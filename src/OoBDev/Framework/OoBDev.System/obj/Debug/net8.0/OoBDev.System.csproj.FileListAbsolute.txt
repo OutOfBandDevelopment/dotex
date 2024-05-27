@@ -1,0 +1,8 @@
+C:\Repos\oobdev\dotex\src\OoBDev\Framework\OoBDev.System\obj\Debug\net8.0\OoBDev.System.csproj.AssemblyReference.cache
+C:\Repos\oobdev\dotex\src\OoBDev\Framework\OoBDev.System\obj\Debug\net8.0\OoBDev.System.GeneratedMSBuildEditorConfig.editorconfig
+C:\Repos\oobdev\dotex\src\OoBDev\Framework\OoBDev.System\obj\Debug\net8.0\GitVersionInformation.g.cs
+C:\Repos\oobdev\dotex\src\OoBDev\Framework\OoBDev.System\obj\Debug\net8.0\AssemblyInfo.g.cs
+C:\Repos\oobdev\dotex\src\OoBDev\Framework\OoBDev.System\obj\Debug\net8.0\OoBDev.System.AssemblyInfoInputs.cache
+C:\Repos\oobdev\dotex\src\OoBDev\Framework\OoBDev.System\obj\Debug\net8.0\OoBDev.System.AssemblyInfo.cs
+C:\Repos\oobdev\dotex\src\OoBDev\Framework\OoBDev.System\obj\Debug\net8.0\OoBDev.System.csproj.CoreCompileInputs.cache
+C:\Repos\oobdev\dotex\src\OoBDev\Framework\OoBDev.System\obj\Debug\net8.0\OoBDev.System.sourcelink.json

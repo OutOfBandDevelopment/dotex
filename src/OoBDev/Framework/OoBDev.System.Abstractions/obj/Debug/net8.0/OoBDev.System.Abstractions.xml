@@ -1,0 +1,127 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>OoBDev.System.Abstractions</name>
+    </assembly>
+    <members>
+        <member name="T:BinaryDataDecoders.ToolKit.Collections.IDoubleLinkedList`1">
+            <summary>
+            interface for a double linked list
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="P:BinaryDataDecoders.ToolKit.Collections.IDoubleLinkedList`1.Previous">
+            <summary>
+            previous segment for double linked list
+            </summary>
+        </member>
+        <member name="P:BinaryDataDecoders.ToolKit.Collections.IDoubleLinkedList`1.Current">
+            <summary>
+            current element
+            </summary>
+        </member>
+        <member name="P:BinaryDataDecoders.ToolKit.Collections.IDoubleLinkedList`1.Next">
+            <summary>
+            next segment for double linked list
+            </summary>
+        </member>
+        <member name="T:BinaryDataDecoders.ToolKit.Collections.IReversibleEnumerator`1">
+            <summary>
+            Allow an Enumerable to move forwards or backwards
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:BinaryDataDecoders.ToolKit.Collections.IReversibleEnumerator`1.MovePrevious">
+            <summary>
+            step current state of enumerator to previous element
+            </summary>
+            <returns>true if move was possible</returns>
+        </member>
+        <member name="P:BinaryDataDecoders.ToolKit.Collections.IReversibleEnumerator`1.Position">
+            <summary>
+            current position of enumerator.  -1 if before head/reset
+            </summary>
+        </member>
+        <member name="M:BinaryDataDecoders.ToolKit.Collections.IReversibleEnumerator`1.MoveCurrent">
+            <summary>
+            move enumerator last of previouslly read elements
+            </summary>
+            <returns>true if move was possible</returns>
+        </member>
+        <member name="T:BinaryDataDecoders.ToolKit.DelimiterOptions">
+            <summary>
+            delimiter used optin for <see cref="!:MemoryEx"/>
+            </summary>
+        </member>
+        <member name="F:BinaryDataDecoders.ToolKit.DelimiterOptions.Exclude">
+            <summary>
+            Do not include the delimiter in the resulting memory chunks
+            </summary>
+        </member>
+        <member name="F:BinaryDataDecoders.ToolKit.DelimiterOptions.Return">
+            <summary>
+            Include delimiter in the left side of break
+            </summary>
+        </member>
+        <member name="F:BinaryDataDecoders.ToolKit.DelimiterOptions.Carry">
+            <summary>
+            Include the delimiter in the right side of the break;
+            </summary>
+        </member>
+        <member name="T:BinaryDataDecoders.ToolKit.Xml.Xsl.IXsltTransformer">
+            <summary>
+            Interface for IXsltTransformer
+            </summary>
+        </member>
+        <member name="M:BinaryDataDecoders.ToolKit.Xml.Xsl.IXsltTransformer.ReadAsXml(System.String)">
+            <summary>
+            Read input file as XML
+            </summary>
+            <param name="fileName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BinaryDataDecoders.ToolKit.Xml.Xsl.IXsltTransformer.Transform(System.String,System.String,System.String)">
+            <summary>
+            Single action transform
+            </summary>
+            <param name="template">path for xslt stylesheet</param>
+            <param name="input">source XML file</param>
+            <param name="output">resulting text content</param>
+        </member>
+        <member name="M:BinaryDataDecoders.ToolKit.Xml.Xsl.IXsltTransformer.Transform(System.String,System.String,System.Xml.XPath.IXPathNavigable,System.String)">
+            <summary>
+            Single action transform
+            </summary>
+            <param name="template">path for xslt stylesheet</param>
+            <param name="inputSource"></param>
+            <param name="input">source XPathNavigable</param>
+            <param name="output">resulting text content</param>
+        </member>
+        <member name="M:BinaryDataDecoders.ToolKit.Xml.Xsl.IXsltTransformer.TransformAll(System.String,System.String,System.String,System.String)">
+            <summary>
+            Multiaction action transform. 
+            </summary>
+            <param name="template">path for xslt stylesheet</param>
+            <param name="input">Wild card allowed for multiple files</param>
+            <param name="output">Output and suffix per file.</param>
+        </member>
+        <member name="M:BinaryDataDecoders.ToolKit.Xml.Xsl.IXsltTransformer.TransformAll(System.String,System.String,System.Func{System.String,System.Xml.XPath.IXPathNavigable},System.String,System.String)">
+            <summary>
+            Multi-action transform. 
+            </summary>
+            <param name="template">path for XSLT style-sheet</param>
+            <param name="input">Wild card allowed for multiple files</param>
+            <param name="inputNavigatorFactory">function to load input file into IXPathNavigable</param>
+            <param name="output">Output and suffix per file.</param>
+        </member>
+        <member name="M:BinaryDataDecoders.ToolKit.Xml.Xsl.IXsltTransformer.TransformMerge(System.String,System.String,System.Func{System.String,System.Xml.XPath.IXPathNavigable},System.String,System.String)">
+            <summary>
+            Multi-action transform. Merge globbed files an handoff to single style
+            </summary>
+            <param name="template">path for XSLT style-sheet</param>
+            <param name="input">Wild card allowed for multiple files</param>
+            <param name="inputNavigatorFactory">function to load input file into IXPathNavigable</param>
+            <param name="output">Output and suffix per file.</param>
+        </member>
+    </members>
+</doc>

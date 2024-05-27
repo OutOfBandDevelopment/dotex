@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "hqkZkquIx8o=",
+  "success": true,
+  "projectFilePath": "C:\\Repos\\oobdev\\dotex\\src\\OoBDev\\Framework\\OoBDev.System\\OoBDev.System.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\mwwhi\\.nuget\\packages\\gitversion.msbuild\\5.12.0\\gitversion.msbuild.5.12.0.nupkg.sha512"
+  ],
+  "logs": []
+}

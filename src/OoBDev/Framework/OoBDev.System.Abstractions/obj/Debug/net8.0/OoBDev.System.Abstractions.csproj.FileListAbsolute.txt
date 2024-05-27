@@ -1,0 +1,16 @@
+C:\Repos\oobdev\dotex\src\OoBDev\Framework\OoBDev.System.Abstractions\bin\Debug\net8.0\OoBDev.System.Abstractions.deps.json
+C:\Repos\oobdev\dotex\src\OoBDev\Framework\OoBDev.System.Abstractions\bin\Debug\net8.0\OoBDev.System.Abstractions.dll
+C:\Repos\oobdev\dotex\src\OoBDev\Framework\OoBDev.System.Abstractions\bin\Debug\net8.0\OoBDev.System.Abstractions.pdb
+C:\Repos\oobdev\dotex\src\OoBDev\Framework\OoBDev.System.Abstractions\bin\Debug\net8.0\OoBDev.System.Abstractions.xml
+C:\Repos\oobdev\dotex\src\OoBDev\Framework\OoBDev.System.Abstractions\obj\Debug\net8.0\OoBDev.System.Abstractions.GeneratedMSBuildEditorConfig.editorconfig
+C:\Repos\oobdev\dotex\src\OoBDev\Framework\OoBDev.System.Abstractions\obj\Debug\net8.0\GitVersionInformation.g.cs
+C:\Repos\oobdev\dotex\src\OoBDev\Framework\OoBDev.System.Abstractions\obj\Debug\net8.0\AssemblyInfo.g.cs
+C:\Repos\oobdev\dotex\src\OoBDev\Framework\OoBDev.System.Abstractions\obj\Debug\net8.0\OoBDev.System.Abstractions.AssemblyInfoInputs.cache
+C:\Repos\oobdev\dotex\src\OoBDev\Framework\OoBDev.System.Abstractions\obj\Debug\net8.0\OoBDev.System.Abstractions.AssemblyInfo.cs
+C:\Repos\oobdev\dotex\src\OoBDev\Framework\OoBDev.System.Abstractions\obj\Debug\net8.0\OoBDev.System.Abstractions.csproj.CoreCompileInputs.cache
+C:\Repos\oobdev\dotex\src\OoBDev\Framework\OoBDev.System.Abstractions\obj\Debug\net8.0\OoBDev.System.Abstractions.sourcelink.json
+C:\Repos\oobdev\dotex\src\OoBDev\Framework\OoBDev.System.Abstractions\obj\Debug\net8.0\OoBDev.System.Abstractions.dll
+C:\Repos\oobdev\dotex\src\OoBDev\Framework\OoBDev.System.Abstractions\obj\Debug\net8.0\refint\OoBDev.System.Abstractions.dll
+C:\Repos\oobdev\dotex\src\OoBDev\Framework\OoBDev.System.Abstractions\obj\Debug\net8.0\OoBDev.System.Abstractions.xml
+C:\Repos\oobdev\dotex\src\OoBDev\Framework\OoBDev.System.Abstractions\obj\Debug\net8.0\OoBDev.System.Abstractions.pdb
+C:\Repos\oobdev\dotex\src\OoBDev\Framework\OoBDev.System.Abstractions\obj\Debug\net8.0\ref\OoBDev.System.Abstractions.dll
