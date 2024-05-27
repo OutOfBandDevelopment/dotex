@@ -2,7 +2,7 @@
 using System.Text;
 using System.IO;
 
-namespace BinaryDataDecoders.Archives.Tar;
+namespace OoBDev.System.Archives.Tar;
 
 class Entry
 {

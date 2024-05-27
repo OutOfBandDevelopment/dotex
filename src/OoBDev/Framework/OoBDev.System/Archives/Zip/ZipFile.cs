@@ -3,7 +3,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 
-namespace BinaryDataDecoders.Archives.Zip;
+namespace OoBDev.System.Archives.Zip;
 
 class ZipFile
 {

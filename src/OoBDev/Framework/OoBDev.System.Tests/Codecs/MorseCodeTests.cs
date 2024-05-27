@@ -2,7 +2,7 @@
 using BinaryDataDecoders.ToolKit.Codecs;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace BinaryDataDecoders.ToolKit.Tests.Codecs;
+namespace OoBDev.System.Tests.Codecs;
 
 [TestClass]
 public class MorseCodeTests
@@ -17,7 +17,7 @@ public class MorseCodeTests
     public void EncodeTest(string message, string expected)
     {
         var result = new MorseCode().Encode(message);
-        this.TestContext.WriteLine($"{message} -> {result}");
+        TestContext.WriteLine($"{message} -> {result}");
         Assert.AreEqual(expected, result);
     }
 
@@ -28,7 +28,7 @@ public class MorseCodeTests
     public void DecodeTest(string message, string expected)
     {
         var result = new MorseCode().Decode(message);
-        this.TestContext.WriteLine($"{message} -> {result}");
+        TestContext.WriteLine($"{message} -> {result}");
         Assert.AreEqual(expected, result);
     }
 }

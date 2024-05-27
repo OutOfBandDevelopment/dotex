@@ -7,7 +7,7 @@ using System.Xml.Linq;
 using System.Xml.XPath;
 using System.Xml.Xsl;
 
-namespace BinaryDataDecoders.ToolKit.Tests.Xml.Xsl.Extensions;
+namespace OoBDev.System.Tests.Xml.Xsl.Extensions;
 
 [TestClass]
 public class XPath20FunctionsTests
@@ -163,7 +163,7 @@ public class XPath20FunctionsTests
         var capture = selected.Clone();
         while (capture.MoveNext())
         {
-            this.TestContext.WriteLine(capture.Current.Value);
+            TestContext.WriteLine(capture.Current.Value);
         }
 
 

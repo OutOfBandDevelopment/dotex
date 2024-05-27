@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace BinaryDataDecoders.ToolKit.Collections;
+namespace OoBDev.System.Collections;
 
 /// <summary>
 /// Allow an Enumerable to move forwards or backwards

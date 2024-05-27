@@ -5,7 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 
-namespace BinaryDataDecoders.FileSystems.Iso9660;
+namespace OoBDev.System.IO.Iso9660;
 
 public class DirectoryRecord : IEnumerable<DirectoryRecord>
 {
@@ -16,21 +16,21 @@ public class DirectoryRecord : IEnumerable<DirectoryRecord>
     {
         if (file != null)
             disc = file;
-        this.Parent = parent;
+        Parent = parent;
 
         //1	22 
-        this.BytesInRecord = buffer[offset];
+        BytesInRecord = buffer[offset];
         offset++;
 
         //1	00 
-        this.SectorsInExtended = buffer[offset];
+        SectorsInExtended = buffer[offset];
         offset++;
 
         //8	1B 00 00 00 - 00 00 00 1B 
-        this.FirstSector = buffer.GetUInt32(ref offset, 8);
+        FirstSector = buffer.GetUInt32(ref offset, 8);
 
         //8	00 08 00 00 - 00 00 08 00 
-        this.Size = buffer.GetUInt32(ref offset, 8);
+        Size = buffer.GetUInt32(ref offset, 8);
 
         //1	63 
         var yearOffset = buffer[offset];
@@ -51,11 +51,11 @@ public class DirectoryRecord : IEnumerable<DirectoryRecord>
         var second = buffer[offset];
         offset++;
         //1	00 
-        var quaterHourOffset = (sbyte)(buffer[offset]);
+        var quaterHourOffset = (sbyte)buffer[offset];
         offset++;
 
         var timeOffset = quaterHourOffset * 15d;
-        this.DateTime = new DateTime(yearOffset + 1900,
+        DateTime = new DateTime(yearOffset + 1900,
                                      month == 0 ? 1 : month,
                                      day == 0 ? 1 : month,
                                      hour,
@@ -64,31 +64,31 @@ public class DirectoryRecord : IEnumerable<DirectoryRecord>
                                      ).AddMinutes(timeOffset);
 
         //1	02 
-        this.DirectoryType = (DirectoryType)(buffer[offset]);
+        DirectoryType = (DirectoryType)buffer[offset];
         offset++;
 
         //1	00 
-        this.FileUnitSize = buffer[offset];
+        FileUnitSize = buffer[offset];
         offset++;
 
         //1	00 
-        this.InterlaveGapSize = buffer[offset];
+        InterlaveGapSize = buffer[offset];
         offset++;
 
         //4	01 00 - 00 01 
-        this.VolumeSequenceNumber = buffer.GetUInt16(ref offset, 4);
+        VolumeSequenceNumber = buffer.GetUInt16(ref offset, 4);
 
         //1	01 
-        this.IdentifierLength = buffer[offset];
+        IdentifierLength = buffer[offset];
         offset++;
 
-        this.Identifier = buffer.GetString(ref offset,
-                                           this.IdentifierLength,
+        Identifier = buffer.GetString(ref offset,
+                                           IdentifierLength,
                                            Encoding.ASCII);
-        if (string.IsNullOrEmpty(this.Identifier))
-            this.Identifier = ".";
-        else if (this.Identifier == "\x01")
-            this.Identifier = "..";
+        if (string.IsNullOrEmpty(Identifier))
+            Identifier = ".";
+        else if (Identifier == "\x01")
+            Identifier = "..";
 
         //    00 
     }
@@ -157,14 +157,14 @@ public class DirectoryRecord : IEnumerable<DirectoryRecord>
 
     private IEnumerable<DirectoryRecord> GetChildren()
     {
-        if (this.IsDirectory)
+        if (IsDirectory)
         {
             var sector = new byte[2048];
             var bufferLen = 0;
 
-            lock (this.disc)
+            lock (disc)
             {
-                disc.Seek(this.FirstSector * this.Size,
+                disc.Seek(FirstSector * Size,
                         SeekOrigin.Begin);
                 bufferLen = disc.Read(sector, 0, sector.Length);
 
@@ -184,11 +184,11 @@ public class DirectoryRecord : IEnumerable<DirectoryRecord>
     }
     private byte[] GetBuffer()
     {
-        lock (this.disc)
+        lock (disc)
         {
-            disc.Seek(this.FirstSector * 2048, SeekOrigin.Begin);
-            var buffer = new byte[this.Size];
-            var bufferLen = disc.Read(buffer, 0, (int)this.Size);
+            disc.Seek(FirstSector * 2048, SeekOrigin.Begin);
+            var buffer = new byte[Size];
+            var bufferLen = disc.Read(buffer, 0, (int)Size);
             return buffer;
         }
     }
@@ -205,23 +205,23 @@ public class DirectoryRecord : IEnumerable<DirectoryRecord>
         {
             if (_root == null)
             {
-                if (this.Parent == null)
+                if (Parent == null)
                     return this;
-                _root = this.Parent.Root;
+                _root = Parent.Root;
             }
             return _root;
         }
     }
     public bool IsDirectory
     {
-        get { return (this.DirectoryType & DirectoryType.Directory) != 0; }
+        get { return (DirectoryType & DirectoryType.Directory) != 0; }
     }
     public IEnumerable<DirectoryRecord> Children
     {
         get
         {
-            if (disc != null && this.IsDirectory)
-                foreach (var item in this.GetChildren())
+            if (disc != null && IsDirectory)
+                foreach (var item in GetChildren())
                     yield return item;
         }
     }
@@ -230,15 +230,15 @@ public class DirectoryRecord : IEnumerable<DirectoryRecord>
         get
         {
             if (disc == null) return null;
-            return this.GetBuffer();
+            return GetBuffer();
         }
     }
     public string DataBase64
     {
         get
         {
-            if (this.Data == null) return null;
-            return Convert.ToBase64String(this.Data);
+            if (Data == null) return null;
+            return Convert.ToBase64String(Data);
         }
     }
 
@@ -246,13 +246,13 @@ public class DirectoryRecord : IEnumerable<DirectoryRecord>
 
     public IEnumerator<DirectoryRecord> GetEnumerator()
     {
-        if (this.Children == null) return null;
-        return this.Children.GetEnumerator();
+        if (Children == null) return null;
+        return Children.GetEnumerator();
     }
 
     IEnumerator IEnumerable.GetEnumerator()
     {
-        return this.GetEnumerator();
+        return GetEnumerator();
     }
 
     #endregion

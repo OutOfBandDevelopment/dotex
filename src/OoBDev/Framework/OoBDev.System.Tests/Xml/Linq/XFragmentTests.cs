@@ -4,7 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
 using System.Xml.Linq;
 
-namespace BinaryDataDecoders.ToolKit.Tests.Xml.Linq;
+namespace OoBDev.System.Tests.Xml.Linq;
 
 [TestClass]
 public class XFragmentTests

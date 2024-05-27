@@ -1,4 +1,4 @@
-﻿namespace BinaryDataDecoders.Archives.Zip;
+﻿namespace OoBDev.System.Archives.Zip;
 
 public enum CompressionMethodType : short
 {

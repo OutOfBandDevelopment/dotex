@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace BinaryDataDecoders.Archives.Tar;
+namespace OoBDev.System.Archives.Tar;
 
 [StructLayout(LayoutKind.Sequential)]
 public struct SECURITY_ATTRIBUTES
 {
     public int nLength;
-    public IntPtr lpSecurityDescriptor;
+    public nint lpSecurityDescriptor;
     public int bInheritHandle;
 }

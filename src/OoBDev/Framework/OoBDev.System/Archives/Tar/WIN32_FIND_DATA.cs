@@ -1,6 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 
-namespace BinaryDataDecoders.Archives.Tar;
+namespace OoBDev.System.Archives.Tar;
 
 [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
 internal struct WIN32_FIND_DATA

@@ -3,9 +3,9 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using static BinaryDataDecoders.ToolKit.DelimiterOptions;
+using static OoBDev.System.DelimiterOptions;
 
-namespace BinaryDataDecoders.ToolKit.Tests;
+namespace OoBDev.System.Tests;
 
 [TestClass]
 public class MemoryExTests

@@ -3,7 +3,7 @@ using BinaryDataDecoders.TestUtilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
-namespace BinaryDataDecoders.ToolKit.Tests.Xml.Linq;
+namespace OoBDev.System.Tests.Xml.Linq;
 
 [TestClass]
 public class ObjectXmlExtensionsTests
@@ -33,6 +33,6 @@ public class ObjectXmlExtensionsTests
 
         var result = ObjectXmlExtensions.AsXElement(testData);
         if (result != null)
-            this.TestContext.AddResult(result);
+            TestContext.AddResult(result);
     }
 }

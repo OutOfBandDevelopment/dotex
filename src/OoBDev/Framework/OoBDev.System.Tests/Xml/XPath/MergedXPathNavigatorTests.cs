@@ -6,7 +6,7 @@ using System.IO;
 using System.Xml.Linq;
 using System.Xml.XPath;
 
-namespace BinaryDataDecoders.ToolKit.Tests.Xml.XPath;
+namespace OoBDev.System.Tests.Xml.XPath;
 
 [TestClass]
 public class MergedXPathNavigatorTests
@@ -20,7 +20,7 @@ public class MergedXPathNavigatorTests
         var di2 = new DirectoryInfo(@"C:\Repos\mwwhited\BinaryDataDecoders\docs\Code").ToNavigable();
         var navs = new[] { ("f1", di1), ("f2", di2), ("f3", di1) };
         var merged = navs.MergeNavigators();
-        this.TestContext.AddResult(merged);
+        TestContext.AddResult(merged);
     }
 
     [TestMethod, TestCategory(TestCategories.Unit)]

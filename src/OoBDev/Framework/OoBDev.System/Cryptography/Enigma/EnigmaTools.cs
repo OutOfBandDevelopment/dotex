@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Text;
 
-namespace BinaryDataDecoders.Cryptography.Enigma;
+namespace OoBDev.System.Cryptography.Enigma;
 
 public static class EnigmaTools
 {

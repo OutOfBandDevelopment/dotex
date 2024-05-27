@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Xml.XPath;
 
-namespace BinaryDataDecoders.ToolKit.Xml.Xsl;
+namespace OoBDev.System.Xml.Xsl;
 
 /// <summary>
 /// Interface for IXsltTransformer

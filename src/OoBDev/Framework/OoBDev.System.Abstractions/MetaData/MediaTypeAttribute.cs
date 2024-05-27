@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BinaryDataDecoders.ToolKit.MetaData;
+namespace OoBDev.System.MetaData;
 
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
 public class MediaTypeAttribute(string mediaType) : Attribute

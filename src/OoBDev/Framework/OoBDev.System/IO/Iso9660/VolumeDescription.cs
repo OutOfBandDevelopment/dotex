@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace BinaryDataDecoders.FileSystems.Iso9660;
+namespace OoBDev.System.IO.Iso9660;
 
 public class VolumeDescription : IEnumerable<DirectoryRecord>, IDisposable
 {
@@ -14,27 +14,27 @@ public class VolumeDescription : IEnumerable<DirectoryRecord>, IDisposable
         var offset = 1;
         //  6      67, 68, 48, 48, 49 and 1, respectively (same as Volume
         //           Descriptor Set Terminator)
-        this.DescriptorSet = buffer.GetString(ref offset, 6, encoding);
+        DescriptorSet = buffer.GetString(ref offset, 6, encoding);
         //  1      0
         offset += 1;    //padding
         // 32      system identifier
-        this.SystemIdentifier = buffer.GetString(ref offset, 32, encoding);
+        SystemIdentifier = buffer.GetString(ref offset, 32, encoding);
         // 32      volume identifier
-        this.VolumeIdentifier = buffer.GetString(ref offset, 32, encoding);
+        VolumeIdentifier = buffer.GetString(ref offset, 32, encoding);
         //  8      zeros
         offset += 8;    // padding
         //  8      total number of sectors, as a both endian double word
-        this.SectorCount = buffer.GetUInt32(ref offset, 8);
+        SectorCount = buffer.GetUInt32(ref offset, 8);
         // 32      zeros
         offset += 32;   // padding
         //  4      1, as a both endian word [volume set size]
-        this.VolumeSetSize = buffer.GetUInt16(ref offset, 4);
+        VolumeSetSize = buffer.GetUInt16(ref offset, 4);
         //  4      1, as a both endian word [volume sequence number]
-        this.VolumeSequenceNumber = buffer.GetUInt16(ref offset, 4);
+        VolumeSequenceNumber = buffer.GetUInt16(ref offset, 4);
         //  4      2048 (the sector size), as a both endian word
-        this.SectorSize = buffer.GetUInt16(ref offset, 4);
+        SectorSize = buffer.GetUInt16(ref offset, 4);
         //  8      path table length in bytes, as a both endian double word
-        this.PathTableLength = buffer.GetUInt32(ref offset, 8);
+        PathTableLength = buffer.GetUInt32(ref offset, 8);
         //  4      number of first sector in first little endian path table,
         //           as a little endian double word
         var v1 = buffer.GetUInt32(ref offset, 4);
@@ -46,38 +46,38 @@ public class VolumeDescription : IEnumerable<DirectoryRecord>, IDisposable
         //offset += 4;   // padding
         //  4      number of first sector in first big endian path table,
         //           as a big endian double word
-        this.FirstSectorFirst = buffer.GetUInt32(ref offset, 4);
+        FirstSectorFirst = buffer.GetUInt32(ref offset, 4);
         //  4      number of first sector in second big endian path table,
         //           as a big endian double word, or zero if there is no
         //           second big endian path table
-        this.FirstSectorSecond = buffer.GetUInt32(ref offset, 4);
+        FirstSectorSecond = buffer.GetUInt32(ref offset, 4);
         // 34      root directory record, as described below
         var rootDir = new byte[34];
         Array.Copy(buffer, offset, rootDir, 0, 34);
-        this.DirectoryRecord = new DirectoryRecord(rootDir, 0, reader, null);
+        DirectoryRecord = new DirectoryRecord(rootDir, 0, reader, null);
         offset += 34;    // 4 big endian
         //128      volume set identifier
-        this.VolumeSetIdentifier = buffer.GetString(ref offset, 128, encoding);
+        VolumeSetIdentifier = buffer.GetString(ref offset, 128, encoding);
         //128      publisher identifier
-        this.PublisherIdentifier = buffer.GetString(ref offset, 128, encoding);
+        PublisherIdentifier = buffer.GetString(ref offset, 128, encoding);
         //128      data preparer identifier
-        this.DataPreparerIdentifier = buffer.GetString(ref offset, 128, encoding);
+        DataPreparerIdentifier = buffer.GetString(ref offset, 128, encoding);
         //128      application identifier
-        this.ApplicationIdentifier = buffer.GetString(ref offset, 128, encoding);
+        ApplicationIdentifier = buffer.GetString(ref offset, 128, encoding);
         // 37      copyright file identifier
-        this.CopyRightFileIdentifier = buffer.GetString(ref offset, 37, encoding);
+        CopyRightFileIdentifier = buffer.GetString(ref offset, 37, encoding);
         // 37      abstract file identifier
-        this.AbstractFileIdentifier = buffer.GetString(ref offset, 37, encoding);
+        AbstractFileIdentifier = buffer.GetString(ref offset, 37, encoding);
         // 37      bibliographical file identifier
-        this.BibliographyFileIdentifier = buffer.GetString(ref offset, 37, encoding);
+        BibliographyFileIdentifier = buffer.GetString(ref offset, 37, encoding);
         // 17      date and time of volume creation
-        this.VolumeCreation = buffer.GetDateTime(ref offset, 17);
+        VolumeCreation = buffer.GetDateTime(ref offset, 17);
         // 17      date and time of most recent modification
-        this.VolumeModification = buffer.GetDateTime(ref offset, 17);
+        VolumeModification = buffer.GetDateTime(ref offset, 17);
         // 17      date and time when volume expires
-        this.VolumeExpires = buffer.GetDateTime(ref offset, 17);
+        VolumeExpires = buffer.GetDateTime(ref offset, 17);
         // 17      date and time when volume is effective
-        this.VolumeEffective = buffer.GetDateTime(ref offset, 17);
+        VolumeEffective = buffer.GetDateTime(ref offset, 17);
         //  1      1
         //  1      0
         //512      reserved for application use (usually zeros)
@@ -126,13 +126,13 @@ public class VolumeDescription : IEnumerable<DirectoryRecord>, IDisposable
 
     public IEnumerator<DirectoryRecord> GetEnumerator()
     {
-        if (this.DirectoryRecord == null) return null;
-        return this.DirectoryRecord.GetEnumerator();
+        if (DirectoryRecord == null) return null;
+        return DirectoryRecord.GetEnumerator();
     }
 
     IEnumerator IEnumerable.GetEnumerator()
     {
-        return this.GetEnumerator();
+        return GetEnumerator();
     }
 
     #endregion
@@ -141,8 +141,8 @@ public class VolumeDescription : IEnumerable<DirectoryRecord>, IDisposable
 
     public void Dispose()
     {
-        if (this.BaseStream != null)
-            this.BaseStream.Dispose();
+        if (BaseStream != null)
+            BaseStream.Dispose();
     }
 
     #endregion

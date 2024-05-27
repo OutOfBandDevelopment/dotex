@@ -3,7 +3,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Text;
 
-namespace BinaryDataDecoders.Archives.Tar;
+namespace OoBDev.System.Archives.Tar;
 
 public static class Utilities
 {

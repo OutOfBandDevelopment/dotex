@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace BinaryDataDecoders.Cryptography.Enigma;
+namespace OoBDev.System.Cryptography.Enigma;
 
 public record EnigmaRotor
 {

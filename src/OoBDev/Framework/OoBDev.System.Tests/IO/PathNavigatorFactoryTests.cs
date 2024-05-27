@@ -3,7 +3,7 @@ using System.IO;
 using BinaryDataDecoders.ToolKit.IO;
 using BinaryDataDecoders.TestUtilities;
 
-namespace BinaryDataDecoders.ToolKit.Tests.IO;
+namespace OoBDev.System.Tests.IO;
 
 [TestClass]
 public class PathNavigatorFactoryTests
@@ -15,6 +15,6 @@ public class PathNavigatorFactoryTests
     {
         var di = new DirectoryInfo("../../../../");
         var xpath = di.ToNavigable().CreateNavigator();
-        this.TestContext.AddResult(xpath);
+        TestContext.AddResult(xpath);
     }
 }

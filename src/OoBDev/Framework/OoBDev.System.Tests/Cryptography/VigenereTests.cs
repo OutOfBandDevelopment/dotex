@@ -1,7 +1,8 @@
-﻿using BinaryDataDecoders.TestUtilities;
+﻿using BinaryDataDecoders.Cryptography;
+using BinaryDataDecoders.TestUtilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace BinaryDataDecoders.Cryptography.Tests;
+namespace OoBDev.System.Tests.Cryptography;
 
 [TestClass]
 public class VigenereTests
@@ -17,7 +18,7 @@ public class VigenereTests
     public void EncodeTest(string message, string key, string expected)
     {
         var result = new Vigenere().Encode(message, key);
-        this.TestContext.WriteLine($"{message} -> {result}");
+        TestContext.WriteLine($"{message} -> {result}");
         Assert.AreEqual(expected, result);
     }
 
@@ -30,7 +31,7 @@ public class VigenereTests
     public void DecodeTest(string message, string key, string expected)
     {
         var result = new Vigenere().Decode(message, key);
-        this.TestContext.WriteLine($"{message} -> {result}");
+        TestContext.WriteLine($"{message} -> {result}");
         Assert.AreEqual(expected, result);
     }
 }

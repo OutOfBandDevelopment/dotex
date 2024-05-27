@@ -1,4 +1,4 @@
-﻿namespace BinaryDataDecoders.Archives.Tar;
+﻿namespace OoBDev.System.Archives.Tar;
 
 public class TarHeader
 {

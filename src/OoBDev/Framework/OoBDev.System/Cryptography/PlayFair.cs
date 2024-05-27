@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace BinaryDataDecoders.Cryptography;
+namespace OoBDev.System.Cryptography;
 
 public class PlayFair
 {
@@ -146,7 +146,7 @@ public class PlayFair
                     new string(new char[] { currentChar, cSwap, currentChar }));
         }
 
-        message = message.PadRight(message.Length + (message.Length % 2), cSwap);
+        message = message.PadRight(message.Length + message.Length % 2, cSwap);
 
         string sCryptic = new(cryptic);
 

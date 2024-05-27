@@ -5,7 +5,7 @@ using Moq;
 using System;
 using BinaryDataDecoders.TestUtilities;
 
-namespace BinaryDataDecoders.ToolKit.Tests.Reflection;
+namespace OoBDev.System.Tests.Reflection;
 
 [TestClass]
 public class ReflectionElementNodeTests
@@ -17,7 +17,7 @@ public class ReflectionElementNodeTests
     [TestInitialize]
     public void TestInitialize()
     {
-        this.mockRepository = new MockRepository(MockBehavior.Strict);
+        mockRepository = new MockRepository(MockBehavior.Strict);
     }
 
     private ReflectionElementNodeBuilder CreateReflectionElementNode(object testData, bool excludeNamespace = false) =>
@@ -52,16 +52,16 @@ public class ReflectionElementNodeTests
         // Mock
 
         // Test
-        var reflectionElementNode = this.CreateReflectionElementNode(testData, true).Build();
+        var reflectionElementNode = CreateReflectionElementNode(testData, true).Build();
         var nav = reflectionElementNode.ToNavigable().CreateNavigator();
 
         if (nav != null)
-            this.TestContext.AddResult(nav);
+            TestContext.AddResult(nav);
 
         // Assert
         Assert.IsFalse(string.IsNullOrWhiteSpace(nav?.OuterXml));
 
         // Verify
-        this.mockRepository.VerifyAll();
+        mockRepository.VerifyAll();
     }
 }

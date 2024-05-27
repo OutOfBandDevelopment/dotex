@@ -4,7 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Diagnostics;
 using System.Reflection;
 
-namespace BinaryDataDecoders.ToolKit.Tests.Xml.Xsl;
+namespace OoBDev.System.Tests.Xml.Xsl;
 
 [TestClass]
 public class XsltExtensionFactoryTests
@@ -24,27 +24,27 @@ public class XsltExtensionFactoryTests
         {
             var mi = wrappedType.GetMethod("do-work", BindingFlags.Public | BindingFlags.Instance);
             var ret = mi?.Invoke(wrapped, new object[] { "Hi!" });
-            this.TestContext.WriteLine($"{"do-work"}: {ret}");
+            TestContext.WriteLine($"{"do-work"}: {ret}");
         }
         {
             var mi = wrappedType.GetMethod("big-work", BindingFlags.Public | BindingFlags.Instance);
             var ret = mi?.Invoke(wrapped, new object[] { "Hi!", "2", "3", "4", "5", "6" });
-            this.TestContext.WriteLine($"{"big-work"}: {ret}");
+            TestContext.WriteLine($"{"big-work"}: {ret}");
         }
         {
             var mi = wrappedType.GetMethod("more-work", BindingFlags.Public | BindingFlags.Instance);
             var ret = mi?.Invoke(wrapped, new object[] { "Hi!" });
-            this.TestContext.WriteLine($"{"more-work"}: {ret}");
+            TestContext.WriteLine($"{"more-work"}: {ret}");
         }
         {
             var mi = wrappedType.GetMethod("other-work", BindingFlags.Public | BindingFlags.Instance);
             var ret = mi?.Invoke(wrapped, []);
-            this.TestContext.WriteLine($"{"other-work"}: {ret}");
+            TestContext.WriteLine($"{"other-work"}: {ret}");
         }
         {
             var mi = wrappedType.GetMethod("and-work", BindingFlags.Public | BindingFlags.Instance);
             var ret = mi?.Invoke(wrapped, []);
-            this.TestContext.WriteLine($"{"and-work"}: {ret}");
+            TestContext.WriteLine($"{"and-work"}: {ret}");
         }
 
     }

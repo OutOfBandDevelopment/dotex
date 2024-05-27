@@ -1,8 +1,8 @@
-﻿using BinaryDataDecoders.Cryptography.Lorenz;
-using BinaryDataDecoders.TestUtilities;
+﻿using BinaryDataDecoders.TestUtilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using OoBDev.System.Cryptography.Lorenz;
 
-namespace BinaryDataDecoders.Cryptography.Tests.Lorenz;
+namespace OoBDev.System.Tests.Cryptography.Lorenz;
 
 [TestClass]
 public class LorenzMachineTests

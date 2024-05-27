@@ -1,7 +1,7 @@
 ﻿using System.Xml.Linq;
 using System.Xml.XPath;
 
-namespace BinaryDataDecoders.ToolKit.Xml.XPath;
+namespace OoBDev.System.Xml.XPath;
 
 public interface INode
 {

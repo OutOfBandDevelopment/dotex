@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace BinaryDataDecoders.Cryptography.Enigma;
+namespace OoBDev.System.Cryptography.Enigma;
 
 // https://en.wikipedia.org/wiki/Enigma_rotor_details
 // http://enigmaco.de/enigma/enigma.html
@@ -28,26 +28,26 @@ public class EnigmaMachine
         this.rotors = rotors.Reverse().ToArray();
         this.reflector = reflector;
         //this.Positions = default;  //(start ?? new string('A', rotors.Length));
-        this.RingSettings = ringSettings;
-        this.PlugBoard = plugBoard;
+        RingSettings = ringSettings;
+        PlugBoard = plugBoard;
     }
 
     public string Positions
     {
         get
         {
-            return (this.postions?
+            return (postions?
                         .Reverse()
                         .Select(p => (char)(p + 'A'))
                         .AsString()
-                        + new string('A', this.rotors.Length)
-                        )[..this.rotors.Length];
+                        + new string('A', rotors.Length)
+                        )[..rotors.Length];
         }
         set
         {
-            this.postions = (value ?? new string('A', this.rotors.Length)).Select(i => i - 'A')
-                                 .Concat(new int[this.rotors.Length])
-                                 .Take(this.rotors.Length)
+            postions = (value ?? new string('A', rotors.Length)).Select(i => i - 'A')
+                                 .Concat(new int[rotors.Length])
+                                 .Take(rotors.Length)
                                  .Reverse()
                                  .ToArray();
         }
@@ -57,18 +57,18 @@ public class EnigmaMachine
     {
         get
         {
-            return (this.ringSettings?
+            return (ringSettings?
                         .Reverse()
                         .Select(p => (char)(p + 'A'))
                         .AsString()
-                        + new string('A', this.rotors.Length)
-                        )[..this.rotors.Length];
+                        + new string('A', rotors.Length)
+                        )[..rotors.Length];
         }
         private set
         {
-            this.ringSettings = (value ?? new string('A', this.rotors.Length)).Select(i => i - 'A')
-                                     .Concat(new int[this.rotors.Length])
-                                     .Take(this.rotors.Length)
+            ringSettings = (value ?? new string('A', rotors.Length)).Select(i => i - 'A')
+                                     .Concat(new int[rotors.Length])
+                                     .Take(rotors.Length)
                                      .Reverse()
                                      .ToArray();
         }
@@ -78,7 +78,7 @@ public class EnigmaMachine
     {
         get
         {
-            return string.Join(" ", this.plugboard ?? []);
+            return string.Join(" ", plugboard ?? []);
         }
         set
         {
@@ -86,58 +86,59 @@ public class EnigmaMachine
             if (cleaned.Length % 2 == 0 && cleaned.GroupBy(c => c).Any(c => c.Count() != 1))
                 throw new InvalidOperationException("Invalid Plug Board");
 
-            this.plugboard = cleaned?.SplitAt(2).ToArray();
+            plugboard = cleaned?.SplitAt(2).ToArray();
         }
     }
 
     public string Rotors
     {
-        get { return string.Join(";", this.rotors.Select(r => r.Number)); }
+        get { return string.Join(";", rotors.Select(r => r.Number)); }
     }
     public string Reflector
     {
-        get { return this.reflector.Number; }
+        get { return reflector.Number; }
     }
 
     public string Process(string input)
     {
-        input = input.Clean().AsString().SwapSet(this.plugboard);
-        var start = this.Positions;
-        var set = this.rotors;
-        var rs = this.ringSettings;
+        input = input.Clean().AsString().SwapSet(plugboard);
+        var start = Positions;
+        var set = rotors;
+        var rs = ringSettings;
         var l = 26; // set[0].Length;
 
         var cOut = new List<char>();
 
         foreach (var c in input.Select(x => x - 'A'))
-        {;
-            this.postions[0] = (this.postions[0] + 1) % l;
-            if (this.rotors[0].RotateOn.Contains((char)(this.postions[0] + 'A')))
+        {
+            ;
+            postions[0] = (postions[0] + 1) % l;
+            if (rotors[0].RotateOn.Contains((char)(postions[0] + 'A')))
             {
-                this.postions[1] = (this.postions[1] + 1) % l;
+                postions[1] = (postions[1] + 1) % l;
 
-                if (this.rotors[1].RotateOn.Contains((char)(this.postions[1] + 'A')))
+                if (rotors[1].RotateOn.Contains((char)(postions[1] + 'A')))
                 {
-                    this.postions[2] = (this.postions[2] + 1) % l;
+                    postions[2] = (postions[2] + 1) % l;
 
-                    if (this.rotors.Length > 3 &&
-                        this.rotors[2].RotateOn.Contains((char)(this.postions[2] + 'A')))
+                    if (rotors.Length > 3 &&
+                        rotors[2].RotateOn.Contains((char)(postions[2] + 'A')))
                     {
-                        this.postions[3] = (this.postions[3] + 1) % l;
+                        postions[3] = (postions[3] + 1) % l;
                     }
                 }
             }
 
-            var indexes = this.postions;
+            var indexes = postions;
 
             var m = c;
             for (var i = 0; i < set.Length; i++)
                 m = (set[i].Wiring[(m + indexes[i] + rs[i]) % l] - indexes[i] - 'A' + l) % l;
             m = (reflector.Wiring[m] - 'A' + l) % l;
             for (var i = set.Length - 1; i > -1; i--)
-                m = (set[i].Wiring.IndexOf((char)(((m + indexes[i]) % l) + 'A')) - indexes[i] - rs[i] + l) % l;
+                m = (set[i].Wiring.IndexOf((char)((m + indexes[i]) % l + 'A')) - indexes[i] - rs[i] + l) % l;
             cOut.Add((char)(m + 'A'));
         }
-        return cOut.AsString().SwapSet(this.plugboard);
+        return cOut.AsString().SwapSet(plugboard);
     }
 }

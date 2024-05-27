@@ -5,7 +5,7 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BinaryDataDecoders.ToolKit.Tests.IO;
+namespace OoBDev.System.Tests.IO;
 
 [TestClass]
 public class StreamExTests
@@ -22,7 +22,7 @@ public class StreamExTests
         {
             tempFile = temp.FilePath;
             var read = File.ReadAllText(temp.FilePath);
-            this.TestContext.WriteLine(read);
+            TestContext.WriteLine(read);
             Assert.AreEqual(message, read);
         }
 

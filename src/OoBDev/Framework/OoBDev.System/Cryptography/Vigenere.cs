@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 
-namespace BinaryDataDecoders.Cryptography;
+namespace OoBDev.System.Cryptography;
 
 public class Vigenere : Caesar
 {
@@ -28,7 +28,7 @@ public class Vigenere : Caesar
     {
         code = new string((code ?? string.Empty).Where(c => char.IsLetter(c)).ToArray());
         if (string.IsNullOrWhiteSpace(code))
-            return new string(Enumerable.Range(0, length).Select(i => (char)('A' + (i % 26))).ToArray());
+            return new string(Enumerable.Range(0, length).Select(i => (char)('A' + i % 26)).ToArray());
         return string.Join("", Enumerable.Range(0, length / code.Length + 1).Select(_ => code))[..length];
     }
 }

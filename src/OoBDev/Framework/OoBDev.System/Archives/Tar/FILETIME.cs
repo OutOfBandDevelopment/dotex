@@ -1,6 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 
-namespace BinaryDataDecoders.Archives.Tar;
+namespace OoBDev.System.Archives.Tar;
 
 [StructLayout(LayoutKind.Sequential)]
 internal struct FILETIME

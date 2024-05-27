@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BinaryDataDecoders.ToolKit.IO;
+namespace OoBDev.System.IO;
 
 public interface ITempFile : IDisposable
 {

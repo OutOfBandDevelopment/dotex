@@ -3,7 +3,7 @@ using BinaryDataDecoders.ToolKit.Xml.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Xml.Linq;
 
-namespace BinaryDataDecoders.ToolKit.Tests.Xml.Linq;
+namespace OoBDev.System.Tests.Xml.Linq;
 
 [TestClass]
 public class XFragmentExTests

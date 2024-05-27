@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BinaryDataDecoders.FileSystems.Iso9660;
+namespace OoBDev.System.IO.Iso9660;
 
 [Flags]
 public enum DirectoryType : byte

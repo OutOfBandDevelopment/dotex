@@ -2,7 +2,7 @@
 using BinaryDataDecoders.ToolKit.Codecs;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace BinaryDataDecoders.ToolKit.Tests.Codecs;
+namespace OoBDev.System.Tests.Codecs;
 
 [TestClass]
 public class RomanNumeralTests

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace BinaryDataDecoders.Cryptography;
+namespace OoBDev.System.Cryptography;
 
 public class Caesar
 {
@@ -30,15 +30,15 @@ public class Caesar
     public char Encode(char input, int offset) =>
         input switch
         {
-            >= 'A' and <= 'Z' => (char)('A' + ((input - 'A' + offset) % 26)),
-            >= 'a' and <= 'z' => (char)('a' + ((input - 'a' + offset) % 26)),
+            >= 'A' and <= 'Z' => (char)('A' + (input - 'A' + offset) % 26),
+            >= 'a' and <= 'z' => (char)('a' + (input - 'a' + offset) % 26),
             _ => input
         };
     public char Decode(char input, int offset) =>
         input switch
         {
-            >= 'A' and <= 'Z' => (char)('A' + ((input + 26 - 'A' - offset) % 26)),
-            >= 'a' and <= 'z' => (char)('a' + ((input + 26 - 'a' - offset) % 26)),
+            >= 'A' and <= 'Z' => (char)('A' + (input + 26 - 'A' - offset) % 26),
+            >= 'a' and <= 'z' => (char)('a' + (input + 26 - 'a' - offset) % 26),
             _ => input
         };
 

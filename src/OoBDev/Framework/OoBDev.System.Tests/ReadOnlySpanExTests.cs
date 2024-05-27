@@ -3,7 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Linq;
 
-namespace BinaryDataDecoders.ToolKit.Tests;
+namespace OoBDev.System.Tests;
 
 [TestClass]
 public class ReadOnlySpanExTests

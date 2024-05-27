@@ -1,4 +1,4 @@
-﻿using BinaryDataDecoders.ToolKit.PathSegments;
+﻿using OoBDev.System.PathSegments;
 using System;
 using System.Collections;
 using System.Collections.Generic;

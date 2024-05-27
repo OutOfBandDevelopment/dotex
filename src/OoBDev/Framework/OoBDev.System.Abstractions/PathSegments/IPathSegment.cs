@@ -1,4 +1,4 @@
-﻿namespace BinaryDataDecoders.ToolKit.PathSegments;
+﻿namespace OoBDev.System.PathSegments;
 
 public interface IPathSegment<out T> : IPathSegment
 {

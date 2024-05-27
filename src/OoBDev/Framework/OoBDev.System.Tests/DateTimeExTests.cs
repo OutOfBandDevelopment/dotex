@@ -2,7 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
-namespace BinaryDataDecoders.ToolKit.Tests;
+namespace OoBDev.System.Tests;
 
 [TestClass]
 public class DateTimeExTests

@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Text;
 using System.Threading;
 
-namespace BinaryDataDecoders.FileSystems.Iso9660;
+namespace OoBDev.System.IO.Iso9660;
 
 public static class Tools
 {
@@ -15,8 +15,8 @@ public static class Tools
         return sb.ToString();
     }
 
-    public static string GetString(this byte[] buffer, 
-                                    ref int offset, 
+    public static string GetString(this byte[] buffer,
+                                    ref int offset,
                                         int length,
                                         Encoding encoding)
     {
@@ -26,8 +26,8 @@ public static class Tools
         return ret;
     }
 
-    public static uint GetUInt32(this byte[] buffer, 
-                                  ref int offset, 
+    public static uint GetUInt32(this byte[] buffer,
+                                  ref int offset,
                                       int length)
     {
         var ret = BitConverter.ToUInt32(buffer, offset);
@@ -35,8 +35,8 @@ public static class Tools
         return ret;
     }
 
-    public static ushort GetUInt16(this byte[] buffer, 
-                                    ref int offset, 
+    public static ushort GetUInt16(this byte[] buffer,
+                                    ref int offset,
                                         int length)
     {
         var ret = BitConverter.ToUInt16(buffer, offset);
@@ -44,8 +44,8 @@ public static class Tools
         return ret;
     }
 
-    public static DateTime GetDateTime(this byte[] buffer, 
-                                        ref int offset, 
+    public static DateTime GetDateTime(this byte[] buffer,
+                                        ref int offset,
                                             int length)
     {
         var temp = Encoding.ASCII.GetString(buffer, offset, 16).Trim();

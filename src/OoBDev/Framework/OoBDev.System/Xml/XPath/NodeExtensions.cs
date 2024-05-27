@@ -1,5 +1,4 @@
-﻿using BinaryDataDecoders.ToolKit.Xml.XPath;
-using System.Xml.XPath;
+﻿using System.Xml.XPath;
 
 namespace OoBDev.System.Xml.XPath;
 

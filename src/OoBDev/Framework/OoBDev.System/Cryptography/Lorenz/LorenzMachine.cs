@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Linq;
 
-namespace BinaryDataDecoders.Cryptography.Lorenz;
+namespace OoBDev.System.Cryptography.Lorenz;
 
 // https://www.codesandciphers.org.uk/cevent2.htm
 // https://lorenz.virtualcolossus.co.uk/LorenzSZ/#
@@ -92,11 +92,11 @@ public class LorenzMachine(byte[] keySet, int[] startPosition)
             var psi4 = (psi + startPosition[10]) % _psiModulus[3];
             var psi5 = (psi + startPosition[11]) % _psiModulus[4];
 
-            var z1 = (bit1 ^ key[chi1 + keyOffsets[0]] ^ key[psi1 + keyOffsets[7]]) ? 1 : 0;
-            var z2 = (bit2 ^ key[chi2 + keyOffsets[1]] ^ key[psi2 + keyOffsets[8]]) ? 1 : 0;
-            var z3 = (bit3 ^ key[chi3 + keyOffsets[2]] ^ key[psi3 + keyOffsets[9]]) ? 1 : 0;
-            var z4 = (bit4 ^ key[chi4 + keyOffsets[3]] ^ key[psi4 + keyOffsets[10]]) ? 1 : 0;
-            var z5 = (bit5 ^ key[chi5 + keyOffsets[4]] ^ key[psi5 + keyOffsets[11]]) ? 1 : 0;
+            var z1 = bit1 ^ key[chi1 + keyOffsets[0]] ^ key[psi1 + keyOffsets[7]] ? 1 : 0;
+            var z2 = bit2 ^ key[chi2 + keyOffsets[1]] ^ key[psi2 + keyOffsets[8]] ? 1 : 0;
+            var z3 = bit3 ^ key[chi3 + keyOffsets[2]] ^ key[psi3 + keyOffsets[9]] ? 1 : 0;
+            var z4 = bit4 ^ key[chi4 + keyOffsets[3]] ^ key[psi4 + keyOffsets[10]] ? 1 : 0;
+            var z5 = bit5 ^ key[chi5 + keyOffsets[4]] ^ key[psi5 + keyOffsets[11]] ? 1 : 0;
 
             var z = z1 << 4 | z2 << 3 | z3 << 2 | z4 << 1 | z5;
 

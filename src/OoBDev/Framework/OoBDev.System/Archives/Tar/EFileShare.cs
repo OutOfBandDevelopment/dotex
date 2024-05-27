@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BinaryDataDecoders.Archives.Tar;
+namespace OoBDev.System.Archives.Tar;
 
 [Flags]
 public enum EFileShare : uint

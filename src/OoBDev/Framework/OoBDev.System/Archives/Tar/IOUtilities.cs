@@ -3,7 +3,7 @@ using System;
 using System.IO;
 using System.Runtime.InteropServices;
 
-namespace BinaryDataDecoders.Archives.Tar;
+namespace OoBDev.System.Archives.Tar;
 
 public static class IOUtilities
 {
@@ -12,12 +12,12 @@ public static class IOUtilities
         string lpFileName,
         EFileAccess dwDesiredAccess,
         EFileShare dwShareMode,
-        IntPtr lpSecurityAttributes,
+        nint lpSecurityAttributes,
         ECreationDisposition dwCreationDisposition,
         EFileAttributes dwFlagsAndAttributes,
-        IntPtr hTemplateFile);
+        nint hTemplateFile);
 
-    internal static IntPtr INVALID_HANDLE_VALUE = new(-1);
+    internal static nint INVALID_HANDLE_VALUE = new(-1);
     internal static int FILE_ATTRIBUTE_DIRECTORY = 0x00000010;
     internal const int MAX_PATH = 260;
 
@@ -30,9 +30,9 @@ public static class IOUtilities
             @"\\?\" + fileName,
             fileAccess.Convert(),
             fileShare.Convert(),
-            IntPtr.Zero,
+            nint.Zero,
             fileMode.Convert(),
-            0, IntPtr.Zero);
+            0, nint.Zero);
         var stream = new FileStream(handle, fileAccess);
         if (fileMode == FileMode.Append)
             stream.Seek(0, SeekOrigin.End);

@@ -1,10 +1,10 @@
-﻿using BinaryDataDecoders.Cryptography.Enigma;
-using BinaryDataDecoders.TestUtilities;
+﻿using BinaryDataDecoders.TestUtilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using OoBDev.System.Cryptography.Enigma;
 using System;
 using System.Linq;
 
-namespace BinaryDataDecoders.Cryptography.Tests.Enigma;
+namespace OoBDev.System.Tests.Cryptography.Enigma;
 
 [TestClass]
 public class EnigmaMachineTests

@@ -3,7 +3,7 @@ using BinaryDataDecoders.ToolKit.Codecs;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Text;
 
-namespace BinaryDataDecoders.ToolKit.Tests.Codecs;
+namespace OoBDev.System.Tests.Codecs;
 
 
 [TestClass]

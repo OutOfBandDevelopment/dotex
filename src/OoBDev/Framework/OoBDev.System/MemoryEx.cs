@@ -1,5 +1,4 @@
-﻿using BinaryDataDecoders.ToolKit;
-using OoBDev.System;
+﻿using OoBDev.System;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -1,4 +1,4 @@
-﻿namespace BinaryDataDecoders.ToolKit;
+﻿namespace OoBDev.System;
 
 /// <summary>
 /// delimiter used optin for <see cref="MemoryEx"/>

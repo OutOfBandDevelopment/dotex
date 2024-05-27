@@ -3,7 +3,7 @@ using BinaryDataDecoders.ToolKit.Collections;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Text;
 
-namespace BinaryDataDecoders.ToolKit.Tests.Collections;
+namespace OoBDev.System.Tests.Collections;
 
 [TestClass]
 public class ReversableEnumeratorTests

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace BinaryDataDecoders.Archives.Zip;
+namespace OoBDev.System.Archives.Zip;
 
 public struct LocalFileHeader
 {

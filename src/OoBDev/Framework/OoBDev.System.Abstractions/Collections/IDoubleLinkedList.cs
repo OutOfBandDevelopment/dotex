@@ -1,4 +1,4 @@
-﻿namespace BinaryDataDecoders.ToolKit.Collections;
+﻿namespace OoBDev.System.Collections;
 
 /// <summary>
 /// interface for a double linked list
