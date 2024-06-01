@@ -1,6 +1,6 @@
-﻿using BinaryDataDecoders.TestUtilities;
-using BinaryDataDecoders.ToolKit.Collections;
+﻿using OoBDev.System.Collections;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using OoBDev.TestUtilities;
 using System.Text;
 
 namespace OoBDev.System.Tests.Collections;

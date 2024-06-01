@@ -1,18 +1,18 @@
-using BinaryDataDecoders.ToolKit.Reflection;
-using BinaryDataDecoders.ToolKit.Xml.XPath;
+using OoBDev.System.Reflection;
+using OoBDev.System.Xml.XPath;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
-using BinaryDataDecoders.TestUtilities;
+using OoBDev.TestUtilities;
 
 namespace OoBDev.System.Tests.Reflection;
 
 [TestClass]
 public class ReflectionElementNodeTests
 {
-    public TestContext TestContext { get; set; }
+    public required TestContext TestContext { get; set; }
 
-    private MockRepository mockRepository;
+    private MockRepository? mockRepository;
 
     [TestInitialize]
     public void TestInitialize()
@@ -62,6 +62,6 @@ public class ReflectionElementNodeTests
         Assert.IsFalse(string.IsNullOrWhiteSpace(nav?.OuterXml));
 
         // Verify
-        mockRepository.VerifyAll();
+        mockRepository?.VerifyAll();
     }
 }

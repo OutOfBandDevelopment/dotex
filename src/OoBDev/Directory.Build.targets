@@ -40,12 +40,12 @@
 	<!-- Ensure the PackageReadmeFile is included with the projects to be packaged for nuget -->
 	<Target Name="CheckReadMe" Condition="'$(IsPackable)'=='true' and '$(PackageReadmeFile)'==''" BeforeTargets="Build">
 		<Warning Text="No PackageReadmeFile included for &quot;$(MSBuildProjectName)&quot;"
-				 Code="ELIPK001"
+				 Code="OBDPK001"
 				 File="$(MSBuildProjectName).csproj" />
 	</Target>
 	<Target Name="CheckReadMeExists" Condition="'$(PackageReadmeFile)'!='' and !Exists('$(PackageReadmeFile)')" BeforeTargets="Build">
 		<Error Text="&quot;$(PackageReadmeFile)&quot; missing from &quot;$(MSBuildProjectName)&quot;"
-			   Code="ELIPK002"
+			   Code="OBDPK002"
 			   File="$(MSBuildProjectName).csproj" />
 	</Target>
  

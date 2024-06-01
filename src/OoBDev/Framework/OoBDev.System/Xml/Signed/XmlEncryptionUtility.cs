@@ -3,7 +3,7 @@
 //using System.Text;
 //using System.Xml;
 
-//namespace BinaryDataDecoders.ToolKit.Xml.Signed
+//namespace OoBDev.System.Xml.Signed
 //{
 //    // https://snipt.net/Wolfwyrd/encryption-utilities/
 //    public static class XmlEncryptionUtility

@@ -1,6 +1,4 @@
-﻿using BinaryDataDecoders.ToolKit.Xml.XPath;
-using BinaryDataDecoders.ToolKit.Xml.Xsl;
-using OoBDev.System.Xml.XPath;
+﻿using OoBDev.System.Xml.XPath;
 using System;
 using System.Linq;
 using System.Xml.Serialization;

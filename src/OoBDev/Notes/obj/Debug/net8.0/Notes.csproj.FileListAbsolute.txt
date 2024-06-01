@@ -1,2 +1,0 @@
-C:\Repos\oobdev\dotex\src\OoBDev\Notes\obj\Debug\net8.0\GitVersionInformation.g.cs
-C:\Repos\oobdev\dotex\src\OoBDev\Notes\obj\Debug\net8.0\AssemblyInfo.g.cs

@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
-using BinaryDataDecoders.ToolKit.IO;
-using BinaryDataDecoders.TestUtilities;
+using OoBDev.System.IO;
+using OoBDev.TestUtilities;
 
 namespace OoBDev.System.Tests.IO;
 

@@ -1,6 +1,5 @@
-﻿using BinaryDataDecoders.Cryptography;
-using BinaryDataDecoders.TestUtilities;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using OoBDev.System.Cryptography;
+using OoBDev.TestUtilities;
 
 namespace OoBDev.System.Tests.Cryptography;
 

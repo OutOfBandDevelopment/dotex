@@ -1,6 +1,5 @@
-﻿using BinaryDataDecoders.TestUtilities;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using OoBDev.System.Cryptography.Enigma;
+﻿using OoBDev.System.Cryptography.Enigma;
+using OoBDev.TestUtilities;
 using System;
 using System.Linq;
 

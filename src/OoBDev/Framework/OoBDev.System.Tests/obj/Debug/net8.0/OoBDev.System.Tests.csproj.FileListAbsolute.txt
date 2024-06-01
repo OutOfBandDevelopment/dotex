@@ -1,9 +1,0 @@
-C:\Repos\oobdev\dotex\src\OoBDev\Framework\OoBDev.System.Tests\bin\Debug\net8.0\CoverletSourceRootsMapping_OoBDev.System.Tests
-C:\Repos\oobdev\dotex\src\OoBDev\Framework\OoBDev.System.Tests\obj\Debug\net8.0\OoBDev.System.Tests.csproj.AssemblyReference.cache
-C:\Repos\oobdev\dotex\src\OoBDev\Framework\OoBDev.System.Tests\obj\Debug\net8.0\OoBDev.System.Tests.GeneratedMSBuildEditorConfig.editorconfig
-C:\Repos\oobdev\dotex\src\OoBDev\Framework\OoBDev.System.Tests\obj\Debug\net8.0\GitVersionInformation.g.cs
-C:\Repos\oobdev\dotex\src\OoBDev\Framework\OoBDev.System.Tests\obj\Debug\net8.0\AssemblyInfo.g.cs
-C:\Repos\oobdev\dotex\src\OoBDev\Framework\OoBDev.System.Tests\obj\Debug\net8.0\OoBDev.System.Tests.AssemblyInfoInputs.cache
-C:\Repos\oobdev\dotex\src\OoBDev\Framework\OoBDev.System.Tests\obj\Debug\net8.0\OoBDev.System.Tests.AssemblyInfo.cs
-C:\Repos\oobdev\dotex\src\OoBDev\Framework\OoBDev.System.Tests\obj\Debug\net8.0\OoBDev.System.Tests.csproj.CoreCompileInputs.cache
-C:\Repos\oobdev\dotex\src\OoBDev\Framework\OoBDev.System.Tests\obj\Debug\net8.0\OoBDev.System.Tests.sourcelink.json

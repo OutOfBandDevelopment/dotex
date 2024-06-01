@@ -1,0 +1,12 @@
+assembly-versioning-scheme: MajorMinorPatch
+assembly-file-versioning-scheme: MajorMinorPatchTag
+mode: Mainline
+branches:
+  master:
+    regex: main|master
+    is-release-branch: true
+  develop:
+    tag: dev
+ignore:
+  sha: []
+merge-message-formats: {}

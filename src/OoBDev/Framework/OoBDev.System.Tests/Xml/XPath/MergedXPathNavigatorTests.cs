@@ -1,7 +1,6 @@
-﻿using BinaryDataDecoders.TestUtilities;
-using BinaryDataDecoders.ToolKit.IO;
-using BinaryDataDecoders.ToolKit.Xml.XPath;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using OoBDev.System.IO;
+using OoBDev.System.Xml.XPath;
+using OoBDev.TestUtilities;
 using System.IO;
 using System.Xml.Linq;
 using System.Xml.XPath;

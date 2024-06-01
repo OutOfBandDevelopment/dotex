@@ -1,6 +1,6 @@
 ﻿namespace OoBDev.System.Input;
 
-public interface ICommand : System.Windows.Input.ICommand
+public interface ICommand : global::System.Windows.Input.ICommand
 {
     void RaiseCanExecuteChanged();
 }

@@ -1,6 +1,6 @@
-﻿using BinaryDataDecoders.TestUtilities;
-using BinaryDataDecoders.ToolKit.Codecs;
+﻿using OoBDev.System.Codecs;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using OoBDev.TestUtilities;
 
 namespace OoBDev.System.Tests.Codecs;
 
