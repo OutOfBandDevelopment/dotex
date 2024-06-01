@@ -1,7 +1,8 @@
-﻿namespace OoBDev.System.Windows.Forms;
+﻿//namespace OoBDev.System.Windows.Forms;
 
-public class ValidationEventArgs : EventArgs
-{
-    public bool IsValid { get; init; }
-    public string? Value { get; init; }
-}
+////TODO: port this out
+//public class ValidationEventArgs : EventArgs
+//{
+//    public bool IsValid { get; init; }
+//    public string? Value { get; init; }
+//}

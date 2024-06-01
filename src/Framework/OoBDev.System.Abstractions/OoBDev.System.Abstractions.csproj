@@ -8,6 +8,8 @@
 	  <RootNamespace>$(MSBuildProjectName.Replace(" ", "_").Replace(".Abstractions", ""))</RootNamespace>
 
 	  <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+
+	  <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
 </Project>

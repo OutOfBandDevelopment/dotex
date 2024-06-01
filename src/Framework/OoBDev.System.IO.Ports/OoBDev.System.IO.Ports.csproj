@@ -3,16 +3,13 @@
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Cryptography\" />
-    <Folder Include="Text\Templating\" />
-    <Folder Include="Windows\Forms\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\OoBDev.System.Abstractions\OoBDev.System.Abstractions.csproj" />
+    <PackageReference Include="System.IO.Ports" Version="8.0.0" />
   </ItemGroup>
-
+  
 </Project>
