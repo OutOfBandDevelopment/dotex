@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "isRoot": true,
+  "tools": {
+    "gitversion.tool": {
+      "version": "5.12.0",
+      "commands": [
+        "dotnet-gitversion"
+      ],
+      "rollForward": false
+    },
+    "swashbuckle.aspnetcore.cli": {
+      "version": "6.6.2",
+      "commands": [
+        "swagger"
+      ],
+      "rollForward": false
+    },
+    "dotnet-coverage": {
+      "version": "17.11.3",
+      "commands": [
+        "dotnet-coverage"
+      ],
+      "rollForward": false
+    },
+    "dotnet-trx-merge": {
+      "version": "2.0.1",
+      "commands": [
+        "trx-merge"
+      ],
+      "rollForward": false
+    },
+    "cyclonedx": {
+      "version": "3.0.7",
+      "commands": [
+        "dotnet-CycloneDX"
+      ],
+      "rollForward": false
+    },
+    "dotnet-format": {
+      "version": "5.1.250801",
+      "commands": [
+        "dotnet-format"
+      ],
+      "rollForward": false
+    }
+  }
+}
