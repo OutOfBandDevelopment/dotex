@@ -10,7 +10,7 @@ namespace OoBDev.System.Tests.Xml.XPath;
 [TestClass]
 public class MergedXPathNavigatorTests
 {
-    public TestContext TestContext { get; set; }
+    public required TestContext TestContext { get; set; }
 
     [TestMethod, TestCategory(TestCategories.DevLocal)]
     public void MergeMultiplePathsTest()

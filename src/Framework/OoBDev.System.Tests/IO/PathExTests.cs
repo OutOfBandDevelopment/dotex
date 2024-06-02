@@ -1,5 +1,4 @@
 ﻿using OoBDev.System.IO;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.TestUtilities;
 
 namespace OoBDev.System.Tests.IO;
@@ -7,7 +6,7 @@ namespace OoBDev.System.Tests.IO;
 [TestClass]
 public class PathExTests
 {
-    public TestContext TestContext { get; set; }
+    public required TestContext TestContext { get; set; }
 
     [TestMethod, TestCategory(TestCategories.DevLocal)]
     public void EnumerateFilesTest()

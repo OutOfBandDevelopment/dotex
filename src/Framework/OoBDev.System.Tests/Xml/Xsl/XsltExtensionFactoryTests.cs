@@ -1,5 +1,4 @@
 ﻿using OoBDev.System.Xml.Xsl;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.TestUtilities;
 using System.Diagnostics;
 using System.Reflection;
@@ -9,7 +8,7 @@ namespace OoBDev.System.Tests.Xml.Xsl;
 [TestClass]
 public class XsltExtensionFactoryTests
 {
-    public TestContext TestContext { get; set; }
+    public required TestContext TestContext { get; set; }
 
     [TestMethod, TestCategory(TestCategories.DevLocal)]
     public void BuildXsltExtensionTest()

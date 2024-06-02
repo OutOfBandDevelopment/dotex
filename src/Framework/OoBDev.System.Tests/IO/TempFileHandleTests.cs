@@ -1,5 +1,4 @@
 ﻿using OoBDev.System.IO;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.TestUtilities;
 using System.IO;
 
@@ -8,7 +7,7 @@ namespace OoBDev.System.Tests.IO;
 [TestClass]
 public class TempFileHandleTests
 {
-    public TestContext TestContext { get; set; }
+    public required TestContext TestContext { get; set; }
 
     [TestMethod, TestCategory(TestCategories.Unit)]
     public void CreateTempFileHandleTest()

@@ -9,7 +9,7 @@ namespace OoBDev.System.Tests;
 [TestClass]
 public class MemoryExTests
 {
-    public TestContext TestContext { get; set; }
+    public required TestContext TestContext { get; set; }
 
     [TestMethod, TestCategory(TestCategories.Unit)]
     [TestTarget(typeof(MemoryEx), Member = nameof(MemoryEx.Split))]
@@ -81,16 +81,76 @@ public class MemoryExTests
     {
         return new Memory<byte>(
         [
-            0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
         ]);
     }
     private Memory<byte> GetBigTestData()
     {
         return new Memory<byte>(
         [
-            0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,
-            0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,
-            0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
         ]);
     }
 }

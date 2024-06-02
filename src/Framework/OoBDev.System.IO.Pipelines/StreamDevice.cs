@@ -1,5 +1,4 @@
-﻿using OoBDev.System.IO;
-using OoBDev.System.IO.Messages;
+﻿using OoBDev.System.IO.Messages;
 using OoBDev.System.IO.Segmenters;
 using OoBDev.System.Threading;
 using System;

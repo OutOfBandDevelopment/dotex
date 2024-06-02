@@ -1,5 +1,4 @@
-﻿using OoBDev.System.IO;
-using OoBDev.System.IO.Pipelines.Definitions;
+﻿using OoBDev.System.IO.Pipelines.Definitions;
 using System;
 using System.IO;
 using System.Threading.Tasks;

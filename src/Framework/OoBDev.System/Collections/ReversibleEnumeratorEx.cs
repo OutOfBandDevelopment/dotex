@@ -1,6 +1,4 @@
-﻿using OoBDev.System.Collections;
-
-namespace OoBDev.System.Collections;
+﻿namespace OoBDev.System.Collections;
 
 public static class ReversibleEnumeratorEx
 {

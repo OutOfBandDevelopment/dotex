@@ -1,18 +1,36 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <Folder Include="Cryptography\" />
-    <Folder Include="Text\Templating\" />
-    <Folder Include="Windows\Forms\" />
-  </ItemGroup>
+	<ItemGroup>
+	  <Antlr4 Include="ExpressionCalculator\Parser\ExpressionTree.g4">
+	    <Visitor>true</Visitor>
+	    <Listener>false</Listener>
+	  </Antlr4>
+	  <Antlr4 Include="Text\Json\JsonPath\Parser\JsonPath.g4">
+	    <Visitor>True</Visitor>
+	    <Listener>False</Listener>
+	    <AllowAntlr4cs>True</AllowAntlr4cs>
+	    <GAtn>False</GAtn>
+	  </Antlr4>
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\OoBDev.System.Abstractions\OoBDev.System.Abstractions.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<Folder Include="Cryptography\" />
+		<Folder Include="Text\Templating\" />
+		<Folder Include="Windows\Forms\" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Antlr4.Runtime.Standard" Version="4.13.1" />
+		<PackageReference Include="Antlr4BuildTasks" Version="12.8.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\OoBDev.System.Abstractions\OoBDev.System.Abstractions.csproj" />
+	</ItemGroup>
 
 </Project>

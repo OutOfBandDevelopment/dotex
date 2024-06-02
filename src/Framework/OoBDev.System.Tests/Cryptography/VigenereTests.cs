@@ -6,7 +6,7 @@ namespace OoBDev.System.Tests.Cryptography;
 [TestClass]
 public class VigenereTests
 {
-    public TestContext TestContext { get; set; }
+    public required TestContext TestContext { get; set; }
 
     [DataTestMethod]
     [DataRow("Hello World", "World", "Dscwr Kfcoz")]

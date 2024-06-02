@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using OoBDev.System.Cryptography.Lorenz;
+﻿using OoBDev.System.Cryptography.Lorenz;
 using OoBDev.TestUtilities;
 
 namespace OoBDev.System.Tests.Cryptography.Lorenz;
@@ -7,7 +6,7 @@ namespace OoBDev.System.Tests.Cryptography.Lorenz;
 [TestClass]
 public class LorenzMachineTests
 {
-    public TestContext TestContext { get; set; }
+    public required TestContext TestContext { get; set; }
 
     [TestMethod, TestCategory(TestCategories.Unit)]
     public void Test()

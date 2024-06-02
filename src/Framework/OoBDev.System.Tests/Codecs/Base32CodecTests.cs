@@ -1,5 +1,4 @@
 ﻿using OoBDev.System.Codecs;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.TestUtilities;
 using System.Text;
 

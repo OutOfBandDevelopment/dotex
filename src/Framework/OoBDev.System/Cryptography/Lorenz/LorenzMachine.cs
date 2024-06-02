@@ -115,17 +115,26 @@ public class LorenzMachine(byte[] keySet, int[] startPosition)
     //always advance
     private readonly int[] _chiModulus =
     [
-        41,31,29,26,23
+        41,
+        31,
+        29,
+        26,
+        23
     ];
     //0 always advance, 1 only advance if 0 is 1
     private readonly int[] _muModulus =
     [
-        61,37
+        61,
+        37
     ];
     //only advance if mu 1 is 1
     private readonly int[] _psiModulus =
     [
-        43,47,51,53,59
+        43,
+        47,
+        51,
+        53,
+        59
     ];
     /*
 VIRTUAL LORENZ SETTINGS

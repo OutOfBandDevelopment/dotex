@@ -11,7 +11,7 @@ namespace OoBDev.System.Tests.Xml.Xsl.Extensions;
 [TestClass]
 public class XPath20FunctionsTests
 {
-    public TestContext TestContext { get; set; }
+    public required TestContext TestContext { get; set; }
 
     //private static T ExtendType<T>()
     //{

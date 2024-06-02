@@ -1,5 +1,4 @@
 ﻿using OoBDev.System.Codecs;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.TestUtilities;
 
 namespace OoBDev.System.Tests.Codecs;
@@ -7,7 +6,7 @@ namespace OoBDev.System.Tests.Codecs;
 [TestClass]
 public class RomanNumeralTests
 {
-    public TestContext TestContext { get; set; }
+    public required TestContext TestContext { get; set; }
 
     [DataTestMethod]
     [DataRow(1, "I")]

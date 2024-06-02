@@ -1,6 +1,5 @@
 using OoBDev.System.Reflection;
 using OoBDev.System.Xml.XPath;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
 using OoBDev.TestUtilities;

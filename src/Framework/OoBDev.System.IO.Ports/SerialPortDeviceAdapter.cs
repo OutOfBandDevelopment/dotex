@@ -1,5 +1,4 @@
-﻿using OoBDev.System.IO;
-using System.IO;
+﻿using System.IO;
 using SerialPort = System.IO.Ports.SerialPort;
 
 namespace OoBDev.System.IO.Ports;

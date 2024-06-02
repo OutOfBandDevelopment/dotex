@@ -1,5 +1,4 @@
 ﻿using OoBDev.System.Collections;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.TestUtilities;
 using System.Text;
 
@@ -8,7 +7,7 @@ namespace OoBDev.System.Tests.Collections;
 [TestClass]
 public class ReversableEnumeratorTests
 {
-    public TestContext TestContext { get; set; }
+    public required TestContext TestContext { get; set; }
 
     [TestMethod, TestCategory(TestCategories.DevLocal)]
     public void MoveNextMovePreviousTest()
