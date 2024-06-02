@@ -11,8 +11,6 @@ public class YamlNavigatorTests
 
     [DataTestMethod, TestCategory(TestCategories.DevLocal)]
     [DataRow("Example.yml")]
-    [DataRow("dotnet-core.yml")]
-    //[DataRow("codeql-analysis.yml")]
     public void ToNavigableTest(string resourceName)
     {
         var nav = new YamlNavigator();

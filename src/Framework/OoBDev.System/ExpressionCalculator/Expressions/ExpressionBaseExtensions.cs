@@ -1,5 +1,4 @@
 ﻿using OoBDev.System.ExpressionCalculator.Evaluators;
-using OoBDev.System.ExpressionCalculator.Expressions;
 using OoBDev.System.ExpressionCalculator.Optimizers;
 using OoBDev.System.ExpressionCalculator.Parser;
 using OoBDev.System.ExpressionCalculator.Visitors;

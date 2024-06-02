@@ -70,6 +70,7 @@
 		<Examples Include="**\*.csv" />
 		<Examples Include="**\*.sql" />
 		<Examples Include="**\*.xml" />
+		<Examples Include="**\*.yml" />
 		<Examples Remove="bin\**\*.*" />
 		<Examples Remove="obj\**\*.*" />
 		<Examples Remove="TestResults\**\*.*" />
