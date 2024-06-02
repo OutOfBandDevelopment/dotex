@@ -10,6 +10,14 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <None Remove="Retro\Apple2\Dos33\1983_dos33c.dsk" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Include="Retro\Apple2\Dos33\1983_dos33c.dsk" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="coverlet.collector" Version="6.0.2">
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

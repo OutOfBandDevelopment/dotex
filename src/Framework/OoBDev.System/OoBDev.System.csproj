@@ -3,6 +3,8 @@
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
 		<Nullable>enable</Nullable>
+
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -20,6 +22,7 @@
 
 	<ItemGroup>
 		<Folder Include="Cryptography\" />
+		<Folder Include="Retro\" />
 		<Folder Include="Text\Templating\" />
 		<Folder Include="Windows\Forms\" />
 	</ItemGroup>

@@ -93,8 +93,7 @@ class Entry
                                     {
                                         if (header.FileType != TarFileType.LongName)
                                             longName = null;
-                                        if (newFile != null)
-                                            newFile.Write(buffer,
+                                        newFile?.Write(buffer,
                                                           0,
                                                           Math.Min(buffer.Length,
                                                                    header.FileSize - lengthWrote));
@@ -151,8 +150,7 @@ class Entry
             }
             finally
             {
-                if (infile != null)
-                    infile.Dispose();
+                infile?.Dispose();
             }
         }
         //catch (Exception ex)

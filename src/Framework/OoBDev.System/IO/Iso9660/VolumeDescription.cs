@@ -141,8 +141,7 @@ public class VolumeDescription : IEnumerable<DirectoryRecord>, IDisposable
 
     public void Dispose()
     {
-        if (BaseStream != null)
-            BaseStream.Dispose();
+        BaseStream?.Dispose();
     }
 
     #endregion
