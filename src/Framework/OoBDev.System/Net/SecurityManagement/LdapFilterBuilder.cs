@@ -14,15 +14,10 @@ public class LdapFilterBuilder
             throw new ArgumentNullException("filter");
         }
 
-        var result = Build(filter as LdapSimpleFilter)
+        var result = (Build(filter as LdapSimpleFilter)
                   ?? Build(filter as LdapFilterSetBase)
-                  ?? Build(filter as LdapNotFilter)
+                  ?? Build(filter as LdapNotFilter)) ?? throw new NotSupportedException(string.Format("LdapFilterType: {0} is not supported", filter.GetType()))
                   ;
-        if (result == null)
-        {
-            throw new NotSupportedException(string.Format("LdapFilterType: {0} is not supported", filter.GetType()));
-        }
-
         return result;
     }
 

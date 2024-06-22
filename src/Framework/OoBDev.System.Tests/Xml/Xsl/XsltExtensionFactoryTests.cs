@@ -22,17 +22,17 @@ public class XsltExtensionFactoryTests
 
         {
             var mi = wrappedType.GetMethod("do-work", BindingFlags.Public | BindingFlags.Instance);
-            var ret = mi?.Invoke(wrapped, new object[] { "Hi!" });
+            var ret = mi?.Invoke(wrapped, ["Hi!"]);
             TestContext.WriteLine($"{"do-work"}: {ret}");
         }
         {
             var mi = wrappedType.GetMethod("big-work", BindingFlags.Public | BindingFlags.Instance);
-            var ret = mi?.Invoke(wrapped, new object[] { "Hi!", "2", "3", "4", "5", "6" });
+            var ret = mi?.Invoke(wrapped, ["Hi!", "2", "3", "4", "5", "6"]);
             TestContext.WriteLine($"{"big-work"}: {ret}");
         }
         {
             var mi = wrappedType.GetMethod("more-work", BindingFlags.Public | BindingFlags.Instance);
-            var ret = mi?.Invoke(wrapped, new object[] { "Hi!" });
+            var ret = mi?.Invoke(wrapped, ["Hi!"]);
             TestContext.WriteLine($"{"more-work"}: {ret}");
         }
         {

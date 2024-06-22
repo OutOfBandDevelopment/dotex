@@ -3,11 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace OoBDev.System.Collections.ObjectModel;
 
 public class ObservableDictionary<TKey, TValue> : IDictionary<TKey, TValue>, INotifyCollectionChanged, INotifyPropertyChanged
+     where TKey : notnull
 {
     protected IDictionary<TKey, TValue> Dictionary { get; } = new Dictionary<TKey, TValue>();
 
@@ -43,7 +45,7 @@ public class ObservableDictionary<TKey, TValue> : IDictionary<TKey, TValue>, INo
     public void Add(TKey key, TValue value) => Insert(key, value, true);
     public bool ContainsKey(TKey key) => Dictionary.ContainsKey(key);
     public ICollection<TKey> Keys => Dictionary.Keys;
-    public bool TryGetValue(TKey key, out TValue value) => Dictionary.TryGetValue(key, out value);
+    public bool TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value) => Dictionary.TryGetValue(key, out value);
     public ICollection<TValue> Values => Dictionary.Values;
     public bool Contains(KeyValuePair<TKey, TValue> item) => Dictionary.Contains(item);
     public void CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex) => Dictionary.CopyTo(array, arrayIndex);
@@ -55,11 +57,8 @@ public class ObservableDictionary<TKey, TValue> : IDictionary<TKey, TValue>, INo
     {
         if (key == null) throw new ArgumentNullException(nameof(key));
 
-        TValue value;
-        Dictionary.TryGetValue(key, out value);
         var removed = Dictionary.Remove(key);
         if (removed)
-            //OnCollectionChanged(NotifyCollectionChangedAction.Remove, new KeyValuePair<TKey, TValue>(key, value));
             OnCollectionChanged();
 
         return removed;
@@ -132,8 +131,7 @@ public class ObservableDictionary<TKey, TValue> : IDictionary<TKey, TValue>, INo
     {
         if (key == null) throw new ArgumentNullException(nameof(key));
 
-        TValue item;
-        if (Dictionary.TryGetValue(key, out item))
+        if (Dictionary.TryGetValue(key, out TValue? item))
         {
             if (add) throw new ArgumentException("An item with the same key has already been added.");
             if (Equals(item, value)) return;

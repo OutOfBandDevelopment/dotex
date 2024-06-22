@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace OoBDev.System.IO.Iso9660;
@@ -195,27 +196,14 @@ public class DirectoryRecord : IEnumerable<DirectoryRecord>
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     private readonly Stream disc;
-    public DirectoryRecord Parent { get; protected set; }
+    public DirectoryRecord? Parent { get; protected set; }
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    private DirectoryRecord _root;
-    public DirectoryRecord Root
-    {
-        get
-        {
-            if (_root == null)
-            {
-                if (Parent == null)
-                    return this;
-                _root = Parent.Root;
-            }
-            return _root;
-        }
-    }
-    public bool IsDirectory
-    {
-        get { return (DirectoryType & DirectoryType.Directory) != 0; }
-    }
+    private DirectoryRecord? _root;
+    public DirectoryRecord Root => _root ??= Parent?.Root ?? this;
+
+    public bool IsDirectory => (DirectoryType & DirectoryType.Directory) != 0;
+
     public IEnumerable<DirectoryRecord> Children
     {
         get
@@ -225,35 +213,16 @@ public class DirectoryRecord : IEnumerable<DirectoryRecord>
                     yield return item;
         }
     }
-    public byte[] Data
-    {
-        get
-        {
-            if (disc == null) return null;
-            return GetBuffer();
-        }
-    }
-    public string DataBase64
-    {
-        get
-        {
-            if (Data == null) return null;
-            return Convert.ToBase64String(Data);
-        }
-    }
+    public byte[]? Data => disc switch { null => null, _ => GetBuffer() };
+
+    public string? DataBase64 => Data switch { null => null, byte[] data => Convert.ToBase64String(data) };
 
     #region IEnumerable<DirectoryRecord> Members
 
-    public IEnumerator<DirectoryRecord> GetEnumerator()
-    {
-        if (Children == null) return null;
-        return Children.GetEnumerator();
-    }
+    public IEnumerator<DirectoryRecord> GetEnumerator() =>
+        (Children ?? Enumerable.Empty<DirectoryRecord>()).GetEnumerator();
 
-    IEnumerator IEnumerable.GetEnumerator()
-    {
-        return GetEnumerator();
-    }
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
     #endregion
 }

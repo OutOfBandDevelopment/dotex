@@ -11,8 +11,7 @@ public class LdapNotFilter : ILdapFilter
 
     public override bool Equals(object obj)
     {
-        var inner = obj as LdapNotFilter;
-        if (inner == null)
+        if (obj is not LdapNotFilter inner)
         {
             return false;
         }

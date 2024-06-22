@@ -70,7 +70,7 @@ public class PlayFair
 
         foreach (char currentChar in key.ToCharArray())
         {
-            if (seed.IndexOf(currentChar) >= 0)
+            if (seed.Contains(currentChar))
             {
                 seed = seed.Replace(currentChar.ToString(), "");
                 cipherKey[pos++] = currentChar;
@@ -102,7 +102,6 @@ public class PlayFair
             throw new ArgumentNullException(nameof(message));
 
         message = message.ToUpper();
-        char cMode;
 
         var cSwap = swap switch
         {
@@ -114,17 +113,14 @@ public class PlayFair
         switch (mode)
         {
             case Mode.Q:
-                cMode = 'Q';
                 check = check.Replace("Q", "");
                 message = message.Replace('Q', cSwap);
                 break;
             case Mode.J:
-                cMode = 'J';
                 check = check.Replace("J", "");
                 message = message.Replace('J', 'I');
                 break;
             case Mode.I:
-                cMode = 'I';
                 check = check.Replace("I", "");
                 message = message.Replace('I', 'J');
                 break;
@@ -132,9 +128,9 @@ public class PlayFair
                 throw new ArgumentOutOfRangeException(nameof(mode));
         }
 
-        List<char> newMessage = new();
+        List<char> newMessage = [];
         foreach (char currentChar in message.ToCharArray())
-            if (check.IndexOf(currentChar) >= 0)
+            if (check.Contains(currentChar))
                 newMessage.Add(currentChar);
         message = new string(newMessage.ToArray());
 
@@ -150,7 +146,7 @@ public class PlayFair
 
         string sCryptic = new(cryptic);
 
-        List<char> cipherText = new();
+        List<char> cipherText = [];
 
         for (int i = 0; i < message.Length; i += 2)
         {

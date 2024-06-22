@@ -1,14 +1,14 @@
 ﻿namespace OoBDev.System.Archives.Tar;
 
-public class TarHeader
+public record TarHeader
 {
-    public string FileName;
-    public string FileMode;
-    public string OwnerId;
-    public string GroupId;
-    public int FileSize;
-    public int LastModifiedTime;
-    public string CheckSum;
-    public TarFileType FileType;
-    public string LinkedFile;
+    public required string FileName { get; init; }
+    public required string FileMode { get; init; }
+    public required string OwnerId { get; init; }
+    public required string GroupId { get; init; }
+    public required int FileSize { get; init; }
+    public required int LastModifiedTime { get; init; }
+    public required string CheckSum { get; init; }
+    public required TarFileType FileType { get; init; }
+    public required string LinkedFile { get; init; }
 }

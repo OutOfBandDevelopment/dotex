@@ -24,7 +24,7 @@ public abstract class ServerBase : IServerBase
     {
         if (_listener != null)
             throw new ApplicationException("Already Started!");
-        Console.WriteLine($"{GetType()}::Starting: {Thread.CurrentThread.ManagedThreadId} [{IPAddress}:{Port}]");
+        Console.WriteLine($"{GetType()}::Starting: {Environment.CurrentManagedThreadId} [{IPAddress}:{Port}]");
         _listener = new TcpListener(IPAddress, Port);
         _listener.Start();
         _cts = new CancellationTokenSource();
@@ -64,7 +64,7 @@ public abstract class ServerBase : IServerBase
         {
             try
             {
-                Console.WriteLine($"{GetType()}::ServiceLoopAsync::Listening: {Thread.CurrentThread.ManagedThreadId}");
+                Console.WriteLine($"{GetType()}::ServiceLoopAsync::Listening: {Environment.CurrentManagedThreadId}");
                 var accepted = await listener.AcceptTcpClientAsync(cts.Token);
                 var clientId = clientIdSeed++;
                 _clients.Add(clientId, accepted);
@@ -72,9 +72,9 @@ public abstract class ServerBase : IServerBase
 
                 var clientTask = Task.Run(async () =>
                 {
-                    Console.WriteLine($"{GetType()}::ServiceLoopAsync::Accepted: {clientId}-{Thread.CurrentThread.ManagedThreadId}");
+                    Console.WriteLine($"{GetType()}::ServiceLoopAsync::Accepted: {clientId}-{Environment.CurrentManagedThreadId}");
                     await AcceptClientAsync(clientId, accepted, cts.Token);
-                    Console.WriteLine($"{GetType()}::ServiceLoopAsync::Closed:   {clientId}-{Thread.CurrentThread.ManagedThreadId}");
+                    Console.WriteLine($"{GetType()}::ServiceLoopAsync::Closed:   {clientId}-{Environment.CurrentManagedThreadId}");
                 });
                 _tasks.Add(clientTask);
 
@@ -90,7 +90,7 @@ public abstract class ServerBase : IServerBase
             }
             catch (OperationCanceledException ocex)
             {
-                Console.WriteLine($"{GetType()}::ServiceLoopAsync::Canceled: {Thread.CurrentThread.ManagedThreadId} ({ocex.Message})");
+                Console.WriteLine($"{GetType()}::ServiceLoopAsync::Canceled: {Environment.CurrentManagedThreadId} ({ocex.Message})");
             }
         }
     }
@@ -110,7 +110,7 @@ public abstract class ServerBase : IServerBase
                     if (readLength > 0)
                     {
                         var sliced = buffer[..readLength];
-                        Console.WriteLine($"{GetType()}: {clientId}-{Thread.CurrentThread.ManagedThreadId}: {Encoding.UTF8.GetString(sliced.ToArray())}");
+                        Console.WriteLine($"{GetType()}: {clientId}-{Environment.CurrentManagedThreadId}: {Encoding.UTF8.GetString(sliced.ToArray())}");
                         await MessageReceivedAsync(clientId, accepted, sliced, cts.Token);
                     }
                     else if (readLength <= 0)
@@ -122,7 +122,7 @@ public abstract class ServerBase : IServerBase
             }
             catch (OperationCanceledException ocex)
             {
-                Console.WriteLine($"{GetType()}::ServiceLoopAsync::Canceled: {clientId}-{Thread.CurrentThread.ManagedThreadId} ({ocex.Message})");
+                Console.WriteLine($"{GetType()}::ServiceLoopAsync::Canceled: {clientId}-{Environment.CurrentManagedThreadId} ({ocex.Message})");
             }
         }
     }
@@ -132,8 +132,8 @@ public abstract class ServerBase : IServerBase
     private CancellationTokenSource? _cts;
     private TcpListener? _listener;
     private Task? _task;
-    private readonly Dictionary<int, TcpClient> _clients = new();
-    private readonly List<Task> _tasks = new();
+    private readonly Dictionary<int, TcpClient> _clients = [];
+    private readonly List<Task> _tasks = [];
 
     protected IReadOnlyDictionary<int, TcpClient> Clients => _clients;
 

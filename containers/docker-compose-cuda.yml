@@ -1,0 +1,155 @@
+services:
+  azurite:
+    extends:
+      file: docker-compose.azurite.yml
+      service: azurite
+    networks:
+      - backend
+
+  keycloak:
+    extends:
+      file: docker-compose.keycloak.yml
+      service: keycloak
+    networks:
+      - frontend
+      - backend      
+
+  apache-tika:
+    extends:
+      file: docker-compose.apache-tika.yml
+      service: apache-tika
+    networks:
+      - backend
+
+  mongodb:
+    extends:
+      file: docker-compose.mongodb.yml
+      service: mongodb
+    networks:
+      - backend
+
+  rabbitmq:
+    extends:
+      file: docker-compose.rabbitmq.yml
+      service: rabbitmq
+    networks:
+      - backend
+
+  smtp4dev:
+    extends:
+      file: docker-compose.smtp4dev.yml
+      service: smtp4dev
+    networks:
+      - frontend
+      - backend
+
+  sql-server:
+    extends:
+      file: docker-compose.sql-server.yml
+      service: sql-server
+    networks:
+      - backend
+
+  sbert:
+    extends:
+      file: docker-compose.sbert.yml
+      service: sbert
+    deploy:
+      # mode: replicated
+      # replicas: 6
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    networks:
+      - backend
+
+  ollama:
+    extends:
+      file: docker-compose.ollama.yml
+      service: ollama
+    networks:
+      - backend
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+  open-webui:
+    extends:
+      file: docker-compose.open-webui.yml
+      service: open-webui
+    depends_on:
+      - ollama
+    networks:
+      - frontend
+      - backend
+
+  qdrant:
+    extends:
+      file: docker-compose.qdrant.yml
+      service: qdrant
+    networks:
+      - backend
+
+  paradedb:
+    extends:
+      file: docker-compose.paradedb.yml
+      service: paradedb
+    networks:
+      - backend
+
+  pgadmin:
+    extends:
+      file: docker-compose.pgadmin.yml
+      service: pgadmin
+    depends_on:
+      - paradedb
+    networks:
+      - frontend
+      - backend
+
+  localstack:
+    extends:
+      file: docker-compose.localstack.yml
+      service: localstack
+    networks:
+      - backend
+
+  opensearch:
+    extends:
+      file: docker-compose.opensearch.yml
+      service: opensearch
+    networks:
+      - backend
+
+  kafka:
+    extends:
+      file: docker-compose.kafka.yml
+      service: kafka
+    networks:
+      - backend
+
+networks:
+  frontend:
+    driver: bridge
+  backend:
+    driver: bridge
+
+volumes:
+    mongodb-data:
+    keycloak-data:
+    smtp4dev-data:
+    rabbitmq-data:
+    azurite-data:
+    qdrant-storage:
+    qdrant-snapshots:
+    sqlserver-data:
+    opensearch-data:
+    paradedb-data:
+    kafka-data:

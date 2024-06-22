@@ -69,24 +69,24 @@ public class XsltTransformer(string sandbox, params object[] extensions) : IXslt
     /// <param name="output">resulting text content</param>
     public void Transform(string template, string inputSource, IXPathNavigable input, string output)
     {
-        template = PathEx.FixUpPath(template);
-        inputSource = PathEx.FixUpPath(inputSource);
-        output = PathEx.FixUpPath(output);
+        template = PathEx.FixUpPath(template) ?? template;
+        inputSource = PathEx.FixUpPath(inputSource) ?? inputSource;
+        output = PathEx.FixUpPath(output) ?? output;
         var sandbox = PathEx.FixUpPath(_sandbox);
 
         var xsltArgumentList = new XsltArgumentList().AddExtensions(extensions);
 
-        xsltArgumentList.XsltMessageEncountered += (sender, eventArgs) => Console.WriteLine($"\t\t[{Thread.CurrentThread.ManagedThreadId}]{eventArgs.Message}");
+        xsltArgumentList.XsltMessageEncountered += (sender, eventArgs) => Console.WriteLine($"\t\t[{Environment.CurrentManagedThreadId}]{eventArgs.Message}");
 
         XNamespace ns = this.GetXmlNamespace();
         xsltArgumentList.AddParam("files", "", new XElement(ns + "file",
             new XAttribute(nameof(template), Path.GetFullPath(template)),
             new XAttribute(nameof(input), Path.GetFullPath(inputSource)),
-            new XAttribute(nameof(input) + "Type", input.GetType().AssemblyQualifiedName),
+            new XAttribute(nameof(input) + "Type", input.GetType().AssemblyQualifiedName ?? "UNKNOWN"),
             new XAttribute(nameof(output), Path.GetFullPath(output)),
-            new XAttribute(nameof(output) + "Path", Path.GetDirectoryName(Path.GetFullPath(output))),
-            new XAttribute("sandbox", Path.GetFullPath(sandbox))
-            ).ToXPathNavigable().CreateNavigator());
+            new XAttribute(nameof(output) + "Path", Path.GetDirectoryName(Path.GetFullPath(output)) ?? "."),
+            new XAttribute("sandbox", Path.GetFullPath(sandbox ?? "."))
+            ).ToXPathNavigable().CreateNavigator() ?? throw new NotSupportedException());
 
         var xslt = new XslCompiledTransform(false);
         using var xmlreader = XmlReader.Create(template, new XmlReaderSettings
@@ -99,7 +99,7 @@ public class XsltTransformer(string sandbox, params object[] extensions) : IXslt
 
         xslt.Load(xmlreader, xsltSettings, null);
 
-        var outputDir = Path.GetDirectoryName(output);
+        var outputDir = Path.GetDirectoryName(output) ?? throw new NotSupportedException($"{nameof(output)} not set");
         if (!Directory.Exists(outputDir))
             Directory.CreateDirectory(outputDir);
         using var resultStream = File.Create(output);
@@ -107,14 +107,14 @@ public class XsltTransformer(string sandbox, params object[] extensions) : IXslt
         var currentDirectory = Environment.CurrentDirectory;
         try
         {
-            var localOutfolder = Path.GetDirectoryName(output);
+            var localOutfolder = Path.GetDirectoryName(output) ?? throw new NotSupportedException($"{nameof(output)} not set");
             if (!Directory.Exists(localOutfolder))
             {
                 Directory.CreateDirectory(localOutfolder);
             }
             Environment.CurrentDirectory = localOutfolder;
 
-            var inputNavigator = input.CreateNavigator();
+            var inputNavigator = input.CreateNavigator() ?? throw new NotSupportedException($"Could not resolve navigator for {nameof(input)}");
             inputNavigator.MoveToRoot();
 
             //var x = xslt.GetType();
@@ -146,7 +146,7 @@ public class XsltTransformer(string sandbox, params object[] extensions) : IXslt
     /// <param name="input">Wild card allowed for multiple files</param>
     /// <param name="inputNavigatorFactory">function to load input file into IXPathNavigable</param>
     /// <param name="output">Output and suffix per file.</param>
-    public void TransformAll(string template, string input, Func<string, IXPathNavigable> inputNavigatorFactory, string output, string? excludeInputSource = null)
+    public void TransformAll(string template, string input, Func<string, IXPathNavigable?> inputNavigatorFactory, string output, string? excludeInputSource = null)
     {
         var inputFullPath = Path.GetFullPath(input);
         var inputDir = PathEx.GetBasePath(input);
@@ -175,7 +175,7 @@ public class XsltTransformer(string sandbox, params object[] extensions) : IXslt
             var outFileName = removedExt + outputPattern;
             var outputFile = Path.Combine(outputDir, outFileName);
 
-            var tid = Thread.CurrentThread.ManagedThreadId;
+            var tid = Environment.CurrentManagedThreadId;
 
             Console.WriteLine($"\t[{tid}]\"{inputFileClean}\" => \"{outFileName}\"");
 
@@ -191,14 +191,14 @@ public class XsltTransformer(string sandbox, params object[] extensions) : IXslt
                 Console.Error.WriteLine($"!!! ERROR[{tid}]: \"{inputFileClean}\" => \"{outFileName}\" :: {rex.Message}");
                 try
                 {
-                    File.AppendAllLines(outputFile, new[]
-                    {
+                    File.AppendAllLines(outputFile,
+                    [
                         "",
                         new string('=', 60),
                        $"!!! ERROR !!!: {ex.Message}",
                         new string('=', 60),
                         ex.ToString()
-                    });
+                    ]);
                 }
                 catch
                 {
@@ -216,7 +216,7 @@ public class XsltTransformer(string sandbox, params object[] extensions) : IXslt
     public void TransformMerge(string template, string input, Func<string, IXPathNavigable> inputNavigatorFactory, string output, string? excludeInputSource = null)
     {
         static Exception innerMost(Exception ex) => ex.InnerException == null ? ex : innerMost(ex.InnerException);
-        var tid = Thread.CurrentThread.ManagedThreadId;
+        var tid = Environment.CurrentManagedThreadId;
         try
         {
             var inputFullPath = Path.GetFullPath(input);
@@ -244,14 +244,14 @@ public class XsltTransformer(string sandbox, params object[] extensions) : IXslt
             Console.Error.WriteLine($"ERROR[{tid}]: \"{input}\" => \"{output}\" :: {rex.Message}");
             try
             {
-                File.AppendAllLines(output, new[]
-                {
+                File.AppendAllLines(output,
+                [
                         "",
                         new string('=', 60),
                        $"!!! ERROR !!!: {ex.Message}",
                         new string('=', 60),
                         ex.ToString()
-                    });
+                    ]);
             }
             catch
             {

@@ -4,8 +4,8 @@ namespace OoBDev.System.Cryptography.Enigma;
 
 public record EnigmaRotor
 {
-    public static IEnumerable<EnigmaRotor> Rotors { get; } = new[]
-    {
+    public static IEnumerable<EnigmaRotor> Rotors { get; } =
+    [
         new EnigmaRotor {Number="IC", Series="Commercial Enigma A, B",Wiring="DMTWSILRUYQNKFEJCAZBPGXOHV",Introduced="1924",RotateOn=['Q']},
         new EnigmaRotor {Number="IIC", Series="Commercial Enigma A, B",Wiring="HQZGPJTMOBLNCIFDYAWVEUSRKX",Introduced="1924",RotateOn=['E']},
         new EnigmaRotor {Number="IIIC", Series="Commercial Enigma A, B",Wiring="UQNTLSZFMREHDPXKIBVYGJCWOA",Introduced="1924",RotateOn=['V']},
@@ -30,11 +30,11 @@ public record EnigmaRotor
         // new EnigmaRotor {Number="Beta", Series="M4 R2",Wiring="LEYJVCNIXWPBQMDRTAKZGFUHOS",Introduced="Spring 1941",RotateOn=new char[]{}},
         // new EnigmaRotor {Number="Gamma", Series="M4 R2",Wiring="FSOKANUERHMBTIYCWLQPZXVGJD",Introduced="Spring 1942",RotateOn=new char[]{}},
         // new EnigmaRotor {Number="ETW", Series="Enigma I",Wiring="ABCDEFGHIJKLMNOPQRSTUVWXYZ",Introduced="",RotateOn=new char[]{}},
-    };
+    ];
 
-    public string Introduced { get; init; }
-    public string Number { get; init; }
-    public char[] RotateOn { get; init; }
-    public string Series { get; init; }
-    public string Wiring { get; init; }
+    public required string Introduced { get; init; }
+    public required string Number { get; init; }
+    public required char[] RotateOn { get; init; }
+    public required string Series { get; init; }
+    public required string Wiring { get; init; }
 }

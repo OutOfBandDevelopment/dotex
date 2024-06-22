@@ -14,8 +14,8 @@ public class TokenMap
     /// <returns></returns>
     public string GetToken(byte code) => tokens.Where(t => t.code == code).Select(t => t.token).FirstOrDefault();
 
-    private readonly (int code, string token)[] tokens = new[]
-    {
+    private readonly (int code, string token)[] tokens =
+    [
         (0x80, "END"),
         (0x81, "FOR"),
         (0x82, "NEXT"),
@@ -126,5 +126,5 @@ public class TokenMap
         (0xFD, "("),
         (0xFE, "("),
         (0xFF, "("),
-    };
+    ];
 }

@@ -34,7 +34,7 @@ public class XsltExtensionFactory
         var xmlRootProp = new[] { xmlRootType.GetProperty(nameof(XmlRootAttribute.Namespace)) };
         foreach (var xmlRoot in type.GetCustomAttributes<XmlRootAttribute>())
         {
-            typeBuilder.SetCustomAttribute(new CustomAttributeBuilder(xmlRootTypeCtor, new object[0], xmlRootProp, new object[] { xmlRoot.Namespace }));
+            typeBuilder.SetCustomAttribute(new CustomAttributeBuilder(xmlRootTypeCtor, [], xmlRootProp, [xmlRoot.Namespace]));
         }
 
         var wrapped = typeBuilder.DefineField("_wrapped", type, FieldAttributes.Private | FieldAttributes.InitOnly);

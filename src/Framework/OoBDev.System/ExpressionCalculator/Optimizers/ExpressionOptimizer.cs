@@ -8,14 +8,14 @@ namespace OoBDev.System.ExpressionCalculator.Optimizers;
 public class ExpressionOptimizationProvider<T>
     where T : struct, IComparable<T>, IEquatable<T>
 {
-    private static readonly IEnumerable<IExpressionOptimizer<T>> _optimizations = new IExpressionOptimizer<T>[]
-    {
+    private static readonly IEnumerable<IExpressionOptimizer<T>> _optimizations =
+    [
         new InnerExpressionReducer<T>(),
         new UnaryNumericExpressionReducer<T>(),
         new IdentityExpressionOptimizer<T>(),
         new DeterminedExpressionReducer<T>(),
         new ShiftCommutativeVariablesRight<T>(),
-    };
+    ];
 
     public ExpressionBase<T> Optimize(ExpressionBase<T> expression)
     {

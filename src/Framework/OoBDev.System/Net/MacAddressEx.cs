@@ -22,7 +22,7 @@ public static class MacAddressEx
     {
         if (IsValid(macAddress))
         {
-            macBuffer = new byte[0];
+            macBuffer = [];
             return false;
         }
         else

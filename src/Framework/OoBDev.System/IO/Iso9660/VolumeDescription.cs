@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace OoBDev.System.IO.Iso9660;
@@ -124,16 +125,9 @@ public class VolumeDescription : IEnumerable<DirectoryRecord>, IDisposable
 
     #region IEnumerable<DirectoryRecord> Members
 
-    public IEnumerator<DirectoryRecord> GetEnumerator()
-    {
-        if (DirectoryRecord == null) return null;
-        return DirectoryRecord.GetEnumerator();
-    }
+    public IEnumerator<DirectoryRecord> GetEnumerator() => (DirectoryRecord ?? Enumerable.Empty<DirectoryRecord>()).GetEnumerator();
 
-    IEnumerator IEnumerable.GetEnumerator()
-    {
-        return GetEnumerator();
-    }
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
     #endregion
 

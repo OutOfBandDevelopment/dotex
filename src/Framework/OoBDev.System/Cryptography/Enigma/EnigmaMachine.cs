@@ -111,7 +111,6 @@ public class EnigmaMachine
 
         foreach (var c in input.Select(x => x - 'A'))
         {
-            ;
             postions[0] = (postions[0] + 1) % l;
             if (rotors[0].RotateOn.Contains((char)(postions[0] + 'A')))
             {

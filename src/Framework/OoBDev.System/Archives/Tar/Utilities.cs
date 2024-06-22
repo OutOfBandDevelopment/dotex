@@ -7,27 +7,22 @@ namespace OoBDev.System.Archives.Tar;
 
 public static class Utilities
 {
-    public static TarHeader ToHeader(this byte[] input)
-    {
-        var header = new TarHeader
+    public static TarHeader ToHeader(this byte[] input) =>
+        new()
         {
-            FileName = input.ToString(0, 100),
-            FileMode = input.ToString(100, 8),
-            OwnerId = input.ToString(108, 8),
-            GroupId = input.ToString(116, 8)
-        };
-        var fileSize = input.ToString(124, 12);
-        header.FileSize = Convert.ToInt32(fileSize ?? "0", 8);
-        var lastModifiedTime = input.ToString(136, 12);
-        header.LastModifiedTime = Convert.ToInt32(lastModifiedTime ?? "0", 8);
-        header.CheckSum = input.ToString(148, 8);
-        var fileType = input[156];
-        header.FileType = (TarFileType)fileType;
-        header.LinkedFile = input.ToString(157, 100);
-        return header;
-    }
+            FileName = input.ToString(0, 100) ?? throw new NotSupportedException($"Missing {nameof(TarHeader.FileName)}"),
+            FileMode = input.ToString(100, 8) ?? throw new NotSupportedException($"Missing {nameof(TarHeader.FileMode)}"),
+            OwnerId = input.ToString(108, 8) ?? throw new NotSupportedException($"Missing {nameof(TarHeader.OwnerId)}"),
+            GroupId = input.ToString(116, 8) ?? throw new NotSupportedException($"Missing {nameof(TarHeader.GroupId)}"),
 
-    public static string ToString(this byte[] input, int index, int length)
+            FileSize = Convert.ToInt32(input.ToString(124, 12) ?? "0", 8),
+            LastModifiedTime = Convert.ToInt32(input.ToString(136, 12) ?? "0", 8),
+            CheckSum = input.ToString(148, 8) ?? throw new NotSupportedException($"Missing {nameof(TarHeader.CheckSum)}"),
+            FileType = (TarFileType)input[156],
+            LinkedFile = input.ToString(157, 100) ?? throw new NotSupportedException($"Missing {nameof(TarHeader.LinkedFile)}"),
+        };
+
+    public static string? ToString(this byte[] input, int index, int length)
     {
         if (input == null || input.Length == 0)
             return null;
@@ -42,7 +37,7 @@ public static class Utilities
         }
     }
 
-    public static byte[] Decompress(this byte[] input)
+    public static byte[]? Decompress(this byte[] input)
     {
         if (input == null || input.Length < 1)
             return null;
@@ -67,8 +62,6 @@ public static class Utilities
         return decompressedData.ToArray();
     }
 
-    public static Stream Decompress(this Stream input)
-    {
-        return new GZipStream(input, CompressionMode.Decompress, false);
-    }
+    public static Stream Decompress(this Stream input) =>
+        new GZipStream(input, CompressionMode.Decompress, false);
 }

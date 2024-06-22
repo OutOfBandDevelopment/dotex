@@ -1,0 +1,14 @@
+name: pgadmin
+services:
+    pgadmin:
+        ports:
+        - 8082:80
+        environment:
+        - PGADMIN_DEFAULT_EMAIL=admin@domain.com
+        - PGADMIN_DEFAULT_PASSWORD=admin
+        - PGADMIN_CONFIG_ENHANCED_COOKIE_PROTECTION=True
+        - PGADMIN_CONFIG_LOGIN_BANNER="Authorised users only!"
+        - PGADMIN_CONFIG_CONSOLE_LOG_LEVEL=10
+        volumes:
+            - ./pgadmin/servers.json:/pgadmin4/servers.json
+        image: dpage/pgadmin4

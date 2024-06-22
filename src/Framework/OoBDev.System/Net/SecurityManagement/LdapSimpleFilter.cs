@@ -38,8 +38,7 @@ public class LdapSimpleFilter : ILdapFilter
 
     public override bool Equals(object obj)
     {
-        var inner = obj as LdapSimpleFilter;
-        if (inner == null)
+        if (obj is not LdapSimpleFilter inner)
         {
             return false;
         }

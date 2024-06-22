@@ -9,7 +9,7 @@ class ZipFile
 {
     static void Entry(string[] args)
     {
-        string fileName = new DirectoryInfo(".\\").GetFiles("*.zip").Select(f => f.FullName).FirstOrDefault();
+        string? fileName = new DirectoryInfo(".\\").GetFiles("*.zip").Select(f => f.FullName).FirstOrDefault();
         if (string.IsNullOrEmpty(fileName))
             return;
 
@@ -26,7 +26,7 @@ class ZipFile
             {
                 byte[] fileContent = new byte[localFileHeader.CompressedSize];
                 Array.Copy(zipFileContents, offset, fileContent, 0, fileContent.Length);
-                File.WriteAllBytes(localFileHeader.FileName, Decompress(fileContent));
+                File.WriteAllBytes(localFileHeader.FileName, Decompress(fileContent)??throw new NotSupportedException($"No content for {localFileHeader.FileName}"));
                 offset += fileContent.Length;
             }
 
@@ -38,7 +38,7 @@ class ZipFile
         }
     }
 
-    public static byte[] Decompress(byte[] input)
+    public static byte[]? Decompress(byte[] input)
     {
         if (input == null || input.Length < 1)
             return null;
@@ -57,7 +57,7 @@ class ZipFile
         return decompressedData.ToArray();
     }
 
-    public static byte[] Compress(byte[] input)
+    public static byte[]? Compress(byte[] input)
     {
         if (input == null || input.Length < 1)
             return null;

@@ -24,13 +24,13 @@ public class Detokenizer
         var header2 = (byte)(e.MoveNext() ? e.Current : 0);
 
         //yield return $"$$$ HEADER: 0x{header1:X}, 0x{header2:X}";
-        yield return $"$$$ FILE SIZE :{BitConverter.ToUInt16(new[] { header1, header2 })}";
+        yield return $"$$$ FILE SIZE :{BitConverter.ToUInt16([header1, header2])}";
 
         bool notDone;
         do
         {
-            var addressOfNextLine = BitConverter.ToUInt16(new[] { (byte)(e.MoveNext() ? e.Current : 0), (byte)(e.MoveNext() ? e.Current : 0) });
-            var lineNumber = BitConverter.ToUInt16(new[] { (byte)((notDone = e.MoveNext()) ? e.Current : 0), (byte)(e.MoveNext() ? e.Current : 0) });
+            var addressOfNextLine = BitConverter.ToUInt16([(byte)(e.MoveNext() ? e.Current : 0), (byte)(e.MoveNext() ? e.Current : 0)]);
+            var lineNumber = BitConverter.ToUInt16([(byte)((notDone = e.MoveNext()) ? e.Current : 0), (byte)(e.MoveNext() ? e.Current : 0)]);
 
             if (addressOfNextLine == 0 || lineNumber == 0) continue;
 
