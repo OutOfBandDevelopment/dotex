@@ -1,0 +1,43 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net9.0</TargetFramework>
+		<ImplicitUsings>false</ImplicitUsings>
+		<Nullable>enable</Nullable>
+
+		<PackAsTool>true</PackAsTool>
+		<ToolCommandName>templateengine</ToolCommandName>
+
+    <PackageReadmeFile>Readme.TemplateEngine.md</PackageReadmeFile>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Extensions.FileSystemGlobbing" Version="9.0.2" />
+		<PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.2" />
+	</ItemGroup>
+
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\ExternalServices\Handlebars\OoBDev.Handlebars\OoBDev.Handlebars.csproj" />
+		<ProjectReference Include="..\..\Framework\OoBDev.Extensions\OoBDev.Extensions.csproj" />
+		<ProjectReference Include="..\..\Framework\OoBDev.System\OoBDev.System.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Update="*.hbs">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="*.xslt">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Update="GitVersion.MsBuild" Version="6.0.2">
+	    <PrivateAssets>all</PrivateAssets>
+	    <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+	  </PackageReference>
+	</ItemGroup>
+
+</Project>

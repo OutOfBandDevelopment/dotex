@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "OoBDev.FixSourceLinks.Cli": {
+      "commandName": "Project",
+      "commandLineArgs": "--include=.\\TestResults\\**\\coverage.*;.\\TestResults\\**\\Cobertura.* \r\n--search=$(SolutionDir) \r\n--target=$(SolutionDir)"
+    }
+  }
+}

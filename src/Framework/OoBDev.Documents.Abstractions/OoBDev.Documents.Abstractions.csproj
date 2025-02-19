@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>false</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <RootNamespace>$(MSBuildProjectName.Replace(" ", "_").Replace(".Abstractions", ""))</RootNamespace>
+
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    <PackageReadmeFile>Readme.Documents.Abstractions.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="OoBDev.Documents" />
+    <InternalsVisibleTo Include="OoBDev.Documents.Tests" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="GitVersion.MsBuild" Version="6.0.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+</Project>

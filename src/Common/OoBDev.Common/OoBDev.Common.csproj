@@ -1,0 +1,41 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net9.0</TargetFramework>
+		<ImplicitUsings>false</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+
+		<GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    
+    <PackageReadmeFile>Readme.Common.md</PackageReadmeFile>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Content Include="..\..\Framework\**\ReadMe.*.md" Pack="true">
+			<Link>%(Filename)%(Extension)</Link>
+			<PackagePath>\%(Filename)%(Extension)</PackagePath>
+		</Content>
+		<Content Remove="..\..\Framework\**\*.AspnetCore.*\*.md" />
+		<Content Remove="..\..\Framework\**\*.Hosting\*.md" />
+		<Content Remove="..\..\Framework\**\*.Tests\*.md" />
+	</ItemGroup>
+	
+	<ItemGroup>
+		<ProjectReference Include="..\..\Framework\**\OoBDev.*.csproj" />
+		<ProjectReference Remove="..\..\Framework\**\OoBDev.*.Tests.csproj" />
+		<ProjectReference Remove="..\..\Framework\**\OoBDev.*.Abstractions.csproj" />
+		<ProjectReference Remove="..\..\Framework\**\OoBDev.TestUtilities.csproj" />
+
+		<ProjectReference Remove="..\..\Framework\**\OoBDev.AspNetCore.*.csproj" />
+		<ProjectReference Remove="..\..\Framework\**\OoBDev.*.Hosting.csproj" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <PackageReference Update="GitVersion.MsBuild" Version="6.0.2">
+	    <PrivateAssets>all</PrivateAssets>
+	    <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+	  </PackageReference>
+	</ItemGroup>
+	
+</Project>

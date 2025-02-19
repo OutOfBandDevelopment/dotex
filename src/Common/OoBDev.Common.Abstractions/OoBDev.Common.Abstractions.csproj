@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+
+	<PropertyGroup>
+		<TargetFramework>net9.0</TargetFramework>
+		<ImplicitUsings>false</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+		<RootNamespace>$(MSBuildProjectName.Replace(" ", "_").Replace(".Abstractions", ""))</RootNamespace>
+
+		<GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+
+    <PackageReadmeFile>Readme.Common.Abstractions.md</PackageReadmeFile>
+
+	</PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="..\..\Framework\*.Abstractions\**\ReadMe.*.md" Pack="true">
+      <Link>%(Filename)%(Extension)</Link>
+      <PackagePath>\%(Filename)%(Extension)</PackagePath>
+    </Content>
+    <Content Remove="..\..\Framework\**\*.AspnetCore.*\*.md" />
+    <Content Remove="..\..\Framework\**\*.Hosting\*.md" />
+    <Content Remove="..\..\Framework\**\*.Tests\*.md" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Framework\**\OoBDev.*.Abstractions.csproj" />
+	</ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="GitVersion.MsBuild" Version="6.0.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+</Project>

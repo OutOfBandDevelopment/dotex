@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net9.0</TargetFramework>
+		<ImplicitUsings>false</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+		<PackageReadmeFile>Readme.Communications.md</PackageReadmeFile>
+
+		<GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+	</PropertyGroup>
+	
+	<ItemGroup>
+		<InternalsVisibleTo Include="OoBDev.Communications.Tests" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\OoBDev.Communications.Abstractions\OoBDev.Communications.Abstractions.csproj" />
+		<ProjectReference Include="..\OoBDev.Extensions\OoBDev.Extensions.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Update="GitVersion.MsBuild" Version="6.0.2">
+	    <PrivateAssets>all</PrivateAssets>
+	    <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+	  </PackageReference>
+	</ItemGroup>
+
+</Project>

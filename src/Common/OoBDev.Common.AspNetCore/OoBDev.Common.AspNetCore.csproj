@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net9.0</TargetFramework>
+		<ImplicitUsings>false</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+
+		<GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    <PackageReadmeFile>Readme.Common.AspNetCore.md</PackageReadmeFile>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Content Include="..\..\Framework\**\*.AspnetCore.*\ReadMe.*.md" Pack="true">
+			<Link>%(Filename)%(Extension)</Link>
+			<PackagePath>\%(Filename)%(Extension)</PackagePath>
+		</Content>
+	</ItemGroup>
+
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+	</ItemGroup>
+		
+	<ItemGroup>
+		<ProjectReference Include="..\..\Framework\**\OoBDev.AspNetCore.*.csproj" />
+		<ProjectReference Remove="..\..\Framework\**\OoBDev.*.Tests.csproj" />
+	</ItemGroup>
+		
+	<ItemGroup>
+	  <CodeDocumentation Remove="Readme.Common.AspNetCore.md" />
+	</ItemGroup>
+		
+	<ItemGroup>
+	  <PackageReference Update="GitVersion.MsBuild" Version="6.0.2">
+	    <PrivateAssets>all</PrivateAssets>
+	    <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+	  </PackageReference>
+	</ItemGroup>
+		
+</Project>

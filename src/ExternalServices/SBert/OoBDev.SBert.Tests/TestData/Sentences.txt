@@ -1,0 +1,129 @@
+weather,What's the weather like in New York City?
+weather,Could you tell me about the current weather conditions in California?
+weather,What's the forecast for Chicago today?
+weather,Any idea what it's like outdoors in Texas right now?
+weather,Do you know if it's sunny, rainy, or snowy in London?
+weather,How's the weather looking in Tokyo?
+weather,Is it warm or cold in Sydney at the moment?
+weather,Any news on whether I should bring an umbrella to Paris?
+weather,How are the meteorological conditions in Miami today?
+weather,Is there any precipitation in the forecast for Berlin?
+weather,Can you describe the weather in Los Angeles right now?
+weather,What's the temperature like in Rome today?
+weather,Have you checked the weather report for Shanghai recently?
+weather,Do you have any information about the atmospheric conditions in Moscow?
+weather,What's the outlook for the day in terms of weather in Seoul?
+weather,How's the weather looking outside?
+weather,Could you tell me about the current atmospheric conditions?
+weather,What's the forecast for today?
+weather,Any idea what it's like outdoors right now?
+weather,Do you know if it's sunny, rainy, or cloudy outside?
+weather,Could you give me an update on the weather situation?
+weather,Is it warm or cold out there?
+weather,Any news on whether I should bring an umbrella?
+weather,What are the meteorological conditions at the moment?
+weather,Is there any precipitation in the forecast?
+weather,Can you describe the climate outside?
+weather,What's the temperature like today?
+weather,Have you checked the weather report recently?
+weather,Do you have any information about the atmospheric conditions?
+weather,What's the outlook for the day in terms of weather?
+
+time, What time is it in New York City?
+time, Could you tell me the current time in California?
+time, What's the time in Chicago right now?
+time, Any idea what time it is in Texas?
+time, Do you know the current time in London?
+time, What's the time in Tokyo?
+time, Is it the morning or evening in Sydney?
+time, Any news on the time in Paris?
+time, What's the current time in Miami?
+time, Do you have the time in Berlin?
+time, Can you tell me the time in Los Angeles?
+time, What's the current time in Rome?
+time, Have you checked the time in Shanghai recently?
+time, Do you have the time in Moscow?
+time, What time is it in Seoul?
+time, Do you have the current time?
+time, Could you provide an update on the current time?
+time, What's the time right now?
+time, Any idea about the current time?
+time, Can you tell me what time it is?
+time, Do you know the time at this moment?
+time, Could you share the present time?
+time, What's the current time according to your clock?
+time, Can you inform me of the time?
+time, Do you have the time handy?
+time, Could you check the time for me?
+time, Can you let me know the time, please?
+time, What time does it seem to be?
+time, Could you give me an estimate of the time?
+time, Do you have any notion of the current time?
+
+random, The sun set behind the mountains, painting the sky in hues of orange and pink.
+random, She danced gracefully across the stage, captivating the audience with her movements.
+random, The old bookstore was filled with the scent of aged paper and ink.
+random, The cat stretched lazily in the warm sunlight streaming through the window.
+random, His laughter echoed through the empty halls, filling the space with joy.
+random, The waves crashed against the shore, a rhythmic melody of the sea.
+random, The city skyline glittered with lights as night fell upon the urban landscape.
+random, A gentle breeze rustled the leaves of the trees, whispering secrets of the forest.
+random, The aroma of freshly baked bread wafted from the bakery down the street.
+random, She gazed up at the stars, lost in the vastness of the universe.
+random, The smell of rain lingered in the air after the storm passed.
+random, He stumbled upon a hidden path that led deep into the heart of the woods.
+random, The child giggled as she chased after fireflies in the twilight.
+random, The clock ticked steadily, marking the passage of time.
+random, The scent of pine filled the air as they hiked through the forest.
+random, The painting hung on the wall, a masterpiece of colors and shapes.
+random, The sound of laughter echoed from the playground as children played.
+random, She sipped her tea slowly, savoring the warmth on a chilly morning.
+random, The smell of freshly cut grass permeated the air on a sunny afternoon.
+random, He paused to admire the intricate architecture of the ancient cathedral.
+random, The sound of distant thunder rumbled ominously in the darkening sky.
+random, The kitten purred contentedly as it curled up in her lap.
+random, The scent of lavender filled the room, calming her frazzled nerves.
+random, He watched in awe as the hot air balloons floated gracefully across the sky.
+random, The sound of waves crashing against the cliffs was both soothing and invigorating.
+random, The scent of cinnamon and cloves filled the kitchen as she baked cookies.
+random, She wandered through the bustling market, taking in the sights and sounds.
+random, The sound of footsteps echoed in the empty hallway, sending shivers down her spine.
+random, The sun peeked through the clouds, casting a warm glow over the landscape.
+random, The smell of campfire smoke clung to their clothes after a night under the stars.
+
+questions, What's the weather like today?
+questions, Can you tell me a joke?
+questions, How do I reset my password?
+questions, What's the capital of France?
+questions, Can you recommend a good restaurant nearby?
+questions, How do I bake a chocolate cake?
+questions, What time does the nearest bus arrive?
+questions, Who won the World Series last year?
+questions, What's the meaning of life?
+questions, How do I change the language settings?
+questions, Can you help me with my math homework?
+questions, What's the latest news headlines?
+questions, How do I get rid of ants in my kitchen?
+questions, Can you book a flight for me to New York?
+questions, How do I improve my credit score?
+questions, What are some tips for starting a small business?
+questions, How do I file my taxes online?
+questions, Can you recommend a good book to read?
+questions, What's the best way to learn a new language?
+questions, How do I tie a tie?
+questions, What's the population of Japan?
+questions, Can you tell me about famous landmarks in Italy?
+questions, How do I set an alarm on my phone?
+questions, What's the meaning of this song lyrics?
+questions, How do I cook spaghetti carbonara?
+questions, Can you recommend a good movie to watch?
+questions, What's the current exchange rate for dollars to euros?
+questions, How do I troubleshoot my internet connection?
+questions, Can you help me find a job?
+questions, What's the best way to organize my schedule?
+
+additional, what color is the sky?
+additional, what time is it?
+additional, what is the time?
+additional, what is the date?
+additional, when will be the noon?

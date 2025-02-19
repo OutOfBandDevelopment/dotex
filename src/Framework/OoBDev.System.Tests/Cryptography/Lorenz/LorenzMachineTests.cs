@@ -1,4 +1,5 @@
-﻿using OoBDev.System.Cryptography.Lorenz;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using OoBDev.System.Cryptography.Lorenz;
 using OoBDev.TestUtilities;
 
 namespace OoBDev.System.Tests.Cryptography.Lorenz;

@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>false</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+
+    <PackageReadmeFile>Readme.Search.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="OoBDev.Search.Tests" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\OoBDev.AI.Abstractions\OoBDev.AI.Abstractions.csproj" />
+    <ProjectReference Include="..\OoBDev.Search.Abstractions\OoBDev.Search.Abstractions.csproj" />
+    <ProjectReference Include="..\OoBDev.Extensions\OoBDev.Extensions.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="GitVersion.MsBuild" Version="6.0.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+
+</Project>

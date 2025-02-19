@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net9.0</TargetFramework>
+		<ImplicitUsings>false</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <PackageReadmeFile>Readme.MongoDB.md</PackageReadmeFile>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="MongoDB.Driver" Version="3.2.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\..\Framework\OoBDev.Extensions\OoBDev.Extensions.csproj" />
+		<ProjectReference Include="..\..\..\Framework\OoBDev.System.Abstractions\OoBDev.System.Abstractions.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Update="GitVersion.MsBuild" Version="6.0.2">
+	    <PrivateAssets>all</PrivateAssets>
+	    <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+	  </PackageReference>
+	</ItemGroup>
+
+</Project>
