@@ -1,0 +1,1793 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "OoBDev.WebApi",
+    "version": "1.0.0.0"
+  },
+  "paths": {
+    "/api/AI": {
+      "post": {
+        "tags": [
+          "AI"
+        ],
+        "summary": "Generate an LLM Response based on the prompt and user input",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OoBDev.WebApi.Models.GenerativeAiRequestModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OoBDev.WebApi.Models.GenerativeAiRequestModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/OoBDev.WebApi.Models.GenerativeAiRequestModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "x-permissions": {
+          "anonymous": true
+        }
+      }
+    },
+    "/api/AI/Streamed": {
+      "post": {
+        "tags": [
+          "AI"
+        ],
+        "summary": "Generate an AbstractAI Streamed Response based on the prompt and user input",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OoBDev.WebApi.Models.GenerativeAiRequestModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OoBDev.WebApi.Models.GenerativeAiRequestModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/OoBDev.WebApi.Models.GenerativeAiRequestModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-permissions": {
+          "anonymous": true
+        }
+      }
+    },
+    "/api/AI/Context": {
+      "post": {
+        "tags": [
+          "AI"
+        ],
+        "summary": "Generate an LLM Response based on the prompt and user input",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OoBDev.WebApi.Models.GenAiContextRequestModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OoBDev.WebApi.Models.GenAiContextRequestModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/OoBDev.WebApi.Models.GenAiContextRequestModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-permissions": {
+          "anonymous": true
+        }
+      }
+    },
+    "/api/AI/Embeddings": {
+      "post": {
+        "tags": [
+          "AI"
+        ],
+        "summary": "Generate embeddings",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OoBDev.WebApi.Models.GenerativeAiRequestModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OoBDev.WebApi.Models.GenerativeAiRequestModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/OoBDev.WebApi.Models.GenerativeAiRequestModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/System.ReadOnlyMemory-System.Single"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/System.ReadOnlyMemory-System.Single"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/System.ReadOnlyMemory-System.Single"
+                }
+              }
+            }
+          }
+        },
+        "x-permissions": {
+          "anonymous": true
+        }
+      }
+    },
+    "/api/AI/RaggedAnne": {
+      "post": {
+        "tags": [
+          "AI"
+        ],
+        "summary": "Testing Rag endpoint for context",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OoBDev.WebApi.Models.GenerativeAiRequestModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OoBDev.WebApi.Models.GenerativeAiRequestModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/OoBDev.WebApi.Models.GenerativeAiRequestModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "x-permissions": {
+          "anonymous": true
+        }
+      }
+    },
+    "/api/Communications/public": {
+      "post": {
+        "tags": [
+          "Communications"
+        ],
+        "summary": "Sends an email publicly without requiring authentication.",
+        "requestBody": {
+          "description": "The email message model.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OoBDev.Communications.Models.EmailMessageModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OoBDev.Communications.Models.EmailMessageModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/OoBDev.Communications.Models.EmailMessageModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "x-permissions": {
+          "anonymous": true
+        }
+      }
+    },
+    "/api/Communications/queued": {
+      "post": {
+        "tags": [
+          "Communications"
+        ],
+        "summary": "Enqueues an email message to be processed asynchronously.",
+        "requestBody": {
+          "description": "The email message model.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OoBDev.Communications.Models.EmailMessageModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OoBDev.Communications.Models.EmailMessageModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/OoBDev.Communications.Models.EmailMessageModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "x-permissions": {
+          "anonymous": true
+        }
+      }
+    },
+    "/api/Communications/private": {
+      "post": {
+        "tags": [
+          "Communications"
+        ],
+        "summary": "Sends an email with authorization, requiring the caller to be authenticated.",
+        "requestBody": {
+          "description": "The email message model.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OoBDev.Communications.Models.EmailMessageModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OoBDev.Communications.Models.EmailMessageModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/OoBDev.Communications.Models.EmailMessageModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "x-permissions": {
+          "anonymous": false
+        }
+      }
+    },
+    "/Document/Download/{file}": {
+      "get": {
+        "tags": [
+          "Document"
+        ],
+        "summary": "Downloads the specified file.",
+        "parameters": [
+          {
+            "name": "file",
+            "in": "path",
+            "description": "The path to the file.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "x-permissions": {
+          "anonymous": true
+        }
+      }
+    },
+    "/Document/Text/{file}": {
+      "get": {
+        "tags": [
+          "Document"
+        ],
+        "summary": "Retrieves the text of the specified file.",
+        "parameters": [
+          {
+            "name": "file",
+            "in": "path",
+            "description": "The path to the file.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "x-permissions": {
+          "anonymous": true
+        }
+      }
+    },
+    "/Document/Html/{file}": {
+      "get": {
+        "tags": [
+          "Document"
+        ],
+        "summary": "Retrieves the html of the specified file.",
+        "parameters": [
+          {
+            "name": "file",
+            "in": "path",
+            "description": "The path to the file.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "x-permissions": {
+          "anonymous": true
+        }
+      }
+    },
+    "/Document/Pdf/{file}": {
+      "get": {
+        "tags": [
+          "Document"
+        ],
+        "summary": "Retrieves the pdf of the specified file.",
+        "parameters": [
+          {
+            "name": "file",
+            "in": "path",
+            "description": "The path to the file.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "x-permissions": {
+          "anonymous": true
+        }
+      }
+    },
+    "/Document/Summary/{file}": {
+      "get": {
+        "tags": [
+          "Document"
+        ],
+        "summary": "Retrieves the summary of the specified file.",
+        "parameters": [
+          {
+            "name": "file",
+            "in": "path",
+            "description": "The path to the file.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "x-permissions": {
+          "anonymous": true
+        }
+      }
+    },
+    "/Document/Upload/{file}": {
+      "post": {
+        "tags": [
+          "Document"
+        ],
+        "summary": "Upload file content",
+        "parameters": [
+          {
+            "name": "file",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sourceContentType",
+            "in": "query",
+            "description": "optionally overload the provided MIME Type",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "upload file content",
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "content": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "content": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "x-permissions": {
+          "anonymous": true
+        }
+      }
+    },
+    "/Document/Convert": {
+      "post": {
+        "tags": [
+          "Document"
+        ],
+        "summary": "Document Converter",
+        "parameters": [
+          {
+            "name": "targetContentType",
+            "in": "query",
+            "description": "define the target MIME type",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sourceContentType",
+            "in": "query",
+            "description": "optionally overload the provided MIME Type",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "upload file content",
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "content": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "content": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "x-permissions": {
+          "anonymous": true
+        }
+      }
+    },
+    "/api/GroqCloud/Completion": {
+      "post": {
+        "tags": [
+          "GroqCloud"
+        ],
+        "summary": "executes a completion request",
+        "requestBody": {
+          "description": "completion request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OoBDev.AI.Models.CompletionRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OoBDev.AI.Models.CompletionRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/OoBDev.AI.Models.CompletionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OoBDev.AI.Models.CompletionResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OoBDev.AI.Models.CompletionResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OoBDev.AI.Models.CompletionResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-permissions": {
+          "anonymous": false
+        }
+      }
+    },
+    "/api/MessageQueueing/public": {
+      "post": {
+        "tags": [
+          "MessageQueueing"
+        ],
+        "summary": "Sends a message to the queue publicly without requiring authentication.",
+        "parameters": [
+          {
+            "name": "correlationId",
+            "in": "query",
+            "description": "Optional correlation ID for tracking purposes.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The example message model.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OoBDev.WebApi.Models.ExampleMessageModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OoBDev.WebApi.Models.ExampleMessageModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/OoBDev.WebApi.Models.ExampleMessageModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "x-permissions": {
+          "anonymous": true
+        }
+      }
+    },
+    "/api/MessageQueueing/private": {
+      "post": {
+        "tags": [
+          "MessageQueueing"
+        ],
+        "summary": "Sends a message to the queue with authorization, requiring the caller to be authenticated.",
+        "parameters": [
+          {
+            "name": "correlationId",
+            "in": "query",
+            "description": "Optional correlation ID for tracking purposes.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The example message model.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OoBDev.WebApi.Models.ExampleMessageModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OoBDev.WebApi.Models.ExampleMessageModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/OoBDev.WebApi.Models.ExampleMessageModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "x-permissions": {
+          "anonymous": false
+        }
+      }
+    },
+    "/api/Ollama": {
+      "post": {
+        "tags": [
+          "Ollama"
+        ],
+        "summary": "Generate an LLM Response based on the prompt and user input",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OoBDev.WebApi.Models.GenerativeAiRequestModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OoBDev.WebApi.Models.GenerativeAiRequestModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/OoBDev.WebApi.Models.GenerativeAiRequestModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "x-permissions": {
+          "anonymous": true
+        }
+      },
+      "get": {
+        "tags": [
+          "Ollama"
+        ],
+        "summary": "Retrieves the embedding vector for the given text.",
+        "parameters": [
+          {
+            "name": "text",
+            "in": "query",
+            "description": "The text for which to retrieve the embedding vector.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "model",
+            "in": "query",
+            "description": "The model for which to retrieve the embedding vector.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/System.ReadOnlyMemory-System.Single"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/System.ReadOnlyMemory-System.Single"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/System.ReadOnlyMemory-System.Single"
+                }
+              }
+            }
+          }
+        },
+        "x-permissions": {
+          "anonymous": false
+        }
+      }
+    },
+    "/api/Ollama/Streamed": {
+      "post": {
+        "tags": [
+          "Ollama"
+        ],
+        "summary": "Generate an AbstractAI Streamed Response based on the prompt and user input",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OoBDev.WebApi.Models.GenerativeAiRequestModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OoBDev.WebApi.Models.GenerativeAiRequestModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/OoBDev.WebApi.Models.GenerativeAiRequestModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-permissions": {
+          "anonymous": true
+        }
+      }
+    },
+    "/api/Ollama/Completion": {
+      "post": {
+        "tags": [
+          "Ollama"
+        ],
+        "summary": "executes a completion request",
+        "requestBody": {
+          "description": "completion request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OoBDev.AI.Models.CompletionRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OoBDev.AI.Models.CompletionRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/OoBDev.AI.Models.CompletionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OoBDev.AI.Models.CompletionResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OoBDev.AI.Models.CompletionResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OoBDev.AI.Models.CompletionResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-permissions": {
+          "anonymous": false
+        }
+      }
+    },
+    "/api/SBERT": {
+      "get": {
+        "tags": [
+          "SBERT"
+        ],
+        "summary": "Retrieves the embedding vector for the given text.",
+        "parameters": [
+          {
+            "name": "text",
+            "in": "query",
+            "description": "The text for which to retrieve the embedding vector.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/System.ReadOnlyMemory-System.Single"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/System.ReadOnlyMemory-System.Single"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/System.ReadOnlyMemory-System.Single"
+                }
+              }
+            }
+          }
+        },
+        "x-permissions": {
+          "anonymous": false
+        }
+      }
+    },
+    "/api/TextTemplate/SupportedTemplates": {
+      "post": {
+        "tags": [
+          "TextTemplate"
+        ],
+        "summary": "Gets the list of supported template file types.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OoBDev.System.Text.Templating.FileType"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OoBDev.System.Text.Templating.FileType"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OoBDev.System.Text.Templating.FileType"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-permissions": {
+          "anonymous": true
+        }
+      }
+    },
+    "/api/TextTemplate/Apply": {
+      "post": {
+        "tags": [
+          "TextTemplate"
+        ],
+        "summary": "Applies a text template with the specified name and data.",
+        "parameters": [
+          {
+            "name": "templateName",
+            "in": "query",
+            "description": "The name of the text template to apply.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The JSON data used for template processing.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/System.Text.Json.Nodes.JsonNode"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/System.Text.Json.Nodes.JsonNode"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/System.Text.Json.Nodes.JsonNode"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "x-permissions": {
+          "anonymous": true
+        }
+      }
+    },
+    "/api/User/claims": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Gets the claims associated with the current user.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OoBDev.WebApi.Models.ClaimModel"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OoBDev.WebApi.Models.ClaimModel"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OoBDev.WebApi.Models.ClaimModel"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-permissions": {
+          "anonymous": false
+        }
+      }
+    },
+    "/health": {
+      "get": {
+        "tags": [
+          "ApiHealth"
+        ],
+        "responses": {
+          "200": {
+            "description": null,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "array"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "OoBDev.AI.Models.CompletionRequest": {
+        "required": [
+          "prompt"
+        ],
+        "type": "object",
+        "properties": {
+          "model": {
+            "type": "string",
+            "description": "Gets or initializes the model for the completion request.",
+            "nullable": true
+          },
+          "context": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "description": "Gets or initializes the context for the completion request.",
+            "nullable": true
+          },
+          "images": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Gets or initializes the images for the completion request.",
+            "nullable": true
+          },
+          "prompt": {
+            "type": "string",
+            "description": "Gets or initializes the prompt for the completion request.",
+            "nullable": true
+          },
+          "system": {
+            "type": "string",
+            "description": "Gets or initializes the system for the completion request.",
+            "nullable": true
+          },
+          "template": {
+            "type": "string",
+            "description": "Gets or initializes the template for the completion request.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents a completion request."
+      },
+      "OoBDev.AI.Models.CompletionResponse": {
+        "required": [
+          "context",
+          "response"
+        ],
+        "type": "object",
+        "properties": {
+          "context": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "description": "Gets or sets the context for the completion response.",
+            "nullable": true
+          },
+          "response": {
+            "type": "string",
+            "description": "Gets or sets the response generated by the completion process.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents a completion response."
+      },
+      "OoBDev.Communications.Models.AttachmentReferenceModel": {
+        "required": [
+          "containerName",
+          "documentKey"
+        ],
+        "type": "object",
+        "properties": {
+          "containerName": {
+            "type": "string",
+            "description": "Gets the name of the container where the attachment is stored.",
+            "nullable": true
+          },
+          "documentKey": {
+            "type": "string",
+            "description": "Gets the key or identifier of the document associated with the attachment.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents a model for referencing attachments."
+      },
+      "OoBDev.Communications.Models.EmailMessageModel": {
+        "type": "object",
+        "properties": {
+          "referenceId": {
+            "type": "string",
+            "description": "Gets or sets the reference ID of the email message.",
+            "nullable": true
+          },
+          "fromAddress": {
+            "type": "string",
+            "description": "Gets or sets the sender's email address.",
+            "nullable": true
+          },
+          "toAddresses": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Gets or sets the list of recipient email addresses.",
+            "nullable": true
+          },
+          "ccAddresses": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Gets or sets the list of carbon copy (CC) email addresses.",
+            "nullable": true
+          },
+          "bccAddresses": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Gets or sets the list of blind carbon copy (BCC) email addresses.",
+            "nullable": true
+          },
+          "subject": {
+            "type": "string",
+            "description": "Gets or sets the subject of the email message.",
+            "nullable": true
+          },
+          "textContent": {
+            "type": "string",
+            "description": "Gets or sets the plain text content of the email message.",
+            "nullable": true
+          },
+          "htmlContent": {
+            "type": "string",
+            "description": "Gets or sets the HTML content of the email message.",
+            "nullable": true
+          },
+          "headers": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Gets or sets the headers of the email message.",
+            "nullable": true
+          },
+          "attachments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OoBDev.Communications.Models.AttachmentReferenceModel"
+            },
+            "description": "Gets or sets the list of attachment references in the email message.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents an email message model."
+      },
+      "OoBDev.System.Text.Templating.FileType": {
+        "required": [
+          "contentType",
+          "extension"
+        ],
+        "type": "object",
+        "properties": {
+          "extension": {
+            "type": "string",
+            "description": "Gets or sets the file extension associated with the file type.",
+            "nullable": true
+          },
+          "contentType": {
+            "type": "string",
+            "description": "Gets or sets the content type associated with the file type.",
+            "nullable": true
+          },
+          "isTemplateType": {
+            "type": "boolean",
+            "description": "Gets or sets a value indicating whether the file type is a template type."
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents a file type, providing information about the file extension, content type, and whether it is a template type."
+      },
+      "OoBDev.WebApi.Models.ClaimModel": {
+        "required": [
+          "issuer",
+          "originalIssuer",
+          "type",
+          "value",
+          "valueType"
+        ],
+        "type": "object",
+        "properties": {
+          "issuer": {
+            "type": "string",
+            "description": "Gets or sets the issuer of the claim.",
+            "nullable": true
+          },
+          "value": {
+            "type": "string",
+            "description": "Gets or sets the value of the claim.",
+            "nullable": true
+          },
+          "valueType": {
+            "type": "string",
+            "description": "Gets or sets the value type of the claim.",
+            "nullable": true
+          },
+          "type": {
+            "type": "string",
+            "description": "Gets or sets the type of the claim.",
+            "nullable": true
+          },
+          "originalIssuer": {
+            "type": "string",
+            "description": "Gets or sets the original issuer of the claim.",
+            "nullable": true
+          },
+          "subjectName": {
+            "type": "string",
+            "description": "Gets or sets the subject name associated with the claim.",
+            "nullable": true
+          },
+          "subjectLabel": {
+            "type": "string",
+            "description": "Gets or sets the subject label associated with the claim.",
+            "nullable": true
+          },
+          "subjectAuthenticationType": {
+            "type": "string",
+            "description": "Gets or sets the authentication type of the subject associated with the claim.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents a model for a claim."
+      },
+      "OoBDev.WebApi.Models.ExampleMessageModel": {
+        "type": "object",
+        "properties": {
+          "input": {
+            "type": "string",
+            "description": "Gets or sets the input string. Default value is \"Default Value\".",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/System.Text.Json.Nodes.JsonNode"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents an example message model."
+      },
+      "OoBDev.WebApi.Models.GenAiContextRequestModel": {
+        "required": [
+          "assistantConfinment",
+          "promptDetails",
+          "userInput"
+        ],
+        "type": "object",
+        "properties": {
+          "assistantConfinment": {
+            "type": "string",
+            "description": "Gets or sets the prompt details.",
+            "nullable": true
+          },
+          "promptDetails": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Gets or sets the prompt details.",
+            "nullable": true
+          },
+          "userInput": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Gets or sets the user input.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents the model used for generating AI responses."
+      },
+      "OoBDev.WebApi.Models.GenerativeAiRequestModel": {
+        "required": [
+          "data",
+          "promptDetails",
+          "userInput"
+        ],
+        "type": "object",
+        "properties": {
+          "promptDetails": {
+            "type": "string",
+            "description": "Gets or sets the prompt details.",
+            "nullable": true
+          },
+          "data": {
+            "type": "string",
+            "description": "Gets or sets the prompt details.",
+            "nullable": true
+          },
+          "userInput": {
+            "type": "string",
+            "description": "Gets or sets the user input.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents the model used for generating AI responses."
+      },
+      "System.ReadOnlyMemory-System.Single": {
+        "type": "object",
+        "properties": {
+          "length": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          },
+          "isEmpty": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "span": {
+            "$ref": "#/components/schemas/System.ReadOnlySpan-System.Single"
+          }
+        },
+        "additionalProperties": false
+      },
+      "System.ReadOnlySpan-System.Single": {
+        "type": "object",
+        "properties": {
+          "length": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          },
+          "isEmpty": {
+            "type": "boolean",
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "System.Text.Json.Nodes.JsonNode": {
+        "type": "object",
+        "properties": {
+          "options": {
+            "$ref": "#/components/schemas/System.Text.Json.Nodes.JsonNodeOptions"
+          },
+          "parent": {
+            "$ref": "#/components/schemas/System.Text.Json.Nodes.JsonNode"
+          },
+          "root": {
+            "$ref": "#/components/schemas/System.Text.Json.Nodes.JsonNode"
+          }
+        },
+        "additionalProperties": false
+      },
+      "System.Text.Json.Nodes.JsonNodeOptions": {
+        "type": "object",
+        "properties": {
+          "propertyNameCaseInsensitive": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}

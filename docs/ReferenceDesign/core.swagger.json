@@ -1,0 +1,1390 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Nucleus.Core.Controllers",
+    "version": "1.0.0.0"
+  },
+  "paths": {
+    "/api/Documents/{id}": {
+      "get": {
+        "tags": [
+          "Documents"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "x-permissions": {
+          "anonymous": false
+        }
+      },
+      "delete": {
+        "tags": [
+          "Documents"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Nucleus.Core.Persistence.Models.ResponseModel`1[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Nucleus.Core.Persistence.Models.ResponseModel`1[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Nucleus.Core.Persistence.Models.ResponseModel`1[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                }
+              }
+            }
+          }
+        },
+        "x-permissions": {
+          "anonymous": false,
+          "right": [
+            "right_lesson_admin",
+            "right_blog_admin",
+            "right_project_admin"
+          ]
+        }
+      }
+    },
+    "/api/Documents": {
+      "post": {
+        "tags": [
+          "Documents"
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object"
+              },
+              "encoding": {
+                "DocumentId": {
+                  "style": "form"
+                },
+                "DocumentKey": {
+                  "style": "form"
+                },
+                "DocumentName": {
+                  "style": "form"
+                },
+                "DocumentType": {
+                  "style": "form"
+                },
+                "DocumentSize": {
+                  "style": "form"
+                },
+                "DocumentRepository": {
+                  "style": "form"
+                },
+                "DocumentCategory": {
+                  "style": "form"
+                },
+                "CreatedOn": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Nucleus.Core.Persistence.Models.ResponseModel`1[[Nucleus.Core.Persistence.Models.DocumentModel, Nucleus.Core.Contracts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Nucleus.Core.Persistence.Models.ResponseModel`1[[Nucleus.Core.Persistence.Models.DocumentModel, Nucleus.Core.Contracts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Nucleus.Core.Persistence.Models.ResponseModel`1[[Nucleus.Core.Persistence.Models.DocumentModel, Nucleus.Core.Contracts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          }
+        },
+        "x-permissions": {
+          "anonymous": false,
+          "right": [
+            "right_lesson_admin",
+            "right_blog_admin",
+            "right_project_admin"
+          ]
+        }
+      }
+    },
+    "/api/RegisterUser": {
+      "post": {
+        "tags": [
+          "RegisterUser"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Nucleus.Core.Persistence.Models.UserAction"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Nucleus.Core.Persistence.Models.UserAction"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Nucleus.Core.Persistence.Models.UserAction"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Nucleus.Core.Persistence.Models.ResponseModel`1[[Nucleus.Core.Persistence.Models.User, Nucleus.Core.Contracts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Nucleus.Core.Persistence.Models.ResponseModel`1[[Nucleus.Core.Persistence.Models.User, Nucleus.Core.Contracts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Nucleus.Core.Persistence.Models.ResponseModel`1[[Nucleus.Core.Persistence.Models.User, Nucleus.Core.Contracts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                }
+              }
+            }
+          }
+        },
+        "x-permissions": {
+          "anonymous": true
+        }
+      }
+    },
+    "/api/RegisterUser/ApplicationPermissions": {
+      "get": {
+        "tags": [
+          "RegisterUser"
+        ],
+        "parameters": [
+          {
+            "name": "currentPage",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "**Default size:** `10`, `-1` will disable paging",
+            "schema": {
+              "type": "integer",
+              "description": "**Default size:** `10`, `-1` will disable paging",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "excludePageCount",
+            "in": "query",
+            "description": "`true` will disable row/page counts and may decrease processing time without effecting paging functions",
+            "schema": {
+              "type": "boolean",
+              "description": "`true` will disable row/page counts and may decrease processing time without effecting paging functions"
+            }
+          },
+          {
+            "name": "searchTerm",
+            "in": "query",
+            "description": "**Searched Properties:** ModuleId; Roles; Name; Code",
+            "schema": {
+              "type": "string",
+              "description": "**Searched Properties:** ModuleId; Roles; Name; Code",
+              "nullable": true
+            }
+          },
+          {
+            "name": "orderBy.ModuleId",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/OoBDev.System.Linq.Search.OrderDirections"
+            }
+          },
+          {
+            "name": "orderBy.Roles",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/OoBDev.System.Linq.Search.OrderDirections"
+            }
+          },
+          {
+            "name": "orderBy.Name",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/OoBDev.System.Linq.Search.OrderDirections"
+            }
+          },
+          {
+            "name": "orderBy.Code",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/OoBDev.System.Linq.Search.OrderDirections"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OoBDev.System.Linq.Search.PagedQueryResult`1[[Nucleus.Core.Persistence.Models.Module, Nucleus.Core.Contracts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OoBDev.System.Linq.Search.PagedQueryResult`1[[Nucleus.Core.Persistence.Models.Module, Nucleus.Core.Contracts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OoBDev.System.Linq.Search.PagedQueryResult`1[[Nucleus.Core.Persistence.Models.Module, Nucleus.Core.Contracts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                }
+              }
+            }
+          }
+        },
+        "x-permissions": {
+          "anonymous": true
+        }
+      }
+    },
+    "/api/RegisterUser/ApplicationPemissions": {
+      "get": {
+        "tags": [
+          "RegisterUser"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Nucleus.Core.Persistence.Models.PagedResult`1[[Nucleus.Core.Persistence.Models.Module, Nucleus.Core.Contracts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Nucleus.Core.Persistence.Models.PagedResult`1[[Nucleus.Core.Persistence.Models.Module, Nucleus.Core.Contracts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Nucleus.Core.Persistence.Models.PagedResult`1[[Nucleus.Core.Persistence.Models.Module, Nucleus.Core.Contracts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": true,
+        "x-permissions": {
+          "anonymous": true,
+          "right": [
+            "right_users_write"
+          ]
+        }
+      }
+    },
+    "/api/User": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Get user profile for currently logged in user",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Nucleus.Core.Persistence.Models.User"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Nucleus.Core.Persistence.Models.User"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Nucleus.Core.Persistence.Models.User"
+                }
+              }
+            }
+          }
+        },
+        "x-permissions": {
+          "anonymous": false
+        }
+      },
+      "put": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Save user profile for current logged in user",
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Nucleus.Core.Persistence.Models.User"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Nucleus.Core.Persistence.Models.User"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Nucleus.Core.Persistence.Models.User"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Nucleus.Core.Persistence.Models.ResponseModel`1[[Nucleus.Core.Persistence.Models.User, Nucleus.Core.Contracts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Nucleus.Core.Persistence.Models.ResponseModel`1[[Nucleus.Core.Persistence.Models.User, Nucleus.Core.Contracts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Nucleus.Core.Persistence.Models.ResponseModel`1[[Nucleus.Core.Persistence.Models.User, Nucleus.Core.Contracts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                }
+              }
+            }
+          }
+        },
+        "x-permissions": {
+          "anonymous": false
+        }
+      }
+    },
+    "/api/UserManagement": {
+      "post": {
+        "tags": [
+          "UserManagement"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Nucleus.Core.Persistence.Models.UserAction"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Nucleus.Core.Persistence.Models.UserAction"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Nucleus.Core.Persistence.Models.UserAction"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Nucleus.Core.Persistence.Models.ResponseModel`1[[Nucleus.Core.Persistence.Models.User, Nucleus.Core.Contracts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Nucleus.Core.Persistence.Models.ResponseModel`1[[Nucleus.Core.Persistence.Models.User, Nucleus.Core.Contracts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Nucleus.Core.Persistence.Models.ResponseModel`1[[Nucleus.Core.Persistence.Models.User, Nucleus.Core.Contracts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                }
+              }
+            }
+          }
+        },
+        "x-permissions": {
+          "anonymous": false,
+          "right": [
+            "right_users_write"
+          ]
+        }
+      }
+    },
+    "/api/UserManagement/Query": {
+      "post": {
+        "tags": [
+          "UserManagement"
+        ],
+        "summary": "Query all user accounts",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OoBDev.System.Linq.Search.SearchQuery`1[[Nucleus.Core.Persistence.Models.User, Nucleus.Core.Contracts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OoBDev.System.Linq.Search.SearchQuery`1[[Nucleus.Core.Persistence.Models.User, Nucleus.Core.Contracts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OoBDev.System.Linq.Search.PagedQueryResult`1[[Nucleus.Core.Persistence.Models.User, Nucleus.Core.Contracts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OoBDev.System.Linq.Search.PagedQueryResult`1[[Nucleus.Core.Persistence.Models.User, Nucleus.Core.Contracts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OoBDev.System.Linq.Search.PagedQueryResult`1[[Nucleus.Core.Persistence.Models.User, Nucleus.Core.Contracts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                }
+              }
+            }
+          }
+        },
+        "x-permissions": {
+          "anonymous": false,
+          "right": [
+            "right_users_write"
+          ]
+        }
+      }
+    },
+    "/api/UserManagement/ApplicationPermissions": {
+      "get": {
+        "tags": [
+          "UserManagement"
+        ],
+        "summary": "Query all modules",
+        "parameters": [
+          {
+            "name": "currentPage",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "**Default size:** `10`, `-1` will disable paging",
+            "schema": {
+              "type": "integer",
+              "description": "**Default size:** `10`, `-1` will disable paging",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "excludePageCount",
+            "in": "query",
+            "description": "`true` will disable row/page counts and may decrease processing time without effecting paging functions",
+            "schema": {
+              "type": "boolean",
+              "description": "`true` will disable row/page counts and may decrease processing time without effecting paging functions"
+            }
+          },
+          {
+            "name": "searchTerm",
+            "in": "query",
+            "description": "**Searched Properties:** ModuleId; Roles; Name; Code",
+            "schema": {
+              "type": "string",
+              "description": "**Searched Properties:** ModuleId; Roles; Name; Code",
+              "nullable": true
+            }
+          },
+          {
+            "name": "orderBy.ModuleId",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/OoBDev.System.Linq.Search.OrderDirections"
+            }
+          },
+          {
+            "name": "orderBy.Roles",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/OoBDev.System.Linq.Search.OrderDirections"
+            }
+          },
+          {
+            "name": "orderBy.Name",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/OoBDev.System.Linq.Search.OrderDirections"
+            }
+          },
+          {
+            "name": "orderBy.Code",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/OoBDev.System.Linq.Search.OrderDirections"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OoBDev.System.Linq.Search.PagedQueryResult`1[[Nucleus.Core.Persistence.Models.Module, Nucleus.Core.Contracts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OoBDev.System.Linq.Search.PagedQueryResult`1[[Nucleus.Core.Persistence.Models.Module, Nucleus.Core.Contracts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OoBDev.System.Linq.Search.PagedQueryResult`1[[Nucleus.Core.Persistence.Models.Module, Nucleus.Core.Contracts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                }
+              }
+            }
+          }
+        },
+        "x-permissions": {
+          "anonymous": false,
+          "right": [
+            "right_users_write"
+          ]
+        }
+      }
+    },
+    "/api/UserManagement/UserList": {
+      "post": {
+        "tags": [
+          "UserManagement"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Nucleus.Core.Persistence.Models.Filters.UsersFilter"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Nucleus.Core.Persistence.Models.Filters.UsersFilter"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Nucleus.Core.Persistence.Models.Filters.UsersFilter"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Nucleus.Core.Persistence.Models.PagedResult`1[[Nucleus.Core.Persistence.Models.User, Nucleus.Core.Contracts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Nucleus.Core.Persistence.Models.PagedResult`1[[Nucleus.Core.Persistence.Models.User, Nucleus.Core.Contracts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Nucleus.Core.Persistence.Models.PagedResult`1[[Nucleus.Core.Persistence.Models.User, Nucleus.Core.Contracts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": true,
+        "x-permissions": {
+          "anonymous": false,
+          "right": [
+            "right_users_write"
+          ]
+        }
+      }
+    },
+    "/api/UserManagement/ApplicationPemissions": {
+      "get": {
+        "tags": [
+          "UserManagement"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Nucleus.Core.Persistence.Models.PagedResult`1[[Nucleus.Core.Persistence.Models.Module, Nucleus.Core.Contracts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Nucleus.Core.Persistence.Models.PagedResult`1[[Nucleus.Core.Persistence.Models.Module, Nucleus.Core.Contracts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Nucleus.Core.Persistence.Models.PagedResult`1[[Nucleus.Core.Persistence.Models.Module, Nucleus.Core.Contracts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": true,
+        "x-permissions": {
+          "anonymous": false,
+          "right": [
+            "right_users_write"
+          ]
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "OoBDev.System.Linq.Search.FilterParameter": {
+        "type": "object",
+        "properties": {
+          "eq": {
+            "description": "`Equal To`: pass in the value to match for a given property  \r\n\r\nIf you are using string values you may also use wild cards  \r\n\\*bc -> Ends with  \r\n\\*b\\* -> Contains  \r\nab\\* -> Starts with",
+            "nullable": true
+          },
+          "neq": {
+            "description": "`Not Equal To`: pass in the value to match for a given property  \r\n\r\nIf you are using string values you may also use wild cards  \r\n\\*bc -> Ends with  \r\n\\*b\\* -> Contains  \r\nab\\* -> Starts with",
+            "nullable": true
+          },
+          "in": {
+            "type": "array",
+            "items": { },
+            "description": "This allows for providing a set of values where the value from the queries data must match at least \r\none of provided values",
+            "nullable": true
+          },
+          "gt": {
+            "description": "`Greater than`",
+            "nullable": true
+          },
+          "gte": {
+            "description": "`Greater than or equal to`",
+            "nullable": true
+          },
+          "lt": {
+            "description": "`Less than`",
+            "nullable": true
+          },
+          "lte": {
+            "description": "`Less than or equal to`",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Filter parameter"
+      },
+      "OoBDev.System.Linq.Search.OrderDirections": {
+        "enum": [
+          "asc",
+          "desc"
+        ],
+        "type": "string",
+        "description": "Enumeration to control sort order"
+      },
+      "OoBDev.System.Linq.Search.PagedQueryResult`1[[Nucleus.Core.Persistence.Models.Module, Nucleus.Core.Contracts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]": {
+        "type": "object",
+        "properties": {
+          "rows": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Nucleus.Core.Persistence.Models.Module"
+            },
+            "nullable": true
+          },
+          "currentPage": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalPageCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalRowCount": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "OoBDev.System.Linq.Search.PagedQueryResult`1[[Nucleus.Core.Persistence.Models.User, Nucleus.Core.Contracts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]": {
+        "type": "object",
+        "properties": {
+          "rows": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Nucleus.Core.Persistence.Models.User"
+            },
+            "nullable": true
+          },
+          "currentPage": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalPageCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalRowCount": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "OoBDev.System.Linq.Search.SearchQuery`1[[Nucleus.Core.Persistence.Models.Module, Nucleus.Core.Contracts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]": {
+        "type": "object",
+        "properties": {
+          "currentPage": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "description": "**Default size:** `10`, `-1` will disable paging",
+            "format": "int32"
+          },
+          "excludePageCount": {
+            "type": "boolean",
+            "description": "`true` will disable row/page counts and may decrease processing time without effecting paging functions"
+          },
+          "searchTerm": {
+            "type": "string",
+            "description": "**Searched Properties:** ModuleId; Roles; Name; Code",
+            "nullable": true
+          },
+          "filter": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/OoBDev.System.Linq.Search.FilterParameter"
+            },
+            "description": "**Filterable Properties:** ModuleId; Roles; Name; Code",
+            "nullable": true
+          },
+          "orderBy": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/OoBDev.System.Linq.Search.OrderDirections"
+            },
+            "description": "**Sortable Properties:** ModuleId, Roles, Name, Code  **Default Order:** Name asc",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "OoBDev.System.Linq.Search.SearchQuery`1[[Nucleus.Core.Persistence.Models.User, Nucleus.Core.Contracts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]": {
+        "type": "object",
+        "properties": {
+          "currentPage": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "description": "**Default size:** `10`, `-1` will disable paging",
+            "format": "int32"
+          },
+          "excludePageCount": {
+            "type": "boolean",
+            "description": "`true` will disable row/page counts and may decrease processing time without effecting paging functions"
+          },
+          "searchTerm": {
+            "type": "string",
+            "description": "**Searched Properties:** FirstNameLastName; LastNameFirstName; EmailAddress; FirstName; LastName",
+            "nullable": true
+          },
+          "filter": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/OoBDev.System.Linq.Search.FilterParameter"
+            },
+            "description": "**Filterable Properties:** FirstNameLastName; LastNameFirstName; UserId; UserName; EmailAddress; FirstName; LastName; Active; UserModules; CreatedOn; Module; UserStatus",
+            "nullable": true
+          },
+          "orderBy": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/OoBDev.System.Linq.Search.OrderDirections"
+            },
+            "description": "**Sortable Properties:** FirstNameLastName, LastNameFirstName, UserId, UserName, EmailAddress, FirstName, LastName, Active, UserModules, CreatedOn  **Default Order:** LastName asc, FirstName asc, EmailAddress asc",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Microsoft.AspNetCore.Mvc.ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": { }
+      },
+      "Nucleus.Core.Persistence.Models.DocumentModel": {
+        "type": "object",
+        "properties": {
+          "documentId": {
+            "type": "string",
+            "nullable": true
+          },
+          "documentKey": {
+            "type": "string",
+            "nullable": true
+          },
+          "documentName": {
+            "type": "string",
+            "nullable": true
+          },
+          "documentType": {
+            "type": "string",
+            "nullable": true
+          },
+          "documentSize": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "documentRepository": {
+            "type": "string",
+            "nullable": true
+          },
+          "documentCategory": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdOn": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Nucleus.Core.Persistence.Models.Filters.UserFilterItem": {
+        "type": "object",
+        "properties": {
+          "inputValue": {
+            "type": "string",
+            "nullable": true
+          },
+          "module": {
+            "type": "string",
+            "nullable": true
+          },
+          "userStatus": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Nucleus.Core.Persistence.Models.Filters.UsersFilter": {
+        "type": "object",
+        "properties": {
+          "userFilters": {
+            "$ref": "#/components/schemas/Nucleus.Core.Persistence.Models.Filters.UserFilterItem"
+          },
+          "pagingModel": {
+            "$ref": "#/components/schemas/Nucleus.Core.Persistence.Models.PagingModel"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Nucleus.Core.Persistence.Models.Module": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "code": {
+            "type": "string",
+            "nullable": true
+          },
+          "moduleId": {
+            "type": "string",
+            "nullable": true
+          },
+          "roles": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Nucleus.Core.Persistence.Models.Role"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Nucleus.Core.Persistence.Models.PagedResult`1[[Nucleus.Core.Persistence.Models.Module, Nucleus.Core.Contracts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]": {
+        "type": "object",
+        "properties": {
+          "currentPage": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "rowCount": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "firstRowOnPage": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          },
+          "lastRowOnPage": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Nucleus.Core.Persistence.Models.Module"
+            },
+            "nullable": true
+          },
+          "rows": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Nucleus.Core.Persistence.Models.Module"
+            },
+            "nullable": true,
+            "readOnly": true
+          },
+          "totalPageCount": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          },
+          "totalRowCount": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Nucleus.Core.Persistence.Models.PagedResult`1[[Nucleus.Core.Persistence.Models.User, Nucleus.Core.Contracts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]": {
+        "type": "object",
+        "properties": {
+          "currentPage": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "rowCount": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "firstRowOnPage": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          },
+          "lastRowOnPage": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Nucleus.Core.Persistence.Models.User"
+            },
+            "nullable": true
+          },
+          "rows": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Nucleus.Core.Persistence.Models.User"
+            },
+            "nullable": true,
+            "readOnly": true
+          },
+          "totalPageCount": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          },
+          "totalRowCount": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Nucleus.Core.Persistence.Models.PagingModel": {
+        "type": "object",
+        "properties": {
+          "currentPage": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sortBy": {
+            "type": "string",
+            "nullable": true
+          },
+          "sortDirection": {
+            "type": "string",
+            "nullable": true
+          },
+          "excludePageCount": {
+            "type": "boolean",
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Nucleus.Core.Persistence.Models.PermissionBase": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "code": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Nucleus.Core.Persistence.Models.ResponseModel`1[[Nucleus.Core.Persistence.Models.DocumentModel, Nucleus.Core.Contracts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]": {
+        "type": "object",
+        "properties": {
+          "isSuccess": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "response": {
+            "$ref": "#/components/schemas/Nucleus.Core.Persistence.Models.DocumentModel"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Nucleus.Core.Persistence.Models.ResponseModel`1[[Nucleus.Core.Persistence.Models.User, Nucleus.Core.Contracts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]": {
+        "type": "object",
+        "properties": {
+          "isSuccess": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "response": {
+            "$ref": "#/components/schemas/Nucleus.Core.Persistence.Models.User"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Nucleus.Core.Persistence.Models.ResponseModel`1[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]": {
+        "type": "object",
+        "properties": {
+          "isSuccess": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "response": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Nucleus.Core.Persistence.Models.Role": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "code": {
+            "type": "string",
+            "nullable": true
+          },
+          "rights": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Nucleus.Core.Persistence.Models.PermissionBase"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Nucleus.Core.Persistence.Models.User": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "nullable": true
+          },
+          "userName": {
+            "type": "string",
+            "nullable": true
+          },
+          "emailAddress": {
+            "type": "string",
+            "nullable": true
+          },
+          "firstName": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastName": {
+            "type": "string",
+            "nullable": true
+          },
+          "active": {
+            "type": "boolean"
+          },
+          "userModules": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Nucleus.Core.Persistence.Models.UserModule"
+            },
+            "nullable": true
+          },
+          "createdOn": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Nucleus.Core.Persistence.Models.UserAction": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "nullable": true
+          },
+          "userName": {
+            "type": "string",
+            "nullable": true
+          },
+          "emailAddress": {
+            "type": "string",
+            "nullable": true
+          },
+          "firstName": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastName": {
+            "type": "string",
+            "nullable": true
+          },
+          "active": {
+            "type": "boolean"
+          },
+          "userModules": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Nucleus.Core.Persistence.Models.UserModule"
+            },
+            "nullable": true
+          },
+          "createdOn": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "identityAction": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Nucleus.Core.Persistence.Models.UserModule": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "code": {
+            "type": "string",
+            "nullable": true
+          },
+          "roles": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Nucleus.Core.Persistence.Models.Role"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "securitySchemes": {
+      "oauth2": {
+        "type": "oauth2",
+        "description": "B2C authentication",
+        "flows": {
+          "implicit": {
+            "authorizationUrl": "https://lightwellnucleusdev.b2clogin.com/lightwellnucleusdev.onmicrosoft.com/oauth2/v2.0/authorize?p=B2C_1_NucAcc_Signin",
+            "tokenUrl": "https://lightwellnucleusdev.b2clogin.com/lightwellnucleusdev.onmicrosoft.com/oauth2/v2.0/token?p=B2C_1_NucAcc_Signin",
+            "scopes": {
+              "https://lightwellnucleusdev.onmicrosoft.com/user.read/read": "UserReadApiClaim"
+            }
+          }
+        }
+      }
+    }
+  },
+  "security": [
+    {
+      "oauth2": [ ]
+    }
+  ]
+}

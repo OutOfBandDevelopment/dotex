@@ -1,0 +1,176 @@
+# This workflow will build a .NET project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
+
+name: .NET Build Pipeline
+# https://docs.github.com/en/actions/learn-github-actions/contexts#vars-context
+# https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#run-name
+run-name: .NET ${{ inputs.build-configuration || 'Release' }}/${{ inputs.build-platform || 'ubuntu-latest' }} by @${{ github.actor }} (@${{ github.event_name }})
+
+on:
+  push:
+    branches:
+    - master
+    - main
+
+  pull_request:
+    branches:
+    - master
+    - main
+
+  # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#onpull_requestpull_request_targetbranchesbranches-ignore
+  workflow_dispatch:
+    inputs:
+      build-configuration: 
+        description: 'Build Configuration'
+        required: true
+        default: 'Release'
+        type: choice
+        options:
+          - Release
+          - Debug
+      build-platform: 
+        description: 'Build Platform'
+        required: true
+        default: 'ubuntu-latest'
+        type: choice
+        options:
+          - windows-latest
+          - ubuntu-latest
+          - macos-latest
+
+jobs:
+  build:
+    runs-on: "${{ inputs.build-platform || 'ubuntu-latest' }}"
+
+    steps:
+      # https://github.com/actions/checkout
+    - uses: actions/checkout@v4.1.1
+      with:
+        clean: true
+        persist-credentials: true
+        fetch-depth: 0
+
+      # https://github.com/actions/setup-dotnet
+    - name: Install .Net 8.0 SDK
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x        
+
+      # https://github.com/GitTools/actions/blob/main/docs/examples/github/gitversion/setup/usage-examples.md
+    - name: Install GitVersion
+      uses: gittools/actions/gitversion/setup@v0
+      with:
+        versionSpec: '5.x'  
+
+      # https://github.com/GitTools/actions/blob/main/docs/examples/github/gitversion/execute/usage-examples.md 
+    - name: Use GitVersion
+      uses: gittools/actions/gitversion/execute@v0
+      id:   gitversion
+      with:
+        useConfigFile: true
+        configFilePath: GitVersion.yml
+    
+      # https://github.blog/changelog/2022-10-11-github-actions-deprecating-save-state-and-set-output-commands/
+      # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstepsshell
+      # https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions?tool=powershell
+    - name: Set Version Variables
+      id: calculate-version
+      shell: pwsh
+      run: |
+        echo "GITHUB_WORKSPACE=$env:GITHUB_WORKSPACE"
+        echo "RUNNER_TEMP=$env:RUNNER_TEMP"
+                
+        $buildConfiguration = "${{ inputs.build-configuration || 'Release' }}" 
+        echo "BuildConfiguration=$buildConfiguration"
+        echo "BuildConfiguration=$buildConfiguration" >> "$env:GITHUB_OUTPUT"
+        echo "BuildConfiguration=$buildConfiguration" >> "$env:GITHUB_ENV"
+
+        $fullSemVerLower = "${{ steps.gitversion.outputs.fullSemVer }}".ToLower() 
+        if ($buildConfiguration -eq "Debug") {
+            $fullSemVerLower = "${{ steps.gitversion.outputs.majorMinorPatch }}${{ steps.gitversion.outputs.preReleaseLabelWithDash }}-debug.${{ steps.gitversion.outputs.preReleaseNumber }}"
+        }
+        echo "FullSemVerLower=$fullSemVerLower"
+        echo "FullSemVerLower=$fullSemVerLower" >> "$env:GITHUB_OUTPUT"
+        echo "FullSemVerLower=$fullSemVerLower" >> "$env:GITHUB_ENV"
+        
+        $workspace = $env:GITHUB_WORKSPACE
+        echo "BuildWorkspace=$workspace"
+        echo "BuildWorkspace=$workspace" >> "$env:GITHUB_OUTPUT"
+        echo "BuildWorkspace=$workspace" >> "$env:GITHUB_ENV"
+
+        $testResultsPath = JOIN-PATH -Path $env:RUNNER_TEMP -ChildPath "TestResults"
+        echo "TestResultsPath=$testResultsPath"
+        echo "TestResultsPath=$testResultsPath" >> "$env:GITHUB_OUTPUT"
+        echo "TestResultsPath=$testResultsPath" >> "$env:GITHUB_ENV"
+        
+        $packagesPath = JOIN-PATH -Path $env:RUNNER_TEMP -ChildPath "Packages"
+        echo "PackagesPath=$packagesPath"
+        echo "PackagesPath=$packagesPath" >> "$env:GITHUB_OUTPUT"
+        echo "PackagesPath=$packagesPath" >> "$env:GITHUB_ENV"
+        
+        $runSettings = JOIN-PATH -Path $env:GITHUB_WORKSPACE -ChildPath ".runsettings"
+        echo "RunSettings=$runSettings"
+        echo "RunSettings=$runSettings" >> "$env:GITHUB_OUTPUT"
+        echo "RunSettings=$runSettings" >> "$env:GITHUB_ENV"
+  
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build
+      run: >
+        dotnet build
+        --configuration ${{ steps.calculate-version.outputs.BuildConfiguration }}
+        --property:Version=${{ steps.calculate-version.outputs.FullSemVerLower }}
+        --property:SolutionDir=${{ steps.calculate-version.outputs.BuildWorkspace }}
+        --nologo 
+        --no-restore
+
+      # https://devblogs.microsoft.com/dotnet/producing-packages-with-source-link/
+    - name: Package projects
+      run: >
+        dotnet pack
+        --configuration ${{ steps.calculate-version.outputs.BuildConfiguration }}
+        --no-build 
+        --no-restore 
+        --output "${{ steps.calculate-version.outputs.PackagesPath }}"
+        --property:Version=${{ steps.calculate-version.outputs.fullSemVerLower }}
+        
+    - name: Unit Test
+      run: >
+        dotnet test
+        --configuration ${{ steps.calculate-version.outputs.BuildConfiguration }} 
+        --no-build 
+        --no-restore 
+        --nologo 
+        --filter "TestCategory=Unit|TestCategory=Simulate" 
+        --collect:"XPlat Code Coverage" 
+        --settings "${{ steps.calculate-version.outputs.RunSettings }}"
+        --results-directory "${{ steps.calculate-version.outputs.TestResultsPath }}"
+
+    # https://github.com/marketplace/actions/publish-test-results
+    # https://github.com/marketplace/actions/publish-test-results#create-a-badge-from-test-results
+    # this doesn't support windows right now for some reason
+    - name: Publish Test Results
+      uses: EnricoMi/publish-unit-test-result-action/composite@v2
+      id: test-results
+      if: always()
+      with:
+        trx_files: ${{ steps.calculate-version.outputs.TestResultsPath }}/**/*.trx
+        report_individual_runs: true
+
+    # ## Don't publish PR's
+    # - name: Publish Project to Nuget
+    #   if: github.event_name != 'pull_request'
+    #   run: >
+    #     dotnet nuget push 
+    #     "${{ steps.calculate-version.outputs.PackagesPath }}/*.nupkg" 
+    #     --api-key ${{secrets.NUGET_API_KEY}} 
+    #     --source https://api.nuget.org/v3/index.json 
+    #     --skip-duplicate
+
+    - name: Tag Commit
+      uses: thejeff77/action-push-tag@v1.0.0
+      if: github.event_name != 'pull_request'
+      with:
+        tag: ${{ steps.calculate-version.outputs.FullSemVerLower }}
+        
