@@ -1,4 +1,4 @@
-using Microsoft.Extensions.Diagnostics.HealthChecks;
+﻿using Microsoft.Extensions.Diagnostics.HealthChecks;
 using OllamaSharp;
 using System;
 using System.Linq;
@@ -34,7 +34,7 @@ public class OllamaHealthCheck : IHealthCheck
     {
         try
         {
-            var result = await _client.ListLocalModels(cancellationToken);
+            var result = await _client.ListLocalModelsAsync(cancellationToken);
             return HealthCheckResult.Healthy(description: $"Loaded models: {string.Join("; ", result.Select(m => m.Name))}");
         }
         catch (Exception ex)

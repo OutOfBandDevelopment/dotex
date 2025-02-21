@@ -1,4 +1,4 @@
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using OllamaSharp;
 using System;
 using System.Linq;
@@ -26,13 +26,13 @@ public static class OllamaApiClientExtensions
         )
     {
         logger.LogInformation("list models");
-        var models = await ollama.ListLocalModels();
+        var models = await ollama.ListLocalModelsAsync();
         foreach (var model in models)
             logger.LogInformation("model: {model}, size: {size} ", model.Name, model.Size);
 
         logger.LogInformation("create maybe");
         if (models.Any(m => !m.Name.StartsWith(modelName)))
-            await ollama.CopyModel("llama2", modelName);
+            await ollama.CopyModelAsync("llama2", modelName); //TODO: fix this
         logger.LogInformation("Select model: {modelName}", modelName);
 
         //ollama.SelectedModel = modelName;
@@ -82,7 +82,7 @@ public static class OllamaApiClientExtensions
         this IOllamaApiClient client,
         string text,
         string modelName) =>
-            (await client.GenerateEmbeddings(new() { Model = modelName, Input = [text] })).Embeddings.First();
+            await client.GetEmbeddingDoubleAsync(text, modelName);
 
     /// <summary>
     /// Synchronously retrieves the embedding for the specified text using the specified model.
@@ -95,5 +95,5 @@ public static class OllamaApiClientExtensions
         this IOllamaApiClient client,
         string text,
         string modelName) =>
-            client.GetEmbeddingDoubleAsync(text, modelName).Result;
+            client.GetEmbeddingDouble(text, modelName);
 }

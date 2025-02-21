@@ -21,6 +21,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\OoBDev.System.IO.Pipelines\OoBDev.System.IO.Pipelines.csproj" />
+	  <ProjectReference Include="..\OoBDev.System.IO.Ports\OoBDev.System.IO.Ports.csproj" />
+	  <ProjectReference Include="..\OoBDev.System.IO.UsbHids\OoBDev.System.IO.UsbHids.csproj" />
 	  <ProjectReference Include="..\OoBDev.System\OoBDev.System.csproj" />
 	  <ProjectReference Include="..\OoBDev.TestUtilities\OoBDev.TestUtilities.csproj" />
 	</ItemGroup>

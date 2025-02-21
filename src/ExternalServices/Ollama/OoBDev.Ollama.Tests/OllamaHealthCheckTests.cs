@@ -1,4 +1,4 @@
-using OoBDev.TestUtilities;
+﻿using OoBDev.TestUtilities;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -24,7 +24,7 @@ public class OllamaHealthCheckTests
         var mockRepo = new MockRepository(MockBehavior.Strict);
         var mockClient = mockRepo.Create<IOllamaApiClient>();
 
-        mockClient.Setup(s => s.ListLocalModels(It.IsAny<CancellationToken>())).Returns(Task.FromResult(Enumerable.Empty<Model>()));
+        mockClient.Setup(s => s.ListLocalModelsAsync(It.IsAny<CancellationToken>())).Returns(Task.FromResult(Enumerable.Empty<Model>()));
 
         var check = new OllamaHealthCheck(mockClient.Object);
 

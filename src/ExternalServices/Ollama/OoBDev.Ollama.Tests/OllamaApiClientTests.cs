@@ -1,4 +1,4 @@
-using OoBDev.Extensions;
+﻿using OoBDev.Extensions;
 using OoBDev.TestUtilities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,6 +10,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using OllamaSharp.Models.Chat;
+using OoBDev.Extensions.Linq;
 
 namespace OoBDev.Ollama.Tests;
 
@@ -47,16 +49,11 @@ public class OllamaApiClientTests
     public async Task GenerateEmbeddingsDoubleTest(string hostName, string model)
     {
         var client = Build(hostName, model);
-        var embedding = await client.GenerateEmbeddings(new()
-        {
-            Model = model,
-            Input = ["Hello World!"],
-        });
-
+        var embedding = await client.GetEmbeddingDoubleAsync("Hello World!", model);
         TestContext.WriteLine($"hostName: {hostName}");
         TestContext.WriteLine($"model: {model}");
-        TestContext.WriteLine($"Length: {embedding.Embeddings[0].Length}");
-        TestContext.WriteLine(string.Join(", ", embedding.Embeddings[0]));
+        TestContext.WriteLine($"Length: {embedding.Length}");
+        TestContext.WriteLine(string.Join(", ", embedding));
     }
 
     [TestCategory(TestCategories.DevLocal)]
@@ -65,34 +62,9 @@ public class OllamaApiClientTests
     public async Task GenerateEmbeddingsSingleTest(string hostName, string model)
     {
         var client = Build(hostName, model);
-        var embedding = await client.GenerateEmbeddings(new()
-        {
-            Model = model,
-            Input = ["Hello World!"],
-        });
+        var embedding = await client.GetEmbeddingSingleAsync("Hello World!", model);
 
-        TestContext.WriteLine(string.Join(", ", Array.ConvertAll(embedding.Embeddings[0], Convert.ToSingle)));
-    }
-
-    [TestCategory(TestCategories.DevLocal)]
-    [DataTestMethod]
-    [DataRow("http://127.0.0.1:11434", "phi")]
-    public async Task GenerateEmbeddingsSingleExpandedTest(string hostName, string model)
-    {
-        var client = Build(hostName, model);
-        var embedding = await client.GenerateEmbeddings(new()
-        {
-            Model = model,
-            Input = ["Hello World!"],
-        });
-
-        TestContext.WriteLine(
-            string.Join(", ",
-            Array.ConvertAll(embedding.Embeddings[0], d => new[] {
-                    (float)d,
-                    (float)(d * 10000000 - (float)d * 10000000)
-                }).SelectMany(i => i)
-            ));
+        TestContext.WriteLine(string.Join(", ", embedding));
     }
 
     [TestCategory(TestCategories.DevLocal)]
@@ -103,10 +75,10 @@ public class OllamaApiClientTests
     public async Task GetCompletionTest(string hostName, string model, string prompt)
     {
         var client = Build(hostName, model);
-        var embedding = await client.GetCompletion(new()
+        var embedding = await client.ChatAsync(new()
         {
             Model = model,
-            Prompt = prompt,
+            Messages = new[] { new Message(null, prompt) },
 
             Options = new OllamaSharp.Models.RequestOptions
             {
@@ -117,14 +89,14 @@ public class OllamaApiClientTests
 
                 Temperature = 1f,
             },
-        });
+        }).ToListAsync();
 
         TestContext.AddResult(embedding);
 
         TestContext.WriteLine(
             string.Join(
                 Environment.NewLine,
-                embedding.Response.SplitBy(50)
+                embedding.Select(s => s?.Message.Content?.SplitBy(50))
                 ));
     }
 
@@ -160,7 +132,7 @@ public class OllamaApiClientTests
         using var ms = new MemoryStream();
         img.CopyTo(ms);
 
-        var base54 = Convert.ToBase64String(ms.ToArray());
+        var base64 = Convert.ToBase64String(ms.ToArray());
 
         TestContext.WriteLine($"hostName: {hostName}");
         TestContext.WriteLine($"model: {model}");
@@ -173,22 +145,25 @@ public class OllamaApiClientTests
         //        base54.SplitBy(80)
         //        ));
 
+        //TODO: fix this !
         var client = Build(hostName, model);
-        var embedding = await client.GetCompletion(new()
+        var embedding = await client.ChatAsync(new()
         {
             Model = model,
-            Prompt = prompt,
-            Images = [base54],
+            Messages = new[]
+            {
+                 new Message(ChatRole.User, prompt, [base64]){}
+            },
             Options = new OllamaSharp.Models.RequestOptions
             {
             },
-        });
+        }).ToListAsync();
 
         TestContext.WriteLine(new string('-', 80));
         TestContext.WriteLine(
             string.Join(
                 Environment.NewLine,
-                embedding.Response.SplitBy(80)
+                embedding.Select(s => s?.Message.Content?.SplitBy(50))
                 ));
     }
 
@@ -199,7 +174,7 @@ public class OllamaApiClientTests
     public async Task ListModelsTest(string hostName)
     {
         var client = Build(hostName, "");
-        foreach (var localModel in await client.ListLocalModels())
+        foreach (var localModel in await client.ListLocalModelsAsync())
             TestContext.WriteLine($"model: {localModel.Name} - {localModel.Size:#,##0} ({localModel.Digest})");
     }
 
@@ -228,14 +203,16 @@ public class OllamaApiClientTests
     {
         var client = Build(hostName, model);
         double? last = default;
-        await client.PullModel(model, ps =>
+
+        await foreach(var ps in client.PullModelAsync(model))
         {
+            if (ps == null) continue;
             if (ps.Percent != last)
             {
                 Debug.WriteLine($"{model}: Pulled: {ps.Percent}% / {ps.Status} / {ps.Total:#,##0}");
                 last = ps.Percent;
             }
-        });
+        }
     }
 
     [TestCategory(TestCategories.DevLocal)]
@@ -262,6 +239,6 @@ public class OllamaApiClientTests
     public async Task DeleteModel(string hostName, string model)
     {
         var client = Build(hostName, model);
-        await client.DeleteModel(model);
+        await client.DeleteModelAsync(model);
     }
 }

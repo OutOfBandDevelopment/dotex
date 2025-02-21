@@ -1,7 +1,8 @@
-using OoBDev.System;
+﻿using OoBDev.System;
 using Microsoft.Extensions.Configuration;
 using RabbitMQ.Client;
 using System;
+using System.Threading.Tasks;
 
 namespace OoBDev.RabbitMQ.MessageQueueing;
 
@@ -18,17 +19,17 @@ public class QueueClientFactory : IQueueClientFactory
     /// <exception cref="ApplicationException">
     /// Thrown if the required configuration values ("ConnectionString" or "QueueName") are missing.
     /// </exception>
-    public (IConnection connection, IModel channel, string queueName) Create(IConfigurationSection config)
+    public async Task<(IConnection connection, IChannel channel, string queueName)> CreateAsync(IConfigurationSection config)
     {
         var factory = new ConnectionFactory()
         {
             HostName = config[nameof(ConnectionFactory.HostName)],
         };
-        var connection = factory.CreateConnection();
-        var model = connection.CreateModel();
+        var connection = await factory.CreateConnectionAsync();
+        var channel = await connection.CreateChannelAsync();
 
         var queueName = config["QueueName"] ?? throw new ConfigurationMissingException($"{config.Path}:QueueName");
 
-        return (connection, model, queueName);
+        return (connection, channel, queueName);
     }
 }

@@ -1,4 +1,4 @@
-using OoBDev.MessageQueueing.Services;
+﻿using OoBDev.MessageQueueing.Services;
 using OoBDev.System;
 using OoBDev.System.Text.Json.Serialization;
 using Microsoft.Extensions.Logging;
@@ -37,7 +37,7 @@ public class RabbitMQQueueMessageProvider(
     /// <returns>The message ID if the send operation is successful; otherwise, <c>null</c>.</returns>
     public async Task<string?> SendAsync(object message, IMessageContext context)
     {
-        var (connection, channel, queueName) = clientFactory.Create(context.Config);
+        var (connection, channel, queueName) = await clientFactory.CreateAsync(context.Config);
 
         var wrapped = new WrappedQueueMessage
         {
@@ -50,18 +50,29 @@ public class RabbitMQQueueMessageProvider(
 
         using var stream = new MemoryStream();
         await serializer.SerializeAsync(wrapped, stream, default);
-        var body = stream.ToArray();
+        ReadOnlyMemory<byte> body = stream.ToArray();
 
         using (connection)
         using (channel)
         {
-            channel.BasicPublish(exchange: string.Empty,
-                                 routingKey: queueName,
-                                 basicProperties: null,
-                                 mandatory: true,
-                                 body: body);
+            //string exchange,
+            //    string routingKey,
+            //    bool mandatory, 
+            //    TProperties basicProperties,
+            //    ReadOnlyMemory<byte> body, 
+            //    CancellationToken cancellationToken = default
+            //    ) where TProperties : IReadOnlyBasicProperties, IAmqpHeader;
 
-            return context.CorrelationId;
+            //TODO: fix this!
+            //await channel.BasicPublishAsync<object>(
+            //    exchange: string.Empty,
+            //                     routingKey: queueName,
+            //                     basicProperties: null,
+            //                     mandatory: true,
+            //                     body: body);
+            throw new NotSupportedException();
+
+            //return context.CorrelationId;
         }
     }
 
@@ -87,15 +98,16 @@ public class RabbitMQQueueMessageProvider(
     {
         // https://www.rabbitmq.com/tutorials/tutorial-one-dotnet.html
 
-        var (connection, channel, queueName) = clientFactory.Create(_handlerProvider?.Config ?? throw new ConfigurationMissingException("UNKNOWN"));
+        var (connection, channel, queueName) = await clientFactory.CreateAsync(_handlerProvider?.Config ?? throw new ConfigurationMissingException("UNKNOWN"));
         var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         var newCancellationToken = cts.Token;
 
         using (connection)
         using (channel)
         {
-            var consumer = new EventingBasicConsumer(channel);
-            consumer.Received += async (model, ea) =>
+            var consumer = new AsyncEventingBasicConsumer(channel);
+
+            consumer.ReceivedAsync += async (model, ea) =>
             {
                 var body = ea.Body.ToArray();
                 using var stream = new MemoryStream(body);
@@ -111,8 +123,8 @@ public class RabbitMQQueueMessageProvider(
 
             };
 
-            channel.QueueDeclare(queue: queueName, exclusive: false);
-            channel.BasicConsume(queue: queueName,
+            await channel.QueueDeclareAsync(queue: queueName, exclusive: false);
+            await channel.BasicConsumeAsync(queue: queueName,
                                  autoAck: true,
                                  consumer: consumer);
 

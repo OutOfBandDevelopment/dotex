@@ -1,6 +1,7 @@
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using RabbitMQ.Client;
 using System;
+using System.Threading.Tasks;
 
 namespace OoBDev.RabbitMQ.MessageQueueing;
 
@@ -17,5 +18,5 @@ public interface IQueueClientFactory
     /// <exception cref="ApplicationException">
     /// Thrown if the required configuration values ("ConnectionString" or "QueueName") are missing.
     /// </exception>
-    (IConnection connection, IModel channel, string queueName) Create(IConfigurationSection config);
+    Task<(IConnection connection, IChannel channel, string queueName)> CreateAsync(IConfigurationSection config);
 }
