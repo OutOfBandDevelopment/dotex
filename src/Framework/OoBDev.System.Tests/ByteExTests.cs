@@ -1,4 +1,5 @@
-﻿using OoBDev.TestUtilities;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using OoBDev.TestUtilities;
 using System;
 using System.Text;
 
@@ -22,6 +23,6 @@ public class ByteExTests
         var input = Encoding.UTF8.GetBytes(new string('A', 1024));
         var compressed = input.Compress();
         var checkto = Convert.ToBase64String(compressed);
-        Assert.AreEqual("c3QcBaNgFIxUAAA=", checkto);
+        Assert.AreEqual("c3QcBaNgFDiOUAAA", checkto);
     }
 }

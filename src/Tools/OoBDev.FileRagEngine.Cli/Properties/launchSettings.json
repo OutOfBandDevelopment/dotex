@@ -1,0 +1,28 @@
+{
+  "profiles": {
+    "Documentation - Framework": {
+      "commandName": "Project",
+      "commandLineArgs": "--input $(SolutionDir)Framework\r\n--output $(SolutionDir)docs\\generated\\Framework\r\n--file-template-path $(SolutionDir)docs\\prompts\r\n--template Documentation.md\r\n--include-prompt true"
+    },
+    "Documentation - ExternalServices": {
+      "commandName": "Project",
+      "commandLineArgs": "--input $(SolutionDir)ExternalServices\r\n--output $(SolutionDir)docs\\generated\\ExternalServices\r\n--file-template-path $(SolutionDir)docs\\prompts\r\n--template Documentation.md\r\n--include-prompt true"
+    },
+    "Documentation - Common": {
+      "commandName": "Project",
+      "commandLineArgs": "--input $(SolutionDir)Common\r\n--output $(SolutionDir)docs\\generated\\Common\r\n--file-template-path $(SolutionDir)docs\\prompts\r\n--template Documentation.md\r\n--include-prompt true"
+    },
+    "Documentation - Framework (readme)": {
+      "commandName": "Project",
+      "commandLineArgs": "--input $(SolutionDir)Framework\r\n--output $(SolutionDir)docs\\generated\\Framework\r\n--file-template-path $(SolutionDir)docs\\prompts\r\n--template readme.md\r\n--include-prompt true"
+    },
+    "Documentation - Framework (CodeReview)": {
+      "commandName": "Project",
+      "commandLineArgs": "--input $(SolutionDir)Framework\r\n--output $(SolutionDir)docs\\generated\\Framework\r\n--file-template-path $(SolutionDir)docs\\prompts\r\n--template CodeReview.md\r\n--include-prompt true"
+    },
+    "WSL": {
+      "commandName": "WSL2",
+      "distributionName": ""
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "currentPage": 0,
+  "filter": {
+    "FirstName": {
+      "eq": "jim*"
+    }
+  },
+  "orderBy": {
+  }
+}

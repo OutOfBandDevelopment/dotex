@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>false</ImplicitUsings>
+    <InvariantGlobalization>true</InvariantGlobalization>
+
+    <IsPackable>false</IsPackable>
+
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\OoBDev.Common.Complete\OoBDev.Common.Complete.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="GitVersion.MsBuild" Version="6.0.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <Target Name="BuildSwagger">
+    <!-- AfterTargets="PostBuildEvent" -->
+    <MakeDir Directories="$(DocumentPath)" Condition="!Exists('$(DocumentPath)')" ContinueOnError="true" />
+    <Exec Command="dotnet tool restore" ContinueOnError="true" />
+    <Exec Command="dotnet swagger tofile --output &quot;$(DocumentPath)swagger.json&quot; &quot;$(OutputPath)$(AssemblyName).dll&quot; all" ContinueOnError="true" EnvironmentVariables="SWAGGER_ONLY=TRUE" />
+    <Exec Command="dotnet swagger tofile --yaml --output &quot;$(DocumentPath)swagger.yaml&quot; &quot;$(OutputPath)$(AssemblyName).dll&quot; all" ContinueOnError="true" EnvironmentVariables="SWAGGER_ONLY=TRUE" />
+  </Target>
+
+</Project>

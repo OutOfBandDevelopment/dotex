@@ -1,0 +1,20 @@
+{
+  "CurrentPage": 0, // this is the current 0 based page number index
+  "TotalPageCount": 1, // this is the total number of possible pages -- Note: this will be int.MaxValue/PageLength  0x7fffffff/PageLength if ExcludePageCount was true
+  "TotalRowCount": 500, // this will be the total row count based on the predicate before paging
+  /*proposal... 
+    should we use -1 or null instead of int.max for excludedpagecount?  
+  */
+
+  "Rows": [
+    // the objects in this array will be defined by the query projection
+  ]
+
+  /* 
+    proposal: should we create a means to include next/previous links
+  */
+  /* 
+    proposal: should we include the SearchQuery model?
+  */
+
+}

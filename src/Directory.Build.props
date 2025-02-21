@@ -20,8 +20,31 @@
 		<EnableWindowsTargeting>true</EnableWindowsTargeting>
 		
 		<ManagePackageVersionsCentrally>false</ManagePackageVersionsCentrally>
+		
+
+    <TestResultsOutFolderPath>$(SolutionDir)TestResults\</TestResultsOutFolderPath>
+    <VSTestResultsDirectory>$(SolutionDir)TestResults\</VSTestResultsDirectory>
+    <RunSettingsFilePath>$(SolutionDir).runsettings</RunSettingsFilePath>
 	</PropertyGroup>
 
+  <!--https://www.meziantou.net/the-roslyn-analyzers-i-use.htm-->
+  <!--<PropertyGroup Condition="'$(IsTestProject)' != 'true'">
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <AnalysisMode>AllEnabledByDefault</AnalysisMode>
+    <AnalysisLevel>latest</AnalysisLevel>
+  </PropertyGroup>-->
+
+  <!--https://www.meziantou.net/the-roslyn-analyzers-i-use.htm-->
+  <!--<ItemGroup Condition="'$(IsTestProject)' != 'true'">
+    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="8.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Meziantou.Analyzer" Version="2.0.150">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>-->
 	<PropertyGroup Condition="Exists('$(SolutionDir)..\LICENSE')">
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 	</PropertyGroup>
@@ -30,19 +53,40 @@
 		<None Include="@(LicenseFile)" Pack="true" PackagePath="\" />
 	</ItemGroup>
 
+ <!--
+ <PropertyGroup Condition="'$(LOCAL_NUGET)' != ''">
+    <PackageOutputPath>$(LOCAL_NUGET.Trim('\'))\</PackageOutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(LOCAL_NUGET)' == ''">
+    <PackageOutputPath>$(SolutionDir)publish\packages</PackageOutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(DOCUMENT_PATH)' != ''">
+    <DocumentPath>$(DOCUMENT_PATH.Trim('\'))\</DocumentPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(DOCUMENT_PATH)' == ''">
+    <DocumentPath>$(SolutionDir)..\docs\</DocumentPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(CodeDocumentPath)' == ''">
+    <CodeDocumentPath>$(DocumentPath)code\</CodeDocumentPath>
+  </PropertyGroup>-->
+  
 	<PropertyGroup>
 		<BasePublishPath>$(SolutionDir)publish\</BasePublishPath>
 		<PackageOutputPath>$(BasePublishPath)packages\</PackageOutputPath>
-		<DocumentPath>$(SolutionDir)docs\</DocumentPath>
+		<DocumentPath>$(SolutionDir)..\docs\</DocumentPath>
 		<CodeDocumentPath>$(DocumentPath)code\</CodeDocumentPath>
 	</PropertyGroup>
 
-	<ItemGroup>
-		<PackageReference Include="GitVersion.MsBuild" Version="5.12.0">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-		</PackageReference>
-	</ItemGroup>
+  <Target Name="Details">
+    <Message Text="===== SolutionDir:              $(SolutionDir)"  Importance="high"/>
+    <Message Text="===== TestResultsOutFolderPath: $(TestResultsOutFolderPath)"  Importance="high"/>
+    <Message Text="===== DocumentPath:             $(DocumentPath)"  Importance="high"/>
+    <Message Text="===== CodeDocumentPath:         $(CodeDocumentPath)"  Importance="high"/>
+    <Message Text="===== LicenseFile:              @(LicenseFile)"  Importance="high"/>
+    <Message Text="===== PackageOutputPath:        $(PackageOutputPath)"  Importance="high"/>
+    <Message Text="===== PackageLicenseFile:       $(PackageLicenseFile)"  Importance="high"/>
+  </Target>
+
 
 	<!--
   this is only needed for profiling so dont worry about it for now... but it seems to have an issue with fsharp

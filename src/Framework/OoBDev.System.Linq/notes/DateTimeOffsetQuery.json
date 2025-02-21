@@ -1,0 +1,11 @@
+{
+  "currentPage": 0,
+  "filter": {
+    "CreatedOn": {
+      "lt": "2023-05-23"
+    }
+  },
+  "orderBy": {
+    "CreatedOn": 0
+  }
+}

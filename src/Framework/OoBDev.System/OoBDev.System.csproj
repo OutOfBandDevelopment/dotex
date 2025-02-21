@@ -2,42 +2,51 @@
 
 	<PropertyGroup>
 		<TargetFramework>net9.0</TargetFramework>
+		<ImplicitUsings>false</ImplicitUsings>
 		<Nullable>enable</Nullable>
-
-		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+		
+		<GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    
+    <PackageReadmeFile>Readme.System.md</PackageReadmeFile>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <Antlr4 Include="ExpressionCalculator\Parser\ExpressionTree.g4">
-	    <Visitor>true</Visitor>
-	    <Listener>false</Listener>
-	  </Antlr4>
-	  <Antlr4 Include="Text\Json\JsonPath\Parser\JsonPath.g4">
-	    <Visitor>True</Visitor>
-	    <Listener>False</Listener>
-	    <AllowAntlr4cs>True</AllowAntlr4cs>
-	    <GAtn>False</GAtn>
-	  </Antlr4>
+		<InternalsVisibleTo Include="OoBDev.System.Tests" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<Folder Include="Cryptography\" />
-		<Folder Include="Retro\" />
-		<Folder Include="Text\Templating\" />
-		<Folder Include="Windows\Forms\" />
+	  <ProjectReference Include="..\OoBDev.Extensions\OoBDev.Extensions.csproj" />
+	  <ProjectReference Include="..\OoBDev.System.Linq\OoBDev.System.Linq.csproj" />
 	</ItemGroup>
+  <ItemGroup>
+    <Antlr4 Include="ExpressionCalculator\Parser\ExpressionTree.g4">
+      <Visitor>true</Visitor>
+      <Listener>false</Listener>
+    </Antlr4>
+    <Antlr4 Include="Text\Json\JsonPath\Parser\JsonPath.g4">
+      <Visitor>True</Visitor>
+      <Listener>False</Listener>
+      <AllowAntlr4cs>True</AllowAntlr4cs>
+      <GAtn>False</GAtn>
+    </Antlr4>
+  </ItemGroup>
 
-	<ItemGroup>
-		<PackageReference Include="Antlr4.Runtime.Standard" Version="4.13.1" />
-		<PackageReference Include="Antlr4BuildTasks" Version="12.9.0" />
-	</ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Antlr4.Runtime.Standard" Version="4.13.1" />
+    <PackageReference Include="Antlr4BuildTasks" Version="12.9.0" />
+  </ItemGroup>
 
-	<ItemGroup>
-		<ProjectReference Include="..\OoBDev.System.Abstractions\OoBDev.System.Abstractions.csproj" />
-	</ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\OoBDev.System.Abstractions\OoBDev.System.Abstractions.csproj" />
+  </ItemGroup>
 
-	<ItemGroup>
-	  <PackageReference Update="GitVersion.MsBuild" Version="6.1.0" />
+  <ItemGroup>
+	  <PackageReference Update="GitVersion.MsBuild" Version="6.0.2">
+	    <PrivateAssets>all</PrivateAssets>
+	    <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+	  </PackageReference>
 	</ItemGroup>
 
 </Project>

@@ -1,4 +1,5 @@
-﻿using OoBDev.System.Retro.Apple2.Dos33;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using OoBDev.System.Retro.Apple2.Dos33;
 using OoBDev.TestUtilities;
 using System;
 using System.Linq;

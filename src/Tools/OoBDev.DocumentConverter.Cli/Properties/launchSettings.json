@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "OoBDev.DocumentConverter.Cli": {
+      "commandName": "Project",
+      "commandLineArgs": "--input \"C:\\Users\\MWhited\\OneDrive - OoBDev Group, LLC\\Desktop\\Matthew Whited.txt\"\r\n--output \"C:\\Users\\MWhited\\OneDrive - OoBDev Group, LLC\\Desktop\\Matthew Whited.docx\""
+    },
+    "Profile 1": {
+      "commandName": "Project",
+      "commandLineArgs": "--input \"https://gist.githubusercontent.com/mwwhited/a40bb3f3069cee86bedfdeccd4aff872/raw/1099fda692c3f5a2979c1d044adb4b44ee07c162/MatthewWhited-Resume.md\"\r\n--output \"C:\\Users\\mwwhi\\Desktop\\MatthewWhited-Resume.docx\""
+    }
+  }
+}

@@ -10,7 +10,11 @@
 		<IsPackable>false</IsPackable>
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 	</PropertyGroup>
-
+	
+		<!-- 
+	when `dotnet clean` is not clean enough... 
+	`dotnet clean /T:DeepClean` ensures all of the build and intermediate files are removed 
+	-->
 	<Target Name="DeepClean">
 		<Message Text="===== Really cleaning project: $(Configuration) - &quot;$(MSBuildProjectName)&quot;"  Importance="high"/>
 		<Message Text="===== SolutionDir: $(SolutionDir)"  Importance="high"/>
@@ -52,6 +56,40 @@
 			   Code="OBDPK002"
 			   File="$(MSBuildProjectName).csproj" />
 	</Target>
+
+  <Target Name="PrintFileSize" Condition="'$(PackageReadmeFile)'!=''"  BeforeTargets="Build">
+    <GetFileSize FileName="$(PackageReadmeFile)">
+      <Output TaskParameter="FileSize" PropertyName="PackageReadmeFileSize" />
+    </GetFileSize>
+    <Message Text="--- file size of $(PackageReadmeFile) is $(PackageReadmeFileSize)" />
+  </Target>
+  
+  <Target Name="CheckReadMeSize" 
+          Condition="'$(PackageReadmeFile)'!='' and Exists('$(PackageReadmeFile)') and $(PackageReadmeFileSize)&lt;=0" 
+          BeforeTargets="Build">
+    <Error Text="&quot;$(PackageReadmeFile)&quot; from &quot;$(MSBuildProjectName)&quot; is empty"
+			   Code="ELIPK003"
+			   File="$(MSBuildProjectName).csproj" />
+  </Target>
+
+  <UsingTask TaskName="GetFileSize" 
+             TaskFactory="RoslynCodeTaskFactory"
+             AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll" >
+    <ParameterGroup>
+      <FileName Required="true" />
+      <FileSize ParameterType="System.Int64" Output="true"/>
+    </ParameterGroup>
+    <Task>
+      <Using Namespace="System.IO"/>
+      <Code Type="Fragment" Language="cs">
+        <![CDATA[
+FileInfo fi = new FileInfo(FileName);
+FileSize = fi.Exists ? fi.Length : -1;
+]]>
+      </Code>
+    </Task>
+  </UsingTask>
+
  
 	<Import Project="Directory.Build.Database.targets" />
 

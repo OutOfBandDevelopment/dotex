@@ -1,30 +1,40 @@
-<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFramework>net9.0</TargetFramework>
-		<GenerateDocumentationFile>false</GenerateDocumentationFile>
-		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<ImplicitUsings>false</ImplicitUsings>
 		<Nullable>enable</Nullable>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+		<GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+
+		<PackageReadmeFile>Readme.TestUtilities.md</PackageReadmeFile>
+
 	</PropertyGroup>
-  
+
 	<ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.2" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.2" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.2" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.2" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.2" />
+		<InternalsVisibleTo Include="OoBDev.TestUtilities.Tests" />
+	</ItemGroup>
+	
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.2" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Console" Version="9.0.2" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.2" />
+		<PackageReference Include="Moq" Version="4.20.72" />
 		<PackageReference Include="MSTest.TestFramework" Version="3.8.1" />
-		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+		<PackageReference Include="JsonDiffPatch.Net" Version="2.3.0" />
+		<PackageReference Include="System.Memory.Data" Version="9.0.2" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\OoBDev.System\OoBDev.System.csproj" />
-	  <ProjectReference Include="..\OoBDev.System\OoBDev.System.csproj" />
+		<ProjectReference Include="..\OoBDev.Extensions\OoBDev.Extensions.csproj" />
+		<ProjectReference Include="..\OoBDev.System\OoBDev.System.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <PackageReference Update="GitVersion.MsBuild" Version="6.1.0" />
+	  <PackageReference Update="GitVersion.MsBuild" Version="6.0.2">
+	    <PrivateAssets>all</PrivateAssets>
+	    <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+	  </PackageReference>
 	</ItemGroup>
 
 </Project>

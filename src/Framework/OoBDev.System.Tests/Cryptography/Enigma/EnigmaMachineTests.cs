@@ -1,4 +1,5 @@
-﻿using OoBDev.System.Cryptography.Enigma;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using OoBDev.System.Cryptography.Enigma;
 using OoBDev.TestUtilities;
 using System;
 using System.Linq;
