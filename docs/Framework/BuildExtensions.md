@@ -18,5 +18,5 @@ provide better feedback for your development team while they are developing thei
 
 | Error Code    | Description                                                                                   |
 | ------------- | --------------------------------------------------------------------------------------------- |
-| ELIPK001      | The related project is marked to be packed for NUGET but does not include a package readme    |
-| ELIPK002      | The package readme file identified with the project does not exist                            |
+| OBDPK001      | The related project is marked to be packed for NUGET but does not include a package readme    |
+| OBDPK002      | The package readme file identified with the project does not exist                            |

@@ -1,4 +1,4 @@
-using OoBDev.TestUtilities;
+﻿using OoBDev.TestUtilities;
 using MailKit;
 using MailKit.Net.Imap;
 using MailKit.Net.Smtp;
@@ -18,7 +18,7 @@ public class ClientExampleTests
 
     [DataTestMethod]
     [TestCategory(TestCategories.DevLocal)]
-    [DataRow("nucleus-smtp4dev.d6cke7dpbbesb5ga.eastus.azurecontainer.io")]
+    [DataRow("example-smtp4dev.d6cke7dpbbesb5ga.eastus.azurecontainer.io")]
     [DataRow("localhost")]
     public async Task SendSmtpTest(string host, int port = 25)
     {
@@ -72,7 +72,7 @@ public class ClientExampleTests
 
     [DataTestMethod]
     [TestCategory(TestCategories.DevLocal)]
-    [DataRow("nucleus-smtp4dev.d6cke7dpbbesb5ga.eastus.azurecontainer.io")]
+    [DataRow("example-smtp4dev.d6cke7dpbbesb5ga.eastus.azurecontainer.io")]
     [DataRow("localhost")]
     public async Task GetImapTest(string host, int port = 143)
     {

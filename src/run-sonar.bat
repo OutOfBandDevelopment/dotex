@@ -1,5 +1,5 @@
 
-SET SONARQUBE_KEY=Lightwell-Nucleus_Nucleus.Net.Libs_AY1rEe7JXbPtYw2Rxn60
+SET SONARQUBE_KEY=OoBDev-Example_Example.Net.Libs_AY1rEe7JXbPtYw2Rxn60
 SET SONARQUBE_TOKEN=sqp_19ee9e7d6345e65dd413660300bbbc596c8ec7ba
 
 dotnet tool restore

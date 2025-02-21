@@ -35,8 +35,8 @@
 * https://github.com/microsoft/DacFx/blob/main/src/Microsoft.Build.Sql/docs/Functionality.md
 * https://github.com/microsoft/sql-server-language-extensions/tree/main/language-extensions/dotnet-core-CSharp
 * [c# - Accessing IOptions and DbContext within ConfigureServices - Stack Overflow](https://stackoverflow.com/questions/61783171/accessing-ioptions-and-dbcontext-within-configureservices)
-* Nucleus Notes
-  *  And add health checks to nucleus
+* Notes
+  *  And add health checks
   *  Should we add a signing key for events so we can validate impersonation?
   *  Should we support impersonation for back end events
   *  Should we add weighted predicates in the filter model
@@ -196,8 +196,8 @@ Install az-lazy from nuget
     dotnet tool install --global az-lazy --version 1.3.1
 
 load the solution in visual studio
-build the entire solution (mainly dataloader and nucleusdb)
-start the Lightwell.Nucleus.Functions project (this will start storage emulator for VS2019 or Azurite for VS2022)
+build the entire solution (mainly dataloader and exampledb)
+start the OoBDev.Example.Functions project (this will start storage emulator for VS2019 or Azurite for VS2022)
 
 from a command prompt run the following...
     SetupLocalStorageEmulator.bat
@@ -205,8 +205,8 @@ from a command prompt run the following...
 
 if you have issues with database schema you can delete the sqllocaldb by running the "RemoveLocalDb.bat"
 
-After this is all compelted you can run the Lightwell.Nucleus.WebAPI with the "with B2C" profile if you are using local development
-If you need to test the azure functions such as complex events, emails to scheduled jobs you can also run the Lightwell.Nucleus.Functions project
+After this is all completed you can run the OoBDev.Example.WebAPI with the "with B2C" profile if you are using local development
+If you need to test the azure functions such as complex events, emails to scheduled jobs you can also run the OoBDev.Example.Functions project
 
 
 ## Suggested DevTools

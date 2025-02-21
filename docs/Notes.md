@@ -8,7 +8,7 @@
 ```json
 {
   "lang": "spring",
-  "specURL": "https://nucleusaccnetdevapi.azurewebsites.net/swagger/all/swagger.json",
+  "specURL": "https://exampleaccnetdevapi.azurewebsites.net/swagger/all/swagger.json",
   "type": "SERVER",
   "codegenVersion": "V3",
   "options": { }

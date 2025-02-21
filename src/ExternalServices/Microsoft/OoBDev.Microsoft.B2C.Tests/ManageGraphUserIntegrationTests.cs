@@ -1,4 +1,4 @@
-using OoBDev.Extensions.Configuration;
+﻿using OoBDev.Extensions.Configuration;
 using OoBDev.Identity;
 using OoBDev.Microsoft.B2C.Identity;
 using OoBDev.TestUtilities;
@@ -22,7 +22,7 @@ public class ManageGraphUserIntegrationTests
             .AddInMemoryCollection(
                         ("MicrosoftIdentityOptions:ClientID", "6721294c-f956-4290-9629-6455b92fbcf2"),
                         ("MicrosoftIdentityOptions:Issuer", "f94cddd5-af89-42f6-9a81-d7898aef64a3"),
-                        ("MicrosoftIdentityOptions:Tenant", "lightwellnucleusdev"),
+                        ("MicrosoftIdentityOptions:Tenant", "oobdevexampledev"),
                         ("MicrosoftIdentityOptions:ClientSecret", "bf68Q~SI7x0osvcUaA8qR-oE9xA3ZTqNZVvl.b86")
                 )
             .Build();

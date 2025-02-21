@@ -131,7 +131,7 @@ spelling_languages = en-us
 vsspell_ignored_words_global=Linq|Mvc|Api|Nullable|Queryable|Bson|deserialize|Serializer|Jwt|Middleware|Json
 vsspell_ignored_words_framework=Searchable|Accessor|queueing|Auth|Templating|mongo|xslt|yaml|Username
 vsspell_ignored_words_application=Dto|Blog|Vlog|Blogs|Admin|Dataloader|Cli|Bcc|Cc|Sms|Imap|Sha|Keycloak
-vsspell_ignored_words_eliassen=OoBDev|Nucleus
+oobdev=OoBDev
 vsspell_ignored_words_extensions=qdrant|Qdrant|Sbert|SBert|sbert|ollama|Ollama|Markdig|Grpc|llm
 vsspell_ignored_words_apps=Pdf|uuid|Uuid|metadata|Tika|Docx|Odt|Epub|Rtf|Utc|Mailkit|Groq
 

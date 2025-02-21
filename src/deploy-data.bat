@@ -6,7 +6,7 @@ IF '%MongoDatabase__ConnectionString%'=='' SET MongoDatabase__ConnectionString=m
 
 @ECHO ON
 dotnet run ^
---project Tools\Nucleus.Dataloader.Cli ^
+--project Tools\Example.Dataloader.Cli ^
 --configuration Release ^
 --no-build ^
 --no-restore ^
@@ -14,12 +14,12 @@ dotnet run ^
 --SourcePath=.\Conf\MongoDb\SampleData ^
 --Action=DropCollectionAndImport ^
 --ConnectionString=%MongoDatabase__ConnectionString% ^
---DatabaseName=nucleus
+--DatabaseName=example
 
 @ECHO OFF
 
 REM dotnet.exe run ^
-REM --project .\tools\Nucleus.Dataloader.Cli ^
+REM --project .\tools\Example.Dataloader.Cli ^
 REM --configuration Release ^
 REM --no-build ^
 REM --no-restore ^
@@ -27,7 +27,7 @@ REM --nologo ^
 REM -- ^
 REM --SourcePath=.\Conf\MongoDb\SampleData ^
 REM --Action=Import ^
-REM --DatabaseName=nucleusX
+REM --DatabaseName=exampleX
 
 
 REM --no-build --no-restore --nologo ^

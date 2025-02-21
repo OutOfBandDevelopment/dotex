@@ -54,7 +54,7 @@ public interface ICoreMongoDatabase
 
 using OoBDev.MongoDB.Extensions;
 
-namespace Nucleus.Core.Persistence;
+namespace Example.Core.Persistence;
 
 public static class ServiceCollectionExtensions
 {

@@ -45,7 +45,7 @@ public class MyService
 
 ```json
 {
-    "Lightwell:MessageQueueing:MyService:QueueType": "Azure Storage Bus Topics"
+    "OoBDev:MessageQueueing:MyService:QueueType": "Azure Storage Bus Topics"
 }
 ```
 
@@ -97,8 +97,8 @@ public class OtherService
 // Possible Keys for the above MyService
 
 // QueueType = Default
-"Lightwell:MessageQueueing:MyService:Queue":"your-queue"
-"Lightwell:MessageQueueing:Default:Queue":"your-queue"
+"OoBDev:MessageQueueing:MyService:Queue":"your-queue"
+"OoBDev:MessageQueueing:Default:Queue":"your-queue"
 
 // QueueType = AmazonSimpleQueue
 "Amazon:SimpleQueue:MyService:Queue":"your-queue"
@@ -115,8 +115,8 @@ public class OtherService
 // Possible Keys for the above OtherService
 
 // QueueType = Default
-"Lightwell:MessageQueueing:YourQueue:QueueName":"your-queue"
-"Lightwell:MessageQueueing:Default:QueueName":"your-queue"
+"OoBDev:MessageQueueing:YourQueue:QueueName":"your-queue"
+"OoBDev:MessageQueueing:Default:QueueName":"your-queue"
 
 // QueueType = AmazonSimpleQueue
 "Amazon:SimpleQueue:YourQueue:QueueName":"your-queue"
@@ -170,18 +170,18 @@ Selectable queue type
 This will throw an exception if you try to resolve an message reader for this type.
 The current intention is to be used for read-only queues.
 
-Prefix for related configuration values `Nucleus:MessageQueueing:Special`
+Prefix for related configuration values `Example:MessageQueueing:Special`
 
 ### Configured
 
-If this is selected the configuration key matching "Nucleus:MessageQueueing:{MessageQueueAttribute.SimpleName}:QueueType" 
+If this is selected the configuration key matching "Example:MessageQueueing:{MessageQueueAttribute.SimpleName}:QueueType" 
 must be set to one of the valid values below.
 
 ### Default
 
 This will use the application configured default queue.  
 
-Prefix for related configuration values `Nucleus:MessageQueueing`
+Prefix for related configuration values `Example:MessageQueueing`
 
 ### AzureStorageQueue
 
