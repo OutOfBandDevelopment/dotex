@@ -42,7 +42,6 @@ extension also provides a common means for not only search and filter but also s
 
 * want to add support for claims based predicates
 * want to add support for claims based redaction/masking
-* [Initiative: Data Authorization pattern](https://eliassenps.atlassian.net/browse/NIT-26)
 
 ### MS Test Extensions
 
@@ -74,7 +73,6 @@ not needed as long as UseSourceLinks is not enabled in .runsettings for MSTest
 
 ### Software Bill of Materials
 
-* [Initiative: Centralized location to track packages/versioning/licensing](https://eliassenps.atlassian.net/browse/NIT-25)
 * https://spdx.dev/use/tools/
 * https://devblogs.microsoft.com/engineering-at-microsoft/generating-software-bills-of-materials-sboms-with-spdx-at-microsoft/
 * https://github.com/microsoft/sbom-tool
@@ -90,8 +88,6 @@ not needed as long as UseSourceLinks is not enabled in .runsettings for MSTest
 - [ ] Create bulk user management
 - [ ] Create application roles/claims management
 - [ ] enable client side event bus support using signal/socket.io/websockets
-- [ ] create services to submit/check status of work items
-  - [ ] [Initiative: Issue Reporting / Feedback Integration](https://eliassenps.atlassian.net/browse/NIT-13)
 
 - [ ] Event Scheduler
   - [ ] assign default rules as attribute based on event generator
@@ -104,7 +100,6 @@ not needed as long as UseSourceLinks is not enabled in .runsettings for MSTest
 
 - [ ] Document Management and Conversion
 
-  - [ ] [Initiative: Document Center](https://eliassenps.atlassian.net/browse/NIT-17)
   - [ ] normalize blob storage
   - [ ] https://github.com/okhosting/awesome-storage
   - [ ] https://github.com/topics/blob-storage
@@ -134,7 +129,6 @@ not needed as long as UseSourceLinks is not enabled in .runsettings for MSTest
 
 ### Analytics and Health monitoring
 
-* [Initiative: Application Analytics](https://eliassenps.atlassian.net/browse/NIT-19)
 * add support for checking the status of dependent services like message queues, email servers and the like
 * add context correlation support to allow flowing a correlation ID from the client to dependent services and logs
   * https://stackoverflow.com/questions/56068619/should-i-use-request-id-x-request-id-or-x-correlation-id-in-the-request-header
@@ -145,6 +139,6 @@ not needed as long as UseSourceLinks is not enabled in .runsettings for MSTest
 
 ## Known Issues
 
-- [ ] [Tech Debt: Filters on Date for 'equals to' don't work](https://eliassenps.atlassian.net/browse/NDM-245)
-- [ ] [Create example dotnet template set](https://eliassenps.atlassian.net/browse/NDM-102)
-- [ ] [Add data redaction extension for query engine](https://eliassenps.atlassian.net/browse/NDM-137)
+- [ ] Tech Debt: Filters on Date for 'equals to' don't work
+- [ ] Create example dotnet template set
+- [ ] Add data redaction extension for query engine

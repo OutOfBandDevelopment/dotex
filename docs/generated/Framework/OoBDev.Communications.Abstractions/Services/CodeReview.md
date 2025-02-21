@@ -23,9 +23,6 @@ namespace OoBDev.Communications.Services;
 /// <summary>
 /// Represents an interface for sending communication messages of a specified type.
 /// Provides methods for sending and trying to send messages asynchronously.
-/// <see href="https://eliassenps.atlassian.net/browse/NIT-12">NIT-12</see>
-/// <see href="https://eliassenps.atlassian.net/browse/NDM-368">NDM-368</see>
-/// <see href="https://eliassenps.atlassian.net/browse/NDM-366">NDM-366</see>
 /// </summary>
 /// <typeparam name="TMessageType">The type of the communication message, which is a subtype of `CommunicationMessage`.</typeparam>
 public interface ICommunicationSender<TMessageType>

@@ -64,8 +64,3 @@ smtpServer ->> example: SendCompleted(emailMessageModel)
 
 @enduml
 ```
-### Contact
-
-For more information about the OoBDev Communications libraries, please refer to the [OoBDev Communications website](https://www.eliassen.com/communications).
-
-I hope this helps! Let me know if you have any further questions.

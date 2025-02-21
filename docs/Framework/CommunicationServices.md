@@ -24,7 +24,6 @@ Additional queue mapping provided from `OoBDev.Communications.MessageQueueing`
 
 ## Current Implementations
 
-* [Initiative: Notifications](https://eliassenps.atlassian.net/browse/NIT-12)
 * MailKit - IMAP (inbound) / SMTP (Outbound)  Requires `OoBDev.MailKit`
   * IMAP support is currently in design and is not fully supported at this time.
   * should have the ability to read, dispatch to queue then either delete or mark read

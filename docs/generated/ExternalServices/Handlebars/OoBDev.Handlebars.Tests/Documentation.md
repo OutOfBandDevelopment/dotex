@@ -28,7 +28,7 @@ Here is the documentation for the `OoBDev.Handlebars.Tests.csproj` file:
 @startuml
 class OoBDevHandlebarsTests {
   - testingOoBDevHandlebars: OoBDevHandlebars
-  - eliassenTestUtilities: OoBDevTestUtilities
+  - oobdevTestUtilities: OoBDevTestUtilities
 }
 
 class OoBDevHandlebars {

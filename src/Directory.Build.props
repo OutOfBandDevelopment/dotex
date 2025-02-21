@@ -53,6 +53,7 @@
 		<None Include="@(LicenseFile)" Pack="true" PackagePath="\" />
 	</ItemGroup>
 
+ <!--
  <PropertyGroup Condition="'$(LOCAL_NUGET)' != ''">
     <PackageOutputPath>$(LOCAL_NUGET.Trim('\'))\</PackageOutputPath>
   </PropertyGroup>
@@ -63,16 +64,16 @@
     <DocumentPath>$(DOCUMENT_PATH.Trim('\'))\</DocumentPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(DOCUMENT_PATH)' == ''">
-    <DocumentPath>$(SolutionDir)docs\</DocumentPath>
+    <DocumentPath>$(SolutionDir)..\docs\</DocumentPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(CodeDocumentPath)' == ''">
     <CodeDocumentPath>$(DocumentPath)code\</CodeDocumentPath>
-  </PropertyGroup>
+  </PropertyGroup>-->
   
 	<PropertyGroup>
 		<BasePublishPath>$(SolutionDir)publish\</BasePublishPath>
 		<PackageOutputPath>$(BasePublishPath)packages\</PackageOutputPath>
-		<DocumentPath>$(SolutionDir)docs\</DocumentPath>
+		<DocumentPath>$(SolutionDir)..\docs\</DocumentPath>
 		<CodeDocumentPath>$(DocumentPath)code\</CodeDocumentPath>
 	</PropertyGroup>
 

@@ -65,7 +65,6 @@ Gets or sets the headers associated with the SMS message.
 
 ## Class: Communications.Services.ICommunicationSender`1
 Represents an interface for sending communication messages of a specified type. 
-[NIT-12](https://eliassenps.atlassian.net/browse/NIT-12)[NDM-368](https://eliassenps.atlassian.net/browse/NDM-368)[NDM-366](https://eliassenps.atlassian.net/browse/NDM-366)The type of the communication message. 
 
 ### Methods
 

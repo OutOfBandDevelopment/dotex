@@ -120,9 +120,3 @@ query.OrderBy = new OrderByParameter { Field = "LastName", Direction = OrderDire
 
 var results = query.ExecuteQuery();
 ```
-**Additional Resources**
-
-For more information on the OoBDev System.Linq library, please refer to the following resources:
-
-* [OoBDev System.Linq Documentation](https://www.eliassen.systems/dotnet/docs/linq)
-* [OoBDev System.Linq GitHub Repository](https://github.com/OoBDev-System/Linq)
