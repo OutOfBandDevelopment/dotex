@@ -128,4 +128,6 @@
 		<None Include="$(PackageReadmeFile)" Pack="true" PackagePath="\"/>
 	</ItemGroup>
 
+  <Import Project="SqlClr.Build.props"/>
+
 </Project>
