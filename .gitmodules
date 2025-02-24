@@ -1,0 +1,6 @@
+[submodule "src/ExternalServices/AllMiniLML6v2Sharp"]
+	path = src/ExternalServices/AllMiniLML6v2Sharp
+	url = https://github.com/OutOfBandDevelopment/AllMiniLML6v2Sharp.git
+[submodule "src/ExternalServices/SBert/OoBDev.SBert.AllMiniLML6v2Sharp/model"]
+	path = src/ExternalServices/SBert/OoBDev.SBert.AllMiniLML6v2Sharp/model
+	url = https://huggingface.co/onnx-models/all-MiniLM-L6-v2-onnx

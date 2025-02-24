@@ -1,6 +1,5 @@
 ﻿using OoBDev.AI;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
 
@@ -11,7 +10,7 @@ namespace OoBDev.WebApi.Controllers;
 /// </summary>
 [Route("api/[controller]")]
 [ApiController]
-public class SBERTController : ControllerBase
+public class SBERTDefaultController : ControllerBase
 {
     private readonly IEmbeddingProvider _embedding;
 
@@ -19,8 +18,8 @@ public class SBERTController : ControllerBase
     /// Initializes a new instance of the <see cref="AIController"/> class with the specified dependencies.
     /// </summary>
     /// <param name="embedding">The embedding provider.</param>
-    public SBERTController(
-        [FromKeyedServices("SBERT")] IEmbeddingProvider embedding
+    public SBERTDefaultController(
+        IEmbeddingProvider embedding
         ) => _embedding = embedding;
 
     /// <summary>

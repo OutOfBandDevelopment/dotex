@@ -1,4 +1,4 @@
-using OoBDev.Apache.Tika;
+﻿using OoBDev.Apache.Tika;
 using OoBDev.Azure.StorageAccount;
 using OoBDev.GroqCloud;
 using OoBDev.Handlebars;
@@ -18,6 +18,7 @@ using OoBDev.SBert;
 using OoBDev.WkHtmlToPdf;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using OoBDev.SBert.AllMiniLML6v2Sharp;
 
 namespace OoBDev.Common.Extensions;
 
@@ -65,6 +66,7 @@ public static class ServiceCollectionExtensions
             services.TryAddKeycloakServices(configuration, identityBuilder.KeycloakIdentityConfigurationSection);
 
         services.TryAddSbertServices(configuration, externalBuilder.SentenceEmbeddingOptionSection);
+        services.TryAddAllMiniLmL6V2Services(configuration, externalBuilder.SentenceEmbeddingOptionSection);
         services.TryAddQdrantServices(configuration, externalBuilder.QdrantOptionSection);
 
         services.TryAddOpenSearchServices(configuration, externalBuilder.OpenSearchOptionSection);
