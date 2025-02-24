@@ -1,7 +1,8 @@
-using OoBDev.AI;
+﻿using OoBDev.AI;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace OoBDev.SBert;
 
@@ -32,7 +33,7 @@ public class SentenceEmbeddingProvider : IEmbeddingProvider
     /// <summary>
     /// Gets the length of the embeddings.
     /// </summary>
-    public int Length => _length ??= GetEmbeddingAsync("hello world", null).Result.Length;
+    public int Length => _length ??= GenerateEmbeddingAsync("hello world", default, default).Result.Length;
 
     /// <summary>
     /// Gets the embedding for the given content asynchronously.
@@ -40,12 +41,14 @@ public class SentenceEmbeddingProvider : IEmbeddingProvider
     /// <param name="content">The content for which to obtain the embedding.</param>
     /// <param name="model">The model for which to obtain the embedding.</param>
     /// <returns>A task representing the asynchronous operation. The task result contains the embedding as an array of floats.</returns>
-    public Task<ReadOnlyMemory<float>> GetEmbeddingAsync(
+    public Task<ReadOnlyMemory<float>> GenerateEmbeddingAsync(
         string content,
 #if DEBUG
-        string? model
+        string? model,
+        CancellationToken cancellationToken
 #else
-        string? model = default
+        string? model = default,
+        CancellationToken cancellationToken = default
 #endif
         ) => _client.GetEmbeddingAsync(content);
 }

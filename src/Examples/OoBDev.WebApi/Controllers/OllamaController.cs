@@ -1,4 +1,4 @@
-using OoBDev.AI;
+﻿using OoBDev.AI;
 using OoBDev.AI.Models;
 using OoBDev.WebApi.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -69,7 +69,7 @@ public class OllamaController : ControllerBase
     /// <returns>The embedding vector.</returns>
     [HttpGet]
     public async Task<ReadOnlyMemory<float>> Embed(string text, string? model = default) =>
-        await _embedding.GetEmbeddingAsync(text, model);
+        await _embedding.GenerateEmbeddingAsync(text, model, default);
 
     /// <summary>
     /// executes a completion request

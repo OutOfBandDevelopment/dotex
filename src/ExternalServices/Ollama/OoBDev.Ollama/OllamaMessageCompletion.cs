@@ -38,7 +38,7 @@ public class OllamaMessageCompletion : IMessageCompletion, IEmbeddingProvider
     /// <summary>
     /// Gets the length of the embeddings.
     /// </summary>
-    public int Length => _length ??= GetEmbeddingAsync("hello world", null).Result.Length;
+    public int Length => _length ??= GenerateEmbeddingAsync("hello world", default, default).Result.Length;
 
     /// <summary>
     /// Retrieves the embedding vector for the given content.
@@ -47,12 +47,14 @@ public class OllamaMessageCompletion : IMessageCompletion, IEmbeddingProvider
     /// <param name="model">The model for which to retrieve the embedding.</param>
     /// <returns>A task representing the asynchronous operation. The task result contains the 
     /// embedding vector as an array of single-precision floats.</returns>
-    public async Task<ReadOnlyMemory<float>> GetEmbeddingAsync(
+    public async Task<ReadOnlyMemory<float>> GenerateEmbeddingAsync(
         string content,
 #if DEBUG
-        string? model
+        string? model,
+        CancellationToken cancellationToken
 #else
-        string? model = default
+        string? model = default,
+        CancellationToken cancellationToken = default
 #endif
         ) =>
         await _client.GetEmbeddingSingleAsync(content, model ?? _client.SelectedModel);
