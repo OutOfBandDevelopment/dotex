@@ -16,4 +16,9 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\Framework\OoBDev.TestUtilities\OoBDev.TestUtilities.csproj" />
+    <ProjectReference Include="..\OoBDev.Data.Vectors\OoBDev.Data.Vectors.csproj" />
+  </ItemGroup>
+
 </Project>

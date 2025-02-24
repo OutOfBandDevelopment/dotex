@@ -1,4 +1,4 @@
-DECLARE @vector1 [VectorF] =
+DECLARE @vector1 [vector].[VectorF] =
 '[
   -0.048670433,
   0.05574634,
@@ -385,7 +385,7 @@ DECLARE @vector1 [VectorF] =
   0.030933788,
   0.020237014
 ]';
-DECLARE @vector2 [VectorF] =
+DECLARE @vector2 [vector].[VectorF] =
 '
 [
   -0.04683559,
@@ -775,13 +775,13 @@ DECLARE @vector2 [VectorF] =
 ]';
 
 SELECT 
-	 [vector].Angle([dbo].[CentroidF]([vector]) OVER ())         AS Angle
-	,[vector].Euclidean([dbo].[CentroidF]([vector]) OVER ())     AS Euclidean
-	,[vector].DotProduct([dbo].[CentroidF]([vector]) OVER ())    AS DotProduct
-	,[vector].Cosine([dbo].[CentroidF]([vector]) OVER ())        AS Cosine
-	,[vector].Similarity([dbo].[CentroidF]([vector]) OVER ())    AS Similarity
+	 [value].Angle([vector].[CentroidF]([value]) OVER ())         AS Angle
+	,[value].Euclidean([vector].[CentroidF]([value]) OVER ())     AS Euclidean
+	,[value].DotProduct([vector].[CentroidF]([value]) OVER ())    AS DotProduct
+	,[value].Cosine([vector].[CentroidF]([value]) OVER ())        AS Cosine
+	,[value].Similarity([vector].[CentroidF]([value]) OVER ())    AS Similarity
 FROM ( VALUES 
 	 (@vector1) --Matthew Whited
 	,(@vector2) --Matt Whited
-) as [vectors](vector)
+) as [vectors]([value])
 

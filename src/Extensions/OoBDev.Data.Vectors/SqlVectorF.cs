@@ -225,4 +225,7 @@ public record struct SqlVectorF : INullable, IBinarySerialize
     }
 
     public static implicit operator SqlVectorF(SqlVector vector) => new(values: vector.Values);
+    public static implicit operator SqlVectorF(float[] vector) => new(values: vector);
+    public static implicit operator float[](SqlVectorF vector) => [.. vector.Values.Select(Convert.ToSingle)];
+    public static implicit operator double[](SqlVectorF vector) => [.. vector.Values];
 }

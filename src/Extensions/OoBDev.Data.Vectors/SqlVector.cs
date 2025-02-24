@@ -36,9 +36,7 @@ public record struct SqlVector : INullable, IBinarySerialize
         _magnitude = 0.0;
     }
 
-    public SqlVector(IReadOnlyList<float> values) : this([.. values.Select(Convert.ToDouble)])
-    {
-    }
+    public SqlVector(IReadOnlyList<float> values) : this([.. values.Select(Convert.ToDouble)]) { }
 
     public SqlVector(IReadOnlyList<double> values)
     {
@@ -137,6 +135,15 @@ public record struct SqlVector : INullable, IBinarySerialize
     public SqlVector Midpoint(SqlVector vector) =>
         VectorFunctions.Midpoint(this, vector);
 
+    [SqlMethod(
+        Name = nameof(Length),
+        OnNullCall = false,
+        IsDeterministic = true,
+        IsPrecise = true,
+        IsMutator = false
+        )]
+    public SqlInt32 Length() => Values.Count;
+
     public void Read(BinaryReader reader)
     {
         var header = reader.ReadInt32();
@@ -231,4 +238,7 @@ public record struct SqlVector : INullable, IBinarySerialize
     }
 
     public static implicit operator SqlVector(SqlVectorF vector) => new(values: vector.Values);
+    public static implicit operator SqlVector(float[] vector) => new(values: vector);
+    public static implicit operator float[](SqlVector vector) => [.. vector.Values.Select(Convert.ToSingle)];
+    public static implicit operator double[](SqlVector vector) => [.. vector.Values];
 }
