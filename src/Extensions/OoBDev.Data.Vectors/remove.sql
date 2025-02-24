@@ -1,3 +1,6 @@
+
 DROP AGGREGATE [Centroid]
-DROP TYPE [VECTOR] 
+DROP AGGREGATE [CentroidF]
+DROP TYPE [Vector] 
+DROP TYPE [VectorF] 
 DROP ASSEMBLY [OoBDev.Data.Vectors]
