@@ -1,0 +1,3 @@
+DROP AGGREGATE [Centroid]
+DROP TYPE [VECTOR] 
+DROP ASSEMBLY [OoBDev.Data.Vectors]

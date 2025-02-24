@@ -1,0 +1,143 @@
+<Project>
+   <UsingTask TaskName="GetAsHexString" TaskFactory="RoslynCodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
+    <ParameterGroup>
+      <InputFile ParameterType="System.String" Required="true" />
+
+      <OutputText ParameterType="System.String" Output="true"/>
+    </ParameterGroup>
+    <Task>
+      <Using Namespace="System" />
+      <Using Namespace="System.IO" />
+      <Code Type="Fragment" Language="cs">
+        <![CDATA[
+        var fileContent = File.ReadAllBytes(InputFile);
+        OutputText = BitConverter.ToString(fileContent).Replace("-", "");
+        ]]>
+      </Code>
+    </Task>
+  </UsingTask>
+
+  <UsingTask TaskName="GetAssemblyInstallScript" TaskFactory="RoslynCodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
+    <ParameterGroup>
+      <AssemblyName ParameterType="System.String" Required="true" />
+      <HexString ParameterType="System.String" Required="true" />
+
+      <OutputText ParameterType="System.String" Output="true"/>
+    </ParameterGroup>
+    <Task>
+      <Using Namespace="System" />
+      <Using Namespace="System.IO" />
+      <Code Type="Fragment" Language="cs">
+        <![CDATA[
+        var template = @"
+-- Generated: {2}        
+/*
+EXEC sp_configure 'show advanced options', 1;
+RECONFIGURE;
+EXEC sp_configure 'clr strict security', 0;
+RECONFIGURE;
+EXEC sp_configure 'clr enabled', 1;
+RECONFIGURE;
+*/
+        
+IF NOT EXISTS (
+	SELECT *
+	FROM sys.assemblies
+	WHERE 
+		assemblies.name = '{0}'
+) BEGIN
+	PRINT 'Installing [{0}]';
+	EXEC('
+		CREATE ASSEMBLY [{0}] 
+		FROM 0x{1}
+		WITH PERMISSION_SET = SAFE
+	');
+END ELSE BEGIN
+	PRINT 'Update [{0}]';
+	EXEC('
+		BEGIN TRY
+			ALTER ASSEMBLY [{0}] 
+			FROM 0x{1}
+			WITH PERMISSION_SET = SAFE, UNCHECKED DATA
+		END TRY
+		BEGIN CATCH
+			IF ERROR_NUMBER() IN (6288)
+			BEGIN
+				-- Ignore this specific error
+				PRINT ''-- Assembly was updated with data unchecked.'';
+			END
+			ELSE IF ERROR_NUMBER() IN (6285)
+			BEGIN
+				-- Ignore this specific error
+				PRINT ''-- Assembly was unchanged.'';
+			END
+			ELSE 
+			BEGIN
+				THROW;
+			END
+		END CATCH
+	');
+END
+GO
+";
+        OutputText = string.Format(template, AssemblyName, HexString, DateTimeOffset.Now);
+        ]]>
+      </Code>
+    </Task>
+  </UsingTask>
+
+  <UsingTask TaskName="WriteTextFile" TaskFactory="RoslynCodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
+    <ParameterGroup>
+      <InputText ParameterType="System.String" Required="true" />
+      <OutputFile ParameterType="System.String" Required="true" />
+    </ParameterGroup>
+    <Task>
+      <Using Namespace="System" />
+      <Using Namespace="System.IO" />
+      <Code Type="Fragment" Language="cs">
+        <![CDATA[
+        File.WriteAllText(OutputFile, InputText);
+        ]]>
+      </Code>
+    </Task>
+  </UsingTask>
+
+  <Target Name="BuildSqlInstallScript" DependsOnTargets="Build">
+    
+    <!--
+    <Message Text="OutputPath: $(OutputPath)" Importance="High"/>
+    -->
+    
+    <PropertyGroup>
+      <RealOutputPath Condition="Exists($(OutputPath))">$(OutputPath)</RealOutputPath>
+      <RealOutputPath Condition="!Exists($(OutputPath))">$(OutputPath.TrimEnd('\'))\bin\$(Configuration)\$(TargetFramework)</RealOutputPath>   
+
+      <SqlClrAssemblyPath Condition="'$(SqlClrAssemblyPath)' == ''">$(RealOutputPath.TrimEnd('\'))\$(AssemblyName).dll</SqlClrAssemblyPath>
+      <SqlInstallScriptPath Condition="'$(SqlInstallScriptPath)' == ''">$(RealOutputPath.TrimEnd('\'))\$(AssemblyName).install.sql</SqlInstallScriptPath>
+    </PropertyGroup>
+
+    <!--
+    <Message Text="RealOutputPath: $(RealOutputPath)" Importance="High"/>
+    <Message Text="SqlClrAssemblyPath: $(SqlClrAssemblyPath)" Importance="High"/>
+    <Message Text="SqlInstallScriptPath: $(SqlInstallScriptPath)" Importance="High"/>
+    -->
+    
+    <GetAsHexString InputFile="$(SqlClrAssemblyPath)" Condition="Exists($(SqlClrAssemblyPath))" >
+      <Output TaskParameter="OutputText" PropertyName="AssemblyHexString" />
+    </GetAsHexString>
+    <GetAssemblyInstallScript AssemblyName="$(AssemblyName)" HexString="$(AssemblyHexString)" Condition="'$(AssemblyHexString)' != ''"  >
+      <Output TaskParameter="OutputText" PropertyName="SqlInstallScript" />
+    </GetAssemblyInstallScript>
+    <Delete Files="$(SqlInstallScriptPath)" Condition="Exists($(SqlInstallScriptPath))" />
+    <WriteTextFile InputText="$(SqlInstallScript)" OutputFile="$(SqlInstallScriptPath)" Condition="'$(SqlInstallScript)' != ''" />
+
+    <!-- Output the result -->
+    <!--<Copy SourceFiles="$(SqlInstallScriptPath)" DestinationFolder="$(PublishDir)" />-->
+    <Message Text="Built: $(SqlInstallScriptPath)" Importance="High" Condition="Exists($(SqlInstallScriptPath))" />
+  </Target>
+
+  <Target Name="PostBuild" AfterTargets="Build" Condition="'$(IsSqlClr)'=='True'">
+    <CallTarget Targets="BuildSqlInstallScript" />
+  </Target>
+
+</Project>
