@@ -42,7 +42,7 @@ public record struct SqlVector : INullable, IBinarySerialize
     {
         _isNull = false;
         _values = values;
-        _magnitude = _magnitude = VectorFunctions.Magnitude(values);
+        _magnitude = _magnitude = VectorFunctions.MagnitudeInternal(values);
     }
 
     public static SqlVector Null => new(true);
@@ -64,7 +64,8 @@ public record struct SqlVector : INullable, IBinarySerialize
         IsPrecise = true,
         IsMutator = false
         )]
-    public SqlDouble Distance(SqlVector vector, SqlString metric) => VectorFunctions.Distance(metric, this, vector);
+    public SqlDouble Distance(SqlVector vector, SqlString metric) => 
+		VectorFunctions.Distance(metric, this, vector);
 
     [SqlMethod(
         Name = nameof(Distance),
@@ -73,7 +74,8 @@ public record struct SqlVector : INullable, IBinarySerialize
         IsPrecise = true,
         IsMutator = false
         )]
-    public SqlDouble Angle(SqlVector vector) => VectorFunctions.Angle(this, vector);
+    public SqlDouble Angle(SqlVector vector) => 
+		VectorFunctions.Angle(this, vector);
 
     [SqlMethod(
         Name = nameof(Cosine),
