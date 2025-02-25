@@ -36,15 +36,13 @@ public record struct SqlVector : INullable, IBinarySerialize
         _magnitude = 0.0;
     }
 
-    public SqlVector(IReadOnlyList<float> values) : this([.. values.Select(Convert.ToDouble)])
-    {
-    }
+    public SqlVector(IReadOnlyList<float> values) : this([.. values.Select(Convert.ToDouble)]) { }
 
     public SqlVector(IReadOnlyList<double> values)
     {
         _isNull = false;
         _values = values;
-        _magnitude = _magnitude = VectorFunctions.Magnitude(values);
+        _magnitude = _magnitude = VectorFunctions.MagnitudeInternal(values);
     }
 
     public static SqlVector Null => new(true);
@@ -66,7 +64,8 @@ public record struct SqlVector : INullable, IBinarySerialize
         IsPrecise = true,
         IsMutator = false
         )]
-    public SqlDouble Distance(SqlVector vector, SqlString metric) => VectorFunctions.Distance(metric, this, vector);
+    public SqlDouble Distance(SqlVector vector, SqlString metric) => 
+		VectorFunctions.Distance(metric, this, vector);
 
     [SqlMethod(
         Name = nameof(Distance),
@@ -75,7 +74,8 @@ public record struct SqlVector : INullable, IBinarySerialize
         IsPrecise = true,
         IsMutator = false
         )]
-    public SqlDouble Angle(SqlVector vector) => VectorFunctions.Angle(this, vector);
+    public SqlDouble Angle(SqlVector vector) => 
+		VectorFunctions.Angle(this, vector);
 
     [SqlMethod(
         Name = nameof(Cosine),
@@ -136,6 +136,15 @@ public record struct SqlVector : INullable, IBinarySerialize
         )]
     public SqlVector Midpoint(SqlVector vector) =>
         VectorFunctions.Midpoint(this, vector);
+
+    [SqlMethod(
+        Name = nameof(Length),
+        OnNullCall = false,
+        IsDeterministic = true,
+        IsPrecise = true,
+        IsMutator = false
+        )]
+    public SqlInt32 Length() => Values.Count;
 
     public void Read(BinaryReader reader)
     {
@@ -231,4 +240,7 @@ public record struct SqlVector : INullable, IBinarySerialize
     }
 
     public static implicit operator SqlVector(SqlVectorF vector) => new(values: vector.Values);
+    public static implicit operator SqlVector(float[] vector) => new(values: vector);
+    public static implicit operator float[](SqlVector vector) => [.. vector.Values.Select(Convert.ToSingle)];
+    public static implicit operator double[](SqlVector vector) => [.. vector.Values];
 }

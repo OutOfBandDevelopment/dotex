@@ -1,12 +1,11 @@
-DECLARE @vector VECTOR = '[1,2,3,4]';
-DECLARE @vector2 VECTOR = '[4,3,2,1]';
-DECLARE @vector3 VECTOR = '[2,1,3,5]';
-DECLARE @vector4 VECTORF = '[2,1,3,5]';
+DECLARE @vector [vector].[VectorD] = '[1,2,3,4]';
+DECLARE @vector2 [vector].[VectorD] = '[4,3,2,1]';
+DECLARE @vector3 [vector].[VectorD] = '[2,1,3,5]';
+DECLARE @vector4 [vector].[VectorF] = '[2,1,3,5]';
 
 SELECT 
 	 LEN(CAST(@vector AS VARBINARY(MAX)))
 	,LEN(CAST(@vector4 AS VARBINARY(MAX)))
-
 
 --SELECT 
 --	@vector.Element(0) AS Element,
@@ -21,10 +20,10 @@ SELECT
 --	'x';
 	
 SELECT 
-	CAST([dbo].[Centroid]([vector]) AS NVARCHAR(MAX))
+	CAST([vector].[Centroid]([vector]) AS NVARCHAR(MAX))
 FROM (VALUES 
 	(@vector),
 	(@vector2),
 	(@vector3),
-	(CAST(CAST(@vector4 AS NVARCHAR(MAX)) AS Vector))
+	(CAST(CAST(@vector4 AS NVARCHAR(MAX)) AS [vector].[VectorD]))
 ) AS [vectors](vector)
