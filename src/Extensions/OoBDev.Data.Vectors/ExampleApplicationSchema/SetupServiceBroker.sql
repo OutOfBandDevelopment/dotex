@@ -77,6 +77,7 @@ BEGIN
 
 	BEGIN TRY
 		BEGIN TRANSACTION;
+		DECLARE @processed INT;
 
 		WAITFOR (
 			RECEIVE TOP (@read)
@@ -86,9 +87,12 @@ BEGIN
 				,@messageBody			= CAST(message_body AS XML)
 				FROM [oobdev://embedding/sentence-transformer/queue]
 		), TIMEOUT @timeout;
-
-		IF (@@ROWCOUNT > 0)
+		
+		SET @processed = 1;
+		PRINT '[Sentence-transformer_Reader]: ' + ISNULL(@mesageType,'(null)') + ' ' + CAST(@processed AS NVARCHAR(20))
+		IF (@processed > 0)
 		BEGIN
+			PRINT '[Sentence-transformer_Reader]: TODO: get embedding'
 			SELECT 
 				 @conversationGroup		AS [conversationGroup]
 				,@conversationHandle	AS [conversationHandle]
@@ -97,23 +101,39 @@ BEGIN
 
 			IF (@mesageType = 'oobdev://embedding/sentence-transformer/request')
 			BEGIN
+				PRINT 'TODO: read in message, calculated embedding, return embedding'
 				DECLARE @response XML = N'<response id="123" value="hello world!" />';
 
 				SEND ON CONVERSATION @conversationHandle
 					MESSAGE TYPE [oobdev://embedding/sentence-transformer/response]
 					(@response);
 			END 
-			ELSE IF (@messageType = 'http://schemas.microsoft.com/SQL/ServiceBroker/EndDialog')
+			ELSE IF (@mesageType = 'http://schemas.microsoft.com/SQL/ServiceBroker/EndDialog')
 			BEGIN
-				END CONVERSATION @conversationHandle;
-			END
+				PRINT 'TODO: completed complex';
+				
+			END CONVERSATION @conversationHandle;
+			END 
 		END
 
 		COMMIT;
 	END TRY
 	BEGIN CATCH
+		SELECT 
+			ERROR_NUMBER() AS ErrorNumber,
+			ERROR_MESSAGE() AS ErrorMessage;
+		ROLLBACK;
 	END CATCH
 END
+GO
+ALTER QUEUE [oobdev://embedding/sentence-transformer/queue]
+   WITH 
+   ACTIVATION (
+		STATUS = ON,
+		PROCEDURE_NAME = [dbo].[Sentence-transformer_Reader],
+		MAX_QUEUE_READERS = 1, 
+		EXECUTE AS SELF
+	)
 GO
 
 CREATE PROCEDURE [dbo].[Storage_Reader]
@@ -129,6 +149,7 @@ BEGIN
 
 	BEGIN TRY
 		BEGIN TRANSACTION;
+		DECLARE @processed INT;
 
 		WAITFOR (
 			RECEIVE TOP (@read)
@@ -138,23 +159,40 @@ BEGIN
 				,@messageBody			= CAST(message_body AS XML)
 				FROM [oobdev://embedding/storage/queue]
 		), TIMEOUT @timeout;
-
-		IF (@@ROWCOUNT > 0)
+		
+		SET @processed = 1;
+		PRINT '[Storage_Reader]: ' + ISNULL(@mesageType,'(null)') + ' ' + CAST(@processed AS NVARCHAR(20))
+		IF (@processed > 0)
 		BEGIN
+			PRINT '[Storage_Reader]: TODO: write embedding'
 			SELECT 
 				 @conversationGroup		AS [conversationGroup]
 				,@conversationHandle	AS [conversationHandle]
 				,@mesageType			AS [messageType]
 				,@messageBody			AS [messageBody];
 
+			PRINT '[Storage_Reader]: end request'
 			END CONVERSATION @conversationHandle;
 		END
 
 		COMMIT;
 	END TRY
 	BEGIN CATCH
+		SELECT 
+			ERROR_NUMBER() AS ErrorNumber,
+			ERROR_MESSAGE() AS ErrorMessage;
+		ROLLBACK;
 	END CATCH
 END
+GO
+ALTER QUEUE [oobdev://embedding/storage/queue]
+   WITH 
+   ACTIVATION (
+		STATUS = ON,
+		PROCEDURE_NAME = [dbo].[Storage_Reader],
+		MAX_QUEUE_READERS = 1, 
+		EXECUTE AS SELF
+	)
 GO
 
 -- read queue 
