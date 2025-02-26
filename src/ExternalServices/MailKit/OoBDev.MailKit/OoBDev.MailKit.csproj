@@ -30,4 +30,8 @@
 		<ProjectReference Include="..\..\..\Framework\OoBDev.Communications.Abstractions\OoBDev.Communications.Abstractions.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <PackageReference Update="MailKit" Version="4.10.0" />
+	</ItemGroup>
+
 </Project>
