@@ -20,17 +20,14 @@
 		<PackageReference Include="Handlebars.Net" Version="2.1.6" />
 		<PackageReference Include="Handlebars.Net.Extension.Json" Version="1.0.0" />
 		<PackageReference Include="Handlebars.Net.Helpers" Version="2.4.12" />
+    <PackageReference Include="GitVersion.MsBuild" Version="6.1.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
 	</ItemGroup>
 
 	<ItemGroup>
 	  <ProjectReference Include="..\..\..\Framework\OoBDev.System.Abstractions\OoBDev.System.Abstractions.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <PackageReference Update="GitVersion.MsBuild" Version="6.0.2">
-	    <PrivateAssets>all</PrivateAssets>
-	    <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-	  </PackageReference>
 	</ItemGroup>
 
 </Project>

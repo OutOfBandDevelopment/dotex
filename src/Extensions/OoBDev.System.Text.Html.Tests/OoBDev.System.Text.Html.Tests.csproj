@@ -15,15 +15,15 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="GitVersion.MsBuild" Version="6.1.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\Framework\OoBDev.TestUtilities\OoBDev.TestUtilities.csproj" />
     <ProjectReference Include="..\OoBDev.System.Text.Html\OoBDev.System.Text.Html.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Update="GitVersion.MsBuild" Version="6.1.0" />
   </ItemGroup>
 
 </Project>

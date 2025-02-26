@@ -15,29 +15,26 @@
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Extensions.FileSystemGlobbing" Version="9.0.2" />
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.2" />
-	</ItemGroup>
+    <PackageReference Include="GitVersion.MsBuild" Version="6.1.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
 
 
-	<ItemGroup>
-		<ProjectReference Include="..\..\ExternalServices\Handlebars\OoBDev.Handlebars\OoBDev.Handlebars.csproj" />
-		<ProjectReference Include="..\..\Framework\OoBDev.Extensions\OoBDev.Extensions.csproj" />
-		<ProjectReference Include="..\..\Framework\OoBDev.System\OoBDev.System.csproj" />
-	</ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\ExternalServices\Handlebars\OoBDev.Handlebars\OoBDev.Handlebars.csproj" />
+    <ProjectReference Include="..\..\Framework\OoBDev.Extensions\OoBDev.Extensions.csproj" />
+    <ProjectReference Include="..\..\Framework\OoBDev.System\OoBDev.System.csproj" />
+  </ItemGroup>
 
-	<ItemGroup>
-		<None Update="*.hbs">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</None>
-		<None Update="*.xslt">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</None>
-	</ItemGroup>
-
-	<ItemGroup>
-	  <PackageReference Update="GitVersion.MsBuild" Version="6.0.2">
-	    <PrivateAssets>all</PrivateAssets>
-	    <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-	  </PackageReference>
-	</ItemGroup>
+  <ItemGroup>
+    <None Update="*.hbs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="*.xslt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 
 </Project>

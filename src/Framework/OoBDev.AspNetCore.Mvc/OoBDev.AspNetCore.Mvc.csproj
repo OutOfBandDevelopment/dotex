@@ -17,19 +17,16 @@
 		<PackageReference Include="Microsoft.IdentityModel.Logging" Version="8.6.0" />
 		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="7.2.0" />
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="7.2.0" />
+    <PackageReference Include="GitVersion.MsBuild" Version="6.1.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
 	</ItemGroup>
 
 	<ItemGroup>
 	  <ProjectReference Include="..\OoBDev.AspNetCore.Abstractions\OoBDev.AspNetCore.Abstractions.csproj" />
 	  <ProjectReference Include="..\OoBDev.Extensions\OoBDev.Extensions.csproj" />
 		<ProjectReference Include="..\OoBDev.System\OoBDev.System.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <PackageReference Update="GitVersion.MsBuild" Version="6.0.2">
-	    <PrivateAssets>all</PrivateAssets>
-	    <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-	  </PackageReference>
 	</ItemGroup>
 
 </Project>
