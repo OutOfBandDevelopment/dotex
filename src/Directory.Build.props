@@ -26,6 +26,8 @@
     <VSTestResultsDirectory>$(SolutionDir)TestResults\</VSTestResultsDirectory>
     <RunSettingsFilePath>$(SolutionDir).runsettings</RunSettingsFilePath>
 	</PropertyGroup>
+  
+  <Import Project="OoBDev.Build.Tasks.props"/>
 
   <!--https://www.meziantou.net/the-roslyn-analyzers-i-use.htm-->
   <!--<PropertyGroup Condition="'$(IsTestProject)' != 'true'">

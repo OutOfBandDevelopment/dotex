@@ -1,26 +1,10 @@
 <Project>
-   <UsingTask TaskName="GetAsHexString" TaskFactory="RoslynCodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
-    <ParameterGroup>
-      <InputFile ParameterType="System.String" Required="true" />
-
-      <OutputText ParameterType="System.String" Output="true"/>
-    </ParameterGroup>
-    <Task>
-      <Using Namespace="System" />
-      <Using Namespace="System.IO" />
-      <Code Type="Fragment" Language="cs">
-        <![CDATA[
-        var fileContent = File.ReadAllBytes(InputFile);
-        OutputText = BitConverter.ToString(fileContent).Replace("-", "");
-        ]]>
-      </Code>
-    </Task>
-  </UsingTask>
 
   <UsingTask TaskName="GetAssemblyInstallScript" TaskFactory="RoslynCodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
     <ParameterGroup>
       <AssemblyName ParameterType="System.String" Required="true" />
       <HexString ParameterType="System.String" Required="true" />
+      <HashString ParameterType="System.String" Required="true" />
 
       <OutputText ParameterType="System.String" Output="true"/>
     </ParameterGroup>
@@ -30,7 +14,7 @@
       <Code Type="Fragment" Language="cs">
         <![CDATA[
         var template = @"
--- Generated: {2}        
+-- Generated: {3}        
 /*
 EXEC sp_configure 'show advanced options', 1;
 RECONFIGURE;
@@ -39,6 +23,18 @@ RECONFIGURE;
 EXEC sp_configure 'clr enabled', 1;
 RECONFIGURE;
 */
+
+DECLARE @hash varbinary(64) = 0x{2}
+IF NOT EXISTS (
+	SELECT * FROM sys.trusted_assemblies 
+	WHERE 
+		trusted_assemblies.hash =@hash
+)
+BEGIN
+	PRINT 'Add hash for {0}'
+	EXEC sys.sp_add_trusted_assembly @hash, N'{0}';
+END   
+        
         
 IF NOT EXISTS (
 	SELECT *
@@ -80,33 +76,13 @@ END ELSE BEGIN
 END
 GO
 ";
-        OutputText = string.Format(template, AssemblyName, HexString, DateTimeOffset.Now);
-        ]]>
-      </Code>
-    </Task>
-  </UsingTask>
-
-  <UsingTask TaskName="WriteTextFile" TaskFactory="RoslynCodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
-    <ParameterGroup>
-      <InputText ParameterType="System.String" Required="true" />
-      <OutputFile ParameterType="System.String" Required="true" />
-    </ParameterGroup>
-    <Task>
-      <Using Namespace="System" />
-      <Using Namespace="System.IO" />
-      <Code Type="Fragment" Language="cs">
-        <![CDATA[
-        File.WriteAllText(OutputFile, InputText);
+        OutputText = string.Format(template, AssemblyName, HexString, HashString, DateTimeOffset.Now);
         ]]>
       </Code>
     </Task>
   </UsingTask>
 
   <Target Name="BuildSqlInstallScript" DependsOnTargets="Build">
-    
-    <!--
-    <Message Text="OutputPath: $(OutputPath)" Importance="High"/>
-    -->
     
     <PropertyGroup>
       <RealOutputPath Condition="Exists($(OutputPath))">$(OutputPath)</RealOutputPath>
@@ -115,24 +91,23 @@ GO
       <SqlClrAssemblyPath Condition="'$(SqlClrAssemblyPath)' == ''">$(RealOutputPath.TrimEnd('\'))\$(AssemblyName).dll</SqlClrAssemblyPath>
       <SqlInstallScriptPath Condition="'$(SqlInstallScriptPath)' == ''">$(RealOutputPath.TrimEnd('\'))\$(AssemblyName).install.sql</SqlInstallScriptPath>
     </PropertyGroup>
-
-    <!--
-    <Message Text="RealOutputPath: $(RealOutputPath)" Importance="High"/>
-    <Message Text="SqlClrAssemblyPath: $(SqlClrAssemblyPath)" Importance="High"/>
-    <Message Text="SqlInstallScriptPath: $(SqlInstallScriptPath)" Importance="High"/>
-    -->
     
     <GetAsHexString InputFile="$(SqlClrAssemblyPath)" Condition="Exists($(SqlClrAssemblyPath))" >
       <Output TaskParameter="OutputText" PropertyName="AssemblyHexString" />
     </GetAsHexString>
-    <GetAssemblyInstallScript AssemblyName="$(AssemblyName)" HexString="$(AssemblyHexString)" Condition="'$(AssemblyHexString)' != ''"  >
+    <GetSha512Hash InputFile="$(SqlClrAssemblyPath)"  Condition="Exists($(SqlClrAssemblyPath))" >
+      <Output TaskParameter="OutputHash" PropertyName="AssemblyHashString" />
+    </GetSha512Hash>
+    <GetAssemblyInstallScript 
+      AssemblyName="$(AssemblyName)" 
+      HexString="$(AssemblyHexString)" 
+      HashString="$(AssemblyHashString)"
+      Condition="'$(AssemblyHexString)' != ''"  >
       <Output TaskParameter="OutputText" PropertyName="SqlInstallScript" />
     </GetAssemblyInstallScript>
     <Delete Files="$(SqlInstallScriptPath)" Condition="Exists($(SqlInstallScriptPath))" />
     <WriteTextFile InputText="$(SqlInstallScript)" OutputFile="$(SqlInstallScriptPath)" Condition="'$(SqlInstallScript)' != ''" />
 
-    <!-- Output the result -->
-    <!--<Copy SourceFiles="$(SqlInstallScriptPath)" DestinationFolder="$(PublishDir)" />-->
     <Message Text="Built: $(SqlInstallScriptPath)" Importance="High" Condition="Exists($(SqlInstallScriptPath))" />
   </Target>
 

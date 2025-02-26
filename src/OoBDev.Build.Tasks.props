@@ -1,0 +1,57 @@
+<Project>
+   <UsingTask TaskName="GetAsHexString" TaskFactory="RoslynCodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
+    <ParameterGroup>
+      <InputFile ParameterType="System.String" Required="true" />
+
+      <OutputText ParameterType="System.String" Output="true"/>
+    </ParameterGroup>
+    <Task>
+      <Using Namespace="System" />
+      <Using Namespace="System.IO" />
+      <Code Type="Fragment" Language="cs">
+        <![CDATA[
+        var fileContent = File.ReadAllBytes(InputFile);
+        OutputText = BitConverter.ToString(fileContent).Replace("-", "");
+        ]]>
+      </Code>
+    </Task>
+  </UsingTask>
+
+  <UsingTask TaskName="WriteTextFile" TaskFactory="RoslynCodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
+    <ParameterGroup>
+      <InputText ParameterType="System.String" Required="true" />
+      <OutputFile ParameterType="System.String" Required="true" />
+    </ParameterGroup>
+    <Task>
+      <Using Namespace="System" />
+      <Using Namespace="System.IO" />
+      <Code Type="Fragment" Language="cs">
+        <![CDATA[
+        File.WriteAllText(OutputFile, InputText);
+        ]]>
+      </Code>
+    </Task>
+  </UsingTask>
+
+  <UsingTask TaskName="GetSha512Hash" TaskFactory="RoslynCodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
+    <ParameterGroup>
+      <InputFile ParameterType="System.String" Required="true" />
+      <OutputHash ParameterType="System.String" Output="true" />
+    </ParameterGroup>
+    <Task>
+      <Using Namespace="System" />
+      <Using Namespace="System.IO" />
+      <Code Type="Fragment" Language="cs">
+        <![CDATA[
+            using (FileStream stream = File.OpenRead(InputFile))
+            using (var sha512 = System.Security.Cryptography.SHA512.Create())
+            {
+                byte[] hashBytes = sha512.ComputeHash(stream);
+                OutputHash = BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
+            }
+        ]]>
+      </Code>
+    </Task>
+  </UsingTask>
+
+</Project>
