@@ -9,10 +9,7 @@ public class LdapFilterBuilder
 {
     public string Build(ILdapFilter filter)
     {
-        if (filter == null)
-        {
-            throw new ArgumentNullException("filter");
-        }
+        ArgumentNullException.ThrowIfNull(filter);
 
         var result = (Build(filter as LdapSimpleFilter)
                   ?? Build(filter as LdapFilterSetBase)

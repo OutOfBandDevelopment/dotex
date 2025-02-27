@@ -92,8 +92,7 @@ public class PlayFair
 
     public static string Cipher(char[] cryptic, string message, Mode mode, Swap swap)
     {
-        if (cryptic == null)
-            throw new ArgumentNullException(nameof(cryptic));
+        ArgumentNullException.ThrowIfNull(cryptic);
 
         if (cryptic.Length != 25)
             throw new ArgumentOutOfRangeException(nameof(cryptic));

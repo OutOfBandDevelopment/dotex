@@ -2,7 +2,7 @@
 
 public enum LdapFilterSetOperations
 {
-    /// <remarks>&</remarks>
+    /// <remarks>&quot;</remarks>
     And,
     /// <remarks>|</remarks>
     Or,

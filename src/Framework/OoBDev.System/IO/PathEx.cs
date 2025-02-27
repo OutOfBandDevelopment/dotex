@@ -77,9 +77,9 @@ public static class PathEx
                 yield return file;
     }
 
-    public static IEnumerable<string> EnumerateDirectories(string path, string wildcardPath)
+    public static IEnumerable<string> EnumerateDirectories(string path, string wildCardPath)
     {
-        if (string.IsNullOrWhiteSpace(wildcardPath))
+        if (string.IsNullOrWhiteSpace(wildCardPath))
         {
             if (Directory.Exists(path))
             {
@@ -89,7 +89,7 @@ public static class PathEx
         }
         path = Path.GetFullPath(path);
         var wildCards = new[] { '*', '?' };
-        var pathSegments = wildcardPath.Split('/', '\\');
+        var pathSegments = wildCardPath.Split('/', '\\');
         var segmentsQuery = from ps in pathSegments
                             select (segment: ps, hasWildcard: wildCards.Any(c => ps.Contains(c)));
 
