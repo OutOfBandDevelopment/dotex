@@ -11,9 +11,9 @@ public static class TaskEx
     // http://stackoverflow.com/a/5097066/89586 
 
     /// <summary>
-    /// Execute's an async Task<T> method which has a void return value synchronously
+    /// Execute's an async Task{T} method which has a void return value synchronously
     /// </summary>
-    /// <param name="task">Task<T> method to execute</param>
+    /// <param name="task">Task{T} method to execute</param>
     public static void RunSync(this Func<Task> task)
     {
         var oldContext = SynchronizationContext.Current;
@@ -41,10 +41,10 @@ public static class TaskEx
     }
 
     /// <summary>
-    /// Execute's an async Task<T> method which has a T return type synchronously
+    /// Execute's an async Task{T} method which has a T return type synchronously
     /// </summary>
     /// <typeparam name="T">Return Type</typeparam>
-    /// <param name="task">Task<T> method to execute</param>
+    /// <param name="task">Task{T} method to execute</param>
     /// <returns></returns>
     public static T? RunSync<T>(this Func<Task<T>> task)
     {

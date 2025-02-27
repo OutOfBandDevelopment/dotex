@@ -1,4 +1,6 @@
-﻿namespace OoBDev.System.Net.SecurityManagement;
+﻿// Ignore Spelling: Ldap
+
+namespace OoBDev.System.Net.SecurityManagement;
 
 public class LdapNotFilter : ILdapFilter
 {

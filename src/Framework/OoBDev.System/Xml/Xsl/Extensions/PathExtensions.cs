@@ -29,8 +29,7 @@ public class PathExtensions
     /// <summary>
     /// Returns the directory information for the specified path string.
     /// </summary>
-    /// <param name="file"></param>
-    /// <param name="path">The path of a file or directory.</param>
+    /// <param name="file">The path of a file or directory.</param>
     /// <returns>
     /// Directory information for path, or null if path denotes a root directory or is
     /// null. Returns System.String.Empty if path does not contain directory information.

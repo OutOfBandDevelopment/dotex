@@ -16,7 +16,7 @@ public static class SandboxPath
     /// <param name="filePath"></param>
     /// <returns></returns>
     /// <exception cref="System.ApplicationException">this will be throw if <c>filePath</c> is not a child of <c>basePath</c>.</exception>
-    public static string EnsureSafePath(string basePath, string filePath)
+    public static string? EnsureSafePath(string basePath, string filePath)
     {
         var sandbox = Path.GetFullPath(basePath);
         var currentDirectory = Path.GetFullPath(Environment.CurrentDirectory);
@@ -27,7 +27,7 @@ public static class SandboxPath
                 Path.Combine(basePath, filePath)
             );
 
-        return !composedPath.StartsWith(sandbox)
+        return composedPath.StartsWith(sandbox)
             ? throw new ApplicationException($"invalid path requested: {filePath}")
             : PathEx.FixUpPath(composedPath);
     }
