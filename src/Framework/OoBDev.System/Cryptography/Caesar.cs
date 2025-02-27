@@ -15,13 +15,13 @@ public class Caesar
         (GetOffset(code), input) switch
         {
             (_, null) => "",
-            (int offset, _) => new string(input.Select(c => Encode(c, offset)).ToArray())
+            (int offset, _) => new string([.. input.Select(c => Encode(c, offset))])
         };
     public string Decode(string input, char code) =>
         (GetOffset(code), input) switch
         {
             (_, null) => "",
-            (int offset, _) => new string(input.Select(c => Decode(c, offset)).ToArray())
+            (int offset, _) => new string([.. input.Select(c => Decode(c, offset))])
         };
 
     public char Encode(char input, char code) => Encode(input, GetOffset(code));

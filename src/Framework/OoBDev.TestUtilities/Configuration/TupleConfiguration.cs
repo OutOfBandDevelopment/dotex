@@ -41,7 +41,7 @@ public class TupleConfiguration : IConfiguration, IConfigurationSection
 
     public string? this[string key]
     {
-        get { return _store.TryGetValue(key, out var value) ? value : null; }
+        get => _store.TryGetValue(key, out var value) ? value : null;
         set
         {
             if (_store.ContainsKey(key))

@@ -42,7 +42,7 @@ public static class ConsoleEx
             }
         }
         Console.WriteLine();
-        var result = new string(chars.ToArray());
+        var result = new string([.. chars]);
         return result;
     }
 
@@ -79,7 +79,7 @@ public static class ConsoleEx
             }
         }
         Console.WriteLine();
-        var result = new string(chars.ToArray());
+        var result = new string([.. chars]);
         return result;
     }
 }

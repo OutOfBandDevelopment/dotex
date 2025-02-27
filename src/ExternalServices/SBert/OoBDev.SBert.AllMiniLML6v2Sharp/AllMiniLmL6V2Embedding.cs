@@ -32,7 +32,7 @@ public class AllMiniLmL6V2Embedding : IEmbeddingProvider
         ReadOnlyMemory<float> result =
             string.IsNullOrWhiteSpace(content) ?
             Array.Empty<float>() :
-            _embedder.GenerateEmbedding(content).ToArray();
+            [.. _embedder.GenerateEmbedding(content)];
 
         return Task.FromResult(result);
     }

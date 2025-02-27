@@ -19,6 +19,7 @@ public interface IEmbeddingProvider
     /// </summary>
     /// <param name="content">The content for which to retrieve the embedding.</param>
     /// <param name="model">The model for which to retrieve the embedding.</param>
+    /// <param name="cancellationToken"></param>
     /// <returns>A task representing the asynchronous operation. The task result contains the embedding vector as an array of single-precision floats.</returns>
     Task<ReadOnlyMemory<float>> GenerateEmbeddingAsync(
         string content,

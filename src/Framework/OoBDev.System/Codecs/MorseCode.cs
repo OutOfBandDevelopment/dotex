@@ -8,7 +8,7 @@ public class MorseCode
 {
     public string Encode(string input) => string.Join(" ", input.Select(Map).Where(c => c != "")).Replace("   ", "  ");
 
-    public string Decode(string input) => new(input.Split(' ').Select(Map).ToArray());
+    public string Decode(string input) => new([.. input.Split(' ').Select(Map)]);
 
     public string Map(char input) =>
         (char)(input > '_' ? input & 0b01011111 : input) switch

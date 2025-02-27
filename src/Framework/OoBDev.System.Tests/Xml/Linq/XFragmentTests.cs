@@ -23,7 +23,7 @@ public class XFragmentTests
         Assert.IsNotNull(lastElement.Element("child"));
         Assert.AreEqual(firstElement.Name, "test");
         Assert.AreEqual(lastElement.Name, "test2");
-        Assert.AreEqual((string)lastElement.Element("child").Attribute("attr1"), "attr1value");
+        Assert.AreEqual("attr1value", (string?)lastElement.Element("child")?.Attribute("attr1"));
     }
 
     [TestMethod, TestCategory(TestCategories.Unit)]
@@ -37,9 +37,9 @@ public class XFragmentTests
         Assert.IsNotNull(firstElement);
         Assert.IsNotNull(lastElement);
         Assert.IsNotNull(lastElement.Element("child"));
-        Assert.AreEqual(firstElement.Name, "test");
-        Assert.AreEqual(lastElement.Name, "test2");
-        Assert.AreEqual((string)lastElement.Element("child").Attribute("attr1"), "attr1value");
+        Assert.AreEqual("test", firstElement.Name);
+        Assert.AreEqual("test2", lastElement.Name);
+        Assert.AreEqual("attr1value", (string?)lastElement.Element("child")?.Attribute("attr1"));
     }
 
     [TestMethod, TestCategory(TestCategories.Unit)]
@@ -47,7 +47,7 @@ public class XFragmentTests
     {
         var xml = @"<test /><test2><child attr1=""attr1value"" /></test2>";
         XFragment fragment = xml;
-        string result = fragment;
+        string? result = fragment;
 
         Assert.AreEqual(xml, result);
     }
@@ -76,7 +76,7 @@ public class XFragmentTests
         XFragment fragment = nodes;
 
         var xml = @"<test /><test2><child attr1=""attr1value"" /></test2>";
-        Assert.AreEqual((string)fragment, xml);
+        Assert.AreEqual(xml, (string?)fragment);
     }
 
     [TestMethod, TestCategory(TestCategories.Unit)]
@@ -86,6 +86,6 @@ public class XFragmentTests
         XFragment fragment = nodes;
 
         var xml = @"<test />";
-        Assert.AreEqual((string)fragment, xml);
+        Assert.AreEqual(xml, (string?)fragment);
     }
 }

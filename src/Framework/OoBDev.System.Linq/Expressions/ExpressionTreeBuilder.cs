@@ -1,4 +1,4 @@
-using OoBDev.Extensions.Reflection;
+﻿using OoBDev.Extensions.Reflection;
 using OoBDev.System.ComponentModel.Search;
 using OoBDev.System.Linq.Search;
 using OoBDev.System.ResponseModel;
@@ -68,12 +68,12 @@ public class ExpressionTreeBuilder<TModel>(
         );
 
     private static KeyValuePair<string, Expression<Func<TModel, object>>>[] BuildExpressions() =>
-        (
+        [.. (
         from pi in typeof(TModel).GetProperties(ReflectionExtensions.PublicProperties)
         let exp = BuildExpression(pi)
         where exp != null
         select KeyValuePair.Create(pi.Name, exp)
-        ).ToArray();
+        )];
 
     private IEnumerable<Expression<Func<TModel, bool>>?> GetPredicates(
         string scope,
@@ -134,7 +134,7 @@ public class ExpressionTreeBuilder<TModel>(
         {
             queryParameter = queryParameter switch
             {
-                IEnumerable<char> charArray => new string(charArray.ToArray()),
+                IEnumerable<char> charArray => new string([.. charArray]),
                 Array _ => queryParameter,
                 IEnumerable enumerable => enumerable.OfType<object>().ToArray(),
                 _ => Convert.ToString(queryParameter)
@@ -502,12 +502,12 @@ public class ExpressionTreeBuilder<TModel>(
     }
 
     private (string property, Expression<Func<TModel, object>> expression)[] GetSearchableExpressions(StringComparison stringComparison) =>
-        (
+        [.. (
         from property in GetSearchablePropertyNames()
         let expression = TryGetPropertyExpression(property, out var exp, stringComparison) ? exp : null
         where expression != null
         select (property, expression)
-        ).ToArray();
+        )];
 
     private static Expression<Func<TModel, object>>? BuildExpression(PropertyInfo? prop)
     {

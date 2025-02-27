@@ -25,7 +25,7 @@ public class EnigmaMachine
         if (reflector == null)
             throw new InvalidOperationException("Invalid Reflector");
 
-        this.rotors = rotors.Reverse().ToArray();
+        this.rotors = [.. rotors.Reverse()];
         this.reflector = reflector;
         //this.Positions = default;  //(start ?? new string('A', rotors.Length));
         RingSettings = ringSettings;
@@ -34,52 +34,34 @@ public class EnigmaMachine
 
     public string Positions
     {
-        get
-        {
-            return (postions?
-                        .Reverse()
-                        .Select(p => (char)(p + 'A'))
-                        .AsString()
-                        + new string('A', rotors.Length)
-                        )[..rotors.Length];
-        }
-        set
-        {
-            postions = (value ?? new string('A', rotors.Length)).Select(i => i - 'A')
-                                 .Concat(new int[rotors.Length])
-                                 .Take(rotors.Length)
-                                 .Reverse()
-                                 .ToArray();
-        }
+        get => (postions?
+                      .Reverse()
+                      .Select(p => (char)(p + 'A'))
+                      .AsString()
+                      + new string('A', rotors.Length)
+                      )[..rotors.Length]; set => postions = [.. (value ?? new string('A', rotors.Length)).Select(i => i - 'A')
+                                                                   .Concat(new int[rotors.Length])
+                                                                   .Take(rotors.Length)
+                                                                   .Reverse()];
     }
 
     public string? RingSettings
     {
-        get
-        {
-            return (ringSettings?
-                        .Reverse()
-                        .Select(p => (char)(p + 'A'))
-                        .AsString()
-                        + new string('A', rotors.Length)
-                        )[..rotors.Length];
-        }
-        private set
-        {
-            ringSettings = (value ?? new string('A', rotors.Length)).Select(i => i - 'A')
-                                     .Concat(new int[rotors.Length])
-                                     .Take(rotors.Length)
-                                     .Reverse()
-                                     .ToArray();
-        }
+        get => (ringSettings?
+                      .Reverse()
+                      .Select(p => (char)(p + 'A'))
+                      .AsString()
+                      + new string('A', rotors.Length)
+                      )[..rotors.Length]; 
+        private set => ringSettings = [.. (value ?? new string('A', rotors.Length)).Select(i => i - 'A')
+                                                                       .Concat(new int[rotors.Length])
+                                                                       .Take(rotors.Length)
+                                                                       .Reverse()];
     }
 
     public string? PlugBoard
     {
-        get
-        {
-            return string.Join(" ", plugboard ?? []);
-        }
+        get => string.Join(" ", plugboard ?? []);
         set
         {
             var cleaned = value?.Clean().AsString() ?? "";
@@ -90,14 +72,8 @@ public class EnigmaMachine
         }
     }
 
-    public string Rotors
-    {
-        get { return string.Join(";", rotors.Select(r => r.Number)); }
-    }
-    public string Reflector
-    {
-        get { return reflector.Number; }
-    }
+    public string Rotors => string.Join(";", rotors.Select(r => r.Number));
+    public string Reflector => reflector.Number;
 
     public string Process(string input)
     {

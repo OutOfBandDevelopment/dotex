@@ -39,7 +39,7 @@ public sealed class StartAndFixLengthSegmenter(
                 {
                     var valueData = completeSegment.Slice(ExtensionDefinition.Postion, ExtensionDefinition.Length);
                     //TODO, drop the endian check... only support little and convert 
-                    var set = ExtensionDefinition.Endianness == Endianness.Little ? valueData.ToArray() : valueData.ToArray().Reverse().ToArray();
+                    var set = ExtensionDefinition.Endianness == Endianness.Little ? valueData.ToArray() : [.. valueData.ToArray().Reverse()];
 
                     ulong extendedLength = 0;
                     for (var i = 0; i < ExtensionDefinition.Length; i++)

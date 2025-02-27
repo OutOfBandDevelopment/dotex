@@ -11,7 +11,7 @@ namespace OoBDev.System;
 public static class MemoryEx
 {
     public static Memory<char> AsMemory(this IEnumerable<char> input) =>
-        new(input.ToArray());
+        new([.. input]);
 
     public static IEnumerable<Memory<T>> Distinct<T>(this IEnumerable<Memory<T>> segments) where T : IEquatable<T> =>
         segments.Distinct(new MemoryCompare<T>());

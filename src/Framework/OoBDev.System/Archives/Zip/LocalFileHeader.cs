@@ -37,7 +37,7 @@ public struct LocalFileHeader
     public string FileName;
     public string ExtraField;
 
-    public readonly int HeaderSize { get { return 4 + 2 + 2 + 2 + 2 + 2 + 4 + 4 + 4 + 2 + 2 + FileNameLength + ExtraFieldLength; } }
+    public readonly int HeaderSize => 4 + 2 + 2 + 2 + 2 + 2 + 4 + 4 + 4 + 2 + 2 + FileNameLength + ExtraFieldLength;
 
     public static implicit operator byte[](LocalFileHeader localFileHeader)
     {

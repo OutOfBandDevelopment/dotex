@@ -12,7 +12,7 @@ public class ReadOnlySpanExTests
     [TestTarget(typeof(ReadOnlySpanEx), Member = nameof(ReadOnlySpanEx.CopyWithTransform))]
     public void CopyWithTransformTest_byte2byte_7bit()
     {
-        byte[] input = Enumerable.Range(0, 255).Select(b => (byte)b).ToArray();
+        byte[] input = [.. Enumerable.Range(0, 255).Select(b => (byte)b)];
         ReadOnlySpan<byte> span = input;
         var result = span.CopyWithTransform(i => (byte)(i & 0x7f));
         foreach (var b in result)

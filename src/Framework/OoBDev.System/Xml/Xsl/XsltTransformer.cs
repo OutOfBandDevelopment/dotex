@@ -21,6 +21,7 @@ namespace OoBDev.System.Xml.Xsl;
 /// <remarks>
 /// create instance of XsltTransformer
 /// </remarks>
+/// <param name="sandbox"></param>
 /// <param name="extensions">optional extensions for XSLT Transform</param>
 public class XsltTransformer(string sandbox, params object[] extensions) : IXsltTransformer
 {
@@ -136,6 +137,7 @@ public class XsltTransformer(string sandbox, params object[] extensions) : IXslt
     /// <param name="template">path for XSLT style-sheet</param>
     /// <param name="input">Wild card allowed for multiple files</param>
     /// <param name="output">Output and suffix per file.</param>
+    /// <param name="excludeInputSource"></param>
     public void TransformAll(string template, string input, string output, string? excludeInputSource = null) =>
         TransformAll(template, input, ReadAsXml, output, excludeInputSource);
 
@@ -146,6 +148,7 @@ public class XsltTransformer(string sandbox, params object[] extensions) : IXslt
     /// <param name="input">Wild card allowed for multiple files</param>
     /// <param name="inputNavigatorFactory">function to load input file into IXPathNavigable</param>
     /// <param name="output">Output and suffix per file.</param>
+    /// <param name="excludeInputSource"></param>
     public void TransformAll(string template, string input, Func<string, IXPathNavigable?> inputNavigatorFactory, string output, string? excludeInputSource = null)
     {
         var inputFullPath = Path.GetFullPath(input);

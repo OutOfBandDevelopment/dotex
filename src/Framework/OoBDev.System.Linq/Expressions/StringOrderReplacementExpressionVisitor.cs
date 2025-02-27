@@ -30,11 +30,10 @@ public class StringOrderReplacementExpressionVisitor(
         nameof(Queryable.ThenByDescending),
     ];
     private static readonly MethodInfo[] TargetedMethods =
-        typeof(Queryable)
+        [.. typeof(Queryable)
         .GetMethods(BindingFlags.Static | BindingFlags.Public)
         .Where(m => TargetMethodNames.Contains(m.Name))
-        .Where(m => m.GetParameters().Length == 2)
-        .ToArray()
+        .Where(m => m.GetParameters().Length == 2)]
         ;
     private readonly RewriteChildren Rewriter = new(logger, stringCasing);
 

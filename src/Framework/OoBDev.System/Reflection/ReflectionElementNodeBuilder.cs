@@ -103,7 +103,7 @@ public class ReflectionElementNodeBuilder(object seed, bool excludeNamespace = f
 
             string @string => @string,
             char[] chars => new string(chars),
-            IEnumerable<char> chars => new string(chars.ToArray()),
+            IEnumerable<char> chars => new string([.. chars]),
 
             _ => null // model.ToString()
         } : null;

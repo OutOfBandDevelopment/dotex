@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -54,7 +54,7 @@ public class XFragment : IList<XNode>, IXPathNavigable
     /// </summary>
     /// <param name="xml">The XML string to initialize the instance with.</param>
     public XFragment(string? xml)
-        : this(Parser(xml).ToArray())
+        : this([.. Parser(xml)])
     {
     }
 
@@ -63,7 +63,7 @@ public class XFragment : IList<XNode>, IXPathNavigable
     /// </summary>
     /// <param name="xmlReader">The XML reader to initialize the instance with.</param>
     public XFragment(XmlReader xmlReader)
-        : this(Parser(xmlReader).ToArray())
+        : this([.. Parser(xmlReader)])
     {
     }
 

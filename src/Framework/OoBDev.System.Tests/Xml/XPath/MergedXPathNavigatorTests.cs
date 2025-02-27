@@ -32,14 +32,14 @@ public class MergedXPathNavigatorTests
 
         var merged = x1.MergeWith(x2);
         var mergedNav = merged.CreateNavigator();
-        mergedNav.MoveToRoot();
+        mergedNav?.MoveToRoot();
 
-        var x = mergedNav.Select("/Top/Node/top1");
-        Assert.IsTrue(x.MoveNext());
-        Assert.AreEqual("test1", x.Current.Value);
+        var x = mergedNav?.Select("/Top/Node/top1");
+        Assert.IsTrue(x?.MoveNext());
+        Assert.AreEqual("test1", x?.Current?.Value);
 
-        var y = mergedNav.Select("/Top/Node/top2");
-        Assert.IsTrue(y.MoveNext());
-        Assert.AreEqual("test2", y.Current.Value);
+        var y = mergedNav?.Select("/Top/Node/top2");
+        Assert.IsTrue(y?.MoveNext());
+        Assert.AreEqual("test2", y?.Current?.Value);
     }
 }

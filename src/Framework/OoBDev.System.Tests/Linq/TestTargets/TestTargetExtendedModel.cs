@@ -1,4 +1,4 @@
-using OoBDev.System.ComponentModel.Search;
+﻿using OoBDev.System.ComponentModel.Search;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
@@ -30,7 +30,7 @@ public class TestTargetExtendedModel
               (index % 7 == 0) ? "!" :
               index.ToString();
 
-        Modules = index > 0 ? Enumerable.Range(0, index).Select(i => "Module-" + i).ToArray() : [];
+        Modules = index > 0 ? [.. Enumerable.Range(0, index).Select(i => "Module-" + i)] : [];
 
         Date = BaseDate.AddMonths(index);
         if (index >= 0)

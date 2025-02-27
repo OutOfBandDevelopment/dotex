@@ -132,7 +132,7 @@ public class PlayFair
         foreach (char currentChar in message.ToCharArray())
             if (check.Contains(currentChar))
                 newMessage.Add(currentChar);
-        message = new string(newMessage.ToArray());
+        message = new string([.. newMessage]);
 
         foreach (char currentChar in check.ToCharArray())
         {
@@ -182,6 +182,6 @@ public class PlayFair
             cipherText.Add(sCryptic[p2]);
         }
 
-        return new string(cipherText.ToArray());
+        return new string([.. cipherText]);
     }
 }

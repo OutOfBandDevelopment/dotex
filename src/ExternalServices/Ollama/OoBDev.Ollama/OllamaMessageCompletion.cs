@@ -1,7 +1,7 @@
 ﻿using OoBDev.AI;
 using OoBDev.AI.Models;
 using OllamaSharp;
-using OllamaSharp.Models;
+//using OllamaSharp.Models;
 //using OllamaSharp.Streamer;//TODO: ifx this
 using System;
 using System.Collections.Concurrent;
@@ -45,6 +45,7 @@ public class OllamaMessageCompletion : IMessageCompletion, IEmbeddingProvider
     /// </summary>
     /// <param name="content">The content for which to retrieve the embedding.</param>
     /// <param name="model">The model for which to retrieve the embedding.</param>
+    /// <param name="cancellationToken"></param>
     /// <returns>A task representing the asynchronous operation. The task result contains the 
     /// embedding vector as an array of single-precision floats.</returns>
     public async Task<ReadOnlyMemory<float>> GenerateEmbeddingAsync(
@@ -65,7 +66,7 @@ public class OllamaMessageCompletion : IMessageCompletion, IEmbeddingProvider
     /// <param name="modelName">The name of the model to use for completion.</param>
     /// <param name="prompt">The prompt for which completion is requested.</param>
     /// <returns>A task representing the asynchronous operation. The task result contains the completion response.</returns>
-    public async Task<string> GetCompletionAsync(string modelName, string prompt) =>
+    public  Task<string> GetCompletionAsync(string modelName, string prompt) =>
         throw new NotImplementedException(); //TODO: fix this!
         //(await _client.GetCompletion(new()
         //{
@@ -78,7 +79,7 @@ public class OllamaMessageCompletion : IMessageCompletion, IEmbeddingProvider
     /// </summary>
     /// <param name="model">Completion request model</param>
     /// <returns>Resulting response object</returns>
-    public async Task<CompletionResponse> GetCompletionAsync(CompletionRequest model) =>
+    public  Task<CompletionResponse> GetCompletionAsync(CompletionRequest model) =>
       throw new NotImplementedException(); //TODO: fix this!
     //_mapper.Map(await _client.GetCompletion(_mapper.Map(model with { Model = model.Model ?? _client.SelectedModel })));
 
@@ -89,7 +90,7 @@ public class OllamaMessageCompletion : IMessageCompletion, IEmbeddingProvider
     /// <param name="userInput">The user input or query.</param>
     /// <param name="cancellationToken">The Cancellation Token.</param>
     /// <returns>A task representing the asynchronous operation. The task result contains the response from the language model.</returns>
-    public async Task<string> GetResponseAsync(string promptDetails, string userInput,
+    public  Task<string> GetResponseAsync(string promptDetails, string userInput,
 #pragma warning disable CS8424 // The EnumeratorCancellationAttribute will have no effect. The attribute is only effective on a parameter of type CancellationToken in an async-iterator method returning IAsyncEnumerable
         [EnumeratorCancellation] CancellationToken cancellationToken = default)
 #pragma warning restore CS8424 // The EnumeratorCancellationAttribute will have no effect. The attribute is only effective on a parameter of type CancellationToken in an async-iterator method returning IAsyncEnumerable
@@ -111,12 +112,14 @@ public class OllamaMessageCompletion : IMessageCompletion, IEmbeddingProvider
     /// <param name="userInput">The user input.</param>
     /// <param name="cancellationToken">The Cancellation Token.</param>
     /// <returns>An asynchronous enumerable of strings representing the streamed response.</returns>
-    public async IAsyncEnumerable<string> GetStreamedResponseAsync(string promptDetails, string userInput, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+#pragma warning disable CS8424 // The EnumeratorCancellationAttribute will have no effect. The attribute is only effective on a parameter of type CancellationToken in an async-iterator method returning IAsyncEnumerable
+    public  IAsyncEnumerable<string> GetStreamedResponseAsync(string promptDetails, string userInput, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+#pragma warning restore CS8424 // The EnumeratorCancellationAttribute will have no effect. The attribute is only effective on a parameter of type CancellationToken in an async-iterator method returning IAsyncEnumerable
     {
         var queue = new ConcurrentQueue<string>();
-        var completed = false;
+        //var completed = false;
         throw new NotImplementedException(); //TODO: fix this!
-        yield break;
+       // yield break;
 
         //var streamer = new ActionResponseStreamer<GenerateCompletionResponseStream?>(response =>
         //{

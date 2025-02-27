@@ -12,30 +12,21 @@ public class ApplicationInformation
     /// Gets the executing assembly.
     /// </summary>
     /// <value>The executing assembly.</value>
-    public Assembly ExecutingAssembly
-    {
-        get { return executingAssembly ??= Assembly.GetExecutingAssembly(); }
-    }
+    public Assembly ExecutingAssembly => executingAssembly ??= Assembly.GetExecutingAssembly();
     private Assembly? executingAssembly;
 
     /// <summary>
     /// Gets the executing assembly version.
     /// </summary>
     /// <value>The executing assembly version.</value>
-    public Version? ExecutingAssemblyVersion
-    {
-        get { return executingAssemblyVersion ??= ExecutingAssembly.GetName().Version; }
-    }
+    public Version? ExecutingAssemblyVersion => executingAssemblyVersion ??= ExecutingAssembly.GetName().Version;
     private Version? executingAssemblyVersion;
 
     /// <summary>
     /// Gets the compile date of the currently executing assembly.
     /// </summary>
     /// <value>The compile date.</value>
-    public DateTime CompileDate
-    {
-        get { return ((DateTime?)(compileDate ??= RetrieveLinkerTimestamp(ExecutingAssembly.Location))).Value; }
-    }
+    public DateTime CompileDate => ((DateTime?)(compileDate ??= RetrieveLinkerTimestamp(ExecutingAssembly.Location))).Value;
     private DateTime? compileDate;
 
     /// <summary>

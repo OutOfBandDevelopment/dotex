@@ -1,4 +1,4 @@
-using OoBDev.Extensions.Reflection;
+﻿using OoBDev.Extensions.Reflection;
 using OoBDev.System.ComponentModel.Search;
 using OoBDev.System.Linq.Expressions;
 using OoBDev.System.ResponseModel;
@@ -264,8 +264,8 @@ public class QueryBuilder<TModel>(
         var rows = (pageLength, page) switch
         {
             _ when page < 0 => Array.Empty<TModel>(),
-            (int.MaxValue, 0) => query.ToArray(),
-            _ => pagedQuery.ToArray()
+            (int.MaxValue, 0) => [.. query],
+            _ => [.. pagedQuery]
         };
 
         _logger.LogInformation($"Execute (paged): {{{nameof(query)}}}", pagedQuery.ToString());

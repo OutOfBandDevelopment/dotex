@@ -66,7 +66,7 @@ public static class ObjectXmlExtensions
             {
                 if (input is IEnumerable<char> || input is char[])
                 {
-                    input = new string(enumerable.Cast<char>().ToArray());
+                    input = new string([.. enumerable.Cast<char>()]);
                 }
                 else if (input is IEnumerable<byte> || input is byte[])
                 {

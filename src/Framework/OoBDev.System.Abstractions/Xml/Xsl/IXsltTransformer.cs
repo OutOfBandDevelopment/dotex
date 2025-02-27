@@ -38,6 +38,7 @@ public interface IXsltTransformer
     /// <param name="template">path for xslt stylesheet</param>
     /// <param name="input">Wild card allowed for multiple files</param>
     /// <param name="output">Output and suffix per file.</param>
+    /// <param name="exclude"></param>
     void TransformAll(string template, string input, string output, string? exclude = null);
 
     /// <summary>
@@ -47,6 +48,7 @@ public interface IXsltTransformer
     /// <param name="input">Wild card allowed for multiple files</param>
     /// <param name="inputNavigatorFactory">function to load input file into IXPathNavigable</param>
     /// <param name="output">Output and suffix per file.</param>
+    /// <param name="exclude"></param>
     void TransformAll(string template, string input, Func<string, IXPathNavigable> inputNavigatorFactory, string output, string? exclude = null);
 
     /// <summary>
@@ -56,5 +58,6 @@ public interface IXsltTransformer
     /// <param name="input">Wild card allowed for multiple files</param>
     /// <param name="inputNavigatorFactory">function to load input file into IXPathNavigable</param>
     /// <param name="output">Output and suffix per file.</param>
+    /// <param name="exclude"></param>
     void TransformMerge(string template, string input, Func<string, IXPathNavigable> inputNavigatorFactory, string output, string? exclude = null);
 }

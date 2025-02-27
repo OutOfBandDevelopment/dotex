@@ -12,11 +12,10 @@ public static class Segment
         new SegmentBuildDefinition(starts);
     public static ISegmentBuildDefinition StartsWithMask(byte mask) =>
         new SegmentBuildDefinition(
-            Enumerable.Range(0, 255)
+            [.. Enumerable.Range(0, 255)
                       .Select(b => (byte)(b & mask))
                       .Where(b => b != 0x00)
-                      .Distinct()
-                      .ToArray()
+                      .Distinct()]
             );
     public static ISegmentBuildDefinition PassThough() => new SegmentBuildDefinition([]);
 

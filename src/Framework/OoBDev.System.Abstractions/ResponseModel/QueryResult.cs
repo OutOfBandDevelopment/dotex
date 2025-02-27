@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -13,7 +13,7 @@ public class QueryResult<TModel> : IQueryResult<TModel>
     /// Initializes a new instance of the <see cref="QueryResult{TModel}"/> class.
     /// </summary>
     /// <param name="items">The collection of items in the result.</param>
-    public QueryResult(IEnumerable<TModel> items) => Rows = items as List<TModel> ?? items.ToList();
+    public QueryResult(IEnumerable<TModel> items) => Rows = items as List<TModel> ?? [.. items];
 
     /// <summary>
     /// Initializes a new instance of the <see cref="QueryResult{TModel}"/> class by wrapping another <see cref="IQueryResult{TModel}"/>.

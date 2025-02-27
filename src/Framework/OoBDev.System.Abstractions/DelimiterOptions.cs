@@ -1,7 +1,7 @@
 ﻿namespace OoBDev.System;
 
 /// <summary>
-/// delimiter used optin for <see cref="MemoryEx"/>
+/// delimiter used option for <see cref="MemoryEx"/>
 /// </summary>
 public enum DelimiterOptions
 {
