@@ -21,10 +21,7 @@ public static class BcdEx
 
         if (low > 9)
             throw new ArgumentOutOfRangeException("low nibble");
-        if (high > 9)
-            throw new ArgumentOutOfRangeException("high nibble");
-
-        return low + high * 10;
+        return high > 9 ? throw new ArgumentOutOfRangeException("high nibble") : low + high * 10;
     }
     /// <summary>
     /// convert decimal value to Binary code Decimal (BCD)
@@ -41,10 +38,6 @@ public static class BcdEx
 
         if (low > 9)
             throw new ArgumentOutOfRangeException("low nibble");
-        if (high > 9)
-            throw new ArgumentOutOfRangeException("high nibble");
-
-
-        return (byte)(high << 4 | low);
+        return high > 9 ? throw new ArgumentOutOfRangeException("high nibble") : (byte)(high << 4 | low);
     }
 }

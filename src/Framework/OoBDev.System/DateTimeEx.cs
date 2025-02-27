@@ -22,14 +22,8 @@ public static class DateTimeEx
         return (long)result.TotalSeconds;
     }
 
-    public static int MonthsDifferent(this DateTime ldate, DateTime rdate)
-    {
-        return ldate.Month - rdate.Month + 12 * (ldate.Year - rdate.Year);
-    }
-    public static int? MonthsDifferent(this DateTime? ldate, DateTime? rdate)
-    {
-        return ldate?.Month - rdate?.Month + 12 * (ldate?.Year - rdate?.Year);
-    }
+    public static int MonthsDifferent(this DateTime ldate, DateTime rdate) => ldate.Month - rdate.Month + 12 * (ldate.Year - rdate.Year);
+    public static int? MonthsDifferent(this DateTime? ldate, DateTime? rdate) => ldate?.Month - rdate?.Month + 12 * (ldate?.Year - rdate?.Year);
 
     public static int Days360(this DateTime startDate, DateTime endDate)
     {
@@ -49,8 +43,5 @@ public static class DateTimeEx
         return (endYear - startYear) * 360 + (endMonth - startMonth) * 30 + (endDay - startDay);
     }
 
-    public static bool IsLastDayOfFebruary(this DateTime date)
-    {
-        return date.Month == 2 && date.Day == DateTime.DaysInMonth(date.Year, date.Month);
-    }
+    public static bool IsLastDayOfFebruary(this DateTime date) => date.Month == 2 && date.Day == DateTime.DaysInMonth(date.Year, date.Month);
 }

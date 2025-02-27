@@ -197,12 +197,7 @@ public static class VectorFunctions
         Math.Sqrt(DotProduct(values, values));
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    internal static double CosineDistance(IReadOnlyList<double> vector1, double magnitude1, IReadOnlyList<double> vector2, double magnitude2)
-    {
-        if (magnitude1 == 0 || magnitude2 == 0)
-            return 1.0;
-        return 1.0 - CosineSimilarity(vector1, magnitude1, vector2, magnitude2);
-    }
+    internal static double CosineDistance(IReadOnlyList<double> vector1, double magnitude1, IReadOnlyList<double> vector2, double magnitude2) => magnitude1 == 0 || magnitude2 == 0 ? 1.0 : 1.0 - CosineSimilarity(vector1, magnitude1, vector2, magnitude2);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal static double CosineSimilarity(IReadOnlyList<double> vector1, double magnitude1, IReadOnlyList<double> vector2, double magnitude2)

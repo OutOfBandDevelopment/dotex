@@ -22,24 +22,16 @@ public class LdapFilterBuilder
     }
 
 
-    private string Build(LdapNotFilter filter)
-    {
-        if (filter == null)
-        {
-            return null;
-        }
+    private string? Build(LdapNotFilter filter) => filter == null ? null : string.Format("(!{0})", Build(filter.Wrapped));
 
-        return string.Format("(!{0})", Build(filter.Wrapped));
-    }
-
-    private Dictionary<LdapFilterTypes, string> _simpleMap = new Dictionary<LdapFilterTypes, string>()
+    private readonly Dictionary<LdapFilterTypes, string> _simpleMap = new()
     {
         { LdapFilterTypes.Equals, "="},
         { LdapFilterTypes.Approximate, "~="},
         { LdapFilterTypes.GreaterThanOrEqualTo, ">="},
         { LdapFilterTypes.LessThanOrEqualTo, "<="},
     };
-    private string Build(LdapSimpleFilter filter)
+    private string? Build(LdapSimpleFilter filter)
     {
         if (filter == null)
         {
@@ -52,14 +44,11 @@ public class LdapFilterBuilder
         }
 
         var notAllowed = "()*\0";
-        if (notAllowed.Any(c => filter.AttributeName.Contains(c)))
-        {
-            throw new InvalidOperationException("Invalid character found in filter.AttributeName");
-        }
-
-        return string.Format("({0}{1}{2}{3})", filter.AttributeName, _simpleMap[filter.Operation], EscapedValue(filter.Value), filter.UnEscapedSuffix);
+        return notAllowed.Any(c => filter.AttributeName.Contains(c))
+            ? throw new InvalidOperationException("Invalid character found in filter.AttributeName")
+            : string.Format("({0}{1}{2}{3})", filter.AttributeName, _simpleMap[filter.Operation], EscapedValue(filter.Value), filter.UnEscapedSuffix);
     }
-    private static string EscapedValue(string value)
+    private static string? EscapedValue(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
         {
@@ -80,19 +69,16 @@ public class LdapFilterBuilder
             ;
     }
 
-    private Dictionary<LdapFilterSetOperations, string> _setMap = new Dictionary<LdapFilterSetOperations, string>()
+    private readonly Dictionary<LdapFilterSetOperations, string> _setMap = new()
     {
         { LdapFilterSetOperations.And, "&"},
         { LdapFilterSetOperations.Or, "|"},
     };
-    internal string Build(LdapFilterSetBase filter)
+    internal string? Build(LdapFilterSetBase filter)
     {
-        if (filter == null)
-        {
-            return null;
-        }
-
-        return (filter.FilterSet ?? Enumerable.Empty<ILdapFilter>())
+        return filter == null
+            ? null
+            : (filter.FilterSet ?? Enumerable.Empty<ILdapFilter>())
                 .Aggregate(new StringBuilder("(" + _setMap[filter.Operation]),
                            (b, v) => b.Append(Build(v)),
                            b => b.Append(")").ToString()

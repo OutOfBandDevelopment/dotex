@@ -29,10 +29,7 @@ public partial class ConvertEx
         return buffer;
     }
 
-    public static string ToHexString(byte[] buffer)
-    {
-        return buffer.Aggregate(new StringBuilder(), (sb, v) => sb.Append(v), sb => sb.ToString());
-    }
+    public static string ToHexString(byte[] buffer) => buffer.Aggregate(new StringBuilder(), (sb, v) => sb.Append(v), sb => sb.ToString());
 
     [GeneratedRegex("([0-9a-fA-F]{2}){1,}", RegexOptions.Compiled)]
     private static partial Regex HexStringRegex();

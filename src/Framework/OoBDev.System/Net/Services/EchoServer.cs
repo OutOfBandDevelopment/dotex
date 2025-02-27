@@ -9,8 +9,5 @@ namespace OoBDev.System.Net.Services;
 
 public class EchoServer(IPAddress? ipAddress = default, ushort port = 7) : ServerBase(ipAddress, port)
 {
-    protected override async Task MessageReceivedAsync(int clientId, TcpClient accepted, Memory<byte> message, CancellationToken cancellationToken)
-    {
-        await accepted.GetStream().WriteAsync(message, cancellationToken);
-    }
+    protected override async Task MessageReceivedAsync(int clientId, TcpClient accepted, Memory<byte> message, CancellationToken cancellationToken) => await accepted.GetStream().WriteAsync(message, cancellationToken);
 }

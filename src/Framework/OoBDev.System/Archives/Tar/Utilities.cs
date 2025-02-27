@@ -30,10 +30,7 @@ public static class Utilities
         {
             string result = Encoding.ASCII.GetString(input, index, length)
                                           .Trim('\0', ' ');
-            if (result == string.Empty)
-                return null;
-            else
-                return result;
+            return result == string.Empty ? null : result;
         }
     }
 

@@ -1,4 +1,4 @@
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -13,8 +13,5 @@ public class HealthCheckSwaggerGenEndpointOptions : IConfigureOptions<SwaggerGen
     /// Configures SwaggerGen options to use the <see cref="HealthChecksDocumentFilter"/> for filtering documents.
     /// </summary>
     /// <param name="options">The SwaggerGen options to configure.</param>
-    public void Configure(SwaggerGenOptions options)
-    {
-        options.DocumentFilter<HealthChecksDocumentFilter>();
-    }
+    public void Configure(SwaggerGenOptions options) => options.DocumentFilter<HealthChecksDocumentFilter>();
 }

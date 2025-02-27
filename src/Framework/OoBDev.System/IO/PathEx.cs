@@ -42,12 +42,7 @@ public static class PathEx
                             select (segment: ps, hasWildcard: wildCards.Any(c => ps.Contains(c)));
         var basePath = string.Join(Path.DirectorySeparatorChar, segmentsQuery.TakeWhile(ps => !ps.hasWildcard).Select(ps => ps.segment));
 
-        if (path == basePath)
-        {
-            return Path.GetDirectoryName(basePath);
-        }
-
-        return basePath;
+        return path == basePath ? Path.GetDirectoryName(basePath) : basePath;
     }
 
     public static IEnumerable<string> EnumerateFiles(string? wildcardPath)

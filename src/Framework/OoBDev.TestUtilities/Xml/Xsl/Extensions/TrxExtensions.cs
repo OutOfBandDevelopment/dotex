@@ -18,12 +18,11 @@ public class TrxExtensions
     /// </summary>
     /// <param name="input">{http://microsoft.com/schemas/VisualStudio/TeamTest/2010}TestMethod</param>
     /// <returns></returns>
-    public XPathNavigator GetTestTargets(XPathNavigator? input)
+    public XPathNavigator? GetTestTargets(XPathNavigator? input)
     {
         XNamespace ns = this.GetXmlNamespace() + ":out";
         try
         {
-
             /*
           <TestMethod codeBase="C:\Repos\mwwhited\BinaryDataDecoders\src\BinaryDataDecoders.ExpressionCalculator.Tests\bin\Debug\netcoreapp3.1\BinaryDataDecoders.ExpressionCalculator.Tests.dll"
                 adapterTypeName="executor://mstestadapter/v2" 
@@ -36,7 +35,7 @@ public class TrxExtensions
             var name = input?.GetAttribute("name", "");
 
             if (!File.Exists(codeBase))
-                return new XElement(ns + "targets", new XComment($"File: \"{codeBase}\" not found")).ToXPathNavigable().CreateNavigator();
+                return new XElement(ns + "targets", new XComment($"File: \"{codeBase}\" not found")).ToXPathNavigable()?.CreateNavigator();
 
             var assembly = string.IsNullOrWhiteSpace(codeBase) ? null : Assembly.LoadFrom(codeBase);
             var testClass = string.IsNullOrWhiteSpace(className) ? null : assembly?.GetType(className);

@@ -12,7 +12,7 @@ public class TokenMap
     /// </summary>
     /// <param name="code"></param>
     /// <returns></returns>
-    public string GetToken(byte code) => tokens.Where(t => t.code == code).Select(t => t.token).FirstOrDefault();
+    public string? GetToken(byte code) => tokens.Where(t => t.code == code).Select(t => t.token).FirstOrDefault();
 
     private readonly (int code, string token)[] tokens =
     [

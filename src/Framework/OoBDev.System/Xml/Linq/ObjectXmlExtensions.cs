@@ -27,12 +27,9 @@ public static class ObjectXmlExtensions
         if (val == null || val == DBNull.Value)
             return null;
 
-        if (prop.PropertyType.IsSimpleType())
-        {
-            return new XAttribute(name, val);
-        }
-
-        return ReflectObjectXml(val, XName.Get(name, parentName?.NamespaceName ?? ""));
+        return prop.PropertyType.IsSimpleType()
+            ? new XAttribute(name, val)
+            : ReflectObjectXml(val, XName.Get(name, parentName?.NamespaceName ?? ""));
     }
 
     private static XElement? ReflectObjectXml(object input, XName? elementName = null)

@@ -74,12 +74,12 @@ internal class WrappedNavigator(IWrappedNode node) : XPathNavigator
         _ => ""
     };
 
-    public override string LookupNamespace(string prefix) => _state switch
+    public override string? LookupNamespace(string prefix) => _state switch
     {
         WrapperState.Child => _node.Current.LookupNamespace(prefix),
         _ => ""
     };
-    public override string LookupPrefix(string namespaceURI) => _state switch
+    public override string? LookupPrefix(string namespaceURI) => _state switch
     {
         WrapperState.Child => _node.Current.LookupPrefix(namespaceURI),
         _ => ""

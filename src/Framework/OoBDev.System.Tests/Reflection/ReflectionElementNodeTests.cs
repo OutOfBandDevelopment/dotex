@@ -15,10 +15,7 @@ public class ReflectionElementNodeTests
     private MockRepository? mockRepository;
 
     [TestInitialize]
-    public void TestInitialize()
-    {
-        mockRepository = new MockRepository(MockBehavior.Strict);
-    }
+    public void TestInitialize() => mockRepository = new MockRepository(MockBehavior.Strict);
 
     private ReflectionElementNodeBuilder CreateReflectionElementNode(object testData, bool excludeNamespace = false) =>
         new(testData, excludeNamespace);

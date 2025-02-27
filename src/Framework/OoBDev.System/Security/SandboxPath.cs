@@ -27,8 +27,9 @@ public static class SandboxPath
                 Path.Combine(basePath, filePath)
             );
 
-        if (!composedPath.StartsWith(sandbox)) throw new ApplicationException($"invalid path requested: {filePath}");
-        return PathEx.FixUpPath(composedPath);
+        return !composedPath.StartsWith(sandbox)
+            ? throw new ApplicationException($"invalid path requested: {filePath}")
+            : PathEx.FixUpPath(composedPath);
     }
 
     ///// <summary>

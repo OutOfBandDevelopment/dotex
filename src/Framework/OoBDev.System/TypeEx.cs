@@ -20,7 +20,7 @@ public static class TypeEx
     /// <param name="classType">object to use as locater</param>
     /// <param name="filename">name of resource</param>
     /// <returns>resource stream</returns>
-    public static Stream GetResourceStream(this Type classType, string filename) =>
+    public static Stream? GetResourceStream(this Type classType, string filename) =>
          classType.Assembly.GetManifestResourceStream($"{classType.Namespace}.{filename}") ??
          classType.Assembly.GetManifestResourceStream(
              classType.Assembly.GetManifestResourceNames()
@@ -51,8 +51,7 @@ public static class TypeEx
         var ns = type.GetCustomAttribute<XmlRootAttribute>(true)?.Namespace;
         if (string.IsNullOrWhiteSpace(ns))
         {
-            if (type.IsAnonymousType()) return "";
-            return $"clr:{string.Join(',', type.AssemblyQualifiedName.Split(',').Where(s => !s.Contains('=')))}";
+            return type.IsAnonymousType() ? "" : $"clr:{string.Join(',', type.AssemblyQualifiedName.Split(',').Where(s => !s.Contains('=')))}";
         }
         return ns;
     }

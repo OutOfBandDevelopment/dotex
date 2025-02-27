@@ -12,9 +12,9 @@ internal static class RomanExtensions
         {
             if (enumerator.Current == '/')
             {
-                if (!enumerator.MoveNext())
-                    throw new ApplicationException("invalid. unexpected end of input");
-                yield return enumerator.Current.GetValue() * 1000;
+                yield return !enumerator.MoveNext()
+                    ? throw new ApplicationException("invalid. unexpected end of input")
+                    : enumerator.Current.GetValue() * 1000;
             }
             else
             {

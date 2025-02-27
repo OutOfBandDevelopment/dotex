@@ -53,25 +53,16 @@ public class XsltExtensionFactoryTests
     public class FakeClass
     {
         [XsltFunction("big-work")]
-        public string DoWork3(string x1, string x2, string x3, string x4, string x5, string x6)
-        {
-            return string.Join("_", x1, x2, x3, x4, x5, x6);
-        }
+        public string DoWork3(string x1, string x2, string x3, string x4, string x5, string x6) => string.Join("_", x1, x2, x3, x4, x5, x6);
 
         [XsltFunction("do-work")]
         public string DoWork(string input) => input;
 
         [XsltFunction("more-work")]
-        public void MoreWork(string input)
-        {
-            Debug.WriteLine(input);
-        }
+        public void MoreWork(string input) => Debug.WriteLine(input);
 
         [XsltFunction("other-work")]
-        public void OtherWork()
-        {
-            Debug.WriteLine("hello!");
-        }
+        public void OtherWork() => Debug.WriteLine("hello!");
 
         [XsltFunction("and-work")]
         public string AndWork() => "noice";

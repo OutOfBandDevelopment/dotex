@@ -28,7 +28,7 @@ public static class XPathExtensions
                 .OfType<XPathNavigator>()
                 ;
 
-    public static IEnumerable<XPathNavigator> AsNodeSet(this object item)
+    public static IEnumerable<XPathNavigator?> AsNodeSet(this object item)
     {
         if (item is IEnumerable items)
         {
@@ -53,7 +53,7 @@ public static class XPathExtensions
                     case XPathNodeIterator iterator:
                         while (iterator.MoveNext())
                         {
-                            yield return iterator.Current.CreateNavigator();
+                            yield return iterator.Current?.CreateNavigator();
                         }
                         break;
 

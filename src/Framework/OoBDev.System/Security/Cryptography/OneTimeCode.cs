@@ -43,10 +43,7 @@ public class OneTimeCode
         return result;
     }
 
-    public string GetToken(string secret, long? counter = null)
-    {
-        return GenerateToken(secret, counter ?? GetCurrentCounter());
-    }
+    public string GetToken(string secret, long? counter = null) => GenerateToken(secret, counter ?? GetCurrentCounter());
 
     public bool IsValid(string secret, string token, int checkAdjacentIntervals = 1)
     {
@@ -85,10 +82,7 @@ public class OneTimeCode
         return decoded;
     }
 
-    public string GetUri(string secret, string issuer, string account = null, Types type = Types.TOTP)
-    {
-        return $"otpauth://{type.ToString().ToLower()}/{issuer}{(!string.IsNullOrWhiteSpace(account) ? ":" + account : null)}?secret={secret}&issuer={issuer}";
-    }
+    public string GetUri(string secret, string issuer, string account = null, Types type = Types.TOTP) => $"otpauth://{type.ToString().ToLower()}/{issuer}{(!string.IsNullOrWhiteSpace(account) ? ":" + account : null)}?secret={secret}&issuer={issuer}";
 
     public enum Types
     {

@@ -27,16 +27,13 @@ public class ExpressionTreeVisitor<T> : ExpressionTreeBaseVisitor<ExpressionBase
     public override ExpressionBase<T> VisitExpression([NotNull] ExpressionTreeParser.ExpressionContext context)
     {
         var op = context.@operator?.Text.AsBinaryOperators();
-        if (op.HasValue && op.Value != BinaryOperators.Unknown)
-        {
-            return new BinaryOperatorExpression<T>(
+        return op.HasValue && op.Value != BinaryOperators.Unknown
+            ? new BinaryOperatorExpression<T>(
                 Visit(context.left) ?? throw new NotSupportedException($"Missing Left Expression: {context.GetText()}"),
                 op.Value,
                 Visit(context.right) ?? throw new NotSupportedException($"Missing Right Expression: {context.GetText()}")
-                );
-        }
-
-        return base.VisitExpression(context);
+                )
+            : base.VisitExpression(context);
     }
 
     public override ExpressionBase<T> VisitInnerExpression([NotNull] ExpressionTreeParser.InnerExpressionContext context) =>

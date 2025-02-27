@@ -10,7 +10,7 @@ public static class EnigmaTools
         input.Select(c => (char)(c > 'Z' ? c - 32 : c))
                     .Where(c => c >= 'A' && c <= 'Z');
     public static string AsString(this IEnumerable<char> input) =>
-        new string(input.ToArray());
+        new(input.ToArray());
 
     public static IEnumerable<string> SplitAt(this string input, int at = 2) =>
         Enumerable.Range(0, input.Length / at)
@@ -18,9 +18,9 @@ public static class EnigmaTools
 
     internal static string SwapSet(this string input, string[]? swaps)
     {
-        if (swaps == null)
-            return input;
-        return swaps.Aggregate(new StringBuilder(input ?? ""),
+        return swaps == null
+            ? input
+            : swaps.Aggregate(new StringBuilder(input ?? ""),
                                (sb, s) => sb.Replace(s[0], '_')
                                             .Replace(s[1], s[0])
                                             .Replace('_', s[1]),

@@ -67,8 +67,5 @@ internal class StreamPipelineFactory
         context.pipeline.Complete();
     }
 
-    internal Task? CreateReader(PipelineBuildDefinition pipeline, Stream stream)
-    {
-        throw new NotImplementedException();
-    }
+    internal Task? CreateReader(PipelineBuildDefinition pipeline, Stream stream) => throw new NotImplementedException();
 }

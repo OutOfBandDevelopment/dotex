@@ -7,7 +7,7 @@ public class AsyncManualResetEvent
 {
     // https://devblogs.microsoft.com/pfxteam/building-async-coordination-primitives-part-1-asyncmanualresetevent/
     private volatile TaskCompletionSource<bool> m_tcs = new();
-    public Task WaitAsync() { return m_tcs.Task; }
+    public Task WaitAsync() => m_tcs.Task;
 
     public void Set()
     {

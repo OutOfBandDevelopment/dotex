@@ -16,7 +16,7 @@ public class AsyncCountdownEvent
         m_count = initialCount;
     }
 
-    public Task WaitAsync() { return m_amre.WaitAsync(); }
+    public Task WaitAsync() => m_amre.WaitAsync();
 
     public void Signal()
     {

@@ -78,8 +78,8 @@ public class TupleConfiguration : IConfiguration, IConfigurationSection
                 );
     }
 
-    public IConfigurationSection GetSection(string key) =>
-         GetChildren().FirstOrDefault(i => i.Key == key);
+    public IConfigurationSection? GetSection(string key) =>
+         GetChildren()?.FirstOrDefault(i => i.Key == key);
 
     internal class ChangeToken : IChangeToken, IDisposable
     {

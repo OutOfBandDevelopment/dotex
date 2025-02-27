@@ -46,12 +46,12 @@ public static class TaskEx
     /// <typeparam name="T">Return Type</typeparam>
     /// <param name="task">Task<T> method to execute</param>
     /// <returns></returns>
-    public static T RunSync<T>(this Func<Task<T>> task)
+    public static T? RunSync<T>(this Func<Task<T>> task)
     {
         var oldContext = SynchronizationContext.Current;
         var synch = new ExclusiveSynchronizationContext();
         SynchronizationContext.SetSynchronizationContext(synch);
-        T ret = default;
+        T? ret = default;
         synch.Post(async _ =>
         {
             try
@@ -76,17 +76,14 @@ public static class TaskEx
     private class ExclusiveSynchronizationContext : SynchronizationContext
     {
         private bool done;
-        public Exception InnerException { get; set; }
+        public Exception? InnerException { get; set; }
         readonly AutoResetEvent workItemsWaiting = new(false);
-        readonly Queue<Tuple<SendOrPostCallback, object>> items =
+        readonly Queue<Tuple<SendOrPostCallback, object?>> items =
             new();
 
-        public override void Send(SendOrPostCallback d, object state)
-        {
-            throw new NotSupportedException("We cannot send to our same thread");
-        }
+        public override void Send(SendOrPostCallback d, object? state) => throw new NotSupportedException("We cannot send to our same thread");
 
-        public override void Post(SendOrPostCallback d, object state)
+        public override void Post(SendOrPostCallback d, object? state)
         {
             lock (items)
             {
@@ -95,16 +92,13 @@ public static class TaskEx
             workItemsWaiting.Set();
         }
 
-        public void EndMessageLoop()
-        {
-            Post(_ => done = true, null);
-        }
+        public void EndMessageLoop() => Post(_ => done = true, null);
 
         public void BeginMessageLoop()
         {
             while (!done)
             {
-                Tuple<SendOrPostCallback, object> task = null;
+                Tuple<SendOrPostCallback, object?>? task = null;
                 lock (items)
                 {
                     if (items.Count > 0)
@@ -127,9 +121,6 @@ public static class TaskEx
             }
         }
 
-        public override SynchronizationContext CreateCopy()
-        {
-            return this;
-        }
+        public override SynchronizationContext CreateCopy() => this;
     }
 }

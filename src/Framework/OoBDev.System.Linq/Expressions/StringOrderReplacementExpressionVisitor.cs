@@ -1,4 +1,4 @@
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
@@ -36,7 +36,7 @@ public class StringOrderReplacementExpressionVisitor(
         .Where(m => m.GetParameters().Length == 2)
         .ToArray()
         ;
-    private readonly RewriteChildren Rewriter = new RewriteChildren(logger, stringCasing);
+    private readonly RewriteChildren Rewriter = new(logger, stringCasing);
 
     /// <summary>
     /// Visits method call expressions, rewriting them to adjust string casing 

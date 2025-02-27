@@ -32,9 +32,6 @@ public class AsyncLock
 
         internal Releaser(AsyncLock toRelease) { m_toRelease = toRelease; }
 
-        public void Dispose()
-        {
-            m_toRelease?.m_semaphore.Release();
-        }
+        public void Dispose() => m_toRelease?.m_semaphore.Release();
     }
 }
