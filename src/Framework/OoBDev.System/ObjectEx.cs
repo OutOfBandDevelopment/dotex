@@ -54,7 +54,6 @@ public static class ObjectEx
     public static string GetXmlNamespaceForOutput(this object obj) =>
         obj.GetType().GetXmlNamespace() + ToolkitConstants.XmlNamespaces.OutputSuffix;
 
-
     public static XName GetXmlElementName(this object @object, bool excludeNamespace = false) =>
         @object.GetType().GetXmlElementName(excludeNamespace);
 

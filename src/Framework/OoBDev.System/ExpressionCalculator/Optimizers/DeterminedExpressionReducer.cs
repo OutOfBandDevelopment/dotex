@@ -14,7 +14,6 @@ public sealed class DeterminedExpressionReducer<T> : IExpressionOptimizer<T> whe
             _ => expression
         };
 
-
     /// simplify determined
     // #`?#`` => #```
     // B/B => 1

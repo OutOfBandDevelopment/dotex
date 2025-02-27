@@ -14,7 +14,6 @@ public class HtmlNavigatorTests
         var html = new HtmlNavigator();
         var xpath = html.ToNavigable(styleSheet).CreateNavigator().Clone();
 
-
         var valueOf = xpath.Select("//value-of");
         var valueAttr = xpath.Select("//value-attr");
         var repeater = xpath.Select("//repeater");

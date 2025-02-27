@@ -150,7 +150,6 @@ public class MongoDBTests
 
     }
 
-
     [TestMethod]
     [TestCategory(TestCategories.DevLocal)]
     public async Task TestMethod3()

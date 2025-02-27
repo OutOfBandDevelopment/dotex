@@ -1,4 +1,4 @@
-using OoBDev.Communications.Models;
+﻿using OoBDev.Communications.Models;
 using OoBDev.Communications.Services;
 using OoBDev.MessageQueueing;
 using OoBDev.MessageQueueing.Services;
@@ -36,7 +36,6 @@ public class EmailMessageHandler : IMessageQueueHandler<EmailMessageModel, Email
         }
         _email = email;
     }
-
 
     /// <summary>
     /// Handles the specified email message asynchronously.

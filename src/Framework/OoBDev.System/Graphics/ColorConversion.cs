@@ -4,7 +4,6 @@ using System.Linq;
 
 namespace OoBDev.System.Graphics;
 
-
 public static class ColorConversion
 {
     public static (double hue, double saturation, double lightness) Rgb2Hsl((byte red, byte green, byte blue) color) => Rgb2Hsl(color.red, color.green, color.blue);
@@ -32,7 +31,6 @@ public static class ColorConversion
             }, lightness
             );
     }
-
 
     public static (double hue, double saturation, double value) Rgb2Hsv((byte red, byte green, byte blue) color) => Rgb2Hsv(color.red, color.green, color.blue);
     public static (double hue, double saturation, double value) Rgb2Hsv(byte red, byte green, byte blue) => Rgb2Hsv((red, green, blue), 255.0);

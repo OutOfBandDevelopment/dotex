@@ -3,7 +3,6 @@ using System.Xml.XPath;
 
 namespace OoBDev.System.Xml.XPath;
 
-
 internal class ExtensibleWhitespaceNode<T>(
      INode parent,
      XName name,

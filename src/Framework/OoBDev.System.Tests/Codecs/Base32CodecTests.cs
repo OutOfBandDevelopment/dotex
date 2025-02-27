@@ -5,7 +5,6 @@ using System.Text;
 
 namespace OoBDev.System.Tests.Codecs;
 
-
 [TestClass]
 public class Base32CodecTests
 {

@@ -133,7 +133,7 @@ public static class PathEx
             recursive = false;
         }
 
-        foreach (var dir in directories ?? Enumerable.Empty<string>())
+        foreach (var dir in directories ?? [])
             yield return dir;
     }
 }

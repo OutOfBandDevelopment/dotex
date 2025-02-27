@@ -50,7 +50,6 @@ public class DiskImageCommandsTests
         };
         Assert.IsFalse(expected.Zip(vtoc.BitmapFreeSectors).Any(i => i.First != i.Second));
 
-
         //Verify
     }
 
@@ -127,7 +126,6 @@ public class DiskImageCommandsTests
 
         //Verify
     }
-
 
     [TestMethod, TestCategory(TestCategories.Unit)]
     [TestTarget(typeof(DiskImageCommands), Member = nameof(DiskImageCommands.GetDataFileEntry))]

@@ -77,8 +77,8 @@ public static class TaskEx
     {
         private bool done;
         public Exception? InnerException { get; set; }
-        readonly AutoResetEvent workItemsWaiting = new(false);
-        readonly Queue<Tuple<SendOrPostCallback, object?>> items =
+        private readonly AutoResetEvent workItemsWaiting = new(false);
+        private readonly Queue<Tuple<SendOrPostCallback, object?>> items =
             new();
 
         public override void Send(SendOrPostCallback d, object? state) => throw new NotSupportedException("We cannot send to our same thread");

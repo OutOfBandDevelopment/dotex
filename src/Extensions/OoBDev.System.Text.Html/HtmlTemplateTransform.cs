@@ -33,7 +33,6 @@ public class HtmlTemplateTransform(
         return xpathNav;
     }
 
-
     public async Task<string> Transform(object source, string template)
     {
         var pathResolver = await instanceFactory.GetPathResolver(source);

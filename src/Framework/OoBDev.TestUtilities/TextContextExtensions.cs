@@ -87,7 +87,6 @@ public static class TextContextExtensions
         return context;
     }
 
-
     //TODO: clean this up
     ///// <summary>
     ///// Write out binary content to test results folder and link to test results

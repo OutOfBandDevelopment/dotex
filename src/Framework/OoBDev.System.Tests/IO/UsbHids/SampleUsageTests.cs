@@ -6,7 +6,6 @@ using System.Text;
 
 namespace OoBDev.System.Tests.IO.UsbHids;
 
-
 [TestClass]
 public class SampleUsageTests
 {

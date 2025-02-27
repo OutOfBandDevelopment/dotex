@@ -10,16 +10,11 @@ internal static class RomanExtensions
         var enumerator = value.GetEnumerator();
         while (enumerator.MoveNext())
         {
-            if (enumerator.Current == '/')
-            {
-                yield return !enumerator.MoveNext()
+            yield return enumerator.Current == '/'
+                ? !enumerator.MoveNext()
                     ? throw new ApplicationException("invalid. unexpected end of input")
-                    : enumerator.Current.GetValue() * 1000;
-            }
-            else
-            {
-                yield return enumerator.Current.GetValue();
-            }
+                    : enumerator.Current.GetValue() * 1000
+                : enumerator.Current.GetValue();
         }
     }
 

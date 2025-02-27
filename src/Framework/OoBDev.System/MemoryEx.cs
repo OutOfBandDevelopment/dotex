@@ -23,8 +23,9 @@ public static class MemoryEx
             unchecked
             {
                 if (input >= '0' && input <= '9') return (byte)(input - '0');
-                else if (input >= 'A' && input <= 'F') return (byte)(input - 'A' + 10);
-                else return input >= 'a' && input <= 'f' ? (byte)(input - 'a' + 10) : throw new InvalidOperationException();
+                else return input >= 'A' && input <= 'F'
+                    ? (byte)(input - 'A' + 10)
+                    : input >= 'a' && input <= 'f' ? (byte)(input - 'a' + 10) : throw new InvalidOperationException();
             }
         }
 

@@ -40,7 +40,7 @@ public class TrxExtensions
             var assembly = string.IsNullOrWhiteSpace(codeBase) ? null : Assembly.LoadFrom(codeBase);
             var testClass = string.IsNullOrWhiteSpace(className) ? null : assembly?.GetType(className);
             var testMethod = string.IsNullOrWhiteSpace(name) ? null : testClass?.GetMethod(name);
-            var attributes = testMethod?.GetCustomAttributes<TestTargetAttribute>() ?? Enumerable.Empty<TestTargetAttribute>();
+            var attributes = testMethod?.GetCustomAttributes<TestTargetAttribute>() ?? [];
 
             var xml = new XElement(ns + "targets",
                 from a in attributes

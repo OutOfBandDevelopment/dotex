@@ -4,10 +4,7 @@ namespace OoBDev.System.Net.SecurityManagement;
 
 public class LdapNotFilter : ILdapFilter
 {
-    public LdapNotFilter(ILdapFilter wrapped)
-    {
-        Wrapped = wrapped;
-    }
+    public LdapNotFilter(ILdapFilter wrapped) => Wrapped = wrapped;
 
     public ILdapFilter Wrapped { get; init; }
 

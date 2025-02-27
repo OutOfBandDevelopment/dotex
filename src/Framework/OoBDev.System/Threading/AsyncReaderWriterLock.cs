@@ -53,7 +53,6 @@ public class AsyncReaderWriterLock
         toWake?.SetResult(new Releaser(this, true));
     }
 
-
     public Task<Releaser> WriterLockAsync()
     {
         lock (m_waitingWriters)
@@ -97,7 +96,6 @@ public class AsyncReaderWriterLock
 
         toWake?.SetResult(new Releaser(this, toWakeIsWriter));
     }
-
 
     public readonly struct Releaser : IDisposable
     {

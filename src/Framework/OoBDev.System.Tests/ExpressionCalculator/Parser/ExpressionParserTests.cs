@@ -86,7 +86,6 @@ public abstract class ExpressionParserTests<T>
 
     public required TestContext TestContext { get; set; }
 
-
     [DataTestMethod, TestCategory(TestCategories.Unit)]
     [ExpectedException(typeof(ParseCanceledException))]
     [DataRow("-A!")]

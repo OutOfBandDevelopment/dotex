@@ -40,9 +40,7 @@ public class LdapSimpleFilter : ILdapFilter
 
     public override bool Equals(object obj)
     {
-        return obj is not LdapSimpleFilter inner
-            ? false
-            : new
+        return obj is LdapSimpleFilter inner && new
         {
             AttributeName = AttributeName.ToUpperInvariant(),
             Operation,

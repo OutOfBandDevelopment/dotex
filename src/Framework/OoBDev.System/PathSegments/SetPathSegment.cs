@@ -11,5 +11,5 @@ public class SetPathSegment(
 
     public override string ToString() => string.Join(",", Set);
 
-    public static readonly IPathSegment Empty = new SetPathSegment(Enumerable.Empty<IPathSegment>());
+    public static readonly IPathSegment Empty = new SetPathSegment([]);
 }

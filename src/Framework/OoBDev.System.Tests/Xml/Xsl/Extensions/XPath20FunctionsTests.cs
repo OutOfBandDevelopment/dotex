@@ -92,7 +92,6 @@ public class XPath20FunctionsTests
     //    }
     //}
 
-
     //[TestMethod, TestCategory(TestCategories.DevLocal)]
     //public void ExtendTypeTest()
     //{
@@ -124,7 +123,6 @@ public class XPath20FunctionsTests
     //        this.TestContext.WriteLine($"{"and-work"}: {ret}");
     //    }
     //}
-
 
     [TestMethod, TestCategory(TestCategories.DevLocal)]
     //[TestCategory(TestCategories.Unit)]

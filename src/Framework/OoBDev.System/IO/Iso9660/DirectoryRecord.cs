@@ -220,7 +220,7 @@ public class DirectoryRecord : IEnumerable<DirectoryRecord>
     #region IEnumerable<DirectoryRecord> Members
 
     public IEnumerator<DirectoryRecord> GetEnumerator() =>
-        (Children ?? Enumerable.Empty<DirectoryRecord>()).GetEnumerator();
+        (Children ?? []).GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 

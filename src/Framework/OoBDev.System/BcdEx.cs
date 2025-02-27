@@ -19,9 +19,9 @@ public static class BcdEx
         var low = input & 0x0f;
         var high = (input & 0xf0) >> 4;
 
-        if (low > 9)
-            throw new ArgumentOutOfRangeException("low nibble");
-        return high > 9 ? throw new ArgumentOutOfRangeException("high nibble") : low + high * 10;
+        return low > 9
+            ? throw new ArgumentOutOfRangeException("low nibble")
+            : high > 9 ? throw new ArgumentOutOfRangeException("high nibble") : low + high * 10;
     }
     /// <summary>
     /// convert decimal value to Binary code Decimal (BCD)
@@ -36,8 +36,8 @@ public static class BcdEx
         var high = input / 10;
         var low = input - high * 10;
 
-        if (low > 9)
-            throw new ArgumentOutOfRangeException("low nibble");
-        return high > 9 ? throw new ArgumentOutOfRangeException("high nibble") : (byte)(high << 4 | low);
+        return low > 9
+            ? throw new ArgumentOutOfRangeException("low nibble")
+            : high > 9 ? throw new ArgumentOutOfRangeException("high nibble") : (byte)(high << 4 | low);
     }
 }

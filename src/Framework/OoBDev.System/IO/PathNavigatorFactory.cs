@@ -69,7 +69,6 @@ public static class PathNavigatorFactory
                   _ => throw new NotSupportedException(),
               },
 
-
              childSelector: c => c switch
              {
                  DirectoryInfo directory => directory.GetDirectories().Select(fsi => (XName.Get("Directory", rootName.NamespaceName), (object)fsi))

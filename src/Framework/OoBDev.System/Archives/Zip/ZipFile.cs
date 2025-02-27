@@ -5,9 +5,9 @@ using System.Linq;
 
 namespace OoBDev.System.Archives.Zip;
 
-class ZipFile
+internal class ZipFile
 {
-    static void Entry(string[] args)
+    private static void Entry(string[] args)
     {
         string? fileName = new DirectoryInfo(".\\").GetFiles("*.zip").Select(f => f.FullName).FirstOrDefault();
         if (string.IsNullOrEmpty(fileName))
@@ -29,7 +29,6 @@ class ZipFile
                 File.WriteAllBytes(localFileHeader.FileName, Decompress(fileContent)??throw new NotSupportedException($"No content for {localFileHeader.FileName}"));
                 offset += fileContent.Length;
             }
-
 
             byte[] newBuffer = new byte[zipFileContents.Length - offset];
             Array.Copy(zipFileContents, offset, newBuffer, 0, newBuffer.Length);

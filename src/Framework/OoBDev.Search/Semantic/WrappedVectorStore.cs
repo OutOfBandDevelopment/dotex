@@ -1,4 +1,4 @@
-using OoBDev.Search.Models;
+﻿using OoBDev.Search.Models;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -58,7 +58,6 @@ public class WrappedVectorStore<T> : IVectorStore<T>
     /// <returns>A task representing the asynchronous operation. The task result contains the IDs of the stored vectors.</returns>
     public Task<string[]> StoreVectorsAsync(IEnumerable<ReadOnlyMemory<float>> embeddings, Dictionary<string, object> metadata) =>
         _wrapped.StoreVectorsAsync(embeddings, metadata);
-
 
     /// <summary>
     /// Stores the specified embeddings and metadata.

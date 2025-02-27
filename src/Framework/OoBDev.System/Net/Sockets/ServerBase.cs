@@ -69,7 +69,6 @@ public abstract class ServerBase : IServerBase
                 var clientId = clientIdSeed++;
                 _clients.Add(clientId, accepted);
 
-
                 var clientTask = Task.Run(async () =>
                 {
                     Console.WriteLine($"{GetType()}::ServiceLoopAsync::Accepted: {clientId}-{Environment.CurrentManagedThreadId}");

@@ -191,7 +191,6 @@ public static class VectorFunctions
     public static SqlVectorF UniformF(SqlInt32 length, SqlDouble min, SqlDouble max, SqlInt32 seed) =>
         Uniform(length, min, max, seed);
 
-
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal static double MagnitudeInternal(IReadOnlyList<double> values) =>
         Math.Sqrt(DotProduct(values, values));

@@ -122,7 +122,6 @@ public class ObservableDictionary<TKey, TValue> : IDictionary<TKey, TValue>, INo
             else
                 foreach (var item in items) Dictionary.Add(item);
 
-
             OnCollectionChanged(NotifyCollectionChangedAction.Add, items.ToArray());
         }
     }

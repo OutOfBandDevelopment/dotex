@@ -20,7 +20,6 @@ public class LdapFilterBuilder
         return result;
     }
 
-
     private string? Build(LdapNotFilter filter) => filter == null ? null : string.Format("(!{0})", Build(filter.Wrapped));
 
     private readonly Dictionary<LdapFilterTypes, string> _simpleMap = new()
@@ -77,10 +76,10 @@ public class LdapFilterBuilder
     {
         return filter == null
             ? null
-            : (filter.FilterSet ?? Enumerable.Empty<ILdapFilter>())
+            : (filter.FilterSet ?? [])
                 .Aggregate(new StringBuilder("(" + _setMap[filter.Operation]),
                            (b, v) => b.Append(Build(v)),
-                           b => b.Append(")").ToString()
+                           b => b.Append(')').ToString()
                            );
     }
 }

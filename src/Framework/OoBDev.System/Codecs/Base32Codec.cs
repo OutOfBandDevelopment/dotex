@@ -117,7 +117,6 @@ public class Base32Codec
     }
 }
 
-
 //public class Base32Encoding
 //{
 //    public static byte[] ToBytes(string input)

@@ -8,7 +8,6 @@ using System.Xml.Linq;
 
 namespace OoBDev.System.Xml.Linq;
 
-
 public class XFragment : IList<XNode>
 {
     // https://github.com/OutOfBandDevelopment/Samples/blob/master/HandyClasses/XFragment.cs
@@ -16,7 +15,7 @@ public class XFragment : IList<XNode>
 
     public XFragment(IEnumerable<XNode> nodes)
     {
-        foreach (var node in (nodes ?? Enumerable.Empty<XNode>()).Where(n => n != null))
+        foreach (var node in (nodes ?? []).Where(n => n != null))
             Nodes.Add(node);
     }
 

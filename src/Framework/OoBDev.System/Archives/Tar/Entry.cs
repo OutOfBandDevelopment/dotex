@@ -4,7 +4,7 @@ using System.IO;
 
 namespace OoBDev.System.Archives.Tar;
 
-class Entry
+internal class Entry
 {
     public static void Sample(string[] args)
     {

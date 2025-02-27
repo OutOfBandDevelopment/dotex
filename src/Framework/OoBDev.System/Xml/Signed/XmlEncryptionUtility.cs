@@ -94,7 +94,6 @@
 //            int exp_idx = bitlen_idx + bitlen_size;
 //            int exp_size = 4;
 
-
 //            //BYTE modulus[rsapubkey.bitlen/8]; == MOD; Size 128
 //            int mod_idx = exp_idx + exp_size;
 //            int mod_size = 128;
@@ -122,7 +121,6 @@
 //            //BYTE privateExponent[rsapubkey.bitlen/8]; == D; Size 128
 //            int d_idx = invq_idx + invq_size;
 //            int d_size = 128;
-
 
 //            // Figure public params, Must reverse order (little vs. big endian issue)
 //            ret.Exponent = XmlEncryptionUtility.BlockCopy(keyBytes, exp_idx, exp_size);

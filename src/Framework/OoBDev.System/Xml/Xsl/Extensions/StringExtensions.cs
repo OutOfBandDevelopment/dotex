@@ -29,7 +29,6 @@ public class StringExtensions
     public string TrimPerLine(string input) =>
         string.Join("\r\n", input.Split("\r\n").Select(l => l.Trim().Trim('\t', '\r', '\n', ' ')));
 
-
     public string PadLeft(string input, int totalWidth) => input.PadLeft(totalWidth);
     public string PadRight(string input, int totalWidth) => input.PadRight(totalWidth);
     public string New(string @char, int length) => string.IsNullOrEmpty(@char) || length < 0 ? "" : new string(@char[0], length);

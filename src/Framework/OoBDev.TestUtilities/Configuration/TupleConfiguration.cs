@@ -59,7 +59,6 @@ public class TupleConfiguration : IConfiguration, IConfigurationSection
     }
     public IChangeToken GetReloadToken() => new ChangeToken();
 
-
     public IEnumerable<IConfigurationSection> GetChildren()
     {
         var values = from k in _store.Keys

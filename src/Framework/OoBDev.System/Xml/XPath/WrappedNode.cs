@@ -43,7 +43,6 @@ internal class WrappedNode : IWrappedNode
         }
     }
 
-
     public static IWrappedNode? Build(IEnumerable<(string source, IXPathNavigable? navigator)> children)
     {
         var enumerator = children.GetEnumerator();

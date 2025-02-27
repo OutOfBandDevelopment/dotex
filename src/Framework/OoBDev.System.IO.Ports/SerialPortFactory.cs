@@ -6,7 +6,6 @@ using SerialPort = System.IO.Ports.SerialPort;
 
 namespace OoBDev.System.IO.Ports;
 
-
 [DeviceTarget(typeof(SerialPortAttribute))]
 public class SerialPortFactory : IDeviceFactory
 {

@@ -7,7 +7,6 @@ using System;
 
 namespace OoBDev.SBert.AllMiniLML6v2Sharp;
 
-
 public static class ServiceCollectionExtensions
 {
     public static IServiceCollection TryAddAllMiniLmL6V2Services(

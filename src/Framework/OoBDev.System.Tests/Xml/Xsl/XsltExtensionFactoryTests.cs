@@ -49,7 +49,6 @@ public class XsltExtensionFactoryTests
 
     }
 
-
     public class FakeClass
     {
         [XsltFunction("big-work")]

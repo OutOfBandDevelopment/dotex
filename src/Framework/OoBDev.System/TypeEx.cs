@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OoBDev.System.IO;
+using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -49,11 +50,9 @@ public static class TypeEx
     public static string GetXmlNamespace(this Type type)
     {
         var ns = type.GetCustomAttribute<XmlRootAttribute>(true)?.Namespace;
-        if (string.IsNullOrWhiteSpace(ns))
-        {
-            return type.IsAnonymousType() ? "" : $"clr:{string.Join(',', type.AssemblyQualifiedName.Split(',').Where(s => !s.Contains('=')))}";
-        }
-        return ns;
+        return string.IsNullOrWhiteSpace(ns)
+            ? type.IsAnonymousType() ? "" : $"clr:{string.Join(',', type.AssemblyQualifiedName?.Split(',').Where(s => !s.Contains('=')) ?? [])}"
+            : ns;
     }
 
     /// <summary>

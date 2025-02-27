@@ -86,7 +86,7 @@ public class ExtensibleElementNode<T> : IElementNode, ISimpleNode
 
         _attributes = new Lazy<IAttributeNode?>(() =>
         {
-            var query = (_attributeSelector?.Invoke(_item) ?? Enumerable.Empty<(XName name, string? value)>()).GetEnumerator();
+            var query = (_attributeSelector?.Invoke(_item) ?? []).GetEnumerator();
             IAttributeNode? first = null;
             IAttributeNode? previous = null;
 
@@ -113,7 +113,7 @@ public class ExtensibleElementNode<T> : IElementNode, ISimpleNode
 
         _children = new Lazy<INode?>(() =>
         {
-            var query = (_childSelector?.Invoke(_item) ?? Enumerable.Empty<(XName name, T child)>()).GetEnumerator();
+            var query = (_childSelector?.Invoke(_item) ?? []).GetEnumerator();
             INode? first = null;
             INode? previous = null;
 
@@ -147,10 +147,9 @@ public class ExtensibleElementNode<T> : IElementNode, ISimpleNode
             return first ?? _value.Value;
         });
 
-
         _namespaces = new Lazy<INamespaceNode?>(() =>
         {
-            var query = (_namespacesSelector?.Invoke(_item) ?? Enumerable.Empty<XName>()).GetEnumerator();
+            var query = (_namespacesSelector?.Invoke(_item) ?? []).GetEnumerator();
             INamespaceNode? first = null;
             INamespaceNode? previous = null;
 

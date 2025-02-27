@@ -1,4 +1,4 @@
-using OoBDev.Search.Models;
+﻿using OoBDev.Search.Models;
 using OoBDev.Search.Semantic;
 using Google.Protobuf.Collections;
 using Microsoft.Extensions.Options;
@@ -112,7 +112,6 @@ public class QdrantVectorStoreProvider : IVectorStoreProvider
 
             points.Add(point);
         }
-
 
         var response = await _client.Points.UpsertAsync(new()
         {

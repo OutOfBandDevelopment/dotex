@@ -39,7 +39,6 @@ public class ExpressionTreeVisitor<T> : ExpressionTreeBaseVisitor<ExpressionBase
     public override ExpressionBase<T> VisitInnerExpression([NotNull] ExpressionTreeParser.InnerExpressionContext context) =>
         new InnerExpression<T>(Visit(context.inner));
 
-
     public override ExpressionBase<T> VisitValue([NotNull] ExpressionTreeParser.ValueContext context)
     {
         var result = VisitNumber(context.NUMBER()) ??

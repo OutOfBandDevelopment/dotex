@@ -28,7 +28,7 @@ public class ReflectionElementNodeBuilder(object seed, bool excludeNamespace = f
              );
 
     protected virtual bool PreserveWhitespace(object obj) => true;
-    protected virtual IEnumerable<XName>? NamespacesSelector(object model) => Enumerable.Empty<XName>();
+    protected virtual IEnumerable<XName>? NamespacesSelector(object model) => [];
 
     protected virtual IEnumerable<(XName name, object child)>? ChildSelector(object model) =>
          IsValue(model) ? null : model switch

@@ -1,4 +1,4 @@
-
+﻿
 namespace OoBDev.MongoDB.Extensions;
 
 /// <summary>
@@ -9,20 +9,20 @@ public interface IAtlasVectorSearch
     /// <summary>
     /// provide a centralized means to create Atlas Vector Search
     /// </summary>
-    public string Type { get; set; }
+    string Type { get; set; }
 
     /// <summary>
     /// provide a centralized means to create Atlas Vector Search
     /// </summary>
-    public string Path { get; set; }
+    string Path { get; set; }
 
     /// <summary>
     /// provide a centralized means to create Atlas Vector Search
     /// </summary>
-    public int NumDimensions { get; set; }
+    int NumDimensions { get; set; }
 
     /// <summary>
     /// provide a centralized means to create Atlas Vector Search
     /// </summary>
-    public int Similarity { get; set; }
+    int Similarity { get; set; }
 }

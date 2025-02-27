@@ -28,7 +28,7 @@ public static class ExpressionBaseExtensions
             InnerExpression<T> inner => inner.Expression.GetAllExpressions(),
             UnaryOperatorExpression<T> unary => unary.Operand.GetAllExpressions(),
             BinaryOperatorExpression<T> binary => binary.Left.GetAllExpressions().Concat(binary.Right.GetAllExpressions()),
-            _ => Enumerable.Empty<ExpressionBase<T>>()
+            _ => []
         };
 
         foreach (var sub in subExpressions)

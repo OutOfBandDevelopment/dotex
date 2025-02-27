@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 
 namespace OoBDev.System.IO.Pipelines.Factories;
 
-
 internal class StreamPipelineFactory
 {
     //https://devblogs.microsoft.com/dotnet/system-io-pipelines-high-performance-io-in-net/
