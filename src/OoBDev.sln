@@ -238,6 +238,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AllMiniLmL6V2Sharp.Tests", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OoBDev.SBert.AllMiniLML6v2Sharp", "ExternalServices\SBert\OoBDev.SBert.AllMiniLML6v2Sharp\OoBDev.SBert.AllMiniLML6v2Sharp.csproj", "{C667979E-F3D9-4F89-8300-EFD33CB5541D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OoBDev.Data.Vectors.DB", "Extensions\OoBDev.Data.Vectors.DB\OoBDev.Data.Vectors.DB.csproj", "{3D6EC522-D0EE-4347-911D-E59830C792CC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -620,6 +622,10 @@ Global
 		{C667979E-F3D9-4F89-8300-EFD33CB5541D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C667979E-F3D9-4F89-8300-EFD33CB5541D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C667979E-F3D9-4F89-8300-EFD33CB5541D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D6EC522-D0EE-4347-911D-E59830C792CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D6EC522-D0EE-4347-911D-E59830C792CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D6EC522-D0EE-4347-911D-E59830C792CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D6EC522-D0EE-4347-911D-E59830C792CC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -736,6 +742,7 @@ Global
 		{C159FF26-D806-8FE3-84C5-6DEEC55B9220} = {17FC73D0-953D-47DC-AFAA-DCFE6227F3B1}
 		{66804A88-F235-BF49-5106-2F87A1B65E91} = {17FC73D0-953D-47DC-AFAA-DCFE6227F3B1}
 		{C667979E-F3D9-4F89-8300-EFD33CB5541D} = {C7E8927B-75DF-43AD-90AA-192F399ECBC3}
+		{3D6EC522-D0EE-4347-911D-E59830C792CC} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {92959CB8-A44C-4F0D-BBCF-C99B014BEEAD}

@@ -1,0 +1,61 @@
+﻿<Project Sdk="MSBuild.Sdk.SqlProj/3.1.1">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <SqlServerVersion>Sql150</SqlServerVersion>
+    <RunSqlCodeAnalysis>True</RunSqlCodeAnalysis>
+    <RecoveryMode>Simple</RecoveryMode>
+    <ServiceBrokerOption>EnableBroker</ServiceBrokerOption>
+  </PropertyGroup>
+
+  <!-- https://github.com/rr-wfm/MSBuild.Sdk.SqlProj#publishing-support -->
+  <PropertyGroup>
+    <!--  Controls the name of the server to which the project is published -->
+    <TargetServerName>127.0.0.1</TargetServerName>
+    <!-- Controls the name of the server to which the project is published -->
+    <TargetDatabaseName>VectorDb</TargetDatabaseName>
+    <!-- 	Specifies an alternate port for connecting to the target server (only necessary if using a non-standard port) -->
+    <TargetPort>1433</TargetPort>
+    <!-- Username used to connect to the server. If empty, Windows authentication is used -->
+    <TargetUser>sa</TargetUser>
+    <!-- Password used to connect to the server. If empty, but TargetUser is set you will be prompted for the password -->
+    <TargetPassword>L0c@lD3v</TargetPassword>
+    <!-- Controls whether objects from referenced packages are deployed to the same database -->
+    <IncludeCompositeObjects>True</IncludeCompositeObjects>
+    <!-- Controls the name of the .dacpac created by dotnet build. The default name for the .dacpac file is the name of the project file, e.g. MyProject.csproj produces MyProject.dacpac. -->
+    <TargetName>$(TargetDatabaseName)</TargetName>
+    <!-- 	Controls whether a deploy occurs when the project is published. -->
+    <DeployOnPublish>True</DeployOnPublish>
+  </PropertyGroup>
+
+
+  <!-- 
+  https://learn.microsoft.com/en-us/dotnet/api/microsoft.sqlserver.dac.dacdeployoptions?view=sql-dacfx-162 
+  Additional properties 
+  -->
+
+  <!-- https://github.com/rr-wfm/MSBuild.Sdk.SqlProj?tab=readme-ov-file#sqlcmd-variables -->
+  <ItemGroup>
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- These packages adds additional code analysis rules -->
+    <!-- We recommend using these, but they can be removed if desired -->
+    <PackageReference Include="ErikEJ.DacFX.SqlServer.Rules" Version="1.2.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="ErikEJ.DacFX.TSQLSmellSCA" Version="1.2.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="ServiceBroker\MessageTypes\" />
+    <Folder Include="ServiceBroker\Contracts\" />
+    <Folder Include="ServiceBroker\Services\" />
+    <Folder Include="ServiceBroker\Queues\" />
+  </ItemGroup>
+
+</Project>
