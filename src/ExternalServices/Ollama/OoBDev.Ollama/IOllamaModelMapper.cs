@@ -1,8 +1,4 @@
-﻿using OoBDev.AI.Models;
-using OllamaSharp;
-using OllamaSharp.Models;
-
-namespace OoBDev.Ollama;
+﻿namespace OoBDev.Ollama;
 
 /// <summary>
 /// Represents a mapper interface for llama models.

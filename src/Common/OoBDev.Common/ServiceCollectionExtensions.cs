@@ -1,12 +1,13 @@
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using OoBDev.Communications;
 using OoBDev.Communications.MessageQueueing;
+using OoBDev.Data.Common;
 using OoBDev.Documents;
 using OoBDev.Identity;
 using OoBDev.MessageQueueing;
 using OoBDev.Search;
 using OoBDev.System;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace OoBDev.Common;
 
@@ -42,6 +43,7 @@ public static class ServiceCollectionExtensions
         services.TryAddIdentityServices(configuration);
         services.TryAddSearchServices();
         services.TryAddDocumentServices();
+        services.TryAddDataCommonServices();
 
         return services;
     }

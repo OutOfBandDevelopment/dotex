@@ -1,5 +1,4 @@
-using OoBDev.Extensions.IO;
-using OoBDev.Extensions.Reflection;
+﻿using OoBDev.Extensions.IO;
 using OoBDev.System.Tests.Reflection.TestTargets;
 using OoBDev.TestUtilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

@@ -1,4 +1,6 @@
-﻿using OoBDev.Apache.Tika;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using OoBDev.Apache.Tika;
 using OoBDev.Azure.StorageAccount;
 using OoBDev.GroqCloud;
 using OoBDev.Handlebars;
@@ -8,6 +10,7 @@ using OoBDev.MailKit;
 using OoBDev.Markdig;
 using OoBDev.Microsoft.ApplicationInsights;
 using OoBDev.Microsoft.B2C;
+using OoBDev.Microsoft.SqlServer.Server;
 using OoBDev.MongoDB;
 using OoBDev.MysticMind;
 using OoBDev.Ollama;
@@ -15,10 +18,8 @@ using OoBDev.OpenSearch;
 using OoBDev.Qdrant;
 using OoBDev.RabbitMQ;
 using OoBDev.SBert;
-using OoBDev.WkHtmlToPdf;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using OoBDev.SBert.AllMiniLML6v2Sharp;
+using OoBDev.WkHtmlToPdf;
 
 namespace OoBDev.Common.Extensions;
 
@@ -80,6 +81,7 @@ public static class ServiceCollectionExtensions
         services.TryAddHandlebarServices();
         services.TryAddMysticMindServices();
         services.TryAddHtmlToOpenXmlServices();
+        services.TryAddMicrosoftSqlServerExtensions();
 
         return services;
     }
