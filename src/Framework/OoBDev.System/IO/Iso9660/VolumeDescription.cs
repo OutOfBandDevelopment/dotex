@@ -133,6 +133,7 @@ public class VolumeDescription : IEnumerable<DirectoryRecord>, IDisposable
 
     #region IDisposable Members
 
+    /// <inheritdoc/>
     public void Dispose() => BaseStream?.Dispose();
 
     #endregion
