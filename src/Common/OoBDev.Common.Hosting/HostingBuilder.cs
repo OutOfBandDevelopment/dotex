@@ -1,4 +1,4 @@
-namespace OoBDev.Common.Hosting;
+﻿namespace OoBDev.Common.Hosting;
 
 /// <summary>
 /// Represents a builder for configuring hosting extensions.
@@ -22,4 +22,6 @@ public record HostingBuilder
     /// The default value is <c>false</c>.
     /// </remarks>
     public bool DisableMessageQueueing { get; init; } = false;
+
+    public bool DisableVectorHosting { get; init; } = false;
 }

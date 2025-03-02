@@ -1,6 +1,8 @@
 CREATE PROCEDURE [embedding].[oobdev://embedding/storage/reader] 
 AS
 BEGIN
+	SET NOCOUNT ON;
+
 	DECLARE  @conversationGroup		UNIQUEIDENTIFIER
 			,@conversationHandle	UNIQUEIDENTIFIER
 			,@mesageType			NVARCHAR(255)

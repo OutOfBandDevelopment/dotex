@@ -13,7 +13,7 @@
     <!--  Controls the name of the server to which the project is published -->
     <TargetServerName>127.0.0.1</TargetServerName>
     <!-- Controls the name of the server to which the project is published -->
-    <TargetDatabaseName>VectorDb</TargetDatabaseName>
+    <TargetDatabaseName>ExampleDb</TargetDatabaseName>
     <!-- 	Specifies an alternate port for connecting to the target server (only necessary if using a non-standard port) -->
     <TargetPort>1433</TargetPort>
     <!-- Username used to connect to the server. If empty, Windows authentication is used -->
@@ -35,14 +35,6 @@
     </PackageReference>
   </ItemGroup>
 
-  <!-- 
-  https://learn.microsoft.com/en-us/dotnet/api/microsoft.sqlserver.dac.dacdeployoptions?view=sql-dacfx-162 
-  Additional properties 
-  -->
-
-  <!-- https://github.com/rr-wfm/MSBuild.Sdk.SqlProj?tab=readme-ov-file#sqlcmd-variables -->
-  <ItemGroup>
-  </ItemGroup>
 
   <ItemGroup>
     <!-- These packages adds additional code analysis rules -->
@@ -57,12 +49,15 @@
     </PackageReference>
   </ItemGroup>
 
+
   <ItemGroup>
-    <Folder Include="Programmability\Types\" />
-    <Folder Include="ServiceBroker\MessageTypes\" />
-    <Folder Include="ServiceBroker\Contracts\" />
-    <Folder Include="ServiceBroker\Services\" />
-    <Folder Include="ServiceBroker\Queues\" />
+    <ProjectReference Include="..\..\Extensions\OoBDev.Data.Vectors.DB\OoBDev.Data.Vectors.DB.csproj" />
   </ItemGroup>
+
+
+  <ItemGroup>
+    <Folder Include="Tables\" />
+  </ItemGroup>
+
 
 </Project>

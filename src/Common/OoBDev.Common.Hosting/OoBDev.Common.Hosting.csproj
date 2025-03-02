@@ -29,8 +29,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Extensions\**\*.Hosting.csproj" />
     <ProjectReference Include="..\..\ExternalServices\**\*.Hosting.csproj" />
   </ItemGroup>
+
 
   <ItemGroup>
     <CodeDocumentation Remove="Readme.Common.Hosting.md" />

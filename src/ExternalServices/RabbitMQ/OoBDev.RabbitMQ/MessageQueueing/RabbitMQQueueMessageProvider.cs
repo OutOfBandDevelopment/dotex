@@ -57,14 +57,14 @@ public class RabbitMQQueueMessageProvider(
         {
             //string exchange,
             //    string routingKey,
-            //    bool mandatory, 
+            //    bool mandatory,
             //    TProperties basicProperties,
-            //    ReadOnlyMemory<byte> body, 
+            //    ReadOnlyMemory<byte> body,
             //    CancellationToken cancellationToken = default
             //    ) where TProperties : IReadOnlyBasicProperties, IAmqpHeader;
 
             //TODO: fix this!
-            //await channel.BasicPublishAsync<object>(
+            //await channel.BasicPublishAsync(
             //    exchange: string.Empty,
             //                     routingKey: queueName,
             //                     basicProperties: null,

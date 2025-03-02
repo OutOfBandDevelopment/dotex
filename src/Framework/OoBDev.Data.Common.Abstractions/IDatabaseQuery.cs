@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
-using System;
+﻿using System;
+using System.Collections.Generic;
+using System.Data.Common;
 using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace OoBDev.Data.Common;
 
@@ -12,6 +13,8 @@ namespace OoBDev.Data.Common;
 /// <typeparam name="TDbOptions">The type of the database options.</typeparam>
 public interface IDatabaseQuery<TDbOptions>
 {
+    DbConnection GetConnection();
+
     /// <summary>
     /// Executes a database function procedure asynchronously and retrieves the result
     /// </summary>

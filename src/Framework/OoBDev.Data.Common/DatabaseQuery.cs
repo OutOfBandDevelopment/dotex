@@ -36,6 +36,8 @@ public class DatabaseQuery<TDbOptions> : IDatabaseQuery<TDbOptions>
             );
     }
 
+    public DbConnection GetConnection() => _mapper.GetConnection<TDbOptions>();
+
     public IAsyncEnumerable<TResult> ExecuteStoredProcedureAsync<T, TResult>(
         T query,
 #pragma warning disable CS8424 // The EnumeratorCancellationAttribute will have no effect. The attribute is only effective on a parameter of type CancellationToken in an async-iterator method returning IAsyncEnumerable
@@ -46,7 +48,7 @@ public class DatabaseQuery<TDbOptions> : IDatabaseQuery<TDbOptions>
 
     public async IAsyncEnumerable<TResult> ExecuteStoredProcedureAsync<T, TResult>(T query, Action<int> resultCallback, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        using var connection = _mapper.GetConnection<TDbOptions>();
+        using var connection = GetConnection();
         using var command = _mapper.GetStoredProcedure(connection, query);
 
         var timeout = _mapper.GetCommandTimeout<TDbOptions>();

@@ -1,7 +1,8 @@
-using OoBDev.MailKit.Hosting;
+﻿using OoBDev.MailKit.Hosting;
 using OoBDev.MessageQueueing.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using OoBDev.Data.Vectors.Hosting;
 
 namespace OoBDev.Common.Hosting;
 
@@ -37,6 +38,9 @@ public static class ServiceCollectionExtensions
 
         if (!builder.DisableMessageQueueing)
             services.TryAddMessageQueueingHosting();
+
+        if (!builder.DisableVectorHosting)
+            services.TryAddVectorHosting();
 
         return services;
     }

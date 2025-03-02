@@ -3,7 +3,7 @@ CREATE QUEUE [embedding].[oobdev://embedding/storage/queue]
         STATUS = ON, 
         RETENTION = OFF,
         ACTIVATION (
-            STATUS = ON, 
+            STATUS = OFF, 
             PROCEDURE_NAME = [embedding].[oobdev://embedding/storage/reader] , 
             MAX_QUEUE_READERS = 1, 
             EXECUTE AS N'dbo'  
