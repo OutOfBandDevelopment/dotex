@@ -1,16 +1,15 @@
 ﻿using Castle.Core.Internal;
 using Microsoft.SqlServer.Server;
+using Microsoft.SqlServer.Types;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Reflection.Metadata;
-using System.Security.Cryptography;
 using System.Xml.Linq;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace OoBDev.Data.Vectors.Tests;
 
@@ -25,6 +24,7 @@ public class DacPacBuilderTests
         var sqlClrAssembly = typeof(CentroidFAggregator).Assembly;
         var builder = new DacPacBuilder();
         var xml = builder.BuildPackage(sqlClrAssembly);
+        xml.Save("model.xml");
     }
 }
 
@@ -110,91 +110,124 @@ public class DacPacBuilder
         return dataSchemaModel;
     }
 
-    public IEnumerable<XElement> Aggregates(XNamespace ns, Assembly assembly, string realAssemblyName)
-    {
-        var aggregates = from type in assembly.GetTypes()
-                         let attrib = type.GetAttributes<SqlUserDefinedAggregateAttribute>().FirstOrDefault()
-                         let method = type.GetMethod("Accumulate")
-                         where attrib != null
-                         select new XElement(ns + "Element", new XAttribute("Type", "SqlAggregate"), new XAttribute("Name", attrib.Name), //TODO: I need a name builder
-                            new XElement(ns + "Property", new XAttribute("Name", "Format"), new XAttribute("Value", (int)attrib.Format)),
-                            new XElement(ns + "Property", new XAttribute("Name", "IsInvariantToDuplicates"), new XAttribute("Value", attrib.IsInvariantToDuplicates ? "True" : "False")),
-                            new XElement(ns + "Property", new XAttribute("Name", "IsInvariantToNulls"), new XAttribute("Value", attrib.IsInvariantToNulls ? "True" : "False")),
-                            new XElement(ns + "Property", new XAttribute("Name", "IsNullIfEmpty"), new XAttribute("Value", attrib.IsNullIfEmpty ? "True" : "False")),
-                            new XElement(ns + "Property", new XAttribute("Name", "MaxByteSize"), new XAttribute("Value", attrib.MaxByteSize)),
-                            new XElement(ns + "Property", new XAttribute("Name", "ClassName"), new XAttribute("Value", type.Name)),
-                            new XElement(ns + "Relationship", new XAttribute("Name", "Assembly"),
-                                new XElement(ns + "Entry",
-                                    new XElement(ns + "References", new XAttribute("Name", $"[{realAssemblyName}]")
-                                    )
-                                )
-                            ),
-                           Parameters(method.GetParameters()),
-                            //new XElement(ns + "Relationship", new XAttribute("Name", "Parameters"),
-                            //    new XElement(ns + "Entry",
-                            //        new XElement(ns + "Element", new XAttribute("Type", "SqlSubroutineParameter"), new XAttribute("Name", $"{attrib.Name}.[@{method.GetParameters()[0].Name}]"), //TODO: I need a name builder
-                            //             new XElement(ns + "Relationship", new XAttribute("Name", "Type"),
-                            //                 new XElement(ns + "Entry",
-                            //                     new XElement(ns + "Element", new XAttribute("Type", "SqlTypeSpecifier"),
-                            //                         new XElement(ns + "Relationship", new XAttribute("Name", "Type"),
-                            //                             new XElement(ns + "Entry",
-                            //                                 new XElement(ns + "References", new XAttribute("Name", $"{method.GetParameters()[0].ParameterType.GetAttribute<SqlUserDefinedTypeAttribute>().Name}") //TODO: I need a name builder
-                            //                                 )
-                            //                             )
-                            //                         )
-                            //                     )
-                            //                 )
-                            //             )
-                            //        )
-                            //    )
-                            //),
-                            new XElement(ns + "Relationship", new XAttribute("Name", "ReturnType"),
-                                new XElement(ns + "Entry",
-                                    new XElement(ns + "Element", new XAttribute("Type", "SqlTypeSpecifier"),
-                                         new XElement(ns + "Relationship", new XAttribute("Name", "Type"),
-                                             new XElement(ns + "Entry",
-                                                 new XElement(ns + "Element", new XAttribute("Type", "SqlTypeSpecifier"),
-                                                     new XElement(ns + "Relationship", new XAttribute("Name", "Type"),
-                                                         new XElement(ns + "Entry",
-                                                             new XElement(ns + "References", new XAttribute("Name", $"{method.GetParameters()[0].ParameterType.GetAttribute<SqlUserDefinedTypeAttribute>().Name}") //TODO: I need a name builder
-                                                             )
-                                                         )
-                                                     )
-                                                 )
-                                             )
-                                         )
-                                    )
-                                )
-                            ),
-                            new XElement(ns + "Relationship", new XAttribute("Name", "Schema"),
-                                new XElement(ns + "Entry",
-                                        new XElement(ns + "References", new XAttribute("ExternalSource", "Name"), new XAttribute("Name", "[dbo]") //TODO: I need a name builder
-                                    )
-                                )
-                            )
-                        );
-        return aggregates;
-    }
+    public IEnumerable<XElement> Aggregates(XNamespace ns, Assembly assembly, string realAssemblyName) =>
+        from type in assembly.GetTypes()
+        let attrib = type.GetAttributes<SqlUserDefinedAggregateAttribute>().FirstOrDefault()
+        let accumulator = type.GetMethod("Accumulate")
+        let terminator = type.GetMethod("Terminate")
+        where attrib != null
+        select new XElement(ns + "Element", new XAttribute("Type", "SqlAggregate"), new XAttribute("Name", attrib.Name), //TODO: I need a name builder
+           new XElement(ns + "Property", new XAttribute("Name", "Format"), new XAttribute("Value", (int)attrib.Format)),
+           new XElement(ns + "Property", new XAttribute("Name", "IsInvariantToDuplicates"), new XAttribute("Value", attrib.IsInvariantToDuplicates ? "True" : "False")),
+           new XElement(ns + "Property", new XAttribute("Name", "IsInvariantToNulls"), new XAttribute("Value", attrib.IsInvariantToNulls ? "True" : "False")),
+           new XElement(ns + "Property", new XAttribute("Name", "IsNullIfEmpty"), new XAttribute("Value", attrib.IsNullIfEmpty ? "True" : "False")),
+           new XElement(ns + "Property", new XAttribute("Name", "MaxByteSize"), new XAttribute("Value", attrib.MaxByteSize)),
+           new XElement(ns + "Property", new XAttribute("Name", "ClassName"), new XAttribute("Value", type.Name)),
+           new XElement(ns + "Relationship", new XAttribute("Name", "Assembly"),
+               new XElement(ns + "Entry",
+                   new XElement(ns + "References", new XAttribute("Name", $"[{realAssemblyName}]")
+                   )
+               )
+           ),
+          Parameters(accumulator.GetParameters()),
+          Return(terminator.ReturnParameter),
+          Schema(type)
+       );
 
-    public string GetName(object input) =>
-    input switch
+    public string? GetName(object input) =>
+        input switch
+        {
+            ParameterInfo parameter => $"{GetName(parameter.Member) ?? GetName(parameter.Member.DeclaringType)}.[@{parameter.Name}]",
+            Type type => type.GetAttributes<SqlUserDefinedAggregateAttribute>().FirstOrDefault()?.Name ??
+                         type.GetAttributes<SqlUserDefinedTypeAttribute>().FirstOrDefault()?.Name ??
+                         _typeName.GetValueOrDefault(type) ??
+                         GetTypeName(type),
+            MethodInfo method => method.GetAttributes<SqlFunctionAttribute>().FirstOrDefault()?.Name,
+            _ => null
+        };
+
+
+    private readonly IReadOnlyDictionary<Type, string> _typeName = new Dictionary<Type, string>
     {
-        ParameterInfo parameter => $"{GetName(parameter.Member.DeclaringType)}.[@{parameter.Name}]",
-        Type type => type.GetAttributes<SqlUserDefinedAggregateAttribute>().FirstOrDefault()?.Name,
-        _ => throw new NotSupportedException()
+        { typeof(SqlByte), "TINYINT" },
+        { typeof(SqlInt16), "SMALLINT" },
+        { typeof(SqlInt32), "INT" },
+        { typeof(SqlInt64), "BIGINT" },
+        { typeof(SqlBytes ), "VARBINARY(max)" },
+        { typeof(SqlBinary ), "VARBINARY(max)" },
+        { typeof(SqlBoolean), "BIT" },
+        { typeof(SqlDateTime), "DATETIME" },
+        { typeof(SqlDecimal), "DECIMAL(29,4)" },
+        { typeof(SqlDouble), "FLOAT" },
+        { typeof(SqlSingle), "REAL" },
+        { typeof(SqlString), "NVARCHAR(MAX)" },
+        { typeof(SqlXml), "XML" },
+        { typeof(SqlChars), "NVARCHAR(MAX)" },
+        { typeof(SqlGuid), "UNIQUEIDENTIFIER" },
+        { typeof(SqlGeography), "geography" },
+        { typeof(SqlHierarchyId), "HIERARCHYID" },
+        { typeof(SqlGeometry), "geometry" },
+
+        { typeof(char), "NCHAR(1)" },
+        { typeof(sbyte), "SMALLINT" },
+        { typeof(byte), "TINYINT" },
+        { typeof(short), "SMALLINT" },
+        { typeof(int), "INT" },
+        { typeof(long), "BIGINT" },
+        { typeof(ushort), "INT" },
+        { typeof(uint), "BIGINT" },
+        { typeof(ulong), "DECIMAL(20)" },
+        { typeof(decimal), "DECIMAL(29,4)" },
+        { typeof(float), "REAL" },
+        { typeof(double), "FLOAT" },
+        { typeof(DateTime), "DATETIME2" },
+        { typeof(DateTimeOffset), "DATETIMEOFFSET" },
+        { typeof(TimeSpan), "TIME" },
+        { typeof(Guid), "UNIQUEIDENTIFIER" },
+
+        { typeof(char?), "NCHAR(1)" },
+        { typeof(sbyte?), "SMALLINT" },
+        { typeof(byte?), "TINYINT" },
+        { typeof(short?), "SMALLINT" },
+        { typeof(int?), "INT" },
+        { typeof(long?), "BIGINT" },
+        { typeof(ushort?), "INT" },
+        { typeof(uint?), "BIGINT" },
+        { typeof(ulong?), "DECIMAL(20)" },
+        { typeof(decimal?), "DECIMAL(29,4)" },
+        { typeof(float?), "REAL" },
+        { typeof(double?), "FLOAT" },
+        { typeof(DateTime?), "DATETIME2" },
+        { typeof(DateTimeOffset?), "DATETIMEOFFSET" },
+        { typeof(TimeSpan?), "TIME" },
+        { typeof(Guid?), "UNIQUEIDENTIFIER" },
+
+        { typeof(string), "NVARCHAR(MAX)" },
+        { typeof(char[]), "NVARCHAR(MAX)" },
     };
+    private string GetTypeName(Type type) => throw new NotSupportedException($"no mapping found for {type}");
+
+    public XElement Schema(object input) =>
+        new XElement(ns + "Relationship", new XAttribute("Name", "Schema"),
+            new XElement(ns + "Entry",
+                    new XElement(ns + "References",
+                        new XAttribute("ExternalSource", "BuiltIns"),
+                        new XAttribute("Name", GetName(input).Split('.')[0])
+                )
+            )
+        );
 
     public XElement Parameters(IEnumerable<ParameterInfo> parameters) =>
         new XElement(ns + "Relationship", new XAttribute("Name", "Parameters"),
             from parameter in parameters
             select new XElement(ns + "Entry",
-                new XElement(ns + "Element", new XAttribute("Type", "SqlSubroutineParameter"), new XAttribute("Name", GetName(parameter)), //TODO: I need a name builder
+                new XElement(ns + "Element", new XAttribute("Type", "SqlSubroutineParameter"), new XAttribute("Name", GetName(parameter)),
                     new XElement(ns + "Relationship", new XAttribute("Name", "Type"),
                         new XElement(ns + "Entry",
                             new XElement(ns + "Element", new XAttribute("Type", "SqlTypeSpecifier"),
                                 new XElement(ns + "Relationship", new XAttribute("Name", "Type"),
                                     new XElement(ns + "Entry",
-                                        new XElement(ns + "References", new XAttribute("Name", $"{parameter.ParameterType.GetAttribute<SqlUserDefinedTypeAttribute>().Name}") //TODO: I need a name builder
+                                        new XElement(ns + "References", new XAttribute("Name", GetName(parameter.ParameterType))
                                         )
                                     )
                                 )
@@ -205,100 +238,53 @@ public class DacPacBuilder
             )
         );
 
-    public IEnumerable<XElement> Functions(XNamespace ns, Assembly assembly, string realAssemblyName)
-    {
-        var functions = from functionClasses in assembly.GetTypes().Where(t => t.IsAbstract)
-                        from function in functionClasses.GetMethods(BindingFlags.Static | BindingFlags.Public)
-                        let attrib = function.GetAttributes<SqlFunctionAttribute>().FirstOrDefault()
-                        where attrib != null
-                        select new XElement(ns + "Element",
-                            new XAttribute("Type", function.ReturnType.IsAssignableTo(typeof(IEnumerable)) ? throw new NotSupportedException($"{function.ReturnType}") : "SqlScalarFunction"),
-                            new XAttribute("Name", attrib.Name),
-                            new XElement(ns + "Property", new XAttribute("Name", "IsAnsiNullsOn")),
-                            new XElement(ns + "Property", new XAttribute("Name", "IsQuotedIdentifierOn")),
-                            new XElement(ns + "Relationship", new XAttribute("Name", "FunctionBody"),
-                                new XElement(ns + "Entry",
-                                    new XElement(ns + "Element", new XAttribute("Type", "SqlClrFunctionImplementation"),
-                                        new XElement(ns + "Property", new XAttribute("Name", "IsDeterministic"), new XAttribute("Value", attrib.IsDeterministic ? "True" : "False")),
-                                        new XElement(ns + "Property", new XAttribute("Name", "IsPrecise"), new XAttribute("Value", attrib.IsPrecise ? "True" : "False")),
-                                        new XElement(ns + "Property", new XAttribute("Name", "MethodName"), new XAttribute("Value", function.Name)),
-                                        new XElement(ns + "Property", new XAttribute("Name", "ClassName"), new XAttribute("Value", functionClasses.Name)),
-                                        new XElement(ns + "Relationship", new XAttribute("Name", "Assembly"),
-                                            new XElement(ns + "Entry",
-                                                new XElement(ns + "References", new XAttribute("Name", $"[{realAssemblyName}]"))
-                                            )
-                                        )
-                                    )
-                                )
-                            ),
-                            new XElement(ns + "Relationship", new XAttribute("Name", "Parameters"),
-                                new XElement(ns + "Entry",
-                                    new XElement(ns + "Element", new XAttribute("Type", "SqlSubroutineParameter"),
-                                        new XElement(ns + "Property", new XAttribute("Name", "IsDeterministic"), new XAttribute("Value", attrib.IsDeterministic ? "True" : "False")),
-                                        new XElement(ns + "Property", new XAttribute("Name", "IsPrecise"), new XAttribute("Value", attrib.IsPrecise ? "True" : "False")),
-                                        new XElement(ns + "Property", new XAttribute("Name", "MethodName"), new XAttribute("Value", function.Name)),
-                                        new XElement(ns + "Property", new XAttribute("Name", "ClassName"), new XAttribute("Value", functionClasses.Name)),
-                                        new XElement(ns + "Relationship", new XAttribute("Name", "Assembly"),
-                                            new XElement(ns + "Entry",
-                                                new XElement(ns + "References", new XAttribute("Name", $"[{realAssemblyName}]"))
+    public XElement Return(ParameterInfo returnInfo) =>
+        new XElement(ns + "Relationship", new XAttribute("Name", "ReturnType"),
+            new XElement(ns + "Entry",
+                new XElement(ns + "Element", new XAttribute("Type", "SqlTypeSpecifier"),
+                        new XElement(ns + "Relationship", new XAttribute("Name", "Type"),
+                            new XElement(ns + "Entry",
+                                new XElement(ns + "Element", new XAttribute("Type", "SqlTypeSpecifier"),
+                                    new XElement(ns + "Relationship", new XAttribute("Name", "Type"),
+                                        new XElement(ns + "Entry",
+                                            new XElement(ns + "References", new XAttribute("Name", GetName(returnInfo.ParameterType))
                                             )
                                         )
                                     )
                                 )
                             )
-                        );
-        /*
-			<Relationship Name="Parameters">
-				<Entry>
-					<Element Type="SqlSubroutineParameter" Name="[dbo].[Vector.Angle].[@vector1]">
-						<Relationship Name="Type">
-							<Entry>
-								<Element Type="SqlTypeSpecifier">
-									<Relationship Name="Type">
-										<Entry>
-											<References Name="[dbo].[Vector]" />
-										</Entry>
-									</Relationship>
-								</Element>
-							</Entry>
-						</Relationship>
-					</Element>
-				</Entry>
-				<Entry>
-					<Element Type="SqlSubroutineParameter" Name="[dbo].[Vector.Angle].[@vector2]">
-						<Relationship Name="Type">
-							<Entry>
-								<Element Type="SqlTypeSpecifier">
-									<Relationship Name="Type">
-										<Entry>
-											<References Name="[dbo].[Vector]" />
-										</Entry>
-									</Relationship>
-								</Element>
-							</Entry>
-						</Relationship>
-					</Element>
-				</Entry>
-			</Relationship>
-			<Relationship Name="Schema">
-				<Entry>
-					<References ExternalSource="BuiltIns" Name="[dbo]" />
-				</Entry>
-			</Relationship>
-			<Relationship Name="Type">
-				<Entry>
-					<Element Type="SqlTypeSpecifier">
-						<Property Name="Precision" Value="53" />
-						<Relationship Name="Type">
-							<Entry>
-								<References ExternalSource="BuiltIns" Name="[float]" />
-							</Entry>
-						</Relationship>
-					</Element>
-				</Entry>
-			</Relationship>
-		</Element>
-         */
-        yield break;
-    }
+                        )
+                )
+            )
+        );
+
+    public IEnumerable<XElement> Functions(XNamespace ns, Assembly assembly, string realAssemblyName) =>
+        from functionClasses in assembly.GetTypes().Where(t => t.IsAbstract)
+        from function in functionClasses.GetMethods(BindingFlags.Static | BindingFlags.Public)
+        let attrib = function.GetAttributes<SqlFunctionAttribute>().FirstOrDefault()
+        where attrib != null
+        select new XElement(ns + "Element",
+            new XAttribute("Type", function.ReturnType.IsAssignableTo(typeof(IEnumerable)) ? throw new NotSupportedException($"{function.ReturnType}") : "SqlScalarFunction"),
+            new XAttribute("Name", attrib.Name),
+            new XElement(ns + "Property", new XAttribute("Name", "IsAnsiNullsOn")),
+            new XElement(ns + "Property", new XAttribute("Name", "IsQuotedIdentifierOn")),
+            new XElement(ns + "Relationship", new XAttribute("Name", "FunctionBody"),
+                new XElement(ns + "Entry",
+                    new XElement(ns + "Element", new XAttribute("Type", "SqlClrFunctionImplementation"),
+                        new XElement(ns + "Property", new XAttribute("Name", "IsDeterministic"), new XAttribute("Value", attrib.IsDeterministic ? "True" : "False")),
+                        new XElement(ns + "Property", new XAttribute("Name", "IsPrecise"), new XAttribute("Value", attrib.IsPrecise ? "True" : "False")),
+                        new XElement(ns + "Property", new XAttribute("Name", "MethodName"), new XAttribute("Value", function.Name)),
+                        new XElement(ns + "Property", new XAttribute("Name", "ClassName"), new XAttribute("Value", functionClasses.Name)),
+                        new XElement(ns + "Relationship", new XAttribute("Name", "Assembly"),
+                            new XElement(ns + "Entry",
+                                new XElement(ns + "References", new XAttribute("Name", $"[{realAssemblyName}]"))
+                            )
+                        )
+                    )
+                )
+            ),
+            Parameters(function.GetParameters()),
+            Schema(function),
+            Return(function.ReturnParameter)
+        );
 }

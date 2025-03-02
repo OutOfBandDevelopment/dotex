@@ -11,18 +11,6 @@
 			<Metadata Name="CompatibilityMode" Value="150" />
 		</CustomData>
 		<CustomData Category="Reference" Type="Assembly">
-			<Metadata Name="LogicalName" Value="ClassLibrary1.dll" />
-			<Metadata Name="FileName" Value="C:\REPOS\TEMP\DATABASE1\CLASSLIBRARY1\BIN\DEBUG\CLASSLIBRARY1.DLL" />
-			<Metadata Name="AssemblyName" Value="ClassLibrary1" />
-			<Metadata Name="PermissionSet" Value="SAFE" />
-			<Metadata Name="Owner" Value="" />
-			<Metadata Name="GenerateSqlClrDdl" Value="True" />
-			<Metadata Name="IsVisible" Value="True" />
-			<Metadata Name="IsModelAware" Value="True" />
-			<Metadata Name="SkipCreationIfEmpty" Value="False" />
-			<Metadata Name="AssemblySymbolsName" />
-		</CustomData>
-		<CustomData Category="Reference" Type="Assembly">
 			<Metadata Name="LogicalName" Value="OoBDev.Data.Vectors.dll" />
 			<Metadata Name="FileName" Value="C:\REPOS\TEMP\DATABASE1\DATABASE1\OBJ\DEBUG\OOBDEV.DATA.VECTORS.DLL" />
 			<Metadata Name="AssemblyName" Value="OoBDev.Data.Vectors" />
@@ -56,7 +44,7 @@
 				</Entry>
 			</Relationship>
 		</Element>
-		<Element Type="SqlAggregate" Name="[dbo].[Centroid]">
+		<Element Type="SqlAggregate" Name="[embedding].[Centroid]">
 			<Property Name="Format" Value="2" />
 			<Property Name="IsInvariantToDuplicates" Value="False" />
 			<Property Name="IsInvariantToNulls" Value="True" />
@@ -70,13 +58,13 @@
 			</Relationship>
 			<Relationship Name="Parameters">
 				<Entry>
-					<Element Type="SqlSubroutineParameter" Name="[dbo].[Centroid].[@vector]">
+					<Element Type="SqlSubroutineParameter" Name="[embedding].[Centroid].[@vector]">
 						<Relationship Name="Type">
 							<Entry>
 								<Element Type="SqlTypeSpecifier">
 									<Relationship Name="Type">
 										<Entry>
-											<References Name="[dbo].[Vector]" />
+											<References Name="[embedding].[Vector]" />
 										</Entry>
 									</Relationship>
 								</Element>
@@ -90,7 +78,7 @@
 					<Element Type="SqlTypeSpecifier">
 						<Relationship Name="Type">
 							<Entry>
-								<References Name="[dbo].[Vector]" />
+								<References Name="[embedding].[Vector]" />
 							</Entry>
 						</Relationship>
 					</Element>
@@ -98,11 +86,11 @@
 			</Relationship>
 			<Relationship Name="Schema">
 				<Entry>
-					<References ExternalSource="BuiltIns" Name="[dbo]" />
+					<References ExternalSource="BuiltIns" Name="[embedding]" />
 				</Entry>
 			</Relationship>
 		</Element>
-		<Element Type="SqlAggregate" Name="[dbo].[CentroidF]">
+		<Element Type="SqlAggregate" Name="[embedding].[CentroidF]">
 			<Property Name="Format" Value="2" />
 			<Property Name="IsInvariantToDuplicates" Value="False" />
 			<Property Name="IsInvariantToNulls" Value="True" />
@@ -116,13 +104,13 @@
 			</Relationship>
 			<Relationship Name="Parameters">
 				<Entry>
-					<Element Type="SqlSubroutineParameter" Name="[dbo].[CentroidF].[@vector]">
+					<Element Type="SqlSubroutineParameter" Name="[embedding].[CentroidF].[@vector]">
 						<Relationship Name="Type">
 							<Entry>
 								<Element Type="SqlTypeSpecifier">
 									<Relationship Name="Type">
 										<Entry>
-											<References Name="[dbo].[VectorF]" />
+											<References Name="[embedding].[VectorF]" />
 										</Entry>
 									</Relationship>
 								</Element>
@@ -136,7 +124,7 @@
 					<Element Type="SqlTypeSpecifier">
 						<Relationship Name="Type">
 							<Entry>
-								<References Name="[dbo].[VectorF]" />
+								<References Name="[embedding].[VectorF]" />
 							</Entry>
 						</Relationship>
 					</Element>
@@ -144,11 +132,11 @@
 			</Relationship>
 			<Relationship Name="Schema">
 				<Entry>
-					<References ExternalSource="BuiltIns" Name="[dbo]" />
+					<References ExternalSource="BuiltIns" Name="[embedding]" />
 				</Entry>
 			</Relationship>
 		</Element>
-		<Element Type="SqlUserDefinedType" Name="[dbo].[Vector]">
+		<Element Type="SqlUserDefinedType" Name="[embedding].[Vector]">
 			<Property Name="Format" Value="2" />
 			<Property Name="MaxByteSize" Value="-1" />
 			<Property Name="IsByteOrdered" Value="True" />
@@ -160,7 +148,7 @@
 			</Relationship>
 			<Relationship Name="Methods">
 				<Entry>
-					<Element Type="SqlClrMethod" Name="[dbo].[Vector].[get_IsNull]">
+					<Element Type="SqlClrMethod" Name="[embedding].[Vector].[get_IsNull]">
 						<Property Name="ClrName" Value="get_IsNull" />
 						<Relationship Name="ReturnType">
 							<Entry>
@@ -176,7 +164,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="SqlClrMethod" Name="[dbo].[Vector].[get_Magnitude]">
+					<Element Type="SqlClrMethod" Name="[embedding].[Vector].[get_Magnitude]">
 						<Property Name="ClrName" Value="get_Magnitude" />
 						<Relationship Name="ReturnType">
 							<Entry>
@@ -192,14 +180,14 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="SqlClrMethod" Name="[dbo].[Vector].[get_Null]">
+					<Element Type="SqlClrMethod" Name="[embedding].[Vector].[get_Null]">
 						<Property Name="ClrName" Value="get_Null" />
 						<Relationship Name="ReturnType">
 							<Entry>
 								<Element Type="SqlTypeSpecifier">
 									<Relationship Name="Type">
 										<Entry>
-											<References Name="[dbo].[Vector]" />
+											<References Name="[embedding].[Vector]" />
 										</Entry>
 									</Relationship>
 								</Element>
@@ -208,11 +196,11 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="SqlClrMethod" Name="[dbo].[Vector].[Element]">
+					<Element Type="SqlClrMethod" Name="[embedding].[Vector].[Element]">
 						<Property Name="ClrName" Value="Element" />
 						<Relationship Name="Parameters">
 							<Entry>
-								<Element Type="SqlClrMethodParameter" Name="[dbo].[Vector].[Element].[position]">
+								<Element Type="SqlClrMethodParameter" Name="[embedding].[Vector].[Element].[position]">
 									<Property Name="ClrName" Value="position" />
 									<Relationship Name="Type">
 										<Entry>
@@ -242,18 +230,18 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="SqlClrMethod" Name="[dbo].[Vector].[Distance]">
+					<Element Type="SqlClrMethod" Name="[embedding].[Vector].[Distance]">
 						<Property Name="ClrName" Value="Distance" />
 						<Relationship Name="Parameters">
 							<Entry>
-								<Element Type="SqlClrMethodParameter" Name="[dbo].[Vector].[Distance].[vector]">
+								<Element Type="SqlClrMethodParameter" Name="[embedding].[Vector].[Distance].[vector]">
 									<Property Name="ClrName" Value="vector" />
 									<Relationship Name="Type">
 										<Entry>
 											<Element Type="SqlTypeSpecifier">
 												<Relationship Name="Type">
 													<Entry>
-														<References Name="[dbo].[Vector]" />
+														<References Name="[embedding].[Vector]" />
 													</Entry>
 												</Relationship>
 											</Element>
@@ -262,7 +250,7 @@
 								</Element>
 							</Entry>
 							<Entry>
-								<Element Type="SqlClrMethodParameter" Name="[dbo].[Vector].[Distance].[metric]">
+								<Element Type="SqlClrMethodParameter" Name="[embedding].[Vector].[Distance].[metric]">
 									<Property Name="ClrName" Value="metric" />
 									<Relationship Name="Type">
 										<Entry>
@@ -293,18 +281,18 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="SqlClrMethod" Name="[dbo].[Vector].[Angle]">
+					<Element Type="SqlClrMethod" Name="[embedding].[Vector].[Angle]">
 						<Property Name="ClrName" Value="Angle" />
 						<Relationship Name="Parameters">
 							<Entry>
-								<Element Type="SqlClrMethodParameter" Name="[dbo].[Vector].[Angle].[vector]">
+								<Element Type="SqlClrMethodParameter" Name="[embedding].[Vector].[Angle].[vector]">
 									<Property Name="ClrName" Value="vector" />
 									<Relationship Name="Type">
 										<Entry>
 											<Element Type="SqlTypeSpecifier">
 												<Relationship Name="Type">
 													<Entry>
-														<References Name="[dbo].[Vector]" />
+														<References Name="[embedding].[Vector]" />
 													</Entry>
 												</Relationship>
 											</Element>
@@ -327,18 +315,18 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="SqlClrMethod" Name="[dbo].[Vector].[Cosine]">
+					<Element Type="SqlClrMethod" Name="[embedding].[Vector].[Cosine]">
 						<Property Name="ClrName" Value="Cosine" />
 						<Relationship Name="Parameters">
 							<Entry>
-								<Element Type="SqlClrMethodParameter" Name="[dbo].[Vector].[Cosine].[vector]">
+								<Element Type="SqlClrMethodParameter" Name="[embedding].[Vector].[Cosine].[vector]">
 									<Property Name="ClrName" Value="vector" />
 									<Relationship Name="Type">
 										<Entry>
 											<Element Type="SqlTypeSpecifier">
 												<Relationship Name="Type">
 													<Entry>
-														<References Name="[dbo].[Vector]" />
+														<References Name="[embedding].[Vector]" />
 													</Entry>
 												</Relationship>
 											</Element>
@@ -361,18 +349,18 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="SqlClrMethod" Name="[dbo].[Vector].[Similarity]">
+					<Element Type="SqlClrMethod" Name="[embedding].[Vector].[Similarity]">
 						<Property Name="ClrName" Value="Similarity" />
 						<Relationship Name="Parameters">
 							<Entry>
-								<Element Type="SqlClrMethodParameter" Name="[dbo].[Vector].[Similarity].[vector]">
+								<Element Type="SqlClrMethodParameter" Name="[embedding].[Vector].[Similarity].[vector]">
 									<Property Name="ClrName" Value="vector" />
 									<Relationship Name="Type">
 										<Entry>
 											<Element Type="SqlTypeSpecifier">
 												<Relationship Name="Type">
 													<Entry>
-														<References Name="[dbo].[Vector]" />
+														<References Name="[embedding].[Vector]" />
 													</Entry>
 												</Relationship>
 											</Element>
@@ -395,18 +383,18 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="SqlClrMethod" Name="[dbo].[Vector].[DotProduct]">
+					<Element Type="SqlClrMethod" Name="[embedding].[Vector].[DotProduct]">
 						<Property Name="ClrName" Value="DotProduct" />
 						<Relationship Name="Parameters">
 							<Entry>
-								<Element Type="SqlClrMethodParameter" Name="[dbo].[Vector].[DotProduct].[vector]">
+								<Element Type="SqlClrMethodParameter" Name="[embedding].[Vector].[DotProduct].[vector]">
 									<Property Name="ClrName" Value="vector" />
 									<Relationship Name="Type">
 										<Entry>
 											<Element Type="SqlTypeSpecifier">
 												<Relationship Name="Type">
 													<Entry>
-														<References Name="[dbo].[Vector]" />
+														<References Name="[embedding].[Vector]" />
 													</Entry>
 												</Relationship>
 											</Element>
@@ -429,18 +417,18 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="SqlClrMethod" Name="[dbo].[Vector].[Euclidean]">
+					<Element Type="SqlClrMethod" Name="[embedding].[Vector].[Euclidean]">
 						<Property Name="ClrName" Value="Euclidean" />
 						<Relationship Name="Parameters">
 							<Entry>
-								<Element Type="SqlClrMethodParameter" Name="[dbo].[Vector].[Euclidean].[vector]">
+								<Element Type="SqlClrMethodParameter" Name="[embedding].[Vector].[Euclidean].[vector]">
 									<Property Name="ClrName" Value="vector" />
 									<Relationship Name="Type">
 										<Entry>
 											<Element Type="SqlTypeSpecifier">
 												<Relationship Name="Type">
 													<Entry>
-														<References Name="[dbo].[Vector]" />
+														<References Name="[embedding].[Vector]" />
 													</Entry>
 												</Relationship>
 											</Element>
@@ -463,18 +451,18 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="SqlClrMethod" Name="[dbo].[Vector].[Manhattan]">
+					<Element Type="SqlClrMethod" Name="[embedding].[Vector].[Manhattan]">
 						<Property Name="ClrName" Value="Manhattan" />
 						<Relationship Name="Parameters">
 							<Entry>
-								<Element Type="SqlClrMethodParameter" Name="[dbo].[Vector].[Manhattan].[vector]">
+								<Element Type="SqlClrMethodParameter" Name="[embedding].[Vector].[Manhattan].[vector]">
 									<Property Name="ClrName" Value="vector" />
 									<Relationship Name="Type">
 										<Entry>
 											<Element Type="SqlTypeSpecifier">
 												<Relationship Name="Type">
 													<Entry>
-														<References Name="[dbo].[Vector]" />
+														<References Name="[embedding].[Vector]" />
 													</Entry>
 												</Relationship>
 											</Element>
@@ -497,18 +485,18 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="SqlClrMethod" Name="[dbo].[Vector].[Midpoint]">
+					<Element Type="SqlClrMethod" Name="[embedding].[Vector].[Midpoint]">
 						<Property Name="ClrName" Value="Midpoint" />
 						<Relationship Name="Parameters">
 							<Entry>
-								<Element Type="SqlClrMethodParameter" Name="[dbo].[Vector].[Midpoint].[vector]">
+								<Element Type="SqlClrMethodParameter" Name="[embedding].[Vector].[Midpoint].[vector]">
 									<Property Name="ClrName" Value="vector" />
 									<Relationship Name="Type">
 										<Entry>
 											<Element Type="SqlTypeSpecifier">
 												<Relationship Name="Type">
 													<Entry>
-														<References Name="[dbo].[Vector]" />
+														<References Name="[embedding].[Vector]" />
 													</Entry>
 												</Relationship>
 											</Element>
@@ -522,7 +510,7 @@
 								<Element Type="SqlTypeSpecifier">
 									<Relationship Name="Type">
 										<Entry>
-											<References Name="[dbo].[Vector]" />
+											<References Name="[embedding].[Vector]" />
 										</Entry>
 									</Relationship>
 								</Element>
@@ -531,7 +519,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="SqlClrMethod" Name="[dbo].[Vector].[Length]">
+					<Element Type="SqlClrMethod" Name="[embedding].[Vector].[Length]">
 						<Property Name="ClrName" Value="Length" />
 						<Relationship Name="ReturnType">
 							<Entry>
@@ -547,11 +535,11 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="SqlClrMethod" Name="[dbo].[Vector].[Parse]">
+					<Element Type="SqlClrMethod" Name="[embedding].[Vector].[Parse]">
 						<Property Name="ClrName" Value="Parse" />
 						<Relationship Name="Parameters">
 							<Entry>
-								<Element Type="SqlClrMethodParameter" Name="[dbo].[Vector].[Parse].[input]">
+								<Element Type="SqlClrMethodParameter" Name="[embedding].[Vector].[Parse].[input]">
 									<Property Name="ClrName" Value="input" />
 									<Relationship Name="Type">
 										<Entry>
@@ -573,7 +561,7 @@
 								<Element Type="SqlTypeSpecifier">
 									<Relationship Name="Type">
 										<Entry>
-											<References Name="[dbo].[Vector]" />
+											<References Name="[embedding].[Vector]" />
 										</Entry>
 									</Relationship>
 								</Element>
@@ -582,11 +570,11 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="SqlClrMethod" Name="[dbo].[Vector].[From]">
+					<Element Type="SqlClrMethod" Name="[embedding].[Vector].[From]">
 						<Property Name="ClrName" Value="From" />
 						<Relationship Name="Parameters">
 							<Entry>
-								<Element Type="SqlClrMethodParameter" Name="[dbo].[Vector].[From].[bytes]">
+								<Element Type="SqlClrMethodParameter" Name="[embedding].[Vector].[From].[bytes]">
 									<Property Name="ClrName" Value="bytes" />
 									<Relationship Name="Type">
 										<Entry>
@@ -608,7 +596,7 @@
 								<Element Type="SqlTypeSpecifier">
 									<Relationship Name="Type">
 										<Entry>
-											<References Name="[dbo].[Vector]" />
+											<References Name="[embedding].[Vector]" />
 										</Entry>
 									</Relationship>
 								</Element>
@@ -617,7 +605,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="SqlClrMethod" Name="[dbo].[Vector].[ToBytes]">
+					<Element Type="SqlClrMethod" Name="[embedding].[Vector].[ToBytes]">
 						<Property Name="ClrName" Value="ToBytes" />
 						<Relationship Name="ReturnType">
 							<Entry>
@@ -634,7 +622,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="SqlClrMethod" Name="[dbo].[Vector].[ToString]">
+					<Element Type="SqlClrMethod" Name="[embedding].[Vector].[ToString]">
 						<Property Name="ClrName" Value="ToString" />
 						<Relationship Name="ReturnType">
 							<Entry>
@@ -653,7 +641,7 @@
 			</Relationship>
 			<Relationship Name="Properties">
 				<Entry>
-					<Element Type="SqlClrProperty" Name="[dbo].[Vector].[IsNull]">
+					<Element Type="SqlClrProperty" Name="[embedding].[Vector].[IsNull]">
 						<Property Name="ClrName" Value="IsNull" />
 						<Relationship Name="Type">
 							<Entry>
@@ -669,7 +657,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="SqlClrProperty" Name="[dbo].[Vector].[Magnitude]">
+					<Element Type="SqlClrProperty" Name="[embedding].[Vector].[Magnitude]">
 						<Property Name="ClrName" Value="Magnitude" />
 						<Relationship Name="Type">
 							<Entry>
@@ -685,14 +673,14 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="SqlClrProperty" Name="[dbo].[Vector].[Null]">
+					<Element Type="SqlClrProperty" Name="[embedding].[Vector].[Null]">
 						<Property Name="ClrName" Value="Null" />
 						<Relationship Name="Type">
 							<Entry>
 								<Element Type="SqlTypeSpecifier">
 									<Relationship Name="Type">
 										<Entry>
-											<References Name="[dbo].[Vector]" />
+											<References Name="[embedding].[Vector]" />
 										</Entry>
 									</Relationship>
 								</Element>
@@ -703,11 +691,11 @@
 			</Relationship>
 			<Relationship Name="Schema">
 				<Entry>
-					<References ExternalSource="BuiltIns" Name="[dbo]" />
+					<References ExternalSource="BuiltIns" Name="[embedding]" />
 				</Entry>
 			</Relationship>
 		</Element>
-		<Element Type="SqlScalarFunction" Name="[dbo].[Vector.Angle]">
+		<Element Type="SqlScalarFunction" Name="[embedding].[Vector.Angle]">
 			<Property Name="IsAnsiNullsOn" />
 			<Property Name="IsQuotedIdentifierOn" />
 			<Relationship Name="FunctionBody">
@@ -727,13 +715,13 @@
 			</Relationship>
 			<Relationship Name="Parameters">
 				<Entry>
-					<Element Type="SqlSubroutineParameter" Name="[dbo].[Vector.Angle].[@vector1]">
+					<Element Type="SqlSubroutineParameter" Name="[embedding].[Vector.Angle].[@vector1]">
 						<Relationship Name="Type">
 							<Entry>
 								<Element Type="SqlTypeSpecifier">
 									<Relationship Name="Type">
 										<Entry>
-											<References Name="[dbo].[Vector]" />
+											<References Name="[embedding].[Vector]" />
 										</Entry>
 									</Relationship>
 								</Element>
@@ -742,13 +730,13 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="SqlSubroutineParameter" Name="[dbo].[Vector.Angle].[@vector2]">
+					<Element Type="SqlSubroutineParameter" Name="[embedding].[Vector.Angle].[@vector2]">
 						<Relationship Name="Type">
 							<Entry>
 								<Element Type="SqlTypeSpecifier">
 									<Relationship Name="Type">
 										<Entry>
-											<References Name="[dbo].[Vector]" />
+											<References Name="[embedding].[Vector]" />
 										</Entry>
 									</Relationship>
 								</Element>
@@ -759,7 +747,7 @@
 			</Relationship>
 			<Relationship Name="Schema">
 				<Entry>
-					<References ExternalSource="BuiltIns" Name="[dbo]" />
+					<References ExternalSource="BuiltIns" Name="[embedding]" />
 				</Entry>
 			</Relationship>
 			<Relationship Name="Type">
@@ -775,7 +763,7 @@
 				</Entry>
 			</Relationship>
 		</Element>
-		<Element Type="SqlScalarFunction" Name="[dbo].[Vector.AngleF]">
+		<Element Type="SqlScalarFunction" Name="[embedding].[Vector.AngleF]">
 			<Property Name="IsAnsiNullsOn" />
 			<Property Name="IsQuotedIdentifierOn" />
 			<Relationship Name="FunctionBody">
@@ -795,13 +783,13 @@
 			</Relationship>
 			<Relationship Name="Parameters">
 				<Entry>
-					<Element Type="SqlSubroutineParameter" Name="[dbo].[Vector.AngleF].[@vector1]">
+					<Element Type="SqlSubroutineParameter" Name="[embedding].[Vector.AngleF].[@vector1]">
 						<Relationship Name="Type">
 							<Entry>
 								<Element Type="SqlTypeSpecifier">
 									<Relationship Name="Type">
 										<Entry>
-											<References Name="[dbo].[VectorF]" />
+											<References Name="[embedding].[VectorF]" />
 										</Entry>
 									</Relationship>
 								</Element>
@@ -810,13 +798,13 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="SqlSubroutineParameter" Name="[dbo].[Vector.AngleF].[@vector2]">
+					<Element Type="SqlSubroutineParameter" Name="[embedding].[Vector.AngleF].[@vector2]">
 						<Relationship Name="Type">
 							<Entry>
 								<Element Type="SqlTypeSpecifier">
 									<Relationship Name="Type">
 										<Entry>
-											<References Name="[dbo].[VectorF]" />
+											<References Name="[embedding].[VectorF]" />
 										</Entry>
 									</Relationship>
 								</Element>
@@ -827,7 +815,7 @@
 			</Relationship>
 			<Relationship Name="Schema">
 				<Entry>
-					<References ExternalSource="BuiltIns" Name="[dbo]" />
+					<References ExternalSource="BuiltIns" Name="[embedding]" />
 				</Entry>
 			</Relationship>
 			<Relationship Name="Type">
@@ -842,7 +830,7 @@
 				</Entry>
 			</Relationship>
 		</Element>
-		<Element Type="SqlScalarFunction" Name="[dbo].[Vector.Distance]">
+		<Element Type="SqlScalarFunction" Name="[embedding].[Vector.Distance]">
 			<Property Name="IsAnsiNullsOn" />
 			<Property Name="IsQuotedIdentifierOn" />
 			<Relationship Name="FunctionBody">
@@ -862,7 +850,7 @@
 			</Relationship>
 			<Relationship Name="Parameters">
 				<Entry>
-					<Element Type="SqlSubroutineParameter" Name="[dbo].[Vector.Distance].[@distanceMetric]">
+					<Element Type="SqlSubroutineParameter" Name="[embedding].[Vector.Distance].[@distanceMetric]">
 						<Relationship Name="Type">
 							<Entry>
 								<Element Type="SqlTypeSpecifier">
@@ -878,13 +866,13 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="SqlSubroutineParameter" Name="[dbo].[Vector.Distance].[@vector1]">
+					<Element Type="SqlSubroutineParameter" Name="[embedding].[Vector.Distance].[@vector1]">
 						<Relationship Name="Type">
 							<Entry>
 								<Element Type="SqlTypeSpecifier">
 									<Relationship Name="Type">
 										<Entry>
-											<References Name="[dbo].[Vector]" />
+											<References Name="[embedding].[Vector]" />
 										</Entry>
 									</Relationship>
 								</Element>
@@ -893,13 +881,13 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="SqlSubroutineParameter" Name="[dbo].[Vector.Distance].[@vector2]">
+					<Element Type="SqlSubroutineParameter" Name="[embedding].[Vector.Distance].[@vector2]">
 						<Relationship Name="Type">
 							<Entry>
 								<Element Type="SqlTypeSpecifier">
 									<Relationship Name="Type">
 										<Entry>
-											<References Name="[dbo].[Vector]" />
+											<References Name="[embedding].[Vector]" />
 										</Entry>
 									</Relationship>
 								</Element>
@@ -910,7 +898,7 @@
 			</Relationship>
 			<Relationship Name="Schema">
 				<Entry>
-					<References ExternalSource="BuiltIns" Name="[dbo]" />
+					<References ExternalSource="BuiltIns" Name="[embedding]" />
 				</Entry>
 			</Relationship>
 			<Relationship Name="Type">
@@ -926,7 +914,7 @@
 				</Entry>
 			</Relationship>
 		</Element>
-		<Element Type="SqlScalarFunction" Name="[dbo].[Vector.DistanceF]">
+		<Element Type="SqlScalarFunction" Name="[embedding].[Vector.DistanceF]">
 			<Property Name="IsAnsiNullsOn" />
 			<Property Name="IsQuotedIdentifierOn" />
 			<Relationship Name="FunctionBody">
@@ -946,7 +934,7 @@
 			</Relationship>
 			<Relationship Name="Parameters">
 				<Entry>
-					<Element Type="SqlSubroutineParameter" Name="[dbo].[Vector.DistanceF].[@distanceMetric]">
+					<Element Type="SqlSubroutineParameter" Name="[embedding].[Vector.DistanceF].[@distanceMetric]">
 						<Relationship Name="Type">
 							<Entry>
 								<Element Type="SqlTypeSpecifier">
@@ -962,13 +950,13 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="SqlSubroutineParameter" Name="[dbo].[Vector.DistanceF].[@vector1]">
+					<Element Type="SqlSubroutineParameter" Name="[embedding].[Vector.DistanceF].[@vector1]">
 						<Relationship Name="Type">
 							<Entry>
 								<Element Type="SqlTypeSpecifier">
 									<Relationship Name="Type">
 										<Entry>
-											<References Name="[dbo].[VectorF]" />
+											<References Name="[embedding].[VectorF]" />
 										</Entry>
 									</Relationship>
 								</Element>
@@ -977,13 +965,13 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="SqlSubroutineParameter" Name="[dbo].[Vector.DistanceF].[@vector2]">
+					<Element Type="SqlSubroutineParameter" Name="[embedding].[Vector.DistanceF].[@vector2]">
 						<Relationship Name="Type">
 							<Entry>
 								<Element Type="SqlTypeSpecifier">
 									<Relationship Name="Type">
 										<Entry>
-											<References Name="[dbo].[VectorF]" />
+											<References Name="[embedding].[VectorF]" />
 										</Entry>
 									</Relationship>
 								</Element>
@@ -994,7 +982,7 @@
 			</Relationship>
 			<Relationship Name="Schema">
 				<Entry>
-					<References ExternalSource="BuiltIns" Name="[dbo]" />
+					<References ExternalSource="BuiltIns" Name="[embedding]" />
 				</Entry>
 			</Relationship>
 			<Relationship Name="Type">
@@ -1009,7 +997,7 @@
 				</Entry>
 			</Relationship>
 		</Element>
-		<Element Type="SqlScalarFunction" Name="[dbo].[Vector.Element]">
+		<Element Type="SqlScalarFunction" Name="[embedding].[Vector.Element]">
 			<Property Name="IsAnsiNullsOn" />
 			<Property Name="IsQuotedIdentifierOn" />
 			<Relationship Name="FunctionBody">
@@ -1029,13 +1017,13 @@
 			</Relationship>
 			<Relationship Name="Parameters">
 				<Entry>
-					<Element Type="SqlSubroutineParameter" Name="[dbo].[Vector.Element].[@vector]">
+					<Element Type="SqlSubroutineParameter" Name="[embedding].[Vector.Element].[@vector]">
 						<Relationship Name="Type">
 							<Entry>
 								<Element Type="SqlTypeSpecifier">
 									<Relationship Name="Type">
 										<Entry>
-											<References Name="[dbo].[Vector]" />
+											<References Name="[embedding].[Vector]" />
 										</Entry>
 									</Relationship>
 								</Element>
@@ -1044,7 +1032,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="SqlSubroutineParameter" Name="[dbo].[Vector.Element].[@index]">
+					<Element Type="SqlSubroutineParameter" Name="[embedding].[Vector.Element].[@index]">
 						<Relationship Name="Type">
 							<Entry>
 								<Element Type="SqlTypeSpecifier">
@@ -1061,7 +1049,7 @@
 			</Relationship>
 			<Relationship Name="Schema">
 				<Entry>
-					<References ExternalSource="BuiltIns" Name="[dbo]" />
+					<References ExternalSource="BuiltIns" Name="[embedding]" />
 				</Entry>
 			</Relationship>
 			<Relationship Name="Type">
@@ -1077,7 +1065,7 @@
 				</Entry>
 			</Relationship>
 		</Element>
-		<Element Type="SqlScalarFunction" Name="[dbo].[Vector.ElementF]">
+		<Element Type="SqlScalarFunction" Name="[embedding].[Vector.ElementF]">
 			<Property Name="IsAnsiNullsOn" />
 			<Property Name="IsQuotedIdentifierOn" />
 			<Relationship Name="FunctionBody">
@@ -1097,13 +1085,13 @@
 			</Relationship>
 			<Relationship Name="Parameters">
 				<Entry>
-					<Element Type="SqlSubroutineParameter" Name="[dbo].[Vector.ElementF].[@vector]">
+					<Element Type="SqlSubroutineParameter" Name="[embedding].[Vector.ElementF].[@vector]">
 						<Relationship Name="Type">
 							<Entry>
 								<Element Type="SqlTypeSpecifier">
 									<Relationship Name="Type">
 										<Entry>
-											<References Name="[dbo].[VectorF]" />
+											<References Name="[embedding].[VectorF]" />
 										</Entry>
 									</Relationship>
 								</Element>
@@ -1112,7 +1100,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="SqlSubroutineParameter" Name="[dbo].[Vector.ElementF].[@index]">
+					<Element Type="SqlSubroutineParameter" Name="[embedding].[Vector.ElementF].[@index]">
 						<Relationship Name="Type">
 							<Entry>
 								<Element Type="SqlTypeSpecifier">
@@ -1129,7 +1117,7 @@
 			</Relationship>
 			<Relationship Name="Schema">
 				<Entry>
-					<References ExternalSource="BuiltIns" Name="[dbo]" />
+					<References ExternalSource="BuiltIns" Name="[embedding]" />
 				</Entry>
 			</Relationship>
 			<Relationship Name="Type">
@@ -1144,7 +1132,7 @@
 				</Entry>
 			</Relationship>
 		</Element>
-		<Element Type="SqlScalarFunction" Name="[dbo].[Vector.Length]">
+		<Element Type="SqlScalarFunction" Name="[embedding].[Vector.Length]">
 			<Property Name="IsAnsiNullsOn" />
 			<Property Name="IsQuotedIdentifierOn" />
 			<Relationship Name="FunctionBody">
@@ -1164,13 +1152,13 @@
 			</Relationship>
 			<Relationship Name="Parameters">
 				<Entry>
-					<Element Type="SqlSubroutineParameter" Name="[dbo].[Vector.Length].[@vector]">
+					<Element Type="SqlSubroutineParameter" Name="[embedding].[Vector.Length].[@vector]">
 						<Relationship Name="Type">
 							<Entry>
 								<Element Type="SqlTypeSpecifier">
 									<Relationship Name="Type">
 										<Entry>
-											<References Name="[dbo].[Vector]" />
+											<References Name="[embedding].[Vector]" />
 										</Entry>
 									</Relationship>
 								</Element>
@@ -1181,7 +1169,7 @@
 			</Relationship>
 			<Relationship Name="Schema">
 				<Entry>
-					<References ExternalSource="BuiltIns" Name="[dbo]" />
+					<References ExternalSource="BuiltIns" Name="[embedding]" />
 				</Entry>
 			</Relationship>
 			<Relationship Name="Type">
@@ -1196,7 +1184,7 @@
 				</Entry>
 			</Relationship>
 		</Element>
-		<Element Type="SqlScalarFunction" Name="[dbo].[Vector.LengthF]">
+		<Element Type="SqlScalarFunction" Name="[embedding].[Vector.LengthF]">
 			<Property Name="IsAnsiNullsOn" />
 			<Property Name="IsQuotedIdentifierOn" />
 			<Relationship Name="FunctionBody">
@@ -1216,13 +1204,13 @@
 			</Relationship>
 			<Relationship Name="Parameters">
 				<Entry>
-					<Element Type="SqlSubroutineParameter" Name="[dbo].[Vector.LengthF].[@vector]">
+					<Element Type="SqlSubroutineParameter" Name="[embedding].[Vector.LengthF].[@vector]">
 						<Relationship Name="Type">
 							<Entry>
 								<Element Type="SqlTypeSpecifier">
 									<Relationship Name="Type">
 										<Entry>
-											<References Name="[dbo].[VectorF]" />
+											<References Name="[embedding].[VectorF]" />
 										</Entry>
 									</Relationship>
 								</Element>
@@ -1233,7 +1221,7 @@
 			</Relationship>
 			<Relationship Name="Schema">
 				<Entry>
-					<References ExternalSource="BuiltIns" Name="[dbo]" />
+					<References ExternalSource="BuiltIns" Name="[embedding]" />
 				</Entry>
 			</Relationship>
 			<Relationship Name="Type">
@@ -1248,7 +1236,7 @@
 				</Entry>
 			</Relationship>
 		</Element>
-		<Element Type="SqlScalarFunction" Name="[dbo].[Vector.Magnitude]">
+		<Element Type="SqlScalarFunction" Name="[embedding].[Vector.Magnitude]">
 			<Property Name="IsAnsiNullsOn" />
 			<Property Name="IsQuotedIdentifierOn" />
 			<Relationship Name="FunctionBody">
@@ -1268,13 +1256,13 @@
 			</Relationship>
 			<Relationship Name="Parameters">
 				<Entry>
-					<Element Type="SqlSubroutineParameter" Name="[dbo].[Vector.Magnitude].[@vector]">
+					<Element Type="SqlSubroutineParameter" Name="[embedding].[Vector.Magnitude].[@vector]">
 						<Relationship Name="Type">
 							<Entry>
 								<Element Type="SqlTypeSpecifier">
 									<Relationship Name="Type">
 										<Entry>
-											<References Name="[dbo].[Vector]" />
+											<References Name="[embedding].[Vector]" />
 										</Entry>
 									</Relationship>
 								</Element>
@@ -1285,7 +1273,7 @@
 			</Relationship>
 			<Relationship Name="Schema">
 				<Entry>
-					<References ExternalSource="BuiltIns" Name="[dbo]" />
+					<References ExternalSource="BuiltIns" Name="[embedding]" />
 				</Entry>
 			</Relationship>
 			<Relationship Name="Type">
@@ -1301,7 +1289,7 @@
 				</Entry>
 			</Relationship>
 		</Element>
-		<Element Type="SqlScalarFunction" Name="[dbo].[Vector.MagnitudeF]">
+		<Element Type="SqlScalarFunction" Name="[embedding].[Vector.MagnitudeF]">
 			<Property Name="IsAnsiNullsOn" />
 			<Property Name="IsQuotedIdentifierOn" />
 			<Relationship Name="FunctionBody">
@@ -1321,13 +1309,13 @@
 			</Relationship>
 			<Relationship Name="Parameters">
 				<Entry>
-					<Element Type="SqlSubroutineParameter" Name="[dbo].[Vector.MagnitudeF].[@vector]">
+					<Element Type="SqlSubroutineParameter" Name="[embedding].[Vector.MagnitudeF].[@vector]">
 						<Relationship Name="Type">
 							<Entry>
 								<Element Type="SqlTypeSpecifier">
 									<Relationship Name="Type">
 										<Entry>
-											<References Name="[dbo].[VectorF]" />
+											<References Name="[embedding].[VectorF]" />
 										</Entry>
 									</Relationship>
 								</Element>
@@ -1338,7 +1326,7 @@
 			</Relationship>
 			<Relationship Name="Schema">
 				<Entry>
-					<References ExternalSource="BuiltIns" Name="[dbo]" />
+					<References ExternalSource="BuiltIns" Name="[embedding]" />
 				</Entry>
 			</Relationship>
 			<Relationship Name="Type">
@@ -1353,7 +1341,7 @@
 				</Entry>
 			</Relationship>
 		</Element>
-		<Element Type="SqlScalarFunction" Name="[dbo].[Vector.Midpoint]">
+		<Element Type="SqlScalarFunction" Name="[embedding].[Vector.Midpoint]">
 			<Property Name="IsAnsiNullsOn" />
 			<Property Name="IsQuotedIdentifierOn" />
 			<Relationship Name="FunctionBody">
@@ -1373,13 +1361,13 @@
 			</Relationship>
 			<Relationship Name="Parameters">
 				<Entry>
-					<Element Type="SqlSubroutineParameter" Name="[dbo].[Vector.Midpoint].[@vector1]">
+					<Element Type="SqlSubroutineParameter" Name="[embedding].[Vector.Midpoint].[@vector1]">
 						<Relationship Name="Type">
 							<Entry>
 								<Element Type="SqlTypeSpecifier">
 									<Relationship Name="Type">
 										<Entry>
-											<References Name="[dbo].[Vector]" />
+											<References Name="[embedding].[Vector]" />
 										</Entry>
 									</Relationship>
 								</Element>
@@ -1388,13 +1376,13 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="SqlSubroutineParameter" Name="[dbo].[Vector.Midpoint].[@vector2]">
+					<Element Type="SqlSubroutineParameter" Name="[embedding].[Vector.Midpoint].[@vector2]">
 						<Relationship Name="Type">
 							<Entry>
 								<Element Type="SqlTypeSpecifier">
 									<Relationship Name="Type">
 										<Entry>
-											<References Name="[dbo].[Vector]" />
+											<References Name="[embedding].[Vector]" />
 										</Entry>
 									</Relationship>
 								</Element>
@@ -1405,7 +1393,7 @@
 			</Relationship>
 			<Relationship Name="Schema">
 				<Entry>
-					<References ExternalSource="BuiltIns" Name="[dbo]" />
+					<References ExternalSource="BuiltIns" Name="[embedding]" />
 				</Entry>
 			</Relationship>
 			<Relationship Name="Type">
@@ -1413,14 +1401,14 @@
 					<Element Type="SqlTypeSpecifier">
 						<Relationship Name="Type">
 							<Entry>
-								<References Name="[dbo].[Vector]" />
+								<References Name="[embedding].[Vector]" />
 							</Entry>
 						</Relationship>
 					</Element>
 				</Entry>
 			</Relationship>
 		</Element>
-		<Element Type="SqlScalarFunction" Name="[dbo].[Vector.MidpointF]">
+		<Element Type="SqlScalarFunction" Name="[embedding].[Vector.MidpointF]">
 			<Property Name="IsAnsiNullsOn" />
 			<Property Name="IsQuotedIdentifierOn" />
 			<Relationship Name="FunctionBody">
@@ -1440,13 +1428,13 @@
 			</Relationship>
 			<Relationship Name="Parameters">
 				<Entry>
-					<Element Type="SqlSubroutineParameter" Name="[dbo].[Vector.MidpointF].[@vector1]">
+					<Element Type="SqlSubroutineParameter" Name="[embedding].[Vector.MidpointF].[@vector1]">
 						<Relationship Name="Type">
 							<Entry>
 								<Element Type="SqlTypeSpecifier">
 									<Relationship Name="Type">
 										<Entry>
-											<References Name="[dbo].[VectorF]" />
+											<References Name="[embedding].[VectorF]" />
 										</Entry>
 									</Relationship>
 								</Element>
@@ -1455,13 +1443,13 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="SqlSubroutineParameter" Name="[dbo].[Vector.MidpointF].[@vector2]">
+					<Element Type="SqlSubroutineParameter" Name="[embedding].[Vector.MidpointF].[@vector2]">
 						<Relationship Name="Type">
 							<Entry>
 								<Element Type="SqlTypeSpecifier">
 									<Relationship Name="Type">
 										<Entry>
-											<References Name="[dbo].[VectorF]" />
+											<References Name="[embedding].[VectorF]" />
 										</Entry>
 									</Relationship>
 								</Element>
@@ -1472,7 +1460,7 @@
 			</Relationship>
 			<Relationship Name="Schema">
 				<Entry>
-					<References ExternalSource="BuiltIns" Name="[dbo]" />
+					<References ExternalSource="BuiltIns" Name="[embedding]" />
 				</Entry>
 			</Relationship>
 			<Relationship Name="Type">
@@ -1480,14 +1468,14 @@
 					<Element Type="SqlTypeSpecifier">
 						<Relationship Name="Type">
 							<Entry>
-								<References Name="[dbo].[VectorF]" />
+								<References Name="[embedding].[VectorF]" />
 							</Entry>
 						</Relationship>
 					</Element>
 				</Entry>
 			</Relationship>
 		</Element>
-		<Element Type="SqlScalarFunction" Name="[dbo].[Vector.Random]">
+		<Element Type="SqlScalarFunction" Name="[embedding].[Vector.Random]">
 			<Property Name="IsAnsiNullsOn" />
 			<Property Name="IsQuotedIdentifierOn" />
 			<Relationship Name="FunctionBody">
@@ -1507,7 +1495,7 @@
 			</Relationship>
 			<Relationship Name="Parameters">
 				<Entry>
-					<Element Type="SqlSubroutineParameter" Name="[dbo].[Vector.Random].[@length]">
+					<Element Type="SqlSubroutineParameter" Name="[embedding].[Vector.Random].[@length]">
 						<Relationship Name="Type">
 							<Entry>
 								<Element Type="SqlTypeSpecifier">
@@ -1522,7 +1510,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="SqlSubroutineParameter" Name="[dbo].[Vector.Random].[@seed]">
+					<Element Type="SqlSubroutineParameter" Name="[embedding].[Vector.Random].[@seed]">
 						<Relationship Name="Type">
 							<Entry>
 								<Element Type="SqlTypeSpecifier">
@@ -1539,7 +1527,7 @@
 			</Relationship>
 			<Relationship Name="Schema">
 				<Entry>
-					<References ExternalSource="BuiltIns" Name="[dbo]" />
+					<References ExternalSource="BuiltIns" Name="[embedding]" />
 				</Entry>
 			</Relationship>
 			<Relationship Name="Type">
@@ -1547,14 +1535,14 @@
 					<Element Type="SqlTypeSpecifier">
 						<Relationship Name="Type">
 							<Entry>
-								<References Name="[dbo].[Vector]" />
+								<References Name="[embedding].[Vector]" />
 							</Entry>
 						</Relationship>
 					</Element>
 				</Entry>
 			</Relationship>
 		</Element>
-		<Element Type="SqlScalarFunction" Name="[dbo].[Vector.RandomF]">
+		<Element Type="SqlScalarFunction" Name="[embedding].[Vector.RandomF]">
 			<Property Name="IsAnsiNullsOn" />
 			<Property Name="IsQuotedIdentifierOn" />
 			<Relationship Name="FunctionBody">
@@ -1574,7 +1562,7 @@
 			</Relationship>
 			<Relationship Name="Parameters">
 				<Entry>
-					<Element Type="SqlSubroutineParameter" Name="[dbo].[Vector.RandomF].[@length]">
+					<Element Type="SqlSubroutineParameter" Name="[embedding].[Vector.RandomF].[@length]">
 						<Relationship Name="Type">
 							<Entry>
 								<Element Type="SqlTypeSpecifier">
@@ -1589,7 +1577,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="SqlSubroutineParameter" Name="[dbo].[Vector.RandomF].[@seed]">
+					<Element Type="SqlSubroutineParameter" Name="[embedding].[Vector.RandomF].[@seed]">
 						<Relationship Name="Type">
 							<Entry>
 								<Element Type="SqlTypeSpecifier">
@@ -1606,7 +1594,7 @@
 			</Relationship>
 			<Relationship Name="Schema">
 				<Entry>
-					<References ExternalSource="BuiltIns" Name="[dbo]" />
+					<References ExternalSource="BuiltIns" Name="[embedding]" />
 				</Entry>
 			</Relationship>
 			<Relationship Name="Type">
@@ -1614,14 +1602,14 @@
 					<Element Type="SqlTypeSpecifier">
 						<Relationship Name="Type">
 							<Entry>
-								<References Name="[dbo].[VectorF]" />
+								<References Name="[embedding].[VectorF]" />
 							</Entry>
 						</Relationship>
 					</Element>
 				</Entry>
 			</Relationship>
 		</Element>
-		<Element Type="SqlScalarFunction" Name="[dbo].[Vector.Uniform]">
+		<Element Type="SqlScalarFunction" Name="[embedding].[Vector.Uniform]">
 			<Property Name="IsAnsiNullsOn" />
 			<Property Name="IsQuotedIdentifierOn" />
 			<Relationship Name="FunctionBody">
@@ -1641,7 +1629,7 @@
 			</Relationship>
 			<Relationship Name="Parameters">
 				<Entry>
-					<Element Type="SqlSubroutineParameter" Name="[dbo].[Vector.Uniform].[@length]">
+					<Element Type="SqlSubroutineParameter" Name="[embedding].[Vector.Uniform].[@length]">
 						<Relationship Name="Type">
 							<Entry>
 								<Element Type="SqlTypeSpecifier">
@@ -1656,7 +1644,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="SqlSubroutineParameter" Name="[dbo].[Vector.Uniform].[@min]">
+					<Element Type="SqlSubroutineParameter" Name="[embedding].[Vector.Uniform].[@min]">
 						<Relationship Name="Type">
 							<Entry>
 								<Element Type="SqlTypeSpecifier">
@@ -1672,7 +1660,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="SqlSubroutineParameter" Name="[dbo].[Vector.Uniform].[@max]">
+					<Element Type="SqlSubroutineParameter" Name="[embedding].[Vector.Uniform].[@max]">
 						<Relationship Name="Type">
 							<Entry>
 								<Element Type="SqlTypeSpecifier">
@@ -1688,7 +1676,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="SqlSubroutineParameter" Name="[dbo].[Vector.Uniform].[@seed]">
+					<Element Type="SqlSubroutineParameter" Name="[embedding].[Vector.Uniform].[@seed]">
 						<Relationship Name="Type">
 							<Entry>
 								<Element Type="SqlTypeSpecifier">
@@ -1705,7 +1693,7 @@
 			</Relationship>
 			<Relationship Name="Schema">
 				<Entry>
-					<References ExternalSource="BuiltIns" Name="[dbo]" />
+					<References ExternalSource="BuiltIns" Name="[embedding]" />
 				</Entry>
 			</Relationship>
 			<Relationship Name="Type">
@@ -1713,14 +1701,14 @@
 					<Element Type="SqlTypeSpecifier">
 						<Relationship Name="Type">
 							<Entry>
-								<References Name="[dbo].[Vector]" />
+								<References Name="[embedding].[Vector]" />
 							</Entry>
 						</Relationship>
 					</Element>
 				</Entry>
 			</Relationship>
 		</Element>
-		<Element Type="SqlScalarFunction" Name="[dbo].[Vector.UniformF]">
+		<Element Type="SqlScalarFunction" Name="[embedding].[Vector.UniformF]">
 			<Property Name="IsAnsiNullsOn" />
 			<Property Name="IsQuotedIdentifierOn" />
 			<Relationship Name="FunctionBody">
@@ -1740,7 +1728,7 @@
 			</Relationship>
 			<Relationship Name="Parameters">
 				<Entry>
-					<Element Type="SqlSubroutineParameter" Name="[dbo].[Vector.UniformF].[@length]">
+					<Element Type="SqlSubroutineParameter" Name="[embedding].[Vector.UniformF].[@length]">
 						<Relationship Name="Type">
 							<Entry>
 								<Element Type="SqlTypeSpecifier">
@@ -1755,7 +1743,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="SqlSubroutineParameter" Name="[dbo].[Vector.UniformF].[@min]">
+					<Element Type="SqlSubroutineParameter" Name="[embedding].[Vector.UniformF].[@min]">
 						<Relationship Name="Type">
 							<Entry>
 								<Element Type="SqlTypeSpecifier">
@@ -1771,7 +1759,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="SqlSubroutineParameter" Name="[dbo].[Vector.UniformF].[@max]">
+					<Element Type="SqlSubroutineParameter" Name="[embedding].[Vector.UniformF].[@max]">
 						<Relationship Name="Type">
 							<Entry>
 								<Element Type="SqlTypeSpecifier">
@@ -1787,7 +1775,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="SqlSubroutineParameter" Name="[dbo].[Vector.UniformF].[@seed]">
+					<Element Type="SqlSubroutineParameter" Name="[embedding].[Vector.UniformF].[@seed]">
 						<Relationship Name="Type">
 							<Entry>
 								<Element Type="SqlTypeSpecifier">
@@ -1804,7 +1792,7 @@
 			</Relationship>
 			<Relationship Name="Schema">
 				<Entry>
-					<References ExternalSource="BuiltIns" Name="[dbo]" />
+					<References ExternalSource="BuiltIns" Name="[embedding]" />
 				</Entry>
 			</Relationship>
 			<Relationship Name="Type">
@@ -1812,14 +1800,14 @@
 					<Element Type="SqlTypeSpecifier">
 						<Relationship Name="Type">
 							<Entry>
-								<References Name="[dbo].[VectorF]" />
+								<References Name="[embedding].[VectorF]" />
 							</Entry>
 						</Relationship>
 					</Element>
 				</Entry>
 			</Relationship>
 		</Element>
-		<Element Type="SqlUserDefinedType" Name="[dbo].[VectorF]">
+		<Element Type="SqlUserDefinedType" Name="[embedding].[VectorF]">
 			<Property Name="Format" Value="2" />
 			<Property Name="MaxByteSize" Value="-1" />
 			<Property Name="IsByteOrdered" Value="True" />
@@ -1831,7 +1819,7 @@
 			</Relationship>
 			<Relationship Name="Methods">
 				<Entry>
-					<Element Type="SqlClrMethod" Name="[dbo].[VectorF].[get_IsNull]">
+					<Element Type="SqlClrMethod" Name="[embedding].[VectorF].[get_IsNull]">
 						<Property Name="ClrName" Value="get_IsNull" />
 						<Relationship Name="ReturnType">
 							<Entry>
@@ -1847,7 +1835,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="SqlClrMethod" Name="[dbo].[VectorF].[get_Magnitude]">
+					<Element Type="SqlClrMethod" Name="[embedding].[VectorF].[get_Magnitude]">
 						<Property Name="ClrName" Value="get_Magnitude" />
 						<Relationship Name="ReturnType">
 							<Entry>
@@ -1863,14 +1851,14 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="SqlClrMethod" Name="[dbo].[VectorF].[get_Null]">
+					<Element Type="SqlClrMethod" Name="[embedding].[VectorF].[get_Null]">
 						<Property Name="ClrName" Value="get_Null" />
 						<Relationship Name="ReturnType">
 							<Entry>
 								<Element Type="SqlTypeSpecifier">
 									<Relationship Name="Type">
 										<Entry>
-											<References Name="[dbo].[VectorF]" />
+											<References Name="[embedding].[VectorF]" />
 										</Entry>
 									</Relationship>
 								</Element>
@@ -1879,11 +1867,11 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="SqlClrMethod" Name="[dbo].[VectorF].[Element]">
+					<Element Type="SqlClrMethod" Name="[embedding].[VectorF].[Element]">
 						<Property Name="ClrName" Value="Element" />
 						<Relationship Name="Parameters">
 							<Entry>
-								<Element Type="SqlClrMethodParameter" Name="[dbo].[VectorF].[Element].[position]">
+								<Element Type="SqlClrMethodParameter" Name="[embedding].[VectorF].[Element].[position]">
 									<Property Name="ClrName" Value="position" />
 									<Relationship Name="Type">
 										<Entry>
@@ -1913,18 +1901,18 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="SqlClrMethod" Name="[dbo].[VectorF].[Distance]">
+					<Element Type="SqlClrMethod" Name="[embedding].[VectorF].[Distance]">
 						<Property Name="ClrName" Value="Distance" />
 						<Relationship Name="Parameters">
 							<Entry>
-								<Element Type="SqlClrMethodParameter" Name="[dbo].[VectorF].[Distance].[vector]">
+								<Element Type="SqlClrMethodParameter" Name="[embedding].[VectorF].[Distance].[vector]">
 									<Property Name="ClrName" Value="vector" />
 									<Relationship Name="Type">
 										<Entry>
 											<Element Type="SqlTypeSpecifier">
 												<Relationship Name="Type">
 													<Entry>
-														<References Name="[dbo].[VectorF]" />
+														<References Name="[embedding].[VectorF]" />
 													</Entry>
 												</Relationship>
 											</Element>
@@ -1933,7 +1921,7 @@
 								</Element>
 							</Entry>
 							<Entry>
-								<Element Type="SqlClrMethodParameter" Name="[dbo].[VectorF].[Distance].[metric]">
+								<Element Type="SqlClrMethodParameter" Name="[embedding].[VectorF].[Distance].[metric]">
 									<Property Name="ClrName" Value="metric" />
 									<Relationship Name="Type">
 										<Entry>
@@ -1964,18 +1952,18 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="SqlClrMethod" Name="[dbo].[VectorF].[Angle]">
+					<Element Type="SqlClrMethod" Name="[embedding].[VectorF].[Angle]">
 						<Property Name="ClrName" Value="Angle" />
 						<Relationship Name="Parameters">
 							<Entry>
-								<Element Type="SqlClrMethodParameter" Name="[dbo].[VectorF].[Angle].[vector]">
+								<Element Type="SqlClrMethodParameter" Name="[embedding].[VectorF].[Angle].[vector]">
 									<Property Name="ClrName" Value="vector" />
 									<Relationship Name="Type">
 										<Entry>
 											<Element Type="SqlTypeSpecifier">
 												<Relationship Name="Type">
 													<Entry>
-														<References Name="[dbo].[VectorF]" />
+														<References Name="[embedding].[VectorF]" />
 													</Entry>
 												</Relationship>
 											</Element>
@@ -1998,18 +1986,18 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="SqlClrMethod" Name="[dbo].[VectorF].[Cosine]">
+					<Element Type="SqlClrMethod" Name="[embedding].[VectorF].[Cosine]">
 						<Property Name="ClrName" Value="Cosine" />
 						<Relationship Name="Parameters">
 							<Entry>
-								<Element Type="SqlClrMethodParameter" Name="[dbo].[VectorF].[Cosine].[vector]">
+								<Element Type="SqlClrMethodParameter" Name="[embedding].[VectorF].[Cosine].[vector]">
 									<Property Name="ClrName" Value="vector" />
 									<Relationship Name="Type">
 										<Entry>
 											<Element Type="SqlTypeSpecifier">
 												<Relationship Name="Type">
 													<Entry>
-														<References Name="[dbo].[VectorF]" />
+														<References Name="[embedding].[VectorF]" />
 													</Entry>
 												</Relationship>
 											</Element>
@@ -2032,18 +2020,18 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="SqlClrMethod" Name="[dbo].[VectorF].[Similarity]">
+					<Element Type="SqlClrMethod" Name="[embedding].[VectorF].[Similarity]">
 						<Property Name="ClrName" Value="Similarity" />
 						<Relationship Name="Parameters">
 							<Entry>
-								<Element Type="SqlClrMethodParameter" Name="[dbo].[VectorF].[Similarity].[vector]">
+								<Element Type="SqlClrMethodParameter" Name="[embedding].[VectorF].[Similarity].[vector]">
 									<Property Name="ClrName" Value="vector" />
 									<Relationship Name="Type">
 										<Entry>
 											<Element Type="SqlTypeSpecifier">
 												<Relationship Name="Type">
 													<Entry>
-														<References Name="[dbo].[VectorF]" />
+														<References Name="[embedding].[VectorF]" />
 													</Entry>
 												</Relationship>
 											</Element>
@@ -2066,18 +2054,18 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="SqlClrMethod" Name="[dbo].[VectorF].[DotProduct]">
+					<Element Type="SqlClrMethod" Name="[embedding].[VectorF].[DotProduct]">
 						<Property Name="ClrName" Value="DotProduct" />
 						<Relationship Name="Parameters">
 							<Entry>
-								<Element Type="SqlClrMethodParameter" Name="[dbo].[VectorF].[DotProduct].[vector]">
+								<Element Type="SqlClrMethodParameter" Name="[embedding].[VectorF].[DotProduct].[vector]">
 									<Property Name="ClrName" Value="vector" />
 									<Relationship Name="Type">
 										<Entry>
 											<Element Type="SqlTypeSpecifier">
 												<Relationship Name="Type">
 													<Entry>
-														<References Name="[dbo].[VectorF]" />
+														<References Name="[embedding].[VectorF]" />
 													</Entry>
 												</Relationship>
 											</Element>
@@ -2100,18 +2088,18 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="SqlClrMethod" Name="[dbo].[VectorF].[Euclidean]">
+					<Element Type="SqlClrMethod" Name="[embedding].[VectorF].[Euclidean]">
 						<Property Name="ClrName" Value="Euclidean" />
 						<Relationship Name="Parameters">
 							<Entry>
-								<Element Type="SqlClrMethodParameter" Name="[dbo].[VectorF].[Euclidean].[vector]">
+								<Element Type="SqlClrMethodParameter" Name="[embedding].[VectorF].[Euclidean].[vector]">
 									<Property Name="ClrName" Value="vector" />
 									<Relationship Name="Type">
 										<Entry>
 											<Element Type="SqlTypeSpecifier">
 												<Relationship Name="Type">
 													<Entry>
-														<References Name="[dbo].[VectorF]" />
+														<References Name="[embedding].[VectorF]" />
 													</Entry>
 												</Relationship>
 											</Element>
@@ -2134,18 +2122,18 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="SqlClrMethod" Name="[dbo].[VectorF].[Manhattan]">
+					<Element Type="SqlClrMethod" Name="[embedding].[VectorF].[Manhattan]">
 						<Property Name="ClrName" Value="Manhattan" />
 						<Relationship Name="Parameters">
 							<Entry>
-								<Element Type="SqlClrMethodParameter" Name="[dbo].[VectorF].[Manhattan].[vector]">
+								<Element Type="SqlClrMethodParameter" Name="[embedding].[VectorF].[Manhattan].[vector]">
 									<Property Name="ClrName" Value="vector" />
 									<Relationship Name="Type">
 										<Entry>
 											<Element Type="SqlTypeSpecifier">
 												<Relationship Name="Type">
 													<Entry>
-														<References Name="[dbo].[VectorF]" />
+														<References Name="[embedding].[VectorF]" />
 													</Entry>
 												</Relationship>
 											</Element>
@@ -2168,18 +2156,18 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="SqlClrMethod" Name="[dbo].[VectorF].[Midpoint]">
+					<Element Type="SqlClrMethod" Name="[embedding].[VectorF].[Midpoint]">
 						<Property Name="ClrName" Value="Midpoint" />
 						<Relationship Name="Parameters">
 							<Entry>
-								<Element Type="SqlClrMethodParameter" Name="[dbo].[VectorF].[Midpoint].[vector]">
+								<Element Type="SqlClrMethodParameter" Name="[embedding].[VectorF].[Midpoint].[vector]">
 									<Property Name="ClrName" Value="vector" />
 									<Relationship Name="Type">
 										<Entry>
 											<Element Type="SqlTypeSpecifier">
 												<Relationship Name="Type">
 													<Entry>
-														<References Name="[dbo].[VectorF]" />
+														<References Name="[embedding].[VectorF]" />
 													</Entry>
 												</Relationship>
 											</Element>
@@ -2193,7 +2181,7 @@
 								<Element Type="SqlTypeSpecifier">
 									<Relationship Name="Type">
 										<Entry>
-											<References Name="[dbo].[VectorF]" />
+											<References Name="[embedding].[VectorF]" />
 										</Entry>
 									</Relationship>
 								</Element>
@@ -2202,7 +2190,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="SqlClrMethod" Name="[dbo].[VectorF].[Length]">
+					<Element Type="SqlClrMethod" Name="[embedding].[VectorF].[Length]">
 						<Property Name="ClrName" Value="Length" />
 						<Relationship Name="ReturnType">
 							<Entry>
@@ -2218,11 +2206,11 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="SqlClrMethod" Name="[dbo].[VectorF].[Parse]">
+					<Element Type="SqlClrMethod" Name="[embedding].[VectorF].[Parse]">
 						<Property Name="ClrName" Value="Parse" />
 						<Relationship Name="Parameters">
 							<Entry>
-								<Element Type="SqlClrMethodParameter" Name="[dbo].[VectorF].[Parse].[input]">
+								<Element Type="SqlClrMethodParameter" Name="[embedding].[VectorF].[Parse].[input]">
 									<Property Name="ClrName" Value="input" />
 									<Relationship Name="Type">
 										<Entry>
@@ -2244,7 +2232,7 @@
 								<Element Type="SqlTypeSpecifier">
 									<Relationship Name="Type">
 										<Entry>
-											<References Name="[dbo].[VectorF]" />
+											<References Name="[embedding].[VectorF]" />
 										</Entry>
 									</Relationship>
 								</Element>
@@ -2253,11 +2241,11 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="SqlClrMethod" Name="[dbo].[VectorF].[From]">
+					<Element Type="SqlClrMethod" Name="[embedding].[VectorF].[From]">
 						<Property Name="ClrName" Value="From" />
 						<Relationship Name="Parameters">
 							<Entry>
-								<Element Type="SqlClrMethodParameter" Name="[dbo].[VectorF].[From].[bytes]">
+								<Element Type="SqlClrMethodParameter" Name="[embedding].[VectorF].[From].[bytes]">
 									<Property Name="ClrName" Value="bytes" />
 									<Relationship Name="Type">
 										<Entry>
@@ -2279,7 +2267,7 @@
 								<Element Type="SqlTypeSpecifier">
 									<Relationship Name="Type">
 										<Entry>
-											<References Name="[dbo].[VectorF]" />
+											<References Name="[embedding].[VectorF]" />
 										</Entry>
 									</Relationship>
 								</Element>
@@ -2288,7 +2276,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="SqlClrMethod" Name="[dbo].[VectorF].[ToBytes]">
+					<Element Type="SqlClrMethod" Name="[embedding].[VectorF].[ToBytes]">
 						<Property Name="ClrName" Value="ToBytes" />
 						<Relationship Name="ReturnType">
 							<Entry>
@@ -2305,7 +2293,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="SqlClrMethod" Name="[dbo].[VectorF].[ToString]">
+					<Element Type="SqlClrMethod" Name="[embedding].[VectorF].[ToString]">
 						<Property Name="ClrName" Value="ToString" />
 						<Relationship Name="ReturnType">
 							<Entry>
@@ -2324,7 +2312,7 @@
 			</Relationship>
 			<Relationship Name="Properties">
 				<Entry>
-					<Element Type="SqlClrProperty" Name="[dbo].[VectorF].[IsNull]">
+					<Element Type="SqlClrProperty" Name="[embedding].[VectorF].[IsNull]">
 						<Property Name="ClrName" Value="IsNull" />
 						<Relationship Name="Type">
 							<Entry>
@@ -2340,7 +2328,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="SqlClrProperty" Name="[dbo].[VectorF].[Magnitude]">
+					<Element Type="SqlClrProperty" Name="[embedding].[VectorF].[Magnitude]">
 						<Property Name="ClrName" Value="Magnitude" />
 						<Relationship Name="Type">
 							<Entry>
@@ -2356,14 +2344,14 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="SqlClrProperty" Name="[dbo].[VectorF].[Null]">
+					<Element Type="SqlClrProperty" Name="[embedding].[VectorF].[Null]">
 						<Property Name="ClrName" Value="Null" />
 						<Relationship Name="Type">
 							<Entry>
 								<Element Type="SqlTypeSpecifier">
 									<Relationship Name="Type">
 										<Entry>
-											<References Name="[dbo].[VectorF]" />
+											<References Name="[embedding].[VectorF]" />
 										</Entry>
 									</Relationship>
 								</Element>
@@ -2374,7 +2362,7 @@
 			</Relationship>
 			<Relationship Name="Schema">
 				<Entry>
-					<References ExternalSource="BuiltIns" Name="[dbo]" />
+					<References ExternalSource="BuiltIns" Name="[embedding]" />
 				</Entry>
 			</Relationship>
 		</Element>
@@ -2390,7 +2378,7 @@
 			</Relationship>
 			<Relationship Name="Authorizer">
 				<Entry>
-					<References ExternalSource="BuiltIns" Name="[dbo]" />
+					<References ExternalSource="BuiltIns" Name="[embedding]" />
 				</Entry>
 			</Relationship>
 		</Element>
