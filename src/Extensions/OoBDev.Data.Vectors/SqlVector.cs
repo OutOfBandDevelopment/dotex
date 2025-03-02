@@ -13,7 +13,7 @@ namespace OoBDev.Data.Vectors;
 [Serializable]
 [SqlUserDefinedType(
     Format.UserDefined,
-    Name = "Vector",
+    Name = "[embedding].[Vector]",
     IsByteOrdered = true,
     MaxByteSize = -1)]
 public record struct SqlVector : INullable, IBinarySerialize

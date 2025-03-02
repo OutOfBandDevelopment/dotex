@@ -1,6 +1,9 @@
 ﻿using Castle.Core.Internal;
 using Microsoft.SqlServer.Server;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -97,11 +100,19 @@ public class DacPacBuilder
             );
         dataSchemaModel.Add(model);
 
+        model.Add(Aggregates(ns, assembly, realAssemblyName));
+        model.Add(Functions(ns, assembly, realAssemblyName));
+
+        return dataSchemaModel;
+    }
+
+    public IEnumerable<XElement> Aggregates(XNamespace ns, Assembly assembly, string realAssemblyName)
+    {
         var aggregates = from type in assembly.GetTypes()
                          let attrib = type.GetAttributes<SqlUserDefinedAggregateAttribute>().FirstOrDefault()
+                         let method = type.GetMethod("Accumulate")
                          where attrib != null
-                         select new XElement(ns + "Element",
-                            new XElement(ns + "Property", new XAttribute("Name", "Type"), new XAttribute("Value", "SqlAggregate"), new XAttribute("Name", attrib.Name)), //TODO: I need a name builder
+                         select new XElement(ns + "Element", new XAttribute("Type", "SqlAggregate"), new XAttribute("Name", attrib.Name), //TODO: I need a name builder
                             new XElement(ns + "Property", new XAttribute("Name", "Format"), new XAttribute("Value", (int)attrib.Format)),
                             new XElement(ns + "Property", new XAttribute("Name", "IsInvariantToDuplicates"), new XAttribute("Value", attrib.IsInvariantToDuplicates ? "True" : "False")),
                             new XElement(ns + "Property", new XAttribute("Name", "IsInvariantToNulls"), new XAttribute("Value", attrib.IsInvariantToNulls ? "True" : "False")),
@@ -109,14 +120,137 @@ public class DacPacBuilder
                             new XElement(ns + "Property", new XAttribute("Name", "MaxByteSize"), new XAttribute("Value", attrib.MaxByteSize)),
                             new XElement(ns + "Property", new XAttribute("Name", "ClassName"), new XAttribute("Value", type.Name)),
                             new XElement(ns + "Relationship", new XAttribute("Name", "Assembly"),
-                                new XElement("Entry",
-                                    new XElement("References", new XAttribute("Name", $"[{realAssemblyName}]")
+                                new XElement(ns + "Entry",
+                                    new XElement(ns + "References", new XAttribute("Name", $"[{realAssemblyName}]")
+                                    )
+                                )
+                            ),
+                            new XElement(ns + "Relationship", new XAttribute("Name", "Parameters"),
+                                new XElement(ns + "Entry",
+                                    new XElement(ns + "Element", new XAttribute("Type", "SqlSubroutineParameter"), new XAttribute("Name", $"{attrib.Name}.[@{method.GetParameters()[0].Name}]"), //TODO: I need a name builder
+                                         new XElement(ns + "Relationship", new XAttribute("Name", "Type"),
+                                             new XElement(ns + "Entry",
+                                                 new XElement(ns + "Element", new XAttribute("Type", "SqlTypeSpecifier"),
+                                                     new XElement(ns + "Relationship", new XAttribute("Name", "Type"),
+                                                         new XElement(ns + "Entry",
+                                                             new XElement(ns + "References", new XAttribute("Name", $"{method.GetParameters()[0].ParameterType.GetAttribute<SqlUserDefinedTypeAttribute>().Name}") //TODO: I need a name builder
+                                                             )
+                                                         )
+                                                     )
+                                                 )
+                                             )
+                                         )
+                                    )
+                                )
+                            ),
+                            new XElement(ns + "Relationship", new XAttribute("Name", "ReturnType"),
+                                new XElement(ns + "Entry",
+                                    new XElement(ns + "Element", new XAttribute("Type", "SqlTypeSpecifier"),
+                                         new XElement(ns + "Relationship", new XAttribute("Name", "Type"),
+                                             new XElement(ns + "Entry",
+                                                 new XElement(ns + "Element", new XAttribute("Type", "SqlTypeSpecifier"),
+                                                     new XElement(ns + "Relationship", new XAttribute("Name", "Type"),
+                                                         new XElement(ns + "Entry",
+                                                             new XElement(ns + "References", new XAttribute("Name", $"{method.GetParameters()[0].ParameterType.GetAttribute<SqlUserDefinedTypeAttribute>().Name}") //TODO: I need a name builder
+                                                             )
+                                                         )
+                                                     )
+                                                 )
+                                             )
+                                         )
+                                    )
+                                )
+                            ),
+                            new XElement(ns + "Relationship", new XAttribute("Name", "Schema"),
+                                new XElement(ns + "Entry",
+                                        new XElement(ns + "References", new XAttribute("ExternalSource", "Name"), new XAttribute("Name", "[dbo]") //TODO: I need a name builder
                                     )
                                 )
                             )
                         );
-        model.Add(aggregates);
+        return aggregates;
+    }
 
-        return dataSchemaModel;
+
+    public IEnumerable<XElement> Functions(XNamespace ns, Assembly assembly, string realAssemblyName)
+    {
+        var functions = from functionClasses in assembly.GetTypes().Where(t => t.IsAbstract)
+                        from function in functionClasses.GetMethods(BindingFlags.Static | BindingFlags.Public)
+                        let attrib = function.GetAttributes<SqlFunctionAttribute>().FirstOrDefault()
+                        where attrib != null
+                        select new XElement(ns + "Element", 
+                            new XAttribute("Type", function.ReturnType.IsAssignableTo(typeof(IEnumerable)) ? throw new NotSupportedException($"{function.ReturnType}") : "SqlScalarFunction"),
+                            new XAttribute("Name", attrib.Name),
+                            new XElement(ns + "Property", new XAttribute("Name", "IsAnsiNullsOn")),
+                            new XElement(ns + "Property", new XAttribute("Name", "IsQuotedIdentifierOn")),
+                            new XElement(ns + "Relationship", new XAttribute("Name", "FunctionBody"),
+                                new XElement(ns + "Entry",
+                                    new XElement(ns + "Element", new XAttribute("Type", "SqlClrFunctionImplementation"),
+                                        new XElement(ns + "Property", new XAttribute("Name", "IsDeterministic"), new XAttribute("Value", attrib.IsDeterministic ? "True": "False" )),
+                                        new XElement(ns + "Property", new XAttribute("Name", "IsPrecise"), new XAttribute("Value", attrib.IsPrecise ? "True" : "False")),
+                                        new XElement(ns + "Property", new XAttribute("Name", "MethodName"), new XAttribute("Value", function.Name)),
+                                        new XElement(ns + "Property", new XAttribute("Name", "ClassName"), new XAttribute("Value", functionClasses.Name)),
+                                        new XElement(ns + "Relationship", new XAttribute("Name", "Assembly"),
+                                            new XElement(ns + "Entry",
+                                                new XElement(ns + "References", new XAttribute("Name", $"[{realAssemblyName}]"))
+                                            )
+                                        )
+                                    )
+                                )
+                            )
+                        );
+        /*
+			<Relationship Name="Parameters">
+				<Entry>
+					<Element Type="SqlSubroutineParameter" Name="[dbo].[Vector.Angle].[@vector1]">
+						<Relationship Name="Type">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Relationship Name="Type">
+										<Entry>
+											<References Name="[dbo].[Vector]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSubroutineParameter" Name="[dbo].[Vector.Angle].[@vector2]">
+						<Relationship Name="Type">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Relationship Name="Type">
+										<Entry>
+											<References Name="[dbo].[Vector]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+			</Relationship>
+			<Relationship Name="Schema">
+				<Entry>
+					<References ExternalSource="BuiltIns" Name="[dbo]" />
+				</Entry>
+			</Relationship>
+			<Relationship Name="Type">
+				<Entry>
+					<Element Type="SqlTypeSpecifier">
+						<Property Name="Precision" Value="53" />
+						<Relationship Name="Type">
+							<Entry>
+								<References ExternalSource="BuiltIns" Name="[float]" />
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+			</Relationship>
+		</Element>
+         */
+        yield break;
     }
 }

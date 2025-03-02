@@ -9,31 +9,31 @@ namespace OoBDev.Data.Vectors;
 
 public static class VectorFunctions
 {
-    [SqlFunction(Name = $"Vector.{nameof(Element)}", IsDeterministic = true, IsPrecise = true)]
+    [SqlFunction(Name = $"[embedding].[{nameof(Element)}]", IsDeterministic = true, IsPrecise = true)]
     public static SqlDouble Element(SqlVector vector, SqlInt32 index) =>
         (vector.IsNull || index.IsNull) ? SqlDouble.Null : (SqlDouble)vector.Values[index.Value];
 
-    [SqlFunction(Name = $"Vector.{nameof(ElementF)}", IsDeterministic = true, IsPrecise = true)]
+    [SqlFunction(Name = $"[embedding].[{nameof(ElementF)}]", IsDeterministic = true, IsPrecise = true)]
     public static SqlSingle ElementF(SqlVectorF vector, SqlInt32 index) =>
         (vector.IsNull || index.IsNull) ? SqlSingle.Null : (SqlSingle)vector.Values[index.Value];
 
-    [SqlFunction(Name = $"Vector.{nameof(Magnitude)}", IsDeterministic = true, IsPrecise = true)]
+    [SqlFunction(Name = $"[embedding].[{nameof(Magnitude)}]", IsDeterministic = true, IsPrecise = true)]
     public static SqlDouble Magnitude(SqlVector vector) =>
         vector.IsNull ? SqlDouble.Null : (SqlDouble)Math.Sqrt(DotProduct(vector.Values, vector.Values));
 
-    [SqlFunction(Name = $"Vector.{nameof(MagnitudeF)}", IsDeterministic = true, IsPrecise = true)]
+    [SqlFunction(Name = $"[embedding].[{nameof(MagnitudeF)}]", IsDeterministic = true, IsPrecise = true)]
     public static SqlSingle MagnitudeF(SqlVectorF vector) =>
         vector.IsNull ? SqlSingle.Null : (SqlSingle)Math.Sqrt(DotProduct(vector.Values, vector.Values));
 
-    [SqlFunction(Name = $"Vector.{nameof(Length)}", IsDeterministic = true, IsPrecise = true)]
+    [SqlFunction(Name = $"[embedding].[{nameof(Length)}]", IsDeterministic = true, IsPrecise = true)]
     public static SqlInt32 Length(SqlVector vector) =>
         vector.IsNull ? SqlInt32.Null : (SqlInt32)vector.Values.Count;
 
-    [SqlFunction(Name = $"Vector.{nameof(LengthF)}", IsDeterministic = true, IsPrecise = true)]
+    [SqlFunction(Name = $"[embedding].[{nameof(LengthF)}]", IsDeterministic = true, IsPrecise = true)]
     public static SqlInt32 LengthF(SqlVectorF vector) =>
         vector.IsNull ? SqlInt32.Null : (SqlInt32)vector.Values.Count;
 
-    [SqlFunction(Name = $"Vector.{nameof(Distance)}", IsDeterministic = true, IsPrecise = true)]
+    [SqlFunction(Name = $"[embedding].[{nameof(Distance)}]", IsDeterministic = true, IsPrecise = true)]
     public static SqlDouble Distance(SqlString distanceMetric, SqlVector vector1, SqlVector vector2)
     {
         if (distanceMetric.IsNull || string.IsNullOrWhiteSpace(distanceMetric.Value) ||
@@ -58,7 +58,7 @@ public static class VectorFunctions
         };
     }
 
-    [SqlFunction(Name = $"Vector.{nameof(DistanceF)}", IsDeterministic = true, IsPrecise = true)]
+    [SqlFunction(Name = $"[embedding].[{nameof(DistanceF)}]", IsDeterministic = true, IsPrecise = true)]
     public static SqlSingle DistanceF(SqlString distanceMetric, SqlVectorF vector1, SqlVectorF vector2)
     {
         if (distanceMetric.IsNull || string.IsNullOrWhiteSpace(distanceMetric.Value) ||
@@ -83,7 +83,7 @@ public static class VectorFunctions
         };
     }
 
-    [SqlFunction(Name = $"Vector.{nameof(Midpoint)}", IsDeterministic = true, IsPrecise = true)]
+    [SqlFunction(Name = $"[embedding].[{nameof(Midpoint)}]", IsDeterministic = true, IsPrecise = true)]
     public static SqlVector Midpoint(SqlVector vector1, SqlVector vector2)
     {
         if (vector1.IsNull || vector2.IsNull)
@@ -105,7 +105,7 @@ public static class VectorFunctions
         return vectorM;
     }
 
-    [SqlFunction(Name = $"Vector.{nameof(MidpointF)}", IsDeterministic = true, IsPrecise = true)]
+    [SqlFunction(Name = $"[embedding].[{nameof(MidpointF)}]", IsDeterministic = true, IsPrecise = true)]
     public static SqlVectorF MidpointF(SqlVectorF vector1, SqlVectorF vector2)
     {
         if (vector1.IsNull || vector2.IsNull)
@@ -127,7 +127,7 @@ public static class VectorFunctions
         return vectorM;
     }
 
-    [SqlFunction(Name = $"Vector.{nameof(Angle)}", IsDeterministic = true, IsPrecise = true)]
+    [SqlFunction(Name = $"[embedding].[{nameof(Angle)}]", IsDeterministic = true, IsPrecise = true)]
     public static SqlDouble Angle(SqlVector vector1, SqlVector vector2) =>
         vector1.IsNull || vector2.IsNull ? SqlDouble.Null :
         (SqlDouble)Math.Acos(
@@ -136,7 +136,7 @@ public static class VectorFunctions
                 )
             );
 
-    [SqlFunction(Name = $"Vector.{nameof(AngleF)}", IsDeterministic = true, IsPrecise = true)]
+    [SqlFunction(Name = $"[embedding].[{nameof(AngleF)}]", IsDeterministic = true, IsPrecise = true)]
     public static SqlSingle AngleF(SqlVectorF vector1, SqlVectorF vector2) =>
         vector1.IsNull || vector2.IsNull ? SqlSingle.Null :
         (SqlSingle)Math.Acos(
@@ -145,7 +145,7 @@ public static class VectorFunctions
                 )
             );
 
-    [SqlFunction(Name = $"Vector.{nameof(Random)}", IsDeterministic = true, IsPrecise = true)]
+    [SqlFunction(Name = $"[embedding].[{nameof(Random)}]", IsDeterministic = true, IsPrecise = true)]
     public static SqlVector Random(SqlInt32 length, SqlInt32 seed)
     {
         if (length.IsNull) return SqlVector.Null;
@@ -165,11 +165,11 @@ public static class VectorFunctions
         return new SqlVector(vector);
     }
 
-    [SqlFunction(Name = $"Vector.{nameof(RandomF)}", IsDeterministic = true, IsPrecise = true)]
+    [SqlFunction(Name = $"[embedding].[{nameof(RandomF)}]", IsDeterministic = true, IsPrecise = true)]
     public static SqlVectorF RandomF(SqlInt32 length, SqlInt32 seed) =>
         Random(length, seed);
 
-    [SqlFunction(Name = $"Vector.{nameof(Uniform)}", IsDeterministic = true, IsPrecise = true)]
+    [SqlFunction(Name = $"[embedding].[{nameof(Uniform)}]", IsDeterministic = true, IsPrecise = true)]
     public static SqlVector Uniform(SqlInt32 length, SqlDouble min, SqlDouble max, SqlInt32 seed)
     {
         var random = Random(length, seed);
@@ -187,7 +187,7 @@ public static class VectorFunctions
         return new SqlVector(vector);
     }
 
-    [SqlFunction(Name = $"Vector.{nameof(UniformF)}", IsDeterministic = true, IsPrecise = true)]
+    [SqlFunction(Name = $"[embedding].[{nameof(UniformF)}]", IsDeterministic = true, IsPrecise = true)]
     public static SqlVectorF UniformF(SqlInt32 length, SqlDouble min, SqlDouble max, SqlInt32 seed) =>
         Uniform(length, min, max, seed);
 

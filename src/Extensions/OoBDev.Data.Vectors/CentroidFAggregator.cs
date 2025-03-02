@@ -6,7 +6,7 @@ namespace OoBDev.Data.Vectors;
 
 [SqlUserDefinedAggregate(
     Format.UserDefined,
-    Name = "CentroidF",
+    Name = "[embedding].[CentroidF]",
     IsInvariantToDuplicates = false,
     IsInvariantToNulls = true,
     IsInvariantToOrder = true,
