@@ -1,7 +1,6 @@
 ﻿using Microsoft.SqlServer.Server;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data.SqlTypes;
 using System.Globalization;
 using System.IO;
@@ -10,7 +9,6 @@ using System.Runtime.CompilerServices;
 
 namespace OoBDev.Data.Vectors;
 
-[TypeConverter(typeof(SqlVectorFConverter))]
 [Serializable]
 [SqlUserDefinedType(
     Format.UserDefined,

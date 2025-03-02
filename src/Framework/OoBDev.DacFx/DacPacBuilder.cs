@@ -417,7 +417,7 @@ END
                    )
                )
            ),
-           Methods(assembly, realAssemblyName, type),
+           //Methods(assembly, realAssemblyName, type),
            Schema(type)
        );
 
