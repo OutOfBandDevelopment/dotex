@@ -13,10 +13,10 @@ BEGIN
     WITH XMLNAMESPACES ('oobdev://embedding/sentence-transformer/request' AS st)
 	SELECT @message = (
 		SELECT 
-			@id AS [st:request/@id],
-			@value AS [st:request/@value],
-			@tableName AS [st:request/@tableName]
-		FOR XML PATH('st:request'), TYPE
+			@id AS [@id],
+			@value AS [@value],
+			@tableName AS [@tableName]
+		FOR XML PATH('st:request')
 	);
 
 	BEGIN DIALOG @conversationHandle
