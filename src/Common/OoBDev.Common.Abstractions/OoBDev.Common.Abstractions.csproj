@@ -25,6 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Remove="..\..\Extensions\**\OoBDev.*.Abstractions.csproj" />
     <ProjectReference Include="..\..\Framework\**\OoBDev.*.Abstractions.csproj" />
 	</ItemGroup>
 

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net481</TargetFrameworks>
+    <TargetFrameworks>net90;net481</TargetFrameworks>
     <LangVersion>preview</LangVersion>
     <IsSqlClr>True</IsSqlClr>
   </PropertyGroup>

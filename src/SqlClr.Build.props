@@ -115,4 +115,8 @@ GO
     <CallTarget Targets="BuildSqlInstallScript" />
   </Target>
 
+  <!--<ItemGroup Condition="'$(IsSqlClr)'=='True' AND '$(TargetFramework)' == 'net90'">
+    <ProjectReference Include="$(SolutionDir)Framework\OoBDev.DacFx\OoBDev.DacFx.csproj" ReferenceOutputAssembly="false" />    
+  </ItemGroup>-->
+
 </Project>

@@ -1,4 +1,6 @@
-﻿namespace OoBDev.DacPacCompiler.Cli;
+﻿using System;
+
+namespace OoBDev.DacPacCompiler.Cli;
 
 internal class Program
 {
