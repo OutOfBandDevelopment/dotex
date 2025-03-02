@@ -68,7 +68,7 @@ public record struct SqlVectorF : INullable, IBinarySerialize
         (SqlSingle)VectorFunctions.Distance(metric, this, vector);
 
     [SqlMethod(
-        Name = nameof(Distance),
+        Name = nameof(Angle),
         OnNullCall = false,
         IsDeterministic = true,
         IsPrecise = true,

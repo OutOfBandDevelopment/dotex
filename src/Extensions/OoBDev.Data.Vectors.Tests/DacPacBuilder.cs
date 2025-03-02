@@ -104,19 +104,20 @@ public class DacPacBuilder
             );
         dataSchemaModel.Add(model);
 
-        model.Add(Aggregates(ns, assembly, realAssemblyName));
-        model.Add(Functions(ns, assembly, realAssemblyName));
+        model.Add(Aggregates(assembly, realAssemblyName));
+        model.Add(UserDefinedTypes(assembly, realAssemblyName));
+        model.Add(Functions(assembly, realAssemblyName));
 
         return dataSchemaModel;
     }
 
-    public IEnumerable<XElement> Aggregates(XNamespace ns, Assembly assembly, string realAssemblyName) =>
+    public IEnumerable<XElement> Aggregates(Assembly assembly, string realAssemblyName) =>
         from type in assembly.GetTypes()
         let attrib = type.GetAttributes<SqlUserDefinedAggregateAttribute>().FirstOrDefault()
         let accumulator = type.GetMethod("Accumulate")
         let terminator = type.GetMethod("Terminate")
         where attrib != null
-        select new XElement(ns + "Element", new XAttribute("Type", "SqlAggregate"), new XAttribute("Name", attrib.Name), //TODO: I need a name builder
+        select new XElement(ns + "Element", new XAttribute("Type", "SqlAggregate"), new XAttribute("Name", GetName(attrib)), //TODO: I need a name builder
            new XElement(ns + "Property", new XAttribute("Name", "Format"), new XAttribute("Value", (int)attrib.Format)),
            new XElement(ns + "Property", new XAttribute("Name", "IsInvariantToDuplicates"), new XAttribute("Value", attrib.IsInvariantToDuplicates ? "True" : "False")),
            new XElement(ns + "Property", new XAttribute("Name", "IsInvariantToNulls"), new XAttribute("Value", attrib.IsInvariantToNulls ? "True" : "False")),
@@ -129,7 +130,7 @@ public class DacPacBuilder
                    )
                )
            ),
-          Parameters(accumulator.GetParameters()),
+          FunctionParameters(accumulator.GetParameters()),
           Return(terminator.ReturnParameter),
           Schema(type)
        );
@@ -142,69 +143,77 @@ public class DacPacBuilder
                          type.GetAttributes<SqlUserDefinedTypeAttribute>().FirstOrDefault()?.Name ??
                          _typeName.GetValueOrDefault(type) ??
                          GetTypeName(type),
-            MethodInfo method => method.GetAttributes<SqlFunctionAttribute>().FirstOrDefault()?.Name,
+            MethodInfo method => GetName(method.GetAttributes<SqlFunctionAttribute>().FirstOrDefault()),
+            SqlUserDefinedAggregateAttribute attrib when !string.IsNullOrWhiteSpace(attrib.Name) => attrib.Name,
+            SqlUserDefinedTypeAttribute attrib when !string.IsNullOrWhiteSpace(attrib.Name) => attrib.Name,
+            SqlFunctionAttribute attrib when !string.IsNullOrWhiteSpace(attrib.Name) => attrib.Name,
             _ => null
         };
 
-
-    private readonly IReadOnlyDictionary<Type, string> _typeName = new Dictionary<Type, string>
+    private static readonly IReadOnlyDictionary<Type, string> _typeName = new Dictionary<Type, string>
     {
-        { typeof(SqlByte), "TINYINT" },
-        { typeof(SqlInt16), "SMALLINT" },
-        { typeof(SqlInt32), "INT" },
-        { typeof(SqlInt64), "BIGINT" },
-        { typeof(SqlBytes ), "VARBINARY(max)" },
-        { typeof(SqlBinary ), "VARBINARY(max)" },
-        { typeof(SqlBoolean), "BIT" },
-        { typeof(SqlDateTime), "DATETIME" },
-        { typeof(SqlDecimal), "DECIMAL(29,4)" },
-        { typeof(SqlDouble), "FLOAT" },
-        { typeof(SqlSingle), "REAL" },
-        { typeof(SqlString), "NVARCHAR(MAX)" },
-        { typeof(SqlXml), "XML" },
-        { typeof(SqlChars), "NVARCHAR(MAX)" },
-        { typeof(SqlGuid), "UNIQUEIDENTIFIER" },
-        { typeof(SqlGeography), "geography" },
-        { typeof(SqlHierarchyId), "HIERARCHYID" },
-        { typeof(SqlGeometry), "geometry" },
+        { typeof(SqlByte), "[tinyint]"},
+        { typeof(SqlInt16),"[smallint]" },
+        { typeof(SqlInt32), "[int]" },
+        { typeof(SqlInt64), "[bigint]"},
+        { typeof(SqlBytes ),"[varbinary]"},
+        { typeof(SqlBinary ),"[varbinary]"},
+        { typeof(SqlBoolean), "[bit]" },
+        { typeof(SqlDateTime), "[datetime2]" },
+        { typeof(SqlDecimal), "[decimal(29,4)]" },
+        { typeof(SqlDouble), "[float]" },
+        { typeof(SqlSingle), "[real]" },
+        { typeof(SqlString), "[nvarchar]"},
+        { typeof(SqlXml), "[xml]" },
+        { typeof(SqlChars), "[nvarchar]"},
+        { typeof(SqlGuid), "[uniqueidentifier]" },
+        { typeof(SqlGeography), "[geography]" },
+        { typeof(SqlHierarchyId), "[hierarchyid]" },
+        { typeof(SqlGeometry), "[geometry]" },
 
-        { typeof(char), "NCHAR(1)" },
-        { typeof(sbyte), "SMALLINT" },
-        { typeof(byte), "TINYINT" },
-        { typeof(short), "SMALLINT" },
-        { typeof(int), "INT" },
-        { typeof(long), "BIGINT" },
-        { typeof(ushort), "INT" },
-        { typeof(uint), "BIGINT" },
-        { typeof(ulong), "DECIMAL(20)" },
-        { typeof(decimal), "DECIMAL(29,4)" },
-        { typeof(float), "REAL" },
-        { typeof(double), "FLOAT" },
+        { typeof(char), "[nchar(1)]" },
+        { typeof(sbyte),"[smallint]" },
+        { typeof(byte), "[tinyint]"},
+        { typeof(short),"[smallint]" },
+        { typeof(int), "[int]" },
+        { typeof(long), "[bigint]"},
+        { typeof(ushort), "[int]" },
+        { typeof(uint), "[bigint]"},
+        { typeof(ulong), "[decimal](20)]" },
+        { typeof(decimal), "[decimal(29,4)]" },
+        { typeof(float), "[real]" },
+        { typeof(double), "[float]" },
         { typeof(DateTime), "DATETIME2" },
         { typeof(DateTimeOffset), "DATETIMEOFFSET" },
-        { typeof(TimeSpan), "TIME" },
-        { typeof(Guid), "UNIQUEIDENTIFIER" },
+        { typeof(TimeSpan), "[time]" },
+        { typeof(Guid), "[uniqueidentifier]" },
 
-        { typeof(char?), "NCHAR(1)" },
-        { typeof(sbyte?), "SMALLINT" },
-        { typeof(byte?), "TINYINT" },
-        { typeof(short?), "SMALLINT" },
-        { typeof(int?), "INT" },
-        { typeof(long?), "BIGINT" },
-        { typeof(ushort?), "INT" },
-        { typeof(uint?), "BIGINT" },
-        { typeof(ulong?), "DECIMAL(20)" },
-        { typeof(decimal?), "DECIMAL(29,4)" },
-        { typeof(float?), "REAL" },
-        { typeof(double?), "FLOAT" },
-        { typeof(DateTime?), "DATETIME2" },
-        { typeof(DateTimeOffset?), "DATETIMEOFFSET" },
-        { typeof(TimeSpan?), "TIME" },
-        { typeof(Guid?), "UNIQUEIDENTIFIER" },
+        { typeof(char?), "[nchar(1)]" },
+        { typeof(sbyte?),"[smallint]" },
+        { typeof(byte?), "[tinyint]"},
+        { typeof(short?),"[smallint]" },
+        { typeof(int?), "[int]" },
+        { typeof(long?), "[bigint]"},
+        { typeof(ushort?), "[int]" },
+        { typeof(uint?), "[bigint]"},
+        { typeof(ulong?), "[decimal](20)]" },
+        { typeof(decimal?), "[decimal(29,4)]" },
+        { typeof(float?), "[real]" },
+        { typeof(double?), "[float]" },
+        { typeof(DateTime?), "[datetime2]" },
+        { typeof(DateTimeOffset?), "[datetimeoffset]" },
+        { typeof(TimeSpan?), "[time]" },
+        { typeof(Guid?), "[uniqueidentifier]" },
 
-        { typeof(string), "NVARCHAR(MAX)" },
-        { typeof(char[]), "NVARCHAR(MAX)" },
+        { typeof(string), "[nvarchar]"},
+        { typeof(char[]), "[nvarchar]"},
     };
+
+    private static readonly IReadOnlyList<Type> _isBuiltIn = _typeName.Keys.ToArray();
+
+    private XAttribute? ExternalSource(Type type) =>
+        _isBuiltIn.Contains(type) ? new XAttribute("ExternalSource", "BuiltIns") : null;
+
     private string GetTypeName(Type type) => throw new NotSupportedException($"no mapping found for {type}");
 
     public XElement Schema(object input) =>
@@ -217,21 +226,14 @@ public class DacPacBuilder
             )
         );
 
-    public XElement Parameters(IEnumerable<ParameterInfo> parameters) =>
+    public XElement FunctionParameters(IEnumerable<ParameterInfo> parameters) =>
         new XElement(ns + "Relationship", new XAttribute("Name", "Parameters"),
             from parameter in parameters
             select new XElement(ns + "Entry",
                 new XElement(ns + "Element", new XAttribute("Type", "SqlSubroutineParameter"), new XAttribute("Name", GetName(parameter)),
                     new XElement(ns + "Relationship", new XAttribute("Name", "Type"),
                         new XElement(ns + "Entry",
-                            new XElement(ns + "Element", new XAttribute("Type", "SqlTypeSpecifier"),
-                                new XElement(ns + "Relationship", new XAttribute("Name", "Type"),
-                                    new XElement(ns + "Entry",
-                                        new XElement(ns + "References", new XAttribute("Name", GetName(parameter.ParameterType))
-                                        )
-                                    )
-                                )
-                            )
+                            TypeSpecifier(parameter)
                         )
                     )
                 )
@@ -241,31 +243,18 @@ public class DacPacBuilder
     public XElement Return(ParameterInfo returnInfo) =>
         new XElement(ns + "Relationship", new XAttribute("Name", "ReturnType"),
             new XElement(ns + "Entry",
-                new XElement(ns + "Element", new XAttribute("Type", "SqlTypeSpecifier"),
-                        new XElement(ns + "Relationship", new XAttribute("Name", "Type"),
-                            new XElement(ns + "Entry",
-                                new XElement(ns + "Element", new XAttribute("Type", "SqlTypeSpecifier"),
-                                    new XElement(ns + "Relationship", new XAttribute("Name", "Type"),
-                                        new XElement(ns + "Entry",
-                                            new XElement(ns + "References", new XAttribute("Name", GetName(returnInfo.ParameterType))
-                                            )
-                                        )
-                                    )
-                                )
-                            )
-                        )
-                )
+               TypeSpecifier(returnInfo)
             )
         );
 
-    public IEnumerable<XElement> Functions(XNamespace ns, Assembly assembly, string realAssemblyName) =>
+    public IEnumerable<XElement> Functions(Assembly assembly, string realAssemblyName) =>
         from functionClasses in assembly.GetTypes().Where(t => t.IsAbstract)
         from function in functionClasses.GetMethods(BindingFlags.Static | BindingFlags.Public)
         let attrib = function.GetAttributes<SqlFunctionAttribute>().FirstOrDefault()
         where attrib != null
         select new XElement(ns + "Element",
             new XAttribute("Type", function.ReturnType.IsAssignableTo(typeof(IEnumerable)) ? throw new NotSupportedException($"{function.ReturnType}") : "SqlScalarFunction"),
-            new XAttribute("Name", attrib.Name),
+            new XAttribute("Name", GetName(attrib)),
             new XElement(ns + "Property", new XAttribute("Name", "IsAnsiNullsOn")),
             new XElement(ns + "Property", new XAttribute("Name", "IsQuotedIdentifierOn")),
             new XElement(ns + "Relationship", new XAttribute("Name", "FunctionBody"),
@@ -283,8 +272,79 @@ public class DacPacBuilder
                     )
                 )
             ),
-            Parameters(function.GetParameters()),
+            FunctionParameters(function.GetParameters()),
             Schema(function),
             Return(function.ReturnParameter)
         );
+
+    public IEnumerable<XElement> UserDefinedTypes(Assembly assembly, string realAssemblyName) =>
+        from type in assembly.GetTypes()
+        let attrib = type.GetAttributes<SqlUserDefinedTypeAttribute>().FirstOrDefault()
+        where attrib != null
+        select new XElement(ns + "Element", new XAttribute("Type", "SqlUserDefinedType"), new XAttribute("Name", GetName(attrib)),
+           new XElement(ns + "Property", new XAttribute("Name", "Format"), new XAttribute("Value", (int)attrib.Format)),
+           new XElement(ns + "Property", new XAttribute("Name", "MaxByteSize"), new XAttribute("Value", attrib.MaxByteSize)),
+           new XElement(ns + "Property", new XAttribute("Name", "IsByteOrdered"), new XAttribute("Value", attrib.IsByteOrdered ? "True" : "False")),
+           new XElement(ns + "Property", new XAttribute("Name", "ClassName"), new XAttribute("Value", type.Name)),
+           new XElement(ns + "Relationship", new XAttribute("Name", "Assembly"),
+               new XElement(ns + "Entry",
+                   new XElement(ns + "References", new XAttribute("Name", $"[{realAssemblyName}]")
+                   )
+               )
+           ),
+           Methods(assembly, realAssemblyName, type),
+           new XComment(DateTimeOffset.Now.ToString())
+       //Parameters(accumulator.GetParameters()),
+       //Return(terminator.ReturnParameter),
+       //Schema(type)
+       );
+
+    public XElement Methods(Assembly assembly, string realAssemblyName, Type sqlClrType) =>
+        new XElement(ns + "Relationship", new XAttribute("Name", "Methods"),
+            from function in sqlClrType.GetMethods(BindingFlags.Instance | BindingFlags.Public)
+            let attrib = function.GetAttributes<SqlFunctionAttribute>().FirstOrDefault()
+            where attrib != null
+            select new XElement(ns + "Entry",
+                new XElement(ns + "Element",
+                    new XAttribute("Type", "SqlClrMethod"), new XAttribute("Name", $"{GetName(sqlClrType)}.[{GetName(function)}]"),
+                    new XElement(ns + "Property", new XAttribute("Name", "ClrName"), new XAttribute("Value", GetName(function))),
+                    MethodParameters(function.GetParameters()),
+                    Return(function.ReturnParameter)
+                )
+            )
+        );
+
+    public XElement MethodParameters(IEnumerable<ParameterInfo> parameters) =>
+        parameters.FirstOrDefault() == null ? null :
+        new XElement(ns + "Relationship", new XAttribute("Name", "Parameters"),
+            from parameter in parameters
+            select new XElement(ns + "Entry",
+                new XElement(ns + "Element", new XAttribute("Type", "SqlClrMethodParameter"), new XAttribute("Name", $"{GetName(parameter.Member.DeclaringType)}.[{GetName(parameter.Member)}].[{parameter.Name}]"),
+                    new XElement(ns + "Property", new XAttribute("Name", "ClrName"), new XAttribute("Value", parameter.Name)),
+                    new XElement(ns + "Relationship", new XAttribute("Name", "Type"),
+                        new XElement(ns + "Entry",
+                            TypeSpecifier(parameter)
+                        )
+                    )
+                )
+            )
+        );
+
+    public XElement TypeSpecifier(ParameterInfo parameterInfo) =>
+        new XElement(ns + "Element", new XAttribute("Type", "SqlTypeSpecifier"),
+            IsMax(parameterInfo),
+            new XElement(ns + "Relationship", new XAttribute("Name", "Type"),
+                new XElement(ns + "Entry",
+                    new XElement(ns + "References", ExternalSource(parameterInfo.ParameterType), new XAttribute("Name", GetName(parameterInfo.ParameterType)))
+                )
+            )
+        );
+
+
+    private static readonly IReadOnlyList<Type> _isMax = [typeof(SqlString), typeof(string), typeof(byte[]), typeof(char[])];
+
+    public XElement IsMax(ParameterInfo parameterInfo) =>
+        _isMax.Contains(parameterInfo.ParameterType) ?
+        new XElement(ns + "Property", new XAttribute("Name", "IsMax"), new XAttribute("Value", "True")) :
+        null;
 }

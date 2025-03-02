@@ -25,7 +25,9 @@ public record struct SqlVector : INullable, IBinarySerialize
     private double _magnitude;
 
     public readonly bool IsNull => _isNull;
-    public readonly IReadOnlyList<double> Values => _values;
+    
+    internal readonly IReadOnlyList<double> Values => _values;
+
     public readonly double Magnitude => _magnitude;
 
     private SqlVector(bool isNull)
@@ -45,7 +47,7 @@ public record struct SqlVector : INullable, IBinarySerialize
         _magnitude = _magnitude = VectorFunctions.MagnitudeInternal(values);
     }
 
-    public static SqlVector Null => new(true);
+    internal static SqlVector Null => new(true);
 
     [SqlMethod(
         Name = nameof(Element),
@@ -64,18 +66,18 @@ public record struct SqlVector : INullable, IBinarySerialize
         IsPrecise = true,
         IsMutator = false
         )]
-    public SqlDouble Distance(SqlVector vector, SqlString metric) => 
-		VectorFunctions.Distance(metric, this, vector);
+    public SqlDouble Distance(SqlVector vector, SqlString metric) =>
+        VectorFunctions.Distance(metric, this, vector);
 
     [SqlMethod(
-        Name = nameof(Distance),
+        Name = nameof(Angle),
         OnNullCall = false,
         IsDeterministic = true,
         IsPrecise = true,
         IsMutator = false
         )]
-    public SqlDouble Angle(SqlVector vector) => 
-		VectorFunctions.Angle(this, vector);
+    public SqlDouble Angle(SqlVector vector) =>
+        VectorFunctions.Angle(this, vector);
 
     [SqlMethod(
         Name = nameof(Cosine),
