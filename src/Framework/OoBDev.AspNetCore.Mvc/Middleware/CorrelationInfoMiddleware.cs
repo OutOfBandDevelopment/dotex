@@ -1,7 +1,7 @@
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using OoBDev.System.Accessors;
 using OoBDev.System.Net.Http;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
 
@@ -41,8 +41,12 @@ public class CorrelationInfoMiddleware
             var correlationId = context.Request.Headers[DefinedHttpHeaders.CorrelationIdHeader];
             var requestId = context.Request.Headers[DefinedHttpHeaders.RequestIdHeader];
 
-            correlationId = correlationAccessor.Value.CorrelationId = string.IsNullOrWhiteSpace(correlationId) ? Guid.NewGuid().ToString() : correlationId;
             correlationAccessor.Value.RequestId = string.IsNullOrWhiteSpace(requestId) ? (string?)null : requestId;
+
+            if (string.IsNullOrWhiteSpace(correlationId))
+                correlationId = correlationAccessor.Value.RequestId;
+
+            correlationId = correlationAccessor.Value.CorrelationId = string.IsNullOrWhiteSpace(correlationId) ? Guid.NewGuid().ToString() : correlationId;
 
             logger.LogInformation($"Invoke: {{{nameof(correlationId)}}}/{{{nameof(requestId)}}}", correlationId, requestId);
         }
@@ -51,8 +55,8 @@ public class CorrelationInfoMiddleware
         {
             var accessor = state as IAccessor<CorrelationInfo>;
 
-            var correlationId = correlationAccessor.Value?.CorrelationId;
             var requestId = correlationAccessor.Value?.RequestId;
+            var correlationId = correlationAccessor.Value?.CorrelationId;
 
             if (!string.IsNullOrWhiteSpace(correlationId)) context.Response.Headers[DefinedHttpHeaders.CorrelationIdHeader] = correlationId;
             if (!string.IsNullOrWhiteSpace(requestId)) context.Response.Headers[DefinedHttpHeaders.RequestIdHeader] = requestId;

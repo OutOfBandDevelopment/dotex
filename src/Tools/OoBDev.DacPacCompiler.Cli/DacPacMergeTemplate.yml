@@ -1,0 +1,14 @@
+﻿#SourcePath: "."
+#SourcePatterns:
+#- "*.dacpac"
+
+TargetPath: composed_XXXXXXXXXX.dacpac
+#ServerVersion: SqlAzure
+
+#ModelOptionSource: Custom
+#ModelOptions:
+
+Name: test name
+Description: test desc
+Version: 1.2.3
+BuildVersion: 20200527-1.2.3-XYZ.4

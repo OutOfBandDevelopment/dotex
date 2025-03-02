@@ -1,4 +1,4 @@
-using OoBDev.AspNetCore.Mvc.Authorization;
+﻿using OoBDev.AspNetCore.Mvc.Authorization;
 using OoBDev.AspNetCore.Mvc.Filters;
 using OoBDev.AspNetCore.Mvc.Providers.SearchQuery;
 using OoBDev.AspNetCore.Mvc.SwaggerGen;
@@ -17,6 +17,8 @@ using Swashbuckle.AspNetCore.SwaggerUI;
 using System;
 using System.Globalization;
 using System.Security.Claims;
+using OoBDev.AspNetCore.Mvc.Middleware;
+using OoBDev.System.Net.Http;
 
 namespace OoBDev.AspNetCore.Mvc;
 
@@ -56,6 +58,8 @@ public static class ServiceCollectionExtensions
             ClaimsPrincipal.Current ??
             new ClaimsPrincipal(new ClaimsIdentity())
             );
+
+        services.AddTransient<IHttpPrepareRequestFeature, CorrelationInfoHttpPrepareRequestFeature>();
 
         services.AddSwaggerGen();
 

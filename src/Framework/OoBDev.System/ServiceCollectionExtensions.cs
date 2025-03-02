@@ -1,4 +1,4 @@
-using OoBDev.System.IO;
+﻿using OoBDev.System.IO;
 using OoBDev.System.Linq;
 using OoBDev.System.Net.Mime;
 using OoBDev.System.Providers;
@@ -10,6 +10,7 @@ using OoBDev.System.Text.Xml.Serialization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using OoBDev.System.Net.Http;
 
 namespace OoBDev.System;
 
@@ -41,6 +42,8 @@ public static class ServiceCollectionExtensions
         services.TrySecurityExtensions(builder.DefaultHashType);
         services.TrySerializerExtensions(builder.DefaultSerializerType);
         services.TryAddProviders();
+
+        services.TryAddTransient<IHttpPrepareRequest, HttpPrepareRequest>();
         ;
         return services;
     }

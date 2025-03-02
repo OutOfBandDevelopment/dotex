@@ -30,8 +30,19 @@
     <ProjectReference Remove="..\..\Extensions\**\OoBDev.AspNetCore.*.csproj" />
     <ProjectReference Remove="..\..\Extensions\**\OoBDev.*.Hosting.csproj" />
     <ProjectReference Remove="..\..\Extensions\**\OoBDev.*.DB.csproj" />
-    
-		<ProjectReference Include="..\..\Framework\**\OoBDev.*.csproj" />
+    <ProjectReference Include="..\..\Framework\OoBDev.Communications.MessageQueueing\OoBDev.Communications.MessageQueueing.csproj" />
+    <ProjectReference Include="..\..\Framework\OoBDev.Communications\OoBDev.Communications.csproj" />
+    <ProjectReference Include="..\..\Framework\OoBDev.Data.Common\OoBDev.Data.Common.csproj" />
+    <ProjectReference Include="..\..\Framework\OoBDev.Documents\OoBDev.Documents.csproj" />
+    <ProjectReference Include="..\..\Framework\OoBDev.Extensions\OoBDev.Extensions.csproj" />
+    <ProjectReference Include="..\..\Framework\OoBDev.Identity\OoBDev.Identity.csproj" />
+    <ProjectReference Include="..\..\Framework\OoBDev.MessageQueueing\OoBDev.MessageQueueing.csproj" />
+    <ProjectReference Include="..\..\Framework\OoBDev.Search\OoBDev.Search.csproj" />
+    <ProjectReference Include="..\..\Framework\OoBDev.System.IO.Pipelines\OoBDev.System.IO.Pipelines.csproj" />
+    <ProjectReference Include="..\..\Framework\OoBDev.System.IO.Ports\OoBDev.System.IO.Ports.csproj" />
+    <ProjectReference Include="..\..\Framework\OoBDev.System.IO.UsbHids\OoBDev.System.IO.UsbHids.csproj" />
+    <ProjectReference Include="..\..\Framework\OoBDev.System.Linq\OoBDev.System.Linq.csproj" />
+    <ProjectReference Include="..\..\Framework\OoBDev.System\OoBDev.System.csproj" />
     
 		<ProjectReference Remove="..\..\Framework\**\OoBDev.*.Tests.csproj" />
 		<ProjectReference Remove="..\..\Framework\**\OoBDev.*.Abstractions.csproj" />
