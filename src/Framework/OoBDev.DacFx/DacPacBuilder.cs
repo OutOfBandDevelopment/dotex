@@ -6,8 +6,6 @@ using System.IO.Compression;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Xml.Linq;
-using OoBDev.Extensions.Reflection;
-
 
 namespace OoBDev.DacFx;
 
@@ -112,6 +110,14 @@ END
                 }
             }
         }
+
+        if (bothPath)
+        {
+            var dacpacFile2 = Path.ChangeExtension(assemblyFileNet, ".dacpac");
+            if (dacpacFile == dacpacFile2) return;
+
+            File.Copy(dacpacFile, dacpacFile2, overwrite: true);
+        }
     }
 
     private readonly XNamespace ns = "http://schemas.microsoft.com/sqlserver/dac/Serialization/2012/02";
@@ -124,32 +130,7 @@ END
             new XAttribute("SchemaVersion", "2.9"),
             new XAttribute("DspName", "Microsoft.Data.Tools.Schema.Sql.Sql150DatabaseSchemaProvider"),
             new XAttribute("CollationLcid", "1033"),
-            new XAttribute("CollationCaseSensitive", "False"),
-
-            XElement.Parse(@"<Header xmlns=""http://schemas.microsoft.com/sqlserver/dac/Serialization/2012/02"">
-		<CustomData Category=""AnsiNulls"">
-			<Metadata Name=""AnsiNulls"" Value=""True"" />
-		</CustomData>
-		<CustomData Category=""QuotedIdentifier"">
-			<Metadata Name=""QuotedIdentifier"" Value=""True"" />
-		</CustomData>
-		<CustomData Category=""CompatibilityMode"">
-			<Metadata Name=""CompatibilityMode"" Value=""150"" />
-		</CustomData>
-		<CustomData Category=""Reference"" Type=""Assembly"">
-			<Metadata Name=""LogicalName"" Value=""OoBDev.Data.Vectors.dll"" />
-			<Metadata Name=""FileName"" Value=""C:\REPOS\TEMP\DATABASE1\DATABASE1\OBJ\DEBUG\OOBDEV.DATA.VECTORS.DLL"" />
-			<Metadata Name=""AssemblyName"" Value=""OoBDev.Data.Vectors"" />
-			<Metadata Name=""PermissionSet"" Value=""SAFE"" />
-			<Metadata Name=""Owner"" Value="""" />
-			<Metadata Name=""GenerateSqlClrDdl"" Value=""True"" />
-			<Metadata Name=""IsVisible"" Value=""True"" />
-			<Metadata Name=""IsModelAware"" Value=""True"" />
-			<Metadata Name=""SkipCreationIfEmpty"" Value=""True"" />
-			<Metadata Name=""AssemblySymbolsName"" Value=""C:\Repos\temp\Database1\Database1\obj\Debug\OoBDev.Data.Vectors.pdb"" />
-		</CustomData>
-		<CustomData Category=""SqlCmdVariables"" Type=""SqlCmdVariable"" />
-	</Header>")
+            new XAttribute("CollationCaseSensitive", "False")
             );
 
         var metaData = dataSchemaModel.Descendants(ns + "Metadata");
@@ -192,9 +173,24 @@ END
         model.Add(UserDefinedTypes(assembly, realAssemblyName));
         model.Add(Functions(assembly, realAssemblyName));
         model.Add(Files(realAssemblyName, assemblyFile, pdbFile));
+        model.Add(CollectSchema(dataSchemaModel));
 
         return dataSchemaModel;
     }
+
+    private IEnumerable<XElement> CollectSchema(XElement dataSchemaModel) =>
+        from schema in dataSchemaModel.Descendants(ns + "Relationship")
+            .Where(x => ((string)x.Attribute("Name")) == "Schema")
+            .SelectMany(x => x.Descendants(ns + "References"))
+            .Select(x => (string)x.Attribute("Name"))
+            .Distinct()
+        select new XElement(ns + "Element", new XAttribute("Type", "SqlSchema"), new XAttribute("Name", schema),
+                new XElement(ns + "Relationship", new XAttribute("Name", "Authorizer"),
+                    new XElement(ns + "Entry",
+                        new XElement(ns + "References", new XAttribute("ExternalSource", "BuiltIns"), new XAttribute("Name", "[dbo]"))
+                    )
+                )
+            );
 
     public XElement BuildOrigin(string modelHash)
     {
@@ -252,7 +248,7 @@ END
            new XElement(ns + "Property", new XAttribute("Name", "IsInvariantToNulls"), new XAttribute("Value", attrib.IsInvariantToNulls ? "True" : "False")),
            new XElement(ns + "Property", new XAttribute("Name", "IsNullIfEmpty"), new XAttribute("Value", attrib.IsNullIfEmpty ? "True" : "False")),
            new XElement(ns + "Property", new XAttribute("Name", "MaxByteSize"), new XAttribute("Value", attrib.MaxByteSize)),
-           new XElement(ns + "Property", new XAttribute("Name", "ClassName"), new XAttribute("Value", type.Name)),
+           new XElement(ns + "Property", new XAttribute("Name", "ClassName"), new XAttribute("Value", type.FullName)),
            new XElement(ns + "Relationship", new XAttribute("Name", "Assembly"),
                new XElement(ns + "Entry",
                    new XElement(ns + "References", new XAttribute("Name", $"[{realAssemblyName}]")
@@ -349,7 +345,6 @@ END
         new XElement(ns + "Relationship", new XAttribute("Name", "Schema"),
             new XElement(ns + "Entry",
                     new XElement(ns + "References",
-                        new XAttribute("ExternalSource", "BuiltIns"),
                         new XAttribute("Name", GetName(input)?.Split('.')?[0] ?? throw new NotSupportedException())
                 )
             )
@@ -393,7 +388,7 @@ END
                         new XElement(ns + "Property", new XAttribute("Name", "IsDeterministic"), new XAttribute("Value", attrib.IsDeterministic ? "True" : "False")),
                         new XElement(ns + "Property", new XAttribute("Name", "IsPrecise"), new XAttribute("Value", attrib.IsPrecise ? "True" : "False")),
                         new XElement(ns + "Property", new XAttribute("Name", "MethodName"), new XAttribute("Value", function.Name)),
-                        new XElement(ns + "Property", new XAttribute("Name", "ClassName"), new XAttribute("Value", functionClasses.Name)),
+                        new XElement(ns + "Property", new XAttribute("Name", "ClassName"), new XAttribute("Value", functionClasses.FullName)),
                         new XElement(ns + "Relationship", new XAttribute("Name", "Assembly"),
                             new XElement(ns + "Entry",
                                 new XElement(ns + "References", new XAttribute("Name", $"[{realAssemblyName}]"))
@@ -415,7 +410,7 @@ END
            new XElement(ns + "Property", new XAttribute("Name", "Format"), new XAttribute("Value", (int)attrib.Format)),
            new XElement(ns + "Property", new XAttribute("Name", "MaxByteSize"), new XAttribute("Value", attrib.MaxByteSize)),
            new XElement(ns + "Property", new XAttribute("Name", "IsByteOrdered"), new XAttribute("Value", attrib.IsByteOrdered ? "True" : "False")),
-           new XElement(ns + "Property", new XAttribute("Name", "ClassName"), new XAttribute("Value", type.Name)),
+           new XElement(ns + "Property", new XAttribute("Name", "ClassName"), new XAttribute("Value", type.FullName)),
            new XElement(ns + "Relationship", new XAttribute("Name", "Assembly"),
                new XElement(ns + "Entry",
                    new XElement(ns + "References", new XAttribute("Name", $"[{realAssemblyName}]")
@@ -472,6 +467,7 @@ END
     private static readonly IReadOnlyList<Type> _doubles = [typeof(SqlDouble), typeof(double), typeof(double?)];
 
     public IEnumerable<XElement> Properties(ParameterInfo parameterInfo) => PropertiesInternal(parameterInfo).Where(i => i != null);
+
     private IEnumerable<XElement> PropertiesInternal(ParameterInfo parameterInfo)
     {
         yield return _isMax.Contains(parameterInfo.ParameterType) ?
@@ -497,6 +493,11 @@ END
                                 )
                             )
                         )
+                    ),
+                    new XElement(ns + "Relationship", new XAttribute("Name", "Authorizer"),
+                        new XElement(ns + "Entry",
+                            new XElement(ns + "References", new XAttribute("ExternalSource", "BuiltIns"), new XAttribute("Name", "[dbo]"))                            
+                        )
                     )
                 );
         }
@@ -519,6 +520,7 @@ END
     }
 
     public string? GetHexContext(string file) => BitConverter.ToString(File.ReadAllBytes(file)).Replace("-", "");
+
     public string GetSha256(string file) => GetSha256(File.ReadAllBytes(file));
     public string GetSha256(byte[] content) => BitConverter.ToString(SHA256.HashData(content)).Replace("-", "");
     public string GetSha512(string file) => GetSha512(File.ReadAllBytes(file));
