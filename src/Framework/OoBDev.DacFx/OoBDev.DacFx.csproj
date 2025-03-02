@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="OoBDev.DacFx.Tests" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\OoBDev.DacFx.Abstractions\OoBDev.DacFx.Abstractions.csproj" />
+    <ProjectReference Include="..\OoBDev.Extensions\OoBDev.Extensions.csproj" />
+  </ItemGroup>
+
+</Project>

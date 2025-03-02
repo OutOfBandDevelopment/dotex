@@ -1,9 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <ImplicitUsings>false</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
     <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
   </PropertyGroup>
 
   <ItemGroup>
@@ -21,8 +23,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Framework\OoBDev.TestUtilities\OoBDev.TestUtilities.csproj" />
-    <ProjectReference Include="..\OoBDev.Data.Vectors\OoBDev.Data.Vectors.csproj" />
+    <ProjectReference Include="..\OoBDev.DacFx\OoBDev.DacFx.csproj" />
+    <ProjectReference Include="..\OoBDev.System\OoBDev.System.csproj" />
+    <ProjectReference Include="..\OoBDev.TestUtilities\OoBDev.TestUtilities.csproj" />
   </ItemGroup>
 
 </Project>

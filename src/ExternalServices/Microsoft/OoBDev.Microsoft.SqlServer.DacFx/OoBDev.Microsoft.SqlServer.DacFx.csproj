@@ -29,6 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Framework\OoBDev.DacFx.Abstractions\OoBDev.DacFx.Abstractions.csproj" />
     <ProjectReference Include="..\..\..\Framework\OoBDev.DacFx\OoBDev.DacFx.Abstractions\OoBDev.DacFx.Abstractions.csproj" />
     <ProjectReference Include="..\..\..\Framework\OoBDev.Identity.Abstractions\OoBDev.Identity.Abstractions.csproj" />
     <ProjectReference Include="..\..\..\Framework\OoBDev.System.Abstractions\OoBDev.System.Abstractions.csproj" />

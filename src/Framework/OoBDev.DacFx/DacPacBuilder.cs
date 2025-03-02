@@ -1,36 +1,49 @@
-﻿using Castle.Core.Internal;
-using Microsoft.SqlServer.Server;
+﻿using Microsoft.SqlServer.Server;
 using Microsoft.SqlServer.Types;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SharpCompress.Common;
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Data.SqlTypes;
-using System.IO;
 using System.IO.Compression;
-using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Xml.Linq;
-using static OoBDev.System.Cryptography.PlayFair;
+using OoBDev.Extensions.Reflection;
 
-namespace OoBDev.Data.Vectors.Tests;
 
-[TestClass]
-public class DacPacBuilderTests
+namespace OoBDev.DacFx;
+
+public class DacPacBuilder
 {
-    public required TestContext TestContext { get; set; }
-
-    [TestMethod]
-    public void BuildPackageTest()
+    public void BuildDacPac(
+        string assemblyFileFramework,
+        string assemblyFileNet,
+        string? assemblyPdbFramework = null,
+        string? dacpacFile = null,
+        string? projectName = null,
+        string? projectVersion = null
+        )
     {
-        var sqlClrAssembly = typeof(CentroidFAggregator).Assembly;
-        var assemblyFile = @"C:\Repos\oobdev\dotex\src\Extensions\OoBDev.Data.Vectors\bin\Debug\net481\OoBDev.Data.Vectors.dll";
-        var pdbFile = Path.ChangeExtension(assemblyFile, ".pdb");
-        var dacpacFile = Path.ChangeExtension(assemblyFile, ".dacpac");
-        var projectName = Path.GetFileName(assemblyFile);
-        var projectVersion = "0.0.0.1";
+        var sqlClrAssembly = Assembly.LoadFile(assemblyFileNet);
+
+        var bothPath = string.IsNullOrWhiteSpace(dacpacFile);
+
+        assemblyPdbFramework = assemblyPdbFramework ?? Path.ChangeExtension(assemblyFileFramework, ".pdb");
+        dacpacFile = dacpacFile ?? Path.ChangeExtension(assemblyFileFramework, ".dacpac");
+        projectName = projectName ?? Path.GetFileName(assemblyFileFramework);
+        projectVersion = projectVersion ?? "0.0.0.1";
+
+        //var sha512 = builder.GetSha512(assemblyFile);
+        /*
+DECLARE @hash varbinary(64) = 0x{2}
+IF NOT EXISTS (
+	SELECT * FROM sys.trusted_assemblies 
+	WHERE 
+		trusted_assemblies.hash =@hash
+)
+BEGIN
+	PRINT 'Add hash for {0}'
+	EXEC sys.sp_add_trusted_assembly @hash, N'{0}';
+END   
+         */
 
         //var sha512 = builder.GetSha512(assemblyFile);
 
@@ -42,7 +55,7 @@ public class DacPacBuilderTests
             string sha256;
             using (var stream = new MemoryStream())
             {
-                var xml = builder.BuildModel(sqlClrAssembly, assemblyFile, pdbFile);
+                var xml = builder.BuildModel(sqlClrAssembly, assemblyFileFramework, assemblyPdbFramework);
                 xml.Save(stream);
                 stream.Position = 0;
                 var entry = archive.CreateEntry("model.xml");
@@ -100,10 +113,7 @@ public class DacPacBuilderTests
             }
         }
     }
-}
 
-public class DacPacBuilder
-{
     private readonly XNamespace ns = "http://schemas.microsoft.com/sqlserver/dac/Serialization/2012/02";
 
     public XElement BuildModel(Assembly assembly, string assemblyFile, string? pdbFile)
@@ -232,7 +242,7 @@ public class DacPacBuilder
 
     public IEnumerable<XElement> Aggregates(Assembly assembly, string realAssemblyName) =>
         from type in assembly.GetTypes()
-        let attrib = type.GetAttributes<SqlUserDefinedAggregateAttribute>().FirstOrDefault()
+        let attrib = type.GetCustomAttributes<SqlUserDefinedAggregateAttribute>().FirstOrDefault()
         let accumulator = type.GetMethod("Accumulate")
         let terminator = type.GetMethod("Terminate")
         where attrib != null
@@ -254,15 +264,15 @@ public class DacPacBuilder
           Schema(type)
        );
 
-    public string? GetName(object input) =>
+    public string? GetName(object? input) =>
         input switch
         {
             ParameterInfo parameter => $"{GetName(parameter.Member) ?? GetName(parameter.Member.DeclaringType)}.[@{parameter.Name}]",
-            Type type => type.GetAttributes<SqlUserDefinedAggregateAttribute>().FirstOrDefault()?.Name ??
-                         type.GetAttributes<SqlUserDefinedTypeAttribute>().FirstOrDefault()?.Name ??
+            Type type => type.GetCustomAttributes<SqlUserDefinedAggregateAttribute>().FirstOrDefault()?.Name ??
+                         type.GetCustomAttributes<SqlUserDefinedTypeAttribute>().FirstOrDefault()?.Name ??
                          _typeName.GetValueOrDefault(type) ??
                          GetTypeName(type),
-            MethodInfo method => GetName(method.GetAttributes<SqlFunctionAttribute>().FirstOrDefault()),
+            MethodInfo method => GetName(method.GetCustomAttributes<SqlFunctionAttribute>().FirstOrDefault()),
             SqlUserDefinedAggregateAttribute attrib when !string.IsNullOrWhiteSpace(attrib.Name) => attrib.Name,
             SqlUserDefinedTypeAttribute attrib when !string.IsNullOrWhiteSpace(attrib.Name) => attrib.Name,
             SqlFunctionAttribute attrib when !string.IsNullOrWhiteSpace(attrib.Name) => attrib.Name,
@@ -340,7 +350,7 @@ public class DacPacBuilder
             new XElement(ns + "Entry",
                     new XElement(ns + "References",
                         new XAttribute("ExternalSource", "BuiltIns"),
-                        new XAttribute("Name", GetName(input).Split('.')[0])
+                        new XAttribute("Name", GetName(input)?.Split('.')?[0] ?? throw new NotSupportedException())
                 )
             )
         );
@@ -349,7 +359,7 @@ public class DacPacBuilder
         new XElement(ns + "Relationship", new XAttribute("Name", "Parameters"),
             from parameter in parameters
             select new XElement(ns + "Entry",
-                new XElement(ns + "Element", new XAttribute("Type", "SqlSubroutineParameter"), new XAttribute("Name", GetName(parameter)),
+                new XElement(ns + "Element", new XAttribute("Type", "SqlSubroutineParameter"), new XAttribute("Name", GetName(parameter) ?? throw new NotSupportedException()),
                     new XElement(ns + "Relationship", new XAttribute("Name", "Type"),
                         new XElement(ns + "Entry",
                             TypeSpecifier(parameter)
@@ -369,12 +379,12 @@ public class DacPacBuilder
     public IEnumerable<XElement> Functions(Assembly assembly, string realAssemblyName) =>
         from functionClasses in assembly.GetTypes().Where(t => t.IsAbstract)
         from function in functionClasses.GetMethods(BindingFlags.Static | BindingFlags.Public)
-        let attrib = function.GetAttributes<SqlFunctionAttribute>().FirstOrDefault()
+        let attrib = function.GetCustomAttributes<SqlFunctionAttribute>().FirstOrDefault()
         where attrib != null
         orderby attrib.Name
         select new XElement(ns + "Element",
             new XAttribute("Type", function.ReturnType.IsAssignableTo(typeof(IEnumerable)) ? throw new NotSupportedException($"{function.ReturnType}") : "SqlScalarFunction"),
-            new XAttribute("Name", GetName(attrib)),
+            new XAttribute("Name", GetName(attrib) ?? throw new NotSupportedException()),
             new XElement(ns + "Property", new XAttribute("Name", "IsAnsiNullsOn")),
             new XElement(ns + "Property", new XAttribute("Name", "IsQuotedIdentifierOn")),
             new XElement(ns + "Relationship", new XAttribute("Name", "FunctionBody"),
@@ -399,9 +409,9 @@ public class DacPacBuilder
 
     public IEnumerable<XElement> UserDefinedTypes(Assembly assembly, string realAssemblyName) =>
         from type in assembly.GetTypes()
-        let attrib = type.GetAttributes<SqlUserDefinedTypeAttribute>().FirstOrDefault()
+        let attrib = type.GetCustomAttributes<SqlUserDefinedTypeAttribute>().FirstOrDefault()
         where attrib != null
-        select new XElement(ns + "Element", new XAttribute("Type", "SqlUserDefinedType"), new XAttribute("Name", GetName(attrib)),
+        select new XElement(ns + "Element", new XAttribute("Type", "SqlUserDefinedType"), new XAttribute("Name", GetName(attrib) ?? throw new NotSupportedException()),
            new XElement(ns + "Property", new XAttribute("Name", "Format"), new XAttribute("Value", (int)attrib.Format)),
            new XElement(ns + "Property", new XAttribute("Name", "MaxByteSize"), new XAttribute("Value", attrib.MaxByteSize)),
            new XElement(ns + "Property", new XAttribute("Name", "IsByteOrdered"), new XAttribute("Value", attrib.IsByteOrdered ? "True" : "False")),
@@ -419,12 +429,12 @@ public class DacPacBuilder
     public XElement Methods(Assembly assembly, string realAssemblyName, Type sqlClrType) =>
         new XElement(ns + "Relationship", new XAttribute("Name", "Methods"),
             from function in sqlClrType.GetMethods(BindingFlags.Instance | BindingFlags.Public)
-            let attrib = function.GetAttributes<SqlFunctionAttribute>().FirstOrDefault()
+            let attrib = function.GetCustomAttributes<SqlFunctionAttribute>().FirstOrDefault()
             where attrib != null
             select new XElement(ns + "Entry",
                 new XElement(ns + "Element",
                     new XAttribute("Type", "SqlClrMethod"), new XAttribute("Name", $"{GetName(sqlClrType)}.[{GetName(function)}]"),
-                    new XElement(ns + "Property", new XAttribute("Name", "ClrName"), new XAttribute("Value", GetName(function))),
+                    new XElement(ns + "Property", new XAttribute("Name", "ClrName"), new XAttribute("Value", GetName(function) ?? throw new NotSupportedException())),
                     MethodParameters(function.GetParameters()),
                     Return(function.ReturnParameter, isFunction: false)
                 )
