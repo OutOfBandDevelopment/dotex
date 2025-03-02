@@ -20,6 +20,7 @@
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="9.0.2" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.2" />
     <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks" Version="9.0.2" />
+    <PackageReference Include="Microsoft.SemanticKernel.Connectors.Ollama" Version="1.40.0-alpha" />
     <PackageReference Include="OllamaSharp" Version="5.1.2" />
     <PackageReference Include="GitVersion.MsBuild" Version="6.1.0">
       <PrivateAssets>all</PrivateAssets>
@@ -30,6 +31,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\Framework\OoBDev.AI.Abstractions\OoBDev.AI.Abstractions.csproj" />
     <ProjectReference Include="..\..\..\Framework\OoBDev.Search.Abstractions\OoBDev.Search.Abstractions.csproj" />
+    <ProjectReference Include="..\..\..\Framework\OoBDev.SemanticKernel.Abstractions\OoBDev.SemanticKernel.Abstractions.csproj" />
   </ItemGroup>
 
 </Project>

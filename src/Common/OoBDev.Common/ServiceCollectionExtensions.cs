@@ -7,6 +7,7 @@ using OoBDev.Documents;
 using OoBDev.Identity;
 using OoBDev.MessageQueueing;
 using OoBDev.Search;
+using OoBDev.SemanticKernel;
 using OoBDev.System;
 
 namespace OoBDev.Common;
@@ -44,6 +45,7 @@ public static class ServiceCollectionExtensions
         services.TryAddSearchServices();
         services.TryAddDocumentServices();
         services.TryAddDataCommonServices();
+        services.TryAddSemanticKernelPlugins();
 
         return services;
     }

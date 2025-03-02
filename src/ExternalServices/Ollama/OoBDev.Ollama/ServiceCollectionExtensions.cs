@@ -1,7 +1,8 @@
-using OoBDev.AI;
+﻿using OoBDev.AI;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using OoBDev.SemanticKernel;
 
 namespace OoBDev.Ollama;
 
@@ -48,6 +49,9 @@ public static class ServiceCollectionExtensions
         services.TryAddKeyedTransient<IEmbeddingProvider, OllamaMessageCompletion>("OLLAMA");
 
         services.Configure<OllamaApiClientOptions>(options => configuration.Bind(ollamaApiClientOptionSection, options));
+
+        services.TryAddTransient<IChatProvider, OllamaChatProvider>();
+        services.TryAddKeyedTransient<IChatProvider, OllamaChatProvider>("OLLAMA");
 
         return services;
     }
