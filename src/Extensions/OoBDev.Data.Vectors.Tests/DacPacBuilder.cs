@@ -2,14 +2,18 @@
 using Microsoft.SqlServer.Server;
 using Microsoft.SqlServer.Types;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SharpCompress.Common;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data.SqlTypes;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
+using System.Security.Cryptography;
 using System.Xml.Linq;
+using static OoBDev.System.Cryptography.PlayFair;
 
 namespace OoBDev.Data.Vectors.Tests;
 
@@ -22,9 +26,79 @@ public class DacPacBuilderTests
     public void BuildPackageTest()
     {
         var sqlClrAssembly = typeof(CentroidFAggregator).Assembly;
-        var builder = new DacPacBuilder();
-        var xml = builder.BuildPackage(sqlClrAssembly);
-        xml.Save("model.xml");
+        var assemblyFile = @"C:\Repos\oobdev\dotex\src\Extensions\OoBDev.Data.Vectors\bin\Debug\net481\OoBDev.Data.Vectors.dll";
+        var pdbFile = Path.ChangeExtension(assemblyFile, ".pdb");
+        var dacpacFile = Path.ChangeExtension(assemblyFile, ".dacpac");
+        var projectName = Path.GetFileName(assemblyFile);
+        var projectVersion = "0.0.0.1";
+
+        //var sha512 = builder.GetSha512(assemblyFile);
+
+        if (File.Exists(dacpacFile)) File.Delete(dacpacFile);
+        using (var archive = ZipFile.Open(dacpacFile, ZipArchiveMode.Create))
+        {
+            var builder = new DacPacBuilder();
+
+            string sha256;
+            using (var stream = new MemoryStream())
+            {
+                var xml = builder.BuildModel(sqlClrAssembly, assemblyFile, pdbFile);
+                xml.Save(stream);
+                stream.Position = 0;
+                var entry = archive.CreateEntry("model.xml");
+                entry.LastWriteTime = DateTimeOffset.Now;
+                using (var entryStream = entry.Open())
+                {
+                    stream.CopyTo(entryStream);
+                    entryStream.Close();
+                }
+
+                stream.Position = 0;
+                sha256 = builder.GetSha256(stream.ToArray());
+            }
+
+            using (var stream = new MemoryStream())
+            {
+                var xml = builder.BuildOrigin(sha256);
+                xml.Save(stream);
+                stream.Position = 0;
+                var entry = archive.CreateEntry("Origin.xml");
+                entry.LastWriteTime = DateTimeOffset.Now;
+                using (var entryStream = entry.Open())
+                {
+                    stream.CopyTo(entryStream);
+                    entryStream.Close();
+                }
+            }
+
+            using (var stream = new MemoryStream())
+            {
+                var xml = builder.BuildDacMetadata(projectName, projectVersion);
+                xml.Save(stream);
+                stream.Position = 0;
+                var entry = archive.CreateEntry("DacMetadata.xml");
+                entry.LastWriteTime = DateTimeOffset.Now;
+                using (var entryStream = entry.Open())
+                {
+                    stream.CopyTo(entryStream);
+                    entryStream.Close();
+                }
+            }
+
+            using (var stream = new MemoryStream())
+            {
+                var xml = builder.BuildContentType();
+                xml.Save(stream);
+                stream.Position = 0;
+                var entry = archive.CreateEntry("[Content_Types].xml");
+                entry.LastWriteTime = DateTimeOffset.Now;
+                using (var entryStream = entry.Open())
+                {
+                    stream.CopyTo(entryStream);
+                    entryStream.Close();
+                }
+            }
+        }
     }
 }
 
@@ -32,7 +106,7 @@ public class DacPacBuilder
 {
     private readonly XNamespace ns = "http://schemas.microsoft.com/sqlserver/dac/Serialization/2012/02";
 
-    public XElement BuildPackage(Assembly assembly)
+    public XElement BuildModel(Assembly assembly, string assemblyFile, string? pdbFile)
     {
         var dataSchemaModel = new XElement(
             ns + "DataSchemaModel",
@@ -107,9 +181,54 @@ public class DacPacBuilder
         model.Add(Aggregates(assembly, realAssemblyName));
         model.Add(UserDefinedTypes(assembly, realAssemblyName));
         model.Add(Functions(assembly, realAssemblyName));
+        model.Add(Files(realAssemblyName, assemblyFile, pdbFile));
 
         return dataSchemaModel;
     }
+
+    public XElement BuildOrigin(string modelHash)
+    {
+        var xml = XElement.Parse(@"<?xml version=""1.0"" encoding=""utf-8""?>
+<DacOrigin xmlns=""http://schemas.microsoft.com/sqlserver/dac/Serialization/2012/02"">
+  <PackageProperties>
+    <Version>3.0.0.0</Version>
+    <ContainsExportedData>false</ContainsExportedData>
+    <StreamVersions>
+      <Version StreamName=""Data"">2.0.0.0</Version>
+      <Version StreamName=""DeploymentContributors"">1.0.0.0</Version>
+    </StreamVersions>
+  </PackageProperties>
+  <Operation>
+    <Identity>8836d3ee-a491-424c-8924-7772671badb6</Identity>
+    <Start>2025-03-02T01:04:47.6699800-05:00</Start>
+    <End>2025-03-02T01:04:47.7931242-05:00</End>
+    <ProductName>Microsoft.Data.Tools.Schema.Tasks.Sql, Version=162.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</ProductName>
+    <ProductVersion>162.6.15.1</ProductVersion>
+    <ProductSchema>http://schemas.microsoft.com/sqlserver/dac/Serialization/2012/02</ProductSchema>
+  </Operation>
+  <Checksums>
+    <Checksum Uri=""/model.xml"">... hex string of Sha256 of model.xml ... </Checksum>
+  </Checksums>
+  <ModelSchemaVersion>2.9</ModelSchemaVersion>
+</DacOrigin>");
+        xml.Descendants(ns + "Checksum").First().SetValue(modelHash);
+        return xml;
+    }
+
+    public XElement BuildDacMetadata(string projectName, string versionNumber)
+    {
+        var xml = XElement.Parse(@"<?xml version=""1.0"" encoding=""utf-8""?>
+<DacType xmlns=""http://schemas.microsoft.com/sqlserver/dac/Serialization/2012/02"">
+  <Name>Database1</Name>
+  <Version>1.0.0.0</Version>
+</DacType>");
+        xml.Descendants(ns + "Name").First().SetValue(projectName);
+        xml.Descendants(ns + "Version").First().SetValue(versionNumber);
+        return xml;
+    }
+
+    public XElement BuildContentType() =>
+        XElement.Parse(@"<?xml version=""1.0"" encoding=""utf-8""?><Types xmlns=""http://schemas.openxmlformats.org/package/2006/content-types""><Default Extension=""xml"" ContentType=""text/xml"" /></Types>");
 
     public IEnumerable<XElement> Aggregates(Assembly assembly, string realAssemblyName) =>
         from type in assembly.GetTypes()
@@ -131,7 +250,7 @@ public class DacPacBuilder
                )
            ),
           FunctionParameters(accumulator.GetParameters()),
-          Return(terminator.ReturnParameter),
+          Return(terminator.ReturnParameter, isFunction: false),
           Schema(type)
        );
 
@@ -240,8 +359,8 @@ public class DacPacBuilder
             )
         );
 
-    public XElement Return(ParameterInfo returnInfo) =>
-        new XElement(ns + "Relationship", new XAttribute("Name", "ReturnType"),
+    public XElement Return(ParameterInfo returnInfo, bool isFunction) =>
+        new XElement(ns + "Relationship", new XAttribute("Name", isFunction ? "Type" : "ReturnType"),
             new XElement(ns + "Entry",
                TypeSpecifier(returnInfo)
             )
@@ -252,6 +371,7 @@ public class DacPacBuilder
         from function in functionClasses.GetMethods(BindingFlags.Static | BindingFlags.Public)
         let attrib = function.GetAttributes<SqlFunctionAttribute>().FirstOrDefault()
         where attrib != null
+        orderby attrib.Name
         select new XElement(ns + "Element",
             new XAttribute("Type", function.ReturnType.IsAssignableTo(typeof(IEnumerable)) ? throw new NotSupportedException($"{function.ReturnType}") : "SqlScalarFunction"),
             new XAttribute("Name", GetName(attrib)),
@@ -274,7 +394,7 @@ public class DacPacBuilder
             ),
             FunctionParameters(function.GetParameters()),
             Schema(function),
-            Return(function.ReturnParameter)
+            Return(function.ReturnParameter, isFunction: true)
         );
 
     public IEnumerable<XElement> UserDefinedTypes(Assembly assembly, string realAssemblyName) =>
@@ -293,10 +413,7 @@ public class DacPacBuilder
                )
            ),
            Methods(assembly, realAssemblyName, type),
-           new XComment(DateTimeOffset.Now.ToString())
-       //Parameters(accumulator.GetParameters()),
-       //Return(terminator.ReturnParameter),
-       //Schema(type)
+           Schema(type)
        );
 
     public XElement Methods(Assembly assembly, string realAssemblyName, Type sqlClrType) =>
@@ -309,7 +426,7 @@ public class DacPacBuilder
                     new XAttribute("Type", "SqlClrMethod"), new XAttribute("Name", $"{GetName(sqlClrType)}.[{GetName(function)}]"),
                     new XElement(ns + "Property", new XAttribute("Name", "ClrName"), new XAttribute("Value", GetName(function))),
                     MethodParameters(function.GetParameters()),
-                    Return(function.ReturnParameter)
+                    Return(function.ReturnParameter, isFunction: false)
                 )
             )
         );
@@ -332,7 +449,7 @@ public class DacPacBuilder
 
     public XElement TypeSpecifier(ParameterInfo parameterInfo) =>
         new XElement(ns + "Element", new XAttribute("Type", "SqlTypeSpecifier"),
-            IsMax(parameterInfo),
+            Properties(parameterInfo),
             new XElement(ns + "Relationship", new XAttribute("Name", "Type"),
                 new XElement(ns + "Entry",
                     new XElement(ns + "References", ExternalSource(parameterInfo.ParameterType), new XAttribute("Name", GetName(parameterInfo.ParameterType)))
@@ -340,11 +457,60 @@ public class DacPacBuilder
             )
         );
 
-
     private static readonly IReadOnlyList<Type> _isMax = [typeof(SqlString), typeof(string), typeof(byte[]), typeof(char[])];
 
-    public XElement IsMax(ParameterInfo parameterInfo) =>
-        _isMax.Contains(parameterInfo.ParameterType) ?
-        new XElement(ns + "Property", new XAttribute("Name", "IsMax"), new XAttribute("Value", "True")) :
-        null;
+    private static readonly IReadOnlyList<Type> _doubles = [typeof(SqlDouble), typeof(double), typeof(double?)];
+
+    public IEnumerable<XElement> Properties(ParameterInfo parameterInfo) => PropertiesInternal(parameterInfo).Where(i => i != null);
+    private IEnumerable<XElement> PropertiesInternal(ParameterInfo parameterInfo)
+    {
+        yield return _isMax.Contains(parameterInfo.ParameterType) ?
+            new XElement(ns + "Property", new XAttribute("Name", "IsMax"), new XAttribute("Value", "True")) :
+            null;
+        yield return _doubles.Contains(parameterInfo.ParameterType) ?
+            new XElement(ns + "Property", new XAttribute("Name", "Precision"), new XAttribute("Value", "53")) :
+            null;
+    }
+
+    public IEnumerable<XElement> Files(string realAssemblyName, string assemblyFile, string? pdbFile)
+    {
+        if (File.Exists(assemblyFile))
+        {
+            yield return new XElement(ns + "Element", new XAttribute("Type", "SqlAssembly"), new XAttribute("Name", $"[{realAssemblyName}]"),
+                    new XElement(ns + "Relationship", new XAttribute("Name", "AssemblySources"),
+                        new XElement(ns + "Entry",
+                            new XElement(ns + "Element", new XAttribute("Type", "SqlAssemblySource"),
+                                new XElement(ns + "Property", new XAttribute("Name", "Source"),
+                                    new XElement(ns + "Value",
+                                        new XCData($"0x{GetHexContext(assemblyFile)}")
+                                    )
+                                )
+                            )
+                        )
+                    )
+                );
+        }
+        if (!string.IsNullOrWhiteSpace(pdbFile) && File.Exists(pdbFile))
+        {
+            yield return new XElement(ns + "Element", new XAttribute("Type", "SqlAssemblyFile"), new XAttribute("Name", $"[{realAssemblyName}].[{Path.GetFileName(pdbFile)}]"),
+                    new XElement(ns + "Property", new XAttribute("Name", "Source"),
+                        new XElement(ns + "Value",
+                            new XCData($"0x{GetHexContext(assemblyFile)}"
+                            )
+                        )
+                    ),
+                    new XElement(ns + "Relationship", new XAttribute("Name", "Assembly"),
+                        new XElement(ns + "Entry",
+                            new XElement(ns + "References", new XAttribute("Name", $"[{realAssemblyName}]"))
+                        )
+                    )
+                );
+        }
+    }
+
+    public string? GetHexContext(string file) => BitConverter.ToString(File.ReadAllBytes(file)).Replace("-", "");
+    public string GetSha256(string file) => GetSha256(File.ReadAllBytes(file));
+    public string GetSha256(byte[] content) => BitConverter.ToString(SHA256.HashData(content)).Replace("-", "");
+    public string GetSha512(string file) => GetSha512(File.ReadAllBytes(file));
+    public string GetSha512(byte[] content) => BitConverter.ToString(SHA512.HashData(content)).Replace("-", "");
 }

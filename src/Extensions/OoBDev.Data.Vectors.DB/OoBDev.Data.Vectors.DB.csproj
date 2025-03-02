@@ -41,8 +41,6 @@
   -->
 
   <!-- https://github.com/rr-wfm/MSBuild.Sdk.SqlProj?tab=readme-ov-file#sqlcmd-variables -->
-  <ItemGroup>
-  </ItemGroup>
 
   <ItemGroup>
     <!-- These packages adds additional code analysis rules -->
@@ -63,6 +61,10 @@
     <Folder Include="ServiceBroker\Contracts\" />
     <Folder Include="ServiceBroker\Services\" />
     <Folder Include="ServiceBroker\Queues\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\OoBDev.Data.Vectors\OoBDev.Data.Vectors.csproj" />
   </ItemGroup>
 
 </Project>

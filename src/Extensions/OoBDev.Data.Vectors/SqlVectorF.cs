@@ -6,6 +6,7 @@ using System.Data.SqlTypes;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace OoBDev.Data.Vectors;
 
@@ -26,7 +27,16 @@ public record struct SqlVectorF : INullable, IBinarySerialize
 
     public readonly bool IsNull => _isNull;
     public readonly IReadOnlyList<double> Values => _values;
-    public readonly double Magnitude => _magnitude;
+
+    [SqlMethod(
+        Name = nameof(Magnitude),
+        OnNullCall = false,
+        IsDeterministic = true,
+        IsPrecise = true,
+        IsMutator = false
+        )]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public readonly double Magnitude() => _magnitude;
 
     private SqlVectorF(bool isNull)
     {
