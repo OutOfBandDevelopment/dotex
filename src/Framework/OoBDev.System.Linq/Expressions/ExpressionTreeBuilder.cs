@@ -68,12 +68,12 @@ public class ExpressionTreeBuilder<TModel>(
         );
 
     private static KeyValuePair<string, Expression<Func<TModel, object>>>[] BuildExpressions() =>
-        [.. (
+        [.. 
         from pi in typeof(TModel).GetProperties(ReflectionExtensions.PublicProperties)
         let exp = BuildExpression(pi)
         where exp != null
         select KeyValuePair.Create(pi.Name, exp)
-        )];
+        ];
 
     private IEnumerable<Expression<Func<TModel, bool>>?> GetPredicates(
         string scope,
@@ -502,12 +502,12 @@ public class ExpressionTreeBuilder<TModel>(
     }
 
     private (string property, Expression<Func<TModel, object>> expression)[] GetSearchableExpressions(StringComparison stringComparison) =>
-        [.. (
+        [.. 
         from property in GetSearchablePropertyNames()
         let expression = TryGetPropertyExpression(property, out var exp, stringComparison) ? exp : null
         where expression != null
         select (property, expression)
-        )];
+        ];
 
     private static Expression<Func<TModel, object>>? BuildExpression(PropertyInfo? prop)
     {

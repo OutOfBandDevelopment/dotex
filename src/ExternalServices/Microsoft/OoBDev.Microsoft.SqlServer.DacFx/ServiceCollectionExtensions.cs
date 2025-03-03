@@ -8,7 +8,7 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddDacPacCompilerServices(this IServiceCollection services)
     {
-        services.TryAddSingleton<IDacPacMergeCompiler, DacPacMergeCompiler>();
+        services.TryAddSingleton<IDacpacMergeCompiler, DacpacMergeCompiler>();
         services.TryAddSingleton<IDacPacCompilerConfig, DacPacCompilerConfig>();
 
         services.TryAddSingleton<IDacPacMergeTemplateFactory, DacPacMergeTemplateFactory>();

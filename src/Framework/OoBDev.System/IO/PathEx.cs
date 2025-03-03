@@ -39,7 +39,7 @@ public static class PathEx
         var wildCards = new[] { '*', '?' };
         var pathSegments = path.Split('/', '\\');
         var segmentsQuery = from ps in pathSegments
-                            select (segment: ps, hasWildcard: wildCards.Any(c => ps.Contains(c)));
+                            select (segment: ps, hasWildcard: wildCards.Any(ps.Contains));
         var basePath = string.Join(Path.DirectorySeparatorChar, segmentsQuery.TakeWhile(ps => !ps.hasWildcard).Select(ps => ps.segment));
 
         return path == basePath ? Path.GetDirectoryName(basePath) : basePath;
@@ -63,7 +63,7 @@ public static class PathEx
         var wildCards = new[] { '*', '?' };
         var pathSegments = wildcardPath.Split('/', '\\');
         var segmentsQuery = from ps in pathSegments
-                            select (segment: ps, hasWildcard: wildCards.Any(c => ps.Contains(c)));
+                            select (segment: ps, hasWildcard: wildCards.Any(ps.Contains));
         var basePath = string.Join(Path.DirectorySeparatorChar, segmentsQuery.TakeWhile(ps => !ps.hasWildcard).Select(ps => ps.segment));
         // var searchPathSegments = segmentsQuery.SkipWhile(ps => !ps.hasWildcard).ToArray();
         //var searchPaths = searchPathSegments[..^1];
@@ -91,7 +91,7 @@ public static class PathEx
         var wildCards = new[] { '*', '?' };
         var pathSegments = wildCardPath.Split('/', '\\');
         var segmentsQuery = from ps in pathSegments
-                            select (segment: ps, hasWildcard: wildCards.Any(c => ps.Contains(c)));
+                            select (segment: ps, hasWildcard: wildCards.Any(ps.Contains));
 
         var basePath = Path.Combine(path, string.Join(Path.DirectorySeparatorChar, segmentsQuery.TakeWhile(ps => !ps.hasWildcard).Select(ps => ps.segment)));
         var searchPathSegments = segmentsQuery.SkipWhile(ps => !ps.hasWildcard);
@@ -104,7 +104,7 @@ public static class PathEx
 
     internal static IEnumerable<string> EnumerateDirectories(string path, IEnumerator<string> enumerator)
     {
-        IEnumerable<string> directories = null;
+        IEnumerable<string>? directories = null;
         var recursive = false;
         while (enumerator.MoveNext())
         {

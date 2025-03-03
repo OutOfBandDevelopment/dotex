@@ -43,7 +43,7 @@ internal class WrappedNavigator(IWrappedNode node) : XPathNavigator
         _ => ""
     };
 
-    public override XmlNameTable NameTable => _state switch
+    public override XmlNameTable? NameTable => _state switch
     {
         WrapperState.Child => _node.Current.NameTable,
         _ => null

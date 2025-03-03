@@ -1,6 +1,6 @@
 ﻿namespace OoBDev.DacFx;
 
-public interface IDacPacMergeCompiler
+public interface IDacpacMergeCompiler
 {
     void CreatePackage(IDacPacMergeDefinition def);
 }

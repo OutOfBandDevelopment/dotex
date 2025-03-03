@@ -20,11 +20,11 @@ public class ReflectionElementNodeBuilder(object seed, bool excludeNamespace = f
         new ExtensibleElementNode(
              Seed.GetXmlElementName(ExcludeNamespace),
              Seed,
-             o => ValueSelector(o),
-             o => AttributeSelector(o),
-             o => ChildSelector(o),
-             o => NamespacesSelector(o),
-             o => PreserveWhitespace(o)
+             ValueSelector,
+             AttributeSelector,
+             ChildSelector,
+             NamespacesSelector,
+             PreserveWhitespace
              );
 
     protected virtual bool PreserveWhitespace(object obj) => true;

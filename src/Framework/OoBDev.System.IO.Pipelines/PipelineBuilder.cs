@@ -112,7 +112,7 @@ public static class PipelineBuilder
             throw new NotSupportedException("this pipeline is not configured with a reader");
         }
 
-        cancellationToken.Register(() => def.CancellationTokenSource.Cancel());
+        cancellationToken.Register(def.CancellationTokenSource.Cancel);
 
         return Task.WhenAll(
             Task.Run(async () => await def.PipeWriter, cancellationToken),

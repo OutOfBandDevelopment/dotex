@@ -24,8 +24,8 @@ public class DacPacBuilder
         string? projectVersion = null
         )
     {
-        if (string.IsNullOrWhiteSpace(assemblyFileFramework)) assemblyFileFramework = null;
-        if (string.IsNullOrWhiteSpace(assemblyFileNet)) assemblyFileNet = null;
+        if (string.IsNullOrWhiteSpace(assemblyFileFramework)) throw new ArgumentNullException(nameof(assemblyFileFramework));
+        if (string.IsNullOrWhiteSpace(assemblyFileNet)) throw new ArgumentNullException(nameof(assemblyFileNet));
         if (string.IsNullOrWhiteSpace(assemblyPdbFramework)) assemblyPdbFramework = null;
         if (string.IsNullOrWhiteSpace(dacpacFile)) dacpacFile = null;
         if (string.IsNullOrWhiteSpace(projectName)) projectName = null;
@@ -36,7 +36,7 @@ public class DacPacBuilder
 
         var bothPath = string.IsNullOrWhiteSpace(dacpacFile);
 
-        assemblyPdbFramework =Path.GetFullPath( assemblyPdbFramework ?? Path.ChangeExtension(assemblyFileFramework, ".pdb"));
+        assemblyPdbFramework = Path.GetFullPath(assemblyPdbFramework ?? Path.ChangeExtension(assemblyFileFramework, ".pdb"));
         dacpacFile = Path.GetFullPath(dacpacFile ?? Path.ChangeExtension(assemblyFileFramework, ".dacpac"));
         projectName = projectName ?? Path.GetFileName(assemblyFileFramework);
         projectVersion = projectVersion ?? "0.0.0.1";
@@ -157,16 +157,16 @@ END
 
         var metaData = dataSchemaModel.Descendants(ns + "Metadata");
 
-        var logicalName = metaData.FirstOrDefault(x => ((string)x.Attribute("Name")) == "LogicalName");
-        logicalName?.Attribute("Value").SetValue(Path.GetFileName(assembly.Location));
-        var fileName = metaData.FirstOrDefault(x => ((string)x.Attribute("Name")) == "FileName");
-        fileName?.Attribute("Value").SetValue(assembly.Location);
+        var logicalName = metaData.FirstOrDefault(x => (string?)x.Attribute("Name") == "LogicalName");
+        logicalName?.Attribute("Value")?.SetValue(Path.GetFileName(assembly.Location));
+        var fileName = metaData.FirstOrDefault(x => (string?)x.Attribute("Name") == "FileName");
+        fileName?.Attribute("Value")?.SetValue(assembly.Location);
 
-        var realAssemblyName = assembly.FullName.Split(',').First();
-        var assemblyName = metaData.FirstOrDefault(x => ((string)x.Attribute("Name")) == "AssemblyName");
-        assemblyName?.Attribute("Value").SetValue(realAssemblyName);
-        var assemblySymbolsName = metaData.FirstOrDefault(x => ((string)x.Attribute("Name")) == "AssemblySymbolsName");
-        assemblySymbolsName?.Attribute("Value").SetValue(Path.ChangeExtension(assembly.Location, ".pdb"));
+        var realAssemblyName = assembly.FullName?.Split(',').First() ?? throw new ApplicationException("assembly name is required");
+        var assemblyName = metaData.FirstOrDefault(x => (string?)x.Attribute("Name") == "AssemblyName");
+        assemblyName?.Attribute("Value")?.SetValue(realAssemblyName);
+        var assemblySymbolsName = metaData.FirstOrDefault(x => (string?)x.Attribute("Name") == "AssemblySymbolsName");
+        assemblySymbolsName?.Attribute("Value")?.SetValue(Path.ChangeExtension(assembly.Location, ".pdb"));
 
         var model = new XElement(ns + "Model",
             XElement.Parse(@"<Element Type=""SqlDatabaseOptions"" xmlns=""http://schemas.microsoft.com/sqlserver/dac/Serialization/2012/02"">
@@ -202,9 +202,9 @@ END
 
     private IEnumerable<XElement> CollectSchema(XElement dataSchemaModel) =>
         from schema in dataSchemaModel.Descendants(ns + "Relationship")
-            .Where(x => ((string)x.Attribute("Name")) == "Schema")
+            .Where(x => (string?)x.Attribute("Name") == "Schema")
             .SelectMany(x => x.Descendants(ns + "References"))
-            .Select(x => (string)x.Attribute("Name"))
+            .Select(x => (string?)x.Attribute("Name"))
             .Distinct()
         select new XElement(ns + "Element", new XAttribute("Type", "SqlSchema"), new XAttribute("Name", schema),
                 new XElement(ns + "Relationship", new XAttribute("Name", "Authorizer"),
@@ -264,7 +264,7 @@ END
         let accumulator = type.GetMethod("Accumulate")
         let terminator = type.GetMethod("Terminate")
         where attrib != null
-        select new XElement(ns + "Element", new XAttribute("Type", "SqlAggregate"), new XAttribute("Name", GetName(attrib)), //TODO: I need a name builder
+        select new XElement(ns + "Element", new XAttribute("Type", "SqlAggregate"), new XAttribute("Name", GetName(attrib)), 
            new XElement(ns + "Property", new XAttribute("Name", "Format"), new XAttribute("Value", (int)attrib.Format)),
            new XElement(ns + "Property", new XAttribute("Name", "IsInvariantToDuplicates"), new XAttribute("Value", attrib.IsInvariantToDuplicates ? "True" : "False")),
            new XElement(ns + "Property", new XAttribute("Name", "IsInvariantToNulls"), new XAttribute("Value", attrib.IsInvariantToNulls ? "True" : "False")),
@@ -458,7 +458,7 @@ END
             )
         );
 
-    public XElement MethodParameters(IEnumerable<ParameterInfo> parameters) =>
+    public XElement? MethodParameters(IEnumerable<ParameterInfo> parameters) =>
         parameters.FirstOrDefault() == null ? null :
         new XElement(ns + "Relationship", new XAttribute("Name", "Parameters"),
             from parameter in parameters
@@ -488,9 +488,9 @@ END
 
     private static readonly IReadOnlyList<Type> _doubles = [typeof(SqlDouble), typeof(double), typeof(double?)];
 
-    public IEnumerable<XElement> Properties(ParameterInfo parameterInfo) => PropertiesInternal(parameterInfo).Where(i => i != null);
+    public IEnumerable<XElement> Properties(ParameterInfo parameterInfo) => PropertiesInternal(parameterInfo).Where(i => i != null).Select(i => i!);
 
-    private IEnumerable<XElement> PropertiesInternal(ParameterInfo parameterInfo)
+    private IEnumerable<XElement?> PropertiesInternal(ParameterInfo parameterInfo)
     {
         yield return _isMax.Contains(parameterInfo.ParameterType) ?
             new XElement(ns + "Property", new XAttribute("Name", "IsMax"), new XAttribute("Value", "True")) :
@@ -518,7 +518,7 @@ END
                     ),
                     new XElement(ns + "Relationship", new XAttribute("Name", "Authorizer"),
                         new XElement(ns + "Entry",
-                            new XElement(ns + "References", new XAttribute("ExternalSource", "BuiltIns"), new XAttribute("Name", "[dbo]"))                            
+                            new XElement(ns + "References", new XAttribute("ExternalSource", "BuiltIns"), new XAttribute("Name", "[dbo]"))
                         )
                     )
                 );

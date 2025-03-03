@@ -33,13 +33,13 @@ public static class ExpressionEvaluatorExtensions
         this IExpressionEvaluator<T> evaluator,
         IEnumerable<T> values
         ) where T : struct, IComparable<T>, IEquatable<T> =>
-        values.Aggregate(evaluator.GetValue(1), (carry, current) => evaluator.Multiply(carry, current));
+        values.Aggregate(evaluator.GetValue(1), evaluator.Multiply);
 
     public static T Sum<T>(
         this IExpressionEvaluator<T> evaluator,
         IEnumerable<T> values
         ) where T : struct, IComparable<T>, IEquatable<T> =>
-        values.Aggregate(evaluator.GetValue(0), (carry, current) => evaluator.Add(carry, current));
+        values.Aggregate(evaluator.GetValue(0), evaluator.Add);
 
     public static T Factorial<T>(
         this IExpressionEvaluator<T> evaluator,

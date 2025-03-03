@@ -9,7 +9,7 @@ namespace OoBDev.System.Xml.Xsl;
 
 public class XsltExtensionFactory
 {
-    public object BuildXsltExtension(object input)
+    public object? BuildXsltExtension(object input)
     {
         var type = input.GetType();
         var extendedMethods = GetExtendableMethods(type);

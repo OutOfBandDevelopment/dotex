@@ -20,10 +20,10 @@ public class XmlSchemaValidatorEx
     {
         XmlSchemaSet.Add(targetNamespace ?? "", xsdUri);
     }
-    public XmlSchemaValidatorEx(string targetNamespace, XmlReader xmlreader)
+    public XmlSchemaValidatorEx(string targetNamespace, XmlReader xmlReader)
         : this()
     {
-        XmlSchemaSet.Add(targetNamespace ?? "", xmlreader);
+        XmlSchemaSet.Add(targetNamespace ?? "", xmlReader);
     }
     public XmlSchemaValidatorEx(string targetNamespace, XNode xsd)
         : this(targetNamespace ?? "", xsd.CreateReader())
@@ -62,7 +62,7 @@ public class XmlSchemaValidatorEx
             var xDocument = XDocument.Load(xsdUri);
             var xsdNs = (XNamespace)"http://www.w3.org/2001/XMLSchema";
 
-            var targetNamespace = xDocument.Element(xsdNs + "schema").Attribute("targetNamespace") switch
+            var targetNamespace = xDocument?.Element(xsdNs + "schema")?.Attribute("targetNamespace") switch
             {
                 null => null,
                 XAttribute attribute => (string)attribute
@@ -77,9 +77,11 @@ public class XmlSchemaValidatorEx
     {
         foreach (var xsdContainer in xsdContainers)
         {
+            if (xsdContainer == null) continue;
+
             var xsdNs = (XNamespace)"http://www.w3.org/2001/XMLSchema";
 
-            var targetNamespace = xsdContainer.Element(xsdNs + "schema").Attribute("targetNamespace") switch
+            var targetNamespace = xsdContainer.Element(xsdNs + "schema")?.Attribute("targetNamespace") switch
             {
                 null => null,
                 XAttribute attribute => (string)attribute

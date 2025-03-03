@@ -7,21 +7,20 @@ using System.Text;
 
 namespace OoBDev.Microsoft.SqlServer.DacFx;
 
-public class DacPacMergeCompiler : IDacPacMergeCompiler
+public class DacpacMergeCompiler : IDacpacMergeCompiler
 {
-    private readonly ILogger<DacPacMergeCompiler> _logger;
+    private readonly ILogger<DacpacMergeCompiler> _logger;
 
-    public DacPacMergeCompiler(ILogger<DacPacMergeCompiler> logger)
+    public DacpacMergeCompiler(ILogger<DacpacMergeCompiler> logger)
     {
         _logger = logger;
     }
 
     public void CreatePackage(IDacPacMergeDefinition def)
     {
-
         // ===== TSqlModel =====
 
-        _logger.LogInformation($"Create: {def.TargetPath}");
+        _logger.LogInformation($"Create: {{{nameof(def.TargetPath)}}}", def.TargetPath);
 
         var target = new TSqlModel(def.ServerVersion, def.ModelOptions);
 
@@ -30,7 +29,7 @@ public class DacPacMergeCompiler : IDacPacMergeCompiler
 
         foreach (var file in def.SourceFiles)
         {
-            _logger.LogInformation($"Read: {file}");
+            _logger.LogInformation($"Read: {{{nameof(file)}}}", file);
 
             using var sqlModel = DacTools.OpenDacPacModel(file);
             foreach (var source in sqlModel.ReadPackage())
@@ -47,17 +46,17 @@ public class DacPacMergeCompiler : IDacPacMergeCompiler
         if (!string.IsNullOrWhiteSpace(def.TargetBuildVersion))
             postDeploymentScript.AppendLine(DacTools.GenerateBuildVersionScript(def.TargetBuildVersion));
 
-        _logger.LogInformation($"Build: {def.TargetPath}");
+        _logger.LogInformation($"Build: {{{nameof(def.TargetPath)}}}", def.TargetPath);
 
         var parentPath = Path.GetDirectoryName(def.TargetPath);
-        if (!Directory.Exists(parentPath)) Directory.CreateDirectory(parentPath);
+        if (parentPath != null && !Directory.Exists(parentPath)) Directory.CreateDirectory(parentPath);
 
         DacPackageExtensions.BuildPackage(def.TargetPath, target, def.TargetPackageMetadata);
 
-        _logger.LogInformation($"Add scripts: {def.TargetPath}");
+        _logger.LogInformation($"Add scripts: {{{nameof(def.TargetPath)}}}", def.TargetPath);
         DacTools.AddScripts(def.TargetPath, (preDeploymentScript.ToString(), postDeploymentScript.ToString()));
 
-        _logger.LogInformation($"Complete: {def.TargetPath}");
+        _logger.LogInformation($"Complete: {{{nameof(def.TargetPath)}}}", def.TargetPath);
     }
 
 }

@@ -129,7 +129,7 @@ csharp_style_throw_expression = true:suggestion
 #Spell check  https://devblogs.microsoft.com/visualstudio/visual-studio-spell-checker-preview-now-available/
 spelling_languages = en-us
 vsspell_ignored_words_global=Linq|Mvc|Api|Nullable|Queryable|Bson|deserialize|Serializer|Jwt|Middleware|Json
-vsspell_ignored_words_framework=Searchable|Accessor|queueing|Auth|Templating|mongo|xslt|yaml|Username
+vsspell_ignored_words_framework=Searchable|Accessor|queueing|Auth|Templating|mongo|xslt|yaml|Username|xsd|Validator|dacpac|Dacpac|Pdb|Clr|sql|wildcard
 vsspell_ignored_words_application=Dto|Blog|Vlog|Blogs|Admin|Dataloader|Cli|Bcc|Cc|Sms|Imap|Sha|Keycloak
 oobdev=OoBDev
 vsspell_ignored_words_extensions=qdrant|Qdrant|Sbert|SBert|sbert|ollama|Ollama|Markdig|Grpc|llm

@@ -42,7 +42,7 @@ public class LdapFilterBuilder
         }
 
         var notAllowed = "()*\0";
-        return notAllowed.Any(c => filter.AttributeName.Contains(c))
+        return notAllowed.Any(filter.AttributeName.Contains)
             ? throw new InvalidOperationException("Invalid character found in filter.AttributeName")
             : string.Format("({0}{1}{2}{3})", filter.AttributeName, _simpleMap[filter.Operation], EscapedValue(filter.Value), filter.UnEscapedSuffix);
     }

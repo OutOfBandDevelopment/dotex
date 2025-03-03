@@ -22,6 +22,6 @@ public class XFragmentExTests
         var fragment = nodes.ToXFragment();
 
         var xml = @"<test /><test2><child attr1=""attr1value"" /></test2>";
-        Assert.AreEqual((string)fragment, xml);
+        Assert.AreEqual((string?)fragment, xml);
     }
 }

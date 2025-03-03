@@ -26,7 +26,7 @@ public class Vigenere : Caesar
 
     public string BuildKey(int length, string? code)
     {
-        code = new string([.. (code ?? string.Empty).Where(c => char.IsLetter(c))]);
+        code = new string([.. (code ?? string.Empty).Where(char.IsLetter)]);
         return string.IsNullOrWhiteSpace(code)
             ? new string([.. Enumerable.Range(0, length).Select(i => (char)('A' + i % 26))])
             : string.Join("", Enumerable.Range(0, length / code.Length + 1).Select(_ => code))[..length];

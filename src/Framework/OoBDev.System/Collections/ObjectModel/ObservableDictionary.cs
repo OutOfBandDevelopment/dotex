@@ -117,7 +117,7 @@ public class ObservableDictionary<TKey, TValue> : IDictionary<TKey, TValue>, INo
 
         if (items.Count > 0)
         {
-            if (items.Keys.Any((k) => Dictionary.ContainsKey(k)))
+            if (items.Keys.Any(Dictionary.ContainsKey))
                 throw new ArgumentException("An item with the same key has already been added.");
             else
                 foreach (var item in items) Dictionary.Add(item);
