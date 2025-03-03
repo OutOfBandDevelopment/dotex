@@ -7,7 +7,7 @@
     <InvariantGlobalization>true</InvariantGlobalization>
 
     <IsPackable>false</IsPackable>
-    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <GenerateDocumentationFile>False</GenerateDocumentationFile>
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
     
     <InvariantGlobalization>false</InvariantGlobalization>

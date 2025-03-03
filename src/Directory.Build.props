@@ -16,7 +16,7 @@
 		<RepositoryType>GitHub</RepositoryType>
 		<Authors>Matthew Whited</Authors>
 
-		<!--<GenerateDocumentationFile>true</GenerateDocumentationFile>-->
+		<!--<GenerateDocumentationFile>False</GenerateDocumentationFile>-->
 		<EnableWindowsTargeting>true</EnableWindowsTargeting>
 		
 		<ManagePackageVersionsCentrally>false</ManagePackageVersionsCentrally>
