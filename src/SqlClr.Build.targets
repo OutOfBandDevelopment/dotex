@@ -89,7 +89,7 @@ GO
       <RealOutputPath Condition="!Exists($(OutputPath))">$(OutputPath.TrimEnd('\'))\bin\$(Configuration)\$(TargetFramework)</RealOutputPath>
 
       <SqlClrAssemblyPath Condition="'$(SqlClrAssemblyPath)' == ''">$(RealOutputPath.TrimEnd('\'))\$(AssemblyName).dll</SqlClrAssemblyPath>
-      <SqlInstallScriptPath Condition="'$(SqlInstallScriptPath)' == ''">$(BaseIntermediateOutputPath)\sqlclr\$(AssemblyName).install.sql</SqlInstallScriptPath>
+      <SqlInstallScriptPath Condition="'$(SqlInstallScriptPath)' == ''">$(BaseIntermediateOutputPath)sqlclr\$(AssemblyName).install.sql</SqlInstallScriptPath>
     </PropertyGroup>
 
     <GetAsHexString InputFile="$(SqlClrAssemblyPath)" Condition="Exists($(SqlClrAssemblyPath))" >
@@ -113,8 +113,7 @@ GO
     <Message Text="Built: $(SqlInstallScriptPath)" Importance="High" Condition="Exists($(SqlInstallScriptPath))" />
     <Error Text="Failed to build the DACPAC file: $(SqlAssemblyDacPacFile)" Condition="!Exists($(SqlInstallScriptPath))" />
 
-    <Copy SourceFiles="$(SqlInstallScriptPath)" DestinationFolder="$(OutDir)" />
-    
+    <Copy SourceFiles="$(SqlInstallScriptPath)" DestinationFolder="$(OutDir)" />    
   </Target>
 
   <Target Name="BuildSqlClrInstallPackage" DependsOnTargets="Build">
@@ -122,7 +121,7 @@ GO
     <PropertyGroup>
       <SqlAssemblyFileFramework>$(MSBuildProjectDirectory)\$(OutputPath)..\net481\$(AssemblyName).dll</SqlAssemblyFileFramework>
       <SqlAssemblyDotnetFile>$(MSBuildProjectDirectory)\$(OutputPath)$(AssemblyName).dll</SqlAssemblyDotnetFile>
-      <SqlAssemblyDacPacFile>$(MSBuildProjectDirectory)\$(OutputPath)$(AssemblyName).dacpac</SqlAssemblyDacPacFile>
+      <SqlAssemblyDacPacFile>$(BaseIntermediateOutputPath)sqlclr\$(AssemblyName).dacpac</SqlAssemblyDacPacFile>
     </PropertyGroup>
 
     <Error Text="This requires net481 to be built first: $(SqlAssemblyDacPacFile)" Condition="!Exists($(SqlAssemblyFileFramework))" />
@@ -140,6 +139,7 @@ GO
 
     <Message Text="Built: $(SqlAssemblyDacPacFile)" Importance="High" Condition="Exists($(SqlAssemblyDacPacFile))" />
     <Error Text="Failed to build the DACPAC file: $(SqlAssemblyDacPacFile)" Condition="!Exists($(SqlAssemblyDacPacFile))" />
+    <Copy SourceFiles="$(SqlAssemblyDacPacFile)" DestinationFolder="$(OutDir)" />
   </Target>
 
   <Target Name="PostBuild" AfterTargets="Build" Condition="'$(IsSqlClr)'=='True'">

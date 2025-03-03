@@ -17,7 +17,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.2" />
-    <PackageReference Include="Microsoft.SemanticKernel.Core" Version="1.40.0" />
+    <PackageReference Include="Microsoft.SemanticKernel.Core" Version="1.40.1" />
   </ItemGroup>
 
   <ItemGroup>

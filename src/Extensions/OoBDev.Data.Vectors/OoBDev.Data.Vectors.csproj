@@ -18,4 +18,12 @@
     <InternalsVisibleTo Include="OoBDev.Data.Vectors.Tests" />
   </ItemGroup>
 
+  <Target Name="BuildNet481First" BeforeTargets="Build" Condition="'$(TargetFramework)' == 'net481'">
+    <Message Text="Building SQLCLR first..." Importance="high" />
+  </Target>
+
+  <Target Name="BuildDacpacSecond" BeforeTargets="Build" Condition="'$(TargetFramework)' == 'net6.0'" DependsOnTargets="BuildNet481First">
+    <Message Text="Building References and DACPAC..." Importance="high" />
+  </Target>
+
 </Project>
