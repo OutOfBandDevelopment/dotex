@@ -89,7 +89,7 @@ GO
       <RealOutputPath Condition="!Exists($(OutputPath))">$(OutputPath.TrimEnd('\'))\bin\$(Configuration)\$(TargetFramework)</RealOutputPath>
 
       <SqlClrAssemblyPath Condition="'$(SqlClrAssemblyPath)' == ''">$(RealOutputPath.TrimEnd('\'))\$(AssemblyName).dll</SqlClrAssemblyPath>
-      <SqlInstallScriptPath Condition="'$(SqlInstallScriptPath)' == ''">$(RealOutputPath.TrimEnd('\'))\$(AssemblyName).install.sql</SqlInstallScriptPath>
+      <SqlInstallScriptPath Condition="'$(SqlInstallScriptPath)' == ''">$(BaseIntermediateOutputPath)\sqlclr\$(AssemblyName).install.sql</SqlInstallScriptPath>
     </PropertyGroup>
 
     <GetAsHexString InputFile="$(SqlClrAssemblyPath)" Condition="Exists($(SqlClrAssemblyPath))" >
@@ -111,7 +111,10 @@ GO
     <Message Text="OoBDevDacFxBuild: $(OoBDevDacFxBuild)" Importance="High" />
 
     <Message Text="Built: $(SqlInstallScriptPath)" Importance="High" Condition="Exists($(SqlInstallScriptPath))" />
+    <Error Text="Failed to build the DACPAC file: $(SqlAssemblyDacPacFile)" Condition="!Exists($(SqlInstallScriptPath))" />
 
+    <Copy SourceFiles="$(SqlInstallScriptPath)" DestinationFolder="$(OutDir)" />
+    
   </Target>
 
   <Target Name="BuildSqlClrInstallPackage" DependsOnTargets="Build">
@@ -122,21 +125,26 @@ GO
       <SqlAssemblyDacPacFile>$(MSBuildProjectDirectory)\$(OutputPath)$(AssemblyName).dacpac</SqlAssemblyDacPacFile>
     </PropertyGroup>
 
+    <Error Text="This requires net481 to be built first: $(SqlAssemblyDacPacFile)" Condition="!Exists($(SqlAssemblyFileFramework))" />
+
     <Message Text="SqlAssemblyFileFramework: $(SqlAssemblyFileFramework)" Importance="High" />
     <Message Text="SqlAssemblyDotnetFile: $(SqlAssemblyDotnetFile)" Importance="High" />
     <Message Text="SqlAssemblyDacPacFile: $(SqlAssemblyDacPacFile)" Importance="High" />
     <Message Text="TargetFramework: $(TargetFramework)" Importance="High" />
     <Message Text="MSBuildProjectDirectory\OutputPath: $(MSBuildProjectDirectory)\$(OutputPath)" Importance="High" />
 
-    <Exec Command="dotnet run --project &quot;$(SolutionDir)Tools\OoBDev.DacPacCompiler.Cli&quot; --sqlclr &quot;$(SqlAssemblyFileFramework)&quot; --dotnet &quot;$(SqlAssemblyDotnetFile)&quot; --dacpac &quot;$(SqlAssemblyDacPacFile)&quot; --version &quot;$(AssemblyVersion)&quot;"  />
-
+    <Exec Command="dotnet run --project &quot;$(SolutionDir)Tools\OoBDev.DacPacCompiler.Cli&quot; --sqlclr &quot;$(SqlAssemblyFileFramework)&quot; --dotnet &quot;$(SqlAssemblyDotnetFile)&quot; --dacpac &quot;$(SqlAssemblyDacPacFile)&quot; --version &quot;$(AssemblyVersion)&quot;" 
+          ContinueOnError="false" 
+          StandardErrorImportance="High" 
+          StandardOutputImportance="High" />
 
     <Message Text="Built: $(SqlAssemblyDacPacFile)" Importance="High" Condition="Exists($(SqlAssemblyDacPacFile))" />
+    <Error Text="Failed to build the DACPAC file: $(SqlAssemblyDacPacFile)" Condition="!Exists($(SqlAssemblyDacPacFile))" />
   </Target>
 
   <Target Name="PostBuild" AfterTargets="Build" Condition="'$(IsSqlClr)'=='True'">
     <CallTarget Targets="BuildSqlInstallScript"  Condition="'$(TargetFramework)' == 'net481'"/>
-    <CallTarget Targets="BuildSqlClrInstallPackage"  Condition="'$(TargetFramework)' == 'net90'"/>
+    <CallTarget Targets="BuildSqlClrInstallPackage"  Condition="'$(TargetFramework)' == 'netstandard2.1'"/>
   </Target>
 
 </Project>

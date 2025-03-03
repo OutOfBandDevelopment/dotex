@@ -27,6 +27,8 @@
       <Using Namespace="System.IO" />
       <Code Type="Fragment" Language="cs">
         <![CDATA[
+        var directory = Path.GetDirectoryName(OutputFile);
+        if (!Directory.Exists(directory)) Directory.CreateDirectory(directory);
         File.WriteAllText(OutputFile, InputText);
         ]]>
       </Code>

@@ -1,61 +1,61 @@
 <Project>
-	<!--https://docs.microsoft.com/en-us/visualstudio/msbuild/common-msbuild-project-properties?view=vs-2019-->
+  <!--https://docs.microsoft.com/en-us/visualstudio/msbuild/common-msbuild-project-properties?view=vs-2019-->
 
-	<PropertyGroup Condition="'$(IsPreRelease)'=='true' and '$(PreReleaseOnly)'=='true'">
-		<IsPackable>true</IsPackable>
-		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-	</PropertyGroup>
+  <PropertyGroup Condition="'$(IsPreRelease)'=='true' and '$(PreReleaseOnly)'=='true'">
+    <IsPackable>true</IsPackable>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+  </PropertyGroup>
 
-	<PropertyGroup Condition="'$(IsPreRelease)'!='true' and '$(PreReleaseOnly)'=='true'">
-		<IsPackable>false</IsPackable>
-		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-	</PropertyGroup>
-	
-		<!-- 
+  <PropertyGroup Condition="'$(IsPreRelease)'!='true' and '$(PreReleaseOnly)'=='true'">
+    <IsPackable>false</IsPackable>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <!-- 
 	when `dotnet clean` is not clean enough... 
 	`dotnet clean /T:DeepClean` ensures all of the build and intermediate files are removed 
 	-->
-	<Target Name="DeepClean">
-		<Message Text="===== Really cleaning project: $(Configuration) - &quot;$(MSBuildProjectName)&quot;"  Importance="high"/>
-		<Message Text="===== SolutionDir: $(SolutionDir)"  Importance="high"/>
-		<Message Text="===== BasePublishPath: $(BasePublishPath)"  Importance="high"/>
-		<Message Text="===== DocumentPath: $(DocumentPath)"  Importance="high"/>
-		<Message Text="===== CodeDocumentPath: $(CodeDocumentPath)"  Importance="high"/>
-		<RemoveDir Directories="$(BaseIntermediateOutputPath)" Condition="Exists('$(BaseIntermediateOutputPath)')" ContinueOnError="true" />
-		<RemoveDir Directories="$(BaseOutputPath)" Condition="Exists('$(BaseOutputPath)')" ContinueOnError="true" />
-		<RemoveDir Directories="$(TestResultsOutFolderPath)" Condition="Exists('$(TestResultsOutFolderPath)')" ContinueOnError="true" />
-	</Target>
-	
-	<Target Name="CleanPaths">
-		<Message Text="===== Check: $(SolutionDir)"  Importance="high"/>
-		<ItemGroup>
-			<Directories Include="$([System.IO.Directory]::GetDirectories('$(SolutionDir)', '*', System.IO.SearchOption.AllDirectories))" />
-			<Directories>
-				<Files>$([System.IO.Directory]::GetFiles("%(Directories.Identity)", "*", System.IO.SearchOption.AllDirectories).get_Length())</Files>
-			</Directories>
-		</ItemGroup>
-		<RemoveDir Directories="@(Directories)" Condition="%(Files)=='0'" />
-	</Target>
+  <Target Name="DeepClean">
+    <Message Text="===== Really cleaning project: $(Configuration) - &quot;$(MSBuildProjectName)&quot;"  Importance="high"/>
+    <Message Text="===== SolutionDir: $(SolutionDir)"  Importance="high"/>
+    <Message Text="===== BasePublishPath: $(BasePublishPath)"  Importance="high"/>
+    <Message Text="===== DocumentPath: $(DocumentPath)"  Importance="high"/>
+    <Message Text="===== CodeDocumentPath: $(CodeDocumentPath)"  Importance="high"/>
+    <RemoveDir Directories="$(BaseIntermediateOutputPath)" Condition="Exists('$(BaseIntermediateOutputPath)')" ContinueOnError="true" />
+    <RemoveDir Directories="$(BaseOutputPath)" Condition="Exists('$(BaseOutputPath)')" ContinueOnError="true" />
+    <RemoveDir Directories="$(TestResultsOutFolderPath)" Condition="Exists('$(TestResultsOutFolderPath)')" ContinueOnError="true" />
+  </Target>
 
-	<Target Name="GetDocumentation" Condition="'@(CodeDocumentation)' != ''">
-		<!--AfterTargets="PostBuildEvent"-->
-		<Message Text="===== Get Documentation: $(Configuration) - &quot;$(MSBuildProjectName)&quot;"  Importance="high"/>
-		<RemoveDir Directories="$(CodeDocumentPath)$(MSBuildProjectName)" ContinueOnError="true" />
-		<Message Text="CodeDocumentation: @(CodeDocumentation) -> $(CodeDocumentPath)$(MSBuildProjectName)"  Importance="high"/>
-		<Copy SourceFiles="@(CodeDocumentation)" DestinationFolder="$(CodeDocumentPath)$(MSBuildProjectName)" />
-	</Target>
+  <Target Name="CleanPaths">
+    <Message Text="===== Check: $(SolutionDir)"  Importance="high"/>
+    <ItemGroup>
+      <Directories Include="$([System.IO.Directory]::GetDirectories('$(SolutionDir)', '*', System.IO.SearchOption.AllDirectories))" />
+      <Directories>
+        <Files>$([System.IO.Directory]::GetFiles("%(Directories.Identity)", "*", System.IO.SearchOption.AllDirectories).get_Length())</Files>
+      </Directories>
+    </ItemGroup>
+    <RemoveDir Directories="@(Directories)" Condition="%(Files)=='0'" />
+  </Target>
 
-	<!-- Ensure the PackageReadmeFile is included with the projects to be packaged for nuget -->
-	<Target Name="CheckReadMe" Condition="'$(IsPackable)'=='true' and '$(PackageReadmeFile)'==''" BeforeTargets="Build">
-		<Warning Text="No PackageReadmeFile included for &quot;$(MSBuildProjectName)&quot;"
+  <Target Name="GetDocumentation" Condition="'@(CodeDocumentation)' != ''">
+    <!--AfterTargets="PostBuildEvent"-->
+    <Message Text="===== Get Documentation: $(Configuration) - &quot;$(MSBuildProjectName)&quot;"  Importance="high"/>
+    <RemoveDir Directories="$(CodeDocumentPath)$(MSBuildProjectName)" ContinueOnError="true" />
+    <Message Text="CodeDocumentation: @(CodeDocumentation) -> $(CodeDocumentPath)$(MSBuildProjectName)"  Importance="high"/>
+    <Copy SourceFiles="@(CodeDocumentation)" DestinationFolder="$(CodeDocumentPath)$(MSBuildProjectName)" />
+  </Target>
+
+  <!-- Ensure the PackageReadmeFile is included with the projects to be packaged for nuget -->
+  <Target Name="CheckReadMe" Condition="'$(IsPackable)'=='true' and '$(PackageReadmeFile)'==''" BeforeTargets="Build">
+    <Warning Text="No PackageReadmeFile included for &quot;$(MSBuildProjectName)&quot;"
 				 Code="OBDPK001"
 				 File="$(MSBuildProjectName).csproj" />
-	</Target>
-	<Target Name="CheckReadMeExists" Condition="'$(PackageReadmeFile)'!='' and !Exists('$(PackageReadmeFile)')" BeforeTargets="Build">
-		<Error Text="&quot;$(PackageReadmeFile)&quot; missing from &quot;$(MSBuildProjectName)&quot;"
+  </Target>
+  <Target Name="CheckReadMeExists" Condition="'$(PackageReadmeFile)'!='' and !Exists('$(PackageReadmeFile)')" BeforeTargets="Build">
+    <Error Text="&quot;$(PackageReadmeFile)&quot; missing from &quot;$(MSBuildProjectName)&quot;"
 			   Code="OBDPK002"
 			   File="$(MSBuildProjectName).csproj" />
-	</Target>
+  </Target>
 
   <Target Name="PrintFileSize" Condition="'$(PackageReadmeFile)'!=''"  BeforeTargets="Build">
     <GetFileSize FileName="$(PackageReadmeFile)">
@@ -63,16 +63,16 @@
     </GetFileSize>
     <Message Text="--- file size of $(PackageReadmeFile) is $(PackageReadmeFileSize)" />
   </Target>
-  
-  <Target Name="CheckReadMeSize" 
-          Condition="'$(PackageReadmeFile)'!='' and Exists('$(PackageReadmeFile)') and $(PackageReadmeFileSize)&lt;=0" 
+
+  <Target Name="CheckReadMeSize"
+          Condition="'$(PackageReadmeFile)'!='' and Exists('$(PackageReadmeFile)') and $(PackageReadmeFileSize)&lt;=0"
           BeforeTargets="Build">
     <Error Text="&quot;$(PackageReadmeFile)&quot; from &quot;$(MSBuildProjectName)&quot; is empty"
 			   Code="ELIPK003"
 			   File="$(MSBuildProjectName).csproj" />
   </Target>
 
-  <UsingTask TaskName="GetFileSize" 
+  <UsingTask TaskName="GetFileSize"
              TaskFactory="RoslynCodeTaskFactory"
              AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll" >
     <ParameterGroup>
@@ -90,8 +90,41 @@ FileSize = fi.Exists ? fi.Length : -1;
     </Task>
   </UsingTask>
 
- 
-	<Import Project="Directory.Build.Database.targets" />
+  <Target Name="FixupDatabaseProject"
+          DependsOnTargets="ResolveDatabaseReferences"
+          BeforeTargets="RemoveDatabaseReferencesFromAssemblyReferences"
+          Condition="'@(DacpacReference)'!=''"
+          >
+    <ItemGroup>
+      <DacpacReferenceReplacements Include="@(DacpacReference->'%(RootDir)%(Directory)%(Filename).dacpac')" />
+      <DacpacReference Remove="@(DacpacReference)" />
+      <DacpacReference Include="@(DacpacReferenceReplacements)"  />
+    </ItemGroup>
+    <Message Importance="High" Text="after-z DacpacReference: @(DacpacReference)" />
+    <Message Importance="High" Text="after-z DacpacFile: @(DacpacFile)" />
+    <Message Importance="High" Text="after-z _ResolvedProjectReference: @(_ResolvedProjectReference)" />
+  </Target>
+  <Target Name="CheckedDatabaseProject"
+          BeforeTargets="ResolveDatabaseReferences"
+          >
+    <Message Importance="High" Text="before-z PackageReference: @(PackageReference)" />
+    <Message Importance="High" Text="before-z ProjectReference: @(ProjectReference)" />
+    <Message Importance="High" Text="before-z _ResolvedProjectReferencePaths: @(_ResolvedProjectReferencePaths)" />
+    <Message  Importance="High" Text="OutDir: $(OutDir)"/>
+    <Message  Importance="High" Text="BaseIntermediateOutputPath: $(BaseIntermediateOutputPath)"/>
+    <Message  Importance="High" Text="AssemblyName: $(AssemblyName)"/>
+    <Message  Importance="High" Text="OutputPath: $(OutputPath)"/>
+
+    <!--<_ResolvedProjectReference Include="%(_ResolvedProjectReferencePaths.Identity)">
+      <DacpacFile>%(_ResolvedProjectReferencePaths.Identity)</DacpacFile>
+      <DatabaseVariableLiteralValue>%(_ResolvedProjectReferencePaths.DatabaseVariableLiteralValue)</DatabaseVariableLiteralValue>
+      <SuppressMissingDependenciesErrors>%(_ResolvedProjectReferencePaths.SuppressMissingDependenciesErrors)</SuppressMissingDependenciesErrors>
+      <ExternalParts>dbl=%(_ResolvedProjectReferencePaths.DatabaseVariableLiteralValue)|dbv=%(_ResolvedProjectReferencePaths.DatabaseSqlCmdVariable)|srv=%(_ResolvedProjectReferencePaths.ServerSqlCmdVariable)</ExternalParts>
+    </_ResolvedProjectReference>-->
+
+  </Target>
+
+  <Import Project="Directory.Build.Database.targets" />
   <Import Project="SqlClr.Build.targets"/>
 
 </Project>
