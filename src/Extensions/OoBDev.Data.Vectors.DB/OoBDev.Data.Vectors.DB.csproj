@@ -63,4 +63,8 @@
     <Folder Include="ServiceBroker\Queues\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\OoBDev.Data.Vectors\OoBDev.Data.Vectors.csproj" />
+  </ItemGroup>
+
 </Project>

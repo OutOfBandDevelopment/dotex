@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using OoBDev.System.Net.Http;
+using OoBDev.System.ComponentModel;
 
 namespace OoBDev.System;
 
@@ -175,6 +176,7 @@ public static class ServiceCollectionExtensions
         this IServiceCollection services
         )
     {
+        services.TryAddSingleton<IDataConverter, DataConverter>();
         services.TryAddSingleton<IDateTimeProvider, DateTimeProvider>();
         services.TryAddSingleton<IGuidProvider, GuidProvider>();
 

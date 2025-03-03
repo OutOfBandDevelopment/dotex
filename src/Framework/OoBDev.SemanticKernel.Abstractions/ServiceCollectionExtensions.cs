@@ -13,31 +13,4 @@ public static class ServiceCollectionExtensions
         services.AddTransient<IKernelPlugIn, T>();
         return services;
     }
-
-    public static IServiceCollection AddKernelHostExtensions(this IServiceCollection services, IConfiguration configuration)
-    {
-        services.TryAddScoped<IModelNameAccessor, ModelNameAccessor>();
-
-        services.TryAddKeyedTransient(KernelGlobal.Name, (sp, key) =>
-        {
-            var registeredPlugins = sp.GetServices<IKernelPlugIn>();
-
-            var plugins = new KernelPluginCollection();
-            foreach (var plugin in registeredPlugins)
-            {
-                plugins.AddFromObject(plugin);
-            }
-
-            var kernel = new Kernel(sp, plugins);
-
-            return kernel;
-        });
-
-        services.TryAddKeyedTransient(KernelGlobal.Name, (sp, key) =>
-            sp.GetRequiredKeyedService<Kernel>(key)
-              .GetRequiredService<IChatCompletionService>()
-            );
-
-        return services;
-    }
 }

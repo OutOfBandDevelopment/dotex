@@ -6,7 +6,7 @@
     },
     "Generate - XmlDocs to Markdown": {
       "commandName": "Project",
-      "commandLineArgs": "--input $(SolutionDir)Examples\\OoBDev.WebApi\\bin\\Debug\\net8.0\\*.xml\r\n--output $(SolutionDir)docs\\Libraries\\[file].md\r\n--Template Documentation.md\r\n--file-template-path $(SolutionDir)docs\\templates "
+      "commandLineArgs": "--input $(SolutionDir)Examples\\OoBDev.WebApi\\bin\\Debug\\net9.0\\*.xml\r\n--output $(SolutionDir)docs\\Libraries\\[file].md\r\n--Template Documentation.md\r\n--file-template-path $(SolutionDir)docs\\templates "
     },
     "Generate - Test Results to Markdown": {
       "commandName": "Project",

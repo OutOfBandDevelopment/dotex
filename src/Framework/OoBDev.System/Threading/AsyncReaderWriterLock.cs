@@ -4,6 +4,13 @@ using System.Threading.Tasks;
 
 namespace OoBDev.System.Threading;
 
+/// <summary>
+/// Provides an asynchronous reader-writer lock, allowing multiple readers or one writer to hold a lock.
+/// </summary>
+/// <remarks>
+/// Based on the implementation from Microsoft's Parallel Programming team:
+/// <see href="http://blogs.msdn.com/b/pfxteam/archive/2012/02/12/10267069.aspx"/>
+/// </remarks>
 public class AsyncReaderWriterLock
 {
     // http://blogs.msdn.com/b/pfxteam/archive/2012/02/12/10267069.aspx
@@ -15,12 +22,19 @@ public class AsyncReaderWriterLock
     private int m_readersWaiting;
     private int m_status;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AsyncReaderWriterLock"/> class.
+    /// </summary>
     public AsyncReaderWriterLock()
     {
         m_readerReleaser = Task.FromResult(new Releaser(this, false));
         m_writerReleaser = Task.FromResult(new Releaser(this, true));
     }
 
+    /// <summary>
+    /// Acquires a reader lock asynchronously.
+    /// </summary>
+    /// <returns>A task that represents the lock acquisition, and returns a <see cref="Releaser"/> when the lock is released.</returns>
     public Task<Releaser> ReaderLockAsync()
     {
         lock (m_waitingWriters)
@@ -37,6 +51,7 @@ public class AsyncReaderWriterLock
             }
         }
     }
+
     private void ReaderRelease()
     {
         TaskCompletionSource<Releaser>? toWake = null;
@@ -53,6 +68,10 @@ public class AsyncReaderWriterLock
         toWake?.SetResult(new Releaser(this, true));
     }
 
+    /// <summary>
+    /// Acquires a writer lock asynchronously.
+    /// </summary>
+    /// <returns>A task that represents the lock acquisition, and returns a <see cref="Releaser"/> when the lock is released.</returns>
     public Task<Releaser> WriterLockAsync()
     {
         lock (m_waitingWriters)
@@ -71,6 +90,9 @@ public class AsyncReaderWriterLock
         }
     }
 
+    /// <summary>
+    /// Releases a writer lock.
+    /// </summary>
     private void WriterRelease()
     {
         TaskCompletionSource<Releaser>? toWake = null;
@@ -97,17 +119,28 @@ public class AsyncReaderWriterLock
         toWake?.SetResult(new Releaser(this, toWakeIsWriter));
     }
 
+    /// <summary>
+    /// A struct representing the releaser that can be used to release the lock.
+    /// </summary>
     public readonly struct Releaser : IDisposable
     {
         private readonly AsyncReaderWriterLock m_toRelease;
         private readonly bool m_writer;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Releaser"/> struct.
+        /// </summary>
+        /// <param name="toRelease">The <see cref="AsyncReaderWriterLock"/> instance to release when disposed.</param>
+        /// <param name="writer">Indicates if the releaser is for a writer lock.</param>
         internal Releaser(AsyncReaderWriterLock toRelease, bool writer)
         {
             m_toRelease = toRelease;
             m_writer = writer;
         }
 
+        /// <summary>
+        /// Releases the acquired lock.
+        /// </summary>
         public void Dispose()
         {
             if (m_toRelease != null)

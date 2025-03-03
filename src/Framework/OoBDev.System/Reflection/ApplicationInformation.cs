@@ -4,10 +4,14 @@ using System.Reflection;
 
 namespace OoBDev.System.Reflection;
 
-// http://blog.codinghorror.com/determining-build-date-the-hard-way/
-// http://stackoverflow.com/questions/2050396/getting-the-date-of-a-net-assembly
+/// <summary>
+/// Provides information about the currently executing application, including version and compile date.
+/// </summary>
 public class ApplicationInformation
 {
+    // http://blog.codinghorror.com/determining-build-date-the-hard-way/
+    // http://stackoverflow.com/questions/2050396/getting-the-date-of-a-net-assembly
+
     /// <summary>
     /// Gets the executing assembly.
     /// </summary>
