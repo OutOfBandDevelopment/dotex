@@ -5,6 +5,10 @@ using static OoBDev.System.ExpressionCalculator.Expressions.BinaryOperators;
 
 namespace OoBDev.System.ExpressionCalculator.Expressions;
 
+/// <summary>
+/// Represents a binary operator expression with two operands.
+/// </summary>
+/// <typeparam name="T">The type of the value in the expression (must be a value type that is comparable and equatable).</typeparam>
 public sealed class BinaryOperatorExpression<T>(
     ExpressionBase<T> left,
     BinaryOperators @operator,
@@ -14,12 +18,32 @@ public sealed class BinaryOperatorExpression<T>(
 {
     private static readonly IExpressionEvaluator<T> _evaluator = ExpressionEvaluatorFactory.Create<T>();
 
+    /// <summary>
+    /// Gets the left operand of the binary operator expression.
+    /// </summary>
     public ExpressionBase<T> Left { get; } = left;
+
+    /// <summary>
+    /// Gets the binary operator used in the expression.
+    /// </summary>
     public BinaryOperators Operator { get; } = @operator;
+
+    /// <summary>
+    /// Gets the right operand of the binary operator expression.
+    /// </summary>
     public ExpressionBase<T> Right { get; } = right;
 
+    /// <summary>
+    /// Creates a new clone of the current binary operator expression.
+    /// </summary>
+    /// <returns>A new instance of the same type with cloned operands.</returns>
     public override ExpressionBase<T> Clone() => new BinaryOperatorExpression<T>(Left.Clone(), Operator, Right.Clone());
 
+    /// <summary>
+    /// Evaluates the binary operator expression given a dictionary of variable values.
+    /// </summary>
+    /// <param name="variables">The dictionary containing variable values for evaluation.</param>
+    /// <returns>The result of the binary operation.</returns>
     public override T Evaluate(IDictionary<string, T> variables) =>
         Operator switch
         {
@@ -35,5 +59,9 @@ public sealed class BinaryOperatorExpression<T>(
             _ => throw new NotSupportedException($"Operator {Operator} not supported")
         };
 
+    /// <summary>
+    /// Returns a string representation of the binary operator expression.
+    /// </summary>
+    /// <returns>A string that represents the binary operator expression in the format "LeftOperand Operator RightOperand".</returns>
     public override string ToString() => $"{Left} {Operator.AsString()} {Right}";
 }

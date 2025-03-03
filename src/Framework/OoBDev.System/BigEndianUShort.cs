@@ -44,22 +44,62 @@ public readonly struct BigEndianUShort
     /// </summary>
     public ushort Value => (ushort)(HH << 8 | LL);
 
+    /// <summary>
+    /// Returns a string representation of the value.
+    /// </summary>
+    /// <returns>A string that represents the value.</returns>
     public override string ToString() => Value.ToString();
+    
+    /// <summary>
+    /// Checks if the given object is equal to the current <see cref="BigEndianUShort"/>.
+    /// </summary>
+    /// <param name="obj">The object to compare.</param>
+    /// <returns><c>true</c> if the object is equal to the current <see cref="BigEndianUShort"/>; otherwise, <c>false</c>.</returns>
     public override bool Equals(object? obj) => Value.Equals(obj);
-    public override int GetHashCode() => Value.GetHashCode();
+   
+    /// <summary>
+    /// Gets the hash code for the current <see cref="BigEndianUShort"/>.
+    /// </summary>
+    /// <returns>The hash code of the value.</returns>
+   public override int GetHashCode() => Value.GetHashCode();
 
+    /// <summary>
+    /// Implicitly converts a <see cref="BigEndianUShort"/> to a <see cref="ushort"/>.
+    /// </summary>
+    /// <param name="input">The <see cref="BigEndianUShort"/> to convert.</param>
     public static implicit operator ushort(BigEndianUShort input) => input.Value;
+
+    /// <summary>
+    /// Implicitly converts a <see cref="ushort"/> to a <see cref="BigEndianUShort"/>.
+    /// </summary>
+    /// <param name="input">The <see cref="ushort"/> to convert.</param>
     public static implicit operator BigEndianUShort(ushort input) => new(input);
+
+    /// <summary>
+    /// Implicitly converts a <see cref="BigEndianUShort"/> to an <see cref="int"/>.
+    /// </summary>
+    /// <param name="input">The <see cref="BigEndianUShort"/> to convert.</param>
     public static implicit operator int(BigEndianUShort input) => input.Value;
+   
+    /// <summary>
+    /// Explicitly converts an <see cref="int"/> to a <see cref="BigEndianUShort"/>.
+    /// </summary>
+    /// <param name="input">The <see cref="int"/> to convert.</param>
     public static explicit operator BigEndianUShort(int input) => new((ushort)input);
 
-    public static bool operator ==(BigEndianUShort left, BigEndianUShort right)
-    {
-        return left.Equals(right);
-    }
+    /// <summary>
+    /// Compares two <see cref="BigEndianUShort"/> instances for equality.
+    /// </summary>
+    /// <param name="left">The left operand.</param>
+    /// <param name="right">The right operand.</param>
+    /// <returns><c>true</c> if the two instances are equal; otherwise, <c>false</c>.</returns>
+    public static bool operator ==(BigEndianUShort left, BigEndianUShort right) => left.Equals(right);
 
-    public static bool operator !=(BigEndianUShort left, BigEndianUShort right)
-    {
-        return !(left == right);
-    }
+    /// <summary>
+    /// Compares two <see cref="BigEndianUShort"/> instances for inequality.
+    /// </summary>
+    /// <param name="left">The left operand.</param>
+    /// <param name="right">The right operand.</param>
+    /// <returns><c>true</c> if the two instances are not equal; otherwise, <c>false</c>.</returns>
+    public static bool operator !=(BigEndianUShort left, BigEndianUShort right) => !(left == right);
 }
