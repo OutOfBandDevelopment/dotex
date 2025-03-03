@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "OoBDev.DacPacCompiler.Cli": {
+      "commandName": "Project",
+      "commandLineArgs": " --sqlclr \"$(SolutionDir)Extensions\\OoBDev.Data.Vectors\\bin\\Debug\\net481\\OoBDev.Data.Vectors.dll\" \r\n--dotnet \"$(SolutionDir)Extensions\\OoBDev.Data.Vectors\\bin\\Debug\\net90\\OoBDev.Data.Vectors.dll\""
+    }
+  }
+}

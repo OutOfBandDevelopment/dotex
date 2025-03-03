@@ -24,14 +24,30 @@ public class DacPacBuilder
         string? projectVersion = null
         )
     {
+        if (string.IsNullOrWhiteSpace(assemblyFileFramework)) assemblyFileFramework = null;
+        if (string.IsNullOrWhiteSpace(assemblyFileNet)) assemblyFileNet = null;
+        if (string.IsNullOrWhiteSpace(assemblyPdbFramework)) assemblyPdbFramework = null;
+        if (string.IsNullOrWhiteSpace(dacpacFile)) dacpacFile = null;
+        if (string.IsNullOrWhiteSpace(projectName)) projectName = null;
+        if (string.IsNullOrWhiteSpace(projectVersion)) projectVersion = null;
+
+        assemblyFileNet = Path.GetFullPath(assemblyFileNet);
         var sqlClrAssembly = Assembly.LoadFile(assemblyFileNet);
 
         var bothPath = string.IsNullOrWhiteSpace(dacpacFile);
 
-        assemblyPdbFramework = assemblyPdbFramework ?? Path.ChangeExtension(assemblyFileFramework, ".pdb");
-        dacpacFile = dacpacFile ?? Path.ChangeExtension(assemblyFileFramework, ".dacpac");
+        assemblyPdbFramework =Path.GetFullPath( assemblyPdbFramework ?? Path.ChangeExtension(assemblyFileFramework, ".pdb"));
+        dacpacFile = Path.GetFullPath(dacpacFile ?? Path.ChangeExtension(assemblyFileFramework, ".dacpac"));
         projectName = projectName ?? Path.GetFileName(assemblyFileFramework);
         projectVersion = projectVersion ?? "0.0.0.1";
+
+        //TODO: replace with logging
+
+        Console.WriteLine($"-- assemblyFileFramework: {assemblyFileFramework}");
+        Console.WriteLine($"-- assemblyPdbFramework: {assemblyPdbFramework}");
+        Console.WriteLine($"-- dacpacFile: {dacpacFile}");
+        Console.WriteLine($"-- projectName: {projectName}");
+        Console.WriteLine($"-- assemblyFileNet: {assemblyFileNet}");
 
         //var sha512 = builder.GetSha512(assemblyFile);
         /*
@@ -114,6 +130,7 @@ END
                 }
             }
         }
+        Console.WriteLine($"{sqlClrAssembly} ({projectVersion}) => {dacpacFile}");
 
         if (bothPath)
         {
@@ -121,6 +138,7 @@ END
             if (dacpacFile == dacpacFile2) return;
 
             File.Copy(dacpacFile, dacpacFile2, overwrite: true);
+            Console.WriteLine($"{sqlClrAssembly} ({projectVersion}) => {dacpacFile2}");
         }
     }
 

@@ -92,5 +92,6 @@ FileSize = fi.Exists ? fi.Length : -1;
 
  
 	<Import Project="Directory.Build.Database.targets" />
+  <Import Project="SqlClr.Build.targets"/>
 
 </Project>
