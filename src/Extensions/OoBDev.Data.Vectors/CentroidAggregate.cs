@@ -13,7 +13,7 @@ namespace OoBDev.Data.Vectors;
     IsNullIfEmpty = true,
     MaxByteSize = -1
     )]
-public class CentroidAggregator : IBinarySerialize
+public class CentroidAggregate : IBinarySerialize
 {
     private double[] _sum;
     private int _count;
@@ -45,7 +45,7 @@ public class CentroidAggregator : IBinarySerialize
         _count++;
     }
 
-    public void Merge(CentroidAggregator other)
+    public void Merge(CentroidAggregate other)
     {
         if (other != null)
         {

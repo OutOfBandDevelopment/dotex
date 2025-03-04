@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using OoBDev.TestUtilities;
 using System;
 
 namespace OoBDev.Data.Vectors.Tests;
@@ -9,6 +10,7 @@ public class SqlVectorTests
     public required TestContext TestContext { get; set; }
 
     [TestMethod]
+    [TestCategory(TestCategories.Unit)]
     public void MagnitudeTest()
     {
         var vector = new SqlVector([1, 2, 3, 4]);
@@ -16,6 +18,7 @@ public class SqlVectorTests
     }
 
     [TestMethod]
+    [TestCategory(TestCategories.Unit)]
     public void ElementTest()
     {
         var vector = new SqlVector([1, 2, 3, 4]);
@@ -31,6 +34,7 @@ public class SqlVectorTests
     [DataRow(VectorDistanceTypes.DotProduct, 40.0)]
     [DataRow(VectorDistanceTypes.EuclideanDistance, 2)]
     [DataRow(VectorDistanceTypes.ManhattanDistance, 4)]
+    [TestCategory(TestCategories.Unit)]
     public void DistanceTest(string metric, double expected)
     {
         var vector = new SqlVector([1, 2, 3, 4]);
@@ -39,6 +43,7 @@ public class SqlVectorTests
     }
 
     [TestMethod]
+    [TestCategory(TestCategories.Unit)]
     public void AngleTest()
     {
         var vector = new SqlVector([1, 2, 3, 4]);
@@ -47,6 +52,7 @@ public class SqlVectorTests
     }
 
     [TestMethod]
+    [TestCategory(TestCategories.Unit)]
     public void CosineTest()
     {
         var vector = new SqlVector([1, 2, 3, 4]);
@@ -55,6 +61,7 @@ public class SqlVectorTests
     }
 
     [TestMethod]
+    [TestCategory(TestCategories.Unit)]
     public void SimilarityTest()
     {
         var vector = new SqlVector([1, 2, 3, 4]);
@@ -63,6 +70,7 @@ public class SqlVectorTests
     }
 
     [TestMethod]
+    [TestCategory(TestCategories.Unit)]
     public void DotProductTest()
     {
         var vector = new SqlVector([1, 2, 3, 4]);
@@ -71,6 +79,7 @@ public class SqlVectorTests
     }
 
     [TestMethod]
+    [TestCategory(TestCategories.Unit)]
     public void EuclideanTest()
     {
         var vector = new SqlVector([1, 2, 3, 4]);
@@ -79,6 +88,7 @@ public class SqlVectorTests
     }
 
     [TestMethod]
+    [TestCategory(TestCategories.Unit)]
     public void ManhattanTest()
     {
         var vector = new SqlVector([1, 2, 3, 4]);
@@ -87,6 +97,7 @@ public class SqlVectorTests
     }
 
     [TestMethod]
+    [TestCategory(TestCategories.Unit)]
     public void MidpointTest()
     {
         var vector = new SqlVector([1, 2, 3, 4]);
@@ -95,6 +106,7 @@ public class SqlVectorTests
     }
 
     [TestMethod]
+    [TestCategory(TestCategories.Unit)]
     public void LengthTest()
     {
         var vector = new SqlVector([1, 2, 3, 4]);
@@ -102,6 +114,7 @@ public class SqlVectorTests
     }
 
     [TestMethod]
+    [TestCategory(TestCategories.Unit)]
     public void ParseTest()
     {
         var vector = SqlVector.Parse("[1, 2, 3, 4]");
@@ -109,6 +122,7 @@ public class SqlVectorTests
     }
 
     [TestMethod]
+    [TestCategory(TestCategories.Unit)]
     public void ToBytesTest()
     {
         var vector = SqlVector.Parse("[1, 2, 3, 4]");
@@ -117,6 +131,7 @@ public class SqlVectorTests
     }
 
     [TestMethod]
+    [TestCategory(TestCategories.Unit)]
     public void FromTest()
     {
         var bytes = Convert.FromBase64String("BAAAAQAAAAAAAPA/AAAAAAAAAEAAAAAAAAAIQAAAAAAAABBAj6U20q3oFUA=");
