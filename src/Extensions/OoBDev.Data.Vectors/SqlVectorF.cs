@@ -73,7 +73,7 @@ public record struct SqlVectorF : INullable, IBinarySerialize
         IsMutator = false
         )]
     public SqlSingle Distance(SqlVectorF vector, SqlString metric) =>
-        (SqlSingle)VectorFunctions.Distance(metric, this, vector);
+        (SqlSingle)VectorFunctions.DistanceF(metric, this, vector);
 
     [SqlMethod(
         Name = nameof(Angle),
@@ -83,7 +83,7 @@ public record struct SqlVectorF : INullable, IBinarySerialize
         IsMutator = false
         )]
     public SqlSingle Angle(SqlVectorF vector) =>
-        (SqlSingle)VectorFunctions.Angle(this, vector);
+        (SqlSingle)VectorFunctions.AngleF(this, vector);
 
     [SqlMethod(
         Name = nameof(Cosine),
@@ -93,7 +93,7 @@ public record struct SqlVectorF : INullable, IBinarySerialize
         IsMutator = false
         )]
     public SqlSingle Cosine(SqlVectorF vector) =>
-       (SqlSingle)VectorFunctions.Distance(VectorDistanceTypes.CosineDistance, this, vector);
+       (SqlSingle)VectorFunctions.DistanceF(VectorDistanceTypes.CosineDistance, this, vector);
 
     [SqlMethod(
         Name = nameof(Similarity),
@@ -103,7 +103,7 @@ public record struct SqlVectorF : INullable, IBinarySerialize
         IsMutator = false
         )]
     public SqlSingle Similarity(SqlVectorF vector) =>
-        (SqlSingle)VectorFunctions.Distance(VectorDistanceTypes.CosineSimilarity, this, vector);
+        (SqlSingle)VectorFunctions.DistanceF(VectorDistanceTypes.CosineSimilarity, this, vector);
 
     [SqlMethod(
         Name = nameof(DotProduct),
@@ -113,7 +113,7 @@ public record struct SqlVectorF : INullable, IBinarySerialize
         IsMutator = false
         )]
     public SqlSingle DotProduct(SqlVectorF vector) =>
-        (SqlSingle)VectorFunctions.Distance(VectorDistanceTypes.DotProduct, this, vector);
+        (SqlSingle)VectorFunctions.DistanceF(VectorDistanceTypes.DotProduct, this, vector);
 
     [SqlMethod(
         Name = nameof(Euclidean),
@@ -123,7 +123,7 @@ public record struct SqlVectorF : INullable, IBinarySerialize
         IsMutator = false
         )]
     public SqlSingle Euclidean(SqlVectorF vector) =>
-         (SqlSingle)VectorFunctions.Distance(VectorDistanceTypes.EuclideanDistance, this, vector);
+         (SqlSingle)VectorFunctions.DistanceF(VectorDistanceTypes.EuclideanDistance, this, vector);
 
     [SqlMethod(
         Name = nameof(Manhattan),
@@ -133,7 +133,7 @@ public record struct SqlVectorF : INullable, IBinarySerialize
         IsMutator = false
         )]
     public SqlSingle Manhattan(SqlVectorF vector) =>
-        (SqlSingle)VectorFunctions.Distance(VectorDistanceTypes.ManhattanDistance, this, vector);
+        (SqlSingle)VectorFunctions.DistanceF(VectorDistanceTypes.ManhattanDistance, this, vector);
 
     [SqlMethod(
         Name = nameof(Midpoint),
@@ -143,7 +143,7 @@ public record struct SqlVectorF : INullable, IBinarySerialize
         IsMutator = false
         )]
     public SqlVectorF Midpoint(SqlVectorF vector) =>
-        VectorFunctions.Midpoint(this, vector);
+        VectorFunctions.MidpointF(this, vector);
 
     [SqlMethod(
         Name = nameof(Length),
@@ -240,8 +240,9 @@ public record struct SqlVectorF : INullable, IBinarySerialize
         return "[" + string.Join(",", formattedValues) + "]";
     }
 
-    public static implicit operator SqlVectorF(SqlVector vector) => new(values: vector.Values);
-    public static implicit operator SqlVectorF(float[] vector) => new(values: vector);
-    public static implicit operator float[](SqlVectorF vector) => [.. vector.Values.Select(Convert.ToSingle)];
-    public static implicit operator double[](SqlVectorF vector) => [.. vector.Values];
+    public static explicit operator SqlVectorF(SqlVector vector) => new(values: vector.Values);
+    public static explicit operator SqlVectorF(float[] vector) => new(values: vector);
+    public static explicit operator SqlVectorF(double[] vector) => new(values: vector);
+    public static explicit operator float[](SqlVectorF vector) => [.. vector.Values.Select(Convert.ToSingle)];
+    public static explicit operator double[](SqlVectorF vector) => [.. vector.Values];
 }

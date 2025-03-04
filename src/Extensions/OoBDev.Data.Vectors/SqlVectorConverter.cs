@@ -53,7 +53,7 @@ public class SqlVectorConverter : TypeConverter
     {
         if (!(value is SqlVector vector)) throw new NotSupportedException($"{value.GetType()} is not supported");
 
-        if (vector == null) return SqlVector.Null;
+        if (vector.IsNull) return SqlVector.Null;
         else if (destinationType == typeof(string)) return vector.IsNull ? null : vector.ToString();
         else if (destinationType == typeof(SqlString)) return vector.IsNull ? SqlString.Null : new SqlString(vector.ToString());
         else if (destinationType == typeof(float[])) return vector.IsNull ? null : vector.Values.Select(Convert.ToSingle).ToArray();

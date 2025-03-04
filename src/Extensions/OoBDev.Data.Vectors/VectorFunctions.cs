@@ -1,4 +1,8 @@
-﻿using Microsoft.SqlServer.Server;
+﻿
+
+
+
+using Microsoft.SqlServer.Server;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlTypes;
@@ -167,7 +171,7 @@ public static class VectorFunctions
 
     [SqlFunction(Name = $"[embedding].[{nameof(RandomF)}]", IsDeterministic = true, IsPrecise = true)]
     public static SqlVectorF RandomF(SqlInt32 length, SqlInt32 seed) =>
-        Random(length, seed);
+        new(Random(length, seed).Values);
 
     [SqlFunction(Name = $"[embedding].[{nameof(Uniform)}]", IsDeterministic = true, IsPrecise = true)]
     public static SqlVector Uniform(SqlInt32 length, SqlDouble min, SqlDouble max, SqlInt32 seed)
@@ -189,7 +193,7 @@ public static class VectorFunctions
 
     [SqlFunction(Name = $"[embedding].[{nameof(UniformF)}]", IsDeterministic = true, IsPrecise = true)]
     public static SqlVectorF UniformF(SqlInt32 length, SqlDouble min, SqlDouble max, SqlInt32 seed) =>
-        Uniform(length, min, max, seed);
+        new (Uniform(length, min, max, seed).Values);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal static double MagnitudeInternal(IReadOnlyList<double> values) =>

@@ -40,11 +40,4 @@ public class VectorFunctionsTests
         Assert.IsTrue(vector.Values.Min() >= 10.0);
         Assert.IsTrue(vector.Values.Max() <= 15.0);
     }
-
-    //[TestCategory(TestCategories.Unit)]
-    //[TestMethod]
-    //public void DistanceTest()
-    //{
-    //    Assert.IsNull(VectorFunctions.Distance(SqlVector.Null));
-    //}
 }

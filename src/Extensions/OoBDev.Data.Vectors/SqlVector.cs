@@ -24,7 +24,6 @@ public record struct SqlVector : INullable, IBinarySerialize
     private double _magnitude;
 
     public readonly bool IsNull => _isNull;
-
     public readonly IReadOnlyList<double> Values => _values;
 
     [SqlMethod(
@@ -54,7 +53,7 @@ public record struct SqlVector : INullable, IBinarySerialize
         _magnitude = _magnitude = VectorFunctions.MagnitudeInternal(values);
     }
 
-    internal static SqlVector Null => new(true);
+    public static SqlVector Null => new(true);
 
     [SqlMethod(
         Name = nameof(Element),
@@ -167,7 +166,7 @@ public record struct SqlVector : INullable, IBinarySerialize
             values[i] = reader.ReadDouble();
         }
         _values = values;
-        if (version > 0 || reader.BaseStream.Position < reader.BaseStream.Length)
+        if (reader.BaseStream.Position < reader.BaseStream.Length)
         {
             _magnitude = reader.ReadDouble();
         }
@@ -248,8 +247,9 @@ public record struct SqlVector : INullable, IBinarySerialize
         return "[" + string.Join(",", formattedValues) + "]";
     }
 
-    public static implicit operator SqlVector(SqlVectorF vector) => new(values: vector.Values);
-    public static implicit operator SqlVector(float[] vector) => new(values: vector);
-    public static implicit operator float[](SqlVector vector) => [.. vector.Values.Select(Convert.ToSingle)];
-    public static implicit operator double[](SqlVector vector) => [.. vector.Values];
+    public static explicit operator SqlVector(SqlVectorF vector) => new(values: vector.Values);
+    public static explicit operator SqlVector(float[] vector) => new(values: vector);
+    public static explicit operator SqlVector(double[] vector) => new(values: vector);
+    public static explicit operator float[](SqlVector vector) => [.. vector.Values.Select(Convert.ToSingle)];
+    public static explicit operator double[](SqlVector vector) => [.. vector.Values];
 }
