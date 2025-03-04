@@ -21,7 +21,7 @@ public class ReflectionElementNodeTests
         new(testData, excludeNamespace);
 
     [TestMethod, TestCategory(TestCategories.DevLocal)]
-    [TestCategory(TestCategories.Unit)]
+    //[TestCategory(TestCategories.Unit)]
     public void ReflectionElementNodeTest()
     {
         // Stage
