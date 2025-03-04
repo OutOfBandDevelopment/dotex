@@ -90,40 +90,6 @@ FileSize = fi.Exists ? fi.Length : -1;
     </Task>
   </UsingTask>
 
-  <Target Name="FixupDatabaseProject"
-          DependsOnTargets="ResolveDatabaseReferences"
-          BeforeTargets="RemoveDatabaseReferencesFromAssemblyReferences"
-          Condition="'@(DacpacReference)'!=''"
-          >
-    <ItemGroup>
-      <DacpacReferenceReplacements Include="@(DacpacReference->'%(RootDir)%(Directory)%(Filename).dacpac')" />
-      <DacpacReference Remove="@(DacpacReference)" />
-      <DacpacReference Include="@(DacpacReferenceReplacements)"  />
-    </ItemGroup>
-    <Message Importance="High" Text="after-z DacpacReference: @(DacpacReference)" />
-    <Message Importance="High" Text="after-z DacpacFile: @(DacpacFile)" />
-    <Message Importance="High" Text="after-z _ResolvedProjectReference: @(_ResolvedProjectReference)" />
-  </Target>
-  <Target Name="CheckedDatabaseProject"
-          BeforeTargets="ResolveDatabaseReferences"
-          >
-    <Message Importance="High" Text="before-z PackageReference: @(PackageReference)" />
-    <Message Importance="High" Text="before-z ProjectReference: @(ProjectReference)" />
-    <Message Importance="High" Text="before-z _ResolvedProjectReferencePaths: @(_ResolvedProjectReferencePaths)" />
-    <Message  Importance="High" Text="OutDir: $(OutDir)"/>
-    <Message  Importance="High" Text="BaseIntermediateOutputPath: $(BaseIntermediateOutputPath)"/>
-    <Message  Importance="High" Text="AssemblyName: $(AssemblyName)"/>
-    <Message  Importance="High" Text="OutputPath: $(OutputPath)"/>
-
-    <!--<_ResolvedProjectReference Include="%(_ResolvedProjectReferencePaths.Identity)">
-      <DacpacFile>%(_ResolvedProjectReferencePaths.Identity)</DacpacFile>
-      <DatabaseVariableLiteralValue>%(_ResolvedProjectReferencePaths.DatabaseVariableLiteralValue)</DatabaseVariableLiteralValue>
-      <SuppressMissingDependenciesErrors>%(_ResolvedProjectReferencePaths.SuppressMissingDependenciesErrors)</SuppressMissingDependenciesErrors>
-      <ExternalParts>dbl=%(_ResolvedProjectReferencePaths.DatabaseVariableLiteralValue)|dbv=%(_ResolvedProjectReferencePaths.DatabaseSqlCmdVariable)|srv=%(_ResolvedProjectReferencePaths.ServerSqlCmdVariable)</ExternalParts>
-    </_ResolvedProjectReference>-->
-
-  </Target>
-
   <Import Project="Directory.Build.Database.targets" />
   <Import Project="SqlClr.Build.targets"/>
 

@@ -148,4 +148,31 @@
 		/>
 	</Target>
 
+  <Target Name="CheckDatabaseProject"
+          AfterTargets="ResolveDatabaseReferences"
+          >
+    <Message Importance="High" Text="a============= DacpacReference: @(DacpacReference)" />
+    <Message Importance="High" Text="a============= DacpacReference.DacpacFile: %(DacpacReference.DacpacFile)" />
+    <Message Importance="High" Text="a============= _ResolvedProjectReferencePaths.Identity: %(_ResolvedProjectReferencePaths.Identity)" />
+  </Target>
+  <Target Name="FixUpDatabaseReferences"
+          BeforeTargets="ResolveDatabaseReferences"
+          >
+    <ItemGroup>
+
+      <_ResolvedProjectReferencePaths Include="@(_ResolvedProjectReferencePaths->'%(RootDir)%(Directory)%(Filename).dacpac')">
+        <Before>%(_ResolvedProjectReferencePaths.Identity)</Before>
+      </_ResolvedProjectReferencePaths>
+      <_ResolvedProjectReferencePaths Remove="@(_ResolvedProjectReferencePaths)" Condition="'%(_ResolvedProjectReferencePaths.Before)'==''" />
+
+    </ItemGroup>
+
+    <!--
+    <Message Importance="High" Text="b============= DacpacReference: @(DacpacReference)" />
+    <Message Importance="High" Text="b============= DacpacReference.DacpacFile: %(DacpacReference.DacpacFile)" />
+    <Message Importance="High" Text="b============= _ResolvedProjectReferencePaths.Identity: %(_ResolvedProjectReferencePaths.Identity) - %(_ResolvedProjectReferencePaths.Before)" />
+    -->
+
+  </Target>
+
 </Project>

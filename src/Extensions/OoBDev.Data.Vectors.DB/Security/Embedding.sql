@@ -1,1 +1,1 @@
-CREATE SCHEMA [embedding]
+--CREATE SCHEMA [embedding]
