@@ -2,13 +2,23 @@
  
 	<!-- Start: this is a patch while a fix is pending approval -->
 	<!--https://github.com/rr-wfm/MSBuild.Sdk.SqlProj/pull/284-->
-	<PropertyGroup Condition="'$(IsDatabaseProject)'=='True'">
-		<NuspecFile></NuspecFile>
+	<PropertyGroup Condition="'$(UsingMSBuildSdkSqlProj)'=='true'">
+    <IsDatabaseProject>True</IsDatabaseProject>    
+    <NuspecFile></NuspecFile>
 		<PackageType>dacpac</PackageType>
 		<GenerateNuspecDependsOn>$(GenerateNuspecDependsOn);_PackageDatabaseResults</GenerateNuspecDependsOn>
 	</PropertyGroup>
 
-	<Target Name="_PackageDatabaseResults" Condition="'$(IsDatabaseProject)'=='True'" BeforeTargets="_GetPackageFiles">
+  <!--<Target Name="CheckSdkType" BeforeTargets="BeforeBuild">
+    <PropertyGroup>
+      <IsDotNetSdk Condition="'$(MSBuildProjectSDK)' == 'Microsoft.NET.Sdk'">true</IsDotNetSdk>
+    </PropertyGroup>
+
+    <Message Text="The project is using the .NET SDK." Condition="'$(IsDotNetSdk)' == 'true'" Importance="High" />
+  </Target>-->
+
+
+  <Target Name="_PackageDatabaseResults" Condition="'$(IsDatabaseProject)'=='True'" BeforeTargets="_GetPackageFiles">
 		<Message Text="===== _PackageDatabaseResults ===== "  Importance="high"/>
 		<Message Text="===== _PackageDatabaseResults: IncludeAllDacPac===== "  Importance="high" Condition="'$(IncludeAllDacPacs)'!='true'"/>
 
@@ -148,23 +158,22 @@
 		/>
 	</Target>
 
-  <Target Name="CheckDatabaseProject"
+  <!--<Target Name="CheckDatabaseProject"
           AfterTargets="ResolveDatabaseReferences"
           >
     <Message Importance="High" Text="a============= DacpacReference: @(DacpacReference)" />
     <Message Importance="High" Text="a============= DacpacReference.DacpacFile: %(DacpacReference.DacpacFile)" />
     <Message Importance="High" Text="a============= _ResolvedProjectReferencePaths.Identity: %(_ResolvedProjectReferencePaths.Identity)" />
-  </Target>
+  </Target>-->
+  
   <Target Name="FixUpDatabaseReferences"
           BeforeTargets="ResolveDatabaseReferences"
           >
     <ItemGroup>
-
       <_ResolvedProjectReferencePaths Include="@(_ResolvedProjectReferencePaths->'%(RootDir)%(Directory)%(Filename).dacpac')">
         <Before>%(_ResolvedProjectReferencePaths.Identity)</Before>
       </_ResolvedProjectReferencePaths>
       <_ResolvedProjectReferencePaths Remove="@(_ResolvedProjectReferencePaths)" Condition="'%(_ResolvedProjectReferencePaths.Before)'==''" />
-
     </ItemGroup>
 
     <!--
