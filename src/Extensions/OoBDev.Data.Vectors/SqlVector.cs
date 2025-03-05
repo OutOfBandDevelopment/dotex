@@ -15,7 +15,7 @@ namespace OoBDev.Data.Vectors;
     Name = "[embedding].[Vector]",
     IsByteOrdered = true,
     MaxByteSize = -1)]
-public record struct SqlVector : INullable, IBinarySerialize
+public struct SqlVector : INullable, IBinarySerialize, IEquatable<SqlVector>
 {
     private const int Version = 0x01;
 
@@ -252,4 +252,20 @@ public record struct SqlVector : INullable, IBinarySerialize
     public static explicit operator SqlVector(double[] vector) => new(values: vector);
     public static explicit operator float[](SqlVector vector) => [.. vector.Values.Select(Convert.ToSingle)];
     public static explicit operator double[](SqlVector vector) => [.. vector.Values];
+
+    public override readonly bool Equals(object other) =>
+        other is SqlVector matrix && Equals(matrix);
+
+    public readonly bool Equals(SqlVector other)
+    {
+        if (IsNull != other.IsNull) return false;
+
+        if (Values.Count != other.Values.Count) return false;
+
+        for (var i = 0; i < Values.Count; i++)
+        {
+            if (_values[i] != other.Values[i]) return false;
+        }
+        return true;
+    }
 }
