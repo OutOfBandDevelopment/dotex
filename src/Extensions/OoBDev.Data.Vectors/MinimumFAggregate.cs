@@ -6,7 +6,7 @@ namespace OoBDev.Data.Vectors;
 
 [SqlUserDefinedAggregate(
     Format.UserDefined,
-    Name = "[embedding].[MinimuF]",
+    Name = "[embedding].[MinimumF]",
     IsInvariantToDuplicates = false,
     IsInvariantToNulls = true,
     IsInvariantToOrder = true,

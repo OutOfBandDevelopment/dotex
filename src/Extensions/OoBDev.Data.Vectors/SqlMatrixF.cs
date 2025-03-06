@@ -10,7 +10,7 @@ namespace OoBDev.Data.Vectors;
 [Serializable]
 [SqlUserDefinedType(
     Format.UserDefined,
-    Name = "[embedding].[Vector]",
+    Name = "[embedding].[MatrixF]",
     IsByteOrdered = true,
     MaxByteSize = -1)]
 public struct SqlMatrixF : INullable, IBinarySerialize, IEquatable<SqlMatrixF>
