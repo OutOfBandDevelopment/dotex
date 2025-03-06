@@ -19,8 +19,8 @@ public class DacPacBuilderEngineOptions
 
 
     [CommandParameter(Value = "dotnet")]
-    public string AssemblyFileNet { get; set; }
+    public required string AssemblyFileNet { get; set; }
 
     [CommandParameter(Value = "sqlclr")]
-    public string AssemblyFileFramework { get; set; }
+    public required string AssemblyFileFramework { get; set; }
 }

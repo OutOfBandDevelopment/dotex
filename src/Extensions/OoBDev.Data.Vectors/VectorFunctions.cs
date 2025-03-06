@@ -1,4 +1,8 @@
-﻿using Microsoft.SqlServer.Server;
+﻿
+
+
+
+using Microsoft.SqlServer.Server;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlTypes;
@@ -49,8 +53,8 @@ public static class VectorFunctions
 
         return distanceMetric.Value.ToLower() switch
         {
-            VectorDistanceTypes.CosineDistance => (SqlDouble)CosineDistance(vector1.Values, vector1.Magnitude(), vector2.Values, vector2.Magnitude()),
-            VectorDistanceTypes.CosineSimilarity => (SqlDouble)CosineSimilarity(vector1.Values, vector1.Magnitude(), vector2.Values, vector2.Magnitude()),
+            VectorDistanceTypes.CosineDistance => (SqlDouble)CosineDistance(vector1.Values, vector1.Magnitude().Value, vector2.Values, vector2.Magnitude().Value),
+            VectorDistanceTypes.CosineSimilarity => (SqlDouble)CosineSimilarity(vector1.Values, vector1.Magnitude().Value, vector2.Values, vector2.Magnitude().Value),
             VectorDistanceTypes.EuclideanDistance => (SqlDouble)EuclideanDistance(vector1.Values, vector2.Values),
             VectorDistanceTypes.DotProduct => (SqlDouble)DotProduct(vector1.Values, vector2.Values),
             VectorDistanceTypes.ManhattanDistance => (SqlDouble)ManhattanDistance(vector1.Values, vector2.Values),
@@ -74,8 +78,8 @@ public static class VectorFunctions
 
         return distanceMetric.Value.ToLower() switch
         {
-            VectorDistanceTypes.CosineDistance => (SqlSingle)CosineDistance(vector1.Values, vector1.Magnitude(), vector2.Values, vector2.Magnitude()),
-            VectorDistanceTypes.CosineSimilarity => (SqlSingle)CosineSimilarity(vector1.Values, vector1.Magnitude(), vector2.Values, vector2.Magnitude()),
+            VectorDistanceTypes.CosineDistance => (SqlSingle)CosineDistance(vector1.Values, vector1.Magnitude().Value, vector2.Values, vector2.Magnitude().Value),
+            VectorDistanceTypes.CosineSimilarity => (SqlSingle)CosineSimilarity(vector1.Values, vector1.Magnitude().Value, vector2.Values, vector2.Magnitude().Value),
             VectorDistanceTypes.EuclideanDistance => (SqlSingle)EuclideanDistance(vector1.Values, vector2.Values),
             VectorDistanceTypes.DotProduct => (SqlSingle)DotProduct(vector1.Values, vector2.Values),
             VectorDistanceTypes.ManhattanDistance => (SqlSingle)ManhattanDistance(vector1.Values, vector2.Values),
@@ -132,7 +136,7 @@ public static class VectorFunctions
         vector1.IsNull || vector2.IsNull ? SqlDouble.Null :
         (SqlDouble)Math.Acos(
             Math.Min(1, Math.Max(0,
-                Math.Sqrt(DotProduct(vector1.Values, vector2.Values)) / (vector1.Magnitude() * vector2.Magnitude()))
+                Math.Sqrt(DotProduct(vector1.Values, vector2.Values)) / (vector1.Magnitude().Value * vector2.Magnitude().Value))
                 )
             );
 
@@ -141,7 +145,7 @@ public static class VectorFunctions
         vector1.IsNull || vector2.IsNull ? SqlSingle.Null :
         (SqlSingle)Math.Acos(
             Math.Min(1, Math.Max(0,
-                Math.Sqrt(DotProduct(vector1.Values, vector2.Values)) / (vector1.Magnitude() * vector2.Magnitude()))
+                Math.Sqrt(DotProduct(vector1.Values, vector2.Values)) / (vector1.Magnitude().Value * vector2.Magnitude().Value))
                 )
             );
 
@@ -167,7 +171,7 @@ public static class VectorFunctions
 
     [SqlFunction(Name = $"[embedding].[{nameof(RandomF)}]", IsDeterministic = true, IsPrecise = true)]
     public static SqlVectorF RandomF(SqlInt32 length, SqlInt32 seed) =>
-        Random(length, seed);
+        new(Random(length, seed).Values);
 
     [SqlFunction(Name = $"[embedding].[{nameof(Uniform)}]", IsDeterministic = true, IsPrecise = true)]
     public static SqlVector Uniform(SqlInt32 length, SqlDouble min, SqlDouble max, SqlInt32 seed)
@@ -189,7 +193,7 @@ public static class VectorFunctions
 
     [SqlFunction(Name = $"[embedding].[{nameof(UniformF)}]", IsDeterministic = true, IsPrecise = true)]
     public static SqlVectorF UniformF(SqlInt32 length, SqlDouble min, SqlDouble max, SqlInt32 seed) =>
-        Uniform(length, min, max, seed);
+        new (Uniform(length, min, max, seed).Values);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal static double MagnitudeInternal(IReadOnlyList<double> values) =>

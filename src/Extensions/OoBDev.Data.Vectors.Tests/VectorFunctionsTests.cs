@@ -11,6 +11,7 @@ public class VectorFunctionsTests
 
     [TestCategory(TestCategories.Unit)]
     [TestMethod]
+    [TestCategory(TestCategories.Unit)]
     public void LengthTest()
     {
         Assert.IsTrue(VectorFunctions.Length(SqlVector.Null).IsNull);
@@ -19,6 +20,7 @@ public class VectorFunctionsTests
 
     [TestCategory(TestCategories.Unit)]
     [TestMethod]
+    [TestCategory(TestCategories.Unit)]
     public void RandomTest()
     {
         var vector = VectorFunctions.Random(100, 0);
@@ -30,6 +32,7 @@ public class VectorFunctionsTests
 
     [TestCategory(TestCategories.Unit)]
     [TestMethod]
+    [TestCategory(TestCategories.Unit)]
     public void UniformTest()
     {
         var targetLength = 20;
@@ -40,11 +43,4 @@ public class VectorFunctionsTests
         Assert.IsTrue(vector.Values.Min() >= 10.0);
         Assert.IsTrue(vector.Values.Max() <= 15.0);
     }
-
-    //[TestCategory(TestCategories.Unit)]
-    //[TestMethod]
-    //public void DistanceTest()
-    //{
-    //    Assert.IsNull(VectorFunctions.Distance(SqlVector.Null));
-    //}
 }

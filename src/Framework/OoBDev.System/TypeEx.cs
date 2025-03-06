@@ -22,10 +22,14 @@ public static class TypeEx
     /// <returns>resource stream</returns>
     public static Stream? GetResourceStream(this Type classType, string filename) =>
          classType.Assembly.GetManifestResourceStream($"{classType.Namespace}.{filename}") ??
-         classType.Assembly.GetManifestResourceStream(
-             classType.Assembly.GetManifestResourceNames()
-                               .FirstOrDefault(f => f.EndsWith($".{filename}"))
-             );
+        classType.Assembly.GetManifestResourceNames().FirstOrDefault(f => f.EndsWith($".{filename}")) switch
+        {
+            null => null,
+            string name => classType.Assembly.GetManifestResourceStream(name)
+        };
+
+
+
 
     /// <summary>
     /// Access stream for resource found in the same name space as the referenced object 

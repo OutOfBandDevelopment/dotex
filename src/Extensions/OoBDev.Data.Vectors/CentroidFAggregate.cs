@@ -6,14 +6,14 @@ namespace OoBDev.Data.Vectors;
 
 [SqlUserDefinedAggregate(
     Format.UserDefined,
-    Name = "[embedding].[Centroid]",
+    Name = "[embedding].[CentroidF]",
     IsInvariantToDuplicates = false,
     IsInvariantToNulls = true,
     IsInvariantToOrder = true,
     IsNullIfEmpty = true,
     MaxByteSize = -1
     )]
-public class CentroidAggregator : IBinarySerialize
+public class CentroidFAggregate : IBinarySerialize
 {
     private double[] _sum;
     private int _count;
@@ -24,7 +24,7 @@ public class CentroidAggregator : IBinarySerialize
         _count = 0;
     }
 
-    public void Accumulate(SqlVector vector)
+    public void Accumulate(SqlVectorF vector)
     {
         if (vector.IsNull) return;
 
@@ -45,7 +45,7 @@ public class CentroidAggregator : IBinarySerialize
         _count++;
     }
 
-    public void Merge(CentroidAggregator other)
+    public void Merge(CentroidFAggregate other)
     {
         if (other != null)
         {
@@ -65,9 +65,9 @@ public class CentroidAggregator : IBinarySerialize
         }
     }
 
-    public SqlVector Terminate()
+    public SqlVectorF Terminate()
     {
-        if (_count == 0) return SqlVector.Null;
+        if (_count == 0) return SqlVectorF.Null;
 
         var centroid = new double[_sum.Length];
         for (var i = 0; i < centroid.Length; i++)
@@ -75,12 +75,12 @@ public class CentroidAggregator : IBinarySerialize
             centroid[i] = _sum[i] / _count;
         }
 
-        return new SqlVector(centroid);
+        return new SqlVectorF(centroid);
     }
 
     public void Read(BinaryReader reader)
     {
-        var vector = new SqlVector();
+        var vector = new SqlVectorF();
         vector.Read(reader);
         _sum = [.. vector.Values];
         _count = reader.ReadInt32();
@@ -88,7 +88,7 @@ public class CentroidAggregator : IBinarySerialize
 
     public void Write(BinaryWriter writer)
     {
-        var vector = new SqlVector(_sum);
+        var vector = new SqlVectorF(_sum);
         vector.Write(writer);
         writer.Write(_count);
     }

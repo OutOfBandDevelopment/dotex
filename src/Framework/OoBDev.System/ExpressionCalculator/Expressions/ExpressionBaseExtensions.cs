@@ -60,7 +60,12 @@ public static class ExpressionBaseExtensions
         foreach (var variableName in variableNames)
         {
             var randomValue = Math.Round(rand.NextDouble() * Math.Pow(10, scale) * (includeNegatives && rand.Next() % 2 == 0 ? -1 : 1), places);
+            if (randomValue == 0) randomValue += 0.0000000001d;
             var value = evaluator.GetValue(randomValue);
+            if (value is uint ui && ui == 0) value = (T)(object)(uint)2;
+            else if (value is ulong ul && ul == 0) value = (T)(object)(ulong)2;
+            else if (value is ushort us && us == 0) value = (T)(object)(ushort)2;
+            else if (value is byte b && b == 0) value = (T)(object)(byte)2;
             variables.Add(variableName, value);
         }
         return variables;

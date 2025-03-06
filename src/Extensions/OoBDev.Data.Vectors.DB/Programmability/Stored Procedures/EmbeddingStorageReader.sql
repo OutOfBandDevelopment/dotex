@@ -3,41 +3,94 @@ AS
 BEGIN
 	SET NOCOUNT ON;
 
-	DECLARE  @conversationGroup		UNIQUEIDENTIFIER
-			,@conversationHandle	UNIQUEIDENTIFIER
-			,@mesageType			NVARCHAR(255)
-			,@messageBody			XML;
-
 	DECLARE  @read INT			= 1
 			,@timeout INT		= 6000;
 
+	DECLARE @received TABLE (
+		 [conversationGroup]	UNIQUEIDENTIFIER
+		,[conversationHandle]	UNIQUEIDENTIFIER
+		,[mesageType]			NVARCHAR(255)
+		,[messageBody]			XML
+	);
+
 	BEGIN TRY
 		BEGIN TRANSACTION;
-		DECLARE @processed INT;
-
+			   		 
 		WAITFOR (
 			RECEIVE TOP (@read)
-				 @conversationGroup		= conversation_group_id
-				,@conversationHandle	= conversation_handle
-				,@mesageType			= message_type_name
-				,@messageBody			= CAST(message_body AS XML)
+				 conversation_group_id
+				,conversation_handle
+				,message_type_name
+				,CAST(message_body AS XML)
 				FROM [oobdev://embedding/storage/queue]
+				INTO @received
 		), TIMEOUT @timeout;
 		
-		SET @processed = 1;
-		PRINT '[Storage_Reader]: ' + ISNULL(@mesageType,'(null)') + ' ' + CAST(@processed AS NVARCHAR(20))
-		IF (@processed > 0)
+		DROP TABLE IF EXISTS [#resposes];
+			SELECT *
+			INTO [#resposes]
+			FROM @received AS [$received]
+			WHERE 
+				[$received].[mesageType] = 'oobdev://embedding/sentence-transformer/response'
+		DROP TABLE IF EXISTS [#others];
+			SELECT *
+			INTO [#others]
+			FROM @received AS [$received]
+			WHERE 
+				[$received].[mesageType] != 'oobdev://embedding/sentence-transformer/response'
+			   
+		IF EXISTS (SELECT * FROM [#resposes])
 		BEGIN
-			PRINT '[Storage_Reader]: TODO: write embedding'
+		
+			WITH XMLNAMESPACES(DEFAULT 'oobdev://embedding/sentence-transformer/response')
+			INSERT INTO [embedding].[Sources] ([Name])
 			SELECT 
-				 @conversationGroup		AS [conversationGroup]
-				,@conversationHandle	AS [conversationHandle]
-				,@mesageType			AS [messageType]
-				,@messageBody			AS [messageBody];
+				[$Sources].[SourceName]
+			FROM (
+				SELECT DISTINCT
+					x.value('@tableName', 'NVARCHAR(128)') AS [SourceName]
+				FROM [#resposes] AS [$Received]
+				CROSS APPLY [$Received].[messageBody].nodes('response') x(x)
+			) AS [$Sources]
+			WHERE 
+				NOT EXISTS (
+					SELECT *
+					FROM [embedding].[Sources]
+					WHERE 
+						[Sources].[Name] = [$Sources].[SourceName]
+				);
 
-			PRINT '[Storage_Reader]: end request'
-			END CONVERSATION @conversationHandle;
+			WITH XMLNAMESPACES(DEFAULT 'oobdev://embedding/sentence-transformer/response')
+			INSERT INTO [embedding].[Vectors] (
+				 [Value]
+				,[OriginalID]
+				,[SourceID]
+			)
+			SELECT 
+				 [$Received].[Embedding]
+				,[$Received].[id]
+				,[Sources].[SourceID]
+			FROM (
+				SELECT 
+					x.value('@id', 'BIGINT') AS [id]
+					,x.value('@value', 'NVARCHAR(MAX)') AS [value]
+					,x.value('@tableName', 'NVARCHAR(128)') AS [SourceName]
+					,CAST(x.value('@embedding', 'NVARCHAR(MAX)') AS [embedding].[Vector]) AS [Embedding]
+				FROM [#resposes] AS [$Received]
+				CROSS APPLY [$Received].[messageBody].nodes('response') x(x)
+			) AS [$Received]
+			INNER JOIN [embedding].[Sources]
+				ON [Sources].[Name] = [$Received].[SourceName];
+			
+			--TODO: add response here
+			-- - [ ] Create a /send
+			-- - [ ] Create a /send-batch
+            -- - [ ] make this a merge script instead
+            -- - [ ] change to VectorF
+
 		END
+
+		--TODO: add end response
 
 		COMMIT;
 	END TRY
@@ -48,6 +101,3 @@ BEGIN
 		ROLLBACK;
 	END CATCH
 END
-GO
-
-

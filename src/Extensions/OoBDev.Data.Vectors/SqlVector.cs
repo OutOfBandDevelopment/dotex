@@ -15,7 +15,7 @@ namespace OoBDev.Data.Vectors;
     Name = "[embedding].[Vector]",
     IsByteOrdered = true,
     MaxByteSize = -1)]
-public record struct SqlVector : INullable, IBinarySerialize
+public struct SqlVector : INullable, IBinarySerialize, IEquatable<SqlVector>
 {
     private const int Version = 0x01;
 
@@ -24,7 +24,6 @@ public record struct SqlVector : INullable, IBinarySerialize
     private double _magnitude;
 
     public readonly bool IsNull => _isNull;
-
     public readonly IReadOnlyList<double> Values => _values;
 
     [SqlMethod(
@@ -34,8 +33,8 @@ public record struct SqlVector : INullable, IBinarySerialize
         IsPrecise = true,
         IsMutator = false
         )]
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly double Magnitude() => _magnitude;
+    //[MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public readonly SqlDouble Magnitude() => _magnitude;
 
     private SqlVector(bool isNull)
     {
@@ -54,7 +53,7 @@ public record struct SqlVector : INullable, IBinarySerialize
         _magnitude = _magnitude = VectorFunctions.MagnitudeInternal(values);
     }
 
-    internal static SqlVector Null => new(true);
+    public static SqlVector Null => new(true);
 
     [SqlMethod(
         Name = nameof(Element),
@@ -167,7 +166,7 @@ public record struct SqlVector : INullable, IBinarySerialize
             values[i] = reader.ReadDouble();
         }
         _values = values;
-        if (version > 0 || reader.BaseStream.Position < reader.BaseStream.Length)
+        if (reader.BaseStream.Position < reader.BaseStream.Length)
         {
             _magnitude = reader.ReadDouble();
         }
@@ -248,8 +247,25 @@ public record struct SqlVector : INullable, IBinarySerialize
         return "[" + string.Join(",", formattedValues) + "]";
     }
 
-    public static implicit operator SqlVector(SqlVectorF vector) => new(values: vector.Values);
-    public static implicit operator SqlVector(float[] vector) => new(values: vector);
-    public static implicit operator float[](SqlVector vector) => [.. vector.Values.Select(Convert.ToSingle)];
-    public static implicit operator double[](SqlVector vector) => [.. vector.Values];
+    public static explicit operator SqlVector(SqlVectorF vector) => new(values: vector.Values);
+    public static explicit operator SqlVector(float[] vector) => new(values: vector);
+    public static explicit operator SqlVector(double[] vector) => new(values: vector);
+    public static explicit operator float[](SqlVector vector) => [.. vector.Values.Select(Convert.ToSingle)];
+    public static explicit operator double[](SqlVector vector) => [.. vector.Values];
+
+    public override readonly bool Equals(object other) =>
+        other is SqlVector matrix && Equals(matrix);
+
+    public readonly bool Equals(SqlVector other)
+    {
+        if (IsNull != other.IsNull) return false;
+
+        if (Values.Count != other.Values.Count) return false;
+
+        for (var i = 0; i < Values.Count; i++)
+        {
+            if (_values[i] != other.Values[i]) return false;
+        }
+        return true;
+    }
 }

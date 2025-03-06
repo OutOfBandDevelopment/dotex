@@ -6,22 +6,20 @@ namespace OoBDev.Data.Vectors;
 
 [SqlUserDefinedAggregate(
     Format.UserDefined,
-    Name = "[embedding].[CentroidF]",
+    Name = "[embedding].[MinimumF]",
     IsInvariantToDuplicates = false,
     IsInvariantToNulls = true,
     IsInvariantToOrder = true,
     IsNullIfEmpty = true,
     MaxByteSize = -1
     )]
-public class CentroidFAggregator : IBinarySerialize
+public class MinimumFAggregate : IBinarySerialize
 {
     private double[] _sum;
-    private int _count;
 
     public void Init()
     {
         _sum = [];
-        _count = 0;
     }
 
     public void Accumulate(SqlVectorF vector)
@@ -30,29 +28,29 @@ public class CentroidFAggregator : IBinarySerialize
 
         if (_sum.Length == 0)
         {
-            _sum = new double[vector.Values.Count];
+            _sum = [.. vector.Values];
         }
         else if (_sum.Length != vector.Values.Count)
         {
             throw new NotSupportedException($"Vectors must be of the same length");
         }
-
-        for (var i = 0; i < _sum.Length; i++)
+        else
         {
-            _sum[i] += vector.Values[i];
+            for (var i = 0; i < _sum.Length; i++)
+            {
+                if (vector.Values[i] < _sum[i])
+                    _sum[i] = vector.Values[i];
+            }
         }
-
-        _count++;
     }
 
-    public void Merge(CentroidFAggregator other)
+    public void Merge(MinimumFAggregate other)
     {
         if (other != null)
         {
             if (_sum.Length == 0)
             {
                 _sum = [.. other._sum];
-                _count = other._count;
             }
             else
             {
@@ -60,22 +58,19 @@ public class CentroidFAggregator : IBinarySerialize
                 {
                     _sum[i] += other._sum[i];
                 }
-                _count += other._count;
             }
         }
     }
 
     public SqlVectorF Terminate()
     {
-        if (_count == 0) return SqlVectorF.Null;
-
-        var centroid = new double[_sum.Length];
-        for (var i = 0; i < centroid.Length; i++)
+        var data = new double[_sum.Length];
+        for (var i = 0; i < data.Length; i++)
         {
-            centroid[i] = _sum[i] / _count;
+            data[i] = _sum[i];
         }
 
-        return new SqlVectorF(centroid);
+        return new SqlVectorF(data);
     }
 
     public void Read(BinaryReader reader)
@@ -83,13 +78,11 @@ public class CentroidFAggregator : IBinarySerialize
         var vector = new SqlVectorF();
         vector.Read(reader);
         _sum = [.. vector.Values];
-        _count = reader.ReadInt32();
     }
 
     public void Write(BinaryWriter writer)
     {
         var vector = new SqlVectorF(_sum);
         vector.Write(writer);
-        writer.Write(_count);
     }
 }
