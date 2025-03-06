@@ -21,4 +21,44 @@ public class SqlMatrixFTests
         var expected = SqlMatrixF.Parse(expectedString);
         Assert.AreEqual(expected, matrix);
     }
+
+    [TestCategory(TestCategories.Unit)]
+    [DataTestMethod]
+    [DataRow("1,2,3|4,5,7", (short)1, "4,5,7")]
+    [DataRow("1,2,3|4,5,7", (short)0, "1,2,3")]
+    public void RowTest(string input, short rowIndex, string expectedString)
+    {
+        var matrix = SqlMatrixF.Parse(input);
+        this.TestContext.WriteLine("matrix:");
+        this.TestContext.WriteLine(matrix.ToString());
+
+        var row = matrix.Row(rowIndex);
+        this.TestContext.WriteLine("row:");
+        this.TestContext.WriteLine(row.ToString());
+
+        var expected = SqlVectorF.Parse(expectedString);
+
+        Assert.AreEqual(expected, row);
+    }
+
+
+    [TestCategory(TestCategories.Unit)]
+    [DataTestMethod]
+    [DataRow("1,2,3|4,5,7", (short)0, "1,4")]
+    [DataRow("1,2,3|4,5,7", (short)1, "2,5")]
+    [DataRow("1,2,3|4,5,7", (short)2, "3,7")]
+    public void ColumnTest(string input, short columnIndex, string expectedString)
+    {
+        var matrix = SqlMatrixF.Parse(input);
+        this.TestContext.WriteLine("matrix:");
+        this.TestContext.WriteLine(matrix.ToString());
+
+        var column = matrix.Column(columnIndex);
+        this.TestContext.WriteLine("column:");
+        this.TestContext.WriteLine(column.ToString());
+
+        var expected = SqlVectorF.Parse(expectedString);
+
+        Assert.AreEqual(expected, column);
+    }
 }

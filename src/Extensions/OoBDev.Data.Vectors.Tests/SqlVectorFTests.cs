@@ -14,7 +14,7 @@ public class SqlVectorFTests
     public void MagnitudeTest()
     {
         var vector = new SqlVectorF([1, 2, 3, 4]);
-        Assert.AreEqual(5.477225575051661, vector.Magnitude());
+        Assert.AreEqual(5.477225575051661, vector.Magnitude().Value);
     }
 
     [TestMethod]

@@ -53,8 +53,8 @@ public static class VectorFunctions
 
         return distanceMetric.Value.ToLower() switch
         {
-            VectorDistanceTypes.CosineDistance => (SqlDouble)CosineDistance(vector1.Values, vector1.Magnitude(), vector2.Values, vector2.Magnitude()),
-            VectorDistanceTypes.CosineSimilarity => (SqlDouble)CosineSimilarity(vector1.Values, vector1.Magnitude(), vector2.Values, vector2.Magnitude()),
+            VectorDistanceTypes.CosineDistance => (SqlDouble)CosineDistance(vector1.Values, vector1.Magnitude().Value, vector2.Values, vector2.Magnitude().Value),
+            VectorDistanceTypes.CosineSimilarity => (SqlDouble)CosineSimilarity(vector1.Values, vector1.Magnitude().Value, vector2.Values, vector2.Magnitude().Value),
             VectorDistanceTypes.EuclideanDistance => (SqlDouble)EuclideanDistance(vector1.Values, vector2.Values),
             VectorDistanceTypes.DotProduct => (SqlDouble)DotProduct(vector1.Values, vector2.Values),
             VectorDistanceTypes.ManhattanDistance => (SqlDouble)ManhattanDistance(vector1.Values, vector2.Values),
@@ -78,8 +78,8 @@ public static class VectorFunctions
 
         return distanceMetric.Value.ToLower() switch
         {
-            VectorDistanceTypes.CosineDistance => (SqlSingle)CosineDistance(vector1.Values, vector1.Magnitude(), vector2.Values, vector2.Magnitude()),
-            VectorDistanceTypes.CosineSimilarity => (SqlSingle)CosineSimilarity(vector1.Values, vector1.Magnitude(), vector2.Values, vector2.Magnitude()),
+            VectorDistanceTypes.CosineDistance => (SqlSingle)CosineDistance(vector1.Values, vector1.Magnitude().Value, vector2.Values, vector2.Magnitude().Value),
+            VectorDistanceTypes.CosineSimilarity => (SqlSingle)CosineSimilarity(vector1.Values, vector1.Magnitude().Value, vector2.Values, vector2.Magnitude().Value),
             VectorDistanceTypes.EuclideanDistance => (SqlSingle)EuclideanDistance(vector1.Values, vector2.Values),
             VectorDistanceTypes.DotProduct => (SqlSingle)DotProduct(vector1.Values, vector2.Values),
             VectorDistanceTypes.ManhattanDistance => (SqlSingle)ManhattanDistance(vector1.Values, vector2.Values),
@@ -136,7 +136,7 @@ public static class VectorFunctions
         vector1.IsNull || vector2.IsNull ? SqlDouble.Null :
         (SqlDouble)Math.Acos(
             Math.Min(1, Math.Max(0,
-                Math.Sqrt(DotProduct(vector1.Values, vector2.Values)) / (vector1.Magnitude() * vector2.Magnitude()))
+                Math.Sqrt(DotProduct(vector1.Values, vector2.Values)) / (vector1.Magnitude().Value * vector2.Magnitude().Value))
                 )
             );
 
@@ -145,7 +145,7 @@ public static class VectorFunctions
         vector1.IsNull || vector2.IsNull ? SqlSingle.Null :
         (SqlSingle)Math.Acos(
             Math.Min(1, Math.Max(0,
-                Math.Sqrt(DotProduct(vector1.Values, vector2.Values)) / (vector1.Magnitude() * vector2.Magnitude()))
+                Math.Sqrt(DotProduct(vector1.Values, vector2.Values)) / (vector1.Magnitude().Value * vector2.Magnitude().Value))
                 )
             );
 

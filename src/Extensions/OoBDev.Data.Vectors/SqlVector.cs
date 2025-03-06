@@ -33,8 +33,8 @@ public struct SqlVector : INullable, IBinarySerialize, IEquatable<SqlVector>
         IsPrecise = true,
         IsMutator = false
         )]
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly double Magnitude() => _magnitude;
+    //[MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public readonly SqlDouble Magnitude() => _magnitude;
 
     private SqlVector(bool isNull)
     {

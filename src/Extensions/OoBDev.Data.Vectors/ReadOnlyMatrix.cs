@@ -29,7 +29,7 @@ internal class ReadOnlyMatrix<T> : IReadOnlyMatrix<T>
         var rows = Rows;
 
         var data = new T[rows];
-        for (var r = 0; r <= rows; r++)
+        for (var r = 0; r < rows; r++)
         {
             data[r] = _values[r, column];
         }
@@ -47,7 +47,7 @@ internal class ReadOnlyMatrix<T> : IReadOnlyMatrix<T>
         var columns = Columns;
 
         var data = new T[columns];
-        for (var c = 0; c <= columns; c++)
+        for (var c = 0; c < columns; c++)
         {
             data[c] = _values[row, c];
         }

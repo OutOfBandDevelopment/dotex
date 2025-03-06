@@ -5,7 +5,6 @@ using System.Data.SqlTypes;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
 
 namespace OoBDev.Data.Vectors;
 
@@ -33,8 +32,8 @@ public struct SqlVectorF : INullable, IBinarySerialize, IEquatable<SqlVectorF>
         IsPrecise = true,
         IsMutator = false
         )]
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly double Magnitude() => _magnitude;
+    //[MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public readonly SqlSingle Magnitude() => (float)_magnitude;
 
     private SqlVectorF(bool isNull)
     {

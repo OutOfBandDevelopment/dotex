@@ -10,33 +10,33 @@ namespace OoBDev.Data.Vectors;
 [Serializable]
 [SqlUserDefinedType(
     Format.UserDefined,
-    Name = "[embedding].[MatrixF]",
+    Name = "[embedding].[Matrix]",
     IsByteOrdered = true,
     MaxByteSize = -1)]
-public struct SqlMatrixF : INullable, IBinarySerialize, IEquatable<SqlMatrixF>
+public struct SqlMatrix : INullable, IBinarySerialize, IEquatable<SqlMatrix>
 {
     private const ushort Version = 0x00;
-    private static readonly SqlMatrixF _null = new(true, new float[0, 0], Version);
-    private static readonly SqlMatrixF _empty = new(false, new float[0, 0], Version);
+    private static readonly SqlMatrix _null = new(true, new double[0, 0], Version);
+    private static readonly SqlMatrix _empty = new(false, new double[0, 0], Version);
 
     private ushort _version;
     private bool _isNull;
-    private float[,] _values;
+    private double[,] _values;
 
     public readonly bool IsNull => _isNull;
-    public readonly IReadOnlyMatrix<float> Values => _values.AsReadOnly();
+    public readonly IReadOnlyMatrix<double> Values => _values.AsReadOnly();
 
-    private SqlMatrixF(bool isNull, float[,] data, ushort version)
+    private SqlMatrix(bool isNull, double[,] data, ushort version)
     {
         _isNull = isNull;
         _values = data;
         _version = version;
     }
 
-    public SqlMatrixF(float[,] data) : this(false, data, Version) { }
+    public SqlMatrix(double[,] data) : this(false, data, Version) { }
 
-    public static SqlMatrixF Null => _null;
-    public static SqlMatrixF Empty => _empty;
+    public static SqlMatrix Null => _null;
+    public static SqlMatrix Empty => _empty;
 
     [SqlMethod(
         Name = nameof(Row),
@@ -45,7 +45,7 @@ public struct SqlMatrixF : INullable, IBinarySerialize, IEquatable<SqlMatrixF>
         IsPrecise = true,
         IsMutator = false
         )]
-    public readonly SqlVectorF Row(SqlInt16 row) => row.IsNull ? SqlVectorF.Null : new([.. Values.Row(row.Value)]);
+    public readonly SqlVector Row(SqlInt16 row) => row.IsNull ? SqlVector.Null : new([.. Values.Row(row.Value)]);
 
     [SqlMethod(
         Name = nameof(Column),
@@ -54,40 +54,22 @@ public struct SqlMatrixF : INullable, IBinarySerialize, IEquatable<SqlMatrixF>
         IsPrecise = true,
         IsMutator = false
         )]
-    public readonly SqlVectorF Column(SqlInt16 column)
+    public readonly SqlVector Column(SqlInt16 column)
     {
-        if (column.IsNull) return SqlVectorF.Null;
+        if (column.IsNull) return SqlVector.Null;
 
         var realColumn = column.Value;
         var columns = (short)_values.GetUpperBound(1) + 1;
         if (column.Value >= columns) throw new ArgumentOutOfRangeException(nameof(column));
         var rows = (short)_values.GetUpperBound(0) + 1;
 
-        var data = new float[rows];
+        var data = new double[rows];
         for (var r = 0; r < rows; r++)
         {
             data[r] = _values[r, realColumn];
         }
         return new(data);
     }
-
-    [SqlMethod(
-        Name = nameof(Rows),
-        OnNullCall = false,
-        IsDeterministic = true,
-        IsPrecise = true,
-        IsMutator = false
-        )]
-    public readonly SqlInt16 Rows() => (short)Values.Rows;
-
-    [SqlMethod(
-        Name = nameof(Columns),
-        OnNullCall = false,
-        IsDeterministic = true,
-        IsPrecise = true,
-        IsMutator = false
-        )]
-    public readonly SqlInt16 Columns() => (short)Values.Columns;
 
     [SqlMethod(
         Name = nameof(Element),
@@ -108,12 +90,12 @@ public struct SqlMatrixF : INullable, IBinarySerialize, IEquatable<SqlMatrixF>
         if (rows == -1 || columns == -1)
         {
             _isNull = true;
-            _values = new float[0, 0];
+            _values = new double[0, 0];
             return;
         }
 
         _isNull = false;
-        var data = new float[rows, columns];
+        var data = new double[rows, columns];
         for (var c = 0; c < columns; c++)
             for (var r = 0; r < rows; r++)
             {
@@ -149,30 +131,30 @@ public struct SqlMatrixF : INullable, IBinarySerialize, IEquatable<SqlMatrixF>
             }
     }
 
-    public static SqlMatrixF Parse(SqlString input)
+    public static SqlMatrix Parse(SqlString input)
     {
         if (input.IsNull) return Null;
 
         var rowStrings = input.Value.Split(['\n', '\r', '|'], options: StringSplitOptions.RemoveEmptyEntries);
         var rows = rowStrings.Length;
 
-        float[,] data = default;
+        double[,] data = default;
         for (var r = 0; r < rows; r++)
         {
             var columnStrings = rowStrings[r].Split(['\t', ','], options: StringSplitOptions.RemoveEmptyEntries);
             var columns = columnStrings.Length;
             if (r == 0)
             {
-                data = new float[rows, columns];
+                data = new double[rows, columns];
             }
 
             for (var c = 0; c < columns; c++)
             {
-                data[r, c] = float.Parse(columnStrings[c], CultureInfo.InvariantCulture);
+                data[r, c] = double.Parse(columnStrings[c], CultureInfo.InvariantCulture);
             }
         }
 
-        return new SqlMatrixF(data);
+        return new SqlMatrix(data);
     }
 
     public override readonly string ToString()
@@ -195,9 +177,9 @@ public struct SqlMatrixF : INullable, IBinarySerialize, IEquatable<SqlMatrixF>
     }
 
     public override readonly bool Equals(object other) =>
-        other is SqlMatrixF matrix && Equals(matrix);
+        other is SqlMatrix matrix && Equals(matrix);
 
-    public readonly bool Equals(SqlMatrixF other)
+    public readonly bool Equals(SqlMatrix other)
     {
         if (IsNull != other.IsNull) return false;
 
