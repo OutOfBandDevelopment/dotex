@@ -49,6 +49,8 @@ jobs:
         clean: true
         persist-credentials: true
         fetch-depth: 0
+        lfs: true
+        submodules: true        
 
       # https://github.com/actions/setup-dotnet
     - name: Install .Net 9.0 SDK
