@@ -78,6 +78,7 @@ jobs:
     - name: Set Version Variables
       id: calculate-version
       shell: pwsh
+      working-directory: ./src
       run: |
         echo "GITHUB_WORKSPACE=$env:GITHUB_WORKSPACE"
         echo "RUNNER_TEMP=$env:RUNNER_TEMP"
@@ -116,19 +117,34 @@ jobs:
         echo "RunSettings=$runSettings" >> "$env:GITHUB_ENV"
   
     - name: Restore dependencies
+      working-directory: ./src
       run: dotnet restore
 
+    # dotnet build .\Extensions\OoBDev.Data.Vectors --framework net481
+    - name: Build - .Net 4.8.1 (SQLCLR)
+      working-directory: ./src
+      run: >
+        dotnet build ./Extensions/OoBDev.Data.Vectors
+        --framework net481
+        --configuration ${{ steps.calculate-version.outputs.BuildConfiguration }}
+        --property:Version=${{ steps.calculate-version.outputs.FullSemVerLower }}
+        --property:SolutionDir=${{ steps.calculate-version.outputs.BuildWorkspace }}/
+        --nologo 
+        --no-restore
+
     - name: Build
+      working-directory: ./src
       run: >
         dotnet build
         --configuration ${{ steps.calculate-version.outputs.BuildConfiguration }}
         --property:Version=${{ steps.calculate-version.outputs.FullSemVerLower }}
-        --property:SolutionDir=${{ steps.calculate-version.outputs.BuildWorkspace }}
+        --property:SolutionDir=${{ steps.calculate-version.outputs.BuildWorkspace }}/
         --nologo 
         --no-restore
 
       # https://devblogs.microsoft.com/dotnet/producing-packages-with-source-link/
     - name: Package projects
+      working-directory: ./src
       run: >
         dotnet pack
         --configuration ${{ steps.calculate-version.outputs.BuildConfiguration }}
@@ -138,6 +154,7 @@ jobs:
         --property:Version=${{ steps.calculate-version.outputs.fullSemVerLower }}
         
     - name: Unit Test
+      working-directory: ./src
       run: >
         dotnet test
         --configuration ${{ steps.calculate-version.outputs.BuildConfiguration }} 

@@ -191,9 +191,52 @@ public static class VectorFunctions
         return new SqlVector(vector);
     }
 
+    [SqlFunction(Name = $"[embedding].[{nameof(UniformV)}]", IsDeterministic = true, IsPrecise = true)]
+    public static SqlVector UniformV(SqlVector min, SqlVector max, SqlInt32 seed)
+    {
+        if (min.IsNull || max.IsNull) return SqlVector.Null;
+        if (min.Length() != max.Length()) throw new ArgumentException("Vectors must be of the same length.");
+
+        var random = Random(min.Length(), seed);
+        if (random.IsNull) return SqlVector.Null;
+
+        var realMin = min.Values;
+        var realMax = max.Values;
+
+        var vector = random.Values.ToArray();
+        for (var i = 0; i < vector.Length; i++)
+        {
+            vector[i] = vector[i] * (realMax[i] - realMin[i]) + realMin[i];
+        }
+
+        return new SqlVector(vector);
+    }
+
     [SqlFunction(Name = $"[embedding].[{nameof(UniformF)}]", IsDeterministic = true, IsPrecise = true)]
     public static SqlVectorF UniformF(SqlInt32 length, SqlDouble min, SqlDouble max, SqlInt32 seed) =>
-        new (Uniform(length, min, max, seed).Values);
+        new(Uniform(length, min, max, seed).Values);
+
+
+    [SqlFunction(Name = $"[embedding].[{nameof(UniformVF)}]", IsDeterministic = true, IsPrecise = true)]
+    public static SqlVectorF UniformVF(SqlVectorF min, SqlVectorF max, SqlInt32 seed)
+    {
+        if (min.IsNull || max.IsNull) return SqlVectorF.Null;
+        if (min.Length() != max.Length()) throw new ArgumentException("Vectors must be of the same length.");
+
+        var random = Random(min.Length(), seed);
+        if (random.IsNull) return SqlVectorF.Null;
+
+        var realMin = min.Values;
+        var realMax = max.Values;
+
+        var vector = random.Values.ToArray();
+        for (var i = 0; i < vector.Length; i++)
+        {
+            vector[i] = vector[i] * (realMax[i] - realMin[i]) + realMin[i];
+        }
+
+        return new SqlVectorF(vector);
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal static double MagnitudeInternal(IReadOnlyList<double> values) =>

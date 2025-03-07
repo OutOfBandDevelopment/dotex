@@ -132,7 +132,7 @@ GO
     <Message Text="TargetFramework: $(TargetFramework)" Importance="High" />
     <Message Text="MSBuildProjectDirectory\OutputPath: $(MSBuildProjectDirectory)\$(OutputPath)" Importance="High" />
 
-    <Exec Command="dotnet run --project &quot;$(SolutionDir)Tools\OoBDev.DacPacCompiler.Cli&quot; --sqlclr &quot;$(SqlAssemblyFileFramework)&quot; --dotnet &quot;$(SqlAssemblyDotnetFile)&quot; --dacpac &quot;$(SqlAssemblyDacPacFile)&quot; --version &quot;$(AssemblyVersion)&quot;" 
+    <Exec Command="dotnet run --project &quot;$(SolutionDir)Tools/OoBDev.DacPacCompiler.Cli&quot; --sqlclr &quot;$(SqlAssemblyFileFramework)&quot; --dotnet &quot;$(SqlAssemblyDotnetFile)&quot; --dacpac &quot;$(SqlAssemblyDacPacFile)&quot; --version &quot;$(AssemblyVersion)&quot;" 
           ContinueOnError="false" 
           StandardErrorImportance="High" 
           StandardOutputImportance="High" />

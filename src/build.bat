@@ -1,6 +1,7 @@
 
 @ECHO OFF
 SETLOCAL EnableDelayedExpansion
+SET MSBUILDTERMINALLOGGER=off
 
 IF "%SolutionDir%"=="" (
 SET SolutionDir=%~dp0
