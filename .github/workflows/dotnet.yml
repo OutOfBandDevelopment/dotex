@@ -51,20 +51,20 @@ jobs:
         fetch-depth: 0
 
       # https://github.com/actions/setup-dotnet
-    - name: Install .Net 8.0 SDK
+    - name: Install .Net 9.0 SDK
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 8.0.x        
+        dotnet-version: 9.0.x        
 
       # https://github.com/GitTools/actions/blob/main/docs/examples/github/gitversion/setup/usage-examples.md
     - name: Install GitVersion
-      uses: gittools/actions/gitversion/setup@v0
+      uses: gittools/actions/gitversion/setup@v3.1.11
       with:
-        versionSpec: '5.x'  
+        versionSpec: '6.0.x'
 
       # https://github.com/GitTools/actions/blob/main/docs/examples/github/gitversion/execute/usage-examples.md 
     - name: Use GitVersion
-      uses: gittools/actions/gitversion/execute@v0
+      uses: gittools/actions/gitversion/execute@v3.1.11
       id:   gitversion
       with:
         useConfigFile: true
