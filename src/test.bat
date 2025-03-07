@@ -3,7 +3,8 @@ REM @REM SET
 @ECHO OFF
 SETLOCAL
 
-SET TestProject=OoBDev.Libs.sln
+SET MSBUILDTERMINALLOGGER=off
+SET TestProject=OoBDev.sln
 REM SET Configuration=Debug
 SET Configuration=Release
 
