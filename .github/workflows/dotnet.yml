@@ -128,7 +128,7 @@ jobs:
         --framework net481
         --configuration ${{ steps.calculate-version.outputs.BuildConfiguration }}
         --property:Version=${{ steps.calculate-version.outputs.FullSemVerLower }}
-        --property:SolutionDir=${{ steps.calculate-version.outputs.BuildWorkspace }}
+        --property:SolutionDir=${{ steps.calculate-version.outputs.BuildWorkspace }}/
         --nologo 
         --no-restore
 
@@ -138,7 +138,7 @@ jobs:
         dotnet build
         --configuration ${{ steps.calculate-version.outputs.BuildConfiguration }}
         --property:Version=${{ steps.calculate-version.outputs.FullSemVerLower }}
-        --property:SolutionDir=${{ steps.calculate-version.outputs.BuildWorkspace }}
+        --property:SolutionDir=${{ steps.calculate-version.outputs.BuildWorkspace }}/
         --nologo 
         --no-restore
 
