@@ -120,7 +120,6 @@ jobs:
       working-directory: ./src
       run: >
         dotnet restore
-        --configuration ${{ steps.calculate-version.outputs.BuildConfiguration }}
         --property:Version=${{ steps.calculate-version.outputs.FullSemVerLower }}
         --property:SolutionDir=${{ steps.calculate-version.outputs.BuildWorkspace }}/src
 
