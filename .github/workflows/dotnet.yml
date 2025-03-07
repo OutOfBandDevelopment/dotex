@@ -120,6 +120,18 @@ jobs:
       working-directory: ./src
       run: dotnet restore
 
+    # dotnet build .\Extensions\OoBDev.Data.Vectors --framework net481
+    - name: Build - .Net 4.8.1 (SQLCLR)
+      working-directory: ./src
+      run: >
+        dotnet build ./Extensions/OoBDev.Data.Vectors
+        --framework net481
+        --configuration ${{ steps.calculate-version.outputs.BuildConfiguration }}
+        --property:Version=${{ steps.calculate-version.outputs.FullSemVerLower }}
+        --property:SolutionDir=${{ steps.calculate-version.outputs.BuildWorkspace }}
+        --nologo 
+        --no-restore
+
     - name: Build
       working-directory: ./src
       run: >
