@@ -57,8 +57,8 @@
 
 		<PropertyGroup>
 			<RunScriptsFromReferences>True</RunScriptsFromReferences>
-			<DatabasePostDeploymentScriptPath>Post-Deployment\Script.PostDeployment.sql</DatabasePostDeploymentScriptPath>
-			<DatabasePreDeploymentScriptPath>Pre-Deployment\Script.PreDeployment.sql</DatabasePreDeploymentScriptPath>
+			<DatabasePostDeploymentScriptPath>Post-Deployment/Script.PostDeployment.sql</DatabasePostDeploymentScriptPath>
+			<DatabasePreDeploymentScriptPath>Pre-Deployment/Script.PreDeployment.sql</DatabasePreDeploymentScriptPath>
 			<DatabaseVersionScriptPath>Post-Deployment/SetDacVersion.sql</DatabaseVersionScriptPath>
 			<DacVersion>$(GitVersion_AssemblySemFileVer)</DacVersion>
 			<BuildVersion>$(GitVersion_InformationalVersion)</BuildVersion>
