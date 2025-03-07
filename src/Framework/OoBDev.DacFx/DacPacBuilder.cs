@@ -354,6 +354,8 @@ END
 
         { typeof(string), "[nvarchar]"},
         { typeof(char[]), "[nvarchar]"},
+
+        { typeof(object), "[sql_variant]"},
     };
 
     private static readonly IReadOnlyList<Type> _isBuiltIn = _typeName.Keys.ToArray();

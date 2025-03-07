@@ -2,6 +2,10 @@
 DECLARE @v1 embedding.VectorF = '1,2,3,4,5';
 DECLARE @v2 embedding.VectorF = '2,3,4,5,6';
 
+DECLARE @r REAL = 2;
+
+SELECT CAST(@v1.Scale(@r) AS NVARCHAR(MAX));
+
 
 WITH [$fakeValues] AS (
 	SELECT 

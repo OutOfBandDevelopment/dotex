@@ -153,6 +153,28 @@ public struct SqlVectorF : INullable, IBinarySerialize, IEquatable<SqlVectorF>
         )]
     public SqlInt32 Length() => Values.Count;
 
+
+    [SqlMethod(
+        Name = nameof(Scale),
+        OnNullCall = false,
+        IsDeterministic = true,
+        IsPrecise = true,
+        IsMutator = false
+        )]
+    public SqlVectorF Scale(SqlSingle scalar)
+    {
+        if (scalar.IsNull) return Null;
+
+        var data = new double[Values.Count];
+        for (var i = 0; i < data.Length; i++)
+        {
+            data[i] = Values[i] * scalar.Value;
+        }
+
+        return new(data);
+    }
+
+
     public void Read(BinaryReader reader)
     {
         var header = reader.ReadInt32();
