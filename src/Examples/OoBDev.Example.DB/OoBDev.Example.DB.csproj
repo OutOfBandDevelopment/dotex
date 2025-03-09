@@ -23,7 +23,7 @@
     <!-- Controls whether objects from referenced packages are deployed to the same database -->
     <IncludeCompositeObjects>True</IncludeCompositeObjects>
     <!-- Controls the name of the .dacpac created by dotnet build. The default name for the .dacpac file is the name of the project file, e.g. MyProject.csproj produces MyProject.dacpac. -->
-    <TargetName>$(TargetDatabaseName)</TargetName>
+    <!--<TargetName>$(TargetDatabaseName)</TargetName>-->
     <!-- 	Controls whether a deploy occurs when the project is published. -->
     <DeployOnPublish>True</DeployOnPublish>
   </PropertyGroup>

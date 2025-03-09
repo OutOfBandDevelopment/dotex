@@ -1,6 +1,6 @@
 CREATE PROCEDURE [embedding].[oobdev://embedding/sentence-transformer/response/send-batch]
     @items [embedding].[oobdev://embedding/sentence-transformer/response/send-batch/set] READONLY,
-	@returnValues BIT = 1
+	@returnValues BIT = 0
 AS
 BEGIN
 	SET NOCOUNT ON;
@@ -11,35 +11,70 @@ BEGIN
     );
 
 	DECLARE 
-		 @id BIGINT
-		,@value NVARCHAR(MAX)
-		,@tableName SYSNAME
-		,@conversationHandle UNIQUEIDENTIFIER;
+         @id                    BIGINT
+        ,@sourceId              BIGINT
+        ,@sourceName            NVARCHAR(128)
+        ,@vectorId              BIGINT
+        ,@action                NVARCHAR(20)
+        ,@conversationGroupId   UNIQUEIDENTIFIER
+        ,@conversationHandle    UNIQUEIDENTIFIER
+        ,@messageType           NVARCHAR(128)
+        ,@payload               XML;
 
 	DECLARE [ItemCursor] CURSOR FOR		
 		SELECT 
-			 [Set].[id]
-			,[Set].[value]
-			,[Set].[tableName] 
-		FROM @items AS [Set];
+             [Set].[id]                   
+            ,[Set].[sourceId]             
+            ,[Set].[sourceName]           
+            ,[Set].[vectorId]             
+            ,[Set].[action]               
+            ,[Set].[conversationGroupId]  
+            ,[Set].[conversationHandle]   
+            ,[Set].[messageType]          
+            ,[Set].[payload]            
+		FROM @items AS [Set];      
 
 	OPEN [ItemCursor];
-	FETCH NEXT FROM [ItemCursor] 
-		INTO @id, @value, @tableName;
+	FETCH NEXT FROM [ItemCursor] INTO
+         @id                    
+        ,@sourceId              
+        ,@sourceName            
+        ,@vectorId              
+        ,@action                
+        ,@conversationGroupId   
+        ,@conversationHandle    
+        ,@messageType           
+        ,@payload
+        ;
 
 	WHILE @@FETCH_STATUS = 0
 	BEGIN
 		EXEC [embedding].[oobdev://embedding/sentence-transformer/response/send]
-			 @id = @id
-			,@value = @value
-			,@tableName = @tableName
-			,@conversationHandle = @conversationHandle;
+             @id                  = @id                    
+            ,@sourceId            = @sourceId              
+            ,@sourceName          = @sourceName            
+            ,@vectorId            = @vectorId              
+            ,@action              = @action                
+            ,@conversationGroupId = @conversationGroupId   
+            ,@conversationHandle  = @conversationHandle    
+            ,@messageType         = @messageType           
+            ,@payload             = @payload
+            ;
 
 		INSERT INTO @results 
 			VALUES (@id, @conversationHandle);
 
-		FETCH NEXT FROM [ItemCursor] 
-			INTO @id, @value, @tableName;
+	    FETCH NEXT FROM [ItemCursor] INTO
+             @id                    
+            ,@sourceId              
+            ,@sourceName            
+            ,@vectorId              
+            ,@action                
+            ,@conversationGroupId   
+            ,@conversationHandle    
+            ,@messageType           
+            ,@payload
+            ;
 	END;
 
 	CLOSE [ItemCursor];
