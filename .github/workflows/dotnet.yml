@@ -120,9 +120,8 @@ jobs:
       working-directory: ./src
       run: >
         dotnet restore
-        --configuration ${{ steps.calculate-version.outputs.BuildConfiguration }}
         --property:Version=${{ steps.calculate-version.outputs.FullSemVerLower }}
-        --property:SolutionDir=${{ steps.calculate-version.outputs.BuildWorkspace }}/src
+        --property:SolutionDir=${{ steps.calculate-version.outputs.BuildWorkspace }}/src/
 
     # dotnet build .\Extensions\OoBDev.Data.Vectors --framework net481
     - name: Build - .Net 4.8.1 (SQLCLR)
@@ -132,7 +131,7 @@ jobs:
         --framework net481
         --configuration ${{ steps.calculate-version.outputs.BuildConfiguration }}
         --property:Version=${{ steps.calculate-version.outputs.FullSemVerLower }}
-        --property:SolutionDir=${{ steps.calculate-version.outputs.BuildWorkspace }}/src
+        --property:SolutionDir=${{ steps.calculate-version.outputs.BuildWorkspace }}/src/
         --nologo 
         --no-restore
 
@@ -142,7 +141,7 @@ jobs:
         dotnet build
         --configuration ${{ steps.calculate-version.outputs.BuildConfiguration }}
         --property:Version=${{ steps.calculate-version.outputs.FullSemVerLower }}
-        --property:SolutionDir=${{ steps.calculate-version.outputs.BuildWorkspace }}/src
+        --property:SolutionDir=${{ steps.calculate-version.outputs.BuildWorkspace }}/src/
         --nologo 
         --no-restore
 
@@ -153,7 +152,7 @@ jobs:
         dotnet pack
         --configuration ${{ steps.calculate-version.outputs.BuildConfiguration }}
         --property:Version=${{ steps.calculate-version.outputs.FullSemVerLower }}
-        --property:SolutionDir=${{ steps.calculate-version.outputs.BuildWorkspace }}/src
+        --property:SolutionDir=${{ steps.calculate-version.outputs.BuildWorkspace }}/src/
         --no-build 
         --no-restore 
         --output "${{ steps.calculate-version.outputs.PackagesPath }}"
@@ -164,7 +163,7 @@ jobs:
         dotnet test
         --configuration ${{ steps.calculate-version.outputs.BuildConfiguration }} 
         --property:Version=${{ steps.calculate-version.outputs.FullSemVerLower }}
-        --property:SolutionDir=${{ steps.calculate-version.outputs.BuildWorkspace }}/src
+        --property:SolutionDir=${{ steps.calculate-version.outputs.BuildWorkspace }}/src/
         --no-build 
         --no-restore 
         --nologo 
