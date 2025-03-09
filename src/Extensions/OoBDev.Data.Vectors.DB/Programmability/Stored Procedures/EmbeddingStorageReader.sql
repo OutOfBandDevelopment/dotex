@@ -1,4 +1,5 @@
-CREATE PROCEDURE [embedding].[oobdev://embedding/storage/reader] 
+CREATE PROCEDURE [embedding].[oobdev://embedding/storage/reader]
+	@returnValues BIT = 0
 AS
 BEGIN
 	SET NOCOUNT ON;
@@ -31,66 +32,96 @@ BEGIN
 			INTO [#resposes]
 			FROM @received AS [$received]
 			WHERE 
-				[$received].[mesageType] = 'oobdev://embedding/sentence-transformer/response'
-		DROP TABLE IF EXISTS [#others];
-			SELECT *
-			INTO [#others]
+				[$received].[mesageType] = 'oobdev://embedding/sentence-transformer/response';
+				
+		DECLARE @response [embedding].[oobdev://embedding/sentence-transformer/response/send-batch/set];
+				
+		INSERT INTO @response([action],[conversationGroupId],[conversationHandle],[messageType],[payload])
+			SELECT
+				 'other'
+				,[conversationGroup]
+				,[conversationHandle]
+				,[mesageType]
+				,[messageBody]
 			FROM @received AS [$received]
 			WHERE 
-				[$received].[mesageType] != 'oobdev://embedding/sentence-transformer/response'
-			   
-		IF EXISTS (SELECT * FROM [#resposes])
-		BEGIN
-		
-			WITH XMLNAMESPACES(DEFAULT 'oobdev://embedding/sentence-transformer/response')
-			INSERT INTO [embedding].[Sources] ([Name])
-			SELECT 
-				[$Sources].[SourceName]
-			FROM (
-				SELECT DISTINCT
-					x.value('@tableName', 'NVARCHAR(128)') AS [SourceName]
-				FROM [#resposes] AS [$Received]
-				CROSS APPLY [$Received].[messageBody].nodes('response') x(x)
-			) AS [$Sources]
-			WHERE 
-				NOT EXISTS (
-					SELECT *
-					FROM [embedding].[Sources]
-					WHERE 
-						[Sources].[Name] = [$Sources].[SourceName]
-				);
+				[$received].[mesageType] != 'oobdev://embedding/sentence-transformer/response';
 
-			WITH XMLNAMESPACES(DEFAULT 'oobdev://embedding/sentence-transformer/response')
-			INSERT INTO [embedding].[Vectors] (
-				 [Value]
-				,[OriginalID]
-				,[SourceID]
-			)
+		WITH XMLNAMESPACES(DEFAULT 'oobdev://embedding/sentence-transformer/response')
+		INSERT INTO [embedding].[Sources] ([Name])
+		SELECT 
+			[$Sources].[SourceName]
+		FROM (
+			SELECT DISTINCT
+				x.value('@tableName', 'NVARCHAR(128)') AS [SourceName]
+			FROM [#resposes] AS [$Received]
+			CROSS APPLY [$Received].[messageBody].nodes('response') x(x)
+		) AS [$Sources]
+		WHERE 
+			NOT EXISTS (
+				SELECT *
+				FROM [embedding].[Sources]
+				WHERE 
+					[Sources].[Name] = [$Sources].[SourceName]
+			);
+
+		WITH XMLNAMESPACES(DEFAULT 'oobdev://embedding/sentence-transformer/response')
+		MERGE INTO [embedding].[Vectors] AS target
+		USING (
 			SELECT 
 				 [$Received].[Embedding]
 				,[$Received].[id]
 				,[Sources].[SourceID]
+				,[$Received].[SourceName]
+				,[$Received].[conversationGroupId]
+				,[$Received].[conversationHandle]
+				,[$Received].[mesageType]
 			FROM (
 				SELECT 
-					x.value('@id', 'BIGINT') AS [id]
+					 x.value('@id', 'BIGINT') AS [id]
 					,x.value('@value', 'NVARCHAR(MAX)') AS [value]
 					,x.value('@tableName', 'NVARCHAR(128)') AS [SourceName]
-					,CAST(x.value('@embedding', 'NVARCHAR(MAX)') AS [embedding].[Vector]) AS [Embedding]
+					,CAST(x.value('@embedding', 'NVARCHAR(MAX)') AS [embedding].[VectorF]) AS [Embedding]
+					,[$Received].[conversationGroupId]
+					,[$Received].[conversationHandle]
+					,[$Received].[mesageType]
 				FROM [#resposes] AS [$Received]
 				CROSS APPLY [$Received].[messageBody].nodes('response') x(x)
 			) AS [$Received]
 			INNER JOIN [embedding].[Sources]
-				ON [Sources].[Name] = [$Received].[SourceName];
-			
-			--TODO: add response here
-			-- - [ ] Create a /send
-			-- - [ ] Create a /send-batch
-            -- - [ ] make this a merge script instead
-            -- - [ ] change to VectorF
+				ON [Sources].[Name] = [$Received].[SourceName]
+		) AS source ON source.[id] = target.[OriginalID]
+					AND source.[SourceID] = target.[SourceID]
+		WHEN MATCHED
+			THEN UPDATE SET 
+                [Value] = source.[Embedding]
+		WHEN NOT MATCHED BY TARGET 
+			THEN INSERT ([Value],[OriginalID],[SourceID]) 
+				VALUES (source.[Embedding],source.[id],source.[SourceID])
+		OUTPUT 
+			 inserted.[OriginalID]
+			,inserted.[SourceID]
+			,source.[SourceName]
+			,inserted.[VectorID]
+			,$action
+			,source.[conversationGroupId]
+			,source.[conversationHandle]
+			,source.[mesageType]
+			INTO @response(
+					 [id]                   
+					,[sourceId]             
+					,[sourceName]           
+					,[vectorId]             
+					,[action]               
+					,[conversationGroupId]  
+					,[conversationHandle]  
+					,[mesageType]
+				)
+		;
 
-		END
-
-		--TODO: add end response
+		EXEC [embedding].[oobdev://embedding/sentence-transformer/response/send-batch]
+			@items = @response,
+			@returnValues = 0;
 
 		COMMIT;
 	END TRY
@@ -101,3 +132,6 @@ BEGIN
 		ROLLBACK;
 	END CATCH
 END
+GO
+
+

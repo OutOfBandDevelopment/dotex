@@ -1,5 +1,5 @@
-CREATE PROCEDURE [embedding].[oobdev://embedding/sentence-transformer/send-batch]
-    @items [embedding].[oobdev://embedding/sentence-transformer/send-batch/set] READONLY,
+CREATE PROCEDURE [embedding].[oobdev://embedding/sentence-transformer/response/send-batch]
+    @items [embedding].[oobdev://embedding/sentence-transformer/response/send-batch/set] READONLY,
 	@returnValues BIT = 1
 AS
 BEGIN
@@ -29,11 +29,11 @@ BEGIN
 
 	WHILE @@FETCH_STATUS = 0
 	BEGIN
-		EXEC [embedding].[oobdev://embedding/sentence-transformer/send]
+		EXEC [embedding].[oobdev://embedding/sentence-transformer/response/send]
 			 @id = @id
 			,@value = @value
 			,@tableName = @tableName
-			,@conversationHandle = @conversationHandle OUTPUT;
+			,@conversationHandle = @conversationHandle;
 
 		INSERT INTO @results 
 			VALUES (@id, @conversationHandle);

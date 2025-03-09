@@ -1,7 +1,7 @@
 CREATE TABLE [embedding].[Vectors] (
     [VectorID]    BIGINT               IDENTITY (1, 1) NOT NULL,
     [OriginalID]  BIGINT                  NOT NULL,
-    [Value]       [embedding].[Vector] NOT NULL,
+    [Value]       [embedding].[VectorF] NOT NULL,
     [Length]      AS                   ([Value].[Length]()) PERSISTED,
     [Magnitude]   AS                   ([Value].[Magnitude]()) PERSISTED,
     [SourceID]    INT                  NOT NULL,

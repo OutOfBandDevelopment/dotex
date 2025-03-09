@@ -58,7 +58,6 @@
   </ItemGroup>
   
   <ItemGroup>
-    <Folder Include="Programmability\Types\" />
     <Folder Include="ServiceBroker\MessageTypes\" />
     <Folder Include="ServiceBroker\Contracts\" />
     <Folder Include="ServiceBroker\Services\" />
