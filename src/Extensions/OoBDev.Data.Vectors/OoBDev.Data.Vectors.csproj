@@ -18,6 +18,10 @@
     <InternalsVisibleTo Include="OoBDev.Data.Vectors.Tests" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ExampleScripts\" />
+  </ItemGroup>
+
   <Target Name="BuildNet481First" BeforeTargets="Build" Condition="'$(TargetFramework)' == 'net481'">
     <Message Text="Building SQLCLR first..." Importance="high" />
   </Target>

@@ -3,8 +3,18 @@ using System.ComponentModel.DataAnnotations;
 
 namespace OoBDev.DacPacCompiler.Cli;
 
+public enum DacPackTools
+{
+    Unknown = 0,
+    SqlClr = 1,
+    Merge = 1,
+}
+
 public class DacPacBuilderEngineOptions
 {
+    [CommandParameter(Value = "tool")]
+    public DacPackTools Tool { get; set; } = DacPackTools.SqlClr;
+
     [CommandParameter(Value = "version")]
     public string? ProjectVersion { get; set; }
 
