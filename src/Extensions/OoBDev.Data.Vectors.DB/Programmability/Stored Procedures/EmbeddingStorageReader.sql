@@ -1,16 +1,15 @@
 CREATE PROCEDURE [embedding].[oobdev://embedding/storage/reader]
-	@returnValues BIT = 0
 AS
 BEGIN
 	SET NOCOUNT ON;
 
-	DECLARE  @read INT			= 1
+	DECLARE  @read INT			= 100
 			,@timeout INT		= 6000;
 
 	DECLARE @received TABLE (
 		 [conversationGroup]	UNIQUEIDENTIFIER
 		,[conversationHandle]	UNIQUEIDENTIFIER
-		,[mesageType]			NVARCHAR(255)
+		,[messageType]			NVARCHAR(255)
 		,[messageBody]			XML
 	);
 
@@ -32,7 +31,7 @@ BEGIN
 			INTO [#resposes]
 			FROM @received AS [$received]
 			WHERE 
-				[$received].[mesageType] = 'oobdev://embedding/sentence-transformer/response';
+				[$received].[messageType] = 'oobdev://embedding/sentence-transformer/response';
 				
 		DECLARE @response [embedding].[oobdev://embedding/sentence-transformer/response/send-batch/set];
 				
@@ -41,11 +40,11 @@ BEGIN
 				 'other'
 				,[conversationGroup]
 				,[conversationHandle]
-				,[mesageType]
+				,[messageType]
 				,[messageBody]
 			FROM @received AS [$received]
 			WHERE 
-				[$received].[mesageType] != 'oobdev://embedding/sentence-transformer/response';
+				[$received].[messageType] != 'oobdev://embedding/sentence-transformer/response';
 
 		WITH XMLNAMESPACES(DEFAULT 'oobdev://embedding/sentence-transformer/response')
 		INSERT INTO [embedding].[Sources] ([Name])
@@ -73,18 +72,18 @@ BEGIN
 				,[$Received].[id]
 				,[Sources].[SourceID]
 				,[$Received].[SourceName]
-				,[$Received].[conversationGroupId]
+				,[$Received].[conversationGroup]
 				,[$Received].[conversationHandle]
-				,[$Received].[mesageType]
+				,[$Received].[messageType]
 			FROM (
 				SELECT 
 					 x.value('@id', 'BIGINT') AS [id]
 					,x.value('@value', 'NVARCHAR(MAX)') AS [value]
 					,x.value('@tableName', 'NVARCHAR(128)') AS [SourceName]
 					,CAST(x.value('@embedding', 'NVARCHAR(MAX)') AS [embedding].[VectorF]) AS [Embedding]
-					,[$Received].[conversationGroupId]
+					,[$Received].[conversationGroup]
 					,[$Received].[conversationHandle]
-					,[$Received].[mesageType]
+					,[$Received].[messageType]
 				FROM [#resposes] AS [$Received]
 				CROSS APPLY [$Received].[messageBody].nodes('response') x(x)
 			) AS [$Received]
@@ -104,9 +103,9 @@ BEGIN
 			,source.[SourceName]
 			,inserted.[VectorID]
 			,$action
-			,source.[conversationGroupId]
+			,source.[conversationGroup]
 			,source.[conversationHandle]
-			,source.[mesageType]
+			,source.[messageType]
 			INTO @response(
 					 [id]                   
 					,[sourceId]             
@@ -115,7 +114,7 @@ BEGIN
 					,[action]               
 					,[conversationGroupId]  
 					,[conversationHandle]  
-					,[mesageType]
+					,[messageType]
 				)
 		;
 
@@ -132,6 +131,3 @@ BEGIN
 		ROLLBACK;
 	END CATCH
 END
-GO
-
-

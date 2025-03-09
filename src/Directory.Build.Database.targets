@@ -126,9 +126,9 @@
 				END
 				END
 				GO
-				EXEC [#usp_saveextendedproperty] N'EntityFramework:FileVersion:$(AssemblyName)', '$(FileVersion)';
+				EXEC [#usp_saveextendedproperty] N'OoBDev:FileVersion:$(AssemblyName)', '$(FileVersion)';
 				GO
-				EXEC [#usp_saveextendedproperty] N'EntityFramework:InformationalVersion:$(AssemblyName)', '$(InformationalVersion)';
+				EXEC [#usp_saveextendedproperty] N'OoBDev:InformationalVersion:$(AssemblyName)', '$(InformationalVersion)';
 				GO
 
 				DROP PROCEDURE IF EXISTS [#usp_saveextendedproperty];

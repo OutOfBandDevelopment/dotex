@@ -63,7 +63,7 @@ public class EmbeddingSentenceTransformerQueueReader : IEmbeddingSentenceTransfo
                 var maxRead = receiver.CreateParameter();
                 maxRead.ParameterName = "@maxRead";
                 maxRead.DbType = DbType.Int32;
-                maxRead.Value = 5;
+                maxRead.Value = 100;
                 maxRead.Direction = ParameterDirection.Input;
                 receiver.Parameters.Add(maxRead);
 

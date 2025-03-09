@@ -22,7 +22,7 @@ AS
 BEGIN
 	SET NOCOUNT ON;
 
-    DECLARE @items [embedding].[oobdev://embedding/sentence-transformer/send-batch/set];
+    DECLARE @items [embedding].[oobdev://embedding/sentence-transformer/request/send-batch/set];
 	
     INSERT INTO @items ([id], [value], [tableName])
     SELECT 
@@ -31,7 +31,7 @@ BEGIN
 		,'[dbo].[Names]'
     FROM INSERTED;
 	
-    EXEC [embedding].[oobdev://embedding/sentence-transformer/send-batch] @items = @items, @returnValues = 0;
+    EXEC [embedding].[oobdev://embedding/sentence-transformer/request/send-batch] @items = @items, @returnValues = 0;
 
 END
 GO
