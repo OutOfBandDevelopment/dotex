@@ -1,5 +1,5 @@
 
-CREATE PROCEDURE [embedding].[oobdev://embedding/sentence-transformer/send]
+CREATE PROCEDURE [embedding].[oobdev://embedding/sentence-transformer/request/send]
     @id BIGINT = NULL,
     @value NVARCHAR(MAX),
     @tableName SYSNAME,

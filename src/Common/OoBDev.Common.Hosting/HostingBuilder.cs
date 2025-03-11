@@ -1,4 +1,6 @@
-﻿namespace OoBDev.Common.Hosting;
+﻿using OoBDev.Data.Vectors.Hosting;
+
+namespace OoBDev.Common.Hosting;
 
 /// <summary>
 /// Represents a builder for configuring hosting extensions.
@@ -24,4 +26,6 @@ public record HostingBuilder
     public bool DisableMessageQueueing { get; init; } = false;
 
     public bool DisableVectorHosting { get; init; } = false;
+
+    public string EmbeddingSentenceTransformerQueueReaderConfigurationSection { get; init; } = nameof(EmbeddingSentenceTransformerQueueReaderOptions);
 }

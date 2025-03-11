@@ -57,8 +57,8 @@
 
 		<PropertyGroup>
 			<RunScriptsFromReferences>True</RunScriptsFromReferences>
-			<DatabasePostDeploymentScriptPath>Post-Deployment\Script.PostDeployment.sql</DatabasePostDeploymentScriptPath>
-			<DatabasePreDeploymentScriptPath>Pre-Deployment\Script.PreDeployment.sql</DatabasePreDeploymentScriptPath>
+			<DatabasePostDeploymentScriptPath>Post-Deployment/Script.PostDeployment.sql</DatabasePostDeploymentScriptPath>
+			<DatabasePreDeploymentScriptPath>Pre-Deployment/Script.PreDeployment.sql</DatabasePreDeploymentScriptPath>
 			<DatabaseVersionScriptPath>Post-Deployment/SetDacVersion.sql</DatabaseVersionScriptPath>
 			<DacVersion>$(GitVersion_AssemblySemFileVer)</DacVersion>
 			<BuildVersion>$(GitVersion_InformationalVersion)</BuildVersion>
@@ -126,9 +126,9 @@
 				END
 				END
 				GO
-				EXEC [#usp_saveextendedproperty] N'EntityFramework:FileVersion:$(AssemblyName)', '$(FileVersion)';
+				EXEC [#usp_saveextendedproperty] N'OoBDev:FileVersion:$(AssemblyName)', '$(FileVersion)';
 				GO
-				EXEC [#usp_saveextendedproperty] N'EntityFramework:InformationalVersion:$(AssemblyName)', '$(InformationalVersion)';
+				EXEC [#usp_saveextendedproperty] N'OoBDev:InformationalVersion:$(AssemblyName)', '$(InformationalVersion)';
 				GO
 
 				DROP PROCEDURE IF EXISTS [#usp_saveextendedproperty];

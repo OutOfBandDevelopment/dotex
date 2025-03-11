@@ -1,6 +1,6 @@
-CREATE PROCEDURE [embedding].[oobdev://embedding/sentence-transformer/send-batch]
-    @items [embedding].[oobdev://embedding/sentence-transformer/send-batch/set] READONLY,
-	@returnValues BIT = 1
+CREATE PROCEDURE [embedding].[oobdev://embedding/sentence-transformer/request/send-batch]
+    @items [embedding].[oobdev://embedding/sentence-transformer/request/send-batch/set] READONLY,
+	@returnValues BIT = 0
 AS
 BEGIN
 	SET NOCOUNT ON;
@@ -29,7 +29,7 @@ BEGIN
 
 	WHILE @@FETCH_STATUS = 0
 	BEGIN
-		EXEC [embedding].[oobdev://embedding/sentence-transformer/send]
+		EXEC [embedding].[oobdev://embedding/sentence-transformer/request/send]
 			 @id = @id
 			,@value = @value
 			,@tableName = @tableName

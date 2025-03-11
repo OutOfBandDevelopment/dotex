@@ -1,15 +1,12 @@
 ﻿using Microsoft.Extensions.Logging;
-using Microsoft.VisualBasic;
+using Microsoft.Extensions.Options;
 using OoBDev.AI;
 using OoBDev.Data.Common;
 using OoBDev.System.ComponentModel;
 using OoBDev.System.Text.Json.Serialization;
 using OoBDev.System.Text.Xml.Serialization;
-using System;
 using System.Data;
 using System.Data.Common;
-using System.Data.SqlTypes;
-using System.Net.Http.Headers;
 using System.Xml.Linq;
 
 namespace OoBDev.Data.Vectors.Hosting;
@@ -22,13 +19,15 @@ public class EmbeddingSentenceTransformerQueueReader : IEmbeddingSentenceTransfo
     private readonly ILogger _logger;
     private readonly IXmlSerializer _xml;
     private readonly IJsonSerializer _json;
+    private readonly IOptions<EmbeddingSentenceTransformerQueueReaderOptions> _options;
 
     public EmbeddingSentenceTransformerQueueReader(
         IDatabaseQuery<EmbeddingSentenceTransformerQueueReader> database,
         IEmbeddingProvider embedding,
         ILogger<EmbeddingSentenceTransformerQueueReader> logger,
         IXmlSerializer xml,
-        IJsonSerializer json
+        IJsonSerializer json,
+        IOptions<EmbeddingSentenceTransformerQueueReaderOptions> options
         )
     {
         _database = database;
@@ -36,6 +35,7 @@ public class EmbeddingSentenceTransformerQueueReader : IEmbeddingSentenceTransfo
         _logger = logger;
         _xml = xml;
         _json = json;
+        _options = options;
     }
 
     public async Task RunAsync(CancellationToken cancellationToken)
@@ -63,14 +63,14 @@ public class EmbeddingSentenceTransformerQueueReader : IEmbeddingSentenceTransfo
                 var maxRead = receiver.CreateParameter();
                 maxRead.ParameterName = "@maxRead";
                 maxRead.DbType = DbType.Int32;
-                maxRead.Value = 5;
+                maxRead.Value = _options.Value.MaximumReadLength;
                 maxRead.Direction = ParameterDirection.Input;
                 receiver.Parameters.Add(maxRead);
 
                 var timeout = receiver.CreateParameter();
                 timeout.ParameterName = "@timeout";
                 timeout.DbType = DbType.Int32;
-                timeout.Value = 6000;
+                timeout.Value = _options.Value.ReadWaitTimeout.TotalMilliseconds;
                 timeout.Direction = ParameterDirection.Input;
                 receiver.Parameters.Add(timeout);
 
@@ -166,7 +166,6 @@ public class EmbeddingSentenceTransformerQueueReader : IEmbeddingSentenceTransfo
                 {
                     await command.ExecuteNonQueryAsync(cancellationToken);
                 }
-
 
                 await transaction.CommitAsync(cancellationToken);
             }
