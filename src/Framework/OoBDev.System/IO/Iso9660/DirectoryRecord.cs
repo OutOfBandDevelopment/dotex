@@ -72,7 +72,7 @@ public class DirectoryRecord : IEnumerable<DirectoryRecord>
         offset++;
 
         //1	00 
-        InterlaveGapSize = buffer[offset];
+        InterleaveGapSize = buffer[offset];
         offset++;
 
         //4	01 00 - 00 01 
@@ -137,7 +137,7 @@ public class DirectoryRecord : IEnumerable<DirectoryRecord>
     //             7 (MS)  0 [1 if not the final record for the file]
     public byte FileUnitSize { get; protected set; }
     //    1      0 [file unit size for an interleaved file]
-    public byte InterlaveGapSize { get; protected set; }
+    public byte InterleaveGapSize { get; protected set; }
     //    1      0 [interleave gap size for an interleaved file]
     public ushort VolumeSequenceNumber { get; protected set; }
     //    4      1, as a both endian word [volume sequence number]

@@ -38,6 +38,9 @@ on:
           - ubuntu-latest
           - macos-latest
 
+env:
+  MSBUILDTERMINALLOGGER: off
+
 jobs:
   build:
     runs-on: "${{ inputs.build-platform || 'ubuntu-latest' }}"

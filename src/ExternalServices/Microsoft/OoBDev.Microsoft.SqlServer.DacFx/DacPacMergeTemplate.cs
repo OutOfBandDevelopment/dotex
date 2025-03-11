@@ -11,7 +11,7 @@ public class DacPacMergeTemplate : IDacPacMergeTemplate
     public string SourcePath { get; set; } = Environment.CurrentDirectory;
     public string[] SourcePatterns { get; set; } = ["*.dacpac"];
 
-    public string TargetPath { get; set; }
+    public string TargetPath { get; set; } = default!;
 
     public SqlServerVersion ServerVersion { get; set; } = SqlServerVersion.SqlAzure;
 

@@ -5,7 +5,6 @@ using System.Data.SqlTypes;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
 
 namespace OoBDev.Data.Vectors;
 
@@ -33,7 +32,6 @@ public struct SqlVector : INullable, IBinarySerialize, IEquatable<SqlVector>
         IsPrecise = true,
         IsMutator = false
         )]
-    //[MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly SqlDouble Magnitude() => _magnitude;
 
     private SqlVector(bool isNull)
@@ -268,4 +266,8 @@ public struct SqlVector : INullable, IBinarySerialize, IEquatable<SqlVector>
         }
         return true;
     }
+
+    public override readonly int GetHashCode() => _isNull.GetHashCode() * 31 + _values.Sum(i => i.GetHashCode() * 47) + _magnitude.GetHashCode();
+    public static bool operator ==(SqlVector left, SqlVector right) => left.Equals(right);
+    public static bool operator !=(SqlVector left, SqlVector right) => !(left == right);
 }
