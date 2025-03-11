@@ -145,8 +145,8 @@
 
 		<PropertyGroup>
 			<DatabasePostDeploymentScriptTemplate>
-				:r .\SetDacVersion.sql
-				--:r .\your-script.sql
+				:r ./SetDacVersion.sql
+				--:r ./your-script.sql
 			</DatabasePostDeploymentScriptTemplate>
 		</PropertyGroup>
 		<WriteLinesToFile
