@@ -123,6 +123,8 @@ BEGIN
 			@returnValues = 0;
 
 		COMMIT;
+
+		EXEC [embedding].[oobdev://embedding/storage/hashes/build];
 	END TRY
 	BEGIN CATCH
 		SELECT 
