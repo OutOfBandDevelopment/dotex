@@ -195,4 +195,22 @@ public struct SqlMatrix : INullable, IBinarySerialize, IEquatable<SqlMatrix>
             }
         return true;
     }
+
+    public override readonly int GetHashCode()
+    {
+        var hash = _isNull.GetHashCode() * 31;
+
+        var rows = _values.GetUpperBound(0) + 1;
+        var columns = _values.GetUpperBound(1) + 1;
+
+        for (var r = 0; r < rows; r++)
+            for (var c = 0; c < columns; c++)
+            {
+                hash += Values[r, c].GetHashCode() * 47;
+            }
+
+        return hash;
+    }
+    public static bool operator ==(SqlMatrix left, SqlMatrix right) => left.Equals(right);
+    public static bool operator !=(SqlMatrix left, SqlMatrix right) => !(left == right);
 }

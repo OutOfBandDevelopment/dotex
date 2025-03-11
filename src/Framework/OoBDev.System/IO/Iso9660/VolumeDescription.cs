@@ -85,28 +85,28 @@ public class VolumeDescription : IEnumerable<DirectoryRecord>, IDisposable
         //653      zeros
     }
 
-    public string DescriptorSet { get; protected set; }
-    public string SystemIdentifier { get; protected set; }
-    public string VolumeIdentifier { get; protected set; }
-    public uint SectorCount { get; protected set; }
-    public ushort VolumeSetSize { get; protected set; }
-    public ushort VolumeSequenceNumber { get; protected set; }
-    public ushort SectorSize { get; protected set; }
-    public uint PathTableLength { get; protected set; }
-    public uint FirstSectorFirst { get; protected set; }
-    public uint FirstSectorSecond { get; protected set; }
-    public DirectoryRecord DirectoryRecord { get; protected set; }
-    public string VolumeSetIdentifier { get; protected set; }
-    public string PublisherIdentifier { get; protected set; }
-    public string DataPreparerIdentifier { get; protected set; }
-    public string ApplicationIdentifier { get; protected set; }
-    public string CopyRightFileIdentifier { get; protected set; }
-    public string AbstractFileIdentifier { get; protected set; }
-    public string BibliographyFileIdentifier { get; protected set; }
-    public DateTime VolumeCreation { get; protected set; }
-    public DateTime VolumeModification { get; protected set; }
-    public DateTime VolumeExpires { get; protected set; }
-    public DateTime VolumeEffective { get; protected set; }
+    public string DescriptorSet { get; init; }
+    public string SystemIdentifier { get; init; }
+    public string VolumeIdentifier { get; init; }
+    public uint SectorCount { get; init; }
+    public ushort VolumeSetSize { get; init; }
+    public ushort VolumeSequenceNumber { get; init; }
+    public ushort SectorSize { get; init; }
+    public uint PathTableLength { get; init; }
+    public uint FirstSectorFirst { get; init; }
+    public uint FirstSectorSecond { get; init; }
+    public DirectoryRecord DirectoryRecord { get; init; }
+    public string VolumeSetIdentifier { get; init; }
+    public string PublisherIdentifier { get; init; }
+    public string DataPreparerIdentifier { get; init; }
+    public string ApplicationIdentifier { get; init; }
+    public string CopyRightFileIdentifier { get; init; }
+    public string AbstractFileIdentifier { get; init; }
+    public string BibliographyFileIdentifier { get; init; }
+    public DateTime VolumeCreation { get; init; }
+    public DateTime VolumeModification { get; init; }
+    public DateTime VolumeExpires { get; init; }
+    public DateTime VolumeEffective { get; init; }
 
     public static VolumeDescription Create(Stream stream)
     {

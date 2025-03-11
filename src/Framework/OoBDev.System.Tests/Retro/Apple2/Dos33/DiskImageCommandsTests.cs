@@ -23,7 +23,7 @@ public class DiskImageCommandsTests
         //Mock
 
         //Test
-        var vtoc = dic.GetVolumeTableOfContents(diskImageStream);
+        var vtoc = dic.GetVolumeTableOfContents(diskImageStream ?? throw new NotSupportedException());
 
         //Assert
 
@@ -65,7 +65,7 @@ public class DiskImageCommandsTests
 
         //Test
         var dic = new DiskImageCommands();
-        var catalogs = dic.GetCatalogs(diskImageStream).ToArray();
+        var catalogs = dic.GetCatalogs(diskImageStream ?? throw new NotSupportedException()).ToArray();
 
         //Output
         foreach (var catalog in catalogs)
@@ -102,7 +102,7 @@ public class DiskImageCommandsTests
 
         //Test
         var dic = new DiskImageCommands();
-        var target = (from catalog in dic.GetCatalogs(diskImageStream)
+        var target = (from catalog in dic.GetCatalogs(diskImageStream ?? throw new NotSupportedException())
                       from file in catalog.FileEntries
                       where file.Exists
                       select file).First();
@@ -138,7 +138,7 @@ public class DiskImageCommandsTests
 
         //Test
         var dic = new DiskImageCommands();
-        var target = (from catalog in dic.GetCatalogs(diskImageStream)
+        var target = (from catalog in dic.GetCatalogs(diskImageStream ?? throw new NotSupportedException())
                       from file in catalog.FileEntries
                       where file.Exists
                       select file).First();

@@ -1,4 +1,6 @@
-﻿using OoBDev.DacFx;
+﻿// Ignore Spelling: Dac
+
+using OoBDev.DacFx;
 using OoBDev.System.ComponentModel;
 using System.Threading.Tasks;
 

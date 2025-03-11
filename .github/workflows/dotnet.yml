@@ -38,6 +38,9 @@ on:
           - ubuntu-latest
           - macos-latest
 
+env:
+  MSBUILDTERMINALLOGGER: off
+
 jobs:
   build:
     runs-on: "${{ inputs.build-platform || 'ubuntu-latest' }}"
@@ -169,8 +172,9 @@ jobs:
         --nologo 
         --filter "TestCategory=Unit|TestCategory=Simulate" 
         --collect:"XPlat Code Coverage" 
-        --settings "${{ steps.calculate-version.outputs.RunSettings }}"
         --results-directory "${{ steps.calculate-version.outputs.TestResultsPath }}"
+        
+      #--settings "${{ steps.calculate-version.outputs.RunSettings }}"
 
     # https://github.com/marketplace/actions/publish-test-results
     # https://github.com/marketplace/actions/publish-test-results#create-a-badge-from-test-results

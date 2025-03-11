@@ -28,9 +28,10 @@ public class TestLogger : ILogger
         _category = string.IsNullOrWhiteSpace(category) ? null : category;
     }
 
-    public virtual IDisposable BeginScope<TState>(TState state) => new LoggerScope<TState>(state);
+    public virtual IDisposable? BeginScope<TState>(TState state) where TState : notnull => new LoggerScope<TState>(state);
     public virtual bool IsEnabled(LogLevel logLevel) => true;
-    public virtual void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
+
+    public virtual void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter)
     {
         void WriteMessage(string message)
         {

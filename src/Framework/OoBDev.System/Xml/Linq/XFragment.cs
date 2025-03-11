@@ -62,7 +62,7 @@ public class XFragment : IList<XNode>
 
     public override string? ToString() => this;
 
-    public XmlReader CreateReader() => XmlReader.Create(new StringReader(this), new XmlReaderSettings
+    public XmlReader CreateReader() => XmlReader.Create(new StringReader(this!), new XmlReaderSettings
     {
         ConformanceLevel = ConformanceLevel.Fragment,
     });

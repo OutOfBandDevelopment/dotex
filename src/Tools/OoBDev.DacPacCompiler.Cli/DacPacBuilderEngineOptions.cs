@@ -1,5 +1,4 @@
 ﻿using OoBDev.System.Configuration;
-using System.ComponentModel.DataAnnotations;
 
 namespace OoBDev.DacPacCompiler.Cli;
 

@@ -88,7 +88,7 @@ public class EmbeddingSentenceTransformerQueueReader : IEmbeddingSentenceTransfo
 
                         _logger.LogInformation($"{{{nameof(conversationHandle)}}}: {{{nameof(messageType)}}}", conversationHandle, messageType);
 
-                        if (messageType == "oobdev://embedding/sentence-transformer/request")
+                        if (messageType == "oobdev://embedding/sentence-transformer/request" && messageBodyXml != null)
                         {
                             // oobdev://embedding/sentence-transformer
                             // ﻿<st:request xmlns:st="oobdev://embedding/sentence-transformer/request" id="1" value="gsdgs" tableName="[dbo].[Names]"/>

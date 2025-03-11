@@ -36,13 +36,17 @@ public static class YamlNavigatorFactory
               attributeSelector: a => a switch
               {
                   _ when a.Tag == null => null,
-                  _ when !string.IsNullOrWhiteSpace(a.Tag.Value) => new[] { ((XName)nameof(a.Tag), a.Tag.Value ?? ""), },
+                  _ when !string.IsNullOrWhiteSpace(a.Tag.Value) => new[] { ((XName)nameof(a.Tag), (string?)(a.Tag.Value ?? "")), },
                   _ => null,
               },
 
              childSelector: c => c switch
              {
-                 YamlMappingNode mapping => mapping.Select(i => (XName.Get(i.Key is YamlScalarNode s ? s.Value : "item", rootName.NamespaceName), i.Value)),
+                 YamlMappingNode mapping => mapping.Select(i => (XName.Get(i.Key switch
+                 {
+                     YamlScalarNode s when s.Value != null => s.Value,
+                     _ => "item"
+                 }, rootName.NamespaceName), i.Value)),
                  YamlSequenceNode mapping => mapping.Select(i => (XName.Get("item", rootName.NamespaceName), i)),
                  YamlScalarNode scalar => null,
                  _ => null,

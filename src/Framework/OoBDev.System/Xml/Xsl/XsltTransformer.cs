@@ -67,8 +67,10 @@ public class XsltTransformer(string sandbox, params object[] extensions) : IXslt
     /// <param name="inputSource"></param>
     /// <param name="input">source XML file</param>
     /// <param name="output">resulting text content</param>
-    public void Transform(string template, string inputSource, IXPathNavigable input, string output)
+    public void Transform(string template, string inputSource, IXPathNavigable? input, string output)
     {
+        if (input == null) return;
+
         template = PathEx.FixUpPath(template) ?? template;
         inputSource = PathEx.FixUpPath(inputSource) ?? inputSource;
         output = PathEx.FixUpPath(output) ?? output;
@@ -151,12 +153,12 @@ public class XsltTransformer(string sandbox, params object[] extensions) : IXslt
     public void TransformAll(string template, string input, Func<string, IXPathNavigable?> inputNavigatorFactory, string output, string? excludeInputSource = null)
     {
         var inputFullPath = Path.GetFullPath(input);
-        var inputDir = PathEx.GetBasePath(input);
+        var inputDir = PathEx.GetBasePath(input) ?? ".";
         var excludeFiles = PathEx.EnumerateFiles(excludeInputSource);
         var inputFiles = PathEx.EnumerateFiles(input).Select(Path.GetFullPath).Except(excludeFiles.Select(Path.GetFullPath));
 
         var outputFullPath = Path.GetFullPath(output);
-        var outputDir = Path.GetDirectoryName(outputFullPath);
+        var outputDir = Path.GetDirectoryName(outputFullPath) ?? ".";
         var outputPattern = Path.GetFileName(outputFullPath).Split('*').LastOrDefault() ?? "";
 
         Console.WriteLine($"\"{inputDir}\" => \"{outputDir}\"");

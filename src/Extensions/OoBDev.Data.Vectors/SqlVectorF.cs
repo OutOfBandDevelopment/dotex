@@ -282,4 +282,8 @@ public struct SqlVectorF : INullable, IBinarySerialize, IEquatable<SqlVectorF>
         }
         return true;
     }
+
+    public override readonly int GetHashCode() => _isNull.GetHashCode() * 31 + _values.Sum(i => i.GetHashCode() * 47) + _magnitude.GetHashCode();
+    public static bool operator ==(SqlVectorF left, SqlVectorF right) => left.Equals(right);
+    public static bool operator !=(SqlVectorF left, SqlVectorF right) => !(left == right);
 }

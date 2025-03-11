@@ -1,4 +1,6 @@
-﻿using Microsoft.SqlServer.Server;
+﻿// Ignore Spelling: Dac
+
+using Microsoft.SqlServer.Server;
 using Microsoft.SqlServer.Types;
 using System;
 using System.Collections;
@@ -264,13 +266,13 @@ END
         let accumulator = type.GetMethod("Accumulate")
         let terminator = type.GetMethod("Terminate")
         where attrib != null
-        select new XElement(ns + "Element", new XAttribute("Type", "SqlAggregate"), new XAttribute("Name", GetName(attrib)), 
+        select new XElement(ns + "Element", new XAttribute("Type", "SqlAggregate"), MakeAttribute("Name", GetName(attrib)),
            new XElement(ns + "Property", new XAttribute("Name", "Format"), new XAttribute("Value", (int)attrib.Format)),
            new XElement(ns + "Property", new XAttribute("Name", "IsInvariantToDuplicates"), new XAttribute("Value", attrib.IsInvariantToDuplicates ? "True" : "False")),
            new XElement(ns + "Property", new XAttribute("Name", "IsInvariantToNulls"), new XAttribute("Value", attrib.IsInvariantToNulls ? "True" : "False")),
            new XElement(ns + "Property", new XAttribute("Name", "IsNullIfEmpty"), new XAttribute("Value", attrib.IsNullIfEmpty ? "True" : "False")),
            new XElement(ns + "Property", new XAttribute("Name", "MaxByteSize"), new XAttribute("Value", attrib.MaxByteSize)),
-           new XElement(ns + "Property", new XAttribute("Name", "ClassName"), new XAttribute("Value", type.FullName)),
+           new XElement(ns + "Property", new XAttribute("Name", "ClassName"), MakeAttribute("Value", type.FullName)),
            new XElement(ns + "Relationship", new XAttribute("Name", "Assembly"),
                new XElement(ns + "Entry",
                    new XElement(ns + "References", new XAttribute("Name", $"[{realAssemblyName}]")
@@ -365,6 +367,8 @@ END
 
     private string GetTypeName(Type type) => throw new NotSupportedException($"no mapping found for {type}");
 
+    private XAttribute? MakeAttribute(XName name, object? value) => value == null ? null : new XAttribute(name, value);
+
     public XElement Schema(object input) =>
         new XElement(ns + "Relationship", new XAttribute("Name", "Schema"),
             new XElement(ns + "Entry",
@@ -412,7 +416,7 @@ END
                         new XElement(ns + "Property", new XAttribute("Name", "IsDeterministic"), new XAttribute("Value", attrib.IsDeterministic ? "True" : "False")),
                         new XElement(ns + "Property", new XAttribute("Name", "IsPrecise"), new XAttribute("Value", attrib.IsPrecise ? "True" : "False")),
                         new XElement(ns + "Property", new XAttribute("Name", "MethodName"), new XAttribute("Value", function.Name)),
-                        new XElement(ns + "Property", new XAttribute("Name", "ClassName"), new XAttribute("Value", functionClasses.FullName)),
+                        new XElement(ns + "Property", new XAttribute("Name", "ClassName"), MakeAttribute("Value", functionClasses.FullName)),
                         new XElement(ns + "Relationship", new XAttribute("Name", "Assembly"),
                             new XElement(ns + "Entry",
                                 new XElement(ns + "References", new XAttribute("Name", $"[{realAssemblyName}]"))
@@ -466,7 +470,7 @@ END
             from parameter in parameters
             select new XElement(ns + "Entry",
                 new XElement(ns + "Element", new XAttribute("Type", "SqlClrMethodParameter"), new XAttribute("Name", $"{GetName(parameter.Member.DeclaringType)}.[{GetName(parameter.Member)}].[{parameter.Name}]"),
-                    new XElement(ns + "Property", new XAttribute("Name", "ClrName"), new XAttribute("Value", parameter.Name)),
+                    new XElement(ns + "Property", new XAttribute("Name", "ClrName"), MakeAttribute("Value", parameter.Name)),
                     new XElement(ns + "Relationship", new XAttribute("Name", "Type"),
                         new XElement(ns + "Entry",
                             TypeSpecifier(parameter)
@@ -481,7 +485,7 @@ END
             Properties(parameterInfo),
             new XElement(ns + "Relationship", new XAttribute("Name", "Type"),
                 new XElement(ns + "Entry",
-                    new XElement(ns + "References", ExternalSource(parameterInfo.ParameterType), new XAttribute("Name", GetName(parameterInfo.ParameterType)))
+                    new XElement(ns + "References", ExternalSource(parameterInfo.ParameterType), MakeAttribute("Name", GetName(parameterInfo.ParameterType)))
                 )
             )
         );

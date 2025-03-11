@@ -1,6 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.TestUtilities;
-using System;
 
 namespace OoBDev.Data.Vectors.Tests;
 

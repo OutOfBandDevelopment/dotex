@@ -14,7 +14,7 @@ public class SqlVectorFTests
     public void MagnitudeTest()
     {
         var vector = new SqlVectorF([1, 2, 3, 4]);
-        Assert.AreEqual(5.477225575051661, vector.Magnitude().Value);
+        Assert.AreEqual(5.4772257804870605f, vector.Magnitude().Value);
     }
 
     [TestMethod]
@@ -30,7 +30,7 @@ public class SqlVectorFTests
 
     [DataTestMethod]
     [TestCategory(TestCategories.Unit)]
-    [DataRow(VectorDistanceTypes.CosineDistance, 0.00619201f)]
+    [DataRow(VectorDistanceTypes.CosineDistance, 0.0061920513f)]
     [DataRow(VectorDistanceTypes.CosineSimilarity, 0.993808f)]
     [DataRow(VectorDistanceTypes.DotProduct, 40.0f)]
     [DataRow(VectorDistanceTypes.EuclideanDistance, 2.0f)]
@@ -57,7 +57,7 @@ public class SqlVectorFTests
     {
         var vector = new SqlVectorF([1, 2, 3, 4]);
         var vector2 = new SqlVectorF([2, 3, 4, 5]);
-        Assert.AreEqual(0.00619201f, vector.Cosine(vector2));
+        Assert.AreEqual(0.0061920513f, vector.Cosine(vector2));
     }
 
     [TestMethod]

@@ -1,5 +1,7 @@
 ﻿using OoBDev.System.IO;
 using OoBDev.System.Security;
+using System;
+using System.Diagnostics;
 using System.IO;
 using System.Xml.Linq;
 using System.Xml.Serialization;
@@ -28,7 +30,14 @@ public class FileExtensions(string sandbox)
     {
         if (string.IsNullOrWhiteSpace(source.Value)) return source;
         var realPath = SandboxPath.EnsureSafePath(sandbox, filePath).CreateParentIfNotExists();
-        File.WriteAllText(realPath, source.Value);
+        if (realPath == null)
+        {
+            Debug.WriteLine("FileExtensions::WriteToFile(...) path is null");//TODO: change to injectable console logger
+        }
+        else
+        {
+            File.WriteAllText(realPath, source.Value);
+        }
         return source;
     }
 
@@ -40,5 +49,5 @@ public class FileExtensions(string sandbox)
     public XPathNavigator ReadXml(string filePath) =>
         //TODO: should this be made safe to return an empty set if file not found?
         //TODO: should this be made safe to not throw if input is not XML
-        XDocument.Load(SandboxPath.EnsureSafePath(sandbox, filePath)).CreateNavigator();
+        XDocument.Load(SandboxPath.EnsureSafePath(sandbox, filePath) ?? throw new NotSupportedException("null path not allowe")).CreateNavigator();
 }

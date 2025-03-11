@@ -1,35 +1,29 @@
 #!/bin/bash
+set -e  # Exit immediately if a command exits with a non-zero status
 
-# Enable error handling
-set -e
+export MSBUILDTERMINALLOGGER=off
 
-# Check if SolutionDir is set
+# Set SolutionDir if not already set
 if [ -z "$SolutionDir" ]; then
-    SolutionDir="$(dirname "$0")/"
+    SolutionDir="$(dirname "$(realpath "$0")")"
 fi
 
-# Check if PublishPath is set
+# Set PublishPath if not already set
 if [ -z "$PublishPath" ]; then
-    PublishPath="${SolutionDir}publish/libs/"
+    PublishPath="$SolutionDir/publish/libs/"
 fi
 
 echo "Build Web Project"
 
-# Remove the publish path if it exists
+# Remove and recreate the publish directory
 rm -rf "$PublishPath"
-# Create the publish directory
 mkdir -p "$PublishPath"
 
 # Build the project
-dotnet build --configuration Release --output "$PublishPath" /bl:logfile=./docs/build/solution.binlog
-
-# Capture the exit status
-TEST_ERR=$?
-
-# Check if the build failed
-if [ "$TEST_ERR" -ne 0 ]; then
-    echo "Build Failed! $TEST_ERR"
-    exit $TEST_ERR
+if ! dotnet build \
+    --configuration Release \
+    --output "$PublishPath" \
+    /bl:logfile=./docs/build/solution.binlog; then
+    echo "Build Failed! $?"
+    exit 1
 fi
-
-exit 0

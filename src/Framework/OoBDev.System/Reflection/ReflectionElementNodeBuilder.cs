@@ -89,7 +89,7 @@ public class ReflectionElementNodeBuilder(object seed, bool excludeNamespace = f
             }
         };
 
-    protected virtual string? ValueSelector(object model) =>
+    protected virtual string? ValueSelector(object? model) =>
         IsValue(model) ? model switch
         {
             null => null,
@@ -99,7 +99,7 @@ public class ReflectionElementNodeBuilder(object seed, bool excludeNamespace = f
             byte[] bytes => Convert.ToBase64String(bytes),
             IEnumerable<byte> bytes => Convert.ToBase64String(bytes.ToArray()),
             MemoryStream ms => Convert.ToBase64String(ms.ToArray()),
-            Stream stream => Convert.ToBase64String(stream.AsBytes()),
+            Stream stream => ValueSelector(stream.AsBytes()),
 
             string @string => @string,
             char[] chars => new string(chars),
@@ -108,7 +108,7 @@ public class ReflectionElementNodeBuilder(object seed, bool excludeNamespace = f
             _ => null // model.ToString()
         } : null;
 
-    protected virtual bool IsValue(object input) =>
+    protected virtual bool IsValue(object? input) =>
         input switch
         {
             null => false,
