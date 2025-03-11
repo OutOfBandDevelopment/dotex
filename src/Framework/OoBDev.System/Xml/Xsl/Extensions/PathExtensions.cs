@@ -90,10 +90,14 @@ public class PathExtensions
     /// <returns>An XPathNavigator of the full names (including paths) for the files in the specified directory
     /// that match the specified search pattern, or an empty array if no files are found.</returns>
     public XPathNavigator? ListFiles(string path) =>
-        new XElement(_ns + "files",
-            from f in Directory.GetFiles(SandboxPath.EnsureSafePath(_sandbox, path))
-            select new XElement(_ns + "file", f)
-        ).ToXPathNavigable().CreateNavigator();
+        SandboxPath.EnsureSafePath(_sandbox, path) switch
+        {
+            string cleanPath => new XElement(_ns + "files",
+                from f in Directory.GetFiles(cleanPath)
+                select new XElement(_ns + "file", f)
+            ).ToXPathNavigable().CreateNavigator(),
+            _ => null
+        };
 
     /// <summary>
     /// Returns the names of files (including their paths) that match the specified search

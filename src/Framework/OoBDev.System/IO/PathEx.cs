@@ -14,7 +14,7 @@ public static class PathEx
     /// </summary>
     /// <param name="path"></param>
     /// <returns>return input path to support chaining</returns>
-    public static string CreateParentIfNotExists(this string path)
+    public static string? CreateParentIfNotExists(this string? path)
     {
         var realDir = Path.GetDirectoryName(path);
         if (realDir != null && !Directory.Exists(realDir))
@@ -65,16 +65,14 @@ public static class PathEx
         var segmentsQuery = from ps in pathSegments
                             select (segment: ps, hasWildcard: wildCards.Any(ps.Contains));
         var basePath = string.Join(Path.DirectorySeparatorChar, segmentsQuery.TakeWhile(ps => !ps.hasWildcard).Select(ps => ps.segment));
-        // var searchPathSegments = segmentsQuery.SkipWhile(ps => !ps.hasWildcard).ToArray();
-        //var searchPaths = searchPathSegments[..^1];
-        //var searchFilePattern = searchPathSegments[^1].segment;
         var searchPathSegments = string.Join(Path.DirectorySeparatorChar, segmentsQuery.SkipWhile(ps => !ps.hasWildcard).Select(ps => ps.segment));
         var searchPaths = Path.GetDirectoryName(searchPathSegments);
         var searchFilePattern = Path.GetFileName(searchPathSegments);
 
-        foreach (var directory in EnumerateDirectories(basePath, searchPaths))
-            foreach (var file in Directory.EnumerateFiles(directory, searchFilePattern))
-                yield return file;
+        if (searchPaths != null)
+            foreach (var directory in EnumerateDirectories(basePath, searchPaths))
+                foreach (var file in Directory.EnumerateFiles(directory, searchFilePattern))
+                    yield return file;
     }
 
     public static IEnumerable<string> EnumerateDirectories(string path, string wildCardPath)

@@ -10,7 +10,7 @@ public interface IStreamDevice<TMessage> : IDeviceReceiver<TMessage>, IDeviceTra
     new event EventHandler<TMessage> MessageReceived;
     event EventHandler<StreamDeviceStatus> DeviceStatus;
     event EventHandler<DeviceErrorEventArgs> MessageReceivedError;
-    event EventHandler<DeviceErrorEventArgs> MessageTrasmitterError;
+    event EventHandler<DeviceErrorEventArgs> MessageTransmitterError;
 
     new Task<bool> Transmit(TMessage message);
 }

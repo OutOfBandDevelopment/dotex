@@ -38,7 +38,7 @@ public class LdapSimpleFilter : ILdapFilter
     public string Value { get; private set; }
     internal string UnEscapedSuffix { get; private set; }
 
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         return obj is LdapSimpleFilter inner && new
         {

@@ -264,13 +264,13 @@ END
         let accumulator = type.GetMethod("Accumulate")
         let terminator = type.GetMethod("Terminate")
         where attrib != null
-        select new XElement(ns + "Element", new XAttribute("Type", "SqlAggregate"), new XAttribute("Name", GetName(attrib)), 
+        select new XElement(ns + "Element", new XAttribute("Type", "SqlAggregate"), MakeAttribute("Name", GetName(attrib)),
            new XElement(ns + "Property", new XAttribute("Name", "Format"), new XAttribute("Value", (int)attrib.Format)),
            new XElement(ns + "Property", new XAttribute("Name", "IsInvariantToDuplicates"), new XAttribute("Value", attrib.IsInvariantToDuplicates ? "True" : "False")),
            new XElement(ns + "Property", new XAttribute("Name", "IsInvariantToNulls"), new XAttribute("Value", attrib.IsInvariantToNulls ? "True" : "False")),
            new XElement(ns + "Property", new XAttribute("Name", "IsNullIfEmpty"), new XAttribute("Value", attrib.IsNullIfEmpty ? "True" : "False")),
            new XElement(ns + "Property", new XAttribute("Name", "MaxByteSize"), new XAttribute("Value", attrib.MaxByteSize)),
-           new XElement(ns + "Property", new XAttribute("Name", "ClassName"), new XAttribute("Value", type.FullName)),
+           new XElement(ns + "Property", new XAttribute("Name", "ClassName"), MakeAttribute("Value", type.FullName)),
            new XElement(ns + "Relationship", new XAttribute("Name", "Assembly"),
                new XElement(ns + "Entry",
                    new XElement(ns + "References", new XAttribute("Name", $"[{realAssemblyName}]")
@@ -364,6 +364,8 @@ END
         _isBuiltIn.Contains(type) ? new XAttribute("ExternalSource", "BuiltIns") : null;
 
     private string GetTypeName(Type type) => throw new NotSupportedException($"no mapping found for {type}");
+
+    private XAttribute? MakeAttribute(XName name, object? value) => value == null ? null : new XAttribute(name, value);
 
     public XElement Schema(object input) =>
         new XElement(ns + "Relationship", new XAttribute("Name", "Schema"),

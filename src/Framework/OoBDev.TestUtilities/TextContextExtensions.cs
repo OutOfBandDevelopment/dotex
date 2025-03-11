@@ -23,7 +23,7 @@ public static class TextContextExtensions
     /// <param name="value">object to store</param>
     /// <param name="fileName"></param>
     /// <returns>test context for chaining</returns>
-    public static TestContext AddResult(this TestContext context, object value, string fileName)
+    public static TestContext AddResult(this TestContext context, object? value, string? fileName)
     {
         if (value == null)
             return context;

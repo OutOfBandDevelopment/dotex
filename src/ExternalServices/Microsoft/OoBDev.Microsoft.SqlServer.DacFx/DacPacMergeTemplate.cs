@@ -1,4 +1,6 @@
-﻿using Microsoft.SqlServer.Dac.Model;
+﻿// Ignore Spelling: Dac
+
+using Microsoft.SqlServer.Dac.Model;
 using OoBDev.DacFx;
 using System;
 
@@ -7,7 +9,7 @@ namespace OoBDev.Microsoft.SqlServer.DacFx;
 public class DacPacMergeTemplate : IDacPacMergeTemplate
 {
     public string SourcePath { get; set; } = Environment.CurrentDirectory;
-    public string[] SourcePatterns { get; set; } = new[] { "*.dacpac" };
+    public string[] SourcePatterns { get; set; } = ["*.dacpac"];
 
     public string TargetPath { get; set; }
 

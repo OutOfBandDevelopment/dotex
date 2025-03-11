@@ -8,7 +8,7 @@ public class LdapNotFilter : ILdapFilter
 
     public ILdapFilter Wrapped { get; init; }
 
-    public override bool Equals(object obj) => obj switch { LdapNotFilter inner => Wrapped.Equals(inner.Wrapped), _ => false };
+    public override bool Equals(object? obj) => obj switch { LdapNotFilter inner => Wrapped.Equals(inner.Wrapped), _ => false };
 
     public override int GetHashCode() => new { Wrapped, }.GetHashCode();
 }

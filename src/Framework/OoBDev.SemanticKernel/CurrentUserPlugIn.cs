@@ -22,7 +22,7 @@ public class CurrentUserPlugIn : IKernelPlugIn
     public Task<string?> WhoAmI()
     {
         _logger.LogInformation("Called: {method}", nameof(WhoAmI));
-        return Task.FromResult(Environment.UserName);
+        return Task.FromResult<string?>(Environment.UserName);
     }
 }
 

@@ -8,7 +8,7 @@ namespace OoBDev.System.Xml.Linq;
 
 public static class XElementEx
 {
-    public static XmlNode ToXmlNode(this XElement element)
+    public static XmlNode? ToXmlNode(this XElement element)
     {
         using var xmlReader = element.CreateReader();
         var xmlDoc = new XmlDocument();

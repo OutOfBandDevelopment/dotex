@@ -9,14 +9,19 @@ namespace OoBDev.System.Net.SecurityManagement;
 
 public class LdapFilterBuilder
 {
-    public string Build(ILdapFilter filter)
+    //TODO: extract interface
+
+    public string? Build(ILdapFilter filter)
     {
         ArgumentNullException.ThrowIfNull(filter);
 
-        var result = (Build(filter as LdapSimpleFilter)
-                  ?? Build(filter as LdapFilterSetBase)
-                  ?? Build(filter as LdapNotFilter)) ?? throw new NotSupportedException(string.Format("LdapFilterType: {0} is not supported", filter.GetType()))
-                  ;
+        var result = filter switch
+        {
+            LdapSimpleFilter simple => Build(simple),
+            LdapFilterSetBase simple => Build(simple),
+            LdapNotFilter simple => Build(simple),
+            _ => throw new NotSupportedException(string.Format("LdapFilterType: {0} is not supported", filter.GetType()))
+        };
         return result;
     }
 

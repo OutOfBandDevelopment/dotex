@@ -23,7 +23,7 @@ public class QueueClientFactory : IQueueClientFactory
     {
         var factory = new ConnectionFactory()
         {
-            HostName = config[nameof(ConnectionFactory.HostName)],
+            HostName = config[nameof(ConnectionFactory.HostName)] ?? throw new ConfigurationMissingException($"{config.Path}:{nameof(ConnectionFactory.HostName)}"),
         };
         var connection = await factory.CreateConnectionAsync();
         var channel = await connection.CreateChannelAsync();

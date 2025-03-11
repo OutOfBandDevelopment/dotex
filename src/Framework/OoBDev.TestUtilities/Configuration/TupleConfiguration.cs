@@ -10,8 +10,8 @@ public class TupleConfiguration : IConfiguration, IConfigurationSection
 {
     private readonly IDictionary<string, string> _store = new Dictionary<string, string>();
 
-    public string? Key { get; }
-    public string? Path { get; }
+    public string Key { get; }
+    public string Path { get; }
     public string? Value { get; set; }
 
     public TupleConfiguration(params (string key, string value)[] settings)
@@ -30,7 +30,7 @@ public class TupleConfiguration : IConfiguration, IConfigurationSection
         }
         else
         {
-            Key = key;
+            Key = key ?? "unknown";
             Path = string.Join(":", new[] { path, key }.Where(i => !string.IsNullOrWhiteSpace(i)));
         }
         foreach (var setting in settings)
@@ -77,15 +77,15 @@ public class TupleConfiguration : IConfiguration, IConfigurationSection
                 );
     }
 
-    public IConfigurationSection? GetSection(string key) =>
-         GetChildren()?.FirstOrDefault(i => i.Key == key);
+    public IConfigurationSection GetSection(string key) =>
+         GetChildren()?.FirstOrDefault(i => i.Key == key) ?? new TupleConfiguration();
 
     internal class ChangeToken : IChangeToken, IDisposable
     {
         public bool HasChanged => false;
         public bool ActiveChangeCallbacks => false;
         public void Dispose() { }
-        public IDisposable RegisterChangeCallback(Action<object> callback, object state) => this;
+        public IDisposable RegisterChangeCallback(Action<object?> callback, object? state) => this;
     }
 
 }

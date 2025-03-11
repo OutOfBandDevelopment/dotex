@@ -21,6 +21,7 @@ public static class XsltArgumentListExtensions
             xsltArgumentList.AddExtensionObject(extensionObject);
         return xsltArgumentList;
     }
+
     /// <summary>
     /// simplify chaining XsltArgumentList and AddExtensionObject
     /// </summary>
@@ -31,7 +32,8 @@ public static class XsltArgumentListExtensions
     {
         var ns = extensionObject.GetXmlNamespace();
         var extended = _builder.BuildXsltExtension(extensionObject);
-        xsltArgumentList.AddExtensionObject(ns, extended);
+        if (extended != null)
+            xsltArgumentList.AddExtensionObject(ns, extended);
         return xsltArgumentList;
     }
 }

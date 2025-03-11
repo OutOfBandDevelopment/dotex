@@ -16,9 +16,9 @@ public class StreamDevice<TMessage> : IStreamDevice<TMessage>
     private Stream _stream => _adapter.Stream;
     private readonly IDeviceAdapter _adapter;
     private readonly IDeviceDefinition _device;
-    private readonly ISegmentBuildDefinition? _segmentDefintion;
-    private readonly IMessageDecoder<TMessage>? _decoder;
-    private readonly IMessageEncoder<TMessage>? _encoder;
+    private readonly ISegmentBuildDefinition _segmentDefintion;
+    private readonly IMessageDecoder<TMessage> _decoder;
+    private readonly IMessageEncoder<TMessage> _encoder;
     private readonly int _minimumTrasmissionDelay;
     private readonly CancellationToken _token;
     private readonly CancellationTokenSource _tokenSource;
@@ -27,7 +27,7 @@ public class StreamDevice<TMessage> : IStreamDevice<TMessage>
         IDeviceAdapter adapter,
         IDeviceDefinition device,
         CancellationToken token = default,
-        int minimumTrasmissionDelay = 1000 //TODO should this default be overideable from the devicedefinition or it's attributes?
+        int minimumTransmissionDelay = 1000 //TODO should this default be overideable from the devicedefinition or it's attributes?
         )
     {
         _tokenSource = CancellationTokenSource.CreateLinkedTokenSource(token);
@@ -35,7 +35,7 @@ public class StreamDevice<TMessage> : IStreamDevice<TMessage>
 
         _adapter = adapter;
         _device = device;
-        _minimumTrasmissionDelay = minimumTrasmissionDelay;
+        _minimumTrasmissionDelay = minimumTransmissionDelay;
 
         Task? messageReceiver = null;
         Task? messageTransmitter = null;
@@ -77,7 +77,7 @@ public class StreamDevice<TMessage> : IStreamDevice<TMessage>
     public event EventHandler<TMessage> MessageReceived;
     public event EventHandler<StreamDeviceStatus> DeviceStatus;
     public event EventHandler<DeviceErrorEventArgs> MessageReceivedError;
-    public event EventHandler<DeviceErrorEventArgs> MessageTrasmitterError;
+    public event EventHandler<DeviceErrorEventArgs> MessageTransmitterError;
 
     public Task<bool> Transmit(TMessage message) => Task.FromResult(_transmissionQueue.TryAdd(message));
 
@@ -157,7 +157,7 @@ public class StreamDevice<TMessage> : IStreamDevice<TMessage>
                 catch (Exception ex)
                 {
                     var eventArg = new DeviceErrorEventArgs(exception: ex, errorHandling: ErrorHandling.Throw);
-                    MessageTrasmitterError?.Invoke(_stream, eventArg);
+                    MessageTransmitterError?.Invoke(_stream, eventArg);
                     switch (eventArg.ErrorHandling)
                     {
                         case ErrorHandling.Ignore:

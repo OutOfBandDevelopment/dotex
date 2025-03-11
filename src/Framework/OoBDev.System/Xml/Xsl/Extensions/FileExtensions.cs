@@ -1,5 +1,6 @@
 ﻿using OoBDev.System.IO;
 using OoBDev.System.Security;
+using System.Diagnostics;
 using System.IO;
 using System.Xml.Linq;
 using System.Xml.Serialization;
@@ -28,7 +29,14 @@ public class FileExtensions(string sandbox)
     {
         if (string.IsNullOrWhiteSpace(source.Value)) return source;
         var realPath = SandboxPath.EnsureSafePath(sandbox, filePath).CreateParentIfNotExists();
-        File.WriteAllText(realPath, source.Value);
+        if (realPath == null)
+        {
+            Debug.WriteLine("FileExtensions::WriteToFile(...) path is null");//TODO: change to injectable console logger
+        }
+        else
+        {
+            File.WriteAllText(realPath, source.Value);
+        }
         return source;
     }
 

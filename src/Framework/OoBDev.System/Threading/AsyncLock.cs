@@ -35,7 +35,11 @@ public class AsyncLock
         var wait = m_semaphore.WaitAsync();
         return wait.IsCompleted ?
             m_releaser :
-            wait.ContinueWith((_, state) => new Releaser((AsyncLock)state),
+            wait.ContinueWith((_, state) => new Releaser(state switch
+            {
+                AsyncLock aLock => aLock,
+                _ => throw new NotSupportedException($"type of {state} is invalid")
+            }),
                 this, CancellationToken.None,
                 TaskContinuationOptions.ExecuteSynchronously, TaskScheduler.Default);
     }

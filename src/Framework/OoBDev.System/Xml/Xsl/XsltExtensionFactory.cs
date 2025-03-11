@@ -30,8 +30,8 @@ public class XsltExtensionFactory
                 null);
 
         var xmlRootType = typeof(XmlRootAttribute);
-        var xmlRootTypeCtor = xmlRootType.GetConstructor(Type.EmptyTypes);
-        var xmlRootProp = new[] { xmlRootType.GetProperty(nameof(XmlRootAttribute.Namespace)) };
+        var xmlRootTypeCtor = xmlRootType.GetConstructor(Type.EmptyTypes) ?? throw new NotSupportedException("Missing Default Constructor");
+        var xmlRootProp = new [] { xmlRootType.GetProperty(nameof(XmlRootAttribute.Namespace))! };
         foreach (var xmlRoot in type.GetCustomAttributes<XmlRootAttribute>())
         {
             typeBuilder.SetCustomAttribute(new CustomAttributeBuilder(xmlRootTypeCtor, [], xmlRootProp, [xmlRoot.Namespace]));
