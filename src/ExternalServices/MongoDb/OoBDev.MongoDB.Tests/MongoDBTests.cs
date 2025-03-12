@@ -173,7 +173,6 @@ public class MongoDBTests
         var db = provider.GetRequiredService<ITestMongoDatabase>();
 
         var query1 = await db.Tests.AsQueryable().OrderBy(e => e.Value1).ThenBy(e => e.Value2).Select(e => new { e.Value1, e.Value2 }).ToListAsync();
-        // var query2 = db.Tests.AsQueryable().OrderBy(e => e.Value1, StringComparer.OrdinalIgnoreCase).Select(e => e.Value1).ToList();
         var query2 = db.Tests.AsQueryable().OrderBy(e => e.Value1.ToUpper()).ThenBy(e => e.Value2).Select(e => new { e.Value1, e.Value2 }).ToList();
 
         TestContext.WriteLine("-------------- 111111111111111111111111");

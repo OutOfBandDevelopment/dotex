@@ -30,7 +30,7 @@ internal abstract class ExtensibleSimpleNodeBase<T> : ISimpleNode
     public string? Value { get; }
     public XPathNodeType NodeType { get; }
 
-    public INode? FirstChild { get; protected set; }
+    public INode? FirstChild { get; init; }
     public INode? Next { get; set; }
     public INode? Previous { get; set; }
 }

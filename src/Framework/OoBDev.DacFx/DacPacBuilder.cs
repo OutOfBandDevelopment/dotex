@@ -438,7 +438,7 @@ END
            new XElement(ns + "Property", new XAttribute("Name", "Format"), new XAttribute("Value", (int)attrib.Format)),
            new XElement(ns + "Property", new XAttribute("Name", "MaxByteSize"), new XAttribute("Value", attrib.MaxByteSize)),
            new XElement(ns + "Property", new XAttribute("Name", "IsByteOrdered"), new XAttribute("Value", attrib.IsByteOrdered ? "True" : "False")),
-           new XElement(ns + "Property", new XAttribute("Name", "ClassName"), new XAttribute("Value", type.FullName)),
+           new XElement(ns + "Property", new XAttribute("Name", "ClassName"), MakeAttribute("Value", type.FullName)),
            new XElement(ns + "Relationship", new XAttribute("Name", "Assembly"),
                new XElement(ns + "Entry",
                    new XElement(ns + "References", new XAttribute("Name", $"[{realAssemblyName}]")

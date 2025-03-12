@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.System.Text.Json;
 using OoBDev.TestUtilities;
+using System;
 using System.Text.Json;
 
 namespace OoBDev.System.Tests.Text.Json;
@@ -18,7 +19,7 @@ public class JsonNavigatorTests
         var fs = @"{""r"":123,""o"":{""f"":""v""}}";
         var json = JsonDocument.Parse(fs);
 
-        var oNavigator = json.ToNavigable().CreateNavigator();
+        var oNavigator = json.ToNavigable().CreateNavigator() ?? throw new NotSupportedException();
         oNavigator?.MoveToRoot();
         TestContext.WriteLine(oNavigator.OuterXml);
 

@@ -2,7 +2,7 @@
 
 namespace OoBDev.System.Net.SecurityManagement;
 
-public class LdapEqualsFilter : LdapSimpleFilter
+public record LdapEqualsFilter : LdapSimpleFilter
 {
     public LdapEqualsFilter(string attributeName, Guid value)
         : base(attributeName, LdapFilterTypes.Equals, value)

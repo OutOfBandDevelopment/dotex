@@ -112,11 +112,11 @@ public class DataConverter : IDataConverter
         if (IsNull(value)) return default;
         else if (value is Array arrayvalue)
         {
-            return arrayvalue.Cast<object>().Where(i => !IsNull(i)).ToArray();
+            return [.. arrayvalue.Cast<object>().Where(i => !IsNull(i))];
         }
         else if (value is not string and IEnumerable enumerableValue)
         {
-            return enumerableValue.Cast<object>().Where(i => !IsNull(i)).ToArray();
+            return [.. enumerableValue.Cast<object>().Where(i => !IsNull(i))];
         }
 
         if (value is string stringValue)
@@ -139,17 +139,17 @@ public class DataConverter : IDataConverter
                 //Note: don't care
             }
 
-            return stringValue.Split(',').Cast<object>().Where(i => !IsNull(i)).ToArray();
+            return [.. stringValue.Split(',').Cast<object>().Where(i => !IsNull(i))];
         }
         else if (value is JsonNode jsonNode)
         {
             if (jsonNode is JsonArray jsonArray)
             {
-                return jsonArray.AsEnumerable<object>().Where(i => !IsNull(i)).ToArray();
+                return [.. jsonArray.OfType<object>().Where(i => !IsNull(i))];
             }
             else if (jsonNode is JsonValue jsonValue && jsonValue.GetValueKind() == JsonValueKind.String)
             {
-                //try parse
+                //TODO: try parse
             }
         }
 
