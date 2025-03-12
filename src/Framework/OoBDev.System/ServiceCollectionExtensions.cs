@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using OoBDev.System.Net.Http;
 using OoBDev.System.ComponentModel;
+using OoBDev.System.Net.SecurityManagement;
 
 namespace OoBDev.System;
 
@@ -79,6 +80,8 @@ public static class ServiceCollectionExtensions
         services.TryAddKeyedSingleton<IHMACCalculator, HMAC512Calculator>("HMAC512");
         services.TryAddKeyedSingleton<IHMACCalculator, HMAC3_256Calculator>("HMAC3-256");
         services.TryAddKeyedSingleton<IHMACCalculator, HMAC3_512Calculator>("HMAC3-512");
+
+        services.TryAddTransient<ILdapFilterBuilder, LdapFilterBuilder>();
 
         return services;
     }

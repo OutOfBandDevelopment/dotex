@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.Extensions.Logging;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace OoBDev.DacFx.Tests;
 
@@ -10,7 +11,8 @@ public class DacPacBuilderTests
     [TestMethod]
     public void BuildPackageTest()
     {
-        var builder = new DacPacBuilder();
+        var logger = new LoggerFactory().CreateLogger<DacPacBuilder>();
+        var builder = new DacPacBuilder(logger);
         builder.BuildDacPac(
             assemblyFileFramework: @"C:\Repos\oobdev\dotex\src\Extensions\OoBDev.Data.Vectors\bin\Debug\net481\OoBDev.Data.Vectors.dll",
             assemblyFileNet: @"C:\Repos\oobdev\dotex\src\Extensions\OoBDev.Data.Vectors\bin\Debug\netstandard2.0\OoBDev.Data.Vectors.dll"

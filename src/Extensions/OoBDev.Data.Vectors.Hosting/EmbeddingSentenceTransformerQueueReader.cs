@@ -173,7 +173,7 @@ public class EmbeddingSentenceTransformerQueueReader : IEmbeddingSentenceTransfo
             {
                 _logger.LogError($"{{{nameof(ex.Message)}}}", ex.Message);
                 await transaction.RollbackAsync(cancellationToken);
-                await Task.Delay(1000, cancellationToken); //TODO: make this configurable
+                await Task.Delay((int)_options.Value.ReadWaitTimeout.TotalMilliseconds, cancellationToken); 
             }
         }
     }

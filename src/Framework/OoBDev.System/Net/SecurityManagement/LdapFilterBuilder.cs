@@ -7,10 +7,8 @@ using System.Text;
 
 namespace OoBDev.System.Net.SecurityManagement;
 
-public class LdapFilterBuilder
+public class LdapFilterBuilder : ILdapFilterBuilder
 {
-    //TODO: extract interface
-
     public string? Build(ILdapFilter filter)
     {
         ArgumentNullException.ThrowIfNull(filter);
