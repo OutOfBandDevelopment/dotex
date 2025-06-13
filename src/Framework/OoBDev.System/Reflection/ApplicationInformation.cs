@@ -46,7 +46,7 @@ public class ApplicationInformation
         var b = new byte[2048];
         using (var s = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read))
         {
-            s.Read(b, 0, 2048);
+            s.ReadExactly(b, 0, 2048);
         }
         var dt = new DateTime(1970, 1, 1, 0, 0, 0).AddSeconds(BitConverter.ToInt32(b, BitConverter.ToInt32(b, peHeaderOffset) + linkerTimestampOffset));
 

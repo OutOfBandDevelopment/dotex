@@ -6,7 +6,7 @@ using System.Text;
 
 namespace OoBDev.System.Net.SecurityManagement;
 
-public class LdapSimpleFilter : ILdapFilter
+public record LdapSimpleFilter : ILdapFilter
 {
     public LdapSimpleFilter(string attributeName, LdapFilterTypes operation, Guid value)
         : this(attributeName, operation, value.ToByteArray())
@@ -25,7 +25,7 @@ public class LdapSimpleFilter : ILdapFilter
         : this(attributeName, operation, value, null)
     {
     }
-    internal LdapSimpleFilter(string attributeName, LdapFilterTypes operation, string value, string unEscapedSuffix)
+    internal LdapSimpleFilter(string attributeName, LdapFilterTypes operation, string? value, string? unEscapedSuffix)
     {
         AttributeName = attributeName;
         Operation = operation;
@@ -33,36 +33,8 @@ public class LdapSimpleFilter : ILdapFilter
         UnEscapedSuffix = unEscapedSuffix;
     }
 
-    public string AttributeName { get; private set; }
-    public LdapFilterTypes Operation { get; private set; }
-    public string Value { get; private set; }
-    internal string UnEscapedSuffix { get; private set; }
-
-    public override bool Equals(object? obj)
-    {
-        return obj is LdapSimpleFilter inner && new
-        {
-            AttributeName = AttributeName.ToUpperInvariant(),
-            Operation,
-            Value = (Value ?? "").ToUpperInvariant(),
-            UnEscapedSuffix = (UnEscapedSuffix ?? "").ToUpperInvariant(),
-        }.Equals(new
-        {
-            AttributeName = inner.AttributeName.ToUpperInvariant(),
-            inner.Operation,
-            Value = (inner.Value ?? "").ToUpperInvariant(),
-            UnEscapedSuffix = (inner.UnEscapedSuffix ?? "").ToUpperInvariant(),
-        });
-    }
-
-    public override int GetHashCode()
-    {
-        return new
-        {
-            AttributeName,
-            Operation,
-            Value,
-            UnEscapedSuffix,
-        }.GetHashCode();
-    }
+    public string AttributeName { get; }
+    public LdapFilterTypes Operation { get; }
+    public string? Value { get; }
+    internal string? UnEscapedSuffix { get; }
 }

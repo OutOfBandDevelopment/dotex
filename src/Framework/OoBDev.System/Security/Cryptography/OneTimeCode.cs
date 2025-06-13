@@ -82,7 +82,8 @@ public class OneTimeCode
         return decoded;
     }
 
-    public string GetUri(string secret, string issuer, string account = null, Types type = Types.TOTP) => $"otpauth://{type.ToString().ToLower()}/{issuer}{(!string.IsNullOrWhiteSpace(account) ? ":" + account : null)}?secret={secret}&issuer={issuer}";
+    public string GetUri(string secret, string issuer, string? account = null, Types type = Types.TOTP) =>
+        $"otpauth://{type.ToString().ToLower()}/{issuer}{(!string.IsNullOrWhiteSpace(account) ? ":" + account : null)}?secret={secret}&issuer={issuer}";
 
     public enum Types
     {

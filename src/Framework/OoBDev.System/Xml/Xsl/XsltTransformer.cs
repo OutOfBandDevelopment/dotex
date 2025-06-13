@@ -213,7 +213,7 @@ public class XsltTransformer(string sandbox, params object[] extensions) : IXslt
 #if PARALLEL
         );
 #endif
-        if (errors.Any())
+        if (errors.Count != 0)
             throw new AggregateException(errors);
     }
 
@@ -236,9 +236,11 @@ public class XsltTransformer(string sandbox, params object[] extensions) : IXslt
 
             //TODO: need to figure out why this won't navigate correctly.
             var merged = navigators.MergeNavigators().CreateNavigator();
+            if (merged == null) return;
             var doc = new XmlDocument();
             doc.LoadXml(merged.OuterXml);
             merged = doc.CreateNavigator();
+            if (merged == null) return;
             merged.MoveToRoot();
             Transform(template, input, merged, output);
         }
@@ -259,7 +261,7 @@ public class XsltTransformer(string sandbox, params object[] extensions) : IXslt
             }
             catch
             {
-                // Eat and errors!
+                // Eat errors!
             }
             throw;
         }

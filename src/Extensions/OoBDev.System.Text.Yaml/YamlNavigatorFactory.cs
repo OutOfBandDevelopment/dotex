@@ -35,7 +35,6 @@ public static class YamlNavigatorFactory
 
               attributeSelector: a => a switch
               {
-                  _ when a.Tag == null => null,
                   _ when !string.IsNullOrWhiteSpace(a.Tag.Value) => new[] { ((XName)nameof(a.Tag), (string?)(a.Tag.Value ?? "")), },
                   _ => null,
               },

@@ -7,10 +7,8 @@ using System.Text;
 
 namespace OoBDev.System.Net.SecurityManagement;
 
-public class LdapFilterBuilder
+public class LdapFilterBuilder : ILdapFilterBuilder
 {
-    //TODO: extract interface
-
     public string? Build(ILdapFilter filter)
     {
         ArgumentNullException.ThrowIfNull(filter);
@@ -51,7 +49,7 @@ public class LdapFilterBuilder
             ? throw new InvalidOperationException("Invalid character found in filter.AttributeName")
             : string.Format("({0}{1}{2}{3})", filter.AttributeName, _simpleMap[filter.Operation], EscapedValue(filter.Value), filter.UnEscapedSuffix);
     }
-    private static string? EscapedValue(string value)
+    private static string? EscapedValue(string? value)
     {
         if (string.IsNullOrWhiteSpace(value))
         {

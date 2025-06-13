@@ -1,6 +1,8 @@
-﻿namespace OoBDev.System.Net.SecurityManagement;
+﻿// Ignore Spelling: Ldap
 
-public class LdapStartsWith : LdapSimpleFilter
+namespace OoBDev.System.Net.SecurityManagement;
+
+public record LdapStartsWith : LdapSimpleFilter
 {
     public LdapStartsWith(string attributeName, string value)
         : base(attributeName, LdapFilterTypes.Equals, value, "*")

@@ -7,6 +7,7 @@ public class MessageEncoder<TMessage> : IMessageEncoder<TMessage>
 {
     public ReadOnlyMemory<byte> Encode(ref TMessage request)
     {
+        if (request == null) throw new ArgumentNullException(nameof(request));
         var requestBuffer = new byte[Marshal.SizeOf(request)];
         nint ptr = Marshal.AllocHGlobal(requestBuffer.Length);
         Marshal.StructureToPtr(request, ptr, true);

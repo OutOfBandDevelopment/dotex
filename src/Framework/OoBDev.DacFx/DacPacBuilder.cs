@@ -1,5 +1,6 @@
 ﻿// Ignore Spelling: Dac
 
+using Microsoft.Extensions.Logging;
 using Microsoft.SqlServer.Server;
 using Microsoft.SqlServer.Types;
 using System;
@@ -15,8 +16,17 @@ using System.Xml.Linq;
 
 namespace OoBDev.DacFx;
 
-public class DacPacBuilder
+public class DacPacBuilder : IDacPacBuilder
 {
+    private readonly ILogger _logger;
+
+    public DacPacBuilder(
+        ILogger<DacPacBuilder> logger
+        )
+    {
+        _logger = logger;
+    }
+
     public void BuildDacPac(
         string assemblyFileFramework,
         string assemblyFileNet,
@@ -43,13 +53,11 @@ public class DacPacBuilder
         projectName = projectName ?? Path.GetFileName(assemblyFileFramework);
         projectVersion = projectVersion ?? "0.0.0.1";
 
-        //TODO: replace with logging
-
-        Console.WriteLine($"-- assemblyFileFramework: {assemblyFileFramework}");
-        Console.WriteLine($"-- assemblyPdbFramework: {assemblyPdbFramework}");
-        Console.WriteLine($"-- dacpacFile: {dacpacFile}");
-        Console.WriteLine($"-- projectName: {projectName}");
-        Console.WriteLine($"-- assemblyFileNet: {assemblyFileNet}");
+        _logger.LogInformation("assemblyFileFramework: {assemblyFileFramework}", assemblyFileFramework);
+        _logger.LogInformation("assemblyPdbFramework: {assemblyPdbFramework}", assemblyPdbFramework);
+        _logger.LogInformation("dacpacFile: {dacpacFile}", dacpacFile);
+        _logger.LogInformation("projectName: {projectName}", projectName);
+        _logger.LogInformation("assemblyFileNet: {assemblyFileNet}", assemblyFileNet);
 
         //var sha512 = builder.GetSha512(assemblyFile);
         /*
@@ -70,12 +78,10 @@ END
         if (File.Exists(dacpacFile)) File.Delete(dacpacFile);
         using (var archive = ZipFile.Open(dacpacFile, ZipArchiveMode.Create))
         {
-            var builder = new DacPacBuilder();
-
             string sha256;
             using (var stream = new MemoryStream())
             {
-                var xml = builder.BuildModel(sqlClrAssembly, assemblyFileFramework, assemblyPdbFramework);
+                var xml = BuildModel(sqlClrAssembly, assemblyFileFramework, assemblyPdbFramework);
                 xml.Save(stream);
                 stream.Position = 0;
                 var entry = archive.CreateEntry("model.xml");
@@ -87,12 +93,12 @@ END
                 }
 
                 stream.Position = 0;
-                sha256 = builder.GetSha256(stream.ToArray());
+                sha256 = GetSha256(stream.ToArray());
             }
 
             using (var stream = new MemoryStream())
             {
-                var xml = builder.BuildOrigin(sha256);
+                var xml = BuildOrigin(sha256);
                 xml.Save(stream);
                 stream.Position = 0;
                 var entry = archive.CreateEntry("Origin.xml");
@@ -106,7 +112,7 @@ END
 
             using (var stream = new MemoryStream())
             {
-                var xml = builder.BuildDacMetadata(projectName, projectVersion);
+                var xml = BuildDacMetadata(projectName, projectVersion);
                 xml.Save(stream);
                 stream.Position = 0;
                 var entry = archive.CreateEntry("DacMetadata.xml");
@@ -120,7 +126,7 @@ END
 
             using (var stream = new MemoryStream())
             {
-                var xml = builder.BuildContentType();
+                var xml = BuildContentType();
                 xml.Save(stream);
                 stream.Position = 0;
                 var entry = archive.CreateEntry("[Content_Types].xml");
@@ -132,7 +138,7 @@ END
                 }
             }
         }
-        Console.WriteLine($"{sqlClrAssembly} ({projectVersion}) => {dacpacFile}");
+        _logger.LogInformation("{sqlClrAssembly} ({projectVersion}) => {dacpacFile}", sqlClrAssembly, projectVersion, dacpacFile);
 
         if (bothPath)
         {
@@ -140,7 +146,7 @@ END
             if (dacpacFile == dacpacFile2) return;
 
             File.Copy(dacpacFile, dacpacFile2, overwrite: true);
-            Console.WriteLine($"{sqlClrAssembly} ({projectVersion}) => {dacpacFile2}");
+            _logger.LogInformation("{sqlClrAssembly} ({projectVersion}) => {dacpacFile2}", sqlClrAssembly, projectVersion, dacpacFile2);
         }
     }
 
@@ -438,7 +444,7 @@ END
            new XElement(ns + "Property", new XAttribute("Name", "Format"), new XAttribute("Value", (int)attrib.Format)),
            new XElement(ns + "Property", new XAttribute("Name", "MaxByteSize"), new XAttribute("Value", attrib.MaxByteSize)),
            new XElement(ns + "Property", new XAttribute("Name", "IsByteOrdered"), new XAttribute("Value", attrib.IsByteOrdered ? "True" : "False")),
-           new XElement(ns + "Property", new XAttribute("Name", "ClassName"), new XAttribute("Value", type.FullName)),
+           new XElement(ns + "Property", new XAttribute("Name", "ClassName"), MakeAttribute("Value", type.FullName)),
            new XElement(ns + "Relationship", new XAttribute("Name", "Assembly"),
                new XElement(ns + "Entry",
                    new XElement(ns + "References", new XAttribute("Name", $"[{realAssemblyName}]")

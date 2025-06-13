@@ -6,4 +6,5 @@ public class EmbeddingSentenceTransformerQueueReaderOptions
 
     public int MaximumReadLength { get; init; } = 100;
     public TimeSpan ReadWaitTimeout { get; init; } = new(0, 5, 0);
+    public TimeSpan ErrorWaitTimeout { get; init; } = new(0, 0, 30);
 }

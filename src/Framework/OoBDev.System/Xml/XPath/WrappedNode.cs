@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Xml.XPath;
 
@@ -9,7 +10,7 @@ internal class WrappedNode : IWrappedNode
 {
     private WrappedNode(string source, IXPathNavigable nav, IWrappedNode? previous)
     {
-        var xpathNav = nav.CreateNavigator();
+        var xpathNav = nav.CreateNavigator() ?? throw new ArgumentNullException(nameof(nav));
         xpathNav.MoveToRoot();
         Current = xpathNav;
         Previous = previous;

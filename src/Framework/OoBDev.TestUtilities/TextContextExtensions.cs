@@ -68,7 +68,7 @@ public static class TextContextExtensions
         }
         else if (value is IXPathNavigable xPathNavigator)
         {
-            context.AddResultFile(fileName, Encoding.UTF8.GetBytes(xPathNavigator.CreateNavigator().OuterXml));
+            context.AddResultFile(fileName, Encoding.UTF8.GetBytes(xPathNavigator.CreateNavigator()?.OuterXml ?? ""));
         }
         else if (value is XPathNodeIterator xPathNodeIterator)
         {

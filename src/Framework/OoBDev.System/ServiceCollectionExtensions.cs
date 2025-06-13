@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using OoBDev.System.Net.Http;
 using OoBDev.System.ComponentModel;
+using OoBDev.System.Net.SecurityManagement;
 
 namespace OoBDev.System;
 
@@ -73,6 +74,14 @@ public static class ServiceCollectionExtensions
         services.TryAddKeyedSingleton(HashTypes.Md5, (sp, key) => sp.GetRequiredKeyedService<IHash>(key?.ToString()?.ToUpper()));
         services.TryAddKeyedSingleton(HashTypes.Sha256, (sp, key) => sp.GetRequiredKeyedService<IHash>(key?.ToString()?.ToUpper()));
         services.TryAddKeyedSingleton(HashTypes.Sha512, (sp, key) => sp.GetRequiredKeyedService<IHash>(key?.ToString()?.ToUpper()));
+
+        services.TryAddSingleton<IHMACCalculator, HMAC256Calculator>();
+        services.TryAddKeyedSingleton<IHMACCalculator, HMAC256Calculator>("HMAC256");
+        services.TryAddKeyedSingleton<IHMACCalculator, HMAC512Calculator>("HMAC512");
+        services.TryAddKeyedSingleton<IHMACCalculator, HMAC3_256Calculator>("HMAC3-256");
+        services.TryAddKeyedSingleton<IHMACCalculator, HMAC3_512Calculator>("HMAC3-512");
+
+        services.TryAddTransient<ILdapFilterBuilder, LdapFilterBuilder>();
 
         return services;
     }

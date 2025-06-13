@@ -98,19 +98,19 @@ public class DirectoryRecord : IEnumerable<DirectoryRecord>
     // length
     // in bytes  contents
     // --------  ---------------------------------------------------------
-    public byte BytesInRecord { get; protected set; }
+    public byte BytesInRecord { get; init; }
     //    1      R, the number of bytes in the record (which must be even)
-    public byte SectorsInExtended { get; protected set; }
+    public byte SectorsInExtended { get; init; }
     //    1      0 [number of sectors in extended attribute record]
-    public uint FirstSector { get; protected set; }
+    public uint FirstSector { get; init; }
     //    8      number of the first sector of file data or directory
     //             (zero for an empty file), as a both endian double word
-    public uint Size { get; protected set; }
+    public uint Size { get; init; }
     //    8      number of bytes of file data or length of directory,
     //             excluding the extended attribute record,
     //             as a both endian double word
 
-    public DateTime DateTime { get; protected set; }
+    public DateTime DateTime { get; init; }
     //    1      number of years since 1900
     //    1      month, where 1=January, 2=February, etc.
     //    1      day of month, in the range from 1 to 31
@@ -123,7 +123,7 @@ public class DirectoryRecord : IEnumerable<DirectoryRecord>
     //             zones east of Greenwich, and negative for time zones
     //             west of Greenwich (DOS ignores this field)
 
-    public DirectoryType DirectoryType { get; protected set; }
+    public DirectoryType DirectoryType { get; init; }
     //    1      flags, with bits as follows:
     //             bit     value
     //             ------  ------------------------------------------
@@ -135,16 +135,16 @@ public class DirectoryRecord : IEnumerable<DirectoryRecord>
     //             5       0
     //             6       0
     //             7 (MS)  0 [1 if not the final record for the file]
-    public byte FileUnitSize { get; protected set; }
+    public byte FileUnitSize { get; init; }
     //    1      0 [file unit size for an interleaved file]
-    public byte InterleaveGapSize { get; protected set; }
+    public byte InterleaveGapSize { get; init; }
     //    1      0 [interleave gap size for an interleaved file]
-    public ushort VolumeSequenceNumber { get; protected set; }
+    public ushort VolumeSequenceNumber { get; init; }
     //    4      1, as a both endian word [volume sequence number]
-    public byte IdentifierLength { get; protected set; }
+    public byte IdentifierLength { get; init; }
     //    1      N, the identifier length
 
-    public string Identifier { get; protected set; }
+    public string Identifier { get; init; }
     //    N      identifier
     //    P      padding byte: if N is even, P = 1 and this field contains
     //             a zero; if N is odd, P = 0 and this field is omitted
@@ -195,7 +195,7 @@ public class DirectoryRecord : IEnumerable<DirectoryRecord>
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     private readonly Stream disc;
-    public DirectoryRecord? Parent { get; protected set; }
+    public DirectoryRecord? Parent { get; init; }
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     private DirectoryRecord? _root;

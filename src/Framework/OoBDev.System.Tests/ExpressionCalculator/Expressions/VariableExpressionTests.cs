@@ -53,7 +53,7 @@ public class VariableExpressionTests
     [TestTarget(typeof(VariableExpression<>))]
     public void NullVariableName_Test()
     {
-        _ = new VariableExpression<double>(null);
+        _ = new VariableExpression<double>(null!);
         Assert.Fail("you should not get here!");
     }
 

@@ -8,11 +8,11 @@ namespace OoBDev.System.Cryptography.Enigma;
 // http://enigmaco.de/enigma/enigma.html
 public class EnigmaMachine
 {
-    private string[]? plugboard;
-    private int[]? postions;
-    private int[]? ringSettings;
-    private readonly EnigmaRotor[] rotors;
-    private readonly EnigmaReflector reflector;
+    private string[] _plugboard;
+    private int[] _postions;
+    private int[] _ringSettings;
+    private readonly EnigmaRotor[] _rotors;
+    private readonly EnigmaReflector _reflector;
 
     public EnigmaMachine(EnigmaRotor[] rotors,
                          EnigmaReflector reflector,
@@ -22,8 +22,8 @@ public class EnigmaMachine
     {
         if (rotors == null || rotors.Length < 3 || rotors.Length > 5)
             throw new InvalidOperationException("Invalid Rotor Set");
-        this.rotors = [.. rotors.Reverse()];
-        this.reflector = reflector ?? throw new InvalidOperationException("Invalid Reflector");
+        this._rotors = [.. rotors.Reverse()];
+        this._reflector = reflector ?? throw new InvalidOperationException("Invalid Reflector");
         //this.Positions = default;  //(start ?? new string('A', rotors.Length));
         RingSettings = ringSettings;
         PlugBoard = plugBoard;
@@ -31,86 +31,86 @@ public class EnigmaMachine
 
     public string Positions
     {
-        get => (postions?
+        get => (_postions?
                       .Reverse()
                       .Select(p => (char)(p + 'A'))
                       .AsString()
-                      + new string('A', rotors.Length)
-                      )[..rotors.Length]; set => postions = [.. (value ?? new string('A', rotors.Length)).Select(i => i - 'A')
-                                                                   .Concat(new int[rotors.Length])
-                                                                   .Take(rotors.Length)
+                      + new string('A', _rotors.Length)
+                      )[.._rotors.Length]; set => _postions = [.. (value ?? new string('A', _rotors.Length)).Select(i => i - 'A')
+                                                                   .Concat(new int[_rotors.Length])
+                                                                   .Take(_rotors.Length)
                                                                    .Reverse()];
     }
 
     public string? RingSettings
     {
-        get => (ringSettings?
+        get => (_ringSettings?
                       .Reverse()
                       .Select(p => (char)(p + 'A'))
                       .AsString()
-                      + new string('A', rotors.Length)
-                      )[..rotors.Length]; 
-        private set => ringSettings = [.. (value ?? new string('A', rotors.Length)).Select(i => i - 'A')
-                                                                       .Concat(new int[rotors.Length])
-                                                                       .Take(rotors.Length)
+                      + new string('A', _rotors.Length)
+                      )[.._rotors.Length];
+        private set => _ringSettings = [.. (value ?? new string('A', _rotors.Length)).Select(i => i - 'A')
+                                                                       .Concat(new int[_rotors.Length])
+                                                                       .Take(_rotors.Length)
                                                                        .Reverse()];
     }
 
     public string? PlugBoard
     {
-        get => string.Join(" ", plugboard ?? []);
+        get => string.Join(" ", _plugboard ?? []);
         set
         {
             var cleaned = value?.Clean().AsString() ?? "";
             if (cleaned.Length % 2 == 0 && cleaned.GroupBy(c => c).Any(c => c.Count() != 1))
                 throw new InvalidOperationException("Invalid Plug Board");
 
-            plugboard = cleaned?.SplitAt(2).ToArray();
+            _plugboard = cleaned?.SplitAt(2).ToArray() ?? [];
         }
     }
 
-    public string Rotors => string.Join(";", rotors.Select(r => r.Number));
-    public string Reflector => reflector.Number;
+    public string Rotors => string.Join(";", _rotors.Select(r => r.Number));
+    public string Reflector => _reflector.Number;
 
     public string Process(string input)
     {
-        input = input.Clean().AsString().SwapSet(plugboard);
+        input = input.Clean().AsString().SwapSet(_plugboard);
         var start = Positions;
-        var set = rotors;
-        var rs = ringSettings;
+        var set = _rotors;
+        var rs = _ringSettings;
         var l = 26; // set[0].Length;
 
         var cOut = new List<char>();
 
         foreach (var c in input.Select(x => x - 'A'))
         {
-            postions[0] = (postions[0] + 1) % l;
-            if (rotors[0].RotateOn.Contains((char)(postions[0] + 'A')))
+            _postions[0] = (_postions[0] + 1) % l;
+            if (_rotors[0].RotateOn.Contains((char)(_postions[0] + 'A')))
             {
-                postions[1] = (postions[1] + 1) % l;
+                _postions[1] = (_postions[1] + 1) % l;
 
-                if (rotors[1].RotateOn.Contains((char)(postions[1] + 'A')))
+                if (_rotors[1].RotateOn.Contains((char)(_postions[1] + 'A')))
                 {
-                    postions[2] = (postions[2] + 1) % l;
+                    _postions[2] = (_postions[2] + 1) % l;
 
-                    if (rotors.Length > 3 &&
-                        rotors[2].RotateOn.Contains((char)(postions[2] + 'A')))
+                    if (_rotors.Length > 3 &&
+                        _rotors[2].RotateOn.Contains((char)(_postions[2] + 'A')))
                     {
-                        postions[3] = (postions[3] + 1) % l;
+                        _postions[3] = (_postions[3] + 1) % l;
                     }
                 }
             }
 
-            var indexes = postions;
+            var indexes = _postions;
 
             var m = c;
             for (var i = 0; i < set.Length; i++)
                 m = (set[i].Wiring[(m + indexes[i] + rs[i]) % l] - indexes[i] - 'A' + l) % l;
-            m = (reflector.Wiring[m] - 'A' + l) % l;
+            m = (_reflector.Wiring[m] - 'A' + l) % l;
             for (var i = set.Length - 1; i > -1; i--)
                 m = (set[i].Wiring.IndexOf((char)((m + indexes[i]) % l + 'A')) - indexes[i] - rs[i] + l) % l;
             cOut.Add((char)(m + 'A'));
         }
-        return cOut.AsString().SwapSet(plugboard);
+        return cOut.AsString().SwapSet(_plugboard);
     }
 }

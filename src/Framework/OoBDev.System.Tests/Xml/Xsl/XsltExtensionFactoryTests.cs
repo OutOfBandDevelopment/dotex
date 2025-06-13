@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.System.Xml.Xsl;
 using OoBDev.TestUtilities;
+using System;
 using System.Diagnostics;
 using System.Reflection;
 
@@ -18,7 +19,7 @@ public class XsltExtensionFactoryTests
 
         var toWrap = new FakeClass();
 
-        var wrapped = factory.BuildXsltExtension(toWrap);
+        var wrapped = factory.BuildXsltExtension(toWrap) ?? throw new NotSupportedException();
         var wrappedType = wrapped.GetType();
 
         {
