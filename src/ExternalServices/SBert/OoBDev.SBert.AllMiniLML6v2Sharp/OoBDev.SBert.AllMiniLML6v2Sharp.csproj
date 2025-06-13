@@ -15,15 +15,15 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.5" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="9.0.5" />
-    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="9.0.5" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.6" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="9.0.6" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="9.0.6" />
 
     <PackageReference Include="libtorch-cpu-win-x64" Version="2.5.1" />
     <PackageReference Include="Microsoft.ML" Version="4.0.2" />
     <PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.22.0" />
     <PackageReference Include="Microsoft.ML.OnnxRuntime.Managed" Version="1.22.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.5" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.6" />
   </ItemGroup>
 
   <ItemGroup>
