@@ -1,4 +1,4 @@
-using OoBDev.AspNetCore.Mvc.Filters;
+﻿using OoBDev.AspNetCore.Mvc.Filters;
 using OoBDev.System.ComponentModel;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -107,11 +107,8 @@ public class AdditionalSwaggerGenEndpointsOptions(
             }
         }
     }
-
-    private string ResolveSchemaType(Type type)
-    {
-        return type.IsGenericType
-            ? $"{type.Namespace}.{type.Name.Split('`')[0]}-{string.Join("_", type.GetGenericArguments().Select(ResolveSchemaType))}"
+    private string ResolveSchemaType(Type type) =>
+        type.IsGenericType
+            ? $"{string.Join("_", type.GetGenericArguments().Select(ResolveSchemaType))}{type.Name.Split('`')[0]}"
             : $"{type.Namespace}.{type.Name}";
-    }
 }

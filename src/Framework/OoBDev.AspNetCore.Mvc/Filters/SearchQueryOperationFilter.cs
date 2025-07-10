@@ -1,4 +1,4 @@
-using OoBDev.Extensions.Linq;
+﻿using OoBDev.Extensions.Linq;
 using OoBDev.System.Linq.Expressions;
 using OoBDev.System.Linq.Search;
 using OoBDev.System.Reflection;
@@ -43,8 +43,19 @@ public class SearchQueryOperationFilter(
             //    };
             //}
 
+            if (string.Equals(context.MethodInfo.Name, "save", StringComparison.InvariantCultureIgnoreCase))
+            {
+                operation.Tags.Add(new() { Name = "Save" });
+            }
+            if (string.Equals(context.MethodInfo.Name, "get", StringComparison.InvariantCultureIgnoreCase))
+            {
+                operation.Tags.Add(new() { Name = "Getter" });
+            }
+
             if (context.MethodInfo.ReturnType.IsAssignableTo(typeof(IQueryable)) && context.MethodInfo.ReturnType.IsGenericType)
             {
+                operation.Tags.Add(new() { Name = nameof(IQueryable) });
+
                 var elementType = context.MethodInfo.ReturnType.GetGenericArguments()[0];
                 var treeBuilder = (IExpressionTreeBuilder)ActivatorUtilities.CreateInstance(scopedServiceProvider.ServiceProvider, typeof(ExpressionTreeBuilder<>).MakeGenericType(elementType));
 
@@ -192,19 +203,32 @@ public class SearchQueryOperationFilter(
 
         if (properties.TryGetValue(nameof(ISearchQuery.Filter), out var filter))
         {
-            var filterSchema = context.SchemaGenerator.GenerateSchema(typeof(FilterParameter), context.SchemaRepository);
-            filterSchema.Nullable = true;
+            var filterParameterSchema = context.SchemaGenerator.GenerateSchema(typeof(FilterParameter), context.SchemaRepository);
+            filterParameterSchema.Nullable = true;
 
+            var filterName = context.MethodInfo.ReturnType.GenericTypeArguments[0].FullName + nameof(ISearchQuery.Filter);
+            if (!context.SchemaRepository.Schemas.TryGetValue(filterName, out var filterSchema))
+            {
+                filterSchema = new OpenApiSchema()
+                {
+                    Type = "object",
+                    Description = $"**Filterable Properties:** {string.Join("; ", treeBuilder.GetFilterablePropertyNames())}",
+                    Nullable = true,
+                };
+                context.SchemaRepository.Schemas.Add(filterName, filterSchema);
+                foreach (var propertyName in treeBuilder.GetFilterablePropertyNames())
+                {
+                    filterSchema.Properties.Add(json.AsPropertyName(propertyName), filterParameterSchema);
+                }
+            }
             filter = properties[nameof(ISearchQuery.Filter)] = new OpenApiSchema()
             {
-                Description = $"**Filterable Properties:** {string.Join("; ", treeBuilder.GetFilterablePropertyNames())}",
-                Nullable = true,
+                Reference = new OpenApiReference()
+                {
+                    Id = filterName,
+                    Type = ReferenceType.Schema,
+                }
             };
-
-            foreach (var propertyName in treeBuilder.GetFilterablePropertyNames())
-            {
-                filter.Properties.Add(json.AsPropertyName(propertyName), filterSchema);
-            }
         }
 
         if (properties.TryGetValue(nameof(ISearchQuery.OrderBy), out var orderBy))
@@ -213,21 +237,32 @@ public class SearchQueryOperationFilter(
             var defaultSort = from ordinal in treeBuilder.DefaultSortOrder()
                               select $"{ordinal.column} {ordinal.direction.AsString()}";
 
-            var orderBySchema = context.SchemaGenerator.GenerateSchema(typeof(OrderDirections), context.SchemaRepository);
-            orderBySchema.Nullable = true;
+            var orderDirectionsSchema = context.SchemaGenerator.GenerateSchema(typeof(OrderDirections), context.SchemaRepository);
+            orderDirectionsSchema.Nullable = true;
 
+            var orderByName = context.MethodInfo.ReturnType.GenericTypeArguments[0].FullName + nameof(ISearchQuery.OrderBy);
+            if (!context.SchemaRepository.Schemas.TryGetValue(orderByName, out var orderBySchema))
+            {
+                orderBySchema = new OpenApiSchema()
+                {
+                    Type = "object",
+                    Description = $"**Filterable Properties:** {string.Join("; ", treeBuilder.GetFilterablePropertyNames())}",
+                    Nullable = true,
+                };
+                context.SchemaRepository.Schemas.Add(orderByName, orderBySchema);
+                foreach (var propertyName in treeBuilder.GetFilterablePropertyNames())
+                {
+                    orderBySchema.Properties.Add(json.AsPropertyName(propertyName), orderDirectionsSchema);
+                }
+            }
             orderBy = properties[nameof(ISearchQuery.OrderBy)] = new OpenApiSchema()
             {
-                Description =
-                        $"**Sortable Properties:** {string.Join(", ", sortableProperties)}  " +
-                        $"**Default Order:** {string.Join(", ", defaultSort)}",
-                Nullable = true,
+                Reference = new OpenApiReference()
+                {
+                    Id = orderByName,
+                    Type = ReferenceType.Schema,
+                }
             };
-
-            foreach (var propertyName in treeBuilder.GetSortablePropertyNames())
-            {
-                orderBy.Properties.Add(json.AsPropertyName(propertyName), orderBySchema);
-            }
         }
 
         if (properties.TryGetValue(nameof(ISearchQuery.SearchTerm), out var searchTerm))
