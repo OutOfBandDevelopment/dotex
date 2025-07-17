@@ -4,9 +4,7 @@ branches:
   main:
     regex: ^(main|master)$
     increment: Minor
-    label: ''
 
   '*':
     regex: .*
     increment: Patch
-    label: '{EscapedBranchName}'   # puts escaped branch name in prerelease label
