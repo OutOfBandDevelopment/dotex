@@ -1,0 +1,1 @@
+dotnet nbgv get-version 
