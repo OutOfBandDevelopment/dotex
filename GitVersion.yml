@@ -1,15 +1,12 @@
 mode: ContinuousDeployment
 
 branches:
-  master:
+  main:
     regex: ^(main|master)$
     increment: Minor
     label: ''
 
-  dev:
-    regex: ^dev
-    increment: Patch
-
   '*':
     regex: .*
     increment: Patch
+    label: '{EscapedBranchName}'   # puts escaped branch name in prerelease label
