@@ -1,16 +1,19 @@
+mode: ContinuousDeployment
+
 assembly-versioning-scheme: MajorMinorPatch
 assembly-file-versioning-scheme: MajorMinorPatchTag
-assembly-informational-format: '{CommitDate}-{FullSemVer}'
-
-mode: ContinuousDelivery
+assembly-versioning-format: '{Major}.{Minor}.{Patch}.{CommitsSinceVersionSource}'
 
 branches:
   master:
     regex: ^(main|master)$
     increment: Minor
+    label: ''
 
   '*':
     regex: .*
     increment: Patch
+    label: ''  # explicitly set empty label here
+
 ignore:
   sha: []
