@@ -10,10 +10,6 @@
 
 	<ItemGroup>
 		<PackageReference Include="MongoDB.Driver" Version="3.4.1" />
-    <PackageReference Include="GitVersion.MsBuild" Version="6.3.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageReference>
 	</ItemGroup>
 
 	<ItemGroup>

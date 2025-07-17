@@ -72,12 +72,5 @@
 	  <None Include="..\..\GitVersion.yml" Link="GitVersion.yml" />
 	  <None Include="..\..\README.md" Link="README.md" />
 	</ItemGroup>
-	
-	<ItemGroup>
-    <PackageReference Include="GitVersion.MsBuild" Version="6.3.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageReference>
-	</ItemGroup>
 
 </Project>

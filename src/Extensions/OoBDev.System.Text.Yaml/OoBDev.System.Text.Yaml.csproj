@@ -9,10 +9,6 @@
 
   <ItemGroup>
 	  <PackageReference Include="YamlDotNet" Version="16.3.0" />
-    <PackageReference Include="GitVersion.MsBuild" Version="6.3.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageReference>
 	</ItemGroup>
 
 	<ItemGroup>
