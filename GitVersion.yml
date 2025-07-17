@@ -1,8 +1,16 @@
 assembly-versioning-scheme: MajorMinorPatch
 assembly-file-versioning-scheme: MajorMinorPatchTag
+assembly-informational-format: '{CommitDate}-{FullSemVer}'
+
+mode: ContinuousDelivery
+
 branches:
   master:
-    regex: main|master
+    regex: ^(main|master)$
+    increment: Minor
+
+  '*':
+    regex: .*
     increment: Patch
 ignore:
   sha: []
