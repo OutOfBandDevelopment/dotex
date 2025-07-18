@@ -1,6 +1,9 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using OoBDev.Data.Vectors.Hosting;
+#if DEBUG
+using OoBDev.MailKit.Hosting;
+#endif
 using OoBDev.MessageQueueing.Hosting;
 
 namespace OoBDev.Common.Hosting;

@@ -48,7 +48,7 @@
 
 	<!-- End: this is a patch while a fix is pending approval -->
 
-	<Target Name="_DacPrePostVersion" DependsOnTargets="GetVersion" >
+	<Target Name="_DacPrePostVersion"> <!-- TODO: fix me DependsOnTargets="GetVersion"  -->
 		<Message Text="=== _DacPrePostVersion ===" Importance="high" />
 		<Message Text="=== InformationalVersion: $(InformationalVersion) ===" Importance="high" />
 		<Message Text="=== FileVersion: $(FileVersion) ===" Importance="high" />

@@ -19,6 +19,9 @@ using OoBDev.RabbitMQ;
 using OoBDev.SBert;
 using OoBDev.SBert.AllMiniLML6v2Sharp;
 using OoBDev.WkHtmlToPdf;
+#if DEBUG
+using OoBDev.Microsoft.ApplicationInsights;
+#endif
 
 namespace OoBDev.Common.Extensions;
 

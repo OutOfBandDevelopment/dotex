@@ -1,9 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net90</TargetFrameworks>
+    <TargetFrameworks>net90;netstandard2.1;net481</TargetFrameworks>
     <LangVersion>preview</LangVersion>
-    <!--<IsSqlClr>True</IsSqlClr>-->
+    <IsSqlClr>True</IsSqlClr>
+    <AssemblyName>$(MSBuildProjectName.Replace(".net481", ""))</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
@@ -22,14 +23,12 @@
     <Folder Include="ExampleScripts\" />
   </ItemGroup>
 
-  <!--
   <Target Name="BuildNet481First" BeforeTargets="Build" Condition="'$(TargetFramework)' == 'net481'">
     <Message Text="Building SQLCLR first..." Importance="high" />
   </Target>
 
-  <Target Name="BuildDacpacSecond" BeforeTargets="Build" Condition="'$(TargetFramework)' == 'net6.0'" DependsOnTargets="BuildNet481First">
+  <Target Name="BuildDacpacSecond" BeforeTargets="Build" Condition="'$(TargetFramework)' == 'net9.0'" DependsOnTargets="BuildNet481First">
     <Message Text="Building References and DACPAC..." Importance="high" />
   </Target>
-  -->
 
 </Project>

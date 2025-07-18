@@ -65,7 +65,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\OoBDev.Data.Vectors\OoBDev.Data.Vectors.csproj" />
+    <ProjectReference Include="..\OoBDev.Data.Vectors\OoBDev.Data.Vectors.net481.csproj" />
   </ItemGroup>
 
 </Project>
