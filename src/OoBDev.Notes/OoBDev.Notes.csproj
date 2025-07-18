@@ -66,14 +66,17 @@
 	</ItemGroup>
 	
 	<ItemGroup>
-	  <Content Include="..\..\version.json" Link="version.json" />
-	</ItemGroup>
-	
-	<ItemGroup>
 	  <None Include="..\..\.gitattributes" Link=".gitattributes" />
 	  <None Include="..\..\.gitignore" Link=".gitignore" />
 	  <None Include="..\..\.gitmodules" Link=".gitmodules" />
 	  <None Include="..\..\README.md" Link="README.md" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <PackageReference Include="GitVersion.MsBuild" Version="6.3.0">
+	    <PrivateAssets>all</PrivateAssets>
+	    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	  </PackageReference>
 	</ItemGroup>
 
 </Project>
