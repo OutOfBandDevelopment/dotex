@@ -32,11 +32,4 @@
     <ProjectReference Remove="..\**\*.Complete.csproj" />
 	</ItemGroup>
 
-	<ItemGroup>
-    <PackageReference Include="GitVersion.MsBuild" Version="6.3.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageReference>
-	</ItemGroup>
-
 </Project>
