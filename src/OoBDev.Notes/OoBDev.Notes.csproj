@@ -66,6 +66,10 @@
 	</ItemGroup>
 	
 	<ItemGroup>
+	  <Content Include="..\..\version.json" Link="version.json" />
+	</ItemGroup>
+	
+	<ItemGroup>
 	  <None Include="..\..\.gitattributes" Link=".gitattributes" />
 	  <None Include="..\..\.gitignore" Link=".gitignore" />
 	  <None Include="..\..\.gitmodules" Link=".gitmodules" />

@@ -1,10 +1,10 @@
 {
   "version": "0.0.1",
-  "publicReleaseRefSpec": [ "^refs/heads/main$" ],
+  "assemblyVersion": "0.0.1",
+  "publicReleaseRefSpec": [
+    "^refs/heads/main$"
+  ],
   "cloudBuild": {
     "setVersionVariables": true
-  },
-  "release": {
-    "branchName": "main"
   }
 }
