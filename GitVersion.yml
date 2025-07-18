@@ -1,0 +1,21 @@
+mode: ContinuousDeployment
+
+branches:
+  main:
+    increment: Patch
+    track-merge-target: false
+
+  feature:
+    regex: ^(feature|bugfix|hotfix|task)[/-]
+    label: useBranchName
+    increment: Inherit
+    source-branches: ['main']
+    track-merge-target: false
+
+  develop:
+    increment: Minor
+    label: dev
+    source-branches: ['main']
+
+ignore:
+  sha: []
