@@ -19,12 +19,5 @@
     <ProjectReference Include="..\OoBDev.Documents.Abstractions\OoBDev.Documents.Abstractions.csproj" />
     <ProjectReference Include="..\OoBDev.TestUtilities\OoBDev.TestUtilities.csproj" />
   </ItemGroup>
-  
-  <ItemGroup>
-    <PackageReference Include="GitVersion.MsBuild" Version="6.3.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
 
 </Project>

@@ -14,9 +14,5 @@
   <ItemGroup>
     <InternalsVisibleTo Include="OoBDev.Documents" />
     <InternalsVisibleTo Include="OoBDev.Documents.Tests" />
-    <PackageReference Include="GitVersion.MsBuild" Version="6.3.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageReference>
   </ItemGroup>
 </Project>

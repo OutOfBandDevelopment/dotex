@@ -22,10 +22,6 @@
     <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks" Version="9.0.7" />
     <PackageReference Include="Microsoft.SemanticKernel.Connectors.Ollama" Version="1.40.0-alpha" />
     <PackageReference Include="OllamaSharp" Version="5.2.10" />
-    <PackageReference Include="GitVersion.MsBuild" Version="6.3.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>

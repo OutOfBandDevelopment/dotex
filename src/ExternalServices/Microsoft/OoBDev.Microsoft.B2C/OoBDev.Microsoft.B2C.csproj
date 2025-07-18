@@ -23,10 +23,6 @@
     <PackageReference Include="Microsoft.Graph" Version="5.86.0" />
     <PackageReference Include="Azure.Identity" Version="1.14.2" />
     <PackageReference Include="Microsoft.Identity.Client" Version="4.74.0" />
-    <PackageReference Include="GitVersion.MsBuild" Version="6.3.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>

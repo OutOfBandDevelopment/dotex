@@ -8,10 +8,6 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.SqlServer.Server" Version="1.0.0" />
-    <PackageReference Include="GitVersion.MsBuild" Version="6.3.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
