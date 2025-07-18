@@ -13,6 +13,13 @@
 	<ItemGroup>
 		<InternalsVisibleTo Include="OoBDev.Communications.Tests" />
 	</ItemGroup>
+	
+	<ItemGroup>
+	  <PackageReference Include="Nerdbank.GitVersioning" Version="3.7.115">
+	    <PrivateAssets>all</PrivateAssets>
+	    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	  </PackageReference>
+	</ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\OoBDev.Communications.Abstractions\OoBDev.Communications.Abstractions.csproj" />

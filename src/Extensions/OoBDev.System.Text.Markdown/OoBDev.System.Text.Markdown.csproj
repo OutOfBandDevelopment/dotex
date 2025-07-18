@@ -8,6 +8,10 @@
 
   <ItemGroup>
     <PackageReference Include="Markdig" Version="0.41.3" />
+    <PackageReference Include="Nerdbank.GitVersioning" Version="3.7.115">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="PlantUml.Net" Version="1.4.80" />
   </ItemGroup>
 

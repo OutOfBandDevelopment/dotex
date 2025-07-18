@@ -18,6 +18,13 @@
     <Content Include="@(Examples)" Pack="true" PackagePath="\examples" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Nerdbank.GitVersioning" Version="3.7.115">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
 	<ItemGroup>
 		<ProjectReference Include="..\OoBDev.Extensions\OoBDev.Extensions.csproj" />
 		<ProjectReference Include="..\OoBDev.System.Abstractions\OoBDev.System.Abstractions.csproj" />

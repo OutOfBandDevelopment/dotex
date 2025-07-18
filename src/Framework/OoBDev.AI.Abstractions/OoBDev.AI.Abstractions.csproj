@@ -8,4 +8,10 @@
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
     <PackageReadmeFile>Readme.AI.Abstractions.md</PackageReadmeFile>
   </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Nerdbank.GitVersioning" Version="3.7.115">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
 </Project>
