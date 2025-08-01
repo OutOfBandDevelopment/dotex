@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using OoBDev.Extensions.Configuration;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using OoBDev.DacFx;
 
 namespace OoBDev.DacPacCompiler.Cli;
 
@@ -24,6 +25,7 @@ internal class Program
                     options.AddFilter("Microsoft", LogLevel.Warning);
                 });
                 services.Configure<DacPacBuilderEngineOptions>(options => context.Configuration.Bind(nameof(DacPacBuilderEngineOptions), options));
+                services.TryAddDacPacServices();
                 services.AddHostedService<DacPacBuilderEngineService>();
             })
             .StartAsync();
