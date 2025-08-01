@@ -30,15 +30,16 @@
     <ProjectReference Remove="..\..\Extensions\**\OoBDev.AspNetCore.*.csproj" />
     <ProjectReference Remove="..\..\Extensions\**\OoBDev.*.Hosting.csproj" />
     <ProjectReference Remove="..\..\Extensions\**\OoBDev.*.DB.csproj" />
-    
-    <ProjectReference Include="..\..\Framework\OoBDev.*\OoBDev.*.csproj" />    
-		<ProjectReference Remove="..\..\Framework\**\OoBDev.*.Tests.csproj" />
-		<ProjectReference Remove="..\..\Framework\**\OoBDev.*.Abstractions.csproj" />
-		<ProjectReference Remove="..\..\Framework\**\OoBDev.TestUtilities.csproj" />
 
-		<ProjectReference Remove="..\..\Framework\**\OoBDev.AspNetCore.*.csproj" />
+    <ProjectReference Include="..\..\Framework\OoBDev.*\OoBDev.*.csproj" />
+    <ProjectReference Remove="..\..\Framework\**\OoBDev.*.Tests.csproj" />
+    <ProjectReference Remove="..\..\Framework\**\OoBDev.*.Abstractions.csproj" />
+    <ProjectReference Remove="..\..\Framework\**\OoBDev.TestUtilities.csproj" />
+
+    <ProjectReference Remove="..\..\Framework\**\OoBDev.AspNetCore.*.csproj" />
     <ProjectReference Remove="..\..\Framework\**\OoBDev.*.Hosting.csproj" />
     <ProjectReference Remove="..\..\Framework\**\OoBDev.*.DB.csproj" />
+    <ProjectReference Remove="..\..\Extensions\**\OoBDev.*.net481.csproj" />
 	</ItemGroup>
 	
 	<ItemGroup>
