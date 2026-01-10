@@ -18,7 +18,7 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddKernelPlugIns(this IServiceCollection services) =>
         services
-            .AddKernelPlugIn<BotChatPlugIn>()
+            //.AddKernelPlugIn<BotChatPlugIn>() //Your plug in ts
         ;
 
     public static IServiceCollection AddKernelPlugIn<T>(this IServiceCollection services) where T : class, IKernelPlugIn
