@@ -1,0 +1,16 @@
+﻿<table>
+    <thead>
+        <tr>
+            <th>Class</th>
+            <th>Period</th>
+        </tr>
+    </thead>
+    <tbody>
+        <repeater binding="FullSchedule">
+            <tr>
+                <td><value-of binding="Name" /></td>
+                <td><value-of binding="Period" /></td>
+            </tr>
+        </repeater>
+    </tbody>
+</table>

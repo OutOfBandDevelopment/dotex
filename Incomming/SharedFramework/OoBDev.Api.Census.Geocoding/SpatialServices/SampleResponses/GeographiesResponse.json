@@ -1,0 +1,139 @@
+{
+  "result": {
+    "input": {
+      "benchmark": {
+        "id": "4",
+        "benchmarkName": "Public_AR_Current",
+        "benchmarkDescription": "Public Address Ranges - Current Benchmark",
+        "isDefault": false
+      },
+      "vintage": {
+        "id": "4",
+        "vintageName": "Current_Current",
+        "vintageDescription": "Current Vintage - Current Benchmark",
+        "isDefault": true
+      },
+      "address": { "address": "576 S. Grant Ave, Columbus, Ohio 43206" }
+    },
+    "addressMatches": [
+      {
+        "matchedAddress": "576 S GRANT AVE, COLUMBUS, OH, 43206",
+        "coordinates": {
+          "x": -82.98905,
+          "y": 39.95133
+        },
+        "tigerLine": {
+          "tigerLineId": "135579925",
+          "side": "L"
+        },
+        "addressComponents": {
+          "fromAddress": "570",
+          "toAddress": "592",
+          "preQualifier": "",
+          "preDirection": "S",
+          "preType": "",
+          "streetName": "GRANT",
+          "suffixType": "AVE",
+          "suffixDirection": "",
+          "suffixQualifier": "",
+          "city": "COLUMBUS",
+          "state": "OH",
+          "zip": "43206"
+        },
+        "geographies": {
+          "States": [
+            {
+              "STATENS": "01085497",
+              "GEOID": "39",
+              "CENTLAT": "+40.4097282",
+              "AREAWATER": 10274656132,
+              "STATE": "39",
+              "BASENAME": "Ohio",
+              "STUSAB": "OH",
+              "OID": 2749046634335,
+              "LSADC": "00",
+              "FUNCSTAT": "A",
+              "INTPTLAT": "+40.4149297",
+              "DIVISION": "3",
+              "NAME": "Ohio",
+              "REGION": "2",
+              "OBJECTID": 25,
+              "CENTLON": "-082.7168530",
+              "AREALAND": 105823700104,
+              "INTPTLON": "-082.7119975",
+              "MTFCC": "G4000"
+            }
+          ],
+          "Counties": [
+            {
+              "GEOID": "39049",
+              "CENTLAT": "+39.9694943",
+              "AREAWATER": 29030507,
+              "STATE": "39",
+              "BASENAME": "Franklin",
+              "OID": 27590472243840,
+              "LSADC": "06",
+              "FUNCSTAT": "A",
+              "INTPTLAT": "+39.9698749",
+              "NAME": "Franklin County",
+              "OBJECTID": 2761,
+              "CENTLON": "-083.0093220",
+              "COUNTYCC": "H1",
+              "COUNTYNS": "01074037",
+              "AREALAND": 1378954535,
+              "INTPTLON": "-083.0090858",
+              "MTFCC": "G4020",
+              "COUNTY": "049"
+            }
+          ],
+          "2020 Census Blocks": [
+            {
+              "SUFFIX": "",
+              "GEOID": "390490052001051",
+              "CENTLAT": "+39.9512264",
+              "BLOCK": "1051",
+              "AREAWATER": 0,
+              "STATE": "39",
+              "BASENAME": "1051",
+              "OID": 210701008191812,
+              "LSADC": "BK",
+              "FUNCSTAT": "S",
+              "INTPTLAT": "+39.9512264",
+              "NAME": "Block 1051",
+              "OBJECTID": 5131183,
+              "TRACT": "005200",
+              "CENTLON": "-082.9885800",
+              "BLKGRP": "1",
+              "AREALAND": 4286,
+              "INTPTLON": "-082.9885800",
+              "MTFCC": "G5040",
+              "LWBLKTYP": "L",
+              "COUNTY": "049"
+            }
+          ],
+          "Census Tracts": [
+            {
+              "GEOID": "39049005200",
+              "CENTLAT": "+39.9509626",
+              "AREAWATER": 0,
+              "STATE": "39",
+              "BASENAME": "52",
+              "OID": 20790472265273,
+              "LSADC": "CT",
+              "FUNCSTAT": "S",
+              "INTPTLAT": "+39.9509626",
+              "NAME": "Census Tract 52",
+              "OBJECTID": 64243,
+              "TRACT": "005200",
+              "CENTLON": "-082.9917935",
+              "AREALAND": 1091055,
+              "INTPTLON": "-082.9917935",
+              "MTFCC": "G5020",
+              "COUNTY": "049"
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

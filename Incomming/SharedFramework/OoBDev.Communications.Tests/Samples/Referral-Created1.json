@@ -1,0 +1,12 @@
+{
+  "CorrelationId": "aac728c8-407c-4bd5-ae84-c97c11e1b74c",
+  "ContentType": "application/json; Class=OoBDev.Contracts.MessageQueueing.MessageWrapper`1[[OoBDev.Communications.Contracts.Handler.SendRequestModel, OoBDev.Communications.Contracts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+  "Payload": {
+    "TargetPersonId": "8dd355fc-6590-480f-af10-128f575bedab",
+    "MessageType": "Referral-Created",
+    "Data": {
+      "ReferralId": "21a8aa70-5105-4f62-aec4-efa72a19895e",
+      "PersonId": "8dd355fc-6590-480f-af10-128f575bedab"
+    }
+  }
+}

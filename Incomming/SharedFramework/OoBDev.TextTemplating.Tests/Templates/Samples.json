@@ -1,0 +1,23 @@
+[
+  {
+    "Id": "82669837-e754-4114-883e-19035dcfdbf3",
+    "Name": "sample",
+    "Template": "<html>\r\n    <head>\r\n<value-of source=\"item\" binding=\"$.title.Value\" />\r\n    <title data-binding=\"$.title\"></title>\r\n    </head>\r\n    <body>\r\n        <ul>\r\n            <repeater item=\"item\" binding=\"$.items\">\r\n                <li>\r\n                    <value-of source=\"item\" binding=\"$.id\" />/<value-of source=\"item\" binding=\"$.value\" />\r\n                    <ul>\r\n                        <repeater item=\"nested\" source=\"item\" binding=\"$.values\">\r\n                            <li><value-of source=\"nested\" binding=\"$\"></li>\r\n                        </repeater>\r\n                    </ul>\r\n                </li>\r\n            </repeater>\r\n        </ul>\r\n    </body>\r\n</html>\r\n",
+    "Language": "en",
+    "Country": "US"
+  },
+  {
+    "Id": "361a0b60-7fa9-400b-9c1d-ef2514134278",
+    "Name": "sample",
+    "Template": "<ul>\r\n            <repeater item=\"item\" binding=\"$.items\">\r\n                <li>\r\n                    <value-of source=\"item\" binding=\"$.id\" />/<value-of source=\"item\" binding=\"$.value\" />\r\n                    <ul>\r\n                        <repeater item=\"nested\" source=\"item\" binding=\"$.values\">\r\n                            <li><value-of source=\"nested\" binding=\"$\"></li>\r\n                        </repeater>\r\n                    </ul>\r\n                </li>\r\n            </repeater>\r\n        </ul>\r\n",
+    "Language": "es",
+    "Country": "US"
+  },
+  {
+    "Id": "f972a4fa-85f0-41c9-8b5b-31ca8995fee7",
+    "Name": "sample",
+    "Template": "<ul>\r\n            <repeater item=\"item\" binding=\"$.items\">\r\n                <li>\r\n                    <value-of source=\"item\" binding=\"$.id\" />/<value-of source=\"item\" binding=\"$.value\" />\r\n                    <ul>\r\n                        <repeater item=\"nested\" source=\"item\" binding=\"$.values\">\r\n                            <li><value-of source=\"nested\" binding=\"$\"></li>\r\n                        </repeater>\r\n                    </ul>\r\n                </li>\r\n            </repeater>\r\n        </ul>\r\n",
+    "Language": "en",
+    "Country": "UK"
+  }
+]

@@ -1,0 +1,42 @@
+[
+  {
+    "Id": "1a86c44b-b19d-4d88-b35a-4cabfd57906d",
+    "Name": "attendance-email",
+    "Template": "To: <value-of binding=\"$.Parent.FirstName\" /> <value-of binding=\"$.Parent.LastName\" />\r\nRegarding: <value-of binding=\"$.Student.FirstName\" /> <value-of binding=\"$.Student.LastName\" /> attendance issues\r\n\r\n<value-of binding=\"$.Student.FirstName\" /> missed <value-of binding=\"$.Class.Name\" /> scheduled on <value-of binding=\"$.Class.Date\" />",
+    "Language": "en",
+    "Country": "US"
+  },
+  {
+    "Id": "df0f3646-2052-4705-803e-ca132c2bf9e2",
+    "Name": "attendance-sms",
+    "Template": "<value-of binding=\"$.Student.FirstName\" /> missed <value-of binding=\"$.Class.Name\" /> scheduled on <value-of binding=\"$.Class.Date\" />",
+    "Language": "en",
+    "Country": "US"
+  },
+  {
+    "Id": "e172e03a-d0fd-4ab9-8f24-7dedcfba88ba",
+    "Name": "StudentCommentCreated-InApp-NotificationTypeId",
+    "Template": "3",
+    "Language": "en",
+    "Country": "US"
+  },
+  {
+    "Id": "42524062-0272-493d-9c40-95fad24fb77e",
+    "Name": "ParentTextNumberChanged-InApp-NotificationTypeId",
+    "Template": "4",
+    "Language": "en",
+    "Country": "US"
+  },
+  {
+    "Name": "ParentTextNumberChanged-InApp-Summary",
+    "Template": "Parent Text Number Changed!",
+    "Language": "en",
+    "Country": "US"
+  },
+  {
+    "Name": "ParentTextNumberChanged-InApp-Detail",
+    "Template": "Parent Text Number Changed! <value-of binding=\"$\" />",
+    "Language": "en",
+    "Country": "US"
+  }
+]

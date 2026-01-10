@@ -8,7 +8,7 @@ This tool scans directories of source code, reads files, generates prompts using
 
 ## Current Configuration
 
-- **Input Path**: `C:\Repos\Nucleus\Net.Libs\docs`
+- **Input Path**: `C:\Repos\Application\Net.Libs\docs`
 - **Output Path**: `.\Net.Core\src`
 - **Template**: `GenerateDocumentationForThisCode.md.hbs`
 - **LLM Backend**: Groq Cloud API

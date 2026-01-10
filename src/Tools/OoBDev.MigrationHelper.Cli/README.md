@@ -8,11 +8,11 @@ This tool automates the process of migrating code from external libraries by ren
 
 ## Use Case
 
-Designed to help migrate features from external codebases (like eliassen-dotnet-libs) into the dotex framework by changing namespace prefixes.
+Designed to help migrate features from external codebases (like dotnet-libs) into the dotex framework by changing namespace prefixes.
 
 **Example Migration:**
-- Source: `Eliassen.System.Abstractions` → Target: `OoBDev.System.Abstractions`
-- Source: `Eliassen.AspNetCore.Mvc` → Target: `OoBDev.AspNetCore.Mvc`
+- Source: `OobDev.System.Abstractions` → Target: `OoBDev.System.Abstractions`
+- Source: `OobDev.AspNetCore.Mvc` → Target: `OoBDev.AspNetCore.Mvc`
 
 ## How It Works
 
@@ -22,7 +22,7 @@ The tool performs three operations in sequence:
 Scans all directories recursively and renames those starting with the source prefix.
 
 ```
-Before: /path/Eliassen.System.Abstractions/
+Before: /path/OobDev.System.Abstractions/
 After:  /path/OoBDev.System.Abstractions/
 ```
 
@@ -30,7 +30,7 @@ After:  /path/OoBDev.System.Abstractions/
 Scans all files recursively and renames those starting with the source prefix.
 
 ```
-Before: Eliassen.System.Abstractions.csproj
+Before: OobDev.System.Abstractions.csproj
 After:  OoBDev.System.Abstractions.csproj
 ```
 
@@ -39,7 +39,7 @@ Reads all text files and replaces namespace references throughout the content.
 
 ```csharp
 // Before
-namespace Eliassen.System.Abstractions
+namespace OobDev.System.Abstractions
 {
     public interface IResult { }
 }
@@ -57,7 +57,7 @@ Edit `Program.cs` lines 7-9:
 
 ```csharp
 var path = @"C:\repo\merge-em\dotex\Incomming\dotnet-lib";  // Base directory
-var sourcePrefix = "Eliassen";                               // Prefix to replace
+var sourcePrefix = "SourceApp";                               // Prefix to replace
 var targetPrefix = "OoBDev";                                 // New prefix
 ```
 
@@ -66,7 +66,7 @@ var targetPrefix = "OoBDev";                                 // New prefix
 ### Step 1: Configure
 Edit the three configuration variables in `Program.cs`:
 - `path` - Root directory containing code to migrate
-- `sourcePrefix` - Current namespace prefix (e.g., "Eliassen")
+- `sourcePrefix` - Current namespace prefix (e.g., "SourceApp")
 - `targetPrefix` - Desired namespace prefix (e.g., "OoBDev")
 
 ### Step 2: Run
@@ -86,9 +86,9 @@ Review the console output showing renamed directories, files, and modified conte
 ## Example Output
 
 ```
-Eliassen.System.Abstractions
-Eliassen.AspNetCore.Mvc
-Eliassen.System.Abstractions.csproj
+OobDev.System.Abstractions
+OobDev.AspNetCore.Mvc
+OobDev.System.Abstractions.csproj
 /path/to/file/IResult.cs
 /path/to/file/ResponseModel/ModelResult.cs
 Skip: /path/to/binary.dll
@@ -148,14 +148,14 @@ The tool will:
   - Regex-based replacement patterns
   - C# syntax-aware renaming
 
-## Example: Eliassen to OoBDev Migration
+## Example: SourceApp to OoBDev Migration
 
-**Scenario:** Migrating 40 files from eliassen-dotnet-libs
+**Scenario:** Migrating 40 files from dotnet-libs
 
 **Configuration:**
 ```csharp
 var path = @"C:\repo\dotex\Incomming\dotnet-lib";
-var sourcePrefix = "Eliassen";
+var sourcePrefix = "SourceApp";
 var targetPrefix = "OoBDev";
 ```
 
@@ -171,4 +171,4 @@ var targetPrefix = "OoBDev";
 
 ---
 
-**Status:** ✅ Production Ready - Actively used for eliassen-dotnet-libs migration
+**Status:** ✅ Production Ready - Actively used for dotnet-libs migration

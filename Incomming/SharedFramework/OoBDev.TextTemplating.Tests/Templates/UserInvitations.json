@@ -1,0 +1,30 @@
+[
+    {
+    "TextTemplateId": "8227e15a-8569-488c-9100-33124aa4cc27",
+    "Name": "UserInvitationCreatedEvent-Email-Body",
+    "LanguageCode": "en",
+    "CountryCode": "US",
+    "Template": "Dear <value-of binding='$.Person.FirstName'/>,\n\nGeorgia Cyber Academy has invited you to our new student services platform Application. We're using this to track and manage related services delivery.\n\nClick the invitation link below or copy and paste it into your browser.<condition rule='$.WebUrl != null'>\nStudent Services: <value-of binding='$.WebUrl'/></condition><condition rule='$.PortalUrl != null'>\nParent Portal: <value-of binding='$.PortalUrl'/></condition>"
+  },
+  {
+    "TextTemplateId": "e9c4fc4f-3a22-473a-8636-150e04396acc",
+    "Name": "UserInvitationCreatedEvent-Email-From",
+    "LanguageCode": "en",
+    "CountryCode": "US",
+    "Template": ""
+  },
+  {
+    "TextTemplateId": "cc8dc799-ca29-4157-b037-62ebdfbe09ff",
+    "Name": "UserInvitationCreatedEvent-Email-Html",
+    "LanguageCode": "en",
+    "CountryCode": "US",
+    "Template": "Dear <value-of binding='$.Person.FirstName'/>,<br><br>Georgia Cyber Academy has invited you to our new student services platform Application. We're using this to track and manage related services delivery.<br><br>Click the invitation link below.<condition rule='$.WebUrl != null'><br><a><value-attr binding='$.WebUrl' item='href'/>Student Services</a></condition><condition rule='$.PortalUrl != null'><br><a><value-attr binding='$.PortalUrl' item='href'/>Parent Portal</a></condition>"
+  },
+  {
+    "TextTemplateId": "49dc1c7c-494f-440d-af79-f031a3563a13",
+    "Name": "UserInvitationCreatedEvent-Email-Subject",
+    "LanguageCode": "en",
+    "CountryCode": "US",
+    "Template": "You are invited to Application for GCA"
+  }
+]

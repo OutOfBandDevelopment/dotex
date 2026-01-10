@@ -1,0 +1,40 @@
+{
+  "result": {
+    "input": {
+      "benchmark": {
+        "id": "2020",
+        "benchmarkName": "Public_AR_Census2020",
+        "benchmarkDescription": "Public Address Ranges - Census 2020 Benchmark",
+        "isDefault": false
+      },
+      "address": { "address": "560 N. Grant Ave, Columbus, Ohio 43206" }
+    },
+    "addressMatches": [
+      {
+        "matchedAddress": "560 S GRANT AVE, COLUMBUS, OH, 43206",
+        "coordinates": {
+          "x": -82.98903,
+          "y": 39.95165
+        },
+        "tigerLine": {
+          "tigerLineId": "135579923",
+          "side": "L"
+        },
+        "addressComponents": {
+          "fromAddress": "548",
+          "toAddress": "568",
+          "preQualifier": "",
+          "preDirection": "S",
+          "preType": "",
+          "streetName": "GRANT",
+          "suffixType": "AVE",
+          "suffixDirection": "",
+          "suffixQualifier": "",
+          "city": "COLUMBUS",
+          "state": "OH",
+          "zip": "43206"
+        }
+      }
+    ]
+  }
+}

@@ -8,29 +8,50 @@
 
 ## ⚠️ INCOMING FEATURES - READY FOR INTEGRATION
 
-**Source:** eliassen-dotnet-libs migration (2026-01-10)
+### Migration 1: dotnet-libs (2026-01-10)
+
+**Source:** dotnet-libs
 **Location:** `/current/src/dotex/Incomming/dotnet-lib/`
 **Files Migrated:** 40 unique feature files
 **Status:** 🔴 NOT YET INTEGRATED - Awaiting review and integration into main codebase
 
-**See:** `Incomming/ELIASSEN_UNIQUE_FEATURES.md` for detailed comparison and migration guide.
+**See:** `Incomming/SourceApp_UNIQUE_FEATURES.md` for detailed comparison and migration guide.
 
-### High Priority Features Available (13 files)
+### Migration 2: Application SharedFramework (2026-01-10)
 
-1. ✅ **Result Pattern System** (8 files) - `Incomming/dotnet-lib/Framework/Eliassen.System.Abstractions/ResponseModel/`
+**Source:** Application SharedFramework (Nucleus)
+**Location:** `/current/src/dotex/Incomming/SharedFramework/`
+**Projects Migrated:** 52 projects (33 implementation + 19 test projects)
+**Status:** 🟡 NOT YET INTEGRATED - Ready for namespace migration and integration
+
+**See:** `Incomming/SHAREDFRAMEWORK_MIGRATION.md` for complete migration guide.
+
+**Key New Capabilities:**
+- Amazon SQS & Azure Service Bus message queue providers
+- Twilio SendGrid (email) & SMS providers
+- Complete geocoding suite (Census, Google Maps, Bing Maps)
+- ComplexEvents framework (event sourcing, CQRS, cron scheduling)
+- DataLoader ETL framework
+- Test data generation (Generations)
+- Distributed caching (Redis)
+- Enhanced communications orchestration
+
+### SourceApp Migration - High Priority Features (13 files)
+
+1. ✅ **Result Pattern System** (8 files) - `Incomming/dotnet-lib/Framework/OobDev.System.Abstractions/ResponseModel/`
    - `IResult`, `IModelResult<T>`, `IQueryResult<T>`, `IPagedQueryResult<T>`
    - `ResultMessage`, `MessageLevels`, `ICaptureResultMessage`, `CaptureResultMessage`
    - Standardizes API responses with hierarchical message levels
 
-2. ✅ **ContentChunk** (1 file) - `Incomming/dotnet-lib/Framework/Eliassen.System.Abstractions/IO/`
+2. ✅ **ContentChunk** (1 file) - `Incomming/dotnet-lib/Framework/OobDev.System.Abstractions/IO/`
    - RAG document chunking with sequence, start, length
    - Critical for document processing pipelines
 
-3. ✅ **Search Query Interception** (4 files) - `Incomming/dotnet-lib/Framework/Eliassen.System.Abstractions/ComponentModel/Search/`
+3. ✅ **Search Query Interception** (4 files) - `Incomming/dotnet-lib/Framework/OobDev.System.Abstractions/ComponentModel/Search/`
    - `ISearchQueryIntercept`, `SearchTermDefaultAttribute`, `IgnoreStringComparisonReplacementAttribute`, `SearchTermDefaults`
    - Attribute-based query modification before execution
 
-### Medium Priority Features Available (27 files)
+### SourceApp Migration - Medium Priority Features (27 files)
 
 4. ✅ **IVersionProvider** - Assembly version information access
 5. ✅ **ReceivedEmailMessageModel** - Inbound email model (complements existing outbound)
@@ -46,16 +67,60 @@
 
 ---
 
+### SharedFramework Migration - Critical Priority Projects (26 projects)
+
+**New Capabilities Not in dotex:**
+
+1. ✅ **Message Queue Providers** (4 projects)
+   - Amazon SQS - AWS cloud support
+   - Azure Service Bus - Enterprise messaging (topics, sessions, dead-letter)
+
+2. ✅ **Communication Providers** (4 projects)
+   - Twilio SendGrid - Cloud email with analytics
+   - Twilio SMS - First SMS implementation
+
+3. ✅ **Spatial/Geocoding Services** (7 projects)
+   - Census Geocoding (free, government)
+   - Google Maps (industry standard)
+   - Bing Maps (Microsoft ecosystem)
+   - SpatialServices abstractions
+
+4. ✅ **Complex Events** (7 projects)
+   - Event sourcing and CQRS
+   - Cron-based scheduling
+   - Azure Event Hubs integration
+
+5. ✅ **Data Loading** (4 projects)
+   - ETL framework (CSV/JSON to database)
+   - DataLoader CLI tool
+
+### SharedFramework Migration - High Priority Projects (20 projects)
+
+**Enhanced Capabilities:**
+
+6. ✅ **Communications Orchestration** (3) - Preferences, deferral, tracking
+7. ✅ **Test Data Generation** (4) - Attribute-driven (`[EmailAddress]`, `[Address]`)
+8. ✅ **Document Management** (3) - Enhanced DocumentCenter
+9. ✅ **Distributed Caching** (7) - Redis + attribute-based
+10. ✅ **Identity & Session** (3) - User session, claims enhancement
+11. ✅ **Template Persistence** (3) - Database-backed templates
+
+**Integration Recommendation:** Phase 1 (Week 1-2) - Message queues and communications. See Section 15 for full roadmap.
+
+---
+
 ## Project Overview
 
 - **Total Projects:** 100+
-- **Total C# Files:** 965 (+ 40 incoming)
+- **Total C# Files:** 965
 - **Test Projects:** 36
 - **Code Coverage:** 42.8% lines, 42.4% branches
 - **Primary Framework:** .NET 9.0
 - **Secondary Framework:** .NET 4.8.1 (SQL CLR)
 - **Solution File:** `/current/src/dotex/src/OoBDev.sln`
-- **Incoming Features:** `/current/src/dotex/Incomming/dotnet-lib/`
+- **Incoming Features:**
+  - SourceApp migration: 40 files at `/current/src/dotex/Incomming/dotnet-lib/`
+  - SharedFramework migration: 52 projects at `/current/src/dotex/Incomming/SharedFramework/`
 
 ---
 
@@ -115,15 +180,17 @@
 - [x] In-Process `ConcurrentQueue` (default)
 - [x] Azure Storage Queues
 - [x] RabbitMQ
+- [ ] 🟡 **INCOMING (SharedFramework):** Amazon SQS - AWS cloud message queue support
+- [ ] 🟡 **INCOMING (SharedFramework):** Azure Service Bus - Enterprise messaging with topics, sessions, dead-letter queues
 
 **Key Interfaces:**
 - `IMessageQueueHandler<TChannel, TMessage>`
 - `IMessageQueueSender<TChannel>`
 - `IMessageContext`
 - `IQueueMessage`
-- 🔴 **INCOMING:** `WrappedQueueMessage`
-- 🔴 **INCOMING:** `IMessageHandlerProviderWrapped`
-- 🔴 **INCOMING:** `IMessagePropertyResolver`
+- 🔴 **INCOMING (SourceApp):** `WrappedQueueMessage`
+- 🔴 **INCOMING (SourceApp):** `IMessageHandlerProviderWrapped`
+- 🔴 **INCOMING (SourceApp):** `IMessagePropertyResolver`
 
 **Coverage:** 90.4% line coverage
 
@@ -145,10 +212,22 @@
 **Handlebars Helpers:**
 - `DateNow`, `GuidNew`, `Get`, `Set`, `Hash`, `StringReplace`
 
+**Template Enhancements:**
+- [ ] 🔴 **INCOMING (SourceApp):** `ITemplateContext` - Template execution context
+- [ ] 🔴 **INCOMING (SourceApp):** `IFileType`, `IFileTypeProvider` - File type system
+- [ ] 🟡 **INCOMING (SharedFramework):** Database-backed template storage
+- [ ] 🟡 **INCOMING (SharedFramework):** Template CRUD operations (`SaveAsync`, `DeleteAsync`, `QueryAsync`)
+- [ ] 🟡 **INCOMING (SharedFramework):** Multi-language/country template support
+
 **Key Interfaces:**
 - `ITemplateEngine`, `ITemplateProvider`, `ITemplateSource`
-- 🔴 **INCOMING:** `ITemplateContext`
-- 🔴 **INCOMING:** `IFileType`, `IFileTypeProvider`
+- 🔴 **INCOMING (SourceApp):** `ITemplateContext`
+- 🔴 **INCOMING (SourceApp):** `IFileType`, `IFileTypeProvider`
+- 🟡 **INCOMING (SharedFramework):** `ITextTemplateProvider` (with persistence)
+
+**Location:**
+- SourceApp: `Incomming/dotnet-lib/Framework/OobDev.System.Abstractions/Text/Templating/`
+- SharedFramework: `Incomming/SharedFramework/OoBDev.TextTemplating.*`
 
 ### 2.3 ASP.NET Core Extensions ✓
 
@@ -184,19 +263,33 @@
 
 ### 2.4 Communications Services ✓
 
-**Email (MailKit):**
-- [x] SMTP support
-- [x] IMAP support
+**Email:**
+- [x] MailKit - SMTP support
+- [x] MailKit - IMAP support
 - [x] HTML and plain text content
 - [x] Attachments via blob references
 - [x] Health checks
 - [x] Message queueing integration
-- [ ] 🔴 **INCOMING:** Inbound email model (`ReceivedEmailMessageModel`)
+- [ ] 🔴 **INCOMING (SourceApp):** Inbound email model (`ReceivedEmailMessageModel`)
+- [ ] 🟡 **INCOMING (SharedFramework):** Twilio SendGrid - Cloud email service with analytics, templates, deliverability
+
+**SMS:**
+- [x] SMS abstraction (`SmsMessageModel`)
+- [ ] 🟡 **INCOMING (SharedFramework):** Twilio SMS - First SMS provider implementation
+
+**Enhanced Orchestration:**
+- [ ] 🟡 **INCOMING (SharedFramework):** Communication deferral system
+- [ ] 🟡 **INCOMING (SharedFramework):** User notification preferences
+- [ ] 🟡 **INCOMING (SharedFramework):** Data enrichment pipeline
+- [ ] 🟡 **INCOMING (SharedFramework):** Delivery logging/tracking
+- [ ] 🟡 **INCOMING (SharedFramework):** Multi-channel orchestration
 
 **Key Interfaces:**
 - `ICommunicationSender<T>`
 - `EmailMessageModel`, `SmsMessageModel`
-- 🔴 **INCOMING:** `ReceivedEmailMessageModel`
+- 🔴 **INCOMING (SourceApp):** `ReceivedEmailMessageModel`
+- 🟡 **INCOMING (SharedFramework):** `ISendEmailProvider`, `ISendSmsProvider`
+- 🟡 **INCOMING (SharedFramework):** `ICommunicationCentralProcessor`, `INotificationPreferenceProvider`
 
 ### 2.5 Document Services ✓
 
@@ -216,10 +309,19 @@
 - [x] MysticMind (HTML to Markdown)
 - [x] Conversion handler chain pattern
 
+**Document Management Enhancements:**
+- [ ] 🟡 **INCOMING (SharedFramework):** `IDocumentStore` - Simplified document storage API
+- [ ] 🟡 **INCOMING (SharedFramework):** Document packaging (`IDocumentPackager`)
+- [ ] 🟡 **INCOMING (SharedFramework):** Content validation (`IValidateContent`)
+- [ ] 🟡 **INCOMING (SharedFramework):** `ConvertToAndStoreAsync` - Combined conversion + storage
+
 **Key Interfaces:**
 - `IBlobContainer<T>`, `IBlobContainerFactory`, `IBlobContainerProvider`
 - `IDocumentConversion`, `IDocumentConversionHandler`
 - `IContentTypeDetector`
+- 🟡 **INCOMING (SharedFramework):** `IDocumentStore`, `IDocumentConverter`, `IDocumentPackager`
+
+**Location:** `Incomming/SharedFramework/OoBDev.DocumentCenter.*`
 
 ### 2.6 Search Capabilities ✓
 
@@ -242,7 +344,39 @@
 - `SearchResultModel`
 - `SearchTypes` enum
 
-### 2.7 AI/LLM Integration ✓
+### 2.7 Spatial Services & Geocoding ⚠️ INCOMING (SharedFramework)
+
+**Status:** ❌ Not present in dotex - NEW capability from SharedFramework
+
+**Geocoding Providers:**
+- [ ] 🟡 **INCOMING:** Census Geocoding API - Free US government geocoding service
+- [ ] 🟡 **INCOMING:** Google Maps API - Industry-standard geocoding
+- [ ] 🟡 **INCOMING:** Bing Maps API - Microsoft ecosystem geocoding
+
+**Core Abstractions:**
+- [ ] 🟡 **INCOMING:** `ILocationServices` - Unified geocoding interface
+- [ ] 🟡 **INCOMING:** `IAddress` - Address model
+- [ ] 🟡 **INCOMING:** `IGlobalPosition` - Geographic coordinates
+
+**Features:**
+- Provider pattern for geocoding (swap Census/Google/Bing based on config)
+- Address validation and normalization
+- Address to lat/long conversion
+- Quality metrics and confidence scores
+- Multiple match handling
+
+**Location:** `Incomming/SharedFramework/OoBDev.SpatialServices.*`
+
+**Projects:**
+- OoBDev.SpatialServices.Contracts
+- OoBDev.SpatialServices.Common
+- OoBDev.Api.Census.Geocoding
+- OoBDev.Api.Google.Maps
+- OoBDev.Api.Microsoft.BingMaps
+
+---
+
+### 2.8 AI/LLM Integration ✓
 
 **Providers:**
 - [x] Ollama (local LLM)
@@ -264,7 +398,196 @@
 - `IMessageCompletion`
 - `CompletionRequest`, `CompletionResponse`
 
-### 2.8 Identity Management ✓
+### 2.9 Complex Events & Event Sourcing ⚠️ INCOMING (SharedFramework)
+
+**Status:** ❌ Not present in dotex - NEW capability from SharedFramework
+
+**Event Processing:**
+- [ ] 🟡 **INCOMING:** Event sourcing and CQRS patterns
+- [ ] 🟡 **INCOMING:** Cron-based event scheduling
+- [ ] 🟡 **INCOMING:** Event persistence and replay
+- [ ] 🟡 **INCOMING:** Azure Event Hubs integration
+
+**Key Interfaces:**
+- [ ] 🟡 **INCOMING:** `IComplexEventHandler` - Process events
+- [ ] 🟡 **INCOMING:** `IComplexEventScheduler` - Generate scheduled events
+- [ ] 🟡 **INCOMING:** `IEventHubProvider<TChannel>` - Send to event hubs
+- [ ] 🟡 **INCOMING:** `IScheduleExecutionProvider` - Execute schedules
+- [ ] 🟡 **INCOMING:** `ISchedulePersistenceProvider` - Store schedule state
+
+**Features:**
+- Cron expression scheduling with `[ScheduleAt("0 */45 6-18 * * *")]`
+- Event hub abstraction for big data streaming
+- Database persistence for events (EF Core)
+- NCrontab integration for cron parsing
+- Event data abstraction with `IEventData`
+
+**Difference from Message Queueing:**
+- Event sourcing (immutable event log)
+- CQRS (command/query separation)
+- Scheduled generation of events
+- Big data streaming (Event Hubs vs queues)
+
+**Location:** `Incomming/SharedFramework/OoBDev.ComplexEvents.*`
+
+**Projects:**
+- OoBDev.ComplexEvents.Contracts
+- OoBDev.ComplexEvents.Common
+- OoBDev.ComplexEvents.DatabaseExtensions
+- OoBDev.ComplexEvents.EntityFrameworkCore
+- OoBDev.Azure.EventHub
+
+**Example:**
+```csharp
+[ScheduleAt("0 */45 6-18 * * MON,WED,FRI")]
+public class MyScheduler : IComplexEventScheduler
+{
+    public Task<IEventData> RequestAsync(DateTimeOffset requestTime)
+        => Task.FromResult(new MyEvent());
+}
+```
+
+---
+
+### 2.10 Data Loading & ETL ⚠️ INCOMING (SharedFramework)
+
+**Status:** ❌ Not present in dotex - NEW capability from SharedFramework
+
+**Data Loading:**
+- [ ] 🟡 **INCOMING:** ETL framework for CSV/JSON to database
+- [ ] 🟡 **INCOMING:** Seed data and reference data loading
+- [ ] 🟡 **INCOMING:** Alternative key lookup for relationships
+- [ ] 🟡 **INCOMING:** DataLoader CLI tool
+
+**Key Interfaces:**
+- [ ] 🟡 **INCOMING:** `IDataPipelineProcessor` - Convert file data to entities
+- [ ] 🟡 **INCOMING:** `IDataFileReader` - Read CSV/JSON files
+- [ ] 🟡 **INCOMING:** `IDataPipelineHandler` - Pipeline handlers (priority-based)
+
+**File Readers:**
+- [ ] 🟡 **INCOMING:** `CsvDataFileReader` - CSV via CsvHelper
+- [ ] 🟡 **INCOMING:** `JsonDataFileReader` - JSON/YAML via YamlDotNet
+
+**Handlers:**
+- [ ] 🟡 **INCOMING:** `LookupAlternativeKey` - Find entities by alternate keys
+- [ ] 🟡 **INCOMING:** `LookupDatabaseValuesByProperty` - Reference data lookup
+- [ ] 🟡 **INCOMING:** `DocumentUpload` - Upload files during data load
+
+**Features:**
+- Duplicate handling (Skip, Replace, Error)
+- Priority-based handler execution
+- Document upload during load
+- Database deployment templates
+
+**Use Cases:**
+- Database initialization
+- Seed data deployment
+- Test environment setup
+- Data migration from legacy systems
+
+**Location:** `Incomming/SharedFramework/OoBDev.DataLoader.*`
+
+**Projects:**
+- OoBDev.DataLoader.Contracts
+- OoBDev.DataLoader
+- OoBDev.DataLoader.Cli
+
+---
+
+### 2.11 Test Data Generation ⚠️ INCOMING (SharedFramework)
+
+**Status:** ❌ Not present in dotex - NEW capability from SharedFramework
+
+**Generation Framework:**
+- [ ] 🟡 **INCOMING:** Attribute-driven procedural data generation
+- [ ] 🟡 **INCOMING:** Seeded randomization (reproducible)
+- [ ] 🟡 **INCOMING:** DispatchProxy support for interface mocking
+- [ ] 🟡 **INCOMING:** DI integration
+
+**Generation Attributes:**
+- [ ] 🟡 **INCOMING:** `[Address]` - Generate addresses
+- [ ] 🟡 **INCOMING:** `[EmailAddress]` - Generate emails
+- [ ] 🟡 **INCOMING:** `[Phone]` - Generate phone numbers
+- [ ] 🟡 **INCOMING:** `[FirstSpaceLastName]` - "John Doe" format
+- [ ] 🟡 **INCOMING:** `[LastCommaFirstName]` - "Doe, John" format
+- [ ] 🟡 **INCOMING:** `[DateTime]`, `[Boolean]`, `[Number]`, `[Words]`
+
+**Key Interfaces:**
+- [ ] 🟡 **INCOMING:** `IProcedualGenerationProvider` - Generate objects
+- [ ] 🟡 **INCOMING:** `IGenerateObject` - Generation rules
+- [ ] 🟡 **INCOMING:** `IProcedualGenerationContext` - Context with seed
+
+**Features:**
+- Priority-based generator selection
+- TypeBuilder for dynamic types
+- Reproducible with seeds
+- Alternative to Bogus/Faker
+
+**Example:**
+```csharp
+public class PersonModel
+{
+    [FirstSpaceLastName]
+    public string Name { get; set; }
+
+    [EmailAddress]
+    public string Email { get; set; }
+
+    [Address]
+    public string Address { get; set; }
+}
+
+var provider = new ProcedualGenerationProvider();
+var person = provider.Generate<PersonModel>();
+```
+
+**Location:** `Incomming/SharedFramework/OoBDev.Generations.*`
+
+**Projects:**
+- OoBDev.Generations.Contracts
+- OoBDev.Generations
+- OoBDev.Generations.Extensions.DependencyInjection
+
+---
+
+### 2.12 Caching ⚠️ INCOMING (SharedFramework)
+
+**Status:** ❌ Not present in dotex - NEW capability from SharedFramework
+
+**Caching Framework:**
+- [ ] 🟡 **INCOMING:** Provider pattern for cache backends
+- [ ] 🟡 **INCOMING:** Attribute-based caching
+- [ ] 🟡 **INCOMING:** Redis support
+- [ ] 🟡 **INCOMING:** Microsoft.Extensions.Caching support
+
+**Key Interfaces:**
+- [ ] 🟡 **INCOMING:** `ICachingProvider` - Provider abstraction
+- [ ] 🟡 **INCOMING:** `ICachingManager` - Cache management
+
+**Attributes:**
+- [ ] 🟡 **INCOMING:** `[IsCacheable]` - Mark methods/properties as cacheable
+- [ ] 🟡 **INCOMING:** `[FlushCache]` - Trigger cache invalidation
+
+**Providers:**
+- [ ] 🟡 **INCOMING:** Microsoft.Extensions.Caching provider
+- [ ] 🟡 **INCOMING:** Redis provider (StackExchange.Redis)
+
+**Features:**
+- Testable caching layer
+- Distributed caching support
+- Declarative caching via attributes
+
+**Location:** `Incomming/SharedFramework/OoBDev.Caching.*`
+
+**Projects:**
+- OoBDev.Caching.Contracts
+- OoBDev.Caching.Common
+- OoBDev.Api.Microsoft.Caching
+- OoBDev.Api.Redis.Caching
+
+---
+
+### 2.13 Identity Management ✓
 
 **Providers:**
 - [x] Azure B2C
@@ -275,13 +598,23 @@
 - [x] Email-based user lookup
 - [x] Password management
 - [x] Force password change
+- [ ] 🟡 **INCOMING (SharedFramework):** User session management
+- [ ] 🟡 **INCOMING (SharedFramework):** Claims enhancement pipeline
+- [ ] 🟡 **INCOMING (SharedFramework):** Application rights/permissions
+- [ ] 🟡 **INCOMING (SharedFramework):** Extended user properties
 
 **Key Interfaces:**
 - `IIdentityManager`
 - `IUserManagementProvider`
 - `UserIdentityModel`, `UserCreateModel`, `UserCreatedModel`
+- 🟡 **INCOMING (SharedFramework):** `IUserSession`, `IUserSessionAccessor`
+- 🟡 **INCOMING (SharedFramework):** `IClaimsEnhancer`, `[ClaimsEnhancerAttribute]`
+- 🟡 **INCOMING (SharedFramework):** `IRightsProvider`, `IUserRights`
+- 🟡 **INCOMING (SharedFramework):** `IExtendedPropertyProvider`
 
-### 2.9 Database Extensions ✓
+**Location:** `Incomming/SharedFramework/OoBDev.IdentityModel.*`
+
+### 2.14 Database Extensions ✓
 
 **MongoDB:**
 - [x] Custom conventions (BsonObjectId)
@@ -293,7 +626,7 @@
 - [x] SQL CLR vector functions (.NET 4.8.1)
 - [x] Vector data type support
 
-### 2.10 System Extensions ✓
+### 2.15 System Extensions ✓
 
 **Configuration:**
 - [x] Command-line configuration provider
@@ -341,7 +674,7 @@
 - `IDateTimeProvider`, `IGuidProvider`
 - 🔴 **INCOMING:** `IVersionProvider`
 
-### 2.11 LINQ and Query Building ✓
+### 2.16 LINQ and Query Building ✓
 
 **Query Interfaces:**
 - [x] `ISearchQuery` - Search term queries
@@ -372,7 +705,7 @@
 
 ---
 
-### 2.12 API Response Patterns ⚠️ INCOMING
+### 2.17 API Response Patterns ⚠️ INCOMING (SourceApp)
 
 **Result Pattern System:**
 - [ ] 🔴 **INCOMING:** `IResult` - Base result interface
@@ -396,7 +729,7 @@
 
 **Breaking Change:** YES - Will require updating controller return types
 
-**Location:** `Incomming/dotnet-lib/Framework/Eliassen.System.Abstractions/ResponseModel/`
+**Location:** `Incomming/dotnet-lib/Framework/OobDev.System.Abstractions/ResponseModel/`
 
 ---
 
@@ -738,7 +1071,7 @@
 
 **Purpose:** Automated migration tool for renaming namespaces and prefixes in migrated code.
 
-**Use Case:** Migrate code from external libraries (e.g., "Eliassen" → "OoBDev")
+**Use Case:** Migrate code from external libraries (e.g., "SourceApp" → "OoBDev")
 
 **Operations:**
 1. Renames directories with source prefix to target prefix
@@ -748,10 +1081,10 @@
 
 **Configuration:** Edit `Program.cs` to set:
 - `path` - Base directory to process
-- `sourcePrefix` - Prefix to replace (e.g., "Eliassen")
+- `sourcePrefix` - Prefix to replace (e.g., "SourceApp")
 - `targetPrefix` - New prefix (e.g., "OoBDev")
 
-**Example:** Used to migrate features from `Incomming/dotnet-lib/` (Eliassen namespace) to main dotex codebase (OoBDev namespace)
+**Example:** Used to migrate features from `Incomming/dotnet-lib/` (SourceApp namespace) to main dotex codebase (OoBDev namespace)
 
 ---
 
@@ -869,14 +1202,14 @@ See `/current/src/dotex/src/OoBDev.sln` for complete project listing.
 ## 14. Incoming Features - Detailed Inventory
 
 **Migration Date:** 2026-01-10
-**Source:** eliassen-dotnet-libs
+**Source:** SourceApp-dotnet-libs
 **Location:** `/current/src/dotex/Incomming/dotnet-lib/`
 **Status:** 🔴 Awaiting Integration
 **Total Files:** 40
 
 ### 14.1 HIGH Priority - Result Pattern System (8 files)
 
-**Location:** `Incomming/dotnet-lib/Framework/Eliassen.System.Abstractions/ResponseModel/`
+**Location:** `Incomming/dotnet-lib/Framework/OobDev.System.Abstractions/ResponseModel/`
 
 | File | Purpose | Integration Impact |
 |------|---------|-------------------|
@@ -903,7 +1236,7 @@ See `/current/src/dotex/src/OoBDev.sln` for complete project listing.
 
 ### 14.2 HIGH Priority - ContentChunk (1 file)
 
-**Location:** `Incomming/dotnet-lib/Framework/Eliassen.System.Abstractions/IO/`
+**Location:** `Incomming/dotnet-lib/Framework/OobDev.System.Abstractions/IO/`
 
 | File | Purpose | Integration Impact |
 |------|---------|-------------------|
@@ -928,7 +1261,7 @@ See `/current/src/dotex/src/OoBDev.sln` for complete project listing.
 
 ### 14.3 HIGH Priority - Search Query Interception (4 files)
 
-**Location:** `Incomming/dotnet-lib/Framework/Eliassen.System.Abstractions/ComponentModel/Search/`
+**Location:** `Incomming/dotnet-lib/Framework/OobDev.System.Abstractions/ComponentModel/Search/`
 
 | File | Purpose | Integration Impact |
 |------|---------|-------------------|
@@ -962,7 +1295,7 @@ public class ProductSearchModel
 
 ### 14.4 MEDIUM Priority - Version Provider (1 file)
 
-**Location:** `Incomming/dotnet-lib/Framework/Eliassen.System.Abstractions/ComponentModel/`
+**Location:** `Incomming/dotnet-lib/Framework/OobDev.System.Abstractions/ComponentModel/`
 
 | File | Purpose | Integration Impact |
 |------|---------|-------------------|
@@ -980,7 +1313,7 @@ public class ProductSearchModel
 
 ### 14.5 MEDIUM Priority - Inbound Email (1 file)
 
-**Location:** `Incomming/dotnet-lib/Framework/Eliassen.Communications.Abstractions/Models/`
+**Location:** `Incomming/dotnet-lib/Framework/OobDev.Communications.Abstractions/Models/`
 
 | File | Purpose | Integration Impact |
 |------|---------|-------------------|
@@ -999,8 +1332,8 @@ public class ProductSearchModel
 ### 14.6 MEDIUM Priority - Template Enhancements (5 files)
 
 **Locations:**
-- `Incomming/dotnet-lib/Framework/Eliassen.System.Abstractions/Text/Templating/`
-- `Incomming/dotnet-lib/Framework/Eliassen.System/Text/Templating/`
+- `Incomming/dotnet-lib/Framework/OobDev.System.Abstractions/Text/Templating/`
+- `Incomming/dotnet-lib/Framework/OobDev.System/Text/Templating/`
 
 | File | Purpose | Integration Impact |
 |------|---------|-------------------|
@@ -1022,7 +1355,7 @@ public class ProductSearchModel
 
 ### 14.7 MEDIUM Priority - Enum Workflow Attributes (3 files)
 
-**Location:** `Incomming/dotnet-lib/Framework/Eliassen.System.Abstractions/ComponentModel/`
+**Location:** `Incomming/dotnet-lib/Framework/OobDev.System.Abstractions/ComponentModel/`
 
 | File | Purpose | Integration Impact |
 |------|---------|-------------------|
@@ -1042,7 +1375,7 @@ public class ProductSearchModel
 
 ### 14.8 MEDIUM Priority - CLI Parameter Binding (1 file)
 
-**Location:** `Incomming/dotnet-lib/Framework/Eliassen.System.Abstractions/Configuration/`
+**Location:** `Incomming/dotnet-lib/Framework/OobDev.System.Abstractions/Configuration/`
 
 | File | Purpose | Integration Impact |
 |------|---------|-------------------|
@@ -1061,8 +1394,8 @@ public class ProductSearchModel
 ### 14.9 MEDIUM Priority - Message Wrapping (4 files)
 
 **Locations:**
-- `Incomming/dotnet-lib/Framework/Eliassen.MessageQueueing.Abstractions/Services/`
-- `Incomming/dotnet-lib/Framework/Eliassen.MessageQueueing/Services/`
+- `Incomming/dotnet-lib/Framework/OobDev.MessageQueueing.Abstractions/Services/`
+- `Incomming/dotnet-lib/Framework/OobDev.MessageQueueing/Services/`
 
 | File | Purpose | Integration Impact |
 |------|---------|-------------------|
@@ -1083,7 +1416,7 @@ public class ProductSearchModel
 
 ### 14.10 MEDIUM Priority - Expression Visitors (2 files)
 
-**Location:** `Incomming/dotnet-lib/Framework/Eliassen.System.Linq/Expressions/`
+**Location:** `Incomming/dotnet-lib/Framework/OobDev.System.Linq/Expressions/`
 
 | File | Purpose | Integration Impact |
 |------|---------|-------------------|
@@ -1101,7 +1434,7 @@ public class ProductSearchModel
 
 ### 14.11 MEDIUM Priority - Search Model Builders (4 files)
 
-**Location:** `Incomming/dotnet-lib/Framework/Eliassen.AspNetCore.Mvc/Providers/SearchQuery/`
+**Location:** `Incomming/dotnet-lib/Framework/OobDev.AspNetCore.Mvc/Providers/SearchQuery/`
 
 | File | Purpose | Integration Impact |
 |------|---------|-------------------|
@@ -1123,8 +1456,8 @@ public class ProductSearchModel
 ### 14.12 MEDIUM Priority - Enhanced Swagger Options (6 files)
 
 **Locations:**
-- `Incomming/dotnet-lib/Framework/Eliassen.AspNetCore.Mvc/SwaggerGen/`
-- `Incomming/dotnet-lib/Framework/Eliassen.AspNetCore.JwtAuthentication/SwaggerGen/`
+- `Incomming/dotnet-lib/Framework/OobDev.AspNetCore.Mvc/SwaggerGen/`
+- `Incomming/dotnet-lib/Framework/OobDev.AspNetCore.JwtAuthentication/SwaggerGen/`
 
 | File | Purpose | Integration Impact |
 |------|---------|-------------------|
@@ -1184,6 +1517,374 @@ public class ProductSearchModel
 - [ ] **Tests Updated** - All tests pass
 - [ ] **Breaking Changes Documented** - Migration guide for consumers
 - [ ] **NuGet Packages Published** - New versions released
+
+---
+
+## 15. Incoming Features - SharedFramework
+
+**Migration Date:** 2026-01-10
+**Source:** Application SharedFramework (Nucleus)
+**Location:** `/current/src/dotex/Incomming/SharedFramework/`
+**Status:** 🟡 Awaiting Integration
+**Total Projects:** 52 (33 implementation + 19 test)
+
+### 15.1 CRITICAL Priority - New Capabilities (26 projects)
+
+#### 15.1.1 Message Queue Providers (4 projects)
+
+**Location:** `Incomming/SharedFramework/`
+
+| Project | Purpose | Integration Effort |
+|---------|---------|-------------------|
+| OoBDev.Amazon.Sqs | Amazon SQS message queue provider | Low - Plugs into existing framework |
+| OoBDev.Amazon.Sqs.Tests | Tests | - |
+| OoBDev.Azure.ServiceBus | Azure Service Bus queues/topics | Low - Plugs into existing framework |
+| OoBDev.Azure.ServiceBus.Tests | Tests | - |
+
+**Key Additions:**
+- Multi-cloud support (AWS via SQS)
+- Enterprise messaging (Service Bus topics, sessions, dead-letter queues)
+- Queue types: `QueueTypes.AmazonSimpleQueue`, `QueueTypes.AzureServiceBusQueue`, `QueueTypes.AzureServiceBusTopic`
+
+**Dependencies:** `AWSSDK.SQS`, `Azure.Messaging.ServiceBus`
+
+**Migration Priority:** CRITICAL - Week 1-2
+
+---
+
+#### 15.1.2 Communication Providers (4 projects)
+
+**Location:** `Incomming/SharedFramework/`
+
+| Project | Purpose | Integration Effort |
+|---------|---------|-------------------|
+| OoBDev.Api.Twilio.SendGrid | SendGrid email provider | Low |
+| OoBDev.Api.Twilio.SendGrid.Tests | Tests | - |
+| OoBDev.Api.Twilio.SmsMessaging | Twilio SMS provider | Low |
+| OoBDev.Api.Twilio.SmsMessaging.Tests | Tests | - |
+
+**Key Additions:**
+- Cloud email service (SendGrid) with analytics, templates, deliverability
+- First SMS implementation (Twilio)
+- Implements `ISendEmailProvider`, `ISendSmsProvider`
+
+**Dependencies:** `SendGrid`, `Twilio`
+
+**Migration Priority:** CRITICAL - Week 1-2
+
+---
+
+#### 15.1.3 Spatial/Geocoding Services (7 projects)
+
+**Location:** `Incomming/SharedFramework/`
+
+| Project | Purpose | Integration Effort |
+|---------|---------|-------------------|
+| OoBDev.SpatialServices.Contracts | Core geocoding abstractions | Low |
+| OoBDev.SpatialServices.Common | Common utilities | Low |
+| OoBDev.SpatialServices.Common.Tests | Tests | - |
+| OoBDev.Api.Census.Geocoding | US Census geocoding (free) | Low |
+| OoBDev.Api.Census.Geocoding.Tests | Tests | - |
+| OoBDev.Api.Google.Maps | Google Maps geocoding | Low |
+| OoBDev.Api.Google.Maps.Tests | Tests | - |
+
+**Plus:** OoBDev.Api.Microsoft.BingMaps (2 projects) - Optional
+
+**Key Interfaces:**
+- `ILocationServices` - Unified geocoding interface
+- `IAddress` - Address model
+- `IGlobalPosition` - Geographic coordinates
+
+**Key Additions:**
+- Provider pattern for geocoding (swap providers via config)
+- Free option (Census) for US addresses
+- Industry standard (Google Maps) for global
+- Address validation and normalization
+
+**Dependencies:** HTTP clients (no specific packages)
+
+**Migration Priority:** CRITICAL - Week 3-4
+
+---
+
+#### 15.1.4 Complex Event Processing (7 projects)
+
+**Location:** `Incomming/SharedFramework/`
+
+| Project | Purpose | Integration Effort |
+|---------|---------|-------------------|
+| OoBDev.ComplexEvents.Contracts | Event abstractions | Medium-High |
+| OoBDev.ComplexEvents.Common | Core event processing | Medium-High |
+| OoBDev.ComplexEvents.Common.Tests | Tests | - |
+| OoBDev.ComplexEvents.DatabaseExtensions | Event persistence | Medium-High |
+| OoBDev.ComplexEvents.EntityFrameworkCore | EF Core integration | Medium-High |
+| OoBDev.Azure.EventHub | Azure Event Hubs provider | Medium |
+| OoBDev.Azure.EventHub.Tests | Tests | - |
+
+**Key Interfaces:**
+- `IComplexEventHandler` - Process events
+- `IComplexEventScheduler` - Generate scheduled events
+- `IEventHubProvider<TChannel>` - Send to event hubs
+- `IScheduleExecutionProvider` - Execute schedules
+
+**Key Additions:**
+- Event sourcing and CQRS patterns
+- Cron-based scheduling: `[ScheduleAt("0 */45 6-18 * * *")]`
+- Event persistence and replay
+- Azure Event Hubs for big data streaming
+- NCrontab for cron parsing
+
+**Dependencies:** `Azure.Messaging.EventHubs`, `NCrontab`
+
+**Migration Priority:** CRITICAL - Week 5-7
+
+---
+
+#### 15.1.5 Data Loading Framework (4 projects)
+
+**Location:** `Incomming/SharedFramework/`
+
+| Project | Purpose | Integration Effort |
+|---------|---------|-------------------|
+| OoBDev.DataLoader.Contracts | ETL abstractions | Medium |
+| OoBDev.DataLoader | Core data loading | Medium |
+| OoBDev.DataLoader.Tests | Tests | - |
+| OoBDev.DataLoader.Cli | CLI tool | Low |
+
+**Key Interfaces:**
+- `IDataPipelineProcessor` - Convert file data to entities
+- `IDataFileReader` - Read CSV/JSON files
+- `IDataPipelineHandler` - Pipeline handlers
+
+**Key Additions:**
+- CSV/JSON to database ETL
+- Seed data and reference data loading
+- Alternative key lookup
+- Duplicate handling (Skip, Replace, Error)
+- CLI tool for automation
+
+**Dependencies:** `CsvHelper`, `YamlDotNet`
+
+**Migration Priority:** CRITICAL - Week 8-9
+
+---
+
+### 15.2 HIGH Priority - Enhanced Capabilities (20 projects)
+
+#### 15.2.1 Communications Orchestration (3 projects)
+
+**Location:** `Incomming/SharedFramework/OoBDev.Communications.*`
+
+**Enhancements over dotex:**
+- Communication deferral system
+- User notification preferences
+- Data enrichment pipeline
+- Delivery logging/tracking
+- Multi-channel orchestration
+
+**Key Interfaces:** `ICommunicationCentralProcessor`, `INotificationPreferenceProvider`
+
+**Migration Priority:** HIGH - Week 10-12
+
+---
+
+#### 15.2.2 Test Data Generation (4 projects)
+
+**Location:** `Incomming/SharedFramework/OoBDev.Generations.*`
+
+**Key Features:**
+- Attribute-driven: `[Address]`, `[EmailAddress]`, `[Phone]`
+- Seeded randomization
+- DispatchProxy for interfaces
+- DI integration
+
+**Migration Priority:** HIGH - Week 10-12
+
+---
+
+#### 15.2.3 Document Management (3 projects)
+
+**Location:** `Incomming/SharedFramework/OoBDev.DocumentCenter.*`
+
+**Enhancements:**
+- Simplified `IDocumentStore` API
+- Document packaging
+- Content validation
+- `ConvertToAndStoreAsync`
+
+**Migration Priority:** HIGH - Week 10-12
+
+---
+
+#### 15.2.4 Distributed Caching (7 projects)
+
+**Location:** `Incomming/SharedFramework/OoBDev.Caching.*`
+
+**Projects:**
+- OoBDev.Caching.Contracts
+- OoBDev.Caching.Common
+- OoBDev.Api.Microsoft.Caching (2 projects)
+- OoBDev.Api.Redis.Caching (2 projects)
+
+**Features:**
+- Attribute-based: `[IsCacheable]`, `[FlushCache]`
+- Redis support
+- Microsoft.Extensions.Caching support
+
+**Dependencies:** `StackExchange.Redis`
+
+**Migration Priority:** HIGH - Week 10-12
+
+---
+
+#### 15.2.5 Identity & Session (3 projects)
+
+**Location:** `Incomming/SharedFramework/OoBDev.IdentityModel.*`
+
+**Enhancements:**
+- User session management
+- Claims enhancement pipeline
+- Application rights/permissions
+- Extended properties
+
+**Migration Priority:** HIGH - Week 10-12
+
+---
+
+#### 15.2.6 Template Persistence (3 projects)
+
+**Location:** `Incomming/SharedFramework/OoBDev.TextTemplating.*`
+
+**Enhancements:**
+- Database-backed storage
+- Template CRUD operations
+- Multi-language support
+
+**Migration Priority:** HIGH - Week 10-12
+
+---
+
+#### 15.2.7 Accounting Domain (1 project)
+
+**Location:** `Incomming/SharedFramework/OoBDev.Accounting.Contracts`
+
+**Purpose:** Accounting/billing domain abstractions
+
+**Migration Priority:** LOW - Very specific domain
+
+---
+
+### 15.3 Integration Roadmap
+
+**Phase 1: Foundation (Week 1-2)** - 8 projects
+- Amazon SQS (2)
+- Azure Service Bus (2)
+- Twilio SendGrid (2)
+- Twilio SMS (2)
+
+**Phase 2: Spatial (Week 3-4)** - 7 projects
+- SpatialServices (3)
+- Census Geocoding (2)
+- Google Maps (2)
+
+**Phase 3: Events (Week 5-7)** - 7 projects
+- ComplexEvents (5)
+- Azure EventHub (2)
+
+**Phase 4: Data (Week 8-9)** - 4 projects
+- DataLoader (4)
+
+**Phase 5: Enhancements (Week 10-12)** - 20 projects
+- Communications (3)
+- Generations (4)
+- DocumentCenter (3)
+- Caching (7)
+- IdentityModel (3)
+
+**Total: 46 projects** (excluding Bing Maps and Accounting)
+
+---
+
+### 15.4 Dependencies Summary
+
+**NuGet Packages Required:**
+
+| Package | Purpose | Used By |
+|---------|---------|---------|
+| AWSSDK.SQS | Amazon SQS | Amazon.Sqs |
+| Azure.Messaging.ServiceBus | Azure Service Bus | Azure.ServiceBus |
+| Azure.Messaging.EventHubs | Azure Event Hubs | Azure.EventHub |
+| SendGrid | Email service | Twilio.SendGrid |
+| Twilio | SMS service | Twilio.SmsMessaging |
+| NCrontab | Cron parsing | ComplexEvents |
+| CsvHelper | CSV reading | DataLoader |
+| YamlDotNet | YAML/JSON reading | DataLoader |
+| StackExchange.Redis | Redis caching | Redis.Caching |
+
+---
+
+### 15.5 Migration Checklist
+
+**Pre-Integration:**
+- [ ] Run MigrationHelper.Cli (SourceApp → OoBDev namespace)
+- [ ] Verify namespace changes
+- [ ] Add projects to OoBDev.sln
+- [ ] Install NuGet dependencies
+
+**Integration (Phase 1):**
+- [ ] Amazon SQS integration
+- [ ] Azure Service Bus integration
+- [ ] Twilio SendGrid integration
+- [ ] Twilio SMS integration
+- [ ] Tests pass for Phase 1
+
+**Integration (Phase 2):**
+- [ ] SpatialServices integration
+- [ ] Census Geocoding integration
+- [ ] Google Maps integration
+- [ ] Tests pass for Phase 2
+
+**Integration (Phase 3):**
+- [ ] ComplexEvents integration
+- [ ] Azure EventHub integration
+- [ ] Tests pass for Phase 3
+
+**Integration (Phase 4):**
+- [ ] DataLoader integration
+- [ ] DataLoader.Cli working
+- [ ] Tests pass for Phase 4
+
+**Integration (Phase 5):**
+- [ ] Communications orchestration
+- [ ] Generations framework
+- [ ] DocumentCenter
+- [ ] Caching framework
+- [ ] IdentityModel enhancements
+- [ ] TextTemplating persistence
+- [ ] Tests pass for Phase 5
+
+**Post-Integration:**
+- [ ] Update FEATURE_INVENTORY.md (mark as integrated)
+- [ ] Update ConfigurationSettings.md
+- [ ] Create library documentation
+- [ ] Create example applications
+- [ ] NuGet packages published
+- [ ] Git tags created
+
+---
+
+### 15.6 Breaking Changes Assessment
+
+**Expected Impact:** None - All additions are new capabilities
+
+**Potential Conflicts:**
+1. Namespace overlap with existing OoBDev.System utilities
+2. Interface naming conflicts (review required)
+
+**Mitigation:**
+- Careful review during namespace migration
+- Qualified names where needed
+- Selective feature integration
 
 ---
 

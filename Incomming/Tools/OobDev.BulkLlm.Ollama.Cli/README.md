@@ -8,7 +8,7 @@ This tool scans directories of source code, reads files, generates prompts using
 
 ## Current Configuration
 
-- **Input Path**: `C:\Repos\Nucleus\Net.Api`
+- **Input Path**: `C:\Repos\Application\Net.Api`
 - **Output Path**: `.\Net.Api\tests`
 - **Template**: `GenerateUnitTests.md.hbs`
 - **LLM Backend**: Ollama (http://192.168.1.170:11434)

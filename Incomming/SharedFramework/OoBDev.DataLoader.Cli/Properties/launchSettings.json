@@ -1,0 +1,13 @@
+{
+  "profiles": {
+    "Run DeploymentScript.yml": {
+      "commandName": "Project",
+      "commandLineArgs": "--template \"$(ProjectDir)DeploymentScript.yml\" \r\n--base-path \"D:\\Repos\\Application\\Core\"",
+      "environmentVariables": {
+        "Azure__Storage__Default__ConnectionString": "UseDevelopmentStorage=true",
+        "ApplicationCoreDb__ConnectionString": "server=(localdb)\\ApplicationCore;database=ApplicationDb;trusted_connection=true;",
+        "ApplicationSampleDb__ConnectionString": "server=(localdb)\\ApplicationCore;database=ApplicationDb;trusted_connection=true;"
+      }
+    }
+  }
+}

@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net9.0</TargetFramework>
+		<PackAsTool>true</PackAsTool>
+		<ToolCommandName>lw-dataloader</ToolCommandName>	
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+		<PackageReference Include="Microsoft.Extensions.FileSystemGlobbing" />
+
+		<PackageReference Include="Microsoft.Extensions.Logging" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Console" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" />
+
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\OoBDev.DataLoader\OoBDev.DataLoader.csproj" />
+	  <ProjectReference Include="..\OoBDev.SharedFramework.Core\OoBDev.SharedFramework.Core.csproj" />
+	  <ProjectReference Include="..\OoBDev.SharedFramework.External\OoBDev.SharedFramework.External.csproj" />
+	</ItemGroup>
+
+</Project>

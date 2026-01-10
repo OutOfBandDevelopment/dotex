@@ -4,8 +4,8 @@
     {
         static void Main(string[] args)
         {
-            var path = @"C:\repo\merge-em\dotex\Incomming\dotnet-lib";
-            var sourcePrefix = "Eliassen";
+            var path = @"C:\repo\merge-em\dotex\Incomming\SharedFramework";
+            var sourcePrefix = "OoBDev.Application";
             var targetPrefix = "OoBDev";
 
             foreach (var folder in Directory.EnumerateDirectories(path, "*.*", SearchOption.AllDirectories))

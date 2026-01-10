@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [ -z "$APP_PROJECT" ]; then
-  APP_PROJECT="eliassen-libs-dev"
+  APP_PROJECT="libs-dev"
 fi
 
 EXTRA_ARGS=""

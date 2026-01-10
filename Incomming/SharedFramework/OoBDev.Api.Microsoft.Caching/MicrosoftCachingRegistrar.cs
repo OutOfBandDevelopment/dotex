@@ -1,0 +1,17 @@
+using OoBDev.Api.Microsoft.Caching.Providers;
+using OoBDev.Caching.Contracts;
+using OoBDev.Toolkit.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace OoBDev.Api.Microsoft.Caching
+{
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    public class MicrosoftCachingRegistrar : IRegistrar
+    {
+        public IServiceCollection AddServices(IServiceCollection services)
+        {
+            services.AddSingleton<ICachingProvider, MicrosoftMemoryCachingProvider>();
+            return services;
+        }
+    }
+}

@@ -1,0 +1,20 @@
+{
+  "Other-Data": {},
+  "Request-Headers": {
+    "ContentType": "OoBDev.MessageQueueing.Contracts.MessageWrapper`1[[OoBDev.Communications.Contracts.Handler.ISendRequest, OoBDev.Communications.Contracts, Version=0.3.31.0, Culture=neutral, PublicKeyToken=null]]",
+    "X-CallerMemberName": "HandleEvent+OoBDev.MessageQueueing.Services.MessageSenderBridge`1[OoBDev.Communications.Services.CommunicationProvider]",
+    "X-CallerLineNumber": 71,
+    "X-CallerFilePath": "C:\\Repos\\\\RSMBilling\\src\\Invoicing\\OoBDev.Core.Business\\ComplexEvents\\Notifications\\UserInvitationHandler.cs",
+    "X-UserName": "MattWhited",
+    "X-MachineName": "DESKTOP-VUQ5QMI",
+    "X-SentAt": "2021-06-05T10:36:23.1444733-04:00"
+  },
+  "Request-MessageType": {
+    "Value": "UserInvitationCreatedEvent",
+    "Type": "String"
+  },
+  "Request-CorrelationId": {
+    "Value": "9600a75c-e15d-40e4-ac7f-71287928a2e7",
+    "Type": "String"
+  }
+}

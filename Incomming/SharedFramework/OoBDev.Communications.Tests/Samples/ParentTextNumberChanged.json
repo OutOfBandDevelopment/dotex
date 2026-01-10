@@ -1,0 +1,12 @@
+{
+  "CorrelationId": "aac728c8-407c-4bd5-ae84-c97c11e1b74c",
+  "ContentType": "application/json; Class=OoBDev.Contracts.MessageQueueing.MessageWrapper`1[[OoBDev.Communications.Contracts.Handler.SendRequestModel, OoBDev.Communications.Contracts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+  "Payload": {
+    "TargetPersonId": "6C3C00FE-FC95-4730-B5B8-391CCF3AEB9D",
+    "MessageType": "ParentTextNumberChanged",
+    "Data": {
+      "TextNumberChangeId": "22c0cf06-b74c-4d07-9ad1-ccda5ecbba75",
+      "PersonId": "6c3c00fe-fc95-4730-b5b8-391ccf3aeb9d"
+    }
+  }
+}

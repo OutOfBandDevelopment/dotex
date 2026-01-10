@@ -1,5 +1,5 @@
 
-IF "%APP_PROJECT%"=="" SET APP_PROJECT=eliassen-libs-dev
+IF "%APP_PROJECT%"=="" SET APP_PROJECT=libs-dev
 
 SET EXTRA_ARGS=
 IF /I "%1" EQU "ALL" (

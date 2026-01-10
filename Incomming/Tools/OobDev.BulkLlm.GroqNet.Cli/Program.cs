@@ -10,8 +10,8 @@ internal class Program
 {
     static async Task Main(string[] args)
     {
-        //var inputPath = @"C:\Repos\Nucleus\Net.Api";
-        var inputPath = @"C:\Repos\Nucleus\Net.Libs\docs";
+        //var inputPath = @"C:\Repos\Application\Net.Api";
+        var inputPath = @"C:\Repos\Application\Net.Libs\docs";
         var outputPath = @".\Net.Core\src";
         var promptTemplateSource = @".\Prompts\GenerateDocumentationForThisCode.md.hbs"; // @".\Prompts\Angular2React.md.hbs";
 

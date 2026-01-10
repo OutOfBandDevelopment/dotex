@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+	  <Nullable>disable</Nullable>
+	  <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="MSTest.TestAdapter" />
+    <PackageReference Include="MSTest.TestFramework" />
+    <PackageReference Include="coverlet.collector">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\OoBDev.Api.Google.Maps\OoBDev.Api.Google.Maps.csproj" />
+    <ProjectReference Include="..\OoBDev.Api.Census.Geocoding\OoBDev.Api.Census.Geocoding.csproj" />
+    <ProjectReference Include="..\OoBDev.Api.Microsoft.BingMaps\OoBDev.Api.Microsoft.BingMaps.csproj" />
+    <ProjectReference Include="..\OoBDev.TestUtilities\OoBDev.TestUtilities.csproj" />
+    <ProjectReference Include="..\OoBDev.SpatialServices.Common\OoBDev.SpatialServices.Common.csproj" />
+  </ItemGroup>
+</Project>

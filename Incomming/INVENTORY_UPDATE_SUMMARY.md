@@ -1,13 +1,13 @@
 # Feature Inventory Update Summary
 
 **Date:** 2026-01-10
-**Action:** Updated dotex/FEATURE_INVENTORY.md with incoming features from eliassen-dotnet-libs
+**Action:** Updated dotex/FEATURE_INVENTORY.md with incoming features from dotnet-libs
 
 ---
 
 ## What Was Updated
 
-The `FEATURE_INVENTORY.md` has been comprehensively updated to reflect 40 newly migrated feature files from eliassen-dotnet-libs.
+The `FEATURE_INVENTORY.md` has been comprehensively updated to reflect 40 newly migrated feature files from dotnet-libs.
 
 ### Changes Made
 
@@ -139,11 +139,11 @@ Tracking checklist for:
 ## Related Documents
 
 - **FEATURE_INVENTORY.md** - Updated main inventory (this update)
-- **Incomming/ELIASSEN_UNIQUE_FEATURES.md** - Detailed comparison and migration guide
+- **Incomming/SourceApp_UNIQUE_FEATURES.md** - Detailed comparison and migration guide
 - **Incomming/dotnet-lib/** - 40 migrated feature files ready for integration
 - **src/Tools/OoBDev.MigrationHelper.Cli/** - Automated namespace migration tool
   - **README.md** - Complete documentation for migration tool
-  - Used to rename "Eliassen" → "OoBDev" namespaces during integration
+  - Used to rename "SourceApp" → "OoBDev" namespaces during integration
 
 ---
 
