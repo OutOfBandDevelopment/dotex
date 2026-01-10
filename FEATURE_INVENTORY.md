@@ -6,15 +6,56 @@
 
 ---
 
+## ⚠️ INCOMING FEATURES - READY FOR INTEGRATION
+
+**Source:** eliassen-dotnet-libs migration (2026-01-10)
+**Location:** `/current/src/dotex/Incomming/dotnet-lib/`
+**Files Migrated:** 40 unique feature files
+**Status:** 🔴 NOT YET INTEGRATED - Awaiting review and integration into main codebase
+
+**See:** `Incomming/ELIASSEN_UNIQUE_FEATURES.md` for detailed comparison and migration guide.
+
+### High Priority Features Available (13 files)
+
+1. ✅ **Result Pattern System** (8 files) - `Incomming/dotnet-lib/Framework/Eliassen.System.Abstractions/ResponseModel/`
+   - `IResult`, `IModelResult<T>`, `IQueryResult<T>`, `IPagedQueryResult<T>`
+   - `ResultMessage`, `MessageLevels`, `ICaptureResultMessage`, `CaptureResultMessage`
+   - Standardizes API responses with hierarchical message levels
+
+2. ✅ **ContentChunk** (1 file) - `Incomming/dotnet-lib/Framework/Eliassen.System.Abstractions/IO/`
+   - RAG document chunking with sequence, start, length
+   - Critical for document processing pipelines
+
+3. ✅ **Search Query Interception** (4 files) - `Incomming/dotnet-lib/Framework/Eliassen.System.Abstractions/ComponentModel/Search/`
+   - `ISearchQueryIntercept`, `SearchTermDefaultAttribute`, `IgnoreStringComparisonReplacementAttribute`, `SearchTermDefaults`
+   - Attribute-based query modification before execution
+
+### Medium Priority Features Available (27 files)
+
+4. ✅ **IVersionProvider** - Assembly version information access
+5. ✅ **ReceivedEmailMessageModel** - Inbound email model (complements existing outbound)
+6. ✅ **Template Context** - `ITemplateContext`, `IFileType`, `IFileTypeProvider`, `FileType`, `TemplateContext`
+7. ✅ **Enum Workflow Attributes** - `EnumValueAttribute`, `ExcludeFromUniqueAttribute`, `EndStateAttribute`
+8. ✅ **CommandParameterAttribute** - CLI parameter binding
+9. ✅ **Message Wrapping** - `WrappedQueueMessage`, `IMessageHandlerProviderWrapped`, `IMessagePropertyResolver`
+10. ✅ **Expression Visitors** - `ParameterReplacerExpressionVisitor`, `SkipInstanceMethodOnNullExpressionVisitor`
+11. ✅ **Search Model Builders** - `ISearchModelBuilder`, `SearchModelBuilder`, `ISearchModelMapper`, `SearchModelMapper`
+12. ✅ **Enhanced Swagger Options** - Additional configuration options for Swagger documentation
+
+**Integration Recommendation:** Prioritize Result Pattern System, ContentChunk, and Search Query Interception for immediate integration.
+
+---
+
 ## Project Overview
 
 - **Total Projects:** 100+
-- **Total C# Files:** 965
+- **Total C# Files:** 965 (+ 40 incoming)
 - **Test Projects:** 36
 - **Code Coverage:** 42.8% lines, 42.4% branches
 - **Primary Framework:** .NET 9.0
 - **Secondary Framework:** .NET 4.8.1 (SQL CLR)
 - **Solution File:** `/current/src/dotex/src/OoBDev.sln`
+- **Incoming Features:** `/current/src/dotex/Incomming/dotnet-lib/`
 
 ---
 
@@ -68,6 +109,7 @@
 - [x] Background hosted service for processing
 - [x] Attribute-based handler registration (`[MessageQueue]`)
 - [x] Message context with headers and metadata
+- [ ] 🔴 **INCOMING:** Message wrapping pattern for message enrichment
 
 **Built-in Providers:**
 - [x] In-Process `ConcurrentQueue` (default)
@@ -79,6 +121,9 @@
 - `IMessageQueueSender<TChannel>`
 - `IMessageContext`
 - `IQueueMessage`
+- 🔴 **INCOMING:** `WrappedQueueMessage`
+- 🔴 **INCOMING:** `IMessageHandlerProviderWrapped`
+- 🔴 **INCOMING:** `IMessagePropertyResolver`
 
 **Coverage:** 90.4% line coverage
 
@@ -90,6 +135,8 @@
 - [x] Content type detection
 - [x] Priority-based template selection
 - [x] Sandbox path support
+- [ ] 🔴 **INCOMING:** Template execution context (`ITemplateContext`)
+- [ ] 🔴 **INCOMING:** File type system (`IFileType`, `IFileTypeProvider`, `FileType`)
 
 **Built-in Providers:**
 - [x] XSLT 1.0
@@ -100,6 +147,8 @@
 
 **Key Interfaces:**
 - `ITemplateEngine`, `ITemplateProvider`, `ITemplateSource`
+- 🔴 **INCOMING:** `ITemplateContext`
+- 🔴 **INCOMING:** `IFileType`, `IFileTypeProvider`
 
 ### 2.3 ASP.NET Core Extensions ✓
 
@@ -126,6 +175,12 @@
 - [x] Health check endpoints
 - [x] Query parameter documentation
 - [x] FormFile upload support
+- [ ] 🔴 **INCOMING:** Enhanced Swagger options
+  - `AdditionalSwaggerGenEndpointsOptions` - Additional generation endpoints
+  - `AdditionalSwaggerUIEndpointsOptions` - Additional UI endpoints
+  - `HealthCheckSwaggerGenEndpointOptions` - Health check endpoint options
+  - `ConfigureOAuthSwaggerGenOptions` - Enhanced OAuth generation
+  - `ConfigureOAuthSwaggerUIOptions` - Enhanced OAuth UI
 
 ### 2.4 Communications Services ✓
 
@@ -136,10 +191,12 @@
 - [x] Attachments via blob references
 - [x] Health checks
 - [x] Message queueing integration
+- [ ] 🔴 **INCOMING:** Inbound email model (`ReceivedEmailMessageModel`)
 
 **Key Interfaces:**
 - `ICommunicationSender<T>`
 - `EmailMessageModel`, `SmsMessageModel`
+- 🔴 **INCOMING:** `ReceivedEmailMessageModel`
 
 ### 2.5 Document Services ✓
 
@@ -242,12 +299,14 @@
 - [x] Command-line configuration provider
 - [x] Hierarchical configuration support
 - [x] Strongly-typed options pattern
+- [ ] 🔴 **INCOMING:** `CommandParameterAttribute` - Attribute-based CLI parameter binding
 
 **Serialization:**
 - [x] JSON (System.Text.Json)
 - [x] BSON
 - [x] XML
 - [x] Custom converters (DateTime, ObjectId, Dictionary)
+- [ ] 🔴 **INCOMING:** `EnumValueAttribute` - Custom JSON enum serialization
 
 **I/O:**
 - [x] Stream extensions
@@ -255,23 +314,32 @@
 - [x] Pipelines support
 - [x] USB HID device support
 - [x] Serial port abstractions
+- [ ] 🔴 **INCOMING:** `ContentChunk` - Content chunking for RAG pipelines
 
 **LINQ Extensions:**
 - [x] Async enumerable extensions
 - [x] Dictionary extensions
 - [x] Expression building and manipulation
 - [x] Expression tree visitors
+- [ ] 🔴 **INCOMING:** `ParameterReplacerExpressionVisitor` - Expression parameter replacement
+- [ ] 🔴 **INCOMING:** `SkipInstanceMethodOnNullExpressionVisitor` - Null-safe instance methods
 
 **Reflection:**
 - [x] Embedded resource utilities
 - [x] Type resolution
 - [x] Enum modeling
+- [ ] 🔴 **INCOMING:** `IVersionProvider` - Assembly version information access
+
+**Workflow & State Management:**
+- [ ] 🔴 **INCOMING:** `EndStateAttribute` - Mark terminal workflow states
+- [ ] 🔴 **INCOMING:** `ExcludeFromUniqueAttribute` - State machine enum handling
 
 **Key Interfaces:**
 - `ISerializer`, `IJsonSerializer`, `IBsonSerializer`, `IXmlSerializer`
 - `IDevice`, `IDeviceAdapter`, `IStreamDevice`
 - `ITempFile`, `ITempFileFactory`
 - `IDateTimeProvider`, `IGuidProvider`
+- 🔴 **INCOMING:** `IVersionProvider`
 
 ### 2.11 LINQ and Query Building ✓
 
@@ -288,8 +356,47 @@
 - [x] Expression visitors for null-safety
 - [x] String comparison replacement visitors
 - [x] Sort order replacement visitors
+- [ ] 🔴 **INCOMING:** `ParameterReplacerExpressionVisitor` - Replace expression parameters
+- [ ] 🔴 **INCOMING:** `SkipInstanceMethodOnNullExpressionVisitor` - Null-safe instance method calls
+
+**Query Interception:**
+- [ ] 🔴 **INCOMING:** `ISearchQueryIntercept` - Intercept and modify queries before execution
+- [ ] 🔴 **INCOMING:** `SearchTermDefaultAttribute` - Configure search term behavior (EqualTo, Contains, StartsWith, EndsWith)
+- [ ] 🔴 **INCOMING:** `IgnoreStringComparisonReplacementAttribute` - Skip string comparison replacement
+
+**Search Model Building:**
+- [ ] 🔴 **INCOMING:** `ISearchModelBuilder` / `SearchModelBuilder` - Build search models from requests
+- [ ] 🔴 **INCOMING:** `ISearchModelMapper` / `SearchModelMapper` - Map search requests to models
 
 **Coverage:** 90.5% line coverage (highest in framework)
+
+---
+
+### 2.12 API Response Patterns ⚠️ INCOMING
+
+**Result Pattern System:**
+- [ ] 🔴 **INCOMING:** `IResult` - Base result interface
+- [ ] 🔴 **INCOMING:** `IModelResult<T>` - Single model result wrapper
+- [ ] 🔴 **INCOMING:** `IQueryResult<T>` - Collection result wrapper
+- [ ] 🔴 **INCOMING:** `IPagedQueryResult<T>` - Paged collection result with metadata
+- [ ] 🔴 **INCOMING:** `ResultMessage` - Structured result messages
+- [ ] 🔴 **INCOMING:** `MessageLevels` - Message severity (Trace, Debug, Info, Warning, Error, Critical)
+- [ ] 🔴 **INCOMING:** `ICaptureResultMessage` / `CaptureResultMessage` - Message capture and propagation
+
+**Key Benefits:**
+- Standardized API response format
+- Hierarchical message levels for diagnostics
+- i18n-ready message codes
+- Consistent error handling
+- Paging metadata for collections
+
+**Current Status:** ❌ Not present - No standardized result pattern in dotex
+
+**Migration Priority:** **CRITICAL** - Foundation for consistent API design
+
+**Breaking Change:** YES - Will require updating controller return types
+
+**Location:** `Incomming/dotnet-lib/Framework/Eliassen.System.Abstractions/ResponseModel/`
 
 ---
 
@@ -625,6 +732,26 @@
 | **FileRagEngine.Cli** | RAG indexing and queries | `src/Tools/` |
 | **FixSourceLinks.Cli** | Source link correction | `src/Tools/` |
 | **TemplateEngine.Cli** | Template processing | `src/Tools/` |
+| **MigrationHelper.Cli** | Namespace/prefix migration tool | `src/Tools/` |
+
+### MigrationHelper.Cli Details
+
+**Purpose:** Automated migration tool for renaming namespaces and prefixes in migrated code.
+
+**Use Case:** Migrate code from external libraries (e.g., "Eliassen" → "OoBDev")
+
+**Operations:**
+1. Renames directories with source prefix to target prefix
+2. Renames files with source prefix to target prefix
+3. Replaces namespace references in all file contents
+4. Skips binary files (null byte detection)
+
+**Configuration:** Edit `Program.cs` to set:
+- `path` - Base directory to process
+- `sourcePrefix` - Prefix to replace (e.g., "Eliassen")
+- `targetPrefix` - New prefix (e.g., "OoBDev")
+
+**Example:** Used to migrate features from `Incomming/dotnet-lib/` (Eliassen namespace) to main dotex codebase (OoBDev namespace)
 
 ---
 
@@ -736,6 +863,327 @@ See `/current/src/dotex/src/OoBDev.sln` for complete project listing.
 - `OoBDev.Search.*` - Search
 - `OoBDev.System.*` - System utilities
 - `OoBDev.<Provider>` - External service integrations
+
+---
+
+## 14. Incoming Features - Detailed Inventory
+
+**Migration Date:** 2026-01-10
+**Source:** eliassen-dotnet-libs
+**Location:** `/current/src/dotex/Incomming/dotnet-lib/`
+**Status:** 🔴 Awaiting Integration
+**Total Files:** 40
+
+### 14.1 HIGH Priority - Result Pattern System (8 files)
+
+**Location:** `Incomming/dotnet-lib/Framework/Eliassen.System.Abstractions/ResponseModel/`
+
+| File | Purpose | Integration Impact |
+|------|---------|-------------------|
+| `IResult.cs` | Base result interface | Foundation for standardized API responses |
+| `IModelResult.cs` | Single model result interface | Generic result wrapper for single entities |
+| `IQueryResult.cs` | Collection result interface | Generic result wrapper for collections |
+| `IPagedQueryResult.cs` | Paged result interface | Adds paging metadata to collections |
+| `ResultMessage.cs` | Structured message class | Result messages with codes, levels, context |
+| `MessageLevels.cs` | Message severity enum | Trace, Debug, Info, Warning, Error, Critical |
+| `ICaptureResultMessage.cs` | Message capture interface | Capture and propagate messages |
+| `CaptureResultMessage.cs` | Message capture implementation | Concrete implementation |
+
+**Benefits:**
+- Standardizes API response format across all endpoints
+- Hierarchical message levels for logging/diagnostics
+- i18n-ready with message codes
+- Paging metadata for collections
+- Consistent error handling
+
+**Integration Effort:** Medium - Requires updating controller return types
+**Breaking Changes:** YES - API response format changes
+
+---
+
+### 14.2 HIGH Priority - ContentChunk (1 file)
+
+**Location:** `Incomming/dotnet-lib/Framework/Eliassen.System.Abstractions/IO/`
+
+| File | Purpose | Integration Impact |
+|------|---------|-------------------|
+| `ContentChunk.cs` | RAG content chunking model | Standardizes document chunking for embeddings |
+
+**Properties:**
+- `Sequence` - Chunk order
+- `Start` - Start position in source
+- `Length` - Chunk length
+- Content data
+
+**Benefits:**
+- Standardized chunking interface for RAG
+- Metadata tracking per chunk
+- Sequence ordering for reconstruction
+- Supports overlapping chunks
+
+**Integration Effort:** Low - New model class
+**Breaking Changes:** NO
+
+---
+
+### 14.3 HIGH Priority - Search Query Interception (4 files)
+
+**Location:** `Incomming/dotnet-lib/Framework/Eliassen.System.Abstractions/ComponentModel/Search/`
+
+| File | Purpose | Integration Impact |
+|------|---------|-------------------|
+| `ISearchQueryIntercept.cs` | Query interception interface | Allows pre-execution query modification |
+| `SearchTermDefaultAttribute.cs` | Search term behavior attribute | Configure search term matching |
+| `IgnoreStringComparisonReplacementAttribute.cs` | Skip string replacement | Exclude properties from comparison replacement |
+| `SearchTermDefaults.cs` | Search term options enum | EqualTo, Contains, StartsWith, EndsWith |
+
+**Benefits:**
+- Attribute-based query customization
+- Pre-execution transformation
+- Flexible search term matching
+- Property-level control
+
+**Example:**
+```csharp
+public class ProductSearchModel
+{
+    [SearchTermDefault(SearchTermDefaults.Contains)]
+    public string Name { get; set; }
+
+    [SearchTermDefault(SearchTermDefaults.EqualTo)]
+    public string SKU { get; set; }
+}
+```
+
+**Integration Effort:** Medium - Integrate with existing QueryBuilder
+**Breaking Changes:** NO - Additive feature
+
+---
+
+### 14.4 MEDIUM Priority - Version Provider (1 file)
+
+**Location:** `Incomming/dotnet-lib/Framework/Eliassen.System.Abstractions/ComponentModel/`
+
+| File | Purpose | Integration Impact |
+|------|---------|-------------------|
+| `IVersionProvider.cs` | Assembly version information | Runtime version access |
+
+**Benefits:**
+- Telemetry integration
+- About dialogs
+- Diagnostics
+
+**Integration Effort:** Low
+**Breaking Changes:** NO
+
+---
+
+### 14.5 MEDIUM Priority - Inbound Email (1 file)
+
+**Location:** `Incomming/dotnet-lib/Framework/Eliassen.Communications.Abstractions/Models/`
+
+| File | Purpose | Integration Impact |
+|------|---------|-------------------|
+| `ReceivedEmailMessageModel.cs` | Inbound email model | Email processing workflows |
+
+**Benefits:**
+- Complements existing `EmailMessageModel` (outbound only)
+- Enables email processing features
+- Mailbox monitoring
+
+**Integration Effort:** Low
+**Breaking Changes:** NO
+
+---
+
+### 14.6 MEDIUM Priority - Template Enhancements (5 files)
+
+**Locations:**
+- `Incomming/dotnet-lib/Framework/Eliassen.System.Abstractions/Text/Templating/`
+- `Incomming/dotnet-lib/Framework/Eliassen.System/Text/Templating/`
+
+| File | Purpose | Integration Impact |
+|------|---------|-------------------|
+| `ITemplateContext.cs` | Template execution context interface | Context-aware template processing |
+| `TemplateContext.cs` | Template context implementation | Concrete implementation |
+| `IFileType.cs` | File type interface | File type metadata |
+| `IFileTypeProvider.cs` | File type provider | File type resolution |
+| `FileType.cs` | Built-in file types | Common file type enumeration |
+
+**Benefits:**
+- Runtime context during template execution
+- Extensible file type system
+- Type detection and mapping
+
+**Integration Effort:** Medium
+**Breaking Changes:** NO
+
+---
+
+### 14.7 MEDIUM Priority - Enum Workflow Attributes (3 files)
+
+**Location:** `Incomming/dotnet-lib/Framework/Eliassen.System.Abstractions/ComponentModel/`
+
+| File | Purpose | Integration Impact |
+|------|---------|-------------------|
+| `EnumValueAttribute.cs` | Custom JSON enum values | Custom serialization |
+| `ExcludeFromUniqueAttribute.cs` | Non-unique state values | State machine support |
+| `EndStateAttribute.cs` | Terminal workflow states | Workflow terminals |
+
+**Benefits:**
+- Workflow system support
+- State machine patterns
+- Custom enum serialization
+
+**Integration Effort:** Low
+**Breaking Changes:** NO
+
+---
+
+### 14.8 MEDIUM Priority - CLI Parameter Binding (1 file)
+
+**Location:** `Incomming/dotnet-lib/Framework/Eliassen.System.Abstractions/Configuration/`
+
+| File | Purpose | Integration Impact |
+|------|---------|-------------------|
+| `CommandParameterAttribute.cs` | CLI parameter binding | Attribute-based CLI arguments |
+
+**Benefits:**
+- Type-safe parameter binding
+- Help text generation
+- Improved CLI tool development
+
+**Integration Effort:** Low - Complements existing `CommandLine` class
+**Breaking Changes:** NO
+
+---
+
+### 14.9 MEDIUM Priority - Message Wrapping (4 files)
+
+**Locations:**
+- `Incomming/dotnet-lib/Framework/Eliassen.MessageQueueing.Abstractions/Services/`
+- `Incomming/dotnet-lib/Framework/Eliassen.MessageQueueing/Services/`
+
+| File | Purpose | Integration Impact |
+|------|---------|-------------------|
+| `WrappedQueueMessage.cs` | Message wrapper | Message envelope pattern |
+| `IMessageHandlerProviderWrapped.cs` | Wrapped handler provider | Handle wrapped messages |
+| `IMessagePropertyResolver.cs` | Message property resolver | Extract metadata from wrapped messages |
+| `MessagePropertyResolver.cs` | Property resolver implementation | Concrete implementation |
+
+**Benefits:**
+- Message enrichment patterns
+- Metadata extraction
+- Message envelope support
+
+**Integration Effort:** Medium
+**Breaking Changes:** Potentially - Handler signatures may change
+
+---
+
+### 14.10 MEDIUM Priority - Expression Visitors (2 files)
+
+**Location:** `Incomming/dotnet-lib/Framework/Eliassen.System.Linq/Expressions/`
+
+| File | Purpose | Integration Impact |
+|------|---------|-------------------|
+| `ParameterReplacerExpressionVisitor.cs` | Replace expression parameters | Expression tree manipulation |
+| `SkipInstanceMethodOnNullExpressionVisitor.cs` | Null-safe instance methods | Enhanced null safety |
+
+**Benefits:**
+- Enhanced expression tree manipulation
+- Null-safe instance method calls (complements existing null-safe member access)
+
+**Integration Effort:** Low
+**Breaking Changes:** NO
+
+---
+
+### 14.11 MEDIUM Priority - Search Model Builders (4 files)
+
+**Location:** `Incomming/dotnet-lib/Framework/Eliassen.AspNetCore.Mvc/Providers/SearchQuery/`
+
+| File | Purpose | Integration Impact |
+|------|---------|-------------------|
+| `ISearchModelBuilder.cs` | Search model builder interface | Build search models |
+| `SearchModelBuilder.cs` | Search model builder implementation | Concrete builder |
+| `ISearchModelMapper.cs` | Search model mapper interface | Map requests to models |
+| `SearchModelMapper.cs` | Search model mapper implementation | Concrete mapper |
+
+**Benefits:**
+- Improved search API design
+- Request to model mapping
+- Separation of concerns
+
+**Integration Effort:** Medium
+**Breaking Changes:** NO
+
+---
+
+### 14.12 MEDIUM Priority - Enhanced Swagger Options (6 files)
+
+**Locations:**
+- `Incomming/dotnet-lib/Framework/Eliassen.AspNetCore.Mvc/SwaggerGen/`
+- `Incomming/dotnet-lib/Framework/Eliassen.AspNetCore.JwtAuthentication/SwaggerGen/`
+
+| File | Purpose | Integration Impact |
+|------|---------|-------------------|
+| `AdditionalSwaggerGenEndpointsOptions.cs` | Additional generation endpoints | More Swagger endpoints |
+| `AdditionalSwaggerUIEndpointsOptions.cs` | Additional UI endpoints | More UI endpoints |
+| `HealthCheckSwaggerGenEndpointOptions.cs` | Health check endpoint options | Health check documentation |
+| `ConfigureOAuthSwaggerGenOptions.cs` | Enhanced OAuth generation | Better OAuth docs |
+| `ConfigureOAuthSwaggerUIOptions.cs` | Enhanced OAuth UI | Better OAuth UI |
+| `OAuth2SwaggerOptions.cs` | OAuth2 configuration | OAuth2 settings |
+
+**Benefits:**
+- Better API documentation
+- More configuration options
+- Enhanced OAuth integration
+
+**Integration Effort:** Low - Configuration options
+**Breaking Changes:** NO
+
+---
+
+### 14.13 Integration Roadmap
+
+**Phase 1 - Quick Wins (Low effort, high value)**
+1. ✅ ContentChunk - Add to System.Abstractions
+2. ✅ IVersionProvider - Add to System.Abstractions
+3. ✅ ReceivedEmailMessageModel - Add to Communications.Abstractions
+4. ✅ Enum attributes - Add to System.Abstractions
+5. ✅ CommandParameterAttribute - Add to System.Abstractions
+6. ✅ Expression visitors - Add to System.Linq
+
+**Phase 2 - Core Patterns (Medium effort, high value)**
+1. ✅ Search Query Interception - Integrate with QueryBuilder
+2. ✅ Template enhancements - Extend template system
+3. ✅ Search model builders - Add to AspNetCore.Mvc
+
+**Phase 3 - Structural Changes (High effort, high value)**
+1. ✅ Result Pattern System - Update all API responses (Breaking)
+2. ✅ Message wrapping - Extend message queueing (Potentially breaking)
+3. ✅ Enhanced Swagger options - Replace existing Swagger configuration
+
+**Phase 4 - Validation & Testing**
+1. Update unit tests for all integrated features
+2. Update integration tests
+3. Update documentation
+4. Update examples
+
+---
+
+### 14.14 Migration Checklist
+
+- [ ] **Phase 1 Complete** - Quick wins integrated
+- [ ] **Phase 2 Complete** - Core patterns integrated
+- [ ] **Phase 3 Complete** - Structural changes integrated
+- [ ] **Phase 4 Complete** - Validation complete
+- [ ] **Documentation Updated** - All docs reflect new features
+- [ ] **Examples Updated** - Example projects use new features
+- [ ] **Tests Updated** - All tests pass
+- [ ] **Breaking Changes Documented** - Migration guide for consumers
+- [ ] **NuGet Packages Published** - New versions released
 
 ---
 
