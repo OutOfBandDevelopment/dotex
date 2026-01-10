@@ -1,0 +1,38 @@
+﻿ReassignAccountService @service
+	| https://confluence.example.com/display/DOCS/EOT+Reassign+Account
+	| https://jira.example.com/browse/PROJ-7524
+	|
+	| Existing
+	|	View: /DevOps/DF3/Sprint/src/InfoBahn/Infobahn.Web/src/Areas/AccountManagement/Views/Reassignment
+	|	Controller: /DevOps/DF3/Sprint/src/InfoBahn/Infobahn.Web/src/Areas/AccountManagement/Controllers/ReassignmentController.cs
+	+ GetClientAdvisersAndAccountsByDealer
+		> DealerContext : DealerContextDto
+		< ReassignmentSummaryList : List<ReassignmentSummaryDto>
+
+	+ GetAccountsForReassignment
+		> ReassignmentAccountList : List<int> 
+		< ReassignmentDetailList : List<ReassignmentDetailDto>
+
+	* UpdateClientAdviserOnSelectedAccounts
+		> ReassignmentAccountList : List<int> 
+		> ClientAdviserFirstName : string
+		> ClientAdviserLastName : string
+
+ReassignmentSummaryDto @dto
+	SalespersonFirstName : string
+	SalespersonLastName : string
+	TotalAccounts : int
+
+ReassignmentDetailDto @dto
+	AccountNumber : string
+	CustomerFirstName : string
+	CustomerMiddleName : string
+	CustomerLastName : string
+	Make : string
+	Model : string
+	Year : string
+	MaturityDate : dateTime
+	Vin : string
+	SalespersonFirstName : string
+	SalespersonLastName : string
+	Location : string

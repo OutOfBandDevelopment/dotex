@@ -1,0 +1,60 @@
+PayoffQuoteService @service
+	| https://confluence.example.com/display/DOCS/Payoff+Quote
+	| https://jira.example.com/browse/PROJ-7741
+	| https://tfs.example.com/workitems?id=139907
+	+ GetAccountCondition
+		| New Public Operation - returns the account condition codes
+		> AccountNumber : int
+		< IsLeaseEnd : bool
+		< HasSpecialCircumstances : bool
+		< ConditionFlags : AccountConditionFlags
+		< Conditions : List<string> 
+
+	+ GetAvailablePromotions
+		| New Public Operation - This method returns list of promotion Ids and names based the account number.
+		> AccountNumber : int
+		< PromotionList : List<PromptionItemDto>
+
+	* CreateQuote
+		| New Public Operation - This method generates the quote based on the existing code.
+		> AccountNumber : int
+		< Quote : PayoffQuoteDto | Entities should not be returned from data providers
+
+	* CreateLeaseEndQuote
+		| New Public Operation - This method generates the ABC quote based on the existing code.  This calls CreateABCPayoffQuote. If the dealer has selected a promotion quote (ie pull ahead) the AbcCreatePayoffDTO.TurnInCode needs to be set to PullAheadPromotionCode and the  AbcCreatePayoffDTO.PromotionId should be set to the selected promotion Id if not the AbcCreatePayoffDTO.PromotionId = 0.
+		| NOTE:  We have to change CreateAbcPayoffQuote() to facilitate a PromotionID. The code will need to have this change:
+		|	if(AbcCreatePayoffDTO.PromotionId > 0)
+		|		promotionId = payoffRequest.PromotionId;
+		|	else (payoffRequest.TurnInCode == PullAheadPromotionCode)
+		|		promotionId = GetPromotions(payoffRequest.FsDealerId, fsAccountId);
+		> Quote : AbcCreatePayoffDTO 
+		< Payoff : AbcPayoffDTO
+
+PromptionItemDto @dto
+	PromotionId : int
+	PromotionName : string
+
+PayoffQuoteDto @dto
+	PayoffQuoteId : int
+	GoodThroughDate : DateTime?
+	NetPayoff : decimal?
+	
+AccountConditionFlags @enum | flags
+	None						= 0x00000000
+	OutForRepo					= 0x00000001
+	CustomerCti�				= 0x00000002
+	LeaseEndState�				= 0x00000004
+	AccountExtended�			= 0x00000008
+	AccountNonPrime�			= 0x00000010
+	Emini�						= 0x00000020
+	EarlyOutOption�				= 0x00000040
+	DisputeCompanyNa�			= 0x00000080
+	AccountTerminated�			= 0x00000100
+	AccountUsa�					= 0x00000200
+	VehicleReturned�			= 0x00000400
+	AccountBankruptOrDischarge� = 0x00000800
+	Retail�						= 0x00001000
+	AdjustmentExist�			= 0x00002000
+	SpecialCircumstances�		= 0x00004000
+	RetailerPayoff�				= 0x00008000
+	CenterSales�				= 0x00010000

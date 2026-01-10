@@ -1,0 +1,15 @@
+﻿DealerToCustomerPaymentService @service
+	| https://confluence.example.com/display/DOCS/DFE+CR6+-+Dealer+Any+Any
+	| https://tfs.example.com/workitems?id=145317
+	| https://jira.example.com/browse/PROJ-9504
+	+ PostDealerToCustomerPayment
+		| This service will orchestrate:
+		| 
+		| CustCashManagement.PostCustomerPayment
+		| PostAchPaymentFromDealerUseStoredSource
+		| Refactor this to expose a new public operation on the PostCustomerPayment service
+		| PostPaymentOrchestratorsvc.cs has a call 
+			> Amount : decimal
+			> DealerBankAccount : string
+			> CustomerAccountNumber : string
+			> Note : string

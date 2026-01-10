@@ -4,9 +4,9 @@
     {
         static void Main(string[] args)
         {
-            var path = @"C:\repo\merge-em\dotex\Incomming\Framework";
-            var sourcePrefix = "ERisk";
-            var targetPrefix = "OoBDev";
+            var path = @"C:\repo\merge-em\dotex\Incomming\BotChat";
+            var sourcePrefix = "BotChat";
+            var targetPrefix = "BotChat";
 
             foreach (var folder in Directory.EnumerateDirectories(path, "*.*", SearchOption.AllDirectories))
             {

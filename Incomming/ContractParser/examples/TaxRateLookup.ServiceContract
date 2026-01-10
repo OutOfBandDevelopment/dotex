@@ -1,0 +1,28 @@
+﻿TaxRateLookupService @service
+| https://confluence.example.com/display/DOCS/Tax+Rate+Lookup+FA
+| https://jira.example.com/browse/PROJ-7641
+| https://tfs.example.com/workitems?id=139874
+	+ GetTaxRates
+		> SearchDate : DateTime
+		> SearchType :int | SearchTypes
+		< TaxRatesInfo : TaxRateLookupInfoDto
+
+SearchTypes @enum
+	PostalCode = 1
+	GetCode = 2
+
+TaxRateLookupInfoDto @dto
+	RateList : List<TaxRateInfoDto>
+	RuleList : List<TaxRuleInfoDto>
+
+TaxRateInfoDto @dto
+	GeoName : string
+	CityName : string
+	StateName : string
+	CountyName : string
+	TotalSaleRate : decimal
+	TotalRentRate : decimal
+
+TaxRuleInfoDto @dto
+	RuleName : string
+	RuleDescription : string

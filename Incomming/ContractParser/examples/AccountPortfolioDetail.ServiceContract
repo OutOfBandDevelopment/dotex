@@ -1,0 +1,225 @@
+﻿FranchiseTypes @enum
+	None = 0
+	BrandA = 1
+	BrandB = 2
+	BrandC = 3
+	BrandD = 5
+	BrandE = 21
+	BrandF = 4
+	BrandG = 6
+	OtherBrand = 50
+
+AccountPortfolioDetail @service
+	| https://confluence.example.com/display/DOCS/Portfolio+Account+Details
+	| https://jira.example.com/browse/PROJ-7519
+	| https://tfs.example.com/workitems?id=138992
+	+ GetPortfolioDetails
+		|New public method - This method is a pass through to the data provider.
+		| NOTE: FranchiseTypes: None = 0, BrandA = 1, BrandB = 2, BrandC = 3, BrandD = 5, BrandE = 21, BrandF = 4, BrandG = 6, OtherBrand = 50
+
+		> FsAccountId : int
+		> FranchiseType : int | FranchiseTypes
+		< PortfolioDetails : PortfolioDetailsDto
+	
+	+ GetLeadsandStatuses
+		|New public method - This method is a pass through to the data provider.
+
+		> FsAccountId : int
+		< Leads : LeadDto
+
+	* UpdateLeadStatus
+		|New public method - This method is a pass through to the data provider.
+		> LeadId : int
+		> LeadStatusId : int
+
+	+ GetAvailableVehicleDetails
+		|New public method - This method will get the available vehicles from inventory. This service calls to the RetailEquity Service. See GetQualifiedVehiclesForSeries and GetInventoryVehicleDetails  in the Account Details Legacy Code Crawl for details.
+	
+		> SearchType : string
+		> FSDealerId : int
+		> NaDealerMapId : int
+		> AccountId  : int
+		> AccountType : string
+		> LowerMonthlyPmt  : decimal
+		> UpperMonthlyPmt  : decimaloka
+		> TotalFees : decimal
+		> YearstoMatch : int[]
+		> ModelstoMatch  : int[]
+		> FinanceTypes : int[]
+		> ContractTerms : int[]
+		> TradeInAmount : decimal
+		> CashDown : decimal
+		> AnnualMileage : int
+
+		< Vehicle : string
+		< ContractType : string
+		< Term: int
+		< MonthlyPayment: double
+		< PaymentDifference: double
+		< APR: double
+		< MSRP : string
+		< Residual : string
+		< AddNoteScript : string
+		< VIN : string
+		< Color : string
+		< DaysInInventory: int
+		< StockNumber : string
+		< LocationCode : string
+		< LocationName : string
+		
+	+ GetCustomerNotes
+		| New public method - This method will get the customer notes by calling the INotes service. As part of this, the FetchNoteInfo method will need to be added to the NotesService and referenced in the iNotesService. See Account Details Legacy Code Crawl for details.
+
+		> DealerNumber : string
+		> AccountNo : string
+		> CountryCde : string
+		< FSAccountID: int
+		< CustomerNotes: List<CustomerNoteDetailsDto>
+
+	* InsertNote
+		| New public method - This method will call the INoteService to insert a new note then return a list of customer notes . See Account Details Legacy Code Crawl for details.
+
+		> FSAccountID: int
+		> FranchiseType: int | FranchiseTypes
+		> Note : string
+
+		< FSAccountID: int
+		< CustomerNotes : List<CustomerNoteDetailsDto>
+
+PortfolioDetailsDto @dto
+	CustomerDetails : CustomerDetailsDto
+	ContractDetails : ContractDetailsDto
+	LeadDetails : LeadDetailsDto
+	PaymentEquityDetails : PaymentEquityDetailsDto
+	SalesPerson : SalesPersonDto
+	VehicleDetails : VehicleDetailsDto
+	NoteIndicator : string
+	ContractIndicator : string
+	DetailsLink : string
+	NextApptDate : DateTime
+	NonFsIndicator : byte
+	FsAccountId : int
+	PromotionDescription : string
+	SelectEquity : string
+	EquityRangeId : int
+	ActiveIndicator : byte
+
+ContractDetailsDto @dto
+	MaturityDate : string
+	ContractDate : string
+	TerminationDate : string
+	Term : int
+	ContractType : string
+	ContractTypeCode : int
+	StatusCategoryCode : int
+	AccountStAtus : string
+	InterestRate : string
+	OriginalOdometer : string
+	MmaMiles : string
+	EocMileage : string
+	ContractMileage : string
+	MoneyFactor : string
+	FranchiseName : string
+	FranchiseTypeCode : int | FranchiseTypes
+	PortfolioId : int
+	PortfolioCategoryCode : byte
+	EwtIndicator : string
+	ProtectionProductIndicator : string
+	ProtectionProductDescription : string
+	RowId : int
+	ExcessWear : string
+	ExtWarrantyIndicator : string
+	ConditionName : string
+	IntentDate : string
+
+CustomerDetailsDto @dto
+	AccountNumber : string
+	NewAccountNumber : string
+	ContractCode : byte
+	CountryCode : string
+	LastName : string
+	FirstName : string
+	MiddleInitial : string
+	Address1 : string
+	Address2 : string
+	City : string
+	State : string
+	PostalCode : string
+	HomePhoneNumber : string
+	WorkPhoneNumber : string
+	EmailAddress : string
+	CosignerName : string
+	Location : LocationDto
+	CustomerNumberPrimary : int
+	CustomerPayoffDate : string
+	FirstTimeFsCustomer : string
+
+LocationDto @dto
+	DealerMapId : int
+	DealerId  :int
+	LocationCode : string
+	LocationDescription : string
+
+SalesPersonDto @dto
+	SalesPersonFirstName : string
+	SalesPersonLastName : string
+	SalesPersonName : string
+	SalesPersonChecked : bool
+
+LeadDto @dto
+	LeadId : int
+	LeadType : string
+	LeadVisibilityDate : DateTime
+	LeadStatus : string
+	CreatedDate : DateTime
+
+PaymentEquityDetailsDto @dto
+	MonthlyPayment : string
+	PaymentDate : string
+	DownPayment : string
+	DownPaymentPercentage : string
+	DownPaymentPercentageToolTip : string
+	EstimatedValue : string
+	PayoffAmount : string
+	Equity : string
+	ResidualAmount : string
+	BalloonAmount : string
+	SecurityDeposity : string
+	EstimatedMaturityMileage : string
+	MmaAmount : string
+	GrossCapiralizezdCost : string
+	NetTrade : string
+	CashDown : string
+	TotalMonthlyPayment : string
+	RemainingBillings : string
+	BaseMonthlyPayment : string
+	NextPaymentDate : string
+	MonthlyInsuranceAmount : string
+	OutstandingBalanceAmount : string
+	OptOut : int
+	MaxDaysOver : int
+	RebatesCredits : string
+	MidTermMileageAdjustment : string
+	UpFrontSalesTax : string
+
+VehicleDetailsDto @dto
+	Vin : string
+	Make : string
+	Model : string
+	Year : string
+	ExteriorColor : string
+	InteriorColor : string
+	OdometerAsService : string
+	ServiceDate : string
+	NewOrUsed : string
+	CpoStatus : string
+	FactoryOptions : string
+	FinalInspection : string
+	EstimatedMileage : string
+
+CustomerNoteDetailsDto @dto
+	UpdateDate: DateTime
+	Department : string
+	User : string
+	Note : string
+	DoNotCall: bool
