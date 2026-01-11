@@ -5,10 +5,18 @@
     <LangVersion>preview</LangVersion>
     <IsSqlClr>True</IsSqlClr>
     <AssemblyName>$(MSBuildProjectName.Replace(".net481", ""))</AssemblyName>
+    <!-- Separate intermediate/output directories to avoid conflicts with main .csproj -->
+    <BaseIntermediateOutputPath>obj/net481-clr/</BaseIntermediateOutputPath>
+    <BaseOutputPath>bin/net481-clr/</BaseOutputPath>
+    <IntermediateOutputPath>$(BaseIntermediateOutputPath)$(Configuration)/</IntermediateOutputPath>
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.SqlServer.Server" Version="1.0.0" />
+  
+  <ItemGroup Condition="'$(TargetFramework)' == 'net481'">
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.0" />
+  </ItemGroup>
+  
+  <ItemGroup>    
+    <!--<PackageReference Include="Microsoft.SqlServer.Server" Version="1.0.0" />-->
     <!--<PackageReference Include="Nerdbank.GitVersioning" Version="3.7.115">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
