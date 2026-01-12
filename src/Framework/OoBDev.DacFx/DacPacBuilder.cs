@@ -93,6 +93,14 @@ public class DacPacBuilder : IDacPacBuilder
         using (var archive = ZipFile.Open(dacpacFile, ZipArchiveMode.Create))
         {
             var modelXml = BuildModel(sqlClrAssembly, assemblyFileFramework, assemblyPdbFramework);
+
+#if DEBUG
+            // Save model.xml for debugging
+            var debugModelPath = Path.ChangeExtension(dacpacFile, ".model.xml");
+            modelXml.Save(debugModelPath);
+            _logger.LogInformation("DEBUG: Saved model.xml to {debugModelPath}", debugModelPath);
+#endif 
+
             var modelHash = AddXmlToArchive(archive, "model.xml", modelXml);
 
             var originXml = BuildOrigin(modelHash);
@@ -254,102 +262,147 @@ public class DacPacBuilder : IDacPacBuilder
             i.FullName == "System.Collections.IEnumerable" ||
             i.FullName == "System.Collections.Generic.IEnumerable`1");
 
-    public IEnumerable<XElement> Aggregates(Assembly assembly, string realAssemblyName) =>
-        from type in assembly.GetTypes()
-        let attrData = CustomAttributeData.GetCustomAttributes(type)
-            .FirstOrDefault(a => a.AttributeType.FullName == "Microsoft.SqlServer.Server.SqlUserDefinedAggregateAttribute")
-        where attrData != null
-        let accumulator = type.GetMethod("Accumulate")
-        let terminator = type.GetMethod("Terminate")
-        let format = GetNamedArgument<int>(attrData, "Format")
-        let isInvariantToDuplicates = GetNamedArgument<bool>(attrData, "IsInvariantToDuplicates")
-        let isInvariantToNulls = GetNamedArgument<bool>(attrData, "IsInvariantToNulls")
-        let isNullIfEmpty = GetNamedArgument<bool>(attrData, "IsNullIfEmpty")
-        let maxByteSize = GetNamedArgument<int>(attrData, "MaxByteSize")
-        let name = GetAttributeName(attrData) ?? throw new NotSupportedException($"SqlUserDefinedAggregate on {type.FullName} must have a Name")
-        select new XElement(ns + "Element",
-            new XAttribute("Type", "SqlAggregate"),
-            new XAttribute("Name", name),
-            new XElement(ns + "Property", new XAttribute("Name", "Format"), new XAttribute("Value", format)),
-            new XElement(ns + "Property", new XAttribute("Name", "IsInvariantToDuplicates"), new XAttribute("Value", isInvariantToDuplicates ? "True" : "False")),
-            new XElement(ns + "Property", new XAttribute("Name", "IsInvariantToNulls"), new XAttribute("Value", isInvariantToNulls ? "True" : "False")),
-            new XElement(ns + "Property", new XAttribute("Name", "IsNullIfEmpty"), new XAttribute("Value", isNullIfEmpty ? "True" : "False")),
-            new XElement(ns + "Property", new XAttribute("Name", "MaxByteSize"), new XAttribute("Value", maxByteSize)),
-            new XElement(ns + "Property", new XAttribute("Name", "ClassName"), new XAttribute("Value", type.FullName!)),
-            new XElement(ns + "Relationship", new XAttribute("Name", "Assembly"),
-                new XElement(ns + "Entry",
-                    new XElement(ns + "References", new XAttribute("Name", $"[{realAssemblyName}]"))
-                )
-            ),
-            FunctionParameters(accumulator!.GetParameters()),
-            Return(terminator!.ReturnParameter, isFunction: false),
-            Schema(name)
-        );
+    public IEnumerable<XElement> Aggregates(Assembly assembly, string realAssemblyName)
+    {
+        foreach (var type in assembly.GetTypes())
+        {
+            var attrData = CustomAttributeData.GetCustomAttributes(type)
+                .FirstOrDefault(a => a.AttributeType.FullName == "Microsoft.SqlServer.Server.SqlUserDefinedAggregateAttribute");
 
-    public IEnumerable<XElement> UserDefinedTypes(Assembly assembly, string realAssemblyName) =>
-        from type in assembly.GetTypes()
-        let attrData = CustomAttributeData.GetCustomAttributes(type)
-            .FirstOrDefault(a => a.AttributeType.FullName == "Microsoft.SqlServer.Server.SqlUserDefinedTypeAttribute")
-        where attrData != null
-        let format = GetNamedArgument<int>(attrData, "Format")
-        let maxByteSize = GetNamedArgument<int>(attrData, "MaxByteSize")
-        let isByteOrdered = GetNamedArgument<bool>(attrData, "IsByteOrdered")
-        let name = GetAttributeName(attrData) ?? throw new NotSupportedException($"SqlUserDefinedType on {type.FullName} must have a Name")
-        select new XElement(ns + "Element",
-            new XAttribute("Type", "SqlUserDefinedType"),
-            new XAttribute("Name", name),
-            new XElement(ns + "Property", new XAttribute("Name", "Format"), new XAttribute("Value", format)),
-            new XElement(ns + "Property", new XAttribute("Name", "MaxByteSize"), new XAttribute("Value", maxByteSize)),
-            new XElement(ns + "Property", new XAttribute("Name", "IsByteOrdered"), new XAttribute("Value", isByteOrdered ? "True" : "False")),
-            new XElement(ns + "Property", new XAttribute("Name", "ClassName"), new XAttribute("Value", type.FullName!)),
-            new XElement(ns + "Relationship", new XAttribute("Name", "Assembly"),
-                new XElement(ns + "Entry",
-                    new XElement(ns + "References", new XAttribute("Name", $"[{realAssemblyName}]"))
-                )
-            ),
-            Methods(assembly, realAssemblyName, type),
-            Schema(name)
-        );
+            if (attrData == null)
+                continue;
 
-    public IEnumerable<XElement> Functions(Assembly assembly, string realAssemblyName) =>
-        from functionClasses in assembly.GetTypes().Where(t => t.IsAbstract)
-        from function in functionClasses.GetMethods(BindingFlags.Static | BindingFlags.Public)
-        let attrData = CustomAttributeData.GetCustomAttributes(function)
-            .FirstOrDefault(a => a.AttributeType.FullName == "Microsoft.SqlServer.Server.SqlFunctionAttribute")
-        where attrData != null
-        let functionName = GetAttributeName(attrData) ?? throw new NotSupportedException($"SqlFunction on {functionClasses.FullName}.{function.Name} must have a Name")
-        let isDeterministic = GetNamedArgument<bool>(attrData, "IsDeterministic")
-        let isPrecise = GetNamedArgument<bool>(attrData, "IsPrecise")
-        orderby functionName
-        select new XElement(ns + "Element",
-            new XAttribute("Type", IsEnumerableType(function.ReturnType)
-                ? throw new NotSupportedException($"Table-valued functions not supported: {function.ReturnType}")
-                : "SqlScalarFunction"),
-            new XAttribute("Name", functionName),
-            new XElement(ns + "Property", new XAttribute("Name", "IsAnsiNullsOn")),
-            new XElement(ns + "Property", new XAttribute("Name", "IsQuotedIdentifierOn")),
-            new XElement(ns + "Relationship", new XAttribute("Name", "FunctionBody"),
-                new XElement(ns + "Entry",
-                    new XElement(ns + "Element", new XAttribute("Type", "SqlClrFunctionImplementation"),
-                        new XElement(ns + "Property", new XAttribute("Name", "IsDeterministic"), new XAttribute("Value", isDeterministic ? "True" : "False")),
-                        new XElement(ns + "Property", new XAttribute("Name", "IsPrecise"), new XAttribute("Value", isPrecise ? "True" : "False")),
-                        new XElement(ns + "Property", new XAttribute("Name", "MethodName"), new XAttribute("Value", function.Name)),
-                        new XElement(ns + "Property", new XAttribute("Name", "ClassName"), new XAttribute("Value", functionClasses.FullName!)),
-                        new XElement(ns + "Relationship", new XAttribute("Name", "Assembly"),
-                            new XElement(ns + "Entry",
-                                new XElement(ns + "References", new XAttribute("Name", $"[{realAssemblyName}]"))
+            var name = GetAttributeName(attrData);
+            _logger.LogDebug("Processing aggregate: {typeName}, AttributeName: '{name}'", type.FullName, name ?? "(null)");
+
+            if (string.IsNullOrWhiteSpace(name))
+                throw new NotSupportedException($"SqlUserDefinedAggregate on {type.FullName} must have a non-empty Name");
+
+            var accumulator = type.GetMethod("Accumulate");
+            var terminator = type.GetMethod("Terminate");
+            var format = GetNamedArgument<int>(attrData, "Format");
+            var isInvariantToDuplicates = GetNamedArgument<bool>(attrData, "IsInvariantToDuplicates");
+            var isInvariantToNulls = GetNamedArgument<bool>(attrData, "IsInvariantToNulls");
+            var isNullIfEmpty = GetNamedArgument<bool>(attrData, "IsNullIfEmpty");
+            var maxByteSize = GetNamedArgument<int>(attrData, "MaxByteSize");
+
+            yield return new XElement(ns + "Element",
+                new XAttribute("Type", "SqlAggregate"),
+                new XAttribute("Name", name),
+                new XElement(ns + "Property", new XAttribute("Name", "Format"), new XAttribute("Value", format)),
+                new XElement(ns + "Property", new XAttribute("Name", "IsInvariantToDuplicates"), new XAttribute("Value", isInvariantToDuplicates ? "True" : "False")),
+                new XElement(ns + "Property", new XAttribute("Name", "IsInvariantToNulls"), new XAttribute("Value", isInvariantToNulls ? "True" : "False")),
+                new XElement(ns + "Property", new XAttribute("Name", "IsNullIfEmpty"), new XAttribute("Value", isNullIfEmpty ? "True" : "False")),
+                new XElement(ns + "Property", new XAttribute("Name", "MaxByteSize"), new XAttribute("Value", maxByteSize)),
+                new XElement(ns + "Property", new XAttribute("Name", "ClassName"), new XAttribute("Value", type.FullName!)),
+                new XElement(ns + "Relationship", new XAttribute("Name", "Assembly"),
+                    new XElement(ns + "Entry",
+                        new XElement(ns + "References", new XAttribute("Name", $"[{realAssemblyName}]"))
+                    )
+                ),
+                FunctionParameters(accumulator!.GetParameters()),
+                Return(terminator!.ReturnParameter, isFunction: false),
+                Schema(name)
+            );
+        }
+    }
+
+    public IEnumerable<XElement> UserDefinedTypes(Assembly assembly, string realAssemblyName)
+    {
+        foreach (var type in assembly.GetTypes())
+        {
+            var attrData = CustomAttributeData.GetCustomAttributes(type)
+                .FirstOrDefault(a => a.AttributeType.FullName == "Microsoft.SqlServer.Server.SqlUserDefinedTypeAttribute");
+
+            if (attrData == null)
+                continue;
+
+            var name = GetAttributeName(attrData);
+            _logger.LogDebug("Processing UDT: {typeName}, AttributeName: '{name}'", type.FullName, name ?? "(null)");
+
+            if (string.IsNullOrWhiteSpace(name))
+                throw new NotSupportedException($"SqlUserDefinedType on {type.FullName} must have a non-empty Name");
+
+            var format = GetNamedArgument<int>(attrData, "Format");
+            var maxByteSize = GetNamedArgument<int>(attrData, "MaxByteSize");
+            var isByteOrdered = GetNamedArgument<bool>(attrData, "IsByteOrdered");
+
+            yield return new XElement(ns + "Element",
+                new XAttribute("Type", "SqlUserDefinedType"),
+                new XAttribute("Name", name),
+                new XElement(ns + "Property", new XAttribute("Name", "Format"), new XAttribute("Value", format)),
+                new XElement(ns + "Property", new XAttribute("Name", "MaxByteSize"), new XAttribute("Value", maxByteSize)),
+                new XElement(ns + "Property", new XAttribute("Name", "IsByteOrdered"), new XAttribute("Value", isByteOrdered ? "True" : "False")),
+                new XElement(ns + "Property", new XAttribute("Name", "ClassName"), new XAttribute("Value", type.FullName!)),
+                new XElement(ns + "Relationship", new XAttribute("Name", "Assembly"),
+                    new XElement(ns + "Entry",
+                        new XElement(ns + "References", new XAttribute("Name", $"[{realAssemblyName}]"))
+                    )
+                ),
+                Methods(assembly, realAssemblyName, type),
+                Schema(name)
+            );
+        }
+    }
+
+    public IEnumerable<XElement> Functions(Assembly assembly, string realAssemblyName)
+    {
+        foreach (var functionClasses in assembly.GetTypes().Where(t => t.IsAbstract))
+        {
+            foreach (var function in functionClasses.GetMethods(BindingFlags.Static | BindingFlags.Public))
+            {
+                var attrData = CustomAttributeData.GetCustomAttributes(function)
+                    .FirstOrDefault(a => a.AttributeType.FullName == "Microsoft.SqlServer.Server.SqlFunctionAttribute");
+
+                if (attrData == null)
+                    continue;
+
+                var functionName = GetAttributeName(attrData);
+                _logger.LogDebug("Processing function: {className}.{methodName}, AttributeName: '{name}'",
+                    functionClasses.FullName, function.Name, functionName ?? "(null)");
+
+                if (string.IsNullOrWhiteSpace(functionName))
+                    throw new NotSupportedException($"SqlFunction on {functionClasses.FullName}.{function.Name} must have a non-empty Name");
+
+                var isDeterministic = GetNamedArgument<bool>(attrData, "IsDeterministic");
+                var isPrecise = GetNamedArgument<bool>(attrData, "IsPrecise");
+
+                if (IsEnumerableType(function.ReturnType))
+                    throw new NotSupportedException($"Table-valued functions not supported: {function.ReturnType}");
+
+                yield return new XElement(ns + "Element",
+                    new XAttribute("Type", "SqlScalarFunction"),
+                    new XAttribute("Name", functionName),
+                    new XElement(ns + "Property", new XAttribute("Name", "IsAnsiNullsOn"), new XAttribute("Value", "True")),
+                    new XElement(ns + "Property", new XAttribute("Name", "IsQuotedIdentifierOn"), new XAttribute("Value", "True")),
+                    new XElement(ns + "Relationship", new XAttribute("Name", "FunctionBody"),
+                        new XElement(ns + "Entry",
+                            new XElement(ns + "Element", new XAttribute("Type", "SqlClrFunctionImplementation"),
+                                new XElement(ns + "Property", new XAttribute("Name", "IsDeterministic"), new XAttribute("Value", isDeterministic ? "True" : "False")),
+                                new XElement(ns + "Property", new XAttribute("Name", "IsPrecise"), new XAttribute("Value", isPrecise ? "True" : "False")),
+                                new XElement(ns + "Property", new XAttribute("Name", "MethodName"), new XAttribute("Value", function.Name)),
+                                new XElement(ns + "Property", new XAttribute("Name", "ClassName"), new XAttribute("Value", functionClasses.FullName!)),
+                                new XElement(ns + "Relationship", new XAttribute("Name", "Assembly"),
+                                    new XElement(ns + "Entry",
+                                        new XElement(ns + "References", new XAttribute("Name", $"[{realAssemblyName}]"))
+                                    )
+                                )
                             )
                         )
-                    )
-                )
-            ),
-            FunctionParameters(function.GetParameters()),
-            Schema(functionName),
-            Return(function.ReturnParameter, isFunction: true)
-        );
+                    ),
+                    FunctionParameters(function.GetParameters()),
+                    Schema(functionName),
+                    Return(function.ReturnParameter, isFunction: true)
+                );
+            }
+        }
+    }
 
-    public XElement Methods(Assembly assembly, string realAssemblyName, Type sqlClrType) =>
-        new XElement(ns + "Relationship", new XAttribute("Name", "Methods"),
+    public XElement Methods(Assembly assembly, string realAssemblyName, Type sqlClrType)
+    {
+        var typeName = GetName(sqlClrType) ?? throw new NotSupportedException($"Type {sqlClrType.FullName} must have a Name");
+
+        return new XElement(ns + "Relationship", new XAttribute("Name", "Methods"),
             from function in sqlClrType.GetMethods(BindingFlags.Instance | BindingFlags.Public)
             let attrData = CustomAttributeData.GetCustomAttributes(function)
                 .FirstOrDefault(a => a.AttributeType.FullName == "Microsoft.SqlServer.Server.SqlFunctionAttribute")
@@ -358,7 +411,7 @@ public class DacPacBuilder : IDacPacBuilder
             select new XElement(ns + "Entry",
                 new XElement(ns + "Element",
                     new XAttribute("Type", "SqlClrMethod"),
-                    new XAttribute("Name", $"{GetName(sqlClrType)}.[{functionName}]"),
+                    new XAttribute("Name", $"{typeName}.[{functionName}]"),
                     new XElement(ns + "Property",
                         new XAttribute("Name", "ClrName"),
                         new XAttribute("Value", functionName)),
@@ -367,6 +420,7 @@ public class DacPacBuilder : IDacPacBuilder
                 )
             )
         );
+    }
 
     public IEnumerable<XElement> Files(string realAssemblyName, string assemblyFile, string? pdbFile)
     {
@@ -443,10 +497,12 @@ public class DacPacBuilder : IDacPacBuilder
 
         return new XElement(ns + "Relationship", new XAttribute("Name", "Parameters"),
             from parameter in paramArray
+            let typeName = GetName(parameter.Member.DeclaringType) ?? throw new NotSupportedException($"Type {parameter.Member.DeclaringType?.FullName} must have a Name")
+            let methodName = GetName(parameter.Member) ?? throw new NotSupportedException($"Method {parameter.Member.Name} must have a Name")
             select new XElement(ns + "Entry",
                 new XElement(ns + "Element",
                     new XAttribute("Type", "SqlClrMethodParameter"),
-                    new XAttribute("Name", $"{GetName(parameter.Member.DeclaringType)}.[{GetName(parameter.Member)}].[{parameter.Name}]"),
+                    new XAttribute("Name", $"{typeName}.[{methodName}].[{parameter.Name}]"),
                     new XElement(ns + "Property",
                         new XAttribute("Name", "ClrName"),
                         new XAttribute("Value", parameter.Name!)),
@@ -484,6 +540,8 @@ public class DacPacBuilder : IDacPacBuilder
     public IEnumerable<XElement> Properties(ParameterInfo parameterInfo)
     {
         var fullName = parameterInfo.ParameterType.FullName;
+
+        if (fullName == null) yield break;
 
         // IsMax for string/binary types
         if (_isMax.Contains(fullName))
@@ -526,12 +584,19 @@ public class DacPacBuilder : IDacPacBuilder
     public XElement Schema(object input)
     {
         if (input is not string fullName)
-            fullName = GetName(input) ?? throw new NotSupportedException();
+            fullName = GetName(input) ?? throw new NotSupportedException($"Cannot get name for schema from {input?.GetType().Name ?? "null"}");
+
+        if (string.IsNullOrWhiteSpace(fullName) || fullName == "[]")
+            throw new NotSupportedException($"Schema name cannot be empty or just brackets: '{fullName}'");
 
         // Extract schema name: [embedding].[Centroid] -> [embedding]
         var schemaName = fullName.Contains('.')
             ? fullName.Substring(0, fullName.LastIndexOf('.'))
             : "[dbo]";
+
+        // Validate schema name is not empty
+        if (string.IsNullOrWhiteSpace(schemaName) || schemaName == "[]")
+            schemaName = "[dbo]";
 
         return new XElement(ns + "Relationship", new XAttribute("Name", "Schema"),
             new XElement(ns + "Entry",
@@ -563,7 +628,9 @@ public class DacPacBuilder : IDacPacBuilder
                 return name;
         }
 
-        return method.Name;
+        // Return null for methods without SqlFunction attribute
+        // This allows parameter names to fall back to using the declaring type name
+        return null;
     }
 
     private string? GetTypeName(Type type)
@@ -593,6 +660,9 @@ public class DacPacBuilder : IDacPacBuilder
             return mappedName;
 
         // Default to full type name
+        if (string.IsNullOrWhiteSpace(type.FullName))
+            return null;
+
         return $"[{type.FullName}]";
     }
 
@@ -611,11 +681,19 @@ public class DacPacBuilder : IDacPacBuilder
         // Try named argument
         var nameArg = attrData.NamedArguments.FirstOrDefault(a => a.MemberName == "Name");
         if (nameArg.MemberName != null)
-            return nameArg.TypedValue.Value?.ToString();
+        {
+            var name = nameArg.TypedValue.Value?.ToString();
+            if (!string.IsNullOrWhiteSpace(name))
+                return name;
+        }
 
         // Try constructor argument
         if (attrData.ConstructorArguments.Count > 0)
-            return attrData.ConstructorArguments[0].Value?.ToString();
+        {
+            var name = attrData.ConstructorArguments[0].Value?.ToString();
+            if (!string.IsNullOrWhiteSpace(name))
+                return name;
+        }
 
         return null;
     }

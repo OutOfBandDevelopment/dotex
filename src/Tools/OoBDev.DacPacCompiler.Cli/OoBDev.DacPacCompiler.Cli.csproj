@@ -27,10 +27,10 @@
     <ProjectReference Include="..\..\Framework\OoBDev.DacFx\OoBDev.DacFx.csproj" />
   </ItemGroup>
 
-  <!-- Force the 4.8.1 build to run before this project for testing -->
+  <!-- Force the 4.8 build to run before this project for testing -->
   <PropertyGroup>
     <VectorProjectDir>$(MSBuildProjectDirectory)\..\..\Extensions\OoBDev.Data.Vectors.Net481</VectorProjectDir>
-    <VectorOutputPath>$(VectorProjectDir)\bin\$(Configuration)\net481</VectorOutputPath>
+    <VectorOutputPath>$(VectorProjectDir)\bin\$(Configuration)\net48</VectorOutputPath>
   </PropertyGroup>
   <!--
   <ItemGroup>

@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net481</TargetFrameworks>
-    <!--<TargetFrameworks>net481;netstandard2.1</TargetFrameworks>-->
+    <TargetFrameworks>net48</TargetFrameworks>
+    <!--<TargetFrameworks>net48;netstandard2.1</TargetFrameworks>-->
     <LangVersion>preview</LangVersion>
     
     <IsSqlClr>True</IsSqlClr>
@@ -16,14 +16,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- Condition="'$(TargetFramework)' == 'net481'" -->
-    
-    <PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.0" />
+    <Compile Include="..\OoBDev.Data.Vectors\**\*.cs" Exclude="..\OoBDev.Data.Vectors\bin\**;..\OoBDev.Data.Vectors\obj\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="..\OoBDev.Data.Vectors\**\*.cs"
-             Exclude="..\OoBDev.Data.Vectors\bin\**;..\OoBDev.Data.Vectors\obj\**" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.9.0" />
   </ItemGroup>
 
   <!-- Build the DacPacCompiler.Cli tool before generating DACPAC -->

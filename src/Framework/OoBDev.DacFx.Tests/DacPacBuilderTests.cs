@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.Extensions.Logging.Console;
 
 namespace OoBDev.DacFx.Tests;
 
@@ -11,12 +12,16 @@ public class DacPacBuilderTests
     [TestMethod]
     public void BuildPackageTest()
     {
-        var loggerFactory = new LoggerFactory();
+        var loggerFactory = LoggerFactory.Create(builder =>
+        {
+            builder.AddConsole();
+            builder.SetMinimumLevel(LogLevel.Debug);
+        });
         var loggerBuilder = loggerFactory.CreateLogger<DacPacBuilder>();
         var loggerValidator = loggerFactory.CreateLogger<DacPacValidator>();
         var builder = new DacPacBuilder(loggerBuilder, new DacPacValidator(loggerValidator));
         builder.BuildDacPac(
-            assemblyFileFramework: @"C:\repo\merge-em\dotex\src\Extensions\OoBDev.Data.Vectors.Net481\bin\Debug\net481\OoBDev.Data.Vectors.dll"
+            assemblyFileFramework: @"C:\repo\merge-em\dotex\src\Extensions\OoBDev.Data.Vectors.Net481\bin\Debug\net48\OoBDev.Data.Vectors.dll"
             //assemblyPdbFramework: @"C:\Repos\oobdev\dotex\src\Extensions\OoBDev.Data.Vectors\bin\Debug\net481\OoBDev.Data.Vectors.pdb",
             //dacpacFile: @"C:\Repos\oobdev\dotex\src\Extensions\OoBDev.Data.Vectors\bin\Debug\netstandard2.0\OoBDev.Data.Vectors.dacpac",
             //projectName: "OoBDev.Data.Vectors",
