@@ -1,4 +1,4 @@
-using OoBDev.Extensions.Reflection;
+﻿using OoBDev.Extensions.Reflection;
 using OoBDev.System.Text.Json.Serialization;
 using OoBDev.System.Text.Xml.Linq;
 using Microsoft.Extensions.Configuration;
@@ -92,6 +92,7 @@ public static class TestContextExtensions
         var baseFileExtension = string.IsNullOrWhiteSpace(fileName) ? "" : Path.GetExtension(fileName);
         var allowChangeExtension = false;
         var timeStamp = DateTime.Now.Ticks;
+        var uniqueId = Guid.NewGuid().ToString("N")[..8]; // Add 8-char unique ID for parallel test safety
 
         if (string.IsNullOrWhiteSpace(baseFileExtension) && (!fileName?.EndsWith('.') ?? true))
         {
@@ -111,7 +112,8 @@ public static class TestContextExtensions
         var composedFileName = cleanFileName(string.Join('-',
             baseFileName,
             $"{Path.GetFileNameWithoutExtension(callerFile)}_{caller}({callerLine})",
-            timeStamp
+            timeStamp,
+            uniqueId
             ) + baseFileExtension);
 
         if (value == null)
@@ -261,7 +263,26 @@ public static class TestContextExtensions
         var dir = Path.GetDirectoryName(outFile);
         if (!string.IsNullOrWhiteSpace(dir) && !Directory.Exists(dir))
             Directory.CreateDirectory(dir);
-        File.WriteAllBytes(outFile, content);
+
+        // Retry file write with exponential backoff to handle transient file locking issues
+        var maxRetries = 5;
+        var retryDelay = 10; // milliseconds
+
+        for (var attempt = 0; attempt < maxRetries; attempt++)
+        {
+            try
+            {
+                File.WriteAllBytes(outFile, content);
+                break; // Success, exit retry loop
+            }
+            catch (IOException) when (attempt < maxRetries - 1)
+            {
+                // File is locked, wait and retry
+                global::System.Threading.Thread.Sleep(retryDelay);
+                retryDelay *= 2; // Exponential backoff
+            }
+        }
+
         context.AddResultFile(outFile);
         return context;
     }
