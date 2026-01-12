@@ -11,11 +11,29 @@ on:
     branches:
     - master
     - main
+    paths:
+    - 'src/**/*.cs'
+    - 'src/**/*.csproj'
+    - 'src/**/*.sln'
+    - 'src/**/*.props'
+    - 'src/**/*.targets'
+    - 'src/.runsettings'
+    - 'src/GitVersion.yml'
+    - '.github/workflows/dotnet.yml'
 
   pull_request:
     branches:
     - master
     - main
+    paths:
+    - 'src/**/*.cs'
+    - 'src/**/*.csproj'
+    - 'src/**/*.sln'
+    - 'src/**/*.props'
+    - 'src/**/*.targets'
+    - 'src/.runsettings'
+    - 'src/GitVersion.yml'
+    - '.github/workflows/dotnet.yml'
 
   # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#onpull_requestpull_request_targetbranchesbranches-ignore
   workflow_dispatch:
