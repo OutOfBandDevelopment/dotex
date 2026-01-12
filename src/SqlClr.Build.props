@@ -1,2 +1,8 @@
-<Project>  
+<Project>
+
+  <PropertyGroup>
+    <SqlAssemblyFileFramework Condition="'$(SqlAssemblyFileFramework)' == ''">$(TargetPath)</SqlAssemblyFileFramework>
+    <SqlAssemblyDacPacFile Condition="'$(SqlAssemblyDacPacFile)' == ''">$(TargetDir)$(AssemblyName).dacpac</SqlAssemblyDacPacFile>
+  </PropertyGroup>
+  
 </Project>
