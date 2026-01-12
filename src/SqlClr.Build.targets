@@ -6,9 +6,10 @@
     <Message Text="Generating DACPAC from SQL CLR assembly..." Importance="High" />
 
     <!-- Define properties at target execution time when build paths are available -->
+    <!-- Projects can override these by setting them in a PropertyGroup -->
     <PropertyGroup>
-      <SqlAssemblyFileFramework>$(TargetPath)</SqlAssemblyFileFramework>
-      <SqlAssemblyDacPacFile>$([System.IO.Path]::GetDirectoryName('$(TargetPath)'))\$(AssemblyName).dacpac</SqlAssemblyDacPacFile>
+      <SqlAssemblyFileFramework Condition="'$(SqlAssemblyFileFramework)' == ''">$(TargetPath)</SqlAssemblyFileFramework>
+      <SqlAssemblyDacPacFile Condition="'$(SqlAssemblyDacPacFile)' == ''">$([System.IO.Path]::GetDirectoryName('$(TargetPath)'))\$(AssemblyName).dacpac</SqlAssemblyDacPacFile>
     </PropertyGroup>
 
     <!-- Fail if DLL does not exist yet -->
@@ -23,7 +24,15 @@
           StandardErrorImportance="High"
           StandardOutputImportance="High" />
 
+    <!-- Verify the DACPAC was created successfully -->
+    <Error Condition="!Exists('$(SqlAssemblyDacPacFile)')" Text="DACPAC generation failed: $(SqlAssemblyDacPacFile) does not exist" />
+
     <Message Text="DACPAC generated: $(SqlAssemblyDacPacFile)" Importance="High" />
+
+    <!-- Register the DACPAC as a build output so consuming projects can reference it -->
+    <ItemGroup>
+      <FileWrites Include="$(SqlAssemblyDacPacFile)" />
+    </ItemGroup>
   </Target>
 
 </Project>

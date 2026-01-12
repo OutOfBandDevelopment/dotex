@@ -1,6 +1,19 @@
 <Project>
 
-  <!-- Properties are now defined in SqlClr.Build.targets within the GenerateDacPac target -->
-  <!-- This ensures they are evaluated at target execution time when build paths are available -->
+  <!--
+    SqlAssemblyFileFramework and SqlAssemblyDacPacFile are defined in SqlClr.Build.targets
+    within the GenerateDacPac target. This ensures they are evaluated at target execution
+    time when build paths are available.
+
+    To override these properties, define them in your project file either:
+    1. In a Target that runs before GenerateDacPac, or
+    2. In a PropertyGroup within the GenerateDacPac target by creating a custom target
+
+    Example override in .csproj:
+    <PropertyGroup>
+      <SqlAssemblyFileFramework>C:\custom\path\Assembly.dll</SqlAssemblyFileFramework>
+      <SqlAssemblyDacPacFile>C:\custom\path\Assembly.dacpac</SqlAssemblyDacPacFile>
+    </PropertyGroup>
+  -->
 
 </Project>

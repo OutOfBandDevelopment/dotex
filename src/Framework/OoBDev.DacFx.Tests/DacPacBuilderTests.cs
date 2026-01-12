@@ -11,10 +11,12 @@ public class DacPacBuilderTests
     [TestMethod]
     public void BuildPackageTest()
     {
-        var logger = new LoggerFactory().CreateLogger<DacPacBuilder>();
-        var builder = new DacPacBuilder(logger);
+        var loggerFactory = new LoggerFactory();
+        var loggerBuilder = loggerFactory.CreateLogger<DacPacBuilder>();
+        var loggerValidator = loggerFactory.CreateLogger<DacPacValidator>();
+        var builder = new DacPacBuilder(loggerBuilder, new DacPacValidator(loggerValidator));
         builder.BuildDacPac(
-            assemblyFileFramework: @"C:\Repos\oobdev\dotex\src\Extensions\OoBDev.Data.Vectors\bin\Debug\net481\OoBDev.Data.Vectors.dll"
+            assemblyFileFramework: @"C:\repo\merge-em\dotex\src\Extensions\OoBDev.Data.Vectors.Net481\bin\Debug\net481\OoBDev.Data.Vectors.dll"
             //assemblyPdbFramework: @"C:\Repos\oobdev\dotex\src\Extensions\OoBDev.Data.Vectors\bin\Debug\net481\OoBDev.Data.Vectors.pdb",
             //dacpacFile: @"C:\Repos\oobdev\dotex\src\Extensions\OoBDev.Data.Vectors\bin\Debug\netstandard2.0\OoBDev.Data.Vectors.dacpac",
             //projectName: "OoBDev.Data.Vectors",

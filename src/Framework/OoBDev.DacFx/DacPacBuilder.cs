@@ -11,15 +11,19 @@ using System.Security.Cryptography;
 using System.Xml.Linq;
 
 namespace OoBDev.DacFx;
-
 public class DacPacBuilder : IDacPacBuilder
 {
     private readonly ILogger _logger;
+    private readonly IDacPacValidator _validator;
     private readonly XNamespace ns = "http://schemas.microsoft.com/sqlserver/dac/Serialization/2012/02";
 
-    public DacPacBuilder(ILogger<DacPacBuilder> logger)
+    public DacPacBuilder(
+        ILogger<DacPacBuilder> logger,
+        IDacPacValidator validator
+        )
     {
         _logger = logger;
+        _validator = validator;
     }
 
     #region MetadataLoadContext Setup
@@ -103,6 +107,9 @@ public class DacPacBuilder : IDacPacBuilder
 
         _logger.LogInformation("DACPAC created successfully: {dacpacFile}", dacpacFile);
 
+        // Validate the DACPAC using Microsoft DacFx
+        _validator.ValidateDacPac(dacpacFile);
+
         if (bothPath)
         {
             var dacpacFile2 = Path.GetFullPath(Path.ChangeExtension(assemblyFileFramework, ".dacpac"));
@@ -113,7 +120,6 @@ public class DacPacBuilder : IDacPacBuilder
             }
         }
     }
-
     #endregion
 
     #region Archive Helpers
@@ -239,6 +245,15 @@ public class DacPacBuilder : IDacPacBuilder
 
     #region SQL CLR Element Extractors
 
+    /// <summary>
+    /// Checks if a type implements IEnumerable by examining interfaces via FullName.
+    /// Required for MetadataLoadContext compatibility - runtime type comparisons don't work.
+    /// </summary>
+    private static bool IsEnumerableType(Type type) =>
+        type.GetInterfaces().Any(i =>
+            i.FullName == "System.Collections.IEnumerable" ||
+            i.FullName == "System.Collections.Generic.IEnumerable`1");
+
     public IEnumerable<XElement> Aggregates(Assembly assembly, string realAssemblyName) =>
         from type in assembly.GetTypes()
         let attrData = CustomAttributeData.GetCustomAttributes(type)
@@ -307,7 +322,7 @@ public class DacPacBuilder : IDacPacBuilder
         let isPrecise = GetNamedArgument<bool>(attrData, "IsPrecise")
         orderby functionName
         select new XElement(ns + "Element",
-            new XAttribute("Type", function.ReturnType.IsAssignableTo(typeof(IEnumerable))
+            new XAttribute("Type", IsEnumerableType(function.ReturnType)
                 ? throw new NotSupportedException($"Table-valued functions not supported: {function.ReturnType}")
                 : "SqlScalarFunction"),
             new XAttribute("Name", functionName),
@@ -665,9 +680,12 @@ public class DacPacBuilder : IDacPacBuilder
 
     private string? GetTypeNameFromDictionary(Type type)
     {
-        // Handle nullable types
-        var underlyingType = Nullable.GetUnderlyingType(type);
-        var lookupType = underlyingType ?? type;
+        // Handle nullable types (check by FullName for MetadataLoadContext compatibility)
+        var lookupType = type;
+        if (type.IsGenericType && type.GetGenericTypeDefinition().FullName == "System.Nullable`1")
+        {
+            lookupType = type.GetGenericArguments()[0];
+        }
 
         // Handle arrays
         if (lookupType.IsArray)
