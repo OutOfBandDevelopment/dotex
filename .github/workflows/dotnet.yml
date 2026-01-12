@@ -4,7 +4,7 @@
 name: .NET Build Pipeline
 # https://docs.github.com/en/actions/learn-github-actions/contexts#vars-context
 # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#run-name
-run-name: .NET ${{ inputs.build-configuration || 'Release' }}/${{ inputs.build-platform || 'ubuntu-latest' }} by @${{ github.actor }} (@${{ github.event_name }})
+run-name: .NET ${{ inputs.build-configuration || 'Release' }}/${{ inputs.build-platform || 'windows-latest' }} by @${{ github.actor }} (@${{ github.event_name }})
 
 on:
   push:
@@ -28,10 +28,10 @@ on:
         options:
           - Release
           - Debug
-      build-platform: 
+      build-platform:
         description: 'Build Platform'
         required: true
-        default: 'ubuntu-latest'
+        default: 'windows-latest'
         type: choice
         options:
           - windows-latest
@@ -43,7 +43,9 @@ env:
 
 jobs:
   build:
-    runs-on: "${{ inputs.build-platform || 'ubuntu-latest' }}"
+    runs-on: "${{ inputs.build-platform || 'windows-latest' }}"
+    # Note: Defaults to 'windows-latest' to support .NET Framework (SQLCLR) projects
+    # The workflow will skip .NET Framework builds on non-Windows runners
 
     steps:
       # https://github.com/actions/checkout
@@ -126,16 +128,18 @@ jobs:
         --property:Version=${{ steps.calculate-version.outputs.FullSemVerLower }}
         --property:SolutionDir=${{ steps.calculate-version.outputs.BuildWorkspace }}/src/
 
-    # dotnet build .\Extensions\OoBDev.Data.Vectors --framework net481
-    - name: Build - .Net 4.8.1 (SQLCLR)
+    # dotnet build .\Extensions\OoBDev.Data.Vectors.Net481 --framework net48
+    # .NET Framework builds only work on Windows runners (default platform)
+    - name: Build - .Net 4.8 (SQLCLR)
+      if: runner.os == 'Windows'
       working-directory: ./src
       run: >
-        dotnet build ./Extensions/OoBDev.Data.Vectors
-        --framework net481
+        dotnet build ./Extensions/OoBDev.Data.Vectors.Net481
+        --framework net48
         --configuration ${{ steps.calculate-version.outputs.BuildConfiguration }}
         --property:Version=${{ steps.calculate-version.outputs.FullSemVerLower }}
         --property:SolutionDir=${{ steps.calculate-version.outputs.BuildWorkspace }}/src/
-        --nologo 
+        --nologo
         --no-restore
 
     - name: Build

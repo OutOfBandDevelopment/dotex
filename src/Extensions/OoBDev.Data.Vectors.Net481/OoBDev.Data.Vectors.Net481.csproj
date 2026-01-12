@@ -1,8 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
+  <!-- .NET Framework is Windows-only, conditionally target based on OS -->
+  <PropertyGroup Condition="'$(OS)' == 'Windows_NT'">
     <TargetFrameworks>net48</TargetFrameworks>
-    <!--<TargetFrameworks>net48;netstandard2.1</TargetFrameworks>-->
+  </PropertyGroup>
+
+  <!-- On non-Windows platforms, target a cross-platform framework as fallback -->
+  <PropertyGroup Condition="'$(OS)' != 'Windows_NT'">
+    <TargetFrameworks>netstandard2.1</TargetFrameworks>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <LangVersion>preview</LangVersion>
 
     <IsSqlClr>True</IsSqlClr>
@@ -20,7 +28,8 @@
     <Compile Include="..\OoBDev.Data.Vectors\**\*.cs" Exclude="..\OoBDev.Data.Vectors\bin\**;..\OoBDev.Data.Vectors\obj\**" />
   </ItemGroup>
 
-  <ItemGroup>
+  <!-- SQLCLR dependencies only needed for .NET Framework build -->
+  <ItemGroup Condition="'$(TargetFramework)' == 'net48'">
     <PackageReference Include="System.Data.SqlClient" Version="4.9.0" />
   </ItemGroup>
 

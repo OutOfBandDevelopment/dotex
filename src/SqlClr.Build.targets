@@ -2,7 +2,7 @@
 
   <Target Name="GenerateDacPac"
          AfterTargets="Build"
-         Condition="'$(IsSqlClr)' == 'true' AND '$(TargetFramework)' != '' AND '$(TargetPath)' != ''">
+         Condition="'$(IsSqlClr)' == 'true' AND '$(TargetFramework)' != '' AND '$(TargetPath)' != '' AND '$(OS)' == 'Windows_NT'">
     <Message Text="Generating DACPAC from SQL CLR assembly..." Importance="High" />
 
     <!-- Define properties at target execution time when build paths are available -->
