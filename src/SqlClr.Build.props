@@ -1,8 +1,6 @@
 <Project>
 
-  <PropertyGroup>
-    <SqlAssemblyFileFramework Condition="'$(SqlAssemblyFileFramework)' == ''">$(TargetPath)</SqlAssemblyFileFramework>
-    <SqlAssemblyDacPacFile Condition="'$(SqlAssemblyDacPacFile)' == ''">$(TargetDir)$(AssemblyName).dacpac</SqlAssemblyDacPacFile>
-  </PropertyGroup>
-  
+  <!-- Properties are now defined in SqlClr.Build.targets within the GenerateDacPac target -->
+  <!-- This ensures they are evaluated at target execution time when build paths are available -->
+
 </Project>

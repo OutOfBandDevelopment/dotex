@@ -2,13 +2,13 @@
 
   <Target Name="GenerateDacPac"
          AfterTargets="Build"
-         Condition="'$(IsSqlClr)' == 'true'">
+         Condition="'$(IsSqlClr)' == 'true' AND '$(TargetFramework)' != '' AND '$(TargetPath)' != ''">
     <Message Text="Generating DACPAC from SQL CLR assembly..." Importance="High" />
 
     <!-- Define properties at target execution time when build paths are available -->
     <PropertyGroup>
-      <SqlAssemblyFileFramework Condition="'$(SqlAssemblyFileFramework)' == ''">$(TargetPath)</SqlAssemblyFileFramework>
-      <SqlAssemblyDacPacFile Condition="'$(SqlAssemblyDacPacFile)' == ''">$(TargetDir)$(AssemblyName).dacpac</SqlAssemblyDacPacFile>
+      <SqlAssemblyFileFramework>$(TargetPath)</SqlAssemblyFileFramework>
+      <SqlAssemblyDacPacFile>$([System.IO.Path]::GetDirectoryName('$(TargetPath)'))\$(AssemblyName).dacpac</SqlAssemblyDacPacFile>
     </PropertyGroup>
 
     <!-- Fail if DLL does not exist yet -->
