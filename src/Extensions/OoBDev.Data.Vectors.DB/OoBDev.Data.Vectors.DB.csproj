@@ -73,6 +73,7 @@
 
   <ItemGroup>
     <None Include="README.md" Pack="true" PackagePath="\" />
+    <Content Remove="README.md" />
   </ItemGroup>
 
 </Project>

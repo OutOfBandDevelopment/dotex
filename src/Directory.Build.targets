@@ -55,6 +55,8 @@
     </PropertyGroup>
     <ItemGroup>
       <None Include="README.md" Pack="true" PackagePath="\" />
+      <!-- Exclude README.md from Content to prevent it being processed as source code -->
+      <Content Remove="README.md" />
     </ItemGroup>
     <Message Text="Auto-configured PackageReadmeFile for $(MSBuildProjectName)" Importance="normal" />
   </Target>
