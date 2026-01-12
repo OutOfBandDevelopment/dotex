@@ -50,11 +50,14 @@ This directory contains migration plans and feature mappings for integrating cod
 | NMEA GPS | NEW | MEDIUM | Create OoBDev.Protocols.Nmea |
 | Drawing/Barcodes | NEW | MEDIUM | Evaluate need, modernize |
 | Network Utils | EXISTS | LOW | Keep OoBDev |
-| FileSystems (ISO) | NEW | LOW | Selective |
-| Cryptography (Classic) | NEW | LOW | Educational only |
-| Apple II | NEW | VERY LOW | Skip |
-| Hardware (9 projects) | NEW | VERY LOW | Skip |
-| WinForms UI | DELETE | N/A | Out of scope |
+| FileSystems (ISO) | NEW | LOW | Migrate (Phase 4) |
+| Cryptography (Classic) | NEW | LOW | Migrate (Phase 4, educational) |
+| Apple II | NEW | VERY LOW | Migrate (Phase 4) |
+| Hardware (8 devices) | NEW | VERY LOW | Migrate (Phase 4) |
+| WinForms UI | NEW | LOW | Migrate (Phase 4/5) |
+| CLI Tools (4 tools) | MIXED | LOW | Migrate/Merge (Phase 4/5) |
+
+**Migration Scope:** ALL features will be migrated. Phases indicate priority order, not feature selection.
 
 ---
 
@@ -128,18 +131,23 @@ Tasks:
 
 ---
 
-### Phase 4: Specialized Features (Selective)
+### Phase 4: Specialized Domain Features
 **Dependencies:** Phase 0
-**Effort:** Small
+**Effort:** Medium
 
 Tasks:
-1. Evaluate FileSystems (ISO 9660) - migrate if needed
-2. Evaluate Classic Cryptography - migrate if educational use case
-3. Skip: Apple II, Hardware devices, WinForms
+1. Migrate FileSystems (ISO 9660)
+2. Migrate Classic Cryptography (with security warnings)
+3. Migrate Apple II support
+4. Migrate Hardware devices (8 devices)
+5. Migrate Windows Forms components
+6. Migrate/Merge CLI Tools (4 tools)
 
 **Completion Criteria:**
-- Only business-justified features migrated
-- Clear documentation on limitations
+- ALL specialized features migrated
+- Packaged separately for specialized audiences
+- Clear documentation on use cases
+- Security warnings where appropriate
 
 ---
 

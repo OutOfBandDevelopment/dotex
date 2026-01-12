@@ -224,10 +224,12 @@ File: `docs/migration/{incoming-name}-feature-mapping.md`
 - Target Frameworks: {list}
 
 **Migration Status Overview:**
-- **NEW Features**: {count} major feature areas
-- **UPDATE Required**: {count} areas with critical bugs/improvements
-- **EXISTS (Keep OoBDev)**: {count} areas
-- **DELETE (No Migration)**: {count} specialized/obsolete areas
+- **NEW Features**: {count} major feature areas - ALL will be migrated
+- **UPDATE Required**: {count} areas with critical bugs/improvements - improvements will be migrated
+- **EXISTS (Keep OoBDev)**: {count} areas - OoBDev version kept
+- **DELETE (No Migration)**: {count} stub/obsolete platform code only (very rare)
+
+**Migration Scope:** ALL features will be migrated, including highly specialized and niche features. Phases indicate priority order, not feature selection.
 
 ---
 
@@ -310,10 +312,15 @@ Following `/docs/architecture` guidelines:
 
 | Status | Meaning | Action |
 |--------|---------|--------|
-| **NEW** | Does not exist in OoBDev | Migrate |
-| **EXISTS** | Exists in OoBDev, similar quality | Keep OoBDev |
-| **UPDATE** | Exists but incoming has improvements | Migrate improvements |
-| **DELETE** | Obsolete or out of scope | Do not migrate |
+| **NEW** | Does not exist in OoBDev | Migrate completely |
+| **EXISTS** | Exists in OoBDev, similar quality | Keep OoBDev version |
+| **UPDATE** | Exists but incoming has improvements/bug fixes | Migrate improvements only |
+| **DELETE** | Stub/placeholder only OR platform-specific with no .NET 9 equivalent | Do not migrate (rare) |
+
+**Note on DELETE:** Very rarely used. Only applies to:
+- Projects with zero implementation (stub only, no actual code)
+- Silverlight-only or obsolete platform code with no modern equivalent
+- **NOT** for specialized/niche features - those are migrated in later phases
 
 **Priority Levels:**
 
@@ -384,6 +391,33 @@ All migration work MUST follow these principles from `/docs/architecture`:
 5. **Testing** - 80% coverage minimum, MSTest, categorized
 6. **Documentation** - README required, XML docs on public APIs
 7. **No Breaking Changes** - Maintain backward compatibility
+
+---
+
+## Migration Scope
+
+**ALL features from the incoming codebase will be migrated.**
+
+- Phases indicate **priority order**, not feature selection
+- Even highly specialized and niche features will be maintained
+- Incomplete features will be migrated and tracked in TODO.md for future completion
+- No features will be skipped or deleted unless:
+  - They are platform-specific with no .NET 9.0 equivalent (e.g., Silverlight-only)
+  - They are completely obsolete without modern use cases
+  - They are stub/placeholder projects with zero implementation
+
+**Incomplete Features:** If a feature in the incoming codebase is partially implemented or has TODOs:
+1. Migrate the existing implementation as-is
+2. Add comprehensive TODO items in `/TODO.md`
+3. Document what's missing in the project README
+4. Mark incomplete areas with `// TODO:` comments in code
+5. Track in migration plan under appropriate phase
+
+**Specialized Features:** Even highly specialized features (niche hardware, retro computing, educational tools) will be migrated:
+- Package separately for specialized audiences
+- Document specific use cases clearly
+- Add security warnings where appropriate (e.g., educational cryptography)
+- Maintain in appropriate layer (usually Extensions)
 
 ---
 

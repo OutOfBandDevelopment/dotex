@@ -29,6 +29,25 @@ All migration work MUST follow these principles from `/current/src/docs/architec
 
 ---
 
+## Migration Scope
+
+**ALL features from BinaryDataDecoders will be migrated.**
+
+- Phases indicate **priority order**, not feature selection
+- Even highly specialized and niche features will be maintained
+- Incomplete features will be migrated and tracked in TODO.md for future completion
+- No features will be skipped or deleted unless:
+  - They are UWP/Framework-specific with no .NET 9.0 equivalent
+  - They are completely obsolete (e.g., Silverlight-specific code)
+
+**Incomplete Features:** If a feature in BinaryDataDecoders is partially implemented or has TODOs:
+1. Migrate the existing implementation
+2. Add comprehensive TODO items in `/current/src/TODO.md`
+3. Document what's missing in the project README
+4. Mark incomplete areas with `// TODO:` comments in code
+
+---
+
 ## Phase 0: Critical Bug Fixes (IMMEDIATE)
 
 **Priority:** CRITICAL
@@ -411,20 +430,22 @@ public static class BcdConverter
 - INotifyCollectionChanged support
 - MVVM-friendly
 
-**Decision Point:**
-- OoBDev is server-side framework
-- MVVM components may not be needed
-- **EVALUATE:** Is there a server-side use case?
+**Migration Plan:**
+- OoBDev supports desktop and server scenarios
+- MVVM components useful for WPF, Windows Forms, and Blazor UI
+- **MIGRATE** to `OoBDev.Extensions.UI.Collections` (Phase 4/5)
+- Package separately for UI scenarios
 
-**Recommendation:**
-- **SKIP** if no server-side use case
-- OR: Migrate to separate `OoBDev.UI.Collections` if needed for Blazor/UI scenarios
-
-**Validation (if migrated):**
+**Validation:**
 - [ ] INotifyPropertyChanged works
 - [ ] INotifyCollectionChanged events fire
 - [ ] All dictionary operations work
 - [ ] Tests cover event notifications
+- [ ] Works with WPF, Windows Forms, and Blazor data binding
+
+**Files to Create:**
+- `src/Extensions/OoBDev.Extensions.UI.Collections/ObservableDictionary.cs`
+- `src/Extensions/OoBDev.Extensions.UI.Collections.Tests/`
 
 ---
 
@@ -738,11 +759,11 @@ ExternalServices/
 
 ---
 
-## Phase 3: Protocols & Specialized Features
+## Phase 3: Protocols & Graphics
 
 **Priority:** MEDIUM
 **Dependencies:** Phase 0 complete
-**Goal:** Add NMEA protocol, Drawing capabilities (selective)
+**Goal:** Add NMEA protocol and Drawing capabilities
 
 ### Task 3.1: Migrate NMEA Protocol Decoder
 
@@ -862,30 +883,34 @@ device.MessageReceived += (sender, e) =>
 
 ---
 
-### Task 3.2: Evaluate and Migrate Drawing Features (Selective)
+### Task 3.2: Migrate Drawing Features
 
-**Status:** NEW (conditional)
+**Status:** NEW
 **Target:** `OoBDev.Extensions.Drawing`
 **Source:** `BinaryDataDecoders.Drawing`
 
-**Decision Required:**
-- Do we need barcode generation?
-- Do we need DeepZoom tiling?
-- Do we need JPEG manipulation?
+**Features to Migrate:**
+- Barcode generation (Code39)
+- DeepZoom tiling
+- JPEG manipulation utilities
+- Graphics primitives (if not duplicating System.Drawing)
 
-**If YES to Barcodes:**
+**Steps:**
 
-1. **Create Drawing Extensions Project**
+1. **Create Drawing Extensions Projects**
    ```bash
    mkdir -p src/Extensions/OoBDev.Extensions.Drawing.Barcodes.Abstractions
    mkdir -p src/Extensions/OoBDev.Extensions.Drawing.Barcodes
+   mkdir -p src/Extensions/OoBDev.Extensions.Drawing.DeepZoom
+   mkdir -p src/Extensions/OoBDev.Extensions.Drawing.Imaging
    ```
 
-2. **Replace System.Drawing with SkiaSharp or ImageSharp**
+2. **Modernize Imaging Dependencies**
+   - Replace System.Drawing with SkiaSharp or SixLabors.ImageSharp
    - System.Drawing.Common is deprecated for cross-platform
-   - Use SkiaSharp or SixLabors.ImageSharp
+   - Choose modern, actively-maintained imaging library
 
-3. **Implement Code39 Barcode**
+3. **Migrate Barcode Generation**
    ```csharp
    public interface IBarcodeGenerator
    {
@@ -895,38 +920,48 @@ device.MessageReceived += (sender, e) =>
 
    public class Code39BarcodeGenerator : IBarcodeGenerator
    {
-       // Implementation using SkiaSharp or ImageSharp
+       // Implementation using modern imaging library
    }
    ```
 
-4. **Add Tests**
-   - Test barcode generation
-   - Test various data inputs
+4. **Migrate DeepZoom Tile Generation (Backend)**
+   - Z-order curve generation
+   - Tile image generation with configurable size
+   - Multi-resolution pyramid support
+   - DZI metadata file generation
+   - Note: This is the tile GENERATION component
+
+5. **Create DeepZoom Viewer Controls (NEW - Future Phase)**
+   - WPF viewer control (pan, zoom, smooth transitions)
+   - JavaScript/TypeScript viewer library
+   - Touch/gesture support
+   - Progressive loading
+   - See Phase 5 planning for viewer implementation
+
+6. **Migrate JPEG Utilities**
+   - EXIF data reading/writing
+   - JPEG marker parsing
+   - Quality adjustment utilities
+
+7. **Add Comprehensive Tests**
+   - Barcode generation and validation
+   - DeepZoom tile generation
+   - JPEG manipulation
    - Visual verification (save to file in tests)
 
-**If YES to DeepZoom:**
+8. **Document All Features**
+   - Usage examples for each drawing feature
+   - Performance considerations
+   - Imaging library selection rationale
 
-1. **Implement Multi-Scale Tiling**
-   - Z-order curve generation
-   - Tile generation with configurable size
-   - Multi-resolution pyramid
-
-2. **Add Tests**
-   - Test tile generation
-   - Test Z-order curve
-   - Test pyramid creation
-
-**Recommendation:**
-- **SKIP** if no immediate use case
-- **MIGRATE** selectively based on business needs
-- **MODERNIZE** to use cross-platform imaging library
-
-**Validation (if migrated):**
-- [ ] Modern imaging library (SkiaSharp/ImageSharp)
-- [ ] Code39 barcode generates correctly
+**Validation:**
+- [ ] Modern imaging library integrated (SkiaSharp/ImageSharp)
+- [ ] Code39 barcode generation working
+- [ ] DeepZoom tiling operational
+- [ ] JPEG utilities functional
 - [ ] Cross-platform compatible (.NET 9.0)
-- [ ] Tests comprehensive
-- [ ] Documentation includes examples
+- [ ] All tests pass
+- [ ] Documentation complete with examples
 
 ---
 
@@ -935,94 +970,188 @@ device.MessageReceived += (sender, e) =>
 - [ ] NMEA protocol decoder operational
 - [ ] Integrates with OoBDev.System.IO
 - [ ] GPS sentences parsed correctly
-- [ ] Drawing features migrated (if needed)
-- [ ] Modern imaging library used (not System.Drawing)
+- [ ] All Drawing features migrated
+  - [ ] Barcode generation (Code39)
+  - [ ] DeepZoom tiling
+  - [ ] JPEG manipulation
+- [ ] Modern imaging library integrated (SkiaSharp/ImageSharp)
 - [ ] All tests pass
 - [ ] Documentation complete
 
-**Estimated Effort:** Medium
+**Estimated Effort:** Medium-Large (complete migration of protocols and drawing)
 **Blocking:** None (Phase 0 complete)
 
 ---
 
-## Phase 4: Optional Specialized Features
+## Phase 4: Specialized Domain Features
 
 **Priority:** LOW
 **Dependencies:** Phase 0 complete
-**Goal:** Migrate specialized features based on business case
+**Goal:** Migrate all specialized domain features for completeness
 
-### Task 4.1: Evaluate FileSystems (ISO 9660)
+**Note:** ALL features will be migrated to maintain full BinaryDataDecoders functionality. Phases indicate priority order, not feature selection.
 
-**Status:** NEW (conditional)
+### Task 4.1: Migrate FileSystems (ISO 9660)
+
+**Status:** NEW
 **Target:** `OoBDev.Extensions.FileSystems.ISO9660`
 **Source:** `BinaryDataDecoders.FileSystems`
 
-**Business Case Required:**
-- Do we need to read ISO images?
-- Is there a use case for CD/DVD filesystem access?
+**Use Cases:**
+- CD/DVD ISO image reading
+- Disk image mounting and analysis
+- Legacy data recovery from optical media
+- Software distribution analysis
 
-**If YES:**
+**Steps:**
 
-1. Create Extensions project
-2. Copy ISO 9660 implementation
-3. Add tests
-4. Document use cases
+1. Create Extensions project structure
+2. Migrate ISO 9660 core implementation
+3. Add Rock Ridge extensions support if present
+4. Add Joliet extensions support if present
+5. Implement file/directory reading
+6. Add comprehensive tests
+7. Document API and usage examples
 
-**Recommendation:** SKIP unless specific need
+**Validation:**
+- [ ] Can read standard ISO 9660 images
+- [ ] Can read files and directories
+- [ ] Tests cover various ISO formats
+- [ ] Documentation includes examples
+- [ ] Performance acceptable for large images
 
 ---
 
-### Task 4.2: Evaluate Classic Cryptography
+### Task 4.2: Migrate Classic Cryptography (Educational)
 
-**Status:** NEW (conditional)
+**Status:** NEW
 **Target:** `OoBDev.Security.Cryptography.Classic`
 **Source:** `BinaryDataDecoders.Cryptography`
 
-**Business Case:**
-- Educational use only (these are broken ciphers)
-- NOT for production security
-- CTF challenges
-- Historical simulation
+**Use Cases:**
+- Educational demonstrations of cipher weaknesses
+- CTF (Capture The Flag) challenges
+- Historical cryptography simulation
+- Security training materials
 
-**If YES:**
+**CRITICAL WARNINGS:**
+- These are BROKEN ciphers - NOT for production security
+- Educational and historical purposes ONLY
+- Must include strong security warnings
 
-1. Create project with clear warnings
-2. Mark all classes with [Obsolete("For educational use only. NOT SECURE.")]
-3. Add comprehensive XML docs explaining security issues
-4. Implement Enigma, Lorenz, Caesar, Vigenère, PlayFair
-5. Add tests
+**Steps:**
 
-**Recommendation:**
-- MIGRATE if educational use case exists
-- Add strong security warnings in documentation
-- Do NOT include in "Complete" package
+1. Create Extensions project with security warnings in README
+2. Migrate cipher implementations:
+   - Enigma machine simulation
+   - Lorenz cipher
+   - Caesar cipher
+   - Vigenère cipher
+   - PlayFair cipher
+3. Mark ALL classes with `[Obsolete("For educational use only. NOT SECURE. Do not use for actual security.")]`
+4. Add comprehensive XML documentation explaining why each cipher is broken
+5. Add tests demonstrating cipher operation AND breaking
+6. Document educational use cases
+7. Create separate NuGet package (NOT included in main bundle)
+
+**Validation:**
+- [ ] All classes have Obsolete attribute with security warning
+- [ ] XML docs explain cipher weaknesses
+- [ ] Tests include both encryption and breaking examples
+- [ ] Documentation explicitly warns against production use
+- [ ] Packaged separately from core framework
+- [ ] README includes educational use statement
 
 ---
 
-### Task 4.3: Evaluate Apple II Support
+### Task 4.3: Migrate Apple II Support
 
-**Status:** NEW (conditional)
+**Status:** NEW
 **Target:** `OoBDev.Retro.Apple2`
 **Source:** `BinaryDataDecoders.Apple2`
 
-**Business Case:**
-- Retro computing enthusiasts
-- Legacy data recovery
-- Historical preservation
+**Use Cases:**
+- Retro computing enthusiasts and emulator developers
+- Legacy data recovery from Apple II disk images
+- Historical digital preservation projects
+- Educational demonstrations of early computing
 
-**Recommendation:** SKIP (very niche audience)
+**Steps:**
+
+1. Create Extensions project for retro computing support
+2. Migrate Apple II disk format implementations:
+   - DOS 3.3 filesystem
+   - ProDOS filesystem (if present)
+   - Nibble disk formats
+   - DSK image format
+3. Migrate disk image readers/writers
+4. Add sector-level and file-level access
+5. Add comprehensive tests with real Apple II disk images
+6. Document disk formats and usage
+7. Include examples for common scenarios
+
+**Validation:**
+- [ ] Can read DOS 3.3 disk images
+- [ ] Can read ProDOS disk images (if supported)
+- [ ] Can extract files from disk images
+- [ ] Can write disk images
+- [ ] Tests use real Apple II disk images
+- [ ] Documentation explains disk formats
+- [ ] Examples show common use cases
 
 ---
 
 ### Phase 4 Completion Criteria
 
-- [ ] Business cases evaluated
-- [ ] Only needed features migrated
-- [ ] All tests pass
-- [ ] Documentation clear on use cases and limitations
+- [ ] FileSystems (ISO 9660) migrated and tested
+- [ ] Classic Cryptography migrated with security warnings
+- [ ] Apple II support migrated and tested
+- [ ] Hardware devices (8 devices) migrated and tested
+- [ ] Windows Forms components migrated and tested
+- [ ] CLI tools migrated/merged
+- [ ] Platform-specific code reviewed (UWP/Framework)
+- [ ] All migrated features have comprehensive tests
+- [ ] All documentation complete with use cases
+- [ ] Security warnings in place for cryptography
+- [ ] Separate packaging for educational/niche/specialized features
 
-**Estimated Effort:** Small (selective migration)
+**Estimated Effort:** Medium-Large (complete migration of all specialized features)
 **Blocking:** None
+
+---
+
+### Task 4.4: Migrate Windows Forms Components
+
+**Status:** NEW
+**Target:** `OoBDev.Extensions.Windows.Forms`
+**Source:** `BinaryDataDecoders.Windows.Forms`
+
+**Use Cases:**
+- Desktop applications built on OoBDev
+- Windows Forms validation controls
+- Data binding helpers for desktop scenarios
+- Custom UI validators
+
+**Note:** OoBDev supports both desktop and server scenarios - Windows Forms is actively supported in .NET 9.0 and extends the framework for desktop UI applications
+
+**Steps:**
+
+1. Create Extensions project for Windows Forms
+2. Migrate validation controls
+3. Migrate data binding helpers
+4. Migrate custom UI components
+5. Ensure .NET 9.0 Windows Forms compatibility
+6. Add comprehensive tests
+7. Document desktop application scenarios
+8. Package separately for desktop/UI use cases
+
+**Validation:**
+- [ ] Windows Forms components working in .NET 9.0
+- [ ] Validation controls functional
+- [ ] Data binding helpers tested
+- [ ] Desktop scenario documentation complete
+- [ ] Packaged separately from core framework
+- [ ] All tests pass
 
 ---
 

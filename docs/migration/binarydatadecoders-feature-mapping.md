@@ -129,8 +129,7 @@ public event EventHandler<ErrorEventArgs>? MessageTransmitterError;
 - **Phase 1:** Fix critical bugs in OoBDev (BUG-001, BUG-002, BUG-003)
 - **Phase 2:** Migrate missing endianness types (BigEndianInt32, etc.)
 - **Phase 3:** Migrate useful collections (DoubleLinkedList, ObservableDictionary)
-- **Phase 4:** Evaluate remaining utilities case-by-case
-- **Phase 5:** Skip MVVM components (not applicable to OoBDev's server-side focus)
+- **Phase 4:** Migrate remaining utilities including MVVM components (useful for WPF, Windows Forms, Blazor UI)
 
 ---
 
@@ -535,15 +534,14 @@ $GPGGA,123519,4807.038,N,01131.000,E,1,08,0.9,545.4,M,46.9,M,,*47
 - No production security risk (clearly historic)
 - Good test coverage
 
-**Recommendation:**
-- **EVALUATE** based on need:
-  - Educational use case → MIGRATE
-  - Production use → SKIP (use modern crypto)
-- If migrated:
-  - Create `OoBDev.Security.Cryptography.Classic`
-  - Mark as [Obsolete] for security
-  - Document as educational/historical
-  - Add XML doc warnings about security
+**Migration Plan:**
+- **MIGRATE** for educational and CTF use cases (Phase 4)
+- Create `OoBDev.Security.Cryptography.Classic`
+- Mark ALL classes as [Obsolete("For educational use only. NOT SECURE.")]
+- Document as educational/historical only
+- Add comprehensive XML doc warnings about security
+- Package separately from core framework
+- Include tests that demonstrate both operation AND breaking
 
 ---
 
@@ -575,10 +573,13 @@ $GPGGA,123519,4807.038,N,01131.000,E,1,08,0.9,545.4,M,46.9,M,,*47
 - Self-contained
 - No dependencies on OoBDev core
 
-**Recommendation:**
-- **SKIP** unless specific retro computing use case
-- If needed, migrate as `OoBDev.Retro.Apple2`
-- Very specialized audience
+**Migration Plan:**
+- **MIGRATE** for retro computing and digital preservation (Phase 4)
+- Create `OoBDev.Retro.Apple2` in Extensions layer
+- Maintain full DOS 3.3 and AppleSoft BASIC support
+- Document use cases (preservation, education, data recovery)
+- Package separately for specialized audience
+- Include comprehensive tests with real disk images
 
 ---
 
@@ -599,25 +600,25 @@ $GPGGA,123519,4807.038,N,01131.000,E,1,08,0.9,545.4,M,46.9,M,,*47
 8. **BinaryDataDecoders.EByteElectronicTechnology** - LoRa/RS485 modules
 9. **BinaryDataDecoders.Net.ZWave** - Z-Wave home automation (if exists)
 
-**Recommendation for Each:**
+**Migration Status:**
 
-| Device | Priority | Action | Rationale |
-|--------|----------|--------|-----------|
-| Kuando Busylight | LOW | SKIP | Very niche (presence indicators) |
-| RadexOne | VERY LOW | SKIP | Specialized radiation detection |
-| Velleman K8055 | LOW | SKIP | Hobbyist experiment board |
-| Zoom H4n | VERY LOW | SKIP | Legacy audio equipment |
-| Fencing equipment | VERY LOW | SKIP | Ultra-specialized sport equipment |
-| LANC | VERY LOW | SKIP | Legacy camera protocol |
-| Rigol | N/A | DELETE | Stub project, incomplete |
-| EByte modules | LOW | EVALUATE | IoT/LoRa may have broader appeal |
+| Device | Priority | Action | Phase | Notes |
+|--------|----------|--------|-------|-------|
+| Kuando Busylight | LOW | MIGRATE | Phase 4 | Presence indicators for teams |
+| RadexOne | VERY LOW | MIGRATE | Phase 4 | Radiation detection (safety/education) |
+| Velleman K8055 | LOW | MIGRATE | Phase 4 | Hobbyist experiment board |
+| Zoom H4n | VERY LOW | MIGRATE | Phase 4 | Legacy audio equipment |
+| Fencing equipment | VERY LOW | MIGRATE | Phase 4 | Sport equipment automation |
+| LANC | VERY LOW | MIGRATE | Phase 4 | Camera protocol (video production) |
+| Rigol | N/A | DELETE | - | Stub project only, no implementation |
+| EByte modules | LOW | MIGRATE | Phase 4 | IoT/LoRa communication |
 
-**General Recommendation:**
-- **SKIP** all specialized hardware unless specific business case
-- These are highly specialized, narrow audience
-- Can be maintained separately if needed
-- Focus OoBDev on general-purpose framework
-- Hardware-specific projects can remain in BinaryDataDecoders repo
+**Migration Approach:**
+- ALL specialized hardware will be migrated to maintain full functionality
+- Projects will be packaged separately for specialized domains
+- Follow provider/factory pattern for device abstractions
+- Maintain in Extensions layer: `OoBDev.Extensions.Hardware.*`
+- Document specific use cases for each device type
 
 ---
 
@@ -642,13 +643,13 @@ $GPGGA,123519,4807.038,N,01131.000,E,1,08,0.9,545.4,M,46.9,M,,*47
   - OoBDev.FileRagEngine.Cli
   - OoBDev.TemplateEngine.Cli
 
-**Recommendation:**
+**Migration Status:**
 
-| Tool | Action | Rationale |
-|------|--------|-----------|
-| IO.Controller.Cli | SKIP | Use library directly in custom apps |
-| ServiceHost.Cli | SKIP | Generic tool, not framework core |
-| PackMan.Cli | SKIP | Not clear value proposition |
+| Tool | Action | Phase | Notes |
+|------|--------|-------|-------|
+| IO.Controller.Cli | MIGRATE | Phase 4 | Device control utility |
+| ServiceHost.Cli | MIGRATE | Phase 4 | Network service hosting |
+| PackMan.Cli | MIGRATE | Phase 4/5 | Package management utility |
 | Xslt.Cli | **MERGE** | Integrate into OoBDev.TemplateEngine.Cli |
 
 ---
@@ -657,16 +658,19 @@ $GPGGA,123519,4807.038,N,01131.000,E,1,08,0.9,545.4,M,46.9,M,,*47
 
 ### 9.1 Windows Forms
 
-**Status:** DELETE
+**Status:** NEW
 **Source:** `BinaryDataDecoders.Windows.Forms`
-**Target:** N/A
-**Priority:** N/A
+**Target:** `OoBDev.Extensions.Windows.Forms`
+**Priority:** LOW
 
-**Recommendation:**
-- **DELETE / DO NOT MIGRATE**
-- OoBDev is server-side/library framework
-- WinForms validation controls not applicable
-- Focus on backend services, not UI
+**Migration Plan:**
+- **MIGRATE** Windows Forms components (Phase 4/5)
+- Windows Forms is actively supported in .NET 9.0
+- Create `OoBDev.Extensions.Windows.Forms` for validation controls
+- Useful for desktop applications built on OoBDev
+- Package separately for desktop/UI scenarios
+- OoBDev supports both desktop and server scenarios - Windows Forms extends the framework for desktop UI applications
+- Maintain full compatibility with .NET 9.0 Windows Forms
 
 ---
 
@@ -730,12 +734,12 @@ $GPGGA,123519,4807.038,N,01131.000,E,1,08,0.9,545.4,M,46.9,M,,*47
 | **NMEA Protocol** | 1 | NEW | MEDIUM | Framework | LOW |
 | **FileSystems** | 1 | NEW | LOW | Extensions | LOW |
 | **Cryptography** | 1 | NEW | LOW | Framework | LOW |
-| **Network Utils** | 1 | EXISTS | LOW | - | SKIP |
-| **TestUtilities** | 1 | EXISTS | LOW | - | SKIP |
-| **Apple II** | 1 | NEW | VERY LOW | Extensions | SKIP |
-| **Hardware (9 projects)** | 9 | NEW | VERY LOW | Extensions | SKIP |
-| **CLI Tools** | 4 | MIXED | LOW | Tools | SELECTIVE |
-| **Windows Forms** | 1 | DELETE | N/A | - | DELETE |
+| **Network Utils** | 1 | EXISTS | LOW | - | Phase 5 |
+| **TestUtilities** | 1 | EXISTS | LOW | - | Phase 5 |
+| **Apple II** | 1 | NEW | VERY LOW | Extensions | Phase 4 |
+| **Hardware (9 projects)** | 9 | NEW | VERY LOW | Extensions | Phase 4 |
+| **CLI Tools** | 4 | MIXED | LOW | Tools | Phase 4/5 |
+| **Windows Forms** | 1 | NEW | LOW | Extensions | Phase 4/5 |
 
 ---
 
