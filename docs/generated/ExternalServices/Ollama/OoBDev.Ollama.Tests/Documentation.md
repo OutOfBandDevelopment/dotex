@@ -14,7 +14,7 @@ This is a test class that tests the `OllamaApiClient` class. It uses the `TestCo
 
 The class has several test methods that test various functionalities of the `OllamaApiClient` class, including generating embeddings, getting completions, listing models, pulling models, and deleting models. Each test method uses the `Build` method to create an instance of the `OllamaApiClient` class with a specific URL and model.
 
-The class also uses the `DataTestMethod` attribute to run multiple tests with different inputs.
+The class also uses the `TestMethod` attribute to run multiple tests with different inputs.
 
 **Class Diagram:**
 

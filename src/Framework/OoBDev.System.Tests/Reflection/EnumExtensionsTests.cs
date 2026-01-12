@@ -1,4 +1,4 @@
-using OoBDev.System.ComponentModel;
+﻿using OoBDev.System.ComponentModel;
 using OoBDev.System.Reflection;
 using OoBDev.TestUtilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -79,7 +79,7 @@ EnumModel { Id = 32, Name = test name, Code = test short, Description = test dis
         Assert.AreEqual(expected, result);
     }
 
-    [DataTestMethod, TestCategory(TestCategories.Unit)]
+    [TestMethod, TestCategory(TestCategories.Unit)]
     [DataRow(null, null)]
     [DataRow("Val1", TestEnum.Val1)]
     [DataRow("Val2", TestEnum.Val2)]

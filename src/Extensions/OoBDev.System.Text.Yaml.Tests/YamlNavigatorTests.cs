@@ -1,4 +1,4 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.TestUtilities;
 using System.IO;
 
@@ -9,7 +9,7 @@ public class YamlNavigatorTests
 {
     public required TestContext TestContext { get; set; }
 
-    [DataTestMethod, TestCategory(TestCategories.DevLocal)]
+    [TestMethod, TestCategory(TestCategories.DevLocal)]
     [DataRow("Example.yml")]
     public void ToNavigableTest(string resourceName)
     {

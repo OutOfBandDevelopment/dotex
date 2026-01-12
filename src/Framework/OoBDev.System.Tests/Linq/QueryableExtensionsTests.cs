@@ -1,4 +1,4 @@
-using OoBDev.Extensions.Reflection;
+﻿using OoBDev.Extensions.Reflection;
 using OoBDev.System.Linq.Expressions;
 using OoBDev.System.Linq.Search;
 using OoBDev.System.ResponseModel;
@@ -21,7 +21,7 @@ public class QueryableExtensionsTests
     [TestCategory(TestCategories.Unit)]
     public void DefaultPageSizeTest() => Assert.AreEqual(10, QueryBuilder.DefaultPageSize);
 
-    [DataTestMethod]
+    [TestMethod]
     [TestCategory(TestCategories.Unit)]
     [DataRow(typeof(TestTargetModel), nameof(TestTargetModel.Index), Operators.EqualTo, "!1", 10, "0,2,3,4,5,6,7,8,9,10")]
     [DataRow(typeof(TestTargetModel), "index", Operators.EqualTo, "!1", 10, "0,2,3,4,5,6,7,8,9,10")]
@@ -201,7 +201,7 @@ public class QueryableExtensionsTests
         TestContext.AddResult(queryResults);
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [TestCategory(TestCategories.Unit)]
     [DataRow(typeof(TestTargetModel), "Name3", 1, 1, 1, "3")]
     [DataRow(typeof(TestTargetModel), "Name3*", 12, 111, 10, "3,30,31,32,33,34,35,36,37,38")]
@@ -254,7 +254,7 @@ public class QueryableExtensionsTests
             Assert.AreEqual(expectedKeys, resultKeys, message: nameof(expectedKeys));
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [TestCategory(TestCategories.Unit)]
     [DataRow(0, 0, 100, 1000, 0, 10, "0,1,2,3,4,5,6,7,8,9")]
     [DataRow(0, 1, 1000, 1000, 0, 1, "0")]
@@ -300,7 +300,7 @@ public class QueryableExtensionsTests
             TestContext?.WriteLine(item.ToString());
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [TestCategory(TestCategories.Unit)]
     [DataRow(nameof(TestTargetModel.Name), OrderDirections.Descending, "999,998,997,996,995,994,993,992,991,990")]
     [DataRow("name", OrderDirections.Descending, "999,998,997,996,995,994,993,992,991,990")]
@@ -328,7 +328,7 @@ public class QueryableExtensionsTests
             TestContext.WriteLine(item.ToString());
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [TestCategory(TestCategories.Unit)]
     [DataRow(nameof(TestTargetModel.Name), OrderDirections.Descending, "999,998,997,996,995,994,993,992,991,990")]
     [DataRow("name", OrderDirections.Descending, "999,998,997,996,995,994,993,992,991,990")]

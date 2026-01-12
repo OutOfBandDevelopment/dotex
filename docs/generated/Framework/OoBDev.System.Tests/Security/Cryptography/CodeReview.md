@@ -4,14 +4,14 @@ As a senior software engineer/solutions architect, I'll provide feedback on the 
 
 * The use of `required` keyword for properties is a good practice, but it's worth noting that it was introduced in C# 9.0. If you're still using an earlier version, you can simply declare the property with the `get` and `set` keywords.
 * The `TestContext` property should be replaced with a more descriptive name, such as `TestHelper`.
-* The `DataTestMethod` attribute is used to run the test with different data sets. This is a good practice, but you might consider using a more descriptive name for the attribute, such as `TestWithDifferentInput`.
+* The `TestMethod` attribute is used to run the test with different data sets. This is a good practice, but you might consider using a more descriptive name for the attribute, such as `TestWithDifferentInput`.
 * The `TryAddSystemExtensions` method seems unused and can be removed.
 * The `GetRequiredKeyedService` method is used to resolve a service instance. This can be better implemented using Microsoft.Extensions.DependencyInjection's `ServiceDescriptor` to register services.
 
 **Md5HashTests.cs**, **Sha256HashTests.cs**, and **Sha512HashTests.cs**
 
 * Each test class has a similar structure and tests with the same pattern (input, expected output). You can consider merging these classes into a single class, with different test methods for each hash type.
-* The test methods are using `DataTestMethod` attribute, but the test data is hardcoded. You can improve the test data management by using a separate data provider class or a CSV file.
+* The test methods are using `TestMethod` attribute, but the test data is hardcoded. You can improve the test data management by using a separate data provider class or a CSV file.
 * The test methods are printing the input and output to the console. While this can be helpful during development, it's recommended to remove it in the production-ready code.
 * The `GetHash` method is being tested with a specific input and expected output. You can improve the unit test by using more different inputs to test the hash function.
 * Consider using a test factory to create the hash instance instead of creating it manually.

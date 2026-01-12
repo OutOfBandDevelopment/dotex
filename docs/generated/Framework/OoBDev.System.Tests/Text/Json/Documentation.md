@@ -22,8 +22,8 @@ class BsonDateConverterTests {
   - testContext: TestContext
   - serializeTest_Nullable: TestMethod
   - serializeTest_Value: TestMethod
-  - deserializeTest_Nullable: DataTestMethod
-  - deserializeTest_Value: DataTestMethod
+  - deserializeTest_Nullable: TestMethod
+  - deserializeTest_Value: TestMethod
 }
 @enduml
 ```
@@ -79,7 +79,7 @@ This test class covers the serialization and deserialization of IDs using the Bs
 class BsonIdConverterTests {
   - testContext: TestContext
   - serializeTest: TestMethod
-  - deserializeTest: DataTestMethod
+  - deserializeTest: TestMethod
 }
 @enduml
 ```

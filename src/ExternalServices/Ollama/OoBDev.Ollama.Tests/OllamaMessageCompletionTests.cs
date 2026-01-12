@@ -1,4 +1,4 @@
-using OoBDev.AI;
+﻿using OoBDev.AI;
 using OoBDev.TestUtilities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -34,7 +34,7 @@ public class OllamaMessageCompletionTests
     }
 
     [TestCategory(TestCategories.DevLocal)]
-    [DataTestMethod]
+    [TestMethod]
     [DataRow("http://127.0.0.1:11434", "phi", "Hello World!")]
     public async Task IMessageCompletion_GetCompletionAsyncTest(string hostName, string model, string prompt)
     {
@@ -46,7 +46,7 @@ public class OllamaMessageCompletionTests
     }
 
     [TestCategory(TestCategories.DevLocal)]
-    [DataTestMethod]
+    [TestMethod]
     [DataRow("http://127.0.0.1:11434", "phi", "You are an assistant", "How are you?")]
     public async Task ILanguageModelProvider_GetResponseAsyncTest(string hostName, string model, string prompt, string input)
     {

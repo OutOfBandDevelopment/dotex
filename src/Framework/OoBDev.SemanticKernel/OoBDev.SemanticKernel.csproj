@@ -7,6 +7,7 @@
     <GenerateDocumentationFile>False</GenerateDocumentationFile>
 
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -26,6 +27,10 @@
   <ItemGroup>
     <ProjectReference Include="..\OoBDev.SemanticKernel.Abstractions\OoBDev.SemanticKernel.Abstractions.csproj" />
     <ProjectReference Include="..\OoBDev.System.Abstractions\OoBDev.System.Abstractions.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
 </Project>

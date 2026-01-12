@@ -1,4 +1,4 @@
-using OoBDev.System.Security.Cryptography;
+﻿using OoBDev.System.Security.Cryptography;
 using OoBDev.TestUtilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -9,7 +9,7 @@ public class Sha256HashTests
 {
     public required TestContext TestContext { get; set; }
 
-    [DataTestMethod]
+    [TestMethod]
     [TestCategory(TestCategories.Unit)]
     [DataRow("Hello World!", "f4OxZX/x/FO5LcGBSKHWXfwtSx+j1ncoSt3SABJtkGk=")]
     [DataRow("hello world", "uU0nuZNNPgilLlLX2n2r+sSE7+N6U4DukIj3rOLvzek=")]

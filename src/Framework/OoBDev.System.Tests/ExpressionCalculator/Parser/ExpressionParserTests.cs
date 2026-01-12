@@ -86,7 +86,7 @@ public abstract class ExpressionParserTests<T>
 
     public required TestContext TestContext { get; set; }
 
-    [DataTestMethod, TestCategory(TestCategories.Unit)]
+    [TestMethod, TestCategory(TestCategories.Unit)]
     [ExpectedException(typeof(ParseCanceledException))]
     [DataRow("-A!")]
     [DataRow("B/*1")]
@@ -116,7 +116,7 @@ public abstract class ExpressionParserTests<T>
         }
     }
 
-    [DataTestMethod, TestCategory(TestCategories.Unit)]
+    [TestMethod, TestCategory(TestCategories.Unit)]
     [DataRow("2+3*4^5%6/7-8", "2 + 3 * 4 ^ 5 % 6 / 7 - 8", DisplayName = "Parse all operators test")]
     [DataRow("A+B+1", "A + B + 1", DisplayName = "Simple test with variable")]
     [DataRow("Abc1", "Abc1", DisplayName = "Just variable")]
@@ -141,7 +141,7 @@ public abstract class ExpressionParserTests<T>
         }
     }
 
-    [DataTestMethod, TestCategory(TestCategories.Unit)]
+    [TestMethod, TestCategory(TestCategories.Unit)]
     [DataRow("(A)", "A")]
     [DataRow("(A+(B))", "A + B")]
     [DataRow("B^1", "B")]
@@ -213,7 +213,7 @@ public abstract class ExpressionParserTests<T>
         }
     }
 
-    [DataTestMethod, TestCategory(TestCategories.Unit)]
+    [TestMethod, TestCategory(TestCategories.Unit)]
     [DataRow("B/0")]
     [DataRow("B%0")]
     [ExpectedException(typeof(DivideByZeroException))]
@@ -228,7 +228,7 @@ public abstract class ExpressionParserTests<T>
         Assert.Fail("You shouldn't get here");
     }
 
-    [DataTestMethod, TestCategory(TestCategories.Unit)]
+    [TestMethod, TestCategory(TestCategories.Unit)]
     [DataRow("A+B+C", "A, B, C")]
     //[DataRow("A+B+B", "A, B")]
     //[DataRow("Abc+XyW1", "Abc, XyW1")]
@@ -243,7 +243,7 @@ public abstract class ExpressionParserTests<T>
         Assert.AreEqual(result, variables.ToString());
     }
 
-    [DataTestMethod, TestCategory(TestCategories.Unit)]
+    [TestMethod, TestCategory(TestCategories.Unit)]
     [DataRow("A", DisplayName = "Check Expressions \"A\"")]
     [DataRow("A*1", DisplayName = "Check Expressions \"A*1\"")]
     [DataRow("(A*B)+C", DisplayName = "Check Expressions \"(A*B)+C\"")]

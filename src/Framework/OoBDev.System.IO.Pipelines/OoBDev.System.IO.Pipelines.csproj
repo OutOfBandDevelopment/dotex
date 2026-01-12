@@ -6,6 +6,7 @@
 		<Nullable>enable</Nullable>
 		<GenerateDocumentationFile>false</GenerateDocumentationFile>
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
 	</PropertyGroup>
 
   <ItemGroup>
@@ -18,5 +19,9 @@
 	
   <ItemGroup>
 	  <ProjectReference Include="..\OoBDev.System\OoBDev.System.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 </Project>

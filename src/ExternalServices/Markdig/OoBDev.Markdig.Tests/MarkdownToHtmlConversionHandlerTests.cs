@@ -1,4 +1,4 @@
-using OoBDev.TestUtilities;
+﻿using OoBDev.TestUtilities;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -15,7 +15,7 @@ public class MarkdownToHtmlConversionHandlerTests
     public required TestContext TestContext { get; set; }
 
     [TestCategory(TestCategories.Unit)]
-    [DataTestMethod]
+    [TestMethod]
     [DataRow("HelloWorld.md", "text/markdown", "text/html")]
     [DataRow("HelloWorld.md", "text/plain", "text/html")]
     [DataRow("HelloWorld.md", "text/x-markdown", "text/html")]

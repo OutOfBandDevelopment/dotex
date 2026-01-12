@@ -1,4 +1,4 @@
-using OoBDev.TestUtilities;
+﻿using OoBDev.TestUtilities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -30,7 +30,7 @@ public class SentenceEmbeddingClientTests
         return client;
     }
 
-    [DataTestMethod, TestCategory(TestCategories.DevLocal)]
+    [TestMethod, TestCategory(TestCategories.DevLocal)]
     [DataRow("http://127.0.0.1:5080", "Hello World!")]
     public async Task GetEmbeddingAsyncTest(string url, string message)
     {
@@ -39,7 +39,7 @@ public class SentenceEmbeddingClientTests
         TestContext.WriteLine(string.Join(';', embedding));
     }
 
-    [DataTestMethod, TestCategory(TestCategories.DevLocal)]
+    [TestMethod, TestCategory(TestCategories.DevLocal)]
     [DataRow("http://127.0.0.1:5080")]
     public async Task GetAllTest(string url)
     {

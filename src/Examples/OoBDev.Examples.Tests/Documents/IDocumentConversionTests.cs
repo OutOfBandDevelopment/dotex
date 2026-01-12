@@ -1,4 +1,4 @@
-using OoBDev.Common;
+﻿using OoBDev.Common;
 using OoBDev.Documents;
 using OoBDev.TestUtilities;
 using Microsoft.Extensions.Configuration;
@@ -19,7 +19,7 @@ public class IDocumentConversionTests
     public required TestContext TestContext { get; set; }
 
     [TestCategory(TestCategories.Unit)]
-    [DataTestMethod]
+    [TestMethod]
     [DataRow("HelloWorld.html", "text/html", "text/x-markdown", ".md")]
     //TODO: these require more configuration on linux at this time. 
     //[DataRow("HelloWorld.html", "text/html", "application/pdf", ".pdf")]
@@ -31,7 +31,7 @@ public class IDocumentConversionTests
         InternalConvertAsyncTest(resourceName, sourceType, targetType, extension, false);
 
     [TestCategory(TestCategories.DevLocal)]
-    [DataTestMethod]
+    [TestMethod]
     [DataRow("HelloWorld.txt", "unknown/unknown", "text/plain", ".txt")]
     [DataRow("sample1.docx", "unknown/unknown", "application/pdf", ".pdf")]
     [DataRow("sample1.docx", "unknown/unknown", "text/markdown", ".md")]

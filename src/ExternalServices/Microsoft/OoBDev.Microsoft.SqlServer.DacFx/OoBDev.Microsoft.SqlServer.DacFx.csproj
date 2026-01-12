@@ -6,6 +6,7 @@
     <Nullable>enable</Nullable>
     <GenerateDocumentationFile>False</GenerateDocumentationFile>
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
 
   </PropertyGroup>
 
@@ -34,5 +35,8 @@
     <ProjectReference Include="..\..\..\Framework\OoBDev.System.Abstractions\OoBDev.System.Abstractions.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
 
 </Project>

@@ -1,4 +1,4 @@
-using OoBDev.Extensions.Reflection;
+﻿using OoBDev.Extensions.Reflection;
 using OoBDev.System.ResponseModel;
 using OoBDev.TestUtilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -56,7 +56,7 @@ public class ReflectionExtensionsTests
         [typeof(AttributeTargets?), "nope", null],
     };
 
-    [DataTestMethod]
+    [TestMethod]
     [TestCategory(TestCategories.Unit)]
     [DynamicData(nameof(MakeSafeTestData), DynamicDataSourceType.Method)]
     public void MakeSafeTest(Type? type, object? input, object? expected)
@@ -85,7 +85,7 @@ public class ReflectionExtensionsTests
         [typeof(decimal), new object[] { 1,2.3,2.4m, "1.2" }, new decimal[] {1m, 2.3m,2.4m,1.2m, }],
     };
 
-    [DataTestMethod]
+    [TestMethod]
     [TestCategory(TestCategories.Unit)]
     [DynamicData(nameof(MakeSafeArrayTestData), DynamicDataSourceType.Method)]
     public void MakeSafeArrayTest(Type? type, Array? input, Array? expected)
@@ -124,7 +124,7 @@ public class ReflectionExtensionsTests
         [typeof(AttributeTargets), AttributeTargets.Enum.ToString(), true, AttributeTargets.Enum],
     };
 
-    [DataTestMethod]
+    [TestMethod]
     [TestCategory(TestCategories.Unit)]
     [DynamicData(nameof(TryParseTestData), DynamicDataSourceType.Method)]
     public void TryParseTest(Type? type, string? input, bool passed, object? expected)
@@ -139,7 +139,7 @@ public class ReflectionExtensionsTests
             TestContext.WriteLine(item.ToString());
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [TestCategory(TestCategories.Unit)]
     [DataRow(typeof(string), "System.String, System.Private.CoreLib")]
     [DataRow(typeof(ReflectionExtensionsTests), "OoBDev.System.Tests.Reflection.ReflectionExtensionsTests, OoBDev.System.Tests")]

@@ -1,4 +1,4 @@
-using OoBDev.System.Text;
+﻿using OoBDev.System.Text;
 using OoBDev.System.Text.Json.Serialization;
 using OoBDev.System.Text.Xml.Serialization;
 using OoBDev.TestUtilities;
@@ -14,7 +14,7 @@ public class SerializerSelectorTest
 {
     public required TestContext TestContext { get; set; }
 
-    [DataTestMethod]
+    [TestMethod]
     [TestCategory(TestCategories.Unit)]
     [DataRow(SerializerTypes.Json, typeof(DefaultJsonSerializer))]
     [DataRow(SerializerTypes.Bson, typeof(DefaultBsonSerializer))]
@@ -34,7 +34,7 @@ public class SerializerSelectorTest
         Assert.IsInstanceOfType(serializer, expectedType);
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [TestCategory(TestCategories.Unit)]
     [DataRow(SerializerTypes.Json, typeof(DefaultJsonSerializer))]
     [DataRow(SerializerTypes.Bson, typeof(DefaultBsonSerializer))]

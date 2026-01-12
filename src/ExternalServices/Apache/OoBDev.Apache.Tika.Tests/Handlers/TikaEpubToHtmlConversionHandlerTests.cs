@@ -1,4 +1,4 @@
-using OoBDev.Apache.Tika.Handlers;
+﻿using OoBDev.Apache.Tika.Handlers;
 using OoBDev.TestUtilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Threading.Tasks;
@@ -12,14 +12,14 @@ public class TikaEpubToHtmlConversionHandlerTests :
     public required TestContext TestContext { get; set; }
 
     [TestCategory(TestCategories.DevLocal)]
-    [DataTestMethod]
+    [TestMethod]
     [DataRow("accessible_epub_3.epub", "application/epub+zip", "text/html", ".html")]
     [DataRow("childrens-literature.epub", "application/epub+zip", "text/html", ".html")]
     public async Task ConvertAsyncTest(string resourceName, string sourceType, string targetType, string ext) =>
         await ConvertAsyncTestHarness(resourceName, sourceType, targetType, ext, TestContext);
 
     [TestCategory(TestCategories.Unit)]
-    [DataTestMethod]
+    [TestMethod]
     [DataRow("application/epub+zip", "text/html")]
     [DataRow("application/epub+zip", "text/xhtml")]
     [DataRow("application/epub+zip", "text/xhtml+xml")]

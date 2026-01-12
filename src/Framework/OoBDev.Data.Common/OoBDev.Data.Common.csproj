@@ -7,6 +7,7 @@
     <GenerateDocumentationFile>False</GenerateDocumentationFile>
 
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,6 +24,10 @@
   <ItemGroup>
     <ProjectReference Include="..\OoBDev.Data.Common.Abstractions\OoBDev.Data.Common.Abstractions.csproj" />
     <ProjectReference Include="..\OoBDev.TestUtilities\OoBDev.TestUtilities.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
 </Project>

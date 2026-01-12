@@ -55,7 +55,7 @@ This test method tests the `DetectContentTypeAsync` method of the `TikaContentTy
 
 * `TestCategory`: This attribute identifies the test category for the test method. The `TestCategory` attribute is used to group test methods by category.
 * `TestMethod`: This attribute indicates that the method is a test method.
-* `DataTestMethod`: This attribute indicates that the method is a data-driven test method.
+* `TestMethod`: This attribute indicates that the method is a data-driven test method.
 * `DataRow`: This attribute specifies the data rows for the data-driven test method.
 
 **Requirements**

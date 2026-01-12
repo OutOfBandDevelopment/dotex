@@ -34,7 +34,7 @@ component QueryableExtensionsTests {
   component TestContext {
     -- TestMethods
   }
-  -- IDataTestMethod
+  -- ITestMethod
   ExecuteByTest_Filter
   ExecuteByTest_Filter_JsonElement
   ExecuteByTest_Filter_JsonElement_Nested

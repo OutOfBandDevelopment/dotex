@@ -22,7 +22,7 @@ public void AsModelsTest2()
 ```
 2. The `ToEnumTest` method can use a more concise approach by using a single `Assert.AreEqual` statement.
 ```csharp
-[DataTestMethod]
+[TestMethod]
 public void ToEnumTest(string input, TestEnum? expected)
 {
     Assert.AreEqual(expected, input.ToEnum<TestEnum>());
@@ -32,14 +32,14 @@ public void ToEnumTest(string input, TestEnum? expected)
 
 1. The `MakeSafeTest` and `MakeSafeArrayTest` methods can be simplified by using LINQ's `Select` method and eliminating the need for an internal loop.
 ```csharp
-[DataTestMethod]
+[TestMethod]
 public void MakeSafeTest(Type? type, object? input, object? expected)
 {
     var result = ReflectionExtensions.MakeSafe(type, input);
     Assert.AreEqual(expected, result);
 }
 
-[DataTestMethod]
+[TestMethod]
 public void MakeSafeArrayTest(Type? type, Array? input, Array? expected)
 {
     var result = ReflectionExtensions.MakeSafeArray(type, input);
@@ -48,7 +48,7 @@ public void MakeSafeArrayTest(Type? type, Array? input, Array? expected)
 ```
 2. The `TryParseTest` method can use a more concise approach by using a single `Assert.AreEqual` statement.
 ```csharp
-[DataTestMethod]
+[TestMethod]
 public void TryParseTest(Type? type, string? input, bool passed, object? expected)
 {
     var output = ReflectionExtensions.TryParse(type, input, out var result);

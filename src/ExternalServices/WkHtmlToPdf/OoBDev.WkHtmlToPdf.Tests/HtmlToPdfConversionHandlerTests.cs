@@ -1,4 +1,4 @@
-using OoBDev.TestUtilities;
+﻿using OoBDev.TestUtilities;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -15,7 +15,7 @@ public class HtmlToPdfConversionHandlerTests
     public required TestContext TestContext { get; set; }
 
     [TestCategory(TestCategories.Unit)]
-    [DataTestMethod]
+    [TestMethod]
     [DataRow("HelloWorld.html", "text/html", "application/pdf")]
     [DataRow("HelloWorld.html", "text/xhtml", "application/pdf")]
     [DataRow("HelloWorld.html", "text/xhtml+xml", "application/pdf")]

@@ -1,4 +1,4 @@
-using OoBDev.Apache.Tika.Detectors;
+﻿using OoBDev.Apache.Tika.Detectors;
 using OoBDev.TestUtilities;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -39,7 +39,7 @@ public class TikaContentTypeDetectorTests
     }
 
     [TestCategory(TestCategories.DevLocal)]
-    [DataTestMethod]
+    [TestMethod]
     [DataRow("accessible_epub_3.epub", "application/epub+zip")]
     [DataRow("Sample.pdf", "application/pdf")]
     [DataRow("sample1.docx", "application/vnd.openxmlformats-officedocument.wordprocessingml.document")]

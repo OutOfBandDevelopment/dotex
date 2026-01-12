@@ -1,4 +1,4 @@
-using OoBDev.Common;
+﻿using OoBDev.Common;
 using OoBDev.System.Text;
 using OoBDev.System.Text.Json.Serialization;
 using OoBDev.System.Text.Xml.Serialization;
@@ -53,7 +53,7 @@ public class ISerializerTests
         Assert.IsInstanceOfType<DefaultJsonSerializer>(service);
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [TestCategory(TestCategories.Unit)]
     [DataRow("JSON", typeof(DefaultJsonSerializer))]
     [DataRow("XML", typeof(DefaultXmlSerializer))]
@@ -66,7 +66,7 @@ public class ISerializerTests
         Assert.IsInstanceOfType(service, expected);
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [TestCategory(TestCategories.Unit)]
     [DataRow("JSON", typeof(DefaultJsonSerializer), ".json")]
     [DataRow("XML", typeof(DefaultXmlSerializer), ".xml")]

@@ -1,4 +1,4 @@
-using OoBDev.System.Security.Cryptography;
+﻿using OoBDev.System.Security.Cryptography;
 using OoBDev.TestUtilities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,7 +12,7 @@ public class HashSelectorTest
 {
     public required TestContext TestContext { get; set; }
 
-    [DataTestMethod]
+    [TestMethod]
     [TestCategory(TestCategories.Unit)]
     [DataRow(HashTypes.Md5, typeof(Md5Hash))]
     [DataRow(HashTypes.Sha256, typeof(Sha256Hash))]
@@ -32,7 +32,7 @@ public class HashSelectorTest
         Assert.IsInstanceOfType(serializer, expectedType);
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [TestCategory(TestCategories.Unit)]
     [DataRow(HashTypes.Md5, typeof(Md5Hash))]
     [DataRow(HashTypes.Sha256, typeof(Sha256Hash))]

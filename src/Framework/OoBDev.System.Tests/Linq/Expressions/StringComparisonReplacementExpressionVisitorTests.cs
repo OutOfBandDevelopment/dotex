@@ -1,4 +1,4 @@
-using OoBDev.System.Linq.Expressions;
+﻿using OoBDev.System.Linq.Expressions;
 using OoBDev.TestUtilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
@@ -11,7 +11,7 @@ public class StringComparisonReplacementExpressionVisitorTests
 {
     public required TestContext TestContext { get; set; }
 
-    [DataTestMethod]
+    [TestMethod]
     [TestCategory(TestCategories.Unit)]
     [DataRow("Hello", "hello", true)]
     [DataRow("Hello", "HELLO", true)]
@@ -27,7 +27,7 @@ public class StringComparisonReplacementExpressionVisitorTests
         Assert.AreEqual(expected, result);
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [TestCategory(TestCategories.Unit)]
     [DataRow("Hello", "hello", true)]
     [DataRow("Hello", "HELLO", true)]
@@ -43,7 +43,7 @@ public class StringComparisonReplacementExpressionVisitorTests
         Assert.AreEqual(expected, result);
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [TestCategory(TestCategories.Unit)]
     [DataRow("Hello", "el", true)]
     [DataRow("Hello", "EL", true)]
@@ -59,7 +59,7 @@ public class StringComparisonReplacementExpressionVisitorTests
         Assert.AreEqual(expected, result);
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [TestCategory(TestCategories.Unit)]
     [DataRow("Hello", "He", true)]
     [DataRow("Hello", "HE", true)]
@@ -75,7 +75,7 @@ public class StringComparisonReplacementExpressionVisitorTests
         Assert.AreEqual(expected, result);
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [TestCategory(TestCategories.Unit)]
     [DataRow("Hello", "lO", true)]
     [DataRow("Hello", "Lo", true)]

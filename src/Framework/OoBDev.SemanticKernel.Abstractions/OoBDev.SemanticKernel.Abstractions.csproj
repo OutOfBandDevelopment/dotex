@@ -8,6 +8,7 @@
     <RootNamespace>$(MSBuildProjectName.Replace(" ", "_").Replace(".Abstractions", ""))</RootNamespace>
 
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,6 +24,10 @@
   <ItemGroup>
     <InternalsVisibleTo Include="OoBDev.SemanticKernel" />
     <InternalsVisibleTo Include="OoBDev.SemanticKernel.Tests" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
 </Project>

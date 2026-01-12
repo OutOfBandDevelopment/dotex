@@ -53,6 +53,6 @@ The `GetResponseAsyncTest` method is a data-driven test that takes three input p
 The `GetResponseAsyncTest` method is marked with the `TestCategory` attribute and the `DevLocal` test category. This means that the test will only be executed when running the tests in the `DevLocal` environment.
 
 **Data-Driven Test:**
-The `GetResponseAsyncTest` method is also marked with the `DataTestMethod` attribute and the `DataRow` attribute. This means that the test will be executed multiple times with different input parameters, as specified in the `DataTestMethod` attribute.
+The `GetResponseAsyncTest` method is also marked with the `TestMethod` attribute and the `DataRow` attribute. This means that the test will be executed multiple times with different input parameters, as specified in the `TestMethod` attribute.
 
 I hope this documentation helps! Let me know if you have any questions or need further clarification.

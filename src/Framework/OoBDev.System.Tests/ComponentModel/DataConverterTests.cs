@@ -11,7 +11,7 @@ public class DataConverterTests
 {
     public required TestContext TestContext { get; set; }
 
-    [DataTestMethod]
+    [TestMethod]
     [TestCategory(TestCategories.Unit)]
     [DataRow("1", 1)]
     [DataRow("1", 1L)]
@@ -43,7 +43,7 @@ public class DataConverterTests
         }
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [TestCategory(TestCategories.Unit)]
     [DataRow("+05:30", typeof(TimeSpan), "05:30:00")]
     [DataRow("-05:30", typeof(TimeSpan), "-05:30:00")]

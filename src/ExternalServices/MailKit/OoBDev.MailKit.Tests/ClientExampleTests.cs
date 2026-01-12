@@ -16,7 +16,7 @@ public class ClientExampleTests
 {
     public required TestContext TestContext { get; set; }
 
-    [DataTestMethod]
+    [TestMethod]
     [TestCategory(TestCategories.DevLocal)]
     [DataRow("example-smtp4dev.d6cke7dpbbesb5ga.eastus.azurecontainer.io")]
     [DataRow("localhost")]
@@ -70,7 +70,7 @@ public class ClientExampleTests
         TestContext.WriteLine($"Sent: {result}");
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [TestCategory(TestCategories.DevLocal)]
     [DataRow("example-smtp4dev.d6cke7dpbbesb5ga.eastus.azurecontainer.io")]
     [DataRow("localhost")]

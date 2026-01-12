@@ -1,4 +1,4 @@
-//using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿//using Microsoft.VisualStudio.TestTools.UnitTesting;
 //using Qdrant.Client.Grpc;
 //using System.Threading.Tasks;
 
@@ -11,7 +11,7 @@
 
 //    //TODO: fix up
 
-//    [DataTestMethod, TestCategory("setup")]
+//    [TestMethod, TestCategory("setup")]
 //    //[DataRow("192.168.1.170", "service-registry")]
 //    //[DataRow("192.168.1.170", "csharp-files")]
 //    //[DataRow("192.168.1.170", "csharp-files-phi")]
@@ -25,7 +25,7 @@
 //        this.TestContext.WriteLine(result.Result ? "Created" : "Failed");
 //    }
 
-//    [DataTestMethod, TestCategory("setup")]
+//    [TestMethod, TestCategory("setup")]
 //    //[DataRow("192.168.1.170", "service-registry", Distance.Cosine, "llama2:13b")]
 //    //[DataRow("192.168.1.170", "csharp-files", Distance.Cosine, "llama2:13b")]
 //    //[DataRow("192.168.1.170", "csharp-files-phi", Distance.Cosine, "phi")]
@@ -62,7 +62,7 @@
 //        this.TestContext.WriteLine(result.Result ? "Created" : "Failed");
 //    }
 
-//    [DataTestMethod, TestCategory("setup")]
+//    [TestMethod, TestCategory("setup")]
 //    //[DataRow("192.168.1.170", "example-sbert", Distance.Cosine)]
 //    [DataRow("192.168.1.170", "search-keys", Distance.Cosine)]
 //    public async Task B2_CreateCollectionTest(string hostName, string collectionName, Distance distanceCalculation)
@@ -87,7 +87,7 @@
 //        this.TestContext.WriteLine(result.Result ? "Created" : "Failed");
 //    }
 
-//    [DataTestMethod, TestCategory("setup")]
+//    [TestMethod, TestCategory("setup")]
 //    //[DataRow("192.168.1.170", "service-registry", typeof(LocalTimeProvider), LocalTimeProvider.EXAMPLE_QUESTION, "llama2:13b")]
 //    //[DataRow("192.168.1.170", "service-registry", typeof(WeatherLookupProvider), WeatherLookupProvider.EXAMPLE_QUESTION, "llama2:13b")]
 //    public async Task C_RegisterService(string hostName, string collectionName, Type serviceType, string serviceDescription, string modelName)
@@ -104,7 +104,7 @@
 //            );
 //    }
 
-//    [DataTestMethod, TestCategory("setup")]
+//    [TestMethod, TestCategory("setup")]
 //    //[DataRow("192.168.1.170", "example-phi", Distance.Cosine, "phi")]
 //    //[DataRow("192.168.1.170", "example-llama2-13", Distance.Cosine, "llama2:13b")]
 //    //[DataRow("192.168.1.170", "example-llama2-7", Distance.Cosine, "llama2:7b")]
@@ -168,7 +168,7 @@
 //        }
 //    }
 
-//    [DataTestMethod, TestCategory("setup")]
+//    [TestMethod, TestCategory("setup")]
 //    //[DataRow("192.168.1.170", "example-sbert")]
 //    [DataRow("127.0.0.1", "example-sbert")]
 //    public async Task D2_LoadExamplesTest(string hostName, string collectionName)
@@ -221,7 +221,7 @@
 //        }
 //    }
 
-//    [DataTestMethod, TestCategory("dev-local")]
+//    [TestMethod, TestCategory("dev-local")]
 //    //[DataRow("192.168.1.170", "docs", "smtp")]
 //    [DataRow("127.0.0.1", "docs", "smtp")]
 //    public async Task E_SearchTests(string hostName, string collectionName, string queryString)
@@ -250,7 +250,7 @@
 //        }
 //    }
 
-//    [DataTestMethod, TestCategory("dev-local")]
+//    [TestMethod, TestCategory("dev-local")]
 //    //[DataRow("192.168.1.170", "docs", "smtp")]
 //    [DataRow("127.0.0.1", "docs", "smtp")]
 //    public async Task F_SearchTests(string hostName, string collectionName, string queryString)

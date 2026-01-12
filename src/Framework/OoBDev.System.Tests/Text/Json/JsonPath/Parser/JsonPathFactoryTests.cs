@@ -12,7 +12,7 @@ public class JsonPathFactoryTests
 {
     public required TestContext TestContext { get; set; }
 
-    [DataTestMethod, TestCategory(TestCategories.Unit)]
+    [TestMethod, TestCategory(TestCategories.Unit)]
     [DataRow("$.options", ":/options")]
     [DataRow("$.options.quantity", ":/options/quantity")]
     [DataRow("$.*.quantity", ":/*/quantity")]
@@ -70,7 +70,7 @@ public class JsonPathFactoryTests
         }
     }
 
-    [DataTestMethod, TestCategory(TestCategories.Unit)]
+    [TestMethod, TestCategory(TestCategories.Unit)]
     [DataRow("$.options", "/options")]
     [DataRow("$.options.quantity", "/options/quantity")]
     [DataRow("$.*.quantity", "/*/quantity")]

@@ -9,7 +9,7 @@ public class SqlMatrixFTests
     public required TestContext TestContext { get; set; }
 
     [TestCategory(TestCategories.Unit)]
-    [DataTestMethod]
+    [TestMethod]
     [DataRow("1,2,3\r\n4,5,7", @"1.0000000e+000	2.0000000e+000	3.0000000e+000
 4.0000000e+000	5.0000000e+000	7.0000000e+000")]
     [DataRow("1,2,3|4,5,7", "1,2,3|4,5,7")]
@@ -22,7 +22,7 @@ public class SqlMatrixFTests
     }
 
     [TestCategory(TestCategories.Unit)]
-    [DataTestMethod]
+    [TestMethod]
     [DataRow("1,2,3|4,5,7", (short)1, "4,5,7")]
     [DataRow("1,2,3|4,5,7", (short)0, "1,2,3")]
     public void RowTest(string input, short rowIndex, string expectedString)
@@ -42,7 +42,7 @@ public class SqlMatrixFTests
 
 
     [TestCategory(TestCategories.Unit)]
-    [DataTestMethod]
+    [TestMethod]
     [DataRow("1,2,3|4,5,7", (short)0, "1,4")]
     [DataRow("1,2,3|4,5,7", (short)1, "2,5")]
     [DataRow("1,2,3|4,5,7", (short)2, "3,7")]

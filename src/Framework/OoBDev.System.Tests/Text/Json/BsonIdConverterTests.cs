@@ -1,4 +1,4 @@
-using OoBDev.System.Tests.TestTargets;
+﻿using OoBDev.System.Tests.TestTargets;
 using OoBDev.TestUtilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Text.Json;
@@ -30,7 +30,7 @@ public class BsonIdConverterTests
         Assert.AreEqual(expected, selected);
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [TestCategory(TestCategories.Unit)]
     [DataRow(@"{""_id"":{""$oid"":""Hello World""}}", "Hello World")]
     [DataRow(@"{""_id"":""Hello World""}", "Hello World")]

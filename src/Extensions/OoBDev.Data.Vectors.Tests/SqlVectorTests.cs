@@ -28,7 +28,7 @@ public class SqlVectorTests
         Assert.AreEqual(4, vector.Element(3));
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(VectorDistanceTypes.CosineDistance, 0.006192010000093506)]
     [DataRow(VectorDistanceTypes.CosineSimilarity, 0.9938079899999065)]
     [DataRow(VectorDistanceTypes.DotProduct, 40.0)]

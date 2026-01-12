@@ -1,4 +1,4 @@
-using OoBDev.Azure.StorageAccount.MessageQueueing;
+﻿using OoBDev.Azure.StorageAccount.MessageQueueing;
 using OoBDev.MessageQueueing.Services;
 using OoBDev.TestUtilities;
 using Microsoft.Extensions.Configuration;
@@ -14,7 +14,7 @@ public class AzureStorageQueueMapperTests
     public required TestContext TestContext { get; set; }
 
     [TestCategory(TestCategories.Unit)]
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(null, 1000)]
     [DataRow("100", 100)]
     [DataRow("5000", 5000)]
@@ -34,7 +34,7 @@ public class AzureStorageQueueMapperTests
     }
 
     [TestCategory(TestCategories.Unit)]
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(null, false)]
     [DataRow("false", false)]
     [DataRow("False", false)]

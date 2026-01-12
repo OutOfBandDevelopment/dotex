@@ -9,12 +9,12 @@ public class VigenereTests
 {
     public required TestContext TestContext { get; set; }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow("Hello World", "World", "Dscwr Kfcoz")]
     [DataRow("Hello, World", "world", "Dscwr, Nzuhr")]
     [DataRow("hello, world", "World", "dscwr, nzuhr")]
     [DataRow("hello world", "Hello", "oiwwc azczk")]
-    [TestMethod, TestCategory(TestCategories.Unit)]
+    [TestCategory(TestCategories.Unit)]
     public void EncodeTest(string message, string key, string expected)
     {
         var result = new Vigenere().Encode(message, key);
@@ -22,12 +22,12 @@ public class VigenereTests
         Assert.AreEqual(expected, result);
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow("Dscwr Kfcoz", "World", "Hello World")]
     [DataRow("Dscwr, Nzuhr", "World", "Hello, World")]
     [DataRow("dscwr, nzuhr", "World", "hello, world")]
     [DataRow("oiwwc azczk", "Hello", "hello world")]
-    [TestMethod, TestCategory(TestCategories.Unit)]
+    [TestCategory(TestCategories.Unit)]
     public void DecodeTest(string message, string key, string expected)
     {
         var result = new Vigenere().Decode(message, key);

@@ -1,4 +1,4 @@
-using OoBDev.System.Linq.Expressions;
+﻿using OoBDev.System.Linq.Expressions;
 using OoBDev.TestUtilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
@@ -11,7 +11,7 @@ public class SkipInstanceMethodOnNullExpressionVisitorTests
 {
     public required TestContext TestContext { get; set; }
 
-    [DataTestMethod]
+    [TestMethod]
     [TestCategory(TestCategories.Unit)]
     [DataRow("Hello", "Hello", true)]
     [DataRow("Hello", "hello", false)]

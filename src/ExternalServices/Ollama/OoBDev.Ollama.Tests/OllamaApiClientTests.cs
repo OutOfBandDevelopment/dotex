@@ -42,7 +42,7 @@ public class OllamaApiClientTests
     }
 
     [TestCategory(TestCategories.DevLocal)]
-    [DataTestMethod]
+    [TestMethod]
     [DataRow("http://127.0.0.1:11434", "phi")]
     [DataRow("http://192.168.1.170:11434", "phi3")]
     [DataRow("http://192.168.1.170:11434", "all-minilm")]
@@ -57,7 +57,7 @@ public class OllamaApiClientTests
     }
 
     [TestCategory(TestCategories.DevLocal)]
-    [DataTestMethod]
+    [TestMethod]
     [DataRow("http://127.0.0.1:11434", "phi")]
     public async Task GenerateEmbeddingsSingleTest(string hostName, string model)
     {
@@ -68,7 +68,7 @@ public class OllamaApiClientTests
     }
 
     [TestCategory(TestCategories.DevLocal)]
-    [DataTestMethod]
+    [TestMethod]
     //[DataRow("http://127.0.0.1:11434", "phi", "Create a hello world script for windows command prompt")]
     [DataRow("http://192.168.1.170:11434", "llama2:7b", "tell me a story about a cat")]
 
@@ -101,7 +101,7 @@ public class OllamaApiClientTests
     }
 
     [TestCategory(TestCategories.DevLocal)]
-    [DataTestMethod]
+    [TestMethod]
     //[DataRow("http://127.0.0.1:11434", "llava-phi3", "describe the image", "LadyDancingWithDog.jpg")]
     //[DataRow("http://127.0.0.1:11434", "llava-phi3", "describe the image", "RobotsTalking.jpg")]
 
@@ -168,7 +168,7 @@ public class OllamaApiClientTests
     }
 
     [TestCategory(TestCategories.DevLocal)]
-    [DataTestMethod]
+    [TestMethod]
     [DataRow("http://127.0.0.1:11434")]
     [DataRow("http://192.168.1.170:11434")]
     public async Task ListModelsTest(string hostName)
@@ -179,7 +179,7 @@ public class OllamaApiClientTests
     }
 
     [TestCategory(TestCategories.DevLocal)]
-    [DataTestMethod]
+    [TestMethod]
     //[DataRow("http://127.0.0.1:11434", "phi")]
     [DataRow("http://127.0.0.1:11434", "phi3")]
     [DataRow("http://127.0.0.1:11434", "llava-phi3")]
@@ -216,7 +216,7 @@ public class OllamaApiClientTests
     }
 
     [TestCategory(TestCategories.DevLocal)]
-    [DataTestMethod]
+    [TestMethod]
     //[DataRow("http://127.0.0.1:11434", "phi")]
     //[DataRow("http://127.0.0.1:11434", "phi3")]
     //[DataRow("http://127.0.0.1:11434", "llava-phi3")]

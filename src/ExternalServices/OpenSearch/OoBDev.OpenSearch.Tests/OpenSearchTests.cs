@@ -1,4 +1,4 @@
-using OoBDev.TestUtilities;
+﻿using OoBDev.TestUtilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenSearch.Net;
 using System;
@@ -28,7 +28,7 @@ public class OpenSearchTests
         return client;
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [TestCategory(TestCategories.DevLocal)]
     [DataRow(storeName)]
     [DataRow("summary")]

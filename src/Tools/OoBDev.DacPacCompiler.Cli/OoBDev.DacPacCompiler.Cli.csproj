@@ -8,6 +8,7 @@
 
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>dacpactools</ToolCommandName>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
 
@@ -25,6 +26,10 @@
   <ItemGroup>
     <ProjectReference Include="..\..\ExternalServices\Microsoft\OoBDev.Microsoft.SqlServer.DacFx\OoBDev.Microsoft.SqlServer.DacFx.csproj" />
     <ProjectReference Include="..\..\Framework\OoBDev.DacFx\OoBDev.DacFx.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
   <!-- Force the 4.8 build to run before this project for testing -->

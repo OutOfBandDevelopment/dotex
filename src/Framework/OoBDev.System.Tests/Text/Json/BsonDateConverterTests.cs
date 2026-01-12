@@ -1,4 +1,4 @@
-using OoBDev.System.Tests.TestTargets;
+﻿using OoBDev.System.Tests.TestTargets;
 using OoBDev.TestUtilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
@@ -55,7 +55,7 @@ public class BsonDateConverterTests
         Assert.AreEqual(expected, parsed);
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [TestCategory(TestCategories.Unit)]
     [DataRow(@"{""Nullable"":{""$date"":""2023-07-05T14:16:32.2015217-04:00""},""Value"":{""$date"":""0001-01-01T00:00:00+00:00""}}", "2023-07-05T14:16:32.2015217-04:00")]
     [DataRow(@"{""Nullable"":null,""Value"":{""$date"":""2023-07-05T14:17:05.2315812-04:00""}}", null)]
@@ -69,7 +69,7 @@ public class BsonDateConverterTests
         Assert.AreEqual(parsed, result?.Nullable);
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [TestCategory(TestCategories.Unit)]
     [DataRow(@"{""Nullable"":{""$date"":""2023-07-05T14:16:32.2015217-04:00""},""Value"":{""$date"":""0001-01-01T00:00:00+00:00""}}", "0001-01-01T00:00:00+00:00")]
     [DataRow(@"{""Nullable"":null,""Value"":{""$date"":""2023-07-05T14:17:05.2315812-04:00""}}", "2023-07-05T14:17:05.2315812-04:00")]

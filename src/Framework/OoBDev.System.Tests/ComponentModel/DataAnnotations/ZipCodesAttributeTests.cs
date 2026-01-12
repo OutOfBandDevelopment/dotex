@@ -8,7 +8,7 @@ public class ZipCodesAttributeTests
 {
     public TestContext TestContext { get; set; } = null!;
 
-    [DataTestMethod]
+    [TestMethod]
     [TestCategory("UNIT")]
     [DataRow("12345", true)]
     [DataRow("12345-1111", true)]
