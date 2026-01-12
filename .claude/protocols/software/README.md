@@ -18,6 +18,7 @@ Protocols for software architecture analysis, documentation completeness validat
 |---------------------------------------|---------|---------------------------------------|
 | [architectural-analysis.md]           | 1.0     | Systematic architecture documentation |
 | [comprehensive-analysis-checklist.md] | 1.0     | Documentation completeness checklist  |
+| [incoming-codebase-comparison.md]     | 1.0     | Compare incoming code with main codebase |
 | [protocol-validation.md]              | 1.0     | Protocol quality assurance            |
 | [security-audit.md]                   | 1.0     | API security audit                    |
 
@@ -51,6 +52,7 @@ Protocols for software architecture analysis, documentation completeness validat
 | Situation                                  | Protocol                            |
 |--------------------------------------------|-------------------------------------|
 | Analyzing a new codebase                   | architectural-analysis.md           |
+| Comparing incoming code for migration      | incoming-codebase-comparison.md     |
 | Documenting project architecture           | architectural-analysis.md           |
 | Verifying documentation completeness       | comprehensive-analysis-checklist.md |
 | Creating or updating a protocol            | protocol-validation.md              |
@@ -161,6 +163,7 @@ Protocols for software architecture analysis, documentation completeness validat
 
 [architectural-analysis.md]: ./architectural-analysis.md
 [comprehensive-analysis-checklist.md]: ./comprehensive-analysis-checklist.md
+[incoming-codebase-comparison.md]: ./incoming-codebase-comparison.md
 [protocol-validation.md]: ./protocol-validation.md
 [security-audit.md]: ./security-audit.md
 [compare-documentation-to-project.md]: ./compare-documentation-to-project.md

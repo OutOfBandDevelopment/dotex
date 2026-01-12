@@ -22,9 +22,10 @@ public class SerialPortFactory : IDeviceFactory
 
         var def = definition.GetType();
         var config = def.GetCustomAttribute<SerialPortAttribute>();
-        return config == null
-            ? null
-            : (IDeviceAdapter)new SerialPortDeviceAdapter(
+        if (config == null)
+            return null;
+
+        return new SerialPortDeviceAdapter(
             new SerialPort(
                 portName: assignedDevicePath,
                 baudRate: config.BaudRate,

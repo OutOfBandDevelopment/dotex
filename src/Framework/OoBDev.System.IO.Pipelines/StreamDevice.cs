@@ -16,10 +16,10 @@ public class StreamDevice<TMessage> : IStreamDevice<TMessage>
     private Stream _stream => _adapter.Stream;
     private readonly IDeviceAdapter _adapter;
     private readonly IDeviceDefinition _device;
-    private readonly ISegmentBuildDefinition _segmentDefintion;
-    private readonly IMessageDecoder<TMessage> _decoder;
-    private readonly IMessageEncoder<TMessage> _encoder;
-    private readonly int _minimumTrasmissionDelay;
+    private readonly ISegmentBuildDefinition? _segmentDefintion;
+    private readonly IMessageDecoder<TMessage>? _decoder;
+    private readonly IMessageEncoder<TMessage>? _encoder;
+    private readonly int _minimumTransmissionDelay;
     private readonly CancellationToken _token;
     private readonly CancellationTokenSource _tokenSource;
 
@@ -35,7 +35,7 @@ public class StreamDevice<TMessage> : IStreamDevice<TMessage>
 
         _adapter = adapter;
         _device = device;
-        _minimumTrasmissionDelay = minimumTransmissionDelay;
+        _minimumTransmissionDelay = minimumTransmissionDelay;
 
         Task? messageReceiver = null;
         Task? messageTransmitter = null;
@@ -172,9 +172,9 @@ public class StreamDevice<TMessage> : IStreamDevice<TMessage>
                     }
                 }
 
-                if (!_token.IsCancellationRequested && _minimumTrasmissionDelay > 0)
+                if (!_token.IsCancellationRequested && _minimumTransmissionDelay > 0)
                 {
-                    await Task.Delay(_minimumTrasmissionDelay);
+                    await Task.Delay(_minimumTransmissionDelay);
                 }
             }
         }

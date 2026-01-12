@@ -39,7 +39,7 @@ public static class PathEx
         var wildCards = new[] { '*', '?' };
         var pathSegments = path.Split('/', '\\');
         var segmentsQuery = from ps in pathSegments
-                            select (segment: ps, hasWildcard: wildCards.Any(ps.Contains));
+                            select (segment: ps, hasWildcard: wildCards.Any(c => ps.Contains(c)));
         var basePath = string.Join(Path.DirectorySeparatorChar, segmentsQuery.TakeWhile(ps => !ps.hasWildcard).Select(ps => ps.segment));
 
         return path == basePath ? Path.GetDirectoryName(basePath) : basePath;
@@ -63,7 +63,7 @@ public static class PathEx
         var wildCards = new[] { '*', '?' };
         var pathSegments = wildcardPath.Split('/', '\\');
         var segmentsQuery = from ps in pathSegments
-                            select (segment: ps, hasWildcard: wildCards.Any(ps.Contains));
+                            select (segment: ps, hasWildcard: wildCards.Any(c => ps.Contains(c)));
         var basePath = string.Join(Path.DirectorySeparatorChar, segmentsQuery.TakeWhile(ps => !ps.hasWildcard).Select(ps => ps.segment));
         var searchPathSegments = string.Join(Path.DirectorySeparatorChar, segmentsQuery.SkipWhile(ps => !ps.hasWildcard).Select(ps => ps.segment));
         var searchPaths = Path.GetDirectoryName(searchPathSegments);
@@ -89,7 +89,7 @@ public static class PathEx
         var wildCards = new[] { '*', '?' };
         var pathSegments = wildCardPath.Split('/', '\\');
         var segmentsQuery = from ps in pathSegments
-                            select (segment: ps, hasWildcard: wildCards.Any(ps.Contains));
+                            select (segment: ps, hasWildcard: wildCards.Any(c => ps.Contains(c)));
 
         var basePath = Path.Combine(path, string.Join(Path.DirectorySeparatorChar, segmentsQuery.TakeWhile(ps => !ps.hasWildcard).Select(ps => ps.segment)));
         var searchPathSegments = segmentsQuery.SkipWhile(ps => !ps.hasWildcard);

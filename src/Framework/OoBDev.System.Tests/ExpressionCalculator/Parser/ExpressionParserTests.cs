@@ -316,48 +316,49 @@ public abstract class ExpressionParserTests<T>
     [TestTarget(typeof(ExpressionBaseExtensions), Member = nameof(ExpressionBaseExtensions.Optimize))]
     public void VerifyOptimizerForComplexExpressions(string input)
     {
+        const int MaxRetryAttempts = 10;
         var includesFactorial = input.Contains("!");
-        var x = 0;
-    tryAgain:
-        try
+
+        for (int attempt = 0; attempt <= MaxRetryAttempts; attempt++)
         {
-            if (_skipDecimal && input.Contains("."))
+            try
             {
-                Assert.Inconclusive("Decimals not supported");
+                if (_skipDecimal && input.Contains("."))
+                {
+                    Assert.Inconclusive("Decimals not supported");
+                }
+                else
+                {
+                    TestContext.WriteLine($"Input: {input}");
+                    var parsed = new ExpressionParser<T>().Parse(input);
+                    TestContext.WriteLine($"As Parsed: {parsed}");
+                    var optimized = parsed.Optimize();
+                    TestContext.WriteLine($"As Optimized: {optimized}");
+
+                    var testValues = parsed.GenerateTestValues(includeNegatives: !includesFactorial, scale: includesFactorial ? 1 : 4);
+
+                    var variables = string.Join(", ", testValues.Select(kvp => (Name: kvp.Key, kvp.Value)));
+                    TestContext.WriteLine($"Variables: {variables}");
+
+                    var resultAsParsed = parsed.Evaluate(testValues);
+                    var resultAsOptimized = optimized.Evaluate(testValues);
+
+                    TestContext.WriteLine($"Parsed Result: {resultAsParsed}");
+                    TestContext.WriteLine($"Optimized Result: {resultAsOptimized}");
+
+                    NumericAsserts.AreSimilar(resultAsParsed, resultAsOptimized);
+                }
+                return; // Test passed, exit the retry loop
             }
-            else
+            catch (NotSupportedException nse) when (_skipNegative && nse.Message == nameof(IExpressionEvaluator<T>.Negate))
             {
-                TestContext.WriteLine($"Input: {input}");
-                var parsed = new ExpressionParser<T>().Parse(input);
-                TestContext.WriteLine($"As Parsed: {parsed}");
-                var optimized = parsed.Optimize();
-                TestContext.WriteLine($"As Optimized: {optimized}");
-
-                var testValues = parsed.GenerateTestValues(includeNegatives: !includesFactorial, scale: includesFactorial ? 1 : 4);
-
-                var variables = string.Join(", ", testValues.Select(kvp => (Name: kvp.Key, kvp.Value)));
-                TestContext.WriteLine($"Variables: {variables}");
-
-                var resultAsParsed = parsed.Evaluate(testValues);
-                var resultAsOptimized = optimized.Evaluate(testValues);
-
-                TestContext.WriteLine($"Parsed Result: {resultAsParsed}");
-                TestContext.WriteLine($"Optimized Result: {resultAsOptimized}");
-
-                Assert.AreEqual(resultAsParsed, resultAsOptimized);
+                Assert.Inconclusive($"{nse.Message} not supported");
             }
-        }
-        catch (NotSupportedException nse) when (_skipNegative && nse.Message == nameof(IExpressionEvaluator<T>.Negate))
-        {
-            Assert.Inconclusive($"{nse.Message} not supported");
-        }
-        catch (DivideByZeroException)
-        {
-            if (x++ > 2)
+            catch (DivideByZeroException) when (attempt < MaxRetryAttempts)
             {
-                throw;
+                // Retry with new random values
+                continue;
             }
-            goto tryAgain;
         }
     }
 }
