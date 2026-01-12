@@ -32,11 +32,38 @@ This document tracks architectural work, migration planning, and bug fixes for t
 - [x] Created `docs/architecture/architectural-patterns.md` - 11 pattern catalog
 - [x] Created `docs/architecture/layering-architecture.md` - Layer-by-layer breakdown
 
-### Migration Analysis
+### Migration Analysis - BinaryDataDecoders
 - [x] Deep comparison of `Incomming/BinaryDecoders` vs `src/`
 - [x] Created `docs/migration/binarydatadecoders-feature-mapping.md` - Feature comparison
 - [x] Created `docs/migration/binarydatadecoders-migration-plan.md` - 5-phase plan
+- [x] Created `docs/migration/binarydatadecoders-critical-questions.md` - Decision points
 - [x] Created `docs/migration/README.md` - Migration tracking
+
+### Migration Analysis - dotnet-lib (COMPLETE)
+- [x] Deep comparison of `Incomming/dotnet-lib` vs `src/` - All 40 files
+- [x] Created `docs/migration/dotnet-lib-feature-mapping.md` - Feature analysis
+- [x] Created `docs/migration/dotnet-lib-migration-plan.md` - Investigation plan
+- [x] Created `docs/migration/dotnet-lib-comparison-matrix.md` - File-by-file comparison
+- [x] Created `Incomming/dotnet-lib/README.md` - Archive documentation
+
+### dotnet-lib Investigation Results (COMPLETE)
+- [x] **Phase 0: Investigation**
+  - [x] Compared all 40 C# files against main codebase
+  - [x] Result: 38 files (95%) IDENTICAL, 2 files differ
+  - [x] All files exist in main codebase - No migration needed
+- [x] **Phase 1: Critical Bug Fix**
+  - [x] **AdditionalSwaggerGenEndpointsOptions.cs** - Fixed missing namespace prefix for generic types
+    - Location: `src/Framework/OoBDev.AspNetCore.Mvc/SwaggerGen/AdditionalSwaggerGenEndpointsOptions.cs:111-116`
+    - Issue: Main codebase missing `{type.Namespace}.` in `ResolveSchemaType` method
+    - Impact: Swagger schema IDs for generic types now properly qualified
+    - Severity: HIGH - Prevented potential schema naming collisions
+  - [x] **HealthCheckSwaggerGenEndpointOptions.cs** - Stylistic difference only, no action needed
+- [x] **Phase 2: Documentation**
+  - [x] Documented synchronization status (95% identical)
+  - [x] Marked dotnet-lib as reference copy (valuable for QA)
+  - [x] Updated feature mapping with completion status
+
+**Outcome:** dotnet-lib is fully synchronized with main codebase. Directory kept as reference for quality assurance.
 
 ### Protocols
 - [x] Created `.claude/protocols/software/incoming-codebase-comparison.md`
@@ -61,6 +88,44 @@ This document tracks architectural work, migration planning, and bug fixes for t
 - [x] Run `dotnet build src/` to verify all bug fixes compile
 - [x] Run `dotnet test src/` to verify all tests pass - ALL PASSED
 - [x] Address any compilation or test failures - None found
+
+---
+
+## BinaryDataDecoders Migration - Decision Points
+
+**Status:** ⏸️ BLOCKED - Awaiting decisions on migration approach
+
+Before proceeding with BinaryDataDecoders migration (Phases 1-5), critical questions need answers. See:
+- **[Critical Questions Document](docs/migration/binarydatadecoders-critical-questions.md)** - Complete decision matrix
+
+### Summary of Required Decisions
+
+**Immediate (Phase 1 - Foundation):**
+- [ ] **Endianness API design** - Extension methods, static methods, or both?
+- [ ] **BinaryPrimitives naming** - `ReadInt32BigEndian()` style preferred?
+- [ ] **UI Collections location** - Create `OoBDev.Extensions.UI.Collections`?
+
+**High Priority (Phase 2 - High-Value Features):**
+- [ ] **CodeAnalysis use case** - What are you building with Roslyn extensions?
+- [ ] **Archive formats** - Which formats needed (TAR, CPIO, ZIP)?
+- [ ] **ExpressionCalculator audit** - Is current implementation sufficient?
+
+**Medium Priority (Phase 3 - Protocols):**
+- [ ] **NMEA Protocol** - GPS hardware integration or data file parsing?
+- [ ] **Drawing/Geometry** - Migrate or use existing libraries (SkiaSharp, ImageSharp)?
+- [ ] **Barcode** - Which formats? Use ZXing.Net or custom?
+
+**Lower Priority (Phase 4 - Specialized):**
+- [ ] **Hardware devices** - Which of the 8 devices are actively used?
+- [ ] **CLI tools** - Which of the 4 tools should be migrated?
+- [ ] **ISO 9660, Apple II, Classic Crypto** - Active use cases?
+- [ ] **Windows Forms, UWP** - Modernization approach?
+
+**Recommendation:** Can start Phase 1 with recommended defaults while Phase 2-4 decisions are made.
+
+---
+
+## BinaryDataDecoders Migration Work
 
 ### Phase 1: Foundation Enhancement
 
@@ -353,24 +418,115 @@ This document tracks architectural work, migration planning, and bug fixes for t
 
 ### Phase 5: Cleanup & Documentation
 
-#### 5.1 Code Cleanup
+#### 5.1 Future Development: DeepZoom Viewer Controls (NEW)
+
+**Note:** These are NEW controls, not migrations. To be implemented after migration complete.
+
+##### 5.1.1 WPF DeepZoom Viewer Control
+- [ ] Create `src/Extensions/OoBDev.Extensions.WPF.DeepZoom/`
+- [ ] Design WPF control architecture:
+  - [ ] DeepZoomViewer control (pan, zoom, multi-touch)
+  - [ ] Progressive tile loading with caching
+  - [ ] Smooth zoom transitions (animation)
+  - [ ] Touch/gesture support (pinch-to-zoom)
+  - [ ] Mouse wheel and drag support
+  - [ ] Keyboard navigation
+- [ ] Implement rendering pipeline:
+  - [ ] Tile fetching (local and HTTP)
+  - [ ] Tile caching strategy
+  - [ ] View frustum culling
+  - [ ] Level-of-detail (LOD) management
+- [ ] Add features:
+  - [ ] Min/max zoom constraints
+  - [ ] Initial viewport positioning
+  - [ ] Viewport changed events
+  - [ ] Custom tile source providers
+  - [ ] Overlay support (annotations, markers)
+- [ ] Performance optimization:
+  - [ ] Background tile loading
+  - [ ] Render throttling
+  - [ ] Memory management
+- [ ] Add comprehensive examples:
+  - [ ] Basic viewer usage
+  - [ ] Custom tile sources
+  - [ ] Annotation overlays
+  - [ ] Multi-viewer synchronization
+- [ ] Create documentation and demos
+
+**New files to create:**
+- `src/Extensions/OoBDev.Extensions.WPF.DeepZoom/Controls/DeepZoomViewer.xaml`
+- `src/Extensions/OoBDev.Extensions.WPF.DeepZoom/TileLoaders/`
+- `src/Extensions/OoBDev.Extensions.WPF.DeepZoom/Caching/`
+- `src/Extensions/OoBDev.Extensions.WPF.DeepZoom.Demo/` (sample app)
+
+##### 5.1.2 JavaScript/TypeScript DeepZoom Viewer Library
+- [ ] Create `src/Web/OoBDev.Web.DeepZoom/` (TypeScript library)
+- [ ] Design JavaScript/TypeScript API:
+  - [ ] DeepZoomViewer class
+  - [ ] Configuration options
+  - [ ] Event system
+  - [ ] Plugin architecture
+- [ ] Implement core viewer:
+  - [ ] Canvas-based rendering
+  - [ ] Touch/mouse/wheel event handling
+  - [ ] Smooth zoom animations (CSS transitions or requestAnimationFrame)
+  - [ ] Progressive tile loading with preloading
+- [ ] Add features:
+  - [ ] Responsive design (resize handling)
+  - [ ] Mobile-optimized touch gestures
+  - [ ] Accessibility (keyboard navigation, ARIA)
+  - [ ] SVG overlay support
+  - [ ] Custom controls (zoom in/out, home, fullscreen)
+- [ ] Framework integrations:
+  - [ ] Vanilla JavaScript/TypeScript
+  - [ ] React component wrapper
+  - [ ] Angular component wrapper (optional)
+  - [ ] Vue component wrapper (optional)
+- [ ] Build tooling:
+  - [ ] TypeScript compilation
+  - [ ] Module bundling (ESM, UMD, CommonJS)
+  - [ ] Minification
+  - [ ] Source maps
+- [ ] Add comprehensive examples:
+  - [ ] Basic HTML usage
+  - [ ] React integration
+  - [ ] Custom tile sources
+  - [ ] Annotation layers
+- [ ] Create documentation site:
+  - [ ] API reference
+  - [ ] Interactive demos
+  - [ ] Getting started guide
+
+**New files to create:**
+- `src/Web/OoBDev.Web.DeepZoom/src/DeepZoomViewer.ts`
+- `src/Web/OoBDev.Web.DeepZoom/src/TileLoader.ts`
+- `src/Web/OoBDev.Web.DeepZoom/src/Cache.ts`
+- `src/Web/OoBDev.Web.DeepZoom/react/` (React wrapper)
+- `src/Web/OoBDev.Web.DeepZoom/examples/`
+- `src/Web/OoBDev.Web.DeepZoom/docs/`
+
+**Package Distribution:**
+- NPM package: `@oodev/deepzoom-viewer`
+- NuGet package: `OoBDev.Extensions.WPF.DeepZoom`
+
+#### 5.2 Code Cleanup
 - [ ] Remove obsolete/unused code
 - [ ] Consolidate duplicate utilities
 - [ ] Verify all projects have README.md files
 - [ ] Ensure consistent coding standards
 
-#### 5.2 Testing
+#### 5.3 Testing
 - [ ] Achieve 80%+ code coverage for Framework layer
 - [ ] Add integration tests for migrated components
 - [ ] Add performance benchmarks where applicable
 
-#### 5.3 Documentation
+#### 5.4 Documentation
 - [ ] Update all component README.md files
 - [ ] Update architecture documentation with new components
 - [ ] Create migration notes document
 - [ ] Add API documentation examples
 
-#### 5.4 Final Validation
+#### 5.5 Final Validation
 - [ ] Run full test suite
 - [ ] Run security audit (use security-audit.md protocol)
 - [ ] Run architectural compliance check

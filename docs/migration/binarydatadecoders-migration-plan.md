@@ -957,11 +957,13 @@ device.MessageReceived += (sender, e) =>
 **Validation:**
 - [ ] Modern imaging library integrated (SkiaSharp/ImageSharp)
 - [ ] Code39 barcode generation working
-- [ ] DeepZoom tiling operational
+- [ ] DeepZoom tile GENERATION operational (creates DZI files and tile images)
 - [ ] JPEG utilities functional
 - [ ] Cross-platform compatible (.NET 9.0)
 - [ ] All tests pass
 - [ ] Documentation complete with examples
+
+**Note:** DeepZoom VIEWER controls (WPF and JavaScript/TypeScript) are NEW development, not migration. See Phase 5 Future Development section.
 
 ---
 
@@ -1294,7 +1296,80 @@ See [BinaryDataDecoders Migration Guide](docs/migration/binarydatadecoders-migra
 
 ---
 
-### Task 5.5: Tag Release
+### Task 5.5: Future Development - DeepZoom Viewer Controls (NEW)
+
+**Status:** FUTURE DEVELOPMENT (not migration)
+**Priority:** Post-migration enhancement
+
+**Note:** The DeepZoom tile generation is migrated in Phase 3. This task is for creating NEW viewer controls.
+
+#### 5.5.1: WPF DeepZoom Viewer Control
+
+**Target:** `OoBDev.Extensions.WPF.DeepZoom`
+
+**Features:**
+- Interactive pan/zoom viewer control for WPF
+- Progressive tile loading with caching
+- Smooth zoom transitions (animations)
+- Multi-touch support (pinch-to-zoom)
+- Mouse wheel and drag navigation
+- Keyboard navigation
+- Viewport events and customization
+- Overlay support (annotations, markers)
+
+**Implementation:**
+1. Design WPF control (XAML + code-behind)
+2. Implement tile loading pipeline
+3. Add rendering optimizations (view frustum culling, LOD)
+4. Implement gesture/touch handling
+5. Add caching strategy
+6. Create demo application
+7. Write comprehensive documentation
+
+**Package:** NuGet `OoBDev.Extensions.WPF.DeepZoom`
+
+---
+
+#### 5.5.2: JavaScript/TypeScript DeepZoom Viewer Library
+
+**Target:** `OoBDev.Web.DeepZoom`
+
+**Features:**
+- Canvas-based web viewer
+- Touch/mouse/wheel event handling
+- Smooth zoom animations
+- Progressive tile loading
+- Responsive design
+- Mobile-optimized gestures
+- Accessibility (keyboard, ARIA)
+- SVG overlay support
+- Framework wrappers (React, Angular, Vue)
+
+**Implementation:**
+1. Create TypeScript viewer library
+2. Implement canvas rendering
+3. Add event handling and animations
+4. Implement tile loading and caching
+5. Create React component wrapper
+6. Add optional Angular/Vue wrappers
+7. Build tooling (bundling, minification)
+8. Create documentation site with demos
+
+**Package:** NPM `@oodev/deepzoom-viewer`
+
+**Validation:**
+- [ ] WPF viewer functional with smooth performance
+- [ ] JavaScript/TypeScript viewer works cross-browser
+- [ ] React wrapper available and documented
+- [ ] Mobile touch gestures working
+- [ ] Comprehensive examples and demos
+- [ ] API documentation complete
+
+**See Also:** `/TODO.md` Phase 5.1 for detailed implementation checklist
+
+---
+
+### Task 5.6: Tag Release
 
 **Steps:**
 1. Ensure all tests pass

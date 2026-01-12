@@ -93,9 +93,14 @@ Located in `.claude/protocols/`:
 - Windows Forms components
 - CLI tools
 
-**Phase 5: Finalization** - PENDING
+**Phase 5: Finalization & Future Development** - PENDING
+- DeepZoom viewer controls (NEW - WPF and JavaScript/TypeScript implementations)
 - Cleanup and documentation
 - Final validation
+
+**Future Development (Post-Migration):**
+- WPF DeepZoom Viewer Control - Interactive pan/zoom/touch control for WPF applications
+- JavaScript/TypeScript DeepZoom Viewer - Web-based viewer library with React/Angular/Vue wrappers
 
 ---
 

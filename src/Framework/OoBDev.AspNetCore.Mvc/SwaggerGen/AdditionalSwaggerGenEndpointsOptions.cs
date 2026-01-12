@@ -107,8 +107,11 @@ public class AdditionalSwaggerGenEndpointsOptions(
             }
         }
     }
-    private string ResolveSchemaType(Type type) =>
-        type.IsGenericType
-            ? $"{string.Join("_", type.GetGenericArguments().Select(ResolveSchemaType))}{type.Name.Split('`')[0]}"
+
+    private string ResolveSchemaType(Type type)
+    {
+        return type.IsGenericType
+            ? $"{type.Namespace}.{type.Name.Split('`')[0]}-{string.Join("_", type.GetGenericArguments().Select(ResolveSchemaType))}"
             : $"{type.Namespace}.{type.Name}";
+    }
 }
