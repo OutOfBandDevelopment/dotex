@@ -4,9 +4,6 @@
     <TargetFrameworks>net9.0</TargetFrameworks>
     <LangVersion>preview</LangVersion>
     <!--<IsSqlClr>True</IsSqlClr>-->
-    <!-- Separate intermediate/output directories to avoid conflicts with net481.csproj -->
-    <BaseIntermediateOutputPath>obj/net9/</BaseIntermediateOutputPath>
-    <BaseOutputPath>bin/net9/</BaseOutputPath>
   </PropertyGroup>
 
   <ItemGroup>

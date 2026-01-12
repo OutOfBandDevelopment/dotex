@@ -1,7 +1,4 @@
-﻿#if NET481
-#else
-using Microsoft.SqlServer.Server;
-#endif
+﻿using Microsoft.SqlServer.Server;
 using System;
 using System.IO;
 

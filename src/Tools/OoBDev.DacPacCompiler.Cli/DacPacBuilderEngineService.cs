@@ -29,8 +29,11 @@ public class DacPacBuilderEngineService : IHostedService
 
     public Task StartAsync(CancellationToken cancellationToken)
     {
+        /*
+        --sqlclr "$(SolutionDir)Extensions\OoBDev.Data.Vectors\bin\Debug\net481\OoBDev.Data.Vectors.dll" 
+        --dotnet "$(SolutionDir)Extensions\OoBDev.Data.Vectors\bin\Debug\net9.0\OoBDev.Data.Vectors.dll"
+        */
         _log.LogInformation("AssemblyFileFramework: {AssemblyFileFramework}", _settings.Value.AssemblyFileFramework);
-        _log.LogInformation("AssemblyFileNet: {AssemblyFileNet}", _settings.Value.AssemblyFileNet);
         _log.LogInformation("AssemblyPdbFramework: {AssemblyPdbFramework}", _settings.Value.AssemblyPdbFramework);
         _log.LogInformation("DacpacFile: {DacpacFile}", _settings.Value.DacpacFile);
         _log.LogInformation("ProjectName: {ProjectName}", _settings.Value.ProjectName);
@@ -38,7 +41,6 @@ public class DacPacBuilderEngineService : IHostedService
 
         _builder.BuildDacPac(
             assemblyFileFramework: _settings.Value.AssemblyFileFramework,
-            assemblyFileNet: _settings.Value.AssemblyFileNet,
             assemblyPdbFramework: _settings.Value.AssemblyPdbFramework,
             dacpacFile: _settings.Value.DacpacFile,
             projectName: _settings.Value.ProjectName,

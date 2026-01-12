@@ -1,12 +1,8 @@
 ﻿// Ignore Spelling: Dac
-
 using Microsoft.Extensions.Logging;
-using Microsoft.SqlServer.Server;
-using Microsoft.SqlServer.Types;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Data.SqlTypes;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -19,141 +15,136 @@ namespace OoBDev.DacFx;
 public class DacPacBuilder : IDacPacBuilder
 {
     private readonly ILogger _logger;
+    private readonly XNamespace ns = "http://schemas.microsoft.com/sqlserver/dac/Serialization/2012/02";
 
-    public DacPacBuilder(
-        ILogger<DacPacBuilder> logger
-        )
+    public DacPacBuilder(ILogger<DacPacBuilder> logger)
     {
         _logger = logger;
     }
 
+    #region MetadataLoadContext Setup
+
+    private static string GetNet48ReferenceAssembliesPath()
+    {
+        var programFiles86 = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86);
+
+        // Try reference assemblies first (best for metadata)
+        var refAssemblies = Path.Combine(programFiles86, "Reference Assemblies", "Microsoft", "Framework", ".NETFramework", "v4.8.1");
+        if (Directory.Exists(refAssemblies))
+            return refAssemblies;
+
+        // Fallback to v4.8
+        refAssemblies = Path.Combine(programFiles86, "Reference Assemblies", "Microsoft", "Framework", ".NETFramework", "v4.8");
+        if (Directory.Exists(refAssemblies))
+            return refAssemblies;
+
+        // Last resort: runtime directory (GAC)
+        var windir = Environment.GetEnvironmentVariable("WINDIR") ?? @"C:\Windows";
+        return Path.Combine(windir, "Microsoft.NET", "Framework64", "v4.0.30319");
+    }
+
+    private static MetadataLoadContext GetMetadataLoadContext(string assemblyPath)
+    {
+        var runtimeDir = GetNet48ReferenceAssembliesPath();
+        var assemblyDir = Path.GetDirectoryName(assemblyPath)!;
+
+        var paths = Directory.GetFiles(runtimeDir, "*.dll")
+            .Concat(Directory.GetFiles(assemblyDir, "*.dll"))
+            .Distinct();
+
+        var resolver = new PathAssemblyResolver(paths);
+        return new MetadataLoadContext(resolver, "mscorlib");
+    }
+
+    #endregion
+
+    #region Public API
+
     public void BuildDacPac(
         string assemblyFileFramework,
-        string assemblyFileNet,
         string? assemblyPdbFramework = null,
         string? dacpacFile = null,
         string? projectName = null,
-        string? projectVersion = null
-        )
+        string? projectVersion = null)
     {
-        if (string.IsNullOrWhiteSpace(assemblyFileFramework)) throw new ArgumentNullException(nameof(assemblyFileFramework));
-        if (string.IsNullOrWhiteSpace(assemblyFileNet)) throw new ArgumentNullException(nameof(assemblyFileNet));
-        if (string.IsNullOrWhiteSpace(assemblyPdbFramework)) assemblyPdbFramework = null;
-        if (string.IsNullOrWhiteSpace(dacpacFile)) dacpacFile = null;
-        if (string.IsNullOrWhiteSpace(projectName)) projectName = null;
-        if (string.IsNullOrWhiteSpace(projectVersion)) projectVersion = null;
+        if (string.IsNullOrWhiteSpace(assemblyFileFramework))
+            throw new ArgumentNullException(nameof(assemblyFileFramework));
 
-        assemblyFileNet = Path.GetFullPath(assemblyFileNet);
-        var sqlClrAssembly = Assembly.LoadFile(assemblyFileNet);
+        using var mlc = GetMetadataLoadContext(assemblyFileFramework);
+        var sqlClrAssembly = mlc.LoadFromAssemblyPath(assemblyFileFramework);
 
         var bothPath = string.IsNullOrWhiteSpace(dacpacFile);
-
         assemblyPdbFramework = Path.GetFullPath(assemblyPdbFramework ?? Path.ChangeExtension(assemblyFileFramework, ".pdb"));
         dacpacFile = Path.GetFullPath(dacpacFile ?? Path.ChangeExtension(assemblyFileFramework, ".dacpac"));
-        projectName = projectName ?? Path.GetFileName(assemblyFileFramework);
-        projectVersion = projectVersion ?? "0.0.0.1";
+        projectName ??= Path.GetFileNameWithoutExtension(assemblyFileFramework);
+        projectVersion ??= "0.0.0.1";
 
-        _logger.LogInformation("assemblyFileFramework: {assemblyFileFramework}", assemblyFileFramework);
-        _logger.LogInformation("assemblyPdbFramework: {assemblyPdbFramework}", assemblyPdbFramework);
-        _logger.LogInformation("dacpacFile: {dacpacFile}", dacpacFile);
-        _logger.LogInformation("projectName: {projectName}", projectName);
-        _logger.LogInformation("assemblyFileNet: {assemblyFileNet}", assemblyFileNet);
+        _logger.LogInformation("Building DACPAC: {projectName} v{projectVersion}", projectName, projectVersion);
+        _logger.LogInformation("Assembly: {assemblyFileFramework}", assemblyFileFramework);
+        _logger.LogInformation("Output: {dacpacFile}", dacpacFile);
 
-        //var sha512 = builder.GetSha512(assemblyFile);
-        /*
-DECLARE @hash varbinary(64) = 0x{2}
-IF NOT EXISTS (
-	SELECT * FROM sys.trusted_assemblies 
-	WHERE 
-		trusted_assemblies.hash =@hash
-)
-BEGIN
-	PRINT 'Add hash for {0}'
-	EXEC sys.sp_add_trusted_assembly @hash, N'{0}';
-END   
-         */
+        if (File.Exists(dacpacFile))
+            File.Delete(dacpacFile);
 
-        //var sha512 = builder.GetSha512(assemblyFile);
-
-        if (File.Exists(dacpacFile)) File.Delete(dacpacFile);
         using (var archive = ZipFile.Open(dacpacFile, ZipArchiveMode.Create))
         {
-            string sha256;
-            using (var stream = new MemoryStream())
-            {
-                var xml = BuildModel(sqlClrAssembly, assemblyFileFramework, assemblyPdbFramework);
-                xml.Save(stream);
-                stream.Position = 0;
-                var entry = archive.CreateEntry("model.xml");
-                entry.LastWriteTime = DateTimeOffset.Now;
-                using (var entryStream = entry.Open())
-                {
-                    stream.CopyTo(entryStream);
-                    entryStream.Close();
-                }
+            var modelXml = BuildModel(sqlClrAssembly, assemblyFileFramework, assemblyPdbFramework);
+            var modelHash = AddXmlToArchive(archive, "model.xml", modelXml);
 
-                stream.Position = 0;
-                sha256 = GetSha256(stream.ToArray());
-            }
+            var originXml = BuildOrigin(modelHash);
+            AddXmlToArchive(archive, "Origin.xml", originXml);
 
-            using (var stream = new MemoryStream())
-            {
-                var xml = BuildOrigin(sha256);
-                xml.Save(stream);
-                stream.Position = 0;
-                var entry = archive.CreateEntry("Origin.xml");
-                entry.LastWriteTime = DateTimeOffset.Now;
-                using (var entryStream = entry.Open())
-                {
-                    stream.CopyTo(entryStream);
-                    entryStream.Close();
-                }
-            }
+            var dacMetadataXml = BuildDacMetadata(projectName, projectVersion);
+            AddXmlToArchive(archive, "DacMetadata.xml", dacMetadataXml);
 
-            using (var stream = new MemoryStream())
-            {
-                var xml = BuildDacMetadata(projectName, projectVersion);
-                xml.Save(stream);
-                stream.Position = 0;
-                var entry = archive.CreateEntry("DacMetadata.xml");
-                entry.LastWriteTime = DateTimeOffset.Now;
-                using (var entryStream = entry.Open())
-                {
-                    stream.CopyTo(entryStream);
-                    entryStream.Close();
-                }
-            }
-
-            using (var stream = new MemoryStream())
-            {
-                var xml = BuildContentType();
-                xml.Save(stream);
-                stream.Position = 0;
-                var entry = archive.CreateEntry("[Content_Types].xml");
-                entry.LastWriteTime = DateTimeOffset.Now;
-                using (var entryStream = entry.Open())
-                {
-                    stream.CopyTo(entryStream);
-                    entryStream.Close();
-                }
-            }
+            var contentTypeXml = BuildContentType();
+            AddXmlToArchive(archive, "[Content_Types].xml", contentTypeXml);
         }
-        _logger.LogInformation("{sqlClrAssembly} ({projectVersion}) => {dacpacFile}", sqlClrAssembly, projectVersion, dacpacFile);
+
+        _logger.LogInformation("DACPAC created successfully: {dacpacFile}", dacpacFile);
 
         if (bothPath)
         {
-            var dacpacFile2 = Path.ChangeExtension(assemblyFileNet, ".dacpac");
-            if (dacpacFile == dacpacFile2) return;
-
-            File.Copy(dacpacFile, dacpacFile2, overwrite: true);
-            _logger.LogInformation("{sqlClrAssembly} ({projectVersion}) => {dacpacFile2}", sqlClrAssembly, projectVersion, dacpacFile2);
+            var dacpacFile2 = Path.GetFullPath(Path.ChangeExtension(assemblyFileFramework, ".dacpac"));
+            if (dacpacFile != dacpacFile2)
+            {
+                File.Copy(dacpacFile, dacpacFile2, overwrite: true);
+                _logger.LogInformation("Copied to: {dacpacFile2}", dacpacFile2);
+            }
         }
     }
 
-    private readonly XNamespace ns = "http://schemas.microsoft.com/sqlserver/dac/Serialization/2012/02";
+    #endregion
+
+    #region Archive Helpers
+
+    private string AddXmlToArchive(ZipArchive archive, string entryName, XElement xml)
+    {
+        using var stream = new MemoryStream();
+        xml.Save(stream);
+        stream.Position = 0;
+
+        var entry = archive.CreateEntry(entryName);
+        entry.LastWriteTime = DateTimeOffset.Now;
+
+        using (var entryStream = entry.Open())
+        {
+            stream.CopyTo(entryStream);
+        }
+
+        stream.Position = 0;
+        return GetSha256(stream.ToArray());
+    }
+
+    #endregion
+
+    #region XML Builders
 
     public XElement BuildModel(Assembly assembly, string assemblyFile, string? pdbFile)
     {
+        var realAssemblyName = assembly.FullName?.Split(',').First()
+            ?? throw new ApplicationException("Assembly name is required");
+
         var dataSchemaModel = new XElement(
             ns + "DataSchemaModel",
             new XAttribute("FileFormatVersion", "1.2"),
@@ -161,66 +152,39 @@ END
             new XAttribute("DspName", "Microsoft.Data.Tools.Schema.Sql.Sql150DatabaseSchemaProvider"),
             new XAttribute("CollationLcid", "1033"),
             new XAttribute("CollationCaseSensitive", "False")
-            );
-
-        var metaData = dataSchemaModel.Descendants(ns + "Metadata");
-
-        var logicalName = metaData.FirstOrDefault(x => (string?)x.Attribute("Name") == "LogicalName");
-        logicalName?.Attribute("Value")?.SetValue(Path.GetFileName(assembly.Location));
-        var fileName = metaData.FirstOrDefault(x => (string?)x.Attribute("Name") == "FileName");
-        fileName?.Attribute("Value")?.SetValue(assembly.Location);
-
-        var realAssemblyName = assembly.FullName?.Split(',').First() ?? throw new ApplicationException("assembly name is required");
-        var assemblyName = metaData.FirstOrDefault(x => (string?)x.Attribute("Name") == "AssemblyName");
-        assemblyName?.Attribute("Value")?.SetValue(realAssemblyName);
-        var assemblySymbolsName = metaData.FirstOrDefault(x => (string?)x.Attribute("Name") == "AssemblySymbolsName");
-        assemblySymbolsName?.Attribute("Value")?.SetValue(Path.ChangeExtension(assembly.Location, ".pdb"));
+        );
 
         var model = new XElement(ns + "Model",
             XElement.Parse(@"<Element Type=""SqlDatabaseOptions"" xmlns=""http://schemas.microsoft.com/sqlserver/dac/Serialization/2012/02"">
-			<Property Name=""Collation"" Value=""SQL_Latin1_General_CP1_CI_AS"" />
-			<Property Name=""IsAnsiNullDefaultOn"" Value=""True"" />
-			<Property Name=""IsAnsiNullsOn"" Value=""True"" />
-			<Property Name=""IsAnsiWarningsOn"" Value=""True"" />
-			<Property Name=""IsArithAbortOn"" Value=""True"" />
-			<Property Name=""IsConcatNullYieldsNullOn"" Value=""True"" />
-			<Property Name=""IsTornPageProtectionOn"" Value=""False"" />
-			<Property Name=""IsFullTextEnabled"" Value=""True"" />
-			<Property Name=""PageVerifyMode"" Value=""3"" />
-			<Property Name=""DefaultLanguage"" Value="""" />
-			<Property Name=""DefaultFullTextLanguage"" Value="""" />
-			<Property Name=""QueryStoreStaleQueryThreshold"" Value=""367"" />
-			<Relationship Name=""DefaultFilegroup"">
-				<Entry>
-					<References ExternalSource=""BuiltIns"" Name=""[PRIMARY]"" />
-				</Entry>
-			</Relationship>
-		</Element>")
-            );
-        dataSchemaModel.Add(model);
+                <Property Name=""Collation"" Value=""SQL_Latin1_General_CP1_CI_AS"" />
+                <Property Name=""IsAnsiNullDefaultOn"" Value=""True"" />
+                <Property Name=""IsAnsiNullsOn"" Value=""True"" />
+                <Property Name=""IsAnsiWarningsOn"" Value=""True"" />
+                <Property Name=""IsArithAbortOn"" Value=""True"" />
+                <Property Name=""IsConcatNullYieldsNullOn"" Value=""True"" />
+                <Property Name=""IsTornPageProtectionOn"" Value=""False"" />
+                <Property Name=""IsFullTextEnabled"" Value=""True"" />
+                <Property Name=""PageVerifyMode"" Value=""3"" />
+                <Property Name=""DefaultLanguage"" Value="""" />
+                <Property Name=""DefaultFullTextLanguage"" Value="""" />
+                <Property Name=""QueryStoreStaleQueryThreshold"" Value=""367"" />
+                <Relationship Name=""DefaultFilegroup"">
+                    <Entry>
+                        <References ExternalSource=""BuiltIns"" Name=""[PRIMARY]"" />
+                    </Entry>
+                </Relationship>
+            </Element>")
+        );
 
+        dataSchemaModel.Add(model);
+        model.Add(Files(realAssemblyName, assemblyFile, pdbFile));
         model.Add(Aggregates(assembly, realAssemblyName));
         model.Add(UserDefinedTypes(assembly, realAssemblyName));
         model.Add(Functions(assembly, realAssemblyName));
-        model.Add(Files(realAssemblyName, assemblyFile, pdbFile));
         model.Add(CollectSchema(dataSchemaModel));
 
         return dataSchemaModel;
     }
-
-    private IEnumerable<XElement> CollectSchema(XElement dataSchemaModel) =>
-        from schema in dataSchemaModel.Descendants(ns + "Relationship")
-            .Where(x => (string?)x.Attribute("Name") == "Schema")
-            .SelectMany(x => x.Descendants(ns + "References"))
-            .Select(x => (string?)x.Attribute("Name"))
-            .Distinct()
-        select new XElement(ns + "Element", new XAttribute("Type", "SqlSchema"), new XAttribute("Name", schema),
-                new XElement(ns + "Relationship", new XAttribute("Name", "Authorizer"),
-                    new XElement(ns + "Entry",
-                        new XElement(ns + "References", new XAttribute("ExternalSource", "BuiltIns"), new XAttribute("Name", "[dbo]"))
-                    )
-                )
-            );
 
     public XElement BuildOrigin(string modelHash)
     {
@@ -243,10 +207,11 @@ END
     <ProductSchema>http://schemas.microsoft.com/sqlserver/dac/Serialization/2012/02</ProductSchema>
   </Operation>
   <Checksums>
-    <Checksum Uri=""/model.xml"">... hex string of Sha256 of model.xml ... </Checksum>
+    <Checksum Uri=""/model.xml""></Checksum>
   </Checksums>
   <ModelSchemaVersion>2.9</ModelSchemaVersion>
 </DacOrigin>");
+
         xml.Descendants(ns + "Checksum").First().SetValue(modelHash);
         return xml;
     }
@@ -258,171 +223,103 @@ END
   <Name>Database1</Name>
   <Version>1.0.0.0</Version>
 </DacType>");
+
         xml.Descendants(ns + "Name").First().SetValue(projectName);
         xml.Descendants(ns + "Version").First().SetValue(versionNumber);
         return xml;
     }
 
     public XElement BuildContentType() =>
-        XElement.Parse(@"<?xml version=""1.0"" encoding=""utf-8""?><Types xmlns=""http://schemas.openxmlformats.org/package/2006/content-types""><Default Extension=""xml"" ContentType=""text/xml"" /></Types>");
+        XElement.Parse(@"<?xml version=""1.0"" encoding=""utf-8""?>
+<Types xmlns=""http://schemas.openxmlformats.org/package/2006/content-types"">
+  <Default Extension=""xml"" ContentType=""text/xml"" />
+</Types>");
+
+    #endregion
+
+    #region SQL CLR Element Extractors
 
     public IEnumerable<XElement> Aggregates(Assembly assembly, string realAssemblyName) =>
         from type in assembly.GetTypes()
-        let attrib = type.GetCustomAttributes<SqlUserDefinedAggregateAttribute>().FirstOrDefault()
+        let attrData = CustomAttributeData.GetCustomAttributes(type)
+            .FirstOrDefault(a => a.AttributeType.FullName == "Microsoft.SqlServer.Server.SqlUserDefinedAggregateAttribute")
+        where attrData != null
         let accumulator = type.GetMethod("Accumulate")
         let terminator = type.GetMethod("Terminate")
-        where attrib != null
-        select new XElement(ns + "Element", new XAttribute("Type", "SqlAggregate"), MakeAttribute("Name", GetName(attrib)),
-           new XElement(ns + "Property", new XAttribute("Name", "Format"), new XAttribute("Value", (int)attrib.Format)),
-           new XElement(ns + "Property", new XAttribute("Name", "IsInvariantToDuplicates"), new XAttribute("Value", attrib.IsInvariantToDuplicates ? "True" : "False")),
-           new XElement(ns + "Property", new XAttribute("Name", "IsInvariantToNulls"), new XAttribute("Value", attrib.IsInvariantToNulls ? "True" : "False")),
-           new XElement(ns + "Property", new XAttribute("Name", "IsNullIfEmpty"), new XAttribute("Value", attrib.IsNullIfEmpty ? "True" : "False")),
-           new XElement(ns + "Property", new XAttribute("Name", "MaxByteSize"), new XAttribute("Value", attrib.MaxByteSize)),
-           new XElement(ns + "Property", new XAttribute("Name", "ClassName"), MakeAttribute("Value", type.FullName)),
-           new XElement(ns + "Relationship", new XAttribute("Name", "Assembly"),
-               new XElement(ns + "Entry",
-                   new XElement(ns + "References", new XAttribute("Name", $"[{realAssemblyName}]")
-                   )
-               )
-           ),
-          FunctionParameters(accumulator.GetParameters()),
-          Return(terminator.ReturnParameter, isFunction: false),
-          Schema(type)
-       );
-
-    public string? GetName(object? input) =>
-        input switch
-        {
-            ParameterInfo parameter => $"{GetName(parameter.Member) ?? GetName(parameter.Member.DeclaringType)}.[@{parameter.Name}]",
-            Type type => type.GetCustomAttributes<SqlUserDefinedAggregateAttribute>().FirstOrDefault()?.Name ??
-                         type.GetCustomAttributes<SqlUserDefinedTypeAttribute>().FirstOrDefault()?.Name ??
-                         _typeName.GetValueOrDefault(type) ??
-                         GetTypeName(type),
-            MethodInfo method => GetName(method.GetCustomAttributes<SqlFunctionAttribute>().FirstOrDefault()),
-            SqlUserDefinedAggregateAttribute attrib when !string.IsNullOrWhiteSpace(attrib.Name) => attrib.Name,
-            SqlUserDefinedTypeAttribute attrib when !string.IsNullOrWhiteSpace(attrib.Name) => attrib.Name,
-            SqlFunctionAttribute attrib when !string.IsNullOrWhiteSpace(attrib.Name) => attrib.Name,
-            _ => null
-        };
-
-    private static readonly IReadOnlyDictionary<Type, string> _typeName = new Dictionary<Type, string>
-    {
-        { typeof(SqlByte), "[tinyint]"},
-        { typeof(SqlInt16),"[smallint]" },
-        { typeof(SqlInt32), "[int]" },
-        { typeof(SqlInt64), "[bigint]"},
-        { typeof(SqlBytes ),"[varbinary]"},
-        { typeof(SqlBinary ),"[varbinary]"},
-        { typeof(SqlBoolean), "[bit]" },
-        { typeof(SqlDateTime), "[datetime2]" },
-        { typeof(SqlDecimal), "[decimal(29,4)]" },
-        { typeof(SqlDouble), "[float]" },
-        { typeof(SqlSingle), "[real]" },
-        { typeof(SqlString), "[nvarchar]"},
-        { typeof(SqlXml), "[xml]" },
-        { typeof(SqlChars), "[nvarchar]"},
-        { typeof(SqlGuid), "[uniqueidentifier]" },
-        { typeof(SqlGeography), "[geography]" },
-        { typeof(SqlHierarchyId), "[hierarchyid]" },
-        { typeof(SqlGeometry), "[geometry]" },
-
-        { typeof(char), "[nchar(1)]" },
-        { typeof(sbyte),"[smallint]" },
-        { typeof(byte), "[tinyint]"},
-        { typeof(short),"[smallint]" },
-        { typeof(int), "[int]" },
-        { typeof(long), "[bigint]"},
-        { typeof(ushort), "[int]" },
-        { typeof(uint), "[bigint]"},
-        { typeof(ulong), "[decimal](20)]" },
-        { typeof(decimal), "[decimal(29,4)]" },
-        { typeof(float), "[real]" },
-        { typeof(double), "[float]" },
-        { typeof(DateTime), "DATETIME2" },
-        { typeof(DateTimeOffset), "DATETIMEOFFSET" },
-        { typeof(TimeSpan), "[time]" },
-        { typeof(Guid), "[uniqueidentifier]" },
-
-        { typeof(char?), "[nchar(1)]" },
-        { typeof(sbyte?),"[smallint]" },
-        { typeof(byte?), "[tinyint]"},
-        { typeof(short?),"[smallint]" },
-        { typeof(int?), "[int]" },
-        { typeof(long?), "[bigint]"},
-        { typeof(ushort?), "[int]" },
-        { typeof(uint?), "[bigint]"},
-        { typeof(ulong?), "[decimal](20)]" },
-        { typeof(decimal?), "[decimal(29,4)]" },
-        { typeof(float?), "[real]" },
-        { typeof(double?), "[float]" },
-        { typeof(DateTime?), "[datetime2]" },
-        { typeof(DateTimeOffset?), "[datetimeoffset]" },
-        { typeof(TimeSpan?), "[time]" },
-        { typeof(Guid?), "[uniqueidentifier]" },
-
-        { typeof(string), "[nvarchar]"},
-        { typeof(char[]), "[nvarchar]"},
-
-        { typeof(object), "[sql_variant]"},
-    };
-
-    private static readonly IReadOnlyList<Type> _isBuiltIn = _typeName.Keys.ToArray();
-
-    private XAttribute? ExternalSource(Type type) =>
-        _isBuiltIn.Contains(type) ? new XAttribute("ExternalSource", "BuiltIns") : null;
-
-    private string GetTypeName(Type type) => throw new NotSupportedException($"no mapping found for {type}");
-
-    private XAttribute? MakeAttribute(XName name, object? value) => value == null ? null : new XAttribute(name, value);
-
-    public XElement Schema(object input) =>
-        new XElement(ns + "Relationship", new XAttribute("Name", "Schema"),
-            new XElement(ns + "Entry",
-                    new XElement(ns + "References",
-                        new XAttribute("Name", GetName(input)?.Split('.')?[0] ?? throw new NotSupportedException())
+        let format = GetNamedArgument<int>(attrData, "Format")
+        let isInvariantToDuplicates = GetNamedArgument<bool>(attrData, "IsInvariantToDuplicates")
+        let isInvariantToNulls = GetNamedArgument<bool>(attrData, "IsInvariantToNulls")
+        let isNullIfEmpty = GetNamedArgument<bool>(attrData, "IsNullIfEmpty")
+        let maxByteSize = GetNamedArgument<int>(attrData, "MaxByteSize")
+        let name = GetAttributeName(attrData) ?? throw new NotSupportedException($"SqlUserDefinedAggregate on {type.FullName} must have a Name")
+        select new XElement(ns + "Element",
+            new XAttribute("Type", "SqlAggregate"),
+            new XAttribute("Name", name),
+            new XElement(ns + "Property", new XAttribute("Name", "Format"), new XAttribute("Value", format)),
+            new XElement(ns + "Property", new XAttribute("Name", "IsInvariantToDuplicates"), new XAttribute("Value", isInvariantToDuplicates ? "True" : "False")),
+            new XElement(ns + "Property", new XAttribute("Name", "IsInvariantToNulls"), new XAttribute("Value", isInvariantToNulls ? "True" : "False")),
+            new XElement(ns + "Property", new XAttribute("Name", "IsNullIfEmpty"), new XAttribute("Value", isNullIfEmpty ? "True" : "False")),
+            new XElement(ns + "Property", new XAttribute("Name", "MaxByteSize"), new XAttribute("Value", maxByteSize)),
+            new XElement(ns + "Property", new XAttribute("Name", "ClassName"), new XAttribute("Value", type.FullName!)),
+            new XElement(ns + "Relationship", new XAttribute("Name", "Assembly"),
+                new XElement(ns + "Entry",
+                    new XElement(ns + "References", new XAttribute("Name", $"[{realAssemblyName}]"))
                 )
-            )
+            ),
+            FunctionParameters(accumulator!.GetParameters()),
+            Return(terminator!.ReturnParameter, isFunction: false),
+            Schema(name)
         );
 
-    public XElement FunctionParameters(IEnumerable<ParameterInfo> parameters) =>
-        new XElement(ns + "Relationship", new XAttribute("Name", "Parameters"),
-            from parameter in parameters
-            select new XElement(ns + "Entry",
-                new XElement(ns + "Element", new XAttribute("Type", "SqlSubroutineParameter"), new XAttribute("Name", GetName(parameter) ?? throw new NotSupportedException()),
-                    new XElement(ns + "Relationship", new XAttribute("Name", "Type"),
-                        new XElement(ns + "Entry",
-                            TypeSpecifier(parameter)
-                        )
-                    )
+    public IEnumerable<XElement> UserDefinedTypes(Assembly assembly, string realAssemblyName) =>
+        from type in assembly.GetTypes()
+        let attrData = CustomAttributeData.GetCustomAttributes(type)
+            .FirstOrDefault(a => a.AttributeType.FullName == "Microsoft.SqlServer.Server.SqlUserDefinedTypeAttribute")
+        where attrData != null
+        let format = GetNamedArgument<int>(attrData, "Format")
+        let maxByteSize = GetNamedArgument<int>(attrData, "MaxByteSize")
+        let isByteOrdered = GetNamedArgument<bool>(attrData, "IsByteOrdered")
+        let name = GetAttributeName(attrData) ?? throw new NotSupportedException($"SqlUserDefinedType on {type.FullName} must have a Name")
+        select new XElement(ns + "Element",
+            new XAttribute("Type", "SqlUserDefinedType"),
+            new XAttribute("Name", name),
+            new XElement(ns + "Property", new XAttribute("Name", "Format"), new XAttribute("Value", format)),
+            new XElement(ns + "Property", new XAttribute("Name", "MaxByteSize"), new XAttribute("Value", maxByteSize)),
+            new XElement(ns + "Property", new XAttribute("Name", "IsByteOrdered"), new XAttribute("Value", isByteOrdered ? "True" : "False")),
+            new XElement(ns + "Property", new XAttribute("Name", "ClassName"), new XAttribute("Value", type.FullName!)),
+            new XElement(ns + "Relationship", new XAttribute("Name", "Assembly"),
+                new XElement(ns + "Entry",
+                    new XElement(ns + "References", new XAttribute("Name", $"[{realAssemblyName}]"))
                 )
-            )
-        );
-
-    public XElement Return(ParameterInfo returnInfo, bool isFunction) =>
-        new XElement(ns + "Relationship", new XAttribute("Name", isFunction ? "Type" : "ReturnType"),
-            new XElement(ns + "Entry",
-               TypeSpecifier(returnInfo)
-            )
+            ),
+            Methods(assembly, realAssemblyName, type),
+            Schema(name)
         );
 
     public IEnumerable<XElement> Functions(Assembly assembly, string realAssemblyName) =>
         from functionClasses in assembly.GetTypes().Where(t => t.IsAbstract)
         from function in functionClasses.GetMethods(BindingFlags.Static | BindingFlags.Public)
-        let attrib = function.GetCustomAttributes<SqlFunctionAttribute>().FirstOrDefault()
-        where attrib != null
-        orderby attrib.Name
+        let attrData = CustomAttributeData.GetCustomAttributes(function)
+            .FirstOrDefault(a => a.AttributeType.FullName == "Microsoft.SqlServer.Server.SqlFunctionAttribute")
+        where attrData != null
+        let functionName = GetAttributeName(attrData) ?? throw new NotSupportedException($"SqlFunction on {functionClasses.FullName}.{function.Name} must have a Name")
+        let isDeterministic = GetNamedArgument<bool>(attrData, "IsDeterministic")
+        let isPrecise = GetNamedArgument<bool>(attrData, "IsPrecise")
+        orderby functionName
         select new XElement(ns + "Element",
-            new XAttribute("Type", function.ReturnType.IsAssignableTo(typeof(IEnumerable)) ? throw new NotSupportedException($"{function.ReturnType}") : "SqlScalarFunction"),
-            new XAttribute("Name", GetName(attrib) ?? throw new NotSupportedException()),
+            new XAttribute("Type", function.ReturnType.IsAssignableTo(typeof(IEnumerable))
+                ? throw new NotSupportedException($"Table-valued functions not supported: {function.ReturnType}")
+                : "SqlScalarFunction"),
+            new XAttribute("Name", functionName),
             new XElement(ns + "Property", new XAttribute("Name", "IsAnsiNullsOn")),
             new XElement(ns + "Property", new XAttribute("Name", "IsQuotedIdentifierOn")),
             new XElement(ns + "Relationship", new XAttribute("Name", "FunctionBody"),
                 new XElement(ns + "Entry",
                     new XElement(ns + "Element", new XAttribute("Type", "SqlClrFunctionImplementation"),
-                        new XElement(ns + "Property", new XAttribute("Name", "IsDeterministic"), new XAttribute("Value", attrib.IsDeterministic ? "True" : "False")),
-                        new XElement(ns + "Property", new XAttribute("Name", "IsPrecise"), new XAttribute("Value", attrib.IsPrecise ? "True" : "False")),
+                        new XElement(ns + "Property", new XAttribute("Name", "IsDeterministic"), new XAttribute("Value", isDeterministic ? "True" : "False")),
+                        new XElement(ns + "Property", new XAttribute("Name", "IsPrecise"), new XAttribute("Value", isPrecise ? "True" : "False")),
                         new XElement(ns + "Property", new XAttribute("Name", "MethodName"), new XAttribute("Value", function.Name)),
-                        new XElement(ns + "Property", new XAttribute("Name", "ClassName"), MakeAttribute("Value", functionClasses.FullName)),
+                        new XElement(ns + "Property", new XAttribute("Name", "ClassName"), new XAttribute("Value", functionClasses.FullName!)),
                         new XElement(ns + "Relationship", new XAttribute("Name", "Assembly"),
                             new XElement(ns + "Entry",
                                 new XElement(ns + "References", new XAttribute("Name", $"[{realAssemblyName}]"))
@@ -432,51 +329,88 @@ END
                 )
             ),
             FunctionParameters(function.GetParameters()),
-            Schema(function),
+            Schema(functionName),
             Return(function.ReturnParameter, isFunction: true)
         );
-
-    public IEnumerable<XElement> UserDefinedTypes(Assembly assembly, string realAssemblyName) =>
-        from type in assembly.GetTypes()
-        let attrib = type.GetCustomAttributes<SqlUserDefinedTypeAttribute>().FirstOrDefault()
-        where attrib != null
-        select new XElement(ns + "Element", new XAttribute("Type", "SqlUserDefinedType"), new XAttribute("Name", GetName(attrib) ?? throw new NotSupportedException()),
-           new XElement(ns + "Property", new XAttribute("Name", "Format"), new XAttribute("Value", (int)attrib.Format)),
-           new XElement(ns + "Property", new XAttribute("Name", "MaxByteSize"), new XAttribute("Value", attrib.MaxByteSize)),
-           new XElement(ns + "Property", new XAttribute("Name", "IsByteOrdered"), new XAttribute("Value", attrib.IsByteOrdered ? "True" : "False")),
-           new XElement(ns + "Property", new XAttribute("Name", "ClassName"), MakeAttribute("Value", type.FullName)),
-           new XElement(ns + "Relationship", new XAttribute("Name", "Assembly"),
-               new XElement(ns + "Entry",
-                   new XElement(ns + "References", new XAttribute("Name", $"[{realAssemblyName}]")
-                   )
-               )
-           ),
-           Methods(assembly, realAssemblyName, type),
-           Schema(type)
-       );
 
     public XElement Methods(Assembly assembly, string realAssemblyName, Type sqlClrType) =>
         new XElement(ns + "Relationship", new XAttribute("Name", "Methods"),
             from function in sqlClrType.GetMethods(BindingFlags.Instance | BindingFlags.Public)
-            let attrib = function.GetCustomAttributes<SqlFunctionAttribute>().FirstOrDefault()
-            where attrib != null
+            let attrData = CustomAttributeData.GetCustomAttributes(function)
+                .FirstOrDefault(a => a.AttributeType.FullName == "Microsoft.SqlServer.Server.SqlFunctionAttribute")
+            where attrData != null
+            let functionName = GetName(function) ?? throw new NotSupportedException($"Method {function.Name} on {sqlClrType.FullName} must have a Name")
             select new XElement(ns + "Entry",
                 new XElement(ns + "Element",
-                    new XAttribute("Type", "SqlClrMethod"), new XAttribute("Name", $"{GetName(sqlClrType)}.[{GetName(function)}]"),
-                    new XElement(ns + "Property", new XAttribute("Name", "ClrName"), new XAttribute("Value", GetName(function) ?? throw new NotSupportedException())),
+                    new XAttribute("Type", "SqlClrMethod"),
+                    new XAttribute("Name", $"{GetName(sqlClrType)}.[{functionName}]"),
+                    new XElement(ns + "Property",
+                        new XAttribute("Name", "ClrName"),
+                        new XAttribute("Value", functionName)),
                     MethodParameters(function.GetParameters()),
                     Return(function.ReturnParameter, isFunction: false)
                 )
             )
         );
 
-    public XElement? MethodParameters(IEnumerable<ParameterInfo> parameters) =>
-        parameters.FirstOrDefault() == null ? null :
+    public IEnumerable<XElement> Files(string realAssemblyName, string assemblyFile, string? pdbFile)
+    {
+        if (File.Exists(assemblyFile))
+        {
+            yield return new XElement(ns + "Element",
+                new XAttribute("Type", "SqlAssembly"),
+                new XAttribute("Name", $"[{realAssemblyName}]"),
+                new XElement(ns + "Relationship", new XAttribute("Name", "AssemblySources"),
+                    new XElement(ns + "Entry",
+                        new XElement(ns + "Element", new XAttribute("Type", "SqlAssemblySource"),
+                            new XElement(ns + "Property", new XAttribute("Name", "Source"),
+                                new XElement(ns + "Value",
+                                    new XCData($"0x{GetHexContent(assemblyFile)}")
+                                )
+                            )
+                        )
+                    )
+                ),
+                new XElement(ns + "Relationship", new XAttribute("Name", "Authorizer"),
+                    new XElement(ns + "Entry",
+                        new XElement(ns + "References",
+                            new XAttribute("ExternalSource", "BuiltIns"),
+                            new XAttribute("Name", "[dbo]"))
+                    )
+                )
+            );
+        }
+
+        if (!string.IsNullOrWhiteSpace(pdbFile) && File.Exists(pdbFile))
+        {
+            yield return new XElement(ns + "Element",
+                new XAttribute("Type", "SqlAssemblyFile"),
+                new XAttribute("Name", $"[{realAssemblyName}].[{Path.GetFileName(pdbFile)}]"),
+                new XElement(ns + "Property", new XAttribute("Name", "Source"),
+                    new XElement(ns + "Value",
+                        new XCData($"0x{GetHexContent(pdbFile)}")
+                    )
+                ),
+                new XElement(ns + "Relationship", new XAttribute("Name", "Assembly"),
+                    new XElement(ns + "Entry",
+                        new XElement(ns + "References", new XAttribute("Name", $"[{realAssemblyName}]"))
+                    )
+                )
+            );
+        }
+    }
+
+    #endregion
+
+    #region Parameter and Type Handling
+
+    public XElement FunctionParameters(IEnumerable<ParameterInfo> parameters) =>
         new XElement(ns + "Relationship", new XAttribute("Name", "Parameters"),
             from parameter in parameters
             select new XElement(ns + "Entry",
-                new XElement(ns + "Element", new XAttribute("Type", "SqlClrMethodParameter"), new XAttribute("Name", $"{GetName(parameter.Member.DeclaringType)}.[{GetName(parameter.Member)}].[{parameter.Name}]"),
-                    new XElement(ns + "Property", new XAttribute("Name", "ClrName"), MakeAttribute("Value", parameter.Name)),
+                new XElement(ns + "Element",
+                    new XAttribute("Type", "SqlSubroutineParameter"),
+                    new XAttribute("Name", GetName(parameter) ?? throw new NotSupportedException()),
                     new XElement(ns + "Relationship", new XAttribute("Name", "Type"),
                         new XElement(ns + "Entry",
                             TypeSpecifier(parameter)
@@ -486,77 +420,294 @@ END
             )
         );
 
+    public XElement? MethodParameters(IEnumerable<ParameterInfo> parameters)
+    {
+        var paramArray = parameters.ToArray();
+        if (paramArray.Length == 0)
+            return null;
+
+        return new XElement(ns + "Relationship", new XAttribute("Name", "Parameters"),
+            from parameter in paramArray
+            select new XElement(ns + "Entry",
+                new XElement(ns + "Element",
+                    new XAttribute("Type", "SqlClrMethodParameter"),
+                    new XAttribute("Name", $"{GetName(parameter.Member.DeclaringType)}.[{GetName(parameter.Member)}].[{parameter.Name}]"),
+                    new XElement(ns + "Property",
+                        new XAttribute("Name", "ClrName"),
+                        new XAttribute("Value", parameter.Name!)),
+                    new XElement(ns + "Relationship", new XAttribute("Name", "Type"),
+                        new XElement(ns + "Entry",
+                            TypeSpecifier(parameter)
+                        )
+                    )
+                )
+            )
+        );
+    }
+
+    public XElement Return(ParameterInfo returnInfo, bool isFunction) =>
+        new XElement(ns + "Relationship",
+            new XAttribute("Name", isFunction ? "Type" : "ReturnType"),
+            new XElement(ns + "Entry",
+                TypeSpecifier(returnInfo)
+            )
+        );
+
     public XElement TypeSpecifier(ParameterInfo parameterInfo) =>
         new XElement(ns + "Element", new XAttribute("Type", "SqlTypeSpecifier"),
             Properties(parameterInfo),
             new XElement(ns + "Relationship", new XAttribute("Name", "Type"),
                 new XElement(ns + "Entry",
-                    new XElement(ns + "References", ExternalSource(parameterInfo.ParameterType), MakeAttribute("Name", GetName(parameterInfo.ParameterType)))
+                    new XElement(ns + "References",
+                        ExternalSource(parameterInfo.ParameterType),
+                        new XAttribute("Name", GetName(parameterInfo.ParameterType) ?? throw new NotSupportedException())
+                    )
                 )
             )
         );
 
-    private static readonly IReadOnlyList<Type> _isMax = [typeof(SqlString), typeof(string), typeof(byte[]), typeof(char[])];
-
-    private static readonly IReadOnlyList<Type> _doubles = [typeof(SqlDouble), typeof(double), typeof(double?)];
-
-    public IEnumerable<XElement> Properties(ParameterInfo parameterInfo) => PropertiesInternal(parameterInfo).Where(i => i != null).Select(i => i!);
-
-    private IEnumerable<XElement?> PropertiesInternal(ParameterInfo parameterInfo)
+    public IEnumerable<XElement> Properties(ParameterInfo parameterInfo)
     {
-        yield return _isMax.Contains(parameterInfo.ParameterType) ?
-            new XElement(ns + "Property", new XAttribute("Name", "IsMax"), new XAttribute("Value", "True")) :
-            null;
-        yield return _doubles.Contains(parameterInfo.ParameterType) ?
-            new XElement(ns + "Property", new XAttribute("Name", "Precision"), new XAttribute("Value", "53")) :
-            null;
-    }
+        var fullName = parameterInfo.ParameterType.FullName;
 
-    public IEnumerable<XElement> Files(string realAssemblyName, string assemblyFile, string? pdbFile)
-    {
-        if (File.Exists(assemblyFile))
+        // IsMax for string/binary types
+        if (_isMax.Contains(fullName))
         {
-            yield return new XElement(ns + "Element", new XAttribute("Type", "SqlAssembly"), new XAttribute("Name", $"[{realAssemblyName}]"),
-                    new XElement(ns + "Relationship", new XAttribute("Name", "AssemblySources"),
-                        new XElement(ns + "Entry",
-                            new XElement(ns + "Element", new XAttribute("Type", "SqlAssemblySource"),
-                                new XElement(ns + "Property", new XAttribute("Name", "Source"),
-                                    new XElement(ns + "Value",
-                                        new XCData($"0x{GetHexContext(assemblyFile)}")
-                                    )
-                                )
-                            )
-                        )
-                    ),
-                    new XElement(ns + "Relationship", new XAttribute("Name", "Authorizer"),
-                        new XElement(ns + "Entry",
-                            new XElement(ns + "References", new XAttribute("ExternalSource", "BuiltIns"), new XAttribute("Name", "[dbo]"))
-                        )
-                    )
-                );
+            yield return new XElement(ns + "Property",
+                new XAttribute("Name", "IsMax"),
+                new XAttribute("Value", "True"));
         }
-        if (!string.IsNullOrWhiteSpace(pdbFile) && File.Exists(pdbFile))
+
+        // Precision for doubles
+        if (_doubles.Contains(fullName))
         {
-            yield return new XElement(ns + "Element", new XAttribute("Type", "SqlAssemblyFile"), new XAttribute("Name", $"[{realAssemblyName}].[{Path.GetFileName(pdbFile)}]"),
-                    new XElement(ns + "Property", new XAttribute("Name", "Source"),
-                        new XElement(ns + "Value",
-                            new XCData($"0x{GetHexContext(assemblyFile)}"
-                            )
-                        )
-                    ),
-                    new XElement(ns + "Relationship", new XAttribute("Name", "Assembly"),
-                        new XElement(ns + "Entry",
-                            new XElement(ns + "References", new XAttribute("Name", $"[{realAssemblyName}]"))
-                        )
-                    )
-                );
+            yield return new XElement(ns + "Property",
+                new XAttribute("Name", "Precision"),
+                new XAttribute("Value", "53"));
         }
     }
 
-    public string? GetHexContext(string file) => BitConverter.ToString(File.ReadAllBytes(file)).Replace("-", "");
+    #endregion
 
-    public string GetSha256(string file) => GetSha256(File.ReadAllBytes(file));
-    public string GetSha256(byte[] content) => BitConverter.ToString(SHA256.HashData(content)).Replace("-", "");
-    public string GetSha512(string file) => GetSha512(File.ReadAllBytes(file));
-    public string GetSha512(byte[] content) => BitConverter.ToString(SHA512.HashData(content)).Replace("-", "");
+    #region Schema and Naming
+
+    private IEnumerable<XElement> CollectSchema(XElement dataSchemaModel) =>
+        from schema in dataSchemaModel.Descendants(ns + "Relationship")
+            .Where(x => (string?)x.Attribute("Name") == "Schema")
+            .SelectMany(x => x.Descendants(ns + "References"))
+            .Select(x => (string?)x.Attribute("Name"))
+            .Distinct()
+        select new XElement(ns + "Element",
+            new XAttribute("Type", "SqlSchema"),
+            new XAttribute("Name", schema!),
+            new XElement(ns + "Relationship", new XAttribute("Name", "Authorizer"),
+                new XElement(ns + "Entry",
+                    new XElement(ns + "References",
+                        new XAttribute("ExternalSource", "BuiltIns"),
+                        new XAttribute("Name", "[dbo]"))
+                )
+            )
+        );
+    public XElement Schema(object input)
+    {
+        if (input is not string fullName)
+            fullName = GetName(input) ?? throw new NotSupportedException();
+
+        // Extract schema name: [embedding].[Centroid] -> [embedding]
+        var schemaName = fullName.Contains('.')
+            ? fullName.Substring(0, fullName.LastIndexOf('.'))
+            : "[dbo]";
+
+        return new XElement(ns + "Relationship", new XAttribute("Name", "Schema"),
+            new XElement(ns + "Entry",
+                new XElement(ns + "References",
+                    new XAttribute("Name", schemaName)
+                )
+            )
+        );
+    }
+
+    public string? GetName(object? input) =>
+        input switch
+        {
+            ParameterInfo parameter => $"{GetName(parameter.Member) ?? GetName(parameter.Member.DeclaringType)}.[@{parameter.Name}]",
+            Type type => GetTypeName(type),
+            MethodInfo method => GetMethodName(method),
+            _ => null
+        };
+
+    private string? GetMethodName(MethodInfo method)
+    {
+        var attrData = CustomAttributeData.GetCustomAttributes(method)
+            .FirstOrDefault(a => a.AttributeType.FullName == "Microsoft.SqlServer.Server.SqlFunctionAttribute");
+
+        if (attrData != null)
+        {
+            var name = GetAttributeName(attrData);
+            if (!string.IsNullOrWhiteSpace(name))
+                return name;
+        }
+
+        return method.Name;
+    }
+
+    private string? GetTypeName(Type type)
+    {
+        // Check for SQL CLR attributes first
+        var aggregateAttr = CustomAttributeData.GetCustomAttributes(type)
+            .FirstOrDefault(a => a.AttributeType.FullName == "Microsoft.SqlServer.Server.SqlUserDefinedAggregateAttribute");
+        if (aggregateAttr != null)
+        {
+            var name = GetAttributeName(aggregateAttr);
+            if (!string.IsNullOrWhiteSpace(name))
+                return name;
+        }
+
+        var typeAttr = CustomAttributeData.GetCustomAttributes(type)
+            .FirstOrDefault(a => a.AttributeType.FullName == "Microsoft.SqlServer.Server.SqlUserDefinedTypeAttribute");
+        if (typeAttr != null)
+        {
+            var name = GetAttributeName(typeAttr);
+            if (!string.IsNullOrWhiteSpace(name))
+                return name;
+        }
+
+        // Check type mapping dictionary
+        var mappedName = GetTypeNameFromDictionary(type);
+        if (!string.IsNullOrWhiteSpace(mappedName))
+            return mappedName;
+
+        // Default to full type name
+        return $"[{type.FullName}]";
+    }
+
+    #endregion
+
+    #region Attribute Helpers
+
+    private static T? GetNamedArgument<T>(CustomAttributeData attrData, string name)
+    {
+        var arg = attrData.NamedArguments.FirstOrDefault(a => a.MemberName == name);
+        return arg.TypedValue.Value != null ? (T)arg.TypedValue.Value : default;
+    }
+
+    private static string? GetAttributeName(CustomAttributeData attrData)
+    {
+        // Try named argument
+        var nameArg = attrData.NamedArguments.FirstOrDefault(a => a.MemberName == "Name");
+        if (nameArg.MemberName != null)
+            return nameArg.TypedValue.Value?.ToString();
+
+        // Try constructor argument
+        if (attrData.ConstructorArguments.Count > 0)
+            return attrData.ConstructorArguments[0].Value?.ToString();
+
+        return null;
+    }
+
+    #endregion
+
+    #region Type Mapping
+
+    private static readonly IReadOnlyDictionary<string, string> _typeName = new Dictionary<string, string>
+    {
+        { "System.Data.SqlTypes.SqlByte", "[tinyint]" },
+        { "System.Data.SqlTypes.SqlInt16", "[smallint]" },
+        { "System.Data.SqlTypes.SqlInt32", "[int]" },
+        { "System.Data.SqlTypes.SqlInt64", "[bigint]" },
+        { "System.Data.SqlTypes.SqlBytes", "[varbinary]" },
+        { "System.Data.SqlTypes.SqlBinary", "[varbinary]" },
+        { "System.Data.SqlTypes.SqlBoolean", "[bit]" },
+        { "System.Data.SqlTypes.SqlDateTime", "[datetime2]" },
+        { "System.Data.SqlTypes.SqlDecimal", "[decimal(29,4)]" },
+        { "System.Data.SqlTypes.SqlDouble", "[float]" },
+        { "System.Data.SqlTypes.SqlSingle", "[real]" },
+        { "System.Data.SqlTypes.SqlString", "[nvarchar]" },
+        { "System.Data.SqlTypes.SqlXml", "[xml]" },
+        { "System.Data.SqlTypes.SqlChars", "[nvarchar]" },
+        { "System.Data.SqlTypes.SqlGuid", "[uniqueidentifier]" },
+        { "Microsoft.SqlServer.Types.SqlGeography", "[geography]" },
+        { "Microsoft.SqlServer.Types.SqlHierarchyId", "[hierarchyid]" },
+        { "Microsoft.SqlServer.Types.SqlGeometry", "[geometry]" },
+        { "System.Char", "[nchar(1)]" },
+        { "System.SByte", "[smallint]" },
+        { "System.Byte", "[tinyint]" },
+        { "System.Int16", "[smallint]" },
+        { "System.Int32", "[int]" },
+        { "System.Int64", "[bigint]" },
+        { "System.UInt16", "[int]" },
+        { "System.UInt32", "[bigint]" },
+        { "System.UInt64", "[decimal(20)]" },
+        { "System.Decimal", "[decimal(29,4)]" },
+        { "System.Single", "[real]" },
+        { "System.Double", "[float]" },
+        { "System.DateTime", "[datetime2]" },
+        { "System.DateTimeOffset", "[datetimeoffset]" },
+        { "System.TimeSpan", "[time]" },
+        { "System.Guid", "[uniqueidentifier]" },
+        { "System.String", "[nvarchar]" },
+        { "System.Object", "[sql_variant]" },
+    };
+
+    private static readonly HashSet<string> _isMax = new()
+    {
+        "System.Data.SqlTypes.SqlString",
+        "System.String",
+        "System.Byte[]",
+        "System.Char[]"
+    };
+
+    private static readonly HashSet<string> _doubles = new()
+    {
+        "System.Data.SqlTypes.SqlDouble",
+        "System.Double"
+    };
+
+    private string? GetTypeNameFromDictionary(Type type)
+    {
+        // Handle nullable types
+        var underlyingType = Nullable.GetUnderlyingType(type);
+        var lookupType = underlyingType ?? type;
+
+        // Handle arrays
+        if (lookupType.IsArray)
+        {
+            var elementType = lookupType.GetElementType();
+            if (elementType?.FullName == "System.Char")
+                return "[nvarchar]";
+            if (elementType?.FullName == "System.Byte")
+                return "[varbinary]";
+        }
+
+        return _typeName.GetValueOrDefault(lookupType.FullName ?? "");
+    }
+
+    private XAttribute? ExternalSource(Type type)
+    {
+        var fullName = type.FullName;
+        if (fullName != null && _typeName.ContainsKey(fullName))
+            return new XAttribute("ExternalSource", "BuiltIns");
+        return null;
+    }
+
+    #endregion
+
+    #region Utility Methods
+
+    public string? GetHexContent(string file) =>
+        BitConverter.ToString(File.ReadAllBytes(file)).Replace("-", "");
+
+    public string GetSha256(string file) =>
+        GetSha256(File.ReadAllBytes(file));
+
+    public string GetSha256(byte[] content) =>
+        BitConverter.ToString(SHA256.HashData(content)).Replace("-", "");
+
+    public string GetSha512(string file) =>
+        GetSha512(File.ReadAllBytes(file));
+
+    public string GetSha512(byte[] content) =>
+        BitConverter.ToString(SHA512.HashData(content)).Replace("-", "");
+
+    #endregion
 }

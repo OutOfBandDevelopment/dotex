@@ -14,8 +14,7 @@ public class DacPacBuilderTests
         var logger = new LoggerFactory().CreateLogger<DacPacBuilder>();
         var builder = new DacPacBuilder(logger);
         builder.BuildDacPac(
-            assemblyFileFramework: @"C:\Repos\oobdev\dotex\src\Extensions\OoBDev.Data.Vectors\bin\Debug\net481\OoBDev.Data.Vectors.dll",
-            assemblyFileNet: @"C:\Repos\oobdev\dotex\src\Extensions\OoBDev.Data.Vectors\bin\Debug\netstandard2.0\OoBDev.Data.Vectors.dll"
+            assemblyFileFramework: @"C:\Repos\oobdev\dotex\src\Extensions\OoBDev.Data.Vectors\bin\Debug\net481\OoBDev.Data.Vectors.dll"
             //assemblyPdbFramework: @"C:\Repos\oobdev\dotex\src\Extensions\OoBDev.Data.Vectors\bin\Debug\net481\OoBDev.Data.Vectors.pdb",
             //dacpacFile: @"C:\Repos\oobdev\dotex\src\Extensions\OoBDev.Data.Vectors\bin\Debug\netstandard2.0\OoBDev.Data.Vectors.dacpac",
             //projectName: "OoBDev.Data.Vectors",

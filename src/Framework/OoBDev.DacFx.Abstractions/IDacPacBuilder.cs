@@ -11,13 +11,13 @@ public interface IDacPacBuilder
     IEnumerable<XElement> Aggregates(Assembly assembly, string realAssemblyName);
     XElement BuildContentType();
     XElement BuildDacMetadata(string projectName, string versionNumber);
-    void BuildDacPac(string assemblyFileFramework, string assemblyFileNet, string? assemblyPdbFramework = null, string? dacpacFile = null, string? projectName = null, string? projectVersion = null);
+    void BuildDacPac(string assemblyFileFramework, string? assemblyPdbFramework = null, string? dacpacFile = null, string? projectName = null, string? projectVersion = null);
     XElement BuildModel(Assembly assembly, string assemblyFile, string? pdbFile);
     XElement BuildOrigin(string modelHash);
     IEnumerable<XElement> Files(string realAssemblyName, string assemblyFile, string? pdbFile);
     XElement FunctionParameters(IEnumerable<ParameterInfo> parameters);
     IEnumerable<XElement> Functions(Assembly assembly, string realAssemblyName);
-    string? GetHexContext(string file);
+    string? GetHexContent(string file);
     string? GetName(object? input);
     string GetSha256(byte[] content);
     string GetSha256(string file);

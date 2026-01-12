@@ -26,10 +26,6 @@ public class DacPacBuilderEngineOptions
     [CommandParameter(Value = "pdb")]
     public string? AssemblyPdbFramework { get; set; }
 
-
-    [CommandParameter(Value = "dotnet")]
-    public required string AssemblyFileNet { get; set; }
-
     [CommandParameter(Value = "sqlclr")]
     public required string AssemblyFileFramework { get; set; }
 }
