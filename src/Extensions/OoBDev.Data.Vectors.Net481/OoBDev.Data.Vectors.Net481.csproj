@@ -31,7 +31,9 @@
 
   <Target Name="BuildDacPacTool" BeforeTargets="GenerateDacPac">
     <Message Text="Building DacPacCompiler.Cli tool..." Importance="High" />
-    <MSBuild Projects="$(DacPacToolProject)" Targets="Build" />
+    <MSBuild Projects="$(DacPacToolProject)"
+             Targets="Build"
+             Properties="TargetFramework=net9.0" />
   </Target>
 
   <ItemGroup>
