@@ -383,3 +383,6 @@ FodyWeavers.xsd
 .sonarqube/
 *.prompt.md
 /old/OoBDev.DacPacCompiler.Cli
+
+*.pdf
+*_tmp.html
