@@ -175,8 +175,91 @@ This document tracks architectural work, migration planning, and bug fixes for t
 
 **Outcome:** Comparison complete. **Ready to migrate Vector math library.**
 
+### Migration Analysis - Incomming/BotChat (INVESTIGATION COMPLETE)
+- [x] Deep analysis of `Incomming/BotChat` structure and features
+- [x] Created `docs/migration/botchat-feature-mapping.md` - Comprehensive feature analysis
+- [x] Created `docs/migration/botchat-migration-plan.md` - Migration options (Archive/Enhance/Extract)
+- [x] Compared against existing OoBDev.Ollama library
+
+### Incomming/BotChat Investigation Results (COMPLETE)
+- [x] **Discovery:**
+  - [x] Classification: **Sample/Demo Application** (not a library)
+  - [x] 12 C# files, ~393 LOC console application
+  - [x] Demonstrates Microsoft SemanticKernel + Ollama integration
+  - [x] Uses older SemanticKernel version (1.32.0 vs main's 1.40.0-alpha)
+- [x] **Analysis:**
+  - [x] Interactive chat loop with conversation history
+  - [x] GenericRunnerHost<T> pattern (reusable background service host)
+  - [x] API key support for Ollama (missing in main OoBDev.Ollama)
+  - [x] Fluent configuration with IConfiguration binding
+- [x] **Comparison:**
+  - [x] BotChat is sample/demo, OoBDev.Ollama is production library
+  - [x] BotChat demonstrates usage patterns
+  - [x] Main codebase has newer SemanticKernel integration
+- [x] **Decision Options:**
+  - Option 1: ARCHIVE with comprehensive README (recommended)
+  - Option 2: ENHANCE as official demo/sample project
+  - Option 3: EXTRACT patterns only (RunnerHost<T>, API key support)
+
+**RECOMMENDATION: Option 1 (Archive)** - Create comprehensive README documenting the sample, its purpose, and relationship to OoBDev.Ollama. Keep as reference for developers learning SemanticKernel integration.
+
+**Outcome:** Investigation complete. **Awaiting decision on which option to execute.**
+
+### Migration Analysis - Incomming/SharedFramework (INVESTIGATION COMPLETE)
+- [x] Deep analysis of `Incomming/SharedFramework` structure and features (52 projects)
+- [x] Created `docs/migration/sharedframework-feature-mapping.md` - Comprehensive 52-project analysis
+- [x] Created `docs/migration/sharedframework-migration-plan.md` - 12-phase migration plan
+- [x] Compared all projects against main OoBDev codebase
+
+### Incomming/SharedFramework Investigation Results (COMPLETE)
+- [x] **Discovery:**
+  - [x] Classification: **Production Framework Library** (52 projects total)
+  - [x] 34 implementation projects + 18 test projects
+  - [x] ~28,582 LOC across all projects
+  - [x] 11 major categories of external service integrations
+  - [x] Multi-targets .NET 8.0 (requires upgrade to .NET 9.0)
+- [x] **Analysis:**
+  - [x] **24 projects (71%)** - NEW capabilities not in main codebase (~9,000+ LOC)
+  - [x] **10 projects (29%)** - ENHANCED versions of existing frameworks (DIFFERS status)
+  - [x] **0 projects (0%)** - IDENTICAL to main codebase
+- [x] **Categories:**
+  - [x] Message Queueing (4 projects) - AWS SQS, Azure Service Bus
+  - [x] Communications (6 projects) - CRITICAL: Main has 16 LOC stub, SF has 1,145 LOC (71x larger!)
+  - [x] Spatial Services (7 projects) - Census, Google Maps, Bing Maps geocoding
+  - [x] Complex Events (5 projects) - Event sourcing, CQRS, Azure EventHub
+  - [x] Data Loading (4 projects) - CSV/JSON ETL pipeline with CLI
+  - [x] Code Generation (4 projects) - Attribute-driven test data generation
+  - [x] Document Management (3 projects) - Enhanced document contracts
+  - [x] Distributed Caching (7 projects) - Redis provider
+  - [x] Identity & Session (3 projects) - Enhanced identity management
+  - [x] Text Templating (3 projects) - Unified templating
+  - [x] Accounting (1 project) - Domain-specific (evaluate usefulness)
+- [x] **Migration Plan:**
+  - [x] Phase 0: Framework upgrades (.NET 9.0, namespace cleanup)
+  - [x] Phases 1-11: Categorized migrations by priority (CRITICAL, HIGH, MEDIUM, LOW)
+  - [x] Phase 12: Final integration and testing
+  - [x] All 380+ migration tasks added to TODO.md below
+
+**COMPLEXITY:** VERY HIGH - 52 projects requiring careful integration, critical merges, and .NET 9.0 upgrades.
+
+**CRITICAL FINDING:** OoBDev.Communications in main codebase is a 16 LOC stub. SharedFramework has full 1,145 LOC implementation with Twilio SendGrid and SMS providers. This is a critical capability gap that must be merged.
+
+**RECOMMENDATION:** Execute 12-phase migration plan. Prioritize Phase 2 (Communications merge) as CRITICAL.
+
+**Outcome:** Investigation complete. Migration plan ready. **All tasks added to TODO.md.**
+
+### Incomming Project Tracking
+- [x] Created `Incomming/CHECKLIST.md` - Master tracking document for all 9 Incomming projects
+- [x] Updated protocol v1.0 → v1.1 with checklist management, project type classifications, and TODO.md integration
+
 ### Protocols
-- [x] Created `.claude/protocols/software/incoming-codebase-comparison.md`
+- [x] Created `.claude/protocols/software/incoming-codebase-comparison.md` (v1.0)
+- [x] Updated `.claude/protocols/software/incoming-codebase-comparison.md` to v1.1:
+  - [x] Added project type classifications (6 types)
+  - [x] Added Step 1.5: Update Checklist (register investigation start)
+  - [x] Added Step 5.5: Add Migration Tasks to TODO.md
+  - [x] Added Step 13: Update Checklist - Investigation Complete
+  - [x] Added Example 2: Sample Application (BotChat)
 - [x] Updated `.claude/protocols/software/README.md` with new protocol
 
 ### CI/CD

@@ -1,6 +1,6 @@
 # OoBDev (dotex) Framework - Claude Development Guide
 
-**Last Updated:** 2026-01-12
+**Last Updated:** 2026-01-13
 **Framework:** OoBDev (dotex) - Enterprise .NET Library Suite
 **Target:** .NET 9.0
 
@@ -49,7 +49,8 @@ Located in `.claude/protocols/`:
 
 #### Software Analysis
 - **architectural-analysis.md** - Systematic architecture documentation
-- **incoming-codebase-comparison.md** - Compare incoming code with main codebase
+- **incoming-codebase-comparison.md** (v1.1) - Compare incoming code with main codebase
+  - Updated with project type classifications, checklist management, and TODO.md integration
 - **security-audit.md** - API security audit
 - **protocol-validation.md** - Protocol quality assurance
 
@@ -67,40 +68,39 @@ Located in `.claude/protocols/`:
 
 ### 3. Current Migration Work
 
+**Incomming Project Investigations** - 🔍 IN PROGRESS (5 of 9 complete)
+- ✅ dotnet-lib - Completed and deleted (95% identical to main)
+- ✅ Framework - Investigated (55 files, Phase 0 comparison required)
+- ✅ Oobtainium - Investigated (mocking framework, deletion recommended)
+- ✅ BotChat - Investigated (sample app, awaiting decision)
+- ✅ SharedFramework - Investigated (52 projects, migration plan ready)
+- ⏱️ BinaryDecoders - Investigated (awaiting critical decisions)
+- ⏳ CloudOrchestrator - Not yet started
+- ⏳ ContractParser - Not yet started
+- ⏳ Tools - Not yet started
+
+**Tracking:** See `Incomming/CHECKLIST.md` for detailed status
+
+**BinaryDataDecoders Migration** - ⏸️ BLOCKED (Awaiting decisions)
+
 **Phase 0: Critical Bug Fixes** - ✅ COMPLETED
 - All 6 critical bugs fixed and tested
 - Build verification passed
 
-**Phase 1: Foundation Enhancement** - PENDING
+**Phase 1: Foundation Enhancement** - ⏸️ PENDING (Awaiting decisions)
 - Endianness support improvements
 - Utility enhancements
 - BinaryPrimitives expansion
 
-**Phase 2: Core Features** - PENDING
-- CodeAnalysis migration
-- ExpressionCalculator completion
-- Archive support (TAR/ZIP/CPIO)
+**Framework Vector Math Migration** - ✅ READY TO EXECUTE
+- Incomming/Framework Vector library analyzed
+- Migration plan created (HIGH priority)
+- Target: `src/Framework/OoBDev.System/Math/`
 
-**Phase 3: Protocols** - PENDING
-- NMEA GPS protocol
-- Drawing/graphics features
-
-**Phase 4: Specialized Domains** - PENDING
-- FileSystems (ISO 9660)
-- Classic Cryptography (educational)
-- Apple II retro computing
-- Hardware devices (8 specialized devices)
-- Windows Forms components
-- CLI tools
-
-**Phase 5: Finalization & Future Development** - PENDING
-- DeepZoom viewer controls (NEW - WPF and JavaScript/TypeScript implementations)
-- Cleanup and documentation
-- Final validation
-
-**Future Development (Post-Migration):**
-- WPF DeepZoom Viewer Control - Interactive pan/zoom/touch control for WPF applications
-- JavaScript/TypeScript DeepZoom Viewer - Web-based viewer library with React/Angular/Vue wrappers
+**SharedFramework Migration** - ✅ READY TO EXECUTE
+- 52 projects analyzed and categorized
+- 12-phase migration plan created
+- Critical: Communications merge (1,145 LOC vs 16 LOC stub)
 
 ---
 
@@ -263,6 +263,7 @@ OoBDev.{Layer}.{Feature}/
 - `/docs/architecture/` - Complete architecture documentation
 - `/docs/migration/` - Migration plans and feature mappings
 - `/TODO.md` - Current work tracking
+- `/Incomming/CHECKLIST.md` - Incomming project investigation status
 
 ### Configuration
 - `/src/GitVersion.yml` - Semantic versioning
