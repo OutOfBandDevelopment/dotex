@@ -21,8 +21,6 @@ This checklist tracks the investigation and migration status of all projects in 
 
 | Project | Status | Type | Files | LOC | Priority | Action Required |
 |---------|--------|------|-------|-----|----------|-----------------|
-| **dotnet-lib** | 🗑️ **DELETED** | Framework Library | 40 | ~8,000 | - | None - Successfully migrated |
-| **Framework** | 🔍 **INVESTIGATED** | Framework Library | 55 | ~2,054 | HIGH | Phase 0 systematic comparison |
 | **OoBDev.Oobtainium** | ⏸️ **PENDING** | Mocking Framework | 48 | ~1,578 | LOW | Choose Option 1-4 |
 | **BotChat** | 🔍 **INVESTIGATED** | Sample Application | 12 | ~393 | LOW | Migration decision needed |
 | **BinaryDecoders** | 🔍 **INVESTIGATED** | Massive Codebase | ~500 | ~50,000 | HIGH | Critical questions answered |
@@ -34,74 +32,6 @@ This checklist tracks the investigation and migration status of all projects in 
 ---
 
 ## Detailed Status
-
-### ✅ dotnet-lib (COMPLETE & DELETED)
-
-**Status:** 🗑️ **DELETED 2026-01-12**
-
-**Investigation Date:** 2026-01-11
-**Deletion Date:** 2026-01-12
-
-**Summary:**
-- 40 C# files compared with main codebase
-- Result: 38 files (95%) IDENTICAL to main
-- 2 files with differences:
-  - `AdditionalSwaggerGenEndpointsOptions.cs` - **Critical bug fixed** in main codebase
-  - `HealthCheckSwaggerGenEndpointOptions.cs` - Stylistic difference only
-
-**Outcome:**
-- Bug fix applied to main codebase
-- All valuable information extracted
-- Directory deleted successfully
-
-**Documentation:**
-- [Feature Mapping](../docs/migration/dotnet-lib-feature-mapping.md)
-- [Migration Plan](../docs/migration/dotnet-lib-migration-plan.md)
-- [Comparison Matrix](../docs/migration/dotnet-lib-comparison-matrix.md)
-
----
-
-### 🔍 Framework (INVESTIGATION COMPLETE)
-
-**Status:** 🔍 **INVESTIGATED** - Awaiting Phase 0 execution
-
-**Investigation Date:** 2026-01-12 - 2026-01-13
-
-**Summary:**
-- 3 projects: OoBDev.Common.Abstractions, OoBDev.Common, OoBDev.AspNetCore.Extensions
-- 55 implementation files (~2,054 LOC)
-- Comparison: 0 identical, 25 differs (45%), 30 new (55%)
-
-**Key Findings:**
-- Main `OoBDev.Common` is meta-package (aggregator)
-- Incomming has actual implementations
-- Branding issue: "EriskInternalDocumentFilter.cs" needs renaming
-- Vector math library analyzed separately (ready for migration)
-
-**Major Features Discovered:**
-1. ✅ Vector Math Library (5 files) - **Analysis complete, ready to migrate**
-2. SQL Database Mapper (1 file) - ORM-like stored procedure mapping
-3. Audit Logging System (5 files) - Request/response capture
-4. User & Application Access (5 files) - Multi-tenancy support
-5. Environment Settings (4 files) - Configuration patterns
-6. Swagger/OpenAPI Customizations (4 files)
-7. HTTP Extensions (2 files)
-8. JSON Serializer Wrapper (1 file)
-9. Validation Attributes (1 file)
-
-**Next Steps:**
-- [ ] Execute Phase 0: Systematic comparison of 25 DIFFERS files
-- [ ] Make namespace mapping decisions
-- [ ] Execute Phase 1: Migrate Vector Math Library to `OoBDev.System.Math`
-- [ ] Execute Phases 2-5 per migration plan
-
-**Documentation:**
-- [Feature Mapping](../docs/migration/framework-feature-mapping.md)
-- [Vector Comparison](../docs/migration/vector-comparison.md) - Detailed vector analysis
-
-**Migration Complexity:** HIGH
-
----
 
 ### ⏸️ OoBDev.Oobtainium (PENDING DECISION)
 
@@ -433,17 +363,12 @@ Execution Phase Complete: 1/9 (11%)
 
 ## Key Milestones
 
-- [x] 2026-01-11: dotnet-lib investigation complete
-- [x] 2026-01-12: dotnet-lib deleted (95% identical, bug fixed)
 - [x] 2026-01-12: Oobtainium investigation complete
-- [x] 2026-01-12: Framework investigation complete
 - [x] 2026-01-13: Vector comparison complete (Framework subset)
 - [x] 2026-01-13: BotChat investigation complete
 - [x] 2026-01-13: SharedFramework investigation complete (52 projects)
 - [ ] TBD: Oobtainium decision made
 - [ ] TBD: BotChat decision made
-- [ ] TBD: Framework Phase 0 complete
-- [ ] TBD: Vector Math migrated to OoBDev.System.Math
 - [ ] TBD: BinaryDecoders critical questions answered
 - [ ] TBD: All Incomming projects investigated
 - [ ] TBD: All Incomming projects migrated or decided
