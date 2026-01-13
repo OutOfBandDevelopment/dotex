@@ -1,7 +1,7 @@
 # Incoming Codebase Comparison Protocol
 
-**Version:** 1.0
-**Last Updated:** 2026-01-12
+**Version:** 1.1
+**Last Updated:** 2026-01-13
 **Purpose:** Standardized procedure for comparing incoming codebases with the main OoBDev framework to create comprehensive migration plans
 
 ---
@@ -29,6 +29,23 @@ All outputs follow OoBDev architectural standards and patterns.
 
 ---
 
+## Project Type Classifications
+
+Before starting, understand that incoming projects fall into these categories:
+
+| Type | Description | Migration Approach | Example |
+|------|-------------|-------------------|---------|
+| **Framework Library** | Reusable class libraries with abstractions/implementations | Full comparison and migration | dotnet-lib, Framework |
+| **Sample/Demo App** | Executable applications demonstrating usage | Archive or enhance as example | BotChat |
+| **Tool/CLI** | Command-line utilities or developer tools | Evaluate, enhance, or migrate | Tools/* |
+| **External Service** | Third-party service integrations | Migrate to ExternalServices layer | OoBDev.Ollama |
+| **Test Project** | Unit/integration test suites | Merge with main test projects | *.Tests |
+| **Obsolete/Deprecated** | Outdated platform-specific code | Document and archive or delete | Silverlight projects |
+
+**Key Decision:** Identify the project type early to determine the appropriate migration strategy.
+
+---
+
 ## Prerequisites
 
 - [ ] Access to incoming codebase directory
@@ -37,6 +54,7 @@ All outputs follow OoBDev architectural standards and patterns.
 - [ ] [Architectural Standards](../../docs/architecture/architectural-standards.md) reviewed
 - [ ] [Layering Architecture](../../docs/architecture/layering-architecture.md) reviewed
 - [ ] Write access to create documentation
+- [ ] Access to `Incomming/CHECKLIST.md` for tracking
 
 ---
 
@@ -67,11 +85,59 @@ find $INCOMING_DIR -name "*.sln"
 find $INCOMING_DIR -name "README.md" -o -name "*.md"
 ```
 
+**1.3: Determine Project Type**
+
+Based on quick inspection:
+- Check for OutputType in .csproj (Exe vs Library)
+- Check for Main/Program.cs (indicates executable)
+- Look at project naming (*.Tests, *.Cli, *.Abstractions, etc.)
+- Review purpose from README or comments
+
+Classify as: Framework Library, Sample/Demo App, Tool/CLI, External Service, Test Project, or Obsolete
+
 **Validation:**
 - [ ] Directory path confirmed
 - [ ] Project count estimated
 - [ ] Source file count estimated
 - [ ] Existing documentation identified
+- [ ] Project type classified
+
+---
+
+### Step 1.5: Update Checklist
+
+Register the project in the tracking checklist.
+
+**1.5.1: Update Incomming/CHECKLIST.md**
+
+- [ ] Add project to "Projects Status" table with status "🚧 IN PROGRESS"
+- [ ] Fill in known statistics (files, LOC estimates)
+- [ ] Set priority as TBD until investigation complete
+- [ ] Add to "Detailed Status" section with investigation start date
+
+**Example Entry:**
+```markdown
+### 🚧 {ProjectName} (IN PROGRESS)
+
+**Status:** 🚧 **IN PROGRESS** - Currently investigating
+
+**Investigation Date:** {today's date}
+
+**Summary:**
+- {Brief description}
+- {File count} files
+- Project type: {type}
+
+**Next Steps:**
+- [ ] Complete deep exploration
+- [ ] Create feature mapping
+- [ ] Create migration plan
+```
+
+**Validation:**
+- [ ] Project added to checklist
+- [ ] Status set to "IN PROGRESS"
+- [ ] Investigation date recorded
 
 ---
 
@@ -565,6 +631,179 @@ Typical phase structure:
 
 ---
 
+### Step 5.5: Add Migration Tasks to TODO.md
+
+Create actionable work items in the main TODO.md for tracking migration progress.
+
+**5.5.1: Add to Pending Work Section**
+
+Add a new section in `/TODO.md` under appropriate category:
+
+```markdown
+## {IncomingName} Migration Work
+
+**Status:** {STATUS EMOJI} {Description}
+
+**Complexity:** {LOW | MEDIUM | HIGH | VERY HIGH}
+
+**Documentation:**
+- [Feature Mapping](docs/migration/{name}-feature-mapping.md)
+- [Migration Plan](docs/migration/{name}-migration-plan.md)
+
+### Phase 0: {Name} (if critical bugs exist)
+
+**Priority:** CRITICAL
+
+- [ ] **0.1 {Bug/Issue Name}**
+  - [ ] {Specific fix step 1}
+  - [ ] {Specific fix step 2}
+  - [ ] Test fix
+  - [ ] Document change
+
+### Phase 1: {Name}
+
+**Status:** {Status description}
+
+- [ ] **1.1 {Task Name}**
+  - [ ] {Subtask 1}
+  - [ ] {Subtask 2}
+  - [ ] {Subtask 3}
+  - [ ] Test implementation
+  - [ ] Update documentation
+
+- [ ] **1.2 {Task Name}**
+  - [ ] {Subtask 1}
+  - [ ] {Subtask 2}
+
+[... Continue for all phases]
+
+### Phase {N}: {Name}
+
+**Status:** ⏸️ BLOCKED - {Blocking reason}
+
+- [ ] **{N.1} {Task Name}**
+  - [ ] {Subtask}
+```
+
+**For Different Project Types:**
+
+**Framework Library:**
+```markdown
+## {IncomingName} Migration Work
+
+**Status:** 🔍 INVESTIGATION COMPLETE - Ready for Phase 0
+
+**Complexity:** HIGH - {file count} files with mix of NEW and DIFFERS
+
+**Documentation:**
+- [Feature Mapping](...)
+- [Migration Plan](...)
+
+### Phase 0: Systematic File Comparison (REQUIRED FIRST)
+
+**Priority:** CRITICAL - Must complete before any migration
+
+- [ ] **0.1 Core Abstractions ({count} files)**
+  - [ ] Compare {file1}
+  - [ ] Compare {file2}
+  - [ ] Create comparison matrix
+
+### Phase 1: {High Priority Features}
+
+- [ ] **1.1 {Feature Name}**
+  - [ ] Create target directory
+  - [ ] Migrate files
+  - [ ] Update namespaces
+  - [ ] Add tests
+  - [ ] Update project references
+```
+
+**Sample/Demo Application:**
+```markdown
+## {IncomingName} Migration Work
+
+**Status:** ⏸️ PENDING DECISION - Choose migration approach
+
+**Complexity:** LOW - Sample application analysis
+
+**Documentation:**
+- [Feature Mapping](...)
+- [Migration Plan](...)
+
+**Decision Required - Choose ONE:**
+
+### Option 1: ARCHIVE as Reference
+
+- [ ] **Create Documentation**
+  - [ ] Create comprehensive README.md
+  - [ ] Add code comments
+  - [ ] Update Incomming/CHECKLIST.md
+
+### Option 2: ENHANCE as Official Demo
+
+- [ ] **Extract Reusable Patterns**
+  - [ ] Extract {Pattern1} to framework
+  - [ ] Extract {Pattern2} to framework
+
+- [ ] **Update Application**
+  - [ ] Update dependencies
+  - [ ] Polish UX
+  - [ ] Move to Tools/
+
+### Option 3: EXTRACT Patterns Only
+
+- [ ] **Extract {Pattern}**
+  - [ ] Create new project
+  - [ ] Migrate pattern
+  - [ ] Add tests
+
+- [ ] **Delete Source**
+  - [ ] Backup if desired
+  - [ ] Delete directory
+```
+
+**Tool/CLI:**
+```markdown
+## {IncomingName} Migration Work
+
+**Status:** 🔍 INVESTIGATION COMPLETE
+
+**Complexity:** MEDIUM
+
+**Decision Required:** Migrate to Tools/ or integrate into existing tools
+
+- [ ] **Evaluate Tool Value**
+  - [ ] Compare with existing tools
+  - [ ] Identify unique functionality
+
+- [ ] **Migration or Integration**
+  - [ ] Option A: Move to src/Tools/{ToolName}/
+  - [ ] Option B: Integrate features into existing tool
+  - [ ] Option C: Archive as reference
+```
+
+**5.5.2: Update TODO.md Header**
+
+Update the "Last Updated" date and add to completed/pending sections as appropriate.
+
+**5.5.3: Cross-Reference**
+
+Ensure bidirectional links:
+- TODO.md links to migration plan docs
+- Migration plan links back to TODO.md section
+- Incomming/CHECKLIST.md links to TODO.md section
+
+**Validation:**
+- [ ] TODO.md updated with all migration tasks
+- [ ] Tasks follow existing TODO.md format
+- [ ] All phases from migration plan included
+- [ ] Checkboxes for all actionable items
+- [ ] Blocked items clearly marked
+- [ ] Decision points noted
+- [ ] Cross-references working
+
+---
+
 ### Step 6: Create Migration Tracking Document
 
 Create a README to track migration progress.
@@ -819,6 +1058,83 @@ Document any architectural changes:
 
 ---
 
+### Step 13: Update Checklist - Investigation Complete
+
+Mark the investigation as complete in the tracking checklist.
+
+**13.1: Update Incomming/CHECKLIST.md**
+
+- [ ] Change status from "🚧 IN PROGRESS" to "🔍 INVESTIGATED"
+- [ ] Update file count, LOC with actual values
+- [ ] Set priority based on findings (HIGH, MEDIUM, LOW)
+- [ ] Add "Action Required" description
+- [ ] Update "Detailed Status" section with:
+  - Investigation completion date
+  - Summary of findings
+  - Key features discovered
+  - Migration complexity assessment
+  - Recommended approach
+  - Links to feature mapping and migration plan
+  - Next steps
+
+**Example Update:**
+```markdown
+| Project | Status | Type | Files | LOC | Priority | Action Required |
+|---------|--------|------|-------|-----|----------|-----------------|
+| **{ProjectName}** | 🔍 **INVESTIGATED** | {Type} | {count} | ~{LOC} | {priority} | {action} |
+
+### 🔍 {ProjectName} (INVESTIGATION COMPLETE)
+
+**Status:** 🔍 **INVESTIGATED** - Awaiting {decision/migration/etc}
+
+**Investigation Date:** {start} - {end}
+
+**Summary:**
+- {Classification}: {Framework Library / Sample Application / Tool / etc}
+- {File count} files (~{LOC} LOC)
+- {Key finding 1}
+- {Key finding 2}
+
+**{Classification-specific section}:**
+[For libraries: comparison results, new features, differs, etc]
+[For samples: demonstration value, extraction opportunities, etc]
+[For tools: utility value, integration approach, etc]
+
+**Decision Options:** [If applicable]
+1. Option 1: {name} - {effort}
+2. Option 2: {name} - {effort}
+...
+
+**Recommendation:** {recommended approach}
+
+**Next Steps:**
+- [ ] {next step 1}
+- [ ] {next step 2}
+
+**Documentation:**
+- [Feature Mapping](../docs/migration/{name}-feature-mapping.md)
+- [Migration Plan](../docs/migration/{name}-migration-plan.md)
+
+**Migration Complexity:** {LOW | MEDIUM | HIGH | VERY HIGH}
+```
+
+**13.2: Update Summary Statistics**
+
+Update the checklist summary tables:
+- Increment "Investigated" count
+- Decrement "In Progress" count
+- Update progress bars
+- Update milestone list
+
+**Validation:**
+- [ ] Status updated to "INVESTIGATED"
+- [ ] All statistics accurate
+- [ ] Documentation links working
+- [ ] Next steps clear
+- [ ] Recommendation stated
+
+---
+
 ## Validation Checklist
 
 Complete comparison validation:
@@ -967,13 +1283,24 @@ docs/migration/
 
 ## Example Usage
 
-### Scenario: New Directory "Incomming/BinaryDecoders"
+### Example 1: Framework Library - "Incomming/BinaryDecoders"
+
+**Project Type:** Framework Library (Massive Codebase)
 
 **Step 1: Initial Assessment**
 ```bash
 INCOMING_DIR="Incomming/BinaryDecoders"
 find $INCOMING_DIR -name "*.csproj" | wc -l
 # Output: 41
+# Classification: Framework Library
+```
+
+**Step 1.5: Update Checklist**
+```
+Added to Incomming/CHECKLIST.md:
+- Status: 🚧 IN PROGRESS
+- Type: Framework Library
+- Files: ~500
 ```
 
 **Step 2: Launch Exploration**
@@ -1004,6 +1331,15 @@ Found 5 critical bugs in OoBDev:
 - etc.
 ```
 
+**Step 13: Update Checklist - Complete**
+```
+Updated Incomming/CHECKLIST.md:
+- Status: 🔍 INVESTIGATED (Blocked - awaiting critical questions)
+- Priority: HIGH
+- Complexity: VERY HIGH
+- Action Required: Answer critical questions
+```
+
 **Result:**
 Comprehensive migration plan with:
 - 5 critical bug fixes (Phase 0)
@@ -1012,7 +1348,78 @@ Comprehensive migration plan with:
 - 5 phases defined
 - All tasks actionable
 - Architectural compliance verified
+
+---
+
+### Example 2: Sample Application - "Incomming/BotChat"
+
+**Project Type:** Sample/Demo Application (Console Exe)
+
+**Step 1: Initial Assessment**
+```bash
+INCOMING_DIR="Incomming/BotChat"
+find $INCOMING_DIR -name "*.csproj"
+# Output: BotChat.csproj (OutputType: Exe)
+# Classification: Sample/Demo Application
 ```
+
+**Step 1.5: Update Checklist**
+```
+Added to Incomming/CHECKLIST.md:
+- Status: 🚧 IN PROGRESS
+- Type: Sample Application
+- Files: ~12
+```
+
+**Step 2: Launch Exploration**
+```
+Task: Explore Incomming/BotChat and compare with OoBDev.Ollama...
+Result: Interactive CLI chat demo using SemanticKernel + Ollama
+- 12 C# files (~393 LOC)
+- Demonstrates OoBDev.Ollama usage
+- Has unique RunnerHost<T> pattern
+- Has API key support (missing in main)
+```
+
+**Step 3: Find Related in OoBDev**
+```
+Task: Search for Ollama integration...
+Result: OoBDev.Ollama exists (production library, 526 LOC)
+- More features than BotChat
+- Missing API key support
+- No example/demo application
+```
+
+**Step 4-6: Create Documents**
+```
+Created:
+- docs/migration/botchat-feature-mapping.md
+  - Classified as Sample/Demo Application
+  - Identified unique patterns worth extracting
+  - Compared with production OoBDev.Ollama
+- docs/migration/botchat-migration-plan.md
+  - Option 1: Archive as reference
+  - Option 2: Enhance as official demo
+  - Option 3: Extract patterns only
+```
+
+**Step 13: Update Checklist - Complete**
+```
+Updated Incomming/CHECKLIST.md:
+- Status: 🔍 INVESTIGATED (Awaiting decision)
+- Priority: LOW (sample app, not critical functionality)
+- Complexity: LOW (if archiving), MEDIUM (if enhancing)
+- Action Required: Choose Option 1, 2, or 3
+- Recommendation: Archive or enhance as demo
+```
+
+**Result:**
+Sample application analysis with:
+- 3 migration options defined
+- Unique patterns identified (RunnerHost<T>, API key support)
+- Relationship to OoBDev.Ollama documented
+- Enhancement opportunities listed
+- Archival value recognized
 
 ---
 
@@ -1026,4 +1433,13 @@ Comprehensive migration plan with:
 
 ## Change Log
 
+- 2026-01-13 v1.1: Updated protocol with project type classifications, checklist management, and TODO.md integration
+  - Added "Project Type Classifications" section with 6 types
+  - Added Step 1.3: Determine Project Type
+  - Added Step 1.5: Update Checklist (register investigation start)
+  - Added Step 5.5: Add Migration Tasks to TODO.md
+  - Added Step 13: Update Checklist - Investigation Complete
+  - Added Example 2: Sample Application (BotChat)
+  - Enhanced with templates for different project types
+  - Added cross-referencing requirements
 - 2026-01-12 v1.0: Initial incoming codebase comparison protocol created based on BinaryDataDecoders analysis
