@@ -1,6 +1,6 @@
 # TODO - OoBDev (dotex) Framework
 
-**Last Updated:** 2026-01-13
+**Last Updated:** 2026-01-13 (SharedFramework investigation complete)
 
 > **New to this project?** Read `/CLAUDE.md` first for a complete development guide including architecture, patterns, and migration scope.
 
@@ -657,6 +657,389 @@ Before proceeding with BinaryDataDecoders migration (Phases 1-5), critical quest
 - [ ] **5.3 Cleanup**
   - [ ] Delete or archive `Incomming/Framework/` after successful migration
   - [ ] Update TODO.md with results
+  - [ ] Create final migration report
+
+---
+
+## Incomming/SharedFramework Migration Work
+
+**Status:** 🔍 INVESTIGATION COMPLETE - Ready for systematic migration
+
+**Complexity:** HIGH - 52 projects (~28,582 LOC) requiring careful integration
+
+**Documentation:**
+- [Feature Mapping](docs/migration/sharedframework-feature-mapping.md) - Complete 52-project analysis
+- [Migration Plan](docs/migration/sharedframework-migration-plan.md) - 12-phase execution plan
+
+**Summary:**
+- 24 projects (71%) provide NEW capabilities
+- 10 projects (29%) are ENHANCED versions (DIFFERS - need merge)
+- 52 total projects: 34 implementation + 18 test projects
+- Critical external service integrations (AWS SQS, Azure, Twilio, geocoding)
+- Completes partially-implemented main framework components
+
+### Phase 0: Framework Upgrades (FOUNDATION)
+
+**Priority:** CRITICAL
+
+- [ ] **0.1 Upgrade All Projects to .NET 9.0**
+  - [ ] Update all 52 `.csproj` files: `net8.0` → `net9.0`
+  - [ ] Update NuGet packages to .NET 9-compatible versions
+  - [ ] Test compilation
+  - [ ] Fix breaking API changes
+
+- [ ] **0.2 Namespace Cleanup**
+  - [ ] Create namespace mapping matrix
+  - [ ] Remove "Api." prefix: `OoBDev.Api.Twilio` → `OoBDev.Twilio`
+  - [ ] Update all using statements
+  - [ ] Verify no broken references
+
+### Phase 1: Message Queueing Providers (HIGH PRIORITY)
+
+**Priority:** HIGH - Critical cloud messaging
+
+- [ ] **1.1 Migrate Amazon SQS**
+  - [ ] Create `src/ExternalServices/Amazon/OoBDev.Amazon.Sqs/`
+  - [ ] Copy source files (183 LOC)
+  - [ ] Add `AWSSDK.SQS` NuGet package
+  - [ ] Add ServiceCollectionExtensions with TryAddAmazonSqs()
+  - [ ] Migrate test project
+  - [ ] Create README with usage examples
+  - [ ] Verify compilation and tests
+
+- [ ] **1.2 Migrate Azure Service Bus**
+  - [ ] Create `src/ExternalServices/Azure/OoBDev.Azure.ServiceBus/`
+  - [ ] Copy source files (114 LOC)
+  - [ ] Add `Azure.Messaging.ServiceBus` NuGet package
+  - [ ] Verify topics, sessions, dead-letter queue support
+  - [ ] Add ServiceCollectionExtensions
+  - [ ] Migrate test project
+  - [ ] Create README
+  - [ ] Verify compilation and tests
+
+### Phase 2: Communications Complete Implementation (CRITICAL)
+
+**Priority:** CRITICAL - Main has only 16 LOC stub, SF has 1,145 LOC implementation
+
+- [ ] **2.1 Merge OoBDev.Communications.Contracts**
+  - [ ] Backup main version (125 LOC)
+  - [ ] Compare interfaces for breaking changes
+  - [ ] Replace main with SharedFramework version (695 LOC)
+  - [ ] Update namespace to match main: `OoBDev.Communications`
+  - [ ] Merge unique main features (if any)
+  - [ ] Update dependent projects
+  - [ ] Migrate tests
+  - [ ] Create migration guide for users
+
+- [ ] **2.2 Merge OoBDev.Communications**
+  - [ ] Backup main stub (16 LOC)
+  - [ ] Replace with SharedFramework implementation (1,145 LOC)
+  - [ ] Update namespace
+  - [ ] Verify composers, handlers, providers integrated
+  - [ ] Migrate tests
+  - [ ] Update ServiceCollectionExtensions
+  - [ ] Create comprehensive README
+
+- [ ] **2.3 Migrate Twilio SendGrid Provider**
+  - [ ] Create `src/ExternalServices/Twilio/OoBDev.Twilio.SendGrid/`
+  - [ ] Copy files (267 LOC), update namespace
+  - [ ] Add `SendGrid` NuGet package
+  - [ ] Integrate with OoBDev.Communications abstractions
+  - [ ] Add ServiceCollectionExtensions
+  - [ ] Migrate tests
+  - [ ] Create README with API key setup
+  - [ ] Verify email delivery works
+
+- [ ] **2.4 Migrate Twilio SMS Provider**
+  - [ ] Create `src/ExternalServices/Twilio/OoBDev.Twilio.SmsMessaging/`
+  - [ ] Copy files (151 LOC), update namespace
+  - [ ] Add `Twilio` NuGet package
+  - [ ] Integrate with OoBDev.Communications abstractions
+  - [ ] Add ServiceCollectionExtensions
+  - [ ] Migrate tests
+  - [ ] Create README
+  - [ ] Verify SMS works
+
+### Phase 3: Spatial Services Suite (HIGH PRIORITY)
+
+**Priority:** HIGH - Main has ZERO spatial/geocoding capability
+
+- [ ] **3.1 Migrate Spatial Services Contracts**
+  - [ ] Create `src/Framework/OoBDev.SpatialServices.Abstractions/`
+  - [ ] Copy contracts (85 LOC): ILocationServices, address models
+  - [ ] Update namespace to `OoBDev.SpatialServices`
+  - [ ] Add to solution
+  - [ ] Create README
+
+- [ ] **3.2 Migrate Spatial Services Common**
+  - [ ] Create `src/Framework/OoBDev.SpatialServices/`
+  - [ ] Copy utilities (21 LOC)
+  - [ ] Add reference to Abstractions
+  - [ ] Add ServiceCollectionExtensions
+  - [ ] Add to solution
+
+- [ ] **3.3 Migrate Census Geocoding Provider**
+  - [ ] Create `src/ExternalServices/Census/OoBDev.Census.Geocoding/`
+  - [ ] Copy files (420 LOC), update namespace
+  - [ ] Implement ILocationServices interface
+  - [ ] Add ServiceCollectionExtensions
+  - [ ] Migrate tests
+  - [ ] Create README (note: free, no API key)
+  - [ ] Verify geocoding works
+
+- [ ] **3.4 Migrate Google Maps Provider**
+  - [ ] Create `src/ExternalServices/Google/OoBDev.Google.Maps/`
+  - [ ] Copy files (269 LOC), update namespace
+  - [ ] Implement ILocationServices
+  - [ ] Add ServiceCollectionExtensions
+  - [ ] Migrate tests
+  - [ ] Create README with API key setup
+  - [ ] Verify geocoding works
+
+- [ ] **3.5 Migrate Bing Maps Provider**
+  - [ ] Create `src/ExternalServices/Microsoft/OoBDev.Microsoft.BingMaps/`
+  - [ ] Copy files (288 LOC), update namespace
+  - [ ] Implement ILocationServices
+  - [ ] Add ServiceCollectionExtensions
+  - [ ] Migrate tests
+  - [ ] Create README
+  - [ ] Verify geocoding works
+
+### Phase 4: Distributed Caching (HIGH PRIORITY)
+
+**Priority:** HIGH - Main has NO distributed caching
+
+- [ ] **4.1 Migrate Caching Contracts**
+  - [ ] Create `src/Framework/OoBDev.Caching.Abstractions/`
+  - [ ] Copy interfaces (83 LOC)
+  - [ ] Copy attributes: `[IsCacheable]`, `[FlushCache]`
+  - [ ] Update namespace
+  - [ ] Add to solution
+  - [ ] Create README
+
+- [ ] **4.2 Migrate Caching Common**
+  - [ ] Create `src/Framework/OoBDev.Caching/`
+  - [ ] Copy factories, managers (290 LOC)
+  - [ ] Add reference to Abstractions
+  - [ ] Add ServiceCollectionExtensions
+  - [ ] Migrate tests
+  - [ ] Create README
+
+- [ ] **4.3 Migrate Microsoft Caching Provider**
+  - [ ] Create `src/ExternalServices/Microsoft/OoBDev.Microsoft.Caching/`
+  - [ ] Copy files (70 LOC)
+  - [ ] Add `Microsoft.Extensions.Caching.Memory` package
+  - [ ] Implement caching provider interface
+  - [ ] Add ServiceCollectionExtensions
+  - [ ] Migrate tests
+  - [ ] Create README
+
+- [ ] **4.4 Migrate Redis Caching Provider**
+  - [ ] Create `src/ExternalServices/Redis/OoBDev.Redis.Caching/`
+  - [ ] Copy files (119 LOC)
+  - [ ] Add `StackExchange.Redis` NuGet package
+  - [ ] Implement caching provider interface
+  - [ ] Add ServiceCollectionExtensions
+  - [ ] Migrate tests
+  - [ ] Create README with Redis connection setup
+  - [ ] Verify Redis caching works
+
+### Phase 5: Data Loading Pipeline (HIGH PRIORITY)
+
+**Priority:** HIGH - Critical ETL tool (1,633 LOC)
+
+- [ ] **5.1 Migrate DataLoader Contracts**
+  - [ ] Create `src/Framework/OoBDev.DataLoader.Abstractions/`
+  - [ ] Copy interfaces and models (435 LOC)
+  - [ ] Update namespace
+  - [ ] Add to solution
+  - [ ] Create README
+
+- [ ] **5.2 Migrate DataLoader Implementation**
+  - [ ] Create `src/Framework/OoBDev.DataLoader/`
+  - [ ] Copy ETL pipeline (1,633 LOC)
+  - [ ] Add `CsvHelper`, `YamlDotNet` NuGet packages
+  - [ ] Add reference to Abstractions
+  - [ ] Add ServiceCollectionExtensions
+  - [ ] Migrate tests
+  - [ ] Create README with CSV/JSON examples
+  - [ ] Verify CSV to database works
+  - [ ] Verify JSON to database works
+
+- [ ] **5.3 Migrate DataLoader CLI Tool**
+  - [ ] Create `src/Tools/OoBDev.DataLoader.Cli/`
+  - [ ] Copy CLI application (228 LOC)
+  - [ ] Add reference to OoBDev.DataLoader
+  - [ ] Test CLI execution
+  - [ ] Create README with command-line usage
+  - [ ] Add to solution under Tools
+
+### Phase 6: Document Management Enhancement (HIGH PRIORITY)
+
+**Priority:** HIGH - SF is 71% larger than main (911 LOC vs 531 LOC)
+
+- [ ] **6.1 Migrate DocumentCenter.Contracts**
+  - [ ] Create `src/Framework/OoBDev.Documents.Abstractions/`
+  - [ ] Copy handlers, providers, storage interfaces (422 LOC)
+  - [ ] Update namespace to `OoBDev.Documents`
+  - [ ] Add to solution
+  - [ ] Create README
+
+- [ ] **6.2 Merge DocumentCenter Implementation**
+  - [ ] Backup main version (531 LOC)
+  - [ ] Compare implementations
+  - [ ] Merge: Keep main abstractions, add SF packaging/conversion
+  - [ ] Update namespace
+  - [ ] Migrate tests from both
+  - [ ] Create comprehensive README
+  - [ ] Verify no breaking changes
+
+### Phase 7: Identity & Session Enhancement (HIGH PRIORITY)
+
+**Priority:** HIGH - SF is 2.3x larger (291 LOC vs 125 LOC)
+
+- [ ] **7.1 Merge IdentityModel.Contracts**
+  - [ ] Backup main version (125 LOC)
+  - [ ] Compare contracts
+  - [ ] Merge: Add SF's user session, rights, claims
+  - [ ] Update namespace
+  - [ ] Migrate tests
+  - [ ] Create README
+  - [ ] Verify no breaking changes
+
+- [ ] **7.2 Migrate IdentityModel.Extensions**
+  - [ ] Copy authorization services (204 LOC)
+  - [ ] Copy globalization support
+  - [ ] Add to existing OoBDev.Identity project
+  - [ ] Add ServiceCollectionExtensions
+  - [ ] Migrate tests
+  - [ ] Update README
+
+### Phase 8: Complex Events & Event Sourcing (MEDIUM PRIORITY)
+
+**Priority:** MEDIUM - Main has NO event sourcing
+
+- [ ] **8.1 Migrate ComplexEvents.Contracts**
+  - [ ] Create `src/Framework/OoBDev.ComplexEvents.Abstractions/`
+  - [ ] Copy event sourcing contracts (315 LOC)
+  - [ ] Copy CQRS interfaces
+  - [ ] Update namespace
+  - [ ] Add to solution
+  - [ ] Create README
+
+- [ ] **8.2 Migrate ComplexEvents.Common**
+  - [ ] Create `src/Framework/OoBDev.ComplexEvents/`
+  - [ ] Copy resolvers, subscribers, schedulers (680 LOC)
+  - [ ] Add `NCrontab` NuGet package
+  - [ ] Add ServiceCollectionExtensions
+  - [ ] Migrate tests
+  - [ ] Create README with cron examples
+  - [ ] Verify `[ScheduleAt("0 */45 * * * *")]` works
+
+- [ ] **8.3 Migrate ComplexEvents.DatabaseExtensions**
+  - [ ] Create `src/Framework/OoBDev.ComplexEvents.Database/`
+  - [ ] Copy T-SQL schema scripts
+  - [ ] Create migration scripts
+  - [ ] Document schema in README
+
+- [ ] **8.4 Migrate ComplexEvents.EntityFrameworkCore**
+  - [ ] Create `src/Framework/OoBDev.ComplexEvents.EntityFrameworkCore/`
+  - [ ] Copy DbContext (252 LOC)
+  - [ ] Add ServiceCollectionExtensions
+  - [ ] Migrate tests
+  - [ ] Create README
+  - [ ] Verify EF Core persistence works
+
+- [ ] **8.5 Migrate Azure EventHub**
+  - [ ] Create `src/ExternalServices/Azure/OoBDev.Azure.EventHub/`
+  - [ ] Copy integration (141 LOC)
+  - [ ] Add `Azure.Messaging.EventHubs` package
+  - [ ] Integrate with ComplexEvents abstractions
+  - [ ] Add ServiceCollectionExtensions
+  - [ ] Migrate tests
+  - [ ] Create README
+
+### Phase 9: Test Data Generation (MEDIUM PRIORITY)
+
+**Priority:** MEDIUM - Attribute-driven test data (1,256 LOC)
+
+- [ ] **9.1 Migrate Generations.Contracts**
+  - [ ] Create `src/Extensions/OoBDev.Extensions.TestData.Abstractions/`
+  - [ ] Copy generation rules (488 LOC)
+  - [ ] Update namespace to `OoBDev.Extensions.TestData`
+  - [ ] Add to solution
+  - [ ] Create README
+
+- [ ] **9.2 Migrate Generations Implementation**
+  - [ ] Create `src/Extensions/OoBDev.Extensions.TestData/`
+  - [ ] Copy generators (1,256 LOC): `[EmailAddress]`, `[Phone]`, etc.
+  - [ ] Copy type converters
+  - [ ] Add reference to Abstractions
+  - [ ] Migrate tests
+  - [ ] Create README with attribute examples
+  - [ ] Verify attribute-driven generation works
+
+- [ ] **9.3 Merge Generations DI Extensions**
+  - [ ] Copy ServiceCollectionExtensions (21 LOC)
+  - [ ] Merge into TestData project
+  - [ ] Test DI registration
+
+### Phase 10: Text Templating Unification (MEDIUM PRIORITY)
+
+**Priority:** MEDIUM - Unify scattered implementations
+
+- [ ] **10.1 Migrate TextTemplating.Contracts**
+  - [ ] Create `src/Framework/OoBDev.TextTemplating.Abstractions/`
+  - [ ] Copy template contracts (117 LOC)
+  - [ ] Update namespace
+  - [ ] Add to solution
+  - [ ] Create README
+
+- [ ] **10.2 Merge TextTemplating Implementation**
+  - [ ] Create `src/Framework/OoBDev.TextTemplating/`
+  - [ ] Copy SF templating engine (424 LOC)
+  - [ ] Integrate with main's abstractions
+  - [ ] Keep OoBDev.TemplateEngine.Cli separate
+  - [ ] Migrate tests
+  - [ ] Create README
+  - [ ] Verify template engine works
+
+### Phase 11: Domain-Specific Review (LOW PRIORITY)
+
+**Priority:** LOW - Assess if generally useful
+
+- [ ] **11.1 Review Accounting.Contracts**
+  - [ ] Review invoice/payment models (166 LOC)
+  - [ ] Determine if generally useful or application-specific
+  - [ ] Decision: Migrate to Extensions, Archive, or Delete
+  - [ ] If migrating: Create `src/Extensions/OoBDev.Extensions.Accounting/`
+
+### Phase 12: Final Integration & Testing (FINAL)
+
+**Priority:** CRITICAL - Final validation
+
+- [ ] **12.1 Solution-Wide Integration**
+  - [ ] Verify all 52 projects added to OoBDev.sln
+  - [ ] Resolve circular dependencies
+  - [ ] Build entire solution
+  - [ ] Verify no compilation errors
+
+- [ ] **12.2 Test Suite Execution**
+  - [ ] Run all migrated test projects
+  - [ ] Verify 80%+ coverage
+  - [ ] Fix failing tests
+  - [ ] Document test limitations
+
+- [ ] **12.3 Documentation Updates**
+  - [ ] Update FEATURE_INVENTORY.md with 52 projects
+  - [ ] Update main README.md
+  - [ ] Create ConfigurationSettings.md updates
+  - [ ] Create migration guide for users
+
+- [ ] **12.4 Cleanup & Archive**
+  - [ ] Delete or archive `Incomming/SharedFramework/`
+  - [ ] Update Incomming/CHECKLIST.md
+  - [ ] Update TODO.md with completion
   - [ ] Create final migration report
 
 ---
