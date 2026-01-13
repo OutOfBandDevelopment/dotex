@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace OoBDev.System.ComponentModel;
+namespace OoBDev.System.ComponentModel.DataAnnotations;
 
 /// <summary>
 /// Indicates that a property to assist in mapping responses.

@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using OoBDev.System.ComponentModel;
+using OoBDev.System.ComponentModel.DataAnnotations;
 using OoBDev.System.Text.Json.Serialization;
 using OoBDev.TestUtilities;
 using System;

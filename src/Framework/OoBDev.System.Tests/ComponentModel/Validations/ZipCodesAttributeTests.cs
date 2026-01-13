@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using OoBDev.System.ComponentModel.DataAnnotations;
+using OoBDev.System.ComponentModel.Validations;
 
-namespace OoBDev.System.Tests.ComponentModel.DataAnnotations;
+namespace OoBDev.System.Tests.ComponentModel.Validations;
 
 [TestClass]
 public class ZipCodesAttributeTests

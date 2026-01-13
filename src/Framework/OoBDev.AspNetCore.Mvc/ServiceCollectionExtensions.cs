@@ -1,10 +1,4 @@
-﻿using OoBDev.AspNetCore.Mvc.Authorization;
-using OoBDev.AspNetCore.Mvc.Filters;
-using OoBDev.AspNetCore.Mvc.Providers.SearchQuery;
-using OoBDev.AspNetCore.Mvc.SwaggerGen;
-using OoBDev.Extensions;
-using OoBDev.System.Linq.Search;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
@@ -12,13 +6,21 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
+using OoBDev.AspNetCore.Mvc.Authorization;
+using OoBDev.AspNetCore.Mvc.Filters;
+using OoBDev.AspNetCore.Mvc.Middleware;
+using OoBDev.AspNetCore.Mvc.Providers.SearchQuery;
+using OoBDev.AspNetCore.Mvc.SwaggerGen;
+using OoBDev.Extensions;
+using OoBDev.System.Linq.Search;
+using OoBDev.System.Net.Http;
+using OoBDev.System.Security;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using System;
 using System.Globalization;
 using System.Security.Claims;
-using OoBDev.AspNetCore.Mvc.Middleware;
-using OoBDev.System.Net.Http;
+using System.Security.Principal;
 
 namespace OoBDev.AspNetCore.Mvc;
 
@@ -53,13 +55,25 @@ public static class ServiceCollectionExtensions
 
         services.AddHttpContextAccessor();
         services.TryAddSingleton<IActionContextAccessor, ActionContextAccessor>();
+
+        services.TryAddTransient<IIdentity>(sp=>sp.GetRequiredService<IPrincipal>().Identity ?? new ClaimsIdentity());
+        services.TryAddTransient<IPrincipal, ClaimsPrincipal>();
         services.TryAddTransient(sp =>
             sp.GetRequiredService<IHttpContextAccessor>().HttpContext?.User ??
             ClaimsPrincipal.Current ??
             new ClaimsPrincipal(new ClaimsIdentity())
             );
 
+        services.TryAddKeyedTransient<ICurrentUserAccessor, HttpContextUserAccessor>("HTTP");
+        services.Replace(ServiceDescriptor.Describe(
+            typeof(ICurrentUserAccessor),
+            sp => sp.GetRequiredKeyedService<ICurrentUserAccessor>("HTTP"),
+            ServiceLifetime.Transient));
+
         services.AddTransient<IHttpPrepareRequestFeature, CorrelationInfoHttpPrepareRequestFeature>();
+
+        services.TryAddTransient<ICurrentUserAccessor, EnvironmentUserAccessor>();
+        services.TryAddKeyedTransient<ICurrentUserAccessor, EnvironmentUserAccessor>("Environment");
 
         services.AddSwaggerGen();
 

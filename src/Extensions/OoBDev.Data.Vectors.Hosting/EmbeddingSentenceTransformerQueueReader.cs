@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Options;
 using OoBDev.AI;
 using OoBDev.Data.Common;
-using OoBDev.System.ComponentModel;
+using OoBDev.System.ComponentModel.DataAnnotations;
 using OoBDev.System.Text.Json.Serialization;
 using OoBDev.System.Text.Xml.Serialization;
 using System.Data;

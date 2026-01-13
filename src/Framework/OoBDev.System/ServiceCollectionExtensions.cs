@@ -1,18 +1,19 @@
-﻿using OoBDev.System.IO;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using OoBDev.System.ComponentModel;
+using OoBDev.System.IO;
 using OoBDev.System.Linq;
+using OoBDev.System.Net.Http;
 using OoBDev.System.Net.Mime;
+using OoBDev.System.Net.SecurityManagement;
 using OoBDev.System.Providers;
+using OoBDev.System.Security;
 using OoBDev.System.Security.Cryptography;
 using OoBDev.System.Text;
 using OoBDev.System.Text.Json.Serialization;
 using OoBDev.System.Text.Templating;
 using OoBDev.System.Text.Xml.Serialization;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using OoBDev.System.Net.Http;
-using OoBDev.System.ComponentModel;
-using OoBDev.System.Net.SecurityManagement;
 
 namespace OoBDev.System;
 
@@ -82,6 +83,9 @@ public static class ServiceCollectionExtensions
         services.TryAddKeyedSingleton<IHMACCalculator, HMAC3_512Calculator>("HMAC3-512");
 
         services.TryAddTransient<ILdapFilterBuilder, LdapFilterBuilder>();
+
+        services.TryAddTransient<ICurrentUserAccessor, EnvironmentUserAccessor>();
+        services.TryAddKeyedTransient<ICurrentUserAccessor, EnvironmentUserAccessor>("Environment");
 
         return services;
     }

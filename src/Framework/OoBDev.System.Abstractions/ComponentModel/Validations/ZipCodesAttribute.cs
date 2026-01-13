@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace OoBDev.System.ComponentModel.DataAnnotations;
+namespace OoBDev.System.ComponentModel.Validations;
 
 /// <summary>
 /// Specifies that a data field must match the format of one or more valid ZIP codes.

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFramework>net9.0</TargetFramework>
@@ -38,6 +38,10 @@
 	  <ProjectReference Include="..\OoBDev.System.IO.UsbHids\OoBDev.System.IO.UsbHids.csproj" />
 	  <ProjectReference Include="..\OoBDev.System\OoBDev.System.csproj" />
 	  <ProjectReference Include="..\OoBDev.TestUtilities\OoBDev.TestUtilities.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Math\" />
 	</ItemGroup>
 
 </Project>

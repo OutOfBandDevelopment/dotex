@@ -1,0 +1,1 @@
+have a demo with keycloak/jwt as well as a lightweight provider like ASP.Net Core Identity.
