@@ -65,6 +65,82 @@ This document tracks architectural work, migration planning, and bug fixes for t
 
 **Outcome:** dotnet-lib was fully synchronized with main codebase. Critical bug fix applied. **Directory deleted 2026-01-12.**
 
+### Migration Analysis - OoBDev.Oobtainium (INVESTIGATION COMPLETE)
+- [x] Deep analysis of `Incomming/OoBDev.Oobtainium` structure and features
+- [x] Created `docs/migration/oobtainium-feature-mapping.md` - Comprehensive feature analysis
+- [x] Created `docs/migration/oobtainium-migration-plan.md` - Migration options and plan
+- [x] Compared against existing mocking frameworks (Moq, NSubstitute, FakeItEasy)
+
+### OoBDev.Oobtainium Investigation Results (COMPLETE)
+- [x] **Discovery:**
+  - [x] Oobtainium does NOT exist in main codebase (new library)
+  - [x] Complete mocking/proxy framework (48 files, ~1,578 LOC)
+  - [x] Uses .NET Standard 2.1 with 3.1.9 dependencies (outdated)
+  - [x] GitHub repository: https://github.com/OutOfBandDevelopment/oobtainium/
+- [x] **Analysis:**
+  - [x] Runtime proxy creation using DispatchProxy
+  - [x] Method binding with fluent API
+  - [x] Call recording infrastructure
+  - [x] Full async/await support
+  - [x] DI integration (ServiceCollection)
+  - [x] Good architecture (Abstractions + Implementation + Tests)
+- [x] **Comparison:**
+  - [x] Simpler than Moq but less feature-rich
+  - [x] Lightweight (1,578 LOC vs Moq's 20,000+)
+  - [x] Limited matchers and verification compared to established frameworks
+- [x] **Decision Options:**
+  - Option 1: MIGRATE to main framework (requires .NET 9.0 upgrade, moderate effort)
+  - Option 2: REFERENCE as external NuGet package (low effort)
+  - Option 3: ARCHIVE in Incomming/ (no effort)
+  - Option 4: DELETE (minimal effort)
+
+**RECOMMENDATION: Option 4 (Delete)** - Mocking is well-solved by Moq/NSubstitute. OoBDev's value is in unique features (binary processing, protocols, hardware) not mocking tools. Focus resources on differentiating capabilities.
+
+**Outcome:** Investigation complete. **Awaiting decision on which option to execute.**
+
+### Migration Analysis - Incomming/Framework (INVESTIGATION COMPLETE)
+- [x] Deep analysis of `Incomming/Framework` structure and features (55 files, ~2,054 LOC)
+- [x] Created `docs/migration/framework-feature-mapping.md` - Comprehensive feature analysis
+- [x] File-by-file comparison with main OoBDev codebase
+
+### Incomming/Framework Investigation Results (COMPLETE)
+- [x] **Discovery:**
+  - [x] Contains 3 projects: OoBDev.Common.Abstractions, OoBDev.Common, OoBDev.AspNetCore.Extensions
+  - [x] 55 implementation files vs main's 1 aggregator file
+  - [x] Main OoBDev.Common is meta-package (references other projects), Incomming has actual implementations
+  - [x] Multi-targets .NET 8.0 and 9.0
+- [x] **Comparison Results:**
+  - [x] **0 files (0%)** - IDENTICAL to main codebase
+  - [x] **25 files (45%)** - DIFFER (exist in both but have changes) - **Requires systematic comparison**
+  - [x] **30 files (55%)** - NEW (only in Incomming)
+- [x] **Key NEW Features:**
+  - [x] **Vector Math Library** (5 files) - AI/ML vector operations for SemanticKernel
+  - [x] **SQL Database Mapper** (1 file) - ORM-like stored procedure mapping with reflection
+  - [x] **Audit Logging System** (5 files) - Request/response capture middleware
+  - [x] **User & Application Access** (5 files) - Current user resolution, multi-tenancy
+  - [x] **Environment Settings** (4 files) - Centralized configuration
+  - [x] **Swagger/OpenAPI Customizations** (4 files) - Internal endpoint hiding
+  - [x] **HTTP Extensions** (2 files) - Request preparation utilities
+  - [x] **JSON Serializer Wrapper** (1 file) - Centralized JSON configuration
+  - [x] **Validation Attributes** (1 file) - QuoteIdAttribute
+- [x] **Branding Issue Found:**
+  - [x] "EriskInternalDocumentFilter.cs" needs renaming to "OoBDevInternalDocumentFilter.cs"
+- [x] **Critical Work Required:**
+  - [ ] **Phase 0:** Systematic diff of all 25 DIFFERS files
+  - [ ] **Namespace Decision:** Map "OoBDev.Common" to main Framework structure
+  - [ ] **Project Placement:** Where to place new features (OoBDev.System? OoBDev.Data.Common?)
+  - [ ] **Branding Audit:** Search and replace "Erisk" references
+
+**COMPLEXITY:** HIGH - Not a simple sync like dotnet-lib. Requires:
+1. File-by-file comparison of 25 DIFFERS files
+2. Strategic decisions on namespace mapping
+3. Integration of 30 NEW feature files
+4. Breaking change analysis
+
+**RECOMMENDATION:** Requires systematic Phase 0 comparison before migration decisions.
+
+**Outcome:** Investigation complete. **Phase 0 (file comparison) required before migration.**
+
 ### Protocols
 - [x] Created `.claude/protocols/software/incoming-codebase-comparison.md`
 - [x] Updated `.claude/protocols/software/README.md` with new protocol
@@ -122,6 +198,69 @@ Before proceeding with BinaryDataDecoders migration (Phases 1-5), critical quest
 - [ ] **Windows Forms, UWP** - Modernization approach?
 
 **Recommendation:** Can start Phase 1 with recommended defaults while Phase 2-4 decisions are made.
+
+---
+
+## OoBDev.Oobtainium - Migration Decision
+
+**Status:** ⏸️ PENDING DECISION - Choose migration approach
+
+**What is Oobtainium?**
+- Complete mocking/proxy framework (48 files, ~1,578 LOC)
+- Runtime interface proxies using DispatchProxy
+- Method call recording and binding
+- Does NOT exist in main OoBDev codebase (new library)
+- GitHub: https://github.com/OutOfBandDevelopment/oobtainium/
+
+**Current State:**
+- .NET Standard 2.1 (needs upgrade to .NET 9.0)
+- Microsoft.Extensions.* 3.1.9 dependencies (2020 - outdated)
+- Good architecture: Abstractions + Implementation + Tests
+- Simpler than Moq but less feature-rich
+
+**Decision Required - Choose ONE of four options:**
+
+### Option 1: MIGRATE to Main Framework
+- **Action:** Upgrade to .NET 9.0, integrate into `src/Framework/OoBDev.Mocking/` or `src/Extensions/OoBDev.Extensions.Mocking/`
+- **Effort:** MEDIUM (upgrade dependencies, rename namespaces, add documentation)
+- **Maintenance:** HIGH (ongoing .NET updates, feature additions)
+- **Pros:** First-party mocking solution, DI-integrated, simpler than Moq for basic scenarios
+- **Cons:** Maintenance burden, duplicates existing tools (Moq, NSubstitute)
+- **See:** [Migration Plan](docs/migration/oobtainium-migration-plan.md) - Phase 1-5 detailed steps
+
+### Option 2: REFERENCE as External NuGet Package
+- **Action:** Verify if published to NuGet, or publish it, then reference where needed
+- **Effort:** LOW (add PackageReference)
+- **Maintenance:** MINIMAL (external updates)
+- **Pros:** No code maintenance, separate evolution
+- **Cons:** Dependency on external package, may not be published
+
+### Option 3: ARCHIVE in Incomming/
+- **Action:** Create README.md documenting decision, keep for reference
+- **Effort:** MINIMAL (documentation only)
+- **Maintenance:** NONE
+- **Pros:** Available for future reconsideration, no commitment
+- **Cons:** Not integrated, users won't discover it
+
+### Option 4: DELETE ⭐ RECOMMENDED
+- **Action:** Remove `/current/src/Incomming/OoBDev.Oobtainium` directory
+- **Effort:** MINIMAL (rm -rf, update docs)
+- **Maintenance:** NONE
+- **Pros:** No burden, focus on unique OoBDev features, Moq/NSubstitute already solve this
+- **Cons:** Lose lightweight alternative
+- **Rationale:**
+  - Mocking is well-solved (Moq: 460M+ downloads, NSubstitute: 130M+)
+  - OoBDev's value is in unique features (binary processing, protocols, hardware)
+  - Limited differentiation vs established frameworks
+  - Better resource allocation on BinaryDataDecoders migration
+
+**Documentation:**
+- [Feature Mapping](docs/migration/oobtainium-feature-mapping.md) - Complete feature analysis and comparison
+- [Migration Plan](docs/migration/oobtainium-migration-plan.md) - All 4 options with detailed steps
+
+**Next Steps:**
+- [ ] **DECISION:** Choose Option 1, 2, 3, or 4
+- [ ] Execute chosen option per migration plan
 
 ---
 
