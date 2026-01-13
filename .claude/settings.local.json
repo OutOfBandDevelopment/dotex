@@ -5,7 +5,9 @@
       "Bash(dotnet build:*)",
       "Bash(chmod:*)",
       "Bash(/current/src/compare_dotnet_lib.sh)",
-      "Bash(bash:*)"
+      "Bash(bash:*)",
+      "Bash(while read file)",
+      "Bash(do basename \"$file\")"
     ]
   }
 }

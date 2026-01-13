@@ -1,6 +1,6 @@
 # TODO - OoBDev (dotex) Framework
 
-**Last Updated:** 2026-01-12
+**Last Updated:** 2026-01-13
 
 > **New to this project?** Read `/CLAUDE.md` first for a complete development guide including architecture, patterns, and migration scope.
 
@@ -141,6 +141,40 @@ This document tracks architectural work, migration planning, and bug fixes for t
 
 **Outcome:** Investigation complete. **Phase 0 (file comparison) required before migration.**
 
+### Vector/Embedding Comparison (COMPLETE)
+- [x] Compared Incomming/Framework Vector math with existing OoBDev.Data.Vectors
+- [x] Created `docs/migration/vector-comparison.md` - Detailed comparison and coexistence strategy
+
+### Vector Comparison Results (COMPLETE)
+- [x] **Discovery:**
+  - [x] **Two DIFFERENT purposes** - Should coexist, not replace
+  - [x] **Main (OoBDev.Data.Vectors):** SQL Server CLR User-Defined Type for database storage
+  - [x] **Incomming (Vector):** Application-level vector math for AI/ML operations
+  - [x] Existing SemanticKernel integration in main codebase needs application-level vectors
+- [x] **Feature Comparison:**
+  - [x] Both support same 4 distance metrics: Cosine, Euclidean, DotProduct, Manhattan
+  - [x] **Difference:** Main returns cosine *similarity*, Incomming returns cosine *distance*
+  - [x] Main has SQL-specific features (Angle, Midpoint, IBinarySerialize)
+  - [x] Incomming has .NET features (implicit conversions, BinaryReader/Writer)
+- [x] **Algorithm Analysis:**
+  - [x] Euclidean, DotProduct, Manhattan: **100% identical implementations**
+  - [x] Cosine: Same algorithm, different formula (similarity vs distance)
+  - [x] Main uses `[MethodImpl(AggressiveInlining)]` for performance
+- [x] **Coexistence Strategy:**
+  - [x] Application creates/processes embeddings using `OoBDev.System.Math.Vector`
+  - [x] Convert to `SqlVector` for database storage
+  - [x] Both needed for complete RAG/AI workflow
+- [x] **Migration Decision:** ✅ **MIGRATE Incomming Vector to Framework**
+  - [x] Target: `src/Framework/OoBDev.System/Math/`
+  - [x] Namespace: `OoBDev.System.Math` (from `OoBDev.Common.Math`)
+  - [x] Complexity: LOW - 4 self-contained files, well-tested
+  - [x] Priority: HIGH - Critical for SemanticKernel and AI/ML features
+  - [x] Breaking Changes: NONE - New addition, no conflicts
+
+**RECOMMENDATION:** Migrate Vector math library to OoBDev.System.Math. Add conversion utilities between Vector and SqlVector. Add both CosineSimilarity and CosineDistance to both implementations for consistency.
+
+**Outcome:** Comparison complete. **Ready to migrate Vector math library.**
+
 ### Protocols
 - [x] Created `.claude/protocols/software/incoming-codebase-comparison.md`
 - [x] Updated `.claude/protocols/software/README.md` with new protocol
@@ -260,7 +294,370 @@ Before proceeding with BinaryDataDecoders migration (Phases 1-5), critical quest
 
 **Next Steps:**
 - [ ] **DECISION:** Choose Option 1, 2, 3, or 4
-- [ ] Execute chosen option per migration plan
+- [ ] Execute chosen option per migration plan sections below
+
+---
+
+### Oobtainium Migration - Option 1: MIGRATE to Main Framework
+
+**Execute ONLY if Option 1 is chosen**
+
+**Effort:** MEDIUM | **Maintenance:** HIGH | **See:** [Migration Plan Phase 1-5](docs/migration/oobtainium-migration-plan.md)
+
+- [ ] **Phase 1: Preparation & Analysis**
+  - [ ] Create target project structure: `src/Extensions/OoBDev.Extensions.Mocking/`
+  - [ ] Create `OoBDev.Extensions.Mocking.Abstractions/` for interfaces
+  - [ ] Create `OoBDev.Extensions.Mocking.Tests/` for unit tests
+  - [ ] Decide on namespace: `OoBDev.Mocking` or `OoBDev.Extensions.Mocking`
+  - [ ] Review all 48 files for migration requirements
+
+- [ ] **Phase 2: Upgrade & Migrate**
+  - [ ] Upgrade all projects to .NET 9.0 (from .NET Standard 2.1)
+  - [ ] Upgrade Microsoft.Extensions.* to 9.0.x (from 3.1.9)
+  - [ ] Rename namespaces: `OoBDev.Oobtainium` → target namespace
+  - [ ] Migrate all 48 source files
+  - [ ] Fix any API breaking changes from .NET Standard → .NET 9.0
+  - [ ] Enable nullable reference types
+  - [ ] Add file-scoped namespaces
+
+- [ ] **Phase 3: Integration**
+  - [ ] Add project references to OoBDev.sln
+  - [ ] Add ServiceCollection extensions
+  - [ ] Add configuration options
+  - [ ] Create README.md with usage examples
+  - [ ] Add XML documentation to public APIs
+
+- [ ] **Phase 4: Testing**
+  - [ ] Migrate all existing tests
+  - [ ] Add new tests for .NET 9.0 features
+  - [ ] Target 80%+ code coverage
+  - [ ] Run `dotnet test` and verify all pass
+  - [ ] Create integration test examples
+
+- [ ] **Phase 5: Documentation & Cleanup**
+  - [ ] Add to main README.md feature list
+  - [ ] Create migration guide for users
+  - [ ] Add comparison with Moq/NSubstitute
+  - [ ] Update CHANGELOG
+  - [ ] Delete `Incomming/OoBDev.Oobtainium/` after successful migration
+
+### Oobtainium Migration - Option 2: REFERENCE as External NuGet
+
+**Execute ONLY if Option 2 is chosen**
+
+**Effort:** LOW | **Maintenance:** MINIMAL
+
+- [ ] **Verify NuGet Package Availability**
+  - [ ] Search NuGet.org for "OoBDev.Oobtainium"
+  - [ ] Check GitHub releases: https://github.com/OutOfBandDevelopment/oobtainium/releases
+  - [ ] If not published, decide whether to publish it
+
+- [ ] **Option 2A: Package Exists on NuGet**
+  - [ ] Add PackageReference to projects that need mocking
+  - [ ] Document which package version to use
+  - [ ] Add usage examples in docs
+  - [ ] Delete `Incomming/OoBDev.Oobtainium/` (using external package)
+
+- [ ] **Option 2B: Publish to NuGet (if needed)**
+  - [ ] Create NuGet package from Incomming/OoBDev.Oobtainium
+  - [ ] Set package metadata (authors, description, license)
+  - [ ] Publish to NuGet.org or internal feed
+  - [ ] Add PackageReference to consuming projects
+  - [ ] Delete `Incomming/OoBDev.Oobtainium/` after publishing
+
+- [ ] **Documentation**
+  - [ ] Document external dependency
+  - [ ] Add to README.md under "External Dependencies"
+  - [ ] Create examples of usage
+
+### Oobtainium Migration - Option 3: ARCHIVE in Incomming/
+
+**Execute ONLY if Option 3 is chosen**
+
+**Effort:** MINIMAL | **Maintenance:** NONE
+
+- [ ] **Create Archive Documentation**
+  - [ ] Create `Incomming/OoBDev.Oobtainium/README.md`
+  - [ ] Document decision to archive
+  - [ ] Explain what Oobtainium is and does
+  - [ ] List reasons for not migrating
+  - [ ] Provide alternatives (Moq, NSubstitute)
+  - [ ] Add note that it can be reconsidered in future
+
+- [ ] **Update Main Documentation**
+  - [ ] Add note to main TODO.md about archived decision
+  - [ ] Document location for future reference
+  - [ ] Update migration docs with archive status
+
+- [ ] **No Further Action Required**
+  - Code remains in `Incomming/OoBDev.Oobtainium/`
+  - Available for future reconsideration
+  - Zero maintenance burden
+
+### Oobtainium Migration - Option 4: DELETE ⭐ RECOMMENDED
+
+**Execute ONLY if Option 4 is chosen**
+
+**Effort:** MINIMAL | **Maintenance:** NONE
+
+- [ ] **Final Review Before Deletion**
+  - [ ] Verify no references to Oobtainium in main codebase
+  - [ ] Verify no dependencies on Oobtainium in other Incomming/ directories
+  - [ ] Confirm decision with stakeholders if needed
+  - [ ] Backup if desired: `tar -czf oobtainium-backup-$(date +%Y%m%d).tar.gz Incomming/OoBDev.Oobtainium/`
+
+- [ ] **Delete Directory**
+  - [ ] Delete `Incomming/OoBDev.Oobtainium/` directory
+  - [ ] Verify deletion: `ls Incomming/` should not show OoBDev.Oobtainium
+
+- [ ] **Update Documentation**
+  - [ ] Update TODO.md with deletion status
+  - [ ] Update `docs/migration/oobtainium-feature-mapping.md` conclusion
+  - [ ] Update `docs/migration/oobtainium-migration-plan.md` with decision
+  - [ ] Add entry to CHANGELOG if exists
+
+- [ ] **Rationale Documentation**
+  - [ ] Document why deleted (focus on unique OoBDev features)
+  - [ ] List alternatives: Moq (460M+ downloads), NSubstitute (130M+)
+  - [ ] Confirm resource reallocation to BinaryDataDecoders migration
+
+---
+
+## Incomming/Framework Migration Work
+
+**Status:** 🔍 INVESTIGATION COMPLETE - Ready for Phase 0 systematic comparison
+
+**Complexity:** HIGH - 55 files with mix of NEW features and DIFFERS requiring individual review
+
+**Documentation:**
+- [Feature Mapping](docs/migration/framework-feature-mapping.md) - Complete 30 NEW + 25 DIFFERS analysis
+- [Vector Comparison](docs/migration/vector-comparison.md) - Detailed vector implementation analysis
+
+### Phase 0: Systematic File Comparison (REQUIRED FIRST)
+
+**Purpose:** Compare all 25 DIFFERS files to identify bug fixes, improvements, and breaking changes
+
+**Priority:** CRITICAL - Must complete before any migration
+
+- [ ] **0.1 Core Abstractions (8 files)**
+  - [ ] Compare `IAccessor.cs` - Async-local accessor pattern
+  - [ ] Compare `IDataConverter.cs` - Type conversion interface
+  - [ ] Compare `IDatabaseMapper.cs` - Database mapping interface
+  - [ ] Compare `IDatabaseQuery.cs` - Database query interface
+  - [ ] Compare `IHttpPrepareRequest.cs` - HTTP request customization
+  - [ ] Compare `IHttpPrepareRequestFeature.cs` - Middleware feature
+  - [ ] Compare `IJsonSerializer.cs` - JSON serialization interface
+  - [ ] Compare `Accessor.cs` - Accessor implementation
+  - [ ] Create comparison matrix documenting differences
+
+- [ ] **0.2 Core Implementations (8 files)**
+  - [ ] Compare `DataConverter.cs` - Type conversion implementation
+  - [ ] Compare `DatabaseQuery.cs` - Query execution
+  - [ ] Compare `HttpPrepareRequest.cs` - HTTP preparation base
+  - [ ] Compare `CorrelationInfo.cs` - Correlation tracking
+  - [ ] Compare `CorrelationInfoMiddleware.cs` - Middleware implementation
+  - [ ] Compare `CorrelationInfoHttpPrepareRequestFeature.cs` - Feature implementation
+  - [ ] Compare `ServiceCollectionExtensions.cs` (both projects)
+  - [ ] Document bug fixes and improvements found
+
+- [ ] **0.3 Validation Attributes (7 files)**
+  - [ ] Compare `ConnectionStringNameAttribute.cs` - Database connection attribute
+  - [ ] Compare `QueryParameterAttribute.cs` - Stored procedure parameters
+  - [ ] Compare `QueryResultAttribute.cs` - Result mapping
+  - [ ] Compare `StoredProcedureAttribute.cs` - SP mapping
+  - [ ] Compare `ZipCodeAttribute.cs` - Zip code validation
+  - [ ] Compare `ZipCodesAttribute.cs` - Multi-zip validation
+  - [ ] Verify regex patterns and validation logic
+
+- [ ] **0.4 ASP.NET Core (2 files)**
+  - [ ] Compare `ApplicationBuilderExtensions.cs` - Pipeline configuration
+  - [ ] Compare `AdditionalSwaggerGenEndpointsOptions.cs` - **May already be fixed in dotnet-lib migration**
+  - [ ] Document middleware additions
+
+- [ ] **0.5 Constants & Headers (1 file)**
+  - [ ] Compare `DefinedHttpHeaders.cs` - HTTP header constants
+  - [ ] Check for new headers
+
+- [ ] **0.6 Branding Audit**
+  - [ ] Search all Incomming/Framework files for "Erisk" references
+  - [ ] Create list of files requiring branding changes
+  - [ ] Plan "Erisk" → "OoBDev" renaming strategy
+
+- [ ] **0.7 Namespace Mapping Decision**
+  - [ ] Decide: `OoBDev.Common` → `OoBDev.System` or keep as `OoBDev.Common`?
+  - [ ] Map all Incomming namespaces to target main framework namespaces
+  - [ ] Document namespace migration strategy
+
+- [ ] **0.8 Phase 0 Summary Report**
+  - [ ] Create `docs/migration/framework-phase0-comparison.md`
+  - [ ] Document all differences found in 25 DIFFERS files
+  - [ ] Identify bug fixes to apply
+  - [ ] Identify breaking changes
+  - [ ] Create prioritized migration task list
+
+### Phase 1: Vector Math Library Migration (READY)
+
+**Status:** ✅ APPROVED - Analysis complete, ready to execute
+
+**Complexity:** LOW - 4 self-contained files, well-tested
+
+**Priority:** HIGH - Critical for SemanticKernel and AI/ML features
+
+**See:** [Vector Comparison](docs/migration/vector-comparison.md) for detailed analysis
+
+- [ ] **1.1 Create Target Directory Structure**
+  - [ ] Create `src/Framework/OoBDev.System/Math/` directory
+  - [ ] Create `src/Framework/OoBDev.System.Tests/Math/` directory
+
+- [ ] **1.2 Migrate Core Vector Files**
+  - [ ] Migrate `Vector.cs` to `src/Framework/OoBDev.System/Math/Vector.cs`
+    - Change namespace: `OoBDev.Common.Math` → `OoBDev.System.Math`
+    - Add `[MethodImpl(MethodImplOptions.AggressiveInlining)]` to VectorMath methods
+  - [ ] Migrate `VectorMath.cs` to `src/Framework/OoBDev.System/Math/VectorMath.cs`
+    - Change namespace to `OoBDev.System.Math`
+    - Add aggressive inlining to distance metric methods
+    - Add `CosineSimilarity` method (returns `1.0 - CosineDistance(...)`)
+  - [ ] Migrate `VectorDistanceMetrics.cs` to `src/Framework/OoBDev.System/Math/VectorDistanceMetrics.cs`
+    - Change namespace to `OoBDev.System.Math`
+  - [ ] Migrate `VectorComparer.cs` to `src/Framework/OoBDev.System/Math/VectorComparer.cs`
+    - Change namespace to `OoBDev.System.Math`
+
+- [ ] **1.3 Migrate Tests**
+  - [ ] Migrate `VectorTests.cs` to `src/Framework/OoBDev.System.Tests/Math/VectorTests.cs`
+    - Update namespace references
+    - Add additional test cases for edge cases
+    - Target 80%+ coverage
+
+- [ ] **1.4 Update Project References**
+  - [ ] Add Math files to `OoBDev.System.csproj`
+  - [ ] Add test references to `OoBDev.System.Tests.csproj`
+  - [ ] Verify compilation with `dotnet build`
+
+- [ ] **1.5 Create SqlVector Conversion Utilities**
+  - [ ] Create `src/Extensions/OoBDev.Data.Vectors/VectorConversions.cs`
+  - [ ] Add extension method: `ToSqlVector(this Vector vector)`
+  - [ ] Add extension method: `ToVector(this SqlVector sqlVector)`
+  - [ ] Add unit tests for conversions
+
+- [ ] **1.6 Enhance OoBDev.Data.Vectors**
+  - [ ] Add `CosineDistance` method to `VectorFunctions.cs` (returns `1.0 - CosineSimilarity(...)`)
+  - [ ] Ensure both `CosineSimilarity` and `CosineDistance` available
+  - [ ] Add XML documentation explaining difference
+  - [ ] Update tests
+
+- [ ] **1.7 Update SemanticKernel Integration**
+  - [ ] Check `src/Framework/OoBDev.SemanticKernel/` for vector dependencies
+  - [ ] Add reference to `OoBDev.System` if needed
+  - [ ] Update any vector-related code to use new namespace
+  - [ ] Verify SemanticKernel plugins still work
+
+- [ ] **1.8 Documentation**
+  - [ ] Add XML documentation to all public Vector APIs
+  - [ ] Create `src/Framework/OoBDev.System/Math/README.md` explaining usage
+  - [ ] Document difference between `Vector` (application) and `SqlVector` (database)
+  - [ ] Add examples of RAG/AI workflow using both
+
+- [ ] **1.9 Testing & Validation**
+  - [ ] Run `dotnet build src/Framework/OoBDev.System/`
+  - [ ] Run `dotnet test src/Framework/OoBDev.System.Tests/`
+  - [ ] Verify 80%+ test coverage on new Math namespace
+  - [ ] Run integration tests if available
+
+### Phase 2: High-Priority NEW Features Migration
+
+**Status:** ⏸️ BLOCKED - Awaiting Phase 0 completion and namespace decisions
+
+- [ ] **2.1 SQL Database Mapper**
+  - [ ] Target: `src/Extensions/OoBDev.Data.Common/` or new `OoBDev.Data.SqlServer/`
+  - [ ] Migrate `SqlDatabaseMapper.cs`
+  - [ ] Add comprehensive tests
+  - [ ] Document usage patterns
+
+- [ ] **2.2 Audit Logging Middleware**
+  - [ ] Target: `src/Framework/OoBDev.AspNetCore.Mvc/Middleware/`
+  - [ ] Migrate all 5 audit logging files
+  - [ ] Create sample `IAuditLoggingRecorder` implementation
+  - [ ] Add configuration options
+  - [ ] Document setup and usage
+
+- [ ] **2.3 User & Application Access**
+  - [ ] Target: `src/Framework/OoBDev.System/` or `src/Framework/OoBDev.AspNetCore.Mvc/`
+  - [ ] Migrate `IApplicationAccess.cs`, `ICurrentUserAccessor.cs`
+  - [ ] Migrate implementations: `CurrentUserAccessor.cs`, `HttpCurrentUserAccessor.cs`
+  - [ ] Integrate with existing identity system
+  - [ ] Add multi-tenancy examples
+
+- [ ] **2.4 Environment Settings**
+  - [ ] Target: `src/Framework/OoBDev.AspNetCore.Mvc/Configuration/`
+  - [ ] Migrate all 4 environment settings files
+  - [ ] Integrate with existing configuration patterns
+  - [ ] Add examples
+
+### Phase 3: Medium-Priority NEW Features Migration
+
+**Status:** ⏸️ BLOCKED - Awaiting Phase 0 and Phase 2 completion
+
+- [ ] **3.1 HTTP Extensions**
+  - [ ] Migrate `HttpContextExtensions.cs`
+  - [ ] Migrate `OoBDevClientOptions.cs`
+  - [ ] Migrate `OoBDevHttpPrepareRequest.cs`
+  - [ ] Add tests
+
+- [ ] **3.2 Swagger/OpenAPI Customizations**
+  - [ ] Rename `EriskInternalDocumentFilter.cs` → `OoBDevInternalDocumentFilter.cs`
+  - [ ] Migrate all 4 Swagger files
+  - [ ] Integrate with existing Swagger setup
+  - [ ] Add documentation
+
+- [ ] **3.3 JSON Serializer Wrapper**
+  - [ ] Migrate `WrappedJsonSerializer.cs`
+  - [ ] Integrate with existing JSON configuration
+  - [ ] Add tests
+
+- [ ] **3.4 Validation Attributes**
+  - [ ] Migrate `QuoteIdAttribute.cs`
+  - [ ] Review for domain-specific logic that needs generalization
+  - [ ] Add tests
+
+### Phase 4: Merge DIFFERS Files
+
+**Status:** ⏸️ BLOCKED - Requires Phase 0 comparison results
+
+- [ ] **4.1 Apply Bug Fixes**
+  - [ ] Apply any bug fixes found in Phase 0 comparison
+  - [ ] Test thoroughly
+  - [ ] Document changes
+
+- [ ] **4.2 Merge Improvements**
+  - [ ] Merge improvements from Incomming to main
+  - [ ] Maintain backward compatibility
+  - [ ] Update tests
+
+- [ ] **4.3 Breaking Change Analysis**
+  - [ ] Document any breaking changes
+  - [ ] Create migration guide if needed
+  - [ ] Update CHANGELOG
+
+### Phase 5: Final Testing & Cleanup
+
+**Status:** ⏸️ BLOCKED - Awaiting Phase 1-4 completion
+
+- [ ] **5.1 Integration Testing**
+  - [ ] Test all migrated features together
+  - [ ] Verify SemanticKernel integration works
+  - [ ] Test audit logging with real scenarios
+  - [ ] Verify SQL Database Mapper with actual database
+
+- [ ] **5.2 Documentation**
+  - [ ] Update main README.md
+  - [ ] Create migration guide for users
+  - [ ] Add examples for all new features
+  - [ ] Update architecture docs
+
+- [ ] **5.3 Cleanup**
+  - [ ] Delete or archive `Incomming/Framework/` after successful migration
+  - [ ] Update TODO.md with results
+  - [ ] Create final migration report
 
 ---
 
