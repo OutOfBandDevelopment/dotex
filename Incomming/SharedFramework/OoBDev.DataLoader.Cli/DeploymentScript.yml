@@ -13,7 +13,7 @@ Contexts:
 - OoBDev.Core.Persistence.CoreDbContext, OoBDev.Core.Persistence
 #- OoBDev.Core.AnnouncementBanners.Persistence.CoreBannersDbContext, OoBDev.Core.AnnouncementBanners
 #- OoBDev.Core.ClaimScopes.Persistence.CoreClaimScopesDbContext, OoBDev.Core.ClaimScopes
-#- OoBDev.Core.CMS.Persistence.CMSDbContext, OoBDev.Core.CMS
+#- OoBDev.Core.APP.Persistence.CMSDbContext, OoBDev.Core.CMS
 #- OoBDev.Core.DynamicForms.Persistence.DynamicFormsDbContext, OoBDev.Core.DynamicForms
 #- OoBDev.Core.Languages.Persistence.CoreLanguagesDbContext, OoBDev.Core.Languages
 SourceDataPaths:

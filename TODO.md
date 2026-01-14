@@ -484,11 +484,6 @@ Before proceeding with BinaryDataDecoders migration (Phases 1-5), critical quest
   - [ ] Compare `DefinedHttpHeaders.cs` - HTTP header constants
   - [ ] Check for new headers
 
-- [ ] **0.6 Branding Audit**
-  - [ ] Search all Incomming/Framework files for "Erisk" references
-  - [ ] Create list of files requiring branding changes
-  - [ ] Plan "Erisk" → "OoBDev" renaming strategy
-
 - [ ] **0.7 Namespace Mapping Decision**
   - [ ] Decide: `OoBDev.Common` → `OoBDev.System` or keep as `OoBDev.Common`?
   - [ ] Map all Incomming namespaces to target main framework namespaces
@@ -608,12 +603,6 @@ Before proceeding with BinaryDataDecoders migration (Phases 1-5), critical quest
   - [ ] Migrate `OoBDevClientOptions.cs`
   - [ ] Migrate `OoBDevHttpPrepareRequest.cs`
   - [ ] Add tests
-
-- [ ] **3.2 Swagger/OpenAPI Customizations**
-  - [ ] Rename `EriskInternalDocumentFilter.cs` → `OoBDevInternalDocumentFilter.cs`
-  - [ ] Migrate all 4 Swagger files
-  - [ ] Integrate with existing Swagger setup
-  - [ ] Add documentation
 
 - [ ] **3.3 JSON Serializer Wrapper**
   - [ ] Migrate `WrappedJsonSerializer.cs`
