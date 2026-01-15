@@ -14,11 +14,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="GitVersion.MsBuild" Version="6.3.0">
+    <PackageReference Include="GitVersion.MsBuild" Version="6.5.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="System.Reflection.MetadataLoadContext" Version="10.0.1" />
+    <PackageReference Include="System.Reflection.MetadataLoadContext" Version="10.0.2" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,6 +1,6 @@
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.OpenApi;
 using OoBDev.AspNetCore.Mvc.OpenApi;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Linq;
 using System.Reflection;

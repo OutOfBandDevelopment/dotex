@@ -1,12 +1,12 @@
-﻿using OoBDev.Extensions.Linq;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi;
+using OoBDev.Extensions.Linq;
 using OoBDev.System.Linq.Expressions;
 using OoBDev.System.Linq.Search;
 using OoBDev.System.Reflection;
 using OoBDev.System.ResponseModel;
 using OoBDev.System.Text.Json.Serialization;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System;
 using System.Collections.Generic;
@@ -45,16 +45,16 @@ public class SearchQueryOperationFilter(
 
             if (string.Equals(context.MethodInfo.Name, "save", StringComparison.InvariantCultureIgnoreCase))
             {
-                operation.Tags.Add(new() { Name = "Save" });
+                operation.Tags.Add(new OpenApiTag { Name = "Save" });
             }
             if (string.Equals(context.MethodInfo.Name, "get", StringComparison.InvariantCultureIgnoreCase))
             {
-                operation.Tags.Add(new() { Name = "Getter" });
+                operation.Tags.Add(new OpenApiTag { Name = "Getter" });
             }
 
             if (context.MethodInfo.ReturnType.IsAssignableTo(typeof(IQueryable)) && context.MethodInfo.ReturnType.IsGenericType)
             {
-                operation.Tags.Add(new() { Name = nameof(IQueryable) });
+                operation.Tags.Add(new OpenApiTag { Name = nameof(IQueryable) });
 
                 var elementType = context.MethodInfo.ReturnType.GetGenericArguments()[0];
                 var treeBuilder = (IExpressionTreeBuilder)ActivatorUtilities.CreateInstance(scopedServiceProvider.ServiceProvider, typeof(ExpressionTreeBuilder<>).MakeGenericType(elementType));

@@ -1,13 +1,13 @@
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.Extensions;
 using OoBDev.MessageQueueing.Services;
 using OoBDev.MessageQueueing.Tests.TestItems;
 using OoBDev.System;
 using OoBDev.System.Accessors;
 using OoBDev.TestUtilities;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;
