@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.OpenApi;
-using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System;
 using System.Linq;
@@ -32,11 +31,15 @@ public class FormFileOperationFilter : IOperationFilter
         var fileParams = context.MethodInfo.GetParameters().Where(p => p.ParameterType == typeof(IFormFile));
 
         // Map IFormFile parameters to OpenApiSchema properties
-        operation.RequestBody.Content[fileUploadMime].Schema.Properties =
-            fileParams.ToDictionary(k => k.Name ?? k.ParameterType.Name, v => new OpenApiSchema()
+        var schema = operation.RequestBody.Content[fileUploadMime].Schema;
+        foreach (var fileParam in fileParams)
+        {
+            var propertyName = fileParam.Name ?? fileParam.ParameterType.Name;
+            schema.Properties[propertyName] = new OpenApiSchema()
             {
-                Type = "string",
+                Type = JsonSchemaType.String,
                 Format = "binary"
-            });
+            };
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.OpenApi;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Collections.Generic;
+using System.Net.Http;
 
 namespace OoBDev.AspNetCore.Mvc.SwaggerGen;
 
@@ -24,27 +25,24 @@ public class HealthChecksDocumentFilter : IDocumentFilter
         var pathItem = new OpenApiPathItem();
 
         var operation = new OpenApiOperation();
-        operation.Tags.Add(new OpenApiTag { Name = "ApiHealth" });
+        operation.Tags.Add(new OpenApiTagReference { Name = "ApiHealth" });
 
-        var properties = new Dictionary<string, OpenApiSchema>
+        var schema = new OpenApiSchema
         {
-            { "status", new OpenApiSchema() { Type = "string" } },
-            { "errors", new OpenApiSchema() { Type = "array" } }
+            Type = JsonSchemaType.Object,
+            AdditionalPropertiesAllowed = true,
         };
+        schema.Properties.Add("status", new OpenApiSchema() { Type = JsonSchemaType.String });
+        schema.Properties.Add("errors", new OpenApiSchema() { Type = JsonSchemaType.Array });
 
         var response = new OpenApiResponse();
         response.Content.Add("application/json", new OpenApiMediaType
         {
-            Schema = new OpenApiSchema
-            {
-                Type = "object",
-                AdditionalPropertiesAllowed = true,
-                Properties = properties,
-            }
+            Schema = schema
         });
 
         operation.Responses.Add("200", response);
-        pathItem.AddOperation(OperationType.Get, operation);
+        pathItem.AddOperation(HttpMethod.Get, operation);
         openApiDocument?.Paths.Add(HealthCheckEndpoint, pathItem);
     }
 }

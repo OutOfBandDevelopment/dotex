@@ -36,7 +36,6 @@ public class NumericAssertsTests
 
     [TestMethod]
     [TestCategory(TestCategories.Unit)]
-    [ExpectedException(typeof(AssertFailedException))]
     public void AreSimilar_Double_BeyondTolerance()
     {
         // Stage
@@ -44,7 +43,10 @@ public class NumericAssertsTests
         double actual = 123.457;
 
         // Test - Should throw
-        NumericAsserts.AreSimilar(expected, actual);
+        Assert.ThrowsException<AssertFailedException>(() =>
+        {
+            NumericAsserts.AreSimilar(expected, actual);
+        });
     }
 
     [TestMethod]
@@ -89,7 +91,6 @@ public class NumericAssertsTests
 
     [TestMethod]
     [TestCategory(TestCategories.Unit)]
-    [ExpectedException(typeof(AssertFailedException))]
     public void AreSimilar_Float_BeyondTolerance()
     {
         // Stage
@@ -97,7 +98,10 @@ public class NumericAssertsTests
         float actual = 123.46f;
 
         // Test - Should throw
-        NumericAsserts.AreSimilar(expected, actual);
+        Assert.ThrowsException<AssertFailedException>(() =>
+        {
+            NumericAsserts.AreSimilar(expected, actual);
+        });
     }
 
     #endregion

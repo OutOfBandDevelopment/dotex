@@ -45,16 +45,16 @@ public class SearchQueryOperationFilter(
 
             if (string.Equals(context.MethodInfo.Name, "save", StringComparison.InvariantCultureIgnoreCase))
             {
-                operation.Tags.Add(new OpenApiTag { Name = "Save" });
+                operation.Tags.Add(new OpenApiTagReference { Name = "Save" });
             }
             if (string.Equals(context.MethodInfo.Name, "get", StringComparison.InvariantCultureIgnoreCase))
             {
-                operation.Tags.Add(new OpenApiTag { Name = "Getter" });
+                operation.Tags.Add(new OpenApiTagReference { Name = "Getter" });
             }
 
             if (context.MethodInfo.ReturnType.IsAssignableTo(typeof(IQueryable)) && context.MethodInfo.ReturnType.IsGenericType)
             {
-                operation.Tags.Add(new OpenApiTag { Name = nameof(IQueryable) });
+                operation.Tags.Add(new OpenApiTagReference { Name = nameof(IQueryable) });
 
                 var elementType = context.MethodInfo.ReturnType.GetGenericArguments()[0];
                 var treeBuilder = (IExpressionTreeBuilder)ActivatorUtilities.CreateInstance(scopedServiceProvider.ServiceProvider, typeof(ExpressionTreeBuilder<>).MakeGenericType(elementType));
@@ -111,7 +111,11 @@ public class SearchQueryOperationFilter(
                     //    context.SchemaRepository.TryLookupByType(elementType.GetProperty(propertyName)?.PropertyType, out var pas) ? pas : null
                     //    );
 
-                    var parameters = operation.Parameters ??= new List<OpenApiParameter>();
+                    if (operation.Parameters == null)
+                    {
+                        operation.Parameters = new List<OpenApiParameter>();
+                    }
+                    var parameters = operation.Parameters;
                     //TODO: build query request
                     if (request != null)
                     {
@@ -186,42 +190,51 @@ public class SearchQueryOperationFilter(
         IExpressionTreeBuilder treeBuilder
         )
     {
-        var schema = context.SchemaRepository.Schemas[requestSchema.Reference.Id];
+        if (requestSchema?.Reference == null) return null;
+
+        if (!context.SchemaRepository.Schemas.TryGetValue(requestSchema.Reference.Id, out var schema))
+        {
+            return null;
+        }
 
         if (schema == null) return null;
 
-        var properties = schema.Properties.ChangeComparer(StringComparer.InvariantCultureIgnoreCase);
-
-        if (properties.TryGetValue(nameof(ISearchQuery.PageSize), out var pageSize))
+        if (schema.Properties.TryGetValue(nameof(ISearchQuery.PageSize), out var pageSize))
         {
             pageSize.Description = $"**Default size:** `{QueryBuilder.DefaultPageSize}`, `-1` will disable paging";
         }
-        if (properties.TryGetValue(nameof(ISearchQuery.ExcludePageCount), out var excludePageCount))
+        if (schema.Properties.TryGetValue(nameof(ISearchQuery.ExcludePageCount), out var excludePageCount))
         {
             excludePageCount.Description = "`true` will disable row/page counts and may decrease processing time without effecting paging functions";
         }
 
-        if (properties.TryGetValue(nameof(ISearchQuery.Filter), out var filter))
+        if (schema.Properties.TryGetValue(nameof(ISearchQuery.Filter), out var filter))
         {
             var filterParameterSchema = context.SchemaGenerator.GenerateSchema(typeof(FilterParameter), context.SchemaRepository);
-            filterParameterSchema.Nullable = true;
+            if (filterParameterSchema != null)
+            {
+                filterParameterSchema.Nullable = true;
+            }
 
             var filterName = context.MethodInfo.ReturnType.GenericTypeArguments[0].FullName + nameof(ISearchQuery.Filter);
             if (!context.SchemaRepository.Schemas.TryGetValue(filterName, out var filterSchema))
             {
                 filterSchema = new OpenApiSchema()
                 {
-                    Type = "object",
+                    Type = JsonSchemaType.Object,
                     Description = $"**Filterable Properties:** {string.Join("; ", treeBuilder.GetFilterablePropertyNames())}",
                     Nullable = true,
                 };
                 context.SchemaRepository.Schemas.Add(filterName, filterSchema);
                 foreach (var propertyName in treeBuilder.GetFilterablePropertyNames())
                 {
-                    filterSchema.Properties.Add(json.AsPropertyName(propertyName), filterParameterSchema);
+                    if (filterParameterSchema != null)
+                    {
+                        filterSchema.Properties[json.AsPropertyName(propertyName)] = filterParameterSchema;
+                    }
                 }
             }
-            filter = properties[nameof(ISearchQuery.Filter)] = new OpenApiSchema()
+            schema.Properties[nameof(ISearchQuery.Filter)] = new OpenApiSchema()
             {
                 Reference = new OpenApiReference()
                 {
@@ -231,31 +244,37 @@ public class SearchQueryOperationFilter(
             };
         }
 
-        if (properties.TryGetValue(nameof(ISearchQuery.OrderBy), out var orderBy))
+        if (schema.Properties.TryGetValue(nameof(ISearchQuery.OrderBy), out var orderBy))
         {
             var sortableProperties = treeBuilder.GetSortablePropertyNames();
             var defaultSort = from ordinal in treeBuilder.DefaultSortOrder()
                               select $"{ordinal.column} {ordinal.direction.AsString()}";
 
             var orderDirectionsSchema = context.SchemaGenerator.GenerateSchema(typeof(OrderDirections), context.SchemaRepository);
-            orderDirectionsSchema.Nullable = true;
+            if (orderDirectionsSchema != null)
+            {
+                orderDirectionsSchema.Nullable = true;
+            }
 
             var orderByName = context.MethodInfo.ReturnType.GenericTypeArguments[0].FullName + nameof(ISearchQuery.OrderBy);
             if (!context.SchemaRepository.Schemas.TryGetValue(orderByName, out var orderBySchema))
             {
                 orderBySchema = new OpenApiSchema()
                 {
-                    Type = "object",
+                    Type = JsonSchemaType.Object,
                     Description = $"**Filterable Properties:** {string.Join("; ", treeBuilder.GetFilterablePropertyNames())}",
                     Nullable = true,
                 };
                 context.SchemaRepository.Schemas.Add(orderByName, orderBySchema);
                 foreach (var propertyName in treeBuilder.GetFilterablePropertyNames())
                 {
-                    orderBySchema.Properties.Add(json.AsPropertyName(propertyName), orderDirectionsSchema);
+                    if (orderDirectionsSchema != null)
+                    {
+                        orderBySchema.Properties[json.AsPropertyName(propertyName)] = orderDirectionsSchema;
+                    }
                 }
             }
-            orderBy = properties[nameof(ISearchQuery.OrderBy)] = new OpenApiSchema()
+            schema.Properties[nameof(ISearchQuery.OrderBy)] = new OpenApiSchema()
             {
                 Reference = new OpenApiReference()
                 {
@@ -265,11 +284,10 @@ public class SearchQueryOperationFilter(
             };
         }
 
-        if (properties.TryGetValue(nameof(ISearchQuery.SearchTerm), out var searchTerm))
+        if (schema.Properties.TryGetValue(nameof(ISearchQuery.SearchTerm), out var searchTerm))
         {
             searchTerm.Description = $"**Searched Properties:** {string.Join("; ", treeBuilder.GetSearchablePropertyNames())}";
         }
-        schema.Properties = properties;
         return schema;
     }
 

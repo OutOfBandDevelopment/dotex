@@ -1,6 +1,8 @@
 # TODO - OoBDev (dotex) Framework
 
-**Last Updated:** 2026-01-13 (SharedFramework investigation complete)
+**Last Updated:** 2026-01-15 (Swashbuckle 10.1.0 breaking changes fixes in progress)
+
+⚠️ **IN PROGRESS:** Swashbuckle 10.1.0 breaking changes in OoBDev.AspNetCore.Mvc (see section below)
 
 > **New to this project?** Read `/CLAUDE.md` first for a complete development guide including architecture, patterns, and migration scope.
 
@@ -199,6 +201,62 @@ This document tracks architectural work, migration planning, and bug fixes for t
 ---
 
 ## Pending Work
+
+### OoBDev.AspNetCore.Mvc - Swashbuckle 10.1.0 Breaking Changes (IN PROGRESS)
+
+**Issue:** Assembly updates introduced breaking changes in Swashbuckle 10.1.0 API
+
+**Changes Made (2026-01-15):**
+
+**File: FormFileOperationFilter.cs**
+- [x] Fixed CS0200: `IOpenApiSchema.Properties` is read-only
+  - Changed from: `schema.Properties = new Dictionary<...>()`
+  - Changed to: Loop through fileParams and add to `schema.Properties[propertyName]`
+  - Location: Lines 34-43
+- [x] Fixed CS0029: String to JsonSchemaType conversion
+  - Changed from: `Type = "string"`
+  - Changed to: `Type = JsonSchemaType.String`
+  - Location: Line 40
+
+**File: HealthChecksDocumentFilter.cs**
+- [x] Fixed CS1503: `OpenApiTag` vs `OpenApiTagReference` mismatch
+  - Changed from: `operation.Tags.Add(new OpenApiTag { Name = "ApiHealth" })`
+  - Changed to: `operation.Tags.Add(new OpenApiTagReference { Name = "ApiHealth" })`
+  - Location: Line 28
+- [x] Fixed CS0200 & CS0266: Properties assignment and type conversion
+  - Changed from: `Properties = properties` (assignment)
+  - Changed to: Build schema with `.Properties.Add()` calls
+  - Location: Lines 30-36
+
+**File: SearchQueryOperationFilter.cs**
+- [x] Fixed CS1503: OpenApiTag references (3 occurrences)
+  - Changed from: `new OpenApiTag { Name = ... }`
+  - Changed to: `new OpenApiTagReference { Name = ... }`
+  - Location: Lines 48, 52, 57
+- [x] Fixed CS0019: Coalesce assignment with mismatched types
+  - Changed from: `operation.Parameters ??= new List<OpenApiParameter>()`
+  - Changed to: Traditional null check and assignment
+  - Location: Lines 114-118
+- [x] Fixed UpdateRequestSchema method (major refactor)
+  - Changed from: Creating mutable dictionary copy with `.ChangeComparer()`
+  - Changed to: Direct schema property access via `schema.Properties[key]`
+  - Removed unnecessary `.Properties = properties` reassignment
+  - Added null checks for schema lookups
+  - Fixed IOpenApiSchema vs OpenApiSchema conversions
+  - Location: Lines 187-292
+
+**Remaining:**
+- [ ] Verify build: `dotnet build src/Framework/OoBDev.AspNetCore.Mvc/OoBDev.AspNetCore.Mvc.csproj`
+- [ ] Verify tests pass: `dotnet test src/ --filter "OoBDev.AspNetCore.Mvc"`
+- [ ] Check for any remaining compiler errors in related filters
+
+**Breaking Change Summary:**
+- `OpenApiTag` collection now expects `OpenApiTagReference` objects
+- `IOpenApiSchema.Properties` is read-only collection (use `.Add()` instead of assignment)
+- `JsonSchemaType` is enum (not string) - use enum values like `JsonSchemaType.String`, `JsonSchemaType.Object`, etc.
+- Schema reference API requires proper null checking on `?.Reference`
+
+---
 
 ### Build Verification (COMPLETED)
 - [x] Run `dotnet build src/` to verify all bug fixes compile

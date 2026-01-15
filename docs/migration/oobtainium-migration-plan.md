@@ -100,12 +100,12 @@ If migration is chosen (Option 1), all work MUST follow these principles from `/
 <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.1.9" />
 
 <!-- NEW -->
-<TargetFramework>net9.0</TargetFramework>
+<TargetFramework>net10.0</TargetFramework>
 <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.0" />
 ```
 
 **Steps:**
-- [ ] Update all `.csproj` files to `<TargetFramework>net9.0</TargetFramework>`
+- [ ] Update all `.csproj` files to `<TargetFramework>net10.0</TargetFramework>`
 - [ ] Update package references:
   - [ ] Microsoft.Extensions.DependencyInjection.Abstractions: 3.1.9 → 9.0.0
   - [ ] Microsoft.Extensions.Logging.Abstractions: 3.1.9 → 9.0.0
@@ -142,7 +142,7 @@ If migration is chosen (Option 1), all work MUST follow these principles from `/
 **Example:**
 ```xml
 <PropertyGroup>
-  <TargetFramework>net9.0</TargetFramework>
+  <TargetFramework>net10.0</TargetFramework>
   <Nullable>enable</Nullable>
   <ImplicitUsings>disable</ImplicitUsings>
   <TreatWarningsAsErrors>true</TreatWarningsAsErrors>

@@ -53,7 +53,7 @@ All migration work MUST follow `/docs/architecture` standards:
 **Current State:** All 52 projects target .NET 8.0
 
 **Steps:**
-1. Update all `.csproj` files: `<TargetFramework>net8.0</TargetFramework>` → `<TargetFramework>net9.0</TargetFramework>`
+1. Update all `.csproj` files: `<TargetFramework>net8.0</TargetFramework>` → `<TargetFramework>net10.0</TargetFramework>`
 2. Update NuGet package versions to latest .NET 9-compatible versions
 3. Test compilation after upgrade
 4. Fix any breaking API changes
