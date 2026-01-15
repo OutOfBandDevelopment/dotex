@@ -1,5 +1,4 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace OoBDev.TestUtilities.Tests;
 
@@ -134,7 +133,6 @@ public class NumericAssertsTests
 
     [TestMethod]
     [TestCategory(TestCategories.Unit)]
-    [ExpectedException(typeof(AssertFailedException))]
     public void AreSimilar_Decimal_BeyondTolerance()
     {
         // Stage
@@ -142,7 +140,10 @@ public class NumericAssertsTests
         decimal actual = 123.457m;
 
         // Test - Should throw
-        NumericAsserts.AreSimilar(expected, actual);
+        Assert.ThrowsException<AssertFailedException>(() =>
+        {
+            NumericAsserts.AreSimilar(expected, actual);
+        });
     }
 
     #endregion
@@ -163,7 +164,6 @@ public class NumericAssertsTests
 
     [TestMethod]
     [TestCategory(TestCategories.Unit)]
-    [ExpectedException(typeof(AssertFailedException))]
     public void AreSimilar_Int32_NotEqual()
     {
         // Stage
@@ -171,7 +171,10 @@ public class NumericAssertsTests
         int actual = 12346;
 
         // Test - Should throw
-        NumericAsserts.AreSimilar(expected, actual);
+        Assert.ThrowsException<AssertFailedException>(() =>
+        {
+            NumericAsserts.AreSimilar(expected, actual);
+        });
     }
 
     [TestMethod]
@@ -205,7 +208,6 @@ public class NumericAssertsTests
 
     [TestMethod]
     [TestCategory(TestCategories.Unit)]
-    [ExpectedException(typeof(AssertFailedException))]
     public void AreSimilar_Double_CustomTolerance_BeyondRange()
     {
         // Stage
@@ -214,7 +216,10 @@ public class NumericAssertsTests
         double tolerance = 1.0;
 
         // Test - Should throw
-        NumericAsserts.AreSimilar(expected, actual, tolerance);
+        Assert.ThrowsException<AssertFailedException>(() =>
+        {
+            NumericAsserts.AreSimilar(expected, actual, tolerance);
+        });
     }
 
     [TestMethod]
@@ -232,7 +237,6 @@ public class NumericAssertsTests
 
     [TestMethod]
     [TestCategory(TestCategories.Unit)]
-    [ExpectedException(typeof(AssertFailedException))]
     public void AreSimilar_Int32_CustomTolerance_BeyondRange()
     {
         // Stage
@@ -241,7 +245,10 @@ public class NumericAssertsTests
         int tolerance = 10;
 
         // Test - Should throw
-        NumericAsserts.AreSimilar(expected, actual, tolerance);
+        Assert.ThrowsException<AssertFailedException>(() =>
+        {
+            NumericAsserts.AreSimilar(expected, actual, tolerance);
+        });
     }
 
     #endregion

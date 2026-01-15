@@ -1,8 +1,9 @@
 # TODO - OoBDev (dotex) Framework
 
-**Last Updated:** 2026-01-15 (Swashbuckle 10.1.0 breaking changes fixes in progress)
+**Last Updated:** 2026-01-15
 
-⚠️ **IN PROGRESS:** Swashbuckle 10.1.0 breaking changes in OoBDev.AspNetCore.Mvc (see section below)
+✅ **COMPLETED:** ExpectedExceptionAttribute → Assert.ThrowsException conversion (40 instances)
+⚠️ **IN PROGRESS:** Swashbuckle 10.1.0 breaking changes in OoBDev.AspNetCore.Mvc
 
 > **New to this project?** Read `/CLAUDE.md` first for a complete development guide including architecture, patterns, and migration scope.
 
@@ -201,6 +202,43 @@ This document tracks architectural work, migration planning, and bug fixes for t
 ---
 
 ## Pending Work
+
+### MSTest ExpectedExceptionAttribute Conversion (COMPLETED - 2026-01-15)
+
+**Task:** Convert all `[ExpectedException(typeof(ExceptionType))]` attributes to use `Assert.ThrowsException<T>()`
+
+**Completed:** All 40 instances across 24 files converted
+
+**Files Converted:**
+
+*Framework Layer (4 files, 10 conversions):*
+- OoBDev.TestUtilities.Tests/NumericAssertsTests.cs (6)
+- OoBDev.MessageQueueing.Tests/MessageSenderTests.cs (1)
+- OoBDev.System.Tests/ExpressionCalculator/Parser/ExpressionParserTests.cs (2)
+- OoBDev.System.Tests/ExpressionCalculator/Expressions/VariableExpressionTests.cs (2)
+
+*Binary Decoders (2 files, 4 conversions):*
+- BinaryDecoders/BinaryDataDecoders.ExpressionCalculator.Tests/Parser/ExpressionParserTests.cs (2)
+- BinaryDecoders/BinaryDataDecoders.ExpressionCalculator.Tests/Expressions/VariableExpressionTests.cs (2)
+
+*SharedFramework (18 files, 26 conversions):*
+- OoBDev.DocumentCenter.Tests (4 files, 4 conversions)
+- OoBDev.Communications.Tests (12 files, 16 conversions)
+- OoBDev.DataLoader.Tests (1 file, 1 conversion)
+- OoBDev.Caching.Common.Tests (1 file, 1 conversion)
+- OoBDev.Api.Twilio.* (3 files, 3 conversions)
+- OoBDev.Generations.Tests (1 file, 1 conversion)
+
+**Conversion Details:**
+- Removed `[ExpectedException(typeof(ExceptionType))]` attributes
+- Wrapped test body in `Assert.ThrowsException<T>(() => { ... })` for sync tests
+- Wrapped test body in `await Assert.ThrowsExceptionAsync<T>(async () => { ... })` for async tests
+- Preserved all test logic, comments, and variable declarations
+- Maintained proper indentation and code structure
+
+**Verification:** Code conversions manually verified by inspection of NumericAssertsTests.cs and CommunicationProviderTests.cs (both showing correct patterns)
+
+---
 
 ### OoBDev.AspNetCore.Mvc - Swashbuckle 10.1.0 Breaking Changes (IN PROGRESS)
 

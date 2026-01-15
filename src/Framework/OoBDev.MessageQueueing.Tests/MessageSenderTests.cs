@@ -49,31 +49,33 @@ public class MessageSenderTests
 
     [TestMethod]
     [TestCategory(TestCategories.Simulate)]
-    [ExpectedException(typeof(ApplicationException))]
     public async Task SendAsyncTest_Error()
     {
-        var configBuilder = new ConfigurationBuilder();
-
-        configBuilder.AddInMemoryCollection(new Dictionary<string, string?>
+        await Assert.ThrowsExceptionAsync<ApplicationException>(async () =>
         {
-            {"MessageQueue:MessageSenderTests:Provider", typeof(TestExceptionMessageSenderProvider).AssemblyQualifiedName },
+            var configBuilder = new ConfigurationBuilder();
+
+            configBuilder.AddInMemoryCollection(new Dictionary<string, string?>
+            {
+                {"MessageQueue:MessageSenderTests:Provider", typeof(TestExceptionMessageSenderProvider).AssemblyQualifiedName },
+            });
+
+            var config = configBuilder.Build();
+
+            var service = GetServiceProvider(TestContext, config);
+
+            // ---------------
+
+            var sender = service.GetRequiredService<IMessageQueueSender<MessageSenderTests>>();
+            var correlationId = await sender.SendAsync(new
+            {
+                hello = "world",
+            });
+
+            TestContext.Write($"correlationId: {correlationId}");
+
+            Assert.Fail("you should not get here!");
         });
-
-        var config = configBuilder.Build();
-
-        var service = GetServiceProvider(TestContext, config);
-
-        // ---------------
-
-        var sender = service.GetRequiredService<IMessageQueueSender<MessageSenderTests>>();
-        var correlationId = await sender.SendAsync(new
-        {
-            hello = "world",
-        });
-
-        TestContext.Write($"correlationId: {correlationId}");
-
-        Assert.Fail("you should not get here!");
     }
 
     [TestMethod]

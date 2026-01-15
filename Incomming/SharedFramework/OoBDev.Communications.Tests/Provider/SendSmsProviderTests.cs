@@ -76,7 +76,6 @@ namespace OoBDev.Communications.Tests.Provider
 
         [TestMethod]
         [TestCategory(TestCategories.Unit)]
-        [ExpectedException(typeof(ApplicationException))]
         public async Task ScheduleSendMessageAsyncTest_Error()
         {
             // Stage
@@ -100,13 +99,16 @@ namespace OoBDev.Communications.Tests.Provider
 
             // Test
             var provider = this.CreateProvider();
-            var result = await provider.ScheduleSendMessageAsync(mockMessage.Object, messageId);
+            await Assert.ThrowsExceptionAsync<ApplicationException>(async () =>
+            {
+                var result = await provider.ScheduleSendMessageAsync(mockMessage.Object, messageId);
 
-            // Assert
-            Assert.AreEqual(expected, result);
+                // Assert
+                Assert.AreEqual(expected, result);
 
-            // Verify
-            this.mockRepository.VerifyAll();
+                // Verify
+                this.mockRepository.VerifyAll();
+            });
         }
 
         [TestMethod]
@@ -137,7 +139,6 @@ namespace OoBDev.Communications.Tests.Provider
 
         [TestMethod]
         [TestCategory(TestCategories.Unit)]
-        [ExpectedException(typeof(ApplicationException))]
         public async Task SendMessageAsyncTest_Error()
         {
             // Stage
@@ -154,12 +155,15 @@ namespace OoBDev.Communications.Tests.Provider
             // Test
             var provider = this.CreateProvider();
 
-            await provider.SendMessageAsync(mockMessage.Object);
+            await Assert.ThrowsExceptionAsync<ApplicationException>(async () =>
+            {
+                await provider.SendMessageAsync(mockMessage.Object);
 
-            // Assert
+                // Assert
 
-            // Verify
-            this.mockRepository.VerifyAll();
+                // Verify
+                this.mockRepository.VerifyAll();
+            });
         }
     }
 }

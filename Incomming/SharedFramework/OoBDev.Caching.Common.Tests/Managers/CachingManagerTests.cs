@@ -121,7 +121,6 @@ namespace OoBDev.Caching.Common.Tests.Managers
 
         [TestMethod]
         [TestCategory(TestCategories.Unit)]
-        [ExpectedException(typeof(ApplicationException))]
         public void BuildKeyTest_Bypass()
         {
             // Stage
@@ -132,10 +131,13 @@ namespace OoBDev.Caching.Common.Tests.Managers
 
             // Test
             var manager = this.CreateManager();
-            var result = manager.BuildKey(method, args);
+            Assert.ThrowsException<ApplicationException>(() =>
+            {
+                var result = manager.BuildKey(method, args);
 
-            // Assert
-            Assert.Fail("you shouldn't get here");
+                // Assert
+                Assert.Fail("you shouldn't get here");
+            });
 
             // Verify
             this.mockRepository.VerifyAll();

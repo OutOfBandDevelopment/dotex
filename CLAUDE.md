@@ -386,6 +386,20 @@ dotnet test src/ --collect:"XPlat Code Coverage"
 
 ---
 
+## Recently Completed Work (2026-01-15)
+
+### Task: Convert ExpectedExceptionAttribute to Assert.ThrowsException
+**Status:** ✅ COMPLETED
+
+Successfully converted all 40 instances of `[ExpectedException(typeof(T))]` to `Assert.ThrowsException<T>()` across 24 test files:
+- Framework Layer: 10 conversions
+- Binary Decoders: 4 conversions
+- SharedFramework: 26 conversions
+
+Both sync and async test patterns handled correctly. See TODO.md for full file list.
+
+---
+
 ## Current Work Context (2026-01-15)
 
 ### Task: Fix Swashbuckle 10.1.0 Breaking Changes in OoBDev.AspNetCore.Mvc

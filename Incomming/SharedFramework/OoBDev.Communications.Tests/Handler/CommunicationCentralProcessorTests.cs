@@ -22,7 +22,7 @@ namespace OoBDev.Communications.Tests.Handler
     {
         public TestContext TestContext { get; set; }
 
-        [TestMethod, ExpectedException(typeof(ArgumentNullException)), TestCategory(TestCategories.Unit)]
+        [TestMethod, TestCategory(TestCategories.Unit)]
         [TestCategory(TestCategories.Feature.CommunicationCenter)]
         public void IsDeferredUntilTest_Ignore_null()
         {
@@ -36,8 +36,11 @@ namespace OoBDev.Communications.Tests.Handler
                 mock.Create<IObjectSerializer>().Object
                 );
             var processor = mockProcessor.Object;
-            processor.IsDeferredUntil(null, null, DateTimeOffset.UtcNow);
-            Assert.Fail("you shouldn't get here");
+            Assert.ThrowsException<ArgumentNullException>(() =>
+            {
+                processor.IsDeferredUntil(null, null, DateTimeOffset.UtcNow);
+                Assert.Fail("you shouldn't get here");
+            });
             mock.VerifyAll();
         }
 
@@ -823,7 +826,6 @@ namespace OoBDev.Communications.Tests.Handler
 
         [TestMethod, TestCategory(TestCategories.Unit)]
         [TestCategory(TestCategories.Feature.CommunicationCenter)]
-        [ExpectedException(typeof(InvalidOperationException))]
         public async Task HandleRequestAsyncTest_1ChannelsWithException()
         {
             //Stage
@@ -878,12 +880,15 @@ namespace OoBDev.Communications.Tests.Handler
                 mockSerializer.Object
                 );
 
-            await processor.HandleRequestAsync(preference, correlationId, request, headers);
+            await Assert.ThrowsExceptionAsync<InvalidOperationException>(async () =>
+            {
+                await processor.HandleRequestAsync(preference, correlationId, request, headers);
 
-            //Assert
+                //Assert
 
-            //Verify
-            mock.VerifyAll();
+                //Verify
+                mock.VerifyAll();
+            });
         }
     }
 }

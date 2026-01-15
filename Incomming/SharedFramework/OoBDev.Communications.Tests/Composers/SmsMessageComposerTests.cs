@@ -177,7 +177,6 @@ namespace OoBDev.Communications.Tests.Composers
 
         [TestMethod, TestCategory(TestCategories.Unit)]
         [TestCategory(TestCategories.Feature.CommunicationCenter)]
-        [ExpectedException(typeof(InvalidOperationException))]
         public async Task ComposeAndSendAsyncTest_ExceptionThrown()
         {
             //Stage
@@ -241,17 +240,15 @@ namespace OoBDev.Communications.Tests.Composers
                 mockDateTools.Object
                 );
 
-            await composer.ComposeAndSendAsync(targetPersonId, messageType, culture, data, requestGroupId, headers);
+            await Assert.ThrowsExceptionAsync<InvalidOperationException>(async () =>
+            {
+                await composer.ComposeAndSendAsync(targetPersonId, messageType, culture, data, requestGroupId, headers);
 
-            try
-            {
                 //Assert
-            }
-            finally
-            {
-                //Verify
-                mock.VerifyAll();
-            }
+            });
+
+            //Verify
+            mock.VerifyAll();
         }
     }
 }
