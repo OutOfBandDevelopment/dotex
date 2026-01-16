@@ -30,15 +30,15 @@ internal class Entry
             if (ext == ".GZ" || ext == ".TGZ")
                 infile = infile.Decompress();
 
-            byte[] buffer = new byte[512];
+            var buffer = new byte[512];
             TarHeader? header = null;
-            bool getHeader = true;
+            var getHeader = true;
             Stream? newFile = null;
-            int lengthWrote = 0;
+            var lengthWrote = 0;
             string? longName = null;
-            bool writingFile = false;
+            var writingFile = false;
 
-            int getLength = 1;
+            var getLength = 1;
 
             while (getLength > 0)
             {

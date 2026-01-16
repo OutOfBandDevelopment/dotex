@@ -9,12 +9,12 @@ internal class ZipFile
 {
     private static void Entry(string[] args)
     {
-        string? fileName = new DirectoryInfo(".\\").GetFiles("*.zip").Select(f => f.FullName).FirstOrDefault();
+        var fileName = new DirectoryInfo(".\\").GetFiles("*.zip").Select(f => f.FullName).FirstOrDefault();
         if (string.IsNullOrEmpty(fileName))
             return;
 
-        byte[] zipFileContents = File.ReadAllBytes(fileName);
-        int offset = 0;
+        var zipFileContents = File.ReadAllBytes(fileName);
+        var offset = 0;
         while (true)
         {
             LocalFileHeader localFileHeader = zipFileContents;
@@ -24,13 +24,13 @@ internal class ZipFile
             offset += localFileHeader.HeaderSize;
             if (localFileHeader.CompressionMethod == CompressionMethodType.Deflate)
             {
-                byte[] fileContent = new byte[localFileHeader.CompressedSize];
+                var fileContent = new byte[localFileHeader.CompressedSize];
                 Array.Copy(zipFileContents, offset, fileContent, 0, fileContent.Length);
                 File.WriteAllBytes(localFileHeader.FileName, Decompress(fileContent)??throw new NotSupportedException($"No content for {localFileHeader.FileName}"));
                 offset += fileContent.Length;
             }
 
-            byte[] newBuffer = new byte[zipFileContents.Length - offset];
+            var newBuffer = new byte[zipFileContents.Length - offset];
             Array.Copy(zipFileContents, offset, newBuffer, 0, newBuffer.Length);
             zipFileContents = newBuffer;
             offset = 0;
@@ -45,7 +45,7 @@ internal class ZipFile
         using MemoryStream compressedData = new(input);
         using MemoryStream decompressedData = new();
         using DeflateStream deflateDecompress = new(compressedData, CompressionMode.Decompress, true);
-        byte[] buffer = new byte[1024];
+        var buffer = new byte[1024];
         int bufferLen;
         do
         {
@@ -64,7 +64,7 @@ internal class ZipFile
         using MemoryStream rawDataStreamIn = new(input);
         using MemoryStream compressedDataStreamOut = new();
         using DeflateStream deflateCompress = new(compressedDataStreamOut, CompressionMode.Compress, true);
-        byte[] buffer = new byte[1024];
+        var buffer = new byte[1024];
         int bufferLen;
         do
         {

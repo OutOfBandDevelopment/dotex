@@ -14,8 +14,8 @@ public class NumericAssertsTests
     public void AreSimilar_Double_ExactMatch()
     {
         // Stage
-        double expected = 123.456;
-        double actual = 123.456;
+        var expected = 123.456;
+        var actual = 123.456;
 
         // Test & Assert
         NumericAsserts.AreSimilar(expected, actual);
@@ -26,8 +26,8 @@ public class NumericAssertsTests
     public void AreSimilar_Double_WithinTolerance()
     {
         // Stage
-        double expected = 123.456789012345;
-        double actual = 123.456789012346; // Differs in last digit
+        var expected = 123.456789012345;
+        var actual = 123.456789012346; // Differs in last digit
 
         // Test & Assert
         NumericAsserts.AreSimilar(expected, actual);
@@ -38,14 +38,11 @@ public class NumericAssertsTests
     public void AreSimilar_Double_BeyondTolerance()
     {
         // Stage
-        double expected = 123.456;
-        double actual = 123.457;
+        var expected = 123.456;
+        var actual = 123.457;
 
         // Test - Should throw
-        Assert.Throws<AssertFailedException>(() =>
-        {
-            NumericAsserts.AreSimilar(expected, actual);
-        });
+        Assert.Throws<AssertFailedException>(() => NumericAsserts.AreSimilar(expected, actual));
     }
 
     [TestMethod]
@@ -53,8 +50,8 @@ public class NumericAssertsTests
     public void AreSimilar_Double_LargeValues()
     {
         // Stage
-        double expected = -59423282750552.782382789829384;
-        double actual = -59423282750552.782382789829386;
+        var expected = -59423282750552.782382789829384;
+        var actual = -59423282750552.782382789829386;
 
         // Test & Assert - Real-world example from expression optimizer
         NumericAsserts.AreSimilar(expected, actual);
@@ -69,8 +66,8 @@ public class NumericAssertsTests
     public void AreSimilar_Float_ExactMatch()
     {
         // Stage
-        float expected = 123.456f;
-        float actual = 123.456f;
+        var expected = 123.456f;
+        var actual = 123.456f;
 
         // Test & Assert
         NumericAsserts.AreSimilar(expected, actual);
@@ -81,8 +78,8 @@ public class NumericAssertsTests
     public void AreSimilar_Float_WithinTolerance()
     {
         // Stage
-        float expected = 123.4567f;
-        float actual = 123.45671f;
+        var expected = 123.4567f;
+        var actual = 123.45671f;
 
         // Test & Assert
         NumericAsserts.AreSimilar(expected, actual);
@@ -93,14 +90,11 @@ public class NumericAssertsTests
     public void AreSimilar_Float_BeyondTolerance()
     {
         // Stage
-        float expected = 123.456f;
-        float actual = 123.46f;
+        var expected = 123.456f;
+        var actual = 123.46f;
 
         // Test - Should throw
-        Assert.Throws<AssertFailedException>(() =>
-        {
-            NumericAsserts.AreSimilar(expected, actual);
-        });
+        Assert.Throws<AssertFailedException>(() => NumericAsserts.AreSimilar(expected, actual));
     }
 
     #endregion
@@ -112,8 +106,8 @@ public class NumericAssertsTests
     public void AreSimilar_Decimal_ExactMatch()
     {
         // Stage
-        decimal expected = 123.456789012345678901234567890m;
-        decimal actual = 123.456789012345678901234567890m;
+        var expected = 123.456789012345678901234567890m;
+        var actual = 123.456789012345678901234567890m;
 
         // Test & Assert
         NumericAsserts.AreSimilar(expected, actual);
@@ -124,8 +118,8 @@ public class NumericAssertsTests
     public void AreSimilar_Decimal_WithinTolerance()
     {
         // Stage
-        decimal expected = 123.456789012345678901234567890m;
-        decimal actual = 123.456789012345678901234567891m;
+        var expected = 123.456789012345678901234567890m;
+        var actual = 123.456789012345678901234567891m;
 
         // Test & Assert
         NumericAsserts.AreSimilar(expected, actual);
@@ -136,14 +130,11 @@ public class NumericAssertsTests
     public void AreSimilar_Decimal_BeyondTolerance()
     {
         // Stage
-        decimal expected = 123.456m;
-        decimal actual = 123.457m;
+        var expected = 123.456m;
+        var actual = 123.457m;
 
         // Test - Should throw
-        Assert.Throws<AssertFailedException>(() =>
-        {
-            NumericAsserts.AreSimilar(expected, actual);
-        });
+        Assert.Throws<AssertFailedException>(() => NumericAsserts.AreSimilar(expected, actual));
     }
 
     #endregion
@@ -155,8 +146,8 @@ public class NumericAssertsTests
     public void AreSimilar_Int32_ExactMatch()
     {
         // Stage
-        int expected = 12345;
-        int actual = 12345;
+        var expected = 12345;
+        var actual = 12345;
 
         // Test & Assert
         NumericAsserts.AreSimilar(expected, actual);
@@ -167,14 +158,11 @@ public class NumericAssertsTests
     public void AreSimilar_Int32_NotEqual()
     {
         // Stage
-        int expected = 12345;
-        int actual = 12346;
+        var expected = 12345;
+        var actual = 12346;
 
         // Test - Should throw
-        Assert.Throws<AssertFailedException>(() =>
-        {
-            NumericAsserts.AreSimilar(expected, actual);
-        });
+        Assert.Throws<AssertFailedException>(() => NumericAsserts.AreSimilar(expected, actual));
     }
 
     [TestMethod]
@@ -182,8 +170,8 @@ public class NumericAssertsTests
     public void AreSimilar_Int64_ExactMatch()
     {
         // Stage
-        long expected = 123456789012345;
-        long actual = 123456789012345;
+        var expected = 123456789012345;
+        var actual = 123456789012345;
 
         // Test & Assert
         NumericAsserts.AreSimilar(expected, actual);
@@ -198,9 +186,9 @@ public class NumericAssertsTests
     public void AreSimilar_Double_CustomTolerance_WithinRange()
     {
         // Stage
-        double expected = 100.0;
-        double actual = 100.5;
-        double tolerance = 1.0;
+        var expected = 100.0;
+        var actual = 100.5;
+        var tolerance = 1.0;
 
         // Test & Assert
         NumericAsserts.AreSimilar(expected, actual, tolerance);
@@ -211,15 +199,12 @@ public class NumericAssertsTests
     public void AreSimilar_Double_CustomTolerance_BeyondRange()
     {
         // Stage
-        double expected = 100.0;
-        double actual = 101.5;
-        double tolerance = 1.0;
+        var expected = 100.0;
+        var actual = 101.5;
+        var tolerance = 1.0;
 
         // Test - Should throw
-        Assert.Throws<AssertFailedException>(() =>
-        {
-            NumericAsserts.AreSimilar(expected, actual, tolerance);
-        });
+        Assert.Throws<AssertFailedException>(() => NumericAsserts.AreSimilar(expected, actual, tolerance));
     }
 
     [TestMethod]
@@ -227,9 +212,9 @@ public class NumericAssertsTests
     public void AreSimilar_Int32_CustomTolerance_WithinRange()
     {
         // Stage
-        int expected = 100;
-        int actual = 105;
-        int tolerance = 10;
+        var expected = 100;
+        var actual = 105;
+        var tolerance = 10;
 
         // Test & Assert
         NumericAsserts.AreSimilar(expected, actual, tolerance);
@@ -240,15 +225,12 @@ public class NumericAssertsTests
     public void AreSimilar_Int32_CustomTolerance_BeyondRange()
     {
         // Stage
-        int expected = 100;
-        int actual = 115;
-        int tolerance = 10;
+        var expected = 100;
+        var actual = 115;
+        var tolerance = 10;
 
         // Test - Should throw
-        Assert.Throws<AssertFailedException>(() =>
-        {
-            NumericAsserts.AreSimilar(expected, actual, tolerance);
-        });
+        Assert.Throws<AssertFailedException>(() => NumericAsserts.AreSimilar(expected, actual, tolerance));
     }
 
     #endregion
@@ -260,9 +242,9 @@ public class NumericAssertsTests
     public void AreSimilar_CustomMessage_Success()
     {
         // Stage
-        double expected = 100.0;
-        double actual = 100.0;
-        string message = "Custom success message";
+        var expected = 100.0;
+        var actual = 100.0;
+        var message = "Custom success message";
 
         // Test & Assert
         NumericAsserts.AreSimilar(expected, actual, message);
@@ -273,9 +255,9 @@ public class NumericAssertsTests
     public void AreSimilar_CustomMessage_Failure()
     {
         // Stage
-        double expected = 100.0;
-        double actual = 200.0;
-        string customMessage = "Values should be similar";
+        var expected = 100.0;
+        var actual = 200.0;
+        var customMessage = "Values should be similar";
 
         // Test
         try
@@ -299,8 +281,8 @@ public class NumericAssertsTests
     public void AreSimilar_Double_ZeroValues()
     {
         // Stage
-        double expected = 0.0;
-        double actual = 0.0;
+        var expected = 0.0;
+        var actual = 0.0;
 
         // Test & Assert
         NumericAsserts.AreSimilar(expected, actual);
@@ -311,8 +293,8 @@ public class NumericAssertsTests
     public void AreSimilar_Double_NegativeValues()
     {
         // Stage
-        double expected = -123.456789012345;
-        double actual = -123.456789012346;
+        var expected = -123.456789012345;
+        var actual = -123.456789012346;
 
         // Test & Assert
         NumericAsserts.AreSimilar(expected, actual);
@@ -323,8 +305,8 @@ public class NumericAssertsTests
     public void AreSimilar_Double_VerySmallValues()
     {
         // Stage
-        double expected = 1.23e-15;
-        double actual = 1.23e-15;
+        var expected = 1.23e-15;
+        var actual = 1.23e-15;
 
         // Test & Assert
         NumericAsserts.AreSimilar(expected, actual);
@@ -335,8 +317,8 @@ public class NumericAssertsTests
     public void AreSimilar_Double_VeryLargeValues()
     {
         // Stage
-        double expected = 1.23e15;
-        double actual = 1.23e15;
+        var expected = 1.23e15;
+        var actual = 1.23e15;
 
         // Test & Assert
         NumericAsserts.AreSimilar(expected, actual);

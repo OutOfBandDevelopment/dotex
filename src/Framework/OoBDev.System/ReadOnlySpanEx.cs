@@ -45,7 +45,7 @@ public static partial class ReadOnlySpanEx
     /// <param name="transform"></param>
     public static void CopyToWithTransform<TIn, TOut>(this ReadOnlySpan<TIn> input, Span<TOut> target, Func<TIn, TOut> transform)
     {
-        int index = input.Length % 8;
+        var index = input.Length % 8;
         switch (index)
         {
             case 7: target[6] = transform(input[6]); goto case 6;

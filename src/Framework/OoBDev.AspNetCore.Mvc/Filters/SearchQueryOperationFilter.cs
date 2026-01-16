@@ -192,8 +192,7 @@ public class SearchQueryOperationFilter(
         if (requestSchema == null) return null;
 
         // Cast to actual OpenApiSchema if possible
-        var schema = requestSchema as OpenApiSchema;
-        if (schema == null) return null;
+        if (requestSchema is not OpenApiSchema schema) return null;
 
         if (schema.Properties.TryGetValue(nameof(ISearchQuery.PageSize), out var pageSize))
         {

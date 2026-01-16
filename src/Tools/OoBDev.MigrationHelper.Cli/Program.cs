@@ -42,7 +42,7 @@
 
                     content = content.Replace(sourcePrefix, targetPrefix);
 
-                    if (content.Contains("\0"))
+                    if (content.Contains('\0'))
                     {
                         Console.WriteLine($"Skip: {file}");
                     }

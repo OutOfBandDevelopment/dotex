@@ -54,8 +54,8 @@ public struct LocalFileHeader
             .. BitConverter.GetBytes(localFileHeader.UncompressedSize),
         ];
 
-        byte[] fileName = Encoding.ASCII.GetBytes(localFileHeader.FileName);
-        byte[] extraField = Encoding.ASCII.GetBytes(localFileHeader.ExtraField);
+        var fileName = Encoding.ASCII.GetBytes(localFileHeader.FileName);
+        var extraField = Encoding.ASCII.GetBytes(localFileHeader.ExtraField);
 
         data.AddRange(BitConverter.GetBytes(fileName.Length));
         data.AddRange(BitConverter.GetBytes(extraField.Length));
@@ -82,7 +82,7 @@ public struct LocalFileHeader
             FileNameLength = BitConverter.ToInt16(rawFileheader, 4 + 2 + 2 + 2 + 2 + 2 + 4 + 4 + 4),
             ExtraFieldLength = BitConverter.ToInt16(rawFileheader, 4 + 2 + 2 + 2 + 2 + 2 + 4 + 4 + 4 + 2),
         };
-        int lastPosition = 4 + 2 + 2 + 2 + 2 + 2 + 4 + 4 + 4 + 2 + 2;
+        var lastPosition = 4 + 2 + 2 + 2 + 2 + 2 + 4 + 4 + 4 + 2 + 2;
         localFileHeader.FileName = Encoding.ASCII.GetString(rawFileheader, lastPosition, localFileHeader.FileNameLength);
         lastPosition += localFileHeader.FileNameLength;
         localFileHeader.ExtraField = Encoding.ASCII.GetString(rawFileheader, lastPosition, localFileHeader.ExtraFieldLength);

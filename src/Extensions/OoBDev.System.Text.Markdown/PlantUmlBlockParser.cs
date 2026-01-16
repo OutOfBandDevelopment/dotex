@@ -22,8 +22,8 @@ public class PlantUmlBlockParser : FencedBlockParserBase<PlantUmlBlock>
 
         var c = line.CurrentChar;
         // An info string cannot contain any backsticks
-        int firstSpace = -1;
-        for (int i = line.Start; i <= line.End; i++)
+        var firstSpace = -1;
+        for (var i = line.Start; i <= line.End; i++)
         {
             c = line.Text[i];
             if (c == '`')

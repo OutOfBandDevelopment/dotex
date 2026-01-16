@@ -168,7 +168,7 @@ public class DirectoryRecord : IEnumerable<DirectoryRecord>
                         SeekOrigin.Begin);
                 bufferLen = disc.Read(sector, 0, sector.Length);
 
-                for (int i = 0; i < bufferLen;)
+                for (var i = 0; i < bufferLen;)
                 {
                     var directorRecord = new DirectoryRecord(sector,
                                                              i,

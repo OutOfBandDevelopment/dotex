@@ -9,7 +9,7 @@ public class MessageEncoder<TMessage> : IMessageEncoder<TMessage>
     {
         if (request == null) throw new ArgumentNullException(nameof(request));
         var requestBuffer = new byte[Marshal.SizeOf(request)];
-        nint ptr = Marshal.AllocHGlobal(requestBuffer.Length);
+        var ptr = Marshal.AllocHGlobal(requestBuffer.Length);
         Marshal.StructureToPtr(request, ptr, true);
         Marshal.Copy(ptr, requestBuffer, 0, requestBuffer.Length);
         Marshal.FreeHGlobal(ptr);
