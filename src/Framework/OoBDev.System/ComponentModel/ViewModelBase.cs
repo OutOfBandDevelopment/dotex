@@ -27,8 +27,5 @@ public abstract class ViewModelBase : INotifyPropertyChanged
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;
-    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-    {
-        DispatchWork(() => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)));
-    }
+    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null) => DispatchWork(() => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)));
 }

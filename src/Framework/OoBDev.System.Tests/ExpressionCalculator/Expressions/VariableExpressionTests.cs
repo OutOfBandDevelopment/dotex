@@ -51,15 +51,9 @@ public class VariableExpressionTests
 
     [TestMethod, TestCategory(TestCategories.Unit)]
     [TestTarget(typeof(VariableExpression<>))]
-    public void NullVariableName_Test()
-    {
-        Assert.ThrowsExactly<InvalidOperationException>(() => new VariableExpression<double>(null!));
-    }
+    public void NullVariableName_Test() => Assert.ThrowsExactly<InvalidOperationException>(() => new VariableExpression<double>(null!));
 
     [TestMethod, TestCategory(TestCategories.Unit)]
     [TestTarget(typeof(VariableExpression<>))]
-    public void EmptyVariableName_Test()
-    {
-        Assert.ThrowsExactly<InvalidOperationException>(() => new VariableExpression<double>(""));
-    }
+    public void EmptyVariableName_Test() => Assert.ThrowsExactly<InvalidOperationException>(() => new VariableExpression<double>(""));
 }

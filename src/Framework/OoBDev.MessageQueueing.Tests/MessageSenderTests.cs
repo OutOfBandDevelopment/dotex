@@ -51,31 +51,25 @@ public class MessageSenderTests
     [TestCategory(TestCategories.Simulate)]
     public async Task SendAsyncTest_Error()
     {
-        await Assert.ThrowsAsync<ApplicationException>(async () =>
-        {
-            var configBuilder = new ConfigurationBuilder();
+        var configBuilder = new ConfigurationBuilder();
 
-            configBuilder.AddInMemoryCollection(new Dictionary<string, string?>
+        configBuilder.AddInMemoryCollection(new Dictionary<string, string?>
             {
                 {"MessageQueue:MessageSenderTests:Provider", typeof(TestExceptionMessageSenderProvider).AssemblyQualifiedName },
             });
 
-            var config = configBuilder.Build();
+        var config = configBuilder.Build();
 
-            var service = GetServiceProvider(TestContext, config);
+        var service = GetServiceProvider(TestContext, config);
 
-            // ---------------
+        // ---------------
 
-            var sender = service.GetRequiredService<IMessageQueueSender<MessageSenderTests>>();
-            var correlationId = await sender.SendAsync(new
-            {
-                hello = "world",
-            });
+        var sender = service.GetRequiredService<IMessageQueueSender<MessageSenderTests>>();
 
-            TestContext.Write($"correlationId: {correlationId}");
-
-            Assert.Fail("you should not get here!");
-        });
+        await Assert.ThrowsAsync<ApplicationException>(async () => await sender.SendAsync(new
+        {
+            hello = "world",
+        }));
     }
 
     [TestMethod]
