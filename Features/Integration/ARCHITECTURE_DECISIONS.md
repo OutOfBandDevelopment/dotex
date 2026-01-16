@@ -388,26 +388,132 @@ AZURE_CLIENT_SECRET=your-client-secret
 
 ---
 
-## Release Publishing
+## Release Publishing & Tagging Strategy
 
-**Decision:** Automatic NuGet publish (no approval gate) after integration tests pass.
+**Decision:** Automatic NuGet publish (no approval gate) after integration tests pass. Three-tier tagging on every build and release.
 
-### Flow
+### Three-Tier Tagging
 
+**Tier 1: Build Tag (Every Build)**
+```
+dotnet.yml completes
+  └─ Create vX.Y.Z (main branch)
+     OR vX.Y.Z-{branch-name} (dev/* branches)
+```
+
+- Created on every successful build
+- Main branch: `v2.1.0`, `v2.1.1`, etc.
+- Dev branches: `v2.1.0-feature-xyz`, `v2.1.0-hotfix-abc`, etc.
+- Always pushed to git history
+
+**Tier 2: Validation Tag (Integration Pass)**
 ```
 integration-tests.yml ✅ PASS
-  ↓
-scheduled-release.yml
-  ├─ Create GitHub Release (validated-vX.Y.Z)
-  └─ Automatically publish to NuGet
-      └─ Create release-vX.Y.Z tag
+  └─ Create validated-vX.Y.Z (main branch only)
 ```
+
+- Only created if all integration tests pass
+- Only on main branch (proof of validation)
+- Additional tag, doesn't replace vX.Y.Z
+
+**Tier 3: Release Tag (NuGet Published)**
+```
+scheduled-release.yml ✅ NuGet publish succeeds
+  └─ Create release-vX.Y.Z (main branch only)
+```
+
+- Only created after successful NuGet publish
+- Only on main branch (proof of release)
+- Additional tag, doesn't replace previous tags
+
+### Full Flow
+
+```
+Every Push:
+├─ dotnet.yml
+│  └─ Tag: vX.Y.Z (main) or vX.Y.Z-branch (dev/*)
+
+Daily on Main (if changes detected):
+├─ integration-tests.yml
+│  └─ IF TESTS PASS: Tag: validated-vX.Y.Z
+│  └─ IF TESTS FAIL: No tag, release blocked
+│
+└─ scheduled-release.yml (only if integration tests passed)
+   ├─ Create GitHub Release
+   └─ IF NuGet publish succeeds: Tag: release-vX.Y.Z
+```
+
+### Example Commit History
+
+```
+Commit ABC123: "Add feature X"
+├─ v2.1.0-feature-x (build tag, dev branch)
+├─ validated-v2.1.0 (integration tests pass, main)
+└─ release-v2.1.0 (published to NuGet, main)
+
+Commit DEF456: "Add feature Y"
+├─ v2.1.1-feature-y (build tag, dev branch)
+├─ validated-v2.1.1 (integration tests pass, main)
+└─ release-v2.1.1 (published to NuGet, main)
+```
+
+### Implementation
+
+**In dotnet.yml (every build):**
+```yaml
+- name: Create build tag
+  run: |
+    VERSION=$(cat src/GitVersion.yml | grep 'full-semver:' | cut -d' ' -f2)
+    BRANCH=$(echo ${{ github.ref }} | sed 's/refs\/heads\///')
+
+    if [ "$BRANCH" = "main" ]; then
+      TAG="v${VERSION}"
+    else
+      TAG="v${VERSION}-${BRANCH}"
+    fi
+
+    git config user.name "github-actions[bot]"
+    git config user.email "github-actions[bot]@users.noreply.github.com"
+    git tag -a "${TAG}" -m "Build from branch ${BRANCH}"
+    git push origin "${TAG}"
+```
+
+**In integration-tests.yml (on main, if tests pass):**
+```yaml
+- name: Create validated tag
+  if: success() && github.ref == 'refs/heads/main'
+  run: |
+    VERSION=$(cat src/GitVersion.yml | grep 'full-semver:' | cut -d' ' -f2)
+    git tag -a "validated-v${VERSION}" -m "Integration tests passed"
+    git push origin "validated-v${VERSION}"
+```
+
+**In scheduled-release.yml (on main, after NuGet publish):**
+```yaml
+- name: Create release tag
+  if: success() && github.ref == 'refs/heads/main'
+  run: |
+    VERSION=$(cat src/GitVersion.yml | grep 'full-semver:' | cut -d' ' -f2)
+    git tag -a "release-v${VERSION}" -m "Released to NuGet"
+    git push origin "release-v${VERSION}"
+```
+
+### Tag Conditions Summary
+
+| Tag | Branch | When Created | Meaning |
+|-----|--------|--------------|---------|
+| `vX.Y.Z` | main | Every build ✅ | Build artifact created |
+| `vX.Y.Z-{branch}` | dev/* | Every build ✅ | Build from feature branch |
+| `validated-vX.Y.Z` | main | Integration tests ✅ | Code validated for release |
+| ❌ | main | Integration tests ❌ | Release blocked (no tag) |
+| `release-vX.Y.Z` | main | NuGet publish ✅ | Published to NuGet |
 
 ### Safety
 
-- Integration tests act as the approval gate
-- If tests fail → no release, no publish
-- If tests pass → safe to publish automatically
+- Every build is tagged (full history)
+- Integration tests act as approval gate for release
+- If tests fail → no `validated-` or `release-` tag, release blocked
+- If tests pass → safe to release automatically
 
 ### Manual Override
 
