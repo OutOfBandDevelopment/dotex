@@ -138,8 +138,28 @@ jobs:
             --source https://api.nuget.org/v3/index.json \
             --skip-duplicate
 
+      # Tier 3: Create release tag after successful NuGet publish
+      # Tags: release-vX.Y.Z (proof that package was published to NuGet)
+      - name: Checkout code for tagging
+        uses: actions/checkout@v4.1.1
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Create release tag
+        run: |
+          VERSION="${{ needs.release.outputs.release-tag }}"
+          TAG="release-${VERSION}"
+
+          echo "Creating release tag: ${TAG}"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag -a "${TAG}" -m "Released to NuGet"
+          git push origin "${TAG}"
+
       - name: Confirm Automated Deployment
         run: |
           echo "✅ Scheduled release published to NuGet"
           echo "Version: ${{ needs.release.outputs.release-tag }}"
           echo "Release URL: ${{ needs.release.outputs.release-url }}"
+          echo "Release Tag: release-${{ needs.release.outputs.release-tag }}"
