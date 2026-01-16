@@ -7,7 +7,8 @@
       "Bash(/current/src/compare_dotnet_lib.sh)",
       "Bash(bash:*)",
       "Bash(while read file)",
-      "Bash(do basename \"$file\")"
+      "Bash(do basename \"$file\")",
+      "Bash(__NEW_LINE_a283f497624e4ff1__ echo \"=== COMMON LAYER PROJECTS ===\")"
     ]
   }
 }
