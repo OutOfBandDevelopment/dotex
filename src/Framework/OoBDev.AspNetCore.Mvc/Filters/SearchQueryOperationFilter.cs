@@ -111,11 +111,6 @@ public class SearchQueryOperationFilter(
                     //    context.SchemaRepository.TryLookupByType(elementType.GetProperty(propertyName)?.PropertyType, out var pas) ? pas : null
                     //    );
 
-                    if (operation.Parameters == null)
-                    {
-                        operation.Parameters = new List<OpenApiParameter>();
-                    }
-                    var parameters = operation.Parameters;
                     //TODO: build query request
                     if (request != null)
                     {
@@ -130,7 +125,7 @@ public class SearchQueryOperationFilter(
                                 //    var localFilterSchema = getSchema(filter);
                                 //    foreach (var filterType in filterSchema.Properties)
                                 //    {
-                                //        parameters.Add(new OpenApiParameter()
+                                //        operation.Parameters.Add(new OpenApiParameter()
                                 //        {
                                 //            Name = $"{property.Key}.{filter}.{filterType.Key}",
                                 //            Schema = (filterType.Key == "in") ? localFilterSchema.array : localFilterSchema.item,
@@ -144,7 +139,7 @@ public class SearchQueryOperationFilter(
                                 var sortableProperties = treeBuilder.GetSortablePropertyNames();
                                 foreach (var sort in sortableProperties)
                                 {
-                                    parameters.Add(new OpenApiParameter()
+                                    operation.Parameters.Add(new OpenApiParameter()
                                     {
                                         Name = $"{property.Key}.{sort}",
                                         Schema = orderSchema,
@@ -154,7 +149,7 @@ public class SearchQueryOperationFilter(
                             }
                             else
                             {
-                                parameters.Add(new OpenApiParameter()
+                                operation.Parameters.Add(new OpenApiParameter()
                                 {
                                     Name = property.Key,
                                     Description = property.Value.Description,
@@ -196,26 +191,8 @@ public class SearchQueryOperationFilter(
     {
         if (requestSchema == null) return null;
 
-        // Try to find the actual schema in the repository
-        OpenApiSchema? schema = null;
-
-        if (requestSchema is OpenApiSchema actualSchema)
-        {
-            schema = actualSchema;
-        }
-        else if (requestSchema is OpenApiSchemaReference schemaRef)
-        {
-            // If it's a reference, look up the actual schema
-            foreach (var kvp in context.SchemaRepository.Schemas)
-            {
-                if (kvp.Value == schemaRef)
-                {
-                    schema = schemaRef as OpenApiSchema;
-                    break;
-                }
-            }
-        }
-
+        // Cast to actual OpenApiSchema if possible
+        var schema = requestSchema as OpenApiSchema;
         if (schema == null) return null;
 
         if (schema.Properties.TryGetValue(nameof(ISearchQuery.PageSize), out var pageSize))
