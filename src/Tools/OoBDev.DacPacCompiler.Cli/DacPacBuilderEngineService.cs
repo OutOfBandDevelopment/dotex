@@ -31,7 +31,7 @@ public class DacPacBuilderEngineService : IHostedService
     {
         /*
         --sqlclr "$(SolutionDir)Extensions\OoBDev.Data.Vectors\bin\Debug\net481\OoBDev.Data.Vectors.dll" 
-        --dotnet "$(SolutionDir)Extensions\OoBDev.Data.Vectors\bin\Debug\net9.0\OoBDev.Data.Vectors.dll"
+        --dotnet "$(SolutionDir)Extensions\OoBDev.Data.Vectors\bin\Debug\net10.0\OoBDev.Data.Vectors.dll"
         */
         _log.LogInformation("AssemblyFileFramework: {AssemblyFileFramework}", _settings.Value.AssemblyFileFramework);
         _log.LogInformation("AssemblyPdbFramework: {AssemblyPdbFramework}", _settings.Value.AssemblyPdbFramework);

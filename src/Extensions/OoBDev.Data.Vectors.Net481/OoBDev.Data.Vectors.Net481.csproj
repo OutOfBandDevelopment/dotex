@@ -42,7 +42,7 @@
     <Message Text="Building DacPacCompiler.Cli tool..." Importance="High" />
     <MSBuild Projects="$(DacPacToolProject)"
              Targets="Build"
-             Properties="TargetFramework=net9.0" />
+             Properties="TargetFramework=net10.0" />
   </Target>
 
   <ItemGroup>

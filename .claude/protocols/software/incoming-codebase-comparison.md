@@ -965,7 +965,7 @@ For incoming codebase:
 
 Compare:
 - Incoming: Target frameworks
-- OoBDev: net9.0 primary, net8.0 support
+- OoBDev: net10.0 primary, net8.0 support
 - Migration: Plan for framework updates
 
 **10.3: Dependency Conflicts**

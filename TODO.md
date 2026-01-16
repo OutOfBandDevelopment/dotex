@@ -774,7 +774,7 @@ Before proceeding with BinaryDataDecoders migration (Phases 1-5), critical quest
 **Priority:** CRITICAL
 
 - [ ] **0.1 Upgrade All Projects to .NET 9.0**
-  - [ ] Update all 52 `.csproj` files: `net8.0` → `net9.0`
+  - [ ] Update all 52 `.csproj` files: `net8.0` → `net10.0`
   - [ ] Update NuGet packages to .NET 9-compatible versions
   - [ ] Test compilation
   - [ ] Fix breaking API changes

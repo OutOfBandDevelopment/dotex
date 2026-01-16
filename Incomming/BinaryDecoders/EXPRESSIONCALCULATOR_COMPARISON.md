@@ -35,7 +35,7 @@ The ExpressionCalculator implementations in **BinaryDataDecoders** and **dotex**
 | **Modern C#** | Older syntax | C# 12 features | ✅ **dotex** |
 | **Nullable Handling** | Explicit casts | Implicit (better) | ✅ **dotex** |
 | **Dependencies** | Antlr4.Runtime.Standard 4.13.1 | Antlr4.Runtime.Standard 4.13.1 | 🟰 TIE |
-| **Target Frameworks** | net8.0, net9.0 | net9.0 | ⚠️ BDD wider |
+| **Target Frameworks** | net8.0, net10.0 | net10.0 | ⚠️ BDD wider |
 
 **Overall Winner:** ✅ **dotex** (better code quality, documentation, modern features)
 
@@ -406,18 +406,18 @@ WS: [ \t\r\n]+ -> skip;
 
 **BinaryDataDecoders:**
 ```xml
-<TargetFrameworks>net8.0;net9.0</TargetFrameworks>
+<TargetFrameworks>net10.0</TargetFrameworks>
 ```
 
 **dotex:**
 ```xml
-<TargetFramework>net9.0</TargetFramework>
+<TargetFramework>net10.0</TargetFramework>
 ```
 
 **Analysis:**
 - BDD targets both .NET 8.0 and 9.0
 - dotex targets only .NET 9.0
-- For dotex ecosystem: net9.0 only is fine (consistent with rest of dotex)
+- For dotex ecosystem: net10.0 only is fine (consistent with rest of dotex)
 
 ---
 

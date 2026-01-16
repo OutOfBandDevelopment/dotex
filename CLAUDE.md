@@ -210,7 +210,7 @@ OoBDev.{Layer}.{Feature}/
 - Nullable enabled
 - ImplicitUsings disabled (explicit using statements)
 - XML documentation on public APIs
-- Target framework: net9.0
+- Target framework: net10.0
 - No breaking changes to existing OoBDev APIs
 
 ### Testing
