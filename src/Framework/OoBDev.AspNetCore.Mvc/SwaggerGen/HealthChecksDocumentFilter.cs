@@ -25,7 +25,7 @@ public class HealthChecksDocumentFilter : IDocumentFilter
         var pathItem = new OpenApiPathItem();
 
         var operation = new OpenApiOperation();
-        operation.Tags.Add(new OpenApiTagReference { Name = "ApiHealth" });
+        operation.Tags.Add(new OpenApiTagReference("ApiHealth"));
 
         var schema = new OpenApiSchema
         {

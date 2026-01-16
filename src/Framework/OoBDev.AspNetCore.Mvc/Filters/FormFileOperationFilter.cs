@@ -31,15 +31,18 @@ public class FormFileOperationFilter : IOperationFilter
         var fileParams = context.MethodInfo.GetParameters().Where(p => p.ParameterType == typeof(IFormFile));
 
         // Map IFormFile parameters to OpenApiSchema properties
-        var schema = operation.RequestBody.Content[fileUploadMime].Schema;
-        foreach (var fileParam in fileParams)
+        var mediaType = operation.RequestBody.Content[fileUploadMime];
+        if (mediaType.Schema is OpenApiSchema schema)
         {
-            var propertyName = fileParam.Name ?? fileParam.ParameterType.Name;
-            schema.Properties[propertyName] = new OpenApiSchema()
+            foreach (var fileParam in fileParams)
             {
-                Type = JsonSchemaType.String,
-                Format = "binary"
-            };
+                var propertyName = fileParam.Name ?? fileParam.ParameterType.Name;
+                schema.Properties[propertyName] = new OpenApiSchema()
+                {
+                    Type = JsonSchemaType.String,
+                    Format = "binary"
+                };
+            }
         }
     }
 }
