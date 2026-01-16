@@ -8,7 +8,7 @@ branches:
     track-merge-target: false
 
   feature:
-    regex: ^(?!main$).*
+    regex: ^(?!main$)(?<BranchName>.+)
     increment: Patch
     label: '{BranchName}'
     track-merge-target: false
