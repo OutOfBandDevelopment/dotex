@@ -8,14 +8,14 @@ namespace OoBDev.System.Tests.ExpressionCalculator.Expressions;
 public class NumberExpressionTests
 {
     [TestMethod, TestCategory(TestCategories.Unit)]
-    [TestTarget(typeof(NumberExpression<>), Member = nameof(NumberExpression<double>.Equals))]
+    [TestTarget(typeof(NumberExpression<>), Member = nameof(NumberExpression<>.Equals))]
     public void Equals_SameReference_Test()
     {
         var exp = new NumberExpression<double>(1.1);
         Assert.IsTrue(exp.Equals(exp));
     }
     [TestMethod, TestCategory(TestCategories.Unit)]
-    [TestTarget(typeof(NumberExpression<>), Member = nameof(NumberExpression<double>.Equals))]
+    [TestTarget(typeof(NumberExpression<>), Member = nameof(NumberExpression<>.Equals))]
     public void Equals_SameValue_Test()
     {
         var num1 = new NumberExpression<double>(1.1);
@@ -23,7 +23,7 @@ public class NumberExpressionTests
         Assert.IsTrue(num1.Equals(num2));
     }
     [TestMethod, TestCategory(TestCategories.Unit)]
-    [TestTarget(typeof(NumberExpression<>), Member = nameof(NumberExpression<double>.Equals))]
+    [TestTarget(typeof(NumberExpression<>), Member = nameof(NumberExpression<>.Equals))]
     public void Equals_DifferentValue_Test()
     {
         var num1 = new NumberExpression<double>(1.1);
@@ -32,7 +32,7 @@ public class NumberExpressionTests
     }
 
     [TestMethod, TestCategory(TestCategories.Unit)]
-    [TestTarget(typeof(NumberExpression<>), Member = nameof(NumberExpression<double>.Equals))]
+    [TestTarget(typeof(NumberExpression<>), Member = nameof(NumberExpression<>.Equals))]
     public void Equals_SameNumber_Test()
     {
         var num1 = new NumberExpression<double>(1.1);
@@ -40,7 +40,7 @@ public class NumberExpressionTests
         Assert.IsTrue(num1.Equals(num2));
     }
     [TestMethod, TestCategory(TestCategories.Unit)]
-    [TestTarget(typeof(NumberExpression<>), Member = nameof(NumberExpression<double>.Equals))]
+    [TestTarget(typeof(NumberExpression<>), Member = nameof(NumberExpression<>.Equals))]
     public void Equals_DifferentNumber_Test()
     {
         var num1 = new NumberExpression<double>(1.1);

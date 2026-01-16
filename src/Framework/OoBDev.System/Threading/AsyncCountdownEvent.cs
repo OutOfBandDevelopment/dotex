@@ -44,7 +44,7 @@ public class AsyncCountdownEvent
         if (m_count <= 0)
             throw new InvalidOperationException();
 
-        int newCount = Interlocked.Decrement(ref m_count);
+        var newCount = Interlocked.Decrement(ref m_count);
         if (newCount == 0)
             m_amre.Set();
         else if (newCount < 0)

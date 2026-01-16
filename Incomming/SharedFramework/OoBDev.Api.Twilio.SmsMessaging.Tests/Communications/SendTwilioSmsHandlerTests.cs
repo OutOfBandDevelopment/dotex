@@ -75,7 +75,6 @@ namespace OoBDev.Api.Twilio.SmsMessaging.Tests.Communications
 
         [TestMethod]
         [TestCategory(TestCategories.Unit)]
-        [ExpectedException(typeof(ApplicationException))]
         public async Task SendMessageAsyncTest_ErrorThrow()
         {
             // Stage
@@ -96,12 +95,15 @@ namespace OoBDev.Api.Twilio.SmsMessaging.Tests.Communications
 
             // Test
             var sendTwilioSmsHandler = this.CreateProvider();
-            await sendTwilioSmsHandler.SendMessageAsync(mockMessage.Object);
+            await Assert.ThrowsExceptionAsync<ApplicationException>(async () =>
+            {
+                await sendTwilioSmsHandler.SendMessageAsync(mockMessage.Object);
 
-            // Assert
+                // Assert
 
-            // Verify
-            this.mockRepository.VerifyAll();
+                // Verify
+                this.mockRepository.VerifyAll();
+            });
         }
 
         [TestMethod]

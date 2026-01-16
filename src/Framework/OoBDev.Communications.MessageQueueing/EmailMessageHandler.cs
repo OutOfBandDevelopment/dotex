@@ -32,7 +32,7 @@ public class EmailMessageHandler : IMessageQueueHandler<EmailMessageModel, Email
 
         if (email == null)
         {
-            _logger.LogWarning($"No provider for type {nameof(ICommunicationSender<EmailMessageModel>)}");
+            _logger.LogWarning($"No provider for type {nameof(ICommunicationSender<>)}");
         }
         _email = email;
     }
@@ -49,7 +49,7 @@ public class EmailMessageHandler : IMessageQueueHandler<EmailMessageModel, Email
         {
             //TODO: updated process to support not handing events
             _logger.LogError(
-                $"No provider for type {nameof(ICommunicationSender<EmailMessageModel>)}. Unable to send {{subject}} for {{from}} [{{id}}] as provider is not configured",
+                $"No provider for type {nameof(ICommunicationSender<>)}. Unable to send {{subject}} for {{from}} [{{id}}] as provider is not configured",
                 message.Subject,
                 message.FromAddress,
                 message.ReferenceId

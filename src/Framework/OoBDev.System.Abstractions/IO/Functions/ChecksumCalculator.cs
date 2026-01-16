@@ -16,7 +16,7 @@ public class ChecksumCalculator : IChecksumCalculator
     /// <returns>checksum value</returns>
     public ushort Simple16(ReadOnlySpan<ushort> buffer)
     {
-        int sum = -1;
+        var sum = -1;
         foreach (var term in buffer)
             sum -= term;
         return (ushort)(sum % 0xffff);

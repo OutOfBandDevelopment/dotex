@@ -25,7 +25,7 @@ This document provides a comprehensive feature-by-feature mapping between the Bi
 - Total C# Files: ~800+
 - Core Projects: 26
 - Test Projects: 15 (37% test coverage ratio)
-- Target Frameworks: net8.0, net9.0
+- Target Frameworks: net8.0, net10.0
 
 **Migration Status Overview:**
 - **NEW Features**: 18 major feature areas

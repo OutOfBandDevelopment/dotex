@@ -97,7 +97,6 @@ namespace OoBDev.Communications.Tests.Handler
         [TestMethod]
         [TestCategory(TestCategories.Unit)]
         [TestCategory(TestCategories.Feature.CommunicationCenter)]
-        [ExpectedException(typeof(DataEnhancementException))]
         public async Task EnhanceAsyncTest_Exception()
         {
             //Stage
@@ -116,22 +115,15 @@ namespace OoBDev.Communications.Tests.Handler
             var provider = new DataEnhancementManager(
                 mockProviders.Object
                 );
-            try
+            await Assert.ThrowsExceptionAsync<DataEnhancementException>(async () =>
             {
                 var response = await provider.EnhanceAsync(targetPersonId, messageType, data);
 
                 //Assert
-            }
-            catch (Exception ex)
-            {
-                Assert.AreEqual(exception, ex.InnerException);
-                throw;
-            }
-            finally
-            {
-                //Verify
-                mock.VerifyAll();
-            }
+            });
+
+            //Verify
+            mock.VerifyAll();
         }
 
         [TestMethod]

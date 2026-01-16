@@ -9,14 +9,14 @@ namespace OoBDev.System.Tests.ExpressionCalculator.Expressions;
 public class VariableExpressionTests
 {
     [TestMethod, TestCategory(TestCategories.Unit)]
-    [TestTarget(typeof(VariableExpression<>), Member = nameof(VariableExpression<double>.Equals))]
+    [TestTarget(typeof(VariableExpression<>), Member = nameof(VariableExpression<>.Equals))]
     public void Equals_SameReference_Test()
     {
         var exp = new VariableExpression<double>("Test");
         Assert.IsTrue(exp.Equals(exp));
     }
     [TestMethod, TestCategory(TestCategories.Unit)]
-    [TestTarget(typeof(VariableExpression<>), Member = nameof(VariableExpression<double>.Equals))]
+    [TestTarget(typeof(VariableExpression<>), Member = nameof(VariableExpression<>.Equals))]
     public void Equals_SameValue_Test()
     {
         var var1 = new VariableExpression<double>("Test1");
@@ -24,7 +24,7 @@ public class VariableExpressionTests
         Assert.IsTrue(var1.Equals(var2));
     }
     [TestMethod, TestCategory(TestCategories.Unit)]
-    [TestTarget(typeof(VariableExpression<>), Member = nameof(VariableExpression<double>.Equals))]
+    [TestTarget(typeof(VariableExpression<>), Member = nameof(VariableExpression<>.Equals))]
     public void Equals_DifferentValue_Test()
     {
         var var1 = new VariableExpression<double>("Test1");
@@ -33,7 +33,7 @@ public class VariableExpressionTests
     }
 
     [TestMethod, TestCategory(TestCategories.Unit)]
-    [TestTarget(typeof(VariableExpression<>), Member = nameof(VariableExpression<double>.Equals))]
+    [TestTarget(typeof(VariableExpression<>), Member = nameof(VariableExpression<>.Equals))]
     public void Equals_SameString_Test()
     {
         var var1 = new VariableExpression<double>("Test1");
@@ -41,7 +41,7 @@ public class VariableExpressionTests
         Assert.IsTrue(var1.Equals(var2));
     }
     [TestMethod, TestCategory(TestCategories.Unit)]
-    [TestTarget(typeof(VariableExpression<>), Member = nameof(VariableExpression<double>.Equals))]
+    [TestTarget(typeof(VariableExpression<>), Member = nameof(VariableExpression<>.Equals))]
     public void Equals_DifferentString_Test()
     {
         var var1 = new VariableExpression<double>("Test1");
@@ -49,19 +49,11 @@ public class VariableExpressionTests
         Assert.IsFalse(var1.Equals(var2));
     }
 
-    [TestMethod, TestCategory(TestCategories.Unit), ExpectedException(typeof(InvalidOperationException))]
+    [TestMethod, TestCategory(TestCategories.Unit)]
     [TestTarget(typeof(VariableExpression<>))]
-    public void NullVariableName_Test()
-    {
-        _ = new VariableExpression<double>(null!);
-        Assert.Fail("you should not get here!");
-    }
+    public void NullVariableName_Test() => Assert.ThrowsExactly<InvalidOperationException>(() => new VariableExpression<double>(null!));
 
-    [TestMethod, TestCategory(TestCategories.Unit), ExpectedException(typeof(InvalidOperationException))]
+    [TestMethod, TestCategory(TestCategories.Unit)]
     [TestTarget(typeof(VariableExpression<>))]
-    public void EmptyVariableName_Test()
-    {
-        _ = new VariableExpression<double>("");
-        Assert.Fail("you should not get here!");
-    }
+    public void EmptyVariableName_Test() => Assert.ThrowsExactly<InvalidOperationException>(() => new VariableExpression<double>(""));
 }

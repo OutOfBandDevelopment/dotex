@@ -1,13 +1,13 @@
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.Extensions;
 using OoBDev.MessageQueueing.Services;
 using OoBDev.MessageQueueing.Tests.TestItems;
 using OoBDev.System;
 using OoBDev.System.Accessors;
 using OoBDev.TestUtilities;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;
@@ -49,15 +49,14 @@ public class MessageSenderTests
 
     [TestMethod]
     [TestCategory(TestCategories.Simulate)]
-    [ExpectedException(typeof(ApplicationException))]
     public async Task SendAsyncTest_Error()
     {
         var configBuilder = new ConfigurationBuilder();
 
         configBuilder.AddInMemoryCollection(new Dictionary<string, string?>
-        {
-            {"MessageQueue:MessageSenderTests:Provider", typeof(TestExceptionMessageSenderProvider).AssemblyQualifiedName },
-        });
+            {
+                {"MessageQueue:MessageSenderTests:Provider", typeof(TestExceptionMessageSenderProvider).AssemblyQualifiedName },
+            });
 
         var config = configBuilder.Build();
 
@@ -66,14 +65,11 @@ public class MessageSenderTests
         // ---------------
 
         var sender = service.GetRequiredService<IMessageQueueSender<MessageSenderTests>>();
-        var correlationId = await sender.SendAsync(new
+
+        await Assert.ThrowsAsync<ApplicationException>(async () => await sender.SendAsync(new
         {
             hello = "world",
-        });
-
-        TestContext.Write($"correlationId: {correlationId}");
-
-        Assert.Fail("you should not get here!");
+        }));
     }
 
     [TestMethod]

@@ -118,7 +118,7 @@ src/
 ```xml
 <PropertyGroup>
   <!-- ✅ MUST: Target framework -->
-  <TargetFramework>net9.0</TargetFramework>
+  <TargetFramework>net10.0</TargetFramework>
 
   <!-- ✅ MUST: Nullable enabled -->
   <Nullable>enable</Nullable>

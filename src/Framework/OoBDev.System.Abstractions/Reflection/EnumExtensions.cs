@@ -1,4 +1,4 @@
-using OoBDev.System.ComponentModel;
+﻿using OoBDev.System.ComponentModel;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -87,14 +87,14 @@ public static class EnumExtensions
             Id = Convert.ToInt32(@enum),
 
             Name = First(displayValues?.Name, @enum.ToString().Replace("_", " ")) ??
-                throw new NullReferenceException(nameof(EnumModel<TEnum>.Name)),
+                throw new NullReferenceException(nameof(EnumModel<>.Name)),
             Code = First(
                 enumValue?.Name,
                 enumMember?.Value,
                 displayValues?.ShortName,
                 displayValues?.Name,
                 @enum.ToString().ToUpper()) ??
-                throw new NullReferenceException(nameof(EnumModel<TEnum>.Code)),
+                throw new NullReferenceException(nameof(EnumModel<>.Code)),
             Description = First(description, displayValues?.Description),
             Order = displayValues?.GetOrder() ?? 0,
 

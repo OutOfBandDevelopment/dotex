@@ -2,14 +2,17 @@ mode: ContinuousDeployment
 
 branches:
   main:
+    regex: ^main$
     increment: Patch
+    label: ''
     track-merge-target: false
 
   feature:
-    regex: ^(?!main$).*
-    increment: Inherit
-    source-branches: ['main']
+    regex: ^(?!main$)(?<BranchName>.+)
+    increment: Patch
+    label: '{BranchName}'
     track-merge-target: false
+    source-branches: ['main']
 
 ignore:
   sha: []

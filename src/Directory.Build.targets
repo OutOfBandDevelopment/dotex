@@ -105,6 +105,22 @@ FileSize = fi.Exists ? fi.Length : -1;
     </Task>
   </UsingTask>
 
+  <!--<Target Name="NormalizeVersions"
+          BeforeTargets="GenerateAssemblyInfo"
+          Condition="'$(InformationalVersion)' != ''">
+
+    <PropertyGroup>
+      <FileVersion>$(FileVersion)</FileVersion>
+      <AssemblyVersion>$(AssemblyVersion)</AssemblyVersion>
+      <InformationalVersion>$([System.String]::Copy('$(InformationalVersion)').ToLowerInvariant().Trim())</InformationalVersion>
+      <Version>$([System.String]::Copy('$(Version)').ToLowerInvariant().Trim())</Version>
+      <ProductVersion>$([System.String]::Copy('$(InformationalVersion)').ToLowerInvariant().Trim())</ProductVersion>
+      <AssemblyProduct>$([System.String]::Copy('$(AssemblyName)').ToLowerInvariant().Trim())</AssemblyProduct>
+      <AssemblyInformationalVersion>$([System.String]::Copy('$(InformationalVersion)').ToLowerInvariant().Trim())</AssemblyInformationalVersion>
+    </PropertyGroup>
+
+  </Target>-->
+
   <Import Project="Directory.Build.Database.targets" />
   <Import Project="SqlClr.Build.targets"/>
 

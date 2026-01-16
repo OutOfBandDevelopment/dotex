@@ -86,7 +86,6 @@ namespace OoBDev.DocumentCenter.Tests.Conversion
 
         [TestMethod]
         [TestCategory(TestCategories.Unit)]
-        [ExpectedException(typeof(UnhandledConversionRequestedException))]
         public async Task ConvertAsyncTest_Empty()
         {
             // Stage
@@ -101,13 +100,16 @@ namespace OoBDev.DocumentCenter.Tests.Conversion
 
             // Test
             var provider = this.CreateProvider();
-            var result = await provider.ConvertAsync(inputType, html, outputType);
+            await Assert.ThrowsExceptionAsync<UnhandledConversionRequestedException>(async () =>
+            {
+                var result = await provider.ConvertAsync(inputType, html, outputType);
 
-            // Assert
-            Assert.Fail("you shouldn't get here");
+                // Assert
+                Assert.Fail("you shouldn't get here");
 
-            // Verify
-            this.mockRepository.VerifyAll();
+                // Verify
+                this.mockRepository.VerifyAll();
+            });
         }
     }
 }

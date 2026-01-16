@@ -87,7 +87,6 @@ namespace OoBDev.DocumentCenter.Tests.Storage
 
         [TestMethod]
         [TestCategory(TestCategories.Unit)]
-        [ExpectedException(typeof(FileNotFoundException))]
         public async Task GetAsyncTest_Key_NotFound()
         {
             // Stage
@@ -105,13 +104,16 @@ namespace OoBDev.DocumentCenter.Tests.Storage
 
             // Test
             var documentStore = this.CreateDocumentStore();
-            var result = await documentStore.GetAsync(key);
+            await Assert.ThrowsExceptionAsync<FileNotFoundException>(async () =>
+            {
+                var result = await documentStore.GetAsync(key);
 
-            // Assert
-            Assert.Fail("you shouldn't get here");
+                // Assert
+                Assert.Fail("you shouldn't get here");
 
-            // Verify
-            this.mockRepository.VerifyAll();
+                // Verify
+                this.mockRepository.VerifyAll();
+            });
         }
 
         [TestMethod]
@@ -499,7 +501,6 @@ namespace OoBDev.DocumentCenter.Tests.Storage
 
         [TestMethod]
         [TestCategory(TestCategories.Unit)]
-        [ExpectedException(typeof(ApplicationException))]
         public async Task StoreAsyncTest_Error()
         {
             // Stage
@@ -512,13 +513,16 @@ namespace OoBDev.DocumentCenter.Tests.Storage
 
             // Test
             var documentStore = this.CreateDocumentStore();
-            _ = await documentStore.StoreAsync(fileName, content, contentType);
+            await Assert.ThrowsExceptionAsync<ApplicationException>(async () =>
+            {
+                _ = await documentStore.StoreAsync(fileName, content, contentType);
 
-            // Assert
-            Assert.Fail("you shouldn't get here");
+                // Assert
+                Assert.Fail("you shouldn't get here");
 
-            // Verify
-            this.mockRepository.VerifyAll();
+                // Verify
+                this.mockRepository.VerifyAll();
+            });
         }
     }
 }

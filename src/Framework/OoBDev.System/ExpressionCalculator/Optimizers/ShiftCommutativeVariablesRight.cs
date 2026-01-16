@@ -1,4 +1,4 @@
-using OoBDev.System.ExpressionCalculator.Expressions;
+﻿using OoBDev.System.ExpressionCalculator.Expressions;
 using System;
 using System.Collections.Generic;
 
@@ -89,7 +89,7 @@ public sealed class ShiftCommutativeVariablesRight<T> : IExpressionOptimizer<T> 
         {
             // For more than 4 operands, build left-associative tree
             var result = operands[0];
-            for (int i = 1; i < operands.Count; i++)
+            for (var i = 1; i < operands.Count; i++)
             {
                 result = new BinaryOperatorExpression<T>(result, op, operands[i]);
             }

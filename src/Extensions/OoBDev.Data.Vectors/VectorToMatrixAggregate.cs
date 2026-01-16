@@ -19,10 +19,7 @@ public class VectorToMatrixAggregate : IBinarySerialize
     private int _length;
     private List<SqlVector> _vectors = [];
 
-    public void Init()
-    {
-        _vectors = [];
-    }
+    public void Init() => _vectors = [];
 
     public void Accumulate(SqlVector vector)
     {

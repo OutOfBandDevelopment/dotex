@@ -1,8 +1,9 @@
 # OoBDev (dotex) Framework - Claude Development Guide
 
-**Last Updated:** 2026-01-13
+**Last Updated:** 2026-01-15
 **Framework:** OoBDev (dotex) - Enterprise .NET Library Suite
 **Target:** .NET 9.0
+**Current Work:** Fixing Swashbuckle 10.1.0 breaking changes in OoBDev.AspNetCore.Mvc
 
 ---
 
@@ -209,7 +210,7 @@ OoBDev.{Layer}.{Feature}/
 - Nullable enabled
 - ImplicitUsings disabled (explicit using statements)
 - XML documentation on public APIs
-- Target framework: net9.0
+- Target framework: net10.0
 - No breaking changes to existing OoBDev APIs
 
 ### Testing
@@ -382,6 +383,65 @@ dotnet test src/ --collect:"XPlat Code Coverage"
 > "We maintain ALL features, even highly specialized ones, to preserve the complete functionality of BinaryDataDecoders. Phases indicate priority order for migration work, not a selection of which features to keep. Incomplete features are migrated and tracked for future completion."
 
 **Remember:** The goal is complete feature parity with improvements, not selective cherry-picking.
+
+---
+
+## Recently Completed Work (2026-01-15)
+
+### Task: Convert ExpectedExceptionAttribute to Assert.ThrowsException
+**Status:** ✅ COMPLETED
+
+Successfully converted all 40 instances of `[ExpectedException(typeof(T))]` to `Assert.ThrowsException<T>()` across 24 test files:
+- Framework Layer: 10 conversions
+- Binary Decoders: 4 conversions
+- SharedFramework: 26 conversions
+
+Both sync and async test patterns handled correctly. See TODO.md for full file list.
+
+---
+
+## Current Work Context (2026-01-15)
+
+### Task: Fix Swashbuckle 10.1.0 Breaking Changes in OoBDev.AspNetCore.Mvc
+
+**Status:** IN PROGRESS - Code changes completed, awaiting build verification
+
+**What was done:**
+Fixed breaking changes from Swashbuckle 10.1.0 assembly updates across 3 files:
+
+1. **FormFileOperationFilter.cs** - 2 errors fixed
+   - Properties collection is read-only (loop through and add instead of assign)
+   - JsonSchemaType is enum (use `JsonSchemaType.String` not `"string"`)
+
+2. **HealthChecksDocumentFilter.cs** - 2 errors fixed
+   - OpenApiTag changed to OpenApiTagReference in Tags collection
+   - Properties is read-only (use .Add() calls instead of assignment)
+
+3. **SearchQueryOperationFilter.cs** - 8+ errors fixed
+   - OpenApiTag → OpenApiTagReference (3 occurrences)
+   - Coalesce assignment with type mismatch (use traditional null check)
+   - UpdateRequestSchema method major refactor:
+     - Removed dictionary copy with `.ChangeComparer()`
+     - Direct property access via `schema.Properties[key]`
+     - Fixed IOpenApiSchema vs OpenApiSchema conversions
+     - Added null checks for schema lookups
+
+**Next Steps When Resuming:**
+1. Build the project: `dotnet build src/Framework/OoBDev.AspNetCore.Mvc/OoBDev.AspNetCore.Mvc.csproj`
+2. If build fails, address remaining compiler errors
+3. Run tests: `dotnet test src/ --filter "OoBDev.AspNetCore.Mvc"`
+4. Verify no regressions in OpenAPI functionality
+
+**Files Modified:**
+- `/current/src/src/Framework/OoBDev.AspNetCore.Mvc/Filters/FormFileOperationFilter.cs`
+- `/current/src/src/Framework/OoBDev.AspNetCore.Mvc/Filters/SearchQueryOperationFilter.cs`
+- `/current/src/src/Framework/OoBDev.AspNetCore.Mvc/SwaggerGen/HealthChecksDocumentFilter.cs`
+
+**Key Breaking Changes Reference:**
+- `OpenApiTag` → `OpenApiTagReference` for Tags collection
+- `IOpenApiSchema.Properties` is read-only (use `.Add()` or `[key] = value`)
+- `JsonSchemaType` enum instead of string literals
+- Schema references require null checking: `?.Reference`
 
 ---
 

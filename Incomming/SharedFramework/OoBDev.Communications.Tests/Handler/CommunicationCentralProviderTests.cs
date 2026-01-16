@@ -241,7 +241,6 @@ namespace OoBDev.Communications.Tests.Handler
         [TestMethod]
         [TestCategory(TestCategories.Unit)]
         [TestCategory(TestCategories.Feature.CommunicationCenter)]
-        [ExpectedException(typeof(ApplicationException))]
         public async Task ReceivedAsyncTest_Exception()
         {
             //Stage
@@ -280,18 +279,16 @@ namespace OoBDev.Communications.Tests.Handler
                 mockDateTools.Object,
                 mockGuidTools.Object
                 );
-            try
+            await Assert.ThrowsExceptionAsync<ApplicationException>(async () =>
             {
                 var result = await provider.ReceivedAsync(mockSendRequest.Object, coorRequest, headers);
 
                 //Assert
                 Assert.Fail("you shouldn't get here");
-            }
-            finally
-            {
-                //Verify
-                mock.VerifyAll();
-            }
+            });
+
+            //Verify
+            mock.VerifyAll();
         }
     }
 }

@@ -53,7 +53,7 @@ public class OneTimeCode
         if (checkAdjacentIntervals < 1)
             checkAdjacentIntervals = 1;
 
-        for (int i = 1; i <= checkAdjacentIntervals; i++)
+        for (var i = 1; i <= checkAdjacentIntervals; i++)
         {
             string check;
             if (token == (check = GetToken(secret, GetCurrentCounter() + i)))

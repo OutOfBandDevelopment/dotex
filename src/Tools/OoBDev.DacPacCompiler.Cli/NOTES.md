@@ -9,7 +9,7 @@ Below is the **clean, correct migration path**.
 ## Target architecture (recommended)
 
 ```
-DacPacBuilder        (net9.0)
+DacPacBuilder        (net10.0)
 │
 ├─ build dependency → SqlClrProject (net481)
 │                    (NO runtime reference)
@@ -27,7 +27,7 @@ You will:
 
 ## Step 1: Remove the netstandard dependency
 
-### In the net9.0 `.csproj`
+### In the net10.0 `.csproj`
 
 ```xml
 <ItemGroup>

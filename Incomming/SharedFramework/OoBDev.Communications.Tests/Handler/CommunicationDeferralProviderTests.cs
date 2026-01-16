@@ -136,7 +136,6 @@ namespace OoBDev.Communications.Tests.Handler
 
         [TestMethod, TestCategory(TestCategories.Unit)]
         [TestCategory(TestCategories.Feature.CommunicationCenter)]
-        [ExpectedException(typeof(ApplicationException))]
         public async Task ExecuteAsyncTest_ExceptionInital()
         {
             //Stage
@@ -164,28 +163,20 @@ namespace OoBDev.Communications.Tests.Handler
                 mockConfig.Object
                 );
 
-            try
+            await Assert.ThrowsExceptionAsync<ApplicationException>(async () =>
             {
                 var result = await processor.ExecuteAsync(requestTime);
 
                 //Assert
                 Assert.Fail("you shouldn't get here");
-            }
-            catch (Exception ex)
-            {
-                Assert.AreEqual(expectedException, ex);
-                throw;
-            }
-            finally
-            {
-                //Verify
-                mock.VerifyAll();
-            }
+            });
+
+            //Verify
+            mock.VerifyAll();
         }
 
         [TestMethod, TestCategory(TestCategories.Unit)]
         [TestCategory(TestCategories.Feature.CommunicationCenter)]
-        [ExpectedException(typeof(ApplicationException))]
         public async Task ExecuteAsyncTest_ExceptionPer()
         {
             //Stage
@@ -231,18 +222,16 @@ namespace OoBDev.Communications.Tests.Handler
                 mockConfig.Object
                 );
 
-            try
+            await Assert.ThrowsExceptionAsync<ApplicationException>(async () =>
             {
                 var result = await processor.ExecuteAsync(requestTime);
 
                 //Assert
                 Assert.IsTrue(result);
-            }
-            finally
-            {
-                //Verify
-                mock.VerifyAll();
-            }
+            });
+
+            //Verify
+            mock.VerifyAll();
         }
     }
 }
