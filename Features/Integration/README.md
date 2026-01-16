@@ -32,6 +32,7 @@ This folder contains planning materials and infrastructure code for setting up a
 Features/Integration/
 ├── README.md (this file)
 ├── PLANNING.md - Implementation roadmap and strategy
+├── ARCHITECTURE_DECISIONS.md - Key implementation decisions (schema, flaky tests, parallelization, etc.)
 ├── DOCKER_SETUP.md - Docker container configuration guide
 ├── TEST_CATEGORIES.md - Integration test categories and scope
 ├── SERVICE_CONTAINERS.md - Database and service container definitions
@@ -49,12 +50,13 @@ Features/Integration/
 
 **Start Here:**
 1. **[PLANNING.md](./PLANNING.md)** ⭐ - Overview, architecture, phases, timeline
-2. **[TEST_CATEGORIES.md](./TEST_CATEGORIES.md)** - Decision tree for test categorization
-3. **[DOCKER_SETUP.md](./DOCKER_SETUP.md)** - Container architecture with PlantUML diagrams
+2. **[ARCHITECTURE_DECISIONS.md](./ARCHITECTURE_DECISIONS.md)** ⭐ - Key implementation decisions
+3. **[TEST_CATEGORIES.md](./TEST_CATEGORIES.md)** - Decision tree for test categorization
+4. **[DOCKER_SETUP.md](./DOCKER_SETUP.md)** - Container architecture with PlantUML diagrams
 
 **Implementation Guides:**
-4. **[SERVICE_CONTAINERS.md](./SERVICE_CONTAINERS.md)** - Detailed service specifications
-5. **[GITHUB_ACTIONS.md](./GITHUB_ACTIONS.md)** - Daily scheduled execution workflow
+5. **[SERVICE_CONTAINERS.md](./SERVICE_CONTAINERS.md)** - Detailed service specifications
+6. **[GITHUB_ACTIONS.md](./GITHUB_ACTIONS.md)** - Daily scheduled execution workflow
 
 **Examples:**
 - **[EXAMPLES/](./EXAMPLES/)** - Sample docker-compose and test code (when available)
