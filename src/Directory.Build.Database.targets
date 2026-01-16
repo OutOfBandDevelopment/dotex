@@ -1,6 +1,41 @@
 <Project>
- 
-	<!-- Start: this is a patch while a fix is pending approval -->
+
+	<!-- GitVersion from CLI for database projects only -->
+  <Target Name="GitVersionFromCLI"
+        BeforeTargets="_DacPrePostVersion"
+        Condition="'$(SkipGitVersion)' != 'true'">
+
+    <Message Text="Running GitVersion (SqlProj)" Importance="High" />
+
+    <Exec Command="dotnet tool restore"
+          WorkingDirectory="$(SolutionDir)"
+          ContinueOnError="true"
+          ConsoleToMSBuild="true"
+          StandardOutputImportance="Low" />
+
+    <Exec Command="dotnet gitversion /showvariable InformationalVersion"
+          WorkingDirectory="$(SolutionDir)"
+          ConsoleToMSBuild="true">
+      <Output TaskParameter="ConsoleOutput"
+              PropertyName="InformationalVersion" />
+    </Exec>
+
+    <Exec Command="dotnet gitversion /showvariable AssemblySemFileVer"
+          WorkingDirectory="$(SolutionDir)"
+          ConsoleToMSBuild="true">
+      <Output TaskParameter="ConsoleOutput"
+              PropertyName="FileVersion" />
+    </Exec>
+
+    <!--
+    <PropertyGroup>
+      <InformationalVersion>$([System.String]::Copy('$(InformationalVersion)').ToLowerInvariant().Trim())</InformationalVersion>
+      <FileVersion>$([System.String]::Copy('$(FileVersion)').ToLowerInvariant().Trim())</FileVersion>    
+    </PropertyGroup>
+    -->
+  </Target>
+
+  <!-- Start: this is a patch while a fix is pending approval -->
 	<!--https://github.com/rr-wfm/MSBuild.Sdk.SqlProj/pull/284-->
 	<PropertyGroup Condition="'$(UsingMSBuildSdkSqlProj)'=='true'">
     <IsDatabaseProject>True</IsDatabaseProject>    
