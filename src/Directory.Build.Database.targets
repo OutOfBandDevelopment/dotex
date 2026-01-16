@@ -1,38 +1,47 @@
 <Project>
 
-	<!-- GitVersion from CLI for database projects only -->
+	<!-- GitVersion Resolution: Use pipeline parameters first, fallback to CLI calculation -->
   <Target Name="GitVersionFromCLI"
         BeforeTargets="_DacPrePostVersion"
         Condition="'$(SkipGitVersion)' != 'true'">
 
-    <Message Text="Running GitVersion (SqlProj)" Importance="High" />
+    <!-- Priority 1: Use environment variables from pipeline (passed as properties) -->
+    <PropertyGroup Condition="'$(GitVersion_AssemblySemFileVer)' != ''">
+      <FileVersion>$(GitVersion_AssemblySemFileVer)</FileVersion>
+      <_GitVersionSource>Pipeline Environment Variable</_GitVersionSource>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(GitVersion_InformationalVersion)' != ''">
+      <InformationalVersion>$(GitVersion_InformationalVersion)</InformationalVersion>
+      <_GitVersionSource>Pipeline Environment Variable</_GitVersionSource>
+    </PropertyGroup>
+
+    <!-- Priority 2: Fall back to CLI execution if environment variables not provided -->
+    <Message Text="GitVersion source: Pipeline parameters" Importance="High" Condition="'$(_GitVersionSource)' == 'Pipeline Environment Variable'" />
+    <Message Text="GitVersion source: Local CLI execution (parameters not provided)" Importance="High" Condition="'$(_GitVersionSource)' != 'Pipeline Environment Variable'" />
 
     <Exec Command="dotnet tool restore"
           WorkingDirectory="$(SolutionDir)"
           ContinueOnError="true"
           ConsoleToMSBuild="true"
-          StandardOutputImportance="Low" />
+          StandardOutputImportance="Low"
+          Condition="'$(_GitVersionSource)' != 'Pipeline Environment Variable'" />
 
     <Exec Command="dotnet gitversion /showvariable InformationalVersion"
           WorkingDirectory="$(SolutionDir)"
-          ConsoleToMSBuild="true">
+          ConsoleToMSBuild="true"
+          Condition="'$(_GitVersionSource)' != 'Pipeline Environment Variable'">
       <Output TaskParameter="ConsoleOutput"
               PropertyName="InformationalVersion" />
     </Exec>
 
     <Exec Command="dotnet gitversion /showvariable AssemblySemFileVer"
           WorkingDirectory="$(SolutionDir)"
-          ConsoleToMSBuild="true">
+          ConsoleToMSBuild="true"
+          Condition="'$(_GitVersionSource)' != 'Pipeline Environment Variable'">
       <Output TaskParameter="ConsoleOutput"
               PropertyName="FileVersion" />
     </Exec>
-
-    <!--
-    <PropertyGroup>
-      <InformationalVersion>$([System.String]::Copy('$(InformationalVersion)').ToLowerInvariant().Trim())</InformationalVersion>
-      <FileVersion>$([System.String]::Copy('$(FileVersion)').ToLowerInvariant().Trim())</FileVersion>    
-    </PropertyGroup>
-    -->
   </Target>
 
   <!-- Start: this is a patch while a fix is pending approval -->
@@ -87,25 +96,19 @@
 		<Message Text="=== _DacPrePostVersion ===" Importance="high" />
 		<Message Text="=== InformationalVersion: $(InformationalVersion) ===" Importance="high" />
 		<Message Text="=== FileVersion: $(FileVersion) ===" Importance="high" />
-		<Message Text="=== GitVersion_AssemblySemFileVer: $(GitVersion_AssemblySemFileVer) ===" Importance="high" />
-		<Message Text="=== GitVersion_InformationalVersion: $(GitVersion_InformationalVersion) ===" Importance="high" />
 
 		<PropertyGroup>
 			<RunScriptsFromReferences>True</RunScriptsFromReferences>
 			<DatabasePostDeploymentScriptPath>Post-Deployment/Script.PostDeployment.sql</DatabasePostDeploymentScriptPath>
 			<DatabasePreDeploymentScriptPath>Pre-Deployment/Script.PreDeployment.sql</DatabasePreDeploymentScriptPath>
 			<DatabaseVersionScriptPath>Post-Deployment/SetDacVersion.sql</DatabaseVersionScriptPath>
-			<!-- Use GitVersion properties if available, otherwise fallback to InformationalVersion/FileVersion -->
-			<DacVersion Condition="'$(GitVersion_AssemblySemFileVer)' != ''">$(GitVersion_AssemblySemFileVer)</DacVersion>
-			<DacVersion Condition="'$(GitVersion_AssemblySemFileVer)' == ''">$(FileVersion)</DacVersion>
-			<BuildVersion Condition="'$(GitVersion_InformationalVersion)' != ''">$(GitVersion_InformationalVersion)</BuildVersion>
-			<BuildVersion Condition="'$(GitVersion_InformationalVersion)' == ''">$(InformationalVersion)</BuildVersion>
+			<!-- Use resolved versions from GitVersionFromCLI target (pipeline params or local CLI) -->
+			<DacVersion>$(FileVersion)</DacVersion>
+			<BuildVersion>$(InformationalVersion)</BuildVersion>
 		</PropertyGroup>
 
 		<Message Text="=== DacVersion: $(DacVersion) ===" Importance="high" />
 		<Message Text="=== BuildVersion: $(BuildVersion) ===" Importance="high" />
-		<Message Text="=== Using GitVersion: Condition passed ===" Importance="high" Condition="'$(GitVersion_AssemblySemFileVer)' != ''" />
-		<Message Text="=== Using Fallback: GitVersion properties empty ===" Importance="high" Condition="'$(GitVersion_AssemblySemFileVer)' == ''" />
 
 		<WriteLinesToFile
             File="$(DatabaseVersionScriptPath)"

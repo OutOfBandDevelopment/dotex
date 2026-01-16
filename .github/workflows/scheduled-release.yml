@@ -1,0 +1,145 @@
+name: Scheduled Daily Release
+
+# Automatically release and publish at end of day if there are changes on main
+on:
+  schedule:
+    # Run daily at 5 PM UTC (adjust timezone as needed)
+    - cron: '0 17 * * *'
+
+  # Allow manual trigger for testing
+  workflow_dispatch:
+
+env:
+  MSBUILDTERMINALLOGGER: off
+
+jobs:
+  check-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      has-changes: ${{ steps.check.outputs.has-changes }}
+      last-tag: ${{ steps.check.outputs.last-tag }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4.1.1
+        with:
+          fetch-depth: 0
+
+      - name: Check for changes since last release
+        id: check
+        run: |
+          # Get the most recent tag on main
+          LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "none")
+          echo "last-tag=$LAST_TAG" >> $GITHUB_OUTPUT
+
+          if [ "$LAST_TAG" = "none" ]; then
+            # No tags yet, treat as changes exist
+            echo "has-changes=true" >> $GITHUB_OUTPUT
+            echo "✅ No previous releases - changes detected"
+          else
+            # Check if there are commits since the last tag on main
+            COMMITS_SINCE_TAG=$(git rev-list --count $LAST_TAG..main 2>/dev/null || echo "0")
+
+            if [ "$COMMITS_SINCE_TAG" -gt 0 ]; then
+              echo "has-changes=true" >> $GITHUB_OUTPUT
+              echo "✅ Found $COMMITS_SINCE_TAG new commits since $LAST_TAG - changes detected"
+            else
+              echo "has-changes=false" >> $GITHUB_OUTPUT
+              echo "⏭️ No new commits since $LAST_TAG - skipping release"
+            fi
+          fi
+
+  release:
+    needs: check-changes
+    if: needs.check-changes.outputs.has-changes == 'true'
+    runs-on: ubuntu-latest
+    outputs:
+      release-tag: ${{ steps.parse-artifact.outputs.version }}
+      release-url: ${{ steps.create-release.outputs.url }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4.1.1
+        with:
+          fetch-depth: 0
+
+      - name: Find Latest Package Artifact
+        id: find-artifact
+        run: |
+          # Get the latest successful build artifact from main
+          ARTIFACT=$(gh run list --branch main --workflow dotnet.yml --status success --limit 1 --json artifacts -q '.[0].artifacts[0].name')
+
+          if [ -z "$ARTIFACT" ]; then
+            echo "❌ No build artifacts found for main branch"
+            exit 1
+          fi
+
+          echo "artifact-name=$ARTIFACT" >> $GITHUB_OUTPUT
+          echo "✅ Using artifact: $ARTIFACT"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Download packages from build
+      - name: Download Package Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ steps.find-artifact.outputs.artifact-name }}
+          path: ./packages
+
+      # Parse version from artifact name
+      - name: Parse Version from Artifact
+        id: parse-artifact
+        run: |
+          # Extract version from artifact name format: packages-X.Y.Z-...
+          ARTIFACT_NAME="${{ steps.find-artifact.outputs.artifact-name }}"
+          VERSION="${ARTIFACT_NAME#packages-}"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "✅ Release version: $VERSION"
+
+      # Create GitHub Release
+      - name: Create GitHub Release
+        id: create-release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.parse-artifact.outputs.version }}
+          name: Release ${{ steps.parse-artifact.outputs.version }}
+          files: ./packages/*.nupkg
+          draft: false
+          prerelease: ${{ contains(steps.parse-artifact.outputs.version, '-') }}
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  publish-nuget:
+    needs: release
+    runs-on: ubuntu-latest
+    environment:
+      name: nuget-release
+      url: ${{ needs.release.outputs.release-url }}
+
+    steps:
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      # Download packages from build
+      - name: Download Package Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: packages-${{ needs.release.outputs.release-tag }}
+          path: ./packages
+
+      - name: Publish to NuGet
+        run: |
+          dotnet nuget push \
+            "./packages/*.nupkg" \
+            --api-key ${{ secrets.NUGET_API_KEY }} \
+            --source https://api.nuget.org/v3/index.json \
+            --skip-duplicate
+
+      - name: Confirm Automated Deployment
+        run: |
+          echo "✅ Scheduled release published to NuGet"
+          echo "Version: ${{ needs.release.outputs.release-tag }}"
+          echo "Release URL: ${{ needs.release.outputs.release-url }}"

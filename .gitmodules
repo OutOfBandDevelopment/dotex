@@ -1,6 +1,8 @@
 [submodule "src/ExternalServices/AllMiniLML6v2Sharp"]
 	path = src/ExternalServices/AllMiniLML6v2Sharp
 	url = https://github.com/mwwhited-forks/AllMiniLML6v2Sharp.git
+	branch = main
 [submodule "src/ExternalServices/SBert/OoBDev.SBert.AllMiniLML6v2Sharp/model"]
 	path = src/ExternalServices/SBert/OoBDev.SBert.AllMiniLML6v2Sharp/model
 	url = https://huggingface.co/onnx-models/all-MiniLM-L6-v2-onnx
+	branch = main
