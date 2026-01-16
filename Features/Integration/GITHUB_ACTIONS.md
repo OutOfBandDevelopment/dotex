@@ -4,6 +4,24 @@
 **Execution Model:** Once daily if changes detected
 **Trigger Time:** 5 PM UTC (adjustable)
 
+## Executive Summary
+
+This document provides a complete GitHub Actions workflow design for running integration tests in OoBDev daily at 5 PM UTC (if changes detected). The setup includes three workflows: `dotnet.yml` (build + unit/simulate tests on every push/PR), `release.yml` (manual on-demand releases), and `integration-tests.yml` (daily integration testing with all Docker services). Integration tests run against real SQL Server, RabbitMQ, MongoDB, Qdrant, and OpenSearch databases/services in Docker containers. The workflow includes smart change detection (skip if no changes), comprehensive health checks, environment variable setup, test result publishing, codecov integration, and monitoring strategies. The total execution time is ~12-18 minutes with cost of $0 for public repositories (unlimited GitHub Actions minutes).
+
+## Table of Contents
+
+- [Integration Testing Workflow Architecture](#integration-testing-workflow-architecture)
+- [Workflow File Structure](#workflow-file-structure)
+- [Integration Tests Workflow Template](#integration-tests-workflow-template)
+- [Execution Flow Timing](#execution-flow-timing)
+- [Integration with Scheduled Release](#integration-with-scheduled-release)
+- [Monitoring & Alerts](#monitoring--alerts)
+- [Test Connection Strings](#test-connection-strings)
+- [Cost Analysis (Public Repository)](#cost-analysis-public-repository)
+- [Debugging Failed Tests](#debugging-failed-tests)
+- [Next Steps When Ready to Implement](#next-steps-when-ready-to-implement)
+- [Key Takeaways](#key-takeaways)
+
 ## Integration Testing Workflow Architecture
 
 ```plantuml

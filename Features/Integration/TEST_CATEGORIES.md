@@ -2,6 +2,28 @@
 
 **Purpose:** Define which tests belong in Unit, Simulate, Integration, and DevLocal categories
 
+## Executive Summary
+
+This document provides a comprehensive decision tree and categorization framework for OoBDev tests. It defines four test categories: Unit (fast, isolated logic), Simulate (component interactions with mocks), Integration (real external dependencies), and DevLocal (developer-only, local setup). The guide includes quick reference tables, detailed definitions with code examples, a decision tree for test categorization, real-world examples specific to OoBDev projects, coverage goals by project type, migration paths between categories, and a comprehensive checklist for new tests. Understanding test categories is critical for maintaining fast feedback on PRs while ensuring comprehensive validation through integration testing.
+
+## Table of Contents
+
+- [Quick Reference](#quick-reference)
+- [Category Definitions](#category-definitions)
+  - [Unit Tests (TestCategory=Unit)](#unit-tests-testcategoryunit)
+  - [Simulate Tests (TestCategory=Simulate)](#simulate-tests-testcategorysimulate)
+  - [Integration Tests (TestCategory=Integration)](#integration-tests-testcategoryintegration)
+  - [DevLocal Tests (TestCategory=DevLocal)](#devlocal-tests-testcategorydevlocal)
+- [Decision Tree](#decision-tree)
+- [Real-World Examples for OoBDev](#real-world-examples-for-oodev)
+  - [OoBDev.System](#oobdevsystem)
+  - [OoBDev.IO](#oobdevio)
+  - [OoBDev.Data (Database Projects)](#oobdevdata-database-projects)
+- [Coverage Goals by Category](#coverage-goals-by-category)
+- [Migration Path](#migration-path)
+- [Checklist for New Tests](#checklist-for-new-tests)
+- [Q&A](#qa)
+
 ## Quick Reference
 
 | Category | Environment | Dependencies | Speed | When to Use | RunsInCI |

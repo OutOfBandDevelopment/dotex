@@ -3,6 +3,25 @@
 **Status:** Planning Phase - Not Yet Implemented
 **Last Updated:** 2026-01-16
 
+## Executive Summary
+
+This folder contains complete planning materials for implementing integration testing in OoBDev. Integration tests validate the framework against **real external dependencies** (databases, file systems, networks) rather than mocks, catching bugs that unit tests miss. The infrastructure is designed to run daily in GitHub Actions (free for public projects) using Docker containers for SQL Server, PostgreSQL, MongoDB, RabbitMQ, and other services. This is a comprehensive, phased approach with estimated effort of 9-18 hours across four phases, with detailed decision points and rollout strategy provided.
+
+## Table of Contents
+
+- [Structure](#structure)
+- [Quick Links & Reading Order](#quick-links--reading-order)
+- [Current State](#current-state)
+- [What Are Integration Tests?](#what-are-integration-tests)
+- [Why Do We Need Them?](#why-do-we-need-them)
+- [Test Scope by Category](#test-scope-by-category)
+- [Docker in GitHub Actions](#docker-in-github-actions)
+- [Next Steps](#next-steps)
+- [Important Notes](#important-notes)
+- [Resources](#resources)
+- [Questions for When You're Ready](#questions-for-when-youre-ready)
+- [Contact & Resources](#contact--resources)
+
 ## Overview
 
 This folder contains planning materials and infrastructure code for setting up a comprehensive integration testing environment for OoBDev. Integration tests will validate the framework against real external dependencies and services.

@@ -4,6 +4,33 @@
 **Execution Model:** Daily runs (once per day if changes detected)
 **Cost:** Free (unlimited GitHub Actions minutes for public repo)
 
+## Executive Summary
+
+This document defines the complete Docker container architecture for integration testing OoBDev. The setup includes 7 containerized services (SQL Server, RabbitMQ, MongoDB, Qdrant, OpenSearch, Ollama, volumes) running in a isolated Docker network on GitHub Actions runners (or locally). Containers start in ~40 seconds and run all integration tests in ~3-6 minutes. The design emphasizes test isolation (clean state per run), change detection (skip if no changes), and performance optimization (parallel startup). Detailed specifications, health checks, and cleanup procedures are provided for each service. The architecture supports both minimal setups (SQL Server only) and comprehensive testing (all services).
+
+## Table of Contents
+
+- [Container Architecture](#container-architecture)
+  - [Complete Integration Testing Stack](#complete-integration-testing-stack)
+  - [Service Dependency Matrix](#service-dependency-matrix)
+- [Container Startup Sequence](#container-startup-sequence)
+- [GitHub Actions Execution Flow](#github-actions-execution-flow)
+- [Docker Compose Configuration Structure](#docker-compose-configuration-structure)
+- [Service Specifications](#service-specifications)
+  - [SQL Server 2019+](#sql-server-2019)
+  - [RabbitMQ 3.12](#rabbitmq-312)
+  - [MongoDB 7.0](#mongodb-70)
+  - [Qdrant Vector Database](#qdrant-vector-database)
+  - [OpenSearch 2.0](#opensearch-20)
+  - [Ollama (Optional for LLM Tests)](#ollama-optional-for-llm-tests)
+- [Execution Strategy: Daily with Change Detection](#execution-strategy-daily-with-change-detection)
+- [Test Isolation Strategy](#test-isolation-strategy)
+- [Performance Expectations](#performance-expectations)
+- [Network Topology](#network-topology)
+- [Next Steps (When Ready to Implement)](#next-steps-when-ready-to-implement)
+- [Decision Checklist](#decision-checklist)
+- [Resources](#resources)
+
 ## Overview
 
 This document defines the Docker container architecture for integration testing OoBDev. All services run in Docker containers within GitHub Actions runners (or locally for development).

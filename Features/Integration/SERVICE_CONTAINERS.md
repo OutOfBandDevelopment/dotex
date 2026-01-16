@@ -2,6 +2,24 @@
 
 **Purpose:** Detailed configuration for each Docker service used in integration testing
 
+## Executive Summary
+
+This document provides comprehensive specifications for all Docker containers used in integration testing OoBDev. It details six required services (SQL Server, RabbitMQ, MongoDB, Qdrant, OpenSearch) and two optional services (Ollama, Keycloak) with complete configuration, environment variables, volumes, health checks, initialization scripts, and cleanup procedures. A requirements diagram shows which OoBDev projects depend on each service. The document includes a container composition matrix for choosing between minimal (SQL only), standard (essential services), and full (all services) setups, startup optimization strategies, memory and CPU limits with resource constraints, and next steps for implementation. All configurations are production-ready for GitHub Actions runners.
+
+## Table of Contents
+
+- [Service Requirements by OoBDev Project](#service-requirements-by-oodev-project)
+- [SQL Server 2019+ (REQUIRED)](#sql-server-2019-required)
+- [RabbitMQ 3.12 (REQUIRED)](#rabbitmq-312-required)
+- [MongoDB 7.0 (REQUIRED)](#mongodb-70-required)
+- [Qdrant Vector Database (REQUIRED)](#qdrant-vector-database-required)
+- [OpenSearch 2.0 (REQUIRED)](#opensearch-20-required)
+- [Ollama (OPTIONAL)](#ollama-optional)
+- [Container Composition Matrix](#container-composition-matrix)
+- [Container Startup Optimization](#container-startup-optimization)
+- [Memory & CPU Limits](#memory--cpu-limits)
+- [Next Steps](#next-steps)
+
 ## Service Requirements by OoBDev Project
 
 ```plantuml

@@ -6,6 +6,32 @@
 
 ## Executive Summary
 
+This document provides a complete, phased roadmap for implementing integration testing in OoBDev. Integration testing adds a third layer of validation beyond Unit and Simulate tests by running against **real external dependencies** (databases, file system, network, services) instead of mocks. The plan includes four phases spanning 9-18 hours of effort, from planning (current) through Docker infrastructure, test project structure, CI/CD integration, and DevLocal test evaluation. It includes architectural diagrams, decision trees, service container specifications, GitHub Actions workflows, and detailed rollout strategies. Everything is free for public open-source projects—unlimited GitHub Actions minutes with Docker pre-installed.
+
+## Table of Contents
+
+- [Architecture Overview](#architecture-overview)
+- [Implementation Phases](#implementation-phases)
+  - [Phase 0: Planning & Setup](#phase-0-planning--setup-current)
+  - [Phase 1: Docker Infrastructure](#phase-1-docker-infrastructure)
+  - [Phase 2: Test Project Structure](#phase-2-test-project-structure)
+  - [Phase 3: CI/CD Integration](#phase-3-cicd-integration)
+  - [Phase 4: DevLocal Test Evaluation](#phase-4-devlocal-test-evaluation)
+- [Test Categories Decision Tree](#test-categories-decision-tree)
+- [Service Container Decisions](#service-container-decisions)
+- [CI/CD Strategy](#cicd-strategy)
+- [Resource Requirements](#resource-requirements)
+- [Data Management Strategy](#data-management-strategy)
+- [Naming & Organization](#naming--organization)
+- [Testcontainers Alternative](#testcontainers-alternative)
+- [Timeline & Effort](#timeline--effort)
+- [Rollout Strategy](#rollout-strategy)
+- [Decision Points](#decision-points)
+- [Success Metrics](#success-metrics)
+- [Next Steps](#next-steps)
+
+## Context: What Are Integration Tests?
+
 Integration testing adds a third layer of validation beyond Unit and Simulate tests. Unlike mocked tests, Integration tests run against **real external dependencies** (databases, file system, network, etc.).
 
 For OoBDev, this means:
