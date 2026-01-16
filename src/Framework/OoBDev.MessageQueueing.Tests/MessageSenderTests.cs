@@ -51,7 +51,7 @@ public class MessageSenderTests
     [TestCategory(TestCategories.Simulate)]
     public async Task SendAsyncTest_Error()
     {
-        await Assert.ThrowsExceptionAsync<ApplicationException>(async () =>
+        await Assert.ThrowsAsync<ApplicationException>(async () =>
         {
             var configBuilder = new ConfigurationBuilder();
 

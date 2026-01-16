@@ -101,7 +101,7 @@ public abstract class ExpressionParserTests<T>
     //TODO: this should throw a parse error !!![DataRow("1e")]
     public void PoorlyFormedExpressions(string input)
     {
-        Assert.ThrowsException<ParseCanceledException>(() =>
+        Assert.Throws<ParseCanceledException>(() =>
         {
             try
             {
@@ -221,7 +221,7 @@ public abstract class ExpressionParserTests<T>
     [TestTarget(typeof(ExpressionBaseExtensions), Member = nameof(ExpressionBaseExtensions.Optimize))]
     public void OptimizerTests_WithExceptions(string input)
     {
-        Assert.ThrowsException<DivideByZeroException>(() =>
+        Assert.ThrowsExactly<DivideByZeroException>(() =>
         {
             TestContext.WriteLine($"Input: {input}");
             var parsed = new ExpressionParser<T>().Parse(input);

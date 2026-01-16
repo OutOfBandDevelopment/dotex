@@ -53,7 +53,7 @@ public class VariableExpressionTests
     [TestTarget(typeof(VariableExpression<>))]
     public void NullVariableName_Test()
     {
-        Assert.ThrowsException<InvalidOperationException>(() =>
+        Assert.ThrowsExactly<InvalidOperationException>(() =>
         {
             _ = new VariableExpression<double>(null!);
             Assert.Fail("you should not get here!");
@@ -64,7 +64,7 @@ public class VariableExpressionTests
     [TestTarget(typeof(VariableExpression<>))]
     public void EmptyVariableName_Test()
     {
-        Assert.ThrowsException<InvalidOperationException>(() =>
+        Assert.ThrowsExactly<InvalidOperationException>(() =>
         {
             _ = new VariableExpression<double>("");
             Assert.Fail("you should not get here!");

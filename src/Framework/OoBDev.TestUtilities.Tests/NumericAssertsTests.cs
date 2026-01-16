@@ -42,7 +42,7 @@ public class NumericAssertsTests
         double actual = 123.457;
 
         // Test - Should throw
-        Assert.ThrowsException<AssertFailedException>(() =>
+        Assert.Throws<AssertFailedException>(() =>
         {
             NumericAsserts.AreSimilar(expected, actual);
         });
@@ -97,7 +97,7 @@ public class NumericAssertsTests
         float actual = 123.46f;
 
         // Test - Should throw
-        Assert.ThrowsException<AssertFailedException>(() =>
+        Assert.Throws<AssertFailedException>(() =>
         {
             NumericAsserts.AreSimilar(expected, actual);
         });
@@ -140,7 +140,7 @@ public class NumericAssertsTests
         decimal actual = 123.457m;
 
         // Test - Should throw
-        Assert.ThrowsException<AssertFailedException>(() =>
+        Assert.Throws<AssertFailedException>(() =>
         {
             NumericAsserts.AreSimilar(expected, actual);
         });
@@ -171,7 +171,7 @@ public class NumericAssertsTests
         int actual = 12346;
 
         // Test - Should throw
-        Assert.ThrowsException<AssertFailedException>(() =>
+        Assert.Throws<AssertFailedException>(() =>
         {
             NumericAsserts.AreSimilar(expected, actual);
         });
@@ -216,7 +216,7 @@ public class NumericAssertsTests
         double tolerance = 1.0;
 
         // Test - Should throw
-        Assert.ThrowsException<AssertFailedException>(() =>
+        Assert.Throws<AssertFailedException>(() =>
         {
             NumericAsserts.AreSimilar(expected, actual, tolerance);
         });
@@ -245,7 +245,7 @@ public class NumericAssertsTests
         int tolerance = 10;
 
         // Test - Should throw
-        Assert.ThrowsException<AssertFailedException>(() =>
+        Assert.Throws<AssertFailedException>(() =>
         {
             NumericAsserts.AreSimilar(expected, actual, tolerance);
         });
