@@ -1,15 +1,14 @@
-# This workflow will build a .NET project
+# This workflow will build, test, and package a .NET project
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
 
 name: .NET Build Pipeline
 # https://docs.github.com/en/actions/learn-github-actions/contexts#vars-context
 # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#run-name
-run-name: .NET ${{ inputs.build-configuration || 'Release' }}/${{ inputs.build-platform || 'windows-latest' }} by @${{ github.actor }} (@${{ github.event_name }})
+run-name: Build ${{ inputs.build-configuration || 'Release' }}/${{ inputs.build-platform || 'windows-latest' }} by @${{ github.actor }} (@${{ github.event_name }})
 
 on:
   push:
     branches:
-    - master
     - main
     - 'dev/*'
     paths:
@@ -24,7 +23,6 @@ on:
 
   pull_request:
     branches:
-    - master
     - main
     - 'dev/*'
     paths:
@@ -40,7 +38,7 @@ on:
   # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#onpull_requestpull_request_targetbranchesbranches-ignore
   workflow_dispatch:
     inputs:
-      build-configuration: 
+      build-configuration:
         description: 'Build Configuration'
         required: true
         default: 'Release'
@@ -147,6 +145,12 @@ jobs:
         dotnet restore
         --property:Version=${{ steps.calculate-version.outputs.FullSemVerLower }}
         --property:SolutionDir=${{ steps.calculate-version.outputs.BuildWorkspace }}/src/
+        --property:GitVersion_AssemblySemFileVer=${{ steps.gitversion.outputs.assemblySemFileVer }}
+        --property:GitVersion_InformationalVersion=${{ steps.gitversion.outputs.informationalVersion }}
+        --property:GitVersion_FullSemVer=${{ steps.gitversion.outputs.fullSemVer }}
+        --property:GitVersion_Major=${{ steps.gitversion.outputs.major }}
+        --property:GitVersion_Minor=${{ steps.gitversion.outputs.minor }}
+        --property:GitVersion_Patch=${{ steps.gitversion.outputs.patch }}
 
     - name: Build
       working-directory: ./src
@@ -155,40 +159,36 @@ jobs:
         --configuration ${{ steps.calculate-version.outputs.BuildConfiguration }}
         --property:Version=${{ steps.calculate-version.outputs.FullSemVerLower }}
         --property:SolutionDir=${{ steps.calculate-version.outputs.BuildWorkspace }}/src/
-        --nologo 
+        --property:GitVersion_AssemblySemFileVer=${{ steps.gitversion.outputs.assemblySemFileVer }}
+        --property:GitVersion_InformationalVersion=${{ steps.gitversion.outputs.informationalVersion }}
+        --property:GitVersion_FullSemVer=${{ steps.gitversion.outputs.fullSemVer }}
+        --property:GitVersion_Major=${{ steps.gitversion.outputs.major }}
+        --property:GitVersion_Minor=${{ steps.gitversion.outputs.minor }}
+        --property:GitVersion_Patch=${{ steps.gitversion.outputs.patch }}
+        --nologo
         --no-restore
 
-      # https://devblogs.microsoft.com/dotnet/producing-packages-with-source-link/
-    - name: Package projects
-      working-directory: ./src
-      run: >
-        dotnet pack
-        --configuration ${{ steps.calculate-version.outputs.BuildConfiguration }}
-        --property:Version=${{ steps.calculate-version.outputs.FullSemVerLower }}
-        --property:SolutionDir=${{ steps.calculate-version.outputs.BuildWorkspace }}/src/
-        --no-build 
-        --no-restore 
-        --output "${{ steps.calculate-version.outputs.PackagesPath }}"
-        
     - name: Unit Test
       working-directory: ./src
       run: >
         dotnet test
-        --configuration ${{ steps.calculate-version.outputs.BuildConfiguration }} 
+        --configuration ${{ steps.calculate-version.outputs.BuildConfiguration }}
         --property:Version=${{ steps.calculate-version.outputs.FullSemVerLower }}
         --property:SolutionDir=${{ steps.calculate-version.outputs.BuildWorkspace }}/src/
-        --no-build 
-        --no-restore 
-        --nologo 
-        --filter "TestCategory=Unit|TestCategory=Simulate" 
-        --collect:"XPlat Code Coverage" 
+        --property:GitVersion_AssemblySemFileVer=${{ steps.gitversion.outputs.assemblySemFileVer }}
+        --property:GitVersion_InformationalVersion=${{ steps.gitversion.outputs.informationalVersion }}
+        --property:GitVersion_FullSemVer=${{ steps.gitversion.outputs.fullSemVer }}
+        --property:GitVersion_Major=${{ steps.gitversion.outputs.major }}
+        --property:GitVersion_Minor=${{ steps.gitversion.outputs.minor }}
+        --property:GitVersion_Patch=${{ steps.gitversion.outputs.patch }}
+        --no-build
+        --no-restore
+        --nologo
+        --filter "TestCategory=Unit|TestCategory=Simulate"
+        --collect:"XPlat Code Coverage"
         --results-directory "${{ steps.calculate-version.outputs.TestResultsPath }}"
-        
-      #--settings "${{ steps.calculate-version.outputs.RunSettings }}"
 
     # https://github.com/marketplace/actions/publish-test-results
-    # https://github.com/marketplace/actions/publish-test-results#create-a-badge-from-test-results
-    # this doesn't support windows right now for some reason
     - name: Publish Test Results
       uses: EnricoMi/publish-unit-test-result-action/composite@v2
       id: test-results
@@ -197,19 +197,32 @@ jobs:
         trx_files: ${{ steps.calculate-version.outputs.TestResultsPath }}/**/*.trx
         report_individual_runs: true
 
-    ## Don't publish PR's
-    - name: Publish Project to Nuget
-      if: github.event_name != 'pull_request'
+    # Package only after tests pass (gated flow)
+    # https://devblogs.microsoft.com/dotnet/producing-packages-with-source-link/
+    - name: Package projects
+      working-directory: ./src
       run: >
-        dotnet nuget push 
-        "${{ steps.calculate-version.outputs.PackagesPath }}/*.nupkg" 
-        --api-key ${{secrets.NUGET_API_KEY}} 
-        --source https://api.nuget.org/v3/index.json 
-        --skip-duplicate
+        dotnet pack
+        --configuration ${{ steps.calculate-version.outputs.BuildConfiguration }}
+        --property:Version=${{ steps.calculate-version.outputs.FullSemVerLower }}
+        --property:SolutionDir=${{ steps.calculate-version.outputs.BuildWorkspace }}/src/
+        --property:GitVersion_AssemblySemFileVer=${{ steps.gitversion.outputs.assemblySemFileVer }}
+        --property:GitVersion_InformationalVersion=${{ steps.gitversion.outputs.informationalVersion }}
+        --property:GitVersion_FullSemVer=${{ steps.gitversion.outputs.fullSemVer }}
+        --property:GitVersion_Major=${{ steps.gitversion.outputs.major }}
+        --property:GitVersion_Minor=${{ steps.gitversion.outputs.minor }}
+        --property:GitVersion_Patch=${{ steps.gitversion.outputs.patch }}
+        --no-build
+        --no-restore
+        --output "${{ steps.calculate-version.outputs.PackagesPath }}"
 
-    - name: Tag Commit
-      uses: thejeff77/action-push-tag@v1.0.0
+    # Upload packages as artifacts for 90 days (available for release workflow)
+    - name: Upload Package Artifacts
       if: github.event_name != 'pull_request'
+      uses: actions/upload-artifact@v4
       with:
-        tag: ${{ steps.calculate-version.outputs.FullSemVerLower }}
+        name: packages-${{ steps.calculate-version.outputs.FullSemVerLower }}
+        path: ${{ steps.calculate-version.outputs.PackagesPath }}/*.nupkg
+        retention-days: 90
+        compression-level: 0
         
