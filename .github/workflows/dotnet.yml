@@ -11,6 +11,7 @@ on:
     branches:
     - master
     - main
+    - 'dev/*'
     paths:
     - 'src/**/*.cs'
     - 'src/**/*.csproj'
@@ -25,6 +26,7 @@ on:
     branches:
     - master
     - main
+    - 'dev/*'
     paths:
     - 'src/**/*.cs'
     - 'src/**/*.csproj'
