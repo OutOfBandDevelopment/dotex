@@ -15,7 +15,7 @@ public static class ShuffleExtensions
 
         //http://stackoverflow.com/questions/1287567/is-using-random-and-orderby-a-good-shuffle -algorithm
         var elements = source.ToArray();
-        for (int i = elements.Length - 1; i >= 0; i--)
+        for (var i = elements.Length - 1; i >= 0; i--)
         {
             // Swap element "i" with a random earlier element it (or itself)
             // ... except we don't really need to swap it fully, as we can

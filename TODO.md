@@ -1,6 +1,9 @@
 # TODO - OoBDev (dotex) Framework
 
-**Last Updated:** 2026-01-13 (SharedFramework investigation complete)
+**Last Updated:** 2026-01-15
+
+✅ **COMPLETED:** ExpectedExceptionAttribute → Assert.ThrowsException conversion (40 instances)
+⚠️ **IN PROGRESS:** Swashbuckle 10.1.0 breaking changes in OoBDev.AspNetCore.Mvc
 
 > **New to this project?** Read `/CLAUDE.md` first for a complete development guide including architecture, patterns, and migration scope.
 
@@ -199,6 +202,99 @@ This document tracks architectural work, migration planning, and bug fixes for t
 ---
 
 ## Pending Work
+
+### MSTest ExpectedExceptionAttribute Conversion (COMPLETED - 2026-01-15)
+
+**Task:** Convert all `[ExpectedException(typeof(ExceptionType))]` attributes to use `Assert.ThrowsException<T>()`
+
+**Completed:** All 40 instances across 24 files converted
+
+**Files Converted:**
+
+*Framework Layer (4 files, 10 conversions):*
+- OoBDev.TestUtilities.Tests/NumericAssertsTests.cs (6)
+- OoBDev.MessageQueueing.Tests/MessageSenderTests.cs (1)
+- OoBDev.System.Tests/ExpressionCalculator/Parser/ExpressionParserTests.cs (2)
+- OoBDev.System.Tests/ExpressionCalculator/Expressions/VariableExpressionTests.cs (2)
+
+*Binary Decoders (2 files, 4 conversions):*
+- BinaryDecoders/BinaryDataDecoders.ExpressionCalculator.Tests/Parser/ExpressionParserTests.cs (2)
+- BinaryDecoders/BinaryDataDecoders.ExpressionCalculator.Tests/Expressions/VariableExpressionTests.cs (2)
+
+*SharedFramework (18 files, 26 conversions):*
+- OoBDev.DocumentCenter.Tests (4 files, 4 conversions)
+- OoBDev.Communications.Tests (12 files, 16 conversions)
+- OoBDev.DataLoader.Tests (1 file, 1 conversion)
+- OoBDev.Caching.Common.Tests (1 file, 1 conversion)
+- OoBDev.Api.Twilio.* (3 files, 3 conversions)
+- OoBDev.Generations.Tests (1 file, 1 conversion)
+
+**Conversion Details:**
+- Removed `[ExpectedException(typeof(ExceptionType))]` attributes
+- Wrapped test body in `Assert.ThrowsException<T>(() => { ... })` for sync tests
+- Wrapped test body in `await Assert.ThrowsExceptionAsync<T>(async () => { ... })` for async tests
+- Preserved all test logic, comments, and variable declarations
+- Maintained proper indentation and code structure
+
+**Verification:** Code conversions manually verified by inspection of NumericAssertsTests.cs and CommunicationProviderTests.cs (both showing correct patterns)
+
+---
+
+### OoBDev.AspNetCore.Mvc - Swashbuckle 10.1.0 Breaking Changes (IN PROGRESS)
+
+**Issue:** Assembly updates introduced breaking changes in Swashbuckle 10.1.0 API
+
+**Changes Made (2026-01-15):**
+
+**File: FormFileOperationFilter.cs**
+- [x] Fixed CS0200: `IOpenApiSchema.Properties` is read-only
+  - Changed from: `schema.Properties = new Dictionary<...>()`
+  - Changed to: Loop through fileParams and add to `schema.Properties[propertyName]`
+  - Location: Lines 34-43
+- [x] Fixed CS0029: String to JsonSchemaType conversion
+  - Changed from: `Type = "string"`
+  - Changed to: `Type = JsonSchemaType.String`
+  - Location: Line 40
+
+**File: HealthChecksDocumentFilter.cs**
+- [x] Fixed CS1503: `OpenApiTag` vs `OpenApiTagReference` mismatch
+  - Changed from: `operation.Tags.Add(new OpenApiTag { Name = "ApiHealth" })`
+  - Changed to: `operation.Tags.Add(new OpenApiTagReference { Name = "ApiHealth" })`
+  - Location: Line 28
+- [x] Fixed CS0200 & CS0266: Properties assignment and type conversion
+  - Changed from: `Properties = properties` (assignment)
+  - Changed to: Build schema with `.Properties.Add()` calls
+  - Location: Lines 30-36
+
+**File: SearchQueryOperationFilter.cs**
+- [x] Fixed CS1503: OpenApiTag references (3 occurrences)
+  - Changed from: `new OpenApiTag { Name = ... }`
+  - Changed to: `new OpenApiTagReference { Name = ... }`
+  - Location: Lines 48, 52, 57
+- [x] Fixed CS0019: Coalesce assignment with mismatched types
+  - Changed from: `operation.Parameters ??= new List<OpenApiParameter>()`
+  - Changed to: Traditional null check and assignment
+  - Location: Lines 114-118
+- [x] Fixed UpdateRequestSchema method (major refactor)
+  - Changed from: Creating mutable dictionary copy with `.ChangeComparer()`
+  - Changed to: Direct schema property access via `schema.Properties[key]`
+  - Removed unnecessary `.Properties = properties` reassignment
+  - Added null checks for schema lookups
+  - Fixed IOpenApiSchema vs OpenApiSchema conversions
+  - Location: Lines 187-292
+
+**Remaining:**
+- [ ] Verify build: `dotnet build src/Framework/OoBDev.AspNetCore.Mvc/OoBDev.AspNetCore.Mvc.csproj`
+- [ ] Verify tests pass: `dotnet test src/ --filter "OoBDev.AspNetCore.Mvc"`
+- [ ] Check for any remaining compiler errors in related filters
+
+**Breaking Change Summary:**
+- `OpenApiTag` collection now expects `OpenApiTagReference` objects
+- `IOpenApiSchema.Properties` is read-only collection (use `.Add()` instead of assignment)
+- `JsonSchemaType` is enum (not string) - use enum values like `JsonSchemaType.String`, `JsonSchemaType.Object`, etc.
+- Schema reference API requires proper null checking on `?.Reference`
+
+---
 
 ### Build Verification (COMPLETED)
 - [x] Run `dotnet build src/` to verify all bug fixes compile
@@ -678,7 +774,7 @@ Before proceeding with BinaryDataDecoders migration (Phases 1-5), critical quest
 **Priority:** CRITICAL
 
 - [ ] **0.1 Upgrade All Projects to .NET 9.0**
-  - [ ] Update all 52 `.csproj` files: `net8.0` → `net9.0`
+  - [ ] Update all 52 `.csproj` files: `net8.0` → `net10.0`
   - [ ] Update NuGet packages to .NET 9-compatible versions
   - [ ] Test compilation
   - [ ] Fix breaking API changes

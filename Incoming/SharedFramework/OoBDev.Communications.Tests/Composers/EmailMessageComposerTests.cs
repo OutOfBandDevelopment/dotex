@@ -275,7 +275,6 @@ namespace OoBDev.Communications.Tests.Composers
 
         [TestMethod, TestCategory(TestCategories.Unit)]
         [TestCategory(TestCategories.Feature.CommunicationCenter)]
-        [ExpectedException(typeof(InvalidOperationException))]
         public async Task ComposeAndSendAsyncTest_ExceptionThrown()
         {
             //Stage
@@ -344,18 +343,16 @@ namespace OoBDev.Communications.Tests.Composers
                 mockEmailMessageComposerConfig.Object
                 );
 
-            await composer.ComposeAndSendAsync(targetPersonId, messageType, culture, data, requestGroupId, headers);
-
-            try
+            await Assert.ThrowsExceptionAsync<InvalidOperationException>(async () =>
             {
+                await composer.ComposeAndSendAsync(targetPersonId, messageType, culture, data, requestGroupId, headers);
+
                 //Assert
                 Assert.Fail("You shouldn't get here!");
-            }
-            finally
-            {
-                //Verify
-                mock.VerifyAll();
-            }
+            });
+
+            //Verify
+            mock.VerifyAll();
         }
     }
 }

@@ -1,6 +1,41 @@
 <Project>
- 
-	<!-- Start: this is a patch while a fix is pending approval -->
+
+	<!-- GitVersion from CLI for database projects only -->
+  <Target Name="GitVersionFromCLI"
+        BeforeTargets="_DacPrePostVersion"
+        Condition="'$(SkipGitVersion)' != 'true'">
+
+    <Message Text="Running GitVersion (SqlProj)" Importance="High" />
+
+    <Exec Command="dotnet tool restore"
+          WorkingDirectory="$(SolutionDir)"
+          ContinueOnError="true"
+          ConsoleToMSBuild="true"
+          StandardOutputImportance="Low" />
+
+    <Exec Command="dotnet gitversion /showvariable InformationalVersion"
+          WorkingDirectory="$(SolutionDir)"
+          ConsoleToMSBuild="true">
+      <Output TaskParameter="ConsoleOutput"
+              PropertyName="InformationalVersion" />
+    </Exec>
+
+    <Exec Command="dotnet gitversion /showvariable AssemblySemFileVer"
+          WorkingDirectory="$(SolutionDir)"
+          ConsoleToMSBuild="true">
+      <Output TaskParameter="ConsoleOutput"
+              PropertyName="FileVersion" />
+    </Exec>
+
+    <!--
+    <PropertyGroup>
+      <InformationalVersion>$([System.String]::Copy('$(InformationalVersion)').ToLowerInvariant().Trim())</InformationalVersion>
+      <FileVersion>$([System.String]::Copy('$(FileVersion)').ToLowerInvariant().Trim())</FileVersion>    
+    </PropertyGroup>
+    -->
+  </Target>
+
+  <!-- Start: this is a patch while a fix is pending approval -->
 	<!--https://github.com/rr-wfm/MSBuild.Sdk.SqlProj/pull/284-->
 	<PropertyGroup Condition="'$(UsingMSBuildSdkSqlProj)'=='true'">
     <IsDatabaseProject>True</IsDatabaseProject>    
@@ -48,7 +83,7 @@
 
 	<!-- End: this is a patch while a fix is pending approval -->
 
-	<Target Name="_DacPrePostVersion"> <!-- TODO: fix me DependsOnTargets="GetVersion"  -->
+	<Target Name="_DacPrePostVersion">
 		<Message Text="=== _DacPrePostVersion ===" Importance="high" />
 		<Message Text="=== InformationalVersion: $(InformationalVersion) ===" Importance="high" />
 		<Message Text="=== FileVersion: $(FileVersion) ===" Importance="high" />
@@ -60,9 +95,17 @@
 			<DatabasePostDeploymentScriptPath>Post-Deployment/Script.PostDeployment.sql</DatabasePostDeploymentScriptPath>
 			<DatabasePreDeploymentScriptPath>Pre-Deployment/Script.PreDeployment.sql</DatabasePreDeploymentScriptPath>
 			<DatabaseVersionScriptPath>Post-Deployment/SetDacVersion.sql</DatabaseVersionScriptPath>
-			<DacVersion>$(GitVersion_AssemblySemFileVer)</DacVersion>
-			<BuildVersion>$(GitVersion_InformationalVersion)</BuildVersion>
+			<!-- Use GitVersion properties if available, otherwise fallback to InformationalVersion/FileVersion -->
+			<DacVersion Condition="'$(GitVersion_AssemblySemFileVer)' != ''">$(GitVersion_AssemblySemFileVer)</DacVersion>
+			<DacVersion Condition="'$(GitVersion_AssemblySemFileVer)' == ''">$(FileVersion)</DacVersion>
+			<BuildVersion Condition="'$(GitVersion_InformationalVersion)' != ''">$(GitVersion_InformationalVersion)</BuildVersion>
+			<BuildVersion Condition="'$(GitVersion_InformationalVersion)' == ''">$(InformationalVersion)</BuildVersion>
 		</PropertyGroup>
+
+		<Message Text="=== DacVersion: $(DacVersion) ===" Importance="high" />
+		<Message Text="=== BuildVersion: $(BuildVersion) ===" Importance="high" />
+		<Message Text="=== Using GitVersion: Condition passed ===" Importance="high" Condition="'$(GitVersion_AssemblySemFileVer)' != ''" />
+		<Message Text="=== Using Fallback: GitVersion properties empty ===" Importance="high" Condition="'$(GitVersion_AssemblySemFileVer)' == ''" />
 
 		<WriteLinesToFile
             File="$(DatabaseVersionScriptPath)"

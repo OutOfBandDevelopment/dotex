@@ -324,7 +324,6 @@ namespace OoBDev.Api.Twilio.SendGrid.Tests.Shared
 
         [TestMethod]
         [TestCategory(TestCategories.Unit)]
-        [ExpectedException(typeof(NotSupportedException))]
         public void AddBodyTest_Neither()
         {
             // Stage
@@ -339,10 +338,13 @@ namespace OoBDev.Api.Twilio.SendGrid.Tests.Shared
 
             // Test
             var messageBuilder = this.CreateMessageBuilder();
-            messageBuilder.AddBody(mockMessage.Object, email);
+            Assert.ThrowsException<NotSupportedException>(() =>
+            {
+                messageBuilder.AddBody(mockMessage.Object, email);
 
-            // Assert
-            Assert.Fail("you shouldnt get here");
+                // Assert
+                Assert.Fail("you shouldnt get here");
+            });
 
             // Verify
             this.mockRepository.VerifyAll();

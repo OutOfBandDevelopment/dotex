@@ -46,16 +46,19 @@ namespace OoBDev.DocumentCenter.Tests.Providers
             this.TestContext?.WriteLine(Convert.ToBase64String(result));
         }
 
-        [TestMethod, TestCategory(TestCategories.Integration), ExpectedException(typeof(UnhandledConversionRequestedException))]
+        [TestMethod, TestCategory(TestCategories.Integration)]
         public async Task Markdown2TextTest_Unhandled()
         {
             var provider = this.TestContext.GetService<IDocumentConversionProvider>();
-            var result = await provider.ConvertAsync(Markdown, Encoding.UTF8.GetBytes(@"# Hello World
+            await Assert.ThrowsExceptionAsync<UnhandledConversionRequestedException>(async () =>
+            {
+                var result = await provider.ConvertAsync(Markdown, Encoding.UTF8.GetBytes(@"# Hello World
 ## Summary
 
  This is a test!
 "), Text);
-            this.TestContext?.WriteLine(Convert.ToBase64String(result));
+                this.TestContext?.WriteLine(Convert.ToBase64String(result));
+            });
         }
     }
 }

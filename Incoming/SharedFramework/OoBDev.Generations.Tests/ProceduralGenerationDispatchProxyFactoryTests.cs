@@ -44,7 +44,6 @@ namespace OoBDev.Generations.Tests
 
         [TestMethod]
         [TestCategory(TestCategories.Unit)]
-        [ExpectedException(typeof(NotSupportedException))]
         public void CreateTest_Class()
         {
             // Stage
@@ -56,10 +55,13 @@ namespace OoBDev.Generations.Tests
 
             // Test
             var factory = new ProceduralGenerationDispatchProxyFactory();
-            var result = factory.Create(mockContext.Object);
+            Assert.ThrowsException<NotSupportedException>(() =>
+            {
+                var result = factory.Create(mockContext.Object);
 
-            // Assert
-            Assert.Fail("This is not supported so it should fail before you get here");
+                // Assert
+                Assert.Fail("This is not supported so it should fail before you get here");
+            });
         }
 
         public interface ITarget

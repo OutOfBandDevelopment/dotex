@@ -61,7 +61,6 @@ namespace OoBDev.Communications.Tests.Services
 
         [TestMethod, TestCategory(TestCategories.Unit)]
         [TestCategory(TestCategories.Feature.CommunicationCenter)]
-        [ExpectedException(typeof(ArgumentNullException))]
         public async Task SendAsyncTest_SendRequestModel_NullRequest()
         {
             //Stage
@@ -80,23 +79,20 @@ namespace OoBDev.Communications.Tests.Services
                 mockLog.Object
                 );
 
-            try
+            await Assert.ThrowsExceptionAsync<ArgumentNullException>(async () =>
             {
                 var result = await provider.SendAsync(request);
 
                 //Assert
                 Assert.Fail("You shouldn't get here!");
-            }
-            finally
-            {
-                //Verify
-                mock.VerifyAll();
-            }
+            });
+
+            //Verify
+            mock.VerifyAll();
         }
 
         [TestMethod, TestCategory(TestCategories.Unit)]
         [TestCategory(TestCategories.Feature.CommunicationCenter)]
-        [ExpectedException(typeof(ArgumentException))]
         public async Task SendAsyncTest_SendRequestModel_EmptyId()
         {
             //Stage
@@ -119,24 +115,21 @@ namespace OoBDev.Communications.Tests.Services
                 mockLog.Object
                 );
 
-            try
+            await Assert.ThrowsExceptionAsync<ArgumentException>(async () =>
             {
                 var result = await provider.SendAsync(request);
 
                 //Assert
                 Assert.Fail("You shouldn't get here!");
-            }
-            finally
-            {
-                //Verify
-                mock.VerifyAll();
-            }
+            });
+
+            //Verify
+            mock.VerifyAll();
         }
 
 
         [TestMethod, TestCategory(TestCategories.Unit)]
         [TestCategory(TestCategories.Feature.CommunicationCenter)]
-        [ExpectedException(typeof(ArgumentException))]
         public async Task SendAsyncTest_SendRequestModel_EmptyMessageType()
         {
             //Stage
@@ -159,18 +152,16 @@ namespace OoBDev.Communications.Tests.Services
                 mockLog.Object
                 );
 
-            try
+            await Assert.ThrowsExceptionAsync<ArgumentException>(async () =>
             {
                 var result = await provider.SendAsync(request);
 
                 //Assert
                 Assert.Fail("You shouldn't get here!");
-            }
-            finally
-            {
-                //Verify
-                mock.VerifyAll();
-            }
+            });
+
+            //Verify
+            mock.VerifyAll();
         }
 
         [TestMethod, TestCategory(TestCategories.Unit)]

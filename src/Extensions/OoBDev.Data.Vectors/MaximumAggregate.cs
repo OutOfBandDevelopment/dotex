@@ -17,10 +17,7 @@ public class MaximumAggregate : IBinarySerialize
 {
     private double[] _sum;
 
-    public void Init()
-    {
-        _sum = [];
-    }
+    public void Init() => _sum = [];
 
     public void Accumulate(SqlVector vector)
     {

@@ -73,7 +73,6 @@ namespace OoBDev.Communications.Tests.Provider
 
         [TestMethod]
         [TestCategory(TestCategories.Unit)]
-        [ExpectedException(typeof(ApplicationException))]
         public async Task ScheduleSendMessageAsyncTest_Error()
         {
             // Stage
@@ -98,14 +97,16 @@ namespace OoBDev.Communications.Tests.Provider
             // Test
             var provider = this.CreateProvider();
 
+            await Assert.ThrowsExceptionAsync<ApplicationException>(async () =>
+            {
+                var result = await provider.ScheduleSendMessageAsync(mockMessage.Object, messageId);
 
-            var result = await provider.ScheduleSendMessageAsync(mockMessage.Object, messageId);
+                // Assert
+                Assert.Fail("you shouldnt get here");
 
-            // Assert
-            Assert.Fail("you shouldnt get here");
-
-            // Verify
-            this.mockRepository.VerifyAll();
+                // Verify
+                this.mockRepository.VerifyAll();
+            });
         }
 
         [TestMethod]
@@ -136,7 +137,6 @@ namespace OoBDev.Communications.Tests.Provider
 
         [TestMethod]
         [TestCategory(TestCategories.Unit)]
-        [ExpectedException(typeof(ApplicationException))]
         public async Task SendMessageAsyncTest_Error()
         {
             // Stage
@@ -153,13 +153,16 @@ namespace OoBDev.Communications.Tests.Provider
             // Test
             var provider = this.CreateProvider();
 
-            await provider.SendMessageAsync(mockMessage.Object);
+            await Assert.ThrowsExceptionAsync<ApplicationException>(async () =>
+            {
+                await provider.SendMessageAsync(mockMessage.Object);
 
-            // Assert
-            Assert.Fail("you shouldnt get here");
+                // Assert
+                Assert.Fail("you shouldnt get here");
 
-            // Verify
-            this.mockRepository.VerifyAll();
+                // Verify
+                this.mockRepository.VerifyAll();
+            });
         }
     }
 }

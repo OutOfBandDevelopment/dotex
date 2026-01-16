@@ -20,10 +20,7 @@ internal class Program
                     }))
             .ConfigureServices((context, services) =>
             {
-                services.AddLogging(options =>
-                {
-                    options.AddFilter("Microsoft", LogLevel.Warning);
-                });
+                services.AddLogging(options => options.AddFilter("Microsoft", LogLevel.Warning));
                 services.Configure<DacPacBuilderEngineOptions>(options => context.Configuration.Bind(nameof(DacPacBuilderEngineOptions), options));
                 services.TryAddDacPacServices();
                 services.AddHostedService<DacPacBuilderEngineService>();

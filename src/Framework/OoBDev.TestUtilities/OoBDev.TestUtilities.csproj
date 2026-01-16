@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net9.0</TargetFramework>
+		<TargetFramework>net10.0</TargetFramework>
 		<ImplicitUsings>false</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<GenerateDocumentationFile>False</GenerateDocumentationFile>
@@ -16,17 +16,17 @@
 	</ItemGroup>
 	
 	<ItemGroup>
-		<PackageReference Include="GitVersion.MsBuild" Version="6.3.0">
+		<PackageReference Include="GitVersion.MsBuild" Version="6.5.1">
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.7" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Console" Version="9.0.7" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.7" />
+		<PackageReference Include="Microsoft.Extensions.Logging" Version="10.0.2" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Console" Version="10.0.2" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.2" />
 		<PackageReference Include="Moq" Version="4.20.72" />
-		<PackageReference Include="MSTest.TestFramework" Version="3.10.0" />
+		<PackageReference Include="MSTest.TestFramework" Version="4.0.2" />
 		<PackageReference Include="JsonDiffPatch.Net" Version="2.5.0" />
-		<PackageReference Include="System.Memory.Data" Version="9.0.7" />
+		<PackageReference Include="System.Memory.Data" Version="10.0.2" />
 	</ItemGroup>
 
 	<ItemGroup>

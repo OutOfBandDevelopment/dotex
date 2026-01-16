@@ -96,7 +96,7 @@ public class AsyncReaderWriterLock
     private void WriterRelease()
     {
         TaskCompletionSource<Releaser>? toWake = null;
-        bool toWakeIsWriter = false;
+        var toWakeIsWriter = false;
 
         lock (m_waitingWriters)
         {

@@ -122,7 +122,7 @@ public class DiskImageCommands : IDiskImageCommands
         var outputBuffer = new byte[sectorLength * ts.Length];
         Span<byte> outputSpan = outputBuffer;
 
-        for (int i = 0; i < ts.Length; i++)
+        for (var i = 0; i < ts.Length; i++)
         {
             if (ts[i].trackSectorList.SectorOffset != 0) throw new NotSupportedException();
 

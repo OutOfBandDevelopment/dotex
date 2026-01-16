@@ -11,7 +11,7 @@ public static class SecureStringEx
         if (secure == null)
             return null;
 
-        nint unmanagedString = nint.Zero;
+        var unmanagedString = nint.Zero;
         try
         {
             unmanagedString = Marshal.SecureStringToGlobalAllocUnicode(secure);

@@ -36,18 +36,20 @@ namespace OoBDev.DataLoader.Tests.JsonSerialization
 
         [TestMethod]
         [TestCategory(TestCategories.Unit)]
-        [ExpectedException(typeof(NotSupportedException))]
         public void WriteJsonTest()
         {
             //Test
             var dateTimeOffsetConverter = new DateTimeOffsetConverter();
-            dateTimeOffsetConverter.WriteJson(
-                new JsonTextWriter(new StreamWriter(new MemoryStream())), 
-                new { }, 
-                new JsonSerializer());
+            Assert.ThrowsException<NotSupportedException>(() =>
+            {
+                dateTimeOffsetConverter.WriteJson(
+                    new JsonTextWriter(new StreamWriter(new MemoryStream())),
+                    new { },
+                    new JsonSerializer());
 
-            // Assert
-            Assert.Fail("You shouldn't get here");
+                // Assert
+                Assert.Fail("You shouldn't get here");
+            });
         }
 
         public class TargetObject

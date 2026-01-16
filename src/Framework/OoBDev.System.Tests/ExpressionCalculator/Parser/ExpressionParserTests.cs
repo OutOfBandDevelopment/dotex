@@ -87,7 +87,6 @@ public abstract class ExpressionParserTests<T>
     public required TestContext TestContext { get; set; }
 
     [TestMethod, TestCategory(TestCategories.Unit)]
-    [ExpectedException(typeof(ParseCanceledException))]
     [DataRow("-A!")]
     [DataRow("B/*1")]
     [DataRow("B**")]
@@ -98,22 +97,25 @@ public abstract class ExpressionParserTests<T>
     [DataRow("")]
     [DataRow("b")]
     [DataRow("b+1")]
-    [TestTarget(typeof(ExpressionParser<>), Member = nameof(ExpressionParser<double>.Parse))]
+    [TestTarget(typeof(ExpressionParser<>), Member = nameof(ExpressionParser<>.Parse))]
     //TODO: this should throw a parse error !!![DataRow("1e")]
     public void PoorlyFormedExpressions(string input)
     {
-        try
+        Assert.Throws<ParseCanceledException>(() =>
         {
-            TestContext.WriteLine($"Input: {input}");
-            var parsed = new ExpressionParser<T>().Parse(input);
-            Assert.Fail("You shouldn't get here!");
-        }
-        catch (Exception ex)
-        {
-            TestContext.WriteLine(ex.Message);
-            TestContext.WriteLine(ex.GetType().ToString());
-            throw;
-        }
+            try
+            {
+                TestContext.WriteLine($"Input: {input}");
+                var parsed = new ExpressionParser<T>().Parse(input);
+                Assert.Fail("You shouldn't get here!");
+            }
+            catch (Exception ex)
+            {
+                TestContext.WriteLine(ex.Message);
+                TestContext.WriteLine(ex.GetType().ToString());
+                throw;
+            }
+        });
     }
 
     [TestMethod, TestCategory(TestCategories.Unit)]
@@ -125,10 +127,10 @@ public abstract class ExpressionParserTests<T>
     [DataRow("-(A!)", "-(A!)", DisplayName = "Negative factorial")]
     [DataRow("((((((A-B-1*E-06)/C)+0.999999)/1000000)*1000000)*((D*E)*F)*G)+H", "((((((A - B - 1 * E - 6) / C) + 0.999999) / 1000000) * 1000000) * ((D * E) * F) * G) + H", DisplayName = "Parse Complex Expression")]
     [DataRow("B*--A", "B * --A")]
-    [TestTarget(typeof(ExpressionParser<>), Member = nameof(ExpressionParser<double>.Parse))]
+    [TestTarget(typeof(ExpressionParser<>), Member = nameof(ExpressionParser<>.Parse))]
     public void SimpleParserTests(string input, string result)
     {
-        if (_skipDecimal && input.Contains("."))
+        if (_skipDecimal && input.Contains('.'))
         {
             Assert.Inconclusive("Decimals not supported");
         }
@@ -198,7 +200,7 @@ public abstract class ExpressionParserTests<T>
             var optimized = parsed.Optimize();
             TestContext.WriteLine($"As Optimized: {optimized}");
 
-            if (_skipNegative && result.StartsWith("-"))
+            if (_skipNegative && result.StartsWith('-'))
             {
                 Assert.Inconclusive($"Negative not supported");
             }
@@ -207,7 +209,7 @@ public abstract class ExpressionParserTests<T>
                 Assert.AreEqual(result, optimized.ToString());
             }
         }
-        catch (NotSupportedException nse) when (_skipNegative && nse.Message == nameof(IExpressionEvaluator<T>.Negate))
+        catch (NotSupportedException nse) when (_skipNegative && nse.Message == nameof(IExpressionEvaluator<>.Negate))
         {
             Assert.Inconclusive($"{nse.Message} not supported");
         }
@@ -216,16 +218,13 @@ public abstract class ExpressionParserTests<T>
     [TestMethod, TestCategory(TestCategories.Unit)]
     [DataRow("B/0")]
     [DataRow("B%0")]
-    [ExpectedException(typeof(DivideByZeroException))]
     [TestTarget(typeof(ExpressionBaseExtensions), Member = nameof(ExpressionBaseExtensions.Optimize))]
     public void OptimizerTests_WithExceptions(string input)
     {
         TestContext.WriteLine($"Input: {input}");
         var parsed = new ExpressionParser<T>().Parse(input);
         TestContext.WriteLine($"As Parsed: {parsed}");
-        var optimized = parsed.Optimize();
-        TestContext.WriteLine($"As Optimized: {optimized}");
-        Assert.Fail("You shouldn't get here");
+        Assert.ThrowsExactly<DivideByZeroException>(() => parsed.Optimize());
     }
 
     [TestMethod, TestCategory(TestCategories.Unit)]
@@ -317,13 +316,13 @@ public abstract class ExpressionParserTests<T>
     public void VerifyOptimizerForComplexExpressions(string input)
     {
         const int MaxRetryAttempts = 10;
-        var includesFactorial = input.Contains("!");
+        var includesFactorial = input.Contains('!');
 
-        for (int attempt = 0; attempt <= MaxRetryAttempts; attempt++)
+        for (var attempt = 0; attempt <= MaxRetryAttempts; attempt++)
         {
             try
             {
-                if (_skipDecimal && input.Contains("."))
+                if (_skipDecimal && input.Contains('.'))
                 {
                     Assert.Inconclusive("Decimals not supported");
                 }
@@ -350,7 +349,7 @@ public abstract class ExpressionParserTests<T>
                 }
                 return; // Test passed, exit the retry loop
             }
-            catch (NotSupportedException nse) when (_skipNegative && nse.Message == nameof(IExpressionEvaluator<T>.Negate))
+            catch (NotSupportedException nse) when (_skipNegative && nse.Message == nameof(IExpressionEvaluator<>.Negate))
             {
                 Assert.Inconclusive($"{nse.Message} not supported");
             }

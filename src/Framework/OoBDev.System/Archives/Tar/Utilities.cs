@@ -28,7 +28,7 @@ public static class Utilities
             return null;
         else
         {
-            string result = Encoding.ASCII.GetString(input, index, length)
+            var result = Encoding.ASCII.GetString(input, index, length)
                                           .Trim('\0', ' ');
             return result == string.Empty ? null : result;
         }
@@ -45,7 +45,7 @@ public static class Utilities
                                                       CompressionMode.Decompress,
                                                       true))
         {
-            byte[] buffer = new byte[1024];
+            var buffer = new byte[1024];
             int bufferLen;
             do
             {

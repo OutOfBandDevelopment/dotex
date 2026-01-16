@@ -37,9 +37,9 @@ public class PlayFair
         if (string.IsNullOrEmpty(key))
             throw new ArgumentNullException(nameof(key));
 
-        string seed = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        var seed = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-        char[] cipherKey = new char[5 * 5];
+        var cipherKey = new char[5 * 5];
         key = key.ToUpper();
         char cMode;
         var cSwap = swap switch
@@ -66,9 +66,9 @@ public class PlayFair
                 throw new ArgumentOutOfRangeException(nameof(mode));
         }
         seed = seed.Replace(cMode.ToString(), "");
-        int pos = 0;
+        var pos = 0;
 
-        foreach (char currentChar in key.ToCharArray())
+        foreach (var currentChar in key.ToCharArray())
         {
             if (seed.Contains(currentChar))
             {
@@ -80,7 +80,7 @@ public class PlayFair
                 break;
         }
 
-        foreach (char currentChar in seed.ToCharArray())
+        foreach (var currentChar in seed.ToCharArray())
         {
             if (pos >= cipherKey.Length)
                 break;
@@ -108,7 +108,7 @@ public class PlayFair
             Swap.Z => 'Z',
             _ => throw new ArgumentOutOfRangeException(nameof(swap)),
         };
-        string check = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        var check = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         switch (mode)
         {
             case Mode.Q:
@@ -128,12 +128,12 @@ public class PlayFair
         }
 
         List<char> newMessage = [];
-        foreach (char currentChar in message.ToCharArray())
+        foreach (var currentChar in message.ToCharArray())
             if (check.Contains(currentChar))
                 newMessage.Add(currentChar);
         message = new string([.. newMessage]);
 
-        foreach (char currentChar in check.ToCharArray())
+        foreach (var currentChar in check.ToCharArray())
         {
             if (currentChar != cSwap)
                 message = message.Replace(
@@ -147,16 +147,16 @@ public class PlayFair
 
         List<char> cipherText = [];
 
-        for (int i = 0; i < message.Length; i += 2)
+        for (var i = 0; i < message.Length; i += 2)
         {
-            int p1 = sCryptic.IndexOf(message[i]);
-            int p2 = sCryptic.IndexOf(message[i + 1]);
+            var p1 = sCryptic.IndexOf(message[i]);
+            var p2 = sCryptic.IndexOf(message[i + 1]);
 
-            int mn = Math.Min(p1, p2);
-            int mx = Math.Max(p1, p2);
+            var mn = Math.Min(p1, p2);
+            var mx = Math.Max(p1, p2);
 
-            bool column = mn % 5 == mx % 5;
-            bool row = mx - mn < 5;
+            var column = mn % 5 == mx % 5;
+            var row = mx - mn < 5;
 
             if (row)
             {
@@ -170,11 +170,11 @@ public class PlayFair
             }
             else
             {
-                int x1 = p1 % 5;
-                int y1 = p1 / 5;
+                var x1 = p1 % 5;
+                var y1 = p1 / 5;
 
-                int x2 = p2 % 5;
-                int y2 = p2 / 5;
+                var x2 = p2 % 5;
+                var y2 = p2 / 5;
             }
 
             cipherText.Add(sCryptic[p1]);

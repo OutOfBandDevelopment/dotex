@@ -3,21 +3,21 @@
   "isRoot": true,
   "tools": {
     "swashbuckle.aspnetcore.cli": {
-      "version": "9.0.3",
+      "version": "10.1.0",
       "commands": [
         "swagger"
       ],
       "rollForward": false
     },
     "dotnet-coverage": {
-      "version": "17.14.2",
+      "version": "18.3.2",
       "commands": [
         "dotnet-coverage"
       ],
       "rollForward": false
     },
     "rnwood.smtp4dev": {
-      "version": "3.8.6",
+      "version": "3.12.0",
       "commands": [
         "smtp4dev"
       ],
@@ -31,7 +31,7 @@
       "rollForward": false
     },
     "cyclonedx": {
-      "version": "5.3.2",
+      "version": "5.5.0",
       "commands": [
         "dotnet-CycloneDX"
       ],
@@ -45,14 +45,14 @@
       "rollForward": false
     },
     "dotnet-sonarscanner": {
-      "version": "10.3.0",
+      "version": "11.0.0",
       "commands": [
         "dotnet-sonarscanner"
       ],
       "rollForward": false
     },
     "gitversion.tool": {
-      "version": "6.3.0",
+      "version": "6.5.1",
       "commands": [
         "dotnet-gitversion"
       ],

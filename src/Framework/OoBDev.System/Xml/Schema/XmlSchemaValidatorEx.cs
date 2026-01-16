@@ -129,15 +129,12 @@ public class XmlSchemaValidatorEx
     public IEnumerable<XmlValidationResult> GetResults(XDocument xDocument)
     {
         var result = new List<XmlValidationResult>();
-        xDocument.Validate(XmlSchemaSet, (sender, e) =>
+        xDocument.Validate(XmlSchemaSet, (sender, e) => result.Add(new XmlValidationResult
         {
-            result.Add(new XmlValidationResult
-            {
-                Exception = e.Exception,
-                Message = e.Message,
-                Severity = e.Severity,
-            });
-        }, false);
+            Exception = e.Exception,
+            Message = e.Message,
+            Severity = e.Severity,
+        }), false);
 
         return result.AsReadOnly();
     }
