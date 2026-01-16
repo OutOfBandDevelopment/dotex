@@ -146,20 +146,6 @@ jobs:
         --property:Version=${{ steps.calculate-version.outputs.FullSemVerLower }}
         --property:SolutionDir=${{ steps.calculate-version.outputs.BuildWorkspace }}/src/
 
-    # dotnet build .\Extensions\OoBDev.Data.Vectors.Net481 --framework net48
-    # .NET Framework builds only work on Windows runners (default platform)
-    - name: Build - .Net 4.8 (SQLCLR)
-      if: runner.os == 'Windows'
-      working-directory: ./src
-      run: >
-        dotnet build ./Extensions/OoBDev.Data.Vectors.Net481
-        --framework net48
-        --configuration ${{ steps.calculate-version.outputs.BuildConfiguration }}
-        --property:Version=${{ steps.calculate-version.outputs.FullSemVerLower }}
-        --property:SolutionDir=${{ steps.calculate-version.outputs.BuildWorkspace }}/src/
-        --nologo
-        --no-restore
-
     - name: Build
       working-directory: ./src
       run: >
@@ -209,15 +195,15 @@ jobs:
         trx_files: ${{ steps.calculate-version.outputs.TestResultsPath }}/**/*.trx
         report_individual_runs: true
 
-    # ## Don't publish PR's
-    # - name: Publish Project to Nuget
-    #   if: github.event_name != 'pull_request'
-    #   run: >
-    #     dotnet nuget push 
-    #     "${{ steps.calculate-version.outputs.PackagesPath }}/*.nupkg" 
-    #     --api-key ${{secrets.NUGET_API_KEY}} 
-    #     --source https://api.nuget.org/v3/index.json 
-    #     --skip-duplicate
+    ## Don't publish PR's
+    - name: Publish Project to Nuget
+      if: github.event_name != 'pull_request'
+      run: >
+        dotnet nuget push 
+        "${{ steps.calculate-version.outputs.PackagesPath }}/*.nupkg" 
+        --api-key ${{secrets.NUGET_API_KEY}} 
+        --source https://api.nuget.org/v3/index.json 
+        --skip-duplicate
 
     - name: Tag Commit
       uses: thejeff77/action-push-tag@v1.0.0
