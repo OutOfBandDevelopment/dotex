@@ -6,7 +6,7 @@
 
 ## Executive Summary
 
-This document defines the complete Docker container architecture for integration testing OoBDev. The setup includes 7 containerized services (SQL Server, RabbitMQ, MongoDB, Qdrant, OpenSearch, Ollama, volumes) running in a isolated Docker network on GitHub Actions runners (or locally). Containers start in ~40 seconds and run all integration tests in ~3-6 minutes. The design emphasizes test isolation (clean state per run), change detection (skip if no changes), and performance optimization (parallel startup). Detailed specifications, health checks, and cleanup procedures are provided for each service. The architecture supports both minimal setups (SQL Server only) and comprehensive testing (all services).
+This document defines the complete Docker container architecture for integration testing OoBDev. The setup includes 7 containerized services (SQL Server, RabbitMQ, MongoDB, Qdrant, OpenSearch, Ollama) running in an isolated Docker network on GitHub Actions runners (or locally). **No data persistence is required** — all containers use ephemeral storage that is discarded when containers stop. Schema and configurations are initialized via read-only mounted scripts (init.sql, definitions.json, init.js). Test data is created/imported programmatically by test fixtures during execution (SQL commands, REST APIs, client libraries). Containers start in ~40 seconds and run all integration tests in ~3-6 minutes with <2 second cleanup. The design emphasizes test isolation (clean state per run), change detection (skip if no changes), and performance optimization (parallel startup). The architecture supports minimal setups (SQL Server only) through comprehensive testing (all services).
 
 ## Table of Contents
 
@@ -299,37 +299,35 @@ Expected structure for when you implement:
 
 ```
 Features/Integration/Workflows/
-├── docker-compose.yml              # All services
-├── docker-compose.override.yml     # Local development overrides
+├── docker-compose.yml              # All services (ephemeral, no persistent volumes)
+├── docker-compose.override.yml     # Local development overrides (optional)
 ├── .env.example                    # Environment variables template
 ├── services/
 │   ├── sqlserver/
-│   │   ├── Dockerfile             # SQL Server configuration
-│   │   ├── init.sql               # Database initialization
-│   │   └── setup.sh               # Setup script
+│   │   ├── init.sql               # Database initialization (mounted read-only)
 │   ├── rabbitmq/
-│   │   ├── rabbitmq.conf          # RabbitMQ configuration
-│   │   └── definitions.json       # Queue/exchange definitions
+│   │   └── definitions.json       # Queue/exchange definitions (mounted read-only)
 │   ├── mongodb/
-│   │   ├── mongod.conf            # MongoDB configuration
-│   │   └── init.js                # Database initialization
+│   │   └── init.js                # Database initialization (mounted read-only)
 │   ├── qdrant/
-│   │   └── config.yaml            # Qdrant configuration
-│   ├── opensearch/
-│   │   └── opensearch.yml         # OpenSearch configuration
-│   └── ollama/
-│       └── Dockerfile             # Ollama custom image
-├── scripts/
-│   ├── start-services.sh          # Start all containers
-│   ├── stop-services.sh           # Stop all containers
-│   ├── wait-for-db.sh             # Wait for SQL Server ready
-│   ├── init-databases.sh          # Initialize test databases
-│   └── health-check.sh            # Verify all services healthy
-└── health-checks/
-    ├── sqlserver.sh
-    ├── rabbitmq.sh
-    └── mongodb.sh
+│   │   └── config.yaml            # Qdrant configuration (optional)
+│   └── opensearch/
+│       └── opensearch.yml         # OpenSearch configuration (optional)
+├── test-data/
+│   ├── users.csv                  # Sample import data (optional)
+│   ├── vectors.json               # Sample vectors (optional)
+│   └── documents.json             # Sample documents (optional)
+└── scripts/
+    ├── start-services.sh          # Start all containers
+    ├── stop-services.sh           # Stop all containers
+    └── health-check.sh            # Verify all services healthy
 ```
+
+**Key Notes:**
+- **No persistent volumes** - Data is ephemeral and discarded on container stop
+- **Initialization scripts are read-only** - Mounted for schema/configuration setup
+- **Test data mounted read-only** - Tests read and import during execution
+- **Clean slate per run** - Each test run starts with fresh services
 
 ---
 
@@ -348,9 +346,11 @@ environment:
 ports:
   - "1433:1433"
 volumes:
-  - sqlserver-data:/var/opt/mssql/data
-  - sqlserver-log:/var/opt/mssql/log
+  # Mount initialization scripts (read-only)
+  - ./services/sqlserver/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
 ```
+
+**Storage:** Ephemeral (no persistence)
 
 **Test Databases:**
 - VectorDb (primary)
@@ -386,9 +386,11 @@ ports:
   - "5672:5672"    # AMQP
   - "15672:15672"  # Management UI
 volumes:
-  - rabbitmq-data:/var/lib/rabbitmq
+  # Definitions file (read-only) - recreated from this on startup
   - ./services/rabbitmq/definitions.json:/etc/rabbitmq/definitions.json:ro
 ```
+
+**Storage:** Ephemeral (no persistence)
 
 **Test Queues:**
 ```json
@@ -408,14 +410,11 @@ volumes:
 curl -f http://localhost:15672/api/aliveness-test/%2F -u guest:guest
 ```
 
-**Cleanup:**
-```bash
-# Delete test queues
-curl -i -u guest:guest -X DELETE http://localhost:15672/api/queues/%2F/test.queue.1
-
-# Purge messages
-curl -i -u guest:guest -X POST http://localhost:15672/api/queues/%2F/test.queue.1/contents
-```
+**Automatic Cleanup on Container Stop:**
+- All queues/messages discarded
+- All exchanges removed
+- Definitions.json reloaded on next start
+- No manual cleanup required
 
 ---
 
@@ -430,9 +429,11 @@ environment:
 ports:
   - "27017:27017"
 volumes:
-  - mongodb-data:/data/db
+  # Initialization script (read-only)
   - ./services/mongodb/init.js:/docker-entrypoint-initdb.d/init.js:ro
 ```
+
+**Storage:** Ephemeral (no persistence)
 
 **Initialize Script:**
 ```javascript
@@ -446,10 +447,11 @@ db.test_documents.createIndex({ "createdAt": 1 });
 mongosh --eval "db.adminCommand('ping')"
 ```
 
-**Cleanup:**
-```javascript
-db.dropDatabase();  // Drop entire test database
-```
+**Automatic Cleanup on Container Stop:**
+- All databases/collections discarded
+- All data removed
+- init.js re-executed on next start
+- No manual cleanup required
 
 ---
 
@@ -463,20 +465,19 @@ environment:
   QDRANT_API_KEY: test_key_12345
 ports:
   - "6333:6333"
-volumes:
-  - qdrant-storage:/qdrant/storage
 ```
+
+**Storage:** Ephemeral (no persistence)
 
 **Health Check:**
 ```bash
 curl -f http://localhost:6333/health
 ```
 
-**Cleanup:**
-```bash
-# Delete test collections via API
-curl -X DELETE http://localhost:6333/collections/test_vectors
-```
+**Automatic Cleanup on Container Stop:**
+- All collections discarded
+- All vectors removed
+- No manual cleanup required
 
 ---
 
@@ -493,20 +494,19 @@ environment:
 ports:
   - "9200:9200"
   - "9600:9600"
-volumes:
-  - opensearch-data:/usr/share/opensearch/data
 ```
+
+**Storage:** Ephemeral (no persistence)
 
 **Health Check:**
 ```bash
 curl -f http://localhost:9200/_cluster/health
 ```
 
-**Cleanup:**
-```bash
-# Delete test indices
-curl -X DELETE "http://localhost:9200/test_*"
-```
+**Automatic Cleanup on Container Stop:**
+- All indices discarded
+- All documents removed
+- No manual cleanup required
 
 ---
 
@@ -518,13 +518,15 @@ curl -X DELETE "http://localhost:9200/test_*"
 ```yaml
 ports:
   - "11434:11434"
-volumes:
-  - ollama-models:/root/.ollama
 ```
+
+**Storage:** Ephemeral (models downloaded per run or cached during session)
 
 **Model Setup:**
 ```bash
-ollama pull mistral:latest  # Lightweight model for testing
+# Pull via API during test initialization
+POST http://localhost:11434/api/pull
+Body: { "name": "tinyllama" }
 ```
 
 **Health Check:**
@@ -680,13 +682,15 @@ Total startup:        ~30-50 seconds
 
 ```
 Database initialization:     10-20 seconds
-Setup fixtures:              5-10 seconds
+Setup fixtures (via code):   5-10 seconds
 Integration tests:           2-5 minutes (depends on test count)
 Reporting:                   5-10 seconds
-Cleanup:                     5-10 seconds
+Cleanup:                     <2 seconds (ephemeral data)
 ────────────────────────────────────
 Total per run:               ~3-6 minutes
 ```
+
+**Note:** Cleanup is fast because there's no persistent data to flush to disk.
 
 ### Full Pipeline (Build + Integration)
 
@@ -778,13 +782,15 @@ TESTS <==> VOL2
 
 Before implementing, confirm:
 
+- [x] **No persistent volumes required** - All data is ephemeral (discarded on container stop)
+- [x] **Initialization via read-only mounts** - SQL scripts, definitions files mounted as read-only
+- [x] **Test data via fixtures** - Tests create/import data during execution via code
 - [ ] SQL Server 2019+ container acceptable? (vs other DB)
 - [ ] Which services are critical vs optional?
 - [ ] Use docker-compose vs Testcontainers?
-- [ ] Test data: seed via SQL vs Docker volume?
-- [ ] Volumes: persistent vs ephemeral?
-- [ ] Resource limits: memory, CPU?
-- [ ] Logging: verbose? saved?
+- [ ] Test data import strategy: Fixtures vs CSV/JSON files vs SQL scripts?
+- [ ] Resource limits: memory, CPU allocation?
+- [ ] Logging: verbose? captured for debugging?
 
 ---
 

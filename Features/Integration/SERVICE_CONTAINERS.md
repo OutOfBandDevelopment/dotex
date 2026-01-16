@@ -4,7 +4,7 @@
 
 ## Executive Summary
 
-This document provides comprehensive specifications for all Docker containers used in integration testing OoBDev. It details six required services (SQL Server, RabbitMQ, MongoDB, Qdrant, OpenSearch) and two optional services (Ollama, Keycloak) with complete configuration, environment variables, volumes, health checks, initialization scripts, and cleanup procedures. A requirements diagram shows which OoBDev projects depend on each service. The document includes a container composition matrix for choosing between minimal (SQL only), standard (essential services), and full (all services) setups, startup optimization strategies, memory and CPU limits with resource constraints, and next steps for implementation. All configurations are production-ready for GitHub Actions runners.
+This document provides comprehensive specifications for all Docker containers used in integration testing OoBDev. It details six required services (SQL Server, RabbitMQ, MongoDB, Qdrant, OpenSearch) and two optional services (Ollama, Keycloak) with complete configuration, environment variables, health checks, and initialization procedures. **All containers use ephemeral storage** — no persistent volumes. Initialization scripts (init.sql, definitions.json, init.js) are mounted read-only for schema/configuration setup. Test data is created/imported programmatically by test fixtures during execution using SQL commands, REST APIs, and client libraries. The document includes three test data initialization strategies (SQL scripts, test fixtures, and CSV/JSON imports), a container composition matrix for minimal/standard/full setups, startup optimization strategies, memory and CPU limits, and implementation guidance. All configurations are production-ready for GitHub Actions runners with clean-slate, isolated test execution.
 
 ## Table of Contents
 
@@ -120,18 +120,22 @@ MSSQL_MEMORY_LIMIT_MB: 2048             # Memory limit
 MSSQL_COLLATION: SQL_Latin1_General_CP1_CI_AS  # Collation
 ```
 
-### Volumes
+### Storage
+**Note:** SQL Server uses ephemeral storage (no persistence required). Each test run starts with a fresh database.
+
 ```yaml
+# Optional: For test initialization scripts
 volumes:
-  # Data files (for persistence)
-  - sqlserver-data:/var/opt/mssql/data
-
-  # Log files (for diagnostics)
-  - sqlserver-log:/var/opt/mssql/log
-
-  # Backup directory (optional)
-  - sqlserver-backup:/var/opt/mssql/backup
+  # Mount initialization SQL scripts (read-only)
+  - ./services/sqlserver/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
 ```
+
+**Data Flow:**
+- Container starts with empty SQL Server
+- Initialization script creates databases and schema
+- Tests import/create test data via SQL during test execution
+- Container stopped → all data discarded (intentional)
+- Next test run starts fresh
 
 ### Health Check
 ```yaml
@@ -152,7 +156,7 @@ healthcheck:
 
 ### Initialization
 
-**Create Test Databases:**
+**Database Schema (via init.sql or DacFx):**
 ```sql
 CREATE DATABASE [VectorDb];
 CREATE DATABASE [ExampleDb];
@@ -161,24 +165,69 @@ CREATE DATABASE [test_integration];
 -- Enable Service Broker (required for messaging)
 ALTER DATABASE [VectorDb] SET ENABLE_BROKER;
 ALTER DATABASE [ExampleDb] SET ENABLE_BROKER;
+
+-- Run migrations via OoBDev.DacFx DACPAC deployment
+-- Creates tables, stored procedures, CLR functions, etc.
 ```
 
-**Initialize Database Schema:**
-```sql
--- Run migrations via OoBDev.DacFx
--- Load schema from dacpac files
--- Create Service Broker artifacts
+**Test Data Import Strategies:**
+
+1. **SQL Scripts (Lightweight)**
+   - Mount readonly script: `./services/sqlserver/init.sql:/docker-entrypoint-initdb.d/init.sql:ro`
+   - Called during container startup
+   - Best for: Schema creation, minimal seed data
+
+2. **Test Fixtures (Recommended)**
+   ```csharp
+   public class SqlServerFixture : IAsyncLifetime
+   {
+       private SqlConnection _connection;
+
+       public async Task InitializeAsync()
+       {
+           // Create/connect to database
+           // Run migrations
+           _connection = new SqlConnection(connectionString);
+           await _connection.OpenAsync();
+
+           // Import test data via SQL commands
+           using var cmd = _connection.CreateCommand();
+           cmd.CommandText = "INSERT INTO Users VALUES (...)";
+           await cmd.ExecuteNonQueryAsync();
+       }
+
+       public async Task DisposeAsync()
+       {
+           // Cleanup: Drop databases
+           await _connection.CloseAsync();
+       }
+   }
+   ```
+   - Called by each test class
+   - Best for: Complex data, test isolation
+
+3. **Import CSV/JSON Files**
+   - Mount test data directory: `./test-data:/test-data:ro`
+   - Tests read and insert data during setup
+   - Best for: Large datasets, realistic scenarios
+   ```csharp
+   var csvData = File.ReadAllLines("/test-data/users.csv");
+   foreach (var line in csvData)
+   {
+       await ImportUserRow(line);
+   }
+   ```
+
+### Cleanup (Automatic)
+```
+On test run end:
+- Container stopped via docker-compose down
+- All databases, tables, data discarded
+- Volumes removed (ephemeral)
+- Next run starts with fresh SQL Server
 ```
 
-### Cleanup
-```sql
--- Drop test databases
-DROP DATABASE [test_integration];
-
--- Clear transaction logs
-DBCC SHRINKFILE (VectorDb_log, 1);
-DBCC SHRINKFILE (ExampleDb_log, 1);
-```
+**No manual cleanup required.**
 
 ### Resource Requirements
 - **Disk:** 5-10 GB minimum
@@ -218,18 +267,25 @@ RABBITMQ_DEFAULT_PASS: guest
 RABBITMQ_DEFAULT_VHOST: /
 ```
 
-### Volumes
+### Storage
+**Note:** RabbitMQ uses ephemeral storage (no persistence). Queues/exchanges are recreated from definitions.json on startup.
+
 ```yaml
 volumes:
-  # RabbitMQ data directory
-  - rabbitmq-data:/var/lib/rabbitmq
-
-  # Configuration file
+  # Configuration file (read-only)
   - ./services/rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
 
-  # Definitions (queues, exchanges, bindings)
+  # Definitions file: queues, exchanges, bindings (read-only)
+  # RabbitMQ loads this on startup and recreates all definitions
   - ./services/rabbitmq/definitions.json:/etc/rabbitmq/definitions.json:ro
 ```
+
+**Data Flow:**
+- Container starts with empty RabbitMQ
+- Definitions file loads and creates queues/exchanges
+- Tests publish/consume messages during execution
+- Container stopped → all queues/data discarded (intentional)
+- Next run recreates everything from definitions.json
 
 ### Health Check
 ```yaml
@@ -312,19 +368,44 @@ healthcheck:
 }
 ```
 
-### Cleanup
-```bash
-# Delete test queues
-curl -i -u guest:guest -X DELETE \
-  http://localhost:15672/api/queues/%2F/test.queue.1
+### Test Data (Messages)
 
-# Purge all messages
-curl -i -u guest:guest -X POST \
-  http://localhost:15672/api/queues/%2F/test.queue.1/contents
+**Message Setup in Tests:**
+```csharp
+public class RabbitMqFixture : IAsyncLifetime
+{
+    private IConnection _connection;
 
-# Or use RabbitMQ CLI
-docker exec rabbitmq rabbitmqctl purge_queue test.queue.1
+    public async Task InitializeAsync()
+    {
+        var factory = new ConnectionFactory { HostName = "localhost" };
+        _connection = factory.CreateConnection();
+        _channel = _connection.CreateModel();
+
+        // Verify queues/exchanges exist (created from definitions.json)
+        // Publish test messages if needed
+        var body = Encoding.UTF8.GetBytes("test message");
+        _channel.BasicPublish(
+            exchange: "test.exchange",
+            routingKey: "test.1",
+            basicProperties: null,
+            body: body);
+    }
+
+    public async Task DisposeAsync()
+    {
+        _channel?.Close();
+        _connection?.Close();
+    }
+}
 ```
+
+### Cleanup (Automatic)
+On container stop:
+- All queues/messages discarded
+- All exchanges removed
+- Next run loads fresh definitions.json
+- No manual cleanup required
 
 ### Resource Requirements
 - **Disk:** 500 MB
@@ -358,15 +439,22 @@ MONGO_INITDB_ROOT_PASSWORD: root
 MONGO_INITDB_DATABASE: test_oodev
 ```
 
-### Volumes
+### Storage
+**Note:** MongoDB uses ephemeral storage (no persistence). Collections are recreated from init.js on startup.
+
 ```yaml
 volumes:
-  # MongoDB data directory
-  - mongodb-data:/data/db
-
-  # Initialization script
+  # Initialization script (read-only)
+  # MongoDB runs this to create collections, indices, etc.
   - ./services/mongodb/init.js:/docker-entrypoint-initdb.d/init.js:ro
 ```
+
+**Data Flow:**
+- Container starts with empty MongoDB
+- init.js script creates collections and indices
+- Tests insert/query documents during execution
+- Container stopped → all data discarded (intentional)
+- Next run executes init.js again
 
 ### Health Check
 ```yaml
@@ -411,16 +499,47 @@ db.documents.insertOne({
 print("MongoDB initialization complete");
 ```
 
-### Cleanup
-```javascript
-// Drop entire test database
-db.dropDatabase();
+### Test Data (Documents)
 
-// Or drop specific collections
-db.documents.drop();
-db.vectors.drop();
-db.logs.drop();
+**Document Setup in Tests:**
+```csharp
+public class MongoDbFixture : IAsyncLifetime
+{
+    private IMongoClient _client;
+    private IMongoDatabase _database;
+
+    public async Task InitializeAsync()
+    {
+        _client = new MongoClient("mongodb://root:root@localhost:27017/test_oodev");
+        _database = _client.GetDatabase("test_oodev");
+
+        // Insert test documents
+        var collection = _database.GetCollection<BsonDocument>("documents");
+        var docs = new[]
+        {
+            new BsonDocument
+            {
+                { "name", "test_1" },
+                { "content", "Test content 1" },
+                { "createdAt", DateTime.UtcNow }
+            }
+        };
+        await collection.InsertManyAsync(docs);
+    }
+
+    public async Task DisposeAsync()
+    {
+        // Connection closes automatically
+    }
+}
 ```
+
+### Cleanup (Automatic)
+On container stop:
+- All databases/collections discarded
+- All data removed
+- Next run executes init.js again
+- No manual cleanup required
 
 ### Resource Requirements
 - **Disk:** 2-5 GB
@@ -453,15 +572,21 @@ qdrant/qdrant:v1.7.0  # Pinned version
 QDRANT_API_KEY: test_key_12345
 ```
 
-### Volumes
+### Storage
+**Note:** Qdrant uses ephemeral storage (no persistence). Collections are recreated per test run.
+
 ```yaml
 volumes:
-  # Vector storage
-  - qdrant-storage:/qdrant/storage
-
-  # Configuration (optional)
+  # Configuration (optional, read-only)
   - ./services/qdrant/config.yaml:/qdrant/config/config.yaml:ro
 ```
+
+**Data Flow:**
+- Container starts with empty Qdrant
+- Tests create collections via REST API
+- Tests insert vectors during execution
+- Container stopped → all data discarded (intentional)
+- Next run starts fresh
 
 ### Health Check
 ```yaml
@@ -478,25 +603,62 @@ healthcheck:
   start_period: 20s
 ```
 
-### API Initialization
+### Test Data (Vectors)
 
-**Create Test Collection:**
-```bash
-curl -X PUT http://localhost:6333/collections/test_vectors \
-  -H "Content-Type: application/json" \
-  -d '{
-    "vectors": {
-      "size": 384,
-      "distance": "Cosine"
+**Collection & Vector Setup in Tests:**
+```csharp
+public class QdrantFixture : IAsyncLifetime
+{
+    private readonly HttpClient _client = new();
+
+    public async Task InitializeAsync()
+    {
+        // Create test collection
+        var createRequest = new
+        {
+            vectors = new { size = 384, distance = "Cosine" }
+        };
+
+        var response = await _client.PutAsync(
+            "http://localhost:6333/collections/test_vectors",
+            new StringContent(
+                JsonConvert.SerializeObject(createRequest),
+                Encoding.UTF8,
+                "application/json"));
+
+        response.EnsureSuccessStatusCode();
+
+        // Insert test vectors
+        var vectorData = new
+        {
+            points = new object[]
+            {
+                new {
+                    id = 1,
+                    vector = new float[384],  // Your embedding
+                    payload = new { text = "test" }
+                }
+            }
+        };
+
+        await _client.PutAsync(
+            "http://localhost:6333/collections/test_vectors/points",
+            new StringContent(
+                JsonConvert.SerializeObject(vectorData),
+                Encoding.UTF8,
+                "application/json"));
     }
-  }'
+
+    public async Task DisposeAsync() { }
+}
 ```
 
-### Cleanup
-```bash
-# Delete test collection
-curl -X DELETE http://localhost:6333/collections/test_vectors
-```
+### Cleanup (Automatic)
+On container stop:
+- All collections discarded
+- All vectors removed
+- Next run creates new collections
+- No manual cleanup required
 
 ### Resource Requirements
 - **Disk:** 1-5 GB (depends on vectors)
@@ -531,12 +693,19 @@ OPENSEARCH_JAVA_OPTS: "-Xms512m -Xmx512m"
 DISABLE_SECURITY_PLUGIN: "true"  # OK for testing
 ```
 
-### Volumes
+### Storage
+**Note:** OpenSearch uses ephemeral storage (no persistence). Indices are recreated per test run.
+
 ```yaml
-volumes:
-  # OpenSearch data
-  - opensearch-data:/usr/share/opensearch/data
+# No persistent volumes needed
 ```
+
+**Data Flow:**
+- Container starts with empty OpenSearch
+- Tests create indices via REST API
+- Tests index documents during execution
+- Container stopped → all data discarded (intentional)
+- Next run starts fresh
 
 ### Health Check
 ```yaml
@@ -553,27 +722,58 @@ healthcheck:
   start_period: 30s
 ```
 
-### Initialization
+### Test Data (Documents)
 
-**Create Test Index:**
-```bash
-curl -X PUT http://localhost:9200/test_index \
-  -H "Content-Type: application/json" \
-  -d '{
-    "settings": {
-      "index": {
-        "number_of_shards": 1,
-        "number_of_replicas": 0
-      }
+**Index & Document Setup in Tests:**
+```csharp
+public class OpenSearchFixture : IAsyncLifetime
+{
+    private readonly HttpClient _client = new();
+
+    public async Task InitializeAsync()
+    {
+        // Create test index
+        var indexSettings = new
+        {
+            settings = new
+            {
+                index = new
+                {
+                    number_of_shards = 1,
+                    number_of_replicas = 0
+                }
+            }
+        };
+
+        var response = await _client.PutAsync(
+            "http://localhost:9200/test_index",
+            new StringContent(
+                JsonConvert.SerializeObject(indexSettings),
+                Encoding.UTF8,
+                "application/json"));
+
+        response.EnsureSuccessStatusCode();
+
+        // Insert test documents
+        var doc = new { text = "test content", timestamp = DateTime.UtcNow };
+        await _client.PostAsync(
+            "http://localhost:9200/test_index/_doc",
+            new StringContent(
+                JsonConvert.SerializeObject(doc),
+                Encoding.UTF8,
+                "application/json"));
     }
-  }'
+
+    public async Task DisposeAsync() { }
+}
 ```
 
-### Cleanup
-```bash
-# Delete test indices
-curl -X DELETE "http://localhost:9200/test_*"
-```
+### Cleanup (Automatic)
+On container stop:
+- All indices discarded
+- All documents removed
+- Next run creates new indices
+- No manual cleanup required
 
 ### Resource Requirements
 - **Disk:** 2-10 GB
@@ -598,23 +798,48 @@ ollama/ollama:latest
 ### Ports
 - **11434/TCP** - API port
 
-### Volumes
+### Storage
+**Note:** Ollama uses ephemeral storage (no persistence). Models are downloaded per test run or cached temporarily.
+
 ```yaml
+# Optional: Temporary cache (discarded when container stops)
 volumes:
-  # Model cache (large!)
-  - ollama-models:/root/.ollama
+  # Volatile cache during test run (speeds up multiple tests)
+  - ollama-cache:/root/.ollama
 ```
+
+**Note:** On first run, model downloads (2-5 minutes for mistral). Subsequent runs in same container session reuse cached model. Container stops → cache discarded.
 
 ### Model Setup
 
-**Pull Minimal Model:**
-```bash
-# Mistral 7B (~4GB) - smallest reasonable model
-docker exec ollama ollama pull mistral
+**Pull Minimal Model (within test):**
+```csharp
+public class OllamaFixture : IAsyncLifetime
+{
+    private readonly HttpClient _client = new();
 
-# Or use tiny model for testing
-docker exec ollama ollama pull tinyllama  # ~400MB
+    public async Task InitializeAsync()
+    {
+        // Pull model if needed
+        var pullRequest = new { name = "tinyllama" };
+        var response = await _client.PostAsync(
+            "http://localhost:11434/api/pull",
+            new StringContent(
+                JsonConvert.SerializeObject(pullRequest),
+                Encoding.UTF8,
+                "application/json"));
+
+        response.EnsureSuccessStatusCode();
+    }
+
+    public async Task DisposeAsync() { }
+}
 ```
+
+**Available Models for Testing:**
+- `tinyllama` (~400MB) - Smallest, fastest for testing
+- `neural-chat:7b` (~4GB) - Balanced
+- `mistral` (~4GB) - Good quality
 
 ### Health Check
 ```yaml

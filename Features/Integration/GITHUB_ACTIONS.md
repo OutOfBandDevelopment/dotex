@@ -6,7 +6,7 @@
 
 ## Executive Summary
 
-This document provides a complete GitHub Actions workflow design for running integration tests in OoBDev daily at 5 PM UTC (if changes detected). The setup includes three workflows: `dotnet.yml` (build + unit/simulate tests on every push/PR), `release.yml` (manual on-demand releases), and `integration-tests.yml` (daily integration testing with all Docker services). Integration tests run against real SQL Server, RabbitMQ, MongoDB, Qdrant, and OpenSearch databases/services in Docker containers. The workflow includes smart change detection (skip if no changes), comprehensive health checks, environment variable setup, test result publishing, codecov integration, and monitoring strategies. The total execution time is ~12-18 minutes with cost of $0 for public repositories (unlimited GitHub Actions minutes).
+This document provides a complete GitHub Actions workflow design for running integration tests in OoBDev daily at 5 PM UTC (if changes detected). The setup includes three workflows in a **three-stage pipeline**: (1) `dotnet.yml` builds + unit/simulate tests on every push/PR, (2) `integration-tests.yml` gates releases by running integration tests against real Docker services (SQL Server, RabbitMQ, MongoDB, Qdrant, OpenSearch), (3) `scheduled-release.yml` only runs if integration tests pass, creating releases and publishing to NuGet. **Integration tests are injected between build and release as a mandatory validation gate** — if tests fail, releases are blocked and no tags are created. Includes smart change detection (skip if no changes), comprehensive health checks, detailed logging and tracing reports (Docker logs, test execution logs), code coverage collection and reporting (integrated with Codecov), and semantic version tagging: `validated-vX.Y.Z` (integration tests pass) and `release-vX.Y.Z` (published to NuGet). Total execution time ~12-18 minutes, cost $0 for public repositories (unlimited GitHub Actions minutes).
 
 ## Table of Contents
 
@@ -16,6 +16,9 @@ This document provides a complete GitHub Actions workflow design for running int
 - [Execution Flow Timing](#execution-flow-timing)
 - [Integration with Scheduled Release](#integration-with-scheduled-release)
 - [Monitoring & Alerts](#monitoring--alerts)
+- [Logging & Tracing Reports](#logging--tracing-reports)
+- [Code Coverage Reports](#code-coverage-reports)
+- [Release Tagging Strategy](#release-tagging-strategy)
 - [Test Connection Strings](#test-connection-strings)
 - [Cost Analysis (Public Repository)](#cost-analysis-public-repository)
 - [Debugging Failed Tests](#debugging-failed-tests)
@@ -96,15 +99,65 @@ end
 
 ---
 
-## Workflow File Structure
+## Workflow File Structure & Pipeline Order
 
 ```
 .github/workflows/
-├── dotnet.yml                    # Build + Unit + Simulate (every push/PR)
-├── release.yml                   # Manual release (on-demand)
-├── scheduled-release.yml         # Scheduled daily (main branch)
-├── integration-tests.yml (NEW)  # Daily integration tests
+├── dotnet.yml                    # [STAGE 1] Build + Unit + Simulate tests
+├── integration-tests.yml         # [STAGE 2] Integration tests (gate before release)
+├── scheduled-release.yml         # [STAGE 3] Release creation + NuGet publish
+├── release.yml                   # [STAGE 3-ALT] Manual release (on-demand)
 └── README.md                     # Workflow documentation
+```
+
+### Pipeline Flow
+
+**Every Push/PR:**
+```
+dotnet.yml (all branches)
+  ├─ Restore
+  ├─ Build
+  ├─ Unit + Simulate Tests
+  └─ Package (upload as artifacts)
+  [STOP - no integration tests or release on non-main branches]
+```
+
+**Daily on Main Branch (5 PM UTC):**
+```
+dotnet.yml (main only)
+  ├─ Restore
+  ├─ Build
+  ├─ Unit + Simulate Tests
+  └─ Package (upload as artifacts)
+    │
+    ▼
+integration-tests.yml (GATE - blocks release if fails)
+  ├─ Detect changes (skip if no commits since last validated tag)
+  ├─ Start Docker services (SQL Server, RabbitMQ, MongoDB, etc.)
+  ├─ Run Integration Tests (--filter TestCategory=Integration)
+  ├─ Publish test results (TRX, JSON)
+  ├─ Collect coverage reports
+  ├─ Create validated-vX.Y.Z tag (only if ALL tests pass)
+  └─ Upload artifacts (logs, coverage reports)
+    │
+    ├─ [IF TESTS FAIL] → Stop, do NOT proceed to release
+    │
+    └─ [IF TESTS PASS] → Continue
+        │
+        ▼
+scheduled-release.yml (only runs if integration tests passed)
+  ├─ Create GitHub Release with validated-vX.Y.Z tag
+  ├─ Attach .nupkg files
+  ├─ (Optional) Publish to NuGet (requires approval)
+  └─ Create release-vX.Y.Z tag (only after NuGet publish)
+```
+
+**Manual Release (On-Demand):**
+```
+release.yml (manual workflow_dispatch)
+  ├─ Select packages from latest build artifacts
+  └─ Create release (requires approval for NuGet publish)
+  [Integration tests already passed on main, safe to release]
 ```
 
 ---
@@ -461,30 +514,104 @@ end note
 
 ---
 
-## Integration with Scheduled Release
+## Integration Tests as a Release Gate
 
-Modify `scheduled-release.yml` to depend on integration tests:
+Integration tests are **injected between build and release** as a mandatory validation gate.
+
+### Gating Mechanism
+
+**scheduled-release.yml depends on integration-tests.yml:**
 
 ```yaml
 name: Scheduled Daily Release
 
 on:
   schedule:
-    - cron: '0 17 * * *'  # 5 PM UTC (same as integration tests)
+    - cron: '0 17 * * *'  # 5 PM UTC
 
   workflow_dispatch:
 
 jobs:
-  # Integration tests must pass first
+  # STAGE 2: Integration tests MUST pass before proceeding
   integration-tests:
     uses: ./.github/workflows/integration-tests.yml
+    # Outputs:
+    #   - has-changes: true|false (skip release if false)
+    #   - validated-tag: validated-vX.Y.Z (only if tests pass)
 
+  # STAGE 3: Release only happens if integration tests pass
   release:
     needs: integration-tests
-    if: needs.integration-tests.outputs.has-changes == 'true'
+    # GATE: Only proceed if tests passed
+    if: |
+      success() &&
+      needs.integration-tests.result == 'success' &&
+      needs.integration-tests.outputs.has-changes == 'true'
     runs-on: ubuntu-latest
-    # ... rest of release job
+
+    steps:
+      # Download already-built packages from dotnet.yml
+      - uses: actions/download-artifact@v3
+        with:
+          name: packages
+
+      # Create GitHub Release with validated tag
+      - uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ needs.integration-tests.outputs.validated-tag }}
+          files: '*.nupkg'
+
+      # Optional: Publish to NuGet (approval gate)
+      - name: Publish to NuGet
+        if: github.event.inputs.publish-nuget == 'true'
+        run: |
+          dotnet nuget push **/*.nupkg \
+            --api-key ${{ secrets.NUGET_API_KEY }} \
+            --source https://api.nuget.org/v3/index.json \
+            --skip-duplicate
+
+          # Create release tag only after successful NuGet publish
+          git tag -a "release-${{ env.VERSION }}" \
+            -m "Released to NuGet"
+          git push origin "release-${{ env.VERSION }}"
 ```
+
+### What Happens If Integration Tests Fail
+
+**Block Release:**
+```
+dotnet.yml ✅ passes
+  ↓
+integration-tests.yml ❌ FAILS
+  ↓
+scheduled-release.yml 🚫 BLOCKED (does not run)
+  ↓
+Result: No release, no tags, no NuGet publish
+```
+
+**Notification:**
+- GitHub Actions shows failure in scheduled-release workflow
+- Integration test report visible in GitHub Actions UI
+- Logs, service logs, and coverage reports available as artifacts
+- (Optional) Slack/email notification of failure
+
+### What Happens If Integration Tests Pass
+
+**Allow Release:**
+```
+dotnet.yml ✅ passes
+  ↓
+integration-tests.yml ✅ PASSES
+  ↓
+scheduled-release.yml ✅ PROCEEDS
+  ├─ Create GitHub Release (validated-vX.Y.Z)
+  ├─ Attach .nupkg files
+  └─ (Optional) Publish to NuGet → release-vX.Y.Z
+```
+
+**Automatic Tagging:**
+- `validated-vX.Y.Z` - Created by integration-tests.yml when tests pass
+- `release-vX.Y.Z` - Created by scheduled-release.yml after NuGet publish (if enabled)
 
 ---
 
@@ -527,6 +654,239 @@ jobs:
         body: 'Check workflow logs for details'
       })
 ```
+
+---
+
+## Logging & Tracing Reports
+
+Integration tests generate detailed logs and traces for debugging and audit trails.
+
+### Docker Container Logs
+
+**Capture service logs on test failure:**
+```yaml
+- name: Collect service logs on failure
+  if: failure()
+  run: |
+    mkdir -p test-logs
+
+    echo "=== SQL Server Logs ===" > test-logs/sqlserver.log
+    docker logs $(docker ps -a --filter ancestor=mcr.microsoft.com/mssql/server -q) >> test-logs/sqlserver.log 2>&1 || true
+
+    echo "=== RabbitMQ Logs ===" > test-logs/rabbitmq.log
+    docker logs $(docker ps -a --filter ancestor=rabbitmq:3.12 -q) >> test-logs/rabbitmq.log 2>&1 || true
+
+    echo "=== MongoDB Logs ===" > test-logs/mongodb.log
+    docker logs $(docker ps -a --filter ancestor=mongo:7.0 -q) >> test-logs/mongodb.log 2>&1 || true
+
+    echo "=== OpenSearch Logs ===" > test-logs/opensearch.log
+    docker logs $(docker ps -a --filter ancestor=opensearchproject/opensearch -q) >> test-logs/opensearch.log 2>&1 || true
+
+    echo "=== Qdrant Logs ===" > test-logs/qdrant.log
+    docker logs $(docker ps -a --filter ancestor=qdrant/qdrant -q) >> test-logs/qdrant.log 2>&1 || true
+
+- name: Upload service logs
+  if: failure()
+  uses: actions/upload-artifact@v3
+  with:
+    name: service-logs-${{ github.run_id }}
+    path: test-logs/
+    retention-days: 30
+```
+
+### Test Execution Logs
+
+**Structured test logging via MSTest:**
+```yaml
+- name: Run integration tests with detailed logging
+  run: >
+    dotnet test src/
+    --configuration Release
+    --filter "TestCategory=Integration"
+    --logger "console;verbosity=detailed"
+    --logger "trx;LogFileName=${{ runner.temp }}/test-results-integration.trx"
+    --logger "json;LogFileName=${{ runner.temp }}/test-results-integration.json"
+    --collect:"XPlat Code Coverage"
+  env:
+    DOTNET_CLI_TELEMETRY_OPTOUT: true
+    DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+```
+
+**Test result artifacts:**
+- TRX format (MSTest native) - Parseable by test result reporters
+- JSON format - Machine readable, detailed test info
+- Code coverage data - Detailed line-by-line coverage
+
+---
+
+## Code Coverage Reports
+
+Integration tests contribute to overall code coverage metrics.
+
+### Coverage Collection
+
+**Enable coverage during test execution:**
+```yaml
+- name: Run integration tests with coverage
+  run: >
+    dotnet test src/
+    --configuration Release
+    --filter "TestCategory=Integration"
+    --logger "trx;LogFileName=${{ runner.temp }}/test-results-integration.trx"
+    --collect:"XPlat Code Coverage"
+    --settings .runsettings
+  env:
+    COVERAGE_OPTS: /p:CollectCoverage=true /p:CoverageFormat=opencover /p:CoverageFilePath=${{ runner.temp }}/coverage-integration.xml
+```
+
+### Coverage Reports
+
+**Generate and upload coverage reports:**
+```yaml
+- name: Merge coverage reports
+  run: |
+    # Merge Unit + Simulate + Integration coverage
+    dotnet tool install -g dotnet-reportgenerator-globaltool
+    reportgenerator \
+      -reports:"${{ runner.temp }}/**/coverage*.xml" \
+      -targetdir:"${{ runner.temp }}/coverage-report" \
+      -reporttypes:"HtmlInline;Cobertura;Badges"
+
+- name: Publish to Codecov
+  uses: codecov/codecov-action@v3
+  with:
+    files: ${{ runner.temp }}/coverage-integration.xml
+    flags: integration
+    name: Integration Tests Coverage
+    fail_ci_if_error: false
+
+- name: Upload HTML coverage report
+  if: always()
+  uses: actions/upload-artifact@v3
+  with:
+    name: coverage-report-${{ github.run_id }}
+    path: ${{ runner.temp }}/coverage-report/
+    retention-days: 90
+```
+
+### Coverage Badges
+
+**Display coverage in README:**
+```markdown
+![Integration Tests Coverage](https://codecov.io/gh/user/repo/branch/main/graph/badge.svg?token=ABC123)
+```
+
+---
+
+## Release Tagging Strategy
+
+Implement semantic versioning with integration test validation.
+
+### Tag Naming Convention
+
+**Two-tier tagging approach:**
+
+| Tag Pattern | Trigger | Meaning |
+|------------|---------|---------|
+| `validated-vX.Y.Z` | Integration tests ✅ pass on main | Code validated, ready for release |
+| `release-vX.Y.Z` | Manual approval + Publish to NuGet ✅ | Published to NuGet, production-ready |
+
+**Example:**
+```
+validated-v2.1.0    ← All integration tests passed on main branch
+↓
+release-v2.1.0      ← Released to NuGet (manual approval)
+```
+
+### Implementation
+
+**Create validated tag on test success:**
+```yaml
+- name: Create validated tag
+  if: success()  # Only if integration tests pass
+  run: |
+    VERSION=$(cat src/GitVersion.yml | grep 'full-semver:' | cut -d' ' -f2)
+    git config user.name "github-actions[bot]"
+    git config user.email "github-actions[bot]@users.noreply.github.com"
+    git tag -a "validated-${VERSION}" -m "Integration tests passed for ${VERSION}"
+    git push origin "validated-${VERSION}"
+```
+
+**Create release tag on NuGet publish:**
+```yaml
+- name: Create release tag
+  if: success() && github.event_name == 'workflow_dispatch'
+  run: |
+    VERSION=$(cat src/GitVersion.yml | grep 'full-semver:' | cut -d' ' -f2)
+    git config user.name "github-actions[bot]"
+    git config user.email "github-actions[bot]@users.noreply.github.com"
+    git tag -a "release-${VERSION}" -m "Released ${VERSION} to NuGet"
+    git push origin "release-${VERSION}"
+```
+
+### Tag Creation Workflow
+
+**Only validated-vX.Y.Z tags are created automatically (by integration-tests.yml):**
+```yaml
+# In integration-tests.yml (STAGE 2)
+- name: Create validated tag (only if tests pass)
+  if: success()
+  run: |
+    VERSION=$(cat src/GitVersion.yml | grep 'full-semver:' | cut -d' ' -f2)
+    git config user.name "github-actions[bot]"
+    git config user.email "github-actions[bot]@users.noreply.github.com"
+    git tag -a "validated-${VERSION}" \
+      -m "Integration tests passed - code validated for release"
+    git push origin "validated-${VERSION}"
+```
+
+**release-vX.Y.Z tags are created only after NuGet publish (by scheduled-release.yml):**
+```yaml
+# In scheduled-release.yml (STAGE 3)
+# Only runs if integration tests passed
+- name: Publish to NuGet
+  run: dotnet nuget push **/*.nupkg ...
+
+- name: Create release tag (only after successful NuGet publish)
+  run: |
+    VERSION=$(cat src/GitVersion.yml | grep 'full-semver:' | cut -d' ' -f2)
+    git tag -a "release-${VERSION}" \
+      -m "Released ${VERSION} to NuGet"
+    git push origin "release-${VERSION}"
+```
+
+### Tag Visibility in GitHub
+
+**GitHub Release for validated-vX.Y.Z:**
+```yaml
+- name: Create GitHub Release (after integration tests pass)
+  if: success()
+  uses: softprops/action-gh-release@v1
+  with:
+    tag_name: validated-v${{ env.VERSION }}
+    draft: false
+    prerelease: false
+    name: "Validated v${{ env.VERSION }}"
+    body: |
+      # Integration Tests Validated
+      - All integration tests passed ✅
+      - Ready for release
+      - See artifacts for test results and coverage
+    files: |
+      ${{ runner.temp }}/packages/*.nupkg
+      test-results-integration.trx
+      coverage-report.html
+```
+
+### Tag Conditions Summary
+
+| Tag | Condition | Created By | Can Release |
+|-----|-----------|------------|------------|
+| `validated-vX.Y.Z` | ✅ Integration tests pass | integration-tests.yml | Yes (validated) |
+| ❌ Tag missing | ❌ Integration tests fail | (NOT created) | No (blocked) |
+| `release-vX.Y.Z` | ✅ NuGet publish succeeds | scheduled-release.yml | Yes (released) |
+
+**Key Point:** Without the `validated-vX.Y.Z` tag, no release is created. The tag itself serves as proof that integration tests have validated the code.
 
 ---
 
