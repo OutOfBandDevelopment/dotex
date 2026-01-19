@@ -1,0 +1,251 @@
+# OoBDev Integration Test Stack
+# Docker Compose configuration for running integration tests in CI/CD and locally
+# This stack includes all Docker-based services needed for Integration test category
+#
+# Usage:
+#   Local:  ./scripts/integration-up.sh
+#   CI/CD:  docker compose -f docker-compose.integration-tests.yml up -d
+#   Cleanup: docker compose -f docker-compose.integration-tests.yml down -v
+#
+# Note: Uses 'extends' to reuse existing service definitions from parent directory
+
+name: oobd-integration-tests
+
+services:
+  # ============================================================================
+  # Stateless Services - No persistent data between runs
+  # ============================================================================
+
+  apache-tika:
+    extends:
+      file: ../docker-compose.apache-tika.yml
+      service: apache-tika
+    container_name: oobd-test-tika
+    networks:
+      - integration-test-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9998/tika"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  smtp4dev:
+    extends:
+      file: ../docker-compose.smtp4dev.yml
+      service: smtp4dev
+    container_name: oobd-test-smtp
+    networks:
+      - integration-test-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80/"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+
+  # ============================================================================
+  # Stateful Services - Require cleanup between test runs
+  # ============================================================================
+
+  mongodb:
+    extends:
+      file: ../docker-compose.mongodb.yml
+      service: mongodb
+    container_name: oobd-test-mongodb
+    networks:
+      - integration-test-net
+    volumes:
+      - mongodb-test-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  sql-server:
+    extends:
+      file: ../docker-compose.sql-server.yml
+      service: sql-server
+    container_name: oobd-test-sqlserver
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=${SQL_SA_PASSWORD:-IntegrationTest123!}
+      - MSSQL_PID=Developer
+    networks:
+      - integration-test-net
+    volumes:
+      - sqlserver-test-data:/var/opt/mssql
+    healthcheck:
+      test: ["CMD", "/opt/mssql-tools18/bin/sqlcmd", "-S", "localhost", "-U", "sa", "-P", "${SQL_SA_PASSWORD:-IntegrationTest123!}", "-Q", "SELECT 1", "-C"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  rabbitmq:
+    extends:
+      file: ../docker-compose.rabbitmq.yml
+      service: rabbitmq
+    container_name: oobd-test-rabbitmq
+    networks:
+      - integration-test-net
+    volumes:
+      - rabbitmq-test-data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+
+  opensearch:
+    extends:
+      file: ../docker-compose.opensearch.yml
+      service: opensearch
+    container_name: oobd-test-opensearch
+    environment:
+      - discovery.type=single-node
+      - OPENSEARCH_INITIAL_ADMIN_PASSWORD=${OPENSEARCH_PASSWORD:-IntegrationTest123!}
+      - OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m
+      - bootstrap.memory_lock=true
+      - DISABLE_SECURITY_PLUGIN=false
+    networks:
+      - integration-test-net
+    volumes:
+      - opensearch-test-data:/usr/share/opensearch/data
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    healthcheck:
+      test: ["CMD", "curl", "-f", "-k", "-u", "admin:${OPENSEARCH_PASSWORD:-IntegrationTest123!}", "https://localhost:9200/_cluster/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  qdrant:
+    extends:
+      file: ../docker-compose.qdrant.yml
+      service: qdrant
+    container_name: oobd-test-qdrant
+    networks:
+      - integration-test-net
+    volumes:
+      - qdrant-test-storage:/qdrant/storage
+      - qdrant-test-snapshots:/qdrant/snapshots
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:6333/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  # ============================================================================
+  # Cloud Emulators - Azure and AWS service emulation
+  # ============================================================================
+
+  azurite:
+    extends:
+      file: ../docker-compose.azurite.yml
+      service: azurite
+    container_name: oobd-test-azurite
+    networks:
+      - integration-test-net
+    volumes:
+      - azurite-test-data:/data
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "10000"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+
+  localstack:
+    extends:
+      file: ../docker-compose.localstack.yml
+      service: localstack
+    container_name: oobd-test-localstack
+    networks:
+      - integration-test-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4566/_localstack/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+
+  # ============================================================================
+  # Identity & Access Management
+  # ============================================================================
+
+  keycloak:
+    extends:
+      file: ../docker-compose.keycloak.yml
+      service: keycloak
+    container_name: oobd-test-keycloak
+    networks:
+      - integration-test-net
+    volumes:
+      - keycloak-test-data:/opt/keycloak/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health/ready"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  # ============================================================================
+  # AI/ML Services - CPU-only for CI/CD compatibility
+  # ============================================================================
+
+  sbert:
+    extends:
+      file: ../docker-compose.sbert.yml
+      service: sbert
+    container_name: oobd-test-sbert
+    networks:
+      - integration-test-net
+    # Note: No GPU deployment for CI/CD compatibility
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+# ============================================================================
+# Networks - Isolated test network
+# ============================================================================
+
+networks:
+  integration-test-net:
+    driver: bridge
+    name: oobd-integration-test-net
+
+# ============================================================================
+# Volumes - Ephemeral volumes destroyed with 'down -v'
+# ============================================================================
+
+volumes:
+  mongodb-test-data:
+    name: oobd-test-mongodb-data
+  sqlserver-test-data:
+    name: oobd-test-sqlserver-data
+  rabbitmq-test-data:
+    name: oobd-test-rabbitmq-data
+  opensearch-test-data:
+    name: oobd-test-opensearch-data
+  qdrant-test-storage:
+    name: oobd-test-qdrant-storage
+  qdrant-test-snapshots:
+    name: oobd-test-qdrant-snapshots
+  azurite-test-data:
+    name: oobd-test-azurite-data
+  keycloak-test-data:
+    name: oobd-test-keycloak-data

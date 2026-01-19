@@ -19,13 +19,23 @@ public static class TestCategories
     public const string Simulate = nameof(Simulate);
 
     /// <summary>
-    /// Integration tests should support the ability to run against deployed environments
-    /// including interacting with databases and web services
+    /// Integration tests run against Docker-based external services (databases, message queues,
+    /// search engines, etc.). Requires Docker containers to be running locally or in CI/CD.
+    /// Runs in daily integration test pipeline.
     /// </summary>
     public const string Integration = nameof(Integration);
 
     /// <summary>
-    /// Test points for local development, not expected to be safe to return and may use persisted resources
+    /// Test points for local development only. Not expected to be safe to rerun and may use
+    /// persisted resources. Typically used for manual testing, performance benchmarks, or
+    /// exploratory testing. Not executed in CI/CD pipelines.
     /// </summary>
     public const string DevLocal = nameof(DevLocal);
+
+    /// <summary>
+    /// Tests that require live cloud services (Azure B2C, Application Insights, Groq Cloud, etc.)
+    /// which cannot be emulated or containerized locally. Requires valid cloud credentials and
+    /// active service subscriptions. Manual execution only, not run in CI/CD pipelines.
+    /// </summary>
+    public const string LiveIntegration = nameof(LiveIntegration);
 }

@@ -1,8 +1,9 @@
 # TODO - OoBDev (dotex) Framework
 
-**Last Updated:** 2026-01-15
+**Last Updated:** 2026-01-19
 
-✅ **COMPLETED:** ExpectedExceptionAttribute → Assert.ThrowsException conversion (40 instances)
+✅ **COMPLETED:** Docker-based Integration Testing Infrastructure (Week 1)
+⏳ **AWAITING:** Local Docker testing validation before enabling CI/CD
 ⚠️ **IN PROGRESS:** Swashbuckle 10.1.0 breaking changes in OoBDev.AspNetCore.Mvc
 
 > **New to this project?** Read `/CLAUDE.md` first for a complete development guide including architecture, patterns, and migration scope.
@@ -190,6 +191,60 @@ This document tracks architectural work, migration planning, and bug fixes for t
 
 ### CI/CD
 - [x] Updated `.github/workflows/dotnet.yml` - Added path filters for selective compilation
+- [x] Updated `.github/workflows/integration-tests.yml` - Complete implementation (DISABLED pending local testing)
+
+### Testing Infrastructure (COMPLETED - 2026-01-19)
+- [x] **Docker Integration Test Stack** - 11 services for Integration test category
+  - [x] Created `/containers/testing/docker-compose.integration-tests.yml` (Apache Tika, SMTP4Dev, MongoDB, SQL Server, RabbitMQ, OpenSearch, Qdrant, Azurite, LocalStack, Keycloak, SBert)
+  - [x] Created `/containers/testing/.env.integration` - Environment configuration
+  - [x] Created `/containers/testing/README.md` - 500+ line guide with PlantUML deployment diagram
+  - [x] Created cross-platform scripts: `integration-up.sh/.bat`, `integration-down.sh/.bat`, `wait-for-services.sh/.bat`
+  - [x] Created `/containers/testing/TESTING-CHECKLIST.md` - Local validation guide
+  - [x] Created `/containers/testing/STATUS.md` - Implementation tracker
+- [x] **Test Categories Enhancement**
+  - [x] Added `LiveIntegration` category to `TestCategories.cs` (5th category for cloud-only services)
+  - [x] Updated XML documentation for Integration, DevLocal, and new LiveIntegration categories
+  - [x] Clear distinction: Integration (Docker-based) vs LiveIntegration (Cloud-based)
+- [x] **CI/CD Pipeline Implementation**
+  - [x] Completed `.github/workflows/integration-tests.yml` (Docker startup, health checks, tests, cleanup)
+  - [x] Configured all environment variables for 11 services
+  - [x] Test result upload (30-day retention)
+  - [x] Validated tag creation (`validated-v{version}`)
+  - [x] **Workflow DISABLED** - Triggers commented out until local Docker testing validates infrastructure
+
+**Next Steps (Week 2 - Test Migration):**
+- [ ] **LOCAL TESTING REQUIRED** - Validate Docker stack before proceeding
+  - [ ] Follow `/containers/testing/TESTING-CHECKLIST.md` step-by-step
+  - [ ] Verify all 11 services become healthy within 2 minutes
+  - [ ] Test cleanup (`integration-down.sh --clean`)
+  - [ ] Verify clean restart works correctly
+  - [ ] Document any issues or port conflicts
+- [ ] **Enable CI/CD After Validation**
+  - [ ] Uncomment workflow triggers in `integration-tests.yml`
+  - [ ] Manually trigger workflow to verify CI/CD execution
+  - [ ] Verify validated tag creation on success
+- [ ] **Migrate Tests to Integration Category** (20+ tests from DevLocal)
+  - [ ] Apache Tika (6 tests) - PRIORITY 1
+  - [ ] SMTP/MailKit (2 tests) - PRIORITY 1
+  - [ ] MongoDB (3 tests) - PRIORITY 2
+  - [ ] SQL Server DacFx - PRIORITY 2
+  - [ ] RabbitMQ - PRIORITY 2
+  - [ ] OpenSearch (2 tests) - PRIORITY 3
+  - [ ] SBert (2 tests) - PRIORITY 3
+  - [ ] Qdrant (commented tests) - PRIORITY 4
+
+**Architecture Highlights:**
+- ✅ Shared Docker infrastructure for local development and CI/CD
+- ✅ Health checks ensure services ready before tests run
+- ✅ Ephemeral volumes provide clean state on each run
+- ✅ Isolated network prevents conflicts
+- ✅ Daily scheduled tests at 4 PM UTC (after build, before release)
+- ✅ Pipeline flow: Build → Daily Integration Tests → Manual Release
+
+**Documentation References:**
+- See `/containers/testing/README.md` for complete infrastructure guide
+- See `/containers/testing/TESTING-CHECKLIST.md` for validation procedure
+- See `/containers/testing/STATUS.md` for detailed implementation progress
 
 ### Phase 0: Critical Bug Fixes (COMPLETED)
 - [x] **PathEx.cs** - Fixed lambda expression syntax error (lines 42, 66, 92)

@@ -1,9 +1,9 @@
 # OoBDev (dotex) Framework - Claude Development Guide
 
-**Last Updated:** 2026-01-15
+**Last Updated:** 2026-01-19
 **Framework:** OoBDev (dotex) - Enterprise .NET Library Suite
 **Target:** .NET 9.0
-**Current Work:** Fixing Swashbuckle 10.1.0 breaking changes in OoBDev.AspNetCore.Mvc
+**Current Work:** Testing Infrastructure complete - Awaiting local Docker validation
 
 ---
 
@@ -280,12 +280,80 @@ OoBDev.{Layer}.{Feature}/
 ## Testing Guidelines
 
 ### Test Categories
+
+OoBDev uses **5 test categories** to organize tests by execution environment and dependencies:
+
 ```csharp
-[TestCategory(TestCategories.Unit)]        // Fast, isolated
-[TestCategory(TestCategories.Simulate)]    // Integration with mocks
-[TestCategory(TestCategories.Integration)] // Real external resources
-[TestCategory(TestCategories.DevLocal)]    // Local development only
+[TestCategory(TestCategories.Unit)]            // Fast, isolated, no external dependencies
+[TestCategory(TestCategories.Simulate)]        // Full stack, mocked persistence
+[TestCategory(TestCategories.Integration)]     // Docker-based external services (NEW)
+[TestCategory(TestCategories.DevLocal)]        // Manual/exploratory testing only
+[TestCategory(TestCategories.LiveIntegration)] // Cloud services only (NEW)
 ```
+
+**Category Definitions:**
+
+| Category | Runs In CI/CD | External Services | Use Case |
+|----------|---------------|-------------------|----------|
+| **Unit** | YES (every PR/push) | Mocked | Pure logic, < 100ms |
+| **Simulate** | YES (every PR/push) | Mocked | End-to-end with in-memory persistence |
+| **Integration** | YES (daily at 4 PM UTC) | Docker containers | MongoDB, SQL Server, RabbitMQ, etc. |
+| **DevLocal** | NO (manual only) | Local services | Performance tests, GPU tests |
+| **LiveIntegration** | NO (manual only) | Live Azure/AWS/GCP | Azure B2C, Groq, App Insights |
+
+**Docker-Based Integration Tests:**
+
+Integration tests run against **11 Docker services** managed by the testing infrastructure:
+
+```bash
+# Start Docker services for integration testing
+cd containers/testing
+./scripts/integration-up.sh --wait
+
+# Run integration tests
+cd ../../src
+dotnet test --filter "TestCategory=Integration"
+
+# Stop and cleanup
+cd ../containers/testing
+./scripts/integration-down.sh --clean
+```
+
+**Services Available:**
+- Apache Tika (Document processing)
+- SMTP4Dev (Email testing)
+- MongoDB (NoSQL database)
+- SQL Server (Relational database)
+- RabbitMQ (Message queue)
+- OpenSearch (Search engine)
+- Qdrant (Vector database)
+- Azurite (Azure Storage emulator)
+- LocalStack (AWS emulator)
+- Keycloak (Identity & Access Management)
+- SBert (Sentence embeddings)
+
+**Environment Variables for Tests:**
+```csharp
+[TestMethod]
+[TestCategory(TestCategories.Integration)]
+public async Task TestMongoDBOperation()
+{
+    // Use environment variable or fallback to localhost
+    var connectionString = Environment.GetEnvironmentVariable("MONGODB_CONNECTION_STRING")
+        ?? "mongodb://localhost:27017";
+    var databaseName = $"IntegrationTest_{Guid.NewGuid():N}";  // Unique per run
+
+    // ... test logic
+
+    // Cleanup in [TestCleanup]
+    await client.DropDatabaseAsync(databaseName);
+}
+```
+
+**See Also:**
+- `/containers/testing/README.md` - Complete Docker infrastructure guide
+- `/containers/testing/TESTING-CHECKLIST.md` - Local validation steps
+- `/containers/testing/STATUS.md` - Implementation progress
 
 ### Numeric Assertions
 ```csharp
@@ -386,7 +454,41 @@ dotnet test src/ --collect:"XPlat Code Coverage"
 
 ---
 
-## Recently Completed Work (2026-01-15)
+## Recently Completed Work (2026-01-19)
+
+### Task: Docker-Based Integration Testing Infrastructure (Week 1)
+**Status:** ✅ COMPLETED (Awaiting Local Testing Validation)
+
+Successfully implemented complete Docker-based testing infrastructure for integration tests:
+
+**Docker Infrastructure** (`/containers/testing/`):
+- ✅ 11-service stack (Apache Tika, SMTP4Dev, MongoDB, SQL Server, RabbitMQ, OpenSearch, Qdrant, Azurite, LocalStack, Keycloak, SBert)
+- ✅ Cross-platform scripts (Linux/macOS/Windows)
+- ✅ Health checks for all services (2-minute timeout)
+- ✅ Ephemeral volumes for clean state
+- ✅ Comprehensive README with PlantUML deployment diagram
+
+**Test Categories**:
+- ✅ Added `LiveIntegration` category (5th category)
+- ✅ Updated XML documentation for all categories
+- ✅ Clear separation: Integration (Docker) vs LiveIntegration (Cloud)
+
+**CI/CD Pipeline**:
+- ✅ Complete implementation in `integration-tests.yml`
+- ✅ Docker startup, health checks, tests, cleanup
+- ✅ Daily scheduled at 4 PM UTC (after build, before release)
+- ⚠️ **DISABLED** - Triggers commented out until local Docker validation
+
+**Next Steps:**
+1. Complete `/containers/testing/TESTING-CHECKLIST.md` to validate Docker stack locally
+2. Enable workflow triggers after successful validation
+3. Migrate 20+ tests from DevLocal to Integration category
+
+See `/containers/testing/STATUS.md` for detailed progress.
+
+---
+
+## Previous Completed Work (2026-01-15)
 
 ### Task: Convert ExpectedExceptionAttribute to Assert.ThrowsException
 **Status:** ✅ COMPLETED
@@ -400,7 +502,31 @@ Both sync and async test patterns handled correctly. See TODO.md for full file l
 
 ---
 
-## Current Work Context (2026-01-15)
+## Current Work Context (2026-01-19)
+
+### Task: Local Docker Testing Validation
+
+**Status:** ⏳ AWAITING LOCAL TESTING
+
+**What's Ready:**
+- ✅ Complete Docker infrastructure in `/containers/testing/`
+- ✅ 11 services configured with health checks
+- ✅ Cross-platform startup/shutdown scripts
+- ✅ CI/CD pipeline implemented (disabled)
+
+**What's Needed:**
+- [ ] Local validation using `/containers/testing/TESTING-CHECKLIST.md`
+- [ ] Verify all services become healthy
+- [ ] Test cleanup works correctly
+- [ ] Document any issues or adjustments needed
+
+**After Validation:**
+- Enable GitHub Actions workflow (uncomment triggers)
+- Proceed to Week 2: Migrate tests from DevLocal to Integration
+
+---
+
+## Previous Work Context (2026-01-15)
 
 ### Task: Fix Swashbuckle 10.1.0 Breaking Changes in OoBDev.AspNetCore.Mvc
 
