@@ -2,71 +2,124 @@
 
 This directory contains GitHub Actions workflows for building, testing, packaging, and releasing the OoBDev framework.
 
+---
+
+## Table of Contents
+
+- [Current Pipeline Architecture](#current-pipeline-architecture-implemented)
+  - [Three-Workflow Design](#three-workflow-design)
+  - [Why This Design?](#why-this-design)
+  - [Workflow Comparison](#workflow-comparison)
+  - [Which Workflow to Use?](#which-workflow-to-use)
+- [Workflow Details](#workflow-details)
+  - [Build Pipeline](#build-pipeline-dotnetyml---single-job)
+  - [Deploy Release Pipeline](#deploy-release-pipeline-deploy-releaseyml---reusable-unified-deployment)
+  - [Manual Release Pipeline](#manual-release-pipeline-releaseyml---on-demand-with-parameters)
+  - [Scheduled Release Pipeline](#scheduled-release-pipeline-scheduled-releaseyml---automatic-daily)
+- [Architecture Diagram](#architecture-diagram)
+- [Branch Behavior](#branch-behavior)
+- [Key Configuration](#key-configuration)
+  - [What Gets Tested](#what-gets-tested-build-pipeline)
+  - [How Releases Work](#how-releases-work)
+  - [Versioning](#versioning)
+- [GitVersion Property Passing](#gitversion-property-passing)
+- [Running Locally](#running-locally)
+- [Workflow Files](#workflow-files)
+- [Common Tasks](#common-tasks)
+  - [Manual Build](#trigger-a-manual-build)
+  - [GitHub Release Only](#manual-release-create-github-release-only)
+  - [GitHub + NuGet](#manual-release-github-release--nuget-requires-approval)
+  - [Specific Artifact](#manual-release-from-specific-build-artifact)
+  - [Auto-Detect Latest](#auto-detect-latest-artifact-and-create-release)
+  - [Scheduled Release (Manual)](#trigger-scheduled-release-manually-for-testing)
+  - [Adjust Schedule](#adjust-scheduled-release-time)
+  - [Check Status](#check-workflow-status)
+  - [View Logs](#view-workflow-logs)
+  - [Troubleshooting](#troubleshooting-scheduled-release)
+- [Maintenance](#maintenance)
+- [References](#references)
+
+---
+
 ## Current Pipeline Architecture (Implemented)
 
 ### Three-Workflow Design
 
 **1. Build Pipeline** (`dotnet.yml`) - Single Job
-- ✅ Triggers on every push/PR to `main` and `dev/*`
+- ✅ Triggers on every **push** to `main` and `dev/*` branches
+- ✅ **Skipped on PRs** (no packages generated for pull requests)
 - ✅ Single job: Restore → Build → Test → Package
-- ✅ Tests gated (must pass before packaging)
+- ✅ Tests gated (Unit + Simulate only; Integration tests disabled)
+- ✅ Creates build tags: `vX.Y.Z` (main) or `vX.Y.Z-{branch}` (dev/*)
 - ✅ Uploads packages as artifacts (90-day retention)
 
-**2. Manual Release Pipeline** (`release.yml`) - Two Conditional Jobs
-- ✅ Manual on-demand trigger via GitHub UI or CLI
-- ✅ **Release Job** (always runs):
-  - Downloads pre-built packages from artifacts
-  - Creates GitHub Release with git tag
-  - Attaches .nupkg files to release
-- ✅ **Publish NuGet Job** (conditional on user choice):
-  - `create-release` → GitHub only (no approval)
-  - `create-and-publish-release` → GitHub + NuGet (requires approval)
+**2. Deploy Release Pipeline** (`deploy-release.yml`) - Unified Deployment
+- ✅ Reusable workflow called by both manual and scheduled releases
+- ✅ Parameters:
+  - `artifact-name` (required) - Specify which artifact to deploy
+  - `publish-to-nuget` (optional) - Publish to NuGet.org (true/false)
+- ✅ Always creates GitHub Release with git tag
+- ✅ Conditionally publishes to NuGet based on parameter
+- ✅ Requires approval when publishing to NuGet
 
 **3. Scheduled Release Pipeline** (`scheduled-release.yml`) - Automatic Daily
-- ✅ Runs automatically at **5 PM UTC daily** (on `main` only)
-- ✅ **Change Detection**: Checks if commits exist since last tag
-- ✅ **Skip if No Changes**: Exits early if no new work
-- ✅ **Release Job** (if changes found):
-  - Downloads latest package artifact
-  - Creates GitHub Release with git tag
-- ✅ **Publish NuGet Job** (auto-runs):
-  - Always publishes to NuGet when scheduled release runs
-  - Requires approval via environment protection
+- ✅ Runs automatically at **5 PM UTC daily** on `main` branch
+- ✅ Checks if commits exist since last tag
+- ✅ Skip if No Changes: Exits early if no new work
+- ✅ Calls `deploy-release.yml` with `publish-to-nuget=true`
+- ✅ Automatically creates GitHub Release and publishes to NuGet
+
+**4. Manual Release Pipeline** (`release.yml`) - On-Demand Flexible Release
+- ✅ Manual on-demand trigger via GitHub UI or CLI
+- ✅ Parameters:
+  - `artifact-name` (optional) - Specify artifact or auto-detect latest
+  - `publish-to-nuget` (optional) - Publish to NuGet (true/false)
+- ✅ Calls `deploy-release.yml` with your chosen parameters
+- ✅ Works on any branch
 
 ### Why This Design?
 
 ✅ **Instant feedback** - Tests must pass before packaging (gated flow)
 ✅ **No friction** - Developers get fast CI results without approval wait
-✅ **Flexible releases** - Manual: choose GitHub only or GitHub + NuGet | Scheduled: always both
+✅ **DRY principle** - Single `deploy-release.yml` used for all deployments (no code duplication)
+✅ **Flexible releases** - Manual releases with choice of GitHub-only or GitHub + NuGet
 ✅ **Audit trail** - Approval only for NuGet (high-risk action)
 ✅ **Package reuse** - Once built, packages never rebuilt (artifact-based)
 ✅ **Cost efficient** - No duplicate builds, just download and release
-✅ **Automated delivery** - End-of-day release ensures constant delivery rhythm
+✅ **Automated delivery** - Scheduled release on main ensures constant delivery rhythm
+✅ **Parametrized** - Control deployment behavior through workflow parameters
 
 ### Workflow Comparison
 
-| Feature | Build | Manual Release | Scheduled Release |
-|---------|-------|----------------|-------------------|
-| **Trigger** | Push/PR to main, dev/* | Manual (CLI/UI) | Daily 5 PM UTC |
-| **Runs On** | All branches | main only | main only |
-| **Branch Check** | None | None | Yes (skips if no changes) |
-| **GitHub Release** | ✅ No | ✅ Yes | ✅ Yes |
-| **NuGet Publish** | ✅ No | ⚙️ Optional | ✅ Yes |
-| **Approval Needed** | ❌ No | ⚙️ If NuGet | ✅ Yes (for NuGet) |
-| **Use Case** | Validation | Ad-hoc release | Daily delivery rhythm |
+| Feature | Build | Manual Release | Scheduled Release | Deploy (Reusable) |
+|---------|-------|----------------|-------------------|--------------------|
+| **Trigger** | Push to main, dev/* | Manual (CLI/UI) | Daily 5 PM UTC | Called by other workflows |
+| **Runs On** | Pushes only (no PRs) | Any branch | main only | N/A (reusable) |
+| **GitHub Release** | ✅ Tags only | ✅ Yes | ✅ Yes | ✅ Yes |
+| **NuGet Publish** | ❌ No | ⚙️ Configurable | ✅ Yes | ⚙️ Configurable |
+| **Approval Needed** | ❌ No | ✅ If NuGet=true | ✅ Yes | ✅ If NuGet=true |
+| **Parameters** | N/A | artifact-name, publish-to-nuget | N/A | artifact-name, publish-to-nuget |
 
 ### Which Workflow to Use?
 
 ```
 Do you want to release RIGHT NOW?
-├─ YES → Use Manual Release (release.yml)
-│   ├─ GitHub only?        → create-release (no approval)
-│   └─ GitHub + NuGet?     → create-and-publish-release (requires approval)
+├─ YES, to GitHub only
+│   └─ Use Manual Release (release.yml)
+│       ├─ Input: artifact-name (optional: auto-detect latest)
+│       └─ Input: publish-to-nuget = false (default)
 │
-└─ NO → Already set up
-    └─ Scheduled Release (scheduled-release.yml) runs daily at 5 PM UTC
-        ├─ Auto-skips if no new commits since last release
-        └─ Auto-publishes to GitHub + NuGet (requires approval for NuGet)
+├─ YES, to GitHub + NuGet (any branch)
+│   └─ Use Manual Release (release.yml)
+│       ├─ Input: artifact-name (optional: auto-detect latest)
+│       └─ Input: publish-to-nuget = true (requires approval)
+│
+└─ NO → Automatic workflows handle it:
+    └─ Main branch: Scheduled Release (scheduled-release.yml) runs daily at 5 PM UTC
+        ├─ Detects commits since last release
+        ├─ Auto-skips if no new work
+        ├─ Creates GitHub Release
+        └─ Publishes to NuGet (requires approval)
 ```
 
 ---
@@ -97,34 +150,73 @@ Runs automatically on:
 
 ---
 
-### Release Pipeline (`release.yml`) - Manual Two Jobs
+### Deploy Release Pipeline (`deploy-release.yml`) - Reusable Unified Deployment
 
-Manual trigger via GitHub UI.
+Reusable workflow called by both manual and scheduled releases. Handles creating GitHub Releases and optionally publishing to NuGet.
 
-**Inputs:**
-- **Release Action** (required):
-  - `create-release` → Publish to GitHub only (no approval needed)
-  - `create-and-publish-release` → Publish to GitHub + NuGet (requires approval)
-- **Package Artifact** (optional):
-  - Auto-detects latest successful build
-  - Or specify artifact name manually
+**Inputs (Parameters):**
+- **artifact-name** (required) - Package artifact name (e.g., `packages-1.2.3`)
+- **publish-to-nuget** (optional) - Publish to NuGet.org (`true` or `false`, default: `false`)
 
-**Job 1: Release (Always Runs)**
-1. Find/validate package artifact (auto or specified)
-2. Download packages from build artifacts
-3. Create GitHub Release (git tag + release notes)
-4. Attach .nupkg files to release
+**Job 1: Deploy (Always Runs)**
+1. Validate artifact name format
+2. Parse version from artifact name
+3. Download packages from build artifacts
+4. Create GitHub Release with auto-generated release notes
+5. Attach .nupkg files to release
+6. Create release tracking tag (`v-released-X.Y.Z`)
 
 **Job 2: Publish NuGet (Conditional)**
-- Runs only if user selected `create-and-publish-release`
-- Requires approval via environment protection
+- Runs only if `publish-to-nuget == 'true'`
+- Requires approval via environment protection (`nuget-release`)
 - Publishes packages to NuGet.org
+- Creates NuGet deployment tag (`nuget-X.Y.Z`)
 
 **Outputs:**
 - ✅ GitHub Release created with tag
 - ✅ Packages attached to release
-- ✅ Release notes auto-generated
+- ✅ Release notes auto-generated from commit history
 - ✅ (Optional) Published to NuGet.org
+- ✅ Tracking tags created for audit trail
+
+---
+
+### Manual Release Pipeline (`release.yml`) - On-Demand with Parameters
+
+Manual trigger via GitHub UI or CLI for flexible deployments.
+
+**Inputs (Parameters):**
+- **artifact-name** (optional) - Specific artifact to deploy
+  - If empty: auto-detects latest successful build
+  - Format: `packages-X.Y.Z-...`
+- **publish-to-nuget** (optional) - Publish to NuGet (default: `false`)
+  - `false` → GitHub Release only (no approval)
+  - `true` → GitHub Release + NuGet (requires approval)
+
+**Job Sequence:**
+1. **Find Artifact** - Locate artifact (specified or auto-detected)
+2. **Deploy** - Call `deploy-release.yml` with parameters
+
+**Examples:**
+
+GitHub Release only:
+```bash
+gh workflow run release.yml --ref main \
+  -f artifact-name=packages-1.2.3 \
+  -f publish-to-nuget=false
+```
+
+GitHub + NuGet (requires approval):
+```bash
+gh workflow run release.yml --ref main \
+  -f artifact-name=packages-1.2.3 \
+  -f publish-to-nuget=true
+```
+
+Auto-detect latest (GitHub only):
+```bash
+gh workflow run release.yml --ref main
+```
 
 ---
 
@@ -135,13 +227,13 @@ Automatically runs at **5 PM UTC daily** on `main` branch only.
 **How It Works:**
 1. **Check for Changes**: Compares current main against last release tag
 2. **Skip if No Changes**: Exits early if no new commits
-3. **Release Job** (if changes found):
-   - Downloads latest package artifact from successful build
+3. **Find Artifact** (if changes found):
+   - Queries latest successful build on main branch
+   - Extracts package artifact name
+4. **Deploy** (calls `deploy-release.yml` with `publish-to-nuget=true`):
    - Creates GitHub Release with git tag
    - Attaches .nupkg files
-4. **Publish NuGet Job** (auto-runs after release):
-   - Requires approval via environment protection
-   - Publishes packages to NuGet.org
+   - Publishes to NuGet.org (requires approval)
 
 **Triggers:**
 - ✅ Scheduled: Daily at 5 PM UTC
@@ -274,15 +366,20 @@ The diagram above shows the manual release flow. The scheduled release workflow 
 
 ## Branch Behavior
 
-| Branch | Build Trigger | Tests | Release | Approval |
-|--------|---------------|-------|---------|----------|
-| `main` | Push + PR | ✅ Unit/Simulate | Manual (GitHub) | ❌ None |
-| `main` | Release trigger | N/A | Manual (GitHub + NuGet) | ✅ Required |
-| `dev/*` | Push + PR | ✅ Unit/Simulate | Manual (GitHub) | ❌ None |
-| `dev/*` | Release trigger | N/A | Manual (GitHub + NuGet) | ✅ Required |
-| Other | PR only | ✅ Unit/Simulate | ❌ Never | N/A |
+| Branch | Build Trigger | Tests | Manual Release | Auto Release | Approval |
+|--------|---------------|-------|---|---|---|
+| `main` | Push (not PR) | ✅ Unit/Simulate | ✅ GitHub or GitHub+NuGet | ✅ Daily 5PM | ✅ If NuGet |
+| `dev/*` | Push (not PR) | ✅ Unit/Simulate | ✅ GitHub or GitHub+NuGet | ❌ No | ✅ If NuGet |
+| Other | Never | N/A | ❌ No | ❌ No | N/A |
 
-**Note:** All releases are manual and on-demand. Approval is only required when selecting "create-and-publish-release" (NuGet).
+**Build Behavior:**
+- `main` and `dev/*`: Builds on every push (creates build tags automatically)
+- PRs: Skipped (no artifacts generated)
+
+**Release Behavior:**
+- Approval required only when `publish-to-nuget=true`
+- Use `release.yml` for manual releases on any branch
+- Use `scheduled-release.yml` auto-release only applies to `main` (daily at 5 PM UTC)
 
 ---
 
@@ -369,9 +466,10 @@ dotnet nuget push "./packages/*.nupkg" --api-key [YOUR_KEY] --source https://api
 
 ## Workflow Files
 
-- **`dotnet.yml`** - Build pipeline: single job with restore → build → test → package → upload
-- **`release.yml`** - Manual release pipeline: two conditional jobs (release always, NuGet publish on demand with approval)
-- **`scheduled-release.yml`** - Automatic scheduled release: runs daily at end of day if changes detected on main
+- **`dotnet.yml`** - Build pipeline: restore → build → test → package → upload (runs on push, skipped on PRs)
+- **`deploy-release.yml`** - Reusable deployment: creates GitHub Release, conditionally publishes to NuGet (called by other workflows)
+- **`release.yml`** - Manual release: parametrized trigger (artifact-name, publish-to-nuget) that calls deploy-release.yml
+- **`scheduled-release.yml`** - Automatic release: runs daily at 5 PM UTC on main if changes detected, calls deploy-release.yml with publish-to-nuget=true
 
 ---
 
@@ -384,19 +482,27 @@ gh workflow run dotnet.yml --ref dev/my-feature
 
 ### Manual Release: Create GitHub Release Only
 ```bash
-gh workflow run release.yml --ref main -f release-action=create-release
+gh workflow run release.yml --ref main \
+  -f publish-to-nuget=false
 ```
 
-### Manual Release: Publish to GitHub + NuGet (Requires Approval)
+### Manual Release: GitHub Release + NuGet (Requires Approval)
 ```bash
-gh workflow run release.yml --ref main -f release-action=create-and-publish-release
+gh workflow run release.yml --ref main \
+  -f publish-to-nuget=true
 ```
 
 ### Manual Release from Specific Build Artifact
 ```bash
 gh workflow run release.yml --ref main \
-  -f release-action=create-and-publish-release \
-  -f packages-artifact=packages-1.2.3
+  -f artifact-name=packages-1.2.3 \
+  -f publish-to-nuget=true
+```
+
+### Auto-Detect Latest Artifact and Create Release
+```bash
+# Finds latest successful build and creates GitHub Release (no NuGet)
+gh workflow run release.yml --ref main
 ```
 
 ### Trigger Scheduled Release Manually (for testing)

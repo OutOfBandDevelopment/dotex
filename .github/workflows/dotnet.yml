@@ -168,7 +168,7 @@ jobs:
         --nologo
         --no-restore
 
-    - name: Unit Test
+    - name: Unit & Simulated Test
       working-directory: ./src
       run: >
         dotnet test
