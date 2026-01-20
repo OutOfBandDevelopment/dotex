@@ -120,6 +120,27 @@ Tests that require live cloud credentials. Manual execution only.
 
 ---
 
+### Redis (Cache Store)
+
+**Service:** Redis in-memory data store
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `REDIS_CONNECTION_STRING` | `localhost:6379` | Redis connection string |
+
+**Docker Container:** `redis:7-alpine` (Port 6379)
+
+**Tests Using:**
+- `OoBDev.Redis.Caching.Tests.Examples.ExampleTests.CachingDesignTest_WithRedisCache`
+- Other Redis caching integration tests (to be migrated from DevLocal category)
+
+**Notes:**
+- No authentication by default in test container
+- Cache keys should be unique per test run
+- Automatic cleanup via FLUSHDB or key expiration
+
+---
+
 ### OpenSearch (Search Engine)
 
 **Service:** OpenSearch distributed search and analytics engine

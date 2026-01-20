@@ -72,6 +72,7 @@ Methods that you want cached must be tagged with the `[IsCacheable]` attribute:
 **Key Formatting:**
 - Use `{parameterName}` to include method parameters in the cache key
 - Use `{model.PropertyName}` to access properties of complex parameters
+- Use `{model.Property.SubProperty}` for nested property chains (unlimited depth)
 - Multiple methods with the same cache key will share cached results
 
 **Examples:**
@@ -91,11 +92,19 @@ public Task GetByModel(ReturnModel model)
     // Returns: cached for 30 seconds with key "bucket1/data/modelValue1/modelValue2"
 }
 
-// Long-lived cache
-[IsCacheable("bucket1/data/{param1}/{param2}", "01:00:00")]
-public Task<ReturnModel> GetData(string param1, string param2)
+// Nested property chains
+[IsCacheable("companies/{company.Address.City}/users", "01:00:00")]
+public Task<User[]> GetUsersByCompanyCity(Company company)
 {
-    // Returns: cached for 1 hour
+    // Returns: cached for 1 hour with key "companies/Seattle/users"
+    // if company.Address.City = "Seattle"
+}
+
+// Mixed parameters and property chains
+[IsCacheable("users/{userId}/orders/{order.Product.Category}", "00:15:00")]
+public Task<OrderDetails> GetOrderDetails(int userId, Order order)
+{
+    // Returns: cached for 15 minutes with complex key
 }
 ```
 
@@ -120,6 +129,12 @@ public Task UpdateData(string param1, string param2)
 public Task UpdateData(ReturnModel model)
 {
     // Clears cache using model properties
+}
+
+[FlushCache("companies/{company.Address.City}/users")]
+public Task UpdateCompanyUsers(Company company)
+{
+    // Clears cache using nested property chain
 }
 ```
 

@@ -17,12 +17,12 @@ This directory contains Docker-based testing infrastructure for running integrat
 
 ## Overview
 
-The integration test stack provides **11 Docker-based services** needed for Integration test category:
+The integration test stack provides **12 Docker-based services** needed for Integration test category:
 
 | Category | Services |
 |----------|----------|
 | **Stateless** | Apache Tika, SMTP4Dev |
-| **Stateful** | MongoDB, SQL Server, RabbitMQ, OpenSearch, Qdrant |
+| **Stateful** | MongoDB, SQL Server, RabbitMQ, Redis, OpenSearch, Qdrant |
 | **Emulators** | Azurite (Azure Storage), LocalStack (AWS) |
 | **Identity** | Keycloak |
 | **AI/ML** | SBert (CPU-only) |
@@ -79,9 +79,13 @@ package "oobd-integration-test-net (Bridge Network)" {
         database "Vector DB" as qdrant
     }
 
-    ' Messaging Services
+    ' Messaging & Caching Services
     component "RabbitMQ\n:5672, :15672" <<Container>> #QUEUE_BG_COLOR {
         queue "Message Queue" as rabbitmq
+    }
+
+    component "Redis\n:6379" <<Container>> #DATABASE_BG_COLOR {
+        database "Cache Store" as redis
     }
 
     ' Cloud Emulators
@@ -152,6 +156,7 @@ note bottom of tests
   - MONGODB_CONNECTION_STRING
   - SQL_CONNECTION_STRING
   - RABBITMQ_HOST
+  - REDIS_CONNECTION_STRING
   - OPENSEARCH_URL
   - QDRANT_URL
   - TIKA_URL
@@ -176,14 +181,14 @@ end note
 │  └──────────┘  └──────────┘  └──────────┘  └──────────┘   │
 │                                                               │
 │  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐   │
-│  │ RabbitMQ │  │OpenSearch│  │  Qdrant  │  │ Azurite  │   │
-│  │  :5672   │  │  :9200   │  │  :6333   │  │  :10000  │   │
+│  │ RabbitMQ │  │  Redis   │  │OpenSearch│  │  Qdrant  │   │
+│  │  :5672   │  │  :6379   │  │  :9200   │  │  :6333   │   │
 │  └──────────┘  └──────────┘  └──────────┘  └──────────┘   │
 │                                                               │
-│  ┌──────────┐  ┌──────────┐  ┌──────────┐                  │
-│  │LocalStack│  │ Keycloak │  │  SBert   │                  │
-│  │  :4566   │  │  :8081   │  │  :5080   │                  │
-│  └──────────┘  └──────────┘  └──────────┘                  │
+│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐   │
+│  │ Azurite  │  │LocalStack│  │ Keycloak │  │  SBert   │   │
+│  │  :10000  │  │  :4566   │  │  :8081   │  │  :5080   │   │
+│  └──────────┘  └──────────┘  └──────────┘  └──────────┘   │
 │                                                               │
 └─────────────────────────────────────────────────────────────┘
          ↑
@@ -206,7 +211,7 @@ end note
 
 - **Docker Desktop** (Windows/Mac) or **Docker Engine** (Linux)
 - **Docker Compose** v2.0+
-- Ports available: 1433, 5672, 6333, 8081, 9200, 9998, 10000-10002, 27017
+- Ports available: 1433, 5672, 6333, 6379, 8081, 9200, 9998, 10000-10002, 27017
 
 ### Start Services (Linux/macOS)
 
@@ -266,6 +271,7 @@ scripts\integration-down.bat --clean
 | **MongoDB** | `mongo:latest` | 27017 | NoSQL document database | `mongosh --eval "db.adminCommand('ping')"` |
 | **SQL Server** | `mcr.microsoft.com/mssql/server:2022-latest` | 1433 | Relational database | `sqlcmd -Q "SELECT 1"` |
 | **RabbitMQ** | `rabbitmq:latest` | 5672 (AMQP)<br>15672 (Management) | Message broker | `rabbitmq-diagnostics ping` |
+| **Redis** | `redis:7-alpine` | 6379 | In-memory cache store | `redis-cli ping` |
 | **OpenSearch** | `opensearchproject/opensearch:latest` | 9200 (HTTP)<br>9600 (Performance) | Search engine | `curl https://localhost:9200/_cluster/health` |
 | **Qdrant** | `qdrant/qdrant` | 6333 (HTTP)<br>6334 (gRPC) | Vector database | `curl http://localhost:6333/health` |
 
@@ -347,6 +353,7 @@ Tests use environment variables for connection strings. See `.env.integration` f
 | `SQL_CONNECTION_STRING` | `Server=localhost,1433;User Id=sa;Password=IntegrationTest123!;TrustServerCertificate=True` | SQL Server connection |
 | `MONGODB_CONNECTION_STRING` | `mongodb://localhost:27017` | MongoDB connection |
 | `RABBITMQ_CONNECTION_STRING` | `amqp://guest:guest@localhost:5672/` | RabbitMQ connection |
+| `REDIS_CONNECTION_STRING` | `localhost:6379` | Redis connection |
 | `OPENSEARCH_URL` | `https://localhost:9200` | OpenSearch endpoint |
 | `QDRANT_URL` | `http://localhost:6333` | Qdrant HTTP endpoint |
 | `TIKA_URL` | `http://localhost:9998` | Apache Tika endpoint |

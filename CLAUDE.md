@@ -319,7 +319,7 @@ OoBDev uses **5 test categories** to organize tests by execution environment and
 
 **Docker-Based Integration Tests:**
 
-Integration tests run against **11 Docker services** managed by the testing infrastructure:
+Integration tests run against **12 Docker services** managed by the testing infrastructure:
 
 ```bash
 # Start Docker services for integration testing
@@ -341,6 +341,7 @@ cd ../containers/testing
 - MongoDB (NoSQL database)
 - SQL Server (Relational database)
 - RabbitMQ (Message queue)
+- Redis (Cache store)
 - OpenSearch (Search engine)
 - Qdrant (Vector database)
 - Azurite (Azure Storage emulator)

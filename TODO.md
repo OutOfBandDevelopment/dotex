@@ -19,10 +19,10 @@ This document is organized into **epic-based files** for better navigation and m
 ### 🧪 [Local Integration Testing (Docker)](./TODO-testing-local-integration.md)
 **Status:** ✅ Week 1 & 2 Complete - ⏳ Awaiting Local Validation
 
-Docker-based integration testing with 11 services (Apache Tika, SMTP4Dev, MongoDB, SQL Server, RabbitMQ, OpenSearch, Qdrant, Azurite, LocalStack, Keycloak, SBert). Infrastructure complete, 19 tests migrated.
+Docker-based integration testing with 12 services (Apache Tika, SMTP4Dev, MongoDB, SQL Server, RabbitMQ, Redis, OpenSearch, Qdrant, Azurite, LocalStack, Keycloak, SBert). Infrastructure complete, 19 tests migrated.
 
 **Key Tasks:**
-- ✅ Docker infrastructure (11 services, compose files, scripts, README with PlantUML)
+- ✅ Docker infrastructure (12 services, compose files, scripts, README with PlantUML)
 - ✅ Test category: Integration (Docker-based, runs in CI/CD)
 - ✅ CI/CD pipeline (complete but DISABLED until validation)
 - ✅ Week 2: Migrated 19 tests from DevLocal to Integration category

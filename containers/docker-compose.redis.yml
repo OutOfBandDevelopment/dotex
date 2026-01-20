@@ -1,0 +1,35 @@
+# Redis Stack - In-memory data structure store
+# Used for caching, session storage, and real-time analytics
+#
+# Usage:
+#   docker compose -f docker-compose.redis.yml up -d
+#   docker compose -f docker-compose.redis.yml down -v
+#
+# Ports:
+#   6379 - Redis server (main)
+#   8001 - RedisInsight web UI (optional, for local development)
+#
+# Health Check:
+#   redis-cli ping (returns "PONG" when healthy)
+
+name: oobd-redis
+
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: oobd-redis
+    ports:
+      - "6379:6379"
+    command: >
+      redis-server
+      --maxmemory 256mb
+      --maxmemory-policy allkeys-lru
+      --appendonly no
+    restart: unless-stopped
+    networks:
+      - oobd-net
+
+networks:
+  oobd-net:
+    name: oobd-net
+    external: true
