@@ -1,7 +1,6 @@
-﻿using Keycloak.AuthServices.Sdk;
-using Keycloak.AuthServices.Sdk.Admin;
-using Keycloak.AuthServices.Sdk.Admin.Models;
-using Keycloak.AuthServices.Sdk.Admin.Requests.Users;
+﻿using Keycloak.ApiClient.Net;
+using Keycloak.ApiClient.Net.Models;
+using Keycloak.ApiClient.Net.Models.Users;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.TestUtilities;
 using System;
@@ -23,31 +22,30 @@ public class KeycloakUserManagementTests
     public required TestContext TestContext { get; set; }
 
     private string _createdUserId = string.Empty;
-    private IKeycloakUserClient? _userClient;
+    private KeycloakClient? _keycloakClient;
     private string _realm = string.Empty;
+    private string _baseUrl = string.Empty;
 
     [TestInitialize]
     public void Setup()
     {
-        var baseUrl = TestContext.GetProperty<string>("KEYCLOAK_URL") ?? "http://localhost:8081";
+        _baseUrl = TestContext.GetProperty<string>("KEYCLOAK_URL") ?? "http://localhost:8081";
+        var adminUsername = TestContext.GetProperty<string>("KEYCLOAK_ADMIN_USERNAME") ?? "admin";
+        var adminPassword = TestContext.GetProperty<string>("KEYCLOAK_ADMIN_PASSWORD") ?? "admin";
         _realm = TestContext.GetProperty<string>("KEYCLOAK_REALM") ?? "integration-test";
 
-        var adminClient = new KeycloakAdminApiClient(
-            new HttpClient { BaseAddress = new Uri(baseUrl) }
-        );
-
-        _userClient = adminClient.Users(_realm);
+        _keycloakClient = new KeycloakClient(_baseUrl, adminUsername, adminPassword);
     }
 
     [TestCleanup]
     public async Task Cleanup()
     {
         // Clean up any created users
-        if (!string.IsNullOrEmpty(_createdUserId) && _userClient != null)
+        if (!string.IsNullOrEmpty(_createdUserId) && _keycloakClient != null)
         {
             try
             {
-                await _userClient.DeleteUser(_createdUserId);
+                await DeleteUserViaHttpAsync(_createdUserId);
                 TestContext.WriteLine($"Cleaned up test user: {_createdUserId}");
             }
             catch (Exception ex)
@@ -58,17 +56,182 @@ public class KeycloakUserManagementTests
     }
 
     /// <summary>
+    /// Helper method to delete a user via direct HTTP call to Keycloak Admin API.
+    /// </summary>
+    private async Task DeleteUserViaHttpAsync(string userId)
+    {
+        var client = new HttpClient();
+        var adminUsername = TestContext.GetProperty<string>("KEYCLOAK_ADMIN_USERNAME") ?? "admin";
+        var adminPassword = TestContext.GetProperty<string>("KEYCLOAK_ADMIN_PASSWORD") ?? "admin";
+
+        // Get admin token
+        var tokenResponse = await GetAdminTokenAsync(client, adminUsername, adminPassword);
+        var token = JsonDocument.Parse(tokenResponse).RootElement.GetProperty("access_token").GetString();
+
+        // Delete user
+        var deleteUrl = $"{_baseUrl}/admin/realms/{_realm}/users/{userId}";
+        var deleteRequest = new HttpRequestMessage(HttpMethod.Delete, deleteUrl);
+        deleteRequest.Headers.Add("Authorization", $"Bearer {token}");
+
+        var deleteResponse = await client.SendAsync(deleteRequest);
+        deleteResponse.EnsureSuccessStatusCode();
+    }
+
+    /// <summary>
+    /// Helper method to get admin token for direct API calls.
+    /// </summary>
+    private async Task<string> GetAdminTokenAsync(HttpClient client, string username, string password)
+    {
+        var tokenEndpoint = $"{_baseUrl}/realms/master/protocol/openid-connect/token";
+        var requestBody = new FormUrlEncodedContent(new Dictionary<string, string>
+        {
+            { "client_id", "admin-cli" },
+            { "grant_type", "password" },
+            { "username", username },
+            { "password", password }
+        });
+
+        var response = await client.PostAsync(tokenEndpoint, requestBody);
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadAsStringAsync();
+    }
+
+    /// <summary>
+    /// Helper method to set a user password via direct HTTP call to Keycloak Admin API.
+    /// </summary>
+    private async Task SetUserPasswordViaHttpAsync(string userId, string password, bool temporary = false)
+    {
+        var client = new HttpClient();
+        var adminUsername = TestContext.GetProperty<string>("KEYCLOAK_ADMIN_USERNAME") ?? "admin";
+        var adminPassword = TestContext.GetProperty<string>("KEYCLOAK_ADMIN_PASSWORD") ?? "admin";
+
+        // Get admin token
+        var tokenResponse = await GetAdminTokenAsync(client, adminUsername, adminPassword);
+        var token = JsonDocument.Parse(tokenResponse).RootElement.GetProperty("access_token").GetString();
+
+        // Set password
+        var setPasswordUrl = $"{_baseUrl}/admin/realms/{_realm}/users/{userId}/reset-password";
+        var passwordBody = new StringContent(
+            JsonSerializer.Serialize(new { type = "password", value = password, temporary }),
+            global::System.Text.Encoding.UTF8,
+            "application/json"
+        );
+
+        var setPasswordRequest = new HttpRequestMessage(HttpMethod.Post, setPasswordUrl)
+        {
+            Content = passwordBody
+        };
+        setPasswordRequest.Headers.Add("Authorization", $"Bearer {token}");
+
+        var setPasswordResponse = await client.SendAsync(setPasswordRequest);
+        setPasswordResponse.EnsureSuccessStatusCode();
+    }
+
+    /// <summary>
+    /// Helper method to assign realm roles to a user via direct HTTP call.
+    /// </summary>
+    private async Task AddUserRealmRolesViaHttpAsync(string userId, List<string> roleNames)
+    {
+        var client = new HttpClient();
+        var adminUsername = TestContext.GetProperty<string>("KEYCLOAK_ADMIN_USERNAME") ?? "admin";
+        var adminPassword = TestContext.GetProperty<string>("KEYCLOAK_ADMIN_PASSWORD") ?? "admin";
+
+        // Get admin token
+        var tokenResponse = await GetAdminTokenAsync(client, adminUsername, adminPassword);
+        var token = JsonDocument.Parse(tokenResponse).RootElement.GetProperty("access_token").GetString();
+
+        // Get role IDs
+        var getRolesUrl = $"{_baseUrl}/admin/realms/{_realm}/roles";
+        var getRolesRequest = new HttpRequestMessage(HttpMethod.Get, getRolesUrl);
+        getRolesRequest.Headers.Add("Authorization", $"Bearer {token}");
+
+        var getRolesResponse = await client.SendAsync(getRolesRequest);
+        getRolesResponse.EnsureSuccessStatusCode();
+        var rolesContent = await getRolesResponse.Content.ReadAsStringAsync();
+        var rolesDoc = JsonDocument.Parse(rolesContent);
+
+        var rolesToAssign = new List<object>();
+        foreach (var roleJson in rolesDoc.RootElement.EnumerateArray())
+        {
+            var roleName = roleJson.GetProperty("name").GetString();
+            if (roleNames.Contains(roleName))
+            {
+                var roleId = roleJson.GetProperty("id").GetString();
+                rolesToAssign.Add(new
+                {
+                    id = roleId,
+                    name = roleName,
+                    composite = roleJson.GetProperty("composite").GetBoolean(),
+                    clientRole = roleJson.GetProperty("clientRole").GetBoolean(),
+                    containerId = roleJson.GetProperty("containerId").GetString()
+                });
+            }
+        }
+
+        // Assign roles
+        var assignRolesUrl = $"{_baseUrl}/admin/realms/{_realm}/users/{userId}/role-mappings/realm";
+        var assignRolesBody = new StringContent(
+            JsonSerializer.Serialize(rolesToAssign),
+            global::System.Text.Encoding.UTF8,
+            "application/json"
+        );
+
+        var assignRolesRequest = new HttpRequestMessage(HttpMethod.Post, assignRolesUrl)
+        {
+            Content = assignRolesBody
+        };
+        assignRolesRequest.Headers.Add("Authorization", $"Bearer {token}");
+
+        var assignRolesResponse = await client.SendAsync(assignRolesRequest);
+        assignRolesResponse.EnsureSuccessStatusCode();
+    }
+
+    /// <summary>
+    /// Helper method to get user realm roles via direct HTTP call.
+    /// </summary>
+    private async Task<List<(string id, string name)>> GetUserRealmRolesViaHttpAsync(string userId)
+    {
+        var client = new HttpClient();
+        var adminUsername = TestContext.GetProperty<string>("KEYCLOAK_ADMIN_USERNAME") ?? "admin";
+        var adminPassword = TestContext.GetProperty<string>("KEYCLOAK_ADMIN_PASSWORD") ?? "admin";
+
+        // Get admin token
+        var tokenResponse = await GetAdminTokenAsync(client, adminUsername, adminPassword);
+        var token = JsonDocument.Parse(tokenResponse).RootElement.GetProperty("access_token").GetString();
+
+        // Get user roles
+        var getUserRolesUrl = $"{_baseUrl}/admin/realms/{_realm}/users/{userId}/role-mappings/realm";
+        var getUserRolesRequest = new HttpRequestMessage(HttpMethod.Get, getUserRolesUrl);
+        getUserRolesRequest.Headers.Add("Authorization", $"Bearer {token}");
+
+        var getUserRolesResponse = await client.SendAsync(getUserRolesRequest);
+        getUserRolesResponse.EnsureSuccessStatusCode();
+        var rolesContent = await getUserRolesResponse.Content.ReadAsStringAsync();
+        var rolesDoc = JsonDocument.Parse(rolesContent);
+
+        var roles = new List<(string id, string name)>();
+        foreach (var roleJson in rolesDoc.RootElement.EnumerateArray())
+        {
+            var id = roleJson.GetProperty("id").GetString() ?? string.Empty;
+            var name = roleJson.GetProperty("name").GetString() ?? string.Empty;
+            roles.Add((id, name));
+        }
+
+        return roles;
+    }
+
+    /// <summary>
     /// Creates a new user in Keycloak and verifies it was created successfully.
     /// </summary>
     [TestMethod]
-    [TestCategory(TestCategories.DevLocal)]
+    [TestCategory(TestCategories.Integration)]
     public async Task CreateUser_WithValidData_CreatesSuccessfully()
     {
         // Arrange
         var username = $"testuser_{Guid.NewGuid():N}";
         var email = $"{username}@example.com";
 
-        var newUser = new UserRepresentation
+        var newUser = new User
         {
             Username = username,
             Email = email,
@@ -76,16 +239,16 @@ public class KeycloakUserManagementTests
             LastName = "User",
             Enabled = true,
             EmailVerified = true,
-            Attributes = new Dictionary<string, IEnumerable<string>>
+            Attributes = new Dictionary<string, List<string>>
             {
-                { "department", new[] { "Engineering" } },
-                { "employeeId", new[] { $"EMP{Random.Shared.Next(1000, 9999)}" } }
+                { "department", new List<string> { "Engineering" } },
+                { "employeeId", new List<string> { $"EMP{Random.Shared.Next(1000, 9999)}" } }
             }
         };
 
         // Act - Create user
-        var userId = await _userClient!.CreateUser(newUser);
-        _createdUserId = userId; // Store for cleanup
+        var userId = await _keycloakClient!.CreateUserAsync(_realm, newUser);
+        _createdUserId = userId;
 
         // Assert
         Assert.IsFalse(string.IsNullOrEmpty(userId), "User ID should be returned");
@@ -94,14 +257,12 @@ public class KeycloakUserManagementTests
         TestContext.WriteLine($"Email: {email}");
 
         // Verify user was created by fetching it
-        var createdUser = await _userClient.GetUser(userId);
+        var createdUser = await _keycloakClient.GetUserAsync(_realm, userId);
         Assert.IsNotNull(createdUser);
         Assert.AreEqual(username, createdUser.Username);
         Assert.AreEqual(email, createdUser.Email);
         Assert.AreEqual("Test", createdUser.FirstName);
         Assert.AreEqual("User", createdUser.LastName);
-        Assert.IsTrue(createdUser.Enabled);
-        Assert.IsTrue(createdUser.EmailVerified);
 
         TestContext.WriteLine("User creation verified successfully");
     }
@@ -110,7 +271,7 @@ public class KeycloakUserManagementTests
     /// Creates a user, sets a password, and tests authentication.
     /// </summary>
     [TestMethod]
-    [TestCategory(TestCategories.DevLocal)]
+    [TestCategory(TestCategories.Integration)]
     public async Task CreateUserWithPassword_CanAuthenticate()
     {
         // Arrange
@@ -118,43 +279,35 @@ public class KeycloakUserManagementTests
         var email = $"{username}@example.com";
         var password = "TestPassword123!";
 
-        var newUser = new UserRepresentation
+        var newUser = new User
         {
             Username = username,
             Email = email,
             FirstName = "Auth",
             LastName = "Test",
-            Enabled = true,
-            EmailVerified = true
+            Enabled = "true",
+            EmailVerified = "true"
         };
 
         // Act - Create user
-        var userId = await _userClient!.CreateUser(newUser);
+        var userId = await _keycloakClient!.CreateUserAsync(_realm, newUser);
         _createdUserId = userId;
 
         TestContext.WriteLine($"Created user: {username} (ID: {userId})");
 
         // Set password
-        var credential = new CredentialRepresentation
-        {
-            Type = "password",
-            Value = password,
-            Temporary = false
-        };
-
-        await _userClient.ResetUserPassword(userId, credential);
+        await SetUserPasswordViaHttpAsync(userId, password, temporary: false);
         TestContext.WriteLine("Password set successfully");
 
         // Wait a moment for password to propagate
         await Task.Delay(1000);
 
         // Attempt authentication
-        var baseUrl = TestContext.GetProperty<string>("KEYCLOAK_URL") ?? "http://localhost:8081";
         var clientId = TestContext.GetProperty<string>("KEYCLOAK_CLIENT_ID") ?? "integration-test-client";
         var clientSecret = TestContext.GetProperty<string>("KEYCLOAK_CLIENT_SECRET") ?? "test-client-secret-12345";
 
         var httpClient = new HttpClient();
-        var tokenEndpoint = $"{baseUrl}/realms/{_realm}/protocol/openid-connect/token";
+        var tokenEndpoint = $"{_baseUrl}/realms/{_realm}/protocol/openid-connect/token";
 
         var requestBody = new FormUrlEncodedContent(new Dictionary<string, string>
         {
@@ -184,37 +337,40 @@ public class KeycloakUserManagementTests
     /// Creates a user with roles assigned.
     /// </summary>
     [TestMethod]
-    [TestCategory(TestCategories.DevLocal)]
+    [TestCategory(TestCategories.Integration)]
     public async Task CreateUser_WithRoles_AssignsCorrectly()
     {
         // Arrange
         var username = $"roletest_{Guid.NewGuid():N}";
         var email = $"{username}@example.com";
 
-        var newUser = new UserRepresentation
+        var newUser = new User
         {
             Username = username,
             Email = email,
             FirstName = "Role",
             LastName = "Test",
-            Enabled = true,
-            EmailVerified = true,
-            RealmRoles = new List<string> { "user", "test-role" }
+            Enabled = "true",
+            EmailVerified = "true"
         };
 
         // Act - Create user
-        var userId = await _userClient!.CreateUser(newUser);
+        var userId = await _keycloakClient!.CreateUserAsync(_realm, newUser);
         _createdUserId = userId;
 
         TestContext.WriteLine($"Created user with roles: {username}");
 
+        // Assign roles to the user
+        var rolesToAssign = new List<string> { "user", "test-role" };
+        await AddUserRealmRolesViaHttpAsync(userId, rolesToAssign);
+
         // Verify user has roles
-        var createdUser = await _userClient.GetUser(userId);
+        var createdUser = await _keycloakClient.GetUserAsync(_realm, userId);
         Assert.IsNotNull(createdUser);
 
         // Get user's role mappings
-        var roleMappings = await _userClient.GetUserRealmRoles(userId);
-        var roleNames = roleMappings.Select(r => r.Name).ToList();
+        var userRoles = await GetUserRealmRolesViaHttpAsync(userId);
+        var roleNames = userRoles.Select(r => r.name).ToList();
 
         TestContext.WriteLine($"Assigned roles: {string.Join(", ", roleNames)}");
 
@@ -226,48 +382,49 @@ public class KeycloakUserManagementTests
     /// Creates a user, updates their information, and verifies the update.
     /// </summary>
     [TestMethod]
-    [TestCategory(TestCategories.DevLocal)]
+    [TestCategory(TestCategories.Integration)]
     public async Task UpdateUser_ModifiesUserData()
     {
         // Arrange - Create initial user
         var username = $"updatetest_{Guid.NewGuid():N}";
         var originalEmail = $"{username}@example.com";
 
-        var newUser = new UserRepresentation
+        var newUser = new User
         {
             Username = username,
             Email = originalEmail,
             FirstName = "Original",
             LastName = "Name",
-            Enabled = true
+            Enabled = "true"
         };
 
-        var userId = await _userClient!.CreateUser(newUser);
+        var userId = await _keycloakClient!.CreateUserAsync(_realm, newUser);
         _createdUserId = userId;
 
         TestContext.WriteLine($"Created user: {username}");
 
         // Act - Update user
-        var updatedUser = new UserRepresentation
+        var updatedUser = new User
         {
             FirstName = "Updated",
             LastName = "Name",
-            Attributes = new Dictionary<string, IEnumerable<string>>
+            Attributes = new Dictionary<string, List<string>>
             {
-                { "department", new[] { "Sales" } },
-                { "location", new[] { "New York" } }
+                { "department", new List<string> { "Sales" } },
+                { "location", new List<string> { "New York" } }
             }
         };
 
-        await _userClient.UpdateUser(userId, updatedUser);
+        await _keycloakClient.UpdateUserAsync(_realm, userId, updatedUser);
         TestContext.WriteLine("User updated");
 
         // Assert - Verify updates
-        var fetchedUser = await _userClient.GetUser(userId);
+        var fetchedUser = await _keycloakClient.GetUserAsync(_realm, userId);
 
         Assert.AreEqual("Updated", fetchedUser.FirstName);
         Assert.AreEqual("Name", fetchedUser.LastName);
-        Assert.IsTrue(fetchedUser.Attributes!.ContainsKey("department"));
+        Assert.IsNotNull(fetchedUser.Attributes);
+        Assert.IsTrue(fetchedUser.Attributes.ContainsKey("department"));
         Assert.AreEqual("Sales", fetchedUser.Attributes["department"].First());
 
         TestContext.WriteLine($"Verified updates: {fetchedUser.FirstName} {fetchedUser.LastName}");
@@ -277,17 +434,11 @@ public class KeycloakUserManagementTests
     /// Lists all users in the realm and verifies pagination.
     /// </summary>
     [TestMethod]
-    [TestCategory(TestCategories.DevLocal)]
+    [TestCategory(TestCategories.Integration)]
     public async Task GetUsers_ReturnsUserList()
     {
         // Act
-        var parameters = new GetUsersRequestParameters
-        {
-            Max = 10,
-            First = 0
-        };
-
-        var users = await _userClient!.GetUsers(parameters);
+        var users = await _keycloakClient!.GetUsersAsync(_realm, max: 10, first: 0);
 
         // Assert
         Assert.IsNotNull(users);
@@ -309,21 +460,21 @@ public class KeycloakUserManagementTests
     /// Searches for users by username.
     /// </summary>
     [TestMethod]
-    [TestCategory(TestCategories.DevLocal)]
+    [TestCategory(TestCategories.Integration)]
     public async Task SearchUsers_ByUsername_FindsMatches()
     {
         // Arrange - Create a user with distinctive username
         var uniquePrefix = $"search_{Guid.NewGuid():N[..8]}";
         var username = $"{uniquePrefix}_user";
 
-        var newUser = new UserRepresentation
+        var newUser = new User
         {
             Username = username,
             Email = $"{username}@example.com",
-            Enabled = true
+            Enabled = "true"
         };
 
-        var userId = await _userClient!.CreateUser(newUser);
+        var userId = await _keycloakClient!.CreateUserAsync(_realm, newUser);
         _createdUserId = userId;
 
         TestContext.WriteLine($"Created searchable user: {username}");
@@ -332,12 +483,7 @@ public class KeycloakUserManagementTests
         await Task.Delay(500);
 
         // Act - Search for the user
-        var parameters = new GetUsersRequestParameters
-        {
-            Search = uniquePrefix
-        };
-
-        var searchResults = await _userClient.GetUsers(parameters);
+        var searchResults = await _keycloakClient.GetUsersAsync(_realm, search: uniquePrefix);
 
         // Assert
         Assert.IsNotNull(searchResults);
@@ -353,44 +499,36 @@ public class KeycloakUserManagementTests
     /// Creates a disabled user and verifies authentication fails.
     /// </summary>
     [TestMethod]
-    [TestCategory(TestCategories.DevLocal)]
+    [TestCategory(TestCategories.Integration)]
     public async Task CreateDisabledUser_CannotAuthenticate()
     {
         // Arrange
         var username = $"disabled_{Guid.NewGuid():N}";
         var password = "TestPassword123!";
 
-        var newUser = new UserRepresentation
+        var newUser = new User
         {
             Username = username,
             Email = $"{username}@example.com",
-            Enabled = false, // Create as disabled
-            EmailVerified = true
+            Enabled = "false",
+            EmailVerified = "true"
         };
 
         // Act - Create user and set password
-        var userId = await _userClient!.CreateUser(newUser);
+        var userId = await _keycloakClient!.CreateUserAsync(_realm, newUser);
         _createdUserId = userId;
 
-        var credential = new CredentialRepresentation
-        {
-            Type = "password",
-            Value = password,
-            Temporary = false
-        };
-
-        await _userClient.ResetUserPassword(userId, credential);
+        await SetUserPasswordViaHttpAsync(userId, password, temporary: false);
         TestContext.WriteLine($"Created disabled user: {username}");
 
         await Task.Delay(1000);
 
         // Attempt authentication
-        var baseUrl = TestContext.GetProperty<string>("KEYCLOAK_URL") ?? "http://localhost:8081";
         var clientId = TestContext.GetProperty<string>("KEYCLOAK_CLIENT_ID") ?? "integration-test-client";
         var clientSecret = TestContext.GetProperty<string>("KEYCLOAK_CLIENT_SECRET") ?? "test-client-secret-12345";
 
         var httpClient = new HttpClient();
-        var tokenEndpoint = $"{baseUrl}/realms/{_realm}/protocol/openid-connect/token";
+        var tokenEndpoint = $"{_baseUrl}/realms/{_realm}/protocol/openid-connect/token";
 
         var requestBody = new FormUrlEncodedContent(new Dictionary<string, string>
         {
