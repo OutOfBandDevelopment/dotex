@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\OoBDev.Caching.Abstractions\OoBDev.Caching.Abstractions.csproj" />
+    <ProjectReference Include="..\OoBDev.System\OoBDev.System.csproj" />
   </ItemGroup>
 
   <ItemGroup>

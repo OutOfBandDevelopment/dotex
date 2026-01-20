@@ -14,6 +14,7 @@ using OoBDev.System.Text;
 using OoBDev.System.Text.Json.Serialization;
 using OoBDev.System.Text.Templating;
 using OoBDev.System.Text.Xml.Serialization;
+using OoBDev.System.Utilities;
 
 namespace OoBDev.System;
 
@@ -194,6 +195,9 @@ public static class ServiceCollectionExtensions
         services.TryAddSingleton<IGuidProvider, GuidProvider>();
 
         services.TryAddSingleton<ITempFileFactory, TempFileFactory>();
+
+        services.TryAddSingleton<IStringFormatter, StringFormatter>();
+        services.TryAddSingleton(typeof(ISelectedService<>), typeof(SelectedService<>));
 
         return services;
     }

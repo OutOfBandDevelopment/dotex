@@ -33,7 +33,7 @@ public class CacheableFactory : ICacheableFactory
             TImplemention instance => CachedProxy<TInterface, TImplemention>.Create(
                 instance, 
                 _cachingManager, 
-                _serviceProvider.GetRequiredService<ILogger<TImplemention>>()
+                _serviceProvider.GetRequiredService<ILogger<TImplemention>>() //TODO: what if this took ILoggerFactory instead
                 ),
             _ => throw new ApplicationException($"Unable to created instance of {typeof(TImplemention)}")
         };

@@ -30,13 +30,11 @@ public class CacheableFactoryTests
         this.mockConfiguration = this.mockRepository.Create<IConfiguration>();
     }
 
-    private CacheableFactory CreateFactory()
-    {
-        return new CacheableFactory(
+    private CacheableFactory CreateFactory() => new(
             this.mockServiceProvider.Object,
             this.mockCachingManager.Object,
-            this.mockConfiguration.Object);
-    }
+            this.mockConfiguration.Object
+        );
 
     public interface ITestObject
     {
@@ -53,9 +51,11 @@ public class CacheableFactoryTests
 
         // Mock
         mockConfiguration.Setup(s => s[CacheableFactory.DisabledConfigurationKey]).Returns("false");
-        //mockServiceProvider.Setup(s => s.GetService(typeof(ILogger<TestObject>)))
-        //                                .Returns(this.TestContext.GetTestLoggingServices<TestObject>()
-        //                                );
+        mockServiceProvider.Setup(s => s.GetService(typeof(Microsoft.Extensions.DependencyInjection.IServiceProviderIsService)))
+                                        .Returns(null);
+        mockServiceProvider.Setup(s => s.GetService(typeof(ILogger<TestObject>)))
+                                        .Returns(this.TestContext.GetLogger<TestObject>()
+                                        );
 
         // Test
         var factory = this.CreateFactory();
@@ -64,8 +64,8 @@ public class CacheableFactoryTests
 
         // Assert
         Assert.IsNotNull(result);
-        Assert.IsNotInstanceOfType(result, typeof(TestObject));
-        Assert.IsInstanceOfType(result, typeof(CachedProxy<ITestObject, TestObject>));
+        Assert.IsNotInstanceOfType<TestObject>(result);
+        Assert.IsInstanceOfType<CachedProxy<ITestObject, TestObject>>(result);
 
         // Verify
         this.mockRepository.VerifyAll();
@@ -79,6 +79,8 @@ public class CacheableFactoryTests
 
         // Mock
         mockConfiguration.Setup(s => s[CacheableFactory.DisabledConfigurationKey]).Returns("true");
+        mockServiceProvider.Setup(s => s.GetService(typeof(Microsoft.Extensions.DependencyInjection.IServiceProviderIsService)))
+                                        .Returns(null);
 
         // Test
         var factory = this.CreateFactory();

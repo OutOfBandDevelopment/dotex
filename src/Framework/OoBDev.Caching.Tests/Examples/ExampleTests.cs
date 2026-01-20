@@ -1,5 +1,7 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using OoBDev.Caching.Tests.Providers;
 using OoBDev.TestUtilities;
 using OoBDev.TestUtilities.Logging;
 using System;
@@ -17,13 +19,16 @@ public class ExampleTests
     [TestCategory(TestCategories.Simulate)]
     public async Task CachingDesignTest()
     {
+        var configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection()
+            .Build();
+
         var services = new ServiceCollection()
+            .AddSingleton<IConfiguration>(configuration)
             .AddTestLoggingServices(TestContext)
-            //.AddDebugTestConfigurations(
-            //    (ConnectionMultiplexerFactory.SourceConfigurationKey, "localhost")
-            //    )
             .AddOptions() //this needs added to startup projects
             .AddCachingServices()
+            .AddSingleton<ICachingProvider, NullCachingProvider>() // Default no-op provider for tests
             //.AddMicrosoftCachingServices()
             //.AddRedisCachingServices()
             //.AddToolkitServices()

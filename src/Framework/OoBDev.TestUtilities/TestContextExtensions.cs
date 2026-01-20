@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 using OoBDev.System.Reflection;
+using Microsoft.Extensions.Logging;
 
 namespace OoBDev.TestUtilities;
 
@@ -26,6 +27,9 @@ namespace OoBDev.TestUtilities;
 /// </summary>
 public static class TestContextExtensions
 {
+
+    public static ILogger<T> GetLogger<T>(this TestContext testContext) => TestLogger.CreateLogger<T>();
+
     public static T? GetProperty<T>(this TestContext testContext, string parameter)
     {
         try

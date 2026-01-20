@@ -105,6 +105,7 @@ public class RedisCachingProviderTests
         // Verify
         this.mockRepository.VerifyAll();
     }
+
     [TestMethod]
     [TestCategory(TestCategories.Unit)]
     public async Task RetreiveAsyncTest()
@@ -122,7 +123,7 @@ public class RedisCachingProviderTests
         mockConnectionMultiplexerFactory.Setup(s => s.Create()).Returns(mockConnectionMultiplexer.Object);
         mockConnectionMultiplexer.Setup(s => s.GetDatabase(It.IsAny<int>(), It.IsAny<object>())).Returns(mockDatabase.Object);
         mockDatabase.Setup(s => s.StringGetAsync(It.IsAny<RedisKey>(), It.IsAny<CommandFlags>())).ReturnsAsync(redisValue);
-        //mockObjectConverter.Setup(s => s.ConvertAsync(testValue, targetType)).ReturnsAsync(testValue);
+        mockObjectConverter.Setup(s => s.Convert(It.IsAny<object>(), targetType)).Returns(testValue);
 
         // Test
         var provider = this.CreateProvider();
@@ -165,7 +166,7 @@ public class RedisCachingProviderTests
         // Stage
         var key = Guid.NewGuid().ToString();
         var data = new { };
-        var testValue = data.ToString();
+        var testValue = "{}";
         var expiration = new TimeSpan(1234, 23, 24);
 
         // Mock
@@ -173,16 +174,14 @@ public class RedisCachingProviderTests
         var mockDatabase = mockRepository.Create<IDatabase>();
         mockConnectionMultiplexerFactory.Setup(s => s.Create()).Returns(mockConnectionMultiplexer.Object);
         mockConnectionMultiplexer.Setup(s => s.GetDatabase(It.IsAny<int>(), It.IsAny<object>())).Returns(mockDatabase.Object);
-        //mockObjectConverter.Setup(s => s.ToJsonAsync(data)).ReturnsAsync(testValue);
+        mockJsonSerializer.Setup(s => s.Serialize(It.IsAny<object>(), It.IsAny<Type>())).Returns(testValue);
         mockDatabase.Setup(s => s.StringSetAsync(
             It.IsAny<RedisKey>(),
             It.IsAny<RedisValue>(),
-            It.Is<TimeSpan>(i => i == expiration),
-            It.IsAny<bool>(),
-            It.IsAny<When>(),
+            It.IsAny<Expiration>(),
+            It.IsAny<ValueCondition>(),
             It.IsAny<CommandFlags>()
             )).ReturnsAsync(true);
-        // ba6a000f-fe44-4aca-93e4-23ee66b66ea7, { }, 51.10:23:24, False, When.Always, CommandFlags.None
 
         // Test
         var provider = this.CreateProvider();
