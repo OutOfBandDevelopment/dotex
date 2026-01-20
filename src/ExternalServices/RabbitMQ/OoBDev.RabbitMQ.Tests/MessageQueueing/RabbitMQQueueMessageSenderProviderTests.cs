@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace OoBDev.RabbitMQ.Tests.MessageQueueing;
 
@@ -30,6 +31,7 @@ public class RabbitMQQueueMessageSenderProviderTests
     public async Task SendAsyncTest_ByFullType()
     {
         var rabbitMQHost = TestContext.GetRequiredProperty<string>("RABBITMQ_HOST");
+        var rabbitMQPort = TestContext.GetPropertyOrDefault("RABBITMQ_PORT", 5672);
 
         var configBuilder = new ConfigurationBuilder();
 
@@ -38,7 +40,9 @@ public class RabbitMQQueueMessageSenderProviderTests
             {$"MessageQueue:{QueueConfig}:Provider", typeof(RabbitMQQueueMessageProvider).AssemblyQualifiedName },
 
             {$"MessageQueue:{QueueConfig}:Config:HostName", rabbitMQHost },
+            {$"MessageQueue:{QueueConfig}:Config:Port", rabbitMQPort.ToString() },
             {$"MessageQueue:{QueueConfig}:Config:QueueName", "test-queue" },
+            {$"MessageQueue:{QueueConfig}:Config:RequestedConnectionTimeout", "2000" }, // 2 second timeout
         });
 
         var config = configBuilder.Build();
@@ -61,6 +65,7 @@ public class RabbitMQQueueMessageSenderProviderTests
     public async Task SendAsyncTest_ByKeyed()
     {
         var rabbitMQHost = TestContext.GetRequiredProperty<string>("RABBITMQ_HOST");
+        var rabbitMQPort = TestContext.GetPropertyOrDefault("RABBITMQ_PORT", 5672);
 
         var configBuilder = new ConfigurationBuilder();
 
@@ -69,7 +74,9 @@ public class RabbitMQQueueMessageSenderProviderTests
             {$"MessageQueue:{QueueConfig}:Provider", RabbitMQGlobals.MessageProviderKey },
 
             {$"MessageQueue:{QueueConfig}:Config:HostName", rabbitMQHost },
+            {$"MessageQueue:{QueueConfig}:Config:Port", rabbitMQPort.ToString() },
             {$"MessageQueue:{QueueConfig}:Config:QueueName", "test-queue" },
+            {$"MessageQueue:{QueueConfig}:Config:RequestedConnectionTimeout", "2000" }, // 2 second timeout
 
         });
 
@@ -89,10 +96,11 @@ public class RabbitMQQueueMessageSenderProviderTests
     }
 
     [TestMethod]
-    [TestCategory(TestCategories.Integration)]
+    [TestCategory(TestCategories.DevLocal)]
     public async Task FindProviderTests()
     {
         var rabbitMQHost = TestContext.GetRequiredProperty<string>("RABBITMQ_HOST");
+        var rabbitMQPort = TestContext.GetPropertyOrDefault("RABBITMQ_PORT", 5672);
 
         var configBuilder = new ConfigurationBuilder();
 
@@ -101,10 +109,11 @@ public class RabbitMQQueueMessageSenderProviderTests
             {$"MessageQueue:{QueueConfig}:Provider", RabbitMQGlobals.MessageProviderKey },
 
             {$"MessageQueue:{QueueConfig}:Config:HostName", rabbitMQHost },
+            {$"MessageQueue:{QueueConfig}:Config:Port", rabbitMQPort.ToString() },
             {$"MessageQueue:{QueueConfig}:Config:QueueName", "test-queue" },
+            {$"MessageQueue:{QueueConfig}:Config:RequestedConnectionTimeout", "2000" }, // 2 second timeout
 
             {$"MessageQueue:Default:Provider", InProcessMessageProvider.MessageProviderKey },
-
         });
 
         var config = configBuilder.Build();
@@ -144,13 +153,13 @@ public class RabbitMQQueueMessageSenderProviderTests
                 for (var y = 0; y < x; y++)
                 {
                     object message = y % 2 == 0 ? new TestQueueMessage() : new { Hello = "There" };
-                    Console.WriteLine($"----------: Send {DateTimeOffset.Now} :---------- [{message}]");
+                    Debug.WriteLine($"----------: Send {DateTimeOffset.Now} :---------- [{message}]");
                     var id = await sender.SendAsync(message);
                     var id2 = await sender2.SendAsync(message);
-                    Console.WriteLine($"----------: Sent {DateTimeOffset.Now} :---------- [{id}]"); ///{id2}
+                    Debug.WriteLine($"----------: Sent {DateTimeOffset.Now} :---------- [{id}]"); ///{id2}
                 }
 
-                Console.WriteLine($"----------: Waiting {DateTimeOffset.Now} :---------- ");
+                Debug.WriteLine($"----------: Waiting {DateTimeOffset.Now} :---------- ");
 
                 await Task.Delay(1000);
             }

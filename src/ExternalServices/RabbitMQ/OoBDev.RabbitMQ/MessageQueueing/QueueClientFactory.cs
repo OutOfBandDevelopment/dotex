@@ -25,6 +25,37 @@ public class QueueClientFactory : IQueueClientFactory
         {
             HostName = config[nameof(ConnectionFactory.HostName)] ?? throw new ConfigurationMissingException($"{config.Path}:{nameof(ConnectionFactory.HostName)}"),
         };
+
+        // Optional: Port (default 5672)
+        if (int.TryParse(config[nameof(ConnectionFactory.Port)], out var port))
+        {
+            factory.Port = port;
+        }
+
+        // Optional: Username (default "guest")
+        if (config[nameof(ConnectionFactory.UserName)] is { } userName)
+        {
+            factory.UserName = userName;
+        }
+
+        // Optional: Password (default "guest")
+        if (config[nameof(ConnectionFactory.Password)] is { } password)
+        {
+            factory.Password = password;
+        }
+
+        // Optional: Connection timeout (default 30 seconds) - set to shorter for tests
+        if (int.TryParse(config[nameof(ConnectionFactory.RequestedConnectionTimeout)], out var connectionTimeout))
+        {
+            factory.RequestedConnectionTimeout = TimeSpan.FromMilliseconds(connectionTimeout);
+        }
+
+        // Optional: Handshake timeout (default 10 seconds)
+        if (int.TryParse(config[nameof(ConnectionFactory.HandshakeContinuationTimeout)], out var handshakeTimeout))
+        {
+            factory.HandshakeContinuationTimeout = TimeSpan.FromMilliseconds(handshakeTimeout);
+        }
+
         var connection = await factory.CreateConnectionAsync();
         var channel = await connection.CreateChannelAsync();
 

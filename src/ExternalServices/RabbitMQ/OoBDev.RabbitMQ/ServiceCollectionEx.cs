@@ -1,4 +1,4 @@
-using OoBDev.MessageQueueing.Services;
+﻿using OoBDev.MessageQueueing.Services;
 using OoBDev.RabbitMQ.MessageQueueing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;

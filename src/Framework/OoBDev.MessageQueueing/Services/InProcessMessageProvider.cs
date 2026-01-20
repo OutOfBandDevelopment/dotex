@@ -1,4 +1,4 @@
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Concurrent;
 using System.Threading;
@@ -18,7 +18,7 @@ public class InProcessMessageProvider(
     ) : IMessageSenderProvider, IMessageReceiverProvider
 {
     private IMessageHandlerProvider? _handlerProvider;
-    private static readonly ConcurrentQueue<WrappedQueueMessage> _queue = new();
+    private readonly ConcurrentQueue<WrappedQueueMessage> _queue = new();
 
     /// <summary>
     /// Gets the key associated with the in-process message provider.

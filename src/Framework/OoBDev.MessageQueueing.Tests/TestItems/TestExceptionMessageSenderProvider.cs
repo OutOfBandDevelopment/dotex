@@ -1,4 +1,4 @@
-using OoBDev.MessageQueueing.Services;
+﻿using OoBDev.MessageQueueing.Services;
 using System;
 using System.Threading.Tasks;
 

@@ -1,4 +1,4 @@
-using OoBDev.MessageQueueing.Services;
+﻿using OoBDev.MessageQueueing.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
@@ -28,8 +28,19 @@ public static class ServiceCollectionExtensions
         services.TryAddTransient<IMessageHandlerProvider, MessageHandlerProvider>();
         services.TryAddTransient<IMessageReceiverProviderFactory, MessageReceiverProviderFactory>();
 
-        services.AddTransient<IMessageSenderProvider, InProcessMessageProvider>();
-        services.TryAddKeyedTransient<IMessageSenderProvider, InProcessMessageProvider>(InProcessMessageProvider.MessageProviderKey);
+        services.TryAddSingleton<InProcessMessageProvider>();
+
+        services.AddTransient<IMessageSenderProvider>(sp => sp.GetRequiredService<InProcessMessageProvider>());
+        services.TryAddKeyedTransient<IMessageSenderProvider>(
+            InProcessMessageProvider.MessageProviderKey,
+            (sp, _) => sp.GetRequiredService<InProcessMessageProvider>()
+            );
+
+        services.AddTransient<IMessageReceiverProvider>(sp => sp.GetRequiredService<InProcessMessageProvider>());
+        services.TryAddKeyedTransient<IMessageReceiverProvider>(
+            InProcessMessageProvider.MessageProviderKey,
+            (sp, _) => sp.GetRequiredService<InProcessMessageProvider>()
+            );
 
         return services;
     }

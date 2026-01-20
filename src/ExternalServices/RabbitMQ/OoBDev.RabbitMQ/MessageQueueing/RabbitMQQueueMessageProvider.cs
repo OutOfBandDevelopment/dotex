@@ -55,24 +55,33 @@ public class RabbitMQQueueMessageProvider(
         using (connection)
         using (channel)
         {
-            //string exchange,
-            //    string routingKey,
-            //    bool mandatory,
-            //    TProperties basicProperties,
-            //    ReadOnlyMemory<byte> body,
-            //    CancellationToken cancellationToken = default
-            //    ) where TProperties : IReadOnlyBasicProperties, IAmqpHeader;
+            // Declare the queue to ensure it exists
+            await channel.QueueDeclareAsync(
+                queue: queueName,
+                durable: true,
+                exclusive: false,
+                autoDelete: false,
+                arguments: null);
 
-            //TODO: fix this!
-            //await channel.BasicPublishAsync(
-            //    exchange: string.Empty,
-            //                     routingKey: queueName,
-            //                     basicProperties: null,
-            //                     mandatory: true,
-            //                     body: body);
-            throw new NotSupportedException();
+            // Create basic properties for the message
+            var properties = new BasicProperties
+            {
+                CorrelationId = context.CorrelationId,
+                ContentType = "application/json",
+                DeliveryMode = DeliveryModes.Persistent
+            };
 
-            //return context.CorrelationId;
+            // Publish the message
+            await channel.BasicPublishAsync(
+                exchange: string.Empty,
+                routingKey: queueName,
+                mandatory: true,
+                basicProperties: properties,
+                body: body);
+
+            logger.LogInformation("Enqueue: {CorrelationId}", context.CorrelationId);
+
+            return context.CorrelationId;
         }
     }
 

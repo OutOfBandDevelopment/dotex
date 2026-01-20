@@ -1,4 +1,4 @@
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using OoBDev.Amazon.Sqs.MessageQueueing;
 using OoBDev.MessageQueueing.Services;
