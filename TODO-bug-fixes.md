@@ -87,10 +87,39 @@ This document tracks bug fixes, breaking changes, and technical debt resolution.
   - Replacement pattern (if needed): Use `IHttpContextAccessor` and `HttpContext.GetEndpoint()`
   - Location: Line 57 (removed)
 
-**Remaining:**
-- [ ] Verify build: `dotnet build src/Framework/OoBDev.AspNetCore.Mvc/OoBDev.AspNetCore.Mvc.csproj`
+**File: Directory.Build.props** (2026-01-20)
+- [x] Enabled XML documentation file generation globally
+  - Changed from: `<!--<GenerateDocumentationFile>False</GenerateDocumentationFile>-->`
+  - Changed to: `<GenerateDocumentationFile>True</GenerateDocumentationFile>`
+  - Reason: Swagger Summary and Description properties require XML documentation files
+  - Location: Line 19
+
+**File: OoBDev.AspNetCore.Mvc.csproj** (2026-01-20)
+- [x] Removed local GenerateDocumentationFile override
+  - Removed: `<GenerateDocumentationFile>False</GenerateDocumentationFile>`
+  - Reason: Now controlled globally by Directory.Build.props
+  - Location: Line 7 (removed)
+
+**File: OoBDev.WebApi.csproj** (2026-01-20)
+- [x] Removed local GenerateDocumentationFile override
+  - Removed: `<GenerateDocumentationFile>False</GenerateDocumentationFile>`
+  - Reason: Was overriding global setting, preventing XML documentation generation
+  - Also cleaned up duplicate InvariantGlobalization setting
+  - Location: Line 10 (removed)
+
+**Verification (2026-01-20):**
+- [x] Build verified: All 65 projects built successfully
+- [x] XML documentation files generated and loaded:
+  - OoBDev.AspNetCore.Mvc.xml ✅
+  - OoBDev.WebApi.xml ✅
+  - OoBDev.Data.Vectors.xml ✅
+  - OoBDev.Data.Vectors.Hosting.xml ✅
+  - OoBDev.AllMiniLmL6V2Sharp.xml ✅
+- [x] Swagger files generated successfully:
+  - docs/swagger.json ✅
+  - docs/swagger.yaml ✅
+- [x] Swagger documentation verified: Summary and Description properties now appear ✅
 - [ ] Verify tests pass: `dotnet test src/ --filter "OoBDev.AspNetCore.Mvc"`
-- [ ] Check for any remaining compiler errors in related filters
 
 **Breaking Change Summary:**
 

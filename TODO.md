@@ -3,9 +3,10 @@
 **Last Updated:** 2026-01-20
 
 ✅ **COMPLETED:** Docker-based Integration Testing Infrastructure (Week 1 & 2)
-✅ **COMPLETED:** Swashbuckle 10.1.0 & .NET 10.0 breaking changes - All code fixed (5 files + deprecations)
+✅ **COMPLETED:** Swashbuckle 10.1.0 & .NET 10.0 breaking changes - All fixes verified working
+✅ **COMPLETED:** XML Documentation generation - Swagger Summary/Description now appear
 ⏳ **AWAITING:** Local Docker testing validation before enabling CI/CD
-⏳ **AWAITING:** Build/test verification for OoBDev.AspNetCore.Mvc
+⏳ **AWAITING:** Test verification for OoBDev.AspNetCore.Mvc
 
 > **New to this project?** Read `/CLAUDE.md` first for a complete development guide including architecture, patterns, and migration scope.
 
@@ -181,11 +182,13 @@ TODO.md                                  # This file - Index and navigation
    - Test cleanup and restart
    - Enable CI/CD workflow after validation
 
-2. **OoBDev.AspNetCore.Mvc Build Verification** ✅ CODE COMPLETE - ⏳ AWAITING BUILD
+2. **OoBDev.AspNetCore.Mvc - Swashbuckle & .NET 10.0 Fixes** ✅ VERIFIED WORKING - ⏳ AWAITING TESTS
    - Swashbuckle 10.1.0: 4 files fixed (FormFileOperationFilter, HealthChecksDocumentFilter, SearchQueryOperationFilter, ApplicationPermissionsApiFilter)
-   - .NET 10.0: 1 file fixed (ServiceCollectionExtensions - ClaimsPrincipal DI)
-   - Build `OoBDev.AspNetCore.Mvc` to verify
-   - Run tests to ensure no regressions
+   - .NET 10.0: 1 file fixed (ServiceCollectionExtensions - ClaimsPrincipal DI, IActionContextAccessor deprecation)
+   - XML Documentation: Enabled globally, removed overrides in 2 projects (AspNetCore.Mvc, WebApi)
+   - Build verified: All 65 projects built successfully ✅
+   - Swagger verified: Summary and Description properties now appear ✅
+   - Remaining: Run tests to ensure no regressions
 
 3. **Strategic Decisions** ⏸️ BLOCKING
    - Decide on Oobtainium migration (RECOMMEND: Delete)

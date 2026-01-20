@@ -7,6 +7,7 @@ paths:
     post:
       tags:
         - AI
+      summary: Generate an LLM Response based on the prompt and user input
       requestBody:
         content:
           application/json:
@@ -37,6 +38,7 @@ paths:
     post:
       tags:
         - AI
+      summary: Generate an AbstractAI Streamed Response based on the prompt and user input
       requestBody:
         content:
           application/json:
@@ -73,6 +75,7 @@ paths:
     post:
       tags:
         - AI
+      summary: Generate an LLM Response based on the prompt and user input
       requestBody:
         content:
           application/json:
@@ -109,6 +112,7 @@ paths:
     post:
       tags:
         - AI
+      summary: Generate embeddings
       requestBody:
         content:
           application/json:
@@ -139,6 +143,7 @@ paths:
     post:
       tags:
         - AI
+      summary: Testing Rag endpoint for context
       requestBody:
         content:
           application/json:
@@ -169,9 +174,11 @@ paths:
     get:
       tags:
         - AllMiniLM
+      summary: Retrieves the embedding vector for the given text.
       parameters:
         - name: text
           in: query
+          description: The text for which to retrieve the embedding vector.
           schema:
             type: string
       responses:
@@ -193,7 +200,9 @@ paths:
     post:
       tags:
         - Communications
+      summary: Sends an email publicly without requiring authentication.
       requestBody:
+        description: The email message model.
         content:
           application/json:
             schema:
@@ -223,7 +232,9 @@ paths:
     post:
       tags:
         - Communications
+      summary: Enqueues an email message to be processed asynchronously.
       requestBody:
+        description: The email message model.
         content:
           application/json:
             schema:
@@ -253,7 +264,9 @@ paths:
     post:
       tags:
         - Communications
+      summary: 'Sends an email with authorization, requiring the caller to be authenticated.'
       requestBody:
+        description: The email message model.
         content:
           application/json:
             schema:
@@ -283,9 +296,11 @@ paths:
     get:
       tags:
         - Document
+      summary: Downloads the specified file.
       parameters:
         - name: file
           in: path
+          description: The path to the file.
           required: true
           schema:
             type: string
@@ -313,9 +328,11 @@ paths:
     get:
       tags:
         - Document
+      summary: Retrieves the text of the specified file.
       parameters:
         - name: file
           in: path
+          description: The path to the file.
           required: true
           schema:
             type: string
@@ -343,9 +360,11 @@ paths:
     get:
       tags:
         - Document
+      summary: Retrieves the html of the specified file.
       parameters:
         - name: file
           in: path
+          description: The path to the file.
           required: true
           schema:
             type: string
@@ -373,9 +392,11 @@ paths:
     get:
       tags:
         - Document
+      summary: Retrieves the pdf of the specified file.
       parameters:
         - name: file
           in: path
+          description: The path to the file.
           required: true
           schema:
             type: string
@@ -403,9 +424,11 @@ paths:
     get:
       tags:
         - Document
+      summary: Retrieves the summary of the specified file.
       parameters:
         - name: file
           in: path
+          description: The path to the file.
           required: true
           schema:
             type: string
@@ -433,14 +456,17 @@ paths:
     post:
       tags:
         - Document
+      summary: Upload file content
       parameters:
         - name: file
           in: path
+          description: ''
           required: true
           schema:
             type: string
         - name: sourceContentType
           in: query
+          description: optionally overload the provided MIME Type
           schema:
             type: string
       requestBody:
@@ -468,13 +494,16 @@ paths:
     post:
       tags:
         - Document
+      summary: Document Converter
       parameters:
         - name: targetContentType
           in: query
+          description: define the target MIME type
           schema:
             type: string
         - name: sourceContentType
           in: query
+          description: optionally overload the provided MIME Type
           schema:
             type: string
       requestBody:
@@ -502,7 +531,9 @@ paths:
     post:
       tags:
         - GroqCloud
+      summary: executes a completion request
       requestBody:
+        description: completion request
         content:
           application/json:
             schema:
@@ -532,12 +563,15 @@ paths:
     post:
       tags:
         - MessageQueueing
+      summary: Sends a message to the queue publicly without requiring authentication.
       parameters:
         - name: correlationId
           in: query
+          description: Optional correlation ID for tracking purposes.
           schema:
             type: string
       requestBody:
+        description: The example message model.
         content:
           application/json:
             schema:
@@ -567,12 +601,15 @@ paths:
     post:
       tags:
         - MessageQueueing
+      summary: 'Sends a message to the queue with authorization, requiring the caller to be authenticated.'
       parameters:
         - name: correlationId
           in: query
+          description: Optional correlation ID for tracking purposes.
           schema:
             type: string
       requestBody:
+        description: The example message model.
         content:
           application/json:
             schema:
@@ -602,6 +639,7 @@ paths:
     post:
       tags:
         - Ollama
+      summary: Generate an LLM Response based on the prompt and user input
       requestBody:
         content:
           application/json:
@@ -631,13 +669,16 @@ paths:
     get:
       tags:
         - Ollama
+      summary: Retrieves the embedding vector for the given text.
       parameters:
         - name: text
           in: query
+          description: The text for which to retrieve the embedding vector.
           schema:
             type: string
         - name: model
           in: query
+          description: The model for which to retrieve the embedding vector.
           schema:
             type: string
       responses:
@@ -659,6 +700,7 @@ paths:
     post:
       tags:
         - Ollama
+      summary: Generate an AbstractAI Streamed Response based on the prompt and user input
       requestBody:
         content:
           application/json:
@@ -695,7 +737,9 @@ paths:
     post:
       tags:
         - Ollama
+      summary: executes a completion request
       requestBody:
+        description: completion request
         content:
           application/json:
             schema:
@@ -725,9 +769,11 @@ paths:
     get:
       tags:
         - SBERT
+      summary: Retrieves the embedding vector for the given text.
       parameters:
         - name: text
           in: query
+          description: The text for which to retrieve the embedding vector.
           schema:
             type: string
       responses:
@@ -749,9 +795,11 @@ paths:
     get:
       tags:
         - SBERTDefault
+      summary: Retrieves the embedding vector for the given text.
       parameters:
         - name: text
           in: query
+          description: The text for which to retrieve the embedding vector.
           schema:
             type: string
       responses:
@@ -773,6 +821,7 @@ paths:
     post:
       tags:
         - TextTemplate
+      summary: Gets the list of supported template file types.
       responses:
         '200':
           description: OK
@@ -798,12 +847,15 @@ paths:
     post:
       tags:
         - TextTemplate
+      summary: Applies a text template with the specified name and data.
       parameters:
         - name: templateName
           in: query
+          description: The name of the text template to apply.
           schema:
             type: string
       requestBody:
+        description: The JSON data used for template processing.
         content:
           application/json:
             schema:
@@ -823,6 +875,7 @@ paths:
     get:
       tags:
         - User
+      summary: Gets the claims associated with the current user.
       responses:
         '200':
           description: OK
@@ -990,38 +1043,49 @@ components:
       properties:
         issuer:
           type: string
+          description: Gets or sets the issuer of the claim.
           nullable: true
         value:
           type: string
+          description: Gets or sets the value of the claim.
           nullable: true
         valueType:
           type: string
+          description: Gets or sets the value type of the claim.
           nullable: true
         type:
           type: string
+          description: Gets or sets the type of the claim.
           nullable: true
         originalIssuer:
           type: string
+          description: Gets or sets the original issuer of the claim.
           nullable: true
         subjectName:
           type: string
+          description: Gets or sets the subject name associated with the claim.
           nullable: true
         subjectLabel:
           type: string
+          description: Gets or sets the subject label associated with the claim.
           nullable: true
         subjectAuthenticationType:
           type: string
+          description: Gets or sets the authentication type of the subject associated with the claim.
           nullable: true
       additionalProperties: false
+      description: Represents a model for a claim.
     OoBDev.WebApi.Models.ExampleMessageModel:
       type: object
       properties:
         input:
           type: string
+          description: Gets or sets the input string. Default value is "Default Value".
           nullable: true
         data:
           $ref: '#/components/schemas/System.Text.Json.Nodes.JsonNode'
       additionalProperties: false
+      description: Represents an example message model.
     OoBDev.WebApi.Models.GenAiContextRequestModel:
       required:
         - assistantConfinment
@@ -1031,18 +1095,22 @@ components:
       properties:
         assistantConfinment:
           type: string
+          description: Gets or sets the prompt details.
           nullable: true
         promptDetails:
           type: array
           items:
             type: string
+          description: Gets or sets the prompt details.
           nullable: true
         userInput:
           type: array
           items:
             type: string
+          description: Gets or sets the user input.
           nullable: true
       additionalProperties: false
+      description: Represents the model used for generating AI responses.
     OoBDev.WebApi.Models.GenerativeAiRequestModel:
       required:
         - data
@@ -1052,14 +1120,18 @@ components:
       properties:
         promptDetails:
           type: string
+          description: Gets or sets the prompt details.
           nullable: true
         data:
           type: string
+          description: Gets or sets the prompt details.
           nullable: true
         userInput:
           type: string
+          description: Gets or sets the user input.
           nullable: true
       additionalProperties: false
+      description: Represents the model used for generating AI responses.
     System.ReadOnlyMemory-System.Single:
       type: object
       properties:
