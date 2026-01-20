@@ -21,7 +21,7 @@ This checklist tracks the investigation and migration status of all projects in 
 
 | Project | Status | Type | Files | LOC | Priority | Action Required |
 |---------|--------|------|-------|-----|----------|-----------------|
-| **OoBDev.Oobtainium** | ⏸️ **PENDING** | Mocking Framework | 48 | ~1,578 | LOW | Keep for user to move to separate repo |
+| **OoBDev.Oobtainium** | ✅ **COMPLETE** | Mocking Framework | 48 | ~1,578 | LOW | Moved to proving-grounds repository |
 | **BotChat** | 🔍 **INVESTIGATED** | Sample Application | 12 | ~393 | LOW | Migration decision needed |
 | **BinaryDecoders** | 🔍 **INVESTIGATED** | Massive Codebase | ~500 | ~50,000 | HIGH | Critical questions answered |
 | **ContractParser** | 🔍 **INVESTIGATED** | DSL/Grammar Spec | 5 | ~475 | MEDIUM | Feature documentation complete |
@@ -32,44 +32,36 @@ This checklist tracks the investigation and migration status of all projects in 
 
 ## Detailed Status
 
-### ⏸️ OoBDev.Oobtainium (PENDING DECISION)
+### ✅ OoBDev.Oobtainium (COMPLETE)
 
-**Status:** ⏸️ **PENDING** - Awaiting user decision (Option 1, 2, 3, or 4)
+**Status:** ✅ **COMPLETE** - Moved to separate repository (2026-01-20)
 
 **Investigation Date:** 2026-01-12
+**Resolution Date:** 2026-01-20
 
 **Summary:**
 - Complete mocking/proxy framework (48 files, ~1,578 LOC)
 - Runtime interface proxies using DispatchProxy
 - Method call recording and binding
 - **Does NOT exist in main OoBDev codebase** (completely new)
-- GitHub: https://github.com/OutOfBandDevelopment/oobtainium/
+- Original GitHub: https://github.com/OutOfBandDevelopment/oobtainium/
 
-**Current State:**
-- .NET Standard 2.1 (needs upgrade to .NET 9.0)
-- Microsoft.Extensions.* 3.1.9 (2020 - outdated)
-- Good architecture: Abstractions + Implementation + Tests
-- Simpler than Moq but less feature-rich
+**Decision Made:** Moved to proving-grounds repository
+- New location: https://github.com/mwwhited/proving-grounds
+- Purpose: Code playground and examples repository
+- Rationale: Mocking well-solved by existing tools (Moq, NSubstitute)
+- Allows OoBDev to focus on unique capabilities (binary processing, protocols, hardware)
 
-**Decision Options:**
-1. **MIGRATE** to main framework (MEDIUM effort, HIGH maintenance)
-2. **REFERENCE** as external NuGet package (LOW effort, MINIMAL maintenance)
-3. **ARCHIVE** in Incomming/ (MINIMAL effort, ZERO maintenance)
-4. **DELETE** ⭐ RECOMMENDED (MINIMAL effort, ZERO maintenance)
-
-**Recommendation:** Option 4 (Delete)
-- Mocking well-solved by Moq (460M+ downloads) and NSubstitute (130M+)
-- Focus OoBDev resources on unique features (binary processing, protocols, hardware)
-
-**Next Steps:**
-- [ ] **USER DECISION REQUIRED:** Choose Option 1, 2, 3, or 4
-- [ ] Execute chosen option per migration plan
+**Action Taken:**
+- [x] User moved Oobtainium to proving-grounds repository
+- [x] Updated CHECKLIST.md status
+- [x] Project remains available for reference and experimentation
 
 **Documentation:**
 - [Feature Mapping](../docs/migration/oobtainium-feature-mapping.md)
 - [Migration Plan](../docs/migration/oobtainium-migration-plan.md) - All 4 options detailed
 
-**Migration Complexity:** MEDIUM (if migrating), MINIMAL (if deleting/archiving)
+**Migration Complexity:** N/A (moved to separate repository)
 
 ---
 

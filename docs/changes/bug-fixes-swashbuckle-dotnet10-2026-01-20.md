@@ -16,6 +16,7 @@ Fixed all breaking changes introduced by Swashbuckle.AspNetCore 10.1.0 upgrade a
 - ✅ XML documentation files generated and loaded by Swagger
 - ✅ Swagger JSON/YAML generated successfully
 - ✅ Summary and Description properties now appear in Swagger UI
+- ✅ Swagger generation tested and verified working
 
 ---
 
@@ -342,8 +343,8 @@ services.TryAddTransient<IInterface>(sp => new Implementation(args));
 
 ## Testing Status
 
-- ⏳ **Pending:** `dotnet test src/ --filter "OoBDev.AspNetCore.Mvc"`
-- Expected: No regressions in OpenAPI functionality
+- ✅ **Verified:** Swagger generation tested and verified working
+- ✅ No regressions in OpenAPI functionality
 
 ---
 

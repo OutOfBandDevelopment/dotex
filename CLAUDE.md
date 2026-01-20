@@ -73,7 +73,7 @@ Located in `.claude/protocols/`:
 **Incomming Project Investigations** - ✅ COMPLETE (6 of 6 = 100%)
 - ✅ dotnet-lib - Completed and deleted (95% identical to main)
 - ✅ Framework - Investigated (55 files, Phase 0 comparison required)
-- ✅ Oobtainium - Investigated (user will move to separate repository)
+- ✅ Oobtainium - RESOLVED: Moved to proving-grounds repository (https://github.com/mwwhited/proving-grounds)
 - ✅ BotChat - Investigated (sample app, awaiting decision)
 - ✅ SharedFramework - Investigated (52 projects, migration plan ready)
 - ✅ BinaryDecoders - Investigated (awaiting critical decisions)
@@ -99,10 +99,11 @@ Located in `.claude/protocols/`:
 - ✅ No migration needed - files already integrated
 
 **SharedFramework Migration** - ✅ PHASE 0 COMPLETE
-- ✅ 51 projects already at .NET 10.0 (newer than .NET 9.0 requirement)
-- ✅ 1 SQL project at netstandard2.0 (correct for SQL database projects)
-- ✅ Namespace cleanup complete (18 directories renamed, Api. prefix removed)
-- ✅ Azure projects moved under Microsoft hierarchy
+- ✅ 51 projects at .NET 10.0 (1 SQL project at netstandard2.0)
+- ✅ Namespace cleanup complete (27 directories renamed)
+  - 14 Api. prefix removals
+  - 4 Azure reorganizations (moved under Microsoft hierarchy)
+  - 9 Contracts → Abstractions renames
 - 52 projects analyzed and categorized
 - 12-phase migration plan created
 - Ready for Phase 1: Message Queueing Providers
@@ -518,9 +519,9 @@ See `/containers/testing/STATUS.md` for detailed progress.
 
 **Status:** ✅ 100% COMPLETE - All 6 projects investigated
 
-### Priority 2: SharedFramework Namespace Cleanup
+### Priority 2: SharedFramework Phase 0 Cleanup
 
-**Status:** ✅ COMPLETE - 18 directories renamed, all namespaces updated
+**Status:** ✅ COMPLETE - 27 directories renamed, all namespaces updated
 
 ### Priority 3: Integration Testing Infrastructure & Test Migration
 
@@ -528,20 +529,23 @@ See `/containers/testing/STATUS.md` for detailed progress.
 
 ### Priority 4: Swashbuckle 10.1.0 & .NET 10.0 Fixes
 
-**Status:** ✅ VERIFIED COMPLETE - All fixes working, Swagger documentation appearing
+**Status:** ✅ COMPLETE - All fixes working, Swagger generation tested and verified
 
 ---
 
 ## Recently Completed Work
 
-### ✅ SharedFramework Phase 0 Namespace Cleanup (2026-01-20)
+### ✅ SharedFramework Phase 0 Cleanup (2026-01-20)
 
-Completed comprehensive namespace reorganization for all 52 SharedFramework projects, removing "Api." prefix and moving Azure services under Microsoft hierarchy.
+Completed comprehensive namespace reorganization and standardization for all 52 SharedFramework projects.
 
 **Completed:**
-- Removed "Api." prefix from 14 projects (Twilio, Redis, Microsoft, Google, Census)
-- Moved 4 Azure projects under Microsoft.Azure hierarchy
-- Renamed 18 directories
+- **Removed "Api." prefix** from 14 projects (Twilio, Redis, Microsoft, Google, Census)
+- **Moved Azure under Microsoft hierarchy** (4 projects: EventHub, ServiceBus)
+- **Renamed .Contracts to .Abstractions** (9 projects standardized to match main framework)
+  - Deleted OoBDev.Accounting.Contracts (application-specific)
+  - Standardized: Caching, Communications, ComplexEvents, DataLoader, DocumentCenter, Generations, IdentityModel, SpatialServices, TextTemplating
+- **Renamed 27 directories total** (14 + 4 + 9)
 - Updated 87+ namespace declarations and 37+ using statements in .cs files
 - Updated all .csproj ProjectReference paths
 - Updated README.md and documentation
@@ -572,13 +576,13 @@ Completed investigation of final 2 Incoming projects (ContractParser and Tools),
 **Updated:**
 - Incoming/CHECKLIST.md: 100% investigation complete (6/6 projects)
 - Removed CloudOrchestrator references (doesn't exist)
-- Updated Oobtainium status (user will move to separate repository)
+- Oobtainium: Moved to proving-grounds repository (https://github.com/mwwhited/proving-grounds)
 
 ---
 
 ### ✅ Swashbuckle 10.1.0 & .NET 10.0 Fixes (2026-01-20)
 
-Fixed all breaking changes from Swashbuckle 10.1.0 and .NET 10.0, plus enabled XML documentation globally. All 65 projects build successfully, Swagger documentation now appears correctly.
+Fixed all breaking changes from Swashbuckle 10.1.0 and .NET 10.0, plus enabled XML documentation globally. All 65 projects build successfully, Swagger generation tested and verified working.
 
 **Details:** [docs/changes/bug-fixes-swashbuckle-dotnet10-2026-01-20.md](docs/changes/bug-fixes-swashbuckle-dotnet10-2026-01-20.md)
 

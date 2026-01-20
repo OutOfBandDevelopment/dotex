@@ -1,10 +1,34 @@
 # TODO - Migrations Epic
 
-**Last Updated:** 2026-01-19
+**Last Updated:** 2026-01-20
 
 This document tracks all migration work for Incomming projects and BinaryDataDecoders.
 
 > **Parent Document:** [TODO.md](./TODO.md)
+
+---
+
+## Individual Migration TODOs
+
+**📋 See:** [TODO-migrations-index.md](./TODO-migrations-index.md) for complete index
+
+Each migration area has a dedicated TODO file:
+
+### SharedFramework (10 projects)
+1. [TODO-migrations-communications.md](./TODO-migrations-communications.md) 🔥 CRITICAL
+2. [TODO-migrations-caching.md](./TODO-migrations-caching.md) ✅ SAFE
+3. [TODO-migrations-message-queues.md](./TODO-migrations-message-queues.md) ✅ SAFE
+4. [TODO-migrations-spatial.md](./TODO-migrations-spatial.md) ✅ SAFE
+5. [TODO-migrations-identity.md](./TODO-migrations-identity.md) ⚠️ MERGE
+6. [TODO-migrations-documents.md](./TODO-migrations-documents.md) ⚠️ MERGE
+7. [TODO-migrations-text-templating.md](./TODO-migrations-text-templating.md) ⚠️ CONSOLIDATE
+8. [TODO-migrations-data-loader.md](./TODO-migrations-data-loader.md) ✅ SAFE
+9. [TODO-migrations-complex-events.md](./TODO-migrations-complex-events.md) ✅ SAFE
+10. [TODO-migrations-generations.md](./TODO-migrations-generations.md) ✅ SAFE
+
+### Other Incoming
+11. [TODO-migrations-framework.md](./TODO-migrations-framework.md) - 55 files comparison required
+12. [TODO-migrations-binarydatadecoders.md](./TODO-migrations-binarydatadecoders.md) - Blocked by decisions
 
 ---
 
@@ -250,13 +274,30 @@ Migration work includes:
 
 ## Incomming/SharedFramework Migration Work
 
-**Status:** 🔍 INVESTIGATION COMPLETE - Ready for systematic migration
+**Status:** 🔍 INVESTIGATION COMPLETE - ⚠️ OVERLAP ANALYSIS COMPLETE
 
 **Complexity:** HIGH - 52 projects (~28,582 LOC) requiring careful integration
 
 **Documentation:**
 - [Feature Mapping](docs/migration/sharedframework-feature-mapping.md) - Complete 52-project analysis
 - [Migration Plan](docs/migration/sharedframework-migration-plan.md) - 12-phase execution plan
+- [Coverage Analysis](docs/migration/sharedframework-phase0-coverage-analysis.md) - Overlap analysis with main codebase
+- [DIFFERS Detailed Comparison](docs/migration/sharedframework-differs-detailed-comparison.md) - **NEW:** Detailed analysis of 5 conflict projects
+
+**Key Findings from Coverage Analysis:**
+- ✅ **Phase 0 Complete** - .NET 10.0 + namespace cleanup done
+- ⚠️ **5 DIFFERS projects** - Main has partial/basic implementations (Communications, Documents, Identity, TextTemplating)
+- ✅ **19 NEW projects** - No overlap, safe to migrate (Caching, Spatial, Events, etc.)
+- 🔥 **Critical:** Communications has 16 LOC stub in main vs 1,145 LOC in SF (71x difference!)
+
+**Verdict from Detailed Comparison:**
+- ✅ **ALL 5 DIFFERS projects** - SharedFramework provides significant advantages
+  - Communications: Main is empty stub → SF has complete orchestration system
+  - Communications.Abstractions: Main has 5 files → SF has 47 files with complete framework
+  - Documents: SF adds Packaging, Resolvers, generic Storage abstraction
+  - Identity: SF adds Claims enhancement, Rights management, Azure B2C, Graph API
+  - TextTemplating: SF provides unified framework vs main's scattered implementation
+- 🎯 **Recommendation:** Accept ALL SharedFramework implementations (production-proven)
 
 **Summary:**
 - 24 projects (71%) provide NEW capabilities

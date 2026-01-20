@@ -1,6 +1,6 @@
 # TODO - Decisions Required Epic
 
-**Last Updated:** 2026-01-19
+**Last Updated:** 2026-01-20
 
 This document tracks all pending decisions that block migration and development work.
 
@@ -48,177 +48,37 @@ Before proceeding with BinaryDataDecoders migration (Phases 1-5), critical quest
 
 ---
 
-## OoBDev.Oobtainium - Migration Decision
+## OoBDev.Oobtainium - Migration Decision ✅ RESOLVED
 
-**Status:** ⏸️ PENDING DECISION - Choose migration approach
+**Status:** ✅ **RESOLVED** - Moved to proving-grounds repository (2026-01-20)
 
-**What is Oobtainium?**
+**Decision Made:** Moved to separate code playground repository
+
+**What was Oobtainium?**
 - Complete mocking/proxy framework (48 files, ~1,578 LOC)
 - Runtime interface proxies using DispatchProxy
 - Method call recording and binding
-- Does NOT exist in main OoBDev codebase (new library)
-- GitHub: https://github.com/OutOfBandDevelopment/oobtainium/
+- Does NOT exist in main OoBDev codebase (completely new)
+- Original GitHub: https://github.com/OutOfBandDevelopment/oobtainium/
 
-**Current State:**
-- .NET Standard 2.1 (needs upgrade to .NET 9.0)
-- Microsoft.Extensions.* 3.1.9 dependencies (2020 - outdated)
-- Good architecture: Abstractions + Implementation + Tests
-- Simpler than Moq but less feature-rich
-
-**Decision Required - Choose ONE of four options:**
-
-### Option 1: MIGRATE to Main Framework
-
-- **Action:** Upgrade to .NET 9.0, integrate into `src/Framework/OoBDev.Mocking/` or `src/Extensions/OoBDev.Extensions.Mocking/`
-- **Effort:** MEDIUM (upgrade dependencies, rename namespaces, add documentation)
-- **Maintenance:** HIGH (ongoing .NET updates, feature additions)
-- **Pros:** First-party mocking solution, DI-integrated, simpler than Moq for basic scenarios
-- **Cons:** Maintenance burden, duplicates existing tools (Moq, NSubstitute)
-- **See:** [Migration Plan](docs/migration/oobtainium-migration-plan.md) - Phase 1-5 detailed steps
-
-**Implementation Tasks (if chosen):**
-
-- [ ] **Phase 1: Preparation & Analysis**
-  - [ ] Create target project structure: `src/Extensions/OoBDev.Extensions.Mocking/`
-  - [ ] Create `OoBDev.Extensions.Mocking.Abstractions/` for interfaces
-  - [ ] Create `OoBDev.Extensions.Mocking.Tests/` for unit tests
-  - [ ] Decide on namespace: `OoBDev.Mocking` or `OoBDev.Extensions.Mocking`
-  - [ ] Review all 48 files for migration requirements
-
-- [ ] **Phase 2: Upgrade & Migrate**
-  - [ ] Upgrade all projects to .NET 9.0 (from .NET Standard 2.1)
-  - [ ] Upgrade Microsoft.Extensions.* to 9.0.x (from 3.1.9)
-  - [ ] Rename namespaces: `OoBDev.Oobtainium` → target namespace
-  - [ ] Migrate all 48 source files
-  - [ ] Fix any API breaking changes from .NET Standard → .NET 9.0
-  - [ ] Enable nullable reference types
-  - [ ] Add file-scoped namespaces
-
-- [ ] **Phase 3: Integration**
-  - [ ] Add project references to OoBDev.sln
-  - [ ] Add ServiceCollection extensions
-  - [ ] Add configuration options
-  - [ ] Create README.md with usage examples
-  - [ ] Add XML documentation to public APIs
-
-- [ ] **Phase 4: Testing**
-  - [ ] Migrate all existing tests
-  - [ ] Add new tests for .NET 9.0 features
-  - [ ] Target 80%+ code coverage
-  - [ ] Run `dotnet test` and verify all pass
-  - [ ] Create integration test examples
-
-- [ ] **Phase 5: Documentation & Cleanup**
-  - [ ] Add to main README.md feature list
-  - [ ] Create migration guide for users
-  - [ ] Add comparison with Moq/NSubstitute
-  - [ ] Update CHANGELOG
-  - [ ] Delete `Incomming/OoBDev.Oobtainium/` after successful migration
-
-### Option 2: REFERENCE as External NuGet Package
-
-- **Action:** Verify if published to NuGet, or publish it, then reference where needed
-- **Effort:** LOW (add PackageReference)
-- **Maintenance:** MINIMAL (external updates)
-- **Pros:** No code maintenance, separate evolution
-- **Cons:** Dependency on external package, may not be published
-
-**Implementation Tasks (if chosen):**
-
-- [ ] **Verify NuGet Package Availability**
-  - [ ] Search NuGet.org for "OoBDev.Oobtainium"
-  - [ ] Check GitHub releases: https://github.com/OutOfBandDevelopment/oobtainium/releases
-  - [ ] If not published, decide whether to publish it
-
-- [ ] **Option 2A: Package Exists on NuGet**
-  - [ ] Add PackageReference to projects that need mocking
-  - [ ] Document which package version to use
-  - [ ] Add usage examples in docs
-  - [ ] Delete `Incomming/OoBDev.Oobtainium/` (using external package)
-
-- [ ] **Option 2B: Publish to NuGet (if needed)**
-  - [ ] Create NuGet package from Incomming/OoBDev.Oobtainium
-  - [ ] Set package metadata (authors, description, license)
-  - [ ] Publish to NuGet.org or internal feed
-  - [ ] Add PackageReference to consuming projects
-  - [ ] Delete `Incomming/OoBDev.Oobtainium/` after publishing
-
-- [ ] **Documentation**
-  - [ ] Document external dependency
-  - [ ] Add to README.md under "External Dependencies"
-  - [ ] Create examples of usage
-
-### Option 3: ARCHIVE in Incomming/
-
-- **Action:** Create README.md documenting decision, keep for reference
-- **Effort:** MINIMAL (documentation only)
-- **Maintenance:** NONE
-- **Pros:** Available for future reconsideration, no commitment
-- **Cons:** Not integrated, users won't discover it
-
-**Implementation Tasks (if chosen):**
-
-- [ ] **Create Archive Documentation**
-  - [ ] Create `Incomming/OoBDev.Oobtainium/README.md`
-  - [ ] Document decision to archive
-  - [ ] Explain what Oobtainium is and does
-  - [ ] List reasons for not migrating
-  - [ ] Provide alternatives (Moq, NSubstitute)
-  - [ ] Add note that it can be reconsidered in future
-
-- [ ] **Update Main Documentation**
-  - [ ] Add note to main TODO.md about archived decision
-  - [ ] Document location for future reference
-  - [ ] Update migration docs with archive status
-
-- [ ] **No Further Action Required**
-  - Code remains in `Incomming/OoBDev.Oobtainium/`
-  - Available for future reconsideration
-  - Zero maintenance burden
-
-### Option 4: DELETE ⭐ RECOMMENDED
-
-- **Action:** Remove `/current/src/Incomming/OoBDev.Oobtainium` directory
-- **Effort:** MINIMAL (rm -rf, update docs)
-- **Maintenance:** NONE
-- **Pros:** No burden, focus on unique OoBDev features, Moq/NSubstitute already solve this
-- **Cons:** Lose lightweight alternative
+**Resolution:**
+- **New Location:** https://github.com/mwwhited/proving-grounds
+- **Purpose:** Code playground and examples repository
 - **Rationale:**
-  - Mocking is well-solved (Moq: 460M+ downloads, NSubstitute: 130M+)
-  - OoBDev's value is in unique features (binary processing, protocols, hardware)
-  - Limited differentiation vs established frameworks
-  - Better resource allocation on BinaryDataDecoders migration
+  - Mocking is well-solved by existing tools (Moq: 460M+ downloads, NSubstitute: 130M+)
+  - Allows OoBDev to focus on unique capabilities (binary processing, protocols, hardware)
+  - Project remains available for experimentation and reference
+  - Better resource allocation to BinaryDataDecoders and SharedFramework migrations
 
-**Implementation Tasks (if chosen):**
-
-- [ ] **Final Review Before Deletion**
-  - [ ] Verify no references to Oobtainium in main codebase
-  - [ ] Verify no dependencies on Oobtainium in other Incomming/ directories
-  - [ ] Confirm decision with stakeholders if needed
-  - [ ] Backup if desired: `tar -czf oobtainium-backup-$(date +%Y%m%d).tar.gz Incomming/OoBDev.Oobtainium/`
-
-- [ ] **Delete Directory**
-  - [ ] Delete `Incomming/OoBDev.Oobtainium/` directory
-  - [ ] Verify deletion: `ls Incomming/` should not show OoBDev.Oobtainium
-
-- [ ] **Update Documentation**
-  - [ ] Update TODO.md with deletion status
-  - [ ] Update `docs/migration/oobtainium-feature-mapping.md` conclusion
-  - [ ] Update `docs/migration/oobtainium-migration-plan.md` with decision
-  - [ ] Add entry to CHANGELOG if exists
-
-- [ ] **Rationale Documentation**
-  - [ ] Document why deleted (focus on unique OoBDev features)
-  - [ ] List alternatives: Moq (460M+ downloads), NSubstitute (130M+)
-  - [ ] Confirm resource reallocation to BinaryDataDecoders migration
+**Actions Completed:**
+- [x] User moved Oobtainium to proving-grounds repository
+- [x] Updated CHECKLIST.md status to COMPLETE
+- [x] Updated TODO-decisions.md to reflect resolution
+- [x] Project remains accessible for future reference
 
 **Documentation:**
-- [Feature Mapping](docs/migration/oobtainium-feature-mapping.md) - Complete feature analysis and comparison
-- [Migration Plan](docs/migration/oobtainium-migration-plan.md) - All 4 options with detailed steps
-
-**Next Steps:**
-- [ ] **DECISION:** Choose Option 1, 2, 3, or 4
-- [ ] Execute chosen option per tasks above
+- [Feature Mapping](docs/migration/oobtainium-feature-mapping.md) - Complete feature analysis
+- [Migration Plan](docs/migration/oobtainium-migration-plan.md) - All 4 options documented (for reference)
 
 ---
 

@@ -5,8 +5,8 @@
 ✅ **COMPLETED:** Docker-based Integration Testing Infrastructure (Week 1 & 2)
 ✅ **COMPLETED:** Swashbuckle 10.1.0 & .NET 10.0 breaking changes - All fixes verified working
 ✅ **COMPLETED:** XML Documentation generation - Swagger Summary/Description now appear
+✅ **COMPLETED:** Swagger generation tested and verified working
 ⏳ **AWAITING:** Local Docker testing validation before enabling CI/CD
-⏳ **AWAITING:** Test verification for OoBDev.AspNetCore.Mvc
 
 > **New to this project?** Read `/CLAUDE.md` first for a complete development guide including architecture, patterns, and migration scope.
 
@@ -40,19 +40,33 @@ Cloud-based integration testing for services requiring live credentials (Azure B
 - ⏳ Week 4: Cloud documentation (credential management, cost management)
 
 ### 📦 [Migrations](./TODO-migrations.md)
-**Status:** ✅ SharedFramework Phase 0 Complete - ✅ All Incoming Investigations Complete - ⏸️ Multiple Phases Blocked by Decisions
+**Status:** ✅ Analysis Complete - 📋 Individual TODOs Created - Ready to Execute
+
+**📋 Individual Migration TODOs:** [TODO-migrations-index.md](./TODO-migrations-index.md)
 
 All migration work for Incomming projects and BinaryDataDecoders:
 - **Incomming/Framework** - 55 files (30 NEW + 25 DIFFERS) requiring systematic comparison
-- **Incomming/SharedFramework** - 52 projects (~28,582 LOC) with 12-phase migration plan
+- **Incomming/SharedFramework** - 52 projects (~28,582 LOC) with 12 individual TODO files created
 - **BinaryDataDecoders** - 5-phase migration (Foundation → Specialized Features)
 
-**Key Tasks:**
+**Key Accomplishments:**
 - ✅ Framework Vector namespace updated to OoBDev.System.Math (files already in main)
-- ✅ SharedFramework Phase 0: .NET 10.0 verified + Namespace cleanup complete (18 directories renamed)
+- ✅ SharedFramework Phase 0: .NET 10.0 verified + Namespace cleanup complete (27 directories renamed)
+  - 14 Api. prefix removals, 4 Azure reorganizations, 9 Contracts → Abstractions renames
 - ✅ All 6 Incoming projects investigated (100% complete)
-- ⏸️ SharedFramework Phase 1-2: Ready to start (Message Queueing, Communications merge)
-- ⏸️ BinaryDataDecoders: Awaiting critical decisions (see TODO-decisions.md)
+- ✅ Coverage analysis complete - Identified 5 DIFFERS projects needing careful merge
+- ✅ DIFFERS detailed comparison - SharedFramework wins on ALL 5 conflicts
+- ✅ **NEW:** 12 individual migration TODO files created (ready to execute)
+
+**Ready to Migrate:**
+- 🔥 Communications (CRITICAL - 16 LOC stub → 1,145 LOC)
+- ✅ Caching (4 projects - zero overlap)
+- ✅ Message Queues (AWS SQS, Azure Service Bus)
+- ✅ Spatial Services (5 projects)
+- ⚠️ Identity, Documents, TextTemplating (merge required)
+- ✅ DataLoader, ComplexEvents, Generations
+- ⏸️ Framework (Phase 0 comparison required)
+- ⏸️ BinaryDataDecoders (decisions required)
 
 ### 🐛 [Bug Fixes & Technical Debt](./TODO-bug-fixes.md)
 **Status:** ✅ VERIFIED COMPLETE
@@ -67,7 +81,7 @@ Bug fixes, breaking changes, and technical debt resolution:
 **Completed:**
 - ✅ Build verification: All 65 projects build successfully
 - ✅ Swagger verification: Summary and Description properties appear
-- ⏳ Test verification: `dotnet test src/ --filter "OoBDev.AspNetCore.Mvc"`
+- ✅ Swagger generation: Tested and verified working
 - ⏳ Technical debt: 80%+ test coverage, documentation, dependency audits
 
 ### ❓ [Decisions Required](./TODO-decisions.md)
@@ -75,13 +89,13 @@ Bug fixes, breaking changes, and technical debt resolution:
 
 Critical decisions blocking migration work:
 - **BinaryDataDecoders** - Endianness API design, CodeAnalysis use cases, archive formats, hardware devices
-- **Oobtainium** - Choose: Migrate, Reference, Archive, or Delete (RECOMMEND: Delete)
 - **BotChat** - Choose: Archive, Enhance, or Extract patterns (RECOMMEND: Archive)
+- ✅ **Oobtainium** - RESOLVED: Moved to proving-grounds repository
 
 **Key Decisions:**
-- ⏸️ Oobtainium: Mocking framework (Option 4 DELETE recommended)
 - ⏸️ BotChat: Sample application (Option 1 ARCHIVE recommended)
 - ⏸️ BinaryDataDecoders: 14+ questions across 4 priority levels
+- ✅ Oobtainium: RESOLVED - Moved to separate code playground repository
 
 ---
 
@@ -114,7 +128,7 @@ TODO.md                                  # This file - Index and navigation
 ### What Gets Deleted (Very Rare)
 ❌ Stub projects with zero implementation (e.g., Rigol)
 ❌ Silverlight-only or obsolete platform code
-❌ Features with no .NET 9.0 equivalent
+❌ Features with no .NET 10.0 equivalent
 
 ### Migration Principles
 1. Phases indicate **priority order**, not feature selection
@@ -170,6 +184,7 @@ TODO.md                                  # This file - Index and navigation
 
 ### CI/CD ✅
 - Updated `.github/workflows/dotnet.yml` - Added path filters
+- Fixed build tag format (2026-01-20) - Removed duplicate branch name in tags
 - Completed `.github/workflows/integration-tests.yml` - DISABLED pending validation
 
 ---
@@ -183,13 +198,13 @@ TODO.md                                  # This file - Index and navigation
    - Test cleanup and restart
    - Enable CI/CD workflow after validation
 
-2. **OoBDev.AspNetCore.Mvc - Swashbuckle & .NET 10.0 Fixes** ✅ VERIFIED WORKING - ⏳ AWAITING TESTS
+2. **OoBDev.AspNetCore.Mvc - Swashbuckle & .NET 10.0 Fixes** ✅ COMPLETE
    - Swashbuckle 10.1.0: 4 files fixed (FormFileOperationFilter, HealthChecksDocumentFilter, SearchQueryOperationFilter, ApplicationPermissionsApiFilter)
    - .NET 10.0: 1 file fixed (ServiceCollectionExtensions - ClaimsPrincipal DI, IActionContextAccessor deprecation)
    - XML Documentation: Enabled globally, removed overrides in 2 projects (AspNetCore.Mvc, WebApi)
    - Build verified: All 65 projects built successfully ✅
    - Swagger verified: Summary and Description properties now appear ✅
-   - Remaining: Run tests to ensure no regressions
+   - Swagger generation: Tested and verified working ✅
 
 3. **Strategic Decisions** ⏸️ BLOCKING
    - Decide on Oobtainium migration (RECOMMEND: Delete)
@@ -211,18 +226,29 @@ TODO.md                                  # This file - Index and navigation
    - Create LiveIntegration setup guides
    - Update SemanticKernel integration
 
-3. **SharedFramework Namespace Cleanup** ✅ COMPLETE (2026-01-20)
+3. **SharedFramework Phase 0 Namespace Cleanup** ✅ COMPLETE (2026-01-20)
    - Removed "Api." prefix from all namespaces (14 projects)
    - Moved Azure under Microsoft hierarchy (4 projects)
+   - Renamed .Contracts to .Abstractions (9 projects, deleted 1 application-specific)
    - Updated 87+ namespace declarations and 37+ using statements
-   - Renamed all 18 directories
+   - Renamed all 27 directories (14 + 4 + 9)
    - Verified no broken references
 
 ### Medium Term (Next Month)
-1. **SharedFramework Phase 2** ✅ READY TO START (Phase 0 complete)
-   - Merge OoBDev.Communications (1,145 LOC vs 16 LOC stub)
-   - Migrate Twilio SendGrid and SMS providers
-   - Complete communications implementation
+1. **SharedFramework Migration Strategy** ⚠️ DECISIONS NEEDED (Coverage analysis complete)
+   - ✅ Phase 0 complete (.NET 10.0 + namespace cleanup)
+   - ⚠️ **5 DIFFERS projects require merge decisions:**
+     - Communications (16 LOC stub → 1,145 LOC implementation) - **CRITICAL**
+     - Communications.Abstractions (125 LOC → 695 LOC) - **CRITICAL**
+     - Documents vs DocumentCenter (531 LOC vs 911 LOC)
+     - Identity vs IdentityModel (125 LOC vs 291 LOC)
+     - TextTemplating (scattered vs unified)
+   - ✅ **19 NEW projects ready to migrate** (no conflicts):
+     - Caching (4 projects) - HIGH PRIORITY
+     - Message Queueing Providers: AWS SQS, Azure Service Bus
+     - Spatial Services (5 projects): Geocoding, Maps
+     - Complex Events, Data Loader, Generations
+   - **See:** [Coverage Analysis](docs/migration/sharedframework-phase0-coverage-analysis.md)
 
 2. **Feature Implementation Decisions** ⏸️ PENDING
    - ContractParser - Decide: Implement now, later, or keep as specification
@@ -253,6 +279,8 @@ TODO.md                                  # This file - Index and navigation
 - `docs/migration/vector-comparison.md` - Vector library comparison
 - `docs/migration/sharedframework-feature-mapping.md` - 52 projects analyzed
 - `docs/migration/sharedframework-migration-plan.md` - 12-phase plan
+- `docs/migration/sharedframework-phase0-coverage-analysis.md` - Overlap analysis with main codebase
+- `docs/migration/sharedframework-differs-detailed-comparison.md` - **NEW:** Detailed DIFFERS project comparison
 - `docs/migration/oobtainium-feature-mapping.md` - Mocking framework analysis
 - `docs/migration/oobtainium-migration-plan.md` - 4 migration options
 - `docs/migration/botchat-feature-mapping.md` - Sample app analysis
@@ -286,7 +314,7 @@ TODO.md                                  # This file - Index and navigation
 - Framework layer requires 80%+ test coverage
 - Use provider/factory pattern for extensible components
 - Follow existing dependency injection patterns
-- Maintain .NET 9.0 target framework
+- Maintain .NET 10.0 target framework
 - Keep nullable reference types enabled
 - Keep implicit usings disabled
 
