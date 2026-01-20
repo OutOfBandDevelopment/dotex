@@ -1,4 +1,4 @@
-﻿namespace Microsoft.SqlServer.Server;
+﻿namespace OoBDev.Data.Vectors;
 
 #if NETSTANDARD2_1
 

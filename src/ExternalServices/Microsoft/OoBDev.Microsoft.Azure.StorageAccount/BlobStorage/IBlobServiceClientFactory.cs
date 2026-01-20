@@ -1,6 +1,6 @@
-using Azure.Storage.Blobs;
+﻿using Azure.Storage.Blobs;
 
-namespace OoBDev.Azure.StorageAccount.BlobStorage;
+namespace OoBDev.Microsoft.Azure.StorageAccount.BlobStorage;
 
 /// <summary>
 /// Interface for a factory that creates instances of <see cref="AzureBlobContainerProvider"/>.

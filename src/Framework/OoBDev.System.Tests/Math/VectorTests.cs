@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.System.Math;
+using OoBDev.TestUtilities;
 
 namespace OoBDev.System.Tests.Math;
 
@@ -9,7 +10,7 @@ public class VectorTests
     public TestContext TestContext { get; set; } = null!;
 
     [DataTestMethod]
-    [TestCategory("UNIT")]
+    [TestCategory(TestCategories.Unit)]
     [DataRow("[1,2,3,4]", 4, 5.477225575051661d)]
     [DataRow("[1,1,1,1]", 4, 2)]
     public void Test(string vectorValue, int expectedLength, double expectedMagnitude)
@@ -20,7 +21,7 @@ public class VectorTests
     }
 
     [DataTestMethod]
-    [TestCategory("UNIT")]
+    [TestCategory(TestCategories.Unit)]
     [DataRow("[1,2,3,4]", "[1,2,3,4]", VectorDistanceMetrics.Cosine, 0)]
     [DataRow("[1,2,3,4]", "[1,2,3,4]", VectorDistanceMetrics.Euclidean, 0)]
     [DataRow("[1,2,3,4]", "[1,2,3,4]", VectorDistanceMetrics.DotProduct, 30)]

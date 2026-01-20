@@ -1,4 +1,4 @@
-using OoBDev.MessageQueueing.Services;
+﻿using OoBDev.MessageQueueing.Services;
 using OoBDev.System;
 using OoBDev.System.Text.Json.Serialization;
 using Microsoft.Extensions.Logging;
@@ -6,7 +6,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace OoBDev.Azure.StorageAccount.MessageQueueing;
+namespace OoBDev.Microsoft.Azure.StorageAccount.MessageQueueing;
 
 /// <summary>
 /// Provides functionality for sending and receiving messages using Azure Storage Queues.

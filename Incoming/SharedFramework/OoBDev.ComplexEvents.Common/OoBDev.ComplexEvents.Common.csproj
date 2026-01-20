@@ -12,10 +12,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\OoBDev.ComplexEvents.Contracts\OoBDev.ComplexEvents.Contracts.csproj" />
-    <ProjectReference Include="..\OoBDev.IdentityModel.Contracts\OoBDev.IdentityModel.Contracts.csproj" />
-    <ProjectReference Include="..\OoBDev.MessageQueueing.Contracts\OoBDev.MessageQueueing.Contracts.csproj" />
-    <ProjectReference Include="..\OoBDev.Toolkit.Contracts\OoBDev.Toolkit.Contracts.csproj" />
+    <ProjectReference Include="..\OoBDev.ComplexEvents.Abstractions\OoBDev.ComplexEvents.Abstractions.csproj" />
+    <ProjectReference Include="..\OoBDev.IdentityModel.Abstractions\OoBDev.IdentityModel.Abstractions.csproj" />
+    <ProjectReference Include="..\OoBDev.MessageQueueing.Contracts\OoBDev.MessageQueueing.Abstractions.csproj" />
+    <ProjectReference Include="..\OoBDev.Toolkit.Contracts\OoBDev.Toolkit.Abstractions.csproj" />
   </ItemGroup>
 
 </Project>

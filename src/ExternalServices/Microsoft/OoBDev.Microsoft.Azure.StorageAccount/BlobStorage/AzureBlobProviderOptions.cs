@@ -1,4 +1,4 @@
-namespace OoBDev.Azure.StorageAccount.BlobStorage;
+﻿namespace OoBDev.Microsoft.Azure.StorageAccount.BlobStorage;
 
 /// <summary>
 /// Options for configuring Azure Blob storage provider.

@@ -1,7 +1,7 @@
-using Azure.Storage.Blobs;
+﻿using Azure.Storage.Blobs;
 using Microsoft.Extensions.Options;
 
-namespace OoBDev.Azure.StorageAccount.BlobStorage;
+namespace OoBDev.Microsoft.Azure.StorageAccount.BlobStorage;
 
 /// <summary>
 /// Represents a factory for creating instances of <see cref="BlobServiceClient"/>.

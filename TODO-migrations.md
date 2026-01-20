@@ -287,11 +287,22 @@ Migration work includes:
   - [x] Moved Azure under Microsoft hierarchy:
     - `OoBDev.Azure.EventHub` → `OoBDev.Microsoft.Azure.EventHub`
     - `OoBDev.Azure.ServiceBus` → `OoBDev.Microsoft.Azure.ServiceBus`
+  - [x] Renamed `.Contracts` to `.Abstractions` (9 projects):
+    - Deleted `OoBDev.Accounting.Contracts` (application-specific)
+    - `OoBDev.Caching.Contracts` → `OoBDev.Caching.Abstractions`
+    - `OoBDev.Communications.Contracts` → `OoBDev.Communications.Abstractions`
+    - `OoBDev.ComplexEvents.Contracts` → `OoBDev.ComplexEvents.Abstractions`
+    - `OoBDev.DataLoader.Contracts` → `OoBDev.DataLoader.Abstractions`
+    - `OoBDev.DocumentCenter.Contracts` → `OoBDev.DocumentCenter.Abstractions`
+    - `OoBDev.Generations.Contracts` → `OoBDev.Generations.Abstractions`
+    - `OoBDev.IdentityModel.Contracts` → `OoBDev.IdentityModel.Abstractions`
+    - `OoBDev.SpatialServices.Contracts` → `OoBDev.SpatialServices.Abstractions`
+    - `OoBDev.TextTemplating.Contracts` → `OoBDev.TextTemplating.Abstractions`
   - [x] Updated 87+ namespace declarations in .cs files
   - [x] Updated 37+ using statements in .cs files
   - [x] Updated all .csproj ProjectReference paths
   - [x] Updated all README.md and documentation references
-  - [x] Renamed all 18 directories (14 Api. removal + 4 Azure reorganization)
+  - [x] Renamed all 27 directories (14 Api. removal + 4 Azure reorganization + 9 Contracts → Abstractions)
   - [x] Verified no broken references
 
 ### Phase 1: Message Queueing Providers (HIGH PRIORITY)

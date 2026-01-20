@@ -11,7 +11,7 @@ Support for Communication Central to use a Twilio for SMS messages
 | Twilio:SmsMessaging:AccountSid          |              | Account SID                         |
 | Twilio:SmsMessaging:AuthToken           |              | Twilio Auth token                   |
 | Twilio:SmsMessaging:Default:From        |              | Default from number if not provided in request |
-| OoBDev:ConfiguredServices:OoBDev.Communications.Contracts.Channels.ISendSmsProvider |  | Set to "OoBDev.Twilio.SmsMessaging.Communications.SendTwilioSmsHandler" to enable this provider
+| OoBDev:ConfiguredServices:OoBDev.Communications.Abstractions.Channels.ISendSmsProvider |  | Set to "OoBDev.Twilio.SmsMessaging.Communications.SendTwilioSmsHandler" to enable this provider
 
 ## Notes
 

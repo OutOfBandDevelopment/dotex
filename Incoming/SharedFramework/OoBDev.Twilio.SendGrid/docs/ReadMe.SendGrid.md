@@ -11,7 +11,7 @@ Support for Communication Central to use a Send Grid for Email
 | Twilio:SendGrid:ApiKey                  |              | API Key for Send Grid               |
 | Twilio:SendGrid:Default:From:Email      |              | Default From address if not provided in request |
 | Twilio:SendGrid:Default:Subject         |              | Default Subject if not provided in request |
-| OoBDev:ConfiguredServices:OoBDev.Communications.Contracts.Channels.ISendEmailProvider |  | Set to "OoBDev.Twilio.SendGrid.Communications.SendGridEmailHandler" to enable this provider
+| OoBDev:ConfiguredServices:OoBDev.Communications.Abstractions.Channels.ISendEmailProvider |  | Set to "OoBDev.Twilio.SendGrid.Communications.SendGridEmailHandler" to enable this provider
 
 ## Notes
 

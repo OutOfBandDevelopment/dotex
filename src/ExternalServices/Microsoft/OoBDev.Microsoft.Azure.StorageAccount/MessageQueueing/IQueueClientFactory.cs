@@ -1,8 +1,8 @@
-using Azure.Storage.Queues;
+﻿using Azure.Storage.Queues;
 using Microsoft.Extensions.Configuration;
 using System;
 
-namespace OoBDev.Azure.StorageAccount.MessageQueueing;
+namespace OoBDev.Microsoft.Azure.StorageAccount.MessageQueueing;
 
 /// <summary>
 /// Factory for creating instances of <see cref="QueueClient"/> for Azure Storage Queues.

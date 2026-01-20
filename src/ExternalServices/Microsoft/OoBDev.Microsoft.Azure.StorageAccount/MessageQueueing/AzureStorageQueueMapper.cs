@@ -1,8 +1,8 @@
-using OoBDev.MessageQueueing.Services;
+﻿using OoBDev.MessageQueueing.Services;
 using Microsoft.Extensions.Configuration;
 using System;
 
-namespace OoBDev.Azure.StorageAccount.MessageQueueing;
+namespace OoBDev.Microsoft.Azure.StorageAccount.MessageQueueing;
 
 /// <summary>
 /// Provides functionality to map objects to and from Azure Storage Queue messages.

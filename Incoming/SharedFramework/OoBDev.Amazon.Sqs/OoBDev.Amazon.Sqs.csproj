@@ -12,8 +12,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\OoBDev.MessageQueueing.Contracts\OoBDev.MessageQueueing.Contracts.csproj" />
-    <ProjectReference Include="..\OoBDev.Toolkit.Contracts\OoBDev.Toolkit.Contracts.csproj" />
+    <ProjectReference Include="..\OoBDev.MessageQueueing.Contracts\OoBDev.MessageQueueing.Abstractions.csproj" />
+    <ProjectReference Include="..\OoBDev.Toolkit.Contracts\OoBDev.Toolkit.Abstractions.csproj" />
   </ItemGroup>
 
 </Project>

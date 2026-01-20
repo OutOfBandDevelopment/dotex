@@ -9,8 +9,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\OoBDev.DocumentCenter.Contracts\OoBDev.DocumentCenter.Contracts.csproj" />
-    <ProjectReference Include="..\OoBDev.Toolkit.Contracts\OoBDev.Toolkit.Contracts.csproj" />
+    <ProjectReference Include="..\OoBDev.DocumentCenter.Abstractions\OoBDev.DocumentCenter.Abstractions.csproj" />
+    <ProjectReference Include="..\OoBDev.Toolkit.Contracts\OoBDev.Toolkit.Abstractions.csproj" />
   </ItemGroup>
 
 </Project>

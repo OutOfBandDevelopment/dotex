@@ -1,12 +1,12 @@
-using OoBDev.Azure.StorageAccount.BlobStorage;
-using OoBDev.Azure.StorageAccount.MessageQueueing;
-using OoBDev.Documents.Containers;
+﻿using OoBDev.Documents.Containers;
 using OoBDev.MessageQueueing.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using OoBDev.Microsoft.Azure.StorageAccount.MessageQueueing;
+using OoBDev.Microsoft.Azure.StorageAccount.BlobStorage;
 
-namespace OoBDev.Azure.StorageAccount;
+namespace OoBDev.Microsoft.Azure.StorageAccount;
 
 /// <summary>
 /// Provides extension methods for configuring Azure Storage services in the <see cref="IServiceCollection"/>.

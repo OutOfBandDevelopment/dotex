@@ -1,4 +1,4 @@
-namespace OoBDev.Azure.StorageAccount;
+﻿namespace OoBDev.Microsoft.Azure.StorageAccount;
 
 /// <summary>
 /// Contains global constants related to Azure Storage.

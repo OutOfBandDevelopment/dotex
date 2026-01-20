@@ -1,7 +1,7 @@
 ﻿using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using OoBDev.Data.Common;
-using OoBDev.System.ComponentModel.DataAnnotations;
+using OoBDev.System.ComponentModel.Data;
 using OoBDev.System.Text.Json.Serialization;
 using System;
 using System.Collections.Generic;

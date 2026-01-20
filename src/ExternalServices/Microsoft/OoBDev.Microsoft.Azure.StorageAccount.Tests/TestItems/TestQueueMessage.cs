@@ -1,4 +1,4 @@
-namespace OoBDev.Azure.StorageAccount.Tests.TestItems;
+﻿namespace OoBDev.Microsoft.Azure.StorageAccount.Tests.TestItems;
 
 public record TestQueueMessage
 {

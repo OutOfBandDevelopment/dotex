@@ -154,7 +154,7 @@ Update documentation:
 
 ```
 SharedFramework/
-├── OoBDev.Accounting.Contracts/
+├── OoBDev.Accounting.Abstractions/
 ├── OoBDev.Amazon.Sqs/
 ├── OoBDev.Amazon.Sqs.Tests/
 ├── OoBDev.Census.Geocoding/
@@ -177,34 +177,34 @@ SharedFramework/
 ├── OoBDev.Microsoft.Azure.ServiceBus.Tests/
 ├── OoBDev.Caching.Common/
 ├── OoBDev.Caching.Common.Tests/
-├── OoBDev.Caching.Contracts/
+├── OoBDev.Caching.Abstractions/
 ├── OoBDev.Communications/
-├── OoBDev.Communications.Contracts/
+├── OoBDev.Communications.Abstractions/
 ├── OoBDev.Communications.Tests/
 ├── OoBDev.ComplexEvents.Common/
 ├── OoBDev.ComplexEvents.Common.Tests/
-├── OoBDev.ComplexEvents.Contracts/
+├── OoBDev.ComplexEvents.Abstractions/
 ├── OoBDev.ComplexEvents.DatabaseExtensions/
 ├── OoBDev.ComplexEvents.EntityFrameworkCore/
 ├── OoBDev.DataLoader/
 ├── OoBDev.DataLoader.Cli/
-├── OoBDev.DataLoader.Contracts/
+├── OoBDev.DataLoader.Abstractions/
 ├── OoBDev.DataLoader.Tests/
 ├── OoBDev.DocumentCenter/
-├── OoBDev.DocumentCenter.Contracts/
+├── OoBDev.DocumentCenter.Abstractions/
 ├── OoBDev.DocumentCenter.Tests/
 ├── OoBDev.Generations/
-├── OoBDev.Generations.Contracts/
+├── OoBDev.Generations.Abstractions/
 ├── OoBDev.Generations.Extensions.DependencyInjection/
 ├── OoBDev.Generations.Tests/
-├── OoBDev.IdentityModel.Contracts/
+├── OoBDev.IdentityModel.Abstractions/
 ├── OoBDev.IdentityModel.Extensions/
 ├── OoBDev.IdentityModel.Tests/
 ├── OoBDev.SpatialServices.Common/
 ├── OoBDev.SpatialServices.Common.Tests/
-├── OoBDev.SpatialServices.Contracts/
+├── OoBDev.SpatialServices.Abstractions/
 ├── OoBDev.TextTemplating/
-├── OoBDev.TextTemplating.Contracts/
+├── OoBDev.TextTemplating.Abstractions/
 └── OoBDev.TextTemplating.Tests/
 ```
 

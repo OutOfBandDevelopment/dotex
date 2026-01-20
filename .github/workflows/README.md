@@ -50,7 +50,9 @@ This directory contains GitHub Actions workflows for building, testing, packagin
 - ✅ **Skipped on PRs** (no packages generated for pull requests)
 - ✅ Single job: Restore → Build → Test → Package
 - ✅ Tests gated (Unit + Simulate only; Integration tests disabled)
-- ✅ Creates build tags: `vX.Y.Z` (main) or `vX.Y.Z-{branch}` (dev/*)
+- ✅ Creates build tags: `vX.Y.Z` (main) or `vX.Y.Z-{branch-name}.{count}` (dev/*)
+  - GitVersion automatically includes normalized branch name in version
+  - Examples: `v0.0.11` (main), `v0.0.11-dev-fix-pipelines.1` (dev/fix-pipelines)
 - ✅ Uploads packages as artifacts (90-day retention)
 
 **2. Deploy Release Pipeline** (`deploy-release.yml`) - Unified Deployment
@@ -415,7 +417,14 @@ The diagram above shows the manual release flow. The scheduled release workflow 
 - Uses **GitVersion** for semantic versioning
 - `main` → Release version (e.g., `1.2.3`)
 - `dev/*` → Prerelease version (e.g., `1.2.3-dev-feature-branch.1`)
-- Automatic git tagging when release is created
+- **Build Tags** (created after successful builds):
+  - Format: `v{GitVersion.fullSemVer}`
+  - Main branch: `v1.2.3`
+  - Dev branches: `v1.2.3-dev-feature-branch.1` (branch name normalized by GitVersion)
+  - Slash characters in branch names converted to hyphens
+- **Release Tags** (created when deploying):
+  - GitHub Release: `v-released-X.Y.Z`
+  - NuGet Release: `nuget-X.Y.Z`
 - Properties passed to MSBuild for `.sqlproj` projects
 
 ---
@@ -571,6 +580,17 @@ When updating workflows:
 2. **Document changes** in this README
 3. **Update diagrams** if flow changes
 4. **Notify team** of breaking changes
+
+### Recent Changes
+
+**2026-01-20: Fixed Build Tag Format**
+- **Issue:** Build tags were malformed on dev branches (e.g., `v0.0.11-dev-fix-pipelines.1-dev/fix-pipelines`)
+- **Cause:** Pipeline was appending raw branch name to GitVersion output that already included normalized branch name
+- **Fix:** Simplified tag creation to use GitVersion's `fullSemVer` directly without additional branch name appending
+- **Result:** Clean tags now generated correctly:
+  - Main: `v0.0.11`
+  - Dev branches: `v0.0.11-dev-fix-pipelines.1`
+- **File:** `.github/workflows/dotnet.yml` lines 229-243
 
 ---
 

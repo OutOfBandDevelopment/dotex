@@ -1,9 +1,9 @@
-using OoBDev.Documents.Containers;
+﻿using OoBDev.Documents.Containers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using System;
 
-namespace OoBDev.Azure.StorageAccount.BlobStorage;
+namespace OoBDev.Microsoft.Azure.StorageAccount.BlobStorage;
 
 /// <summary>
 /// Represents a factory for creating instances of <see cref="AzureBlobContainerProvider"/>.

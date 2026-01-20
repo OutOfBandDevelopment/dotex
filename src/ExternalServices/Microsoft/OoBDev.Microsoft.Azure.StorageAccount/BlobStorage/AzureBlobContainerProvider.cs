@@ -1,4 +1,4 @@
-using Azure.Storage.Blobs;
+﻿using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using OoBDev.Documents.Containers;
 using OoBDev.Documents.Models;
@@ -9,7 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace OoBDev.Azure.StorageAccount.BlobStorage;
+namespace OoBDev.Microsoft.Azure.StorageAccount.BlobStorage;
 
 /// <summary>
 /// Represents a provider for storing and searching content in Azure Blob storage.

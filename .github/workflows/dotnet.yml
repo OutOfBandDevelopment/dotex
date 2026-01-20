@@ -227,24 +227,18 @@ jobs:
         compression-level: 0
 
     # Tier 1: Create build tag on every successful build
-    # Tags: vX.Y.Z (main branch) or vX.Y.Z-{branch-name} (dev/* branches)
+    # Tags: vX.Y.Z (main branch) or vX.Y.Z-{branch-name}.{count} (dev/* branches)
+    # Note: GitVersion already includes branch name in fullSemVer for non-main branches
     - name: Create build tag
       if: github.event_name != 'pull_request'
       shell: bash
       run: |
         VERSION="${{ steps.gitversion.outputs.fullSemVer }}"
-        BRANCH="${{ github.ref }}"
-        BRANCH="${BRANCH#refs/heads/}"
-
-        if [ "$BRANCH" = "main" ]; then
-          TAG="v${VERSION}"
-        else
-          TAG="v${VERSION}-${BRANCH}"
-        fi
+        TAG="v${VERSION}"
 
         echo "Creating tag: ${TAG}"
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
-        git tag -a "${TAG}" -m "Build from branch ${BRANCH}"
+        git tag -a "${TAG}" -m "Build from branch ${{ github.ref_name }}"
         git push origin "${TAG}"
 

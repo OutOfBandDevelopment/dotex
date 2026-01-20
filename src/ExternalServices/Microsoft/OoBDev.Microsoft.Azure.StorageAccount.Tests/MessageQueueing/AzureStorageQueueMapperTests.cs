@@ -1,12 +1,12 @@
-﻿using OoBDev.Azure.StorageAccount.MessageQueueing;
-using OoBDev.MessageQueueing.Services;
-using OoBDev.TestUtilities;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using OoBDev.MessageQueueing.Services;
+using OoBDev.Microsoft.Azure.StorageAccount.MessageQueueing;
+using OoBDev.TestUtilities;
 using System;
 using System.Collections.Generic;
 
-namespace OoBDev.Azure.StorageAccount.Tests.MessageQueueing;
+namespace OoBDev.Microsoft.Azure.StorageAccount.Tests.MessageQueueing;
 
 [TestClass]
 public class AzureStorageQueueMapperTests

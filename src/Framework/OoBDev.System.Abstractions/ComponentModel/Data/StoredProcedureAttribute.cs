@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace OoBDev.System.ComponentModel.DataAnnotations;
+namespace OoBDev.System.ComponentModel.Data;
 
 /// <summary>
 /// Specifies the name of a stored procedure associated with a class.
