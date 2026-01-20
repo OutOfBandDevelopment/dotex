@@ -19,6 +19,10 @@ using OoBDev.SBert;
 using OoBDev.SBert.AllMiniLML6v2Sharp;
 using OoBDev.WkHtmlToPdf;
 using OoBDev.Microsoft.Azure.StorageAccount;
+using OoBDev.Microsoft.Caching;
+using OoBDev.Redis.Caching;
+
+
 
 #if DEBUG
 using OoBDev.Microsoft.ApplicationInsights;
@@ -85,6 +89,9 @@ public static class ServiceCollectionExtensions
         services.TryAddMysticMindServices();
         services.TryAddHtmlToOpenXmlServices();
         services.TryAddMicrosoftSqlServerExtensions();
+
+        services.TryAddMicrosoftCachingServices();
+        services.TryAddRedisCachingServices();
 
         return services;
     }

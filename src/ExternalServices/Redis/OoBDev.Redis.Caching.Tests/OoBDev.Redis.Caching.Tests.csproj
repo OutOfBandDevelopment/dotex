@@ -29,6 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Framework\OoBDev.Caching\OoBDev.Caching.csproj" />
     <ProjectReference Include="..\..\..\Framework\OoBDev.TestUtilities\OoBDev.TestUtilities.csproj" />
     <ProjectReference Include="..\OoBDev.Redis.Caching\OoBDev.Redis.Caching.csproj" />
   </ItemGroup>

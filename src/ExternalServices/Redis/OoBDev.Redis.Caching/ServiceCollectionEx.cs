@@ -6,6 +6,6 @@ namespace OoBDev.Redis.Caching;
 [ExcludeFromCodeCoverage]
 public static class ServiceCollectionEx
 {
-    public static IServiceCollection AddRedisCachingServices(this IServiceCollection services) =>
+    public static IServiceCollection TryAddRedisCachingServices(this IServiceCollection services) =>
         new RedisCachingRegistrar().AddServices(services);
 }

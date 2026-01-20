@@ -6,6 +6,6 @@ namespace OoBDev.Microsoft.Caching;
 [ExcludeFromCodeCoverage]
 public static class ServiceCollectionEx
 {
-    public static IServiceCollection AddMicrosoftCachingServices(this IServiceCollection services) =>
+    public static IServiceCollection TryAddMicrosoftCachingServices(this IServiceCollection services) =>
         new MicrosoftCachingRegistrar().AddServices(services);
 }

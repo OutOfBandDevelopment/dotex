@@ -19,7 +19,7 @@ public static class IntegrationServices
             .AddSingleton<IConfiguration>(configuration)
         //    .AddDebugTestConfigurations()
             .AddTestLoggingServices(testContext)
-            .AddCachingServices()
+            .TryAddCachingServices()
             .AddSingleton<ICachingProvider, NullCachingProvider>() // Default no-op provider for tests
             //.AddMicrosoftCachingServices()
             //.AddRedisCachingServices()

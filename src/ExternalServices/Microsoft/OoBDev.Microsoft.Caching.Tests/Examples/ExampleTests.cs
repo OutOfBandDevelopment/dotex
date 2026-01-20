@@ -1,15 +1,14 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using OoBDev.Caching.Tests.Providers;
+using OoBDev.Caching;
 using OoBDev.TestUtilities;
 using OoBDev.TestUtilities.Logging;
 using System;
 using System.Threading.Tasks;
 
-namespace OoBDev.Caching.Tests.Examples;
+namespace OoBDev.Microsoft.Caching.Tests.Examples;
 
-// https://docs.microsoft.com/en-us/dotnet/api/microsoft.extensions.caching.memory.imemorycache?view=dotnet-plat-ext-5.0
 [TestClass]
 public class ExampleTests
 {
@@ -17,7 +16,7 @@ public class ExampleTests
 
     [TestMethod]
     [TestCategory(TestCategories.Simulate)]
-    public async Task CachingDesignTest()
+    public async Task CachingDesignTest_WithMicrosoftMemoryCache()
     {
         var configuration = new ConfigurationBuilder()
             .AddInMemoryCollection()
@@ -26,12 +25,9 @@ public class ExampleTests
         var services = new ServiceCollection()
             .AddSingleton<IConfiguration>(configuration)
             .AddTestLoggingServices(TestContext)
-            .AddOptions() //this needs added to startup projects
+            .AddOptions()
             .TryAddCachingServices()
-            .AddSingleton<ICachingProvider, NullCachingProvider>() // Default no-op provider for tests
-            //.AddMicrosoftCachingServices()
-            //.AddRedisCachingServices()
-            //.AddToolkitServices()
+            .TryAddMicrosoftCachingServices() // Use Microsoft Memory Cache provider
 
         // register cacheable classes
             .AddTransient(sp => sp.Cacheable<IExampleRepository, ExampleRepository>())
@@ -50,8 +46,11 @@ public class ExampleTests
 
         var result4 = example.NotTask("test1", "test2");
 
-        //await example.NotSupported1();
-        //example.NotSupported2();
+        // Verify results are not null
+        Assert.IsNotNull(result1);
+        Assert.IsNotNull(result2);
+        Assert.IsNotNull(result3);
+        Assert.IsNotNull(result4);
     }
 }
 
@@ -63,6 +62,7 @@ public class ReturnModel
     public string Param1 { get; set; }
     public string Param2 { get; set; }
 }
+
 public interface IExampleRepository
 {
     Task<ReturnModel> GetData(string param1, string param2, int a, int b, int c, int d);
@@ -72,10 +72,8 @@ public interface IExampleRepository
     Task UpdateData(ReturnModel model);
     Task UpdateData(string param1, string param2);
     Task UpdateData2(string param1, string param2);
-
-    Task NotSupported1() { throw new NotImplementedException(); }
-    void NotSupported2() { throw new NotImplementedException(); }
 }
+
 public class ExampleRepository : IExampleRepository
 {
     public ReturnModel NotTask(string param1, string param2) =>
@@ -127,14 +125,6 @@ public class ExampleRepository : IExampleRepository
     [FlushCache("bucket1/data/{param1}/{param2}")]
     public Task UpdateData(string param1, string param2) => Task.FromResult(0);
 
-    // The intention is to get the key from the related method... but unless the 
-    // parameters match I'm not sure how I would fill out the missing key values
     [FlushCache(typeof(ExampleRepository), nameof(GetData))]
     public Task UpdateData2(string param1, string param2) => Task.FromResult(0);
-
-    [IsCacheable("bucket1/data/{param1}/{param2}", "00:05:00")]
-    public Task NotSupported1() { throw new NotImplementedException(); }
-
-    [IsCacheable("bucket1/data/{param1}/{param2}", "00:05:00")]
-    public void NotSupported2() { throw new NotImplementedException(); }
 }

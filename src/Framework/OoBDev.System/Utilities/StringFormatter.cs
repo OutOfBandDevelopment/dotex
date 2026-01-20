@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 namespace OoBDev.System.Utilities;
 
 public class StringFormatter : IStringFormatter
-{
+{   
     public string? Format(string keyFormatter, MethodInfo method, object[] args)
     {
         if (string.IsNullOrWhiteSpace(keyFormatter))

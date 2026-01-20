@@ -20,7 +20,7 @@ public class RedisCachingProviderDevLocalTests
             //.AddDebugTestConfigurations(
             //    (ConnectionMultiplexerFactory.SourceConfigurationKey, "localhost")
             //    )
-            .AddRedisCachingServices()
+            .TryAddRedisCachingServices()
             //.AddToolkitServices()
         ;
 

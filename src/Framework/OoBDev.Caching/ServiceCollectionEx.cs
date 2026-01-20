@@ -8,7 +8,7 @@ namespace OoBDev.Caching;
 
 public static class ServiceCollectionEx
 {
-    public static IServiceCollection AddCachingServices(this IServiceCollection services)
+    public static IServiceCollection TryAddCachingServices(this IServiceCollection services)
     {
         services.TryAddProviders(); // Register IStringFormatter and ISelectedService<T>
         services.TryAddTransient<ICachingManager, CachingManager>();
