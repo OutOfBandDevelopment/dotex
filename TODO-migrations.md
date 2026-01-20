@@ -16,7 +16,7 @@ Each migration area has a dedicated TODO file:
 
 ### SharedFramework (10 projects)
 1. [TODO-migrations-communications.md](./TODO-migrations-communications.md) 🔥 CRITICAL
-2. [TODO-migrations-caching.md](./TODO-migrations-caching.md) ✅ SAFE
+2. [TODO-migrations-caching.md](./Features/Caching/TODO-migrations-caching.md) ✅ SAFE
 3. [TODO-migrations-message-queues.md](./TODO-migrations-message-queues.md) ✅ SAFE
 4. [TODO-migrations-spatial.md](./TODO-migrations-spatial.md) ✅ SAFE
 5. [TODO-migrations-identity.md](./TODO-migrations-identity.md) ⚠️ MERGE

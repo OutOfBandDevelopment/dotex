@@ -70,6 +70,15 @@ Each change document should include:
 
 ## Current Change Documents
 
+### Migrations
+
+**[migration-caching-framework-2026-01-20.md](migration-caching-framework-2026-01-20.md)**
+- Complete Caching framework migration from SharedFramework (4 implementation + 3 test projects)
+- Enhanced StringFormatter with property chain support (unlimited depth)
+- Added Redis to Docker integration testing infrastructure (12 services total)
+- Comprehensive documentation (5 architecture docs)
+- Status: ✅ Complete and verified
+
 ### Bug Fixes & Technical Debt
 
 **[bug-fixes-swashbuckle-dotnet10-2026-01-20.md](bug-fixes-swashbuckle-dotnet10-2026-01-20.md)**

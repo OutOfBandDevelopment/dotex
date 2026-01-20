@@ -59,7 +59,8 @@ All migration work for Incomming projects and BinaryDataDecoders:
 - ✅ **NEW:** 12 individual migration TODO files created (ready to execute)
 
 **Completed Migrations:**
-- ✅ **Caching (COMPLETE - 2026-01-20)** - 4 implementation + 3 test projects, full documentation
+- ✅ **Caching (COMPLETE - 2026-01-20)** - 4 implementation + 3 test projects, property chains, Redis Docker integration
+  - **Details:** [docs/changes/migration-caching-framework-2026-01-20.md](docs/changes/migration-caching-framework-2026-01-20.md)
 
 **Ready to Migrate:**
 - 🔥 Communications (CRITICAL - 16 LOC stub → 1,145 LOC)
@@ -298,6 +299,7 @@ TODO.md                                  # This file - Index and navigation
 
 ### Change History
 - `docs/changes/README.md` - Archived completed work (reduces context overhead)
+- `docs/changes/migration-caching-framework-2026-01-20.md` - Caching framework migration (4 projects, property chains, Redis Docker)
 - `docs/changes/bug-fixes-swashbuckle-dotnet10-2026-01-20.md` - Swashbuckle & .NET 10.0 fixes
 - `docs/changes/bug-fixes-mstest-expected-exception-2026-01-15.md` - MSTest modernization
 - `docs/changes/bug-fixes-phase0-critical-2026-01-15.md` - Phase 0 critical bugs

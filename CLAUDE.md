@@ -513,7 +513,7 @@ Successfully migrated entire Caching framework from SharedFramework to main code
 
 **Deliverables:** ~600 LOC implementation + 3 test projects + 15,000 words documentation
 
-**Details:** [CACHING-MIGRATION-STATUS-2026-01-20.md](CACHING-MIGRATION-STATUS-2026-01-20.md)
+**Details:** [docs/changes/migration-caching-framework-2026-01-20.md](docs/changes/migration-caching-framework-2026-01-20.md)
 
 ---
 

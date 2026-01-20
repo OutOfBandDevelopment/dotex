@@ -14,7 +14,7 @@
    - Impact: Complete multi-channel communications system
    - Priority: IMMEDIATE
 
-2. **[TODO-migrations-caching.md](./TODO-migrations-caching.md)** ✅ **COMPLETE (2026-01-20)**
+2. **[TODO-migrations-caching.md](./Features/Caching/TODO-migrations-caching.md)** ✅ **COMPLETE (2026-01-20)**
    - Status: MIGRATED - 4 implementation + 3 test projects, full documentation
    - Impact: Redis + Microsoft distributed caching
    - Priority: HIGH
