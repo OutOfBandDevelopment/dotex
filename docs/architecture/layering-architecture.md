@@ -513,7 +513,7 @@ Projects are organized by vendor/technology:
 
 #### Microsoft (8 projects)
 - **OoBDev.Microsoft.ApplicationInsights.** (2)
-- **OoBDev.Microsoft.B2C.** (2)
+- **OoBDev.Microsoft.Azure.B2C.** (2)
 - **OoBDev.Microsoft.SqlServer.DacFx.** (2)
 - **OoBDev.Microsoft.SqlServer.Server.** (2)
 
@@ -631,7 +631,7 @@ OoBDev.{Vendor}/
 
 **Naming Convention:**
 - Use vendor name: `OoBDev.{Vendor}.{Subcategory}`
-- Examples: `OoBDev.RabbitMQ`, `OoBDev.Azure.StorageAccount`, `OoBDev.Microsoft.B2C`
+- Examples: `OoBDev.RabbitMQ`, `OoBDev.Azure.StorageAccount`, `OoBDev.Microsoft.Azure.B2C`
 
 **Integration Checklist:**
 - [ ] Create `OoBDev.{Vendor}.Abstractions` project

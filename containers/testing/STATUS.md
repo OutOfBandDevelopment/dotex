@@ -207,7 +207,7 @@ Week 4: Documentation            ░░░░░░░░░░░░░░░�
 ### Azure B2C
 
 **Files to Update**:
-- `src/ExternalServices/Microsoft/OoBDev.Microsoft.B2C.Tests/`
+- `src/ExternalServices/Microsoft/OoBDev.Microsoft.Azure.B2C.Tests/`
 
 **Changes**:
 - [ ] Change category to LiveIntegration

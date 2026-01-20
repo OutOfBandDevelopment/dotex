@@ -8,7 +8,7 @@ using OoBDev.HtmlToOpenXml;
 using OoBDev.Keycloak;
 using OoBDev.MailKit;
 using OoBDev.Markdig;
-using OoBDev.Microsoft.B2C;
+using OoBDev.Microsoft.Azure.B2C;
 using OoBDev.Microsoft.SqlServer.Server;
 using OoBDev.MongoDB;
 using OoBDev.MysticMind;

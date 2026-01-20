@@ -9,7 +9,10 @@
       "Bash(while read file)",
       "Bash(do basename \"$file\")",
       "Bash(__NEW_LINE_a283f497624e4ff1__ echo \"=== COMMON LAYER PROJECTS ===\")",
-      "WebFetch(domain:github.com)"
+      "WebFetch(domain:github.com)",
+      "Bash(file:*)",
+      "Bash(xargs file:*)",
+      "Bash(du:*)"
     ]
   }
 }

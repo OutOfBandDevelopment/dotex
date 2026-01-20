@@ -40,7 +40,7 @@ Cloud-based integration testing for services requiring live credentials (Azure B
 - ⏳ Week 4: Cloud documentation (credential management, cost management)
 
 ### 📦 [Migrations](./TODO-migrations.md)
-**Status:** ✅ Vector & SharedFramework .NET Complete - ⏸️ Multiple Phases Blocked by Decisions
+**Status:** ✅ SharedFramework Phase 0 Complete - ✅ All Incoming Investigations Complete - ⏸️ Multiple Phases Blocked by Decisions
 
 All migration work for Incomming projects and BinaryDataDecoders:
 - **Incomming/Framework** - 55 files (30 NEW + 25 DIFFERS) requiring systematic comparison
@@ -49,8 +49,9 @@ All migration work for Incomming projects and BinaryDataDecoders:
 
 **Key Tasks:**
 - ✅ Framework Vector namespace updated to OoBDev.System.Math (files already in main)
-- ✅ SharedFramework Phase 0: All 51 projects at .NET 10.0, 1 SQL project at netstandard2.0 (verified complete)
-- ⏸️ SharedFramework Phase 2: Communications merge (CRITICAL - 1,145 LOC vs 16 LOC stub)
+- ✅ SharedFramework Phase 0: .NET 10.0 verified + Namespace cleanup complete (18 directories renamed)
+- ✅ All 6 Incoming projects investigated (100% complete)
+- ⏸️ SharedFramework Phase 1-2: Ready to start (Message Queueing, Communications merge)
 - ⏸️ BinaryDataDecoders: Awaiting critical decisions (see TODO-decisions.md)
 
 ### 🐛 [Bug Fixes & Technical Debt](./TODO-bug-fixes.md)
@@ -132,20 +133,17 @@ TODO.md                                  # This file - Index and navigation
 - Documented enforceable standards and pattern catalog
 - Created layer-by-layer breakdown
 
-### Migration Investigations ✅
+### Migration Investigations ✅ COMPLETE
 
-**Completed & Archived:**
+**All 6 Incoming Projects Investigated:**
 - ✅ **dotnet-lib** (2026-01-12) - 95% identical, critical bug fix applied, DELETED
 - ✅ **Framework** - 55 files analyzed (30 NEW + 25 DIFFERS), Vector library ready
-- ✅ **Oobtainium** - Mocking framework analyzed, 4 options documented, awaiting decision
+- ✅ **Oobtainium** - Mocking framework analyzed, user will move to separate repository
 - ✅ **BotChat** - Sample app analyzed, 3 options documented, awaiting decision
 - ✅ **SharedFramework** - 52 projects analyzed (~28,582 LOC), 12-phase plan created
 - ✅ **BinaryDataDecoders** - Complete feature mapping, 5-phase plan, decision points identified
-
-**In Progress:**
-- 🔍 **CloudOrchestrator** - Not yet started
-- 🔍 **ContractParser** - Not yet started
-- 🔍 **Tools** - Not yet started
+- ✅ **ContractParser** (2026-01-20) - Feature specification created in Features/ContractParser/
+- ✅ **Tools** (2026-01-20) - 4 CLI tools analyzed in Features/Tools/
 
 **Tracking:** See `Incomming/CHECKLIST.md` for detailed investigation status
 
@@ -213,21 +211,22 @@ TODO.md                                  # This file - Index and navigation
    - Create LiveIntegration setup guides
    - Update SemanticKernel integration
 
-3. **SharedFramework Namespace Cleanup** ⏳ PENDING
-   - Remove "Api." prefix (e.g., OoBDev.Api.Twilio → OoBDev.Twilio)
-   - Update all using statements
-   - Verify no broken references
+3. **SharedFramework Namespace Cleanup** ✅ COMPLETE (2026-01-20)
+   - Removed "Api." prefix from all namespaces (14 projects)
+   - Moved Azure under Microsoft hierarchy (4 projects)
+   - Updated 87+ namespace declarations and 37+ using statements
+   - Renamed all 18 directories
+   - Verified no broken references
 
 ### Medium Term (Next Month)
-1. **SharedFramework Phase 2** ⏸️ CRITICAL (Awaiting Phase 0 namespace cleanup)
+1. **SharedFramework Phase 2** ✅ READY TO START (Phase 0 complete)
    - Merge OoBDev.Communications (1,145 LOC vs 16 LOC stub)
    - Migrate Twilio SendGrid and SMS providers
    - Complete communications implementation
 
-2. **Incomming Project Investigations** 🔍 IN PROGRESS (3 remaining)
-   - CloudOrchestrator - Not yet started
-   - ContractParser - Not yet started
-   - Tools - Not yet started
+2. **Feature Implementation Decisions** ⏸️ PENDING
+   - ContractParser - Decide: Implement now, later, or keep as specification
+   - Tools (BulkLlm) - Decide: Consolidate into unified LlmCodeGen tool
 
 3. **BinaryDataDecoders Phase 1** ⏸️ BLOCKED (Awaiting decisions)
    - Endianness support enhancements
