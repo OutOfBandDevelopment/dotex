@@ -1,6 +1,6 @@
 # TODO - Live Integration Testing (Cloud) Epic
 
-**Last Updated:** 2026-01-19
+**Last Updated:** 2026-01-20
 
 Cloud-based integration testing for services that cannot be Dockerized or emulated.
 
@@ -91,15 +91,13 @@ Integration testing for cloud services that require actual cloud infrastructure 
     - Use Azure Key Vault for production
   - **NOTE:** Manual execution only, not in CI/CD
 
-- [ ] Update tests to read from environment variables:
+- [ ] Update tests to read from test properties:
   ```csharp
   [TestInitialize]
   public void Setup()
   {
-      var tenantId = Environment.GetEnvironmentVariable("AZURE_B2C_TENANT_ID")
-          ?? throw new InvalidOperationException("AZURE_B2C_TENANT_ID not set");
-      var clientId = Environment.GetEnvironmentVariable("AZURE_B2C_CLIENT_ID")
-          ?? throw new InvalidOperationException("AZURE_B2C_CLIENT_ID not set");
+      var tenantId = TestContext.GetRequiredProperty<string>("AZURE_B2C_TENANT_ID");
+      var clientId = TestContext.GetRequiredProperty<string>("AZURE_B2C_CLIENT_ID");
       // ... configure B2C client
   }
   ```
@@ -151,13 +149,12 @@ Integration testing for cloud services that require actual cloud infrastructure 
   - **Security:** Environment variable management, Key Vault
   - **NOTE:** Manual execution only
 
-- [ ] Update tests for environment variables:
+- [ ] Update tests for test properties:
   ```csharp
   [TestInitialize]
   public void Setup()
   {
-      var connectionString = Environment.GetEnvironmentVariable("APPINSIGHTS_CONNECTION_STRING")
-          ?? throw new InvalidOperationException("APPINSIGHTS_CONNECTION_STRING not set");
+      var connectionString = TestContext.GetRequiredProperty<string>("APPINSIGHTS_CONNECTION_STRING");
       _telemetryClient = new TelemetryClient(new TelemetryConfiguration
       {
           ConnectionString = connectionString
@@ -215,15 +212,13 @@ Integration testing for cloud services that require actual cloud infrastructure 
   - **Security:** API key management
   - **NOTE:** Manual execution only
 
-- [ ] Update tests for environment variables:
+- [ ] Update tests for test properties:
   ```csharp
   [TestInitialize]
   public void Setup()
   {
-      var apiKey = Environment.GetEnvironmentVariable("GROQ_API_KEY")
-          ?? throw new InvalidOperationException("GROQ_API_KEY not set");
-      var apiUrl = Environment.GetEnvironmentVariable("GROQ_API_URL")
-          ?? "https://api.groq.com/openai/v1";
+      var apiKey = TestContext.GetRequiredProperty<string>("GROQ_API_KEY");
+      var apiUrl = TestContext.GetPropertyOrDefault("GROQ_API_URL", "https://api.groq.com/openai/v1");
 
       _groqClient = new GroqClient(new GroqClientOptions
       {

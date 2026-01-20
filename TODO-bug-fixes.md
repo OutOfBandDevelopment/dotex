@@ -107,7 +107,7 @@ All completed bug fixes have been archived to change documents for reference:
 ### Dependencies
 
 - [ ] Audit NuGet package versions for security vulnerabilities
-- [ ] Update outdated packages to .NET 9-compatible versions
+- [ ] Update outdated packages to .NET 10-compatible versions
 - [ ] Remove unused package references
 - [ ] Document all external dependencies
 
@@ -159,5 +159,5 @@ All completed bug fixes have been archived to change documents for reference:
 - [Architectural Patterns](docs/architecture/architectural-patterns.md) - Pattern catalog
 
 **Protocols:**
-- [Security Audit](. claude/protocols/software/security-audit.md) - Security review protocol
+- [Security Audit](.claude/protocols/software/security-audit.md) - Security review protocol
 - [Architectural Analysis](.claude/protocols/software/architectural-analysis.md) - Architecture review

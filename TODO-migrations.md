@@ -585,7 +585,7 @@ Migration work includes:
   - [ ] Custom validators
   - [ ] Data binding helpers
   - [ ] UI validation components
-- [ ] Ensure .NET 9.0 Windows Forms compatibility
+- [ ] Ensure .NET 10.0 Windows Forms compatibility
 - [ ] Add comprehensive tests
 - [ ] Document desktop application scenarios
 - [ ] Package separately for desktop/UI use cases
@@ -598,7 +598,7 @@ Migration work includes:
   - [ ] Update to modern Windows App SDK if needed
   - [ ] Otherwise DELETE
 - [ ] Review .NET Framework-specific code
-  - [ ] Port to .NET 9.0 if valuable
+  - [ ] Port to .NET 10.0 if valuable
   - [ ] Otherwise DELETE
 - [ ] Review other platform-specific features
   - [ ] Migrate valuable cross-platform features

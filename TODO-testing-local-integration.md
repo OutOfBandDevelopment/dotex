@@ -1,6 +1,6 @@
 # TODO - Local Integration Testing (Docker) Epic
 
-**Last Updated:** 2026-01-19
+**Last Updated:** 2026-01-20
 
 Docker-based integration testing infrastructure for OoBDev framework.
 
@@ -52,7 +52,7 @@ Complete Docker-based integration testing infrastructure enabling automated test
 2. **SMTP4Dev** (Email testing) - Ports 25, 7777
 3. **MongoDB** (NoSQL database) - Port 27017
 4. **SQL Server** (Relational database) - Port 1433
-5. **RabbitMQ** (Message queue) - Ports 5672, 15672
+5. **RabbitMQ** (Message queue) - Ports 5673, 15672
 6. **OpenSearch** (Search engine) - Ports 9200, 9600
 7. **Qdrant** (Vector database) - Ports 6333, 6334
 8. **Azurite** (Azure Storage emulator) - Ports 10000-10002
@@ -100,9 +100,9 @@ Complete Docker-based integration testing infrastructure enabling automated test
 **Apache Tika (6 tests)** - ✅ COMPLETED
 - [x] File: `src/ExternalServices/Apache/OoBDev.Apache.Tika.Tests/Handlers/*HandlerTests.cs`
 - [x] Changed `[TestCategory(TestCategories.DevLocal)]` → `[TestCategory(TestCategories.Integration)]`
-- [x] Updated base test class to use `TIKA_URL` environment variable
+- [x] Updated base test class to use `TIKA_URL` test property
   ```csharp
-  var tikaUrl = Environment.GetEnvironmentVariable("TIKA_URL") ?? "http://localhost:9998";
+  var tikaUrl = TestContext.GetRequiredProperty<string>("TIKA_URL");
   ```
 - [x] Removed hardcoded URL (`http://127.0.0.1:9998`) from `TikaToHtmlConversionHandlerTestsBase.cs`
 - [x] All 6 handler tests (PDF, DOC, DOCX, EPUB, ODT, RTF) migrated
@@ -110,12 +110,12 @@ Complete Docker-based integration testing infrastructure enabling automated test
 **SMTP/MailKit (2 tests)** - ✅ COMPLETED
 - [x] File: `src/ExternalServices/MailKit/OoBDev.MailKit.Tests/ClientExampleTests.cs`
 - [x] Changed category to Integration for both `SendSmtpTest` and `GetImapTest`
-- [x] Updated to use environment variables:
+- [x] Updated to use test properties:
   ```csharp
-  var smtpHost = Environment.GetEnvironmentVariable("SMTP_HOST") ?? "localhost";
-  var smtpPort = int.TryParse(Environment.GetEnvironmentVariable("SMTP_PORT"), out var p) ? p : 25;
-  var imapHost = Environment.GetEnvironmentVariable("IMAP_HOST") ?? "localhost";
-  var imapPort = int.TryParse(Environment.GetEnvironmentVariable("IMAP_PORT"), out var p) ? p : 143;
+  var smtpHost = TestContext.GetRequiredProperty<string>("SMTP_HOST");
+  var smtpPort = TestContext.GetPropertyOrDefault("SMTP_PORT", 25);
+  var imapHost = TestContext.GetRequiredProperty<string>("IMAP_HOST");
+  var imapPort = TestContext.GetPropertyOrDefault("IMAP_PORT", 143);
   ```
 - [x] Removed DataRow attributes (Azure container tests moved to local Docker focus)
 
@@ -139,10 +139,9 @@ Complete Docker-based integration testing infrastructure enabling automated test
           await _mongoClient.DropDatabaseAsync(_databaseName);
   }
   ```
-- [x] Updated connection string to use environment variable in all 3 tests:
+- [x] Updated connection string to use test property in all 3 tests:
   ```csharp
-  var connectionString = Environment.GetEnvironmentVariable("MONGODB_CONNECTION_STRING")
-      ?? "mongodb://localhost:27017?collation={locale:'en_US',caseLevel:false,strength:2 }";
+  var connectionString = TestContext.GetRequiredProperty<string>("MONGODB_CONNECTION_STRING");
   ```
 
 **SQL Server DacFx** - ⏭️ SKIPPED (No integration tests to migrate)
@@ -153,9 +152,9 @@ Complete Docker-based integration testing infrastructure enabling automated test
 **RabbitMQ (3 tests)** - ✅ COMPLETED
 - [x] File: `src/ExternalServices/RabbitMQ/OoBDev.RabbitMQ.Tests/MessageQueueing/RabbitMQQueueMessageSenderProviderTests.cs`
 - [x] Changed category to Integration for all 3 test methods
-- [x] Updated connection to use environment variable in all 3 tests:
+- [x] Updated connection to use test property in all 3 tests:
   ```csharp
-  var rabbitMQHost = Environment.GetEnvironmentVariable("RABBITMQ_HOST") ?? "localhost";
+  var rabbitMQHost = TestContext.GetRequiredProperty<string>("RABBITMQ_HOST");
   ```
 - [x] Tests: `SendAsyncTest_ByFullType`, `SendAsyncTest_ByKeyed`, `FindProviderTests`
 - Note: Cleanup handled by RabbitMQ framework's message queue cleanup
@@ -177,11 +176,11 @@ Complete Docker-based integration testing infrastructure enabling automated test
       }
   }
   ```
-- [x] Updated connection to use environment variables:
+- [x] Updated connection to use test properties:
   ```csharp
-  var url = Environment.GetEnvironmentVariable("OPENSEARCH_URL") ?? "http://localhost:9200";
-  var username = Environment.GetEnvironmentVariable("OPENSEARCH_USERNAME") ?? "admin";
-  var password = Environment.GetEnvironmentVariable("OPENSEARCH_PASSWORD") ?? "admin";
+  var url = TestContext.GetRequiredProperty<string>("OPENSEARCH_URL");
+  var username = TestContext.GetRequiredProperty<string>("OPENSEARCH_USERNAME");
+  var password = TestContext.GetRequiredProperty<string>("OPENSEARCH_PASSWORD");
   ```
 - [x] Added unique index names: `integrationtest_{Guid.NewGuid():N}`
 - [x] SearchIndexTest now creates test data before searching
@@ -189,9 +188,9 @@ Complete Docker-based integration testing infrastructure enabling automated test
 **SBert (2 tests)** - ✅ COMPLETED
 - [x] File: `src/ExternalServices/SBert/OoBDev.SBert.Tests/SentenceEmbeddingClientTests.cs`
 - [x] Changed category to Integration for both tests
-- [x] Updated to use environment variable:
+- [x] Updated to use test property:
   ```csharp
-  var url = Environment.GetEnvironmentVariable("SBERT_URL") ?? "http://localhost:5080";
+  var url = TestContext.GetRequiredProperty<string>("SBERT_URL");
   ```
 - [x] Removed DataRow attributes (hardcoded URLs replaced with env vars)
 - [x] Tests: `GetEmbeddingAsyncTest`, `GetAllTest`
@@ -391,7 +390,7 @@ Complete Docker-based integration testing infrastructure enabling automated test
   - Cleanup works correctly
   - Ready for daily CI/CD execution
 
-  Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>"
+  Co-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>"
   git push
   ```
 - [ ] Manually trigger workflow to verify CI/CD execution:
@@ -552,8 +551,8 @@ MONGODB_CONNECTION_STRING=mongodb://localhost:27017
 
 # RabbitMQ
 RABBITMQ_HOST=localhost
-RABBITMQ_PORT=5672
-RABBITMQ_CONNECTION_STRING=amqp://guest:guest@localhost:5672/
+RABBITMQ_PORT=5673
+RABBITMQ_CONNECTION_STRING=amqp://guest:guest@localhost:5673/
 
 # OpenSearch
 OPENSEARCH_URL=https://localhost:9200

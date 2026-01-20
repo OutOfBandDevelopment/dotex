@@ -47,6 +47,7 @@ public class OpenSearchTests
         var password = TestContext.GetRequiredProperty<string>("OPENSEARCH_PASSWORD");
 
         var connection = new ConnectionConfiguration(new Uri(url))
+            .ServerCertificateValidationCallback((_, _, _, _) => true)//HACK: never do this in prod! this is for integration testing only
             .BasicAuthentication(username, password)
             .EnableHttpCompression(true)
             .ThrowExceptions(true)

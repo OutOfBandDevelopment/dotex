@@ -3,7 +3,7 @@
 **Last Updated:** 2026-01-20
 **Framework:** OoBDev (dotex) - Enterprise .NET Library Suite
 **Target:** net10.0
-**Current Work:** Swashbuckle 10.1.0 & .NET 10.0 fixes VERIFIED COMPLETE | Docker testing infrastructure awaiting local validation
+**Current Work:** Caching + Message Queues migrations COMPLETE | Docker testing infrastructure awaiting local validation
 
 ---
 
@@ -98,16 +98,17 @@ Located in `.claude/protocols/`:
 - ✅ Namespace updated from `OoBDev.Common.Math` → `OoBDev.System.Math` (5 files)
 - ✅ No migration needed - files already integrated
 
-**SharedFramework Migration** - ✅ PHASE 0 COMPLETE
+**SharedFramework Migration** - ✅ PHASE 1 IN PROGRESS
 - ✅ 51 projects at .NET 10.0 (1 SQL project at netstandard2.0)
 - ✅ Namespace cleanup complete (27 directories renamed)
   - 14 Api. prefix removals
   - 4 Azure reorganizations (moved under Microsoft hierarchy)
   - 9 Contracts → Abstractions renames
+- ✅ Caching Framework migrated (4 impl + 3 test projects)
+- ✅ Message Queues migrated (AWS SQS + Azure Service Bus providers)
 - 52 projects analyzed and categorized
 - 12-phase migration plan created
-- Ready for Phase 1: Message Queueing Providers
-- Critical: Communications merge (1,145 LOC vs 16 LOC stub)
+- Next: Communications merge (1,145 LOC vs 16 LOC stub)
 
 ---
 
@@ -356,9 +357,12 @@ cd ../containers/testing
 [TestCategory(TestCategories.Integration)]
 public async Task TestMongoDBOperation()
 {
-    // ✅ CORRECT: Use TestContext.GetProperty<T>()
-    var connectionString = TestContext.GetProperty<string>("MONGODB_CONNECTION_STRING")
-        ?? "mongodb://localhost:27017";
+    // ✅ CORRECT: Use GetRequiredProperty for required values
+    var connectionString = TestContext.GetRequiredProperty<string>("MONGODB_CONNECTION_STRING");
+
+    // ✅ CORRECT: Use GetPropertyOrDefault for industry-standard defaults
+    var port = TestContext.GetPropertyOrDefault("MONGODB_PORT", 27017);
+
     var databaseName = $"IntegrationTest_{Guid.NewGuid():N}";  // Unique per run
 
     // ... test logic
@@ -368,7 +372,7 @@ public async Task TestMongoDBOperation()
 }
 ```
 
-**IMPORTANT:** Always use `TestContext.GetProperty<T>()` instead of `Environment.GetEnvironmentVariable()` for test configuration. This integrates with `.runsettings` files and MSTest infrastructure.
+**IMPORTANT:** Always use `TestContext.GetRequiredProperty<T>()` or `TestContext.GetPropertyOrDefault<T>()` instead of `Environment.GetEnvironmentVariable()` for test configuration. This integrates with `.runsettings` files and MSTest infrastructure.
 
 **Test Configuration:**
 - **All Variables:** See [TEST_VARIABLES.md](./TEST_VARIABLES.md) for complete list of 30+ test properties
@@ -412,7 +416,7 @@ public void MethodName_Scenario_ExpectedBehavior()
 ### Commits
 - Only create when user explicitly requests
 - Follow security protocol (no force push, no amend unless specific conditions)
-- Co-author: `Claude Sonnet 4.5 <noreply@anthropic.com>`
+- Co-author: `Claude Opus 4.5 <noreply@anthropic.com>`
 
 ### Pull Requests
 - Use `gh pr create` for GitHub PRs
@@ -637,7 +641,6 @@ See `/containers/testing/STATUS.md` for detailed progress.
 
 **Next Priority Migrations:**
 - 🔥 Communications (CRITICAL - 16 LOC stub → 1,145 LOC complete system)
-- Message Queues (AWS SQS + Azure Service Bus)
 - Spatial Services (5 geocoding providers)
 - Data Loader (ETL pipeline + CLI tool)
 
@@ -747,7 +750,7 @@ Fixed 6 critical bugs including lambda syntax errors, non-functional stub implem
 - ✅ RabbitMQ (3 tests) - Added RABBITMQ_HOST env var
 - ✅ OpenSearch (2 tests) - Added unique index naming, cleanup, OPENSEARCH_URL/USERNAME/PASSWORD
 - ✅ SBert (2 tests) - Added SBERT_URL env var
-- ✅ All tests now use `TestContext.GetProperty<T>()` pattern (corrected by linter)
+- ✅ All tests now use `TestContext.GetRequiredProperty<T>()` / `GetPropertyOrDefault<T>()` patterns
 
 **Documentation Complete:**
 - ✅ [TEST_VARIABLES.md](./TEST_VARIABLES.md) - All 30+ test properties documented

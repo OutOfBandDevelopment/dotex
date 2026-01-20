@@ -19,8 +19,8 @@
    - Impact: Redis + Microsoft distributed caching
    - Priority: HIGH
 
-3. **[TODO-migrations-message-queues.md](./TODO-migrations-message-queues.md)** ✅
-   - Status: Main only has RabbitMQ, SF adds AWS SQS + Azure Service Bus
+3. **[TODO-migrations-message-queues.md](./TODO-migrations-message-queues.md)** ✅ **COMPLETE (2026-01-20)**
+   - Status: MIGRATED - AWS SQS + Azure Service Bus providers with Docker testing
    - Impact: Cloud message queue providers
    - Priority: HIGH
 
@@ -106,7 +106,7 @@
 |---------|------|-------------|--------|----------|--------|
 | Communications | TODO-migrations-communications.md | 16 LOC stub | 1,145 | 🔥 IMMEDIATE | ⚠️ MailKit adapter needed |
 | Caching | TODO-migrations-caching.md | ✅ **COMPLETE** | ~600 | HIGH | ✅ Migrated 2026-01-20 |
-| Message Queues | TODO-migrations-message-queues.md | RabbitMQ only | ~300 | HIGH | ✅ None |
+| Message Queues | TODO-migrations-message-queues.md | ✅ **COMPLETE** | ~750 | HIGH | ✅ Migrated 2026-01-20 |
 | Spatial | TODO-migrations-spatial.md | None | ~1,200 | HIGH | ✅ None |
 | Identity | TODO-migrations-identity.md | 125 LOC | 291+204 | HIGH | ⚠️ Merge needed |
 | Documents | TODO-migrations-documents.md | 531 LOC | 911 | MEDIUM | ⚠️ Feature merge |
