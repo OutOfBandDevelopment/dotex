@@ -5,7 +5,10 @@
 Cloud-based integration testing for services that cannot be Dockerized or emulated.
 
 > **Parent Document:** [TODO.md](./TODO.md)
-> **Related:** [TODO-testing-local-integration.md](./TODO-testing-local-integration.md) - Docker-based testing
+> **Related:**
+> - [TODO-testing-local-integration.md](./TODO-testing-local-integration.md) - Docker-based testing
+> - [TEST_VARIABLES.md](./TEST_VARIABLES.md) - Test property reference (3 cloud services)
+> - [docs/architecture/testing-guidelines.md](./docs/architecture/testing-guidelines.md) - Testing best practices
 
 ---
 

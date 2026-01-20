@@ -5,7 +5,10 @@
 Docker-based integration testing infrastructure for OoBDev framework.
 
 > **Parent Document:** [TODO.md](./TODO.md)
-> **Related:** [TODO-testing-live-integration.md](./TODO-testing-live-integration.md) - Cloud-based testing
+> **Related:**
+> - [TODO-testing-live-integration.md](./TODO-testing-live-integration.md) - Cloud-based testing
+> - [TEST_VARIABLES.md](./TEST_VARIABLES.md) - Test property reference (11 Docker services)
+> - [docs/architecture/testing-guidelines.md](./docs/architecture/testing-guidelines.md) - Testing best practices
 
 ---
 
