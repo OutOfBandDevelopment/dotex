@@ -58,6 +58,7 @@ Located in `.claude/protocols/`:
 #### Documentation
 - **documentation-style-guide.md** - Content standards
 - **documentation-standards.md** - File organization
+- **change-documentation-archival.md** - Archive completed work to reduce context overhead
 
 #### Code Generation
 - **template-development.md** - Template-based code generation
@@ -258,6 +259,15 @@ OoBDev.{Layer}.{Feature}/
 4. Link to related documentation
 5. Add to appropriate index/README
 
+### Archiving Completed Work
+1. **Trigger:** "clean up your task list" or when TODO files > 400 lines
+2. Follow `.claude/protocols/documentation/change-documentation-archival.md`
+3. Create change document in `docs/changes/`
+4. Update TODO files with summary + link
+5. Update CLAUDE.md "Recently Completed Work"
+6. Update `docs/changes/README.md` index
+7. Reduces context overhead by 30-50%
+
 ---
 
 ## Important Files
@@ -276,6 +286,7 @@ OoBDev.{Layer}.{Feature}/
 ### Protocols
 - `/.claude/protocols/software/` - Software development protocols
 - `/.claude/protocols/documentation/` - Documentation protocols
+  - `change-documentation-archival.md` - Archive completed work (use "clean up your task list")
 
 ---
 
@@ -498,19 +509,6 @@ See `/containers/testing/STATUS.md` for detailed progress.
 
 ---
 
-## Previous Completed Work (2026-01-15)
-
-### Task: Convert ExpectedExceptionAttribute to Assert.ThrowsException
-**Status:** ✅ COMPLETED
-
-Successfully converted all 40 instances of `[ExpectedException(typeof(T))]` to `Assert.ThrowsException<T>()` across 24 test files:
-- Framework Layer: 10 conversions
-- Binary Decoders: 4 conversions
-- SharedFramework: 26 conversions
-
-Both sync and async test patterns handled correctly. See TODO.md for full file list.
-
----
 
 ## Current Work Context (2026-01-20)
 
@@ -524,39 +522,29 @@ Both sync and async test patterns handled correctly. See TODO.md for full file l
 
 ---
 
-## Latest Completed Work (2026-01-20)
+## Recently Completed Work
 
-### Task: Fix Swashbuckle 10.1.0 & .NET 10.0 Breaking Changes + XML Documentation
+### ✅ Swashbuckle 10.1.0 & .NET 10.0 Fixes (2026-01-20)
 
-**Status:** ✅ COMPLETE AND VERIFIED
+Fixed all breaking changes from Swashbuckle 10.1.0 and .NET 10.0, plus enabled XML documentation globally. All 65 projects build successfully, Swagger documentation now appears correctly.
 
-Successfully fixed all breaking changes and enabled XML documentation:
+**Details:** [docs/changes/bug-fixes-swashbuckle-dotnet10-2026-01-20.md](docs/changes/bug-fixes-swashbuckle-dotnet10-2026-01-20.md)
 
-**Swashbuckle 10.1.0 (5 files fixed):**
-1. **FormFileOperationFilter.cs** - Collection initialization
-2. **HealthChecksDocumentFilter.cs** - Collection initialization
-3. **SearchQueryOperationFilter.cs** - Comprehensive collection initialization
-4. **ApplicationPermissionsApiFilter.cs** - Extensions initialization
-5. **ServiceCollectionExtensions.cs** - .NET 10.0 DI fixes
+---
 
-**XML Documentation (3 files):**
-1. **Directory.Build.props** - Enabled `GenerateDocumentationFile` globally
-2. **OoBDev.AspNetCore.Mvc.csproj** - Removed local override
-3. **OoBDev.WebApi.csproj** - Removed local override
+### ✅ MSTest ExpectedExceptionAttribute Conversion (2026-01-15)
 
-**Verification:**
-- ✅ All 65 projects build successfully
-- ✅ XML documentation files generated (OoBDev.AspNetCore.Mvc.xml, OoBDev.WebApi.xml, etc.)
-- ✅ Swagger JSON/YAML generated successfully
-- ✅ Summary and Description properties now appear in Swagger
-- ⏳ Tests pending: `dotnet test src/ --filter "OoBDev.AspNetCore.Mvc"`
+Converted 40 test instances from deprecated `[ExpectedException]` to modern `Assert.ThrowsException<T>()` pattern across 24 files.
 
-**Key Lessons:**
-- Swashbuckle 10.1.0: ALL collections (Tags, Parameters, Responses, Extensions, Properties) start as null
-- Must initialize before use: `operation.Tags ??= new HashSet<OpenApiTagReference>()`
-- Read-only Content properties require object initializers
-- .NET 10.0: ClaimsPrincipal has ambiguous constructors - use factory methods
-- .NET 10.0: IActionContextAccessor deprecated (ASPDEPR006)
+**Details:** [docs/changes/bug-fixes-mstest-expected-exception-2026-01-15.md](docs/changes/bug-fixes-mstest-expected-exception-2026-01-15.md)
+
+---
+
+### ✅ Phase 0 Critical Bug Fixes (2026-01-15)
+
+Fixed 6 critical bugs including lambda syntax errors, non-functional stub implementations, and floating-point precision issues. Created NumericAsserts utility for consistent floating-point comparisons.
+
+**Details:** [docs/changes/bug-fixes-phase0-critical-2026-01-15.md](docs/changes/bug-fixes-phase0-critical-2026-01-15.md)
 
 ---
 

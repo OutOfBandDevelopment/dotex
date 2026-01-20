@@ -10,202 +10,54 @@ This document tracks bug fixes, breaking changes, and technical debt resolution.
 
 ## Active Work
 
-### OoBDev.AspNetCore.Mvc - Swashbuckle 10.1.0 Breaking Changes (✅ COMPLETED)
-
-**Issue:** Assembly updates introduced breaking changes in Swashbuckle 10.1.0 API
-
-**Changes Made (2026-01-15):**
-
-**File: FormFileOperationFilter.cs**
-- [x] Fixed CS0200: `IOpenApiSchema.Properties` is read-only (2026-01-15)
-  - Changed from: `schema.Properties = new Dictionary<...>()`
-  - Changed to: Loop through fileParams and add to `schema.Properties[propertyName]`
-  - Location: Lines 34-43
-- [x] Fixed CS0029: String to JsonSchemaType conversion (2026-01-15)
-  - Changed from: `Type = "string"`
-  - Changed to: `Type = JsonSchemaType.String`
-  - Location: Line 40
-- [x] Fixed NullReferenceException: schema.Properties is null (2026-01-20)
-  - Initialize: `schema.Properties ??= new Dictionary<string, IOpenApiSchema>()`
-  - Location: Line 37
-
-**File: HealthChecksDocumentFilter.cs**
-- [x] Fixed CS1503: `OpenApiTag` vs `OpenApiTagReference` mismatch (2026-01-15)
-  - Changed from: `operation.Tags.Add(new OpenApiTag { Name = "ApiHealth" })`
-  - Changed to: `operation.Tags.Add(new OpenApiTagReference { Name = "ApiHealth" })`
-  - Location: Line 28
-- [x] Fixed CS0200 & CS0266: Properties assignment and type conversion (2026-01-15)
-  - Changed from: `Properties = properties` (assignment)
-  - Changed to: Build schema with `.Properties.Add()` calls
-  - Location: Lines 30-36
-- [x] Fixed NullReferenceException: Collections are null in Swashbuckle 10.1.0 (2026-01-20)
-  - Collections must be initialized in object initializers
-  - Changed to initialize: `Tags`, `Content`, `Responses`, `Properties`
-  - Used collection initializer syntax for clean initialization
-  - Location: Lines 26-50
-
-**File: SearchQueryOperationFilter.cs**
-- [x] Fixed CS1503: OpenApiTag references (3 occurrences) (2026-01-15)
-  - Changed from: `new OpenApiTag { Name = ... }`
-  - Changed to: `new OpenApiTagReference { Name = ... }`
-  - Location: Lines 48, 52, 57
-- [x] Fixed CS0019: Coalesce assignment with mismatched types (2026-01-15)
-  - Changed from: `operation.Parameters ??= new List<OpenApiParameter>()`
-  - Changed to: Traditional null check and assignment
-  - Location: Lines 114-118
-- [x] Fixed UpdateRequestSchema method (major refactor) (2026-01-15)
-  - Changed from: Creating mutable dictionary copy with `.ChangeComparer()`
-  - Changed to: Direct schema property access via `schema.Properties[key]`
-  - Removed unnecessary `.Properties = properties` reassignment
-  - Added null checks for schema lookups
-  - Fixed IOpenApiSchema vs OpenApiSchema conversions
-  - Location: Lines 187-292
-- [x] Fixed NullReferenceException: Collections are null in Swashbuckle 10.1.0 (2026-01-20)
-  - Initialize operation.Tags before use: `operation.Tags ??= new HashSet<OpenApiTagReference>()`
-  - Initialize operation.Parameters before use: `operation.Parameters ??= new List<OpenApiParameter>()`
-  - Initialize operation.RequestBody and Content before passing to ApplyContent
-  - Initialize operation.Responses and Response.Content properly
-  - Initialize schema.Properties in new schemas (filterSchema, orderBySchema)
-  - All collection initializations done before adding items
-  - Location: Lines 46, 92-99, 121, 173-185, 238, 267
-
-**File: ApplicationPermissionsApiFilter.cs** (2026-01-20)
-- [x] Fixed NullReferenceException: Extensions dictionary is null in Swashbuckle 10.1.0
-  - Initialize Extensions if null: `operation.Extensions ??= new Dictionary<string, IOpenApiExtension>()`
-  - Then use indexer assignment: `operation.Extensions["x-permissions"] = ...`
-  - Location: Lines 42-43
-
-**File: ServiceCollectionExtensions.cs** (2026-01-20)
-- [x] Fixed .NET 10.0 ambiguous constructor: ClaimsPrincipal has multiple constructors
-  - Changed from: `services.TryAddTransient<IPrincipal, ClaimsPrincipal>()`
-  - Changed to: Factory method that explicitly creates instance with ClaimsIdentity
-  - Issue: DI container couldn't decide between constructors in .NET 10.0
-  - Location: Lines 60-64
-- [x] Removed deprecated IActionContextAccessor registration (2026-01-20)
-  - Removed: `services.TryAddSingleton<IActionContextAccessor, ActionContextAccessor>()`
-  - Reason: Deprecated in .NET 10 (ASPDEPR006), not used anywhere in codebase
-  - Replacement pattern (if needed): Use `IHttpContextAccessor` and `HttpContext.GetEndpoint()`
-  - Location: Line 57 (removed)
-
-**File: Directory.Build.props** (2026-01-20)
-- [x] Enabled XML documentation file generation globally
-  - Changed from: `<!--<GenerateDocumentationFile>False</GenerateDocumentationFile>-->`
-  - Changed to: `<GenerateDocumentationFile>True</GenerateDocumentationFile>`
-  - Reason: Swagger Summary and Description properties require XML documentation files
-  - Location: Line 19
-
-**File: OoBDev.AspNetCore.Mvc.csproj** (2026-01-20)
-- [x] Removed local GenerateDocumentationFile override
-  - Removed: `<GenerateDocumentationFile>False</GenerateDocumentationFile>`
-  - Reason: Now controlled globally by Directory.Build.props
-  - Location: Line 7 (removed)
-
-**File: OoBDev.WebApi.csproj** (2026-01-20)
-- [x] Removed local GenerateDocumentationFile override
-  - Removed: `<GenerateDocumentationFile>False</GenerateDocumentationFile>`
-  - Reason: Was overriding global setting, preventing XML documentation generation
-  - Also cleaned up duplicate InvariantGlobalization setting
-  - Location: Line 10 (removed)
-
-**Verification (2026-01-20):**
-- [x] Build verified: All 65 projects built successfully
-- [x] XML documentation files generated and loaded:
-  - OoBDev.AspNetCore.Mvc.xml ✅
-  - OoBDev.WebApi.xml ✅
-  - OoBDev.Data.Vectors.xml ✅
-  - OoBDev.Data.Vectors.Hosting.xml ✅
-  - OoBDev.AllMiniLmL6V2Sharp.xml ✅
-- [x] Swagger files generated successfully:
-  - docs/swagger.json ✅
-  - docs/swagger.yaml ✅
-- [x] Swagger documentation verified: Summary and Description properties now appear ✅
-- [ ] Verify tests pass: `dotnet test src/ --filter "OoBDev.AspNetCore.Mvc"`
-
-**Breaking Change Summary:**
-
-**Swashbuckle 10.1.0 - Collections are NULL by default:**
-- **ALL OpenAPI collections start as null** - must initialize before use
-- `operation.Tags` → Initialize: `operation.Tags ??= new HashSet<OpenApiTagReference>()`
-- `operation.Parameters` → Initialize: `operation.Parameters ??= new List<OpenApiParameter>()`
-- `operation.Responses` → Initialize: `operation.Responses ??= new OpenApiResponses()`
-- `operation.Extensions` → Initialize: `operation.Extensions ??= new Dictionary<string, IOpenApiExtension>()`
-- `schema.Properties` → Initialize: `schema.Properties ??= new Dictionary<string, IOpenApiSchema>()` OR in object initializer
-
-**Swashbuckle 10.1.0 - Read-Only Properties (create new objects):**
-- `IOpenApiRequestBody.Content` is read-only:
-  ```csharp
-  operation.RequestBody = new OpenApiRequestBody { Content = new Dictionary<string, OpenApiMediaType>() };
-  ```
-- `IOpenApiResponse.Content` is read-only:
-  ```csharp
-  response = new OpenApiResponse { Content = new Dictionary<string, OpenApiMediaType>() };
-  ```
-
-**Swashbuckle 10.1.0 - Type Changes:**
-- `OpenApiTag` → `OpenApiTagReference` for Tags collection
-- `JsonSchemaType` is enum (not string) - use `JsonSchemaType.String`, `JsonSchemaType.Object`, etc.
-- `IOpenApiSchema.Properties` is read-only (use `.Add()` or indexer `[key] = value`)
-- Schema references require null checking: `?.Reference`
-
-**.NET 10.0:**
-- `ClaimsPrincipal` has ambiguous constructors in DI - use factory method instead of type-based registration
-- `IActionContextAccessor` is deprecated (ASPDEPR006) - use `IHttpContextAccessor` and `HttpContext.GetEndpoint()` instead
+*No active bug fixes at this time. All known critical bugs resolved.*
 
 ---
 
 ## Completed Work
 
-### Phase 0: Critical Bug Fixes (COMPLETED)
+All completed bug fixes have been archived to change documents for reference:
 
-All critical bugs fixed and verified:
+### ✅ Swashbuckle 10.1.0 & .NET 10.0 Breaking Changes (2026-01-20)
 
-- [x] **PathEx.cs** - Fixed lambda expression syntax error (lines 42, 66, 92)
-- [x] **StreamDevice.cs** - Fixed nullable annotations and transmission delay typo
-- [x] **SerialPortFactory.cs** - Simplified verbose ternary expression
-- [x] **ShiftCommutativeVariablesRight.cs** - Replaced non-functional stub with working implementation
-- [x] **ExpressionParserTests.cs** - Fixed floating-point precision test failures by adding epsilon tolerance
-- [x] **NumericAsserts.cs** - Created reusable numeric comparison utility in OoBDev.TestUtilities
+**Summary:** Fixed all breaking changes from Swashbuckle 10.1.0 upgrade and .NET 10.0 migration + enabled XML documentation generation globally.
 
-### MSTest ExpectedExceptionAttribute Conversion (COMPLETED - 2026-01-15)
+**Impact:**
+- 5 files fixed (4 Swashbuckle, 1 .NET 10.0)
+- 3 files for XML documentation
+- All 65 projects build successfully
+- Swagger Summary/Description properties now appear
 
-**Task:** Convert all `[ExpectedException(typeof(ExceptionType))]` attributes to use `Assert.ThrowsException<T>()`
+**Details:** [docs/changes/bug-fixes-swashbuckle-dotnet10-2026-01-20.md](docs/changes/bug-fixes-swashbuckle-dotnet10-2026-01-20.md)
 
-**Completed:** All 40 instances across 24 files converted
+---
 
-**Files Converted:**
+### ✅ MSTest ExpectedExceptionAttribute Conversion (2026-01-15)
 
-*Framework Layer (4 files, 10 conversions):*
-- OoBDev.TestUtilities.Tests/NumericAssertsTests.cs (6)
-- OoBDev.MessageQueueing.Tests/MessageSenderTests.cs (1)
-- OoBDev.System.Tests/ExpressionCalculator/Parser/ExpressionParserTests.cs (2)
-- OoBDev.System.Tests/ExpressionCalculator/Expressions/VariableExpressionTests.cs (2)
+**Summary:** Converted all deprecated `[ExpectedException]` attributes to modern `Assert.ThrowsException<T>()` pattern.
 
-*Binary Decoders (2 files, 4 conversions):*
-- BinaryDecoders/BinaryDataDecoders.ExpressionCalculator.Tests/Parser/ExpressionParserTests.cs (2)
-- BinaryDecoders/BinaryDataDecoders.ExpressionCalculator.Tests/Expressions/VariableExpressionTests.cs (2)
+**Impact:**
+- 40 conversions across 24 files
+- Framework (10), Binary Decoders (4), SharedFramework (26)
+- All tests passing
 
-*SharedFramework (18 files, 26 conversions):*
-- OoBDev.DocumentCenter.Tests (4 files, 4 conversions)
-- OoBDev.Communications.Tests (12 files, 16 conversions)
-- OoBDev.DataLoader.Tests (1 file, 1 conversion)
-- OoBDev.Caching.Common.Tests (1 file, 1 conversion)
-- OoBDev.Api.Twilio.* (3 files, 3 conversions)
-- OoBDev.Generations.Tests (1 file, 1 conversion)
+**Details:** [docs/changes/bug-fixes-mstest-expected-exception-2026-01-15.md](docs/changes/bug-fixes-mstest-expected-exception-2026-01-15.md)
 
-**Conversion Details:**
-- Removed `[ExpectedException(typeof(ExceptionType))]` attributes
-- Wrapped test body in `Assert.ThrowsException<T>(() => { ... })` for sync tests
-- Wrapped test body in `await Assert.ThrowsExceptionAsync<T>(async () => { ... })` for async tests
-- Preserved all test logic, comments, and variable declarations
-- Maintained proper indentation and code structure
+---
 
-**Verification:** Code conversions manually verified by inspection of NumericAssertsTests.cs and CommunicationProviderTests.cs (both showing correct patterns)
+### ✅ Phase 0: Critical Bug Fixes (2026-01-15)
 
-### Build Verification (COMPLETED)
+**Summary:** Fixed 6 critical bugs including syntax errors, non-functional implementations, and floating-point precision issues.
 
-- [x] Run `dotnet build src/` to verify all bug fixes compile
-- [x] Run `dotnet test src/` to verify all tests pass - ALL PASSED
-- [x] Address any compilation or test failures - None found
+**Impact:**
+- PathEx lambda syntax
+- StreamDevice nullable/typo
+- SerialPortFactory ternary
+- ShiftCommutativeVariables stub → working implementation
+- ExpressionParser precision
+- NumericAsserts utility created
+
+**Details:** [docs/changes/bug-fixes-phase0-critical-2026-01-15.md](docs/changes/bug-fixes-phase0-critical-2026-01-15.md)
 
 ---
 

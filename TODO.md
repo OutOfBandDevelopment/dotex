@@ -267,6 +267,12 @@ TODO.md                                  # This file - Index and navigation
 - `containers/testing/STATUS.md` - Implementation progress tracker
 - `Incomming/CHECKLIST.md` - Investigation tracking
 
+### Change History
+- `docs/changes/README.md` - Archived completed work (reduces context overhead)
+- `docs/changes/bug-fixes-swashbuckle-dotnet10-2026-01-20.md` - Swashbuckle & .NET 10.0 fixes
+- `docs/changes/bug-fixes-mstest-expected-exception-2026-01-15.md` - MSTest modernization
+- `docs/changes/bug-fixes-phase0-critical-2026-01-15.md` - Phase 0 critical bugs
+
 ### Protocols
 - `.claude/protocols/software/incoming-codebase-comparison.md` - v1.1
 - `.claude/protocols/software/architectural-analysis.md` - Architecture review
