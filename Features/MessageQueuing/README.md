@@ -51,16 +51,17 @@ public interface IMessageSenderProvider
   - Background service integration
   - Production-ready
 
-### 🚧 In Migration (Context Pattern)
-- **AWS SQS** - Migrating from SharedFramework
-  - Target: `src/ExternalServices/Amazon/OoBDev.Amazon.Sqs/`
-  - Features: FIFO queues, message attributes, dead-letter queues
-  - Status: Pattern selected, ready to implement
+- **AWS SQS** - `src/ExternalServices/Amazon/OoBDev.Amazon.Sqs/`
+  - FIFO queues, message attributes, dead-letter queues
+  - LocalStack emulator support for integration testing
+  - Latest package: AWSSDK.SQS 4.0.2.11
+  - Status: ✅ Complete (2026-01-20)
 
-- **Azure Service Bus** - Migrating from SharedFramework
-  - Target: `src/ExternalServices/Microsoft/OoBDev.Microsoft.Azure.ServiceBus/`
-  - Features: Topics, sessions, scheduled messages, dead-letter queues
-  - Status: Pattern selected, ready to implement
+- **Azure Service Bus** - `src/ExternalServices/Microsoft/OoBDev.Microsoft.Azure.ServiceBus/`
+  - Topics, sessions, scheduled messages, dead-letter queues
+  - Azure Service Bus Emulator support for integration testing
+  - Latest package: Azure.Messaging.ServiceBus 7.20.1
+  - Status: ✅ Complete (2026-01-20)
 
 ---
 

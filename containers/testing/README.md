@@ -17,13 +17,13 @@ This directory contains Docker-based testing infrastructure for running integrat
 
 ## Overview
 
-The integration test stack provides **12 Docker-based services** needed for Integration test category:
+The integration test stack provides **13 Docker-based services** needed for Integration test category:
 
 | Category | Services |
 |----------|----------|
 | **Stateless** | Apache Tika, SMTP4Dev |
 | **Stateful** | MongoDB, SQL Server, RabbitMQ, Redis, OpenSearch, Qdrant |
-| **Emulators** | Azurite (Azure Storage), LocalStack (AWS) |
+| **Emulators** | Azurite (Azure Storage), LocalStack (AWS), Azure Service Bus Emulator |
 | **Identity** | Keycloak |
 | **AI/ML** | SBert (CPU-only) |
 
@@ -174,22 +174,22 @@ end note
 ```plaintext
 ┌─────────────────────────────────────────────────────────────┐
 │  oobd-integration-test-net (Bridge Network)                 │
-│                                                               │
-│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐   │
-│  │  Tika    │  │  SMTP    │  │  Mongo   │  │   SQL    │   │
-│  │  :9998   │  │  :25     │  │  :27017  │  │  :1433   │   │
-│  └──────────┘  └──────────┘  └──────────┘  └──────────┘   │
-│                                                               │
-│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐   │
-│  │ RabbitMQ │  │  Redis   │  │OpenSearch│  │  Qdrant  │   │
-│  │  :5672   │  │  :6379   │  │  :9200   │  │  :6333   │   │
-│  └──────────┘  └──────────┘  └──────────┘  └──────────┘   │
-│                                                               │
-│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐   │
-│  │ Azurite  │  │LocalStack│  │ Keycloak │  │  SBert   │   │
-│  │  :10000  │  │  :4566   │  │  :8081   │  │  :5080   │   │
-│  └──────────┘  └──────────┘  └──────────┘  └──────────┘   │
-│                                                               │
+│                                                             │
+│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐     │
+│  │  Tika    │  │  SMTP    │  │  Mongo   │  │   SQL    │     │
+│  │  :9998   │  │  :25     │  │  :27017  │  │  :1433   │     │
+│  └──────────┘  └──────────┘  └──────────┘  └──────────┘     │
+│                                                             │
+│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐     │
+│  │ RabbitMQ │  │  Redis   │  │OpenSearch│  │  Qdrant  │     │
+│  │  :5672   │  │  :6379   │  │  :9200   │  │  :6333   │     │
+│  └──────────┘  └──────────┘  └──────────┘  └──────────┘     │
+│                                                             │
+│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐     │
+│  │ Azurite  │  │LocalStack│  │ Keycloak │  │  SBert   │     │
+│  │  :10000  │  │  :4566   │  │  :8081   │  │  :5080   │     │
+│  └──────────┘  └──────────┘  └──────────┘  └──────────┘     │
+│                                                             │
 └─────────────────────────────────────────────────────────────┘
          ↑
          │ (port mapping)
@@ -282,7 +282,8 @@ scripts\integration-down.bat --clean
 | Service | Image | Port(s) | Purpose | Health Check |
 |---------|-------|---------|---------|--------------|
 | **Azurite** | `mcr.microsoft.com/azure-storage/azurite` | 10000 (Blob)<br>10001 (Queue)<br>10002 (Table) | Azure Storage emulator | `nc -z localhost 10000` |
-| **LocalStack** | `localstack/localstack` | 4566 | AWS services emulator | `curl http://localhost:4566/_localstack/health` |
+| **LocalStack** | `localstack/localstack` | 4566 | AWS services emulator (SQS, S3, etc.) | `curl http://localhost:4566/_localstack/health` |
+| **Service Bus Emulator** | `mcr.microsoft.com/azure-messaging/servicebus-emulator` | 5672 (AMQP) | Azure Service Bus emulator | `nc -z localhost 5672` |
 
 ### Identity & AI/ML
 
@@ -360,6 +361,8 @@ Tests use environment variables for connection strings. See `.env.integration` f
 | `SMTP_HOST` | `localhost` | SMTP server host |
 | `AZURITE_CONNECTION_STRING` | (see .env file) | Azurite connection |
 | `LOCALSTACK_URL` | `http://localhost:4566` | LocalStack endpoint |
+| `SQS_QUEUE_URL` | `http://localhost:4566/000000000000/{queue-name}` | AWS SQS queue URL |
+| `SERVICEBUS_CONNECTION_STRING` | `Endpoint=sb://localhost;...;UseDevelopmentEmulator=true;` | Azure Service Bus connection |
 | `KEYCLOAK_URL` | `http://localhost:8081` | Keycloak endpoint |
 | `SBERT_URL` | `http://localhost:5080` | SBert endpoint |
 
@@ -617,10 +620,12 @@ All containers are prefixed with `oobd-test-`:
 - `oobd-test-mongodb`
 - `oobd-test-sqlserver`
 - `oobd-test-rabbitmq`
+- `oobd-test-redis`
 - `oobd-test-opensearch`
 - `oobd-test-qdrant`
 - `oobd-test-azurite`
 - `oobd-test-localstack`
+- `oobd-test-servicebus`
 - `oobd-test-keycloak`
 - `oobd-test-sbert`
 

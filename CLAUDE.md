@@ -319,7 +319,7 @@ OoBDev uses **5 test categories** to organize tests by execution environment and
 
 **Docker-Based Integration Tests:**
 
-Integration tests run against **12 Docker services** managed by the testing infrastructure:
+Integration tests run against **13 Docker services** managed by the testing infrastructure:
 
 ```bash
 # Start Docker services for integration testing
@@ -345,7 +345,8 @@ cd ../containers/testing
 - OpenSearch (Search engine)
 - Qdrant (Vector database)
 - Azurite (Azure Storage emulator)
-- LocalStack (AWS emulator)
+- LocalStack (AWS emulator - SQS, S3, etc.)
+- Azure Service Bus Emulator (Message queue)
 - Keycloak (Identity & Access Management)
 - SBert (Sentence embeddings)
 
@@ -517,13 +518,54 @@ Successfully migrated entire Caching framework from SharedFramework to main code
 
 ---
 
-### Task: Docker-Based Integration Testing Infrastructure (Week 1 & 2 - 2026-01-19)
+### ✅ Message Queue Providers Migration (AWS SQS + Azure Service Bus) (2026-01-20)
+
+**Status:** ✅ COMPLETE - Both providers built successfully, integration testing infrastructure ready
+
+Successfully migrated AWS SQS and Azure Service Bus message queue providers from SharedFramework to main codebase using context-based pattern.
+
+**Implementation Projects (2):**
+- ✅ OoBDev.Amazon.Sqs - AWS SQS provider with LocalStack emulator support
+- ✅ OoBDev.Microsoft.Azure.ServiceBus - Azure Service Bus provider with official emulator support
+
+**Key Features:**
+- ✅ Context-based pattern (non-generic `IMessageSenderProvider`)
+- ✅ Latest packages: AWSSDK.SQS 4.0.2.11, Azure.Messaging.ServiceBus 7.20.1
+- ✅ Multi-provider support via keyed services
+- ✅ SQS-specific features: FIFO queues, message attributes, delay queues
+- ✅ Service Bus-specific features: Queues, topics, sessions, application properties
+- ✅ Configuration-driven queue/topic selection
+- ✅ Follows RabbitMQ reference implementation exactly
+
+**Integration Testing Infrastructure:**
+- ✅ LocalStack (AWS SQS emulator) - Already available at port 4566
+- ✅ Azure Service Bus Emulator - Added to Docker stack at port 5672
+- ✅ Setup scripts: `setup-localstack-sqs.sh/bat`, `setup-servicebus-emulator.sh/bat`
+- ✅ Test queues pre-configured: standard, FIFO, DLQ for SQS; queue and topic for Service Bus
+- ✅ Fixed Docker Compose issues (Redis network, smtp4dev volume references)
+
+**Documentation (6 files):**
+- ✅ Features/MessageQueuing/README.md - Architecture overview with PlantUML diagrams
+- ✅ Features/MessageQueuing/pattern-context-based.md - Pattern documentation
+- ✅ Features/MessageQueuing/migration-checklist.md - Migration guide
+- ✅ OoBDev.Amazon.Sqs/TESTING.md - LocalStack integration testing guide
+- ✅ OoBDev.Microsoft.Azure.ServiceBus/TESTING.md - Service Bus emulator testing guide
+- ✅ OoBDev.Amazon.Sqs/Readme.AmazonSqs.md - Provider documentation
+- ✅ OoBDev.Microsoft.Azure.ServiceBus/Readme.AzureServiceBus.md - Provider documentation
+
+**Deliverables:** ~1,500 LOC implementation + comprehensive testing infrastructure + 8,000+ words documentation
+
+**Pattern Decision:** Context-based (non-generic) chosen over generic channel-based for superior multi-provider support, runtime flexibility, and consistency with existing RabbitMQ implementation.
+
+---
+
+### ✅ Docker-Based Integration Testing Infrastructure (Week 1 & 2 - 2026-01-19)
 **Status:** ✅ COMPLETED (Awaiting Local Testing Validation)
 
 Successfully implemented complete Docker-based testing infrastructure for integration tests:
 
 **Docker Infrastructure** (`/containers/testing/`):
-- ✅ 11-service stack (Apache Tika, SMTP4Dev, MongoDB, SQL Server, RabbitMQ, OpenSearch, Qdrant, Azurite, LocalStack, Keycloak, SBert)
+- ✅ 13-service stack (Apache Tika, SMTP4Dev, MongoDB, SQL Server, RabbitMQ, Redis, OpenSearch, Qdrant, Azurite, LocalStack, Azure Service Bus Emulator, Keycloak, SBert)
 - ✅ Cross-platform scripts (Linux/macOS/Windows)
 - ✅ Health checks for all services (2-minute timeout)
 - ✅ Ephemeral volumes for clean state

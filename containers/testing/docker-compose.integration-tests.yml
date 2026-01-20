@@ -31,10 +31,12 @@ services:
       start_period: 10s
 
   smtp4dev:
-    extends:
-      file: ../docker-compose.smtp4dev.yml
-      service: smtp4dev
+    image: rnwood/smtp4dev
     container_name: oobd-test-smtp
+    ports:
+      - "7777:80"
+      - "25:25"
+      - "143:143"
     networks:
       - integration-test-net
     healthcheck:
@@ -101,10 +103,15 @@ services:
       start_period: 15s
 
   redis:
-    extends:
-      file: ../docker-compose.redis.yml
-      service: redis
+    image: redis:7-alpine
     container_name: oobd-test-redis
+    ports:
+      - "6379:6379"
+    command: >
+      redis-server
+      --maxmemory 256mb
+      --maxmemory-policy allkeys-lru
+      --appendonly no
     networks:
       - integration-test-net
     volumes:
@@ -195,6 +202,24 @@ services:
       timeout: 5s
       retries: 5
       start_period: 15s
+
+  servicebus-emulator:
+    image: mcr.microsoft.com/azure-messaging/servicebus-emulator:latest
+    container_name: oobd-test-servicebus
+    ports:
+      - "5672:5672"   # AMQP
+    networks:
+      - integration-test-net
+    environment:
+      - ACCEPT_EULA=Y
+      - SERVICEBUS_SERVER__ENTITYNAME__0=integration-test-queue
+      - SERVICEBUS_SERVER__ENTITYNAME__1=integration-test-topic
+    healthcheck:
+      test: ["CMD", "sh", "-c", "nc -z localhost 5672"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
 
   # ============================================================================
   # Identity & Access Management

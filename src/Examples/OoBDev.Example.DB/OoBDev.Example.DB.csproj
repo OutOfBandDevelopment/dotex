@@ -7,6 +7,8 @@
     <RecoveryMode>Simple</RecoveryMode>
     <ServiceBrokerOption>EnableBroker</ServiceBrokerOption>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <!-- https://github.com/rr-wfm/MSBuild.Sdk.SqlProj#publishing-support -->

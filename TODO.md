@@ -19,10 +19,10 @@ This document is organized into **epic-based files** for better navigation and m
 ### 🧪 [Local Integration Testing (Docker)](./TODO-testing-local-integration.md)
 **Status:** ✅ Week 1 & 2 Complete - ⏳ Awaiting Local Validation
 
-Docker-based integration testing with 12 services (Apache Tika, SMTP4Dev, MongoDB, SQL Server, RabbitMQ, Redis, OpenSearch, Qdrant, Azurite, LocalStack, Keycloak, SBert). Infrastructure complete, 19 tests migrated.
+Docker-based integration testing with 13 services (Apache Tika, SMTP4Dev, MongoDB, SQL Server, RabbitMQ, Redis, OpenSearch, Qdrant, Azurite, LocalStack, Azure Service Bus Emulator, Keycloak, SBert). Infrastructure complete, 19 tests migrated.
 
 **Key Tasks:**
-- ✅ Docker infrastructure (12 services, compose files, scripts, README with PlantUML)
+- ✅ Docker infrastructure (13 services, compose files, scripts, README with PlantUML)
 - ✅ Test category: Integration (Docker-based, runs in CI/CD)
 - ✅ CI/CD pipeline (complete but DISABLED until validation)
 - ✅ Week 2: Migrated 19 tests from DevLocal to Integration category
@@ -61,10 +61,11 @@ All migration work for Incomming projects and BinaryDataDecoders:
 **Completed Migrations:**
 - ✅ **Caching (COMPLETE - 2026-01-20)** - 4 implementation + 3 test projects, property chains, Redis Docker integration
   - **Details:** [docs/changes/migration-caching-framework-2026-01-20.md](docs/changes/migration-caching-framework-2026-01-20.md)
+- ✅ **Message Queues (COMPLETE - 2026-01-20)** - AWS SQS + Azure Service Bus providers, LocalStack + Azure emulator integration
+  - **Details:** See [Features/MessageQueuing/README.md](Features/MessageQueuing/README.md)
 
 **Ready to Migrate:**
 - 🔥 Communications (CRITICAL - 16 LOC stub → 1,145 LOC)
-- ✅ Message Queues (AWS SQS, Azure Service Bus)
 - ✅ Spatial Services (5 projects)
 - ⚠️ Identity, Documents, TextTemplating (merge required)
 - ✅ DataLoader, ComplexEvents, Generations
@@ -166,7 +167,7 @@ TODO.md                                  # This file - Index and navigation
 
 ### Testing Infrastructure ✅
 - ✅ Week 1 & 2 Complete (2026-01-19): Docker infrastructure, test categories, CI/CD pipeline, 19 tests migrated
-- ✅ **Local Integration (Docker):** 11-service stack with health checks, ephemeral volumes, isolated network
+- ✅ **Local Integration (Docker):** 13-service stack with health checks, ephemeral volumes, isolated network
 - ✅ **Live Integration (Cloud):** Added LiveIntegration category for cloud-only services
 - ✅ **Test Variables:** Documented all 30+ test properties in [TEST_VARIABLES.md](./TEST_VARIABLES.md)
 - ✅ Complete CI/CD workflow (DISABLED until local testing validates)
