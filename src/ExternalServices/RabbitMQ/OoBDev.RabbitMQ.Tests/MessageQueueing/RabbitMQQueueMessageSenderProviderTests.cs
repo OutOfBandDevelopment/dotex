@@ -1,4 +1,4 @@
-using OoBDev.MessageQueueing;
+﻿using OoBDev.MessageQueueing;
 using OoBDev.MessageQueueing.Services;
 using OoBDev.MessageQueueing.Tests;
 using OoBDev.RabbitMQ.MessageQueueing;
@@ -26,16 +26,18 @@ public class RabbitMQQueueMessageSenderProviderTests
     public required TestContext TestContext { get; set; }
 
     [TestMethod]
-    [TestCategory(TestCategories.DevLocal)]
+    [TestCategory(TestCategories.Integration)]
     public async Task SendAsyncTest_ByFullType()
     {
+        var rabbitMQHost = TestContext.GetProperty<string>("RABBITMQ_HOST") ?? "localhost";
+
         var configBuilder = new ConfigurationBuilder();
 
         configBuilder.AddInMemoryCollection(new Dictionary<string, string?>
         {
             {$"MessageQueue:{QueueConfig}:Provider", typeof(RabbitMQQueueMessageProvider).AssemblyQualifiedName },
 
-            {$"MessageQueue:{QueueConfig}:Config:HostName", "localhost" },
+            {$"MessageQueue:{QueueConfig}:Config:HostName", rabbitMQHost },
             {$"MessageQueue:{QueueConfig}:Config:QueueName", "test-queue" },
         });
 
@@ -55,16 +57,18 @@ public class RabbitMQQueueMessageSenderProviderTests
     }
 
     [TestMethod]
-    [TestCategory(TestCategories.DevLocal)]
+    [TestCategory(TestCategories.Integration)]
     public async Task SendAsyncTest_ByKeyed()
     {
+        var rabbitMQHost = TestContext.GetProperty<string>("RABBITMQ_HOST") ?? "localhost";
+
         var configBuilder = new ConfigurationBuilder();
 
         configBuilder.AddInMemoryCollection(new Dictionary<string, string?>
         {
             {$"MessageQueue:{QueueConfig}:Provider", RabbitMQGlobals.MessageProviderKey },
 
-            {$"MessageQueue:{QueueConfig}:Config:HostName", "localhost" },
+            {$"MessageQueue:{QueueConfig}:Config:HostName", rabbitMQHost },
             {$"MessageQueue:{QueueConfig}:Config:QueueName", "test-queue" },
 
         });
@@ -85,16 +89,18 @@ public class RabbitMQQueueMessageSenderProviderTests
     }
 
     [TestMethod]
-    [TestCategory(TestCategories.DevLocal)]
+    [TestCategory(TestCategories.Integration)]
     public async Task FindProviderTests()
     {
+        var rabbitMQHost = TestContext.GetProperty<string>("RABBITMQ_HOST") ?? "localhost";
+
         var configBuilder = new ConfigurationBuilder();
 
         configBuilder.AddInMemoryCollection(new Dictionary<string, string?>
         {
             {$"MessageQueue:{QueueConfig}:Provider", RabbitMQGlobals.MessageProviderKey },
 
-            {$"MessageQueue:{QueueConfig}:Config:HostName", "localhost" },
+            {$"MessageQueue:{QueueConfig}:Config:HostName", rabbitMQHost },
             {$"MessageQueue:{QueueConfig}:Config:QueueName", "test-queue" },
 
             {$"MessageQueue:Default:Provider", InProcessMessageProvider.MessageProviderKey },

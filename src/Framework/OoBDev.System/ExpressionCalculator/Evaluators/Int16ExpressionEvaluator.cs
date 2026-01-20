@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace OoBDev.System.ExpressionCalculator.Evaluators;
+﻿namespace OoBDev.System.ExpressionCalculator.Evaluators;
 
 public sealed class Int16ExpressionEvaluator : IExpressionEvaluator<short>
 {
@@ -10,7 +8,7 @@ public sealed class Int16ExpressionEvaluator : IExpressionEvaluator<short>
     public short Modulo(short left, short right) => (short)(left % right);
     public short Multiply(short left, short right) => (short)(left * right);
     public short Negate(short operand) => (short)-operand;
-    public short Power(short left, short right) => (short)Math.Pow(left, right);
+    public short Power(short left, short right) => (short)global::System.Math.Pow(left, right);
     public short Subtract(short left, short right) => (short)(left - right);
 
     public short? TryParse(string input) => short.TryParse(input, out var ret) ? ret : null;

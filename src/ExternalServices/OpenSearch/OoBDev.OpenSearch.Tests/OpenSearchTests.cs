@@ -10,33 +10,59 @@ namespace OoBDev.OpenSearch.Tests;
 public class OpenSearchTests
 {
     private const string storeName = "docs";
-    private readonly string hostName = "192.168.1.170";
 
     public required TestContext TestContext { get; set; }
 
+    private OpenSearchLowLevelClient? _client;
+    private string? _testIndexName;
+
+    [TestInitialize]
+    public void TestInitialize()
+    {
+        // Create unique index name for this test run
+        _testIndexName = $"integrationtest_{Guid.NewGuid():N}";
+    }
+
+    [TestCleanup]
+    public async Task TestCleanup()
+    {
+        // Cleanup: Delete the test index
+        if (_client != null && _testIndexName != null)
+        {
+            try
+            {
+                await _client.Indices.DeleteAsync<StringResponse>(_testIndexName);
+            }
+            catch
+            {
+                // Ignore cleanup errors
+            }
+        }
+    }
+
     private OpenSearchLowLevelClient GetClient()
     {
-        var connection = new ConnectionConfiguration(
-                new Uri($"http://{hostName}:9200")
-            )
-            .BasicAuthentication("admin", "UY8rB3tC7ygzsFNWdRpxZb")
+        var url = TestContext.GetProperty<string>("OPENSEARCH_URL") ?? "http://localhost:9200";
+        var username = TestContext.GetProperty<string>("OPENSEARCH_USERNAME") ?? "admin";
+        var password = TestContext.GetProperty<string>("OPENSEARCH_PASSWORD") ?? "admin";
+
+        var connection = new ConnectionConfiguration(new Uri(url))
+            .BasicAuthentication(username, password)
             .EnableHttpCompression(true)
             .ThrowExceptions(true)
             .PrettyJson()
             ;
-        var client = new OpenSearchLowLevelClient(connection);
-        return client;
+        _client = new OpenSearchLowLevelClient(connection);
+        return _client;
     }
 
     [TestMethod]
-    [TestCategory(TestCategories.DevLocal)]
-    [DataRow(storeName)]
-    [DataRow("summary")]
-    public async Task CreateIndexTest(string indexName)
+    [TestCategory(TestCategories.Integration)]
+    public async Task CreateIndexTest()
     {
         var id = Guid.NewGuid().ToString();
         var client = GetClient();
-        var result = await client.IndexAsync<StringResponse>(indexName, id, PostData.Serializable(new
+        var result = await client.IndexAsync<StringResponse>(_testIndexName, id, PostData.Serializable(new
         {
             Id = id,
             Name = "Hello",
@@ -51,12 +77,24 @@ public class OpenSearchTests
     }
 
     [TestMethod]
-    [TestCategory(TestCategories.DevLocal)]
+    [TestCategory(TestCategories.Integration)]
     public async Task SearchIndexTest()
     {
-        //var id = Guid.NewGuid().ToString();
+        // First create a document to search for
+        var id = Guid.NewGuid().ToString();
         var client = GetClient();
-        var result = await client.SearchAsync<StringResponse>(storeName,
+
+        await client.IndexAsync<StringResponse>(_testIndexName, id, PostData.Serializable(new
+        {
+            Id = id,
+            Name = "Hello",
+            Body = "World!"
+        }));
+
+        // Wait a moment for indexing to complete
+        await Task.Delay(1000);
+
+        var result = await client.SearchAsync<StringResponse>(_testIndexName,
             PostData.Serializable(new
             {
                 query = new

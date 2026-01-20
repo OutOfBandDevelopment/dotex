@@ -15,16 +15,16 @@
 This document is organized into **epic-based files** for better navigation and maintenance:
 
 ### 🧪 [Local Integration Testing (Docker)](./TODO-testing-local-integration.md)
-**Status:** ✅ Week 1 Complete - ⏳ Awaiting Local Validation
+**Status:** ✅ Week 1 & 2 Complete - ⏳ Awaiting Local Validation
 
-Docker-based integration testing with 11 services (Apache Tika, SMTP4Dev, MongoDB, SQL Server, RabbitMQ, OpenSearch, Qdrant, Azurite, LocalStack, Keycloak, SBert). Infrastructure complete, requires local testing validation.
+Docker-based integration testing with 11 services (Apache Tika, SMTP4Dev, MongoDB, SQL Server, RabbitMQ, OpenSearch, Qdrant, Azurite, LocalStack, Keycloak, SBert). Infrastructure complete, 19 tests migrated.
 
 **Key Tasks:**
 - ✅ Docker infrastructure (11 services, compose files, scripts, README with PlantUML)
 - ✅ Test category: Integration (Docker-based, runs in CI/CD)
 - ✅ CI/CD pipeline (complete but DISABLED until validation)
+- ✅ Week 2: Migrated 19 tests from DevLocal to Integration category
 - ⏳ **NEXT:** Local testing with TESTING-CHECKLIST.md
-- ⏳ Week 2: Migrate 20+ tests from DevLocal to Integration category
 - ⏳ Week 4: Docker documentation (11 stacks)
 
 ### ☁️ [Live Integration Testing (Cloud)](./TODO-testing-live-integration.md)
@@ -38,7 +38,7 @@ Cloud-based integration testing for services requiring live credentials (Azure B
 - ⏳ Week 4: Cloud documentation (credential management, cost management)
 
 ### 📦 [Migrations](./TODO-migrations.md)
-**Status:** 🔍 Investigations Complete - ⏸️ Multiple Phases Blocked by Decisions
+**Status:** ✅ Vector & SharedFramework .NET Complete - ⏸️ Multiple Phases Blocked by Decisions
 
 All migration work for Incomming projects and BinaryDataDecoders:
 - **Incomming/Framework** - 55 files (30 NEW + 25 DIFFERS) requiring systematic comparison
@@ -46,8 +46,8 @@ All migration work for Incomming projects and BinaryDataDecoders:
 - **BinaryDataDecoders** - 5-phase migration (Foundation → Specialized Features)
 
 **Key Tasks:**
-- ✅ Framework Vector library ready to migrate (Phase 1, HIGH priority)
-- ⏸️ SharedFramework Phase 0: .NET 9.0 upgrade required
+- ✅ Framework Vector namespace updated to OoBDev.System.Math (files already in main)
+- ✅ SharedFramework Phase 0: All 51 projects at .NET 10.0, 1 SQL project at netstandard2.0 (verified complete)
 - ⏸️ SharedFramework Phase 2: Communications merge (CRITICAL - 1,145 LOC vs 16 LOC stub)
 - ⏸️ BinaryDataDecoders: Awaiting critical decisions (see TODO-decisions.md)
 
@@ -87,7 +87,8 @@ TODO.md                                  # This file - Index and navigation
 ├── TODO-testing-live-integration.md     # Cloud-based integration testing (3 services)
 ├── TODO-migrations.md                   # All Incomming/ and BinaryDataDecoders migrations
 ├── TODO-bug-fixes.md                    # Bug fixes and technical debt
-└── TODO-decisions.md                    # Pending strategic decisions
+├── TODO-decisions.md                    # Pending strategic decisions
+└── TEST_VARIABLES.md                    # All test properties and configuration variables
 ```
 
 ---
@@ -144,9 +145,10 @@ TODO.md                                  # This file - Index and navigation
 **Tracking:** See `Incomming/CHECKLIST.md` for detailed investigation status
 
 ### Testing Infrastructure ✅
-- ✅ Week 1 Complete (2026-01-19): Docker infrastructure, test categories, CI/CD pipeline
+- ✅ Week 1 & 2 Complete (2026-01-19): Docker infrastructure, test categories, CI/CD pipeline, 19 tests migrated
 - ✅ **Local Integration (Docker):** 11-service stack with health checks, ephemeral volumes, isolated network
 - ✅ **Live Integration (Cloud):** Added LiveIntegration category for cloud-only services
+- ✅ **Test Variables:** Documented all 30+ test properties in [TEST_VARIABLES.md](./TEST_VARIABLES.md)
 - ✅ Complete CI/CD workflow (DISABLED until local testing validates)
 - ✅ Comprehensive documentation with PlantUML deployment diagram
 - ✅ Split into 2 epics: Local (Docker) and Live (Cloud) integration testing

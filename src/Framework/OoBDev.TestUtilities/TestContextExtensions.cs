@@ -17,6 +17,7 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
+using OoBDev.System.Reflection;
 
 namespace OoBDev.TestUtilities;
 
@@ -25,6 +26,22 @@ namespace OoBDev.TestUtilities;
 /// </summary>
 public static class TestContextExtensions
 {
+    public static T? GetProperty<T>(this TestContext testContext, string parameter)
+    {
+        try
+        {
+            if (testContext.Properties.TryGetValue(parameter, out var value))
+                return value.As<T>();
+
+            value = Environment.GetEnvironmentVariable(parameter);
+            return value.As<T>();
+        }
+        catch
+        {
+        }
+        return default;
+    }
+
     /// <summary>
     /// serialize an object to the test results for a given test run
     /// </summary>

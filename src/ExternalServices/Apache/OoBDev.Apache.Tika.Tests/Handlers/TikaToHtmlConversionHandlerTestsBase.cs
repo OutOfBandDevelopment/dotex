@@ -1,4 +1,4 @@
-using OoBDev.Documents.Conversion;
+﻿using OoBDev.Documents.Conversion;
 using OoBDev.TestUtilities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,10 +23,11 @@ public abstract class TikaToHtmlConversionHandlerTestsBase<T> where T : IDocumen
         TestContext testContext
         )
     {
+        var tikaUrl = testContext.GetProperty<string>("TIKA_URL") ?? "http://localhost:9998";
         var config = new ConfigurationBuilder()
             .AddInMemoryCollection(new Dictionary<string, string?>
             {
-                { "ApacheTikaClientOptions:Url","http://127.0.0.1:9998"}
+                { "ApacheTikaClientOptions:Url", tikaUrl}
             })
             .Build();
         var serviceProvider = new ServiceCollection()

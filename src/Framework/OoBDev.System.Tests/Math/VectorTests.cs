@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using OoBDev.Common.Math;
+using OoBDev.System.Math;
 
-namespace OoBDev.Common.Tests.Math;
+namespace OoBDev.System.Tests.Math;
 
 [TestClass]
 public class VectorTests

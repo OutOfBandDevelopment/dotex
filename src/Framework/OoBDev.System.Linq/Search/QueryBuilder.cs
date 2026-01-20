@@ -272,7 +272,7 @@ public class QueryBuilder<TModel>(
 
         var result = new PagedQueryResult<TModel>(
             currentPage: page,
-            totalPageCount: totalRows == -1 ? totalRows : (int)Math.Ceiling((decimal)totalRows / pageLength),
+            totalPageCount: totalRows == -1 ? totalRows : (int)global::System.Math.Ceiling((decimal)totalRows / pageLength),
             totalRowCount: totalRows,
             items: rows
             )

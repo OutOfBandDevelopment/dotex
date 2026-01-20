@@ -1,6 +1,5 @@
 ﻿using Microsoft.OpenApi;
 using Swashbuckle.AspNetCore.SwaggerGen;
-using System.Collections.Generic;
 using System.Net.Http;
 
 namespace OoBDev.AspNetCore.Mvc.SwaggerGen;

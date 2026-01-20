@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace OoBDev.Common.Math;
+namespace OoBDev.System.Math;
 
 public class VectorMath
 {

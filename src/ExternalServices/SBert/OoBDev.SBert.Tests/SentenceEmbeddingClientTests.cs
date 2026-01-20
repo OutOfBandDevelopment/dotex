@@ -1,7 +1,7 @@
-﻿using OoBDev.TestUtilities;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using OoBDev.TestUtilities;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -30,19 +30,21 @@ public class SentenceEmbeddingClientTests
         return client;
     }
 
-    [TestMethod, TestCategory(TestCategories.DevLocal)]
-    [DataRow("http://127.0.0.1:5080", "Hello World!")]
-    public async Task GetEmbeddingAsyncTest(string url, string message)
+    [TestMethod, TestCategory(TestCategories.Integration)]
+    public async Task GetEmbeddingAsyncTest()
     {
+        var url = TestContext.GetProperty<string>("SBERT_URL") ?? "http://localhost:5080";
+        var message = "Hello World!";
+
         var client = BuildClient(url);
         var embedding = await client.GetEmbeddingAsync(message);
         TestContext.WriteLine(string.Join(';', embedding));
     }
 
-    [TestMethod, TestCategory(TestCategories.DevLocal)]
-    [DataRow("http://127.0.0.1:5080")]
-    public async Task GetAllTest(string url)
+    [TestMethod, TestCategory(TestCategories.Integration)]
+    public async Task GetAllTest()
     {
+        var url = TestContext.GetProperty<string>("SBERT_URL") ?? "http://localhost:5080";
         var client = BuildClient(url);
 
         var resource = GetType().Assembly.GetManifestResourceNames().FirstOrDefault(l => l.EndsWith(".Sentences.txt"))

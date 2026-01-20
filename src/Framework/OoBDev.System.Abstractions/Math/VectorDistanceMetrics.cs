@@ -1,4 +1,4 @@
-namespace OoBDev.Common.Math;
+namespace OoBDev.System.Math;
 
 public enum VectorDistanceMetrics
 {

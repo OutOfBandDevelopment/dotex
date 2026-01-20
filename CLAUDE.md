@@ -332,14 +332,14 @@ cd ../containers/testing
 - Keycloak (Identity & Access Management)
 - SBert (Sentence embeddings)
 
-**Environment Variables for Tests:**
+**Test Properties Pattern:**
 ```csharp
 [TestMethod]
 [TestCategory(TestCategories.Integration)]
 public async Task TestMongoDBOperation()
 {
-    // Use environment variable or fallback to localhost
-    var connectionString = Environment.GetEnvironmentVariable("MONGODB_CONNECTION_STRING")
+    // ✅ CORRECT: Use TestContext.GetProperty<T>()
+    var connectionString = TestContext.GetProperty<string>("MONGODB_CONNECTION_STRING")
         ?? "mongodb://localhost:27017";
     var databaseName = $"IntegrationTest_{Guid.NewGuid():N}";  // Unique per run
 
@@ -350,7 +350,15 @@ public async Task TestMongoDBOperation()
 }
 ```
 
+**IMPORTANT:** Always use `TestContext.GetProperty<T>()` instead of `Environment.GetEnvironmentVariable()` for test configuration. This integrates with `.runsettings` files and MSTest infrastructure.
+
+**Test Configuration:**
+- **All Variables:** See [TEST_VARIABLES.md](./TEST_VARIABLES.md) for complete list of 30+ test properties
+- **30+ Properties:** MongoDB, SQL Server, RabbitMQ, OpenSearch, SBert, Azure B2C, Groq, etc.
+- **Configuration:** Use `.runsettings` file or test deployment context
+
 **See Also:**
+- [TEST_VARIABLES.md](./TEST_VARIABLES.md) - Complete test property reference
 - `/containers/testing/README.md` - Complete Docker infrastructure guide
 - `/containers/testing/TESTING-CHECKLIST.md` - Local validation steps
 - `/containers/testing/STATUS.md` - Implementation progress

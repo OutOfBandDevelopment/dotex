@@ -18,15 +18,38 @@ public class MongoDBTests
 {
     public required TestContext TestContext { get; set; }
 
+    private string? _databaseName;
+    private IMongoClient? _mongoClient;
+
+    [TestInitialize]
+    public void TestInitialize()
+    {
+        // Create unique database name for this test run
+        _databaseName = $"IntegrationTest_{Guid.NewGuid():N}";
+    }
+
+    [TestCleanup]
+    public async Task TestCleanup()
+    {
+        // Cleanup: Drop the test database
+        if (_mongoClient != null && _databaseName != null)
+        {
+            await _mongoClient.DropDatabaseAsync(_databaseName);
+        }
+    }
+
     [TestMethod]
-    [TestCategory(TestCategories.DevLocal)]
+    [TestCategory(TestCategories.Integration)]
     public void TestMethod1()
     {
+        var connectionString = TestContext.GetProperty<string>("MONGODB_CONNECTION_STRING")
+            ?? "mongodb://localhost:27017?collation={locale:'en_US',caseLevel:false,strength:2 }";
+
         var configBuilder = new ConfigurationBuilder()
             .AddInMemoryCollection(new Dictionary<string, string?>
             {
-                { "MongoDatabaseOptions:DatabaseName" , "Test"},
-                { "MongoDatabaseOptions:ConnectionString" , "mongodb://localhost:27017?collation={locale:'en_US',caseLevel:false,strength:2 }"},
+                { "MongoDatabaseOptions:DatabaseName" , _databaseName},
+                { "MongoDatabaseOptions:ConnectionString" , connectionString},
             })
             ;
         var config = configBuilder.Build();
@@ -38,6 +61,7 @@ public class MongoDBTests
         services.TryAddMongoDatabase<ITestMongoDatabase>();
         var provider = services.BuildServiceProvider();
 
+        _mongoClient = provider.GetRequiredService<IMongoClient>();
         var db = provider.GetRequiredService<ITestMongoDatabase>();
 
         var entity = new TestCollection
@@ -89,14 +113,17 @@ public class MongoDBTests
     }
 
     [TestMethod]
-    [TestCategory(TestCategories.DevLocal)]
+    [TestCategory(TestCategories.Integration)]
     public async Task TestMethod2()
     {
+        var connectionString = TestContext.GetProperty<string>("MONGODB_CONNECTION_STRING")
+            ?? "mongodb://localhost:27017?collation={locale:'en_US',caseLevel:false,strength:2 }";
+
         var configBuilder = new ConfigurationBuilder()
             .AddInMemoryCollection(new Dictionary<string, string?>
             {
-                { "MongoDatabase:DatabaseName" , "Test"},
-                { "MongoDatabase:ConnectionString" , "mongodb://localhost:27017?collation={locale:'en_US',caseLevel:false,strength:2 }"},
+                { "MongoDatabase:DatabaseName" , _databaseName},
+                { "MongoDatabase:ConnectionString" , connectionString},
             })
             ;
         var config = configBuilder.Build();
@@ -108,6 +135,7 @@ public class MongoDBTests
         services.TryAddMongoDatabase<ITestMongoDatabase>();
         var provider = services.BuildServiceProvider();
 
+        _mongoClient = provider.GetRequiredService<IMongoClient>();
         var db = provider.GetRequiredService<ITestMongoDatabase>();
 
         var entity = new TestCollection
@@ -151,14 +179,17 @@ public class MongoDBTests
     }
 
     [TestMethod]
-    [TestCategory(TestCategories.DevLocal)]
+    [TestCategory(TestCategories.Integration)]
     public async Task TestMethod3()
     {
+        var connectionString = TestContext.GetProperty<string>("MONGODB_CONNECTION_STRING")
+            ?? "mongodb://localhost:27017?collation={locale:'en_US',caseLevel:false,strength:2 }";
+
         var configBuilder = new ConfigurationBuilder()
             .AddInMemoryCollection(new Dictionary<string, string?>
             {
-                { "MongoDatabase:DatabaseName" , "Test"},
-                { "MongoDatabase:ConnectionString" , "mongodb://localhost:27017?collation={locale:'en_US',caseLevel:false,strength:2 }"},
+                { "MongoDatabase:DatabaseName" , _databaseName},
+                { "MongoDatabase:ConnectionString" , connectionString},
             })
             ;
         var config = configBuilder.Build();
@@ -170,6 +201,7 @@ public class MongoDBTests
         services.TryAddMongoDatabase<ITestMongoDatabase>();
         var provider = services.BuildServiceProvider();
 
+        _mongoClient = provider.GetRequiredService<IMongoClient>();
         var db = provider.GetRequiredService<ITestMongoDatabase>();
 
         var query1 = await db.Tests.AsQueryable().OrderBy(e => e.Value1).ThenBy(e => e.Value2).Select(e => new { e.Value1, e.Value2 }).ToListAsync();

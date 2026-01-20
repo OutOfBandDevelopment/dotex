@@ -59,7 +59,7 @@ public static class ExpressionBaseExtensions
         var variables = new Dictionary<string, T>();
         foreach (var variableName in variableNames)
         {
-            var randomValue = Math.Round(rand.NextDouble() * Math.Pow(10, scale) * (includeNegatives && rand.Next() % 2 == 0 ? -1 : 1), places);
+            var randomValue = global::System.Math.Round(rand.NextDouble() * global::System.Math.Pow(10, scale) * (includeNegatives && rand.Next() % 2 == 0 ? -1 : 1), places);
             if (randomValue == 0) randomValue += 0.0000000001d;
             var value = evaluator.GetValue(randomValue);
             if (value is uint ui && ui == 0) value = (T)(object)(uint)2;

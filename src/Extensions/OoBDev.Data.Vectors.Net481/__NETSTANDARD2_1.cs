@@ -1,8 +1,4 @@
-﻿using Microsoft.SqlServer.Server;
-using System;
-using System.IO;
-
-namespace Microsoft.SqlServer.Server;
+﻿namespace Microsoft.SqlServer.Server;
 
 #if NETSTANDARD2_1
 
