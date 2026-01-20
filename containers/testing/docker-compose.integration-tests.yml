@@ -87,13 +87,16 @@ services:
       start_period: 30s
 
   rabbitmq:
-    image: rabbitmq:latest
+    image: rabbitmq:management
     container_name: oobd-test-rabbitmq
     ports:
       - "5673:5672"   # AMQP (changed to avoid conflict with Service Bus on 5672)
       - "15672:15672" # Management UI
     networks:
       - integration-test-net
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
     volumes:
       - rabbitmq-test-data:/var/lib/rabbitmq
     healthcheck:
@@ -191,12 +194,21 @@ services:
       start_period: 5s
 
   localstack:
-    extends:
-      file: ../docker-compose.localstack.yml
-      service: localstack
+    image: localstack/localstack:latest
     container_name: oobd-test-localstack
+    ports:
+      - "4566:4566"
     networks:
       - integration-test-net
+    environment:
+      - SERVICES=s3,sqs,sns,dynamodb,lambda,secretsmanager
+      - DEBUG=0
+      - DATA_DIR=/tmp/localstack/data
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - LOCALSTACK_HOST=localhost:4566
+    volumes:
+      - localstack-test-data:/tmp/localstack
+      - /var/run/docker.sock:/var/run/docker.sock
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:4566/_localstack/health"]
       interval: 10s
@@ -213,8 +225,19 @@ services:
       - integration-test-net
     environment:
       - ACCEPT_EULA=Y
-      - SERVICEBUS_SERVER__ENTITYNAME__0=integration-test-queue
-      - SERVICEBUS_SERVER__ENTITYNAME__1=integration-test-topic
+      - SQL_SERVER=oobd-test-sqlserver
+      - MSSQL_SA_PASSWORD=${SQL_SA_PASSWORD:-IntegrationTest123!}
+    volumes:
+      - ./servicebus-config/Config.json:/ServiceBus_Emulator/ConfigFiles/Config.json:ro
+    depends_on:
+      sql-server:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+        reservations:
+          memory: 512M
     healthcheck:
       test: ["CMD", "sh", "-c", "timeout 1 bash -c '</dev/tcp/localhost/5672' 2>/dev/null || exit 1"]
       interval: 10s
@@ -237,6 +260,8 @@ services:
       - KEYCLOAK_ADMIN=admin
       - KEYCLOAK_ADMIN_PASSWORD=admin
       - KC_HEALTH_ENABLED=true
+      - KC_PROXY=edge
+      - KC_HOSTNAME_STRICT=false
     volumes:
       - keycloak-test-data:/opt/keycloak/data
       - ./keycloak-config/integration-test-realm.json:/opt/keycloak/data/import/integration-test-realm.json:ro
@@ -291,10 +316,12 @@ services:
       - DISABLE_SECURITY_DASHBOARDS_PLUGIN=false
       - OPENSEARCH_USERNAME=admin
       - OPENSEARCH_PASSWORD=${OPENSEARCH_PASSWORD:-IntegrationTest123!}
+      - SERVER_BASEPATH=/opensearch-dashboards
+      - SERVER_REWRITEBASEPATH=true
     depends_on:
       - opensearch
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5601/api/status"]
+      test: ["CMD", "curl", "-f", "http://localhost:5601/opensearch-dashboards/api/status"]
       interval: 30s
       timeout: 10s
       retries: 5
@@ -349,5 +376,7 @@ volumes:
     name: oobd-test-qdrant-snapshots
   azurite-test-data:
     name: oobd-test-azurite-data
+  localstack-test-data:
+    name: oobd-test-localstack-data
   keycloak-test-data:
     name: oobd-test-keycloak-data

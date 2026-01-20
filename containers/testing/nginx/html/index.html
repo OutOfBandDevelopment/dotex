@@ -173,6 +173,14 @@
             background: #138496;
         }
 
+        .service-link.direct {
+            background: #6c757d;
+        }
+
+        .service-link.direct:hover {
+            background: #5a6268;
+        }
+
         .port-info {
             background: #f8f9fa;
             border-radius: 6px;
@@ -275,7 +283,7 @@
                         Email testing server with web interface. Captures all sent emails for inspection.
                     </div>
                     <div class="service-links">
-                        <a href="/smtp4dev/" class="service-link" target="_blank">Open Dashboard</a>
+                        <a href="http://localhost:7777" class="service-link" target="_blank">Open Dashboard :7777</a>
                     </div>
                     <div class="port-info">
                         <div class="port-item">SMTP: <span class="port-number">localhost:25</span></div>
@@ -294,7 +302,7 @@
                         Message broker with management console. User: <strong>guest</strong> / Pass: <strong>guest</strong>
                     </div>
                     <div class="service-links">
-                        <a href="/rabbitmq/" class="service-link" target="_blank">Management Console</a>
+                        <a href="http://localhost:15672" class="service-link" target="_blank">Management Console :15672</a>
                     </div>
                     <div class="port-info">
                         <div class="port-item">AMQP: <span class="port-number">localhost:5673</span></div>
@@ -312,7 +320,7 @@
                         Identity & Access Management. User: <strong>admin</strong> / Pass: <strong>admin</strong>
                     </div>
                     <div class="service-links">
-                        <a href="/keycloak/" class="service-link" target="_blank">Admin Console</a>
+                        <a href="http://localhost:8081" class="service-link" target="_blank">Admin Console :8081</a>
                     </div>
                     <div class="port-info">
                         <div class="port-item">HTTP: <span class="port-number">localhost:8081</span></div>
@@ -330,7 +338,7 @@
                         Vector database with web UI for managing collections and search.
                     </div>
                     <div class="service-links">
-                        <a href="/qdrant/" class="service-link" target="_blank">Dashboard</a>
+                        <a href="http://localhost:6333/dashboard" class="service-link" target="_blank">Dashboard :6333</a>
                     </div>
                     <div class="port-info">
                         <div class="port-item">REST API: <span class="port-number">localhost:6333</span></div>
@@ -348,7 +356,7 @@
                         Data visualization and exploration for OpenSearch. User: <strong>admin</strong> / Pass: <strong>IntegrationTest123!</strong>
                     </div>
                     <div class="service-links">
-                        <a href="/opensearch-dashboards/" class="service-link" target="_blank">Open Dashboards</a>
+                        <a href="http://localhost:5601/opensearch-dashboards/" class="service-link" target="_blank">Open Dashboards :5601</a>
                     </div>
                     <div class="port-info">
                         <div class="port-item">HTTP: <span class="port-number">localhost:5601</span></div>
@@ -410,14 +418,16 @@
                         <span class="service-status status-api">Search Engine</span>
                     </div>
                     <div class="service-description">
-                        Full-text search and analytics. User: <strong>admin</strong> / Pass: <strong>IntegrationTest123!</strong>
+                        Full-text search and analytics. User: <strong>admin</strong> / Pass: <strong>IntegrationTest123!</strong><br>
+                        <em style="color: #e74c3c; font-size: 0.85em;">⚠️ Requires HTTPS and authentication (self-signed cert)</em>
                     </div>
                     <div class="service-links">
-                        <a href="/opensearch-api/_cluster/health" class="service-link api" target="_blank">Cluster Health</a>
+                        <a href="https://localhost:9200/_cluster/health" class="service-link api" target="_blank">Cluster Health :9200 (HTTPS)</a>
                     </div>
                     <div class="port-info">
-                        <div class="port-item">REST API: <span class="port-number">localhost:9200</span></div>
+                        <div class="port-item">REST API: <span class="port-number">https://localhost:9200</span></div>
                         <div class="port-item">Performance: <span class="port-number">localhost:9600</span></div>
+                        <div class="port-item" style="color: #666; font-size: 0.8em;">curl: <span class="port-number">-k -u admin:IntegrationTest123!</span></div>
                     </div>
                 </div>
             </div>
@@ -437,7 +447,7 @@
                         AWS cloud services emulator (SQS, S3, DynamoDB, SNS, Lambda, etc.)
                     </div>
                     <div class="service-links">
-                        <a href="/localstack/_localstack/health" class="service-link api" target="_blank">Health Check</a>
+                        <a href="http://localhost:4566/_localstack/health" class="service-link api" target="_blank">Health Check :4566</a>
                     </div>
                     <div class="port-info">
                         <div class="port-item">Unified: <span class="port-number">localhost:4566</span></div>
@@ -486,7 +496,7 @@
                         Content analysis and text extraction from 1000+ file formats.
                     </div>
                     <div class="service-links">
-                        <a href="/tika" class="service-link api" target="_blank">API Endpoint</a>
+                        <a href="http://localhost:9998" class="service-link api" target="_blank">API Endpoint :9998</a>
                     </div>
                     <div class="port-info">
                         <div class="port-item">HTTP: <span class="port-number">localhost:9998</span></div>
@@ -503,7 +513,7 @@
                         Sentence transformers for generating text embeddings (CPU-only mode).
                     </div>
                     <div class="service-links">
-                        <a href="/sbert/health" class="service-link api" target="_blank">Health Check</a>
+                        <a href="http://localhost:5000/health" class="service-link api" target="_blank">Health Check :5000</a>
                     </div>
                     <div class="port-info">
                         <div class="port-item">HTTP: <span class="port-number">localhost:5000</span></div>

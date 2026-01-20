@@ -180,6 +180,57 @@ keycloak:
 - Common mistake: `upload-scripts` is NOT a valid feature (use `scripts` instead)
 - Valid feature format: `--features=feature1,feature2` (comma-separated, no spaces)
 
+## Reverse Proxy Configuration
+
+Keycloak is accessible through the nginx reverse proxy at `http://localhost:8080/keycloak/` and directly at `http://localhost:8081/`.
+
+### Nginx Configuration
+
+The nginx reverse proxy is configured to handle Keycloak's redirects correctly:
+
+```nginx
+location /keycloak/ {
+    set $upstream_keycloak keycloak:8080;
+    rewrite ^/keycloak/(.*)$ /$1 break;
+    proxy_pass http://$upstream_keycloak;
+
+    # Forward original request information
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header X-Forwarded-Host $host;
+    proxy_set_header X-Forwarded-Port $server_port;
+
+    # Rewrite redirects to include /keycloak prefix
+    proxy_redirect http://$host/ http://$host/keycloak/;
+    proxy_redirect https://$host/ https://$host/keycloak/;
+}
+```
+
+### Keycloak Proxy Settings
+
+Keycloak is configured to work behind a reverse proxy:
+
+```yaml
+environment:
+  - KC_PROXY=edge           # Trust X-Forwarded-* headers from edge proxy
+  - KC_HOSTNAME_STRICT=false  # Allow flexible hostname handling
+```
+
+**Key Configuration:**
+- `KC_PROXY=edge` - Tells Keycloak to trust X-Forwarded headers from the reverse proxy
+- `KC_HOSTNAME_STRICT=false` - Allows Keycloak to work with different hostnames (localhost, docker service names)
+- `proxy_redirect` in nginx - Rewrites redirect Location headers to include `/keycloak` prefix
+
+### Access URLs
+
+- **Through Nginx (Recommended for integration tests)**: `http://localhost:8080/keycloak/`
+- **Direct Access**: `http://localhost:8081/`
+- **Admin Console (via nginx)**: `http://localhost:8080/keycloak/admin/`
+- **Admin Console (direct)**: `http://localhost:8081/admin/`
+
+**Note:** When using nginx proxy, all URLs must include the `/keycloak` prefix. The proxy automatically handles redirects to maintain this prefix.
+
 ## References
 
 - [Keycloak Server Administration Guide](https://www.keycloak.org/docs/latest/server_admin/)
