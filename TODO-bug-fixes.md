@@ -81,6 +81,11 @@ This document tracks bug fixes, breaking changes, and technical debt resolution.
   - Changed to: Factory method that explicitly creates instance with ClaimsIdentity
   - Issue: DI container couldn't decide between constructors in .NET 10.0
   - Location: Lines 60-64
+- [x] Removed deprecated IActionContextAccessor registration (2026-01-20)
+  - Removed: `services.TryAddSingleton<IActionContextAccessor, ActionContextAccessor>()`
+  - Reason: Deprecated in .NET 10 (ASPDEPR006), not used anywhere in codebase
+  - Replacement pattern (if needed): Use `IHttpContextAccessor` and `HttpContext.GetEndpoint()`
+  - Location: Line 57 (removed)
 
 **Remaining:**
 - [ ] Verify build: `dotnet build src/Framework/OoBDev.AspNetCore.Mvc/OoBDev.AspNetCore.Mvc.csproj`
@@ -115,6 +120,7 @@ This document tracks bug fixes, breaking changes, and technical debt resolution.
 
 **.NET 10.0:**
 - `ClaimsPrincipal` has ambiguous constructors in DI - use factory method instead of type-based registration
+- `IActionContextAccessor` is deprecated (ASPDEPR006) - use `IHttpContextAccessor` and `HttpContext.GetEndpoint()` instead
 
 ---
 

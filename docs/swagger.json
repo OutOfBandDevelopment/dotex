@@ -1,8 +1,8 @@
 {
-  "openapi": "3.0.1",
+  "openapi": "3.0.4",
   "info": {
     "title": "OoBDev.WebApi",
-    "version": "1.0.0.0"
+    "version": "0.0.11.0"
   },
   "paths": {
     "/api/AI": {
@@ -10,7 +10,6 @@
         "tags": [
           "AI"
         ],
-        "summary": "Generate an LLM Response based on the prompt and user input",
         "requestBody": {
           "content": {
             "application/json": {
@@ -62,7 +61,6 @@
         "tags": [
           "AI"
         ],
-        "summary": "Generate an AbstractAI Streamed Response based on the prompt and user input",
         "requestBody": {
           "content": {
             "application/json": {
@@ -123,7 +121,6 @@
         "tags": [
           "AI"
         ],
-        "summary": "Generate an LLM Response based on the prompt and user input",
         "requestBody": {
           "content": {
             "application/json": {
@@ -184,7 +181,6 @@
         "tags": [
           "AI"
         ],
-        "summary": "Generate embeddings",
         "requestBody": {
           "content": {
             "application/json": {
@@ -236,7 +232,6 @@
         "tags": [
           "AI"
         ],
-        "summary": "Testing Rag endpoint for context",
         "requestBody": {
           "content": {
             "application/json": {
@@ -283,14 +278,53 @@
         }
       }
     },
+    "/api/AllMiniLM": {
+      "get": {
+        "tags": [
+          "AllMiniLM"
+        ],
+        "parameters": [
+          {
+            "name": "text",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/System.ReadOnlyMemory-System.Single"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/System.ReadOnlyMemory-System.Single"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/System.ReadOnlyMemory-System.Single"
+                }
+              }
+            }
+          }
+        },
+        "x-permissions": {
+          "anonymous": false
+        }
+      }
+    },
     "/api/Communications/public": {
       "post": {
         "tags": [
           "Communications"
         ],
-        "summary": "Sends an email publicly without requiring authentication.",
         "requestBody": {
-          "description": "The email message model.",
           "content": {
             "application/json": {
               "schema": {
@@ -341,9 +375,7 @@
         "tags": [
           "Communications"
         ],
-        "summary": "Enqueues an email message to be processed asynchronously.",
         "requestBody": {
-          "description": "The email message model.",
           "content": {
             "application/json": {
               "schema": {
@@ -394,9 +426,7 @@
         "tags": [
           "Communications"
         ],
-        "summary": "Sends an email with authorization, requiring the caller to be authenticated.",
         "requestBody": {
-          "description": "The email message model.",
           "content": {
             "application/json": {
               "schema": {
@@ -447,12 +477,10 @@
         "tags": [
           "Document"
         ],
-        "summary": "Downloads the specified file.",
         "parameters": [
           {
             "name": "file",
             "in": "path",
-            "description": "The path to the file.",
             "required": true,
             "schema": {
               "type": "string"
@@ -497,12 +525,10 @@
         "tags": [
           "Document"
         ],
-        "summary": "Retrieves the text of the specified file.",
         "parameters": [
           {
             "name": "file",
             "in": "path",
-            "description": "The path to the file.",
             "required": true,
             "schema": {
               "type": "string"
@@ -547,12 +573,10 @@
         "tags": [
           "Document"
         ],
-        "summary": "Retrieves the html of the specified file.",
         "parameters": [
           {
             "name": "file",
             "in": "path",
-            "description": "The path to the file.",
             "required": true,
             "schema": {
               "type": "string"
@@ -597,12 +621,10 @@
         "tags": [
           "Document"
         ],
-        "summary": "Retrieves the pdf of the specified file.",
         "parameters": [
           {
             "name": "file",
             "in": "path",
-            "description": "The path to the file.",
             "required": true,
             "schema": {
               "type": "string"
@@ -647,12 +669,10 @@
         "tags": [
           "Document"
         ],
-        "summary": "Retrieves the summary of the specified file.",
         "parameters": [
           {
             "name": "file",
             "in": "path",
-            "description": "The path to the file.",
             "required": true,
             "schema": {
               "type": "string"
@@ -697,12 +717,10 @@
         "tags": [
           "Document"
         ],
-        "summary": "Upload file content",
         "parameters": [
           {
             "name": "file",
             "in": "path",
-            "description": "",
             "required": true,
             "schema": {
               "type": "string"
@@ -711,14 +729,12 @@
           {
             "name": "sourceContentType",
             "in": "query",
-            "description": "optionally overload the provided MIME Type",
             "schema": {
               "type": "string"
             }
           }
         ],
         "requestBody": {
-          "description": "upload file content",
           "content": {
             "multipart/form-data": {
               "schema": {
@@ -759,12 +775,10 @@
         "tags": [
           "Document"
         ],
-        "summary": "Document Converter",
         "parameters": [
           {
             "name": "targetContentType",
             "in": "query",
-            "description": "define the target MIME type",
             "schema": {
               "type": "string"
             }
@@ -772,14 +786,12 @@
           {
             "name": "sourceContentType",
             "in": "query",
-            "description": "optionally overload the provided MIME Type",
             "schema": {
               "type": "string"
             }
           }
         ],
         "requestBody": {
-          "description": "upload file content",
           "content": {
             "multipart/form-data": {
               "schema": {
@@ -820,9 +832,7 @@
         "tags": [
           "GroqCloud"
         ],
-        "summary": "executes a completion request",
         "requestBody": {
-          "description": "completion request",
           "content": {
             "application/json": {
               "schema": {
@@ -873,19 +883,16 @@
         "tags": [
           "MessageQueueing"
         ],
-        "summary": "Sends a message to the queue publicly without requiring authentication.",
         "parameters": [
           {
             "name": "correlationId",
             "in": "query",
-            "description": "Optional correlation ID for tracking purposes.",
             "schema": {
               "type": "string"
             }
           }
         ],
         "requestBody": {
-          "description": "The example message model.",
           "content": {
             "application/json": {
               "schema": {
@@ -936,19 +943,16 @@
         "tags": [
           "MessageQueueing"
         ],
-        "summary": "Sends a message to the queue with authorization, requiring the caller to be authenticated.",
         "parameters": [
           {
             "name": "correlationId",
             "in": "query",
-            "description": "Optional correlation ID for tracking purposes.",
             "schema": {
               "type": "string"
             }
           }
         ],
         "requestBody": {
-          "description": "The example message model.",
           "content": {
             "application/json": {
               "schema": {
@@ -999,7 +1003,6 @@
         "tags": [
           "Ollama"
         ],
-        "summary": "Generate an LLM Response based on the prompt and user input",
         "requestBody": {
           "content": {
             "application/json": {
@@ -1049,12 +1052,10 @@
         "tags": [
           "Ollama"
         ],
-        "summary": "Retrieves the embedding vector for the given text.",
         "parameters": [
           {
             "name": "text",
             "in": "query",
-            "description": "The text for which to retrieve the embedding vector.",
             "schema": {
               "type": "string"
             }
@@ -1062,7 +1063,6 @@
           {
             "name": "model",
             "in": "query",
-            "description": "The model for which to retrieve the embedding vector.",
             "schema": {
               "type": "string"
             }
@@ -1100,7 +1100,6 @@
         "tags": [
           "Ollama"
         ],
-        "summary": "Generate an AbstractAI Streamed Response based on the prompt and user input",
         "requestBody": {
           "content": {
             "application/json": {
@@ -1161,9 +1160,7 @@
         "tags": [
           "Ollama"
         ],
-        "summary": "executes a completion request",
         "requestBody": {
-          "description": "completion request",
           "content": {
             "application/json": {
               "schema": {
@@ -1214,12 +1211,51 @@
         "tags": [
           "SBERT"
         ],
-        "summary": "Retrieves the embedding vector for the given text.",
         "parameters": [
           {
             "name": "text",
             "in": "query",
-            "description": "The text for which to retrieve the embedding vector.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/System.ReadOnlyMemory-System.Single"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/System.ReadOnlyMemory-System.Single"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/System.ReadOnlyMemory-System.Single"
+                }
+              }
+            }
+          }
+        },
+        "x-permissions": {
+          "anonymous": false
+        }
+      }
+    },
+    "/api/SBERTDefault": {
+      "get": {
+        "tags": [
+          "SBERTDefault"
+        ],
+        "parameters": [
+          {
+            "name": "text",
+            "in": "query",
             "schema": {
               "type": "string"
             }
@@ -1257,7 +1293,6 @@
         "tags": [
           "TextTemplate"
         ],
-        "summary": "Gets the list of supported template file types.",
         "responses": {
           "200": {
             "description": "OK",
@@ -1299,19 +1334,16 @@
         "tags": [
           "TextTemplate"
         ],
-        "summary": "Applies a text template with the specified name and data.",
         "parameters": [
           {
             "name": "templateName",
             "in": "query",
-            "description": "The name of the text template to apply.",
             "schema": {
               "type": "string"
             }
           }
         ],
         "requestBody": {
-          "description": "The JSON data used for template processing.",
           "content": {
             "application/json": {
               "schema": {
@@ -1345,7 +1377,6 @@
         "tags": [
           "User"
         ],
-        "summary": "Gets the claims associated with the current user.",
         "responses": {
           "200": {
             "description": "OK",
@@ -1420,7 +1451,6 @@
         "properties": {
           "model": {
             "type": "string",
-            "description": "Gets or initializes the model for the completion request.",
             "nullable": true
           },
           "context": {
@@ -1429,7 +1459,6 @@
               "type": "integer",
               "format": "int64"
             },
-            "description": "Gets or initializes the context for the completion request.",
             "nullable": true
           },
           "images": {
@@ -1437,27 +1466,22 @@
             "items": {
               "type": "string"
             },
-            "description": "Gets or initializes the images for the completion request.",
             "nullable": true
           },
           "prompt": {
             "type": "string",
-            "description": "Gets or initializes the prompt for the completion request.",
             "nullable": true
           },
           "system": {
             "type": "string",
-            "description": "Gets or initializes the system for the completion request.",
             "nullable": true
           },
           "template": {
             "type": "string",
-            "description": "Gets or initializes the template for the completion request.",
             "nullable": true
           }
         },
-        "additionalProperties": false,
-        "description": "Represents a completion request."
+        "additionalProperties": false
       },
       "OoBDev.AI.Models.CompletionResponse": {
         "required": [
@@ -1472,17 +1496,14 @@
               "type": "integer",
               "format": "int64"
             },
-            "description": "Gets or sets the context for the completion response.",
             "nullable": true
           },
           "response": {
             "type": "string",
-            "description": "Gets or sets the response generated by the completion process.",
             "nullable": true
           }
         },
-        "additionalProperties": false,
-        "description": "Represents a completion response."
+        "additionalProperties": false
       },
       "OoBDev.Communications.Models.AttachmentReferenceModel": {
         "required": [
@@ -1493,29 +1514,24 @@
         "properties": {
           "containerName": {
             "type": "string",
-            "description": "Gets the name of the container where the attachment is stored.",
             "nullable": true
           },
           "documentKey": {
             "type": "string",
-            "description": "Gets the key or identifier of the document associated with the attachment.",
             "nullable": true
           }
         },
-        "additionalProperties": false,
-        "description": "Represents a model for referencing attachments."
+        "additionalProperties": false
       },
       "OoBDev.Communications.Models.EmailMessageModel": {
         "type": "object",
         "properties": {
           "referenceId": {
             "type": "string",
-            "description": "Gets or sets the reference ID of the email message.",
             "nullable": true
           },
           "fromAddress": {
             "type": "string",
-            "description": "Gets or sets the sender's email address.",
             "nullable": true
           },
           "toAddresses": {
@@ -1523,7 +1539,6 @@
             "items": {
               "type": "string"
             },
-            "description": "Gets or sets the list of recipient email addresses.",
             "nullable": true
           },
           "ccAddresses": {
@@ -1531,7 +1546,6 @@
             "items": {
               "type": "string"
             },
-            "description": "Gets or sets the list of carbon copy (CC) email addresses.",
             "nullable": true
           },
           "bccAddresses": {
@@ -1539,22 +1553,18 @@
             "items": {
               "type": "string"
             },
-            "description": "Gets or sets the list of blind carbon copy (BCC) email addresses.",
             "nullable": true
           },
           "subject": {
             "type": "string",
-            "description": "Gets or sets the subject of the email message.",
             "nullable": true
           },
           "textContent": {
             "type": "string",
-            "description": "Gets or sets the plain text content of the email message.",
             "nullable": true
           },
           "htmlContent": {
             "type": "string",
-            "description": "Gets or sets the HTML content of the email message.",
             "nullable": true
           },
           "headers": {
@@ -1562,7 +1572,6 @@
             "additionalProperties": {
               "type": "string"
             },
-            "description": "Gets or sets the headers of the email message.",
             "nullable": true
           },
           "attachments": {
@@ -1570,12 +1579,10 @@
             "items": {
               "$ref": "#/components/schemas/OoBDev.Communications.Models.AttachmentReferenceModel"
             },
-            "description": "Gets or sets the list of attachment references in the email message.",
             "nullable": true
           }
         },
-        "additionalProperties": false,
-        "description": "Represents an email message model."
+        "additionalProperties": false
       },
       "OoBDev.System.Text.Templating.FileType": {
         "required": [
@@ -1586,21 +1593,17 @@
         "properties": {
           "extension": {
             "type": "string",
-            "description": "Gets or sets the file extension associated with the file type.",
             "nullable": true
           },
           "contentType": {
             "type": "string",
-            "description": "Gets or sets the content type associated with the file type.",
             "nullable": true
           },
           "isTemplateType": {
-            "type": "boolean",
-            "description": "Gets or sets a value indicating whether the file type is a template type."
+            "type": "boolean"
           }
         },
-        "additionalProperties": false,
-        "description": "Represents a file type, providing information about the file extension, content type, and whether it is a template type."
+        "additionalProperties": false
       },
       "OoBDev.WebApi.Models.ClaimModel": {
         "required": [
@@ -1614,62 +1617,51 @@
         "properties": {
           "issuer": {
             "type": "string",
-            "description": "Gets or sets the issuer of the claim.",
             "nullable": true
           },
           "value": {
             "type": "string",
-            "description": "Gets or sets the value of the claim.",
             "nullable": true
           },
           "valueType": {
             "type": "string",
-            "description": "Gets or sets the value type of the claim.",
             "nullable": true
           },
           "type": {
             "type": "string",
-            "description": "Gets or sets the type of the claim.",
             "nullable": true
           },
           "originalIssuer": {
             "type": "string",
-            "description": "Gets or sets the original issuer of the claim.",
             "nullable": true
           },
           "subjectName": {
             "type": "string",
-            "description": "Gets or sets the subject name associated with the claim.",
             "nullable": true
           },
           "subjectLabel": {
             "type": "string",
-            "description": "Gets or sets the subject label associated with the claim.",
             "nullable": true
           },
           "subjectAuthenticationType": {
             "type": "string",
-            "description": "Gets or sets the authentication type of the subject associated with the claim.",
             "nullable": true
           }
         },
-        "additionalProperties": false,
-        "description": "Represents a model for a claim."
+        "additionalProperties": false
       },
       "OoBDev.WebApi.Models.ExampleMessageModel": {
         "type": "object",
         "properties": {
           "input": {
             "type": "string",
-            "description": "Gets or sets the input string. Default value is \"Default Value\".",
             "nullable": true
           },
           "data": {
             "$ref": "#/components/schemas/System.Text.Json.Nodes.JsonNode"
           }
         },
-        "additionalProperties": false,
-        "description": "Represents an example message model."
+        "additionalProperties": false
       },
       "OoBDev.WebApi.Models.GenAiContextRequestModel": {
         "required": [
@@ -1681,7 +1673,6 @@
         "properties": {
           "assistantConfinment": {
             "type": "string",
-            "description": "Gets or sets the prompt details.",
             "nullable": true
           },
           "promptDetails": {
@@ -1689,7 +1680,6 @@
             "items": {
               "type": "string"
             },
-            "description": "Gets or sets the prompt details.",
             "nullable": true
           },
           "userInput": {
@@ -1697,12 +1687,10 @@
             "items": {
               "type": "string"
             },
-            "description": "Gets or sets the user input.",
             "nullable": true
           }
         },
-        "additionalProperties": false,
-        "description": "Represents the model used for generating AI responses."
+        "additionalProperties": false
       },
       "OoBDev.WebApi.Models.GenerativeAiRequestModel": {
         "required": [
@@ -1714,22 +1702,18 @@
         "properties": {
           "promptDetails": {
             "type": "string",
-            "description": "Gets or sets the prompt details.",
             "nullable": true
           },
           "data": {
             "type": "string",
-            "description": "Gets or sets the prompt details.",
             "nullable": true
           },
           "userInput": {
             "type": "string",
-            "description": "Gets or sets the user input.",
             "nullable": true
           }
         },
-        "additionalProperties": false,
-        "description": "Represents the model used for generating AI responses."
+        "additionalProperties": false
       },
       "System.ReadOnlyMemory-System.Single": {
         "type": "object",
@@ -1789,5 +1773,40 @@
         "additionalProperties": false
       }
     }
-  }
+  },
+  "tags": [
+    {
+      "name": "AI"
+    },
+    {
+      "name": "AllMiniLM"
+    },
+    {
+      "name": "Communications"
+    },
+    {
+      "name": "Document"
+    },
+    {
+      "name": "GroqCloud"
+    },
+    {
+      "name": "MessageQueueing"
+    },
+    {
+      "name": "Ollama"
+    },
+    {
+      "name": "SBERT"
+    },
+    {
+      "name": "SBERTDefault"
+    },
+    {
+      "name": "TextTemplate"
+    },
+    {
+      "name": "User"
+    }
+  ]
 }

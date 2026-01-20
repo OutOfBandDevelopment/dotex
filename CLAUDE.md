@@ -633,6 +633,7 @@ Fixed breaking changes from Swashbuckle 10.1.0 and .NET 10.0 across 5 files:
 
 **.NET 10.0:**
 - `ClaimsPrincipal` has ambiguous constructors - use factory methods in DI registration
+- `IActionContextAccessor` is deprecated (ASPDEPR006) - removed from DI (not used in codebase)
 
 ---
 

@@ -54,7 +54,6 @@ public static class ServiceCollectionExtensions
         services.AddAccessor<CultureInfo>();
 
         services.AddHttpContextAccessor();
-        services.TryAddSingleton<IActionContextAccessor, ActionContextAccessor>();
 
         services.TryAddTransient<IIdentity>(sp=>sp.GetRequiredService<IPrincipal>().Identity ?? new ClaimsIdentity());
         services.TryAddTransient<IPrincipal>(sp =>

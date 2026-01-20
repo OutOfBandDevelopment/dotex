@@ -3,7 +3,7 @@
 **Last Updated:** 2026-01-20
 
 ✅ **COMPLETED:** Docker-based Integration Testing Infrastructure (Week 1 & 2)
-✅ **COMPLETED:** Swashbuckle 10.1.0 & .NET 10.0 breaking changes - All code fixed (5 files)
+✅ **COMPLETED:** Swashbuckle 10.1.0 & .NET 10.0 breaking changes - All code fixed (5 files + deprecations)
 ⏳ **AWAITING:** Local Docker testing validation before enabling CI/CD
 ⏳ **AWAITING:** Build/test verification for OoBDev.AspNetCore.Mvc
 
