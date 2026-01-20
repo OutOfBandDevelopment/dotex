@@ -54,16 +54,18 @@ All migration work for Incomming projects and BinaryDataDecoders:
 - ⏸️ BinaryDataDecoders: Awaiting critical decisions (see TODO-decisions.md)
 
 ### 🐛 [Bug Fixes & Technical Debt](./TODO-bug-fixes.md)
-**Status:** ✅ Code Complete - ⏳ Awaiting Verification
+**Status:** ✅ VERIFIED COMPLETE
 
 Bug fixes, breaking changes, and technical debt resolution:
 - ✅ Phase 0 critical bugs (6 fixes) - All complete
 - ✅ MSTest ExpectedExceptionAttribute conversion (40 instances) - Complete
-- ✅ Swashbuckle 10.1.0 breaking changes - All 4 files fixed
-- ✅ .NET 10.0 breaking changes - ClaimsPrincipal DI ambiguity fixed
+- ✅ Swashbuckle 10.1.0 breaking changes - All 5 files fixed and verified
+- ✅ .NET 10.0 breaking changes - ClaimsPrincipal DI + IActionContextAccessor deprecation
+- ✅ XML Documentation generation - Enabled globally, Swagger working
 
-**Key Tasks:**
-- ⏳ Build verification: `dotnet build src/Framework/OoBDev.AspNetCore.Mvc/`
+**Completed:**
+- ✅ Build verification: All 65 projects build successfully
+- ✅ Swagger verification: Summary and Description properties appear
 - ⏳ Test verification: `dotnet test src/ --filter "OoBDev.AspNetCore.Mvc"`
 - ⏳ Technical debt: 80%+ test coverage, documentation, dependency audits
 
@@ -159,8 +161,9 @@ TODO.md                                  # This file - Index and navigation
 ### Bug Fixes ✅
 - ✅ Phase 0: Critical bug fixes (6 fixes) - All complete
 - ✅ MSTest ExpectedExceptionAttribute conversion (40 instances across 24 files)
-- ✅ Swashbuckle 10.1.0 breaking changes - All 4 files fixed
-- ✅ .NET 10.0 breaking changes - ClaimsPrincipal DI ambiguity fixed (awaiting build verification)
+- ✅ Swashbuckle 10.1.0 breaking changes - All 5 files fixed and verified
+- ✅ .NET 10.0 breaking changes - ClaimsPrincipal DI + IActionContextAccessor deprecation
+- ✅ XML Documentation - Enabled globally, Swagger working
 
 ### Protocols & Documentation ✅
 - Created `.claude/protocols/software/incoming-codebase-comparison.md` (v1.1)
