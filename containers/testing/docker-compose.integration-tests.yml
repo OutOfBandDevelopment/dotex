@@ -203,11 +203,9 @@ services:
     environment:
       - SERVICES=s3,sqs,sns,dynamodb,lambda,secretsmanager
       - DEBUG=0
-      - DATA_DIR=/tmp/localstack/data
       - DOCKER_HOST=unix:///var/run/docker.sock
       - LOCALSTACK_HOST=localhost:4566
     volumes:
-      - localstack-test-data:/tmp/localstack
       - /var/run/docker.sock:/var/run/docker.sock
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:4566/_localstack/health"]
@@ -232,12 +230,12 @@ services:
     depends_on:
       sql-server:
         condition: service_healthy
-    deploy:
-      resources:
-        limits:
-          memory: 2G
-        reservations:
-          memory: 512M
+    # deploy:
+    #   resources:
+    #     limits:
+    #       memory: 2G
+    #     reservations:
+    #       memory: 512M
     healthcheck:
       test: ["CMD", "sh", "-c", "timeout 1 bash -c '</dev/tcp/localhost/5672' 2>/dev/null || exit 1"]
       interval: 10s
@@ -376,7 +374,5 @@ volumes:
     name: oobd-test-qdrant-snapshots
   azurite-test-data:
     name: oobd-test-azurite-data
-  localstack-test-data:
-    name: oobd-test-localstack-data
   keycloak-test-data:
     name: oobd-test-keycloak-data

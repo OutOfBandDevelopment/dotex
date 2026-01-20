@@ -10,9 +10,9 @@
               "LockDuration": "PT1M",
               "MaxDeliveryCount": 10,
               "RequiresSession": false,
-              "DefaultMessageTimeToLive": "P14D",
+              "DefaultMessageTimeToLive": "PT30M",
               "DeadLetteringOnMessageExpiration": false,
-              "DuplicateDetectionHistoryTimeWindow": "PT10M",
+              "DuplicateDetectionHistoryTimeWindow": "PT5M",
               "RequiresDuplicateDetection": false
             }
           }
@@ -21,8 +21,8 @@
           {
             "Name": "integration-test-topic",
             "Properties": {
-              "DefaultMessageTimeToLive": "P14D",
-              "DuplicateDetectionHistoryTimeWindow": "PT10M",
+              "DefaultMessageTimeToLive": "PT30M",
+              "DuplicateDetectionHistoryTimeWindow": "PT5M",
               "RequiresDuplicateDetection": false
             },
             "Subscriptions": [
@@ -32,7 +32,7 @@
                   "LockDuration": "PT1M",
                   "MaxDeliveryCount": 10,
                   "RequiresSession": false,
-                  "DefaultMessageTimeToLive": "P14D",
+                  "DefaultMessageTimeToLive": "PT30M",
                   "DeadLetteringOnMessageExpiration": false
                 }
               }
