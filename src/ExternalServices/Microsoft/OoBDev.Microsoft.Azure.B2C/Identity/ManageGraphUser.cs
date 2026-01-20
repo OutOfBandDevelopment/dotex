@@ -1,4 +1,4 @@
-using Azure.Identity;
+﻿using Azure.Identity;
 using OoBDev.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace OoBDev.Microsoft.B2C.Identity;
+namespace OoBDev.Microsoft.Azure.B2C.Identity;
 
 /// <summary>
 /// Implementation of  <see cref="IIdentityManager"/> for managing users in Microsoft Graph.

@@ -1,10 +1,10 @@
-using OoBDev.Identity;
-using OoBDev.Microsoft.B2C.Identity;
+﻿using OoBDev.Identity;
+using OoBDev.Microsoft.Azure.B2C.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace OoBDev.Microsoft.B2C;
+namespace OoBDev.Microsoft.Azure.B2C;
 
 /// <summary>
 /// Extension methods for adding Microsoft B2C services to the service collection.

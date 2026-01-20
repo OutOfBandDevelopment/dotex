@@ -1,6 +1,6 @@
 ﻿using OoBDev.Extensions.Configuration;
 using OoBDev.Identity;
-using OoBDev.Microsoft.B2C.Identity;
+using OoBDev.Microsoft.Azure.B2C.Identity;
 using OoBDev.TestUtilities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,7 +10,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Threading.Tasks;
 
-namespace OoBDev.Microsoft.B2C.Tests;
+namespace OoBDev.Microsoft.Azure.B2C.Tests;
 
 [TestClass]
 public class ManageGraphUserIntegrationTests

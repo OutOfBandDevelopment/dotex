@@ -24,8 +24,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\OoBDev.Microsoft.B2C\OoBDev.Microsoft.B2C.csproj" />
+		<ProjectReference Include="..\OoBDev.Microsoft.Azure.StorageAccount\OoBDev.Microsoft.Azure.StorageAccount.csproj" />
 		<ProjectReference Include="..\..\..\Framework\OoBDev.TestUtilities\OoBDev.TestUtilities.csproj" />
-		<ProjectReference Include="..\..\..\Framework\OoBDev.System\OoBDev.System.csproj" />
 	</ItemGroup>
 </Project>

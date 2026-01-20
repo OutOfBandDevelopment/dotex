@@ -1,4 +1,4 @@
-namespace OoBDev.Microsoft.B2C.Identity;
+﻿namespace OoBDev.Microsoft.Azure.B2C.Identity;
 
 /// <summary>
 /// Contains keys related to Azure Active Directory B2C configuration.

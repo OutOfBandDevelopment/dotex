@@ -1,6 +1,6 @@
-# OoBDev.Microsoft.B2C
+# OoBDev.Microsoft.Azure.B2C
 
-OoBDev.Microsoft.B2C provides implementations and extensions for integrating with Microsoft Azure Active Directory B2C. Here's an overview of its key components:
+OoBDev.Microsoft.Azure.B2C provides implementations and extensions for integrating with Microsoft Azure Active Directory B2C. Here's an overview of its key components:
 
 ## ManageGraphUser
 Implementation of `OoBDev.Identity.IIdentityManager` for managing users in Microsoft Graph.
@@ -27,4 +27,4 @@ Extension methods for adding Microsoft B2C services to the service collection.
 ### Methods
 - **TryAddMicrosoftB2CServices**: Adds Microsoft B2C services to the service collection.
 
-OoBDev.Microsoft.B2C streamlines integration with Microsoft Azure Active Directory B2C, facilitating user management and authentication workflows within applications.
+OoBDev.Microsoft.Azure.B2C streamlines integration with Microsoft Azure Active Directory B2C, facilitating user management and authentication workflows within applications.
