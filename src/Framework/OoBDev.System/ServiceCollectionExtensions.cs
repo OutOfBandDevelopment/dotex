@@ -121,6 +121,8 @@ public static class ServiceCollectionExtensions
             (sp, key) => sp.GetRequiredKeyedService<ISerializer>(key?.ToString()?.ToUpper())
             );
 
+        services.TryAddSingleton<IObjectConverter, ObjectConverter>();
+
         services.TryAddSingleton<IJsonSerializer, DefaultJsonSerializer>();
         services.TryAddKeyedSingleton<ISerializer>(
             nameof(SerializerTypes.Json).ToUpper(),

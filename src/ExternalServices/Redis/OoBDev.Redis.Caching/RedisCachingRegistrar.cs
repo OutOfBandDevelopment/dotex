@@ -18,8 +18,8 @@ public class RedisCachingRegistrar
     /// <returns>The service collection for chaining.</returns>
     public IServiceCollection AddServices(IServiceCollection services)
     {
-        services.TryAddSingleton<ICachingProvider, RedisCachingProvider>();
-        services.TryAddKeyedSingleton<ICachingProvider, RedisCachingProvider>("Redis");
+        services.TryAddTransient<ICachingProvider, RedisCachingProvider>();
+        services.TryAddKeyedTransient<ICachingProvider, RedisCachingProvider>("Redis");
         services.TryAddTransient<IConnectionMultiplexerFactory, ConnectionMultiplexerFactory>();
         return services;
     }
