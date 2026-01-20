@@ -22,8 +22,8 @@
 		<ProjectReference Include="..\OoBDev.Caching.Common\OoBDev.Caching.Common.csproj" />
 		<ProjectReference Include="..\OoBDev.TestUtilities\OoBDev.TestUtilities.csproj" />
 		<ProjectReference Include="..\OoBDev.Toolkit\OoBDev.Toolkit.csproj" />
-		<ProjectReference Include="..\OoBDev.Api.Microsoft.Caching\OoBDev.Api.Microsoft.Caching.csproj" />
-		<ProjectReference Include="..\OoBDev.Api.Redis.Caching\OoBDev.Api.Redis.Caching.csproj" />
+		<ProjectReference Include="..\OoBDev.Microsoft.Caching\OoBDev.Microsoft.Caching.csproj" />
+		<ProjectReference Include="..\OoBDev.Redis.Caching\OoBDev.Redis.Caching.csproj" />
 	</ItemGroup>
 
 </Project>

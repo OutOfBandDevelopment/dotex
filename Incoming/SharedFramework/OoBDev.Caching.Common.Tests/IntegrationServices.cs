@@ -1,5 +1,5 @@
-using OoBDev.Api.Microsoft.Caching;
-using OoBDev.Api.Redis.Caching;
+using OoBDev.Microsoft.Caching;
+using OoBDev.Redis.Caching;
 using OoBDev.TestUtilities;
 using OoBDev.TestUtilities.Logging;
 using OoBDev.Toolkit;

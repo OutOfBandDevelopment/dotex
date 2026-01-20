@@ -1,4 +1,4 @@
-using OoBDev.Azure.Storage;
+using OoBDev.Microsoft.Azure.Storage;
 using OoBDev.ComplexEvents.Common;
 using OoBDev.DocumentCenter;
 using OoBDev.IdentityModel.Extensions;

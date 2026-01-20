@@ -27,7 +27,7 @@ Intention is to use Azure Redis cache for deployed services
                 will plan to use docker container for local development
 
 This will all follow my normal level of crazy so I’ll be adding at least a OoBDev.Caching.Contracts 
-and a OoBDev.Api.Redis.Caching to the OoBDev.SharedFramework
+and a OoBDev.Redis.Caching to the OoBDev.SharedFramework
 
 
 in theory this will be able to cache anything in the IOC container as I am not going to add any 

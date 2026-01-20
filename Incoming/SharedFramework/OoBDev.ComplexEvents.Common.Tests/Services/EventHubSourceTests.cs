@@ -1,7 +1,7 @@
-using OoBDev.Azure.EventHub;
-using OoBDev.Azure.EventHub.ComplexEvents;
-using OoBDev.Azure.ServiceBus;
-using OoBDev.Azure.Storage;
+using OoBDev.Microsoft.Azure.EventHub;
+using OoBDev.Microsoft.Azure.EventHub.ComplexEvents;
+using OoBDev.Microsoft.Azure.ServiceBus;
+using OoBDev.Microsoft.Azure.Storage;
 using OoBDev.ComplexEvents.Common.Services;
 using OoBDev.ComplexEvents.Contracts;
 using OoBDev.ComplexEvents.Contracts.Services;

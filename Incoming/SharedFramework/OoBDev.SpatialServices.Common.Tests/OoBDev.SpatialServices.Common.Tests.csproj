@@ -18,9 +18,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\OoBDev.Api.Google.Maps\OoBDev.Api.Google.Maps.csproj" />
-    <ProjectReference Include="..\OoBDev.Api.Census.Geocoding\OoBDev.Api.Census.Geocoding.csproj" />
-    <ProjectReference Include="..\OoBDev.Api.Microsoft.BingMaps\OoBDev.Api.Microsoft.BingMaps.csproj" />
+    <ProjectReference Include="..\OoBDev.Google.Maps\OoBDev.Google.Maps.csproj" />
+    <ProjectReference Include="..\OoBDev.Census.Geocoding\OoBDev.Census.Geocoding.csproj" />
+    <ProjectReference Include="..\OoBDev.Microsoft.BingMaps\OoBDev.Microsoft.BingMaps.csproj" />
     <ProjectReference Include="..\OoBDev.TestUtilities\OoBDev.TestUtilities.csproj" />
     <ProjectReference Include="..\OoBDev.SpatialServices.Common\OoBDev.SpatialServices.Common.csproj" />
   </ItemGroup>

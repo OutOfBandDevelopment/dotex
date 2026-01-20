@@ -1,6 +1,6 @@
-using OoBDev.Api.Microsoft.Caching;
-using OoBDev.Api.Redis.Caching;
-using OoBDev.Api.Redis.Caching.Providers;
+using OoBDev.Microsoft.Caching;
+using OoBDev.Redis.Caching;
+using OoBDev.Redis.Caching.Providers;
 using OoBDev.Caching.Common.Factories;
 using OoBDev.Caching.Contracts;
 using OoBDev.TestUtilities;

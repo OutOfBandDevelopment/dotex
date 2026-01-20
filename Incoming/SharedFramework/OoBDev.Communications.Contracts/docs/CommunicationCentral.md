@@ -23,8 +23,8 @@ notification channels added in the future.
 | MailKit:SmtpClient:Default:From:Email   |              | Default From address if not provided in request                                                 |
 | MailKit:SmtpClient:Default:Subject      |              | Default Subject if not provided in request                                                      |
 | MailKit:SmsClient:Default:From:Number   |              | Default From number if not provided in request                                                  |
-| OoBDev:ConfiguredServices:OoBDev.Communications.Contracts.Channels.ISendEmailProvider |  | Set to "OoBDev.Api.MailKit.Communications.SendMailKitEmailHandler" to enable this provider
-| OoBDev:ConfiguredServices:OoBDev.Communications.Contracts.Channels.ISendSmsProvider   |  | Set to "OoBDev.Api.MailKit.Communications.SendMailKitSmsHandler" to enable this provider
+| OoBDev:ConfiguredServices:OoBDev.Communications.Contracts.Channels.ISendEmailProvider |  | Set to "OoBDev.MailKit.Communications.SendMailKitEmailHandler" to enable this provider
+| OoBDev:ConfiguredServices:OoBDev.Communications.Contracts.Channels.ISendSmsProvider   |  | Set to "OoBDev.MailKit.Communications.SendMailKitSmsHandler" to enable this provider
 
 ### SendGrid 
 
@@ -33,7 +33,7 @@ notification channels added in the future.
 | Twilio:SendGrid:ApiKey                  |              | API Key for Send Grid               |
 | Twilio:SendGrid:Default:From:Email      |              | Default From address if not provided in request |
 | Twilio:SendGrid:Default:Subject         |              | Default Subject if not provided in request |
-| OoBDev:ConfiguredServices:OoBDev.Communications.Contracts.Channels.ISendEmailProvider |  | Set to "OoBDev.Api.Twilio.SendGrid.Communications.SendGridEmailHandler" to enable this provider
+| OoBDev:ConfiguredServices:OoBDev.Communications.Contracts.Channels.ISendEmailProvider |  | Set to "OoBDev.Twilio.SendGrid.Communications.SendGridEmailHandler" to enable this provider
 
 ### Twilio 
 
@@ -42,7 +42,7 @@ notification channels added in the future.
 | Twilio:SmsMessaging:AccountSid          |              | Account SID                         |
 | Twilio:SmsMessaging:AuthToken           |              | Twilio Auth token                   |
 | Twilio:SmsMessaging:Default:From        |              | Default from number if not provided in request |
-| OoBDev:ConfiguredServices:OoBDev.Communications.Contracts.Channels.ISendSmsProvider |  | Set to "OoBDev.Api.Twilio.SmsMessaging.Communications.SendTwilioSmsHandler" to enable this provider
+| OoBDev:ConfiguredServices:OoBDev.Communications.Contracts.Channels.ISendSmsProvider |  | Set to "OoBDev.Twilio.SmsMessaging.Communications.SendTwilioSmsHandler" to enable this provider
 
 
 ## Table of Contents
