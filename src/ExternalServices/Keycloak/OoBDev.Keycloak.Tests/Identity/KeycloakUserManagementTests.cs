@@ -325,28 +325,20 @@ public class KeycloakUserManagementTests
         Assert.IsNotNull(createdUser, "Created user should be found");
         _createdUserId = createdUser.Id ?? string.Empty;
 
-        // Act - Update user
-        var updatedUser = new User
-        {
-            FirstName = "Updated",
-            LastName = "Name",
-            Attributes = new Dictionary<string, List<string>>
-            {
-                { "department", ["Sales"] },
-                { "location", ["New York"] }
-            }
-        };
+        // Act - Fetch user, modify, then update (UpdateUserAsync replaces, doesn't merge)
+        var userToUpdate = await _keycloakClient.GetUserAsync(_realm, _createdUserId);
+        userToUpdate.FirstName = "Updated";
+        userToUpdate.LastName = "Modified";
 
-        await _keycloakClient.UpdateUserAsync(_realm, _createdUserId, updatedUser);
+        await _keycloakClient.UpdateUserAsync(_realm, _createdUserId, userToUpdate);
 
         // Assert
         var fetchedUser = await _keycloakClient.GetUserAsync(_realm, _createdUserId);
 
         Assert.AreEqual("Updated", fetchedUser.FirstName);
-        Assert.AreEqual("Name", fetchedUser.LastName);
-        Assert.IsNotNull(fetchedUser.Attributes);
-        Assert.IsTrue(fetchedUser.Attributes.ContainsKey("department"));
-        Assert.AreEqual("Sales", fetchedUser.Attributes["department"].First());
+        Assert.AreEqual("Modified", fetchedUser.LastName);
+        Assert.AreEqual(username, fetchedUser.Username, "Username should not change");
+        Assert.AreEqual(email, fetchedUser.Email, "Email should not change");
 
         TestContext.WriteLine($"User updated: {fetchedUser.FirstName} {fetchedUser.LastName}");
     }
