@@ -1,14 +1,44 @@
 # Integration Test Variables
 
-**Last Updated:** 2026-01-19
+**Last Updated:** 2026-01-20
 
 This document lists all test properties used by Integration tests. These properties can be configured via:
 - `.runsettings` file (`TestRunParameters` section)
 - Test deployment context
 - Environment variables (fallback)
-- Default values (if not configured)
 
-> **Usage in Tests:** `TestContext.GetProperty<string>("VARIABLE_NAME") ?? "default_value"`
+> **Usage in Tests:**
+> - Required values: `TestContext.GetRequiredProperty<string>("SERVICE_URL")`
+> - Values with defaults: `TestContext.GetPropertyOrDefault("SERVICE_PORT", 8080)`
+>
+> See [Testing Guidelines](docs/architecture/testing/testing-guidelines.md) for complete patterns.
+
+---
+
+## Table of Contents
+
+1. [Test Categories](#test-categories)
+2. [Integration Test Variables](#integration-test-variables)
+   - [Apache Tika (Document Processing)](#apache-tika-document-processing)
+   - [SMTP/IMAP (Email Testing)](#smtpimap-email-testing)
+   - [MongoDB (NoSQL Database)](#mongodb-nosql-database)
+   - [SQL Server (Relational Database)](#sql-server-relational-database)
+   - [RabbitMQ (Message Queue)](#rabbitmq-message-queue)
+   - [Redis (Cache Store)](#redis-cache-store)
+   - [OpenSearch (Search Engine)](#opensearch-search-engine)
+   - [SBert (Sentence Embeddings)](#sbert-sentence-embeddings---aiml)
+   - [Qdrant (Vector Database)](#qdrant-vector-database)
+   - [Azurite (Azure Storage Emulator)](#azurite-azure-storage-emulator)
+   - [LocalStack (AWS Emulator)](#localstack-aws-emulator)
+   - [Keycloak (Identity & Access Management)](#keycloak-identity--access-management)
+3. [LiveIntegration Test Variables](#liveintegration-test-variables)
+   - [Azure B2C (Identity Provider)](#azure-b2c-identity-provider)
+   - [Application Insights (Telemetry)](#application-insights-telemetry)
+   - [Groq Cloud (LLM API)](#groq-cloud-llm-api)
+4. [Configuration Examples](#configuration-examples)
+5. [Test Pattern Guidelines](#test-pattern-guidelines)
+6. [Docker Integration Stack](#docker-integration-stack)
+7. [Related Documentation](#related-documentation)
 
 ---
 
@@ -443,8 +473,13 @@ See `.github/workflows/integration-tests.yml` for environment variable configura
 [TestCategory(TestCategories.Integration)]
 public async Task MyIntegrationTest()
 {
-    // ✅ CORRECT: Use TestContext.GetProperty<T>()
-    var url = TestContext.GetProperty<string>("SERVICE_URL") ?? "http://localhost:8080";
+    // ✅ CORRECT: Use GetRequiredProperty for required values
+    var url = TestContext.GetRequiredProperty<string>("SERVICE_URL");
+    var username = TestContext.GetRequiredProperty<string>("SERVICE_USERNAME");
+    var password = TestContext.GetRequiredProperty<string>("SERVICE_PASSWORD");
+
+    // ✅ CORRECT: Use GetPropertyOrDefault for values with industry-standard defaults
+    var port = TestContext.GetPropertyOrDefault("SERVICE_PORT", 8080);
 
     // ❌ WRONG: Don't use Environment.GetEnvironmentVariable()
     // var url = Environment.GetEnvironmentVariable("SERVICE_URL") ?? "http://localhost:8080";
@@ -484,11 +519,12 @@ See `/containers/testing/README.md` for detailed Docker infrastructure documenta
 
 ## Related Documentation
 
-- [Local Integration Testing Epic](./TODO-testing-local-integration.md) - Docker-based testing roadmap
-- [Live Integration Testing Epic](./TODO-testing-live-integration.md) - Cloud-based testing roadmap
+- [Testing Guidelines](./docs/architecture/testing/testing-guidelines.md) - Testing standards and patterns
+- [Testing README](./docs/architecture/testing/README.md) - Testing documentation index
 - [Docker Infrastructure](./containers/testing/README.md) - Docker setup and usage
 - [Test Categories](./src/Framework/OoBDev.TestUtilities/TestCategories.cs) - Test category definitions
 - [.runsettings](./src/.runsettings) - Default test run configuration
+- [Integration Test Protocol](./src/.claude/protocols/software/integration-test-maintenance.md) - Maintenance checklist
 
 ---
 

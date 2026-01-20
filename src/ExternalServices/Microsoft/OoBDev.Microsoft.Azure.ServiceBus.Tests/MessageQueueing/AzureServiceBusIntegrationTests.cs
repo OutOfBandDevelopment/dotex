@@ -122,9 +122,8 @@ public class AzureServiceBusIntegrationTests
     public async Task SendAsync_ToServiceBusQueue_SendsSuccessfully()
     {
         // Arrange
-        var connectionString = TestContext.GetProperty<string>("SERVICEBUS_CONNECTION_STRING")
-            ?? "Endpoint=sb://localhost;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=SAS_KEY_VALUE;UseDevelopmentEmulator=true;";
-        var queueName = TestContext.GetProperty<string>("SERVICEBUS_TEST_QUEUE") ?? "integration-test-queue";
+        var connectionString = TestContext.GetRequiredProperty<string>("SERVICEBUS_CONNECTION_STRING");
+        var queueName = TestContext.GetRequiredProperty<string>("SERVICEBUS_TEST_QUEUE");
 
         // Configure message provider
         var configBuilder = new ConfigurationBuilder();
@@ -206,9 +205,8 @@ public class AzureServiceBusIntegrationTests
     public async Task SendAsync_ToServiceBusTopic_SendsSuccessfully()
     {
         // Arrange
-        var connectionString = TestContext.GetProperty<string>("SERVICEBUS_CONNECTION_STRING")
-            ?? "Endpoint=sb://localhost;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=SAS_KEY_VALUE;UseDevelopmentEmulator=true;";
-        var topicName = TestContext.GetProperty<string>("SERVICEBUS_TEST_TOPIC") ?? "integration-test-topic";
+        var connectionString = TestContext.GetRequiredProperty<string>("SERVICEBUS_CONNECTION_STRING");
+        var topicName = TestContext.GetRequiredProperty<string>("SERVICEBUS_TEST_TOPIC");
 
         // Configure message provider
         var configBuilder = new ConfigurationBuilder();

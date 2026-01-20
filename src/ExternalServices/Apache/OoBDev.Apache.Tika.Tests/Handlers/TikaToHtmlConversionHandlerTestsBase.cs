@@ -23,7 +23,7 @@ public abstract class TikaToHtmlConversionHandlerTestsBase<T> where T : IDocumen
         TestContext testContext
         )
     {
-        var tikaUrl = testContext.GetProperty<string>("TIKA_URL") ?? "http://localhost:9998";
+        var tikaUrl = testContext.GetRequiredProperty<string>("TIKA_URL");
         var config = new ConfigurationBuilder()
             .AddInMemoryCollection(new Dictionary<string, string?>
             {

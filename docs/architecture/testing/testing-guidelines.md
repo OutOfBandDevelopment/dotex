@@ -1,10 +1,10 @@
 # Testing Guidelines
 
-**Last Updated:** 2026-01-19
+**Last Updated:** 2026-01-20
 
 Comprehensive testing standards and best practices for the OoBDev framework.
 
-> **Quick Reference:** [TEST_VARIABLES.md](../../TEST_VARIABLES.md) - All test properties and configuration
+> **Quick Reference:** [TEST_VARIABLES.md](../../../TEST_VARIABLES.md) - All test properties and configuration
 
 ---
 
@@ -161,7 +161,12 @@ endif
 
 ### Test Property Pattern
 
-**✅ CORRECT - Use TestContext.GetProperty:**
+OoBDev provides two extension methods for retrieving test properties:
+
+- **`GetRequiredProperty<T>()`** - For values that must be explicitly configured (no sensible default)
+- **`GetPropertyOrDefault<T>()`** - For values with industry-standard defaults
+
+**✅ CORRECT - Use GetRequiredProperty for required values:**
 
 ```csharp
 [TestClass]
@@ -193,9 +198,8 @@ public class MongoDBIntegrationTests
     [TestCategory(TestCategories.Integration)]
     public async Task TestMongoDBCRUD()
     {
-        // ✅ CORRECT: Use TestContext.GetProperty<T>()
-        var connectionString = TestContext.GetProperty<string>("MONGODB_CONNECTION_STRING")
-            ?? "mongodb://localhost:27017";
+        // ✅ CORRECT: Use GetRequiredProperty for required configuration
+        var connectionString = TestContext.GetRequiredProperty<string>("MONGODB_CONNECTION_STRING");
 
         var config = new ConfigurationBuilder()
             .AddInMemoryCollection(new Dictionary<string, string?>
@@ -216,6 +220,15 @@ public class MongoDBIntegrationTests
 }
 ```
 
+**✅ CORRECT - Use GetPropertyOrDefault for industry-standard values:**
+
+```csharp
+// Port numbers with industry standards
+var smtpPort = TestContext.GetPropertyOrDefault("SMTP_PORT", 25);       // SMTP default
+var imapPort = TestContext.GetPropertyOrDefault("IMAP_PORT", 143);      // IMAP default
+var mongoPort = TestContext.GetPropertyOrDefault("MONGODB_PORT", 27017); // MongoDB default
+```
+
 **❌ WRONG - Don't use Environment.GetEnvironmentVariable:**
 
 ```csharp
@@ -224,12 +237,20 @@ var connectionString = Environment.GetEnvironmentVariable("MONGODB_CONNECTION_ST
     ?? "mongodb://localhost:27017";
 ```
 
-**Why TestContext.GetProperty is better:**
+**Why TestContext extension methods are better:**
 - Integrates with `.runsettings` files
 - Works with MSTest test deployment context
-- Supports test parameter overrides
+- `GetRequiredProperty` throws clear error if not configured
+- `GetPropertyOrDefault` checks .runsettings first, then env vars
 - Better IDE integration (Test Explorer)
 - Clearer test configuration management
+
+**Decision Guide:**
+
+| Method | Use When | Examples |
+|--------|----------|----------|
+| `GetRequiredProperty<T>()` | Value must be explicitly configured | URLs, usernames, passwords, connection strings, realm names, client IDs |
+| `GetPropertyOrDefault<T>()` | Industry-standard default exists | Port 5432 (PostgreSQL), Port 27017 (MongoDB), Port 6379 (Redis), Port 25 (SMTP) |
 
 ### Test Isolation Patterns
 
@@ -378,8 +399,7 @@ public class UserRepositoryIntegrationTests
     {
         _databaseName = $"IntegrationTest_{Guid.NewGuid():N}";
 
-        var connectionString = TestContext.GetProperty<string>("MONGODB_CONNECTION_STRING")
-            ?? "mongodb://localhost:27017";
+        var connectionString = TestContext.GetRequiredProperty<string>("MONGODB_CONNECTION_STRING");
 
         var config = new ConfigurationBuilder()
             .AddInMemoryCollection(new Dictionary<string, string?>
@@ -439,8 +459,7 @@ public class DocumentConversionIntegrationTests
     public async Task ConvertPdfToHtml_ShouldSucceed()
     {
         // Get Tika URL from test properties
-        var tikaUrl = TestContext.GetProperty<string>("TIKA_URL")
-            ?? "http://localhost:9998";
+        var tikaUrl = TestContext.GetRequiredProperty<string>("TIKA_URL");
 
         var config = new ConfigurationBuilder()
             .AddInMemoryCollection(new Dictionary<string, string?>
@@ -487,8 +506,8 @@ public class MessageQueueIntegrationTests
     {
         _queueName = $"test_queue_{Guid.NewGuid():N}";
 
-        var host = TestContext.GetProperty<string>("RABBITMQ_HOST") ?? "localhost";
-        var port = int.TryParse(TestContext.GetProperty<string>("RABBITMQ_PORT"), out var p) ? p : 5672;
+        var host = TestContext.GetRequiredProperty<string>("RABBITMQ_HOST");
+        var port = TestContext.GetPropertyOrDefault("RABBITMQ_PORT", 5672);
 
         var factory = new ConnectionFactory { HostName = host, Port = port };
         _connection = factory.CreateConnection();
@@ -813,11 +832,11 @@ public void MathOperation_ShouldReturnExpectedValue()
 
 ## Related Documentation
 
-- [TEST_VARIABLES.md](../../TEST_VARIABLES.md) - Complete test property reference
-- [Local Integration Testing](../../TODO-testing-local-integration.md) - Docker testing roadmap
-- [Live Integration Testing](../../TODO-testing-live-integration.md) - Cloud testing roadmap
+- [Testing README](./README.md) - Testing documentation index
+- [TEST_VARIABLES.md](../../../TEST_VARIABLES.md) - Complete test property reference
 - [TestCategories.cs](../../../src/Framework/OoBDev.TestUtilities/TestCategories.cs) - Category definitions
-- [Docker Infrastructure](../../../containers/testing/README.md) - Docker setup guide
+- [Docker Infrastructure](../../../../containers/testing/README.md) - Docker setup guide
+- [Integration Test Protocol](../../../.claude/protocols/software/integration-test-maintenance.md) - Maintenance checklist
 
 ---
 
@@ -835,7 +854,11 @@ Need external service? → NO → Unit
 ### Test Property Usage
 
 ```csharp
-var value = TestContext.GetProperty<string>("PROPERTY_NAME") ?? "default";
+// Required values (URLs, credentials, connection strings)
+var url = TestContext.GetRequiredProperty<string>("SERVICE_URL");
+
+// Values with industry defaults (port numbers)
+var port = TestContext.GetPropertyOrDefault("SERVICE_PORT", 8080);
 ```
 
 ### Test Isolation

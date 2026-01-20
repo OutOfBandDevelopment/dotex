@@ -40,14 +40,10 @@ public class KeycloakUserManagementTests
     [TestInitialize]
     public async Task Setup()
     {
-        _baseUrl = TestContext.GetProperty<string>("KEYCLOAK_URL")
-            ?? throw new ApplicationException("Missing KEYCLOAK_URL");
-        var adminUsername = TestContext.GetProperty<string>("KEYCLOAK_ADMIN_USERNAME")
-            ?? throw new ApplicationException("Missing KEYCLOAK_ADMIN_USERNAME");
-        var adminPassword = TestContext.GetProperty<string>("KEYCLOAK_ADMIN_PASSWORD")
-            ?? throw new ApplicationException("Missing KEYCLOAK_ADMIN_PASSWORD");
-        _realm = TestContext.GetProperty<string>("KEYCLOAK_REALM")
-            ?? throw new ApplicationException("Missing KEYCLOAK_REALM");
+        _baseUrl = TestContext.GetRequiredProperty<string>("KEYCLOAK_URL");
+        var adminUsername = TestContext.GetRequiredProperty<string>("KEYCLOAK_ADMIN_USERNAME");
+        var adminPassword = TestContext.GetRequiredProperty<string>("KEYCLOAK_ADMIN_PASSWORD");
+        _realm = TestContext.GetRequiredProperty<string>("KEYCLOAK_REALM");
 
         // Get admin token from MASTER realm (where admin user exists)
         _adminToken = await GetAdminTokenAsync(adminUsername, adminPassword);
@@ -471,10 +467,8 @@ public class KeycloakUserManagementTests
     /// </summary>
     private async Task<TokenResponse?> AuthenticateUserAsync(string username, string password, bool expectFailure = false)
     {
-        var clientId = TestContext.GetProperty<string>("KEYCLOAK_CLIENT_ID")
-            ?? throw new ApplicationException("Missing KEYCLOAK_CLIENT_ID");
-        var clientSecret = TestContext.GetProperty<string>("KEYCLOAK_CLIENT_SECRET")
-            ?? throw new ApplicationException("Missing KEYCLOAK_CLIENT_SECRET");
+        var clientId = TestContext.GetRequiredProperty<string>("KEYCLOAK_CLIENT_ID");
+        var clientSecret = TestContext.GetRequiredProperty<string>("KEYCLOAK_CLIENT_SECRET");
 
         using var httpClient = new HttpClient();
         var tokenEndpoint = $"{_baseUrl}/realms/{_realm}/protocol/openid-connect/token";

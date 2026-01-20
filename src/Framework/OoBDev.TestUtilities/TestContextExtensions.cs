@@ -30,6 +30,12 @@ public static class TestContextExtensions
 
     public static ILogger<T> GetLogger<T>(this TestContext testContext) => TestLogger.CreateLogger<T>();
 
+    public static T GetPropertyOrDefault<T>(this TestContext testContext, string parameter, T defaultValue) =>
+        testContext.GetProperty<T>(parameter) ?? defaultValue;
+
+    public static T GetRequiredProperty<T>(this TestContext testContext, string parameter) =>
+        testContext.GetProperty<T>(parameter) ?? throw new ApplicationException($"Test Property {parameter} is required");
+
     public static T? GetProperty<T>(this TestContext testContext, string parameter)
     {
         try

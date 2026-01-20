@@ -42,9 +42,9 @@ public class OpenSearchTests
 
     private OpenSearchLowLevelClient GetClient()
     {
-        var url = TestContext.GetProperty<string>("OPENSEARCH_URL") ?? "http://localhost:9200";
-        var username = TestContext.GetProperty<string>("OPENSEARCH_USERNAME") ?? "admin";
-        var password = TestContext.GetProperty<string>("OPENSEARCH_PASSWORD") ?? "admin";
+        var url = TestContext.GetRequiredProperty<string>("OPENSEARCH_URL");
+        var username = TestContext.GetRequiredProperty<string>("OPENSEARCH_USERNAME");
+        var password = TestContext.GetRequiredProperty<string>("OPENSEARCH_PASSWORD");
 
         var connection = new ConnectionConfiguration(new Uri(url))
             .BasicAuthentication(username, password)

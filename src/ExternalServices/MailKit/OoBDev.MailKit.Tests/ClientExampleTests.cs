@@ -21,8 +21,8 @@ public class ClientExampleTests
     [TestCategory(TestCategories.Integration)]
     public async Task SendSmtpTest()
     {
-        var host = TestContext.GetProperty<string>("SMTP_HOST") ?? "localhost";
-        var port = int.TryParse(TestContext.GetProperty<string>("SMTP_PORT"), out var p) ? p : 25;
+        var host = TestContext.GetRequiredProperty<string>("SMTP_HOST");
+        var port = TestContext.GetPropertyOrDefault("SMTP_PORT", 25);
 
         var config = new
         {
@@ -76,8 +76,8 @@ public class ClientExampleTests
     [TestCategory(TestCategories.Integration)]
     public async Task GetImapTest()
     {
-        var host = TestContext.GetProperty<string>("IMAP_HOST") ?? "localhost";
-        var port = int.TryParse(TestContext.GetProperty<string>("IMAP_PORT"), out var p) ? p : 143;
+        var host = TestContext.GetRequiredProperty<string>("IMAP_HOST");
+        var port = TestContext.GetPropertyOrDefault("IMAP_PORT", 143);
 
         var config = new
         {

@@ -30,10 +30,10 @@ public class SentenceEmbeddingClientTests
         return client;
     }
 
-    [TestMethod, TestCategory(TestCategories.Integration)]
+    [TestMethod, TestCategory(TestCategories.DevLocal)]
     public async Task GetEmbeddingAsyncTest()
     {
-        var url = TestContext.GetProperty<string>("SBERT_URL") ?? "http://localhost:5080";
+        var url = TestContext.GetRequiredProperty<string>("SBERT_URL");
         var message = "Hello World!";
 
         var client = BuildClient(url);
@@ -41,10 +41,10 @@ public class SentenceEmbeddingClientTests
         TestContext.WriteLine(string.Join(';', embedding));
     }
 
-    [TestMethod, TestCategory(TestCategories.Integration)]
+    [TestMethod, TestCategory(TestCategories.DevLocal)]
     public async Task GetAllTest()
     {
-        var url = TestContext.GetProperty<string>("SBERT_URL") ?? "http://localhost:5080";
+        var url = TestContext.GetRequiredProperty<string>("SBERT_URL");
         var client = BuildClient(url);
 
         var resource = GetType().Assembly.GetManifestResourceNames().FirstOrDefault(l => l.EndsWith(".Sentences.txt"))

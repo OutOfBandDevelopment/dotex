@@ -81,7 +81,7 @@ public class KeycloakAuthenticationTests
     public async Task AuthenticateUser_WithValidCredentials_ReturnsAccessToken()
     {
         // Arrange
-        var baseUrl = TestContext.GetProperty<string>("KEYCLOAK_URL") ?? "http://localhost:8081";
+        var baseUrl = TestContext.GetRequiredProperty<string>("KEYCLOAK_URL");
         var realm = "integration-test";
         var tokenEndpoint = $"{baseUrl}/realms/{realm}/protocol/openid-connect/token";
 
@@ -116,7 +116,7 @@ public class KeycloakAuthenticationTests
     public async Task AuthenticateUser_WithInvalidCredentials_ReturnsUnauthorized()
     {
         // Arrange
-        var baseUrl = TestContext.GetProperty<string>("KEYCLOAK_URL") ?? "http://localhost:8081";
+        var baseUrl = TestContext.GetRequiredProperty<string>("KEYCLOAK_URL");
         var tokenEndpoint = $"{baseUrl}/realms/integration-test/protocol/openid-connect/token";
 
         var client = new HttpClient();
@@ -161,7 +161,7 @@ public class KeycloakAuthenticationTests
 public async Task AuthenticateUser_WithDisabledAccount_ReturnsUnauthorized()
 {
     // Arrange
-    var baseUrl = TestContext.GetProperty<string>("KEYCLOAK_URL") ?? "http://localhost:8081";
+    var baseUrl = TestContext.GetRequiredProperty<string>("KEYCLOAK_URL");
     var tokenEndpoint = $"{baseUrl}/realms/integration-test/protocol/openid-connect/token";
 
     var client = new HttpClient();
@@ -193,7 +193,7 @@ public async Task AuthenticateUser_WithDisabledAccount_ReturnsUnauthorized()
 public async Task ValidateToken_ReturnsCorrectClaims()
 {
     // Arrange - Get access token
-    var baseUrl = TestContext.GetProperty<string>("KEYCLOAK_URL") ?? "http://localhost:8081";
+    var baseUrl = TestContext.GetRequiredProperty<string>("KEYCLOAK_URL");
     var tokenEndpoint = $"{baseUrl}/realms/integration-test/protocol/openid-connect/token";
 
     var client = new HttpClient();
@@ -232,7 +232,7 @@ public async Task ValidateToken_ReturnsCorrectClaims()
 public async Task GetServiceAccountToken_WithClientCredentials_Succeeds()
 {
     // Arrange
-    var baseUrl = TestContext.GetProperty<string>("KEYCLOAK_URL") ?? "http://localhost:8081";
+    var baseUrl = TestContext.GetRequiredProperty<string>("KEYCLOAK_URL");
     var tokenEndpoint = $"{baseUrl}/realms/integration-test/protocol/openid-connect/token";
 
     var client = new HttpClient();
@@ -284,9 +284,9 @@ Add to your `.runsettings` file:
 ### Using TestContext
 
 ```csharp
-var keycloakUrl = TestContext.GetProperty<string>("KEYCLOAK_URL") ?? "http://localhost:8081";
-var realm = TestContext.GetProperty<string>("KEYCLOAK_REALM") ?? "integration-test";
-var clientId = TestContext.GetProperty<string>("KEYCLOAK_CLIENT_ID") ?? "integration-test-client";
+var keycloakUrl = TestContext.GetRequiredProperty<string>("KEYCLOAK_URL");
+var realm = TestContext.GetRequiredProperty<string>("KEYCLOAK_REALM");
+var clientId = TestContext.GetRequiredProperty<string>("KEYCLOAK_CLIENT_ID");
 ```
 
 ## Admin Console Access

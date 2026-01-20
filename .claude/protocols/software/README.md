@@ -1,6 +1,6 @@
 # Software Analysis Protocols
 
-**Last Updated:** 2026-01-03
+**Last Updated:** 2026-01-20
 
 ---
 
@@ -43,6 +43,12 @@ Protocols for software architecture analysis, documentation completeness validat
 | [schema-integration.md]               | 1.0     | Schema framework integration          |
 | [datagrid-style-guide.md]             | 1.0     | DataGrid component standards          |
 
+### Testing & Infrastructure
+
+| Protocol                              | Version | Purpose                               |
+|---------------------------------------|---------|---------------------------------------|
+| [integration-test-maintenance.md]     | 1.0     | Integration test infrastructure maintenance |
+
 ---
 
 ## Quick Reference
@@ -63,6 +69,9 @@ Protocols for software architecture analysis, documentation completeness validat
 | Maintaining template documentation         | template-swagger-documentation.md   |
 | Integrating schema validation frameworks   | schema-integration.md               |
 | Implementing data grids                    | datagrid-style-guide.md             |
+| Adding/modifying integration test services | integration-test-maintenance.md     |
+| Updating test parameters in .runsettings   | integration-test-maintenance.md     |
+| Adding service to nginx dashboard          | integration-test-maintenance.md     |
 
 ---
 
@@ -114,6 +123,24 @@ Protocols for software architecture analysis, documentation completeness validat
    v  (integrate with components)
 ```
 
+### Integration Testing Infrastructure
+
+```
+1. integration-test-maintenance.md
+   |
+   v  (follow checklist for adding service)
+   |
+   +-- docker-compose.integration-tests.yml  (service definition)
+   +-- nginx/nginx.conf                       (reverse proxy routing)
+   +-- nginx/html/index.html                  (dashboard UI)
+   +-- src/.runsettings                       (test parameters)
+   +-- containers/testing/README.md           (documentation)
+   |
+   v  (write tests using TestContext.GetProperty)
+   |
+2. Validate with integration-up.sh --wait
+```
+
 ---
 
 ## Key Concepts
@@ -154,6 +181,12 @@ Protocols for software architecture analysis, documentation completeness validat
 
 ---
 
+## Related Documentation
+
+- [Testing Guidelines](../../../docs/architecture/testing/testing-guidelines.md) - Testing standards and patterns
+- [Testing README](../../../docs/architecture/testing/README.md) - Testing documentation index
+- [Test Variables Reference](../../../TEST_VARIABLES.md) - Complete test property reference
+
 ## Related Protocols
 
 - [Documentation Style Guide](../documentation/documentation-style-guide.md) - Content standards
@@ -172,3 +205,4 @@ Protocols for software architecture analysis, documentation completeness validat
 [template-swagger-documentation.md]: ./template-swagger-documentation.md
 [schema-integration.md]: ./schema-integration.md
 [datagrid-style-guide.md]: ./datagrid-style-guide.md
+[integration-test-maintenance.md]: ./integration-test-maintenance.md

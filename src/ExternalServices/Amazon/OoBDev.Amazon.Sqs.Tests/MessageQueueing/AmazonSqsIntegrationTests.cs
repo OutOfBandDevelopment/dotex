@@ -32,10 +32,10 @@ public class AmazonSqsIntegrationTests
     public async Task ListQueues_WithLocalStack_ReturnsQueueUrls()
     {
         // Arrange
-        var endpoint = TestContext.GetProperty<string>("SQS_ENDPOINT") ?? "http://localhost:4566";
-        var region = TestContext.GetProperty<string>("AWS_REGION") ?? "us-east-1";
-        var accessKeyId = TestContext.GetProperty<string>("AWS_ACCESS_KEY_ID") ?? "test";
-        var secretAccessKey = TestContext.GetProperty<string>("AWS_SECRET_ACCESS_KEY") ?? "test";
+        var endpoint = TestContext.GetRequiredProperty<string>("SQS_ENDPOINT");
+        var region = TestContext.GetRequiredProperty<string>("AWS_REGION");
+        var accessKeyId = TestContext.GetRequiredProperty<string>("AWS_ACCESS_KEY_ID");
+        var secretAccessKey = TestContext.GetRequiredProperty<string>("AWS_SECRET_ACCESS_KEY");
 
         var config = new AmazonSQSConfig
         {
@@ -68,10 +68,10 @@ public class AmazonSqsIntegrationTests
     public async Task CreateQueue_WithLocalStack_CreatesSuccessfully()
     {
         // Arrange
-        var endpoint = TestContext.GetProperty<string>("SQS_ENDPOINT") ?? "http://localhost:4566";
-        var region = TestContext.GetProperty<string>("AWS_REGION") ?? "us-east-1";
-        var accessKeyId = TestContext.GetProperty<string>("AWS_ACCESS_KEY_ID") ?? "test";
-        var secretAccessKey = TestContext.GetProperty<string>("AWS_SECRET_ACCESS_KEY") ?? "test";
+        var endpoint = TestContext.GetRequiredProperty<string>("SQS_ENDPOINT");
+        var region = TestContext.GetRequiredProperty<string>("AWS_REGION");
+        var accessKeyId = TestContext.GetRequiredProperty<string>("AWS_ACCESS_KEY_ID");
+        var secretAccessKey = TestContext.GetRequiredProperty<string>("AWS_SECRET_ACCESS_KEY");
 
         var config = new AmazonSQSConfig
         {
@@ -130,11 +130,11 @@ public class AmazonSqsIntegrationTests
     public async Task SendAsync_ToLocalStackQueue_SendsSuccessfully()
     {
         // Arrange
-        var endpoint = TestContext.GetProperty<string>("SQS_ENDPOINT") ?? "http://localhost:4566";
-        var region = TestContext.GetProperty<string>("AWS_REGION") ?? "us-east-1";
-        var accessKeyId = TestContext.GetProperty<string>("AWS_ACCESS_KEY_ID") ?? "test";
-        var secretAccessKey = TestContext.GetProperty<string>("AWS_SECRET_ACCESS_KEY") ?? "test";
-        var queueName = TestContext.GetProperty<string>("SQS_TEST_QUEUE") ?? "integration-test-queue";
+        var endpoint = TestContext.GetRequiredProperty<string>("SQS_ENDPOINT");
+        var region = TestContext.GetRequiredProperty<string>("AWS_REGION");
+        var accessKeyId = TestContext.GetRequiredProperty<string>("AWS_ACCESS_KEY_ID");
+        var secretAccessKey = TestContext.GetRequiredProperty<string>("AWS_SECRET_ACCESS_KEY");
+        var queueName = TestContext.GetRequiredProperty<string>("SQS_TEST_QUEUE");
 
         // Ensure queue exists
         var sqsConfig = new AmazonSQSConfig
@@ -226,10 +226,10 @@ public class AmazonSqsIntegrationTests
     public async Task SendAsync_ToFifoQueue_WithMessageGroupId_SendsSuccessfully()
     {
         // Arrange
-        var endpoint = TestContext.GetProperty<string>("SQS_ENDPOINT") ?? "http://localhost:4566";
-        var region = TestContext.GetProperty<string>("AWS_REGION") ?? "us-east-1";
-        var accessKeyId = TestContext.GetProperty<string>("AWS_ACCESS_KEY_ID") ?? "test";
-        var secretAccessKey = TestContext.GetProperty<string>("AWS_SECRET_ACCESS_KEY") ?? "test";
+        var endpoint = TestContext.GetRequiredProperty<string>("SQS_ENDPOINT");
+        var region = TestContext.GetRequiredProperty<string>("AWS_REGION");
+        var accessKeyId = TestContext.GetRequiredProperty<string>("AWS_ACCESS_KEY_ID");
+        var secretAccessKey = TestContext.GetRequiredProperty<string>("AWS_SECRET_ACCESS_KEY");
         var queueName = $"test-fifo-{DateTime.UtcNow:yyyyMMddHHmmss}.fifo";
 
         var sqsConfig = new AmazonSQSConfig

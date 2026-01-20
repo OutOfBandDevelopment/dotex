@@ -29,7 +29,7 @@ public class RabbitMQQueueMessageSenderProviderTests
     [TestCategory(TestCategories.Integration)]
     public async Task SendAsyncTest_ByFullType()
     {
-        var rabbitMQHost = TestContext.GetProperty<string>("RABBITMQ_HOST") ?? "localhost";
+        var rabbitMQHost = TestContext.GetRequiredProperty<string>("RABBITMQ_HOST");
 
         var configBuilder = new ConfigurationBuilder();
 
@@ -60,7 +60,7 @@ public class RabbitMQQueueMessageSenderProviderTests
     [TestCategory(TestCategories.Integration)]
     public async Task SendAsyncTest_ByKeyed()
     {
-        var rabbitMQHost = TestContext.GetProperty<string>("RABBITMQ_HOST") ?? "localhost";
+        var rabbitMQHost = TestContext.GetRequiredProperty<string>("RABBITMQ_HOST");
 
         var configBuilder = new ConfigurationBuilder();
 
@@ -92,7 +92,7 @@ public class RabbitMQQueueMessageSenderProviderTests
     [TestCategory(TestCategories.Integration)]
     public async Task FindProviderTests()
     {
-        var rabbitMQHost = TestContext.GetProperty<string>("RABBITMQ_HOST") ?? "localhost";
+        var rabbitMQHost = TestContext.GetRequiredProperty<string>("RABBITMQ_HOST");
 
         var configBuilder = new ConfigurationBuilder();
 

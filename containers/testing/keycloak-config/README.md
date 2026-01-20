@@ -59,13 +59,13 @@ curl -X POST http://localhost:8081/realms/integration-test/protocol/openid-conne
 [TestCategory(TestCategories.Integration)]
 public async Task AuthenticateUser_WithKeycloak_ReturnsAccessToken()
 {
-    var baseUrl = TestContext.GetProperty<string>("KEYCLOAK_URL") ?? "http://localhost:8081";
-    var realm = TestContext.GetProperty<string>("KEYCLOAK_REALM") ?? "integration-test";
-    var clientId = TestContext.GetProperty<string>("KEYCLOAK_CLIENT_ID") ?? "integration-test-client";
-    var clientSecret = TestContext.GetProperty<string>("KEYCLOAK_CLIENT_SECRET") ?? "test-client-secret-12345";
+    var baseUrl = TestContext.GetRequiredProperty<string>("KEYCLOAK_URL");
+    var realm = TestContext.GetRequiredProperty<string>("KEYCLOAK_REALM");
+    var clientId = TestContext.GetRequiredProperty<string>("KEYCLOAK_CLIENT_ID");
+    var clientSecret = TestContext.GetRequiredProperty<string>("KEYCLOAK_CLIENT_SECRET");
 
-    var username = TestContext.GetProperty<string>("KEYCLOAK_TEST_USERNAME") ?? "testuser";
-    var password = TestContext.GetProperty<string>("KEYCLOAK_TEST_PASSWORD") ?? "testpassword";
+    var username = TestContext.GetRequiredProperty<string>("KEYCLOAK_TEST_USERNAME");
+    var password = TestContext.GetRequiredProperty<string>("KEYCLOAK_TEST_PASSWORD");
 
     var client = new HttpClient();
     var tokenEndpoint = $"{baseUrl}/realms/{realm}/protocol/openid-connect/token";

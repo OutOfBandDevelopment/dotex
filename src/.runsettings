@@ -132,11 +132,15 @@ https://github.com/coverlet-coverage/coverlet/blob/fc7ec26dcaed8fedba880ff13c6f1
 		<Parameter name="AWS_REGION" value="us-east-1" />
 		<Parameter name="AWS_ACCESS_KEY_ID" value="test" />
 		<Parameter name="AWS_SECRET_ACCESS_KEY" value="test" />
+		<Parameter name="SQS_ENDPOINT" value="http://localhost:4566" />
+		<Parameter name="SQS_TEST_QUEUE" value="integration-test-queue" />
 
 		<!-- Azure Service Bus Emulator -->
 		<Parameter name="SERVICEBUS_CONNECTION_STRING" value="Endpoint=sb://localhost:5672/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=SAS_KEY_VALUE;" />
 		<Parameter name="SERVICEBUS_HOST" value="localhost" />
 		<Parameter name="SERVICEBUS_PORT" value="5672" />
+		<Parameter name="SERVICEBUS_TEST_QUEUE" value="integration-test-queue" />
+		<Parameter name="SERVICEBUS_TEST_TOPIC" value="integration-test-topic" />
 
 		<!-- Keycloak -->
 		<Parameter name="KEYCLOAK_URL" value="http://localhost:8081" />
@@ -145,6 +149,8 @@ https://github.com/coverlet-coverage/coverlet/blob/fc7ec26dcaed8fedba880ff13c6f1
 		<Parameter name="KEYCLOAK_REALM" value="integration-test" />
 		<Parameter name="KEYCLOAK_CLIENT_ID" value="integration-test-client" />
 		<Parameter name="KEYCLOAK_CLIENT_SECRET" value="test-client-secret-12345" />
+		<Parameter name="KEYCLOAK_TEST_USERNAME" value="testuser" />
+		<Parameter name="KEYCLOAK_TEST_PASSWORD" value="testpassword" />
 
 		<!-- SMTP (SMTP4Dev) -->
 		<Parameter name="SMTP_HOST" value="localhost" />
