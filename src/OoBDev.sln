@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
-VisualStudioVersion = 18.2.11408.102 d18.0
+VisualStudioVersion = 18.2.11408.102
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ExternalServices", "ExternalServices", "{23338E7F-E943-4D99-B58C-CFBB7F2F53B2}"
 EndProject
@@ -274,6 +274,22 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OoBDev.Microsoft.Azure.StorageAccount.Tests", "ExternalServices\Microsoft\OoBDev.Microsoft.Azure.StorageAccount.Tests\OoBDev.Microsoft.Azure.StorageAccount.Tests.csproj", "{76978707-7AE5-A977-CCEA-B0EFA61E7B14}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OoBDev.Microsoft.Azure.B2C", "ExternalServices\Microsoft\OoBDev.Microsoft.Azure.B2C\OoBDev.Microsoft.Azure.B2C.csproj", "{5A611290-E97A-0E0B-32F6-F34D0B1F9188}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OoBDev.Caching.Abstractions", "Framework\OoBDev.Caching.Abstractions\OoBDev.Caching.Abstractions.csproj", "{E797E493-E5D5-7034-FA38-2F5CDB982856}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OoBDev.Caching", "Framework\OoBDev.Caching\OoBDev.Caching.csproj", "{BBBF82FA-5EF9-C37A-C11A-752075635BA8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Redis", "Redis", "{98430138-BDBE-4244-BB6A-50E517BBAB02}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OoBDev.Redis.Caching", "ExternalServices\Redis\OoBDev.Redis.Caching\OoBDev.Redis.Caching.csproj", "{B4990BCD-9169-74F1-1118-D7BB31C7BFD9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OoBDev.Microsoft.Caching", "ExternalServices\Microsoft\OoBDev.Microsoft.Caching\OoBDev.Microsoft.Caching.csproj", "{18352462-BDC1-DF7E-5E29-B11A14D1FDFE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OoBDev.Caching.Tests", "Framework\OoBDev.Caching.Tests\OoBDev.Caching.Tests.csproj", "{843F1012-C1EC-B86C-D6E6-E3B1C6F98F6E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OoBDev.Redis.Caching.Tests", "ExternalServices\Redis\OoBDev.Redis.Caching.Tests\OoBDev.Redis.Caching.Tests.csproj", "{0CA2EE9F-AB8A-B6E9-78EB-252272E0821D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OoBDev.Microsoft.Caching.Tests", "ExternalServices\Microsoft\OoBDev.Microsoft.Caching.Tests\OoBDev.Microsoft.Caching.Tests.csproj", "{0DE19EBB-6E2D-8829-3041-4F17250AEF0C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -729,6 +745,34 @@ Global
 		{5A611290-E97A-0E0B-32F6-F34D0B1F9188}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5A611290-E97A-0E0B-32F6-F34D0B1F9188}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5A611290-E97A-0E0B-32F6-F34D0B1F9188}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E797E493-E5D5-7034-FA38-2F5CDB982856}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E797E493-E5D5-7034-FA38-2F5CDB982856}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E797E493-E5D5-7034-FA38-2F5CDB982856}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E797E493-E5D5-7034-FA38-2F5CDB982856}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BBBF82FA-5EF9-C37A-C11A-752075635BA8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BBBF82FA-5EF9-C37A-C11A-752075635BA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BBBF82FA-5EF9-C37A-C11A-752075635BA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BBBF82FA-5EF9-C37A-C11A-752075635BA8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B4990BCD-9169-74F1-1118-D7BB31C7BFD9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4990BCD-9169-74F1-1118-D7BB31C7BFD9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B4990BCD-9169-74F1-1118-D7BB31C7BFD9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B4990BCD-9169-74F1-1118-D7BB31C7BFD9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{18352462-BDC1-DF7E-5E29-B11A14D1FDFE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{18352462-BDC1-DF7E-5E29-B11A14D1FDFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{18352462-BDC1-DF7E-5E29-B11A14D1FDFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{18352462-BDC1-DF7E-5E29-B11A14D1FDFE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{843F1012-C1EC-B86C-D6E6-E3B1C6F98F6E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{843F1012-C1EC-B86C-D6E6-E3B1C6F98F6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{843F1012-C1EC-B86C-D6E6-E3B1C6F98F6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{843F1012-C1EC-B86C-D6E6-E3B1C6F98F6E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0CA2EE9F-AB8A-B6E9-78EB-252272E0821D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0CA2EE9F-AB8A-B6E9-78EB-252272E0821D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0CA2EE9F-AB8A-B6E9-78EB-252272E0821D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0CA2EE9F-AB8A-B6E9-78EB-252272E0821D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0DE19EBB-6E2D-8829-3041-4F17250AEF0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0DE19EBB-6E2D-8829-3041-4F17250AEF0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0DE19EBB-6E2D-8829-3041-4F17250AEF0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0DE19EBB-6E2D-8829-3041-4F17250AEF0C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -862,6 +906,14 @@ Global
 		{1BADACA3-D31B-C4D3-7BB1-977DA26A7D1F} = {71129CCF-1669-468F-A0B3-7A306149C3F5}
 		{76978707-7AE5-A977-CCEA-B0EFA61E7B14} = {71129CCF-1669-468F-A0B3-7A306149C3F5}
 		{5A611290-E97A-0E0B-32F6-F34D0B1F9188} = {71129CCF-1669-468F-A0B3-7A306149C3F5}
+		{E797E493-E5D5-7034-FA38-2F5CDB982856} = {44FA51E2-00C0-4F5A-8F6D-9D0D0F61F1AC}
+		{BBBF82FA-5EF9-C37A-C11A-752075635BA8} = {44FA51E2-00C0-4F5A-8F6D-9D0D0F61F1AC}
+		{98430138-BDBE-4244-BB6A-50E517BBAB02} = {23338E7F-E943-4D99-B58C-CFBB7F2F53B2}
+		{B4990BCD-9169-74F1-1118-D7BB31C7BFD9} = {98430138-BDBE-4244-BB6A-50E517BBAB02}
+		{18352462-BDC1-DF7E-5E29-B11A14D1FDFE} = {71129CCF-1669-468F-A0B3-7A306149C3F5}
+		{843F1012-C1EC-B86C-D6E6-E3B1C6F98F6E} = {44FA51E2-00C0-4F5A-8F6D-9D0D0F61F1AC}
+		{0CA2EE9F-AB8A-B6E9-78EB-252272E0821D} = {98430138-BDBE-4244-BB6A-50E517BBAB02}
+		{0DE19EBB-6E2D-8829-3041-4F17250AEF0C} = {71129CCF-1669-468F-A0B3-7A306149C3F5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {92959CB8-A44C-4F0D-BBCF-C99B014BEEAD}
