@@ -1,10 +1,11 @@
 # TODO - OoBDev (dotex) Framework
 
-**Last Updated:** 2026-01-19
+**Last Updated:** 2026-01-20
 
-✅ **COMPLETED:** Docker-based Integration Testing Infrastructure (Week 1)
+✅ **COMPLETED:** Docker-based Integration Testing Infrastructure (Week 1 & 2)
+✅ **COMPLETED:** Swashbuckle 10.1.0 & .NET 10.0 breaking changes - All code fixed (5 files)
 ⏳ **AWAITING:** Local Docker testing validation before enabling CI/CD
-⚠️ **IN PROGRESS:** Swashbuckle 10.1.0 breaking changes in OoBDev.AspNetCore.Mvc
+⏳ **AWAITING:** Build/test verification for OoBDev.AspNetCore.Mvc
 
 > **New to this project?** Read `/CLAUDE.md` first for a complete development guide including architecture, patterns, and migration scope.
 
@@ -52,12 +53,13 @@ All migration work for Incomming projects and BinaryDataDecoders:
 - ⏸️ BinaryDataDecoders: Awaiting critical decisions (see TODO-decisions.md)
 
 ### 🐛 [Bug Fixes & Technical Debt](./TODO-bug-fixes.md)
-**Status:** ⚠️ Swashbuckle 10.1.0 IN PROGRESS - ✅ Phase 0 Complete
+**Status:** ✅ Code Complete - ⏳ Awaiting Verification
 
 Bug fixes, breaking changes, and technical debt resolution:
 - ✅ Phase 0 critical bugs (6 fixes) - All complete
 - ✅ MSTest ExpectedExceptionAttribute conversion (40 instances) - Complete
-- ⚠️ Swashbuckle 10.1.0 breaking changes - Code fixed, awaiting build verification
+- ✅ Swashbuckle 10.1.0 breaking changes - All 4 files fixed
+- ✅ .NET 10.0 breaking changes - ClaimsPrincipal DI ambiguity fixed
 
 **Key Tasks:**
 - ⏳ Build verification: `dotnet build src/Framework/OoBDev.AspNetCore.Mvc/`
@@ -156,7 +158,8 @@ TODO.md                                  # This file - Index and navigation
 ### Bug Fixes ✅
 - ✅ Phase 0: Critical bug fixes (6 fixes) - All complete
 - ✅ MSTest ExpectedExceptionAttribute conversion (40 instances across 24 files)
-- ⚠️ Swashbuckle 10.1.0 breaking changes - Code fixed, awaiting verification
+- ✅ Swashbuckle 10.1.0 breaking changes - All 4 files fixed
+- ✅ .NET 10.0 breaking changes - ClaimsPrincipal DI ambiguity fixed (awaiting build verification)
 
 ### Protocols & Documentation ✅
 - Created `.claude/protocols/software/incoming-codebase-comparison.md` (v1.1)
@@ -178,10 +181,11 @@ TODO.md                                  # This file - Index and navigation
    - Test cleanup and restart
    - Enable CI/CD workflow after validation
 
-2. **Swashbuckle Build Verification** ⚠️ IN PROGRESS
-   - Build `OoBDev.AspNetCore.Mvc`
-   - Run tests
-   - Address any remaining issues
+2. **OoBDev.AspNetCore.Mvc Build Verification** ✅ CODE COMPLETE - ⏳ AWAITING BUILD
+   - Swashbuckle 10.1.0: 4 files fixed (FormFileOperationFilter, HealthChecksDocumentFilter, SearchQueryOperationFilter, ApplicationPermissionsApiFilter)
+   - .NET 10.0: 1 file fixed (ServiceCollectionExtensions - ClaimsPrincipal DI)
+   - Build `OoBDev.AspNetCore.Mvc` to verify
+   - Run tests to ensure no regressions
 
 3. **Strategic Decisions** ⏸️ BLOCKING
    - Decide on Oobtainium migration (RECOMMEND: Delete)
@@ -189,43 +193,37 @@ TODO.md                                  # This file - Index and navigation
    - Review BinaryDataDecoders decision points
 
 ### Short Term (Next 2 Weeks)
-1. **Local Integration Test Migration (Week 2)**
-   - Apache Tika tests (6 tests) - PRIORITY 1
-   - SMTP/MailKit tests (2 tests) - PRIORITY 1
-   - MongoDB tests (3 tests) - PRIORITY 2
-   - 15+ more tests across 6 services (Docker-based)
+1. **Live Integration Test Migration (Week 3)** ⏳ PENDING
+   - Azure B2C tests - Move from DevLocal to LiveIntegration
+   - Application Insights tests - Move to LiveIntegration
+   - Groq Cloud tests - Move to LiveIntegration
+   - Create .env.liveintegration.template files
+   - Document cloud credential setup
 
-2. **Framework Vector Migration**
-   - Migrate 4 vector math files to `OoBDev.System/Math/`
-   - Create SqlVector conversion utilities
+2. **Testing Documentation (Week 4)** ⏳ PENDING
+   - Create 11 stack-specific documentation files
+   - Document each Docker service (MongoDB, RabbitMQ, etc.)
+   - Add PlantUML diagrams for service architecture
+   - Create LiveIntegration setup guides
    - Update SemanticKernel integration
 
-3. **SharedFramework Phase 0**
-   - Upgrade all 52 projects to .NET 9.0
-   - Namespace cleanup (remove "Api." prefix)
-   - Verify compilation
+3. **SharedFramework Namespace Cleanup** ⏳ PENDING
+   - Remove "Api." prefix (e.g., OoBDev.Api.Twilio → OoBDev.Twilio)
+   - Update all using statements
+   - Verify no broken references
 
 ### Medium Term (Next Month)
-1. **SharedFramework Phase 2** (CRITICAL)
+1. **SharedFramework Phase 2** ⏸️ CRITICAL (Awaiting Phase 0 namespace cleanup)
    - Merge OoBDev.Communications (1,145 LOC vs 16 LOC stub)
    - Migrate Twilio SendGrid and SMS providers
    - Complete communications implementation
 
-2. **Live Integration Test Migration (Week 3)**
-   - Migrate Azure B2C tests to LiveIntegration category
-   - Migrate Application Insights tests
-   - Migrate Groq Cloud tests
-   - Create .env.liveintegration.template files
-   - Document credential management and cost considerations
+2. **Incomming Project Investigations** 🔍 IN PROGRESS (3 remaining)
+   - CloudOrchestrator - Not yet started
+   - ContractParser - Not yet started
+   - Tools - Not yet started
 
-3. **Testing Documentation (Week 4)**
-   - Create comprehensive documentation for both test types
-   - Docker infrastructure docs (11 stacks)
-   - Cloud service docs (3 stacks)
-   - PlantUML diagrams
-   - Credential and cost management guides
-
-4. **BinaryDataDecoders Phase 1**
+3. **BinaryDataDecoders Phase 1** ⏸️ BLOCKED (Awaiting decisions)
    - Endianness support enhancements
    - Utility enhancements
    - BinaryPrimitives expansion
@@ -256,6 +254,8 @@ TODO.md                                  # This file - Index and navigation
 - `docs/migration/botchat-migration-plan.md` - 3 migration options
 
 ### Testing
+- `TEST_VARIABLES.md` - All test properties reference (30+ variables)
+- `docs/architecture/testing-guidelines.md` - Comprehensive testing best practices
 - `containers/testing/README.md` - Infrastructure guide with PlantUML
 - `containers/testing/TESTING-CHECKLIST.md` - Local validation procedure
 - `containers/testing/STATUS.md` - Implementation progress tracker
@@ -290,8 +290,13 @@ dotnet build src/
 # Run all tests
 dotnet test src/
 
-# Run specific test category
-dotnet test src/ --filter TestCategory=Unit
+# Run specific test categories
+dotnet test src/ --filter "TestCategory=Unit"
+dotnet test src/ --filter "TestCategory=Simulate"
+dotnet test src/ --filter "TestCategory=Integration"
+
+# Run Integration tests with custom settings
+dotnet test src/ --settings integration.runsettings --filter "TestCategory=Integration"
 
 # Start integration test services
 cd containers/testing

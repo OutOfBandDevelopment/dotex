@@ -43,6 +43,8 @@ public class SearchQueryOperationFilter(
             //    };
             //}
 
+            operation.Tags ??= new HashSet<OpenApiTagReference>();
+
             if (string.Equals(context.MethodInfo.Name, "save", StringComparison.InvariantCultureIgnoreCase))
             {
                 operation.Tags.Add(new OpenApiTagReference("Save"));
@@ -87,8 +89,15 @@ public class SearchQueryOperationFilter(
 
                     if (context.SchemaRepository.TryLookupByType(requestType, out var requestSchemaReference))
                     {
+                        if (operation.RequestBody == null)
+                        {
+                            operation.RequestBody = new OpenApiRequestBody
+                            {
+                                Content = new Dictionary<string, OpenApiMediaType>()
+                            };
+                        }
                         ApplyContent(
-                            (operation.RequestBody ??= new OpenApiRequestBody()).Content,
+                            operation.RequestBody.Content,
                             requestSchemaReference,
                             contentTypes
                             );
@@ -114,6 +123,8 @@ public class SearchQueryOperationFilter(
                     //TODO: build query request
                     if (request != null)
                     {
+                        operation.Parameters ??= [];
+
                         foreach (var property in request.Properties)
                         {
                             if (property.Key.Equals(nameof(ISearchQuery.Filter), StringComparison.InvariantCultureIgnoreCase))
@@ -164,8 +175,17 @@ public class SearchQueryOperationFilter(
 
                 if (context.SchemaRepository.TryLookupByType(pagedResponseType, out var pagedResponseSchemaReference))
                 {
+                    operation.Responses ??= new OpenApiResponses();
+                    if (!operation.Responses.ContainsKey("200"))
+                    {
+                        operation.Responses["200"] = new OpenApiResponse
+                        {
+                            Content = new Dictionary<string, OpenApiMediaType>()
+                        };
+                    }
+
                     ApplyContent(
-                        (operation.Responses["200"] ??= new OpenApiResponse()).Content,
+                        operation.Responses["200"].Content,
                         pagedResponseSchemaReference,
                         context.ApiDescription.SupportedResponseTypes.SelectMany(m => m.ApiResponseFormats.Select(i => i.MediaType)).Distinct()
                         );
@@ -215,6 +235,7 @@ public class SearchQueryOperationFilter(
                 {
                     Type = JsonSchemaType.Object,
                     Description = $"**Filterable Properties:** {string.Join("; ", treeBuilder.GetFilterablePropertyNames())}",
+                    Properties = new Dictionary<string, IOpenApiSchema>()
                 };
                 context.SchemaRepository.Schemas.Add(filterName, filterSchema);
                 foreach (var propertyName in treeBuilder.GetFilterablePropertyNames())
@@ -243,6 +264,7 @@ public class SearchQueryOperationFilter(
                 {
                     Type = JsonSchemaType.Object,
                     Description = $"**Sortable Properties:** {string.Join("; ", treeBuilder.GetSortablePropertyNames())}",
+                    Properties = new Dictionary<string, IOpenApiSchema>()
                 };
                 context.SchemaRepository.Schemas.Add(orderByName, orderBySchema);
                 foreach (var propertyName in treeBuilder.GetSortablePropertyNames())

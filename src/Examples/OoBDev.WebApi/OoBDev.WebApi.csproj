@@ -24,7 +24,7 @@
     <ProjectReference Include="..\..\Common\OoBDev.Common.Complete\OoBDev.Common.Complete.csproj" />
   </ItemGroup>
 
-  <Target Name="BuildSwagger">
+  <Target Name="BuildSwagger" AfterTargets="PostBuildEvent">
     <!-- AfterTargets="PostBuildEvent" -->
     <MakeDir Directories="$(DocumentPath)" Condition="!Exists('$(DocumentPath)')" ContinueOnError="true" />
     <Exec Command="dotnet tool restore" ContinueOnError="true" />

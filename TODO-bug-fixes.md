@@ -17,41 +17,70 @@ This document tracks bug fixes, breaking changes, and technical debt resolution.
 **Changes Made (2026-01-15):**
 
 **File: FormFileOperationFilter.cs**
-- [x] Fixed CS0200: `IOpenApiSchema.Properties` is read-only
+- [x] Fixed CS0200: `IOpenApiSchema.Properties` is read-only (2026-01-15)
   - Changed from: `schema.Properties = new Dictionary<...>()`
   - Changed to: Loop through fileParams and add to `schema.Properties[propertyName]`
   - Location: Lines 34-43
-- [x] Fixed CS0029: String to JsonSchemaType conversion
+- [x] Fixed CS0029: String to JsonSchemaType conversion (2026-01-15)
   - Changed from: `Type = "string"`
   - Changed to: `Type = JsonSchemaType.String`
   - Location: Line 40
+- [x] Fixed NullReferenceException: schema.Properties is null (2026-01-20)
+  - Initialize: `schema.Properties ??= new Dictionary<string, IOpenApiSchema>()`
+  - Location: Line 37
 
 **File: HealthChecksDocumentFilter.cs**
-- [x] Fixed CS1503: `OpenApiTag` vs `OpenApiTagReference` mismatch
+- [x] Fixed CS1503: `OpenApiTag` vs `OpenApiTagReference` mismatch (2026-01-15)
   - Changed from: `operation.Tags.Add(new OpenApiTag { Name = "ApiHealth" })`
   - Changed to: `operation.Tags.Add(new OpenApiTagReference { Name = "ApiHealth" })`
   - Location: Line 28
-- [x] Fixed CS0200 & CS0266: Properties assignment and type conversion
+- [x] Fixed CS0200 & CS0266: Properties assignment and type conversion (2026-01-15)
   - Changed from: `Properties = properties` (assignment)
   - Changed to: Build schema with `.Properties.Add()` calls
   - Location: Lines 30-36
+- [x] Fixed NullReferenceException: Collections are null in Swashbuckle 10.1.0 (2026-01-20)
+  - Collections must be initialized in object initializers
+  - Changed to initialize: `Tags`, `Content`, `Responses`, `Properties`
+  - Used collection initializer syntax for clean initialization
+  - Location: Lines 26-50
 
 **File: SearchQueryOperationFilter.cs**
-- [x] Fixed CS1503: OpenApiTag references (3 occurrences)
+- [x] Fixed CS1503: OpenApiTag references (3 occurrences) (2026-01-15)
   - Changed from: `new OpenApiTag { Name = ... }`
   - Changed to: `new OpenApiTagReference { Name = ... }`
   - Location: Lines 48, 52, 57
-- [x] Fixed CS0019: Coalesce assignment with mismatched types
+- [x] Fixed CS0019: Coalesce assignment with mismatched types (2026-01-15)
   - Changed from: `operation.Parameters ??= new List<OpenApiParameter>()`
   - Changed to: Traditional null check and assignment
   - Location: Lines 114-118
-- [x] Fixed UpdateRequestSchema method (major refactor)
+- [x] Fixed UpdateRequestSchema method (major refactor) (2026-01-15)
   - Changed from: Creating mutable dictionary copy with `.ChangeComparer()`
   - Changed to: Direct schema property access via `schema.Properties[key]`
   - Removed unnecessary `.Properties = properties` reassignment
   - Added null checks for schema lookups
   - Fixed IOpenApiSchema vs OpenApiSchema conversions
   - Location: Lines 187-292
+- [x] Fixed NullReferenceException: Collections are null in Swashbuckle 10.1.0 (2026-01-20)
+  - Initialize operation.Tags before use: `operation.Tags ??= new HashSet<OpenApiTagReference>()`
+  - Initialize operation.Parameters before use: `operation.Parameters ??= new List<OpenApiParameter>()`
+  - Initialize operation.RequestBody and Content before passing to ApplyContent
+  - Initialize operation.Responses and Response.Content properly
+  - Initialize schema.Properties in new schemas (filterSchema, orderBySchema)
+  - All collection initializations done before adding items
+  - Location: Lines 46, 92-99, 121, 173-185, 238, 267
+
+**File: ApplicationPermissionsApiFilter.cs** (2026-01-20)
+- [x] Fixed NullReferenceException: Extensions dictionary is null in Swashbuckle 10.1.0
+  - Initialize Extensions if null: `operation.Extensions ??= new Dictionary<string, IOpenApiExtension>()`
+  - Then use indexer assignment: `operation.Extensions["x-permissions"] = ...`
+  - Location: Lines 42-43
+
+**File: ServiceCollectionExtensions.cs** (2026-01-20)
+- [x] Fixed .NET 10.0 ambiguous constructor: ClaimsPrincipal has multiple constructors
+  - Changed from: `services.TryAddTransient<IPrincipal, ClaimsPrincipal>()`
+  - Changed to: Factory method that explicitly creates instance with ClaimsIdentity
+  - Issue: DI container couldn't decide between constructors in .NET 10.0
+  - Location: Lines 60-64
 
 **Remaining:**
 - [ ] Verify build: `dotnet build src/Framework/OoBDev.AspNetCore.Mvc/OoBDev.AspNetCore.Mvc.csproj`
@@ -59,10 +88,33 @@ This document tracks bug fixes, breaking changes, and technical debt resolution.
 - [ ] Check for any remaining compiler errors in related filters
 
 **Breaking Change Summary:**
-- `OpenApiTag` collection now expects `OpenApiTagReference` objects
-- `IOpenApiSchema.Properties` is read-only collection (use `.Add()` instead of assignment)
-- `JsonSchemaType` is enum (not string) - use enum values like `JsonSchemaType.String`, `JsonSchemaType.Object`, etc.
-- Schema reference API requires proper null checking on `?.Reference`
+
+**Swashbuckle 10.1.0 - Collections are NULL by default:**
+- **ALL OpenAPI collections start as null** - must initialize before use
+- `operation.Tags` → Initialize: `operation.Tags ??= new HashSet<OpenApiTagReference>()`
+- `operation.Parameters` → Initialize: `operation.Parameters ??= new List<OpenApiParameter>()`
+- `operation.Responses` → Initialize: `operation.Responses ??= new OpenApiResponses()`
+- `operation.Extensions` → Initialize: `operation.Extensions ??= new Dictionary<string, IOpenApiExtension>()`
+- `schema.Properties` → Initialize: `schema.Properties ??= new Dictionary<string, IOpenApiSchema>()` OR in object initializer
+
+**Swashbuckle 10.1.0 - Read-Only Properties (create new objects):**
+- `IOpenApiRequestBody.Content` is read-only:
+  ```csharp
+  operation.RequestBody = new OpenApiRequestBody { Content = new Dictionary<string, OpenApiMediaType>() };
+  ```
+- `IOpenApiResponse.Content` is read-only:
+  ```csharp
+  response = new OpenApiResponse { Content = new Dictionary<string, OpenApiMediaType>() };
+  ```
+
+**Swashbuckle 10.1.0 - Type Changes:**
+- `OpenApiTag` → `OpenApiTagReference` for Tags collection
+- `JsonSchemaType` is enum (not string) - use `JsonSchemaType.String`, `JsonSchemaType.Object`, etc.
+- `IOpenApiSchema.Properties` is read-only (use `.Add()` or indexer `[key] = value`)
+- Schema references require null checking: `?.Reference`
+
+**.NET 10.0:**
+- `ClaimsPrincipal` has ambiguous constructors in DI - use factory method instead of type-based registration
 
 ---
 
@@ -126,8 +178,6 @@ All critical bugs fixed and verified:
 
 ### To Investigate
 
-- [ ] Verify ExpressionCalculator optimizers match incoming implementation
-- [ ] Verify ANTLR grammar versions match
 - [ ] Check for other stub implementations in codebase
 
 ### Resolved
@@ -139,6 +189,8 @@ All critical bugs fixed and verified:
 - [x] ShiftCommutativeVariablesRight stub - FIXED
 - [x] ExpressionParserTests floating-point precision - FIXED (added epsilon tolerance)
 - [x] NumericAsserts utility created - Migrated to OoBDev.TestUtilities for reuse
+- [x] ExpressionCalculator optimizers - VERIFIED (all tests green)
+- [x] ANTLR grammar versions - VERIFIED (all tests green)
 
 ---
 

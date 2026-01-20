@@ -57,7 +57,11 @@ public static class ServiceCollectionExtensions
         services.TryAddSingleton<IActionContextAccessor, ActionContextAccessor>();
 
         services.TryAddTransient<IIdentity>(sp=>sp.GetRequiredService<IPrincipal>().Identity ?? new ClaimsIdentity());
-        services.TryAddTransient<IPrincipal, ClaimsPrincipal>();
+        services.TryAddTransient<IPrincipal>(sp =>
+            sp.GetRequiredService<IHttpContextAccessor>().HttpContext?.User ??
+            ClaimsPrincipal.Current ??
+            new ClaimsPrincipal(new ClaimsIdentity())
+        );
         services.TryAddTransient(sp =>
             sp.GetRequiredService<IHttpContextAccessor>().HttpContext?.User ??
             ClaimsPrincipal.Current ??

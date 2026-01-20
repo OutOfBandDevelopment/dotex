@@ -556,24 +556,26 @@ Both sync and async test patterns handled correctly. See TODO.md for full file l
 
 ---
 
-## Previous Work Context (2026-01-15)
+## Previous Work Context (2026-01-15 → 2026-01-20)
 
-### Task: Fix Swashbuckle 10.1.0 Breaking Changes in OoBDev.AspNetCore.Mvc
+### Task: Fix Swashbuckle 10.1.0 & .NET 10.0 Breaking Changes in OoBDev.AspNetCore.Mvc
 
-**Status:** IN PROGRESS - Code changes completed, awaiting build verification
+**Status:** ✅ CODE COMPLETE - Awaiting build/test verification
 
-**What was done:**
-Fixed breaking changes from Swashbuckle 10.1.0 assembly updates across 3 files:
+**What was completed:**
+Fixed breaking changes from Swashbuckle 10.1.0 and .NET 10.0 across 5 files:
 
-1. **FormFileOperationFilter.cs** - 2 errors fixed
+**Swashbuckle 10.1.0 (4 files):**
+
+1. **FormFileOperationFilter.cs** (2026-01-15) - 2 errors fixed
    - Properties collection is read-only (loop through and add instead of assign)
    - JsonSchemaType is enum (use `JsonSchemaType.String` not `"string"`)
 
-2. **HealthChecksDocumentFilter.cs** - 2 errors fixed
+2. **HealthChecksDocumentFilter.cs** (2026-01-15) - 2 errors fixed
    - OpenApiTag changed to OpenApiTagReference in Tags collection
    - Properties is read-only (use .Add() calls instead of assignment)
 
-3. **SearchQueryOperationFilter.cs** - 8+ errors fixed
+3. **SearchQueryOperationFilter.cs** (2026-01-15) - 8+ errors fixed
    - OpenApiTag → OpenApiTagReference (3 occurrences)
    - Coalesce assignment with type mismatch (use traditional null check)
    - UpdateRequestSchema method major refactor:
@@ -582,22 +584,55 @@ Fixed breaking changes from Swashbuckle 10.1.0 assembly updates across 3 files:
      - Fixed IOpenApiSchema vs OpenApiSchema conversions
      - Added null checks for schema lookups
 
-**Next Steps When Resuming:**
+4. **ApplicationPermissionsApiFilter.cs** (2026-01-20) - 1 error fixed
+   - Extensions collection can be null and is read-only
+   - Added null guard: `if (operation.Extensions != null)`
+   - Use indexer syntax: `Extensions["key"] = value` instead of `.Add()`
+   - Fixed NullReferenceException at lines 41-44
+
+**.NET 10.0 (1 file):**
+
+5. **ServiceCollectionExtensions.cs** (2026-01-20) - 1 error fixed
+   - ClaimsPrincipal has ambiguous constructors in .NET 10.0
+   - Changed from type-based registration: `services.TryAddTransient<IPrincipal, ClaimsPrincipal>()`
+   - Changed to factory method: `services.TryAddTransient<IPrincipal>(sp => new ClaimsPrincipal(new ClaimsIdentity()))`
+   - Fixed DI container ambiguous constructor error at lines 60-64
+
+**Next Steps:**
 1. Build the project: `dotnet build src/Framework/OoBDev.AspNetCore.Mvc/OoBDev.AspNetCore.Mvc.csproj`
-2. If build fails, address remaining compiler errors
-3. Run tests: `dotnet test src/ --filter "OoBDev.AspNetCore.Mvc"`
-4. Verify no regressions in OpenAPI functionality
+2. Run tests: `dotnet test src/ --filter "OoBDev.AspNetCore.Mvc"`
+3. Verify no regressions in OpenAPI functionality
 
 **Files Modified:**
-- `/current/src/src/Framework/OoBDev.AspNetCore.Mvc/Filters/FormFileOperationFilter.cs`
-- `/current/src/src/Framework/OoBDev.AspNetCore.Mvc/Filters/SearchQueryOperationFilter.cs`
-- `/current/src/src/Framework/OoBDev.AspNetCore.Mvc/SwaggerGen/HealthChecksDocumentFilter.cs`
+- `src/Framework/OoBDev.AspNetCore.Mvc/Filters/FormFileOperationFilter.cs`
+- `src/Framework/OoBDev.AspNetCore.Mvc/Filters/SearchQueryOperationFilter.cs`
+- `src/Framework/OoBDev.AspNetCore.Mvc/SwaggerGen/HealthChecksDocumentFilter.cs`
+- `src/Framework/OoBDev.AspNetCore.Mvc/Filters/ApplicationPermissionsApiFilter.cs`
+- `src/Framework/OoBDev.AspNetCore.Mvc/ServiceCollectionExtensions.cs`
 
 **Key Breaking Changes Reference:**
+
+**Swashbuckle 10.1.0 - Collections NULL by default:**
+- **ALL OpenAPI collections start as null** - must initialize before use
+- `operation.Tags ??= new HashSet<OpenApiTagReference>()`
+- `operation.Parameters ??= new List<OpenApiParameter>()`
+- `operation.Responses ??= new OpenApiResponses()`
+- `operation.Extensions ??= new Dictionary<string, IOpenApiExtension>()`
+- `schema.Properties ??= new Dictionary<string, IOpenApiSchema>()` (or in object initializer)
+
+**Swashbuckle 10.1.0 - Read-Only Properties:**
+- `Content` properties are read-only - create new objects:
+  - `new OpenApiRequestBody { Content = new Dictionary<...>() }`
+  - `new OpenApiResponse { Content = new Dictionary<...>() }`
+
+**Swashbuckle 10.1.0 - Type Changes:**
 - `OpenApiTag` → `OpenApiTagReference` for Tags collection
-- `IOpenApiSchema.Properties` is read-only (use `.Add()` or `[key] = value`)
 - `JsonSchemaType` enum instead of string literals
+- `IOpenApiSchema.Properties` is read-only (use `.Add()` or `[key] = value`)
 - Schema references require null checking: `?.Reference`
+
+**.NET 10.0:**
+- `ClaimsPrincipal` has ambiguous constructors - use factory methods in DI registration
 
 ---
 
