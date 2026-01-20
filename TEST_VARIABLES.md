@@ -99,13 +99,17 @@ Tests that require live cloud credentials. Manual execution only.
 **Docker Container:** `mongo:latest` (Port 27017)
 
 **Tests Using:**
-- `OoBDev.MongoDB.Tests.MongoDBTests.TestMethod1`
-- `OoBDev.MongoDB.Tests.MongoDBTests.TestMethod2`
-- `OoBDev.MongoDB.Tests.MongoDBTests.TestMethod3`
+- `OoBDev.MongoDB.Tests.MongoDBIntegrationTests.InsertDocument_WithNewEntity_AssignsIdAndPersists`
+- `OoBDev.MongoDB.Tests.MongoDBIntegrationTests.UpsertDocument_WhenDocumentExists_UpdatesExistingDocument`
+- `OoBDev.MongoDB.Tests.MongoDBIntegrationTests.InsertMultipleDocuments_WithVariedCasing_PersistsAllDocuments`
+- `OoBDev.MongoDB.Tests.MongoDBIntegrationTests.QueryDocuments_WithOrdering_ReturnsSortedResults`
+- `OoBDev.MongoDB.Tests.MongoDBIntegrationTests.UpdateDocument_WhenDocumentExists_ModifiesValues`
+- `OoBDev.MongoDB.Tests.MongoDBIntegrationTests.DeleteDocument_WhenDocumentExists_RemovesDocument`
 
 **Notes:**
 - Tests create unique database names: `IntegrationTest_{Guid}`
 - Automatic cleanup via `[TestCleanup]` drops test databases
+- All tests are independent and can run in isolation
 
 ---
 
