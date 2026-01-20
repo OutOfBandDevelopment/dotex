@@ -1,8 +1,0 @@
-<Project>
-  <ItemGroup>
-    <None Include="..\..\..\LICENSE">
-      <Pack>True</Pack>
-      <PackagePath/>
-    </None>
-  </ItemGroup>
-</Project>
