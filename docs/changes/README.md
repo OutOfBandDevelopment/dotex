@@ -81,6 +81,14 @@ Each change document should include:
 
 ### Bug Fixes & Technical Debt
 
+**[bug-fixes-antlr-keycloak-2026-01-20.md](bug-fixes-antlr-keycloak-2026-01-20.md)**
+- ANTLR cross-platform build fix (Windows absolute paths in generated files)
+- Keycloak script feature configuration (--features=scripts, NOT upload-scripts)
+- Nginx DNS resolver with variable-based proxy_pass (Docker 127.0.0.11)
+- RabbitMQ port conflict resolution (5672→5673, removed extends)
+- Documentation updates for troubleshooting all four issues
+- Status: ✅ Complete and verified
+
 **[bug-fixes-swashbuckle-dotnet10-2026-01-20.md](bug-fixes-swashbuckle-dotnet10-2026-01-20.md)**
 - Swashbuckle 10.1.0 breaking changes (5 files)
 - .NET 10.0 breaking changes (ClaimsPrincipal DI, IActionContextAccessor deprecation)

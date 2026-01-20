@@ -87,10 +87,11 @@ services:
       start_period: 30s
 
   rabbitmq:
-    extends:
-      file: ../docker-compose.rabbitmq.yml
-      service: rabbitmq
+    image: rabbitmq:latest
     container_name: oobd-test-rabbitmq
+    ports:
+      - "5673:5672"   # AMQP (changed to avoid conflict with Service Bus on 5672)
+      - "15672:15672" # Management UI
     networks:
       - integration-test-net
     volumes:
@@ -215,31 +216,89 @@ services:
       - SERVICEBUS_SERVER__ENTITYNAME__0=integration-test-queue
       - SERVICEBUS_SERVER__ENTITYNAME__1=integration-test-topic
     healthcheck:
-      test: ["CMD", "sh", "-c", "nc -z localhost 5672"]
+      test: ["CMD", "sh", "-c", "timeout 1 bash -c '</dev/tcp/localhost/5672' 2>/dev/null || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 10
-      start_period: 20s
+      start_period: 30s
 
   # ============================================================================
   # Identity & Access Management
   # ============================================================================
 
   keycloak:
-    extends:
-      file: ../docker-compose.keycloak.yml
-      service: keycloak
+    image: quay.io/keycloak/keycloak:latest
     container_name: oobd-test-keycloak
+    ports:
+      - "8081:8080"
     networks:
       - integration-test-net
+    environment:
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+      - KC_HEALTH_ENABLED=true
     volumes:
       - keycloak-test-data:/opt/keycloak/data
+      - ./keycloak-config/integration-test-realm.json:/opt/keycloak/data/import/integration-test-realm.json:ro
+    command: start-dev --import-realm --features=scripts
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/health/ready"]
       interval: 10s
       timeout: 5s
       retries: 10
-      start_period: 30s
+      start_period: 40s
+
+  # ============================================================================
+  # Reverse Proxy & Dashboard
+  # ============================================================================
+
+  nginx:
+    image: nginx:alpine
+    container_name: oobd-test-nginx
+    ports:
+      - "8080:80"
+    networks:
+      - integration-test-net
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/html:/usr/share/nginx/html:ro
+    depends_on:
+      - smtp4dev
+      - rabbitmq
+      - keycloak
+      - qdrant
+      - opensearch-dashboards
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  # ============================================================================
+  # Data Visualization
+  # ============================================================================
+
+  opensearch-dashboards:
+    image: opensearchproject/opensearch-dashboards:latest
+    container_name: oobd-test-opensearch-dashboards
+    ports:
+      - "5601:5601"
+    networks:
+      - integration-test-net
+    environment:
+      - OPENSEARCH_HOSTS=["https://opensearch:9200"]
+      - DISABLE_SECURITY_DASHBOARDS_PLUGIN=false
+      - OPENSEARCH_USERNAME=admin
+      - OPENSEARCH_PASSWORD=${OPENSEARCH_PASSWORD:-IntegrationTest123!}
+    depends_on:
+      - opensearch
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5601/api/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
 
   # ============================================================================
   # AI/ML Services - CPU-only for CI/CD compatibility

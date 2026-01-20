@@ -84,7 +84,7 @@ Week 4: Documentation            ░░░░░░░░░░░░░░░�
 
 1. **Prerequisites Check**
    - Docker Desktop/Engine installed and running
-   - Required ports available (1433, 5672, 6333, 8081, 9200, 9998, 10000-10002, 27017)
+   - Required ports available (1433, 5672-5673, 6333, 8081, 9200, 9998, 10000-10002, 27017)
    - At least 10GB disk space available
 
 2. **Start Services**

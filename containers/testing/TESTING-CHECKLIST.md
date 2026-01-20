@@ -18,8 +18,8 @@ Before starting Docker services, verify:
 - [ ] **Required ports are available**:
   ```bash
   # Check if ports are already in use
-  netstat -an | grep -E "1433|5672|6333|8081|9200|9998|10000|27017"
-  # On Windows: netstat -an | findstr "1433 5672 6333 8081 9200 9998 10000 27017"
+  netstat -an | grep -E "1433|5672|5673|6333|8081|9200|9998|10000|27017"
+  # On Windows: netstat -an | findstr "1433 5672 5673 6333 8081 9200 9998 10000 27017"
   ```
 
 - [ ] **Sufficient disk space** (at least 10GB free for Docker images/volumes)
@@ -63,7 +63,7 @@ Services running:
   - SMTP4Dev:           http://localhost:7777
   - MongoDB:            mongodb://localhost:27017
   - SQL Server:         localhost,1433 (sa/IntegrationTest123!)
-  - RabbitMQ:           amqp://localhost:5672, http://localhost:15672
+  - RabbitMQ:           amqp://localhost:5673, http://localhost:15672
   - OpenSearch:         https://localhost:9200 (admin/IntegrationTest123!)
   - Qdrant:             http://localhost:6333
   - Azurite:            http://localhost:10000 (Blob), 10001 (Queue), 10002 (Table)
@@ -186,7 +186,7 @@ oobd-test-tika          Up (healthy)             0.0.0.0:9998->9998/tcp
 oobd-test-smtp          Up (healthy)             0.0.0.0:25->25/tcp, 0.0.0.0:7777->80/tcp
 oobd-test-mongodb       Up (healthy)             0.0.0.0:27017->27017/tcp
 oobd-test-sqlserver     Up (healthy)             0.0.0.0:1433->1433/tcp
-oobd-test-rabbitmq      Up (healthy)             0.0.0.0:5672->5672/tcp, 0.0.0.0:15672->15672/tcp
+oobd-test-rabbitmq      Up (healthy)             0.0.0.0:5673->5672/tcp, 0.0.0.0:15672->15672/tcp
 oobd-test-opensearch    Up (healthy)             0.0.0.0:9200->9200/tcp, 0.0.0.0:9600->9600/tcp
 oobd-test-qdrant        Up (healthy)             0.0.0.0:6333->6333/tcp, 0.0.0.0:6334->6334/tcp
 oobd-test-azurite       Up (healthy)             0.0.0.0:10000-10002->10000-10002/tcp

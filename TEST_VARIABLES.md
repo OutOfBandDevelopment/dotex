@@ -105,9 +105,9 @@ Tests that require live cloud credentials. Manual execution only.
 | Variable | Default | Description |
 |----------|---------|-------------|
 | `RABBITMQ_HOST` | `localhost` | RabbitMQ server hostname |
-| `RABBITMQ_PORT` | `5672` | RabbitMQ AMQP port |
+| `RABBITMQ_PORT` | `5673` | RabbitMQ AMQP port (5672 used by Service Bus emulator) |
 
-**Docker Container:** `rabbitmq:latest` (Ports 5672 AMQP, 15672 Management UI)
+**Docker Container:** `rabbitmq:latest` (Ports 5673 AMQP, 15672 Management UI)
 
 **Tests Using:**
 - `OoBDev.RabbitMQ.Tests.MessageQueueing.RabbitMQQueueMessageSenderProviderTests.SendAsyncTest_ByFullType`
@@ -249,12 +249,37 @@ Tests that require live cloud credentials. Manual execution only.
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `KEYCLOAK_URL` | `http://localhost:8081` | Keycloak server URL |
+| `KEYCLOAK_URL` | `http://localhost:8081` | Keycloak server base URL |
+| `KEYCLOAK_REALM` | `integration-test` | Keycloak realm name for tests |
+| `KEYCLOAK_CLIENT_ID` | `integration-test-client` | OAuth confidential client ID |
+| `KEYCLOAK_CLIENT_SECRET` | `test-client-secret-12345` | OAuth client secret |
+| `KEYCLOAK_TEST_USERNAME` | `testuser` | Standard test user username |
+| `KEYCLOAK_TEST_PASSWORD` | `testpassword` | Standard test user password |
+| `KEYCLOAK_ADMIN_USERNAME` | `adminuser` | Admin test user username |
+| `KEYCLOAK_ADMIN_PASSWORD` | `adminpassword` | Admin test user password |
 
-**Docker Container:** Custom Keycloak with realm import (Port 8081)
+**Docker Container:** `quay.io/keycloak/keycloak:latest` (Port 8081)
+
+**Pre-configured Test Realm:** `integration-test`
+
+**Test Users:**
+- `testuser/testpassword` - Standard user with `user` role (enabled, verified)
+- `adminuser/adminpassword` - Admin user with `user` and `admin` roles (enabled, verified)
+- `disableduser/disabledpassword` - Disabled account for negative tests
+- `unverifieduser/unverifiedpassword` - Unverified email for email flow tests
+
+**Test Clients:**
+- `integration-test-client` (confidential) - For server-side authentication
+- `integration-test-public-client` (public) - For browser-based authentication
 
 **Tests Using:**
 - To be migrated
+
+**Notes:**
+- Admin console: `http://localhost:8081` (admin/admin)
+- Realm auto-imported on startup from `keycloak-config/integration-test-realm.json`
+- See [KEYCLOAK-TESTING.md](containers/testing/KEYCLOAK-TESTING.md) for detailed testing guide
+- Token endpoint: `http://localhost:8081/realms/integration-test/protocol/openid-connect/token`
 
 ---
 
@@ -345,7 +370,7 @@ Tests that require live cloud credentials. Manual execution only.
 
     <!-- RabbitMQ -->
     <Parameter name="RABBITMQ_HOST" value="localhost" />
-    <Parameter name="RABBITMQ_PORT" value="5672" />
+    <Parameter name="RABBITMQ_PORT" value="5673" />
 
     <!-- OpenSearch -->
     <Parameter name="OPENSEARCH_URL" value="http://localhost:9200" />

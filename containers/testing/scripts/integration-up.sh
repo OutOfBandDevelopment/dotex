@@ -8,7 +8,7 @@
 #
 # Requirements:
 #   - Docker and Docker Compose installed
-#   - Ports available: 1433, 5672, 6333, 8081, 9200, 9998, 10000-10002, 27017
+#   - Ports available: 1433, 5672-5673, 6333, 8081, 9200, 9998, 10000-10002, 27017
 
 set -e  # Exit on error
 
@@ -53,7 +53,7 @@ echo "  - Apache Tika:        http://localhost:9998"
 echo "  - SMTP4Dev:           http://localhost:7777"
 echo "  - MongoDB:            mongodb://localhost:27017"
 echo "  - SQL Server:         localhost,1433 (sa/${SQL_SA_PASSWORD:-IntegrationTest123!})"
-echo "  - RabbitMQ:           amqp://localhost:5672, http://localhost:15672"
+echo "  - RabbitMQ:           amqp://localhost:5673, http://localhost:15672"
 echo "  - OpenSearch:         https://localhost:9200 (admin/${OPENSEARCH_PASSWORD:-IntegrationTest123!})"
 echo "  - Qdrant:             http://localhost:6333"
 echo "  - Azurite:            http://localhost:10000 (Blob), 10001 (Queue), 10002 (Table)"

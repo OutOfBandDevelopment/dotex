@@ -482,6 +482,40 @@ dotnet test src/ --collect:"XPlat Code Coverage"
 
 ## Recently Completed Work
 
+### ✅ ANTLR Cross-Platform Build & Integration Testing Infrastructure Fixes (2026-01-20)
+
+**Status:** ✅ COMPLETE - All three issues resolved and verified
+
+Fixed three critical issues affecting cross-platform builds and integration testing infrastructure:
+
+**ANTLR Cross-Platform Build Fix:**
+- Added `Package` and `TargetNamespace` metadata to ANTLR4 grammar entries in OoBDev.System.csproj
+- Resolved Windows absolute paths being embedded in generated parser files
+- Now builds successfully on Windows, Linux, and macOS
+- Affected: ExpressionCalculator.Parser and Text.Json.JsonPath.Parser
+
+**Keycloak Script Upload Fix:**
+- Used `--features=scripts` command-line flag to enable JavaScript authenticator preview feature
+- Fixed "Script upload is disabled" error on container startup
+- Note: `upload-scripts` is NOT a valid Keycloak feature (was causing "unrecognized feature" error)
+- Container now starts successfully with imported realm
+
+**Nginx DNS Resolution Fix:**
+- Added Docker DNS resolver configuration (`resolver 127.0.0.11`) to nginx.conf
+- Converted all `proxy_pass` directives to use variables (e.g., `set $upstream keycloak:8080`)
+- Variables force runtime DNS resolution instead of startup-time resolution
+- Fixed "host not found in upstream" error when nginx starts before other services
+- Nginx now starts successfully regardless of upstream service availability
+
+**RabbitMQ Port Conflict Fix:**
+- Changed RabbitMQ AMQP port from 5672 to 5673 (Service Bus uses 5672)
+- Removed `extends` directive to prevent port merging from parent compose file
+- All 12 documentation files and scripts updated with new port
+
+**Details:** [docs/changes/bug-fixes-antlr-keycloak-2026-01-20.md](docs/changes/bug-fixes-antlr-keycloak-2026-01-20.md)
+
+---
+
 ### ✅ Caching Framework Migration (2026-01-20)
 
 **Status:** ✅ COMPLETE - All 7 phases done, building successfully

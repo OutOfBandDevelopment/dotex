@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OoBDev Integration Test Stack - Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+
+        .section {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        .service-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 8px;
+            padding: 20px;
+            border-left: 4px solid #667eea;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .service-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .service-name {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .service-status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+
+        .status-running {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-api {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .service-description {
+            color: #555;
+            font-size: 0.95em;
+            margin-bottom: 15px;
+            min-height: 40px;
+        }
+
+        .service-links {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .service-link {
+            display: inline-block;
+            padding: 8px 16px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.9em;
+            transition: background 0.2s;
+        }
+
+        .service-link:hover {
+            background: #5568d3;
+        }
+
+        .service-link.api {
+            background: #17a2b8;
+        }
+
+        .service-link.api:hover {
+            background: #138496;
+        }
+
+        .port-info {
+            background: #f8f9fa;
+            border-radius: 6px;
+            padding: 10px;
+            margin-top: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85em;
+        }
+
+        .port-item {
+            margin: 5px 0;
+            color: #666;
+        }
+
+        .port-number {
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        footer {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            color: #666;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            background: #667eea;
+            color: white;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        .icon {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        @media (max-width: 768px) {
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .stat-number {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚀 OoBDev Integration Test Stack</h1>
+            <p class="subtitle">Complete testing infrastructure with 13 Docker services</p>
+        </header>
+
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number">13</div>
+                <div class="stat-label">Total Services</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">5</div>
+                <div class="stat-label">Web UIs</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">8</div>
+                <div class="stat-label">API Endpoints</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">100%</div>
+                <div class="stat-label">Available</div>
+            </div>
+        </div>
+
+        <!-- Web UI Services -->
+        <section class="section">
+            <h2>🖥️ Web Interfaces</h2>
+            <div class="services-grid">
+                <!-- SMTP4Dev -->
+                <div class="service-card">
+                    <div class="service-header">
+                        <span class="service-name">📧 SMTP4Dev</span>
+                        <span class="service-status status-running">Web UI</span>
+                    </div>
+                    <div class="service-description">
+                        Email testing server with web interface. Captures all sent emails for inspection.
+                    </div>
+                    <div class="service-links">
+                        <a href="/smtp4dev/" class="service-link" target="_blank">Open Dashboard</a>
+                    </div>
+                    <div class="port-info">
+                        <div class="port-item">SMTP: <span class="port-number">localhost:25</span></div>
+                        <div class="port-item">IMAP: <span class="port-number">localhost:143</span></div>
+                        <div class="port-item">Web UI: <span class="port-number">localhost:7777</span></div>
+                    </div>
+                </div>
+
+                <!-- RabbitMQ -->
+                <div class="service-card">
+                    <div class="service-header">
+                        <span class="service-name">🐰 RabbitMQ</span>
+                        <span class="service-status status-running">Management</span>
+                    </div>
+                    <div class="service-description">
+                        Message broker with management console. User: <strong>guest</strong> / Pass: <strong>guest</strong>
+                    </div>
+                    <div class="service-links">
+                        <a href="/rabbitmq/" class="service-link" target="_blank">Management Console</a>
+                    </div>
+                    <div class="port-info">
+                        <div class="port-item">AMQP: <span class="port-number">localhost:5673</span></div>
+                        <div class="port-item">Management: <span class="port-number">localhost:15672</span></div>
+                    </div>
+                </div>
+
+                <!-- Keycloak -->
+                <div class="service-card">
+                    <div class="service-header">
+                        <span class="service-name">🔐 Keycloak</span>
+                        <span class="service-status status-running">Admin Console</span>
+                    </div>
+                    <div class="service-description">
+                        Identity & Access Management. User: <strong>admin</strong> / Pass: <strong>admin</strong>
+                    </div>
+                    <div class="service-links">
+                        <a href="/keycloak/" class="service-link" target="_blank">Admin Console</a>
+                    </div>
+                    <div class="port-info">
+                        <div class="port-item">HTTP: <span class="port-number">localhost:8081</span></div>
+                        <div class="port-item">Realm: <span class="port-number">integration-test</span></div>
+                    </div>
+                </div>
+
+                <!-- Qdrant -->
+                <div class="service-card">
+                    <div class="service-header">
+                        <span class="service-name">🔍 Qdrant</span>
+                        <span class="service-status status-running">Dashboard</span>
+                    </div>
+                    <div class="service-description">
+                        Vector database with web UI for managing collections and search.
+                    </div>
+                    <div class="service-links">
+                        <a href="/qdrant/" class="service-link" target="_blank">Dashboard</a>
+                    </div>
+                    <div class="port-info">
+                        <div class="port-item">REST API: <span class="port-number">localhost:6333</span></div>
+                        <div class="port-item">gRPC: <span class="port-number">localhost:6334</span></div>
+                    </div>
+                </div>
+
+                <!-- OpenSearch Dashboards (Optional) -->
+                <div class="service-card">
+                    <div class="service-header">
+                        <span class="service-name">📊 OpenSearch Dashboards</span>
+                        <span class="service-status status-running">Visualization</span>
+                    </div>
+                    <div class="service-description">
+                        Data visualization and exploration for OpenSearch. User: <strong>admin</strong> / Pass: <strong>IntegrationTest123!</strong>
+                    </div>
+                    <div class="service-links">
+                        <a href="/opensearch-dashboards/" class="service-link" target="_blank">Open Dashboards</a>
+                    </div>
+                    <div class="port-info">
+                        <div class="port-item">HTTP: <span class="port-number">localhost:5601</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Database Services -->
+        <section class="section">
+            <h2>💾 Database Services</h2>
+            <div class="services-grid">
+                <!-- MongoDB -->
+                <div class="service-card">
+                    <div class="service-header">
+                        <span class="service-name">🍃 MongoDB</span>
+                        <span class="service-status status-api">NoSQL</span>
+                    </div>
+                    <div class="service-description">
+                        Document database for unstructured data storage.
+                    </div>
+                    <div class="port-info">
+                        <div class="port-item">Connection: <span class="port-number">mongodb://localhost:27017</span></div>
+                    </div>
+                </div>
+
+                <!-- SQL Server -->
+                <div class="service-card">
+                    <div class="service-header">
+                        <span class="service-name">🗄️ SQL Server</span>
+                        <span class="service-status status-api">RDBMS</span>
+                    </div>
+                    <div class="service-description">
+                        Relational database. User: <strong>sa</strong> / Pass: <strong>IntegrationTest123!</strong>
+                    </div>
+                    <div class="port-info">
+                        <div class="port-item">Port: <span class="port-number">localhost:1433</span></div>
+                    </div>
+                </div>
+
+                <!-- Redis -->
+                <div class="service-card">
+                    <div class="service-header">
+                        <span class="service-name">⚡ Redis</span>
+                        <span class="service-status status-api">Cache</span>
+                    </div>
+                    <div class="service-description">
+                        In-memory data structure store. Max memory: 256MB with LRU eviction.
+                    </div>
+                    <div class="port-info">
+                        <div class="port-item">Port: <span class="port-number">localhost:6379</span></div>
+                    </div>
+                </div>
+
+                <!-- OpenSearch -->
+                <div class="service-card">
+                    <div class="service-header">
+                        <span class="service-name">🔎 OpenSearch</span>
+                        <span class="service-status status-api">Search Engine</span>
+                    </div>
+                    <div class="service-description">
+                        Full-text search and analytics. User: <strong>admin</strong> / Pass: <strong>IntegrationTest123!</strong>
+                    </div>
+                    <div class="service-links">
+                        <a href="/opensearch-api/_cluster/health" class="service-link api" target="_blank">Cluster Health</a>
+                    </div>
+                    <div class="port-info">
+                        <div class="port-item">REST API: <span class="port-number">localhost:9200</span></div>
+                        <div class="port-item">Performance: <span class="port-number">localhost:9600</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Cloud Emulators & Other Services -->
+        <section class="section">
+            <h2>☁️ Cloud Emulators & Additional Services</h2>
+            <div class="services-grid">
+                <!-- LocalStack (AWS) -->
+                <div class="service-card">
+                    <div class="service-header">
+                        <span class="service-name">☁️ LocalStack</span>
+                        <span class="service-status status-api">AWS Emulator</span>
+                    </div>
+                    <div class="service-description">
+                        AWS cloud services emulator (SQS, S3, DynamoDB, SNS, Lambda, etc.)
+                    </div>
+                    <div class="service-links">
+                        <a href="/localstack/_localstack/health" class="service-link api" target="_blank">Health Check</a>
+                    </div>
+                    <div class="port-info">
+                        <div class="port-item">Unified: <span class="port-number">localhost:4566</span></div>
+                        <div class="port-item">Credentials: <span class="port-number">test / test</span></div>
+                    </div>
+                </div>
+
+                <!-- Azurite -->
+                <div class="service-card">
+                    <div class="service-header">
+                        <span class="service-name">💙 Azurite</span>
+                        <span class="service-status status-api">Azure Storage</span>
+                    </div>
+                    <div class="service-description">
+                        Azure Storage emulator for Blob, Queue, and Table storage.
+                    </div>
+                    <div class="port-info">
+                        <div class="port-item">Blob: <span class="port-number">localhost:10000</span></div>
+                        <div class="port-item">Queue: <span class="port-number">localhost:10001</span></div>
+                        <div class="port-item">Table: <span class="port-number">localhost:10002</span></div>
+                    </div>
+                </div>
+
+                <!-- Azure Service Bus Emulator -->
+                <div class="service-card">
+                    <div class="service-header">
+                        <span class="service-name">🚌 Service Bus Emulator</span>
+                        <span class="service-status status-api">Azure Messaging</span>
+                    </div>
+                    <div class="service-description">
+                        Azure Service Bus emulator for queues and topics testing.
+                    </div>
+                    <div class="port-info">
+                        <div class="port-item">AMQP: <span class="port-number">localhost:5672</span></div>
+                        <div class="port-item">Entities: <span class="port-number">integration-test-queue, integration-test-topic</span></div>
+                    </div>
+                </div>
+
+                <!-- Apache Tika -->
+                <div class="service-card">
+                    <div class="service-header">
+                        <span class="service-name">📄 Apache Tika</span>
+                        <span class="service-status status-api">Document Parser</span>
+                    </div>
+                    <div class="service-description">
+                        Content analysis and text extraction from 1000+ file formats.
+                    </div>
+                    <div class="service-links">
+                        <a href="/tika" class="service-link api" target="_blank">API Endpoint</a>
+                    </div>
+                    <div class="port-info">
+                        <div class="port-item">HTTP: <span class="port-number">localhost:9998</span></div>
+                    </div>
+                </div>
+
+                <!-- SBert -->
+                <div class="service-card">
+                    <div class="service-header">
+                        <span class="service-name">🤖 SBert</span>
+                        <span class="service-status status-api">ML Embeddings</span>
+                    </div>
+                    <div class="service-description">
+                        Sentence transformers for generating text embeddings (CPU-only mode).
+                    </div>
+                    <div class="service-links">
+                        <a href="/sbert/health" class="service-link api" target="_blank">Health Check</a>
+                    </div>
+                    <div class="port-info">
+                        <div class="port-item">HTTP: <span class="port-number">localhost:5000</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quick Commands -->
+        <section class="section">
+            <h2>⚡ Quick Commands</h2>
+            <div style="background: #f8f9fa; border-radius: 8px; padding: 20px; font-family: 'Courier New', monospace; font-size: 0.9em;">
+                <p style="margin-bottom: 15px; color: #666;"><strong>Start all services:</strong></p>
+                <code style="display: block; background: #2d3748; color: #68d391; padding: 10px; border-radius: 4px; margin-bottom: 20px;">
+                    cd /current/src/containers/testing<br>
+                    ./scripts/integration-up.sh --wait
+                </code>
+
+                <p style="margin-bottom: 15px; color: #666;"><strong>Run integration tests:</strong></p>
+                <code style="display: block; background: #2d3748; color: #68d391; padding: 10px; border-radius: 4px; margin-bottom: 20px;">
+                    cd /current/src<br>
+                    dotnet test --filter "TestCategory=Integration"
+                </code>
+
+                <p style="margin-bottom: 15px; color: #666;"><strong>Stop all services:</strong></p>
+                <code style="display: block; background: #2d3748; color: #f56565; padding: 10px; border-radius: 4px;">
+                    cd /current/src/containers/testing<br>
+                    ./scripts/integration-down.sh --clean
+                </code>
+            </div>
+        </section>
+
+        <footer>
+            <p><strong>OoBDev Integration Test Stack</strong> - Docker-based testing infrastructure</p>
+            <p style="margin-top: 10px; font-size: 0.9em;">
+                All services are running in isolated network: <code>oobd-integration-test-net</code><br>
+                Volumes are ephemeral and destroyed with <code>docker-compose down -v</code>
+            </p>
+            <p style="margin-top: 15px; color: #999;">
+                📚 <a href="https://github.com/anthropics/claude-code" style="color: #667eea; text-decoration: none;">Documentation</a> |
+                🐛 <a href="https://github.com/anthropics/claude-code/issues" style="color: #667eea; text-decoration: none;">Report Issue</a>
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

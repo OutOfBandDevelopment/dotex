@@ -17,12 +17,20 @@ This directory contains Docker-based testing infrastructure for running integrat
 
 ## Overview
 
-The integration test stack provides **13 Docker-based services** needed for Integration test category:
+The integration test stack provides **15 Docker-based services** (13 core + nginx reverse proxy + OpenSearch Dashboards) needed for Integration test category:
+
+## 🌐 Quick Access
+
+**Dashboard:** http://localhost:8080 (when stack is running)
+
+The nginx reverse proxy provides a unified web interface to all services with direct links, port information, and status monitoring.
 
 | Category | Services |
 |----------|----------|
+| **Web Interface** | Nginx Reverse Proxy + Dashboard |
 | **Stateless** | Apache Tika, SMTP4Dev |
 | **Stateful** | MongoDB, SQL Server, RabbitMQ, Redis, OpenSearch, Qdrant |
+| **Visualization** | OpenSearch Dashboards |
 | **Emulators** | Azurite (Azure Storage), LocalStack (AWS), Azure Service Bus Emulator |
 | **Identity** | Keycloak |
 | **AI/ML** | SBert (CPU-only) |
@@ -80,7 +88,7 @@ package "oobd-integration-test-net (Bridge Network)" {
     }
 
     ' Messaging & Caching Services
-    component "RabbitMQ\n:5672, :15672" <<Container>> #QUEUE_BG_COLOR {
+    component "RabbitMQ\n:5673, :15672" <<Container>> #QUEUE_BG_COLOR {
         queue "Message Queue" as rabbitmq
     }
 
@@ -116,7 +124,7 @@ tests --> [Document Parser] : HTTP
 tests --> [Email Server] : SMTP/HTTP
 tests --> sqldb : T-SQL (1433)
 tests --> mongodb : MongoDB Protocol (27017)
-tests --> rabbitmq : AMQP (5672)
+tests --> rabbitmq : AMQP (5673)
 tests --> opensearch : HTTPS (9200)
 tests --> qdrant : HTTP/gRPC (6333/6334)
 tests --> [Azure Storage\nEmulator] : HTTP
@@ -182,7 +190,7 @@ end note
 │                                                             │
 │  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐     │
 │  │ RabbitMQ │  │  Redis   │  │OpenSearch│  │  Qdrant  │     │
-│  │  :5672   │  │  :6379   │  │  :9200   │  │  :6333   │     │
+│  │  :5673   │  │  :6379   │  │  :9200   │  │  :6333   │     │
 │  └──────────┘  └──────────┘  └──────────┘  └──────────┘     │
 │                                                             │
 │  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐     │
@@ -211,7 +219,7 @@ end note
 
 - **Docker Desktop** (Windows/Mac) or **Docker Engine** (Linux)
 - **Docker Compose** v2.0+
-- Ports available: 1433, 5672, 6333, 6379, 8081, 9200, 9998, 10000-10002, 27017
+- Ports available: 1433, 5672-5673, 6333, 6379, 8081, 9200, 9998, 10000-10002, 27017
 
 ### Start Services (Linux/macOS)
 
@@ -270,7 +278,7 @@ scripts\integration-down.bat --clean
 |---------|-------|---------|---------|--------------|
 | **MongoDB** | `mongo:latest` | 27017 | NoSQL document database | `mongosh --eval "db.adminCommand('ping')"` |
 | **SQL Server** | `mcr.microsoft.com/mssql/server:2022-latest` | 1433 | Relational database | `sqlcmd -Q "SELECT 1"` |
-| **RabbitMQ** | `rabbitmq:latest` | 5672 (AMQP)<br>15672 (Management) | Message broker | `rabbitmq-diagnostics ping` |
+| **RabbitMQ** | `rabbitmq:latest` | 5673 (AMQP)<br>15672 (Management) | Message broker | `rabbitmq-diagnostics ping` |
 | **Redis** | `redis:7-alpine` | 6379 | In-memory cache store | `redis-cli ping` |
 | **OpenSearch** | `opensearchproject/opensearch:latest` | 9200 (HTTP)<br>9600 (Performance) | Search engine | `curl https://localhost:9200/_cluster/health` |
 | **Qdrant** | `qdrant/qdrant` | 6333 (HTTP)<br>6334 (gRPC) | Vector database | `curl http://localhost:6333/health` |
@@ -353,7 +361,7 @@ Tests use environment variables for connection strings. See `.env.integration` f
 |----------|---------|---------|
 | `SQL_CONNECTION_STRING` | `Server=localhost,1433;User Id=sa;Password=IntegrationTest123!;TrustServerCertificate=True` | SQL Server connection |
 | `MONGODB_CONNECTION_STRING` | `mongodb://localhost:27017` | MongoDB connection |
-| `RABBITMQ_CONNECTION_STRING` | `amqp://guest:guest@localhost:5672/` | RabbitMQ connection |
+| `RABBITMQ_CONNECTION_STRING` | `amqp://guest:guest@localhost:5673/` | RabbitMQ connection |
 | `REDIS_CONNECTION_STRING` | `localhost:6379` | Redis connection |
 | `OPENSEARCH_URL` | `https://localhost:9200` | OpenSearch endpoint |
 | `QDRANT_URL` | `http://localhost:6333` | Qdrant HTTP endpoint |
