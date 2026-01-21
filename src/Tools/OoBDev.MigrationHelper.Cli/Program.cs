@@ -10,7 +10,7 @@ internal class Program
 
         foreach (var folder in Directory.EnumerateDirectories(path, "*.*", SearchOption.AllDirectories))
         {
-            var dir = Path.GetDirectoryName(folder);
+            var dir = Path.GetDirectoryName(folder) ?? ".";
             var current = Path.GetFileName(folder);
             if (current.StartsWith(sourcePrefix))
             {
@@ -22,7 +22,7 @@ internal class Program
 
         foreach (var file in Directory.EnumerateFiles(path, "*.*", SearchOption.AllDirectories))
         {
-            var dir = Path.GetDirectoryName(file);
+            var dir = Path.GetDirectoryName(file) ?? ".";
             var current = Path.GetFileName(file);
             if (current.StartsWith(sourcePrefix))
             {

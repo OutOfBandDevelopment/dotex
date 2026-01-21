@@ -27,11 +27,15 @@ BEGIN
 		), TIMEOUT @timeout;
 		
 		DROP TABLE IF EXISTS [#resposes];
-			SELECT *
-			INTO [#resposes]
-			FROM @received AS [$received]
-			WHERE 
-				[$received].[messageType] = 'oobdev://embedding/sentence-transformer/response';
+		SELECT        
+		     [conversationGroup]
+		    ,[conversationHandle]
+		    ,[messageType]		
+		    ,[messageBody]		
+		INTO [#resposes]
+		FROM @received AS [$received]
+		WHERE 
+			[$received].[messageType] = 'oobdev://embedding/sentence-transformer/response';
 				
 		DECLARE @response [embedding].[oobdev://embedding/sentence-transformer/response/send-batch/set];
 				

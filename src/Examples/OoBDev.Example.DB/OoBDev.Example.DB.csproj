@@ -7,6 +7,7 @@
     <RecoveryMode>Simple</RecoveryMode>
     <ServiceBrokerOption>EnableBroker</ServiceBrokerOption>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <NoWarn>$(NoWarn);MSB3270;NU1701;NU1702</NoWarn>
 
     <IsPackable>false</IsPackable>
   </PropertyGroup>

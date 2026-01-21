@@ -164,6 +164,11 @@ public class FileRagEngineService : IHostedService
             throw new AggregateException(exceptions);
     }
 
+    /// <summary>
+    /// Retrieves the configured language model provider from the service provider.
+    /// </summary>
+    /// <returns>The message completion provider instance.</returns>
+    /// <exception cref="NotSupportedException">Thrown when no language model provider is configured.</exception>
     private IMessageCompletion GetProvider() => _settings.Value.LanguageModelType switch
     {
         string key => _serviceProvider.GetKeyedService<IMessageCompletion>(_settings.Value.LanguageModelType),

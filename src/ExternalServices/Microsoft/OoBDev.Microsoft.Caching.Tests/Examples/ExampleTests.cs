@@ -12,7 +12,7 @@ namespace OoBDev.Microsoft.Caching.Tests.Examples;
 [TestClass]
 public class ExampleTests
 {
-    public TestContext TestContext { get; set; }
+    public required TestContext TestContext { get; set; }
 
     [TestMethod]
     [TestCategory(TestCategories.Simulate)]

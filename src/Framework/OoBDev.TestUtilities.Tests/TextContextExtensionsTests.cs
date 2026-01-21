@@ -1,4 +1,4 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json.Linq;
 using System.IO;
 using System.Linq;
@@ -10,7 +10,7 @@ namespace OoBDev.TestUtilities.Tests;
 [TestClass]
 public class TextContextExtensionsTests
 {
-    public TestContext TestContext { get; set; }
+    public required TestContext TestContext { get; set; }
 
     public class TestData
     {

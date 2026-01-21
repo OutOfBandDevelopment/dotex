@@ -1,4 +1,4 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
 namespace OoBDev.TestUtilities;
@@ -104,7 +104,7 @@ public static class NumericAsserts
             var act = Convert.ToInt64(actual);
             var tol = Convert.ToInt64(tolerance);
             var diff = Math.Abs(exp - act);
-            Assert.IsTrue(diff <= tol, displayMessage);
+            Assert.IsLessThanOrEqualTo(tol, diff, displayMessage);
         }
     }
 }

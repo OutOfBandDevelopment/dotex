@@ -56,6 +56,6 @@ public class HtmlToMarkdownConversionHandlerTests
 
         TestContext.AddResult(pdfStream, fileName: Path.ChangeExtension(resourceName, ".md"));
 
-        Assert.IsTrue(pdfStream.Length > 0);
+        Assert.IsGreaterThan(0, pdfStream.Length);
     }
 }

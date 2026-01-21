@@ -13,7 +13,7 @@ namespace OoBDev.Caching.Tests.Factories;
 [TestClass]
 public class CachedProxyTests
 {
-    public TestContext TestContext { get; set; }
+    public required TestContext TestContext { get; set; }
 
     private MockRepository mockRepository;
     private Mock<ICachingManager> mockCachingManager;

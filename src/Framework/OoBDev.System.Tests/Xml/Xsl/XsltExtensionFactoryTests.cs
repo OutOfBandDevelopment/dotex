@@ -12,8 +12,13 @@ public class XsltExtensionFactoryTests
 {
     public required TestContext TestContext { get; set; }
 
-    [TestMethod, TestCategory(TestCategories.DevLocal)]
-    public void BuildXsltExtensionTest()
+    [TestMethod, TestCategory(TestCategories.Unit)]
+    [DataRow("do-work", new string[] { "Hi!" }, "Hi!")]
+    [DataRow("big-work", new string[] { "Hi!", "2", "3", "4", "5", "6" }, "Hi!_2_3_4_5_6")]
+    [DataRow("more-work", new string[] { "Hi!" }, null)]
+    [DataRow("other-work", new string[] { }, null)]
+    [DataRow("and-work", new string[] { }, "noice")]
+    public void BuildXsltExtensionTest(string method, string[] inputs, string? expected)
     {
         var factory = new XsltExtensionFactory();
 
@@ -21,33 +26,17 @@ public class XsltExtensionFactoryTests
 
         var wrapped = factory.BuildXsltExtension(toWrap) ?? throw new NotSupportedException();
         var wrappedType = wrapped.GetType();
+        var mi = wrappedType.GetMethod(method, BindingFlags.Public | BindingFlags.Instance);
+        var ret = mi?.Invoke(wrapped, inputs);
+        TestContext.WriteLine($"{method}: {ret}");
 
+        if (expected != null)
         {
-            var mi = wrappedType.GetMethod("do-work", BindingFlags.Public | BindingFlags.Instance);
-            var ret = mi?.Invoke(wrapped, ["Hi!"]);
-            TestContext.WriteLine($"{"do-work"}: {ret}");
-        }
+            Assert.AreEqual(expected, ret as string);
+        } else
         {
-            var mi = wrappedType.GetMethod("big-work", BindingFlags.Public | BindingFlags.Instance);
-            var ret = mi?.Invoke(wrapped, ["Hi!", "2", "3", "4", "5", "6"]);
-            TestContext.WriteLine($"{"big-work"}: {ret}");
+            Assert.IsNull(ret);
         }
-        {
-            var mi = wrappedType.GetMethod("more-work", BindingFlags.Public | BindingFlags.Instance);
-            var ret = mi?.Invoke(wrapped, ["Hi!"]);
-            TestContext.WriteLine($"{"more-work"}: {ret}");
-        }
-        {
-            var mi = wrappedType.GetMethod("other-work", BindingFlags.Public | BindingFlags.Instance);
-            var ret = mi?.Invoke(wrapped, []);
-            TestContext.WriteLine($"{"other-work"}: {ret}");
-        }
-        {
-            var mi = wrappedType.GetMethod("and-work", BindingFlags.Public | BindingFlags.Instance);
-            var ret = mi?.Invoke(wrapped, []);
-            TestContext.WriteLine($"{"and-work"}: {ret}");
-        }
-
     }
 
     public class FakeClass

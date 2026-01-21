@@ -59,7 +59,7 @@ public abstract class TikaToHtmlConversionHandlerTestsBase<T> where T : IDocumen
 
         testContext.AddResult(pdfStream, fileName: Path.ChangeExtension(resourceName, ext));
 
-        Assert.IsTrue(pdfStream.Length > 240);
+        Assert.IsGreaterThan(240, pdfStream.Length);
     }
 
     public async Task ConvertAsyncTestHarness(string sourceContentType, string destinationContentType)

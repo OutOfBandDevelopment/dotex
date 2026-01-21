@@ -13,18 +13,18 @@ namespace OoBDev.Microsoft.Caching.Tests.Providers;
 [TestClass]
 public class MicrosoftMemoryCachingProviderTests
 {
-    public TestContext TestContext { get; set; }
+    public required TestContext TestContext { get; set; }
 
     [TestMethod]
     [TestCategory(TestCategories.Simulate)]
     public async Task TestAll()
     {
         // Stage
+        var cb = new ConfigurationBuilder();
 
         // Mock
-
         var services = new ServiceCollection()
-            .AddTransient<IConfiguration>(sp => null)
+            .AddTransient<IConfiguration>(sp => cb.Build())
             .AddOptions()
             .BuildServiceProvider();
         var options = services.GetRequiredService<IOptions<MemoryCacheOptions>>();

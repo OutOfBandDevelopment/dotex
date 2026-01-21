@@ -1,4 +1,4 @@
-using OoBDev.Extensions.IO;
+﻿using OoBDev.Extensions.IO;
 using OoBDev.TestUtilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
@@ -29,6 +29,6 @@ public class StreamExtensionsTests
     {
         using var ms = new MemoryStream(new byte[3 * StreamExtensions.DefaultChunkLength]);
         var chunks = ms.SplitStreamAsync().ToBlockingEnumerable().ToList();
-        Assert.AreEqual(3, chunks.Count);
+        Assert.HasCount(3, chunks);
     }
 }

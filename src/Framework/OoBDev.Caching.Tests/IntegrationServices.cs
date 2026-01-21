@@ -20,18 +20,19 @@ public static class IntegrationServices
         //    .AddDebugTestConfigurations()
             .AddTestLoggingServices(testContext)
             .TryAddCachingServices()
-            .AddSingleton<ICachingProvider, NullCachingProvider>() // Default no-op provider for tests
+            .AddSingleton<ICachingProvider, NullCachingProvider>()
+            // Default no-op provider for tests
             //.AddMicrosoftCachingServices()
             //.AddRedisCachingServices()
             //.AddToolkitServices()
             ;
     }
 
-
-    public static T GetService<T>(this TestContext testContext, IServiceCollection services = null) =>
-        (services ?? testContext.GetServices())
-            .BuildServiceProvider()
-            .GetService<T>()
-            ;
+    public static T? GetService<T>(this TestContext testContext, IServiceCollection? services = default) =>
+        (services ?? testContext.GetServices()) switch
+        {
+            IServiceCollection serviceCollection => serviceCollection.BuildServiceProvider().GetService<T>(),
+            _ => default
+        };
 
 }

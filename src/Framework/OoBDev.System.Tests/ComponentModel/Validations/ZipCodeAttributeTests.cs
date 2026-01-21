@@ -7,7 +7,7 @@ namespace OoBDev.System.Tests.ComponentModel.Validations;
 [TestClass]
 public class ZipCodeAttributeTests
 {
-    public TestContext TestContext { get; set; } = null!;
+    public required TestContext TestContext { get; set; } = null!;
 
     [TestMethod]
     [TestCategory(TestCategories.Unit)]

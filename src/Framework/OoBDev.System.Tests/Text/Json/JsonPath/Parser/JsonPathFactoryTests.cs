@@ -58,10 +58,9 @@ public class JsonPathFactoryTests
         }
         catch (Exception ex)
         {
-            if (expected is Type type && type.IsInstanceOfType(ex))
+            if (expected is Type type)
             {
-                //Expected!
-                Assert.IsTrue(true);
+                Assert.IsTrue(type.IsInstanceOfType(ex));
             }
             else
             {

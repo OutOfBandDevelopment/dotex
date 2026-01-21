@@ -13,7 +13,7 @@ namespace OoBDev.Redis.Caching.Tests.Providers;
 [TestClass]
 public class RedisCachingProviderTests
 {
-    public TestContext TestContext { get; set; }
+    public required TestContext TestContext { get; set; }
 
     private MockRepository mockRepository;
 

@@ -46,7 +46,7 @@ public class CachingManager : ICachingManager
                 return _formatter.Format(flushCacheAttribute.KeyFormatter, method, args) ??
                     throw new NullReferenceException($"Unable to creating caching key");
 
-            var targetMethod = flushCacheAttribute.TargetClass?.GetMethod(flushCacheAttribute.MethodName, method.GetParameters().Select(p => p.ParameterType).ToArray());
+            var targetMethod = flushCacheAttribute.TargetClass?.GetMethod(flushCacheAttribute.MethodName, [.. method.GetParameters().Select(p => p.ParameterType)]);
             if (targetMethod != null)
                 return BuildKey(targetMethod, args);
         }

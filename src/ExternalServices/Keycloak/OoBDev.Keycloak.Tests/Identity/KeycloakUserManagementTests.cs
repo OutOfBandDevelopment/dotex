@@ -289,8 +289,8 @@ public class KeycloakUserManagementTests
 
         TestContext.WriteLine($"User's assigned roles: {string.Join(", ", roleNames)}");
 
-        Assert.IsTrue(roleNames.Contains("user"), "User should have 'user' role");
-        Assert.IsTrue(roleNames.Contains("test-role"), "User should have 'test-role' role");
+        Assert.Contains("user", roleNames, "User should have 'user' role");
+        Assert.Contains("test-role", roleNames, "User should have 'test-role' role");
     }
 
     /// <summary>
@@ -456,7 +456,7 @@ public class KeycloakUserManagementTests
         var count = await _keycloakClient!.GetUsersCountAsync(_realm);
 
         // Assert
-        Assert.IsTrue(count >= 0, "User count should be non-negative");
+        Assert.IsGreaterThanOrEqualTo(0, count, "User count should be non-negative");
         TestContext.WriteLine($"Total users in realm '{_realm}': {count}");
     }
 

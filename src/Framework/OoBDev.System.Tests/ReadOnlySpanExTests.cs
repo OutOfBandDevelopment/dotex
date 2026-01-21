@@ -16,6 +16,6 @@ public class ReadOnlySpanExTests
         ReadOnlySpan<byte> span = input;
         var result = span.CopyWithTransform(i => (byte)(i & 0x7f));
         foreach (var b in result)
-            Assert.IsTrue(b < 0x80);
+            Assert.IsLessThan(0x80, b);
     }
 }

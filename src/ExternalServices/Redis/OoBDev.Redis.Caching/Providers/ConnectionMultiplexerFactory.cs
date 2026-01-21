@@ -1,5 +1,6 @@
 ﻿using StackExchange.Redis;
 using Microsoft.Extensions.Configuration;
+using System;
 
 namespace OoBDev.Redis.Caching.Providers;
 
@@ -24,5 +25,6 @@ public class ConnectionMultiplexerFactory : IConnectionMultiplexerFactory
         ) => _config = config;
 
     /// <inheritdoc/>
-    public IConnectionMultiplexer Create() => ConnectionMultiplexer.Connect(_config[SourceConfigurationKey]);
+    public IConnectionMultiplexer Create() => ConnectionMultiplexer.Connect(_config[SourceConfigurationKey]??
+        throw new NullReferenceException($"Missing Configuration \"{SourceConfigurationKey}\""));
 }

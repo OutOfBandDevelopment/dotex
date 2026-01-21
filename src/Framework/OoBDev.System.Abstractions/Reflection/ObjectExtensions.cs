@@ -26,9 +26,9 @@ public static class ObjectExtensions
             if (parsableType != null)
             {
                 object?[] parseArgs = [stringValue, CultureInfo.CurrentCulture, null];
-                var parableMethod = parsableType.GetMethod(nameof(IParsable<>.TryParse));
-                parableMethod = nonNullableType.GetMethod(parableMethod.Name, [.. parableMethod.GetParameters().Select(p => p.ParameterType)]);
-                var parseResult = (bool)parableMethod.Invoke(null, parseArgs);
+                var parableMethod = parsableType.GetMethod(nameof(IParsable<>.TryParse)) ?? throw new ApplicationException("This is IParsable<> so you shouldn't get here!");
+                parableMethod = nonNullableType.GetMethod(parableMethod.Name, [.. parableMethod.GetParameters().Select(p => p.ParameterType)]) ?? throw new ApplicationException("This is IParsable<> so you shouldn't get here!");
+                var parseResult = (bool)(parableMethod?.Invoke(null, parseArgs) ?? throw new ApplicationException("This is IParsable<> so you shouldn't get here!"));
                 if (parseResult)
                     return parseArgs[2];
             }

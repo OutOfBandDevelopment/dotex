@@ -88,6 +88,12 @@ public class DocumentConverterService : IHostedService
         }
     }
 
+    /// <summary>
+    /// Opens a file or HTTP stream from the specified path.
+    /// </summary>
+    /// <param name="sourcePath">The file path or HTTP/HTTPS URL to open.</param>
+    /// <returns>A stream for reading the content.</returns>
+    /// <exception cref="ApplicationException">Thrown when the file is not found.</exception>
     private async Task<Stream> OpenPathAsync(string sourcePath)
     {
         if (sourcePath.StartsWith("http:", StringComparison.InvariantCultureIgnoreCase) ||

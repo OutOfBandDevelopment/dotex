@@ -9,7 +9,7 @@ namespace OoBDev.System.Tests.Reflection;
 [TestClass]
 public class ObjectExtensionTests
 {
-    public TestContext TestContext { get; set; }
+    public required TestContext TestContext { get; set; }
 
     [TestMethod]
     [TestCategory(TestCategories.Unit)]

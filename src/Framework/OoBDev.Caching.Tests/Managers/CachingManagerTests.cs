@@ -11,7 +11,7 @@ namespace OoBDev.Caching.Tests.Managers;
 [TestClass]
 public class CachingManagerTests
 {
-    public TestContext TestContext { get; set; }
+    public required TestContext TestContext { get; set; }
 
     private MockRepository mockRepository;
 

@@ -19,11 +19,17 @@ public class CachedProxy<TInterface, TImplemention> : DispatchProxy
     private ICachingManager? _cachingManager;
     private ILogger<TImplemention>? _logger;
 
-    protected override object? Invoke(MethodInfo targetMethod, object[] args)
+    /// <summary>
+    /// Intercepts method invocations and applies caching logic based on <see cref="IsCacheableAttribute"/> and <see cref="FlushCacheAttribute"/> attributes.
+    /// </summary>
+    /// <param name="targetMethod">The method being invoked.</param>
+    /// <param name="args">The arguments passed to the method.</param>
+    /// <returns>The result of the method invocation, potentially retrieved from cache or stored to cache.</returns>
+    protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
     {
-        if (_decorated == null) return null;
+        if (_decorated == null || targetMethod == null) return null;
 
-        var method = _decorated.GetType().GetMethod(targetMethod.Name, targetMethod.GetParameters().Select(p => p.ParameterType).ToArray());
+        var method = _decorated.GetType().GetMethod(targetMethod.Name, [.. targetMethod.GetParameters().Select(p => p.ParameterType)]);
         if (_cachingManager != null)
         {
             try

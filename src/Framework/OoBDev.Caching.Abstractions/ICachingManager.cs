@@ -15,7 +15,7 @@ public interface ICachingManager
     /// <param name="method">The method information.</param>
     /// <param name="args">The method arguments.</param>
     /// <returns>A unique cache key string.</returns>
-    string BuildKey(MethodInfo method, params object[] args);
+    string BuildKey(MethodInfo method, params object?[]? args);
 
     /// <summary>
     /// Flushes (removes) a cache entry by key.

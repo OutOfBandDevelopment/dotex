@@ -14,7 +14,7 @@ namespace OoBDev.Microsoft.SqlServer.Server.Tests;
 [TestClass]
 public class SqlDatabaseMapperTests
 {
-    public TestContext TestContext { get; set; } = null!;
+    public required TestContext TestContext { get; set; } = null!;
 
     [TestMethod]
     [TestCategory(TestCategories.Unit)]
@@ -31,7 +31,7 @@ public class SqlDatabaseMapperTests
             Name = "test",
         }).ToArray();
 
-        Assert.AreEqual(2, parameters.Length);
+        Assert.HasCount(2, parameters);
         Assert.AreEqual("@Name", parameters[0].ParameterName);
         Assert.AreEqual("@Props", parameters[1].ParameterName);
         Assert.AreEqual("test", parameters[0].Value);

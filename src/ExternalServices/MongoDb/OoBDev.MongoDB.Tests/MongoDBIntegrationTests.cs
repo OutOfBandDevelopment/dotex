@@ -1,4 +1,4 @@
-using OoBDev.MongoDB.Extensions;
+﻿using OoBDev.MongoDB.Extensions;
 using OoBDev.System;
 using OoBDev.TestUtilities;
 using Microsoft.Extensions.Configuration;
@@ -213,7 +213,7 @@ public class MongoDBIntegrationTests
             .ToListAsync();
 
         // Assert
-        Assert.AreEqual(4, orderedResults.Count, "Should return all 4 documents");
+        Assert.HasCount(4, orderedResults, "Should return all 4 documents");
 
         // Verify ordering: Alpha (Another First), Alpha (First), Bravo, Charlie
         Assert.AreEqual("Alpha", orderedResults[0].Value1, "First result should be Alpha");

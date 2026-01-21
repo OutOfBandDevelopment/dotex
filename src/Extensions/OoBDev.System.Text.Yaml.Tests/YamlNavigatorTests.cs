@@ -9,7 +9,7 @@ public class YamlNavigatorTests
 {
     public required TestContext TestContext { get; set; }
 
-    [TestMethod, TestCategory(TestCategories.DevLocal)]
+    [TestMethod, TestCategory(TestCategories.Simulate)]
     [DataRow("Example.yml")]
     public void ToNavigableTest(string resourceName)
     {

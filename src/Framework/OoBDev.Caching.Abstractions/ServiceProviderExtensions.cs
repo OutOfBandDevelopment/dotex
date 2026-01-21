@@ -17,6 +17,9 @@ public static class ServiceProviderExtensions
     /// <exception cref="NotSupportedException">Thrown when the cacheable factory cannot create the proxy.</exception>
     public static TInterface Cacheable<TInterface, TImplemention>(this IServiceProvider serviceProvider)
         where TImplemention : class, TInterface =>
-        ((ICacheableFactory)serviceProvider.GetService(typeof(ICacheableFactory))).Create<TInterface, TImplemention>()
-        ?? throw new NotSupportedException();
+        serviceProvider.GetService(typeof(ICacheableFactory)) switch
+        {
+            ICacheableFactory factory => factory.Create<TInterface, TImplemention>(),
+            _ => throw new NotSupportedException()
+        };
 }

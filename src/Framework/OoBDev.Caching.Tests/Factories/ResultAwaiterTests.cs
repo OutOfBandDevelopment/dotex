@@ -10,7 +10,7 @@ namespace OoBDev.Caching.Tests.Factories;
 [TestClass]
 public class ResultAwaiterTests
 {
-    public TestContext TestContext { get; set; }
+    public required TestContext TestContext { get; set; }
 
     private MockRepository mockRepository;
 

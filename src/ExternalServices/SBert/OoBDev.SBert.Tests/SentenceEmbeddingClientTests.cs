@@ -30,7 +30,7 @@ public class SentenceEmbeddingClientTests
         return client;
     }
 
-    [TestMethod, TestCategory(TestCategories.DevLocal)]
+    [TestMethod, TestCategory(TestCategories.Integration)]
     public async Task GetEmbeddingAsyncTest()
     {
         var url = TestContext.GetRequiredProperty<string>("SBERT_URL");
@@ -41,7 +41,7 @@ public class SentenceEmbeddingClientTests
         TestContext.WriteLine(string.Join(';', embedding));
     }
 
-    [TestMethod, TestCategory(TestCategories.DevLocal)]
+    [TestMethod, TestCategory(TestCategories.Integration)]
     public async Task GetAllTest()
     {
         var url = TestContext.GetRequiredProperty<string>("SBERT_URL");

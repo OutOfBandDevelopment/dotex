@@ -1,4 +1,4 @@
-using OoBDev.MessageQueueing.Services;
+﻿using OoBDev.MessageQueueing.Services;
 using OoBDev.TestUtilities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -63,7 +63,7 @@ public class MessageReceiverProviderFactoryTests
         var providers = factory.Create().ToArray();
 
         Assert.IsNotNull(providers);
-        Assert.AreEqual(1, providers.Length);
+        Assert.HasCount(1, providers);
 
         mockRepo.VerifyAll();
     }
@@ -145,7 +145,7 @@ public class MessageReceiverProviderFactoryTests
         var providers = factory.Create().ToArray();
 
         Assert.IsNotNull(providers);
-        Assert.AreEqual(2, providers.Length, "Factory should return 2 providers (rabbitmq and in-process)");
+        Assert.HasCount(2, providers, "Factory should return 2 providers (rabbitmq and in-process)");
 
         mockRepo.VerifyAll();
     }

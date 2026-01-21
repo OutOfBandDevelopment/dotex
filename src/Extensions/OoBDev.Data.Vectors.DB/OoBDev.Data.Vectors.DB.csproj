@@ -7,7 +7,7 @@
     <RecoveryMode>Simple</RecoveryMode>
     <ServiceBrokerOption>EnableBroker</ServiceBrokerOption>
     <!-- Suppress warning about .NET Framework 4.8 project reference in .NET Standard 2.1 project -->
-    <NoWarn>$(NoWarn);MSB3270;NU1701</NoWarn>
+    <NoWarn>$(NoWarn);MSB3270;NU1701;NU1702</NoWarn>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <!-- SQL projects don't generate XML documentation files -->
     <GenerateDocumentationFile>false</GenerateDocumentationFile>

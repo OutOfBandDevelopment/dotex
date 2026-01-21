@@ -11,7 +11,7 @@ namespace OoBDev.Redis.Caching.Tests.Providers;
 [TestClass]
 public class RedisCachingProviderDevLocalTests
 {
-    public TestContext TestContext { get; set; }
+    public required TestContext TestContext { get; set; }
 
     private RedisCachingProvider CreateProvider()
     {
