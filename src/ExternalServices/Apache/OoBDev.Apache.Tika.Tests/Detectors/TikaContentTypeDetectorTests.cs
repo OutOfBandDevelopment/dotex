@@ -51,9 +51,11 @@ public class TikaContentTypeDetectorTests
         using var stream = GetType().Assembly.GetManifestResourceStream($"OoBDev.Apache.Tika.Tests.TestData.{resourceName}")
             ?? throw new NotSupportedException($"Not found {resourceName}");
 
+        var tikaUrl = TestContext.GetRequiredProperty<string>("TIKA_URL");
+
         var serviceProvider = ApacheTikaTestHarness.GetServiceProvider(new Dictionary<string, string?>()
         {
-            { "ApacheTikaClientOptions:Url","http://127.0.0.1:9998"}
+            { "ApacheTikaClientOptions:Url", tikaUrl }
         });
 
         var detector = ActivatorUtilities.CreateInstance<TikaContentTypeDetector>(serviceProvider);

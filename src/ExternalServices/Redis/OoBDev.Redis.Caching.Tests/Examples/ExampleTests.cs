@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.Caching;
+using OoBDev.System;
 using OoBDev.TestUtilities;
 using OoBDev.TestUtilities.Logging;
 using System;
@@ -13,16 +14,18 @@ namespace OoBDev.Redis.Caching.Tests.Examples;
 [TestClass]
 public class ExampleTests
 {
-    public TestContext TestContext { get; set; }
+    public required TestContext TestContext { get; set; }
 
     [TestMethod]
-    [TestCategory(TestCategories.DevLocal)]
+    [TestCategory(TestCategories.Integration)]
     public async Task CachingDesignTest_WithRedisCache()
     {
+        var redisConnectionString = TestContext.GetRequiredProperty<string>("REDIS_CONNECTION_STRING");
+
         var configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(new Dictionary<string, string>
             {
-                { "ConnectionMultiplexerFactory:Source", "localhost:6379" }
+                { "Redis:ConnectionMultiplexer:Config", redisConnectionString }
             })
             .Build();
 
@@ -30,6 +33,7 @@ public class ExampleTests
             .AddSingleton<IConfiguration>(configuration)
             .AddTestLoggingServices(TestContext)
             .AddOptions()
+            .TryAddSystemExtensions(configuration, new())  // Required for IObjectConverter
             .TryAddCachingServices()
             .TryAddRedisCachingServices() // Use Redis Cache provider
 

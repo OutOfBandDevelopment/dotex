@@ -41,12 +41,29 @@ public class OllamaApiClientTests
         return client;
     }
 
+    [TestCategory(TestCategories.Integration)]
+    [TestMethod]
+    public async Task GenerateEmbeddingsDoubleTest()
+    {
+        var url = TestContext.GetRequiredProperty<string>("OLLAMA_URL");
+        var model = TestContext.GetPropertyOrDefault("OLLAMA_MODEL", "phi3");
+
+        var client = Build(url, model);
+        var embedding = await client.GetEmbeddingDoubleAsync("Hello World!", model);
+
+        TestContext.WriteLine($"url: {url}");
+        TestContext.WriteLine($"model: {model}");
+        TestContext.WriteLine($"Length: {embedding.Length}");
+        TestContext.WriteLine(string.Join(", ", embedding.Take(10)));
+
+        Assert.IsTrue(embedding.Length > 0, "Embedding should have elements");
+    }
+
     [TestCategory(TestCategories.DevLocal)]
     [TestMethod]
-    [DataRow("http://127.0.0.1:11434", "phi")]
     [DataRow("http://192.168.1.170:11434", "phi3")]
     [DataRow("http://192.168.1.170:11434", "all-minilm")]
-    public async Task GenerateEmbeddingsDoubleTest(string hostName, string model)
+    public async Task GenerateEmbeddingsDoubleTest_DevLocal(string hostName, string model)
     {
         var client = Build(hostName, model);
         var embedding = await client.GetEmbeddingDoubleAsync("Hello World!", model);
@@ -167,11 +184,26 @@ public class OllamaApiClientTests
                 ));
     }
 
+    [TestCategory(TestCategories.Integration)]
+    [TestMethod]
+    public async Task ListModelsTest()
+    {
+        var url = TestContext.GetRequiredProperty<string>("OLLAMA_URL");
+        var client = Build(url, "");
+
+        var models = await client.ListLocalModelsAsync();
+        var modelsList = models.ToList();
+
+        foreach (var localModel in modelsList)
+            TestContext.WriteLine($"model: {localModel.Name} - {localModel.Size:#,##0} ({localModel.Digest})");
+
+        Assert.IsTrue(modelsList.Any(), "At least one model should be available");
+    }
+
     [TestCategory(TestCategories.DevLocal)]
     [TestMethod]
-    [DataRow("http://127.0.0.1:11434")]
     [DataRow("http://192.168.1.170:11434")]
-    public async Task ListModelsTest(string hostName)
+    public async Task ListModelsTest_DevLocal(string hostName)
     {
         var client = Build(hostName, "");
         foreach (var localModel in await client.ListLocalModelsAsync())

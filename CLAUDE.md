@@ -59,10 +59,18 @@ Located in `.claude/protocols/`:
 - **documentation-style-guide.md** - Content standards
 - **documentation-standards.md** - File organization
 - **change-documentation-archival.md** - Archive completed work to reduce context overhead
+- **configuration-documentation.md** - Discover and document all IConfiguration, IOptions, and Environment variables
+  - **Trigger:** "find all my configurations"
+  - Creates comprehensive CONFIGURATION_SETTINGS.md reference
 
 #### Code Generation
 - **template-development.md** - Template-based code generation
 - **template-swagger-documentation.md** - Template/OpenAPI maintenance
+
+#### Testing & Integration
+- **integration-test-maintenance.md** - Maintain Docker-based integration test infrastructure
+  - **Trigger:** "add new container", "add integration test service"
+  - Checklist for Docker services, nginx config, dashboard, .runsettings, documentation
 
 #### Component Standards
 - **schema-integration.md** - Schema framework integration

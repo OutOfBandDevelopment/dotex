@@ -169,6 +169,12 @@ https://github.com/coverlet-coverage/coverlet/blob/fc7ec26dcaed8fedba880ff13c6f1
 		<Parameter name="SBERT_HOST" value="localhost" />
 		<Parameter name="SBERT_PORT" value="5000" />
 
+		<!-- Ollama (LLM Inference) -->
+		<Parameter name="OLLAMA_URL" value="http://localhost:11434" />
+		<Parameter name="OLLAMA_HOST" value="localhost" />
+		<Parameter name="OLLAMA_PORT" value="11434" />
+		<Parameter name="OLLAMA_MODEL" value="phi3" />
+
 		<!-- OpenSearch Dashboards -->
 		<Parameter name="OPENSEARCH_DASHBOARDS_URL" value="http://localhost:5601" />
 		<Parameter name="OPENSEARCH_DASHBOARDS_HOST" value="localhost" />

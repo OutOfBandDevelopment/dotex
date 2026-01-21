@@ -247,12 +247,12 @@
     <div class="container">
         <header>
             <h1>🚀 OoBDev Integration Test Stack</h1>
-            <p class="subtitle">Complete testing infrastructure with 13 Docker services</p>
+            <p class="subtitle">Complete testing infrastructure with 14 Docker services</p>
         </header>
 
         <div class="stats">
             <div class="stat-card">
-                <div class="stat-number">13</div>
+                <div class="stat-number">14</div>
                 <div class="stat-label">Total Services</div>
             </div>
             <div class="stat-card">
@@ -260,7 +260,7 @@
                 <div class="stat-label">Web UIs</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number">8</div>
+                <div class="stat-number">9</div>
                 <div class="stat-label">API Endpoints</div>
             </div>
             <div class="stat-card">
@@ -517,6 +517,24 @@
                     </div>
                     <div class="port-info">
                         <div class="port-item">HTTP: <span class="port-number">localhost:5000</span></div>
+                    </div>
+                </div>
+
+                <!-- Ollama -->
+                <div class="service-card">
+                    <div class="service-header">
+                        <span class="service-name">🦙 Ollama</span>
+                        <span class="service-status status-api">LLM Inference</span>
+                    </div>
+                    <div class="service-description">
+                        Local LLM inference with phi3 model (CPU-only mode for CI/CD compatibility).
+                    </div>
+                    <div class="service-links">
+                        <a href="http://localhost:11434/api/tags" class="service-link api" target="_blank">API Endpoint :11434</a>
+                    </div>
+                    <div class="port-info">
+                        <div class="port-item">HTTP: <span class="port-number">localhost:11434</span></div>
+                        <div class="port-item">Model: <span class="port-number">phi3</span></div>
                     </div>
                 </div>
             </div>

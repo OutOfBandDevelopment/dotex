@@ -24,7 +24,7 @@ The dashboard provides a single entry point to all service web UIs:
 
 The root page (`/`) displays:
 
-- **Service Status**: All 13 services with their status
+- **Service Status**: All 14 services with their status
 - **Web UIs**: Direct links to all web interfaces
 - **API Endpoints**: Proxied access to REST APIs
 - **Port Information**: All exposed ports for each service

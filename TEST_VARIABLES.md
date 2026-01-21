@@ -217,6 +217,37 @@ Tests that require live cloud credentials. Manual execution only.
 
 ---
 
+### Ollama (LLM Inference - AI/ML)
+
+**Service:** Ollama local LLM inference (CPU-only for CI/CD)
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `OLLAMA_URL` | `http://localhost:11434` | Ollama HTTP API endpoint |
+| `OLLAMA_HOST` | `localhost` | Ollama host |
+| `OLLAMA_PORT` | `11434` | Ollama port |
+| `OLLAMA_MODEL` | `phi3` | Model name to use for testing |
+
+**Docker Container:** `ollama/ollama:latest` (Port 11434)
+
+**Setup Required:**
+- After container start, run `./scripts/setup-ollama.sh` to pull the model
+- Model is stored in persistent volume `ollama-test-data`
+
+**Tests Using:**
+- `OoBDev.Ollama.Tests.OllamaApiClientTests.ListModelsTest`
+- `OoBDev.Ollama.Tests.OllamaApiClientTests.GenerateEmbeddingsDoubleTest`
+- `OoBDev.Ollama.Tests.OllamaMessageCompletionTests.IMessageCompletion_GetCompletionAsyncTest`
+- `OoBDev.Ollama.Tests.OllamaMessageCompletionTests.ILanguageModelProvider_GetResponseAsyncTest`
+
+**Notes:**
+- CPU-only configuration for CI/CD compatibility
+- Uses small phi3 model (~2GB) for fast testing
+- Model must be pulled before tests run (via setup script)
+- Stateful service (model data persisted in volume)
+
+---
+
 ### Qdrant (Vector Database)
 
 **Service:** Qdrant vector similarity search engine

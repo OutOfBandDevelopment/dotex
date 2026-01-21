@@ -17,7 +17,7 @@ This directory contains Docker-based testing infrastructure for running integrat
 
 ## Overview
 
-The integration test stack provides **15 Docker-based services** (13 core + nginx reverse proxy + OpenSearch Dashboards) needed for Integration test category:
+The integration test stack provides **16 Docker-based services** (14 core + nginx reverse proxy + OpenSearch Dashboards) needed for Integration test category:
 
 ## 🌐 Quick Access
 
@@ -33,7 +33,7 @@ The nginx reverse proxy provides a unified web interface to all services with di
 | **Visualization** | OpenSearch Dashboards |
 | **Emulators** | Azurite (Azure Storage), LocalStack (AWS), Azure Service Bus Emulator |
 | **Identity** | Keycloak |
-| **AI/ML** | SBert (CPU-only) |
+| **AI/ML** | SBert (CPU-only), Ollama (CPU-only) |
 
 **Design Principles:**
 - ✅ **Shared Infrastructure**: Same containers for local development and CI/CD
@@ -114,6 +114,10 @@ package "oobd-integration-test-net (Bridge Network)" {
     component "SBert\n:5080" <<Container>> #AI_BG_COLOR {
         [Sentence\nEmbeddings]
     }
+
+    component "Ollama\n:11434" <<Container>> #AI_BG_COLOR {
+        [LLM Inference\n(phi3)]
+    }
 }
 
 ' External connections
@@ -172,6 +176,7 @@ note bottom of tests
   - AZURITE_BLOB_URL
   - KEYCLOAK_URL
   - SBERT_URL
+  - OLLAMA_URL
 end note
 
 @enduml
@@ -197,6 +202,12 @@ end note
 │  │ Azurite  │  │LocalStack│  │ Keycloak │  │  SBert   │     │
 │  │  :10000  │  │  :4566   │  │  :8081   │  │  :5080   │     │
 │  └──────────┘  └──────────┘  └──────────┘  └──────────┘     │
+│                                                             │
+│  ┌──────────┐  ┌──────────┐                                 │
+│  │ Service  │  │  Ollama  │                                 │
+│  │   Bus    │  │ :11434   │                                 │
+│  │  :5672   │  │          │                                 │
+│  └──────────┘  └──────────┘                                 │
 │                                                             │
 └─────────────────────────────────────────────────────────────┘
          ↑
@@ -299,6 +310,7 @@ scripts\integration-down.bat --clean
 |---------|-------|---------|---------|--------------|
 | **Keycloak** | Custom (realm import) | 8081 | IAM (OAuth/OIDC) | `curl http://localhost:8080/health/ready` |
 | **SBert** | Custom (Python ML) | 5080 | Sentence embeddings | `curl http://localhost:5000/health` |
+| **Ollama** | `ollama/ollama:latest` | 11434 | LLM inference (phi3) | `curl http://localhost:11434/api/tags` |
 
 ---
 
@@ -373,6 +385,8 @@ Tests use environment variables for connection strings. See `.env.integration` f
 | `SERVICEBUS_CONNECTION_STRING` | `Endpoint=sb://localhost;...;UseDevelopmentEmulator=true;` | Azure Service Bus connection |
 | `KEYCLOAK_URL` | `http://localhost:8081` | Keycloak endpoint |
 | `SBERT_URL` | `http://localhost:5080` | SBert endpoint |
+| `OLLAMA_URL` | `http://localhost:11434` | Ollama LLM endpoint |
+| `OLLAMA_MODEL` | `phi3` | Ollama model name |
 
 ### Test Configuration in C#
 
@@ -636,8 +650,9 @@ All containers are prefixed with `oobd-test-`:
 - `oobd-test-servicebus`
 - `oobd-test-keycloak`
 - `oobd-test-sbert`
+- `oobd-test-ollama`
 
 ---
 
-**Last Updated**: 2026-01-19
+**Last Updated**: 2026-01-21
 **Version**: 1.0.0

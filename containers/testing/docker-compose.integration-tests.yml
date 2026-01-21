@@ -344,6 +344,24 @@ services:
       retries: 5
       start_period: 20s
 
+  ollama:
+    image: ollama/ollama:latest
+    container_name: oobd-test-ollama
+    ports:
+      - "11434:11434"
+    networks:
+      - integration-test-net
+    volumes:
+      - ollama-test-data:/root/.ollama
+    environment:
+      - OLLAMA_HOST=0.0.0.0
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
 # ============================================================================
 # Networks - Isolated test network
 # ============================================================================
@@ -376,3 +394,5 @@ volumes:
     name: oobd-test-azurite-data
   keycloak-test-data:
     name: oobd-test-keycloak-data
+  ollama-test-data:
+    name: oobd-test-ollama-data
