@@ -22,15 +22,15 @@ public class ApiPermissionsExtension(bool allowAnonymous, IEnumerable<string> ri
     public IReadOnlyCollection<string> Rights { get; } = rights.Distinct().ToList().AsReadOnly();
 
     /// <summary>
-    /// generate a property to provide the required permissions
+    /// Writes the required permissions to the OpenAPI writer.
     /// </summary>
-    /// <param name="writer"></param>
-    /// <param name="specVersion"></param>
+    /// <param name="writer">The OpenAPI writer to write to.</param>
+    /// <param name="specVersion">The OpenAPI specification version.</param>
     public void Write(IOpenApiWriter writer, OpenApiSpecVersion specVersion)
     {
         writer.WriteStartObject();
         writer.WriteProperty("anonymous", AllowAnonymous);
-        writer.WriteOptionalCollection("right", Rights, (w, v) => w.WriteValue(v));
+        writer.WriteOptionalCollection("right", Rights, (w, v) => w.WriteValue(v!));
         writer.WriteEndObject();
     }
 }

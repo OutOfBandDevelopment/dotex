@@ -13,11 +13,11 @@ public class CacheableFactoryTests
 {
     public required TestContext TestContext { get; set; }
 
-    private MockRepository mockRepository;
+    private MockRepository mockRepository = null!;
 
-    private Mock<IServiceProvider> mockServiceProvider;
-    private Mock<ICachingManager> mockCachingManager;
-    private Mock<IConfiguration> mockConfiguration;
+    private Mock<IServiceProvider> mockServiceProvider = null!;
+    private Mock<ICachingManager> mockCachingManager = null!;
+    private Mock<IConfiguration> mockConfiguration = null!;
 
     [TestInitialize]
     public void TestInitialize()
@@ -51,7 +51,7 @@ public class CacheableFactoryTests
         // Mock
         mockConfiguration.Setup(s => s[CacheableFactory.DisabledConfigurationKey]).Returns("false");
         mockServiceProvider.Setup(s => s.GetService(typeof(Microsoft.Extensions.DependencyInjection.IServiceProviderIsService)))
-                                        .Returns(null);
+                                        .Returns((object?)null);
         mockServiceProvider.Setup(s => s.GetService(typeof(ILogger<TestObject>)))
                                         .Returns(this.TestContext.GetLogger<TestObject>()
                                         );
@@ -79,7 +79,7 @@ public class CacheableFactoryTests
         // Mock
         mockConfiguration.Setup(s => s[CacheableFactory.DisabledConfigurationKey]).Returns("true");
         mockServiceProvider.Setup(s => s.GetService(typeof(Microsoft.Extensions.DependencyInjection.IServiceProviderIsService)))
-                                        .Returns(null);
+                                        .Returns((object?)null);
 
         // Test
         var factory = this.CreateFactory();
@@ -88,7 +88,7 @@ public class CacheableFactoryTests
 
         // Assert
         Assert.IsNotNull(result);
-        Assert.IsInstanceOfType(result, typeof(TestObject));
+        Assert.IsInstanceOfType<TestObject>(result);
 
         // Verify
         this.mockRepository.VerifyAll();

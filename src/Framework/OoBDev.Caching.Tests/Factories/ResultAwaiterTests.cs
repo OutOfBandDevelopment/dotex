@@ -11,7 +11,7 @@ public class ResultAwaiterTests
 {
     public required TestContext TestContext { get; set; }
 
-    private MockRepository mockRepository;
+    private MockRepository mockRepository = null!;
 
     [TestInitialize]
     public void TestInitialize() => this.mockRepository = new MockRepository(MockBehavior.Strict);

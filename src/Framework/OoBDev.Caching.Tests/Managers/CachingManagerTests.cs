@@ -13,11 +13,11 @@ public class CachingManagerTests
 {
     public required TestContext TestContext { get; set; }
 
-    private MockRepository mockRepository;
+    private MockRepository mockRepository = null!;
 
-    private Mock<IStringFormatter> mockStringFormatter;
-    private Mock<ISelectedService<ICachingProvider>> mockCache;
-    private Mock<ICachingProvider> mockCachingProvider;
+    private Mock<IStringFormatter> mockStringFormatter = null!;
+    private Mock<ISelectedService<ICachingProvider>> mockCache = null!;
+    private Mock<ICachingProvider> mockCachingProvider = null!;
 
     [TestInitialize]
     public void TestInitialize()
@@ -50,7 +50,7 @@ public class CachingManagerTests
     public void BuildKeyTest_IsCacheable()
     {
         // Stage
-        var method = typeof(TestObject).GetMethod(nameof(TestObject.IsCacheable));
+        var method = typeof(TestObject).GetMethod(nameof(TestObject.IsCacheable))!;
         var args = Array.Empty<object>();
         var expected = "test results";
 
@@ -73,7 +73,7 @@ public class CachingManagerTests
     public void BuildKeyTest_Flush()
     {
         // Stage
-        var method = typeof(TestObject).GetMethod(nameof(TestObject.Flush));
+        var method = typeof(TestObject).GetMethod(nameof(TestObject.Flush))!;
         var args = Array.Empty<object>();
         var expected = "test results";
 
@@ -96,10 +96,10 @@ public class CachingManagerTests
     public void BuildKeyTest_FlushDirected()
     {
         // Stage
-        var method = typeof(TestObject).GetMethod(nameof(TestObject.FlushDirected));
+        var method = typeof(TestObject).GetMethod(nameof(TestObject.FlushDirected))!;
         var args = Array.Empty<object>();
         var expected = "test results";
-        var directedMethod = typeof(TestObject).GetMethod(nameof(TestObject.IsCacheable));
+        var directedMethod = typeof(TestObject).GetMethod(nameof(TestObject.IsCacheable))!;
 
         // Mock
         //  mockStringFormatter.Setup(s => s.Format(TestObject.FlushKey, method, args)).Returns(expected);
@@ -121,7 +121,7 @@ public class CachingManagerTests
     public void BuildKeyTest_Bypass()
     {
         // Stage
-        var method = typeof(TestObject).GetMethod(nameof(TestObject.Bypass));
+        var method = typeof(TestObject).GetMethod(nameof(TestObject.Bypass))!;
         var args = Array.Empty<object>();
 
         // Mock

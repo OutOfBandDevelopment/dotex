@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Options;
 
@@ -16,5 +16,5 @@ public class AddMvcFilterOptions<TFilter> : IConfigureOptions<MvcOptions>
     /// </summary>
     /// <param name="options">The MVC options to be configured.</param>
     public void Configure(MvcOptions options) =>
-        options.Filters.Add(typeof(TFilter));
+        options.Filters.Add<TFilter>();
 }

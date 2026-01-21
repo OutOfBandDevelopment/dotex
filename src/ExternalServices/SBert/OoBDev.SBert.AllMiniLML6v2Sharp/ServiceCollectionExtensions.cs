@@ -33,7 +33,7 @@ public static class ServiceCollectionExtensions
 
         services.TryAddSingleton<IEmbedder, CachedAllMiniLmL6V2Embedder>();
 
-        services.Replace(ServiceDescriptor.Transient(typeof(IEmbeddingProvider), typeof(AllMiniLmL6V2Embedding)));
+        services.Replace(ServiceDescriptor.Transient<IEmbeddingProvider, AllMiniLmL6V2Embedding>());
         services.TryAddKeyedTransient<IEmbeddingProvider, AllMiniLmL6V2Embedding>("ALLMINILM");
 
         return services;

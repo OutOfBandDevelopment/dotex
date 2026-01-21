@@ -69,7 +69,7 @@ public static class EnumExtensions
     /// <returns>The enumeration model.</returns>
     public static IEnumModel<TEnum>? AsModel<TEnum>(this TEnum @enum) where TEnum : struct, Enum
     {
-        var enumName = Enum.GetName(typeof(TEnum), @enum);
+        var enumName = Enum.GetName(@enum);
         if (string.IsNullOrEmpty(enumName)) return null;
 
         var member = @enum.GetType().GetMember(enumName).FirstOrDefault();
@@ -124,7 +124,7 @@ public static class EnumExtensions
     /// <typeparam name="TEnum">The enumeration type.</typeparam>
     /// <returns>A collection of enumeration models.</returns>
     public static IReadOnlyCollection<IEnumModel> AsModels<TEnum>() where TEnum : struct, Enum =>
-       Enum.GetValues(typeof(TEnum))
+       Enum.GetValues<TEnum>()
            .Cast<TEnum>()
            .Select(AsModel)
            .Where(e => e != null)

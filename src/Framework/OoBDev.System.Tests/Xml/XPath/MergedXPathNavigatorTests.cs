@@ -18,7 +18,7 @@ public class MergedXPathNavigatorTests
     {
         var di1 = new DirectoryInfo(@"C:\Repos\mwwhited\BinaryDataDecoders\templates").ToNavigable();
         var di2 = new DirectoryInfo(@"C:\Repos\mwwhited\BinaryDataDecoders\docs\Code").ToNavigable();
-        var navs = new[] { ("f1", di1), ("f2", di2), ("f3", di1) };
+        var navs = new[] { ("f1", di1)!, ("f2", di2)!, ("f3", di1)! };
         var merged = navs.MergeNavigators();
         TestContext.AddResult(merged);
     }

@@ -13,8 +13,8 @@ public class CachedProxyTests
 {
     public required TestContext TestContext { get; set; }
 
-    private MockRepository mockRepository;
-    private Mock<ICachingManager> mockCachingManager;
+    private MockRepository mockRepository = null!;
+    private Mock<ICachingManager> mockCachingManager = null!;
 
     [TestInitialize]
     public void TestInitialize()

@@ -39,7 +39,7 @@ public class FormFileOperationFilter : IOperationFilter
 
             foreach (var fileParam in fileParams)
             {
-                var propertyName = fileParam.Name ?? fileParam.ParameterType.Name;
+                var propertyName = fileParam.Name ?? fileParam.ParameterType.Name ?? "file";
                 schema.Properties[propertyName] = new OpenApiSchema()
                 {
                     Type = JsonSchemaType.String,

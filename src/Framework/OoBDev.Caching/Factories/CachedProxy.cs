@@ -30,7 +30,7 @@ public class CachedProxy<TInterface, TImplemention> : DispatchProxy
         if (_decorated == null || targetMethod == null) return null;
 
         var method = _decorated.GetType().GetMethod(targetMethod.Name, [.. targetMethod.GetParameters().Select(p => p.ParameterType)]);
-        if (_cachingManager != null)
+        if (_cachingManager != null && method != null)
         {
             try
             {

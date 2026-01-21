@@ -13,7 +13,7 @@ public class ExpressionBaseTests
     {
         ExpressionBase<decimal> exp = "A+B";
         string result = exp;
-        Assert.IsInstanceOfType(exp, typeof(BinaryOperatorExpression<decimal>));
+        Assert.IsInstanceOfType<BinaryOperatorExpression<decimal>>(exp);
         Assert.AreEqual("A + B", result);
     }
 
@@ -23,7 +23,7 @@ public class ExpressionBaseTests
     {
         ExpressionBase<decimal> exp = "A";
         string result = exp;
-        Assert.IsInstanceOfType(exp, typeof(VariableExpression<decimal>));
+        Assert.IsInstanceOfType<VariableExpression<decimal>>(exp);
         Assert.AreEqual("A", result);
     }
 
@@ -33,7 +33,7 @@ public class ExpressionBaseTests
     {
         ExpressionBase<decimal> exp = "1.45";
         string result = exp;
-        Assert.IsInstanceOfType(exp, typeof(NumberExpression<decimal>));
+        Assert.IsInstanceOfType<NumberExpression<decimal>>(exp);
         Assert.AreEqual("1.45", result);
     }
 

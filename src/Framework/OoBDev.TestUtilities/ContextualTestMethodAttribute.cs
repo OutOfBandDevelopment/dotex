@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -78,7 +79,9 @@ public class ContextualTestMethodAttribute : TestMethodAttribute
     /// <summary>
     /// Initializes a new instance of the <see cref="ContextualTestMethodAttribute"/> class.
     /// </summary>
-    public ContextualTestMethodAttribute()
+    /// <param name="callerFilePath">The path to the source file containing the caller (automatically provided by the compiler).</param>
+    /// <param name="callerLineNumber">The line number in the source file at which this method is called (automatically provided by the compiler).</param>
+    public ContextualTestMethodAttribute([CallerFilePath] string callerFilePath = "", [CallerLineNumber] int callerLineNumber = -1) : base(callerFilePath, callerLineNumber)
     {
     }
 
@@ -86,7 +89,9 @@ public class ContextualTestMethodAttribute : TestMethodAttribute
     /// Initializes a new instance of the <see cref="ContextualTestMethodAttribute"/> class with a display name.
     /// </summary>
     /// <param name="displayName">The display name for the test method.</param>
-    public ContextualTestMethodAttribute(string? displayName) : base()
+    /// <param name="callerFilePath">The path to the source file containing the caller (automatically provided by the compiler).</param>
+    /// <param name="callerLineNumber">The line number in the source file at which this method is called (automatically provided by the compiler).</param>
+    public ContextualTestMethodAttribute(string? displayName, [CallerFilePath] string callerFilePath = "", [CallerLineNumber] int callerLineNumber = -1) : base(callerFilePath, callerLineNumber)
     {
     }
 

@@ -1,4 +1,4 @@
-using OoBDev.System.Text.Xml.Serialization;
+﻿using OoBDev.System.Text.Xml.Serialization;
 using OoBDev.TestUtilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
@@ -16,7 +16,7 @@ public class DefaultXmlSerializerTests
     public void DeserializeTest_StringType()
     {
         var serializer = new DefaultXmlSerializer();
-        var result = serializer.Deserialize(SourceText, typeof(TestTarget));
+        var result = serializer.Deserialize<TestTarget>(SourceText);
         Assert.IsInstanceOfType<TestTarget>(result);
         Assert.AreEqual("value1", ((TestTarget)result).Prop1);
     }
@@ -39,7 +39,7 @@ public class DefaultXmlSerializerTests
         var writer = new StreamWriter(ms) { AutoFlush = true };
         writer.Write(SourceText);
         ms.Position = 0;
-        var result = serializer.Deserialize(ms, typeof(TestTarget));
+        var result = serializer.Deserialize<TestTarget>(ms);
         Assert.IsInstanceOfType<TestTarget>(result);
         Assert.AreEqual("value1", ((TestTarget)result).Prop1);
     }
@@ -90,7 +90,7 @@ public class DefaultXmlSerializerTests
     {
         var obj = new TestTarget { Prop1 = "value1" };
         var serializer = new DefaultXmlSerializer();
-        var result = serializer.Serialize(obj, typeof(TestTarget));
+        var result = serializer.Serialize(obj);
         Assert.IsNotNull(result);
         TestContext.WriteLine(result);
     }
@@ -113,7 +113,7 @@ public class DefaultXmlSerializerTests
         var obj = new TestTarget { Prop1 = "value1" };
         var ms = new MemoryStream();
         var serializer = new DefaultXmlSerializer();
-        var result = serializer.SerializeAsync(obj, typeof(TestTarget), ms);
+        var result = serializer.SerializeAsync(obj, ms);
         Assert.IsNotNull(result);
 
         ms.Position = 0;

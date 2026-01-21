@@ -91,22 +91,22 @@ public class StreamDevice<TMessage> : IStreamDevice<TMessage>
     /// <summary>
     /// Occurs when a message is received from the device.
     /// </summary>
-    public event EventHandler<TMessage> MessageReceived;
+    public event EventHandler<TMessage>? MessageReceived;
 
     /// <summary>
     /// Occurs when the device status changes.
     /// </summary>
-    public event EventHandler<StreamDeviceStatus> DeviceStatus;
+    public event EventHandler<StreamDeviceStatus>? DeviceStatus;
 
     /// <summary>
     /// Occurs when an error happens during message receiving.
     /// </summary>
-    public event EventHandler<DeviceErrorEventArgs> MessageReceivedError;
+    public event EventHandler<DeviceErrorEventArgs>? MessageReceivedError;
 
     /// <summary>
     /// Occurs when an error happens during message transmission.
     /// </summary>
-    public event EventHandler<DeviceErrorEventArgs> MessageTransmitterError;
+    public event EventHandler<DeviceErrorEventArgs>? MessageTransmitterError;
 
     /// <summary>
     /// Queues a message for transmission to the device.

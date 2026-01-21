@@ -8,9 +8,9 @@ namespace OoBDev.Caching.Tests.Providers;
 /// </summary>
 internal class NullCachingProvider : ICachingProvider
 {
-    public Task FlushAsync(string key) => Task.CompletedTask;
+    public Task FlushAsync(string? key) => Task.CompletedTask;
 
-    public Task<object?> RetreiveAsync(string key, Type targetType) => Task.FromResult<object?>(null);
+    public Task<object?> RetreiveAsync(string? key, Type? targetType) => Task.FromResult<object?>(null);
 
-    public Task StoreAsync(string key, object data, TimeSpan expiration) => Task.CompletedTask;
+    public Task StoreAsync(string? key, object? data, TimeSpan expiration) => Task.CompletedTask;
 }

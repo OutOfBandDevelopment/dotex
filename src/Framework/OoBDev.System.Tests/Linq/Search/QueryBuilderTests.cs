@@ -1,4 +1,4 @@
-using OoBDev.System.Linq.Expressions;
+﻿using OoBDev.System.Linq.Expressions;
 using OoBDev.System.Linq.Search;
 using OoBDev.System.ResponseModel;
 using OoBDev.System.Tests.Linq.TestTargets;
@@ -21,7 +21,7 @@ public class QueryBuilderTests
     public void ExecuteByTest_IQueryable()
     {
         //Setup
-        var queryable = TestDataBuilder.GetTestData(typeof(TestTargetModel), 0);
+        var queryable = TestDataBuilder.GetTestData<TestTargetModel>(0);
 
         var query = new SearchQuery
         {

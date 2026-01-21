@@ -228,7 +228,7 @@ public class VolumeDescription : IEnumerable<DirectoryRecord>, IDisposable
     /// <summary>
     /// Gets or sets the base stream for the ISO 9660 disc.
     /// </summary>
-    protected Stream BaseStream { get; set; }
+    protected Stream? BaseStream { get; set; }
 
     #region IEnumerable<DirectoryRecord> Members
 

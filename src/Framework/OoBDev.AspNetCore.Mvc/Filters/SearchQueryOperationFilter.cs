@@ -229,7 +229,7 @@ public class SearchQueryOperationFilter(
             var filterParameterSchema = context.SchemaGenerator.GenerateSchema(typeof(FilterParameter), context.SchemaRepository);
             // Nullable is handled through the schema type definition
 
-            var filterName = context.MethodInfo.ReturnType.GenericTypeArguments[0].FullName + nameof(ISearchQuery.Filter);
+            var filterName = (context.MethodInfo.ReturnType.GenericTypeArguments[0].FullName ?? "Unknown") + nameof(ISearchQuery.Filter);
             if (!context.SchemaRepository.Schemas.TryGetValue(filterName, out var filterSchema))
             {
                 filterSchema = new OpenApiSchema()
@@ -258,7 +258,7 @@ public class SearchQueryOperationFilter(
             var orderDirectionsSchema = context.SchemaGenerator.GenerateSchema(typeof(OrderDirections), context.SchemaRepository);
             // Nullable is handled through the schema type definition
 
-            var orderByName = context.MethodInfo.ReturnType.GenericTypeArguments[0].FullName + nameof(ISearchQuery.OrderBy);
+            var orderByName = (context.MethodInfo.ReturnType.GenericTypeArguments[0].FullName ?? "Unknown") + nameof(ISearchQuery.OrderBy);
             if (!context.SchemaRepository.Schemas.TryGetValue(orderByName, out var orderBySchema))
             {
                 orderBySchema = new OpenApiSchema()
