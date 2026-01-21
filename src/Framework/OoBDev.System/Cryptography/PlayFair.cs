@@ -3,6 +3,14 @@ using System.Collections.Generic;
 
 namespace OoBDev.System.Cryptography;
 
+/// <summary>
+/// Implements the Playfair cipher, a manual symmetric encryption technique that encrypts pairs of letters (digraphs) using a 5x5 grid.
+/// See https://en.wikipedia.org/wiki/Playfair_cipher for more information.
+/// </summary>
+/// <remarks>
+/// WARNING: This is a classic cipher for educational purposes only. It provides no security and should never be used for protecting sensitive data.
+/// The cipher uses a 5x5 table and requires reducing the alphabet by combining or omitting one letter (Q, I, or J).
+/// </remarks>
 public class PlayFair
 {
     /*
@@ -19,19 +27,54 @@ public class PlayFair
     If the letters are not on the same row or column, replace them with the letters on the same row respectively but at the other pair of corners of the rectangle defined by the original pair. The order is important – the first encrypted letter of the pair is the one that lies on the same row as the first plaintext letter. 
     To decrypt, use the inverse of these 4 rules (dropping any extra "X"s (or "Q"s) that don't make sense in the final message when you finish).
     */
+
+    /// <summary>
+    /// Specifies which letter to omit from the 5x5 grid and how to handle it in the plaintext.
+    /// </summary>
     public enum Mode
     {
-        Q = 1, //to X
-        J = 2, //to I
-        I = 3  //to J
+        /// <summary>
+        /// Omit 'Q' from the grid and replace it with 'X' in the plaintext.
+        /// </summary>
+        Q = 1,
+
+        /// <summary>
+        /// Omit 'J' from the grid and replace it with 'I' in the plaintext.
+        /// </summary>
+        J = 2,
+
+        /// <summary>
+        /// Omit 'I' from the grid and replace it with 'J' in the plaintext.
+        /// </summary>
+        I = 3
     }
 
+    /// <summary>
+    /// Specifies which character to use for padding when duplicate letters appear in a digraph.
+    /// </summary>
     public enum Swap
     {
+        /// <summary>
+        /// Use 'X' as the padding character.
+        /// </summary>
         X = 1,
+
+        /// <summary>
+        /// Use 'Z' as the padding character.
+        /// </summary>
         Z = 2
     }
 
+    /// <summary>
+    /// Builds a 5x5 Playfair cipher key grid from the specified keyword.
+    /// The grid is filled with the keyword (removing duplicates), followed by the remaining letters of the alphabet.
+    /// </summary>
+    /// <param name="key">The keyword to use for building the cipher grid (must not be null or empty).</param>
+    /// <param name="mode">The mode specifying which letter to omit from the grid.</param>
+    /// <param name="swap">The character to use for padding duplicate letters.</param>
+    /// <returns>A 25-element character array representing the 5x5 cipher grid (row-major order).</returns>
+    /// <exception cref="ArgumentNullException">Thrown when the key is null or empty.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when mode or swap has an invalid value.</exception>
     public static char[] BuildKey(string key, Mode mode, Swap swap)
     {
         if (string.IsNullOrEmpty(key))
@@ -90,6 +133,18 @@ public class PlayFair
         return cipherKey;
     }
 
+    /// <summary>
+    /// Encrypts a message using the Playfair cipher with the specified key grid.
+    /// The message is broken into digraphs (pairs of letters), with padding added for duplicate letters and odd-length messages.
+    /// Non-alphabetic characters are removed from the message.
+    /// </summary>
+    /// <param name="cryptic">The 25-element cipher key grid (must be exactly 25 characters).</param>
+    /// <param name="message">The message to encrypt (must not be null or empty).</param>
+    /// <param name="mode">The mode specifying which letter was omitted from the grid.</param>
+    /// <param name="swap">The character used for padding duplicate letters.</param>
+    /// <returns>The encrypted ciphertext.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when cryptic or message is null.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when cryptic is not exactly 25 characters, or when mode or swap has an invalid value.</exception>
     public static string Cipher(char[] cryptic, string message, Mode mode, Swap swap)
     {
         ArgumentNullException.ThrowIfNull(cryptic);

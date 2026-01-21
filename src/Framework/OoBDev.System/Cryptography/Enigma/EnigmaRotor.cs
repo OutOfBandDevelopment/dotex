@@ -2,8 +2,15 @@
 
 namespace OoBDev.System.Cryptography.Enigma;
 
+/// <summary>
+/// Represents an Enigma rotor configuration with wiring specifications and turnover notch positions.
+/// Rotors are rotating cipher disks that scramble letters and advance to create a polyalphabetic substitution.
+/// </summary>
 public record EnigmaRotor
 {
+    /// <summary>
+    /// Gets a collection of historical Enigma rotor configurations from various Enigma models (Commercial, Railway, Swiss K, Enigma I, M3, M4).
+    /// </summary>
     public static IEnumerable<EnigmaRotor> Rotors { get; } =
     [
         new EnigmaRotor {Number="IC", Series="Commercial Enigma A, B",Wiring="DMTWSILRUYQNKFEJCAZBPGXOHV",Introduced="1924",RotateOn=['Q']},
@@ -32,9 +39,29 @@ public record EnigmaRotor
         // new EnigmaRotor {Number="ETW", Series="Enigma I",Wiring="ABCDEFGHIJKLMNOPQRSTUVWXYZ",Introduced="",RotateOn=new char[]{}},
     ];
 
+    /// <summary>
+    /// Gets or initializes the year or date when this rotor was introduced.
+    /// </summary>
     public required string Introduced { get; init; }
+
+    /// <summary>
+    /// Gets or initializes the rotor designation/number (e.g., "I", "II", "III", "IC").
+    /// </summary>
     public required string Number { get; init; }
+
+    /// <summary>
+    /// Gets or initializes the turnover notch positions (letters at which this rotor causes the next rotor to advance).
+    /// Most rotors have one notch, but some naval rotors (VI, VII, VIII) have two.
+    /// </summary>
     public required char[] RotateOn { get; init; }
+
+    /// <summary>
+    /// Gets or initializes the Enigma series this rotor was used with (e.g., "Enigma I", "M3 Army", "M4 Naval").
+    /// </summary>
     public required string Series { get; init; }
+
+    /// <summary>
+    /// Gets or initializes the wiring specification as a 26-letter string defining the rotor's electrical connections.
+    /// </summary>
     public required string Wiring { get; init; }
 }

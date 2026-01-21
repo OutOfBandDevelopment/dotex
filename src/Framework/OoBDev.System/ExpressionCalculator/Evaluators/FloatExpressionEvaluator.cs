@@ -1,5 +1,8 @@
 ﻿namespace OoBDev.System.ExpressionCalculator.Evaluators;
 
+/// <summary>
+/// Provides arithmetic operations and value conversions for expression evaluation using the <see cref="float"/> type.
+/// </summary>
 public sealed class FloatExpressionEvaluator : IExpressionEvaluator<float>
 {
     public float Add(float left, float right) => left + right;

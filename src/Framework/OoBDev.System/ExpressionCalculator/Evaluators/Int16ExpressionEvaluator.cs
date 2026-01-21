@@ -1,5 +1,8 @@
 ﻿namespace OoBDev.System.ExpressionCalculator.Evaluators;
 
+/// <summary>
+/// Provides arithmetic operations and value conversions for expression evaluation using the <see cref="short"/> (Int16) type.
+/// </summary>
 public sealed class Int16ExpressionEvaluator : IExpressionEvaluator<short>
 {
     public short Add(short left, short right) => (short)(left + right);

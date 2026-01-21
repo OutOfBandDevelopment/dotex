@@ -1,5 +1,8 @@
 ﻿namespace OoBDev.System.ExpressionCalculator.Evaluators;
 
+/// <summary>
+/// Provides arithmetic operations and value conversions for expression evaluation using the <see cref="long"/> (Int64) type.
+/// </summary>
 public sealed class Int64ExpressionEvaluator : IExpressionEvaluator<long>
 {
     public long Add(long left, long right) => left + right;

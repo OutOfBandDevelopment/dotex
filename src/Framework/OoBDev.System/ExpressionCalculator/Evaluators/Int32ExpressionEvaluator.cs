@@ -1,5 +1,8 @@
 ﻿namespace OoBDev.System.ExpressionCalculator.Evaluators;
 
+/// <summary>
+/// Provides arithmetic operations and value conversions for expression evaluation using the <see cref="int"/> (Int32) type.
+/// </summary>
 public sealed class Int32ExpressionEvaluator : IExpressionEvaluator<int>
 {
     public int Add(int left, int right) => left + right;

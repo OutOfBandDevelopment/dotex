@@ -2,6 +2,10 @@
 
 namespace OoBDev.System.ExpressionCalculator.Evaluators;
 
+/// <summary>
+/// Provides arithmetic operations and value conversions for expression evaluation using the <see cref="byte"/> (UInt8) type.
+/// Note: Negate operation is not supported for unsigned types.
+/// </summary>
 public sealed class UInt8ExpressionEvaluator : IExpressionEvaluator<byte>
 {
     public byte Add(byte left, byte right) => (byte)(left + right);

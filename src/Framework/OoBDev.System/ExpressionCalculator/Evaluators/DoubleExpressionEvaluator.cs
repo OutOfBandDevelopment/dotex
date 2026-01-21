@@ -1,5 +1,8 @@
 ﻿namespace OoBDev.System.ExpressionCalculator.Evaluators;
 
+/// <summary>
+/// Provides arithmetic operations and value conversions for expression evaluation using the <see cref="double"/> type.
+/// </summary>
 public sealed class DoubleExpressionEvaluator : IExpressionEvaluator<double>
 {
     public double Add(double left, double right) => left + right;

@@ -2,6 +2,10 @@
 
 namespace OoBDev.System.ExpressionCalculator.Evaluators;
 
+/// <summary>
+/// Provides arithmetic operations and value conversions for expression evaluation using the <see cref="ushort"/> (UInt16) type.
+/// Note: Negate operation is not supported for unsigned types.
+/// </summary>
 public sealed class UInt16ExpressionEvaluator : IExpressionEvaluator<ushort>
 {
     public ushort Add(ushort left, ushort right) => (ushort)(left + right);

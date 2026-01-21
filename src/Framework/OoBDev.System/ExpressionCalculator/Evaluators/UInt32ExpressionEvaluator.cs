@@ -2,6 +2,10 @@
 
 namespace OoBDev.System.ExpressionCalculator.Evaluators;
 
+/// <summary>
+/// Provides arithmetic operations and value conversions for expression evaluation using the <see cref="uint"/> (UInt32) type.
+/// Note: Negate operation is not supported for unsigned types.
+/// </summary>
 public sealed class UInt32ExpressionEvaluator : IExpressionEvaluator<uint>
 {
     public uint Add(uint left, uint right) => left + right;

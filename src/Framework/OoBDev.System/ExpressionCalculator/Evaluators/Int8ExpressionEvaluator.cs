@@ -1,5 +1,8 @@
 ﻿namespace OoBDev.System.ExpressionCalculator.Evaluators;
 
+/// <summary>
+/// Provides arithmetic operations and value conversions for expression evaluation using the <see cref="sbyte"/> (Int8) type.
+/// </summary>
 public sealed class Int8ExpressionEvaluator : IExpressionEvaluator<sbyte>
 {
     public sbyte Add(sbyte left, sbyte right) => (sbyte)(left + right);

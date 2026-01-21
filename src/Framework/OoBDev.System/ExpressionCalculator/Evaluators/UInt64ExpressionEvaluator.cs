@@ -2,6 +2,10 @@
 
 namespace OoBDev.System.ExpressionCalculator.Evaluators;
 
+/// <summary>
+/// Provides arithmetic operations and value conversions for expression evaluation using the <see cref="ulong"/> (UInt64) type.
+/// Note: Negate operation is not supported for unsigned types.
+/// </summary>
 public sealed class UInt64ExpressionEvaluator : IExpressionEvaluator<ulong>
 {
     public ulong Add(ulong left, ulong right) => left + right;
