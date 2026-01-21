@@ -19,7 +19,7 @@
 	</ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\OoBDev.IdentityModel.Contracts\OoBDev.IdentityModel.Contracts.csproj" />
+    <ProjectReference Include="..\OoBDev.IdentityModel.Abstractions\OoBDev.IdentityModel.Abstractions.csproj" />
     <ProjectReference Include="..\OoBDev.IdentityModel.Extensions\OoBDev.IdentityModel.Extensions.csproj" />
     <ProjectReference Include="..\OoBDev.TestUtilities\OoBDev.TestUtilities.csproj" />
     <ProjectReference Include="..\OoBDev.Toolkit\OoBDev.Toolkit.csproj" />

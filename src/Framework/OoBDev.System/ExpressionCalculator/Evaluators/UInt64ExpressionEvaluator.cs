@@ -10,7 +10,7 @@ public sealed class UInt64ExpressionEvaluator : IExpressionEvaluator<ulong>
     public ulong Modulo(ulong left, ulong right) => left % right;
     public ulong Multiply(ulong left, ulong right) => left * right;
     public ulong Negate(ulong operand) => throw new NotSupportedException(nameof(Negate));
-    public ulong Power(ulong left, ulong right) => (ulong)Math.Pow(left, right);
+    public ulong Power(ulong left, ulong right) => (ulong)global::System.Math.Pow(left, right);
     public ulong Subtract(ulong left, ulong right) => left - right;
 
     public ulong? TryParse(string input) => ulong.TryParse(input, out var ret) ? ret : null;

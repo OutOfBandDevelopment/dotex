@@ -1,5 +1,6 @@
-using Markdig;
+﻿using Markdig;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using OoBDev.TestUtilities;
 using System.IO;
 using _Markdown = Markdig.Markdown;
 
@@ -8,7 +9,7 @@ namespace OoBDev.System.Text.Markdown.Tests;
 [TestClass]
 public class UnitTest1
 {
-    [TestMethod]
+    [TestMethod, TestCategory(TestCategories.DevLocal)]
     public void TestMethod1()
     {
         var filePath = "Design.md";

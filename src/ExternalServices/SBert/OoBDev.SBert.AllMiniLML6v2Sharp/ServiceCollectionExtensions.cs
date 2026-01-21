@@ -1,8 +1,8 @@
-﻿using AllMiniLmL6V2Sharp;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using OoBDev.AI;
+using OoBDev.AllMiniLmL6V2Sharp;
 using System;
 
 namespace OoBDev.SBert.AllMiniLML6v2Sharp;

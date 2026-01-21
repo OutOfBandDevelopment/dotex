@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\OoBDev.Generations.Contracts\OoBDev.Generations.Contracts.csproj" />
+    <ProjectReference Include="..\OoBDev.Generations.Abstractions\OoBDev.Generations.Abstractions.csproj" />
   </ItemGroup>
 
 </Project>

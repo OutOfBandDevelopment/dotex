@@ -2,6 +2,7 @@
 using Microsoft.OpenApi;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace OoBDev.AspNetCore.Mvc.Filters;
@@ -34,6 +35,8 @@ public class FormFileOperationFilter : IOperationFilter
         var mediaType = operation.RequestBody.Content[fileUploadMime];
         if (mediaType.Schema is OpenApiSchema schema)
         {
+            schema.Properties ??= new Dictionary<string, IOpenApiSchema>();
+
             foreach (var fileParam in fileParams)
             {
                 var propertyName = fileParam.Name ?? fileParam.ParameterType.Name;

@@ -36,7 +36,7 @@ public class OneTimeCode
             | (hash[offset + 2] & 0xff) << 8
             | hash[offset + 3] & 0xff;
 
-        var password = binary % (int)Math.Pow(10, digits); // 6 digits
+        var password = binary % (int)global::System.Math.Pow(10, digits); // 6 digits
 
         var result = password.ToString(new string('0', digits));
 

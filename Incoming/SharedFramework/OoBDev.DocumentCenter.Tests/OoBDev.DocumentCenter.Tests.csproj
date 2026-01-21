@@ -18,11 +18,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\OoBDev.Api.DocRaptor\OoBDev.Api.DocRaptor.csproj" />
-    <ProjectReference Include="..\OoBDev.Api.Markdig\OoBDev.Api.Markdig.csproj" />
-    <ProjectReference Include="..\OoBDev.Azure.Storage\OoBDev.Azure.Storage.csproj" />
+    <ProjectReference Include="..\OoBDev.DocRaptor\OoBDev.DocRaptor.csproj" />
+    <ProjectReference Include="..\OoBDev.Markdig\OoBDev.Markdig.csproj" />
+    <ProjectReference Include="..\OoBDev.Microsoft.Azure.Storage\OoBDev.Microsoft.Azure.Storage.csproj" />
     <ProjectReference Include="..\OoBDev.ComplexEvents.Common\OoBDev.ComplexEvents.Common.csproj" />
-    <ProjectReference Include="..\OoBDev.DocumentCenter.Contracts\OoBDev.DocumentCenter.Contracts.csproj" />
+    <ProjectReference Include="..\OoBDev.DocumentCenter.Abstractions\OoBDev.DocumentCenter.Abstractions.csproj" />
     <ProjectReference Include="..\OoBDev.DocumentCenter\OoBDev.DocumentCenter.csproj" />
     <ProjectReference Include="..\OoBDev.MessageQueueing\OoBDev.MessageQueueing.csproj" />
     <ProjectReference Include="..\OoBDev.TestUtilities\OoBDev.TestUtilities.csproj" />

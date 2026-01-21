@@ -67,7 +67,7 @@ public class Base32Codec
 
             if (cl < 5)
             {
-                var o = (int)Math.Ceiling(cl * 8d / 5d);
+                var o = (int)global::System.Math.Ceiling(cl * 8d / 5d);
 
                 Array.Copy("        "u8.ToArray(), 0, vo, o, 8 - o);
             }

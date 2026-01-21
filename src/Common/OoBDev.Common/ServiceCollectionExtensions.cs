@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using OoBDev.Caching;
 using OoBDev.Communications;
 using OoBDev.Communications.MessageQueueing;
 using OoBDev.Data.Common;
@@ -46,6 +47,7 @@ public static class ServiceCollectionExtensions
         services.TryAddDocumentServices();
         services.TryAddDataCommonServices();
         services.TryAddSemanticKernelPlugins();
+        services.TryAddCachingServices();
 
         return services;
     }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.SqlServer.Dac;
 using Microsoft.SqlServer.Dac.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using OoBDev.TestUtilities;
 
 namespace OoBDev.Microsoft.SqlServer.DacFx.Tests;
 
@@ -9,8 +10,8 @@ public class Tests
 {
     public required TestContext TestContext { get; set; }
 
-    [TestMethod]
-    public void Test()
+    [TestMethod, TestCategory(TestCategories.Simulate)]
+    public void DacPacVersioningTest()
     {
         var model = new TSqlModel(
             SqlServerVersion.Sql160, new TSqlModelOptions

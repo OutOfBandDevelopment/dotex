@@ -5,6 +5,9 @@ using System.IO;
 
 namespace OoBDev.Data.Vectors;
 
+/// <summary>
+/// SQL CLR aggregate function that collects double-precision vectors into a matrix where each vector becomes a row.
+/// </summary>
 [SqlUserDefinedAggregate(
     Format.UserDefined,
     Name = "[embedding].[VectorToMatrix]",
@@ -19,8 +22,16 @@ public class VectorToMatrixAggregate : IBinarySerialize
     private int _length;
     private List<SqlVector> _vectors = [];
 
+    /// <summary>
+    /// Initializes the aggregate state.
+    /// </summary>
     public void Init() => _vectors = [];
 
+    /// <summary>
+    /// Accumulates a vector to be added as a row in the resulting matrix.
+    /// </summary>
+    /// <param name="vector">The vector to add.</param>
+    /// <exception cref="NotSupportedException">Thrown when vectors have different lengths.</exception>
     public void Accumulate(SqlVector vector)
     {
         if (vector.IsNull) return;
@@ -37,6 +48,11 @@ public class VectorToMatrixAggregate : IBinarySerialize
         _vectors.Add(vector);
     }
 
+    /// <summary>
+    /// Merges another aggregate instance into this one for parallel execution.
+    /// </summary>
+    /// <param name="other">The other aggregate instance to merge.</param>
+    /// <exception cref="NotSupportedException">Thrown when vectors have different lengths.</exception>
     public void Merge(VectorToMatrixAggregate other)
     {
         if (_length != other._length)
@@ -47,6 +63,10 @@ public class VectorToMatrixAggregate : IBinarySerialize
         _vectors.AddRange(other._vectors);
     }
 
+    /// <summary>
+    /// Completes the aggregation and returns a matrix with accumulated vectors as rows.
+    /// </summary>
+    /// <returns>A matrix where each row is one of the accumulated vectors.</returns>
     public SqlMatrix Terminate()
     {
         var data = new double[_vectors.Count, _length];
@@ -63,6 +83,10 @@ public class VectorToMatrixAggregate : IBinarySerialize
         return new SqlMatrix(data);
     }
 
+    /// <summary>
+    /// Deserializes the aggregate state from a binary stream.
+    /// </summary>
+    /// <param name="reader">The binary reader to read from.</param>
     public void Read(BinaryReader reader)
     {
         _length = reader.ReadInt32();
@@ -76,6 +100,10 @@ public class VectorToMatrixAggregate : IBinarySerialize
         }
     }
 
+    /// <summary>
+    /// Serializes the aggregate state to a binary stream.
+    /// </summary>
+    /// <param name="writer">The binary writer to write to.</param>
     public void Write(BinaryWriter writer)
     {
         writer.Write(_length);

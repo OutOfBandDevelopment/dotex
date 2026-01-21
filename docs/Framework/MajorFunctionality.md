@@ -22,7 +22,7 @@ These extensions include
 * SwaggerGen extensions for oauth2 authentication as well as enumeration of options for querying 
   * Tested to support Azure B2C and Keycloak providers
   * User management is tested for B2C
-  * User management is in progress for Keycloak 
+  * User management is tested for Keycloak (using Keycloak.ApiClient.Net) 
 * CultureInfo mapping based on request/response headers
 * Application Permission filtering based on Claims authorization
 * Improved OAuth/JWT configuration support
@@ -34,6 +34,14 @@ See [Text Templating](CommunicationServices.md)
 ### MongoDB Extensions
 
 See [MongoDB Extensions](MongoDbExtensions.md)
+
+### Testing Infrastructure
+
+Docker-based integration testing with 13 services including databases, message queues, and cloud emulators.
+
+See [Testing Documentation](../architecture/testing/README.md) for:
+- [Testing Guidelines](../architecture/testing/testing-guidelines.md) - Comprehensive testing patterns
+- [Test Variables Reference](../../TEST_VARIABLES.md) - All 30+ configuration properties
 
 ### Common Query Extension
 
@@ -47,8 +55,42 @@ extension also provides a common means for not only search and filter but also s
 
 `OoBDev.TestUtilities`
 
-* current extensions only exist for easily attaching result content as attachments to the test results
-* should add support to present the content back in the reports
+Provides extensions for MSTest including:
+
+* **Test result attachments**: Easily attach content as attachments to test results
+* **TestContext extensions**: `GetRequiredProperty<T>()` and `GetPropertyOrDefault<T>()` for configuration
+
+#### TestContext Property Access
+
+Use extension methods instead of `Environment.GetEnvironmentVariable()`:
+
+```csharp
+// REQUIRED VALUES - URLs, credentials, connection strings (no sensible default)
+var url = TestContext.GetRequiredProperty<string>("MYSERVICE_URL");
+var username = TestContext.GetRequiredProperty<string>("MYSERVICE_USERNAME");
+var password = TestContext.GetRequiredProperty<string>("MYSERVICE_PASSWORD");
+
+// OPTIONAL VALUES WITH INDUSTRY DEFAULTS - port numbers, timeouts
+var port = TestContext.GetPropertyOrDefault("MONGODB_PORT", 27017);
+var redisPort = TestContext.GetPropertyOrDefault("REDIS_PORT", 6379);
+var timeout = TestContext.GetPropertyOrDefault("REQUEST_TIMEOUT_MS", 30000);
+
+// INCORRECT - Never use environment variables directly
+var value = Environment.GetEnvironmentVariable("PARAMETER_NAME"); // DON'T DO THIS
+```
+
+**Note:** Both methods check `.runsettings` first, then fall back to environment variables automatically.
+
+| Method | Use When | Examples |
+|--------|----------|----------|
+| `GetRequiredProperty<T>()` | Value must be explicitly configured | URLs, usernames, passwords, connection strings |
+| `GetPropertyOrDefault<T>()` | Industry-standard default exists | Port 5432 (PostgreSQL), Port 27017 (MongoDB), Port 6379 (Redis) |
+
+See [Testing Guidelines](../architecture/testing/testing-guidelines.md) for complete documentation.
+
+#### Planned Improvements
+
+* Support to present attached content back in reports
 
 ## Tooling
 

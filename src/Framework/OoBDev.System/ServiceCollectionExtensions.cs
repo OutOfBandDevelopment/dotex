@@ -14,6 +14,7 @@ using OoBDev.System.Text;
 using OoBDev.System.Text.Json.Serialization;
 using OoBDev.System.Text.Templating;
 using OoBDev.System.Text.Xml.Serialization;
+using OoBDev.System.Utilities;
 
 namespace OoBDev.System;
 
@@ -120,6 +121,8 @@ public static class ServiceCollectionExtensions
             (sp, key) => sp.GetRequiredKeyedService<ISerializer>(key?.ToString()?.ToUpper())
             );
 
+        services.TryAddSingleton<IObjectConverter, ObjectConverter>();
+
         services.TryAddSingleton<IJsonSerializer, DefaultJsonSerializer>();
         services.TryAddKeyedSingleton<ISerializer>(
             nameof(SerializerTypes.Json).ToUpper(),
@@ -194,6 +197,9 @@ public static class ServiceCollectionExtensions
         services.TryAddSingleton<IGuidProvider, GuidProvider>();
 
         services.TryAddSingleton<ITempFileFactory, TempFileFactory>();
+
+        services.TryAddSingleton<IStringFormatter, StringFormatter>();
+        services.TryAddSingleton(typeof(ISelectedService<>), typeof(SelectedService<>));
 
         return services;
     }

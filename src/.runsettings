@@ -80,4 +80,114 @@ https://github.com/coverlet-coverage/coverlet/blob/fc7ec26dcaed8fedba880ff13c6f1
 		<DeployTestSourceDependencies>true</DeployTestSourceDependencies>
 	</MSTest>
 
+	<!-- Test Run Parameters for Integration Tests -->
+	<TestRunParameters>
+		<!-- MongoDB -->
+		<Parameter name="MONGODB_CONNECTION_STRING" value="mongodb://localhost:27017" />
+		<Parameter name="MONGODB_DATABASE_NAME" value="integration_tests" />
+
+		<!-- SQL Server -->
+		<Parameter name="SQLSERVER_CONNECTION_STRING" value="Server=localhost,1433;User Id=sa;Password=IntegrationTest123!;TrustServerCertificate=true;" />
+		<Parameter name="SQLSERVER_HOST" value="localhost" />
+		<Parameter name="SQLSERVER_PORT" value="1433" />
+		<Parameter name="SQLSERVER_USERNAME" value="sa" />
+		<Parameter name="SQLSERVER_PASSWORD" value="IntegrationTest123!" />
+
+		<!-- RabbitMQ -->
+		<Parameter name="RABBITMQ_HOST" value="localhost" />
+		<Parameter name="RABBITMQ_PORT" value="5673" />
+		<Parameter name="RABBITMQ_AMQP_PORT" value="5673" />
+		<Parameter name="RABBITMQ_MANAGEMENT_PORT" value="15672" />
+		<Parameter name="RABBITMQ_USERNAME" value="guest" />
+		<Parameter name="RABBITMQ_PASSWORD" value="guest" />
+		<Parameter name="RABBITMQ_CONNECTION_STRING" value="amqp://guest:guest@localhost:5673/" />
+
+		<!-- Redis -->
+		<Parameter name="REDIS_CONNECTION_STRING" value="localhost:6379" />
+		<Parameter name="REDIS_HOST" value="localhost" />
+		<Parameter name="REDIS_PORT" value="6379" />
+
+		<!-- OpenSearch -->
+		<Parameter name="OPENSEARCH_URL" value="https://localhost:9200" />
+		<Parameter name="OPENSEARCH_HOST" value="localhost" />
+		<Parameter name="OPENSEARCH_PORT" value="9200" />
+		<Parameter name="OPENSEARCH_USERNAME" value="admin" />
+		<Parameter name="OPENSEARCH_PASSWORD" value="IntegrationTest123!" />
+		<Parameter name="OPENSEARCH_USE_HTTPS" value="true" />
+
+		<!-- Qdrant -->
+		<Parameter name="QDRANT_URL" value="http://localhost:6333" />
+		<Parameter name="QDRANT_HOST" value="localhost" />
+		<Parameter name="QDRANT_PORT" value="6333" />
+
+		<!-- Azure Storage (Azurite) -->
+		<Parameter name="AZURITE_URL" value="http://localhost:10000" />
+		<Parameter name="AZURITE_BLOB_SERVICE_URL" value="http://127.0.0.1:10000/devstoreaccount1" />
+		<Parameter name="AZURITE_CONNECTION_STRING" value="DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://127.0.0.1:10000/devstoreaccount1;QueueEndpoint=http://127.0.0.1:10001/devstoreaccount1;TableEndpoint=http://127.0.0.1:10002/devstoreaccount1;" />
+
+		<!-- AWS LocalStack -->
+		<Parameter name="LOCALSTACK_URL" value="http://localhost:4566" />
+		<Parameter name="LOCALSTACK_HOST" value="localhost" />
+		<Parameter name="LOCALSTACK_PORT" value="4566" />
+		<Parameter name="AWS_REGION" value="us-east-1" />
+		<Parameter name="AWS_ACCESS_KEY_ID" value="test" />
+		<Parameter name="AWS_SECRET_ACCESS_KEY" value="test" />
+		<Parameter name="SQS_ENDPOINT" value="http://localhost:4566" />
+		<Parameter name="SQS_TEST_QUEUE" value="integration-test-queue" />
+
+		<!-- Azure Service Bus Emulator -->
+		<Parameter name="SERVICEBUS_CONNECTION_STRING" value="Endpoint=sb://localhost:5672/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=SAS_KEY_VALUE;" />
+		<Parameter name="SERVICEBUS_HOST" value="localhost" />
+		<Parameter name="SERVICEBUS_PORT" value="5672" />
+		<Parameter name="SERVICEBUS_TEST_QUEUE" value="integration-test-queue" />
+		<Parameter name="SERVICEBUS_TEST_TOPIC" value="integration-test-topic" />
+
+		<!-- Keycloak -->
+		<Parameter name="KEYCLOAK_URL" value="http://localhost:8081" />
+		<Parameter name="KEYCLOAK_ADMIN_USERNAME" value="admin" />
+		<Parameter name="KEYCLOAK_ADMIN_PASSWORD" value="admin" />
+		<Parameter name="KEYCLOAK_REALM" value="integration-test" />
+		<Parameter name="KEYCLOAK_CLIENT_ID" value="integration-test-client" />
+		<Parameter name="KEYCLOAK_CLIENT_SECRET" value="test-client-secret-12345" />
+		<Parameter name="KEYCLOAK_TEST_USERNAME" value="testuser" />
+		<Parameter name="KEYCLOAK_TEST_PASSWORD" value="testpassword" />
+
+		<!-- SMTP (SMTP4Dev) -->
+		<Parameter name="SMTP_HOST" value="localhost" />
+		<Parameter name="SMTP_PORT" value="25" />
+		<Parameter name="SMTP_URL" value="http://localhost:7777" />
+		<Parameter name="IMAP_HOST" value="localhost" />
+		<Parameter name="IMAP_PORT" value="143" />
+
+		<!-- Apache Tika -->
+		<Parameter name="TIKA_URL" value="http://localhost:9998" />
+		<Parameter name="TIKA_HOST" value="localhost" />
+		<Parameter name="TIKA_PORT" value="9998" />
+
+		<!-- SBert (Sentence Embeddings) -->
+		<Parameter name="SBERT_URL" value="http://localhost:5000" />
+		<Parameter name="SBERT_HOST" value="localhost" />
+		<Parameter name="SBERT_PORT" value="5000" />
+
+		<!-- Ollama (LLM Inference) -->
+		<Parameter name="OLLAMA_URL" value="http://localhost:11434" />
+		<Parameter name="OLLAMA_HOST" value="localhost" />
+		<Parameter name="OLLAMA_PORT" value="11434" />
+		<Parameter name="OLLAMA_MODEL" value="phi3" />
+
+		<!-- OpenSearch Dashboards -->
+		<Parameter name="OPENSEARCH_DASHBOARDS_URL" value="http://localhost:5601" />
+		<Parameter name="OPENSEARCH_DASHBOARDS_HOST" value="localhost" />
+		<Parameter name="OPENSEARCH_DASHBOARDS_PORT" value="5601" />
+
+		<!-- Nginx Dashboard -->
+		<Parameter name="NGINX_URL" value="http://localhost:8080" />
+		<Parameter name="NGINX_HOST" value="localhost" />
+		<Parameter name="NGINX_PORT" value="8080" />
+
+		<!-- General Docker Network -->
+		<Parameter name="DOCKER_NETWORK" value="oobd-integration-test-net" />
+		<Parameter name="DOCKER_COMPOSE_FILE" value="docker-compose.integration-tests.yml" />
+	</TestRunParameters>
+
 </RunSettings>

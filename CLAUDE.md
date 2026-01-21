@@ -1,9 +1,9 @@
 # OoBDev (dotex) Framework - Claude Development Guide
 
-**Last Updated:** 2026-01-15
+**Last Updated:** 2026-01-21
 **Framework:** OoBDev (dotex) - Enterprise .NET Library Suite
-**Target:** .NET 9.0
-**Current Work:** Fixing Swashbuckle 10.1.0 breaking changes in OoBDev.AspNetCore.Mvc
+**Target:** net10.0
+**Current Work:** Configuration documentation COMPLETE | Ollama integration COMPLETE | Docker testing (14 services, 23 tests) awaiting local validation
 
 ---
 
@@ -21,7 +21,7 @@ OoBDev is a comprehensive collection of .NET framework extensions at various uti
 
 **Key Stats:**
 - 112+ projects across 4 architectural layers
-- .NET 9.0 target framework
+- net10.0 target framework
 - MSTest with 80%+ coverage requirement
 - Comprehensive architectural documentation
 
@@ -58,10 +58,19 @@ Located in `.claude/protocols/`:
 #### Documentation
 - **documentation-style-guide.md** - Content standards
 - **documentation-standards.md** - File organization
+- **change-documentation-archival.md** - Archive completed work to reduce context overhead
+- **configuration-documentation.md** - Discover and document all IConfiguration, IOptions, and Environment variables
+  - **Trigger:** "find all my configurations"
+  - Creates comprehensive CONFIGURATION_SETTINGS.md reference
 
 #### Code Generation
 - **template-development.md** - Template-based code generation
 - **template-swagger-documentation.md** - Template/OpenAPI maintenance
+
+#### Testing & Integration
+- **integration-test-maintenance.md** - Maintain Docker-based integration test infrastructure
+  - **Trigger:** "add new container", "add integration test service"
+  - Checklist for Docker services, nginx config, dashboard, .runsettings, documentation
 
 #### Component Standards
 - **schema-integration.md** - Schema framework integration
@@ -69,16 +78,15 @@ Located in `.claude/protocols/`:
 
 ### 3. Current Migration Work
 
-**Incomming Project Investigations** - 🔍 IN PROGRESS (5 of 9 complete)
+**Incomming Project Investigations** - ✅ COMPLETE (6 of 6 = 100%)
 - ✅ dotnet-lib - Completed and deleted (95% identical to main)
 - ✅ Framework - Investigated (55 files, Phase 0 comparison required)
-- ✅ Oobtainium - Investigated (mocking framework, deletion recommended)
+- ✅ Oobtainium - RESOLVED: Moved to proving-grounds repository (https://github.com/mwwhited/proving-grounds)
 - ✅ BotChat - Investigated (sample app, awaiting decision)
 - ✅ SharedFramework - Investigated (52 projects, migration plan ready)
-- ⏱️ BinaryDecoders - Investigated (awaiting critical decisions)
-- ⏳ CloudOrchestrator - Not yet started
-- ⏳ ContractParser - Not yet started
-- ⏳ Tools - Not yet started
+- ✅ BinaryDecoders - Investigated (awaiting critical decisions)
+- ✅ ContractParser - Investigated (feature specification in Features/ContractParser/)
+- ✅ Tools - Investigated (4 CLI tools analyzed in Features/Tools/)
 
 **Tracking:** See `Incomming/CHECKLIST.md` for detailed status
 
@@ -93,15 +101,22 @@ Located in `.claude/protocols/`:
 - Utility enhancements
 - BinaryPrimitives expansion
 
-**Framework Vector Math Migration** - ✅ READY TO EXECUTE
-- Incomming/Framework Vector library analyzed
-- Migration plan created (HIGH priority)
-- Target: `src/Framework/OoBDev.System/Math/`
+**Framework Vector Math Migration** - ✅ NAMESPACE UPDATE COMPLETE
+- ✅ Vector files already in main codebase at `src/Framework/OoBDev.System.Abstractions/Math/`
+- ✅ Namespace updated from `OoBDev.Common.Math` → `OoBDev.System.Math` (5 files)
+- ✅ No migration needed - files already integrated
 
-**SharedFramework Migration** - ✅ READY TO EXECUTE
+**SharedFramework Migration** - ✅ PHASE 1 IN PROGRESS
+- ✅ 51 projects at .NET 10.0 (1 SQL project at netstandard2.0)
+- ✅ Namespace cleanup complete (27 directories renamed)
+  - 14 Api. prefix removals
+  - 4 Azure reorganizations (moved under Microsoft hierarchy)
+  - 9 Contracts → Abstractions renames
+- ✅ Caching Framework migrated (4 impl + 3 test projects)
+- ✅ Message Queues migrated (AWS SQS + Azure Service Bus providers)
 - 52 projects analyzed and categorized
 - 12-phase migration plan created
-- Critical: Communications merge (1,145 LOC vs 16 LOC stub)
+- Next: Communications merge (1,145 LOC vs 16 LOC stub)
 
 ---
 
@@ -175,7 +190,7 @@ public interface IHandler<TRequest, TResponse>
 ### What Gets Deleted (Very Rare)
 ❌ Stub projects with zero implementation (e.g., Rigol)
 ❌ Silverlight-only or obsolete platform code
-❌ Features with no .NET 9.0 equivalent
+❌ Features with no net10.0 equivalent
 
 ### Migration Principles
 1. Phases indicate **priority order**, not feature selection
@@ -256,6 +271,15 @@ OoBDev.{Layer}.{Feature}/
 4. Link to related documentation
 5. Add to appropriate index/README
 
+### Archiving Completed Work
+1. **Trigger:** "clean up your task list" or when TODO files > 400 lines
+2. Follow `.claude/protocols/documentation/change-documentation-archival.md`
+3. Create change document in `docs/changes/`
+4. Update TODO files with summary + link
+5. Update CLAUDE.md "Recently Completed Work"
+6. Update `docs/changes/README.md` index
+7. Reduces context overhead by 30-50%
+
 ---
 
 ## Important Files
@@ -274,18 +298,101 @@ OoBDev.{Layer}.{Feature}/
 ### Protocols
 - `/.claude/protocols/software/` - Software development protocols
 - `/.claude/protocols/documentation/` - Documentation protocols
+  - `change-documentation-archival.md` - Archive completed work (use "clean up your task list")
 
 ---
 
 ## Testing Guidelines
 
 ### Test Categories
+
+OoBDev uses **5 test categories** to organize tests by execution environment and dependencies:
+
 ```csharp
-[TestCategory(TestCategories.Unit)]        // Fast, isolated
-[TestCategory(TestCategories.Simulate)]    // Integration with mocks
-[TestCategory(TestCategories.Integration)] // Real external resources
-[TestCategory(TestCategories.DevLocal)]    // Local development only
+[TestCategory(TestCategories.Unit)]            // Fast, isolated, no external dependencies
+[TestCategory(TestCategories.Simulate)]        // Full stack, mocked persistence
+[TestCategory(TestCategories.Integration)]     // Docker-based external services (NEW)
+[TestCategory(TestCategories.DevLocal)]        // Manual/exploratory testing only
+[TestCategory(TestCategories.LiveIntegration)] // Cloud services only (NEW)
 ```
+
+**Category Definitions:**
+
+| Category | Runs In CI/CD | External Services | Use Case |
+|----------|---------------|-------------------|----------|
+| **Unit** | YES (every PR/push) | Mocked | Pure logic, < 100ms |
+| **Simulate** | YES (every PR/push) | Mocked | End-to-end with in-memory persistence |
+| **Integration** | YES (daily at 4 PM UTC) | Docker containers | MongoDB, SQL Server, RabbitMQ, etc. |
+| **DevLocal** | NO (manual only) | Local services | Performance tests, GPU tests |
+| **LiveIntegration** | NO (manual only) | Live Azure/AWS/GCP | Azure B2C, Groq, App Insights |
+
+**Docker-Based Integration Tests:**
+
+Integration tests run against **14 Docker services** managed by the testing infrastructure:
+
+```bash
+# Start Docker services for integration testing
+cd containers/testing
+./scripts/integration-up.sh --wait
+
+# Run integration tests
+cd ../../src
+dotnet test --filter "TestCategory=Integration"
+
+# Stop and cleanup
+cd ../containers/testing
+./scripts/integration-down.sh --clean
+```
+
+**Services Available:**
+- Apache Tika (Document processing)
+- SMTP4Dev (Email testing)
+- MongoDB (NoSQL database)
+- SQL Server (Relational database)
+- RabbitMQ (Message queue)
+- Redis (Cache store)
+- OpenSearch (Search engine)
+- Qdrant (Vector database)
+- Azurite (Azure Storage emulator)
+- LocalStack (AWS emulator - SQS, S3, etc.)
+- Azure Service Bus Emulator (Message queue)
+- Keycloak (Identity & Access Management)
+- SBert (Sentence embeddings - CPU only)
+- Ollama (LLM inference - CPU only, phi3 model auto-pulled)
+
+**Test Properties Pattern:**
+```csharp
+[TestMethod]
+[TestCategory(TestCategories.Integration)]
+public async Task TestMongoDBOperation()
+{
+    // ✅ CORRECT: Use GetRequiredProperty for required values
+    var connectionString = TestContext.GetRequiredProperty<string>("MONGODB_CONNECTION_STRING");
+
+    // ✅ CORRECT: Use GetPropertyOrDefault for industry-standard defaults
+    var port = TestContext.GetPropertyOrDefault("MONGODB_PORT", 27017);
+
+    var databaseName = $"IntegrationTest_{Guid.NewGuid():N}";  // Unique per run
+
+    // ... test logic
+
+    // Cleanup in [TestCleanup]
+    await client.DropDatabaseAsync(databaseName);
+}
+```
+
+**IMPORTANT:** Always use `TestContext.GetRequiredProperty<T>()` or `TestContext.GetPropertyOrDefault<T>()` instead of `Environment.GetEnvironmentVariable()` for test configuration. This integrates with `.runsettings` files and MSTest infrastructure.
+
+**Test Configuration:**
+- **All Variables:** See [TEST_VARIABLES.md](./TEST_VARIABLES.md) for complete list of 30+ test properties
+- **30+ Properties:** MongoDB, SQL Server, RabbitMQ, OpenSearch, SBert, Azure B2C, Groq, etc.
+- **Configuration:** Use `.runsettings` file or test deployment context
+
+**See Also:**
+- [TEST_VARIABLES.md](./TEST_VARIABLES.md) - Complete test property reference
+- `/containers/testing/README.md` - Complete Docker infrastructure guide
+- `/containers/testing/TESTING-CHECKLIST.md` - Local validation steps
+- `/containers/testing/STATUS.md` - Implementation progress
 
 ### Numeric Assertions
 ```csharp
@@ -318,7 +425,7 @@ public void MethodName_Scenario_ExpectedBehavior()
 ### Commits
 - Only create when user explicitly requests
 - Follow security protocol (no force push, no amend unless specific conditions)
-- Co-author: `Claude Sonnet 4.5 <noreply@anthropic.com>`
+- Co-author: `Claude Opus 4.5 <noreply@anthropic.com>`
 
 ### Pull Requests
 - Use `gh pr create` for GitHub PRs
@@ -386,68 +493,37 @@ dotnet test src/ --collect:"XPlat Code Coverage"
 
 ---
 
-## Recently Completed Work (2026-01-15)
+## Recently Completed Work
 
-### Task: Convert ExpectedExceptionAttribute to Assert.ThrowsException
-**Status:** ✅ COMPLETED
+### 2026-01-21
+- **Configuration** - 157+ settings. [Details](docs/changes/documentation-configuration-settings-2026-01-21.md)
+- **Ollama** - 4 tests, auto-setup. [Details](docs/changes/testing-ollama-integration-2026-01-21.md)
 
-Successfully converted all 40 instances of `[ExpectedException(typeof(T))]` to `Assert.ThrowsException<T>()` across 24 test files:
-- Framework Layer: 10 conversions
-- Binary Decoders: 4 conversions
-- SharedFramework: 26 conversions
+### 2026-01-20
+- **ANTLR/Keycloak** - Build & infra fixes. [Details](docs/changes/bug-fixes-antlr-keycloak-2026-01-20.md)
+- **Caching** - 4 projects + 3 tests. [Details](docs/changes/migration-caching-framework-2026-01-20.md)
+- **Message Queues** - SQS + Service Bus. [Details](docs/changes/migration-message-queues-2026-01-20.md)
+- **SharedFramework** - Phase 0 namespace cleanup (27 dirs). [Details](docs/changes/sharedframework-phase0-2026-01-20.md)
+- **Swashbuckle** - 10.1.0 + .NET 10.0 fixes. [Details](docs/changes/bug-fixes-swashbuckle-dotnet10-2026-01-20.md)
 
-Both sync and async test patterns handled correctly. See TODO.md for full file list.
+### 2026-01-19
+- **Docker Testing** - 14 services, 23 tests. [Details](docs/changes/testing-docker-infrastructure-2026-01-19.md)
 
----
-
-## Current Work Context (2026-01-15)
-
-### Task: Fix Swashbuckle 10.1.0 Breaking Changes in OoBDev.AspNetCore.Mvc
-
-**Status:** IN PROGRESS - Code changes completed, awaiting build verification
-
-**What was done:**
-Fixed breaking changes from Swashbuckle 10.1.0 assembly updates across 3 files:
-
-1. **FormFileOperationFilter.cs** - 2 errors fixed
-   - Properties collection is read-only (loop through and add instead of assign)
-   - JsonSchemaType is enum (use `JsonSchemaType.String` not `"string"`)
-
-2. **HealthChecksDocumentFilter.cs** - 2 errors fixed
-   - OpenApiTag changed to OpenApiTagReference in Tags collection
-   - Properties is read-only (use .Add() calls instead of assignment)
-
-3. **SearchQueryOperationFilter.cs** - 8+ errors fixed
-   - OpenApiTag → OpenApiTagReference (3 occurrences)
-   - Coalesce assignment with type mismatch (use traditional null check)
-   - UpdateRequestSchema method major refactor:
-     - Removed dictionary copy with `.ChangeComparer()`
-     - Direct property access via `schema.Properties[key]`
-     - Fixed IOpenApiSchema vs OpenApiSchema conversions
-     - Added null checks for schema lookups
-
-**Next Steps When Resuming:**
-1. Build the project: `dotnet build src/Framework/OoBDev.AspNetCore.Mvc/OoBDev.AspNetCore.Mvc.csproj`
-2. If build fails, address remaining compiler errors
-3. Run tests: `dotnet test src/ --filter "OoBDev.AspNetCore.Mvc"`
-4. Verify no regressions in OpenAPI functionality
-
-**Files Modified:**
-- `/current/src/src/Framework/OoBDev.AspNetCore.Mvc/Filters/FormFileOperationFilter.cs`
-- `/current/src/src/Framework/OoBDev.AspNetCore.Mvc/Filters/SearchQueryOperationFilter.cs`
-- `/current/src/src/Framework/OoBDev.AspNetCore.Mvc/SwaggerGen/HealthChecksDocumentFilter.cs`
-
-**Key Breaking Changes Reference:**
-- `OpenApiTag` → `OpenApiTagReference` for Tags collection
-- `IOpenApiSchema.Properties` is read-only (use `.Add()` or `[key] = value`)
-- `JsonSchemaType` enum instead of string literals
-- Schema references require null checking: `?.Reference`
+### 2026-01-15
+- **MSTest** - 40 tests modernized. [Details](docs/changes/bug-fixes-mstest-expected-exception-2026-01-15.md)
+- **Phase 0 Bugs** - 6 critical fixes. [Details](docs/changes/bug-fixes-phase0-critical-2026-01-15.md)
 
 ---
 
-## Contact & Feedback
+## Current Work Context
 
-- Issues: https://github.com/anthropics/claude-code/issues
-- Protocols: `.claude/protocols/`
-- Documentation: `/docs/`
-- Tracking: `/TODO.md`
+**Active Priorities:**
+1. **SharedFramework** - Next: Communications migration (16 LOC stub → 1,145 LOC)
+2. **Docker Testing** - Awaiting local validation (14 services, 23 tests)
+3. **Incoming Projects** - All investigated (decisions pending)
+
+**Latest Updates:**
+- Configuration documentation complete (CONFIGURATION_SETTINGS.md)
+- Ollama integration complete (phi3 auto-setup)
+- 14 Docker services ready (Apache Tika, MongoDB, SQL Server, RabbitMQ, Redis, OpenSearch, Qdrant, Azurite, LocalStack, Service Bus, Keycloak, SBert, Ollama)
+

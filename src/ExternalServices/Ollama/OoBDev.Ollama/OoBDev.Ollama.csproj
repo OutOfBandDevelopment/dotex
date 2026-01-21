@@ -30,6 +30,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Framework\OoBDev.AI.Abstractions\OoBDev.AI.Abstractions.csproj" />
+    <ProjectReference Include="..\..\..\Framework\OoBDev.Extensions\OoBDev.Extensions.csproj" />
     <ProjectReference Include="..\..\..\Framework\OoBDev.Search.Abstractions\OoBDev.Search.Abstractions.csproj" />
     <ProjectReference Include="..\..\..\Framework\OoBDev.SemanticKernel.Abstractions\OoBDev.SemanticKernel.Abstractions.csproj" />
   </ItemGroup>

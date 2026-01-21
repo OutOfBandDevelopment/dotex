@@ -10,8 +10,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\OoBDev.Toolkit.Contracts\OoBDev.Toolkit.Contracts.csproj" />
-    <ProjectReference Include="..\OoBDev.SpatialServices.Contracts\OoBDev.SpatialServices.Contracts.csproj" />
+    <ProjectReference Include="..\OoBDev.Toolkit.Contracts\OoBDev.Toolkit.Abstractions.csproj" />
+    <ProjectReference Include="..\OoBDev.SpatialServices.Abstractions\OoBDev.SpatialServices.Abstractions.csproj" />
   </ItemGroup>
 
 </Project>

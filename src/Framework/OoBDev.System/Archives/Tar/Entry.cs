@@ -92,7 +92,7 @@ internal class Entry
                                         longName = null;
                                     newFile?.Write(buffer,
                                                       0,
-                                                      Math.Min(buffer.Length,
+                                                      global::System.Math.Min(buffer.Length,
                                                                header.FileSize - lengthWrote));
                                     lengthWrote += 512;
 

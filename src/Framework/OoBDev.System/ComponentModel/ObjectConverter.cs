@@ -16,6 +16,7 @@ public class ObjectConverter : IObjectConverter
 
     public T? Convert<T>(object? input) where T : class => (T?)Convert(input, typeof(T));
 
+    //TODO: this is a bit nutty and should be tossed.
     public object? Convert(object? input, Type target) =>
         input switch
         {

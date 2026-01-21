@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace OoBDev.Common.Math;
+namespace OoBDev.System.Math;
 
 public class VectorComparer : IComparer<Vector>, IComparer<double[]>, IComparer
 {

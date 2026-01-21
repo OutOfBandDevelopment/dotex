@@ -10,9 +10,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\OoBDev.Communications.Contracts\OoBDev.Communications.Contracts.csproj" />
-    <ProjectReference Include="..\OoBDev.TextTemplating.Contracts\OoBDev.TextTemplating.Contracts.csproj" />
-    <ProjectReference Include="..\OoBDev.Toolkit.Contracts\OoBDev.Toolkit.Contracts.csproj" />
+    <ProjectReference Include="..\OoBDev.Communications.Abstractions\OoBDev.Communications.Abstractions.csproj" />
+    <ProjectReference Include="..\OoBDev.TextTemplating.Abstractions\OoBDev.TextTemplating.Abstractions.csproj" />
+    <ProjectReference Include="..\OoBDev.Toolkit.Contracts\OoBDev.Toolkit.Abstractions.csproj" />
   </ItemGroup>
 
 </Project>

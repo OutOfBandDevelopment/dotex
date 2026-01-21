@@ -10,8 +10,8 @@ namespace OoBDev.System.Xml.Xsl.Extensions;
 public class XPath20Functions
 {
 #pragma warning disable IDE1006 // Naming Styles
-    public decimal abs(decimal input) => Math.Abs(input);
-    public decimal ceiling(decimal input) => Math.Ceiling(input);
+    public decimal abs(decimal input) => global::System.Math.Abs(input);
+    public decimal ceiling(decimal input) => global::System.Math.Ceiling(input);
     public decimal count(XPathNodeIterator input) => input.AsNavigatorSet().Count();
     public decimal avg(XPathNodeIterator input) => sum(input) / count(input);
     public bool exists(XPathNodeIterator input) => input.AsNavigatorSet().Any();

@@ -4,6 +4,9 @@ using System.IO;
 
 namespace OoBDev.Data.Vectors;
 
+/// <summary>
+/// SQL CLR aggregate function that computes the element-wise minimum across a set of single-precision vectors.
+/// </summary>
 [SqlUserDefinedAggregate(
     Format.UserDefined,
     Name = "[embedding].[MinimumF]",
@@ -17,8 +20,16 @@ public class MinimumFAggregate : IBinarySerialize
 {
     private double[] _sum;
 
+    /// <summary>
+    /// Initializes the aggregate state.
+    /// </summary>
     public void Init() => _sum = [];
 
+    /// <summary>
+    /// Accumulates a vector, keeping the minimum value for each element position.
+    /// </summary>
+    /// <param name="vector">The vector to accumulate.</param>
+    /// <exception cref="NotSupportedException">Thrown when vectors have different lengths.</exception>
     public void Accumulate(SqlVectorF vector)
     {
         if (vector.IsNull) return;
@@ -41,6 +52,10 @@ public class MinimumFAggregate : IBinarySerialize
         }
     }
 
+    /// <summary>
+    /// Merges another aggregate instance into this one for parallel execution.
+    /// </summary>
+    /// <param name="other">The other aggregate instance to merge.</param>
     public void Merge(MinimumFAggregate other)
     {
         if (other != null)
@@ -59,6 +74,10 @@ public class MinimumFAggregate : IBinarySerialize
         }
     }
 
+    /// <summary>
+    /// Completes the aggregation and returns the vector of minimum values.
+    /// </summary>
+    /// <returns>A vector containing the minimum value at each element position.</returns>
     public SqlVectorF Terminate()
     {
         var data = new double[_sum.Length];
@@ -70,6 +89,10 @@ public class MinimumFAggregate : IBinarySerialize
         return new SqlVectorF(data);
     }
 
+    /// <summary>
+    /// Deserializes the aggregate state from a binary stream.
+    /// </summary>
+    /// <param name="reader">The binary reader to read from.</param>
     public void Read(BinaryReader reader)
     {
         var vector = new SqlVectorF();
@@ -77,6 +100,10 @@ public class MinimumFAggregate : IBinarySerialize
         _sum = [.. vector.Values];
     }
 
+    /// <summary>
+    /// Serializes the aggregate state to a binary stream.
+    /// </summary>
+    /// <param name="writer">The binary writer to write to.</param>
     public void Write(BinaryWriter writer)
     {
         var vector = new SqlVectorF(_sum);

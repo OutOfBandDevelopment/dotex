@@ -48,7 +48,7 @@
   <!-- Ensure the PackageReadmeFile is included with the projects to be packaged for nuget -->
   <!-- Automatically set PackageReadmeFile if README.md exists but property is not set -->
   <Target Name="AutoSetPackageReadmeFile"
-          Condition="'$(IsPackable)'=='true' and '$(PackageReadmeFile)'=='' and Exists('README.md')"
+          Condition="'$(IsPackable)'!='false' and '$(PackageReadmeFile)'=='' and Exists('README.md')"
           BeforeTargets="CheckReadMe;CheckReadMeExists;GenerateNuspec">
     <PropertyGroup>
       <PackageReadmeFile>README.md</PackageReadmeFile>
@@ -61,7 +61,7 @@
     <Message Text="Auto-configured PackageReadmeFile for $(MSBuildProjectName)" Importance="normal" />
   </Target>
 
-  <Target Name="CheckReadMe" Condition="'$(IsPackable)'=='true' and '$(PackageReadmeFile)'==''" BeforeTargets="Build">
+  <Target Name="CheckReadMe" Condition="'$(IsPackable)'!='false' and '$(PackageReadmeFile)'==''" BeforeTargets="Build">
     <Warning Text="No PackageReadmeFile included for &quot;$(MSBuildProjectName)&quot;"
 				 Code="OBDPK001"
 				 File="$(MSBuildProjectName).csproj" />

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace OoBDev.System.ExpressionCalculator.Evaluators;
+﻿namespace OoBDev.System.ExpressionCalculator.Evaluators;
 
 public sealed class FloatExpressionEvaluator : IExpressionEvaluator<float>
 {
@@ -10,7 +8,7 @@ public sealed class FloatExpressionEvaluator : IExpressionEvaluator<float>
     public float Modulo(float left, float right) => left % right;
     public float Multiply(float left, float right) => left * right;
     public float Negate(float operand) => -operand;
-    public float Power(float left, float right) => (float)Math.Pow((double)left, (double)right);
+    public float Power(float left, float right) => (float)global::System.Math.Pow((double)left, (double)right);
     public float Subtract(float left, float right) => left - right;
 
     public float? TryParse(string input) => float.TryParse(input, out var ret) ? ret : null;

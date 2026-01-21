@@ -1,4 +1,4 @@
-# OoBDev.Microsoft.B2C
+# OoBDev.Microsoft.Azure.B2C
 
 
 ## Class: Microsoft.B2C.Identity.ManageGraphUser

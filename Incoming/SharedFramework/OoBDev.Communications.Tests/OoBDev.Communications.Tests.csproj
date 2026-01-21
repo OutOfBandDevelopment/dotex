@@ -21,10 +21,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\OoBDev.Api.Twilio.SendGrid\OoBDev.Api.Twilio.SendGrid.csproj" />
-    <ProjectReference Include="..\OoBDev.Api.Twilio.SmsMessaging\OoBDev.Api.Twilio.SmsMessaging.csproj" />
-    <ProjectReference Include="..\OoBDev.Azure.Storage\OoBDev.Azure.Storage.csproj" />
-    <ProjectReference Include="..\OoBDev.Communications.Contracts\OoBDev.Communications.Contracts.csproj" />
+    <ProjectReference Include="..\OoBDev.Twilio.SendGrid\OoBDev.Twilio.SendGrid.csproj" />
+    <ProjectReference Include="..\OoBDev.Twilio.SmsMessaging\OoBDev.Twilio.SmsMessaging.csproj" />
+    <ProjectReference Include="..\OoBDev.Microsoft.Azure.Storage\OoBDev.Microsoft.Azure.Storage.csproj" />
+    <ProjectReference Include="..\OoBDev.Communications.Abstractions\OoBDev.Communications.Abstractions.csproj" />
     <ProjectReference Include="..\OoBDev.Communications\OoBDev.Communications.csproj" />
     <ProjectReference Include="..\OoBDev.ComplexEvents.Common\OoBDev.ComplexEvents.Common.csproj" />
     <ProjectReference Include="..\OoBDev.MessageQueueing\OoBDev.MessageQueueing.csproj" />

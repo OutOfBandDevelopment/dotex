@@ -2,7 +2,7 @@ Here is the documentation for the provided source code files.
 
 **Project Documentation**
 
-Project: OoBDev.Microsoft.B2C.csproj
+Project: OoBDev.Microsoft.Azure.B2C.csproj
 -----------------------------------
 
 This project is a .NET Core library that provides implementations and extensions for integrating with Microsoft Azure Active Directory B2C.
@@ -49,13 +49,13 @@ The project provides three main components:
 
 ### Usage
 
-To use this project, you can import the `OoBDev.Microsoft.B2C` namespace and use the provided classes and methods. For example, you can use the `ManageGraphUser` class to create and manage users in Microsoft Graph, or use the `MicrosoftIdentityOptions` class to configure Azure Active Directory B2C settings.
+To use this project, you can import the `OoBDev.Microsoft.Azure.B2C` namespace and use the provided classes and methods. For example, you can use the `ManageGraphUser` class to create and manage users in Microsoft Graph, or use the `MicrosoftIdentityOptions` class to configure Azure Active Directory B2C settings.
 
 **Readme.Microsoft.B2C.md Documentation**
 
-# OoBDev.Microsoft.B2C
+# OoBDev.Microsoft.Azure.B2C
 
-OoBDev.Microsoft.B2C provides implementations and extensions for integrating with Microsoft Azure Active Directory B2C. Here's an overview of its key components:
+OoBDev.Microsoft.Azure.B2C provides implementations and extensions for integrating with Microsoft Azure Active Directory B2C. Here's an overview of its key components:
 
 ## ManageGraphUser
 

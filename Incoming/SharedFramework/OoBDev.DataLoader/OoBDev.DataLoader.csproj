@@ -17,8 +17,8 @@
 	
 	<ItemGroup>		
 		<ProjectReference Include="..\OoBDev.EntityFrameworkCore.SqlServer\OoBDev.EntityFrameworkCore.SqlServer.csproj" />
-		<ProjectReference Include="..\OoBDev.DocumentCenter.Contracts\OoBDev.DocumentCenter.Contracts.csproj" />
-		<ProjectReference Include="..\OoBDev.DataLoader.Contracts\OoBDev.DataLoader.Contracts.csproj" />
+		<ProjectReference Include="..\OoBDev.DocumentCenter.Abstractions\OoBDev.DocumentCenter.Abstractions.csproj" />
+		<ProjectReference Include="..\OoBDev.DataLoader.Abstractions\OoBDev.DataLoader.Abstractions.csproj" />
 	</ItemGroup>
 
 </Project>

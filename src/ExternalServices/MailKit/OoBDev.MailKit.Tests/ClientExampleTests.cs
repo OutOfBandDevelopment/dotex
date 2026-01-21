@@ -1,10 +1,11 @@
-﻿using OoBDev.TestUtilities;
-using MailKit;
+﻿using MailKit;
 using MailKit.Net.Imap;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MimeKit;
+using OoBDev.TestUtilities;
+using Org.BouncyCastle.Tls;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,11 +18,12 @@ public class ClientExampleTests
     public required TestContext TestContext { get; set; }
 
     [TestMethod]
-    [TestCategory(TestCategories.DevLocal)]
-    [DataRow("example-smtp4dev.d6cke7dpbbesb5ga.eastus.azurecontainer.io")]
-    [DataRow("localhost")]
-    public async Task SendSmtpTest(string host, int port = 25)
+    [TestCategory(TestCategories.Integration)]
+    public async Task SendSmtpTest()
     {
+        var host = TestContext.GetRequiredProperty<string>("SMTP_HOST");
+        var port = TestContext.GetPropertyOrDefault("SMTP_PORT", 25);
+
         var config = new
         {
             Value = new
@@ -71,11 +73,12 @@ public class ClientExampleTests
     }
 
     [TestMethod]
-    [TestCategory(TestCategories.DevLocal)]
-    [DataRow("example-smtp4dev.d6cke7dpbbesb5ga.eastus.azurecontainer.io")]
-    [DataRow("localhost")]
-    public async Task GetImapTest(string host, int port = 143)
+    [TestCategory(TestCategories.Integration)]
+    public async Task GetImapTest()
     {
+        var host = TestContext.GetRequiredProperty<string>("IMAP_HOST");
+        var port = TestContext.GetPropertyOrDefault("IMAP_PORT", 143);
+
         var config = new
         {
             Value = new

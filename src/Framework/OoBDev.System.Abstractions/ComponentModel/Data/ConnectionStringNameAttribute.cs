@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace OoBDev.System.ComponentModel.DataAnnotations;
+namespace OoBDev.System.ComponentModel.Data;
 
 /// <summary>
 /// Specifies the name of the connection string to associate with a class.

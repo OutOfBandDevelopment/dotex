@@ -24,24 +24,35 @@ public class HealthChecksDocumentFilter : IDocumentFilter
     {
         var pathItem = new OpenApiPathItem();
 
-        var operation = new OpenApiOperation();
-        operation.Tags.Add(new OpenApiTagReference("ApiHealth"));
+        var operation = new OpenApiOperation
+        {
+            Tags = new HashSet<OpenApiTagReference> { new OpenApiTagReference("ApiHealth") }
+        };
 
         var schema = new OpenApiSchema
         {
             Type = JsonSchemaType.Object,
             AdditionalPropertiesAllowed = true,
+            Properties = new Dictionary<string, IOpenApiSchema>
+            {
+                ["status"] = new OpenApiSchema { Type = JsonSchemaType.String },
+                ["errors"] = new OpenApiSchema { Type = JsonSchemaType.Array }
+            }
         };
-        schema.Properties.Add("status", new OpenApiSchema() { Type = JsonSchemaType.String });
-        schema.Properties.Add("errors", new OpenApiSchema() { Type = JsonSchemaType.Array });
 
-        var response = new OpenApiResponse();
-        response.Content.Add("application/json", new OpenApiMediaType
+        var response = new OpenApiResponse
         {
-            Schema = schema
-        });
+            Content = new Dictionary<string, OpenApiMediaType>
+            {
+                ["application/json"] = new OpenApiMediaType { Schema = schema }
+            }
+        };
 
-        operation.Responses.Add("200", response);
+        operation.Responses = new OpenApiResponses
+        {
+            ["200"] = response
+        };
+
         pathItem.AddOperation(HttpMethod.Get, operation);
         openApiDocument?.Paths.Add(HealthCheckEndpoint, pathItem);
     }

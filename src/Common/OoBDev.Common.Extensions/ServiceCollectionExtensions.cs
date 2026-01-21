@@ -1,14 +1,13 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using OoBDev.Apache.Tika;
-using OoBDev.Azure.StorageAccount;
 using OoBDev.GroqCloud;
 using OoBDev.Handlebars;
 using OoBDev.HtmlToOpenXml;
 using OoBDev.Keycloak;
 using OoBDev.MailKit;
 using OoBDev.Markdig;
-using OoBDev.Microsoft.B2C;
+using OoBDev.Microsoft.Azure.B2C;
 using OoBDev.Microsoft.SqlServer.Server;
 using OoBDev.MongoDB;
 using OoBDev.MysticMind;
@@ -19,6 +18,12 @@ using OoBDev.RabbitMQ;
 using OoBDev.SBert;
 using OoBDev.SBert.AllMiniLML6v2Sharp;
 using OoBDev.WkHtmlToPdf;
+using OoBDev.Microsoft.Azure.StorageAccount;
+using OoBDev.Microsoft.Caching;
+using OoBDev.Redis.Caching;
+
+
+
 #if DEBUG
 using OoBDev.Microsoft.ApplicationInsights;
 #endif
@@ -84,6 +89,9 @@ public static class ServiceCollectionExtensions
         services.TryAddMysticMindServices();
         services.TryAddHtmlToOpenXmlServices();
         services.TryAddMicrosoftSqlServerExtensions();
+
+        services.TryAddMicrosoftCachingServices();
+        services.TryAddRedisCachingServices();
 
         return services;
     }

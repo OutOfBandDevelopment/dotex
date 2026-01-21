@@ -1,13 +1,29 @@
 name: Integration Tests
 
+# ============================================================================
+# WORKFLOW DISABLED - Pending Local Testing
+# ============================================================================
+# This workflow is currently DISABLED until Docker containers are validated locally.
+#
+# To enable after successful local testing:
+# 1. Test locally: cd containers/testing && ./scripts/integration-up.sh --wait
+# 2. Verify all services become healthy
+# 3. Uncomment the 'on:' triggers below
+# 4. Commit and push to enable daily integration tests
+# ============================================================================
+
 # Run daily at 4 PM UTC (after build, before scheduled release)
 # Only on main branch to validate before release
 on:
-  schedule:
-    - cron: '0 16 * * *'
+  # DISABLED - Uncomment after local Docker testing
+  # schedule:
+  #   - cron: '0 16 * * *'
 
-  # Allow manual trigger for testing
-  workflow_dispatch:
+  # DISABLED - Uncomment to allow manual trigger
+  # workflow_dispatch:
+
+  # Temporary: Only trigger via workflow_call (never runs)
+  workflow_call:
 
 env:
   MSBUILDTERMINALLOGGER: off
@@ -23,16 +39,7 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: true
-
-      # TODO: Set up Docker containers for external services
-      # - SQL Server
-      # - PostgreSQL
-      # - MongoDB
-      # - RabbitMQ
-      # - Any other required services
-
-      # TODO: Configure service health checks
-      # Verify all services are ready before running tests
+          submodules: true
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
@@ -51,14 +58,174 @@ jobs:
           useConfigFile: true
           configFilePath: GitVersion.yml
 
-      # TODO: Run integration tests
-      # dotnet test src/ --filter "TestCategory=Integration"
-      # Collect code coverage and test results
+      - name: Set Version Variables
+        id: calculate-version
+        shell: pwsh
+        working-directory: ./src
+        run: |
+          echo "GITHUB_WORKSPACE=$env:GITHUB_WORKSPACE"
+          echo "RUNNER_TEMP=$env:RUNNER_TEMP"
 
+          $buildConfiguration = "Release"
+          echo "BuildConfiguration=$buildConfiguration"
+          echo "BuildConfiguration=$buildConfiguration" >> "$env:GITHUB_OUTPUT"
+
+          $testResultsPath = JOIN-PATH -Path $env:RUNNER_TEMP -ChildPath "TestResults"
+          echo "TestResultsPath=$testResultsPath"
+          echo "TestResultsPath=$testResultsPath" >> "$env:GITHUB_OUTPUT"
+
+      # ===== Docker Service Setup =====
+
+      - name: Start Integration Test Services
+        working-directory: ./containers/testing
+        run: |
+          echo "Starting Docker services for integration testing..."
+          docker compose -f docker-compose.integration-tests.yml up -d
+
+      - name: Wait for Services to be Healthy
+        working-directory: ./containers/testing
+        run: |
+          chmod +x ./scripts/wait-for-services.sh
+          ./scripts/wait-for-services.sh
+        timeout-minutes: 5
+
+      # ===== Restore and Build =====
+
+      - name: Restore dependencies
+        working-directory: ./src
+        run: >
+          dotnet restore
+          --property:Version=${{ steps.gitversion.outputs.fullSemVer }}
+          --property:SolutionDir=${{ github.workspace }}/src/
+          --property:GitVersion_AssemblySemFileVer=${{ steps.gitversion.outputs.assemblySemFileVer }}
+          --property:GitVersion_InformationalVersion=${{ steps.gitversion.outputs.informationalVersion }}
+          --property:GitVersion_FullSemVer=${{ steps.gitversion.outputs.fullSemVer }}
+          --property:GitVersion_Major=${{ steps.gitversion.outputs.major }}
+          --property:GitVersion_Minor=${{ steps.gitversion.outputs.minor }}
+          --property:GitVersion_Patch=${{ steps.gitversion.outputs.patch }}
+
+      - name: Build
+        working-directory: ./src
+        run: >
+          dotnet build
+          --configuration ${{ steps.calculate-version.outputs.BuildConfiguration }}
+          --property:Version=${{ steps.gitversion.outputs.fullSemVer }}
+          --property:SolutionDir=${{ github.workspace }}/src/
+          --property:GitVersion_AssemblySemFileVer=${{ steps.gitversion.outputs.assemblySemFileVer }}
+          --property:GitVersion_InformationalVersion=${{ steps.gitversion.outputs.informationalVersion }}
+          --property:GitVersion_FullSemVer=${{ steps.gitversion.outputs.fullSemVer }}
+          --property:GitVersion_Major=${{ steps.gitversion.outputs.major }}
+          --property:GitVersion_Minor=${{ steps.gitversion.outputs.minor }}
+          --property:GitVersion_Patch=${{ steps.gitversion.outputs.patch }}
+          --nologo
+          --no-restore
+
+      # ===== Run Integration Tests =====
+
+      - name: Run Integration Tests
+        working-directory: ./src
+        env:
+          # SQL Server
+          SQL_CONNECTION_STRING: Server=localhost,1433;User Id=sa;Password=IntegrationTest123!;TrustServerCertificate=True;Encrypt=False
+          SQL_SA_PASSWORD: IntegrationTest123!
+
+          # MongoDB
+          MONGODB_CONNECTION_STRING: mongodb://localhost:27017
+
+          # RabbitMQ
+          RABBITMQ_HOST: localhost
+          RABBITMQ_PORT: 5672
+          RABBITMQ_CONNECTION_STRING: amqp://guest:guest@localhost:5672/
+
+          # OpenSearch
+          OPENSEARCH_URL: https://localhost:9200
+          OPENSEARCH_USERNAME: admin
+          OPENSEARCH_PASSWORD: IntegrationTest123!
+
+          # Qdrant
+          QDRANT_URL: http://localhost:6333
+          QDRANT_GRPC_URL: http://localhost:6334
+
+          # Apache Tika
+          TIKA_URL: http://localhost:9998
+
+          # SMTP
+          SMTP_HOST: localhost
+          SMTP_PORT: 25
+
+          # Azurite (Azure Storage Emulator)
+          AZURITE_BLOB_URL: http://localhost:10000
+          AZURITE_QUEUE_URL: http://localhost:10001
+          AZURITE_TABLE_URL: http://localhost:10002
+          AZURITE_CONNECTION_STRING: DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://localhost:10000/devstoreaccount1;QueueEndpoint=http://localhost:10001/devstoreaccount1;TableEndpoint=http://localhost:10002/devstoreaccount1
+
+          # LocalStack (AWS Emulator)
+          LOCALSTACK_URL: http://localhost:4566
+          AWS_ACCESS_KEY_ID: test
+          AWS_SECRET_ACCESS_KEY: test
+          AWS_DEFAULT_REGION: us-east-1
+
+          # Keycloak
+          KEYCLOAK_URL: http://localhost:8081
+          KEYCLOAK_REALM: local-dev
+          KEYCLOAK_CLIENT_ID: test-client
+
+          # SBert
+          SBERT_URL: http://localhost:5080
+        run: >
+          dotnet test
+          --configuration ${{ steps.calculate-version.outputs.BuildConfiguration }}
+          --property:Version=${{ steps.gitversion.outputs.fullSemVer }}
+          --property:SolutionDir=${{ github.workspace }}/src/
+          --property:GitVersion_AssemblySemFileVer=${{ steps.gitversion.outputs.assemblySemFileVer }}
+          --property:GitVersion_InformationalVersion=${{ steps.gitversion.outputs.informationalVersion }}
+          --property:GitVersion_FullSemVer=${{ steps.gitversion.outputs.fullSemVer }}
+          --property:GitVersion_Major=${{ steps.gitversion.outputs.major }}
+          --property:GitVersion_Minor=${{ steps.gitversion.outputs.minor }}
+          --property:GitVersion_Patch=${{ steps.gitversion.outputs.patch }}
+          --no-build
+          --no-restore
+          --nologo
+          --filter "TestCategory=Integration"
+          --collect:"XPlat Code Coverage"
+          --results-directory "${{ steps.calculate-version.outputs.TestResultsPath }}"
+          --logger "trx;LogFileName=integration-tests.trx"
+
+      # ===== Publish Test Results =====
+
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action/composite@v2
+        id: test-results
+        if: always()
+        with:
+          trx_files: ${{ steps.calculate-version.outputs.TestResultsPath }}/**/*.trx
+          report_individual_runs: true
+          check_name: Integration Test Results
+
+      - name: Upload Test Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: integration-test-results-${{ steps.gitversion.outputs.fullSemVer }}
+          path: ${{ steps.calculate-version.outputs.TestResultsPath }}/**/*
+          retention-days: 30
+          compression-level: 6
+
+      # ===== Cleanup Docker Services =====
+
+      - name: Stop Docker Services
+        if: always()
+        working-directory: ./containers/testing
+        run: |
+          echo "Stopping and cleaning up Docker services..."
+          docker compose -f docker-compose.integration-tests.yml down -v
+
+      # ===== Create Validated Tag =====
       # Tier 2: Create validated tag after successful integration tests
       # Tags: validated-vX.Y.Z (proof that code passed integration validation)
       - name: Create validated tag
         if: success() && github.ref == 'refs/heads/main'
+        shell: bash
         run: |
           VERSION="${{ steps.gitversion.outputs.fullSemVer }}"
           TAG="validated-v${VERSION}"
@@ -66,13 +233,8 @@ jobs:
           echo "Creating validated tag: ${TAG}"
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git tag -a "${TAG}" -m "Integration tests passed"
+          git tag -a "${TAG}" -m "Integration tests passed for version ${VERSION}"
           git push origin "${TAG}"
-
-      # TODO: Upload integration test results and coverage reports
-      # - Test result artifacts
-      # - Coverage reports (ReportGenerator)
-      # - Docker logs (if available)
 
       - name: Notify Success
         if: success()

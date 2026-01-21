@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 
-namespace OoBDev.Common.Math;
+namespace OoBDev.System.Math;
 
 public readonly record struct Vector
 {

@@ -152,8 +152,8 @@ public class PlayFair
             var p1 = sCryptic.IndexOf(message[i]);
             var p2 = sCryptic.IndexOf(message[i + 1]);
 
-            var mn = Math.Min(p1, p2);
-            var mx = Math.Max(p1, p2);
+            var mn = global::System.Math.Min(p1, p2);
+            var mx = global::System.Math.Max(p1, p2);
 
             var column = mn % 5 == mx % 5;
             var row = mx - mn < 5;

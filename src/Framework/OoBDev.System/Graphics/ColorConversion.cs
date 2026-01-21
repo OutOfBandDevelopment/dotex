@@ -1,5 +1,4 @@
 ﻿using OoBDev.System.Linq;
-using System;
 using System.Linq;
 
 namespace OoBDev.System.Graphics;
@@ -27,7 +26,7 @@ public static class ColorConversion
             saturation: diff switch
             {
                 0.0 => 0.0,
-                _ => diff / (1.0 - Math.Abs(2 * lightness - 1))
+                _ => diff / (1.0 - global::System.Math.Abs(2 * lightness - 1))
             }, lightness
             );
     }
@@ -63,7 +62,7 @@ public static class ColorConversion
         var adjusted = (hue: color.hue % 360.0, color.saturation, color.value);
 
         var c = adjusted.value * adjusted.saturation;
-        var x = c * (1 - Math.Abs(adjusted.hue / 60 % 2 - 1));
+        var x = c * (1 - global::System.Math.Abs(adjusted.hue / 60 % 2 - 1));
         var m = adjusted.value - c;
 
         (double red, double green, double blue) rgb = ((int)(adjusted.hue / 60) % 6) switch
@@ -82,9 +81,9 @@ public static class ColorConversion
     {
         var adjusted = (hue: color.hue % 360.0, color.saturation, color.lightness);
 
-        var c = (1 - Math.Abs(2.0 * adjusted.lightness - 1.0)) * adjusted.saturation;
+        var c = (1 - global::System.Math.Abs(2.0 * adjusted.lightness - 1.0)) * adjusted.saturation;
         ;
-        var x = c * (1 - Math.Abs(adjusted.hue / 60 % 2 - 1));
+        var x = c * (1 - global::System.Math.Abs(adjusted.hue / 60 % 2 - 1));
         var m = adjusted.lightness - c / 2.0;
 
         (double red, double green, double blue) rgb = ((int)(adjusted.hue / 60) % 6) switch
@@ -104,8 +103,8 @@ public static class ColorConversion
     {
         var adjusted = (hue: color.hue % 360.0, color.saturation, color.lightness);
 
-        var c = (1 - Math.Abs(2.0 * adjusted.lightness - 1.0)) * adjusted.saturation;
-        var x = c * (1 - Math.Abs(adjusted.hue / 60 % 2 - 1));
+        var c = (1 - global::System.Math.Abs(2.0 * adjusted.lightness - 1.0)) * adjusted.saturation;
+        var x = c * (1 - global::System.Math.Abs(adjusted.hue / 60 % 2 - 1));
         var m = adjusted.lightness - c / 2.0;
 
         var terms = new[] { c + m, x + m, m };
@@ -124,7 +123,7 @@ public static class ColorConversion
         var adjusted = (hue: color.hue % 360.0, color.saturation, color.value);
 
         var c = adjusted.value * adjusted.saturation;
-        var x = c * (1 - Math.Abs(adjusted.hue / 60 % 2 - 1));
+        var x = c * (1 - global::System.Math.Abs(adjusted.hue / 60 % 2 - 1));
         var m = adjusted.value - c;
 
         var rgbP = new[] { c + m, x + m, m };
@@ -133,7 +132,7 @@ public static class ColorConversion
         var lightness = (c2.max + c2.min) / 2.0;
 
         return (adjusted.hue,
-            saturation: diff == 0.0 ? 0.0 : diff / (1.0 - Math.Abs(2 * lightness - 1)), lightness
+            saturation: diff == 0.0 ? 0.0 : diff / (1.0 - global::System.Math.Abs(2 * lightness - 1)), lightness
             );
     }
 }

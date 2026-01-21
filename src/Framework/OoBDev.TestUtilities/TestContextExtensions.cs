@@ -17,6 +17,8 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
+using OoBDev.System.Reflection;
+using Microsoft.Extensions.Logging;
 
 namespace OoBDev.TestUtilities;
 
@@ -25,6 +27,31 @@ namespace OoBDev.TestUtilities;
 /// </summary>
 public static class TestContextExtensions
 {
+
+    public static ILogger<T> GetLogger<T>(this TestContext testContext) => TestLogger.CreateLogger<T>();
+
+    public static T GetPropertyOrDefault<T>(this TestContext testContext, string parameter, T defaultValue) =>
+        testContext.GetProperty<T>(parameter) ?? defaultValue;
+
+    public static T GetRequiredProperty<T>(this TestContext testContext, string parameter) =>
+        testContext.GetProperty<T>(parameter) ?? throw new ApplicationException($"Test Property {parameter} is required");
+
+    public static T? GetProperty<T>(this TestContext testContext, string parameter)
+    {
+        try
+        {
+            if (testContext.Properties.TryGetValue(parameter, out var value))
+                return value.As<T>();
+
+            value = Environment.GetEnvironmentVariable(parameter);
+            return value.As<T>();
+        }
+        catch
+        {
+        }
+        return default;
+    }
+
     /// <summary>
     /// serialize an object to the test results for a given test run
     /// </summary>
