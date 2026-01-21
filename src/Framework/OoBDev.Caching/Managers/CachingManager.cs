@@ -40,13 +40,14 @@ public class CachingManager : ICachingManager
         }
 
         var flushCacheAttribute = method.GetCustomAttribute<FlushCacheAttribute>();
-        if (flushCacheAttribute != null && !string.IsNullOrWhiteSpace(flushCacheAttribute.MethodName))
+        if (flushCacheAttribute != null)
         {
             if (!string.IsNullOrWhiteSpace(flushCacheAttribute.KeyFormatter))
                 return _formatter.Format(flushCacheAttribute.KeyFormatter, method, args) ??
                     throw new NullReferenceException($"Unable to creating caching key");
 
-            var targetMethod = flushCacheAttribute.TargetClass?.GetMethod(flushCacheAttribute.MethodName, [.. method.GetParameters().Select(p => p.ParameterType)]);
+            var targetMethod = flushCacheAttribute.MethodName == null ? null :
+                flushCacheAttribute.TargetClass?.GetMethod(flushCacheAttribute.MethodName, [.. method.GetParameters().Select(p => p.ParameterType)]);
             if (targetMethod != null)
                 return BuildKey(targetMethod, args);
         }
