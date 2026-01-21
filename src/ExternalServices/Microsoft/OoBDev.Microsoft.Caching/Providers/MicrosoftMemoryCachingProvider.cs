@@ -30,24 +30,26 @@ public class MicrosoftMemoryCachingProvider : ICachingProvider, IDisposable
     public void Dispose() => _cache.Dispose();
 
     /// <inheritdoc/>
-    public Task FlushAsync(string key)
+    public Task FlushAsync(string? key)
     {
-        _cache.Remove(key);
+        if (key != null)
+            _cache.Remove(key);
         return Task.FromResult(0);
     }
 
     /// <inheritdoc/>
-    public Task<object?> RetreiveAsync(string key, Type targetType) =>
+    public Task<object?> RetreiveAsync(string? key, Type? targetType) =>
         Task.FromResult(
-            _cache.TryGetValue(key, out var value) ?
+            key != null && _cache.TryGetValue(key, out var value) ?
                 value :
                 null
         );
 
     /// <inheritdoc/>
-    public Task StoreAsync(string key, object data, TimeSpan expiration)
+    public Task StoreAsync(string? key, object? data, TimeSpan expiration)
     {
-        _cache.Set(key, data, expiration);
+        if (key != null && data != null)
+            _cache.Set(key, data, expiration);
         return Task.FromResult(0);
     }
 }

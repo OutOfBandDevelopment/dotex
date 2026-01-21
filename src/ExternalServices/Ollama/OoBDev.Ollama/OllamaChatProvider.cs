@@ -8,12 +8,20 @@ using System.Threading.Tasks;
 
 namespace OoBDev.Ollama;
 
+/// <summary>
+/// Provides chat completion functionality using the Ollama LLM service.
+/// </summary>
 public class OllamaChatProvider : IChatProvider
 {
     private readonly Kernel _kernel;
     private readonly IChatCompletionService _chat;
     private readonly ILogger _logger;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="OllamaChatProvider"/> class.
+    /// </summary>
+    /// <param name="kernel">The Semantic Kernel instance configured for Ollama.</param>
+    /// <param name="logger">The logger for diagnostic output.</param>
     public OllamaChatProvider(
         [FromKeyedServices(KernelGlobal.Name)] Kernel kernel,
         ILogger<OllamaChatProvider> logger
@@ -24,6 +32,7 @@ public class OllamaChatProvider : IChatProvider
         _logger = logger;
     }
 
+    /// <inheritdoc/>
     public async Task<string?> OneShotAsync(string prompt)
     {
         var chatHistory = new ChatHistory();

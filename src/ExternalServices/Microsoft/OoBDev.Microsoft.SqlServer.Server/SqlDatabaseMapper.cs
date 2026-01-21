@@ -13,11 +13,19 @@ using System.Reflection;
 
 namespace OoBDev.Microsoft.SqlServer.Server;
 
+/// <summary>
+/// Provides database mapping functionality for Microsoft SQL Server using stored procedures and attributes.
+/// </summary>
 public class SqlDatabaseMapper : IDatabaseMapper
 {
     private readonly IConfiguration _configuration;
     private readonly IJsonSerializer _serializer;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SqlDatabaseMapper"/> class.
+    /// </summary>
+    /// <param name="configuration">The configuration for retrieving connection strings and timeouts.</param>
+    /// <param name="serializer">The JSON serializer for parameter serialization.</param>
     public SqlDatabaseMapper(
         IConfiguration configuration,
         IJsonSerializer serializer
@@ -27,6 +35,7 @@ public class SqlDatabaseMapper : IDatabaseMapper
         _serializer = serializer;
     }
 
+    /// <inheritdoc/>
     public IEnumerable<IDataParameter> GetCommandParameters<T>(T query)
     {
         foreach (var property in typeof(T).GetProperties())
@@ -49,6 +58,7 @@ public class SqlDatabaseMapper : IDatabaseMapper
         }
     }
 
+    /// <inheritdoc/>
     public string GetConnectionString<T>()
     {
         var attribute = typeof(T).GetCustomAttribute<ConnectionStringNameAttribute>() ??
@@ -57,6 +67,7 @@ public class SqlDatabaseMapper : IDatabaseMapper
             throw new ApplicationException($"Missing Connection string for {attribute.ConnectionStringName}");
     }
 
+    /// <inheritdoc/>
     public int? GetCommandTimeout<T>()
     {
         var attribute = typeof(T).GetCustomAttribute<ConnectionStringNameAttribute>() ??
@@ -65,6 +76,7 @@ public class SqlDatabaseMapper : IDatabaseMapper
         return int.TryParse(_configuration[$"CommandTimeouts:{attribute.ConnectionStringName}"], out var value) ? value : null;
     }
 
+    /// <inheritdoc/>
     public DbConnection GetConnection<T>()
     {
         var connectionString = GetConnectionString<T>();
@@ -72,6 +84,7 @@ public class SqlDatabaseMapper : IDatabaseMapper
         return sqlConnection;
     }
 
+    /// <inheritdoc/>
     public string GetStoredProcedureName<T>()
     {
         var attribute = typeof(T).GetCustomAttribute<StoredProcedureAttribute>() ??
@@ -79,6 +92,7 @@ public class SqlDatabaseMapper : IDatabaseMapper
         return attribute.StoredProcedureName;
     }
 
+    /// <inheritdoc/>
     public DbCommand GetStoredProcedure<T>(DbConnection sqlConnection, T query)
     {
         var commandString = GetStoredProcedureName<T>();
@@ -92,6 +106,7 @@ public class SqlDatabaseMapper : IDatabaseMapper
         return sqlCommand;
     }
 
+    /// <inheritdoc/>
     public Func<DbDataReader, TResult> GetReaderMapper<TResult>(DbDataReader reader)
     {
         var columns = reader.GetColumnSchema();

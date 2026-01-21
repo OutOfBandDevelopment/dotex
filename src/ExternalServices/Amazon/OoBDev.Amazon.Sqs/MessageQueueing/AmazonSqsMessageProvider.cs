@@ -24,6 +24,7 @@ public class AmazonSqsMessageProvider(
     ISqsClientFactory clientFactory,
     ILogger<AmazonSqsMessageProvider> logger
         ) : IMessageSenderProvider
+//TODO: add IMessageReceiverProvider support
 {
     /// <summary>
     /// Sends a message asynchronously to an AWS SQS Queue.
