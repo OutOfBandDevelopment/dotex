@@ -19,6 +19,10 @@ namespace OoBDev.System.Retro.Apple2.Dos33;
 /// </summary>
 public struct TrackSectorList
 {
+    /// <summary>
+    /// Initializes a new instance of the TrackSectorList struct by parsing T/S list data from a byte span.
+    /// </summary>
+    /// <param name="span">The byte span containing track/sector list sector data.</param>
     public TrackSectorList(ReadOnlySpan<byte> span)
     {
         Unused_0 = span[0x00];

@@ -16,6 +16,9 @@ public class EnvironmentExtensions
 {
     private readonly XNamespace _ns;
 
+    /// <summary>
+    /// Initializes a new instance of the EnvironmentExtensions class.
+    /// </summary>
     public EnvironmentExtensions()
     {
         _ns = this.GetXmlNamespace() + XmlNamespaces.OutputSuffix;

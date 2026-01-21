@@ -3,8 +3,18 @@ using System.Text.RegularExpressions;
 
 namespace OoBDev.System.Utilities;
 
+/// <summary>
+/// Provides string formatting with support for parameter replacement and property chain resolution.
+/// </summary>
 public class StringFormatter : IStringFormatter
 {
+    /// <summary>
+    /// Formats a string by replacing parameter placeholders with actual values from method arguments.
+    /// </summary>
+    /// <param name="keyFormatter">The format string containing placeholders like {paramName} or {paramName.Property}.</param>
+    /// <param name="method">The method whose parameters are used for placeholder replacement.</param>
+    /// <param name="args">The argument values to substitute into the format string.</param>
+    /// <returns>The formatted string with all placeholders replaced, or null if the format string is empty.</returns>
     public string? Format(string keyFormatter, MethodInfo method, object?[]? args)
     {
         if (string.IsNullOrWhiteSpace(keyFormatter))

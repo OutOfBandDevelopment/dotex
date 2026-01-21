@@ -9,6 +9,10 @@ namespace OoBDev.System.Retro.Apple2.Dos33;
 [StructLayout(LayoutKind.Explicit, Size = 2)]
 public readonly struct TrackSector
 {
+    /// <summary>
+    /// Initializes a new instance of the TrackSector struct by parsing track/sector data from a byte span.
+    /// </summary>
+    /// <param name="span">The byte span containing track and sector values.</param>
     public TrackSector(ReadOnlySpan<byte> span)
     {
         Track = span[0x00];
@@ -30,5 +34,9 @@ public readonly struct TrackSector
     [FieldOffset(1)]
     public readonly byte Sector;
 
+    /// <summary>
+    /// Returns a string representation of the track/sector pair.
+    /// </summary>
+    /// <returns>A string in the format "Track/Sector".</returns>
     public override string ToString() => $"{Track}/{Sector}";
 }

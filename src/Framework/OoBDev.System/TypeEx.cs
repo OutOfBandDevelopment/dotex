@@ -92,6 +92,11 @@ public static class TypeEx
     /// <returns></returns>
     public static bool IsSimpleType(this Type type) => type.IsPrimitive || _simpleTypes.Contains(type);
 
+    /// <summary>
+    /// Checks if the specified type is an anonymous type (compiler-generated for anonymous objects).
+    /// </summary>
+    /// <param name="type">The type to check.</param>
+    /// <returns>True if the type is an anonymous type, otherwise false.</returns>
     public static bool IsAnonymousType(this Type type) =>
         type?.Name switch
         {
@@ -100,6 +105,12 @@ public static class TypeEx
             _ => false
         };
 
+    /// <summary>
+    /// Gets the XML element name for the specified type, including namespace if applicable.
+    /// </summary>
+    /// <param name="type">The type to get the XML element name for.</param>
+    /// <param name="excludeNamespace">If true, excludes the namespace from the XML element name.</param>
+    /// <returns>An XName representing the XML element name for the type.</returns>
     public static XName GetXmlElementName(this Type type, bool excludeNamespace = false)
     {
         var objectName = type.Name;

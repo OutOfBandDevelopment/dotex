@@ -20,6 +20,11 @@ public static class StreamEx
         return await sr.ReadToEndAsync().ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Asynchronously reads all bytes from a stream and returns them as a byte array.
+    /// </summary>
+    /// <param name="stream">The stream to read from.</param>
+    /// <returns>A byte array containing the stream contents, or null if the stream is null.</returns>
     public static async Task<byte[]?> AsBytesAsync(this Stream? stream)
     {
         if (stream == null) return null;
@@ -27,6 +32,12 @@ public static class StreamEx
         await stream.CopyToAsync(ms).ConfigureAwait(false);
         return ms.ToArray();
     }
+
+    /// <summary>
+    /// Synchronously reads all bytes from a stream and returns them as a byte array.
+    /// </summary>
+    /// <param name="stream">The stream to read from.</param>
+    /// <returns>A byte array containing the stream contents, or null if the stream is null.</returns>
     public static byte[]? AsBytes(this Stream? stream)
     {
         if (stream == null) return null;

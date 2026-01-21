@@ -11,6 +11,10 @@ namespace OoBDev.System.Retro.Apple2.Dos33;
 /// </summary>
 public struct VolumeTableOfContents
 {
+    /// <summary>
+    /// Initializes a new instance of the VolumeTableOfContents struct by parsing VTOC data from a byte span.
+    /// </summary>
+    /// <param name="span">The byte span containing Volume Table of Contents data from track 17, sector 0.</param>
     public VolumeTableOfContents(ReadOnlySpan<byte> span)
     {
         Unused0 = span[0];
