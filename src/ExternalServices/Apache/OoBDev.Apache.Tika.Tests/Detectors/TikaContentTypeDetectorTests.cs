@@ -38,7 +38,7 @@ public class TikaContentTypeDetectorTests
         mockRepo.VerifyAll();
     }
 
-    [TestCategory(TestCategories.DevLocal)]
+    [TestCategory(TestCategories.Integration)]
     [TestMethod]
     [DataRow("accessible_epub_3.epub", "application/epub+zip")]
     [DataRow("Sample.pdf", "application/pdf")]

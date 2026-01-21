@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using OoBDev.TestUtilities;
 
 namespace OoBDev.DacFx.Tests;
 
@@ -8,7 +9,7 @@ public class DacPacBuilderTests
 {
     public required TestContext TestContext { get; set; }
 
-    [TestMethod]
+    [TestMethod, TestCategory(TestCategories.DevLocal)]
     public void BuildPackageTest()
     {
         var loggerFactory = LoggerFactory.Create(builder =>
