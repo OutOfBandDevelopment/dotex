@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using OllamaSharp;
+using OllamaSharp.Models;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -81,8 +82,16 @@ public static class OllamaApiClientExtensions
     public static async Task<ReadOnlyMemory<double>> GetEmbeddingDoubleAsync(
         this IOllamaApiClient client,
         string text,
-        string modelName) =>
-            await client.GetEmbeddingDoubleAsync(text, modelName);
+        string modelName)
+    {
+        var request = new EmbedRequest
+        {
+            Model = modelName,
+            Input = [text],
+        };
+        var response = await client.EmbedAsync(request);
+        return response.Embeddings[0].Select(Convert.ToDouble).ToArray();
+    }
 
     /// <summary>
     /// Synchronously retrieves the embedding for the specified text using the specified model.
@@ -95,5 +104,5 @@ public static class OllamaApiClientExtensions
         this IOllamaApiClient client,
         string text,
         string modelName) =>
-            client.GetEmbeddingDouble(text, modelName);
+            client.GetEmbeddingDoubleAsync(text, modelName).Result;
 }
