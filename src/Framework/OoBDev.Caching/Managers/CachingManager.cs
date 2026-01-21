@@ -6,11 +6,20 @@ using System.Threading.Tasks;
 
 namespace OoBDev.Caching.Managers;
 
+/// <summary>
+/// Manages cache operations including key generation, storage, retrieval, and flushing.
+/// Delegates actual cache storage to a configured <see cref="ICachingProvider"/>.
+/// </summary>
 public class CachingManager : ICachingManager
 {
     private readonly IStringFormatter _formatter;
     private readonly ISelectedService<ICachingProvider> _cache;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="CachingManager"/> class.
+    /// </summary>
+    /// <param name="formatter">The string formatter for building cache keys.</param>
+    /// <param name="cache">The selected caching provider.</param>
     public CachingManager(
         IStringFormatter formatter,
         ISelectedService<ICachingProvider> cache
@@ -20,6 +29,7 @@ public class CachingManager : ICachingManager
         _cache = cache;
     }
 
+    /// <inheritdoc/>
     public string BuildKey(MethodInfo method, params object[] args)
     {
         var isCachableAttribute = method.GetCustomAttribute<IsCacheableAttribute>();
@@ -44,12 +54,16 @@ public class CachingManager : ICachingManager
         throw new ApplicationException("Unable resolve Caching Key");
     }
 
+    /// <inheritdoc/>
     public Task FlushAsync(string key) => _cache.Value?.FlushAsync(key) ?? Task.FromResult(0);
+
+    /// <inheritdoc/>
     public async Task<T> RetreiveAsync<T>(string key) =>
 #pragma warning disable CS8603 // Possible null reference return.
         (T)((await RetreiveAsync(key, typeof(T))) ?? default(T));
 #pragma warning restore CS8603 // Possible null reference return.
 
+    /// <inheritdoc/>
     public async Task<object?> RetreiveAsync(string key, Type targetType) =>
         _cache.Value switch
         {
@@ -57,6 +71,7 @@ public class CachingManager : ICachingManager
             _ => await _cache.Value.RetreiveAsync(key, targetType)
         };
 
+    /// <inheritdoc/>
     public Task StoreAsync(string key, object data, TimeSpan lifeTime) =>
         _cache.Value?.StoreAsync(key, data, lifeTime) ?? Task.FromResult(0);
 }

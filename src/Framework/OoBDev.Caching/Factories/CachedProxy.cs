@@ -6,6 +6,12 @@ using System.Threading.Tasks;
 
 namespace OoBDev.Caching.Factories;
 
+/// <summary>
+/// Dynamic proxy that intercepts method calls and applies caching logic based on attributes.
+/// Uses <see cref="DispatchProxy"/> to create proxy instances at runtime.
+/// </summary>
+/// <typeparam name="TInterface">The interface type being proxied.</typeparam>
+/// <typeparam name="TImplemention">The implementation type being decorated with caching.</typeparam>
 public class CachedProxy<TInterface, TImplemention> : DispatchProxy
         where TImplemention : class, TInterface
 {
@@ -98,6 +104,13 @@ public class CachedProxy<TInterface, TImplemention> : DispatchProxy
         return method?.Invoke(_decorated, args);
     }
 
+    /// <summary>
+    /// Creates a new cacheable proxy instance that wraps the specified implementation.
+    /// </summary>
+    /// <param name="decorated">The implementation instance to wrap.</param>
+    /// <param name="cachingManager">The caching manager for cache operations.</param>
+    /// <param name="logger">The logger for recording cache operations.</param>
+    /// <returns>A proxy instance that intercepts method calls and applies caching logic.</returns>
     public static TInterface Create(TImplemention decorated, ICachingManager cachingManager, ILogger<TImplemention> logger)
     {
         object? proxy = Create<TInterface, CachedProxy<TInterface, TImplemention>>();

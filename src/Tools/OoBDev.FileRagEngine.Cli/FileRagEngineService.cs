@@ -15,6 +15,10 @@ using System.Threading.Tasks;
 
 namespace OoBDev.FileRagEngine.Cli;
 
+/// <summary>
+/// Hosted service that generates documentation using RAG (Retrieval-Augmented Generation) and LLM models.
+/// Scans directories, processes files, and generates documentation using templates and language models.
+/// </summary>
 public class FileRagEngineService : IHostedService
 {
     private readonly ILogger _log;
@@ -22,6 +26,13 @@ public class FileRagEngineService : IHostedService
     private readonly ITemplateEngine _engine;
     private readonly IServiceProvider _serviceProvider;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="FileRagEngineService"/> class.
+    /// </summary>
+    /// <param name="log">The logger for diagnostics.</param>
+    /// <param name="settings">The RAG engine configuration options.</param>
+    /// <param name="engine">The template engine for prompt generation.</param>
+    /// <param name="serviceProvider">The service provider for resolving LLM providers.</param>
     public FileRagEngineService(
         ILogger<FileRagEngineService> log,
         IOptions<FileRagEngineOptions> settings,
@@ -35,6 +46,11 @@ public class FileRagEngineService : IHostedService
         _serviceProvider = serviceProvider;
     }
 
+    /// <summary>
+    /// Starts the RAG documentation generation process.
+    /// </summary>
+    /// <param name="cancellationToken">Token to signal cancellation.</param>
+    /// <returns>A task representing the generation operation.</returns>
     public async Task StartAsync(CancellationToken cancellationToken)
     {
 #pragma warning disable CA2208 // Instantiate argument exceptions correctly
@@ -154,5 +170,10 @@ public class FileRagEngineService : IHostedService
         _ => _serviceProvider.GetService<IMessageCompletion>()
     } ?? throw new NotSupportedException($"No language model provider configured");
 
+    /// <summary>
+    /// Stops the service (no-op).
+    /// </summary>
+    /// <param name="cancellationToken">Token to signal cancellation.</param>
+    /// <returns>A completed task.</returns>
     public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
 }
