@@ -8,11 +8,27 @@ namespace OoBDev.System.IO.Ports;
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
 public class SerialPortAttribute : Attribute
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SerialPortAttribute"/> class with default settings.
+    /// </summary>
     public SerialPortAttribute() { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SerialPortAttribute"/> class with the specified baud rate.
+    /// </summary>
+    /// <param name="baudRate">The baud rate for the serial port.</param>
     public SerialPortAttribute(int baudRate)
     {
         BaudRate = baudRate;
     }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SerialPortAttribute"/> class with full port configuration.
+    /// </summary>
+    /// <param name="baudRate">The baud rate for the serial port.</param>
+    /// <param name="parity">The parity checking protocol.</param>
+    /// <param name="dataBits">The number of data bits per byte.</param>
+    /// <param name="stopBits">The number of stop bits per byte.</param>
     public SerialPortAttribute(int baudRate, Parity parity, int dataBits, StopBits stopBits)
         : this(baudRate)
     {
@@ -38,6 +54,13 @@ public class SerialPortAttribute : Attribute
     /// </summary>
     public Parity Parity { get; set; } = Parity.None;
 
+    /// <summary>
+    /// Gets or sets the read timeout in milliseconds. Default is -1 (infinite timeout).
+    /// </summary>
     public int ReadTimeout { get; set; } = -1;
+
+    /// <summary>
+    /// Gets or sets the write timeout in milliseconds. Default is -1 (infinite timeout).
+    /// </summary>
     public int WriteTimeout { get; set; } = -1;
 }

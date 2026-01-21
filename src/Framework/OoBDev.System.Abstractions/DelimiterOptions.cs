@@ -1,7 +1,7 @@
 ﻿namespace OoBDev.System;
 
 /// <summary>
-/// delimiter used option for <see cref="MemoryEx"/>
+/// Specifies how delimiters should be handled when splitting memory sequences.
 /// </summary>
 public enum DelimiterOptions
 {
