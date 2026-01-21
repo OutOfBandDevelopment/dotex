@@ -11,11 +11,10 @@ public class DirectoryRecord : IEnumerable<DirectoryRecord>
 {
     internal DirectoryRecord(byte[] buffer,
                              int offset,
-                             Stream file,
-                             DirectoryRecord parent)
+                             Stream? file,
+                             DirectoryRecord? parent)
     {
-        if (file != null)
-            disc = file;
+        disc = file;
         Parent = parent;
 
         //1	22 
@@ -162,28 +161,30 @@ public class DirectoryRecord : IEnumerable<DirectoryRecord>
             var sector = new byte[2048];
             var bufferLen = 0;
 
-            lock (disc)
-            {
-                disc.Seek(FirstSector * Size,
-                        SeekOrigin.Begin);
-                bufferLen = disc.Read(sector, 0, sector.Length);
-
-                for (var i = 0; i < bufferLen;)
+            if (disc != null)
+                lock (disc)
                 {
-                    var directorRecord = new DirectoryRecord(sector,
-                                                             i,
-                                                             disc,
-                                                             this);
-                    if (directorRecord.BytesInRecord < 34)
-                        break;
-                    i += directorRecord.BytesInRecord;
-                    yield return directorRecord;
+                    disc.Seek(FirstSector * Size,
+                            SeekOrigin.Begin);
+                    bufferLen = disc.Read(sector, 0, sector.Length);
+
                 }
+            for (var i = 0; i < bufferLen;)
+            {
+                var directorRecord = new DirectoryRecord(sector,
+                                                         i,
+                                                         disc,
+                                                         this);
+                if (directorRecord.BytesInRecord < 34)
+                    break;
+                i += directorRecord.BytesInRecord;
+                yield return directorRecord;
             }
         }
     }
-    private byte[] GetBuffer()
+    private byte[]? GetBuffer()
     {
+        if (disc == null) return null;
         lock (disc)
         {
             disc.Seek(FirstSector * 2048, SeekOrigin.Begin);
@@ -194,12 +195,11 @@ public class DirectoryRecord : IEnumerable<DirectoryRecord>
     }
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    private readonly Stream disc;
+    private readonly Stream? disc;
     public DirectoryRecord? Parent { get; init; }
 
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    private DirectoryRecord? _root;
-    public DirectoryRecord Root => _root ??= Parent?.Root ?? this;
+    [field: DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    public DirectoryRecord Root => field ??= Parent?.Root ?? this;
 
     public bool IsDirectory => (DirectoryType & DirectoryType.Directory) != 0;
 

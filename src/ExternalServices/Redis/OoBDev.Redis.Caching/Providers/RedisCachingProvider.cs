@@ -41,7 +41,7 @@ public class RedisCachingProvider : ICachingProvider
     /// </summary>
     /// <param name="key">The cache key to remove.</param>
     /// <returns>A task representing the asynchronous flush operation.</returns>
-    public async Task FlushAsync(string key)
+    public async Task FlushAsync(string? key)
     {
         if (string.IsNullOrWhiteSpace(key)) return;
         var db = _redis.Value.GetDatabase();
@@ -54,7 +54,7 @@ public class RedisCachingProvider : ICachingProvider
     /// <param name="key">The cache key to retrieve.</param>
     /// <param name="targetType">The target type to convert the cached value to.</param>
     /// <returns>The cached object converted to the target type, or null if not found.</returns>
-    public async Task<object?> RetreiveAsync(string key, Type targetType)
+    public async Task<object?> RetreiveAsync(string? key, Type? targetType)
     {
         if (string.IsNullOrWhiteSpace(key)) return null;
         var db = _redis.Value.GetDatabase();
@@ -62,8 +62,9 @@ public class RedisCachingProvider : ICachingProvider
         var result = await db.StringGetAsync(key).ConfigureAwait(false);
 
         if (!result.HasValue) return null;
-        var value = _converter.Convert(result.ToString(), targetType);
 
+        if (targetType == null) return result;
+        var value = _converter.Convert(result.ToString(), targetType);
         return value;
     }
 
@@ -74,7 +75,7 @@ public class RedisCachingProvider : ICachingProvider
     /// <param name="data">The data object to cache.</param>
     /// <param name="expiration">The time span after which the cached item expires.</param>
     /// <returns>A task representing the asynchronous store operation.</returns>
-    public async Task StoreAsync(string key, object data, TimeSpan expiration)
+    public async Task StoreAsync(string? key, object? data, TimeSpan expiration)
     {
         if (string.IsNullOrWhiteSpace(key) || data == null) return;
 

@@ -16,15 +16,13 @@ public class ApplicationInformation
     /// Gets the executing assembly.
     /// </summary>
     /// <value>The executing assembly.</value>
-    public Assembly ExecutingAssembly => executingAssembly ??= Assembly.GetExecutingAssembly();
-    private Assembly? executingAssembly;
+    public Assembly ExecutingAssembly => field ??= Assembly.GetExecutingAssembly();
 
     /// <summary>
     /// Gets the executing assembly version.
     /// </summary>
     /// <value>The executing assembly version.</value>
-    public Version? ExecutingAssemblyVersion => executingAssemblyVersion ??= ExecutingAssembly.GetName().Version;
-    private Version? executingAssemblyVersion;
+    public Version? ExecutingAssemblyVersion => field ??= ExecutingAssembly.GetName().Version;
 
     /// <summary>
     /// Gets the compile date of the currently executing assembly.

@@ -79,7 +79,7 @@ public interface IExampleRepository
 public class ExampleRepository : IExampleRepository
 {
     public ReturnModel NotTask(string param1, string param2) =>
-       new ReturnModel
+       new()
        {
            Param1 = param1,
            Param2 = param2,

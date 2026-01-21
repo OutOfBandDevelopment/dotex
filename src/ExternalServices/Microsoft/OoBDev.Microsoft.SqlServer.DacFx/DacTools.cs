@@ -26,7 +26,7 @@ public static class DacTools
         return options;
     }
 
-    public static TSqlModel OpenDacPacModel(string filename) => new TSqlModel(filename);
+    public static TSqlModel OpenDacPacModel(string filename) => new(filename);
 
     public static IEnumerable<(string name, TSqlScript script)> ReadPackage(this TSqlModel sqlModel)
     {

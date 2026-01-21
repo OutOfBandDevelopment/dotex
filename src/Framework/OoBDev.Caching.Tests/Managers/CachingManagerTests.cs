@@ -29,7 +29,7 @@ public class CachingManagerTests
         this.mockCachingProvider = this.mockRepository.Create<ICachingProvider>();
     }
 
-    private CachingManager CreateManager() => new CachingManager(this.mockStringFormatter.Object, this.mockCache.Object);
+    private CachingManager CreateManager() => new(this.mockStringFormatter.Object, this.mockCache.Object);
 
     public abstract class TestObject
     {

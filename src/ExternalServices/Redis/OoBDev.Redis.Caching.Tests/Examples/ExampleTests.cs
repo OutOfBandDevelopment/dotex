@@ -23,7 +23,7 @@ public class ExampleTests
         var redisConnectionString = TestContext.GetRequiredProperty<string>("REDIS_CONNECTION_STRING");
 
         var configuration = new ConfigurationBuilder()
-            .AddInMemoryCollection(new Dictionary<string, string>
+            .AddInMemoryCollection(new Dictionary<string, string?>
             {
                 { "Redis:ConnectionMultiplexer:Config", redisConnectionString }
             })
@@ -85,7 +85,7 @@ public interface IExampleRepository
 public class ExampleRepository : IExampleRepository
 {
     public ReturnModel NotTask(string param1, string param2) =>
-       new ReturnModel
+       new()
        {
            Param1 = param1,
            Param2 = param2,

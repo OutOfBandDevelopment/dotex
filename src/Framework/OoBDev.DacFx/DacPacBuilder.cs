@@ -473,7 +473,7 @@ public class DacPacBuilder : IDacPacBuilder
     #region Parameter and Type Handling
 
     public XElement FunctionParameters(IEnumerable<ParameterInfo> parameters) =>
-        new XElement(ns + "Relationship", new XAttribute("Name", "Parameters"),
+        new(ns + "Relationship", new XAttribute("Name", "Parameters"),
             from parameter in parameters
             select new XElement(ns + "Entry",
                 new XElement(ns + "Element",
@@ -516,7 +516,7 @@ public class DacPacBuilder : IDacPacBuilder
     }
 
     public XElement Return(ParameterInfo returnInfo, bool isFunction) =>
-        new XElement(ns + "Relationship",
+        new(ns + "Relationship",
             new XAttribute("Name", isFunction ? "Type" : "ReturnType"),
             new XElement(ns + "Entry",
                 TypeSpecifier(returnInfo)
@@ -524,7 +524,7 @@ public class DacPacBuilder : IDacPacBuilder
         );
 
     public XElement TypeSpecifier(ParameterInfo parameterInfo) =>
-        new XElement(ns + "Element", new XAttribute("Type", "SqlTypeSpecifier"),
+        new(ns + "Element", new XAttribute("Type", "SqlTypeSpecifier"),
             Properties(parameterInfo),
             new XElement(ns + "Relationship", new XAttribute("Name", "Type"),
                 new XElement(ns + "Entry",

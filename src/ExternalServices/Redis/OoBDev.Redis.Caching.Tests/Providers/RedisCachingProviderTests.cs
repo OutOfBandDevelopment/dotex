@@ -31,7 +31,7 @@ public class RedisCachingProviderTests
         this.mockConnectionMultiplexerFactory = this.mockRepository.Create<IConnectionMultiplexerFactory>();
     }
 
-    private RedisCachingProvider CreateProvider() => new RedisCachingProvider(
+    private RedisCachingProvider CreateProvider() => new(
             this.mockObjectConverter.Object,
             mockJsonSerializer.Object,
             this.mockConnectionMultiplexerFactory.Object
@@ -47,7 +47,7 @@ public class RedisCachingProviderTests
 
         // Test
         var provider = this.CreateProvider();
-        string key = null;
+        string? key = null;
 
 
         await provider.FlushAsync(key);
@@ -93,8 +93,8 @@ public class RedisCachingProviderTests
 
         // Test
         var provider = this.CreateProvider();
-        string key = null;
-        Type targetType = null;
+        string? key = null;
+        Type? targetType = null;
 
 
         var result = await provider.RetreiveAsync(key, targetType);
@@ -148,8 +148,8 @@ public class RedisCachingProviderTests
 
         // Test
         var provider = this.CreateProvider();
-        string key = null;
-        object data = null;
+        string? key = null;
+        object? data = null;
         var expiration = TimeSpan.MinValue;
 
         await provider.StoreAsync(key, data, expiration);

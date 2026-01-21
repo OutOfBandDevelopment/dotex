@@ -7,9 +7,9 @@ BEGIN
 			,@timeout INT		= 6000;
 
 	DECLARE @received TABLE (
-		 [conversationGroup]	UNIQUEIDENTIFIER
-		,[conversationHandle]	UNIQUEIDENTIFIER
-		,[messageType]			NVARCHAR(255)
+		 [conversationGroup]	UNIQUEIDENTIFIER    NOT NULL
+		,[conversationHandle]	UNIQUEIDENTIFIER    NOT NULL
+		,[messageType]			NVARCHAR(255)       NOT NULL
 		,[messageBody]			XML
 	);
 
@@ -35,7 +35,7 @@ BEGIN
 		INTO [#resposes]
 		FROM @received AS [$received]
 		WHERE 
-			[$received].[messageType] = 'oobdev://embedding/sentence-transformer/response';
+			    [$received].[messageType] = 'oobdev://embedding/sentence-transformer/response';
 				
 		DECLARE @response [embedding].[oobdev://embedding/sentence-transformer/response/send-batch/set];
 				

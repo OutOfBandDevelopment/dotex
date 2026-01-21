@@ -21,7 +21,7 @@ public class RedisCachingProviderDevLocalTests
             //    (ConnectionMultiplexerFactory.SourceConfigurationKey, "localhost")
             //    )
             .TryAddRedisCachingServices()
-            //.AddToolkitServices()
+        //.AddToolkitServices()
         ;
 
         var serviceProvider = services.BuildServiceProvider();
@@ -40,11 +40,10 @@ public class RedisCachingProviderDevLocalTests
 
         // Test
         var provider = this.CreateProvider();
-        string key = null;
+        string? key = null;
 
 
-        await provider.FlushAsync(
-            key);
+        await provider.FlushAsync(key);
 
         // Assert
         Assert.Fail();

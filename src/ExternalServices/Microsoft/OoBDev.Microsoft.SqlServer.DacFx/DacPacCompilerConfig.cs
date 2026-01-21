@@ -53,7 +53,7 @@ public class DacPacCompilerConfig : IDacPacCompilerConfig
 
     public ModelOptionSource? ModelOptionSource { get; }
 
-    public static Dictionary<string, string> CommandLineSwitchMappings => new Dictionary<string, string>
+    public static Dictionary<string, string> CommandLineSwitchMappings => new()
     {
         { "--template",TemplatePathKey},
         { "-t",TemplatePathKey},

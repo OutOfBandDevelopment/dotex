@@ -1,4 +1,4 @@
-using OoBDev.System.Text;
+﻿using OoBDev.System.Text;
 using OoBDev.System.Text.Json.Serialization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -28,13 +28,12 @@ public class MessageHandlerProvider(
     private readonly ILogger _logger = logger;
 
     private Type? _channelType;
-    private IConfigurationSection _config = null!;
     private readonly ConcurrentBag<IMessageQueueHandler> _handlers = [];
 
     /// <summary>
     /// Gets the configuration section associated with the message handler.
     /// </summary>
-    public IConfigurationSection Config => _config ?? throw new ApplicationException($"Missing Configuration");
+    public IConfigurationSection Config { get => field ?? throw new ApplicationException($"Missing Configuration"); private set; } = null!;
 
     /// <summary>
     /// Handles the specified queue message by invoking each registered message handler.
@@ -91,7 +90,7 @@ public class MessageHandlerProvider(
 
     IMessageHandlerProviderWrapped IMessageHandlerProviderWrapped.SetConfig(IConfigurationSection config)
     {
-        _config = config ?? throw new ApplicationException($"Missing Configuration");
+        Config = config ?? throw new ApplicationException($"Missing Configuration");
         return this;
     }
 

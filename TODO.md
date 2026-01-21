@@ -76,19 +76,22 @@ All migration work for Incomming projects and BinaryDataDecoders:
 - ⏸️ BinaryDataDecoders (decisions required)
 
 ### 🐛 [Bug Fixes & Technical Debt](./TODO-bug-fixes.md)
-**Status:** ✅ VERIFIED COMPLETE
+**Status:** ⚠️ Active Work - Build Warnings Resolution
 
-Bug fixes, breaking changes, and technical debt resolution:
+**Active Work:**
+- ⚠️ **Build Warnings** - 95 warnings to categorize and resolve
+
+**Completed:**
 - ✅ Phase 0 critical bugs (6 fixes) - All complete
 - ✅ MSTest ExpectedExceptionAttribute conversion (40 instances) - Complete
 - ✅ Swashbuckle 10.1.0 breaking changes - All 5 files fixed and verified
 - ✅ .NET 10.0 breaking changes - ClaimsPrincipal DI + IActionContextAccessor deprecation
 - ✅ XML Documentation generation - Enabled globally, Swagger working
-
-**Completed:**
 - ✅ Build verification: All 65 projects build successfully
 - ✅ Swagger verification: Summary and Description properties appear
 - ✅ Swagger generation: Tested and verified working
+
+**Ongoing:**
 - ⏳ Technical debt: 80%+ test coverage, documentation, dependency audits
 
 ### 📝 [Documentation](./TODO-documentation.md)

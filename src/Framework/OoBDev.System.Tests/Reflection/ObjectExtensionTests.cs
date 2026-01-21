@@ -38,11 +38,13 @@ public class ObjectExtensionTests
     [DataRow("AQIDBAU=", typeof(byte[]), new byte[] { 1, 2, 3, 4, 5 })]
     public void Test(object input, Type type, object expected)
     {
-        var method = typeof(ObjectExtensions).GetMethod(nameof(ObjectExtensions.As), [typeof(object)]).MakeGenericMethod(type);
+        var method = typeof(ObjectExtensions).GetMethod(nameof(ObjectExtensions.As), [typeof(object)])?.MakeGenericMethod(type)
+            ?? throw new ApplicationException("This is not expected!");
         var result = method.Invoke(null, [input]);
 
         if (expected is IEnumerable and not string)
         {
+            Assert.IsNotNull(result);
             CollectionAssert.AreEqual((ICollection)expected, (ICollection)result);
         }
         else

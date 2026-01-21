@@ -1,6 +1,6 @@
 # TODO - Bug Fixes & Technical Debt Epic
 
-**Last Updated:** 2026-01-20
+**Last Updated:** 2026-01-21
 
 This document tracks bug fixes, breaking changes, and technical debt resolution.
 
@@ -10,7 +10,47 @@ This document tracks bug fixes, breaking changes, and technical debt resolution.
 
 ## Active Work
 
-*No active bug fixes at this time. All known critical bugs resolved.*
+### ⚠️ Build Warnings Resolution (95 warnings)
+
+**Status:** 🔴 PENDING - Investigation Required
+
+**📋 Detailed Tracking:** [TODO-build-warnings.md](./TODO-build-warnings.md)
+
+**Current State:**
+- 95 build warnings across the solution
+- Warning types to be categorized
+- Priority to be determined based on warning severity
+
+**4-Phase Approach:**
+1. **Phase 1: Investigation** - Capture and categorize all warnings
+2. **Phase 2: Prioritization** - Assign priority levels (Critical → Low)
+3. **Phase 3: Resolution** - Fix warnings systematically by category
+4. **Phase 4: Enforcement** - Enable warnings-as-errors in CI/CD
+
+**Quick Start:**
+```bash
+cd src
+dotnet build > build-warnings.txt 2>&1
+# Then analyze warnings by category
+```
+
+**Expected Categories:**
+- CS1591 - Missing XML documentation (architectural standard)
+- CS8600/CS8602/CS8604 - Nullable reference warnings
+- CS8618 - Non-nullable field initialization
+- CS0618 - Obsolete API usage
+- OBDPK001 - Missing PackageReadmeFile
+- Other codes (to be identified)
+
+**Success Criteria:**
+- [ ] Zero warnings in Release build
+- [ ] All warnings categorized and documented
+- [ ] Resolution strategy documented for each type
+- [ ] Optional: `<TreatWarningsAsErrors>true</TreatWarningsAsErrors>` enabled
+
+**Related:**
+- [architectural-standards.md](docs/architecture/architectural-standards.md) - XML documentation requirements
+- [TODO-build-warnings.md](./TODO-build-warnings.md) - Detailed tracking with progress tables
 
 ---
 

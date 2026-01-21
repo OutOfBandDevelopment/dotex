@@ -124,51 +124,51 @@ public class SearchQueryOperationFilter(
                     if (request != null)
                     {
                         operation.Parameters ??= [];
-
-                        foreach (var property in request.Properties)
-                        {
-                            if (property.Key.Equals(nameof(ISearchQuery.Filter), StringComparison.InvariantCultureIgnoreCase))
+                        if (request.Properties != null)
+                            foreach (var property in request.Properties)
                             {
-                                //TODO: ignore filter support for now.
-                                //var filterableProperties = ExpressionTreeBuilder.GetFilterablePropertyNames(elementType);
-                                //foreach (var filter in filterableProperties)
-                                //{
-                                //    var localFilterSchema = getSchema(filter);
-                                //    foreach (var filterType in filterSchema.Properties)
-                                //    {
-                                //        operation.Parameters.Add(new OpenApiParameter()
-                                //        {
-                                //            Name = $"{property.Key}.{filter}.{filterType.Key}",
-                                //            Schema = (filterType.Key == "in") ? localFilterSchema.array : localFilterSchema.item,
-                                //            In = ParameterLocation.Query,
-                                //        });
-                                //    }
-                                //}
-                            }
-                            else if (property.Key.Equals(nameof(ISearchQuery.OrderBy), StringComparison.InvariantCultureIgnoreCase))
-                            {
-                                var sortableProperties = treeBuilder.GetSortablePropertyNames();
-                                foreach (var sort in sortableProperties)
+                                if (property.Key.Equals(nameof(ISearchQuery.Filter), StringComparison.InvariantCultureIgnoreCase))
+                                {
+                                    //TODO: ignore filter support for now.
+                                    //var filterableProperties = ExpressionTreeBuilder.GetFilterablePropertyNames(elementType);
+                                    //foreach (var filter in filterableProperties)
+                                    //{
+                                    //    var localFilterSchema = getSchema(filter);
+                                    //    foreach (var filterType in filterSchema.Properties)
+                                    //    {
+                                    //        operation.Parameters.Add(new OpenApiParameter()
+                                    //        {
+                                    //            Name = $"{property.Key}.{filter}.{filterType.Key}",
+                                    //            Schema = (filterType.Key == "in") ? localFilterSchema.array : localFilterSchema.item,
+                                    //            In = ParameterLocation.Query,
+                                    //        });
+                                    //    }
+                                    //}
+                                }
+                                else if (property.Key.Equals(nameof(ISearchQuery.OrderBy), StringComparison.InvariantCultureIgnoreCase))
+                                {
+                                    var sortableProperties = treeBuilder.GetSortablePropertyNames();
+                                    foreach (var sort in sortableProperties)
+                                    {
+                                        operation.Parameters.Add(new OpenApiParameter()
+                                        {
+                                            Name = $"{property.Key}.{sort}",
+                                            Schema = orderSchema,
+                                            In = ParameterLocation.Query,
+                                        });
+                                    }
+                                }
+                                else
                                 {
                                     operation.Parameters.Add(new OpenApiParameter()
                                     {
-                                        Name = $"{property.Key}.{sort}",
-                                        Schema = orderSchema,
+                                        Name = property.Key,
+                                        Description = property.Value.Description,
+                                        Schema = property.Value,
                                         In = ParameterLocation.Query,
                                     });
                                 }
                             }
-                            else
-                            {
-                                operation.Parameters.Add(new OpenApiParameter()
-                                {
-                                    Name = property.Key,
-                                    Description = property.Value.Description,
-                                    Schema = property.Value,
-                                    In = ParameterLocation.Query,
-                                });
-                            }
-                        }
                     }
 
                 }

@@ -26,7 +26,7 @@ public class HealthChecksDocumentFilter : IDocumentFilter
 
         var operation = new OpenApiOperation
         {
-            Tags = new HashSet<OpenApiTagReference> { new OpenApiTagReference("ApiHealth") }
+            Tags = new HashSet<OpenApiTagReference> { new("ApiHealth") }
         };
 
         var schema = new OpenApiSchema
