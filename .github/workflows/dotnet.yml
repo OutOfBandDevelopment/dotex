@@ -73,7 +73,13 @@ jobs:
         persist-credentials: true
         fetch-depth: 0
         lfs: true
-        submodules: true        
+        submodules: recursive
+
+      # Pull LFS files from submodules (GitHub Actions doesn't do this automatically)
+    - name: Checkout LFS files in submodules
+      shell: bash
+      run: |
+        git submodule foreach --recursive 'git lfs fetch && git lfs checkout'
 
       # https://github.com/actions/setup-dotnet
     - name: Install .Net 10.0 SDK
