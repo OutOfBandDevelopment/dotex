@@ -21,6 +21,7 @@ public class JsonNavigatorTests
 
         var oNavigator = json.ToNavigable().CreateNavigator() ?? throw new NotSupportedException();
         oNavigator?.MoveToRoot();
+        if (oNavigator == null) throw new NotSupportedException("You shouldn't get here!");
         TestContext.WriteLine(oNavigator.OuterXml);
 
         var rootName = oNavigator.Select("/");

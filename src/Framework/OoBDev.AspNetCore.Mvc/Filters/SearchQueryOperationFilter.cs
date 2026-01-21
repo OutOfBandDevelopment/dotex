@@ -213,6 +213,7 @@ public class SearchQueryOperationFilter(
 
         // Cast to actual OpenApiSchema if possible
         if (requestSchema is not OpenApiSchema schema) return null;
+        schema.Properties ??= new Dictionary<string, IOpenApiSchema>();
 
         if (schema.Properties.TryGetValue(nameof(ISearchQuery.PageSize), out var pageSize))
         {
@@ -235,14 +236,14 @@ public class SearchQueryOperationFilter(
                 {
                     Type = JsonSchemaType.Object,
                     Description = $"**Filterable Properties:** {string.Join("; ", treeBuilder.GetFilterablePropertyNames())}",
-                    Properties = new Dictionary<string, IOpenApiSchema>()
+                    Properties = new Dictionary<string, IOpenApiSchema>(),
                 };
                 context.SchemaRepository.Schemas.Add(filterName, filterSchema);
                 foreach (var propertyName in treeBuilder.GetFilterablePropertyNames())
                 {
                     if (filterParameterSchema != null)
                     {
-                        filterSchema.Properties[json.AsPropertyName(propertyName)] = filterParameterSchema;
+                        filterSchema.Properties![json.AsPropertyName(propertyName)] = filterParameterSchema;
                     }
                 }
             }
@@ -271,7 +272,7 @@ public class SearchQueryOperationFilter(
                 {
                     if (orderDirectionsSchema != null)
                     {
-                        orderBySchema.Properties[json.AsPropertyName(propertyName)] = orderDirectionsSchema;
+                        orderBySchema.Properties![json.AsPropertyName(propertyName)] = orderDirectionsSchema;
                     }
                 }
             }

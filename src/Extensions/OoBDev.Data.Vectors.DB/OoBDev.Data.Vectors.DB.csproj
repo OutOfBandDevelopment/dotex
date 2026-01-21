@@ -10,7 +10,7 @@
     <NoWarn>$(NoWarn);MSB3270;NU1701;NU1702</NoWarn>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <!-- SQL projects don't generate XML documentation files -->
-    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    
   </PropertyGroup>
 
   <!-- https://github.com/rr-wfm/MSBuild.Sdk.SqlProj#publishing-support -->

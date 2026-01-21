@@ -236,7 +236,7 @@ Swagger Summary and Description properties were missing because XML documentatio
 **1. Directory.Build.props (Line 19):**
 ```xml
 <!-- BEFORE: -->
-<!--<GenerateDocumentationFile>False</GenerateDocumentationFile>-->
+<!---->
 
 <!-- AFTER: -->
 <GenerateDocumentationFile>True</GenerateDocumentationFile>
@@ -245,13 +245,13 @@ Swagger Summary and Description properties were missing because XML documentatio
 **2. OoBDev.AspNetCore.Mvc.csproj (Line 7 removed):**
 ```xml
 <!-- REMOVED local override -->
-<GenerateDocumentationFile>False</GenerateDocumentationFile>
+
 ```
 
 **3. OoBDev.WebApi.csproj (Line 10 removed):**
 ```xml
 <!-- REMOVED local override -->
-<GenerateDocumentationFile>False</GenerateDocumentationFile>
+
 
 <!-- Also cleaned up duplicate InvariantGlobalization setting -->
 ```

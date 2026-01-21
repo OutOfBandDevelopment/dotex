@@ -141,6 +141,8 @@ public class StreamDevice<TMessage> : IStreamDevice<TMessage>
 
     private Task Transmitter(AsyncManualResetEvent mre) => Task.Run(async () =>
     {
+        var encoder = _encoder;
+        if (encoder == null) return;
         while (!_token.IsCancellationRequested)
         {
             await mre.WaitAsync();
@@ -149,7 +151,7 @@ public class StreamDevice<TMessage> : IStreamDevice<TMessage>
                 try
                 {
                     await ReportDeviceStatus(StreamDeviceStatus.Transmitting);
-                    var requestBuffer = _encoder.Encode(ref item);
+                    var requestBuffer = encoder.Encode(ref item);
                     await _stream.WriteAsync(requestBuffer, _token)
                                  .ConfigureAwait(false);
                     await ReportDeviceStatus(StreamDeviceStatus.Transmitted);
