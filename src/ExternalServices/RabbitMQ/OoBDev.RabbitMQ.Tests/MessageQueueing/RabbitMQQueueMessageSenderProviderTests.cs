@@ -1,18 +1,12 @@
 ﻿using OoBDev.MessageQueueing;
-using OoBDev.MessageQueueing.Services;
 using OoBDev.MessageQueueing.Tests;
 using OoBDev.RabbitMQ.MessageQueueing;
-using OoBDev.RabbitMQ.Tests.TestItems;
 using OoBDev.TestUtilities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
-using System.Diagnostics;
 
 namespace OoBDev.RabbitMQ.Tests.MessageQueueing;
 

@@ -1,7 +1,7 @@
 # Architectural Standards
 
-**Version:** 1.0
-**Last Updated:** 2026-01-12
+**Version:** 1.1
+**Last Updated:** 2026-01-21
 **Project:** OoBDev (dotex) - .NET Extensions Framework
 
 ---
@@ -140,6 +140,11 @@ src/
   <!-- ✅ MUST: License file -->
   <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
 </PropertyGroup>
+
+<!-- ✅ MUST: Include README.md in NuGet package -->
+<ItemGroup>
+  <None Include="README.md" Pack="true" PackagePath="\" />
+</ItemGroup>
 ```
 
 **Additional Requirements for Libraries:**
@@ -157,8 +162,10 @@ src/
 ```
 
 **Validation:**
-- Build task `AutoSetPackageReadmeFile` validates README configuration
-- NuGet package validation ensures metadata is complete
+- ✅ Build task `AutoSetPackageReadmeFile` validates README configuration
+- ✅ Analyzer: OBDPK001 (missing PackageReadmeFile)
+- ✅ NuGet package validation ensures metadata is complete
+- ✅ Build fails if README.md is missing or not included in package
 
 **Reference:** `Directory.Build.props`, `Directory.Build.targets`
 
@@ -924,6 +931,8 @@ Use this checklist for code reviews and new projects:
 - [ ] Project in correct layer directory
 - [ ] README.md exists and is complete
 - [ ] .csproj includes all required metadata
+- [ ] PackageReadmeFile property set to README.md
+- [ ] README.md included in ItemGroup with Pack="true"
 - [ ] Nullable enabled
 - [ ] ImplicitUsings disabled
 - [ ] GenerateDocumentationFile enabled
@@ -999,4 +1008,5 @@ Use this checklist for code reviews and new projects:
 
 ## Change Log
 
+- 2026-01-21 v1.1: Added explicit requirement for README.md ItemGroup in .csproj files
 - 2026-01-12 v1.0: Initial architectural standards created

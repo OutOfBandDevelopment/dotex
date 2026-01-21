@@ -30,7 +30,7 @@ public class CachingManager : ICachingManager
     }
 
     /// <inheritdoc/>
-    public string BuildKey(MethodInfo method, params object[] args)
+    public string BuildKey(MethodInfo method, params object?[]? args)
     {
         var isCachableAttribute = method.GetCustomAttribute<IsCacheableAttribute>();
         if (isCachableAttribute != null)
@@ -40,7 +40,7 @@ public class CachingManager : ICachingManager
         }
 
         var flushCacheAttribute = method.GetCustomAttribute<FlushCacheAttribute>();
-        if (flushCacheAttribute != null)
+        if (flushCacheAttribute != null && !string.IsNullOrWhiteSpace(flushCacheAttribute.MethodName))
         {
             if (!string.IsNullOrWhiteSpace(flushCacheAttribute.KeyFormatter))
                 return _formatter.Format(flushCacheAttribute.KeyFormatter, method, args) ??
@@ -58,9 +58,9 @@ public class CachingManager : ICachingManager
     public Task FlushAsync(string key) => _cache.Value?.FlushAsync(key) ?? Task.FromResult(0);
 
     /// <inheritdoc/>
-    public async Task<T> RetreiveAsync<T>(string key) =>
+    public async Task<T?> RetreiveAsync<T>(string key) =>
 #pragma warning disable CS8603 // Possible null reference return.
-        (T)((await RetreiveAsync(key, typeof(T))) ?? default(T));
+        (T?)((await RetreiveAsync(key, typeof(T))) ?? default(T));
 #pragma warning restore CS8603 // Possible null reference return.
 
     /// <inheritdoc/>

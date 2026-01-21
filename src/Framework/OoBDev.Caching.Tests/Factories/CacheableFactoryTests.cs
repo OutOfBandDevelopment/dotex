@@ -1,6 +1,5 @@
 ﻿using OoBDev.Caching.Factories;
 using OoBDev.TestUtilities;
-using OoBDev.TestUtilities.Logging;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

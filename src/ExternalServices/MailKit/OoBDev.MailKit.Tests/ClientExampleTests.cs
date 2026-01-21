@@ -5,7 +5,6 @@ using MailKit.Security;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MimeKit;
 using OoBDev.TestUtilities;
-using Org.BouncyCastle.Tls;
 using System;
 using System.Linq;
 using System.Threading.Tasks;

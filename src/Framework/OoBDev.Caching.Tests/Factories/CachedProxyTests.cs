@@ -3,10 +3,8 @@ using OoBDev.Caching.Factories;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
-using Microsoft.Extensions.Logging;
 using System.Reflection;
 using System.Threading.Tasks;
-using OoBDev.TestUtilities.Logging;
 
 namespace OoBDev.Caching.Tests.Factories;
 

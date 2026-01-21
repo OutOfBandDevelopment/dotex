@@ -2,7 +2,6 @@
 using OoBDev.Caching.Factories;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using System;
 using System.Threading.Tasks;
 
 namespace OoBDev.Caching.Tests.Factories;

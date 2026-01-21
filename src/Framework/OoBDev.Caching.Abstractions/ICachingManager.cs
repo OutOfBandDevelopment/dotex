@@ -47,5 +47,5 @@ public interface ICachingManager
     /// <typeparam name="T">The type of the cached value.</typeparam>
     /// <param name="key">The cache key.</param>
     /// <returns>The cached value.</returns>
-    Task<T> RetreiveAsync<T>(string key);
+    Task<T?> RetreiveAsync<T>(string key);
 }
