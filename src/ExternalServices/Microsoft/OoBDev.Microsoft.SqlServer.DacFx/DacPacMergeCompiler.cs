@@ -7,15 +7,23 @@ using System.Text;
 
 namespace OoBDev.Microsoft.SqlServer.DacFx;
 
+/// <summary>
+/// Compiles multiple DacPac files into a single merged DacPac package.
+/// </summary>
 public class DacpacMergeCompiler : IDacpacMergeCompiler
 {
     private readonly ILogger<DacpacMergeCompiler> _logger;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="DacpacMergeCompiler"/> class.
+    /// </summary>
+    /// <param name="logger">The logger for compilation operations.</param>
     public DacpacMergeCompiler(ILogger<DacpacMergeCompiler> logger)
     {
         _logger = logger;
     }
 
+    /// <inheritdoc/>
     public void CreatePackage(IDacPacMergeDefinition def)
     {
         // ===== TSqlModel =====

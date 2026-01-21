@@ -8,8 +8,12 @@ using System.Linq;
 
 namespace OoBDev.Microsoft.SqlServer.DacFx;
 
+/// <summary>
+/// Factory for creating DacPac merge definitions from templates.
+/// </summary>
 public class DacPacMergeDefinitionFactory : IDacPacMergeDefinitionFactory
 {
+    /// <inheritdoc/>
     public IDacPacMergeDefinition Create(IDacPacMergeTemplate template)
     {
         var matcher = new Matcher();

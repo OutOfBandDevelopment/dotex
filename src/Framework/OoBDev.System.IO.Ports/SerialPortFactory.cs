@@ -6,11 +6,16 @@ using SerialPort = System.IO.Ports.SerialPort;
 
 namespace OoBDev.System.IO.Ports;
 
+/// <summary>
+/// Factory for creating serial port device adapters based on <see cref="SerialPortAttribute"/> configuration.
+/// </summary>
 [DeviceTarget(typeof(SerialPortAttribute))]
 public class SerialPortFactory : IDeviceFactory
 {
+    /// <inheritdoc/>
     public bool CanGetDevice(object? definition) => definition?.GetType()?.GetCustomAttributes<SerialPortAttribute>()?.Any() ?? false;
 
+    /// <inheritdoc/>
     public IDeviceAdapter? GetDevice(string devicePath, object? definition)
     {
         var assignedDevicePath = SerialPort.GetPortNames()
@@ -38,5 +43,7 @@ public class SerialPortFactory : IDeviceFactory
                 WriteTimeout = config.WriteTimeout,
             });
     }
+
+    /// <inheritdoc/>
     public IEnumerable<string> GetDeviceNames() => SerialPort.GetPortNames().OrderBy(s => s);
 }

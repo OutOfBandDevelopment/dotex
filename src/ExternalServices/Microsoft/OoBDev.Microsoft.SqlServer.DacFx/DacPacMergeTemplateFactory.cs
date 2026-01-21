@@ -6,10 +6,18 @@ using System.Threading.Tasks;
 
 namespace OoBDev.Microsoft.SqlServer.DacFx;
 
+/// <summary>
+/// Factory for creating DacPac merge templates from configuration and template files.
+/// </summary>
 public class DacPacMergeTemplateFactory : TemplateFactoryBase<DacPacMergeTemplate>, IDacPacMergeTemplateFactory
 {
     private readonly IDacPacCompilerConfig _config;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="DacPacMergeTemplateFactory"/> class.
+    /// </summary>
+    /// <param name="config">The compiler configuration.</param>
+    /// <param name="converter">The object converter for deserializing templates.</param>
     public DacPacMergeTemplateFactory(
         IDacPacCompilerConfig config,
         IObjectConverter converter
@@ -18,6 +26,7 @@ public class DacPacMergeTemplateFactory : TemplateFactoryBase<DacPacMergeTemplat
         _config = config;
     }
 
+    /// <inheritdoc/>
     public async Task<IDacPacMergeTemplate> Create()
     {
         var template = await ReadTemplateFileAsync(_config.TemplatePath);

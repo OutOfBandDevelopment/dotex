@@ -8,8 +8,16 @@ using System.IO.Packaging;
 
 namespace OoBDev.Microsoft.SqlServer.DacFx;
 
+/// <summary>
+/// Provides utility methods for working with DacPac files and SQL Server database models.
+/// </summary>
 public static class DacTools
 {
+    /// <summary>
+    /// Reads the entire contents of a stream as a string.
+    /// </summary>
+    /// <param name="stream">The stream to read.</param>
+    /// <returns>The stream contents as a string, or null if the stream is null or empty.</returns>
     public static string? ReadToEnd(this Stream? stream)
     {
         if (stream == null) return null;
@@ -19,6 +27,11 @@ public static class DacTools
         return read;
     }
 
+    /// <summary>
+    /// Extracts the model options from a DacPac file.
+    /// </summary>
+    /// <param name="filename">The path to the DacPac file.</param>
+    /// <returns>The model options from the DacPac.</returns>
     public static TSqlModelOptions GetModelOptions(string filename)
     {
         using var sqlModel = new TSqlModel(filename);
@@ -26,8 +39,18 @@ public static class DacTools
         return options;
     }
 
+    /// <summary>
+    /// Opens a DacPac file and returns its TSqlModel.
+    /// </summary>
+    /// <param name="filename">The path to the DacPac file.</param>
+    /// <returns>A TSqlModel representing the DacPac contents.</returns>
     public static TSqlModel OpenDacPacModel(string filename) => new(filename);
 
+    /// <summary>
+    /// Reads all user-defined objects from a TSqlModel as name/script pairs.
+    /// </summary>
+    /// <param name="sqlModel">The TSqlModel to read from.</param>
+    /// <returns>An enumerable of tuples containing object names and their TSqlScript definitions.</returns>
     public static IEnumerable<(string name, TSqlScript script)> ReadPackage(this TSqlModel sqlModel)
     {
         var objs = sqlModel.GetObjects(DacQueryScopes.UserDefined);
@@ -43,6 +66,11 @@ public static class DacTools
         }
     }
 
+    /// <summary>
+    /// Extracts the pre-deployment and post-deployment scripts from a DacPac file.
+    /// </summary>
+    /// <param name="fileName">The path to the DacPac file.</param>
+    /// <returns>A tuple containing the pre-deployment and post-deployment scripts, or null if not present.</returns>
     public static (string? PreDeploymentScript, string? PostDeploymentScript) GetScripts(string fileName)
     {
         using var dac = DacPackage.Load(fileName, DacSchemaModelStorageType.File);
@@ -52,6 +80,11 @@ public static class DacTools
             );
     }
 
+    /// <summary>
+    /// Adds pre-deployment and post-deployment scripts to an existing DacPac file.
+    /// </summary>
+    /// <param name="file">The path to the DacPac file.</param>
+    /// <param name="scripts">A tuple containing the pre-deployment and post-deployment scripts to add.</param>
     public static void AddScripts(string file, (string? preDeployment, string? postDeployment) scripts)
     {
         using var package = Package.Open(file, FileMode.Open, FileAccess.ReadWrite);
@@ -61,6 +94,14 @@ public static class DacTools
                ;
     }
 
+    /// <summary>
+    /// Adds a file with text content to a package.
+    /// </summary>
+    /// <param name="package">The package to add the file to.</param>
+    /// <param name="path">The relative path within the package.</param>
+    /// <param name="content">The text content to write, or null to skip.</param>
+    /// <param name="contentType">The MIME content type. Default is "text/plain".</param>
+    /// <returns>The package for method chaining.</returns>
     public static Package AddFileContent(this Package package, string path, string? content, string contentType = "text/plain")
     {
         if (!string.IsNullOrEmpty(content))
@@ -75,6 +116,11 @@ public static class DacTools
         return package;
     }
 
+    /// <summary>
+    /// Generates a T-SQL script that sets or updates the database version extended property.
+    /// </summary>
+    /// <param name="version">The version string to set.</param>
+    /// <returns>A T-SQL script that sets the DbVersion extended property.</returns>
     public static string GenerateBuildVersionScript(string? version) => $@"
 IF EXISTS (
 	SELECT *

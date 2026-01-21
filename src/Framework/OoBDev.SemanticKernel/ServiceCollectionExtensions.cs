@@ -5,8 +5,16 @@ using Microsoft.SemanticKernel.ChatCompletion;
 
 namespace OoBDev.SemanticKernel;
 
+/// <summary>
+/// Provides extension methods for registering Semantic Kernel plugins and services.
+/// </summary>
 public static class ServiceCollectionExtensions
 {
+    /// <summary>
+    /// Adds Semantic Kernel plugins and kernel services to the service collection.
+    /// </summary>
+    /// <param name="services">The service collection to add services to.</param>
+    /// <returns>The service collection for method chaining.</returns>
     public static IServiceCollection TryAddSemanticKernelPlugins(this IServiceCollection services)
     {
         services.AddKernelPlugIn<TimePlugIn>();

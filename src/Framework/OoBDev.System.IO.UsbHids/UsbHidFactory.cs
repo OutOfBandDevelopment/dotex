@@ -6,16 +6,23 @@ using System.Reflection;
 
 namespace OoBDev.System.IO.UsbHids;
 
+/// <summary>
+/// Factory for creating USB HID device adapters based on <see cref="UsbHidAttribute"/> configuration.
+/// </summary>
 [DeviceTarget(typeof(UsbHidAttribute))]
 public class UsbHidFactory : IImplictDeviceFactory
 {
+    /// <inheritdoc/>
     public bool CanGetDevice(object? definition) => definition?.GetType()?.GetCustomAttributes<UsbHidAttribute>()?.Any() ?? false;
 
+    /// <inheritdoc/>
     public IDeviceAdapter? GetDevice(string devicePath, object? definition) =>
         GetDevices(definition).FirstOrDefault(d => string.Equals(d.Path, devicePath, StringComparison.OrdinalIgnoreCase));
 
+    /// <inheritdoc/>
     public IDeviceAdapter? GetDevice(object? definition) => GetDevices(definition).FirstOrDefault();
 
+    /// <inheritdoc/>
     public IEnumerable<IDeviceAdapter> GetDevices(object? definition)
     {
         if (definition == null) yield break;
@@ -33,6 +40,7 @@ public class UsbHidFactory : IImplictDeviceFactory
             yield return new UsbHidDeviceAdapter(device);
     }
 
+    /// <inheritdoc/>
     public IEnumerable<string> GetDeviceNames() =>
         DeviceList.Local
                   .GetAllDevices()
