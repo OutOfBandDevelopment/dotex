@@ -8,31 +8,70 @@ using System.Linq;
 
 namespace OoBDev.System.Collections.ObjectModel;
 
+/// <summary>
+/// Represents a dictionary that provides notifications when items are added, removed, or when the collection is refreshed.
+/// Implements INotifyCollectionChanged and INotifyPropertyChanged for data binding scenarios.
+/// </summary>
+/// <typeparam name="TKey">The type of keys in the dictionary, which must be non-nullable.</typeparam>
+/// <typeparam name="TValue">The type of values in the dictionary.</typeparam>
 public class ObservableDictionary<TKey, TValue> : IDictionary<TKey, TValue>, INotifyCollectionChanged, INotifyPropertyChanged
      where TKey : notnull
 {
+    /// <summary>
+    /// Gets the underlying dictionary that stores the key-value pairs.
+    /// </summary>
     protected IDictionary<TKey, TValue> Dictionary { get; } = new Dictionary<TKey, TValue>();
 
     #region Constructors
+    /// <summary>
+    /// Initializes a new instance of the ObservableDictionary class that is empty.
+    /// </summary>
     public ObservableDictionary()
     {
     }
+
+    /// <summary>
+    /// Initializes a new instance of the ObservableDictionary class that contains elements copied from the specified dictionary.
+    /// </summary>
+    /// <param name="dictionary">The dictionary whose elements are copied to the new ObservableDictionary.</param>
     public ObservableDictionary(IDictionary<TKey, TValue> dictionary)
     {
         Dictionary = new Dictionary<TKey, TValue>(dictionary);
     }
+
+    /// <summary>
+    /// Initializes a new instance of the ObservableDictionary class that uses the specified IEqualityComparer&lt;T&gt;.
+    /// </summary>
+    /// <param name="comparer">The IEqualityComparer&lt;T&gt; implementation to use when comparing keys.</param>
     public ObservableDictionary(IEqualityComparer<TKey> comparer)
     {
         Dictionary = new Dictionary<TKey, TValue>(comparer);
     }
+
+    /// <summary>
+    /// Initializes a new instance of the ObservableDictionary class that is empty and has the specified initial capacity.
+    /// </summary>
+    /// <param name="capacity">The initial number of elements that the ObservableDictionary can contain.</param>
     public ObservableDictionary(int capacity)
     {
         Dictionary = new Dictionary<TKey, TValue>(capacity);
     }
+
+    /// <summary>
+    /// Initializes a new instance of the ObservableDictionary class that contains elements copied from the specified dictionary and uses the specified IEqualityComparer&lt;T&gt;.
+    /// </summary>
+    /// <param name="dictionary">The dictionary whose elements are copied to the new ObservableDictionary.</param>
+    /// <param name="comparer">The IEqualityComparer&lt;T&gt; implementation to use when comparing keys.</param>
     public ObservableDictionary(IDictionary<TKey, TValue> dictionary, IEqualityComparer<TKey> comparer)
     {
         Dictionary = new Dictionary<TKey, TValue>(dictionary, comparer);
     }
+
+    /// <summary>
+    /// Initializes a new instance of the ObservableDictionary class that is empty, has the specified initial capacity, and uses the specified IEqualityComparer&lt;T&gt;.
+    /// </summary>
+    /// <param name="capacity">The initial number of elements that the ObservableDictionary can contain.</param>
+    /// <param name="comparer">The IEqualityComparer&lt;T&gt; implementation to use when comparing keys.</param>
     public ObservableDictionary(int capacity, IEqualityComparer<TKey> comparer)
     {
         Dictionary = new Dictionary<TKey, TValue>(capacity, comparer);
@@ -101,16 +140,29 @@ public class ObservableDictionary<TKey, TValue> : IDictionary<TKey, TValue>, INo
 
     #region INotifyCollectionChanged Members
 
+    /// <summary>
+    /// Occurs when the collection changes, either by adding or removing items, or when the collection is refreshed.
+    /// </summary>
     public event NotifyCollectionChangedEventHandler? CollectionChanged;
 
     #endregion
 
     #region INotifyPropertyChanged Members
 
+    /// <summary>
+    /// Occurs when a property value changes, including Count, Keys, Values, and the indexer.
+    /// </summary>
     public event PropertyChangedEventHandler? PropertyChanged;
 
     #endregion
 
+    /// <summary>
+    /// Adds multiple key-value pairs to the dictionary in a single operation.
+    /// Raises a single CollectionChanged event for all added items.
+    /// </summary>
+    /// <param name="items">The dictionary containing items to add.</param>
+    /// <exception cref="ArgumentNullException">Thrown when items is null.</exception>
+    /// <exception cref="ArgumentException">Thrown when any key in items already exists in the dictionary.</exception>
     public void AddRange(IDictionary<TKey, TValue> items)
     {
         ArgumentNullException.ThrowIfNull(items, nameof(items));

@@ -54,12 +54,31 @@ public static class ObjectEx
     public static string GetXmlNamespaceForOutput(this object obj) =>
         obj.GetType().GetXmlNamespace() + ToolkitConstants.XmlNamespaces.OutputSuffix;
 
+    /// <summary>
+    /// Gets the XML element name for the object's type.
+    /// </summary>
+    /// <param name="object">The object to get the element name for.</param>
+    /// <param name="excludeNamespace">If true, returns only the local name without namespace. Defaults to false.</param>
+    /// <returns>The XName representing the XML element name for the object's type.</returns>
     public static XName GetXmlElementName(this object @object, bool excludeNamespace = false) =>
         @object.GetType().GetXmlElementName(excludeNamespace);
 
+    /// <summary>
+    /// Gets the XML item name for elements in an enumerable collection.
+    /// </summary>
+    /// <param name="enumerable">The enumerable collection.</param>
+    /// <param name="excludeNamespace">If true, excludes the namespace from the element name.</param>
+    /// <returns>The XName for individual items in the collection.</returns>
     public static XName GetXmlItemName(this IEnumerable enumerable, bool excludeNamespace) =>
         enumerable.GetXmlItemName(enumerable.GetXmlElementName(excludeNamespace));
 
+    /// <summary>
+    /// Gets the XML item name for elements in an enumerable collection, with optional parent element name.
+    /// For anonymous types, attempts to singularize the element name by removing trailing 's' or 'es'.
+    /// </summary>
+    /// <param name="enumerable">The enumerable collection.</param>
+    /// <param name="elementName">The parent element name to use for deriving the item name. If null, derives from the element type.</param>
+    /// <returns>The XName for individual items in the collection, defaulting to "item" if no name can be derived.</returns>
     public static XName GetXmlItemName(this IEnumerable enumerable, XName? elementName = null)
     {
         var elementType = enumerable.GetType().GetElementType();
