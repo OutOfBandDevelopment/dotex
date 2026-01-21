@@ -4,11 +4,32 @@ using System.Linq;
 
 namespace OoBDev.System.Xml.XPath;
 
+/// <summary>
+/// Converts path segment structures into XPath expression strings using the visitor pattern.
+/// Supports various path segment types including binary operations, predicates, functions, and wildcards.
+/// </summary>
 public class XPathExpressionBuilder
 {
+    /// <summary>
+    /// Builds an XPath expression string from the specified path segment structure.
+    /// </summary>
+    /// <param name="path">The root path segment to convert to an XPath expression.</param>
+    /// <returns>The XPath expression string.</returns>
     public string BuildXPathExpression(IPathSegment path) => Visit(path);
+
+    /// <summary>
+    /// Visits a path segment and converts it to an XPath expression string without a parent context.
+    /// </summary>
+    /// <param name="path">The path segment to visit.</param>
+    /// <returns>The XPath expression string for the path segment.</returns>
     public string Visit(IPathSegment path) => Visit(path, null);
 
+    /// <summary>
+    /// Visits a path segment and converts it to an XPath expression string, using the parent segment for context-specific rendering.
+    /// </summary>
+    /// <param name="path">The path segment to visit.</param>
+    /// <param name="parent">The parent path segment, or null if there is no parent. Used to determine context-specific rendering rules.</param>
+    /// <returns>The XPath expression string for the path segment.</returns>
     public string Visit(IPathSegment path, IPathSegment? parent) =>
         path switch
         {

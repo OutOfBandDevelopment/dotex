@@ -17,11 +17,9 @@ public class OpenSearchTests
     private string? _testIndexName;
 
     [TestInitialize]
-    public void TestInitialize()
-    {
+    public void TestInitialize() =>
         // Create unique index name for this test run
         _testIndexName = $"integrationtest_{Guid.NewGuid():N}";
-    }
 
     [TestCleanup]
     public async Task TestCleanup()

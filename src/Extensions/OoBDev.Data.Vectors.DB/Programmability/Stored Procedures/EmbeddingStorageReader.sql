@@ -9,7 +9,7 @@ BEGIN
 	DECLARE @received TABLE (
 		 [conversationGroup]	UNIQUEIDENTIFIER    NOT NULL
 		,[conversationHandle]	UNIQUEIDENTIFIER    NOT NULL
-		,[messageType]			NVARCHAR(255)       NOT NULL
+		,[messageType]			NVARCHAR(128)       NOT NULL
 		,[messageBody]			XML
 	);
 

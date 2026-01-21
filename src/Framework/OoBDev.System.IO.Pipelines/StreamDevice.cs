@@ -13,7 +13,7 @@ public class StreamDevice<TMessage> : IStreamDevice<TMessage>
 {
     private readonly IProducerConsumerCollection<TMessage> _transmissionQueue = new ConcurrentQueue<TMessage>();
 
-    private Stream _stream => _adapter.Stream;
+    private Stream AdapterStream => _adapter.Stream;
     private readonly IDeviceAdapter _adapter;
     private readonly IDeviceDefinition _device;
     private readonly ISegmentBuildDefinition? _segmentDefintion;
@@ -111,7 +111,7 @@ public class StreamDevice<TMessage> : IStreamDevice<TMessage>
             try
             {
                 await ReportDeviceStatus(StreamDeviceStatus.Receiving);
-                await _stream.Follow()
+                await AdapterStream.Follow()
                              .With(_segmentDefintion.ThenAs(_decoder, OnMessageReceived))
                              .RunAsync(_token)
                              .ConfigureAwait(false);
@@ -121,7 +121,7 @@ public class StreamDevice<TMessage> : IStreamDevice<TMessage>
             catch (Exception ex)
             {
                 var eventArg = new DeviceErrorEventArgs(exception: ex, errorHandling: ErrorHandling.Throw);
-                MessageReceivedError?.Invoke(_stream, eventArg);
+                MessageReceivedError?.Invoke(AdapterStream, eventArg);
                 switch (eventArg.ErrorHandling)
                 {
                     case ErrorHandling.Ignore:
@@ -152,14 +152,14 @@ public class StreamDevice<TMessage> : IStreamDevice<TMessage>
                 {
                     await ReportDeviceStatus(StreamDeviceStatus.Transmitting);
                     var requestBuffer = encoder.Encode(ref item);
-                    await _stream.WriteAsync(requestBuffer, _token)
+                    await AdapterStream.WriteAsync(requestBuffer, _token)
                                  .ConfigureAwait(false);
                     await ReportDeviceStatus(StreamDeviceStatus.Transmitted);
                 }
                 catch (Exception ex)
                 {
                     var eventArg = new DeviceErrorEventArgs(exception: ex, errorHandling: ErrorHandling.Throw);
-                    MessageTransmitterError?.Invoke(_stream, eventArg);
+                    MessageTransmitterError?.Invoke(AdapterStream, eventArg);
                     switch (eventArg.ErrorHandling)
                     {
                         case ErrorHandling.Ignore:
@@ -186,6 +186,6 @@ public class StreamDevice<TMessage> : IStreamDevice<TMessage>
     {
         Runner.GetAwaiter().GetResult();
         _tokenSource.Cancel(false);
-        _stream.Dispose();
+        AdapterStream.Dispose();
     }
 }

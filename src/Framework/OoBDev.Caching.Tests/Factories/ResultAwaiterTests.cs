@@ -14,10 +14,7 @@ public class ResultAwaiterTests
     private MockRepository mockRepository;
 
     [TestInitialize]
-    public void TestInitialize()
-    {
-        this.mockRepository = new MockRepository(MockBehavior.Strict);
-    }
+    public void TestInitialize() => this.mockRepository = new MockRepository(MockBehavior.Strict);
 
     [TestMethod]
     [TestCategory(TestCategories.Unit)]

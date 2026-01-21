@@ -6,18 +6,49 @@ using YamlDotNet.RepresentationModel;
 
 namespace OoBDev.System.Text.Yaml;
 
+/// <summary>
+/// Provides extension methods for converting YAML documents and nodes to XPath-navigable representations.
+/// </summary>
 public static class YamlNavigatorFactory
 {
-
+    /// <summary>
+    /// Converts a YAML document to an XPath-navigable representation.
+    /// </summary>
+    /// <param name="yaml">The YAML document to convert.</param>
+    /// <param name="rootName">Optional name for the root element. If null, uses the node type as the name.</param>
+    /// <param name="baseUri">Optional base URI for the document.</param>
+    /// <returns>An IXPathNavigable instance representing the YAML document.</returns>
     public static IXPathNavigable ToNavigable(this YamlDocument yaml, XName? rootName = null, string? baseUri = null) =>
         yaml.RootNode.ToNavigable(rootName, baseUri);
 
+    /// <summary>
+    /// Converts a YAML node to an XPath-navigable representation.
+    /// </summary>
+    /// <param name="yaml">The YAML node to convert.</param>
+    /// <param name="rootName">Optional name for the root element. If null, uses the node type as the name.</param>
+    /// <param name="baseUri">Optional base URI for the node.</param>
+    /// <returns>An IXPathNavigable instance representing the YAML node.</returns>
     public static IXPathNavigable ToNavigable(this YamlNode yaml, XName? rootName = null, string? baseUri = null) =>
         new ExtensibleNavigator(yaml.AsNode(rootName, baseUri));
 
+    /// <summary>
+    /// Converts a YAML document to an INode representation.
+    /// </summary>
+    /// <param name="yaml">The YAML document to convert.</param>
+    /// <param name="rootName">Optional name for the root element. If null, uses the node type as the name.</param>
+    /// <param name="baseUri">Optional base URI for the document.</param>
+    /// <returns>An INode instance representing the YAML document.</returns>
     public static INode AsNode(this YamlDocument yaml, XName? rootName = null, string? baseUri = null) =>
         yaml.RootNode.AsNode(rootName, baseUri);
 
+    /// <summary>
+    /// Converts a YAML node to an INode representation with configurable element name and child/attribute selectors.
+    /// Handles YAML scalar nodes, mapping nodes (key-value pairs), and sequence nodes (lists).
+    /// </summary>
+    /// <param name="yaml">The YAML node to convert.</param>
+    /// <param name="rootName">Optional name for the root element. If null, uses the node type as the name.</param>
+    /// <param name="baseUri">Optional base URI for the node.</param>
+    /// <returns>An INode instance representing the YAML node with appropriate structure for scalar, mapping, or sequence content.</returns>
     public static INode AsNode(this YamlNode yaml, XName? rootName = null, string? baseUri = null)
     {
         if (rootName == null || string.IsNullOrWhiteSpace(rootName.LocalName))

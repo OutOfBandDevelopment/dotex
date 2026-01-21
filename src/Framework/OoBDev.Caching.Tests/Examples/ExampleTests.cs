@@ -73,8 +73,8 @@ public interface IExampleRepository
     Task UpdateData(string param1, string param2);
     Task UpdateData2(string param1, string param2);
 
-    Task NotSupported1() { throw new NotImplementedException(); }
-    void NotSupported2() { throw new NotImplementedException(); }
+    Task NotSupported1() => throw new NotImplementedException();
+    void NotSupported2() => throw new NotImplementedException();
 }
 public class ExampleRepository : IExampleRepository
 {
@@ -133,8 +133,8 @@ public class ExampleRepository : IExampleRepository
     public Task UpdateData2(string param1, string param2) => Task.FromResult(0);
 
     [IsCacheable("bucket1/data/{param1}/{param2}", "00:05:00")]
-    public Task NotSupported1() { throw new NotImplementedException(); }
+    public Task NotSupported1() => throw new NotImplementedException();
 
     [IsCacheable("bucket1/data/{param1}/{param2}", "00:05:00")]
-    public void NotSupported2() { throw new NotImplementedException(); }
+    public void NotSupported2() => throw new NotImplementedException();
 }

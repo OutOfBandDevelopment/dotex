@@ -6,20 +6,82 @@ using System.Xml.XPath;
 
 namespace OoBDev.System.Xml.Xsl.Extensions;
 
+/// <summary>
+/// Provides XPath 2.0 function implementations for use in XSLT transformations.
+/// This class implements common XPath 2.0 functions including mathematical operations, aggregate functions, and sequence operations.
+/// Note: Method names use lowercase to match XPath function naming conventions.
+/// </summary>
 [XmlRoot(Namespace = @"http://www.w3.org/2005/xpath-functions")]
 public class XPath20Functions
 {
 #pragma warning disable IDE1006 // Naming Styles
+    /// <summary>
+    /// Returns the absolute value of the input.
+    /// </summary>
+    /// <param name="input">The input value.</param>
+    /// <returns>The absolute value of the input.</returns>
     public decimal abs(decimal input) => global::System.Math.Abs(input);
+
+    /// <summary>
+    /// Returns the smallest integer that is greater than or equal to the input.
+    /// </summary>
+    /// <param name="input">The input value.</param>
+    /// <returns>The ceiling of the input.</returns>
     public decimal ceiling(decimal input) => global::System.Math.Ceiling(input);
+
+    /// <summary>
+    /// Returns the count of nodes in the input node set.
+    /// </summary>
+    /// <param name="input">The input node iterator.</param>
+    /// <returns>The number of nodes in the input.</returns>
     public decimal count(XPathNodeIterator input) => input.AsNavigatorSet().Count();
+
+    /// <summary>
+    /// Returns the average of the numeric values in the input node set.
+    /// </summary>
+    /// <param name="input">The input node iterator containing numeric values.</param>
+    /// <returns>The average of the values, or 0 if the input is empty or contains no valid numeric values.</returns>
     public decimal avg(XPathNodeIterator input) => sum(input) / count(input);
+
+    /// <summary>
+    /// Returns true if the input sequence contains one or more items.
+    /// </summary>
+    /// <param name="input">The input node iterator.</param>
+    /// <returns>True if the input is not empty; otherwise, false.</returns>
     public bool exists(XPathNodeIterator input) => input.AsNavigatorSet().Any();
+
+    /// <summary>
+    /// Returns true if the input sequence is empty.
+    /// </summary>
+    /// <param name="input">The input node iterator.</param>
+    /// <returns>True if the input is empty; otherwise, false.</returns>
     public bool empty(XPathNodeIterator input) => !exists(input);
+
+    /// <summary>
+    /// Returns false.
+    /// </summary>
+    /// <returns>False.</returns>
     public bool @false() => false;
+
+    /// <summary>
+    /// Returns the negation of the input boolean value.
+    /// </summary>
+    /// <param name="input">The input boolean value.</param>
+    /// <returns>The negation of the input.</returns>
     public bool not(bool input) => !input;
+
+    /// <summary>
+    /// Returns true.
+    /// </summary>
+    /// <returns>True.</returns>
     public bool @true() => true;
 
+    /// <summary>
+    /// Returns the sum of the numeric values in the input node set.
+    /// Non-numeric or empty values are ignored.
+    /// </summary>
+    /// <param name="input">The input node iterator containing numeric values.</param>
+    /// <returns>The sum of the values, or 0 if the input is empty or contains no valid numeric values.</returns>
     public decimal sum(XPathNodeIterator input) =>
         (from i in input.AsNavigatorSet()
          where !string.IsNullOrWhiteSpace(i.Value)
@@ -27,6 +89,12 @@ public class XPath20Functions
          where d.HasValue
          select d).Sum() ?? 0;
 
+    /// <summary>
+    /// Returns the maximum of the numeric values in the input node set.
+    /// Non-numeric or empty values are ignored.
+    /// </summary>
+    /// <param name="input">The input node iterator containing numeric values.</param>
+    /// <returns>The maximum value, or 0 if the input is empty or contains no valid numeric values.</returns>
     public decimal max(XPathNodeIterator input) =>
         (from i in input.AsNavigatorSet()
          where !string.IsNullOrWhiteSpace(i.Value)
@@ -34,6 +102,12 @@ public class XPath20Functions
          where d.HasValue
          select d).Max() ?? 0;
 
+    /// <summary>
+    /// Returns the minimum of the numeric values in the input node set.
+    /// Non-numeric or empty values are ignored.
+    /// </summary>
+    /// <param name="input">The input node iterator containing numeric values.</param>
+    /// <returns>The minimum value, or 0 if the input is empty or contains no valid numeric values.</returns>
     public decimal min(XPathNodeIterator input) =>
         (from i in input.AsNavigatorSet()
          where !string.IsNullOrWhiteSpace(i.Value)
@@ -43,6 +117,12 @@ public class XPath20Functions
 
     // https://www.w3.org/2005/xpath-functions/
 
+    /// <summary>
+    /// Returns the distinct values from the input sequence, eliminating duplicates based on node value.
+    /// This method is exposed in XSLT as "distinct-values" per XPath 2.0 specification.
+    /// </summary>
+    /// <param name="input">The input node iterator.</param>
+    /// <returns>An XPath node iterator containing only the first occurrence of each distinct value.</returns>
     [XsltFunction("distinct-values", HideOriginalName = true)]
     public XPathNodeIterator distinct_values(XPathNodeIterator input) =>
          new EnumerableXPathNodeIterator(
@@ -51,6 +131,12 @@ public class XPath20Functions
             from i in grouped
             select grouped.First());
 
+    /// <summary>
+    /// Applies an XPath expression to each node in the input sequence and returns the combined results.
+    /// </summary>
+    /// <param name="xpath">The XPath expression to evaluate on each input node.</param>
+    /// <param name="input">The input node iterator.</param>
+    /// <returns>An XPath node iterator containing all results from evaluating the XPath expression on each input node.</returns>
     public XPathNodeIterator apply(string xpath, XPathNodeIterator input) =>
          new EnumerableXPathNodeIterator(
             from item in input.AsNavigatorSet()

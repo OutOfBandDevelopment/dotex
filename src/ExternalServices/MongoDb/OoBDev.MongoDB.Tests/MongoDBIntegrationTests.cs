@@ -22,11 +22,9 @@ public class MongoDBIntegrationTests
     private IMongoClient? _mongoClient;
 
     [TestInitialize]
-    public void TestInitialize()
-    {
+    public void TestInitialize() =>
         // Create unique database name for this test run
         _databaseName = $"IntegrationTest_{Guid.NewGuid():N}";
-    }
 
     [TestCleanup]
     public async Task TestCleanup()

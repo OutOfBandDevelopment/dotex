@@ -43,7 +43,7 @@ public class CachedProxyTests
          CachedProxy<ITestObject, TestObject>.Create(
              testObject, 
              mockCachingManager.Object,
-             null//this.TestContext.GetTestLoggingServices<TestObject>()
+             this.TestContext.GetLogger<TestObject>()
              );
 
     [TestMethod]
