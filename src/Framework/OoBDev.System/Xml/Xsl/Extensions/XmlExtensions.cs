@@ -21,7 +21,18 @@ public class XmlExtensions
         _ns = this.GetXmlNamespace() + XmlNamespaces.OutputSuffix;
     }
 
+    /// <summary>
+    /// Returns the XPathNodeIterator unchanged. Used for type compatibility in XSLT transformations.
+    /// </summary>
+    /// <param name="xPathNavigator">The XPathNodeIterator to return.</param>
+    /// <returns>The same XPathNodeIterator that was passed in.</returns>
     public XPathNodeIterator Fixup(XPathNodeIterator xPathNavigator) => xPathNavigator;
 
+    /// <summary>
+    /// Evaluates an XPath expression against an XPathNavigator and returns the matching nodes.
+    /// </summary>
+    /// <param name="xPathNavigator">The navigator to evaluate the XPath expression against.</param>
+    /// <param name="xpath">The XPath expression to evaluate.</param>
+    /// <returns>An XPathNodeIterator containing the nodes that match the XPath expression.</returns>
     public XPathNodeIterator Evaluate(XPathNavigator xPathNavigator, string xpath) => xPathNavigator.Select(xpath);
 }

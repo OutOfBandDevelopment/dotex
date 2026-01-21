@@ -60,5 +60,9 @@ public readonly struct CatalogEntry
     /// </summary>
     public readonly FileEntry[] FileEntries;
 
+    /// <summary>
+    /// Returns a string representation of the catalog entry.
+    /// </summary>
+    /// <returns>A string showing the next catalog location and file count.</returns>
     public override string ToString() => $"Next: {NextCatalogTrack}/{NextSectorTrack}\t Files: {FileEntries.Count(i => i.Exists)}";
 }

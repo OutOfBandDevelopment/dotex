@@ -60,6 +60,14 @@ public static class TestContextExtensions
     public static T GetRequiredProperty<T>(this TestContext testContext, string parameter) =>
         testContext.GetProperty<T>(parameter) ?? throw new ApplicationException($"Test Property {parameter} is required");
 
+    /// <summary>
+    /// Gets a test property value, returning null if not found.
+    /// Checks TestContext properties first, then environment variables.
+    /// </summary>
+    /// <typeparam name="T">The type to convert the property value to.</typeparam>
+    /// <param name="testContext">The test context.</param>
+    /// <param name="parameter">The property name to retrieve.</param>
+    /// <returns>The property value, or null if not found or conversion fails.</returns>
     public static T? GetProperty<T>(this TestContext testContext, string parameter)
     {
         try

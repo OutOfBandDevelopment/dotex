@@ -29,7 +29,27 @@ public class StringExtensions
     public string TrimPerLine(string input) =>
         string.Join("\r\n", input.Split("\r\n").Select(l => l.Trim().Trim('\t', '\r', '\n', ' ')));
 
+    /// <summary>
+    /// Pads a string on the left with spaces to a specified total width.
+    /// </summary>
+    /// <param name="input">The string to pad.</param>
+    /// <param name="totalWidth">The desired total width of the padded string.</param>
+    /// <returns>The left-padded string.</returns>
     public string PadLeft(string input, int totalWidth) => input.PadLeft(totalWidth);
+
+    /// <summary>
+    /// Pads a string on the right with spaces to a specified total width.
+    /// </summary>
+    /// <param name="input">The string to pad.</param>
+    /// <param name="totalWidth">The desired total width of the padded string.</param>
+    /// <returns>The right-padded string.</returns>
     public string PadRight(string input, int totalWidth) => input.PadRight(totalWidth);
+
+    /// <summary>
+    /// Creates a new string by repeating a character a specified number of times.
+    /// </summary>
+    /// <param name="char">The character to repeat (only the first character is used).</param>
+    /// <param name="length">The number of times to repeat the character.</param>
+    /// <returns>A string containing the repeated character, or an empty string if the input is invalid.</returns>
     public string New(string @char, int length) => string.IsNullOrEmpty(@char) || length < 0 ? "" : new string(@char[0], length);
 }

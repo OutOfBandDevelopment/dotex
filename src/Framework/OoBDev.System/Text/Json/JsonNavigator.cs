@@ -6,11 +6,11 @@ using System.Xml.XPath;
 
 namespace OoBDev.System.Text.Json;
 
-[FileExtension(".json")]
-[MediaType("application/json")]
 /// <summary>
 /// Provides navigation capabilities for JSON documents, converting them to XPath-navigable structures.
 /// </summary>
+[FileExtension(".json")]
+[MediaType("application/json")]
 public class JsonNavigator : IToXPathNavigable
 {
     /// <summary>
