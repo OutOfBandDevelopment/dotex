@@ -19,6 +19,11 @@ public static class ByteEx
     public static string ToHexString(this IEnumerable<byte> data, string delimiter = "") =>
         string.Join(delimiter ?? "", (data ?? []).Select(b => b.ToString("x2")));
 
+    /// <summary>
+    /// Decompresses a byte array that was compressed using DEFLATE compression.
+    /// </summary>
+    /// <param name="input">The compressed byte array to decompress.</param>
+    /// <returns>The decompressed byte array.</returns>
     public static byte[] Decompress(this byte[] input)
     {
         using var inputStream = new MemoryStream(input);
@@ -29,6 +34,11 @@ public static class ByteEx
         return outputStream.ToArray();
     }
 
+    /// <summary>
+    /// Compresses a byte array using DEFLATE compression with optimal compression level.
+    /// </summary>
+    /// <param name="input">The byte array to compress.</param>
+    /// <returns>The compressed byte array.</returns>
     public static byte[] Compress(this byte[] input)
     {
         using var inputStream = new MemoryStream(input);
