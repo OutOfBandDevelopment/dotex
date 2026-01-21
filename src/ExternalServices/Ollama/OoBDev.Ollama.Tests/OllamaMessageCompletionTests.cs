@@ -62,32 +62,4 @@ public class OllamaMessageCompletionTests
         Assert.IsFalse(string.IsNullOrWhiteSpace(embedding));
     }
 
-    [TestCategory(TestCategories.Integration)]
-    [TestMethod]
-    public async Task ILanguageModelProvider_GetResponseAsyncTest()
-    {
-        var url = TestContext.GetRequiredProperty<string>("OLLAMA_URL");
-        var model = TestContext.GetPropertyOrDefault("OLLAMA_MODEL", "phi3");
-
-        var client = Build<ILanguageModelProvider>(url, model);
-        var response = await client.GetResponseAsync("You are a helpful assistant", "How are you?");
-
-        TestContext.WriteLine($"url: {url}");
-        TestContext.WriteLine($"model: {model}");
-        TestContext.WriteLine($"Response: {response}");
-
-        Assert.IsFalse(string.IsNullOrWhiteSpace(response));
-    }
-
-    [TestCategory(TestCategories.DevLocal)]
-    [TestMethod]
-    [DataRow("http://127.0.0.1:11434", "phi", "You are an assistant", "How are you?")]
-    public async Task ILanguageModelProvider_GetResponseAsyncTest_DevLocal(string hostName, string model, string prompt, string input)
-    {
-        var client = Build<ILanguageModelProvider>(hostName, model);
-        var embedding = await client.GetResponseAsync(prompt, input);
-        TestContext.WriteLine(embedding);
-
-        Assert.IsFalse(string.IsNullOrWhiteSpace(embedding));
-    }
 }

@@ -1,11 +1,12 @@
 ﻿using OoBDev.AI;
 using OoBDev.AI.Models;
+using OoBDev.Extensions.Linq;
 using OllamaSharp;
-//using OllamaSharp.Models;
-//using OllamaSharp.Streamer;//TODO: ifx this
+using OllamaSharp.Models.Chat;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -66,13 +67,18 @@ public class OllamaMessageCompletion : IMessageCompletion, IEmbeddingProvider
     /// <param name="modelName">The name of the model to use for completion.</param>
     /// <param name="prompt">The prompt for which completion is requested.</param>
     /// <returns>A task representing the asynchronous operation. The task result contains the completion response.</returns>
-    public  Task<string> GetCompletionAsync(string modelName, string prompt) =>
-        throw new NotImplementedException(); //TODO: fix this!
-        //(await _client.GetCompletion(new()
-        //{
-        //    Model = modelName,
-        //    Prompt = prompt,
-        //})).Response;
+    public async Task<string> GetCompletionAsync(string modelName, string prompt)
+    {
+        var request = new ChatRequest
+        {
+            Model = modelName,
+            Messages = new[] { new Message(ChatRole.User, prompt) }
+        };
+
+        var responses = await _client.ChatAsync(request).ToListAsync();
+        var result = string.Join("", responses.Select(r => r?.Message.Content ?? ""));
+        return result;
+    }
 
     /// <summary>
     /// Retrieves a completion for the given prompt from the specified model.
@@ -83,27 +89,6 @@ public class OllamaMessageCompletion : IMessageCompletion, IEmbeddingProvider
       throw new NotImplementedException(); //TODO: fix this!
     //_mapper.Map(await _client.GetCompletion(_mapper.Map(model with { Model = model.Model ?? _client.SelectedModel })));
 
-    /// <summary>
-    /// Retrieves a response from the language model based on the provided prompt details and user input.
-    /// </summary>
-    /// <param name="promptDetails">Details of the prompt or context.</param>
-    /// <param name="userInput">The user input or query.</param>
-    /// <param name="cancellationToken">The Cancellation Token.</param>
-    /// <returns>A task representing the asynchronous operation. The task result contains the response from the language model.</returns>
-    public  Task<string> GetResponseAsync(string promptDetails, string userInput,
-#pragma warning disable CS8424 // The EnumeratorCancellationAttribute will have no effect. The attribute is only effective on a parameter of type CancellationToken in an async-iterator method returning IAsyncEnumerable
-        [EnumeratorCancellation] CancellationToken cancellationToken = default)
-#pragma warning restore CS8424 // The EnumeratorCancellationAttribute will have no effect. The attribute is only effective on a parameter of type CancellationToken in an async-iterator method returning IAsyncEnumerable
-        => throw new NotImplementedException(); //TODO: fix this!
-
-    //TODO:should probably build a custom model but this works for now
-    //(await _client.GetCompletion(new()
-    //    {
-    //        Model = _client.SelectedModel,
-    //        Prompt = $"SYSTEM: {promptDetails}" + //TODO: do something smarter here
-    //        $"" +
-    //        $"USER: {userInput}",
-    //    })).Response;
 
     /// <summary>
     /// Gets a streamed response asynchronously based on the provided prompt details and user input.
