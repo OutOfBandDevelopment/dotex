@@ -58,7 +58,7 @@ public class ReflectionExtensionsTests
 
     [TestMethod]
     [TestCategory(TestCategories.Unit)]
-    [DynamicData(nameof(MakeSafeTestData), DynamicDataSourceType.Method)]
+    [DynamicData(nameof(MakeSafeTestData))]
     public void MakeSafeTest(Type? type, object? input, object? expected)
     {
         var capture = new CaptureResultMessage();
@@ -87,7 +87,7 @@ public class ReflectionExtensionsTests
 
     [TestMethod]
     [TestCategory(TestCategories.Unit)]
-    [DynamicData(nameof(MakeSafeArrayTestData), DynamicDataSourceType.Method)]
+    [DynamicData(nameof(MakeSafeArrayTestData))]
     public void MakeSafeArrayTest(Type? type, Array? input, Array? expected)
     {
         var capture = new CaptureResultMessage();
@@ -126,7 +126,7 @@ public class ReflectionExtensionsTests
 
     [TestMethod]
     [TestCategory(TestCategories.Unit)]
-    [DynamicData(nameof(TryParseTestData), DynamicDataSourceType.Method)]
+    [DynamicData(nameof(TryParseTestData))]
     public void TryParseTest(Type? type, string? input, bool passed, object? expected)
     {
         var capture = new CaptureResultMessage();

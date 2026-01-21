@@ -25,7 +25,7 @@ public class FormFileOperationFilter : IOperationFilter
         var fileUploadMime = "multipart/form-data";
 
         // If the operation doesn't have a request body or doesn't support file uploads, return
-        if (operation.RequestBody == null || !operation.RequestBody.Content.Any(x => x.Key.Equals(fileUploadMime, StringComparison.InvariantCultureIgnoreCase)))
+        if (operation.RequestBody?.Content == null || !operation.RequestBody.Content.Any(x => x.Key.Equals(fileUploadMime, StringComparison.InvariantCultureIgnoreCase)))
             return;
 
         // Get parameters of type IFormFile from the method

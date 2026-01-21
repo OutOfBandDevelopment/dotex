@@ -15,11 +15,11 @@ public class RedisCachingProviderTests
 {
     public required TestContext TestContext { get; set; }
 
-    private MockRepository mockRepository;
+    private MockRepository mockRepository = null!;
 
-    private Mock<IObjectConverter> mockObjectConverter;
-    private Mock<IJsonSerializer> mockJsonSerializer;
-    private Mock<IConnectionMultiplexerFactory> mockConnectionMultiplexerFactory;
+    private Mock<IObjectConverter> mockObjectConverter = null!;
+    private Mock<IJsonSerializer> mockJsonSerializer = null!;
+    private Mock<IConnectionMultiplexerFactory> mockConnectionMultiplexerFactory = null!;
 
     [TestInitialize]
     public void TestInitialize()

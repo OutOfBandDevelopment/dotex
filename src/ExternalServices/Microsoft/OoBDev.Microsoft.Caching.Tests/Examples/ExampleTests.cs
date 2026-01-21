@@ -56,11 +56,11 @@ public class ExampleTests
 
 public class ReturnModel
 {
-    public string Property1 { get; set; }
-    public string Property2 { get; set; }
+    public string Property1 { get; set; } = string.Empty;
+    public string Property2 { get; set; } = string.Empty;
 
-    public string Param1 { get; set; }
-    public string Param2 { get; set; }
+    public string Param1 { get; set; } = string.Empty;
+    public string Param2 { get; set; } = string.Empty;
 }
 
 public interface IExampleRepository

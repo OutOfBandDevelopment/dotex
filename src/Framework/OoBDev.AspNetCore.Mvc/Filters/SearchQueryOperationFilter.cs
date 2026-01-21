@@ -89,18 +89,19 @@ public class SearchQueryOperationFilter(
 
                     if (context.SchemaRepository.TryLookupByType(requestType, out var requestSchemaReference))
                     {
-                        if (operation.RequestBody == null)
+                        operation.RequestBody ??= new OpenApiRequestBody
                         {
-                            operation.RequestBody = new OpenApiRequestBody
-                            {
-                                Content = new Dictionary<string, OpenApiMediaType>()
-                            };
+                            Content = new Dictionary<string, OpenApiMediaType>()
+                        };
+
+                        if (operation.RequestBody.Content != null)
+                        {
+                            ApplyContent(
+                                operation.RequestBody.Content,
+                                requestSchemaReference,
+                                contentTypes
+                                );
                         }
-                        ApplyContent(
-                            operation.RequestBody.Content,
-                            requestSchemaReference,
-                            contentTypes
-                            );
                     }
 
                     //TODO: add request type for form data
@@ -184,11 +185,14 @@ public class SearchQueryOperationFilter(
                         };
                     }
 
-                    ApplyContent(
-                        operation.Responses["200"].Content,
-                        pagedResponseSchemaReference,
-                        context.ApiDescription.SupportedResponseTypes.SelectMany(m => m.ApiResponseFormats.Select(i => i.MediaType)).Distinct()
-                        );
+                    if (operation.Responses["200"].Content != null)
+                    {
+                        ApplyContent(
+                            operation.Responses["200"].Content,
+                            pagedResponseSchemaReference,
+                            context.ApiDescription.SupportedResponseTypes.SelectMany(m => m.ApiResponseFormats.Select(i => i.MediaType)).Distinct()
+                            );
+                    }
                 }
             }
         }

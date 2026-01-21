@@ -146,7 +146,7 @@ public class StreamDevice<TMessage> : IStreamDevice<TMessage>
             {
                 await ReportDeviceStatus(StreamDeviceStatus.Receiving);
                 await AdapterStream.Follow()
-                             .With(_segmentDefintion.ThenAs(_decoder, OnMessageReceived))
+                             .With(_segmentDefintion!.ThenAs(_decoder!, OnMessageReceived))
                              .RunAsync(_token)
                              .ConfigureAwait(false);
                 _tokenSource.Cancel(true);

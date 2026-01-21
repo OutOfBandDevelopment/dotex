@@ -55,9 +55,9 @@ public class SentenceEmbeddingClientTests
 
         var dict = new Dictionary<string, ReadOnlyMemory<double>>();
 
-        while (!reader.EndOfStream)
+        var line = await reader.ReadLineAsync();
+        while (line != null)
         {
-            var line = await reader.ReadLineAsync();
             try
             {
                 if (string.IsNullOrWhiteSpace(line?.Trim())) continue;
@@ -77,6 +77,8 @@ public class SentenceEmbeddingClientTests
             {
                 TestContext.WriteLine($"ERROR: \"{line}\" -> {ex.Message}");
             }
+
+            line = await reader.ReadLineAsync();
         }
 
         var each = from a in dict
