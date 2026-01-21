@@ -15,7 +15,7 @@ echo Model: %OLLAMA_MODEL%
 echo.
 
 REM Check if container is running
-docker ps --format "{{.Names}}" | findstr /r "^%CONTAINER_NAME%$" >nul 2>&1
+docker ps --format "{{.Names}}" | findstr "%CONTAINER_NAME%" >nul 2>&1
 if errorlevel 1 (
     echo Error: Container '%CONTAINER_NAME%' is not running
     echo Please start the integration test stack first:

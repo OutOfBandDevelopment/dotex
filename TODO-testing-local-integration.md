@@ -1,13 +1,13 @@
 # TODO - Local Integration Testing (Docker) Epic
 
-**Last Updated:** 2026-01-20
+**Last Updated:** 2026-01-21
 
 Docker-based integration testing infrastructure for OoBDev framework.
 
 > **Parent Document:** [TODO.md](./TODO.md)
 > **Related:**
 > - [TODO-testing-live-integration.md](./TODO-testing-live-integration.md) - Cloud-based testing
-> - [TEST_VARIABLES.md](./TEST_VARIABLES.md) - Test property reference (11 Docker services)
+> - [TEST_VARIABLES.md](./TEST_VARIABLES.md) - Test property reference (14 Docker services)
 > - [docs/architecture/testing-guidelines.md](./docs/architecture/testing-guidelines.md) - Testing best practices
 
 ---
@@ -26,13 +26,14 @@ Complete Docker-based integration testing infrastructure enabling automated test
 
 ### Week 1: Infrastructure Setup (COMPLETED - 2026-01-19)
 
-**Docker Integration Test Stack** - 11 services for Integration test category
+**Docker Integration Test Stack** - 14 services for Integration test category
 
 **Files Created:**
-- [x] `/containers/testing/docker-compose.integration-tests.yml` (Apache Tika, SMTP4Dev, MongoDB, SQL Server, RabbitMQ, OpenSearch, Qdrant, Azurite, LocalStack, Keycloak, SBert)
+- [x] `/containers/testing/docker-compose.integration-tests.yml` (14 services - see list below)
 - [x] `/containers/testing/.env.integration` - Environment configuration
 - [x] `/containers/testing/README.md` - 500+ line guide with PlantUML deployment diagram
 - [x] Cross-platform scripts: `integration-up.sh/.bat`, `integration-down.sh/.bat`, `wait-for-services.sh/.bat`
+- [x] `/containers/testing/scripts/setup-ollama.sh/.bat` - Automated model pulling (phi3)
 - [x] `/containers/testing/TESTING-CHECKLIST.md` - Local validation guide
 - [x] `/containers/testing/STATUS.md` - Implementation tracker
 
@@ -42,23 +43,32 @@ Complete Docker-based integration testing infrastructure enabling automated test
 
 **CI/CD Pipeline Implementation:**
 - [x] Completed `.github/workflows/integration-tests.yml` (Docker startup, health checks, tests, cleanup)
-- [x] Configured all environment variables for 11 services
+- [x] Configured all environment variables for 14 services
 - [x] Test result upload (30-day retention)
 - [x] Validated tag creation (`validated-v{version}`)
 - [x] **Workflow DISABLED** - Triggers commented out until local Docker testing validates infrastructure
 
-**11 Docker Services:**
+**Ollama Integration Automation (2026-01-21):**
+- [x] Automated phi3 model pulling in integration-up scripts
+- [x] Model setup runs automatically after all services are healthy
+- [x] Fixed Windows batch file container detection regex
+- [x] 4 tests migrated to Integration category
+
+**14 Docker Services:**
 1. **Apache Tika** (Document processing) - Port 9998
 2. **SMTP4Dev** (Email testing) - Ports 25, 7777
 3. **MongoDB** (NoSQL database) - Port 27017
 4. **SQL Server** (Relational database) - Port 1433
 5. **RabbitMQ** (Message queue) - Ports 5673, 15672
-6. **OpenSearch** (Search engine) - Ports 9200, 9600
-7. **Qdrant** (Vector database) - Ports 6333, 6334
-8. **Azurite** (Azure Storage emulator) - Ports 10000-10002
-9. **LocalStack** (AWS emulator) - Port 4566
-10. **Keycloak** (Identity & Access Management) - Port 8081
-11. **SBert** (Sentence embeddings - CPU only) - Port 5080
+6. **Redis** (Cache store) - Port 6379
+7. **OpenSearch** (Search engine) - Ports 9200, 9600
+8. **Qdrant** (Vector database) - Ports 6333, 6334
+9. **Azurite** (Azure Storage emulator) - Ports 10000-10002
+10. **LocalStack** (AWS emulator - SQS, S3, etc.) - Port 4566
+11. **Azure Service Bus Emulator** (Message queue) - Port 5672
+12. **Keycloak** (Identity & Access Management) - Port 8081
+13. **SBert** (Sentence embeddings - CPU only) - Port 5080
+14. **Ollama** (LLM inference - CPU only) - Port 11434
 
 ---
 
@@ -91,9 +101,9 @@ Complete Docker-based integration testing infrastructure enabling automated test
 
 ---
 
-### Week 2: Test Migration (COMPLETED - 2026-01-19)
+### Week 2: Test Migration (COMPLETED - 2026-01-21)
 
-**✅ Migrated 19 tests from DevLocal to Integration category**
+**✅ Migrated 23 tests from DevLocal to Integration category**
 
 #### Priority 1: Stateless Services ✅ COMPLETE
 
@@ -196,6 +206,22 @@ Complete Docker-based integration testing infrastructure enabling automated test
 - [x] Tests: `GetEmbeddingAsyncTest`, `GetAllTest`
 - [x] No cleanup needed (stateless service)
 
+**Ollama (4 tests)** - ✅ COMPLETED (2026-01-21)
+- [x] Files: `src/ExternalServices/Ollama/OoBDev.Ollama.Tests/OllamaApiClientTests.cs`, `OllamaMessageCompletionTests.cs`
+- [x] Changed category to Integration for 4 tests (was DevLocal)
+- [x] Updated to use test properties:
+  ```csharp
+  var url = TestContext.GetRequiredProperty<string>("OLLAMA_URL");
+  var model = TestContext.GetPropertyOrDefault("OLLAMA_MODEL", "phi3");
+  ```
+- [x] Tests migrated:
+  - `OllamaApiClientTests.ListModelsTest`
+  - `OllamaApiClientTests.GenerateEmbeddingsDoubleTest`
+  - `OllamaMessageCompletionTests.IMessageCompletion_GetCompletionAsyncTest`
+  - `OllamaMessageCompletionTests.ILanguageModelProvider_GetResponseAsyncTest`
+- [x] Model auto-pulled by integration-up scripts (phi3)
+- [x] No cleanup needed (stateless service)
+
 #### Priority 4: Commented Tests ⏭️ DEFERRED
 
 **Qdrant (commented tests)** - ⏭️ DEFERRED (All tests commented out)
@@ -205,13 +231,14 @@ Complete Docker-based integration testing infrastructure enabling automated test
 - Categories used: "setup" and "dev-local" (not DevLocal standard category)
 - **Decision:** Leave commented until tests are uncommented and requirements clarified
 
-**Final Migration Count:** 19 tests migrated successfully
+**Final Migration Count:** 23 tests migrated successfully
 - ✅ Apache Tika: 6 tests
 - ✅ SMTP/MailKit: 2 tests
 - ✅ MongoDB: 3 tests
 - ✅ RabbitMQ: 3 tests
 - ✅ OpenSearch: 2 tests
 - ✅ SBert: 2 tests
+- ✅ Ollama: 4 tests
 - ⏭️ SQL Server DacFx: 0 tests (none applicable)
 - ⏭️ Qdrant: 0 tests (all commented out)
 
@@ -340,6 +367,14 @@ Complete Docker-based integration testing infrastructure enabling automated test
   - Model: all-MiniLM-L6-v2
   - CPU-only configuration
 
+- [ ] `docs/architecture/testing/stacks/ai-ml/ollama.md`
+  - Image: ollama/ollama:latest
+  - Port: 11434
+  - LLM inference (phi3 model)
+  - CPU-only configuration
+  - Automated model pulling
+  - Stateless service (no cleanup)
+
 #### Docker Infrastructure Documentation
 
 - [ ] Create `docs/architecture/testing/docker-infrastructure.md`
@@ -461,23 +496,24 @@ Manual Release (release.yml)
 
 ### Week 1: Infrastructure ✅
 - ✅ Docker integration stack starts/stops successfully
-- ⏳ All 11 services become healthy within 2 minutes (awaiting local test)
+- ⏳ All 14 services become healthy within 2 minutes (awaiting local test)
 - ⏳ Manual workflow trigger works (awaiting local test)
 - ✅ Daily schedule configured correctly (disabled until local test)
 - ✅ Health check script works correctly
 - ✅ Cleanup script removes all volumes
+- ✅ Ollama automated model setup (phi3)
 
-### Week 2: Test Migration
-- [ ] 20+ tests migrated from DevLocal to Integration
-- [ ] All Integration tests pass locally with Docker stack running
-- [ ] All Integration tests pass in CI/CD pipeline
-- [ ] Test cleanup verified (no data leaks between runs)
-- [ ] Total execution time < 10 minutes
-- [ ] Zero flaky tests (10 consecutive runs pass)
+### Week 2: Test Migration ✅
+- ✅ 23 tests migrated from DevLocal to Integration (Apache Tika, SMTP, MongoDB, RabbitMQ, OpenSearch, SBert, Ollama)
+- ⏳ All Integration tests pass locally with Docker stack running (awaiting local test)
+- ⏳ All Integration tests pass in CI/CD pipeline (awaiting workflow enable)
+- ⏳ Test cleanup verified (no data leaks between runs) (awaiting local test)
+- ⏳ Total execution time < 10 minutes (awaiting local test)
+- ⏳ Zero flaky tests (10 consecutive runs pass) (awaiting local test)
 
 ### Week 4 (Part 1): Documentation
 - [ ] Integration category fully documented
-- [ ] All 11 Docker stacks documented
+- [ ] All 14 Docker stacks documented
 - [ ] Code examples for each stack
 - [ ] PlantUML diagrams embedded
 - [ ] Templates available
@@ -589,6 +625,18 @@ KEYCLOAK_CLIENT_ID=test-client
 
 # SBert
 SBERT_URL=http://localhost:5080
+
+# Ollama
+OLLAMA_URL=http://localhost:11434
+OLLAMA_HOST=localhost
+OLLAMA_PORT=11434
+OLLAMA_MODEL=phi3
+
+# Redis
+REDIS_CONNECTION_STRING=localhost:6379
+
+# Azure Service Bus Emulator
+AZURE_SERVICE_BUS_CONNECTION_STRING=Endpoint=sb://localhost;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=SAS_KEY_VALUE;UseDevelopmentEmulator=true
 ```
 
 ---
@@ -606,14 +654,15 @@ SBERT_URL=http://localhost:5080
 ## Notes
 
 **Services NOT included in Integration testing:**
-- **Ollama** - Large LLM models, slow startup, optional GPU, too heavy for CI/CD
 - **WkHtmlToPdf** - In-process library, no Docker container needed
 - **ParadeDB/Kafka** - Already in compose files but no tests exist yet
 
 **Services with no tests yet:**
+- **Redis** - Future Integration tests for caching features
+- **Azure Service Bus Emulator** - Future Integration tests for Service Bus features
 - **Keycloak** - Future Integration tests when identity features implemented
 - **Azurite** - Future Integration tests for Azure Storage features
-- **LocalStack** - Future Integration tests for AWS features
+- **LocalStack** - Future Integration tests for AWS features (SQS tests exist, S3 needed)
 
 **Long-Term Goals:**
 - 🎯 80% code coverage for Integration tests

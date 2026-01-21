@@ -1,8 +1,10 @@
 # TODO - OoBDev (dotex) Framework
 
-**Last Updated:** 2026-01-20
+**Last Updated:** 2026-01-21
 
-✅ **COMPLETED:** Docker-based Integration Testing Infrastructure (Week 1 & 2)
+✅ **COMPLETED:** Configuration Documentation - Comprehensive CONFIGURATION_SETTINGS.md created (157+ settings)
+✅ **COMPLETED:** Ollama Integration Test Setup - Automated model pulling in integration-up scripts
+✅ **COMPLETED:** Docker-based Integration Testing Infrastructure (Week 1 & 2) - 14 services + Ollama
 ✅ **COMPLETED:** Swashbuckle 10.1.0 & .NET 10.0 breaking changes - All fixes verified working
 ✅ **COMPLETED:** XML Documentation generation - Swagger Summary/Description now appear
 ✅ **COMPLETED:** Swagger generation tested and verified working
@@ -19,13 +21,14 @@ This document is organized into **epic-based files** for better navigation and m
 ### 🧪 [Local Integration Testing (Docker)](./TODO-testing-local-integration.md)
 **Status:** ✅ Week 1 & 2 Complete - ⏳ Awaiting Local Validation
 
-Docker-based integration testing with 13 services (Apache Tika, SMTP4Dev, MongoDB, SQL Server, RabbitMQ, Redis, OpenSearch, Qdrant, Azurite, LocalStack, Azure Service Bus Emulator, Keycloak, SBert). Infrastructure complete, 19 tests migrated.
+Docker-based integration testing with 14 services (Apache Tika, SMTP4Dev, MongoDB, SQL Server, RabbitMQ, Redis, OpenSearch, Qdrant, Azurite, LocalStack, Azure Service Bus Emulator, Keycloak, SBert, Ollama). Infrastructure complete, 23 tests migrated.
 
 **Key Tasks:**
-- ✅ Docker infrastructure (13 services, compose files, scripts, README with PlantUML)
+- ✅ Docker infrastructure (14 services, compose files, scripts, README with PlantUML)
 - ✅ Test category: Integration (Docker-based, runs in CI/CD)
 - ✅ CI/CD pipeline (complete but DISABLED until validation)
-- ✅ Week 2: Migrated 19 tests from DevLocal to Integration category
+- ✅ Week 2: Migrated 23 tests from DevLocal to Integration category (Apache Tika, SMTP/MailKit, MongoDB, RabbitMQ, OpenSearch, SBert, Ollama)
+- ✅ Ollama integration: Auto-pull phi3 model in integration-up scripts
 - ⏳ **NEXT:** Local testing with TESTING-CHECKLIST.md
 - ⏳ Week 4: Docker documentation (11 stacks)
 
@@ -87,6 +90,24 @@ Bug fixes, breaking changes, and technical debt resolution:
 - ✅ Swagger verification: Summary and Description properties appear
 - ✅ Swagger generation: Tested and verified working
 - ⏳ Technical debt: 80%+ test coverage, documentation, dependency audits
+
+### 📝 [Documentation](./TODO-documentation.md)
+**Status:** ✅ Configuration Reference Complete - 📋 Ongoing Maintenance
+
+Comprehensive framework documentation including configuration, testing, and architecture:
+
+**Completed:**
+- ✅ **CONFIGURATION_SETTINGS.md** (2026-01-21) - 157+ configuration points
+  - 31 Options classes (FileTemplating, OAuth2, GroqCloud, MongoDB, Ollama, etc.)
+  - 24 direct IConfiguration keys (RabbitMQ, ServiceBus, SQS, Redis, SQL Server)
+  - 102 environment variables (Runtime, Database, Message Queues, Cloud, AI/ML)
+  - Connection string formats, validation rules, best practices, migration guide
+- ✅ **TEST_VARIABLES.md** - 30+ test parameters for integration testing
+- ✅ **Testing documentation** - Complete testing guidelines and infrastructure docs
+
+**See Also:**
+- [CONFIGURATION_SETTINGS.md](./CONFIGURATION_SETTINGS.md) - Configuration reference
+- [TEST_VARIABLES.md](./TEST_VARIABLES.md) - Test property reference
 
 ### ❓ [Decisions Required](./TODO-decisions.md)
 **Status:** ⏸️ Multiple Migrations Blocked - Awaiting Strategic Decisions
@@ -300,6 +321,7 @@ TODO.md                                  # This file - Index and navigation
 
 ### Change History
 - `docs/changes/README.md` - Archived completed work (reduces context overhead)
+- `docs/changes/testing-docker-infrastructure-2026-01-19.md` - Docker integration testing (14 services, 23 tests migrated)
 - `docs/changes/migration-caching-framework-2026-01-20.md` - Caching framework migration (4 projects, property chains, Redis Docker)
 - `docs/changes/bug-fixes-swashbuckle-dotnet10-2026-01-20.md` - Swashbuckle & .NET 10.0 fixes
 - `docs/changes/bug-fixes-mstest-expected-exception-2026-01-15.md` - MSTest modernization

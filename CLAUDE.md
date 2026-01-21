@@ -1,9 +1,9 @@
 # OoBDev (dotex) Framework - Claude Development Guide
 
-**Last Updated:** 2026-01-20
+**Last Updated:** 2026-01-21
 **Framework:** OoBDev (dotex) - Enterprise .NET Library Suite
 **Target:** net10.0
-**Current Work:** Caching + Message Queues migrations COMPLETE | Docker testing infrastructure awaiting local validation
+**Current Work:** Configuration documentation COMPLETE | Ollama integration COMPLETE | Docker testing (14 services, 23 tests) awaiting local validation
 
 ---
 
@@ -328,7 +328,7 @@ OoBDev uses **5 test categories** to organize tests by execution environment and
 
 **Docker-Based Integration Tests:**
 
-Integration tests run against **13 Docker services** managed by the testing infrastructure:
+Integration tests run against **14 Docker services** managed by the testing infrastructure:
 
 ```bash
 # Start Docker services for integration testing
@@ -357,7 +357,8 @@ cd ../containers/testing
 - LocalStack (AWS emulator - SQS, S3, etc.)
 - Azure Service Bus Emulator (Message queue)
 - Keycloak (Identity & Access Management)
-- SBert (Sentence embeddings)
+- SBert (Sentence embeddings - CPU only)
+- Ollama (LLM inference - CPU only, phi3 model auto-pulled)
 
 **Test Properties Pattern:**
 ```csharp
@@ -493,6 +494,67 @@ dotnet test src/ --collect:"XPlat Code Coverage"
 ---
 
 ## Recently Completed Work
+
+### ✅ Configuration Documentation (CONFIGURATION_SETTINGS.md) (2026-01-21)
+
+**Status:** ✅ COMPLETE - Comprehensive configuration reference created (157+ settings)
+
+Successfully discovered and documented all configuration settings across the OoBDev framework using new configuration-documentation.md protocol.
+
+**Discovered:**
+- **31 Options Classes** - IOptions<T> pattern (FileTemplating, OAuth2, GroqCloud, MongoDB, Ollama, RabbitMQ, ServiceBus, SQS, Redis, SQL Server, OpenSearch, SBert, Azure Storage, Keycloak, etc.)
+- **24 Direct IConfiguration Keys** - Connection strings and service configs
+- **102 Environment Variables** - Runtime settings, database configs, message queues, cloud services, AI/ML services
+
+**Documentation:**
+- ✅ CONFIGURATION_SETTINGS.md - Single source of truth for all framework configuration
+- ✅ Options pattern examples with property tables
+- ✅ Direct IConfiguration key patterns
+- ✅ Environment variable reference by category
+- ✅ Connection string formats (6 types)
+- ✅ Validation rules and best practices
+- ✅ Migration guide from legacy patterns
+
+**Protocol:**
+- ✅ Created `.claude/protocols/documentation/configuration-documentation.md`
+- ✅ Created `.claude/protocols/PROTOCOL_TRIGGERS.md` for quick reference
+- ✅ Trigger phrase: "find all my configurations"
+
+**Deliverables:** 1,200+ lines of comprehensive configuration documentation
+
+---
+
+### ✅ Ollama Integration Testing & Automated Model Setup (2026-01-21)
+
+**Status:** ✅ COMPLETE - 4 tests migrated, automated phi3 model pulling implemented
+
+Successfully integrated Ollama LLM inference service into Docker-based integration testing infrastructure with automated model setup.
+
+**Test Migration:**
+- ✅ Migrated 4 tests from DevLocal to Integration category
+  - `OllamaApiClientTests.ListModelsTest`
+  - `OllamaApiClientTests.GenerateEmbeddingsDoubleTest`
+  - `OllamaMessageCompletionTests.IMessageCompletion_GetCompletionAsyncTest`
+  - `OllamaMessageCompletionTests.ILanguageModelProvider_GetResponseAsyncTest`
+- ✅ Updated tests to use `TestContext.GetRequiredProperty<T>()` pattern
+- ✅ Configuration: OLLAMA_URL, OLLAMA_MODEL (default: phi3)
+
+**Automation:**
+- ✅ Created `setup-ollama.sh/.bat` scripts for automated phi3 model pulling
+- ✅ Modified `integration-up.sh/.bat` to automatically run model setup after health checks
+- ✅ Fixed Windows batch file container detection regex (findstr pattern)
+- ✅ Model setup now runs automatically - no manual intervention required
+
+**Infrastructure Updates:**
+- ✅ Added Ollama to docker-compose.integration-tests.yml (14th service)
+- ✅ Updated nginx dashboard with Ollama service card
+- ✅ Added OLLAMA_* parameters to .runsettings
+- ✅ Updated TEST_VARIABLES.md with Ollama configuration
+- ✅ Updated containers/testing/README.md (14 services, 9 API endpoints)
+
+**Total Integration Tests:** 23 (was 19) across 14 Docker services
+
+---
 
 ### ✅ ANTLR Cross-Platform Build & Integration Testing Infrastructure Fixes (2026-01-20)
 
@@ -638,7 +700,7 @@ See `/containers/testing/STATUS.md` for detailed progress.
 ---
 
 
-## Current Work Context (2026-01-20)
+## Current Work Context (2026-01-21)
 
 ### Priority 1: SharedFramework Migrations
 
@@ -655,6 +717,12 @@ See `/containers/testing/STATUS.md` for detailed progress.
 ### Priority 2: Integration Testing Infrastructure
 
 **Status:** ✅ WEEK 1 & 2 COMPLETE - ⏳ AWAITING LOCAL DOCKER VALIDATION
+
+**Latest:**
+- ✅ Configuration Documentation (2026-01-21) - 157+ settings documented in CONFIGURATION_SETTINGS.md
+- ✅ Ollama Integration (2026-01-21) - 4 tests migrated, automated phi3 model setup
+- ✅ 14 Docker services (added Ollama, Redis, Azure Service Bus Emulator)
+- ✅ 23 Integration tests migrated (was 19)
 
 ### Priority 3: Incoming Project Investigations
 
@@ -737,45 +805,21 @@ Fixed 6 critical bugs including lambda syntax errors, non-functional stub implem
 
 ---
 
-## Previous Completed Work (2026-01-19)
+### ✅ Docker-Based Integration Testing Infrastructure (Week 1 & 2) (2026-01-19/21)
 
-### Task: Docker-Based Integration Testing Infrastructure
+**Status:** ✅ COMPLETE - ⏳ AWAITING LOCAL VALIDATION
 
-**What's Completed:**
+Implemented complete Docker-based integration testing infrastructure with 14 services, migrated 23 tests from DevLocal to Integration category, and created comprehensive testing documentation.
 
-**Week 1 - Docker Infrastructure (✅ COMPLETE):**
-- ✅ Complete Docker infrastructure in `/containers/testing/`
-- ✅ 11 services configured with health checks
-- ✅ Cross-platform startup/shutdown scripts
-- ✅ CI/CD pipeline implemented (disabled until validation)
-- ✅ Comprehensive documentation with PlantUML diagrams
+**Impact:**
+- 14 Docker services (Apache Tika, MongoDB, SQL Server, RabbitMQ, Redis, OpenSearch, Qdrant, Azurite, LocalStack, Azure Service Bus, Keycloak, SBert, Ollama)
+- 23 Integration tests migrated (Apache Tika 6, SMTP 2, MongoDB 3, RabbitMQ 3, OpenSearch 2, SBert 2, Ollama 4)
+- Complete CI/CD pipeline (disabled until local validation)
+- Cross-platform scripts (Linux/macOS/Windows)
+- TestContext extension methods for test configuration
+- PlantUML deployment diagram and comprehensive documentation
 
-**Week 2 - Test Migration (✅ COMPLETE):**
-- ✅ Migrated 19 tests from DevLocal to Integration category
-- ✅ Apache Tika (6 tests) - Updated base class with TIKA_URL env var
-- ✅ SMTP/MailKit (2 tests) - Added SMTP_HOST, SMTP_PORT, IMAP_HOST, IMAP_PORT
-- ✅ MongoDB (3 tests) - Added unique DB naming, cleanup, MONGODB_CONNECTION_STRING
-- ✅ RabbitMQ (3 tests) - Added RABBITMQ_HOST env var
-- ✅ OpenSearch (2 tests) - Added unique index naming, cleanup, OPENSEARCH_URL/USERNAME/PASSWORD
-- ✅ SBert (2 tests) - Added SBERT_URL env var
-- ✅ All tests now use `TestContext.GetRequiredProperty<T>()` / `GetPropertyOrDefault<T>()` patterns
-
-**Documentation Complete:**
-- ✅ [TEST_VARIABLES.md](./TEST_VARIABLES.md) - All 30+ test properties documented
-- ✅ [docs/architecture/testing-guidelines.md](./docs/architecture/testing-guidelines.md) - Comprehensive testing guide
-- ✅ Updated TODO.md, CLAUDE.md, and child TODO files with references
-
-**What's Needed:**
-- [ ] Local validation using `/containers/testing/TESTING-CHECKLIST.md`
-- [ ] Verify all 11 services become healthy
-- [ ] Run 19 migrated Integration tests locally
-- [ ] Test cleanup works correctly
-- [ ] Document any issues or adjustments needed
-
-**After Validation:**
-- Enable GitHub Actions workflow (uncomment triggers)
-- Proceed to Week 3: Migrate LiveIntegration tests (Azure B2C, App Insights, Groq)
-- Proceed to Week 4: Complete documentation (11 stack docs + diagrams)
+**Details:** [docs/changes/testing-docker-infrastructure-2026-01-19.md](docs/changes/testing-docker-infrastructure-2026-01-19.md)
 
 
 ## Contact & Feedback

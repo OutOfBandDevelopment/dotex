@@ -79,6 +79,16 @@ Each change document should include:
 - Comprehensive documentation (5 architecture docs)
 - Status: ✅ Complete and verified
 
+### Testing
+
+**[testing-docker-infrastructure-2026-01-19.md](testing-docker-infrastructure-2026-01-19.md)**
+- Docker-based integration testing infrastructure (14 services)
+- Migrated 23 tests from DevLocal to Integration category
+- Complete CI/CD pipeline (disabled until local validation)
+- Cross-platform scripts (Linux/macOS/Windows)
+- TestContext extension methods and comprehensive documentation
+- Status: ✅ Complete (Week 1 & 2) - ⏳ Awaiting local validation
+
 ### Bug Fixes & Technical Debt
 
 **[bug-fixes-antlr-keycloak-2026-01-20.md](bug-fixes-antlr-keycloak-2026-01-20.md)**
@@ -147,4 +157,4 @@ Each change document should include:
 
 ---
 
-**Last Updated:** 2026-01-20
+**Last Updated:** 2026-01-21
