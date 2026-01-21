@@ -22,13 +22,29 @@ public static class PathEx
         return path;
     }
 
+    /// <summary>
+    /// Determines whether a path string ends with a directory separator character.
+    /// </summary>
+    /// <param name="path">The path string to check.</param>
+    /// <returns>True if the path ends with a directory separator (\ or /); otherwise, false.</returns>
     public static bool EndsInDirectorySeparator(string path) =>
         path.EndsWith(Path.DirectorySeparatorChar) ||
         path.EndsWith(Path.AltDirectorySeparatorChar);
 
+    /// <summary>
+    /// Normalizes a path by replacing all forward slashes and backslashes with the platform's directory separator.
+    /// </summary>
+    /// <param name="path">The path to normalize.</param>
+    /// <returns>The normalized path, or null if the input is null or whitespace.</returns>
     public static string? FixUpPath(string path) =>
        string.IsNullOrWhiteSpace(path) ? null : string.Join(Path.DirectorySeparatorChar, path.Split('/', '\\'));
 
+    /// <summary>
+    /// Extracts the base path from a wildcard path by removing wildcard segments.
+    /// For example, "C:\folder\*.txt" returns "C:\folder".
+    /// </summary>
+    /// <param name="path">The path that may contain wildcards (* or ?).</param>
+    /// <returns>The base path without wildcard segments, or null if the input is null or whitespace.</returns>
     public static string? GetBasePath(string path)
     {
         if (string.IsNullOrWhiteSpace(path))
@@ -45,6 +61,12 @@ public static class PathEx
         return path == basePath ? Path.GetDirectoryName(basePath) : basePath;
     }
 
+    /// <summary>
+    /// Enumerates files matching a wildcard path pattern.
+    /// Supports wildcards (* and ?) in any path segment and recursively searches directories.
+    /// </summary>
+    /// <param name="wildcardPath">The path pattern to search for, which may contain wildcard characters.</param>
+    /// <returns>An enumerable collection of full file paths matching the wildcard pattern.</returns>
     public static IEnumerable<string> EnumerateFiles(string? wildcardPath)
     {
         if (string.IsNullOrWhiteSpace(wildcardPath))
@@ -75,6 +97,13 @@ public static class PathEx
                     yield return file;
     }
 
+    /// <summary>
+    /// Enumerates directories matching a wildcard path pattern.
+    /// Supports hierarchical wildcard patterns with asterisks.
+    /// </summary>
+    /// <param name="path">The base path to start searching from.</param>
+    /// <param name="wildCardPath">The wildcard pattern for matching directories (e.g., "**" for recursive).</param>
+    /// <returns>Enumerable of directory paths matching the pattern.</returns>
     public static IEnumerable<string> EnumerateDirectories(string path, string wildCardPath)
     {
         if (string.IsNullOrWhiteSpace(wildCardPath))

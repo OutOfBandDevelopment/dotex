@@ -5,10 +5,21 @@ using System.Linq;
 
 namespace OoBDev.System.Linq;
 
+/// <summary>
+/// Provides extension methods for randomizing the order of elements in sequences.
+/// </summary>
 public static class ShuffleExtensions
 {
     private static Random RandomGenerator { get; } = new Random();
 
+    /// <summary>
+    /// Randomly shuffles the elements of a sequence using the Fisher-Yates shuffle algorithm.
+    /// This method provides a uniform random permutation of the input sequence.
+    /// </summary>
+    /// <typeparam name="T">The type of elements in the sequence.</typeparam>
+    /// <param name="source">The sequence to shuffle.</param>
+    /// <param name="randomGenerator">Optional random number generator to use. If null, uses a shared static Random instance.</param>
+    /// <returns>A new sequence with elements in randomized order.</returns>
     public static IEnumerable<T> Shuffle<T>(this IEnumerable<T> source, Random? randomGenerator = null)
     {
         randomGenerator ??= RandomGenerator;

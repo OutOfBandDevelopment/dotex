@@ -10,12 +10,34 @@ using System.Xml.Linq;
 
 namespace OoBDev.System.Reflection;
 
+/// <summary>
+/// Builds an XML node tree from a .NET object using reflection.
+/// Supports customization of namespace handling, type details, and navigation rules.
+/// </summary>
+/// <param name="seed">The root object to build the XML node tree from.</param>
+/// <param name="excludeNamespace">If true, excludes XML namespace information from the generated nodes.</param>
+/// <param name="excludeTypeDetails">If true, excludes type metadata attributes from the generated nodes.</param>
 public class ReflectionElementNodeBuilder(object seed, bool excludeNamespace = false, bool excludeTypeDetails = false)
 {
+    /// <summary>
+    /// Gets a value indicating whether XML namespaces should be excluded from generated nodes.
+    /// </summary>
     protected bool ExcludeNamespace { get; } = excludeNamespace;
+
+    /// <summary>
+    /// Gets a value indicating whether type details should be excluded from generated nodes.
+    /// </summary>
     protected bool ExcludeTypeDetails { get; } = excludeTypeDetails;
+
+    /// <summary>
+    /// Gets the root object being converted to an XML node tree.
+    /// </summary>
     protected object Seed { get; } = seed;
 
+    /// <summary>
+    /// Builds an INode tree from the seed object using reflection.
+    /// </summary>
+    /// <returns>An INode representing the root of the XML node tree.</returns>
     public INode Build() =>
         new ExtensibleElementNode(
              Seed.GetXmlElementName(ExcludeNamespace),
@@ -27,9 +49,27 @@ public class ReflectionElementNodeBuilder(object seed, bool excludeNamespace = f
              PreserveWhitespace
              );
 
+    /// <summary>
+    /// Determines whether whitespace should be preserved for the given object.
+    /// </summary>
+    /// <param name="obj">The object to check.</param>
+    /// <returns>True to preserve whitespace; otherwise, false. Default is true.</returns>
     protected virtual bool PreserveWhitespace(object obj) => true;
+
+    /// <summary>
+    /// Selects the XML namespaces to include for the given model object.
+    /// </summary>
+    /// <param name="model">The model object.</param>
+    /// <returns>A collection of XML namespace names, or null.</returns>
     protected virtual IEnumerable<XName>? NamespacesSelector(object model) => [];
 
+    /// <summary>
+    /// Selects the child nodes for the given model object.
+    /// For value types, returns null. For IEnumerable types, returns enumerable items.
+    /// For other objects, returns properties that can be navigated.
+    /// </summary>
+    /// <param name="model">The model object to get children from.</param>
+    /// <returns>A collection of child name/object tuples, or null if the model is a value type.</returns>
     protected virtual IEnumerable<(XName name, object child)>? ChildSelector(object model) =>
          IsValue(model) ? null : model switch
          {
@@ -42,6 +82,13 @@ public class ReflectionElementNodeBuilder(object seed, bool excludeNamespace = f
                   select (XName.Get(property.Name, ExcludeNamespace ? "" : model.GetXmlNamespace()), SafeRead(model, property))
          };
 
+    /// <summary>
+    /// Determines whether navigation to the specified property is allowed for the given model object.
+    /// Excludes indexed properties and properties on Type objects.
+    /// </summary>
+    /// <param name="model">The model object containing the property.</param>
+    /// <param name="property">The property to check.</param>
+    /// <returns>True if navigation is allowed; otherwise, false.</returns>
     protected virtual bool AllowNavigate(object model, PropertyInfo property) =>
         model switch
         {
@@ -54,6 +101,12 @@ public class ReflectionElementNodeBuilder(object seed, bool excludeNamespace = f
             }
         };
 
+    /// <summary>
+    /// Safely reads a property value from the model object, catching and logging any exceptions.
+    /// </summary>
+    /// <param name="model">The model object to read the property from.</param>
+    /// <param name="property">The property to read.</param>
+    /// <returns>The property value, or null if an exception occurs.</returns>
     protected virtual object? SafeRead(object model, PropertyInfo property)
     {
         try
@@ -67,6 +120,12 @@ public class ReflectionElementNodeBuilder(object seed, bool excludeNamespace = f
         }
     }
 
+    /// <summary>
+    /// Selects the XML attributes to include for the given model object.
+    /// If ExcludeTypeDetails is false, includes type metadata (AssemblyQualifiedName, Name, FullName, Namespace).
+    /// </summary>
+    /// <param name="model">The model object to get attributes from.</param>
+    /// <returns>A collection of attribute name/value tuples, or null if type details are excluded or model is null.</returns>
     protected virtual IEnumerable<(XName name, string? value)>? AttributeSelector(object model) =>
         ExcludeTypeDetails switch
         {
@@ -89,6 +148,13 @@ public class ReflectionElementNodeBuilder(object seed, bool excludeNamespace = f
             }
         };
 
+    /// <summary>
+    /// Selects the string value representation for the given model object.
+    /// Handles special types like Type (returns AssemblyQualifiedName), byte arrays (Base64),
+    /// streams (Base64), and character arrays/sequences (converts to string).
+    /// </summary>
+    /// <param name="model">The model object to get the value from.</param>
+    /// <returns>A string representation of the value, or null if not a value type.</returns>
     protected virtual string? ValueSelector(object? model) =>
         IsValue(model) ? model switch
         {
@@ -108,6 +174,12 @@ public class ReflectionElementNodeBuilder(object seed, bool excludeNamespace = f
             _ => null // model.ToString()
         } : null;
 
+    /// <summary>
+    /// Determines whether the given object should be treated as a value (leaf node) rather than a complex object.
+    /// Returns true for simple types, byte arrays, character arrays, and streams.
+    /// </summary>
+    /// <param name="input">The object to check.</param>
+    /// <returns>True if the object is a value type; otherwise, false.</returns>
     protected virtual bool IsValue(object? input) =>
         input switch
         {

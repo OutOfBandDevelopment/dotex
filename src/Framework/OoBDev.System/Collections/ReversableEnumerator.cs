@@ -21,6 +21,9 @@ public class ReversableEnumerator<T>(IEnumerator<T> @base) : IReversibleEnumerat
     private bool _reset = false;
     private bool _end = false;
 
+    /// <summary>
+    /// Gets the current position in the enumeration sequence. Returns -1 when reset.
+    /// </summary>
     public int Position { get; private set; } = ResetPosition;
 
     /// <summary>
@@ -29,6 +32,9 @@ public class ReversableEnumerator<T>(IEnumerator<T> @base) : IReversibleEnumerat
     /// <param name="base"></param>
     public ReversableEnumerator(IEnumerable<T> @base) : this(@base.GetEnumerator()) { }
 
+    /// <summary>
+    /// Gets the element in the collection at the current position of the enumerator.
+    /// </summary>
     public T Current => _pointer == null ? @base.Current : _pointer.Current;
 
 #pragma warning disable CS8603 // Possible null reference return.
@@ -101,6 +107,11 @@ public class ReversableEnumerator<T>(IEnumerator<T> @base) : IReversibleEnumerat
         }
     }
 
+    /// <summary>
+    /// Moves to the most recent (latest) position in the cached enumeration.
+    /// This operation fast-forwards to the end of the currently cached items without pulling new items from the base enumerator.
+    /// </summary>
+    /// <returns>True if the move was successful; false if there is no cached data.</returns>
     public bool MoveCurrent()
     {
         lock (_lock)

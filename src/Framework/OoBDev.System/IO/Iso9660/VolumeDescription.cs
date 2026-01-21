@@ -7,8 +7,18 @@ using System.Text;
 
 namespace OoBDev.System.IO.Iso9660;
 
+/// <summary>
+/// Represents the primary volume descriptor in an ISO 9660 file system.
+/// Contains metadata about the volume including identifiers, sector information, timestamps, and the root directory.
+/// </summary>
 public class VolumeDescription : IEnumerable<DirectoryRecord>, IDisposable
 {
+    /// <summary>
+    /// Initializes a new instance of the VolumeDescription class by parsing ISO 9660 volume descriptor data.
+    /// </summary>
+    /// <param name="buffer">The byte array containing the volume descriptor sector data.</param>
+    /// <param name="encoding">The text encoding used for string fields (typically ASCII).</param>
+    /// <param name="reader">The ISO 9660 disc stream for reading directory and file data.</param>
     private VolumeDescription(byte[] buffer, Encoding encoding, Stream reader)
     {
         //  1      1
@@ -85,29 +95,122 @@ public class VolumeDescription : IEnumerable<DirectoryRecord>, IDisposable
         //653      zeros
     }
 
+    /// <summary>
+    /// Gets the descriptor set identifier (typically "CD001").
+    /// </summary>
     public string DescriptorSet { get; init; }
+
+    /// <summary>
+    /// Gets the system identifier string.
+    /// </summary>
     public string SystemIdentifier { get; init; }
+
+    /// <summary>
+    /// Gets the volume identifier (volume label/name).
+    /// </summary>
     public string VolumeIdentifier { get; init; }
+
+    /// <summary>
+    /// Gets the total number of sectors in the volume.
+    /// </summary>
     public uint SectorCount { get; init; }
+
+    /// <summary>
+    /// Gets the volume set size (typically 1).
+    /// </summary>
     public ushort VolumeSetSize { get; init; }
+
+    /// <summary>
+    /// Gets the volume sequence number (typically 1).
+    /// </summary>
     public ushort VolumeSequenceNumber { get; init; }
+
+    /// <summary>
+    /// Gets the sector size in bytes (typically 2048).
+    /// </summary>
     public ushort SectorSize { get; init; }
+
+    /// <summary>
+    /// Gets the path table length in bytes.
+    /// </summary>
     public uint PathTableLength { get; init; }
+
+    /// <summary>
+    /// Gets the number of the first sector in the first big endian path table.
+    /// </summary>
     public uint FirstSectorFirst { get; init; }
+
+    /// <summary>
+    /// Gets the number of the first sector in the second big endian path table, or zero if none exists.
+    /// </summary>
     public uint FirstSectorSecond { get; init; }
+
+    /// <summary>
+    /// Gets the root directory record for the volume.
+    /// </summary>
     public DirectoryRecord DirectoryRecord { get; init; }
+
+    /// <summary>
+    /// Gets the volume set identifier.
+    /// </summary>
     public string VolumeSetIdentifier { get; init; }
+
+    /// <summary>
+    /// Gets the publisher identifier.
+    /// </summary>
     public string PublisherIdentifier { get; init; }
+
+    /// <summary>
+    /// Gets the data preparer identifier.
+    /// </summary>
     public string DataPreparerIdentifier { get; init; }
+
+    /// <summary>
+    /// Gets the application identifier.
+    /// </summary>
     public string ApplicationIdentifier { get; init; }
+
+    /// <summary>
+    /// Gets the copyright file identifier.
+    /// </summary>
     public string CopyRightFileIdentifier { get; init; }
+
+    /// <summary>
+    /// Gets the abstract file identifier.
+    /// </summary>
     public string AbstractFileIdentifier { get; init; }
+
+    /// <summary>
+    /// Gets the bibliographical file identifier.
+    /// </summary>
     public string BibliographyFileIdentifier { get; init; }
+
+    /// <summary>
+    /// Gets the date and time when the volume was created.
+    /// </summary>
     public DateTime VolumeCreation { get; init; }
+
+    /// <summary>
+    /// Gets the date and time of the most recent volume modification.
+    /// </summary>
     public DateTime VolumeModification { get; init; }
+
+    /// <summary>
+    /// Gets the date and time when the volume expires.
+    /// </summary>
     public DateTime VolumeExpires { get; init; }
+
+    /// <summary>
+    /// Gets the date and time when the volume becomes effective.
+    /// </summary>
     public DateTime VolumeEffective { get; init; }
 
+    /// <summary>
+    /// Creates a VolumeDescription from an ISO 9660 disc stream by reading the primary volume descriptor.
+    /// The primary volume descriptor is located at sector 16.
+    /// </summary>
+    /// <param name="stream">The ISO 9660 disc stream to read from.</param>
+    /// <returns>A VolumeDescription instance containing the parsed volume metadata.</returns>
     public static VolumeDescription Create(Stream stream)
     {
         var sector = new byte[2048];
@@ -121,19 +224,33 @@ public class VolumeDescription : IEnumerable<DirectoryRecord>, IDisposable
         }
         return new VolumeDescription(sector, Encoding.ASCII, stream);
     }
+
+    /// <summary>
+    /// Gets or sets the base stream for the ISO 9660 disc.
+    /// </summary>
     protected Stream BaseStream { get; set; }
 
     #region IEnumerable<DirectoryRecord> Members
 
+    /// <summary>
+    /// Returns an enumerator that iterates through the root directory records.
+    /// </summary>
+    /// <returns>An enumerator for the root directory record collection.</returns>
     public IEnumerator<DirectoryRecord> GetEnumerator() => (DirectoryRecord ?? Enumerable.Empty<DirectoryRecord>()).GetEnumerator();
 
+    /// <summary>
+    /// Returns an enumerator that iterates through the root directory records.
+    /// </summary>
+    /// <returns>An enumerator for the root directory record collection.</returns>
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
     #endregion
 
     #region IDisposable Members
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Disposes the volume description and releases the underlying base stream.
+    /// </summary>
     public void Dispose() => BaseStream?.Dispose();
 
     #endregion

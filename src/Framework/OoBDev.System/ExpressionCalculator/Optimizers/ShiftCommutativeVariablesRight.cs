@@ -4,8 +4,19 @@ using System.Collections.Generic;
 
 namespace OoBDev.System.ExpressionCalculator.Optimizers;
 
+/// <summary>
+/// Optimizes expressions by reordering operands in commutative operations (addition and multiplication).
+/// Orders operands as: numbers (by value) first, then variables (alphabetically), then other expressions.
+/// This canonicalization helps with expression comparison and further optimizations.
+/// </summary>
+/// <typeparam name="T">The numeric type of the expression, which must be a value type implementing IComparable&lt;T&gt; and IEquatable&lt;T&gt;.</typeparam>
 public sealed class ShiftCommutativeVariablesRight<T> : IExpressionOptimizer<T> where T : struct, IComparable<T>, IEquatable<T>
 {
+    /// <summary>
+    /// Optimizes the given expression by reordering operands in commutative operations.
+    /// </summary>
+    /// <param name="expression">The expression to optimize.</param>
+    /// <returns>An optimized expression with canonically ordered operands.</returns>
     public ExpressionBase<T> Optimize(ExpressionBase<T> expression) =>
         expression switch
         {
