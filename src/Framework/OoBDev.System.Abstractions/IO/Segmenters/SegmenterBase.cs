@@ -30,6 +30,7 @@ public abstract class SegmenterBase : ISegmenter
     /// </summary>
     public SegmentionOptions Options { get; }
 
+    /// <inheritdoc/>
     public async ValueTask<ISegmentReadResult> TryReadAsync(ReadOnlySequence<byte> buffer)
     {
         var result = Read(buffer);

@@ -6,10 +6,25 @@ using System.Numerics;
 
 namespace OoBDev.System.Reflection;
 
+/// <summary>
+/// Provides extension methods for object type conversion using reflection and type descriptors.
+/// </summary>
 public static class ObjectExtensions
 {
+    /// <summary>
+    /// Converts an object to the specified type.
+    /// </summary>
+    /// <typeparam name="T">The target type.</typeparam>
+    /// <param name="value">The value to convert.</param>
+    /// <returns>The converted value, or default if conversion fails or the value is null.</returns>
     public static T? As<T>(this object? value) => value == null ? default : (T?)value.As(typeof(T));
 
+    /// <summary>
+    /// Converts an object to the specified type using various conversion strategies.
+    /// </summary>
+    /// <param name="value">The value to convert.</param>
+    /// <param name="targetType">The target type.</param>
+    /// <returns>The converted value, or default if conversion fails or the value is null.</returns>
     public static object? As(this object? value, Type targetType)
     {
         if (value is null) return default;
