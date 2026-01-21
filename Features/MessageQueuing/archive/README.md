@@ -197,7 +197,7 @@ public PaymentProcessor(IMessageSenderProvider<PaymentQueue> queue)
 
 ### Related Documentation
 - [Main README](../README.md) - Current message queuing overview
-- [TODO-migrations-message-queues.md](../../../TODO-migrations-message-queues.md) - Migration tracking
+- [TODO-archive/TODO-migrations-message-queues.md](../../../TODO-archive/TODO-migrations-message-queues.md) - Migration tracking
 - Existing RabbitMQ implementation: `src/ExternalServices/RabbitMQ/OoBDev.RabbitMQ/`
 
 ### Source Code

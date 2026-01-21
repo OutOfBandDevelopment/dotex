@@ -441,7 +441,7 @@ public class RabbitMQQueueMessageProvider : IMessageSenderProvider, IMessageRece
 1. Update main README
 2. Update pattern documentation
 3. Create usage examples
-4. Update TODO-migrations-message-queues.md
+4. Update TODO-archive/TODO-migrations-message-queues.md
 
 ### Step 5: Final Verification
 1. Build entire solution

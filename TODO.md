@@ -321,11 +321,11 @@ TODO.md                                  # This file - Index and navigation
 
 ### Change History
 - `docs/changes/README.md` - Archived completed work (reduces context overhead)
-- `docs/changes/testing-docker-infrastructure-2026-01-19.md` - Docker integration testing (14 services, 23 tests migrated)
-- `docs/changes/migration-caching-framework-2026-01-20.md` - Caching framework migration (4 projects, property chains, Redis Docker)
-- `docs/changes/bug-fixes-swashbuckle-dotnet10-2026-01-20.md` - Swashbuckle & .NET 10.0 fixes
-- `docs/changes/bug-fixes-mstest-expected-exception-2026-01-15.md` - MSTest modernization
-- `docs/changes/bug-fixes-phase0-critical-2026-01-15.md` - Phase 0 critical bugs
+- `docs/changes/documentation-configuration-settings-2026-01-21.md` - Configuration documentation (157+ settings)
+- `docs/changes/testing-ollama-integration-2026-01-21.md` - Ollama integration (4 tests, auto-setup)
+- `docs/changes/sharedframework-phase0-2026-01-20.md` - Namespace cleanup (27 directories)
+- `docs/changes/migration-message-queues-2026-01-20.md` - AWS SQS + Azure Service Bus
+- `docs/changes/testing-docker-infrastructure-2026-01-19.md` - Docker testing (14 services, 23 tests)
 
 ### Protocols
 - `.claude/protocols/software/incoming-codebase-comparison.md` - v1.1

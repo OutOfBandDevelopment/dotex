@@ -75,18 +75,41 @@ Each change document should include:
 **[migration-caching-framework-2026-01-20.md](migration-caching-framework-2026-01-20.md)**
 - Complete Caching framework migration from SharedFramework (4 implementation + 3 test projects)
 - Enhanced StringFormatter with property chain support (unlimited depth)
-- Added Redis to Docker integration testing infrastructure (12 services total)
+- Added Redis to Docker integration testing infrastructure
 - Comprehensive documentation (5 architecture docs)
-- Status: ✅ Complete and verified
+- Status: ✅ Complete
+
+**[migration-message-queues-2026-01-20.md](migration-message-queues-2026-01-20.md)**
+- AWS SQS + Azure Service Bus providers
+- LocalStack + Azure emulator integration
+- Context-based pattern (non-generic)
+- Status: ✅ Complete
+
+**[sharedframework-phase0-2026-01-20.md](sharedframework-phase0-2026-01-20.md)**
+- Namespace cleanup (27 directories renamed)
+- Api. prefix removals, Azure reorganization, Contracts → Abstractions
+- Status: ✅ Complete
+
+### Documentation
+
+**[documentation-configuration-settings-2026-01-21.md](documentation-configuration-settings-2026-01-21.md)**
+- CONFIGURATION_SETTINGS.md created (157+ settings)
+- 31 Options classes, 24 direct keys, 102 environment variables
+- New protocol: configuration-documentation.md
+- Status: ✅ Complete
 
 ### Testing
 
+**[testing-ollama-integration-2026-01-21.md](testing-ollama-integration-2026-01-21.md)**
+- Ollama LLM inference (14th Docker service)
+- 4 tests migrated, automated phi3 model setup
+- Fixed Windows batch container detection
+- Status: ✅ Complete
+
 **[testing-docker-infrastructure-2026-01-19.md](testing-docker-infrastructure-2026-01-19.md)**
-- Docker-based integration testing infrastructure (14 services)
-- Migrated 23 tests from DevLocal to Integration category
-- Complete CI/CD pipeline (disabled until local validation)
-- Cross-platform scripts (Linux/macOS/Windows)
-- TestContext extension methods and comprehensive documentation
+- Docker integration testing infrastructure (14 services)
+- 23 tests migrated from DevLocal to Integration
+- CI/CD pipeline, cross-platform scripts
 - Status: ✅ Complete (Week 1 & 2) - ⏳ Awaiting local validation
 
 ### Bug Fixes & Technical Debt

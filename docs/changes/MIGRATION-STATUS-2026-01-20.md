@@ -126,7 +126,7 @@
 ### Message Queues (✅ SAFE)
 - AWS SQS (183 LOC)
 - Azure Service Bus (114 LOC)
-- See: TODO-migrations-message-queues.md
+- See: TODO-archive/TODO-migrations-message-queues.md
 
 ### Spatial Services (✅ SAFE)
 - 5 projects: Abstractions, Common, Census, Google Maps, Bing Maps

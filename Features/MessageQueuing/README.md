@@ -686,7 +686,7 @@ The [archive](./archive/) folder contains comprehensive analysis of alternative 
 ## References
 
 ### Documentation
-- [TODO-migrations-message-queues.md](../../TODO-migrations-message-queues.md) - Migration tracking
+- [TODO-archive/TODO-migrations-message-queues.md](../../TODO-archive/TODO-migrations-message-queues.md) - Migration tracking
 - [OoBDev.MessageQueueing.Abstractions](../../src/Framework/OoBDev.MessageQueueing.Abstractions/) - Core interfaces
 - [OoBDev.RabbitMQ](../../src/ExternalServices/RabbitMQ/OoBDev.RabbitMQ/) - Reference implementation
 

@@ -19,10 +19,10 @@
    - Impact: Redis + Microsoft distributed caching
    - Priority: HIGH
 
-3. **[TODO-migrations-message-queues.md](./TODO-migrations-message-queues.md)** ✅ **COMPLETE (2026-01-20)**
+3. **Message Queues** ✅ **COMPLETE (2026-01-20)** - [Archived](./TODO-archive/TODO-migrations-message-queues.md)
    - Status: MIGRATED - AWS SQS + Azure Service Bus providers with Docker testing
    - Impact: Cloud message queue providers
-   - Priority: HIGH
+   - Details: [migration-message-queues-2026-01-20.md](docs/changes/migration-message-queues-2026-01-20.md)
 
 ### High Priority (Enhance Main)
 
@@ -106,7 +106,7 @@
 |---------|------|-------------|--------|----------|--------|
 | Communications | TODO-migrations-communications.md | 16 LOC stub | 1,145 | 🔥 IMMEDIATE | ⚠️ MailKit adapter needed |
 | Caching | TODO-migrations-caching.md | ✅ **COMPLETE** | ~600 | HIGH | ✅ Migrated 2026-01-20 |
-| Message Queues | TODO-migrations-message-queues.md | ✅ **COMPLETE** | ~750 | HIGH | ✅ Migrated 2026-01-20 |
+| Message Queues | [Archived](TODO-archive/) | ✅ **COMPLETE** | ~750 | HIGH | ✅ Migrated 2026-01-20 |
 | Spatial | TODO-migrations-spatial.md | None | ~1,200 | HIGH | ✅ None |
 | Identity | TODO-migrations-identity.md | 125 LOC | 291+204 | HIGH | ⚠️ Merge needed |
 | Documents | TODO-migrations-documents.md | 531 LOC | 911 | MEDIUM | ⚠️ Feature merge |
