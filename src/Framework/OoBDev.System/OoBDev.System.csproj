@@ -4,7 +4,9 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>false</ImplicitUsings>
     <Nullable>enable</Nullable>
-    
+
+    <!-- Suppress warnings in ANTLR-generated files -->
+    <NoWarn>$(NoWarn);CS1584;CS1658</NoWarn>
 
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
 

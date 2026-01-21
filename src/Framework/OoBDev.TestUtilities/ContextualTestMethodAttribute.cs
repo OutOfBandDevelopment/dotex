@@ -86,7 +86,7 @@ public class ContextualTestMethodAttribute : TestMethodAttribute
     /// Initializes a new instance of the <see cref="ContextualTestMethodAttribute"/> class with a display name.
     /// </summary>
     /// <param name="displayName">The display name for the test method.</param>
-    public ContextualTestMethodAttribute(string? displayName) : base(displayName)
+    public ContextualTestMethodAttribute(string? displayName) : base()
     {
     }
 

@@ -16,7 +16,7 @@ public class ExpressionParser<T>
     /// </summary>
     /// <param name="input">The string representation of the expression to parse.</param>
     /// <returns>An expression tree representing the parsed input.</returns>
-    /// <exception cref="System.Exception">Thrown when the input contains syntax errors or cannot be parsed.</exception>
+    /// <exception cref="Exception">Thrown when the input contains syntax errors or cannot be parsed.</exception>
     public ExpressionBase<T> Parse(string input) =>
         new ExpressionTreeVisitor<T>().Visit(
             new ExpressionTreeParser(

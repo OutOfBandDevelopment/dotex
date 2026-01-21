@@ -171,7 +171,7 @@ public class JsonPathVisitor : JsonPathBaseVisitor<IPathSegment?>
             step: Visit<int>(context.rangeStep)
             );
     /// <summary>
-    /// Visits a filter node, creating a predicate path segment for filtering arrays with conditional expressions like [?(@.price < 10)].
+    /// Visits a filter node, creating a predicate path segment for filtering arrays with conditional expressions like [?(@.price &lt; 10)].
     /// </summary>
     /// <param name="context">The parse tree context for the filter rule.</param>
     /// <returns>A predicate path segment containing the filter query.</returns>
