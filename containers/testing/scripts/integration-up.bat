@@ -75,7 +75,22 @@ if "%1"=="--wait" (
     if %ERRORLEVEL% equ 0 (
         echo.
         echo ======================================================================
-        echo ✅ All services are healthy and ready for testing!
+        echo ✅ All services are healthy!
+        echo ======================================================================
+        echo.
+
+        REM Setup Ollama model if container is running
+        echo Setting up Ollama model...
+        call "%~dp0setup-ollama.bat"
+        if %ERRORLEVEL% equ 0 (
+            echo ✅ Ollama model ready
+        ) else (
+            echo ⚠️  Ollama model setup failed (may already be installed)
+        )
+
+        echo.
+        echo ======================================================================
+        echo ✅ Stack is ready for testing!
         echo ======================================================================
         echo.
         echo You can now run integration tests:

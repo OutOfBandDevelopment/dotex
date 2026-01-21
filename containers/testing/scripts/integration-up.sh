@@ -71,7 +71,21 @@ if [[ "$1" == "--wait" ]]; then
     if [ $? -eq 0 ]; then
         echo ""
         echo "======================================================================"
-        echo "✅ All services are healthy and ready for testing!"
+        echo "✅ All services are healthy!"
+        echo "======================================================================"
+        echo ""
+
+        # Setup Ollama model if container is running
+        echo "Setting up Ollama model..."
+        if "${SCRIPT_DIR}/setup-ollama.sh"; then
+            echo "✅ Ollama model ready"
+        else
+            echo "⚠️  Ollama model setup failed (may already be installed)"
+        fi
+
+        echo ""
+        echo "======================================================================"
+        echo "✅ Stack is ready for testing!"
         echo "======================================================================"
         echo ""
         echo "You can now run integration tests:"

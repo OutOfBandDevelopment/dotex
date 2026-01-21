@@ -54,9 +54,9 @@ public class OllamaApiClientTests
         TestContext.WriteLine($"url: {url}");
         TestContext.WriteLine($"model: {model}");
         TestContext.WriteLine($"Length: {embedding.Length}");
-        TestContext.WriteLine(string.Join(", ", embedding.Take(10)));
+        TestContext.WriteLine(string.Join(", ", embedding[..10]));
 
-        Assert.IsTrue(embedding.Length > 0, "Embedding should have elements");
+        Assert.IsGreaterThan(0, embedding.Length, "Embedding should have elements");
     }
 
     [TestCategory(TestCategories.DevLocal)]
