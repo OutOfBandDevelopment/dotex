@@ -11,32 +11,75 @@ using System.Runtime.CompilerServices;
 
 namespace OoBDev.Data.Vectors;
 
+/// <summary>
+/// Provides SQL CLR functions for vector operations including distance metrics, magnitude calculations, and vector generation.
+/// </summary>
 public static class VectorFunctions
 {
+    /// <summary>
+    /// Gets the value at a specific index in a double-precision vector.
+    /// </summary>
+    /// <param name="vector">The vector to query.</param>
+    /// <param name="index">The zero-based index of the element.</param>
+    /// <returns>The value at the specified index, or null if the vector or index is null.</returns>
     [SqlFunction(Name = $"[embedding].[{nameof(Element)}]", IsDeterministic = true, IsPrecise = true)]
     public static SqlDouble Element(SqlVector vector, SqlInt32 index) =>
         (vector.IsNull || index.IsNull) ? SqlDouble.Null : (SqlDouble)vector.Values[index.Value];
 
+    /// <summary>
+    /// Gets the value at a specific index in a single-precision vector.
+    /// </summary>
+    /// <param name="vector">The vector to query.</param>
+    /// <param name="index">The zero-based index of the element.</param>
+    /// <returns>The value at the specified index, or null if the vector or index is null.</returns>
     [SqlFunction(Name = $"[embedding].[{nameof(ElementF)}]", IsDeterministic = true, IsPrecise = true)]
     public static SqlSingle ElementF(SqlVectorF vector, SqlInt32 index) =>
         (vector.IsNull || index.IsNull) ? SqlSingle.Null : (SqlSingle)vector.Values[index.Value];
 
+    /// <summary>
+    /// Calculates the magnitude (Euclidean norm) of a double-precision vector.
+    /// </summary>
+    /// <param name="vector">The vector to measure.</param>
+    /// <returns>The magnitude of the vector, or null if the vector is null.</returns>
     [SqlFunction(Name = $"[embedding].[{nameof(Magnitude)}]", IsDeterministic = true, IsPrecise = true)]
     public static SqlDouble Magnitude(SqlVector vector) =>
         vector.IsNull ? SqlDouble.Null : (SqlDouble)Math.Sqrt(DotProduct(vector.Values, vector.Values));
 
+    /// <summary>
+    /// Calculates the magnitude (Euclidean norm) of a single-precision vector.
+    /// </summary>
+    /// <param name="vector">The vector to measure.</param>
+    /// <returns>The magnitude of the vector, or null if the vector is null.</returns>
     [SqlFunction(Name = $"[embedding].[{nameof(MagnitudeF)}]", IsDeterministic = true, IsPrecise = true)]
     public static SqlSingle MagnitudeF(SqlVectorF vector) =>
         vector.IsNull ? SqlSingle.Null : (SqlSingle)Math.Sqrt(DotProduct(vector.Values, vector.Values));
 
+    /// <summary>
+    /// Gets the number of elements in a double-precision vector.
+    /// </summary>
+    /// <param name="vector">The vector to measure.</param>
+    /// <returns>The number of elements, or null if the vector is null.</returns>
     [SqlFunction(Name = $"[embedding].[{nameof(Length)}]", IsDeterministic = true, IsPrecise = true)]
     public static SqlInt32 Length(SqlVector vector) =>
         vector.IsNull ? SqlInt32.Null : (SqlInt32)vector.Values.Count;
 
+    /// <summary>
+    /// Gets the number of elements in a single-precision vector.
+    /// </summary>
+    /// <param name="vector">The vector to measure.</param>
+    /// <returns>The number of elements, or null if the vector is null.</returns>
     [SqlFunction(Name = $"[embedding].[{nameof(LengthF)}]", IsDeterministic = true, IsPrecise = true)]
     public static SqlInt32 LengthF(SqlVectorF vector) =>
         vector.IsNull ? SqlInt32.Null : (SqlInt32)vector.Values.Count;
 
+    /// <summary>
+    /// Calculates the distance or similarity between two double-precision vectors using the specified metric.
+    /// </summary>
+    /// <param name="distanceMetric">The metric to use (cosine_distance, cosine_similarity, euclidean_distance, dot_product, manhattan_distance).</param>
+    /// <param name="vector1">The first vector.</param>
+    /// <param name="vector2">The second vector.</param>
+    /// <returns>The calculated distance or similarity value, or null if any parameter is null.</returns>
+    /// <exception cref="ArgumentException">Thrown when vectors have different lengths or the metric is unsupported.</exception>
     [SqlFunction(Name = $"[embedding].[{nameof(Distance)}]", IsDeterministic = true, IsPrecise = true)]
     public static SqlDouble Distance(SqlString distanceMetric, SqlVector vector1, SqlVector vector2)
     {
@@ -62,6 +105,14 @@ public static class VectorFunctions
         };
     }
 
+    /// <summary>
+    /// Calculates the distance or similarity between two single-precision vectors using the specified metric.
+    /// </summary>
+    /// <param name="distanceMetric">The metric to use (cosine_distance, cosine_similarity, euclidean_distance, dot_product, manhattan_distance).</param>
+    /// <param name="vector1">The first vector.</param>
+    /// <param name="vector2">The second vector.</param>
+    /// <returns>The calculated distance or similarity value, or null if any parameter is null.</returns>
+    /// <exception cref="ArgumentException">Thrown when vectors have different lengths or the metric is unsupported.</exception>
     [SqlFunction(Name = $"[embedding].[{nameof(DistanceF)}]", IsDeterministic = true, IsPrecise = true)]
     public static SqlSingle DistanceF(SqlString distanceMetric, SqlVectorF vector1, SqlVectorF vector2)
     {
@@ -87,6 +138,13 @@ public static class VectorFunctions
         };
     }
 
+    /// <summary>
+    /// Calculates the midpoint between two double-precision vectors.
+    /// </summary>
+    /// <param name="vector1">The first vector.</param>
+    /// <param name="vector2">The second vector.</param>
+    /// <returns>A vector representing the midpoint, or null if either vector is null.</returns>
+    /// <exception cref="ArgumentException">Thrown when vectors have different lengths.</exception>
     [SqlFunction(Name = $"[embedding].[{nameof(Midpoint)}]", IsDeterministic = true, IsPrecise = true)]
     public static SqlVector Midpoint(SqlVector vector1, SqlVector vector2)
     {
@@ -109,6 +167,13 @@ public static class VectorFunctions
         return vectorM;
     }
 
+    /// <summary>
+    /// Calculates the midpoint between two single-precision vectors.
+    /// </summary>
+    /// <param name="vector1">The first vector.</param>
+    /// <param name="vector2">The second vector.</param>
+    /// <returns>A vector representing the midpoint, or null if either vector is null.</returns>
+    /// <exception cref="ArgumentException">Thrown when vectors have different lengths.</exception>
     [SqlFunction(Name = $"[embedding].[{nameof(MidpointF)}]", IsDeterministic = true, IsPrecise = true)]
     public static SqlVectorF MidpointF(SqlVectorF vector1, SqlVectorF vector2)
     {
@@ -131,6 +196,12 @@ public static class VectorFunctions
         return vectorM;
     }
 
+    /// <summary>
+    /// Calculates the angle in radians between two double-precision vectors.
+    /// </summary>
+    /// <param name="vector1">The first vector.</param>
+    /// <param name="vector2">The second vector.</param>
+    /// <returns>The angle in radians, or null if either vector is null.</returns>
     [SqlFunction(Name = $"[embedding].[{nameof(Angle)}]", IsDeterministic = true, IsPrecise = true)]
     public static SqlDouble Angle(SqlVector vector1, SqlVector vector2) =>
         vector1.IsNull || vector2.IsNull ? SqlDouble.Null :
@@ -140,6 +211,12 @@ public static class VectorFunctions
                 )
             );
 
+    /// <summary>
+    /// Calculates the angle in radians between two single-precision vectors.
+    /// </summary>
+    /// <param name="vector1">The first vector.</param>
+    /// <param name="vector2">The second vector.</param>
+    /// <returns>The angle in radians, or null if either vector is null.</returns>
     [SqlFunction(Name = $"[embedding].[{nameof(AngleF)}]", IsDeterministic = true, IsPrecise = true)]
     public static SqlSingle AngleF(SqlVectorF vector1, SqlVectorF vector2) =>
         vector1.IsNull || vector2.IsNull ? SqlSingle.Null :
@@ -149,6 +226,12 @@ public static class VectorFunctions
                 )
             );
 
+    /// <summary>
+    /// Generates a random double-precision vector with values between 0 and 1.
+    /// </summary>
+    /// <param name="length">The number of elements in the vector.</param>
+    /// <param name="seed">The random seed (null uses current time).</param>
+    /// <returns>A vector with random values, or null if length is null.</returns>
     [SqlFunction(Name = $"[embedding].[{nameof(Random)}]", IsDeterministic = true, IsPrecise = true)]
     public static SqlVector Random(SqlInt32 length, SqlInt32 seed)
     {
@@ -169,10 +252,24 @@ public static class VectorFunctions
         return new SqlVector(vector);
     }
 
+    /// <summary>
+    /// Generates a random single-precision vector with values between 0 and 1.
+    /// </summary>
+    /// <param name="length">The number of elements in the vector.</param>
+    /// <param name="seed">The random seed (null uses current time).</param>
+    /// <returns>A vector with random values, or null if length is null.</returns>
     [SqlFunction(Name = $"[embedding].[{nameof(RandomF)}]", IsDeterministic = true, IsPrecise = true)]
     public static SqlVectorF RandomF(SqlInt32 length, SqlInt32 seed) =>
         new(Random(length, seed).Values);
 
+    /// <summary>
+    /// Generates a random double-precision vector with uniform distribution in the specified range.
+    /// </summary>
+    /// <param name="length">The number of elements in the vector.</param>
+    /// <param name="min">The minimum value (defaults to -1.0).</param>
+    /// <param name="max">The maximum value (defaults to 1.0).</param>
+    /// <param name="seed">The random seed (null uses current time).</param>
+    /// <returns>A vector with uniformly distributed random values.</returns>
     [SqlFunction(Name = $"[embedding].[{nameof(Uniform)}]", IsDeterministic = true, IsPrecise = true)]
     public static SqlVector Uniform(SqlInt32 length, SqlDouble min, SqlDouble max, SqlInt32 seed)
     {
@@ -191,6 +288,14 @@ public static class VectorFunctions
         return new SqlVector(vector);
     }
 
+    /// <summary>
+    /// Generates a random double-precision vector with element-wise uniform distribution using vector bounds.
+    /// </summary>
+    /// <param name="min">The minimum values for each element.</param>
+    /// <param name="max">The maximum values for each element.</param>
+    /// <param name="seed">The random seed (null uses current time).</param>
+    /// <returns>A vector with uniformly distributed random values.</returns>
+    /// <exception cref="ArgumentException">Thrown when min and max vectors have different lengths.</exception>
     [SqlFunction(Name = $"[embedding].[{nameof(UniformV)}]", IsDeterministic = true, IsPrecise = true)]
     public static SqlVector UniformV(SqlVector min, SqlVector max, SqlInt32 seed)
     {
@@ -212,11 +317,27 @@ public static class VectorFunctions
         return new SqlVector(vector);
     }
 
+    /// <summary>
+    /// Generates a random single-precision vector with uniform distribution in the specified range.
+    /// </summary>
+    /// <param name="length">The number of elements in the vector.</param>
+    /// <param name="min">The minimum value (defaults to -1.0).</param>
+    /// <param name="max">The maximum value (defaults to 1.0).</param>
+    /// <param name="seed">The random seed (null uses current time).</param>
+    /// <returns>A vector with uniformly distributed random values.</returns>
     [SqlFunction(Name = $"[embedding].[{nameof(UniformF)}]", IsDeterministic = true, IsPrecise = true)]
     public static SqlVectorF UniformF(SqlInt32 length, SqlDouble min, SqlDouble max, SqlInt32 seed) =>
         new(Uniform(length, min, max, seed).Values);
 
 
+    /// <summary>
+    /// Generates a random single-precision vector with element-wise uniform distribution using vector bounds.
+    /// </summary>
+    /// <param name="min">The minimum values for each element.</param>
+    /// <param name="max">The maximum values for each element.</param>
+    /// <param name="seed">The random seed (null uses current time).</param>
+    /// <returns>A vector with uniformly distributed random values.</returns>
+    /// <exception cref="ArgumentException">Thrown when min and max vectors have different lengths.</exception>
     [SqlFunction(Name = $"[embedding].[{nameof(UniformVF)}]", IsDeterministic = true, IsPrecise = true)]
     public static SqlVectorF UniformVF(SqlVectorF min, SqlVectorF max, SqlInt32 seed)
     {
@@ -238,14 +359,35 @@ public static class VectorFunctions
         return new SqlVectorF(vector);
     }
 
+    /// <summary>
+    /// Calculates the magnitude of a vector using its values.
+    /// </summary>
+    /// <param name="values">The vector values.</param>
+    /// <returns>The magnitude (Euclidean norm).</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal static double MagnitudeInternal(IReadOnlyList<double> values) =>
         Math.Sqrt(DotProduct(values, values));
 
+    /// <summary>
+    /// Calculates cosine distance between two vectors.
+    /// </summary>
+    /// <param name="vector1">The first vector values.</param>
+    /// <param name="magnitude1">The magnitude of the first vector.</param>
+    /// <param name="vector2">The second vector values.</param>
+    /// <param name="magnitude2">The magnitude of the second vector.</param>
+    /// <returns>The cosine distance (1 - cosine similarity).</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal static double CosineDistance(IReadOnlyList<double> vector1, double magnitude1, IReadOnlyList<double> vector2, double magnitude2) =>
         magnitude1 == 0 || magnitude2 == 0 ? 1.0 : 1.0 - CosineSimilarity(vector1, magnitude1, vector2, magnitude2);
 
+    /// <summary>
+    /// Calculates cosine similarity between two vectors.
+    /// </summary>
+    /// <param name="vector1">The first vector values.</param>
+    /// <param name="magnitude1">The magnitude of the first vector.</param>
+    /// <param name="vector2">The second vector values.</param>
+    /// <param name="magnitude2">The magnitude of the second vector.</param>
+    /// <returns>The cosine similarity (between -1 and 1).</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal static double CosineSimilarity(IReadOnlyList<double> vector1, double magnitude1, IReadOnlyList<double> vector2, double magnitude2)
     {
@@ -253,6 +395,12 @@ public static class VectorFunctions
         return Math.Max(-1.0, Math.Min(1.0, dot / (magnitude1 * magnitude2)));
     }
 
+    /// <summary>
+    /// Calculates Euclidean distance between two vectors.
+    /// </summary>
+    /// <param name="v1">The first vector values.</param>
+    /// <param name="v2">The second vector values.</param>
+    /// <returns>The Euclidean distance.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal static double EuclideanDistance(IReadOnlyList<double> v1, IReadOnlyList<double> v2)
     {
@@ -265,6 +413,12 @@ public static class VectorFunctions
         return Math.Sqrt(sum);
     }
 
+    /// <summary>
+    /// Calculates dot product of two vectors.
+    /// </summary>
+    /// <param name="v1">The first vector values.</param>
+    /// <param name="v2">The second vector values.</param>
+    /// <returns>The dot product.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal static double DotProduct(IReadOnlyList<double> v1, IReadOnlyList<double> v2)
     {
@@ -276,6 +430,12 @@ public static class VectorFunctions
         return result;
     }
 
+    /// <summary>
+    /// Calculates Manhattan distance (L1 norm) between two vectors.
+    /// </summary>
+    /// <param name="v1">The first vector values.</param>
+    /// <param name="v2">The second vector values.</param>
+    /// <returns>The Manhattan distance.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal static double ManhattanDistance(IReadOnlyList<double> v1, IReadOnlyList<double> v2)
     {

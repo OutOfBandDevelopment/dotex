@@ -6,8 +6,17 @@ using System.Linq;
 
 namespace OoBDev.Data.Vectors;
 
+/// <summary>
+/// Provides type conversion for <see cref="SqlVector"/> to and from various formats including strings, arrays, and binary data.
+/// </summary>
 public class SqlVectorConverter : TypeConverter
 {
+    /// <summary>
+    /// Determines whether this converter can convert from the specified source type.
+    /// </summary>
+    /// <param name="context">The type descriptor context.</param>
+    /// <param name="sourceType">The source type to convert from.</param>
+    /// <returns>True if conversion is supported; otherwise, false.</returns>
     public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType) =>
         new Type[]
         {
@@ -21,6 +30,14 @@ public class SqlVectorConverter : TypeConverter
             typeof(SqlBinary),
         }.Contains(sourceType);
 
+    /// <summary>
+    /// Converts the specified value to a <see cref="SqlVector"/>.
+    /// </summary>
+    /// <param name="context">The type descriptor context.</param>
+    /// <param name="culture">The culture to use for conversion.</param>
+    /// <param name="value">The value to convert.</param>
+    /// <returns>The converted <see cref="SqlVector"/>.</returns>
+    /// <exception cref="NotSupportedException">Thrown when the value type is not supported.</exception>
     public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value) =>
         value switch
         {
@@ -37,6 +54,12 @@ public class SqlVectorConverter : TypeConverter
             _ => throw new NotSupportedException($"{value.GetType()} is not supported")
         };
 
+    /// <summary>
+    /// Determines whether this converter can convert to the specified destination type.
+    /// </summary>
+    /// <param name="context">The type descriptor context.</param>
+    /// <param name="destinationType">The destination type to convert to.</param>
+    /// <returns>True if conversion is supported; otherwise, false.</returns>
     public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType) =>
         new Type[]
         {
@@ -49,6 +72,15 @@ public class SqlVectorConverter : TypeConverter
             typeof(SqlBinary),
         }.Contains(destinationType);
 
+    /// <summary>
+    /// Converts a <see cref="SqlVector"/> to the specified destination type.
+    /// </summary>
+    /// <param name="context">The type descriptor context.</param>
+    /// <param name="culture">The culture to use for conversion.</param>
+    /// <param name="value">The <see cref="SqlVector"/> to convert.</param>
+    /// <param name="destinationType">The type to convert to.</param>
+    /// <returns>The converted value.</returns>
+    /// <exception cref="NotSupportedException">Thrown when the value or destination type is not supported.</exception>
     public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
     {
         if (!(value is SqlVector vector)) throw new NotSupportedException($"{value.GetType()} is not supported");
