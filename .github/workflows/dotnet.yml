@@ -67,7 +67,7 @@ jobs:
 
     steps:
       # https://github.com/actions/checkout
-    - uses: actions/checkout@v4.1.1
+    - uses: actions/checkout@v6.0.2
       with:
         clean: true
         persist-credentials: true
@@ -83,22 +83,21 @@ jobs:
 
       # https://github.com/actions/setup-dotnet
     - name: Install .Net 10.0 SDK
-      uses: actions/setup-dotnet@v4
+      uses: actions/setup-dotnet@v5.1.0
       with:
-        dotnet-version: 10.0.x        
+        dotnet-version: 10.0.x
 
       # https://github.com/GitTools/actions/blob/main/docs/examples/github/gitversion/setup/usage-examples.md
     - name: Install GitVersion
-      uses: gittools/actions/gitversion/setup@v3.1.11
+      uses: gittools/actions/gitversion/setup@v4.2.0
       with:
         versionSpec: '6.0.x'
 
-      # https://github.com/GitTools/actions/blob/main/docs/examples/github/gitversion/execute/usage-examples.md 
+      # https://github.com/GitTools/actions/blob/main/docs/examples/github/gitversion/execute/usage-examples.md
     - name: Use GitVersion
-      uses: gittools/actions/gitversion/execute@v3.1.11
+      uses: gittools/actions/gitversion/execute@v4.2.0
       id:   gitversion
       with:
-        useConfigFile: true
         configFilePath: GitVersion.yml
     
       # https://github.blog/changelog/2022-10-11-github-actions-deprecating-save-state-and-set-output-commands/
@@ -196,7 +195,7 @@ jobs:
 
     # https://github.com/marketplace/actions/publish-test-results
     - name: Publish Test Results
-      uses: EnricoMi/publish-unit-test-result-action/composite@v2
+      uses: EnricoMi/publish-unit-test-result-action/composite@v2.22.0
       id: test-results
       if: always()
       with:
@@ -225,7 +224,7 @@ jobs:
     # Upload packages as artifacts for 90 days (available for release workflow)
     - name: Upload Package Artifacts
       if: github.event_name != 'pull_request'
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6.0.0
       with:
         name: packages-${{ steps.calculate-version.outputs.FullSemVerLower }}
         path: ${{ steps.calculate-version.outputs.PackagesPath }}/*.nupkg
