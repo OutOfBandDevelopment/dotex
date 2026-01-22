@@ -1,4 +1,4 @@
-using OoBDev.Common;
+﻿using OoBDev.Common;
 using OoBDev.Common.Extensions;
 using OoBDev.Documents.Models;
 using OoBDev.TestUtilities;
@@ -19,16 +19,18 @@ public class DocumentConversionTests
     public required TestContext TestContext { get; set; }
 
     [TestMethod]
-    [TestCategory(TestCategories.DevLocal)]
+    [TestCategory(TestCategories.Integration)]
     public async Task ConvertAsyncTest()
     {
+        // Stage
+        var tikaUrl = TestContext.GetRequiredProperty<string>("TIKA_URL");
+
         var config = new ConfigurationBuilder()
             .AddInMemoryCollection(new Dictionary<string, string?>
             {
-                ["ApacheTikaClientOptions:Url"] = "http://127.0.0.1:9998",
+                ["ApacheTikaClientOptions:Url"] = tikaUrl,
             })
-            .Build()
-            ;
+            .Build();
 
         var services = new ServiceCollection()
             .AddLogging()
@@ -39,44 +41,44 @@ public class DocumentConversionTests
         var documentConversion = services.GetRequiredService<IDocumentConversion>();
         var fileTypes = services.GetServices<IDocumentType>();
 
-        var sourceFile = @"C:\Users\MWhited\OneDrive - OoBDev Group, LLC\Desktop\Matthew Whited.txt";
-        var sourceFileType = fileTypes
-            .FirstOrDefault(ft => ft.FileExtensions.Any(e => string.Equals(e, Path.GetExtension(sourceFile), StringComparison.OrdinalIgnoreCase)))
-            ?.ContentTypes[0]
-            ?? throw new ApplicationException($"unable to identify source file type")
-            ;
+        // Create test content
+        var sourceContent = $"Test document created at {DateTime.UtcNow:O}";
+        var sourceFileType = "text/plain";
 
-        foreach (var ext in fileTypes.SelectMany(e => e.FileExtensions).Distinct().OrderBy(s => s))
+        // Test conversions to various formats
+        var targetFormats = new[] { ".pdf", ".html", ".xml", ".rtf" };
+
+        foreach (var ext in targetFormats)
         {
             try
             {
-                await using var source = File.OpenRead(sourceFile);
-                var targetFile = Path.ChangeExtension(sourceFile, ext);
-
-                if (Path.GetFullPath(sourceFile) == Path.GetFullPath(targetFile)) continue;
-
-                //this.TestContext.WriteLine(ext);
                 var targetFileType = fileTypes
-                    .FirstOrDefault(ft => ft.FileExtensions.Any(e => string.Equals(e, Path.GetExtension(targetFile), StringComparison.OrdinalIgnoreCase)))
-                    ?.ContentTypes[0]
-                    ?? throw new ApplicationException($"unable to identify source file type")
-                    ;
+                    .FirstOrDefault(ft => ft.FileExtensions.Any(e => string.Equals(e, ext, StringComparison.OrdinalIgnoreCase)))
+                    ?.ContentTypes[0];
 
+                if (targetFileType == null)
+                {
+                    TestContext.WriteLine($"Skip({ext}): No file type found");
+                    continue;
+                }
+
+                // Test conversion
+                using var source = new MemoryStream(global::System.Text.Encoding.UTF8.GetBytes(sourceContent));
                 using var target = new MemoryStream();
+
                 if (await documentConversion.ConvertAsync(source, sourceFileType, target, targetFileType))
                 {
-                    await using var targetOut = File.Create(targetFile);
-                    this.TestContext.WriteLine($"out({ext}):{targetFile}");
-                    await target.CopyToAsync(targetOut);
+                    TestContext.WriteLine($"Success({ext}): Converted {source.Length} bytes → {target.Length} bytes");
+                    Assert.IsGreaterThan(0, target.Length, $"Converted document should have content for {ext}");
                 }
                 else
                 {
-                    //  this.TestContext.WriteLine($"nope({ext}):{targetFile}");
+                    TestContext.WriteLine($"Skip({ext}): Conversion not supported");
                 }
             }
             catch (Exception ex)
             {
-                this.TestContext.WriteLine($"ERR({ext}):{ex.Message}");
+                TestContext.WriteLine($"Error({ext}): {ex.Message}");
             }
         }
     }

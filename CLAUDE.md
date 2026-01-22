@@ -286,6 +286,8 @@ OoBDev.{Layer}.{Feature}/
 
 ### Documentation
 - `/docs/architecture/` - Complete architecture documentation
+- `/docs/how-tos/` - Practical how-to guides
+  - [Variables in .runsettings](docs/how-tos/runsettings-variables-and-configuration.md)
 - `/docs/migration/` - Migration plans and feature mappings
 - `/TODO.md` - Current work tracking
 - `/Incomming/CHECKLIST.md` - Incomming project investigation status

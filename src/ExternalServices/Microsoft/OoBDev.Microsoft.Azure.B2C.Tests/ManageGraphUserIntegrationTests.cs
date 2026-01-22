@@ -40,7 +40,7 @@ public class ManageGraphUserIntegrationTests
     }
 
     [TestMethod]
-    [TestCategory(TestCategories.DevLocal)]
+    [TestCategory(TestCategories.LiveIntegration)]
     public async Task GetGraphUsersByEmailTest_Integration_Exists()
     {
         // Stage
@@ -71,7 +71,7 @@ public class ManageGraphUserIntegrationTests
     }
 
     [TestMethod]
-    [TestCategory(TestCategories.DevLocal)]
+    [TestCategory(TestCategories.LiveIntegration)]
     public async Task CreateIdentityUserAsyncTest_Integration_Exists()
     {
         // Stage
@@ -98,7 +98,7 @@ public class ManageGraphUserIntegrationTests
     }
 
     [TestMethod]
-    [TestCategory(TestCategories.DevLocal)]
+    [TestCategory(TestCategories.LiveIntegration)]
     public async Task RemoveIdentityUserAsyncTest_Integration()
     {
         // Stage

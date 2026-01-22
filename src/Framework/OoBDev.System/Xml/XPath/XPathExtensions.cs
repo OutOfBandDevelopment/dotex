@@ -1,4 +1,5 @@
-﻿using OoBDev.System.PathSegments;
+﻿using OoBDev.System.IO;
+using OoBDev.System.PathSegments;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -66,46 +67,6 @@ public static class XPathExtensions
     /// </summary>
     /// <param name="item">The object to convert to a node set.</param>
     /// <returns>An enumerable sequence of XPath navigators representing the input item(s).</returns>
-    public static IEnumerable<XPathNavigator?> AsNodeSet(this object item)
-    {
-        if (item is IEnumerable items)
-        {
-            var enumerable = items.GetEnumerator();
-            while (enumerable.MoveNext())
-            {
-                var current = enumerable.Current;
-
-                switch (current)
-                {
-                    case IXPathNavigable nav:
-                        yield return nav.CreateNavigator();
-                        break;
-
-                    case IEnumerable<XPathNavigator> navs:
-                        foreach (var nav in navs)
-                        {
-                            yield return nav.CreateNavigator();
-                        }
-                        break;
-
-                    case XPathNodeIterator iterator:
-                        while (iterator.MoveNext())
-                        {
-                            yield return iterator.Current?.CreateNavigator();
-                        }
-                        break;
-
-                    default:
-                        var text = new XText($"{current}");
-                        yield return text.ToXPathNavigable().CreateNavigator();
-                        break;
-                }
-            }
-        }
-        else
-        {
-            foreach (var child in (new[] { item }).AsNodeSet())
-                yield return child;
-        }
-    }
+    public static IEnumerable<XPathNavigator?> AsNodeSet(this XPathNodeIterator item) =>
+        item.OfType<XPathNavigator>();
 }

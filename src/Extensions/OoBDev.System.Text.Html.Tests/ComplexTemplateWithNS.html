@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Complex HTML Template for Testing</title>
+</head>
+<body>
+    <h1>Complex Template Test</h1>
+
+    <!-- Value-of elements for dynamic content -->
+    <div>
+        <value-of select="@.title">Default Title</value-of>
+        <value-of select="@.description">Default Description</value-of>
+    </div>
+
+    <!-- Value-attr for attribute binding -->
+    <input type="text" value-attr="value=@.inputValue" name="testInput" />
+    <a href="#" value-attr="href=@.linkUrl">Dynamic Link</a>
+
+    <!-- Repeater for collections -->
+    <repeater source="@.items">
+        <div class="item">
+            <h2><value-of select="@.name">Item Name</value-of></h2>
+            <p><value-of select="@.description">Item Description</value-of></p>
+            <span data-binding="@.price">$0.00</span>
+        </div>
+    </repeater>
+
+    <!-- Nested repeater -->
+    <repeater source="@.categories">
+        <section>
+            <h3><value-of select="@.categoryName">Category</value-of></h3>
+            <repeater source="@.products">
+                <div class="product" data-binding="@.id">
+                    <value-of select="@.productName">Product</value-of>
+                </div>
+            </repeater>
+        </section>
+    </repeater>
+
+    <!-- Conditional elements -->
+    <condition test="@.showHeader">
+        <header>
+            <h1>Conditional Header</h1>
+        </header>
+    </condition>
+
+    <condition test="@.isLoggedIn">
+        <div class="user-info">
+            <value-of select="@.username">Guest</value-of>
+        </div>
+    </condition>
+
+    <condition test="@.hasErrors">
+        <div class="error-panel">
+            <repeater source="@.errors">
+                <p class="error"><value-of select="@.message">Error</value-of></p>
+            </repeater>
+        </div>
+    </condition>
+
+    <!-- Data-binding attributes for various scenarios -->
+    <div data-binding="@.mainContent">
+        <p data-binding="@.paragraph1">First paragraph</p>
+        <p data-binding="@.paragraph2">Second paragraph</p>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <repeater source="@.records">
+                <tr data-binding="@.rowId">
+                    <td><value-of select="@.id">0</value-of></td>
+                    <td><value-of select="@.name">Name</value-of></td>
+                    <td value-attr="class=@.statusClass"><value-of select="@.status">Pending</value-of></td>
+                </tr>
+            </repeater>
+        </tbody>
+    </table>
+
+    <!-- Complex nested structure -->
+    <div class="complex" data-binding="@.root">
+        <condition test="@.root.enabled">
+            <repeater source="@.root.sections">
+                <section data-binding="@.sectionId">
+                    <h4><value-of select="@.title">Section Title</value-of></h4>
+                    <condition test="@.hasContent">
+                        <div class="content">
+                            <value-of select="@.content">Content here</value-of>
+                        </div>
+                    </condition>
+                </section>
+            </repeater>
+        </condition>
+    </div>
+
+</body>
+</html>

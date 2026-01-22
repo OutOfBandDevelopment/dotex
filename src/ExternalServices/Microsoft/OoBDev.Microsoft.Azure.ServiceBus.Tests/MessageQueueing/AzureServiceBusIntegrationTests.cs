@@ -28,7 +28,7 @@ public class AzureServiceBusIntegrationTests
     /// Note: The emulator doesn't support management operations, so this requires real Azure.
     /// </summary>
     [TestMethod]
-    [TestCategory(TestCategories.DevLocal)]
+    [TestCategory(TestCategories.Integration)]
     public async Task ListQueues_WithAzureServiceBus_ReturnsQueueNames()
     {
         // Arrange
@@ -63,7 +63,7 @@ public class AzureServiceBusIntegrationTests
     /// Note: The emulator doesn't support management operations, so this requires real Azure.
     /// </summary>
     [TestMethod]
-    [TestCategory(TestCategories.DevLocal)]
+    [TestCategory(TestCategories.Integration)]
     public async Task CreateQueue_WithAzureServiceBus_CreatesSuccessfully()
     {
         // Arrange
@@ -118,7 +118,7 @@ public class AzureServiceBusIntegrationTests
     /// Works with both emulator and real Azure Service Bus.
     /// </summary>
     [TestMethod]
-    [TestCategory(TestCategories.DevLocal)]
+    [TestCategory(TestCategories.Integration)]
     public async Task SendAsync_ToServiceBusQueue_SendsSuccessfully()
     {
         // Arrange
@@ -201,7 +201,7 @@ public class AzureServiceBusIntegrationTests
     /// Works with both emulator and real Azure Service Bus.
     /// </summary>
     [TestMethod]
-    [TestCategory(TestCategories.DevLocal)]
+    [TestCategory(TestCategories.Integration)]
     public async Task SendAsync_ToServiceBusTopic_SendsSuccessfully()
     {
         // Arrange
@@ -252,7 +252,7 @@ public class AzureServiceBusIntegrationTests
     /// Note: Requires a session-enabled queue to be created first.
     /// </summary>
     [TestMethod]
-    [TestCategory(TestCategories.DevLocal)]
+    [TestCategory(TestCategories.Integration)]
     public async Task SendAsync_ToSessionQueue_WithSessionId_SendsSuccessfully()
     {
         // Arrange

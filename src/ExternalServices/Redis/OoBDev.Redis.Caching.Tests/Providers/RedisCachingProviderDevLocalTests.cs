@@ -1,9 +1,12 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json.Linq;
+using OoBDev.Extensions.Configuration;
 using OoBDev.Redis.Caching.Providers;
 using OoBDev.TestUtilities;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace OoBDev.Redis.Caching.Tests.Providers;
@@ -31,69 +34,106 @@ public class RedisCachingProviderDevLocalTests
     }
 
     [TestMethod]
-    [TestCategory(TestCategories.DevLocal)]
+    [TestCategory(TestCategories.Integration)]
     public async Task FlushAsyncTest()
     {
         // Stage
+        var connectionString = TestContext.GetRequiredProperty<string>("REDIS_CONNECTION_STRING");
 
-        // Mock
+        var configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(new Dictionary<string, string?>
+            {
+                { "Redis:ConnectionMultiplexer:Config", connectionString }
+            })
+            .Build();
 
         // Test
-        var provider = this.CreateProvider();
-        string? key = null;
+        var services = new ServiceCollection()
+            .AddSingleton<IConfiguration>(configuration)
+            .TryAddRedisCachingServices()
+            .BuildServiceProvider();
 
+        var provider = ActivatorUtilities.CreateInstance<RedisCachingProvider>(services);
+        string? key = null;
 
         await provider.FlushAsync(key);
 
-        // Assert
-        Assert.Fail();
+        // Assert - no exception thrown
     }
 
     [TestMethod]
-    [TestCategory(TestCategories.DevLocal)]
+    [TestCategory(TestCategories.Integration)]
     public async Task RetreiveAsyncTest()
     {
         // Stage
+        var connectionString = TestContext.GetRequiredProperty<string>("REDIS_CONNECTION_STRING");
 
-        // Mock
+        var configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(new Dictionary<string, string?>
+            {
+                { "Redis:ConnectionMultiplexer:Config", connectionString }
+            })
+            .Build();
+
+        var services = new ServiceCollection()
+            .AddSingleton<IConfiguration>(configuration)
+            .TryAddRedisCachingServices()
+            .BuildServiceProvider();
+
+        var provider = ActivatorUtilities.CreateInstance<RedisCachingProvider>(services);
+
+        // First store a value
+        var key = $"TestKey_{Guid.NewGuid():N}";
+        var testData = new { Hello = "World!", Timestamp = DateTime.UtcNow };
+        await provider.StoreAsync(key, testData, TimeSpan.FromMinutes(5));
 
         // Test
-        var provider = this.CreateProvider();
-        string key = "Claims/User/6bb0e835-06b1-44ae-8907-7f5e3ebb20d7";
         Type targetType = typeof(JObject);
-
-        var result = await provider.RetreiveAsync(
-            key,
-            targetType);
+        var result = await provider.RetreiveAsync(key, targetType);
 
         // Assert
         Assert.IsNotNull(result);
 
-        // Verify
+        // Cleanup
+        await provider.FlushAsync(key);
     }
 
     [TestMethod]
-    [TestCategory(TestCategories.DevLocal)]
+    [TestCategory(TestCategories.Integration)]
     public async Task StoreAsyncTest()
     {
         // Stage
+        var connectionString = TestContext.GetRequiredProperty<string>("REDIS_CONNECTION_STRING");
 
-        // Mock
+        var configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(new Dictionary<string, string?>
+            {
+                { "Redis:ConnectionMultiplexer:Config", connectionString }
+            })
+            .Build();
 
-        // Test
-        var provider = this.CreateProvider();
-        var key = "Claims/User/6bb0e835-06b1-44ae-8907-7f5e3ebb20d7";
+        var services = new ServiceCollection()
+            .AddSingleton<IConfiguration>(configuration)
+            .TryAddRedisCachingServices()
+            .BuildServiceProvider();
+
+        var provider = ActivatorUtilities.CreateInstance<RedisCachingProvider>(services);
+        var key = $"TestKey_{Guid.NewGuid():N}";
         var data = new
         {
             Hello = "World!",
-            TimeStamp = DateTime.Now,
+            TimeStamp = DateTime.UtcNow,
         };
         var expiration = new TimeSpan(5, 0, 0);
 
+        // Test
         await provider.StoreAsync(key, data, expiration);
 
-        // Assert
+        // Verify by retrieving
+        var result = await provider.RetreiveAsync(key, data.GetType());
+        Assert.IsNotNull(result);
 
-        // Verify
+        // Cleanup
+        await provider.FlushAsync(key);
     }
 }

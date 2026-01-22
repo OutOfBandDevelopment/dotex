@@ -28,7 +28,7 @@ public class AmazonSqsIntegrationTests
     /// Useful for verifying LocalStack setup or AWS credentials.
     /// </summary>
     [TestMethod]
-    [TestCategory(TestCategories.DevLocal)]
+    [TestCategory(TestCategories.Integration)]
     public async Task ListQueues_WithLocalStack_ReturnsQueueUrls()
     {
         // Arrange
@@ -64,7 +64,7 @@ public class AmazonSqsIntegrationTests
     /// Queue name will include timestamp to ensure uniqueness.
     /// </summary>
     [TestMethod]
-    [TestCategory(TestCategories.DevLocal)]
+    [TestCategory(TestCategories.Integration)]
     public async Task CreateQueue_WithLocalStack_CreatesSuccessfully()
     {
         // Arrange
@@ -126,7 +126,7 @@ public class AmazonSqsIntegrationTests
     /// Sends a test message to a queue using the AmazonSqsMessageProvider.
     /// </summary>
     [TestMethod]
-    [TestCategory(TestCategories.DevLocal)]
+    [TestCategory(TestCategories.Integration)]
     public async Task SendAsync_ToLocalStackQueue_SendsSuccessfully()
     {
         // Arrange
@@ -222,7 +222,7 @@ public class AmazonSqsIntegrationTests
     /// Tests sending to a FIFO queue with MessageGroupId.
     /// </summary>
     [TestMethod]
-    [TestCategory(TestCategories.DevLocal)]
+    [TestCategory(TestCategories.Integration)]
     public async Task SendAsync_ToFifoQueue_WithMessageGroupId_SendsSuccessfully()
     {
         // Arrange

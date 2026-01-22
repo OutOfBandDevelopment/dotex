@@ -10,7 +10,7 @@ public class ReversableEnumeratorTests
 {
     public required TestContext TestContext { get; set; }
 
-    [TestMethod, TestCategory(TestCategories.DevLocal)]
+    [TestMethod, TestCategory(TestCategories.Unit)]
     public void MoveNextMovePreviousTest()
     {
         var set = new object[] { 1, 2, 3, 4, 5 }.GetReversibleEnumerator();

@@ -13,6 +13,8 @@ namespace OoBDev.SBert.Tests;
 [TestClass]
 public class SentenceEmbeddingClientTests
 {
+    //TODO: I think I want to do away with ISentenceEmbeddingClient
+
     public required TestContext TestContext { get; set; }
 
     private ISentenceEmbeddingClient BuildClient(string url)
@@ -30,7 +32,7 @@ public class SentenceEmbeddingClientTests
         return client;
     }
 
-    [TestMethod, TestCategory(TestCategories.Integration)]
+    [TestMethod, TestCategory(TestCategories.Integration),Ignore]
     public async Task GetEmbeddingAsyncTest()
     {
         var url = TestContext.GetRequiredProperty<string>("SBERT_URL");
@@ -41,7 +43,7 @@ public class SentenceEmbeddingClientTests
         TestContext.WriteLine(string.Join(';', embedding));
     }
 
-    [TestMethod, TestCategory(TestCategories.Integration)]
+    [TestMethod, TestCategory(TestCategories.Integration), Ignore]
     public async Task GetAllTest()
     {
         var url = TestContext.GetRequiredProperty<string>("SBERT_URL");

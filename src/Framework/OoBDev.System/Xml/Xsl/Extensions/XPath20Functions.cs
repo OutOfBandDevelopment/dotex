@@ -131,19 +131,23 @@ public class XPath20Functions
             from i in grouped
             select grouped.First());
 
-    /// <summary>
-    /// Applies an XPath expression to each node in the input sequence and returns the combined results.
-    /// </summary>
-    /// <param name="xpath">The XPath expression to evaluate on each input node.</param>
-    /// <param name="input">The input node iterator.</param>
-    /// <returns>An XPath node iterator containing all results from evaluating the XPath expression on each input node.</returns>
-    public XPathNodeIterator apply(string xpath, XPathNodeIterator input) =>
-         new EnumerableXPathNodeIterator(
-            from item in input.AsNavigatorSet()
-            let value = item.Evaluate(xpath)
-            from node in value.AsNodeSet()
-            select node
-            );
+    ////TODO: this does not seem supported at this time
+    ///// <summary>
+    ///// Applies an XPath expression to each node in the input sequence and returns the combined results.
+    ///// </summary>
+    ///// <param name="xpath">The XPath expression to evaluate on each input node.</param>
+    ///// <param name="input">The input node iterator.</param>
+    ///// <returns>An XPath node iterator containing all results from evaluating the XPath expression on each input node.</returns>
+    //public XPathNodeIterator apply(string xPath, XPathNodeIterator input)
+    //{
+    //    input.AsNavigatorSet().FirstOrDefault().ev
+    //}
+    ////new EnumerableXPathNodeIterator(
+    ////   from item in input.AsNavigatorSet()
+    ////   let value = item.Evaluate(xpath) 
+    ////   from node in value.AsNodeSet()
+    ////   select node
+    ////   );
 
 #pragma warning restore IDE1006 // Naming Styles
 

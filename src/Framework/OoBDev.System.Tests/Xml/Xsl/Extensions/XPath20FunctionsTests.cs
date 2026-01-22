@@ -164,7 +164,7 @@ public class XPath20FunctionsTests
             TestContext.WriteLine(capture.Current?.Value);
         }
 
-        var result = new XPath20Functions().apply("local-name(.)", selected);
+       // var result = new XPath20Functions().apply("local-name(.)", selected);
         //Assert.AreEqual(15m, result);
 
         Assert.Inconclusive();
