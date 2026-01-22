@@ -5,7 +5,7 @@
 		<TargetFramework>net10.0</TargetFramework>
 		<ImplicitUsings>false</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<RootNamespace>$(MSBuildProjectName.Replace(" ", "_").Replace(".Abstractions", ""))</RootNamespace>
+		
 
     <PackageReadmeFile>Readme.Common.Abstractions.md</PackageReadmeFile>
 
