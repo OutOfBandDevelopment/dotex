@@ -18,6 +18,13 @@
 
     <GenerateDocumentationFile Condition="!$([System.Text.RegularExpressions.Regex]::IsMatch('$(MSBuildProjectName)', '\.Tests$'))">True</GenerateDocumentationFile>
     <GenerateDocumentationFile Condition="$([System.Text.RegularExpressions.Regex]::IsMatch('$(MSBuildProjectName)', '\.Tests$'))">false</GenerateDocumentationFile>
+    <IsPackable Condition="!$([System.Text.RegularExpressions.Regex]::IsMatch('$(MSBuildProjectName)', '\.Tests$'))">True</IsPackable>
+    <IsPackable Condition="$([System.Text.RegularExpressions.Regex]::IsMatch('$(MSBuildProjectName)', '\.Tests$'))">false</IsPackable>
+    <GeneratePackageOnBuild Condition="!$([System.Text.RegularExpressions.Regex]::IsMatch('$(MSBuildProjectName)', '\.Tests$'))">True</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild Condition="$([System.Text.RegularExpressions.Regex]::IsMatch('$(MSBuildProjectName)', '\.Tests$'))">false</GeneratePackageOnBuild>
+
+    <RootNamespace>$(MSBuildProjectName.Replace(" ", "_").Replace(".Abstractions", ""))</RootNamespace>
+    
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
 
     <ManagePackageVersionsCentrally>false</ManagePackageVersionsCentrally>

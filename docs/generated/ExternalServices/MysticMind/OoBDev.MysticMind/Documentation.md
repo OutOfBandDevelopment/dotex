@@ -22,7 +22,7 @@ public class ConverterFactory : IConverterFactory
     <ImplicitUsings>false</ImplicitUsings>
     <Nullable>enable</Nullable>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    
     <PackageReadmeFile>Readme.MysticMind.md</PackageReadmeFile>
   </PropertyGroup>
 

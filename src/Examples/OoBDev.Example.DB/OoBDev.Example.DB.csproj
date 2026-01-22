@@ -9,7 +9,9 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <NoWarn>$(NoWarn);MSB3270;NU1701;NU1702</NoWarn>
 
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
     <IsPackable>false</IsPackable>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>    
   </PropertyGroup>
 
   <!-- https://github.com/rr-wfm/MSBuild.Sdk.SqlProj#publishing-support -->

@@ -31,6 +31,8 @@
     <!--<TargetName>$(TargetDatabaseName)</TargetName>-->
     <!-- 	Controls whether a deploy occurs when the project is published. -->
     <DeployOnPublish>True</DeployOnPublish>
+
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

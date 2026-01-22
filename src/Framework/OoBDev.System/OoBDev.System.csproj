@@ -8,7 +8,7 @@
     <!-- Suppress warnings in ANTLR-generated files -->
     <NoWarn>$(NoWarn);CS1584;CS1658</NoWarn>
 
-    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    
 
     <PackageReadmeFile>Readme.System.md</PackageReadmeFile>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>

@@ -132,7 +132,7 @@ class ApacheTikaHealthCheck {
     <ImplicitUsings>false</ImplicitUsings>
     <Nullable>enable</Nullable>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    
 
     <NoWarn>1701;1702</NoWarn>
     <WarningLevel>0</WarningLevel>

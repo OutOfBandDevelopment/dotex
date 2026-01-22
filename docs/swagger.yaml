@@ -1,7 +1,7 @@
 openapi: 3.0.4
 info:
   title: OoBDev.Example.WebApi
-  version: 0.0.11.0
+  version: 0.0.12.0
 paths:
   /api/AI:
     post:

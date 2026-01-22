@@ -7,7 +7,7 @@
 		
     <PackageReadmeFile>Readme.System.Linq.md</PackageReadmeFile>
 
-		<GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+		
 	</PropertyGroup>
 
 	<ItemGroup>
