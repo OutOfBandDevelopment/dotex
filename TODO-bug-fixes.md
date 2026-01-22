@@ -1,6 +1,6 @@
 # TODO - Bug Fixes & Technical Debt Epic
 
-**Last Updated:** 2026-01-21
+**Last Updated:** 2026-01-22
 
 This document tracks bug fixes, breaking changes, and technical debt resolution.
 
@@ -10,16 +10,16 @@ This document tracks bug fixes, breaking changes, and technical debt resolution.
 
 ## Active Work
 
-### ⚠️ Build Warnings Resolution (95 warnings)
+### ⚠️ Build Warnings Resolution (8 warnings)
 
-**Status:** 🔴 PENDING - Investigation Required
+**Status:** 🟢 MOSTLY COMPLETE - 8 Remaining Warnings
 
 **📋 Detailed Tracking:** [TODO-build-warnings.md](./TODO-build-warnings.md)
 
 **Current State:**
-- 95 build warnings across the solution
-- Warning types to be categorized
-- Priority to be determined based on warning severity
+- 8 build warnings remaining (down from 95+)
+- Critical warnings resolved (CS1573, CS8604, CS8618, CS8620, CA2022, CA2024)
+- Priority: Monitor but acceptable for now
 
 **4-Phase Approach:**
 1. **Phase 1: Investigation** - Capture and categorize all warnings
@@ -57,6 +57,25 @@ dotnet build > build-warnings.txt 2>&1
 ## Completed Work
 
 All completed bug fixes have been archived to change documents for reference:
+
+### ✅ Build Warnings & Test Cleanup (2026-01-22)
+
+**Summary:** Reduced build warnings from 95+ to 8, converted DevLocal tests to appropriate categories, and created .runsettings documentation.
+
+**Impact:**
+- Fixed critical warnings: CS1573 (XML docs), CS8604/CS8618 (nullable), CA2022/CA2024 (async patterns)
+- Converted multiple DevLocal tests to Integration/Unit/LiveIntegration categories
+- Fixed HtmlNavigatorTests with proper ComplexTemplate.html resource
+- Fixed Redis integration tests (IObjectConverter dependency, JSON serialization)
+- Created comprehensive .runsettings variables how-to guide
+
+**Files Changed:**
+- 24+ test files converted to appropriate categories
+- `docs/how-tos/runsettings-variables-and-configuration.md` created
+- `ComplexTemplate.html` test resource created
+- Multiple compiler warning fixes across solution
+
+---
 
 ### ✅ Swashbuckle 10.1.0 & .NET 10.0 Breaking Changes (2026-01-20)
 

@@ -497,6 +497,13 @@ dotnet test src/ --collect:"XPlat Code Coverage"
 
 ## Recently Completed Work
 
+### 2026-01-22
+- **Build Warnings** - Reduced from 95+ to 8 warnings (CS1573, CS8604, CS8618, CS8620, CA2022, CA2024 fixed)
+- **Test Categories** - Converted DevLocal tests to Integration/Unit/LiveIntegration categories
+- **.runsettings How-To** - Created comprehensive guide for variables and configuration
+- **HtmlNavigatorTests** - Fixed with ComplexTemplate.html resource and proper assertions
+- **Redis Tests** - Fixed IObjectConverter dependency and JSON serialization compatibility
+
 ### 2026-01-21
 - **Configuration** - 157+ settings. [Details](docs/changes/documentation-configuration-settings-2026-01-21.md)
 - **Ollama** - 4 tests, auto-setup. [Details](docs/changes/testing-ollama-integration-2026-01-21.md)
@@ -521,10 +528,13 @@ dotnet test src/ --collect:"XPlat Code Coverage"
 
 **Active Priorities:**
 1. **SharedFramework** - Next: Communications migration (16 LOC stub → 1,145 LOC)
-2. **Docker Testing** - Awaiting local validation (14 services, 23 tests)
+2. **Docker Testing** - Ready for CI/CD enablement (14 services, 23+ tests validated)
 3. **Incoming Projects** - All investigated (decisions pending)
 
 **Latest Updates:**
+- Build warnings reduced to 8 (down from 95+)
+- Test categories cleaned up (DevLocal → Integration/Unit/LiveIntegration)
+- .runsettings how-to guide created
 - Configuration documentation complete (CONFIGURATION_SETTINGS.md)
 - Ollama integration complete (phi3 auto-setup)
 - 14 Docker services ready (Apache Tika, MongoDB, SQL Server, RabbitMQ, Redis, OpenSearch, Qdrant, Azurite, LocalStack, Service Bus, Keycloak, SBert, Ollama)

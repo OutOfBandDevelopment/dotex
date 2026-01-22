@@ -1,7 +1,10 @@
 # TODO - OoBDev (dotex) Framework
 
-**Last Updated:** 2026-01-21
+**Last Updated:** 2026-01-22
 
+✅ **COMPLETED:** Build Warnings Resolution - Reduced from 95+ to 8 warnings (2026-01-22)
+✅ **COMPLETED:** Test Category Cleanup - DevLocal tests converted to Integration/Unit/LiveIntegration (2026-01-22)
+✅ **COMPLETED:** .runsettings Documentation - Comprehensive how-to guide created (2026-01-22)
 ✅ **COMPLETED:** Configuration Documentation - Comprehensive CONFIGURATION_SETTINGS.md created (157+ settings)
 ✅ **COMPLETED:** Ollama Integration Test Setup - Automated model pulling in integration-up scripts
 ✅ **COMPLETED:** Docker-based Integration Testing Infrastructure (Week 1 & 2) - 14 services + Ollama
@@ -76,12 +79,17 @@ All migration work for Incomming projects and BinaryDataDecoders:
 - ⏸️ BinaryDataDecoders (decisions required)
 
 ### 🐛 [Bug Fixes & Technical Debt](./TODO-bug-fixes.md)
-**Status:** ⚠️ Active Work - Build Warnings Resolution
+**Status:** 🟢 Mostly Complete - 8 Warnings Remaining
 
 **Active Work:**
-- ⚠️ **Build Warnings** - 95 warnings to categorize and resolve
+- 🟢 **Build Warnings** - 8 remaining (down from 95+), acceptable for now
 
 **Completed:**
+- ✅ Build warnings reduced from 95+ to 8 (2026-01-22)
+- ✅ Test category cleanup - DevLocal → Integration/Unit/LiveIntegration (2026-01-22)
+- ✅ .runsettings documentation - Comprehensive how-to guide (2026-01-22)
+- ✅ HtmlNavigatorTests fixed - ComplexTemplate.html + proper assertions (2026-01-22)
+- ✅ Redis integration tests fixed - IObjectConverter + JSON serialization (2026-01-22)
 - ✅ Phase 0 critical bugs (6 fixes) - All complete
 - ✅ MSTest ExpectedExceptionAttribute conversion (40 instances) - Complete
 - ✅ Swashbuckle 10.1.0 breaking changes - All 5 files fixed and verified
@@ -100,6 +108,10 @@ All migration work for Incomming projects and BinaryDataDecoders:
 Comprehensive framework documentation including configuration, testing, and architecture:
 
 **Completed:**
+- ✅ **.runsettings How-To Guide** (2026-01-22) - Variables and configuration best practices
+  - MSBuild variables NOT supported, environment variables + relative paths documented
+  - OoBDev Docker testing patterns explained
+  - Workarounds for MSBuild variables provided
 - ✅ **CONFIGURATION_SETTINGS.md** (2026-01-21) - 157+ configuration points
   - 31 Options classes (FileTemplating, OAuth2, GroqCloud, MongoDB, Ollama, etc.)
   - 24 direct IConfiguration keys (RabbitMQ, ServiceBus, SQS, Redis, SQL Server)
@@ -109,6 +121,7 @@ Comprehensive framework documentation including configuration, testing, and arch
 - ✅ **Testing documentation** - Complete testing guidelines and infrastructure docs
 
 **See Also:**
+- [docs/how-tos/runsettings-variables-and-configuration.md](./docs/how-tos/runsettings-variables-and-configuration.md) - .runsettings guide
 - [CONFIGURATION_SETTINGS.md](./CONFIGURATION_SETTINGS.md) - Configuration reference
 - [TEST_VARIABLES.md](./TEST_VARIABLES.md) - Test property reference
 
