@@ -6,7 +6,7 @@
     <ImplicitUsings>false</ImplicitUsings>
     <InvariantGlobalization>false</InvariantGlobalization>
 
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    
     <IsPackable>false</IsPackable>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>    
   </PropertyGroup>
