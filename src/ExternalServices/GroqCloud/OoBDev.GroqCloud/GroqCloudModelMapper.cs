@@ -1,4 +1,4 @@
-using OoBDev.AI.Models;
+﻿using OoBDev.AI.Models;
 using GroqNet.ChatCompletions;
 using System.Linq;
 
@@ -17,7 +17,7 @@ public class GroqCloudModelMapper : IGroqCloudModelMapper
     public GroqChatHistory Map(CompletionRequest request) => request.System switch
     {
         string system when !string.IsNullOrWhiteSpace(system) => new(system) { new(request.Prompt) },
-        _ => new() { new(request.Prompt) },
+        _ => [new(request.Prompt)],
     };
 
     /// <summary>

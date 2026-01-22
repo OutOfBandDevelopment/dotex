@@ -78,11 +78,12 @@ public sealed class ExtensibleNavigator : XPathNavigator
             return "";
 
         var uri = namespaceURI.Trim();
-        if (!_namespacePrefixes.ContainsKey(uri))
+        if (!_namespacePrefixes.TryGetValue(uri, out var value))
         {
-            _namespacePrefixes.Add(uri, $"n{_namespacePrefixes.Count + 1}");
+            value = $"n{_namespacePrefixes.Count + 1}";
+            _namespacePrefixes.Add(uri, value);
         }
-        return _namespacePrefixes[uri];
+        return value;
     }
 
     /// <summary>

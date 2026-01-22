@@ -15,7 +15,7 @@ namespace OoBDev.System.Xml.Linq;
 public class XFragment : IList<XNode>
 {
     // https://github.com/OutOfBandDevelopment/Samples/blob/master/HandyClasses/XFragment.cs
-    private IList<XNode> Nodes { get; } = new List<XNode>();
+    private IList<XNode> Nodes { get; } = [];
 
     /// <summary>
     /// Initializes a new instance of the XFragment class from a collection of XML nodes.

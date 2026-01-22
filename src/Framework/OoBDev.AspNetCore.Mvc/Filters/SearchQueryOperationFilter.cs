@@ -14,6 +14,7 @@ using System.Linq;
 
 namespace OoBDev.AspNetCore.Mvc.Filters;
 
+#pragma warning disable CA1873 
 /// <summary>
 /// Search Query Operation filter extends Swagger/OpenAPI to provide details on IQueryable{T} endpoints.
 /// </summary>
@@ -176,19 +177,20 @@ public class SearchQueryOperationFilter(
 
                 if (context.SchemaRepository.TryLookupByType(pagedResponseType, out var pagedResponseSchemaReference))
                 {
-                    operation.Responses ??= new OpenApiResponses();
-                    if (!operation.Responses.ContainsKey("200"))
+                    operation.Responses ??= [];
+                    if (!operation.Responses.TryGetValue("200", out var value))
                     {
-                        operation.Responses["200"] = new OpenApiResponse
+                        value = new OpenApiResponse
                         {
                             Content = new Dictionary<string, OpenApiMediaType>()
                         };
+                        operation.Responses["200"] = value;
                     }
 
-                    if (operation.Responses["200"].Content != null)
+                    if (value.Content != null)
                     {
                         ApplyContent(
-                            operation.Responses["200"].Content,
+value.Content,
                             pagedResponseSchemaReference,
                             context.ApiDescription.SupportedResponseTypes.SelectMany(m => m.ApiResponseFormats.Select(i => i.MediaType)).Distinct()
                             );
@@ -312,3 +314,4 @@ public class SearchQueryOperationFilter(
         }
     }
 }
+#pragma warning restore CA1873

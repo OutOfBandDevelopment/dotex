@@ -842,19 +842,19 @@ public class DacPacBuilder : IDacPacBuilder
         { "System.Object", "[sql_variant]" },
     };
 
-    private static readonly HashSet<string> _isMax = new()
-    {
+    private static readonly HashSet<string> _isMax =
+    [
         "System.Data.SqlTypes.SqlString",
         "System.String",
         "System.Byte[]",
         "System.Char[]"
-    };
+    ];
 
-    private static readonly HashSet<string> _doubles = new()
-    {
+    private static readonly HashSet<string> _doubles =
+    [
         "System.Data.SqlTypes.SqlDouble",
         "System.Double"
-    };
+    ];
 
     private string? GetTypeNameFromDictionary(Type type)
     {
