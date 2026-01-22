@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json.Linq;
 using OoBDev.Extensions.Configuration;
 using OoBDev.Redis.Caching.Providers;
+using OoBDev.System;
 using OoBDev.TestUtilities;
 using System;
 using System.Collections.Generic;
@@ -50,6 +50,7 @@ public class RedisCachingProviderDevLocalTests
         // Test
         var services = new ServiceCollection()
             .AddSingleton<IConfiguration>(configuration)
+            .TryAddSystemExtensions(configuration, new())  // Required for IObjectConverter
             .TryAddRedisCachingServices()
             .BuildServiceProvider();
 
@@ -77,6 +78,7 @@ public class RedisCachingProviderDevLocalTests
 
         var services = new ServiceCollection()
             .AddSingleton<IConfiguration>(configuration)
+            .TryAddSystemExtensions(configuration, new())  // Required for IObjectConverter
             .TryAddRedisCachingServices()
             .BuildServiceProvider();
 
@@ -88,8 +90,7 @@ public class RedisCachingProviderDevLocalTests
         await provider.StoreAsync(key, testData, TimeSpan.FromMinutes(5));
 
         // Test
-        Type targetType = typeof(JObject);
-        var result = await provider.RetreiveAsync(key, targetType);
+        var result = await provider.RetreiveAsync(key, testData.GetType());
 
         // Assert
         Assert.IsNotNull(result);
@@ -114,6 +115,7 @@ public class RedisCachingProviderDevLocalTests
 
         var services = new ServiceCollection()
             .AddSingleton<IConfiguration>(configuration)
+            .TryAddSystemExtensions(configuration, new())  // Required for IObjectConverter
             .TryAddRedisCachingServices()
             .BuildServiceProvider();
 
