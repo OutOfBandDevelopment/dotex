@@ -239,7 +239,7 @@ Swagger Summary and Description properties were missing because XML documentatio
 <!---->
 
 <!-- AFTER: -->
-<GenerateDocumentationFile>True</GenerateDocumentationFile>
+
 ```
 
 **2. OoBDev.AspNetCore.Mvc.csproj (Line 7 removed):**

@@ -127,7 +127,7 @@ src/
   <ImplicitUsings>disable</ImplicitUsings>
 
   <!-- ✅ MUST: Generate documentation for public APIs -->
-  <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  
 
   <!-- ✅ MUST: Package metadata -->
   <Authors>Matthew Whited</Authors>
@@ -349,7 +349,7 @@ Console.WriteLine(optionalValue); // Warning CS8602
 **Configuration:**
 ```xml
 <PropertyGroup>
-  <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  
 </PropertyGroup>
 ```
 

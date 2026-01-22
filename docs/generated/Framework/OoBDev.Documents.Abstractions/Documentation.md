@@ -37,8 +37,8 @@ namespace OoBDev.Documents
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>false</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <RootNamespace>$(MSBuildProjectName.Replace(" ", "_").Replace(".Abstractions", ""))</RootNamespace>
+    
+    
     
     <PackageReadmeFile>Readme.Documents.Abstractions.md</PackageReadmeFile>
   </PropertyGroup>

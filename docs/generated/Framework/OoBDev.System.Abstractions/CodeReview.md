@@ -50,7 +50,7 @@ Suggested change:
 
 Suggested change:
 ```xml
-<GenerateDocumentationFile>True</GenerateDocumentationFile>
+
 <DocumentationFile>Documentation.xml</DocumentationFile>
 ```
 **Readme(System.Abstractions).md**
