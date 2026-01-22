@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
     
 
-    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 

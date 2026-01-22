@@ -39,7 +39,7 @@ namespace OoBDev.Documents
     <Nullable>enable</Nullable>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <RootNamespace>$(MSBuildProjectName.Replace(" ", "_").Replace(".Abstractions", ""))</RootNamespace>
-    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    
     <PackageReadmeFile>Readme.Documents.Abstractions.md</PackageReadmeFile>
   </PropertyGroup>
   <ItemGroup>

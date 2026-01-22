@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
     
 
-    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    
 
     <PackageReadmeFile>Readme.WkHtmlToPdf.md</PackageReadmeFile>
 

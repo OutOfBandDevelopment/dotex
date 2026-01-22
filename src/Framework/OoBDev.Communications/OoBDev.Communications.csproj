@@ -7,7 +7,7 @@
 		
 		<PackageReadmeFile>Readme.Communications.md</PackageReadmeFile>
 
-		<GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+		
 	</PropertyGroup>
 	
 	<ItemGroup>

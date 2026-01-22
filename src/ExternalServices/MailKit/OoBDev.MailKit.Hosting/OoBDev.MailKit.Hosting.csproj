@@ -5,7 +5,7 @@
 		<TargetFramework>net10.0</TargetFramework>
 		<ImplicitUsings>false</ImplicitUsings>
 		<Nullable>enable</Nullable>
-    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    
 		<PackageReadmeFile>Readme.MailKit.Hosting.md</PackageReadmeFile>
 	</PropertyGroup>
 

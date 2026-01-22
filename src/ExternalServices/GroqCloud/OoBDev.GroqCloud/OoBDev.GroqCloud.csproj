@@ -5,7 +5,7 @@
     <ImplicitUsings>false</ImplicitUsings>
     <Nullable>enable</Nullable>
 
-    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    
     <PackageReadmeFile>Readme.GroqCloud.md</PackageReadmeFile>
   </PropertyGroup>
 

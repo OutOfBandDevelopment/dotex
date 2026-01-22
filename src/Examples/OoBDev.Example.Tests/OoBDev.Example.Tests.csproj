@@ -5,7 +5,10 @@
     <ImplicitUsings>false</ImplicitUsings>
     <Nullable>enable</Nullable>
 
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
     <IsPackable>false</IsPackable>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    
     <IsTestProject>true</IsTestProject>
   </PropertyGroup>
 

@@ -4,8 +4,7 @@
 		<TargetFramework>net10.0</TargetFramework>
 		<ImplicitUsings>false</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<GenerateAssemblyInfo>true</GenerateAssemblyInfo>
-    
+		    
     <PackageReadmeFile>Readme.Common.md</PackageReadmeFile>
 	</PropertyGroup>
 

@@ -6,8 +6,10 @@
     <ImplicitUsings>false</ImplicitUsings>
     <InvariantGlobalization>false</InvariantGlobalization>
 
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
     <IsPackable>false</IsPackable>
-    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>   
+    
   </PropertyGroup>
 
   <ItemGroup>
