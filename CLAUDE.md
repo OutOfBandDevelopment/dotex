@@ -1,9 +1,9 @@
 # OoBDev (dotex) Framework - Claude Development Guide
 
-**Last Updated:** 2026-01-21
+**Last Updated:** 2026-01-22
 **Framework:** OoBDev (dotex) - Enterprise .NET Library Suite
 **Target:** net10.0
-**Current Work:** Configuration documentation COMPLETE | Ollama integration COMPLETE | Docker testing (14 services, 23 tests) awaiting local validation
+**Current Work:** Design-first approach for SharedFramework migrations | 4 Epics in design phase | Docker testing ready for CI/CD
 
 ---
 
@@ -498,6 +498,11 @@ dotnet test src/ --collect:"XPlat Code Coverage"
 ## Recently Completed Work
 
 ### 2026-01-22
+- **Strategic Pivot: Design-First Approach** - Replaced SharedFramework code migrations with comprehensive design documentation
+  - Following Epic 11 pattern for all features (4 documents per feature: requirements, architecture, api-design, testing-strategy)
+  - Updated TODO files: Communications (Epic 2), Text Templating (Epic 10), Identity (Epic 7), Documents (Epic 6)
+  - Benefits: Clean architecture, no technical debt, modern .NET 10.0 patterns, complete test coverage planning
+  - Design phase replaces code migration for 4 major feature areas
 - **Build Warnings** - Reduced from 95+ to 8 warnings (CS1573, CS8604, CS8618, CS8620, CA2022, CA2024 fixed)
 - **Test Categories** - Converted DevLocal tests to Integration/Unit/LiveIntegration categories
 - **.runsettings How-To** - Created comprehensive guide for variables and configuration
@@ -526,12 +531,38 @@ dotnet test src/ --collect:"XPlat Code Coverage"
 
 ## Current Work Context
 
+**Strategic Change (2026-01-22): Design-First Approach**
+
+Instead of directly migrating code from SharedFramework, we've pivoted to comprehensive design documentation following the Epic 11 pattern:
+
+**Why Design-First?**
+- Avoids technical debt from legacy SharedFramework code
+- Ensures modern .NET 10.0 patterns throughout
+- Integrates cleanly with new Epic 11 features (IDataContainer, schema discovery, path translation)
+- Enables comprehensive test planning upfront (85-90% coverage targets)
+- Documents architectural intent before implementation
+- No namespace migrations or breaking changes needed
+
+**Epics in Design Phase:**
+1. **Epic 2: Communications Platform** - Channel abstraction, send/receive, user preferences, multi-channel routing
+2. **Epic 10: Text Templating Extensions** - Template discovery, repository, caching, engine provider pattern
+3. **Epic 7: Identity & Session Management** - Claims enhancement, rights management, session management, Azure B2C integration
+4. **Epic 6: Document Services** - Document packaging, resolvers, storage abstraction, 11 context-based services
+
+**Pattern: 4 Documents per Feature**
+- `requirements.md` - Business requirements and use cases
+- `architecture.md` - System design and component relationships
+- `api-design.md` - Interface definitions and contracts
+- `testing-strategy.md` - Test coverage plan (85-90% targets)
+
 **Active Priorities:**
-1. **SharedFramework** - Next: Communications migration (16 LOC stub → 1,145 LOC)
+1. **Design Documentation** - Creating 16 design documents per Epic (64 total across 4 Epics)
 2. **Docker Testing** - Ready for CI/CD enablement (14 services, 23+ tests validated)
 3. **Incoming Projects** - All investigated (decisions pending)
 
 **Latest Updates:**
+- Strategic pivot from code migration to design-first documentation (2026-01-22)
+- 4 TODO files updated to reflect design phase (Communications, Text Templating, Identity, Documents)
 - Build warnings reduced to 8 (down from 95+)
 - Test categories cleaned up (DevLocal → Integration/Unit/LiveIntegration)
 - .runsettings how-to guide created
