@@ -3,11 +3,7 @@
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
 		<ImplicitUsings>false</ImplicitUsings>
-		<Nullable>enable</Nullable>
-		
-    <PackageReadmeFile>Readme.System.Linq.md</PackageReadmeFile>
-
-		
+		<Nullable>enable</Nullable>		
 	</PropertyGroup>
 
 	<ItemGroup>

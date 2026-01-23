@@ -4,8 +4,6 @@
 		<TargetFramework>net10.0</TargetFramework>
 		<ImplicitUsings>false</ImplicitUsings>
 		<Nullable>enable</Nullable>
-    
-    <PackageReadmeFile>Readme.Common.Extensions.md</PackageReadmeFile>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -23,11 +21,7 @@
 		<ProjectReference Remove="..\..\ExternalServices\**\*.Abstractions.csproj" />
 		<ProjectReference Remove="..\..\ExternalServices\**\*.Hosting.csproj" />
 	</ItemGroup>
-
-	<ItemGroup>
-	  <CodeDocumentation Remove="Readme.Common.Extensions.md" />
-	</ItemGroup>
-
+  
 	<ItemGroup>
 	  <PackageReference Include="GitVersion.MsBuild" Version="6.5.1">
 	    <PrivateAssets>all</PrivateAssets>

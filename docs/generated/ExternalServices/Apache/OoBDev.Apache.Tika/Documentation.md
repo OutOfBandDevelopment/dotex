@@ -132,12 +132,8 @@ class ApacheTikaHealthCheck {
     <ImplicitUsings>false</ImplicitUsings>
     <Nullable>enable</Nullable>
     
-    
-
     <NoWarn>1701;1702</NoWarn>
     <WarningLevel>0</WarningLevel>
-
-    <PackageReadmeFile>Readme.Apache.Tika.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>

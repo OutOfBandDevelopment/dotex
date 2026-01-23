@@ -1,10 +1,9 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
 		<ImplicitUsings>false</ImplicitUsings>
 		<Nullable>enable</Nullable>
-    <PackageReadmeFile>Readme.Common.AspNetCore.md</PackageReadmeFile>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -21,10 +20,6 @@
 	<ItemGroup>
 		<ProjectReference Include="..\..\Framework\**\OoBDev.AspNetCore.*.csproj" />
 		<ProjectReference Remove="..\..\Framework\**\OoBDev.*.Tests.csproj" />
-	</ItemGroup>
-		
-	<ItemGroup>
-	  <CodeDocumentation Remove="Readme.Common.AspNetCore.md" />
 	</ItemGroup>
 		
 	<ItemGroup>

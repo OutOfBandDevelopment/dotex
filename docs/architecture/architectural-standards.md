@@ -128,23 +128,11 @@ src/
 
   <!-- ✅ MUST: Generate documentation for public APIs -->
   
-
   <!-- ✅ MUST: Package metadata -->
   <Authors>Matthew Whited</Authors>
   <Company>Out-of-Band Development, LLC</Company>
   <RepositoryUrl>https://github.com/OutOfBandDevelopment/dotex/</RepositoryUrl>
-
-  <!-- ✅ MUST: Package README -->
-  <PackageReadmeFile>README.md</PackageReadmeFile>
-
-  <!-- ✅ MUST: License file -->
-  <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
 </PropertyGroup>
-
-<!-- ✅ MUST: Include README.md in NuGet package -->
-<ItemGroup>
-  <None Include="README.md" Pack="true" PackagePath="\" />
-</ItemGroup>
 ```
 
 **Additional Requirements for Libraries:**
@@ -827,7 +815,6 @@ branches:
   <EmbeddedResource Include="Examples\*.sql" />
   <EmbeddedResource Include="Examples\*.xml" />
   <EmbeddedResource Include="Examples\*.yml" />
-  <None Include="README.md" Pack="true" PackagePath="\" />
 </ItemGroup>
 ```
 

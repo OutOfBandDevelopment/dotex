@@ -8,8 +8,6 @@
 
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>file-rag</ToolCommandName>
-
-    <PackageReadmeFile>Readme.FileRagEngine.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>

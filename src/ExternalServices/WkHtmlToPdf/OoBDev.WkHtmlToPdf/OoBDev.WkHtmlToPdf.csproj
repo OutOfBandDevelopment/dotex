@@ -4,12 +4,6 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>false</ImplicitUsings>
     <Nullable>enable</Nullable>
-    
-
-    
-
-    <PackageReadmeFile>Readme.WkHtmlToPdf.md</PackageReadmeFile>
-
   </PropertyGroup>
 
   <ItemGroup>

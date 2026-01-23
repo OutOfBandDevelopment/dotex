@@ -4,9 +4,6 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>false</ImplicitUsings>
     <Nullable>enable</Nullable>
-    
-    <PackageReadmeFile>Readme.Microsoft.B2C.md</PackageReadmeFile>
-
   </PropertyGroup>
 
   <ItemGroup>

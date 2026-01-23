@@ -21,9 +21,6 @@ public class ConverterFactory : IConverterFactory
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>false</ImplicitUsings>
     <Nullable>enable</Nullable>
-    
-    
-    <PackageReadmeFile>Readme.MysticMind.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>

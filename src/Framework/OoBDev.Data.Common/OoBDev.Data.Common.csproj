@@ -4,10 +4,6 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>false</ImplicitUsings>
     <Nullable>enable</Nullable>
-    
-
-    
-    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -24,10 +20,6 @@
   <ItemGroup>
     <ProjectReference Include="..\OoBDev.Data.Common.Abstractions\OoBDev.Data.Common.Abstractions.csproj" />
     <ProjectReference Include="..\OoBDev.TestUtilities\OoBDev.TestUtilities.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
 </Project>
