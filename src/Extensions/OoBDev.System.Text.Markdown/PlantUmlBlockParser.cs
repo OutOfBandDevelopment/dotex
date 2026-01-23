@@ -4,10 +4,18 @@ using Markdig.Syntax;
 
 namespace OoBDev.System.Text.Markdown;
 
+/// <summary>
+/// Parses PlantUML fenced code blocks in Markdown documents.
+/// Recognizes code blocks with the "plantuml" info string.
+/// </summary>
 public class PlantUmlBlockParser : FencedBlockParserBase<PlantUmlBlock>
 {
     // https://gist.github.com/joyrexus/16041f2426450e73f5df9391f7f7ae5f
     // https://github.com/macaba/Markdig.Extensions.ScriptCs/blob/master/Markdig.Extensions.ScriptCs/ScriptCsBlockParser.cs
+
+    /// <summary>
+    /// Initializes a new instance of the PlantUmlBlockParser class.
+    /// </summary>
     public PlantUmlBlockParser()
     {
         OpeningCharacters = ['`'];
@@ -72,5 +80,10 @@ public class PlantUmlBlockParser : FencedBlockParserBase<PlantUmlBlock>
         return true;
     }
 
+    /// <summary>
+    /// Creates a new PlantUmlBlock instance for the parser.
+    /// </summary>
+    /// <param name="processor">The block processor handling the parsing.</param>
+    /// <returns>A new PlantUmlBlock instance.</returns>
     protected override PlantUmlBlock CreateFencedBlock(BlockProcessor processor) => new(this);
 }

@@ -21,8 +21,8 @@ public class XFragmentTests
         Assert.IsNotNull(firstElement);
         Assert.IsNotNull(lastElement);
         Assert.IsNotNull(lastElement.Element("child"));
-        Assert.AreEqual(firstElement.Name, "test");
-        Assert.AreEqual(lastElement.Name, "test2");
+        Assert.AreEqual("test", firstElement.Name);
+        Assert.AreEqual("test2", lastElement.Name);
         Assert.AreEqual("attr1value", (string?)lastElement.Element("child")?.Attribute("attr1"));
     }
 

@@ -70,5 +70,9 @@ public readonly struct FileEntry(ReadOnlySpan<byte> span)
     /// </summary>
     public bool Exists => Track != 0x00 && Track != 0xff;
 
+    /// <summary>
+    /// Returns a string representation of the file entry.
+    /// </summary>
+    /// <returns>A string showing the file name, type, track/sector location, and size.</returns>
     public override string ToString() => $"\"{Name}\" - {FileType} ({Track}/{Sector}) {FileSize}S";
 }

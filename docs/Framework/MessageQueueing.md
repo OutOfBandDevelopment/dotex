@@ -10,12 +10,17 @@ Handlers are provided in process though an Hosting Engine extension.
 
 ### Current Implementations
 
-* In Process `ConcurrentQueue` - Built in
-* Azure Storage Queues - Requires `OoBDev.Azure.StorageAccount`
+| Provider | Package | Description |
+|----------|---------|-------------|
+| In Process `ConcurrentQueue` | Built-in | In-memory queue for testing and development |
+| Azure Storage Queues | `OoBDev.Azure.StorageAccount` | Azure Storage Queue integration |
+| RabbitMQ | `OoBDev.RabbitMQ` | AMQP message broker integration |
+| Azure Service Bus | `OoBDev.Microsoft.Azure.ServiceBus` | Azure Service Bus queues and topics |
+| Amazon SQS | `OoBDev.Amazon.Sqs` | AWS Simple Queue Service integration |
 
-### 
+### Planned Features
 
-* should have support for impersonate the originating ClaimsPrincipal
+* Support for impersonating the originating ClaimsPrincipal
 
 ## Related Notes
 
@@ -24,6 +29,40 @@ Handlers are provided in process though an Hosting Engine extension.
   * [MessageQueueing.Hosting](../Libraries/OoBDev.MessageQueueing.Hosting.md)
 * [Azure.StorageAccount](../Libraries/OoBDev.Azure.StorageAccount.md)
 * [RabbitMQ](../Libraries/OoBDev.RabbitMQ.md)
+* [Amazon SQS](../Libraries/OoBDev.Amazon.Sqs.md)
+* [Azure Service Bus](../Libraries/OoBDev.Microsoft.Azure.ServiceBus.md)
+
+## Integration Testing
+
+Message queue providers are tested using Docker-based emulators. See [Testing Guidelines](../architecture/testing/testing-guidelines.md).
+
+### Test Configuration
+
+```csharp
+[TestMethod]
+[TestCategory(TestCategories.Integration)]
+public async Task RabbitMQ_SendAndReceive_Succeeds()
+{
+    // Required values - must be configured
+    var host = TestContext.GetRequiredProperty<string>("RABBITMQ_HOST");
+    var connectionString = TestContext.GetRequiredProperty<string>("RABBITMQ_CONNECTION_STRING");
+
+    // Industry-standard port - use default
+    var port = TestContext.GetPropertyOrDefault("RABBITMQ_PORT", 5672);
+
+    // ... test implementation
+}
+```
+
+### Available Emulators
+
+| Service | Port | Docker Service |
+|---------|------|----------------|
+| RabbitMQ | 5673 (AMQP), 15672 (Management) | `rabbitmq` |
+| Azure Service Bus Emulator | 5672 | `servicebus-emulator` |
+| LocalStack (SQS) | 4566 | `localstack` |
+
+See [TEST_VARIABLES.md](../../TEST_VARIABLES.md) for complete configuration reference.
 
 ## Structure
 

@@ -4,18 +4,26 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using OoBDev.DacFx;
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace OoBDev.DacPacCompiler.Cli;
 
+/// <summary>
+/// Hosted service that builds DACPAC files from SQL CLR assemblies.
+/// </summary>
 public class DacPacBuilderEngineService : IHostedService
 {
     private readonly ILogger _log;
     private readonly IOptions<DacPacBuilderEngineOptions> _settings;
     private readonly IDacPacBuilder _builder;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="DacPacBuilderEngineService"/> class.
+    /// </summary>
+    /// <param name="log">The logger for diagnostics.</param>
+    /// <param name="settings">The builder configuration options.</param>
+    /// <param name="builder">The DACPAC builder implementation.</param>
     public DacPacBuilderEngineService(
         ILogger<DacPacBuilderEngineService> log,
         IOptions<DacPacBuilderEngineOptions> settings,
@@ -27,6 +35,11 @@ public class DacPacBuilderEngineService : IHostedService
         _builder = builder;
     }
 
+    /// <summary>
+    /// Starts the DACPAC build process.
+    /// </summary>
+    /// <param name="cancellationToken">Token to signal cancellation.</param>
+    /// <returns>A completed task.</returns>
     public Task StartAsync(CancellationToken cancellationToken)
     {
         /*
@@ -50,5 +63,10 @@ public class DacPacBuilderEngineService : IHostedService
         return Task.CompletedTask;
     }
 
+    /// <summary>
+    /// Stops the service (no-op).
+    /// </summary>
+    /// <param name="cancellationToken">Token to signal cancellation.</param>
+    /// <returns>A completed task.</returns>
     public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
 }

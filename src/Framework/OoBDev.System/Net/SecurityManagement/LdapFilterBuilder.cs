@@ -7,8 +7,18 @@ using System.Text;
 
 namespace OoBDev.System.Net.SecurityManagement;
 
+/// <summary>
+/// Builds LDAP filter strings from LDAP filter objects, handling proper escaping and formatting according to RFC 4515.
+/// </summary>
 public class LdapFilterBuilder : ILdapFilterBuilder
 {
+    /// <summary>
+    /// Builds an LDAP filter string from an LDAP filter object.
+    /// </summary>
+    /// <param name="filter">The LDAP filter to convert to a string.</param>
+    /// <returns>The LDAP filter string representation, or null if the filter is null.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when the filter is null.</exception>
+    /// <exception cref="NotSupportedException">Thrown when the filter type is not supported.</exception>
     public string? Build(ILdapFilter filter)
     {
         ArgumentNullException.ThrowIfNull(filter);

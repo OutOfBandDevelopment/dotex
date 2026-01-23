@@ -5,7 +5,7 @@ namespace OoBDev.TestUtilities.Tests;
 [TestClass]
 public class NumericAssertsTests
 {
-    public TestContext TestContext { get; set; }
+    public required TestContext TestContext { get; set; }
 
     #region AreSimilar - Double
 
@@ -268,7 +268,7 @@ public class NumericAssertsTests
         catch (AssertFailedException ex)
         {
             // Assert - Verify custom message is in exception
-            Assert.IsTrue(ex.Message.Contains(customMessage));
+            Assert.Contains(customMessage, ex.Message);
         }
     }
 

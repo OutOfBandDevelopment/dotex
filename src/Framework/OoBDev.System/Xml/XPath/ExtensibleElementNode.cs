@@ -6,6 +6,16 @@ using System.Xml.XPath;
 
 namespace OoBDev.System.Xml.XPath;
 
+/// <summary>
+/// Represents an extensible element node with configurable value, attribute, child, and namespace selectors.
+/// </summary>
+/// <param name="name">The name of the element.</param>
+/// <param name="item">The underlying data item for this element.</param>
+/// <param name="valueSelector">Optional function to extract the text value from the item.</param>
+/// <param name="attributeSelector">Optional function to extract attributes from the item.</param>
+/// <param name="childSelector">Optional function to extract child elements from the item.</param>
+/// <param name="namespacesSelector">Optional function to extract namespaces from the item.</param>
+/// <param name="preserveWhitespace">Optional predicate to determine if whitespace should be preserved for this item.</param>
 [DebuggerDisplay("E:>{Name}")]
 public class ExtensibleElementNode(
     XName name,
@@ -18,6 +28,11 @@ public class ExtensibleElementNode(
         ) : ExtensibleElementNode<object>(null, name, item, valueSelector, attributeSelector, childSelector, namespacesSelector, preserveWhitespace)
 {
 }
+
+/// <summary>
+/// Represents a strongly-typed extensible element node with configurable value, attribute, child, and namespace selectors.
+/// </summary>
+/// <typeparam name="T">The type of the underlying data item.</typeparam>
 [DebuggerDisplay("E:>{Name}")]
 public class ExtensibleElementNode<T> : IElementNode, ISimpleNode
 {
@@ -34,6 +49,16 @@ public class ExtensibleElementNode<T> : IElementNode, ISimpleNode
     private readonly Lazy<IAttributeNode?> _attributes;
     private readonly Lazy<INamespaceNode?> _namespaces;
 
+    /// <summary>
+    /// Initializes a new instance of the ExtensibleElementNode class with configurable selectors.
+    /// </summary>
+    /// <param name="name">The name of the element.</param>
+    /// <param name="item">The underlying data item for this element.</param>
+    /// <param name="valueSelector">Optional function to extract the text value from the item.</param>
+    /// <param name="attributeSelector">Optional function to extract attributes from the item.</param>
+    /// <param name="childSelector">Optional function to extract child elements from the item.</param>
+    /// <param name="namespacesSelector">Optional function to extract namespaces from the item.</param>
+    /// <param name="preserveWhitespace">Optional predicate to determine if whitespace should be preserved for this item.</param>
     public ExtensibleElementNode(
         XName name,
         T item,
@@ -47,6 +72,17 @@ public class ExtensibleElementNode<T> : IElementNode, ISimpleNode
     {
     }
 
+    /// <summary>
+    /// Initializes a new instance of the ExtensibleElementNode class with a parent node and configurable selectors.
+    /// </summary>
+    /// <param name="parent">The parent node of this element.</param>
+    /// <param name="name">The name of the element.</param>
+    /// <param name="item">The underlying data item for this element.</param>
+    /// <param name="valueSelector">Optional function to extract the text value from the item.</param>
+    /// <param name="attributeSelector">Optional function to extract attributes from the item.</param>
+    /// <param name="childSelector">Optional function to extract child elements from the item.</param>
+    /// <param name="namespacesSelector">Optional function to extract namespaces from the item.</param>
+    /// <param name="preserveWhitespace">Optional predicate to determine if whitespace should be preserved for this item.</param>
     protected ExtensibleElementNode(
         INode? parent,
         XName name,
@@ -171,17 +207,49 @@ public class ExtensibleElementNode<T> : IElementNode, ISimpleNode
         });
     }
 
+    /// <summary>
+    /// Gets the first child node of this element.
+    /// </summary>
     public INode? FirstChild => _children.Value;
+
+    /// <summary>
+    /// Gets the first attribute of this element.
+    /// </summary>
     public IAttributeNode? FirstAttribute => _attributes.Value;
+
+    /// <summary>
+    /// Gets the first namespace declaration of this element.
+    /// </summary>
     public INamespaceNode? FirstNamespace => _namespaces.Value;
 
+    /// <summary>
+    /// Gets the next sibling node.
+    /// </summary>
     public INode? Next { get; private set; }
+
+    /// <summary>
+    /// Gets the previous sibling node.
+    /// </summary>
     public INode? Previous { get; private set; }
 
+    /// <summary>
+    /// Gets the parent node of this element.
+    /// </summary>
     public INode? Parent { get; }
+
+    /// <summary>
+    /// Gets the name of this element.
+    /// </summary>
     public XName Name { get; }
+
+    /// <summary>
+    /// Gets the text value of this element.
+    /// </summary>
     public string? Value => _value.Value?.Value;
 
+    /// <summary>
+    /// Gets the XPath node type, which is always Element for this node.
+    /// </summary>
     public XPathNodeType NodeType { get; } = XPathNodeType.Element;
 
     INode? ISimpleNode.Next { set => Next = value; }

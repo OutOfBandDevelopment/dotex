@@ -1,5 +1,5 @@
-using OoBDev.Keycloak.Identity;
-using OoBDev.Microsoft.B2C.Identity;
+﻿using OoBDev.Keycloak.Identity;
+using OoBDev.Microsoft.Azure.B2C.Identity;
 
 namespace OoBDev.Common.Extensions;
 

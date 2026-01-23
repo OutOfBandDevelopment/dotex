@@ -131,8 +131,8 @@ class ApacheTikaHealthCheck {
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>false</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    
+    
 
     <NoWarn>1701;1702</NoWarn>
     <WarningLevel>0</WarningLevel>

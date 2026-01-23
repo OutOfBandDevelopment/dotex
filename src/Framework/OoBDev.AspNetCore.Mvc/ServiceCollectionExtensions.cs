@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
@@ -54,10 +53,13 @@ public static class ServiceCollectionExtensions
         services.AddAccessor<CultureInfo>();
 
         services.AddHttpContextAccessor();
-        services.TryAddSingleton<IActionContextAccessor, ActionContextAccessor>();
 
         services.TryAddTransient<IIdentity>(sp=>sp.GetRequiredService<IPrincipal>().Identity ?? new ClaimsIdentity());
-        services.TryAddTransient<IPrincipal, ClaimsPrincipal>();
+        services.TryAddTransient<IPrincipal>(sp =>
+            sp.GetRequiredService<IHttpContextAccessor>().HttpContext?.User ??
+            ClaimsPrincipal.Current ??
+            new ClaimsPrincipal(new ClaimsIdentity())
+        );
         services.TryAddTransient(sp =>
             sp.GetRequiredService<IHttpContextAccessor>().HttpContext?.User ??
             ClaimsPrincipal.Current ??

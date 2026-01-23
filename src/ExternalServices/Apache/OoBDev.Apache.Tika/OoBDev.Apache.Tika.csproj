@@ -4,8 +4,7 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>false</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <GenerateDocumentationFile>False</GenerateDocumentationFile>
-    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    
 
     <NoWarn>1701;1702</NoWarn>
     <WarningLevel>0</WarningLevel>

@@ -4,8 +4,16 @@ using OoBDev.DacFx;
 
 namespace OoBDev.Microsoft.SqlServer.DacFx;
 
+/// <summary>
+/// Provides extension methods for registering DacPac compiler services.
+/// </summary>
 public static class ServiceCollectionExtensions
 {
+    /// <summary>
+    /// Adds DacPac compiler services to the service collection.
+    /// </summary>
+    /// <param name="services">The service collection to add services to.</param>
+    /// <returns>The service collection for method chaining.</returns>
     public static IServiceCollection AddDacPacCompilerServices(this IServiceCollection services)
     {
         services.TryAddSingleton<IDacpacMergeCompiler, DacpacMergeCompiler>();

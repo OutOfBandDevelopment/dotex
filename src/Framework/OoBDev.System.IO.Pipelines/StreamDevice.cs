@@ -9,11 +9,15 @@ using System.Threading.Tasks;
 
 namespace OoBDev.System.IO.Pipelines;
 
+/// <summary>
+/// Provides a message-based device abstraction over a stream, supporting both receiving and transmitting messages.
+/// </summary>
+/// <typeparam name="TMessage">The type of messages to send and receive.</typeparam>
 public class StreamDevice<TMessage> : IStreamDevice<TMessage>
 {
     private readonly IProducerConsumerCollection<TMessage> _transmissionQueue = new ConcurrentQueue<TMessage>();
 
-    private Stream _stream => _adapter.Stream;
+    private Stream AdapterStream => _adapter.Stream;
     private readonly IDeviceAdapter _adapter;
     private readonly IDeviceDefinition _device;
     private readonly ISegmentBuildDefinition? _segmentDefintion;
@@ -23,6 +27,13 @@ public class StreamDevice<TMessage> : IStreamDevice<TMessage>
     private readonly CancellationToken _token;
     private readonly CancellationTokenSource _tokenSource;
 
+    /// <summary>
+    /// Initializes a new instance of the StreamDevice class.
+    /// </summary>
+    /// <param name="adapter">The device adapter providing access to the underlying stream.</param>
+    /// <param name="device">The device definition describing the device's behavior.</param>
+    /// <param name="token">Optional cancellation token to stop the device operations.</param>
+    /// <param name="minimumTransmissionDelay">Minimum delay between message transmissions in milliseconds (default is 1000ms).</param>
     public StreamDevice(
         IDeviceAdapter adapter,
         IDeviceDefinition device,
@@ -72,13 +83,36 @@ public class StreamDevice<TMessage> : IStreamDevice<TMessage>
             );
     }
 
+    /// <summary>
+    /// Gets the task representing the running device operations (initialization, receiving, and transmitting).
+    /// </summary>
     public Task Runner { get; }
 
-    public event EventHandler<TMessage> MessageReceived;
-    public event EventHandler<StreamDeviceStatus> DeviceStatus;
-    public event EventHandler<DeviceErrorEventArgs> MessageReceivedError;
-    public event EventHandler<DeviceErrorEventArgs> MessageTransmitterError;
+    /// <summary>
+    /// Occurs when a message is received from the device.
+    /// </summary>
+    public event EventHandler<TMessage>? MessageReceived;
 
+    /// <summary>
+    /// Occurs when the device status changes.
+    /// </summary>
+    public event EventHandler<StreamDeviceStatus>? DeviceStatus;
+
+    /// <summary>
+    /// Occurs when an error happens during message receiving.
+    /// </summary>
+    public event EventHandler<DeviceErrorEventArgs>? MessageReceivedError;
+
+    /// <summary>
+    /// Occurs when an error happens during message transmission.
+    /// </summary>
+    public event EventHandler<DeviceErrorEventArgs>? MessageTransmitterError;
+
+    /// <summary>
+    /// Queues a message for transmission to the device.
+    /// </summary>
+    /// <param name="message">The message to transmit.</param>
+    /// <returns>A task that resolves to true if the message was successfully queued, false otherwise.</returns>
     public Task<bool> Transmit(TMessage message) => Task.FromResult(_transmissionQueue.TryAdd(message));
 
     private Task OnMessageReceived(TMessage message)
@@ -111,8 +145,8 @@ public class StreamDevice<TMessage> : IStreamDevice<TMessage>
             try
             {
                 await ReportDeviceStatus(StreamDeviceStatus.Receiving);
-                await _stream.Follow()
-                             .With(_segmentDefintion.ThenAs(_decoder, OnMessageReceived))
+                await AdapterStream.Follow()
+                             .With(_segmentDefintion!.ThenAs(_decoder!, OnMessageReceived))
                              .RunAsync(_token)
                              .ConfigureAwait(false);
                 _tokenSource.Cancel(true);
@@ -121,7 +155,7 @@ public class StreamDevice<TMessage> : IStreamDevice<TMessage>
             catch (Exception ex)
             {
                 var eventArg = new DeviceErrorEventArgs(exception: ex, errorHandling: ErrorHandling.Throw);
-                MessageReceivedError?.Invoke(_stream, eventArg);
+                MessageReceivedError?.Invoke(AdapterStream, eventArg);
                 switch (eventArg.ErrorHandling)
                 {
                     case ErrorHandling.Ignore:
@@ -141,6 +175,8 @@ public class StreamDevice<TMessage> : IStreamDevice<TMessage>
 
     private Task Transmitter(AsyncManualResetEvent mre) => Task.Run(async () =>
     {
+        var encoder = _encoder;
+        if (encoder == null) return;
         while (!_token.IsCancellationRequested)
         {
             await mre.WaitAsync();
@@ -149,15 +185,15 @@ public class StreamDevice<TMessage> : IStreamDevice<TMessage>
                 try
                 {
                     await ReportDeviceStatus(StreamDeviceStatus.Transmitting);
-                    var requestBuffer = _encoder.Encode(ref item);
-                    await _stream.WriteAsync(requestBuffer, _token)
+                    var requestBuffer = encoder.Encode(ref item);
+                    await AdapterStream.WriteAsync(requestBuffer, _token)
                                  .ConfigureAwait(false);
                     await ReportDeviceStatus(StreamDeviceStatus.Transmitted);
                 }
                 catch (Exception ex)
                 {
                     var eventArg = new DeviceErrorEventArgs(exception: ex, errorHandling: ErrorHandling.Throw);
-                    MessageTransmitterError?.Invoke(_stream, eventArg);
+                    MessageTransmitterError?.Invoke(AdapterStream, eventArg);
                     switch (eventArg.ErrorHandling)
                     {
                         case ErrorHandling.Ignore:
@@ -180,10 +216,13 @@ public class StreamDevice<TMessage> : IStreamDevice<TMessage>
         }
     });
 
+    /// <summary>
+    /// Disposes the device, waiting for all operations to complete and cleaning up resources.
+    /// </summary>
     public void Dispose()
     {
         Runner.GetAwaiter().GetResult();
         _tokenSource.Cancel(false);
-        _stream.Dispose();
+        AdapterStream.Dispose();
     }
 }

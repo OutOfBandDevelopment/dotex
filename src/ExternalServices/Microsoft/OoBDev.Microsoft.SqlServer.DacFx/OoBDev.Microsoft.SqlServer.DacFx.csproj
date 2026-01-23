@@ -4,14 +4,14 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>false</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <GenerateDocumentationFile>False</GenerateDocumentationFile>
-    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    
+    
     <PackageReadmeFile>README.md</PackageReadmeFile>
 
   </PropertyGroup>
 
   <ItemGroup>
-    <InternalsVisibleTo Include="OoBDev.Microsoft.B2C.Tests" />
+    <InternalsVisibleTo Include="OoBDev.Microsoft.Azure.B2C.Tests" />
   </ItemGroup>
 
   <ItemGroup>

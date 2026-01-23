@@ -9,8 +9,18 @@ using System.Xml.Linq;
 
 namespace OoBDev.System.Xml.Linq;
 
+/// <summary>
+/// Provides extension methods for converting objects to XML representations using reflection.
+/// Supports conversion of simple types, collections, streams, and complex objects to XElement instances.
+/// </summary>
 public static class ObjectXmlExtensions
 {
+    /// <summary>
+    /// Converts an object to an XElement using reflection to map properties and values.
+    /// Handles XElement and XDocument inputs directly, and uses reflection for other types.
+    /// </summary>
+    /// <param name="input">The object to convert to XML. Can be null, XElement, XDocument, or any other object.</param>
+    /// <returns>An XElement representation of the object, or null if the input is null.</returns>
     public static XElement? AsXElement(this object input) =>
         input switch
         {

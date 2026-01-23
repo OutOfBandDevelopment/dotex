@@ -2,6 +2,7 @@
 using Microsoft.OpenApi;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace OoBDev.AspNetCore.Mvc.Filters;
@@ -24,7 +25,7 @@ public class FormFileOperationFilter : IOperationFilter
         var fileUploadMime = "multipart/form-data";
 
         // If the operation doesn't have a request body or doesn't support file uploads, return
-        if (operation.RequestBody == null || !operation.RequestBody.Content.Any(x => x.Key.Equals(fileUploadMime, StringComparison.InvariantCultureIgnoreCase)))
+        if (operation.RequestBody?.Content == null || !operation.RequestBody.Content.Any(x => x.Key.Equals(fileUploadMime, StringComparison.InvariantCultureIgnoreCase)))
             return;
 
         // Get parameters of type IFormFile from the method
@@ -34,9 +35,11 @@ public class FormFileOperationFilter : IOperationFilter
         var mediaType = operation.RequestBody.Content[fileUploadMime];
         if (mediaType.Schema is OpenApiSchema schema)
         {
+            schema.Properties ??= new Dictionary<string, IOpenApiSchema>();
+
             foreach (var fileParam in fileParams)
             {
-                var propertyName = fileParam.Name ?? fileParam.ParameterType.Name;
+                var propertyName = fileParam.Name ?? fileParam.ParameterType.Name ?? "file";
                 schema.Properties[propertyName] = new OpenApiSchema()
                 {
                     Type = JsonSchemaType.String,

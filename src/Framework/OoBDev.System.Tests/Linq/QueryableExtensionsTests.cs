@@ -132,7 +132,7 @@ public class QueryableExtensionsTests
         var resultKeys = string.Join(',', results.Rows.Select(i => i?.GetKeyValue()));
         TestContext?.WriteLine($"{nameof(resultKeys)}: {resultKeys}");
 
-        Assert.AreEqual(expectedRows, results.Rows.Count);
+        Assert.HasCount(expectedRows, results.Rows);
         if (expectedKeys != null)
             Assert.AreEqual(expectedKeys, resultKeys);
 
@@ -249,7 +249,7 @@ public class QueryableExtensionsTests
 
         Assert.AreEqual(expectedTotalPages, results.TotalPageCount, message: nameof(expectedTotalPages));
         Assert.AreEqual(expectedTotalRows, results.TotalRowCount, message: nameof(expectedTotalRows));
-        Assert.AreEqual(expectedRows, results.Rows.Count, message: nameof(expectedRows));
+        Assert.HasCount(expectedRows, results.Rows, message: nameof(expectedRows));
         if (expectedKeys != null)
             Assert.AreEqual(expectedKeys, resultKeys, message: nameof(expectedKeys));
     }
@@ -283,13 +283,13 @@ public class QueryableExtensionsTests
             Assert.AreEqual(expectedTotalPages, pagedResults.TotalPageCount, message: nameof(expectedTotalPages));
             Assert.AreEqual(expectedTotalRows, pagedResults.TotalRowCount, message: nameof(expectedTotalRows));
             Assert.AreEqual(expectedPageNumber, pagedResults.CurrentPage, message: nameof(expectedPageNumber));
-            Assert.AreEqual(expectedRows, pagedResults.Rows.Count, message: nameof(expectedRows));
+            Assert.HasCount(expectedRows, pagedResults.Rows, message: nameof(expectedRows));
             if (expectedKeys != null)
                 Assert.AreEqual(expectedKeys, resultKeys, message: nameof(expectedKeys));
         }
         else if (queryResults is IQueryResult<TestTargetModel> results)
         {
-            Assert.AreEqual(expectedRows, results.Rows.Count, message: nameof(expectedRows));
+            Assert.HasCount(expectedRows, results.Rows, message: nameof(expectedRows));
         }
         else
         {

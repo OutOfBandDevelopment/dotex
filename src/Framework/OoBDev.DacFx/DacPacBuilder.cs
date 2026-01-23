@@ -1,7 +1,6 @@
 ﻿// Ignore Spelling: Dac
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
@@ -11,12 +10,21 @@ using System.Security.Cryptography;
 using System.Xml.Linq;
 
 namespace OoBDev.DacFx;
+
+/// <summary>
+/// Builds Data-tier Application Package (DACPAC) files from SQL CLR assemblies.
+/// </summary>
 public class DacPacBuilder : IDacPacBuilder
 {
     private readonly ILogger _logger;
     private readonly IDacPacValidator _validator;
     private readonly XNamespace ns = "http://schemas.microsoft.com/sqlserver/dac/Serialization/2012/02";
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="DacPacBuilder"/> class.
+    /// </summary>
+    /// <param name="logger">The logger for diagnostic output.</param>
+    /// <param name="validator">The validator for verifying generated DACPAC files.</param>
     public DacPacBuilder(
         ILogger<DacPacBuilder> logger,
         IDacPacValidator validator
@@ -64,6 +72,7 @@ public class DacPacBuilder : IDacPacBuilder
 
     #region Public API
 
+    /// <inheritdoc/>
     public void BuildDacPac(
         string assemblyFileFramework,
         string? assemblyPdbFramework = null,
@@ -154,6 +163,13 @@ public class DacPacBuilder : IDacPacBuilder
 
     #region XML Builders
 
+    /// <summary>
+    /// Builds the main model.xml document containing all SQL CLR object definitions.
+    /// </summary>
+    /// <param name="assembly">The SQL CLR assembly to extract metadata from.</param>
+    /// <param name="assemblyFile">Path to the assembly DLL file.</param>
+    /// <param name="pdbFile">Optional path to the PDB debug symbols file.</param>
+    /// <returns>The model XML element.</returns>
     public XElement BuildModel(Assembly assembly, string assemblyFile, string? pdbFile)
     {
         var realAssemblyName = assembly.FullName?.Split(',').First()
@@ -200,6 +216,11 @@ public class DacPacBuilder : IDacPacBuilder
         return dataSchemaModel;
     }
 
+    /// <summary>
+    /// Builds the Origin.xml document containing package metadata and checksums.
+    /// </summary>
+    /// <param name="modelHash">The SHA-256 hash of the model.xml file.</param>
+    /// <returns>The origin XML element.</returns>
     public XElement BuildOrigin(string modelHash)
     {
         var xml = XElement.Parse(@"<?xml version=""1.0"" encoding=""utf-8""?>
@@ -230,6 +251,12 @@ public class DacPacBuilder : IDacPacBuilder
         return xml;
     }
 
+    /// <summary>
+    /// Builds the DacMetadata.xml document containing project name and version.
+    /// </summary>
+    /// <param name="projectName">The name of the DAC project.</param>
+    /// <param name="versionNumber">The version number in semantic versioning format.</param>
+    /// <returns>The DAC metadata XML element.</returns>
     public XElement BuildDacMetadata(string projectName, string versionNumber)
     {
         var xml = XElement.Parse(@"<?xml version=""1.0"" encoding=""utf-8""?>
@@ -243,6 +270,10 @@ public class DacPacBuilder : IDacPacBuilder
         return xml;
     }
 
+    /// <summary>
+    /// Builds the [Content_Types].xml document for the DACPAC archive.
+    /// </summary>
+    /// <returns>The content types XML element.</returns>
     public XElement BuildContentType() =>
         XElement.Parse(@"<?xml version=""1.0"" encoding=""utf-8""?>
 <Types xmlns=""http://schemas.openxmlformats.org/package/2006/content-types"">
@@ -262,6 +293,12 @@ public class DacPacBuilder : IDacPacBuilder
             i.FullName == "System.Collections.IEnumerable" ||
             i.FullName == "System.Collections.Generic.IEnumerable`1");
 
+    /// <summary>
+    /// Extracts SQL CLR aggregate function definitions from the assembly.
+    /// </summary>
+    /// <param name="assembly">The assembly to scan for aggregates.</param>
+    /// <param name="realAssemblyName">The assembly name to reference in the DACPAC.</param>
+    /// <returns>XML elements representing SQL CLR aggregates.</returns>
     public IEnumerable<XElement> Aggregates(Assembly assembly, string realAssemblyName)
     {
         foreach (var type in assembly.GetTypes())
@@ -307,6 +344,12 @@ public class DacPacBuilder : IDacPacBuilder
         }
     }
 
+    /// <summary>
+    /// Extracts SQL CLR user-defined type (UDT) definitions from the assembly.
+    /// </summary>
+    /// <param name="assembly">The assembly to scan for UDTs.</param>
+    /// <param name="realAssemblyName">The assembly name to reference in the DACPAC.</param>
+    /// <returns>XML elements representing SQL CLR user-defined types.</returns>
     public IEnumerable<XElement> UserDefinedTypes(Assembly assembly, string realAssemblyName)
     {
         foreach (var type in assembly.GetTypes())
@@ -345,6 +388,12 @@ public class DacPacBuilder : IDacPacBuilder
         }
     }
 
+    /// <summary>
+    /// Extracts SQL CLR scalar function definitions from the assembly.
+    /// </summary>
+    /// <param name="assembly">The assembly to scan for functions.</param>
+    /// <param name="realAssemblyName">The assembly name to reference in the DACPAC.</param>
+    /// <returns>XML elements representing SQL CLR scalar functions.</returns>
     public IEnumerable<XElement> Functions(Assembly assembly, string realAssemblyName)
     {
         foreach (var functionClasses in assembly.GetTypes().Where(t => t.IsAbstract))
@@ -398,6 +447,13 @@ public class DacPacBuilder : IDacPacBuilder
         }
     }
 
+    /// <summary>
+    /// Extracts method definitions from a SQL CLR type.
+    /// </summary>
+    /// <param name="assembly">The assembly containing the type.</param>
+    /// <param name="realAssemblyName">The assembly name to reference in the DACPAC.</param>
+    /// <param name="sqlClrType">The SQL CLR type to extract methods from.</param>
+    /// <returns>An XML element containing method relationships.</returns>
     public XElement Methods(Assembly assembly, string realAssemblyName, Type sqlClrType)
     {
         var typeName = GetName(sqlClrType) ?? throw new NotSupportedException($"Type {sqlClrType.FullName} must have a Name");
@@ -422,6 +478,13 @@ public class DacPacBuilder : IDacPacBuilder
         );
     }
 
+    /// <summary>
+    /// Creates XML elements for assembly and PDB files to include in the DACPAC.
+    /// </summary>
+    /// <param name="realAssemblyName">The assembly name.</param>
+    /// <param name="assemblyFile">Path to the assembly DLL file.</param>
+    /// <param name="pdbFile">Optional path to the PDB debug symbols file.</param>
+    /// <returns>XML elements representing the assembly and PDB files.</returns>
     public IEnumerable<XElement> Files(string realAssemblyName, string assemblyFile, string? pdbFile)
     {
         if (File.Exists(assemblyFile))
@@ -473,8 +536,13 @@ public class DacPacBuilder : IDacPacBuilder
 
     #region Parameter and Type Handling
 
+    /// <summary>
+    /// Creates XML elements for function parameters.
+    /// </summary>
+    /// <param name="parameters">The parameters to document.</param>
+    /// <returns>An XML element containing parameter relationships.</returns>
     public XElement FunctionParameters(IEnumerable<ParameterInfo> parameters) =>
-        new XElement(ns + "Relationship", new XAttribute("Name", "Parameters"),
+        new(ns + "Relationship", new XAttribute("Name", "Parameters"),
             from parameter in parameters
             select new XElement(ns + "Entry",
                 new XElement(ns + "Element",
@@ -489,6 +557,11 @@ public class DacPacBuilder : IDacPacBuilder
             )
         );
 
+    /// <summary>
+    /// Creates XML elements for method parameters.
+    /// </summary>
+    /// <param name="parameters">The parameters to document.</param>
+    /// <returns>An XML element containing parameter relationships, or null if no parameters.</returns>
     public XElement? MethodParameters(IEnumerable<ParameterInfo> parameters)
     {
         var paramArray = parameters.ToArray();
@@ -516,16 +589,27 @@ public class DacPacBuilder : IDacPacBuilder
         );
     }
 
+    /// <summary>
+    /// Creates an XML element for the return type of a function or method.
+    /// </summary>
+    /// <param name="returnInfo">The return parameter information.</param>
+    /// <param name="isFunction">True if this is a function return type; false for method return type.</param>
+    /// <returns>An XML element representing the return type relationship.</returns>
     public XElement Return(ParameterInfo returnInfo, bool isFunction) =>
-        new XElement(ns + "Relationship",
+        new(ns + "Relationship",
             new XAttribute("Name", isFunction ? "Type" : "ReturnType"),
             new XElement(ns + "Entry",
                 TypeSpecifier(returnInfo)
             )
         );
 
+    /// <summary>
+    /// Creates an XML element specifying the SQL type for a parameter.
+    /// </summary>
+    /// <param name="parameterInfo">The parameter to get type information from.</param>
+    /// <returns>An XML element representing the type specification.</returns>
     public XElement TypeSpecifier(ParameterInfo parameterInfo) =>
-        new XElement(ns + "Element", new XAttribute("Type", "SqlTypeSpecifier"),
+        new(ns + "Element", new XAttribute("Type", "SqlTypeSpecifier"),
             Properties(parameterInfo),
             new XElement(ns + "Relationship", new XAttribute("Name", "Type"),
                 new XElement(ns + "Entry",
@@ -537,6 +621,11 @@ public class DacPacBuilder : IDacPacBuilder
             )
         );
 
+    /// <summary>
+    /// Creates XML property elements for a parameter based on its type.
+    /// </summary>
+    /// <param name="parameterInfo">The parameter to extract properties from.</param>
+    /// <returns>XML elements representing type-specific properties (e.g., IsMax, Precision).</returns>
     public IEnumerable<XElement> Properties(ParameterInfo parameterInfo)
     {
         var fullName = parameterInfo.ParameterType.FullName;
@@ -581,6 +670,12 @@ public class DacPacBuilder : IDacPacBuilder
                 )
             )
         );
+
+    /// <summary>
+    /// Creates an XML element representing the schema relationship for a SQL object.
+    /// </summary>
+    /// <param name="input">The object or name to extract schema from.</param>
+    /// <returns>An XML element representing the schema relationship.</returns>
     public XElement Schema(object input)
     {
         if (input is not string fullName)
@@ -607,6 +702,11 @@ public class DacPacBuilder : IDacPacBuilder
         );
     }
 
+    /// <summary>
+    /// Gets the SQL name for a parameter, type, or method.
+    /// </summary>
+    /// <param name="input">The object to extract a name from.</param>
+    /// <returns>The SQL-formatted name, or null if the input type is not supported.</returns>
     public string? GetName(object? input) =>
         input switch
         {
@@ -742,19 +842,19 @@ public class DacPacBuilder : IDacPacBuilder
         { "System.Object", "[sql_variant]" },
     };
 
-    private static readonly HashSet<string> _isMax = new()
-    {
+    private static readonly HashSet<string> _isMax =
+    [
         "System.Data.SqlTypes.SqlString",
         "System.String",
         "System.Byte[]",
         "System.Char[]"
-    };
+    ];
 
-    private static readonly HashSet<string> _doubles = new()
-    {
+    private static readonly HashSet<string> _doubles =
+    [
         "System.Data.SqlTypes.SqlDouble",
         "System.Double"
-    };
+    ];
 
     private string? GetTypeNameFromDictionary(Type type)
     {
@@ -790,18 +890,43 @@ public class DacPacBuilder : IDacPacBuilder
 
     #region Utility Methods
 
+    /// <summary>
+    /// Reads a file and returns its contents as a hexadecimal string.
+    /// </summary>
+    /// <param name="file">The path to the file to read.</param>
+    /// <returns>The file contents as a hex string, or null if the file cannot be read.</returns>
     public string? GetHexContent(string file) =>
         BitConverter.ToString(File.ReadAllBytes(file)).Replace("-", "");
 
+    /// <summary>
+    /// Computes the SHA-256 hash of a file.
+    /// </summary>
+    /// <param name="file">The path to the file to hash.</param>
+    /// <returns>The SHA-256 hash as a hex string.</returns>
     public string GetSha256(string file) =>
         GetSha256(File.ReadAllBytes(file));
 
+    /// <summary>
+    /// Computes the SHA-256 hash of byte content.
+    /// </summary>
+    /// <param name="content">The byte array to hash.</param>
+    /// <returns>The SHA-256 hash as a hex string.</returns>
     public string GetSha256(byte[] content) =>
         BitConverter.ToString(SHA256.HashData(content)).Replace("-", "");
 
+    /// <summary>
+    /// Computes the SHA-512 hash of a file.
+    /// </summary>
+    /// <param name="file">The path to the file to hash.</param>
+    /// <returns>The SHA-512 hash as a hex string.</returns>
     public string GetSha512(string file) =>
         GetSha512(File.ReadAllBytes(file));
 
+    /// <summary>
+    /// Computes the SHA-512 hash of byte content.
+    /// </summary>
+    /// <param name="content">The byte array to hash.</param>
+    /// <returns>The SHA-512 hash as a hex string.</returns>
     public string GetSha512(byte[] content) =>
         BitConverter.ToString(SHA512.HashData(content)).Replace("-", "");
 

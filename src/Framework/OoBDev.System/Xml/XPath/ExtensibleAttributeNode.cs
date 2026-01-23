@@ -12,14 +12,15 @@ internal class ExtensibleAttributeNode<T>(
      string value
         ) : IAttributeNode
 {
-    public INode? Parent { get; } = parent;
-    public XName Name { get; } = name;
-    public string? Value { get; } = value;
+    public INode? Parent => parent;
+    public XName Name => name;
+    public string? Value => value;
+    public T Item => item;
 
     public IAttributeNode? Next { get; internal set; }
     public IAttributeNode? Previous { get; internal set; }
 
-    public XPathNodeType NodeType { get; } = XPathNodeType.Attribute;
+    public XPathNodeType NodeType => XPathNodeType.Attribute;
 
     INode? INode.Next => Next;
     INode? INode.Previous => Previous;

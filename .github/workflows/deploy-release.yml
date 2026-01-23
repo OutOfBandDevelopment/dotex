@@ -1,0 +1,142 @@
+name: Deploy Release
+
+# Unified workflow for creating GitHub Releases and/or publishing to NuGet
+# Handles both GitHub-only releases and full deployments with NuGet publishing
+on:
+  workflow_dispatch:
+    inputs:
+      artifact-name:
+        description: 'Package artifact name (e.g., packages-1.2.3)'
+        required: true
+        type: string
+      publish-to-nuget:
+        description: 'Publish to NuGet.org'
+        required: false
+        default: 'false'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
+
+env:
+  MSBUILDTERMINALLOGGER: off
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.parse-version.outputs.version }}
+      release-url: ${{ steps.create-release.outputs.url }}
+
+    steps:
+      - name: Validate artifact name
+        run: |
+          ARTIFACT="${{ inputs.artifact-name }}"
+          if [[ ! "$ARTIFACT" =~ ^packages- ]]; then
+            echo "❌ Artifact name must start with 'packages-'"
+            exit 1
+          fi
+          echo "✅ Artifact name validated: $ARTIFACT"
+
+      - name: Parse version from artifact name
+        id: parse-version
+        run: |
+          ARTIFACT_NAME="${{ inputs.artifact-name }}"
+          # Extract version from artifact name format: packages-X.Y.Z-...
+          VERSION="${ARTIFACT_NAME#packages-}"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "📦 Deploying version: $VERSION"
+
+      - name: Checkout code
+        uses: actions/checkout@v4.1.1
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Download Package Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.artifact-name }}
+          path: ./packages
+
+      - name: Verify packages exist
+        run: |
+          if [ -z "$(ls ./packages/*.nupkg 2>/dev/null)" ]; then
+            echo "❌ No .nupkg files found in artifact"
+            exit 1
+          fi
+          echo "✅ Found packages:"
+          ls -lh ./packages/*.nupkg
+
+      - name: Create GitHub Release
+        id: create-release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: release-${{ steps.parse-version.outputs.version }}
+          name: Release ${{ steps.parse-version.outputs.version }}
+          files: ./packages/*.nupkg
+          draft: false
+          prerelease: ${{ contains(steps.parse-version.outputs.version, '-') }}
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create release tag (post-release proof)
+        run: |
+          VERSION="${{ steps.parse-version.outputs.version }}"
+          TAG="v-released-${VERSION}"
+
+          echo "Creating release tag: ${TAG}"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag -a "${TAG}" -m "GitHub Release created"
+          git push origin "${TAG}"
+
+  publish-nuget:
+    needs: deploy
+    runs-on: ubuntu-latest
+    environment:
+      name: nuget-release
+      url: ${{ needs.deploy.outputs.release-url }}
+    # Only run if user selected "true"
+    if: github.event.inputs.publish-to-nuget == 'true'
+
+    steps:
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Download Package Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ github.event.inputs.artifact-name }}
+          path: ./packages
+
+      - name: Publish to NuGet
+        run: |
+          dotnet nuget push \
+            "./packages/*.nupkg" \
+            --api-key ${{ secrets.NUGET_API_KEY }} \
+            --source https://api.nuget.org/v3/index.json \
+            --skip-duplicate
+          echo "✅ Published to NuGet"
+
+      - name: Checkout code for tagging
+        uses: actions/checkout@v4.1.1
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Create NuGet deployment tag
+        run: |
+          VERSION="${{ needs.deploy.outputs.version }}"
+          TAG="nuget-${VERSION}"
+
+          echo "Creating NuGet deployment tag: ${TAG}"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag -a "${TAG}" -m "Deployed to NuGet"
+          git push origin "${TAG}"
+
+          echo "✅ Deployment confirmed for version: $VERSION"

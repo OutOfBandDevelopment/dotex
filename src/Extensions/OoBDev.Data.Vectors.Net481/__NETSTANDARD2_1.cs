@@ -1,8 +1,4 @@
-﻿using Microsoft.SqlServer.Server;
-using System;
-using System.IO;
-
-namespace Microsoft.SqlServer.Server;
+﻿namespace OoBDev.Data.Vectors;
 
 #if NETSTANDARD2_1
 

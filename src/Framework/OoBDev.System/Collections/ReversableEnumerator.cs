@@ -20,9 +20,11 @@ public class ReversableEnumerator<T>(IEnumerator<T> @base) : IReversibleEnumerat
     private IDoubleLinkedList<T>? _pointer = null;
     private bool _reset = false;
     private bool _end = false;
-    private int _position = ResetPosition;
 
-    public int Position => _position;
+    /// <summary>
+    /// Gets the current position in the enumeration sequence. Returns -1 when reset.
+    /// </summary>
+    public int Position { get; private set; } = ResetPosition;
 
     /// <summary>
     /// Wrap existing IEnumerable
@@ -30,6 +32,9 @@ public class ReversableEnumerator<T>(IEnumerator<T> @base) : IReversibleEnumerat
     /// <param name="base"></param>
     public ReversableEnumerator(IEnumerable<T> @base) : this(@base.GetEnumerator()) { }
 
+    /// <summary>
+    /// Gets the element in the collection at the current position of the enumerator.
+    /// </summary>
     public T Current => _pointer == null ? @base.Current : _pointer.Current;
 
 #pragma warning disable CS8603 // Possible null reference return.
@@ -56,7 +61,7 @@ public class ReversableEnumerator<T>(IEnumerator<T> @base) : IReversibleEnumerat
             if (_reset && _pointer != null)
             {
                 _reset = false;
-                _position++;
+                Position++;
                 return true;
             }
 
@@ -66,7 +71,7 @@ public class ReversableEnumerator<T>(IEnumerator<T> @base) : IReversibleEnumerat
                 if (advanceBase)
                 {
                     _pointer = new DoubleLinkedList<T>(@base.Current);
-                    _position++;
+                    Position++;
                     return true;
                 }
                 else
@@ -80,7 +85,7 @@ public class ReversableEnumerator<T>(IEnumerator<T> @base) : IReversibleEnumerat
                 if (next != null)
                 {
                     _pointer = next;
-                    _position++;
+                    Position++;
                     return true;
                 }
                 else
@@ -89,7 +94,7 @@ public class ReversableEnumerator<T>(IEnumerator<T> @base) : IReversibleEnumerat
                     if (advanceBase)
                     {
                         _pointer = _pointer.InsertAfter(@base.Current);
-                        _position++;
+                        Position++;
                         return true;
                     }
                     else
@@ -102,6 +107,11 @@ public class ReversableEnumerator<T>(IEnumerator<T> @base) : IReversibleEnumerat
         }
     }
 
+    /// <summary>
+    /// Moves to the most recent (latest) position in the cached enumeration.
+    /// This operation fast-forwards to the end of the currently cached items without pulling new items from the base enumerator.
+    /// </summary>
+    /// <returns>True if the move was successful; false if there is no cached data.</returns>
     public bool MoveCurrent()
     {
         lock (_lock)
@@ -112,7 +122,7 @@ public class ReversableEnumerator<T>(IEnumerator<T> @base) : IReversibleEnumerat
                 _pointer = next;
                 if (_pointer is DoubleLinkedList<T> dd)
                 {
-                    _position = dd.Position;
+                    Position = dd.Position;
                 }
                 _reset = false;
                 _end = false;
@@ -138,8 +148,8 @@ public class ReversableEnumerator<T>(IEnumerator<T> @base) : IReversibleEnumerat
             var moveTo = _pointer?.Previous;
             if (moveTo == null) return false;
             _pointer = moveTo;
-            _position--;
-            if (_position < 0) _position = 0;
+            Position--;
+            if (Position < 0) Position = 0;
             return true;
         }
     }
@@ -156,7 +166,7 @@ public class ReversableEnumerator<T>(IEnumerator<T> @base) : IReversibleEnumerat
                 _pointer = _pointer?.Rewind();
                 _reset = true;
                 _end = false;
-                _position = ResetPosition;
+                Position = ResetPosition;
             }
         }
     }

@@ -1,0 +1,48 @@
+{
+  "UserConfig": {
+    "Namespaces": [
+      {
+        "Name": "sbemulatorns",
+        "Queues": [
+          {
+            "Name": "integration-test-queue",
+            "Properties": {
+              "LockDuration": "PT1M",
+              "MaxDeliveryCount": 10,
+              "RequiresSession": false,
+              "DefaultMessageTimeToLive": "PT30M",
+              "DeadLetteringOnMessageExpiration": false,
+              "DuplicateDetectionHistoryTimeWindow": "PT5M",
+              "RequiresDuplicateDetection": false
+            }
+          }
+        ],
+        "Topics": [
+          {
+            "Name": "integration-test-topic",
+            "Properties": {
+              "DefaultMessageTimeToLive": "PT30M",
+              "DuplicateDetectionHistoryTimeWindow": "PT5M",
+              "RequiresDuplicateDetection": false
+            },
+            "Subscriptions": [
+              {
+                "Name": "test-subscription",
+                "Properties": {
+                  "LockDuration": "PT1M",
+                  "MaxDeliveryCount": 10,
+                  "RequiresSession": false,
+                  "DefaultMessageTimeToLive": "PT30M",
+                  "DeadLetteringOnMessageExpiration": false
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "Logging": {
+      "Type": "Console"
+    }
+  }
+}

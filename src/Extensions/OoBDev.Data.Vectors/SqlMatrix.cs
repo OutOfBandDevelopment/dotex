@@ -7,6 +7,10 @@ using System.Text;
 
 namespace OoBDev.Data.Vectors;
 
+/// <summary>
+/// Represents a SQL Server CLR user-defined type for storing and manipulating double-precision matrices.
+/// Used for matrix storage in SQL databases, particularly for embeddings and machine learning applications.
+/// </summary>
 [Serializable]
 [SqlUserDefinedType(
     Format.UserDefined,
@@ -23,7 +27,14 @@ public struct SqlMatrix : INullable, IBinarySerialize, IEquatable<SqlMatrix>
     private bool _isNull;
     private double[,] _values;
 
+    /// <summary>
+    /// Gets a value indicating whether this matrix instance represents a SQL NULL value.
+    /// </summary>
     public readonly bool IsNull => _isNull;
+
+    /// <summary>
+    /// Gets the matrix data as a read-only collection of double-precision values.
+    /// </summary>
     public readonly IReadOnlyMatrix<double> Values => _values.AsReadOnly();
 
     private SqlMatrix(bool isNull, double[,] data, ushort version)
@@ -33,11 +44,27 @@ public struct SqlMatrix : INullable, IBinarySerialize, IEquatable<SqlMatrix>
         _version = version;
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SqlMatrix"/> struct with the specified data.
+    /// </summary>
+    /// <param name="data">The two-dimensional array of double-precision values for the matrix.</param>
     public SqlMatrix(double[,] data) : this(false, data, Version) { }
 
+    /// <summary>
+    /// Gets a SQL NULL matrix instance.
+    /// </summary>
     public static SqlMatrix Null => _null;
+
+    /// <summary>
+    /// Gets an empty matrix instance with zero rows and columns.
+    /// </summary>
     public static SqlMatrix Empty => _empty;
 
+    /// <summary>
+    /// Extracts a specific row from the matrix as a vector.
+    /// </summary>
+    /// <param name="row">The zero-based row index to extract.</param>
+    /// <returns>A <see cref="SqlVector"/> containing the values from the specified row, or SQL NULL if the row parameter is NULL.</returns>
     [SqlMethod(
         Name = nameof(Row),
         OnNullCall = false,
@@ -47,6 +74,12 @@ public struct SqlMatrix : INullable, IBinarySerialize, IEquatable<SqlMatrix>
         )]
     public readonly SqlVector Row(SqlInt16 row) => row.IsNull ? SqlVector.Null : new([.. Values.Row(row.Value)]);
 
+    /// <summary>
+    /// Extracts a specific column from the matrix as a vector.
+    /// </summary>
+    /// <param name="column">The zero-based column index to extract.</param>
+    /// <returns>A <see cref="SqlVector"/> containing the values from the specified column, or SQL NULL if the column parameter is NULL.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when the column index is greater than or equal to the number of columns in the matrix.</exception>
     [SqlMethod(
         Name = nameof(Column),
         OnNullCall = false,
@@ -71,6 +104,12 @@ public struct SqlMatrix : INullable, IBinarySerialize, IEquatable<SqlMatrix>
         return new(data);
     }
 
+    /// <summary>
+    /// Retrieves a single element from the matrix at the specified row and column indices.
+    /// </summary>
+    /// <param name="row">The zero-based row index.</param>
+    /// <param name="column">The zero-based column index.</param>
+    /// <returns>The element value as a <see cref="SqlSingle"/>, or SQL NULL if this matrix or either parameter is NULL.</returns>
     [SqlMethod(
         Name = nameof(Element),
         OnNullCall = false,
@@ -81,6 +120,10 @@ public struct SqlMatrix : INullable, IBinarySerialize, IEquatable<SqlMatrix>
     public SqlSingle Element(SqlInt16 row, SqlInt16 column) =>
         (IsNull || row.IsNull || column.IsNull) ? SqlSingle.Null : (SqlSingle)Values.Get(row.Value, column.Value);
 
+    /// <summary>
+    /// Deserializes the matrix from binary format. Used by SQL Server CLR for data retrieval.
+    /// </summary>
+    /// <param name="reader">The binary reader containing the serialized matrix data.</param>
     public void Read(BinaryReader reader)
     {
         _version = reader.ReadUInt16();
@@ -104,6 +147,10 @@ public struct SqlMatrix : INullable, IBinarySerialize, IEquatable<SqlMatrix>
         _values = data;
     }
 
+    /// <summary>
+    /// Serializes the matrix to binary format. Used by SQL Server CLR for data storage.
+    /// </summary>
+    /// <param name="writer">The binary writer to write the serialized matrix data to.</param>
     public readonly void Write(BinaryWriter writer)
     {
         writer.Write(Version);
@@ -131,6 +178,12 @@ public struct SqlMatrix : INullable, IBinarySerialize, IEquatable<SqlMatrix>
             }
     }
 
+    /// <summary>
+    /// Parses a string representation of a matrix into a <see cref="SqlMatrix"/> instance.
+    /// Supports multiple row and column separators (newline, pipe, tab, comma).
+    /// </summary>
+    /// <param name="input">The string representation of the matrix to parse.</param>
+    /// <returns>A new <see cref="SqlMatrix"/> containing the parsed values, or SQL NULL if the input is NULL.</returns>
     public static SqlMatrix Parse(SqlString input)
     {
         if (input.IsNull) return Null;
@@ -157,6 +210,11 @@ public struct SqlMatrix : INullable, IBinarySerialize, IEquatable<SqlMatrix>
         return new SqlMatrix(data);
     }
 
+    /// <summary>
+    /// Converts the matrix to its string representation using scientific notation (e7 format).
+    /// Rows are separated by newlines, columns are separated by tabs.
+    /// </summary>
+    /// <returns>A string representation of the matrix values.</returns>
     public override readonly string ToString()
     {
         var sb = new StringBuilder();
@@ -176,9 +234,20 @@ public struct SqlMatrix : INullable, IBinarySerialize, IEquatable<SqlMatrix>
         return sb.ToString();
     }
 
+    /// <summary>
+    /// Determines whether the specified object is equal to the current matrix.
+    /// </summary>
+    /// <param name="other">The object to compare with the current matrix.</param>
+    /// <returns><c>true</c> if the specified object is a <see cref="SqlMatrix"/> and has the same dimensions and element values; otherwise, <c>false</c>.</returns>
     public override readonly bool Equals(object other) =>
         other is SqlMatrix matrix && Equals(matrix);
 
+    /// <summary>
+    /// Determines whether the specified matrix is equal to the current matrix.
+    /// Compares dimensions and all element values for equality.
+    /// </summary>
+    /// <param name="other">The matrix to compare with the current matrix.</param>
+    /// <returns><c>true</c> if the matrices have the same dimensions and all corresponding elements are equal; otherwise, <c>false</c>.</returns>
     public readonly bool Equals(SqlMatrix other)
     {
         if (IsNull != other.IsNull) return false;
@@ -196,6 +265,10 @@ public struct SqlMatrix : INullable, IBinarySerialize, IEquatable<SqlMatrix>
         return true;
     }
 
+    /// <summary>
+    /// Calculates a hash code for the matrix based on its null state and all element values.
+    /// </summary>
+    /// <returns>A hash code for the current matrix.</returns>
     public override readonly int GetHashCode()
     {
         var hash = _isNull.GetHashCode() * 31;
@@ -211,6 +284,20 @@ public struct SqlMatrix : INullable, IBinarySerialize, IEquatable<SqlMatrix>
 
         return hash;
     }
+
+    /// <summary>
+    /// Determines whether two matrices are equal by comparing their dimensions and element values.
+    /// </summary>
+    /// <param name="left">The first matrix to compare.</param>
+    /// <param name="right">The second matrix to compare.</param>
+    /// <returns><c>true</c> if the matrices are equal; otherwise, <c>false</c>.</returns>
     public static bool operator ==(SqlMatrix left, SqlMatrix right) => left.Equals(right);
+
+    /// <summary>
+    /// Determines whether two matrices are not equal.
+    /// </summary>
+    /// <param name="left">The first matrix to compare.</param>
+    /// <param name="right">The second matrix to compare.</param>
+    /// <returns><c>true</c> if the matrices are not equal; otherwise, <c>false</c>.</returns>
     public static bool operator !=(SqlMatrix left, SqlMatrix right) => !(left == right);
 }

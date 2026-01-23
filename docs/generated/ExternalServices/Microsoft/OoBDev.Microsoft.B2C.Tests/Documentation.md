@@ -1,8 +1,8 @@
 Here is the documentation for the source code files:
 
-**OoBDev.Microsoft.B2C.Tests.csproj**
+**OoBDev.Microsoft.Azure.B2C.Tests.csproj**
 
-This is a .NET Core test project file that references the OoBDev.Microsoft.B2C project and uses the MSTest testing framework. The project uses the `TargetFramework` of `net8.0` and has `ImplicitUsings` set to `false`. It also has `Nullable` enabled.
+This is a .NET Core test project file that references the OoBDev.Microsoft.Azure.B2C project and uses the MSTest testing framework. The project uses the `TargetFramework` of `net8.0` and has `ImplicitUsings` set to `false`. It also has `Nullable` enabled.
 
 The project references the following NuGet packages:
 
@@ -13,7 +13,7 @@ The project references the following NuGet packages:
 
 It also references the following projects:
 
-* OoBDev.Microsoft.B2C
+* OoBDev.Microsoft.Azure.B2C
 * OoBDev.TestUtilities
 * OoBDev.System
 

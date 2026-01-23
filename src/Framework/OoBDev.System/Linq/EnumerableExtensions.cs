@@ -5,10 +5,23 @@ using System.Linq;
 
 namespace OoBDev.System.Linq;
 
+/// <summary>
+/// Provides extension methods for IEnumerable collections, including shuffle operations.
+/// </summary>
 public static class EnumerableExtensions
 {
+    /// <summary>
+    /// Gets the default random number generator used for shuffling operations when no generator is provided.
+    /// </summary>
     private static Random RandomGenerator { get; } = new Random();
 
+    /// <summary>
+    /// Randomly shuffles the elements of a sequence using the Fisher-Yates algorithm.
+    /// </summary>
+    /// <typeparam name="T">The type of elements in the sequence.</typeparam>
+    /// <param name="source">The sequence to shuffle.</param>
+    /// <param name="randomGenerator">Optional random number generator to use for shuffling. If null, uses the default random generator.</param>
+    /// <returns>An IEnumerable containing the elements of the source sequence in a random order.</returns>
     public static IEnumerable<T> Shuffle<T>(this IEnumerable<T> source, Random? randomGenerator = null)
     {
         randomGenerator ??= RandomGenerator;

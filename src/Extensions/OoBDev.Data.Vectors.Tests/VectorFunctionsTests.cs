@@ -26,8 +26,8 @@ public class VectorFunctionsTests
         var vector = VectorFunctions.Random(100, 0);
         this.TestContext.WriteLine(vector.ToString());
         Assert.AreEqual(100, vector.Length());
-        Assert.IsTrue(vector.Values.Min() < 1.0);
-        Assert.IsTrue(vector.Values.Max() > -1.0);
+        Assert.IsLessThan(1.0, vector.Values.Min());
+        Assert.IsGreaterThan(-1.0, vector.Values.Max());
     }
 
     [TestCategory(TestCategories.Unit)]
@@ -40,7 +40,7 @@ public class VectorFunctionsTests
         var vector = VectorFunctions.Uniform(targetLength, 10, 15, 0);
         this.TestContext.WriteLine(vector.ToString());
         Assert.AreEqual(targetLength, vector.Length());
-        Assert.IsTrue(vector.Values.Min() >= 10.0);
-        Assert.IsTrue(vector.Values.Max() <= 15.0);
+        Assert.IsGreaterThanOrEqualTo(10.0, vector.Values.Min());
+        Assert.IsLessThanOrEqualTo(15.0, vector.Values.Max());
     }
 }

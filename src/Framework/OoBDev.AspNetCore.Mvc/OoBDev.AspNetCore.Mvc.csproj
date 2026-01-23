@@ -4,7 +4,6 @@
 		<TargetFramework>net10.0</TargetFramework>
 		<ImplicitUsings>false</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<GenerateDocumentationFile>False</GenerateDocumentationFile>
 		<PackageReadmeFile>ReadMe.AspNetCore.Mvc.md</PackageReadmeFile>
 	</PropertyGroup>
 

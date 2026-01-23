@@ -8,8 +8,16 @@ using System.Threading.Tasks;
 
 namespace OoBDev.DocumentConverter.Cli;
 
+/// <summary>
+/// Entry point for the document converter CLI tool.
+/// </summary>
 public class Program
 {
+    /// <summary>
+    /// Main entry point for the application.
+    /// </summary>
+    /// <param name="args">Command-line arguments.</param>
+    /// <returns>A task representing the application lifetime.</returns>
     private static async Task Main(string[] args) =>
         await Host.CreateDefaultBuilder(args)
             .ConfigureAppConfiguration((context, config) => config.AddCommandLine(args,

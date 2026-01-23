@@ -4,8 +4,19 @@ using static OoBDev.System.ExpressionCalculator.Expressions.BinaryOperators;
 
 namespace OoBDev.System.ExpressionCalculator.Optimizers;
 
+/// <summary>
+/// Optimizes expressions by simplifying operations with determined values (constants).
+/// Handles algebraic identities like B/B=1, B%B=0, B^0=1, 0^B=0, B*0=0, etc.
+/// Also pre-evaluates expressions where both operands are numeric constants.
+/// </summary>
+/// <typeparam name="T">The numeric type of the expression, which must be a value type implementing IComparable&lt;T&gt; and IEquatable&lt;T&gt;.</typeparam>
 public sealed class DeterminedExpressionReducer<T> : IExpressionOptimizer<T> where T : struct, IComparable<T>, IEquatable<T>
 {
+    /// <summary>
+    /// Optimizes the given expression by reducing operations with determined constant values.
+    /// </summary>
+    /// <param name="expression">The expression to optimize.</param>
+    /// <returns>An optimized expression with simplified constant operations.</returns>
     public ExpressionBase<T> Optimize(ExpressionBase<T> expression) =>
         expression switch
         {

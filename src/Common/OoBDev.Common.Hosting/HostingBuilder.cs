@@ -25,7 +25,13 @@ public record HostingBuilder
     /// </remarks>
     public bool DisableMessageQueueing { get; init; } = false;
 
+    /// <summary>
+    /// Gets or sets a value indicating whether vector hosting should be disabled.
+    /// </summary>
     public bool DisableVectorHosting { get; init; } = false;
 
+    /// <summary>
+    /// Gets or sets the configuration section name for embedding sentence transformer queue reader options.
+    /// </summary>
     public string EmbeddingSentenceTransformerQueueReaderConfigurationSection { get; init; } = nameof(EmbeddingSentenceTransformerQueueReaderOptions);
 }

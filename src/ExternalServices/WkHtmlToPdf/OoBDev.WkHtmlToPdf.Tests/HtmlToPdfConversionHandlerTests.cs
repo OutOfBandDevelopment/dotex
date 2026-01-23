@@ -57,6 +57,6 @@ public class HtmlToPdfConversionHandlerTests
 
         TestContext.AddResult(pdfStream, fileName: Path.ChangeExtension(resourceName, ".pdf"));
 
-        Assert.IsTrue(pdfStream.Length > 0);
+        Assert.IsGreaterThan(0, pdfStream.Length);
     }
 }

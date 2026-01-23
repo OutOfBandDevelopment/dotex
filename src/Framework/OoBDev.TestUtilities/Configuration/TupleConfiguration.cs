@@ -6,19 +6,44 @@ using System.Linq;
 
 namespace OoBDev.TestUtilities.Configuration;
 
+/// <summary>
+/// Provides an in-memory configuration implementation for testing.
+/// Stores configuration key-value pairs using tuples.
+/// </summary>
 public class TupleConfiguration : IConfiguration, IConfigurationSection
 {
     private readonly IDictionary<string, string> _store = new Dictionary<string, string>();
 
+    /// <summary>
+    /// Gets the configuration key.
+    /// </summary>
     public string Key { get; }
+
+    /// <summary>
+    /// Gets the configuration path (colon-separated hierarchy).
+    /// </summary>
     public string Path { get; }
+
+    /// <summary>
+    /// Gets or sets the configuration value.
+    /// </summary>
     public string? Value { get; set; }
 
+    /// <summary>
+    /// Initializes a new instance of the TupleConfiguration class with an array of settings.
+    /// </summary>
+    /// <param name="settings">Array of key-value tuples.</param>
     public TupleConfiguration(params (string key, string value)[] settings)
         : this(settings.AsEnumerable())
     {
     }
 
+    /// <summary>
+    /// Initializes a new instance of the TupleConfiguration class with an enumerable of settings.
+    /// </summary>
+    /// <param name="settings">Enumerable of key-value tuples.</param>
+    /// <param name="key">Optional configuration key.</param>
+    /// <param name="path">Optional configuration path.</param>
     public TupleConfiguration(IEnumerable<(string key, string value)> settings, string? key = null, string? path = null)
     {
         if (settings.Count() == 1)
@@ -39,6 +64,11 @@ public class TupleConfiguration : IConfiguration, IConfigurationSection
         }
     }
 
+    /// <summary>
+    /// Gets or sets the configuration value for the specified key.
+    /// </summary>
+    /// <param name="key">The configuration key.</param>
+    /// <returns>The configuration value, or null if not found.</returns>
     public string? this[string key]
     {
         get => _store.TryGetValue(key, out var value) ? value : null;
@@ -57,8 +87,17 @@ public class TupleConfiguration : IConfiguration, IConfigurationSection
             }
         }
     }
+
+    /// <summary>
+    /// Returns a change token that is always inactive (no reload support for in-memory configuration).
+    /// </summary>
+    /// <returns>A change token that never signals changes.</returns>
     public IChangeToken GetReloadToken() => new ChangeToken();
 
+    /// <summary>
+    /// Gets the immediate child configuration sections.
+    /// </summary>
+    /// <returns>Enumerable of child configuration sections.</returns>
     public IEnumerable<IConfigurationSection> GetChildren()
     {
         var values = from k in _store.Keys
@@ -77,6 +116,11 @@ public class TupleConfiguration : IConfiguration, IConfigurationSection
                 );
     }
 
+    /// <summary>
+    /// Gets a configuration sub-section with the specified key.
+    /// </summary>
+    /// <param name="key">The configuration key.</param>
+    /// <returns>The configuration section.</returns>
     public IConfigurationSection GetSection(string key) =>
          GetChildren()?.FirstOrDefault(i => i.Key == key) ?? new TupleConfiguration();
 

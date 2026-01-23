@@ -1,10 +1,13 @@
 ﻿namespace OoBDev.System.Collections;
 
+/// <summary>
+/// Provides extension methods for IReversibleEnumerator&lt;T&gt; to simplify navigation and positioning operations.
+/// </summary>
 public static class ReversibleEnumeratorEx
 {
 
     /// <summary>
-    /// 
+    /// Resets the enumerator to its initial position and returns the enumerator for method chaining.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="current"></param>

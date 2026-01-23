@@ -4,10 +4,10 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>false</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <GenerateDocumentationFile>False</GenerateDocumentationFile>
-    <RootNamespace>$(MSBuildProjectName.Replace(" ", "_").Replace(".Abstractions", ""))</RootNamespace>
+    
+    
 
-    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 

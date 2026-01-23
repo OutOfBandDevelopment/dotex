@@ -5,6 +5,9 @@ using System.Threading.Tasks;
 
 namespace OoBDev.System.Threading.Tasks;
 
+/// <summary>
+/// Provides extension methods for executing asynchronous Task methods synchronously.
+/// </summary>
 public static class TaskEx
 {
     // http://stackoverflow.com/questions/5095183/how-would-i-run-an-async-taskt-method-synchronously

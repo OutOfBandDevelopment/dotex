@@ -13,6 +13,9 @@ using System.Threading.Tasks;
 
 namespace OoBDev.DocumentConverter.Cli;
 
+/// <summary>
+/// Hosted service that converts documents between different formats.
+/// </summary>
 public class DocumentConverterService : IHostedService
 {
     private readonly ILogger _log;
@@ -21,6 +24,14 @@ public class DocumentConverterService : IHostedService
     private readonly IEnumerable<IDocumentType> _documentTypes;
     private readonly IHttpClientFactory _httpClientFactory;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="DocumentConverterService"/> class.
+    /// </summary>
+    /// <param name="log">The logger for diagnostics.</param>
+    /// <param name="settings">The conversion configuration options.</param>
+    /// <param name="documentConversion">The document conversion provider.</param>
+    /// <param name="documentTypes">Available document type definitions.</param>
+    /// <param name="httpClientFactory">Factory for creating HTTP clients.</param>
     public DocumentConverterService(
         ILogger<DocumentConverterService> log,
         IOptions<DocumentConverterOptions> settings,
@@ -36,6 +47,11 @@ public class DocumentConverterService : IHostedService
         _httpClientFactory = httpClientFactory;
     }
 
+    /// <summary>
+    /// Starts the document conversion process.
+    /// </summary>
+    /// <param name="cancellationToken">Token to signal cancellation.</param>
+    /// <returns>A task representing the conversion operation.</returns>
     public async Task StartAsync(CancellationToken cancellationToken)
     {
         var sourceFileType =
@@ -72,6 +88,12 @@ public class DocumentConverterService : IHostedService
         }
     }
 
+    /// <summary>
+    /// Opens a file or HTTP stream from the specified path.
+    /// </summary>
+    /// <param name="sourcePath">The file path or HTTP/HTTPS URL to open.</param>
+    /// <returns>A stream for reading the content.</returns>
+    /// <exception cref="ApplicationException">Thrown when the file is not found.</exception>
     private async Task<Stream> OpenPathAsync(string sourcePath)
     {
         if (sourcePath.StartsWith("http:", StringComparison.InvariantCultureIgnoreCase) ||
@@ -89,5 +111,10 @@ public class DocumentConverterService : IHostedService
         }
     }
 
+    /// <summary>
+    /// Stops the service (no-op).
+    /// </summary>
+    /// <param name="cancellationToken">Token to signal cancellation.</param>
+    /// <returns>A completed task.</returns>
     public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
 }

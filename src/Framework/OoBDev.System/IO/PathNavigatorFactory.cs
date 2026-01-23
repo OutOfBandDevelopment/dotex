@@ -7,11 +7,30 @@ using System.Xml.XPath;
 
 namespace OoBDev.System.IO;
 
+/// <summary>
+/// Factory methods for creating XPath navigators and nodes from file system directory structures.
+/// Converts DirectoryInfo objects into XPath-queryable representations with file and directory metadata as attributes.
+/// </summary>
 public static class PathNavigatorFactory
 {
+    /// <summary>
+    /// Converts a DirectoryInfo object into an XPath-navigable representation.
+    /// </summary>
+    /// <param name="dir">The directory to convert.</param>
+    /// <param name="rootName">The XML name to use for the root element. Defaults to "Directory".</param>
+    /// <param name="baseUri">The base URI for the navigator. Optional.</param>
+    /// <returns>An IXPathNavigable object representing the directory structure.</returns>
     public static IXPathNavigable ToNavigable(this DirectoryInfo dir, XName? rootName = null, string? baseUri = null) =>
         new ExtensibleNavigator(dir.AsNode(rootName, baseUri));
 
+    /// <summary>
+    /// Converts a DirectoryInfo object into an INode representation suitable for XPath navigation.
+    /// Creates a tree structure with directories and files as child nodes, and file system metadata as attributes.
+    /// </summary>
+    /// <param name="dir">The directory to convert.</param>
+    /// <param name="rootName">The XML name to use for the root element. Defaults to "Directory".</param>
+    /// <param name="baseUri">The base URI for the node. Optional.</param>
+    /// <returns>An INode representing the directory structure with metadata.</returns>
     public static INode AsNode(this DirectoryInfo dir, XName? rootName = null, string? baseUri = null)
     {
         if (rootName == null || string.IsNullOrWhiteSpace(rootName.LocalName))

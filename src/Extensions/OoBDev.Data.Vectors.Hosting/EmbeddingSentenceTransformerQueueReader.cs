@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Options;
 using OoBDev.AI;
 using OoBDev.Data.Common;
-using OoBDev.System.ComponentModel.DataAnnotations;
+using OoBDev.System.ComponentModel.Data;
 using OoBDev.System.Text.Json.Serialization;
 using OoBDev.System.Text.Xml.Serialization;
 using System.Data;
@@ -11,6 +11,10 @@ using System.Xml.Linq;
 
 namespace OoBDev.Data.Vectors.Hosting;
 
+/// <summary>
+/// Reads embedding requests from a SQL Service Broker queue and generates embeddings using a sentence transformer model.
+/// Processes messages, generates embeddings, and sends responses back through the queue.
+/// </summary>
 [ConnectionStringName("EmbeddingSentenceTransformer")]
 public class EmbeddingSentenceTransformerQueueReader : IEmbeddingSentenceTransformerQueueReader
 {
@@ -21,6 +25,15 @@ public class EmbeddingSentenceTransformerQueueReader : IEmbeddingSentenceTransfo
     private readonly IJsonSerializer _json;
     private readonly IOptions<EmbeddingSentenceTransformerQueueReaderOptions> _options;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="EmbeddingSentenceTransformerQueueReader"/> class.
+    /// </summary>
+    /// <param name="database">The database query provider for queue access.</param>
+    /// <param name="embedding">The embedding provider for generating sentence embeddings.</param>
+    /// <param name="logger">The logger for diagnostics.</param>
+    /// <param name="xml">The XML serializer for message processing.</param>
+    /// <param name="json">The JSON serializer for embedding serialization.</param>
+    /// <param name="options">The configuration options for queue reading.</param>
     public EmbeddingSentenceTransformerQueueReader(
         IDatabaseQuery<EmbeddingSentenceTransformerQueueReader> database,
         IEmbeddingProvider embedding,
@@ -38,6 +51,7 @@ public class EmbeddingSentenceTransformerQueueReader : IEmbeddingSentenceTransfo
         _options = options;
     }
 
+    /// <inheritdoc/>
     public async Task RunAsync(CancellationToken cancellationToken)
     {
         while (!cancellationToken.IsCancellationRequested)

@@ -1,32 +1,53 @@
 <Project>
-	<PropertyGroup Condition="'$(SolutionDir)' == ''">
-		<SolutionDir Condition="'$(SolutionDir)' == '' and $([System.IO.Directory]::GetFiles('../', '*.sln').get_Length()) != 0">../</SolutionDir>
-		<SolutionDir Condition="'$(SolutionDir)' == '' and $([System.IO.Directory]::GetFiles('../../', '*.sln').get_Length()) != 0">../../</SolutionDir>
-		<SolutionDir Condition="'$(SolutionDir)' == '' and $([System.IO.Directory]::GetFiles('../../../', '*.sln').get_Length()) != 0">../../../</SolutionDir>
-		<SolutionDir Condition="'$(SolutionDir)' == '' and $([System.IO.Directory]::GetFiles('../../../../', '*.sln').get_Length()) != 0">../../../../</SolutionDir>
-		<SolutionDir Condition="'$(SolutionDir)' == '' and $([System.IO.Directory]::GetFiles('../../../../../', '*.sln').get_Length()) != 0">../../../../../</SolutionDir>
-		<SolutionDir Condition="'$(SolutionDir)' != ''">$([System.IO.Path]::GetFullPath('$(SolutionDir)'))</SolutionDir>
-	</PropertyGroup>
+  <PropertyGroup Condition="'$(SolutionDir)' == ''">
+    <SolutionDir Condition="'$(SolutionDir)' == '' and $([System.IO.Directory]::GetFiles('../', '*.sln').get_Length()) != 0">../</SolutionDir>
+    <SolutionDir Condition="'$(SolutionDir)' == '' and $([System.IO.Directory]::GetFiles('../../', '*.sln').get_Length()) != 0">../../</SolutionDir>
+    <SolutionDir Condition="'$(SolutionDir)' == '' and $([System.IO.Directory]::GetFiles('../../../', '*.sln').get_Length()) != 0">../../../</SolutionDir>
+    <SolutionDir Condition="'$(SolutionDir)' == '' and $([System.IO.Directory]::GetFiles('../../../../', '*.sln').get_Length()) != 0">../../../../</SolutionDir>
+    <SolutionDir Condition="'$(SolutionDir)' == '' and $([System.IO.Directory]::GetFiles('../../../../../', '*.sln').get_Length()) != 0">../../../../../</SolutionDir>
+    <SolutionDir Condition="'$(SolutionDir)' != ''">$([System.IO.Path]::GetFullPath('$(SolutionDir)'))</SolutionDir>
+  </PropertyGroup>
 
-	<PropertyGroup>
-		<Company>Out-of-Band Development, LLC</Company>
-		<Copyright>$(Company), $([System.DateTime]::Now.ToString('yyyy'))</Copyright>
+  <PropertyGroup>
+    <Company>Out-of-Band Development, LLC</Company>
+    <Copyright>$(Company), $([System.DateTime]::Now.ToString('yyyy'))</Copyright>
 
-		<RepositoryUrl>https://github.com/OutOfBandDevelopment/dotex/</RepositoryUrl>
-		<RepositoryType>GitHub</RepositoryType>
-		<Authors>Matthew Whited</Authors>
+    <RepositoryUrl>https://github.com/OutOfBandDevelopment/dotex/</RepositoryUrl>
+    <RepositoryType>GitHub</RepositoryType>
+    <Authors>Matthew Whited</Authors>
 
-		<!--<GenerateDocumentationFile>False</GenerateDocumentationFile>-->
-		<EnableWindowsTargeting>true</EnableWindowsTargeting>
-		
-		<ManagePackageVersionsCentrally>false</ManagePackageVersionsCentrally>
-		
+    <!--
+    <GenerateDocumentationFile Condition="!$([System.Text.RegularExpressions.Regex]::IsMatch('$(MSBuildProjectName)', '\.Tests$'))">True</GenerateDocumentationFile>
+    <GenerateDocumentationFile Condition="$([System.Text.RegularExpressions.Regex]::IsMatch('$(MSBuildProjectName)', '\.Tests$'))">false</GenerateDocumentationFile>
+    -->
+    <IsPackable Condition="!$([System.Text.RegularExpressions.Regex]::IsMatch('$(MSBuildProjectName)', '\.Tests$'))">True</IsPackable>
+    <IsPackable Condition="$([System.Text.RegularExpressions.Regex]::IsMatch('$(MSBuildProjectName)', '\.Tests$'))">false</IsPackable>
+    <GeneratePackageOnBuild Condition="!$([System.Text.RegularExpressions.Regex]::IsMatch('$(MSBuildProjectName)', '\.Tests$'))">True</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild Condition="$([System.Text.RegularExpressions.Regex]::IsMatch('$(MSBuildProjectName)', '\.Tests$'))">false</GeneratePackageOnBuild>
+
+    <RootNamespace>$(MSBuildProjectName.Replace(" ", "_").Replace(".Abstractions", ""))</RootNamespace>
+    
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+
+    <ManagePackageVersionsCentrally>false</ManagePackageVersionsCentrally>
+
 
     <TestResultsOutFolderPath>$(SolutionDir)TestResults\</TestResultsOutFolderPath>
     <VSTestResultsDirectory>$(SolutionDir)TestResults\</VSTestResultsDirectory>
     <RunSettingsFilePath>$(SolutionDir).runsettings</RunSettingsFilePath>
-	</PropertyGroup>
-  
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!-- Optional: MSTest parallelization property -->
+    <MSTest_DisableParallelization>false</MSTest_DisableParallelization>
+    <MSTest_ParallelWorkers>0</MSTest_ParallelWorkers>
+  </PropertyGroup>
+
+  <ItemGroup Condition=" '$(MSBuildProjectName.EndsWith(`.Tests`))' ">
+    <!-- Add the shared assembly info file to all *.Tests projects -->
+    <Compile Include="$(SolutionDir)TestAssemblyInfo.cs" />
+  </ItemGroup>
+
   <Import Project="OoBDev.Build.Tasks.props"/>
 
   <!--https://www.meziantou.net/the-roslyn-analyzers-i-use.htm-->
@@ -47,15 +68,15 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>-->
-	<PropertyGroup Condition="Exists('$(SolutionDir)..\LICENSE')">
-		<PackageLicenseFile>LICENSE</PackageLicenseFile>
-	</PropertyGroup>
-	<ItemGroup Condition="Exists('$(SolutionDir)..\LICENSE')">
-		<LicenseFile Include="$(SolutionDir)..\LICENSE" />
-		<None Include="@(LicenseFile)" Pack="true" PackagePath="\" />
-	</ItemGroup>
+  <PropertyGroup Condition="Exists('$(SolutionDir)..\LICENSE')">
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+  </PropertyGroup>
+  <ItemGroup Condition="Exists('$(SolutionDir)..\LICENSE')">
+    <LicenseFile Include="$(SolutionDir)..\LICENSE" />
+    <None Include="@(LicenseFile)" Pack="true" PackagePath="\" />
+  </ItemGroup>
 
- <!--
+  <!--
  <PropertyGroup Condition="'$(LOCAL_NUGET)' != ''">
     <PackageOutputPath>$(LOCAL_NUGET.Trim('\'))\</PackageOutputPath>
   </PropertyGroup>
@@ -71,13 +92,13 @@
   <PropertyGroup Condition="'$(CodeDocumentPath)' == ''">
     <CodeDocumentPath>$(DocumentPath)code\</CodeDocumentPath>
   </PropertyGroup>-->
-  
-	<PropertyGroup>
-		<BasePublishPath>$(SolutionDir)publish\</BasePublishPath>
-		<PackageOutputPath>$(BasePublishPath)packages\</PackageOutputPath>
-		<DocumentPath>$(SolutionDir)..\docs\</DocumentPath>
-		<CodeDocumentPath>$(DocumentPath)code\</CodeDocumentPath>
-	</PropertyGroup>
+
+  <PropertyGroup>
+    <BasePublishPath>$(SolutionDir)publish\</BasePublishPath>
+    <PackageOutputPath>$(BasePublishPath)packages\</PackageOutputPath>
+    <DocumentPath>$(SolutionDir)..\docs\</DocumentPath>
+    <CodeDocumentPath>$(DocumentPath)code\</CodeDocumentPath>
+  </PropertyGroup>
 
   <Target Name="Details">
     <Message Text="===== SolutionDir:              $(SolutionDir)"  Importance="high"/>
@@ -90,7 +111,7 @@
   </Target>
 
 
-	<!--
+  <!--
   this is only needed for profiling so dont worry about it for now... but it seems to have an issue with fsharp
     https://github.com/dotnet/fsharp/issues/7363
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -99,36 +120,36 @@
   </PropertyGroup>
   -->
 
-	<ItemGroup>
-		<!-- This added additional documentation to your build output -->
-		<CodeDocumentation Include="**\*.md" />
-		<CodeDocumentation Include="**\*.plantuml" />
-		<CodeDocumentation Include="**\*.puml" />
-		<CodeDocumentation Remove="bin\**\*.*" />
-		<CodeDocumentation Remove="obj\**\*.*" />
-		<CodeDocumentation Remove="TestResults\**\*.*" />
-		<CodeDocumentation Remove="TestData\**\*.*" />
+  <ItemGroup>
+    <!-- This added additional documentation to your build output -->
+    <CodeDocumentation Include="**\*.md" />
+    <CodeDocumentation Include="**\*.plantuml" />
+    <CodeDocumentation Include="**\*.puml" />
+    <CodeDocumentation Remove="bin\**\*.*" />
+    <CodeDocumentation Remove="obj\**\*.*" />
+    <CodeDocumentation Remove="TestResults\**\*.*" />
+    <CodeDocumentation Remove="TestData\**\*.*" />
 
-		<!-- these items will be automatically included as embedded resources in your assembly. -->
-		<Examples Include="**\*.txt" />
-		<Examples Include="**\*.json" />
-		<Examples Include="**\*.html" />
-		<Examples Include="**\*.csv" />
-		<Examples Include="**\*.sql" />
-		<Examples Include="**\*.xml" />
-		<Examples Include="**\*.yml" />
-		<Examples Remove="bin\**\*.*" />
-		<Examples Remove="obj\**\*.*" />
-		<Examples Remove="TestResults\**\*.*" />
+    <!-- these items will be automatically included as embedded resources in your assembly. -->
+    <Examples Include="**\*.txt" />
+    <Examples Include="**\*.json" />
+    <Examples Include="**\*.html" />
+    <Examples Include="**\*.csv" />
+    <Examples Include="**\*.sql" />
+    <Examples Include="**\*.xml" />
+    <Examples Include="**\*.yml" />
+    <Examples Remove="bin\**\*.*" />
+    <Examples Remove="obj\**\*.*" />
+    <Examples Remove="TestResults\**\*.*" />
 
-		<Content Include="@(CodeDocumentation)" Pack="true" PackagePath="\docs" />
-		<EmbeddedResource Include="@(Examples)" Pack="true" PackagePath="\examples"  />
-	</ItemGroup>
+    <Content Include="@(CodeDocumentation)" Pack="true" PackagePath="\docs" />
+    <EmbeddedResource Include="@(Examples)" Pack="true" PackagePath="\examples"  />
+  </ItemGroup>
 
-	<ItemGroup Condition="'$(PackageReadmeFile)'!='' and Exists('$(PackageReadmeFile)')">
-		<None Remove="$(PackageReadmeFile)" />
-		<None Include="$(PackageReadmeFile)" Pack="true" PackagePath="\"/>
-	</ItemGroup>
+  <ItemGroup Condition="'$(PackageReadmeFile)'!='' and Exists('$(PackageReadmeFile)')">
+    <None Remove="$(PackageReadmeFile)" />
+    <None Include="$(PackageReadmeFile)" Pack="true" PackagePath="\"/>
+  </ItemGroup>
 
   <Import Project="SqlClr.Build.props"/>
 

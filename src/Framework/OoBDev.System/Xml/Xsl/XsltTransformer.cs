@@ -217,6 +217,14 @@ public class XsltTransformer(string sandbox, params object[] extensions) : IXslt
             throw new AggregateException(errors);
     }
 
+    /// <summary>
+    /// Transforms multiple input XML files by merging them into a single navigable source, then applying an XSLT stylesheet to produce a single output.
+    /// </summary>
+    /// <param name="template">The path to the XSLT stylesheet.</param>
+    /// <param name="input">The path pattern for input files (supports wildcards).</param>
+    /// <param name="inputNavigatorFactory">A factory function that converts file paths to IXPathNavigable instances.</param>
+    /// <param name="output">The output file path for the transformation result.</param>
+    /// <param name="excludeInputSource">Optional path pattern for files to exclude from the merge.</param>
     public void TransformMerge(string template, string input, Func<string, IXPathNavigable> inputNavigatorFactory, string output, string? excludeInputSource = null)
     {
         static Exception innerMost(Exception ex) => ex.InnerException == null ? ex : innerMost(ex.InnerException);

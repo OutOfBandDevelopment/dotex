@@ -14,6 +14,7 @@ internal class ExtensibleNamespaceNode<T>(
     public INode? Parent { get; } = parent;
     public XName Name { get; } = name;
     public string? Value => Name.NamespaceName;
+    public T Item => item;
 
     public INamespaceNode? Next { get; internal set; }
     public INamespaceNode? Previous { get; internal set; }

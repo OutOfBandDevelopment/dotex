@@ -1,11 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace OoBDev.System.Security;
 
-namespace OoBDev.System.Security;
+/// <summary>
+/// Provides access to information about the current user.
+/// </summary>
 public interface ICurrentUserAccessor
 {
+    /// <summary>
+    /// Gets the username of the current user.
+    /// </summary>
     string? UserName { get; }
 }

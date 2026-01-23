@@ -1,7 +1,7 @@
-﻿using OoBDev.TestUtilities;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using OoBDev.TestUtilities;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -13,6 +13,8 @@ namespace OoBDev.SBert.Tests;
 [TestClass]
 public class SentenceEmbeddingClientTests
 {
+    //TODO: I think I want to do away with ISentenceEmbeddingClient
+
     public required TestContext TestContext { get; set; }
 
     private ISentenceEmbeddingClient BuildClient(string url)
@@ -30,19 +32,21 @@ public class SentenceEmbeddingClientTests
         return client;
     }
 
-    [TestMethod, TestCategory(TestCategories.DevLocal)]
-    [DataRow("http://127.0.0.1:5080", "Hello World!")]
-    public async Task GetEmbeddingAsyncTest(string url, string message)
+    [TestMethod, TestCategory(TestCategories.Integration),Ignore]
+    public async Task GetEmbeddingAsyncTest()
     {
+        var url = TestContext.GetRequiredProperty<string>("SBERT_URL");
+        var message = "Hello World!";
+
         var client = BuildClient(url);
         var embedding = await client.GetEmbeddingAsync(message);
         TestContext.WriteLine(string.Join(';', embedding));
     }
 
-    [TestMethod, TestCategory(TestCategories.DevLocal)]
-    [DataRow("http://127.0.0.1:5080")]
-    public async Task GetAllTest(string url)
+    [TestMethod, TestCategory(TestCategories.Integration), Ignore]
+    public async Task GetAllTest()
     {
+        var url = TestContext.GetRequiredProperty<string>("SBERT_URL");
         var client = BuildClient(url);
 
         var resource = GetType().Assembly.GetManifestResourceNames().FirstOrDefault(l => l.EndsWith(".Sentences.txt"))
@@ -53,9 +57,9 @@ public class SentenceEmbeddingClientTests
 
         var dict = new Dictionary<string, ReadOnlyMemory<double>>();
 
-        while (!reader.EndOfStream)
+        var line = await reader.ReadLineAsync();
+        while (line != null)
         {
-            var line = await reader.ReadLineAsync();
             try
             {
                 if (string.IsNullOrWhiteSpace(line?.Trim())) continue;
@@ -75,6 +79,8 @@ public class SentenceEmbeddingClientTests
             {
                 TestContext.WriteLine($"ERROR: \"{line}\" -> {ex.Message}");
             }
+
+            line = await reader.ReadLineAsync();
         }
 
         var each = from a in dict

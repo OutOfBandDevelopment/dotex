@@ -5,6 +5,9 @@ using System.Runtime.InteropServices;
 
 namespace OoBDev.System.Archives.Tar;
 
+/// <summary>
+/// Provides I/O utility methods for working with files, including support for long file paths.
+/// </summary>
 public static class IOUtilities
 {
     [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
@@ -21,6 +24,14 @@ public static class IOUtilities
     internal static int FILE_ATTRIBUTE_DIRECTORY = 0x00000010;
     internal const int MAX_PATH = 260;
 
+    /// <summary>
+    /// Opens a file stream with support for file paths longer than MAX_PATH (260 characters).
+    /// </summary>
+    /// <param name="fileName">The name of the file to open.</param>
+    /// <param name="fileMode">The file mode.</param>
+    /// <param name="fileAccess">The file access.</param>
+    /// <param name="fileShare">The file sharing mode.</param>
+    /// <returns>A FileStream for the opened file.</returns>
     public static FileStream OpenFileStream(string fileName, FileMode fileMode, FileAccess fileAccess, FileShare fileShare)
     {
         if (fileName.Length <= 260)

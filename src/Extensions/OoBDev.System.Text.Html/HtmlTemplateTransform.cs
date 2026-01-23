@@ -5,12 +5,23 @@ using System.Xml.XPath;
 
 namespace OoBDev.System.Text.Html;
 
+/// <summary>
+/// Transforms HTML templates by applying data bindings and processing HTML content.
+/// Implements ITemplateTransform for HTML media type.
+/// </summary>
+/// <param name="instanceFactory">Factory for creating path resolver instances from source objects.</param>
+/// <param name="htmlVisitor">Visitor for processing HTML nodes with data bindings.</param>
 [TemplateTransform(MediaTypes.Html)]
 public class HtmlTemplateTransform(
     IInstanceFactory instanceFactory,
     IHtmlDocumentVistor htmlVisitor
         ) : ITemplateTransform
 {
+    /// <summary>
+    /// Converts HTML content to an XPath navigator for query operations.
+    /// </summary>
+    /// <param name="content">The HTML content to convert.</param>
+    /// <returns>An XPathNavigator for querying the HTML document.</returns>
     public XPathNavigator ToXPathNavigator(string content)
     {
         var html = new HtmlDocument()
@@ -33,6 +44,13 @@ public class HtmlTemplateTransform(
         return xpathNav;
     }
 
+    /// <summary>
+    /// Transforms an HTML template by applying data from the source object.
+    /// Processes data bindings, repeaters, and other template directives.
+    /// </summary>
+    /// <param name="source">The source object containing data for the template.</param>
+    /// <param name="template">The HTML template string with data binding expressions.</param>
+    /// <returns>The transformed HTML string with data bindings resolved.</returns>
     public async Task<string> Transform(object source, string template)
     {
         var pathResolver = await instanceFactory.GetPathResolver(source);

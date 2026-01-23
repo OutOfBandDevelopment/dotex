@@ -1,0 +1,35 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>false</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Remove="TestData\*.*" />
+    <EmbeddedResource Include="TestData\*.*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="coverlet.collector" Version="6.0.4">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="GitVersion.MsBuild" Version="6.5.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
+    <PackageReference Include="MSTest.TestAdapter" Version="4.0.2" />
+    <PackageReference Include="MSTest.TestFramework" Version="4.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Framework\OoBDev.TestUtilities\OoBDev.TestUtilities.csproj" />
+    <ProjectReference Include="..\..\Common\OoBDev.Common.Complete\OoBDev.Common.Complete.csproj" />
+  </ItemGroup>
+  
+</Project>

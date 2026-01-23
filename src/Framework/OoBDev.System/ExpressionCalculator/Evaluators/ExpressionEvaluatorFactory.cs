@@ -2,8 +2,18 @@
 
 namespace OoBDev.System.ExpressionCalculator.Evaluators;
 
+/// <summary>
+/// Factory for creating type-specific expression evaluators.
+/// </summary>
 public static class ExpressionEvaluatorFactory
 {
+    /// <summary>
+    /// Creates an expression evaluator for the specified numeric type.
+    /// Supports decimal, double, float, int, short, long, sbyte, byte, uint, ushort, and ulong.
+    /// </summary>
+    /// <typeparam name="T">The numeric type to create an evaluator for.</typeparam>
+    /// <returns>An expression evaluator for the specified type.</returns>
+    /// <exception cref="NotSupportedException">Thrown when the specified type is not supported.</exception>
     public static IExpressionEvaluator<T> Create<T>()
         where T : struct, IComparable<T>, IEquatable<T> =>
             typeof(T) == typeof(decimal) ? (IExpressionEvaluator<T>)(object)new DecimalExpressionEvaluator() :

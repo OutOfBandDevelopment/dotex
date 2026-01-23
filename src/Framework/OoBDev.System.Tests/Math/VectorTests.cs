@@ -1,26 +1,27 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using OoBDev.Common.Math;
+using OoBDev.System.Math;
+using OoBDev.TestUtilities;
 
-namespace OoBDev.Common.Tests.Math;
+namespace OoBDev.System.Tests.Math;
 
 [TestClass]
 public class VectorTests
 {
-    public TestContext TestContext { get; set; } = null!;
+    public required TestContext TestContext { get; set; } = null!;
 
-    [DataTestMethod]
-    [TestCategory("UNIT")]
+    [TestMethod]
+    [TestCategory(TestCategories.Unit)]
     [DataRow("[1,2,3,4]", 4, 5.477225575051661d)]
     [DataRow("[1,1,1,1]", 4, 2)]
     public void Test(string vectorValue, int expectedLength, double expectedMagnitude)
     {
         var vector = Vector.Parse(vectorValue);
-        Assert.AreEqual(expectedLength, vector.Value.Length);
+        Assert.HasCount(expectedLength, vector.Value);
         Assert.AreEqual(expectedMagnitude, vector.Magnitude);
     }
 
-    [DataTestMethod]
-    [TestCategory("UNIT")]
+    [TestMethod]
+    [TestCategory(TestCategories.Unit)]
     [DataRow("[1,2,3,4]", "[1,2,3,4]", VectorDistanceMetrics.Cosine, 0)]
     [DataRow("[1,2,3,4]", "[1,2,3,4]", VectorDistanceMetrics.Euclidean, 0)]
     [DataRow("[1,2,3,4]", "[1,2,3,4]", VectorDistanceMetrics.DotProduct, 30)]

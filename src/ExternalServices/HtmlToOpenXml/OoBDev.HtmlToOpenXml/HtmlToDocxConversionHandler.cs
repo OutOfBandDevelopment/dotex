@@ -52,7 +52,7 @@ public class HtmlToDocxConversionHandler : IDocumentConversionHandler
                 }
                 var converter = new HtmlConverter(mainPart);
                 await converter.ParseBody(html);
-                mainPart.Document.Save();
+                mainPart.Document?.Save();
             }
 
             await destination.WriteAsync(generatedDocument.ToArray());

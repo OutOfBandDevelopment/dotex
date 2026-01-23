@@ -5,8 +5,18 @@ using static OoBDev.System.ExpressionCalculator.Expressions.UnaryOperators;
 
 namespace OoBDev.System.ExpressionCalculator.Optimizers;
 
+/// <summary>
+/// Optimizes expressions by applying identity operation simplifications.
+/// Handles algebraic identities like B^1=B, B*1=B, B+0=B, B-0=B, B/1=B, B*-1=-B, etc.
+/// </summary>
+/// <typeparam name="T">The numeric type of the expression, which must be a value type implementing IComparable&lt;T&gt; and IEquatable&lt;T&gt;.</typeparam>
 public sealed class IdentityExpressionOptimizer<T> : IExpressionOptimizer<T> where T : struct, IComparable<T>, IEquatable<T>
 {
+    /// <summary>
+    /// Optimizes the given expression by applying identity operation simplifications.
+    /// </summary>
+    /// <param name="expression">The expression to optimize.</param>
+    /// <returns>An optimized expression with simplified identity operations.</returns>
     public ExpressionBase<T> Optimize(ExpressionBase<T> expression) =>
         expression switch
         {

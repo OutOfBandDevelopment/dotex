@@ -89,9 +89,9 @@ The `OoBDev.Documents.csproj` file is the project file for the OoBDev.Documents 
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>false</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    
     <PackageReadmeFile>Readme.Documents.md</PackageReadmeFile>
-    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    
   </PropertyGroup>
   <ItemGroup>
     <InternalsVisibleTo Include="OoBDev.Documents.Tests" />

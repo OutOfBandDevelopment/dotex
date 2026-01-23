@@ -4,19 +4,33 @@ using System.Linq;
 
 namespace OoBDev.System.Cryptography.Enigma;
 
-// https://en.wikipedia.org/wiki/Enigma_rotor_details
-// http://enigmaco.de/enigma/enigma.html
+/// <summary>
+/// Simulates an Enigma cipher machine used for encryption during World War II.
+/// Supports configurable rotors, reflectors, ring settings, and plugboard connections.
+/// See https://en.wikipedia.org/wiki/Enigma_rotor_details and http://enigmaco.de/enigma/enigma.html for more information.
+/// </summary>
+/// <remarks>
+/// WARNING: This is a historical cipher implementation for educational purposes only. It provides no security and should never be used for protecting sensitive data.
+/// </remarks>
 public class EnigmaMachine
 {
-    private string[] _plugboard;
-    private int[] _postions;
-    private int[] _ringSettings;
+    private string[] _plugboard = [];
+    private int[] _postions = [];
+    private int[] _ringSettings = [];
     private readonly EnigmaRotor[] _rotors;
     private readonly EnigmaReflector _reflector;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="EnigmaMachine"/> class with the specified configuration.
+    /// </summary>
+    /// <param name="rotors">The array of rotors to use (must be 3-5 rotors, processed in reverse order).</param>
+    /// <param name="reflector">The reflector to use (must not be null).</param>
+    /// <param name="ringSettings">The ring settings as a string of letters (defaults to all 'A's if not specified).</param>
+    /// <param name="plugBoard">The plugboard connections as pairs of letters (optional).</param>
+    /// <exception cref="InvalidOperationException">Thrown when rotors is null, has fewer than 3 or more than 5 elements, or reflector is null.</exception>
     public EnigmaMachine(EnigmaRotor[] rotors,
                          EnigmaReflector reflector,
-                         //string start = null, 
+                         //string start = null,
                          string? ringSettings = default,
                          string? plugBoard = default)
     {
@@ -29,6 +43,10 @@ public class EnigmaMachine
         PlugBoard = plugBoard;
     }
 
+    /// <summary>
+    /// Gets or sets the current rotor positions as a string of letters.
+    /// Each letter represents the position of the corresponding rotor (e.g., "AAA" for all rotors at position A).
+    /// </summary>
     public string Positions
     {
         get => (_postions?
@@ -42,6 +60,10 @@ public class EnigmaMachine
                                                                    .Reverse()];
     }
 
+    /// <summary>
+    /// Gets the ring settings for the rotors as a string of letters.
+    /// Ring settings offset the wiring of each rotor relative to its position.
+    /// </summary>
     public string? RingSettings
     {
         get => (_ringSettings?
@@ -56,6 +78,11 @@ public class EnigmaMachine
                                                                        .Reverse()];
     }
 
+    /// <summary>
+    /// Gets or sets the plugboard connections as pairs of letters separated by spaces.
+    /// Each pair swaps two letters before and after the rotor processing (e.g., "AB CD" swaps A↔B and C↔D).
+    /// </summary>
+    /// <exception cref="InvalidOperationException">Thrown when the plugboard configuration is invalid (duplicate letters or odd length).</exception>
     public string? PlugBoard
     {
         get => string.Join(" ", _plugboard ?? []);
@@ -69,9 +96,23 @@ public class EnigmaMachine
         }
     }
 
+    /// <summary>
+    /// Gets a semicolon-separated list of the rotor numbers in use.
+    /// </summary>
     public string Rotors => string.Join(";", _rotors.Select(r => r.Number));
+
+    /// <summary>
+    /// Gets the reflector number in use.
+    /// </summary>
     public string Reflector => _reflector.Number;
 
+    /// <summary>
+    /// Processes (encrypts or decrypts) the input text through the Enigma machine.
+    /// The machine's rotors advance with each character, and the same operation both encrypts and decrypts.
+    /// Non-alphabetic characters are removed from the input.
+    /// </summary>
+    /// <param name="input">The text to process (will be cleaned to uppercase letters only).</param>
+    /// <returns>The processed ciphertext or plaintext.</returns>
     public string Process(string input)
     {
         input = input.Clean().AsString().SwapSet(_plugboard);

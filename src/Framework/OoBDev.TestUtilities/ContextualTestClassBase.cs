@@ -9,8 +9,16 @@ public abstract class ContextualTestClassBase
 {
     // https://github.com/MicrosoftDocs/visualstudio-docs/blob/main/docs/test/using-microsoft-visualstudio-testtools-unittesting-members-in-unit-tests.md
     // https://github.com/dotnet/docs/blob/main/docs/core/tutorials/testing-library-with-visual-studio.md
+
+    /// <summary>
+    /// Gets or sets the test context which provides information about and functionality for the current test run.
+    /// </summary>
     public virtual TestContext TestContext { get; set; } = null!;
 
+    /// <summary>
+    /// Initializes test properties and sets up the contextual test method attributes.
+    /// Called automatically before each test method executes.
+    /// </summary>
     [TestInitialize]
     public virtual void TestInitialize()
     {
@@ -25,6 +33,11 @@ public abstract class ContextualTestClassBase
         }
         TestContext.Properties[ContextualTestMethodAttribute.CurrentTestInstance] = ContextualTestMethodAttribute.Instance = this;
     }
+
+    /// <summary>
+    /// Cleans up test properties and removes contextual test method attributes.
+    /// Called automatically after each test method completes.
+    /// </summary>
     [TestCleanup]
     public virtual void TestCleanup()
     {

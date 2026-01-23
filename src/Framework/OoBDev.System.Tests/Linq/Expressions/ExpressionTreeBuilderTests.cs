@@ -1,4 +1,4 @@
-using OoBDev.System.Linq.Expressions;
+﻿using OoBDev.System.Linq.Expressions;
 using OoBDev.System.Tests.Linq.TestTargets;
 using OoBDev.TestUtilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -8,7 +8,7 @@ namespace OoBDev.System.Tests.Linq.Expressions;
 [TestClass]
 public class ExpressionTreeBuilderTests
 {
-    public TestContext TestContext { get; set; } = default!;
+    public required TestContext TestContext { get; set; } = default!;
 
     [TestMethod]
     [TestCategory(TestCategories.Unit)]

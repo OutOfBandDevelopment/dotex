@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace OoBDev.System.ComponentModel.DataAnnotations;
+namespace OoBDev.System.ComponentModel.Data;
 
 /// <summary>
 /// Indicates that a property should be included as a query parameter in a request.

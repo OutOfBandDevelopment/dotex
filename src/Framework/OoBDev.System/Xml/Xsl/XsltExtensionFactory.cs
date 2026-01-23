@@ -7,8 +7,18 @@ using System.Xml.Serialization;
 
 namespace OoBDev.System.Xml.Xsl;
 
+/// <summary>
+/// Factory for dynamically creating XSLT extension objects that wrap existing objects and expose methods decorated with <see cref="XsltFunctionAttribute"/>.
+/// Uses runtime code generation (Reflection.Emit) to create wrapper types that can provide alternative method names and control method visibility in XSLT contexts.
+/// </summary>
 public class XsltExtensionFactory
 {
+    /// <summary>
+    /// Dynamically builds an XSLT extension wrapper object for the specified input object.
+    /// The wrapper exposes methods decorated with <see cref="XsltFunctionAttribute"/>, optionally with alternative names.
+    /// </summary>
+    /// <param name="input">The object to wrap as an XSLT extension.</param>
+    /// <returns>A dynamically generated wrapper object if the input has methods with <see cref="XsltFunctionAttribute"/>; otherwise, returns the input object unchanged.</returns>
     public object? BuildXsltExtension(object input)
     {
         var type = input.GetType();

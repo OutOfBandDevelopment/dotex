@@ -1,4 +1,4 @@
-using OoBDev.Extensions.Linq;
+﻿using OoBDev.Extensions.Linq;
 using OoBDev.TestUtilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
@@ -18,7 +18,7 @@ public class AsyncEnumerableExtensionsTests
 #pragma warning disable CS0619
         var results = await CreateTestData().ToListAsync();
 #pragma warning restore CS0619
-        Assert.AreEqual(10, results.Count);
+        Assert.HasCount(10, results);
     }
 
     private async IAsyncEnumerable<string> CreateTestData()

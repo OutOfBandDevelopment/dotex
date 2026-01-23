@@ -7,10 +7,17 @@ using System.Linq;
 
 namespace OoBDev.DacFx;
 
+/// <summary>
+/// Validates DACPAC files using Microsoft DacFx APIs.
+/// </summary>
 public class DacPacValidator : IDacPacValidator
 {
     private readonly ILogger _logger;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="DacPacValidator"/> class.
+    /// </summary>
+    /// <param name="logger">The logger for diagnostic output.</param>
     public DacPacValidator(ILogger<DacPacValidator> logger)
     {
         _logger = logger;

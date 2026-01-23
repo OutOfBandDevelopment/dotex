@@ -17,6 +17,8 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
+using OoBDev.System.Reflection;
+using Microsoft.Extensions.Logging;
 
 namespace OoBDev.TestUtilities;
 
@@ -25,6 +27,63 @@ namespace OoBDev.TestUtilities;
 /// </summary>
 public static class TestContextExtensions
 {
+
+    /// <summary>
+    /// Gets a logger instance for the specified type.
+    /// </summary>
+    /// <typeparam name="T">The type to use as the logger category.</typeparam>
+    /// <param name="testContext">The test context.</param>
+    /// <returns>A logger instance for the specified type.</returns>
+    public static ILogger<T> GetLogger<T>(this TestContext testContext) => TestLogger.CreateLogger<T>();
+
+    /// <summary>
+    /// Gets a test property value or returns a default value if not found.
+    /// Checks TestContext properties first, then environment variables.
+    /// </summary>
+    /// <typeparam name="T">The type to convert the property value to.</typeparam>
+    /// <param name="testContext">The test context.</param>
+    /// <param name="parameter">The property name to retrieve.</param>
+    /// <param name="defaultValue">The default value to return if the property is not found.</param>
+    /// <returns>The property value or the default value.</returns>
+    public static T GetPropertyOrDefault<T>(this TestContext testContext, string parameter, T defaultValue) =>
+        testContext.GetProperty<T>(parameter) ?? defaultValue;
+
+    /// <summary>
+    /// Gets a required test property value. Throws an exception if not found.
+    /// Checks TestContext properties first, then environment variables.
+    /// </summary>
+    /// <typeparam name="T">The type to convert the property value to.</typeparam>
+    /// <param name="testContext">The test context.</param>
+    /// <param name="parameter">The property name to retrieve.</param>
+    /// <returns>The property value.</returns>
+    /// <exception cref="ApplicationException">Thrown when the property is not found.</exception>
+    public static T GetRequiredProperty<T>(this TestContext testContext, string parameter) =>
+        testContext.GetProperty<T>(parameter) ?? throw new ApplicationException($"Test Property {parameter} is required");
+
+    /// <summary>
+    /// Gets a test property value, returning null if not found.
+    /// Checks TestContext properties first, then environment variables.
+    /// </summary>
+    /// <typeparam name="T">The type to convert the property value to.</typeparam>
+    /// <param name="testContext">The test context.</param>
+    /// <param name="parameter">The property name to retrieve.</param>
+    /// <returns>The property value, or null if not found or conversion fails.</returns>
+    public static T? GetProperty<T>(this TestContext testContext, string parameter)
+    {
+        try
+        {
+            if (testContext.Properties.TryGetValue(parameter, out var value))
+                return value.As<T>();
+
+            value = Environment.GetEnvironmentVariable(parameter);
+            return value.As<T>();
+        }
+        catch
+        {
+        }
+        return default;
+    }
+
     /// <summary>
     /// serialize an object to the test results for a given test run
     /// </summary>

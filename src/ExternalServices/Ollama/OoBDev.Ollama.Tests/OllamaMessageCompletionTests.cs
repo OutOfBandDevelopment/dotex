@@ -33,10 +33,27 @@ public class OllamaMessageCompletionTests
         return client;
     }
 
+    [TestCategory(TestCategories.Integration)]
+    [TestMethod]
+    public async Task IMessageCompletion_GetCompletionAsyncTest()
+    {
+        var url = TestContext.GetRequiredProperty<string>("OLLAMA_URL");
+        var model = TestContext.GetPropertyOrDefault("OLLAMA_MODEL", "phi3");
+
+        var client = Build<IMessageCompletion>(url, model);
+        var response = await client.GetCompletionAsync(model, "Hello World!");
+
+        TestContext.WriteLine($"url: {url}");
+        TestContext.WriteLine($"model: {model}");
+        TestContext.WriteLine($"Response: {response}");
+
+        Assert.IsFalse(string.IsNullOrWhiteSpace(response));
+    }
+
     [TestCategory(TestCategories.DevLocal)]
     [TestMethod]
     [DataRow("http://127.0.0.1:11434", "phi", "Hello World!")]
-    public async Task IMessageCompletion_GetCompletionAsyncTest(string hostName, string model, string prompt)
+    public async Task IMessageCompletion_GetCompletionAsyncTest_DevLocal(string hostName, string model, string prompt)
     {
         var client = Build<IMessageCompletion>(hostName, model);
         var embedding = await client.GetCompletionAsync(model, prompt);
@@ -45,15 +62,4 @@ public class OllamaMessageCompletionTests
         Assert.IsFalse(string.IsNullOrWhiteSpace(embedding));
     }
 
-    [TestCategory(TestCategories.DevLocal)]
-    [TestMethod]
-    [DataRow("http://127.0.0.1:11434", "phi", "You are an assistant", "How are you?")]
-    public async Task ILanguageModelProvider_GetResponseAsyncTest(string hostName, string model, string prompt, string input)
-    {
-        var client = Build<ILanguageModelProvider>(hostName, model);
-        var embedding = await client.GetResponseAsync(prompt, input);
-        TestContext.WriteLine(embedding);
-
-        Assert.IsFalse(string.IsNullOrWhiteSpace(embedding));
-    }
 }

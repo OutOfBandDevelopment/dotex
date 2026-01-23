@@ -13,6 +13,10 @@ namespace OoBDev.Data.Common;
 /// <typeparam name="TDbOptions">The type of the database options.</typeparam>
 public interface IDatabaseQuery<TDbOptions>
 {
+    /// <summary>
+    /// Creates and returns a database connection using the configured database options.
+    /// </summary>
+    /// <returns>A <see cref="DbConnection"/> instance configured for the specified database options type.</returns>
     DbConnection GetConnection();
 
     /// <summary>

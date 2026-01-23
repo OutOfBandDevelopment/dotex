@@ -15,7 +15,6 @@ public static class SandboxPath
     /// <param name="basePath"></param>
     /// <param name="filePath"></param>
     /// <returns></returns>
-    /// <exception cref="System.ApplicationException">this will be throw if <c>filePath</c> is not a child of <c>basePath</c>.</exception>
     public static string? EnsureSafePath(string basePath, string filePath)
     {
         var sandbox = Path.GetFullPath(basePath);

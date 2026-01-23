@@ -169,9 +169,9 @@
 |OoBDev.Microsoft.ApplicationInsights.Extensibility.CorrelationInfoTelemetryProcessor|0|8|8|36|0%|0|16|0%|
 |OoBDev.Microsoft.ApplicationInsights.Extensibility.UserTelemetryProcessor|0|10|10|42|0%|0|24|0%|
 |OoBDev.Microsoft.ApplicationInsights.ServiceCollectionExtensions|0|3|3|22|0%|0|0||
-|**OoBDev.Microsoft.B2C**|**0**|**96**|**96**|**227**|**0%**|**0**|**46**|**0%**|
-|OoBDev.Microsoft.B2C.Identity.ManageGraphUser|0|93|93|190|0%|0|46|0%|
-|OoBDev.Microsoft.B2C.ServiceCollectionExtensions|0|3|3|37|0%|0|0||
+|**OoBDev.Microsoft.Azure.B2C**|**0**|**96**|**96**|**227**|**0%**|**0**|**46**|**0%**|
+|OoBDev.Microsoft.Azure.B2C.Identity.ManageGraphUser|0|93|93|190|0%|0|46|0%|
+|OoBDev.Microsoft.Azure.B2C.ServiceCollectionExtensions|0|3|3|37|0%|0|0||
 |**OoBDev.MongoDB**|**0**|**85**|**85**|**311**|**0%**|**0**|**112**|**0%**|
 |OoBDev.MongoDB.Extensions.BsonObjectIdConvention|0|13|13|42|0%|0|24|0%|
 |OoBDev.MongoDB.Extensions.MongoDatabaseFactory|0|18|18|69|0%|0|0||

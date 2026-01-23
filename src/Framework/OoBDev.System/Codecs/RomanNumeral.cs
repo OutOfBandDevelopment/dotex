@@ -4,6 +4,9 @@ using System.Text;
 
 namespace OoBDev.System.Codecs;
 
+/// <summary>
+/// Provides conversion between Roman numerals and decimal integers.
+/// </summary>
 public class RomanNumeral
 {
     private readonly IReadOnlyDictionary<string, int> _map = new Dictionary<string, int>()
@@ -36,6 +39,11 @@ public class RomanNumeral
         { "I",     1           },
     };
 
+    /// <summary>
+    /// Converts a decimal integer to its Roman numeral representation.
+    /// </summary>
+    /// <param name="value">The integer value to convert.</param>
+    /// <returns>The Roman numeral representation.</returns>
     public string Convert(int value)
     {
         var target = value;
@@ -57,6 +65,11 @@ public class RomanNumeral
         return sb.ToString();
     }
 
+    /// <summary>
+    /// Converts a Roman numeral string to its decimal integer value.
+    /// </summary>
+    /// <param name="value">The Roman numeral string to convert.</param>
+    /// <returns>The decimal integer value.</returns>
     public int Convert(string value) =>
         value
             .FirstPass()

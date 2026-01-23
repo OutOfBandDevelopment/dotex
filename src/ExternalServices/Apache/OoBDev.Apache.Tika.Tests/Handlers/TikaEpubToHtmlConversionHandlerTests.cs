@@ -11,7 +11,7 @@ public class TikaEpubToHtmlConversionHandlerTests :
 {
     public required TestContext TestContext { get; set; }
 
-    [TestCategory(TestCategories.DevLocal)]
+    [TestCategory(TestCategories.Integration)]
     [TestMethod]
     [DataRow("accessible_epub_3.epub", "application/epub+zip", "text/html", ".html")]
     [DataRow("childrens-literature.epub", "application/epub+zip", "text/html", ".html")]

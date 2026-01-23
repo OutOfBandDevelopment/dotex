@@ -11,6 +11,9 @@ using System.Xml.Linq;
 
 namespace OoBDev.TemplateEngine.Cli;
 
+/// <summary>
+/// Hosted service that processes templates with JSON or XML data files to generate output.
+/// </summary>
 public class TemplateEngineService(
     ILogger<TemplateEngineService> log,
     IOptions<TemplateEngineOptions> settings,
@@ -20,6 +23,11 @@ public class TemplateEngineService(
     private readonly ILogger _log = log;
     private readonly IOptions<TemplateEngineOptions> _settings = settings;
 
+    /// <summary>
+    /// Starts the template processing operation.
+    /// </summary>
+    /// <param name="cancellationToken">Token to signal cancellation.</param>
+    /// <returns>A task representing the processing operation.</returns>
     public async Task StartAsync(CancellationToken cancellationToken)
     {
 #pragma warning disable CA2208 // Instantiate argument exceptions correctly
@@ -76,5 +84,10 @@ public class TemplateEngineService(
             _ => null,
         };
 
+    /// <summary>
+    /// Stops the service (no-op).
+    /// </summary>
+    /// <param name="cancellationToken">Token to signal cancellation.</param>
+    /// <returns>A completed task.</returns>
     public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
 }

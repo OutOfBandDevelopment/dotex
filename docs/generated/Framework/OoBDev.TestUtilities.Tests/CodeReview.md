@@ -32,7 +32,7 @@ Here's an updated version of the code:
 ```csharp
 public class TextContextExtensionsTestEngine
 {
-    public TestContext TestContext { get; set; }
+    public required TestContext TestContext { get; set; }
 
     public class TestData
     {

@@ -1,15 +1,16 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.System.ComponentModel.Validations;
+using OoBDev.TestUtilities;
 
 namespace OoBDev.System.Tests.ComponentModel.Validations;
 
 [TestClass]
 public class ZipCodesAttributeTests
 {
-    public TestContext TestContext { get; set; } = null!;
+    public required TestContext TestContext { get; set; } = null!;
 
     [TestMethod]
-    [TestCategory("UNIT")]
+    [TestCategory(TestCategories.Unit)]
     [DataRow("12345", true)]
     [DataRow("12345-1111", true)]
     [DataRow("123451111", false)]

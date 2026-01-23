@@ -2,6 +2,7 @@
 using Microsoft.OpenApi;
 using OoBDev.AspNetCore.Mvc.OpenApi;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
@@ -38,6 +39,7 @@ public class ApplicationPermissionsApiFilter : IOperationFilter
         //    { new OpenApiSecurityScheme()  { Name="Application Rights" }, applicationRights.ToList() }
         //});
 
-        operation.Extensions.Add("x-permissions", new ApiPermissionsExtension(allowAnonymous, applicationRights));
+        operation.Extensions ??= new Dictionary<string, IOpenApiExtension>();
+        operation.Extensions["x-permissions"] = new ApiPermissionsExtension(allowAnonymous, applicationRights);
     }
 }

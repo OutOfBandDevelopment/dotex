@@ -1,25 +1,27 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<TargetFramework>net10.0</TargetFramework>
-		<ImplicitUsings>false</ImplicitUsings>
-		<Nullable>enable</Nullable>
-		<GenerateDocumentationFile>False</GenerateDocumentationFile>
-		
-		<GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>false</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
+    <!-- Suppress warnings in ANTLR-generated files -->
+    <NoWarn>$(NoWarn);CS1584;CS1658</NoWarn>
+
     
+
     <PackageReadmeFile>Readme.System.md</PackageReadmeFile>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-	</PropertyGroup>
+  </PropertyGroup>
 
-	<ItemGroup>
-		<InternalsVisibleTo Include="OoBDev.System.Tests" />
-	</ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="OoBDev.System.Tests" />
+  </ItemGroup>
 
-	<ItemGroup>
-	  <ProjectReference Include="..\OoBDev.Extensions\OoBDev.Extensions.csproj" />
-	  <ProjectReference Include="..\OoBDev.System.Linq\OoBDev.System.Linq.csproj" />
-	</ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\OoBDev.Extensions\OoBDev.Extensions.csproj" />
+    <ProjectReference Include="..\OoBDev.System.Linq\OoBDev.System.Linq.csproj" />
+  </ItemGroup>
   <ItemGroup>
     <Antlr4 Include="ExpressionCalculator\Parser\ExpressionTree.g4">
       <Visitor>true</Visitor>

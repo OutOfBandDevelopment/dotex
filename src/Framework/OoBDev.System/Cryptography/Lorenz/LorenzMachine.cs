@@ -3,11 +3,23 @@ using System.Linq;
 
 namespace OoBDev.System.Cryptography.Lorenz;
 
-// https://www.codesandciphers.org.uk/cevent2.htm
-// https://lorenz.virtualcolossus.co.uk/LorenzSZ/#
+/// <summary>
+/// Simulates the Lorenz SZ40/42 cipher machine (codenamed "Tunny" by the British) used for high-level communications during World War II.
+/// Uses 12 wheels organized into Chi (5), Mu (2), and Psi (5) sets with irregular stepping to create a complex stream cipher.
+/// See https://www.codesandciphers.org.uk/cevent2.htm and https://lorenz.virtualcolossus.co.uk/LorenzSZ/# for more information.
+/// </summary>
+/// <remarks>
+/// WARNING: This is a historical cipher implementation for educational purposes only. It provides no security and should never be used for protecting sensitive data.
+/// The implementation uses ITA2 (Baudot code) for character encoding.
+/// </remarks>
+/// <param name="keySet">The wheel patterns as a byte array defining the pin settings for all 12 wheels.</param>
+/// <param name="startPosition">The starting positions for all 12 wheels (indices 0-4: Chi, 5-6: Mu, 7-11: Psi).</param>
 public class LorenzMachine(byte[] keySet, int[] startPosition)
 {
-
+    /// <summary>
+    /// Predefined ZMUG configuration with historically accurate wheel patterns and start positions.
+    /// This configuration can be used for testing and demonstration purposes.
+    /// </summary>
     public static readonly (byte[] key, int[] start) ZMUG = (new byte[]
     {
         0b00011100,0b11100111,0b10001100,0b01100111,
@@ -35,6 +47,13 @@ public class LorenzMachine(byte[] keySet, int[] startPosition)
     // https://en.wikipedia.org/wiki/Baudot_code#ITA2
     private readonly string _ita2 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ012345";
 
+    /// <summary>
+    /// Encodes (or decodes) the input text using the Lorenz cipher.
+    /// The same operation both encrypts and decrypts (XOR-based stream cipher).
+    /// Input is converted to uppercase and mapped to ITA2 character set; non-ITA2 characters are removed.
+    /// </summary>
+    /// <param name="input">The text to encode/decode (supports letters A-Z and digits 0-5; '+' is converted to '5').</param>
+    /// <returns>The encoded/decoded text using the configured wheel settings.</returns>
     public string Encode(string input)
     {
         var chars = input.ToUpper()

@@ -4,41 +4,85 @@ using System.Text;
 
 namespace OoBDev.System.Archives.Zip;
 
+/// <summary>
+/// Represents the local file header structure in a ZIP archive.
+/// </summary>
 public struct LocalFileHeader
 {
-    /*
-            local file header signature     4 bytes  (0x04034b50)
-            version needed to extract       2 bytes
-            general purpose bit flag        2 bytes
-            compression method              2 bytes
-            last mod file time              2 bytes
-            last mod file date              2 bytes
-            crc-32                          4 bytes
-            compressed size                 4 bytes
-            uncompressed size               4 bytes
-            file name length                2 bytes
-            extra field length              2 bytes
-
-            file name (variable size)
-            extra field (variable size)
-    */
+    /// <summary>
+    /// Local file header signature (0x04034b50).
+    /// </summary>
     public int Signature;
+
+    /// <summary>
+    /// Version needed to extract the file.
+    /// </summary>
     public short Version;
+
+    /// <summary>
+    /// General purpose bit flags.
+    /// </summary>
     public short BitFlags;
+
+    /// <summary>
+    /// Compression method used for this file.
+    /// </summary>
     public CompressionMethodType CompressionMethod;
+
+    /// <summary>
+    /// Last modification time of the file (MS-DOS format).
+    /// </summary>
     public short LastModifyTime;
+
+    /// <summary>
+    /// Last modification date of the file (MS-DOS format).
+    /// </summary>
     public short LastModifyDate;
+
+    /// <summary>
+    /// CRC-32 checksum of the uncompressed file data.
+    /// </summary>
     public int CRC32;
+
+    /// <summary>
+    /// Size of the compressed file data in bytes.
+    /// </summary>
     public int CompressedSize;
+
+    /// <summary>
+    /// Size of the uncompressed file data in bytes.
+    /// </summary>
     public int UncompressedSize;
+
+    /// <summary>
+    /// Length of the file name field in bytes.
+    /// </summary>
     public short FileNameLength;
+
+    /// <summary>
+    /// Length of the extra field in bytes.
+    /// </summary>
     public short ExtraFieldLength;
 
+    /// <summary>
+    /// The file name.
+    /// </summary>
     public string FileName;
+
+    /// <summary>
+    /// The extra field data.
+    /// </summary>
     public string ExtraField;
 
+    /// <summary>
+    /// Gets the total size of the header in bytes, including variable-length fields.
+    /// </summary>
     public readonly int HeaderSize => 4 + 2 + 2 + 2 + 2 + 2 + 4 + 4 + 4 + 2 + 2 + FileNameLength + ExtraFieldLength;
 
+    /// <summary>
+    /// Converts the local file header to its binary representation.
+    /// </summary>
+    /// <param name="localFileHeader">The header to convert.</param>
     public static implicit operator byte[](LocalFileHeader localFileHeader)
     {
         List<byte> data =
@@ -66,6 +110,10 @@ public struct LocalFileHeader
         return [.. data];
     }
 
+    /// <summary>
+    /// Parses a binary representation into a local file header structure.
+    /// </summary>
+    /// <param name="rawFileheader">The binary data to parse.</param>
     public static implicit operator LocalFileHeader(byte[] rawFileheader)
     {
         LocalFileHeader localFileHeader = new()

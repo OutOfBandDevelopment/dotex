@@ -3,6 +3,10 @@ using Microsoft.Extensions.Logging;
 
 namespace OoBDev.Data.Vectors.Hosting;
 
+/// <summary>
+/// Hosted service that manages the lifecycle of the embedding sentence transformer queue reader.
+/// Handles automatic restarts on errors and graceful shutdown.
+/// </summary>
 public class EmbeddingSentenceTransformerQueueReaderHost : IHostedService, IDisposable
 {
     private readonly IEmbeddingSentenceTransformerQueueReader _reader;
@@ -11,6 +15,11 @@ public class EmbeddingSentenceTransformerQueueReaderHost : IHostedService, IDisp
 
     private Task? _task;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="EmbeddingSentenceTransformerQueueReaderHost"/> class.
+    /// </summary>
+    /// <param name="reader">The queue reader to host.</param>
+    /// <param name="logger">The logger for diagnostics.</param>
     public EmbeddingSentenceTransformerQueueReaderHost(
         IEmbeddingSentenceTransformerQueueReader reader,
         ILogger<EmbeddingSentenceTransformerQueueReaderHost> logger
@@ -21,11 +30,20 @@ public class EmbeddingSentenceTransformerQueueReaderHost : IHostedService, IDisp
     }
 
     private bool _disposed = false;
+
+    /// <summary>
+    /// Disposes resources used by this host.
+    /// </summary>
     public void Dispose()
     {
         Dispose(true);
         GC.SuppressFinalize(this);
     }
+
+    /// <summary>
+    /// Disposes resources used by this host.
+    /// </summary>
+    /// <param name="disposing">True if disposing managed resources.</param>
     protected virtual void Dispose(bool disposing)
     {
         if (_disposed)

@@ -206,6 +206,10 @@ What makes OoBDev unique:
 
 ## Related Documentation
 
+### How-To Guides
+- [../how-tos/](../how-tos/) - Practical guides for common tasks
+  - [Variables and Configuration in .runsettings](../how-tos/runsettings-variables-and-configuration.md)
+
 ### Framework Documentation
 - [../Framework/MajorFunctionality.md](../Framework/MajorFunctionality.md)
 - [../Framework/MessageQueueing.md](../Framework/MessageQueueing.md)
@@ -225,4 +229,5 @@ What makes OoBDev unique:
 
 ## Change Log
 
+- 2026-01-21: Added how-tos directory with .runsettings variables guide
 - 2026-01-12 v1.0: Initial architectural documentation created

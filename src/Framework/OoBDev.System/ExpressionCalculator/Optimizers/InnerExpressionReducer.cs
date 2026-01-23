@@ -11,6 +11,12 @@ namespace OoBDev.System.ExpressionCalculator.Optimizers;
 public sealed class InnerExpressionReducer<T> : IExpressionOptimizer<T>
     where T : struct, IComparable<T>, IEquatable<T>
 {
+    /// <summary>
+    /// Optimizes the given expression by removing unnecessary parentheses (inner expressions).
+    /// Parentheses are retained only when required for correct operator precedence.
+    /// </summary>
+    /// <param name="expression">The expression to optimize.</param>
+    /// <returns>An optimized expression with minimal necessary parentheses.</returns>
     public ExpressionBase<T> Optimize(ExpressionBase<T> expression) =>
         expression switch
         {
