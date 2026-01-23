@@ -33,21 +33,4 @@ This document tracks pending migration work for Incomming projects.
 
 ---
 
-## Archived Migration Files
-
-The following TODO files reference historical migration work:
-
-- **TODO-migrations-framework.md** - CANCELLED (directory removed)
-- **TODO-migrations-communications.md** - Historical reference only
-- **TODO-migrations-spatial.md** - Historical reference only
-- **TODO-migrations-identity.md** - Historical reference only
-- **TODO-migrations-documents.md** - Historical reference only
-- **TODO-migrations-text-templating.md** - Historical reference only
-- **TODO-migrations-data-loader.md** - Historical reference only
-- **TODO-migrations-complex-events.md** - Historical reference only
-- **TODO-migrations-generations.md** - Historical reference only
-- **TODO-migrations-caching.md** - COMPLETE (archived)
-
----
-
 **For detailed migration status:** [TODO-migrations-index.md](./TODO-migrations-index.md)
