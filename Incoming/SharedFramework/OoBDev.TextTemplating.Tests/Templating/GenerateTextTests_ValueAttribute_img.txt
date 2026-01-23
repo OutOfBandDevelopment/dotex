@@ -1,3 +1,0 @@
-﻿<body>
-    <img src="http://learnmark.co/img.png">Text
-</body>
