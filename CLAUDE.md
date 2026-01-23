@@ -78,48 +78,18 @@ Located in `.claude/protocols/`:
 
 ### 3. Current Migration Work
 
-**Incomming Project Investigations** - ✅ COMPLETE (8 of 8 = 100%)
-- ✅ dotnet-lib - Completed and deleted (95% identical to main)
-- 🗑️ Framework - CANCELLED: Directory removed from Incoming/
-- ✅ Oobtainium - RESOLVED: Moved to proving-grounds repository (https://github.com/mwwhited/proving-grounds)
-- ✅ BotChat - Investigated (sample app, awaiting decision)
-- 🎨 SharedFramework - REPLACED: Code migration replaced with design-first documentation
-- ✅ BinaryDecoders - Investigated (awaiting critical decisions)
-- ✅ ContractParser - Investigated (feature specification in Features/ContractParser/)
-- ✅ Tools - Investigated (4 CLI tools analyzed in Features/Tools/)
-
-**Tracking:** See `Incomming/CHECKLIST.md` for detailed status
+**Incomming Projects Pending Decisions:**
+- ⏸️ **BotChat** - Sample app, decision needed (archive, enhance, or extract patterns)
+- ⏸️ **BinaryDataDecoders** - ~50,000 LOC, awaiting 14+ critical decisions
+- ⏸️ **ContractParser** - Decision needed (implement now, later, or keep as spec)
+- ⏸️ **Tools** - Decision needed (consolidate BulkLlm tools or archive)
 
 **BinaryDataDecoders Migration** - ⏸️ BLOCKED (Awaiting decisions)
-
-**Phase 0: Critical Bug Fixes** - ✅ COMPLETED
-- All 6 critical bugs fixed and tested
-- Build verification passed
 
 **Phase 1: Foundation Enhancement** - ⏸️ PENDING (Awaiting decisions)
 - Endianness support improvements
 - Utility enhancements
 - BinaryPrimitives expansion
-
-**Framework Migration** - 🗑️ CANCELLED
-- ✅ Vector files already in main codebase at `src/Framework/OoBDev.System.Abstractions/Math/`
-- ✅ Namespace updated from `OoBDev.Common.Math` → `OoBDev.System.Math` (5 files)
-- 🗑️ Incoming/Framework directory removed - migration cancelled
-
-**SharedFramework Migration** - 🎨 REPLACED WITH DESIGN-FIRST APPROACH
-- ✅ Strategic pivot (2026-01-22): Code migration replaced with comprehensive design documentation
-- ✅ Caching Framework migrated (4 impl + 3 test projects) - Before pivot
-- ✅ Message Queues migrated (AWS SQS + Azure Service Bus providers) - Before pivot
-- 🎨 Remaining features: 120 design documents created across 8 epics (90.9% complete)
-  - Epic 11: Data Enhancement (16 docs) ✅
-  - Epic 10: Text Templating (12 docs) ✅
-  - Epic 12: Message Composition (4 docs) ✅
-  - Epic 7: Identity & Session (16 docs) ✅
-  - Epic 6: Document Services (44 docs) ✅
-  - Epic 4: Distributed Caching (12 docs) ✅
-  - Epic 2: Communications (6 docs) 🔄 Partial
-  - Epic 5: Master Data (10 docs) 🔄 Partial
-- 🗑️ Incoming/SharedFramework directory removed - design docs replace code migration
 
 ---
 
