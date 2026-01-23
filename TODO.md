@@ -51,18 +51,17 @@ Cloud-based integration testing for services requiring live credentials (Azure B
 **📋 Individual Migration TODOs:** [TODO-migrations-index.md](./TODO-migrations-index.md)
 
 All migration work for Incomming projects and BinaryDataDecoders:
-- **Incomming/Framework** - 55 files (30 NEW + 25 DIFFERS) requiring systematic comparison
-- **Incomming/SharedFramework** - 52 projects (~28,582 LOC) with 12 individual TODO files created
+- 🗑️ **Incomming/Framework** - CANCELLED: Directory removed from Incoming/
+- 🎨 **Incomming/SharedFramework** - REPLACED: Code migration replaced with design-first documentation (120 docs created, 90.9% complete)
 - **BinaryDataDecoders** - 5-phase migration (Foundation → Specialized Features)
 
 **Key Accomplishments:**
 - ✅ Framework Vector namespace updated to OoBDev.System.Math (files already in main)
-- ✅ SharedFramework Phase 0: .NET 10.0 verified + Namespace cleanup complete (27 directories renamed)
-  - 14 Api. prefix removals, 4 Azure reorganizations, 9 Contracts → Abstractions renames
-- ✅ All 6 Incoming projects investigated (100% complete)
-- ✅ Coverage analysis complete - Identified 5 DIFFERS projects needing careful merge
-- ✅ DIFFERS detailed comparison - SharedFramework wins on ALL 5 conflicts
-- ✅ **NEW:** 12 individual migration TODO files created (ready to execute)
+- 🗑️ Incoming/Framework directory removed - migration cancelled
+- 🎨 SharedFramework replaced with design-first documentation (120 docs, 90.9% complete)
+- ✅ SharedFramework Phase 0: .NET 10.0 verified + Namespace cleanup (before pivot)
+- ✅ All 8 Incoming projects investigated (100% complete)
+- ✅ Strategic pivot: Code migration → comprehensive design documentation
 
 **Completed Migrations:**
 - ✅ **Caching (COMPLETE - 2026-01-20)** - 4 implementation + 3 test projects, property chains, Redis Docker integration
@@ -70,12 +69,19 @@ All migration work for Incomming projects and BinaryDataDecoders:
 - ✅ **Message Queues (COMPLETE - 2026-01-20)** - AWS SQS + Azure Service Bus providers, LocalStack + Azure emulator integration
   - **Details:** See [Features/MessageQueuing/README.md](Features/MessageQueuing/README.md)
 
+**Design Documentation (Replaces SharedFramework Code Migration):**
+- 🎨 **120 comprehensive design documents created** (90.9% complete)
+  - Epic 11: Data Enhancement (16 docs) ✅
+  - Epic 10: Text Templating (12 docs) ✅
+  - Epic 12: Message Composition (4 docs) ✅
+  - Epic 7: Identity & Session (16 docs) ✅
+  - Epic 6: Document Services (44 docs) ✅
+  - Epic 4: Distributed Caching (12 docs) ✅
+  - Epic 2: Communications (6 docs) 🔄 Partial
+  - Epic 5: Master Data (10 docs) 🔄 Partial
+- **See:** [Features/Proposals/DOCUMENTATION_PROGRESS.md](Features/Proposals/DOCUMENTATION_PROGRESS.md)
+
 **Ready to Migrate:**
-- 🔥 Communications (CRITICAL - 16 LOC stub → 1,145 LOC)
-- ✅ Spatial Services (5 projects)
-- ⚠️ Identity, Documents, TextTemplating (merge required)
-- ✅ DataLoader, ComplexEvents, Generations
-- ⏸️ Framework (Phase 0 comparison required)
 - ⏸️ BinaryDataDecoders (decisions required)
 
 ### 🐛 [Bug Fixes & Technical Debt](./TODO-bug-fixes.md)
@@ -190,12 +196,12 @@ TODO.md                                  # This file - Index and navigation
 
 ### Migration Investigations ✅ COMPLETE
 
-**All 6 Incoming Projects Investigated:**
+**All 8 Incoming Projects Investigated:**
 - ✅ **dotnet-lib** (2026-01-12) - 95% identical, critical bug fix applied, DELETED
-- ✅ **Framework** - 55 files analyzed (30 NEW + 25 DIFFERS), Vector library ready
-- ✅ **Oobtainium** - Mocking framework analyzed, user will move to separate repository
+- 🗑️ **Framework** - Vector library namespace updated, directory removed from Incoming/
+- ✅ **Oobtainium** - Mocking framework analyzed, moved to proving-grounds repository
 - ✅ **BotChat** - Sample app analyzed, 3 options documented, awaiting decision
-- ✅ **SharedFramework** - 52 projects analyzed (~28,582 LOC), 12-phase plan created
+- 🎨 **SharedFramework** - Replaced with 120 design documents (90.9% complete), directory removed
 - ✅ **BinaryDataDecoders** - Complete feature mapping, 5-phase plan, decision points identified
 - ✅ **ContractParser** (2026-01-20) - Feature specification created in Features/ContractParser/
 - ✅ **Tools** (2026-01-20) - 4 CLI tools analyzed in Features/Tools/

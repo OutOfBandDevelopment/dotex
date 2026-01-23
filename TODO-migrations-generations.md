@@ -1,19 +1,36 @@
-# Migration TODO - Generations
+# Design Documentation - Test Data Generation
 
-**Projects:** Generations (487 LOC), Generations.Abstractions
-**Source:** Incoming/SharedFramework/
-**Status:** ✅ SAFE - Main has ZERO, no conflicts
-**Priority:** LOW - Performance review needed after migration
+🎨 **REPLACED WITH DESIGN DOCUMENTATION**
+
+**Epic:** 5 - Master Data & Test Data Management (Generations feature)
+**Status:** 📝 DESIGN PHASE (Replaces code migration)
+**Priority:** MEDIUM
+**Strategy:** Design-first approach with comprehensive documentation before implementation
 
 ---
 
-## User Note
+## Overview
+
+**Strategic Change (2026-01-22):** Instead of migrating code from SharedFramework, we created comprehensive design documentation following the Epic 11 pattern. This ensures:
+- Clean architecture from first principles
+- Modern .NET 10.0 patterns throughout
+- Proper integration with IDataContainer, schema discovery, and path translation
+- No technical debt from legacy code
+- Complete test coverage from day one
+
+**Original Scope:** Generations (487 LOC), Generations.Abstractions - Deterministic and procedural test data generation
+
+**Design Documentation:** Test data generation features are documented in Epic 5 (Master Data & Test Data Management).
+
+---
+
+## User Note - Performance Review
 
 **Performance Review Required:**
 > "Once all of the project in incoming is fully ported I want an in-depth review of generations to improve performance. It is intended to be a test data generation that is deterministic and procedurally generated, but it's slower than I would like."
 
-**Post-Migration Task:**
-- [ ] Schedule performance analysis after migration complete
+**Post-Implementation Task:**
+- [ ] Schedule performance analysis after implementation complete
 - [ ] Profile generation performance
 - [ ] Identify bottlenecks
 - [ ] Implement optimizations
@@ -21,129 +38,23 @@
 
 ---
 
-## Tasks
+## Documentation Status
 
-### Phase 1: Generations.Abstractions (NEW)
-- [ ] Create `src/Framework/OoBDev.Generations.Abstractions/`
-- [ ] Copy contracts for test data generation
-- [ ] Review interfaces and models
-- [ ] Update namespace to `OoBDev.Generations`
-- [ ] Add to solution
-- [ ] Create README
+🔄 **PARTIAL** - 10 of 12 documents complete (83%)
 
-### Phase 2: Generations Core (487 LOC - NEW)
-- [ ] Create `src/Framework/OoBDev.Generations/`
-- [ ] Copy deterministic generation implementation
-- [ ] Copy procedural generation logic
-- [ ] Update namespace
-- [ ] Reference Abstractions
-- [ ] Add ServiceCollectionExtensions
-- [ ] Add to solution
-
-### Phase 3: Generations.Extensions.DependencyInjection (NEW)
-- [ ] Create `src/Framework/OoBDev.Generations.Extensions/`
-- [ ] Copy DI extensions from SF
-- [ ] Update namespace
-- [ ] Add ServiceCollectionExtensions
-- [ ] Add to solution
-
-### Phase 4: Testing
-- [ ] Migrate Generations.Tests
-- [ ] Test deterministic generation (same seed = same data)
-- [ ] Test procedural generation patterns
-- [ ] Test data variety and distribution
-- [ ] Benchmark current performance (baseline for future optimization)
-- [ ] Target 80%+ coverage
-
-### Phase 5: Documentation
-- [ ] Document Generations architecture
-- [ ] Document deterministic generation principles
-- [ ] Document procedural generation patterns
-- [ ] Add usage examples for test data
-- [ ] Document seeding strategies
-- [ ] Create migration guide
-
-### Phase 6: Integration
-- [ ] Build entire solution
-- [ ] Run all tests
-- [ ] Update TODO.md
-- [ ] Add to architectural patterns
-
-### Phase 7: Post-Migration Performance Review (FUTURE)
-- [ ] **Defer until after all migrations complete**
-- [ ] Profile generation performance
-- [ ] Identify bottlenecks:
-  - [ ] Algorithm complexity
-  - [ ] Memory allocations
-  - [ ] Reflection usage
-  - [ ] String operations
-  - [ ] Collection operations
-- [ ] Design optimization strategy
-- [ ] Implement performance improvements
-- [ ] Benchmark results
-- [ ] Document optimizations
+**See:** [Features/Proposals/DOCUMENTATION_PROGRESS.md](Features/Proposals/DOCUMENTATION_PROGRESS.md)
 
 ---
 
-## Project Structure
+## Next Steps
 
-```
-src/Framework/
-├── OoBDev.Generations.Abstractions/    # NEW - Generation contracts
-├── OoBDev.Generations/                 # NEW - Core (487 LOC)
-├── OoBDev.Generations.Extensions/      # NEW - DI extensions
-└── OoBDev.Generations.Tests/           # NEW - Tests + benchmarks
-```
+- [ ] Complete remaining 2 design documents (DataSourceProviders api-design.md, testing-strategy.md)
+- [ ] Review and approve Epic 5 design documentation
+- [ ] Begin implementation based on approved designs
+- [ ] Schedule performance optimization review
 
 ---
 
-## Key Features
-
-- ✅ Deterministic test data generation
-- ✅ Procedural generation patterns
-- ✅ Seed-based reproducibility
-- ✅ Configurable data variety
-- ⚠️ Performance optimization needed (post-migration)
-
----
-
-## Use Cases
-
-- Test data generation for unit tests
-- Seed data for development environments
-- Reproducible test scenarios
-- Property-based testing support
-- Fake data generation
-
----
-
-## Performance Optimization Areas (Future)
-
-**Potential Bottlenecks:**
-- Random number generation
-- String manipulation
-- Reflection for property generation
-- Collection allocations
-- LINQ operations
-
-**Optimization Strategies:**
-- Object pooling
-- Span<T> for string operations
-- Compiled expression trees
-- Cached reflection
-- Struct where appropriate
-- ArrayPool for collections
-
----
-
-## LOC Summary
-
-- Generations: 487 LOC
-- Generations.Abstractions: ~100 LOC (estimated)
-- Generations.Extensions: ~50 LOC (estimated)
-- **Total:** ~600 LOC
-
----
-
-**Effort:** 1-2 days (migration), 2-3 days (future performance optimization)
-**Risk:** LOW - Completely new capability, no conflicts
+**Related Documentation:**
+- [Design Progress](Features/Proposals/DOCUMENTATION_PROGRESS.md) - Documentation status
+- [Feature Mapping](docs/migration/sharedframework-feature-mapping.md) - Original analysis (archived)

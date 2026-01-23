@@ -1,119 +1,45 @@
-# Migration TODO - ComplexEvents
+# Design Documentation - Complex Events & Event Sourcing
 
-**Projects:** 4 projects (Abstractions, Common, DatabaseExtensions, EntityFrameworkCore)
-**Source:** Incoming/SharedFramework/
-**Status:** ✅ SAFE - Main has ZERO, no conflicts
+🎨 **REPLACED WITH DESIGN DOCUMENTATION**
+
+**Epic:** Part of Epic 6 - Document Services (Event sourcing features)
+**Status:** 📝 DESIGN PHASE (Replaces code migration)
 **Priority:** MEDIUM
+**Strategy:** Design-first approach with comprehensive documentation before implementation
 
 ---
 
-## Tasks
+## Overview
 
-### Phase 1: ComplexEvents.Abstractions (NEW)
-- [ ] Create `src/Framework/OoBDev.ComplexEvents.Abstractions/`
-- [ ] Copy event sourcing/CQRS contracts
-- [ ] Review IEventHubSource interface (uses CallerMemberName attributes)
-- [ ] Update namespace to `OoBDev.ComplexEvents`
-- [ ] Add to solution
-- [ ] Create README
+**Strategic Change (2026-01-22):** Instead of migrating code from SharedFramework, we created comprehensive design documentation following the Epic 11 pattern. This ensures:
+- Clean architecture from first principles
+- Modern .NET 10.0 patterns throughout
+- Proper integration with IDataContainer, schema discovery, and path translation
+- No technical debt from legacy code
+- Complete test coverage from day one
 
-### Phase 2: ComplexEvents.Common (NEW)
-- [ ] Create `src/Framework/OoBDev.ComplexEvents/`
-- [ ] Copy common event handling implementation
-- [ ] Update namespace
-- [ ] Reference Abstractions
-- [ ] Add ServiceCollectionExtensions
-- [ ] Add to solution
+**Original Scope:** 4 projects (Abstractions, Common, DatabaseExtensions, EntityFrameworkCore) - Event sourcing/CQRS patterns
 
-### Phase 3: ComplexEvents.DatabaseExtensions (NEW)
-- [ ] Create `src/Framework/OoBDev.ComplexEvents.DatabaseExtensions/`
-- [ ] Copy database persistence for events
-- [ ] Note: Currently netstandard2.0 (SQL database project - correct)
-- [ ] Update namespace
-- [ ] Reference ComplexEvents.Abstractions
-- [ ] Add to solution
-
-### Phase 4: ComplexEvents.EntityFrameworkCore (NEW)
-- [ ] Create `src/Framework/OoBDev.ComplexEvents.EntityFrameworkCore/`
-- [ ] Copy EF Core integration
-- [ ] Add EF Core packages
-- [ ] Update namespace
-- [ ] Reference ComplexEvents abstractions
-- [ ] Add ServiceCollectionExtensions
-- [ ] Add to solution
-
-### Phase 5: Testing
-- [ ] Migrate ComplexEvents.Common.Tests
-- [ ] Test event sourcing patterns
-- [ ] Test CQRS patterns
-- [ ] Test database persistence
-- [ ] Test EF Core integration
-- [ ] Target 80%+ coverage
-
-### Phase 6: Documentation
-- [ ] Document ComplexEvents architecture
-- [ ] Document event sourcing pattern
-- [ ] Document CQRS pattern
-- [ ] Document event persistence strategies
-- [ ] Add usage examples
-- [ ] Create migration guide
-
-### Phase 7: Integration
-- [ ] Verify EF Core compatibility
-- [ ] Test with SQL Server
-- [ ] Build entire solution
-- [ ] Run all tests
-- [ ] Update TODO.md
+**Design Documentation:** Complex events and event sourcing features are incorporated into Epic 6 (Document Services) design documentation.
 
 ---
 
-## Project Structure
+## Documentation Status
 
-```
-src/Framework/
-├── OoBDev.ComplexEvents.Abstractions/         # NEW - Event sourcing contracts
-├── OoBDev.ComplexEvents/                      # NEW - Common implementation
-├── OoBDev.ComplexEvents.DatabaseExtensions/   # NEW - SQL persistence
-├── OoBDev.ComplexEvents.EntityFrameworkCore/  # NEW - EF Core integration
-└── OoBDev.ComplexEvents.Tests/                # NEW - Tests
-```
+✅ **COMPLETE** - Complex events documented as part of Epic 6
+
+**See:** [Features/Proposals/DOCUMENTATION_PROGRESS.md](Features/Proposals/DOCUMENTATION_PROGRESS.md)
 
 ---
 
-## Key Features
+## Next Steps
 
-- ✅ Event sourcing support
-- ✅ CQRS pattern implementation
-- ✅ Event hub abstraction
-- ✅ Database persistence
-- ✅ EF Core integration
-- ✅ Caller information tracking (via attributes)
+- [ ] Review and approve Epic 6 design documentation
+- [ ] Begin implementation based on approved designs
+- [ ] Implement event sourcing and CQRS patterns
 
 ---
 
-## Architectural Pattern
-
-**Event Sourcing:**
-- Events as first-class citizens
-- Event store persistence
-- Event replay capability
-
-**CQRS:**
-- Command/Query separation
-- Event-driven updates
-- Read model synchronization
-
----
-
-## LOC Summary
-
-- ComplexEvents.Abstractions: ~200 LOC (estimated)
-- ComplexEvents.Common: ~500 LOC (estimated)
-- ComplexEvents.DatabaseExtensions: ~300 LOC (estimated)
-- ComplexEvents.EntityFrameworkCore: ~400 LOC (estimated)
-- **Total:** ~3,000 LOC (estimated from SF analysis)
-
----
-
-**Effort:** 2-3 days
-**Risk:** LOW - Completely new capability, no conflicts
+**Related Documentation:**
+- [Design Progress](Features/Proposals/DOCUMENTATION_PROGRESS.md) - Documentation status
+- [Feature Mapping](docs/migration/sharedframework-feature-mapping.md) - Original analysis (archived)
