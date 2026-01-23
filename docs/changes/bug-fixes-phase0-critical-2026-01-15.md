@@ -271,6 +271,5 @@ Follow-up work:
 ---
 
 **Related Documentation:**
-- [TODO-bug-fixes.md](../../TODO-bug-fixes.md) - Active bug tracking
 - [TODO.md](../../TODO.md) - Main project tracking
 - [NumericAsserts.cs](../../Framework/OoBDev.TestUtilities/NumericAsserts.cs) - Utility implementation

@@ -174,7 +174,6 @@ Each change document should include:
 ## Related Documentation
 
 - [TODO.md](../../TODO.md) - Main project tracking
-- [TODO-bug-fixes.md](../../TODO-bug-fixes.md) - Active bug tracking
 - [CLAUDE.md](../../CLAUDE.md) - Development guide
 - [docs/architecture/](../architecture/) - Architecture documentation
 

@@ -375,5 +375,4 @@ services.TryAddTransient<IInterface>(sp => new Implementation(args));
 ---
 
 **Related Documentation:**
-- [TODO-bug-fixes.md](../../TODO-bug-fixes.md) - Active bug tracking
 - [TODO.md](../../TODO.md) - Main project tracking

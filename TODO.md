@@ -56,13 +56,6 @@ Cloud-based integration testing for services requiring live credentials (Azure B
   - Priority: HIGH
   - Scope: ~50,000 LOC (binary processing, protocols, hardware)
 
-### 🐛 [Bug Fixes & Technical Debt](./TODO-bug-fixes.md)
-**Status:** 🟢 Mostly Complete - 8 Warnings Remaining
-
-**Active Work:**
-- 🟢 **Build Warnings** - 8 remaining, acceptable for now
-- ⏳ **Technical debt** - 80%+ test coverage, documentation, dependency audits
-
 ### 📝 [Documentation](./TODO-documentation.md)
 **Status:** 📋 Ongoing Maintenance
 
@@ -93,7 +86,6 @@ TODO.md                                  # This file - Index and navigation
 ├── TODO-testing-local-integration.md    # Docker-based integration testing (11 services)
 ├── TODO-testing-live-integration.md     # Cloud-based integration testing (3 services)
 ├── TODO-migrations.md                   # All Incomming/ and BinaryDataDecoders migrations
-├── TODO-bug-fixes.md                    # Bug fixes and technical debt
 ├── TODO-decisions.md                    # Pending strategic decisions
 └── TEST_VARIABLES.md                    # All test properties and configuration variables
 ```

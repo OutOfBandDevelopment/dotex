@@ -48,40 +48,6 @@ Before proceeding with BinaryDataDecoders migration (Phases 1-5), critical quest
 
 ---
 
-## OoBDev.Oobtainium - Migration Decision ✅ RESOLVED
-
-**Status:** ✅ **RESOLVED** - Moved to proving-grounds repository (2026-01-20)
-
-**Decision Made:** Moved to separate code playground repository
-
-**What was Oobtainium?**
-- Complete mocking/proxy framework (48 files, ~1,578 LOC)
-- Runtime interface proxies using DispatchProxy
-- Method call recording and binding
-- Does NOT exist in main OoBDev codebase (completely new)
-- Original GitHub: https://github.com/OutOfBandDevelopment/oobtainium/
-
-**Resolution:**
-- **New Location:** https://github.com/mwwhited/proving-grounds
-- **Purpose:** Code playground and examples repository
-- **Rationale:**
-  - Mocking is well-solved by existing tools (Moq: 460M+ downloads, NSubstitute: 130M+)
-  - Allows OoBDev to focus on unique capabilities (binary processing, protocols, hardware)
-  - Project remains available for experimentation and reference
-  - Better resource allocation to BinaryDataDecoders and SharedFramework migrations
-
-**Actions Completed:**
-- [x] User moved Oobtainium to proving-grounds repository
-- [x] Updated CHECKLIST.md status to COMPLETE
-- [x] Updated TODO-decisions.md to reflect resolution
-- [x] Project remains accessible for future reference
-
-**Documentation:**
-- [Feature Mapping](docs/migration/oobtainium-feature-mapping.md) - Complete feature analysis
-- [Migration Plan](docs/migration/oobtainium-migration-plan.md) - All 4 options documented (for reference)
-
----
-
 ## Incomming/BotChat - Migration Decision
 
 **Status:** ⏸️ PENDING DECISION - Choose archival approach
@@ -177,7 +143,6 @@ When making decisions, consider:
 **Related Documents:**
 - [TODO.md](./TODO.md) - Main tracking document
 - [TODO-migrations.md](./TODO-migrations.md) - Migration work (blocked by decisions)
-- [TODO-bug-fixes.md](./TODO-bug-fixes.md) - Bug fixes and technical debt
 - [TODO-testing-infrastructure.md](./TODO-testing-infrastructure.md) - Testing infrastructure
 
 **Migration Documentation:**
