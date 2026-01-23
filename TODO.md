@@ -79,7 +79,6 @@ All migration work for Incomming projects and BinaryDataDecoders:
   - Epic 4: Distributed Caching (12 docs) ✅
   - Epic 2: Communications (6 docs) 🔄 Partial
   - Epic 5: Master Data (10 docs) 🔄 Partial
-- **See:** [Features/Proposals/DOCUMENTATION_PROGRESS.md](Features/Proposals/DOCUMENTATION_PROGRESS.md)
 
 **Ready to Migrate:**
 - ⏸️ BinaryDataDecoders (decisions required)

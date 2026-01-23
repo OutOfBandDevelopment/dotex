@@ -83,7 +83,7 @@ Located in `.claude/protocols/`:
 - 🗑️ Framework - CANCELLED: Directory removed from Incoming/
 - ✅ Oobtainium - RESOLVED: Moved to proving-grounds repository (https://github.com/mwwhited/proving-grounds)
 - ✅ BotChat - Investigated (sample app, awaiting decision)
-- 🎨 SharedFramework - REPLACED: Code migration replaced with design-first documentation (Features/Proposals/)
+- 🎨 SharedFramework - REPLACED: Code migration replaced with design-first documentation
 - ✅ BinaryDecoders - Investigated (awaiting critical decisions)
 - ✅ ContractParser - Investigated (feature specification in Features/ContractParser/)
 - ✅ Tools - Investigated (4 CLI tools analyzed in Features/Tools/)

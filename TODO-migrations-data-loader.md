@@ -28,8 +28,6 @@
 
 🔄 **PARTIAL** - 10 of 12 documents complete (83%)
 
-**See:** [Features/Proposals/DOCUMENTATION_PROGRESS.md](Features/Proposals/DOCUMENTATION_PROGRESS.md)
-
 ---
 
 ## Next Steps
@@ -41,5 +39,4 @@
 ---
 
 **Related Documentation:**
-- [Design Progress](Features/Proposals/DOCUMENTATION_PROGRESS.md) - Documentation status
 - [Feature Mapping](docs/migration/sharedframework-feature-mapping.md) - Original analysis (archived)

@@ -26,8 +26,6 @@ Each migration area has a dedicated TODO file:
 9. [TODO-migrations-complex-events.md](./TODO-migrations-complex-events.md) - 🎨 Design docs (Epic 6)
 10. [TODO-migrations-generations.md](./TODO-migrations-generations.md) - 🎨 Design docs (Epic 5)
 
-**See:** [Features/Proposals/DOCUMENTATION_PROGRESS.md](Features/Proposals/DOCUMENTATION_PROGRESS.md) for documentation status
-
 ### Other Incoming
 11. 🗑️ **Framework** - CANCELLED: Directory removed from Incoming/
 12. [TODO-migrations-binarydatadecoders.md](./TODO-migrations-binarydatadecoders.md) - Blocked by decisions
@@ -81,8 +79,6 @@ Instead of migrating SharedFramework code, we created 120 comprehensive design d
 - **Epic 4:** Distributed Caching (12 docs) ✅ COMPLETE
 - **Epic 2:** Communications (6 docs) 🔄 PARTIAL (6/16)
 - **Epic 5:** Master Data (10 docs) 🔄 PARTIAL (10/12)
-
-**See:** [Features/Proposals/DOCUMENTATION_PROGRESS.md](Features/Proposals/DOCUMENTATION_PROGRESS.md)
 
 **Archived Documentation (from before pivot):**
 - [Feature Mapping](docs/migration/sharedframework-feature-mapping.md) - 52-project analysis

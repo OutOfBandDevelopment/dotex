@@ -435,7 +435,6 @@ Instead of migrating 52 projects of SharedFramework code (~28,582 LOC), we creat
 - [ ] Begin implementation based on approved designs
 
 **Documentation:**
-- [Design Progress](../Features/Proposals/DOCUMENTATION_PROGRESS.md) - Documentation status
 - [Feature Mapping](../docs/migration/sharedframework-feature-mapping.md) - Original 52-project analysis (archived)
 - [Migration Plan](../docs/migration/sharedframework-migration-plan.md) - Original 12-phase plan (archived)
 

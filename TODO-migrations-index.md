@@ -11,8 +11,6 @@
 
 Instead of migrating SharedFramework code (~28,582 LOC across 52 projects), we created **120 comprehensive design documents** (90.9% complete) following the Epic 11 pattern. This ensures clean architecture from first principles without inheriting technical debt.
 
-**See:** [Features/Proposals/DOCUMENTATION_PROGRESS.md](Features/Proposals/DOCUMENTATION_PROGRESS.md)
-
 ---
 
 ## Design Documentation Status
