@@ -44,7 +44,7 @@
     <Message Text="CodeDocumentation: @(CodeDocumentation) -> $(CodeDocumentPath)$(MSBuildProjectName)"  Importance="high"/>
     <Copy SourceFiles="@(CodeDocumentation)" DestinationFolder="$(CodeDocumentPath)$(MSBuildProjectName)" />
   </Target>
-
+  
   <!-- Ensure the PackageReadmeFile is included with the projects to be packaged for nuget -->
   <!-- Automatically set PackageReadmeFile if README.md exists but property is not set -->
   <Target Name="AutoSetPackageReadmeFile"
