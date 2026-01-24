@@ -303,7 +303,7 @@ OoBDev uses **5 test categories** to organize tests by execution environment and
 
 **Docker-Based Integration Tests:**
 
-Integration tests run against **14 Docker services** managed by the testing infrastructure:
+Integration tests run against **15 Docker services** managed by the testing infrastructure:
 
 ```bash
 # Start Docker services for integration testing
@@ -334,6 +334,7 @@ cd ../containers/testing
 - Keycloak (Identity & Access Management)
 - SBert (Sentence embeddings - CPU only)
 - Ollama (LLM inference - CPU only, phi3 model auto-pulled)
+- Azurinsight (Application Insights emulator)
 
 **Test Properties Pattern:**
 ```csharp
@@ -470,6 +471,14 @@ dotnet test src/ --collect:"XPlat Code Coverage"
 
 ## Recently Completed Work
 
+### 2026-01-24
+- **Integration Testing Scripts** - Enhanced integration-up scripts with `--build` flag, fixed Windows batch path handling (PUSHD)
+- **Health Check Fixes** - Updated all 15 Docker services to use universal bash TCP checks (`</dev/tcp/HOST/PORT`)
+  - Status: 13/15 services healthy (azurinsight, servicebus pending investigation)
+  - Replaced curl/wget/nc dependencies with bash/node/python built-ins
+- **Service Display** - Added all 15 services to startup script output (Redis, Service Bus, Ollama, Azurinsight)
+- **Protocol Updates** - Updated integration-test-maintenance.md to v1.1.0 with expanded checklists
+
 ### 2026-01-22
 - **Strategic Pivot: Design-First Approach** - Replaced SharedFramework code migrations with comprehensive design documentation
   - Following Epic 11 pattern for all features (4 documents per feature: requirements, architecture, api-design, testing-strategy)
@@ -503,6 +512,20 @@ dotnet test src/ --collect:"XPlat Code Coverage"
 ---
 
 ## Current Work Context
+
+**Active Priorities:**
+1. **Integration Testing** - Finalizing health checks for all 15 Docker services (13/15 healthy)
+   - ⏳ azurinsight health check needs investigation
+   - ⏳ servicebus startup validation (30s start period)
+   - Next: Enable CI/CD pipeline after all services validated
+2. **SharedFramework** - Design-first approach (Epic 2, 6, 7, 10)
+3. **Incoming Projects** - All investigated (decisions pending)
+
+**Latest Updates (2026-01-24):**
+- Enhanced integration-up scripts with `--build` flag
+- Fixed Windows batch file path handling (PUSHD)
+- Updated all health checks to use bash TCP built-ins
+- Added missing services to startup output display
 
 **Strategic Change (2026-01-22): Design-First Approach**
 
