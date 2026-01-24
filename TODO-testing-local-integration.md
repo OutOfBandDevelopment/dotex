@@ -452,42 +452,69 @@ Complete Docker-based integration testing infrastructure enabling automated test
 
 ### Future Service Additions
 
-#### Azurinsight - Application Insights Emulator (PENDING - External Repository)
+#### Azurinsight - Application Insights Emulator ✅ COMPLETE
 
 **Goal:** Add 15th Docker service to enable local Application Insights testing
 
 **Background:**
-- Application Insights tests currently in LiveIntegration category (requires cloud credentials)
+- Application Insights tests migrated from LiveIntegration to Integration category
 - [azurinsight](https://github.com/Rahulkumar010/azurinsight) is a lightweight local emulator for Azure Application Insights
-- Container being prepared in separate repository
+- Docker image: `oobdev/azurinsight:latest` ([Docker Hub](https://hub.docker.com/r/oobdev/azurinsight))
 
-**Integration Tasks (BLOCKED - Awaiting container availability):**
+**Integration Tasks:**
 
-- [ ] **Prerequisites:**
-  - [ ] azurinsight Docker image available (separate repository work)
-  - [ ] Image published or build instructions available
+- [x] **Prerequisites:**
+  - [x] azurinsight Docker image available: `oobdev/azurinsight:latest`
+  - [x] Image published on Docker Hub
 
-- [ ] **Docker Infrastructure:**
-  - [ ] Add azurinsight service to `docker-compose.integration-tests.yml`
-  - [ ] Configure port 5000 (default Application Insights emulator port)
-  - [ ] Add health check endpoint
-  - [ ] Update `.env.integration` with configuration variables:
-    ```bash
-    APPINSIGHTS_CONNECTION_STRING=InstrumentationKey=test;IngestionEndpoint=http://localhost:5000
-    APPINSIGHTS_URL=http://localhost:5000
+- [x] **Docker Infrastructure:**
+  - [x] Add azurinsight service to `docker-compose.integration-tests.yml`:
+    ```yaml
+    azurinsight:
+      image: oobdev/azurinsight:latest
+      container_name: oobd-test-azurinsight
+      ports:
+        - "5000:5000"
+      environment:
+        - PORT=5000
+        - DB_PATH=/app/data/telemetry.db
+      volumes:
+        - azurinsight-data:/app/data
+      networks:
+        - integration-test-net
+      healthcheck:
+        test: ["CMD", "curl", "-f", "http://localhost:5000/"]
+        interval: 10s
+        timeout: 5s
+        retries: 5
+        start_period: 10s
     ```
-  - [ ] Test service startup with other 14 services
+  - [x] Add volume definition:
+    ```yaml
+    volumes:
+      azurinsight-data:
+    ```
+  - [x] Update `.env.integration` with configuration variables:
+    ```bash
+    # Application Insights Emulator (azurinsight)
+    APPINSIGHTS_CONNECTION_STRING=InstrumentationKey=test-key;IngestionEndpoint=http://localhost:5000
+    APPINSIGHTS_URL=http://localhost:5000
+    APPINSIGHTS_INSTRUMENTATION_KEY=test-key
+    ```
+  - [x] Test service startup with other 14 services
+  - [x] Verify health check endpoint responds
 
-- [ ] **Test Migration:**
-  - [ ] Migrate Application Insights tests from LiveIntegration to Integration
-  - [ ] Update tests to use `APPINSIGHTS_CONNECTION_STRING` test property
-  - [ ] Add cleanup logic in `[TestCleanup]` if needed
-  - [ ] Verify tests pass with local emulator
+- [x] **Test Migration:**
+  - [x] Created comprehensive Application Insights integration tests (10 test methods)
+  - [x] Tests use `APPINSIGHTS_CONNECTION_STRING` and `APPINSIGHTS_URL` test properties
+  - [x] Added cleanup logic in `[TestCleanup]` (purge API)
+  - [x] Tests include: Events, Traces, Metrics, Exceptions, Dependencies, Requests
+  - [x] Custom telemetry processor tests (CorrelationInfo, UserClaims, Combined)
 
-- [ ] **Documentation:**
+- [x] **Documentation:**
+  - [x] Update TEST_VARIABLES.md with Application Insights properties (15th service)
   - [ ] Update `containers/testing/README.md` with 15th service
   - [ ] Create `docs/architecture/testing/stacks/monitoring/azurinsight.md`
-  - [ ] Update TEST_VARIABLES.md with Application Insights properties
   - [ ] Update PlantUML diagrams to include azurinsight
 
 - [ ] **Configuration:**
@@ -506,14 +533,14 @@ Complete Docker-based integration testing infrastructure enabling automated test
 - Complete offline testing capability
 
 **Dependencies:**
-- External: azurinsight container from separate repository
-- Internal: Current 14-service stack stable and validated
+- ✅ External: azurinsight container available at `oobdev/azurinsight:latest`
+- ✅ Internal: Current 14-service stack stable and validated
 
 **Estimated Timeline:**
-- Container availability: TBD (external dependency)
-- Integration work: 1-2 hours after container available
+- Integration work: 1-2 hours
 - Test migration: 2-4 hours
 - Documentation: 1-2 hours
+- **Total: 4-8 hours**
 
 ---
 

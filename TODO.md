@@ -24,17 +24,17 @@ This document is organized into **epic-based files** for better navigation and m
 ### 🧪 [Local Integration Testing (Docker)](./TODO-testing-local-integration.md)
 **Status:** ✅ VALIDATED & COMPLETE - Ready for CI/CD Enablement
 
-Docker-based integration testing with 14 services (Apache Tika, SMTP4Dev, MongoDB, SQL Server, RabbitMQ, Redis, OpenSearch, Qdrant, Azurite, LocalStack, Azure Service Bus Emulator, Keycloak, SBert, Ollama). Infrastructure complete, 23 tests migrated and validated.
+Docker-based integration testing with 15 services (Apache Tika, SMTP4Dev, MongoDB, SQL Server, RabbitMQ, Redis, OpenSearch, Qdrant, Azurite, LocalStack, Azure Service Bus Emulator, Keycloak, SBert, Ollama, Azurinsight). Infrastructure complete, 33 tests migrated and validated.
 
 **Key Tasks:**
-- ✅ Docker infrastructure (14 services, compose files, scripts, README with PlantUML)
+- ✅ Docker infrastructure (15 services, compose files, scripts, README with PlantUML)
 - ✅ Test category: Integration (Docker-based, runs in CI/CD)
 - ✅ Local validation complete - All Integration tests passing (2026-01-21)
 - ✅ Week 2: Migrated 23 tests from DevLocal to Integration category (Apache Tika, SMTP/MailKit, MongoDB, RabbitMQ, OpenSearch, SBert, Ollama)
 - ✅ Ollama integration: Auto-pull phi3 model in integration-up scripts
+- ✅ **NEW:** Azurinsight integration complete - 10 Application Insights tests (2026-01-24)
 - ⏳ **NEXT:** Enable CI/CD pipeline for daily Integration test runs
-- ⏳ Week 4: Docker documentation (11 stacks)
-- ⏸️ **FUTURE:** Add azurinsight (Application Insights emulator) as 15th service (container in separate repository)
+- ⏳ Week 4: Docker documentation (15 stacks)
 
 ### ☁️ [Live Integration Testing (Cloud)](./TODO-testing-live-integration.md)
 **Status:** ✅ Category Added - ⏳ Week 3 Migration Pending

@@ -35,12 +35,16 @@ SERVICES=(
     "oobd-test-mongodb"
     "oobd-test-sqlserver"
     "oobd-test-rabbitmq"
+    "oobd-test-redis"
     "oobd-test-opensearch"
     "oobd-test-qdrant"
     "oobd-test-azurite"
     "oobd-test-localstack"
+    "oobd-test-servicebus"
     "oobd-test-keycloak"
     "oobd-test-sbert"
+    "oobd-test-ollama"
+    "oobd-test-azurinsight"
 )
 
 # Colors for output (if terminal supports it)

@@ -13,7 +13,8 @@ REM   1 - Timeout reached, some services are not healthy
 setlocal enabledelayedexpansion
 
 REM Get script directory and change to testing directory
-cd /d "%~dp0\.."
+cd /d "%~dp0"
+cd ..
 
 REM Configuration
 set TIMEOUT=%1
@@ -30,7 +31,7 @@ echo Check interval: %INTERVAL% seconds
 echo.
 
 REM Service list (container names from docker-compose file)
-set SERVICES=oobd-test-tika oobd-test-smtp oobd-test-mongodb oobd-test-sqlserver oobd-test-rabbitmq oobd-test-opensearch oobd-test-qdrant oobd-test-azurite oobd-test-localstack oobd-test-keycloak oobd-test-sbert
+set SERVICES=oobd-test-tika oobd-test-smtp oobd-test-mongodb oobd-test-sqlserver oobd-test-rabbitmq oobd-test-redis oobd-test-opensearch oobd-test-qdrant oobd-test-azurite oobd-test-localstack oobd-test-servicebus oobd-test-keycloak oobd-test-sbert oobd-test-ollama oobd-test-azurinsight
 
 REM Main health check loop
 set /a elapsed=0

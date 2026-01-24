@@ -12,7 +12,8 @@ REM Note: Using --clean removes all test data (recommended for CI/CD)
 setlocal
 
 REM Get script directory and change to testing directory
-cd /d "%~dp0\.."
+cd /d "%~dp0"
+cd ..
 
 echo ======================================================================
 echo OoBDev Integration Test Stack - Stopping Services

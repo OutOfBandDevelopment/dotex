@@ -172,6 +172,23 @@ jobs:
 
           # SBert
           SBERT_URL: http://localhost:5080
+
+          # Ollama
+          OLLAMA_URL: http://localhost:11434
+          OLLAMA_HOST: localhost
+          OLLAMA_PORT: 11434
+          OLLAMA_MODEL: phi3
+
+          # Redis
+          REDIS_CONNECTION_STRING: localhost:6379
+
+          # Azure Service Bus Emulator
+          AZURE_SERVICE_BUS_CONNECTION_STRING: Endpoint=sb://localhost;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=SAS_KEY_VALUE;UseDevelopmentEmulator=true
+
+          # Azurinsight (Application Insights Emulator)
+          APPINSIGHTS_URL: http://localhost:5000
+          APPINSIGHTS_INSTRUMENTATION_KEY: test-key
+          APPINSIGHTS_CONNECTION_STRING: InstrumentationKey=test-key;IngestionEndpoint=http://localhost:5000
         run: >
           dotnet test
           --configuration ${{ steps.calculate-version.outputs.BuildConfiguration }}

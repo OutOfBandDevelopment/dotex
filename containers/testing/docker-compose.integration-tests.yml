@@ -243,6 +243,25 @@ services:
       retries: 10
       start_period: 30s
 
+  azurinsight:
+    image: oobdev/azurinsight:latest
+    container_name: oobd-test-azurinsight
+    ports:
+      - "5000:5000"
+    networks:
+      - integration-test-net
+    environment:
+      - PORT=5000
+      - DB_PATH=/app/data/telemetry.db
+    volumes:
+      - azurinsight-test-data:/app/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
   # ============================================================================
   # Identity & Access Management
   # ============================================================================
@@ -396,3 +415,5 @@ volumes:
     name: oobd-test-keycloak-data
   ollama-test-data:
     name: oobd-test-ollama-data
+  azurinsight-test-data:
+    name: oobd-test-azurinsight-data
