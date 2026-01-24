@@ -12,6 +12,8 @@ REM Requirements:
 REM   - Docker Desktop for Windows installed
 REM   - Ports available: 25, 1433, 4566, 5000, 5080, 5672-5673, 6333-6334, 6379, 7777, 8081, 9200, 9998, 10000-10002, 11434, 15672, 27017
 
+setlocal
+
 echo Running: %0
 set SCRIPT_PATH=%~dp0
 echo SCRIPT_PATH: %SCRIPT_PATH%
@@ -19,8 +21,6 @@ set TESTING_DIR=%SCRIPT_PATH%..\
 echo TESTING_DIR: %TESTING_DIR%
 set STARTING_PATH=%CD%
 echo STARTING_PATH: %STARTING_PATH%
-
-setlocal
 
 REM Parse command line arguments
 set BUILD_FLAG=
@@ -111,7 +111,7 @@ if "%WAIT_FLAG%"=="true" (
 
         REM Setup Ollama model if container is running
         echo Setting up Ollama model...
-        call "%~dp0setup-ollama.bat"
+        call "%SCRIPT_PATH%setup-ollama.bat"
         if %ERRORLEVEL% equ 0 (
             echo ✅ Ollama model ready
         ) else (
@@ -145,7 +145,7 @@ if "%WAIT_FLAG%"=="true" (
     echo Services are starting in the background...
     echo.
     echo To wait for health checks:
-    echo   %~dp0wait-for-services.bat
+    echo   %SCRIPT_PATH%wait-for-services.bat
     echo.
     echo To check status:
     echo   docker compose -f docker-compose.integration-tests.yml ps
@@ -154,9 +154,9 @@ if "%WAIT_FLAG%"=="true" (
     echo   docker compose -f docker-compose.integration-tests.yml logs -f [service-name]
     echo.
     echo To stop services:
-    echo   %~dp0integration-down.bat
+    echo   %SCRIPT_PATH%integration-down.bat
     echo.
 )
 
-endlocal
 POPD
+endlocal

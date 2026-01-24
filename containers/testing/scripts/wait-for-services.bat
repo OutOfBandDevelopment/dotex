@@ -12,9 +12,16 @@ REM   1 - Timeout reached, some services are not healthy
 
 setlocal enabledelayedexpansion
 
+echo Running: %0
+set SCRIPT_PATH=%~dp0
+echo SCRIPT_PATH: %SCRIPT_PATH%
+set TESTING_DIR=%SCRIPT_PATH%..\
+echo TESTING_DIR: %TESTING_DIR%
+set STARTING_PATH=%CD%
+echo STARTING_PATH: %STARTING_PATH%
+
 REM Get script directory and change to testing directory
-cd /d "%~dp0"
-cd ..
+PUSHD "%TESTING_DIR%"
 
 REM Configuration
 set TIMEOUT=%1
@@ -70,11 +77,12 @@ REM Check if all services are healthy
 if %all_healthy%==1 (
     echo.
     echo ✅ All services are healthy!
+    POPD
     exit /b 0
 )
 
 REM Print progress
-<nul set /p="⏳ Waiting... [%elapsed%s/%TIMEOUT%s] Healthy: %healthy_count%/%total_count%"
+<nul set /p="Waiting... [%elapsed%s/%TIMEOUT%s] Healthy: %healthy_count%/%total_count%"
 echo.
 
 REM Wait before next check
@@ -122,8 +130,9 @@ echo 2. View logs for failing services:
 echo    docker compose -f %COMPOSE_FILE% logs [service-name]
 echo.
 echo 3. Restart services:
-echo    %~dp0integration-down.bat --clean
-echo    %~dp0integration-up.bat
+echo    %SCRIPT_PATH%integration-down.bat --clean
+echo    %SCRIPT_PATH%integration-up.bat
 echo.
 
+POPD
 exit /b 1
