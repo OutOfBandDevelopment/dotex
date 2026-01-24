@@ -56,7 +56,11 @@ for %%s in (%SERVICES%) do (
     set /a total_count+=1
 
     REM Check if container exists and get health status
-    for /f "delims=" %%h in ('docker inspect --format="{{.State.Health.Status}}" %%s 2^>nul') do set health_status=%%h
+    SET TARGET_HOST=%%s
+    for /f "delims=" %%h in ('docker inspect --format="{{.State.Health.Status}}" %%s 2^>nul') do (
+        set health_status=%%h
+        ECHO ... !TARGET_HOST! -- %%h
+    )
 
     REM If health check failed, try to get running status
     if "!health_status!"=="" (
