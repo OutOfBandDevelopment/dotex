@@ -21,16 +21,64 @@ This checklist tracks the investigation and migration status of all projects in 
 
 | Project | Status | Type | Files | LOC | Priority | Action Required |
 |---------|--------|------|-------|-----|----------|-----------------|
-| **OoBDev.Oobtainium** | ✅ **COMPLETE** | Mocking Framework | 48 | ~1,578 | LOW | Moved to proving-grounds repository |
+| **dotnet-lib** | ✅ **COMPLETE** | Framework subset | N/A | N/A | N/A | Completed and deleted (95% identical to main) |
+| **Framework** | 🗑️ **CANCELLED** | Framework subset | 55 | N/A | N/A | Directory removed (Vector library already in main) |
+| **Oobtainium** | ✅ **COMPLETE** | Mocking Framework | 48 | ~1,578 | LOW | Moved to proving-grounds repository |
 | **BotChat** | 🔍 **INVESTIGATED** | Sample Application | 12 | ~393 | LOW | Migration decision needed |
+| **SharedFramework** | 🎨 **REPLACED** | Framework Library | 52 | ~28,582 | HIGH | Code migration replaced with design documentation (120 docs, 90.9% complete) |
 | **BinaryDecoders** | 🔍 **INVESTIGATED** | Massive Codebase | ~500 | ~50,000 | HIGH | Critical questions answered |
 | **ContractParser** | 🔍 **INVESTIGATED** | DSL/Grammar Spec | 5 | ~475 | MEDIUM | Feature documentation complete |
-| **SharedFramework** | 🔍 **INVESTIGATED** | Framework Library | 52 | ~28,582 | HIGH | Systematic migration required |
 | **Tools** | 🔍 **INVESTIGATED** | CLI Tools (4) | 18 | ~474 | MIXED | Tool-specific recommendations |
 
 ---
 
 ## Detailed Status
+
+### ✅ dotnet-lib (COMPLETE)
+
+**Status:** ✅ **COMPLETE** - Completed and deleted (2026-01-12)
+
+**Investigation Date:** 2026-01-12
+**Resolution Date:** 2026-01-12
+
+**Summary:**
+- 95% identical to main OoBDev codebase
+- Critical bug fix extracted and applied to main
+- Deleted from Incoming/ after successful extraction
+
+**Decision Made:** Completed and deleted
+- Bug fix applied to main codebase
+- No other unique features found
+- Directory removed after extraction
+
+**Documentation:**
+- Bug fix documented in main codebase
+
+---
+
+### 🗑️ Framework (CANCELLED)
+
+**Status:** 🗑️ **CANCELLED** - Directory removed from Incoming/
+
+**Investigation Date:** 2026-01-13
+**Resolution Date:** 2026-01-22
+
+**Summary:**
+- 55 files analyzed (30 NEW + 25 DIFFERS)
+- Vector library already integrated in main codebase at `src/Framework/OoBDev.System.Abstractions/Math/`
+- Vector namespace updated from `OoBDev.Common.Math` → `OoBDev.System.Math` (5 files)
+- Other Framework files not migrated
+
+**Decision Made:** Cancelled
+- Vector library already in main codebase (only unique valuable component)
+- Directory removed from Incoming/
+- No additional migration needed
+
+**Documentation:**
+- [Feature Mapping](../docs/migration/framework-feature-mapping.md) - Analysis of what was in Framework
+- [Vector Comparison](../docs/migration/vector-comparison.md) - Detailed vector implementation analysis
+
+---
 
 ### ✅ OoBDev.Oobtainium (COMPLETE)
 
@@ -340,71 +388,55 @@ This checklist tracks the investigation and migration status of all projects in 
 
 ---
 
-### 🔍 SharedFramework (INVESTIGATION COMPLETE)
+### 🎨 SharedFramework (REPLACED WITH DESIGN DOCUMENTATION)
 
-**Status:** 🔍 **INVESTIGATED** - Ready for systematic migration
+**Status:** 🎨 **REPLACED** - Code migration replaced with comprehensive design documentation
 
 **Investigation Date:** 2026-01-13
+**Strategic Pivot Date:** 2026-01-22
+**Resolution Date:** 2026-01-23
 
-**Summary:**
-- Classification: **Production Framework Library** (52 projects)
-- 34 implementation + 18 test projects
-- ~28,582 LOC total
-- Migrated from production application
-- Contains critical external service integrations
+**Strategic Change:**
+Instead of migrating 52 projects of SharedFramework code (~28,582 LOC), we created comprehensive design documentation following the Epic 11 pattern. This ensures clean architecture from first principles without inheriting technical debt from legacy code.
 
-**Comparison Results:**
-- **24 projects (71%)** - NEW capabilities not in main
-- **10 projects (29%)** - ENHANCED versions (DIFFERS)
-- **0 projects (0%)** - IDENTICAL to main
+**Design Documentation Created:**
+- **120 of 132 documents created (90.9% complete)**
+- **Epic 11:** Data Enhancement Pipeline (16 docs) ✅ COMPLETE
+- **Epic 10:** Text Templating Extensions (12 docs) ✅ COMPLETE
+- **Epic 12:** Message Composition Service (4 docs) ✅ COMPLETE
+- **Epic 7:** Identity & Session Management (16 docs) ✅ COMPLETE
+- **Epic 6:** Document Services (44 docs) ✅ COMPLETE
+- **Epic 4:** Distributed Caching (12 docs) ✅ COMPLETE
+- **Epic 2:** Communications Platform (6 docs) 🔄 PARTIAL (6/16)
+- **Epic 5:** Master Data Management (10 docs) 🔄 PARTIAL (10/12)
 
-**Major Categories:**
-1. **Message Queueing** (4 projects, ~600 LOC) - AWS SQS, Azure Service Bus - NEW
-2. **Communications** (6 projects, ~2,500 LOC) - SendGrid, Twilio SMS, Enhanced orchestration - CRITICAL MERGE
-3. **Spatial Services** (7 projects, ~1,100 LOC) - Census, Google Maps, Bing Maps geocoding - NEW
-4. **Complex Events** (5 projects, ~1,400 LOC) - Event sourcing, CQRS, Azure EventHub - NEW
-5. **Data Loading** (4 projects, ~2,300 LOC) - CSV/JSON ETL + CLI tool - NEW
-6. **Code Generation** (4 projects, ~1,800 LOC) - Test data generation - NEW
-7. **Document Management** (3 projects, ~1,300 LOC) - Enhanced document center - MERGE
-8. **Distributed Caching** (7 projects, ~600 LOC) - Redis, attribute-based caching - NEW
-9. **Identity/Session** (3 projects, ~500 LOC) - Enhanced identity, user sessions - MERGE
-10. **Text Templating** (3 projects, ~550 LOC) - Unified templating engine - MERGE
-11. **Accounting** (1 project, ~170 LOC) - Domain-specific contracts - REVIEW
+**Completed Migrations (Before Pivot):**
+- ✅ Caching Framework (4 impl + 3 test projects) - [Details](../docs/changes/migration-caching-framework-2026-01-20.md)
+- ✅ Message Queues (AWS SQS + Azure Service Bus) - [Details](../docs/changes/migration-message-queues-2026-01-20.md)
 
-**Key Findings:**
-- **NOT a duplicate framework** - Production-proven external service integrations
-- **Fills critical gaps** - Main has abstractions, SF has implementations
-- **CRITICAL MERGES needed:**
-  - OoBDev.Communications: SF is 71x larger than main's stub (1,145 LOC vs 16 LOC)
-  - OoBDev.Communications.Contracts: SF is 5.5x larger (695 LOC vs 125 LOC)
-  - OoBDev.DocumentCenter: SF is 71% larger (911 LOC vs 531 LOC)
-  - OoBDev.IdentityModel: SF is 2.3x larger (291 LOC vs 125 LOC)
+**Decision Made:** Design-first approach
+- Directory removed from Incoming/
+- Comprehensive design documents created instead
+- Modern .NET 10.0 patterns throughout
+- Clean architecture from scratch
+- No technical debt migration
+- Implementation will follow approved designs
 
-**New Capabilities:**
-- AWS SQS and Azure Service Bus message queues
-- Complete geocoding suite (Census, Google Maps, Bing Maps)
-- Event sourcing and CQRS architecture
-- CSV/JSON to database ETL pipeline with CLI
-- Attribute-driven test data generation (1,256 LOC)
-- Distributed caching with Redis
-- SendGrid email and Twilio SMS providers
-
-**Migration Complexity:** HIGH - 52 projects requiring careful integration
+**Why Design-First?**
+- Avoids technical debt from legacy SharedFramework code
+- Ensures modern .NET 10.0 patterns throughout
+- Integrates cleanly with Epic 11 features (IDataContainer, schema discovery, path translation)
+- Enables comprehensive test planning upfront (85-90% coverage targets)
+- Documents intent before implementation
 
 **Next Steps:**
-- [ ] Upgrade all 52 projects to .NET 9.0 (currently .NET 8.0)
-- [ ] Execute Phase 1: Message Queueing (Amazon SQS, Azure Service Bus)
-- [ ] Execute Phase 2: Communications MERGE (CRITICAL)
-- [ ] Execute Phases 3-11 per priority
-- [ ] Systematic integration with 80%+ test coverage
+- [ ] Complete remaining 12 design documents (Epic 2: 10 docs, Epic 5: 2 docs)
+- [ ] Review and approve design documentation
+- [ ] Begin implementation based on approved designs
 
 **Documentation:**
-- [Feature Mapping](../docs/migration/sharedframework-feature-mapping.md) - Complete 52-project analysis
-- [Migration Plan](../docs/migration/sharedframework-migration-plan.md) - 12-phase execution plan
-
-**Migration Complexity:** HIGH - Major framework enhancement
-
-**Priority:** HIGH - Critical external service integrations and framework completions
+- [Feature Mapping](../docs/migration/sharedframework-feature-mapping.md) - Original 52-project analysis (archived)
+- [Migration Plan](../docs/migration/sharedframework-migration-plan.md) - Original 12-phase plan (archived)
 
 ---
 
@@ -414,14 +446,14 @@ This checklist tracks the investigation and migration status of all projects in 
 
 | Metric | Count |
 |--------|-------|
-| **Total Projects** | 6 |
-| **Completed** | 1 (dotnet-lib - deleted) |
-| **Investigated** | 6 (Framework, Oobtainium, BotChat, BinaryDecoders, ContractParser, Tools, SharedFramework) |
-| **Pending Decision** | 2 (Oobtainium - keep for user; BotChat - archive/enhance) |
-| **Blocked** | 1 (BinaryDecoders - awaiting answers) |
+| **Total Projects** | 8 |
+| **Completed** | 2 (dotnet-lib - deleted, Oobtainium - moved) |
+| **Cancelled** | 1 (Framework - directory removed) |
+| **Replaced with Design Docs** | 1 (SharedFramework - 120 docs created) |
+| **Investigated** | 4 (BotChat, BinaryDecoders, ContractParser, Tools) |
+| **Pending Decision** | 4 (BotChat, ContractParser, Tools, BinaryDecoders) |
+| **Blocked** | 1 (BinaryDecoders - awaiting critical decisions) |
 | **Feature Documentation Complete** | 2 (ContractParser, Tools) |
-| **Ready for Migration** | 2 (Framework Phase 1 - Vector Math, SharedFramework) |
-| **Not Yet Started** | 0 |
 
 ---
 
@@ -429,21 +461,25 @@ This checklist tracks the investigation and migration status of all projects in 
 
 Based on investigation results and priority:
 
-### Phase A: Decisions Required (HIGH PRIORITY)
-1. ⚠️ **Oobtainium** - User will move to separate repository (no action needed)
-2. ⚠️ **BotChat Decision** - Archive or enhance as demo
-3. ⚠️ **BinaryDecoders Questions** - Answer critical questions before Phase 1 migration
-4. ⚠️ **ContractParser** - Implement now, later, or keep as specification
-5. ⚠️ **Tools (BulkLlm)** - Consolidate into unified LlmCodeGen tool
+### Phase A: Completed
+1. ✅ **dotnet-lib** - Completed and deleted (2026-01-12)
+2. ✅ **Framework** - Cancelled, directory removed (2026-01-22)
+3. ✅ **Oobtainium** - Moved to proving-grounds repository (2026-01-20)
+4. ✅ **SharedFramework** - Replaced with design documentation (2026-01-22)
 
-### Phase B: Ready to Execute (HIGH PRIORITY)
-6. ✅ **Framework Phase 1** - Migrate Vector Math Library (ready to execute)
-7. ✅ **SharedFramework Phase 0.2** - Namespace cleanup (remove Api. prefix)
-8. ✅ **SharedFramework Phase 1-12** - Begin systematic migration (52 projects)
+### Phase B: Decisions Required (HIGH PRIORITY)
+1. ⚠️ **BotChat Decision** - Archive or enhance as demo
+2. ⚠️ **BinaryDecoders Questions** - Answer critical questions before Phase 1 migration
+3. ⚠️ **ContractParser** - Implement now, later, or keep as specification
+4. ⚠️ **Tools (BulkLlm)** - Consolidate into unified LlmCodeGen tool
 
-### Phase C: Execute Major Migrations (ONGOING)
-9. **BinaryDecoders** - Begin Phase 1 migration once questions answered
-10. **Framework Phases 2-5** - Complete remaining framework migrations
+### Phase C: Complete Remaining Design Docs
+1. 🎨 **Epic 2: Communications** - 10 documents remaining
+2. 🎨 **Epic 5: Master Data** - 2 documents remaining
+
+### Phase D: Execute Major Migrations (FUTURE)
+1. **BinaryDecoders** - Begin Phase 1 migration once questions answered
+2. **SharedFramework Features** - Implement based on approved design documentation
 
 ---
 
@@ -452,46 +488,59 @@ Based on investigation results and priority:
 ### Overall Progress
 
 ```
-Total Projects: 6
-├─ Deleted: 1 (17%)  ████████
-├─ Migrated: 0 (0%)
-├─ Feature Docs Complete: 2 (33%)  ████████████████
-├─ Investigating: 0 (0%)
-├─ Pending Decisions: 3 (50%)  ████████████████████████
-└─ Remaining Work: 83%  █████████████████████████████████████████
+Total Projects: 8
+├─ Completed: 2 (25%)  ████████████
+├─ Cancelled: 1 (12%)  ██████
+├─ Replaced with Design Docs: 1 (12%)  ██████
+├─ Pending Decisions: 4 (50%)  █████████████████████████
+└─ Remaining Work: 50%  █████████████████████████
 ```
 
 ### Investigation Progress
 
 ```
-Investigation Phase Complete: 6/6 (100%)
+Investigation Phase Complete: 8/8 (100%)
 ████████████████████████████████████████████████
 ```
 
 ### Migration Execution Progress
 
 ```
-Execution Phase Complete: 1/6 (17%)
-████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+Projects Resolved: 4/8 (50%)
+- dotnet-lib: Completed and deleted
+- Framework: Cancelled
+- Oobtainium: Moved to proving-grounds
+- SharedFramework: Replaced with 120 design docs (90.9% complete)
+
+Projects Pending: 4/8 (50%)
+- BotChat: Awaiting decision
+- BinaryDecoders: Awaiting critical decisions
+- ContractParser: Awaiting decision
+- Tools: Awaiting decision
 ```
 
 ---
 
 ## Key Milestones
 
+- [x] 2026-01-12: dotnet-lib investigation complete
+- [x] 2026-01-12: dotnet-lib completed and deleted
 - [x] 2026-01-12: Oobtainium investigation complete
-- [x] 2026-01-13: Vector comparison complete (Framework subset)
+- [x] 2026-01-13: Framework investigation complete (Vector library subset)
 - [x] 2026-01-13: BotChat investigation complete
 - [x] 2026-01-13: SharedFramework investigation complete (52 projects)
+- [x] 2026-01-20: Oobtainium moved to proving-grounds repository
 - [x] 2026-01-20: ContractParser investigation complete (feature specification)
 - [x] 2026-01-20: Tools investigation complete (4 CLI tools analyzed)
-- [x] 2026-01-20: All Incoming projects investigated (6/6 = 100%)
-- [ ] TBD: Oobtainium - User will move to separate repository
+- [x] 2026-01-20: All Incoming projects investigated (8/8 = 100%)
+- [x] 2026-01-22: SharedFramework strategic pivot - Code migration replaced with design documentation
+- [x] 2026-01-22: Framework cancelled - Directory removed from Incoming/
+- [x] 2026-01-23: Cleanup complete - All TODO files updated to reflect Framework cancellation and SharedFramework design pivot
 - [ ] TBD: BotChat decision made (archive or enhance)
 - [ ] TBD: ContractParser decision made (implement now, later, or keep as spec)
 - [ ] TBD: Tools BulkLlm consolidation decision
 - [ ] TBD: BinaryDecoders critical questions answered
-- [ ] TBD: All Incoming projects migrated or decided
+- [ ] TBD: Complete remaining 12 design documents (Epic 2: 10 docs, Epic 5: 2 docs)
 
 ---
 
@@ -512,5 +561,11 @@ Execution Phase Complete: 1/6 (17%)
 - 2026-01-20: ContractParser investigation complete - Feature specification in Features/ContractParser/
 - 2026-01-20: Tools investigation complete - 4 CLI tools analyzed in Features/Tools/
 - 2026-01-20: Removed CloudOrchestrator (doesn't exist in Incoming directory)
-- 2026-01-20: Updated Oobtainium status - User will move to separate repository
-- 2026-01-20: All 6 Incoming projects now investigated (100% investigation complete)
+- 2026-01-20: Updated Oobtainium status - Moved to proving-grounds repository
+- 2026-01-20: All 8 Incoming projects now investigated (100% investigation complete)
+- 2026-01-23: **Major Update** - Added Framework and SharedFramework resolution status
+  - Framework: CANCELLED (directory removed, only Vector library preserved)
+  - SharedFramework: REPLACED with 120 design documents (90.9% complete)
+  - Updated all TODO files to reflect strategic pivot from code migration to design-first approach
+  - Updated project counts from 6 to 8 total projects
+  - Updated Summary Statistics to show 4 projects resolved (50%) and 4 pending decisions (50%)

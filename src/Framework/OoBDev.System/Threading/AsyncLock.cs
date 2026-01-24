@@ -55,7 +55,7 @@ public class AsyncLock
         /// Initializes a new instance of the <see cref="Releaser"/> struct.
         /// </summary>
         /// <param name="toRelease">The <see cref="AsyncLock"/> instance to release when disposed.</param>
-        internal Releaser(AsyncLock toRelease) { m_toRelease = toRelease; }
+        internal Releaser(AsyncLock toRelease) => m_toRelease = toRelease;
 
         /// <summary>
         /// Releases the acquired lock.

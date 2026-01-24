@@ -3,18 +3,35 @@
 # Starts all Docker services needed for integration testing
 #
 # Usage:
-#   ./scripts/integration-up.sh          # Start in detached mode
-#   ./scripts/integration-up.sh --wait   # Start and wait for health checks
+#   ./scripts/integration-up.sh                # Start in detached mode
+#   ./scripts/integration-up.sh --wait         # Start and wait for health checks
+#   ./scripts/integration-up.sh --build        # Rebuild images before starting
+#   ./scripts/integration-up.sh --build --wait # Rebuild and wait for health checks
 #
 # Requirements:
 #   - Docker and Docker Compose installed
-#   - Ports available: 1433, 5672-5673, 6333, 8081, 9200, 9998, 10000-10002, 27017
+#   - Ports available: 25, 1433, 4566, 5000, 5080, 5672-5673, 6333-6334, 6379, 7777, 8081, 9200, 9998, 10000-10002, 11434, 15672, 27017
 
 set -e  # Exit on error
 
 # Get script directory
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TESTING_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
+
+# Parse command line arguments
+BUILD_FLAG=""
+WAIT_FLAG=""
+
+for arg in "$@"; do
+    case $arg in
+        --build)
+            BUILD_FLAG="--build"
+            ;;
+        --wait)
+            WAIT_FLAG="true"
+            ;;
+    esac
+done
 
 # Change to testing directory
 cd "$TESTING_DIR"
@@ -39,11 +56,15 @@ else
 fi
 
 echo ""
-echo "Starting Docker containers..."
+if [ -n "$BUILD_FLAG" ]; then
+    echo "Rebuilding Docker images and starting containers..."
+else
+    echo "Starting Docker containers..."
+fi
 echo ""
 
 # Start services in detached mode
-docker compose -f docker-compose.integration-tests.yml up -d
+docker compose -f docker-compose.integration-tests.yml up -d $BUILD_FLAG
 
 echo ""
 echo "✅ Docker services started successfully"
@@ -54,16 +75,20 @@ echo "  - SMTP4Dev:           http://localhost:7777"
 echo "  - MongoDB:            mongodb://localhost:27017"
 echo "  - SQL Server:         localhost,1433 (sa/${SQL_SA_PASSWORD:-IntegrationTest123!})"
 echo "  - RabbitMQ:           amqp://localhost:5673, http://localhost:15672"
+echo "  - Redis:              localhost:6379"
 echo "  - OpenSearch:         https://localhost:9200 (admin/${OPENSEARCH_PASSWORD:-IntegrationTest123!})"
 echo "  - Qdrant:             http://localhost:6333"
 echo "  - Azurite:            http://localhost:10000 (Blob), 10001 (Queue), 10002 (Table)"
 echo "  - LocalStack:         http://localhost:4566"
+echo "  - Service Bus:        localhost:5672"
 echo "  - Keycloak:           http://localhost:8081 (admin/admin)"
 echo "  - SBert:              http://localhost:5080"
+echo "  - Ollama:             http://localhost:11434"
+echo "  - Azurinsight:        http://localhost:5000"
 echo ""
 
 # Check if --wait flag is provided
-if [[ "$1" == "--wait" ]]; then
+if [ "$WAIT_FLAG" = "true" ]; then
     echo "Waiting for services to become healthy..."
     echo ""
     "${SCRIPT_DIR}/wait-for-services.sh"

@@ -17,10 +17,7 @@ public class SerialPortAttribute : Attribute
     /// Initializes a new instance of the <see cref="SerialPortAttribute"/> class with the specified baud rate.
     /// </summary>
     /// <param name="baudRate">The baud rate for the serial port.</param>
-    public SerialPortAttribute(int baudRate)
-    {
-        BaudRate = baudRate;
-    }
+    public SerialPortAttribute(int baudRate) => BaudRate = baudRate;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="SerialPortAttribute"/> class with full port configuration.

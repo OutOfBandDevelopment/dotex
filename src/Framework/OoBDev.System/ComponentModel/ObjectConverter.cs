@@ -16,10 +16,7 @@ public class ObjectConverter : IObjectConverter
     /// <param name="serializer">The serializer to use for conversion.</param>
     public ObjectConverter(
         ISerializer serializer
-        )
-    {
-        _serializer = serializer;
-    }
+        ) => _serializer = serializer;
 
     /// <summary>
     /// Converts an object to the specified type using serialization/deserialization.

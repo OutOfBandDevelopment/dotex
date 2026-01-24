@@ -4,14 +4,7 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>false</ImplicitUsings>
     <Nullable>enable</Nullable>
-
-    
-    <PackageReadmeFile>Readme.GroqCloud.md</PackageReadmeFile>
   </PropertyGroup>
-
-  <ItemGroup>
-    <CodeDocumentation Remove="Readme.GroqCloud.md" />
-  </ItemGroup>
 
   <ItemGroup>
     <InternalsVisibleTo Include="OoBDev.GroqCloud.Tests" />

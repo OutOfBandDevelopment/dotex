@@ -34,48 +34,33 @@ public class ObservableDictionary<TKey, TValue> : IDictionary<TKey, TValue>, INo
     /// Initializes a new instance of the ObservableDictionary class that contains elements copied from the specified dictionary.
     /// </summary>
     /// <param name="dictionary">The dictionary whose elements are copied to the new ObservableDictionary.</param>
-    public ObservableDictionary(IDictionary<TKey, TValue> dictionary)
-    {
-        Dictionary = new Dictionary<TKey, TValue>(dictionary);
-    }
+    public ObservableDictionary(IDictionary<TKey, TValue> dictionary) => Dictionary = new Dictionary<TKey, TValue>(dictionary);
 
     /// <summary>
     /// Initializes a new instance of the ObservableDictionary class that uses the specified IEqualityComparer&lt;T&gt;.
     /// </summary>
     /// <param name="comparer">The IEqualityComparer&lt;T&gt; implementation to use when comparing keys.</param>
-    public ObservableDictionary(IEqualityComparer<TKey> comparer)
-    {
-        Dictionary = new Dictionary<TKey, TValue>(comparer);
-    }
+    public ObservableDictionary(IEqualityComparer<TKey> comparer) => Dictionary = new Dictionary<TKey, TValue>(comparer);
 
     /// <summary>
     /// Initializes a new instance of the ObservableDictionary class that is empty and has the specified initial capacity.
     /// </summary>
     /// <param name="capacity">The initial number of elements that the ObservableDictionary can contain.</param>
-    public ObservableDictionary(int capacity)
-    {
-        Dictionary = new Dictionary<TKey, TValue>(capacity);
-    }
+    public ObservableDictionary(int capacity) => Dictionary = new Dictionary<TKey, TValue>(capacity);
 
     /// <summary>
     /// Initializes a new instance of the ObservableDictionary class that contains elements copied from the specified dictionary and uses the specified IEqualityComparer&lt;T&gt;.
     /// </summary>
     /// <param name="dictionary">The dictionary whose elements are copied to the new ObservableDictionary.</param>
     /// <param name="comparer">The IEqualityComparer&lt;T&gt; implementation to use when comparing keys.</param>
-    public ObservableDictionary(IDictionary<TKey, TValue> dictionary, IEqualityComparer<TKey> comparer)
-    {
-        Dictionary = new Dictionary<TKey, TValue>(dictionary, comparer);
-    }
+    public ObservableDictionary(IDictionary<TKey, TValue> dictionary, IEqualityComparer<TKey> comparer) => Dictionary = new Dictionary<TKey, TValue>(dictionary, comparer);
 
     /// <summary>
     /// Initializes a new instance of the ObservableDictionary class that is empty, has the specified initial capacity, and uses the specified IEqualityComparer&lt;T&gt;.
     /// </summary>
     /// <param name="capacity">The initial number of elements that the ObservableDictionary can contain.</param>
     /// <param name="comparer">The IEqualityComparer&lt;T&gt; implementation to use when comparing keys.</param>
-    public ObservableDictionary(int capacity, IEqualityComparer<TKey> comparer)
-    {
-        Dictionary = new Dictionary<TKey, TValue>(capacity, comparer);
-    }
+    public ObservableDictionary(int capacity, IEqualityComparer<TKey> comparer) => Dictionary = new Dictionary<TKey, TValue>(capacity, comparer);
 
     #endregion
 

@@ -24,16 +24,17 @@ This document is organized into **epic-based files** for better navigation and m
 ### 🧪 [Local Integration Testing (Docker)](./TODO-testing-local-integration.md)
 **Status:** ✅ VALIDATED & COMPLETE - Ready for CI/CD Enablement
 
-Docker-based integration testing with 14 services (Apache Tika, SMTP4Dev, MongoDB, SQL Server, RabbitMQ, Redis, OpenSearch, Qdrant, Azurite, LocalStack, Azure Service Bus Emulator, Keycloak, SBert, Ollama). Infrastructure complete, 23 tests migrated and validated.
+Docker-based integration testing with 15 services (Apache Tika, SMTP4Dev, MongoDB, SQL Server, RabbitMQ, Redis, OpenSearch, Qdrant, Azurite, LocalStack, Azure Service Bus Emulator, Keycloak, SBert, Ollama, Azurinsight). Infrastructure complete, 33 tests migrated and validated.
 
 **Key Tasks:**
-- ✅ Docker infrastructure (14 services, compose files, scripts, README with PlantUML)
+- ✅ Docker infrastructure (15 services, compose files, scripts, README with PlantUML)
 - ✅ Test category: Integration (Docker-based, runs in CI/CD)
 - ✅ Local validation complete - All Integration tests passing (2026-01-21)
 - ✅ Week 2: Migrated 23 tests from DevLocal to Integration category (Apache Tika, SMTP/MailKit, MongoDB, RabbitMQ, OpenSearch, SBert, Ollama)
 - ✅ Ollama integration: Auto-pull phi3 model in integration-up scripts
+- ✅ **NEW:** Azurinsight integration complete - 10 Application Insights tests (2026-01-24)
 - ⏳ **NEXT:** Enable CI/CD pipeline for daily Integration test runs
-- ⏳ Week 4: Docker documentation (11 stacks)
+- ⏳ Week 4: Docker documentation (15 stacks)
 
 ### ☁️ [Live Integration Testing (Cloud)](./TODO-testing-live-integration.md)
 **Status:** ✅ Category Added - ⏳ Week 3 Migration Pending
@@ -46,84 +47,23 @@ Cloud-based integration testing for services requiring live credentials (Azure B
 - ⏳ Week 4: Cloud documentation (credential management, cost management)
 
 ### 📦 [Migrations](./TODO-migrations.md)
-**Status:** ✅ Analysis Complete - 📋 Individual TODOs Created - Ready to Execute
+**Status:** ⏸️ Awaiting Decisions
 
 **📋 Individual Migration TODOs:** [TODO-migrations-index.md](./TODO-migrations-index.md)
 
-All migration work for Incomming projects and BinaryDataDecoders:
-- **Incomming/Framework** - 55 files (30 NEW + 25 DIFFERS) requiring systematic comparison
-- **Incomming/SharedFramework** - 52 projects (~28,582 LOC) with 12 individual TODO files created
-- **BinaryDataDecoders** - 5-phase migration (Foundation → Specialized Features)
-
-**Key Accomplishments:**
-- ✅ Framework Vector namespace updated to OoBDev.System.Math (files already in main)
-- ✅ SharedFramework Phase 0: .NET 10.0 verified + Namespace cleanup complete (27 directories renamed)
-  - 14 Api. prefix removals, 4 Azure reorganizations, 9 Contracts → Abstractions renames
-- ✅ All 6 Incoming projects investigated (100% complete)
-- ✅ Coverage analysis complete - Identified 5 DIFFERS projects needing careful merge
-- ✅ DIFFERS detailed comparison - SharedFramework wins on ALL 5 conflicts
-- ✅ **NEW:** 12 individual migration TODO files created (ready to execute)
-
-**Completed Migrations:**
-- ✅ **Caching (COMPLETE - 2026-01-20)** - 4 implementation + 3 test projects, property chains, Redis Docker integration
-  - **Details:** [docs/changes/migration-caching-framework-2026-01-20.md](docs/changes/migration-caching-framework-2026-01-20.md)
-- ✅ **Message Queues (COMPLETE - 2026-01-20)** - AWS SQS + Azure Service Bus providers, LocalStack + Azure emulator integration
-  - **Details:** See [Features/MessageQueuing/README.md](Features/MessageQueuing/README.md)
-
-**Ready to Migrate:**
-- 🔥 Communications (CRITICAL - 16 LOC stub → 1,145 LOC)
-- ✅ Spatial Services (5 projects)
-- ⚠️ Identity, Documents, TextTemplating (merge required)
-- ✅ DataLoader, ComplexEvents, Generations
-- ⏸️ Framework (Phase 0 comparison required)
-- ⏸️ BinaryDataDecoders (decisions required)
-
-### 🐛 [Bug Fixes & Technical Debt](./TODO-bug-fixes.md)
-**Status:** 🟢 Mostly Complete - 8 Warnings Remaining
-
-**Active Work:**
-- 🟢 **Build Warnings** - 8 remaining (down from 95+), acceptable for now
-
-**Completed:**
-- ✅ Build warnings reduced from 95+ to 8 (2026-01-22)
-- ✅ Test category cleanup - DevLocal → Integration/Unit/LiveIntegration (2026-01-22)
-- ✅ .runsettings documentation - Comprehensive how-to guide (2026-01-22)
-- ✅ HtmlNavigatorTests fixed - ComplexTemplate.html + proper assertions (2026-01-22)
-- ✅ Redis integration tests fixed - IObjectConverter + JSON serialization (2026-01-22)
-- ✅ Phase 0 critical bugs (6 fixes) - All complete
-- ✅ MSTest ExpectedExceptionAttribute conversion (40 instances) - Complete
-- ✅ Swashbuckle 10.1.0 breaking changes - All 5 files fixed and verified
-- ✅ .NET 10.0 breaking changes - ClaimsPrincipal DI + IActionContextAccessor deprecation
-- ✅ XML Documentation generation - Enabled globally, Swagger working
-- ✅ Build verification: All 65 projects build successfully
-- ✅ Swagger verification: Summary and Description properties appear
-- ✅ Swagger generation: Tested and verified working
-
-**Ongoing:**
-- ⏳ Technical debt: 80%+ test coverage, documentation, dependency audits
+**Pending Migration:**
+- ⏸️ **BinaryDataDecoders** - 5-phase migration (Foundation → Specialized Features)
+  - Blocked: Awaiting 14+ critical decisions
+  - Priority: HIGH
+  - Scope: ~50,000 LOC (binary processing, protocols, hardware)
 
 ### 📝 [Documentation](./TODO-documentation.md)
-**Status:** ✅ Configuration Reference Complete - 📋 Ongoing Maintenance
+**Status:** 📋 Ongoing Maintenance
 
-Comprehensive framework documentation including configuration, testing, and architecture:
-
-**Completed:**
-- ✅ **.runsettings How-To Guide** (2026-01-22) - Variables and configuration best practices
-  - MSBuild variables NOT supported, environment variables + relative paths documented
-  - OoBDev Docker testing patterns explained
-  - Workarounds for MSBuild variables provided
-- ✅ **CONFIGURATION_SETTINGS.md** (2026-01-21) - 157+ configuration points
-  - 31 Options classes (FileTemplating, OAuth2, GroqCloud, MongoDB, Ollama, etc.)
-  - 24 direct IConfiguration keys (RabbitMQ, ServiceBus, SQS, Redis, SQL Server)
-  - 102 environment variables (Runtime, Database, Message Queues, Cloud, AI/ML)
-  - Connection string formats, validation rules, best practices, migration guide
-- ✅ **TEST_VARIABLES.md** - 30+ test parameters for integration testing
-- ✅ **Testing documentation** - Complete testing guidelines and infrastructure docs
-
-**See Also:**
-- [docs/how-tos/runsettings-variables-and-configuration.md](./docs/how-tos/runsettings-variables-and-configuration.md) - .runsettings guide
-- [CONFIGURATION_SETTINGS.md](./CONFIGURATION_SETTINGS.md) - Configuration reference
-- [TEST_VARIABLES.md](./TEST_VARIABLES.md) - Test property reference
+**Active Work:**
+- ⏳ Maintain architecture documentation
+- ⏳ Keep testing guidelines current
+- ⏳ Update configuration references as needed
 
 ### ❓ [Decisions Required](./TODO-decisions.md)
 **Status:** ⏸️ Multiple Migrations Blocked - Awaiting Strategic Decisions
@@ -147,7 +87,6 @@ TODO.md                                  # This file - Index and navigation
 ├── TODO-testing-local-integration.md    # Docker-based integration testing (11 services)
 ├── TODO-testing-live-integration.md     # Cloud-based integration testing (3 services)
 ├── TODO-migrations.md                   # All Incomming/ and BinaryDataDecoders migrations
-├── TODO-bug-fixes.md                    # Bug fixes and technical debt
 ├── TODO-decisions.md                    # Pending strategic decisions
 └── TEST_VARIABLES.md                    # All test properties and configuration variables
 ```
@@ -180,54 +119,6 @@ TODO.md                                  # This file - Index and navigation
 
 ---
 
-## Completed Work Summary
-
-### Architecture Documentation ✅
-- Created complete architecture documentation (5 documents)
-- Established 14 core architectural principles
-- Documented enforceable standards and pattern catalog
-- Created layer-by-layer breakdown
-
-### Migration Investigations ✅ COMPLETE
-
-**All 6 Incoming Projects Investigated:**
-- ✅ **dotnet-lib** (2026-01-12) - 95% identical, critical bug fix applied, DELETED
-- ✅ **Framework** - 55 files analyzed (30 NEW + 25 DIFFERS), Vector library ready
-- ✅ **Oobtainium** - Mocking framework analyzed, user will move to separate repository
-- ✅ **BotChat** - Sample app analyzed, 3 options documented, awaiting decision
-- ✅ **SharedFramework** - 52 projects analyzed (~28,582 LOC), 12-phase plan created
-- ✅ **BinaryDataDecoders** - Complete feature mapping, 5-phase plan, decision points identified
-- ✅ **ContractParser** (2026-01-20) - Feature specification created in Features/ContractParser/
-- ✅ **Tools** (2026-01-20) - 4 CLI tools analyzed in Features/Tools/
-
-**Tracking:** See `Incomming/CHECKLIST.md` for detailed investigation status
-
-### Testing Infrastructure ✅
-- ✅ Week 1 & 2 Complete (2026-01-19): Docker infrastructure, test categories, CI/CD pipeline, 19 tests migrated
-- ✅ **Local Integration (Docker):** 13-service stack with health checks, ephemeral volumes, isolated network
-- ✅ **Live Integration (Cloud):** Added LiveIntegration category for cloud-only services
-- ✅ **Test Variables:** Documented all 30+ test properties in [TEST_VARIABLES.md](./TEST_VARIABLES.md)
-- ✅ Complete CI/CD workflow (DISABLED until local testing validates)
-- ✅ Comprehensive documentation with PlantUML deployment diagram
-- ✅ Split into 2 epics: Local (Docker) and Live (Cloud) integration testing
-
-### Bug Fixes ✅
-- ✅ Phase 0: Critical bug fixes (6 fixes) - All complete
-- ✅ MSTest ExpectedExceptionAttribute conversion (40 instances across 24 files)
-- ✅ Swashbuckle 10.1.0 breaking changes - All 5 files fixed and verified
-- ✅ .NET 10.0 breaking changes - ClaimsPrincipal DI + IActionContextAccessor deprecation
-- ✅ XML Documentation - Enabled globally, Swagger working
-
-### Protocols & Documentation ✅
-- Created `.claude/protocols/software/incoming-codebase-comparison.md` (v1.1)
-- Updated protocol with checklist management and project type classifications
-- Created comprehensive migration documentation for all investigations
-
-### CI/CD ✅
-- Updated `.github/workflows/dotnet.yml` - Added path filters
-- Fixed build tag format (2026-01-20) - Removed duplicate branch name in tags
-- Completed `.github/workflows/integration-tests.yml` - DISABLED pending validation
-
 ---
 
 ## Active Priorities
@@ -239,16 +130,7 @@ TODO.md                                  # This file - Index and navigation
    - Test cleanup and restart
    - Enable CI/CD workflow after validation
 
-2. **OoBDev.AspNetCore.Mvc - Swashbuckle & .NET 10.0 Fixes** ✅ COMPLETE
-   - Swashbuckle 10.1.0: 4 files fixed (FormFileOperationFilter, HealthChecksDocumentFilter, SearchQueryOperationFilter, ApplicationPermissionsApiFilter)
-   - .NET 10.0: 1 file fixed (ServiceCollectionExtensions - ClaimsPrincipal DI, IActionContextAccessor deprecation)
-   - XML Documentation: Enabled globally, removed overrides in 2 projects (AspNetCore.Mvc, WebApi)
-   - Build verified: All 65 projects built successfully ✅
-   - Swagger verified: Summary and Description properties now appear ✅
-   - Swagger generation: Tested and verified working ✅
-
-3. **Strategic Decisions** ⏸️ BLOCKING
-   - Decide on Oobtainium migration (RECOMMEND: Delete)
+2. **Strategic Decisions** ⏸️ BLOCKING
    - Decide on BotChat migration (RECOMMEND: Archive)
    - Review BinaryDataDecoders decision points
 
@@ -267,35 +149,12 @@ TODO.md                                  # This file - Index and navigation
    - Create LiveIntegration setup guides
    - Update SemanticKernel integration
 
-3. **SharedFramework Phase 0 Namespace Cleanup** ✅ COMPLETE (2026-01-20)
-   - Removed "Api." prefix from all namespaces (14 projects)
-   - Moved Azure under Microsoft hierarchy (4 projects)
-   - Renamed .Contracts to .Abstractions (9 projects, deleted 1 application-specific)
-   - Updated 87+ namespace declarations and 37+ using statements
-   - Renamed all 27 directories (14 + 4 + 9)
-   - Verified no broken references
-
 ### Medium Term (Next Month)
-1. **SharedFramework Migration Strategy** ⚠️ DECISIONS NEEDED (Coverage analysis complete)
-   - ✅ Phase 0 complete (.NET 10.0 + namespace cleanup)
-   - ⚠️ **5 DIFFERS projects require merge decisions:**
-     - Communications (16 LOC stub → 1,145 LOC implementation) - **CRITICAL**
-     - Communications.Abstractions (125 LOC → 695 LOC) - **CRITICAL**
-     - Documents vs DocumentCenter (531 LOC vs 911 LOC)
-     - Identity vs IdentityModel (125 LOC vs 291 LOC)
-     - TextTemplating (scattered vs unified)
-   - ✅ **19 NEW projects ready to migrate** (no conflicts):
-     - Caching (4 projects) - HIGH PRIORITY
-     - Message Queueing Providers: AWS SQS, Azure Service Bus
-     - Spatial Services (5 projects): Geocoding, Maps
-     - Complex Events, Data Loader, Generations
-   - **See:** [Coverage Analysis](docs/migration/sharedframework-phase0-coverage-analysis.md)
-
-2. **Feature Implementation Decisions** ⏸️ PENDING
+1. **Feature Implementation Decisions** ⏸️ PENDING
    - ContractParser - Decide: Implement now, later, or keep as specification
    - Tools (BulkLlm) - Decide: Consolidate into unified LlmCodeGen tool
 
-3. **BinaryDataDecoders Phase 1** ⏸️ BLOCKED (Awaiting decisions)
+2. **BinaryDataDecoders Phase 1** ⏸️ BLOCKED (Awaiting decisions)
    - Endianness support enhancements
    - Utility enhancements
    - BinaryPrimitives expansion

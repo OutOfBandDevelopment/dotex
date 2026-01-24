@@ -19,10 +19,7 @@ public abstract class TemplateFactoryBase<T> where T : class, new()
     /// Initializes a new instance of the <see cref="TemplateFactoryBase{T}"/> class.
     /// </summary>
     /// <param name="converter">The object converter for deserializing templates.</param>
-    protected TemplateFactoryBase(IObjectConverter converter)
-    {
-        _converter = converter;
-    }
+    protected TemplateFactoryBase(IObjectConverter converter) => _converter = converter;
 
     /// <summary>
     /// Reads and deserializes a template from a file.

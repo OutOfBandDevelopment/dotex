@@ -18,10 +18,7 @@ public class DacpacMergeCompiler : IDacpacMergeCompiler
     /// Initializes a new instance of the <see cref="DacpacMergeCompiler"/> class.
     /// </summary>
     /// <param name="logger">The logger for compilation operations.</param>
-    public DacpacMergeCompiler(ILogger<DacpacMergeCompiler> logger)
-    {
-        _logger = logger;
-    }
+    public DacpacMergeCompiler(ILogger<DacpacMergeCompiler> logger) => _logger = logger;
 
     /// <inheritdoc/>
     public void CreatePackage(IDacPacMergeDefinition def)

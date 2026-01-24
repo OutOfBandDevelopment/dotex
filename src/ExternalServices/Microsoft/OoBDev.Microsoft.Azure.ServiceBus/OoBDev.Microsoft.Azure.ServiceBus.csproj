@@ -3,8 +3,6 @@
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
 		<Nullable>enable</Nullable>
-		
-		<PackageReadmeFile>Readme.AzureServiceBus.md</PackageReadmeFile>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -22,9 +20,4 @@
 		<ProjectReference Include="..\..\..\Framework\OoBDev.MessageQueueing.Abstractions\OoBDev.MessageQueueing.Abstractions.csproj" />
 		<ProjectReference Include="..\..\..\Framework\OoBDev.System.Abstractions\OoBDev.System.Abstractions.csproj" />
 	</ItemGroup>
-
-	<ItemGroup>
-		<None Include="Readme.AzureServiceBus.md" Pack="true" PackagePath="\" />
-	</ItemGroup>
-
 </Project>

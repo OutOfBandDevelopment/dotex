@@ -18,10 +18,7 @@ public class DacPacValidator : IDacPacValidator
     /// Initializes a new instance of the <see cref="DacPacValidator"/> class.
     /// </summary>
     /// <param name="logger">The logger for diagnostic output.</param>
-    public DacPacValidator(ILogger<DacPacValidator> logger)
-    {
-        _logger = logger;
-    }
+    public DacPacValidator(ILogger<DacPacValidator> logger) => _logger = logger;
 
     /// <summary>
     /// Validates the generated DACPAC using Microsoft.SqlServer.DacFx APIs

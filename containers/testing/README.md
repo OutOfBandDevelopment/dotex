@@ -17,7 +17,7 @@ This directory contains Docker-based testing infrastructure for running integrat
 
 ## Overview
 
-The integration test stack provides **16 Docker-based services** (14 core + nginx reverse proxy + OpenSearch Dashboards) needed for Integration test category:
+The integration test stack provides **17 Docker-based services** (15 core + nginx reverse proxy + OpenSearch Dashboards) needed for Integration test category:
 
 ## 🌐 Quick Access
 
@@ -31,7 +31,7 @@ The nginx reverse proxy provides a unified web interface to all services with di
 | **Stateless** | Apache Tika, SMTP4Dev |
 | **Stateful** | MongoDB, SQL Server, RabbitMQ, Redis, OpenSearch, Qdrant |
 | **Visualization** | OpenSearch Dashboards |
-| **Emulators** | Azurite (Azure Storage), LocalStack (AWS), Azure Service Bus Emulator |
+| **Emulators** | Azurite (Azure Storage), LocalStack (AWS), Azure Service Bus Emulator, Azurinsight (Application Insights) |
 | **Identity** | Keycloak |
 | **AI/ML** | SBert (CPU-only), Ollama (CPU-only) |
 
@@ -117,6 +117,11 @@ package "oobd-integration-test-net (Bridge Network)" {
 
     component "Ollama\n:11434" <<Container>> #AI_BG_COLOR {
         [LLM Inference\n(phi3)]
+    }
+
+    ' Monitoring Emulator
+    component "Azurinsight\n:5000" <<Container>> #CONTAINER_BG_COLOR {
+        [Application Insights\nEmulator]
     }
 }
 
@@ -241,6 +246,9 @@ cd containers/testing
 # Start all services and wait for health checks
 ./scripts/integration-up.sh --wait
 
+# Or rebuild images before starting (useful after Dockerfile changes)
+./scripts/integration-up.sh --build --wait
+
 # Run integration tests
 cd ../../src
 dotnet test --filter "TestCategory=Integration"
@@ -258,6 +266,9 @@ cd containers\testing
 
 REM Start all services and wait for health checks
 scripts\integration-up.bat --wait
+
+REM Or rebuild images before starting (useful after Dockerfile changes)
+scripts\integration-up.bat --build --wait
 
 REM Run integration tests
 cd ..\..\src
@@ -296,13 +307,14 @@ scripts\integration-down.bat --clean
 
 ### Emulators
 
-**Azure and AWS service emulation**
+**Azure, AWS, and monitoring service emulation**
 
 | Service | Image | Port(s) | Purpose | Health Check |
 |---------|-------|---------|---------|--------------|
 | **Azurite** | `mcr.microsoft.com/azure-storage/azurite` | 10000 (Blob)<br>10001 (Queue)<br>10002 (Table) | Azure Storage emulator | `nc -z localhost 10000` |
 | **LocalStack** | `localstack/localstack` | 4566 | AWS services emulator (SQS, S3, etc.) | `curl http://localhost:4566/_localstack/health` |
 | **Service Bus Emulator** | `mcr.microsoft.com/azure-messaging/servicebus-emulator` | 5672 (AMQP) | Azure Service Bus emulator | `nc -z localhost 5672` |
+| **Azurinsight** | `oobdev/azurinsight:latest` | 5000 | Application Insights emulator | `curl http://localhost:5000/` |
 
 ### Identity & AI/ML
 
@@ -320,7 +332,7 @@ scripts\integration-down.bat --clean
 
 | Script | Purpose | Options |
 |--------|---------|---------|
-| `integration-up.sh` / `.bat` | Start services | `--wait` (wait for health checks) |
+| `integration-up.sh` / `.bat` | Start services | `--wait` (wait for health checks)<br>`--build` (rebuild images before starting)<br>`--build --wait` (rebuild and wait) |
 | `integration-down.sh` / `.bat` | Stop services | `--clean` (remove volumes)<br>`--purge` (remove all) |
 | `wait-for-services.sh` / `.bat` | Wait for health checks | `[timeout-seconds]` (default: 120) |
 

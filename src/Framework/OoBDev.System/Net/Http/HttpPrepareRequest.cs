@@ -17,10 +17,7 @@ public class HttpPrepareRequest : IHttpPrepareRequest
     /// <param name="features">The collection of features to apply during request preparation.</param>
     public HttpPrepareRequest(
         IEnumerable<IHttpPrepareRequestFeature> features
-        )
-    {
-        _features = features;
-    }
+        ) => _features = features;
 
     /// <summary>
     /// Prepares an HTTP request by applying all configured features in sequence.

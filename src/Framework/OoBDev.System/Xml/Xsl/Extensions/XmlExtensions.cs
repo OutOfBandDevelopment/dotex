@@ -16,10 +16,7 @@ public class XmlExtensions
     /// <summary>
     /// Create instance of XmlExtensions
     /// </summary>
-    public XmlExtensions()
-    {
-        _ns = this.GetXmlNamespace() + XmlNamespaces.OutputSuffix;
-    }
+    public XmlExtensions() => _ns = this.GetXmlNamespace() + XmlNamespaces.OutputSuffix;
 
     /// <summary>
     /// Returns the XPathNodeIterator unchanged. Used for type compatibility in XSLT transformations.

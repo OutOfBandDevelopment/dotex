@@ -15,7 +15,7 @@
     <RepositoryUrl>https://github.com/OutOfBandDevelopment/dotex/</RepositoryUrl>
     <RepositoryType>GitHub</RepositoryType>
     <Authors>Matthew Whited</Authors>
-
+    
     <!--
     <GenerateDocumentationFile Condition="!$([System.Text.RegularExpressions.Regex]::IsMatch('$(MSBuildProjectName)', '\.Tests$'))">True</GenerateDocumentationFile>
     <GenerateDocumentationFile Condition="$([System.Text.RegularExpressions.Regex]::IsMatch('$(MSBuildProjectName)', '\.Tests$'))">false</GenerateDocumentationFile>
@@ -36,6 +36,31 @@
     <VSTestResultsDirectory>$(SolutionDir)TestResults\</VSTestResultsDirectory>
     <RunSettingsFilePath>$(SolutionDir).runsettings</RunSettingsFilePath>
   </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageReadmeFile Condition="'$(PackageReadmeFile)'==''">README.$(MSBuildProjectName.Replace("OoBDev.", "")).md</PackageReadmeFile>
+    <PackageReadmeFile Condition="!Exists('$(PackageReadmeFile)')"></PackageReadmeFile>
+    <PackageReadmeFile Condition="'$(PackageReadmeFile)'==''">README.md</PackageReadmeFile>
+    <PackageReadmeFile Condition="!Exists('$(PackageReadmeFile)')"></PackageReadmeFile>
+  </PropertyGroup>
+
+
+  <!--<Target Name="BeforeAutoSetPackageReadmeFile"
+        Condition="'$(IsPackable)'!='false' and '$(PackageReadmeFile)'==''"
+        BeforeTargets="AutoSetPackageReadmeFile">
+    $(MSBuildProjectName)
+    
+     '$(MSBuildProjectName.EndsWith(`.Tests`))' "
+    
+  </ItemGroup>
+        <PropertyGroup Condition="Exists('$(SolutionDir)..\LICENSE')">
+
+
+    -->
+    <!--<RootNamespace>$(MSBuildProjectName.Replace(" ", "_").Replace(".Abstractions", ""))</RootNamespace>--><!--
+
+  </Target>-->
+
 
   <PropertyGroup>
     <!-- Optional: MSTest parallelization property -->

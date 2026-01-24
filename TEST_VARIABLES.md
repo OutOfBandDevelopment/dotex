@@ -1,6 +1,6 @@
 # Integration Test Variables
 
-**Last Updated:** 2026-01-20
+**Last Updated:** 2026-01-24
 
 This document lists all test properties used by Integration tests. These properties can be configured via:
 - `.runsettings` file (`TestRunParameters` section)
@@ -27,6 +27,8 @@ This document lists all test properties used by Integration tests. These propert
    - [Redis (Cache Store)](#redis-cache-store)
    - [OpenSearch (Search Engine)](#opensearch-search-engine)
    - [SBert (Sentence Embeddings)](#sbert-sentence-embeddings---aiml)
+   - [Ollama (LLM Inference)](#ollama-llm-inference---aiml)
+   - [Azurinsight (Application Insights Emulator)](#azurinsight-application-insights-emulator)
    - [Qdrant (Vector Database)](#qdrant-vector-database)
    - [Azurite (Azure Storage Emulator)](#azurite-azure-storage-emulator)
    - [LocalStack (AWS Emulator)](#localstack-aws-emulator)
@@ -248,6 +250,59 @@ Tests that require live cloud credentials. Manual execution only.
 
 ---
 
+### Azurinsight (Application Insights Emulator)
+
+**Service:** Azurinsight - Local Application Insights emulator
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `APPINSIGHTS_URL` | `http://localhost:5000` | Azurinsight HTTP API endpoint |
+| `APPINSIGHTS_INSTRUMENTATION_KEY` | `test-key` | Test instrumentation key |
+| `APPINSIGHTS_CONNECTION_STRING` | `InstrumentationKey=test-key;IngestionEndpoint=http://localhost:5000` | Application Insights connection string |
+
+**Docker Container:** `oobdev/azurinsight:latest` (Port 5000)
+
+**Tests Using:**
+- `OoBDev.Microsoft.ApplicationInsights.Tests.ApplicationInsightsIntegrationTests.SendEventTelemetry_ShouldStoreInAzurinsight`
+- `OoBDev.Microsoft.ApplicationInsights.Tests.ApplicationInsightsIntegrationTests.SendTraceTelemetry_ShouldStoreInAzurinsight`
+- `OoBDev.Microsoft.ApplicationInsights.Tests.ApplicationInsightsIntegrationTests.SendMetricTelemetry_ShouldStoreInAzurinsight`
+- `OoBDev.Microsoft.ApplicationInsights.Tests.ApplicationInsightsIntegrationTests.SendExceptionTelemetry_ShouldStoreInAzurinsight`
+- `OoBDev.Microsoft.ApplicationInsights.Tests.ApplicationInsightsIntegrationTests.SendDependencyTelemetry_ShouldStoreInAzurinsight`
+- `OoBDev.Microsoft.ApplicationInsights.Tests.ApplicationInsightsIntegrationTests.SendRequestTelemetry_ShouldStoreInAzurinsight`
+- `OoBDev.Microsoft.ApplicationInsights.Tests.ApplicationInsightsIntegrationTests.PurgeApi_ShouldClearAllTelemetry`
+- `OoBDev.Microsoft.ApplicationInsights.Tests.TelemetryProcessorTests.CorrelationInfoTelemetryProcessor_ShouldAddCorrelationHeaders`
+- `OoBDev.Microsoft.ApplicationInsights.Tests.TelemetryProcessorTests.UserTelemetryProcessor_ShouldAddUserClaims`
+- `OoBDev.Microsoft.ApplicationInsights.Tests.TelemetryProcessorTests.CombinedProcessors_ShouldAddBothCorrelationAndUserInfo`
+
+**API Endpoints:**
+- `POST /v2.1/track` - Receive telemetry data (Application Insights SDK endpoint)
+- `GET /api/query` - Query stored telemetry
+- `POST /api/purge` - Clear all telemetry data
+- WebSocket `/` - Live telemetry streaming
+
+**Cleanup Pattern:**
+```csharp
+[TestCleanup]
+public async Task TestCleanup()
+{
+    _telemetryClient?.Flush();
+    await Task.Delay(1000);
+
+    var response = await _httpClient.PostAsync("/api/purge", null);
+    response.EnsureSuccessStatusCode();
+}
+```
+
+**Notes:**
+- Lightweight SQLite-based emulator (no Azure credentials needed)
+- Stateful service (telemetry persisted in SQLite volume)
+- Supports all standard Application Insights SDK telemetry types
+- WebSocket support for real-time telemetry viewing
+- Test instrumentation key can be any value (e.g., "test-key")
+- Replaces need for live Azure Application Insights in tests
+
+---
+
 ### Qdrant (Vector Database)
 
 **Service:** Qdrant vector similarity search engine
@@ -374,20 +429,24 @@ Tests that require live cloud credentials. Manual execution only.
 
 ### Application Insights (Telemetry)
 
-**Service:** Microsoft Application Insights
+> **NOTE:** Application Insights tests have been **migrated to Integration category** using the [azurinsight](https://github.com/Rahulkumar010/azurinsight) emulator (`oobdev/azurinsight:latest`). See [Azurinsight (Application Insights Emulator)](#azurinsight-application-insights-emulator) in the Integration section above.
+
+**Service:** Microsoft Application Insights (Live Azure Service)
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `APPINSIGHTS_INSTRUMENTATION_KEY` | *(none)* | Instrumentation key |
-| `APPINSIGHTS_CONNECTION_STRING` | *(none)* | Connection string |
+| `APPINSIGHTS_INSTRUMENTATION_KEY` | *(none)* | Live Azure instrumentation key |
+| `APPINSIGHTS_CONNECTION_STRING` | *(none)* | Live Azure connection string |
 
 **Tests Using:**
-- `OoBDev.Microsoft.ApplicationInsights.Tests` (manual execution only)
+- *(All tests migrated to Integration category using azurinsight emulator)*
 
-**Setup:**
+**Setup (if testing against live Azure):**
 1. Create Application Insights resource in Azure
 2. Copy instrumentation key or connection string
 3. Configure `.runsettings`
+
+**Note:** For automated testing, use the azurinsight emulator in Integration tests instead of live Azure resources.
 
 ---
 

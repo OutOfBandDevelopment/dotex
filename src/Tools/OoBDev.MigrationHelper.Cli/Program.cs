@@ -4,9 +4,9 @@ internal class Program
 {
     static void Main(string[] args)
     {
-        var path = @"C:\repo\merge-em\dotex\Incomming\BotChat";
-        var sourcePrefix = "BotChat";
-        var targetPrefix = "BotChat";
+        var path = @"C:\repo\oobdev\dotex\Incoming\BinaryDecoders\src";
+        var sourcePrefix = "BinaryDataDecoders";
+        var targetPrefix = "OoBDev";
 
         foreach (var folder in Directory.EnumerateDirectories(path, "*.*", SearchOption.AllDirectories))
         {

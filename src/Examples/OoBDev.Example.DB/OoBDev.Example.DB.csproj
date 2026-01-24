@@ -6,7 +6,6 @@
     <RunSqlCodeAnalysis>True</RunSqlCodeAnalysis>
     <RecoveryMode>Simple</RecoveryMode>
     <ServiceBrokerOption>EnableBroker</ServiceBrokerOption>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
     <NoWarn>$(NoWarn);MSB3270;NU1701;NU1702</NoWarn>
 
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
@@ -41,9 +40,7 @@
     </PackageReference>
   </ItemGroup>
 
-
-  <ItemGroup>
-    <!-- These packages adds additional code analysis rules -->
+  <ItemGroup><!-- These packages adds additional code analysis rules -->
     <!-- We recommend using these, but they can be removed if desired -->
     <!--
     <PackageReference Include="ErikEJ.DacFX.SqlServer.Rules" Version="1.3.0">
@@ -55,21 +52,12 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     -->
+  
+    <Content Remove="ReadMe.Example.DB.md" />
   </ItemGroup>
-
 
   <ItemGroup>
     <ProjectReference Include="..\..\Extensions\OoBDev.Data.Vectors.DB\OoBDev.Data.Vectors.DB.csproj" />
-  </ItemGroup>
-
-
-  <ItemGroup>
-    <Folder Include="Tables\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="README.md" Pack="true" PackagePath="\" />
-    <Content Remove="README.md" />
   </ItemGroup>
 
 </Project>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFrameworks>net10.0</TargetFrameworks>
+    <IsPackable>false</IsPackable>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>bdd-io-ctrl</ToolCommandName>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  
+	<ItemGroup>
+		<PackageReference Include="System.Composition.Hosting" Version="9.0.0" />
+		<PackageReference Include="System.IO.Pipelines" Version="9.0.0" />
+		<PackageReference Include="System.IO.Ports" Version="9.0.0" />
+		<PackageReference Include="System.Reactive.Core" Version="6.0.1" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\OoBDev.ElectronicScoringMachines.Fencing\OoBDev.ElectronicScoringMachines.Fencing.csproj" />
+		<ProjectReference Include="..\OoBDev.IO.Abstractions\OoBDev.IO.Abstractions.csproj" />
+		<ProjectReference Include="..\OoBDev.IO.Pipelines\OoBDev.IO.Pipelines.csproj" />
+		<ProjectReference Include="..\OoBDev.IO.Ports\OoBDev.IO.Ports.csproj" />
+		<ProjectReference Include="..\OoBDev.IO.UsbHids\OoBDev.IO.UsbHids.csproj" />
+		<ProjectReference Include="..\OoBDev.IO\OoBDev.IO.csproj" />
+		<ProjectReference Include="..\OoBDev.Kuando.Busylight\OoBDev.Kuando.Busylight.csproj" />
+		<ProjectReference Include="..\OoBDev.LanC\OoBDev.LanC.csproj" />
+		<ProjectReference Include="..\OoBDev.Nmea\OoBDev.Nmea.csproj" />
+		<ProjectReference Include="..\OoBDev.Quarta.RadexOne\OoBDev.Quarta.RadexOne.csproj" />
+		<ProjectReference Include="..\OoBDev.ToolKit\OoBDev.ToolKit.csproj" />
+		<ProjectReference Include="..\OoBDev.Velleman.K8055\OoBDev.Velleman.K8055.csproj" />
+		<ProjectReference Include="..\OoBDev.Zoom.H4n\OoBDev.Zoom.H4n.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Update="GitVersion.MsBuild" Version="6.1.0">
+	    <PrivateAssets>all</PrivateAssets>
+	    <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+	  </PackageReference>
+	</ItemGroup>
+
+</Project>

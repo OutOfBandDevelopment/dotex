@@ -5,8 +5,6 @@
 		<ImplicitUsings>false</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<RootNamespace>$(MSBuildProjectName.Replace(" ", "_").Replace(".Complete", ""))</RootNamespace>
-
-    <PackageReadmeFile>Readme.Common.Complete.md</PackageReadmeFile>
 	</PropertyGroup>
 
 	<ItemGroup>

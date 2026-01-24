@@ -1,7 +1,7 @@
 # Integration Test Maintenance Protocol
 
-**Version:** 1.0.0
-**Last Updated:** 2026-01-20
+**Version:** 1.1.0
+**Last Updated:** 2026-01-24
 **Category:** Software Development
 
 ---
@@ -62,7 +62,65 @@ volumes:
     name: oobd-test-myservice-data
 ```
 
-### 2. Nginx Reverse Proxy Configuration
+### 2. Startup Scripts
+
+**Files:** `/containers/testing/scripts/integration-up.sh` and `/containers/testing/scripts/integration-up.bat`
+
+- [ ] Add service to startup output display (shows all running services with URLs/ports)
+- [ ] Update port list in script header comments
+- [ ] Ensure service appears in correct alphabetical/logical order
+- [ ] Include connection details (URL, port, or connection string)
+- [ ] Include credentials if applicable (username/password)
+
+**Example addition to integration-up.sh:**
+```bash
+echo "Services running:"
+echo "  - Apache Tika:        http://localhost:9998"
+# ... other services ...
+echo "  - MyService:          http://localhost:9999 (admin/password)"
+echo ""
+```
+
+**Example addition to integration-up.bat:**
+```batch
+echo Services running:
+echo   - Apache Tika:        http://localhost:9998
+REM ... other services ...
+echo   - MyService:          http://localhost:9999 (admin/password)
+echo.
+```
+
+**Port list update in script header:**
+```bash
+# Requirements:
+#   - Docker and Docker Compose installed
+#   - Ports available: 25, 1433, ..., 9999, ...
+```
+
+### 3. Health Check Scripts
+
+**Files:** `/containers/testing/scripts/wait-for-services.sh` and `/containers/testing/scripts/wait-for-services.bat`
+
+- [ ] Add container name to SERVICES array (must match `container_name` from docker-compose)
+- [ ] Ensure container name follows pattern: `oobd-test-{servicename}`
+- [ ] Place in logical order (typically alphabetical or by dependency)
+
+**Example:**
+```bash
+SERVICES=(
+    "oobd-test-tika"
+    "oobd-test-smtp"
+    # ... other services ...
+    "oobd-test-myservice"
+)
+```
+
+**Windows batch file:**
+```batch
+set SERVICES=oobd-test-tika oobd-test-smtp ... oobd-test-myservice
+```
+
+### 4. Nginx Reverse Proxy Configuration
 
 **File:** `/containers/testing/nginx/nginx.conf`
 
@@ -100,7 +158,7 @@ location /myservice-api/ {
 }
 ```
 
-### 3. Dashboard HTML
+### 5. Dashboard HTML
 
 **File:** `/containers/testing/nginx/html/index.html`
 
@@ -133,7 +191,7 @@ location /myservice-api/ {
 </div>
 ```
 
-### 4. Test Run Settings
+### 6. Test Run Settings
 
 **File:** `/src/.runsettings`
 
@@ -154,7 +212,27 @@ location /myservice-api/ {
 <Parameter name="MYSERVICE_CONNECTION_STRING" value="Host=localhost;Port=9999;Username=admin;Password=password" />
 ```
 
-### 5. Documentation Updates
+### 7. Environment Configuration
+
+**File:** `/containers/testing/.env.integration`
+
+- [ ] Add all service-specific environment variables
+- [ ] Follow naming convention: `{SERVICENAME}_{PROPERTY}`
+- [ ] Include URL, HOST, PORT, credentials, and connection strings
+- [ ] Add comments grouping related variables
+
+**Example:**
+```bash
+# MyService Configuration
+MYSERVICE_URL=http://localhost:9999
+MYSERVICE_HOST=localhost
+MYSERVICE_PORT=9999
+MYSERVICE_USERNAME=admin
+MYSERVICE_PASSWORD=password
+MYSERVICE_CONNECTION_STRING=Host=localhost;Port=9999;Username=admin;Password=password
+```
+
+### 8. Documentation Updates
 
 **Files to update:**
 
@@ -163,7 +241,29 @@ location /myservice-api/ {
 - [ ] `/src/TEST_VARIABLES.md` - Document new test parameters
 - [ ] Service-specific README (if complex configuration)
 
-### 6. Test Implementation
+### 9. CI/CD Workflow
+
+**File:** `/.github/workflows/integration-tests.yml`
+
+- [ ] Add environment variables to the test run step
+- [ ] Match variable names from .env.integration and .runsettings
+- [ ] Include all connection details needed for tests
+
+**Example:**
+```yaml
+env:
+  # ... other services ...
+
+  # MyService
+  MYSERVICE_URL: http://localhost:9999
+  MYSERVICE_HOST: localhost
+  MYSERVICE_PORT: 9999
+  MYSERVICE_USERNAME: admin
+  MYSERVICE_PASSWORD: password
+  MYSERVICE_CONNECTION_STRING: Host=localhost;Port=9999;Username=admin;Password=password
+```
+
+### 10. Test Implementation
 
 **Test file requirements:**
 
@@ -219,10 +319,15 @@ public async Task Cleanup()
 When changing ports, credentials, or URLs:
 
 - [ ] Update `/containers/testing/docker-compose.integration-tests.yml`
+- [ ] Update `/containers/testing/scripts/integration-up.sh` (display output and port list)
+- [ ] Update `/containers/testing/scripts/integration-up.bat` (display output and port list)
 - [ ] Update `/containers/testing/nginx/nginx.conf` (if port changed)
 - [ ] Update `/containers/testing/nginx/html/index.html` (port info and credentials)
+- [ ] Update `/containers/testing/.env.integration` with new values
 - [ ] Update `/src/.runsettings` with new values
+- [ ] Update `/.github/workflows/integration-tests.yml` environment variables
 - [ ] Update `/containers/testing/README.md` tables
+- [ ] Update `/src/TEST_VARIABLES.md` documentation
 - [ ] Search for hardcoded values in test files and update
 - [ ] Update any service-specific config files (e.g., `keycloak-config/`, `servicebus-config/`)
 
@@ -232,12 +337,19 @@ When changing ports, credentials, or URLs:
 
 - [ ] Remove service from `docker-compose.integration-tests.yml`
 - [ ] Remove volume from volumes section
+- [ ] Remove from `scripts/integration-up.sh` display output and port list
+- [ ] Remove from `scripts/integration-up.bat` display output and port list
+- [ ] Remove from `scripts/wait-for-services.sh` SERVICES array
+- [ ] Remove from `scripts/wait-for-services.bat` SERVICES list
 - [ ] Remove location blocks from `nginx/nginx.conf`
 - [ ] Remove service card from `nginx/html/index.html`
 - [ ] Update statistics in dashboard HTML
+- [ ] Remove variables from `.env.integration`
 - [ ] Remove parameters from `/src/.runsettings`
+- [ ] Remove environment variables from `/.github/workflows/integration-tests.yml`
 - [ ] Remove or update affected integration tests
-- [ ] Update documentation files
+- [ ] Update `/containers/testing/README.md` tables and diagrams
+- [ ] Update `/src/TEST_VARIABLES.md` documentation
 
 ---
 
@@ -246,9 +358,15 @@ When changing ports, credentials, or URLs:
 | File | Purpose |
 |------|---------|
 | `/containers/testing/docker-compose.integration-tests.yml` | Docker service definitions |
+| `/containers/testing/scripts/integration-up.sh` | Startup script (Linux/macOS) - displays all services |
+| `/containers/testing/scripts/integration-up.bat` | Startup script (Windows) - displays all services |
+| `/containers/testing/scripts/wait-for-services.sh` | Health check script (Linux/macOS) |
+| `/containers/testing/scripts/wait-for-services.bat` | Health check script (Windows) |
 | `/containers/testing/nginx/nginx.conf` | Reverse proxy routing |
 | `/containers/testing/nginx/html/index.html` | Dashboard UI |
-| `/src/.runsettings` | Test parameters |
+| `/containers/testing/.env.integration` | Environment variables for Docker services |
+| `/src/.runsettings` | Test parameters for MSTest |
+| `/.github/workflows/integration-tests.yml` | CI/CD workflow environment variables |
 | `/containers/testing/README.md` | Infrastructure documentation |
 | `/containers/testing/NGINX-DASHBOARD.md` | Dashboard documentation |
 | `/src/TEST_VARIABLES.md` | Test parameter reference |

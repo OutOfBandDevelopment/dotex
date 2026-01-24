@@ -4,11 +4,6 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>false</ImplicitUsings>
     <Nullable>enable</Nullable>
-    
-    
-
-    
-    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -24,10 +19,6 @@
   <ItemGroup>
     <InternalsVisibleTo Include="OoBDev.SemanticKernel" />
     <InternalsVisibleTo Include="OoBDev.SemanticKernel.Tests" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
 </Project>

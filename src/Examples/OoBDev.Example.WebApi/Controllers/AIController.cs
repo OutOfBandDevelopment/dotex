@@ -1,4 +1,4 @@
-using OoBDev.AI;
+﻿using OoBDev.AI;
 using OoBDev.WebApi.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -24,10 +24,7 @@ public class AIController : ControllerBase
     /// <param name="llmProvider">The language model provider.</param>
     public AIController(
         [FromKeyedServices("OPENAI")] ILanguageModelProvider llmProvider
-        )
-    {
-        _llmProvider = llmProvider;
-    }
+        ) => _llmProvider = llmProvider;
 
     /// <summary>
     /// Generate an LLM Response based on the prompt and user input

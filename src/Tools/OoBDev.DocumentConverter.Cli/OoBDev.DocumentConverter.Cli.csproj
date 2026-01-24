@@ -8,8 +8,6 @@
 
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>file-convert</ToolCommandName>
-
-    <PackageReadmeFile>Readme.DocumentConverter.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>

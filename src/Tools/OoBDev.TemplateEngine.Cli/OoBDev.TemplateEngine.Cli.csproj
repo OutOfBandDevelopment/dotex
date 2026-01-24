@@ -8,8 +8,6 @@
 
 		<PackAsTool>true</PackAsTool>
 		<ToolCommandName>templateengine</ToolCommandName>
-
-    <PackageReadmeFile>Readme.TemplateEngine.md</PackageReadmeFile>
 	</PropertyGroup>
 
 	<ItemGroup>

@@ -12,8 +12,16 @@ REM   1 - Timeout reached, some services are not healthy
 
 setlocal enabledelayedexpansion
 
+echo Running: %0
+set SCRIPT_PATH=%~dp0
+echo SCRIPT_PATH: %SCRIPT_PATH%
+set TESTING_DIR=%SCRIPT_PATH%..\
+echo TESTING_DIR: %TESTING_DIR%
+set STARTING_PATH=%CD%
+echo STARTING_PATH: %STARTING_PATH%
+
 REM Get script directory and change to testing directory
-cd /d "%~dp0\.."
+PUSHD "%TESTING_DIR%"
 
 REM Configuration
 set TIMEOUT=%1
@@ -30,7 +38,7 @@ echo Check interval: %INTERVAL% seconds
 echo.
 
 REM Service list (container names from docker-compose file)
-set SERVICES=oobd-test-tika oobd-test-smtp oobd-test-mongodb oobd-test-sqlserver oobd-test-rabbitmq oobd-test-opensearch oobd-test-qdrant oobd-test-azurite oobd-test-localstack oobd-test-keycloak oobd-test-sbert
+set SERVICES=oobd-test-tika oobd-test-smtp oobd-test-mongodb oobd-test-sqlserver oobd-test-rabbitmq oobd-test-redis oobd-test-opensearch oobd-test-qdrant oobd-test-azurite oobd-test-localstack oobd-test-servicebus oobd-test-keycloak oobd-test-sbert oobd-test-ollama oobd-test-azurinsight
 
 REM Main health check loop
 set /a elapsed=0
@@ -48,7 +56,11 @@ for %%s in (%SERVICES%) do (
     set /a total_count+=1
 
     REM Check if container exists and get health status
-    for /f "delims=" %%h in ('docker inspect --format="{{.State.Health.Status}}" %%s 2^>nul') do set health_status=%%h
+    SET TARGET_HOST=%%s
+    for /f "delims=" %%h in ('docker inspect --format="{{.State.Health.Status}}" %%s 2^>nul') do (
+        set health_status=%%h
+        ECHO ... !TARGET_HOST! -- %%h
+    )
 
     REM If health check failed, try to get running status
     if "!health_status!"=="" (
@@ -69,11 +81,12 @@ REM Check if all services are healthy
 if %all_healthy%==1 (
     echo.
     echo ✅ All services are healthy!
+    POPD
     exit /b 0
 )
 
 REM Print progress
-<nul set /p="⏳ Waiting... [%elapsed%s/%TIMEOUT%s] Healthy: %healthy_count%/%total_count%"
+<nul set /p="Waiting... [%elapsed%s/%TIMEOUT%s] Healthy: %healthy_count%/%total_count%"
 echo.
 
 REM Wait before next check
@@ -121,8 +134,9 @@ echo 2. View logs for failing services:
 echo    docker compose -f %COMPOSE_FILE% logs [service-name]
 echo.
 echo 3. Restart services:
-echo    %~dp0integration-down.bat --clean
-echo    %~dp0integration-up.bat
+echo    %SCRIPT_PATH%integration-down.bat --clean
+echo    %SCRIPT_PATH%integration-up.bat
 echo.
 
+POPD
 exit /b 1

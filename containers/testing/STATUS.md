@@ -1,6 +1,6 @@
 # Integration Testing Infrastructure - Implementation Status
 
-**Last Updated**: 2026-01-21
+**Last Updated**: 2026-01-24
 **Current Phase**: Local Validation Complete - Ready for CI/CD Enablement
 
 ---
@@ -22,7 +22,7 @@ Week 4: Documentation            ░░░░░░░░░░░░░░░�
 ### Docker Infrastructure ✅
 
 **Created Files**:
-- ✅ `docker-compose.integration-tests.yml` - 11-service stack
+- ✅ `docker-compose.integration-tests.yml` - 15-service stack
 - ✅ `.env.integration` - Environment configuration
 - ✅ `scripts/integration-up.sh` + `.bat` - Startup scripts
 - ✅ `scripts/integration-down.sh` + `.bat` - Shutdown scripts
@@ -36,12 +36,16 @@ Week 4: Documentation            ░░░░░░░░░░░░░░░�
 3. ✅ MongoDB (NoSQL database)
 4. ✅ SQL Server (Relational database)
 5. ✅ RabbitMQ (Message queue)
-6. ✅ OpenSearch (Search engine)
-7. ✅ Qdrant (Vector database)
-8. ✅ Azurite (Azure Storage emulator)
-9. ✅ LocalStack (AWS emulator)
-10. ✅ Keycloak (Identity & Access Management)
-11. ✅ SBert (Sentence embeddings - CPU only)
+6. ✅ Redis (Cache store)
+7. ✅ OpenSearch (Search engine)
+8. ✅ Qdrant (Vector database)
+9. ✅ Azurite (Azure Storage emulator)
+10. ✅ LocalStack (AWS emulator)
+11. ✅ Azure Service Bus Emulator (Message queue)
+12. ✅ Keycloak (Identity & Access Management)
+13. ✅ SBert (Sentence embeddings - CPU only)
+14. ✅ Ollama (LLM inference - CPU only, phi3 model)
+15. ✅ Azurinsight (Application Insights emulator)
 
 **Features**:
 - ✅ Health checks for all services
@@ -116,7 +120,7 @@ Week 4: Documentation            ░░░░░░░░░░░░░░░�
 
 ## ✅ Week 2: Test Migration (COMPLETE - 2026-01-21)
 
-**23 tests successfully migrated from DevLocal to Integration category**
+**33 tests successfully migrated from DevLocal to Integration category**
 
 ### Apache Tika Tests (6 tests) ✅ COMPLETE
 
@@ -200,6 +204,41 @@ Week 4: Documentation            ░░░░░░░░░░░░░░░�
 - [x] Updated to use `OLLAMA_URL` and `OLLAMA_MODEL` environment variables
 - [x] Tested with Docker Ollama - ALL PASSING
 
+### Azurinsight Tests (10 tests) ✅ COMPLETE
+
+**Files Created**:
+- `src/ExternalServices/Microsoft/OoBDev.Microsoft.ApplicationInsights.Tests/ApplicationInsightsIntegrationTests.cs`
+- `src/ExternalServices/Microsoft/OoBDev.Microsoft.ApplicationInsights.Tests/TelemetryProcessorTests.cs`
+
+**Tests Created** (2026-01-24):
+1. ✅ `SendEventTelemetry_ShouldStoreInAzurinsight`
+2. ✅ `SendTraceTelemetry_ShouldStoreInAzurinsight`
+3. ✅ `SendMetricTelemetry_ShouldStoreInAzurinsight`
+4. ✅ `SendExceptionTelemetry_ShouldStoreInAzurinsight`
+5. ✅ `SendDependencyTelemetry_ShouldStoreInAzurinsight`
+6. ✅ `SendRequestTelemetry_ShouldStoreInAzurinsight`
+7. ✅ `PurgeApi_ShouldClearAllTelemetry`
+8. ✅ `CorrelationInfoTelemetryProcessor_ShouldAddCorrelationHeaders`
+9. ✅ `UserTelemetryProcessor_ShouldAddUserClaims`
+10. ✅ `CombinedProcessors_ShouldAddBothCorrelationAndUserInfo`
+
+**Changes Complete**:
+- [x] Added azurinsight service to `docker-compose.integration-tests.yml`
+- [x] Updated `.env.integration` with Application Insights configuration
+- [x] Created comprehensive Integration tests (10 test methods)
+- [x] Tests use `APPINSIGHTS_CONNECTION_STRING` and `APPINSIGHTS_URL` test properties
+- [x] Added cleanup logic using azurinsight purge API
+- [x] Updated TEST_VARIABLES.md documentation
+- [x] Updated README.md with 15th service
+- [x] Updated nginx dashboard with azurinsight card
+- [x] Migrated from LiveIntegration to Integration category
+
+**Benefits**:
+- ✅ No Azure credentials needed for Application Insights testing
+- ✅ Deterministic telemetry validation
+- ✅ Fast local testing with SQLite-based emulator
+- ✅ Complete offline testing capability
+
 ### Qdrant Tests ⏭️ DEFERRED
 
 **Files Reviewed**:
@@ -207,7 +246,7 @@ Week 4: Documentation            ░░░░░░░░░░░░░░░�
 
 **Result**: All tests commented out (lines 1-287) - Deferred until uncommented
 
-**Final Count**: 23 tests migrated successfully, ALL PASSING
+**Final Count**: 33 tests migrated successfully, ALL PASSING
 
 ---
 
@@ -233,8 +272,8 @@ Week 4: Documentation            ░░░░░░░░░░░░░░░�
 ### Success Criteria
 
 - [ ] Workflow triggers successfully in GitHub Actions
-- [ ] All 14 Docker services start successfully
-- [ ] All 23 Integration tests pass in CI/CD
+- [ ] All 15 Docker services start successfully
+- [ ] All 33 Integration tests pass in CI/CD
 - [ ] Test results uploaded (30-day retention)
 - [ ] Validated tag created on success
 - [ ] Total execution time < 30 minutes
@@ -323,7 +362,7 @@ Week 4: Documentation            ░░░░░░░░░░░░░░░�
 - ✅ Daily schedule configured correctly (CI/CD disabled pending validation)
 
 ### Week 2: Test Migration ✅ COMPLETE
-- ✅ 23 tests migrated from DevLocal to Integration
+- ✅ 33 tests migrated from DevLocal to Integration
 - ✅ All Integration tests pass locally
 - ✅ Test cleanup verified (no data leaks)
 - ✅ Local execution time acceptable

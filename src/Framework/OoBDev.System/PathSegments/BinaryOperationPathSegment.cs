@@ -21,10 +21,7 @@ public abstract class BinaryOperationPathSegment<T> : BinaryPathSegment
         IPathSegment left,
         IPathSegment<T> @operator,
         IPathSegment right
-        ) : base(left, right)
-    {
-        Operator = @operator;
-    }
+        ) : base(left, right) => Operator = @operator;
 
     /// <summary>
     /// Returns a string representation of the binary operation in the format "LeftOperand Operator RightOperand".

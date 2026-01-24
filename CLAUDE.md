@@ -78,45 +78,18 @@ Located in `.claude/protocols/`:
 
 ### 3. Current Migration Work
 
-**Incomming Project Investigations** - ✅ COMPLETE (6 of 6 = 100%)
-- ✅ dotnet-lib - Completed and deleted (95% identical to main)
-- ✅ Framework - Investigated (55 files, Phase 0 comparison required)
-- ✅ Oobtainium - RESOLVED: Moved to proving-grounds repository (https://github.com/mwwhited/proving-grounds)
-- ✅ BotChat - Investigated (sample app, awaiting decision)
-- ✅ SharedFramework - Investigated (52 projects, migration plan ready)
-- ✅ BinaryDecoders - Investigated (awaiting critical decisions)
-- ✅ ContractParser - Investigated (feature specification in Features/ContractParser/)
-- ✅ Tools - Investigated (4 CLI tools analyzed in Features/Tools/)
-
-**Tracking:** See `Incomming/CHECKLIST.md` for detailed status
+**Incomming Projects Pending Decisions:**
+- ⏸️ **BotChat** - Sample app, decision needed (archive, enhance, or extract patterns)
+- ⏸️ **BinaryDataDecoders** - ~50,000 LOC, awaiting 14+ critical decisions
+- ⏸️ **ContractParser** - Decision needed (implement now, later, or keep as spec)
+- ⏸️ **Tools** - Decision needed (consolidate BulkLlm tools or archive)
 
 **BinaryDataDecoders Migration** - ⏸️ BLOCKED (Awaiting decisions)
-
-**Phase 0: Critical Bug Fixes** - ✅ COMPLETED
-- All 6 critical bugs fixed and tested
-- Build verification passed
 
 **Phase 1: Foundation Enhancement** - ⏸️ PENDING (Awaiting decisions)
 - Endianness support improvements
 - Utility enhancements
 - BinaryPrimitives expansion
-
-**Framework Vector Math Migration** - ✅ NAMESPACE UPDATE COMPLETE
-- ✅ Vector files already in main codebase at `src/Framework/OoBDev.System.Abstractions/Math/`
-- ✅ Namespace updated from `OoBDev.Common.Math` → `OoBDev.System.Math` (5 files)
-- ✅ No migration needed - files already integrated
-
-**SharedFramework Migration** - ✅ PHASE 1 IN PROGRESS
-- ✅ 51 projects at .NET 10.0 (1 SQL project at netstandard2.0)
-- ✅ Namespace cleanup complete (27 directories renamed)
-  - 14 Api. prefix removals
-  - 4 Azure reorganizations (moved under Microsoft hierarchy)
-  - 9 Contracts → Abstractions renames
-- ✅ Caching Framework migrated (4 impl + 3 test projects)
-- ✅ Message Queues migrated (AWS SQS + Azure Service Bus providers)
-- 52 projects analyzed and categorized
-- 12-phase migration plan created
-- Next: Communications merge (1,145 LOC vs 16 LOC stub)
 
 ---
 

@@ -19,10 +19,7 @@ public class MicrosoftMemoryCachingProvider : ICachingProvider, IDisposable
     /// <param name="optionsAccessor">The memory cache options.</param>
     public MicrosoftMemoryCachingProvider(
         IOptions<MemoryCacheOptions> optionsAccessor
-        )
-    {
-        _cache = new MemoryCache(optionsAccessor);
-    }
+        ) => _cache = new MemoryCache(optionsAccessor);
 
     /// <summary>
     /// Disposes the underlying memory cache.

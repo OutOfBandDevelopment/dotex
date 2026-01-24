@@ -11,8 +11,16 @@ REM Note: Using --clean removes all test data (recommended for CI/CD)
 
 setlocal
 
+echo Running: %0
+set SCRIPT_PATH=%~dp0
+echo SCRIPT_PATH: %SCRIPT_PATH%
+set TESTING_DIR=%SCRIPT_PATH%..\
+echo TESTING_DIR: %TESTING_DIR%
+set STARTING_PATH=%CD%
+echo STARTING_PATH: %STARTING_PATH%
+
 REM Get script directory and change to testing directory
-cd /d "%~dp0\.."
+PUSHD "%TESTING_DIR%"
 
 echo ======================================================================
 echo OoBDev Integration Test Stack - Stopping Services
@@ -58,6 +66,7 @@ if %ERRORLEVEL% neq 0 (
     echo.
     echo ❌ Failed to stop Docker services
     echo.
+    POPD
     exit /b 1
 )
 
@@ -99,4 +108,5 @@ echo To start services again:
 echo   %~dp0integration-up.bat
 echo.
 
+POPD
 endlocal

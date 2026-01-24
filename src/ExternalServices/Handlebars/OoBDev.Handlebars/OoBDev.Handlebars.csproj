@@ -5,14 +5,7 @@
 		<ImplicitUsings>false</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		
-
-		<PackageReadmeFile>Readme.Handlebars.md</PackageReadmeFile>
 	</PropertyGroup>
-
-	<ItemGroup>
-		<None Include="Readme.Handlebars.md" Pack="true" PackagePath="\" />
-	</ItemGroup>
-
 	<ItemGroup>
 		<PackageReference Include="GitVersion.MsBuild" Version="6.5.1">
 		  <PrivateAssets>all</PrivateAssets>
