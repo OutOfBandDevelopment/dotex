@@ -13,8 +13,5 @@ internal class ExtensibleSignificantWhitespaceNode<T> : ExtensibleSimpleNodeBase
         ) : base(
             parent, name, item, "",
             XPathNodeType.SignificantWhitespace
-            )
-    {
-        FirstChild = new ExtensibleTextNode<T>(this, name, item, value);
-    }
+            ) => FirstChild = new ExtensibleTextNode<T>(this, name, item, value);
 }

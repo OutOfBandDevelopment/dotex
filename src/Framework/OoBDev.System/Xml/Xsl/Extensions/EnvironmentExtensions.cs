@@ -19,10 +19,7 @@ public class EnvironmentExtensions
     /// <summary>
     /// Initializes a new instance of the EnvironmentExtensions class.
     /// </summary>
-    public EnvironmentExtensions()
-    {
-        _ns = this.GetXmlNamespace() + XmlNamespaces.OutputSuffix;
-    }
+    public EnvironmentExtensions() => _ns = this.GetXmlNamespace() + XmlNamespaces.OutputSuffix;
 
     /// <summary>
     /// Retrieves the value of an environment variable from the current process.

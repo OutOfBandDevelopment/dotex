@@ -19,10 +19,7 @@ public class CurrentUserPlugIn : IKernelPlugIn
     /// <param name="logger">The logger for plugin operations.</param>
     public CurrentUserPlugIn(
         ILogger<CurrentUserPlugIn> logger
-        )
-    {
-        _logger = logger;
-    }
+        ) => _logger = logger;
 
     /// <summary>
     /// Gets the current username.

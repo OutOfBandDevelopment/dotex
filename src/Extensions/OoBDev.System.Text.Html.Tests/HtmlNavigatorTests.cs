@@ -2,7 +2,6 @@
 using OoBDev.System.Xml.XPath;
 using OoBDev.TestUtilities;
 using System.Linq;
-using System.Xml;
 
 namespace OoBDev.System.Text.Html.Tests;
 

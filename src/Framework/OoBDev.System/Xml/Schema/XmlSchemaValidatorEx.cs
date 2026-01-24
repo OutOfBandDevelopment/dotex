@@ -20,10 +20,7 @@ public class XmlSchemaValidatorEx
     /// <summary>
     /// Initializes a new instance of the <see cref="XmlSchemaValidatorEx"/> class with an empty schema set.
     /// </summary>
-    public XmlSchemaValidatorEx()
-    {
-        XmlSchemaSet = new XmlSchemaSet();
-    }
+    public XmlSchemaValidatorEx() => XmlSchemaSet = new XmlSchemaSet();
 
     /// <summary>
     /// Initializes a new instance of the <see cref="XmlSchemaValidatorEx"/> class with a single schema loaded from a URI.
@@ -31,10 +28,7 @@ public class XmlSchemaValidatorEx
     /// <param name="targetNamespace">The target namespace of the schema, or null for no namespace.</param>
     /// <param name="xsdUri">The URI of the XSD schema file to load.</param>
     public XmlSchemaValidatorEx(string targetNamespace, string xsdUri)
-        : this()
-    {
-        XmlSchemaSet.Add(targetNamespace ?? "", xsdUri);
-    }
+        : this() => XmlSchemaSet.Add(targetNamespace ?? "", xsdUri);
 
     /// <summary>
     /// Initializes a new instance of the <see cref="XmlSchemaValidatorEx"/> class with a single schema loaded from an XmlReader.
@@ -42,10 +36,7 @@ public class XmlSchemaValidatorEx
     /// <param name="targetNamespace">The target namespace of the schema, or null for no namespace.</param>
     /// <param name="xmlReader">The XmlReader containing the XSD schema to load.</param>
     public XmlSchemaValidatorEx(string targetNamespace, XmlReader xmlReader)
-        : this()
-    {
-        XmlSchemaSet.Add(targetNamespace ?? "", xmlReader);
-    }
+        : this() => XmlSchemaSet.Add(targetNamespace ?? "", xmlReader);
 
     /// <summary>
     /// Initializes a new instance of the <see cref="XmlSchemaValidatorEx"/> class with a single schema loaded from an XNode.

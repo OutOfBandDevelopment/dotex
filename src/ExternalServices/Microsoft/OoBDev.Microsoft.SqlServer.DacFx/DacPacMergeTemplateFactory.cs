@@ -21,10 +21,7 @@ public class DacPacMergeTemplateFactory : TemplateFactoryBase<DacPacMergeTemplat
     public DacPacMergeTemplateFactory(
         IDacPacCompilerConfig config,
         IObjectConverter converter
-        ) : base(converter)
-    {
-        _config = config;
-    }
+        ) : base(converter) => _config = config;
 
     /// <inheritdoc/>
     public async Task<IDacPacMergeTemplate> Create()

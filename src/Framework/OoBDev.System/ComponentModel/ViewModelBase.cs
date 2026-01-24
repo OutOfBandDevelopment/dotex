@@ -20,10 +20,7 @@ public abstract class ViewModelBase : INotifyPropertyChanged
     /// Initializes a new instance of the <see cref="ViewModelBase"/> class.
     /// </summary>
     /// <param name="dispatched">The action to use for dispatching property change notifications to the UI thread.</param>
-    protected ViewModelBase(Action<Action> dispatched)
-    {
-        Dispatched = dispatched;
-    }
+    protected ViewModelBase(Action<Action> dispatched) => Dispatched = dispatched;
 
     /// <summary>
     /// Gets the action used to dispatch work to the UI thread.

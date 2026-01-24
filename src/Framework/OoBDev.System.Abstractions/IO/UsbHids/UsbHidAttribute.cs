@@ -37,10 +37,7 @@ public class UsbHidAttribute : Attribute
         ushort vendorId,
         ushort productId,
         ushort productMask
-        ) : this(vendorId, productId)
-    {
-        ProductMask = productMask;
-    }
+        ) : this(vendorId, productId) => ProductMask = productMask;
 
     /// <summary>
     /// Gets or sets the USB vendor ID.

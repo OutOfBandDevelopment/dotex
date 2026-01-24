@@ -18,10 +18,7 @@ public class CorrelationInfoHttpPrepareRequestFeature : IHttpPrepareRequestFeatu
     /// <param name="accessor">The accessor for correlation information.</param>
     public CorrelationInfoHttpPrepareRequestFeature(
         IAccessor<CorrelationInfo> accessor
-        )
-    {
-        _accessor = accessor;
-    }
+        ) => _accessor = accessor;
 
     /// <summary>
     /// Prepares an HTTP request by adding correlation ID and request ID headers.

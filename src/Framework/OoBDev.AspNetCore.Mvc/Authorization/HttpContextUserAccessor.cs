@@ -16,10 +16,7 @@ public class HttpContextUserAccessor : ICurrentUserAccessor
     /// <param name="identity">The current user's identity.</param>
     public HttpContextUserAccessor(
         IIdentity identity
-        )
-    {
-        _identity = identity;
-    }
+        ) => _identity = identity;
 
     /// <summary>
     /// Gets the current user's username.

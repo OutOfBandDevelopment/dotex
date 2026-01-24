@@ -10,10 +10,7 @@ public abstract class BaseValuePathSegment<T> : IPathSegment<T>
     /// Initializes a new instance of the <see cref="BaseValuePathSegment{T}"/> class.
     /// </summary>
     /// <param name="value">The value to be stored in the path segment.</param>
-    protected BaseValuePathSegment(T value)
-    {
-        Value = value;
-    }
+    protected BaseValuePathSegment(T value) => Value = value;
 
     /// <summary>
     /// Gets the value stored in this path segment.

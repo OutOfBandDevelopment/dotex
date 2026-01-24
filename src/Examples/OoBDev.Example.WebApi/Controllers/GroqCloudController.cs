@@ -1,4 +1,4 @@
-using OoBDev.AI;
+﻿using OoBDev.AI;
 using OoBDev.AI.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,10 +21,7 @@ public class GroqCloudController : ControllerBase
     /// <param name="completion">The completion provider.</param>
     public GroqCloudController(
         [FromKeyedServices("GroqCloud")] IMessageCompletion completion
-        )
-    {
-        _completion = completion;
-    }
+        ) => _completion = completion;
 
     /// <summary>
     /// executes a completion request

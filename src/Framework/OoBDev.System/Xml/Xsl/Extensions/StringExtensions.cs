@@ -16,10 +16,7 @@ public class StringExtensions
     /// <summary>
     /// Create instance of StringExtensions
     /// </summary>
-    public StringExtensions()
-    {
-        _ns = this.GetXmlNamespace() + XmlNamespaces.OutputSuffix;
-    }
+    public StringExtensions() => _ns = this.GetXmlNamespace() + XmlNamespaces.OutputSuffix;
 
     /// <summary>
     /// remove leading and trailing whitespace for multiline strings 

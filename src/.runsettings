@@ -180,6 +180,11 @@ https://github.com/coverlet-coverage/coverlet/blob/fc7ec26dcaed8fedba880ff13c6f1
 		<Parameter name="OLLAMA_PORT" value="11434" />
 		<Parameter name="OLLAMA_MODEL" value="phi3" />
 
+		<!-- Azurinsight (Application Insights Emulator) -->
+		<Parameter name="APPINSIGHTS_URL" value="http://localhost:5000" />
+		<Parameter name="APPINSIGHTS_INSTRUMENTATION_KEY" value="test-key" />
+		<Parameter name="APPINSIGHTS_CONNECTION_STRING" value="InstrumentationKey=test-key;IngestionEndpoint=http://localhost:5000" />
+
 		<!-- OpenSearch Dashboards -->
 		<Parameter name="OPENSEARCH_DASHBOARDS_URL" value="http://localhost:5601" />
 		<Parameter name="OPENSEARCH_DASHBOARDS_HOST" value="localhost" />
