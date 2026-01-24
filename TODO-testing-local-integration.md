@@ -450,6 +450,73 @@ Complete Docker-based integration testing infrastructure enabling automated test
 
 ---
 
+### Future Service Additions
+
+#### Azurinsight - Application Insights Emulator (PENDING - External Repository)
+
+**Goal:** Add 15th Docker service to enable local Application Insights testing
+
+**Background:**
+- Application Insights tests currently in LiveIntegration category (requires cloud credentials)
+- [azurinsight](https://github.com/Rahulkumar010/azurinsight) is a lightweight local emulator for Azure Application Insights
+- Container being prepared in separate repository
+
+**Integration Tasks (BLOCKED - Awaiting container availability):**
+
+- [ ] **Prerequisites:**
+  - [ ] azurinsight Docker image available (separate repository work)
+  - [ ] Image published or build instructions available
+
+- [ ] **Docker Infrastructure:**
+  - [ ] Add azurinsight service to `docker-compose.integration-tests.yml`
+  - [ ] Configure port 5000 (default Application Insights emulator port)
+  - [ ] Add health check endpoint
+  - [ ] Update `.env.integration` with configuration variables:
+    ```bash
+    APPINSIGHTS_CONNECTION_STRING=InstrumentationKey=test;IngestionEndpoint=http://localhost:5000
+    APPINSIGHTS_URL=http://localhost:5000
+    ```
+  - [ ] Test service startup with other 14 services
+
+- [ ] **Test Migration:**
+  - [ ] Migrate Application Insights tests from LiveIntegration to Integration
+  - [ ] Update tests to use `APPINSIGHTS_CONNECTION_STRING` test property
+  - [ ] Add cleanup logic in `[TestCleanup]` if needed
+  - [ ] Verify tests pass with local emulator
+
+- [ ] **Documentation:**
+  - [ ] Update `containers/testing/README.md` with 15th service
+  - [ ] Create `docs/architecture/testing/stacks/monitoring/azurinsight.md`
+  - [ ] Update TEST_VARIABLES.md with Application Insights properties
+  - [ ] Update PlantUML diagrams to include azurinsight
+
+- [ ] **Configuration:**
+  - [ ] Update `.github/workflows/integration-tests.yml` environment variables
+  - [ ] Update `.runsettings` files with Application Insights settings
+  - [ ] Update nginx dashboard configuration
+
+**Protocol Reference:**
+- Follow `.claude/protocols/testing/integration-test-maintenance.md` for adding new container
+
+**Benefits:**
+- Eliminate need for live Azure Application Insights credentials
+- Move tests from manual LiveIntegration to automated Integration category
+- Reduce cloud costs during testing
+- Enable deterministic telemetry validation
+- Complete offline testing capability
+
+**Dependencies:**
+- External: azurinsight container from separate repository
+- Internal: Current 14-service stack stable and validated
+
+**Estimated Timeline:**
+- Container availability: TBD (external dependency)
+- Integration work: 1-2 hours after container available
+- Test migration: 2-4 hours
+- Documentation: 1-2 hours
+
+---
+
 ## Enable CI/CD After Validation
 
 **After successful local testing:**

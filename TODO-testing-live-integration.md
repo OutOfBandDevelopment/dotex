@@ -114,6 +114,8 @@ Integration testing for cloud services that require actual cloud infrastructure 
 
 **Current Status:** Tests exist but marked as DevLocal
 
+> **NOTE:** These tests may be migrated to Integration category in the future using [azurinsight](https://github.com/Rahulkumar010/azurinsight) (local Application Insights emulator). Container being prepared in separate repository. See [TODO-testing-local-integration.md](./TODO-testing-local-integration.md) "Future Service Additions" section.
+
 **Migration Tasks:**
 - [ ] File: `src/ExternalServices/Microsoft/OoBDev.Microsoft.ApplicationInsights.Tests/`
 - [ ] Change `[TestCategory(TestCategories.DevLocal)]` → `[TestCategory(TestCategories.LiveIntegration)]`

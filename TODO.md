@@ -34,6 +34,7 @@ Docker-based integration testing with 14 services (Apache Tika, SMTP4Dev, MongoD
 - ✅ Ollama integration: Auto-pull phi3 model in integration-up scripts
 - ⏳ **NEXT:** Enable CI/CD pipeline for daily Integration test runs
 - ⏳ Week 4: Docker documentation (11 stacks)
+- ⏸️ **FUTURE:** Add azurinsight (Application Insights emulator) as 15th service (container in separate repository)
 
 ### ☁️ [Live Integration Testing (Cloud)](./TODO-testing-live-integration.md)
 **Status:** ✅ Category Added - ⏳ Week 3 Migration Pending
