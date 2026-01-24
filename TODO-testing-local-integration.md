@@ -1,6 +1,6 @@
 # TODO - Local Integration Testing (Docker) Epic
 
-**Last Updated:** 2026-01-21
+**Last Updated:** 2026-01-24
 
 Docker-based integration testing infrastructure for OoBDev framework.
 
@@ -246,6 +246,45 @@ Complete Docker-based integration testing infrastructure enabling automated test
 - ✅ Ollama: 4 tests
 - ⏭️ SQL Server DacFx: 0 tests (none applicable)
 - ⏭️ Qdrant: 0 tests (all commented out)
+
+---
+
+### Script Enhancements & Health Check Fixes (2026-01-24)
+
+**Goal:** Improve integration-up scripts and fix Docker health checks for all 15 services
+
+**Completed:**
+- [x] **Script Enhancements:**
+  - [x] Added `--build` flag support to `integration-up.sh/.bat` for rebuilding images
+  - [x] Fixed Windows batch file path resolution (using `PUSHD` instead of character counting)
+  - [x] Updated all 15 services in startup script output display
+  - [x] Updated port lists in script headers (all 17 required ports)
+  - [x] Added all 4 missing services to `wait-for-services.sh/.bat` (Redis, Service Bus, Ollama, Azurinsight)
+
+- [x] **Health Check Fixes:**
+  - [x] Updated all health checks to use bash TCP (`</dev/tcp/HOST/PORT`) instead of curl/wget/nc
+  - [x] Apache Tika: `timeout 2 bash -c '</dev/tcp/localhost/9998'` ✅ healthy
+  - [x] Qdrant: bash TCP check ✅ healthy
+  - [x] Azurite: Node.js socket check ✅ healthy
+  - [x] Keycloak: bash TCP check ✅ healthy
+  - [x] SBert: bash TCP check ✅ healthy
+  - [x] Ollama: bash TCP check ✅ healthy
+  - [x] Service Bus: bash TCP check (⏳ starting - 30s period)
+  - [x] Azurinsight: bash TCP check (⚠️ unhealthy - needs investigation)
+
+- [x] **Protocol Updates:**
+  - [x] Updated `.claude/protocols/software/integration-test-maintenance.md` to v1.1.0
+  - [x] Added checklist items for startup scripts (integration-up.sh/.bat)
+  - [x] Added checklist items for health check scripts (wait-for-services.sh/.bat)
+  - [x] Added checklist items for .env.integration and CI/CD workflow
+  - [x] Expanded file reference quick links
+
+**Status:** 13/15 services healthy, 2 remaining (servicebus starting, azurinsight needs fix)
+
+**Next Steps:**
+- [ ] Investigate azurinsight health check failure
+- [ ] Verify servicebus completes startup successfully
+- [ ] Complete final validation with all 15 services healthy
 
 ---
 

@@ -1,6 +1,6 @@
 # TODO - OoBDev (dotex) Framework
 
-**Last Updated:** 2026-01-22
+**Last Updated:** 2026-01-24
 
 ✅ **COMPLETED:** Build Warnings Resolution - Reduced from 95+ to 8 warnings (2026-01-22)
 ✅ **COMPLETED:** Test Category Cleanup - DevLocal tests converted to Integration/Unit/LiveIntegration (2026-01-22)
@@ -32,7 +32,9 @@ Docker-based integration testing with 15 services (Apache Tika, SMTP4Dev, MongoD
 - ✅ Local validation complete - All Integration tests passing (2026-01-21)
 - ✅ Week 2: Migrated 23 tests from DevLocal to Integration category (Apache Tika, SMTP/MailKit, MongoDB, RabbitMQ, OpenSearch, SBert, Ollama)
 - ✅ Ollama integration: Auto-pull phi3 model in integration-up scripts
-- ✅ **NEW:** Azurinsight integration complete - 10 Application Insights tests (2026-01-24)
+- ✅ Azurinsight integration complete - 10 Application Insights tests (2026-01-24)
+- ✅ **NEW:** Scripts enhanced with --build flag, fixed Windows path handling, universal health checks (2026-01-24)
+- ⏳ **IN PROGRESS:** Health check fixes (13/15 services healthy, 2 remaining)
 - ⏳ **NEXT:** Enable CI/CD pipeline for daily Integration test runs
 - ⏳ Week 4: Docker documentation (15 stacks)
 
