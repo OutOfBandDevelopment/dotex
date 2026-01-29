@@ -41,6 +41,7 @@ The nginx reverse proxy provides a unified web interface to all services with di
 - ✅ **Health Checks**: Ensures services are ready before tests run
 - ✅ **Isolated Network**: Test-specific network avoids conflicts
 - ✅ **Configurable**: Environment variables for connection strings
+- ✅ **Auto-Initialization**: Services initialize themselves on startup (models, queues, topics)
 
 ---
 
@@ -400,6 +401,18 @@ Tests use environment variables for connection strings. See `.env.integration` f
 | `OLLAMA_URL` | `http://localhost:11434` | Ollama LLM endpoint |
 | `OLLAMA_MODEL` | `phi3` | Ollama model name |
 
+### Auto-Initialized Resources
+
+The following services automatically initialize required resources on container startup:
+
+| Service | Initialization | Details |
+|---------|----------------|---------|
+| **Ollama** | Pulls phi3 model | Happens during container startup (adds ~60s to first start) |
+| **LocalStack SQS** | Creates test queues | `integration-test-queue` pre-created |
+| **Service Bus Emulator** | Creates queues/topics | `integration-test-queue`, `integration-test-topic` with subscription |
+
+**Note**: Tests can (and should) create additional unique resources (queues, databases, collections) with timestamps or GUIDs to support parallel test execution.
+
 ### Test Configuration in C#
 
 ```csharp
@@ -407,9 +420,10 @@ Tests use environment variables for connection strings. See `.env.integration` f
 [TestCategory(TestCategories.Integration)]
 public async Task TestMongoDBOperation()
 {
-    // Read from environment or use default
-    var connectionString = Environment.GetEnvironmentVariable("MONGODB_CONNECTION_STRING")
-        ?? "mongodb://localhost:27017";
+    // Read from test properties (integrates with .runsettings)
+    var connectionString = TestContext.GetRequiredProperty<string>("MONGODB_CONNECTION_STRING");
+
+    // Use unique names for parallel test support
     var databaseName = $"IntegrationTest_{Guid.NewGuid():N}";
 
     var config = new ConfigurationBuilder()
@@ -422,10 +436,17 @@ public async Task TestMongoDBOperation()
 
     // Use in test...
 
-    // Cleanup in [TestCleanup]
+    // Cleanup in [TestCleanup] or try-finally
     await client.DropDatabaseAsync(databaseName);
 }
 ```
+
+**Best Practices for Integration Tests:**
+1. **Use unique resource names** - Include timestamps or GUIDs to support parallel execution
+2. **Always clean up** - Use `[TestCleanup]` or `try-finally` blocks
+3. **Use TestContext properties** - Prefer `TestContext.GetRequiredProperty<T>()` over `Environment.GetEnvironmentVariable()`
+4. **Handle initialization** - Tests can create queues/databases if they don't exist (see SQS tests for examples)
+5. **Test idempotency** - Ensure tests can run multiple times without conflicts
 
 ---
 

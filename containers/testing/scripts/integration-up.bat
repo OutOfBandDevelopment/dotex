@@ -49,8 +49,11 @@ echo.
 REM Load default environment variables
 if exist ".env.integration" (
     echo Loading environment from .env.integration
-    for /f "delims=" %%i in (.env.integration) do (
-        set %%i
+    for /f "usebackq tokens=* eol=# delims=" %%i in (".env.integration") do (
+        REM Skip empty lines
+        if not "%%i"=="" (
+            set "%%i"
+        )
     )
 ) else (
     echo Warning: .env.integration not found, using defaults
@@ -69,14 +72,14 @@ docker compose -f docker-compose.integration-tests.yml up -d %BUILD_FLAG%
 
 if %ERRORLEVEL% neq 0 (
     echo.
-    echo ❌ Failed to start Docker services
+    echo [ERROR] Failed to start Docker services
     echo.
     echo Check Docker Desktop is running and try again.
     exit /b 1
 )
 
 echo.
-echo ✅ Docker services started successfully
+echo [OK] Docker services started successfully
 echo.
 echo Services running:
 echo   - Apache Tika:        http://localhost:9998
@@ -105,22 +108,16 @@ if "%WAIT_FLAG%"=="true" (
     if %ERRORLEVEL% equ 0 (
         echo.
         echo ======================================================================
-        echo ✅ All services are healthy!
+        echo [OK] All services are healthy and initialized!
         echo ======================================================================
         echo.
-
-        REM Setup Ollama model if container is running
-        echo Setting up Ollama model...
-        call "%SCRIPT_PATH%setup-ollama.bat"
-        if %ERRORLEVEL% equ 0 (
-            echo ✅ Ollama model ready
-        ) else (
-            echo ⚠️  Ollama model setup failed (may already be installed)
-        )
-
+        echo Auto-initialized services:
+        echo   - Ollama: phi3 model installed
+        echo   - LocalStack: SQS queues created (integration-test-queue)
+        echo   - Service Bus: Queues and topics configured
         echo.
         echo ======================================================================
-        echo ✅ Stack is ready for testing!
+        echo [OK] Stack is ready for testing!
         echo ======================================================================
         echo.
         echo You can now run integration tests:
@@ -130,7 +127,7 @@ if "%WAIT_FLAG%"=="true" (
     ) else (
         echo.
         echo ======================================================================
-        echo ❌ Some services failed to become healthy
+        echo [ERROR] Some services failed to become healthy
         echo ======================================================================
         echo.
         echo Check service health:

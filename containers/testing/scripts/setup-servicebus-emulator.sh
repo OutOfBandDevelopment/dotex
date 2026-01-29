@@ -1,5 +1,9 @@
 #!/bin/bash
 # Get Azure Service Bus emulator connection string for integration testing
+#
+# NOTE: Service Bus emulator auto-initializes on container startup using Config.json.
+# Queues and topics are automatically created from servicebus-config/Config.json.
+# This script just displays connection information for reference.
 
 set -e
 

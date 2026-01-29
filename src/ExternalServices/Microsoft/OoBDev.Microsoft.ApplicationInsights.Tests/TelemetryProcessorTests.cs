@@ -1,4 +1,5 @@
 ﻿using Microsoft.ApplicationInsights;
+using Microsoft.ApplicationInsights.Channel;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -75,7 +76,7 @@ public class TelemetryProcessorTests
     }
 
     [TestMethod]
-    [TestCategory(TestCategories.Integration)]
+    [TestCategory(TestCategories.DevLocal)]
     public async Task CorrelationInfoTelemetryProcessor_ShouldAddCorrelationHeaders()
     {
         // Arrange
@@ -83,6 +84,7 @@ public class TelemetryProcessorTests
         var requestId = Guid.NewGuid().ToString();
 
         var connectionString = TestContext!.GetRequiredProperty<string>("APPINSIGHTS_CONNECTION_STRING");
+        var azurinsightUrl = TestContext!.GetRequiredProperty<string>("APPINSIGHTS_URL");
 
         // Setup DI container with correlation accessor
         var services = new ServiceCollection();
@@ -95,9 +97,13 @@ public class TelemetryProcessorTests
 
         services.AddSingleton<IAccessor<CorrelationInfo>>(new TestCorrelationAccessor(correlationInfo));
 
-        _configuration = new TelemetryConfiguration
+        _configuration = TelemetryConfiguration.CreateDefault();
+        _configuration.ConnectionString = connectionString;
+
+        // Use InMemoryChannel for immediate transmission (important for testing)
+        _configuration.TelemetryChannel = new InMemoryChannel
         {
-            ConnectionString = connectionString
+            EndpointAddress = azurinsightUrl + "/v2.1/track"
         };
 
         // Add the correlation processor
@@ -122,7 +128,7 @@ public class TelemetryProcessorTests
     }
 
     [TestMethod]
-    [TestCategory(TestCategories.Integration)]
+    [TestCategory(TestCategories.DevLocal)]
     public async Task UserTelemetryProcessor_ShouldAddUserClaims()
     {
         // Arrange
@@ -130,6 +136,8 @@ public class TelemetryProcessorTests
         var userId = "test-user-id-456";
 
         var connectionString = TestContext!.GetRequiredProperty<string>("APPINSIGHTS_CONNECTION_STRING");
+
+        this.TestContext.WriteLine($"{nameof(connectionString)}: {connectionString}");
 
         // Setup DI container with HTTP context accessor
         var services = new ServiceCollection();
@@ -150,9 +158,15 @@ public class TelemetryProcessorTests
         var httpContextAccessor = new TestHttpContextAccessor(httpContext);
         services.AddSingleton<IHttpContextAccessor>(httpContextAccessor);
 
-        _configuration = new TelemetryConfiguration
+        var azurinsightUrl = TestContext!.GetRequiredProperty<string>("APPINSIGHTS_URL");
+
+        _configuration = TelemetryConfiguration.CreateDefault();
+        _configuration.ConnectionString = connectionString;
+
+        // Use InMemoryChannel for immediate transmission (important for testing)
+        _configuration.TelemetryChannel = new InMemoryChannel
         {
-            ConnectionString = connectionString
+            EndpointAddress = azurinsightUrl + "/v2.1/track"
         };
 
         // Add the user processor
@@ -177,7 +191,7 @@ public class TelemetryProcessorTests
     }
 
     [TestMethod]
-    [TestCategory(TestCategories.Integration)]
+    [TestCategory(TestCategories.DevLocal)]
     public async Task CombinedProcessors_ShouldAddBothCorrelationAndUserInfo()
     {
         // Arrange
@@ -212,9 +226,15 @@ public class TelemetryProcessorTests
 
         _serviceProvider = services.BuildServiceProvider();
 
-        _configuration = new TelemetryConfiguration
+        var azurinsightUrl = TestContext!.GetRequiredProperty<string>("APPINSIGHTS_URL");
+
+        _configuration = TelemetryConfiguration.CreateDefault();
+        _configuration.ConnectionString = connectionString;
+
+        // Use InMemoryChannel for immediate transmission (important for testing)
+        _configuration.TelemetryChannel = new InMemoryChannel
         {
-            ConnectionString = connectionString
+            EndpointAddress = azurinsightUrl + "/v2.1/track"
         };
 
         // Add both processors

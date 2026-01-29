@@ -96,18 +96,13 @@ if [ "$WAIT_FLAG" = "true" ]; then
     if [ $? -eq 0 ]; then
         echo ""
         echo "======================================================================"
-        echo "✅ All services are healthy!"
+        echo "✅ All services are healthy and initialized!"
         echo "======================================================================"
         echo ""
-
-        # Setup Ollama model if container is running
-        echo "Setting up Ollama model..."
-        if "${SCRIPT_DIR}/setup-ollama.sh"; then
-            echo "✅ Ollama model ready"
-        else
-            echo "⚠️  Ollama model setup failed (may already be installed)"
-        fi
-
+        echo "Auto-initialized services:"
+        echo "  - Ollama: phi3 model installed"
+        echo "  - LocalStack: SQS queues created (integration-test-queue)"
+        echo "  - Service Bus: Queues and topics configured"
         echo ""
         echo "======================================================================"
         echo "✅ Stack is ready for testing!"

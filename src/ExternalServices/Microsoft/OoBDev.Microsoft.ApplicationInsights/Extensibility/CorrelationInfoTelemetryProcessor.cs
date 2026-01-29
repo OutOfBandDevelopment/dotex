@@ -10,15 +10,21 @@ namespace OoBDev.Microsoft.ApplicationInsights.Extensibility;
 /// </summary>
 public class CorrelationInfoTelemetryProcessor : ITelemetryProcessor
 {
+    private readonly ITelemetryProcessor _next;
     private readonly IAccessor<CorrelationInfo> _correlationAccessor;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CorrelationInfoTelemetryProcessor"/> class.
     /// </summary>
+    /// <param name="next">The next telemetry processor in the chain.</param>
     /// <param name="stringAccessor">The accessor for managing correlation information.</param>
     public CorrelationInfoTelemetryProcessor(
-        IAccessor<CorrelationInfo> stringAccessor
-        ) => _correlationAccessor = stringAccessor;
+        ITelemetryProcessor next,
+        IAccessor<CorrelationInfo> stringAccessor)
+    {
+        _next = next;
+        _correlationAccessor = stringAccessor;
+    }
 
     /// <summary>
     /// Processes telemetry items by adding correlation information to the global properties.
@@ -32,5 +38,8 @@ public class CorrelationInfoTelemetryProcessor : ITelemetryProcessor
         var requestId = _correlationAccessor.Value?.RequestId;
         if (!string.IsNullOrWhiteSpace(requestId))
             item.Context.GlobalProperties[DefinedHttpHeaders.RequestIdHeader] = requestId;
+
+        // Pass to next processor in chain
+        _next.Process(item);
     }
 }
