@@ -205,8 +205,10 @@ services:
       - DEBUG=0
       - DOCKER_HOST=unix:///var/run/docker.sock
       - LOCALSTACK_HOST=localhost:4566
+      - AWS_DEFAULT_REGION=us-east-1
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - ./localstack-init:/etc/localstack/init/ready.d:ro
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:4566/_localstack/health"]
       interval: 10s
@@ -236,12 +238,9 @@ services:
     #       memory: 2G
     #     reservations:
     #       memory: 512M
-    healthcheck:
-      test: ["CMD-SHELL", "exec 3<>/dev/tcp/localhost/5672 && echo 'OK' || exit 1"]
-      interval: 10s
-      timeout: 5s
-      retries: 10
-      start_period: 30s
+    # Note: No health check - container has no shell/tools for checking
+    # Service logs "Emulator Service is Successfully Up!" when ready
+    # Tests should handle connection retries gracefully
 
   azurinsight:
     image: oobdev/azurinsight:latest
@@ -256,7 +255,7 @@ services:
     volumes:
       - azurinsight-test-data:/app/data
     healthcheck:
-      test: ["CMD-SHELL", "exec 3<>/dev/tcp/127.0.0.1/5000 && echo 'OK' || exit 1"]
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:5000/health"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -372,14 +371,16 @@ services:
       - integration-test-net
     volumes:
       - ollama-test-data:/root/.ollama
+      - ./ollama-init/entrypoint.sh:/entrypoint.sh:ro
     environment:
       - OLLAMA_HOST=0.0.0.0
+    entrypoint: ["/bin/bash", "/entrypoint.sh"]
     healthcheck:
       test: ["CMD-SHELL", "timeout 2 bash -c '</dev/tcp/localhost/11434' || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 5
-      start_period: 30s
+      start_period: 60s
 
 # ============================================================================
 # Networks - Isolated test network

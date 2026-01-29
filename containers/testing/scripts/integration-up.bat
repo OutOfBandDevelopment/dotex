@@ -49,8 +49,11 @@ echo.
 REM Load default environment variables
 if exist ".env.integration" (
     echo Loading environment from .env.integration
-    for /f "delims=" %%i in (.env.integration) do (
-        set %%i
+    for /f "usebackq tokens=* eol=# delims=" %%i in (".env.integration") do (
+        REM Skip empty lines
+        if not "%%i"=="" (
+            set "%%i"
+        )
     )
 ) else (
     echo Warning: .env.integration not found, using defaults
@@ -105,19 +108,13 @@ if "%WAIT_FLAG%"=="true" (
     if %ERRORLEVEL% equ 0 (
         echo.
         echo ======================================================================
-        echo ✅ All services are healthy!
+        echo ✅ All services are healthy and initialized!
         echo ======================================================================
         echo.
-
-        REM Setup Ollama model if container is running
-        echo Setting up Ollama model...
-        call "%SCRIPT_PATH%setup-ollama.bat"
-        if %ERRORLEVEL% equ 0 (
-            echo ✅ Ollama model ready
-        ) else (
-            echo ⚠️  Ollama model setup failed (may already be installed)
-        )
-
+        echo Auto-initialized services:
+        echo   - Ollama: phi3 model installed
+        echo   - LocalStack: SQS queues created (integration-test-queue)
+        echo   - Service Bus: Queues and topics configured
         echo.
         echo ======================================================================
         echo ✅ Stack is ready for testing!

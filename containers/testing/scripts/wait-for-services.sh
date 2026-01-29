@@ -80,12 +80,12 @@ check_container_health() {
         return
     fi
 
-    # Get health status
-    health_status=$(docker inspect --format='{{.State.Health.Status}}' "$container_name" 2>/dev/null || echo "no_healthcheck")
+    # Get health status (trim whitespace and newlines)
+    health_status=$(docker inspect --format='{{.State.Health.Status}}' "$container_name" 2>/dev/null | tr -d '\n\r' || echo "no_healthcheck")
 
     # If no healthcheck defined, check if container is running
-    if [ "$health_status" = "no_healthcheck" ]; then
-        local container_state=$(docker inspect --format='{{.State.Status}}' "$container_name" 2>/dev/null || echo "unknown")
+    if [[ "$health_status" == "" || "$health_status" == "no_healthcheck" || "$health_status" == *"has no entry for key"* ]]; then
+        local container_state=$(docker inspect --format='{{.State.Status}}' "$container_name" 2>/dev/null | tr -d '\n\r' || echo "unknown")
         if [ "$container_state" = "running" ]; then
             echo "running"
         else

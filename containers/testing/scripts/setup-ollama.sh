@@ -1,6 +1,10 @@
 #!/bin/bash
 # Setup script for Ollama integration testing
 # Pulls phi3 model (small, CPU-friendly model for CI/CD)
+#
+# NOTE: This script is DEPRECATED - Ollama now auto-initializes on container startup.
+# The container's custom entrypoint automatically pulls the phi3 model.
+# This script is kept for manual testing/troubleshooting only.
 
 set -e
 

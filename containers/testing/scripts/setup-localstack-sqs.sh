@@ -1,5 +1,9 @@
 #!/bin/bash
 # Setup LocalStack SQS queues for integration testing
+#
+# NOTE: This script is DEPRECATED - LocalStack now auto-initializes on container startup.
+# The init script at localstack-init/01-create-sqs-queues.sh runs automatically.
+# This script is kept for manual testing/troubleshooting only.
 
 set -e
 

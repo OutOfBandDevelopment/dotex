@@ -54,20 +54,31 @@ set /a total_count=0
 REM Check each service
 for %%s in (%SERVICES%) do (
     set /a total_count+=1
+    set health_status=
 
-    REM Check if container exists and get health status
-    SET TARGET_HOST=%%s
+    REM Try to get health status (may fail if no health check defined)
     for /f "delims=" %%h in ('docker inspect --format="{{.State.Health.Status}}" %%s 2^>nul') do (
         set health_status=%%h
-        ECHO ... !TARGET_HOST! -- %%h
     )
 
-    REM If health check failed, try to get running status
+    REM If health check not available, get running status
     if "!health_status!"=="" (
-        for /f "delims=" %%r in ('docker inspect --format="{{.State.Status}}" %%s 2^>nul') do set health_status=%%r
+        for /f "delims=" %%r in ('docker inspect --format="{{.State.Status}}" %%s 2^>nul') do (
+            set health_status=%%r
+        )
     )
 
-    REM Check health status
+    REM Display status
+    SET TARGET_HOST=%%s
+    if "!health_status!"=="healthy" (
+        ECHO ... !TARGET_HOST! -- healthy
+    ) else if "!health_status!"=="running" (
+        ECHO ... !TARGET_HOST! -- running ^(no health check^)
+    ) else (
+        ECHO ... !TARGET_HOST! -- !health_status!
+    )
+
+    REM Check if service is considered healthy
     if "!health_status!"=="healthy" (
         set /a healthy_count+=1
     ) else if "!health_status!"=="running" (
@@ -113,14 +124,20 @@ for %%s in (%SERVICES%) do (
 
     if "!health_status!"=="healthy" (
         echo   ✅ %%s
-    ) else if "!health_status!"=="running" (
-        echo   ✅ %%s
-    ) else if "!health_status!"=="starting" (
-        echo   ⏳ %%s (still starting)
-    ) else if "!health_status!"=="" (
-        echo   ❌ %%s (not found)
     ) else (
-        echo   ❌ %%s (status: !health_status!)
+        if "!health_status!"=="running" (
+            echo   ✅ %%s ^(no health check^)
+        ) else (
+            if "!health_status!"=="starting" (
+                echo   ⏳ %%s ^(still starting^)
+            ) else (
+                if "!health_status!"=="" (
+                    echo   ❌ %%s ^(not found^)
+                ) else (
+                    echo   ❌ %%s ^(status: !health_status!^)
+                )
+            )
+        )
     )
 )
 
