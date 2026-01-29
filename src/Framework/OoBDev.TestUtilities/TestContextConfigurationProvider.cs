@@ -40,10 +40,16 @@ public class TestContextConfigurationProvider : ConfigurationProvider
 
                 // Remove prefix from key
                 key = key.Substring(_source.Prefix.Length);
-                if (key.StartsWith(":", StringComparison.Ordinal) ||
-                    key.StartsWith("__", StringComparison.Ordinal))
+
+                // Remove separator after prefix (__, :, or _)
+                if (key.StartsWith("__", StringComparison.Ordinal))
                 {
-                    key = key.Substring(key.StartsWith("__", StringComparison.Ordinal) ? 2 : 1);
+                    key = key.Substring(2);
+                }
+                else if (key.StartsWith(":", StringComparison.Ordinal) ||
+                         key.StartsWith("_", StringComparison.Ordinal))
+                {
+                    key = key.Substring(1);
                 }
             }
 
