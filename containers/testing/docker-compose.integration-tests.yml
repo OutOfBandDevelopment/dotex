@@ -363,7 +363,10 @@ services:
       start_period: 30s
 
   ollama:
-    image: ollama/ollama:latest
+    build:
+      context: ./ollama
+      dockerfile: Dockerfile
+    image: oobdev/ollama-phi3:latest
     container_name: oobd-test-ollama
     ports:
       - "11434:11434"
@@ -371,16 +374,14 @@ services:
       - integration-test-net
     volumes:
       - ollama-test-data:/root/.ollama
-      - ./ollama-init/entrypoint.sh:/entrypoint.sh:ro
     environment:
       - OLLAMA_HOST=0.0.0.0
-    entrypoint: ["/bin/bash", "/entrypoint.sh"]
     healthcheck:
       test: ["CMD-SHELL", "timeout 2 bash -c '</dev/tcp/localhost/11434' || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 5
-      start_period: 60s
+      start_period: 30s
 
 # ============================================================================
 # Networks - Isolated test network

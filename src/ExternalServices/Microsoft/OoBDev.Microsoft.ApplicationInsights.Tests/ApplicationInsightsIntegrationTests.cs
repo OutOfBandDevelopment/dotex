@@ -1,4 +1,5 @@
 ﻿using Microsoft.ApplicationInsights;
+using Microsoft.ApplicationInsights.Channel;
 using Microsoft.ApplicationInsights.DataContracts;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -34,9 +35,13 @@ public class ApplicationInsightsIntegrationTests
         var azurinsightUrl = TestContext.GetRequiredProperty<string>("APPINSIGHTS_URL");
 
         // Configure Application Insights to use azurinsight emulator
-        _configuration = new TelemetryConfiguration
+        _configuration = TelemetryConfiguration.CreateDefault();
+        _configuration.ConnectionString = connectionString;
+
+        // Use InMemoryChannel for immediate transmission to emulator (important for testing)
+        _configuration.TelemetryChannel = new InMemoryChannel
         {
-            ConnectionString = connectionString
+            EndpointAddress = azurinsightUrl + "/v2.1/track"
         };
 
         _telemetryClient = new TelemetryClient(_configuration);
@@ -74,7 +79,7 @@ public class ApplicationInsightsIntegrationTests
     }
 
     [TestMethod]
-    [TestCategory(TestCategories.Integration)]
+    [TestCategory(TestCategories.DevLocal)]
     public async Task SendEventTelemetry_ShouldStoreInAzurinsight()
     {
         // Arrange
@@ -105,7 +110,7 @@ public class ApplicationInsightsIntegrationTests
     }
 
     [TestMethod]
-    [TestCategory(TestCategories.Integration)]
+    [TestCategory(TestCategories.DevLocal)]
     public async Task SendTraceTelemetry_ShouldStoreInAzurinsight()
     {
         // Arrange
@@ -126,7 +131,7 @@ public class ApplicationInsightsIntegrationTests
     }
 
     [TestMethod]
-    [TestCategory(TestCategories.Integration)]
+    [TestCategory(TestCategories.DevLocal)]
     public async Task SendMetricTelemetry_ShouldStoreInAzurinsight()
     {
         // Arrange
@@ -147,7 +152,7 @@ public class ApplicationInsightsIntegrationTests
     }
 
     [TestMethod]
-    [TestCategory(TestCategories.Integration)]
+    [TestCategory(TestCategories.DevLocal)]
     public async Task SendExceptionTelemetry_ShouldStoreInAzurinsight()
     {
         // Arrange
@@ -172,7 +177,7 @@ public class ApplicationInsightsIntegrationTests
     }
 
     [TestMethod]
-    [TestCategory(TestCategories.Integration)]
+    [TestCategory(TestCategories.DevLocal)]
     public async Task SendDependencyTelemetry_ShouldStoreInAzurinsight()
     {
         // Arrange
@@ -197,7 +202,7 @@ public class ApplicationInsightsIntegrationTests
     }
 
     [TestMethod]
-    [TestCategory(TestCategories.Integration)]
+    [TestCategory(TestCategories.DevLocal)]
     public async Task SendRequestTelemetry_ShouldStoreInAzurinsight()
     {
         // Arrange
@@ -231,7 +236,7 @@ public class ApplicationInsightsIntegrationTests
     }
 
     [TestMethod]
-    [TestCategory(TestCategories.Integration)]
+    [TestCategory(TestCategories.DevLocal)]
     public async Task PurgeApi_ShouldClearAllTelemetry()
     {
         // Arrange - Send some telemetry

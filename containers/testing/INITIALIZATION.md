@@ -15,32 +15,31 @@ The integration test infrastructure automatically initializes all required resou
 ### 1. Ollama (LLM Inference)
 
 **What Gets Initialized:**
-- phi3 model (small, CPU-friendly, ~2.3GB)
+- phi3 model (small, CPU-friendly, ~2.3GB) - baked into image at build time
 
 **How It Works:**
-- Custom entrypoint script: `ollama-init/entrypoint.sh`
-- Runs `/bin/ollama serve` in background
-- Waits for Ollama API to be ready
-- Executes `ollama pull phi3`
-- Keeps service running in foreground
+- Custom Dockerfile: `ollama/Dockerfile`
+- Model is pulled during image build: `RUN ollama serve & ... && ollama pull phi3`
+- Model is part of the image, not downloaded at runtime
+- Container starts immediately with model already available
 
 **Configuration:**
 ```yaml
 # docker-compose.integration-tests.yml
 ollama:
-  volumes:
-    - ./ollama-init/entrypoint.sh:/entrypoint.sh:ro
-  entrypoint: ["/bin/bash", "/entrypoint.sh"]
-  healthcheck:
-    start_period: 60s  # Extended for model download on first run
+  build:
+    context: ./ollama
+    dockerfile: Dockerfile
+  image: oobdev/ollama-phi3:latest
 ```
 
 **First Run:**
-- Takes ~60-90 seconds to download phi3 model
-- Subsequent runs: ~5-10 seconds (model cached in volume)
+- Image build: ~2-3 minutes (downloads phi3 model)
+- Subsequent runs: ~5-10 seconds (image cached)
+- Use `--build` flag with integration-up script to rebuild
 
 **Tests Can:**
-- Assume phi3 model is available
+- Assume phi3 model is always available
 - Use any other Ollama-supported models (tests pull them dynamically)
 
 ---

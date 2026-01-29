@@ -11,15 +11,21 @@ namespace OoBDev.Microsoft.ApplicationInsights.Extensibility;
 /// </summary>
 public class UserTelemetryProcessor : ITelemetryProcessor
 {
+    private readonly ITelemetryProcessor _next;
     private readonly IHttpContextAccessor _accessor;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="UserTelemetryProcessor"/> class.
     /// </summary>
+    /// <param name="next">The next telemetry processor in the chain.</param>
     /// <param name="accessor">The accessor for accessing the current HTTP context.</param>
     public UserTelemetryProcessor(
-        IHttpContextAccessor accessor
-        ) => _accessor = accessor;
+        ITelemetryProcessor next,
+        IHttpContextAccessor accessor)
+    {
+        _next = next;
+        _accessor = accessor;
+    }
 
     /// <summary>
     /// Processes telemetry items by extracting user information from the HTTP context and adding it to the global properties.
@@ -38,5 +44,8 @@ public class UserTelemetryProcessor : ITelemetryProcessor
             if (!string.IsNullOrWhiteSpace(userId))
                 item.Context.GlobalProperties[$"Claim-{CommonClaims.UserId}"] = userId;
         }
+
+        // Pass to next processor in chain
+        _next.Process(item);
     }
 }
