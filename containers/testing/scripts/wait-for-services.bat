@@ -91,7 +91,7 @@ for %%s in (%SERVICES%) do (
 REM Check if all services are healthy
 if %all_healthy%==1 (
     echo.
-    echo ✅ All services are healthy!
+    echo [OK] All services are healthy!
     POPD
     exit /b 0
 )
@@ -109,7 +109,7 @@ goto check_loop
 :timeout_reached
 echo.
 echo.
-echo ❌ Timeout reached (%TIMEOUT%s)
+echo [ERROR] Timeout reached (%TIMEOUT%s)
 echo.
 echo Services that are not healthy:
 echo.
@@ -123,18 +123,18 @@ for %%s in (%SERVICES%) do (
     )
 
     if "!health_status!"=="healthy" (
-        echo   ✅ %%s
+        echo   [OK] %%s
     ) else (
         if "!health_status!"=="running" (
-            echo   ✅ %%s ^(no health check^)
+            echo   [OK] %%s ^(no health check^)
         ) else (
             if "!health_status!"=="starting" (
-                echo   ⏳ %%s ^(still starting^)
+                echo   [WAIT] %%s ^(still starting^)
             ) else (
                 if "!health_status!"=="" (
-                    echo   ❌ %%s ^(not found^)
+                    echo   [ERROR] %%s ^(not found^)
                 ) else (
-                    echo   ❌ %%s ^(status: !health_status!^)
+                    echo   [ERROR] %%s ^(status: !health_status!^)
                 )
             )
         )

@@ -64,7 +64,7 @@ if "%CLEAN_MODE%"=="true" (
 
 if %ERRORLEVEL% neq 0 (
     echo.
-    echo ❌ Failed to stop Docker services
+    echo [ERROR] Failed to stop Docker services
     echo.
     POPD
     exit /b 1
@@ -73,7 +73,7 @@ if %ERRORLEVEL% neq 0 (
 echo.
 
 if "%CLEAN_MODE%"=="true" (
-    echo ✅ Docker services stopped and volumes removed
+    echo [OK] Docker services stopped and volumes removed
     echo.
     echo All test data has been cleaned up:
     echo   - MongoDB databases deleted
@@ -85,7 +85,7 @@ if "%CLEAN_MODE%"=="true" (
     echo   - Keycloak data deleted
     echo.
 ) else (
-    echo ✅ Docker services stopped (volumes preserved)
+    echo [OK] Docker services stopped (volumes preserved)
     echo.
     echo Test data has been preserved in Docker volumes.
     echo.

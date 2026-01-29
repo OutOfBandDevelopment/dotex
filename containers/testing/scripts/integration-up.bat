@@ -72,14 +72,14 @@ docker compose -f docker-compose.integration-tests.yml up -d %BUILD_FLAG%
 
 if %ERRORLEVEL% neq 0 (
     echo.
-    echo ❌ Failed to start Docker services
+    echo [ERROR] Failed to start Docker services
     echo.
     echo Check Docker Desktop is running and try again.
     exit /b 1
 )
 
 echo.
-echo ✅ Docker services started successfully
+echo [OK] Docker services started successfully
 echo.
 echo Services running:
 echo   - Apache Tika:        http://localhost:9998
@@ -108,7 +108,7 @@ if "%WAIT_FLAG%"=="true" (
     if %ERRORLEVEL% equ 0 (
         echo.
         echo ======================================================================
-        echo ✅ All services are healthy and initialized!
+        echo [OK] All services are healthy and initialized!
         echo ======================================================================
         echo.
         echo Auto-initialized services:
@@ -117,7 +117,7 @@ if "%WAIT_FLAG%"=="true" (
         echo   - Service Bus: Queues and topics configured
         echo.
         echo ======================================================================
-        echo ✅ Stack is ready for testing!
+        echo [OK] Stack is ready for testing!
         echo ======================================================================
         echo.
         echo You can now run integration tests:
@@ -127,7 +127,7 @@ if "%WAIT_FLAG%"=="true" (
     ) else (
         echo.
         echo ======================================================================
-        echo ❌ Some services failed to become healthy
+        echo [ERROR] Some services failed to become healthy
         echo ======================================================================
         echo.
         echo Check service health:
