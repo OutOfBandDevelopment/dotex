@@ -198,6 +198,29 @@ https://github.com/coverlet-coverage/coverlet/blob/fc7ec26dcaed8fedba880ff13c6f1
 		<!-- General Docker Network -->
 		<Parameter name="DOCKER_NETWORK" value="oobd-integration-test-net" />
 		<Parameter name="DOCKER_COMPOSE_FILE" value="docker-compose.integration-tests.yml" />
+
+		<!-- TestContext Configuration Provider Integration Tests -->
+		<!-- Flat values -->
+		<Parameter name="TestConfig_Environment" value="IntegrationTest" />
+		<Parameter name="TestConfig_Version" value="1.0.0" />
+
+		<!-- Hierarchical with colons -->
+		<Parameter name="TestConfig:Database:Host" value="test-db-host" />
+		<Parameter name="TestConfig:Database:Port" value="5432" />
+
+		<!-- Hierarchical with double underscores (cross-platform safe) -->
+		<Parameter name="TestConfig__Api__BaseUrl" value="https://api.integration.test" />
+		<Parameter name="TestConfig__Api__Timeout" value="60" />
+		<Parameter name="TestConfig__Api__RetryCount" value="3" />
+
+		<!-- Arrays -->
+		<Parameter name="TestConfig__Servers__0" value="server1.integration.test" />
+		<Parameter name="TestConfig__Servers__1" value="server2.integration.test" />
+		<Parameter name="TestConfig__Servers__2" value="server3.integration.test" />
+
+		<!-- Nested configuration -->
+		<Parameter name="TestConfig__Logging__Level" value="Debug" />
+		<Parameter name="TestConfig__Logging__EnableConsole" value="true" />
 	</TestRunParameters>
 
 </RunSettings>
