@@ -471,6 +471,19 @@ dotnet test src/ --collect:"XPlat Code Coverage"
 
 ## Recently Completed Work
 
+### 2026-01-29
+- **TestContext Configuration Provider** - Integrated MSTest `.runsettings` with .NET `IConfiguration`
+  - Added to OoBDev.TestUtilities (not separate package as originally planned)
+  - 12 unit tests + 8 integration tests
+  - Supports hierarchical configuration (`Database:Server` or `Database__Server`)
+  - Strong-typed binding with `IOptions<T>`
+  - Prefix filtering and case-insensitive keys
+  - Documentation: OoBDev.TestUtilities README + runsettings how-to guide updated
+- **Ollama Auto-Initialization** - Converted to Dockerfile approach with phi3 model baked into image
+  - Model pulled during build, not runtime
+  - Faster startup (no 2.2GB download on container start)
+  - Removed obsolete entrypoint script approach
+
 ### 2026-01-24
 - **Integration Testing Scripts** - Enhanced integration-up scripts with `--build` flag, fixed Windows batch path handling (PUSHD)
 - **Health Check Fixes** - Updated all 15 Docker services to use universal bash TCP checks (`</dev/tcp/HOST/PORT`)

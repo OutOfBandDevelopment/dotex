@@ -1,6 +1,6 @@
 # How-To: Variables and Configuration in .runsettings Files
 
-**Last Updated:** 2026-01-21
+**Last Updated:** 2026-01-29
 **Applies To:** MSTest, VSTest, dotnet test
 
 ---
@@ -311,6 +311,67 @@ public void LoadTestDataTest()
     Assert.IsTrue(File.Exists(imageFile));
 }
 ```
+
+### Using TestContext Configuration Provider (NEW ✅)
+
+**OoBDev.TestUtilities** now includes a configuration provider that integrates `.runsettings` test parameters with the .NET `IConfiguration` system.
+
+**Why use this:**
+- ✅ Standard .NET configuration patterns in tests
+- ✅ Strong-typed configuration binding with `IOptions<T>`
+- ✅ Works with dependency injection
+- ✅ Hierarchical configuration support (`Database:Server` or `Database__Server`)
+- ✅ No need to manually read `TestContext.Properties`
+
+**Example:**
+```csharp
+using Microsoft.Extensions.Configuration;
+
+[TestClass]
+public class MyIntegrationTests
+{
+    public required TestContext TestContext { get; set; }
+
+    [TestMethod]
+    [TestCategory(TestCategories.Integration)]
+    public void TestWithConfiguration()
+    {
+        // Build configuration from .runsettings
+        var config = new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json", optional: true)
+            .AddTestContext(TestContext)  // Adds test parameters (overrides appsettings)
+            .Build();
+
+        // Use standard IConfiguration
+        var mongoUri = config["MONGODB_CONNECTION_STRING"];
+        var redisHost = config["Redis:Host"];
+
+        // Or bind to strong types
+        var dbConfig = config.GetSection("Database").Get<DatabaseConfig>();
+    }
+}
+```
+
+**Hierarchical Configuration:**
+```xml
+<TestRunParameters>
+  <!-- Both formats work -->
+  <Parameter name="Database:Host" value="localhost" />
+  <Parameter name="Database__Port" value="5432" />
+
+  <!-- Arrays -->
+  <Parameter name="Servers__0" value="server1.test.local" />
+  <Parameter name="Servers__1" value="server2.test.local" />
+</TestRunParameters>
+```
+
+**Benefits:**
+- Automatically normalizes `__` to `:` for cross-platform compatibility
+- Case-insensitive key matching
+- Supports prefix filtering
+- Works with configuration validation
+
+See [OoBDev.TestUtilities README](../../src/Framework/OoBDev.TestUtilities/README.md#1-testcontext-configuration-provider) for complete documentation.
 
 ---
 
