@@ -232,6 +232,8 @@ OoBDev.{Layer}.{Feature}/
 - Avoid Polly (license change); add OpenTelemetry; default hash is SHA-512
 - MSTest stays; central package management to be restored; GitVersion stays with app projects versioned together
 - Provider selection: a container-registered factory picks a keyed service from a configuration path (replaces `ISelectedService<T>`); shared options validation via `AddValidatedOptions<T>()`
+- Keep all .NET libraries/packages as current for .NET 10 as practical; Microsoft.Extensions.AI is expected to replace the hand-built AI abstractions (spike in `docs/patterns-discovery/08-spikes/`)
+- Abstractions projects (interfaces and models only) need no tests; if one holds testable implementation it gets a test library. Missing project readmes should be created
 - Owner answers are recorded under each verdict in `docs/patterns-discovery/05-industry-alternatives/`
 
 ### Code Style
@@ -515,7 +517,7 @@ dotnet test src/ --collect:"XPlat Code Coverage"
 
 - **Docs:** `docs/patterns-discovery/` (01 architecture, 02 design patterns, 03 practices, 04 new-project blueprint, 05 industry alternatives, 06 design-document standard; README has the doc/code drift table). Patterns are the owner's preferences: record them, don't "correct" them; rough edges go to `TODO.md` backlogs.
 - **Templates:** `templates/` (`dotnet new` pack: `oobdev-capability`, `oobdev-adapter`, `oobdev-webapp`); verify with `scripts/templates/verify-templates.ps1` (generates under `src/`, builds from `src/Framework` cwd because `Directory.Build.props` computes `SolutionDir` from the cwd, then cleans up).
-- **Scripts:** `scripts/docs/` (`validate-docs.py`, `build-index.py`, `fix-plantuml-newlines.py`). Validate with `python scripts/docs/validate-docs.py docs/patterns-discovery` (expect 64 files, 0 problems; the whole `docs/` tree has ~566 pre-existing problems, e.g. `docs/sbom`). Needs docker `plantuml/plantuml-server` on port 18080.
+- **Scripts:** `scripts/docs/` (`validate-docs.py`, `build-index.py`, `build-project-catalog.py`, `fix-plantuml-newlines.py`). Validate with `python scripts/docs/validate-docs.py docs/patterns-discovery` (expect 80 files, 0 problems; the whole `docs/` tree has ~566 pre-existing problems, e.g. `docs/sbom`). Needs docker `plantuml/plantuml-server` on port 18080.
 - **Decisions made:** `#if DEBUG` required builder parameters are intentional (forces child builders to be forwarded); `ServiceCollectionExtensions` everywhere; provider keys kebab-case; readmes are `README.X.md`; options were deliberately unvalidated (strict/relaxed mode under analysis).
 - **Open backlogs in `TODO.md`:** `ISelectedService` rough edges (intent unknown, needs owner review), naming consistency, Roslyn analyzers, options validation modes, caching proxy (`Retreive` to `Retrieve`), message context caller info, replace hand-built providers with platform primitives (`TimeProvider`), HTTP querying and rights middleware, documentation coverage gaps (build these out in the listed order).
 - **Branch state:** history was rewritten to remove AI trailers from commit messages and the branch matches `origin/dev/patterns-discovery` (as of 3f54bfe). Never force-push without the owner's explicit approval.

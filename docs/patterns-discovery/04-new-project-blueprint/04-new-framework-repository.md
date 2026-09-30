@@ -1,7 +1,7 @@
 # Recipe 4 — New Framework Family in a New Repository
 
 <!-- nav -->
-[↑ 04 — New Project Blueprint](./README.md) · [← Recipe 3 — New Application](./03-new-application.md) · [Index →](./README.md)
+[↑ 04 — New Project Blueprint](./README.md) · [← Recipe 3 — New Application](./03-new-application.md) · [Recipe 5 — New Worker or Command-Line Tool →](./05-new-worker-or-cli.md)
 <!-- nav -->
 
 To carry the same approach to a new framework (different prefix, different domain).
@@ -37,5 +37,5 @@ Before copying blindly, review [Known Warts](../03-practices-and-conventions/07-
 ---
 
 <!-- nav -->
-[↑ 04 — New Project Blueprint](./README.md) · [← Recipe 3 — New Application](./03-new-application.md) · [Index →](./README.md)
+[↑ 04 — New Project Blueprint](./README.md) · [← Recipe 3 — New Application](./03-new-application.md) · [Recipe 5 — New Worker or Command-Line Tool →](./05-new-worker-or-cli.md)
 <!-- nav -->

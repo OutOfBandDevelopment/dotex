@@ -48,6 +48,10 @@ Products change quickly. Licensing and feature statements below reflect what was
 | 24 | Authentication and token exchange | Keep (OAuth/OIDC/JWT plus STS) | [Authentication](./09-authentication.md) |
 | 25 | HTTP API style and query syntax | Keep REST; OData and GraphQL for all `IQueryable<T>` endpoints | [HTTP API](./10-http-api.md) |
 | 26 | Authorization model | Keep (RBAC with application rights) | [Authorization](./11-authorization.md) |
+| 27 | Secrets, abuse control and supply chain | Keep configuration-first; vault adapter, built-in rate limiter, allow-list CORS | [Security](./12-security.md) |
+| 28 | Metrics, tracing and health checks | Adopt OpenTelemetry (owner decision) | [Observability](./13-observability.md) |
+| 29 | Retries, timeouts and idempotency | Avoid Polly; in-house decorators or `Microsoft.Extensions.Resilience` after license check | [Resilience](./14-resilience.md) |
+| 30 | Model abstractions, vector stores and orchestration | Keep own contracts; consider `Microsoft.Extensions.AI` | [AI and RAG](./15-ai-and-rag.md) |
 
 *Figure 1 — effort and value of the recommended changes*
 
@@ -89,6 +93,10 @@ Q2 -[hidden]right- Q3
 9. [Authentication Approaches](./09-authentication.md)
 10. [HTTP API and Querying](./10-http-api.md)
 11. [Authorization Approaches](./11-authorization.md)
+12. [Security Approaches](./12-security.md)
+13. [Observability Approaches](./13-observability.md)
+14. [Resilience Approaches](./14-resilience.md)
+15. [AI and RAG Approaches](./15-ai-and-rag.md)
 
 ### List of Figures
 
@@ -128,4 +136,13 @@ Q2 -[hidden]right- Q3
 30. [Table 30 — Combination strategies](./10-http-api.md)
 31. [Table 31 — Authorization models](./11-authorization.md)
 32. [Table 32 — Where rights get attached](./11-authorization.md)
+33. [Table 33 — Secret management options](./12-security.md)
+34. [Table 34 — Abuse control and hardening options](./12-security.md)
+35. [Table 35 — Telemetry approaches](./13-observability.md)
+36. [Table 36 — Health check styles](./13-observability.md)
+37. [Table 37 — Resilience implementation options](./14-resilience.md)
+38. [Table 38 — Messaging failure handling](./14-resilience.md)
+39. [Table 39 — Model abstraction options](./15-ai-and-rag.md)
+40. [Table 40 — Vector store options](./15-ai-and-rag.md)
+41. [Table 41 — RAG design choices](./15-ai-and-rag.md)
 <!-- toc:end -->

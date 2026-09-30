@@ -1,7 +1,7 @@
 # Authorization Practices (RBAC and Application Rights)
 
 <!-- nav -->
-[↑ 03 — Practices and Conventions](./README.md) · [← HTTP API Practices (REST, Querying and GraphQL)](./10-http-api-practices.md) · [Index →](./README.md)
+[↑ 03 — Practices and Conventions](./README.md) · [← HTTP API Practices (REST, Querying and GraphQL)](./10-http-api-practices.md) · [Security Practices (Beyond Authentication) →](./12-security-practices.md)
 <!-- nav -->
 
 This page records the author's preference for authorization. Authentication ([previous page](./09-authentication-practices.md)) answers who the caller is; this page covers what the caller may do. Existing pieces: `[ApplicationRight]` (`ApplicationRightAttribute` and `ApplicationRightRequirementFilter` in `OoBDev.AspNetCore.Abstractions`), `UserAuthorizationHandler` and the permissions OpenAPI extension in `OoBDev.AspNetCore.Mvc`. The role-to-right translation and the claims-exchange variant are backlog items in [`TODO.md`](../../../TODO.md).
@@ -61,5 +61,5 @@ Treat roughly a few dozen short claims as the upper bound for a bearer token; he
 ---
 
 <!-- nav -->
-[↑ 03 — Practices and Conventions](./README.md) · [← HTTP API Practices (REST, Querying and GraphQL)](./10-http-api-practices.md) · [Index →](./README.md)
+[↑ 03 — Practices and Conventions](./README.md) · [← HTTP API Practices (REST, Querying and GraphQL)](./10-http-api-practices.md) · [Security Practices (Beyond Authentication) →](./12-security-practices.md)
 <!-- nav -->

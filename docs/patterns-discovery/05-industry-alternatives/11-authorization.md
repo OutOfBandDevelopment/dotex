@@ -1,7 +1,7 @@
 # Authorization Approaches
 
 <!-- nav -->
-[↑ 05 — Industry Alternatives](./README.md) · [← HTTP API and Querying](./10-http-api.md) · [Index →](./README.md)
+[↑ 05 — Industry Alternatives](./README.md) · [← HTTP API and Querying](./10-http-api.md) · [Security Approaches →](./12-security.md)
 <!-- nav -->
 
 ## 26. Authorization model
@@ -35,5 +35,5 @@ Token size limits and library capabilities reflect general knowledge and should 
 ---
 
 <!-- nav -->
-[↑ 05 — Industry Alternatives](./README.md) · [← HTTP API and Querying](./10-http-api.md) · [Index →](./README.md)
+[↑ 05 — Industry Alternatives](./README.md) · [← HTTP API and Querying](./10-http-api.md) · [Security Approaches →](./12-security.md)
 <!-- nav -->

@@ -16,6 +16,8 @@ The current patterns are the author's discovered preferences. Sections 01 to 04 
 | [04 New project blueprint](./04-new-project-blueprint/README.md) | Step-by-step recipes for a capability, adapter, application and framework repository |
 | [05 Industry alternatives](./05-industry-alternatives/README.md) | Different industry approaches, pros and cons, verdict per topic |
 | [06 Design document standard](./06-design-document-standard.md) | How every document in this set (and future design documents) is written |
+| [07 Project catalog](./07-project-catalog/README.md) | One line per project by layer, generated from the source tree, with owner-review flags |
+| [08 Spikes](./08-spikes/README.md) | Time-boxed experiments with running code and a verdict (first: Microsoft.Extensions.AI) |
 
 ## Method
 
