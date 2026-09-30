@@ -9,6 +9,8 @@ Choose a recipe:
 - a new **application or product** on the framework → [Recipe 3](./03-new-application.md)
 - a **new framework family** in a new repository → [Recipe 4](./04-new-framework-repository.md)
 
+Recipes 1 to 3 are also available as `dotnet new` templates (`oobdev-capability`, `oobdev-adapter`, `oobdev-webapp`); see [templates/README.md](../../../templates/README.md).
+
 <!-- toc:start -->
 ## Contents
 

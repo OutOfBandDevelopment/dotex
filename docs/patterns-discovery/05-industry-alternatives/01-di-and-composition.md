@@ -37,18 +37,18 @@
 
 ## 3. `#if DEBUG` required parameters
 
-**Today:** optional parameters are required in Debug builds ([pattern 9](../02-design-patterns/09-if-debug-explicit-arguments.md)).
+**Today:** optional builder parameters are required in Debug builds ([pattern 9](../02-design-patterns/09-if-debug-explicit-arguments.md)). The purpose is deliberate: roll-up methods must forward each child builder to the layer beneath them, and a default in dev builds would make it easy to miss a caller that forgets to pass it.
 
 **Table 3 — Alternatives**
 
 | Option | Pros | Cons |
 |--------|------|------|
-| Current | Developers see every option while building; short calls in Release | API surface differs by configuration; a Debug-built library breaks Release callers; confusing to tooling |
-| Overloads (with and without the builder) | Same API in every configuration | A few extra methods |
-| `Action<TBuilder>` delegate | The dominant .NET idiom (`AddX(o => ...)`) | Not immutable-record friendly |
-| Analyzer that warns on missing arguments | Keeps one API, still nudges | Needs writing and maintaining |
+| Current | A missed builder is a compile error while developing; short calls in Release | API surface differs by configuration; a Debug-built library breaks Release callers; can confuse tooling |
+| Always-required parameter | Same API everywhere; same safety | Every consumer must pass `null` or a builder, even for one-liners |
+| Analyzer that reports calls omitting the builder | One API, safety kept in CI, one-liners possible | Needs writing and maintaining |
+| `Action<TBuilder>` delegate | The common .NET idiom | Does not force forwarding; not immutable-record friendly |
 
-**Verdict: Change.** Use overloads; keep the intent (explicitness) via documentation and code review.
+**Verdict: Keep.** It solves a real forwarding problem cheaply. The cost is that the whole solution must be built in one configuration. **Consider** an analyzer if the configuration-dependent API ever causes friction for external consumers.
 
 ## 4. Builder records vs configure delegates
 

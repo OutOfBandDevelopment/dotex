@@ -24,7 +24,7 @@ Products change quickly. Licensing and feature statements below reflect what was
 |---|-------|---------|-------|
 | 1 | Provider selection (`ISelectedService` vs keyed DI vs named options) | Keep, consider simplification | [DI and composition](./01-di-and-composition.md) |
 | 2 | Options binding and validation | Change (add validation) | [DI and composition](./01-di-and-composition.md) |
-| 3 | `#if DEBUG` required parameters | Change | [DI and composition](./01-di-and-composition.md) |
+| 3 | `#if DEBUG` required parameters | Keep (intent is sound) | [DI and composition](./01-di-and-composition.md) |
 | 4 | Builder records vs configure delegates | Keep | [DI and composition](./01-di-and-composition.md) |
 | 5 | `IServiceProvider` injection | Keep, contained | [DI and composition](./01-di-and-composition.md) |
 | 6 | Abstractions / implementation split | Keep | [Structure and build](./02-project-structure-and-build.md) |

@@ -51,6 +51,97 @@
 
 ---
 
+## 📌 Backlog: Review `ISelectedService` Rough Edges (intent unknown, needs owner review)
+
+Source: [pattern 4](docs/patterns-discovery/02-design-patterns/04-selected-service.md). The original intent is not remembered, so decide what each item should be before changing code.
+
+- [ ] **`[ContractConfig(AllowDefault, ConfigKey)]` is unused.** It is declared on provider interfaces (e.g. `ICachingProvider`, `OoBDev:CachingProvider:Type`) and documented in readmes, but nothing reads it; the runtime key is the hard-coded `OoBDev::ServiceKeys::{FullTypeName}` path. Decide: wire the attribute into `SelectedService<T>`, delete it, or keep it as documentation only. If deleted, fix the readmes and the capability template, which currently emits the attribute.
+- [ ] **Selection is resolved in the constructor**, so it is fixed for the lifetime of the wrapper (a singleton means for the process). Decide whether that is intended or whether a reload (`IOptionsMonitor`) is wanted.
+- [ ] **`IServiceProvider` injection** (service locator) is contained in the wrapper. Confirm this stays the accepted exception, or replace with keyed-service resolution.
+
+---
+
+## 📌 Backlog: Options Validation Modes (strict default, relaxed opt-out) — analysis before decision
+
+Source: [pattern 7](docs/patterns-discovery/02-design-patterns/07-options-binding-by-section-name.md). Options are deliberately not validated today so that a misconfiguration cannot take the application down. Proposal to analyze: validation available, **strict by default**, with a **relaxed** mode that disables it. No decision has been made.
+
+- [ ] **Analyze the strict/relaxed model.** Questions: where is the switch (per builder record, a global `OoBDev:Validation:Mode` setting, or both); what "strict" means (`ValidateOnStart` failing startup vs. logging only); whether `relaxed` keeps today's behavior exactly (lazy failure at first use).
+- [ ] **Assess blast radius of a strict default.** Adapters are config-gated (pattern 8) and often have no configuration at all; validation must apply only to options of registrations that actually happened, or unconfigured adapters would fail startup. Count option types and which have required members.
+- [ ] **Choose the validation mechanism.** Compare DataAnnotations, `IValidateOptions<T>`, and source-generated validators (`[OptionsValidator]`, AOT-friendly) with the existing `required … init` records.
+- [ ] **Decide the failure surface.** Startup exception vs. health-check degradation vs. warning log, and how `ConfigurationMissingException` fits.
+- [ ] **Compatibility.** A strict default is a behavior change for existing hosts; consider a release with `relaxed` as default and a warning, then flip.
+- [ ] **Docs and templates.** After the decision update pattern 7, `07-known-warts.md`, the industry-alternatives verdict, the capability/adapter templates, and add an analyzer rule if useful (see the analyzer backlog).
+
+---
+
+## 📌 Backlog: Caching Proxy Review (pattern 10)
+
+Source: [pattern 10](docs/patterns-discovery/02-design-patterns/10-attribute-dispatch-proxy.md).
+
+- [ ] **Fix the `Retreive` → `Retrieve` spelling** (decision: fix it). About 85 occurrences in 23 files: `ICachingProvider`, `ICachingManager`, `CachingManager`, `CachedProxy`, the Redis and Microsoft memory providers, their tests, readmes, and `docs/architecture/caching/*`. It is a public API rename (`RetreiveAsync` → `RetrieveAsync`), so decide whether to keep an `[Obsolete]` forwarding member for one release (CLAUDE.md says no breaking changes to existing APIs). Do it with a deterministic script, then build and run the caching tests.
+- [ ] **Review the remaining rough edges** (needs explanation from the owner later): blocking on async in the proxy, per-call reflection, interface-only proxying. Interface-only fits the "inject by interface" preference, so first establish which of these, if any, is a real concern.
+
+---
+
+## 📌 Backlog: Message Context Caller Info (pattern 12) — review before deciding
+
+Source: [pattern 12](docs/patterns-discovery/02-design-patterns/12-message-context-object.md). Caller method/line/file is captured with `new StackFrame(5, true)`, which is brittle when async state-machine depth changes. The `[CallerMemberName]` alternative was avoided on purpose so signatures stay clean.
+
+- [ ] **Reproduce and measure the brittleness.** Which call paths (sync, async, wrapped by the caching proxy or other decorators) return the wrong frame; add tests that pin the expected caller.
+- [ ] **Compare options.** (a) keep the stack walk but locate the frame by skipping known framework/infrastructure frames instead of a fixed depth of 5; (b) `[CallerMemberName]`/`[CallerFilePath]`/`[CallerLineNumber]` with default values on the public factory/send methods, hidden from the common interface via an overload or extension so signatures stay clean; (c) an optional `CallerInfo` struct parameter; (d) drop caller info from the context or make it opt-in (it costs a stack walk per message; Release builds may lack line info).
+- [ ] **Decide** whether a change is warranted, then update `IMessageContextFactory`, pattern 12, and the industry-alternatives notes if it changes.
+
+---
+
+## 📌 Backlog: Replace Hand-Built Providers With Platform Primitives (pattern 16)
+
+Source: [pattern 16](docs/patterns-discovery/02-design-patterns/16-injectable-non-determinism.md). Many injectable-non-determinism interfaces were created because .NET had no equivalent. Replace them with the platform primitive where one now exists.
+
+- [ ] **Inventory** every provider registered by `TryAddProviders()` (`src/Framework/OoBDev.System.Abstractions/Providers/`) and any other hand-built clock/GUID/random/file/identity abstraction, and map each to a platform equivalent or "no equivalent, keep".
+- [ ] **`IDateTimeProvider` → `System.TimeProvider`.** Register `TimeProvider.System` with `TryAddSingleton`, migrate consumers (including the Handlebars date helper and any timers/delays that can use `TimeProvider.CreateTimer`/`Delay`), use `FakeTimeProvider` (`Microsoft.Extensions.TimeProvider.Testing`) in tests. Keep `IDateTimeProvider` as an `[Obsolete]` adapter over `TimeProvider` for one release (no breaking changes to existing APIs).
+- [ ] **`IGuidProvider`:** no built-in provider abstraction exists; check whether it stays as is (optionally backed by `Guid.CreateVersion7(TimeProvider)`-style time-ordered ids) or is dropped for `Guid.NewGuid()` where determinism is not needed.
+- [ ] **Others** (`ITempFileFactory`, `ICurrentUserAccessor`, `IHttpPrepareRequest`, any random source): compare against `Random.Shared`/injected `Random`, `System.IO.Abstractions`, `IHttpContextAccessor`, `IHttpClientFactory` handlers; keep where no fit.
+- [ ] **Update** pattern 16, the industry-alternatives verdict, the templates (if they use a clock), and add an analyzer rule (see the analyzer backlog) that flags new custom clock abstractions and direct `DateTime.UtcNow`.
+
+---
+
+## 📌 Backlog: Naming Consistency
+
+- [ ] **Rename `ServiceCollectionEx` to `ServiceCollectionExtensions` everywhere** (decision: `ServiceCollectionExtensions` is the standard; 44 projects already use it). Both names coexist in different namespaces, which is ambiguous for consumers importing many namespaces.
+  - Classes to rename (file and class): `OoBDev.Amazon.Sqs`, `OoBDev.Microsoft.Azure.ServiceBus`, `OoBDev.Microsoft.Caching`, `OoBDev.RabbitMQ`, `OoBDev.Redis.Caching`, `OoBDev.Caching` (find with `grep -rl "class ServiceCollectionEx" src`).
+  - Update `<see cref>` references, tests, readmes and docs that mention the old name.
+  - Public API rename: check for external consumers; extension-method call sites are unaffected because only the class name changes.
+  - New code and the `templates/` already use `ServiceCollectionExtensions`.
+- [ ] **Normalize provider keys to kebab-case** (`"Redis"` → `"redis"`, `"OLLAMA"` → `"ollama"`, `"HTTP"` → `"http"`, `"Environment"` → `"environment"`, and the upper-cased enum forwarding for `IHash` etc.). Message-queue adapters already comply. Keep keys next to each adapter (`{Vendor}Globals.ProviderKey`), never in a global registry, so adapters keep referencing only their Abstractions project; make sure every adapter exposes a constant rather than an inline string. Keys are used in configuration (`OoBDev::ServiceKeys::...`), so update `appsettings*`, `.runsettings`, `CONFIGURATION_SETTINGS.md`, tests and docs together, and consider accepting the old key as an alias for one release. Add an analyzer rule (see the analyzer backlog) that flags non-kebab-case key constants.
+
+---
+
+## 📌 Backlog: Roslyn Analyzers That Enforce the Documented Patterns
+
+Goal: turn the rules in `docs/patterns-discovery/` into build-time diagnostics (an `OoBDev.Analyzers` package referenced by `src/Directory.Build.props`), so the patterns are enforced instead of remembered. Start with warnings, promote to errors once the baseline is clean. Each rule gets a diagnostic ID (`OOB0xx`), a code fix where mechanical, tests, and a doc page.
+
+| Candidate rule | Source document | Severity | Code fix |
+|----------------|-----------------|----------|----------|
+| Registration methods use `TryAdd*` (collections may use `Add*`) | [pattern 2](docs/patterns-discovery/02-design-patterns/02-tryadd-everywhere.md) | Warning | Yes |
+| Public `Try*` registration methods forward every child builder parameter they receive (companion to the `#if DEBUG` required-parameter pattern) | [pattern 9](docs/patterns-discovery/02-design-patterns/09-if-debug-explicit-arguments.md) | Warning | No |
+| Entry-point builder parameter uses the `#if DEBUG` required / Release optional shape | [pattern 9](docs/patterns-discovery/02-design-patterns/09-if-debug-explicit-arguments.md) | Info | Yes |
+| Registration class is named `ServiceCollectionExtensions` (retire `ServiceCollectionEx`) | [pattern 1](docs/patterns-discovery/02-design-patterns/01-abstractions-implementation-registration.md) | Warning | Yes |
+| Abstractions projects do not reference implementation projects or vendor SDK packages; adapters reference Abstractions only | [layers](docs/patterns-discovery/01-architecture/02-five-source-layers.md) | Error | No |
+| Builder records expose `OptionsSection` defaulting to `nameof(Options)` | [pattern 6](docs/patterns-discovery/02-design-patterns/06-builder-records.md) | Info | Yes |
+| No `DateTime.Now/UtcNow`, `Guid.NewGuid()`, `Random` in framework code; inject the abstraction | [pattern 16](docs/patterns-discovery/02-design-patterns/16-injectable-non-determinism.md) | Warning | Yes |
+| Only infrastructure types may inject `IServiceProvider` | [alternatives 5](docs/patterns-discovery/05-industry-alternatives/01-di-and-composition.md) | Warning | No |
+| Public API has XML documentation; nullable on; implicit usings off | [practices](docs/patterns-discovery/03-practices-and-conventions/02-build-and-csproj.md) | Warning | No |
+| Test classes carry a `TestCategory`; unit tests avoid non-strict mocks | [testing practices](docs/patterns-discovery/03-practices-and-conventions/04-testing-practices.md) | Warning | No |
+| Test configuration read through `TestContext`, not `Environment.GetEnvironmentVariable` | [testing practices](docs/patterns-discovery/03-practices-and-conventions/04-testing-practices.md) | Warning | Yes |
+| Provider key constants (`*ProviderKey`, keyed registrations) are kebab-case | [pattern 3](docs/patterns-discovery/02-design-patterns/03-provider-factory-keyed.md) | Warning | Yes |
+| Hosted services catch and log and do not exit on a single failure | [pattern 13](docs/patterns-discovery/02-design-patterns/13-supervised-hosted-service.md) | Info | No |
+
+Also enforce at the MSBuild level (no analyzer needed): README present and packed, project name matches folder, central package versions (see [alternatives 9](docs/patterns-discovery/05-industry-alternatives/02-project-structure-and-build.md)).
+
+Plan: (1) design document set for the analyzer package following the design document standard; (2) `OoBDev.Analyzers` and `OoBDev.Analyzers.Tests` projects (use the `oobdev-*` template conventions); (3) implement rules in the order above; (4) measure baseline warnings and fix or suppress; (5) enable as errors in CI.
+
+---
+
 ## Quick Navigation
 
 This document is organized into **epic-based files** for better navigation and maintenance:

@@ -19,7 +19,7 @@ Pieces: `IsCacheableAttribute(keyFormatter, lifetimeString)`, `ICachingManager.B
 
 **Rules embedded in the design:** caching **never breaks the call** in Release (exceptions logged and swallowed); `void` and non-generic `Task` are rejected; nulls are not cached; the feature can be disabled by config without code change.
 
-**Rough edges:** the proxy blocks on async (`.GetAwaiter().GetResult()`), uses reflection per call, only works via interface, and `Retreive` is a spelling error baked into the public API (`RetreiveAsync`).
+**Rough edges (under review, tracked in [`TODO.md`](../../../TODO.md)):** the proxy blocks on async (`.GetAwaiter().GetResult()`), uses reflection per call, and only works via interface. The interface-only limit is consistent with the standing preference that everything injected is consumed by interface, so it may not be a defect; the owner has not yet pinned down what the remaining concern was. `Retreive` is a spelling error baked into the public API (`RetreiveAsync`, should be `RetrieveAsync`) and is to be fixed.
 
 ---
 

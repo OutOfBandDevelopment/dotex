@@ -6,6 +6,8 @@
 
 `IDateTimeProvider`, `IGuidProvider`, `ITempFileFactory`, `ICurrentUserAccessor`, `IHttpPrepareRequest`… Everything that touches the clock, GUIDs, filesystem or ambient identity is behind an interface registered by `TryAddProviders()`.
 
+**Origin and direction (under review, tracked in [`TODO.md`](../../../TODO.md)):** many of these interfaces were hand-built because .NET had no equivalent primitive at the time. Where the platform now provides one, prefer it: `IDateTimeProvider` should give way to `System.TimeProvider` (with `FakeTimeProvider` from `Microsoft.Extensions.TimeProvider.Testing` in tests). The rest are evaluated case by case.
+
 ---
 
 <!-- nav -->

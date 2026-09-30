@@ -415,7 +415,7 @@ public void MethodName_Scenario_ExpectedBehavior()
 ### Commits
 - Only create when user explicitly requests
 - Follow security protocol (no force push, no amend unless specific conditions)
-- Co-author: `Claude Opus 4.5 <noreply@anthropic.com>`
+- Commit messages must NEVER reference Claude or AI (no Co-Authored-By trailer, no "generated with" line)
 
 ### Pull Requests
 - Use `gh pr create` for GitHub PRs

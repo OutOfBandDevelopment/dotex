@@ -24,7 +24,7 @@ Registered once as an open generic in `TryAddProviders()`; used by `CachingManag
 
 **Repeat:** inject `ISelectedService<IThing>` in the *manager/orchestrator*, keep adapters unaware of selection.
 
-**Rough edges (important):**
+**Rough edges (important; the original intent is not remembered, tracked for review in `TODO.md`):**
 
 * `[ContractConfig(AllowDefault, ConfigKey)]` is declared on `ICachingProvider` and documented in the README (`OoBDev:CachingProvider:Type`) but **nothing reads it**; the runtime key is the hard-coded `OoBDev::ServiceKeys::…` path (double-colon). Either wire the attribute into `SelectedService<T>` or delete it.
 * Resolution happens in the constructor, so selection is fixed for the lifetime of the wrapper (singleton ⇒ for the process).

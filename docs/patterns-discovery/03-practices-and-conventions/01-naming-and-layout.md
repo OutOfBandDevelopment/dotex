@@ -30,7 +30,7 @@
 | Provider | `{Name}Provider` | `RedisCachingProvider` |
 | Factory | `{Name}Factory` | `CacheableFactory`, `IOllamaApiClientFactory` |
 | Registration | `TryAdd{Capability}Services`, `TryAdd{Layer}Extensions` | `TryAddCachingServices` |
-| Registration class | `ServiceCollectionExtensions` (majority) or `ServiceCollectionEx` | see [known warts](./07-known-warts.md) |
+| Registration class | `ServiceCollectionExtensions` (standard; `ServiceCollectionEx` is being retired) | see [known warts](./07-known-warts.md) |
 | Vendor registrar | `{Vendor}{Feature}Registrar` (internal) | `RedisCachingRegistrar` |
 | Builder | `{Layer}ExtensionBuilder` / `{Area}Builder` (record) | `ExternalExtensionBuilder` |
 | Options | `{Thing}Options` (record or class) | `OllamaApiClientOptions` |
@@ -45,7 +45,7 @@ OoBDev.Caching/
 ├── README.{Project}.md        packed readme
 ├── OoBDev.Caching.csproj
 ├── AssemblyInfo.cs            InternalsVisibleTo for the Tests project
-├── ServiceCollectionEx.cs     the public registration entry point
+├── ServiceCollectionExtensions.cs     the public registration entry point
 ├── Factories/                 one folder per role, plural
 ├── Managers/
 └── Providers/
