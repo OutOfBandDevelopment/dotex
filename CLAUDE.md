@@ -174,6 +174,18 @@ public interface IHandler<TRequest, TResponse>
 
 ---
 
+## Documentation Diagram Standards
+
+- **All diagrams in markdown documents MUST be PlantUML** (fenced ```` ```plantuml ```` blocks with `@startuml`/`@enduml`). Never use ASCII/box-drawing art or Mermaid.
+- **All UI mockups MUST be PlantUML + Salt** (`@startsalt`/`@endsalt`), embedded in the markdown document.
+- **Architecture diagrams use C4 style (Context/Container/Component) written in plain PlantUML** (rectangles + stereotypes + skinparam). Never `!include` C4-PlantUML templates – they break in production rendering.
+- **Include a Table of Contents, List of Figures and List of Tables where useful** (3+ sections / 2+ figures / 2+ tables). Caption figures `*Figure N — title*` (after) and tables `**Table N — title**` (before).
+- **Split long documents** (>~250 lines or >~6 major sections) into a topic folder with a `README.md` index and one file per headline; nav links at top/bottom of each file. **Prefer valid relative cross references** (file + `#anchor`) wherever a concept has its own document; verify links resolve.
+- Design documents follow `docs/patterns-discovery/06-design-document-standard.md` (4 documents per feature).
+- Applies to every new or edited doc (`docs/**`, READMEs, design docs, protocols). Convert existing ASCII diagrams when touching a document.
+
+---
+
 ## Coding Standards
 
 ### File Structure

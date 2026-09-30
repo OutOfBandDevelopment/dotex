@@ -1,5 +1,39 @@
 # TODO - OoBDev (dotex) Framework
 
+## 🔎 ACTIVE: Patterns Discovery (branch `dev/patterns-discovery`)
+
+**Goal:** Document how this codebase is actually put together (architecture, design, patterns & practices) so future products/frameworks can be built the same way, then produce a pros/cons comparison against common industry alternatives.
+**Output location:** `docs/patterns-discovery/`
+
+| # | Task | Status |
+|---|------|--------|
+| 1 | Create branch, add tracking to TODO.md | ✅ Done |
+| 2 | Review existing docs (`docs/architecture/*`, CLAUDE.md) | ✅ Done |
+| 3 | Survey code: solution/layers, build props, csproj conventions | ✅ Done |
+| 4 | Survey code: abstractions/provider/factory/DI patterns | ✅ Done |
+| 5 | Survey code: options/config, hosting, ASP.NET, data, messaging | ✅ Done |
+| 6 | Survey code: testing (categories, TestContext config, Docker) | ✅ Done |
+| 7 | Write `01-architecture/` (solution shape, layers, dependency rules) | ✅ Done |
+| 8 | Write `02-design-patterns/` (patterns with real code refs) | ✅ Done |
+| 9 | Write `03-practices-and-conventions.md` (naming, build, docs, testing) | ⏳ |
+| 10 | Write `04-new-project-blueprint.md` (how to start a new product/framework) | ⏳ |
+| 11 | Write `05-industry-alternatives.md` (suggestions, pros/cons) | ⏳ |
+| 12 | Write `README.md` index; cross-check claims against code | ⏳ |
+| 13 | Final review, update this table | ⏳ |
+| 14 | Write `06-design-document-standard.md` (how design docs are made; PlantUML/Salt rule; added to CLAUDE.md) | ✅ Done |
+
+**Notes / findings log:**
+- Code survey: 123 csproj, ~1,061 .cs, 42 test projects, 120 on net10.0 (2 netstandard2.1, 1 net48 for SQL CLR).
+- Core idiom: `I{Thing}` (Abstractions project) → `{Thing}` impl → `TryAdd{Thing}Services(IServiceCollection, IConfiguration, sectionName)`; providers registered twice (default + keyed); `ISelectedService<T>` picks one via config `OoBDev::ServiceKeys::{FullTypeName}`.
+- Common layer is an *aggregator* (MSBuild glob ProjectReference include/remove), not "pure interfaces" as CLAUDE.md says.
+- **Drift:** `[ContractConfig]` is declared + documented but never read at runtime (SelectedService hard-codes its own key).
+- **Drift:** docs say .NET 9 / README.md build-enforced; code is net10.0, files are `ReadMe.{Project}.md`, missing readme is only warning OBDPK001 (error only if PackageReadmeFile set but absent).
+- **Drift:** Framework has 4 empty placeholder dirs (Generations, DataLoader, ComplexEvents, SpatialServices); arch docs reference RabbitMQ.Abstractions which does not exist.
+- `Directory.Packages.props` is empty, `ManagePackageVersionsCentrally=false` -> versions inline per csproj; analyzers block is commented out in Directory.Build.props.
+- Unrequested-by-user side observation: no Polly/OpenTelemetry/MediatR/FluentValidation/HybridCache usage anywhere.
+
+---
+
 **Last Updated:** 2026-01-24
 
 ✅ **COMPLETED:** Build Warnings Resolution - Reduced from 95+ to 8 warnings (2026-01-22)
