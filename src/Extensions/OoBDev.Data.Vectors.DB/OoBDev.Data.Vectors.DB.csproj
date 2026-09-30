@@ -61,7 +61,7 @@
     </PackageReference>
     -->
   
-    <Content Remove="ReadMe.Data.Vectors.DB.md" />
+    <Content Remove="README.Data.Vectors.DB.md" />
   </ItemGroup>
   
   <ItemGroup>

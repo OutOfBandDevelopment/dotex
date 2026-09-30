@@ -53,7 +53,7 @@
     </PackageReference>
     -->
   
-    <Content Remove="ReadMe.Example.DB.md" />
+    <Content Remove="README.Example.DB.md" />
   </ItemGroup>
 
   <ItemGroup>

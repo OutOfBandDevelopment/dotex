@@ -15,7 +15,7 @@ Things found in the code that a new project should either fix or knowingly keep.
 | 3 | Sync-over-async (`GetAwaiter().GetResult()`) in the caching proxy | `CachedProxy` | async-aware proxy or decorator |
 | 4 | Caller info from `new StackFrame(5, true)` | message context factory | `[CallerMemberName]` and friends |
 | 5 | `[ContractConfig]` declared but never read | `ICachingProvider` | wire it into `SelectedService<T>` or remove |
-| 6 | Readme case (`ReadMe.X.md` on disk, `README.X.md` in props) | shared props | works on Windows only; normalize |
+| 6 | Readme case (was `Readme.X.md`/`ReadMe.X.md` on disk, `README.X.md` in props) | shared props | **Resolved:** all project readmes renamed to `README.X.md`; the old names only worked on case-insensitive file systems |
 | 7 | `#if DEBUG` changes the compiled API (intentional: forces child builders to be forwarded) | registration entry points | keep; build one configuration; see alternatives |
 | 8 | No options validation, no `ValidateOnStart` | all options | add validation |
 | 9 | Central package management off; versions inline | every csproj | central `Directory.Packages.props` |

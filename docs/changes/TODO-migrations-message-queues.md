@@ -16,7 +16,7 @@
 - [x] Update namespace to `OoBDev.Amazon.Sqs`
 - [x] Reference OoBDev.MessageQueueing.Abstractions
 - [x] Add ServiceCollectionExtensions with TryAddAmazonSqsServices()
-- [x] Create Readme.AmazonSqs.md with AWS credentials setup
+- [x] Create README.AmazonSqs.md with AWS credentials setup
 - [x] Create TESTING.md with LocalStack integration guide
 - [x] Add to solution
 
@@ -28,7 +28,7 @@
 - [x] Reference OoBDev.MessageQueueing.Abstractions
 - [x] Implement topics, sessions, application properties support
 - [x] Add ServiceCollectionExtensions with TryAddAzureServiceBusServices()
-- [x] Create Readme.AzureServiceBus.md with Azure connection string setup
+- [x] Create README.AzureServiceBus.md with Azure connection string setup
 - [x] Create TESTING.md with Azure Service Bus Emulator guide
 - [x] Add to solution
 
@@ -43,8 +43,8 @@
 - [x] Update Docker Compose files (fixed Redis, smtp4dev issues)
 
 ### Phase 4: Documentation ✅ COMPLETE
-- [x] Document SQS provider configuration (Readme.AmazonSqs.md)
-- [x] Document Service Bus provider configuration (Readme.AzureServiceBus.md)
+- [x] Document SQS provider configuration (README.AmazonSqs.md)
+- [x] Document Service Bus provider configuration (README.AzureServiceBus.md)
 - [x] Add usage examples for both providers
 - [x] Update Features/MessageQueuing/README.md with architecture
 - [x] Add PlantUML diagrams (component, sequence, multi-provider bridge, DI flow)
