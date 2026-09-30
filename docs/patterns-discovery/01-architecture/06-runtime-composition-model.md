@@ -1,6 +1,8 @@
 # Architecture § 6 — Runtime Composition Model (How a Call Finds Its Implementation)
 
-[↑ Architecture](./README.md) · [← 5. Composition Root](./05-composition-root.md) · [7. Cross-Cutting Building Blocks (all in `OoBDev.System*`) →](./07-cross-cutting-building-blocks.md)
+<!-- nav -->
+[↑ 01 — Architecture: How the Solution Is Put Together](./README.md) · [← Architecture § 5 — Composition Root](./05-composition-root.md) · [Architecture § 7 — Cross-Cutting Building Blocks (all in `OoBDev.System*`) →](./07-cross-cutting-building-blocks.md)
+<!-- nav -->
 
 There are three selection mechanisms, used for three different situations. They are described in detail in [Design Patterns](../02-design-patterns/README.md): [pattern 3 – provider/factory](../02-design-patterns/03-provider-factory-keyed.md), [pattern 4 – `ISelectedService`](../02-design-patterns/04-selected-service.md), [pattern 5 – config-resolved provider](../02-design-patterns/05-config-resolved-provider.md) and [pattern 14 – strategy collections](../02-design-patterns/14-strategy-collections.md).
 
@@ -14,4 +16,6 @@ There are three selection mechanisms, used for three different situations. They 
 
 ---
 
-[↑ Architecture](./README.md) · [← 5. Composition Root](./05-composition-root.md) · [7. Cross-Cutting Building Blocks (all in `OoBDev.System*`) →](./07-cross-cutting-building-blocks.md)
+<!-- nav -->
+[↑ 01 — Architecture: How the Solution Is Put Together](./README.md) · [← Architecture § 5 — Composition Root](./05-composition-root.md) · [Architecture § 7 — Cross-Cutting Building Blocks (all in `OoBDev.System*`) →](./07-cross-cutting-building-blocks.md)
+<!-- nav -->

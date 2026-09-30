@@ -1,6 +1,8 @@
 # Architecture § 3 — The Abstractions / Implementation Split
 
-[↑ Architecture](./README.md) · [← 2. The Five Source Layers](./02-five-source-layers.md) · [4. The Common Layer Is an Aggregator (Convention over Reference) →](./04-common-layer-aggregator.md)
+<!-- nav -->
+[↑ 01 — Architecture: How the Solution Is Put Together](./README.md) · [← Architecture § 2 — The Five Source Layers](./02-five-source-layers.md) · [Architecture § 4 — The Common Layer Is an Aggregator (Convention over Reference) →](./04-common-layer-aggregator.md)
+<!-- nav -->
 
 Almost every capability ships as a pair (sometimes a triple):
 
@@ -21,4 +23,6 @@ Mechanics that make this ergonomic (all in `src/Directory.Build.props`):
 
 ---
 
-[↑ Architecture](./README.md) · [← 2. The Five Source Layers](./02-five-source-layers.md) · [4. The Common Layer Is an Aggregator (Convention over Reference) →](./04-common-layer-aggregator.md)
+<!-- nav -->
+[↑ 01 — Architecture: How the Solution Is Put Together](./README.md) · [← Architecture § 2 — The Five Source Layers](./02-five-source-layers.md) · [Architecture § 4 — The Common Layer Is an Aggregator (Convention over Reference) →](./04-common-layer-aggregator.md)
+<!-- nav -->

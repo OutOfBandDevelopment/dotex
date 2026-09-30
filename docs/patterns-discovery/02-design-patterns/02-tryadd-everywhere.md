@@ -1,6 +1,8 @@
 # Pattern 2 — `TryAdd*` everywhere
 
-[↑ Design Patterns](./README.md) · [← 1. Abstractions + Implementation + Registration Extension](./01-abstractions-implementation-registration.md) · [3. Provider / Factory with keyed services →](./03-provider-factory-keyed.md)
+<!-- nav -->
+[↑ 02 — Design Patterns (As Practiced in the Code)](./README.md) · [← Pattern 1 — Abstractions + Implementation + Registration Extension](./01-abstractions-implementation-registration.md) · [Pattern 3 — Provider / Factory with keyed services →](./03-provider-factory-keyed.md)
+<!-- nav -->
 
 **What:** Library code uses `TryAddSingleton/Transient/…` so *the application always wins* and repeated calls are idempotent. Lifetimes seen: **Transient by default**, **Singleton** for stateless/expensive utilities (serializers, hashes, `IDateTimeProvider`), **Singleton with a factory** for the selected-service wrapper.
 
@@ -10,4 +12,6 @@
 
 ---
 
-[↑ Design Patterns](./README.md) · [← 1. Abstractions + Implementation + Registration Extension](./01-abstractions-implementation-registration.md) · [3. Provider / Factory with keyed services →](./03-provider-factory-keyed.md)
+<!-- nav -->
+[↑ 02 — Design Patterns (As Practiced in the Code)](./README.md) · [← Pattern 1 — Abstractions + Implementation + Registration Extension](./01-abstractions-implementation-registration.md) · [Pattern 3 — Provider / Factory with keyed services →](./03-provider-factory-keyed.md)
+<!-- nav -->

@@ -1,6 +1,8 @@
 # Pattern 10 — Attribute-declared behavior + dispatch-proxy decoration
 
-[↑ Design Patterns](./README.md) · [← 9. `#if DEBUG` explicit-argument extension methods](./09-if-debug-explicit-arguments.md) · [11. Marker-generic channels & handlers →](./11-marker-generic-channels-handlers.md)
+<!-- nav -->
+[↑ 02 — Design Patterns (As Practiced in the Code)](./README.md) · [← Pattern 9 — `#if DEBUG` explicit-argument extension methods](./09-if-debug-explicit-arguments.md) · [Pattern 11 — Marker-generic channels & handlers →](./11-marker-generic-channels-handlers.md)
+<!-- nav -->
 
 **What:** Cross-cutting behavior (caching) is declared with attributes on the *implementation* method and applied by a `System.Reflection.DispatchProxy`:
 
@@ -21,4 +23,6 @@ Pieces: `IsCacheableAttribute(keyFormatter, lifetimeString)`, `ICachingManager.B
 
 ---
 
-[↑ Design Patterns](./README.md) · [← 9. `#if DEBUG` explicit-argument extension methods](./09-if-debug-explicit-arguments.md) · [11. Marker-generic channels & handlers →](./11-marker-generic-channels-handlers.md)
+<!-- nav -->
+[↑ 02 — Design Patterns (As Practiced in the Code)](./README.md) · [← Pattern 9 — `#if DEBUG` explicit-argument extension methods](./09-if-debug-explicit-arguments.md) · [Pattern 11 — Marker-generic channels & handlers →](./11-marker-generic-channels-handlers.md)
+<!-- nav -->

@@ -1,6 +1,8 @@
 # Architecture § 10 — Architectural Principles (Distilled from the Code)
 
-[↑ Architecture](./README.md) · [← 9. Build & Packaging Architecture](./09-build-and-packaging.md) · [Index →](./README.md)
+<!-- nav -->
+[↑ 01 — Architecture: How the Solution Is Put Together](./README.md) · [← Architecture § 9 — Build & Packaging Architecture](./09-build-and-packaging.md) · [Index →](./README.md)
+<!-- nav -->
 
 1. **Contracts first, then adapters.** A new capability starts as `*.Abstractions`; vendors plug in from outside.
 2. **Composition by convention, wiring by extension method.** Globs and suffixes group projects; one `Try…` method per project wires them.
@@ -13,4 +15,6 @@
 
 ---
 
-[↑ Architecture](./README.md) · [← 9. Build & Packaging Architecture](./09-build-and-packaging.md) · [Index →](./README.md)
+<!-- nav -->
+[↑ 01 — Architecture: How the Solution Is Put Together](./README.md) · [← Architecture § 9 — Build & Packaging Architecture](./09-build-and-packaging.md) · [Index →](./README.md)
+<!-- nav -->

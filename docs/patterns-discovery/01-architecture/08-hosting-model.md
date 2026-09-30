@@ -1,6 +1,8 @@
 # Architecture § 8 — Hosting Model
 
-[↑ Architecture](./README.md) · [← 7. Cross-Cutting Building Blocks (all in `OoBDev.System*`)](./07-cross-cutting-building-blocks.md) · [9. Build & Packaging Architecture →](./09-build-and-packaging.md)
+<!-- nav -->
+[↑ 01 — Architecture: How the Solution Is Put Together](./README.md) · [← Architecture § 7 — Cross-Cutting Building Blocks (all in `OoBDev.System*`)](./07-cross-cutting-building-blocks.md) · [Architecture § 9 — Build & Packaging Architecture →](./09-build-and-packaging.md)
+<!-- nav -->
 
 Background work is isolated in `*.Hosting` projects so libraries never force a host dependency:
 
@@ -10,4 +12,6 @@ Background work is isolated in `*.Hosting` projects so libraries never force a h
 
 ---
 
-[↑ Architecture](./README.md) · [← 7. Cross-Cutting Building Blocks (all in `OoBDev.System*`)](./07-cross-cutting-building-blocks.md) · [9. Build & Packaging Architecture →](./09-build-and-packaging.md)
+<!-- nav -->
+[↑ 01 — Architecture: How the Solution Is Put Together](./README.md) · [← Architecture § 7 — Cross-Cutting Building Blocks (all in `OoBDev.System*`)](./07-cross-cutting-building-blocks.md) · [Architecture § 9 — Build & Packaging Architecture →](./09-build-and-packaging.md)
+<!-- nav -->

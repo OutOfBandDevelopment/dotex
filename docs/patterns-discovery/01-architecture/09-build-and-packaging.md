@@ -1,6 +1,8 @@
 # Architecture § 9 — Build & Packaging Architecture
 
-[↑ Architecture](./README.md) · [← 8. Hosting Model](./08-hosting-model.md) · [10. Architectural Principles (Distilled from the Code) →](./10-architectural-principles.md)
+<!-- nav -->
+[↑ 01 — Architecture: How the Solution Is Put Together](./README.md) · [← Architecture § 8 — Hosting Model](./08-hosting-model.md) · [Architecture § 10 — Architectural Principles (Distilled from the Code) →](./10-architectural-principles.md)
+<!-- nav -->
 
 * **Two-level MSBuild:** `Directory.Build.props` (metadata, paths, packaging inference, README + license packing, test-project wiring) and `Directory.Build.targets` (custom targets: `DeepClean`, `CleanPaths`, `GetDocumentation`, README enforcement).
 * **Self-documenting packages:** every `**\*.md` and `*.plantuml/*.puml` is copied to `docs/code/{Project}` and packed under `\docs`; `**\*.json/html/csv/sql/xml/yml/txt` are embedded as resources and packed under `\examples`.
@@ -12,4 +14,6 @@ See [Practices and Conventions](../03-practices-and-conventions/README.md) for t
 
 ---
 
-[↑ Architecture](./README.md) · [← 8. Hosting Model](./08-hosting-model.md) · [10. Architectural Principles (Distilled from the Code) →](./10-architectural-principles.md)
+<!-- nav -->
+[↑ 01 — Architecture: How the Solution Is Put Together](./README.md) · [← Architecture § 8 — Hosting Model](./08-hosting-model.md) · [Architecture § 10 — Architectural Principles (Distilled from the Code) →](./10-architectural-principles.md)
+<!-- nav -->

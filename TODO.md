@@ -15,11 +15,11 @@
 | 6 | Survey code: testing (categories, TestContext config, Docker) | ✅ Done |
 | 7 | Write `01-architecture/` (solution shape, layers, dependency rules) | ✅ Done |
 | 8 | Write `02-design-patterns/` (patterns with real code refs) | ✅ Done |
-| 9 | Write `03-practices-and-conventions.md` (naming, build, docs, testing) | ⏳ |
-| 10 | Write `04-new-project-blueprint.md` (how to start a new product/framework) | ⏳ |
-| 11 | Write `05-industry-alternatives.md` (suggestions, pros/cons) | ⏳ |
-| 12 | Write `README.md` index; cross-check claims against code | ⏳ |
-| 13 | Final review, update this table | ⏳ |
+| 9 | Write `03-practices-and-conventions/` (naming, build, docs, testing, warts) | ✅ Done |
+| 10 | Write `04-new-project-blueprint/` (4 recipes) | ✅ Done |
+| 11 | Write `05-industry-alternatives/` (22 topics, pros/cons, verdicts) | ✅ Done |
+| 12 | Write `README.md` index with doc/code drift table | ✅ Done |
+| 13 | Final review; validate-docs 56 files, 0 problems | ✅ Done (awaiting user review) |
 | 14 | Write `06-design-document-standard.md` (how design docs are made; PlantUML/Salt rule; added to CLAUDE.md) | ✅ Done |
 
 **Notes / findings log:**

@@ -1,6 +1,8 @@
 # Pattern 3 — Provider / Factory with keyed services
 
-[↑ Design Patterns](./README.md) · [← 2. `TryAdd*` everywhere](./02-tryadd-everywhere.md) · [4. `ISelectedService<T>` — config-selected provider →](./04-selected-service.md)
+<!-- nav -->
+[↑ 02 — Design Patterns (As Practiced in the Code)](./README.md) · [← Pattern 2 — `TryAdd*` everywhere](./02-tryadd-everywhere.md) · [Pattern 4 — `ISelectedService<T>` — config-selected provider →](./04-selected-service.md)
+<!-- nav -->
 
 **What:** A vendor adapter registers itself **twice**: once un-keyed (first `TryAdd` wins → "default"), once keyed (deterministic lookup).
 
@@ -27,4 +29,6 @@ Supporting conventions:
 
 ---
 
-[↑ Design Patterns](./README.md) · [← 2. `TryAdd*` everywhere](./02-tryadd-everywhere.md) · [4. `ISelectedService<T>` — config-selected provider →](./04-selected-service.md)
+<!-- nav -->
+[↑ 02 — Design Patterns (As Practiced in the Code)](./README.md) · [← Pattern 2 — `TryAdd*` everywhere](./02-tryadd-everywhere.md) · [Pattern 4 — `ISelectedService<T>` — config-selected provider →](./04-selected-service.md)
+<!-- nav -->

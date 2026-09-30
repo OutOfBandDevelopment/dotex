@@ -1,6 +1,8 @@
 # Pattern 11 — Marker-generic channels & handlers
 
-[↑ Design Patterns](./README.md) · [← 10. Attribute-declared behavior + dispatch-proxy decoration](./10-attribute-dispatch-proxy.md) · [12. Message context object →](./12-message-context-object.md)
+<!-- nav -->
+[↑ 02 — Design Patterns (As Practiced in the Code)](./README.md) · [← Pattern 10 — Attribute-declared behavior + dispatch-proxy decoration](./10-attribute-dispatch-proxy.md) · [Pattern 12 — Message context object →](./12-message-context-object.md)
+<!-- nav -->
 
 **What:** The *type argument is the routing identity*.
 
@@ -17,4 +19,6 @@ Any class (even the handler itself, as in `ExampleMessageProvider`) can be the `
 
 ---
 
-[↑ Design Patterns](./README.md) · [← 10. Attribute-declared behavior + dispatch-proxy decoration](./10-attribute-dispatch-proxy.md) · [12. Message context object →](./12-message-context-object.md)
+<!-- nav -->
+[↑ 02 — Design Patterns (As Practiced in the Code)](./README.md) · [← Pattern 10 — Attribute-declared behavior + dispatch-proxy decoration](./10-attribute-dispatch-proxy.md) · [Pattern 12 — Message context object →](./12-message-context-object.md)
+<!-- nav -->

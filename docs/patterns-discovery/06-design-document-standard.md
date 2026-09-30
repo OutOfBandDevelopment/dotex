@@ -27,6 +27,7 @@ How design documents are created in this repository. It formalizes the "Epic 11"
 
 | Rule | Requirement |
 |------|-------------|
+| Validation | Run `python scripts/docs/validate-docs.py docs` (see [scripts/docs/README.md](../../scripts/docs/README.md)); every diagram must render and every link must resolve. Prefer deterministic scripts over manual/LLM editing for repeatable doc tasks. |
 | Architecture diagrams | Use **C4-model style** (Context, Container, Component, Code levels), but drawn with **plain PlantUML** (`rectangle`/`component` with stereotypes and `skinparam` colors). **Do not `!include` the C4-PlantUML library** – remote includes break in production/offline rendering. Label each element `Name
 [Type: technology]
 description` and each relationship with its purpose. |
@@ -128,6 +129,7 @@ T ..> R : traces back to\nrequirement IDs
 - [ ] All four documents exist and cross-link.
 - [ ] Long documents are split into folder + files, and every relative link resolves.
 - [ ] Contents / List of Figures / List of Tables present where useful and captions match.
+- [ ] `validate-docs.py` passes.
 - [ ] Architecture diagrams are C4-style plain PlantUML (no `!include`).
 - [ ] Every diagram is PlantUML; every mockup is Salt.
 - [ ] Every requirement is traced to a test row.

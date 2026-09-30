@@ -1,6 +1,8 @@
 # Pattern 18 — Replace-to-override in host layers
 
-[↑ Design Patterns](./README.md) · [← 17. Attribute + mapper data access](./17-attribute-mapper-data-access.md) · [19. ASP.NET cross-cutting: middleware + request features →](./19-aspnet-middleware-request-features.md)
+<!-- nav -->
+[↑ 02 — Design Patterns (As Practiced in the Code)](./README.md) · [← Pattern 17 — Attribute + mapper data access](./17-attribute-mapper-data-access.md) · [Pattern 19 — ASP.NET cross-cutting: middleware + request features →](./19-aspnet-middleware-request-features.md)
+<!-- nav -->
 
 Framework registers a safe default; the ASP.NET layer **replaces** it when a richer implementation is available:
 
@@ -14,4 +16,6 @@ Both are also registered keyed (`"Environment"`, `"HTTP"`) so either can still b
 
 ---
 
-[↑ Design Patterns](./README.md) · [← 17. Attribute + mapper data access](./17-attribute-mapper-data-access.md) · [19. ASP.NET cross-cutting: middleware + request features →](./19-aspnet-middleware-request-features.md)
+<!-- nav -->
+[↑ 02 — Design Patterns (As Practiced in the Code)](./README.md) · [← Pattern 17 — Attribute + mapper data access](./17-attribute-mapper-data-access.md) · [Pattern 19 — ASP.NET cross-cutting: middleware + request features →](./19-aspnet-middleware-request-features.md)
+<!-- nav -->

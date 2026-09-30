@@ -1,6 +1,8 @@
 # Architecture § 5 — Composition Root
 
-[↑ Architecture](./README.md) · [← 4. The Common Layer Is an Aggregator (Convention over Reference)](./04-common-layer-aggregator.md) · [6. Runtime Composition Model (How a Call Finds Its Implementation) →](./06-runtime-composition-model.md)
+<!-- nav -->
+[↑ 01 — Architecture: How the Solution Is Put Together](./README.md) · [← Architecture § 4 — The Common Layer Is an Aggregator (Convention over Reference)](./04-common-layer-aggregator.md) · [Architecture § 6 — Runtime Composition Model (How a Call Finds Its Implementation) →](./06-runtime-composition-model.md)
+<!-- nav -->
 
 There is exactly one composition root per application. In `Examples/OoBDev.Example.WebApi/Program.cs`:
 
@@ -27,4 +29,6 @@ Characteristics worth carrying forward:
 
 ---
 
-[↑ Architecture](./README.md) · [← 4. The Common Layer Is an Aggregator (Convention over Reference)](./04-common-layer-aggregator.md) · [6. Runtime Composition Model (How a Call Finds Its Implementation) →](./06-runtime-composition-model.md)
+<!-- nav -->
+[↑ 01 — Architecture: How the Solution Is Put Together](./README.md) · [← Architecture § 4 — The Common Layer Is an Aggregator (Convention over Reference)](./04-common-layer-aggregator.md) · [Architecture § 6 — Runtime Composition Model (How a Call Finds Its Implementation) →](./06-runtime-composition-model.md)
+<!-- nav -->

@@ -1,6 +1,8 @@
 # Pattern 8 — Config-gated registration
 
-[↑ Design Patterns](./README.md) · [← 7. Options binding by section name](./07-options-binding-by-section-name.md) · [9. `#if DEBUG` explicit-argument extension methods →](./09-if-debug-explicit-arguments.md)
+<!-- nav -->
+[↑ 02 — Design Patterns (As Practiced in the Code)](./README.md) · [← Pattern 7 — Options binding by section name](./07-options-binding-by-section-name.md) · [Pattern 9 — `#if DEBUG` explicit-argument extension methods →](./09-if-debug-explicit-arguments.md)
+<!-- nav -->
 
 **What:** An adapter's `TryAdd…` inspects configuration and registers **nothing** if its section is absent:
 
@@ -13,4 +15,6 @@ This is what lets `TryAllCommonExtensions` pull in 20+ adapters safely. It also 
 
 ---
 
-[↑ Design Patterns](./README.md) · [← 7. Options binding by section name](./07-options-binding-by-section-name.md) · [9. `#if DEBUG` explicit-argument extension methods →](./09-if-debug-explicit-arguments.md)
+<!-- nav -->
+[↑ 02 — Design Patterns (As Practiced in the Code)](./README.md) · [← Pattern 7 — Options binding by section name](./07-options-binding-by-section-name.md) · [Pattern 9 — `#if DEBUG` explicit-argument extension methods →](./09-if-debug-explicit-arguments.md)
+<!-- nav -->

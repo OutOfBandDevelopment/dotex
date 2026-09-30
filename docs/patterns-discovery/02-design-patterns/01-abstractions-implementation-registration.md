@@ -1,6 +1,8 @@
 # Pattern 1 — Abstractions + Implementation + Registration Extension
 
-[↑ Design Patterns](./README.md) · [← Index](./README.md) · [2. `TryAdd*` everywhere →](./02-tryadd-everywhere.md)
+<!-- nav -->
+[↑ 02 — Design Patterns (As Practiced in the Code)](./README.md) · [← Pattern Interaction Cheat-Sheet](./00-pattern-interaction.md) · [Pattern 2 — `TryAdd*` everywhere →](./02-tryadd-everywhere.md)
+<!-- nav -->
 
 **What:** A capability = `X.Abstractions` (contracts) + `X` (defaults) + `ServiceCollectionExtensions` in the implementation (one public `TryAddXServices`).
 
@@ -22,4 +24,6 @@ public static IServiceCollection TryAddCachingServices(this IServiceCollection s
 
 ---
 
-[↑ Design Patterns](./README.md) · [← Index](./README.md) · [2. `TryAdd*` everywhere →](./02-tryadd-everywhere.md)
+<!-- nav -->
+[↑ 02 — Design Patterns (As Practiced in the Code)](./README.md) · [← Pattern Interaction Cheat-Sheet](./00-pattern-interaction.md) · [Pattern 2 — `TryAdd*` everywhere →](./02-tryadd-everywhere.md)
+<!-- nav -->

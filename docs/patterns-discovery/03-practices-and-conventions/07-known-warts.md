@@ -1,0 +1,33 @@
+# Known Warts (Decide Before Copying)
+
+<!-- nav -->
+[↑ 03 — Practices and Conventions](./README.md) · [← CI/CD and Versioning](./06-cicd-and-versioning.md) · [Index →](./README.md)
+<!-- nav -->
+
+Things found in the code that a new project should either fix or knowingly keep. Each is compared with industry practice in [Industry Alternatives](../05-industry-alternatives/README.md).
+
+**Table 8 — Known warts**
+
+| # | Wart | Where | Suggested handling |
+|---|------|-------|--------------------|
+| 1 | `RetreiveAsync` misspelled in the public API | caching abstractions | fix in a new framework; obsolete-forward in this one |
+| 2 | `ServiceCollectionEx` vs `ServiceCollectionExtensions` | many projects | choose `ServiceCollectionExtensions` |
+| 3 | Sync-over-async (`GetAwaiter().GetResult()`) in the caching proxy | `CachedProxy` | async-aware proxy or decorator |
+| 4 | Caller info from `new StackFrame(5, true)` | message context factory | `[CallerMemberName]` and friends |
+| 5 | `[ContractConfig]` declared but never read | `ICachingProvider` | wire it into `SelectedService<T>` or remove |
+| 6 | Readme case (`ReadMe.X.md` on disk, `README.X.md` in props) | shared props | works on Windows only; normalize |
+| 7 | `#if DEBUG` changes the compiled API | registration entry points | overloads instead |
+| 8 | No options validation, no `ValidateOnStart` | all options | add validation |
+| 9 | Central package management off; versions inline | every csproj | central `Directory.Packages.props` |
+| 10 | Analyzers and XML-doc generation commented out | shared props | enable and gate |
+| 11 | Provider key casing differs (`Redis`, `OLLAMA`, `rabbit-mq`) | adapters | constants on the abstraction |
+| 12 | MD5 as a default hash | `OoBDev.System` | prefer SHA-256 for anything security-adjacent |
+| 13 | Hard-coded 10 second restart delay | `MessageReceiverHost` | make configurable |
+
+Doc/code differences (for example the `GitVersion.yml` location) are tracked in [Doc/Code Drift](../README.md).
+
+---
+
+<!-- nav -->
+[↑ 03 — Practices and Conventions](./README.md) · [← CI/CD and Versioning](./06-cicd-and-versioning.md) · [Index →](./README.md)
+<!-- nav -->

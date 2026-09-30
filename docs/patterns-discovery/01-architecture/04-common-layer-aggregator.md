@@ -1,6 +1,8 @@
 # Architecture § 4 — The Common Layer Is an Aggregator (Convention over Reference)
 
-[↑ Architecture](./README.md) · [← 3. The Abstractions / Implementation Split](./03-abstractions-implementation-split.md) · [5. Composition Root →](./05-composition-root.md)
+<!-- nav -->
+[↑ 01 — Architecture: How the Solution Is Put Together](./README.md) · [← Architecture § 3 — The Abstractions / Implementation Split](./03-abstractions-implementation-split.md) · [Architecture § 5 — Composition Root →](./05-composition-root.md)
+<!-- nav -->
 
 `OoBDev.Common.csproj` does not list projects. It **globs** them, then subtracts categories:
 
@@ -32,4 +34,6 @@ determine which roll-up a project lands in.
 
 ---
 
-[↑ Architecture](./README.md) · [← 3. The Abstractions / Implementation Split](./03-abstractions-implementation-split.md) · [5. Composition Root →](./05-composition-root.md)
+<!-- nav -->
+[↑ 01 — Architecture: How the Solution Is Put Together](./README.md) · [← Architecture § 3 — The Abstractions / Implementation Split](./03-abstractions-implementation-split.md) · [Architecture § 5 — Composition Root →](./05-composition-root.md)
+<!-- nav -->

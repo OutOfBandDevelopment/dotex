@@ -1,6 +1,8 @@
 # Architecture § 2 — The Five Source Layers
 
-[↑ Architecture](./README.md) · [← 1. The Shape in One Page](./01-shape-in-one-page.md) · [3. The Abstractions / Implementation Split →](./03-abstractions-implementation-split.md)
+<!-- nav -->
+[↑ 01 — Architecture: How the Solution Is Put Together](./README.md) · [← Architecture § 1 — The Shape in One Page](./01-shape-in-one-page.md) · [Architecture § 3 — The Abstractions / Implementation Split →](./03-abstractions-implementation-split.md)
+<!-- nav -->
 
 **Table 1 — Source layers and dependency rules**
 
@@ -16,4 +18,6 @@
 
 ---
 
-[↑ Architecture](./README.md) · [← 1. The Shape in One Page](./01-shape-in-one-page.md) · [3. The Abstractions / Implementation Split →](./03-abstractions-implementation-split.md)
+<!-- nav -->
+[↑ 01 — Architecture: How the Solution Is Put Together](./README.md) · [← Architecture § 1 — The Shape in One Page](./01-shape-in-one-page.md) · [Architecture § 3 — The Abstractions / Implementation Split →](./03-abstractions-implementation-split.md)
+<!-- nav -->

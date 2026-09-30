@@ -1,6 +1,8 @@
 # Pattern 12 — Message context object
 
-[↑ Design Patterns](./README.md) · [← 11. Marker-generic channels & handlers](./11-marker-generic-channels-handlers.md) · [13. Supervised hosted service →](./13-supervised-hosted-service.md)
+<!-- nav -->
+[↑ 02 — Design Patterns (As Practiced in the Code)](./README.md) · [← Pattern 11 — Marker-generic channels & handlers](./11-marker-generic-channels-handlers.md) · [Pattern 13 — Supervised hosted service →](./13-supervised-hosted-service.md)
+<!-- nav -->
 
 `IMessageContext` bundles correlation (`CorrelationId`, `RequestId`, `OriginMessageId`, `SentId`), provenance (`SentAt`, `SentBy`, `SentFrom`, caller method/line/file captured from the stack), a header bag, and the resolved `IConfigurationSection`. It flows to **both** sender providers and handlers, so cross-cutting information is never in the message payload. `IQueueMessage`/`WrappedQueueMessage` is the wire envelope (`ContentType`, `PayloadType`, `Payload`, `Properties`).
 
@@ -8,4 +10,6 @@
 
 ---
 
-[↑ Design Patterns](./README.md) · [← 11. Marker-generic channels & handlers](./11-marker-generic-channels-handlers.md) · [13. Supervised hosted service →](./13-supervised-hosted-service.md)
+<!-- nav -->
+[↑ 02 — Design Patterns (As Practiced in the Code)](./README.md) · [← Pattern 11 — Marker-generic channels & handlers](./11-marker-generic-channels-handlers.md) · [Pattern 13 — Supervised hosted service →](./13-supervised-hosted-service.md)
+<!-- nav -->

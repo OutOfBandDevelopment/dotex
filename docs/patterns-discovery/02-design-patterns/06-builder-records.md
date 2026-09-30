@@ -1,6 +1,8 @@
 # Pattern 6 — Builder *records* carrying config section names
 
-[↑ Design Patterns](./README.md) · [← 5. Config-resolved provider per channel/message](./05-config-resolved-provider.md) · [7. Options binding by section name →](./07-options-binding-by-section-name.md)
+<!-- nav -->
+[↑ 02 — Design Patterns (As Practiced in the Code)](./README.md) · [← Pattern 5 — Config-resolved provider per channel/message](./05-config-resolved-provider.md) · [Pattern 7 — Options binding by section name →](./07-options-binding-by-section-name.md)
+<!-- nav -->
 
 **What:** Each layer has a `record …Builder` whose properties are **config section names** (and a few feature switches), defaulting to `nameof(TheOptionsType)`.
 
@@ -20,4 +22,6 @@ public record HostingBuilder { public bool DisableMessageQueueing { get; init; }
 
 ---
 
-[↑ Design Patterns](./README.md) · [← 5. Config-resolved provider per channel/message](./05-config-resolved-provider.md) · [7. Options binding by section name →](./07-options-binding-by-section-name.md)
+<!-- nav -->
+[↑ 02 — Design Patterns (As Practiced in the Code)](./README.md) · [← Pattern 5 — Config-resolved provider per channel/message](./05-config-resolved-provider.md) · [Pattern 7 — Options binding by section name →](./07-options-binding-by-section-name.md)
+<!-- nav -->

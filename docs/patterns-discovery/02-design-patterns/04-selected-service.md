@@ -1,6 +1,8 @@
 # Pattern 4 — `ISelectedService<T>` — config-selected provider
 
-[↑ Design Patterns](./README.md) · [← 3. Provider / Factory with keyed services](./03-provider-factory-keyed.md) · [5. Config-resolved provider per channel/message →](./05-config-resolved-provider.md)
+<!-- nav -->
+[↑ 02 — Design Patterns (As Practiced in the Code)](./README.md) · [← Pattern 3 — Provider / Factory with keyed services](./03-provider-factory-keyed.md) · [Pattern 5 — Config-resolved provider per channel/message →](./05-config-resolved-provider.md)
+<!-- nav -->
 
 **What:** When exactly one implementation should be active, consumers inject `ISelectedService<TService>`; its constructor reads
 `configuration["OoBDev::ServiceKeys::{typeof(TService).FullName}"]` and resolves the keyed service, **falling back to the default un-keyed registration**.
@@ -30,4 +32,6 @@ Registered once as an open generic in `TryAddProviders()`; used by `CachingManag
 
 ---
 
-[↑ Design Patterns](./README.md) · [← 3. Provider / Factory with keyed services](./03-provider-factory-keyed.md) · [5. Config-resolved provider per channel/message →](./05-config-resolved-provider.md)
+<!-- nav -->
+[↑ 02 — Design Patterns (As Practiced in the Code)](./README.md) · [← Pattern 3 — Provider / Factory with keyed services](./03-provider-factory-keyed.md) · [Pattern 5 — Config-resolved provider per channel/message →](./05-config-resolved-provider.md)
+<!-- nav -->

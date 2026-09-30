@@ -1,6 +1,8 @@
 # Pattern 7 — Options binding by section name
 
-[↑ Design Patterns](./README.md) · [← 6. Builder *records* carrying config section names](./06-builder-records.md) · [8. Config-gated registration →](./08-config-gated-registration.md)
+<!-- nav -->
+[↑ 02 — Design Patterns (As Practiced in the Code)](./README.md) · [← Pattern 6 — Builder *records* carrying config section names](./06-builder-records.md) · [Pattern 8 — Config-gated registration →](./08-config-gated-registration.md)
+<!-- nav -->
 
 ```csharp
 services.Configure<OllamaApiClientOptions>(o => configuration.Bind(sectionName, o));
@@ -14,4 +16,6 @@ public OllamaApiClientFactory(IOptions<OllamaApiClientOptions> options) ...
 
 ---
 
-[↑ Design Patterns](./README.md) · [← 6. Builder *records* carrying config section names](./06-builder-records.md) · [8. Config-gated registration →](./08-config-gated-registration.md)
+<!-- nav -->
+[↑ 02 — Design Patterns (As Practiced in the Code)](./README.md) · [← Pattern 6 — Builder *records* carrying config section names](./06-builder-records.md) · [Pattern 8 — Config-gated registration →](./08-config-gated-registration.md)
+<!-- nav -->

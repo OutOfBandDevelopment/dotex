@@ -1,6 +1,8 @@
 # Architecture § 7 — Cross-Cutting Building Blocks (all in `OoBDev.System*`)
 
-[↑ Architecture](./README.md) · [← 6. Runtime Composition Model (How a Call Finds Its Implementation)](./06-runtime-composition-model.md) · [8. Hosting Model →](./08-hosting-model.md)
+<!-- nav -->
+[↑ 01 — Architecture: How the Solution Is Put Together](./README.md) · [← Architecture § 6 — Runtime Composition Model (How a Call Finds Its Implementation)](./06-runtime-composition-model.md) · [Architecture § 8 — Hosting Model →](./08-hosting-model.md)
+<!-- nav -->
 
 `OoBDev.System.Abstractions` + `OoBDev.System` are the "BCL extensions" foundation that everything else references. They deliberately hold the *shared vocabulary*:
 
@@ -19,4 +21,6 @@
 
 ---
 
-[↑ Architecture](./README.md) · [← 6. Runtime Composition Model (How a Call Finds Its Implementation)](./06-runtime-composition-model.md) · [8. Hosting Model →](./08-hosting-model.md)
+<!-- nav -->
+[↑ 01 — Architecture: How the Solution Is Put Together](./README.md) · [← Architecture § 6 — Runtime Composition Model (How a Call Finds Its Implementation)](./06-runtime-composition-model.md) · [Architecture § 8 — Hosting Model →](./08-hosting-model.md)
+<!-- nav -->

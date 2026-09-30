@@ -178,6 +178,8 @@ public interface IHandler<TRequest, TResponse>
 
 - **All diagrams in markdown documents MUST be PlantUML** (fenced ```` ```plantuml ```` blocks with `@startuml`/`@enduml`). Never use ASCII/box-drawing art or Mermaid.
 - **All UI mockups MUST be PlantUML + Salt** (`@startsalt`/`@endsalt`), embedded in the markdown document.
+- **Validate docs before finishing**: run `python scripts/docs/validate-docs.py docs` (renders every PlantUML diagram via the `plantuml/plantuml-server` docker image, checks links/captions). A diagram is not done until it renders. Never hand-type escape sequences in shell-heredoc'd Python; write scripts with the Write tool and build backslash-n as `chr(92)+'n'`.
+- **Prefer deterministic scripts over agentic LLM work** for repeatable tasks (validation, linting, TOC/caption generation, renames, link fixing). Put them in `scripts/` with a README, and reuse them.
 - **Architecture diagrams use C4 style (Context/Container/Component) written in plain PlantUML** (rectangles + stereotypes + skinparam). Never `!include` C4-PlantUML templates – they break in production rendering.
 - **Include a Table of Contents, List of Figures and List of Tables where useful** (3+ sections / 2+ figures / 2+ tables). Caption figures `*Figure N — title*` (after) and tables `**Table N — title**` (before).
 - **Split long documents** (>~250 lines or >~6 major sections) into a topic folder with a `README.md` index and one file per headline; nav links at top/bottom of each file. **Prefer valid relative cross references** (file + `#anchor`) wherever a concept has its own document; verify links resolve.
