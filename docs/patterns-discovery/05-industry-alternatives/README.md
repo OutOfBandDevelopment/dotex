@@ -22,30 +22,32 @@ Products change quickly. Licensing and feature statements below reflect what was
 
 | # | Topic | Verdict | Where |
 |---|-------|---------|-------|
-| 1 | Provider selection (`ISelectedService` vs keyed DI vs named options) | Keep, consider simplification | [DI and composition](./01-di-and-composition.md) |
-| 2 | Options binding and validation | Change (add validation) | [DI and composition](./01-di-and-composition.md) |
-| 3 | `#if DEBUG` required parameters | Keep (intent is sound) | [DI and composition](./01-di-and-composition.md) |
+| 1 | Provider selection (`ISelectedService` vs keyed DI vs named options) | Keep intent; migrate to a keyed-service selection factory; third-party DI rejected | [DI and composition](./01-di-and-composition.md) |
+| 2 | Options binding and validation | Change (add validation via `AddValidatedOptions<T>()`) | [DI and composition](./01-di-and-composition.md) |
+| 3 | `#if DEBUG` required parameters | Keep; analyzer preferred, spike wanted | [DI and composition](./01-di-and-composition.md) |
 | 4 | Builder records vs configure delegates | Keep | [DI and composition](./01-di-and-composition.md) |
 | 5 | `IServiceProvider` injection | Keep, contained | [DI and composition](./01-di-and-composition.md) |
 | 6 | Abstractions / implementation split | Keep | [Structure and build](./02-project-structure-and-build.md) |
 | 7 | Glob-based Common aggregator | Consider | [Structure and build](./02-project-structure-and-build.md) |
 | 8 | Layering style (Clean, Onion, Vertical Slice) | Keep | [Structure and build](./02-project-structure-and-build.md) |
-| 9 | Central package management | Change | [Structure and build](./02-project-structure-and-build.md) |
-| 10 | Analyzers and warnings as errors | Change | [Structure and build](./02-project-structure-and-build.md) |
+| 9 | Central package management | Change (restore) | [Structure and build](./02-project-structure-and-build.md) |
+| 10 | Analyzers and warnings as errors | Change (zero warnings, enforce patterns) | [Structure and build](./02-project-structure-and-build.md) |
 | 11 | Versioning tool | Keep | [Structure and build](./02-project-structure-and-build.md) |
-| 12 | `DispatchProxy` caching | Consider | [Cross-cutting](./03-cross-cutting-runtime.md) |
-| 13 | Result envelope | Keep, align at HTTP edge | [Cross-cutting](./03-cross-cutting-runtime.md) |
-| 14 | Observability and resilience | Consider (add) | [Cross-cutting](./03-cross-cutting-runtime.md) |
-| 15 | Logging style | Consider | [Cross-cutting](./03-cross-cutting-runtime.md) |
-| 16 | Default hash algorithm | Change | [Cross-cutting](./03-cross-cutting-runtime.md) |
+| 12 | `DispatchProxy` caching | Change (source generator) | [Cross-cutting](./03-cross-cutting-runtime.md) |
+| 13 | Result envelope | No HTTP envelope; ProblemDetails middleware | [Cross-cutting](./03-cross-cutting-runtime.md) |
+| 14 | Observability and resilience | Add OpenTelemetry; avoid Polly | [Cross-cutting](./03-cross-cutting-runtime.md) |
+| 15 | Logging style | Change (`[LoggerMessage]`; no third-party logging) | [Cross-cutting](./03-cross-cutting-runtime.md) |
+| 16 | Default hash algorithm | Change (SHA-512) | [Cross-cutting](./03-cross-cutting-runtime.md) |
 | 17 | Custom messaging | Keep, consider bridge | [Messaging](./04-messaging.md) |
 | 18 | Stored procedure mapper | Keep, consider Dapper | [Data and API](./05-data-and-api.md) |
-| 19 | Swagger generation | Consider | [Data and API](./05-data-and-api.md) |
-| 20 | Test framework and mocking | Consider | [Testing and quality](./06-testing-and-quality.md) |
-| 21 | Docker test infrastructure | Consider | [Testing and quality](./06-testing-and-quality.md) |
-| 22 | Documentation tooling | Consider | [Documentation](./07-documentation.md) |
+| 19 | Swagger generation | Change (Scalar) | [Data and API](./05-data-and-api.md) |
+| 20 | Test framework and mocking | Keep MSTest; spike other mocks | [Testing and quality](./06-testing-and-quality.md) |
+| 21 | Docker test infrastructure | Consider (Aspire spike) | [Testing and quality](./06-testing-and-quality.md) |
+| 22 | Documentation tooling | Consider (spikes) | [Documentation](./07-documentation.md) |
 | 23 | UI architecture and JS/TS framework choice | Keep (MVVM with commands) | [UI patterns](./08-ui.md) |
 | 24 | Authentication and token exchange | Keep (OAuth/OIDC/JWT plus STS) | [Authentication](./09-authentication.md) |
+| 25 | HTTP API style and query syntax | Keep REST; OData and GraphQL for all `IQueryable<T>` endpoints | [HTTP API](./10-http-api.md) |
+| 26 | Authorization model | Keep (RBAC with application rights) | [Authorization](./11-authorization.md) |
 
 *Figure 1 — effort and value of the recommended changes*
 
@@ -56,11 +58,11 @@ rectangle "Low effort, high value" as Q1 {
   rectangle "Options validation" as a
   rectangle "Central package management" as b
   rectangle "Fix RetreiveAsync typo" as c
-  rectangle "SHA-256 default hash" as d
+  rectangle "SHA-512 default hash" as d
 }
 rectangle "Higher effort, high value" as Q2 {
   rectangle "Enable analyzers" as e
-  rectangle "OpenTelemetry and Polly" as f
+  rectangle "OpenTelemetry (no Polly)" as f
   rectangle "Async-safe caching decorator" as g
 }
 rectangle "Optional" as Q3 {
@@ -85,6 +87,8 @@ Q2 -[hidden]right- Q3
 7. [Documentation](./07-documentation.md)
 8. [UI Patterns](./08-ui.md)
 9. [Authentication Approaches](./09-authentication.md)
+10. [HTTP API and Querying](./10-http-api.md)
+11. [Authorization Approaches](./11-authorization.md)
 
 ### List of Figures
 
@@ -119,4 +123,9 @@ Q2 -[hidden]right- Q3
 25. [Table 25 — JS/TS frameworks by fit to MVVM (general knowledge; re-check before deciding)](./08-ui.md)
 26. [Table 26 — Approaches to cross-application tokens](./09-authentication.md)
 27. [Table 27 — Ways to obtain an STS](./09-authentication.md)
+28. [Table 28 — API styles](./10-http-api.md)
+29. [Table 29 — Query syntax options for collections](./10-http-api.md)
+30. [Table 30 — Combination strategies](./10-http-api.md)
+31. [Table 31 — Authorization models](./11-authorization.md)
+32. [Table 32 — Where rights get attached](./11-authorization.md)
 <!-- toc:end -->

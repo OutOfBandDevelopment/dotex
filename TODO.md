@@ -61,6 +61,27 @@ Source: [pattern 4](docs/patterns-discovery/02-design-patterns/04-selected-servi
 
 ---
 
+## 📌 Backlog: Architect Answers
+
+Owner decisions are recorded under each verdict in `docs/patterns-discovery/05-industry-alternatives/`. Work items they create:
+
+- [ ] **Selection factory replaces `ISelectedService<T>`:** a factory registered in the container that takes a configuration path and picks a keyed service at registration/initialization (or run time); migrate existing `ISelectedService<T>` uses; spike first. Third-party DI and logging libraries are rejected.
+- [ ] **`AddValidatedOptions<T>()`:** one extension wrapping `BindConfiguration` + validation + `ValidateOnStart` (ties to the options validation backlog).
+- [ ] **Builder forwarding spike:** compare the `#if DEBUG` required parameters, an analyzer, and `Action<TBuilder>` for chained/nested registration; show each.
+- [ ] **Mutable configuration option:** evaluate dropping the `record` for mutable configuration while keeping the options pattern over keyed values.
+- [ ] **Restore central package management** (record why it was removed).
+- [ ] **Zero warnings and build-time pattern enforcement** (see Roslyn analyzers backlog).
+- [ ] **Source-generated caching proxy** replacing `DispatchProxy`.
+- [ ] **`ProblemDetails` middleware:** automatic, published in OpenAPI, transparent; no general HTTP envelope.
+- [ ] **OpenTelemetry** capability; **no Polly** (check whether `Microsoft.Extensions.Resilience` is acceptable given its Polly dependency).
+- [ ] **`[LoggerMessage]` migration**; no third-party logging.
+- [ ] **Default hash to SHA-512** (MD5 stays only where a legacy format needs it).
+- [ ] **Scalar** for API docs (confirm what "async-ui" means: AsyncAPI viewer or Swagger UI).
+- [ ] **Spikes:** other mocking frameworks (MSTest stays), Aspire vs the Docker compose stack, documentation tool chains, UI (Blazor, Knockout, Vue), UI component libraries, WPF proof of concept.
+- [ ] **Nested query support** for the `IQueryable<T>` middleware and OData/GraphQL on every `IQueryable<T>` endpoint by header or URL convention.
+
+---
+
 ## 📌 Backlog: Options Validation Modes (strict default, relaxed opt-out) — analysis before decision
 
 Source: [pattern 7](docs/patterns-discovery/02-design-patterns/07-options-binding-by-section-name.md). Options are deliberately not validated today so that a misconfiguration cannot take the application down. Proposal to analyze: validation available, **strict by default**, with a **relaxed** mode that disables it. No decision has been made.
@@ -116,6 +137,36 @@ Source: [authentication practices](docs/patterns-discovery/03-practices-and-conv
 - [ ] **Windows and SAML inputs:** the STS accepts a Windows (Kerberos/NTLM) token or SAML assertion and exchanges it for a JWT, so applications only ever see JWT. Decide the mechanism (AD FS/Entra federation, Keycloak identity brokering, RFC 7522 SAML bearer grant, or in-house) and cover it in the design and example.
 - [ ] **Credential conversion (services know only JWT):** define the STS or edge-adapter contract for converting API keys, HMAC-signed requests, basic auth and legacy bearer tokens to JWT (secret storage, replay protection, per-client policy), and confirm services need no per-scheme code.
 - [ ] **Optional by configuration:** exchange off when the SSO token is acceptable as is; no behavior change for existing hosts.
+
+---
+
+## 📌 Backlog: HTTP API Querying and Rights Middleware
+
+Source: [HTTP API practices](docs/patterns-discovery/03-practices-and-conventions/10-http-api-practices.md), [authorization practices](docs/patterns-discovery/03-practices-and-conventions/11-authorization-practices.md), alternatives topics [25](docs/patterns-discovery/05-industry-alternatives/10-http-api.md) and [26](docs/patterns-discovery/05-industry-alternatives/11-authorization.md). Standing preferences: REST where possible; evaluate OData over the HTTP `QUERY` verb and GraphQL beside the custom search syntax; RBAC with application rights declared per endpoint, roles translated to rights in middleware (or by claims exchange if tokens stay small).
+
+- [ ] **Verify `QUERY` verb support:** current spec status, ASP.NET Core routing, gateway/proxy pass-through, OpenAPI representation; design a `POST` fallback.
+- [ ] **OData evaluation:** current .NET library, `IQueryable<T>` seam shared with `SearchQueryMiddleware`, limits (max page size, allowed properties, `$filter` cost), AOT/trimming; prototype next to the custom syntax (no breaking change).
+- [ ] **GraphQL evaluation:** HotChocolate or alternatives, depth/cost limits, per-field rights, projection to the same query seam.
+- [ ] **ADR:** choose the query surfaces and record it.
+- [ ] **Role-to-right middleware:** design `IRoleRightMapper` (config/data-driven mapping, caching), register with `TryAdd*` and config gating; inventory how `[ApplicationRight]`, `UserAuthorizationHandler` and the permissions OpenAPI extension consume rights today.
+- [ ] **Claims-exchange variant:** define STS-side role-to-right mapping and a token size budget; decide when to prefer it over middleware translation (see STS backlog).
+- [ ] **Deny-by-default check:** analyzer or startup check that flags endpoints with no declared rights.
+- [ ] **Design docs (4-document standard)** for the rights middleware and for the query surfaces.
+
+---
+
+## 📌 Backlog: Documentation Coverage Gaps (build out in this order)
+
+Areas the patterns docs do not yet cover. Each becomes a practices page plus an alternatives topic, following the same 4-part pattern.
+
+- [x] HTTP API conventions (REST, OData/`QUERY`, GraphQL) - practices page 10, alternatives topic 25
+- [x] Authorization (RBAC, application rights, role-to-right translation) - practices page 11, alternatives topic 26
+- [ ] Security beyond authentication: secrets and key management, input validation, transport security, CORS, rate limiting, audit logging, dependency and SBOM policy
+- [ ] Worker and CLI blueprint recipe (a fifth recipe beside the existing four)
+- [ ] AI, vector and RAG patterns (Qdrant, SBert, Ollama, Tika usage)
+- [ ] Per-project catalog (one line per project: layer, purpose, owner-review flags)
+- [ ] Observability beyond logging (metrics, tracing, health checks)
+- [ ] Resilience (retry, timeout, circuit breaker, idempotency)
 
 ---
 

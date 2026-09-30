@@ -20,6 +20,8 @@
 
 **Verdict: Consider.** Keep the attribute vocabulary but reimplement dispatch asynchronously; evaluate `HybridCache` as the storage and stampede layer behind `ICachingProvider`.
 
+**Owner decision:** converting to the source-generator version is welcome; it was not an option when the feature was written.
+
 ## 13. Result envelope
 
 **Today:** `IResult`, `IModelResult<T>`, `IQueryResult<T>`, `ResultMessage` ([pattern 15](../02-design-patterns/15-result-envelope.md)).
@@ -35,6 +37,8 @@
 
 **Verdict: Keep,** and map to `ProblemDetails` at the HTTP boundary so external clients get the standard.
 
+**Owner decision:** no general result envelope on the HTTP surface. Failures should be `ProblemDetails`, produced by middleware, automatic through OpenAPI and transparent to the developer.
+
 ## 14. Observability and resilience
 
 **Today:** logging through `ILogger`; no OpenTelemetry or resilience library found in the framework layer.
@@ -45,10 +49,12 @@
 |--------|------|------|
 | Current | Minimal | No traces or metrics; retry logic is hand-rolled (fixed 10 second delay in the message host) |
 | OpenTelemetry (traces, metrics, logs) | Vendor-neutral standard; auto-instrumentation | Configuration surface |
-| Polly or `Microsoft.Extensions.Resilience` | Retries, circuit breakers, timeouts as policy | Another concept to learn |
+| Polly or `Microsoft.Extensions.Resilience` | Retries, circuit breakers, timeouts as policy | **Polly is avoided by the owner (license change)**; `Microsoft.Extensions.Resilience` builds on Polly, so check before use |
 | Health checks (`AddHealthChecks`) | Standard readiness and liveness | Needs per-adapter checks |
 
 **Verdict: Consider (add).** Add an `OoBDev.Telemetry` capability and per-adapter health checks; use resilience pipelines for adapter calls.
+
+**Owner decision:** add OpenTelemetry. **Avoid Polly** because of its license change; because `Microsoft.Extensions.Resilience` is built on Polly, its use needs a license and dependency check before adoption, otherwise use small in-house or platform primitives.
 
 ## 15. Logging style
 
@@ -62,6 +68,8 @@
 
 **Verdict: Consider.** Use `[LoggerMessage]` in hot paths and templates with arguments everywhere else.
 
+**Owner decision:** migrate to the attribute (`[LoggerMessage]`) form, which did not exist when the framework was written. No third-party logging such as Serilog.
+
 ## 16. Default hash algorithm
 
 **Today:** `OoBDev.System` registers MD5 as a default hash.
@@ -72,9 +80,12 @@
 |--------|------|------|
 | MD5 | Fast; ubiquitous for checksums | Collision-broken; flagged by security scanners |
 | SHA-256 | Standard strong hash | Slightly slower |
+| SHA-512 | Strong hash; the owner's chosen default; often fast on 64-bit CPUs | Longer digests |
 | xxHash / non-crypto hashes | Very fast for cache keys | Not for security |
 
 **Verdict: Change.** Default to SHA-256 and keep MD5 only where a legacy format requires it, clearly named.
+
+**Owner decision:** agreed to move the default, and the target is **SHA-512** (not SHA-256).
 
 ---
 

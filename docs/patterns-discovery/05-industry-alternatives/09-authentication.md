@@ -1,7 +1,7 @@
 # Authentication Approaches
 
 <!-- nav -->
-[↑ 05 — Industry Alternatives](./README.md) · [← UI Patterns](./08-ui.md) · [Index →](./README.md)
+[↑ 05 — Industry Alternatives](./README.md) · [← UI Patterns](./08-ui.md) · [HTTP API and Querying →](./10-http-api.md)
 <!-- nav -->
 
 ## 24. Authentication and token exchange
@@ -37,5 +37,5 @@ Availability and licensing statements reflect general knowledge and must be re-c
 ---
 
 <!-- nav -->
-[↑ 05 — Industry Alternatives](./README.md) · [← UI Patterns](./08-ui.md) · [Index →](./README.md)
+[↑ 05 — Industry Alternatives](./README.md) · [← UI Patterns](./08-ui.md) · [HTTP API and Querying →](./10-http-api.md)
 <!-- nav -->

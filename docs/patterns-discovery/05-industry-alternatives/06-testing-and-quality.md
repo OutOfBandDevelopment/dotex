@@ -21,6 +21,8 @@
 
 **Verdict: Consider.** MSTest is a good fit because `.runsettings` and `TestContext` drive configuration. Re-evaluate Moq against NSubstitute at the next major upgrade, and prefer fakes for stable, simple interfaces.
 
+**Owner decision:** not migrating from MSTest. Other mocking frameworks may be considered but only after spikes.
+
 ## 21. Docker test infrastructure
 
 **Today:** a compose stack with 15 services, started by scripts before the tests ([testing practices](../03-practices-and-conventions/04-testing-practices.md)).
@@ -36,6 +38,8 @@
 | Emulators only (Azurite, LocalStack) | Light | Only some services |
 
 **Verdict: Consider.** Keep compose for the shared long-running stack; use Testcontainers for new, self-contained tests so a single test project can run without the whole stack.
+
+**Owner decision:** .NET Aspire did not exist when this was built and may be adopted as long as no functionality is lost; a spike should prove that.
 
 ## Coverage and mutation
 

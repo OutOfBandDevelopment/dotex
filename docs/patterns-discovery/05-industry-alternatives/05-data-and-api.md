@@ -20,6 +20,8 @@
 
 **Verdict: Keep** for existing procedure-based databases. **Consider** Dapper as an alternate provider behind the same interface for teams that prefer it, and add unit tests that pin the attribute contract.
 
+**Owner decision:** the stored procedure mapper is a feature to offer, not a requirement of the framework.
+
 ## 19. Swagger and OpenAPI
 
 **Today:** Swashbuckle with small `IConfigureOptions` classes for filters and OAuth ([pattern 20](../02-design-patterns/20-configure-options-classes.md)).
@@ -34,6 +36,8 @@
 | Scalar or other UIs on top of built-in documents | Modern UI | Additional package |
 
 **Verdict: Consider.** Keep Swashbuckle for existing apps; prefer the built-in generator in new products and port the filter classes to document transformers when there is a reason to touch them.
+
+**Owner decision:** migrate to Scalar and the "async-ui" viewer (as written in the answers; confirm whether this means an AsyncAPI viewer or Swagger UI).
 
 ---
 

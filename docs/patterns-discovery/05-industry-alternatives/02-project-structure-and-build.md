@@ -18,6 +18,8 @@
 
 **Verdict: Keep.**
 
+**Owner decision:** the abstractions pattern stays. The intent is to let consumers take a minimal piece of the framework instead of pulling in all of it.
+
 ## 7. Glob-based Common aggregator
 
 **Today:** roll-up projects include and remove projects by suffix through MSBuild globs ([architecture](../01-architecture/04-common-layer-aggregator.md)).
@@ -33,6 +35,8 @@
 
 **Verdict: Consider.** Keep globs for the internal roll-up; publish an explicit list (generated) as a check in CI so accidental additions are visible.
 
+**Owner decision:** the glob aggregator stays. It is for composite Common projects only; someone who wants the whole framework references these assemblies, or builds their own composition.
+
 ## 8. Layering style
 
 **Table 8 — Structural styles**
@@ -45,6 +49,8 @@
 | Modular monolith | Enforced module boundaries inside one deployable | Needs boundary tooling |
 
 **Verdict: Keep** for the framework; **consider** vertical slices inside applications built on it.
+
+**Owner decision:** layering stays. This is a framework extension, not an application.
 
 ## 9. Central package management
 
@@ -59,6 +65,8 @@
 | Floating versions | Always latest | Non-reproducible builds |
 
 **Verdict: Change.** Turn it on; a script can lift versions out of the project files deterministically.
+
+**Owner decision:** central package management is preferred and should be restored. It was removed after it caused issues, so record what broke before turning it back on.
 
 ## 10. Analyzers and warnings
 
@@ -75,6 +83,8 @@
 
 **Verdict: Change.** Enable the SDK analyzers, generate XML docs for public APIs, and fail CI on warnings once the baseline is clean.
 
+**Owner decision:** desired but not yet implemented. Goal: zero warnings where possible, and every documented pattern enforced at build time where possible (see the Roslyn analyzers backlog).
+
 ## 11. Versioning tool
 
 **Table 11 — Version derivation**
@@ -87,6 +97,8 @@
 | Manual `Version` in props | Simplest | Easy to forget |
 
 **Verdict: Keep.** It already fits the release workflows.
+
+**Owner decision:** keep GitVersion. Application projects are versioned together so compatibility is obvious without a separate dependency table.
 
 ---
 

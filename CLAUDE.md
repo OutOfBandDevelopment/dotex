@@ -221,6 +221,19 @@ OoBDev.{Layer}.{Feature}/
 - Windows-integrated (Kerberos/NTLM) and SAML sign-in are SSO inputs too: the STS exchanges them for JWT so everything downstream is JWT only
 - When required, support an STS with token exchange (RFC 8693) that converts SSO tokens into application-specific tokens; optional and config-gated, injected by interface (see `docs/patterns-discovery/03-practices-and-conventions/09-authentication-practices.md`)
 
+### HTTP API and Authorization Preferences
+- REST wherever possible; OpenAPI is the contract; errors are RFC 9457 problem details
+- Evaluate OData over the HTTP `QUERY` verb (with a `POST` fallback) and GraphQL as additional query surfaces beside the custom search syntax; no breaking changes to the existing syntax
+- RBAC with application rights: endpoints declare rights (`[ApplicationRight]`), roles are translated to rights in middleware; claims exchange at the STS is an alternative only while tokens stay small
+- Same rights checks on every API surface (see `docs/patterns-discovery/03-practices-and-conventions/10-http-api-practices.md` and `11-authorization-practices.md`)
+
+### Rejected and Preferred Dependencies (owner decisions)
+- No third-party IoC/DI containers and no third-party logging libraries (use `Microsoft.Extensions.*` and `[LoggerMessage]`)
+- Avoid Polly (license change); add OpenTelemetry; default hash is SHA-512
+- MSTest stays; central package management to be restored; GitVersion stays with app projects versioned together
+- Provider selection: a container-registered factory picks a keyed service from a configuration path (replaces `ISelectedService<T>`); shared options validation via `AddValidatedOptions<T>()`
+- Owner answers are recorded under each verdict in `docs/patterns-discovery/05-industry-alternatives/`
+
 ### Code Style
 - Nullable enabled
 - ImplicitUsings disabled (explicit using statements)
@@ -502,9 +515,9 @@ dotnet test src/ --collect:"XPlat Code Coverage"
 
 - **Docs:** `docs/patterns-discovery/` (01 architecture, 02 design patterns, 03 practices, 04 new-project blueprint, 05 industry alternatives, 06 design-document standard; README has the doc/code drift table). Patterns are the owner's preferences: record them, don't "correct" them; rough edges go to `TODO.md` backlogs.
 - **Templates:** `templates/` (`dotnet new` pack: `oobdev-capability`, `oobdev-adapter`, `oobdev-webapp`); verify with `scripts/templates/verify-templates.ps1` (generates under `src/`, builds from `src/Framework` cwd because `Directory.Build.props` computes `SolutionDir` from the cwd, then cleans up).
-- **Scripts:** `scripts/docs/` (`validate-docs.py`, `build-index.py`, `fix-plantuml-newlines.py`). Validate with `python scripts/docs/validate-docs.py docs/patterns-discovery` (expect 56 files, 0 problems; the whole `docs/` tree has ~566 pre-existing problems, e.g. `docs/sbom`). Needs docker `plantuml/plantuml-server` on port 18080.
+- **Scripts:** `scripts/docs/` (`validate-docs.py`, `build-index.py`, `fix-plantuml-newlines.py`). Validate with `python scripts/docs/validate-docs.py docs/patterns-discovery` (expect 64 files, 0 problems; the whole `docs/` tree has ~566 pre-existing problems, e.g. `docs/sbom`). Needs docker `plantuml/plantuml-server` on port 18080.
 - **Decisions made:** `#if DEBUG` required builder parameters are intentional (forces child builders to be forwarded); `ServiceCollectionExtensions` everywhere; provider keys kebab-case; readmes are `README.X.md`; options were deliberately unvalidated (strict/relaxed mode under analysis).
-- **Open backlogs in `TODO.md`:** `ISelectedService` rough edges (intent unknown, needs owner review), naming consistency, Roslyn analyzers, options validation modes, caching proxy (`Retreive` to `Retrieve`), message context caller info, replace hand-built providers with platform primitives (`TimeProvider`).
+- **Open backlogs in `TODO.md`:** `ISelectedService` rough edges (intent unknown, needs owner review), naming consistency, Roslyn analyzers, options validation modes, caching proxy (`Retreive` to `Retrieve`), message context caller info, replace hand-built providers with platform primitives (`TimeProvider`), HTTP querying and rights middleware, documentation coverage gaps (build these out in the listed order).
 - **Branch state:** history was rewritten to remove AI trailers from commit messages and the branch matches `origin/dev/patterns-discovery` (as of 3f54bfe). Never force-push without the owner's explicit approval.
 
 ---

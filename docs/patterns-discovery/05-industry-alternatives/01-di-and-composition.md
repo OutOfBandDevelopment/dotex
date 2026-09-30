@@ -13,12 +13,14 @@
 | Option | Pros | Cons |
 |--------|------|------|
 | Current: default + keyed + `ISelectedService<T>` | Config-only switching; default exists without config; one wrapper type for every capability | Selection resolved in a constructor; key path is a convention nobody validates; extra indirection for consumers |
-| Keyed services alone (`[FromKeyedServices]`) | Built into `Microsoft.Extensions.DependencyInjection` since .NET 8; no wrapper | The key is chosen in code at the consumer, not by configuration |
+| Keyed services alone (`[FromKeyedServices]`) | Built into `Microsoft.Extensions.DependencyInjection` since .NET 8; no wrapper (a factory over keyed services can add configuration selection) | The key is chosen in code at the consumer unless a factory resolves it from configuration (which is the intent of the current pattern) |
 | Named options plus a factory | Familiar `IOptionsMonitor` model; reload support | Options is not a service locator; boilerplate per capability |
-| Third-party container (Autofac, Lamar) | Modules, decorators, richer resolution | Extra dependency; the built-in container is now good enough for this design |
+| Third-party container (Autofac, Lamar) | Modules, decorators, richer resolution | **Rejected by the owner:** extra dependency; the built-in container is good enough for this design |
 | Feature flags (`Microsoft.FeatureManagement`) | Runtime toggles, targeting, gradual rollout | Solves a different problem than provider choice |
 
 **Verdict: Keep.** It matches what the platform now offers (keyed services) while adding configuration selection. **Consider** reading the key through an options type and validating at startup that the key names a registered provider.
+
+**Owner decision:** the intent is selection by convention or configuration through a factory registered in the container. A configuration path is passed to the factory, which chooses the key when the service is registered or initialized (or at run time), so a keyed service is not fixed by the consumer's code; the row above that says otherwise is wrong for this design. `ISelectedService<T>` predates keyed services and should migrate to such a factory. **Third-party IoC/DI containers are rejected**, and so are third-party logging libraries. Tracked in the [`ISelectedService` backlog](../../../TODO.md).
 
 ## 2. Options binding and validation
 
@@ -35,6 +37,8 @@
 
 **Verdict: Change.** Adopt `BindConfiguration` plus `ValidateOnStart` in new capabilities; keep the section-name builder records.
 
+**Owner decision:** if validated options are carried forward, wrap them in one common extension method such as `AddValidatedOptions<T>()` instead of repeating the `BindConfiguration` chain. Strict-by-default with a relaxed mode is under analysis in the [options validation backlog](../../../TODO.md).
+
 ## 3. `#if DEBUG` required parameters
 
 **Today:** optional builder parameters are required in Debug builds ([pattern 9](../02-design-patterns/09-if-debug-explicit-arguments.md)). The purpose is deliberate: roll-up methods must forward each child builder to the layer beneath them, and a default in dev builds would make it easy to miss a caller that forgets to pass it.
@@ -50,6 +54,8 @@
 
 **Verdict: Keep.** It solves a real forwarding problem cheaply. The cost is that the whole solution must be built in one configuration. **Consider** an analyzer if the configuration-dependent API ever causes friction for external consumers.
 
+**Owner decision:** the `Action<TBuilder>` idiom still suffers from chained and nested registration (a forgotten forward is not caught), so the analyzer is preferred, though the delegate form will be considered. A spike should show what each looks like before deciding.
+
 ## 4. Builder records vs configure delegates
 
 **Table 4 — Configuration objects**
@@ -62,6 +68,8 @@
 
 **Verdict: Keep.** Optionally add an `Action<TBuilder>` overload for people who expect it.
 
+**Owner decision:** the record could be dropped to make configuration mutable. The options pattern is still preferred over keyed values for configuration.
+
 ## 5. `IServiceProvider` injection
 
 **Today:** used inside `SelectedService<T>` and factories only.
@@ -71,10 +79,12 @@
 | Option | Pros | Cons |
 |--------|------|------|
 | Current: contained in wrappers and factories | Enables runtime selection | Hides dependencies if it spreads |
-| Pure constructor injection everywhere | Explicit dependencies | Cannot choose among keyed services at runtime |
+| Pure constructor injection everywhere | Explicit dependencies | Cannot choose among keyed services at run time unless a selection factory is registered in the container |
 | `IServiceScopeFactory` for scoped work | Correct lifetime handling | More code |
 
 **Verdict: Keep, but contained.** Add a review rule that only infrastructure classes may take `IServiceProvider`.
+
+**Owner decision:** the row above that says keyed services cannot be chosen at run time is wrong for this design: a factory can resolve the key at run time. Selection factories replace the `IServiceProvider` wrapper where possible.
 
 ---
 

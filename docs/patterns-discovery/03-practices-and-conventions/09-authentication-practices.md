@@ -1,7 +1,7 @@
 # Authentication Practices (OAuth, OIDC, JWT and Token Exchange)
 
 <!-- nav -->
-[↑ 03 — Practices and Conventions](./README.md) · [← UI Practices (MVVM and Command Binding)](./08-ui-practices.md) · [Index →](./README.md)
+[↑ 03 — Practices and Conventions](./README.md) · [← UI Practices (MVVM and Command Binding)](./08-ui-practices.md) · [HTTP API Practices (REST, Querying and GraphQL) →](./10-http-api-practices.md)
 <!-- nav -->
 
 This page records the author's standing preference for authentication so new products follow it. Existing pieces are `OoBDev.AspNetCore.JwtAuthentication` (JWT bearer and Swagger OAuth), `OoBDev.Identity` and the Keycloak test container; a token exchange service does not exist yet and is tracked in [`TODO.md`](../../../TODO.md).
@@ -57,5 +57,5 @@ The comparison with other approaches (pass-through tokens, API gateway, on-behal
 ---
 
 <!-- nav -->
-[↑ 03 — Practices and Conventions](./README.md) · [← UI Practices (MVVM and Command Binding)](./08-ui-practices.md) · [Index →](./README.md)
+[↑ 03 — Practices and Conventions](./README.md) · [← UI Practices (MVVM and Command Binding)](./08-ui-practices.md) · [HTTP API Practices (REST, Querying and GraphQL) →](./10-http-api-practices.md)
 <!-- nav -->

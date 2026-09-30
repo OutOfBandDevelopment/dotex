@@ -21,6 +21,8 @@
 
 **Verdict: Consider.** Add ADRs (`docs/decisions/NNNN-title.md`) as the place where the choices in this section are recorded once decided. Turn on XML documentation and add DocFX when the public API needs a browsable reference. Keep PlantUML and the validation scripts.
 
+**Owner decision:** a documentation generation tool chain existed before; spikes should compare the options.
+
 **Table 23 — Suggested next documentation steps**
 
 | Step | Effort | Value |

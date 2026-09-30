@@ -22,6 +22,8 @@
 
 **Verdict: Keep,** for the simple cases it was built for. **Consider** two cheap improvements: use the CloudEvents attribute names for `IMessageContext` metadata so messages interoperate, and add an outbox capability before adopting a full bus. If sagas or exactly-once handling appear in a product, adopt Wolverine or MassTransit behind the existing `IMessageQueueSender` interface as another provider instead of rewriting callers.
 
+**Owner decision:** sagas are owned by the application, which is known; this is a simple eventing model.
+
 *Figure 1 — replacing the transport without changing callers*
 
 ```plantuml
