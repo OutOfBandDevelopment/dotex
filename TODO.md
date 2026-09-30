@@ -105,6 +105,20 @@ Source: [pattern 16](docs/patterns-discovery/02-design-patterns/16-injectable-no
 
 ---
 
+## 📌 Backlog: STS Token Exchange (SSO token → application token)
+
+Source: [authentication practices](docs/patterns-discovery/03-practices-and-conventions/09-authentication-practices.md) and [alternatives topic 24](docs/patterns-discovery/05-industry-alternatives/09-authentication.md). Standing preference: OAuth/OIDC/JWT wherever possible, and an STS with token exchange (RFC 8693) when an application needs its own token. Related older wish in `docs/todo.md`: an example OAuth token exchange handling multiple client ids in one service set.
+
+- [ ] **Inventory what exists:** `OoBDev.AspNetCore.JwtAuthentication`, `OoBDev.Identity`, the Keycloak container, and the Epic 7 identity design (`Features/Proposals/07-Identity`); note what is validation only vs. exchange.
+- [ ] **Design docs (4-document standard):** requirements, architecture, api-design (`ITokenExchangeClient`/STS interface, claims mapper, config-gated registration), testing-strategy. Cover multiple client ids and audiences, per-client policy, token lifetime and refresh.
+- [ ] **Choose the STS** (Keycloak token exchange, Duende/OpenIddict, cloud provider, or in-house) after verifying current feature availability and licensing; record as an ADR.
+- [ ] **Example and tests:** a working exchange example against the Keycloak test container, with integration tests (`Integration` category) and fakes for unit tests.
+- [ ] **Windows and SAML inputs:** the STS accepts a Windows (Kerberos/NTLM) token or SAML assertion and exchanges it for a JWT, so applications only ever see JWT. Decide the mechanism (AD FS/Entra federation, Keycloak identity brokering, RFC 7522 SAML bearer grant, or in-house) and cover it in the design and example.
+- [ ] **Credential conversion (services know only JWT):** define the STS or edge-adapter contract for converting API keys, HMAC-signed requests, basic auth and legacy bearer tokens to JWT (secret storage, replay protection, per-client policy), and confirm services need no per-scheme code.
+- [ ] **Optional by configuration:** exchange off when the SSO token is acceptable as is; no behavior change for existing hosts.
+
+---
+
 ## 📌 Backlog: Naming Consistency
 
 - [ ] **Rename `ServiceCollectionEx` to `ServiceCollectionExtensions` everywhere** (decision: `ServiceCollectionExtensions` is the standard; 44 projects already use it). Both names coexist in different namespaces, which is ambiguous for consumers importing many namespaces.

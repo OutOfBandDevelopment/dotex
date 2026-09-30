@@ -1,7 +1,7 @@
 # Known Warts (Decide Before Copying)
 
 <!-- nav -->
-[↑ 03 — Practices and Conventions](./README.md) · [← CI/CD and Versioning](./06-cicd-and-versioning.md) · [Index →](./README.md)
+[↑ 03 — Practices and Conventions](./README.md) · [← CI/CD and Versioning](./06-cicd-and-versioning.md) · [UI Practices (MVVM and Command Binding) →](./08-ui-practices.md)
 <!-- nav -->
 
 Things found in the code that a new project should either fix or knowingly keep. Each is compared with industry practice in [Industry Alternatives](../05-industry-alternatives/README.md).
@@ -29,5 +29,5 @@ Doc/code differences (for example the `GitVersion.yml` location) are tracked in 
 ---
 
 <!-- nav -->
-[↑ 03 — Practices and Conventions](./README.md) · [← CI/CD and Versioning](./06-cicd-and-versioning.md) · [Index →](./README.md)
+[↑ 03 — Practices and Conventions](./README.md) · [← CI/CD and Versioning](./06-cicd-and-versioning.md) · [UI Practices (MVVM and Command Binding) →](./08-ui-practices.md)
 <!-- nav -->

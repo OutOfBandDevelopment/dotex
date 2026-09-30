@@ -1,7 +1,7 @@
 # Documentation
 
 <!-- nav -->
-[↑ 05 — Industry Alternatives](./README.md) · [← Testing and Quality](./06-testing-and-quality.md) · [Index →](./README.md)
+[↑ 05 — Industry Alternatives](./README.md) · [← Testing and Quality](./06-testing-and-quality.md) · [UI Patterns →](./08-ui.md)
 <!-- nav -->
 
 ## 22. Documentation tooling
@@ -32,5 +32,5 @@
 ---
 
 <!-- nav -->
-[↑ 05 — Industry Alternatives](./README.md) · [← Testing and Quality](./06-testing-and-quality.md) · [Index →](./README.md)
+[↑ 05 — Industry Alternatives](./README.md) · [← Testing and Quality](./06-testing-and-quality.md) · [UI Patterns →](./08-ui.md)
 <!-- nav -->

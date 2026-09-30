@@ -210,6 +210,17 @@ OoBDev.{Layer}.{Feature}/
 - Provider keys: kebab-case constants in each adapter's `{Vendor}Globals` (never a global registry; keeps adapters referencing only Abstractions)
 - Prefer platform primitives (e.g. `TimeProvider`) over hand-built abstractions; inject by interface
 
+### UI Preferences
+- MVVM with command binding wherever possible (e.g. WPF: view models, `ICommand`, data binding, minimal code-behind)
+- Commands are real, retestable command types (e.g. `SaveDocumentCommand : ICommand` with injected dependencies), not just relay commands routed to lambda expressions
+- When a JS/TS framework is required, prefer one that supports view-model binding and command-style handlers as closely as possible; note where it diverges from MVVM
+
+### Authentication Preferences
+- Use OAuth 2.0 / OIDC / JWT bearer wherever possible; applications validate tokens and never store passwords
+- Services only need to understand JWT: any other credential (API key, HMAC, basic auth, legacy bearer) is converted to JWT by the STS or an edge adapter, never by per-scheme code inside a service
+- Windows-integrated (Kerberos/NTLM) and SAML sign-in are SSO inputs too: the STS exchanges them for JWT so everything downstream is JWT only
+- When required, support an STS with token exchange (RFC 8693) that converts SSO tokens into application-specific tokens; optional and config-gated, injected by interface (see `docs/patterns-discovery/03-practices-and-conventions/09-authentication-practices.md`)
+
 ### Code Style
 - Nullable enabled
 - ImplicitUsings disabled (explicit using statements)

@@ -12,11 +12,15 @@ The day-to-day rules the code follows: how things are named and laid out, how pr
 5. [Logging, Errors and Configuration](./05-logging-errors-and-configuration.md)
 6. [CI/CD and Versioning](./06-cicd-and-versioning.md)
 7. [Known Warts (Decide Before Copying)](./07-known-warts.md)
+8. [UI Practices (MVVM and Command Binding)](./08-ui-practices.md)
+9. [Authentication Practices (OAuth, OIDC, JWT and Token Exchange)](./09-authentication-practices.md)
 
 ### List of Figures
 
 1. [Figure 1 — how a test resolves configuration](./04-testing-practices.md)
 2. [Figure 2 — pipeline from commit to package](./06-cicd-and-versioning.md)
+3. [Figure 3 — MVVM roles and the direction of dependencies](./08-ui-practices.md)
+4. [Figure 4 — exchanging an SSO token for an application token](./09-authentication-practices.md)
 
 ### List of Tables
 
@@ -28,4 +32,6 @@ The day-to-day rules the code follows: how things are named and laid out, how pr
 6. [Table 6 — Configuration conventions](./05-logging-errors-and-configuration.md)
 7. [Table 7 — Workflows](./06-cicd-and-versioning.md)
 8. [Table 8 — Known warts](./07-known-warts.md)
+9. [Table 9 — MVVM rules](./08-ui-practices.md)
+10. [Table 10 — Authentication rules](./09-authentication-practices.md)
 <!-- toc:end -->

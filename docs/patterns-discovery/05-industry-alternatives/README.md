@@ -44,6 +44,8 @@ Products change quickly. Licensing and feature statements below reflect what was
 | 20 | Test framework and mocking | Consider | [Testing and quality](./06-testing-and-quality.md) |
 | 21 | Docker test infrastructure | Consider | [Testing and quality](./06-testing-and-quality.md) |
 | 22 | Documentation tooling | Consider | [Documentation](./07-documentation.md) |
+| 23 | UI architecture and JS/TS framework choice | Keep (MVVM with commands) | [UI patterns](./08-ui.md) |
+| 24 | Authentication and token exchange | Keep (OAuth/OIDC/JWT plus STS) | [Authentication](./09-authentication.md) |
 
 *Figure 1 — effort and value of the recommended changes*
 
@@ -81,6 +83,8 @@ Q2 -[hidden]right- Q3
 5. [Data Access and HTTP API](./05-data-and-api.md)
 6. [Testing and Quality](./06-testing-and-quality.md)
 7. [Documentation](./07-documentation.md)
+8. [UI Patterns](./08-ui.md)
+9. [Authentication Approaches](./09-authentication.md)
 
 ### List of Figures
 
@@ -111,4 +115,8 @@ Q2 -[hidden]right- Q3
 21. [Table 21 — Container strategies](./06-testing-and-quality.md)
 22. [Table 22 — Documentation options](./07-documentation.md)
 23. [Table 23 — Suggested next documentation steps](./07-documentation.md)
+24. [Table 24 — UI architecture options](./08-ui.md)
+25. [Table 25 — JS/TS frameworks by fit to MVVM (general knowledge; re-check before deciding)](./08-ui.md)
+26. [Table 26 — Approaches to cross-application tokens](./09-authentication.md)
+27. [Table 27 — Ways to obtain an STS](./09-authentication.md)
 <!-- toc:end -->
