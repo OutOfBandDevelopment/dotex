@@ -1,9 +1,9 @@
 # OoBDev (dotex) Framework - Claude Development Guide
 
-**Last Updated:** 2026-01-22
+**Last Updated:** 2026-09-30
 **Framework:** OoBDev (dotex) - Enterprise .NET Library Suite
 **Target:** net10.0
-**Current Work:** Design-first approach for SharedFramework migrations | 4 Epics in design phase | Docker testing ready for CI/CD
+**Current Work:** Patterns discovery (branch `dev/patterns-discovery`, see "Patterns Discovery Work" below) | Design-first approach for SharedFramework migrations | Docker testing ready for CI/CD
 
 ---
 
@@ -32,7 +32,8 @@ OoBDev is a comprehensive collection of .NET framework extensions at various uti
 ### 1. Before Starting Any Work
 
 **Read First:**
-- `/TODO.md` - Current migration status and pending work
+- `/TODO.md` - Current migration status and pending work (the `📌 Backlog:` sections hold open review items)
+- `/docs/patterns-discovery/README.md` - How this codebase is actually built (patterns, conventions, blueprint, alternatives)
 - `/docs/architecture/README.md` - Architecture overview
 - `/docs/architecture/architectural-standards.md` - Enforceable coding standards
 
@@ -41,7 +42,7 @@ OoBDev is a comprehensive collection of .NET framework extensions at various uti
 - Follow provider/factory pattern for extensibility
 - Use dependency injection (TryAdd* extensions)
 - 80% test coverage for Framework layer
-- README.md required for all projects (build-enforced)
+- `README.{Project}.md` (upper-case `README`) expected per project; `PackageReadmeFile` is derived from that name in `src/Directory.Build.props`, and a missing file is only warning OBDPK001
 - Nullable enabled, ImplicitUsings disabled
 
 ### 2. Available Protocols
@@ -96,15 +97,14 @@ Located in `.claude/protocols/`:
 ## Architecture Layers
 
 ### Common Layer (6 projects)
-Foundation abstractions and interfaces
-- No external dependencies
-- Pure interfaces and contracts
+Foundation abstractions and contracts
+- Aggregator: MSBuild globs include/remove ProjectReferences (not purely interfaces)
 
 ### Framework Layer (39 projects)
 Core functionality implementations
 - Depends only on Common
 - 80%+ test coverage required
-- README.md required (build-enforced)
+- `README.{Project}.md` expected (warning if missing)
 
 ### Extensions Layer (6 projects)
 Optional enhancements and integrations
@@ -193,7 +193,7 @@ public interface IHandler<TRequest, TResponse>
 ### File Structure
 ```
 OoBDev.{Layer}.{Feature}/
-├── README.md (REQUIRED - build fails without it)
+├── README.{Project}.md (expected; upper-case README, warning if missing)
 ├── {Feature}.csproj
 ├── Abstractions/ (interfaces)
 ├── Implementations/
@@ -206,7 +206,9 @@ OoBDev.{Layer}.{Feature}/
 - Implementations: `{Name}` (no suffix)
 - Providers: `{Name}Provider`
 - Factories: `{Name}Factory`
-- Extensions: `{Name}Extensions`
+- Extensions: `{Name}Extensions`; DI registration class is always `ServiceCollectionExtensions` (never `ServiceCollectionEx`; 6 projects still to rename, see TODO.md)
+- Provider keys: kebab-case constants in each adapter's `{Vendor}Globals` (never a global registry; keeps adapters referencing only Abstractions)
+- Prefer platform primitives (e.g. `TimeProvider`) over hand-built abstractions; inject by interface
 
 ### Code Style
 - Nullable enabled
@@ -483,7 +485,23 @@ dotnet test src/ --collect:"XPlat Code Coverage"
 
 ---
 
+## Patterns Discovery Work (branch `dev/patterns-discovery`)
+
+**Resume here.** Goal: document how the codebase is built so future products follow the same patterns, then compare with industry alternatives.
+
+- **Docs:** `docs/patterns-discovery/` (01 architecture, 02 design patterns, 03 practices, 04 new-project blueprint, 05 industry alternatives, 06 design-document standard; README has the doc/code drift table). Patterns are the owner's preferences: record them, don't "correct" them; rough edges go to `TODO.md` backlogs.
+- **Templates:** `templates/` (`dotnet new` pack: `oobdev-capability`, `oobdev-adapter`, `oobdev-webapp`); verify with `scripts/templates/verify-templates.ps1` (generates under `src/`, builds from `src/Framework` cwd because `Directory.Build.props` computes `SolutionDir` from the cwd, then cleans up).
+- **Scripts:** `scripts/docs/` (`validate-docs.py`, `build-index.py`, `fix-plantuml-newlines.py`). Validate with `python scripts/docs/validate-docs.py docs/patterns-discovery` (expect 56 files, 0 problems; the whole `docs/` tree has ~566 pre-existing problems, e.g. `docs/sbom`). Needs docker `plantuml/plantuml-server` on port 18080.
+- **Decisions made:** `#if DEBUG` required builder parameters are intentional (forces child builders to be forwarded); `ServiceCollectionExtensions` everywhere; provider keys kebab-case; readmes are `README.X.md`; options were deliberately unvalidated (strict/relaxed mode under analysis).
+- **Open backlogs in `TODO.md`:** `ISelectedService` rough edges (intent unknown, needs owner review), naming consistency, Roslyn analyzers, options validation modes, caching proxy (`Retreive` to `Retrieve`), message context caller info, replace hand-built providers with platform primitives (`TimeProvider`).
+- **Branch state:** history was rewritten to remove AI trailers from commit messages and the branch matches `origin/dev/patterns-discovery` (as of 3f54bfe). Never force-push without the owner's explicit approval.
+
+---
+
 ## Recently Completed Work
+
+### 2026-09-30
+- **Patterns Discovery** - architecture/patterns/practices/blueprint/alternatives docs, `dotnet new` templates, doc validation scripts, readme casing normalized (74 files), review backlogs recorded in `TODO.md`
 
 ### 2026-01-29
 - **TestContext Configuration Provider** - Integrated MSTest `.runsettings` with .NET `IConfiguration`
