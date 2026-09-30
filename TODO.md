@@ -17,10 +17,13 @@
 | 8 | Write `02-design-patterns/` (patterns with real code refs) | ✅ Done |
 | 9 | Write `03-practices-and-conventions/` (naming, build, docs, testing, warts) | ✅ Done |
 | 10 | Write `04-new-project-blueprint/` (4 recipes) | ✅ Done |
-| 11 | Write `05-industry-alternatives/` (22 topics, pros/cons, verdicts) | ✅ Done |
+| 11 | Write `05-industry-alternatives/` (26 topics, pros/cons, verdicts, owner decisions applied) | ✅ Done |
 | 12 | Write `README.md` index with doc/code drift table | ✅ Done |
-| 13 | Final review; validate-docs 56 files, 0 problems | ✅ Done (awaiting user review) |
+| 13 | Final review; validate-docs 64 files, 0 problems | ✅ Done (awaiting user review) |
 | 14 | Write `06-design-document-standard.md` (how design docs are made; PlantUML/Salt rule; added to CLAUDE.md) | ✅ Done |
+| 15 | Add HTTP API and authorization practices, alternatives topics 25-26, apply architect answers | ✅ Done (commit 44fb0cd) |
+| 16 | Build out remaining coverage gaps (Documentation Coverage Gaps backlog) | ⏳ Open |
+| 17 | Review all TODO files and record what is actually outstanding (Outstanding Work Review) | ✅ Done (2026-09-30) |
 
 **Notes / findings log:**
 - Code survey: 123 csproj, ~1,061 .cs, 42 test projects, 120 on net10.0 (2 netstandard2.1, 1 net48 for SQL CLR).
@@ -48,6 +51,80 @@
 ✅ **COMPLETED:** Local Docker testing validation - All Integration tests passing (2026-01-21)
 
 > **New to this project?** Read `/CLAUDE.md` first for a complete development guide including architecture, patterns, and migration scope.
+
+---
+
+## 📋 Outstanding Work Review (2026-09-30)
+
+Every TODO file and in-code marker was checked against the repository. The other TODO files carry "Last Updated" dates from 2026-01-20 to 2026-01-24 and several statuses in them are stale. This section is the corrected picture; the epic files keep their detail.
+
+**Table — TODO files and what is really outstanding**
+
+| File | Stated status | Actually outstanding | Action |
+|------|---------------|----------------------|--------|
+| `TODO-testing-local-integration.md` | Validated, ready for CI/CD | CI workflow `.github/workflows/integration-tests.yml` is still disabled (schedule and `workflow_dispatch` commented out, only `workflow_call`); 2 of 15 services not confirmed healthy (azurinsight, servicebus); Docker stack docs under `docs/architecture/testing/` do not exist (only `README.md` and `testing-guidelines.md`) | Keep open; see backlog below |
+| `TODO-testing-live-integration.md` | Week 3 migration pending | Azure B2C tests are already `LiveIntegration` (3 tests in `OoBDev.Microsoft.Azure.B2C.Tests`, not `OoBDev.Microsoft.B2C.Tests` as the file says); Application Insights tests (10) are still `DevLocal`; Groq tests have no category at all; no `.env.liveintegration.template` or per-project README exists; no cloud docs | Keep open; fix paths |
+| `TODO-migrations*.md`, `TODO-decisions.md` | Blocked on decisions | Unchanged: BinaryDataDecoders (14+ decisions), BotChat (archive, enhance or extract), ContractParser, Tools/BulkLlm. The files say `Incomming/`; the folder is `Incoming/` | Blocked on the owner; fix folder name |
+| `Features/Caching/TODO-migrations-caching.md`, `docs/changes/TODO-migrations-message-queues.md` | Complete | Nothing outstanding | Archive candidates |
+| `docs/todo.md` | Wish list | 4 open wishes (below) | Folded into this file |
+| `src/Framework/OoBDev.DacFx.Tests/TODO.md` | Note | Test SQLCLR project covering all SQLCLR features | Backlog |
+| `src/Framework/OoBDev.System.Abstractions/ComponentModel/Data/TODO.md` | Note | Example project for the data annotations | Backlog |
+| `TODO.md` (this file) | Header dated 2026-01-24 | Links to `TODO-documentation.md` and `TODO-testing-infrastructure.md`, which do not exist | Remove links or create the targets |
+
+### Backlog: CI/CD Enablement and Docker Test Infrastructure
+- [ ] Investigate the azurinsight health check; verify servicebus completes startup (30 s start period); confirm all 15 services healthy.
+- [ ] Enable `integration-tests.yml`: uncomment `schedule` (daily 16:00 UTC) and `workflow_dispatch`, remove the temporary `workflow_call`, check the runner has Docker, trigger manually, watch the first run, confirm the `validated-v{version}` tag and the 30-minute limit.
+- [ ] Azurinsight follow-ups: README service table, workflow variables, `.runsettings` Application Insights settings, nginx dashboard entry, PlantUML diagrams, stack doc.
+- [ ] Docker documentation under `docs/architecture/testing/`: integration category pages (README, docker-setup, writing-tests, examples), one page per stack (SQL Server, MongoDB, RabbitMQ, OpenSearch, Qdrant, Tika, SMTP, Azurite, LocalStack, Keycloak, SBert, Ollama, azurinsight), a docker-infrastructure page, and network-topology and dependency-matrix diagrams (PlantUML, per the diagram rule).
+- [ ] Decide whether the Aspire spike (see Architect Answers) changes any of this before the docs are written.
+
+### Backlog: Live Integration (Cloud) Tests
+- [ ] Azure B2C: add `.env.liveintegration.template` and a project README, and read settings from test properties (the category change is already done).
+- [ ] Application Insights: recategorize the 10 `DevLocal` tests (Integration against azurinsight, or LiveIntegration for the real service); add template and README.
+- [ ] Groq (`OoBDev.GroqCloud.Tests`): categorize tests as `LiveIntegration`; add template and README.
+- [ ] Add `.env.liveintegration` to `.gitignore` (not present today).
+- [ ] Cloud docs: category README, cloud setup, credential and cost management, per-service pages, LiveIntegration vs Integration guide, PlantUML diagrams.
+- [ ] Triage the remaining 42 `TestCategories.DevLocal` usages into Unit, Integration or LiveIntegration (Redis, Ollama, ServiceBus, Tika, DacFx, System tests, Example tests, Application Insights).
+
+### Backlog: Migration Decisions (blocked on the owner)
+- [ ] BinaryDataDecoders: the 14+ decisions in `TODO-decisions.md` (endianness API, BinaryPrimitives naming, UI collections location, CodeAnalysis use case, archive formats, ExpressionCalculator audit, NMEA, drawing and geometry, barcode, hardware devices, CLI tools, ISO 9660 / Apple II / classic crypto, Windows Forms and UWP).
+- [ ] BotChat: choose archive, enhance or extract.
+- [ ] ContractParser: implement now, later, or keep as specification. Tools/BulkLlm: consolidate or archive.
+
+### Backlog: `docs/todo.md` Wishes (folded in)
+- [ ] Find a way to turn MS Project into planning control.
+- [ ] Example OAuth token exchange with multiple client ids (covered by the STS backlog).
+- [ ] User analytics (screen usage, URLs, timeouts).
+- [ ] Error handling middleware with correlation that returns the original error location (overlaps the `ProblemDetails` item in Architect Answers; design them together).
+
+### Backlog: Housekeeping
+- [ ] Refresh this file's header date, move the ✅ list to a change document, and fix or remove the links to the non-existent `TODO-documentation.md` and `TODO-testing-infrastructure.md`.
+- [ ] Rename `Incomming` references to `Incoming` across TODO files and `CLAUDE.md`.
+- [ ] Archive the two completed TODO files (caching, message queues) per the archival protocol.
+- [ ] Fix the wrong test project paths in `TODO-testing-live-integration.md`.
+
+### Backlog: In-Code TODO Markers (86 comments in 62 files, grouped)
+None of these are tracked elsewhere. Triage each into fix, ticket or delete.
+
+**Table — In-code TODOs by theme**
+
+| Theme | Where (examples) | Note |
+|-------|------------------|------|
+| Hard-coded values to make configurable | `MessageReceiverHost`, `EmailMessageReceiverHost`, `EmbeddingSentenceTransformerQueueReaderHost`, `InProcessMessageProvider` (10 s and 1 s delays); `HtmlToPdfConversionHandler`; `HandlebarsTemplateProvider` (`NoEscape`); `PlantUmlRenderer` (remote URL); `QdrantVectorStoreProvider` (distance); `DocumentSummaryGenerationProvider` (model name); `HealthChecksDocumentFilter` (health endpoint); `ConfigureOAuthSwaggerGenOptions` (well-known discovery) | Options with defaults; ties to the options validation backlog |
+| Unfinished providers and features | `AmazonSqsMessageProvider` (receiver), `SqlServiceBrokerQueueMessageProvider` ("finish this out"), `MimeMessageFactory` (attachments), `AzureBlobContainerProvider` (query provider), `OllamaMessageCompletion` (two `NotImplementedException`), `IOllamaModelMapper`, `OllamaApiClientExtensions`, `GroqCloudModelMapper`, `EmailMessageHandler` | Track as incomplete features |
+| Health check and authorization behavior | `HealthCheckOptionsFactory` (tiered detail: anonymous gets status only, authenticated gets the list, a special claim gets descriptions and errors), `UserAuthorizationHandler`, `AspNetCoreExtensionBuilder` and `ServiceCollectionExtensions` (`RequireApplicationUserId`, configurable user id claim), `#if DEBUG` PII logging switch | Fold into the rights middleware backlog |
+| Query middleware gaps | `SearchQueryOperationFilter` (form request type, filter support), `SearchModelMapper` (dictionary binding for forms), `ExpressionTreeBuilder` (8 markers: like, null safety, `IEnumerable`, type casting, unrolling) | Fold into the nested query and OData/GraphQL items |
+| Caching proxy | `CachedProxy` (exceptions for void and non-generic tasks), `CacheableFactory` (`ILoggerFactory`) | Fold into the caching proxy review |
+| Code quality and modernization | `Base32Codec`, `BcdEx` (Span/Memory), `XsltTransformer` and the Xsl extensions (async, injectable logger, safe returns), `ObjectConverter` ("should be tossed"), `DataConverter` (try parse), `StreamEx` (leave stream open), `BsonTypeInfoResolver` (injectable), `StartAndFixLengthSegmenter` (endian check), `StreamDevice`, `SerialPortDeviceAdapter` (dispose) | Owner review; some are deletions |
+| Migration leftovers | `Windows/Forms/ValidTextBox`, `ValidationEventArgs` ("port this out") | Part of the Windows Forms decision |
+| Tests | `IDocumentConversionTests` (Linux configuration), `HandlebarsTemplateProviderTests`, `HtmlToPdfConversionHandlerTests`, `EnumExtensionsTests` ("fix this better"), `MongoQueryFixes`, `QdrantGrpcClientTests`, `SentenceEmbeddingClientTests` ("do away with ISentenceEmbeddingClient"), `ExpressionParserTests` (`"1e"` should throw), `QueryableExtensionsTests` | Include in coverage work |
+| Miscellaneous | `GenAiContextRequestModel` (`AssistantConfinment` spelling), `Example.WebApi/Program.cs` (run profile, MailKit disabled), `OpenSearchTests` (`HACK` certificate bypass, test only), `Tools/*` CLIs | Fix the spelling; leave the test-only bypass |
+
+### Backlog: Patterns Discovery (Open Work)
+- [ ] Owner review of all docs under `docs/patterns-discovery/`; changes welcome along the way.
+- [ ] Build out the coverage gaps in the Documentation Coverage Gaps backlog (security beyond authentication first).
+- [ ] Update the `docs/patterns-discovery/README.md` drift table for decisions made since it was written (central package management, readme casing, keyed selection factory).
+- [ ] Update the `dotnet new` templates once decisions land (`AddValidatedOptions<T>()`, selection factory, SHA-512, `[LoggerMessage]`).
 
 ---
 
