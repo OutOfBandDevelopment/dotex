@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Out-of-Band Development",
+  "classifications": [ "OoBDev", "Library", "Adapter" ],
+  "identity": "OoBDev.Templates.Adapter",
+  "name": "OoBDev vendor adapter",
+  "shortName": "oobdev-adapter",
+  "description": "Vendor adapter implementing an OoBDev capability provider. Run from src/ExternalServices/<Vendor>; -n is the vendor name.",
+  "tags": { "language": "C#", "type": "project" },
+  "sourceName": "VendorName",
+  "preferNameDirectory": false,
+  "symbols": {
+    "vendorKey": {
+      "type": "generated",
+      "generator": "casing",
+      "parameters": { "source": "name", "toLower": true },
+      "replaces": "vendor-name"
+    },
+    "capability": {
+      "type": "parameter",
+      "datatype": "text",
+      "isRequired": true,
+      "replaces": "CapabilityName",
+      "fileRename": "CapabilityName",
+      "description": "Name of the existing framework capability (e.g. Notifications) whose provider interface is implemented."
+    }
+  }
+}

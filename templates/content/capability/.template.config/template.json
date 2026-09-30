@@ -1,0 +1,17 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Out-of-Band Development",
+  "classifications": [ "OoBDev", "Library", "Framework" ],
+  "identity": "OoBDev.Templates.Capability",
+  "name": "OoBDev framework capability",
+  "shortName": "oobdev-capability",
+  "description": "Abstractions, implementation and tests for a new OoBDev framework capability. Run from src/Framework.",
+  "tags": { "language": "C#", "type": "project" },
+  "sourceName": "CapabilityName",
+  "preferNameDirectory": false,
+  "primaryOutputs": [
+    { "path": "OoBDev.CapabilityName.Abstractions/OoBDev.CapabilityName.Abstractions.csproj" },
+    { "path": "OoBDev.CapabilityName/OoBDev.CapabilityName.csproj" },
+    { "path": "OoBDev.CapabilityName.Tests/OoBDev.CapabilityName.Tests.csproj" }
+  ]
+}
