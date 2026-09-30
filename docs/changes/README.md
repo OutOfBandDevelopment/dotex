@@ -98,6 +98,12 @@ Each change document should include:
 - New protocol: configuration-documentation.md
 - Status: ✅ Complete
 
+**[documentation-patterns-discovery-2026-09-30.md](documentation-patterns-discovery-2026-09-30.md)**
+- Security, observability, resilience and AI/RAG practices and alternatives pages
+- Worker/CLI recipe, generated project catalog (81 projects)
+- Microsoft.Extensions.AI spike (6 tests) with migration recommendation
+- Status: ✅ Complete
+
 ### Testing
 
 **[testing-ollama-integration-2026-01-21.md](testing-ollama-integration-2026-01-21.md)**

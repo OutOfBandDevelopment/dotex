@@ -22,7 +22,7 @@
 | 13 | Final review; validate-docs 80 files, 0 problems | ✅ Done (awaiting user review) |
 | 14 | Write `06-design-document-standard.md` (how design docs are made; PlantUML/Salt rule; added to CLAUDE.md) | ✅ Done |
 | 15 | Add HTTP API and authorization practices, alternatives topics 25-26, apply architect answers | ✅ Done (commit 44fb0cd) |
-| 16 | Build out remaining coverage gaps (Documentation Coverage Gaps backlog) | ✅ Done (awaiting user review) |
+| 16 | Build out remaining coverage gaps (Documentation Coverage Gaps backlog) | ✅ Done (awaiting user review). [Details](docs/changes/documentation-patterns-discovery-2026-09-30.md) |
 | 17 | Review all TODO files and record what is actually outstanding (Outstanding Work Review) | ✅ Done (2026-09-30) |
 
 **Notes / findings log:**
@@ -252,8 +252,18 @@ Areas the patterns docs do not yet cover. Each becomes a practices page plus an 
 
 - [ ] **Microsoft.Extensions.AI migration:** spike done (`docs/patterns-discovery/08-spikes/01-extensions-ai.md`, code in `src/Spikes/OoBDev.Spike.ExtensionsAI`); owner will probably accept. Next: ADR, pin `Microsoft.Extensions.AI*` together, move consumers of `ILanguageModelProvider` / `IMessageCompletion` to `IChatClient`, verify Groq path.
 - [ ] **Update all .NET libraries for .NET 10 as far as possible:** survey with `dotnet list package --outdated`, upgrade in groups (Microsoft.Extensions.*, test stack, vendor SDKs), build and test each group; do together with restoring central package management.
+  - Survey done 2026-09-30 (`dotnet list src/OoBDev.sln package --outdated`): 72 packages behind. Groups: (1) Microsoft.Extensions.*, AspNetCore JwtBearer, System.* 10.0.2 to 10.0.12 (patch, low risk); (2) test stack MSTest 4.0.2 to 4.4.1, Test.Sdk, coverlet 6.0.4 to 10.1.0, Moq; (3) vendor minor bumps (Azure.*, MailKit, MongoDB, Qdrant, OllamaSharp, Swashbuckle, Semantic Kernel); (4) major bumps needing code review: StackExchange.Redis 3, Microsoft.Graph 6, Microsoft.Data.SqlClient 7, ApplicationInsights 3, OpenSearch.Client 2, Markdig 1, YamlDotNet 18, ReverseMarkdown 6, AngleSharp. `src/Directory.Packages.props` is currently an empty `<Project />`.
 - [ ] **Missing readmes are created:** `OoBDev.System.Text.Html` and `OoBDev.Example.WebApi` readmes written; `AllMiniLmL6V2Sharp` keeps its solution-level readme (imported library, decide whether to copy it into the project folder).
 - [ ] **Abstractions need no tests** when they hold only interfaces and models; an abstractions project with testable implementation gets its own test library. The project catalog no longer flags `*.Abstractions` projects; review any that contain implementation.
+
+- [ ] **Make `AllMiniLmL6V2Sharp` as native as possible** (owner directive; building the tooling is in scope). Today it runs the model through ONNX Runtime with a hand-written tokenizer, and the SBert container covers the same ground. Steps, in order:
+  - Replace the hand-written tokenizer with `Microsoft.ML.Tokenizers` (WordPiece/`BertTokenizer`), checked against golden ids produced by the Python `tokenizers` library.
+  - Build a Hugging Face tokenizer loader (`tokenizer.json` and config folder to a `Tokenizer`, like `AutoTokenizer`): WordPiece first, byte-level BPE next, SentencePiece via `tokenizer.model`; gaps fail with a clear error. First check whether newer `Microsoft.ML.Tokenizers` releases already load `tokenizer.json`.
+  - Build an `AutoModel`-style loader for embedding models: model folder to `IEmbeddingGenerator<string, Embedding<float>>` (tokenize, ONNX Runtime, pooling, normalization, dimension), registered as a keyed provider.
+  - Add a deterministic export script (`scripts/models/export-onnx.py` with README and pinned requirements; Optimum for encoders, the ONNX Runtime GenAI builder for decoder LLMs) that writes a `model-card.md` (source id, revision, tool versions, cosine-similarity validation). Converted models stay out of git. Owner option: publish the converted ONNX models to Hugging Face (an owner-controlled account or organization, each repo with its model card and the source licence respected) while the framework tooling lives here; the export script then also uploads, and the loader can resolve a model id from the Hub into a local cache (an `AutoModel.from_pretrained` equivalent) as well as from a local folder. Decide hosting (Hugging Face vs artifact feed) before the first model is converted.
+  - Golden tests: exact token-id equality and embedding cosine similarity above 0.999 against the Python reference.
+  - Then retire the SBert container and its health check and integration tests if parity holds, and update the AI practices page and alternatives verdict.
+  - Run as a spike first under `src/Spikes/`, recorded in `docs/patterns-discovery/08-spikes/`; record completed steps in `docs/changes/`.
 
 ---
 
