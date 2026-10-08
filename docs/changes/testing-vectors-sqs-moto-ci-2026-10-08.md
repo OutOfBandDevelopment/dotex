@@ -37,7 +37,7 @@ Fixed the GitHub Actions restore failure, corrected and null-hardened the SQL CL
 | `Angle`, `AngleF` undefined (zero vector, NaN, length mismatch) | Misleading number or exception | NULL |
 | `Distance`, `Midpoint`, `UniformV` on length mismatch; `Distance` with unknown metric | Exception (fails the whole SQL batch) | NULL |
 
-NULL policy: undefined results are NULL, never an exception and never a plausible number. SQL Server sorts NULL first in ascending order, so callers filter with `WHERE ... IS NOT NULL`. This is documented in the XML docs and `README.Data.Vectors.md`. Still throwing on purpose: `Parse`, matrix `Element` out of range, vector constructor with an invalid size.
+NULL policy: undefined results are NULL, never an exception and never a plausible number. SQL Server sorts NULL first in ascending order, so callers filter with `WHERE ... IS NOT NULL`. This is documented in the XML docs and `README.Data.Vectors.md`. `Parse` of bad input and out-of-range matrix `Row`, `Column` and `Element` also return NULL (`SqlMatrix.Element` now returns `SqlDouble`).
 
 The metric names are `cosine`, `similarity`, `euclidean`, `dot`, `manhattan` (case-insensitive); the earlier XML docs listed names the code never accepted.
 
@@ -67,6 +67,7 @@ LocalStack's free image now requires a licence token (the compose file had been 
 - Vector tests: 55 passed, including 2 SQL Server Integration tests against a SQL Server 2022 container.
 - SQS tests: 4 passed against the Moto container.
 - Unit and Simulate set: all assemblies passed before the Moto change; the Moto change touches only container, script and documentation files plus the SQS code above.
+- CI build order: `AllMiniLmL6V2Sharp.Tests` copies the model from the SBert project's bin folder and raced it in parallel builds (MSB3030). `src/Directory.Build.targets` now adds an ordering-only project reference; a clean local build succeeds.
 - Not verified: a GitHub Actions run of the CI fixes.
 
 ## Related

@@ -121,6 +121,15 @@ FileSize = fi.Exists ? fi.Length : -1;
 
   </Target>-->
 
+  <!--
+    The AllMiniLML6v2Sharp fork's test project (a submodule we do not edit) copies the model from the SBert project's
+    bin folder. Build that project first so a parallel build cannot reach the copy before the files exist.
+  -->
+  <ItemGroup Condition="'$(MSBuildProjectName)'=='AllMiniLmL6V2Sharp.Tests'">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)ExternalServices\SBert\OoBDev.SBert.AllMiniLML6v2Sharp\OoBDev.SBert.AllMiniLML6v2Sharp.csproj"
+                      ReferenceOutputAssembly="false" />
+  </ItemGroup>
+
   <Import Project="Directory.Build.Database.targets" />
   <Import Project="SqlClr.Build.targets"/>
 
