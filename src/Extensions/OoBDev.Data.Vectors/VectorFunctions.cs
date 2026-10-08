@@ -75,7 +75,7 @@ public static class VectorFunctions
     /// <summary>
     /// Calculates the distance or similarity between two double-precision vectors using the specified metric.
     /// </summary>
-    /// <param name="distanceMetric">The metric to use (cosine_distance, cosine_similarity, euclidean_distance, dot_product, manhattan_distance).</param>
+    /// <param name="distanceMetric">The metric to use (cosine, similarity, euclidean, dot, manhattan; matched case-insensitively, anything else returns NULL).</param>
     /// <param name="vector1">The first vector.</param>
     /// <param name="vector2">The second vector.</param>
     /// <returns>The calculated distance or similarity value, or null if any parameter is null.</returns>
@@ -108,7 +108,7 @@ public static class VectorFunctions
     /// <summary>
     /// Calculates the distance or similarity between two single-precision vectors using the specified metric.
     /// </summary>
-    /// <param name="distanceMetric">The metric to use (cosine_distance, cosine_similarity, euclidean_distance, dot_product, manhattan_distance).</param>
+    /// <param name="distanceMetric">The metric to use (cosine, similarity, euclidean, dot, manhattan; matched case-insensitively, anything else returns NULL).</param>
     /// <param name="vector1">The first vector.</param>
     /// <param name="vector2">The second vector.</param>
     /// <returns>The calculated distance or similarity value, or null if any parameter is null.</returns>
