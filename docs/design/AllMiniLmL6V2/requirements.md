@@ -59,6 +59,10 @@ Observed in the fork (to be confirmed by tests, see [testing strategy](testing-s
 | REQ-013 | Model resolved from a folder; optional Hub id or download loader later | Could |
 | REQ-014 | No dependency on `Microsoft.ML`, `libtorch-*` or the fork after cutover; runs on Windows, Linux and macOS | Must |
 | REQ-015 | The generic runner supports other BERT-family sentence models by configuration (input names, pooling, normalisation), so later presets add no runner code | Could |
+| REQ-017 | Pooling (mean or CLS), optional query/document text prefixes, and optional output `Dimensions` (truncate then re-normalise) are options on the runner | Should |
+| REQ-018 | Second preset `OoBDev.SBert.AllMpnetBaseV2` (`all-mpnet-base-v2`, 768 dimensions, no `token_type_ids` input) using the same runner, with its own compatibility suite against Python reference vectors | Should |
+| REQ-020 | Third preset `OoBDev.SBert.NomicEmbedTextV1_5` (`nomic-embed-text-v1.5`, 768 dimensions, Matryoshka: 512/256/128/64 allowed, mean pooling, `search_query: ` / `search_document: ` prefixes, long context up to 8192 tokens, BERT WordPiece tokenizer); compatibility suite against Python reference vectors at each allowed size | Should |
+| REQ-019 | `Dimensions` is honoured only for presets flagged as Matryoshka-trained (for example `nomic-embed-text-v1.5`); other presets reject it with a clear error rather than silently degrading quality | Should |
 | REQ-016 | `README.{Project}.md` per new project; XML docs on public APIs; 80% coverage | Must |
 
 ## Open questions

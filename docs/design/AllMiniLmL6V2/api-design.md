@@ -31,8 +31,16 @@ public sealed class OnnxSentenceEmbeddingOptions
     public bool LowerCase { get; set; } = true;
     public string InputIdsName { get; set; } = "input_ids";
     public string AttentionMaskName { get; set; } = "attention_mask";
-    public string TokenTypeIdsName { get; set; } = "token_type_ids";
     public bool Normalize { get; set; } = true;
+    /// <summary>Mean (default) or Cls (for example bge models).</summary>
+    public EmbeddingPooling Pooling { get; set; } = EmbeddingPooling.Mean;
+    /// <summary>Optional text prepended to every value (for example "query: " for E5).</summary>
+    public string? Prefix { get; set; }
+    /// <summary>Null when the model has no token type ids input (mpnet).</summary>
+    public string? TokenTypeIdsName { get; set; } = "token_type_ids";
+    /// <summary>Output size after truncate and re-normalise; only valid for Matryoshka-trained models.</summary>
+    public int? Dimensions { get; set; }
+    public bool SupportsDimensionTruncation { get; set; }
 }
 
 public sealed class OnnxSentenceEmbeddingGenerator

@@ -26,6 +26,8 @@ Both projects are ExternalServices (they wrap ONNX Runtime and a published model
 | `OoBDev.Onnx.SentenceEmbeddings` | `ExternalServices/Onnx/` | Generic runner: tokenize, ONNX Runtime session, mean pooling, L2 normalise, `IEmbeddingGenerator` | `AllMiniLmL6V2Sharp` (embedder, tokenizer, `OnnxExtensions`) |
 | `OoBDev.Onnx.SentenceEmbeddings.Tests` | `ExternalServices/Onnx/` | Unit and concurrency tests, fake session | fork tests (19) |
 | `OoBDev.SBert.AllMiniLmL6V2` | `ExternalServices/SBert/` | Model preset: options, model folder, `SBertGlobals.AllMiniLmL6V2Key`, DI, `IEmbeddingProvider` adapter | `OoBDev.SBert.AllMiniLML6v2Sharp` |
+| `OoBDev.SBert.AllMpnetBaseV2` (+ `.Tests`) | `ExternalServices/SBert/` | Second preset: 768 dimensions, no token type ids; key `all-mpnet-base-v2` | n/a (new) |
+| `OoBDev.SBert.NomicEmbedTextV1_5` (+ `.Tests`) | `ExternalServices/SBert/` | Third preset: 768 dimensions, Matryoshka (`SupportsDimensionTruncation = true`), prefixes, long context; key `nomic-embed-text-v1-5` | n/a (new) |
 | `OoBDev.SBert.AllMiniLmL6V2.Tests` | `ExternalServices/SBert/` | Compatibility (golden) tests against the fork during the transition, then against stored vectors | n/a (new) |
 
 Naming rationale: `OoBDev.{Vendor}.{Feature}` as in `OoBDev.SBert` and `OoBDev.Ollama`; the casing `AllMiniLmL6V2` is the .NET form (the current adapter mixes `AllMiniLML6v2Sharp`, `AllMiniLmL6V2` and `ALLMINILM`). The generic runner lives under a neutral `Onnx` vendor so that later presets (other sentence models) reuse it.
