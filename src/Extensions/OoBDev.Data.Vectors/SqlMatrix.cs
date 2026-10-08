@@ -64,7 +64,7 @@ public struct SqlMatrix : INullable, IBinarySerialize, IEquatable<SqlMatrix>
     /// Extracts a specific row from the matrix as a vector.
     /// </summary>
     /// <param name="row">The zero-based row index to extract.</param>
-    /// <returns>A <see cref="SqlVector"/> containing the values from the specified row, or SQL NULL if the row parameter is NULL.</returns>
+    /// <returns>A <see cref="SqlVector"/> containing the values from the specified row, or SQL NULL if the matrix or the row parameter is NULL or the row is out of range.</returns>
     [SqlMethod(
         Name = nameof(Row),
         OnNullCall = false,
@@ -72,14 +72,14 @@ public struct SqlMatrix : INullable, IBinarySerialize, IEquatable<SqlMatrix>
         IsPrecise = true,
         IsMutator = false
         )]
-    public readonly SqlVector Row(SqlInt16 row) => row.IsNull ? SqlVector.Null : new([.. Values.Row(row.Value)]);
+    public readonly SqlVector Row(SqlInt16 row) =>
+        (_isNull || row.IsNull || row.Value < 0 || row.Value >= Values.Rows) ? SqlVector.Null : new([.. Values.Row(row.Value)]);
 
     /// <summary>
     /// Extracts a specific column from the matrix as a vector.
     /// </summary>
     /// <param name="column">The zero-based column index to extract.</param>
-    /// <returns>A <see cref="SqlVector"/> containing the values from the specified column, or SQL NULL if the column parameter is NULL.</returns>
-    /// <exception cref="ArgumentOutOfRangeException">Thrown when the column index is greater than or equal to the number of columns in the matrix.</exception>
+    /// <returns>A <see cref="SqlVector"/> containing the values from the specified column, or SQL NULL if the matrix or the column parameter is NULL or the column is out of range.</returns>
     [SqlMethod(
         Name = nameof(Column),
         OnNullCall = false,
@@ -89,11 +89,11 @@ public struct SqlMatrix : INullable, IBinarySerialize, IEquatable<SqlMatrix>
         )]
     public readonly SqlVector Column(SqlInt16 column)
     {
-        if (column.IsNull) return SqlVector.Null;
+        if (_isNull || column.IsNull) return SqlVector.Null;
 
         var realColumn = column.Value;
         var columns = (short)_values.GetUpperBound(1) + 1;
-        if (column.Value >= columns) throw new ArgumentOutOfRangeException(nameof(column));
+        if (column.Value < 0 || column.Value >= columns) return SqlVector.Null;
         var rows = (short)_values.GetUpperBound(0) + 1;
 
         var data = new double[rows];
@@ -109,7 +109,7 @@ public struct SqlMatrix : INullable, IBinarySerialize, IEquatable<SqlMatrix>
     /// </summary>
     /// <param name="row">The zero-based row index.</param>
     /// <param name="column">The zero-based column index.</param>
-    /// <returns>The element value as a <see cref="SqlSingle"/>, or SQL NULL if this matrix or either parameter is NULL.</returns>
+    /// <returns>The element value as a <see cref="SqlSingle"/>, or SQL NULL if this matrix or either parameter is NULL or the position is out of range.</returns>
     [SqlMethod(
         Name = nameof(Element),
         OnNullCall = false,
@@ -117,8 +117,12 @@ public struct SqlMatrix : INullable, IBinarySerialize, IEquatable<SqlMatrix>
         IsPrecise = true,
         IsMutator = false
         )]
-    public SqlSingle Element(SqlInt16 row, SqlInt16 column) =>
-        (IsNull || row.IsNull || column.IsNull) ? SqlSingle.Null : (SqlSingle)Values.Get(row.Value, column.Value);
+    public SqlDouble Element(SqlInt16 row, SqlInt16 column) =>
+        (IsNull || row.IsNull || column.IsNull
+            || row.Value < 0 || row.Value >= Values.Rows
+            || column.Value < 0 || column.Value >= Values.Columns)
+            ? SqlDouble.Null
+            : (SqlDouble)Values.Get(row.Value, column.Value);
 
     /// <summary>
     /// Deserializes the matrix from binary format. Used by SQL Server CLR for data retrieval.
@@ -183,27 +187,36 @@ public struct SqlMatrix : INullable, IBinarySerialize, IEquatable<SqlMatrix>
     /// Supports multiple row and column separators (newline, pipe, tab, comma).
     /// </summary>
     /// <param name="input">The string representation of the matrix to parse.</param>
-    /// <returns>A new <see cref="SqlMatrix"/> containing the parsed values, or SQL NULL if the input is NULL.</returns>
+    /// <returns>A new <see cref="SqlMatrix"/> containing the parsed values, or SQL NULL if the input is NULL, empty, ragged or not numeric.</returns>
     public static SqlMatrix Parse(SqlString input)
     {
-        if (input.IsNull) return Null;
+        if (input.IsNull || string.IsNullOrWhiteSpace(input.Value)) return Null;
 
         var rowStrings = input.Value.Split(['\n', '\r', '|'], options: StringSplitOptions.RemoveEmptyEntries);
         var rows = rowStrings.Length;
+        if (rows == 0) return Null;
 
-        double[,] data = default;
+        double[,] data = null;
+        var columns = 0;
         for (var r = 0; r < rows; r++)
         {
             var columnStrings = rowStrings[r].Split(['\t', ','], options: StringSplitOptions.RemoveEmptyEntries);
-            var columns = columnStrings.Length;
             if (r == 0)
             {
+                columns = columnStrings.Length;
+                if (columns == 0) return Null;
                 data = new double[rows, columns];
+            }
+            else if (columnStrings.Length != columns)
+            {
+                // ragged rows are not a matrix
+                return Null;
             }
 
             for (var c = 0; c < columns; c++)
             {
-                data[r, c] = double.Parse(columnStrings[c], CultureInfo.InvariantCulture);
+                if (!double.TryParse(columnStrings[c], NumberStyles.Float, CultureInfo.InvariantCulture, out var value)) return Null;
+                data[r, c] = value;
             }
         }
 

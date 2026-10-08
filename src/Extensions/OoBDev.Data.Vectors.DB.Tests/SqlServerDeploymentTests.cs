@@ -6,7 +6,7 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace OoBDev.Data.Vectors.Tests;
+namespace OoBDev.Data.Vectors.DB.Tests;
 
 /// <summary>
 /// Deploys the OoBDev.Data.Vectors.DB dacpac (with the SQL CLR vector types merged in) to the Docker SQL Server

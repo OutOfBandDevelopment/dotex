@@ -300,7 +300,11 @@ public struct SqlVector : INullable, IBinarySerialize, IEquatable<SqlVector>
         }
         catch (FormatException)
         {
-            throw new ArgumentException("Invalid input format.");
+            return Null;
+        }
+        catch (OverflowException)
+        {
+            return Null;
         }
     }
 

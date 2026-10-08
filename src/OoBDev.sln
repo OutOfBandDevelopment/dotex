@@ -301,6 +301,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OoBDev.Microsoft.Azure.Serv
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OoBDev.SBert.AllMiniLML6v2Sharp", "ExternalServices\SBert\OoBDev.SBert.AllMiniLML6v2Sharp\OoBDev.SBert.AllMiniLML6v2Sharp.csproj", "{5977E8CC-A905-10CF-3A0C-EA47FA9E4374}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OoBDev.Data.Vectors.DB.Tests", "Extensions\OoBDev.Data.Vectors.DB.Tests\OoBDev.Data.Vectors.DB.Tests.csproj", "{131C4FA1-9E91-46E2-BBE8-D22027C712F1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -1763,6 +1765,18 @@ Global
 		{5977E8CC-A905-10CF-3A0C-EA47FA9E4374}.Release|x64.Build.0 = Release|Any CPU
 		{5977E8CC-A905-10CF-3A0C-EA47FA9E4374}.Release|x86.ActiveCfg = Release|Any CPU
 		{5977E8CC-A905-10CF-3A0C-EA47FA9E4374}.Release|x86.Build.0 = Release|Any CPU
+		{131C4FA1-9E91-46E2-BBE8-D22027C712F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{131C4FA1-9E91-46E2-BBE8-D22027C712F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{131C4FA1-9E91-46E2-BBE8-D22027C712F1}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{131C4FA1-9E91-46E2-BBE8-D22027C712F1}.Debug|x64.Build.0 = Debug|Any CPU
+		{131C4FA1-9E91-46E2-BBE8-D22027C712F1}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{131C4FA1-9E91-46E2-BBE8-D22027C712F1}.Debug|x86.Build.0 = Debug|Any CPU
+		{131C4FA1-9E91-46E2-BBE8-D22027C712F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{131C4FA1-9E91-46E2-BBE8-D22027C712F1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{131C4FA1-9E91-46E2-BBE8-D22027C712F1}.Release|x64.ActiveCfg = Release|Any CPU
+		{131C4FA1-9E91-46E2-BBE8-D22027C712F1}.Release|x64.Build.0 = Release|Any CPU
+		{131C4FA1-9E91-46E2-BBE8-D22027C712F1}.Release|x86.ActiveCfg = Release|Any CPU
+		{131C4FA1-9E91-46E2-BBE8-D22027C712F1}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1907,6 +1921,7 @@ Global
 		{461BD4F9-67EA-4B49-BFF2-3C6B7E831231} = {36951C38-D999-011D-B5A0-47864D6869BA}
 		{746C160B-C69D-416C-8C26-3F50E493B85F} = {71129CCF-1669-468F-A0B3-7A306149C3F5}
 		{5977E8CC-A905-10CF-3A0C-EA47FA9E4374} = {C7E8927B-75DF-43AD-90AA-192F399ECBC3}
+		{131C4FA1-9E91-46E2-BBE8-D22027C712F1} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {92959CB8-A44C-4F0D-BBCF-C99B014BEEAD}
