@@ -230,7 +230,7 @@ OoBDev.{Layer}.{Feature}/
 ### Rejected and Preferred Dependencies (owner decisions)
 - No third-party IoC/DI containers and no third-party logging libraries (use `Microsoft.Extensions.*` and `[LoggerMessage]`)
 - Avoid Polly (license change); add OpenTelemetry; default hash is SHA-512
-- MSTest stays; central package management to be restored; GitVersion stays with app projects versioned together
+- MSTest stays; central package management is on (versions live only in `src/Directory.Packages.props`); GitVersion stays with app projects versioned together
 - Provider selection: a container-registered factory picks a keyed service from a configuration path (replaces `ISelectedService<T>`); shared options validation via `AddValidatedOptions<T>()`
 - Keep all .NET libraries/packages as current for .NET 10 as practical; Microsoft.Extensions.AI is expected to replace the hand-built AI abstractions (spike in `docs/patterns-discovery/08-spikes/`)
 - Abstractions projects (interfaces and models only) need no tests; if one holds testable implementation it gets a test library. Missing project readmes should be created
@@ -527,6 +527,7 @@ dotnet test src/ --collect:"XPlat Code Coverage"
 ## Recently Completed Work
 
 ### 2026-10-07
+- **Dependencies and build health** - central package management restored, all packages current, warnings triaged (about 12 distinct left), Application Insights migrated to the OpenTelemetry-based 3.x, Qdrant moved to the query API, test property default bug fixed
 - **AllMiniLmL6V2 design** - plan to replace the `AllMiniLML6v2Sharp` fork, same ONNX model, compatibility tests before cutover. [Design](docs/design/AllMiniLmL6V2/README.md)
 
 ### 2026-09-30
@@ -634,7 +635,7 @@ Instead of directly migrating code from SharedFramework, we've pivoted to compre
 **Latest Updates:**
 - Strategic pivot from code migration to design-first documentation (2026-01-22)
 - 4 TODO files updated to reflect design phase (Communications, Text Templating, Identity, Documents)
-- Build warnings reduced to 8 (down from 95+)
+- Build warnings: about 12 distinct remain (2026-10-08); see TODO.md
 - Test categories cleaned up (DevLocal → Integration/Unit/LiveIntegration)
 - .runsettings how-to guide created
 - Configuration documentation complete (CONFIGURATION_SETTINGS.md)
