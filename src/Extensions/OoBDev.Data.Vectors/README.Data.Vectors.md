@@ -43,6 +43,8 @@ ORDER BY Distance
 
 ## NULL results (read this before ordering by angle)
 
+`Parse` of bad input (non-numeric, empty, ragged matrix rows) and out-of-range `Row`, `Column` and `Element` on `SqlMatrix`/`SqlMatrixF` also return `NULL` instead of throwing. `SqlMatrix.Element` returns `SqlDouble`.
+
 The two-vector functions never throw on bad data, because one bad row must not fail a whole batch. `Angle`/`AngleF` return `NULL` when the angle is undefined: a `NULL` input, vectors of different lengths, or a zero-magnitude vector. `Distance`/`DistanceF`, `Midpoint`/`MidpointF` and `UniformV`/`UniformVF` return `NULL` for `NULL` input or vectors of different lengths, and `Distance`/`DistanceF` also for an unsupported metric name.
 
 `NULL` means "no answer", not "good match". SQL Server sorts `NULL` first in an ascending `ORDER BY`, so an unfiltered nearest-match query would list these rows on top. Always filter or sort them away:

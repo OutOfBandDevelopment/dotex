@@ -95,6 +95,7 @@ Every TODO file and in-code marker was checked against the repository. The other
 - [x] Central package management restored (2026-10-07): `src/Directory.Packages.props` holds 87 versions, project files carry none; 8 packages that differed between projects (test tooling, Moq, GitVersion, Microsoft.Extensions 10.0.2 vs 10.0.12) now use the highest version. Script: `scripts/packages/`.
 - [ ] Run the Integration category against Docker after the bumps.
 - [x] Pushed `dev/patterns-discovery` (2026-10-07).
+- [x] Vectors NULL policy extended to `Parse` and matrix accessors, `.DB` dacpac build order (`EnsureClrDacpac`), `DB.Tests` project, AllMiniLm test model build order (2026-10-08, see `docs/changes/testing-vectors-sqs-moto-ci-2026-10-08.md`).
 - [ ] Update `README`/`CLAUDE.md` text: warning count, Application Insights 3.x note.
 
 ### Backlog: Migration Decisions (blocked on the owner)
