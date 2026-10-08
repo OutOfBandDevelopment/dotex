@@ -7,6 +7,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -46,7 +47,7 @@ public static class TestContextExtensions
     /// <param name="defaultValue">The default value to return if the property is not found.</param>
     /// <returns>The property value or the default value.</returns>
     public static T GetPropertyOrDefault<T>(this TestContext testContext, string parameter, T defaultValue) =>
-        testContext.GetProperty<T>(parameter) ?? defaultValue;
+        testContext.TryGetProperty<T>(parameter, out var value) ? value : defaultValue;
 
     /// <summary>
     /// Gets a required test property value. Throws an exception if not found.
@@ -58,7 +59,7 @@ public static class TestContextExtensions
     /// <returns>The property value.</returns>
     /// <exception cref="ApplicationException">Thrown when the property is not found.</exception>
     public static T GetRequiredProperty<T>(this TestContext testContext, string parameter) =>
-        testContext.GetProperty<T>(parameter) ?? throw new ApplicationException($"Test Property {parameter} is required");
+        testContext.TryGetProperty<T>(parameter, out var value) ? value : throw new ApplicationException($"Test Property {parameter} is required");
 
     /// <summary>
     /// Gets a test property value, returning null if not found.
@@ -68,20 +69,40 @@ public static class TestContextExtensions
     /// <param name="testContext">The test context.</param>
     /// <param name="parameter">The property name to retrieve.</param>
     /// <returns>The property value, or null if not found or conversion fails.</returns>
-    public static T? GetProperty<T>(this TestContext testContext, string parameter)
+    public static T? GetProperty<T>(this TestContext testContext, string parameter) =>
+        testContext.TryGetProperty<T>(parameter, out var value) ? value : default;
+
+    /// <summary>
+    /// Tries to get a test property value (TestContext properties first, then environment variables).
+    /// Unlike a nullable return, this distinguishes "not found" from a default value such as 0 or false.
+    /// </summary>
+    /// <typeparam name="T">The type to convert the property value to.</typeparam>
+    /// <param name="testContext">The test context.</param>
+    /// <param name="parameter">The property name to retrieve.</param>
+    /// <param name="value">The converted value when found.</param>
+    /// <returns>True when the property exists and converts to <typeparamref name="T"/>.</returns>
+    public static bool TryGetProperty<T>(this TestContext testContext, string parameter, [MaybeNullWhen(false)] out T value)
     {
         try
         {
-            if (testContext.Properties.TryGetValue(parameter, out var value))
-                return value.As<T>();
-
-            value = Environment.GetEnvironmentVariable(parameter);
-            return value.As<T>();
+            object? raw = testContext.Properties.TryGetValue(parameter, out var found)
+                ? found
+                : Environment.GetEnvironmentVariable(parameter);
+            if (raw is not null)
+            {
+                var converted = raw.As<T>();
+                if (converted is not null)
+                {
+                    value = converted;
+                    return true;
+                }
+            }
         }
         catch
         {
         }
-        return default;
+        value = default;
+        return false;
     }
 
     /// <summary>

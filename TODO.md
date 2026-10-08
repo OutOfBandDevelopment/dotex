@@ -554,4 +554,4 @@ dotnet test src/ --filter TestCategory=Integration
 
 **For detailed information on each epic, see the respective TODO-{epic}.md files above.**
 
-- [ ] Bug: `TestContextExtensions.GetPropertyOrDefault<T>` / `GetProperty<T>` return `default(T)` (0, false) instead of the supplied default for missing value-type properties, because `T?` on an unconstrained generic is not nullable for value types (found in Qdrant tests: port became 0). Fix with a `TryGetProperty` pattern or separate struct overloads, and add tests.
+- [x] Fixed 2026-10-07: `TestContextExtensions.GetPropertyOrDefault<T>`/`GetRequiredProperty<T>` returned `default(T)` instead of the supplied default for missing value-type properties; they now use a new `TryGetProperty<T>` (7 unit tests).

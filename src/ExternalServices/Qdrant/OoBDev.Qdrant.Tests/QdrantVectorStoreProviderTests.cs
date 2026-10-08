@@ -22,7 +22,7 @@ public class QdrantVectorStoreProviderTests
     {
         var host = TestContext.GetPropertyOrDefault("QDRANT_HOST", "127.0.0.1");
         if (host == "localhost") host = "127.0.0.1"; // gRPC resolves localhost to an unusable IPv6 address on some hosts
-        var grpcPort = TestContext.GetPropertyOrDefault("QDRANT_GRPC_PORT", "6334");
+        var grpcPort = TestContext.GetPropertyOrDefault("QDRANT_GRPC_PORT", 6334);
         _collection = $"IntegrationTest_{Guid.NewGuid():N}";
         _client = new QdrantGrpcClientFactory(Options.Create(new QdrantOptions
         {
