@@ -9,6 +9,8 @@
   </PropertyGroup>
 
   <PropertyGroup>
+    <!-- MSBuild tooling packages only ship build-time assets; their net10.0 support warning is noise -->
+    <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
     <Company>Out-of-Band Development, LLC</Company>
     <Copyright>$(Company), $([System.DateTime]::Now.ToString('yyyy'))</Copyright>
 
