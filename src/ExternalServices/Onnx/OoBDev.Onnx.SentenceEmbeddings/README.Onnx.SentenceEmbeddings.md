@@ -23,3 +23,9 @@ ReadOnlyMemory<float> vector = embeddings[0].Vector; // unit length by default
 - Pooling is a masked mean (or the first token with `Pooling = Cls`) followed by L2 normalisation.
 - Blank input returns a zero vector of the right length instead of an empty one.
 - `Dimensions` truncates and re-normalises; it is accepted only when `SupportsDimensionTruncation` is true (Matryoshka-trained models).
+
+## Tokenizer
+
+The tokenizer is first-party (`SentenceTokenizer`): the reference BERT basic tokenizer (control and whitespace cleanup, CJK splitting, lower casing, accent stripping, punctuation splitting, literal `[CLS]`/`[SEP]`/`[UNK]`/`[PAD]`/`[MASK]` kept as special tokens) followed by greedy WordPiece. `Microsoft.ML.Tokenizers` was tried and dropped because it does not treat tab/newline as whitespace, drops ASCII symbols such as `_` and `=`, drops unknown characters instead of emitting `[UNK]`, and does not decompose Hangul. Accent stripping uses `string.Normalize`, which needs ICU (or full normalization support) on Linux.
+
+Verified against vectors from the original Hugging Face model: see `scripts/embeddings/README.md`.

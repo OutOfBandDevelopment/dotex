@@ -11,7 +11,8 @@ using ForkBertTokenizer = OoBDev.AllMiniLmL6V2Sharp.Tokenizer.BertTokenizer;
 namespace OoBDev.Onnx.SentenceEmbeddings.Tests;
 
 /// <summary>
-/// The fork is the golden reference until cutover: same token ids and near-identical vectors (REQ-002, REQ-003).
+/// Parity with the fork on plain text, where the fork is correct. The authority is the Hugging Face reference
+/// (see ReferenceTests); the fork is wrong for accents, Korean, Polish, URLs, dates and bracketed special tokens.
 /// Removed together with the fork.
 /// </summary>
 [TestClass]
@@ -20,7 +21,7 @@ public class ForkCompatibilityTests
     private static readonly string[] _corpus =
     [
         "The quick brown fox jumps over the lazy dog.",
-        "Café déjà vu naïve résumé",
+        "hello 🙂 world",
         "punctuation!?;: (brackets) \"quotes\" - dashes",
         "UPPER lower MiXeD 12345 3.14",
         "a",
@@ -58,24 +59,6 @@ public class ForkCompatibilityTests
 
         CollectionAssert.AreEqual(new[] { 101, 100, 102 }, fork.Encode(fork.Tokenize(text).Count(), text).Select(t => (int)t.InputIds).ToArray());
         Assert.IsGreaterThan(5, ours.Encode(text).Count(id => id != 100));
-    }
-
-    /// <summary>
-    /// Known difference 2 (to review): the fork maps a character missing from the vocabulary (an emoji) to [UNK];
-    /// Microsoft.ML.Tokenizers drops it. The Python reference tokenizer keeps it as [UNK], so this is a deviation
-    /// from the reference. Tracked in the design document (open question 2).
-    /// </summary>
-    [TestCategory(TestCategories.Unit)]
-    [TestMethod]
-    public void TokenIds_Emoji_AreDroppedWhereTheForkEmitsUnknown()
-    {
-        var vocab = Path.Combine(TestModel.RequireFolder(), "vocab.txt");
-        var fork = new ForkBertTokenizer(vocab);
-        var ours = new SentenceTokenizer(vocab, lowerCase: true, maxSequenceLength: 512);
-        const string text = "hello 🙂 world";
-
-        Assert.Contains(100, fork.Encode(fork.Tokenize(text).Count(), text).Select(t => (int)t.InputIds).ToArray());
-        Assert.DoesNotContain(100, ours.Encode(text).ToArray());
     }
 
     [TestCategory(TestCategories.Unit)]
