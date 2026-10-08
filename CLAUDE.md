@@ -526,6 +526,9 @@ dotnet test src/ --collect:"XPlat Code Coverage"
 
 ## Recently Completed Work
 
+### 2026-10-08
+- **CI, vectors, Moto** - CI restore fixed, vector `Angle` corrected and NULL-safe, SQL Server Integration tests, Moto replaces LocalStack, SQS tests repaired. [Details](docs/changes/testing-vectors-sqs-moto-ci-2026-10-08.md)
+
 ### 2026-10-07
 - **Dependencies and build health** - central package management restored, all packages current, warnings triaged (about 12 distinct left), Application Insights migrated to the OpenTelemetry-based 3.x, Qdrant moved to the query API, test property default bug fixed
 - **AllMiniLmL6V2 design** - plan to replace the `AllMiniLML6v2Sharp` fork, same ONNX model, compatibility tests before cutover. [Design](docs/design/AllMiniLmL6V2/README.md)

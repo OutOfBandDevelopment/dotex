@@ -110,6 +110,11 @@ Each change document should include:
 
 ### Testing
 
+**[testing-vectors-sqs-moto-ci-2026-10-08.md](testing-vectors-sqs-moto-ci-2026-10-08.md)**
+- CI restore fix, vector `Angle` correction and NULL-safe functions with SQL Server Integration tests
+- Moto replaces LocalStack; SQS client and test fixes
+- Status: ✅ Complete (GitHub run not yet observed)
+
 **[testing-ollama-integration-2026-01-21.md](testing-ollama-integration-2026-01-21.md)**
 - Ollama LLM inference (14th Docker service)
 - 4 tests migrated, automated phi3 model setup
