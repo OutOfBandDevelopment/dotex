@@ -1,6 +1,6 @@
 # AWS SQS Provider - Integration Testing Guide
 
-This guide explains how to test the AWS SQS provider using LocalStack emulation.
+This guide explains how to test the AWS SQS provider using Moto emulation.
 
 ## Prerequisites
 
@@ -16,15 +16,15 @@ This guide explains how to test the AWS SQS provider using LocalStack emulation.
 # From repository root
 cd containers/testing
 
-# Start all services including LocalStack
+# Start all services including Moto
 ./scripts/integration-up.sh --wait
 ```
 
-### 2. Setup SQS Queues in LocalStack
+### 2. Setup SQS Queues in Moto
 
 ```bash
 # Setup test queues
-./scripts/setup-localstack-sqs.sh
+./scripts/setup-moto-sqs.sh
 ```
 
 This creates:
@@ -62,7 +62,7 @@ export SQS_QUEUE_URL=http://localhost:4566/000000000000/integration-test-queue
 
 ### Queue URLs
 
-LocalStack uses a consistent URL pattern:
+Moto uses a consistent URL pattern:
 
 ```
 Standard: http://localhost:4566/000000000000/{queue-name}
@@ -95,9 +95,9 @@ public class AmazonSqsIntegrationTests
 {
     [TestMethod]
     [TestCategory(TestCategories.Integration)]
-    public async Task SendAsync_ToLocalStack_Succeeds()
+    public async Task SendAsync_ToMoto_Succeeds()
     {
-        // Arrange - LocalStack configuration
+        // Arrange - Moto configuration
         var configBuilder = new ConfigurationBuilder();
         configBuilder.AddInMemoryCollection(new Dictionary<string, string?>
         {
@@ -216,7 +216,7 @@ All headers are automatically converted to SQS message attributes.
 
 ## Troubleshooting
 
-### LocalStack Not Running
+### Moto Not Running
 
 **Error**: Connection refused to localhost:4566
 
@@ -236,7 +236,7 @@ cd containers/testing
 aws --endpoint-url=http://localhost:4566 sqs create-queue --queue-name your-queue-name
 
 # Or run setup script
-./scripts/setup-localstack-sqs.sh
+./scripts/setup-moto-sqs.sh
 ```
 
 ### Invalid Credentials
@@ -245,12 +245,12 @@ aws --endpoint-url=http://localhost:4566 sqs create-queue --queue-name your-queu
 
 **Solution**:
 ```bash
-# LocalStack accepts any credentials
+# Moto accepts any credentials
 export AWS_ACCESS_KEY_ID=test
 export AWS_SECRET_ACCESS_KEY=test
 ```
 
-## Verifying Messages in LocalStack
+## Verifying Messages in Moto
 
 ```bash
 # List queues
@@ -268,6 +268,6 @@ aws --endpoint-url=http://localhost:4566 sqs receive-message \
 
 ## See Also
 
-- [LocalStack Documentation](https://docs.localstack.cloud/user-guide/aws/sqs/)
+- [Moto Documentation](https://docs.getmoto.org/en/latest/docs/services/sqs.html)
 - [AWS SQS Documentation](https://docs.aws.amazon.com/sqs/)
 - [Integration Test Infrastructure](../../../../containers/testing/README.md)

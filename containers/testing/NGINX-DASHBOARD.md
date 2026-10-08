@@ -40,7 +40,7 @@ Direct API access through the reverse proxy:
 | Apache Tika | `/tika/` | 9998 | Document parsing API |
 | OpenSearch | `/opensearch-api/` | 9200 | Search engine API |
 | Qdrant | `/qdrant-api/` | 6333 | Vector database API |
-| LocalStack | `/localstack/` | 4566 | AWS services emulator |
+| Moto | `/moto/` | 4566 | AWS services emulator |
 | SBert | `/sbert/` | 5000 | ML embeddings API |
 
 ## Usage
@@ -104,8 +104,8 @@ curl http://localhost:8080/opensearch-api/_cluster/health
 # Qdrant - List collections
 curl http://localhost:8080/qdrant-api/collections
 
-# LocalStack - List S3 buckets
-aws --endpoint-url=http://localhost:8080/localstack s3 ls
+# Moto - List S3 buckets
+aws --endpoint-url=http://localhost:8080/moto s3 ls
 
 # SBert - Health check
 curl http://localhost:8080/sbert/health
@@ -283,7 +283,7 @@ location /myservice/ {
        ├──────────────► /tika/            → apache-tika:9998
        ├──────────────► /opensearch-api/  → opensearch:9200
        ├──────────────► /qdrant-api/      → qdrant:6333
-       ├──────────────► /localstack/      → localstack:4566
+       ├──────────────► /moto/      → moto:5000
        └──────────────► /sbert/           → sbert:5000
 ```
 

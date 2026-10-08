@@ -31,7 +31,7 @@ This document lists all test properties used by Integration tests. These propert
    - [Azurinsight (Application Insights Emulator)](#azurinsight-application-insights-emulator)
    - [Qdrant (Vector Database)](#qdrant-vector-database)
    - [Azurite (Azure Storage Emulator)](#azurite-azure-storage-emulator)
-   - [LocalStack (AWS Emulator)](#localstack-aws-emulator)
+   - [Moto (AWS Emulator)](#moto-aws-emulator)
    - [Keycloak (Identity & Access Management)](#keycloak-identity--access-management)
 3. [LiveIntegration Test Variables](#liveintegration-test-variables)
    - [Azure B2C (Identity Provider)](#azure-b2c-identity-provider)
@@ -345,15 +345,15 @@ public async Task TestCleanup()
 
 ---
 
-### LocalStack (AWS Emulator)
+### Moto (AWS Emulator)
 
 **Service:** AWS cloud service emulator for local development
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `LOCALSTACK_URL` | `http://localhost:4566` | LocalStack unified endpoint |
+| `MOTO_URL` | `http://localhost:4566` | Moto unified endpoint |
 
-**Docker Container:** `localstack/localstack` (Port 4566)
+**Docker Container:** `motoserver/moto` (Port 4566)
 
 **Tests Using:**
 - To be migrated
@@ -514,8 +514,8 @@ public async Task TestCleanup()
     <Parameter name="AZURITE_QUEUE_URL" value="http://localhost:10001" />
     <Parameter name="AZURITE_TABLE_URL" value="http://localhost:10002" />
 
-    <!-- LocalStack -->
-    <Parameter name="LOCALSTACK_URL" value="http://localhost:4566" />
+    <!-- Moto -->
+    <Parameter name="MOTO_URL" value="http://localhost:4566" />
 
     <!-- Keycloak -->
     <Parameter name="KEYCLOAK_URL" value="http://localhost:8081" />

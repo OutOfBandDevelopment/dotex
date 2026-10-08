@@ -193,28 +193,40 @@ services:
       retries: 5
       start_period: 10s
 
-  localstack:
-    image: localstack/localstack:4.4
-    container_name: oobd-test-localstack
+  # Moto server: Apache-2.0 AWS emulator, no licence token. Host port 4566 is kept so SQS_ENDPOINT is unchanged.
+  moto:
+    image: motoserver/moto:latest
+    container_name: oobd-test-moto
     ports:
-      - "4566:4566"
+      - "4566:5000"
     networks:
       - integration-test-net
     environment:
-      - SERVICES=s3,sqs,sns,dynamodb,lambda,secretsmanager
-      - DEBUG=0
-      - DOCKER_HOST=unix:///var/run/docker.sock
-      - LOCALSTACK_HOST=localhost:4566
       - AWS_DEFAULT_REGION=us-east-1
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ./localstack-init:/etc/localstack/init/ready.d:ro
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:4566/_localstack/health"]
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:5000/moto-api/')"]
       interval: 10s
       timeout: 5s
       retries: 5
-      start_period: 15s
+      start_period: 10s
+
+  # One-shot: creates the SQS queues the integration tests expect, then exits
+  moto-init:
+    image: amazon/aws-cli:latest
+    container_name: oobd-test-moto-init
+    depends_on:
+      moto:
+        condition: service_healthy
+    networks:
+      - integration-test-net
+    environment:
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+      - AWS_DEFAULT_REGION=us-east-1
+    entrypoint: ["/bin/sh", "/init/01-create-sqs-queues.sh"]
+    volumes:
+      - ./moto-init:/init:ro
+    restart: "no"
 
   servicebus-emulator:
     image: mcr.microsoft.com/azure-messaging/servicebus-emulator:latest

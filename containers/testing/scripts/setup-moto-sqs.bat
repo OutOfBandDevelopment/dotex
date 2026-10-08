@@ -1,32 +1,32 @@
 @echo off
-REM Setup LocalStack SQS queues for integration testing
+REM Setup Moto SQS queues for integration testing
 
 setlocal
 
-set LOCALSTACK_URL=http://localhost:4566
+set MOTO_URL=http://localhost:4566
 set REGION=us-east-1
 
-echo Setting up SQS queues in LocalStack at %LOCALSTACK_URL%...
+echo Setting up SQS queues in Moto at %MOTO_URL%...
 
-REM Export AWS credentials for LocalStack (dummy values)
+REM Export AWS credentials for Moto (dummy values)
 set AWS_ACCESS_KEY_ID=test
 set AWS_SECRET_ACCESS_KEY=test
 set AWS_DEFAULT_REGION=%REGION%
 
 echo Creating queue: integration-test-queue
-aws --endpoint-url=%LOCALSTACK_URL% sqs create-queue --queue-name integration-test-queue --region %REGION%
+aws --endpoint-url=%MOTO_URL% sqs create-queue --queue-name integration-test-queue --region %REGION%
 
 echo Creating queue: integration-test-fifo.fifo
-aws --endpoint-url=%LOCALSTACK_URL% sqs create-queue --queue-name integration-test-fifo.fifo --attributes FifoQueue=true,ContentBasedDeduplication=true --region %REGION%
+aws --endpoint-url=%MOTO_URL% sqs create-queue --queue-name integration-test-fifo.fifo --attributes FifoQueue=true,ContentBasedDeduplication=true --region %REGION%
 
 echo Creating queue: integration-test-dlq
-aws --endpoint-url=%LOCALSTACK_URL% sqs create-queue --queue-name integration-test-dlq --region %REGION%
+aws --endpoint-url=%MOTO_URL% sqs create-queue --queue-name integration-test-dlq --region %REGION%
 
 echo.
 echo ✅ SQS queues created successfully!
 echo.
 echo Available queues:
-aws --endpoint-url=%LOCALSTACK_URL% sqs list-queues --region %REGION%
+aws --endpoint-url=%MOTO_URL% sqs list-queues --region %REGION%
 echo.
 echo Use these in your tests:
 echo   Standard Queue: http://localhost:4566/000000000000/integration-test-queue

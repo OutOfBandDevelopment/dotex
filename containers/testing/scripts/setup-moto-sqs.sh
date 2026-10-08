@@ -1,18 +1,18 @@
 #!/bin/bash
-# Setup LocalStack SQS queues for integration testing
+# Setup Moto SQS queues for integration testing
 #
-# NOTE: This script is DEPRECATED - LocalStack now auto-initializes on container startup.
-# The init script at localstack-init/01-create-sqs-queues.sh runs automatically.
+# NOTE: This script is DEPRECATED - the moto-init service creates the queues on startup.
+# The init script at moto-init/01-create-sqs-queues.sh runs automatically (moto-init service).
 # This script is kept for manual testing/troubleshooting only.
 
 set -e
 
-LOCALSTACK_URL="${LOCALSTACK_URL:-http://localhost:4566}"
+MOTO_URL="${MOTO_URL:-http://localhost:4566}"
 REGION="${AWS_DEFAULT_REGION:-us-east-1}"
 
-echo "Setting up SQS queues in LocalStack at $LOCALSTACK_URL..."
+echo "Setting up SQS queues in Moto at $MOTO_URL..."
 
-# Export AWS credentials for LocalStack (dummy values)
+# Export AWS credentials for Moto (dummy values)
 export AWS_ACCESS_KEY_ID=test
 export AWS_SECRET_ACCESS_KEY=test
 export AWS_DEFAULT_REGION=$REGION
@@ -25,12 +25,12 @@ create_queue() {
     echo "Creating queue: $queue_name"
 
     if [ "$is_fifo" = "true" ]; then
-        aws --endpoint-url=$LOCALSTACK_URL sqs create-queue \
+        aws --endpoint-url=$MOTO_URL sqs create-queue \
             --queue-name "${queue_name}.fifo" \
             --attributes FifoQueue=true,ContentBasedDeduplication=true \
             --region $REGION
     else
-        aws --endpoint-url=$LOCALSTACK_URL sqs create-queue \
+        aws --endpoint-url=$MOTO_URL sqs create-queue \
             --queue-name "$queue_name" \
             --region $REGION
     fi
@@ -45,7 +45,7 @@ echo ""
 echo "✅ SQS queues created successfully!"
 echo ""
 echo "Available queues:"
-aws --endpoint-url=$LOCALSTACK_URL sqs list-queues --region $REGION | grep -o 'http[^"]*'
+aws --endpoint-url=$MOTO_URL sqs list-queues --region $REGION | grep -o 'http[^"]*'
 echo ""
 echo "Use these in your tests:"
 echo "  Standard Queue: http://localhost:4566/000000000000/integration-test-queue"

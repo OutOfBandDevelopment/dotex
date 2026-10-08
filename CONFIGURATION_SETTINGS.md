@@ -1056,14 +1056,14 @@ Within each section:
 
 **Note:** Connection string uses standard development account key (not secret).
 
-#### LocalStack (AWS Emulator)
+#### Moto (AWS Emulator)
 
 | Variable | Type | Default | Description |
 |----------|------|---------|-------------|
-| `LOCALSTACK_URL` | string | http://localhost:4566 | Unified endpoint |
-| `LOCALSTACK_HOST` | string | localhost | Host |
-| `LOCALSTACK_PORT` | int | 4566 | Edge port |
-| `LOCALSTACK_EDGE_PORT` | int | 4566 | Unified API port |
+| `MOTO_URL` | string | http://localhost:4566 | Unified endpoint |
+| `MOTO_HOST` | string | localhost | Host |
+| `MOTO_PORT` | int | 4566 | Edge port |
+| `MOTO_EDGE_PORT` | int | 4566 | Unified API port |
 | `AWS_ACCESS_KEY_ID` | string | test | Dummy AWS credential |
 | `AWS_SECRET_ACCESS_KEY` | string | test | Dummy AWS credential |
 | `AWS_DEFAULT_REGION` | string | us-east-1 | Default region |

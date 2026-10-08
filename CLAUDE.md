@@ -371,7 +371,7 @@ cd ../containers/testing
 - OpenSearch (Search engine)
 - Qdrant (Vector database)
 - Azurite (Azure Storage emulator)
-- LocalStack (AWS emulator - SQS, S3, etc.)
+- Moto (AWS emulator - SQS, S3, etc.)
 - Azure Service Bus Emulator (Message queue)
 - Keycloak (Identity & Access Management)
 - SBert (Sentence embeddings - CPU only)
@@ -640,5 +640,5 @@ Instead of directly migrating code from SharedFramework, we've pivoted to compre
 - .runsettings how-to guide created
 - Configuration documentation complete (CONFIGURATION_SETTINGS.md)
 - Ollama integration complete (phi3 auto-setup)
-- 14 Docker services ready (Apache Tika, MongoDB, SQL Server, RabbitMQ, Redis, OpenSearch, Qdrant, Azurite, LocalStack, Service Bus, Keycloak, SBert, Ollama)
+- 14 Docker services ready (Apache Tika, MongoDB, SQL Server, RabbitMQ, Redis, OpenSearch, Qdrant, Azurite, Moto, Service Bus, Keycloak, SBert, Ollama)
 

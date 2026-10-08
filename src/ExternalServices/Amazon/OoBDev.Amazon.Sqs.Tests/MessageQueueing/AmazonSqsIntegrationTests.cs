@@ -16,7 +16,7 @@ namespace OoBDev.Amazon.Sqs.Tests.MessageQueueing;
 
 /// <summary>
 /// Integration tests for AWS SQS message provider.
-/// These tests require either LocalStack or real AWS credentials.
+/// These tests require either Moto or real AWS credentials.
 /// </summary>
 [TestClass]
 public class AmazonSqsIntegrationTests
@@ -25,11 +25,11 @@ public class AmazonSqsIntegrationTests
 
     /// <summary>
     /// Lists all available SQS queues.
-    /// Useful for verifying LocalStack setup or AWS credentials.
+    /// Useful for verifying Moto setup or AWS credentials.
     /// </summary>
     [TestMethod]
     [TestCategory(TestCategories.Integration)]
-    public async Task ListQueues_WithLocalStack_ReturnsQueueUrls()
+    public async Task ListQueues_WithMoto_ReturnsQueueUrls()
     {
         // Arrange
         var endpoint = TestContext.GetRequiredProperty<string>("SQS_ENDPOINT");
@@ -65,7 +65,7 @@ public class AmazonSqsIntegrationTests
     /// </summary>
     [TestMethod]
     [TestCategory(TestCategories.Integration)]
-    public async Task CreateQueue_WithLocalStack_CreatesSuccessfully()
+    public async Task CreateQueue_WithMoto_CreatesSuccessfully()
     {
         // Arrange
         var endpoint = TestContext.GetRequiredProperty<string>("SQS_ENDPOINT");
@@ -127,7 +127,7 @@ public class AmazonSqsIntegrationTests
     /// </summary>
     [TestMethod]
     [TestCategory(TestCategories.Integration)]
-    public async Task SendAsync_ToLocalStackQueue_SendsSuccessfully()
+    public async Task SendAsync_ToMotoQueue_SendsSuccessfully()
     {
         // Arrange
         var endpoint = TestContext.GetRequiredProperty<string>("SQS_ENDPOINT");
