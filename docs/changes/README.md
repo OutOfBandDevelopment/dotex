@@ -108,6 +108,12 @@ Each change document should include:
 - Design set for replacing the `AllMiniLML6v2Sharp` fork with first-party, thread-safe ONNX embeddings
 - Status: ✅ Complete (design only)
 
+### AI
+
+**[migration-allminilml6v2-embedder-2026-10-08.md](migration-allminilml6v2-embedder-2026-10-08.md)**
+- First-party in-process all-MiniLM-L6-v2 embedder verified against Hugging Face; model downloaded on first use; fork and submodules removed
+- Status: ✅ Complete (GitHub run not yet observed)
+
 ### Testing
 
 **[testing-vectors-sqs-moto-ci-2026-10-08.md](testing-vectors-sqs-moto-ci-2026-10-08.md)**

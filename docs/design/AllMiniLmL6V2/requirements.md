@@ -71,8 +71,8 @@ Observed in the fork (to be confirmed by tests, see [testing strategy](testing-s
 
 | # | Question | Default if unanswered |
 |---|----------|-----------------------|
-| 1 | Keep the model as a git submodule under the preset project, or move to an artifact feed or Hugging Face download (see the TODO.md hosting decision)? | Keep the submodule during the compatibility phase |
-| 2 | Is `Microsoft.ML.Tokenizers` `BertTokenizer` output identical to the fork for this vocabulary (casing, accent stripping, CJK)? | Decided by the compatibility suite; fall back to a first-party WordPiece tokenizer if not |
+| 1 | ~~Keep the model as a git submodule, or move to an artifact feed or Hugging Face download?~~ | Decided: Hugging Face download on first use into the hub cache (pinned revision, SHA-256 verified) |
+| 2 | ~~Is `Microsoft.ML.Tokenizers` `BertTokenizer` output identical to the reference?~~ | Decided: no; a first-party tokenizer replaced it and matches the Hugging Face reference on all test items |
 | 3 | Maximum sequence length: the model card says 256 (trained on 128); the fork does not truncate by default | 256, configurable |
 | 4 | Keep the old key `ALLMINILM` as an alias for one release? | Yes, alias, then remove |
 

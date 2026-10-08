@@ -15,7 +15,7 @@ How the codebase does retrieval-augmented generation (RAG) today, and the rules 
 | Language model and embedding contracts | `OoBDev.AI.Abstractions` (`ILanguageModelProvider`, `IEmbeddingProvider`, `IMessageCompletion`) | Vendor-neutral prompts, streamed responses, RAG responses with citations, embeddings |
 | Vector store contracts | `OoBDev.Search.Abstractions` (`IVectorStore`, `IVectorStore<T>`, `IVectorStoreProvider`, `IVectorStoreFactory`, `IVectorStoreProviderFactory`) | Store and search vectors behind the provider and factory pattern |
 | Vector store adapter | `OoBDev.Qdrant` | Qdrant over gRPC, with point struct and client factories |
-| Embedding adapters | `OoBDev.SBert`, `OoBDev.SBert.AllMiniLML6v2Sharp` | Sentence embeddings from a service or in process |
+| Embedding adapters | `OoBDev.SBert`, `OoBDev.SBert.AllMiniLmL6V2`, `OoBDev.Onnx.SentenceEmbeddings` | Sentence embeddings from a service or in process |
 | Language model adapters | `OoBDev.Ollama`, `OoBDev.GroqCloud` | Local and hosted chat completion |
 | Document text extraction | `OoBDev.Apache.Tika` | Extracts text and metadata from files before chunking |
 | Orchestration | `OoBDev.SemanticKernel` (plug-ins for current user and time) | Optional tool calling on top of the contracts |

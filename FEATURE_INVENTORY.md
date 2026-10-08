@@ -336,7 +336,7 @@
 
 **Embeddings:**
 - [x] SBert integration
-- [x] AllMiniLML6v2Sharp (local)
+- [x] OoBDev.Onnx.SentenceEmbeddings / OoBDev.SBert.AllMiniLmL6V2 (local, in-process ONNX)
 - [x] OpenAI embeddings
 
 **Key Interfaces:**
@@ -832,7 +832,7 @@ var person = provider.Generate<PersonModel>();
 | GroqCloud | OoBDev.GroqCloud | Cloud LLM |
 | OpenAI | Via configuration | LLM/Embeddings |
 | SBert | OoBDev.SBert | Sentence embeddings |
-| AllMiniLML6v2Sharp | OoBDev.System.Text.Embeddings | Local embeddings |
+| all-MiniLM-L6-v2 (in-process ONNX) | OoBDev.SBert.AllMiniLmL6V2 | Local embeddings |
 | Semantic Kernel | OoBDev.SemanticKernel | AI orchestration |
 
 ### 4.5 Document Processing

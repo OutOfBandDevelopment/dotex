@@ -1,5 +1,4 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using OoBDev.AllMiniLmL6V2Sharp;
 using OoBDev.TestUtilities;
 using System;
 using System.IO;
@@ -7,13 +6,12 @@ using System.Linq;
 using System.Numerics.Tensors;
 using System.Text.Json;
 using System.Threading.Tasks;
-using ForkBertTokenizer = OoBDev.AllMiniLmL6V2Sharp.Tokenizer.BertTokenizer;
 
 namespace OoBDev.Onnx.SentenceEmbeddings.Tests;
 
 /// <summary>
 /// Compares against vectors produced by the reference implementation (sentence-transformers/all-MiniLM-L6-v2 on
-/// Hugging Face, see TestData/README.md), not against the fork.
+/// Hugging Face, see TestData/README.md).
 /// </summary>
 [TestClass]
 public class ReferenceTests
@@ -51,28 +49,5 @@ public class ReferenceTests
         TestContext.WriteLine($"items={items.Length} below 0.999: {failures.Length}");
         foreach (var failure in failures) TestContext.WriteLine(failure);
         Assert.IsEmpty(failures, string.Join("; ", failures));
-    }
-
-    /// <summary>Informational: how the fork fares against the same reference (never fails).</summary>
-    [TestCategory(TestCategories.Unit)]
-    [TestMethod]
-    public void Fork_AgainstReference_Report()
-    {
-        var folder = TestModel.RequireFolder();
-        var items = Load();
-        using var fork = new AllMiniLmL6V2Embedder(Path.Combine(folder, "model.onnx"), new ForkBertTokenizer(Path.Combine(folder, "vocab.txt")), truncate: true);
-
-        foreach (var item in items)
-        {
-            try
-            {
-                var similarity = TensorPrimitives.CosineSimilarity(item.Vector, fork.GenerateEmbedding(item.Text).ToArray());
-                TestContext.WriteLine($"fork cos={similarity:F4} tokens={item.Tokens} {Describe(item.Text)}");
-            }
-            catch (Exception ex)
-            {
-                TestContext.WriteLine($"fork threw {ex.GetType().Name} tokens={item.Tokens} {Describe(item.Text)}");
-            }
-        }
     }
 }

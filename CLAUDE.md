@@ -527,12 +527,13 @@ dotnet test src/ --collect:"XPlat Code Coverage"
 ## Recently Completed Work
 
 ### 2026-10-08
+- **AllMiniLmL6V2 replaces the fork** - first-party ONNX embedder and tokenizer matching the Hugging Face model (34/34), model downloaded on first use into the shared hub cache, fork and both submodules removed. [Details](docs/changes/migration-allminilml6v2-embedder-2026-10-08.md)
 - **NULL-safe vectors and CI build order** - `Parse` and matrix accessors return NULL, `SqlMatrix.Element` is `SqlDouble`, `.DB` dacpac ordering fixed, SBert model project built before the AllMiniLm tests. [Details](docs/changes/testing-vectors-sqs-moto-ci-2026-10-08.md)
 - **CI, vectors, Moto** - CI restore fixed, vector `Angle` corrected and NULL-safe, SQL Server Integration tests, Moto replaces LocalStack, SQS tests repaired. [Details](docs/changes/testing-vectors-sqs-moto-ci-2026-10-08.md)
 
 ### 2026-10-07
 - **Dependencies and build health** - central package management restored, all packages current, warnings triaged (about 12 distinct left), Application Insights migrated to the OpenTelemetry-based 3.x, Qdrant moved to the query API, test property default bug fixed
-- **AllMiniLmL6V2 design** - plan to replace the `AllMiniLML6v2Sharp` fork, same ONNX model, compatibility tests before cutover. [Design](docs/design/AllMiniLmL6V2/README.md)
+- **AllMiniLmL6V2 design** - plan that replaced the `AllMiniLML6v2Sharp` fork (done 2026-10-08). [Design](docs/design/AllMiniLmL6V2/README.md)
 
 ### 2026-09-30
 - **Patterns Discovery coverage** - security/observability/resilience/AI practices, worker recipe, project catalog, Extensions.AI spike. [Details](docs/changes/documentation-patterns-discovery-2026-09-30.md)

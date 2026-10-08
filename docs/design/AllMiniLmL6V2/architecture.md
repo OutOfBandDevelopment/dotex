@@ -55,7 +55,6 @@ package "OoBDev.Onnx.SentenceEmbeddings" {
 }
 
 package "Platform" {
-  [Microsoft.ML.Tokenizers] as MLTok
   [Microsoft.ML.OnnxRuntime\nInferenceSession] as Ort
   [Microsoft.Extensions.AI\n(cache, logging, OTel middleware)] as MEAI
 }
@@ -68,7 +67,6 @@ Gen --> Tok
 Gen --> Gate
 Gen --> Ort
 Gen --> Pool
-Tok --> MLTok
 MEAI ..> Gen : wraps
 @enduml
 ```
@@ -152,7 +150,7 @@ No `static` mutable state, no lazy fields without `Lazy<T>` (thread-safe mode), 
 | Option | Pros | Cons | Verdict |
 |--------|------|------|---------|
 | Keep the fork and patch it | No new code | Unmaintained upstream, extra dependencies, hand-written tensor maths, threading uncertainty | Rejected (owner goal is to remove it) |
-| First-party runner on ONNX Runtime and `Microsoft.ML.Tokenizers` (this design) | Small, testable, same model, platform abstractions | Needs the compatibility suite to prove equivalence | **Proposed** |
+| First-party runner on ONNX Runtime with a first-party tokenizer (this design) | Small, testable, same model, platform abstractions | Needs the compatibility suite to prove equivalence | **Implemented** |
 | `SmartComponents.LocalEmbeddings` (ships a MiniLM ONNX behind `IEmbeddingGenerator`) | Ready-made, no code | Experimental package, model lifecycle owned by a third party, less control over threading and options | Keep as a reference for behaviour, not a dependency |
 | `Microsoft.ML.OnnxRuntimeGenAI` / Foundry Local | Vendor-supported | Targets generative models; embeddings support limited | Not suitable now |
 | Call the SBert container over HTTP (existing `OoBDev.SBert`) | No in-process model | Extra service and latency | Stays available as the other provider |
