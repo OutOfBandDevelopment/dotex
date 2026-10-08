@@ -174,6 +174,13 @@ public class QdrantVectorStoreProvider : IVectorStoreProvider
         return dict;
     }
 
+    private static Query ToQuery(ReadOnlyMemory<float> vector)
+    {
+        var dense = new DenseVector();
+        dense.Data.AddRange(vector.ToArray());
+        return new Query { Nearest = new VectorInput { Dense = dense } };
+    }
+
     private SearchResultModel Convert(ScoredPoint point) =>
         new()
         {
@@ -214,11 +221,11 @@ public class QdrantVectorStoreProvider : IVectorStoreProvider
     /// <returns>An asynchronous enumerable collection of search results representing nearest neighbors.</returns>
     public virtual async IAsyncEnumerable<SearchResultModel> FindNeighborsAsync(ReadOnlyMemory<float> find)
     {
-        var results = await _client.Points.SearchAsync(new()
+        var results = await _client.Points.QueryAsync(new()
         {
             CollectionName = _collectionName,
             Limit = (uint)1000,
-            Vector = { find.ToArray() },
+            Query = ToQuery(find),
             WithPayload = true,
             //  WithVectors = true,
         });
@@ -234,11 +241,11 @@ public class QdrantVectorStoreProvider : IVectorStoreProvider
     /// <returns>An asynchronous enumerable collection of search results representing nearest neighbors grouped by the specified field.</returns>
     public virtual async IAsyncEnumerable<SearchResultModel> FindNeighborsAsync(ReadOnlyMemory<float> find, string groupBy)
     {
-        var results = await _client.Points.SearchGroupsAsync(new()
+        var results = await _client.Points.QueryGroupsAsync(new()
         {
             CollectionName = _collectionName,
             Limit = (uint)1000,
-            Vector = { find.ToArray() },
+            Query = ToQuery(find),
             WithPayload = true,
             // WithVectors = true,
 

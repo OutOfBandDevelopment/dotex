@@ -25,6 +25,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\OoBDev.Qdrant\OoBDev.Qdrant.csproj" />
+    <ProjectReference Include="..\..\..\Framework\OoBDev.TestUtilities\OoBDev.TestUtilities.csproj" />
   </ItemGroup>
 
 </Project>

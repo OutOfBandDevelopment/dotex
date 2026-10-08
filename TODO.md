@@ -89,7 +89,7 @@ Every TODO file and in-code marker was checked against the repository. The other
 ### Backlog: Dependency Updates and Build Health (2026-10-07)
 - [x] Owner package bumps committed (118 csproj, `58adc7e`); Application Insights 3.1.2 migrated to OpenTelemetry processors; AI tests rewritten (`1c2eab6`). Full solution builds with 0 errors.
 - [ ] Commit the two package bumps inside the nested fork repo `src/ExternalServices/AllMiniLML6v2Sharp` (own git repo; shows as modified in the parent). Moot once the fork is removed.
-- [x] Build warnings: the 542 figure was duplicate reporting; real distinct count was about 22 and is now about 14 (2026-10-07). Remaining: intentional `#warning` markers (4), Qdrant obsolete `SearchAsync`/`SearchGroupsAsync` (migrate to `QueryAsync`), pack NU5118 duplicates (2), MSTEST0032 constant assert, SqlProj SDK upgrade to 4.4.0 and rules package. CLAUDE.md count to refresh.
+- [x] Build warnings: the 542 figure was duplicate reporting; real distinct count was about 22 and is now about 14 (2026-10-07). Qdrant obsolete calls migrated to `QueryAsync`/`QueryGroupsAsync` with 2 integration tests (2026-10-07). Remaining: intentional `#warning` markers (4), pack NU5118 duplicates (2), MSTEST0032 constant assert, SqlProj SDK upgrade to 4.4.0 and rules package. CLAUDE.md count to refresh.
 - [x] Unit/Simulate suites on the whole solution after the bumps: all pass (2026-10-07).
 - [x] Central package management restored (2026-10-07): `src/Directory.Packages.props` holds 87 versions, project files carry none; 8 packages that differed between projects (test tooling, Moq, GitVersion, Microsoft.Extensions 10.0.2 vs 10.0.12) now use the highest version. Script: `scripts/packages/`.
 - [ ] Run the Integration category against Docker after the bumps.
@@ -553,3 +553,5 @@ dotnet test src/ --filter TestCategory=Integration
 ---
 
 **For detailed information on each epic, see the respective TODO-{epic}.md files above.**
+
+- [ ] Bug: `TestContextExtensions.GetPropertyOrDefault<T>` / `GetProperty<T>` return `default(T)` (0, false) instead of the supplied default for missing value-type properties, because `T?` on an unconstrained generic is not nullable for value types (found in Qdrant tests: port became 0). Fix with a `TryGetProperty` pattern or separate struct overloads, and add tests.
