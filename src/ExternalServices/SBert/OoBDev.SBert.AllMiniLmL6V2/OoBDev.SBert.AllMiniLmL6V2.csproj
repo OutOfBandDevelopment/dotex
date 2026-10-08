@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>false</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="GitVersion.MsBuild">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.AI.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.Options" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Framework\OoBDev.AI.Abstractions\OoBDev.AI.Abstractions.csproj" />
+    <ProjectReference Include="..\..\Onnx\OoBDev.Onnx.SentenceEmbeddings\OoBDev.Onnx.SentenceEmbeddings.csproj" />
+  </ItemGroup>
+
+  <!-- Model files still come from the existing model submodule until the Hugging Face download replaces it. -->
+  <ItemGroup>
+    <None Include="..\OoBDev.SBert.AllMiniLML6v2Sharp\model\model.onnx" Link="model\model.onnx" Condition="Exists('..\OoBDev.SBert.AllMiniLML6v2Sharp\model\model.onnx')">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </None>
+    <None Include="..\OoBDev.SBert.AllMiniLML6v2Sharp\model\vocab.txt" Link="model\vocab.txt" Condition="Exists('..\OoBDev.SBert.AllMiniLML6v2Sharp\model\vocab.txt')">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

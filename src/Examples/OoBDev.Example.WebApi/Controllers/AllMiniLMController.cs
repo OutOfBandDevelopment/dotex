@@ -1,4 +1,5 @@
 ﻿using OoBDev.AI;
+using OoBDev.SBert.AllMiniLmL6V2;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -20,7 +21,7 @@ public class AllMiniLMController : ControllerBase
     /// </summary>
     /// <param name="embedding">The embedding provider.</param>
     public AllMiniLMController(
-        [FromKeyedServices("ALLMINILM")] IEmbeddingProvider embedding
+        [FromKeyedServices(SBertGlobals.AllMiniLmL6V2Key)] IEmbeddingProvider embedding
         ) => _embedding = embedding;
 
     /// <summary>
