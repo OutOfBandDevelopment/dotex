@@ -80,11 +80,21 @@ Every TODO file and in-code marker was checked against the repository. The other
 
 ### Backlog: Live Integration (Cloud) Tests
 - [ ] Azure B2C: add `.env.liveintegration.template` and a project README, and read settings from test properties (the category change is already done).
-- [ ] Application Insights: recategorize the 10 `DevLocal` tests (Integration against azurinsight, or LiveIntegration for the real service); add template and README.
+- [ ] Application Insights: library and tests moved to 3.x/OpenTelemetry (2026-10-07; 5 unit tests pass). Still open: run the 5 `DevLocal` integration tests against azurinsight (rewritten, compiled only), then recategorize them (Integration against azurinsight, or LiveIntegration for the real service); add template and README.
 - [ ] Groq (`OoBDev.GroqCloud.Tests`): categorize tests as `LiveIntegration`; add template and README.
 - [ ] Add `.env.liveintegration` to `.gitignore` (not present today).
 - [ ] Cloud docs: category README, cloud setup, credential and cost management, per-service pages, LiveIntegration vs Integration guide, PlantUML diagrams.
 - [ ] Triage the remaining 42 `TestCategories.DevLocal` usages into Unit, Integration or LiveIntegration (Redis, Ollama, ServiceBus, Tika, DacFx, System tests, Example tests, Application Insights).
+
+### Backlog: Dependency Updates and Build Health (2026-10-07)
+- [x] Owner package bumps committed (118 csproj, `58adc7e`); Application Insights 3.1.2 migrated to OpenTelemetry processors; AI tests rewritten (`1c2eab6`). Full solution builds with 0 errors.
+- [ ] Commit the two package bumps inside the nested fork repo `src/ExternalServices/AllMiniLML6v2Sharp` (own git repo; shows as modified in the parent). Moot once the fork is removed.
+- [ ] Build warnings: 542 now versus 8 recorded in CLAUDE.md; find the source (likely the bumps/analyzers) and reduce.
+- [ ] Run Unit/Simulate test suites on the whole solution after the bumps (only the AI test project was rerun after the migration).
+- [ ] Remaining major bumps (StackExchange.Redis 3, Microsoft.Graph 6, Microsoft.Data.SqlClient 7, OpenSearch.Client 2, Markdig 1, YamlDotNet 18, ReverseMarkdown 6) and restore central package management (`Directory.Packages.props` empty).
+- [ ] Run the Integration category against Docker after the bumps.
+- [ ] Push `dev/patterns-discovery` (5 commits ahead: bumps, design, AI tests, presets, TODO) when the owner approves.
+- [ ] Update `README`/`CLAUDE.md` text: warning count, Application Insights 3.x note.
 
 ### Backlog: Migration Decisions (blocked on the owner)
 - [ ] BinaryDataDecoders: the 14+ decisions in `TODO-decisions.md` (endianness API, BinaryPrimitives naming, UI collections location, CodeAnalysis use case, archive formats, ExpressionCalculator audit, NMEA, drawing and geometry, barcode, hardware devices, CLI tools, ISO 9660 / Apple II / classic crypto, Windows Forms and UWP).
@@ -256,7 +266,7 @@ Areas the patterns docs do not yet cover. Each becomes a practices page plus an 
 - [ ] **Missing readmes are created:** `OoBDev.System.Text.Html` and `OoBDev.Example.WebApi` readmes written; `AllMiniLmL6V2Sharp` keeps its solution-level readme (imported library, decide whether to copy it into the project folder).
 - [ ] **Abstractions need no tests** when they hold only interfaces and models; an abstractions project with testable implementation gets its own test library. The project catalog no longer flags `*.Abstractions` projects; review any that contain implementation.
 
-- [ ] **Design drafted:** [docs/design/AllMiniLmL6V2](docs/design/AllMiniLmL6V2/README.md) replaces the fork with `OoBDev.Onnx.SentenceEmbeddings` + `OoBDev.SBert.AllMiniLmL6V2` (same ONNX model, compatibility and concurrency tests before cutover); implementation not started, owner review of the Proposed names and open questions pending.
+- [ ] **Design drafted, implementation not started:** [docs/design/AllMiniLmL6V2](docs/design/AllMiniLmL6V2/README.md) replaces the fork with `OoBDev.Onnx.SentenceEmbeddings` plus presets `OoBDev.SBert.AllMiniLmL6V2`, `AllMpnetBaseV2` and `NomicEmbedTextV1_5` (same ONNX model, compatibility and concurrency tests before cutover). Next: owner review of names and open questions, then phase 1 (create projects), phases 2-6 per the architecture doc.
 - [ ] **Make `AllMiniLmL6V2Sharp` as native as possible** (owner directive; building the tooling is in scope). Today it runs the model through ONNX Runtime with a hand-written tokenizer, and the SBert container covers the same ground. Steps, in order:
   - Replace the hand-written tokenizer with `Microsoft.ML.Tokenizers` (WordPiece/`BertTokenizer`), checked against golden ids produced by the Python `tokenizers` library.
   - Build a Hugging Face tokenizer loader (`tokenizer.json` and config folder to a `Tokenizer`, like `AutoTokenizer`): WordPiece first, byte-level BPE next, SentencePiece via `tokenizer.model`; gaps fail with a clear error. First check whether newer `Microsoft.ML.Tokenizers` releases already load `tokenizer.json`.
