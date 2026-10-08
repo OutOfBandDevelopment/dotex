@@ -11,6 +11,18 @@ public class SqlVectorFTests
 
     [TestMethod]
     [TestCategory(TestCategories.Unit)]
+    public void MismatchedLengths_ReturnNullWithoutThrowing()
+    {
+        var a = new SqlVectorF([1, 2, 3]);
+        var b = new SqlVectorF([1, 2]);
+        Assert.IsTrue(a.Distance(b, "euclidean_distance").IsNull);
+        Assert.IsTrue(a.Distance(a, "not_a_metric").IsNull, "unsupported metric");
+        Assert.IsTrue(VectorFunctions.MidpointF(a, b).IsNull);
+        Assert.IsTrue(VectorFunctions.UniformVF(a, b, 1).IsNull);
+    }
+
+    [TestMethod]
+    [TestCategory(TestCategories.Unit)]
     public void MagnitudeTest()
     {
         var vector = new SqlVectorF([1, 2, 3, 4]);

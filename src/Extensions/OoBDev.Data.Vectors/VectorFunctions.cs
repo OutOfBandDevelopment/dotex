@@ -79,7 +79,7 @@ public static class VectorFunctions
     /// <param name="vector1">The first vector.</param>
     /// <param name="vector2">The second vector.</param>
     /// <returns>The calculated distance or similarity value, or null if any parameter is null.</returns>
-    /// <exception cref="ArgumentException">Thrown when vectors have different lengths or the metric is unsupported.</exception>
+    /// <remarks>Returns NULL (never throws) for NULL input, vectors of different lengths or an unsupported metric. An unsupported metric name also returns NULL, so one bad row cannot fail a whole batch.</remarks>
     [SqlFunction(Name = $"[embedding].[{nameof(Distance)}]", IsDeterministic = true, IsPrecise = true)]
     public static SqlDouble Distance(SqlString distanceMetric, SqlVector vector1, SqlVector vector2)
     {
@@ -91,7 +91,7 @@ public static class VectorFunctions
         }
         else if (vector1.Values.Count != vector2.Values.Count)
         {
-            throw new ArgumentException("Vectors must be of the same length.");
+            return SqlDouble.Null;
         }
 
         return distanceMetric.Value.ToLower() switch
@@ -101,7 +101,7 @@ public static class VectorFunctions
             VectorDistanceTypes.EuclideanDistance => (SqlDouble)EuclideanDistance(vector1.Values, vector2.Values),
             VectorDistanceTypes.DotProduct => (SqlDouble)DotProduct(vector1.Values, vector2.Values),
             VectorDistanceTypes.ManhattanDistance => (SqlDouble)ManhattanDistance(vector1.Values, vector2.Values),
-            _ => throw new ArgumentException($"Unsupported distance metric: {distanceMetric}"),
+            _ => SqlDouble.Null,
         };
     }
 
@@ -112,7 +112,7 @@ public static class VectorFunctions
     /// <param name="vector1">The first vector.</param>
     /// <param name="vector2">The second vector.</param>
     /// <returns>The calculated distance or similarity value, or null if any parameter is null.</returns>
-    /// <exception cref="ArgumentException">Thrown when vectors have different lengths or the metric is unsupported.</exception>
+    /// <remarks>Returns NULL (never throws) for NULL input, vectors of different lengths or an unsupported metric. An unsupported metric name also returns NULL, so one bad row cannot fail a whole batch.</remarks>
     [SqlFunction(Name = $"[embedding].[{nameof(DistanceF)}]", IsDeterministic = true, IsPrecise = true)]
     public static SqlSingle DistanceF(SqlString distanceMetric, SqlVectorF vector1, SqlVectorF vector2)
     {
@@ -124,7 +124,7 @@ public static class VectorFunctions
         }
         else if (vector1.Values.Count != vector2.Values.Count)
         {
-            throw new ArgumentException("Vectors must be of the same length.");
+            return SqlSingle.Null;
         }
 
         return distanceMetric.Value.ToLower() switch
@@ -134,7 +134,7 @@ public static class VectorFunctions
             VectorDistanceTypes.EuclideanDistance => (SqlSingle)EuclideanDistance(vector1.Values, vector2.Values),
             VectorDistanceTypes.DotProduct => (SqlSingle)DotProduct(vector1.Values, vector2.Values),
             VectorDistanceTypes.ManhattanDistance => (SqlSingle)ManhattanDistance(vector1.Values, vector2.Values),
-            _ => throw new ArgumentException($"Unsupported distance metric: {distanceMetric}"),
+            _ => SqlSingle.Null,
         };
     }
 
@@ -144,7 +144,7 @@ public static class VectorFunctions
     /// <param name="vector1">The first vector.</param>
     /// <param name="vector2">The second vector.</param>
     /// <returns>A vector representing the midpoint, or null if either vector is null.</returns>
-    /// <exception cref="ArgumentException">Thrown when vectors have different lengths.</exception>
+    /// <remarks>Returns NULL (never throws) when vectors have different lengths.</remarks>
     [SqlFunction(Name = $"[embedding].[{nameof(Midpoint)}]", IsDeterministic = true, IsPrecise = true)]
     public static SqlVector Midpoint(SqlVector vector1, SqlVector vector2)
     {
@@ -154,7 +154,7 @@ public static class VectorFunctions
         }
         else if (vector1.Values.Count != vector2.Values.Count)
         {
-            throw new ArgumentException("Vectors must be of the same length.");
+            return SqlVector.Null;
         }
 
         var midpoint = new double[vector1.Values.Count];
@@ -173,7 +173,7 @@ public static class VectorFunctions
     /// <param name="vector1">The first vector.</param>
     /// <param name="vector2">The second vector.</param>
     /// <returns>A vector representing the midpoint, or null if either vector is null.</returns>
-    /// <exception cref="ArgumentException">Thrown when vectors have different lengths.</exception>
+    /// <remarks>Returns NULL (never throws) when vectors have different lengths.</remarks>
     [SqlFunction(Name = $"[embedding].[{nameof(MidpointF)}]", IsDeterministic = true, IsPrecise = true)]
     public static SqlVectorF MidpointF(SqlVectorF vector1, SqlVectorF vector2)
     {
@@ -183,7 +183,7 @@ public static class VectorFunctions
         }
         else if (vector1.Values.Count != vector2.Values.Count)
         {
-            throw new ArgumentException("Vectors must be of the same length.");
+            return SqlVectorF.Null;
         }
 
         var midpoint = new double[vector1.Values.Count];
@@ -299,12 +299,12 @@ public static class VectorFunctions
     /// <param name="max">The maximum values for each element.</param>
     /// <param name="seed">The random seed (null uses current time).</param>
     /// <returns>A vector with uniformly distributed random values.</returns>
-    /// <exception cref="ArgumentException">Thrown when min and max vectors have different lengths.</exception>
+    /// <remarks>Returns NULL (never throws) when min and max have different lengths.</remarks>
     [SqlFunction(Name = $"[embedding].[{nameof(UniformV)}]", IsDeterministic = true, IsPrecise = true)]
     public static SqlVector UniformV(SqlVector min, SqlVector max, SqlInt32 seed)
     {
         if (min.IsNull || max.IsNull) return SqlVector.Null;
-        if (min.Length() != max.Length()) throw new ArgumentException("Vectors must be of the same length.");
+        if (min.Length() != max.Length()) return SqlVector.Null;
 
         var random = Random(min.Length(), seed);
         if (random.IsNull) return SqlVector.Null;
@@ -341,12 +341,12 @@ public static class VectorFunctions
     /// <param name="max">The maximum values for each element.</param>
     /// <param name="seed">The random seed (null uses current time).</param>
     /// <returns>A vector with uniformly distributed random values.</returns>
-    /// <exception cref="ArgumentException">Thrown when min and max vectors have different lengths.</exception>
+    /// <remarks>Returns NULL (never throws) when min and max have different lengths.</remarks>
     [SqlFunction(Name = $"[embedding].[{nameof(UniformVF)}]", IsDeterministic = true, IsPrecise = true)]
     public static SqlVectorF UniformVF(SqlVectorF min, SqlVectorF max, SqlInt32 seed)
     {
         if (min.IsNull || max.IsNull) return SqlVectorF.Null;
-        if (min.Length() != max.Length()) throw new ArgumentException("Vectors must be of the same length.");
+        if (min.Length() != max.Length()) return SqlVectorF.Null;
 
         var random = Random(min.Length(), seed);
         if (random.IsNull) return SqlVectorF.Null;
