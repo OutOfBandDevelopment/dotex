@@ -104,6 +104,10 @@ Each change document should include:
 - Microsoft.Extensions.AI spike (6 tests) with migration recommendation
 - Status: ✅ Complete
 
+**[documentation-allminilml6v2-design-2026-10-07.md](documentation-allminilml6v2-design-2026-10-07.md)**
+- Design set for replacing the `AllMiniLML6v2Sharp` fork with first-party, thread-safe ONNX embeddings
+- Status: ✅ Complete (design only)
+
 ### Testing
 
 **[testing-ollama-integration-2026-01-21.md](testing-ollama-integration-2026-01-21.md)**

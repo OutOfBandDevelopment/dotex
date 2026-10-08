@@ -526,6 +526,9 @@ dotnet test src/ --collect:"XPlat Code Coverage"
 
 ## Recently Completed Work
 
+### 2026-10-07
+- **AllMiniLmL6V2 design** - plan to replace the `AllMiniLML6v2Sharp` fork, same ONNX model, compatibility tests before cutover. [Design](docs/design/AllMiniLmL6V2/README.md)
+
 ### 2026-09-30
 - **Patterns Discovery coverage** - security/observability/resilience/AI practices, worker recipe, project catalog, Extensions.AI spike. [Details](docs/changes/documentation-patterns-discovery-2026-09-30.md)
 - **Patterns Discovery** - architecture/patterns/practices/blueprint/alternatives docs, `dotnet new` templates, doc validation scripts, readme casing normalized (74 files), review backlogs recorded in `TODO.md`
