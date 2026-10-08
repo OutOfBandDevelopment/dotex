@@ -1,25 +1,28 @@
-﻿using Microsoft.ApplicationInsights;
-using Microsoft.ApplicationInsights.Channel;
-using Microsoft.ApplicationInsights.DataContracts;
-using Microsoft.ApplicationInsights.Extensibility;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.TestUtilities;
+using OpenTelemetry;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Trace;
 using System;
-using System.Collections.Generic;
+using System.Diagnostics;
+using System.Diagnostics.Metrics;
 using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace OoBDev.Microsoft.ApplicationInsights.Tests;
 
 /// <summary>
-/// Integration tests for Application Insights telemetry using azurinsight emulator.
-/// Tests verify that telemetry is correctly sent to and stored in azurinsight.
+/// Integration tests for Application Insights 3.x (OpenTelemetry) using the azurinsight emulator.
+/// Tests verify that spans, logs and metrics are sent to and stored in azurinsight.
 /// </summary>
 [TestClass]
 public class ApplicationInsightsIntegrationTests
 {
-    private TelemetryClient? _telemetryClient;
-    private TelemetryConfiguration? _configuration;
+    private const string SourceName = "OoBDev.Tests.ApplicationInsights";
+
+    private ServiceProvider? _serviceProvider;
     private HttpClient? _httpClient;
 
     /// <summary>
@@ -30,37 +33,30 @@ public class ApplicationInsightsIntegrationTests
     [TestInitialize]
     public void TestInitialize()
     {
-        // Get connection string from test context
         var connectionString = TestContext.GetRequiredProperty<string>("APPINSIGHTS_CONNECTION_STRING");
         var azurinsightUrl = TestContext.GetRequiredProperty<string>("APPINSIGHTS_URL");
 
-        // Configure Application Insights to use azurinsight emulator
-        _configuration = TelemetryConfiguration.CreateDefault();
-        _configuration.ConnectionString = connectionString;
+        var services = new ServiceCollection();
+        services.AddLogging();
+        services.AddOpenTelemetry()
+            .WithTracing(t => t.AddSource(SourceName))
+            .WithMetrics(m => m.AddMeter(SourceName));
+        services.AddApplicationInsightsTelemetry(o => o.ConnectionString = connectionString);
+        _serviceProvider = services.BuildServiceProvider();
 
-        // Use InMemoryChannel for immediate transmission to emulator (important for testing)
-        _configuration.TelemetryChannel = new InMemoryChannel
-        {
-            EndpointAddress = azurinsightUrl + "/v2.1/track"
-        };
+        // Ensure the SDK providers are created before telemetry is produced.
+        _ = _serviceProvider.GetRequiredService<TracerProvider>();
+        _ = _serviceProvider.GetRequiredService<MeterProvider>();
 
-        _telemetryClient = new TelemetryClient(_configuration);
-
-        // HTTP client for querying azurinsight API
-        _httpClient = new HttpClient
-        {
-            BaseAddress = new Uri(azurinsightUrl)
-        };
+        _httpClient = new HttpClient { BaseAddress = new Uri(azurinsightUrl) };
     }
 
     [TestCleanup]
     public async Task TestCleanup()
     {
-        // Flush all telemetry before cleanup
-        _telemetryClient?.Flush();
-        await Task.Delay(1000); // Give time for telemetry to be sent
+        Flush();
+        await Task.Delay(1000);
 
-        // Purge telemetry data from azurinsight
         try
         {
             if (_httpClient != null)
@@ -74,196 +70,112 @@ public class ApplicationInsightsIntegrationTests
             // Ignore cleanup errors
         }
 
-        _configuration?.Dispose();
         _httpClient?.Dispose();
+        _serviceProvider?.Dispose();
     }
 
     [TestMethod]
     [TestCategory(TestCategories.DevLocal)]
-    public async Task SendEventTelemetry_ShouldStoreInAzurinsight()
+    public async Task SendSpan_ShouldStoreInAzurinsight()
     {
-        // Arrange
-        var eventName = "TestEvent";
-        var properties = new Dictionary<string, string>
+        // Stage
+        var spanName = "TestSpan-" + Guid.NewGuid().ToString("N");
+
+        // Test
+        using (var source = new ActivitySource(SourceName))
+        using (var activity = source.StartActivity(spanName))
         {
-            { "Property1", "Value1" },
-            { "Property2", "Value2" }
-        };
-        var metrics = new Dictionary<string, double>
-        {
-            { "Metric1", 123.45 }
-        };
+            activity?.SetTag("Property1", "Value1");
+        }
 
-        // Act
-        _telemetryClient!.TrackEvent(eventName, properties, metrics);
-        _telemetryClient.Flush();
-        await Task.Delay(2000); // Wait for telemetry to be processed
-
-        // Assert - Query azurinsight to verify telemetry was received
-        var response = await _httpClient!.GetAsync("/api/query");
-        response.EnsureSuccessStatusCode();
-
-        var content = await response.Content.ReadAsStringAsync();
-        Assert.Contains(eventName, content, $"Event '{eventName}' not found in azurinsight");
-        Assert.Contains("Property1", content, "Property1 not found in telemetry");
+        // Assert
+        var content = await QueryAsync();
+        Assert.Contains(spanName, content, $"Span '{spanName}' not found in azurinsight");
         Assert.Contains("Value1", content, "Value1 not found in telemetry");
     }
 
     [TestMethod]
     [TestCategory(TestCategories.DevLocal)]
-    public async Task SendTraceTelemetry_ShouldStoreInAzurinsight()
+    public async Task SendLog_ShouldStoreInAzurinsight()
     {
-        // Arrange
-        var traceMessage = "Test trace message";
-        var severityLevel = SeverityLevel.Information;
+        // Stage
+        var message = "Test trace message " + Guid.NewGuid().ToString("N");
 
-        // Act
-        _telemetryClient!.TrackTrace(traceMessage, severityLevel);
-        _telemetryClient.Flush();
-        await Task.Delay(2000);
+        // Test
+        _serviceProvider!.GetRequiredService<ILoggerFactory>().CreateLogger("test").LogInformation("{Message}", message);
 
         // Assert
-        var response = await _httpClient!.GetAsync("/api/query");
-        response.EnsureSuccessStatusCode();
-
-        var content = await response.Content.ReadAsStringAsync();
-        Assert.Contains(traceMessage, content, $"Trace message '{traceMessage}' not found in azurinsight");
+        var content = await QueryAsync();
+        Assert.Contains(message, content, $"Log message '{message}' not found in azurinsight");
     }
 
     [TestMethod]
     [TestCategory(TestCategories.DevLocal)]
-    public async Task SendMetricTelemetry_ShouldStoreInAzurinsight()
+    public async Task SendMetric_ShouldStoreInAzurinsight()
     {
-        // Arrange
-        var metricName = "TestMetric";
-        var metricValue = 42.0;
+        // Stage
+        var name = "test.counter." + Guid.NewGuid().ToString("N");
 
-        // Act
-        _telemetryClient!.TrackMetric(metricName, metricValue);
-        _telemetryClient.Flush();
-        await Task.Delay(2000);
-
-        // Assert
-        var response = await _httpClient!.GetAsync("/api/query");
-        response.EnsureSuccessStatusCode();
-
-        var content = await response.Content.ReadAsStringAsync();
-        Assert.Contains(metricName, content, $"Metric '{metricName}' not found in azurinsight");
-    }
-
-    [TestMethod]
-    [TestCategory(TestCategories.DevLocal)]
-    public async Task SendExceptionTelemetry_ShouldStoreInAzurinsight()
-    {
-        // Arrange
-        var exception = new InvalidOperationException("Test exception message");
-        var properties = new Dictionary<string, string>
+        // Test
+        using (var meter = new Meter(SourceName))
         {
-            { "ErrorCode", "TEST001" }
-        };
-
-        // Act
-        _telemetryClient!.TrackException(exception, properties);
-        _telemetryClient.Flush();
-        await Task.Delay(2000);
+            meter.CreateCounter<long>(name).Add(5);
+            _serviceProvider!.GetRequiredService<MeterProvider>().ForceFlush();
+        }
 
         // Assert
-        var response = await _httpClient!.GetAsync("/api/query");
-        response.EnsureSuccessStatusCode();
-
-        var content = await response.Content.ReadAsStringAsync();
-        Assert.Contains("Test exception message", content, "Exception message not found in azurinsight");
-        Assert.Contains("InvalidOperationException", content, "Exception type not found in azurinsight");
+        var content = await QueryAsync();
+        Assert.Contains(name, content, $"Metric '{name}' not found in azurinsight");
     }
 
     [TestMethod]
     [TestCategory(TestCategories.DevLocal)]
-    public async Task SendDependencyTelemetry_ShouldStoreInAzurinsight()
+    public async Task SendException_ShouldStoreInAzurinsight()
     {
-        // Arrange
-        var dependencyName = "TestDependency";
-        var dependencyType = "HTTP";
-        var data = "GET https://api.example.com/data";
-        var startTime = DateTimeOffset.UtcNow;
-        var duration = TimeSpan.FromMilliseconds(150);
-        var success = true;
+        // Stage
+        var message = "Test exception " + Guid.NewGuid().ToString("N");
 
-        // Act
-        _telemetryClient!.TrackDependency(dependencyType, dependencyName, data, startTime, duration, success);
-        _telemetryClient.Flush();
-        await Task.Delay(2000);
+        // Test
+        _serviceProvider!.GetRequiredService<ILoggerFactory>().CreateLogger("test")
+            .LogError(new InvalidOperationException(message), "failed");
 
         // Assert
-        var response = await _httpClient!.GetAsync("/api/query");
-        response.EnsureSuccessStatusCode();
-
-        var content = await response.Content.ReadAsStringAsync();
-        Assert.Contains(dependencyName, content, $"Dependency '{dependencyName}' not found in azurinsight");
-    }
-
-    [TestMethod]
-    [TestCategory(TestCategories.DevLocal)]
-    public async Task SendRequestTelemetry_ShouldStoreInAzurinsight()
-    {
-        // Arrange
-        var requestName = "GET /api/test";
-        var startTime = DateTimeOffset.UtcNow;
-        var duration = TimeSpan.FromMilliseconds(50);
-        var responseCode = "200";
-        var success = true;
-
-        var requestTelemetry = new RequestTelemetry
-        {
-            Name = requestName,
-            Timestamp = startTime,
-            Duration = duration,
-            ResponseCode = responseCode,
-            Success = success,
-            Url = new Uri("https://localhost/api/test")
-        };
-
-        // Act
-        _telemetryClient!.TrackRequest(requestTelemetry);
-        _telemetryClient.Flush();
-        await Task.Delay(2000);
-
-        // Assert
-        var response = await _httpClient!.GetAsync("/api/query");
-        response.EnsureSuccessStatusCode();
-
-        var content = await response.Content.ReadAsStringAsync();
-        Assert.Contains(requestName, content, $"Request '{requestName}' not found in azurinsight");
+        var content = await QueryAsync();
+        Assert.Contains(message, content, $"Exception '{message}' not found in azurinsight");
     }
 
     [TestMethod]
     [TestCategory(TestCategories.DevLocal)]
     public async Task PurgeApi_ShouldClearAllTelemetry()
     {
-        // Arrange - Send some telemetry
-        _telemetryClient!.TrackEvent("EventBeforePurge");
-        _telemetryClient.Flush();
+        // Stage
+        var spanName = "PurgeSpan-" + Guid.NewGuid().ToString("N");
+        using (var source = new ActivitySource(SourceName))
+        using (source.StartActivity(spanName))
+        {
+        }
+        Assert.Contains(spanName, await QueryAsync());
+
+        // Test
+        var purge = await _httpClient!.PostAsync("/api/purge", null);
+        purge.EnsureSuccessStatusCode();
+
+        // Assert
+        Assert.DoesNotContain(spanName, await QueryAsync());
+    }
+
+    private void Flush()
+    {
+        _serviceProvider?.GetService<TracerProvider>()?.ForceFlush();
+        _serviceProvider?.GetService<MeterProvider>()?.ForceFlush();
+    }
+
+    private async Task<string> QueryAsync()
+    {
+        Flush();
         await Task.Delay(2000);
-
-        // Verify telemetry exists
-        var beforePurge = await _httpClient!.GetAsync("/api/query");
-        var beforeContent = await beforePurge.Content.ReadAsStringAsync();
-        Assert.Contains("EventBeforePurge", beforeContent, "Event should exist before purge");
-
-        // Act - Purge all telemetry
-        var purgeResponse = await _httpClient.PostAsync("/api/purge", null);
-        purgeResponse.EnsureSuccessStatusCode();
-        await Task.Delay(1000);
-
-        // Assert - Verify telemetry is cleared
-        var afterPurge = await _httpClient.GetAsync("/api/query");
-        var afterContent = await afterPurge.Content.ReadAsStringAsync();
-
-        // After purge, the response should be empty or contain empty array
-        Assert.IsTrue(
-            string.IsNullOrWhiteSpace(afterContent) ||
-            afterContent == "[]" ||
-            !afterContent.Contains("EventBeforePurge"),
-            "Telemetry should be cleared after purge"
-        );
+        var response = await _httpClient!.GetAsync("/api/query");
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadAsStringAsync();
     }
 }
