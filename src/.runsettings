@@ -179,6 +179,7 @@ https://github.com/coverlet-coverage/coverlet/blob/fc7ec26dcaed8fedba880ff13c6f1
 		<Parameter name="OLLAMA_HOST" value="localhost" />
 		<Parameter name="OLLAMA_PORT" value="11434" />
 		<Parameter name="OLLAMA_MODEL" value="phi3" />
+		<Parameter name="OLLAMA_EMBEDDING_MODEL" value="all-minilm" />
 
 		<!-- Azurinsight (Application Insights Emulator) -->
 		<Parameter name="APPINSIGHTS_URL" value="http://localhost:5000" />
