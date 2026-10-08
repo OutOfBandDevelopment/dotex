@@ -34,7 +34,7 @@
     <!-- The AllMiniLML6v2Sharp submodule is a third-party fork with inline package versions; it is removed by the AllMiniLmL6V2 design. -->
     <ManagePackageVersionsCentrally Condition="!$(MSBuildProjectDirectory.Contains('AllMiniLML6v2Sharp')) OR $(MSBuildProjectName.StartsWith('OoBDev.'))">true</ManagePackageVersionsCentrally>
     <ManagePackageVersionsCentrally Condition="'$(ManagePackageVersionsCentrally)' == ''">false</ManagePackageVersionsCentrally>
-    <NoWarn Condition="'$(ManagePackageVersionsCentrally)' == 'false'">$(NoWarn);NU1605</NoWarn>
+    <NoWarn Condition="'$(ManagePackageVersionsCentrally)' == 'false'">$(NoWarn);NU1605;MSB3277</NoWarn>
     <WarningsNotAsErrors Condition="'$(ManagePackageVersionsCentrally)' == 'false'">$(WarningsNotAsErrors);NU1605</WarningsNotAsErrors>
 
 

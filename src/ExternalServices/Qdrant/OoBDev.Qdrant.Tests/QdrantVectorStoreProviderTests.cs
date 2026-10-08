@@ -61,7 +61,7 @@ public class QdrantVectorStoreProviderTests
         var results = await FirstAsync(provider.FindNeighborsAsync(new float[] { 0.9f, 0.1f, 0 }));
 
         Assert.IsNotEmpty(results);
-        Assert.AreEqual("x", results[0].MetaData["name"]);
+        Assert.AreEqual("x", results[0].MetaData!["name"]);
     }
 
     [TestMethod]

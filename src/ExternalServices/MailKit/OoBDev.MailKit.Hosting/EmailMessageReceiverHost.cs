@@ -81,10 +81,12 @@ public class EmailMessageReceiverHost(
     public async Task StartAsync(CancellationToken cancellationToken)
     {
 #if !DEBUG
+#pragma warning disable CS0162 // release builds throw before the rest of the method
 throw new NotSupportedException("this is still in development and is not currently supported");
 #endif
 
         var client = await imapClientFactory.CreateAsync();
+#pragma warning restore CS0162
 
         await client.NoOpAsync(cancellationToken);
 
