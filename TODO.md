@@ -89,11 +89,11 @@ Every TODO file and in-code marker was checked against the repository. The other
 ### Backlog: Dependency Updates and Build Health (2026-10-07)
 - [x] Owner package bumps committed (118 csproj, `58adc7e`); Application Insights 3.1.2 migrated to OpenTelemetry processors; AI tests rewritten (`1c2eab6`). Full solution builds with 0 errors.
 - [ ] Commit the two package bumps inside the nested fork repo `src/ExternalServices/AllMiniLML6v2Sharp` (own git repo; shows as modified in the parent). Moot once the fork is removed.
-- [ ] Build warnings: 542 now versus 8 recorded in CLAUDE.md; find the source (likely the bumps/analyzers) and reduce.
-- [ ] Run Unit/Simulate test suites on the whole solution after the bumps (only the AI test project was rerun after the migration).
+- [x] Build warnings: the 542 figure was duplicate reporting; real distinct count was about 22 and is now about 14 (2026-10-07). Remaining: intentional `#warning` markers (4), Qdrant obsolete `SearchAsync`/`SearchGroupsAsync` (migrate to `QueryAsync`), pack NU5118 duplicates (2), MSTEST0032 constant assert, SqlProj SDK upgrade to 4.4.0 and rules package. CLAUDE.md count to refresh.
+- [x] Unit/Simulate suites on the whole solution after the bumps: all pass (2026-10-07).
 - [ ] Remaining major bumps (StackExchange.Redis 3, Microsoft.Graph 6, Microsoft.Data.SqlClient 7, OpenSearch.Client 2, Markdig 1, YamlDotNet 18, ReverseMarkdown 6) and restore central package management (`Directory.Packages.props` empty).
 - [ ] Run the Integration category against Docker after the bumps.
-- [ ] Push `dev/patterns-discovery` (5 commits ahead: bumps, design, AI tests, presets, TODO) when the owner approves.
+- [x] Pushed `dev/patterns-discovery` (2026-10-07).
 - [ ] Update `README`/`CLAUDE.md` text: warning count, Application Insights 3.x note.
 
 ### Backlog: Migration Decisions (blocked on the owner)
