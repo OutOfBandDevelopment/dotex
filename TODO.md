@@ -555,3 +555,5 @@ dotnet test src/ --filter TestCategory=Integration
 **For detailed information on each epic, see the respective TODO-{epic}.md files above.**
 
 - [x] Fixed 2026-10-07: `TestContextExtensions.GetPropertyOrDefault<T>`/`GetRequiredProperty<T>` returned `default(T)` instead of the supplied default for missing value-type properties; they now use a new `TryGetProperty<T>` (7 unit tests).
+
+- [x] Package updates (2026-10-08): the major bumps listed earlier (Redis 3, SqlClient 7, OpenSearch 2, Markdig 1, YamlDotNet 18, ReverseMarkdown 6, Graph 6) were already in place; applied the remaining minor/patch updates (MSTest 4.5.1, Swashbuckle 10.3.0, Azure.Storage, AWSSDK.SQS, AngleSharp, Graph 6.8.0, SemanticKernel.Core 1.81.0). `Microsoft.SemanticKernel.Connectors.Ollama` stays on its alpha.
