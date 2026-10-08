@@ -76,4 +76,9 @@
     <ProjectReference Include="..\OoBDev.Data.Vectors.Net481\OoBDev.Data.Vectors.Net481.csproj" />
   </ItemGroup>
 
+  <!-- The CLR dacpac is produced by a target that runs after the Net481 build; ask for it explicitly so this project never resolves references before it exists -->
+  <Target Name="EnsureClrDacpac" BeforeTargets="FixUpDatabaseReferences;ResolveDatabaseReferences">
+    <MSBuild Projects="..\OoBDev.Data.Vectors.Net481\OoBDev.Data.Vectors.Net481.csproj" Targets="Build;GenerateDacPac" RemoveProperties="TargetFramework;TargetFrameworks" />
+  </Target>
+
 </Project>
