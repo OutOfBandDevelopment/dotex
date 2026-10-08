@@ -80,7 +80,7 @@ Every TODO file and in-code marker was checked against the repository. The other
 
 ### Backlog: Live Integration (Cloud) Tests
 - [ ] Azure B2C: add `.env.liveintegration.template` and a project README, and read settings from test properties (the category change is already done).
-- [ ] Application Insights: library and tests moved to 3.x/OpenTelemetry (2026-10-07; 5 unit tests pass). Still open: run the 5 `DevLocal` integration tests against azurinsight (rewritten, compiled only), then recategorize them (Integration against azurinsight, or LiveIntegration for the real service); add template and README.
+- [ ] Application Insights: library and tests moved to 3.x/OpenTelemetry (2026-10-07; 5 unit tests pass). Ran the 5 `DevLocal` integration tests against azurinsight on 2026-10-07: all fail because the 3.x exporter posts newline-delimited JSON envelopes to `/v2.1/track` and the emulator (image `oobdev/azurinsight`, fork `mwwhited-forks/Azurinsight`) parses one JSON document (`SyntaxError: Unexpected non-whitespace character after JSON`, body-parser). Fix the emulator to accept NDJSON (and gzip), then re-run and recategorize them (Integration against azurinsight, or LiveIntegration for the real service); add template and README.
 - [ ] Groq (`OoBDev.GroqCloud.Tests`): categorize tests as `LiveIntegration`; add template and README.
 - [ ] Add `.env.liveintegration` to `.gitignore` (not present today).
 - [ ] Cloud docs: category README, cloud setup, credential and cost management, per-service pages, LiveIntegration vs Integration guide, PlantUML diagrams.
