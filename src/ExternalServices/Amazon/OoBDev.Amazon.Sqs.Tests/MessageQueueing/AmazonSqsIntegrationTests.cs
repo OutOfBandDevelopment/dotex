@@ -5,11 +5,15 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.Amazon.Sqs.MessageQueueing;
 using OoBDev.MessageQueueing.Services;
+using OoBDev.MessageQueueing;
+using OoBDev.System;
+using OoBDev.System.Text;
 using OoBDev.System.Text.Json.Serialization;
 using OoBDev.TestUtilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace OoBDev.Amazon.Sqs.Tests.MessageQueueing;
@@ -171,17 +175,18 @@ public class AmazonSqsIntegrationTests
         var configuration = configBuilder.Build();
 
         var services = new ServiceCollection();
+        services.AddLogging();
+        services.TrySerializerExtensions(SerializerTypes.Json);
+        services.AddSingleton<ClaimsPrincipal>(new ClaimsPrincipal());
+        services.TryAddMessageQueueingServices();
         services.TryAddAmazonSqsServices();
-        services.TryAddJsonSerializer();
-        services.AddSingleton<IConfiguration>(configuration);
-        services.AddSingleton<IMessageContextFactory, MessageContextFactory>();
 
         var provider = services.BuildServiceProvider();
-        var sender = provider.GetRequiredService<IMessageSenderProvider>();
+        var sender = provider.GetRequiredKeyedService<IMessageSenderProvider>(AwsSqsGlobals.MessageProviderKey);
         var contextFactory = provider.GetRequiredService<IMessageContextFactory>();
 
         // Act
-        var context = contextFactory.Create("TestQueue", typeof(TestMessage).FullName);
+        var context = contextFactory.Create(typeof(AmazonSqsMessageProvider), typeof(TestMessage), null, Guid.NewGuid().ToString(), Guid.NewGuid().ToString(), configuration.GetSection("MessageQueuing:TestQueue"), null, 0, null);
         context.Headers["TestHeader"] = "TestValue";
         context.Headers["Priority"] = "High";
         context.CorrelationId = Guid.NewGuid().ToString();
@@ -239,7 +244,7 @@ public class AmazonSqsIntegrationTests
         };
         var sqsClient = new AmazonSQSClient(accessKeyId, secretAccessKey, sqsConfig);
 
-        string queueUrl;
+        string queueUrl = string.Empty;
         try
         {
             // Create FIFO queue
@@ -270,17 +275,18 @@ public class AmazonSqsIntegrationTests
             var configuration = configBuilder.Build();
 
             var services = new ServiceCollection();
+            services.AddLogging();
+            services.TrySerializerExtensions(SerializerTypes.Json);
+            services.AddSingleton<ClaimsPrincipal>(new ClaimsPrincipal());
+            services.TryAddMessageQueueingServices();
             services.TryAddAmazonSqsServices();
-            services.TryAddJsonSerializer();
-            services.AddSingleton<IConfiguration>(configuration);
-            services.AddSingleton<IMessageContextFactory, MessageContextFactory>();
 
             var provider = services.BuildServiceProvider();
-            var sender = provider.GetRequiredService<IMessageSenderProvider>();
+            var sender = provider.GetRequiredKeyedService<IMessageSenderProvider>(AwsSqsGlobals.MessageProviderKey);
             var contextFactory = provider.GetRequiredService<IMessageContextFactory>();
 
             // Act
-            var context = contextFactory.Create("FifoQueue", typeof(TestMessage).FullName);
+            var context = contextFactory.Create(typeof(AmazonSqsMessageProvider), typeof(TestMessage), null, Guid.NewGuid().ToString(), Guid.NewGuid().ToString(), configuration.GetSection("MessageQueuing:FifoQueue"), null, 0, null);
             var testMessage = new TestMessage
             {
                 Id = 456,
