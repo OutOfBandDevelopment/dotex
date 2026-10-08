@@ -73,6 +73,7 @@ Every TODO file and in-code marker was checked against the repository. The other
 
 ### Backlog: CI/CD Enablement and Docker Test Infrastructure
 - [ ] Investigate the azurinsight health check; verify servicebus completes startup (30 s start period); confirm all 15 services healthy.
+- [x] 2026-10-08 full Integration run against the Docker stack: 58 passed, 0 failed, 2 skipped (SBert tests marked `[Ignore]`). Fixed on the way: Tika 4 endpoints (`/detect`, `/tika/html|text|xml`), Ollama embedding tests now use `all-minilm`, LocalStack pinned to 4.4 (latest needs a licence token). Still open: `nginx` and `opensearch-dashboards` report unhealthy (not used by tests).
 - [ ] Enable `integration-tests.yml`: uncomment `schedule` (daily 16:00 UTC) and `workflow_dispatch`, remove the temporary `workflow_call`, check the runner has Docker, trigger manually, watch the first run, confirm the `validated-v{version}` tag and the 30-minute limit.
 - [ ] Azurinsight follow-ups: README service table, workflow variables, `.runsettings` Application Insights settings, nginx dashboard entry, PlantUML diagrams, stack doc.
 - [ ] Docker documentation under `docs/architecture/testing/`: integration category pages (README, docker-setup, writing-tests, examples), one page per stack (SQL Server, MongoDB, RabbitMQ, OpenSearch, Qdrant, Tika, SMTP, Azurite, LocalStack, Keycloak, SBert, Ollama, azurinsight), a docker-infrastructure page, and network-topology and dependency-matrix diagrams (PlantUML, per the diagram rule).
