@@ -14,9 +14,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="18.10.1" />
+    <PackageReference Include="Microsoft.Build.Utilities.Core" />
    
-    <PackageReference Include="GitVersion.MsBuild" Version="6.8.2">
+    <PackageReference Include="GitVersion.MsBuild">
 	    <PrivateAssets>all</PrivateAssets>
 	    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 	  </PackageReference>

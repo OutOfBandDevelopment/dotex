@@ -28,7 +28,7 @@
 
   <!-- SQLCLR dependencies only needed for .NET Framework build -->
   <ItemGroup Condition="'$(TargetFramework)' == 'net48'">
-    <PackageReference Include="System.Data.SqlClient" Version="4.9.1" />
+    <PackageReference Include="System.Data.SqlClient" />
   </ItemGroup>
 
   <!-- Build the DacPacCompiler.Cli tool before generating DACPAC -->
