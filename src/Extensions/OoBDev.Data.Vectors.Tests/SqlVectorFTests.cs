@@ -48,7 +48,27 @@ public class SqlVectorFTests
     {
         var vector = new SqlVectorF([1, 2, 3, 4]);
         var vector2 = new SqlVectorF([2, 3, 4, 5]);
-        Assert.AreEqual(1.4130075f, vector.Angle(vector2));
+        Assert.AreEqual(0.111341014, (double)vector.Angle(vector2).Value, 1e-6);
+    }
+
+    [TestMethod]
+    [TestCategory(TestCategories.Unit)]
+    public void Angle_KnownAngles_MatchGeometry()
+    {
+        Assert.AreEqual(0d, (double)new SqlVectorF([1, 0, 0]).Angle(new SqlVectorF([2, 0, 0])).Value, 1e-6);
+        Assert.AreEqual(Math.PI / 2, (double)new SqlVectorF([1, 0, 0]).Angle(new SqlVectorF([0, 1, 0])).Value, 1e-6);
+        Assert.AreEqual(Math.PI, (double)new SqlVectorF([1, 0, 0]).Angle(new SqlVectorF([-1, 0, 0])).Value, 1e-6);
+        Assert.AreEqual(Math.Acos(0.6), (double)new SqlVectorF([1, 0, 0]).Angle(new SqlVectorF([0.6, 0.8, 0])).Value, 1e-6);
+    }
+
+    [TestMethod]
+    [TestCategory(TestCategories.Unit)]
+    public void Angle_Undefined_ReturnsNullWithoutThrowing()
+    {
+        Assert.IsTrue(new SqlVectorF([0, 0, 0]).Angle(new SqlVectorF([1, 2, 3])).IsNull, "zero vector");
+        Assert.IsTrue(new SqlVectorF([1, 2, 3]).Angle(new SqlVectorF([0, 0, 0])).IsNull, "zero vector (second)");
+        Assert.IsTrue(new SqlVectorF([1, 2, 3]).Angle(new SqlVectorF([1, 2])).IsNull, "different lengths");
+        Assert.IsTrue(new SqlVectorF([1, 2, 3]).Angle(SqlVectorF.Null).IsNull, "null input");
     }
 
     [TestMethod]

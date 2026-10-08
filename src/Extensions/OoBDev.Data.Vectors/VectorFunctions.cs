@@ -201,30 +201,34 @@ public static class VectorFunctions
     /// </summary>
     /// <param name="vector1">The first vector.</param>
     /// <param name="vector2">The second vector.</param>
-    /// <returns>The angle in radians, or null if either vector is null.</returns>
+    /// <returns>The angle in radians (0 to pi), or NULL when undefined.</returns>
+    /// <remarks>
+    /// Returns NULL, never throws, when the angle is undefined: either input is NULL, the vectors have different
+    /// lengths, or either vector has zero magnitude. NULL is not a match score. Callers that order by angle must
+    /// filter these rows out (<c>WHERE angle IS NOT NULL</c>) or sort them last, because SQL Server sorts NULL first
+    /// in an ascending <c>ORDER BY</c>.
+    /// </remarks>
     [SqlFunction(Name = $"[embedding].[{nameof(Angle)}]", IsDeterministic = true, IsPrecise = true)]
     public static SqlDouble Angle(SqlVector vector1, SqlVector vector2) =>
         vector1.IsNull || vector2.IsNull ? SqlDouble.Null :
-        (SqlDouble)Math.Acos(
-            Math.Min(1, Math.Max(0,
-                Math.Sqrt(DotProduct(vector1.Values, vector2.Values)) / (vector1.Magnitude().Value * vector2.Magnitude().Value))
-                )
-            );
+        AngleInternal(vector1.Values, vector2.Values) is { } angle ? (SqlDouble)angle : SqlDouble.Null;
 
     /// <summary>
     /// Calculates the angle in radians between two single-precision vectors.
     /// </summary>
     /// <param name="vector1">The first vector.</param>
     /// <param name="vector2">The second vector.</param>
-    /// <returns>The angle in radians, or null if either vector is null.</returns>
+    /// <returns>The angle in radians (0 to pi), or NULL when undefined.</returns>
+    /// <remarks>
+    /// Returns NULL, never throws, when the angle is undefined: either input is NULL, the vectors have different
+    /// lengths, or either vector has zero magnitude. NULL is not a match score. Callers that order by angle must
+    /// filter these rows out (<c>WHERE angle IS NOT NULL</c>) or sort them last, because SQL Server sorts NULL first
+    /// in an ascending <c>ORDER BY</c>.
+    /// </remarks>
     [SqlFunction(Name = $"[embedding].[{nameof(AngleF)}]", IsDeterministic = true, IsPrecise = true)]
     public static SqlSingle AngleF(SqlVectorF vector1, SqlVectorF vector2) =>
         vector1.IsNull || vector2.IsNull ? SqlSingle.Null :
-        (SqlSingle)Math.Acos(
-            Math.Min(1, Math.Max(0,
-                Math.Sqrt(DotProduct(vector1.Values, vector2.Values)) / (vector1.Magnitude().Value * vector2.Magnitude().Value))
-                )
-            );
+        AngleInternal(vector1.Values, vector2.Values) is { } angle ? (SqlSingle)angle : SqlSingle.Null;
 
     /// <summary>
     /// Generates a random double-precision vector with values between 0 and 1.
@@ -367,6 +371,20 @@ public static class VectorFunctions
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal static double MagnitudeInternal(IReadOnlyList<double> values) =>
         Math.Sqrt(DotProduct(values, values));
+
+    /// <summary>
+    /// Calculates the angle in radians between two vectors, or null when it is undefined
+    /// (different lengths, or a zero-magnitude vector).
+    /// </summary>
+    internal static double? AngleInternal(IReadOnlyList<double> v1, IReadOnlyList<double> v2)
+    {
+        if (v1.Count != v2.Count) return null;
+        var magnitude1 = MagnitudeInternal(v1);
+        var magnitude2 = MagnitudeInternal(v2);
+        if (magnitude1 == 0 || magnitude2 == 0 || double.IsNaN(magnitude1) || double.IsNaN(magnitude2)) return null;
+        var angle = Math.Acos(CosineSimilarity(v1, magnitude1, v2, magnitude2));
+        return double.IsNaN(angle) ? null : angle;
+    }
 
     /// <summary>
     /// Calculates cosine distance between two vectors.

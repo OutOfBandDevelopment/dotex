@@ -114,7 +114,7 @@ public struct SqlVectorF : INullable, IBinarySerialize, IEquatable<SqlVectorF>
     /// Calculates the angle in radians between this vector and another.
     /// </summary>
     /// <param name="vector">The other vector.</param>
-    /// <returns>The angle in radians.</returns>
+    /// <returns>The angle in radians (0 to pi), or NULL when undefined (NULL input, different lengths, zero vector). Filter or sort NULL away from the top of nearest-match queries.</returns>
     [SqlMethod(
         Name = nameof(Angle),
         OnNullCall = false,

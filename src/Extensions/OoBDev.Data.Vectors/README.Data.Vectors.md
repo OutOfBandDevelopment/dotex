@@ -41,6 +41,19 @@ FROM Documents
 ORDER BY Distance
 ```
 
+## NULL results (read this before ordering by angle)
+
+`Angle` and `AngleF` never throw. They return `NULL` when the angle is undefined: a `NULL` input, vectors of different lengths, or a zero-magnitude vector.
+
+`NULL` means "no answer", not "good match". SQL Server sorts `NULL` first in an ascending `ORDER BY`, so an unfiltered nearest-match query would list these rows on top. Always filter or sort them away:
+
+```sql
+SELECT TOP (10) Id, a.Angle(@query) AS Angle
+FROM dbo.Items AS a
+WHERE a.Angle(@query) IS NOT NULL
+ORDER BY Angle;
+```
+
 ## License
 
 See repository license file for details.
