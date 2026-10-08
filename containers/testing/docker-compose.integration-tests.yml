@@ -194,7 +194,7 @@ services:
       start_period: 10s
 
   localstack:
-    image: localstack/localstack:latest
+    image: localstack/localstack:4.4
     container_name: oobd-test-localstack
     ports:
       - "4566:4566"
