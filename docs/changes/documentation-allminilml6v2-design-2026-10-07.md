@@ -16,7 +16,7 @@ Designed the replacement of the unmaintained `AllMiniLML6v2Sharp` fork with a fi
 
 ## Verification
 
-- `python scripts/docs/validate-docs.py docs/design`: 5 files, 0 problems. The PlantUML docker server was not running, so diagram rendering was not confirmed; re-run when it is available.
+- `python scripts/docs/validate-docs.py docs/design`: 5 files, 0 problems. Re-run on 2026-10-07 with the PlantUML server up: 0 problems, diagrams render.
 
 ## Related Documentation
 
