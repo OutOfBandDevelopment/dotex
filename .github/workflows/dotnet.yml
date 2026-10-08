@@ -18,7 +18,7 @@ on:
     - 'src/**/*.props'
     - 'src/**/*.targets'
     - 'src/.runsettings'
-    - 'src/GitVersion.yml'
+    - 'GitVersion.yml'
     - '.github/workflows/dotnet.yml'
 
   pull_request:
@@ -32,7 +32,7 @@ on:
     - 'src/**/*.props'
     - 'src/**/*.targets'
     - 'src/.runsettings'
-    - 'src/GitVersion.yml'
+    - 'GitVersion.yml'
     - '.github/workflows/dotnet.yml'
 
   # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#onpull_requestpull_request_targetbranchesbranches-ignore
@@ -55,6 +55,12 @@ on:
           - windows-latest
           - ubuntu-latest
           - macos-latest
+
+# contents: write pushes the build tag; checks/pull-requests: write let the test report action publish results
+permissions:
+  contents: write
+  checks: write
+  pull-requests: write
 
 env:
   MSBUILDTERMINALLOGGER: off
