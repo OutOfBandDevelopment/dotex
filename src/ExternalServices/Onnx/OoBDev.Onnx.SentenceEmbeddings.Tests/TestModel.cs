@@ -1,38 +1,40 @@
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
+using OoBDev.SBert.AllMiniLmL6V2;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.IO;
 
 namespace OoBDev.Onnx.SentenceEmbeddings.Tests;
 
 /// <summary>
-/// Finds the all-MiniLM-L6-v2 model files (git submodule of the SBert adapter) from the test output folder.
+/// The all-MiniLM-L6-v2 model files, downloaded on first use into the shared Hugging Face cache.
 /// </summary>
 internal static class TestModel
 {
-    private static readonly string[] _relative = ["src", "ExternalServices", "SBert", "OoBDev.SBert.AllMiniLML6v2Sharp", "model"];
-
-    public static string? Folder
+    public static OnnxSentenceEmbeddingOptions CreateOptions()
     {
-        get
+        var options = new OnnxSentenceEmbeddingOptions();
+        AllMiniLmL6V2Model.ApplyDefaults(options);
+        return options;
+    }
+
+    public static string RequireFolder()
+    {
+        try
         {
-            for (var dir = new DirectoryInfo(AppContext.BaseDirectory); dir is not null; dir = dir.Parent)
-            {
-                var candidate = Path.Combine([dir.FullName, .. _relative]);
-                if (File.Exists(Path.Combine(candidate, "model.onnx")) && File.Exists(Path.Combine(candidate, "vocab.txt"))) return candidate;
-            }
-            return null;
+            return AllMiniLmL6V2Model.EnsureAsync(CreateOptions(), NullLogger.Instance).GetAwaiter().GetResult();
+        }
+        catch (global::System.Net.Http.HttpRequestException ex)
+        {
+            throw new AssertInconclusiveException("The all-MiniLM-L6-v2 model could not be downloaded: " + ex.Message);
         }
     }
 
-    public static string RequireFolder() =>
-        Folder ?? throw new AssertInconclusiveException("The all-MiniLM-L6-v2 model files are not checked out (git submodule).");
-
     public static OnnxSentenceEmbeddingGenerator CreateGenerator(Action<OnnxSentenceEmbeddingOptions>? configure = null)
     {
-        var options = new OnnxSentenceEmbeddingOptions { ModelPath = RequireFolder() };
+        RequireFolder();
+        var options = CreateOptions();
         configure?.Invoke(options);
-        return new OnnxSentenceEmbeddingGenerator(Options.Create(options), NullLogger<OnnxSentenceEmbeddingGenerator>.Instance);
+        return new OnnxSentenceEmbeddingGenerator(Microsoft.Extensions.Options.Options.Create(options), NullLogger<OnnxSentenceEmbeddingGenerator>.Instance);
     }
 }

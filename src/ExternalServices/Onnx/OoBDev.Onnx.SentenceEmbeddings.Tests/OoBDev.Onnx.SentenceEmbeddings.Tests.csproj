@@ -31,6 +31,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\Framework\OoBDev.TestUtilities\OoBDev.TestUtilities.csproj" />
     <ProjectReference Include="..\OoBDev.Onnx.SentenceEmbeddings\OoBDev.Onnx.SentenceEmbeddings.csproj" />
+    <ProjectReference Include="..\..\SBert\OoBDev.SBert.AllMiniLmL6V2\OoBDev.SBert.AllMiniLmL6V2.csproj" />
     <!-- Golden reference during the compatibility phase only; removed with the fork. -->
     <ProjectReference Include="..\..\AllMiniLML6v2Sharp\AllMiniLmL6V2Sharp\AllMiniLmL6V2Sharp.csproj" />
   </ItemGroup>

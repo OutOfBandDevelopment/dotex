@@ -23,16 +23,4 @@
     <ProjectReference Include="..\..\Onnx\OoBDev.Onnx.SentenceEmbeddings\OoBDev.Onnx.SentenceEmbeddings.csproj" />
   </ItemGroup>
 
-  <!-- Model files still come from the existing model submodule until the Hugging Face download replaces it. -->
-  <ItemGroup>
-    <None Include="..\OoBDev.SBert.AllMiniLML6v2Sharp\model\model.onnx" Link="model\model.onnx" Condition="Exists('..\OoBDev.SBert.AllMiniLML6v2Sharp\model\model.onnx')">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </None>
-    <None Include="..\OoBDev.SBert.AllMiniLML6v2Sharp\model\vocab.txt" Link="model\vocab.txt" Condition="Exists('..\OoBDev.SBert.AllMiniLML6v2Sharp\model\vocab.txt')">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </None>
-  </ItemGroup>
-
 </Project>

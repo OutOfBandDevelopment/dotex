@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace OoBDev.Onnx.SentenceEmbeddings.Tests;
 
 /// <summary>
-/// Run the real all-MiniLM-L6-v2 model from the checked-out submodule; inconclusive when it is absent.
+/// Run the real all-MiniLM-L6-v2 model downloaded on first use into the Hugging Face cache; inconclusive when it cannot be downloaded.
 /// </summary>
 [TestClass]
 public class GeneratorTests

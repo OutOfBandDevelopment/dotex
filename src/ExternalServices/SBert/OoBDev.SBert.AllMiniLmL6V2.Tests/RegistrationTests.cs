@@ -15,20 +15,10 @@ namespace OoBDev.SBert.AllMiniLmL6V2.Tests;
 [TestClass]
 public class RegistrationTests
 {
-    private static string? FindModel()
-    {
-        for (var dir = new DirectoryInfo(AppContext.BaseDirectory); dir is not null; dir = dir.Parent)
-        {
-            var candidate = Path.Combine(dir.FullName, "src", "ExternalServices", "SBert", "OoBDev.SBert.AllMiniLML6v2Sharp", "model");
-            if (File.Exists(Path.Combine(candidate, "model.onnx"))) return candidate;
-        }
-        return null;
-    }
-
-    private static ServiceProvider Build(string? modelPath)
+    private static ServiceProvider Build(string? unused)
     {
         var configuration = new ConfigurationBuilder()
-            .AddInMemoryCollection(new Dictionary<string, string?> { ["AllMiniLmL6V2:ModelPath"] = modelPath })
+            .AddInMemoryCollection(new Dictionary<string, string?> { ["AllMiniLmL6V2:Normalize"] = "true" })
             .Build();
         var services = new ServiceCollection();
         services.AddLogging();
@@ -48,8 +38,7 @@ public class RegistrationTests
     [TestMethod]
     public async Task Provider_ResolvesByDefaultAndKeys_AndEmbeds()
     {
-        var model = FindModel() ?? throw new AssertInconclusiveException("The all-MiniLM-L6-v2 model files are not checked out.");
-        await using var provider = Build(model);
+        await using var provider = Build(null);
 
         var byDefault = provider.GetRequiredService<IEmbeddingProvider>();
         var byKey = provider.GetRequiredKeyedService<IEmbeddingProvider>(SBertGlobals.AllMiniLmL6V2Key);
@@ -67,8 +56,7 @@ public class RegistrationTests
     [TestMethod]
     public async Task Provider_BlankContent_ReturnsZeroVectorOfFullLength()
     {
-        var model = FindModel() ?? throw new AssertInconclusiveException("The all-MiniLM-L6-v2 model files are not checked out.");
-        await using var provider = Build(model);
+        await using var provider = Build(null);
 
         var result = await provider.GetRequiredService<IEmbeddingProvider>().GenerateEmbeddingAsync(" ", null, default);
 

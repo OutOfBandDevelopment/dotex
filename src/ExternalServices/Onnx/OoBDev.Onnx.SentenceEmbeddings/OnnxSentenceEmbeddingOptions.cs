@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace OoBDev.Onnx.SentenceEmbeddings;
 
@@ -9,6 +10,12 @@ public class OnnxSentenceEmbeddingOptions
 {
     /// <summary>Folder with <c>model.onnx</c> and <c>vocab.txt</c>; relative paths resolve against <see cref="AppContext.BaseDirectory"/>.</summary>
     public string ModelPath { get; set; } = "model";
+
+    /// <summary>
+    /// Files downloaded into <see cref="ModelPath"/> on first use when they are missing (verified by SHA-256).
+    /// Map <see cref="ModelPath"/> to a volume in a container to keep them between restarts.
+    /// </summary>
+    public IList<ModelFileSource> ModelFiles { get; set; } = [];
 
     /// <summary>File name of the ONNX model inside <see cref="ModelPath"/>.</summary>
     public string ModelFileName { get; set; } = "model.onnx";

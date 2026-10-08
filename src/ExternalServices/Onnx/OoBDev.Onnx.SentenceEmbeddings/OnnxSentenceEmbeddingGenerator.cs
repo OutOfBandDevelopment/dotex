@@ -40,9 +40,8 @@ public sealed partial class OnnxSentenceEmbeddingGenerator : IEmbeddingGenerator
         _logger = logger;
         _options.Validate();
 
-        var folder = Path.IsPathRooted(_options.ModelPath)
-            ? _options.ModelPath
-            : Path.Combine(AppContext.BaseDirectory, _options.ModelPath);
+        var folder = ResolveFolder(_options);
+        if (_options.ModelFiles.Count > 0) ModelDownloader.EnsureAsync(folder, _options.ModelFiles, _logger, CancellationToken.None).GetAwaiter().GetResult();
         var modelFile = Path.Combine(folder, _options.ModelFileName);
         var vocabFile = Path.Combine(folder, _options.VocabFileName);
         if (!File.Exists(modelFile)) throw new FileNotFoundException("Embedding model not found.", modelFile);
@@ -65,6 +64,26 @@ public sealed partial class OnnxSentenceEmbeddingGenerator : IEmbeddingGenerator
         _metadata = new EmbeddingGeneratorMetadata(nameof(OnnxSentenceEmbeddingGenerator), defaultModelId: _options.ModelFileName, defaultModelDimensions: Dimensions);
         LogLoaded(modelFile, Dimensions);
     }
+
+    /// <summary>
+    /// Downloads the configured <see cref="OnnxSentenceEmbeddingOptions.ModelFiles"/> that are missing from the model folder.
+    /// Call at startup to warm the folder instead of paying for the download on first use.
+    /// </summary>
+    /// <param name="options">Generator settings.</param>
+    /// <param name="logger">Logger.</param>
+    /// <param name="cancellationToken">Cancellation.</param>
+    /// <returns>The resolved model folder.</returns>
+    public static async Task<string> EnsureModelAsync(OnnxSentenceEmbeddingOptions options, ILogger logger, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(options);
+        options.Validate();
+        var folder = ResolveFolder(options);
+        await ModelDownloader.EnsureAsync(folder, options.ModelFiles, logger, cancellationToken).ConfigureAwait(false);
+        return folder;
+    }
+
+    private static string ResolveFolder(OnnxSentenceEmbeddingOptions options) =>
+        Path.IsPathRooted(options.ModelPath) ? options.ModelPath : Path.Combine(AppContext.BaseDirectory, options.ModelPath);
 
     /// <summary>Size of the vectors produced, read from the model.</summary>
     public int Dimensions { get; }

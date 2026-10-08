@@ -30,7 +30,11 @@ public static class ServiceCollectionExtensions
 #endif
         )
     {
-        services.Configure<OnnxSentenceEmbeddingOptions>(options => configuration.Bind(allMiniLmL6V2OptionSection, options));
+        services.Configure<OnnxSentenceEmbeddingOptions>(options =>
+        {
+            AllMiniLmL6V2Model.ApplyDefaults(options);
+            configuration.Bind(allMiniLmL6V2OptionSection, options);
+        });
 
         services.TryAddSingleton<OnnxSentenceEmbeddingGenerator>();
         services.TryAddSingleton<IEmbeddingGenerator<string, Embedding<float>>>(sp => sp.GetRequiredService<OnnxSentenceEmbeddingGenerator>());
