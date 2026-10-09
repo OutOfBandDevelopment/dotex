@@ -262,17 +262,17 @@ jobs:
     - name: Create build tag
       if: github.event_name != 'pull_request' && github.ref_name == 'main'
       shell: bash
+      env:
+        GH_TOKEN: ${{ github.token }}
       run: |
         TAG="v${{ steps.gitversion.outputs.majorMinorPatch }}"
 
         echo "Creating tag: ${TAG}"
-        git config user.name "github-actions[bot]"
-        git config user.email "github-actions[bot]@users.noreply.github.com"
         # Re-runs of the same commit produce the same version; an existing tag is not an error
         if git ls-remote --exit-code --tags origin "refs/tags/${TAG}" > /dev/null; then
           echo "Tag ${TAG} already exists, skipping"
           exit 0
         fi
-        git tag -a "${TAG}" -m "Build from branch ${{ github.ref_name }}"
-        git push origin "${TAG}"
+        # The REST API is used because git push of a tag is rejected for GITHUB_TOKEN when the commit changes workflow files
+        gh api "repos/${GITHUB_REPOSITORY}/git/refs" -f ref="refs/tags/${TAG}" -f sha="${GITHUB_SHA}" > /dev/null
 
