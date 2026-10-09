@@ -51,11 +51,6 @@ The nginx reverse proxy provides a unified web interface to all services with di
 
 ```plantuml
 @startuml
-!define CONTAINER_BG_COLOR #E8F4F8
-!define DATABASE_BG_COLOR #E8FFE8
-!define QUEUE_BG_COLOR #FFF4E8
-!define IDENTITY_BG_COLOR #F0E8FF
-!define AI_BG_COLOR #FFE8CC
 
 skinparam componentStyle rectangle
 
@@ -63,65 +58,65 @@ skinparam componentStyle rectangle
 package "oobd-integration-test-net (Bridge Network)" {
 
     ' Stateless Services
-    component "Apache Tika\n:9998" <<Container>> #CONTAINER_BG_COLOR {
+    component "Apache Tika\n:9998" <<Container>> #E8F4F8 {
         [Document Parser]
     }
 
-    component "SMTP4Dev\n:25, :7777" <<Container>> #CONTAINER_BG_COLOR {
+    component "SMTP4Dev\n:25, :7777" <<Container>> #E8F4F8 {
         [Email Server]
     }
 
     ' Stateful Services - Databases
-    component "SQL Server\n:1433" <<Container>> #DATABASE_BG_COLOR {
+    component "SQL Server\n:1433" <<Container>> #E8FFE8 {
         database "SQL DB" as sqldb
     }
 
-    component "MongoDB\n:27017" <<Container>> #DATABASE_BG_COLOR {
+    component "MongoDB\n:27017" <<Container>> #E8FFE8 {
         database "Mongo DB" as mongodb
     }
 
-    component "OpenSearch\n:9200, :9600" <<Container>> #DATABASE_BG_COLOR {
+    component "OpenSearch\n:9200, :9600" <<Container>> #E8FFE8 {
         database "Search Index" as opensearch
     }
 
-    component "Qdrant\n:6333, :6334" <<Container>> #DATABASE_BG_COLOR {
+    component "Qdrant\n:6333, :6334" <<Container>> #E8FFE8 {
         database "Vector DB" as qdrant
     }
 
     ' Messaging & Caching Services
-    component "RabbitMQ\n:5673, :15672" <<Container>> #QUEUE_BG_COLOR {
+    component "RabbitMQ\n:5673, :15672" <<Container>> #FFF4E8 {
         queue "Message Queue" as rabbitmq
     }
 
-    component "Redis\n:6379" <<Container>> #DATABASE_BG_COLOR {
+    component "Redis\n:6379" <<Container>> #E8FFE8 {
         database "Cache Store" as redis
     }
 
     ' Cloud Emulators
-    component "Azurite\n:10000-10002" <<Container>> #CONTAINER_BG_COLOR {
+    component "Azurite\n:10000-10002" <<Container>> #E8F4F8 {
         [Azure Storage\nEmulator]
     }
 
-    component "Moto\n:4566" <<Container>> #CONTAINER_BG_COLOR {
+    component "Moto\n:4566" <<Container>> #E8F4F8 {
         [AWS Services\nEmulator]
     }
 
     ' Identity Services
-    component "Keycloak\n:8081" <<Container>> #IDENTITY_BG_COLOR {
+    component "Keycloak\n:8081" <<Container>> #F0E8FF {
         [Identity &\nAccess Mgmt]
     }
 
     ' AI/ML Services
-    component "SBert\n:5080" <<Container>> #AI_BG_COLOR {
+    component "SBert\n:5080" <<Container>> #FFE8CC {
         [Sentence\nEmbeddings]
     }
 
-    component "Ollama\n:11435" <<Container>> #AI_BG_COLOR {
+    component "Ollama\n:11435" <<Container>> #FFE8CC {
         [LLM Inference\n(phi3)]
     }
 
     ' Monitoring Emulator
-    component "OTel LGTM\n:3000 :4317 :4318" <<Container>> #CONTAINER_BG_COLOR {
+    component "OTel LGTM\n:3000 :4317 :4318" <<Container>> #E8F4F8 {
         [OTLP receiver, Tempo,\nLoki, Grafana]
     }
 }

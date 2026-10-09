@@ -36,7 +36,7 @@ Order of work, with the reason for the position. Start at the top; tick items of
 
 ### 3. Docker test infrastructure and CI (needs the owner for the merge)
 - [x] (done 2026-10-09) Port-collision hardening: every host port in `docker-compose.integration-tests.yml` is `${TEST_PORT_<NAME>:-default}` (table in `containers/testing/README.md`).
-- [ ] Follow-up: `integration-up` scripts still print the default URLs, and tests read ports from `.runsettings`, so an override needs a matching settings file; consider deriving both from one `.env`. The first diagram in `containers/testing/README.md` (line 52) fails PlantUML rendering (pre-existing).
+- [ ] Follow-up: `integration-up` scripts still print the default URLs, and tests read ports from `.runsettings`, so an override needs a matching settings file; consider deriving both from one `.env`.
 - [x] (done 2026-10-09) Docker documentation: `docs/architecture/testing/integration/` (README with dependency matrix, docker-infrastructure with topology and startup diagrams, services with a section per stack, writing-tests). One services page replaces one page per stack. The Aspire spike is still open (owner decision); the pages double as its checklist.
 - [ ] First GitHub run of `integration-tests.yml`: merge to `main`, trigger by hand, fix Linux build issues (net48 and SQL CLR projects), confirm the `validated-v{version}` tag and the 30-minute limit. Details in `TODO-testing-local-integration.md`.
 
