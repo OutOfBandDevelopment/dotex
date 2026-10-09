@@ -79,7 +79,7 @@ Located in `.claude/protocols/`:
 
 ### 3. Current Migration Work
 
-**Incomming Projects Pending Decisions:**
+**Incoming Projects Pending Decisions:**
 - ⏸️ **BotChat** - Sample app, decision needed (archive, enhance, or extract patterns)
 - ⏸️ **BinaryDataDecoders** - ~50,000 LOC, awaiting 14+ critical decisions
 - ⏸️ **ContractParser** - Decision needed (implement now, later, or keep as spec)
@@ -305,7 +305,7 @@ OoBDev.{Layer}.{Feature}/
   - [Variables in .runsettings](docs/how-tos/runsettings-variables-and-configuration.md)
 - `/docs/migration/` - Migration plans and feature mappings
 - `/TODO.md` - Current work tracking
-- `/Incomming/CHECKLIST.md` - Incomming project investigation status
+- `/Incoming/CHECKLIST.md` - Incoming project investigation status
 
 ### Configuration
 - `/src/GitVersion.yml` - Semantic versioning

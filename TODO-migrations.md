@@ -2,7 +2,7 @@
 
 **Last Updated:** 2026-01-23
 
-This document tracks pending migration work for Incomming projects.
+This document tracks pending migration work for Incoming projects.
 
 > **Parent Document:** [TODO.md](./TODO.md)
 

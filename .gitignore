@@ -386,3 +386,5 @@ FodyWeavers.xsd
 
 *.pdf
 *_tmp.html
+# Live (cloud) integration test settings and credentials
+.env.liveintegration

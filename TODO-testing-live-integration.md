@@ -47,11 +47,11 @@ Integration testing for cloud services that require actual cloud infrastructure 
 #### Azure B2C / Entra ID
 
 **Purpose:** Microsoft identity platform for customer-facing applications
-
+**Current Status:** Tests exist and are already `LiveIntegration` (3 methods, checked 2026-10-09); template and README still missing
 **Current Status:** Tests exist but marked as DevLocal
 
 **Migration Tasks:**
-- [ ] File: `src/ExternalServices/Microsoft/OoBDev.Microsoft.B2C.Tests/`
+- [ ] File: `src/ExternalServices/Microsoft/OoBDev.Microsoft.Azure.B2C.Tests/`
 - [ ] Change `[TestCategory(TestCategories.DevLocal)]` → `[TestCategory(TestCategories.LiveIntegration)]`
 - [ ] Create `.env.liveintegration.template` in test project root:
   ```bash
@@ -173,11 +173,11 @@ Integration testing for cloud services that require actual cloud infrastructure 
 #### Groq Cloud
 
 **Purpose:** High-performance LLM inference API
-
+**Current Status:** The test project currently has no test source files (checked 2026-10-09); there is nothing to recategorize yet
 **Current Status:** Tests exist but marked as DevLocal
 
 **Migration Tasks:**
-- [ ] File: `src/ExternalServices/GroqCloud/OoBDev.Groq.Tests/`
+- [ ] File: `src/ExternalServices/GroqCloud/OoBDev.GroqCloud.Tests/`
 - [ ] Change `[TestCategory(TestCategories.DevLocal)]` → `[TestCategory(TestCategories.LiveIntegration)]`
 - [ ] Create `.env.liveintegration.template`:
   ```bash

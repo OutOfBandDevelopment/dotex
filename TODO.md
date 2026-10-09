@@ -1,5 +1,7 @@
 # TODO - OoBDev (dotex) Framework
 
+> **Owner questions awaiting answers:** [OPEN_QUESTIONS.md](./OPEN_QUESTIONS.md)
+
 ## 🔎 ACTIVE: Patterns Discovery (branch `dev/patterns-discovery`)
 
 **Goal:** Document how this codebase is actually put together (architecture, design, patterns & practices) so future products/frameworks can be built the same way, then produce a pros/cons comparison against common industry alternatives.
@@ -37,7 +39,7 @@
 
 ---
 
-**Last Updated:** 2026-01-24
+**Last Updated:** 2026-10-09
 
 ✅ **COMPLETED:** Build Warnings Resolution - Reduced from 95+ to 8 warnings (2026-01-22)
 ✅ **COMPLETED:** Test Category Cleanup - DevLocal tests converted to Integration/Unit/LiveIntegration (2026-01-22)
@@ -64,7 +66,7 @@ Every TODO file and in-code marker was checked against the repository. The other
 |------|---------------|----------------------|--------|
 | `TODO-testing-local-integration.md` | Validated, ready for CI/CD | CI workflow `.github/workflows/integration-tests.yml` is still disabled (schedule and `workflow_dispatch` commented out, only `workflow_call`); 2 of 15 services not confirmed healthy (azurinsight, servicebus); Docker stack docs under `docs/architecture/testing/` do not exist (only `README.md` and `testing-guidelines.md`) | Keep open; see backlog below |
 | `TODO-testing-live-integration.md` | Week 3 migration pending | Azure B2C tests are already `LiveIntegration` (3 tests in `OoBDev.Microsoft.Azure.B2C.Tests`, not `OoBDev.Microsoft.B2C.Tests` as the file says); Application Insights tests (10) are still `DevLocal`; Groq tests have no category at all; no `.env.liveintegration.template` or per-project README exists; no cloud docs | Keep open; fix paths |
-| `TODO-migrations*.md`, `TODO-decisions.md` | Blocked on decisions | Unchanged: BinaryDataDecoders (14+ decisions), BotChat (archive, enhance or extract), ContractParser, Tools/BulkLlm. The files say `Incomming/`; the folder is `Incoming/` | Blocked on the owner; fix folder name |
+| `TODO-migrations*.md`, `TODO-decisions.md` | Blocked on decisions | Unchanged: BinaryDataDecoders (14+ decisions), BotChat (archive, enhance or extract), ContractParser, Tools/BulkLlm. The files say `Incoming/`; the folder is `Incoming/` | Blocked on the owner; fix folder name |
 | `Features/Caching/TODO-migrations-caching.md`, `docs/changes/TODO-migrations-message-queues.md` | Complete | Nothing outstanding | Archive candidates |
 | `docs/todo.md` | Wish list | 4 open wishes (below) | Folded into this file |
 | `src/Framework/OoBDev.DacFx.Tests/TODO.md` | Note | Test SQLCLR project covering all SQLCLR features | Backlog |
@@ -83,7 +85,7 @@ Every TODO file and in-code marker was checked against the repository. The other
 - [ ] Azure B2C: add `.env.liveintegration.template` and a project README, and read settings from test properties (the category change is already done).
 - [ ] Application Insights: library and tests moved to 3.x/OpenTelemetry (2026-10-07; 5 unit tests pass). Ran the 5 `DevLocal` integration tests against azurinsight on 2026-10-07: all fail because the 3.x exporter posts newline-delimited JSON envelopes to `/v2.1/track` and the emulator (image `oobdev/azurinsight`, fork `mwwhited-forks/Azurinsight`) parses one JSON document (`SyntaxError: Unexpected non-whitespace character after JSON`, body-parser). Fix the emulator to accept NDJSON (and gzip), then re-run and recategorize them (Integration against azurinsight, or LiveIntegration for the real service); add template and README.
 - [ ] Groq (`OoBDev.GroqCloud.Tests`): categorize tests as `LiveIntegration`; add template and README.
-- [ ] Add `.env.liveintegration` to `.gitignore` (not present today).
+- [x] Added `.env.liveintegration` to `.gitignore` (2026-10-09)
 - [ ] Cloud docs: category README, cloud setup, credential and cost management, per-service pages, LiveIntegration vs Integration guide, PlantUML diagrams.
 - [ ] Triage the remaining 42 `TestCategories.DevLocal` usages into Unit, Integration or LiveIntegration (Redis, Ollama, ServiceBus, Tika, DacFx, System tests, Example tests, Application Insights).
 
@@ -111,9 +113,9 @@ Every TODO file and in-code marker was checked against the repository. The other
 
 ### Backlog: Housekeeping
 - [ ] Refresh this file's header date, move the ✅ list to a change document, and fix or remove the links to the non-existent `TODO-documentation.md` and `TODO-testing-infrastructure.md`.
-- [ ] Rename `Incomming` references to `Incoming` across TODO files and `CLAUDE.md`.
+- [x] Renamed `Incomming` references to `Incoming` across TODO files and `CLAUDE.md` (2026-10-09).
 - [ ] Archive the two completed TODO files (caching, message queues) per the archival protocol.
-- [ ] Fix the wrong test project paths in `TODO-testing-live-integration.md`.
+- [x] Fixed the wrong test project paths in `TODO-testing-live-integration.md` (2026-10-09)
 
 ### Backlog: In-Code TODO Markers (86 comments in 62 files, grouped)
 None of these are tracked elsewhere. Triage each into fix, ticket or delete.
@@ -360,7 +362,7 @@ Cloud-based integration testing for services requiring live credentials (Azure B
   - Priority: HIGH
   - Scope: ~50,000 LOC (binary processing, protocols, hardware)
 
-### 📝 [Documentation](./TODO-documentation.md)
+### 📝 [Documentation](./docs/architecture/README.md)
 **Status:** 📋 Ongoing Maintenance
 
 **Active Work:**
@@ -389,7 +391,7 @@ Critical decisions blocking migration work:
 TODO.md                                  # This file - Index and navigation
 ├── TODO-testing-local-integration.md    # Docker-based integration testing (11 services)
 ├── TODO-testing-live-integration.md     # Cloud-based integration testing (3 services)
-├── TODO-migrations.md                   # All Incomming/ and BinaryDataDecoders migrations
+├── TODO-migrations.md                   # All Incoming/ and BinaryDataDecoders migrations
 ├── TODO-decisions.md                    # Pending strategic decisions
 └── TEST_VARIABLES.md                    # All test properties and configuration variables
 ```
@@ -495,7 +497,7 @@ TODO.md                                  # This file - Index and navigation
 - `containers/testing/README.md` - Infrastructure guide with PlantUML
 - `containers/testing/TESTING-CHECKLIST.md` - Local validation procedure
 - `containers/testing/STATUS.md` - Implementation progress tracker
-- `Incomming/CHECKLIST.md` - Investigation tracking
+- `Incoming/CHECKLIST.md` - Investigation tracking
 
 ### Change History
 - `docs/changes/README.md` - Archived completed work (reduces context overhead)
