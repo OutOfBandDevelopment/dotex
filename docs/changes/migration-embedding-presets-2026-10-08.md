@@ -43,6 +43,6 @@ Registration is keyed per model (`all-mpnet-base-v2`, `nomic-embed-text-v1.5`), 
 
 - Done 2026-10-09: the MiniLM preset now uses the official `sentence-transformers/all-MiniLM-L6-v2` repo (`onnx/model.onnx`, revision `1110a243fdf4706b3f48f1d95db1a4f5529b4d41`, same `vocab.txt`) and was re-compared with the Python vectors.
 - Done 2026-10-09: the MiniLM tests that load the model moved from Unit to Integration.
-- Linux/ICU accent stripping and the example web API run remain unverified.
+- Done 2026-10-09: the 60 SentenceEmbeddings tests (accent cases included) pass in a Linux container (`mcr.microsoft.com/dotnet/sdk:10.0`, with `-p:DisableGitVersionTask=true` when the copy has no `.git`). The example web API run remains unverified.
 
 [↑ Change index](README.md)
