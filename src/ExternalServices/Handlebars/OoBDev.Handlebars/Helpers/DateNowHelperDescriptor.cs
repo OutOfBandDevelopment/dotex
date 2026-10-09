@@ -1,6 +1,7 @@
 using HandlebarsDotNet;
 using HandlebarsDotNet.PathStructure;
 using System;
+using System.Globalization;
 using System.Linq;
 
 namespace OoBDev.Handlebars.Helpers;
@@ -34,6 +35,6 @@ public class DateNowHelperDescriptor : HelperDescriptorBase
         if (string.IsNullOrWhiteSpace(format))
             output.WriteSafeString(_time.GetLocalNow());
         else
-            output.WriteSafeString(_time.GetLocalNow().ToString(format));
+            output.WriteSafeString(_time.GetLocalNow().ToString(format, CultureInfo.InvariantCulture));
     };
 }

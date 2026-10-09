@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Collections.Generic;
 
 namespace OoBDev.System.Reflection;
@@ -20,7 +21,7 @@ internal record EnumModel : IEnumModel
     public IReadOnlyCollection<string> PossibleNames { get; init; } = Array.Empty<string>();
 
     public override string ToString() =>
-        $"{new { Id, Name, Code, Description, xId = Id.ToString("x") }}";
+        $"{new { Id, Name, Code, Description, xId = Id.ToString("x", CultureInfo.InvariantCulture) }}";
 }
 internal record EnumModel<TEnum> : EnumModel, IEnumModel<TEnum> where TEnum : struct, Enum
 {

@@ -21,12 +21,12 @@ public static class SandboxPath
         var currentDirectory = Path.GetFullPath(Environment.CurrentDirectory);
 
         var composedPath = Path.GetFullPath(
-            currentDirectory.StartsWith(sandbox) ?
+            currentDirectory.StartsWith(sandbox, StringComparison.Ordinal) ?
                 filePath :
                 Path.Combine(basePath, filePath)
             );
 
-        return composedPath.StartsWith(sandbox)
+        return composedPath.StartsWith(sandbox, StringComparison.Ordinal)
             ? throw new ApplicationException($"invalid path requested: {filePath}")
             : PathEx.FixUpPath(composedPath);
     }

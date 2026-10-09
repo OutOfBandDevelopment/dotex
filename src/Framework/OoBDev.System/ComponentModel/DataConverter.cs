@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,23 +16,23 @@ public class DataConverter : IDataConverter
 {
     private readonly Dictionary<Type, Func<object, object>> _mappedConverters = new()
     {
-        {typeof(int), v=>Convert.ToInt32(v) },
-        {typeof(int?), v=>Convert.ToInt32(v) },
-        {typeof(uint), v=>Convert.ToUInt32(v) },
-        {typeof(uint?), v=>Convert.ToUInt32(v) },
+        {typeof(int), v=>Convert.ToInt32(v, CultureInfo.InvariantCulture) },
+        {typeof(int?), v=>Convert.ToInt32(v, CultureInfo.InvariantCulture) },
+        {typeof(uint), v=>Convert.ToUInt32(v, CultureInfo.InvariantCulture) },
+        {typeof(uint?), v=>Convert.ToUInt32(v, CultureInfo.InvariantCulture) },
 
-        {typeof(long), v=>Convert.ToInt64(v) },
-        {typeof(long?), v=>Convert.ToInt64(v) },
-        {typeof(ulong), v=>Convert.ToUInt64(v) },
-        {typeof(ulong?), v=>Convert.ToUInt64(v) },
+        {typeof(long), v=>Convert.ToInt64(v, CultureInfo.InvariantCulture) },
+        {typeof(long?), v=>Convert.ToInt64(v, CultureInfo.InvariantCulture) },
+        {typeof(ulong), v=>Convert.ToUInt64(v, CultureInfo.InvariantCulture) },
+        {typeof(ulong?), v=>Convert.ToUInt64(v, CultureInfo.InvariantCulture) },
 
-        {typeof(decimal), v=>Convert.ToDecimal(v) },
-        {typeof(decimal?), v=>Convert.ToDecimal(v) },
+        {typeof(decimal), v=>Convert.ToDecimal(v, CultureInfo.InvariantCulture) },
+        {typeof(decimal?), v=>Convert.ToDecimal(v, CultureInfo.InvariantCulture) },
 
-        {typeof(double), v=>Convert.ToDouble(v) },
-        {typeof(double?), v=>Convert.ToDouble(v) },
-        {typeof(float), v=>Convert.ToSingle(v) },
-        {typeof(float?), v=>Convert.ToSingle(v) },
+        {typeof(double), v=>Convert.ToDouble(v, CultureInfo.InvariantCulture) },
+        {typeof(double?), v=>Convert.ToDouble(v, CultureInfo.InvariantCulture) },
+        {typeof(float), v=>Convert.ToSingle(v, CultureInfo.InvariantCulture) },
+        {typeof(float?), v=>Convert.ToSingle(v, CultureInfo.InvariantCulture) },
     };
 
     /// <summary>

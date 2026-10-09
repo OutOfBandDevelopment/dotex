@@ -1,3 +1,4 @@
+using System;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Collections.Generic;
@@ -54,7 +55,7 @@ public class FileTemplateSource(
             let fileName = string.Join("", templateName, target.Extension, template.Extension)
             let filePath = Path.Combine(_settings.TemplatePath, fileName)
             let fullPath = Path.GetFullPath(filePath)
-            where sandbox == null || fullPath.StartsWith(sandbox)
+            where sandbox == null || fullPath.StartsWith(sandbox, StringComparison.Ordinal)
             where File.Exists(fullPath)
             select new TemplateContext()
             {

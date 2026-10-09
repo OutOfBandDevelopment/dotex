@@ -1,6 +1,7 @@
 ﻿// Ignore Spelling: Ldap
 
 using System;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 
@@ -32,7 +33,7 @@ public record LdapSimpleFilter : ILdapFilter
     public LdapSimpleFilter(string attributeName, LdapFilterTypes operation, byte[] value)
         : this(attributeName, operation, null, (value ?? Enumerable.Empty<byte>())
                                                         .Aggregate(new StringBuilder(),
-                                                                   (sb, v) => sb.AppendFormat("\\{0:X}", v),
+                                                                   (sb, v) => sb.AppendFormat(CultureInfo.InvariantCulture, "\\{0:X}", v),
                                                                    sb => sb.ToString()))
     {
     }

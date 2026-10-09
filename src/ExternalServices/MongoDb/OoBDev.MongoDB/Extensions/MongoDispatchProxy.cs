@@ -29,7 +29,7 @@ internal class MongoDispatchProxy : DispatchProxy
         }
 
         //TODO: need to simplify this name logic with that on the DataloaderCommandFactory
-        var originalName = targetMethod.Name.StartsWith("get_") ? targetMethod.Name[4..] : targetMethod.Name;
+        var originalName = targetMethod.Name.StartsWith("get_", StringComparison.Ordinal) ? targetMethod.Name[4..] : targetMethod.Name;
 
         var name = targetMethod.DeclaringType?.GetProperty(originalName)
             ?.GetCustomAttributes()

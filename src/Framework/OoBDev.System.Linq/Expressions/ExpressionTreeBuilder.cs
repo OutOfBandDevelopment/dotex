@@ -4,6 +4,7 @@ using OoBDev.System.Linq.Search;
 using OoBDev.System.ResponseModel;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Globalization;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -137,7 +138,7 @@ public class ExpressionTreeBuilder<TModel>(
                 IEnumerable<char> charArray => new string([.. charArray]),
                 Array _ => queryParameter,
                 IEnumerable enumerable => enumerable.OfType<object>().ToArray(),
-                _ => Convert.ToString(queryParameter)
+                _ => Convert.ToString(queryParameter, CultureInfo.InvariantCulture)
             };
         }
 

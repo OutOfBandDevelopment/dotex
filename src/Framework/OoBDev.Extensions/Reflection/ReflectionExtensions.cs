@@ -1,6 +1,7 @@
 ﻿using OoBDev.System.ComponentModel;
 using OoBDev.System.ResponseModel;
 using System;
+using System.Globalization;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -142,7 +143,7 @@ public static class ReflectionExtensions
         {
             if (input is IConvertible convertible)
             {
-                return Convert.ChangeType(convertible, type);
+                return Convert.ChangeType(convertible, type, CultureInfo.InvariantCulture);
             }
             else if (input is JsonElement json)
             {

@@ -19,7 +19,7 @@ public static class Tools
     {
         var sb = new StringBuilder(buffer.Length * 3);
         foreach (var item in buffer)
-            sb.AppendFormat("{0:X2} ", item);
+            sb.AppendFormat(CultureInfo.InvariantCulture, "{0:X2} ", item);
         return sb.ToString();
     }
 

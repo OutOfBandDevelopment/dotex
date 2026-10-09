@@ -1,5 +1,6 @@
 ﻿using OoBDev.System.ComponentModel;
 using System;
+using System.Globalization;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -84,7 +85,7 @@ public static class EnumExtensions
 
         return new EnumModel<TEnum>
         {
-            Id = Convert.ToInt32(@enum),
+            Id = Convert.ToInt32(@enum, CultureInfo.InvariantCulture),
 
             Name = First(displayValues?.Name, @enum.ToString().Replace("_", " ")) ??
                 throw new NullReferenceException(nameof(EnumModel<>.Name)),
@@ -93,7 +94,7 @@ public static class EnumExtensions
                 enumMember?.Value,
                 displayValues?.ShortName,
                 displayValues?.Name,
-                @enum.ToString().ToUpper()) ??
+                @enum.ToString().ToUpperInvariant()) ??
                 throw new NullReferenceException(nameof(EnumModel<>.Code)),
             Description = First(description, displayValues?.Description),
             Order = displayValues?.GetOrder() ?? 0,
@@ -107,7 +108,7 @@ public static class EnumExtensions
             {
                 @enum.ToString(),
                 @enum.ToString().Replace("_", " "),
-                @enum.ToString().ToUpper(),
+                @enum.ToString().ToUpperInvariant(),
                 displayValues?.Name,
                 displayValues?.ShortName,
                 description,

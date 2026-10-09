@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Globalization;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -50,7 +51,7 @@ public static class StringEx
 
         var buffer = Encoding.UTF8.GetBytes(text);
         var hash = hashAlgorithm.ComputeHash(buffer);
-        var result = hash.Aggregate(new StringBuilder(), (sb, v) => sb.AppendFormat("{0:x2}", v));
+        var result = hash.Aggregate(new StringBuilder(), (sb, v) => sb.AppendFormat(CultureInfo.InvariantCulture, "{0:x2}", v));
         return result.ToString();
     }
 }

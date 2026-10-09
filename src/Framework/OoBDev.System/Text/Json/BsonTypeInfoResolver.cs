@@ -22,8 +22,8 @@ public class BsonTypeInfoResolver : DefaultJsonTypeInfoResolver
         var info = base.GetTypeInfo(type, options);
         var idConvention =
             (
-            type.Name.EndsWith("Model") ? type.Name[..^5] :
-            type.Name.EndsWith("Collection") ? type.Name[..^10] :
+            type.Name.EndsWith("Model", StringComparison.Ordinal) ? type.Name[..^5] :
+            type.Name.EndsWith("Collection", StringComparison.Ordinal) ? type.Name[..^10] :
             type.Name
             ) + "Id";
 

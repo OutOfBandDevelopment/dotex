@@ -1,5 +1,6 @@
 ﻿using OoBDev.System.Codecs;
 using System;
+using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -61,7 +62,7 @@ public class OneTimeCode(TimeProvider? timeProvider = null)
 
         var password = binary % (int)global::System.Math.Pow(10, digits); // 6 digits
 
-        var result = password.ToString(new string('0', digits));
+        var result = password.ToString(new string('0', digits), CultureInfo.InvariantCulture);
 
         return result;
     }
@@ -136,7 +137,7 @@ public class OneTimeCode(TimeProvider? timeProvider = null)
     /// <param name="type">The OTP type (TOTP or HOTP).</param>
     /// <returns>The OTP authentication URI.</returns>
     public string GetUri(string secret, string issuer, string? account = null, Types type = Types.TOTP) =>
-        $"otpauth://{type.ToString().ToLower()}/{issuer}{(!string.IsNullOrWhiteSpace(account) ? ":" + account : null)}?secret={secret}&issuer={issuer}";
+        $"otpauth://{type.ToString().ToLowerInvariant()}/{issuer}{(!string.IsNullOrWhiteSpace(account) ? ":" + account : null)}?secret={secret}&issuer={issuer}";
 
     /// <summary>
     /// Specifies the type of one-time password algorithm.

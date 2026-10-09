@@ -1,6 +1,7 @@
 ﻿// Ignore Spelling: Ldap
 
 using System;
+using System.Globalization;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -28,12 +29,12 @@ public class LdapFilterBuilder : ILdapFilterBuilder
             LdapSimpleFilter simple => Build(simple),
             LdapFilterSetBase simple => Build(simple),
             LdapNotFilter simple => Build(simple),
-            _ => throw new NotSupportedException(string.Format("LdapFilterType: {0} is not supported", filter.GetType()))
+            _ => throw new NotSupportedException(string.Format(CultureInfo.InvariantCulture, "LdapFilterType: {0} is not supported", filter.GetType()))
         };
         return result;
     }
 
-    private string? Build(LdapNotFilter filter) => filter == null ? null : string.Format("(!{0})", Build(filter.Wrapped));
+    private string? Build(LdapNotFilter filter) => filter == null ? null : string.Format(CultureInfo.InvariantCulture, "(!{0})", Build(filter.Wrapped));
 
     private readonly Dictionary<LdapFilterTypes, string> _simpleMap = new()
     {
@@ -57,7 +58,7 @@ public class LdapFilterBuilder : ILdapFilterBuilder
         var notAllowed = "()*\0";
         return notAllowed.Any(filter.AttributeName.Contains)
             ? throw new InvalidOperationException("Invalid character found in filter.AttributeName")
-            : string.Format("({0}{1}{2}{3})", filter.AttributeName, _simpleMap[filter.Operation], EscapedValue(filter.Value), filter.UnEscapedSuffix);
+            : string.Format(CultureInfo.InvariantCulture, "({0}{1}{2}{3})", filter.AttributeName, _simpleMap[filter.Operation], EscapedValue(filter.Value), filter.UnEscapedSuffix);
     }
     private static string? EscapedValue(string? value)
     {

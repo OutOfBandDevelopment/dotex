@@ -52,7 +52,7 @@ public static class ObjectExtensions
             if (numberType != null)
             {
                 if (double.TryParse(stringValue, CultureInfo.CurrentCulture, out var doubleValue))
-                    return Convert.ChangeType(doubleValue, nonNullableType);
+                    return Convert.ChangeType(doubleValue, nonNullableType, CultureInfo.InvariantCulture);
             }
         }
 
@@ -80,7 +80,7 @@ public static class ObjectExtensions
             if (converter.CanConvertTo(nonNullableType))
                 return converter.ConvertTo(value, nonNullableType)!;
 
-            return Convert.ChangeType(value, nonNullableType);
+            return Convert.ChangeType(value, nonNullableType, CultureInfo.InvariantCulture);
         }
         catch
         {

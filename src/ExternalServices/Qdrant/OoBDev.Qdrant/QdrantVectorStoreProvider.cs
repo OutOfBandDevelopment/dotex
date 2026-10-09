@@ -4,6 +4,7 @@ using Google.Protobuf.Collections;
 using Microsoft.Extensions.Options;
 using Qdrant.Client.Grpc;
 using System;
+using System.Globalization;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -185,7 +186,7 @@ public class QdrantVectorStoreProvider : IVectorStoreProvider
         new()
         {
             Score = point.Score,
-            ItemId = point.Id.HasUuid ? point.Id.Uuid : point.Id.Num.ToString(),
+            ItemId = point.Id.HasUuid ? point.Id.Uuid : point.Id.Num.ToString(CultureInfo.InvariantCulture),
             MetaData = Convert(point.Payload),
         };
 
@@ -193,7 +194,7 @@ public class QdrantVectorStoreProvider : IVectorStoreProvider
         new()
         {
             Score = 0.0f,
-            ItemId = point.Id.HasUuid ? point.Id.Uuid : point.Id.Num.ToString(),
+            ItemId = point.Id.HasUuid ? point.Id.Uuid : point.Id.Num.ToString(CultureInfo.InvariantCulture),
             MetaData = Convert(point.Payload),
         };
 

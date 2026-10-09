@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 
 namespace OoBDev.Caching;
 
@@ -13,7 +14,7 @@ public sealed class IsCacheableAttribute : Attribute
     /// </summary>
     /// <param name="keyFormatter">The cache key formatter string.</param>
     /// <param name="lifetimeSpan">The cache entry lifetime as a parseable TimeSpan string (e.g., "00:05:00" for 5 minutes).</param>
-    public IsCacheableAttribute(string keyFormatter, string lifetimeSpan) => (KeyFormatter, LifeTime) = (keyFormatter, TimeSpan.Parse(lifetimeSpan));
+    public IsCacheableAttribute(string keyFormatter, string lifetimeSpan) => (KeyFormatter, LifeTime) = (keyFormatter, TimeSpan.Parse(lifetimeSpan, CultureInfo.InvariantCulture));
 
     /// <summary>
     /// Gets the cache key formatter string.

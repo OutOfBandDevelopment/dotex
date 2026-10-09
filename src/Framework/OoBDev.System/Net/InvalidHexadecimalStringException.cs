@@ -1,5 +1,6 @@
 ﻿using BinaryDataDecoders.Net;
 using System;
+using System.Globalization;
 using System.Diagnostics;
 
 namespace OoBDev.System.Net;
@@ -8,7 +9,7 @@ namespace OoBDev.System.Net;
 /// Exception thrown when a string is not a valid hexadecimal representation.
 /// </summary>
 /// <param name="hexString">The invalid hexadecimal string that caused the exception.</param>
-public class InvalidHexadecimalStringException(string hexString) : Exception(string.Format("\"{0}\" is not a valid Hexadecimal Number", hexString))
+public class InvalidHexadecimalStringException(string hexString) : Exception(string.Format(CultureInfo.InvariantCulture, "\"{0}\" is not a valid Hexadecimal Number", hexString))
 {
     /// <summary>
     /// Gets the hexadecimal string that was invalid.

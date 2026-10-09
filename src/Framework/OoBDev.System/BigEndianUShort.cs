@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Runtime.InteropServices;
 
 namespace OoBDev.System;
@@ -48,7 +49,7 @@ public readonly struct BigEndianUShort
     /// Returns a string representation of the value.
     /// </summary>
     /// <returns>A string that represents the value.</returns>
-    public override string ToString() => Value.ToString();
+    public override string ToString() => Value.ToString(CultureInfo.InvariantCulture);
     
     /// <summary>
     /// Checks if the given object is equal to the current <see cref="BigEndianUShort"/>.

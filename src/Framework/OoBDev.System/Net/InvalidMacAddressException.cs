@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Diagnostics;
 
 namespace OoBDev.System.Net;
@@ -7,7 +8,7 @@ namespace OoBDev.System.Net;
 /// Exception thrown when a string is not a valid MAC (Media Access Control) address.
 /// </summary>
 /// <param name="macAddress">The invalid MAC address string that caused the exception.</param>
-public class InvalidMacAddressException(string macAddress) : Exception(string.Format("\"{0}\" is not a valid MAC Address", macAddress))
+public class InvalidMacAddressException(string macAddress) : Exception(string.Format(CultureInfo.InvariantCulture, "\"{0}\" is not a valid MAC Address", macAddress))
 {
     /// <summary>
     /// Gets the MAC address string that was invalid.

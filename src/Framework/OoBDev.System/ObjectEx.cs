@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.IO;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -88,8 +89,8 @@ public static class ObjectEx
             _ when elementType?.IsAnonymousType() ?? false =>
                 elementName switch
                 {
-                    _ when elementName?.LocalName.EndsWith("es") ?? false => elementName.LocalName[..^2],
-                    _ when elementName?.LocalName.EndsWith("s") ?? false => elementName.LocalName[..^1],
+                    _ when elementName?.LocalName.EndsWith("es", StringComparison.Ordinal) ?? false => elementName.LocalName[..^2],
+                    _ when elementName?.LocalName.EndsWith("s", StringComparison.Ordinal) ?? false => elementName.LocalName[..^1],
                     _ when string.Equals(elementName?.LocalName, "object", global::System.StringComparison.InvariantCultureIgnoreCase) => null,
                     _ => null,
                 },

@@ -60,7 +60,7 @@ public class SearchQueryOperationTransformer(
         var jsonContentTypes = (
             from responseType in context.Description.SupportedResponseTypes
             from format in responseType.ApiResponseFormats
-            where format.MediaType.EndsWith("/json")
+            where format.MediaType.EndsWith("/json", StringComparison.Ordinal)
             select format.MediaType
             ).Distinct().ToList();
 
