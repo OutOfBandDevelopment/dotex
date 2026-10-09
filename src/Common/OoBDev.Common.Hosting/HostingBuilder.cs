@@ -14,7 +14,7 @@ public record HostingBuilder
     /// Set to <c>true</c> to disable MailKit functionality; otherwise, set to <c>false</c>.
     /// The default value is <c>false</c>.
     /// </remarks>
-    public bool DisableMailKit { get; init; } = false;
+    public bool DisableMailKit { get; init; }
 
     /// <summary>
     /// Gets or sets a value indicating whether message queueing should be disabled.
@@ -23,12 +23,12 @@ public record HostingBuilder
     /// Set to <c>true</c> to disable message queueing; otherwise, set to <c>false</c>.
     /// The default value is <c>false</c>.
     /// </remarks>
-    public bool DisableMessageQueueing { get; init; } = false;
+    public bool DisableMessageQueueing { get; init; }
 
     /// <summary>
     /// Gets or sets a value indicating whether vector hosting should be disabled.
     /// </summary>
-    public bool DisableVectorHosting { get; init; } = false;
+    public bool DisableVectorHosting { get; init; }
 
     /// <summary>
     /// Gets or sets the configuration section name for embedding sentence transformer queue reader options.

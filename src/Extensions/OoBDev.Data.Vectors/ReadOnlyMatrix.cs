@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 
 namespace OoBDev.Data.Vectors;
 
-internal class ReadOnlyMatrix<T> : IReadOnlyMatrix<T>
+internal sealed class ReadOnlyMatrix<T> : IReadOnlyMatrix<T>
 {
     private readonly T[,] _values;
 

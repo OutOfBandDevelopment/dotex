@@ -224,5 +224,6 @@ public class StreamDevice<TMessage> : IStreamDevice<TMessage>
         Runner.GetAwaiter().GetResult();
         _tokenSource.Cancel(false);
         AdapterStream.Dispose();
+        GC.SuppressFinalize(this);
     }
 }

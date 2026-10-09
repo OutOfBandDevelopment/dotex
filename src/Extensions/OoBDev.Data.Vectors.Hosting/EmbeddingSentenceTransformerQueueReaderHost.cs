@@ -29,7 +29,7 @@ public class EmbeddingSentenceTransformerQueueReaderHost : IHostedService, IDisp
         _logger = logger;
     }
 
-    private bool _disposed = false;
+    private bool _disposed;
 
     /// <summary>
     /// Disposes resources used by this host.

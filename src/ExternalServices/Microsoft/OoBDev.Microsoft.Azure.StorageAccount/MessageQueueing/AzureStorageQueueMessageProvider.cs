@@ -76,7 +76,7 @@ public class AzureStorageQueueMessageProvider(
             if (_mapper.EnsureQueueExists(_handlerProvider.Config))
             {
                 logger.LogWarning("Creating {queueName} as it does not exist", client.Name);
-                client.CreateIfNotExists();
+                client.CreateIfNotExists(cancellationToken: cancellationToken);
             }
             else
             {

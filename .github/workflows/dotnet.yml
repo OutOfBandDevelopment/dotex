@@ -238,6 +238,7 @@ jobs:
         dotnet pack
         --configuration ${{ steps.calculate-version.outputs.BuildConfiguration }}
         --property:Version=${{ steps.calculate-version.outputs.FullSemVerLower }}
+        --property:PackageVersion=${{ steps.calculate-version.outputs.FullSemVerLower }}
         --property:SolutionDir=${{ steps.calculate-version.outputs.BuildWorkspace }}/src/
         --property:GitVersion_AssemblySemFileVer=${{ steps.gitversion.outputs.assemblySemFileVer }}
         --property:GitVersion_InformationalVersion=${{ steps.gitversion.outputs.informationalVersion }}

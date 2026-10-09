@@ -90,7 +90,7 @@ public static class ObjectEx
                 elementName switch
                 {
                     _ when elementName?.LocalName.EndsWith("es", StringComparison.Ordinal) ?? false => elementName.LocalName[..^2],
-                    _ when elementName?.LocalName.EndsWith("s", StringComparison.Ordinal) ?? false => elementName.LocalName[..^1],
+                    _ when elementName?.LocalName.EndsWith('s') ?? false => elementName.LocalName[..^1],
                     _ when string.Equals(elementName?.LocalName, "object", global::System.StringComparison.OrdinalIgnoreCase) => null,
                     _ => null,
                 },

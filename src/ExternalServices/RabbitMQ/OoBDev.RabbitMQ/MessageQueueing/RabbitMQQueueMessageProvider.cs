@@ -132,10 +132,11 @@ public class RabbitMQQueueMessageProvider(
 
             };
 
-            await channel.QueueDeclareAsync(queue: queueName, exclusive: false);
+            await channel.QueueDeclareAsync(queue: queueName, exclusive: false, cancellationToken: newCancellationToken);
             await channel.BasicConsumeAsync(queue: queueName,
                                  autoAck: true,
-                                 consumer: consumer);
+                                 consumer: consumer,
+                                 cancellationToken: newCancellationToken);
 
             while (!newCancellationToken.IsCancellationRequested)
             {

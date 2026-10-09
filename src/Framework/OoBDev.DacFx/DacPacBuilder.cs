@@ -901,7 +901,7 @@ public class DacPacBuilder : IDacPacBuilder
     /// <param name="file">The path to the file to read.</param>
     /// <returns>The file contents as a hex string, or null if the file cannot be read.</returns>
     public string? GetHexContent(string file) =>
-        BitConverter.ToString(File.ReadAllBytes(file)).Replace("-", "");
+        Convert.ToHexString(File.ReadAllBytes(file));
 
     /// <summary>
     /// Computes the SHA-256 hash of a file.
@@ -917,7 +917,7 @@ public class DacPacBuilder : IDacPacBuilder
     /// <param name="content">The byte array to hash.</param>
     /// <returns>The SHA-256 hash as a hex string.</returns>
     public string GetSha256(byte[] content) =>
-        BitConverter.ToString(SHA256.HashData(content)).Replace("-", "");
+        Convert.ToHexString(SHA256.HashData(content));
 
     /// <summary>
     /// Computes the SHA-512 hash of a file.
@@ -933,7 +933,7 @@ public class DacPacBuilder : IDacPacBuilder
     /// <param name="content">The byte array to hash.</param>
     /// <returns>The SHA-512 hash as a hex string.</returns>
     public string GetSha512(byte[] content) =>
-        BitConverter.ToString(SHA512.HashData(content)).Replace("-", "");
+        Convert.ToHexString(SHA512.HashData(content));
 
     #endregion
 }

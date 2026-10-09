@@ -22,5 +22,5 @@ public class QdrantOptions
     /// <summary>
     /// is this is true the system will create the collection if not exists
     /// </summary>
-    public bool EnsureCollectionExists { get; set; } = false;
+    public bool EnsureCollectionExists { get; set; }
 }

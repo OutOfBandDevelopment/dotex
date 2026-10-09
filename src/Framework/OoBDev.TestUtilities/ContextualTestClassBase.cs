@@ -24,8 +24,7 @@ public abstract class ContextualTestClassBase
     {
         if (ContextualTestMethodAttribute.Current == null)
         {
-            if (TestContext.Properties.ContainsKey(ContextualTestMethodAttribute.CurrentTestMethod))
-                TestContext.Properties.Remove(ContextualTestMethodAttribute.CurrentTestMethod);
+            _ = TestContext.Properties.Remove(ContextualTestMethodAttribute.CurrentTestMethod);
         }
         else
         {
@@ -41,9 +40,7 @@ public abstract class ContextualTestClassBase
     [TestCleanup]
     public virtual void TestCleanup()
     {
-        if (TestContext.Properties.ContainsKey(ContextualTestMethodAttribute.CurrentTestMethod))
-            TestContext.Properties.Remove(ContextualTestMethodAttribute.CurrentTestMethod);
-        if (TestContext.Properties.ContainsKey(ContextualTestMethodAttribute.CurrentTestInstance))
-            TestContext.Properties.Remove(ContextualTestMethodAttribute.CurrentTestInstance);
+        _ = TestContext.Properties.Remove(ContextualTestMethodAttribute.CurrentTestMethod);
+        _ = TestContext.Properties.Remove(ContextualTestMethodAttribute.CurrentTestInstance);
     }
 }

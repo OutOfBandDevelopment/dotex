@@ -243,7 +243,7 @@ public class TestContextConfigurationProviderTests
 
     #region Helper Classes
 
-    private class DatabaseConfig
+    private sealed class DatabaseConfig
     {
         public string Server { get; set; } = string.Empty;
         public int Port { get; set; }

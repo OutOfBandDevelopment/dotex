@@ -251,7 +251,11 @@ public class VolumeDescription : IEnumerable<DirectoryRecord>, IDisposable
     /// <summary>
     /// Disposes the volume description and releases the underlying base stream.
     /// </summary>
-    public void Dispose() => BaseStream?.Dispose();
+    public void Dispose()
+    {
+        BaseStream?.Dispose();
+        GC.SuppressFinalize(this);
+    }
 
     #endregion
 }

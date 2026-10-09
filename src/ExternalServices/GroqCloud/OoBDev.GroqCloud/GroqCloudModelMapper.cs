@@ -28,6 +28,6 @@ public class GroqCloudModelMapper : IGroqCloudModelMapper
     public CompletionResponse Map(GroqChatCompletions response) => new()
     {
         Context = [], //TODO: I need a way to map this more generic,
-        Response = response.Choices.FirstOrDefault()?.Message?.Content ?? "",
+        Response = (response.Choices.Count > 0 ? response.Choices[0].Message?.Content : null) ?? "",
     };
 }

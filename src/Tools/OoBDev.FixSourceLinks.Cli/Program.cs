@@ -9,7 +9,7 @@ using System.Xml.Linq;
 
 namespace OoBDev.FixSourceLinks.Cli;
 
-internal class Program
+internal sealed class Program
 {
     private static void Main(string[] args)
     {

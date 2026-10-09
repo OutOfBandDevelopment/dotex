@@ -286,7 +286,10 @@ public struct SqlVector : INullable, IBinarySerialize, IEquatable<SqlVector>
         var inputValue = input.Value.Trim();
         try
         {
+            // string overloads: this file is also compiled for the .NET Framework 4.8 SQL CLR assembly, which has no char overloads
+#pragma warning disable CA1865
             if (inputValue.StartsWith("[", StringComparison.Ordinal) && inputValue.EndsWith("]", StringComparison.Ordinal))
+#pragma warning restore CA1865
             {
                 inputValue = inputValue.Substring(1, inputValue.Length - 2);
             }

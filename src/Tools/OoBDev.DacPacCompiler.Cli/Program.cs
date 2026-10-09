@@ -9,7 +9,7 @@ using OoBDev.DacFx;
 
 namespace OoBDev.DacPacCompiler.Cli;
 
-internal class Program
+internal sealed class Program
 {
     private static async Task Main(string[] args) =>
         await Host.CreateDefaultBuilder(args)

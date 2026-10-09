@@ -29,7 +29,7 @@ public static class EndpointRouteBuilderExtensions
         endpoints.MapOpenApi();
         endpoints.MapScalarApiReference(options =>
         {
-            options.Title = catalog.Names.Count > 1 ? "API reference" : catalog.Names.FirstOrDefault();
+            options.Title = catalog.Names.Count > 1 ? "API reference" : catalog.Names.Count > 0 ? catalog.Names[0] : null;
             options.AddDocuments(catalog.Names);
             foreach (var configurator in configurators)
             {
