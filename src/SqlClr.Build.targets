@@ -1,5 +1,14 @@
 <Project>
 
+  <!--
+    The DACPAC tool is built once, by the normal project build, before any SQL CLR project uses it. Building it from
+    inside each SQL CLR project (dotnet run, nested MSBuild task) collided on its obj and bin files in parallel builds.
+  -->
+  <ItemGroup Condition="'$(IsSqlClr)' == 'true'">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)Tools\OoBDev.DacPacCompiler.Cli\OoBDev.DacPacCompiler.Cli.csproj"
+                      ReferenceOutputAssembly="false" SkipGetTargetFrameworkProperties="true" GlobalPropertiesToRemove="TargetFramework" />
+  </ItemGroup>
+
   <!-- Runs inside the build (not after it) so that projects referencing this one, such as the sqlproj, only continue once the dacpac exists -->
   <Target Name="GenerateDacPac"
          AfterTargets="CopyFilesToOutputDirectory"
@@ -20,7 +29,7 @@
     <Message Text="SqlAssemblyFileFramework: $(SqlAssemblyFileFramework)" Importance="High" />
     <Message Text="SqlAssemblyDacPacFile: $(SqlAssemblyDacPacFile)" Importance="High" />
 
-    <Exec Command="dotnet run --project &quot;$(SolutionDir)Tools/OoBDev.DacPacCompiler.Cli&quot; --sqlclr &quot;$(SqlAssemblyFileFramework)&quot; --dacpac &quot;$(SqlAssemblyDacPacFile)&quot; --version &quot;$(AssemblyVersion)&quot;"
+    <Exec Command="dotnet run --no-build --configuration $(Configuration) --project &quot;$(MSBuildThisFileDirectory)Tools/OoBDev.DacPacCompiler.Cli&quot; --sqlclr &quot;$(SqlAssemblyFileFramework)&quot; --dacpac &quot;$(SqlAssemblyDacPacFile)&quot; --version &quot;$(AssemblyVersion)&quot;"
           ContinueOnError="false"
           StandardErrorImportance="High"
           StandardOutputImportance="High" />
