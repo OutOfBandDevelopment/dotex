@@ -125,7 +125,7 @@ appsettings.json
 ├── MongoDatabaseOptions
 │   ├── ConnectionString
 │   └── DatabaseName
-├── OAuth2SwaggerOptions
+├── OAuth2OpenApiOptions
 │   ├── UserReadApiClaim
 │   ├── AuthorizationUrl
 │   └── TokenUrl
@@ -194,14 +194,14 @@ services.Configure<FileTemplatingOptions>(options =>
 
 ---
 
-#### OAuth2SwaggerOptions
+#### OAuth2OpenApiOptions
 
-**Namespace:** `OoBDev.AspNetCore.JwtAuthentication.SwaggerGen`
-**Configuration Section:** `OAuth2SwaggerOptions`
+**Namespace:** `OoBDev.AspNetCore.JwtAuthentication.OpenApi`
+**Configuration Section:** `OAuth2OpenApiOptions`
 
 | Property | Type | Required | Default | Description |
 |----------|------|----------|---------|-------------|
-| UserReadApiClaim | string | Yes | - | Claim used to determine API access |
+| UserReadApiClaim | string | Yes | - | Scope the API reference requests to determine API access |
 | AuthorizationUrl | string | Yes | - | OAuth2 authorization endpoint URL |
 | TokenUrl | string | Yes | - | OAuth2 token endpoint URL |
 
@@ -210,7 +210,7 @@ services.Configure<FileTemplatingOptions>(options =>
 
 **Usage:**
 ```csharp
-services.Configure<OAuth2SwaggerOptions>(options =>
+services.Configure<OAuth2OpenApiOptions>(options =>
 {
     options.UserReadApiClaim = "api_access";
     options.AuthorizationUrl = "https://auth.example.com/oauth2/authorize";

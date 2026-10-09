@@ -24,20 +24,20 @@
 
 ## 19. Swagger and OpenAPI
 
-**Today:** Swashbuckle with small `IConfigureOptions` classes for filters and OAuth ([pattern 20](../02-design-patterns/20-configure-options-classes.md)).
+**Today:** `Microsoft.AspNetCore.OpenApi` with document, operation and schema transformers registered by small `IConfigureOptions` classes, and Scalar as the reference ([pattern 20](../02-design-patterns/20-configure-options-classes.md), [design](../../design/OpenApiScalar/README.md)). Swashbuckle was removed on 2026-10-09.
 
 **Table 19 — OpenAPI generation**
 
 | Option | Pros | Cons |
 |--------|------|------|
-| Current Swashbuckle | Mature; rich filters; UI included | No longer the template default; upgrades have needed .NET 10 fixes |
+| Swashbuckle (previous) | Mature; rich filters; UI included | Removed; upgrades had needed .NET 10 fixes |
 | `Microsoft.AspNetCore.OpenApi` (built-in) | First-party; document transformers; less reflection | Needs a separate UI package; different extension model |
 | NSwag | Code generation for clients | Different configuration style |
 | Scalar or other UIs on top of built-in documents | Modern UI | Additional package |
 
-**Verdict: Consider.** Keep Swashbuckle for existing apps; prefer the built-in generator in new products and port the filter classes to document transformers when there is a reason to touch them.
+**Verdict: Adopted.** The built-in generator with Scalar replaced Swashbuckle; the custom filters became transformers.
 
-**Owner decision:** migrate to Scalar and the "async-ui" viewer (as written in the answers; confirm whether this means an AsyncAPI viewer or Swagger UI).
+**Owner decision:** migrate to Scalar and an AsyncAPI viewer (answered 2026-10-09). Scalar is done; the AsyncAPI document and viewer for the SQS, Service Bus and RabbitMQ surfaces is phase 2 of the [design](../../design/OpenApiScalar/architecture.md#phase-2--asyncapi).
 
 ---
 

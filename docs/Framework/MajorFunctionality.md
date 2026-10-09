@@ -19,7 +19,7 @@ See [Text Templating](TextTemplating.md)
 These extensions include
 
 * Common query though IQueryable<T> support as controller actions
-* SwaggerGen extensions for oauth2 authentication as well as enumeration of options for querying 
+* OpenAPI transformers and Scalar sign-in for oauth2 authentication as well as enumeration of options for querying 
   * Tested to support the Keycloak provider
   * User management is tested for Keycloak (using Keycloak.ApiClient.Net) 
 * CultureInfo mapping based on request/response headers

@@ -112,6 +112,12 @@ Each change document should include:
 - Design set for replacing the `AllMiniLML6v2Sharp` fork with first-party, thread-safe ONNX embeddings
 - Status: ✅ Complete (design only)
 
+### API Documentation
+
+**[migration-openapi-scalar-2026-10-09.md](migration-openapi-scalar-2026-10-09.md)**
+- Swashbuckle replaced by `Microsoft.AspNetCore.OpenApi` transformers and the Scalar API reference; OAuth2 authorization code with PKCE; AsyncAPI is phase 2
+- Status: ✅ Complete (phase 1)
+
 ### Observability
 
 **[migration-opentelemetry-2026-10-09.md](migration-opentelemetry-2026-10-09.md)**
