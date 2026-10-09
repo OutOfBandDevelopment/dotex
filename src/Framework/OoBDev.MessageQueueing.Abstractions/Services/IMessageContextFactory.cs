@@ -1,6 +1,5 @@
 using Microsoft.Extensions.Configuration;
 using System;
-using System.Reflection;
 
 namespace OoBDev.MessageQueueing.Services;
 /// <summary>
@@ -17,7 +16,7 @@ public interface IMessageContextFactory
     /// <param name="correlationId">The correlation identifier.</param>
     /// <param name="requestId">The request identifier.</param>
     /// <param name="configuration">The configuration section associated with the message context.</param>
-    /// <param name="caller">The calling method.</param>
+    /// <param name="callerMember">The name of the calling member (from <c>CallerMemberName</c>).</param>
     /// <param name="callerLine">The line number at which the method is called.</param>
     /// <param name="callerFile">The path to the source file that contains the calling method.</param>
     /// <returns>A new instance of <see cref="IMessageContext"/>.</returns>
@@ -28,9 +27,9 @@ public interface IMessageContextFactory
         string correlationId,
         string requestId,
         IConfigurationSection configuration,
-        /*[CallerMemberName]*/ MethodBase? caller     /* = default */,
-        /*[CallerLineNumber]*/ int callerLine     /* = default */,
-        /*[CallerFilePath]  */ string? callerFile /* = default */
+        string? callerMember,
+        int callerLine,
+        string? callerFile
         );
 
     /// <summary>

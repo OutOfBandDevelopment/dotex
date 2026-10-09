@@ -49,6 +49,28 @@ public class MessageSenderTests
 
     [TestMethod]
     [TestCategory(TestCategories.Simulate)]
+    public async Task SendAsync_RecordsCompilerSuppliedCaller()
+    {
+        // Stage
+        var config = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string?>
+        {
+            {"MessageQueue:MessageSenderTests:Provider", typeof(TestMessageSenderProvider).AssemblyQualifiedName },
+        }).Build();
+        var service = GetServiceProvider(TestContext, config);
+        var sender = service.GetRequiredService<IMessageQueueSender<MessageSenderTests>>();
+
+        // Test
+        await sender.SendAsync(new { hello = "world" });
+
+        // Assert
+        var context = TestMessageSenderProvider.LastContext!;
+        Assert.AreEqual(nameof(SendAsync_RecordsCompilerSuppliedCaller), context["X-CallerMemberName"]);
+        StringAssert.EndsWith((string)context["X-CallerFilePath"]!, "MessageSenderTests.cs");
+        Assert.IsTrue((int)context["X-CallerLineNumber"]! > 0);
+    }
+
+    [TestMethod]
+    [TestCategory(TestCategories.Simulate)]
     public async Task SendAsyncTest_Error()
     {
         var configBuilder = new ConfigurationBuilder();

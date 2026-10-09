@@ -40,7 +40,7 @@ public class MessageContextFactory(
         string correlationId,
         string requestId,
         IConfigurationSection configuration,
-        MethodBase? caller,
+        string? callerMember,
         int callerLine,
         string? callerFile
         )
@@ -60,8 +60,7 @@ public class MessageContextFactory(
         context.ChannelType = channelType.AssemblyQualifiedName;
         context.MessageType = messageType.AssemblyQualifiedName;
 
-        context["X-CallerName"] = caller?.DeclaringType?.AssemblyQualifiedName ?? "UNKNOWN CALLER";
-        context["X-CallerMemberName"] = caller?.ToString() ?? "UNKNOWN CALLER";
+        context["X-CallerMemberName"] = callerMember ?? "UNKNOWN CALLER";
         context["X-CallerLineNumber"] = callerLine;
         context["X-CallerFilePath"] = callerFile ?? "UNKNOWN CALLER PATH";
 

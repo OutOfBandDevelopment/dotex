@@ -1,7 +1,7 @@
 using OoBDev.MessageQueueing.Services;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace OoBDev.MessageQueueing;
@@ -33,20 +33,20 @@ public class MessageSender<TChannel>(
     /// </summary>
     /// <param name="message">The message to be sent.</param>
     /// <param name="correlationId">The correlation ID associated with the message (optional).</param>
+    /// <param name="callerMember">The calling member, supplied by the compiler.</param>
+    /// <param name="callerFile">The calling source file, supplied by the compiler.</param>
+    /// <param name="callerLine">The calling line number, supplied by the compiler.</param>
     /// <returns>The ID of the sent message.</returns>
     public virtual async Task<string> SendAsync(
         object message,
-        string? correlationId = default
+        string? correlationId = default,
+        [CallerMemberName] string? callerMember = default,
+        [CallerFilePath] string? callerFile = default,
+        [CallerLineNumber] int callerLine = default
     )
     {
         var targetType = typeof(TChannel);
         var messageType = message.GetType();
-
-        var stackFrame = new StackFrame(5 /* this is based on the depth of the async/await state machine.  5 will get to the original caller  */, true);
-
-        var callerMethod = stackFrame.GetMethod();
-        var lineNumber = stackFrame.GetFileLineNumber();
-        var callerPath = stackFrame.GetFileName();
 
         var originMessageId = correlationId;
         correlationId = resolver.MessageId(targetType, messageType, correlationId);
@@ -59,19 +59,19 @@ public class MessageSender<TChannel>(
             correlationId,
             requestId,
             config,
-            callerMethod,
-            lineNumber,
-            callerPath
+            callerMember,
+            callerLine,
+            callerFile
         );
         var provider = _provider.Sender(targetType, messageType);
 
-        _logger.LogInformation("Sending: \"{message}\" [{orgMessageId} -> {messageId}] to \"{targetType}\" from \"{caller}::{method}\"",
+        _logger.LogInformation("Sending: \"{message}\" [{orgMessageId} -> {messageId}] to \"{targetType}\" from \"{callerFile}::{callerMember}\"",
             message,
             originMessageId,
             correlationId,
             targetType,
-            callerMethod?.DeclaringType,
-            callerMethod
+            callerFile,
+            callerMember
         );
 
         try

@@ -6,7 +6,7 @@
 
 `IMessageContext` bundles correlation (`CorrelationId`, `RequestId`, `OriginMessageId`, `SentId`), provenance (`SentAt`, `SentBy`, `SentFrom`, caller method/line/file captured from the stack), a header bag, and the resolved `IConfigurationSection`. It flows to **both** sender providers and handlers, so cross-cutting information is never in the message payload. `IQueueMessage`/`WrappedQueueMessage` is the wire envelope (`ContentType`, `PayloadType`, `Payload`, `Properties`).
 
-**Rough edge (under review, tracked in [`TODO.md`](../../../TODO.md)):** caller info is taken from `new StackFrame(5, true)`, which is brittle against async state-machine depth changes. The usual replacement is `[CallerMemberName]`/`[CallerFilePath]`/`[CallerLineNumber]` attributes (commented out in `IMessageContextFactory`), but they were deliberately avoided because they pollute the method signatures. The trade-off is acknowledged; whether to change is undecided.
+**Caller info:** `IMessageQueueSender.SendAsync` takes `[CallerMemberName]`, `[CallerFilePath]` and `[CallerLineNumber]` optional parameters and passes them to `IMessageContextFactory.Create`, which records `X-CallerMemberName`, `X-CallerFilePath` and `X-CallerLineNumber`. This replaced a `new StackFrame(5, true)` lookup (2026-10-09) that was brittle against async state-machine depth changes; callers need no change because the parameters are optional.
 
 ---
 
