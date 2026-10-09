@@ -34,5 +34,5 @@ public record AspNetCoreExtensionBuilder
     /// Set to a delegate that configures an <see cref="AuthorizationPolicyBuilder"/>.
     /// The default value is <c>null</c>.
     /// </remarks>
-    public Action<AuthorizationPolicyBuilder>? AuthorizationPolicyBuilder { get; init; } = default;
+    public Action<AuthorizationPolicyBuilder>? AuthorizationPolicyBuilder { get; init; }
 }

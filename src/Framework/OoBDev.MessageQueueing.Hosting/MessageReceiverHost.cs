@@ -25,7 +25,7 @@ public class MessageReceiverHost(
     private readonly List<Task> _tasks = [];
     private readonly CancellationTokenSource _tokenSource = new();
 
-    private bool _disposed = false;
+    private bool _disposed;
 
     /// <summary>
     /// Disposes of the resources used by the <see cref="MessageReceiverHost"/>.

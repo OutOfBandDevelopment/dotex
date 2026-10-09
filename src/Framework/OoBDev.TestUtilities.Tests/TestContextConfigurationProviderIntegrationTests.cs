@@ -179,14 +179,14 @@ public class TestContextConfigurationProviderIntegrationTests
 
     #region Helper Classes
 
-    private class ApiConfiguration
+    private sealed class ApiConfiguration
     {
         public string BaseUrl { get; set; } = string.Empty;
         public int Timeout { get; set; }
         public int RetryCount { get; set; }
     }
 
-    private class LoggingConfiguration
+    private sealed class LoggingConfiguration
     {
         public string Level { get; set; } = string.Empty;
         public bool EnableConsole { get; set; }

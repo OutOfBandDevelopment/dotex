@@ -507,7 +507,7 @@ public class KeycloakUserManagementTests
 
     #region Models
 
-    private class TokenResponse
+    private sealed class TokenResponse
     {
         [global::System.Text.Json.Serialization.JsonPropertyName("access_token")]
         public string? AccessToken { get; set; }

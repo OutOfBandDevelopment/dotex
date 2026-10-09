@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace OoBDev.System.IO.Pipelines.Factories;
 
-internal class SegmentPipeFactory
+internal sealed class SegmentPipeFactory
 {
     internal async Task CreateReader(PipelineBuildDefinition def, ISegmenter segmenter)
     {

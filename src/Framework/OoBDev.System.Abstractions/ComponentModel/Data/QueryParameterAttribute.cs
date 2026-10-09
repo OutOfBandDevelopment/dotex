@@ -16,5 +16,5 @@ public class QueryParameterAttribute : Attribute
     /// <summary>
     /// Indicates to the mapping provide that this property should be serialized as JSON for the request
     /// </summary>
-    public bool IsJson { get; set; } = false;
+    public bool IsJson { get; set; }
 }

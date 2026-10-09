@@ -111,7 +111,7 @@ public abstract class ServerBase : IServerBase
                     Console.WriteLine($"{GetType()}::ServiceLoopAsync::Accepted: {clientId}-{Environment.CurrentManagedThreadId}");
                     await AcceptClientAsync(clientId, accepted, cts.Token);
                     Console.WriteLine($"{GetType()}::ServiceLoopAsync::Closed:   {clientId}-{Environment.CurrentManagedThreadId}");
-                });
+                }, cts.Token);
                 _tasks.Add(clientTask);
 
                 await Task.Yield();
@@ -219,5 +219,6 @@ public abstract class ServerBase : IServerBase
         await Task.Yield();
 
         _cts?.Dispose();
+        GC.SuppressFinalize(this);
     }
 }

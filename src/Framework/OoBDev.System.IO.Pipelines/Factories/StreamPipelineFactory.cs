@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace OoBDev.System.IO.Pipelines.Factories;
 
-internal class StreamPipelineFactory
+internal sealed class StreamPipelineFactory
 {
     //https://devblogs.microsoft.com/dotnet/system-io-pipelines-high-performance-io-in-net/
     internal async Task CreateWriter(PipelineBuildDefinition def, Stream stream, int minimumBufferSize)

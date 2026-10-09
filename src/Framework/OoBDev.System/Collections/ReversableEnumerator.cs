@@ -17,9 +17,9 @@ public class ReversableEnumerator<T>(IEnumerator<T> @base) : IReversibleEnumerat
 {
     private const int ResetPosition = -1;
     private readonly object _lock = new();
-    private IDoubleLinkedList<T>? _pointer = null;
-    private bool _reset = false;
-    private bool _end = false;
+    private IDoubleLinkedList<T>? _pointer;
+    private bool _reset;
+    private bool _end;
 
     /// <summary>
     /// Gets the current position in the enumeration sequence. Returns -1 when reset.
@@ -44,7 +44,11 @@ public class ReversableEnumerator<T>(IEnumerator<T> @base) : IReversibleEnumerat
     /// <summary>
     /// free any underlying resources
     /// </summary>
-    public void Dispose() => @base.Dispose();
+    public void Dispose()
+    {
+        @base.Dispose();
+        global::System.GC.SuppressFinalize(this);
+    }
 
     /// <summary>
     /// allow playing to end of current state before checking for new values in enumerable set.

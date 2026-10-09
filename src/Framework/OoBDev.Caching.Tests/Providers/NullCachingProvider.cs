@@ -6,7 +6,7 @@ namespace OoBDev.Caching.Tests.Providers;
 /// <summary>
 /// A no-op caching provider for testing scenarios where caching is not needed.
 /// </summary>
-internal class NullCachingProvider : ICachingProvider
+internal sealed class NullCachingProvider : ICachingProvider
 {
     public Task FlushAsync(string? key) => Task.CompletedTask;
 

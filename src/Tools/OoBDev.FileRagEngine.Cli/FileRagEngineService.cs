@@ -130,7 +130,7 @@ public class FileRagEngineService : IHostedService
                         if (_settings.Value.IncludePrompt)
                         {
                             var realPromptFile = x == 0 ? promptFile : Path.ChangeExtension(promptFile, $".{x}" + Path.GetExtension(promptFile));
-                            await File.WriteAllBytesAsync(realPromptFile, promptStream.ToArray());
+                            await File.WriteAllBytesAsync(realPromptFile, promptStream.ToArray(), cancellationToken);
                         }
 
                         // post prompt to ollama
@@ -139,13 +139,13 @@ public class FileRagEngineService : IHostedService
 
                         // capture response from ollama
                         _log.LogInformation("write files: {directory}", directory);
-                        await File.WriteAllTextAsync(realResponseFileContent, response.Response);
+                        await File.WriteAllTextAsync(realResponseFileContent, response.Response, cancellationToken);
 
                         if (_settings.Value.IncludeRawOutput)
                         {
                             using var responseStream = File.Create(responseFile);
-                            await JsonSerializer.SerializeAsync(responseStream, response);
-                            await responseStream.FlushAsync();
+                            await JsonSerializer.SerializeAsync(responseStream, response, cancellationToken: cancellationToken);
+                            await responseStream.FlushAsync(cancellationToken);
                         }
                     }
                     catch (Exception ex)
@@ -154,7 +154,7 @@ public class FileRagEngineService : IHostedService
                         _log.LogDebug("Exception: {exception}", ex);
 
                         var errorFile = Path.ChangeExtension(realResponseFileContent, ".error" + Path.GetExtension(responseFileContent));
-                        await File.WriteAllTextAsync(errorFile, ex.ToString());
+                        await File.WriteAllTextAsync(errorFile, ex.ToString(), cancellationToken);
                         exceptions.Add(ex);
                     }
                 }

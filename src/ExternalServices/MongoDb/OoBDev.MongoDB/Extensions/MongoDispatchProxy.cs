@@ -11,7 +11,7 @@ namespace OoBDev.MongoDB.Extensions;
 /// <summary>
 /// This proxy allow for dynamic creation of wrapper classes to expose MongoDatabase instances
 /// </summary>
-internal class MongoDispatchProxy : DispatchProxy
+internal sealed class MongoDispatchProxy : DispatchProxy
 {
     private IMongoDatabase _database = null!;
     private IMongoSettings _settings = null!;

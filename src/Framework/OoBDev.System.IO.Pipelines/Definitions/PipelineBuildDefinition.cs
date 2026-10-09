@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace OoBDev.System.IO.Pipelines.Definitions;
 
-internal class PipelineBuildDefinition : IPipelineBuildDefinition
+internal sealed class PipelineBuildDefinition : IPipelineBuildDefinition
 {
     internal PipelineBuildDefinition(Pipe pipe) => Pipe = pipe;
 

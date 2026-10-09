@@ -46,8 +46,8 @@ public class TestContextConfigurationProvider : ConfigurationProvider
                 {
                     key = key.Substring(2);
                 }
-                else if (key.StartsWith(":", StringComparison.Ordinal) ||
-                         key.StartsWith("_", StringComparison.Ordinal))
+                else if (key.StartsWith(':') ||
+                         key.StartsWith('_'))
                 {
                     key = key.Substring(1);
                 }

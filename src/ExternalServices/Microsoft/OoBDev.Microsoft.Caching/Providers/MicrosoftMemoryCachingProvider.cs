@@ -24,7 +24,11 @@ public class MicrosoftMemoryCachingProvider : ICachingProvider, IDisposable
     /// <summary>
     /// Disposes the underlying memory cache.
     /// </summary>
-    public void Dispose() => _cache.Dispose();
+    public void Dispose()
+    {
+        _cache.Dispose();
+        GC.SuppressFinalize(this);
+    }
 
     /// <inheritdoc/>
     public Task FlushAsync(string? key)
