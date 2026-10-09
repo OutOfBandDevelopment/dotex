@@ -527,6 +527,7 @@ dotnet test src/ --collect:"XPlat Code Coverage"
 ## Recently Completed Work
 
 ### 2026-10-09
+- **Integration test stack** - every host port overridable via `TEST_PORT_<NAME>`; Docker docs under `docs/architecture/testing/integration/` (infrastructure, services, dependency matrix, writing tests)
 - **AsyncAPI document and viewer** - `OoBDev.AsyncApi` (thin first-party AsyncAPI 3.0 model and builder), `IAsyncApiContributor` in the SQS, Service Bus and RabbitMQ adapters, `MapAsyncApi()` (`/asyncapi/{name}.json` and viewer), 7 Simulate tests. [Details](docs/changes/migration-asyncapi-2026-10-09.md)
 - **Swashbuckle replaced by OpenAPI transformers and Scalar** - `Microsoft.AspNetCore.OpenApi` documents (`/openapi/{name}.json`, `all` plus one per assembly), custom filters ported to transformers, Scalar reference with OAuth2 authorization code and PKCE, 4 Simulate tests; AsyncAPI viewer is phase 2. [Details](docs/changes/migration-openapi-scalar-2026-10-09.md)
 - **Azure B2C dropped** - library, tests, `IdentityProviders.AzureB2C`, example profile and test variables removed; Keycloak is the identity provider (default in `IdentityExtensionBuilder`)
@@ -605,7 +606,7 @@ dotnet test src/ --collect:"XPlat Code Coverage"
 
 **Active Priorities:**
 1. **Integration Testing** - Finalizing health checks for all 15 Docker services (14/15 healthy; servicebus has no health check)
-   - Next: enable the CI/CD workflow (`integration-tests.yml` schedule is still commented out)
+   - Next: merge to `main` so the scheduled `integration-tests.yml` (daily 4 PM UTC, already enabled) runs for the first time on GitHub
 2. **SharedFramework** - Design-first approach (Epic 2, 6, 7, 10)
 3. **Incoming Projects** - All investigated (decisions pending)
 
