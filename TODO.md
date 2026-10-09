@@ -35,7 +35,8 @@ Order of work, with the reason for the position. Start at the top; tick items of
 - [ ] Follow-up: describe send-only queues by type (senders are open generics, so only configured queues are listed today); in-process contributor; check the viewer in a browser.
 
 ### 3. Docker test infrastructure and CI (needs the owner for the merge)
-- [ ] Port-collision hardening: make host ports overridable (or move them to a private range) so other local services cannot collide, as `storage-ollama` did on 11434.
+- [x] (done 2026-10-09) Port-collision hardening: every host port in `docker-compose.integration-tests.yml` is `${TEST_PORT_<NAME>:-default}` (table in `containers/testing/README.md`).
+- [ ] Follow-up: `integration-up` scripts still print the default URLs, and tests read ports from `.runsettings`, so an override needs a matching settings file; consider deriving both from one `.env`. The first diagram in `containers/testing/README.md` (line 52) fails PlantUML rendering (pre-existing).
 - [ ] Docker documentation under `docs/architecture/testing/`: integration category pages (README, docker-setup, writing-tests, examples), one page per stack (SQL Server, MongoDB, RabbitMQ, OpenSearch, Qdrant, Tika, SMTP, Azurite, Moto, Keycloak, SBert, Ollama, otel-lgtm), a docker-infrastructure page, and network-topology and dependency-matrix diagrams (PlantUML). Decide first whether the Aspire spike changes this.
 - [ ] First GitHub run of `integration-tests.yml`: merge to `main`, trigger by hand, fix Linux build issues (net48 and SQL CLR projects), confirm the `validated-v{version}` tag and the 30-minute limit. Details in `TODO-testing-local-integration.md`.
 

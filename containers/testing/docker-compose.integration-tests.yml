@@ -21,6 +21,8 @@ services:
       file: ../docker-compose.apache-tika.yml
       service: apache-tika
     container_name: oobd-test-tika
+    ports: !override
+      - "${TEST_PORT_TIKA:-9998}:9998"
     networks:
       - integration-test-net
     healthcheck:
@@ -34,9 +36,9 @@ services:
     image: rnwood/smtp4dev
     container_name: oobd-test-smtp
     ports:
-      - "7777:80"
-      - "25:25"
-      - "143:143"
+      - "${TEST_PORT_SMTP_WEB:-7777}:80"
+      - "${TEST_PORT_SMTP:-25}:25"
+      - "${TEST_PORT_IMAP:-143}:143"
     networks:
       - integration-test-net
     healthcheck:
@@ -55,6 +57,8 @@ services:
       file: ../docker-compose.mongodb.yml
       service: mongodb
     container_name: oobd-test-mongodb
+    ports: !override
+      - "${TEST_PORT_MONGODB:-27017}:27017"
     networks:
       - integration-test-net
     volumes:
@@ -71,6 +75,8 @@ services:
       file: ../docker-compose.sql-server.yml
       service: sql-server
     container_name: oobd-test-sqlserver
+    ports: !override
+      - "${TEST_PORT_SQLSERVER:-1433}:1433"
     environment:
       - ACCEPT_EULA=Y
       - MSSQL_SA_PASSWORD=${SQL_SA_PASSWORD:-IntegrationTest123!}
@@ -90,8 +96,8 @@ services:
     image: rabbitmq:management
     container_name: oobd-test-rabbitmq
     ports:
-      - "5673:5672"   # AMQP (changed to avoid conflict with Service Bus on 5672)
-      - "15672:15672" # Management UI
+      - "${TEST_PORT_RABBITMQ:-5673}:5672"   # AMQP (default avoids the Service Bus emulator on 5672)
+      - "${TEST_PORT_RABBITMQ_MGMT:-15672}:15672" # Management UI
     networks:
       - integration-test-net
     environment:
@@ -110,7 +116,7 @@ services:
     image: redis:7-alpine
     container_name: oobd-test-redis
     ports:
-      - "6379:6379"
+      - "${TEST_PORT_REDIS:-6379}:6379"
     command: >
       redis-server
       --maxmemory 256mb
@@ -132,6 +138,9 @@ services:
       file: ../docker-compose.opensearch.yml
       service: opensearch
     container_name: oobd-test-opensearch
+    ports: !override
+      - "${TEST_PORT_OPENSEARCH:-9200}:9200"
+      - "${TEST_PORT_OPENSEARCH_PERF:-9600}:9600"
     environment:
       - discovery.type=single-node
       - OPENSEARCH_INITIAL_ADMIN_PASSWORD=${OPENSEARCH_PASSWORD:-IntegrationTest123!}
@@ -161,6 +170,9 @@ services:
       file: ../docker-compose.qdrant.yml
       service: qdrant
     container_name: oobd-test-qdrant
+    ports: !override
+      - "${TEST_PORT_QDRANT:-6333}:6333"
+      - "${TEST_PORT_QDRANT_GRPC:-6334}:6334"
     networks:
       - integration-test-net
     volumes:
@@ -182,6 +194,10 @@ services:
       file: ../docker-compose.azurite.yml
       service: azurite
     container_name: oobd-test-azurite
+    ports: !override
+      - "${TEST_PORT_AZURITE_BLOB:-10000}:10000"
+      - "${TEST_PORT_AZURITE_QUEUE:-10001}:10001"
+      - "${TEST_PORT_AZURITE_TABLE:-10002}:10002"
     networks:
       - integration-test-net
     volumes:
@@ -198,7 +214,7 @@ services:
     image: motoserver/moto:latest
     container_name: oobd-test-moto
     ports:
-      - "4566:5000"
+      - "${TEST_PORT_MOTO:-4566}:5000"
     networks:
       - integration-test-net
     environment:
@@ -232,7 +248,7 @@ services:
     image: mcr.microsoft.com/azure-messaging/servicebus-emulator:latest
     container_name: oobd-test-servicebus
     ports:
-      - "5672:5672"   # AMQP
+      - "${TEST_PORT_SERVICEBUS:-5672}:5672"   # AMQP
     networks:
       - integration-test-net
     environment:
@@ -258,9 +274,9 @@ services:
     image: grafana/otel-lgtm:latest
     container_name: oobd-test-otel
     ports:
-      - "3000:3000"   # Grafana (also proxies the Tempo, Loki and Prometheus APIs)
-      - "4317:4317"   # OTLP gRPC
-      - "4318:4318"   # OTLP HTTP
+      - "${TEST_PORT_GRAFANA:-3000}:3000"   # Grafana (also proxies the Tempo, Loki and Prometheus APIs)
+      - "${TEST_PORT_OTLP_GRPC:-4317}:4317"   # OTLP gRPC
+      - "${TEST_PORT_OTLP_HTTP:-4318}:4318"   # OTLP HTTP
     networks:
       - integration-test-net
     healthcheck:
@@ -278,7 +294,7 @@ services:
     image: quay.io/keycloak/keycloak:latest
     container_name: oobd-test-keycloak
     ports:
-      - "8081:8080"
+      - "${TEST_PORT_KEYCLOAK:-8081}:8080"
     networks:
       - integration-test-net
     environment:
@@ -306,7 +322,7 @@ services:
     image: nginx:alpine
     container_name: oobd-test-nginx
     ports:
-      - "8080:80"
+      - "${TEST_PORT_NGINX:-8080}:80"
     networks:
       - integration-test-net
     volumes:
@@ -333,7 +349,7 @@ services:
     image: opensearchproject/opensearch-dashboards:latest
     container_name: oobd-test-opensearch-dashboards
     ports:
-      - "5601:5601"
+      - "${TEST_PORT_OPENSEARCH_DASHBOARDS:-5601}:5601"
     networks:
       - integration-test-net
     environment:
@@ -361,6 +377,8 @@ services:
       file: ../docker-compose.sbert.yml
       service: sbert
     container_name: oobd-test-sbert
+    ports: !override
+      - "${TEST_PORT_SBERT:-5080}:5000"
     networks:
       - integration-test-net
     # Note: No GPU deployment for CI/CD compatibility
@@ -378,7 +396,7 @@ services:
     image: oobdev/ollama-phi3:latest
     container_name: oobd-test-ollama
     ports:
-      - "11435:11434"
+      - "${TEST_PORT_OLLAMA:-11435}:11434"
     networks:
       - integration-test-net
     volumes:

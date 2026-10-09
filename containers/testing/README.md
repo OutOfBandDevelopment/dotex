@@ -599,8 +599,34 @@ lsof -i :27017
 netstat -ano | findstr :1433
 netstat -ano | findstr :27017
 
-# Stop conflicting process or change port mapping in docker-compose file
+# Stop the conflicting process, or move the test stack to other host ports (below)
 ```
+
+**Overriding host ports.** Every host port in `docker-compose.integration-tests.yml` is `${TEST_PORT_<NAME>:-default}`; the defaults are unchanged. Set the variable in the shell or in `containers/testing/.env` before starting the stack:
+
+**Table 1 — Port overrides**
+
+| Variable | Default | Service |
+|----------|---------|---------|
+| `TEST_PORT_SMTP_WEB`, `TEST_PORT_SMTP`, `TEST_PORT_IMAP` | 7777, 25, 143 | smtp4dev |
+| `TEST_PORT_TIKA` | 9998 | Apache Tika |
+| `TEST_PORT_MONGODB` | 27017 | MongoDB |
+| `TEST_PORT_SQLSERVER` | 1433 | SQL Server |
+| `TEST_PORT_RABBITMQ`, `TEST_PORT_RABBITMQ_MGMT` | 5673, 15672 | RabbitMQ (AMQP, management) |
+| `TEST_PORT_REDIS` | 6379 | Redis |
+| `TEST_PORT_OPENSEARCH`, `TEST_PORT_OPENSEARCH_PERF` | 9200, 9600 | OpenSearch |
+| `TEST_PORT_OPENSEARCH_DASHBOARDS` | 5601 | OpenSearch Dashboards |
+| `TEST_PORT_QDRANT`, `TEST_PORT_QDRANT_GRPC` | 6333, 6334 | Qdrant |
+| `TEST_PORT_AZURITE_BLOB`, `TEST_PORT_AZURITE_QUEUE`, `TEST_PORT_AZURITE_TABLE` | 10000, 10001, 10002 | Azurite |
+| `TEST_PORT_MOTO` | 4566 | Moto |
+| `TEST_PORT_SERVICEBUS` | 5672 | Service Bus emulator |
+| `TEST_PORT_GRAFANA`, `TEST_PORT_OTLP_GRPC`, `TEST_PORT_OTLP_HTTP` | 3000, 4317, 4318 | Grafana LGTM |
+| `TEST_PORT_KEYCLOAK` | 8081 | Keycloak |
+| `TEST_PORT_NGINX` | 8080 | Dashboard |
+| `TEST_PORT_SBERT` | 5080 | SBert |
+| `TEST_PORT_OLLAMA` | 11435 | Ollama |
+
+Container-internal ports and health checks do not change. The tests read ports from `src/.runsettings`, so run them with a copy of that file that carries the same values (for example `RABBITMQ_PORT`, `MONGODB_CONNECTION_STRING`).
 
 ### Disk Space Issues
 
