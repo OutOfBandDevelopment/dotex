@@ -1,37 +1,23 @@
 name: Integration Tests
 
-# ============================================================================
-# WORKFLOW DISABLED - Pending Local Testing
-# ============================================================================
-# This workflow is currently DISABLED until Docker containers are validated locally.
-#
-# To enable after successful local testing:
-# 1. Test locally: cd containers/testing && ./scripts/integration-up.sh --wait
-# 2. Verify all services become healthy
-# 3. Uncomment the 'on:' triggers below
-# 4. Commit and push to enable daily integration tests
-# ============================================================================
-
-# Run daily at 4 PM UTC (after build, before scheduled release)
-# Only on main branch to validate before release
+# Runs the Integration category against the Docker stack in containers/testing.
+# Manual: Actions > Integration Tests > Run workflow (or `gh workflow run integration-tests.yml`).
+# Scheduled: daily at 4 PM UTC. On main a successful run creates the validated-v{version} tag.
+# Runs on ubuntu-latest because the stack is Linux containers (windows runners cannot run them).
 on:
-  # DISABLED - Uncomment after local Docker testing
-  # schedule:
-  #   - cron: '0 16 * * *'
+  schedule:
+    - cron: '0 16 * * *'
 
-  # DISABLED - Uncomment to allow manual trigger
-  # workflow_dispatch:
-
-  # Temporary: Only trigger via workflow_call (never runs)
-  workflow_call:
+  workflow_dispatch:
 
 env:
   MSBUILDTERMINALLOGGER: off
 
 jobs:
   integration-tests:
-    runs-on: windows-latest
-    # Note: Using windows-latest to support SQLCLR projects and SQL Server container
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    # Note: the stack is Linux containers, so this job cannot run on windows-latest
 
     steps:
       - name: Checkout code
@@ -201,6 +187,7 @@ jobs:
           --no-build
           --no-restore
           --nologo
+          --settings "${{ github.workspace }}/src/.runsettings"
           --filter "TestCategory=Integration"
           --collect:"XPlat Code Coverage"
           --results-directory "${{ steps.calculate-version.outputs.TestResultsPath }}"

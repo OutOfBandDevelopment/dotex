@@ -130,6 +130,10 @@ Each change document should include:
 
 ### Testing
 
+**[testing-local-integration-completed-2026-10-09.md](testing-local-integration-completed-2026-10-09.md)**
+- Archived completed sections of the local integration TODO (Weeks 1 and 2, validation, script and health check fixes)
+- Status: ✅ Complete
+
 **[testing-vectors-sqs-moto-ci-2026-10-08.md](testing-vectors-sqs-moto-ci-2026-10-08.md)**
 - CI restore fix, vector `Angle` correction and NULL-safe functions with SQL Server Integration tests
 - Moto replaces LocalStack; SQS client and test fixes

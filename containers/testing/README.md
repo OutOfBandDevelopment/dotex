@@ -637,10 +637,10 @@ echo "vm.max_map_count=262144" | sudo tee -a /etc/sysctl.conf
 
 ## Related Documentation
 
-- [Test Categories Guide](../../docs/architecture/testing/test-categories.md)
-- [Integration Testing Guide](../../docs/architecture/testing/categories/integration/README.md)
-- [Docker Infrastructure Guide](../../docs/architecture/testing/docker-infrastructure.md)
-- [Environment Variables Reference](../../docs/architecture/testing/environment-variables.md)
+- [Testing Guidelines](../../docs/architecture/testing/testing-guidelines.md) (test categories and structure)
+- [Testing Overview](../../docs/architecture/testing/README.md)
+- [Test Variables Reference](../../TEST_VARIABLES.md) (every `.runsettings` property)
+- [Variables in .runsettings](../../docs/how-tos/runsettings-variables-and-configuration.md)
 
 ---
 
