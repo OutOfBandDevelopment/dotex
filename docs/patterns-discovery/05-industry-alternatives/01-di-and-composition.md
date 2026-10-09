@@ -37,7 +37,7 @@
 
 **Verdict: Change.** Adopt `BindConfiguration` plus `ValidateOnStart` in new capabilities; keep the section-name builder records.
 
-**Owner decision:** if validated options are carried forward, wrap them in one common extension method such as `AddValidatedOptions<T>()` instead of repeating the `BindConfiguration` chain. Strict-by-default with a relaxed mode is under analysis in the [options validation backlog](../../../TODO.md).
+**Owner decision:** if validated options are carried forward, wrap them in one common extension method such as `AddValidatedOptions<T>()` instead of repeating the `BindConfiguration` chain. `OptionsServiceCollectionExtensions.AddValidatedOptions<T>(configuration, section, validateOnStart = true)` in `OoBDev.System` now implements it (data annotations, strict by default, `validateOnStart: false` for relaxed). Adopting it in the adapters is tracked in the [options validation backlog](../../../TODO.md).
 
 ## 3. `#if DEBUG` required parameters
 
