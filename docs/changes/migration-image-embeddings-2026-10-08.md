@@ -47,6 +47,6 @@ Models and sources are fixed in each `*Model` class. 37 tests pass in the image 
 
 ## Follow-up
 
-- Runner unit coverage toward 80%.
-- Real-photo sanity check and a GitHub CI run have not been observed.
+- Done 2026-10-09: line coverage with all categories (38 tests): runner 95.6%, Skia 95.2%, ClipVitB32 85.4%, Dinov2Small 100%, VitBasePatch16 100%. A registration test covers all presets through dependency injection.
+- Done 2026-10-09: sanity check on five real photos (sensible labels on all three presets) and a green GitHub run on Windows. Linux is not part of the image project runs yet.
 - Reference data comes from `scripts/embeddings/make-reference-images.py` and `make-resize-golden.py`.
