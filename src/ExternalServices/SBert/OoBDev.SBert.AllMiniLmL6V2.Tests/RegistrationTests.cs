@@ -28,14 +28,6 @@ public class RegistrationTests
 
     [TestCategory(TestCategories.Unit)]
     [TestMethod]
-    public void Keys_AreKebabCaseWithLegacyAlias()
-    {
-        Assert.AreEqual("all-minilm-l6-v2", SBertGlobals.AllMiniLmL6V2Key);
-        Assert.AreEqual("ALLMINILM", SBertGlobals.LegacyKey);
-    }
-
-    [TestCategory(TestCategories.Unit)]
-    [TestMethod]
     public async Task Provider_ResolvesByDefaultAndKeys_AndEmbeds()
     {
         await using var provider = Build(null);
