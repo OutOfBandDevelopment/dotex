@@ -321,6 +321,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OoBDev.Vision.Dinov2Small",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OoBDev.Vision.VitBasePatch16", "ExternalServices\Vision\OoBDev.Vision.VitBasePatch16\OoBDev.Vision.VitBasePatch16.csproj", "{39D03C11-59EC-4465-B3AF-A79BD987EDB1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OoBDev.Vision.ClipVitB32", "ExternalServices\Vision\OoBDev.Vision.ClipVitB32\OoBDev.Vision.ClipVitB32.csproj", "{3C2B06E1-7014-446C-A1F2-C93DF01D76EB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -1891,6 +1893,18 @@ Global
 		{39D03C11-59EC-4465-B3AF-A79BD987EDB1}.Release|x64.Build.0 = Release|Any CPU
 		{39D03C11-59EC-4465-B3AF-A79BD987EDB1}.Release|x86.ActiveCfg = Release|Any CPU
 		{39D03C11-59EC-4465-B3AF-A79BD987EDB1}.Release|x86.Build.0 = Release|Any CPU
+		{3C2B06E1-7014-446C-A1F2-C93DF01D76EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3C2B06E1-7014-446C-A1F2-C93DF01D76EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3C2B06E1-7014-446C-A1F2-C93DF01D76EB}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{3C2B06E1-7014-446C-A1F2-C93DF01D76EB}.Debug|x64.Build.0 = Debug|Any CPU
+		{3C2B06E1-7014-446C-A1F2-C93DF01D76EB}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{3C2B06E1-7014-446C-A1F2-C93DF01D76EB}.Debug|x86.Build.0 = Debug|Any CPU
+		{3C2B06E1-7014-446C-A1F2-C93DF01D76EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3C2B06E1-7014-446C-A1F2-C93DF01D76EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3C2B06E1-7014-446C-A1F2-C93DF01D76EB}.Release|x64.ActiveCfg = Release|Any CPU
+		{3C2B06E1-7014-446C-A1F2-C93DF01D76EB}.Release|x64.Build.0 = Release|Any CPU
+		{3C2B06E1-7014-446C-A1F2-C93DF01D76EB}.Release|x86.ActiveCfg = Release|Any CPU
+		{3C2B06E1-7014-446C-A1F2-C93DF01D76EB}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -2045,6 +2059,7 @@ Global
 		{9D69D24A-79B0-9176-4104-AAC05EB076DE} = {23338E7F-E943-4D99-B58C-CFBB7F2F53B2}
 		{F821C089-491E-4779-8E25-079B67357293} = {9D69D24A-79B0-9176-4104-AAC05EB076DE}
 		{39D03C11-59EC-4465-B3AF-A79BD987EDB1} = {9D69D24A-79B0-9176-4104-AAC05EB076DE}
+		{3C2B06E1-7014-446C-A1F2-C93DF01D76EB} = {9D69D24A-79B0-9176-4104-AAC05EB076DE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {92959CB8-A44C-4F0D-BBCF-C99B014BEEAD}

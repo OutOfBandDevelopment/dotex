@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.Onnx.ImageEmbeddings.Skia;
 using OoBDev.TestUtilities;
+using OoBDev.Vision.ClipVitB32;
 using OoBDev.Vision.Dinov2Small;
 using OoBDev.Vision.VitBasePatch16;
 using System;
@@ -104,6 +105,59 @@ public class ReferenceTests
             if (actual[0].Label != expected[0].Label) failures.Add($"{file}: top-1 {actual[0].Label} != {expected[0].Label}");
             if (!actual.Select(a => a.Label).Order().SequenceEqual(expected.Select(e => e.Label).Order())) failures.Add($"{file}: top-5 set differs");
             if (maxDifference > 0.01f) failures.Add($"{file}: probability differs by {maxDifference:F4}");
+        }
+        Assert.IsEmpty(failures, string.Join("; ", failures));
+    }
+
+    [TestCategory(TestCategories.Integration)]
+    [TestMethod]
+    public async Task ClipVitB32_MatchesReference()
+    {
+        var imageOptions = new OnnxImageEmbeddingOptions();
+        ClipVitB32Model.ApplyDefaults(imageOptions);
+        var textOptions = new ClipTextOptions();
+        ClipVitB32Model.ApplyDefaults(textOptions);
+        await Ensure(async () =>
+        {
+            await ClipVitB32Model.EnsureAsync(imageOptions, NullLogger.Instance);
+            await ClipVitB32Model.EnsureAsync(textOptions, NullLogger.Instance);
+        });
+
+        var items = Items("clip-vit-base-patch32", out var root);
+        var texts = root.GetProperty("texts").EnumerateArray().ToArray();
+        using var images = new OnnxImageEmbeddingGenerator(Microsoft.Extensions.Options.Options.Create(imageOptions), new SkiaImageDecoder(), NullLogger<OnnxImageEmbeddingGenerator>.Instance);
+        using var textGenerator = new ClipTextEmbeddingGenerator(textOptions);
+        Assert.AreEqual(512, images.Dimensions);
+        Assert.AreEqual(512, textGenerator.Dimensions);
+
+        var failures = new List<string>();
+
+        var textVectors = await textGenerator.GenerateAsync(texts.Select(t => t.GetProperty("text").GetString()!).ToArray());
+        for (var i = 0; i < texts.Length; i++)
+        {
+            var expected = texts[i].GetProperty("vector").EnumerateArray().Select(v => v.GetSingle()).ToArray();
+            var cos = TensorPrimitives.CosineSimilarity(expected, textVectors[i].Vector.Span);
+            TestContext.WriteLine($"text '{texts[i].GetProperty("text").GetString()}': cos={cos:F5}");
+            if (cos < 0.999f) failures.Add($"text {i} cos={cos:F4}");
+        }
+
+        var imageVectors = await images.GenerateAsync(items.Select(i => Image(i.GetProperty("file").GetString()!)).ToArray());
+        var zeroShot = new ZeroShotImageClassifier(images, textGenerator);
+        var labels = texts.Select(t => t.GetProperty("text").GetString()!).ToArray();
+        for (var i = 0; i < items.Length; i++)
+        {
+            var file = items[i].GetProperty("file").GetString()!;
+            var expected = items[i].GetProperty("vector").EnumerateArray().Select(v => v.GetSingle()).ToArray();
+            var cos = TensorPrimitives.CosineSimilarity(expected, imageVectors[i].Vector.Span);
+            TestContext.WriteLine($"{file}: cos={cos:F5}");
+            if (cos < 0.995f) failures.Add($"{file} cos={cos:F4}");
+
+            var expectedProbabilities = items[i].GetProperty("zeroShot").EnumerateArray().Select(v => v.GetSingle()).ToArray();
+            var actual = await zeroShot.ClassifyAsync(Image(file), labels, 0);
+            var best = Array.IndexOf(expectedProbabilities, expectedProbabilities.Max());
+            if (actual[0].Label != labels[best]) failures.Add($"{file}: zero-shot top {actual[0].Label} != {labels[best]}");
+            var maxDifference = actual.Max(a => Math.Abs(a.Probability - expectedProbabilities[Array.IndexOf(labels, a.Label)]));
+            if (maxDifference > 0.02f) failures.Add($"{file}: zero-shot probability differs by {maxDifference:F4}");
         }
         Assert.IsEmpty(failures, string.Join("; ", failures));
     }

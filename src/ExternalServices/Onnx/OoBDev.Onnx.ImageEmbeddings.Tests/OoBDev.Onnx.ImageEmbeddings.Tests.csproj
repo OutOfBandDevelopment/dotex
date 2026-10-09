@@ -36,6 +36,7 @@
     <ProjectReference Include="..\OoBDev.Onnx.ImageEmbeddings.Skia\OoBDev.Onnx.ImageEmbeddings.Skia.csproj" />
     <ProjectReference Include="..\..\Vision\OoBDev.Vision.Dinov2Small\OoBDev.Vision.Dinov2Small.csproj" />
     <ProjectReference Include="..\..\Vision\OoBDev.Vision.VitBasePatch16\OoBDev.Vision.VitBasePatch16.csproj" />
+    <ProjectReference Include="..\..\Vision\OoBDev.Vision.ClipVitB32\OoBDev.Vision.ClipVitB32.csproj" />
   </ItemGroup>
 
 </Project>
