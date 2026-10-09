@@ -37,7 +37,7 @@ Configuration options for the Groq Cloud API client.
 #### ApiKey
 The API key used to authenticate with the Groq Cloud service.
 #### Model
-The model identifier for the AI model to be used. Defaults to "llama3-8b-8192".
+The model identifier for the AI model to be used. Defaults to "openai/gpt-oss-20b".
 
 ## Class: GroqCloud.GroqCloudHealthCheck
 Represents a health check implementation for the GroqCloud service. 

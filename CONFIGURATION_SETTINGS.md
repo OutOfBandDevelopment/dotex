@@ -265,7 +265,7 @@ services.Configure<ApacheTikaClientOptions>(options =>
 | Property | Type | Required | Default | Description |
 |----------|------|----------|---------|-------------|
 | ApiKey | string? | No | - | Groq Cloud API key (falls back to environment variable) |
-| Model | string | No | "llama3-8b-8192" | Default LLM model identifier |
+| Model | string | No | "openai/gpt-oss-20b" | Default LLM model identifier |
 
 **Environment Variable Fallback:**
 - `API_Key_Groq` (User-scoped environment variable)
@@ -275,7 +275,7 @@ services.Configure<ApacheTikaClientOptions>(options =>
 services.Configure<GroqCloudApiClientOptions>(options =>
 {
     options.ApiKey = "your-api-key"; // Or set API_Key_Groq env var
-    options.Model = "llama3-8b-8192";
+    options.Model = "openai/gpt-oss-20b";
 });
 ```
 

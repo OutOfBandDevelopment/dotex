@@ -381,7 +381,7 @@ Tests that require live cloud credentials. Manual execution only.
 |----------|---------|-------------|
 | `GROQ_API_KEY` | *(none)* | Groq API key |
 | `GROQ_API_URL` | `https://api.groq.com/openai/v1` | Groq API endpoint (not read by the tests yet) |
-| `GROQ_MODEL` | `llama3-8b-8192` | Optional model override |
+| `GROQ_MODEL` | `openai/gpt-oss-20b` | Optional model override |
 
 **Tests Using:**
 - `OoBDev.GroqCloud.Tests` (manual execution only, `LiveIntegration`)

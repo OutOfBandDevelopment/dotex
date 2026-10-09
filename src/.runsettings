@@ -225,7 +225,7 @@ https://github.com/coverlet-coverage/coverlet/blob/fc7ec26dcaed8fedba880ff13c6f1
 		<!-- Groq Cloud (LiveIntegration, manual only). Leave these out and set the GROQ_API_KEY environment variable instead:
 		     a parameter here, even an empty one, wins over the environment variable. Never commit a real key. -->
 		<!-- <Parameter name="GROQ_API_KEY" value="" /> -->
-		<!-- <Parameter name="GROQ_MODEL" value="llama3-8b-8192" /> -->
+		<!-- <Parameter name="GROQ_MODEL" value="openai/gpt-oss-20b" /> -->
 	</TestRunParameters>
 
 </RunSettings>

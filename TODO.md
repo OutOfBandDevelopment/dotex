@@ -41,7 +41,7 @@ Order of work, with the reason for the position. Start at the top; tick items of
 - [ ] First GitHub run of `integration-tests.yml`: merge to `main`, trigger by hand, fix Linux build issues (net48 and SQL CLR projects), confirm the `validated-v{version}` tag and the 30-minute limit. Details in `TODO-testing-local-integration.md`.
 
 ### 4. Live integration (cloud) tests
-- [x] Groq (`OoBDev.GroqCloud.Tests`): two `LiveIntegration` tests, template and README added; they compile but have never run against the live API (no key available).
+- [x] Groq (`OoBDev.GroqCloud.Tests`): two `LiveIntegration` tests, template and README added; both pass against the live API (2026-10-09).
 - [ ] Cloud docs: category README, cloud setup, credential and cost management, per-service pages, LiveIntegration vs Integration guide, PlantUML diagrams.
 - [ ] Azure Monitor export through a collector is untested (needs the owner's subscription).
 - [ ] `DevLocal` tests kept on purpose: Ollama tests (hard-coded LAN host, model pull and delete), USB HID (hardware), `PathEx`, `MergedXPathNavigator`, `ProjectTools.FixReadmes` (hard-coded `C:\Repos` paths), Markdown `TestMethod1` (writes files), DacFx `BuildPackageTest` (hard-coded path). Revisit the Ollama ones when the owner says Ollama testing can resume.
