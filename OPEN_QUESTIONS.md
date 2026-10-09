@@ -28,7 +28,7 @@ Questions that block or shape work in the TODO files. Each has the source it cam
 - **Source:** [TODO.md](./TODO.md) → "Backlog: Architect Answers"; [CLAUDE.md](./CLAUDE.md) → "Recently Completed Work" (2026-10-07)
 - **Question:** CLAUDE.md says it was restored, but the TODO item is still open. May I verify that versions live only in `src/Directory.Packages.props` and tick it off?
 - **Suggestion:** Yes.
-- **Answer:** Yes, verify and tick off (2026-10-09).
+- **Answer:** Yes, verify and tick off (2026-10-09). Verified: no inline `Version` attributes under `src/` or `templates/`; stale pattern docs corrected.
 
 ### Q3 — Live cloud tests (Groq)
 

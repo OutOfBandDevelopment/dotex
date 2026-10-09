@@ -18,7 +18,7 @@ Things found in the code that a new project should either fix or knowingly keep.
 | 6 | Readme case (was `Readme.X.md`/`ReadMe.X.md` on disk, `README.X.md` in props) | shared props | **Resolved:** all project readmes renamed to `README.X.md`; the old names only worked on case-insensitive file systems |
 | 7 | `#if DEBUG` changes the compiled API (intentional: forces child builders to be forwarded) | registration entry points | keep; build one configuration; see alternatives |
 | 8 | No options validation, no `ValidateOnStart` | all options | add validation |
-| 9 | Central package management off; versions inline | every csproj | central `Directory.Packages.props` |
+| 9 | Central package management off; versions inline | every csproj | fixed: central `Directory.Packages.props` is on (verified 2026-10-09; only `Incoming/` code keeps inline versions) |
 | 10 | Analyzers and XML-doc generation commented out | shared props | enable and gate |
 | 11 | Provider key casing differs (`Redis`, `OLLAMA`, `rabbit-mq`) | adapters | constants on the abstraction |
 | 12 | MD5 as a default hash | `OoBDev.System` | prefer SHA-256 for anything security-adjacent |

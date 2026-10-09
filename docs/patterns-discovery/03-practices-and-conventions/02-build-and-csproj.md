@@ -20,7 +20,7 @@ Shared metadata and behavior live once in `src/Directory.Build.props` (and `.tar
 | Solution root | `SolutionDir` discovered by walking up to five levels for a `*.sln` |
 | Tests | `TestAssemblyInfo.cs` compiled into every `*.Tests`; `.runsettings` wired via `RunSettingsFilePath`; results to `TestResults/` |
 | Versioning | `GitVersion.MsBuild` (see [CI and versioning](./06-cicd-and-versioning.md)) |
-| Central package management | **off** (`ManagePackageVersionsCentrally=false`) |
+| Central package management | **on** (`ManagePackageVersionsCentrally=true`); versions live only in `src/Directory.Packages.props` |
 | Analyzers | present but **commented out** |
 
 ## Per-project rules
