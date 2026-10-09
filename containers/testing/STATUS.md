@@ -206,40 +206,9 @@ Week 4: Documentation            ░░░░░░░░░░░░░░░�
 - [x] Updated to use `OLLAMA_URL` and `OLLAMA_MODEL` environment variables
 - [x] Tested with Docker Ollama - ALL PASSING
 
-### Azurinsight Tests (10 tests) ✅ COMPLETE
+### Azurinsight Tests ➡️ REPLACED (2026-10-09)
 
-**Files Created**:
-- `src/ExternalServices/Microsoft/OoBDev.Microsoft.ApplicationInsights.Tests/ApplicationInsightsIntegrationTests.cs`
-- `src/ExternalServices/Microsoft/OoBDev.Microsoft.ApplicationInsights.Tests/TelemetryProcessorTests.cs`
-
-**Tests Created** (2026-01-24):
-1. ✅ `SendEventTelemetry_ShouldStoreInAzurinsight`
-2. ✅ `SendTraceTelemetry_ShouldStoreInAzurinsight`
-3. ✅ `SendMetricTelemetry_ShouldStoreInAzurinsight`
-4. ✅ `SendExceptionTelemetry_ShouldStoreInAzurinsight`
-5. ✅ `SendDependencyTelemetry_ShouldStoreInAzurinsight`
-6. ✅ `SendRequestTelemetry_ShouldStoreInAzurinsight`
-7. ✅ `PurgeApi_ShouldClearAllTelemetry`
-8. ✅ `CorrelationInfoTelemetryProcessor_ShouldAddCorrelationHeaders`
-9. ✅ `UserTelemetryProcessor_ShouldAddUserClaims`
-10. ✅ `CombinedProcessors_ShouldAddBothCorrelationAndUserInfo`
-
-**Changes Complete**:
-- [x] Added azurinsight service to `docker-compose.integration-tests.yml`
-- [x] Updated `.env.integration` with Application Insights configuration
-- [x] Created comprehensive Integration tests (10 test methods)
-- [x] Tests use `APPINSIGHTS_CONNECTION_STRING` and `APPINSIGHTS_URL` test properties
-- [x] Added cleanup logic using azurinsight purge API
-- [x] Updated TEST_VARIABLES.md documentation
-- [x] Updated README.md with 15th service
-- [x] Updated nginx dashboard with azurinsight card
-- [x] Migrated from LiveIntegration to Integration category
-
-**Benefits**:
-- ✅ No Azure credentials needed for Application Insights testing
-- ✅ Deterministic telemetry validation
-- ✅ Fast local testing with SQLite-based emulator
-- ✅ Complete offline testing capability
+The Application Insights emulator (azurinsight) was replaced by plain OpenTelemetry. The `otel-lgtm` service (`grafana/otel-lgtm`: OTLP receiver on 4317/4318, Tempo, Loki, Grafana on 3000) takes its place, the test properties are `OTEL_EXPORTER_OTLP_ENDPOINT` and `OTEL_GRAFANA_URL`, and the tests live in `src/ExternalServices/OpenTelemetry/OoBDev.OpenTelemetry.Tests`. Details: [change document](../../docs/changes/migration-opentelemetry-2026-10-09.md).
 
 ### Qdrant Tests ⏭️ DEFERRED
 
@@ -294,7 +263,6 @@ Week 4: Documentation            ░░░░░░░░░░░░░░░�
 ### LiveIntegration Category
 
 - [ ] Azure B2C tests → LiveIntegration category
-- [ ] Application Insights tests → LiveIntegration category
 - [ ] Groq Cloud tests → LiveIntegration category
 - [ ] Create `.env.liveintegration.template` files
 - [ ] Document credential requirements
@@ -331,7 +299,6 @@ Week 4: Documentation            ░░░░░░░░░░░░░░░�
 - [ ] Keycloak
 - [ ] SBert
 - [ ] Azure B2C
-- [ ] Application Insights
 - [ ] Groq Cloud
 
 ### PlantUML Diagrams

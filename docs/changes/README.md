@@ -108,6 +108,12 @@ Each change document should include:
 - Design set for replacing the `AllMiniLML6v2Sharp` fork with first-party, thread-safe ONNX embeddings
 - Status: ✅ Complete (design only)
 
+### Observability
+
+**[migration-opentelemetry-2026-10-09.md](migration-opentelemetry-2026-10-09.md)**
+- Application Insights replaced by `OoBDev.OpenTelemetry` (OTLP), Grafana LGTM test container, DevLocal tests fixed
+- Status: ✅ Complete
+
 ### AI
 
 **[migration-allminilml6v2-embedder-2026-10-08.md](migration-allminilml6v2-embedder-2026-10-08.md)**

@@ -19,7 +19,7 @@ Questions that block or shape work in the TODO files. Each has the source it cam
 ### Q1 — Enable the scheduled integration tests?
 
 - **Source:** [TODO.md](./TODO.md) → "Backlog: CI/CD Enablement and Docker Test Infrastructure"; [TODO-testing-local-integration.md](./TODO-testing-local-integration.md); [containers/testing/STATUS.md](./containers/testing/STATUS.md)
-- **Question:** Turn on `integration-tests.yml` (daily 16:00 UTC plus `workflow_dispatch`) in `.github/workflows/`? It needs a runner with Docker. The Azurinsight and Service Bus health checks were still unresolved on 2026-01-24.
+- **Question:** Turn on `integration-tests.yml` (daily 16:00 UTC plus `workflow_dispatch`) in `.github/workflows/`? It needs a runner with Docker. The Service Bus emulator has no health check.
 - **Suggestion:** Enable manual dispatch first, watch one full run, then enable the schedule.
 - **Answer:**
 
@@ -30,7 +30,7 @@ Questions that block or shape work in the TODO files. Each has the source it cam
 - **Suggestion:** Yes.
 - **Answer:**
 
-### Q3 — Live cloud tests (Azure B2C, Groq, Application Insights)
+### Q3 — Live cloud tests (Azure B2C, Groq)
 
 - **Source:** [TODO.md](./TODO.md) → "Backlog: Live Integration (Cloud) Tests"; [TODO-testing-live-integration.md](./TODO-testing-live-integration.md)
 - **Question:** I can write the `.env.liveintegration.template`, project readmes, categories and `.gitignore` entry without credentials. Running them needs your accounts. Should I do the scaffolding now and leave the live runs to you?

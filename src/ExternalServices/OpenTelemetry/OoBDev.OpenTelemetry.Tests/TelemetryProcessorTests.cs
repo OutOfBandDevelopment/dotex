@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using OoBDev.Microsoft.ApplicationInsights.Extensibility;
 using OoBDev.System.Accessors;
 using OoBDev.System.Net.Http;
 using OoBDev.System.Security.Claims;
@@ -16,7 +16,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Security.Claims;
 
-namespace OoBDev.Microsoft.ApplicationInsights.Tests;
+namespace OoBDev.OpenTelemetry.Tests;
 
 /// <summary>
 /// Tests that the custom OpenTelemetry processors add correlation and user information to spans and log records.
@@ -128,22 +128,57 @@ public class TelemetryProcessorTests
 
     [TestMethod]
     [TestCategory(TestCategories.Unit)]
-    public void TryAddApplicationInsightsExtensions_ShouldRegisterProcessors()
+    public void TryAddOpenTelemetryExtensions_WithoutSettings_ShouldAddNothing()
     {
         // Stage
+        Environment.SetEnvironmentVariable(ServiceCollectionExtensions.OtlpEndpointVariable, null);
+        var configuration = new ConfigurationBuilder().Build();
         var services = new ServiceCollection();
-        services.AddSingleton<IAccessor<CorrelationInfo>>(new TestCorrelationAccessor(new CorrelationInfo()));
+
+        // Test
+        services.TryAddOpenTelemetryExtensions(configuration);
+
+        // Assert
+        Assert.AreEqual(0, services.Count);
+    }
+
+    [TestMethod]
+    [TestCategory(TestCategories.Unit)]
+    public void TryAddOpenTelemetryExtensions_WithSettings_ShouldRegisterProcessorsAndAddThemToSpans()
+    {
+        // Stage
+        var configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(new Dictionary<string, string?>
+            {
+                [$"{nameof(OpenTelemetryOptions)}:ServiceName"] = "unit-test",
+                [$"{nameof(OpenTelemetryOptions)}:Sources:0"] = SourceName,
+            })
+            .Build();
+        var exported = new List<Activity>();
+        var info = new CorrelationInfo { CorrelationId = "corr-2", RequestId = "req-2" };
+        var services = new ServiceCollection();
+        services.AddSingleton<IAccessor<CorrelationInfo>>(new TestCorrelationAccessor(info));
         services.AddSingleton<IHttpContextAccessor>(new HttpContextAccessor());
 
         // Test
-        services.TryAddApplicationInsightsExtensions();
+        services.TryAddOpenTelemetryExtensions(configuration);
+        services.TryAddOpenTelemetryExtensions(configuration);
+        services.ConfigureOpenTelemetryTracerProvider((_, builder) => builder.AddInMemoryExporter(exported));
         using var provider = services.BuildServiceProvider();
+        using var tracer = provider.GetRequiredService<TracerProvider>();
+        using (var source = new ActivitySource(SourceName))
+        using (source.StartActivity("work"))
+        {
+        }
+        tracer.ForceFlush();
 
         // Assert
-        Assert.IsNotNull(provider.GetRequiredService<CorrelationInfoTelemetryProcessor>());
         Assert.IsNotNull(provider.GetRequiredService<UserTelemetryProcessor>());
         Assert.IsNotNull(provider.GetRequiredService<CorrelationInfoLogProcessor>());
         Assert.IsNotNull(provider.GetRequiredService<UserLogProcessor>());
+        var activity = Assert.ContainsSingle(exported);
+        Assert.AreEqual("corr-2", activity.GetTagItem(DefinedHttpHeaders.CorrelationIdHeader));
+        Assert.AreEqual("req-2", activity.GetTagItem(DefinedHttpHeaders.RequestIdHeader));
     }
 
     private static TestHttpContextAccessor CreateUserAccessor(string objectId, string userId)

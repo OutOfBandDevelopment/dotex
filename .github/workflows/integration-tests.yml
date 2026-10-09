@@ -184,10 +184,9 @@ jobs:
           # Azure Service Bus Emulator
           AZURE_SERVICE_BUS_CONNECTION_STRING: Endpoint=sb://localhost;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=SAS_KEY_VALUE;UseDevelopmentEmulator=true
 
-          # Azurinsight (Application Insights Emulator)
-          APPINSIGHTS_URL: http://localhost:5000
-          APPINSIGHTS_INSTRUMENTATION_KEY: test-key
-          APPINSIGHTS_CONNECTION_STRING: InstrumentationKey=test-key;IngestionEndpoint=http://localhost:5000
+          # OpenTelemetry (Grafana LGTM)
+          OTEL_EXPORTER_OTLP_ENDPOINT: http://localhost:4318
+          OTEL_GRAFANA_URL: http://localhost:3000
         run: >
           dotnet test
           --configuration ${{ steps.calculate-version.outputs.BuildConfiguration }}

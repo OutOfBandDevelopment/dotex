@@ -5,6 +5,7 @@ using OoBDev.Microsoft.Azure.StorageAccount.BlobStorage;
 using OoBDev.MongoDB.Extensions;
 using OoBDev.Ollama;
 using OoBDev.OpenSearch;
+using OoBDev.OpenTelemetry;
 using OoBDev.Qdrant;
 using OoBDev.SBert;
 
@@ -51,6 +52,11 @@ public record ExternalExtensionBuilder
     /// Gets or sets the configuration section name for SentenceEmbeddingOptions.
     /// </summary>
     public string SentenceEmbeddingOptionSection { get; init; } = nameof(SentenceEmbeddingOptions);
+
+    /// <summary>
+    /// Gets or sets the configuration section name for OpenTelemetry options.
+    /// </summary>
+    public string OpenTelemetryOptionSection { get; init; } = nameof(OpenTelemetryOptions);
 
     /// <summary>
     /// Gets or sets the configuration section name for Qdrant options.

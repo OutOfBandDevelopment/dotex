@@ -44,7 +44,7 @@ SERVICES=(
     "oobd-test-keycloak"
     "oobd-test-sbert"
     "oobd-test-ollama"
-    "oobd-test-azurinsight"
+    "oobd-test-otel"
 )
 
 # Colors for output (if terminal supports it)

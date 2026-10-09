@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
-namespace OoBDev.Microsoft.ApplicationInsights.Extensibility;
+namespace OoBDev.OpenTelemetry;
 
 /// <summary>
 /// OpenTelemetry processor that extracts user information from the HTTP context and adds it to spans.

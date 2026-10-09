@@ -254,24 +254,21 @@ services:
     # Service logs "Emulator Service is Successfully Up!" when ready
     # Tests should handle connection retries gracefully
 
-  azurinsight:
-    image: oobdev/azurinsight:latest
-    container_name: oobd-test-azurinsight
+  otel-lgtm:
+    image: grafana/otel-lgtm:latest
+    container_name: oobd-test-otel
     ports:
-      - "5000:5000"
+      - "3000:3000"   # Grafana (also proxies the Tempo, Loki and Prometheus APIs)
+      - "4317:4317"   # OTLP gRPC
+      - "4318:4318"   # OTLP HTTP
     networks:
       - integration-test-net
-    environment:
-      - PORT=5000
-      - DB_PATH=/app/data/telemetry.db
-    volumes:
-      - azurinsight-test-data:/app/data
     healthcheck:
-      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:5000/health"]
+      test: ["CMD-SHELL", "curl -sf http://localhost:3000/api/health || exit 1"]
       interval: 10s
       timeout: 5s
-      retries: 5
-      start_period: 15s
+      retries: 12
+      start_period: 30s
 
   # ============================================================================
   # Identity & Access Management
@@ -429,5 +426,3 @@ volumes:
     name: oobd-test-keycloak-data
   ollama-test-data:
     name: oobd-test-ollama-data
-  azurinsight-test-data:
-    name: oobd-test-azurinsight-data

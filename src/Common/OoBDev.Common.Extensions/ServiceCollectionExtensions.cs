@@ -21,12 +21,7 @@ using OoBDev.WkHtmlToPdf;
 using OoBDev.Microsoft.Azure.StorageAccount;
 using OoBDev.Microsoft.Caching;
 using OoBDev.Redis.Caching;
-
-
-
-#if DEBUG
-using OoBDev.Microsoft.ApplicationInsights;
-#endif
+using OoBDev.OpenTelemetry;
 
 namespace OoBDev.Common.Extensions;
 
@@ -62,10 +57,7 @@ public static class ServiceCollectionExtensions
         services.TryAddAzureStorageServices(configuration, externalBuilder.AzureBlobProviderOptionSection);
         services.TryAddRabbitMQServices();
         services.TryAddMailKitExtensions(configuration, externalBuilder.SmtpConfigurationSection, externalBuilder.ImapConfigurationSection);
-#if DEBUG
-#warning Feature is not complete and should not be used in production.
-        services.TryAddApplicationInsightsExtensions();
-#endif
+        services.TryAddOpenTelemetryExtensions(configuration, externalBuilder.OpenTelemetryOptionSection);
 
         if (identityBuilder.IdentityProvider.HasFlag(IdentityProviders.AzureB2C))
             services.TryAddMicrosoftB2CServices(configuration, identityBuilder.MicrosoftIdentityConfigurationSection);

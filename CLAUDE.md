@@ -376,7 +376,7 @@ cd ../containers/testing
 - Keycloak (Identity & Access Management)
 - SBert (Sentence embeddings - CPU only)
 - Ollama (LLM inference - CPU only, phi3 model auto-pulled)
-- Azurinsight (Application Insights emulator)
+- OpenTelemetry (Grafana LGTM: OTLP receiver, Tempo, Loki, Grafana)
 
 **Test Properties Pattern:**
 ```csharp
@@ -526,6 +526,9 @@ dotnet test src/ --collect:"XPlat Code Coverage"
 
 ## Recently Completed Work
 
+### 2026-10-09
+- **OpenTelemetry replaces Application Insights** - `OoBDev.OpenTelemetry` (config-gated `TryAddOpenTelemetryExtensions`, OTLP export, correlation and user processors), Grafana LGTM container replaces Azurinsight, Integration tests read spans and logs back from Tempo and Loki; most `DevLocal` tests fixed or moved to Unit/Integration. [Details](docs/changes/migration-opentelemetry-2026-10-09.md)
+
 ### 2026-10-08
 - **Image embeddings** - in-process ONNX runner with Skia decoder, DINOv2-small, ViT-base and CLIP ViT-B/32 presets (zero-shot labels), compared with the Python models (ViT and CLIP exact, DINOv2 cosine 0.995+). [Details](docs/changes/migration-image-embeddings-2026-10-08.md)
 - **Embedding presets and version policy** - MPNet and Nomic presets verified against Hugging Face (cosine 0.999+), shared hub cache, `GitVersion.yml`: manual major, minor per merge into main, patch is commits past the last main tag on branches. [Details](docs/changes/migration-embedding-presets-2026-10-08.md)
@@ -598,7 +601,6 @@ dotnet test src/ --collect:"XPlat Code Coverage"
 
 **Active Priorities:**
 1. **Integration Testing** - Finalizing health checks for all 15 Docker services (13/15 healthy)
-   - ⏳ azurinsight health check needs investigation
    - ⏳ servicebus startup validation (30s start period)
    - Next: Enable CI/CD pipeline after all services validated
 2. **SharedFramework** - Design-first approach (Epic 2, 6, 7, 10)

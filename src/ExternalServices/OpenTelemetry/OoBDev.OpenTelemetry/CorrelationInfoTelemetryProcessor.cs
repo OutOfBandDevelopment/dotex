@@ -5,13 +5,13 @@ using OpenTelemetry.Logs;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace OoBDev.Microsoft.ApplicationInsights.Extensibility;
+namespace OoBDev.OpenTelemetry;
 
 /// <summary>
 /// OpenTelemetry processor that adds correlation information to spans.
 /// </summary>
 /// <remarks>
-/// Application Insights 3.x is built on OpenTelemetry, so the former <c>ITelemetryProcessor</c> chain is replaced by
+/// The former Application Insights <c>ITelemetryProcessor</c> chain is replaced by
 /// <see cref="BaseProcessor{T}"/> instances. The tag names are unchanged from the 2.x global properties.
 /// </remarks>
 public class CorrelationInfoTelemetryProcessor : BaseProcessor<Activity>

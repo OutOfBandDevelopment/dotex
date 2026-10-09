@@ -14,8 +14,8 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.ApplicationInsights" />
-    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" />
+    <PackageReference Include="OpenTelemetry.Exporter.InMemory" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="MSTest.TestAdapter" />
@@ -28,7 +28,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Framework\OoBDev.System.Abstractions\OoBDev.System.Abstractions.csproj" />
-    <ProjectReference Include="..\OoBDev.Microsoft.ApplicationInsights\OoBDev.Microsoft.ApplicationInsights.csproj" />
+    <ProjectReference Include="..\OoBDev.OpenTelemetry\OoBDev.OpenTelemetry.csproj" />
     <ProjectReference Include="..\..\..\Framework\OoBDev.TestUtilities\OoBDev.TestUtilities.csproj" />
     <ProjectReference Include="..\..\..\Framework\OoBDev.System\OoBDev.System.csproj" />
   </ItemGroup>
