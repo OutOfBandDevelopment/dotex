@@ -1,5 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using OoBDev.AsyncApi;
 using OoBDev.Amazon.Sqs.MessageQueueing;
 using OoBDev.MessageQueueing.Services;
 
@@ -28,6 +29,7 @@ public static class ServiceCollectionExtensions
         // Factory registration
         services.TryAddTransient<ISqsClientFactory, SqsClientFactory>();
 
+        services.TryAddEnumerable(ServiceDescriptor.Singleton<IAsyncApiContributor, SqsAsyncApiContributor>());
         return services;
     }
 }

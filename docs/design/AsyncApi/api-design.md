@@ -6,7 +6,7 @@
 
 ```csharp
 // services
-services.TryAddAsyncApiExtensions(configuration);   // model, builder, catalog
+services.TryAddAsyncApiServices();                  // builder; adapters add their IAsyncApiContributor
 
 // pipeline
 app.MapAsyncApi();                                   // /asyncapi/{name}.json and /asyncapi/{name}
@@ -28,22 +28,21 @@ Configuration (all optional):
 
 | Type | Role |
 |------|------|
-| `AsyncApiDocument`, `AsyncApiInfo`, `AsyncApiServer`, `AsyncApiChannel`, `AsyncApiOperation`, `AsyncApiMessage` | AsyncAPI 3.0 model (records) |
-| `AsyncApiDocumentBuilder` | Builds a document by name from configuration and registered handler and sender types |
-| `IAsyncApiContributor` | `Describe(string providerKey, IConfigurationSection config)` returns `AsyncApiContribution` (server, address, bindings) |
+| `AsyncApiDocument`, `AsyncApiInfo`, `AsyncApiServer`, `AsyncApiChannel`, `AsyncApiOperation`, `AsyncApiMessage` | AsyncAPI 3.0 model (small classes) |
+| `AsyncApiDocumentBuilder` | Builds a document by name from the registered handlers and the `MessageQueue` configuration |
+| `IAsyncApiContributor` | `ProviderKey` and `Describe(IConfigurationSection config)`, which returns `AsyncApiContribution` (server, address, bindings) |
 | `AsyncApiJsonWriter` | Serializes the model with `System.Text.Json` |
-| `AsyncApiDocumentCatalog` | Document names (`all` plus assemblies) |
+| `AsyncApiContribution` | What an adapter returns: server, address, bindings |
 
-**Table 2 — Namespace `OoBDev.AsyncApi.AspNetCore`**
+**Table 2 — Namespace `OoBDev.AspNetCore.Mvc` (OoBDev.AspNetCore.Mvc project)**
 
 | Type | Role |
 |------|------|
-| `EndpointRouteBuilderExtensions.MapAsyncApi` | Maps the JSON and viewer endpoints |
-| `AsyncApiViewerPage` | Renders the viewer HTML |
+| `AsyncApiEndpointRouteBuilderExtensions.MapAsyncApi` | Maps the JSON and viewer endpoints; renders the viewer HTML |
 
 ## Document shape
 
-For a sender `IMessageQueueSender<OrdersChannel>` and handler `IMessageQueueHandler<OrdersChannel, OrderPlaced>` on SQS:
+For a handler `IMessageQueueHandler<OrdersChannel, OrderPlaced>` on SQS:
 
 ```json
 {

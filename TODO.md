@@ -31,7 +31,8 @@ Order of work, with the reason for the position. Start at the top; tick items of
 
 ### 2. AsyncAPI document and viewer (phase 2 of [OpenApiScalar](docs/design/OpenApiScalar/README.md); owner request)
 - [x] Design set `docs/design/AsyncApi/` (requirements, architecture, api-design, testing-strategy): evaluate `Saunter` and `LEGO.AsyncAPI` against a thin first-party model; channels and messages for SQS, Service Bus and RabbitMQ.
-- [ ] Implement the model and builder, adapter contributions, `/asyncapi/{name}.json` and the viewer page; Simulate tests; example app wiring; docs and change record.
+- [x] (done 2026-10-09) Implemented `OoBDev.AsyncApi`, adapter contributors, `MapAsyncApi()`, 7 Simulate tests, example wiring. [Details](docs/changes/migration-asyncapi-2026-10-09.md)
+- [ ] Follow-up: describe send-only queues by type (senders are open generics, so only configured queues are listed today); in-process contributor; check the viewer in a browser.
 
 ### 3. Docker test infrastructure and CI (needs the owner for the merge)
 - [ ] Port-collision hardening: make host ports overridable (or move them to a private range) so other local services cannot collide, as `storage-ollama` did on 11434.

@@ -63,7 +63,7 @@ OC --> Map : IApiReferenceConfigurator
 
 ## Phase 2 — AsyncAPI
 
-Designed in [AsyncApi](../AsyncApi/README.md); implementation not started. The plan:
+Designed and implemented in [AsyncApi](../AsyncApi/README.md) (2026-10-09). The original plan:
 
 - A small `OoBDev.AsyncApi` model (AsyncAPI 3: info, servers, channels, operations, messages) with a builder that the message queue adapters contribute to. Each adapter (SQS, Service Bus, RabbitMQ) describes its channels from configuration and the message types registered with the sender; nothing is added to the Abstractions projects.
 - `/asyncapi/{name}.json` serves the document; a viewer page (the AsyncAPI web component) is served beside Scalar.

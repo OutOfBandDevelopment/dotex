@@ -1,4 +1,5 @@
-﻿using OoBDev.MessageQueueing.Services;
+using OoBDev.MessageQueueing.Services;
+using OoBDev.AsyncApi;
 using OoBDev.RabbitMQ.MessageQueueing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -34,6 +35,8 @@ public static class ServiceCollectionExtensions
         services.TryAddKeyedTransient<IMessageReceiverProvider, RabbitMQQueueMessageProvider>(RabbitMQGlobals.MessageProviderKey);
 
         services.TryAddTransient<IQueueClientFactory, QueueClientFactory>();
+
+        services.TryAddEnumerable(ServiceDescriptor.Singleton<IAsyncApiContributor, RabbitMQAsyncApiContributor>());
 
         return services;
     }

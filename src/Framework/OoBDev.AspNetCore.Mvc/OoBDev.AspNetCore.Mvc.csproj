@@ -19,6 +19,7 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\OoBDev.AspNetCore.Abstractions\OoBDev.AspNetCore.Abstractions.csproj" />
+	  <ProjectReference Include="..\OoBDev.AsyncApi\OoBDev.AsyncApi.csproj" />
 	  <ProjectReference Include="..\OoBDev.Extensions\OoBDev.Extensions.csproj" />
 		<ProjectReference Include="..\OoBDev.System\OoBDev.System.csproj" />
 	</ItemGroup>

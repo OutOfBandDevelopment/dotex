@@ -20,6 +20,8 @@ class. The main configuration options are:
 
 * `TryAddCommonOpenApiExtensions` This function enables extensions for OpenAPI (Microsoft.AspNetCore.OpenApi transformers and the Scalar API reference).
 
+* `MapAsyncApi` (with `TryAddAsyncApiServices` from `OoBDev.AsyncApi`) publishes the message queue AsyncAPI document at `/asyncapi/{name}.json` and a viewer at `/asyncapi/{name}`.
+
 * `TryAddAspNetCoreSearchQuery` This function enables extensions for shared search query 
   extensions.
 

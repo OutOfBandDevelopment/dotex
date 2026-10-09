@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
@@ -28,6 +28,10 @@
   <ItemGroup>
     <ProjectReference Include="..\OoBDev.AspNetCore.JwtAuthentication\OoBDev.AspNetCore.JwtAuthentication.csproj" />
     <ProjectReference Include="..\OoBDev.AspNetCore.Mvc\OoBDev.AspNetCore.Mvc.csproj" />
+    <ProjectReference Include="..\OoBDev.MessageQueueing\OoBDev.MessageQueueing.csproj" />
+    <ProjectReference Include="..\..\ExternalServices\Amazon\OoBDev.Amazon.Sqs\OoBDev.Amazon.Sqs.csproj" />
+    <ProjectReference Include="..\..\ExternalServices\Microsoft\OoBDev.Microsoft.Azure.ServiceBus\OoBDev.Microsoft.Azure.ServiceBus.csproj" />
+    <ProjectReference Include="..\..\ExternalServices\RabbitMQ\OoBDev.RabbitMQ\OoBDev.RabbitMQ.csproj" />
     <ProjectReference Include="..\OoBDev.TestUtilities\OoBDev.TestUtilities.csproj" />
   </ItemGroup>
   

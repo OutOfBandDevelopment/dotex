@@ -194,6 +194,19 @@ services.Configure<FileTemplatingOptions>(options =>
 
 ---
 
+#### AsyncApi
+
+**Namespace:** `OoBDev.AsyncApi` (read directly from `IConfiguration`)
+**Configuration Section:** `AsyncApi`
+
+| Key | Default | Purpose |
+|-----|---------|---------|
+| `Title` | `Messaging` (or the document name) | Document title |
+| `Version` | `1.0.0` | Document version |
+| `ViewerScriptUrl` | pinned unpkg web component | Script the `/asyncapi/{name}` viewer loads |
+
+---
+
 #### OAuth2OpenApiOptions
 
 **Namespace:** `OoBDev.AspNetCore.JwtAuthentication.OpenApi`

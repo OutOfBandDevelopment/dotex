@@ -1,6 +1,6 @@
 # AsyncApi
 
-**Status:** Design (phase 2 of [OpenApiScalar](../OpenApiScalar/architecture.md#phase-2--asyncapi)) · **Owner decision:** an AsyncAPI viewer beside Scalar (answered 2026-10-09)
+**Status:** Implemented 2026-10-09 ([change record](../../changes/migration-asyncapi-2026-10-09.md)); design (phase 2 of [OpenApiScalar](../OpenApiScalar/architecture.md#phase-2--asyncapi)) · **Owner decision:** an AsyncAPI viewer beside Scalar (answered 2026-10-09)
 
 Publishes an AsyncAPI 3.0 document for the message queue surfaces (SQS, Service Bus, RabbitMQ, in-process) and a viewer page, so queue contracts are as discoverable as the REST contracts.
 

@@ -20,7 +20,7 @@ rectangle "Application" as App <<container>> {
     rectangle "AsyncApiDocumentBuilder" as B
     rectangle "AsyncApiJsonWriter" as W
   }
-  rectangle "OoBDev.AsyncApi.AspNetCore" as Web <<component>> {
+  rectangle "OoBDev.AspNetCore.Mvc" as Web <<component>> {
     rectangle "MapAsyncApi" as Map
     rectangle "Viewer page" as V
   }
@@ -66,7 +66,7 @@ Map -> Map : write JSON
 
 *Figure 2 — Building a document*
 
-The builder reads the service collection registrations once at startup (the same approach as `OpenApiDocumentCatalog`) and builds the document lazily on first request, caching it. Document names match OpenAPI: `all` plus one per assembly that registers handlers or senders, matched case-insensitively.
+The builder takes the registered `IMessageQueueHandler` instances (receive channels) and reads the `MessageQueue` configuration for queues that no handler covers (send channels): `IMessageQueueSender<T>` is an open generic, so senders cannot be enumerated by type. It builds the document on each request from those inputs. Document names match OpenAPI: `all` plus one per assembly that registers handlers or senders, matched case-insensitively.
 
 ## Adapter contributions
 
