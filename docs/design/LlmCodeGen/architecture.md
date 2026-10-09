@@ -8,9 +8,9 @@
 
 | Piece | Source | Role |
 |-------|--------|------|
-| `IChatProvider` | `OoBDev.SemanticKernel.Abstractions` | Sends the prompt, returns the text |
-| Ollama and Groq adapters | `OoBDev.Ollama`, `OoBDev.GroqCloud` | Register keyed `IChatProvider` (`ollama`, `groq`); the Ollama adapter gained an optional `ApiKey` |
-| `ITemplateEngine` | `OoBDev.System.Abstractions` with `OoBDev.Handlebars` | Renders the prompt from the folder's files |
+| `IMessageCompletion` | `OoBDev.AI.Abstractions` | Sends the prompt to a named model, returns the text |
+| Ollama and Groq adapters | `OoBDev.Ollama`, `OoBDev.GroqCloud` | Register keyed `IMessageCompletion` (`ollama`, `groq-cloud`); the Ollama adapter gained an optional `ApiKey` |
+| `PromptRenderer` | new, Handlebars.Net | Renders the prompt from the folder's files; resolves bundled template names |
 | `FolderPromptRunner` | new | The loop: scan, render, ask, save, extract |
 | `ResponseFileExtractor` | new | Pure parser from response text to `(relativePath, content)` pairs |
 | Host and options | new | Generic host, `LlmCodeGenOptions` |
@@ -22,8 +22,8 @@
 skinparam shadowing false
 actor User
 participant "FolderPromptRunner" as R
-participant "ITemplateEngine" as T
-participant "IChatProvider\n(ollama or groq)" as L
+participant "PromptRenderer" as T
+participant "IMessageCompletion\n(ollama or groq-cloud)" as L
 participant "ResponseFileExtractor" as X
 database "Output folder" as O
 
@@ -35,7 +35,7 @@ loop each folder with files
     R -> T : render(template, files)
     T --> R : prompt
     R -> O : write prompt
-    R -> L : OneShotAsync(prompt)
+    R -> L : GetCompletionAsync(model, prompt)
     L --> R : response text
     R -> O : write response
     R -> X : extract(response)

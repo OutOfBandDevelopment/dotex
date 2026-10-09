@@ -30,7 +30,7 @@
 
 ## Acceptance
 
-- Running against a small sample folder with a fake `IChatProvider` writes the prompt, the response and the extracted files.
+- Running against a small sample folder with a fake `IMessageCompletion` writes the prompt, the response and the extracted files.
 - A response containing `../` or an absolute path cannot write outside the output folder.
 - Switching `LlmCodeGen:Provider` between `ollama` and `groq` needs no other change.
 

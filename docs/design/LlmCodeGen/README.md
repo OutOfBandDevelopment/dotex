@@ -15,7 +15,7 @@ A single command-line tool, `OoBDev.LlmCodeGen.Cli`, that walks a source tree, b
 
 ## Decision summary
 
-- No new provider abstraction: the existing `IChatProvider` (single prompt, single answer) selected through `TryAddConfiguredKeyedService<T>` already covers Ollama and Groq.
-- Prompts come from the existing Handlebars template engine through `ITemplateEngine`, not a direct `HandlebarsDotNet` call.
+- No new provider abstraction: the existing `IMessageCompletion` (model name plus prompt in, text out) selected through `TryAddConfiguredKeyedService<T>` already covers Ollama and Groq.
+- Prompts are rendered with Handlebars.Net through a small `PromptRenderer` (the framework template engine is tied to template contexts and sources that a prompt does not need).
 - The disabled file extraction in both prototypes is implemented as a tested, pure parser.
 - Paths, endpoint and model move from hard-coded values to options validated with data annotations.

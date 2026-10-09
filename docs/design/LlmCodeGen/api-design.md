@@ -12,9 +12,11 @@ public record LlmCodeGenOptions
     [Required] public required string InputPath { get; init; }
     [Required] public required string OutputPath { get; init; }
     [Required] public required string Template { get; init; }   // bundled name or file path
-    [Required] public string Provider { get; init; } = "ollama"; // keyed IChatProvider
+    [Required] public string Provider { get; init; } = "ollama"; // keyed IMessageCompletion: ollama or groq-cloud (alias groq)
+    [Required] public required string Model { get; init; }
     public string SearchPattern { get; init; } = "*.*";
     public bool Overwrite { get; init; }
+    public bool ExtractFiles { get; init; } = true;
 }
 ```
 
@@ -22,7 +24,7 @@ Bound with `AddOptions<LlmCodeGenOptions>().Bind(...).ValidateDataAnnotations()`
 
 ## Command line
 
-`llmcodegen --input <dir> --output <dir> --template <name|path> [--provider ollama|groq] [--overwrite]`
+`llmcodegen --input <dir> --output <dir> --template <name|path> --model <model> [--provider ollama|groq] [--pattern <glob>] [--overwrite] [--extract false]`
 
 Arguments override `appsettings.json`, which overrides defaults.
 

@@ -1,0 +1,19 @@
+You are converting an Angular component folder ("{{folder}}") to React with TypeScript.
+
+Rules:
+- Function components with hooks; one `.tsx` file per Angular component, keep the selector as the component name in PascalCase.
+- `@Input()` becomes a typed props interface, `@Output()` becomes a callback prop, services become hooks or context providers.
+- Templates: `*ngIf` becomes conditional rendering, `*ngFor` becomes `map` with a `key`, `[(ngModel)]` becomes controlled state, pipes become helper functions.
+- Keep the view model separate from the markup so commands stay unit-testable; do not keep logic in inline handlers.
+- Copy styles to a CSS module with the same class names.
+- Do not add libraries that were not used in the Angular code except `react`.
+
+Return every output file with its name in bold on the line before the fenced block, for example **UserList.tsx**. List anything you could not convert in a final **NOTES.md** block.
+
+{{#each files}}
+**{{name}}**
+```{{extension}}
+{{content}}
+```
+
+{{/each}}

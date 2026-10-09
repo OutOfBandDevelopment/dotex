@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>false</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>llmcodegen</ToolCommandName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="OoBDev.LlmCodeGen.Cli.Tests" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="GitVersion.MsBuild">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Handlebars.Net" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" />
+    <PackageReference Include="Microsoft.Extensions.Options.DataAnnotations" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\ExternalServices\Ollama\OoBDev.Ollama\OoBDev.Ollama.csproj" />
+    <ProjectReference Include="..\..\ExternalServices\GroqCloud\OoBDev.GroqCloud\OoBDev.GroqCloud.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Templates\*.hbs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>
