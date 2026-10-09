@@ -92,6 +92,10 @@ Each change document should include:
 
 ### Documentation
 
+**[todo-completed-items-2026-10-09.md](todo-completed-items-2026-10-09.md)**
+- Completed Patterns Discovery tasks, banners and backlog items moved out of `TODO.md`
+- Status: ✅ Complete
+
 **[documentation-configuration-settings-2026-01-21.md](documentation-configuration-settings-2026-01-21.md)**
 - CONFIGURATION_SETTINGS.md created (157+ settings)
 - 31 Options classes, 24 direct keys, 102 environment variables
@@ -129,6 +133,10 @@ Each change document should include:
 - Status: ✅ Complete (GitHub run not yet observed)
 
 ### Testing
+
+**[testing-live-integration-completed-2026-10-09.md](testing-live-integration-completed-2026-10-09.md)**
+- Archived completed section of the live integration TODO (LiveIntegration category)
+- Status: ✅ Complete
 
 **[testing-local-integration-completed-2026-10-09.md](testing-local-integration-completed-2026-10-09.md)**
 - Archived completed sections of the local integration TODO (Weeks 1 and 2, validation, script and health check fixes)

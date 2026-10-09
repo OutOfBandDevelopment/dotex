@@ -26,15 +26,7 @@ Integration testing for cloud services that require actual cloud infrastructure 
 
 ## Completed Work ✓
 
-### Test Categories Enhancement (COMPLETED - 2026-01-19)
-
-- [x] Added `LiveIntegration` category to `src/Framework/OoBDev.TestUtilities/TestCategories.cs`
-- [x] Updated XML documentation clearly explaining:
-  - LiveIntegration is for cloud services that cannot be emulated
-  - Requires valid cloud credentials and active service subscriptions
-  - Manual execution only, NOT run in CI/CD pipelines
-  - Examples: Groq Cloud
-- [x] Clear distinction from Integration category (Docker-based, runs in CI/CD)
+Moved to the change history: [testing-live-integration-completed-2026-10-09.md](docs/changes/testing-live-integration-completed-2026-10-09.md).
 
 ---
 
@@ -43,10 +35,6 @@ Integration testing for cloud services that require actual cloud infrastructure 
 ### Week 3: Cloud Test Migration (PENDING)
 
 **Migrate tests that require live cloud services to LiveIntegration category**
-
-#### Microsoft Application Insights (replaced)
-
-Replaced by OpenTelemetry on 2026-10-09; its tests run as Integration against the `otel-lgtm` container. See [the change record](docs/changes/migration-opentelemetry-2026-10-09.md).
 
 #### Groq Cloud
 
@@ -278,7 +266,7 @@ Replaced by OpenTelemetry on 2026-10-09; its tests run as Integration against th
 ## Success Criteria
 
 ### Week 3: Cloud Test Migration
-- [ ] 3 services categorized as LiveIntegration (Azure B2C, App Insights, Groq)
+- [ ] Groq categorized as LiveIntegration (Azure B2C was dropped and Application Insights replaced by OpenTelemetry on 2026-10-09)
 - [ ] `.env.liveintegration.template` created for each service
 - [ ] README.md in each test project explaining setup
 - [ ] Tests updated to use environment variables
