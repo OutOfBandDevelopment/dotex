@@ -124,8 +124,7 @@ public class XPath20FunctionsTests
     //    }
     //}
 
-    [TestMethod, TestCategory(TestCategories.DevLocal)]
-    //[TestCategory(TestCategories.Unit)]
+    [TestMethod, TestCategory(TestCategories.Unit)]
     [TestTarget(typeof(XPath20Functions), Member = nameof(XPath20Functions.max))]
     public void MaxTest()
     {

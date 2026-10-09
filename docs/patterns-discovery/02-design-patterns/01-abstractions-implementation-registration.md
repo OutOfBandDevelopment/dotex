@@ -6,7 +6,7 @@
 
 **What:** A capability = `X.Abstractions` (contracts) + `X` (defaults) + `ServiceCollectionExtensions` in the implementation (one public `TryAddXServices`).
 
-**See:** `Framework/OoBDev.Caching.Abstractions`, `Framework/OoBDev.Caching/ServiceCollectionEx.cs` (to be renamed, see below).
+**See:** `Framework/OoBDev.Caching.Abstractions`, `Framework/OoBDev.Caching/ServiceCollectionExtensions.cs`.
 
 ```csharp
 public static IServiceCollection TryAddCachingServices(this IServiceCollection services)
@@ -20,7 +20,7 @@ public static IServiceCollection TryAddCachingServices(this IServiceCollection s
 
 **Repeat:** name the method `TryAdd{Capability}Services` (or `…Extensions` for cross-cutting); call the dependencies' `TryAdd*` at the top; return `services`.
 
-**Rough edges:** the static class is named `ServiceCollectionEx` in some projects and `ServiceCollectionExtensions` in others; and both names exist in different namespaces which can cause ambiguity for consumers importing many namespaces. **Decision:** `ServiceCollectionExtensions` everywhere (it is the majority, 44 projects). The remaining `ServiceCollectionEx` classes are tracked as a backlog item in `TODO.md` ("Backlog: Naming Consistency"). New code and the dotnet templates already use the standard name.
+**Rough edges:** the static class used to be named `ServiceCollectionEx` in six projects. **Done 2026-10-09:** `ServiceCollectionExtensions` everywhere. Extension-method call sites were unaffected because only the class name changed.
 
 ---
 

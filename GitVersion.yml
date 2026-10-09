@@ -1,9 +1,14 @@
-mode: ContinuousDeployment
+# Versioning policy
+#   Major: bumped by hand: a commit message containing "+semver: major" (or "next-version: 1.0.0" below)
+#   Minor: bumped by every merge into main; the build tags main with vX.Y.0
+#   Patch: on any other branch, the number of commits past the last tag on main (the workflow builds
+#          major.minor.patch-branch from CommitsSinceVersionSource; dev builds are not tagged)
+mode: ContinuousDelivery
 
 branches:
   main:
     regex: ^main$
-    increment: Patch
+    increment: Minor
     label: ''
     track-merge-target: false
 

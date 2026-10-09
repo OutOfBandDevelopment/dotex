@@ -238,7 +238,7 @@
 
 **Authentication/Authorization:**
 - [x] JWT Bearer authentication
-- [x] OAuth2 Swagger integration (Azure B2C, Keycloak)
+- [x] OAuth2 Swagger integration (Keycloak)
 - [x] Claims-based authorization
 - [x] Application rights/permissions filtering (`[ApplicationRight]`)
 
@@ -590,7 +590,7 @@ var person = provider.Generate<PersonModel>();
 ### 2.13 Identity Management ✓
 
 **Providers:**
-- [x] Azure B2C
+- [~] Azure B2C (removed 2026-10-09)
 - [x] Keycloak
 
 **Features:**
@@ -804,8 +804,7 @@ var person = provider.Generate<PersonModel>();
 |---------|---------|---------|
 | Azure Blob Storage | OoBDev.Azure.StorageAccount | Blob container implementation |
 | Azure Storage Queues | OoBDev.Azure.StorageAccount | Message queue provider |
-| Azure B2C | OoBDev.Microsoft.B2C | Identity provider |
-| Application Insights | OoBDev.Microsoft.ApplicationInsights | Telemetry |
+| OpenTelemetry (OTLP) | OoBDev.OpenTelemetry | Telemetry |
 
 ### 4.2 Databases and Storage
 
@@ -850,7 +849,6 @@ var person = provider.Generate<PersonModel>();
 | Service | Project | Purpose |
 |---------|---------|---------|
 | Keycloak | OoBDev.Keycloak | Open source identity |
-| Azure AD B2C | OoBDev.Microsoft.B2C | Cloud identity |
 
 ### 4.7 Communication
 
@@ -886,7 +884,6 @@ var person = provider.Generate<PersonModel>();
 | `AzureBlobProviderOptions` | Blob storage | Connection strings |
 | `MailKitSmtpClientOptions` | Email SMTP | Host, Port, DefaultFrom |
 | `MailKitImapClientOptions` | Email IMAP | Host, Port, Username |
-| `MicrosoftIdentityOptions` | Azure B2C | TenantId, ClientId |
 | `MongoDatabaseOptions` | MongoDB | Connection string |
 | `OllamaApiClientOptions` | Ollama | Base URL, Model |
 | `OpenSearchOptions` | OpenSearch | URLs, credentials |

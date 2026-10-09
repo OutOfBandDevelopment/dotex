@@ -169,7 +169,6 @@ https://medium.com/@hermanschutte/how-to-custom-train-and-fine-tune-models-with-
     * Machine Learning / Artificial Intelligence
         
     * Auth Stores
-      * B2C
       * Keycloak
 
 * Confugurator

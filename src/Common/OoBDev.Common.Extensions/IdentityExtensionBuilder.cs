@@ -1,5 +1,4 @@
 ﻿using OoBDev.Keycloak.Identity;
-using OoBDev.Microsoft.Azure.B2C.Identity;
 
 namespace OoBDev.Common.Extensions;
 
@@ -12,17 +11,9 @@ public record IdentityExtensionBuilder
     /// Gets or sets the identity provider to use.
     /// </summary>
     /// <remarks>
-    /// Specifies the identity provider for authentication. The default value is <see cref="IdentityProviders.AzureB2C"/>.
+    /// Specifies the identity provider for authentication. The default value is <see cref="IdentityProviders.Keycloak"/>.
     /// </remarks>
-    public IdentityProviders IdentityProvider { get; init; } = IdentityProviders.AzureB2C;
-
-    /// <summary>
-    /// Gets or sets the configuration section name for Microsoft Identity options.
-    /// </summary>
-    /// <value>
-    /// The configuration section name for Microsoft Identity options. Default is "MicrosoftIdentityOptions".
-    /// </value>
-    public string MicrosoftIdentityConfigurationSection { get; init; } = nameof(MicrosoftIdentityOptions);
+    public IdentityProviders IdentityProvider { get; init; } = IdentityProviders.Keycloak;
 
     /// <summary>
     /// Gets or sets the configuration section name for Keycloak identity options.

@@ -20,8 +20,7 @@ public class ReflectionElementNodeTests
     private ReflectionElementNodeBuilder CreateReflectionElementNode(object testData, bool excludeNamespace = false) =>
         new(testData, excludeNamespace);
 
-    [TestMethod, TestCategory(TestCategories.DevLocal)]
-    //[TestCategory(TestCategories.Unit)]
+    [TestMethod, TestCategory(TestCategories.Unit)]
     public void ReflectionElementNodeTest()
     {
         // Stage

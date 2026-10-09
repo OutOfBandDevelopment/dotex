@@ -13,12 +13,12 @@ namespace OoBDev.SBert.AllMiniLmL6V2;
 public static class AllMiniLmL6V2Model
 {
     /// <summary>Hugging Face repository the files come from.</summary>
-    public const string Repository = "onnx-models/all-MiniLM-L6-v2-onnx";
+    public const string Repository = "sentence-transformers/all-MiniLM-L6-v2";
 
     /// <summary>Pinned revision (commit) of <see cref="Repository"/>.</summary>
-    public const string Revision = "75251058ddd779e3a744f87fdf63fb39681aec16";
+    public const string Revision = "1110a243fdf4706b3f48f1d95db1a4f5529b4d41";
 
-    private const string ModelSha256 = "994a58868f7abacacbf2192aa0aae8f56da8c4505dbde2740c861b24426ede6b";
+    private const string ModelSha256 = "6fd5d72fe4589f189f8ebc006442dbb529bb7ce38f8082112682524616046452";
     private const string VocabSha256 = "07eced375cec144d27c900241f3e339478dec958f92fddbc551f295c992038a3";
 
     /// <summary>
@@ -27,8 +27,7 @@ public static class AllMiniLmL6V2Model
     /// <c>HF_HUB_CACHE</c>, else <c>HF_HOME/hub</c>, else <c>XDG_CACHE_HOME/huggingface/hub</c>, else <c>~/.cache/huggingface/hub</c>.
     /// Set <c>ModelPath</c> to a mapped volume in containers to keep the files between restarts.
     /// </summary>
-    public static string DefaultFolder { get; } = Path.Combine(
-        HubCacheRoot(), "models--" + Repository.Replace("/", "--", StringComparison.Ordinal), "snapshots", Revision);
+    public static string DefaultFolder { get; } = HuggingFaceHubCache.SnapshotFolder(Repository, Revision);
 
     /// <summary>
     /// Sets the folder and the download sources to the defaults of this model.
@@ -38,12 +37,12 @@ public static class AllMiniLmL6V2Model
     {
         ArgumentNullException.ThrowIfNull(options);
         options.ModelPath = DefaultFolder;
-        options.ModelFileName = "model.onnx";
+        options.ModelFileName = "onnx/model.onnx";
         options.VocabFileName = "vocab.txt";
         options.ModelFiles =
         [
-            new ModelFileSource { FileName = "model.onnx", Url = Url("model.onnx"), Sha256 = ModelSha256 },
-            new ModelFileSource { FileName = "vocab.txt", Url = Url("vocab.txt"), Sha256 = VocabSha256 },
+            HuggingFaceHubCache.File(Repository, Revision, "onnx/model.onnx", ModelSha256),
+            HuggingFaceHubCache.File(Repository, Revision, "vocab.txt", VocabSha256),
         ];
     }
 
@@ -56,14 +55,4 @@ public static class AllMiniLmL6V2Model
     /// <returns>The model folder.</returns>
     public static Task<string> EnsureAsync(OnnxSentenceEmbeddingOptions options, ILogger logger, CancellationToken cancellationToken = default) =>
         OnnxSentenceEmbeddingGenerator.EnsureModelAsync(options, logger, cancellationToken);
-
-    private static string HubCacheRoot()
-    {
-        if (Environment.GetEnvironmentVariable("HF_HUB_CACHE") is { Length: > 0 } hub) return hub;
-        if (Environment.GetEnvironmentVariable("HF_HOME") is { Length: > 0 } home) return Path.Combine(home, "hub");
-        if (Environment.GetEnvironmentVariable("XDG_CACHE_HOME") is { Length: > 0 } xdg) return Path.Combine(xdg, "huggingface", "hub");
-        return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".cache", "huggingface", "hub");
-    }
-
-    private static string Url(string file) => $"https://huggingface.co/{Repository}/resolve/{Revision}/{file}";
 }

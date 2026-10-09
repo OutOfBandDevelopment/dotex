@@ -23,6 +23,9 @@ ReadOnlyMemory<float> vector = embeddings[0].Vector; // unit length by default
 - Pooling is a masked mean (or the first token with `Pooling = Cls`) followed by L2 normalisation.
 - Blank input returns a zero vector of the right length instead of an empty one.
 - `Dimensions` truncates and re-normalises; it is accepted only when `SupportsDimensionTruncation` is true (Matryoshka-trained models).
+- Model differences are options: special tokens (`ClsToken`, `SepToken`, `UnkToken`, `PadToken`, `MaskToken`), `TokenTypeIdsName` (null when the model has no token type input), `Prefix`, `Pooling`, `LayerNormalize` (pooled vector is layer normalised before truncation) and `Dimensions`.
+- `HuggingFaceHubCache` gives the cache root, snapshot folder and pinned download sources in the Hugging Face hub layout, so model files are shared with Python tools; `ModelFiles` names may include a sub folder such as `onnx/model.onnx`.
+- Presets: [all-MiniLM-L6-v2](../../SBert/OoBDev.SBert.AllMiniLmL6V2/README.SBert.AllMiniLmL6V2.md), [all-mpnet-base-v2](../../SBert/OoBDev.SBert.AllMpnetBaseV2/README.SBert.AllMpnetBaseV2.md), [nomic-embed-text-v1.5](../../SBert/OoBDev.SBert.NomicEmbedTextV1_5/README.SBert.NomicEmbedTextV1_5.md).
 
 ## Tokenizer
 

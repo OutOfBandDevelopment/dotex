@@ -538,22 +538,22 @@
                     </div>
                 </div>
 
-                <!-- Azurinsight -->
+                <!-- OpenTelemetry (Grafana LGTM) -->
                 <div class="service-card">
                     <div class="service-header">
-                        <span class="service-name">📊 Azurinsight</span>
-                        <span class="service-status status-api">App Insights Emulator</span>
+                        <span class="service-name">📊 OpenTelemetry</span>
+                        <span class="service-status status-api">Grafana LGTM</span>
                     </div>
                     <div class="service-description">
-                        Local Application Insights emulator with SQLite persistence for telemetry testing.
+                        OTLP receiver with Tempo (traces), Loki (logs), Prometheus (metrics) and Grafana for telemetry testing.
                     </div>
                     <div class="service-links">
-                        <a href="http://localhost:5000/" class="service-link api" target="_blank">API Endpoint :5000</a>
+                        <a href="http://localhost:3000/" class="service-link api" target="_blank">Grafana :3000</a>
                     </div>
                     <div class="port-info">
-                        <div class="port-item">HTTP: <span class="port-number">localhost:5000</span></div>
-                        <div class="port-item">Telemetry: <span class="port-number">/v2.1/track</span></div>
-                        <div class="port-item">Query: <span class="port-number">/api/query</span></div>
+                        <div class="port-item">OTLP gRPC: <span class="port-number">localhost:4317</span></div>
+                        <div class="port-item">OTLP HTTP: <span class="port-number">localhost:4318</span></div>
+                        <div class="port-item">Grafana: <span class="port-number">localhost:3000</span></div>
                     </div>
                 </div>
             </div>

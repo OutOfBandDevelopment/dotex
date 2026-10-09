@@ -44,7 +44,7 @@ public class ServiceRegistryTests
     }
 
     [TestMethod]
-    [TestCategory(TestCategories.DevLocal)]
+    [TestCategory(TestCategories.Unit)]
     public void Create_IBlobContainer__ContainerTargetClass_Test()
     {
         var wrapper = ServiceProvider().GetRequiredService<IBlobContainer<ContainerTargetClass>>();
@@ -52,7 +52,7 @@ public class ServiceRegistryTests
     }
 
     [TestMethod]
-    [TestCategory(TestCategories.DevLocal)]
+    [TestCategory(TestCategories.Unit)]
     public void Create_IBlobContainer__ContainerTargetClassWithTag_Test()
     {
         var wrapper = ServiceProvider().GetRequiredService<IBlobContainer<ContainerTargetClassWithTag>>();

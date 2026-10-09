@@ -13,7 +13,7 @@ public class HtmlTemplateTransformTests
 {
     public required TestContext TestContext { get; set; }
 
-    [TestMethod, TestCategory(TestCategories.DevLocal)]
+    [TestMethod, TestCategory(TestCategories.Unit)]
     public async Task DeeperTest()
     {
         var xsltArgumentList = new XsltArgumentList();

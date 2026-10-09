@@ -26,7 +26,7 @@ OoBDev uses **5 test categories** to organize tests:
 | **Simulate** | Every PR | Mocked | End-to-end with in-memory persistence |
 | **Integration** | Daily 4 PM UTC | Docker | MongoDB, SQL Server, RabbitMQ, etc. |
 | **DevLocal** | Manual | Local | Performance, GPU tests |
-| **LiveIntegration** | Manual | Cloud | Azure B2C, Groq, App Insights |
+| **LiveIntegration** | Manual | Cloud | Groq |
 
 ---
 

@@ -79,7 +79,7 @@ Located in `.claude/protocols/`:
 
 ### 3. Current Migration Work
 
-**Incomming Projects Pending Decisions:**
+**Incoming Projects Pending Decisions:**
 - ⏸️ **BotChat** - Sample app, decision needed (archive, enhance, or extract patterns)
 - ⏸️ **BinaryDataDecoders** - ~50,000 LOC, awaiting 14+ critical decisions
 - ⏸️ **ContractParser** - Decision needed (implement now, later, or keep as spec)
@@ -206,7 +206,7 @@ OoBDev.{Layer}.{Feature}/
 - Implementations: `{Name}` (no suffix)
 - Providers: `{Name}Provider`
 - Factories: `{Name}Factory`
-- Extensions: `{Name}Extensions`; DI registration class is always `ServiceCollectionExtensions` (never `ServiceCollectionEx`; 6 projects still to rename, see TODO.md)
+- Extensions: `{Name}Extensions`; DI registration class is always `ServiceCollectionExtensions` (never `ServiceCollectionEx`; all projects renamed 2026-10-09)
 - Provider keys: kebab-case constants in each adapter's `{Vendor}Globals` (never a global registry; keeps adapters referencing only Abstractions)
 - Prefer platform primitives (e.g. `TimeProvider`) over hand-built abstractions; inject by interface
 
@@ -305,10 +305,10 @@ OoBDev.{Layer}.{Feature}/
   - [Variables in .runsettings](docs/how-tos/runsettings-variables-and-configuration.md)
 - `/docs/migration/` - Migration plans and feature mappings
 - `/TODO.md` - Current work tracking
-- `/Incomming/CHECKLIST.md` - Incomming project investigation status
+- `/Incoming/CHECKLIST.md` - Incoming project investigation status
 
 ### Configuration
-- `/src/GitVersion.yml` - Semantic versioning
+- `/GitVersion.yml` - Semantic versioning
 - `/src/.runsettings` - Test configuration
 - `/.github/workflows/dotnet.yml` - CI/CD pipeline
 
@@ -341,7 +341,7 @@ OoBDev uses **5 test categories** to organize tests by execution environment and
 | **Simulate** | YES (every PR/push) | Mocked | End-to-end with in-memory persistence |
 | **Integration** | YES (daily at 4 PM UTC) | Docker containers | MongoDB, SQL Server, RabbitMQ, etc. |
 | **DevLocal** | NO (manual only) | Local services | Performance tests, GPU tests |
-| **LiveIntegration** | NO (manual only) | Live Azure/AWS/GCP | Azure B2C, Groq, App Insights |
+| **LiveIntegration** | NO (manual only) | Live Azure/AWS/GCP | Groq |
 
 **Docker-Based Integration Tests:**
 
@@ -376,7 +376,7 @@ cd ../containers/testing
 - Keycloak (Identity & Access Management)
 - SBert (Sentence embeddings - CPU only)
 - Ollama (LLM inference - CPU only, phi3 model auto-pulled)
-- Azurinsight (Application Insights emulator)
+- OpenTelemetry (Grafana LGTM: OTLP receiver, Tempo, Loki, Grafana)
 
 **Test Properties Pattern:**
 ```csharp
@@ -403,7 +403,7 @@ public async Task TestMongoDBOperation()
 
 **Test Configuration:**
 - **All Variables:** See [TEST_VARIABLES.md](./TEST_VARIABLES.md) for complete list of 30+ test properties
-- **30+ Properties:** MongoDB, SQL Server, RabbitMQ, OpenSearch, SBert, Azure B2C, Groq, etc.
+- **30+ Properties:** MongoDB, SQL Server, RabbitMQ, OpenSearch, SBert, Groq, etc.
 - **Configuration:** Use `.runsettings` file or test deployment context
 
 **See Also:**
@@ -526,7 +526,12 @@ dotnet test src/ --collect:"XPlat Code Coverage"
 
 ## Recently Completed Work
 
+### 2026-10-09
+- **OpenTelemetry replaces Application Insights** - `OoBDev.OpenTelemetry` (config-gated `TryAddOpenTelemetryExtensions`, OTLP export, correlation and user processors), Grafana LGTM container replaces Azurinsight, Integration tests read spans and logs back from Tempo and Loki; most `DevLocal` tests fixed or moved to Unit/Integration. [Details](docs/changes/migration-opentelemetry-2026-10-09.md)
+
 ### 2026-10-08
+- **Image embeddings** - in-process ONNX runner with Skia decoder, DINOv2-small, ViT-base and CLIP ViT-B/32 presets (zero-shot labels), compared with the Python models (ViT and CLIP exact, DINOv2 cosine 0.995+). [Details](docs/changes/migration-image-embeddings-2026-10-08.md)
+- **Embedding presets and version policy** - MPNet and Nomic presets verified against Hugging Face (cosine 0.999+), shared hub cache, `GitVersion.yml`: manual major, minor per merge into main, patch is commits past the last main tag on branches. [Details](docs/changes/migration-embedding-presets-2026-10-08.md)
 - **AllMiniLmL6V2 replaces the fork** - first-party ONNX embedder and tokenizer matching the Hugging Face model (34/34), model downloaded on first use into the shared hub cache, fork and both submodules removed. [Details](docs/changes/migration-allminilml6v2-embedder-2026-10-08.md)
 - **NULL-safe vectors and CI build order** - `Parse` and matrix accessors return NULL, `SqlMatrix.Element` is `SqlDouble`, `.DB` dacpac ordering fixed, SBert model project built before the AllMiniLm tests. [Details](docs/changes/testing-vectors-sqs-moto-ci-2026-10-08.md)
 - **CI, vectors, Moto** - CI restore fixed, vector `Angle` corrected and NULL-safe, SQL Server Integration tests, Moto replaces LocalStack, SQS tests repaired. [Details](docs/changes/testing-vectors-sqs-moto-ci-2026-10-08.md)
@@ -596,7 +601,6 @@ dotnet test src/ --collect:"XPlat Code Coverage"
 
 **Active Priorities:**
 1. **Integration Testing** - Finalizing health checks for all 15 Docker services (13/15 healthy)
-   - ⏳ azurinsight health check needs investigation
    - ⏳ servicebus startup validation (30s start period)
    - Next: Enable CI/CD pipeline after all services validated
 2. **SharedFramework** - Design-first approach (Epic 2, 6, 7, 10)
@@ -623,7 +627,7 @@ Instead of directly migrating code from SharedFramework, we've pivoted to compre
 **Epics in Design Phase:**
 1. **Epic 2: Communications Platform** - Channel abstraction, send/receive, user preferences, multi-channel routing
 2. **Epic 10: Text Templating Extensions** - Template discovery, repository, caching, engine provider pattern
-3. **Epic 7: Identity & Session Management** - Claims enhancement, rights management, session management, Azure B2C integration
+3. **Epic 7: Identity & Session Management** - Claims enhancement, rights management, session management, Keycloak integration
 4. **Epic 6: Document Services** - Document packaging, resolvers, storage abstraction, 11 context-based services
 
 **Pattern: 4 Documents per Feature**

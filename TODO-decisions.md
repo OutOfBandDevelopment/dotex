@@ -48,7 +48,7 @@ Before proceeding with BinaryDataDecoders migration (Phases 1-5), critical quest
 
 ---
 
-## Incomming/BotChat - Migration Decision
+## Incoming/BotChat - Migration Decision
 
 **Status:** ⏸️ PENDING DECISION - Choose archival approach
 
@@ -73,7 +73,7 @@ Before proceeding with BinaryDataDecoders migration (Phases 1-5), critical quest
 - **Cons:** Not a production library, older SemanticKernel version
 
 **Implementation Tasks:**
-- [ ] Create `Incomming/BotChat/README.md` with:
+- [ ] Create `Incoming/BotChat/README.md` with:
   - [ ] Purpose and architecture overview
   - [ ] Relationship to OoBDev.Ollama
   - [ ] SemanticKernel integration patterns demonstrated
@@ -81,7 +81,7 @@ Before proceeding with BinaryDataDecoders migration (Phases 1-5), critical quest
   - [ ] API key configuration example
   - [ ] Note about older SemanticKernel version (1.32.0)
   - [ ] Instructions for running the sample
-- [ ] Update Incomming/CHECKLIST.md with archive status
+- [ ] Update Incoming/CHECKLIST.md with archive status
 - [ ] Update TODO.md with decision
 
 ### Option 2: ENHANCE as Official Demo/Sample Project
@@ -113,7 +113,7 @@ Before proceeding with BinaryDataDecoders migration (Phases 1-5), critical quest
 - [ ] Add API key support to OoBDev.Ollama
 - [ ] Add fluent configuration patterns
 - [ ] Test extracted features
-- [ ] Delete `Incomming/BotChat/` after extraction
+- [ ] Delete `Incoming/BotChat/` after extraction
 - [ ] Update documentation
 
 **Documentation:**
@@ -143,7 +143,7 @@ When making decisions, consider:
 **Related Documents:**
 - [TODO.md](./TODO.md) - Main tracking document
 - [TODO-migrations.md](./TODO-migrations.md) - Migration work (blocked by decisions)
-- [TODO-testing-infrastructure.md](./TODO-testing-infrastructure.md) - Testing infrastructure
+- [TODO-testing-local-integration.md](./TODO-testing-local-integration.md) - Testing infrastructure
 
 **Migration Documentation:**
 - [BinaryDataDecoders Critical Questions](docs/migration/binarydatadecoders-critical-questions.md)

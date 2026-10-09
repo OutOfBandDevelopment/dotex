@@ -25,7 +25,7 @@ Supporting conventions:
 | Vendor SDK objects are created through a small **`I{Vendor}ClientFactory`** so they can be mocked | `IOllamaApiClientFactory`, `IQueueClientFactory`, `IConnectionMultiplexerFactory` |
 | Registration logic sits in an internal **`{Vendor}Registrar`** class; the public extension delegates to it | `TryAddRedisCachingServices → new RedisCachingRegistrar().AddServices(services)` |
 
-**Standard:** provider keys are kebab-case, as the message-queue adapters already do (`"rabbit-mq"`, `"sqs"`, `"servicebus"`, `"azure-storage-queue"`).
+**Standard:** provider keys are kebab-case (done 2026-10-09 for Groq, Handlebars, memory cache, SQL Server, Ollama, Redis and SBert; each keeps its earlier key registered as `LegacyKey` so existing configuration works), as the message-queue adapters already do (`"rabbit-mq"`, `"sqs"`, `"servicebus"`, `"azure-storage-queue"`).
 
 **Key discovery, not centralization:** keys follow a common, discoverable pattern (a `const string` named `ProviderKey` or `MessageProviderKey` in the adapter's own `{Vendor}Globals` class, value in kebab-case) but are deliberately **not** collected in one global registry. A shared key list would have to be referenced by every adapter and by the abstractions, which breaks the minimum-reference rule that an adapter references only its capability's Abstractions project ([layers](../01-architecture/02-five-source-layers.md)). Consumers find a key by convention (search for `*Globals`) or in the adapter's readme, which lists it under Configuration.
 

@@ -10,7 +10,7 @@ public class ObjectXmlExtensionsTests
 {
     public required TestContext TestContext { get; set; }
 
-    [TestMethod, TestCategory(TestCategories.DevLocal)]
+    [TestMethod, TestCategory(TestCategories.Unit)]
     public void AsXElementTest()
     {
         var testData = new

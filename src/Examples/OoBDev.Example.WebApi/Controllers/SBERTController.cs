@@ -1,4 +1,5 @@
-﻿using OoBDev.AI;
+﻿using OoBDev.SBert;
+using OoBDev.AI;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -20,7 +21,7 @@ public class SBERTController : ControllerBase
     /// </summary>
     /// <param name="embedding">The embedding provider.</param>
     public SBERTController(
-        [FromKeyedServices("SBERT")] IEmbeddingProvider embedding
+        [FromKeyedServices(SBertProviderGlobals.ProviderKey)] IEmbeddingProvider embedding
         ) => _embedding = embedding;
 
     /// <summary>

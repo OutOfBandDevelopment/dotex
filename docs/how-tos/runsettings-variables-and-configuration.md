@@ -272,7 +272,6 @@ Use environment variables for:
 ```xml
 <TestRunParameters>
   <!-- LiveIntegration tests with real services -->
-  <Parameter name="AZURE_B2C_CLIENT_SECRET" value="%AZURE_B2C_CLIENT_SECRET%" />
   <Parameter name="AWS_SECRET_ACCESS_KEY" value="%AWS_SECRET_ACCESS_KEY%" />
   <Parameter name="GROQ_API_KEY" value="%GROQ_API_KEY%" />
 </TestRunParameters>

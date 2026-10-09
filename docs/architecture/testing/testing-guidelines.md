@@ -33,7 +33,7 @@ OoBDev uses **5 test categories** to organize tests by execution environment, de
 | **Simulate** | ✅ YES (every PR/push) | Mocked | < 1s | End-to-end workflows with in-memory persistence |
 | **Integration** | ✅ YES (daily at 4 PM UTC) | Docker containers | < 30s/test | External services (DBs, queues, search engines) |
 | **DevLocal** | ❌ NO (manual only) | Local services | Varies | Performance benchmarks, GPU tests, manual exploration |
-| **LiveIntegration** | ❌ NO (manual only) | Live cloud services | Varies | Azure B2C, Application Insights, Groq Cloud |
+| **LiveIntegration** | ❌ NO (manual only) | Live cloud services | Varies | Groq Cloud |
 
 ### Category Usage
 
@@ -148,7 +148,7 @@ endif
    - YES → Continue...
 
 2. **Can it run in Docker or use emulators?**
-   - NO → **LiveIntegration** (Azure B2C, Groq Cloud, Application Insights)
+   - NO → **LiveIntegration** (Groq Cloud)
    - YES → Continue...
 
 3. **Should it run automatically in CI/CD?**

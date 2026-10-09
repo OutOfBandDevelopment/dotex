@@ -38,7 +38,8 @@ public static class ServiceCollectionExtensions
 
         services.Configure<SentenceEmbeddingOptions>(options => configuration.Bind(sentenceEmbeddingOptionSection, options));
         services.TryAddTransient<IEmbeddingProvider, SentenceEmbeddingProvider>();
-        services.TryAddKeyedTransient<IEmbeddingProvider, SentenceEmbeddingProvider>("SBERT");
+        services.TryAddKeyedTransient<IEmbeddingProvider, SentenceEmbeddingProvider>(SBertProviderGlobals.ProviderKey);
+        services.TryAddKeyedTransient<IEmbeddingProvider, SentenceEmbeddingProvider>(SBertProviderGlobals.LegacyKey);
 
         services.AddHttpClient<ISentenceEmbeddingClient, SentenceEmbeddingClient>((sp, http) =>
         {

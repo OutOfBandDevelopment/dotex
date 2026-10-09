@@ -108,10 +108,24 @@ Each change document should include:
 - Design set for replacing the `AllMiniLML6v2Sharp` fork with first-party, thread-safe ONNX embeddings
 - Status: ✅ Complete (design only)
 
+### Observability
+
+**[migration-opentelemetry-2026-10-09.md](migration-opentelemetry-2026-10-09.md)**
+- Application Insights replaced by `OoBDev.OpenTelemetry` (OTLP), Grafana LGTM test container, DevLocal tests fixed
+- Status: ✅ Complete
+
 ### AI
 
 **[migration-allminilml6v2-embedder-2026-10-08.md](migration-allminilml6v2-embedder-2026-10-08.md)**
 - First-party in-process all-MiniLM-L6-v2 embedder verified against Hugging Face; model downloaded on first use; fork and submodules removed
+- Status: ✅ Complete (GitHub run not yet observed)
+
+**[migration-embedding-presets-2026-10-08.md](migration-embedding-presets-2026-10-08.md)**
+- MPNet and Nomic presets on the ONNX runner, compared with Hugging Face; shared hub cache; version policy
+- Status: ✅ Complete (GitHub run not yet observed)
+
+**[migration-image-embeddings-2026-10-08.md](migration-image-embeddings-2026-10-08.md)**
+- In-process image embeddings and classification: ONNX runner, Skia decoder, DINOv2-small, ViT-base and CLIP presets compared with the Python models
 - Status: ✅ Complete (GitHub run not yet observed)
 
 ### Testing
@@ -172,8 +186,8 @@ Each change document should include:
 
 ### When Referencing Archived Work
 
-- Link from TODO files: `[Details](docs/changes/{document}.md)`
-- Link from CLAUDE.md: `**Details:** [docs/changes/{document}.md](docs/changes/{document}.md)`
+- Link from TODO files: a "Details" link whose target is the change document path under `docs/changes/`
+- Link from CLAUDE.md: a "**Details:**" link with the same path as target and text
 - Direct reference: Check this README for list of available documents
 
 ---

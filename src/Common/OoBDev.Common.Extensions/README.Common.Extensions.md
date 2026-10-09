@@ -95,10 +95,6 @@ Gets or sets the configuration section name for Keycloak identity options. Defau
 
 Represents no specific identity provider.
 
-### `AzureB2C`
-
-Represents the Azure B2C identity provider.
-
 ### `Keycloak`
 
 Represents the Keycloak identity provider.

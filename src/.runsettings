@@ -181,10 +181,9 @@ https://github.com/coverlet-coverage/coverlet/blob/fc7ec26dcaed8fedba880ff13c6f1
 		<Parameter name="OLLAMA_MODEL" value="phi3" />
 		<Parameter name="OLLAMA_EMBEDDING_MODEL" value="all-minilm" />
 
-		<!-- Azurinsight (Application Insights Emulator) -->
-		<Parameter name="APPINSIGHTS_URL" value="http://localhost:5000" />
-		<Parameter name="APPINSIGHTS_INSTRUMENTATION_KEY" value="test-key" />
-		<Parameter name="APPINSIGHTS_CONNECTION_STRING" value="InstrumentationKey=test-key;IngestionEndpoint=http://localhost:5000" />
+		<!-- OpenTelemetry (Grafana LGTM) -->
+		<Parameter name="OTEL_EXPORTER_OTLP_ENDPOINT" value="http://localhost:4318" />
+		<Parameter name="OTEL_GRAFANA_URL" value="http://localhost:3000" />
 
 		<!-- OpenSearch Dashboards -->
 		<Parameter name="OPENSEARCH_DASHBOARDS_URL" value="http://localhost:5601" />

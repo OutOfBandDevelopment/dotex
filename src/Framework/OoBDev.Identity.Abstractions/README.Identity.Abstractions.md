@@ -31,7 +31,7 @@ Represents the model for a user created as a result of account creation.
 
 ## UserCreateModel
 
-Represents a model for creating a user in Microsoft B2C Identity.
+Represents a model for creating a user in an identity provider.
 
 ### Properties
 

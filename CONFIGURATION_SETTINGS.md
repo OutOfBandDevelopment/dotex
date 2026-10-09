@@ -498,6 +498,22 @@ services.Configure<SentenceEmbeddingOptions>(options =>
 | Normalize | bool | No | true | L2 normalise the vectors |
 | Dimensions | int? | No | model size (384) | Truncate to fewer dimensions |
 
+#### OnnxImageEmbeddingOptions (image presets)
+
+**Namespace:** `OoBDev.Onnx.ImageEmbeddings`
+**Configuration Sections:** `Dinov2Small`, `VitBasePatch16`, `ClipVitB32` (CLIP text tower: `ClipVitB32Text`, type `ClipTextOptions`)
+
+| Property | Type | Required | Default | Description |
+|----------|------|----------|---------|-------------|
+| ModelPath | string | No | Hugging Face hub cache snapshot folder | Folder holding the model files |
+| MaxBatchSize | int | No | 8 | Images per model run |
+| MaxConcurrentInferences | int | No | 1 | Bound on parallel model runs |
+| MaxImageBytes | long | No | 64 MB | Largest encoded image accepted |
+| MaxPixels | long | No | 100 million | Largest decoded image accepted |
+| Normalize | bool | No | preset | L2 normalise the vectors |
+
+See [README.Onnx.ImageEmbeddings.md](src/ExternalServices/Onnx/OoBDev.Onnx.ImageEmbeddings/README.Onnx.ImageEmbeddings.md) for the full list.
+
 See [README.Onnx.SentenceEmbeddings.md](src/ExternalServices/Onnx/OoBDev.Onnx.SentenceEmbeddings/README.Onnx.SentenceEmbeddings.md) for the full list.
 
 ----------|------|----------|---------|-------------|
@@ -522,33 +538,6 @@ services.Configure<AllMiniLmL6V2EmbeddingOptions>(options =>
 
 ---
 
-#### MicrosoftIdentityOptions
-
-**Namespace:** `OoBDev.Microsoft.Azure.B2C.Identity`
-**Configuration Section:** `MicrosoftIdentityOptions`
-
-| Property | Type | Required | Default | Description |
-|----------|------|----------|---------|-------------|
-| ClientID | string | Yes | - | Azure AD B2C client ID |
-| Issuer | string | Yes | - | Azure AD B2C issuer URL |
-| ClientSecret | string | Yes | - | Azure AD B2C client secret |
-| Tenant | string | Yes | - | Azure AD B2C tenant identifier |
-
-**Validation:**
-- All properties required (compile-time via `required` modifier)
-
-**Usage:**
-```csharp
-services.Configure<MicrosoftIdentityOptions>(options =>
-{
-    options.ClientID = "your-client-id";
-    options.Issuer = "https://login.microsoftonline.com/your-tenant/v2.0";
-    options.ClientSecret = "your-client-secret";
-    options.Tenant = "your-tenant.onmicrosoft.com";
-});
-```
-
----
 
 #### AzureBlobProviderOptions
 
@@ -1255,7 +1244,7 @@ Test configuration parameters are documented separately in [TEST_VARIABLES.md](.
 **Quick Reference:**
 - **Total Test Parameters:** 30+
 - **Docker-based Integration Tests:** 14 services
-- **Live Cloud Services:** Azure B2C, App Insights, Groq
+- **Live Cloud Services:** Groq
 
 **Test Property Access Patterns:**
 

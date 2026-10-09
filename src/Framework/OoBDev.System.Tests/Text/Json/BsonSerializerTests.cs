@@ -18,7 +18,7 @@ public class BsonSerializerTests
     };
 
     [TestMethod]
-    [TestCategory(TestCategories.DevLocal)]
+    [TestCategory(TestCategories.Unit)]
     public void Test()
     {
         var model = new TargetModel();

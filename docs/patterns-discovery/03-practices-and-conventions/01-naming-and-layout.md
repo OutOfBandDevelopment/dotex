@@ -30,11 +30,11 @@
 | Provider | `{Name}Provider` | `RedisCachingProvider` |
 | Factory | `{Name}Factory` | `CacheableFactory`, `IOllamaApiClientFactory` |
 | Registration | `TryAdd{Capability}Services`, `TryAdd{Layer}Extensions` | `TryAddCachingServices` |
-| Registration class | `ServiceCollectionExtensions` (standard; `ServiceCollectionEx` is being retired) | see [known warts](./07-known-warts.md) |
+| Registration class | `ServiceCollectionExtensions` (standard everywhere; `ServiceCollectionEx` retired 2026-10-09) | see [known warts](./07-known-warts.md) |
 | Vendor registrar | `{Vendor}{Feature}Registrar` (internal) | `RedisCachingRegistrar` |
 | Builder | `{Layer}ExtensionBuilder` / `{Area}Builder` (record) | `ExternalExtensionBuilder` |
 | Options | `{Thing}Options` (record or class) | `OllamaApiClientOptions` |
-| Provider keys | `{Vendor}Globals.MessageProviderKey` constants, or upper-case vendor names | `"rabbit-mq"`, `"OLLAMA"` |
+| Provider keys | `{Vendor}Globals.ProviderKey` (or `MessageProviderKey`) kebab-case constants; the earlier upper-case key stays registered as `LegacyKey` | `"rabbit-mq"`, `"ollama"` (legacy `"OLLAMA"`) |
 | Attributes | `{Name}Attribute`, used without the suffix | `[IsCacheable]`, `[MessageQueue]` |
 | Test methods | `Method_Scenario_ExpectedBehavior` | see [testing](./04-testing-practices.md) |
 

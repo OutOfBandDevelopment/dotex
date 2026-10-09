@@ -117,7 +117,12 @@ jobs:
         echo "BuildConfiguration=$buildConfiguration" >> "$env:GITHUB_OUTPUT"
         echo "BuildConfiguration=$buildConfiguration" >> "$env:GITHUB_ENV"
 
-        $fullSemVerLower = "${{ steps.gitversion.outputs.fullSemVer }}".ToLower() 
+        # main: clean major.minor.patch (minor bumps per merge). Other branches: major.minor.<commits past the last main tag>-branch
+        if ("${{ github.ref_name }}" -eq "main") {
+            $fullSemVerLower = "${{ steps.gitversion.outputs.majorMinorPatch }}"
+        } else {
+            $fullSemVerLower = "${{ steps.gitversion.outputs.major }}.${{ steps.gitversion.outputs.minor }}.${{ steps.gitversion.outputs.commitsSinceVersionSource }}${{ steps.gitversion.outputs.preReleaseLabelWithDash }}".ToLower()
+        }
         if ($buildConfiguration -eq "Debug") {
             $fullSemVerLower = "${{ steps.gitversion.outputs.majorMinorPatch }}${{ steps.gitversion.outputs.preReleaseLabelWithDash }}-debug.${{ steps.gitversion.outputs.preReleaseNumber }}"
         }
@@ -157,6 +162,25 @@ jobs:
         --property:GitVersion_Major=${{ steps.gitversion.outputs.major }}
         --property:GitVersion_Minor=${{ steps.gitversion.outputs.minor }}
         --property:GitVersion_Patch=${{ steps.gitversion.outputs.patch }}
+
+    # Pass 1: the .NET Framework 4.8 SQL CLR assembly and its DACPAC (builds the DACPAC tool first).
+    # Pass 2 (Build) then builds everything else and finds these outputs already in place.
+    - name: Build SQL CLR (net48)
+      working-directory: ./src
+      run: >
+        dotnet build
+        Extensions/OoBDev.Data.Vectors.Net481/OoBDev.Data.Vectors.Net481.csproj
+        --configuration ${{ steps.calculate-version.outputs.BuildConfiguration }}
+        --property:Version=${{ steps.calculate-version.outputs.FullSemVerLower }}
+        --property:SolutionDir=${{ steps.calculate-version.outputs.BuildWorkspace }}/src/
+        --property:GitVersion_AssemblySemFileVer=${{ steps.gitversion.outputs.assemblySemFileVer }}
+        --property:GitVersion_InformationalVersion=${{ steps.gitversion.outputs.informationalVersion }}
+        --property:GitVersion_FullSemVer=${{ steps.gitversion.outputs.fullSemVer }}
+        --property:GitVersion_Major=${{ steps.gitversion.outputs.major }}
+        --property:GitVersion_Minor=${{ steps.gitversion.outputs.minor }}
+        --property:GitVersion_Patch=${{ steps.gitversion.outputs.patch }}
+        --nologo
+        --no-restore
 
     - name: Build
       working-directory: ./src
@@ -233,15 +257,13 @@ jobs:
         retention-days: 90
         compression-level: 0
 
-    # Tier 1: Create build tag on every successful build
-    # Tags: vX.Y.Z (main branch) or vX.Y.Z-{branch-name}.{count} (dev/* branches)
-    # Note: GitVersion already includes branch name in fullSemVer for non-main branches
+    # Tier 1: Create build tag on every successful build of main
+    # Tags: vX.Y.Z. Branch builds are not tagged, so the tag history stays the version source for GitVersion
     - name: Create build tag
-      if: github.event_name != 'pull_request'
+      if: github.event_name != 'pull_request' && github.ref_name == 'main'
       shell: bash
       run: |
-        VERSION="${{ steps.gitversion.outputs.fullSemVer }}"
-        TAG="v${VERSION}"
+        TAG="v${{ steps.gitversion.outputs.majorMinorPatch }}"
 
         echo "Creating tag: ${TAG}"
         git config user.name "github-actions[bot]"

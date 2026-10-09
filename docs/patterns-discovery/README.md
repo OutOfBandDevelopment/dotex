@@ -34,13 +34,15 @@ Places where existing documentation and the code disagree. The new documents fol
 
 | Item | Docs say | Code shows | Suggested action |
 |------|----------|------------|------------------|
-| GitVersion location | `CLAUDE.md`: `/src/GitVersion.yml` | `GitVersion.yml` at the repository root | Fix `CLAUDE.md` |
+| GitVersion location | `CLAUDE.md`: `/src/GitVersion.yml` | `GitVersion.yml` at the repository root | Done 2026-10-09: `CLAUDE.md` fixed |
 | Integration workflow | CLAUDE.md: runs daily at 4 PM UTC | The cron trigger is commented out | Enable the schedule or correct the text |
 | MailKit | Described as a common dependency | Compiled into Common only in Debug and disabled by the example app | Decide and document |
-| `ContractConfig` attribute | Present in the API | Unused | Remove or document |
-| Readme file names | Packed as `README.{Name}.md` | Files are named `ReadMe.*.md` | Rename for case-sensitive systems |
+| `ContractConfig` attribute | Present in the API | Unused | Owner decision pending ([OPEN_QUESTIONS.md](../../OPEN_QUESTIONS.md), Q5); replaced by the keyed selection factory |
+| Readme file names | Packed as `README.{Name}.md` | Files were named `ReadMe.*.md` | Done 2026-09-30: renamed to `README.*.md` (74 files) |
 | Project counts | CLAUDE.md: 112+ projects | 123 project files | Refresh counts |
 | `docs/architecture` | Presented as current | Older than the code in places | Review against these documents |
+| Central package management | Removed at one point | Restored 2026-10-07; versions only in `src/Directory.Packages.props` | None (matches `CLAUDE.md`) |
+| Provider selection | `ISelectedService<T>` described as the pattern | Owner decision: a container-registered factory picks a keyed service from a configuration path | Implement the factory, then update pattern docs |
 | CLAUDE.md status sections | Docker services 13/15 healthy, 14 services | 15 services listed elsewhere | Refresh |
 
 The full list of code-level issues is in [known warts](./03-practices-and-conventions/07-known-warts.md).

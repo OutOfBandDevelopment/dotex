@@ -26,4 +26,8 @@
     <ProjectReference Include="..\OoBDev.System.Text.Html\OoBDev.System.Text.Html.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EmbeddedResource Include="SimpleCopy.xslt" />
+  </ItemGroup>
+
 </Project>

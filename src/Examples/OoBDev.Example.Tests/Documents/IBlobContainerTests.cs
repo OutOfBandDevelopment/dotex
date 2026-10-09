@@ -1,4 +1,5 @@
-﻿using OoBDev.Common;
+﻿using Azure.Storage.Blobs;
+using OoBDev.Common;
 using OoBDev.Documents;
 using OoBDev.Documents.Containers;
 using OoBDev.Documents.Models;
@@ -19,12 +20,19 @@ public class IBlobContainerTests
 {
     public required TestContext TestContext { get; set; }
 
+    private const string DefaultAzuriteConnectionString = "DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://127.0.0.1:10000/devstoreaccount1;";
+
+    private string ConnectionString => TestContext.GetPropertyOrDefault("AZURITE_CONNECTION_STRING", DefaultAzuriteConnectionString);
+
+    private async Task EnsureContainerAsync(string name) =>
+        await new BlobServiceClient(ConnectionString).GetBlobContainerClient(name).CreateIfNotExistsAsync();
+
     private ServiceProvider ServiceProvider()
     {
         var config = new ConfigurationBuilder()
             .AddInMemoryCollection(new Dictionary<string, string?>
             {
-                {"AzureBlobProviderOptions:ConnectionString","DefaultEndpointsProtocol=https;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://192.168.1.170:10000/devstoreaccount1;" },
+                {"AzureBlobProviderOptions:ConnectionString", ConnectionString },
             })
             .Build()
             ;
@@ -48,9 +56,10 @@ public class IBlobContainerTests
     }
 
     [TestMethod]
-    [TestCategory(TestCategories.DevLocal)]
+    [TestCategory(TestCategories.Integration)]
     public async Task Create_IBlobContainer__Docs_Test()
     {
+        await EnsureContainerAsync("docs");
         var wrapper = ServiceProvider().GetRequiredService<IBlobContainer<Docs>>();
 
         var ms = new MemoryStream();
@@ -74,7 +83,7 @@ public class IBlobContainerTests
     }
 
     [TestMethod]
-    [TestCategory(TestCategories.DevLocal)]
+    [TestCategory(TestCategories.Unit)]
     public void Create_IBlobContainer__Summary_Test()
     {
         var wrapper = ServiceProvider().GetRequiredService<IBlobContainer<Summary>>();
@@ -82,22 +91,23 @@ public class IBlobContainerTests
     }
 
     [TestMethod]
-    [TestCategory(TestCategories.DevLocal)]
-    public void Create_IBlobContainer__Summary_List_Test()
+    [TestCategory(TestCategories.Integration)]
+    public async Task Create_IBlobContainer__Summary_List_Test()
     {
+        await EnsureContainerAsync("summary");
         var wrapper = ServiceProvider().GetRequiredService<IBlobContainer<Summary>>();
         var items = wrapper.QueryContent().ToArray();
         TestContext.AddResult(items);
     }
 
     [TestMethod]
-    [TestCategory(TestCategories.DevLocal)]
+    [TestCategory(TestCategories.Unit)]
     public void Test()
     {
         var config = new ConfigurationBuilder()
             .AddInMemoryCollection(new Dictionary<string, string?>
             {
-                {"AzureBlobProviderOptions:ConnectionString","DefaultEndpointsProtocol=https;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://192.168.1.170:10000/devstoreaccount1;" },
+                {"AzureBlobProviderOptions:ConnectionString", ConnectionString },
             })
             .Build()
             ;

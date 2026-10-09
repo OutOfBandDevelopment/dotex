@@ -36,6 +36,18 @@ internal static class EmbeddingMath
     }
 
     /// <summary>
+    /// Layer normalisation without scale or shift: zero mean and unit variance across the vector (epsilon 1e-5).
+    /// </summary>
+    public static void LayerNormalize(Span<float> vector)
+    {
+        if (vector.IsEmpty) return;
+        var mean = TensorPrimitives.Sum(vector) / vector.Length;
+        TensorPrimitives.Subtract(vector, mean, vector);
+        var variance = TensorPrimitives.SumOfSquares(vector) / vector.Length;
+        TensorPrimitives.Divide(vector, MathF.Sqrt(variance + 1e-5f), vector);
+    }
+
+    /// <summary>
     /// Scales a vector to unit length; a zero vector is left as zeros.
     /// </summary>
     public static void Normalize(Span<float> vector)

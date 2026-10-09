@@ -92,11 +92,11 @@ The OoBDev framework provides shared libraries and extensions for faster, more c
 
 **Key Integrations:**
 - AI/ML: Semantic Kernel, Ollama, GroqCloud, SBert
-- Cloud: Azure (Blob, B2C, App Insights), AWS (incoming)
+- Cloud: Azure (Blob), AWS (incoming)
 - Databases: MongoDB, SQL Server, OpenSearch, Qdrant
 - Message Brokers: RabbitMQ, Azure Storage Queues
 - Document Processing: Apache Tika, WkHtmlToPdf, Markdig
-- Identity: Keycloak, Azure AD B2C
+- Identity: Keycloak
 
 ---
 

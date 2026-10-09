@@ -31,7 +31,7 @@ The nginx reverse proxy provides a unified web interface to all services with di
 | **Stateless** | Apache Tika, SMTP4Dev |
 | **Stateful** | MongoDB, SQL Server, RabbitMQ, Redis, OpenSearch, Qdrant |
 | **Visualization** | OpenSearch Dashboards |
-| **Emulators** | Azurite (Azure Storage), Moto (AWS), Azure Service Bus Emulator, Azurinsight (Application Insights) |
+| **Emulators** | Azurite (Azure Storage), Moto (AWS), Azure Service Bus Emulator, Grafana LGTM (OpenTelemetry) |
 | **Identity** | Keycloak |
 | **AI/ML** | SBert (CPU-only), Ollama (CPU-only) |
 
@@ -121,8 +121,8 @@ package "oobd-integration-test-net (Bridge Network)" {
     }
 
     ' Monitoring Emulator
-    component "Azurinsight\n:5000" <<Container>> #CONTAINER_BG_COLOR {
-        [Application Insights\nEmulator]
+    component "OTel LGTM\n:3000 :4317 :4318" <<Container>> #CONTAINER_BG_COLOR {
+        [OTLP receiver, Tempo,\nLoki, Grafana]
     }
 }
 
@@ -315,7 +315,7 @@ scripts\integration-down.bat --clean
 | **Azurite** | `mcr.microsoft.com/azure-storage/azurite` | 10000 (Blob)<br>10001 (Queue)<br>10002 (Table) | Azure Storage emulator | `nc -z localhost 10000` |
 | **Moto** | `motoserver/moto` | 4566 | AWS services emulator (SQS, S3, etc.) | `curl http://localhost:4566/moto-api/` |
 | **Service Bus Emulator** | `mcr.microsoft.com/azure-messaging/servicebus-emulator` | 5672 (AMQP) | Azure Service Bus emulator | `nc -z localhost 5672` |
-| **Azurinsight** | `oobdev/azurinsight:latest` | 5000 | Application Insights emulator | `curl http://localhost:5000/` |
+| **OpenTelemetry** | `grafana/otel-lgtm:latest` | 3000, 4317, 4318 | OTLP receiver, Tempo, Loki, Grafana | `curl http://localhost:3000/api/health` |
 
 ### Identity & AI/ML
 

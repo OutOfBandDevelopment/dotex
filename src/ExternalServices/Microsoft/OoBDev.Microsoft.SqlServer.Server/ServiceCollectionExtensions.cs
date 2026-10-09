@@ -17,7 +17,8 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection TryAddMicrosoftSqlServerExtensions(this IServiceCollection services)
     {
         services.TryAddTransient<IDatabaseMapper, SqlDatabaseMapper>();
-        services.TryAddKeyedTransient<IDatabaseMapper, SqlDatabaseMapper>("MSSQL");
+        services.TryAddKeyedTransient<IDatabaseMapper, SqlDatabaseMapper>(SqlServerGlobals.ProviderKey);
+        services.TryAddKeyedTransient<IDatabaseMapper, SqlDatabaseMapper>(SqlServerGlobals.LegacyKey);
         return services;
     }
 }

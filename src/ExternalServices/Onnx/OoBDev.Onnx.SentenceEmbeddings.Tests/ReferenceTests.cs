@@ -32,7 +32,7 @@ public class ReferenceTests
 
     private static string Describe(string text) => (text.Length > 40 ? text[..40] + "..." : text).Replace('\n', ' ').Replace('\r', ' ').Replace('\t', ' ');
 
-    [TestCategory(TestCategories.Unit)]
+    [TestCategory(TestCategories.Integration)]
     [TestMethod]
     public async Task InProcessGenerator_MatchesReference()
     {

@@ -1,7 +1,7 @@
 namespace OoBDev.Identity;
 
 /// <summary>
-/// Represents a model for creating a user in Microsoft B2C Identity.
+/// Represents a model for creating a user in an identity provider.
 /// </summary>
 public record UserCreateModel
 {

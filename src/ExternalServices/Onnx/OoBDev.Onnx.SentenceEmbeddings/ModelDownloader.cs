@@ -13,10 +13,15 @@ namespace OoBDev.Onnx.SentenceEmbeddings;
 /// Downloads missing model files into the model folder on first use. Safe for several processes that share the folder
 /// (for example a mapped volume): a lock file serialises the download, and a file only appears once its hash is verified.
 /// </summary>
-internal static partial class ModelDownloader
+public static partial class ModelDownloader
 {
     private static readonly HttpClient _client = new() { Timeout = Timeout.InfiniteTimeSpan };
 
+    /// <summary>Downloads the sources that are missing from the folder; existing files are not re-hashed.</summary>
+    /// <param name="folder">Target folder.</param>
+    /// <param name="sources">Files to ensure.</param>
+    /// <param name="logger">Logger.</param>
+    /// <param name="cancellationToken">Cancellation.</param>
     public static async Task EnsureAsync(string folder, IEnumerable<ModelFileSource> sources, ILogger logger, CancellationToken cancellationToken)
     {
         foreach (var source in sources)
@@ -24,11 +29,11 @@ internal static partial class ModelDownloader
             var target = Path.Combine(folder, source.FileName);
             if (File.Exists(target)) continue;
 
-            Directory.CreateDirectory(folder);
-            await using var gate = await AcquireAsync(Path.Combine(folder, source.FileName + ".lock"), cancellationToken).ConfigureAwait(false);
+            Directory.CreateDirectory(Path.GetDirectoryName(target)!); // file names may include a sub folder such as onnx/model.onnx
+            await using var gate = await AcquireAsync(target + ".lock", cancellationToken).ConfigureAwait(false);
             if (File.Exists(target)) continue; // another process finished while this one waited
 
-            var temp = Path.Combine(folder, $"{source.FileName}.{Guid.NewGuid():N}.download");
+            var temp = $"{target}.{Guid.NewGuid():N}.download";
             try
             {
                 LogDownloading(logger, source.Url, target);
