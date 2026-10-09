@@ -21,14 +21,14 @@ Questions that block or shape work in the TODO files. Each has the source it cam
 - **Source:** [TODO.md](./TODO.md) → "Backlog: CI/CD Enablement and Docker Test Infrastructure"; [TODO-testing-local-integration.md](./TODO-testing-local-integration.md); [containers/testing/STATUS.md](./containers/testing/STATUS.md)
 - **Question:** Turn on `integration-tests.yml` (daily 16:00 UTC plus `workflow_dispatch`) in `.github/workflows/`? It needs a runner with Docker. The Service Bus emulator has no health check.
 - **Suggestion:** Enable manual dispatch first, watch one full run, then enable the schedule.
-- **Answer:**
+- **Answer:** Dispatch first: run `workflow_dispatch` once and watch a full run, then enable the schedule (2026-10-09).
 
 ### Q2 — Is "Restore central package management" done?
 
 - **Source:** [TODO.md](./TODO.md) → "Backlog: Architect Answers"; [CLAUDE.md](./CLAUDE.md) → "Recently Completed Work" (2026-10-07)
 - **Question:** CLAUDE.md says it was restored, but the TODO item is still open. May I verify that versions live only in `src/Directory.Packages.props` and tick it off?
 - **Suggestion:** Yes.
-- **Answer:**
+- **Answer:** Yes, verify and tick off (2026-10-09).
 
 ### Q3 — Live cloud tests (Groq)
 
@@ -42,7 +42,7 @@ Questions that block or shape work in the TODO files. Each has the source it cam
 - **Source:** [TODO.md](./TODO.md) → "Backlog: CI/CD Enablement..." (last item) and "Architect Answers" (Spikes)
 - **Question:** Run a short Aspire vs Docker compose spike before writing the Docker test documentation under `docs/architecture/testing/`, so the docs are not rewritten?
 - **Suggestion:** Yes, spike first.
-- **Answer:**
+- **Answer:** Yes, run the Aspire vs Docker compose spike first (2026-10-09).
 
 ## 2. Design questions
 
@@ -61,14 +61,14 @@ Questions that block or shape work in the TODO files. Each has the source it cam
 - **Source:** [TODO.md](./TODO.md) → "Backlog: Options Validation Modes"
 - **Question:** Adapters are config-gated and often have no configuration, so a strict default changes behavior for existing hosts. Where is the switch (per builder, global `OoBDev:Validation:Mode`, or both), and what is the rollout?
 - **Suggestion:** Ship `AddValidatedOptions<T>()` as opt-in. Release with relaxed default plus a warning, flip to strict in a later release.
-- **Answer:**
+- **Answer:** Relaxed default (fail on first use, no startup validation). Adapters inline `AddOptions().Bind().ValidateDataAnnotations()` with the Microsoft package instead of calling the `OoBDev.System` helper (2026-10-09).
 
 ### Q7 — Is `Microsoft.Extensions.Resilience` acceptable?
 
 - **Source:** [TODO.md](./TODO.md) → "Backlog: Architect Answers" (OpenTelemetry / no Polly); [CLAUDE.md](./CLAUDE.md) → "Rejected and Preferred Dependencies"
 - **Question:** It depends on Polly internally. Your rule is "avoid Polly". Is using the Microsoft API (not Polly directly) acceptable?
 - **Suggestion:** Accept, since the dependency is Microsoft's.
-- **Answer:**
+- **Answer:** Accept `Microsoft.Extensions.Resilience` (2026-10-09).
 
 ### Q8 — What does "async-ui" mean for API docs?
 
@@ -83,25 +83,25 @@ Questions that block or shape work in the TODO files. Each has the source it cam
 - **Source:** [TODO-decisions.md](./TODO-decisions.md); [TODO-migrations-binarydatadecoders.md](./TODO-migrations-binarydatadecoders.md); [TODO.md](./TODO.md) → "Backlog: Migration Decisions"
 - **Question:** The decisions cover the endianness API, `BinaryPrimitives` naming, UI collections location, CodeAnalysis use case, archive formats, ExpressionCalculator and more. Should Claude read `TODO-decisions.md` and produce a one-page list with a recommendation next to each, so you can answer yes/no per line?
 - **Suggestion:** Yes.
-- **Answer:**
+- **Answer:** Yes, produce a one-page list with a recommendation per decision (2026-10-09).
 
 ### Q10 — BotChat
 
 - **Source:** [TODO.md](./TODO.md) → "Backlog: Migration Decisions"; [Incoming/CHECKLIST.md](./Incoming/CHECKLIST.md)
 - **Question:** Archive, enhance, or extract patterns?
-- **Answer:**
+- **Answer:** Extract patterns (2026-10-09).
 
 ### Q11 — ContractParser
 
 - **Source:** [TODO.md](./TODO.md) → "Backlog: Migration Decisions"
 - **Question:** Implement now, later, or keep as a specification?
-- **Answer:**
+- **Answer:** Keep as specification (2026-10-09).
 
 ### Q12 — Tools / BulkLlm
 
 - **Source:** [TODO.md](./TODO.md) → "Backlog: Migration Decisions"
 - **Question:** Consolidate the BulkLlm tools or archive them?
-- **Answer:**
+- **Answer:** Consolidate the BulkLlm tools (2026-10-09).
 
 ## 4. Renames and compatibility
 
@@ -124,18 +124,18 @@ Questions that block or shape work in the TODO files. Each has the source it cam
 
 | ID | Topic | Blocks | Answered |
 |----|-------|--------|----------|
-| Q1 | Scheduled integration tests | CI enablement | |
-| Q2 | Central package management done? | TODO cleanup | |
+| Q1 | Scheduled integration tests | CI enablement | 2026-10-09 |
+| Q2 | Central package management done? | TODO cleanup | 2026-10-09 |
 | Q3 | Live cloud test scaffolding | Live integration backlog | |
-| Q4 | Aspire spike first | Docker docs | |
+| Q4 | Aspire spike first | Docker docs | 2026-10-09 |
 | Q5 | `ISelectedService` rough edges | Selection factory migration | |
-| Q6 | Options validation mode | `AddValidatedOptions<T>()` | |
-| Q7 | Microsoft resilience package | Resilience practice | |
+| Q6 | Options validation mode | `AddValidatedOptions<T>()` | 2026-10-09 |
+| Q7 | Microsoft resilience package | Resilience practice | 2026-10-09 |
 | Q8 | "async-ui" meaning | API docs | |
-| Q9 | BinaryDataDecoders decisions | Migration phases | |
-| Q10 | BotChat | Incoming project | |
-| Q11 | ContractParser | Incoming project | |
-| Q12 | Tools / BulkLlm | Incoming project | |
+| Q9 | BinaryDataDecoders decisions | Migration phases | 2026-10-09 |
+| Q10 | BotChat | Incoming project | 2026-10-09 |
+| Q11 | ContractParser | Incoming project | 2026-10-09 |
+| Q12 | Tools / BulkLlm | Incoming project | 2026-10-09 |
 | Q13 | `Retrieve` rename policy | Caching rename | |
 | Q14 | `ServiceCollectionEx` rename policy | Naming consistency | |
 
