@@ -2,13 +2,6 @@
   "version": 1,
   "isRoot": true,
   "tools": {
-    "swashbuckle.aspnetcore.cli": {
-      "version": "10.1.0",
-      "commands": [
-        "swagger"
-      ],
-      "rollForward": false
-    },
     "dotnet-coverage": {
       "version": "18.3.2",
       "commands": [

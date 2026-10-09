@@ -92,6 +92,10 @@ Each change document should include:
 
 ### Documentation
 
+**[todo-completed-items-2026-10-09.md](todo-completed-items-2026-10-09.md)**
+- Completed Patterns Discovery tasks, banners and backlog items moved out of `TODO.md`
+- Status: ✅ Complete
+
 **[documentation-configuration-settings-2026-01-21.md](documentation-configuration-settings-2026-01-21.md)**
 - CONFIGURATION_SETTINGS.md created (157+ settings)
 - 31 Options classes, 24 direct keys, 102 environment variables
@@ -107,6 +111,12 @@ Each change document should include:
 **[documentation-allminilml6v2-design-2026-10-07.md](documentation-allminilml6v2-design-2026-10-07.md)**
 - Design set for replacing the `AllMiniLML6v2Sharp` fork with first-party, thread-safe ONNX embeddings
 - Status: ✅ Complete (design only)
+
+### API Documentation
+
+**[migration-openapi-scalar-2026-10-09.md](migration-openapi-scalar-2026-10-09.md)**
+- Swashbuckle replaced by `Microsoft.AspNetCore.OpenApi` transformers and the Scalar API reference; OAuth2 authorization code with PKCE; AsyncAPI is phase 2
+- Status: ✅ Complete (phase 1)
 
 ### Observability
 
@@ -129,6 +139,14 @@ Each change document should include:
 - Status: ✅ Complete (GitHub run not yet observed)
 
 ### Testing
+
+**[testing-live-integration-completed-2026-10-09.md](testing-live-integration-completed-2026-10-09.md)**
+- Archived completed section of the live integration TODO (LiveIntegration category)
+- Status: ✅ Complete
+
+**[testing-local-integration-completed-2026-10-09.md](testing-local-integration-completed-2026-10-09.md)**
+- Archived completed sections of the local integration TODO (Weeks 1 and 2, validation, script and health check fixes)
+- Status: ✅ Complete
 
 **[testing-vectors-sqs-moto-ci-2026-10-08.md](testing-vectors-sqs-moto-ci-2026-10-08.md)**
 - CI restore fix, vector `Angle` correction and NULL-safe functions with SQL Server Integration tests

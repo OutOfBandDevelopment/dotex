@@ -1,12 +1,12 @@
-namespace OoBDev.AspNetCore.JwtAuthentication.SwaggerGen;
+namespace OoBDev.AspNetCore.JwtAuthentication.OpenApi;
 
 /// <summary>
-/// Represents the options for configuring OAuth2 in Swagger.
+/// Represents the options for configuring OAuth2 sign-in in the OpenAPI documents and the API reference.
 /// </summary>
-public class OAuth2SwaggerOptions
+public class OAuth2OpenApiOptions
 {
     /// <summary>
-    /// Gets or sets the claim that Swagger will use to determine the authenticated user's API access.
+    /// Gets or sets the claim (scope) that the API reference requests to determine the authenticated user's API access.
     /// </summary>
     public required string UserReadApiClaim { get; set; }
 

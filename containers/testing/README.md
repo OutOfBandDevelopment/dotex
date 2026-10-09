@@ -116,7 +116,7 @@ package "oobd-integration-test-net (Bridge Network)" {
         [Sentence\nEmbeddings]
     }
 
-    component "Ollama\n:11434" <<Container>> #AI_BG_COLOR {
+    component "Ollama\n:11435" <<Container>> #AI_BG_COLOR {
         [LLM Inference\n(phi3)]
     }
 
@@ -323,7 +323,7 @@ scripts\integration-down.bat --clean
 |---------|-------|---------|---------|--------------|
 | **Keycloak** | Custom (realm import) | 8081 | IAM (OAuth/OIDC) | `curl http://localhost:8080/health/ready` |
 | **SBert** | Custom (Python ML) | 5080 | Sentence embeddings | `curl http://localhost:5000/health` |
-| **Ollama** | `ollama/ollama:latest` | 11434 | LLM inference (phi3) | `curl http://localhost:11434/api/tags` |
+| **Ollama** | `ollama/ollama:latest` | 11435 | LLM inference (phi3) | `curl http://localhost:11435/api/tags` |
 
 ---
 
@@ -398,7 +398,7 @@ Tests use environment variables for connection strings. See `.env.integration` f
 | `SERVICEBUS_CONNECTION_STRING` | `Endpoint=sb://localhost;...;UseDevelopmentEmulator=true;` | Azure Service Bus connection |
 | `KEYCLOAK_URL` | `http://localhost:8081` | Keycloak endpoint |
 | `SBERT_URL` | `http://localhost:5080` | SBert endpoint |
-| `OLLAMA_URL` | `http://localhost:11434` | Ollama LLM endpoint |
+| `OLLAMA_URL` | `http://localhost:11435` | Ollama LLM endpoint |
 | `OLLAMA_MODEL` | `phi3` | Ollama model name |
 
 ### Auto-Initialized Resources
@@ -637,10 +637,10 @@ echo "vm.max_map_count=262144" | sudo tee -a /etc/sysctl.conf
 
 ## Related Documentation
 
-- [Test Categories Guide](../../docs/architecture/testing/test-categories.md)
-- [Integration Testing Guide](../../docs/architecture/testing/categories/integration/README.md)
-- [Docker Infrastructure Guide](../../docs/architecture/testing/docker-infrastructure.md)
-- [Environment Variables Reference](../../docs/architecture/testing/environment-variables.md)
+- [Testing Guidelines](../../docs/architecture/testing/testing-guidelines.md) (test categories and structure)
+- [Testing Overview](../../docs/architecture/testing/README.md)
+- [Test Variables Reference](../../TEST_VARIABLES.md) (every `.runsettings` property)
+- [Variables in .runsettings](../../docs/how-tos/runsettings-variables-and-configuration.md)
 
 ---
 

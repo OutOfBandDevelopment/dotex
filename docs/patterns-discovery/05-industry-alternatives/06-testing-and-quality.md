@@ -35,7 +35,7 @@
 | Testcontainers for .NET | Containers created per test class from code; automatic cleanup; random ports | Slower start per fixture; needs a Docker API |
 | .NET Aspire testing | Composes services with the app model | Adds the Aspire model |
 | Service containers in CI | Simple in GitHub Actions | Not usable locally |
-| Emulators only (Azurite, LocalStack) | Light | Only some services |
+| Emulators only (Azurite, Moto) | Light | Only some services |
 
 **Verdict: Consider.** Keep compose for the shared long-running stack; use Testcontainers for new, self-contained tests so a single test project can run without the whole stack.
 

@@ -40,7 +40,7 @@ Products change quickly. Licensing and feature statements below reflect what was
 | 16 | Default hash algorithm | Change (SHA-512) | [Cross-cutting](./03-cross-cutting-runtime.md) |
 | 17 | Custom messaging | Keep, consider bridge | [Messaging](./04-messaging.md) |
 | 18 | Stored procedure mapper | Keep, consider Dapper | [Data and API](./05-data-and-api.md) |
-| 19 | Swagger generation | Change (Scalar) | [Data and API](./05-data-and-api.md) |
+| 19 | Swagger generation | Adopted (Scalar) | [Data and API](./05-data-and-api.md) |
 | 20 | Test framework and mocking | Keep MSTest; spike other mocks | [Testing and quality](./06-testing-and-quality.md) |
 | 21 | Docker test infrastructure | Consider (Aspire spike) | [Testing and quality](./06-testing-and-quality.md) |
 | 22 | Documentation tooling | Consider (spikes) | [Documentation](./07-documentation.md) |

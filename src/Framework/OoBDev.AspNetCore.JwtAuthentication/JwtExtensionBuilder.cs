@@ -1,4 +1,4 @@
-using OoBDev.AspNetCore.JwtAuthentication.SwaggerGen;
+using OoBDev.AspNetCore.JwtAuthentication.OpenApi;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace OoBDev.AspNetCore.JwtAuthentication;
@@ -25,10 +25,10 @@ public record JwtExtensionBuilder
     public string JwtBearerConfigurationSection { get; init; } = nameof(JwtBearerOptions);
 
     /// <summary>
-    /// Gets or sets the configuration section name for OAuth2SwaggerOptions.
+    /// Gets or sets the configuration section name for OAuth2OpenApiOptions.
     /// </summary>
     /// <remarks>
-    /// Specifies the configuration section name for OAuth2SwaggerOptions. The default value is the name of <see cref="OAuth2SwaggerOptions"/>.
+    /// Specifies the configuration section name for OAuth2OpenApiOptions. The default value is the name of <see cref="OAuth2OpenApiOptions"/>.
     /// </remarks>
-    public string OAuth2SwaggerConfigurationSection { get; init; } = nameof(OAuth2SwaggerOptions);
+    public string OAuth2OpenApiConfigurationSection { get; init; } = nameof(OAuth2OpenApiOptions);
 }

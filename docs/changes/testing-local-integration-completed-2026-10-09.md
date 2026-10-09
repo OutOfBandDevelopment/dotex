@@ -1,0 +1,534 @@
+# Testing - Local Integration Testing (completed work)
+
+**Date:** 2026-10-09
+**Epic:** Testing
+**Status:** ✅ COMPLETE
+**Impact:** Archived from `TODO-testing-local-integration.md`; records the Docker stack build-out and test migration
+
+---
+
+## Summary
+
+The completed sections of the local integration testing TODO, moved here verbatim to keep the active TODO short. Service names and ports in the text are as of 2026-01-24. Since then Moto replaced LocalStack, Grafana LGTM (`otel-lgtm`) replaced Azurinsight, and the test Ollama is published on host port 11435. See [the OpenTelemetry change](migration-opentelemetry-2026-10-09.md) and [the Moto change](testing-vectors-sqs-moto-ci-2026-10-08.md).
+
+---
+
+## Archived Sections
+
+### Completed Work
+
+### Week 1: Infrastructure Setup (COMPLETED - 2026-01-19)
+
+**Docker Integration Test Stack** - 14 services for Integration test category
+
+**Files Created:**
+- [x] `/containers/testing/docker-compose.integration-tests.yml` (14 services - see list below)
+- [x] `/containers/testing/.env.integration` - Environment configuration
+- [x] `/containers/testing/README.md` - 500+ line guide with PlantUML deployment diagram
+- [x] Cross-platform scripts: `integration-up.sh/.bat`, `integration-down.sh/.bat`, `wait-for-services.sh/.bat`
+- [x] `/containers/testing/scripts/setup-ollama.sh/.bat` - Automated model pulling (phi3)
+- [x] `/containers/testing/TESTING-CHECKLIST.md` - Local validation guide
+- [x] `/containers/testing/STATUS.md` - Implementation tracker
+
+**Test Categories Enhancement:**
+- [x] Updated `TestCategories.cs` with clear Integration category documentation
+- [x] Clear distinction: Integration (Docker-based) vs LiveIntegration (Cloud-based)
+
+**CI/CD Pipeline Implementation:**
+- [x] Completed `.github/workflows/integration-tests.yml` (Docker startup, health checks, tests, cleanup)
+- [x] Configured all environment variables for 14 services
+- [x] Test result upload (30-day retention)
+- [x] Validated tag creation (`validated-v{version}`)
+- [x] **Workflow DISABLED** - Triggers commented out until local Docker testing validates infrastructure
+
+**Ollama Integration Automation (2026-01-21):**
+- [x] Automated phi3 model pulling in integration-up scripts
+- [x] Model setup runs automatically after all services are healthy
+- [x] Fixed Windows batch file container detection regex
+- [x] 4 tests migrated to Integration category
+
+**14 Docker Services:**
+1. **Apache Tika** (Document processing) - Port 9998
+2. **SMTP4Dev** (Email testing) - Ports 25, 7777
+3. **MongoDB** (NoSQL database) - Port 27017
+4. **SQL Server** (Relational database) - Port 1433
+5. **RabbitMQ** (Message queue) - Ports 5673, 15672
+6. **Redis** (Cache store) - Port 6379
+7. **OpenSearch** (Search engine) - Ports 9200, 9600
+8. **Qdrant** (Vector database) - Ports 6333, 6334
+9. **Azurite** (Azure Storage emulator) - Ports 10000-10002
+10. **LocalStack** (AWS emulator - SQS, S3, etc.) - Port 4566
+11. **Azure Service Bus Emulator** (Message queue) - Port 5672
+12. **Keycloak** (Identity & Access Management) - Port 8081
+13. **SBert** (Sentence embeddings - CPU only) - Port 5080
+14. **Ollama** (LLM inference - CPU only) - Port 11434
+
+---
+
+### Completed Work (continued)
+
+### Local Testing Validation (COMPLETED - 2026-01-21)
+
+**✅ All Integration tests validated and passing**
+
+**Prerequisites:**
+- [x] Docker Desktop/Engine installed and running
+- [x] Required ports available (1433, 5672, 6333, 8081, 9200, 9998, 10000-10002, 27017)
+- [x] At least 10GB disk space available
+
+**Validation Steps:**
+- [x] Follow `/containers/testing/TESTING-CHECKLIST.md` step-by-step
+- [x] Start services: `cd containers/testing && ./scripts/integration-up.sh --wait`
+- [x] Verify all 14 services become healthy within 2 minutes
+- [x] Test individual service health (curl commands in checklist)
+- [x] Run all Integration tests - **ALL PASSING**
+- [x] Test cleanup: `./scripts/integration-down.sh --clean`
+- [x] Verify clean restart works correctly
+
+**Success Criteria:**
+- [x] All 14 containers start successfully
+- [x] All health checks pass within 2 minutes
+- [x] All Integration tests passing
+- [x] No port conflicts or errors
+- [x] Cleanup removes all volumes
+- [x] Restart from clean state works
+
+**Result:** ✅ **VALIDATED** - Ready for CI/CD enablement
+
+---
+
+### Week 2 and later
+
+### Week 2: Test Migration (COMPLETED - 2026-01-21)
+
+**✅ Migrated 23 tests from DevLocal to Integration category**
+
+#### Priority 1: Stateless Services ✅ COMPLETE
+
+**Apache Tika (6 tests)** - ✅ COMPLETED
+- [x] File: `src/ExternalServices/Apache/OoBDev.Apache.Tika.Tests/Handlers/*HandlerTests.cs`
+- [x] Changed `[TestCategory(TestCategories.DevLocal)]` → `[TestCategory(TestCategories.Integration)]`
+- [x] Updated base test class to use `TIKA_URL` test property
+  ```csharp
+  var tikaUrl = TestContext.GetRequiredProperty<string>("TIKA_URL");
+  ```
+- [x] Removed hardcoded URL (`http://127.0.0.1:9998`) from `TikaToHtmlConversionHandlerTestsBase.cs`
+- [x] All 6 handler tests (PDF, DOC, DOCX, EPUB, ODT, RTF) migrated
+
+**SMTP/MailKit (2 tests)** - ✅ COMPLETED
+- [x] File: `src/ExternalServices/MailKit/OoBDev.MailKit.Tests/ClientExampleTests.cs`
+- [x] Changed category to Integration for both `SendSmtpTest` and `GetImapTest`
+- [x] Updated to use test properties:
+  ```csharp
+  var smtpHost = TestContext.GetRequiredProperty<string>("SMTP_HOST");
+  var smtpPort = TestContext.GetPropertyOrDefault("SMTP_PORT", 25);
+  var imapHost = TestContext.GetRequiredProperty<string>("IMAP_HOST");
+  var imapPort = TestContext.GetPropertyOrDefault("IMAP_PORT", 143);
+  ```
+- [x] Removed DataRow attributes (Azure container tests moved to local Docker focus)
+
+#### Priority 2: Stateful Services ✅ COMPLETE
+
+**MongoDB (3 tests)** - ✅ COMPLETED
+- [x] File: `src/ExternalServices/MongoDb/OoBDev.MongoDB.Tests/MongoDBTests.cs`
+- [x] Changed category to Integration for all 3 test methods
+- [x] Added unique database name pattern:
+  ```csharp
+  private string? _databaseName;
+  [TestInitialize]
+  public void TestInitialize() { _databaseName = $"IntegrationTest_{Guid.NewGuid():N}"; }
+  ```
+- [x] Added `[TestCleanup]` method:
+  ```csharp
+  [TestCleanup]
+  public async Task TestCleanup()
+  {
+      if (_mongoClient != null && _databaseName != null)
+          await _mongoClient.DropDatabaseAsync(_databaseName);
+  }
+  ```
+- [x] Updated connection string to use test property in all 3 tests:
+  ```csharp
+  var connectionString = TestContext.GetRequiredProperty<string>("MONGODB_CONNECTION_STRING");
+  ```
+
+**SQL Server DacFx** - ⏭️ SKIPPED (No integration tests to migrate)
+- File: `src/ExternalServices/Microsoft/OoBDev.Microsoft.SqlServer.DacFx.Tests/Class1.cs`
+- Contains only unit test that builds DacPac in memory (no external database required)
+- No DevLocal tests found that need migration to Integration category
+
+**RabbitMQ (3 tests)** - ✅ COMPLETED
+- [x] File: `src/ExternalServices/RabbitMQ/OoBDev.RabbitMQ.Tests/MessageQueueing/RabbitMQQueueMessageSenderProviderTests.cs`
+- [x] Changed category to Integration for all 3 test methods
+- [x] Updated connection to use test property in all 3 tests:
+  ```csharp
+  var rabbitMQHost = TestContext.GetRequiredProperty<string>("RABBITMQ_HOST");
+  ```
+- [x] Tests: `SendAsyncTest_ByFullType`, `SendAsyncTest_ByKeyed`, `FindProviderTests`
+- Note: Cleanup handled by RabbitMQ framework's message queue cleanup
+
+#### Priority 3: Search Services ✅ COMPLETE
+
+**OpenSearch (2 tests)** - ✅ COMPLETED
+- [x] File: `src/ExternalServices/OpenSearch/OoBDev.OpenSearch.Tests/OpenSearchTests.cs`
+- [x] Changed category to Integration for both tests
+- [x] Added index cleanup logic in `[TestCleanup]`:
+  ```csharp
+  [TestCleanup]
+  public async Task TestCleanup()
+  {
+      if (_client != null && _testIndexName != null)
+      {
+          try { await _client.Indices.DeleteAsync<StringResponse>(_testIndexName); }
+          catch { /* Ignore cleanup errors */ }
+      }
+  }
+  ```
+- [x] Updated connection to use test properties:
+  ```csharp
+  var url = TestContext.GetRequiredProperty<string>("OPENSEARCH_URL");
+  var username = TestContext.GetRequiredProperty<string>("OPENSEARCH_USERNAME");
+  var password = TestContext.GetRequiredProperty<string>("OPENSEARCH_PASSWORD");
+  ```
+- [x] Added unique index names: `integrationtest_{Guid.NewGuid():N}`
+- [x] SearchIndexTest now creates test data before searching
+
+**SBert (2 tests)** - ✅ COMPLETED
+- [x] File: `src/ExternalServices/SBert/OoBDev.SBert.Tests/SentenceEmbeddingClientTests.cs`
+- [x] Changed category to Integration for both tests
+- [x] Updated to use test property:
+  ```csharp
+  var url = TestContext.GetRequiredProperty<string>("SBERT_URL");
+  ```
+- [x] Removed DataRow attributes (hardcoded URLs replaced with env vars)
+- [x] Tests: `GetEmbeddingAsyncTest`, `GetAllTest`
+- [x] No cleanup needed (stateless service)
+
+**Ollama (4 tests)** - ✅ COMPLETED (2026-01-21)
+- [x] Files: `src/ExternalServices/Ollama/OoBDev.Ollama.Tests/OllamaApiClientTests.cs`, `OllamaMessageCompletionTests.cs`
+- [x] Changed category to Integration for 4 tests (was DevLocal)
+- [x] Updated to use test properties:
+  ```csharp
+  var url = TestContext.GetRequiredProperty<string>("OLLAMA_URL");
+  var model = TestContext.GetPropertyOrDefault("OLLAMA_MODEL", "phi3");
+  ```
+- [x] Tests migrated:
+  - `OllamaApiClientTests.ListModelsTest`
+  - `OllamaApiClientTests.GenerateEmbeddingsDoubleTest`
+  - `OllamaMessageCompletionTests.IMessageCompletion_GetCompletionAsyncTest`
+  - `OllamaMessageCompletionTests.ILanguageModelProvider_GetResponseAsyncTest`
+- [x] Model auto-pulled by integration-up scripts (phi3)
+- [x] No cleanup needed (stateless service)
+
+#### Priority 4: Commented Tests ⏭️ DEFERRED
+
+**Qdrant (commented tests)** - ⏭️ DEFERRED (All tests commented out)
+- File: `src/ExternalServices/Qdrant/OoBDev.Qdrant.Tests/QdrantGrpcClientTests.cs`
+- Entire file is commented out (lines 1-287)
+- Tests depend on Ollama and SBert services (complex setup required)
+- Categories used: "setup" and "dev-local" (not DevLocal standard category)
+- **Decision:** Leave commented until tests are uncommented and requirements clarified
+
+**Final Migration Count:** 23 tests migrated successfully
+- ✅ Apache Tika: 6 tests
+- ✅ SMTP/MailKit: 2 tests
+- ✅ MongoDB: 3 tests
+- ✅ RabbitMQ: 3 tests
+- ✅ OpenSearch: 2 tests
+- ✅ SBert: 2 tests
+- ✅ Ollama: 4 tests
+- ⏭️ SQL Server DacFx: 0 tests (none applicable)
+- ⏭️ Qdrant: 0 tests (all commented out)
+
+---
+
+### Script Enhancements & Health Check Fixes (2026-01-24)
+
+**Goal:** Improve integration-up scripts and fix Docker health checks for all 15 services
+
+**Completed:**
+- [x] **Script Enhancements:**
+  - [x] Added `--build` flag support to `integration-up.sh/.bat` for rebuilding images
+  - [x] Fixed Windows batch file path resolution (using `PUSHD` instead of character counting)
+  - [x] Updated all 15 services in startup script output display
+  - [x] Updated port lists in script headers (all 17 required ports)
+  - [x] Added all 4 missing services to `wait-for-services.sh/.bat` (Redis, Service Bus, Ollama, Azurinsight)
+
+- [x] **Health Check Fixes:**
+  - [x] Updated all health checks to use bash TCP (`</dev/tcp/HOST/PORT`) instead of curl/wget/nc
+  - [x] Apache Tika: `timeout 2 bash -c '</dev/tcp/localhost/9998'` ✅ healthy
+  - [x] Qdrant: bash TCP check ✅ healthy
+  - [x] Azurite: Node.js socket check ✅ healthy
+  - [x] Keycloak: bash TCP check ✅ healthy
+  - [x] SBert: bash TCP check ✅ healthy
+  - [x] Ollama: bash TCP check ✅ healthy
+  - [x] Service Bus: bash TCP check (⏳ starting - 30s period)
+  - [x] Azurinsight: bash TCP check (⚠️ unhealthy - needs investigation)
+
+- [x] **Protocol Updates:**
+  - [x] Updated `.claude/protocols/software/integration-test-maintenance.md` to v1.1.0
+  - [x] Added checklist items for startup scripts (integration-up.sh/.bat)
+  - [x] Added checklist items for health check scripts (wait-for-services.sh/.bat)
+  - [x] Added checklist items for .env.integration and CI/CD workflow
+  - [x] Expanded file reference quick links
+
+**Status:** 13/15 services healthy, 2 remaining (servicebus starting, azurinsight needs fix)
+
+**Next Steps:**
+- [ ] Investigate azurinsight health check failure
+- [ ] Verify servicebus completes startup successfully
+- [ ] Complete final validation with all 15 services healthy
+
+---
+
+### Week 2 and later
+
+---
+
+## Reference Material Moved From the TODO
+
+Stated as of 2026-01-24, so LocalStack (now Moto), Azurinsight (now `otel-lgtm`) and the 11 and 14 service counts are out of date. [TEST_VARIABLES.md](../../TEST_VARIABLES.md) and [the stack readme](../../containers/testing/README.md) are current.
+
+### Future Service Additions
+
+#### Azurinsight - Application Insights Emulator (replaced)
+
+Replaced on 2026-10-09 by the `grafana/otel-lgtm` service (`oobd-test-otel`) when Application Insights gave way to OpenTelemetry. See [the change record](migration-opentelemetry-2026-10-09.md) and [TEST_VARIABLES.md](../../TEST_VARIABLES.md#opentelemetry-grafana-lgtm).
+
+---
+
+### Enable CI/CD After Validation
+
+Superseded by the Week 3 checklist in the TODO; the workflow is enabled (2026-10-09).
+
+---
+
+### Architecture Highlights
+
+**Shared Infrastructure:**
+- Same Docker containers for local development (`docker-compose-cpu.yml`) and CI/CD testing (`testing/docker-compose.integration-tests.yml`)
+- Different orchestration files but same base service definitions (using `extends`)
+- Environment variable overrides for different contexts
+
+**Health Checks:**
+- All 11 services have health check definitions in compose file
+- Wait script polls for healthy status (120-second timeout, configurable)
+- Tests don't run until all services report healthy
+- Fast fail if any service doesn't become healthy
+
+**Clean State Management:**
+- Ephemeral volumes destroyed with `docker compose down -v`
+- Unique resource names per test run: `IntegrationTest_{Guid.NewGuid():N}`
+- Cleanup in `[TestCleanup]` attribute methods (always runs, even on test failure)
+- Fresh database/queue/index for each test
+
+**Isolated Network:**
+- Dedicated `integration-test-net` bridge network
+- No conflicts with development containers
+- Container name prefix: `oobd-test-*`
+
+**CI/CD Pipeline Flow:**
+```
+Build Pipeline (dotnet.yml)
+  ├─ Push/PR trigger
+  ├─ Build + Unit/Simulate tests
+  ├─ Create packages
+  ├─ Upload artifacts (90 days)
+  └─ Tag: v{version}
+          ↓
+Daily at 4 PM UTC (after build completes)
+          ↓
+Integration Tests (integration-tests.yml)
+  ├─ Download latest build artifacts
+  ├─ Start Docker services (11 containers)
+  ├─ Wait for health checks (max 5 minutes)
+  ├─ Run Integration tests (filter: TestCategory=Integration)
+  ├─ Upload test results (30 days)
+  ├─ Stop Docker services (always runs)
+  └─ Tag: validated-v{version} (on success)
+          ↓
+Manual Release (release.yml)
+  ├─ Find validated artifact
+  └─ Deploy to NuGet
+```
+
+---
+
+### Success Criteria
+
+### Week 1: Infrastructure ✅
+- ✅ Docker integration stack starts/stops successfully
+- ⏳ All 14 services become healthy within 2 minutes (awaiting local test)
+- ⏳ Manual workflow trigger works (awaiting local test)
+- ✅ Daily schedule configured correctly (disabled until local test)
+- ✅ Health check script works correctly
+- ✅ Cleanup script removes all volumes
+- ✅ Ollama automated model setup (phi3)
+
+### Week 2: Test Migration ✅
+- ✅ 23 tests migrated from DevLocal to Integration (Apache Tika, SMTP, MongoDB, RabbitMQ, OpenSearch, SBert, Ollama)
+- ⏳ All Integration tests pass locally with Docker stack running (awaiting local test)
+- ⏳ All Integration tests pass in CI/CD pipeline (awaiting workflow enable)
+- ⏳ Test cleanup verified (no data leaks between runs) (awaiting local test)
+- ⏳ Total execution time < 10 minutes (awaiting local test)
+- ⏳ Zero flaky tests (10 consecutive runs pass) (awaiting local test)
+
+### Week 4 (Part 1): Documentation
+- [ ] Integration category fully documented
+- [ ] All 14 Docker stacks documented
+- [ ] Code examples for each stack
+- [ ] PlantUML diagrams embedded
+- [ ] Templates available
+
+---
+
+### Risk Mitigation
+
+### Docker Service Startup Time
+**Risk:** Services take too long to start in CI/CD (>5 minutes)
+
+**Mitigation:**
+- Parallel startup (Docker Compose default behavior)
+- Fast health check intervals (10 seconds)
+- Timeout protection (5 minute maximum for health checks)
+- Docker layer caching in GitHub Actions
+- Pre-pull images in CI/CD setup step
+
+### Test Isolation
+**Risk:** Tests contaminate shared resources (databases, queues, indices)
+
+**Mitigation:**
+- Unique resource names per test: `IntegrationTest_{Guid.NewGuid():N}`
+- Cleanup in `[TestCleanup]` (always runs, even on test failure)
+- Ephemeral volumes (`docker compose down -v`)
+- Retry logic with exponential backoff for transient failures
+
+### CI/CD Runner Constraints
+**Risk:** GitHub Actions runners have limited CPU/memory/disk
+
+**Mitigation:**
+- CPU-only stack (no GPU services like CUDA-enabled Ollama)
+- Maximum 11 containers (well within GitHub limits)
+- Health check timeouts (fail fast if service won't start)
+- Service subset optimization (exclude heavy services)
+- Monitor resource usage in Actions logs
+
+### Flaky Tests
+**Risk:** Tests fail intermittently due to timing issues
+
+**Mitigation:**
+- Explicit health checks before ANY tests run
+- Connection retry logic in tests (3-5 retries with backoff)
+- wait-for-services.sh ensures readiness
+- Clear error messages when service unavailable
+- No hardcoded sleep/delays (use health checks instead)
+
+### Port Conflicts
+**Risk:** Local or CI/CD ports already in use
+
+**Mitigation:**
+- Document required ports in TESTING-CHECKLIST.md
+- Pre-flight check script to verify port availability
+- Clear error messages on port conflicts
+- Option to customize ports via .env.integration
+
+---
+
+### Environment Variables
+
+**Pattern:** `{STACK}_{PROPERTY}`
+
+**Complete List:**
+```bash
+# SQL Server
+SQL_CONNECTION_STRING=Server=localhost,1433;User Id=sa;Password=IntegrationTest123!;TrustServerCertificate=True
+SQL_SA_PASSWORD=IntegrationTest123!
+
+# MongoDB
+MONGODB_CONNECTION_STRING=mongodb://localhost:27017
+
+# RabbitMQ
+RABBITMQ_HOST=localhost
+RABBITMQ_PORT=5673
+RABBITMQ_CONNECTION_STRING=amqp://guest:guest@localhost:5673/
+
+# OpenSearch
+OPENSEARCH_URL=https://localhost:9200
+OPENSEARCH_USERNAME=admin
+OPENSEARCH_PASSWORD=IntegrationTest123!
+
+# Qdrant
+QDRANT_URL=http://localhost:6333
+QDRANT_GRPC_URL=http://localhost:6334
+
+# Apache Tika
+TIKA_URL=http://localhost:9998
+
+# SMTP
+SMTP_HOST=localhost
+SMTP_PORT=25
+
+# Azurite (Azure Storage Emulator)
+AZURITE_BLOB_URL=http://localhost:10000
+AZURITE_QUEUE_URL=http://localhost:10001
+AZURITE_TABLE_URL=http://localhost:10002
+AZURITE_CONNECTION_STRING=DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://localhost:10000/devstoreaccount1;QueueEndpoint=http://localhost:10001/devstoreaccount1;TableEndpoint=http://localhost:10002/devstoreaccount1
+
+# LocalStack (AWS Emulator)
+LOCALSTACK_URL=http://localhost:4566
+AWS_ACCESS_KEY_ID=test
+AWS_SECRET_ACCESS_KEY=test
+AWS_DEFAULT_REGION=us-east-1
+
+# Keycloak
+KEYCLOAK_URL=http://localhost:8081
+KEYCLOAK_REALM=local-dev
+KEYCLOAK_CLIENT_ID=test-client
+
+# SBert
+SBERT_URL=http://localhost:5080
+
+# Ollama
+OLLAMA_URL=http://localhost:11434
+OLLAMA_HOST=localhost
+OLLAMA_PORT=11434
+OLLAMA_MODEL=phi3
+
+# Redis
+REDIS_CONNECTION_STRING=localhost:6379
+
+# Azure Service Bus Emulator
+AZURE_SERVICE_BUS_CONNECTION_STRING=Endpoint=sb://localhost;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=SAS_KEY_VALUE;UseDevelopmentEmulator=true
+```
+
+---
+
+### Documentation References
+
+- `/containers/testing/README.md` - Complete infrastructure guide with PlantUML
+- `/containers/testing/TESTING-CHECKLIST.md` - Local validation procedure
+- `/containers/testing/STATUS.md` - Implementation progress tracker
+- `.github/workflows/integration-tests.yml` - CI/CD pipeline definition
+- `src/Framework/OoBDev.TestUtilities/TestCategories.cs` - Integration category definition
+
+---
+
+### Notes
+
+**Services NOT included in Integration testing:**
+- **WkHtmlToPdf** - In-process library, no Docker container needed
+- **ParadeDB/Kafka** - Already in compose files but no tests exist yet
+
+**Services with no tests yet:**
+- **Redis** - Future Integration tests for caching features
+- **Azure Service Bus Emulator** - Future Integration tests for Service Bus features
+- **Keycloak** - Future Integration tests when identity features implemented
+- **Azurite** - Future Integration tests for Azure Storage features
+- **LocalStack** - Future Integration tests for AWS features (SQS tests exist, S3 needed)
+
+**Long-Term Goals:**
+- 🎯 80% code coverage for Integration tests
+- 🎯 Zero flaky tests (10 consecutive runs pass)
+- 🎯 Test execution time < 5 minutes (optimized from current ~10 minutes)
+- 🎯 All DevLocal tests migrated to Integration or LiveIntegration
+- 🎯 Quarterly review of test reliability and coverage

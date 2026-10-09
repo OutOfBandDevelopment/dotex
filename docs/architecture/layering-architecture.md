@@ -511,15 +511,11 @@ Projects are organized by vendor/technology:
 
 **Reference:** `src/ExternalServices/Markdig/OoBDev.Markdig/`
 
-#### Microsoft (8 projects)
-- **OoBDev.Microsoft.ApplicationInsights.** (2)
-- **OoBDev.Microsoft.Azure.B2C.** (2)
+#### Microsoft (6 projects)
 - **OoBDev.Microsoft.SqlServer.DacFx.** (2)
 - **OoBDev.Microsoft.SqlServer.Server.** (2)
 
 **Purpose:**
-- Application Insights (telemetry)
-- Azure AD B2C (identity)
 - SQL Server DacFx (deployment)
 - SQL Server CLR (server-side code)
 
@@ -631,7 +627,7 @@ OoBDev.{Vendor}/
 
 **Naming Convention:**
 - Use vendor name: `OoBDev.{Vendor}.{Subcategory}`
-- Examples: `OoBDev.RabbitMQ`, `OoBDev.Azure.StorageAccount`, `OoBDev.Microsoft.Azure.B2C`
+- Examples: `OoBDev.RabbitMQ`, `OoBDev.Azure.StorageAccount`, `OoBDev.Azure.StorageAccount`
 
 **Integration Checklist:**
 - [ ] Create `OoBDev.{Vendor}.Abstractions` project

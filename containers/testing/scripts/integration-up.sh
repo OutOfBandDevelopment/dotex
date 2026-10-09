@@ -10,7 +10,7 @@
 #
 # Requirements:
 #   - Docker and Docker Compose installed
-#   - Ports available: 25, 1433, 4566, 5000, 5080, 5672-5673, 6333-6334, 6379, 7777, 8081, 9200, 9998, 10000-10002, 11434, 15672, 27017
+#   - Ports available: 25, 1433, 4566, 5000, 5080, 5672-5673, 6333-6334, 6379, 7777, 8081, 9200, 9998, 10000-10002, 11435, 15672, 27017
 
 set -e  # Exit on error
 
@@ -83,7 +83,7 @@ echo "  - Moto:         http://localhost:4566"
 echo "  - Service Bus:        localhost:5672"
 echo "  - Keycloak:           http://localhost:8081 (admin/admin)"
 echo "  - SBert:              http://localhost:5080"
-echo "  - Ollama:             http://localhost:11434"
+echo "  - Ollama:             http://localhost:11435"
 echo "  - Grafana (OTel):     http://localhost:3000 (OTLP :4317 gRPC, :4318 HTTP)"
 echo ""
 

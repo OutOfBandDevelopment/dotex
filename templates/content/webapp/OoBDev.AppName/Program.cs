@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using OoBDev.AspNetCore.Mvc;
 using OoBDev.Common;
 using OoBDev.Common.Extensions;
 
@@ -38,15 +39,12 @@ public static class Program
             });
 
         services.AddControllers();
-        services.AddEndpointsApiExplorer();
-        services.AddSwaggerGen();
 
         var app = builder.Build();
 
         if (app.Environment.IsDevelopment())
         {
-            app.UseSwagger();
-            app.UseSwaggerUI();
+            app.MapApiReference();
         }
 
         app.UseHttpsRedirection();

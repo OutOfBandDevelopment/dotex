@@ -66,7 +66,7 @@ Located in `.claude/protocols/`:
 
 #### Code Generation
 - **template-development.md** - Template-based code generation
-- **template-swagger-documentation.md** - Template/OpenAPI maintenance
+- **template-swagger-documentation.md** - Template/OpenAPI maintenance (Swagger-era name; OpenAPI is now served by `Microsoft.AspNetCore.OpenApi` and Scalar)
 
 #### Testing & Integration
 - **integration-test-maintenance.md** - Maintain Docker-based integration test infrastructure
@@ -527,6 +527,9 @@ dotnet test src/ --collect:"XPlat Code Coverage"
 ## Recently Completed Work
 
 ### 2026-10-09
+- **Swashbuckle replaced by OpenAPI transformers and Scalar** - `Microsoft.AspNetCore.OpenApi` documents (`/openapi/{name}.json`, `all` plus one per assembly), custom filters ported to transformers, Scalar reference with OAuth2 authorization code and PKCE, 4 Simulate tests; AsyncAPI viewer is phase 2. [Details](docs/changes/migration-openapi-scalar-2026-10-09.md)
+- **Azure B2C dropped** - library, tests, `IdentityProviders.AzureB2C`, example profile and test variables removed; Keycloak is the identity provider (default in `IdentityExtensionBuilder`)
+- **Test Ollama on host port 11435** - avoids the clash with a local Ollama on 11434; the in-container port is unchanged
 - **OpenTelemetry replaces Application Insights** - `OoBDev.OpenTelemetry` (config-gated `TryAddOpenTelemetryExtensions`, OTLP export, correlation and user processors), Grafana LGTM container replaces Azurinsight, Integration tests read spans and logs back from Tempo and Loki; most `DevLocal` tests fixed or moved to Unit/Integration. [Details](docs/changes/migration-opentelemetry-2026-10-09.md)
 
 ### 2026-10-08
@@ -600,17 +603,15 @@ dotnet test src/ --collect:"XPlat Code Coverage"
 ## Current Work Context
 
 **Active Priorities:**
-1. **Integration Testing** - Finalizing health checks for all 15 Docker services (13/15 healthy)
-   - ⏳ servicebus startup validation (30s start period)
-   - Next: Enable CI/CD pipeline after all services validated
+1. **Integration Testing** - Finalizing health checks for all 15 Docker services (14/15 healthy; servicebus has no health check)
+   - Next: enable the CI/CD workflow (`integration-tests.yml` schedule is still commented out)
 2. **SharedFramework** - Design-first approach (Epic 2, 6, 7, 10)
 3. **Incoming Projects** - All investigated (decisions pending)
 
-**Latest Updates (2026-01-24):**
-- Enhanced integration-up scripts with `--build` flag
-- Fixed Windows batch file path handling (PUSHD)
-- Updated all health checks to use bash TCP built-ins
-- Added missing services to startup output display
+**Latest Updates (2026-10-09):**
+- OpenTelemetry replaced Application Insights; Grafana LGTM replaced Azurinsight in the test stack
+- Azure B2C dropped; Keycloak is the identity provider
+- Test Ollama published on host port 11435
 
 **Strategic Change (2026-01-22): Design-First Approach**
 
@@ -638,7 +639,7 @@ Instead of directly migrating code from SharedFramework, we've pivoted to compre
 
 **Active Priorities:**
 1. **Design Documentation** - Creating 16 design documents per Epic (64 total across 4 Epics)
-2. **Docker Testing** - Ready for CI/CD enablement (14 services, 23+ tests validated)
+2. **Docker Testing** - Ready for CI/CD enablement (15 services, Integration suite passing)
 3. **Incoming Projects** - All investigated (decisions pending)
 
 **Latest Updates:**
@@ -649,5 +650,5 @@ Instead of directly migrating code from SharedFramework, we've pivoted to compre
 - .runsettings how-to guide created
 - Configuration documentation complete (CONFIGURATION_SETTINGS.md)
 - Ollama integration complete (phi3 auto-setup)
-- 14 Docker services ready (Apache Tika, MongoDB, SQL Server, RabbitMQ, Redis, OpenSearch, Qdrant, Azurite, Moto, Service Bus, Keycloak, SBert, Ollama)
+- 15 Docker services ready (Apache Tika, SMTP4Dev, MongoDB, SQL Server, RabbitMQ, Redis, OpenSearch, Qdrant, Azurite, Moto, Service Bus, Keycloak, SBert, Ollama, Grafana LGTM)
 

@@ -46,7 +46,7 @@ Week 4: Documentation            ░░░░░░░░░░░░░░░�
 12. ✅ Keycloak (Identity & Access Management)
 13. ✅ SBert (Sentence embeddings - CPU only)
 14. ✅ Ollama (LLM inference - CPU only, phi3 model)
-15. ✅ Azurinsight (Application Insights emulator)
+15. ✅ OpenTelemetry (Grafana LGTM; replaced Azurinsight 2026-10-09)
 
 **Features**:
 - ✅ Health checks for all services

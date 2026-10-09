@@ -378,7 +378,7 @@ services:
     image: oobdev/ollama-phi3:latest
     container_name: oobd-test-ollama
     ports:
-      - "11434:11434"
+      - "11435:11434"
     networks:
       - integration-test-net
     volumes:

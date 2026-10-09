@@ -7,7 +7,7 @@ A sample ASP.NET Core web API that composes the OoBDev framework the way a real 
 ## What it shows
 
 - Composition in `Program.cs`: `AddApplicationServices()` for example services, the framework `Try*` extensions, `UseAllCommonMiddleware(...)`, then authentication, authorization and `MapControllers()`.
-- Swagger UI in development, HTTPS redirection, console logging.
+- OpenAPI documents (`/openapi/all.json` and one per assembly) with the Scalar API reference at `/scalar/all` in development, HTTPS redirection, console logging.
 - One controller per framework capability:
 
 | Controller | Capability |

@@ -74,7 +74,7 @@ Questions that block or shape work in the TODO files. Each has the source it cam
 
 - **Source:** [TODO.md](./TODO.md) → "Backlog: Architect Answers" (Scalar)
 - **Question:** An AsyncAPI viewer, or Swagger UI? Scalar is chosen either way.
-- **Answer:**
+- **Answer:** An AsyncAPI viewer (2026-10-09). Scalar replaced Swashbuckle first; the AsyncAPI document and viewer for the SQS, Service Bus and RabbitMQ surfaces is phase 2 ([design](docs/design/OpenApiScalar/README.md)).
 
 ## 3. Migration decisions
 

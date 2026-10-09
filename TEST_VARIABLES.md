@@ -28,13 +28,12 @@ This document lists all test properties used by Integration tests. These propert
    - [OpenSearch (Search Engine)](#opensearch-search-engine)
    - [SBert (Sentence Embeddings)](#sbert-sentence-embeddings---aiml)
    - [Ollama (LLM Inference)](#ollama-llm-inference---aiml)
-   - [Azurinsight (Application Insights Emulator)](#azurinsight-application-insights-emulator)
+   - [OpenTelemetry (Grafana LGTM)](#opentelemetry-grafana-lgtm)
    - [Qdrant (Vector Database)](#qdrant-vector-database)
    - [Azurite (Azure Storage Emulator)](#azurite-azure-storage-emulator)
    - [Moto (AWS Emulator)](#moto-aws-emulator)
    - [Keycloak (Identity & Access Management)](#keycloak-identity--access-management)
 3. [LiveIntegration Test Variables](#liveintegration-test-variables)
-   - [Application Insights (Telemetry)](#application-insights-telemetry)
    - [Groq Cloud (LLM API)](#groq-cloud-llm-api)
 4. [Configuration Examples](#configuration-examples)
 5. [Test Pattern Guidelines](#test-pattern-guidelines)
@@ -224,13 +223,13 @@ Tests that require live cloud credentials. Manual execution only.
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `OLLAMA_URL` | `http://localhost:11434` | Ollama HTTP API endpoint |
+| `OLLAMA_URL` | `http://localhost:11435` | Ollama HTTP API endpoint |
 | `OLLAMA_HOST` | `localhost` | Ollama host |
-| `OLLAMA_PORT` | `11434` | Ollama port |
+| `OLLAMA_PORT` | `11435` | Ollama port |
 | `OLLAMA_MODEL` | `phi3` | Model name to use for testing |
 | `OLLAMA_EMBEDDING_MODEL` | `all-minilm` | Embedding model (chat models such as phi3 reject embedding requests) |
 
-**Docker Container:** `ollama/ollama:latest` (Port 11434)
+**Docker Container:** `ollama/ollama:latest` (Host port 11435, container 11434)
 
 **Setup Required:**
 - After container start, run `./scripts/setup-ollama.sh` to pull the model
@@ -250,56 +249,25 @@ Tests that require live cloud credentials. Manual execution only.
 
 ---
 
-### Azurinsight (Application Insights Emulator)
+### OpenTelemetry (Grafana LGTM)
 
-**Service:** Azurinsight - Local Application Insights emulator
+**Service:** `grafana/otel-lgtm` - OTLP receiver with Tempo (traces), Loki (logs), Prometheus (metrics) and Grafana
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `APPINSIGHTS_URL` | `http://localhost:5000` | Azurinsight HTTP API endpoint |
-| `APPINSIGHTS_INSTRUMENTATION_KEY` | `test-key` | Test instrumentation key |
-| `APPINSIGHTS_CONNECTION_STRING` | `InstrumentationKey=test-key;IngestionEndpoint=http://localhost:5000` | Application Insights connection string |
+| `OTEL_EXPORTER_OTLP_ENDPOINT` | `http://localhost:4318` | OTLP HTTP endpoint the tests export to |
+| `OTEL_GRAFANA_URL` | `http://localhost:3000` | Grafana, used to read spans and logs back through the Tempo and Loki proxies |
 
-**Docker Container:** `oobdev/azurinsight:latest` (Port 5000)
+**Docker Container:** `grafana/otel-lgtm:latest` (4317 OTLP gRPC, 4318 OTLP HTTP, 3000 Grafana)
 
 **Tests Using:**
-- `OoBDev.Microsoft.ApplicationInsights.Tests.ApplicationInsightsIntegrationTests.SendEventTelemetry_ShouldStoreInAzurinsight`
-- `OoBDev.Microsoft.ApplicationInsights.Tests.ApplicationInsightsIntegrationTests.SendTraceTelemetry_ShouldStoreInAzurinsight`
-- `OoBDev.Microsoft.ApplicationInsights.Tests.ApplicationInsightsIntegrationTests.SendMetricTelemetry_ShouldStoreInAzurinsight`
-- `OoBDev.Microsoft.ApplicationInsights.Tests.ApplicationInsightsIntegrationTests.SendExceptionTelemetry_ShouldStoreInAzurinsight`
-- `OoBDev.Microsoft.ApplicationInsights.Tests.ApplicationInsightsIntegrationTests.SendDependencyTelemetry_ShouldStoreInAzurinsight`
-- `OoBDev.Microsoft.ApplicationInsights.Tests.ApplicationInsightsIntegrationTests.SendRequestTelemetry_ShouldStoreInAzurinsight`
-- `OoBDev.Microsoft.ApplicationInsights.Tests.ApplicationInsightsIntegrationTests.PurgeApi_ShouldClearAllTelemetry`
-- `OoBDev.Microsoft.ApplicationInsights.Tests.TelemetryProcessorTests.CorrelationInfoTelemetryProcessor_ShouldAddCorrelationHeaders`
-- `OoBDev.Microsoft.ApplicationInsights.Tests.TelemetryProcessorTests.UserTelemetryProcessor_ShouldAddUserClaims`
-- `OoBDev.Microsoft.ApplicationInsights.Tests.TelemetryProcessorTests.CombinedProcessors_ShouldAddBothCorrelationAndUserInfo`
-
-**API Endpoints:**
-- `POST /v2.1/track` - Receive telemetry data (Application Insights SDK endpoint)
-- `GET /api/query` - Query stored telemetry
-- `POST /api/purge` - Clear all telemetry data
-- WebSocket `/` - Live telemetry streaming
-
-**Cleanup Pattern:**
-```csharp
-[TestCleanup]
-public async Task TestCleanup()
-{
-    _telemetryClient?.Flush();
-    await Task.Delay(1000);
-
-    var response = await _httpClient.PostAsync("/api/purge", null);
-    response.EnsureSuccessStatusCode();
-}
-```
+- `OoBDev.OpenTelemetry.Tests.OtlpIntegrationTests` (Integration): a span reaches Tempo and a log record reaches Loki, both with the correlation id
+- `OoBDev.OpenTelemetry.Tests.TelemetryProcessorTests` (Unit): processors and registration, no container needed
 
 **Notes:**
-- Lightweight SQLite-based emulator (no Azure credentials needed)
-- Stateful service (telemetry persisted in SQLite volume)
-- Supports all standard Application Insights SDK telemetry types
-- WebSocket support for real-time telemetry viewing
-- Test instrumentation key can be any value (e.g., "test-key")
-- Replaces need for live Azure Application Insights in tests
+- Anonymous Grafana access is enabled in the test image, so no credentials are needed
+- Each test uses a unique `service.name` so runs never see each other's data
+- Replaces the former Azurinsight emulator (2026-10-09)
 
 ---
 
@@ -405,29 +373,6 @@ public async Task TestCleanup()
 
 ## LiveIntegration Test Variables
 
-### Application Insights (Telemetry)
-
-> **NOTE:** Application Insights tests have been **migrated to Integration category** using the [azurinsight](https://github.com/Rahulkumar010/azurinsight) emulator (`oobdev/azurinsight:latest`). See [Azurinsight (Application Insights Emulator)](#azurinsight-application-insights-emulator) in the Integration section above.
-
-**Service:** Microsoft Application Insights (Live Azure Service)
-
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `APPINSIGHTS_INSTRUMENTATION_KEY` | *(none)* | Live Azure instrumentation key |
-| `APPINSIGHTS_CONNECTION_STRING` | *(none)* | Live Azure connection string |
-
-**Tests Using:**
-- *(All tests migrated to Integration category using azurinsight emulator)*
-
-**Setup (if testing against live Azure):**
-1. Create Application Insights resource in Azure
-2. Copy instrumentation key or connection string
-3. Configure `.runsettings`
-
-**Note:** For automated testing, use the azurinsight emulator in Integration tests instead of live Azure resources.
-
----
-
 ### Groq Cloud (LLM API)
 
 **Service:** Groq Cloud AI inference
@@ -497,9 +442,9 @@ public async Task TestCleanup()
     <!-- Keycloak -->
     <Parameter name="KEYCLOAK_URL" value="http://localhost:8081" />
 
-    <!-- Application Insights (LiveIntegration) -->
-    <Parameter name="APPINSIGHTS_INSTRUMENTATION_KEY" value="your-instrumentation-key" />
-    <Parameter name="APPINSIGHTS_CONNECTION_STRING" value="your-connection-string" />
+    <!-- OpenTelemetry (Grafana LGTM) -->
+    <Parameter name="OTEL_EXPORTER_OTLP_ENDPOINT" value="http://localhost:4318" />
+    <Parameter name="OTEL_GRAFANA_URL" value="http://localhost:3000" />
 
     <!-- Groq Cloud (LiveIntegration) -->
     <Parameter name="GROQ_API_KEY" value="your-api-key" />

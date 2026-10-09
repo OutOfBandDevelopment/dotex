@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 
-namespace OoBDev.AspNetCore.Mvc.SwaggerGen;
+namespace OoBDev.AspNetCore.Mvc.OpenApi;
 
 /// <summary>
-/// SwaggerGen extension to configure controller group as the related assembly name
+/// Convention to configure controller group as the related assembly name
 /// </summary>
 public class ApiNamespaceControllerModelConvention : IControllerModelConvention
 {
