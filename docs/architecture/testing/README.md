@@ -13,6 +13,7 @@ Comprehensive testing standards, guidelines, and best practices for the OoBDev f
 | [Testing Guidelines](./testing-guidelines.md) | Comprehensive testing standards and patterns |
 | [Test Variables Reference](../../../TEST_VARIABLES.md) | All test properties and configuration |
 | [Integration Testing](./integration/README.md) | Docker stack: topology, ports, services, dependency matrix, writing tests |
+| [Live Integration Testing](./live-integration/README.md) | Cloud tests: when to use `LiveIntegration`, credentials, cost, Groq Cloud |
 | [Docker Infrastructure](../../../containers/testing/README.md) | Docker-based integration testing setup |
 
 ---

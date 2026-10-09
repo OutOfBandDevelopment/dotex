@@ -42,7 +42,7 @@ Order of work, with the reason for the position. Start at the top; tick items of
 
 ### 4. Live integration (cloud) tests
 - [x] Groq (`OoBDev.GroqCloud.Tests`): two `LiveIntegration` tests, template and README added; both pass against the live API (2026-10-09).
-- [ ] Cloud docs: category README, cloud setup, credential and cost management, per-service pages, LiveIntegration vs Integration guide, PlantUML diagrams.
+- [x] Cloud docs: [live-integration](docs/architecture/testing/live-integration/README.md) (category guide with decision diagram, credentials, cost, Groq page). Only Groq has live tests; add a page per new cloud service.
 - [ ] Azure Monitor export through a collector is untested (needs the owner's subscription).
 - [ ] `DevLocal` tests kept on purpose: Ollama tests (hard-coded LAN host, model pull and delete), USB HID (hardware), `PathEx`, `MergedXPathNavigator`, `ProjectTools.FixReadmes` (hard-coded `C:\Repos` paths), Markdown `TestMethod1` (writes files), DacFx `BuildPackageTest` (hard-coded path). Revisit the Ollama ones when the owner says Ollama testing can resume.
 
