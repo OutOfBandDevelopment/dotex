@@ -193,7 +193,10 @@ public static class ServiceCollectionExtensions
         )
     {
         services.TryAddSingleton<IDataConverter, DataConverter>();
+        services.TryAddSingleton(global::System.TimeProvider.System);
+#pragma warning disable CS0618 // IDateTimeProvider is obsolete
         services.TryAddSingleton<IDateTimeProvider, DateTimeProvider>();
+#pragma warning restore CS0618
         services.TryAddSingleton<IGuidProvider, GuidProvider>();
 
         services.TryAddSingleton<ITempFileFactory, TempFileFactory>();

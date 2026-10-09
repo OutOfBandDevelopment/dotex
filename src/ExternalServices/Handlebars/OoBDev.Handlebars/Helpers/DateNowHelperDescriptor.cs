@@ -1,6 +1,6 @@
-using OoBDev.System.Providers;
 using HandlebarsDotNet;
 using HandlebarsDotNet.PathStructure;
+using System;
 using System.Linq;
 
 namespace OoBDev.Handlebars.Helpers;
@@ -10,15 +10,15 @@ namespace OoBDev.Handlebars.Helpers;
 /// </summary>
 public class DateNowHelperDescriptor : HelperDescriptorBase
 {
-    private readonly IDateTimeProvider _date;
+    private readonly TimeProvider _time;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="DateNowHelperDescriptor"/> class.
     /// </summary>
-    /// <param name="date">The Date provider.</param>
+    /// <param name="time">The time provider.</param>
     public DateNowHelperDescriptor(
-        IDateTimeProvider date
-        ) => _date = date;
+        TimeProvider time
+        ) => _time = time;
 
     /// <summary>
     /// Gets the name of the helper.
@@ -32,8 +32,8 @@ public class DateNowHelperDescriptor : HelperDescriptorBase
     {
         var format = arguments.FirstOrDefault() as string;
         if (string.IsNullOrWhiteSpace(format))
-            output.WriteSafeString(_date.Now);
+            output.WriteSafeString(_time.GetLocalNow());
         else
-            output.WriteSafeString(_date.Now.ToString(format));
+            output.WriteSafeString(_time.GetLocalNow().ToString(format));
     };
 }

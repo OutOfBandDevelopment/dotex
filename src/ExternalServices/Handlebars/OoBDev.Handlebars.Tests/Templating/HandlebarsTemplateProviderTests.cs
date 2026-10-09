@@ -5,6 +5,7 @@ using OoBDev.System.Providers;
 using OoBDev.System.Security.Cryptography;
 using OoBDev.System.Text.Templating;
 using OoBDev.TestUtilities;
+using Microsoft.Extensions.Time.Testing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
@@ -93,8 +94,8 @@ public class HandlebarsTemplateProviderTests
 
         var mockRepo = new MockRepository(MockBehavior.Strict);
         var mockSource = mockRepo.Create<ITemplateSource>(MockBehavior.Loose);
-        var mockDate = mockRepo.Create<IDateTimeProvider>();
-        mockDate.Setup(s => s.Now).Returns(new DateTimeOffset(1, 2, 3, 4, 5, 6, new TimeSpan(5, 0, 0)));
+        var time = new FakeTimeProvider(new DateTimeOffset(1, 2, 2, 23, 5, 6, TimeSpan.Zero));
+        time.SetLocalTimeZone(TimeZoneInfo.CreateCustomTimeZone("test", new TimeSpan(5, 0, 0), "test", "test"));
 
         var context = new TemplateContext
         {
@@ -109,7 +110,7 @@ public class HandlebarsTemplateProviderTests
         };
 
         var provider = new HandlebarsTemplateProvider(
-            [], [], [new DateNowHelperDescriptor(mockDate.Object)],
+            [], [], [new DateNowHelperDescriptor(time)],
             TestLogger.CreateLogger<HandlebarsTemplateProvider>()
             );
 
@@ -145,8 +146,8 @@ public class HandlebarsTemplateProviderTests
 
         var mockRepo = new MockRepository(MockBehavior.Strict);
         var mockSource = mockRepo.Create<ITemplateSource>(MockBehavior.Loose);
-        var mockDate = mockRepo.Create<IDateTimeProvider>();
-        mockDate.Setup(s => s.Now).Returns(new DateTimeOffset(1, 2, 3, 4, 5, 6, new TimeSpan(5, 0, 0)));
+        var time = new FakeTimeProvider(new DateTimeOffset(1, 2, 2, 23, 5, 6, TimeSpan.Zero));
+        time.SetLocalTimeZone(TimeZoneInfo.CreateCustomTimeZone("test", new TimeSpan(5, 0, 0), "test", "test"));
 
         var context = new TemplateContext
         {
@@ -161,7 +162,7 @@ public class HandlebarsTemplateProviderTests
         };
 
         var provider = new HandlebarsTemplateProvider(
-            [], [], [new DateNowHelperDescriptor(mockDate.Object)],
+            [], [], [new DateNowHelperDescriptor(time)],
             TestLogger.CreateLogger<HandlebarsTemplateProvider>()
             );
 
