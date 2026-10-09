@@ -68,7 +68,7 @@ Questions that block or shape work in the TODO files. Each has the source it cam
 - **Source:** [TODO.md](./TODO.md) → "Backlog: Architect Answers" (OpenTelemetry / no Polly); [CLAUDE.md](./CLAUDE.md) → "Rejected and Preferred Dependencies"
 - **Question:** It depends on Polly internally. Your rule is "avoid Polly". Is using the Microsoft API (not Polly directly) acceptable?
 - **Suggestion:** Accept, since the dependency is Microsoft's.
-- **Answer:** Accept `Microsoft.Extensions.Resilience` (2026-10-09).
+- **Answer:** Accept `Microsoft.Extensions.Resilience` (2026-10-09). Recorded in the [resilience practice](docs/patterns-discovery/03-practices-and-conventions/14-resilience-practices.md#implementation); OOB0003 no longer bans `Polly`.
 
 ### Q8 — What does "async-ui" mean for API docs?
 

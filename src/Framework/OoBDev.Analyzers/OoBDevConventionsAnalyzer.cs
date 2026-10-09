@@ -41,7 +41,7 @@ public sealed class OoBDevConventionsAnalyzer : DiagnosticAnalyzer
 
     private static readonly string[] BannedNamespaces =
     [
-        "Autofac", "Serilog", "NLog", "log4net", "Ninject", "SimpleInjector", "StructureMap", "Castle.Windsor", "Polly",
+        "Autofac", "Serilog", "NLog", "log4net", "Ninject", "SimpleInjector", "StructureMap", "Castle.Windsor",
     ];
 
     /// <inheritdoc />

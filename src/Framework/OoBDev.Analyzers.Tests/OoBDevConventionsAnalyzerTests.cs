@@ -89,7 +89,6 @@ public class OoBDevConventionsAnalyzerTests
     [TestCategory(TestCategories.Unit)]
     [DataRow("using Serilog;")]
     [DataRow("using Autofac.Extensions;")]
-    [DataRow("using Polly;")]
     public async Task Analyze_BannedUsing_ReportsOOB0003(string directive)
     {
         var ids = await RunAsync(directive + "\nclass C { }");
