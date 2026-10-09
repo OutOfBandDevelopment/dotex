@@ -27,7 +27,7 @@ Order of work, with the reason for the position. Start at the top; tick items of
 
 ### 1. Fix what the OpenAPI migration left behind (small, unblocks the rest)
 - [x] (done 2026-10-09) `scripts/templates/verify-templates.ps1` failed at "test capability" with NU1008: generated projects carry `Version` on `PackageReference` while central package management is on. Remove the versions from the templates and add any missing `PackageVersion` entries; re-run until all three templates build.
-- [ ] Remove or regenerate the stale Swashbuckle pages under `docs/Libraries/OoBDev.AspNetCore.*.md` and `docs/generated/Framework/OoBDev.AspNetCore.*/SwaggerGen`; update `FEATURE_INVENTORY.md` rows that list the removed Swagger classes; rename `.claude/protocols/software/template-swagger-documentation.md` references (`/swagger/all/swagger.json` is now `/openapi/all.json`).
+- [x] (done 2026-10-09) Removed or annotated the stale Swashbuckle pages under `docs/Libraries/OoBDev.AspNetCore.*.md` and `docs/generated/Framework/OoBDev.AspNetCore.*/SwaggerGen`; update `FEATURE_INVENTORY.md` rows that list the removed Swagger classes; rename `.claude/protocols/software/template-swagger-documentation.md` references (`/swagger/all/swagger.json` is now `/openapi/all.json`).
 
 ### 2. AsyncAPI document and viewer (phase 2 of [OpenApiScalar](docs/design/OpenApiScalar/README.md); owner request)
 - [ ] Design set `docs/design/AsyncApi/` (requirements, architecture, api-design, testing-strategy): evaluate `Saunter` and `LEGO.AsyncAPI` against a thin first-party model; channels and messages for SQS, Service Bus and RabbitMQ.
