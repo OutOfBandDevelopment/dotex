@@ -13,12 +13,12 @@ namespace OoBDev.SBert.AllMiniLmL6V2;
 public static class AllMiniLmL6V2Model
 {
     /// <summary>Hugging Face repository the files come from.</summary>
-    public const string Repository = "onnx-models/all-MiniLM-L6-v2-onnx";
+    public const string Repository = "sentence-transformers/all-MiniLM-L6-v2";
 
     /// <summary>Pinned revision (commit) of <see cref="Repository"/>.</summary>
-    public const string Revision = "75251058ddd779e3a744f87fdf63fb39681aec16";
+    public const string Revision = "1110a243fdf4706b3f48f1d95db1a4f5529b4d41";
 
-    private const string ModelSha256 = "994a58868f7abacacbf2192aa0aae8f56da8c4505dbde2740c861b24426ede6b";
+    private const string ModelSha256 = "6fd5d72fe4589f189f8ebc006442dbb529bb7ce38f8082112682524616046452";
     private const string VocabSha256 = "07eced375cec144d27c900241f3e339478dec958f92fddbc551f295c992038a3";
 
     /// <summary>
@@ -37,11 +37,11 @@ public static class AllMiniLmL6V2Model
     {
         ArgumentNullException.ThrowIfNull(options);
         options.ModelPath = DefaultFolder;
-        options.ModelFileName = "model.onnx";
+        options.ModelFileName = "onnx/model.onnx";
         options.VocabFileName = "vocab.txt";
         options.ModelFiles =
         [
-            HuggingFaceHubCache.File(Repository, Revision, "model.onnx", ModelSha256),
+            HuggingFaceHubCache.File(Repository, Revision, "onnx/model.onnx", ModelSha256),
             HuggingFaceHubCache.File(Repository, Revision, "vocab.txt", VocabSha256),
         ];
     }
