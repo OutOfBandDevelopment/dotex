@@ -30,7 +30,7 @@ public class IDocumentConversionTests
     public Task ConvertAsyncTest(string resourceName, string sourceType, string targetType, string extension) =>
         InternalConvertAsyncTest(resourceName, sourceType, targetType, extension, false);
 
-    [TestCategory(TestCategories.DevLocal)]
+    [TestCategory(TestCategories.Integration)]
     [TestMethod]
     [DataRow("HelloWorld.txt", "unknown/unknown", "text/plain", ".txt")]
     [DataRow("sample1.docx", "unknown/unknown", "application/pdf", ".pdf")]

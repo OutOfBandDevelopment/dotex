@@ -17,6 +17,7 @@ using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using System.Xml;
+using System.Xml.XPath;
 using System.Xml.Linq;
 using OoBDev.System.Reflection;
 using Microsoft.Extensions.Logging;
@@ -245,6 +246,12 @@ public static class TestContextExtensions
             xNode.WriteTo(writer);
             writer.Flush();
             AddResultFile(context, file, ms.ToArray(), out outFile);
+            context.WriteLine($"{file}: Attached");
+        }
+        else if (value is IXPathNavigable navigable)
+        {
+            var file = changeExtension(composedFileName, ".xml");
+            AddResultFile(context, file, Encoding.UTF8.GetBytes(navigable.CreateNavigator()?.OuterXml ?? ""), out outFile);
             context.WriteLine($"{file}: Attached");
         }
         else if (value is JsonNode jsonNode)
