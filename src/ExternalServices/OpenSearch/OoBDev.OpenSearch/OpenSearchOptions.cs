@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace OoBDev.OpenSearch;
 
 /// <summary>
@@ -8,6 +10,7 @@ public class OpenSearchOptions
     /// <summary>
     /// Gets or sets the hostname of the OpenSearch server.
     /// </summary>
+    [Required]
     public required string HostName { get; set; }
     /// <summary>
     /// Gets or sets the port number of the OpenSearch server.
@@ -16,6 +19,7 @@ public class OpenSearchOptions
     /// <summary>
     /// Gets or sets the index name used for OpenSearch operations.
     /// </summary>
+    [Required]
     public required string IndexName { get; set; }
 
     /// <summary>
