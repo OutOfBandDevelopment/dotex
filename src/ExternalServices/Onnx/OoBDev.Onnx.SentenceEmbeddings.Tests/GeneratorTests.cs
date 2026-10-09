@@ -25,7 +25,7 @@ public class GeneratorTests
         string.Join(' ', Enumerable.Repeat("long", 600)),
     ];
 
-    [TestCategory(TestCategories.Unit)]
+    [TestCategory(TestCategories.Integration)]
     [TestMethod]
     public async Task Generate_Single_Returns384UnitVector()
     {
@@ -39,7 +39,7 @@ public class GeneratorTests
         Assert.AreEqual(1f, TensorPrimitives.Norm(result[0].Vector.Span), 1e-4f);
     }
 
-    [TestCategory(TestCategories.Unit)]
+    [TestCategory(TestCategories.Integration)]
     [TestMethod]
     public async Task Generate_Blank_ReturnsZeroVectorOfFullLength()
     {
@@ -54,7 +54,7 @@ public class GeneratorTests
         Assert.AreEqual(1f, TensorPrimitives.Norm(result[2].Vector.Span), 1e-4f);
     }
 
-    [TestCategory(TestCategories.Unit)]
+    [TestCategory(TestCategories.Integration)]
     [TestMethod]
     public async Task Generate_InBatchOrAlone_GivesSameVector()
     {
@@ -69,7 +69,7 @@ public class GeneratorTests
         }
     }
 
-    [TestCategory(TestCategories.Unit)]
+    [TestCategory(TestCategories.Integration)]
     [TestMethod]
     public async Task Generate_SmallBatchSize_GivesSameResultAsLargeBatchSize()
     {
@@ -83,7 +83,7 @@ public class GeneratorTests
             Assert.IsGreaterThan(0.9999f, TensorPrimitives.CosineSimilarity(expected[i].Vector.Span, actual[i].Vector.Span));
     }
 
-    [TestCategory(TestCategories.Unit)]
+    [TestCategory(TestCategories.Integration)]
     [TestMethod]
     public async Task Generate_ManyThreads_AllGetTheSerialResult()
     {
@@ -97,7 +97,7 @@ public class GeneratorTests
                 Assert.IsGreaterThan(0.99999f, TensorPrimitives.CosineSimilarity(serial[i].Vector.Span, run[i].Vector.Span));
     }
 
-    [TestCategory(TestCategories.Unit)]
+    [TestCategory(TestCategories.Integration)]
     [TestMethod]
     public async Task Generate_Cancelled_Throws()
     {
@@ -108,7 +108,7 @@ public class GeneratorTests
         await Assert.ThrowsAsync<OperationCanceledException>(() => generator.GenerateAsync(["text"], cancellationToken: cts.Token));
     }
 
-    [TestCategory(TestCategories.Unit)]
+    [TestCategory(TestCategories.Integration)]
     [TestMethod]
     public void GetService_ReportsMetadata()
     {
@@ -120,12 +120,12 @@ public class GeneratorTests
         Assert.AreEqual(384, metadata.DefaultModelDimensions);
     }
 
-    [TestCategory(TestCategories.Unit)]
+    [TestCategory(TestCategories.Integration)]
     [TestMethod]
     public void Create_DimensionsWithoutMatryoshka_Throws() =>
         Assert.Throws<ArgumentException>(() => TestModel.CreateGenerator(o => o.Dimensions = 128));
 
-    [TestCategory(TestCategories.Unit)]
+    [TestCategory(TestCategories.Integration)]
     [TestMethod]
     public async Task Generate_TruncatedDimensions_AreReNormalised()
     {

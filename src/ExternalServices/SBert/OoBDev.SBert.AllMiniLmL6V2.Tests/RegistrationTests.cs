@@ -26,7 +26,7 @@ public class RegistrationTests
         return services.BuildServiceProvider();
     }
 
-    [TestCategory(TestCategories.Unit)]
+    [TestCategory(TestCategories.Integration)]
     [TestMethod]
     public async Task Provider_ResolvesByDefaultAndKeys_AndEmbeds()
     {
@@ -44,7 +44,7 @@ public class RegistrationTests
         Assert.IsGreaterThan(0.9999f, TensorPrimitives.CosineSimilarity(a.Span, c.Span));
     }
 
-    [TestCategory(TestCategories.Unit)]
+    [TestCategory(TestCategories.Integration)]
     [TestMethod]
     public async Task Provider_BlankContent_ReturnsZeroVectorOfFullLength()
     {

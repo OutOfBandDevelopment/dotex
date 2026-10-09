@@ -74,7 +74,7 @@ public class PresetTests
         Assert.EndsWith(NomicEmbedTextV1_5Model.Revision, options.ModelPath);
     }
 
-    [TestCategory(TestCategories.Unit)]
+    [TestCategory(TestCategories.Integration)]
     [TestMethod]
     public void Registration_AddsKeyedServicesForBothModelsSideBySide()
     {
