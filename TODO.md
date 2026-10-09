@@ -32,10 +32,10 @@
 - Core idiom: `I{Thing}` (Abstractions project) → `{Thing}` impl → `TryAdd{Thing}Services(IServiceCollection, IConfiguration, sectionName)`; providers registered twice (default + keyed); `ISelectedService<T>` picks one via config `OoBDev::ServiceKeys::{FullTypeName}`.
 - Common layer is an *aggregator* (MSBuild glob ProjectReference include/remove), not "pure interfaces" as CLAUDE.md says.
 - **Drift:** `[ContractConfig]` is declared + documented but never read at runtime (SelectedService hard-codes its own key).
-- **Drift:** docs say .NET 9 / README.md build-enforced; code is net10.0, files are `ReadMe.{Project}.md`, missing readme is only warning OBDPK001 (error only if PackageReadmeFile set but absent).
+- **Drift:** docs say .NET 9 / README.md build-enforced; code is net10.0, files were `ReadMe.{Project}.md` (normalized to `README.{Project}.md`), missing readme is only warning OBDPK001 (error only if PackageReadmeFile set but absent).
 - **Drift:** Framework has 4 empty placeholder dirs (Generations, DataLoader, ComplexEvents, SpatialServices); arch docs reference RabbitMQ.Abstractions which does not exist.
-- `Directory.Packages.props` is empty, `ManagePackageVersionsCentrally=false` -> versions inline per csproj; analyzers block is commented out in Directory.Build.props.
-- Unrequested-by-user side observation: no Polly/OpenTelemetry/MediatR/FluentValidation/HybridCache usage anywhere.
+- Superseded 2026-10-07: central package management is on (versions only in `src/Directory.Packages.props`). Analyzers block is still commented out in Directory.Build.props (see backlog).
+- Side observation: no Polly/MediatR/FluentValidation/HybridCache usage anywhere. OpenTelemetry was added 2026-10-09 (`OoBDev.OpenTelemetry`).
 
 ---
 
@@ -64,14 +64,14 @@ Every TODO file and in-code marker was checked against the repository. The other
 
 | File | Stated status | Actually outstanding | Action |
 |------|---------------|----------------------|--------|
-| `TODO-testing-local-integration.md` | Validated, ready for CI/CD | CI workflow `.github/workflows/integration-tests.yml` is still disabled (schedule and `workflow_dispatch` commented out, only `workflow_call`); 2 of 15 services not confirmed healthy (azurinsight, servicebus); Docker stack docs under `docs/architecture/testing/` do not exist (only `README.md` and `testing-guidelines.md`) | Keep open; see backlog below |
-| `TODO-testing-live-integration.md` | Week 3 migration pending | Azure B2C tests are already `LiveIntegration` (3 tests in `OoBDev.Microsoft.Azure.B2C.Tests`, not `OoBDev.Microsoft.B2C.Tests` as the file says); Application Insights tests (10) are still `DevLocal`; Groq tests have no category at all; no `.env.liveintegration.template` or per-project README exists; no cloud docs | Keep open; fix paths |
+| `TODO-testing-local-integration.md` | Validated, ready for CI/CD | CI workflow `.github/workflows/integration-tests.yml` is still disabled (schedule and `workflow_dispatch` commented out, only `workflow_call`); 14 of 15 services healthy since 2026-10-08 (servicebus has no health check; azurinsight replaced by `otel-lgtm` on 2026-10-09); Docker stack docs under `docs/architecture/testing/` do not exist (only `README.md` and `testing-guidelines.md`) | Keep open; see backlog below |
+| `TODO-testing-live-integration.md` | Week 3 migration pending | Azure B2C tests are already `LiveIntegration` (3 tests in `OoBDev.Microsoft.Azure.B2C.Tests`, not `OoBDev.Microsoft.B2C.Tests` as the file says); the Application Insights tests were replaced by the OpenTelemetry tests (2026-10-09); Groq tests have no category at all; no `.env.liveintegration.template` or per-project README exists; no cloud docs | Keep open; fix paths |
 | `TODO-migrations*.md`, `TODO-decisions.md` | Blocked on decisions | Unchanged: BinaryDataDecoders (14+ decisions), BotChat (archive, enhance or extract), ContractParser, Tools/BulkLlm. The files say `Incoming/`; the folder is `Incoming/` | Blocked on the owner; fix folder name |
 | `Features/Caching/TODO-migrations-caching.md`, `docs/changes/migration-message-queues-2026-01-20.md` | Complete | Nothing outstanding | Archive candidates |
 | `docs/todo.md` | Wish list | 4 open wishes (below) | Folded into this file |
 | `src/Framework/OoBDev.DacFx.Tests/TODO.md` | Note | Test SQLCLR project covering all SQLCLR features | Backlog |
 | `src/Framework/OoBDev.System.Abstractions/ComponentModel/Data/TODO.md` | Note | Example project for the data annotations | Backlog |
-| `TODO.md` (this file) | Header dated 2026-01-24 | Links to `TODO-documentation.md` and `TODO-testing-infrastructure.md`, which do not exist | Remove links or create the targets |
+| `TODO.md` (this file) | Header dated 2026-01-24 | Links removed; the file now only links to `OPEN_QUESTIONS.md` and `CLAUDE.md` | Done (2026-10-09) |
 
 ### Backlog: CI/CD Enablement and Docker Test Infrastructure
 - [x] 2026-10-08: after a fresh start 14 services report healthy (azurinsight included); servicebus has no health check; nginx and opensearch-dashboards health checks fixed (nginx probed on 127.0.0.1, dashboards status call authenticated).
