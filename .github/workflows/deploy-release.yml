@@ -64,11 +64,26 @@ jobs:
           fetch-depth: 0
           persist-credentials: true
 
+      # The artifact is uploaded by the build run, not by this run, so find that run first
+      - name: Locate artifact run
+        id: artifact-run
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          RUN_ID=$(gh api "repos/$GITHUB_REPOSITORY/actions/artifacts?name=${{ inputs.artifact-name }}"             --jq '[.artifacts[] | select(.expired == false)] | sort_by(.created_at) | last | .workflow_run.id')
+          if [ -z "$RUN_ID" ] || [ "$RUN_ID" = "null" ]; then
+            echo "❌ Artifact ${{ inputs.artifact-name }} not found or expired"
+            exit 1
+          fi
+          echo "run-id=$RUN_ID" >> "$GITHUB_OUTPUT"
+
       - name: Download Package Artifacts
         uses: actions/download-artifact@v4
         with:
           name: ${{ inputs.artifact-name }}
           path: ./packages
+          run-id: ${{ steps.artifact-run.outputs.run-id }}
+          github-token: ${{ github.token }}
 
       - name: Verify packages exist
         run: |
@@ -113,6 +128,7 @@ jobs:
     if: inputs.publish-to-nuget == 'true'
     permissions:
       contents: write   # deployment tag
+      actions: read
       id-token: write   # OIDC token for NuGet trusted publishing
 
     steps:
@@ -121,11 +137,26 @@ jobs:
         with:
           dotnet-version: 10.0.x
 
+      # The artifact is uploaded by the build run, not by this run, so find that run first
+      - name: Locate artifact run
+        id: artifact-run
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          RUN_ID=$(gh api "repos/$GITHUB_REPOSITORY/actions/artifacts?name=${{ inputs.artifact-name }}"             --jq '[.artifacts[] | select(.expired == false)] | sort_by(.created_at) | last | .workflow_run.id')
+          if [ -z "$RUN_ID" ] || [ "$RUN_ID" = "null" ]; then
+            echo "❌ Artifact ${{ inputs.artifact-name }} not found or expired"
+            exit 1
+          fi
+          echo "run-id=$RUN_ID" >> "$GITHUB_OUTPUT"
+
       - name: Download Package Artifacts
         uses: actions/download-artifact@v4
         with:
           name: ${{ inputs.artifact-name }}
           path: ./packages
+          run-id: ${{ steps.artifact-run.outputs.run-id }}
+          github-token: ${{ github.token }}
 
       # Trusted publishing: exchanges the workflow's OIDC token for a short-lived API key.
       # Needs a trusted publishing policy on nuget.org and the repository variable NUGET_USER.
