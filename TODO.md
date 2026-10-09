@@ -137,7 +137,7 @@ None of these are tracked elsewhere. Triage each into fix, ticket or delete.
 ### Backlog: Patterns Discovery (Open Work)
 - [ ] Owner review of all docs under `docs/patterns-discovery/`; changes welcome along the way.
 - [ ] Build out the coverage gaps in the Documentation Coverage Gaps backlog (security beyond authentication first).
-- [ ] Update the `docs/patterns-discovery/README.md` drift table for decisions made since it was written (central package management, readme casing, keyed selection factory).
+- [x] Updated the `docs/patterns-discovery/README.md` drift table for decisions made since it was written (2026-10-09)
 - [ ] Update the `dotnet new` templates once decisions land (`AddValidatedOptions<T>()`, selection factory, SHA-512, `[LoggerMessage]`).
 
 ---

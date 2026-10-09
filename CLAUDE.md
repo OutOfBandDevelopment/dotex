@@ -308,7 +308,7 @@ OoBDev.{Layer}.{Feature}/
 - `/Incoming/CHECKLIST.md` - Incoming project investigation status
 
 ### Configuration
-- `/src/GitVersion.yml` - Semantic versioning
+- `/GitVersion.yml` - Semantic versioning
 - `/src/.runsettings` - Test configuration
 - `/.github/workflows/dotnet.yml` - CI/CD pipeline
 
