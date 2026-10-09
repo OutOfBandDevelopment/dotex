@@ -32,7 +32,7 @@ Order of work, with the reason for the position. Start at the top; tick items of
 ### 2. AsyncAPI document and viewer (phase 2 of [OpenApiScalar](docs/design/OpenApiScalar/README.md); owner request)
 - [x] Design set `docs/design/AsyncApi/` (requirements, architecture, api-design, testing-strategy): evaluate `Saunter` and `LEGO.AsyncAPI` against a thin first-party model; channels and messages for SQS, Service Bus and RabbitMQ.
 - [x] (done 2026-10-09) Implemented `OoBDev.AsyncApi`, adapter contributors, `MapAsyncApi()`, 7 Simulate tests, example wiring. [Details](docs/changes/migration-asyncapi-2026-10-09.md)
-- [ ] Follow-up: describe send-only queues by type (senders are open generics, so only configured queues are listed today); in-process contributor; check the viewer in a browser.
+- [ ] Follow-up: describe send-only queues by type (senders are open generics, so only configured queues are listed today); check the viewer in a browser; an `azure-storage-queue` contributor if wanted. No in-process contributor: an in-process queue has no server, and the channel already shows `Provider: in-process`.
 
 ### 3. Docker test infrastructure and CI (needs the owner for the merge)
 - [x] (done 2026-10-09) Port-collision hardening: every host port in `docker-compose.integration-tests.yml` is `${TEST_PORT_<NAME>:-default}` (table in `containers/testing/README.md`).
@@ -47,7 +47,7 @@ Order of work, with the reason for the position. Start at the top; tick items of
 - [ ] `DevLocal` tests kept on purpose: Ollama tests (hard-coded LAN host, model pull and delete), USB HID (hardware), `PathEx`, `MergedXPathNavigator`, `ProjectTools.FixReadmes` (hard-coded `C:\Repos` paths), Markdown `TestMethod1` (writes files), DacFx `BuildPackageTest` (hard-coded path). Revisit the Ollama ones when the owner says Ollama testing can resume.
 
 ### 5. Patterns-discovery backlogs
-Roslyn analyzers, options validation modes, `ISelectedService` rough edges, naming consistency, `Retreive` to `Retrieve`, message context caller info, `TimeProvider` replacements, HTTP querying and rights middleware. Tracked in [CLAUDE.md](./CLAUDE.md#patterns-discovery-work-branch-devpatterns-discovery); several need owner answers first.
+Roslyn analyzers, options validation modes, `ISelectedService` rough edges, naming consistency, `Retreive` to `Retrieve` (renames `ICachingProvider`/`ICachingManager.RetreiveAsync` in 12 source files, a public API break; needs the owner to choose between a rename and a correctly spelled method with the old one marked `[Obsolete]`), message context caller info, `TimeProvider` replacements, HTTP querying and rights middleware. Tracked in [CLAUDE.md](./CLAUDE.md#patterns-discovery-work-branch-devpatterns-discovery); several need owner answers first.
 
 ### 6. Blocked on the owner
 BinaryDataDecoders (14+ decisions), BotChat, ContractParser, Tools/BulkLlm, PR #28. See [OPEN_QUESTIONS.md](./OPEN_QUESTIONS.md).
