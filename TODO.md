@@ -47,7 +47,7 @@ Order of work, with the reason for the position. Start at the top; tick items of
 - [ ] `DevLocal` tests kept on purpose: Ollama tests (hard-coded LAN host, model pull and delete), USB HID (hardware), `PathEx`, `MergedXPathNavigator`, `ProjectTools.FixReadmes` (hard-coded `C:\Repos` paths), Markdown `TestMethod1` (writes files), DacFx `BuildPackageTest` (hard-coded path). Revisit the Ollama ones when the owner says Ollama testing can resume.
 
 ### 5. Patterns-discovery backlogs
-Roslyn analyzers, options validation modes (helper `AddValidatedOptions<T>()` exists in `OoBDev.System`; adopting it in the adapters, strict versus relaxed defaults and per-options annotations remain), naming consistency (provider keys done), `TimeProvider` replacements (done for the clock: `IDateTimeProvider` obsolete, remaining providers case by case), HTTP querying and rights middleware. Tracked in [CLAUDE.md](./CLAUDE.md#patterns-discovery-work-branch-devpatterns-discovery); several need owner answers first.
+Roslyn analyzers, options validation modes (helper `AddValidatedOptions<T>()` exists in `OoBDev.System`; adopting it in the adapters, strict versus relaxed defaults and per-options annotations remain), naming consistency (provider keys done), `TimeProvider` replacements (done for the clock: `IDateTimeProvider` removed, remaining providers case by case), HTTP querying and rights middleware. Tracked in [CLAUDE.md](./CLAUDE.md#patterns-discovery-work-branch-devpatterns-discovery); several need owner answers first.
 
 ### 6. Blocked on the owner
 BinaryDataDecoders (14+ decisions), BotChat, ContractParser, Tools/BulkLlm, PR #28. See [OPEN_QUESTIONS.md](./OPEN_QUESTIONS.md).

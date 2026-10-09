@@ -33,7 +33,7 @@
 
 ## Time, identity and randomness
 
-Use the injectable providers (`IDateTimeProvider`, `IGuidProvider`, `ICurrentUserAccessor`, `ITempFileFactory`) rather than `DateTime.Now`, `Guid.NewGuid()` or ambient identity, so behavior is testable ([pattern 16](../02-design-patterns/16-injectable-non-determinism.md)).
+Use the injectable providers (`TimeProvider`, `IGuidProvider`, `ICurrentUserAccessor`, `ITempFileFactory`) rather than `DateTime.Now`, `Guid.NewGuid()` or ambient identity, so behavior is testable ([pattern 16](../02-design-patterns/16-injectable-non-determinism.md)).
 
 ---
 
