@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Options;
 
-namespace OoBDev.AspNetCore.Mvc.SwaggerGen;
+namespace OoBDev.AspNetCore.Mvc.OpenApi;
 
 /// <summary>
 /// register additional ASP.Net MVC Filters

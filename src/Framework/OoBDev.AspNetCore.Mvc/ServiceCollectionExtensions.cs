@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.AspNetCore.OpenApi;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
@@ -9,16 +10,16 @@ using OoBDev.AspNetCore.Mvc.Authorization;
 using OoBDev.AspNetCore.Mvc.Filters;
 using OoBDev.AspNetCore.Mvc.Middleware;
 using OoBDev.AspNetCore.Mvc.Providers.SearchQuery;
-using OoBDev.AspNetCore.Mvc.SwaggerGen;
+using OoBDev.AspNetCore.Mvc.OpenApi;
 using OoBDev.Extensions;
 using OoBDev.System.Linq.Search;
 using OoBDev.System.Net.Http;
 using OoBDev.System.Security;
-using Swashbuckle.AspNetCore.SwaggerGen;
-using Swashbuckle.AspNetCore.SwaggerUI;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Security.Claims;
+using System.Reflection;
 using System.Security.Principal;
 
 namespace OoBDev.AspNetCore.Mvc;
@@ -77,8 +78,6 @@ public static class ServiceCollectionExtensions
         services.TryAddTransient<ICurrentUserAccessor, EnvironmentUserAccessor>();
         services.TryAddKeyedTransient<ICurrentUserAccessor, EnvironmentUserAccessor>("Environment");
 
-        services.AddSwaggerGen();
-
         if (builder.RequireAuthenticatedByDefault)
         {
             services.AddRequireAuthenticatedUser(
@@ -128,16 +127,33 @@ public static class ServiceCollectionExtensions
     }
 
     /// <summary>
-    /// Enables extensions for Swagger/OpenAPI (included in AddAspNetCoreExtensions).
+    /// Enables extensions for OpenAPI (included in AddAspNetCoreExtensions): one document named <c>all</c> and one per assembly
+    /// that contains controllers, with application info, permissions, health checks, XML documentation and search query descriptions.
     /// </summary>
-    /// <param name="services">The service collection to which Swagger/OpenAPI extensions should be added.</param>
+    /// <param name="services">The service collection to which OpenAPI extensions should be added.</param>
     /// <returns>The modified service collection.</returns>
-    public static IServiceCollection TryAddCommonOpenApiExtensions(this IServiceCollection services)
+    public static IServiceCollection TryAddCommonOpenApiExtensions(this IServiceCollection services) =>
+        services.TryAddCommonOpenApiExtensions(OpenApiDocumentCatalog.DiscoverControllerAssemblies());
+
+    /// <summary>
+    /// Enables extensions for OpenAPI (included in AddAspNetCoreExtensions) for specific controller assemblies.
+    /// </summary>
+    /// <param name="services">The service collection to which OpenAPI extensions should be added.</param>
+    /// <param name="controllerAssemblies">The assemblies that contain controllers; each gets its own document beside <c>all</c>.</param>
+    /// <returns>The modified service collection.</returns>
+    public static IServiceCollection TryAddCommonOpenApiExtensions(
+        this IServiceCollection services,
+        IEnumerable<Assembly> controllerAssemblies)
     {
-        services.AddSingleton<IConfigureOptions<SwaggerGenOptions>, AddOperationFilterOptions<FormFileOperationFilter>>();
-        services.AddSingleton<IConfigureOptions<SwaggerGenOptions>, AdditionalSwaggerGenEndpointsOptions>();
-        services.AddSingleton<IConfigureOptions<SwaggerGenOptions>, HealthCheckSwaggerGenEndpointOptions>();
-        services.AddSingleton<IConfigureOptions<SwaggerUIOptions>, AdditionalSwaggerUIEndpointsOptions>();
+        var catalog = OpenApiDocumentCatalog.From(controllerAssemblies);
+        services.TryAddSingleton(catalog);
+        services.TryAddSingleton<XmlDocumentationProvider>();
+        services.TryAddEnumerable(ServiceDescriptor.Singleton<IConfigureOptions<OpenApiOptions>, ConfigureOpenApiOptions>());
+        foreach (var name in catalog.Names)
+        {
+            services.AddOpenApi(name);
+        }
+
         services.AddControllers(opt => opt.Conventions.Add(new ApiNamespaceControllerModelConvention()));
         return services;
     }
@@ -151,7 +167,6 @@ public static class ServiceCollectionExtensions
         this IServiceCollection services
         )
     {
-        services.AddSingleton<IConfigureOptions<SwaggerGenOptions>, AddOperationFilterOptions<SearchQueryOperationFilter>>();
         services.AddSingleton<IConfigureOptions<MvcOptions>, AddMvcFilterOptions<SearchQueryResultFilter>>();
         services.AddAccessor<ISearchQuery>();
         services.TryAddSingleton<SearchQueryResultFilter>();

@@ -18,7 +18,7 @@ class. The main configuration options are:
 * `AddRequireAuthenticatedUser` This function adds authentication requirements to the service 
   collection. It takes two parameters, requireApplicationUserId and authorizationPolicyBuilder.
 
-* `TryAddCommonOpenApiExtensions` This function enables extensions for Swagger/OpenAPI.
+* `TryAddCommonOpenApiExtensions` This function enables extensions for OpenAPI (Microsoft.AspNetCore.OpenApi transformers and the Scalar API reference).
 
 * `TryAddAspNetCoreSearchQuery` This function enables extensions for shared search query 
   extensions.
@@ -57,5 +57,5 @@ public void ConfigureServices(IServiceCollection services)
 In this example, authentication is required by default, and the application user ID is also 
 required. Additionally, two authorization policies are added: one that requires 
 authentication and two specific claims (scope), and another that requires authentication 
-and a specific claim (role). Finally, the Swagger/OpenAPI and search query extensions are 
+and a specific claim (role). Finally, the OpenAPI and search query extensions are 
 enabled.

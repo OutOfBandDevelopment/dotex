@@ -1,4 +1,5 @@
-using OoBDev.AspNetCore.JwtAuthentication.SwaggerGen;
+using OoBDev.AspNetCore.JwtAuthentication.OpenApi;
+using OoBDev.AspNetCore.Mvc;
 using OoBDev.Common;
 using OoBDev.Common.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -31,7 +32,6 @@ public static class Program
             Environment.GetEnvironmentVariable("IDENTITY_PROVIDER"), ignoreCase: true, out var ip) ? ip :
             IdentityProviders.None;
         var authProvider = identityProvider != IdentityProviders.None ? $"{identityProvider}:" : "";
-        var skipHosting = bool.TryParse(Environment.GetEnvironmentVariable("SWAGGER_ONLY"), out var ret) && ret;
 
         // Add internal services
         services.TryAllCommonExtensions(
@@ -47,7 +47,7 @@ public static class Program
             jwtBuilder: new()
             {
                 JwtBearerConfigurationSection = authProvider + nameof(JwtBearerOptions),
-                OAuth2SwaggerConfigurationSection = authProvider + nameof(OAuth2SwaggerOptions),
+                OAuth2OpenApiConfigurationSection = authProvider + nameof(OAuth2OpenApiOptions),
             },
             identityBuilder: new()
             {
@@ -72,17 +72,14 @@ public static class Program
         );
 
         builder.Services.AddControllers();
-        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-        builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
 
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
+        // OpenAPI documents at /openapi/{document}.json and the Scalar API reference at /scalar
         if (app.Environment.IsDevelopment())
         {
-            app.UseSwagger();
-            app.UseSwaggerUI();
+            app.MapApiReference();
         }
 
         app.UseHttpsRedirection();
