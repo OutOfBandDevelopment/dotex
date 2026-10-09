@@ -527,6 +527,8 @@ dotnet test src/ --collect:"XPlat Code Coverage"
 ## Recently Completed Work
 
 ### 2026-10-09
+- **Azure B2C dropped** - library, tests, `IdentityProviders.AzureB2C`, example profile and test variables removed; Keycloak is the identity provider (default in `IdentityExtensionBuilder`)
+- **Test Ollama on host port 11435** - avoids the clash with a local Ollama on 11434; the in-container port is unchanged
 - **OpenTelemetry replaces Application Insights** - `OoBDev.OpenTelemetry` (config-gated `TryAddOpenTelemetryExtensions`, OTLP export, correlation and user processors), Grafana LGTM container replaces Azurinsight, Integration tests read spans and logs back from Tempo and Loki; most `DevLocal` tests fixed or moved to Unit/Integration. [Details](docs/changes/migration-opentelemetry-2026-10-09.md)
 
 ### 2026-10-08
