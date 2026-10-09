@@ -34,11 +34,11 @@ public class ServiceRegistryTests
         var provider = new Mock<IBlobContainerProvider>(MockBehavior.Loose);
         var services = new ServiceCollection()
             .AddLogging()
-            .AddKeyedTransient<IBlobContainer>("TestName", (_, _) => provider.Object)
+            .AddKeyedTransient<IBlobContainer>("test-name", (_, _) => provider.Object)
             .TryAddDocumentServices()
             .BuildServiceProvider();
 
-        var wrapper = services.GetKeyedService<IBlobContainer>("TestName");
+        var wrapper = services.GetKeyedService<IBlobContainer>("test-name");
         Assert.IsNotNull(wrapper);
     }
 }

@@ -177,3 +177,5 @@ csharp_style_var_elsewhere = true:suggestion
 dotnet_sort_system_directives_first = false
 dotnet_separate_import_directive_groups = false
 dotnet_diagnostic.IDE0005.severity = warning
+# OoBDev.Analyzers: remaining direct clock reads are a suggestion until each is moved to TimeProvider (see TODO.md)
+dotnet_diagnostic.OOB0001.severity = suggestion

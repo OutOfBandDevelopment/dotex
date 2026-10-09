@@ -19,7 +19,7 @@ Things found in the code that a new project should either fix or knowingly keep.
 | 7 | `#if DEBUG` changes the compiled API (intentional: forces child builders to be forwarded) | registration entry points | keep; build one configuration; see alternatives |
 | 8 | No options validation, no `ValidateOnStart` | all options | add validation |
 | 9 | Central package management off; versions inline | every csproj | fixed: central `Directory.Packages.props` is on (verified 2026-10-09; only `Incoming/` code keeps inline versions) |
-| 10 | Analyzers and XML-doc generation commented out | shared props | enable and gate |
+| 10 | Analyzers and XML-doc generation commented out | shared props | partly fixed: `OoBDev.Analyzers` (OOB0001 to OOB0003) is wired into every project; stock analyzers and XML-doc generation still off, enable and gate |
 | 11 | Provider key casing differs (`Redis`, `OLLAMA`, `rabbit-mq`) | adapters | constants on the abstraction |
 | 12 | MD5 as a default hash | `OoBDev.System` | prefer SHA-256 for anything security-adjacent |
 | 13 | Hard-coded 10 second restart delay | `MessageReceiverHost` | make configurable |

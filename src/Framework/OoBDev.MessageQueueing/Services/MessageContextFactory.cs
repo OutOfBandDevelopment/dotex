@@ -55,7 +55,7 @@ public class MessageContextFactory(
 
         context.SentBy = userName;
         context.SentFrom = Environment.MachineName;
-        context.SentAt = DateTimeOffset.UtcNow;
+        context.SentAt = (serviceProvider.GetService<TimeProvider>() ?? TimeProvider.System).GetUtcNow();
 
         context.ChannelType = channelType.AssemblyQualifiedName;
         context.MessageType = messageType.AssemblyQualifiedName;

@@ -95,6 +95,11 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>-->
+  <!-- OoBDev convention analyzer: OOB0001 to OOB0003; tune severities in .editorconfig -->
+  <ItemGroup Condition="'$(MSBuildProjectName)' != 'OoBDev.Analyzers' and '$(MSBuildProjectName)' != 'OoBDev.Analyzers.Tests'">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)Framework\OoBDev.Analyzers\OoBDev.Analyzers.csproj"
+                      OutputItemType="Analyzer" ReferenceOutputAssembly="false" PrivateAssets="all" />
+  </ItemGroup>
   <PropertyGroup Condition="Exists('$(SolutionDir)..\LICENSE')">
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
   </PropertyGroup>
