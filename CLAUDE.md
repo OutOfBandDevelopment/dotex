@@ -527,6 +527,7 @@ dotnet test src/ --collect:"XPlat Code Coverage"
 ## Recently Completed Work
 
 ### 2026-10-08
+- **Embedding presets and version policy** - MPNet and Nomic presets verified against Hugging Face (cosine 0.999+), shared hub cache, `GitVersion.yml`: manual major, minor per merge into main, patch is commits past the last main tag on branches. [Details](docs/changes/migration-embedding-presets-2026-10-08.md)
 - **AllMiniLmL6V2 replaces the fork** - first-party ONNX embedder and tokenizer matching the Hugging Face model (34/34), model downloaded on first use into the shared hub cache, fork and both submodules removed. [Details](docs/changes/migration-allminilml6v2-embedder-2026-10-08.md)
 - **NULL-safe vectors and CI build order** - `Parse` and matrix accessors return NULL, `SqlMatrix.Element` is `SqlDouble`, `.DB` dacpac ordering fixed, SBert model project built before the AllMiniLm tests. [Details](docs/changes/testing-vectors-sqs-moto-ci-2026-10-08.md)
 - **CI, vectors, Moto** - CI restore fixed, vector `Angle` corrected and NULL-safe, SQL Server Integration tests, Moto replaces LocalStack, SQS tests repaired. [Details](docs/changes/testing-vectors-sqs-moto-ci-2026-10-08.md)

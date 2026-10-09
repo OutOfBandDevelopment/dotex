@@ -47,7 +47,7 @@ public sealed partial class OnnxSentenceEmbeddingGenerator : IEmbeddingGenerator
         if (!File.Exists(modelFile)) throw new FileNotFoundException("Embedding model not found.", modelFile);
         if (!File.Exists(vocabFile)) throw new FileNotFoundException("Embedding vocabulary not found.", vocabFile);
 
-        _tokenizer = new SentenceTokenizer(vocabFile, _options.LowerCase, _options.MaxSequenceLength);
+        _tokenizer = new SentenceTokenizer(vocabFile, _options.LowerCase, _options.MaxSequenceLength, _options);
 
         using var sessionOptions = new SessionOptions();
         if (_options.IntraOpThreads > 0) sessionOptions.IntraOpNumThreads = _options.IntraOpThreads;
@@ -138,6 +138,7 @@ public sealed partial class OnnxSentenceEmbeddingGenerator : IEmbeddingGenerator
         var ids = new long[size];
         var mask = new long[size];
         var types = new long[size];
+        if (_tokenizer.PadId != 0) Array.Fill(ids, _tokenizer.PadId);
         for (var b = 0; b < batch.Length; b++)
         {
             var row = batch[b].Ids;
@@ -177,6 +178,7 @@ public sealed partial class OnnxSentenceEmbeddingGenerator : IEmbeddingGenerator
                     _hidden,
                     _options.Pooling,
                     pooled);
+                if (_options.LayerNormalize) EmbeddingMath.LayerNormalize(pooled);
                 if (Dimensions < _hidden) pooled = pooled[..Dimensions];
                 if (_options.Normalize || Dimensions < _hidden) EmbeddingMath.Normalize(pooled);
                 rows[b] = pooled;

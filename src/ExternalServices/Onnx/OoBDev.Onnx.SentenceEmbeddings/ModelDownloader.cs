@@ -24,11 +24,11 @@ internal static partial class ModelDownloader
             var target = Path.Combine(folder, source.FileName);
             if (File.Exists(target)) continue;
 
-            Directory.CreateDirectory(folder);
-            await using var gate = await AcquireAsync(Path.Combine(folder, source.FileName + ".lock"), cancellationToken).ConfigureAwait(false);
+            Directory.CreateDirectory(Path.GetDirectoryName(target)!); // file names may include a sub folder such as onnx/model.onnx
+            await using var gate = await AcquireAsync(target + ".lock", cancellationToken).ConfigureAwait(false);
             if (File.Exists(target)) continue; // another process finished while this one waited
 
-            var temp = Path.Combine(folder, $"{source.FileName}.{Guid.NewGuid():N}.download");
+            var temp = $"{target}.{Guid.NewGuid():N}.download";
             try
             {
                 LogDownloading(logger, source.Url, target);

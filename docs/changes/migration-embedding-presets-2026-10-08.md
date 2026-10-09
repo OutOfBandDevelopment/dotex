@@ -1,0 +1,48 @@
+# Embedding presets for MPNet and Nomic, shared Hugging Face cache, version policy
+
+**Date:** 2026-10-08 · **Epic:** AI embeddings · **Status:** Complete (GitHub run not yet observed)
+
+## Summary
+
+Two more models run on the in-process ONNX runner, `all-mpnet-base-v2` (768 dimensions) and `nomic-embed-text-v1.5` (768, Matryoshka). Their files use the same Hugging Face hub cache layout as the Python libraries, so a machine downloads each model once for every app. Both were compared with the Hugging Face originals. The same session also changed the version policy and the CI build order.
+
+## Contents
+
+- [What was built](#what-was-built)
+- [Verification](#verification)
+- [Version policy](#version-policy)
+- [Follow-up](#follow-up)
+
+## What was built
+
+**Table 1 — New projects and runner options**
+
+| Item | Purpose |
+|------|---------|
+| `OoBDev.SBert.AllMpnetBaseV2` | Preset: `sentence-transformers/all-mpnet-base-v2` at a pinned revision, `onnx/model.onnx` (about 420 MB), 384 token limit |
+| `OoBDev.SBert.NomicEmbedTextV1_5` | Preset: `nomic-ai/nomic-embed-text-v1.5` at a pinned revision, `onnx/model.onnx` (about 520 MB), default prefix `search_document: `, sizes 768 to 64 |
+| `HuggingFaceHubCache` | Cache root (`HF_HUB_CACHE`, `HF_HOME`, `XDG_CACHE_HOME`, `~/.cache/huggingface/hub`), snapshot folder and pinned download sources; the MiniLM preset uses it too |
+| `ClsToken`, `SepToken`, `UnkToken`, `PadToken`, `MaskToken` | Special tokens are options now (MPNet uses `<s>`, `</s>`, `<pad>`); the padding id fills unused positions because MPNet derives position ids from it |
+| `LayerNormalize` | Layer normalisation of the pooled vector before truncation, as the Nomic model card requires |
+| Downloader | Accepts file names with a sub folder (`onnx/model.onnx`) |
+
+Registration is keyed per model (`all-mpnet-base-v2`, `nomic-embed-text-v1.5`), so several models can be registered side by side; the first one added is also the unkeyed default.
+
+## Verification
+
+- `scripts/embeddings/make-reference-vectors.py <model> <output.json>` writes reference vectors from the original models. MPNet uses `sentence-transformers` (PyTorch weights). Nomic runs the official ONNX file with the Hugging Face tokenizer and the model card steps (mean pooling, layer norm, truncate, normalise), because the sentence-transformers wrapper needs `trust_remote_code`.
+- `PresetReferenceTests` (Integration category, downloads the models): MPNet 35 of 35 items, Nomic 34 of 34 at 768 dimensions and 34 of 34 at 256 dimensions, all at cosine 0.999 or better (minimum rounds to 1.00000).
+- A cold download into an empty `HF_HUB_CACHE` produced the standard `models--org--name/snapshots/revision/onnx/model.onnx` layout and passed the SHA-256 check.
+- 33 runner tests pass, including the earlier MiniLM comparison, so the tokenizer change did not move it.
+
+## Version policy
+
+`GitVersion.yml`: major is bumped by hand (`+semver: major` in a commit message), main bumps minor on every merge and is tagged `vX.Y.Z`, other branches build `major.minor.<commits past the last main tag>-<branch>` and are no longer tagged (branch tags would reset the commit count). The workflow computes the branch version from `commitsSinceVersionSource`.
+
+## Follow-up
+
+- The MiniLM preset still uses the `onnx-models` mirror; the official `sentence-transformers/all-MiniLM-L6-v2` repo also has `onnx/model.onnx`, which would share the Python cache folder exactly (needs the hash and a re-run of the comparison).
+- The earlier MiniLM tests that download the model are still in the Unit category.
+- Linux/ICU accent stripping and the example web API run remain unverified.
+
+[↑ Change index](README.md)

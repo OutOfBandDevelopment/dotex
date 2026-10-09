@@ -38,6 +38,21 @@ public class OnnxSentenceEmbeddingOptions
     /// <summary>Lower-case text before tokenizing (true for uncased vocabularies).</summary>
     public bool LowerCase { get; set; } = true;
 
+    /// <summary>Start marker token (BERT <c>[CLS]</c>, MPNet <c>&lt;s&gt;</c>).</summary>
+    public string ClsToken { get; set; } = "[CLS]";
+
+    /// <summary>End marker token (BERT <c>[SEP]</c>, MPNet <c>&lt;/s&gt;</c>).</summary>
+    public string SepToken { get; set; } = "[SEP]";
+
+    /// <summary>Token for words missing from the vocabulary.</summary>
+    public string UnkToken { get; set; } = "[UNK]";
+
+    /// <summary>Padding token; its id fills the unused positions of a batch (MPNet derives position ids from it).</summary>
+    public string PadToken { get; set; } = "[PAD]";
+
+    /// <summary>Mask token; kept as one token when it appears literally in the text.</summary>
+    public string MaskToken { get; set; } = "[MASK]";
+
     /// <summary>Name of the token id input.</summary>
     public string InputIdsName { get; set; } = "input_ids";
 
@@ -49,6 +64,9 @@ public class OnnxSentenceEmbeddingOptions
 
     /// <summary>Pooling over the token vectors.</summary>
     public EmbeddingPooling Pooling { get; set; } = EmbeddingPooling.Mean;
+
+    /// <summary>Apply layer normalisation (no scale or shift) to the pooled vector before truncating, as nomic-embed-text does for Matryoshka sizes.</summary>
+    public bool LayerNormalize { get; set; }
 
     /// <summary>Scale each vector to unit length.</summary>
     public bool Normalize { get; set; } = true;
@@ -69,6 +87,8 @@ public class OnnxSentenceEmbeddingOptions
         if (MaxSequenceLength < 3) throw new ArgumentException("MaxSequenceLength must be at least 3.", nameof(MaxSequenceLength));
         if (MaxBatchSize < 1) throw new ArgumentException("MaxBatchSize must be at least 1.", nameof(MaxBatchSize));
         if (MaxConcurrentInferences < 1) throw new ArgumentException("MaxConcurrentInferences must be at least 1.", nameof(MaxConcurrentInferences));
+        foreach (var (name, value) in new[] { (nameof(ClsToken), ClsToken), (nameof(SepToken), SepToken), (nameof(UnkToken), UnkToken), (nameof(PadToken), PadToken), (nameof(MaskToken), MaskToken) })
+            if (string.IsNullOrEmpty(value)) throw new ArgumentException($"{name} is required.", name);
         if (IntraOpThreads < 0) throw new ArgumentException("IntraOpThreads cannot be negative.", nameof(IntraOpThreads));
         if (Dimensions is { } d)
         {

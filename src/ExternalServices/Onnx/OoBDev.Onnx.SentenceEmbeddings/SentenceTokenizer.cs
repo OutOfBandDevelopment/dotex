@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace OoBDev.Onnx.SentenceEmbeddings;
@@ -15,7 +16,7 @@ internal sealed class SentenceTokenizer
 {
     private const int MaxCharsPerWord = 100;
     private const string ContinuationPrefix = "##";
-    private static readonly string[] _specialTokens = ["[CLS]", "[SEP]", "[UNK]", "[PAD]", "[MASK]"];
+    private readonly string[] _specialTokens;
 
     private readonly Dictionary<string, int> _vocabulary;
     private readonly bool _lowerCase;
@@ -24,7 +25,10 @@ internal sealed class SentenceTokenizer
     private readonly int _sepId;
     private readonly int _unkId;
 
-    public SentenceTokenizer(string vocabPath, bool lowerCase, int maxSequenceLength)
+    /// <summary>Id of the padding token.</summary>
+    public int PadId { get; }
+
+    public SentenceTokenizer(string vocabPath, bool lowerCase, int maxSequenceLength, OnnxSentenceEmbeddingOptions tokens)
     {
         _vocabulary = new Dictionary<string, int>(StringComparer.Ordinal);
         var id = 0;
@@ -33,9 +37,11 @@ internal sealed class SentenceTokenizer
 
         _lowerCase = lowerCase;
         _maxSequenceLength = maxSequenceLength;
-        _clsId = Required("[CLS]");
-        _sepId = Required("[SEP]");
-        _unkId = Required("[UNK]");
+        _clsId = Required(tokens.ClsToken);
+        _sepId = Required(tokens.SepToken);
+        _unkId = Required(tokens.UnkToken);
+        PadId = Required(tokens.PadToken);
+        _specialTokens = [.. new[] { tokens.ClsToken, tokens.SepToken, tokens.UnkToken, tokens.PadToken, tokens.MaskToken }.Distinct(StringComparer.Ordinal)];
     }
 
     private int Required(string token) =>
@@ -56,7 +62,7 @@ internal sealed class SentenceTokenizer
             var end = special is null ? text.Length : index;
             AppendText(text.AsSpan(position, end - position), ids, limit);
             if (special is null) break;
-            if (ids.Count < limit) ids.Add(_vocabulary[special]);
+            if (ids.Count < limit && _vocabulary.TryGetValue(special, out var specialId)) ids.Add(specialId);
             position = end + special.Length;
         }
 
@@ -64,7 +70,7 @@ internal sealed class SentenceTokenizer
         return ids;
     }
 
-    private static (string? Token, int Index) FindSpecialToken(string text, int start)
+    private (string? Token, int Index) FindSpecialToken(string text, int start)
     {
         string? found = null;
         var foundAt = -1;

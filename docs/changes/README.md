@@ -114,6 +114,10 @@ Each change document should include:
 - First-party in-process all-MiniLM-L6-v2 embedder verified against Hugging Face; model downloaded on first use; fork and submodules removed
 - Status: ✅ Complete (GitHub run not yet observed)
 
+**[migration-embedding-presets-2026-10-08.md](migration-embedding-presets-2026-10-08.md)**
+- MPNet and Nomic presets on the ONNX runner, compared with Hugging Face; shared hub cache; version policy
+- Status: ✅ Complete (GitHub run not yet observed)
+
 ### Testing
 
 **[testing-vectors-sqs-moto-ci-2026-10-08.md](testing-vectors-sqs-moto-ci-2026-10-08.md)**
