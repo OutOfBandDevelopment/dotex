@@ -527,6 +527,7 @@ dotnet test src/ --collect:"XPlat Code Coverage"
 ## Recently Completed Work
 
 ### 2026-10-09
+- **Framework cleanup (unreleased, breaking)** - `ISelectedService<T>` replaced by `TryAddConfiguredKeyedService<T>` (caching path `OoBDev:CachingProvider:Type`), `IDateTimeProvider` removed for `TimeProvider`, `Retreive` renamed `Retrieve`, hash/serializer/HMAC provider keys lower-case kebab-case, message caller info via caller attributes, `AddValidatedOptions<T>()` added (adapter adoption blocked by the Abstractions-only reference rule, see TODO.md), Groq live tests on `openai/gpt-oss-20b`
 - **Integration test stack** - every host port overridable via `TEST_PORT_<NAME>`; Docker docs under `docs/architecture/testing/integration/` (infrastructure, services, dependency matrix, writing tests)
 - **AsyncAPI document and viewer** - `OoBDev.AsyncApi` (thin first-party AsyncAPI 3.0 model and builder), `IAsyncApiContributor` in the SQS, Service Bus and RabbitMQ adapters, `MapAsyncApi()` (`/asyncapi/{name}.json` and viewer), 7 Simulate tests. [Details](docs/changes/migration-asyncapi-2026-10-09.md)
 - **Swashbuckle replaced by OpenAPI transformers and Scalar** - `Microsoft.AspNetCore.OpenApi` documents (`/openapi/{name}.json`, `all` plus one per assembly), custom filters ported to transformers, Scalar reference with OAuth2 authorization code and PKCE, 4 Simulate tests; AsyncAPI viewer is phase 2. [Details](docs/changes/migration-openapi-scalar-2026-10-09.md)
