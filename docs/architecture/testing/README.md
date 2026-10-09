@@ -11,7 +11,7 @@ Comprehensive testing standards, guidelines, and best practices for the OoBDev f
 | Document | Purpose |
 |----------|---------|
 | [Testing Guidelines](./testing-guidelines.md) | Comprehensive testing standards and patterns |
-| [Test Variables Reference](../../TEST_VARIABLES.md) | All test properties and configuration |
+| [Test Variables Reference](../../../TEST_VARIABLES.md) | All test properties and configuration |
 | [Integration Testing](./integration/README.md) | Docker stack: topology, ports, services, dependency matrix, writing tests |
 | [Docker Infrastructure](../../../containers/testing/README.md) | Docker-based integration testing setup |
 
@@ -135,7 +135,7 @@ public class MyServiceIntegrationTests
 ## Related Documentation
 
 - [Testing Guidelines](./testing-guidelines.md) - Full testing standards
-- [Test Variables Reference](../../TEST_VARIABLES.md) - Complete property list
+- [Test Variables Reference](../../../TEST_VARIABLES.md) - Complete property list
 - [Docker Infrastructure](../../../containers/testing/README.md) - Docker setup
 - [Integration Test Protocol](../../../.claude/protocols/software/integration-test-maintenance.md) - Maintenance checklist
 
