@@ -1,5 +1,7 @@
 # OoBDev.AspNetCore.JwtAuthentication
 
+> **Note (2026-10-09):** this generated page predates the move from Swashbuckle to `Microsoft.AspNetCore.OpenApi` and Scalar. The `SwaggerGen` classes described below were removed; see [OpenApiScalar](../design/OpenApiScalar/README.md) for the current types.
+
 
 ## Class: AspNetCore.JwtAuthentication.JwtExtensionBuilder
 Represents a builder for configuring JWT extensions. 

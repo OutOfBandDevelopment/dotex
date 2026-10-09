@@ -32,7 +32,7 @@ This protocol defines procedures for reviewing and maintaining documentation rel
 | API Spec              | `docs/swagger.json` or `openapi.yaml`     | OpenAPI spec with extensions     |
 | Entity Models         | `src/Models/`                             | Models with metadata attributes  |
 | Metadata Attributes   | `src/Common/Metadata/`                    | Attribute definitions            |
-| Schema Filters        | `src/Common/SwaggerGen/`                  | Swagger extension processors     |
+| Schema Filters        | `src/Framework/OoBDev.AspNetCore.Mvc/OpenApi/`                  | Swagger extension processors     |
 | Template Helpers      | `src/Common/Helpers/`                     | Custom template helpers          |
 | Template Engine CLI   | `src/Tools/TemplateEngine/`               | Code generation tool             |
 
@@ -87,7 +87,7 @@ find src -name "*Attribute.cs" -path "*/Metadata/*" | wc -l
 cat swagger.json | grep -o '"x-[^"]*"' | sort | uniq
 
 # Step 3: Verify schema filter processes all attributes
-cat src/Common/SwaggerGen/MetadataSchemaFilter.cs
+cat src/Framework/OoBDev.AspNetCore.Mvc/OpenApi/SearchQuerySchemaTransformer.cs
 ```
 
 **Extension Categories:**
@@ -188,7 +188,7 @@ find generated -name "*.ts" | wc -l
 # Regenerate swagger.json
 dotnet build src/API
 dotnet run --project src/API
-curl http://localhost:5000/swagger/all/swagger.json > swagger.json
+curl http://localhost:5000/openapi/all.json > swagger.json
 
 # Verify extension count
 cat swagger.json | grep -o '"x-[^"]*"' | sort | uniq -c | sort -rn
