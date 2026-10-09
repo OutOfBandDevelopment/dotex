@@ -4,7 +4,7 @@
 
 Comprehensive testing standards and best practices for the OoBDev framework.
 
-> **Quick Reference:** [TEST_VARIABLES.md](../../../../TEST_VARIABLES.md) - All test properties and configuration
+> **Quick Reference:** [TEST_VARIABLES.md](../../../TEST_VARIABLES.md) - All test properties and configuration
 
 ---
 
@@ -833,7 +833,7 @@ public void MathOperation_ShouldReturnExpectedValue()
 ## Related Documentation
 
 - [Testing README](./README.md) - Testing documentation index
-- [TEST_VARIABLES.md](../../../../TEST_VARIABLES.md) - Complete test property reference
+- [TEST_VARIABLES.md](../../../TEST_VARIABLES.md) - Complete test property reference
 - [TestCategories.cs](../../../src/Framework/OoBDev.TestUtilities/TestCategories.cs) - Category definitions
 - [Docker Infrastructure](../../../containers/testing/README.md) - Docker setup guide
 - [Integration Test Protocol](../../../.claude/protocols/software/integration-test-maintenance.md) - Maintenance checklist
