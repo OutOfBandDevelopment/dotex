@@ -61,6 +61,9 @@ jobs:
   deploy:
     needs: find-artifact
     uses: ./.github/workflows/deploy-release.yml
+    permissions:
+      contents: write
+      id-token: write
     with:
       artifact-name: ${{ needs.find-artifact.outputs.artifact-name }}
       publish-to-nuget: ${{ inputs.publish-to-nuget || 'false' }}
