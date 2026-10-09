@@ -13,10 +13,15 @@ namespace OoBDev.Onnx.SentenceEmbeddings;
 /// Downloads missing model files into the model folder on first use. Safe for several processes that share the folder
 /// (for example a mapped volume): a lock file serialises the download, and a file only appears once its hash is verified.
 /// </summary>
-internal static partial class ModelDownloader
+public static partial class ModelDownloader
 {
     private static readonly HttpClient _client = new() { Timeout = Timeout.InfiniteTimeSpan };
 
+    /// <summary>Downloads the sources that are missing from the folder; existing files are not re-hashed.</summary>
+    /// <param name="folder">Target folder.</param>
+    /// <param name="sources">Files to ensure.</param>
+    /// <param name="logger">Logger.</param>
+    /// <param name="cancellationToken">Cancellation.</param>
     public static async Task EnsureAsync(string folder, IEnumerable<ModelFileSource> sources, ILogger logger, CancellationToken cancellationToken)
     {
         foreach (var source in sources)
