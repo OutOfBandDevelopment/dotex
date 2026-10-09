@@ -173,9 +173,9 @@ jobs:
           SBERT_URL: http://localhost:5080
 
           # Ollama
-          OLLAMA_URL: http://localhost:11434
+          OLLAMA_URL: http://localhost:11435
           OLLAMA_HOST: localhost
-          OLLAMA_PORT: 11434
+          OLLAMA_PORT: 11435
           OLLAMA_MODEL: phi3
 
           # Redis

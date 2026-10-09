@@ -1135,9 +1135,9 @@ Within each section:
 
 | Variable | Type | Default | Description |
 |----------|------|---------|-------------|
-| `OLLAMA_URL` | string | http://localhost:11434 | API URL |
+| `OLLAMA_URL` | string | http://localhost:11435 | API URL |
 | `OLLAMA_HOST` | string | localhost | Host |
-| `OLLAMA_PORT` | int | 11434 | Port |
+| `OLLAMA_PORT` | int | 11435 | Port |
 | `OLLAMA_MODEL` | string | phi3 | Default model name |
 
 ---

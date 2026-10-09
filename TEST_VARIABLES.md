@@ -224,13 +224,13 @@ Tests that require live cloud credentials. Manual execution only.
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `OLLAMA_URL` | `http://localhost:11434` | Ollama HTTP API endpoint |
+| `OLLAMA_URL` | `http://localhost:11435` | Ollama HTTP API endpoint |
 | `OLLAMA_HOST` | `localhost` | Ollama host |
-| `OLLAMA_PORT` | `11434` | Ollama port |
+| `OLLAMA_PORT` | `11435` | Ollama port |
 | `OLLAMA_MODEL` | `phi3` | Model name to use for testing |
 | `OLLAMA_EMBEDDING_MODEL` | `all-minilm` | Embedding model (chat models such as phi3 reject embedding requests) |
 
-**Docker Container:** `ollama/ollama:latest` (Port 11434)
+**Docker Container:** `ollama/ollama:latest` (Host port 11435, container 11434)
 
 **Setup Required:**
 - After container start, run `./scripts/setup-ollama.sh` to pull the model

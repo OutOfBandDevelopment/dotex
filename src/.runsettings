@@ -175,9 +175,9 @@ https://github.com/coverlet-coverage/coverlet/blob/fc7ec26dcaed8fedba880ff13c6f1
 		<Parameter name="SBERT_PORT" value="5080" />
 
 		<!-- Ollama (LLM Inference) -->
-		<Parameter name="OLLAMA_URL" value="http://localhost:11434" />
+		<Parameter name="OLLAMA_URL" value="http://localhost:11435" />
 		<Parameter name="OLLAMA_HOST" value="localhost" />
-		<Parameter name="OLLAMA_PORT" value="11434" />
+		<Parameter name="OLLAMA_PORT" value="11435" />
 		<Parameter name="OLLAMA_MODEL" value="phi3" />
 		<Parameter name="OLLAMA_EMBEDDING_MODEL" value="all-minilm" />
 
