@@ -180,8 +180,8 @@ Each change document should include:
 
 ### When Referencing Archived Work
 
-- Link from TODO files: `[Details](docs/changes/{document}.md)`
-- Link from CLAUDE.md: `**Details:** [docs/changes/{document}.md](docs/changes/{document}.md)`
+- Link from TODO files: a "Details" link whose target is the change document path under `docs/changes/`
+- Link from CLAUDE.md: a "**Details:**" link with the same path as target and text
 - Direct reference: Check this README for list of available documents
 
 ---

@@ -67,7 +67,7 @@ Every TODO file and in-code marker was checked against the repository. The other
 | `TODO-testing-local-integration.md` | Validated, ready for CI/CD | CI workflow `.github/workflows/integration-tests.yml` is still disabled (schedule and `workflow_dispatch` commented out, only `workflow_call`); 2 of 15 services not confirmed healthy (azurinsight, servicebus); Docker stack docs under `docs/architecture/testing/` do not exist (only `README.md` and `testing-guidelines.md`) | Keep open; see backlog below |
 | `TODO-testing-live-integration.md` | Week 3 migration pending | Azure B2C tests are already `LiveIntegration` (3 tests in `OoBDev.Microsoft.Azure.B2C.Tests`, not `OoBDev.Microsoft.B2C.Tests` as the file says); Application Insights tests (10) are still `DevLocal`; Groq tests have no category at all; no `.env.liveintegration.template` or per-project README exists; no cloud docs | Keep open; fix paths |
 | `TODO-migrations*.md`, `TODO-decisions.md` | Blocked on decisions | Unchanged: BinaryDataDecoders (14+ decisions), BotChat (archive, enhance or extract), ContractParser, Tools/BulkLlm. The files say `Incoming/`; the folder is `Incoming/` | Blocked on the owner; fix folder name |
-| `Features/Caching/TODO-migrations-caching.md`, `docs/changes/TODO-migrations-message-queues.md` | Complete | Nothing outstanding | Archive candidates |
+| `Features/Caching/TODO-migrations-caching.md`, `docs/changes/migration-message-queues-2026-01-20.md` | Complete | Nothing outstanding | Archive candidates |
 | `docs/todo.md` | Wish list | 4 open wishes (below) | Folded into this file |
 | `src/Framework/OoBDev.DacFx.Tests/TODO.md` | Note | Test SQLCLR project covering all SQLCLR features | Backlog |
 | `src/Framework/OoBDev.System.Abstractions/ComponentModel/Data/TODO.md` | Note | Example project for the data annotations | Backlog |
@@ -114,7 +114,7 @@ Every TODO file and in-code marker was checked against the repository. The other
 ### Backlog: Housekeeping
 - [ ] Refresh this file's header date, move the ✅ list to a change document, and fix or remove the links to the non-existent `TODO-documentation.md` and `TODO-testing-infrastructure.md`.
 - [x] Renamed `Incomming` references to `Incoming` across TODO files and `CLAUDE.md` (2026-10-09).
-- [ ] Archive the two completed TODO files (caching, message queues) per the archival protocol.
+- [x] Archived the two completed TODO files: caching was already a summary stub with a link; the message queue file became its change document `docs/changes/migration-message-queues-2026-01-20.md` (2026-10-09)
 - [x] Fixed the wrong test project paths in `TODO-testing-live-integration.md` (2026-10-09)
 
 ### Backlog: In-Code TODO Markers (86 comments in 62 files, grouped)
