@@ -90,6 +90,7 @@ jobs:
     uses: ./.github/workflows/deploy-release.yml
     permissions:
       contents: write
+      actions: read
       id-token: write
     with:
       artifact-name: ${{ needs.find-artifact.outputs.artifact-name }}
