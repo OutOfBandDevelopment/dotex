@@ -51,11 +51,6 @@ The nginx reverse proxy provides a unified web interface to all services with di
 
 ```plantuml
 @startuml
-!define CONTAINER_BG_COLOR #E8F4F8
-!define DATABASE_BG_COLOR #E8FFE8
-!define QUEUE_BG_COLOR #FFF4E8
-!define IDENTITY_BG_COLOR #F0E8FF
-!define AI_BG_COLOR #FFE8CC
 
 skinparam componentStyle rectangle
 
@@ -63,65 +58,65 @@ skinparam componentStyle rectangle
 package "oobd-integration-test-net (Bridge Network)" {
 
     ' Stateless Services
-    component "Apache Tika\n:9998" <<Container>> #CONTAINER_BG_COLOR {
+    component "Apache Tika\n:9998" <<Container>> #E8F4F8 {
         [Document Parser]
     }
 
-    component "SMTP4Dev\n:25, :7777" <<Container>> #CONTAINER_BG_COLOR {
+    component "SMTP4Dev\n:25, :7777" <<Container>> #E8F4F8 {
         [Email Server]
     }
 
     ' Stateful Services - Databases
-    component "SQL Server\n:1433" <<Container>> #DATABASE_BG_COLOR {
+    component "SQL Server\n:1433" <<Container>> #E8FFE8 {
         database "SQL DB" as sqldb
     }
 
-    component "MongoDB\n:27017" <<Container>> #DATABASE_BG_COLOR {
+    component "MongoDB\n:27017" <<Container>> #E8FFE8 {
         database "Mongo DB" as mongodb
     }
 
-    component "OpenSearch\n:9200, :9600" <<Container>> #DATABASE_BG_COLOR {
+    component "OpenSearch\n:9200, :9600" <<Container>> #E8FFE8 {
         database "Search Index" as opensearch
     }
 
-    component "Qdrant\n:6333, :6334" <<Container>> #DATABASE_BG_COLOR {
+    component "Qdrant\n:6333, :6334" <<Container>> #E8FFE8 {
         database "Vector DB" as qdrant
     }
 
     ' Messaging & Caching Services
-    component "RabbitMQ\n:5673, :15672" <<Container>> #QUEUE_BG_COLOR {
+    component "RabbitMQ\n:5673, :15672" <<Container>> #FFF4E8 {
         queue "Message Queue" as rabbitmq
     }
 
-    component "Redis\n:6379" <<Container>> #DATABASE_BG_COLOR {
+    component "Redis\n:6379" <<Container>> #E8FFE8 {
         database "Cache Store" as redis
     }
 
     ' Cloud Emulators
-    component "Azurite\n:10000-10002" <<Container>> #CONTAINER_BG_COLOR {
+    component "Azurite\n:10000-10002" <<Container>> #E8F4F8 {
         [Azure Storage\nEmulator]
     }
 
-    component "Moto\n:4566" <<Container>> #CONTAINER_BG_COLOR {
+    component "Moto\n:4566" <<Container>> #E8F4F8 {
         [AWS Services\nEmulator]
     }
 
     ' Identity Services
-    component "Keycloak\n:8081" <<Container>> #IDENTITY_BG_COLOR {
+    component "Keycloak\n:8081" <<Container>> #F0E8FF {
         [Identity &\nAccess Mgmt]
     }
 
     ' AI/ML Services
-    component "SBert\n:5080" <<Container>> #AI_BG_COLOR {
+    component "SBert\n:5080" <<Container>> #FFE8CC {
         [Sentence\nEmbeddings]
     }
 
-    component "Ollama\n:11435" <<Container>> #AI_BG_COLOR {
+    component "Ollama\n:11435" <<Container>> #FFE8CC {
         [LLM Inference\n(phi3)]
     }
 
     ' Monitoring Emulator
-    component "OTel LGTM\n:3000 :4317 :4318" <<Container>> #CONTAINER_BG_COLOR {
+    component "OTel LGTM\n:3000 :4317 :4318" <<Container>> #E8F4F8 {
         [OTLP receiver, Tempo,\nLoki, Grafana]
     }
 }
@@ -599,8 +594,34 @@ lsof -i :27017
 netstat -ano | findstr :1433
 netstat -ano | findstr :27017
 
-# Stop conflicting process or change port mapping in docker-compose file
+# Stop the conflicting process, or move the test stack to other host ports (below)
 ```
+
+**Overriding host ports.** Every host port in `docker-compose.integration-tests.yml` is `${TEST_PORT_<NAME>:-default}`; the defaults are unchanged. Set the variable in the shell or in `containers/testing/.env` before starting the stack:
+
+**Table 1 — Port overrides**
+
+| Variable | Default | Service |
+|----------|---------|---------|
+| `TEST_PORT_SMTP_WEB`, `TEST_PORT_SMTP`, `TEST_PORT_IMAP` | 7777, 25, 143 | smtp4dev |
+| `TEST_PORT_TIKA` | 9998 | Apache Tika |
+| `TEST_PORT_MONGODB` | 27017 | MongoDB |
+| `TEST_PORT_SQLSERVER` | 1433 | SQL Server |
+| `TEST_PORT_RABBITMQ`, `TEST_PORT_RABBITMQ_MGMT` | 5673, 15672 | RabbitMQ (AMQP, management) |
+| `TEST_PORT_REDIS` | 6379 | Redis |
+| `TEST_PORT_OPENSEARCH`, `TEST_PORT_OPENSEARCH_PERF` | 9200, 9600 | OpenSearch |
+| `TEST_PORT_OPENSEARCH_DASHBOARDS` | 5601 | OpenSearch Dashboards |
+| `TEST_PORT_QDRANT`, `TEST_PORT_QDRANT_GRPC` | 6333, 6334 | Qdrant |
+| `TEST_PORT_AZURITE_BLOB`, `TEST_PORT_AZURITE_QUEUE`, `TEST_PORT_AZURITE_TABLE` | 10000, 10001, 10002 | Azurite |
+| `TEST_PORT_MOTO` | 4566 | Moto |
+| `TEST_PORT_SERVICEBUS` | 5672 | Service Bus emulator |
+| `TEST_PORT_GRAFANA`, `TEST_PORT_OTLP_GRPC`, `TEST_PORT_OTLP_HTTP` | 3000, 4317, 4318 | Grafana LGTM |
+| `TEST_PORT_KEYCLOAK` | 8081 | Keycloak |
+| `TEST_PORT_NGINX` | 8080 | Dashboard |
+| `TEST_PORT_SBERT` | 5080 | SBert |
+| `TEST_PORT_OLLAMA` | 11435 | Ollama |
+
+Container-internal ports and health checks do not change. The tests read ports from `src/.runsettings`, so run them with a copy of that file that carries the same values (for example `RABBITMQ_PORT`, `MONGODB_CONNECTION_STRING`).
 
 ### Disk Space Issues
 

@@ -34,7 +34,7 @@ jobs:
 
           if [ -z "$ARTIFACT" ]; then
             # Auto-detect latest successful build artifact
-            RUN_ID=$(gh run list --workflow dotnet.yml --status success --limit 1 --json number -q '.[0].number')
+            RUN_ID=$(gh run list --branch main --workflow dotnet.yml --status success --limit 1 --json databaseId -q '.[0].databaseId')
 
             if [ -z "$RUN_ID" ] || [ "$RUN_ID" = "null" ]; then
               echo "❌ No successful build runs found"
@@ -57,10 +57,14 @@ jobs:
           echo "✅ Using artifact: $ARTIFACT"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
 
   deploy:
     needs: find-artifact
     uses: ./.github/workflows/deploy-release.yml
+    permissions:
+      contents: write
+      id-token: write
     with:
       artifact-name: ${{ needs.find-artifact.outputs.artifact-name }}
       publish-to-nuget: ${{ inputs.publish-to-nuget || 'false' }}
