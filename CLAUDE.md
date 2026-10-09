@@ -206,7 +206,7 @@ OoBDev.{Layer}.{Feature}/
 - Implementations: `{Name}` (no suffix)
 - Providers: `{Name}Provider`
 - Factories: `{Name}Factory`
-- Extensions: `{Name}Extensions`; DI registration class is always `ServiceCollectionExtensions` (never `ServiceCollectionEx`; 6 projects still to rename, see TODO.md)
+- Extensions: `{Name}Extensions`; DI registration class is always `ServiceCollectionExtensions` (never `ServiceCollectionEx`; all projects renamed 2026-10-09)
 - Provider keys: kebab-case constants in each adapter's `{Vendor}Globals` (never a global registry; keeps adapters referencing only Abstractions)
 - Prefer platform primitives (e.g. `TimeProvider`) over hand-built abstractions; inject by interface
 

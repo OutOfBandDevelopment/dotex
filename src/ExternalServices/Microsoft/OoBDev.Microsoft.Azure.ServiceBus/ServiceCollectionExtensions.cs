@@ -8,7 +8,7 @@ namespace OoBDev.Microsoft.Azure.ServiceBus;
 /// <summary>
 /// Provides extension methods for configuring Azure Service Bus services in the <see cref="IServiceCollection"/>.
 /// </summary>
-public static class ServiceCollectionEx
+public static class ServiceCollectionExtensions
 {
     /// <summary>
     /// Tries to add Azure Service Bus services to the specified <see cref="IServiceCollection"/>.

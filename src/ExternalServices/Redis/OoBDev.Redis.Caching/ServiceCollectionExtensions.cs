@@ -7,7 +7,7 @@ namespace OoBDev.Redis.Caching;
 /// Extension methods for <see cref="IServiceCollection"/> to register Redis caching services.
 /// </summary>
 [ExcludeFromCodeCoverage]
-public static class ServiceCollectionEx
+public static class ServiceCollectionExtensions
 {
     /// <summary>
     /// Registers Redis distributed caching provider services.

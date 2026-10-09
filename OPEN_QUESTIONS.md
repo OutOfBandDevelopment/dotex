@@ -115,9 +115,8 @@ Questions that block or shape work in the TODO files. Each has the source it cam
 ### Q14 — `ServiceCollectionEx` to `ServiceCollectionExtensions`
 
 - **Source:** [TODO.md](./TODO.md) → "Backlog: Naming Consistency"
-- **Question:** 6 projects still use the old name. Same question as Q13: rename with `[Obsolete]` forwarders, or rename outright?
-- **Suggestion:** Forwarders, same policy as Q13.
-- **Answer:**
+- **Question:** Resolved 2026-10-09 without needing an answer: the six classes were renamed outright. Forwarders were not possible (two classes with the same extension methods make every call ambiguous) and nothing called the old class by name.
+- **Answer:** (none needed)
 
 ## Summary of questions
 

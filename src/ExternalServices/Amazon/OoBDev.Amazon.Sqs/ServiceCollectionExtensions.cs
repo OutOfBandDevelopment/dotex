@@ -8,7 +8,7 @@ namespace OoBDev.Amazon.Sqs;
 /// <summary>
 /// Provides extension methods for configuring AWS SQS services in the <see cref="IServiceCollection"/>.
 /// </summary>
-public static class ServiceCollectionEx
+public static class ServiceCollectionExtensions
 {
     /// <summary>
     /// Tries to add AWS SQS services to the specified <see cref="IServiceCollection"/>.

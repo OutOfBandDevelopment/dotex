@@ -7,7 +7,7 @@ namespace OoBDev.Microsoft.Caching;
 /// Extension methods for <see cref="IServiceCollection"/> to register Microsoft in-memory caching services.
 /// </summary>
 [ExcludeFromCodeCoverage]
-public static class ServiceCollectionEx
+public static class ServiceCollectionExtensions
 {
     /// <summary>
     /// Registers Microsoft in-memory caching provider services.

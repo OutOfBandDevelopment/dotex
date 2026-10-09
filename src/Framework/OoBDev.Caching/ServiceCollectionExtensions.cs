@@ -9,7 +9,7 @@ namespace OoBDev.Caching;
 /// <summary>
 /// Extension methods for <see cref="IServiceCollection"/> to register caching services.
 /// </summary>
-public static class ServiceCollectionEx
+public static class ServiceCollectionExtensions
 {
     /// <summary>
     /// Registers core caching services including the caching manager and cacheable factory.

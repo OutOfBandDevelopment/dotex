@@ -288,7 +288,7 @@ Areas the patterns docs do not yet cover. Each becomes a practices page plus an 
 
 ## 📌 Backlog: Naming Consistency
 
-- [ ] **Rename `ServiceCollectionEx` to `ServiceCollectionExtensions` everywhere** (decision: `ServiceCollectionExtensions` is the standard; 44 projects already use it). Both names coexist in different namespaces, which is ambiguous for consumers importing many namespaces.
+- [x] **Renamed `ServiceCollectionEx` to `ServiceCollectionExtensions` everywhere (2026-10-09, all 6 classes and files; no forwarders, because duplicate extension methods in two classes would be ambiguous and no static callers existed)** (decision: `ServiceCollectionExtensions` is the standard; 44 projects already use it). Both names coexist in different namespaces, which is ambiguous for consumers importing many namespaces.
   - Classes to rename (file and class): `OoBDev.Amazon.Sqs`, `OoBDev.Microsoft.Azure.ServiceBus`, `OoBDev.Microsoft.Caching`, `OoBDev.RabbitMQ`, `OoBDev.Redis.Caching`, `OoBDev.Caching` (find with `grep -rl "class ServiceCollectionEx" src`).
   - Update `<see cref>` references, tests, readmes and docs that mention the old name.
   - Public API rename: check for external consumers; extension-method call sites are unaffected because only the class name changes.
