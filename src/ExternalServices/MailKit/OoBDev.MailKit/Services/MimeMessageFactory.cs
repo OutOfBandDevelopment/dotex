@@ -27,7 +27,7 @@ public class MimeMessageFactory(
         {
             From =
             {
-                InternetAddress.Parse(message.FromAddress ?? config.Value.DefaultFromEmailAddress),
+                InternetAddress.Parse((message.FromAddress ?? config.Value.DefaultFromEmailAddress)!),
             }
         };
 
@@ -45,7 +45,7 @@ public class MimeMessageFactory(
         email.Cc.AddRange(message.CcAddresses.Select(m => InternetAddress.Parse(m)));
         email.Bcc.AddRange(message.BccAddresses.Select(m => InternetAddress.Parse(m)));
 
-        email.Subject = message.Subject;
+        email.Subject = message.Subject ?? string.Empty;
 
         var bodyBuilder = new BodyBuilder();
         if (string.IsNullOrWhiteSpace(message.TextContent) && string.IsNullOrWhiteSpace(message.HtmlContent))

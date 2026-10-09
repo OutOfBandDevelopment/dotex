@@ -18,7 +18,7 @@ on:
     - 'src/**/*.props'
     - 'src/**/*.targets'
     - 'src/.runsettings'
-    - 'src/GitVersion.yml'
+    - 'GitVersion.yml'
     - '.github/workflows/dotnet.yml'
 
   pull_request:
@@ -32,7 +32,7 @@ on:
     - 'src/**/*.props'
     - 'src/**/*.targets'
     - 'src/.runsettings'
-    - 'src/GitVersion.yml'
+    - 'GitVersion.yml'
     - '.github/workflows/dotnet.yml'
 
   # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#onpull_requestpull_request_targetbranchesbranches-ignore
@@ -56,6 +56,12 @@ on:
           - ubuntu-latest
           - macos-latest
 
+# contents: write pushes the build tag; checks/pull-requests: write let the test report action publish results
+permissions:
+  contents: write
+  checks: write
+  pull-requests: write
+
 env:
   MSBUILDTERMINALLOGGER: off
 
@@ -73,13 +79,7 @@ jobs:
         persist-credentials: true
         fetch-depth: 0
         lfs: true
-        submodules: recursive
 
-      # Pull LFS files from submodules (GitHub Actions doesn't do this automatically)
-    - name: Checkout LFS files in submodules
-      shell: bash
-      run: |
-        git submodule foreach --recursive 'git lfs fetch && git lfs checkout'
 
       # https://github.com/actions/setup-dotnet
     - name: Install .Net 10.0 SDK
@@ -140,7 +140,7 @@ jobs:
         echo "PackagesPath=$packagesPath" >> "$env:GITHUB_OUTPUT"
         echo "PackagesPath=$packagesPath" >> "$env:GITHUB_ENV"
         
-        $runSettings = JOIN-PATH -Path $env:GITHUB_WORKSPACE -ChildPath ".runsettings"
+        $runSettings = JOIN-PATH -Path $env:GITHUB_WORKSPACE -ChildPath "src/.runsettings"
         echo "RunSettings=$runSettings"
         echo "RunSettings=$runSettings" >> "$env:GITHUB_OUTPUT"
         echo "RunSettings=$runSettings" >> "$env:GITHUB_ENV"
@@ -191,6 +191,7 @@ jobs:
         --no-restore
         --nologo
         --filter "TestCategory=Unit|TestCategory=Simulate"
+        --settings "${{ steps.calculate-version.outputs.RunSettings }}"
         --collect:"XPlat Code Coverage"
         --results-directory "${{ steps.calculate-version.outputs.TestResultsPath }}"
 
@@ -245,6 +246,11 @@ jobs:
         echo "Creating tag: ${TAG}"
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
+        # Re-runs of the same commit produce the same version; an existing tag is not an error
+        if git ls-remote --exit-code --tags origin "refs/tags/${TAG}" > /dev/null; then
+          echo "Tag ${TAG} already exists, skipping"
+          exit 0
+        fi
         git tag -a "${TAG}" -m "Build from branch ${{ github.ref_name }}"
         git push origin "${TAG}"
 

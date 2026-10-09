@@ -18,7 +18,7 @@ OoBDev.RabbitMQ/
 ├── RabbitMQGlobals.cs
 ├── ServiceCollectionEx.cs
 ├── OoBDev.RabbitMQ.csproj
-└── Readme.RabbitMQ.md
+└── README.RabbitMQ.md
 ```
 
 ### Key Patterns from RabbitMQ Implementation
@@ -219,7 +219,7 @@ public class RabbitMQQueueMessageProvider : IMessageSenderProvider, IMessageRece
 - [ ] Create `OoBDev.Amazon.Sqs.csproj` with:
   - [ ] TargetFramework: net10.0
   - [ ] Nullable: enable
-  - [ ] PackageReadmeFile: Readme.AmazonSqs.md
+  - [ ] PackageReadmeFile: README.AmazonSqs.md
   - [ ] Latest `AWSSDK.SQS` package
   - [ ] Microsoft.Extensions.* 10.0.2
   - [ ] GitVersion.MsBuild 6.5.1
@@ -232,7 +232,7 @@ public class RabbitMQQueueMessageProvider : IMessageSenderProvider, IMessageRece
 - [ ] `MessageQueueing/AmazonSqsMessageProvider.cs` (implements IMessageSenderProvider)
 - [ ] `AmazonSqsGlobals.cs` (contains provider key constant)
 - [ ] `ServiceCollectionEx.cs` (DI registration)
-- [ ] `Readme.AmazonSqs.md` (provider documentation)
+- [ ] `README.AmazonSqs.md` (provider documentation)
 
 ### Implementation Requirements
 - [ ] Follow exact pattern from RabbitMQ
@@ -280,7 +280,7 @@ public class RabbitMQQueueMessageProvider : IMessageSenderProvider, IMessageRece
 - [ ] Create `OoBDev.Microsoft.Azure.ServiceBus.csproj` with:
   - [ ] TargetFramework: net10.0
   - [ ] Nullable: enable
-  - [ ] PackageReadmeFile: Readme.AzureServiceBus.md
+  - [ ] PackageReadmeFile: README.AzureServiceBus.md
   - [ ] Latest `Azure.Messaging.ServiceBus` package
   - [ ] Microsoft.Extensions.* 10.0.2
   - [ ] GitVersion.MsBuild 6.5.1
@@ -293,7 +293,7 @@ public class RabbitMQQueueMessageProvider : IMessageSenderProvider, IMessageRece
 - [ ] `MessageQueueing/AzureServiceBusMessageProvider.cs` (implements IMessageSenderProvider)
 - [ ] `AzureServiceBusGlobals.cs` (contains provider key constant)
 - [ ] `ServiceCollectionEx.cs` (DI registration)
-- [ ] `Readme.AzureServiceBus.md` (provider documentation)
+- [ ] `README.AzureServiceBus.md` (provider documentation)
 
 ### Implementation Requirements
 - [ ] Follow exact pattern from RabbitMQ
@@ -362,7 +362,7 @@ public class RabbitMQQueueMessageProvider : IMessageSenderProvider, IMessageRece
 ## Documentation Requirements
 
 ### README Files
-- [ ] Create Readme.AmazonSqs.md with:
+- [ ] Create README.AmazonSqs.md with:
   - [ ] Overview of AWS SQS integration
   - [ ] Installation instructions
   - [ ] Configuration examples (standard queue, FIFO queue)
@@ -370,7 +370,7 @@ public class RabbitMQQueueMessageProvider : IMessageSenderProvider, IMessageRece
   - [ ] Feature list (message attributes, delay, etc.)
   - [ ] Troubleshooting
 
-- [ ] Create Readme.AzureServiceBus.md with:
+- [ ] Create README.AzureServiceBus.md with:
   - [ ] Overview of Azure Service Bus integration
   - [ ] Installation instructions
   - [ ] Configuration examples (queue, topic, sessions)

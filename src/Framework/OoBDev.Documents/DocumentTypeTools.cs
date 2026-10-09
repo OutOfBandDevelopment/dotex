@@ -69,7 +69,8 @@ public class DocumentTypeTools : IDocumentTypeTools
 
             Span<byte> temp = new byte[maxRead];
             var possible = _types.Where(t => t.FileHeader.Length > 0);
-            stream.Read(temp);
+            var read = stream.ReadAtLeast(temp, temp.Length, throwOnEndOfStream: false);
+            temp = temp[..read];
 
             foreach (var t in possible.Where(t => t.FileHeader.Length > 0))
                 if (temp.StartsWith(t.FileHeader))

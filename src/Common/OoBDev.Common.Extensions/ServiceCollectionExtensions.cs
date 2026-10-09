@@ -16,7 +16,7 @@ using OoBDev.OpenSearch;
 using OoBDev.Qdrant;
 using OoBDev.RabbitMQ;
 using OoBDev.SBert;
-using OoBDev.SBert.AllMiniLML6v2Sharp;
+using OoBDev.SBert.AllMiniLmL6V2;
 using OoBDev.WkHtmlToPdf;
 using OoBDev.Microsoft.Azure.StorageAccount;
 using OoBDev.Microsoft.Caching;

@@ -1,299 +1,177 @@
-﻿using Microsoft.ApplicationInsights;
-using Microsoft.ApplicationInsights.Channel;
-using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.Microsoft.ApplicationInsights.Extensibility;
 using OoBDev.System.Accessors;
 using OoBDev.System.Net.Http;
 using OoBDev.System.Security.Claims;
 using OoBDev.TestUtilities;
+using OpenTelemetry;
+using OpenTelemetry.Logs;
+using OpenTelemetry.Trace;
 using System;
 using System.Collections.Generic;
-using System.Net.Http;
+using System.Diagnostics;
+using System.Linq;
 using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace OoBDev.Microsoft.ApplicationInsights.Tests;
 
 /// <summary>
-/// Integration tests for custom Application Insights telemetry processors.
-/// Tests verify that CorrelationInfoTelemetryProcessor and UserTelemetryProcessor
-/// correctly add custom properties to telemetry items.
+/// Tests that the custom OpenTelemetry processors add correlation and user information to spans and log records.
 /// </summary>
 [TestClass]
 public class TelemetryProcessorTests
 {
-    private TelemetryClient? _telemetryClient;
-    private TelemetryConfiguration? _configuration;
-    private HttpClient? _httpClient;
-    private ServiceProvider? _serviceProvider;
+    private const string SourceName = "OoBDev.Tests.TelemetryProcessors";
 
-    /// <summary>
-    /// Gets or sets the test context which provides information about and functionality for the current test run.
-    /// </summary>
-    public required TestContext TestContext { get; set; }
-
-    [TestInitialize]
-    public void TestInitialize()
+    [TestMethod]
+    [TestCategory(TestCategories.Unit)]
+    public void CorrelationInfoTelemetryProcessor_ShouldAddCorrelationTags()
     {
-        // Get connection string from test context
-        var connectionString = TestContext.GetRequiredProperty<string>("APPINSIGHTS_CONNECTION_STRING");
-        var azurinsightUrl = TestContext.GetRequiredProperty<string>("APPINSIGHTS_URL");
+        // Stage
+        var info = new CorrelationInfo { CorrelationId = "corr-1", RequestId = "req-1" };
+        var captured = new List<Activity>();
 
-        // HTTP client for querying azurinsight API
-        _httpClient = new HttpClient
+        // Test
+        using (var provider = Sdk.CreateTracerProviderBuilder()
+            .AddSource(SourceName)
+            .AddProcessor(new CorrelationInfoTelemetryProcessor(new TestCorrelationAccessor(info)))
+            .AddProcessor(new CaptureActivityProcessor(captured))
+            .Build())
+        using (var source = new ActivitySource(SourceName))
+        using (source.StartActivity("work"))
         {
-            BaseAddress = new Uri(azurinsightUrl)
-        };
-    }
-
-    [TestCleanup]
-    public async Task TestCleanup()
-    {
-        // Flush all telemetry before cleanup
-        _telemetryClient?.Flush();
-        await Task.Delay(1000);
-
-        // Purge telemetry data from azurinsight
-        try
-        {
-            if (_httpClient != null)
-            {
-                var response = await _httpClient.PostAsync("/api/purge", null);
-                response.EnsureSuccessStatusCode();
-            }
-        }
-        catch
-        {
-            // Ignore cleanup errors
         }
 
-        _configuration?.Dispose();
-        _httpClient?.Dispose();
-        _serviceProvider?.Dispose();
+        // Assert
+        var activity = Assert.ContainsSingle(captured);
+        Assert.AreEqual("corr-1", activity.GetTagItem(DefinedHttpHeaders.CorrelationIdHeader));
+        Assert.AreEqual("req-1", activity.GetTagItem(DefinedHttpHeaders.RequestIdHeader));
     }
 
     [TestMethod]
-    [TestCategory(TestCategories.DevLocal)]
-    public async Task CorrelationInfoTelemetryProcessor_ShouldAddCorrelationHeaders()
+    [TestCategory(TestCategories.Unit)]
+    public void UserTelemetryProcessor_ShouldAddUserClaimTags()
     {
-        // Arrange
-        var correlationId = Guid.NewGuid().ToString();
-        var requestId = Guid.NewGuid().ToString();
+        // Stage
+        var captured = new List<Activity>();
 
-        var connectionString = TestContext!.GetRequiredProperty<string>("APPINSIGHTS_CONNECTION_STRING");
-        var azurinsightUrl = TestContext!.GetRequiredProperty<string>("APPINSIGHTS_URL");
-
-        // Setup DI container with correlation accessor
-        var services = new ServiceCollection();
-
-        var correlationInfo = new CorrelationInfo
+        // Test
+        using (var provider = Sdk.CreateTracerProviderBuilder()
+            .AddSource(SourceName)
+            .AddProcessor(new UserTelemetryProcessor(CreateUserAccessor("obj-1", "user-1")))
+            .AddProcessor(new CaptureActivityProcessor(captured))
+            .Build())
+        using (var source = new ActivitySource(SourceName))
+        using (source.StartActivity("work"))
         {
-            CorrelationId = correlationId,
-            RequestId = requestId
-        };
-
-        services.AddSingleton<IAccessor<CorrelationInfo>>(new TestCorrelationAccessor(correlationInfo));
-
-        _configuration = TelemetryConfiguration.CreateDefault();
-        _configuration.ConnectionString = connectionString;
-
-        // Use InMemoryChannel for immediate transmission (important for testing)
-        _configuration.TelemetryChannel = new InMemoryChannel
-        {
-            EndpointAddress = azurinsightUrl + "/v2.1/track"
-        };
-
-        // Add the correlation processor
-        var processorFactory = new TestTelemetryProcessorFactory<CorrelationInfoTelemetryProcessor>(services.BuildServiceProvider());
-        _configuration.TelemetryProcessorChainBuilder.Use(processorFactory.Create);
-        _configuration.TelemetryProcessorChainBuilder.Build();
-
-        _telemetryClient = new TelemetryClient(_configuration);
-
-        // Act
-        _telemetryClient.TrackEvent("CorrelationTest");
-        _telemetryClient.Flush();
-        await Task.Delay(2000);
-
-        // Assert
-        var response = await _httpClient!.GetAsync("/api/query");
-        response.EnsureSuccessStatusCode();
-
-        var content = await response.Content.ReadAsStringAsync();
-        Assert.Contains(correlationId, content, $"CorrelationId '{correlationId}' not found in telemetry");
-        Assert.Contains(requestId, content, $"RequestId '{requestId}' not found in telemetry");
-    }
-
-    [TestMethod]
-    [TestCategory(TestCategories.DevLocal)]
-    public async Task UserTelemetryProcessor_ShouldAddUserClaims()
-    {
-        // Arrange
-        var objectId = "test-object-id-123";
-        var userId = "test-user-id-456";
-
-        var connectionString = TestContext!.GetRequiredProperty<string>("APPINSIGHTS_CONNECTION_STRING");
-
-        this.TestContext.WriteLine($"{nameof(connectionString)}: {connectionString}");
-
-        // Setup DI container with HTTP context accessor
-        var services = new ServiceCollection();
-
-        var claims = new List<Claim>
-        {
-            new(CommonClaims.ObjectId, objectId),
-            new(CommonClaims.UserId, userId)
-        };
-        var identity = new ClaimsIdentity(claims, "TestAuth");
-        var principal = new ClaimsPrincipal(identity);
-
-        var httpContext = new DefaultHttpContext
-        {
-            User = principal
-        };
-
-        var httpContextAccessor = new TestHttpContextAccessor(httpContext);
-        services.AddSingleton<IHttpContextAccessor>(httpContextAccessor);
-
-        var azurinsightUrl = TestContext!.GetRequiredProperty<string>("APPINSIGHTS_URL");
-
-        _configuration = TelemetryConfiguration.CreateDefault();
-        _configuration.ConnectionString = connectionString;
-
-        // Use InMemoryChannel for immediate transmission (important for testing)
-        _configuration.TelemetryChannel = new InMemoryChannel
-        {
-            EndpointAddress = azurinsightUrl + "/v2.1/track"
-        };
-
-        // Add the user processor
-        var processorFactory = new TestTelemetryProcessorFactory<UserTelemetryProcessor>(services.BuildServiceProvider());
-        _configuration.TelemetryProcessorChainBuilder.Use(processorFactory.Create);
-        _configuration.TelemetryProcessorChainBuilder.Build();
-
-        _telemetryClient = new TelemetryClient(_configuration);
-
-        // Act
-        _telemetryClient.TrackEvent("UserTest");
-        _telemetryClient.Flush();
-        await Task.Delay(2000);
-
-        // Assert
-        var response = await _httpClient!.GetAsync("/api/query");
-        response.EnsureSuccessStatusCode();
-
-        var content = await response.Content.ReadAsStringAsync();
-        Assert.Contains(objectId, content, $"ObjectId '{objectId}' not found in telemetry");
-        Assert.Contains(userId, content, $"UserId '{userId}' not found in telemetry");
-    }
-
-    [TestMethod]
-    [TestCategory(TestCategories.DevLocal)]
-    public async Task CombinedProcessors_ShouldAddBothCorrelationAndUserInfo()
-    {
-        // Arrange
-        var correlationId = Guid.NewGuid().ToString();
-        var requestId = Guid.NewGuid().ToString();
-        var objectId = "combined-object-id";
-        var userId = "combined-user-id";
-
-        var connectionString = TestContext!.GetRequiredProperty<string>("APPINSIGHTS_CONNECTION_STRING");
-
-        // Setup DI container with both accessors
-        var services = new ServiceCollection();
-
-        // Add correlation accessor
-        var correlationInfo = new CorrelationInfo
-        {
-            CorrelationId = correlationId,
-            RequestId = requestId
-        };
-        services.AddSingleton<IAccessor<CorrelationInfo>>(new TestCorrelationAccessor(correlationInfo));
-
-        // Add HTTP context accessor
-        var claims = new List<Claim>
-        {
-            new(CommonClaims.ObjectId, objectId),
-            new(CommonClaims.UserId, userId)
-        };
-        var identity = new ClaimsIdentity(claims, "TestAuth");
-        var principal = new ClaimsPrincipal(identity);
-        var httpContext = new DefaultHttpContext { User = principal };
-        services.AddSingleton<IHttpContextAccessor>(new TestHttpContextAccessor(httpContext));
-
-        _serviceProvider = services.BuildServiceProvider();
-
-        var azurinsightUrl = TestContext!.GetRequiredProperty<string>("APPINSIGHTS_URL");
-
-        _configuration = TelemetryConfiguration.CreateDefault();
-        _configuration.ConnectionString = connectionString;
-
-        // Use InMemoryChannel for immediate transmission (important for testing)
-        _configuration.TelemetryChannel = new InMemoryChannel
-        {
-            EndpointAddress = azurinsightUrl + "/v2.1/track"
-        };
-
-        // Add both processors
-        var correlationFactory = new TestTelemetryProcessorFactory<CorrelationInfoTelemetryProcessor>(_serviceProvider);
-        var userFactory = new TestTelemetryProcessorFactory<UserTelemetryProcessor>(_serviceProvider);
-
-        _configuration.TelemetryProcessorChainBuilder.Use(correlationFactory.Create);
-        _configuration.TelemetryProcessorChainBuilder.Use(userFactory.Create);
-        _configuration.TelemetryProcessorChainBuilder.Build();
-
-        _telemetryClient = new TelemetryClient(_configuration);
-
-        // Act
-        _telemetryClient.TrackEvent("CombinedTest");
-        _telemetryClient.Flush();
-        await Task.Delay(2000);
-
-        // Assert
-        var response = await _httpClient!.GetAsync("/api/query");
-        response.EnsureSuccessStatusCode();
-
-        var content = await response.Content.ReadAsStringAsync();
-
-        // Verify correlation info
-        Assert.Contains(correlationId, content, $"CorrelationId '{correlationId}' not found");
-        Assert.Contains(requestId, content, $"RequestId '{requestId}' not found");
-
-        // Verify user info
-        Assert.Contains(objectId, content, $"ObjectId '{objectId}' not found");
-        Assert.Contains(userId, content, $"UserId '{userId}' not found");
-    }
-
-    #region Test Helpers
-
-    private class TestCorrelationAccessor : IAccessor<CorrelationInfo>
-    {
-        public CorrelationInfo? Value { get; set; }
-
-        public TestCorrelationAccessor(CorrelationInfo value) => Value = value;
-    }
-
-    private class TestHttpContextAccessor : IHttpContextAccessor
-    {
-        public HttpContext? HttpContext { get; set; }
-
-        public TestHttpContextAccessor(HttpContext httpContext) => HttpContext = httpContext;
-    }
-
-    private class TestTelemetryProcessorFactory<T> where T : ITelemetryProcessor
-    {
-        private readonly IServiceProvider _serviceProvider;
-
-        public TestTelemetryProcessorFactory(IServiceProvider serviceProvider) => _serviceProvider = serviceProvider;
-
-        public ITelemetryProcessor Create(ITelemetryProcessor next)
-        {
-            return (T)ActivatorUtilities.CreateInstance(_serviceProvider, typeof(T), next);
         }
+
+        // Assert
+        var activity = Assert.ContainsSingle(captured);
+        Assert.AreEqual("obj-1", activity.GetTagItem($"Claim-{CommonClaims.ObjectId}"));
+        Assert.AreEqual("user-1", activity.GetTagItem($"Claim-{CommonClaims.UserId}"));
     }
 
-    #endregion
+    [TestMethod]
+    [TestCategory(TestCategories.Unit)]
+    public void UserTelemetryProcessor_WithoutHttpContext_ShouldAddNothing()
+    {
+        // Stage
+        var captured = new List<Activity>();
+
+        // Test
+        using (var provider = Sdk.CreateTracerProviderBuilder()
+            .AddSource(SourceName)
+            .AddProcessor(new UserTelemetryProcessor(new HttpContextAccessor()))
+            .AddProcessor(new CaptureActivityProcessor(captured))
+            .Build())
+        using (var source = new ActivitySource(SourceName))
+        using (source.StartActivity("work"))
+        {
+        }
+
+        // Assert
+        var activity = Assert.ContainsSingle(captured);
+        Assert.IsFalse(activity.TagObjects.Any(t => t.Key.StartsWith("Claim-", StringComparison.Ordinal)));
+    }
+
+    [TestMethod]
+    [TestCategory(TestCategories.Unit)]
+    public void LogProcessors_ShouldAddCorrelationAndUserAttributes()
+    {
+        // Stage
+        var info = new CorrelationInfo { CorrelationId = "corr-2", RequestId = "req-2" };
+        var captured = new List<Dictionary<string, object?>>();
+
+        // Test
+        using (var factory = LoggerFactory.Create(builder => builder.AddOpenTelemetry(options =>
+        {
+            options.AddProcessor(new CorrelationInfoLogProcessor(new TestCorrelationAccessor(info)));
+            options.AddProcessor(new UserLogProcessor(CreateUserAccessor("obj-2", "user-2")));
+            options.AddProcessor(new CaptureLogProcessor(captured));
+        })))
+        {
+            factory.CreateLogger("test").LogInformation("hello {Name}", "world");
+        }
+
+        // Assert
+        var attributes = Assert.ContainsSingle(captured);
+        Assert.AreEqual("corr-2", attributes[DefinedHttpHeaders.CorrelationIdHeader]);
+        Assert.AreEqual("req-2", attributes[DefinedHttpHeaders.RequestIdHeader]);
+        Assert.AreEqual("obj-2", attributes[$"Claim-{CommonClaims.ObjectId}"]);
+        Assert.AreEqual("user-2", attributes[$"Claim-{CommonClaims.UserId}"]);
+        Assert.AreEqual("world", attributes["Name"]);
+    }
+
+    [TestMethod]
+    [TestCategory(TestCategories.Unit)]
+    public void TryAddApplicationInsightsExtensions_ShouldRegisterProcessors()
+    {
+        // Stage
+        var services = new ServiceCollection();
+        services.AddSingleton<IAccessor<CorrelationInfo>>(new TestCorrelationAccessor(new CorrelationInfo()));
+        services.AddSingleton<IHttpContextAccessor>(new HttpContextAccessor());
+
+        // Test
+        services.TryAddApplicationInsightsExtensions();
+        using var provider = services.BuildServiceProvider();
+
+        // Assert
+        Assert.IsNotNull(provider.GetRequiredService<CorrelationInfoTelemetryProcessor>());
+        Assert.IsNotNull(provider.GetRequiredService<UserTelemetryProcessor>());
+        Assert.IsNotNull(provider.GetRequiredService<CorrelationInfoLogProcessor>());
+        Assert.IsNotNull(provider.GetRequiredService<UserLogProcessor>());
+    }
+
+    private static TestHttpContextAccessor CreateUserAccessor(string objectId, string userId)
+    {
+        var identity = new ClaimsIdentity(
+            [new Claim(CommonClaims.ObjectId, objectId), new Claim(CommonClaims.UserId, userId)],
+            "TestAuth");
+        return new TestHttpContextAccessor(new DefaultHttpContext { User = new ClaimsPrincipal(identity) });
+    }
+
+    private sealed class CaptureActivityProcessor(List<Activity> captured) : BaseProcessor<Activity>
+    {
+        public override void OnEnd(Activity data) => captured.Add(data);
+    }
+
+    private sealed class CaptureLogProcessor(List<Dictionary<string, object?>> captured) : BaseProcessor<LogRecord>
+    {
+        public override void OnEnd(LogRecord data)
+            => captured.Add((data.Attributes ?? []).ToDictionary(a => a.Key, a => a.Value));
+    }
+
+    private sealed class TestCorrelationAccessor(CorrelationInfo value) : IAccessor<CorrelationInfo>
+    {
+        public CorrelationInfo? Value { get; set; } = value;
+    }
+
+    private sealed class TestHttpContextAccessor(HttpContext httpContext) : IHttpContextAccessor
+    {
+        public HttpContext? HttpContext { get; set; } = httpContext;
+    }
 }

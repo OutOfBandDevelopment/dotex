@@ -112,7 +112,7 @@ public class OllamaApiClientTests
     public async Task GenerateEmbeddingsDoubleTest()
     {
         var url = TestContext.GetRequiredProperty<string>("OLLAMA_URL");
-        var model = TestContext.GetPropertyOrDefault("OLLAMA_MODEL", "phi3");
+        var model = TestContext.GetPropertyOrDefault("OLLAMA_EMBEDDING_MODEL", "all-minilm");
 
         var client = Build(url, model);
         var embedding = await client.GetEmbeddingDoubleAsync("Hello World!", model);
@@ -132,7 +132,7 @@ public class OllamaApiClientTests
     public async Task GenerateEmbeddingsSingleTest()
     {
         var url = TestContext.GetRequiredProperty<string>("OLLAMA_URL");
-        var model = TestContext.GetPropertyOrDefault("OLLAMA_MODEL", "phi3");
+        var model = TestContext.GetPropertyOrDefault("OLLAMA_EMBEDDING_MODEL", "all-minilm");
 
         var client = Build(url, model);
         var embedding = await client.GetEmbeddingSingleAsync("Hello World!", model);

@@ -26,10 +26,19 @@ public class SqsClientFactory : ISqsClientFactory
         var accessKeyId = config["AccessKeyId"];
         var secretAccessKey = config["SecretAccessKey"];
 
+        // Optional endpoint override for emulators such as Moto (leave unset for real AWS)
+        var clientConfig = new AmazonSQSConfig { RegionEndpoint = region };
+        var serviceUrl = config["ServiceUrl"];
+        if (!string.IsNullOrEmpty(serviceUrl))
+        {
+            clientConfig.ServiceURL = serviceUrl;
+            clientConfig.AuthenticationRegion = region.SystemName;
+        }
+
         // Create client (uses AWS credential chain if keys not provided)
         IAmazonSQS client = string.IsNullOrEmpty(accessKeyId)
-            ? new AmazonSQSClient(region)
-            : new AmazonSQSClient(accessKeyId, secretAccessKey, region);
+            ? new AmazonSQSClient(clientConfig)
+            : new AmazonSQSClient(accessKeyId, secretAccessKey, clientConfig);
 
         // Get queue URL
         var queueUrl = config["QueueUrl"];

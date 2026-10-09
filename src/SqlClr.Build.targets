@@ -1,7 +1,8 @@
 <Project>
 
+  <!-- Runs inside the build (not after it) so that projects referencing this one, such as the sqlproj, only continue once the dacpac exists -->
   <Target Name="GenerateDacPac"
-         AfterTargets="Build"
+         AfterTargets="CopyFilesToOutputDirectory"
          Condition="'$(IsSqlClr)' == 'true' AND '$(TargetFramework)' != '' AND '$(TargetPath)' != '' AND '$(OS)' == 'Windows_NT'">
     <Message Text="Generating DACPAC from SQL CLR assembly..." Importance="High" />
 

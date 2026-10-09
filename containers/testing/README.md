@@ -31,7 +31,7 @@ The nginx reverse proxy provides a unified web interface to all services with di
 | **Stateless** | Apache Tika, SMTP4Dev |
 | **Stateful** | MongoDB, SQL Server, RabbitMQ, Redis, OpenSearch, Qdrant |
 | **Visualization** | OpenSearch Dashboards |
-| **Emulators** | Azurite (Azure Storage), LocalStack (AWS), Azure Service Bus Emulator, Azurinsight (Application Insights) |
+| **Emulators** | Azurite (Azure Storage), Moto (AWS), Azure Service Bus Emulator, Azurinsight (Application Insights) |
 | **Identity** | Keycloak |
 | **AI/ML** | SBert (CPU-only), Ollama (CPU-only) |
 
@@ -102,7 +102,7 @@ package "oobd-integration-test-net (Bridge Network)" {
         [Azure Storage\nEmulator]
     }
 
-    component "LocalStack\n:4566" <<Container>> #CONTAINER_BG_COLOR {
+    component "Moto\n:4566" <<Container>> #CONTAINER_BG_COLOR {
         [AWS Services\nEmulator]
     }
 
@@ -205,7 +205,7 @@ end note
 │  └──────────┘  └──────────┘  └──────────┘  └──────────┘     │
 │                                                             │
 │  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐     │
-│  │ Azurite  │  │LocalStack│  │ Keycloak │  │  SBert   │     │
+│  │ Azurite  │  │Moto│  │ Keycloak │  │  SBert   │     │
 │  │  :10000  │  │  :4566   │  │  :8081   │  │  :5080   │     │
 │  └──────────┘  └──────────┘  └──────────┘  └──────────┘     │
 │                                                             │
@@ -313,7 +313,7 @@ scripts\integration-down.bat --clean
 | Service | Image | Port(s) | Purpose | Health Check |
 |---------|-------|---------|---------|--------------|
 | **Azurite** | `mcr.microsoft.com/azure-storage/azurite` | 10000 (Blob)<br>10001 (Queue)<br>10002 (Table) | Azure Storage emulator | `nc -z localhost 10000` |
-| **LocalStack** | `localstack/localstack` | 4566 | AWS services emulator (SQS, S3, etc.) | `curl http://localhost:4566/_localstack/health` |
+| **Moto** | `motoserver/moto` | 4566 | AWS services emulator (SQS, S3, etc.) | `curl http://localhost:4566/moto-api/` |
 | **Service Bus Emulator** | `mcr.microsoft.com/azure-messaging/servicebus-emulator` | 5672 (AMQP) | Azure Service Bus emulator | `nc -z localhost 5672` |
 | **Azurinsight** | `oobdev/azurinsight:latest` | 5000 | Application Insights emulator | `curl http://localhost:5000/` |
 
@@ -393,7 +393,7 @@ Tests use environment variables for connection strings. See `.env.integration` f
 | `TIKA_URL` | `http://localhost:9998` | Apache Tika endpoint |
 | `SMTP_HOST` | `localhost` | SMTP server host |
 | `AZURITE_CONNECTION_STRING` | (see .env file) | Azurite connection |
-| `LOCALSTACK_URL` | `http://localhost:4566` | LocalStack endpoint |
+| `MOTO_URL` | `http://localhost:4566` | Moto endpoint |
 | `SQS_QUEUE_URL` | `http://localhost:4566/000000000000/{queue-name}` | AWS SQS queue URL |
 | `SERVICEBUS_CONNECTION_STRING` | `Endpoint=sb://localhost;...;UseDevelopmentEmulator=true;` | Azure Service Bus connection |
 | `KEYCLOAK_URL` | `http://localhost:8081` | Keycloak endpoint |
@@ -408,7 +408,7 @@ The following services automatically initialize required resources on container 
 | Service | Initialization | Details |
 |---------|----------------|---------|
 | **Ollama** | Pulls phi3 model | Happens during container startup (adds ~60s to first start) |
-| **LocalStack SQS** | Creates test queues | `integration-test-queue` pre-created |
+| **Moto SQS** | Creates test queues | `integration-test-queue` pre-created |
 | **Service Bus Emulator** | Creates queues/topics | `integration-test-queue`, `integration-test-topic` with subscription |
 
 **Note**: Tests can (and should) create additional unique resources (queues, databases, collections) with timestamps or GUIDs to support parallel test execution.
@@ -665,7 +665,7 @@ cd ../containers/testing
 - **OpenSearch**: https://localhost:9200 (admin/IntegrationTest123!)
 - **Keycloak**: http://localhost:8081 (admin/admin)
 - **Qdrant**: http://localhost:6333
-- **LocalStack**: http://localhost:4566
+- **Moto**: http://localhost:4566
 
 ### Container Names
 
@@ -679,7 +679,7 @@ All containers are prefixed with `oobd-test-`:
 - `oobd-test-opensearch`
 - `oobd-test-qdrant`
 - `oobd-test-azurite`
-- `oobd-test-localstack`
+- `oobd-test-moto`
 - `oobd-test-servicebus`
 - `oobd-test-keycloak`
 - `oobd-test-sbert`

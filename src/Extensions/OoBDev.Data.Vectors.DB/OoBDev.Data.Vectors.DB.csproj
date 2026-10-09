@@ -7,7 +7,7 @@
     <RecoveryMode>Simple</RecoveryMode>
     <ServiceBrokerOption>EnableBroker</ServiceBrokerOption>
     <!-- Suppress warning about .NET Framework 4.8 project reference in .NET Standard 2.1 project -->
-    <NoWarn>$(NoWarn);MSB3270;NU1701;NU1702</NoWarn>
+    <NoWarn>$(NoWarn);MSB3270;NU1701;NU1702;SQLPROJ0001;SQLPROJ0002</NoWarn>
     <!-- SQL projects don't generate XML documentation files -->
     
   </PropertyGroup>
@@ -15,15 +15,16 @@
   <!-- https://github.com/rr-wfm/MSBuild.Sdk.SqlProj#publishing-support -->
   <PropertyGroup>
     <!--  Controls the name of the server to which the project is published -->
-    <TargetServerName>127.0.0.1</TargetServerName>
+    <TargetServerName Condition="'$(TargetServerName)' == ''">127.0.0.1</TargetServerName>
     <!-- Controls the name of the server to which the project is published -->
-    <TargetDatabaseName>VectorDb</TargetDatabaseName>
+    <TargetDatabaseName Condition="'$(TargetDatabaseName)' == ''">VectorDb</TargetDatabaseName>
     <!-- 	Specifies an alternate port for connecting to the target server (only necessary if using a non-standard port) -->
     <TargetPort>1433</TargetPort>
     <!-- Username used to connect to the server. If empty, Windows authentication is used -->
-    <TargetUser>sa</TargetUser>
-    <!-- Password used to connect to the server. If empty, but TargetUser is set you will be prompted for the password -->
-    <TargetPassword>L0c@lD3v</TargetPassword>
+    <TargetUser Condition="'$(TargetUser)' == ''">sa</TargetUser>
+    <!-- Password used to connect to the server. Never commit it: pass /p:TargetPassword=... or set the VECTORS_DB_PASSWORD environment variable.
+         If empty, but TargetUser is set you will be prompted for the password -->
+    <TargetPassword Condition="'$(TargetPassword)' == ''">$(VECTORS_DB_PASSWORD)</TargetPassword>
     <!-- Controls whether objects from referenced packages are deployed to the same database -->
     <IncludeCompositeObjects>True</IncludeCompositeObjects>
     <!-- Controls the name of the .dacpac created by dotnet build. The default name for the .dacpac file is the name of the project file, e.g. MyProject.csproj produces MyProject.dacpac. -->
@@ -35,7 +36,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="GitVersion.MsBuild" Version="6.5.1">
+    <PackageReference Include="GitVersion.MsBuild">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
@@ -51,17 +52,17 @@
   <ItemGroup><!-- These packages adds additional code analysis rules -->
     <!-- We recommend using these, but they can be removed if desired -->
     <!--
-    <PackageReference Include="ErikEJ.DacFX.SqlServer.Rules" Version="1.3.0">
+    <PackageReference Include="ErikEJ.DacFX.SqlServer.Rules">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="ErikEJ.DacFX.TSQLSmellSCA" Version="1.3.0">
+    <PackageReference Include="ErikEJ.DacFX.TSQLSmellSCA">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     -->
   
-    <Content Remove="ReadMe.Data.Vectors.DB.md" />
+    <Content Remove="README.Data.Vectors.DB.md" />
   </ItemGroup>
   
   <ItemGroup>
@@ -74,5 +75,10 @@
   <ItemGroup>
     <ProjectReference Include="..\OoBDev.Data.Vectors.Net481\OoBDev.Data.Vectors.Net481.csproj" />
   </ItemGroup>
+
+  <!-- The CLR dacpac is produced by a target that runs after the Net481 build; ask for it explicitly so this project never resolves references before it exists -->
+  <Target Name="EnsureClrDacpac" BeforeTargets="FixUpDatabaseReferences;ResolveDatabaseReferences">
+    <MSBuild Projects="..\OoBDev.Data.Vectors.Net481\OoBDev.Data.Vectors.Net481.csproj" Targets="Build;GenerateDacPac" RemoveProperties="TargetFramework;TargetFrameworks" />
+  </Target>
 
 </Project>

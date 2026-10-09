@@ -484,13 +484,23 @@ services.Configure<SentenceEmbeddingOptions>(options =>
 
 ---
 
-#### AllMiniLmL6V2EmbeddingOptions
+#### OnnxSentenceEmbeddingOptions (all-MiniLM-L6-v2 preset)
 
-**Namespace:** `OoBDev.SBert.AllMiniLML6v2Sharp`
-**Configuration Section:** `AllMiniLmL6V2Embedding` (via ConfigPrefix constant)
+**Namespace:** `OoBDev.Onnx.SentenceEmbeddings`
+**Configuration Section:** `AllMiniLmL6V2` (`SBertGlobals.DefaultSection`)
 
 | Property | Type | Required | Default | Description |
 |----------|------|----------|---------|-------------|
+| ModelPath | string | No | Hugging Face hub cache snapshot folder | Folder holding the model files; map to a volume in containers |
+| MaxSequenceLength | int | No | 256 | Longest token sequence; longer text is truncated |
+| MaxBatchSize | int | No | 32 | Texts per model run |
+| MaxConcurrentInferences | int | No | CPU based | Bound on parallel model runs |
+| Normalize | bool | No | true | L2 normalise the vectors |
+| Dimensions | int? | No | model size (384) | Truncate to fewer dimensions |
+
+See [README.Onnx.SentenceEmbeddings.md](src/ExternalServices/Onnx/OoBDev.Onnx.SentenceEmbeddings/README.Onnx.SentenceEmbeddings.md) for the full list.
+
+----------|------|----------|---------|-------------|
 | PercentageOfParallelism | double | No | 0.75 | Fraction of CPU cores to use (0-1) |
 
 **Usage:**
@@ -1056,14 +1066,14 @@ Within each section:
 
 **Note:** Connection string uses standard development account key (not secret).
 
-#### LocalStack (AWS Emulator)
+#### Moto (AWS Emulator)
 
 | Variable | Type | Default | Description |
 |----------|------|---------|-------------|
-| `LOCALSTACK_URL` | string | http://localhost:4566 | Unified endpoint |
-| `LOCALSTACK_HOST` | string | localhost | Host |
-| `LOCALSTACK_PORT` | int | 4566 | Edge port |
-| `LOCALSTACK_EDGE_PORT` | int | 4566 | Unified API port |
+| `MOTO_URL` | string | http://localhost:4566 | Unified endpoint |
+| `MOTO_HOST` | string | localhost | Host |
+| `MOTO_PORT` | int | 4566 | Edge port |
+| `MOTO_EDGE_PORT` | int | 4566 | Unified API port |
 | `AWS_ACCESS_KEY_ID` | string | test | Dummy AWS credential |
 | `AWS_SECRET_ACCESS_KEY` | string | test | Dummy AWS credential |
 | `AWS_DEFAULT_REGION` | string | us-east-1 | Default region |

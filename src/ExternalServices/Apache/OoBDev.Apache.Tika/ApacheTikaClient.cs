@@ -23,7 +23,13 @@ public class ApacheTikaClient : IApacheTikaClient
     public async ValueTask<string> DetectStreamAsync(Stream source)
     {
         _logger.LogInformation("Detecting Content Type");
-        var response = await _httpClient.PutAsync("/detect/stream", new StreamContent(source));
+        // Tika 4 serves detection at /detect; earlier versions used /detect/stream.
+        var response = await _httpClient.PutAsync("/detect", new StreamContent(source));
+        if (response.StatusCode == System.Net.HttpStatusCode.NotFound && source.CanSeek)
+        {
+            source.Position = 0;
+            response = await _httpClient.PutAsync("/detect/stream", new StreamContent(source));
+        }
         var result = await response.Content.ReadAsStringAsync();
         _logger.LogInformation("Detected Content Type: {contentType}", result);
         return result;
@@ -32,7 +38,15 @@ public class ApacheTikaClient : IApacheTikaClient
     public async Task ConvertAsync(Stream source, string sourceContentType, Stream destination, string destinationContentType)
     {
         _logger.LogInformation("Convert: {source} -> {destination}", sourceContentType, destinationContentType);
-        var request = new HttpRequestMessage(HttpMethod.Put, "/tika")
+        // Tika 4 no longer honours Accept: text/html|xml on /tika; the dedicated endpoints work on every version.
+        var endpoint = destinationContentType switch
+        {
+            "text/html" => "/tika/html",
+            "text/plain" => "/tika/text",
+            "text/xml" => "/tika/xml",
+            _ => "/tika",
+        };
+        var request = new HttpRequestMessage(HttpMethod.Put, endpoint)
         {
             Content = new StreamContent(source),
         };

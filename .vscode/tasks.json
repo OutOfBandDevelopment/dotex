@@ -1,0 +1,28 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "docs: start PlantUML server",
+      "type": "shell",
+      "command": "docker rm -f dotex-plantuml; docker run -d --name dotex-plantuml -p 18080:8080 plantuml/plantuml-server:jetty",
+      "problemMatcher": []
+    },
+    {
+      "label": "docs: validate (diagrams, links, captions)",
+      "type": "shell",
+      "command": "python scripts/docs/validate-docs.py docs",
+      "problemMatcher": {
+        "owner": "docs",
+        "fileLocation": ["relative", "${workspaceFolder}"],
+        "pattern": { "regexp": "^(.+?):(\d+): (.*)$", "file": 1, "line": 2, "message": 3 }
+      },
+      "group": "test"
+    },
+    {
+      "label": "docs: fix PlantUML line breaks",
+      "type": "shell",
+      "command": "python scripts/docs/fix-plantuml-newlines.py ${file}",
+      "problemMatcher": []
+    }
+  ]
+}

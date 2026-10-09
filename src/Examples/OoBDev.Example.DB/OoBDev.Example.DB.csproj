@@ -6,7 +6,7 @@
     <RunSqlCodeAnalysis>True</RunSqlCodeAnalysis>
     <RecoveryMode>Simple</RecoveryMode>
     <ServiceBrokerOption>EnableBroker</ServiceBrokerOption>
-    <NoWarn>$(NoWarn);MSB3270;NU1701;NU1702</NoWarn>
+    <NoWarn>$(NoWarn);MSB3270;NU1701;NU1702;SQLPROJ0001;SQLPROJ0002</NoWarn>
 
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
     <IsPackable>false</IsPackable>
@@ -34,7 +34,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="GitVersion.MsBuild" Version="6.5.1">
+    <PackageReference Include="GitVersion.MsBuild">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
@@ -43,17 +43,17 @@
   <ItemGroup><!-- These packages adds additional code analysis rules -->
     <!-- We recommend using these, but they can be removed if desired -->
     <!--
-    <PackageReference Include="ErikEJ.DacFX.SqlServer.Rules" Version="1.3.0">
+    <PackageReference Include="ErikEJ.DacFX.SqlServer.Rules">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="ErikEJ.DacFX.TSQLSmellSCA" Version="1.3.0">
+    <PackageReference Include="ErikEJ.DacFX.TSQLSmellSCA">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     -->
   
-    <Content Remove="ReadMe.Example.DB.md" />
+    <Content Remove="README.Example.DB.md" />
   </ItemGroup>
 
   <ItemGroup>

@@ -44,24 +44,26 @@ ollama:
 
 ---
 
-### 2. LocalStack (AWS Emulator)
+### 2. Moto (AWS Emulator)
 
 **What Gets Initialized:**
 - SQS queue: `integration-test-queue`
 
 **How It Works:**
-- LocalStack init hooks: `localstack-init/01-create-sqs-queues.sh`
-- Runs automatically when LocalStack reaches "ready" state
-- Uses `awslocal` CLI to create queues
+- One-shot `moto-init` service (AWS CLI image) runs `moto-init/01-create-sqs-queues.sh`
+- Starts after `moto` is healthy, creates the queues and exits
+- Moto is Apache-2.0 and needs no licence token or account
 
 **Configuration:**
 ```yaml
 # docker-compose.integration-tests.yml
-localstack:
-  environment:
-    - AWS_DEFAULT_REGION=us-east-1
+moto:
+  image: motoserver/moto:latest
+  ports: ["4566:5000"]
+moto-init:
+  depends_on: { moto: { condition: service_healthy } }
   volumes:
-    - ./localstack-init:/etc/localstack/init/ready.d:ro
+    - ./moto-init:/init:ro
 ```
 
 **Tests Can:**
@@ -266,7 +268,7 @@ docker exec oobd-test-ollama ollama pull phi3
 docker logs oobd-test-ollama
 ```
 
-### LocalStack Queues Not Created
+### Moto Queues Not Created
 
 **Symptoms:**
 - Tests fail with "queue does not exist"
@@ -274,8 +276,8 @@ docker logs oobd-test-ollama
 
 **Solution:**
 ```bash
-# Check LocalStack health
-curl http://localhost:4566/_localstack/health
+# Check Moto health
+curl http://localhost:4566/moto-api/
 
 # List queues
 aws --endpoint-url=http://localhost:4566 sqs list-queues --region us-east-1
@@ -285,7 +287,7 @@ aws --endpoint-url=http://localhost:4566 sqs create-queue \
     --queue-name integration-test-queue --region us-east-1
 
 # Check init logs
-docker logs oobd-test-localstack | grep -A 10 "Initializing"
+docker logs oobd-test-moto-init | grep -A 10 "Initializing"
 ```
 
 ### Service Bus Entities Not Created
@@ -315,7 +317,7 @@ cd containers/testing
 The following scripts are **no longer needed** but kept for troubleshooting:
 
 - `scripts/setup-ollama.sh` - Use for manual model management
-- `scripts/setup-localstack-sqs.sh` - Use to verify queue creation
+- `scripts/setup-moto-sqs.sh` - Use to verify queue creation
 - `scripts/setup-servicebus-emulator.sh` - Displays connection info only
 
 **Note:** Integration-up scripts no longer call these - initialization is automatic.

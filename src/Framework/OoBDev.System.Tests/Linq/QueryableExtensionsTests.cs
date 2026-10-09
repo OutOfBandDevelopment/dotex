@@ -19,7 +19,9 @@ public class QueryableExtensionsTests
 
     [TestMethod]
     [TestCategory(TestCategories.Unit)]
+#pragma warning disable MSTEST0032 // the constant is the contract under test
     public void DefaultPageSizeTest() => Assert.AreEqual(10, QueryBuilder.DefaultPageSize);
+#pragma warning restore MSTEST0032
 
     [TestMethod]
     [TestCategory(TestCategories.Unit)]

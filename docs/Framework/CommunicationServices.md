@@ -12,10 +12,10 @@ Additional queue mapping provided from `OoBDev.Communications.MessageQueueing`
 ## Notes
 
 * Readme
-  * [Communications](..\code\OoBDev.Communications\Readme.Communications.md)
-  * [Communications.Abstractions](..\code\OoBDev.Communications.Abstractions\Readme.Communications.Abstractions.md)
-  * [MailKit](..\code\OoBDev.MailKit\Readme.MailKit.md)
-  * [MailKit.Hosting](..\code\OoBDev.MailKit.Hosting\Readme.MailKit.Hosting.md)
+  * [Communications](..\code\OoBDev.Communications\README.Communications.md)
+  * [Communications.Abstractions](..\code\OoBDev.Communications.Abstractions\README.Communications.Abstractions.md)
+  * [MailKit](..\code\OoBDev.MailKit\README.MailKit.md)
+  * [MailKit.Hosting](..\code\OoBDev.MailKit.Hosting\README.MailKit.Hosting.md)
 * Libraries
   * [OoBDev.Communications](..\Libraries\OoBDev.Communications.md)
   * [OoBDev.Communications.Abstractions](..\Libraries\OoBDev.Communications.Abstractions.md)

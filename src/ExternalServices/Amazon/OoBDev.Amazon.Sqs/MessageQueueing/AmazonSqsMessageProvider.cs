@@ -67,7 +67,8 @@ public class AmazonSqsMessageProvider(
         if (!string.IsNullOrEmpty(messageGroupId))
             request.MessageGroupId = messageGroupId;
 
-        // Convert context headers to message attributes
+        // Convert context headers to message attributes (the SDK leaves the dictionary null until assigned)
+        request.MessageAttributes ??= [];
         foreach (var header in context.Headers.Where(h => h.Value != null))
         {
             request.MessageAttributes[header.Key] = new MessageAttributeValue

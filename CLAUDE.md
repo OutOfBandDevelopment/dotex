@@ -1,9 +1,9 @@
 # OoBDev (dotex) Framework - Claude Development Guide
 
-**Last Updated:** 2026-01-22
+**Last Updated:** 2026-09-30
 **Framework:** OoBDev (dotex) - Enterprise .NET Library Suite
 **Target:** net10.0
-**Current Work:** Design-first approach for SharedFramework migrations | 4 Epics in design phase | Docker testing ready for CI/CD
+**Current Work:** Patterns discovery (branch `dev/patterns-discovery`, see "Patterns Discovery Work" below) | Design-first approach for SharedFramework migrations | Docker testing ready for CI/CD
 
 ---
 
@@ -32,7 +32,8 @@ OoBDev is a comprehensive collection of .NET framework extensions at various uti
 ### 1. Before Starting Any Work
 
 **Read First:**
-- `/TODO.md` - Current migration status and pending work
+- `/TODO.md` - Current migration status and pending work (the `📌 Backlog:` sections hold open review items)
+- `/docs/patterns-discovery/README.md` - How this codebase is actually built (patterns, conventions, blueprint, alternatives)
 - `/docs/architecture/README.md` - Architecture overview
 - `/docs/architecture/architectural-standards.md` - Enforceable coding standards
 
@@ -41,7 +42,7 @@ OoBDev is a comprehensive collection of .NET framework extensions at various uti
 - Follow provider/factory pattern for extensibility
 - Use dependency injection (TryAdd* extensions)
 - 80% test coverage for Framework layer
-- README.md required for all projects (build-enforced)
+- `README.{Project}.md` (upper-case `README`) expected per project; `PackageReadmeFile` is derived from that name in `src/Directory.Build.props`, and a missing file is only warning OBDPK001
 - Nullable enabled, ImplicitUsings disabled
 
 ### 2. Available Protocols
@@ -96,15 +97,14 @@ Located in `.claude/protocols/`:
 ## Architecture Layers
 
 ### Common Layer (6 projects)
-Foundation abstractions and interfaces
-- No external dependencies
-- Pure interfaces and contracts
+Foundation abstractions and contracts
+- Aggregator: MSBuild globs include/remove ProjectReferences (not purely interfaces)
 
 ### Framework Layer (39 projects)
 Core functionality implementations
 - Depends only on Common
 - 80%+ test coverage required
-- README.md required (build-enforced)
+- `README.{Project}.md` expected (warning if missing)
 
 ### Extensions Layer (6 projects)
 Optional enhancements and integrations
@@ -174,12 +174,26 @@ public interface IHandler<TRequest, TResponse>
 
 ---
 
+## Documentation Diagram Standards
+
+- **All diagrams in markdown documents MUST be PlantUML** (fenced ```` ```plantuml ```` blocks with `@startuml`/`@enduml`). Never use ASCII/box-drawing art or Mermaid.
+- **All UI mockups MUST be PlantUML + Salt** (`@startsalt`/`@endsalt`), embedded in the markdown document.
+- **Validate docs before finishing**: run `python scripts/docs/validate-docs.py docs` (renders every PlantUML diagram via the `plantuml/plantuml-server` docker image, checks links/captions). A diagram is not done until it renders. Never hand-type escape sequences in shell-heredoc'd Python; write scripts with the Write tool and build backslash-n as `chr(92)+'n'`.
+- **Prefer deterministic scripts over agentic LLM work** for repeatable tasks (validation, linting, TOC/caption generation, renames, link fixing). Put them in `scripts/` with a README, and reuse them.
+- **Architecture diagrams use C4 style (Context/Container/Component) written in plain PlantUML** (rectangles + stereotypes + skinparam). Never `!include` C4-PlantUML templates – they break in production rendering.
+- **Include a Table of Contents, List of Figures and List of Tables where useful** (3+ sections / 2+ figures / 2+ tables). Caption figures `*Figure N — title*` (after) and tables `**Table N — title**` (before).
+- **Split long documents** (>~250 lines or >~6 major sections) into a topic folder with a `README.md` index and one file per headline; nav links at top/bottom of each file. **Prefer valid relative cross references** (file + `#anchor`) wherever a concept has its own document; verify links resolve.
+- Design documents follow `docs/patterns-discovery/06-design-document-standard.md` (4 documents per feature).
+- Applies to every new or edited doc (`docs/**`, READMEs, design docs, protocols). Convert existing ASCII diagrams when touching a document.
+
+---
+
 ## Coding Standards
 
 ### File Structure
 ```
 OoBDev.{Layer}.{Feature}/
-├── README.md (REQUIRED - build fails without it)
+├── README.{Project}.md (expected; upper-case README, warning if missing)
 ├── {Feature}.csproj
 ├── Abstractions/ (interfaces)
 ├── Implementations/
@@ -192,7 +206,35 @@ OoBDev.{Layer}.{Feature}/
 - Implementations: `{Name}` (no suffix)
 - Providers: `{Name}Provider`
 - Factories: `{Name}Factory`
-- Extensions: `{Name}Extensions`
+- Extensions: `{Name}Extensions`; DI registration class is always `ServiceCollectionExtensions` (never `ServiceCollectionEx`; 6 projects still to rename, see TODO.md)
+- Provider keys: kebab-case constants in each adapter's `{Vendor}Globals` (never a global registry; keeps adapters referencing only Abstractions)
+- Prefer platform primitives (e.g. `TimeProvider`) over hand-built abstractions; inject by interface
+
+### UI Preferences
+- MVVM with command binding wherever possible (e.g. WPF: view models, `ICommand`, data binding, minimal code-behind)
+- Commands are real, retestable command types (e.g. `SaveDocumentCommand : ICommand` with injected dependencies), not just relay commands routed to lambda expressions
+- When a JS/TS framework is required, prefer one that supports view-model binding and command-style handlers as closely as possible; note where it diverges from MVVM
+
+### Authentication Preferences
+- Use OAuth 2.0 / OIDC / JWT bearer wherever possible; applications validate tokens and never store passwords
+- Services only need to understand JWT: any other credential (API key, HMAC, basic auth, legacy bearer) is converted to JWT by the STS or an edge adapter, never by per-scheme code inside a service
+- Windows-integrated (Kerberos/NTLM) and SAML sign-in are SSO inputs too: the STS exchanges them for JWT so everything downstream is JWT only
+- When required, support an STS with token exchange (RFC 8693) that converts SSO tokens into application-specific tokens; optional and config-gated, injected by interface (see `docs/patterns-discovery/03-practices-and-conventions/09-authentication-practices.md`)
+
+### HTTP API and Authorization Preferences
+- REST wherever possible; OpenAPI is the contract; errors are RFC 9457 problem details
+- Evaluate OData over the HTTP `QUERY` verb (with a `POST` fallback) and GraphQL as additional query surfaces beside the custom search syntax; no breaking changes to the existing syntax
+- RBAC with application rights: endpoints declare rights (`[ApplicationRight]`), roles are translated to rights in middleware; claims exchange at the STS is an alternative only while tokens stay small
+- Same rights checks on every API surface (see `docs/patterns-discovery/03-practices-and-conventions/10-http-api-practices.md` and `11-authorization-practices.md`)
+
+### Rejected and Preferred Dependencies (owner decisions)
+- No third-party IoC/DI containers and no third-party logging libraries (use `Microsoft.Extensions.*` and `[LoggerMessage]`)
+- Avoid Polly (license change); add OpenTelemetry; default hash is SHA-512
+- MSTest stays; central package management is on (versions live only in `src/Directory.Packages.props`); GitVersion stays with app projects versioned together
+- Provider selection: a container-registered factory picks a keyed service from a configuration path (replaces `ISelectedService<T>`); shared options validation via `AddValidatedOptions<T>()`
+- Keep all .NET libraries/packages as current for .NET 10 as practical; Microsoft.Extensions.AI is expected to replace the hand-built AI abstractions (spike in `docs/patterns-discovery/08-spikes/`)
+- Abstractions projects (interfaces and models only) need no tests; if one holds testable implementation it gets a test library. Missing project readmes should be created
+- Owner answers are recorded under each verdict in `docs/patterns-discovery/05-industry-alternatives/`
 
 ### Code Style
 - Nullable enabled
@@ -329,7 +371,7 @@ cd ../containers/testing
 - OpenSearch (Search engine)
 - Qdrant (Vector database)
 - Azurite (Azure Storage emulator)
-- LocalStack (AWS emulator - SQS, S3, etc.)
+- Moto (AWS emulator - SQS, S3, etc.)
 - Azure Service Bus Emulator (Message queue)
 - Keycloak (Identity & Access Management)
 - SBert (Sentence embeddings - CPU only)
@@ -401,7 +443,7 @@ public void MethodName_Scenario_ExpectedBehavior()
 ### Commits
 - Only create when user explicitly requests
 - Follow security protocol (no force push, no amend unless specific conditions)
-- Co-author: `Claude Opus 4.5 <noreply@anthropic.com>`
+- Commit messages must NEVER reference Claude or AI (no Co-Authored-By trailer, no "generated with" line)
 
 ### Pull Requests
 - Use `gh pr create` for GitHub PRs
@@ -469,7 +511,46 @@ dotnet test src/ --collect:"XPlat Code Coverage"
 
 ---
 
+## Patterns Discovery Work (branch `dev/patterns-discovery`)
+
+**Resume here.** Goal: document how the codebase is built so future products follow the same patterns, then compare with industry alternatives.
+
+- **Docs:** `docs/patterns-discovery/` (01 architecture, 02 design patterns, 03 practices, 04 new-project blueprint, 05 industry alternatives, 06 design-document standard; README has the doc/code drift table). Patterns are the owner's preferences: record them, don't "correct" them; rough edges go to `TODO.md` backlogs.
+- **Templates:** `templates/` (`dotnet new` pack: `oobdev-capability`, `oobdev-adapter`, `oobdev-webapp`); verify with `scripts/templates/verify-templates.ps1` (generates under `src/`, builds from `src/Framework` cwd because `Directory.Build.props` computes `SolutionDir` from the cwd, then cleans up).
+- **Scripts:** `scripts/docs/` (`validate-docs.py`, `build-index.py`, `build-project-catalog.py`, `fix-plantuml-newlines.py`). Validate with `python scripts/docs/validate-docs.py docs/patterns-discovery` (expect 80 files, 0 problems; the whole `docs/` tree has ~566 pre-existing problems, e.g. `docs/sbom`). Needs docker `plantuml/plantuml-server` on port 18080.
+- **Decisions made:** `#if DEBUG` required builder parameters are intentional (forces child builders to be forwarded); `ServiceCollectionExtensions` everywhere; provider keys kebab-case; readmes are `README.X.md`; options were deliberately unvalidated (strict/relaxed mode under analysis).
+- **Open backlogs in `TODO.md`:** `ISelectedService` rough edges (intent unknown, needs owner review), naming consistency, Roslyn analyzers, options validation modes, caching proxy (`Retreive` to `Retrieve`), message context caller info, replace hand-built providers with platform primitives (`TimeProvider`), HTTP querying and rights middleware, documentation coverage gaps (build these out in the listed order).
+- **Branch state:** history was rewritten to remove AI trailers from commit messages and the branch matches `origin/dev/patterns-discovery` (as of 3f54bfe). Never force-push without the owner's explicit approval.
+
+---
+
 ## Recently Completed Work
+
+### 2026-10-08
+- **AllMiniLmL6V2 replaces the fork** - first-party ONNX embedder and tokenizer matching the Hugging Face model (34/34), model downloaded on first use into the shared hub cache, fork and both submodules removed. [Details](docs/changes/migration-allminilml6v2-embedder-2026-10-08.md)
+- **NULL-safe vectors and CI build order** - `Parse` and matrix accessors return NULL, `SqlMatrix.Element` is `SqlDouble`, `.DB` dacpac ordering fixed, SBert model project built before the AllMiniLm tests. [Details](docs/changes/testing-vectors-sqs-moto-ci-2026-10-08.md)
+- **CI, vectors, Moto** - CI restore fixed, vector `Angle` corrected and NULL-safe, SQL Server Integration tests, Moto replaces LocalStack, SQS tests repaired. [Details](docs/changes/testing-vectors-sqs-moto-ci-2026-10-08.md)
+
+### 2026-10-07
+- **Dependencies and build health** - central package management restored, all packages current, warnings triaged (about 12 distinct left), Application Insights migrated to the OpenTelemetry-based 3.x, Qdrant moved to the query API, test property default bug fixed
+- **AllMiniLmL6V2 design** - plan that replaced the `AllMiniLML6v2Sharp` fork (done 2026-10-08). [Design](docs/design/AllMiniLmL6V2/README.md)
+
+### 2026-09-30
+- **Patterns Discovery coverage** - security/observability/resilience/AI practices, worker recipe, project catalog, Extensions.AI spike. [Details](docs/changes/documentation-patterns-discovery-2026-09-30.md)
+- **Patterns Discovery** - architecture/patterns/practices/blueprint/alternatives docs, `dotnet new` templates, doc validation scripts, readme casing normalized (74 files), review backlogs recorded in `TODO.md`
+
+### 2026-01-29
+- **TestContext Configuration Provider** - Integrated MSTest `.runsettings` with .NET `IConfiguration`
+  - Added to OoBDev.TestUtilities (not separate package as originally planned)
+  - 12 unit tests + 8 integration tests
+  - Supports hierarchical configuration (`Database:Server` or `Database__Server`)
+  - Strong-typed binding with `IOptions<T>`
+  - Prefix filtering and case-insensitive keys
+  - Documentation: OoBDev.TestUtilities README + runsettings how-to guide updated
+- **Ollama Auto-Initialization** - Converted to Dockerfile approach with phi3 model baked into image
+  - Model pulled during build, not runtime
+  - Faster startup (no 2.2GB download on container start)
+  - Removed obsolete entrypoint script approach
 
 ### 2026-01-24
 - **Integration Testing Scripts** - Enhanced integration-up scripts with `--build` flag, fixed Windows batch path handling (PUSHD)
@@ -559,10 +640,10 @@ Instead of directly migrating code from SharedFramework, we've pivoted to compre
 **Latest Updates:**
 - Strategic pivot from code migration to design-first documentation (2026-01-22)
 - 4 TODO files updated to reflect design phase (Communications, Text Templating, Identity, Documents)
-- Build warnings reduced to 8 (down from 95+)
+- Build warnings: about 12 distinct remain (2026-10-08); see TODO.md
 - Test categories cleaned up (DevLocal → Integration/Unit/LiveIntegration)
 - .runsettings how-to guide created
 - Configuration documentation complete (CONFIGURATION_SETTINGS.md)
 - Ollama integration complete (phi3 auto-setup)
-- 14 Docker services ready (Apache Tika, MongoDB, SQL Server, RabbitMQ, Redis, OpenSearch, Qdrant, Azurite, LocalStack, Service Bus, Keycloak, SBert, Ollama)
+- 14 Docker services ready (Apache Tika, MongoDB, SQL Server, RabbitMQ, Redis, OpenSearch, Qdrant, Azurite, Moto, Service Bus, Keycloak, SBert, Ollama)
 

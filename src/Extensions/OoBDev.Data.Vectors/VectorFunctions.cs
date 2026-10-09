@@ -75,11 +75,11 @@ public static class VectorFunctions
     /// <summary>
     /// Calculates the distance or similarity between two double-precision vectors using the specified metric.
     /// </summary>
-    /// <param name="distanceMetric">The metric to use (cosine_distance, cosine_similarity, euclidean_distance, dot_product, manhattan_distance).</param>
+    /// <param name="distanceMetric">The metric to use (cosine, similarity, euclidean, dot, manhattan; matched case-insensitively, anything else returns NULL).</param>
     /// <param name="vector1">The first vector.</param>
     /// <param name="vector2">The second vector.</param>
     /// <returns>The calculated distance or similarity value, or null if any parameter is null.</returns>
-    /// <exception cref="ArgumentException">Thrown when vectors have different lengths or the metric is unsupported.</exception>
+    /// <remarks>Returns NULL (never throws) for NULL input, vectors of different lengths or an unsupported metric. An unsupported metric name also returns NULL, so one bad row cannot fail a whole batch.</remarks>
     [SqlFunction(Name = $"[embedding].[{nameof(Distance)}]", IsDeterministic = true, IsPrecise = true)]
     public static SqlDouble Distance(SqlString distanceMetric, SqlVector vector1, SqlVector vector2)
     {
@@ -91,7 +91,7 @@ public static class VectorFunctions
         }
         else if (vector1.Values.Count != vector2.Values.Count)
         {
-            throw new ArgumentException("Vectors must be of the same length.");
+            return SqlDouble.Null;
         }
 
         return distanceMetric.Value.ToLower() switch
@@ -101,18 +101,18 @@ public static class VectorFunctions
             VectorDistanceTypes.EuclideanDistance => (SqlDouble)EuclideanDistance(vector1.Values, vector2.Values),
             VectorDistanceTypes.DotProduct => (SqlDouble)DotProduct(vector1.Values, vector2.Values),
             VectorDistanceTypes.ManhattanDistance => (SqlDouble)ManhattanDistance(vector1.Values, vector2.Values),
-            _ => throw new ArgumentException($"Unsupported distance metric: {distanceMetric}"),
+            _ => SqlDouble.Null,
         };
     }
 
     /// <summary>
     /// Calculates the distance or similarity between two single-precision vectors using the specified metric.
     /// </summary>
-    /// <param name="distanceMetric">The metric to use (cosine_distance, cosine_similarity, euclidean_distance, dot_product, manhattan_distance).</param>
+    /// <param name="distanceMetric">The metric to use (cosine, similarity, euclidean, dot, manhattan; matched case-insensitively, anything else returns NULL).</param>
     /// <param name="vector1">The first vector.</param>
     /// <param name="vector2">The second vector.</param>
     /// <returns>The calculated distance or similarity value, or null if any parameter is null.</returns>
-    /// <exception cref="ArgumentException">Thrown when vectors have different lengths or the metric is unsupported.</exception>
+    /// <remarks>Returns NULL (never throws) for NULL input, vectors of different lengths or an unsupported metric. An unsupported metric name also returns NULL, so one bad row cannot fail a whole batch.</remarks>
     [SqlFunction(Name = $"[embedding].[{nameof(DistanceF)}]", IsDeterministic = true, IsPrecise = true)]
     public static SqlSingle DistanceF(SqlString distanceMetric, SqlVectorF vector1, SqlVectorF vector2)
     {
@@ -124,7 +124,7 @@ public static class VectorFunctions
         }
         else if (vector1.Values.Count != vector2.Values.Count)
         {
-            throw new ArgumentException("Vectors must be of the same length.");
+            return SqlSingle.Null;
         }
 
         return distanceMetric.Value.ToLower() switch
@@ -134,7 +134,7 @@ public static class VectorFunctions
             VectorDistanceTypes.EuclideanDistance => (SqlSingle)EuclideanDistance(vector1.Values, vector2.Values),
             VectorDistanceTypes.DotProduct => (SqlSingle)DotProduct(vector1.Values, vector2.Values),
             VectorDistanceTypes.ManhattanDistance => (SqlSingle)ManhattanDistance(vector1.Values, vector2.Values),
-            _ => throw new ArgumentException($"Unsupported distance metric: {distanceMetric}"),
+            _ => SqlSingle.Null,
         };
     }
 
@@ -144,7 +144,7 @@ public static class VectorFunctions
     /// <param name="vector1">The first vector.</param>
     /// <param name="vector2">The second vector.</param>
     /// <returns>A vector representing the midpoint, or null if either vector is null.</returns>
-    /// <exception cref="ArgumentException">Thrown when vectors have different lengths.</exception>
+    /// <remarks>Returns NULL (never throws) when vectors have different lengths.</remarks>
     [SqlFunction(Name = $"[embedding].[{nameof(Midpoint)}]", IsDeterministic = true, IsPrecise = true)]
     public static SqlVector Midpoint(SqlVector vector1, SqlVector vector2)
     {
@@ -154,7 +154,7 @@ public static class VectorFunctions
         }
         else if (vector1.Values.Count != vector2.Values.Count)
         {
-            throw new ArgumentException("Vectors must be of the same length.");
+            return SqlVector.Null;
         }
 
         var midpoint = new double[vector1.Values.Count];
@@ -173,7 +173,7 @@ public static class VectorFunctions
     /// <param name="vector1">The first vector.</param>
     /// <param name="vector2">The second vector.</param>
     /// <returns>A vector representing the midpoint, or null if either vector is null.</returns>
-    /// <exception cref="ArgumentException">Thrown when vectors have different lengths.</exception>
+    /// <remarks>Returns NULL (never throws) when vectors have different lengths.</remarks>
     [SqlFunction(Name = $"[embedding].[{nameof(MidpointF)}]", IsDeterministic = true, IsPrecise = true)]
     public static SqlVectorF MidpointF(SqlVectorF vector1, SqlVectorF vector2)
     {
@@ -183,7 +183,7 @@ public static class VectorFunctions
         }
         else if (vector1.Values.Count != vector2.Values.Count)
         {
-            throw new ArgumentException("Vectors must be of the same length.");
+            return SqlVectorF.Null;
         }
 
         var midpoint = new double[vector1.Values.Count];
@@ -201,30 +201,34 @@ public static class VectorFunctions
     /// </summary>
     /// <param name="vector1">The first vector.</param>
     /// <param name="vector2">The second vector.</param>
-    /// <returns>The angle in radians, or null if either vector is null.</returns>
+    /// <returns>The angle in radians (0 to pi), or NULL when undefined.</returns>
+    /// <remarks>
+    /// Returns NULL, never throws, when the angle is undefined: either input is NULL, the vectors have different
+    /// lengths, or either vector has zero magnitude. NULL is not a match score. Callers that order by angle must
+    /// filter these rows out (<c>WHERE angle IS NOT NULL</c>) or sort them last, because SQL Server sorts NULL first
+    /// in an ascending <c>ORDER BY</c>.
+    /// </remarks>
     [SqlFunction(Name = $"[embedding].[{nameof(Angle)}]", IsDeterministic = true, IsPrecise = true)]
     public static SqlDouble Angle(SqlVector vector1, SqlVector vector2) =>
         vector1.IsNull || vector2.IsNull ? SqlDouble.Null :
-        (SqlDouble)Math.Acos(
-            Math.Min(1, Math.Max(0,
-                Math.Sqrt(DotProduct(vector1.Values, vector2.Values)) / (vector1.Magnitude().Value * vector2.Magnitude().Value))
-                )
-            );
+        AngleInternal(vector1.Values, vector2.Values) is { } angle ? (SqlDouble)angle : SqlDouble.Null;
 
     /// <summary>
     /// Calculates the angle in radians between two single-precision vectors.
     /// </summary>
     /// <param name="vector1">The first vector.</param>
     /// <param name="vector2">The second vector.</param>
-    /// <returns>The angle in radians, or null if either vector is null.</returns>
+    /// <returns>The angle in radians (0 to pi), or NULL when undefined.</returns>
+    /// <remarks>
+    /// Returns NULL, never throws, when the angle is undefined: either input is NULL, the vectors have different
+    /// lengths, or either vector has zero magnitude. NULL is not a match score. Callers that order by angle must
+    /// filter these rows out (<c>WHERE angle IS NOT NULL</c>) or sort them last, because SQL Server sorts NULL first
+    /// in an ascending <c>ORDER BY</c>.
+    /// </remarks>
     [SqlFunction(Name = $"[embedding].[{nameof(AngleF)}]", IsDeterministic = true, IsPrecise = true)]
     public static SqlSingle AngleF(SqlVectorF vector1, SqlVectorF vector2) =>
         vector1.IsNull || vector2.IsNull ? SqlSingle.Null :
-        (SqlSingle)Math.Acos(
-            Math.Min(1, Math.Max(0,
-                Math.Sqrt(DotProduct(vector1.Values, vector2.Values)) / (vector1.Magnitude().Value * vector2.Magnitude().Value))
-                )
-            );
+        AngleInternal(vector1.Values, vector2.Values) is { } angle ? (SqlSingle)angle : SqlSingle.Null;
 
     /// <summary>
     /// Generates a random double-precision vector with values between 0 and 1.
@@ -295,12 +299,12 @@ public static class VectorFunctions
     /// <param name="max">The maximum values for each element.</param>
     /// <param name="seed">The random seed (null uses current time).</param>
     /// <returns>A vector with uniformly distributed random values.</returns>
-    /// <exception cref="ArgumentException">Thrown when min and max vectors have different lengths.</exception>
+    /// <remarks>Returns NULL (never throws) when min and max have different lengths.</remarks>
     [SqlFunction(Name = $"[embedding].[{nameof(UniformV)}]", IsDeterministic = true, IsPrecise = true)]
     public static SqlVector UniformV(SqlVector min, SqlVector max, SqlInt32 seed)
     {
         if (min.IsNull || max.IsNull) return SqlVector.Null;
-        if (min.Length() != max.Length()) throw new ArgumentException("Vectors must be of the same length.");
+        if (min.Length() != max.Length()) return SqlVector.Null;
 
         var random = Random(min.Length(), seed);
         if (random.IsNull) return SqlVector.Null;
@@ -337,12 +341,12 @@ public static class VectorFunctions
     /// <param name="max">The maximum values for each element.</param>
     /// <param name="seed">The random seed (null uses current time).</param>
     /// <returns>A vector with uniformly distributed random values.</returns>
-    /// <exception cref="ArgumentException">Thrown when min and max vectors have different lengths.</exception>
+    /// <remarks>Returns NULL (never throws) when min and max have different lengths.</remarks>
     [SqlFunction(Name = $"[embedding].[{nameof(UniformVF)}]", IsDeterministic = true, IsPrecise = true)]
     public static SqlVectorF UniformVF(SqlVectorF min, SqlVectorF max, SqlInt32 seed)
     {
         if (min.IsNull || max.IsNull) return SqlVectorF.Null;
-        if (min.Length() != max.Length()) throw new ArgumentException("Vectors must be of the same length.");
+        if (min.Length() != max.Length()) return SqlVectorF.Null;
 
         var random = Random(min.Length(), seed);
         if (random.IsNull) return SqlVectorF.Null;
@@ -367,6 +371,20 @@ public static class VectorFunctions
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal static double MagnitudeInternal(IReadOnlyList<double> values) =>
         Math.Sqrt(DotProduct(values, values));
+
+    /// <summary>
+    /// Calculates the angle in radians between two vectors, or null when it is undefined
+    /// (different lengths, or a zero-magnitude vector).
+    /// </summary>
+    internal static double? AngleInternal(IReadOnlyList<double> v1, IReadOnlyList<double> v2)
+    {
+        if (v1.Count != v2.Count) return null;
+        var magnitude1 = MagnitudeInternal(v1);
+        var magnitude2 = MagnitudeInternal(v2);
+        if (magnitude1 == 0 || magnitude2 == 0 || double.IsNaN(magnitude1) || double.IsNaN(magnitude2)) return null;
+        var angle = Math.Acos(CosineSimilarity(v1, magnitude1, v2, magnitude2));
+        return double.IsNaN(angle) ? null : angle;
+    }
 
     /// <summary>
     /// Calculates cosine distance between two vectors.

@@ -39,7 +39,7 @@ SERVICES=(
     "oobd-test-opensearch"
     "oobd-test-qdrant"
     "oobd-test-azurite"
-    "oobd-test-localstack"
+    "oobd-test-moto"
     "oobd-test-servicebus"
     "oobd-test-keycloak"
     "oobd-test-sbert"

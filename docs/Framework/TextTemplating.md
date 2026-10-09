@@ -23,7 +23,7 @@ generate simple text content. `OoBDev.System.Text.Templating`
 * [System](../Libraries/OoBDev.System.md)
   * [System.Abstractions](../Libraries/OoBDev.System.Abstractions.md)
 * [Handlebars](../Libraries/OoBDev.Handlebars.md)
-  * [Notes](../code/OoBDev.Handlebars/Readme.Handlebars.md)
+  * [Notes](../code/OoBDev.Handlebars/README.Handlebars.md)
 
 ## Structure
 

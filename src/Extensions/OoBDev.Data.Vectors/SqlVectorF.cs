@@ -114,7 +114,7 @@ public struct SqlVectorF : INullable, IBinarySerialize, IEquatable<SqlVectorF>
     /// Calculates the angle in radians between this vector and another.
     /// </summary>
     /// <param name="vector">The other vector.</param>
-    /// <returns>The angle in radians.</returns>
+    /// <returns>The angle in radians (0 to pi), or NULL when undefined (NULL input, different lengths, zero vector). Filter or sort NULL away from the top of nearest-match queries.</returns>
     [SqlMethod(
         Name = nameof(Angle),
         OnNullCall = false,
@@ -296,7 +296,7 @@ public struct SqlVectorF : INullable, IBinarySerialize, IEquatable<SqlVectorF>
     /// Parses a string representation of a vector.
     /// </summary>
     /// <param name="input">The input string in format "[1.0,2.0,3.0]".</param>
-    /// <returns>The parsed vector.</returns>
+    /// <returns>The parsed vector, or SQL NULL if the input is NULL, empty or not numeric.</returns>
     public static SqlVectorF Parse(SqlString input)
     {
         if (input.IsNull || string.IsNullOrWhiteSpace(input.Value))
@@ -319,7 +319,11 @@ public struct SqlVectorF : INullable, IBinarySerialize, IEquatable<SqlVectorF>
         }
         catch (FormatException)
         {
-            throw new ArgumentException("Invalid input format.");
+            return Null;
+        }
+        catch (OverflowException)
+        {
+            return Null;
         }
     }
 

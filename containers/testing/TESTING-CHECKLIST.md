@@ -67,7 +67,7 @@ Services running:
   - OpenSearch:         https://localhost:9200 (admin/IntegrationTest123!)
   - Qdrant:             http://localhost:6333
   - Azurite:            http://localhost:10000 (Blob), 10001 (Queue), 10002 (Table)
-  - LocalStack:         http://localhost:4566
+  - Moto:         http://localhost:4566
   - Keycloak:           http://localhost:8081 (admin/admin)
   - SBert:              http://localhost:5080
 ```
@@ -148,12 +148,12 @@ curl http://localhost:10000/devstoreaccount1?comp=list
 ```
 - [ ] ✅ Azurite Blob service responds
 
-#### LocalStack (AWS Emulator)
+#### Moto (AWS Emulator)
 ```bash
-curl http://localhost:4566/_localstack/health
+curl http://localhost:4566/moto-api/
 # Expected: JSON with service status
 ```
-- [ ] ✅ LocalStack responds
+- [ ] ✅ Moto responds
 
 #### Keycloak
 ```bash
@@ -190,7 +190,7 @@ oobd-test-rabbitmq      Up (healthy)             0.0.0.0:5673->5672/tcp, 0.0.0.0
 oobd-test-opensearch    Up (healthy)             0.0.0.0:9200->9200/tcp, 0.0.0.0:9600->9600/tcp
 oobd-test-qdrant        Up (healthy)             0.0.0.0:6333->6333/tcp, 0.0.0.0:6334->6334/tcp
 oobd-test-azurite       Up (healthy)             0.0.0.0:10000-10002->10000-10002/tcp
-oobd-test-localstack    Up (healthy)             0.0.0.0:4566->4566/tcp
+oobd-test-moto    Up (healthy)             0.0.0.0:4566->4566/tcp
 oobd-test-keycloak      Up (healthy)             0.0.0.0:8081->8080/tcp
 oobd-test-sbert         Up (healthy)             0.0.0.0:5080->5000/tcp
 ```

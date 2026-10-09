@@ -98,7 +98,28 @@ Each change document should include:
 - New protocol: configuration-documentation.md
 - Status: ✅ Complete
 
+**[documentation-patterns-discovery-2026-09-30.md](documentation-patterns-discovery-2026-09-30.md)**
+- Security, observability, resilience and AI/RAG practices and alternatives pages
+- Worker/CLI recipe, generated project catalog (81 projects)
+- Microsoft.Extensions.AI spike (6 tests) with migration recommendation
+- Status: ✅ Complete
+
+**[documentation-allminilml6v2-design-2026-10-07.md](documentation-allminilml6v2-design-2026-10-07.md)**
+- Design set for replacing the `AllMiniLML6v2Sharp` fork with first-party, thread-safe ONNX embeddings
+- Status: ✅ Complete (design only)
+
+### AI
+
+**[migration-allminilml6v2-embedder-2026-10-08.md](migration-allminilml6v2-embedder-2026-10-08.md)**
+- First-party in-process all-MiniLM-L6-v2 embedder verified against Hugging Face; model downloaded on first use; fork and submodules removed
+- Status: ✅ Complete (GitHub run not yet observed)
+
 ### Testing
+
+**[testing-vectors-sqs-moto-ci-2026-10-08.md](testing-vectors-sqs-moto-ci-2026-10-08.md)**
+- CI restore fix, vector `Angle` correction and NULL-safe functions with SQL Server Integration tests
+- Moto replaces LocalStack; SQS client and test fixes
+- Status: ✅ Complete (GitHub run not yet observed)
 
 **[testing-ollama-integration-2026-01-21.md](testing-ollama-integration-2026-01-21.md)**
 - Ollama LLM inference (14th Docker service)

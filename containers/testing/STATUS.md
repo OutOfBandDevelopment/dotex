@@ -2,7 +2,7 @@
 
 **Last Updated**: 2026-01-29
 **Current Phase**: Local Validation Complete - Ready for CI/CD Enablement
-**Latest**: Auto-initialization added for Ollama and LocalStack
+**Latest**: Auto-initialization added for Ollama and Moto
 
 ---
 
@@ -41,7 +41,7 @@ Week 4: Documentation            ░░░░░░░░░░░░░░░�
 7. ✅ OpenSearch (Search engine)
 8. ✅ Qdrant (Vector database)
 9. ✅ Azurite (Azure Storage emulator)
-10. ✅ LocalStack (AWS emulator)
+10. ✅ Moto (AWS emulator)
 11. ✅ Azure Service Bus Emulator (Message queue)
 12. ✅ Keycloak (Identity & Access Management)
 13. ✅ SBert (Sentence embeddings - CPU only)
@@ -54,7 +54,7 @@ Week 4: Documentation            ░░░░░░░░░░░░░░░�
 - ✅ Test-specific network isolation
 - ✅ Cross-platform scripts (Linux/macOS/Windows)
 - ✅ Environment variable configuration
-- ✅ Auto-initialization (Ollama models, LocalStack queues, Service Bus entities)
+- ✅ Auto-initialization (Ollama models, Moto queues, Service Bus entities)
 
 ### Test Categories ✅
 
@@ -327,7 +327,7 @@ Week 4: Documentation            ░░░░░░░░░░░░░░░�
 - [ ] Apache Tika
 - [ ] SMTP
 - [ ] Azurite
-- [ ] LocalStack
+- [ ] Moto
 - [ ] Keycloak
 - [ ] SBert
 - [ ] Azure B2C

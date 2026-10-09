@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Out-of-Band Development",
+  "classifications": [ "OoBDev", "Web", "API" ],
+  "identity": "OoBDev.Templates.WebApp",
+  "name": "OoBDev web API application",
+  "shortName": "oobdev-webapp",
+  "description": "Composition-root web API that wires OoBDev.Common.Complete. Run from src/Examples or your application folder.",
+  "tags": { "language": "C#", "type": "project" },
+  "sourceName": "AppName",
+  "preferNameDirectory": false,
+  "symbols": {
+    "commonProject": {
+      "type": "parameter",
+      "datatype": "text",
+      "defaultValue": "..\\..\\Common\\OoBDev.Common.Complete\\OoBDev.Common.Complete.csproj",
+      "replaces": "COMMON_PROJECT_PATH",
+      "description": "Relative path to OoBDev.Common.Complete.csproj"
+    }
+  }
+}
