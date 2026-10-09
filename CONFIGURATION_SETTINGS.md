@@ -134,7 +134,7 @@ appsettings.json
 │   └── DefaultModel
 ├── OoBDev
 │   ├── Communications/EmailMessageComposer/EnableTracing
-│   └── ServiceKeys/{FullTypeName}
+│   └── CachingProvider/Type
 ├── OpenSearchOptions
 │   ├── HostName
 │   ├── Port
@@ -265,7 +265,7 @@ services.Configure<ApacheTikaClientOptions>(options =>
 | Property | Type | Required | Default | Description |
 |----------|------|----------|---------|-------------|
 | ApiKey | string? | No | - | Groq Cloud API key (falls back to environment variable) |
-| Model | string | No | "llama3-8b-8192" | Default LLM model identifier |
+| Model | string | No | "openai/gpt-oss-20b" | Default LLM model identifier |
 
 **Environment Variable Fallback:**
 - `API_Key_Groq` (User-scoped environment variable)
@@ -275,7 +275,7 @@ services.Configure<ApacheTikaClientOptions>(options =>
 services.Configure<GroqCloudApiClientOptions>(options =>
 {
     options.ApiKey = "your-api-key"; // Or set API_Key_Groq env var
-    options.Model = "llama3-8b-8192";
+    options.Model = "openai/gpt-oss-20b";
 });
 ```
 
@@ -886,9 +886,9 @@ Within each section:
 
 ### Service Selection
 
-#### Keyed Service Selection
+#### Keyed Service Selection (caching provider)
 
-**Configuration Key:** `OoBDev::ServiceKeys::{FullTypeName}`
+**Configuration Key:** `OoBDev:CachingProvider:Type` (one path per capability; `TryAddConfiguredKeyedService`)
 **Type:** string (service key)
 **Purpose:** Dynamic service key selection for keyed DI services
 
@@ -896,8 +896,8 @@ Within each section:
 ```json
 {
   "OoBDev": {
-    "ServiceKeys": {
-      "MyApp.Services.IPaymentProcessor": "stripe"
+    "CachingProvider": {
+      "Type": "redis"
     }
   }
 }

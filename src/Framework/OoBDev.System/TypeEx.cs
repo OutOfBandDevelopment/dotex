@@ -22,7 +22,7 @@ public static class TypeEx
     /// <returns>resource stream</returns>
     public static Stream? GetResourceStream(this Type classType, string filename) =>
          classType.Assembly.GetManifestResourceStream($"{classType.Namespace}.{filename}") ??
-        classType.Assembly.GetManifestResourceNames().FirstOrDefault(f => f.EndsWith($".{filename}")) switch
+        classType.Assembly.GetManifestResourceNames().FirstOrDefault(f => f.EndsWith($".{filename}", StringComparison.Ordinal)) switch
         {
             null => null,
             string name => classType.Assembly.GetManifestResourceStream(name)
@@ -101,7 +101,7 @@ public static class TypeEx
         type?.Name switch
         {
             null => false,
-            string name when name.StartsWith("<>f__AnonymousType") || name.StartsWith("VB$AnonymousType_") => true,
+            string name when name.StartsWith("<>f__AnonymousType", StringComparison.Ordinal) || name.StartsWith("VB$AnonymousType_", StringComparison.Ordinal) => true,
             _ => false
         };
 
@@ -114,7 +114,7 @@ public static class TypeEx
     public static XName GetXmlElementName(this Type type, bool excludeNamespace = false)
     {
         var objectName = type.Name;
-        if (objectName.StartsWith("<>f__AnonymousType")) objectName = "object";
+        if (objectName.StartsWith("<>f__AnonymousType", StringComparison.Ordinal)) objectName = "object";
 
         return XName.Get(XmlConvert.EncodeName(objectName), excludeNamespace ? "" : type.GetXmlNamespace());
     }

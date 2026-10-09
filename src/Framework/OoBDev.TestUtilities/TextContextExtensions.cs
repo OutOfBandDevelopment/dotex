@@ -43,7 +43,7 @@ public static class TextContextExtensions
                 XPathNodeIterator _ => ".xml",
                 _ => ".data"
             };
-            fileName = $"{value.GetType().Name}_{DateTime.Now.Ticks}{ext}".Replace('`', '_').Replace(':', '_').Replace('<', '_').Replace('>', '_');
+            fileName = $"{value.GetType().Name}_{TimeProvider.System.GetLocalNow().Ticks}{ext}".Replace('`', '_').Replace(':', '_').Replace('<', '_').Replace('>', '_');
         }
 
         if (value is byte[] data)

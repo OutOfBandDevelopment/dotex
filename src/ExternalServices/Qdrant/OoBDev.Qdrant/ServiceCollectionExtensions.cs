@@ -27,7 +27,9 @@ public static class ServiceCollectionExtensions
 #endif
         )
     {
-        services.Configure<QdrantOptions>(options => configuration.Bind(qdrantOptionSection, options));
+        services.AddOptions<QdrantOptions>()
+            .Bind(configuration.GetSection(qdrantOptionSection))
+            .ValidateDataAnnotations();
         services.TryAddTransient<IQdrantGrpcClientFactory, QdrantGrpcClientFactory>();
         services.TryAddTransient(sp => sp.GetRequiredService<IQdrantGrpcClientFactory>().Create());
 

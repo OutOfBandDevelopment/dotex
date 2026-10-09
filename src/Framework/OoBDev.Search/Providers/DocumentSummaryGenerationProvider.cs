@@ -1,6 +1,7 @@
 using OoBDev.AI;
 using OoBDev.Extensions;
 using System;
+using System.Globalization;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Threading.Tasks;
@@ -36,7 +37,6 @@ public class DocumentSummaryGenerationProvider
         _messageCompletion = messageCompletion;
         _modelName = modelName;
         _promptTemplate = promptTemplate;
-        ;
     }
 
     /// <summary>
@@ -65,7 +65,7 @@ public class DocumentSummaryGenerationProvider
 
     internal async Task<string> GetCompletionAsync(string modelName, string promptTemplate, string content)
     {
-        var prompt = string.Format(promptTemplate, content);
+        var prompt = string.Format(CultureInfo.InvariantCulture, promptTemplate, content);
 
         var completion = await _messageCompletion.GetCompletionAsync(modelName, prompt);
 

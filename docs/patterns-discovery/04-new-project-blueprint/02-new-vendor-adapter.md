@@ -44,7 +44,7 @@ skinparam rectangle {
   FontColor<<external>> white
 }
 rectangle "Notifications.Abstractions\n[Container: library]\nINotificationProvider" as Abs <<container>>
-rectangle "Notifications\n[Container: library]\nNotificationSender, ISelectedService" as Impl <<container>>
+rectangle "Notifications\n[Container: library]\nNotificationSender, configured keyed factory" as Impl <<container>>
 rectangle "Twilio.Notifications\n[Container: library]\nTwilioNotificationProvider" as Ad <<container>>
 rectangle "Twilio\n[External System]" as Ext <<external>>
 Impl --> Abs : implements

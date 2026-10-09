@@ -241,7 +241,7 @@ OoBDev.{Layer}.{Feature}/
 - ImplicitUsings disabled (explicit using statements)
 - XML documentation on public APIs
 - Target framework: net10.0
-- No breaking changes to existing OoBDev APIs
+- Breaking changes to OoBDev APIs are acceptable while the framework is unreleased (owner decision 2026-10-09): rename or remove outright, no obsolete forwarders
 
 ### Testing
 - MSTest framework
@@ -519,7 +519,7 @@ dotnet test src/ --collect:"XPlat Code Coverage"
 - **Templates:** `templates/` (`dotnet new` pack: `oobdev-capability`, `oobdev-adapter`, `oobdev-webapp`); verify with `scripts/templates/verify-templates.ps1` (generates under `src/`, builds from `src/Framework` cwd because `Directory.Build.props` computes `SolutionDir` from the cwd, then cleans up).
 - **Scripts:** `scripts/docs/` (`validate-docs.py`, `build-index.py`, `build-project-catalog.py`, `fix-plantuml-newlines.py`). Validate with `python scripts/docs/validate-docs.py docs/patterns-discovery` (expect 80 files, 0 problems; the whole `docs/` tree has ~566 pre-existing problems, e.g. `docs/sbom`). Needs docker `plantuml/plantuml-server` on port 18080.
 - **Decisions made:** `#if DEBUG` required builder parameters are intentional (forces child builders to be forwarded); `ServiceCollectionExtensions` everywhere; provider keys kebab-case; readmes are `README.X.md`; options were deliberately unvalidated (strict/relaxed mode under analysis).
-- **Open backlogs in `TODO.md`:** `ISelectedService` rough edges (intent unknown, needs owner review), naming consistency, Roslyn analyzers, options validation modes, caching proxy (`Retreive` to `Retrieve`), message context caller info, replace hand-built providers with platform primitives (`TimeProvider`), HTTP querying and rights middleware, documentation coverage gaps (build these out in the listed order).
+- **Open backlogs in `TODO.md`:** naming consistency, Roslyn analyzers, options validation modes, message context caller info, replace hand-built providers with platform primitives (`TimeProvider`), HTTP querying and rights middleware, documentation coverage gaps (build these out in the listed order).
 - **Branch state:** history was rewritten to remove AI trailers from commit messages and the branch matches `origin/dev/patterns-discovery` (as of 3f54bfe). Never force-push without the owner's explicit approval.
 
 ---
@@ -527,6 +527,7 @@ dotnet test src/ --collect:"XPlat Code Coverage"
 ## Recently Completed Work
 
 ### 2026-10-09
+- **Framework cleanup (unreleased, breaking)** - `ISelectedService<T>` replaced by `TryAddConfiguredKeyedService<T>` (caching path `OoBDev:CachingProvider:Type`), `IDateTimeProvider` removed for `TimeProvider`, `Retreive` renamed `Retrieve`, hash/serializer/HMAC provider keys lower-case kebab-case, message caller info via caller attributes, `AddValidatedOptions<T>()` added (adapter adoption blocked by the Abstractions-only reference rule, see TODO.md), Groq live tests on `openai/gpt-oss-20b`
 - **Integration test stack** - every host port overridable via `TEST_PORT_<NAME>`; Docker docs under `docs/architecture/testing/integration/` (infrastructure, services, dependency matrix, writing tests)
 - **AsyncAPI document and viewer** - `OoBDev.AsyncApi` (thin first-party AsyncAPI 3.0 model and builder), `IAsyncApiContributor` in the SQS, Service Bus and RabbitMQ adapters, `MapAsyncApi()` (`/asyncapi/{name}.json` and viewer), 7 Simulate tests. [Details](docs/changes/migration-asyncapi-2026-10-09.md)
 - **Swashbuckle replaced by OpenAPI transformers and Scalar** - `Microsoft.AspNetCore.OpenApi` documents (`/openapi/{name}.json`, `all` plus one per assembly), custom filters ported to transformers, Scalar reference with OAuth2 authorization code and PKCE, 4 Simulate tests; AsyncAPI viewer is phase 2. [Details](docs/changes/migration-openapi-scalar-2026-10-09.md)

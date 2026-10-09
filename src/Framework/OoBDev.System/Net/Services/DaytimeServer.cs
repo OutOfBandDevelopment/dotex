@@ -1,5 +1,6 @@
 ﻿using OoBDev.System.Net.Sockets;
 using System;
+using System.Globalization;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -14,7 +15,7 @@ namespace OoBDev.System.Net.Services;
 /// </summary>
 /// <param name="ipAddress">The IP address to bind to. If null, binds to all available network interfaces.</param>
 /// <param name="port">The port number to listen on. Defaults to 13 (standard daytime port).</param>
-public class DaytimeServer(IPAddress? ipAddress = default, ushort port = 13) : ServerBase(ipAddress, port)
+public class DaytimeServer(IPAddress? ipAddress = default, ushort port = 13, TimeProvider? timeProvider = null) : ServerBase(ipAddress, port)
 {
     /// <summary>
     /// Handles incoming messages by responding with the current date and time in UTF-8 encoded format.
@@ -26,7 +27,7 @@ public class DaytimeServer(IPAddress? ipAddress = default, ushort port = 13) : S
     /// <returns>A task representing the asynchronous operation.</returns>
     protected override async Task MessageReceivedAsync(int clientId, TcpClient accepted, Memory<byte> message, CancellationToken cancellationToken)
     {
-        Memory<byte> buffer = Encoding.UTF8.GetBytes(DateTimeOffset.Now.ToString());
+        Memory<byte> buffer = Encoding.UTF8.GetBytes((timeProvider ?? TimeProvider.System).GetLocalNow().ToString(CultureInfo.InvariantCulture));
         await accepted.GetStream().WriteAsync(buffer, cancellationToken);
     }
 }

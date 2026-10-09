@@ -22,7 +22,7 @@ Products change quickly. Licensing and feature statements below reflect what was
 
 | # | Topic | Verdict | Where |
 |---|-------|---------|-------|
-| 1 | Provider selection (`ISelectedService` vs keyed DI vs named options) | Keep intent; migrate to a keyed-service selection factory; third-party DI rejected | [DI and composition](./01-di-and-composition.md) |
+| 1 | Provider selection (configured keyed factory vs keyed DI vs named options) | Done 2026-10-09: keyed-service selection factory replaced `ISelectedService`; third-party DI rejected | [DI and composition](./01-di-and-composition.md) |
 | 2 | Options binding and validation | Change (add validation via `AddValidatedOptions<T>()`) | [DI and composition](./01-di-and-composition.md) |
 | 3 | `#if DEBUG` required parameters | Keep; analyzer preferred, spike wanted | [DI and composition](./01-di-and-composition.md) |
 | 4 | Builder records vs configure delegates | Keep | [DI and composition](./01-di-and-composition.md) |
@@ -61,7 +61,7 @@ skinparam shadowing false
 rectangle "Low effort, high value" as Q1 {
   rectangle "Options validation" as a
   rectangle "Central package management" as b
-  rectangle "Fix RetreiveAsync typo" as c
+  rectangle "Fix RetrieveAsync typo" as c
   rectangle "SHA-512 default hash" as d
 }
 rectangle "Higher effort, high value" as Q2 {

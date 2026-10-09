@@ -35,29 +35,29 @@ public class MicrosoftMemoryCachingProviderTests
             var testKey = Guid.NewGuid().ToString();
             var testValue = Guid.NewGuid();
 
-            var result1 = await provider.RetreiveAsync(testKey, typeof(Guid));
+            var result1 = await provider.RetrieveAsync(testKey, typeof(Guid));
             Assert.IsNull(result1);
 
             await provider.StoreAsync(testKey, testValue, new TimeSpan(0, 0, 0, 0, 200));
 
-            var result2 = await provider.RetreiveAsync(testKey, typeof(Guid));
+            var result2 = await provider.RetrieveAsync(testKey, typeof(Guid));
             Assert.IsNotNull(result2);
             Assert.AreEqual(testValue, result2);
 
             await Task.Delay(300);
 
-            var result3 = await provider.RetreiveAsync(testKey, typeof(Guid));
+            var result3 = await provider.RetrieveAsync(testKey, typeof(Guid));
             Assert.IsNull(result3);
 
             await provider.StoreAsync(testKey, testValue, new TimeSpan(0, 1, 0));
 
-            var result4 = await provider.RetreiveAsync(testKey, typeof(Guid));
+            var result4 = await provider.RetrieveAsync(testKey, typeof(Guid));
             Assert.IsNotNull(result4);
             Assert.AreEqual(testValue, result4);
 
             await provider.FlushAsync(testKey);
 
-            var result5 = await provider.RetreiveAsync(testKey, typeof(Guid));
+            var result5 = await provider.RetrieveAsync(testKey, typeof(Guid));
             Assert.IsNull(result5);
 
         }

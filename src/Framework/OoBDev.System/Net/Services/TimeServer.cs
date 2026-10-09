@@ -13,7 +13,7 @@ namespace OoBDev.System.Net.Services;
 /// </summary>
 /// <param name="ipAddress">The IP address to bind to. Defaults to all available interfaces.</param>
 /// <param name="port">The port to listen on. Defaults to 37 (standard Time Protocol port).</param>
-public class TimeServer(IPAddress? ipAddress = default, ushort port = 37) : ServerBase(ipAddress, port)
+public class TimeServer(IPAddress? ipAddress = default, ushort port = 37, TimeProvider? timeProvider = null) : ServerBase(ipAddress, port)
 {
     /// <summary>
     /// Handles incoming client connections by sending the current time as seconds since 1900-01-01 00:00:00 UTC.
@@ -25,7 +25,7 @@ public class TimeServer(IPAddress? ipAddress = default, ushort port = 37) : Serv
     /// <returns>A task representing the asynchronous operation.</returns>
     protected override async Task MessageReceivedAsync(int clientId, TcpClient accepted, Memory<byte> message, CancellationToken cancellationToken)
     {
-        var timeDiff = DateTimeOffset.UtcNow.ToUnixTimeSeconds() - new DateTimeOffset(1900, 1, 1, 0, 0, 0, new TimeSpan(0, 0, 0)).ToUnixTimeSeconds();
+        var timeDiff = (timeProvider ?? TimeProvider.System).GetUtcNow().ToUnixTimeSeconds() - new DateTimeOffset(1900, 1, 1, 0, 0, 0, new TimeSpan(0, 0, 0)).ToUnixTimeSeconds();
         Memory<byte> buffer = BitConverter.GetBytes((int)timeDiff);
         await accepted.GetStream().WriteAsync(buffer);
     }

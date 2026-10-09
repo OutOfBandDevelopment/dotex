@@ -41,7 +41,7 @@ namespace OoBDev.Caching.Abstractions
         /// <param name="key">Unique cache key</param>
         /// <param name="targetType">Expected return type</param>
         /// <returns>Cached object or null if not found/expired</returns>
-        Task<object?> RetreiveAsync(string key, Type targetType);
+        Task<object?> RetrieveAsync(string key, Type targetType);
 
         /// <summary>
         /// Remove data from cache
@@ -58,7 +58,7 @@ namespace OoBDev.Caching.Abstractions
 1. ✅ **Handle null keys gracefully** - Return/no-op, don't throw exceptions
 2. ✅ **Be thread-safe** - Support concurrent access from multiple threads
 3. ✅ **Honor expiration** - Automatically remove/reject expired entries
-4. ✅ **Return null on miss** - `RetreiveAsync` returns null if key not found or expired
+4. ✅ **Return null on miss** - `RetrieveAsync` returns null if key not found or expired
 5. ✅ **Support serialization** - Convert objects to storable format (if needed)
 6. ✅ **Be disposable** (if needed) - Implement `IDisposable` for cleanup
 
@@ -113,7 +113,7 @@ namespace MyApp.Caching
             return Task.CompletedTask;
         }
 
-        public Task<object?> RetreiveAsync(string key, Type targetType)
+        public Task<object?> RetrieveAsync(string key, Type targetType)
         {
             if (string.IsNullOrWhiteSpace(key)) return Task.FromResult<object?>(null);
 
@@ -375,12 +375,12 @@ public class UserService
     {
         // Use memory for frequently accessed users
         var memoryCache = _providers.GetProvider("memory");
-        var cached = await memoryCache.RetreiveAsync($"user:{userId}", typeof(User));
+        var cached = await memoryCache.RetrieveAsync($"user:{userId}", typeof(User));
         if (cached != null) return (User)cached;
 
         // Fallback to Redis
         var redisCache = _providers.GetProvider("redis");
-        cached = await redisCache.RetreiveAsync($"user:{userId}", typeof(User));
+        cached = await redisCache.RetrieveAsync($"user:{userId}", typeof(User));
         if (cached != null)
         {
             // Promote to memory cache
@@ -410,14 +410,14 @@ public class HybridCachingProvider : ICachingProvider
         await _l2Cache.StoreAsync(key, data, expiration);
     }
 
-    public async Task<object?> RetreiveAsync(string key, Type targetType)
+    public async Task<object?> RetrieveAsync(string key, Type targetType)
     {
         // Check L1 first (fast)
-        var cached = await _l1Cache.RetreiveAsync(key, targetType);
+        var cached = await _l1Cache.RetrieveAsync(key, targetType);
         if (cached != null) return cached;
 
         // Check L2 (slower)
-        cached = await _l2Cache.RetreiveAsync(key, targetType);
+        cached = await _l2Cache.RetrieveAsync(key, targetType);
         if (cached != null)
         {
             // Promote to L1
@@ -486,7 +486,7 @@ public class UserService
         var key = $"user:{userId}";
 
         // Fast path: Check cache without lock
-        var cached = await _cache.RetreiveAsync(key, typeof(User));
+        var cached = await _cache.RetrieveAsync(key, typeof(User));
         if (cached != null) return (User)cached;
 
         // Slow path: Acquire lock, double-check, load
@@ -494,7 +494,7 @@ public class UserService
         try
         {
             // Double-check after acquiring lock
-            cached = await _cache.RetreiveAsync(key, typeof(User));
+            cached = await _cache.RetrieveAsync(key, typeof(User));
             if (cached != null) return (User)cached;
 
             // Load from database
@@ -544,7 +544,7 @@ public class UserServiceTests
         var userId = 123;
         var expectedUser = new User { Id = userId, Name = "John" };
         _mockCache
-            .Setup(c => c.RetreiveAsync($"user:{userId}", typeof(User)))
+            .Setup(c => c.RetrieveAsync($"user:{userId}", typeof(User)))
             .ReturnsAsync(expectedUser);
 
         // Act
@@ -553,7 +553,7 @@ public class UserServiceTests
         // Assert
         Assert.AreEqual(expectedUser, result);
         _mockCache.Verify(
-            c => c.RetreiveAsync($"user:{userId}", typeof(User)),
+            c => c.RetrieveAsync($"user:{userId}", typeof(User)),
             Times.Once
         );
     }
@@ -583,7 +583,7 @@ public class MicrosoftCachingProviderTests
 
     [TestMethod]
     [TestCategory(TestCategories.Integration)]
-    public async Task StoreAsync_AndRetreive_WorksCorrectly()
+    public async Task StoreAsync_AndRetrieve_WorksCorrectly()
     {
         // Arrange
         var key = $"test:{Guid.NewGuid()}";
@@ -591,7 +591,7 @@ public class MicrosoftCachingProviderTests
 
         // Act
         await _provider.StoreAsync(key, data, TimeSpan.FromMinutes(5));
-        var result = await _provider.RetreiveAsync(key, data.GetType());
+        var result = await _provider.RetrieveAsync(key, data.GetType());
 
         // Assert
         Assert.IsNotNull(result);
@@ -604,7 +604,7 @@ public class MicrosoftCachingProviderTests
 
     [TestMethod]
     [TestCategory(TestCategories.Integration)]
-    public async Task RetreiveAsync_ExpiredEntry_ReturnsNull()
+    public async Task RetrieveAsync_ExpiredEntry_ReturnsNull()
     {
         // Arrange
         var key = $"test:{Guid.NewGuid()}";
@@ -613,7 +613,7 @@ public class MicrosoftCachingProviderTests
         // Act
         await _provider.StoreAsync(key, data, TimeSpan.FromMilliseconds(100));
         await Task.Delay(200); // Wait for expiration
-        var result = await _provider.RetreiveAsync(key, typeof(string));
+        var result = await _provider.RetrieveAsync(key, typeof(string));
 
         // Assert
         Assert.IsNull(result);

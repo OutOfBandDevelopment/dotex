@@ -25,7 +25,7 @@ To carry the same approach to a new framework (different prefix, different domai
 
 ## Order of work
 
-1. Create the `System.Abstractions` and `System` equivalents first (providers for time, GUID, current user; `ISelectedService`; result envelope; builder pattern). These are the foundation for [patterns 1 to 8, 15 and 16](../02-design-patterns/README.md).
+1. Create the `System.Abstractions` and `System` equivalents first (providers for time, GUID, current user; `TryAddConfiguredKeyedService`; result envelope; builder pattern). These are the foundation for [patterns 1 to 8, 15 and 16](../02-design-patterns/README.md).
 2. Add the first capability using [Recipe 1](./01-new-framework-capability.md) and the first adapter using [Recipe 2](./02-new-vendor-adapter.md).
 3. Add the Common roll-up once at least two capabilities exist.
 4. Add the example application ([Recipe 3](./03-new-application.md)) as the living proof of composition.

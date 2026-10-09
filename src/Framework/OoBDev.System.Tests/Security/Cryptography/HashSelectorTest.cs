@@ -37,9 +37,9 @@ public class HashSelectorTest
     [DataRow(HashTypes.Md5, typeof(Md5Hash))]
     [DataRow(HashTypes.Sha256, typeof(Sha256Hash))]
     [DataRow(HashTypes.Sha512, typeof(Sha512Hash))]
-    [DataRow("MD5", typeof(Md5Hash))]
-    [DataRow("SHA256", typeof(Sha256Hash))]
-    [DataRow("SHA512", typeof(Sha512Hash))]
+    [DataRow("md5", typeof(Md5Hash))]
+    [DataRow("sha256", typeof(Sha256Hash))]
+    [DataRow("sha512", typeof(Sha512Hash))]
     public void KeyedHashTest(object targetSerializerType, Type expectedType)
     {
         var config = new ConfigurationBuilder().Build();

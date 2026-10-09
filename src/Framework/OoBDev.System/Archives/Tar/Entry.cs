@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Text;
 using System.IO;
 
@@ -26,7 +27,7 @@ internal class Entry
         Stream? infile = File.OpenRead(file);
         try
         {
-            var ext = Path.GetExtension(file).ToUpper();
+            var ext = Path.GetExtension(file).ToUpperInvariant();
             if (ext == ".GZ" || ext == ".TGZ")
                 infile = infile.Decompress();
 
@@ -101,7 +102,7 @@ internal class Entry
                                         if (newFile != null)
                                         {
                                             if (newFile is MemoryStream ms)
-                                                longName = string.Format("{0}{1}", longName, Encoding.ASCII.GetString(ms.ToArray()).TrimEnd('\0'));
+                                                longName = string.Format(CultureInfo.InvariantCulture, "{0}{1}", longName, Encoding.ASCII.GetString(ms.ToArray()).TrimEnd('\0'));
                                             newFile.Flush();
                                             newFile.Close();
                                         }

@@ -47,7 +47,7 @@ public class HandlebarsTemplateProvider(
     /// <param name="context">The template context.</param>
     /// <returns><c>true</c> if the template processing can be applied; otherwise, <c>false</c>.</returns>
     public bool CanApply(ITemplateContext context) =>
-        SupportedContentTypes.Any(type => string.Equals(context.TemplateContentType, type, StringComparison.InvariantCultureIgnoreCase));
+        SupportedContentTypes.Any(type => string.Equals(context.TemplateContentType, type, StringComparison.OrdinalIgnoreCase));
 
     /// <summary>
     /// Asynchronously applies Handlebars template processing to the specified context, data, and target stream.

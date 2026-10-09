@@ -24,7 +24,8 @@ public class TextTemplateController(
     //ITextTemplateProvider provider,
     ITemplateEngine engine,
 
-    IEnumerable<IFileType> fileTypes
+    IEnumerable<IFileType> fileTypes,
+    TimeProvider timeProvider
     ) : ControllerBase
 {
 
@@ -68,7 +69,7 @@ public class TextTemplateController(
             ? NotFound()
             : new FileContentResult(ms.ToArray(), context.TargetContentType)
             {
-                FileDownloadName = $"{context.TemplateName}-{DateTimeOffset.Now:yyyyMMddHHmmss}{context.TargetFileExtension}"
+                FileDownloadName = $"{context.TemplateName}-{timeProvider.GetLocalNow():yyyyMMddHHmmss}{context.TargetFileExtension}"
             };
     }
 }

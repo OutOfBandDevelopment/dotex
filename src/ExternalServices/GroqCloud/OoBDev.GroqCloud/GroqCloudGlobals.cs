@@ -10,8 +10,4 @@ public static class GroqCloudGlobals
     /// </summary>
     public const string ProviderKey = "groq-cloud";
 
-    /// <summary>
-    /// The earlier key, still registered so existing configuration keeps working.
-    /// </summary>
-    public const string LegacyKey = "GroqCloud";
 }

@@ -12,7 +12,7 @@ internal class Program
         {
             var dir = Path.GetDirectoryName(folder) ?? ".";
             var current = Path.GetFileName(folder);
-            if (current.StartsWith(sourcePrefix))
+            if (current.StartsWith(sourcePrefix, StringComparison.Ordinal))
             {
                 var next = Path.Combine(dir, current.Replace(sourcePrefix, targetPrefix));
                 Console.WriteLine($"{current}");
@@ -24,7 +24,7 @@ internal class Program
         {
             var dir = Path.GetDirectoryName(file) ?? ".";
             var current = Path.GetFileName(file);
-            if (current.StartsWith(sourcePrefix))
+            if (current.StartsWith(sourcePrefix, StringComparison.Ordinal))
             {
                 var next = Path.Combine(dir, current.Replace(sourcePrefix, targetPrefix));
                 Console.WriteLine($"{current}");

@@ -1,5 +1,6 @@
 ﻿using OoBDev.System.ExpressionCalculator.Expressions;
 using System;
+using System.Globalization;
 using static OoBDev.System.ExpressionCalculator.Expressions.BinaryOperators;
 using static OoBDev.System.ExpressionCalculator.Expressions.UnaryOperators;
 
@@ -68,7 +69,7 @@ public sealed class IdentityExpressionOptimizer<T> : IExpressionOptimizer<T> whe
     private int? GetValue(ExpressionBase<T> expression) =>
         expression switch
         {
-            NumberExpression<T> num => Convert.ToInt32(num.Value),
+            NumberExpression<T> num => Convert.ToInt32(num.Value, CultureInfo.InvariantCulture),
             UnaryOperatorExpression<T> unaryOp => 0 - GetValue(unaryOp.Operand),
             _ => null
         };

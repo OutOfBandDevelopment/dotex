@@ -10,7 +10,7 @@ internal class NullCachingProvider : ICachingProvider
 {
     public Task FlushAsync(string? key) => Task.CompletedTask;
 
-    public Task<object?> RetreiveAsync(string? key, Type? targetType) => Task.FromResult<object?>(null);
+    public Task<object?> RetrieveAsync(string? key, Type? targetType) => Task.FromResult<object?>(null);
 
     public Task StoreAsync(string? key, object? data, TimeSpan expiration) => Task.CompletedTask;
 }

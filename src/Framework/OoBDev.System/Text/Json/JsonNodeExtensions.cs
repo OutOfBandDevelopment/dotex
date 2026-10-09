@@ -1,5 +1,6 @@
 using OoBDev.System.Text.Xml.Linq;
 using System;
+using System.Globalization;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
@@ -77,7 +78,7 @@ public static class JsonNodeExtensions
             null => null,
             JsonValueKind.Null => null,
             JsonValueKind.Undefined => null,
-            JsonValueKind.Number => new XFragment(new XText(json.GetValue<double>().ToString())),
+            JsonValueKind.Number => new XFragment(new XText(json.GetValue<double>().ToString(CultureInfo.InvariantCulture))),
             JsonValueKind.String => new XFragment(new XText(json.GetValue<string>())),
             JsonValueKind.Array => json.AsArray().ToXFragment(rootName),
             JsonValueKind.True => new XFragment(new XText("true")),

@@ -7,6 +7,8 @@ using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 
+using System.ComponentModel.DataAnnotations;
+
 namespace OoBDev.Apache.Tika;
 
 /// <summary>
@@ -18,5 +20,6 @@ public class ApacheTikaClientOptions
     /// <summary>
     /// Gets or sets the URL of the Apache Tika server.
     /// </summary>
+    [Required]
     public string Url { get; set; }
 }

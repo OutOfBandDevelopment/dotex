@@ -34,14 +34,11 @@ public class RegistrationTests
 
         var byDefault = provider.GetRequiredService<IEmbeddingProvider>();
         var byKey = provider.GetRequiredKeyedService<IEmbeddingProvider>(SBertGlobals.AllMiniLmL6V2Key);
-        var legacy = provider.GetRequiredKeyedService<IEmbeddingProvider>(SBertGlobals.LegacyKey);
 
         Assert.AreEqual(384, byDefault.Length);
         var a = await byDefault.GenerateEmbeddingAsync("hello world", null, default);
         var b = await byKey.GenerateEmbeddingAsync("hello world", null, default);
-        var c = await legacy.GenerateEmbeddingAsync("hello world", null, default);
         Assert.IsGreaterThan(0.9999f, TensorPrimitives.CosineSimilarity(a.Span, b.Span));
-        Assert.IsGreaterThan(0.9999f, TensorPrimitives.CosineSimilarity(a.Span, c.Span));
     }
 
     [TestCategory(TestCategories.Integration)]

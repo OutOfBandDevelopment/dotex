@@ -20,7 +20,6 @@ public class RedisCachingRegistrar
     {
         services.TryAddTransient<ICachingProvider, RedisCachingProvider>();
         services.TryAddKeyedTransient<ICachingProvider, RedisCachingProvider>(RedisGlobals.ProviderKey);
-        services.TryAddKeyedTransient<ICachingProvider, RedisCachingProvider>(RedisGlobals.LegacyKey);
         services.TryAddTransient<IConnectionMultiplexerFactory, ConnectionMultiplexerFactory>();
         return services;
     }

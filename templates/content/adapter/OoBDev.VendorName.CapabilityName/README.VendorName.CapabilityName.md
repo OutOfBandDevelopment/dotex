@@ -15,6 +15,6 @@ Registers nothing unless `VendorNameOptions:AccountId` is configured.
 | Key | Purpose |
 |-----|---------|
 | `VendorNameOptions:AccountId` | Enables the adapter |
-| `OoBDev::ServiceKeys::OoBDev.CapabilityName.ICapabilityNameProvider` = `vendor-name` | Selects this provider when several are registered |
+| `OoBDev:CapabilityName:Provider` = `vendor-name` | Selects this provider when several are registered |
 
 Document new keys in `CONFIGURATION_SETTINGS.md`.

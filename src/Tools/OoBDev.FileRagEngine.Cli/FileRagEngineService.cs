@@ -87,7 +87,7 @@ public class FileRagEngineService : IHostedService
             var outFolder = Path.Combine(outputPath, realative);
 
             var files = (from file in Directory.GetFiles(directory)
-                         let ext = Path.GetExtension(file).ToUpper() //TODO: do something smarter
+                         let ext = Path.GetExtension(file).ToUpperInvariant() //TODO: do something smarter
                          where !new[] {
                              ".PDF", ".DLL", ".EXE", ".PNG", ".GIF", ".JPG", ".ZIP", ".GZ", ".EPUB", ".RTF", ".DOC", ".DOCX" ,
                              ".V2", ".DACPAC", ".BACPAC", ".SCMP", ".BIN", ".SVG", ".ICO",

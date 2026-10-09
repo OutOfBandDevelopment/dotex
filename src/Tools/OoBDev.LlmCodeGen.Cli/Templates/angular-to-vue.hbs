@@ -1,0 +1,19 @@
+You are converting an Angular component folder ("{{folder}}") to Vue 3 with TypeScript.
+
+Rules:
+- Single-file components with `<script setup lang="ts">`; one `.vue` file per Angular component, keep the selector as the component name in PascalCase.
+- `@Input()` becomes `defineProps`, `@Output()` becomes `defineEmits`, services become composables (`useXxx`) or `provide`/`inject`.
+- Templates: `*ngIf` becomes `v-if`, `*ngFor` becomes `v-for` with `:key`, `[(ngModel)]` becomes `v-model`, pipes become functions or computed values, `(click)` becomes `@click`.
+- Keep the view model in a composable separate from the markup so commands stay unit-testable; do not keep logic in inline handlers.
+- Copy styles into a `<style scoped>` block with the same class names.
+- Do not add libraries that were not used in the Angular code except `vue`.
+
+Return every output file with its name in bold on the line before the fenced block, for example **UserList.vue**. List anything you could not convert in a final **NOTES.md** block.
+
+{{#each files}}
+**{{name}}**
+```{{extension}}
+{{content}}
+```
+
+{{/each}}

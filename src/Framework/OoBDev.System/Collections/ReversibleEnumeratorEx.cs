@@ -38,7 +38,7 @@ public static class ReversibleEnumeratorEx
     /// <returns></returns>
     public static IReversibleEnumerator<T> FastForwardToEnd<T>(this IReversibleEnumerator<T> current)
     {
-        while (current.MoveNext()) ;
+        while (current.MoveNext()) { }
         return current;
     }
 
@@ -66,7 +66,7 @@ public static class ReversibleEnumeratorEx
     /// <returns></returns>
     public static IReversibleEnumerator<T> Back<T>(this IReversibleEnumerator<T> current, int count)
     {
-        for (var i = 0; i < count && current.MovePrevious(); i++) ;
+        for (var i = 0; i < count && current.MovePrevious(); i++) { }
         return current;
     }
 
@@ -79,7 +79,7 @@ public static class ReversibleEnumeratorEx
     /// <returns></returns>
     public static IReversibleEnumerator<T> Forward<T>(this IReversibleEnumerator<T> current, int count)
     {
-        for (var i = 0; i < count && current.MoveNext(); i++) ;
+        for (var i = 0; i < count && current.MoveNext(); i++) { }
         return current;
     }
 }

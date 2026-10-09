@@ -83,7 +83,7 @@ public class ProductService
         var cacheKey = $"product:{id}";
 
         // Try to retrieve from Redis
-        var cached = await _cache.RetreiveAsync(cacheKey, typeof(Product));
+        var cached = await _cache.RetrieveAsync(cacheKey, typeof(Product));
         if (cached != null) return (Product)cached;
 
         // Fetch from source
@@ -215,7 +215,7 @@ public class TwoTierCache
             return value;
 
         // Check L2 (Redis)
-        var cached = await _l2Redis.RetreiveAsync(key, typeof(T));
+        var cached = await _l2Redis.RetrieveAsync(key, typeof(T));
         if (cached != null)
         {
             // Populate L1

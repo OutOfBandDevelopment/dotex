@@ -10,8 +10,4 @@ public static class RedisGlobals
     /// </summary>
     public const string ProviderKey = "redis";
 
-    /// <summary>
-    /// The earlier key, still registered so existing configuration keeps working.
-    /// </summary>
-    public const string LegacyKey = "Redis";
 }

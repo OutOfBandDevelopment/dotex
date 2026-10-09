@@ -10,8 +10,4 @@ public static class HandlebarsGlobals
     /// </summary>
     public const string ProviderKey = "handlebars";
 
-    /// <summary>
-    /// The earlier key, still registered so existing configuration keeps working.
-    /// </summary>
-    public const string LegacyKey = "HANDLEBARS";
 }

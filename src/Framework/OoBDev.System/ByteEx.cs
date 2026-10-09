@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Globalization;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -17,7 +18,7 @@ public static class ByteEx
     /// <param name="delimiter"></param>
     /// <returns></returns>
     public static string ToHexString(this IEnumerable<byte> data, string delimiter = "") =>
-        string.Join(delimiter ?? "", (data ?? []).Select(b => b.ToString("x2")));
+        string.Join(delimiter ?? "", (data ?? []).Select(b => b.ToString("x2", CultureInfo.InvariantCulture)));
 
     /// <summary>
     /// Decompresses a byte array that was compressed using DEFLATE compression.

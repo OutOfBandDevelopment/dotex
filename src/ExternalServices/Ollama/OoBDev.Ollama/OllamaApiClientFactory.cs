@@ -22,5 +22,15 @@ public class OllamaApiClientFactory : IOllamaApiClientFactory
     /// Builds a new instance of the <see cref="OllamaApiClient"/> with the specified host.
     /// </summary>
     /// <returns>A new instance of the <see cref="OllamaApiClient"/>.</returns>
-    public IOllamaApiClient Build() => new OllamaApiClient(_options.Value.Url, _options.Value.DefaultModel);
+    public IOllamaApiClient Build()
+    {
+        var options = _options.Value;
+        var client = new OllamaApiClient(options.Url, options.DefaultModel);
+        if (!string.IsNullOrWhiteSpace(options.ApiKey))
+        {
+            client.DefaultRequestHeaders.Add("Authorization", $"Bearer {options.ApiKey}");
+        }
+
+        return client;
+    }
 }

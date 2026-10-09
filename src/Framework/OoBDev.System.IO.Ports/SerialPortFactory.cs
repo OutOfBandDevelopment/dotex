@@ -19,7 +19,7 @@ public class SerialPortFactory : IDeviceFactory
     public IDeviceAdapter? GetDevice(string devicePath, object? definition)
     {
         var assignedDevicePath = SerialPort.GetPortNames()
-                               .FirstOrDefault(sp => string.Equals(sp, devicePath, StringComparison.InvariantCultureIgnoreCase));
+                               .FirstOrDefault(sp => string.Equals(sp, devicePath, StringComparison.OrdinalIgnoreCase));
         if (string.IsNullOrWhiteSpace(assignedDevicePath))
             return null;
         if (definition == null)

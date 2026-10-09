@@ -341,7 +341,7 @@ public class CachedProxy<TInterface, TImplementation> : DispatchProxy
         {
             var key = _cachingManager.BuildKey(targetMethod, args);
             // Try retrieve from cache
-            var cached = await _cachingManager.RetreiveAsync(key, returnType);
+            var cached = await _cachingManager.RetrieveAsync(key, returnType);
             if (cached != null) return cached;
 
             // Execute method

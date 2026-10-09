@@ -380,10 +380,11 @@ Tests that require live cloud credentials. Manual execution only.
 | Variable | Default | Description |
 |----------|---------|-------------|
 | `GROQ_API_KEY` | *(none)* | Groq API key |
-| `GROQ_API_URL` | `https://api.groq.com/openai/v1` | Groq API endpoint |
+| `GROQ_API_URL` | `https://api.groq.com/openai/v1` | Groq API endpoint (not read by the tests yet) |
+| `GROQ_MODEL` | `openai/gpt-oss-20b` | Optional model override |
 
 **Tests Using:**
-- `OoBDev.Groq.Tests` (manual execution only)
+- `OoBDev.GroqCloud.Tests` (manual execution only, `LiveIntegration`)
 
 **Setup:**
 1. Create Groq account at https://groq.com

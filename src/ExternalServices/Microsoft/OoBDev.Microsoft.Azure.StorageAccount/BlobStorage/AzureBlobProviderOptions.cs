@@ -1,4 +1,6 @@
-﻿namespace OoBDev.Microsoft.Azure.StorageAccount.BlobStorage;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace OoBDev.Microsoft.Azure.StorageAccount.BlobStorage;
 
 /// <summary>
 /// Options for configuring Azure Blob storage provider.
@@ -8,6 +10,7 @@ public class AzureBlobProviderOptions
     /// <summary>
     /// Gets or sets the connection string for Azure Blob storage.
     /// </summary>
+    [Required]
     public required string ConnectionString { get; set; }
 
     /// <summary>

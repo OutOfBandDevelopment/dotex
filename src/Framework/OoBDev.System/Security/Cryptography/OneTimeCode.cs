@@ -1,5 +1,6 @@
 ﻿using OoBDev.System.Codecs;
 using System;
+using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -8,8 +9,10 @@ namespace OoBDev.System.Security.Cryptography;
 /// <summary>
 /// Provides functionality for generating and validating one-time passwords (OTP) using TOTP and HOTP algorithms.
 /// </summary>
-public class OneTimeCode
+public class OneTimeCode(TimeProvider? timeProvider = null)
 {
+    private readonly TimeProvider _timeProvider = timeProvider ?? TimeProvider.System;
+
     /// <summary>
     /// The Unix epoch timestamp (January 1, 1970, 00:00:00 UTC).
     /// </summary>
@@ -26,7 +29,7 @@ public class OneTimeCode
     /// <returns>The current counter value.</returns>
     public long GetCurrentCounter()
     {
-        var counter = (long)(DateTime.UtcNow - UNIX_EPOCH).TotalSeconds / 30;
+        var counter = (long)(_timeProvider.GetUtcNow().UtcDateTime - UNIX_EPOCH).TotalSeconds / 30;
         return counter;
     }
 
@@ -59,7 +62,7 @@ public class OneTimeCode
 
         var password = binary % (int)global::System.Math.Pow(10, digits); // 6 digits
 
-        var result = password.ToString(new string('0', digits));
+        var result = password.ToString(new string('0', digits), CultureInfo.InvariantCulture);
 
         return result;
     }
@@ -134,7 +137,7 @@ public class OneTimeCode
     /// <param name="type">The OTP type (TOTP or HOTP).</param>
     /// <returns>The OTP authentication URI.</returns>
     public string GetUri(string secret, string issuer, string? account = null, Types type = Types.TOTP) =>
-        $"otpauth://{type.ToString().ToLower()}/{issuer}{(!string.IsNullOrWhiteSpace(account) ? ":" + account : null)}?secret={secret}&issuer={issuer}";
+        $"otpauth://{type.ToString().ToLowerInvariant()}/{issuer}{(!string.IsNullOrWhiteSpace(account) ? ":" + account : null)}?secret={secret}&issuer={issuer}";
 
     /// <summary>
     /// Specifies the type of one-time password algorithm.

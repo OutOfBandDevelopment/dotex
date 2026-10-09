@@ -94,7 +94,7 @@ public static class VectorFunctions
             return SqlDouble.Null;
         }
 
-        return distanceMetric.Value.ToLower() switch
+        return distanceMetric.Value.ToLowerInvariant() switch
         {
             VectorDistanceTypes.CosineDistance => (SqlDouble)CosineDistance(vector1.Values, vector1.Magnitude().Value, vector2.Values, vector2.Magnitude().Value),
             VectorDistanceTypes.CosineSimilarity => (SqlDouble)CosineSimilarity(vector1.Values, vector1.Magnitude().Value, vector2.Values, vector2.Magnitude().Value),
@@ -127,7 +127,7 @@ public static class VectorFunctions
             return SqlSingle.Null;
         }
 
-        return distanceMetric.Value.ToLower() switch
+        return distanceMetric.Value.ToLowerInvariant() switch
         {
             VectorDistanceTypes.CosineDistance => (SqlSingle)CosineDistance(vector1.Values, vector1.Magnitude().Value, vector2.Values, vector2.Magnitude().Value),
             VectorDistanceTypes.CosineSimilarity => (SqlSingle)CosineSimilarity(vector1.Values, vector1.Magnitude().Value, vector2.Values, vector2.Magnitude().Value),
@@ -243,7 +243,7 @@ public static class VectorFunctions
 
         var realLength = length.Value;
         //xor seed with length multiplied by prime to make different length vectors have different values
-        var realSeed = (seed.IsNull ? (int)DateTime.Now.Ticks : seed.Value) ^ (realLength * 1309);
+        var realSeed = (seed.IsNull ? Environment.TickCount : seed.Value) ^ (realLength * 1309);
         var rand = new Random(realSeed);
 
         var vector = new double[realLength];

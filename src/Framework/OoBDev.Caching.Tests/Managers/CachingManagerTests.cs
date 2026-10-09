@@ -16,7 +16,6 @@ public class CachingManagerTests
     private MockRepository mockRepository = null!;
 
     private Mock<IStringFormatter> mockStringFormatter = null!;
-    private Mock<ISelectedService<ICachingProvider>> mockCache = null!;
     private Mock<ICachingProvider> mockCachingProvider = null!;
 
     [TestInitialize]
@@ -25,11 +24,10 @@ public class CachingManagerTests
         this.mockRepository = new MockRepository(MockBehavior.Strict);
 
         this.mockStringFormatter = this.mockRepository.Create<IStringFormatter>();
-        this.mockCache = this.mockRepository.Create<ISelectedService<ICachingProvider>>();
         this.mockCachingProvider = this.mockRepository.Create<ICachingProvider>();
     }
 
-    private CachingManager CreateManager() => new(this.mockStringFormatter.Object, this.mockCache.Object);
+    private CachingManager CreateManager() => new(this.mockStringFormatter.Object, this.mockCachingProvider.Object);
 
     public abstract class TestObject
     {
@@ -144,7 +142,6 @@ public class CachingManagerTests
 
         // Mock
         mockCachingProvider.Setup(s => s.FlushAsync(key)).Returns(Task.FromResult(0));
-        mockCache.Setup(s => s.Value).Returns(mockCachingProvider.Object);
 
 
         // Test
@@ -159,7 +156,7 @@ public class CachingManagerTests
 
     [TestMethod]
     [TestCategory(TestCategories.Unit)]
-    public async Task RetreiveAsyncTest()
+    public async Task RetrieveAsyncTest()
     {
         // Stage
         string key = "test key";
@@ -167,12 +164,11 @@ public class CachingManagerTests
         Type targetType = data.GetType();
 
         // Mock
-        mockCachingProvider.Setup(s => s.RetreiveAsync(key, targetType)).ReturnsAsync(data);
-        mockCache.Setup(s => s.Value).Returns(mockCachingProvider.Object);
+        mockCachingProvider.Setup(s => s.RetrieveAsync(key, targetType)).ReturnsAsync(data);
 
         // Test
         var manager = this.CreateManager();
-        var result = await manager.RetreiveAsync(key, targetType);
+        var result = await manager.RetrieveAsync(key, targetType);
 
         // Assert
         Assert.AreEqual(data, result);
@@ -192,7 +188,6 @@ public class CachingManagerTests
 
         // Mock
         mockCachingProvider.Setup(s => s.StoreAsync(key, data, lifeTime)).Returns(Task.FromResult(0));
-        mockCache.Setup(s => s.Value).Returns(mockCachingProvider.Object);
 
         // Test
         var manager = this.CreateManager();

@@ -26,7 +26,7 @@ The classes and interfaces in the library provide the following methods and prop
 	+ `Build`: Builds a new instance of the `GroqClient` class with the specified host.
 * `GroqCloudApiClientOptions`:
 	+ `ApiKey`: The API key used to authenticate with the Groq Cloud service.
-	+ `Model`: The model identifier for the AI model to be used. Defaults to "llama3-8b-8192".
+	+ `Model`: The model identifier for the AI model to be used. Defaults to "openai/gpt-oss-20b".
 * `GroqCloudHealthCheck`:
 	+ `Constructor`: Initializes a new instance of the `GroqCloudHealthCheck` class.
 	+ `CheckHealthAsync`: Checks the health of the GroqCloud service asynchronously.

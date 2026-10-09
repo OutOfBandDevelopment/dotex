@@ -41,7 +41,9 @@ public static class ServiceCollectionExtensions
         }
         services.AddHealthChecks().AddCheck<ApacheTikaHealthCheck>("apache-tika");
 
-        services.Configure<ApacheTikaClientOptions>(options => configuration.Bind(apacheTikaClientOptionSection, options));
+        services.AddOptions<ApacheTikaClientOptions>()
+            .Bind(configuration.GetSection(apacheTikaClientOptionSection))
+            .ValidateDataAnnotations();
 
         services.AddHttpClient<IApacheTikaClient, ApacheTikaClient>((sp, http) =>
         {

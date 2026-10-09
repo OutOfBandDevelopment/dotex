@@ -1,4 +1,6 @@
-﻿namespace OoBDev.System;
+﻿using System;
+
+namespace OoBDev.System;
 
 /// <summary>
 /// Provides extension methods for parsing strings into numeric types with null-safe conversions.
@@ -39,7 +41,7 @@ public static class NumberEx
     {
         if (double.TryParse(input, out var ret))
             return ret;
-        else if (input?.Trim().StartsWith("1/") ?? false)
+        else if (input?.Trim().StartsWith("1/", StringComparison.Ordinal) ?? false)
             if (double.TryParse(input.Trim()[2..], out ret))
                 return 1d / ret;
 

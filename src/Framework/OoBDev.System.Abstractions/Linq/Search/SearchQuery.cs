@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Collections.Generic;
 using System.Text;
 
@@ -77,18 +78,18 @@ public record SearchQuery : ISearchQuery
     public override string ToString()
     {
         var sb = new StringBuilder();
-        sb.AppendLine($"{nameof(CurrentPage)}: {CurrentPage}");
-        sb.AppendLine($"{nameof(PageSize)}: {PageSize}");
-        sb.AppendLine($"{nameof(ExcludePageCount)}: {ExcludePageCount}");
-        sb.AppendLine($"{nameof(SearchTerm)}: {SearchTerm ?? "(null)"}");
+        sb.AppendLine(CultureInfo.InvariantCulture, $"{nameof(CurrentPage)}: {CurrentPage}");
+        sb.AppendLine(CultureInfo.InvariantCulture, $"{nameof(PageSize)}: {PageSize}");
+        sb.AppendLine(CultureInfo.InvariantCulture, $"{nameof(ExcludePageCount)}: {ExcludePageCount}");
+        sb.AppendLine(CultureInfo.InvariantCulture, $"{nameof(SearchTerm)}: {SearchTerm ?? "(null)"}");
 
         foreach (var item in Filter ?? [])
         {
-            sb.AppendLine($"\tF:{item.Key}: {item.Value}");
+            sb.AppendLine(CultureInfo.InvariantCulture, $"\tF:{item.Key}: {item.Value}");
         }
         foreach (var item in OrderBy ?? [])
         {
-            sb.AppendLine($"\tS:{item.Key}: {item.Value}");
+            sb.AppendLine(CultureInfo.InvariantCulture, $"\tS:{item.Key}: {item.Value}");
         }
         return sb.ToString();
     }

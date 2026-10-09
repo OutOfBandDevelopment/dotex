@@ -40,7 +40,7 @@ public class AzureBlobContainerProvider : IBlobContainerProvider
         )
     {
         _logger = loggerFactory.CreateLogger(nameof(AzureBlobContainerProvider) + $"-{collectionName}");
-        ContainerName = collectionName.ToLower();
+        ContainerName = collectionName.ToLowerInvariant();
         _blockBlobClient = client.GetBlobContainerClient(ContainerName);
         _options = options;
     }

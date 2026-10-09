@@ -16,6 +16,8 @@ namespace OoBDev.DacFx;
 /// </summary>
 public class DacPacBuilder : IDacPacBuilder
 {
+    private readonly TimeProvider _timeProvider;
+
     private readonly ILogger _logger;
     private readonly IDacPacValidator _validator;
     private readonly XNamespace ns = "http://schemas.microsoft.com/sqlserver/dac/Serialization/2012/02";
@@ -25,11 +27,14 @@ public class DacPacBuilder : IDacPacBuilder
     /// </summary>
     /// <param name="logger">The logger for diagnostic output.</param>
     /// <param name="validator">The validator for verifying generated DACPAC files.</param>
+    /// <param name="timeProvider">The clock; defaults to <see cref="TimeProvider.System"/>.</param>
     public DacPacBuilder(
         ILogger<DacPacBuilder> logger,
-        IDacPacValidator validator
+        IDacPacValidator validator,
+        TimeProvider? timeProvider = null
         )
     {
+        _timeProvider = timeProvider ?? TimeProvider.System;
         _logger = logger;
         _validator = validator;
     }
@@ -148,7 +153,7 @@ public class DacPacBuilder : IDacPacBuilder
         stream.Position = 0;
 
         var entry = archive.CreateEntry(entryName);
-        entry.LastWriteTime = DateTimeOffset.Now;
+        entry.LastWriteTime = _timeProvider.GetLocalNow();
 
         using (var entryStream = entry.Open())
         {

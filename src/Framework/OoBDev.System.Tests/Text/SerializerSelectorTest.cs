@@ -39,9 +39,9 @@ public class SerializerSelectorTest
     [DataRow(SerializerTypes.Json, typeof(DefaultJsonSerializer))]
     [DataRow(SerializerTypes.Bson, typeof(DefaultBsonSerializer))]
     [DataRow(SerializerTypes.Xml, typeof(DefaultXmlSerializer))]
-    [DataRow("JSON", typeof(DefaultJsonSerializer))]
-    [DataRow("BSON", typeof(DefaultBsonSerializer))]
-    [DataRow("XML", typeof(DefaultXmlSerializer))]
+    [DataRow("json", typeof(DefaultJsonSerializer))]
+    [DataRow("bson", typeof(DefaultBsonSerializer))]
+    [DataRow("xml", typeof(DefaultXmlSerializer))]
     public void KeyedSerializerTest(object targetSerializerType, Type expectedType)
     {
         var config = new ConfigurationBuilder().Build();

@@ -5,14 +5,14 @@
 | Key                                                    | Notes                       | Options                                              | Default      |
 | ------------------------------------------------------ | --------------------------- | ---------------------------------------------------- | ------------ |
 | OoBDev:Caching:Disabled                                | Disable caching globally    | true, false                                          | false        |
-| OoBDev::ServiceKeys::OoBDev.Caching.ICachingProvider   | Select specific provider    | Redis, MemoryCache (or custom keyed registration)    | (first registered) |
+| OoBDev:CachingProvider:Type                            | Select specific provider    | redis, memory-cache (or custom keyed registration)   | (default registration) |
 
 ### Provider Selection
 
-When multiple caching providers are registered, the framework uses `ISelectedService<ICachingProvider>` to select the active provider:
+When multiple caching providers are registered, the framework injects `[FromKeyedServices(CachingGlobals.SelectedKey)] ICachingProvider`, a factory registered by `TryAddCachingServices`, to select the active provider:
 
-1. **Configuration-based selection:** Set `OoBDev::ServiceKeys::OoBDev.Caching.ICachingProvider` to the keyed service name
-2. **Fallback:** If no key is configured, uses the first registered `ICachingProvider`
+1. **Configuration-based selection:** Set `OoBDev:CachingProvider:Type` to the keyed service name (an unknown name throws)
+2. **Fallback:** If no key is configured, uses the default (un-keyed) `ICachingProvider` registration
 
 Providers register themselves with specific keys:
 - Microsoft Memory Cache: `MemoryCache`
@@ -40,7 +40,7 @@ var services = new ServiceCollection()
 - If using Redis, configure connection string: `ConnectionMultiplexerFactory:Source`
 
 **Multiple Providers:**
-When registering multiple providers, set the configuration key `OoBDev::ServiceKeys::OoBDev.Caching.ICachingProvider` to select which one to use (see Configuration section above).
+When registering multiple providers, set the configuration key `OoBDev:CachingProvider:Type` to select which one to use (see Configuration section above).
 
 ## Usage
 
@@ -295,6 +295,6 @@ The caching framework consists of:
 - **`ICachingManager`** - Cache key generation and coordination
 - **`ICacheableFactory`** - Creates dynamic proxies for cached interfaces
 - **`IStringFormatter`** - Formats cache keys with parameter substitution
-- **`ISelectedService<T>`** - Configuration-based service selection
+- **`TryAddConfiguredKeyedService<T>`** - Configuration-based service selection
 
 See `/docs/architecture/caching/` for detailed architecture documentation.

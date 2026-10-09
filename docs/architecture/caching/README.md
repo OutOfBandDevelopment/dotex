@@ -124,7 +124,7 @@ public class ProductService
         var cacheKey = $"product:{productId}";
 
         // Try to retrieve from cache
-        var cached = await _cachingManager.RetreiveAsync(cacheKey, typeof(Product));
+        var cached = await _cachingManager.RetrieveAsync(cacheKey, typeof(Product));
         if (cached != null)
             return (Product)cached;
 
@@ -165,7 +165,7 @@ public class ProductService
 │                  ICachingManager                             │
 │  - BuildKey(method, args)                                    │
 │  - StoreAsync(key, data, expiration)                         │
-│  - RetreiveAsync(key, type)                                  │
+│  - RetrieveAsync(key, type)                                  │
 │  - FlushAsync(key)                                           │
 └─────────────────────┬───────────────────────────────────────┘
                       │
@@ -237,10 +237,10 @@ services.AddMicrosoftCachingServices();  // L1 - Fast, local
 services.AddRedisCachingServices();      // L2 - Shared, persistent
 
 // Retrieve from L1 first, fallback to L2
-var cached = await _memoryCacheProvider.RetreiveAsync(key, type);
+var cached = await _memoryCacheProvider.RetrieveAsync(key, type);
 if (cached == null)
 {
-    cached = await _redisCacheProvider.RetreiveAsync(key, type);
+    cached = await _redisCacheProvider.RetrieveAsync(key, type);
     if (cached != null)
         await _memoryCacheProvider.StoreAsync(key, cached, TimeSpan.FromMinutes(5));
 }

@@ -39,7 +39,7 @@ public interface ICachingManager
     /// <param name="key">The cache key.</param>
     /// <param name="targetType">The expected type of the cached value.</param>
     /// <returns>The cached value or null if not found.</returns>
-    Task<object?> RetreiveAsync(string key, Type targetType);
+    Task<object?> RetrieveAsync(string key, Type targetType);
 
     /// <summary>
     /// Retrieves a strongly-typed cached value by key.
@@ -47,5 +47,5 @@ public interface ICachingManager
     /// <typeparam name="T">The type of the cached value.</typeparam>
     /// <param name="key">The cache key.</param>
     /// <returns>The cached value.</returns>
-    Task<T?> RetreiveAsync<T>(string key);
+    Task<T?> RetrieveAsync<T>(string key);
 }

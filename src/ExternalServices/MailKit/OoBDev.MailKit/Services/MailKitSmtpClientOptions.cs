@@ -1,6 +1,8 @@
 using MailKit.Security;
 using System;
 
+using System.ComponentModel.DataAnnotations;
+
 namespace OoBDev.MailKit.Services;
 
 /// <summary>
@@ -11,6 +13,7 @@ public class MailKitSmtpClientOptions
     /// <summary>
     /// Gets or sets the host address of the SMTP server.
     /// </summary>
+    [Required]
     public required string Host { get; set; }
 
     /// <summary>

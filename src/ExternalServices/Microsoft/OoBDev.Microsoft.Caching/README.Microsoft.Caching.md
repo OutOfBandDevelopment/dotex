@@ -80,7 +80,7 @@ public class UserService
         var cacheKey = $"user:{id}";
 
         // Try to retrieve from memory cache
-        var cached = await _cache.RetreiveAsync(cacheKey, typeof(User));
+        var cached = await _cache.RetrieveAsync(cacheKey, typeof(User));
         if (cached != null) return (User)cached;
 
         // Fetch from source
@@ -137,7 +137,7 @@ public class HybridCache
             return value;
 
         // Check L2 (Redis) if L1 miss
-        var cached = await _l2.RetreiveAsync(key, typeof(T));
+        var cached = await _l2.RetrieveAsync(key, typeof(T));
         if (cached != null)
         {
             // Populate L1 for next access
@@ -268,7 +268,7 @@ public async Task CachingProvider_ShouldStoreAndRetrieve()
 
     // Act
     await cache.StoreAsync(key, data, TimeSpan.FromMinutes(5));
-    var result = await cache.RetreiveAsync(key, data.GetType());
+    var result = await cache.RetrieveAsync(key, data.GetType());
 
     // Assert
     Assert.IsNotNull(result);

@@ -26,7 +26,9 @@ public static class ServiceCollectionExtensions
 #endif
         )
     {
-        services.Configure<OpenSearchOptions>(options => configuration.Bind(openSearchOptionSections, options));
+        services.AddOptions<OpenSearchOptions>()
+            .Bind(configuration.GetSection(openSearchOptionSections))
+            .ValidateDataAnnotations();
         services.TryAddTransient<IOpenSearchClientFactory, OpenSearchClientFactory>();
         services.TryAddTransient(sp => sp.GetRequiredService<IOpenSearchClientFactory>().Create());
 

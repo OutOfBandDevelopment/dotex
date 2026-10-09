@@ -3,6 +3,7 @@ using Microsoft.SqlServer.Dac;
 using Microsoft.SqlServer.Dac.Model;
 using OoBDev.DacFx;
 using System;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 
@@ -11,7 +12,7 @@ namespace OoBDev.Microsoft.SqlServer.DacFx;
 /// <summary>
 /// Factory for creating DacPac merge definitions from templates.
 /// </summary>
-public class DacPacMergeDefinitionFactory : IDacPacMergeDefinitionFactory
+public class DacPacMergeDefinitionFactory(TimeProvider? timeProvider = null) : IDacPacMergeDefinitionFactory
 {
     /// <inheritdoc/>
     public IDacPacMergeDefinition Create(IDacPacMergeTemplate template)
@@ -40,7 +41,7 @@ public class DacPacMergeDefinitionFactory : IDacPacMergeDefinitionFactory
 
             TargetPackageMetadata = new PackageMetadata
             {
-                Description = string.IsNullOrWhiteSpace(template.Description) ? DateTime.Now.ToString() : template.Description,
+                Description = string.IsNullOrWhiteSpace(template.Description) ? (timeProvider ?? TimeProvider.System).GetLocalNow().ToString(CultureInfo.InvariantCulture) : template.Description,
                 Name = string.IsNullOrWhiteSpace(template.Name) ? Path.GetFileNameWithoutExtension(template.TargetPath) : template.Name,
                 Version = template.Version ?? "0.0.0",
             }

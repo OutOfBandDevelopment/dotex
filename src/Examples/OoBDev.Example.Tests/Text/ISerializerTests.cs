@@ -55,9 +55,9 @@ public class ISerializerTests
 
     [TestMethod]
     [TestCategory(TestCategories.Unit)]
-    [DataRow("JSON", typeof(DefaultJsonSerializer))]
-    [DataRow("XML", typeof(DefaultXmlSerializer))]
-    [DataRow("BSON", typeof(DefaultBsonSerializer))]
+    [DataRow("json", typeof(DefaultJsonSerializer))]
+    [DataRow("xml", typeof(DefaultXmlSerializer))]
+    [DataRow("bson", typeof(DefaultBsonSerializer))]
     public void KeyedSerializerTests(string key, Type expected)
     {
         var serviceProvider = CreateProvider();
@@ -68,9 +68,9 @@ public class ISerializerTests
 
     [TestMethod]
     [TestCategory(TestCategories.Unit)]
-    [DataRow("JSON", typeof(DefaultJsonSerializer), ".json")]
-    [DataRow("XML", typeof(DefaultXmlSerializer), ".xml")]
-    [DataRow("BSON", typeof(DefaultBsonSerializer), ".bson")]
+    [DataRow("json", typeof(DefaultJsonSerializer), ".json")]
+    [DataRow("xml", typeof(DefaultXmlSerializer), ".xml")]
+    [DataRow("bson", typeof(DefaultBsonSerializer), ".bson")]
     public void KeyedSerializerTests_Value(string key, Type expected, string ext)
     {
         var serviceProvider = CreateProvider();

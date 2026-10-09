@@ -10,7 +10,7 @@
 
 | Concern | Abstractions | Purpose |
 |---------|--------------|---------|
-| Time / identity of things | `IDateTimeProvider`, `IGuidProvider`, `ITempFileFactory` | Make non-determinism injectable/testable. |
+| Time / identity of things | `TimeProvider`, `IGuidProvider`, `ITempFileFactory` | Make non-determinism injectable/testable. |
 | Serialization | `ISerializer`, `IJsonSerializer`, `IBsonSerializer`, `IXmlSerializer`, `IObjectConverter` | Keyed by `SerializerTypes`; JSON default. |
 | Hashing / HMAC | `IHash`, `IHMACCalculator` | Keyed by name; MD5 default (see alternatives doc). |
 | Current user | `ICurrentUserAccessor` | Environment implementation by default, replaced by HTTP implementation in ASP.NET. |

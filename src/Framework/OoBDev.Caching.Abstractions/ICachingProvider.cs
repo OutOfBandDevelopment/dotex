@@ -1,5 +1,4 @@
-﻿using OoBDev.System.DependencyInjection;
-using System;
+﻿using System;
 using System.Threading.Tasks;
 
 namespace OoBDev.Caching;
@@ -8,10 +7,6 @@ namespace OoBDev.Caching;
 /// Provides the underlying cache storage implementation.
 /// Implementations can use in-memory, distributed, or any other caching mechanism.
 /// </summary>
-[ContractConfig(
-    AllowDefault = true,
-    ConfigKey = "OoBDev:CachingProvider:Type"
-    )]
 public interface ICachingProvider
 {
     /// <summary>
@@ -36,5 +31,5 @@ public interface ICachingProvider
     /// <param name="key">The cache key.</param>
     /// <param name="targetType">The expected type of the cached value.</param>
     /// <returns>The cached value or null if not found.</returns>
-    Task<object?> RetreiveAsync(string? key, Type? targetType);
+    Task<object?> RetrieveAsync(string? key, Type? targetType);
 }

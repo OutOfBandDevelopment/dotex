@@ -28,7 +28,9 @@ public static class ServiceCollectionExtensions
 #endif
         )
     {
-        services.Configure<MongoDatabaseOptions>(options => configuration.Bind(mongoDatabaseConfigurationSection, options));
+        services.AddOptions<MongoDatabaseOptions>()
+            .Bind(configuration.GetSection(mongoDatabaseConfigurationSection))
+            .ValidateDataAnnotations();
         services.TryAddSingleton<IMongoDatabaseFactory, MongoDatabaseFactory>();
         return services;
     }

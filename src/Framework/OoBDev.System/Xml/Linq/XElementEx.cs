@@ -49,7 +49,7 @@ public static class XElementEx
     /// <param name="name">The name attribute value to match (case-insensitive).</param>
     /// <returns>The value attribute of the matching element, or null if not found.</returns>
     public static string? GetTargetValue(this IEnumerable<XElement> elements, string name) =>
-        elements?.Where(e => string.Equals((string?)e.Attribute("name"), name, StringComparison.InvariantCultureIgnoreCase))
+        elements?.Where(e => string.Equals((string?)e.Attribute("name"), name, StringComparison.OrdinalIgnoreCase))
                        .Select(e => (string?)e.Attribute("value"))
                        .FirstOrDefault();
 }

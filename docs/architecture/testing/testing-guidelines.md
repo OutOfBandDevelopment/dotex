@@ -372,7 +372,7 @@ dotnet test --settings integration.runsettings -- TestRunParameters.Parameter\(n
 
 ### Test Variable Reference
 
-See [TEST_VARIABLES.md](../../TEST_VARIABLES.md) for:
+See [TEST_VARIABLES.md](../../../TEST_VARIABLES.md) for:
 - Complete list of 30+ test properties
 - Default values for all services
 - Docker container information
@@ -835,7 +835,7 @@ public void MathOperation_ShouldReturnExpectedValue()
 - [Testing README](./README.md) - Testing documentation index
 - [TEST_VARIABLES.md](../../../TEST_VARIABLES.md) - Complete test property reference
 - [TestCategories.cs](../../../src/Framework/OoBDev.TestUtilities/TestCategories.cs) - Category definitions
-- [Docker Infrastructure](../../../../containers/testing/README.md) - Docker setup guide
+- [Docker Infrastructure](../../../containers/testing/README.md) - Docker setup guide
 - [Integration Test Protocol](../../../.claude/protocols/software/integration-test-maintenance.md) - Maintenance checklist
 
 ---

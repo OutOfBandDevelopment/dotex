@@ -14,19 +14,23 @@ public class TimePlugIn : IKernelPlugIn
 {
     private readonly ILogger _logger;
     private readonly IDataConverter _converter;
+    private readonly TimeProvider _timeProvider;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="TimePlugIn"/> class.
     /// </summary>
     /// <param name="logger">The logger for plugin operations.</param>
     /// <param name="converter">The data converter for parsing time values.</param>
+    /// <param name="timeProvider">The clock; defaults to <see cref="TimeProvider.System"/>.</param>
     public TimePlugIn(
         ILogger<TimePlugIn> logger,
-        IDataConverter converter
+        IDataConverter converter,
+        TimeProvider? timeProvider = null
         )
     {
         _logger = logger;
         _converter = converter;
+        _timeProvider = timeProvider ?? TimeProvider.System;
     }
 
     /// <summary>
@@ -39,7 +43,7 @@ public class TimePlugIn : IKernelPlugIn
     public Task<DateTimeOffset> GetCurrentTime()
     {
         _logger.LogInformation("Called: {method}", nameof(GetCurrentTime));
-        var now = DateTimeOffset.Now;
+        var now = _timeProvider.GetLocalNow();
         _logger.LogDebug("Current time: {now}", now);
         return Task.FromResult(now);
     }
@@ -60,7 +64,7 @@ public class TimePlugIn : IKernelPlugIn
 
         var timeOffsetValue = _converter.ConvertTo<TimeSpan>(timeOffset);
 
-        var now = DateTimeOffset.UtcNow.Add(timeOffsetValue);
+        var now = _timeProvider.GetUtcNow().Add(timeOffsetValue);
         _logger.LogDebug("Current time: {now} ({timeOffset})", now, timeOffset);
         return Task.FromResult(now);
     }

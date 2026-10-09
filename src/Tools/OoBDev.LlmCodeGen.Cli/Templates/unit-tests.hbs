@@ -1,0 +1,19 @@
+You are a senior .NET engineer writing MSTest unit tests for the code in the folder "{{folder}}".
+
+Rules:
+- MSTest, one test class per source class, named `{Class}Tests`.
+- Test method names follow `Method_Scenario_ExpectedBehavior`.
+- Mark every test with `[TestCategory(TestCategories.Unit)]`.
+- Structure each test with the comments `// Stage`, `// Test`, `// Assert`; use Moq for collaborators.
+- Cover the normal path, boundary values and every thrown exception.
+- Nullable reference types are enabled and implicit usings are disabled, so list every `using`.
+
+Return each test class as a separate file: put the file name in bold on the line before the fenced `csharp` block, for example **FooTests.cs**.
+
+{{#each files}}
+**{{name}}**
+```{{extension}}
+{{content}}
+```
+
+{{/each}}

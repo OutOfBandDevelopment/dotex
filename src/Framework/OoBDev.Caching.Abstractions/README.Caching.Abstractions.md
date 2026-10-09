@@ -40,7 +40,6 @@ public class DataService
 ### Implement a Caching Provider
 
 ```csharp
-[ContractConfig(AllowDefault = true, ConfigKey = "OoBDev:CachingProvider:Type")]
 public class MyCachingProvider : ICachingProvider
 {
     public async Task FlushAsync(string key)
@@ -53,7 +52,7 @@ public class MyCachingProvider : ICachingProvider
         // Implementation
     }
 
-    public async Task<object?> RetreiveAsync(string key, Type targetType)
+    public async Task<object?> RetrieveAsync(string key, Type targetType)
     {
         // Implementation
     }

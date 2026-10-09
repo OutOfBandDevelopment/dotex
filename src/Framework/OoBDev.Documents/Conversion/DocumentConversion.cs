@@ -83,7 +83,7 @@ public class DocumentConversion : IDocumentConversion
             if (recurse)
             {
                 var detectedType = await _tools.DetectContentTypeAsync(source);
-                if (detectedType is not null && !string.Equals(sourceContentType, detectedType, StringComparison.InvariantCultureIgnoreCase))
+                if (detectedType is not null && !string.Equals(sourceContentType, detectedType, StringComparison.OrdinalIgnoreCase))
                 {
                     _logger.LogWarning("Provided \"{source}\" but detected \"{detected}\" to try again", sourceContentType, detectedType);
                     source.Position = 0;

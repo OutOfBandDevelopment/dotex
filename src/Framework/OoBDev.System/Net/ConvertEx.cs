@@ -36,7 +36,7 @@ public partial class ConvertEx
         for (var i = 0; i < len; i += 2)
         {
             var part = hexString.Substring(i, 2);
-            var parsed = byte.Parse(part, NumberStyles.HexNumber);
+            var parsed = byte.Parse(part, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
             buffer[i / 2] = parsed;
         }
 

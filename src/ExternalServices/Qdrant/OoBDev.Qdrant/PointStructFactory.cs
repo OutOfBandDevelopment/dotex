@@ -1,6 +1,7 @@
 using OoBDev.System.IO;
 using Qdrant.Client.Grpc;
 using System;
+using System.Globalization;
 using System.IO;
 
 namespace OoBDev.Qdrant;
@@ -39,9 +40,9 @@ public class PointStructFactory : IPointStructFactory
                 [$"chunk_{nameof(chunk.Start)}"] =chunk.Start,
 
                 [$"file_{nameof(fileInfo.Length)}"] =fileInfo.Length,
-                [$"file_{nameof(fileInfo.LastAccessTime)}"] =fileInfo.LastAccessTime.ToString("yyyyMMddHHmmss"),
-                [$"file_{nameof(fileInfo.LastWriteTime)}"] =fileInfo.LastWriteTime.ToString("yyyyMMddHHmmss"),
-                [$"file_{nameof(fileInfo.CreationTime)}"] =fileInfo.CreationTime.ToString("yyyyMMddHHmmss"),
+                [$"file_{nameof(fileInfo.LastAccessTime)}"] =fileInfo.LastAccessTime.ToString("yyyyMMddHHmmss", CultureInfo.InvariantCulture),
+                [$"file_{nameof(fileInfo.LastWriteTime)}"] =fileInfo.LastWriteTime.ToString("yyyyMMddHHmmss", CultureInfo.InvariantCulture),
+                [$"file_{nameof(fileInfo.CreationTime)}"] =fileInfo.CreationTime.ToString("yyyyMMddHHmmss", CultureInfo.InvariantCulture),
                 [$"file_{nameof(fileInfo.Extension)}"] =fileInfo.Extension,
             },
 

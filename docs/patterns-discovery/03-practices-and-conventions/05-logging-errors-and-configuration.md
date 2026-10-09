@@ -24,7 +24,7 @@
 | Rule | Detail |
 |------|--------|
 | Section names | default to `nameof(TheOptionsType)`, overridable through a builder record |
-| Provider selection | `OoBDev::ServiceKeys::{FullTypeName}` (see [`ISelectedService`](../02-design-patterns/04-selected-service.md)) |
+| Provider selection | a configuration path per capability, for example `OoBDev:CachingProvider:Type` (see [config-selected keyed service](../02-design-patterns/04-selected-service.md)) |
 | Message routing | `MessageQueue:{Channel}:{Message}` down to `MessageQueue:Default` ([pattern 5](../02-design-patterns/05-config-resolved-provider.md)) |
 | Feature switches | `Disable…` booleans in builder records, `OoBDev:Caching:Disabled` style keys |
 | Environment switches | `IDENTITY_PROVIDER`, `SWAGGER_ONLY` in the example app |
@@ -33,7 +33,7 @@
 
 ## Time, identity and randomness
 
-Use the injectable providers (`IDateTimeProvider`, `IGuidProvider`, `ICurrentUserAccessor`, `ITempFileFactory`) rather than `DateTime.Now`, `Guid.NewGuid()` or ambient identity, so behavior is testable ([pattern 16](../02-design-patterns/16-injectable-non-determinism.md)).
+Use the injectable providers (`TimeProvider`, `IGuidProvider`, `ICurrentUserAccessor`, `ITempFileFactory`) rather than `DateTime.Now`, `Guid.NewGuid()` or ambient identity, so behavior is testable ([pattern 16](../02-design-patterns/16-injectable-non-determinism.md)).
 
 ---
 

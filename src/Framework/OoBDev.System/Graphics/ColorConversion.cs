@@ -138,7 +138,6 @@ public static class ColorConversion
         var adjusted = (hue: color.hue % 360.0, color.saturation, color.lightness);
 
         var c = (1 - global::System.Math.Abs(2.0 * adjusted.lightness - 1.0)) * adjusted.saturation;
-        ;
         var x = c * (1 - global::System.Math.Abs(adjusted.hue / 60 % 2 - 1));
         var m = adjusted.lightness - c / 2.0;
 

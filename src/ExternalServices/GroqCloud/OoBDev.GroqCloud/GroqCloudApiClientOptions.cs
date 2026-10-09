@@ -11,7 +11,7 @@ public record GroqCloudApiClientOptions
     public string? ApiKey { get; init; }
 
     /// <summary>
-    /// The model identifier for the AI model to be used. Defaults to "llama3-8b-8192".
+    /// The model identifier for the AI model to be used. Defaults to "openai/gpt-oss-20b".
     /// </summary>
-    public string Model { get; init; } = "llama3-8b-8192";
+    public string Model { get; init; } = "openai/gpt-oss-20b";
 }

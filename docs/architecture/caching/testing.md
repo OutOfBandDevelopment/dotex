@@ -89,7 +89,6 @@ namespace OoBDev.Caching.Tests.Managers
     {
         private MockRepository mockRepository;
         private Mock<IStringFormatter> mockStringFormatter;
-        private Mock<ISelectedService<ICachingProvider>> mockCache;
         private Mock<ICachingProvider> mockCachingProvider;
 
         [TestInitialize]
@@ -97,7 +96,6 @@ namespace OoBDev.Caching.Tests.Managers
         {
             mockRepository = new MockRepository(MockBehavior.Strict);
             mockStringFormatter = mockRepository.Create<IStringFormatter>();
-            mockCache = mockRepository.Create<ISelectedService<ICachingProvider>>();
             mockCachingProvider = mockRepository.Create<ICachingProvider>();
         }
 
@@ -113,11 +111,8 @@ namespace OoBDev.Caching.Tests.Managers
             mockCachingProvider
                 .Setup(p => p.StoreAsync(key, data, expiration))
                 .Returns(Task.CompletedTask);
-            mockCache
-                .Setup(c => c.Value)
-                .Returns(mockCachingProvider.Object);
 
-            var manager = new CachingManager(mockStringFormatter.Object, mockCache.Object);
+            var manager = new CachingManager(mockStringFormatter.Object, mockCachingProvider.Object);
 
             // Act
             await manager.StoreAsync(key, data, expiration);
@@ -139,7 +134,7 @@ namespace OoBDev.Caching.Tests.Managers
                 .Setup(f => f.Format("user:{userId}", method, args))
                 .Returns(expectedKey);
 
-            var manager = new CachingManager(mockStringFormatter.Object, mockCache.Object);
+            var manager = new CachingManager(mockStringFormatter.Object, mockCachingProvider.Object);
 
             // Act
             var result = manager.BuildKey(method, args);
@@ -191,7 +186,7 @@ public class CachedProxyTests
             .Setup(m => m.BuildKey(It.IsAny<MethodInfo>(), It.IsAny<object[]>()))
             .Returns(cacheKey);
         mockCachingManager
-            .Setup(m => m.RetreiveAsync(cacheKey, typeof(int)))
+            .Setup(m => m.RetrieveAsync(cacheKey, typeof(int)))
             .ReturnsAsync(cachedValue);
 
         var decorated = new Mock<TestService>();
@@ -221,7 +216,7 @@ public class CachedProxyTests
             .Setup(m => m.BuildKey(It.IsAny<MethodInfo>(), It.IsAny<object[]>()))
             .Returns(cacheKey);
         mockCachingManager
-            .Setup(m => m.RetreiveAsync(cacheKey, typeof(int)))
+            .Setup(m => m.RetrieveAsync(cacheKey, typeof(int)))
             .ReturnsAsync(null);  // Cache miss
         mockCachingManager
             .Setup(m => m.StoreAsync(cacheKey, realValue, It.IsAny<TimeSpan>()))
@@ -382,7 +377,7 @@ public class CachingSimulationTests
         await cachingProvider.StoreAsync(key, data, expiration);
 
         // Act - Retrieve
-        var retrieved = await cachingProvider.RetreiveAsync(key, data.GetType());
+        var retrieved = await cachingProvider.RetrieveAsync(key, data.GetType());
 
         // Assert - Retrieved successfully
         Assert.IsNotNull(retrieved);
@@ -394,7 +389,7 @@ public class CachingSimulationTests
         await cachingProvider.FlushAsync(key);
 
         // Act - Retrieve after flush
-        var afterFlush = await cachingProvider.RetreiveAsync(key, data.GetType());
+        var afterFlush = await cachingProvider.RetrieveAsync(key, data.GetType());
 
         // Assert - Cache empty
         Assert.IsNull(afterFlush);
@@ -416,7 +411,7 @@ public class CachingSimulationTests
         await Task.Delay(200);
 
         // Act - Retrieve after expiration
-        var result = await cachingProvider.RetreiveAsync(key, typeof(string));
+        var result = await cachingProvider.RetrieveAsync(key, typeof(string));
 
         // Assert
         Assert.IsNull(result);
@@ -587,7 +582,7 @@ public class RedisCachingIntegrationTests
             await provider.StoreAsync(key, data, TimeSpan.FromMinutes(5));
 
             // Act - Retrieve
-            var result = await provider.RetreiveAsync(key, data.GetType());
+            var result = await provider.RetrieveAsync(key, data.GetType());
 
             // Assert
             Assert.IsNotNull(result);
@@ -616,7 +611,7 @@ public class RedisCachingIntegrationTests
         await provider.FlushAsync(key);
 
         // Assert
-        var result = await provider.RetreiveAsync(key, typeof(string));
+        var result = await provider.RetrieveAsync(key, typeof(string));
         Assert.IsNull(result);
     }
 }
@@ -659,10 +654,10 @@ public async Task ExampleTest()
 {
     // Arrange - Setup test data and mocks
     var key = "test:123";
-    mockProvider.Setup(p => p.RetreiveAsync(key, typeof(string))).ReturnsAsync("cached");
+    mockProvider.Setup(p => p.RetrieveAsync(key, typeof(string))).ReturnsAsync("cached");
 
     // Act - Execute the method under test
-    var result = await manager.RetreiveAsync(key, typeof(string));
+    var result = await manager.RetrieveAsync(key, typeof(string));
 
     // Assert - Verify results
     Assert.AreEqual("cached", result);
@@ -695,9 +690,9 @@ mockRepository.VerifyAll();
 
 ```csharp
 [TestMethod]
-public async Task RetreiveAsync_NonExistentKey_ReturnsNull()
+public async Task RetrieveAsync_NonExistentKey_ReturnsNull()
 {
-    var result = await provider.RetreiveAsync("does-not-exist", typeof(string));
+    var result = await provider.RetrieveAsync("does-not-exist", typeof(string));
     Assert.IsNull(result);
 }
 
@@ -721,7 +716,7 @@ public async Task Expiration_AfterDuration_ReturnsNull()
 
     await Task.Delay(200);  // Wait for expiration
 
-    var result = await provider.RetreiveAsync(key, typeof(string));
+    var result = await provider.RetrieveAsync(key, typeof(string));
     Assert.IsNull(result);
 }
 ```
@@ -750,7 +745,7 @@ public async Task ConcurrentAccess_CacheMiss_OnlyOneLoadOccurs()
     // Simulate 10 concurrent requests
     var tasks = Enumerable.Range(0, 10).Select(async _ =>
     {
-        var cached = await provider.RetreiveAsync(key, typeof(string));
+        var cached = await provider.RetrieveAsync(key, typeof(string));
         if (cached == null)
         {
             var data = await LoadData();
@@ -783,13 +778,13 @@ public async Task HybridCache_L1Hit_DoesNotCheckL2()
     var key = "test:123";
     var cachedValue = "l1 cached";
 
-    mockL1.Setup(p => p.RetreiveAsync(key, typeof(string))).ReturnsAsync(cachedValue);
+    mockL1.Setup(p => p.RetrieveAsync(key, typeof(string))).ReturnsAsync(cachedValue);
 
-    var result = await hybrid.RetreiveAsync(key, typeof(string));
+    var result = await hybrid.RetrieveAsync(key, typeof(string));
 
     Assert.AreEqual(cachedValue, result);
-    mockL1.Verify(p => p.RetreiveAsync(key, typeof(string)), Times.Once);
-    mockL2.Verify(p => p.RetreiveAsync(It.IsAny<string>(), It.IsAny<Type>()), Times.Never);
+    mockL1.Verify(p => p.RetrieveAsync(key, typeof(string)), Times.Once);
+    mockL2.Verify(p => p.RetrieveAsync(It.IsAny<string>(), It.IsAny<Type>()), Times.Never);
 }
 ```
 

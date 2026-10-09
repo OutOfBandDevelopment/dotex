@@ -32,7 +32,7 @@ public static class OllamaApiClientExtensions
             logger.LogInformation("model: {model}, size: {size} ", model.Name, model.Size);
 
         logger.LogInformation("create maybe");
-        if (models.Any(m => !m.Name.StartsWith(modelName)))
+        if (models.Any(m => !m.Name.StartsWith(modelName, StringComparison.Ordinal)))
             await ollama.CopyModelAsync("llama2", modelName); //TODO: fix this
         logger.LogInformation("Select model: {modelName}", modelName);
 

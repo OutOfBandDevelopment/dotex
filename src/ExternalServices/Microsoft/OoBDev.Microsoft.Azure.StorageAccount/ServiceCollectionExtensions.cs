@@ -51,7 +51,9 @@ public static class ServiceCollectionExtensions
 #endif
         )
     {
-        services.Configure<AzureBlobProviderOptions>(options => configuration.Bind(azureBlobProviderOptionSection, options));
+        services.AddOptions<AzureBlobProviderOptions>()
+            .Bind(configuration.GetSection(azureBlobProviderOptionSection))
+            .ValidateDataAnnotations();
         services.TryAddTransient<IBlobServiceClientFactory, AzureBlobServiceClientFactory>();
         services.TryAddTransient(sp => sp.GetRequiredService<IBlobServiceClientFactory>().Create());
 

@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace OoBDev.Qdrant;
 
 /// <summary>
@@ -8,11 +10,13 @@ public class QdrantOptions
     /// <summary>
     /// Gets or sets the URL for Qdrant.
     /// </summary>
+    [Required]
     public required string Url { get; set; }
 
     /// <summary>
     /// Gets or sets the collection name for Qdrant.
     /// </summary>
+    [Required]
     public required string CollectionName { get; set; }
 
     /// <summary>

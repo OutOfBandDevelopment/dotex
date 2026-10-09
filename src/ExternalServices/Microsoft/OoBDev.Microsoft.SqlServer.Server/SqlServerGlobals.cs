@@ -10,8 +10,4 @@ public static class SqlServerGlobals
     /// </summary>
     public const string ProviderKey = "mssql";
 
-    /// <summary>
-    /// The earlier key, still registered so existing configuration keeps working.
-    /// </summary>
-    public const string LegacyKey = "MSSQL";
 }

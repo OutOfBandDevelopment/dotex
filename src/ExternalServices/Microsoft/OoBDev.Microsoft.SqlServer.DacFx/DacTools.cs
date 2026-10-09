@@ -60,7 +60,7 @@ public static class DacTools
 
             var name = obj.GetSourceInformation()?.SourceName;
             if (string.IsNullOrWhiteSpace(name)) name = $"{obj.Name}_{obj.ObjectType.Name}";
-            if (string.IsNullOrWhiteSpace(name) || name.EndsWith(".xsd", StringComparison.InvariantCultureIgnoreCase)) continue;
+            if (string.IsNullOrWhiteSpace(name) || name.EndsWith(".xsd", StringComparison.OrdinalIgnoreCase)) continue;
 
             yield return (name, ast);
         }

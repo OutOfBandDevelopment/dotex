@@ -41,7 +41,6 @@ public static class ServiceCollectionExtensions
 
         services.Replace(ServiceDescriptor.Transient<IEmbeddingProvider, AllMiniLmL6V2EmbeddingProvider>());
         services.TryAddKeyedTransient<IEmbeddingProvider, AllMiniLmL6V2EmbeddingProvider>(SBertGlobals.AllMiniLmL6V2Key);
-        services.TryAddKeyedTransient<IEmbeddingProvider, AllMiniLmL6V2EmbeddingProvider>(SBertGlobals.LegacyKey);
 
         return services;
     }

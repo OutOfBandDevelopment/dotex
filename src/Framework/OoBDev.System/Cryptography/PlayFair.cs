@@ -83,7 +83,7 @@ public class PlayFair
         var seed = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
         var cipherKey = new char[5 * 5];
-        key = key.ToUpper();
+        key = key.ToUpperInvariant();
         char cMode;
         var cSwap = swap switch
         {
@@ -155,7 +155,7 @@ public class PlayFair
         if (string.IsNullOrEmpty(message))
             throw new ArgumentNullException(nameof(message));
 
-        message = message.ToUpper();
+        message = message.ToUpperInvariant();
 
         var cSwap = swap switch
         {

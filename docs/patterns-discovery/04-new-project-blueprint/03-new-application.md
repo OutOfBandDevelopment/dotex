@@ -23,7 +23,7 @@ app.MapControllers();
 app.Run();
 ```
 
-4. Configuration: only sections the application needs; provider selection by `OoBDev::ServiceKeys::{Type}` keys; environment switches for deployment differences.
+4. Configuration: only sections the application needs; provider selection by a configuration path per capability (for example `OoBDev:CachingProvider:Type`); environment switches for deployment differences.
 5. Application code: controllers depend on small application-level providers, which depend on Framework interfaces (`IMessageQueueSender<T>`, `ICachingManager`).
 6. Add a tests project and, if needed, Docker services for integration tests.
 7. Add `README.md`, `.runsettings` variables, and update `CONFIGURATION_SETTINGS.md`.

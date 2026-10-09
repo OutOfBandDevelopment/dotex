@@ -22,8 +22,8 @@ public class BsonTypeInfoResolver : DefaultJsonTypeInfoResolver
         var info = base.GetTypeInfo(type, options);
         var idConvention =
             (
-            type.Name.EndsWith("Model") ? type.Name[..^5] :
-            type.Name.EndsWith("Collection") ? type.Name[..^10] :
+            type.Name.EndsWith("Model", StringComparison.Ordinal) ? type.Name[..^5] :
+            type.Name.EndsWith("Collection", StringComparison.Ordinal) ? type.Name[..^10] :
             type.Name
             ) + "Id";
 
@@ -34,7 +34,7 @@ public class BsonTypeInfoResolver : DefaultJsonTypeInfoResolver
                 a.GetType().Name == "BsonRepresentationAttribute" //TODO: consider making this injectable so it can be extended
                 ) ?? false;
 
-            if (string.Equals(prop.Name, idConvention, StringComparison.InvariantCultureIgnoreCase))
+            if (string.Equals(prop.Name, idConvention, StringComparison.OrdinalIgnoreCase))
             {
                 prop.Name = "_id";
                 prop.CustomConverter = new BsonIdConverter();

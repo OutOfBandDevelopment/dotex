@@ -13,11 +13,15 @@ public class TestMessageSenderProvider(
 {
     public const string ProviderName = "test-provider";
 
+    /// <summary>The context passed to the most recent send.</summary>
+    public static IMessageContext? LastContext { get; private set; }
+
     private readonly TestContext _context = context;
     private readonly ILogger _logger = logger;
 
     public Task<string?> SendAsync(object message, IMessageContext context)
     {
+        LastContext = context;
         _logger.LogInformation($"{nameof(SendAsync)}({{{nameof(message)}}}, {{{nameof(context)}}})", message, context);
         _context.AddResult(message, fileName: nameof(message));
         _context.AddResult(context, fileName: nameof(context));

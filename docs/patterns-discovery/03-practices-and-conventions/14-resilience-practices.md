@@ -43,6 +43,21 @@ B o-- V
 @enduml
 ```
 
+## Implementation
+
+Owner decision (2026-10-09): use the Microsoft packages, not Polly directly.
+
+**Table 16 — Resilience building blocks**
+
+| Need | Use |
+|------|-----|
+| Outbound `HttpClient` calls | `Microsoft.Extensions.Http.Resilience`: `AddStandardResilienceHandler()` (rate limiter, total timeout, retry with jitter, circuit breaker, attempt timeout), options bound from configuration |
+| Non-HTTP calls (database, queue, vendor SDK) | `Microsoft.Extensions.Resilience`: register a named pipeline with `AddResiliencePipeline` and resolve `ResiliencePipelineProvider<string>` where it is needed |
+| Telemetry | The packages emit OpenTelemetry metrics and logs; no extra instrumentation |
+| Tests | Inject `FakeTimeProvider` into the pipeline so retries and timeouts run instantly |
+
+Polly is a transitive dependency of these packages and is accepted for that reason only. Application code does not build Polly strategies by hand; it registers pipelines through the Microsoft extension methods, and the analyzer rule OOB0003 no longer bans the `Polly` namespace for the same reason. Adapters that wrap a vendor SDK with its own retry (Azure SDK, AWS SDK) configure that retry instead of stacking a second pipeline on top.
+
 ## Messaging
 
 The message queue framework already separates providers behind interfaces, so retry and dead-letter policy belong in a decorator or in the provider options rather than in each handler. Each vendor has native features (visibility timeout, delivery count, dead-letter queue); the adapter maps them onto one options shape so handlers behave the same everywhere. Sagas are owned by the application, not the framework (owner decision).

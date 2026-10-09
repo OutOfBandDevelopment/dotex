@@ -42,7 +42,7 @@ Places where existing documentation and the code disagree. The new documents fol
 | Project counts | CLAUDE.md: 112+ projects | 123 project files | Refresh counts |
 | `docs/architecture` | Presented as current | Older than the code in places | Review against these documents |
 | Central package management | Removed at one point | Restored 2026-10-07; versions only in `src/Directory.Packages.props` | None (matches `CLAUDE.md`) |
-| Provider selection | `ISelectedService<T>` described as the pattern | Owner decision: a container-registered factory picks a keyed service from a configuration path | Implement the factory, then update pattern docs |
+| Provider selection | `ISelectedService<T>` (replaced) | A container-registered factory picks a keyed service from a configuration path (`TryAddConfiguredKeyedService`) | Done 2026-10-09; adopt for other capabilities as needed |
 | CLAUDE.md status sections | Docker services 13/15 healthy, 14 services | 15 services listed elsewhere | Refresh |
 
 The full list of code-level issues is in [known warts](./03-practices-and-conventions/07-known-warts.md).
@@ -52,4 +52,16 @@ The full list of code-level issues is in [known warts](./03-practices-and-conven
 New to the codebase: 01, then 02, then 03. Building something new: 04. Deciding what to change: 05.
 
 <!-- toc:start -->
+## Contents
+
+1. [06 — Design Document Standard](./06-design-document-standard.md)
+
+### List of Figures
+
+1. [Figure 1 — The four documents per feature](./06-design-document-standard.md)
+2. [Figure 2 — Salt UI mockup example](./06-design-document-standard.md)
+
+### List of Tables
+
+1. [Table 1 — Design document rules](./06-design-document-standard.md)
 <!-- toc:end -->

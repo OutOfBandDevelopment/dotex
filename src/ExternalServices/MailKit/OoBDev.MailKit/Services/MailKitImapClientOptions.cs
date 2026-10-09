@@ -1,6 +1,8 @@
 using MailKit.Security;
 using System;
 
+using System.ComponentModel.DataAnnotations;
+
 namespace OoBDev.MailKit.Services;
 
 /// <summary>
@@ -11,6 +13,7 @@ public class MailKitImapClientOptions
     /// <summary>
     /// Gets or sets the host address of the IMAP server.
     /// </summary>
+    [Required]
     public required string Host { get; set; }
 
     /// <summary>

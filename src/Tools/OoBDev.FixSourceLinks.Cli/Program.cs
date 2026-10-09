@@ -66,7 +66,7 @@ internal class Program
                         where attribute != null
                         let existingPath = attribute?.Value
                         where !string.IsNullOrWhiteSpace(existingPath)
-                        where existingPath.StartsWith("https://", StringComparison.InvariantCultureIgnoreCase)
+                        where existingPath.StartsWith("https://", StringComparison.OrdinalIgnoreCase)
                         let uri = existingPath == null ? null : new Uri(existingPath)
                         where !string.IsNullOrWhiteSpace(uri.Query)
                         let path = uri == null ? null : HttpUtility.ParseQueryString(uri.Query)?["path"]?.TrimStart('/', '\\')

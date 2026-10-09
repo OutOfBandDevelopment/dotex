@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Globalization;
 
 namespace OoBDev.TestUtilities;
 
@@ -34,24 +35,24 @@ public static class NumericAsserts
         // that occur when operations are reordered or when precision is lost
         if (typeof(T) == typeof(double))
         {
-            var exp = Convert.ToDouble(expected);
-            var act = Convert.ToDouble(actual);
+            var exp = Convert.ToDouble(expected, CultureInfo.InvariantCulture);
+            var act = Convert.ToDouble(actual, CultureInfo.InvariantCulture);
             var epsilon = Math.Max(Math.Abs(exp), Math.Abs(act)) * 1e-10;
             var displayMessage = message ?? $"Expected: {expected}, Actual: {actual}";
             Assert.AreEqual(exp, act, epsilon, displayMessage);
         }
         else if (typeof(T) == typeof(float))
         {
-            var exp = Convert.ToSingle(expected);
-            var act = Convert.ToSingle(actual);
+            var exp = Convert.ToSingle(expected, CultureInfo.InvariantCulture);
+            var act = Convert.ToSingle(actual, CultureInfo.InvariantCulture);
             var epsilon = Math.Max(Math.Abs(exp), Math.Abs(act)) * 1e-5f;
             var displayMessage = message ?? $"Expected: {expected}, Actual: {actual}";
             Assert.AreEqual(exp, act, epsilon, displayMessage);
         }
         else if (typeof(T) == typeof(decimal))
         {
-            var exp = Convert.ToDecimal(expected);
-            var act = Convert.ToDecimal(actual);
+            var exp = Convert.ToDecimal(expected, CultureInfo.InvariantCulture);
+            var act = Convert.ToDecimal(actual, CultureInfo.InvariantCulture);
             var epsilon = Math.Max(Math.Abs(exp), Math.Abs(act)) * 0.0000000001m;
             var displayMessage = message ?? $"Expected: {expected}, Actual: {actual}";
             Assert.AreEqual(exp, act, epsilon, displayMessage);
@@ -78,31 +79,31 @@ public static class NumericAsserts
 
         if (typeof(T) == typeof(double))
         {
-            var exp = Convert.ToDouble(expected);
-            var act = Convert.ToDouble(actual);
-            var tol = Convert.ToDouble(tolerance);
+            var exp = Convert.ToDouble(expected, CultureInfo.InvariantCulture);
+            var act = Convert.ToDouble(actual, CultureInfo.InvariantCulture);
+            var tol = Convert.ToDouble(tolerance, CultureInfo.InvariantCulture);
             Assert.AreEqual(exp, act, tol, displayMessage);
         }
         else if (typeof(T) == typeof(float))
         {
-            var exp = Convert.ToSingle(expected);
-            var act = Convert.ToSingle(actual);
-            var tol = Convert.ToSingle(tolerance);
+            var exp = Convert.ToSingle(expected, CultureInfo.InvariantCulture);
+            var act = Convert.ToSingle(actual, CultureInfo.InvariantCulture);
+            var tol = Convert.ToSingle(tolerance, CultureInfo.InvariantCulture);
             Assert.AreEqual(exp, act, tol, displayMessage);
         }
         else if (typeof(T) == typeof(decimal))
         {
-            var exp = Convert.ToDecimal(expected);
-            var act = Convert.ToDecimal(actual);
-            var tol = Convert.ToDecimal(tolerance);
+            var exp = Convert.ToDecimal(expected, CultureInfo.InvariantCulture);
+            var act = Convert.ToDecimal(actual, CultureInfo.InvariantCulture);
+            var tol = Convert.ToDecimal(tolerance, CultureInfo.InvariantCulture);
             Assert.AreEqual(exp, act, tol, displayMessage);
         }
         else
         {
             // For integer types, convert tolerance to absolute difference check
-            var exp = Convert.ToInt64(expected);
-            var act = Convert.ToInt64(actual);
-            var tol = Convert.ToInt64(tolerance);
+            var exp = Convert.ToInt64(expected, CultureInfo.InvariantCulture);
+            var act = Convert.ToInt64(actual, CultureInfo.InvariantCulture);
+            var tol = Convert.ToInt64(tolerance, CultureInfo.InvariantCulture);
             var diff = Math.Abs(exp - act);
             Assert.IsLessThanOrEqualTo(tol, diff, displayMessage);
         }

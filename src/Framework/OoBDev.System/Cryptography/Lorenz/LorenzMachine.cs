@@ -56,7 +56,7 @@ public class LorenzMachine(byte[] keySet, int[] startPosition)
     /// <returns>The encoded/decoded text using the configured wheel settings.</returns>
     public string Encode(string input)
     {
-        var chars = input.ToUpper()
+        var chars = input.ToUpperInvariant()
                          .Replace('+', '5')
                          .Select(i => _ita2.IndexOf(i))
                          .Where(i => i >= 0)

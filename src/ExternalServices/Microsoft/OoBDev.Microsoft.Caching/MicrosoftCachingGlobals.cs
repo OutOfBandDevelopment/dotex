@@ -10,8 +10,4 @@ public static class MicrosoftCachingGlobals
     /// </summary>
     public const string ProviderKey = "memory-cache";
 
-    /// <summary>
-    /// The earlier key, still registered so existing configuration keeps working.
-    /// </summary>
-    public const string LegacyKey = "MemoryCache";
 }

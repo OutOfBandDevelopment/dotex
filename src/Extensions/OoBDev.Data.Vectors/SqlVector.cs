@@ -286,7 +286,7 @@ public struct SqlVector : INullable, IBinarySerialize, IEquatable<SqlVector>
         var inputValue = input.Value.Trim();
         try
         {
-            if (inputValue.StartsWith("[") && inputValue.EndsWith("]"))
+            if (inputValue.StartsWith("[", StringComparison.Ordinal) && inputValue.EndsWith("]", StringComparison.Ordinal))
             {
                 inputValue = inputValue.Substring(1, inputValue.Length - 2);
             }
