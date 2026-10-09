@@ -47,7 +47,7 @@ public class XsltTemplateProvider : ITemplateProvider
     /// <param name="context">The template context.</param>
     /// <returns><c>true</c> if the template processing can be applied; otherwise, <c>false</c>.</returns>
     public virtual bool CanApply(ITemplateContext context) =>
-        SupportedContentTypes.Any(type => string.Equals(context.TemplateContentType, type, StringComparison.InvariantCultureIgnoreCase));
+        SupportedContentTypes.Any(type => string.Equals(context.TemplateContentType, type, StringComparison.OrdinalIgnoreCase));
 
     /// <summary>
     /// Applies the XSLT template associated with the specified context, using the provided data,

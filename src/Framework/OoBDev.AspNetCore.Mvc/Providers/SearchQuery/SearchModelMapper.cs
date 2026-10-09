@@ -56,7 +56,7 @@ public class SearchModelMapper : ISearchModelMapper
     {
         HttpRequest request when request.HasFormContentType => RequestType.Form,
         HttpRequest request when request.HasJsonContentType() => RequestType.Json,
-        HttpRequest request when request.Method.Equals("POST", StringComparison.InvariantCultureIgnoreCase) => RequestType.Json,
+        HttpRequest request when request.Method.Equals("POST", StringComparison.OrdinalIgnoreCase) => RequestType.Json,
         _ => RequestType.Query,
     };
 

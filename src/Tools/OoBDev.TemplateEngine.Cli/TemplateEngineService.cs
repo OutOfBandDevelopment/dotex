@@ -55,7 +55,7 @@ public class TemplateEngineService(
                 );
 
             var outFile = _settings.Value.OutputFile
-                .Replace("[file]", Path.GetFileNameWithoutExtension(file), StringComparison.InvariantCultureIgnoreCase)
+                .Replace("[file]", Path.GetFileNameWithoutExtension(file), StringComparison.OrdinalIgnoreCase)
                 ;
             var dir = Path.GetDirectoryName(outFile);
             if (dir != null && !Directory.Exists(dir)) Directory.CreateDirectory(dir);

@@ -29,8 +29,8 @@ public class BsonObjectIdConvention : ConventionBase, IMemberMapConvention
             type.Name
             ) + "Id";
 
-        if (string.Equals(memberMap.ElementName, "_id", StringComparison.InvariantCultureIgnoreCase) ||
-            string.Equals(memberMap.ElementName, idConvention, StringComparison.InvariantCultureIgnoreCase) ||
+        if (string.Equals(memberMap.ElementName, "_id", StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(memberMap.ElementName, idConvention, StringComparison.OrdinalIgnoreCase) ||
             memberMap.MemberInfo is PropertyInfo prop && prop.GetCustomAttribute<KeyAttribute>() != null)
         {
             new BsonIdAttribute().Apply(memberMap);

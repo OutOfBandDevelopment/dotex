@@ -96,8 +96,8 @@ public class DocumentConverterService : IHostedService
     /// <exception cref="ApplicationException">Thrown when the file is not found.</exception>
     private async Task<Stream> OpenPathAsync(string sourcePath)
     {
-        if (sourcePath.StartsWith("http:", StringComparison.InvariantCultureIgnoreCase) ||
-            sourcePath.StartsWith("https:", StringComparison.InvariantCultureIgnoreCase))
+        if (sourcePath.StartsWith("http:", StringComparison.OrdinalIgnoreCase) ||
+            sourcePath.StartsWith("https:", StringComparison.OrdinalIgnoreCase))
         {
             var client = _httpClientFactory.CreateClient();
             var stream = await client.GetStreamAsync(sourcePath);

@@ -75,11 +75,11 @@ public class PlantUmlRenderer
     public void Write(NormalizeRenderer renderer, string script)
     {
         script = script.Trim();
-        if (script.StartsWith("@startuml", StringComparison.InvariantCultureIgnoreCase))
+        if (script.StartsWith("@startuml", StringComparison.OrdinalIgnoreCase))
         {
             script = script[9..];
         }
-        if (script.EndsWith("@enduml", StringComparison.InvariantCultureIgnoreCase))
+        if (script.EndsWith("@enduml", StringComparison.OrdinalIgnoreCase))
         {
             script = script[..^7];
         }

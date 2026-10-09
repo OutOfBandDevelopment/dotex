@@ -38,11 +38,11 @@ public class SearchQueryOperationTransformer(
         var method = action.MethodInfo;
 
         operation.Tags ??= new HashSet<OpenApiTagReference>();
-        if (string.Equals(method.Name, "save", StringComparison.InvariantCultureIgnoreCase))
+        if (string.Equals(method.Name, "save", StringComparison.OrdinalIgnoreCase))
         {
             operation.Tags.Add(new OpenApiTagReference("Save"));
         }
-        if (string.Equals(method.Name, "get", StringComparison.InvariantCultureIgnoreCase))
+        if (string.Equals(method.Name, "get", StringComparison.OrdinalIgnoreCase))
         {
             operation.Tags.Add(new OpenApiTagReference("Getter"));
         }
@@ -106,13 +106,13 @@ public class SearchQueryOperationTransformer(
         {
             var name = json.AsPropertyName(property.Name);
 
-            if (property.Name.Equals(nameof(ISearchQuery.Filter), StringComparison.InvariantCultureIgnoreCase))
+            if (property.Name.Equals(nameof(ISearchQuery.Filter), StringComparison.OrdinalIgnoreCase))
             {
                 //TODO: ignore filter support for now.
                 continue;
             }
 
-            if (property.Name.Equals(nameof(ISearchQuery.OrderBy), StringComparison.InvariantCultureIgnoreCase))
+            if (property.Name.Equals(nameof(ISearchQuery.OrderBy), StringComparison.OrdinalIgnoreCase))
             {
                 var orderSchema = new OpenApiSchema
                 {

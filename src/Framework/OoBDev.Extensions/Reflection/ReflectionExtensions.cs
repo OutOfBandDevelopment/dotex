@@ -217,8 +217,8 @@ public static class ReflectionExtensions
                                  where ev.FieldType == type
                                  let desc = ev.GetCustomAttribute<DescriptionAttribute>()?.Description
                                  let enumVale = ev.GetCustomAttribute<EnumValueAttribute>()?.Name
-                                 where toParse.Equals(desc, StringComparison.InvariantCultureIgnoreCase) ||
-                                       toParse.Equals(enumVale, StringComparison.InvariantCultureIgnoreCase)
+                                 where toParse.Equals(desc, StringComparison.OrdinalIgnoreCase) ||
+                                       toParse.Equals(enumVale, StringComparison.OrdinalIgnoreCase)
                                  select ev.GetValue(null);
                 var enumValue = enumValues.FirstOrDefault();
                 if (enumValue != null)

@@ -75,8 +75,8 @@ public class MessageReceiverProviderFactory(
 
             var disableReceiverValue = config?["DisableReceiver"];
             var disableReceiver =
-                string.Equals("TRUE", disableReceiverValue, StringComparison.InvariantCultureIgnoreCase) ||
-                string.Equals("1", disableReceiverValue, StringComparison.InvariantCultureIgnoreCase);
+                string.Equals("TRUE", disableReceiverValue, StringComparison.OrdinalIgnoreCase) ||
+                string.Equals("1", disableReceiverValue, StringComparison.OrdinalIgnoreCase);
 
             if (disableReceiver)
             {

@@ -58,6 +58,6 @@ public sealed class VariableExpression<T> : ExpressionBase<T>
     /// <returns>True if the objects are equal (same variable name); otherwise, false.</returns>
     public override bool Equals(object? obj) =>
         this == obj ||
-        obj is VariableExpression<T> vari && Name.Equals(vari.Name) ||
+        obj is VariableExpression<T> vari && Name.Equals(vari.Name, StringComparison.Ordinal) ||
         obj is string && Name.Equals(obj);
 }

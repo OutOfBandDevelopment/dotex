@@ -168,7 +168,7 @@ public class QueryBuilder<TModel>(
         ISearchQuery searchQuery
         )
     {
-        var ordered = BuildFrom(query, searchQuery, StringComparison.InvariantCultureIgnoreCase);
+        var ordered = BuildFrom(query, searchQuery, StringComparison.OrdinalIgnoreCase);
 
         if (searchQuery.PageSize >= 0)
         {
