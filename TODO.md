@@ -90,7 +90,9 @@ Every TODO file and in-code marker was checked against the repository. The other
 - [ ] Triage of `TestCategories.DevLocal` (partly done 2026-10-09; 4 tests moved to Unit: Bson serializer, `AsXElement`, XPath `max`, Example service registry). Kept as `DevLocal` on purpose: Ollama tests (hard-coded LAN host, model pull and delete), USB HID tests (hardware), `PathEx`, `MergedXPathNavigator` and `ProjectTools.FixReadmes` (hard-coded `C:\Repos` paths), Example blob tests (Azurite). Still to decide:
   - [ ] `Documents.Tests` `ServiceRegistryTests` (2): fail as Unit (missing logger and other services in the test setup; the keyed test asserts a service that is never registered). Fix the setup or the assertion first.
   - [ ] `System.Tests` `ReflectionElementNodeTest`: fails as Unit (`System.Type` cannot be serialized to JSON).
-  - [ ] Not reviewed yet: Application Insights (5, against azurinsight, so Integration), Html `DeeperTest`, Markdown `TestMethod1` (reads `Design.md`), DacFx `BuildPackageTest`, `IDocumentConversionTests`.
+  - [ ] Application Insights (5): meant to be Integration, but all fail against the azurinsight container (healthy, but the telemetry is not found when queried; 2026-10-09 run). Fix the emulator query or the exporter first, then move them.
+  - [ ] `IDocumentConversionTests` external cases (Apache Tika at `127.0.0.1:9998`): Integration once run against the Tika container.
+  - Kept `DevLocal`: Markdown `TestMethod1` (reads and writes `Design.md` files) and DacFx `BuildPackageTest` (hard-coded `C:epo\merge-em` path). Html `DeeperTest` also fails as Unit (`ArgumentNullException: input`, probably a missing embedded resource), so it stays `DevLocal` until fixed.
 
 ### Backlog: Dependency Updates and Build Health (2026-10-07)
 - [x] Owner package bumps committed (118 csproj, `58adc7e`); Application Insights 3.1.2 migrated to OpenTelemetry processors; AI tests rewritten (`1c2eab6`). Full solution builds with 0 errors.
