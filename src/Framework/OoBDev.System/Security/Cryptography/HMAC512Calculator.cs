@@ -32,7 +32,7 @@ public class HMAC512Calculator : IHMACCalculator
     public string Encode(ReadOnlySpan<byte> bytes)
     {
         var hashInBase64 = Convert.ToBase64String(bytes);
-        var hashInBase64URIencoded = hashInBase64; ;
+        var hashInBase64URIencoded = hashInBase64;
         return hashInBase64URIencoded;
     }
 

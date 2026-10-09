@@ -215,6 +215,38 @@ dotnet_diagnostic.CA5369.severity = suggestion
 # MD5 and SHA-1 are required by existing protocols (RFC 6238 TOTP uses HMAC-SHA1; the MD5 helpers are non-security identifiers)
 dotnet_diagnostic.CA5350.severity = suggestion
 dotnet_diagnostic.CA5351.severity = suggestion
+# Meziantou.Analyzer: rules with an existing backlog are suggestions until fixed in batches (see TODO.md); every other MA rule is a warning
+dotnet_diagnostic.MA0002.severity = suggestion
+dotnet_diagnostic.MA0004.severity = suggestion
+dotnet_diagnostic.MA0006.severity = suggestion
+dotnet_diagnostic.MA0009.severity = suggestion
+dotnet_diagnostic.MA0011.severity = suggestion
+dotnet_diagnostic.MA0012.severity = suggestion
+dotnet_diagnostic.MA0013.severity = suggestion
+dotnet_diagnostic.MA0014.severity = suggestion
+dotnet_diagnostic.MA0015.severity = suggestion
+dotnet_diagnostic.MA0016.severity = suggestion
+dotnet_diagnostic.MA0017.severity = suggestion
+dotnet_diagnostic.MA0019.severity = suggestion
+dotnet_diagnostic.MA0023.severity = suggestion
+dotnet_diagnostic.MA0025.severity = suggestion
+dotnet_diagnostic.MA0026.severity = suggestion
+dotnet_diagnostic.MA0046.severity = suggestion
+dotnet_diagnostic.MA0048.severity = suggestion
+dotnet_diagnostic.MA0051.severity = suggestion
+dotnet_diagnostic.MA0055.severity = suggestion
+dotnet_diagnostic.MA0061.severity = suggestion
+dotnet_diagnostic.MA0070.severity = suggestion
+dotnet_diagnostic.MA0084.severity = suggestion
+dotnet_diagnostic.MA0099.severity = suggestion
+dotnet_diagnostic.MA0132.severity = suggestion
+dotnet_diagnostic.MA0134.severity = suggestion
+dotnet_diagnostic.MA0144.severity = suggestion
+dotnet_diagnostic.MA0147.severity = suggestion
+dotnet_diagnostic.MA0151.severity = suggestion
+dotnet_diagnostic.MA0158.severity = suggestion
+dotnet_diagnostic.MA0169.severity = suggestion
+dotnet_diagnostic.MA0091.severity = suggestion
 # OoBDev.Analyzers: production code uses TimeProvider; test code may read the clock for sample data
 dotnet_diagnostic.OOB0001.severity = warning
 

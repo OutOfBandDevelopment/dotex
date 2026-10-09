@@ -37,7 +37,6 @@ public class DocumentSummaryGenerationProvider
         _messageCompletion = messageCompletion;
         _modelName = modelName;
         _promptTemplate = promptTemplate;
-        ;
     }
 
     /// <summary>

@@ -84,17 +84,13 @@
     <AnalysisLevel>latest</AnalysisLevel>
   </PropertyGroup>
 
-  <!--https://www.meziantou.net/the-roslyn-analyzers-i-use.htm-->
-  <!--<ItemGroup Condition="'$(IsTestProject)' != 'true'">
-    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
+  <!-- NetAnalyzers ship with the SDK (see above); Meziantou adds string, culture and async rules -->
+  <ItemGroup Condition="!$([System.Text.RegularExpressions.Regex]::IsMatch('$(MSBuildProjectName)', '\.Tests$')) and '$(MSBuildProjectName)' != 'OoBDev.TestUtilities'">
     <PackageReference Include="Meziantou.Analyzer">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-  </ItemGroup>-->
+  </ItemGroup>
   <!-- OoBDev convention analyzer: OOB0001 to OOB0003; tune severities in .editorconfig -->
   <ItemGroup Condition="'$(MSBuildProjectName)' != 'OoBDev.Analyzers' and '$(MSBuildProjectName)' != 'OoBDev.Analyzers.Tests'">
     <ProjectReference Include="$(MSBuildThisFileDirectory)Framework\OoBDev.Analyzers\OoBDev.Analyzers.csproj"

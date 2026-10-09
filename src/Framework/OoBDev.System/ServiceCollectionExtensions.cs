@@ -48,7 +48,6 @@ public static class ServiceCollectionExtensions
         services.TryAddProviders();
 
         services.TryAddTransient<IHttpPrepareRequest, HttpPrepareRequest>();
-        ;
         return services;
     }
 

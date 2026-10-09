@@ -118,7 +118,7 @@ public class PathExtensions
         Console.WriteLine($"==> Pattern: {pattern}");
         Console.WriteLine($"==> Cleaned: {cleanedPath}");
 #endif
-        var files = Directory.Exists(cleanedPath) ? Directory.GetFiles(cleanedPath, pattern) : Enumerable.Empty<string>(); ;
+        var files = Directory.Exists(cleanedPath) ? Directory.GetFiles(cleanedPath, pattern) : Enumerable.Empty<string>();
         var xml = new XElement(_ns + "files",
               from f in files
               select new XElement(_ns + "file", new XText(f))

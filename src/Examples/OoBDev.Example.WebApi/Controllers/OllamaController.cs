@@ -59,7 +59,7 @@ public class OllamaController : ControllerBase
         await foreach (var response in _llmProvider.GetStreamedResponseAsync(model.PromptDetails, model.UserInput))
         {
             yield return response;
-        };
+        }
     }
 
     /// <summary>

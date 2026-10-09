@@ -46,7 +46,7 @@ public class AIController : ControllerBase
         await foreach (var response in _llmProvider.GetStreamedResponseAsync(model.PromptDetails, model.UserInput))
         {
             yield return response;
-        };
+        }
     }
 
     /// <summary>
@@ -60,7 +60,7 @@ public class AIController : ControllerBase
         await foreach (var response in _llmProvider.GetStreamedContextResponseAsync(model.AssistantConfinment, model.PromptDetails, model.UserInput))
         {
             yield return response;
-        };
+        }
     }
 
     /// <summary>

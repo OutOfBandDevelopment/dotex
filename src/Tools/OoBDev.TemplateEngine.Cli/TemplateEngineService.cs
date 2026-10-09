@@ -46,7 +46,7 @@ public class TemplateEngineService(
             var content = GetContent(file) ??
                 throw new NotSupportedException($"No content found: \"{file}\"");
             var data = GetData(contentType, content) ??
-                throw new NotSupportedException($"No data found: ({contentType}:{content?.Length})"); ;
+                throw new NotSupportedException($"No data found: ({contentType}:{content?.Length})");
 
             _log.LogInformation(
                 $"Loaded: {{{nameof(file)}}} for {{{nameof(_settings.Value.Template)}}}",

@@ -139,8 +139,7 @@ public static class PathEx
             if (enumerator.Current == "**")
             {
                 recursive = true;
-                while (enumerator.MoveNext() && enumerator.Current == "**")
-                    ;
+                while (enumerator.MoveNext() && enumerator.Current == "**") { }
             }
             var searchOption = recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
 
