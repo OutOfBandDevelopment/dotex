@@ -69,19 +69,19 @@ public static class ServiceCollectionExtensions
     {
         services.TryAddSingleton(sp => sp.GetRequiredKeyedService<IHash>(defaultHashType));
 
-        services.TryAddKeyedSingleton<IHash, Md5Hash>(nameof(HashTypes.Md5).ToUpper());
-        services.TryAddKeyedSingleton<IHash, Sha256Hash>(nameof(HashTypes.Sha256).ToUpper());
-        services.TryAddKeyedSingleton<IHash, Sha512Hash>(nameof(HashTypes.Sha512).ToUpper());
+        services.TryAddKeyedSingleton<IHash, Md5Hash>(nameof(HashTypes.Md5).ToLowerInvariant());
+        services.TryAddKeyedSingleton<IHash, Sha256Hash>(nameof(HashTypes.Sha256).ToLowerInvariant());
+        services.TryAddKeyedSingleton<IHash, Sha512Hash>(nameof(HashTypes.Sha512).ToLowerInvariant());
 
-        services.TryAddKeyedSingleton(HashTypes.Md5, (sp, key) => sp.GetRequiredKeyedService<IHash>(key?.ToString()?.ToUpper()));
-        services.TryAddKeyedSingleton(HashTypes.Sha256, (sp, key) => sp.GetRequiredKeyedService<IHash>(key?.ToString()?.ToUpper()));
-        services.TryAddKeyedSingleton(HashTypes.Sha512, (sp, key) => sp.GetRequiredKeyedService<IHash>(key?.ToString()?.ToUpper()));
+        services.TryAddKeyedSingleton(HashTypes.Md5, (sp, key) => sp.GetRequiredKeyedService<IHash>(key?.ToString()?.ToLowerInvariant()));
+        services.TryAddKeyedSingleton(HashTypes.Sha256, (sp, key) => sp.GetRequiredKeyedService<IHash>(key?.ToString()?.ToLowerInvariant()));
+        services.TryAddKeyedSingleton(HashTypes.Sha512, (sp, key) => sp.GetRequiredKeyedService<IHash>(key?.ToString()?.ToLowerInvariant()));
 
         services.TryAddSingleton<IHMACCalculator, HMAC256Calculator>();
-        services.TryAddKeyedSingleton<IHMACCalculator, HMAC256Calculator>("HMAC256");
-        services.TryAddKeyedSingleton<IHMACCalculator, HMAC512Calculator>("HMAC512");
-        services.TryAddKeyedSingleton<IHMACCalculator, HMAC3_256Calculator>("HMAC3-256");
-        services.TryAddKeyedSingleton<IHMACCalculator, HMAC3_512Calculator>("HMAC3-512");
+        services.TryAddKeyedSingleton<IHMACCalculator, HMAC256Calculator>("hmac-256");
+        services.TryAddKeyedSingleton<IHMACCalculator, HMAC512Calculator>("hmac-512");
+        services.TryAddKeyedSingleton<IHMACCalculator, HMAC3_256Calculator>("hmac3-256");
+        services.TryAddKeyedSingleton<IHMACCalculator, HMAC3_512Calculator>("hmac3-512");
 
         services.TryAddTransient<ILdapFilterBuilder, LdapFilterBuilder>();
 
@@ -110,34 +110,34 @@ public static class ServiceCollectionExtensions
 
         services.TryAddKeyedSingleton(
             SerializerTypes.Json,
-            (sp, key) => sp.GetRequiredKeyedService<ISerializer>(key?.ToString()?.ToUpper())
+            (sp, key) => sp.GetRequiredKeyedService<ISerializer>(key?.ToString()?.ToLowerInvariant())
             );
         services.TryAddKeyedSingleton(
             SerializerTypes.Bson,
-            (sp, key) => sp.GetRequiredKeyedService<ISerializer>(key?.ToString()?.ToUpper())
+            (sp, key) => sp.GetRequiredKeyedService<ISerializer>(key?.ToString()?.ToLowerInvariant())
             );
         services.TryAddKeyedSingleton(
             SerializerTypes.Xml,
-            (sp, key) => sp.GetRequiredKeyedService<ISerializer>(key?.ToString()?.ToUpper())
+            (sp, key) => sp.GetRequiredKeyedService<ISerializer>(key?.ToString()?.ToLowerInvariant())
             );
 
         services.TryAddSingleton<IObjectConverter, ObjectConverter>();
 
         services.TryAddSingleton<IJsonSerializer, DefaultJsonSerializer>();
         services.TryAddKeyedSingleton<ISerializer>(
-            nameof(SerializerTypes.Json).ToUpper(),
+            nameof(SerializerTypes.Json).ToLowerInvariant(),
             (sp, key) => sp.GetRequiredService<IJsonSerializer>()
             );
 
         services.TryAddSingleton<IBsonSerializer, DefaultBsonSerializer>();
         services.TryAddKeyedSingleton<ISerializer>(
-            nameof(SerializerTypes.Bson).ToUpper(),
+            nameof(SerializerTypes.Bson).ToLowerInvariant(),
             (sp, key) => sp.GetRequiredService<IBsonSerializer>()
             );
 
         services.TryAddSingleton<IXmlSerializer, DefaultXmlSerializer>();
         services.TryAddKeyedSingleton<ISerializer>(
-            nameof(SerializerTypes.Xml).ToUpper(),
+            nameof(SerializerTypes.Xml).ToLowerInvariant(),
             (sp, key) => sp.GetRequiredService<IXmlSerializer>()
             );
 

@@ -21,7 +21,7 @@ Supporting conventions:
 |------------|---------|
 | Provider key is a **string constant in a `{Vendor}Globals` class** | `RabbitMQGlobals.MessageProviderKey = "rabbit-mq"` |
 | Keys are **kebab-case** (lower-case words separated by hyphens) | `"rabbit-mq"`, `"azure-storage-queue"`, `"servicebus"` |
-| Enum-typed keys forward to a string key | `TryAddKeyedSingleton(HashTypes.Sha256, (sp,key) => sp.GetRequiredKeyedService<IHash>(...))` (today the string is upper-cased; should become kebab-case) |
+| Enum-typed keys forward to a string key | `TryAddKeyedSingleton(HashTypes.Sha256, (sp,key) => sp.GetRequiredKeyedService<IHash>(...))` (the string is lower-cased: `"sha256"`, `"json"`; HMAC keys are `"hmac-256"`, `"hmac-512"`, `"hmac3-256"`, `"hmac3-512"`) |
 | Vendor SDK objects are created through a small **`I{Vendor}ClientFactory`** so they can be mocked | `IOllamaApiClientFactory`, `IQueueClientFactory`, `IConnectionMultiplexerFactory` |
 | Registration logic sits in an internal **`{Vendor}Registrar`** class; the public extension delegates to it | `TryAddRedisCachingServices → new RedisCachingRegistrar().AddServices(services)` |
 
@@ -29,7 +29,7 @@ Supporting conventions:
 
 **Key discovery, not centralization:** keys follow a common, discoverable pattern (a `const string` named `ProviderKey` or `MessageProviderKey` in the adapter's own `{Vendor}Globals` class, value in kebab-case) but are deliberately **not** collected in one global registry. A shared key list would have to be referenced by every adapter and by the abstractions, which breaks the minimum-reference rule that an adapter references only its capability's Abstractions project ([layers](../01-architecture/02-five-source-layers.md)). Consumers find a key by convention (search for `*Globals`) or in the adapter's readme, which lists it under Configuration.
 
-**Rough edges:** several keys do not follow the naming standard (the upper-cased enum forwarding for hashes and serializers, and the `HMAC*` keys; the user accessor keys are now `"http"` and `"environment"`), and some adapters inline the key string instead of exposing a constant. Fixing these is tracked in `TODO.md` ("Backlog: Naming Consistency"); because keys appear in configuration files this is a breaking change to plan for.
+**Rough edges:** some adapters inline the key string instead of exposing a constant. Fixing these is tracked in `TODO.md` ("Backlog: Naming Consistency"); because keys appear in configuration files this is a breaking change to plan for.
 
 ---
 
