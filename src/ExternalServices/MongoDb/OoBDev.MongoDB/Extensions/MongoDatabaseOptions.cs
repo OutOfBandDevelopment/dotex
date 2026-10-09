@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace OoBDev.MongoDB.Extensions;
 
 /// <summary>
@@ -9,11 +11,13 @@ public class MongoDatabaseOptions : IMongoSettings
     /// <summary>
     /// Gets or sets the connection string for the MongoDB database.
     /// </summary>
+    [Required]
     public required string ConnectionString { get; set; }
 
     /// <summary>
     /// Gets or sets the name of the MongoDB database.
     /// </summary>
+    [Required]
     public required string DatabaseName { get; set; }
 
     /// <summary>

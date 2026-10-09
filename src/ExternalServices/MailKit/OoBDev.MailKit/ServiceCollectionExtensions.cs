@@ -49,14 +49,18 @@ public static class ServiceCollectionExtensions
             services.AddHealthChecks().AddCheck<MailkitSmtpHealthCheck>("mailkit-smtp");
             services.TryAddTransient<ICommunicationSender<EmailMessageModel>, MailKitProvider>();
             services.TryAddTransient<ISmtpClientFactory, SmtpClientFactory>();
-            services.Configure<MailKitSmtpClientOptions>(options => configuration.Bind(smtpConfigurationSection, options));
+            services.AddOptions<MailKitSmtpClientOptions>()
+            .Bind(configuration.GetSection(smtpConfigurationSection))
+            .ValidateDataAnnotations();
         }
 
         if (!string.IsNullOrWhiteSpace(imap))
         {
             services.AddHealthChecks().AddCheck<MailkitImapHealthCheck>("mailkit-imap");
             services.TryAddTransient<IImapClientFactory, ImapClientFactory>();
-            services.Configure<MailKitImapClientOptions>(options => configuration.Bind(imapConfigurationSection, options));
+            services.AddOptions<MailKitImapClientOptions>()
+            .Bind(configuration.GetSection(imapConfigurationSection))
+            .ValidateDataAnnotations();
         }
 
         return services;

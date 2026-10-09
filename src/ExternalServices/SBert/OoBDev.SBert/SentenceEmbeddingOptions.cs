@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace OoBDev.SBert;
 
 /// <summary>
@@ -11,5 +13,6 @@ public class SentenceEmbeddingOptions
     /// <remarks>
     /// Example: http://sbert.example.com:5080
     /// </remarks>
+    [Required]
     public required string Url { get; set; }
 }

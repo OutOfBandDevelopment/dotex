@@ -36,7 +36,9 @@ public static class ServiceCollectionExtensions
         }
         services.AddHealthChecks().AddCheck<SbertHealthCheck>("sbert");
 
-        services.Configure<SentenceEmbeddingOptions>(options => configuration.Bind(sentenceEmbeddingOptionSection, options));
+        services.AddOptions<SentenceEmbeddingOptions>()
+            .Bind(configuration.GetSection(sentenceEmbeddingOptionSection))
+            .ValidateDataAnnotations();
         services.TryAddTransient<IEmbeddingProvider, SentenceEmbeddingProvider>();
         services.TryAddKeyedTransient<IEmbeddingProvider, SentenceEmbeddingProvider>(SBertProviderGlobals.ProviderKey);
 
