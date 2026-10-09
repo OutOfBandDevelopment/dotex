@@ -46,7 +46,7 @@ Questions that block or shape work in the TODO files. Each has the source it cam
 
 ## 2. Design questions
 
-### Q5 — `ISelectedService<T>` rough edges
+### Q5 — `ISelectedService<T>` rough edges (resolved)
 
 - **Source:** [TODO.md](./TODO.md) → "Backlog: Review `ISelectedService` Rough Edges"
 - **Question:** Three points, all affecting how existing consumers move to the selection factory you already chose:
@@ -54,7 +54,7 @@ Questions that block or shape work in the TODO files. Each has the source it cam
   2. Selection is resolved in the constructor, so it is fixed for the process. Intended, or should it follow configuration reloads?
   3. `IServiceProvider` injection (service locator) lives in the wrapper. Accepted exception until the factory lands?
 - **Suggestion:** (1) dead, remove with the migration; (2) fixed at startup; (3) accepted until replaced.
-- **Answer:**
+- **Answer:** Resolved 2026-10-09 by the migration: `ISelectedService<T>` and `[ContractConfig]` were removed; `TryAddConfiguredKeyedService<T>` replaces them (selection per resolution, locator contained in the factory).
 
 ### Q6 — Options validation: strict default or relaxed?
 

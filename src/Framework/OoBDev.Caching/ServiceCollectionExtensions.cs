@@ -19,7 +19,8 @@ public static class ServiceCollectionExtensions
     /// <returns>The service collection for chaining.</returns>
     public static IServiceCollection TryAddCachingServices(this IServiceCollection services)
     {
-        services.TryAddProviders(); // Register IStringFormatter and ISelectedService<T>
+        services.TryAddProviders(); // Register IStringFormatter
+        services.TryAddConfiguredKeyedService<ICachingProvider>(CachingGlobals.ConfigurationPath, CachingGlobals.SelectedKey);
         services.TryAddTransient<ICachingManager, CachingManager>();
         services.TryAddTransient<ICacheableFactory, CacheableFactory>();
         return services;

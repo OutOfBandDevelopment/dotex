@@ -89,7 +89,6 @@ namespace OoBDev.Caching.Tests.Managers
     {
         private MockRepository mockRepository;
         private Mock<IStringFormatter> mockStringFormatter;
-        private Mock<ISelectedService<ICachingProvider>> mockCache;
         private Mock<ICachingProvider> mockCachingProvider;
 
         [TestInitialize]
@@ -97,7 +96,6 @@ namespace OoBDev.Caching.Tests.Managers
         {
             mockRepository = new MockRepository(MockBehavior.Strict);
             mockStringFormatter = mockRepository.Create<IStringFormatter>();
-            mockCache = mockRepository.Create<ISelectedService<ICachingProvider>>();
             mockCachingProvider = mockRepository.Create<ICachingProvider>();
         }
 
@@ -113,11 +111,8 @@ namespace OoBDev.Caching.Tests.Managers
             mockCachingProvider
                 .Setup(p => p.StoreAsync(key, data, expiration))
                 .Returns(Task.CompletedTask);
-            mockCache
-                .Setup(c => c.Value)
-                .Returns(mockCachingProvider.Object);
 
-            var manager = new CachingManager(mockStringFormatter.Object, mockCache.Object);
+            var manager = new CachingManager(mockStringFormatter.Object, mockCachingProvider.Object);
 
             // Act
             await manager.StoreAsync(key, data, expiration);
@@ -139,7 +134,7 @@ namespace OoBDev.Caching.Tests.Managers
                 .Setup(f => f.Format("user:{userId}", method, args))
                 .Returns(expectedKey);
 
-            var manager = new CachingManager(mockStringFormatter.Object, mockCache.Object);
+            var manager = new CachingManager(mockStringFormatter.Object, mockCachingProvider.Object);
 
             // Act
             var result = manager.BuildKey(method, args);

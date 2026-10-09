@@ -1,4 +1,5 @@
-﻿using OoBDev.System.Utilities;
+﻿using Microsoft.Extensions.DependencyInjection;
+using OoBDev.System.Utilities;
 using System;
 using System.Linq;
 using System.Reflection;
@@ -13,7 +14,7 @@ namespace OoBDev.Caching.Managers;
 public class CachingManager : ICachingManager
 {
     private readonly IStringFormatter _formatter;
-    private readonly ISelectedService<ICachingProvider> _cache;
+    private readonly ICachingProvider _cache;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CachingManager"/> class.
@@ -22,7 +23,7 @@ public class CachingManager : ICachingManager
     /// <param name="cache">The selected caching provider.</param>
     public CachingManager(
         IStringFormatter formatter,
-        ISelectedService<ICachingProvider> cache
+        [FromKeyedServices(CachingGlobals.SelectedKey)] ICachingProvider cache
         )
     {
         _formatter = formatter;
@@ -56,7 +57,7 @@ public class CachingManager : ICachingManager
     }
 
     /// <inheritdoc/>
-    public Task FlushAsync(string key) => _cache.Value?.FlushAsync(key) ?? Task.FromResult(0);
+    public Task FlushAsync(string key) => _cache.FlushAsync(key);
 
     /// <inheritdoc/>
     public async Task<T?> RetrieveAsync<T>(string key) =>
@@ -65,14 +66,10 @@ public class CachingManager : ICachingManager
 #pragma warning restore CS8603 // Possible null reference return.
 
     /// <inheritdoc/>
-    public async Task<object?> RetrieveAsync(string key, Type targetType) =>
-        _cache.Value switch
-        {
-            null => null,
-            _ => await _cache.Value.RetrieveAsync(key, targetType)
-        };
+    public Task<object?> RetrieveAsync(string key, Type targetType) =>
+        _cache.RetrieveAsync(key, targetType);
 
     /// <inheritdoc/>
     public Task StoreAsync(string key, object data, TimeSpan lifeTime) =>
-        _cache.Value?.StoreAsync(key, data, lifeTime) ?? Task.FromResult(0);
+        _cache.StoreAsync(key, data, lifeTime);
 }

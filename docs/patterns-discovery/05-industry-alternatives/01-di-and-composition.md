@@ -6,13 +6,13 @@
 
 ## 1. Provider selection
 
-**Today:** default plus keyed registration and `ISelectedService<T>` reading `OoBDev::ServiceKeys::{FullTypeName}` ([pattern 4](../02-design-patterns/04-selected-service.md)).
+**Today:** default plus keyed registration and `TryAddConfiguredKeyedService<T>` reading a configuration path such as `OoBDev:CachingProvider:Type` (the earlier `ISelectedService<T>` wrapper was replaced 2026-10-09; [pattern 4](../02-design-patterns/04-selected-service.md)).
 
 **Table 1 — Provider selection options**
 
 | Option | Pros | Cons |
 |--------|------|------|
-| Current: default + keyed + `ISelectedService<T>` | Config-only switching; default exists without config; one wrapper type for every capability | Selection resolved in a constructor; key path is a convention nobody validates; extra indirection for consumers |
+| Current: default + keyed + configured keyed factory | Config-only switching; default exists without config; plain keyed injection, no wrapper type | Path and selected key are per-capability constants; selection is per resolution |
 | Keyed services alone (`[FromKeyedServices]`) | Built into `Microsoft.Extensions.DependencyInjection` since .NET 8; no wrapper (a factory over keyed services can add configuration selection) | The key is chosen in code at the consumer unless a factory resolves it from configuration (which is the intent of the current pattern) |
 | Named options plus a factory | Familiar `IOptionsMonitor` model; reload support | Options is not a service locator; boilerplate per capability |
 | Third-party container (Autofac, Lamar) | Modules, decorators, richer resolution | **Rejected by the owner:** extra dependency; the built-in container is good enough for this design |
@@ -72,7 +72,7 @@
 
 ## 5. `IServiceProvider` injection
 
-**Today:** used inside `SelectedService<T>` and factories only.
+**Today:** used inside the configured keyed factory and other factories only.
 
 **Table 5 — Service-locator concerns**
 

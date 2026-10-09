@@ -71,7 +71,7 @@ T ..> R : traces back to\nrequirement IDs
 * Layer placement (Common / Framework / Extensions / ExternalServices) and why.
 * Project list following the `X.Abstractions` + `X` + `X.Tests` split.
 * **Component diagram** and **sequence diagram(s)** in PlantUML.
-* Which patterns from 02 are used (provider/keyed, `ISelectedService`, builder record, options section, attributes).
+* Which patterns from 02 are used (provider/keyed, configured keyed factory, builder record, options section, attributes).
 * Configuration keys and defaults; lifetimes; failure and retry behavior.
 * Alternatives considered (short table of option, pro, con, decision).
 

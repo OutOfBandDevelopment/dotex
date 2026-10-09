@@ -362,7 +362,7 @@ public class CachedProxy<TInterface, TImplementation> : DispatchProxy
 public class CachingManager : ICachingManager
 {
     private readonly IStringFormatter _stringFormatter;
-    private readonly ISelectedService<ICachingProvider> _cacheProvider;
+    private readonly ICachingProvider _cacheProvider; // injected with [FromKeyedServices(CachingGlobals.SelectedKey)]
 
     public string BuildKey(MethodInfo method, object[] args)
     {

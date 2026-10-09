@@ -12,7 +12,7 @@ participant "TryAllCommonExtensions" as All
 participant "TryAdd{Capability}Services" as Cap
 participant "Adapter TryAdd{Vendor}Services" as Ad
 participant "Consumer / IManager" as Mgr
-participant "ISelectedService<IProvider>" as Sel
+participant "Selected keyed factory" as Sel
 participant "MessageSender<TChannel>" as Snd
 participant "MessagePropertyResolver" as Res
 
@@ -24,8 +24,8 @@ Ad -> Ad : Configure<Options>(Bind(section))
 Ad -> Ad : TryAdd<I, Impl>() (default)
 Ad -> Ad : TryAddKeyed<I, Impl>("Key")
 
-Mgr -> Sel : .Value
-Sel --> Mgr : keyed impl\n(OoBDev::ServiceKeys::<Type>)
+Mgr -> Sel : FromKeyedServices selected
+Sel --> Mgr : keyed impl\n(config path)
 Mgr -> Snd : Send(message)
 Snd -> Res : resolve config (channel, message)
 Res --> Snd : keyed IMessageSenderProvider

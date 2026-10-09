@@ -1,34 +1,28 @@
-# Pattern 4 — `ISelectedService<T>` — config-selected provider
+# Pattern 4 — Config-selected keyed service
 
 <!-- nav -->
 [↑ 02 — Design Patterns (As Practiced in the Code)](./README.md) · [← Pattern 3 — Provider / Factory with keyed services](./03-provider-factory-keyed.md) · [Pattern 5 — Config-resolved provider per channel/message →](./05-config-resolved-provider.md)
 <!-- nav -->
 
-**What:** When exactly one implementation should be active, consumers inject `ISelectedService<TService>`; its constructor reads
-`configuration["OoBDev::ServiceKeys::{typeof(TService).FullName}"]` and resolves the keyed service, **falling back to the default un-keyed registration**.
+**What:** When exactly one implementation should be active, a container-registered factory picks a keyed service from a configuration path. `TryAddConfiguredKeyedService<TService>(configurationPath, selectedKey)` registers the factory under `selectedKey`; consumers inject `[FromKeyedServices(selectedKey)] TService`. With no configured value the **default un-keyed registration** is used, so registration order does not matter; a configured key that names nothing throws `InvalidOperationException` instead of falling back silently.
 
 ```csharp
-public class SelectedService<TService> : ISelectedService<TService> where TService : notnull
-{
-    public SelectedService(IConfiguration configuration, IServiceProvider serviceProvider)
-    {
-        var key = configuration[$"OoBDev::ServiceKeys::{typeof(TService).FullName}"];
-        Value = serviceProvider.GetKeyedService<TService>(key)
-                ?? serviceProvider.GetRequiredService<TService>();
-    }
-    public TService Value { get; }
-}
+// OoBDev.Caching: path "OoBDev:CachingProvider:Type", selected key "selected"
+services.TryAddConfiguredKeyedService<ICachingProvider>(CachingGlobals.ConfigurationPath, CachingGlobals.SelectedKey);
+
+public CachingManager(IStringFormatter formatter,
+    [FromKeyedServices(CachingGlobals.SelectedKey)] ICachingProvider cache) { ... }
 ```
 
-Registered once as an open generic in `TryAddProviders()`; used by `CachingManager` for `ICachingProvider`.
+```json
+{ "OoBDev": { "CachingProvider": { "Type": "redis" } } }
+```
 
-**Repeat:** inject `ISelectedService<IThing>` in the *manager/orchestrator*, keep adapters unaware of selection.
+It replaces the earlier `ISelectedService<T>` wrapper (deleted 2026-10-09): that type read a hard-coded `OoBDev::ServiceKeys::{FullTypeName}` key in its constructor, wrapped every service in `.Value`, and an unused `[ContractConfig]` attribute duplicated the path.
 
-**Rough edges (important; the original intent is not remembered, tracked for review in `TODO.md`):**
+**Repeat:** put the path and selected key in a `{Capability}Globals` class next to the abstraction, register the factory in the capability's `TryAdd{Capability}Services`, inject the keyed service in the manager/orchestrator, and keep adapters unaware of selection.
 
-* `[ContractConfig(AllowDefault, ConfigKey)]` is declared on `ICachingProvider` and documented in the README (`OoBDev:CachingProvider:Type`) but **nothing reads it**; the runtime key is the hard-coded `OoBDev::ServiceKeys::…` path (double-colon). Either wire the attribute into `SelectedService<T>` or delete it.
-* Resolution happens in the constructor, so selection is fixed for the lifetime of the wrapper (singleton ⇒ for the process).
-* `IServiceProvider` injection is a service-locator; it is contained inside the wrapper, which is the right place.
+**Rough edges:** selection is per resolution (transient), so changing configuration at run time only affects newly created consumers; `IServiceProvider` and `IConfiguration` are used inside the factory only, which is the right place.
 
 ---
 

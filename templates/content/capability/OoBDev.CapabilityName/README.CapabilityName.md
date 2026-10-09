@@ -13,7 +13,7 @@ services.TryAddCapabilityNameServices(configuration, new CapabilityNameBuilder()
 | Key | Purpose |
 |-----|---------|
 | `CapabilityNameOptions` | Options section (override with `CapabilityNameBuilder.OptionsSection`) |
-| `OoBDev::ServiceKeys::OoBDev.CapabilityName.ICapabilityNameProvider` | Selects a keyed provider |
+| `OoBDev:CapabilityName:Provider` | Selects a keyed provider |
 
 ## Usage
 

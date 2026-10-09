@@ -202,7 +202,6 @@ public static class ServiceCollectionExtensions
         services.TryAddSingleton<ITempFileFactory, TempFileFactory>();
 
         services.TryAddSingleton<IStringFormatter, StringFormatter>();
-        services.TryAddSingleton(typeof(ISelectedService<>), typeof(SelectedService<>));
 
         return services;
     }

@@ -16,7 +16,6 @@ public class CachingManagerTests
     private MockRepository mockRepository = null!;
 
     private Mock<IStringFormatter> mockStringFormatter = null!;
-    private Mock<ISelectedService<ICachingProvider>> mockCache = null!;
     private Mock<ICachingProvider> mockCachingProvider = null!;
 
     [TestInitialize]
@@ -25,11 +24,10 @@ public class CachingManagerTests
         this.mockRepository = new MockRepository(MockBehavior.Strict);
 
         this.mockStringFormatter = this.mockRepository.Create<IStringFormatter>();
-        this.mockCache = this.mockRepository.Create<ISelectedService<ICachingProvider>>();
         this.mockCachingProvider = this.mockRepository.Create<ICachingProvider>();
     }
 
-    private CachingManager CreateManager() => new(this.mockStringFormatter.Object, this.mockCache.Object);
+    private CachingManager CreateManager() => new(this.mockStringFormatter.Object, this.mockCachingProvider.Object);
 
     public abstract class TestObject
     {
@@ -144,7 +142,6 @@ public class CachingManagerTests
 
         // Mock
         mockCachingProvider.Setup(s => s.FlushAsync(key)).Returns(Task.FromResult(0));
-        mockCache.Setup(s => s.Value).Returns(mockCachingProvider.Object);
 
 
         // Test
@@ -168,7 +165,6 @@ public class CachingManagerTests
 
         // Mock
         mockCachingProvider.Setup(s => s.RetrieveAsync(key, targetType)).ReturnsAsync(data);
-        mockCache.Setup(s => s.Value).Returns(mockCachingProvider.Object);
 
         // Test
         var manager = this.CreateManager();
@@ -192,7 +188,6 @@ public class CachingManagerTests
 
         // Mock
         mockCachingProvider.Setup(s => s.StoreAsync(key, data, lifeTime)).Returns(Task.FromResult(0));
-        mockCache.Setup(s => s.Value).Returns(mockCachingProvider.Object);
 
         // Test
         var manager = this.CreateManager();

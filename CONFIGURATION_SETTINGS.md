@@ -134,7 +134,7 @@ appsettings.json
 │   └── DefaultModel
 ├── OoBDev
 │   ├── Communications/EmailMessageComposer/EnableTracing
-│   └── ServiceKeys/{FullTypeName}
+│   └── CachingProvider/Type
 ├── OpenSearchOptions
 │   ├── HostName
 │   ├── Port
@@ -886,9 +886,9 @@ Within each section:
 
 ### Service Selection
 
-#### Keyed Service Selection
+#### Keyed Service Selection (caching provider)
 
-**Configuration Key:** `OoBDev::ServiceKeys::{FullTypeName}`
+**Configuration Key:** `OoBDev:CachingProvider:Type` (one path per capability; `TryAddConfiguredKeyedService`)
 **Type:** string (service key)
 **Purpose:** Dynamic service key selection for keyed DI services
 
@@ -896,8 +896,8 @@ Within each section:
 ```json
 {
   "OoBDev": {
-    "ServiceKeys": {
-      "MyApp.Services.IPaymentProcessor": "stripe"
+    "CachingProvider": {
+      "Type": "redis"
     }
   }
 }

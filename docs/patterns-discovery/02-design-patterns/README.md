@@ -12,7 +12,7 @@ Each pattern lists **what it is here**, **where to see it**, **how to repeat it*
 2. [Pattern 1 — Abstractions + Implementation + Registration Extension](./01-abstractions-implementation-registration.md)
 3. [Pattern 2 — `TryAdd*` everywhere](./02-tryadd-everywhere.md)
 4. [Pattern 3 — Provider / Factory with keyed services](./03-provider-factory-keyed.md)
-5. [Pattern 4 — `ISelectedService<T>` — config-selected provider](./04-selected-service.md)
+5. [Pattern 4 — Config-selected keyed service](./04-selected-service.md)
 6. [Pattern 5 — Config-resolved provider per channel/message](./05-config-resolved-provider.md)
 7. [Pattern 6 — Builder *records* carrying config section names](./06-builder-records.md)
 8. [Pattern 7 — Options binding by section name](./07-options-binding-by-section-name.md)
