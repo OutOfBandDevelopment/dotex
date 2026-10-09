@@ -105,12 +105,12 @@ Questions that block or shape work in the TODO files. Each has the source it cam
 
 ## 4. Renames and compatibility
 
-### Q13 — `Retreive` to `Retrieve` without breaking public APIs
+### Q13 — `Retreive` to `Retrieve` rename (resolved)
 
 - **Source:** [TODO.md](./TODO.md) → "Backlog: Caching Proxy Review (pattern 10)"
 - **Question:** About 85 occurrences in 23 files, including public names (`ICachingProvider`, `ICachingManager`). CLAUDE.md says no breaking changes to existing APIs. May the old names stay as `[Obsolete]` forwarders for one release?
 - **Suggestion:** Yes.
-- **Answer:**
+- **Answer:** Resolved 2026-10-09: the framework is unreleased, so breaking public changes are fine. `RetreiveAsync` was renamed outright to `RetrieveAsync` with no forwarders.
 
 ### Q14 — `ServiceCollectionEx` to `ServiceCollectionExtensions`
 
@@ -136,7 +136,7 @@ Questions that block or shape work in the TODO files. Each has the source it cam
 | Q10 | BotChat | Incoming project | |
 | Q11 | ContractParser | Incoming project | |
 | Q12 | Tools / BulkLlm | Incoming project | |
-| Q13 | `Retreive` rename policy | Caching rename | |
+| Q13 | `Retrieve` rename policy | Caching rename | |
 | Q14 | `ServiceCollectionEx` rename policy | Naming consistency | |
 
 [↑ TODO.md](./TODO.md)

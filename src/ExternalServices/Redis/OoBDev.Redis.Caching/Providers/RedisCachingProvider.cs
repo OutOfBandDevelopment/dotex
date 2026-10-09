@@ -54,7 +54,7 @@ public class RedisCachingProvider : ICachingProvider
     /// <param name="key">The cache key to retrieve.</param>
     /// <param name="targetType">The target type to convert the cached value to.</param>
     /// <returns>The cached object converted to the target type, or null if not found.</returns>
-    public async Task<object?> RetreiveAsync(string? key, Type? targetType)
+    public async Task<object?> RetrieveAsync(string? key, Type? targetType)
     {
         if (string.IsNullOrWhiteSpace(key)) return null;
         var db = _redis.Value.GetDatabase();

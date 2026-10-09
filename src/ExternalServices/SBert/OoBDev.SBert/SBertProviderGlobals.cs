@@ -10,8 +10,4 @@ public static class SBertProviderGlobals
     /// </summary>
     public const string ProviderKey = "sbert";
 
-    /// <summary>
-    /// The earlier key, still registered so existing configuration keeps working.
-    /// </summary>
-    public const string LegacyKey = "SBERT";
 }

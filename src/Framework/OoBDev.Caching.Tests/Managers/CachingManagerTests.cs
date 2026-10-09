@@ -159,7 +159,7 @@ public class CachingManagerTests
 
     [TestMethod]
     [TestCategory(TestCategories.Unit)]
-    public async Task RetreiveAsyncTest()
+    public async Task RetrieveAsyncTest()
     {
         // Stage
         string key = "test key";
@@ -167,12 +167,12 @@ public class CachingManagerTests
         Type targetType = data.GetType();
 
         // Mock
-        mockCachingProvider.Setup(s => s.RetreiveAsync(key, targetType)).ReturnsAsync(data);
+        mockCachingProvider.Setup(s => s.RetrieveAsync(key, targetType)).ReturnsAsync(data);
         mockCache.Setup(s => s.Value).Returns(mockCachingProvider.Object);
 
         // Test
         var manager = this.CreateManager();
-        var result = await manager.RetreiveAsync(key, targetType);
+        var result = await manager.RetrieveAsync(key, targetType);
 
         // Assert
         Assert.AreEqual(data, result);

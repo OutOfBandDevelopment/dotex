@@ -64,7 +64,7 @@ public class RedisCachingProviderDevLocalTests
 
     [TestMethod]
     [TestCategory(TestCategories.Integration)]
-    public async Task RetreiveAsyncTest()
+    public async Task RetrieveAsyncTest()
     {
         // Stage
         var connectionString = TestContext.GetRequiredProperty<string>("REDIS_CONNECTION_STRING");
@@ -90,7 +90,7 @@ public class RedisCachingProviderDevLocalTests
         await provider.StoreAsync(key, testData, TimeSpan.FromMinutes(5));
 
         // Test
-        var result = await provider.RetreiveAsync(key, testData.GetType());
+        var result = await provider.RetrieveAsync(key, testData.GetType());
 
         // Assert
         Assert.IsNotNull(result);
@@ -132,7 +132,7 @@ public class RedisCachingProviderDevLocalTests
         await provider.StoreAsync(key, data, expiration);
 
         // Verify by retrieving
-        var result = await provider.RetreiveAsync(key, data.GetType());
+        var result = await provider.RetrieveAsync(key, data.GetType());
         Assert.IsNotNull(result);
 
         // Cleanup

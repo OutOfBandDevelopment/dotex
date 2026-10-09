@@ -61,7 +61,7 @@ skinparam shadowing false
 rectangle "Low effort, high value" as Q1 {
   rectangle "Options validation" as a
   rectangle "Central package management" as b
-  rectangle "Fix RetreiveAsync typo" as c
+  rectangle "Fix RetrieveAsync typo" as c
   rectangle "SHA-512 default hash" as d
 }
 rectangle "Higher effort, high value" as Q2 {

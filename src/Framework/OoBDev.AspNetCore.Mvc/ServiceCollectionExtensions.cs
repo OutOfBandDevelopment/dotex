@@ -67,16 +67,16 @@ public static class ServiceCollectionExtensions
             new ClaimsPrincipal(new ClaimsIdentity())
             );
 
-        services.TryAddKeyedTransient<ICurrentUserAccessor, HttpContextUserAccessor>("HTTP");
+        services.TryAddKeyedTransient<ICurrentUserAccessor, HttpContextUserAccessor>("http");
         services.Replace(ServiceDescriptor.Describe(
             typeof(ICurrentUserAccessor),
-            sp => sp.GetRequiredKeyedService<ICurrentUserAccessor>("HTTP"),
+            sp => sp.GetRequiredKeyedService<ICurrentUserAccessor>("http"),
             ServiceLifetime.Transient));
 
         services.AddTransient<IHttpPrepareRequestFeature, CorrelationInfoHttpPrepareRequestFeature>();
 
         services.TryAddTransient<ICurrentUserAccessor, EnvironmentUserAccessor>();
-        services.TryAddKeyedTransient<ICurrentUserAccessor, EnvironmentUserAccessor>("Environment");
+        services.TryAddKeyedTransient<ICurrentUserAccessor, EnvironmentUserAccessor>("environment");
 
         if (builder.RequireAuthenticatedByDefault)
         {

@@ -59,17 +59,17 @@ public class CachingManager : ICachingManager
     public Task FlushAsync(string key) => _cache.Value?.FlushAsync(key) ?? Task.FromResult(0);
 
     /// <inheritdoc/>
-    public async Task<T?> RetreiveAsync<T>(string key) =>
+    public async Task<T?> RetrieveAsync<T>(string key) =>
 #pragma warning disable CS8603 // Possible null reference return.
-        (T?)((await RetreiveAsync(key, typeof(T))) ?? default(T));
+        (T?)((await RetrieveAsync(key, typeof(T))) ?? default(T));
 #pragma warning restore CS8603 // Possible null reference return.
 
     /// <inheritdoc/>
-    public async Task<object?> RetreiveAsync(string key, Type targetType) =>
+    public async Task<object?> RetrieveAsync(string key, Type targetType) =>
         _cache.Value switch
         {
             null => null,
-            _ => await _cache.Value.RetreiveAsync(key, targetType)
+            _ => await _cache.Value.RetrieveAsync(key, targetType)
         };
 
     /// <inheritdoc/>

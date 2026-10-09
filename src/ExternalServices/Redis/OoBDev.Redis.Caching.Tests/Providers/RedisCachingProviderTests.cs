@@ -85,7 +85,7 @@ public class RedisCachingProviderTests
 
     [TestMethod]
     [TestCategory(TestCategories.Unit)]
-    public async Task RetreiveAsyncTest_NullKey()
+    public async Task RetrieveAsyncTest_NullKey()
     {
         // Stage
 
@@ -97,7 +97,7 @@ public class RedisCachingProviderTests
         Type? targetType = null;
 
 
-        var result = await provider.RetreiveAsync(key, targetType);
+        var result = await provider.RetrieveAsync(key, targetType);
 
         // Assert
         Assert.IsNull(result);
@@ -108,7 +108,7 @@ public class RedisCachingProviderTests
 
     [TestMethod]
     [TestCategory(TestCategories.Unit)]
-    public async Task RetreiveAsyncTest()
+    public async Task RetrieveAsyncTest()
     {
         // Stage
         var testValue = Guid.NewGuid().ToString();
@@ -128,7 +128,7 @@ public class RedisCachingProviderTests
         // Test
         var provider = this.CreateProvider();
 
-        var result = await provider.RetreiveAsync(key, targetType);
+        var result = await provider.RetrieveAsync(key, targetType);
 
         // Assert
         Assert.AreEqual(testValue, result);

@@ -18,7 +18,6 @@ public static class ServiceCollectionExtensions
     {
         services.TryAddTransient<IDatabaseMapper, SqlDatabaseMapper>();
         services.TryAddKeyedTransient<IDatabaseMapper, SqlDatabaseMapper>(SqlServerGlobals.ProviderKey);
-        services.TryAddKeyedTransient<IDatabaseMapper, SqlDatabaseMapper>(SqlServerGlobals.LegacyKey);
         return services;
     }
 }

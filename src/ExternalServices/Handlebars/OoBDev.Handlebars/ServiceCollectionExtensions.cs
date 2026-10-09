@@ -23,7 +23,6 @@ public static class ServiceCollectionExtensions
         // Add a transient service for Handlebars template provider.
         services.AddTransient<ITemplateProvider, HandlebarsTemplateProvider>();
         services.AddKeyedTransient<ITemplateProvider, HandlebarsTemplateProvider>(HandlebarsGlobals.ProviderKey);
-        services.AddKeyedTransient<ITemplateProvider, HandlebarsTemplateProvider>(HandlebarsGlobals.LegacyKey);
 
         // Add a transient service for FileType with default values for Handlebars templates.
         services.AddTransient<IFileType>(_ => new FileType { Extension = ".hbs", ContentType = ContentTypesExtensions.Text.HandlebarsTemplate, IsTemplateType = true });

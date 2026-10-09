@@ -21,7 +21,6 @@ public class MicrosoftCachingRegistrar
         services.AddMemoryCache(); // Register IMemoryCache
         services.TryAddSingleton<ICachingProvider, MicrosoftMemoryCachingProvider>();
         services.TryAddKeyedSingleton<ICachingProvider, MicrosoftMemoryCachingProvider>(MicrosoftCachingGlobals.ProviderKey);
-        services.TryAddKeyedSingleton<ICachingProvider, MicrosoftMemoryCachingProvider>(MicrosoftCachingGlobals.LegacyKey);
         return services;
     }
 }

@@ -10,8 +10,4 @@ public static class OllamaGlobals
     /// </summary>
     public const string ProviderKey = "ollama";
 
-    /// <summary>
-    /// The earlier key, still registered so existing configuration keeps working.
-    /// </summary>
-    public const string LegacyKey = "OLLAMA";
 }

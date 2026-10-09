@@ -83,7 +83,7 @@ public interface ICachingProvider
     /// Retrieve data from cache
     /// </summary>
     /// <returns>Cached object or null if not found/expired</returns>
-    Task<object?> RetreiveAsync(string key, Type targetType);
+    Task<object?> RetrieveAsync(string key, Type targetType);
 
     /// <summary>
     /// Remove data from cache
@@ -118,7 +118,7 @@ public interface ICachingManager
     /// <summary>
     /// Retrieve data from cache
     /// </summary>
-    Task<object?> RetreiveAsync(string key, Type targetType);
+    Task<object?> RetrieveAsync(string key, Type targetType);
 
     /// <summary>
     /// Flush data from cache
@@ -391,8 +391,8 @@ public class CachingManager : ICachingManager
     public Task StoreAsync(string key, object data, TimeSpan expiration)
         => _cacheProvider.Value.StoreAsync(key, data, expiration);
 
-    public Task<object?> RetreiveAsync(string key, Type targetType)
-        => _cacheProvider.Value.RetreiveAsync(key, targetType);
+    public Task<object?> RetrieveAsync(string key, Type targetType)
+        => _cacheProvider.Value.RetrieveAsync(key, targetType);
 
     public Task FlushAsync(string key)
         => _cacheProvider.Value.FlushAsync(key);
@@ -428,7 +428,7 @@ public class RedisCachingProvider : ICachingProvider
         await db.StringSetAsync(key, json, expiration);
     }
 
-    public async Task<object?> RetreiveAsync(string key, Type targetType)
+    public async Task<object?> RetrieveAsync(string key, Type targetType)
     {
         if (string.IsNullOrWhiteSpace(key)) return null;
 
@@ -478,7 +478,7 @@ public class MicrosoftMemoryCachingProvider : ICachingProvider, IDisposable
         return Task.CompletedTask;
     }
 
-    public Task<object?> RetreiveAsync(string key, Type targetType)
+    public Task<object?> RetrieveAsync(string key, Type targetType)
     {
         if (string.IsNullOrWhiteSpace(key)) return Task.FromResult<object?>(null);
 
@@ -608,7 +608,7 @@ var cached = CachedProxy.Create(new UserRepository(), ...);
    ├─> Build key via CachingManager
    │   └─> "user:123"
    ├─> Check cache via CachingManager
-   │   └─> ICachingProvider.RetreiveAsync("user:123", typeof(User))
+   │   └─> ICachingProvider.RetrieveAsync("user:123", typeof(User))
    │
    ├─> Cache HIT?
    │   ├─> YES: Return cached value
@@ -678,14 +678,14 @@ private static readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
 public async Task<User> GetUserAsync(int userId)
 {
     var key = $"user:{userId}";
-    var cached = await _cachingManager.RetreiveAsync(key, typeof(User));
+    var cached = await _cachingManager.RetrieveAsync(key, typeof(User));
     if (cached != null) return (User)cached;
 
     await _semaphore.WaitAsync();
     try
     {
         // Double-check after acquiring lock
-        cached = await _cachingManager.RetreiveAsync(key, typeof(User));
+        cached = await _cachingManager.RetrieveAsync(key, typeof(User));
         if (cached != null) return (User)cached;
 
         // Load from database
@@ -763,10 +763,10 @@ public async Task<Product[]> GetTrendingProductsAsync(int categoryId)
 **4. Hybrid Caching**
 ```csharp
 // Use memory cache as L1, Redis as L2
-var cached = await _memoryCache.RetreiveAsync(key, type);
+var cached = await _memoryCache.RetrieveAsync(key, type);
 if (cached == null)
 {
-    cached = await _redisCache.RetreiveAsync(key, type);
+    cached = await _redisCache.RetrieveAsync(key, type);
     if (cached != null)
         await _memoryCache.StoreAsync(key, cached, TimeSpan.FromMinutes(5));
 }

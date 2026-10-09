@@ -10,10 +10,6 @@ public static class SBertGlobals
     /// </summary>
     public const string AllMiniLmL6V2Key = "all-minilm-l6-v2";
 
-    /// <summary>
-    /// The previous key, kept for one release so existing keyed lookups keep working.
-    /// </summary>
-    public const string LegacyKey = "ALLMINILM";
 
     /// <summary>
     /// The default configuration section.

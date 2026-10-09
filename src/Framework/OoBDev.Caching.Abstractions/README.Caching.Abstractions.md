@@ -53,7 +53,7 @@ public class MyCachingProvider : ICachingProvider
         // Implementation
     }
 
-    public async Task<object?> RetreiveAsync(string key, Type targetType)
+    public async Task<object?> RetrieveAsync(string key, Type targetType)
     {
         // Implementation
     }

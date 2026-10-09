@@ -10,7 +10,7 @@ Things found in the code that a new project should either fix or knowingly keep.
 
 | # | Wart | Where | Suggested handling |
 |---|------|-------|--------------------|
-| 1 | `RetreiveAsync` misspelled in the public API | caching abstractions | fix in a new framework; obsolete-forward in this one |
+| 1 | `RetrieveAsync` misspelled in the public API | caching abstractions | fixed 2026-10-09 (renamed outright; the framework is unreleased) |
 | 2 | `ServiceCollectionEx` vs `ServiceCollectionExtensions` | six projects | Done 2026-10-09: all use `ServiceCollectionExtensions` |
 | 3 | Sync-over-async (`GetAwaiter().GetResult()`) in the caching proxy | `CachedProxy` | async-aware proxy or decorator |
 | 4 | Caller info from `new StackFrame(5, true)` | message context factory | `[CallerMemberName]` and friends |

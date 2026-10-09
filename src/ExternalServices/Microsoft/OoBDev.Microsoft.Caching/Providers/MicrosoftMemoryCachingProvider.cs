@@ -35,7 +35,7 @@ public class MicrosoftMemoryCachingProvider : ICachingProvider, IDisposable
     }
 
     /// <inheritdoc/>
-    public Task<object?> RetreiveAsync(string? key, Type? targetType) =>
+    public Task<object?> RetrieveAsync(string? key, Type? targetType) =>
         Task.FromResult(
             key != null && _cache.TryGetValue(key, out var value) ?
                 value :

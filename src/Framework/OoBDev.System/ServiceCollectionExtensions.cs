@@ -86,7 +86,7 @@ public static class ServiceCollectionExtensions
         services.TryAddTransient<ILdapFilterBuilder, LdapFilterBuilder>();
 
         services.TryAddTransient<ICurrentUserAccessor, EnvironmentUserAccessor>();
-        services.TryAddKeyedTransient<ICurrentUserAccessor, EnvironmentUserAccessor>("Environment");
+        services.TryAddKeyedTransient<ICurrentUserAccessor, EnvironmentUserAccessor>("environment");
 
         return services;
     }

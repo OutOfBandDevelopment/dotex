@@ -61,7 +61,7 @@ public class CachedProxy<TInterface, TImplemention> : DispatchProxy
                             throw new NotSupportedException($"Caching of Void not supported");
                         }
 
-                        var cachedResult = _cachingManager.RetreiveAsync(cachingKey, targetReturnType).ConfigureAwait(false).GetAwaiter().GetResult();
+                        var cachedResult = _cachingManager.RetrieveAsync(cachingKey, targetReturnType).ConfigureAwait(false).GetAwaiter().GetResult();
                         if (cachedResult != null)
                         {
                             _logger?.LogInformation($"Retrieved from Cache::{targetMethod.Name}::{cachingKey}");
