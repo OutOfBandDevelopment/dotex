@@ -14,7 +14,7 @@ Cloud-based integration testing for services that cannot be Dockerized or emulat
 
 ## Overview
 
-Integration testing for cloud services that require actual cloud infrastructure (Azure B2C, Application Insights, Groq Cloud, etc.).
+Integration testing for cloud services that require actual cloud infrastructure (Groq Cloud, etc.).
 
 **Goal:** Enable developers to run integration tests against real cloud services locally with proper credential management and documentation.
 
@@ -33,7 +33,7 @@ Integration testing for cloud services that require actual cloud infrastructure 
   - LiveIntegration is for cloud services that cannot be emulated
   - Requires valid cloud credentials and active service subscriptions
   - Manual execution only, NOT run in CI/CD pipelines
-  - Examples: Azure B2C, Application Insights, Groq Cloud
+  - Examples: Groq Cloud
 - [x] Clear distinction from Integration category (Docker-based, runs in CI/CD)
 
 ---
@@ -43,70 +43,6 @@ Integration testing for cloud services that require actual cloud infrastructure 
 ### Week 3: Cloud Test Migration (PENDING)
 
 **Migrate tests that require live cloud services to LiveIntegration category**
-
-#### Azure B2C / Entra ID
-
-**Purpose:** Microsoft identity platform for customer-facing applications
-**Current Status:** Tests exist and are already `LiveIntegration` (3 methods, checked 2026-10-09); template and README still missing
-**Current Status:** Tests exist but marked as DevLocal
-
-**Migration Tasks:**
-- [ ] File: `src/ExternalServices/Microsoft/OoBDev.Microsoft.Azure.B2C.Tests/`
-- [ ] Change `[TestCategory(TestCategories.DevLocal)]` → `[TestCategory(TestCategories.LiveIntegration)]`
-- [ ] Create `.env.liveintegration.template` in test project root:
-  ```bash
-  # Azure B2C Configuration
-  # See README.md for setup instructions
-
-  AZURE_B2C_TENANT_ID=your-tenant-id-here
-  AZURE_B2C_CLIENT_ID=your-client-id-here
-  AZURE_B2C_CLIENT_SECRET=your-client-secret-here
-  AZURE_B2C_DOMAIN=yourb2c.onmicrosoft.com
-  AZURE_B2C_POLICY=B2C_1_signupsignin
-  ```
-
-- [ ] Create `README.md` in test project documenting:
-  - **Purpose:** What these tests validate (authentication flows, token validation, etc.)
-  - **Prerequisites:** Azure subscription, B2C tenant setup
-  - **Azure Setup Steps:**
-    1. Create Azure B2C tenant
-    2. Register application
-    3. Create user flows (sign-up/sign-in)
-    4. Configure API permissions
-    5. Generate client secret
-  - **Obtaining Credentials:**
-    - Where to find Tenant ID
-    - How to register application
-    - How to get Client ID and Secret
-  - **Running Tests Locally:**
-    1. Copy `.env.liveintegration.template` to `.env.liveintegration`
-    2. Fill in actual credentials
-    3. Run: `dotnet test --filter TestCategory=LiveIntegration`
-  - **Cost Considerations:**
-    - Azure B2C pricing (first 50K MAU free)
-    - Expected API calls per test run
-  - **Security:**
-    - NEVER commit `.env.liveintegration` to source control
-    - Add to `.gitignore`
-    - Use Azure Key Vault for production
-  - **NOTE:** Manual execution only, not in CI/CD
-
-- [ ] Update tests to read from test properties:
-  ```csharp
-  [TestInitialize]
-  public void Setup()
-  {
-      var tenantId = TestContext.GetRequiredProperty<string>("AZURE_B2C_TENANT_ID");
-      var clientId = TestContext.GetRequiredProperty<string>("AZURE_B2C_CLIENT_ID");
-      // ... configure B2C client
-  }
-  ```
-
-- [ ] Add usage examples in README:
-  - User authentication flow
-  - Token validation
-  - User management
-  - Custom policies
 
 #### Microsoft Application Insights
 

@@ -30,7 +30,7 @@ Questions that block or shape work in the TODO files. Each has the source it cam
 - **Suggestion:** Yes.
 - **Answer:**
 
-### Q3 — Live cloud tests (Azure B2C, Groq)
+### Q3 — Live cloud tests (Groq)
 
 - **Source:** [TODO.md](./TODO.md) → "Backlog: Live Integration (Cloud) Tests"; [TODO-testing-live-integration.md](./TODO-testing-live-integration.md)
 - **Question:** I can write the `.env.liveintegration.template`, project readmes, categories and `.gitignore` entry without credentials. Running them needs your accounts. Should I do the scaffolding now and leave the live runs to you?

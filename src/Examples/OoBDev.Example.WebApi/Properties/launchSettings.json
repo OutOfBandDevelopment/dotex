@@ -29,17 +29,6 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "https (B2C)": {
-      "commandName": "Project",
-      "dotnetRunMessages": true,
-      "launchBrowser": true,
-      "launchUrl": "swagger",
-      "applicationUrl": "https://localhost:7276;http://localhost:5276",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development",
-        "IDENTITY_PROVIDER": "AZUREB2C"
-      }
-    },
     "https (Keycloak)": {
       "commandName": "Project",
       "dotnetRunMessages": true,

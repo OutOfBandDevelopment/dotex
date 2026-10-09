@@ -108,7 +108,7 @@ public static class ServiceCollectionExtensions
 #endif
     )
     {
-        // Adding the UserAuthorizationHandler that connects B2C Bearer tokens to internal users
+        // Adding the UserAuthorizationHandler that connects Bearer tokens to internal users
         services.AddSingleton<IAuthorizationHandler, UserAuthorizationHandler>();
 
         // Policy builder

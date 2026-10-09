@@ -262,7 +262,6 @@ The Application Insights emulator (azurinsight) was replaced by plain OpenTeleme
 
 ### LiveIntegration Category
 
-- [ ] Azure B2C tests → LiveIntegration category
 - [ ] Groq Cloud tests → LiveIntegration category
 - [ ] Create `.env.liveintegration.template` files
 - [ ] Document credential requirements
@@ -298,7 +297,6 @@ The Application Insights emulator (azurinsight) was replaced by plain OpenTeleme
 - [ ] Moto
 - [ ] Keycloak
 - [ ] SBert
-- [ ] Azure B2C
 - [ ] Groq Cloud
 
 ### PlantUML Diagrams

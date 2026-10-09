@@ -7,7 +7,6 @@ using OoBDev.HtmlToOpenXml;
 using OoBDev.Keycloak;
 using OoBDev.MailKit;
 using OoBDev.Markdig;
-using OoBDev.Microsoft.Azure.B2C;
 using OoBDev.Microsoft.SqlServer.Server;
 using OoBDev.MongoDB;
 using OoBDev.MysticMind;
@@ -58,9 +57,6 @@ public static class ServiceCollectionExtensions
         services.TryAddRabbitMQServices();
         services.TryAddMailKitExtensions(configuration, externalBuilder.SmtpConfigurationSection, externalBuilder.ImapConfigurationSection);
         services.TryAddOpenTelemetryExtensions(configuration, externalBuilder.OpenTelemetryOptionSection);
-
-        if (identityBuilder.IdentityProvider.HasFlag(IdentityProviders.AzureB2C))
-            services.TryAddMicrosoftB2CServices(configuration, identityBuilder.MicrosoftIdentityConfigurationSection);
 
         if (identityBuilder.IdentityProvider.HasFlag(IdentityProviders.Keycloak))
             services.TryAddKeycloakServices(configuration, identityBuilder.KeycloakIdentityConfigurationSection);

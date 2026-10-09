@@ -538,33 +538,6 @@ services.Configure<AllMiniLmL6V2EmbeddingOptions>(options =>
 
 ---
 
-#### MicrosoftIdentityOptions
-
-**Namespace:** `OoBDev.Microsoft.Azure.B2C.Identity`
-**Configuration Section:** `MicrosoftIdentityOptions`
-
-| Property | Type | Required | Default | Description |
-|----------|------|----------|---------|-------------|
-| ClientID | string | Yes | - | Azure AD B2C client ID |
-| Issuer | string | Yes | - | Azure AD B2C issuer URL |
-| ClientSecret | string | Yes | - | Azure AD B2C client secret |
-| Tenant | string | Yes | - | Azure AD B2C tenant identifier |
-
-**Validation:**
-- All properties required (compile-time via `required` modifier)
-
-**Usage:**
-```csharp
-services.Configure<MicrosoftIdentityOptions>(options =>
-{
-    options.ClientID = "your-client-id";
-    options.Issuer = "https://login.microsoftonline.com/your-tenant/v2.0";
-    options.ClientSecret = "your-client-secret";
-    options.Tenant = "your-tenant.onmicrosoft.com";
-});
-```
-
----
 
 #### AzureBlobProviderOptions
 
@@ -1271,7 +1244,7 @@ Test configuration parameters are documented separately in [TEST_VARIABLES.md](.
 **Quick Reference:**
 - **Total Test Parameters:** 30+
 - **Docker-based Integration Tests:** 14 services
-- **Live Cloud Services:** Azure B2C, App Insights, Groq
+- **Live Cloud Services:** Groq
 
 **Test Property Access Patterns:**
 

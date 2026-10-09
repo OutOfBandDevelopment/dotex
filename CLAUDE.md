@@ -341,7 +341,7 @@ OoBDev uses **5 test categories** to organize tests by execution environment and
 | **Simulate** | YES (every PR/push) | Mocked | End-to-end with in-memory persistence |
 | **Integration** | YES (daily at 4 PM UTC) | Docker containers | MongoDB, SQL Server, RabbitMQ, etc. |
 | **DevLocal** | NO (manual only) | Local services | Performance tests, GPU tests |
-| **LiveIntegration** | NO (manual only) | Live Azure/AWS/GCP | Azure B2C, Groq, App Insights |
+| **LiveIntegration** | NO (manual only) | Live Azure/AWS/GCP | Groq |
 
 **Docker-Based Integration Tests:**
 
@@ -403,7 +403,7 @@ public async Task TestMongoDBOperation()
 
 **Test Configuration:**
 - **All Variables:** See [TEST_VARIABLES.md](./TEST_VARIABLES.md) for complete list of 30+ test properties
-- **30+ Properties:** MongoDB, SQL Server, RabbitMQ, OpenSearch, SBert, Azure B2C, Groq, etc.
+- **30+ Properties:** MongoDB, SQL Server, RabbitMQ, OpenSearch, SBert, Groq, etc.
 - **Configuration:** Use `.runsettings` file or test deployment context
 
 **See Also:**
@@ -627,7 +627,7 @@ Instead of directly migrating code from SharedFramework, we've pivoted to compre
 **Epics in Design Phase:**
 1. **Epic 2: Communications Platform** - Channel abstraction, send/receive, user preferences, multi-channel routing
 2. **Epic 10: Text Templating Extensions** - Template discovery, repository, caching, engine provider pattern
-3. **Epic 7: Identity & Session Management** - Claims enhancement, rights management, session management, Azure B2C integration
+3. **Epic 7: Identity & Session Management** - Claims enhancement, rights management, session management, Keycloak integration
 4. **Epic 6: Document Services** - Document packaging, resolvers, storage abstraction, 11 context-based services
 
 **Pattern: 4 Documents per Feature**

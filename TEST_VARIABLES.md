@@ -34,7 +34,6 @@ This document lists all test properties used by Integration tests. These propert
    - [Moto (AWS Emulator)](#moto-aws-emulator)
    - [Keycloak (Identity & Access Management)](#keycloak-identity--access-management)
 3. [LiveIntegration Test Variables](#liveintegration-test-variables)
-   - [Azure B2C (Identity Provider)](#azure-b2c-identity-provider)
    - [Application Insights (Telemetry)](#application-insights-telemetry)
    - [Groq Cloud (LLM API)](#groq-cloud-llm-api)
 4. [Configuration Examples](#configuration-examples)
@@ -406,28 +405,6 @@ public async Task TestCleanup()
 
 ## LiveIntegration Test Variables
 
-### Azure B2C (Identity Provider)
-
-**Service:** Azure Active Directory B2C
-
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `AZURE_B2C_TENANT_ID` | *(none)* | Azure B2C tenant ID |
-| `AZURE_B2C_CLIENT_ID` | *(none)* | Application (client) ID |
-| `AZURE_B2C_CLIENT_SECRET` | *(none)* | Client secret |
-| `AZURE_B2C_DOMAIN` | *(none)* | B2C domain (e.g., `yourb2c.onmicrosoft.com`) |
-
-**Tests Using:**
-- `OoBDev.Microsoft.B2C.Tests` (manual execution only)
-
-**Setup:**
-1. Create Azure B2C tenant
-2. Register application
-3. Generate client secret
-4. Configure `.runsettings` with credentials
-
----
-
 ### Application Insights (Telemetry)
 
 > **NOTE:** Application Insights tests have been **migrated to Integration category** using the [azurinsight](https://github.com/Rahulkumar010/azurinsight) emulator (`oobdev/azurinsight:latest`). See [Azurinsight (Application Insights Emulator)](#azurinsight-application-insights-emulator) in the Integration section above.
@@ -519,12 +496,6 @@ public async Task TestCleanup()
 
     <!-- Keycloak -->
     <Parameter name="KEYCLOAK_URL" value="http://localhost:8081" />
-
-    <!-- Azure B2C (LiveIntegration) -->
-    <Parameter name="AZURE_B2C_TENANT_ID" value="your-tenant-id" />
-    <Parameter name="AZURE_B2C_CLIENT_ID" value="your-client-id" />
-    <Parameter name="AZURE_B2C_CLIENT_SECRET" value="your-client-secret" />
-    <Parameter name="AZURE_B2C_DOMAIN" value="yourb2c.onmicrosoft.com" />
 
     <!-- Application Insights (LiveIntegration) -->
     <Parameter name="APPINSIGHTS_INSTRUMENTATION_KEY" value="your-instrumentation-key" />

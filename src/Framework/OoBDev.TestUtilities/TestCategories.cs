@@ -33,7 +33,7 @@ public static class TestCategories
     public const string DevLocal = nameof(DevLocal);
 
     /// <summary>
-    /// Tests that require live cloud services (Azure B2C, Groq Cloud, etc.)
+    /// Tests that require live cloud services (Groq Cloud, etc.)
     /// which cannot be emulated or containerized locally. Requires valid cloud credentials and
     /// active service subscriptions. Manual execution only, not run in CI/CD pipelines.
     /// </summary>

@@ -39,6 +39,10 @@ Two details worth knowing: an OTLP endpoint set in code is used as given, so for
 - Integration: the document conversion tests that need Tika (12 pass against the container) and the Example blob tests (Azurite; the tests create their containers).
 - Kept `DevLocal` on purpose: Ollama, USB HID, `PathEx`, `MergedXPathNavigator`, `ProjectTools`, Markdown `TestMethod1`, DacFx `BuildPackageTest`.
 
+## Azure B2C dropped
+
+The `OoBDev.Microsoft.Azure.B2C` library and its tests are removed, along with `IdentityProviders.AzureB2C`, `IdentityExtensionBuilder.MicrosoftIdentityConfigurationSection`, the example host B2C profile and settings, the solution entries and the B2C test variables. `IdentityProvider` now defaults to `Keycloak`. This is a breaking public API removal made at the owner's request. `Microsoft.Graph` and `Azure.Identity` stay because DacFx still references them. The Epic 7 proposals under `Features/Proposals/07-Identity` and the historical change documents still mention B2C as design history.
+
 ## Follow-up
 
 - The `oobdev/azurinsight` image and its fork are no longer used by this repository.

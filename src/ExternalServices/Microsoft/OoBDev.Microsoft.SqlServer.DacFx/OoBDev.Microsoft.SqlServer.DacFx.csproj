@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <InternalsVisibleTo Include="OoBDev.Microsoft.Azure.B2C.Tests" />
   </ItemGroup>
 
   <ItemGroup>

@@ -65,7 +65,7 @@ Every TODO file and in-code marker was checked against the repository. The other
 | File | Stated status | Actually outstanding | Action |
 |------|---------------|----------------------|--------|
 | `TODO-testing-local-integration.md` | Validated, ready for CI/CD | CI workflow `.github/workflows/integration-tests.yml` is still disabled (schedule and `workflow_dispatch` commented out, only `workflow_call`); 14 of 15 services healthy since 2026-10-08 (servicebus has no health check; azurinsight replaced by `otel-lgtm` on 2026-10-09); Docker stack docs under `docs/architecture/testing/` do not exist (only `README.md` and `testing-guidelines.md`) | Keep open; see backlog below |
-| `TODO-testing-live-integration.md` | Week 3 migration pending | Azure B2C tests are already `LiveIntegration` (3 tests in `OoBDev.Microsoft.Azure.B2C.Tests`, not `OoBDev.Microsoft.B2C.Tests` as the file says); the Application Insights tests were replaced by the OpenTelemetry tests (2026-10-09); Groq tests have no category at all; no `.env.liveintegration.template` or per-project README exists; no cloud docs | Keep open; fix paths |
+| `TODO-testing-live-integration.md` | Week 3 migration pending | Azure B2C was dropped (2026-10-09); the Application Insights tests were replaced by the OpenTelemetry tests (2026-10-09); Groq tests have no category at all; no `.env.liveintegration.template` or per-project README exists; no cloud docs | Keep open; fix paths |
 | `TODO-migrations*.md`, `TODO-decisions.md` | Blocked on decisions | Unchanged: BinaryDataDecoders (14+ decisions), BotChat (archive, enhance or extract), ContractParser, Tools/BulkLlm. The files say `Incoming/`; the folder is `Incoming/` | Blocked on the owner; fix folder name |
 | `Features/Caching/TODO-migrations-caching.md`, `docs/changes/migration-message-queues-2026-01-20.md` | Complete | Nothing outstanding | Archive candidates |
 | `docs/todo.md` | Wish list | 4 open wishes (below) | Folded into this file |
@@ -82,7 +82,7 @@ Every TODO file and in-code marker was checked against the repository. The other
 - [ ] Decide whether the Aspire spike (see Architect Answers) changes any of this before the docs are written.
 
 ### Backlog: Live Integration (Cloud) Tests
-- [ ] Azure B2C: add `.env.liveintegration.template` and a project README, and read settings from test properties (the category change is already done).
+- [x] Azure B2C dropped (2026-10-09): project, tests, `IdentityProviders.AzureB2C` and the example host profile removed; Keycloak is the identity provider.
 - [x] Application Insights replaced by plain OpenTelemetry (2026-10-09, `OoBDev.OpenTelemetry`); Integration tests read spans and logs back from the `otel-lgtm` container. [ ] Azure Monitor export through a collector is untested (needs the owner's subscription).
 - [ ] Groq (`OoBDev.GroqCloud.Tests`): categorize tests as `LiveIntegration`; add template and README.
 - [x] Added `.env.liveintegration` to `.gitignore` (2026-10-09)
