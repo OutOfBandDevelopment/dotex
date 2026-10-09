@@ -171,8 +171,22 @@ Reusable workflow called by both manual and scheduled releases. Handles creating
 **Job 2: Publish NuGet (Conditional)**
 - Runs only if `publish-to-nuget == 'true'`
 - Requires approval via environment protection (`nuget-release`)
-- Publishes packages to NuGet.org
+- Publishes packages to NuGet.org with trusted publishing (OIDC, no stored API key); see [NuGet trusted publishing](#nuget-trusted-publishing)
 - Creates NuGet deployment tag (`nuget-X.Y.Z`)
+
+#### NuGet trusted publishing
+
+The publish job exchanges the workflow's GitHub OIDC token for a short-lived NuGet API key (`NuGet/login@v1`), so no `NUGET_API_KEY` secret is stored. Setup, once:
+
+1. On nuget.org, sign in as the account or organization that owns the packages, open **Trusted Publishing**, and add a policy for the GitHub repository:
+   - Repository owner and repository: `OutOfBandDevelopment` / `dotex`
+   - Workflow file: the workflow that starts the run (`release.yml` or `scheduled-release.yml` for the automated paths, `deploy-release.yml` for a manual run). Add one policy per file you use.
+   - Environment: `nuget-release`
+2. In GitHub, add the repository variable `NUGET_USER` (**Settings > Secrets and variables > Actions > Variables**): the nuget.org profile name, not the email address.
+3. Run a release with `publish-to-nuget=true`. If login fails, the error names the claim that did not match the policy.
+4. After one successful publish, delete the old `NUGET_API_KEY` secret and revoke the key on nuget.org.
+
+The calling jobs in `release.yml` and `scheduled-release.yml` grant `id-token: write`; a reusable workflow cannot raise permissions above its caller. A policy for a package ID that does not exist yet is only valid for a limited time until the first publish, so create it shortly before the first release.
 
 **Outputs:**
 - ✅ GitHub Release created with tag
