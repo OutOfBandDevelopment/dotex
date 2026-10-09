@@ -158,6 +158,25 @@ jobs:
         --property:GitVersion_Minor=${{ steps.gitversion.outputs.minor }}
         --property:GitVersion_Patch=${{ steps.gitversion.outputs.patch }}
 
+    # Pass 1: the .NET Framework 4.8 SQL CLR assembly and its DACPAC (builds the DACPAC tool first).
+    # Pass 2 (Build) then builds everything else and finds these outputs already in place.
+    - name: Build SQL CLR (net48)
+      working-directory: ./src
+      run: >
+        dotnet build
+        Extensions/OoBDev.Data.Vectors.Net481/OoBDev.Data.Vectors.Net481.csproj
+        --configuration ${{ steps.calculate-version.outputs.BuildConfiguration }}
+        --property:Version=${{ steps.calculate-version.outputs.FullSemVerLower }}
+        --property:SolutionDir=${{ steps.calculate-version.outputs.BuildWorkspace }}/src/
+        --property:GitVersion_AssemblySemFileVer=${{ steps.gitversion.outputs.assemblySemFileVer }}
+        --property:GitVersion_InformationalVersion=${{ steps.gitversion.outputs.informationalVersion }}
+        --property:GitVersion_FullSemVer=${{ steps.gitversion.outputs.fullSemVer }}
+        --property:GitVersion_Major=${{ steps.gitversion.outputs.major }}
+        --property:GitVersion_Minor=${{ steps.gitversion.outputs.minor }}
+        --property:GitVersion_Patch=${{ steps.gitversion.outputs.patch }}
+        --nologo
+        --no-restore
+
     - name: Build
       working-directory: ./src
       run: >
