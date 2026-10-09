@@ -34,7 +34,7 @@ public class CacheableFactory : ICacheableFactory
         _serviceProvider = serviceProvider;
         _cachingManager = cachingManager;
 
-        bool.TryParse(config?[DisabledConfigurationKey], out _disabled);
+        _ = bool.TryParse(config?[DisabledConfigurationKey], out _disabled);
     }
 
     /// <summary>

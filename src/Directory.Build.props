@@ -78,11 +78,11 @@
   <Import Project="OoBDev.Build.Tasks.props"/>
 
   <!--https://www.meziantou.net/the-roslyn-analyzers-i-use.htm-->
-  <!--<PropertyGroup Condition="'$(IsTestProject)' != 'true'">
+  <PropertyGroup Condition="!$([System.Text.RegularExpressions.Regex]::IsMatch('$(MSBuildProjectName)', '\.Tests$')) and '$(MSBuildProjectName)' != 'OoBDev.TestUtilities'">
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
-    <AnalysisMode>AllEnabledByDefault</AnalysisMode>
+    <AnalysisMode>Recommended</AnalysisMode>
     <AnalysisLevel>latest</AnalysisLevel>
-  </PropertyGroup>-->
+  </PropertyGroup>
 
   <!--https://www.meziantou.net/the-roslyn-analyzers-i-use.htm-->
   <!--<ItemGroup Condition="'$(IsTestProject)' != 'true'">
