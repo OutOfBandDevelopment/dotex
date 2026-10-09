@@ -18,4 +18,9 @@ public record OllamaApiClientOptions
     /// </summary>
     [Required]
     public required string DefaultModel { get; init; }
+
+    /// <summary>
+    /// Gets or initializes an optional API key sent as a bearer token, for Ollama endpoints behind an authenticating gateway.
+    /// </summary>
+    public string? ApiKey { get; init; }
 }

@@ -39,6 +39,7 @@ Represents the configuration options for the Ollama API client.
 
 - **Url**: Gets or initializes the URL of the Ollama API.
 - **DefaultModel**: Gets or initializes the default model to use with the Ollama API.
+- **ApiKey**: Optional. When set, it is sent as a bearer token (`Authorization: Bearer ...`) for endpoints behind an authenticating gateway.
 
 ## OllamaMessageCompletion
 

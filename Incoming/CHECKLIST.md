@@ -24,7 +24,7 @@ This checklist tracks the investigation and migration status of all projects in 
 | **dotnet-lib** | ✅ **COMPLETE** | Framework subset | N/A | N/A | N/A | Completed and deleted (95% identical to main) |
 | **Framework** | 🗑️ **CANCELLED** | Framework subset | 55 | N/A | N/A | Directory removed (Vector library already in main) |
 | **Oobtainium** | ✅ **COMPLETE** | Mocking Framework | 48 | ~1,578 | LOW | Moved to proving-grounds repository |
-| **BotChat** | 🔍 **INVESTIGATED** | Sample Application | 12 | ~393 | LOW | Migration decision needed |
+| **BotChat** | ✅ **EXTRACTED** | Sample Application | 12 | ~393 | LOW | Patterns extracted 2026-10-09 (Ollama `ApiKey`, runner pattern in the worker recipe); sources removed |
 | **SharedFramework** | 🎨 **REPLACED** | Framework Library | 52 | ~28,582 | HIGH | Code migration replaced with design documentation (120 docs, 90.9% complete) |
 | **BinaryDecoders** | 🔍 **INVESTIGATED** | Massive Codebase | ~500 | ~50,000 | HIGH | Critical questions answered |
 | **ContractParser** | 🔍 **INVESTIGATED** | DSL/Grammar Spec | 5 | ~475 | MEDIUM | Feature documentation complete |
@@ -115,7 +115,7 @@ This checklist tracks the investigation and migration status of all projects in 
 
 ### 🔍 BotChat (INVESTIGATION COMPLETE)
 
-**Status:** 🔍 **INVESTIGATED** - Awaiting migration decision
+**Status:** ✅ **EXTRACTED** (owner decision Q10, 2026-10-09): `IKernelPlugIn` already existed in `OoBDev.SemanticKernel.Abstractions`; Ollama `ApiKey` support added to `OoBDev.Ollama`; the runner host pattern is documented in the worker recipe; sources removed.
 
 **Investigation Date:** 2026-01-13
 
