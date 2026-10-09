@@ -1,4 +1,5 @@
-﻿using OoBDev.AI;
+﻿using OoBDev.Ollama;
+using OoBDev.AI;
 using OoBDev.AI.Models;
 using OoBDev.WebApi.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -28,9 +29,9 @@ public class OllamaController : ControllerBase
     /// <param name="completion">The completion provider.</param>
     /// <param name="embedding">The embedding provider.</param>
     public OllamaController(
-        [FromKeyedServices("OLLAMA")] ILanguageModelProvider llmProvider,
-        [FromKeyedServices("OLLAMA")] IMessageCompletion completion,
-        [FromKeyedServices("OLLAMA")] IEmbeddingProvider embedding
+        [FromKeyedServices(OllamaGlobals.ProviderKey)] ILanguageModelProvider llmProvider,
+        [FromKeyedServices(OllamaGlobals.ProviderKey)] IMessageCompletion completion,
+        [FromKeyedServices(OllamaGlobals.ProviderKey)] IEmbeddingProvider embedding
         )
     {
         _llmProvider = llmProvider;

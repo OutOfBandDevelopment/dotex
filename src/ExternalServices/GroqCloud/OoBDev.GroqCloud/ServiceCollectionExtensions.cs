@@ -44,7 +44,8 @@ public static class ServiceCollectionExtensions
 
         services.TryAddTransient<IMessageCompletion, GroqCloudMessageCompletion>();
 
-        services.TryAddKeyedTransient<IMessageCompletion, GroqCloudMessageCompletion>("GroqCloud");
+        services.TryAddKeyedTransient<IMessageCompletion, GroqCloudMessageCompletion>(GroqCloudGlobals.ProviderKey);
+        services.TryAddKeyedTransient<IMessageCompletion, GroqCloudMessageCompletion>(GroqCloudGlobals.LegacyKey);
 
         services.Configure<GroqCloudApiClientOptions>(options => configuration.Bind(groqCloudApiClientOptionSection, options));
 

@@ -19,7 +19,8 @@ public class RedisCachingRegistrar
     public IServiceCollection AddServices(IServiceCollection services)
     {
         services.TryAddTransient<ICachingProvider, RedisCachingProvider>();
-        services.TryAddKeyedTransient<ICachingProvider, RedisCachingProvider>("Redis");
+        services.TryAddKeyedTransient<ICachingProvider, RedisCachingProvider>(RedisGlobals.ProviderKey);
+        services.TryAddKeyedTransient<ICachingProvider, RedisCachingProvider>(RedisGlobals.LegacyKey);
         services.TryAddTransient<IConnectionMultiplexerFactory, ConnectionMultiplexerFactory>();
         return services;
     }

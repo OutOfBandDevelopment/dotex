@@ -34,7 +34,7 @@
 | Vendor registrar | `{Vendor}{Feature}Registrar` (internal) | `RedisCachingRegistrar` |
 | Builder | `{Layer}ExtensionBuilder` / `{Area}Builder` (record) | `ExternalExtensionBuilder` |
 | Options | `{Thing}Options` (record or class) | `OllamaApiClientOptions` |
-| Provider keys | `{Vendor}Globals.MessageProviderKey` constants, or upper-case vendor names | `"rabbit-mq"`, `"OLLAMA"` |
+| Provider keys | `{Vendor}Globals.ProviderKey` (or `MessageProviderKey`) kebab-case constants; the earlier upper-case key stays registered as `LegacyKey` | `"rabbit-mq"`, `"ollama"` (legacy `"OLLAMA"`) |
 | Attributes | `{Name}Attribute`, used without the suffix | `[IsCacheable]`, `[MessageQueue]` |
 | Test methods | `Method_Scenario_ExpectedBehavior` | see [testing](./04-testing-practices.md) |
 

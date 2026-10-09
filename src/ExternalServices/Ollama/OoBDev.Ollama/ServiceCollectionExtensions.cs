@@ -43,13 +43,16 @@ public static class ServiceCollectionExtensions
         services.TryAddTransient<IMessageCompletion, OllamaMessageCompletion>();
         services.TryAddTransient<IEmbeddingProvider, OllamaMessageCompletion>();
 
-        services.TryAddKeyedTransient<IMessageCompletion, OllamaMessageCompletion>("OLLAMA");
-        services.TryAddKeyedTransient<IEmbeddingProvider, OllamaMessageCompletion>("OLLAMA");
+        services.TryAddKeyedTransient<IMessageCompletion, OllamaMessageCompletion>(OllamaGlobals.ProviderKey);
+        services.TryAddKeyedTransient<IMessageCompletion, OllamaMessageCompletion>(OllamaGlobals.LegacyKey);
+        services.TryAddKeyedTransient<IEmbeddingProvider, OllamaMessageCompletion>(OllamaGlobals.ProviderKey);
+        services.TryAddKeyedTransient<IEmbeddingProvider, OllamaMessageCompletion>(OllamaGlobals.LegacyKey);
 
         services.Configure<OllamaApiClientOptions>(options => configuration.Bind(ollamaApiClientOptionSection, options));
 
         services.TryAddTransient<IChatProvider, OllamaChatProvider>();
-        services.TryAddKeyedTransient<IChatProvider, OllamaChatProvider>("OLLAMA");
+        services.TryAddKeyedTransient<IChatProvider, OllamaChatProvider>(OllamaGlobals.ProviderKey);
+        services.TryAddKeyedTransient<IChatProvider, OllamaChatProvider>(OllamaGlobals.LegacyKey);
 
         return services;
     }
