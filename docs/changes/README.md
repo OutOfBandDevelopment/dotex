@@ -118,6 +118,10 @@ Each change document should include:
 - MPNet and Nomic presets on the ONNX runner, compared with Hugging Face; shared hub cache; version policy
 - Status: ✅ Complete (GitHub run not yet observed)
 
+**[migration-image-embeddings-2026-10-08.md](migration-image-embeddings-2026-10-08.md)**
+- In-process image embeddings and classification: ONNX runner, Skia decoder, DINOv2-small, ViT-base and CLIP presets compared with the Python models
+- Status: ✅ Complete (GitHub run not yet observed)
+
 ### Testing
 
 **[testing-vectors-sqs-moto-ci-2026-10-08.md](testing-vectors-sqs-moto-ci-2026-10-08.md)**

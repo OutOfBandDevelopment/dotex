@@ -1,6 +1,6 @@
 # ImageEmbeddings — In-Process Image Embeddings and Classification
 
-**Status:** Design · 2026-10-08 · Epic: AI embeddings · Follows [AllMiniLmL6V2](../AllMiniLmL6V2/README.md)
+**Status:** Implemented 2026-10-08 ([change](../../changes/migration-image-embeddings-2026-10-08.md)); DINOv2 reference bar is cosine 0.995 because the Xenova ONNX export differs from PyTorch · Design 2026-10-08 · Epic: AI embeddings · Follows [AllMiniLmL6V2](../AllMiniLmL6V2/README.md)
 
 First-party, thread-safe image embedding and classification on ONNX Runtime, using the same pattern as the text embedders: one generic runner, small model presets, model files downloaded on first use into the shared Hugging Face hub cache, and every preset compared with the original Python model.
 

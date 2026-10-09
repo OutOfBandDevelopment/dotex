@@ -1,5 +1,7 @@
 # scripts/embeddings
 
+`make-reference-images.py` writes image reference vectors, labels and zero-shot probabilities (DINOv2, ViT, CLIP) from the original PyTorch models and `make-resize-golden.py` writes Pillow resize golden data; both feed `OoBDev.Onnx.ImageEmbeddings.Tests`.
+
 `make-reference-vectors.py <model> <output.json>` (model: `all-minilm-l6-v2`, `all-mpnet-base-v2` or `nomic-embed-text-v1.5`) writes reference sentence embeddings from the original
 Hugging Face model (Hugging Face) for a fixed set of texts: plain English, accents,
 CJK, Korean, Cyrillic, Arabic, emoji, whitespace, URLs, literal special tokens and inputs of 76 to 1482 tokens.

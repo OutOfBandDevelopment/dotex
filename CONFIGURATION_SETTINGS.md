@@ -498,6 +498,22 @@ services.Configure<SentenceEmbeddingOptions>(options =>
 | Normalize | bool | No | true | L2 normalise the vectors |
 | Dimensions | int? | No | model size (384) | Truncate to fewer dimensions |
 
+#### OnnxImageEmbeddingOptions (image presets)
+
+**Namespace:** `OoBDev.Onnx.ImageEmbeddings`
+**Configuration Sections:** `Dinov2Small`, `VitBasePatch16`, `ClipVitB32` (CLIP text tower: `ClipVitB32Text`, type `ClipTextOptions`)
+
+| Property | Type | Required | Default | Description |
+|----------|------|----------|---------|-------------|
+| ModelPath | string | No | Hugging Face hub cache snapshot folder | Folder holding the model files |
+| MaxBatchSize | int | No | 8 | Images per model run |
+| MaxConcurrentInferences | int | No | 1 | Bound on parallel model runs |
+| MaxImageBytes | long | No | 64 MB | Largest encoded image accepted |
+| MaxPixels | long | No | 100 million | Largest decoded image accepted |
+| Normalize | bool | No | preset | L2 normalise the vectors |
+
+See [README.Onnx.ImageEmbeddings.md](src/ExternalServices/Onnx/OoBDev.Onnx.ImageEmbeddings/README.Onnx.ImageEmbeddings.md) for the full list.
+
 See [README.Onnx.SentenceEmbeddings.md](src/ExternalServices/Onnx/OoBDev.Onnx.SentenceEmbeddings/README.Onnx.SentenceEmbeddings.md) for the full list.
 
 ----------|------|----------|---------|-------------|
