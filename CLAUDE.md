@@ -241,7 +241,7 @@ OoBDev.{Layer}.{Feature}/
 - ImplicitUsings disabled (explicit using statements)
 - XML documentation on public APIs
 - Target framework: net10.0
-- No breaking changes to existing OoBDev APIs
+- Breaking changes to OoBDev APIs are acceptable while the framework is unreleased (owner decision 2026-10-09): rename or remove outright, no obsolete forwarders
 
 ### Testing
 - MSTest framework
