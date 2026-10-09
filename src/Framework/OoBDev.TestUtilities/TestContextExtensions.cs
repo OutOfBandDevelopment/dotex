@@ -172,7 +172,7 @@ public static class TestContextExtensions
         var baseFileName = string.IsNullOrWhiteSpace(fileName) ? value?.GetType()?.Name : Path.GetFileNameWithoutExtension(fileName);
         var baseFileExtension = string.IsNullOrWhiteSpace(fileName) ? "" : Path.GetExtension(fileName);
         var allowChangeExtension = false;
-        var timeStamp = DateTime.Now.Ticks;
+        var timeStamp = TimeProvider.System.GetLocalNow().Ticks;
         var uniqueId = Guid.NewGuid().ToString("N")[..8]; // Add 8-char unique ID for parallel test safety
 
         if (string.IsNullOrWhiteSpace(baseFileExtension) && (!fileName?.EndsWith('.') ?? true))

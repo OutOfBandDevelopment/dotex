@@ -8,8 +8,10 @@ namespace OoBDev.System.Security.Cryptography;
 /// <summary>
 /// Provides functionality for generating and validating one-time passwords (OTP) using TOTP and HOTP algorithms.
 /// </summary>
-public class OneTimeCode
+public class OneTimeCode(TimeProvider? timeProvider = null)
 {
+    private readonly TimeProvider _timeProvider = timeProvider ?? TimeProvider.System;
+
     /// <summary>
     /// The Unix epoch timestamp (January 1, 1970, 00:00:00 UTC).
     /// </summary>
@@ -26,7 +28,7 @@ public class OneTimeCode
     /// <returns>The current counter value.</returns>
     public long GetCurrentCounter()
     {
-        var counter = (long)(DateTime.UtcNow - UNIX_EPOCH).TotalSeconds / 30;
+        var counter = (long)(_timeProvider.GetUtcNow().UtcDateTime - UNIX_EPOCH).TotalSeconds / 30;
         return counter;
     }
 
