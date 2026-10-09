@@ -30,7 +30,7 @@ Order of work, with the reason for the position. Start at the top; tick items of
 - [x] (done 2026-10-09) Removed or annotated the stale Swashbuckle pages under `docs/Libraries/OoBDev.AspNetCore.*.md` and `docs/generated/Framework/OoBDev.AspNetCore.*/SwaggerGen`; update `FEATURE_INVENTORY.md` rows that list the removed Swagger classes; rename `.claude/protocols/software/template-swagger-documentation.md` references (`/swagger/all/swagger.json` is now `/openapi/all.json`).
 
 ### 2. AsyncAPI document and viewer (phase 2 of [OpenApiScalar](docs/design/OpenApiScalar/README.md); owner request)
-- [ ] Design set `docs/design/AsyncApi/` (requirements, architecture, api-design, testing-strategy): evaluate `Saunter` and `LEGO.AsyncAPI` against a thin first-party model; channels and messages for SQS, Service Bus and RabbitMQ.
+- [x] Design set `docs/design/AsyncApi/` (requirements, architecture, api-design, testing-strategy): evaluate `Saunter` and `LEGO.AsyncAPI` against a thin first-party model; channels and messages for SQS, Service Bus and RabbitMQ.
 - [ ] Implement the model and builder, adapter contributions, `/asyncapi/{name}.json` and the viewer page; Simulate tests; example app wiring; docs and change record.
 
 ### 3. Docker test infrastructure and CI (needs the owner for the merge)
