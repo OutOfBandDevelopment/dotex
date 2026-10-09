@@ -60,7 +60,7 @@ public async Task RabbitMQ_SendAndReceive_Succeeds()
 |---------|------|----------------|
 | RabbitMQ | 5673 (AMQP), 15672 (Management) | `rabbitmq` |
 | Azure Service Bus Emulator | 5672 | `servicebus-emulator` |
-| LocalStack (SQS) | 4566 | `localstack` |
+| Moto (SQS) | 4566 | `moto` |
 
 See [TEST_VARIABLES.md](../../TEST_VARIABLES.md) for complete configuration reference.
 

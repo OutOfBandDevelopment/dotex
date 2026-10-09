@@ -600,17 +600,15 @@ dotnet test src/ --collect:"XPlat Code Coverage"
 ## Current Work Context
 
 **Active Priorities:**
-1. **Integration Testing** - Finalizing health checks for all 15 Docker services (13/15 healthy)
-   - ⏳ servicebus startup validation (30s start period)
-   - Next: Enable CI/CD pipeline after all services validated
+1. **Integration Testing** - Finalizing health checks for all 15 Docker services (14/15 healthy; servicebus has no health check)
+   - Next: enable the CI/CD workflow (`integration-tests.yml` schedule is still commented out)
 2. **SharedFramework** - Design-first approach (Epic 2, 6, 7, 10)
 3. **Incoming Projects** - All investigated (decisions pending)
 
-**Latest Updates (2026-01-24):**
-- Enhanced integration-up scripts with `--build` flag
-- Fixed Windows batch file path handling (PUSHD)
-- Updated all health checks to use bash TCP built-ins
-- Added missing services to startup output display
+**Latest Updates (2026-10-09):**
+- OpenTelemetry replaced Application Insights; Grafana LGTM replaced Azurinsight in the test stack
+- Azure B2C dropped; Keycloak is the identity provider
+- Test Ollama published on host port 11435
 
 **Strategic Change (2026-01-22): Design-First Approach**
 
@@ -649,5 +647,5 @@ Instead of directly migrating code from SharedFramework, we've pivoted to compre
 - .runsettings how-to guide created
 - Configuration documentation complete (CONFIGURATION_SETTINGS.md)
 - Ollama integration complete (phi3 auto-setup)
-- 14 Docker services ready (Apache Tika, MongoDB, SQL Server, RabbitMQ, Redis, OpenSearch, Qdrant, Azurite, Moto, Service Bus, Keycloak, SBert, Ollama)
+- 15 Docker services ready (Apache Tika, SMTP4Dev, MongoDB, SQL Server, RabbitMQ, Redis, OpenSearch, Qdrant, Azurite, Moto, Service Bus, Keycloak, SBert, Ollama, Grafana LGTM)
 

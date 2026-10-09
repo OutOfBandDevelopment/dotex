@@ -44,67 +44,9 @@ Integration testing for cloud services that require actual cloud infrastructure 
 
 **Migrate tests that require live cloud services to LiveIntegration category**
 
-#### Microsoft Application Insights
+#### Microsoft Application Insights (replaced)
 
-**Purpose:** Application performance monitoring and telemetry
-
-**Current Status:** Tests exist but marked as DevLocal
-
-> **NOTE:** These tests can now be migrated to Integration category using [azurinsight](https://github.com/Rahulkumar010/azurinsight) (local Application Insights emulator). Docker image available at `oobdev/azurinsight:latest`. See [TODO-testing-local-integration.md](./TODO-testing-local-integration.md) "Future Service Additions" section for integration tasks.
-
-**Migration Tasks:**
-- [ ] File: `src/ExternalServices/Microsoft/OoBDev.Microsoft.ApplicationInsights.Tests/`
-- [ ] Change `[TestCategory(TestCategories.DevLocal)]` → `[TestCategory(TestCategories.LiveIntegration)]`
-- [ ] Create `.env.liveintegration.template`:
-  ```bash
-  # Application Insights Configuration
-  # See README.md for setup instructions
-
-  APPINSIGHTS_INSTRUMENTATION_KEY=your-instrumentation-key-here
-  APPINSIGHTS_CONNECTION_STRING=InstrumentationKey=...;IngestionEndpoint=...
-  ```
-
-- [ ] Create `README.md` in test project:
-  - **Purpose:** Validate telemetry sending, query API, alerts
-  - **Prerequisites:** Azure subscription, Application Insights resource
-  - **Azure Setup Steps:**
-    1. Create Application Insights resource
-    2. Get instrumentation key and connection string
-    3. (Optional) Configure availability tests
-  - **Obtaining Credentials:**
-    - Navigate to Azure Portal → Application Insights → Properties
-    - Copy Instrumentation Key
-    - Copy Connection String
-  - **Running Tests Locally:**
-    1. Copy template to `.env.liveintegration`
-    2. Fill in actual credentials
-    3. Run tests
-    4. Verify telemetry in Azure Portal (5-10 minute delay)
-  - **Cost Considerations:**
-    - First 5GB per month free
-    - Each test run sends ~1-5 MB of telemetry
-    - Data retention costs after 90 days
-  - **Security:** Environment variable management, Key Vault
-  - **NOTE:** Manual execution only
-
-- [ ] Update tests for test properties:
-  ```csharp
-  [TestInitialize]
-  public void Setup()
-  {
-      var connectionString = TestContext.GetRequiredProperty<string>("APPINSIGHTS_CONNECTION_STRING");
-      _telemetryClient = new TelemetryClient(new TelemetryConfiguration
-      {
-          ConnectionString = connectionString
-      });
-  }
-  ```
-
-- [ ] Add usage examples:
-  - Send custom events
-  - Send custom metrics
-  - Query telemetry data
-  - Verify dependency tracking
+Replaced by OpenTelemetry on 2026-10-09; its tests run as Integration against the `otel-lgtm` container. See [the change record](docs/changes/migration-opentelemetry-2026-10-09.md).
 
 #### Groq Cloud
 
