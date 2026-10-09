@@ -83,7 +83,7 @@ Questions that block or shape work in the TODO files. Each has the source it cam
 - **Source:** [TODO-decisions.md](./TODO-decisions.md); [TODO-migrations-binarydatadecoders.md](./TODO-migrations-binarydatadecoders.md); [TODO.md](./TODO.md) → "Backlog: Migration Decisions"
 - **Question:** The decisions cover the endianness API, `BinaryPrimitives` naming, UI collections location, CodeAnalysis use case, archive formats, ExpressionCalculator and more. Should Claude read `TODO-decisions.md` and produce a one-page list with a recommendation next to each, so you can answer yes/no per line?
 - **Suggestion:** Yes.
-- **Answer:** Yes, produce a one-page list with a recommendation per decision (2026-10-09).
+- **Answer:** Yes, produce a one-page list with a recommendation per decision (2026-10-09). Done: [decision sheet](docs/migration/binarydatadecoders-decision-sheet.md).
 
 ### Q10 — BotChat
 
