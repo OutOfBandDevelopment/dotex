@@ -1,5 +1,9 @@
 # 06 — Design Document Standard
 
+<!-- nav -->
+[↑ Patterns Discovery](./README.md) · [← Index](./README.md) · [Index →](./README.md)
+<!-- nav -->
+
 How design documents are created in this repository. It formalizes the "Epic 11" pattern already used in `CLAUDE.md` (four documents per feature) and adds the diagram rules.
 
 ## Contents
@@ -135,3 +139,9 @@ T ..> R : traces back to\nrequirement IDs
 - [ ] Every requirement is traced to a test row.
 - [ ] Deviations from established patterns are justified.
 - [ ] README.md and TODO.md updated.
+
+---
+
+<!-- nav -->
+[↑ Patterns Discovery](./README.md) · [← Index](./README.md) · [Index →](./README.md)
+<!-- nav -->

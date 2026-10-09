@@ -42,7 +42,7 @@ Questions that block or shape work in the TODO files. Each has the source it cam
 - **Source:** [TODO.md](./TODO.md) → "Backlog: CI/CD Enablement..." (last item) and "Architect Answers" (Spikes)
 - **Question:** Run a short Aspire vs Docker compose spike before writing the Docker test documentation under `docs/architecture/testing/`, so the docs are not rewritten?
 - **Suggestion:** Yes, spike first.
-- **Answer:** Yes, run the Aspire vs Docker compose spike first (2026-10-09).
+- **Answer:** Yes, run the Aspire vs Docker compose spike first (2026-10-09). Done (desk study): stay on Docker Compose, see [spike](docs/patterns-discovery/08-spikes/02-aspire-vs-compose.md).
 
 ## 2. Design questions
 

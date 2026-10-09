@@ -52,4 +52,16 @@ The full list of code-level issues is in [known warts](./03-practices-and-conven
 New to the codebase: 01, then 02, then 03. Building something new: 04. Deciding what to change: 05.
 
 <!-- toc:start -->
+## Contents
+
+1. [06 — Design Document Standard](./06-design-document-standard.md)
+
+### List of Figures
+
+1. [Figure 1 — The four documents per feature](./06-design-document-standard.md)
+2. [Figure 2 — Salt UI mockup example](./06-design-document-standard.md)
+
+### List of Tables
+
+1. [Table 1 — Design document rules](./06-design-document-standard.md)
 <!-- toc:end -->
