@@ -118,6 +118,10 @@ Each change document should include:
 - Swashbuckle replaced by `Microsoft.AspNetCore.OpenApi` transformers and the Scalar API reference; OAuth2 authorization code with PKCE; AsyncAPI is phase 2
 - Status: ✅ Complete (phase 1)
 
+**[migration-asyncapi-2026-10-09.md](migration-asyncapi-2026-10-09.md)**
+- AsyncAPI 3.0 document and viewer for the message queues (`OoBDev.AsyncApi`, adapter contributors, `MapAsyncApi()`)
+- Status: ✅ Complete
+
 ### Observability
 
 **[migration-opentelemetry-2026-10-09.md](migration-opentelemetry-2026-10-09.md)**

@@ -76,10 +76,12 @@ public static class Program
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
-        // OpenAPI documents at /openapi/{document}.json and the Scalar API reference at /scalar
+        // OpenAPI documents at /openapi/{document}.json and the Scalar API reference at /scalar;
+        // AsyncAPI documents at /asyncapi/{document}.json and the viewer at /asyncapi/{document}
         if (app.Environment.IsDevelopment())
         {
             app.MapApiReference();
+            app.MapAsyncApi();
         }
 
         app.UseHttpsRedirection();

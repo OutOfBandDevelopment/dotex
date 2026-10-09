@@ -1452,6 +1452,8 @@ public class ProductSearchModel
 
 ### 14.12 MEDIUM Priority - Enhanced Swagger Options (6 files)
 
+> **Superseded 2026-10-09:** Swashbuckle was removed; these options are now OpenAPI transformers ([change](docs/changes/migration-openapi-scalar-2026-10-09.md)).
+
 **Locations:**
 - `Incomming/dotnet-lib/Framework/OobDev.AspNetCore.Mvc/SwaggerGen/`
 - `Incomming/dotnet-lib/Framework/OobDev.AspNetCore.JwtAuthentication/SwaggerGen/`

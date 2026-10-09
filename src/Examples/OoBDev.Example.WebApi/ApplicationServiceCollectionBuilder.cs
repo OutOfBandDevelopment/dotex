@@ -1,3 +1,4 @@
+using OoBDev.AsyncApi;
 using OoBDev.MessageQueueing;
 using OoBDev.WebApi.Provider;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,6 +20,7 @@ public static class ApplicationServiceCollectionBuilder
     {
         services.TryAddTransient<IExampleMessageProvider, ExampleMessageProvider>();
         services.TryAddTransient<IMessageQueueHandler, ExampleMessageProvider>();
+        services.TryAddAsyncApiServices();
         return services;
     }
 }

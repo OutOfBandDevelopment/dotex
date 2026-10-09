@@ -1,6 +1,6 @@
 # Swashbuckle replaced by OpenAPI transformers and Scalar
 
-**Date:** 2026-10-09 · **Epic:** API documentation · **Status:** Phase 1 complete (AsyncAPI phase 2 designed, not started)
+**Date:** 2026-10-09 · **Epic:** API documentation · **Status:** Phase 1 complete (AsyncAPI phase 2 done, see its own record)
 
 ## Summary
 
@@ -25,6 +25,6 @@ Security flow moved from implicit to authorization code with PKCE; documents are
 
 ## Follow-up
 
-- Phase 2: AsyncAPI document and viewer for the SQS, Service Bus and RabbitMQ surfaces (design first).
+- Phase 2 (AsyncAPI document and viewer) is done: [change record](migration-asyncapi-2026-10-09.md).
 - `scripts/templates/verify-templates.ps1` fails at the "test capability" step with NU1008 (generated projects carry package versions while central package management is on). This predates the change and is not fixed here.
 - The API reference pages under `docs/Libraries/` and `docs/generated/` still describe the old Swashbuckle classes until they are regenerated.

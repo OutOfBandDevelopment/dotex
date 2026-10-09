@@ -1,6 +1,7 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using OoBDev.MessageQueueing.Services;
+using OoBDev.AsyncApi;
 using OoBDev.Microsoft.Azure.ServiceBus.MessageQueueing;
 
 namespace OoBDev.Microsoft.Azure.ServiceBus;
@@ -27,6 +28,8 @@ public static class ServiceCollectionExtensions
 
         // Factory registration
         services.TryAddTransient<IServiceBusSenderFactory, ServiceBusSenderFactory>();
+
+        services.TryAddEnumerable(ServiceDescriptor.Singleton<IAsyncApiContributor, ServiceBusAsyncApiContributor>());
 
         return services;
     }

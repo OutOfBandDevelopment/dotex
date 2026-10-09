@@ -27,11 +27,12 @@ Order of work, with the reason for the position. Start at the top; tick items of
 
 ### 1. Fix what the OpenAPI migration left behind (small, unblocks the rest)
 - [x] (done 2026-10-09) `scripts/templates/verify-templates.ps1` failed at "test capability" with NU1008: generated projects carry `Version` on `PackageReference` while central package management is on. Remove the versions from the templates and add any missing `PackageVersion` entries; re-run until all three templates build.
-- [ ] Remove or regenerate the stale Swashbuckle pages under `docs/Libraries/OoBDev.AspNetCore.*.md` and `docs/generated/Framework/OoBDev.AspNetCore.*/SwaggerGen`; update `FEATURE_INVENTORY.md` rows that list the removed Swagger classes; rename `.claude/protocols/software/template-swagger-documentation.md` references (`/swagger/all/swagger.json` is now `/openapi/all.json`).
+- [x] (done 2026-10-09) Removed or annotated the stale Swashbuckle pages under `docs/Libraries/OoBDev.AspNetCore.*.md` and `docs/generated/Framework/OoBDev.AspNetCore.*/SwaggerGen`; update `FEATURE_INVENTORY.md` rows that list the removed Swagger classes; rename `.claude/protocols/software/template-swagger-documentation.md` references (`/swagger/all/swagger.json` is now `/openapi/all.json`).
 
 ### 2. AsyncAPI document and viewer (phase 2 of [OpenApiScalar](docs/design/OpenApiScalar/README.md); owner request)
-- [ ] Design set `docs/design/AsyncApi/` (requirements, architecture, api-design, testing-strategy): evaluate `Saunter` and `LEGO.AsyncAPI` against a thin first-party model; channels and messages for SQS, Service Bus and RabbitMQ.
-- [ ] Implement the model and builder, adapter contributions, `/asyncapi/{name}.json` and the viewer page; Simulate tests; example app wiring; docs and change record.
+- [x] Design set `docs/design/AsyncApi/` (requirements, architecture, api-design, testing-strategy): evaluate `Saunter` and `LEGO.AsyncAPI` against a thin first-party model; channels and messages for SQS, Service Bus and RabbitMQ.
+- [x] (done 2026-10-09) Implemented `OoBDev.AsyncApi`, adapter contributors, `MapAsyncApi()`, 7 Simulate tests, example wiring. [Details](docs/changes/migration-asyncapi-2026-10-09.md)
+- [ ] Follow-up: describe send-only queues by type (senders are open generics, so only configured queues are listed today); in-process contributor; check the viewer in a browser.
 
 ### 3. Docker test infrastructure and CI (needs the owner for the merge)
 - [ ] Port-collision hardening: make host ports overridable (or move them to a private range) so other local services cannot collide, as `storage-ollama` did on 11434.
@@ -42,7 +43,7 @@ Order of work, with the reason for the position. Start at the top; tick items of
 - [ ] Groq (`OoBDev.GroqCloud.Tests`): categorize tests as `LiveIntegration`; add template and README (the project has no test sources yet).
 - [ ] Cloud docs: category README, cloud setup, credential and cost management, per-service pages, LiveIntegration vs Integration guide, PlantUML diagrams.
 - [ ] Azure Monitor export through a collector is untested (needs the owner's subscription).
-- [ ] `DevLocal` tests kept on purpose: Ollama tests (hard-coded LAN host, model pull and delete), USB HID (hardware), `PathEx`, `MergedXPathNavigator`, `ProjectTools.FixReadmes` (hard-coded `C:Repos` paths), Markdown `TestMethod1` (writes files), DacFx `BuildPackageTest` (hard-coded path). Revisit the Ollama ones when the owner says Ollama testing can resume.
+- [ ] `DevLocal` tests kept on purpose: Ollama tests (hard-coded LAN host, model pull and delete), USB HID (hardware), `PathEx`, `MergedXPathNavigator`, `ProjectTools.FixReadmes` (hard-coded `C:\Repos` paths), Markdown `TestMethod1` (writes files), DacFx `BuildPackageTest` (hard-coded path). Revisit the Ollama ones when the owner says Ollama testing can resume.
 
 ### 5. Patterns-discovery backlogs
 Roslyn analyzers, options validation modes, `ISelectedService` rough edges, naming consistency, `Retreive` to `Retrieve`, message context caller info, `TimeProvider` replacements, HTTP querying and rights middleware. Tracked in [CLAUDE.md](./CLAUDE.md#patterns-discovery-work-branch-devpatterns-discovery); several need owner answers first.
