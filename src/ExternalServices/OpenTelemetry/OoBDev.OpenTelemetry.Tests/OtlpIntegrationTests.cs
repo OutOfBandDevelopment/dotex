@@ -63,7 +63,8 @@ public partial class OtlpIntegrationTests
         var logs = provider.GetRequiredService<LoggerProvider>();
 
         // Test
-        LogHello(provider.GetRequiredService<ILoggerFactory>().CreateLogger("integration"), "otlp");
+        var logger = provider.GetRequiredService<ILoggerFactory>().CreateLogger("integration");
+        LogHello(logger, "otlp");
         Assert.IsTrue(logs.ForceFlush(10_000));
 
         // Assert

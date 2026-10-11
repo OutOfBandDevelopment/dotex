@@ -114,7 +114,8 @@ public partial class TelemetryProcessorTests
             options.AddProcessor(new CaptureLogProcessor(captured));
         })))
         {
-            LogHello(factory.CreateLogger("test"), "world");
+            var logger = factory.CreateLogger("test");
+            LogHello(logger, "world");
         }
 
         // Assert

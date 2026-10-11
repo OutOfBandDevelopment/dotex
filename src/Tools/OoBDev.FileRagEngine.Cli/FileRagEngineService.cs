@@ -200,7 +200,7 @@ public partial class FileRagEngineService : IHostedService
     [LoggerMessage(EventId = 6, Level = LogLevel.Information, Message = "write files: {directory}")]
     private partial void LogWriteFiles(string directory);
 
-    [LoggerMessage(EventId = 7, Level = LogLevel.Error, Message = "ERROR: {directory} ({x}) -> {error}")]
+    [LoggerMessage(EventId = 7, Level = LogLevel.Error, Message = "{directory} ({x}) -> {error}")]
     private partial void LogFailed(string directory, int x, string error);
 
     [LoggerMessage(EventId = 8, Level = LogLevel.Debug, Message = "Exception: {exception}")]
