@@ -40,7 +40,10 @@ public partial class XmlDocumentationProvider
             }
             catch (Exception e)
             {
-                logger.LogDebug("{File}: {Message}", Path.GetFileName(file), e.Message);
+                if (logger.IsEnabled(LogLevel.Debug))
+#pragma warning disable CA1873 // guarded by IsEnabled
+                    LogUnreadable(logger, Path.GetFileName(file), e.Message);
+#pragma warning restore CA1873
             }
         }
     }
@@ -137,4 +140,7 @@ public partial class XmlDocumentationProvider
 
     [GeneratedRegex(@"\s+")]
     private static partial Regex Whitespace();
+
+    [LoggerMessage(EventId = 1, Level = LogLevel.Debug, Message = "{File}: {Message}")]
+    private static partial void LogUnreadable(ILogger logger, string file, string message);
 }

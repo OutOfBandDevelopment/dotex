@@ -277,12 +277,7 @@ public class ExpressionTreeBuilder<TModel>(
                         targetType = value?.GetType()?.FullName,
                     },
                 });
-                _logger.LogWarning(
-                    $"{{{nameof(queryString)}}} parsed to {{{nameof(value)}}} ({{type}})",
-                    queryString,
-                    value,
-                    value?.GetType()
-                    );
+                LinqLog.ParsedValue(_logger, queryString, value, value?.GetType());
                 queryParameter = value;
             }
         }
@@ -310,13 +305,7 @@ public class ExpressionTreeBuilder<TModel>(
                         source = queryParameter,
                     },
                 });
-                _logger.LogWarning(
-                    $"Unable to map filter expression: {{{nameof(expression)}}} {{{nameof(expressionOperator)}}} {{{nameof(queryParameter)}}} ({{type}})",
-                    expression,
-                    expressionOperator,
-                    queryParameter,
-                    queryParameter?.GetType()
-                    );
+                LinqLog.UnmappedFilter(_logger, expression, expressionOperator, queryParameter, queryParameter?.GetType());
 #if DEBUG
                 throw new NotSupportedException($"Filter not mapped: {expression} {expressionOperator} {queryParameter}");
 #endif
@@ -600,7 +589,7 @@ public class ExpressionTreeBuilder<TModel>(
 
         if (expression == null)
         {
-            _logger.LogInformation($"{nameof(TryGetPropertyExpression)}: {{{nameof(name)}}}", name);
+            LinqLog.TryGetProperty(_logger, name);
         }
 
         return expression != null;

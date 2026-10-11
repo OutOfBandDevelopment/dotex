@@ -13,7 +13,7 @@ namespace OoBDev.Caching.Factories;
 /// <typeparam name="TInterface">The interface type being proxied.</typeparam>
 /// <typeparam name="TImplemention">The implementation type being decorated with caching.</typeparam>
 #pragma warning disable CA1000 // the typed Create mirrors DispatchProxy.Create
-public class CachedProxy<TInterface, TImplemention> : DispatchProxy
+public partial class CachedProxy<TInterface, TImplemention> : DispatchProxy
         where TImplemention : class, TInterface
 {
     private TImplemention? _decorated;
@@ -65,7 +65,7 @@ public class CachedProxy<TInterface, TImplemention> : DispatchProxy
                         var cachedResult = _cachingManager.RetrieveAsync(cachingKey, targetReturnType).ConfigureAwait(false).GetAwaiter().GetResult();
                         if (cachedResult != null)
                         {
-                            _logger?.LogInformation("Retrieved from Cache::{Method}::{Key}", targetMethod.Name, cachingKey);
+                            if (_logger != null) LogRetrieved(_logger, targetMethod.Name, cachingKey);
                             return isTask ? ResultAwaiter.Wrap(cachedResult) : cachedResult;
                         }
 
@@ -80,7 +80,7 @@ public class CachedProxy<TInterface, TImplemention> : DispatchProxy
 
                         // store original
                         _cachingManager.StoreAsync(cachingKey, original, isCachableAttribute.LifeTime).ConfigureAwait(false).GetAwaiter().GetResult();
-                        _logger?.LogInformation("Stored into Cache::{Method}::{Key}", targetMethod.Name, cachingKey);
+                        if (_logger != null) LogStored(_logger, targetMethod.Name, cachingKey);
 
                         return isTask ? ResultAwaiter.Wrap(original) : original;
                     }
@@ -90,15 +90,18 @@ public class CachedProxy<TInterface, TImplemention> : DispatchProxy
                 if (flushCacheAttribute != null)
                 {
                     var cachingKey = _cachingManager.BuildKey(method, args);
-                    _logger?.LogInformation("Flush from Cache::{Method}::{Key}", targetMethod.Name, cachingKey);
+                    if (_logger != null) LogFlushed(_logger, targetMethod.Name, cachingKey);
                     // do flushable stuff
                     _cachingManager.FlushAsync(cachingKey).ConfigureAwait(false).GetAwaiter().GetResult();
                 }
             }
             catch (Exception ex)
             {
-                _logger?.LogError("{Message}", ex.Message);
-                _logger?.LogDebug("{Exception}", ex.ToString());
+                if (_logger != null)
+                {
+                    LogFailure(_logger, ex.Message);
+                    LogFailureDetails(_logger, ex);
+                }
                 //Note: we are eating this exception on purpose.  Is caching fails we still want the process to continue
 
 #if DEBUG
@@ -133,4 +136,19 @@ public class CachedProxy<TInterface, TImplemention> : DispatchProxy
         return default;
 #pragma warning restore CS8603 // Possible null reference return.
     }
+
+    [LoggerMessage(EventId = 1, Level = LogLevel.Information, Message = "Retrieved from Cache::{Method}::{Key}")]
+    private static partial void LogRetrieved(ILogger logger, string method, string? key);
+
+    [LoggerMessage(EventId = 2, Level = LogLevel.Information, Message = "Stored into Cache::{Method}::{Key}")]
+    private static partial void LogStored(ILogger logger, string method, string? key);
+
+    [LoggerMessage(EventId = 3, Level = LogLevel.Information, Message = "Flush from Cache::{Method}::{Key}")]
+    private static partial void LogFlushed(ILogger logger, string method, string? key);
+
+    [LoggerMessage(EventId = 4, Level = LogLevel.Error, Message = "{Message}")]
+    private static partial void LogFailure(ILogger logger, string message);
+
+    [LoggerMessage(EventId = 5, Level = LogLevel.Debug, Message = "Caching operation failed")]
+    private static partial void LogFailureDetails(ILogger logger, Exception exception);
 }
