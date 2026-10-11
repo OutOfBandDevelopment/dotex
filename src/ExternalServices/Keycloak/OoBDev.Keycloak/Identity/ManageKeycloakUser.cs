@@ -28,7 +28,7 @@ public class ManageKeycloakUser(
     /// <param name="lastName">The last name of the user.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains the object ID and an optional password for the created user.</returns>
     public Task<(string objectId, string? password)> CreateIdentityUserAsync(string email, string firstName, string lastName) =>
-        throw new NotImplementedException();
+        throw new NotSupportedException();
 
     /// <summary>
     /// Retrieves a list of user identity models based on the specified email address.
@@ -36,7 +36,7 @@ public class ManageKeycloakUser(
     /// <param name="emailAddress">The email address to search for.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains the list of user identity models or <c>null</c> if no users are found.</returns>
     public Task<List<UserIdentityModel>?> GetIdentityUsersByEmail(string emailAddress) =>
-           throw new NotImplementedException();
+           throw new NotSupportedException();
 
     /// <summary>
     /// Removes an identity user asynchronously based on the specified object ID.
@@ -44,5 +44,5 @@ public class ManageKeycloakUser(
     /// <param name="userId">The object ID of the user to remove.</param>
     /// <returns>A task that represents the asynchronous operation. The task result is <c>true</c> if the user was successfully removed; otherwise, <c>false</c>.</returns>
     public Task<bool> RemoveIdentityUserAsync(string userId) =>
-        throw new NotImplementedException();
+        throw new NotSupportedException();
 }

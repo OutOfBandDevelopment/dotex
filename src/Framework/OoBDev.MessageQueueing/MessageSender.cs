@@ -90,7 +90,7 @@ public partial class MessageSender<TChannel>(
     private partial void LogSending(object message, string? orgMessageId, string? messageId, Type targetType, string? callerFile, string? callerMember);
 
     [LoggerMessage(EventId = 2, Level = LogLevel.Information, Message = "Sent: [{orgMessageId} -> {messageId}] => ({sentId})")]
-    private partial void LogSent(string? orgMessageId, string? messageId, string sentId);
+    private partial void LogSent(string? orgMessageId, string? messageId, string? sentId);
 
     [LoggerMessage(EventId = 3, Level = LogLevel.Error, Message = "Failed: \"{message}\" [{orgMessageId} -> {messageId}]")]
     private partial void LogFailed(string message, string? orgMessageId, string? messageId);

@@ -48,7 +48,7 @@ public static class EnumExtensions
         else if (Enum.TryParse<TEnum>(input?.Replace('|', ','), out var parsed)) return parsed;
 
         var enumModel = AsModels<TEnum>();
-        var enumValues = input?.Split('|', ',') ?? throw new NotImplementedException();
+        var enumValues = input?.Split('|', ',') ?? throw new ArgumentNullException(nameof(input));
 
         var map = from m in enumModel
                   from v in enumValues

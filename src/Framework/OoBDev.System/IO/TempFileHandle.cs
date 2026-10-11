@@ -36,7 +36,9 @@ public partial record TempFileHandle : ITempFile
     /// <summary>
     /// Releases the resources used by the temporary file.
     /// </summary>
+#pragma warning disable MA0055 // the finalizer deletes the temporary file when the handle is never disposed
     ~TempFileHandle() => Dispose(false);
+#pragma warning restore MA0055
 
     /// <summary>
     /// Releases the resources used by the temporary file.
