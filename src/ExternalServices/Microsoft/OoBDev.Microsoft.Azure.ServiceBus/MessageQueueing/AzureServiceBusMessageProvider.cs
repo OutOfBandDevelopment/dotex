@@ -18,7 +18,7 @@ namespace OoBDev.Microsoft.Azure.ServiceBus.MessageQueueing;
 /// <param name="serializer">The JSON serializer for message serialization.</param>
 /// <param name="senderFactory">The factory for creating Azure Service Bus senders.</param>
 /// <param name="logger">The logger for logging messages.</param>
-public class AzureServiceBusMessageProvider(
+public partial class AzureServiceBusMessageProvider(
     IJsonSerializer serializer,
     IServiceBusSenderFactory senderFactory,
     ILogger<AzureServiceBusMessageProvider> logger
@@ -72,10 +72,7 @@ public class AzureServiceBusMessageProvider(
             // Send message
             await sender.SendMessageAsync(busMessage);
 
-            logger.LogInformation(
-                "Sent Service Bus message: CorrelationId: {CorrelationId}",
-                busMessage.CorrelationId
-            );
+            LogSent(busMessage.CorrelationId);
 
             return busMessage.CorrelationId;
         }
@@ -85,4 +82,7 @@ public class AzureServiceBusMessageProvider(
             await client.DisposeAsync();
         }
     }
+
+    [LoggerMessage(EventId = 1, Level = LogLevel.Information, Message = "Sent Service Bus message: CorrelationId: {CorrelationId}")]
+    private partial void LogSent(string? correlationId);
 }

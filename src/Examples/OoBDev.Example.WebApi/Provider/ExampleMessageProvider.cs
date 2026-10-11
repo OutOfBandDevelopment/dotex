@@ -14,7 +14,7 @@ namespace OoBDev.WebApi.Provider;
 /// </remarks>
 /// <param name="sender">The message queue sender for sending messages.</param>
 /// <param name="logger">The logger for logging messages.</param>
-public class ExampleMessageProvider(
+public partial class ExampleMessageProvider(
     IMessageQueueSender<ExampleMessageProvider> sender,
     ILogger<ExampleMessageProvider> logger) : IExampleMessageProvider, IMessageQueueHandler<ExampleMessageProvider>
 {
@@ -26,9 +26,9 @@ public class ExampleMessageProvider(
     /// <returns>The message ID.</returns>
     public async Task<string> PostAsync(object message, string? correlationId)
     {
-        logger.LogInformation("Send: {message} [{correlationId}]", message, correlationId);
+        LogSend(message, correlationId);
         var messageId = await sender.SendAsync(message, correlationId);
-        logger.LogInformation("Sent: {message} [{correlationId}]-[{messageId}]", message, correlationId, messageId);
+        LogSent(message, correlationId, messageId);
         return messageId;
     }
 
@@ -40,7 +40,16 @@ public class ExampleMessageProvider(
     /// <returns>A task representing the asynchronous operation.</returns>
     public Task HandleAsync(object message, IMessageContext context)
     {
-        logger.LogInformation("Received: {message} [{correlationId}]", message, context.CorrelationId);
+        LogReceived(message, context.CorrelationId);
         return Task.CompletedTask;
     }
+
+    [LoggerMessage(EventId = 1, Level = LogLevel.Information, Message = "Send: {message} [{correlationId}]")]
+    private partial void LogSend(object message, string? correlationId);
+
+    [LoggerMessage(EventId = 2, Level = LogLevel.Information, Message = "Sent: {message} [{correlationId}]-[{messageId}]")]
+    private partial void LogSent(object message, string? correlationId, string messageId);
+
+    [LoggerMessage(EventId = 3, Level = LogLevel.Information, Message = "Received: {message} [{correlationId}]")]
+    private partial void LogReceived(object message, string? correlationId);
 }

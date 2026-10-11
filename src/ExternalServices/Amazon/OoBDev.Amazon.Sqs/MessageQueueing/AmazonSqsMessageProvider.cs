@@ -19,7 +19,7 @@ namespace OoBDev.Amazon.Sqs.MessageQueueing;
 /// <param name="serializer">The JSON serializer for message serialization.</param>
 /// <param name="clientFactory">The factory for creating AWS SQS clients.</param>
 /// <param name="logger">The logger for logging messages.</param>
-public class AmazonSqsMessageProvider(
+public partial class AmazonSqsMessageProvider(
     IJsonSerializer serializer,
     ISqsClientFactory clientFactory,
     ILogger<AmazonSqsMessageProvider> logger
@@ -81,12 +81,11 @@ public class AmazonSqsMessageProvider(
         // Send message
         var response = await client.SendMessageAsync(request);
 
-        logger.LogInformation(
-            "Sent SQS message: {MessageId}, CorrelationId: {CorrelationId}",
-            response.MessageId,
-            context.CorrelationId
-        );
+        LogSent(response.MessageId, context.CorrelationId);
 
         return response.MessageId;
     }
+
+    [LoggerMessage(EventId = 1, Level = LogLevel.Information, Message = "Sent SQS message: {MessageId}, CorrelationId: {CorrelationId}")]
+    private partial void LogSent(string? messageId, string? correlationId);
 }

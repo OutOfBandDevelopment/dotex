@@ -16,7 +16,7 @@ namespace OoBDev.Data.Vectors.Hosting;
 /// Processes messages, generates embeddings, and sends responses back through the queue.
 /// </summary>
 [ConnectionStringName("EmbeddingSentenceTransformer")]
-public class EmbeddingSentenceTransformerQueueReader : IEmbeddingSentenceTransformerQueueReader
+public partial class EmbeddingSentenceTransformerQueueReader : IEmbeddingSentenceTransformerQueueReader
 {
     private readonly IDatabaseQuery<EmbeddingSentenceTransformerQueueReader> _database;
     private readonly IEmbeddingProvider _embedding;
@@ -100,7 +100,7 @@ public class EmbeddingSentenceTransformerQueueReader : IEmbeddingSentenceTransfo
                         var messageType = (string?)reader["message_type_name"];
                         var messageBodyXml = reader["message_body_xml"] == DBNull.Value ? null : (string)reader["message_body_xml"];
 
-                        _logger.LogInformation($"{{{nameof(conversationHandle)}}}: {{{nameof(messageType)}}}", conversationHandle, messageType);
+                        LogMessageReceived(conversationHandle, messageType);
 
                         if (messageType == "oobdev://embedding/sentence-transformer/request" && messageBodyXml != null)
                         {
@@ -172,7 +172,7 @@ public class EmbeddingSentenceTransformerQueueReader : IEmbeddingSentenceTransfo
 
                     if (!read)
                     {
-                        _logger.LogWarning($"Timeout!  No messages received");
+                        LogTimeout();
                     }
                 }
 
@@ -185,10 +185,19 @@ public class EmbeddingSentenceTransformerQueueReader : IEmbeddingSentenceTransfo
             }
             catch (Exception ex)
             {
-                _logger.LogError($"{{{nameof(ex.Message)}}}", ex.Message);
+                LogFailure(ex.Message);
                 await transaction.RollbackAsync(cancellationToken);
                 await Task.Delay((int)_options.Value.ReadWaitTimeout.TotalMilliseconds, cancellationToken); 
             }
         }
     }
+
+    [LoggerMessage(EventId = 1, Level = LogLevel.Information, Message = "{conversationHandle}: {messageType}")]
+    private partial void LogMessageReceived(Guid conversationHandle, string? messageType);
+
+    [LoggerMessage(EventId = 2, Level = LogLevel.Warning, Message = "Timeout!  No messages received")]
+    private partial void LogTimeout();
+
+    [LoggerMessage(EventId = 3, Level = LogLevel.Error, Message = "{Message}")]
+    private partial void LogFailure(string message);
 }

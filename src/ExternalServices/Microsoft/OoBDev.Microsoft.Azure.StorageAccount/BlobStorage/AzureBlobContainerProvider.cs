@@ -14,7 +14,7 @@ namespace OoBDev.Microsoft.Azure.StorageAccount.BlobStorage;
 /// <summary>
 /// Represents a provider for storing and searching content in Azure Blob storage.
 /// </summary>
-public class AzureBlobContainerProvider : IBlobContainerProvider
+public partial class AzureBlobContainerProvider : IBlobContainerProvider
 {
     private readonly BlobContainerClient _blockBlobClient;
     private readonly IOptions<AzureBlobProviderOptions> _options;
@@ -109,7 +109,7 @@ public class AzureBlobContainerProvider : IBlobContainerProvider
         await EnsureContainerExistsAsync();
         var blob = _blockBlobClient.GetBlobClient(reference.FileName);
 
-        _logger.LogInformation("upload -> {file}", reference.FileName);
+        LogUpload(reference.FileName);
         _ = await blob.UploadAsync(reference.Content, overwrite: overwrite);
 
         _ = await blob.SetHttpHeadersAsync(new BlobHttpHeaders
@@ -137,7 +137,7 @@ public class AzureBlobContainerProvider : IBlobContainerProvider
         var blob = _blockBlobClient.GetBlobClient(reference.FileName);
         if (!await blob.ExistsAsync()) return false;
 
-        _logger.LogInformation("update -> {file}", reference.FileName);
+        LogUpdate(reference.FileName);
 
         _ = await blob.SetHttpHeadersAsync(new BlobHttpHeaders
         {
@@ -179,6 +179,12 @@ public class AzureBlobContainerProvider : IBlobContainerProvider
         var blob = _blockBlobClient.GetBlobClient(path);
         await blob.DeleteIfExistsAsync();
     }
+
+    [LoggerMessage(EventId = 1, Level = LogLevel.Information, Message = "upload -> {file}")]
+    private partial void LogUpload(string file);
+
+    [LoggerMessage(EventId = 2, Level = LogLevel.Information, Message = "update -> {file}")]
+    private partial void LogUpdate(string file);
 }
 
 //public class BlobQueryProvider : IQueryProvider

@@ -17,7 +17,7 @@ namespace OoBDev.MessageQueueing.Services;
 /// <param name="serializer">The JSON serializer.</param>
 /// <param name="context">The factory for creating instances of <see cref="IMessageContext"/>.</param>
 /// <param name="logger">The logger for logging messages.</param>
-public class MessageHandlerProvider(
+public partial class MessageHandlerProvider(
     IJsonSerializer serializer,
     IMessageContextFactory context,
     ILogger<MessageHandlerProvider> logger
@@ -59,7 +59,7 @@ public class MessageHandlerProvider(
                 payload = _serializer.Deserialize(convert, payloadType) ?? payload;
             }
 
-            _logger.LogInformation($"Handle: {{{nameof(messageId)}}}", messageId);
+            LogHandle(messageId);
             context.SentId = messageId;
 
             foreach (var handler in _handlers)
@@ -67,11 +67,11 @@ public class MessageHandlerProvider(
                 await handler.HandleAsync(payload, context);
             }
 
-            _logger.LogInformation($"Handled: {{{nameof(messageId)}}}", messageId);
+            LogHandled(messageId);
         }
         else
         {
-            _logger.LogWarning($"Nothing to handle");
+            LogNothingToHandle();
         }
     }
 
@@ -94,4 +94,12 @@ public class MessageHandlerProvider(
         return this;
     }
 
+    [LoggerMessage(EventId = 1, Level = LogLevel.Information, Message = "Handle: {messageId}")]
+    private partial void LogHandle(string messageId);
+
+    [LoggerMessage(EventId = 2, Level = LogLevel.Information, Message = "Handled: {messageId}")]
+    private partial void LogHandled(string messageId);
+
+    [LoggerMessage(EventId = 3, Level = LogLevel.Warning, Message = "Nothing to handle")]
+    private partial void LogNothingToHandle();
 }

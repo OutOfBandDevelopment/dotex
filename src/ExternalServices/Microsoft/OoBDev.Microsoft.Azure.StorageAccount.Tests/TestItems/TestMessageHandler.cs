@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace OoBDev.Microsoft.Azure.StorageAccount.Tests.TestItems;
 
-public class TestMessageHandler(
+public partial class TestMessageHandler(
     ILogger<TestMessageHandler> logger,
     TestContext testContext
         ) : IMessageQueueHandler
@@ -16,8 +16,11 @@ public class TestMessageHandler(
 
     public Task HandleAsync(object message, IMessageContext context)
     {
-        _logger.LogInformation("HandleAsync: {message}", message);
+        LogHandle(_logger, message);
         testContext.AddResult(message, fileName: $"TestMessageHandler-Message-{context.Config.Path}");
         return Task.CompletedTask;
     }
+
+    [LoggerMessage(EventId = 1, Level = LogLevel.Information, Message = "HandleAsync: {message}")]
+    private static partial void LogHandle(ILogger logger, object message);
 }
