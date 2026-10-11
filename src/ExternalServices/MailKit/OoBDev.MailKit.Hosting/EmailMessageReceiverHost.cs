@@ -24,7 +24,7 @@ namespace OoBDev.MailKit.Hosting;
 /// <param name="imapClientFactory">The client factory.</param>
 /// <param name="config">imap config.</param>
 /// <param name="messageFactory">The message factory.</param>
-public class EmailMessageReceiverHost(
+public partial class EmailMessageReceiverHost(
     ILogger<EmailMessageReceiverHost> logger,
     IMessageQueueSender<ReceivedEmailMessageModel> queue,
     IImapClientFactory imapClientFactory,
@@ -62,9 +62,9 @@ public class EmailMessageReceiverHost(
         if (disposing)
         {
             // note: dispose managed state (managed objects).
-            logger.LogInformation("Request Dispose");
+            LogRequestDispose();
             _tokenSource.Cancel();
-            logger.LogInformation("Complete Dispose");
+            LogCompleteDispose();
         }
 
         // note: free unmanaged resources (unmanaged objects) and override a finalizer below.
@@ -180,12 +180,24 @@ folder.Expunge ();
     /// <returns>A task representing the stop operation.</returns>
     public async Task StopAsync(CancellationToken cancellationToken)
     {
-        logger.LogInformation("Request Stop");
+        LogRequestStop();
 
         await _tokenSource.CancelAsync();
         await Task.WhenAll(_tasks);
         _tasks.Clear();
 
-        logger.LogInformation("Completed Stop");
+        LogCompletedStop();
     }
+
+    [LoggerMessage(EventId = 1, Level = LogLevel.Information, Message = "Request Dispose")]
+    private partial void LogRequestDispose();
+
+    [LoggerMessage(EventId = 2, Level = LogLevel.Information, Message = "Complete Dispose")]
+    private partial void LogCompleteDispose();
+
+    [LoggerMessage(EventId = 3, Level = LogLevel.Information, Message = "Request Stop")]
+    private partial void LogRequestStop();
+
+    [LoggerMessage(EventId = 4, Level = LogLevel.Information, Message = "Completed Stop")]
+    private partial void LogCompletedStop();
 }

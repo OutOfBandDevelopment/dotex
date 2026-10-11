@@ -13,7 +13,7 @@ namespace OoBDev.Communications.MessageQueueing;
 /// <remarks>
 /// Initializes a new instance of the <see cref="EmailMessageHandler"/> class.
 /// </remarks>
-public class EmailMessageHandler : IMessageQueueHandler<EmailMessageModel, EmailMessageModel>
+public partial class EmailMessageHandler : IMessageQueueHandler<EmailMessageModel, EmailMessageModel>
 {
     private readonly ILogger _logger;
     private readonly ICommunicationSender<EmailMessageModel>? _email;
@@ -32,7 +32,7 @@ public class EmailMessageHandler : IMessageQueueHandler<EmailMessageModel, Email
 
         if (email == null)
         {
-            _logger.LogWarning($"No provider for type {nameof(ICommunicationSender<>)}");
+            LogNoProvider();
         }
         _email = email;
     }
@@ -48,17 +48,12 @@ public class EmailMessageHandler : IMessageQueueHandler<EmailMessageModel, Email
         if (_email == null)
         {
             //TODO: updated process to support not handing events
-            _logger.LogError(
-                $"No provider for type {nameof(ICommunicationSender<>)}. Unable to send {{subject}} for {{from}} [{{id}}] as provider is not configured",
-                message.Subject,
-                message.FromAddress,
-                message.ReferenceId
-                );
+            LogUnableToSend(message.Subject, message.FromAddress, message.ReferenceId);
             return Task.CompletedTask;
         }
 
         message.ReferenceId ??= context.CorrelationId;
-        _logger.LogInformation("Sending {subject} for {from} [{id}]", message.Subject, message.FromAddress, message.ReferenceId);
+        LogSending(message.Subject, message.FromAddress, message.ReferenceId);
         return _email.SendAsync(message);
     }
 
@@ -70,4 +65,13 @@ public class EmailMessageHandler : IMessageQueueHandler<EmailMessageModel, Email
     /// <returns>A task representing the asynchronous operation.</returns>
     public virtual Task HandleAsync(object message, IMessageContext context) =>
         message is EmailMessageModel messageModel ? HandleAsync(messageModel, context) : Task.CompletedTask;
+
+    [LoggerMessage(EventId = 1, Level = LogLevel.Warning, Message = "No provider for type ICommunicationSender<>")]
+    private partial void LogNoProvider();
+
+    [LoggerMessage(EventId = 2, Level = LogLevel.Error, Message = "No provider for type ICommunicationSender<>. Unable to send {subject} for {from} [{id}] as provider is not configured")]
+    private partial void LogUnableToSend(string? subject, string? from, string? id);
+
+    [LoggerMessage(EventId = 3, Level = LogLevel.Information, Message = "Sending {subject} for {from} [{id}]")]
+    private partial void LogSending(string? subject, string? from, string? id);
 }

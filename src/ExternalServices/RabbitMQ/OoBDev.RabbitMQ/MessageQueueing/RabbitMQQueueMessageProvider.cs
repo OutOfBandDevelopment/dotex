@@ -21,7 +21,7 @@ namespace OoBDev.RabbitMQ.MessageQueueing;
 /// <param name="serializer">The JSON serializer for message serialization and deserialization.</param>
 /// <param name="clientFactory">The factory for creating Rabbit MQ Queue clients.</param>
 /// <param name="logger">The logger for logging messages.</param>
-public class RabbitMQQueueMessageProvider(
+public partial class RabbitMQQueueMessageProvider(
     IJsonSerializer serializer,
     IQueueClientFactory clientFactory,
     ILogger<RabbitMQQueueMessageProvider> logger
@@ -79,7 +79,7 @@ public class RabbitMQQueueMessageProvider(
                 basicProperties: properties,
                 body: body);
 
-            logger.LogInformation("Enqueue: {CorrelationId}", context.CorrelationId);
+            LogEnqueue(context.CorrelationId);
 
             return context.CorrelationId;
         }
@@ -124,11 +124,11 @@ public class RabbitMQQueueMessageProvider(
                     ?? throw new NotSupportedException($"No payload found");
 
                 var message = Encoding.UTF8.GetString(body);
-                logger.LogInformation($"Dequeue: {{{nameof(deserialized.CorrelationId)}}}", deserialized.CorrelationId);
+                LogDequeue(deserialized.CorrelationId);
 
                 await _handlerProvider.HandleAsync(deserialized, deserialized.CorrelationId);
 
-                logger.LogInformation($"Dequeue: {{{nameof(deserialized.CorrelationId)}}}", deserialized.CorrelationId);
+                LogDequeue(deserialized.CorrelationId);
 
             };
 
@@ -144,4 +144,10 @@ public class RabbitMQQueueMessageProvider(
             }
         }
     }
+
+    [LoggerMessage(EventId = 1, Level = LogLevel.Information, Message = "Enqueue: {correlationId}")]
+    private partial void LogEnqueue(string? correlationId);
+
+    [LoggerMessage(EventId = 2, Level = LogLevel.Information, Message = "Dequeue: {correlationId}")]
+    private partial void LogDequeue(string? correlationId);
 }

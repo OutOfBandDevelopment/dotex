@@ -17,7 +17,7 @@ namespace OoBDev.MessageQueueing;
 /// <param name="provider">The message sender provider factory.</param>
 /// <param name="resolver">The message property resolver.</param>
 /// <param name="logger">The logger.</param>
-public class MessageSender<TChannel>(
+public partial class MessageSender<TChannel>(
     IMessageContextFactory context,
     IMessageSenderProviderFactory provider,
     IMessagePropertyResolver resolver,
@@ -65,43 +65,36 @@ public class MessageSender<TChannel>(
         );
         var provider = _provider.Sender(targetType, messageType);
 
-        _logger.LogInformation("Sending: \"{message}\" [{orgMessageId} -> {messageId}] to \"{targetType}\" from \"{callerFile}::{callerMember}\"",
-            message,
-            originMessageId,
-            correlationId,
-            targetType,
-            callerFile,
-            callerMember
-        );
+        LogSending(message, originMessageId, correlationId, targetType, callerFile, callerMember);
 
         try
         {
             var sentId = await provider.SendAsync(message, context);
 
-            _logger.LogInformation("Sent: [{orgMessageId} -> {messageId}] => ({sentId})",
-                originMessageId,
-                correlationId,
-                sentId
-            );
+            LogSent(originMessageId, correlationId, sentId);
 
             context.SentId = sentId;
         }
         catch (Exception ex)
         {
-            _logger.LogError("Error: \"{message}\" [{orgMessageId} -> {messageId}]",
-                ex.Message,
-                originMessageId,
-                correlationId
-            );
+            LogFailed(ex.Message, originMessageId, correlationId);
 
-            _logger.LogDebug("Exception: {trace}\r\n [{orgMessageId} -> {messageId}]",
-                ex.ToString(),
-                originMessageId,
-                correlationId
-            );
+            LogException(ex, originMessageId, correlationId);
 
             throw;
         }
         return context.SentId ?? context.CorrelationId ?? originMessageId ?? requestId;
     }
+
+    [LoggerMessage(EventId = 1, Level = LogLevel.Information, Message = "Sending: \"{message}\" [{orgMessageId} -> {messageId}] to \"{targetType}\" from \"{callerFile}::{callerMember}\"")]
+    private partial void LogSending(object message, string? orgMessageId, string? messageId, Type targetType, string? callerFile, string? callerMember);
+
+    [LoggerMessage(EventId = 2, Level = LogLevel.Information, Message = "Sent: [{orgMessageId} -> {messageId}] => ({sentId})")]
+    private partial void LogSent(string? orgMessageId, string? messageId, string sentId);
+
+    [LoggerMessage(EventId = 3, Level = LogLevel.Error, Message = "Failed: \"{message}\" [{orgMessageId} -> {messageId}]")]
+    private partial void LogFailed(string message, string? orgMessageId, string? messageId);
+
+    [LoggerMessage(EventId = 4, Level = LogLevel.Debug, Message = "Exception: [{orgMessageId} -> {messageId}]")]
+    private partial void LogException(Exception exception, string? orgMessageId, string? messageId);
 }

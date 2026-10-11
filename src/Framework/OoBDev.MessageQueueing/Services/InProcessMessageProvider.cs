@@ -13,7 +13,7 @@ namespace OoBDev.MessageQueueing.Services;
 /// Initializes a new instance of the <see cref="InProcessMessageProvider"/> class.
 /// </remarks>
 /// <param name="logger">The logger.</param>
-public class InProcessMessageProvider(
+public partial class InProcessMessageProvider(
     ILogger<InProcessMessageProvider> logger
     ) : IMessageSenderProvider, IMessageReceiverProvider
 {
@@ -75,14 +75,20 @@ public class InProcessMessageProvider(
         {
             if (!_queue.TryDequeue(out var wrapped))
             {
-                logger.LogInformation("Nothing received, waiting...");
+                LogNothingReceived();
                 await Task.Delay(1000, cancellationToken);  // TODO: this should be configurable
                 continue;
             }
 
             await _handlerProvider.HandleAsync(wrapped, wrapped.CorrelationId);
 
-            logger.LogInformation($"Dequeue: {{CorrelationId}}", wrapped.CorrelationId);
+            LogDequeue(wrapped.CorrelationId);
         }
     }
+
+    [LoggerMessage(EventId = 1, Level = LogLevel.Information, Message = "Nothing received, waiting...")]
+    private partial void LogNothingReceived();
+
+    [LoggerMessage(EventId = 2, Level = LogLevel.Information, Message = "Dequeue: {correlationId}")]
+    private partial void LogDequeue(string correlationId);
 }

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace OoBDev.RabbitMQ.Tests.TestItems;
 
-public class TestMessageHandlerWithProviderAndMessage(
+public partial class TestMessageHandlerWithProviderAndMessage(
     ILogger<TestMessageHandlerWithProviderAndMessage> logger,
     TestContext testContext
         ) : IMessageQueueHandler<RabbitMQQueueMessageSenderProviderTests, TestQueueMessage>
@@ -17,10 +17,13 @@ public class TestMessageHandlerWithProviderAndMessage(
 
     public Task HandleAsync(TestQueueMessage message, IMessageContext context)
     {
-        _logger.LogInformation("HandleAsync: {message}", message);
+        LogHandle(_logger, message);
         testContext.AddResult(message, fileName: $"TestMessageHandlerWithProviderAndMessage-Message-{context.Config.Path}");
         return Task.CompletedTask;
     }
 
     public Task HandleAsync(object message, IMessageContext context) => message is TestQueueMessage received ? HandleAsync(received, context) : Task.CompletedTask;
+
+    [LoggerMessage(EventId = 1, Level = LogLevel.Information, Message = "HandleAsync: {message}")]
+    private static partial void LogHandle(ILogger logger, TestQueueMessage message);
 }

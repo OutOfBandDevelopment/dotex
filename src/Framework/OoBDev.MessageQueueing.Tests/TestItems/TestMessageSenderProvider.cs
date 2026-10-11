@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace OoBDev.MessageQueueing.Tests.TestItems;
 
-public class TestMessageSenderProvider(
+public partial class TestMessageSenderProvider(
     TestContext context,
     ILogger<TestMessageSenderProvider> logger
         ) : IMessageSenderProvider
@@ -22,9 +22,12 @@ public class TestMessageSenderProvider(
     public Task<string?> SendAsync(object message, IMessageContext context)
     {
         LastContext = context;
-        _logger.LogInformation($"{nameof(SendAsync)}({{{nameof(message)}}}, {{{nameof(context)}}})", message, context);
+        LogSend(_logger, message, context);
         _context.AddResult(message, fileName: nameof(message));
         _context.AddResult(context, fileName: nameof(context));
         return Task.FromResult((string?)null);
     }
+
+    [LoggerMessage(EventId = 1, Level = LogLevel.Information, Message = "SendAsync({message}, {context})")]
+    private static partial void LogSend(ILogger logger, object message, IMessageContext context);
 }

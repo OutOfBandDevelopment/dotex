@@ -16,7 +16,7 @@ namespace OoBDev.MessageQueueing.Services;
 /// <param name="resolver">The message property resolver.</param>
 /// <param name="serviceProvider">The service provider.</param>
 /// <param name="logger">The logger.</param>
-public class MessageReceiverProviderFactory(
+public partial class MessageReceiverProviderFactory(
     IEnumerable<IMessageQueueHandler> handlers,
     IMessagePropertyResolver resolver,
     IServiceProvider serviceProvider,
@@ -65,7 +65,7 @@ public class MessageReceiverProviderFactory(
             var handlers = item.Select(i => i.handler).ToList();
             if (item.Key.providerKey == null)
             {
-                _logger.LogWarning($"No provider configured for handlers {{{nameof(handlers)}}}", handlers);
+                LogNoProvider(handlers);
                 continue;
             }
 
@@ -80,7 +80,7 @@ public class MessageReceiverProviderFactory(
 
             if (disableReceiver)
             {
-                _logger.LogWarning($"Provider disabled for handlers {{{nameof(handlers)}}}", handlers);
+                LogProviderDisabled(handlers);
                 continue;
             }
 
@@ -114,4 +114,10 @@ public class MessageReceiverProviderFactory(
 
         return provider;
     }
+
+    [LoggerMessage(EventId = 1, Level = LogLevel.Warning, Message = "No provider configured for handlers {handlers}")]
+    private partial void LogNoProvider(IEnumerable<IMessageQueueHandler> handlers);
+
+    [LoggerMessage(EventId = 2, Level = LogLevel.Warning, Message = "Provider disabled for handlers {handlers}")]
+    private partial void LogProviderDisabled(IEnumerable<IMessageQueueHandler> handlers);
 }
