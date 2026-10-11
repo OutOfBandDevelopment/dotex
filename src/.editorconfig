@@ -178,8 +178,8 @@ dotnet_sort_system_directives_first = false
 dotnet_separate_import_directive_groups = false
 dotnet_diagnostic.IDE0005.severity = warning
 # Stock .NET analyzers (AnalysisMode Recommended): rules with large existing backlogs are suggestions until fixed in batches (see TODO.md)
-dotnet_diagnostic.CA1848.severity = suggestion
-dotnet_diagnostic.CA1873.severity = suggestion
+dotnet_diagnostic.CA1848.severity = warning
+dotnet_diagnostic.CA1873.severity = warning
 dotnet_diagnostic.CA1727.severity = suggestion
 dotnet_diagnostic.CA1725.severity = suggestion
 dotnet_diagnostic.CA1051.severity = warning
