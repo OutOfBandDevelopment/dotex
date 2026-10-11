@@ -202,14 +202,14 @@ public class ProductService
 - **[Testing Guide](testing.md)** - Unit, Integration, and Simulation test patterns
 
 ### Provider Documentation
-- **[Redis Caching](../../ExternalServices/Redis/OoBDev.Redis.Caching/README.md)** - Distributed caching with StackExchange.Redis
-- **[Microsoft Caching](../../ExternalServices/Microsoft/OoBDev.Microsoft.Caching/README.md)** - In-memory caching with IMemoryCache
+- **[Redis Caching](../../../src/ExternalServices/Redis/OoBDev.Redis.Caching/README.Redis.Caching.md)** - Distributed caching with StackExchange.Redis
+- **[Microsoft Caching](../../../src/ExternalServices/Microsoft/OoBDev.Microsoft.Caching/README.Microsoft.Caching.md)** - In-memory caching with IMemoryCache
 
 ### API Reference
-- **[ICachingProvider](../../Framework/OoBDev.Caching.Abstractions/ICachingProvider.cs)** - Provider interface
-- **[ICachingManager](../../Framework/OoBDev.Caching.Abstractions/ICachingManager.cs)** - Manager interface
-- **[IsCacheableAttribute](../../Framework/OoBDev.Caching.Abstractions/IsCacheableAttribute.cs)** - Declarative caching attribute
-- **[FlushCacheAttribute](../../Framework/OoBDev.Caching.Abstractions/FlushCacheAttribute.cs)** - Cache invalidation attribute
+- **[ICachingProvider](../../../src/Framework/OoBDev.Caching.Abstractions/ICachingProvider.cs)** - Provider interface
+- **[ICachingManager](../../../src/Framework/OoBDev.Caching.Abstractions/ICachingManager.cs)** - Manager interface
+- **[IsCacheableAttribute](../../../src/Framework/OoBDev.Caching.Abstractions/IsCacheableAttribute.cs)** - Declarative caching attribute
+- **[FlushCacheAttribute](../../../src/Framework/OoBDev.Caching.Abstractions/FlushCacheAttribute.cs)** - Cache invalidation attribute
 
 ---
 
@@ -342,6 +342,6 @@ This framework was migrated from **SharedFramework** (Phase 1-5 of Caching Migra
 
 **Next Steps:**
 1. Review [Architecture Overview](architecture.md) for detailed design
-2. Choose a provider: [Redis](../../ExternalServices/Redis/OoBDev.Redis.Caching/README.md) or [Microsoft](../../ExternalServices/Microsoft/OoBDev.Microsoft.Caching/README.md)
+2. Choose a provider: [Redis](../../../src/ExternalServices/Redis/OoBDev.Redis.Caching/README.Redis.Caching.md) or [Microsoft](../../../src/ExternalServices/Microsoft/OoBDev.Microsoft.Caching/README.Microsoft.Caching.md)
 3. Follow [Configuration Guide](configuration.md) for setup
 4. Review [Testing Guide](testing.md) for best practices
