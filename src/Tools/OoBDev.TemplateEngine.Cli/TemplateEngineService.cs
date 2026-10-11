@@ -14,7 +14,7 @@ namespace OoBDev.TemplateEngine.Cli;
 /// <summary>
 /// Hosted service that processes templates with JSON or XML data files to generate output.
 /// </summary>
-public class TemplateEngineService(
+public partial class TemplateEngineService(
     ILogger<TemplateEngineService> log,
     IOptions<TemplateEngineOptions> settings,
     ITemplateEngine engine
@@ -48,11 +48,7 @@ public class TemplateEngineService(
             var data = GetData(contentType, content) ??
                 throw new NotSupportedException($"No data found: ({contentType}:{content?.Length})");
 
-            _log.LogInformation(
-                $"Loaded: {{{nameof(file)}}} for {{{nameof(_settings.Value.Template)}}}",
-                _settings.Value.InputFile,
-                _settings.Value.Template
-                );
+            LogLoaded(_settings.Value.InputFile, _settings.Value.Template);
 
             var outFile = _settings.Value.OutputFile
                 .Replace("[file]", Path.GetFileNameWithoutExtension(file), StringComparison.OrdinalIgnoreCase)
@@ -63,7 +59,7 @@ public class TemplateEngineService(
 
             var result = await engine.ApplyAsync(_settings.Value.Template, data, fileWriter);
             await fileWriter.FlushAsync(cancellationToken);
-            _log.LogInformation($"Written: {{{nameof(outFile)}}}", outFile);
+            LogWritten(outFile);
         }
     }
 
@@ -90,4 +86,10 @@ public class TemplateEngineService(
     /// <param name="cancellationToken">Token to signal cancellation.</param>
     /// <returns>A completed task.</returns>
     public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
+
+    [LoggerMessage(EventId = 1, Level = LogLevel.Information, Message = "Loaded: {file} for {template}")]
+    private partial void LogLoaded(string? file, string? template);
+
+    [LoggerMessage(EventId = 2, Level = LogLevel.Information, Message = "Written: {outFile}")]
+    private partial void LogWritten(string outFile);
 }

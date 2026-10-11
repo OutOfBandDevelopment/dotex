@@ -12,7 +12,7 @@ namespace OoBDev.LlmCodeGen.Cli;
 /// <summary>
 /// Runs the folder loop once and stops the host.
 /// </summary>
-public class LlmCodeGenService(
+public partial class LlmCodeGenService(
     IOptions<LlmCodeGenOptions> options,
     IServiceProvider services,
     IHostApplicationLifetime lifetime,
@@ -34,15 +34,15 @@ public class LlmCodeGenService(
 
             var sent = await new FolderPromptRunner(completion, loggerFactory.CreateLogger<FolderPromptRunner>())
                 .RunAsync(settings, stoppingToken);
-            log.LogInformation("done: {Count} prompts sent", sent);
+            LogDone(log, sent);
         }
         catch (OperationCanceledException)
         {
-            log.LogInformation("cancelled");
+            LogCancelled(log);
         }
         catch (Exception ex)
         {
-            log.LogError(ex, "llmcodegen failed");
+            LogFailed(log, ex);
             Environment.ExitCode = 1;
         }
         finally
@@ -50,4 +50,13 @@ public class LlmCodeGenService(
             lifetime.StopApplication();
         }
     }
+
+    [LoggerMessage(EventId = 1, Level = LogLevel.Information, Message = "done: {Count} prompts sent")]
+    private static partial void LogDone(ILogger logger, int count);
+
+    [LoggerMessage(EventId = 2, Level = LogLevel.Information, Message = "cancelled")]
+    private static partial void LogCancelled(ILogger logger);
+
+    [LoggerMessage(EventId = 3, Level = LogLevel.Error, Message = "llmcodegen failed")]
+    private static partial void LogFailed(ILogger logger, Exception ex);
 }

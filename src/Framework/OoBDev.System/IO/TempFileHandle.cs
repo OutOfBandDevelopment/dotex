@@ -8,7 +8,7 @@ namespace OoBDev.System.IO;
 /// <summary>
 /// Represents a handle for managing temporary files.
 /// </summary>
-public record TempFileHandle : ITempFile
+public partial record TempFileHandle : ITempFile
 {
     // https://github.com/mwwhited/BinaryDataDecoders/blob/6a31bae265d15ec3d61647453f50f49536a9391c/src/BinaryDataDecoders.ToolKit/IO/TempFileHandle.cs
 
@@ -55,7 +55,7 @@ public record TempFileHandle : ITempFile
 
         try
         {
-            _logger.LogInformation("Deleting {FilePath}", FilePath);
+            Log.LogDeleting(_logger, FilePath);
             File.Delete(FilePath);
         }
         catch
@@ -66,7 +66,7 @@ public record TempFileHandle : ITempFile
 
             try
             {
-                _logger.LogWarning("Deleting {FilePath} (MoveFileEx)", FilePath);
+                Log.LogDeletingOnReboot(_logger, FilePath);
                 NativeWin32Methods.MoveFileEx(FilePath, null, NativeWin32Methods.MoveFileFlags.DelayUntilReboot);
                 //scheduled for reboot so good to go
                 return;
@@ -79,5 +79,14 @@ public record TempFileHandle : ITempFile
             //something happen above so throw the original exception.
             throw;
         }
+    }
+
+    private static partial class Log
+    {
+        [LoggerMessage(EventId = 1, Level = LogLevel.Information, Message = "Deleting {FilePath}")]
+        internal static partial void LogDeleting(ILogger logger, string filePath);
+
+        [LoggerMessage(EventId = 2, Level = LogLevel.Warning, Message = "Deleting {FilePath} (MoveFileEx)")]
+        internal static partial void LogDeletingOnReboot(ILogger logger, string filePath);
     }
 }

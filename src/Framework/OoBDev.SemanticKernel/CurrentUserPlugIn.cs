@@ -9,7 +9,7 @@ namespace OoBDev.SemanticKernel;
 /// <summary>
 /// Semantic Kernel plugin that provides information about the current user.
 /// </summary>
-public class CurrentUserPlugIn : IKernelPlugIn
+public partial class CurrentUserPlugIn : IKernelPlugIn
 {
     private readonly ILogger _logger;
 
@@ -30,8 +30,11 @@ public class CurrentUserPlugIn : IKernelPlugIn
     [return: Description("current user")]
     public Task<string?> WhoAmI()
     {
-        _logger.LogInformation("Called: {method}", nameof(WhoAmI));
+        LogCalled(nameof(WhoAmI));
         return Task.FromResult<string?>(Environment.UserName);
     }
+
+    [LoggerMessage(EventId = 1, Level = LogLevel.Information, Message = "Called: {method}")]
+    private partial void LogCalled(string method);
 }
 

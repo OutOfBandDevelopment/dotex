@@ -14,7 +14,7 @@ namespace OoBDev.System.Text.Templating;
 /// <param name="sources">An enumerable collection of template sources.</param>
 /// <param name="providers">An enumerable collection of template providers.</param>
 /// <param name="logger">The logger for capturing log messages.</param>
-public class TemplateEngine(
+public partial class TemplateEngine(
     IEnumerable<ITemplateSource> sources,
     IEnumerable<ITemplateProvider> providers,
     ILogger<TemplateEngine> logger
@@ -29,11 +29,7 @@ public class TemplateEngine(
     /// <returns>The applied template context or <c>null</c> if no matching template is found.</returns>
     public virtual async Task<ITemplateContext?> ApplyAsync(string templateName, object data, Stream target)
     {
-        logger.LogInformation(
-            $"Apply {{{nameof(templateName)}}} => {{{nameof(data)}}}",
-            templateName,
-            data
-            );
+        LogApply(logger, templateName, data);
 
         var templates =
             from context in GetAll(templateName)
@@ -44,20 +40,13 @@ public class TemplateEngine(
         var template = templates.FirstOrDefault();
         if (template == default || template.context == null)
         {
-            logger.LogInformation(
-                $"No template {{{nameof(templateName)}}}",
-                templateName
-                );
+            LogNoTemplate(logger, templateName);
             return null;
         }
 
         if (await template.provider.ApplyAsync(template.context, data, target))
         {
-            logger.LogInformation(
-                $"Applied {{{nameof(templateName)}}} => {{{nameof(template)}}}",
-                templateName,
-                template
-                );
+            LogApplied(logger, templateName, template.context);
             return template.context;
         }
 
@@ -120,4 +109,13 @@ public class TemplateEngine(
         from context in source.Get(templateName)
         orderby context.Priority
         select context;
+
+    [LoggerMessage(EventId = 1, Level = LogLevel.Information, Message = "Apply {templateName} => {data}")]
+    private static partial void LogApply(ILogger logger, string templateName, object data);
+
+    [LoggerMessage(EventId = 2, Level = LogLevel.Information, Message = "No template {templateName}")]
+    private static partial void LogNoTemplate(ILogger logger, string templateName);
+
+    [LoggerMessage(EventId = 3, Level = LogLevel.Information, Message = "Applied {templateName} => {context}")]
+    private static partial void LogApplied(ILogger logger, string templateName, object context);
 }

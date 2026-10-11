@@ -9,7 +9,7 @@ namespace OoBDev.SBert;
 /// <summary>
 /// Provides sentence embeddings using SBert.
 /// </summary>
-public class SentenceEmbeddingProvider : IEmbeddingProvider
+public partial class SentenceEmbeddingProvider : IEmbeddingProvider
 {
     private readonly ISentenceEmbeddingClient _client;
     private readonly ILogger _logger;
@@ -26,7 +26,7 @@ public class SentenceEmbeddingProvider : IEmbeddingProvider
     {
         _client = client;
         _logger = logger;
-        logger.LogInformation($"connect to embeddings");
+        LogConnect();
     }
 
     private int? _length;
@@ -52,4 +52,7 @@ public class SentenceEmbeddingProvider : IEmbeddingProvider
         CancellationToken cancellationToken = default
 #endif
         ) => _client.GetEmbeddingAsync(content);
+
+    [LoggerMessage(EventId = 1, Level = LogLevel.Information, Message = "connect to embeddings")]
+    private partial void LogConnect();
 }
