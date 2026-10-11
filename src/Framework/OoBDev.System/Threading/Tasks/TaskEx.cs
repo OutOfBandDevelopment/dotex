@@ -20,7 +20,7 @@ public static class TaskEx
     public static void RunSync(this Func<Task> task)
     {
         var oldContext = SynchronizationContext.Current;
-        var synch = new ExclusiveSynchronizationContext();
+        using var synch = new ExclusiveSynchronizationContext();
         SynchronizationContext.SetSynchronizationContext(synch);
         synch.Post(async _ =>
         {
@@ -52,7 +52,7 @@ public static class TaskEx
     public static T? RunSync<T>(this Func<Task<T>> task)
     {
         var oldContext = SynchronizationContext.Current;
-        var synch = new ExclusiveSynchronizationContext();
+        using var synch = new ExclusiveSynchronizationContext();
         SynchronizationContext.SetSynchronizationContext(synch);
         T? ret = default;
         synch.Post(async _ =>
@@ -76,9 +76,10 @@ public static class TaskEx
         return ret;
     }
 
-    private class ExclusiveSynchronizationContext : SynchronizationContext
+    private sealed class ExclusiveSynchronizationContext : SynchronizationContext, IDisposable
     {
         private bool done;
+        private volatile bool _disposed;
         public Exception? InnerException { get; set; }
         private readonly AutoResetEvent workItemsWaiting = new(false);
         private readonly Queue<Tuple<SendOrPostCallback, object?>> items =
@@ -88,6 +89,8 @@ public static class TaskEx
 
         public override void Post(SendOrPostCallback d, object? state)
         {
+            if (_disposed)
+                return;
             lock (items)
             {
                 items.Enqueue(Tuple.Create(d, state));
@@ -125,5 +128,11 @@ public static class TaskEx
         }
 
         public override SynchronizationContext CreateCopy() => this;
+
+        public void Dispose()
+        {
+            _disposed = true;
+            workItemsWaiting.Dispose();
+        }
     }
 }

@@ -12,6 +12,7 @@ namespace OoBDev.Caching.Factories;
 /// </summary>
 /// <typeparam name="TInterface">The interface type being proxied.</typeparam>
 /// <typeparam name="TImplemention">The implementation type being decorated with caching.</typeparam>
+#pragma warning disable CA1000 // the typed Create mirrors DispatchProxy.Create
 public class CachedProxy<TInterface, TImplemention> : DispatchProxy
         where TImplemention : class, TInterface
 {

@@ -8,6 +8,7 @@ namespace OoBDev.System.Xml.XPath;
 /// Provides an XPathNodeIterator implementation for enumerating over a set of IXPathNavigable items.
 /// </summary>
 /// <param name="set">The collection of navigable items to iterate over.</param>
+#pragma warning disable CA1010 // XPathNodeIterator already provides the non-generic enumeration
 public class EnumerableXPathNodeIterator(IEnumerable<IXPathNavigable> set) : XPathNodeIterator
 {
     private int _pointer = -1;

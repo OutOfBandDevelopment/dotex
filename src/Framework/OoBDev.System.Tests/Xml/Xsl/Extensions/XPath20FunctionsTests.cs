@@ -198,6 +198,7 @@ public class XPath20FunctionsTests
     //        select grouped.First());
 }
 
+#pragma warning disable CA1010 // test helper deriving from XsltContext
 public class XsltExtensionContext(NameTable nameTable) : XsltContext(nameTable)
 {
     public override bool Whitespace => true;
