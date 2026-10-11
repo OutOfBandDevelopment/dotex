@@ -8,7 +8,7 @@ namespace OoBDev.Handlebars.Helpers;
 /// <summary>
 /// Represents a descriptor for a Handlebars helper that retrieves a value from a state store.
 /// </summary>
-public class GetHelperDescriptor : HelperDescriptorBase
+public partial class GetHelperDescriptor : HelperDescriptorBase
 {
     private readonly StateStore _store = new();
     private readonly ILogger _log;
@@ -36,10 +36,13 @@ public class GetHelperDescriptor : HelperDescriptorBase
     protected override HandlebarsHelper Helper => (output, context, arguments) =>
     {
         var key = arguments.ElementAtOrDefault(0)?.ToString();
-        _log.LogDebug($"get: {{{nameof(key)}}}", key);
+        LogGet(key);
         if (!string.IsNullOrWhiteSpace(key))
         {
             output.Write(_store[key]);
         }
     };
+
+    [LoggerMessage(EventId = 1, Level = LogLevel.Debug, Message = "get: {key}")]
+    private partial void LogGet(string? key);
 }

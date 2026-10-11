@@ -16,7 +16,7 @@ namespace OoBDev.DocumentConverter.Cli;
 /// <summary>
 /// Hosted service that converts documents between different formats.
 /// </summary>
-public class DocumentConverterService : IHostedService
+public partial class DocumentConverterService : IHostedService
 {
     private readonly ILogger _log;
     private readonly IOptions<DocumentConverterOptions> _settings;
@@ -63,7 +63,10 @@ public class DocumentConverterService : IHostedService
             ?.ContentTypes[0] ?? throw new InvalidOperationException("Unable to identify output file type")
             ;
 
-        _log.LogInformation("convert \"{sourceFileType}\" to \"{targetFileType}\" \"{inFile}\"", sourceFileType, targetFileType, Path.GetFileName(_settings.Value.InputPath));
+        #pragma warning disable CA1873 // guarded by IsEnabled
+        if (_log.IsEnabled(LogLevel.Information))
+            LogConvert(sourceFileType, targetFileType, Path.GetFileName(_settings.Value.InputPath));
+        #pragma warning restore CA1873
 
         var sourcePath = _settings.Value.InputPath ?? throw new InvalidOperationException("Must provide input path");
 
@@ -77,14 +80,17 @@ public class DocumentConverterService : IHostedService
         {
             await using var targetOut = File.Create(_settings.Value.OutputPath ?? throw new InvalidOperationException("Must provide output path"));
 
-            _log.LogInformation("converted \"{sourceFileType}\" to \"{targetFileType}\" \"{outFile}\"", sourceFileType, targetFileType, Path.GetFileName(_settings.Value.OutputPath));
+            #pragma warning disable CA1873 // guarded by IsEnabled
+            if (_log.IsEnabled(LogLevel.Information))
+                LogConverted(sourceFileType, targetFileType, Path.GetFileName(_settings.Value.OutputPath));
+            #pragma warning restore CA1873
             await target.CopyToAsync(targetOut, cancellationToken);
             await targetOut.FlushAsync(cancellationToken);
             targetOut.Close();
         }
         else
         {
-            _log.LogInformation("no conversion \"{sourceFileType}\" to \"{targetFileType}\"", sourceFileType, targetFileType);
+            LogNoConversion(sourceFileType, targetFileType);
         }
     }
 
@@ -117,4 +123,13 @@ public class DocumentConverterService : IHostedService
     /// <param name="cancellationToken">Token to signal cancellation.</param>
     /// <returns>A completed task.</returns>
     public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
+
+    [LoggerMessage(EventId = 1, Level = LogLevel.Information, Message = "convert \"{sourceFileType}\" to \"{targetFileType}\" \"{inFile}\"")]
+    private partial void LogConvert(string sourceFileType, string targetFileType, string? inFile);
+
+    [LoggerMessage(EventId = 2, Level = LogLevel.Information, Message = "converted \"{sourceFileType}\" to \"{targetFileType}\" \"{outFile}\"")]
+    private partial void LogConverted(string sourceFileType, string targetFileType, string? outFile);
+
+    [LoggerMessage(EventId = 3, Level = LogLevel.Information, Message = "no conversion \"{sourceFileType}\" to \"{targetFileType}\"")]
+    private partial void LogNoConversion(string sourceFileType, string targetFileType);
 }

@@ -10,7 +10,7 @@ namespace OoBDev.Ollama;
 /// <summary>
 /// Provides extension methods for the <see cref="OllamaApiClient"/> class.
 /// </summary>
-public static class OllamaApiClientExtensions
+public static partial class OllamaApiClientExtensions
 {
     /// <summary>
     /// Ensures that the specified model exists in the Ollama API client.
@@ -26,15 +26,15 @@ public static class OllamaApiClientExtensions
         ILogger logger
         )
     {
-        logger.LogInformation("list models");
+        LogListModels(logger);
         var models = await ollama.ListLocalModelsAsync();
         foreach (var model in models)
-            logger.LogInformation("model: {model}, size: {size} ", model.Name, model.Size);
+            LogModel(logger, model.Name, model.Size);
 
-        logger.LogInformation("create maybe");
+        LogCreateMaybe(logger);
         if (models.Any(m => !m.Name.StartsWith(modelName, StringComparison.Ordinal)))
             await ollama.CopyModelAsync("llama2", modelName); //TODO: fix this
-        logger.LogInformation("Select model: {modelName}", modelName);
+        LogSelectModel(logger, modelName);
 
         //ollama.SelectedModel = modelName;
 
@@ -105,4 +105,16 @@ public static class OllamaApiClientExtensions
         string text,
         string modelName) =>
             client.GetEmbeddingDoubleAsync(text, modelName).Result;
+
+    [LoggerMessage(EventId = 1, Level = LogLevel.Information, Message = "list models")]
+    private static partial void LogListModels(ILogger logger);
+
+    [LoggerMessage(EventId = 2, Level = LogLevel.Information, Message = "model: {model}, size: {size} ")]
+    private static partial void LogModel(ILogger logger, string model, long size);
+
+    [LoggerMessage(EventId = 3, Level = LogLevel.Information, Message = "create maybe")]
+    private static partial void LogCreateMaybe(ILogger logger);
+
+    [LoggerMessage(EventId = 4, Level = LogLevel.Information, Message = "Select model: {modelName}")]
+    private static partial void LogSelectModel(ILogger logger, string modelName);
 }

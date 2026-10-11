@@ -10,7 +10,7 @@ namespace OoBDev.Documents.Conversion;
 /// <summary>
 /// Represents a document conversion service.
 /// </summary>
-public class DocumentConversion : IDocumentConversion
+public partial class DocumentConversion : IDocumentConversion
 {
     private readonly IDocumentConversionChainBuilder _chain;
     private readonly IDocumentTypeTools _tools;
@@ -54,7 +54,7 @@ public class DocumentConversion : IDocumentConversion
 
         if (string.Equals(sourceContentType, destinationContentType, StringComparison.OrdinalIgnoreCase))
         {
-            _logger.LogInformation("Bypass as input and output types match {source} -> {destination}", sourceContentType, destinationContentType);
+            LogBypass(sourceContentType, destinationContentType);
             await source.CopyToAsync(destination);
             return true;
         }
@@ -62,21 +62,20 @@ public class DocumentConversion : IDocumentConversion
         ChainStep[] steps;
         if (_cache.TryGetValue((sourceContentType, destinationContentType), out var cached))
         {
-            _logger.LogInformation("Use cached chain {source} -> {destination}", sourceContentType, destinationContentType);
+            LogCachedChain(sourceContentType, destinationContentType);
             steps = cached;
         }
         else
         {
-            _logger.LogInformation("Build chain {source} -> {destination}", sourceContentType, destinationContentType);
+            LogBuildChain(sourceContentType, destinationContentType);
             steps = _chain.Steps(sourceContentType, destinationContentType);
             _cache.TryAdd((sourceContentType, destinationContentType), steps);
         }
 
-        _logger.LogInformation(
-            "Chain {source} -> {destination} [{steps}]",
-            sourceContentType, destinationContentType,
-            string.Join(';', steps.Select(s => s.Handler))
-            );
+        #pragma warning disable CA1873 // guarded by IsEnabled
+        if (_logger.IsEnabled(LogLevel.Information))
+            LogChain(sourceContentType, destinationContentType, string.Join(';', steps.Select(s => s.Handler)));
+        #pragma warning restore CA1873
 
         if (steps.Length == 0)
         {
@@ -85,14 +84,14 @@ public class DocumentConversion : IDocumentConversion
                 var detectedType = await _tools.DetectContentTypeAsync(source);
                 if (detectedType is not null && !string.Equals(sourceContentType, detectedType, StringComparison.OrdinalIgnoreCase))
                 {
-                    _logger.LogWarning("Provided \"{source}\" but detected \"{detected}\" to try again", sourceContentType, detectedType);
+                    LogDetected(sourceContentType, detectedType);
                     source.Position = 0;
                     return await InternalConvertAsync(source, detectedType, destination, destinationContentType, false);
                 }
             }
             else
             {
-                _logger.LogError("Conversion from \"{sourceContentType}\" to \"{destinationContentType}\" is not supported", sourceContentType, destinationContentType);
+                LogNotSupported(sourceContentType, destinationContentType);
                 throw new NotSupportedException($"Conversion from \"{sourceContentType}\" to \"{destinationContentType}\" is not supported");
             }
         }
@@ -118,5 +117,23 @@ public class DocumentConversion : IDocumentConversion
 
         return false;
     }
+
+    [LoggerMessage(EventId = 1, Level = LogLevel.Information, Message = "Bypass as input and output types match {source} -> {destination}")]
+    private partial void LogBypass(string source, string destination);
+
+    [LoggerMessage(EventId = 2, Level = LogLevel.Information, Message = "Use cached chain {source} -> {destination}")]
+    private partial void LogCachedChain(string source, string destination);
+
+    [LoggerMessage(EventId = 3, Level = LogLevel.Information, Message = "Build chain {source} -> {destination}")]
+    private partial void LogBuildChain(string source, string destination);
+
+    [LoggerMessage(EventId = 4, Level = LogLevel.Information, Message = "Chain {source} -> {destination} [{steps}]")]
+    private partial void LogChain(string source, string destination, string steps);
+
+    [LoggerMessage(EventId = 5, Level = LogLevel.Warning, Message = "Provided \"{source}\" but detected \"{detected}\" to try again")]
+    private partial void LogDetected(string source, string detected);
+
+    [LoggerMessage(EventId = 6, Level = LogLevel.Error, Message = "Conversion from \"{sourceContentType}\" to \"{destinationContentType}\" is not supported")]
+    private partial void LogNotSupported(string sourceContentType, string destinationContentType);
 }
 
