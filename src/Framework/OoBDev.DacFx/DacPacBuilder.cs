@@ -178,7 +178,7 @@ public class DacPacBuilder : IDacPacBuilder
     public XElement BuildModel(Assembly assembly, string assemblyFile, string? pdbFile)
     {
         var realAssemblyName = assembly.FullName?.Split(',').First()
-            ?? throw new ApplicationException("Assembly name is required");
+            ?? throw new InvalidOperationException("Assembly name is required");
 
         var dataSchemaModel = new XElement(
             ns + "DataSchemaModel",

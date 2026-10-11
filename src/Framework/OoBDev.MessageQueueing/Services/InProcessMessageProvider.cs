@@ -68,7 +68,7 @@ public class InProcessMessageProvider(
 
         if (_handlerProvider == null)
         {
-            throw new ApplicationException($"{nameof(IMessageHandlerProvider)} is not provided");
+            throw new InvalidOperationException($"{nameof(IMessageHandlerProvider)} is not provided");
         }
 
         while (!newCancellationToken.IsCancellationRequested)

@@ -12,67 +12,67 @@ public struct LocalFileHeader
     /// <summary>
     /// Local file header signature (0x04034b50).
     /// </summary>
-    public int Signature;
+    public int Signature { get; set; }
 
     /// <summary>
     /// Version needed to extract the file.
     /// </summary>
-    public short Version;
+    public short Version { get; set; }
 
     /// <summary>
     /// General purpose bit flags.
     /// </summary>
-    public short BitFlags;
+    public short BitFlags { get; set; }
 
     /// <summary>
     /// Compression method used for this file.
     /// </summary>
-    public CompressionMethodType CompressionMethod;
+    public CompressionMethodType CompressionMethod { get; set; }
 
     /// <summary>
     /// Last modification time of the file (MS-DOS format).
     /// </summary>
-    public short LastModifyTime;
+    public short LastModifyTime { get; set; }
 
     /// <summary>
     /// Last modification date of the file (MS-DOS format).
     /// </summary>
-    public short LastModifyDate;
+    public short LastModifyDate { get; set; }
 
     /// <summary>
     /// CRC-32 checksum of the uncompressed file data.
     /// </summary>
-    public int CRC32;
+    public int CRC32 { get; set; }
 
     /// <summary>
     /// Size of the compressed file data in bytes.
     /// </summary>
-    public int CompressedSize;
+    public int CompressedSize { get; set; }
 
     /// <summary>
     /// Size of the uncompressed file data in bytes.
     /// </summary>
-    public int UncompressedSize;
+    public int UncompressedSize { get; set; }
 
     /// <summary>
     /// Length of the file name field in bytes.
     /// </summary>
-    public short FileNameLength;
+    public short FileNameLength { get; set; }
 
     /// <summary>
     /// Length of the extra field in bytes.
     /// </summary>
-    public short ExtraFieldLength;
+    public short ExtraFieldLength { get; set; }
 
     /// <summary>
     /// The file name.
     /// </summary>
-    public string FileName;
+    public string FileName { get; set; }
 
     /// <summary>
     /// The extra field data.
     /// </summary>
-    public string ExtraField;
+    public string ExtraField { get; set; }
 
     /// <summary>
     /// Gets the total size of the header in bytes, including variable-length fields.

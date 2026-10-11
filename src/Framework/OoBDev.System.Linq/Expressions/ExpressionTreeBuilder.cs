@@ -143,7 +143,7 @@ public class ExpressionTreeBuilder<TModel>(
         }
 
         var queryParameterType = queryParameter?.GetType() ??
-            throw new NullReferenceException($"{nameof(queryParameter)} may not be null");
+            throw new InvalidOperationException($"{nameof(queryParameter)} may not be null");
 
         if (expressionOperator == Operators.InSet)
         {

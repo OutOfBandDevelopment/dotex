@@ -40,9 +40,9 @@ public class MarkdownToHtmlConversionHandlerTests
         var converter = ActivatorUtilities.CreateInstance<MarkdownToHtmlConversionHandler>(serviceProvider);
 
         var resource = GetType().Assembly.GetManifestResourceNames().FirstOrDefault(l => l.EndsWith($".{resourceName}"))
-            ?? throw new ApplicationException($"missing .{resourceName} resource");
+            ?? throw new InvalidOperationException($"missing .{resourceName} resource");
         using var stream = GetType().Assembly.GetManifestResourceStream(resource)
-            ?? throw new ApplicationException($"missing .{resourceName} resource");
+            ?? throw new InvalidOperationException($"missing .{resourceName} resource");
 
         using var htmlStream = new MemoryStream();
         stream.CopyTo(htmlStream);

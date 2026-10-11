@@ -40,11 +40,11 @@ public abstract class ServerBase : IServerBase
     /// Starts the TCP server and begins listening for client connections.
     /// Initializes the TCP listener and starts the service loop for accepting clients.
     /// </summary>
-    /// <exception cref="ApplicationException">Thrown if the server is already started.</exception>
+    /// <exception cref="InvalidOperationException">Thrown if the server is already started.</exception>
     public void Start()
     {
         if (_listener != null)
-            throw new ApplicationException("Already Started!");
+            throw new InvalidOperationException("Already Started!");
         Console.WriteLine($"{GetType()}::Starting: {Environment.CurrentManagedThreadId} [{IPAddress}:{Port}]");
         _listener = new TcpListener(IPAddress, Port);
         _listener.Start();

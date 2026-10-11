@@ -88,14 +88,14 @@ public static class EnumExtensions
             Id = Convert.ToInt32(@enum, CultureInfo.InvariantCulture),
 
             Name = First(displayValues?.Name, @enum.ToString().Replace("_", " ")) ??
-                throw new NullReferenceException(nameof(EnumModel<>.Name)),
+                throw new InvalidOperationException(nameof(EnumModel<>.Name)),
             Code = First(
                 enumValue?.Name,
                 enumMember?.Value,
                 displayValues?.ShortName,
                 displayValues?.Name,
                 @enum.ToString().ToUpperInvariant()) ??
-                throw new NullReferenceException(nameof(EnumModel<>.Code)),
+                throw new InvalidOperationException(nameof(EnumModel<>.Code)),
             Description = First(description, displayValues?.Description),
             Order = displayValues?.GetOrder() ?? 0,
 

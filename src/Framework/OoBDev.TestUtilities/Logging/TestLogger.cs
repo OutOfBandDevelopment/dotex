@@ -13,12 +13,12 @@ public class TestLogger : ILogger
     /// <summary>
     /// The TestContext to write log messages to.
     /// </summary>
-    protected readonly TestContext _context;
+    private readonly TestContext _context;
 
     /// <summary>
     /// The logger category name.
     /// </summary>
-    protected readonly string? _category;
+    private readonly string? _category;
 
     /// <summary>
     /// Initializes a new instance of the TestLogger class with a TestContext.

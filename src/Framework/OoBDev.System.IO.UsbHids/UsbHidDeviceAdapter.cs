@@ -17,7 +17,7 @@ public class UsbHidDeviceAdapter(HidDevice device) : IDeviceAdapter
     public string Path => device.DevicePath;
 
     /// <inheritdoc/>
-    public Stream Stream { get => field ?? throw new ApplicationException($"Stream for {device} is not open"); private set; }
+    public Stream Stream { get => field ?? throw new InvalidOperationException($"Stream for {device} is not open"); private set; }
 
     //public void Open() => _device.Open();
 

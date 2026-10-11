@@ -44,7 +44,7 @@ public class CacheableFactory : ICacheableFactory
     /// <typeparam name="TInterface">The interface type to proxy.</typeparam>
     /// <typeparam name="TImplemention">The implementation type to wrap with caching behavior.</typeparam>
     /// <returns>A proxy instance that intercepts method calls and applies caching logic.</returns>
-    /// <exception cref="ApplicationException">Thrown when unable to create an instance.</exception>
+    /// <exception cref="InvalidOperationException">Thrown when unable to create an instance.</exception>
     public TInterface Create<TInterface, TImplemention>()
         where TImplemention : class, TInterface =>
         ActivatorUtilities.CreateInstance<TImplemention>(_serviceProvider) switch
@@ -55,6 +55,6 @@ public class CacheableFactory : ICacheableFactory
                 _cachingManager,
                 _serviceProvider.GetRequiredService<ILogger<TImplemention>>() //TODO: what if this took ILoggerFactory instead
                 ),
-            _ => throw new ApplicationException($"Unable to created instance of {typeof(TImplemention)}")
+            _ => throw new InvalidOperationException($"Unable to created instance of {typeof(TImplemention)}")
         };
 }

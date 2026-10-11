@@ -127,7 +127,7 @@ public class XPathExpressionBuilder
             RelationalOperationTypes.LessThan => "&lt;",
             RelationalOperationTypes.LessThanOrEqual => "&lt;=",
             RelationalOperationTypes.NotEqual => "!=",
-            _ => throw new ApplicationException(segment.Value.ToString())
+            _ => throw new InvalidOperationException(segment.Value.ToString())
         };
 
     private string Visit(LogicOperationTypePathSegment segment, IPathSegment? parent) =>
@@ -135,7 +135,7 @@ public class XPathExpressionBuilder
         {
             LogicOperationTypes.And => "and",
             LogicOperationTypes.Or => "or",
-            _ => throw new ApplicationException(segment.Value.ToString())
+            _ => throw new InvalidOperationException(segment.Value.ToString())
         };
 
     private string Visit(RelationBinaryOperationPathSegment segment, IPathSegment? parent) =>

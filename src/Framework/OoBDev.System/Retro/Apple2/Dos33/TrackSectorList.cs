@@ -42,12 +42,12 @@ public struct TrackSectorList
     /// <summary>
     /// $01         Track number of next T/S List sector if one was needed or zero if no more T/S List sectors
     /// </summary>
-    public readonly byte NextTrack;
+    public byte NextTrack { get; }
 
     /// <summary>
     /// $02         Sector number of next T/S List sector(if present)
     /// </summary>
-    public readonly byte NextSector;
+    public byte NextSector { get; }
 
     /// <summary>
     /// $03-$04     Not used
@@ -56,7 +56,7 @@ public struct TrackSectorList
     /// <summary>
     /// $05-$06     Sector offset in this file of the first sector described by this list (probably 0000, meaning zero bytes offset from byte $0C)
     /// </summary>
-    public readonly ushort SectorOffset;
+    public ushort SectorOffset { get; }
     /// <summary>
     /// $07-$0B     Not used
     /// </summary>
@@ -67,5 +67,5 @@ public struct TrackSectorList
     /// $0E-$0F     Track and sector of second data sector or zeros
     /// $10-$FF Up to 120 more Track/Sector pairs
     /// </summary>
-    public readonly TrackSector[] TrackSectorPairs;
+    public TrackSector[] TrackSectorPairs { get; }
 }

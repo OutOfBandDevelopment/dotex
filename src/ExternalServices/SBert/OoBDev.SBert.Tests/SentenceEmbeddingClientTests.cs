@@ -50,9 +50,9 @@ public class SentenceEmbeddingClientTests
         var client = BuildClient(url);
 
         var resource = GetType().Assembly.GetManifestResourceNames().FirstOrDefault(l => l.EndsWith(".Sentences.txt"))
-            ?? throw new ApplicationException("missing .sentences.txt resource");
+            ?? throw new InvalidOperationException("missing .sentences.txt resource");
         using var stream = GetType().Assembly.GetManifestResourceStream(resource)
-            ?? throw new ApplicationException("missing .sentences.txt resource");
+            ?? throw new InvalidOperationException("missing .sentences.txt resource");
         using var reader = new StreamReader(stream);
 
         var dict = new Dictionary<string, ReadOnlyMemory<double>>();

@@ -91,7 +91,7 @@ public class MessageReceiverProviderFactory(
                 wrapped
                 .SetHandlers(handlers)
                 .SetChannelType(item.Key.channelType)
-                .SetConfig(config ?? throw new ApplicationException($"Missing Configuration"));
+                .SetConfig(config ?? throw new InvalidOperationException($"Missing Configuration"));
             }
 
             receiver.SetHandlerProvider(handler);
@@ -107,7 +107,7 @@ public class MessageReceiverProviderFactory(
         if (provider == null)
         {
             var providerType = Type.GetType(providerKey, true) ??
-                throw new ApplicationException($"Unable to resolve type for {providerKey}");
+                throw new InvalidOperationException($"Unable to resolve type for {providerKey}");
 
             provider = (IMessageReceiverProvider)ActivatorUtilities.CreateInstance(serviceProvider, providerType);
         }

@@ -14,7 +14,7 @@ public interface IQueueClientFactory
     /// </summary>
     /// <param name="config">The configuration section containing connection string and queue name.</param>
     /// <returns>A new instance of <see cref="QueueClient"/> for the specified Azure Storage Queue.</returns>
-    /// <exception cref="ApplicationException">
+    /// <exception cref="InvalidOperationException">
     /// Thrown if the required configuration values ("ConnectionString" or "QueueName") are missing.
     /// </exception>
     QueueClient Create(IConfigurationSection config);

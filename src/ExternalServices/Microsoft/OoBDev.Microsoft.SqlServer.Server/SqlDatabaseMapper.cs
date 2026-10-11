@@ -64,7 +64,7 @@ public class SqlDatabaseMapper : IDatabaseMapper
         var attribute = typeof(T).GetCustomAttribute<ConnectionStringNameAttribute>() ??
             throw new NotSupportedException($"Missing {nameof(ConnectionStringNameAttribute)} on type {typeof(T)}");
         return _configuration.GetConnectionString(attribute.ConnectionStringName) ??
-            throw new ApplicationException($"Missing Connection string for {attribute.ConnectionStringName}");
+            throw new InvalidOperationException($"Missing Connection string for {attribute.ConnectionStringName}");
     }
 
     /// <inheritdoc/>

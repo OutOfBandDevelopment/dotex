@@ -16,7 +16,7 @@ internal static class DoubleLinkedListEx
     /// <returns></returns>
     public static IDoubleLinkedList<T> Rewind<T>(this IDoubleLinkedList<T> current)
     {
-        while (current.Previous != null) current = current.Previous ?? throw new NullReferenceException();
+        while (current.Previous != null) current = current.Previous ?? throw new InvalidOperationException();
         return current;
     }
     /// <summary>
@@ -27,7 +27,7 @@ internal static class DoubleLinkedListEx
     /// <returns></returns>
     public static IDoubleLinkedList<T> FastForward<T>(this IDoubleLinkedList<T> current)
     {
-        while (current.Next != null) current = current.Next ?? throw new NullReferenceException();
+        while (current.Next != null) current = current.Next ?? throw new InvalidOperationException();
         return current;
     }
 
@@ -55,7 +55,7 @@ internal static class DoubleLinkedListEx
     /// <returns></returns>
     public static IDoubleLinkedList<T> Back<T>(this IDoubleLinkedList<T> current, int count)
     {
-        while (current.Previous != null && count-- > 0) current = current.Previous ?? throw new NullReferenceException();
+        while (current.Previous != null && count-- > 0) current = current.Previous ?? throw new InvalidOperationException();
         return current;
     }
 
@@ -68,7 +68,7 @@ internal static class DoubleLinkedListEx
     /// <returns></returns>
     public static IDoubleLinkedList<T> Forward<T>(this IDoubleLinkedList<T> current, int count)
     {
-        while (current.Next != null && count-- > 0) current = current.Next ?? throw new NullReferenceException();
+        while (current.Next != null && count-- > 0) current = current.Next ?? throw new InvalidOperationException();
         return current;
     }
 

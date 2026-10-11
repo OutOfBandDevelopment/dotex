@@ -16,7 +16,7 @@ public class QueueClientFactory : IQueueClientFactory
     /// </summary>
     /// <param name="config">The configuration section containing connection string and queue name.</param>
     /// <returns>A new instance of <see cref="IConnection"/> and <see cref="IChannel"/> for the specified Rabbit MQ Queue.</returns>
-    /// <exception cref="ApplicationException">
+    /// <exception cref="InvalidOperationException">
     /// Thrown if the required configuration values ("ConnectionString" or "QueueName") are missing.
     /// </exception>
     public async Task<(IConnection connection, IChannel channel, string queueName)> CreateAsync(IConfigurationSection config)

@@ -33,7 +33,7 @@ public class MessageHandlerProvider(
     /// <summary>
     /// Gets the configuration section associated with the message handler.
     /// </summary>
-    public IConfigurationSection Config { get => field ?? throw new ApplicationException($"Missing Configuration"); private set; } = null!;
+    public IConfigurationSection Config { get => field ?? throw new InvalidOperationException($"Missing Configuration"); private set; } = null!;
 
     /// <summary>
     /// Handles the specified queue message by invoking each registered message handler.
@@ -46,9 +46,9 @@ public class MessageHandlerProvider(
         if (message != null)
         {
             var context = _context.Create(
-                _channelType ?? throw new ApplicationException("No channel type"),
+                _channelType ?? throw new InvalidOperationException("No channel type"),
                 message,
-                Config ?? throw new ApplicationException("No channel configuration")
+                Config ?? throw new InvalidOperationException("No channel configuration")
                 );
 
             var payloadType = message.PayloadType == null ? null : Type.GetType(message.PayloadType);
@@ -90,7 +90,7 @@ public class MessageHandlerProvider(
 
     IMessageHandlerProviderWrapped IMessageHandlerProviderWrapped.SetConfig(IConfigurationSection config)
     {
-        Config = config ?? throw new ApplicationException($"Missing Configuration");
+        Config = config ?? throw new InvalidOperationException($"Missing Configuration");
         return this;
     }
 

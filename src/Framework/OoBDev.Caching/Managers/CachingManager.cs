@@ -37,7 +37,7 @@ public class CachingManager : ICachingManager
         if (isCachableAttribute != null)
         {
             return _formatter.Format(isCachableAttribute.KeyFormatter, method, args) ??
-                throw new NullReferenceException($"Unable to creating caching key");
+                throw new InvalidOperationException($"Unable to creating caching key");
         }
 
         var flushCacheAttribute = method.GetCustomAttribute<FlushCacheAttribute>();
@@ -45,7 +45,7 @@ public class CachingManager : ICachingManager
         {
             if (!string.IsNullOrWhiteSpace(flushCacheAttribute.KeyFormatter))
                 return _formatter.Format(flushCacheAttribute.KeyFormatter, method, args) ??
-                    throw new NullReferenceException($"Unable to creating caching key");
+                    throw new InvalidOperationException($"Unable to creating caching key");
 
             var targetMethod = flushCacheAttribute.MethodName == null ? null :
                 flushCacheAttribute.TargetClass?.GetMethod(flushCacheAttribute.MethodName, [.. method.GetParameters().Select(p => p.ParameterType)]);
@@ -53,7 +53,7 @@ public class CachingManager : ICachingManager
                 return BuildKey(targetMethod, args);
         }
 
-        throw new ApplicationException("Unable resolve Caching Key");
+        throw new InvalidOperationException("Unable resolve Caching Key");
     }
 
     /// <inheritdoc/>

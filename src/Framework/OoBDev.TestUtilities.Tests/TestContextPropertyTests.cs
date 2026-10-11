@@ -53,7 +53,7 @@ public class TestContextPropertyTests
     [TestMethod]
     [TestCategory(TestCategories.Unit)]
     public void GetRequiredProperty_Missing_Throws() =>
-        Assert.Throws<ApplicationException>(() => TestContext.GetRequiredProperty<int>(Missing));
+        Assert.Throws<InvalidOperationException>(() => TestContext.GetRequiredProperty<int>(Missing));
 
     [TestMethod]
     [TestCategory(TestCategories.Unit)]
