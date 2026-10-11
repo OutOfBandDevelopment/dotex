@@ -217,7 +217,7 @@ dotnet_diagnostic.CA5350.severity = suggestion
 dotnet_diagnostic.CA5351.severity = suggestion
 # Meziantou.Analyzer: rules with an existing backlog are suggestions until fixed in batches (see TODO.md); every other MA rule is a warning
 dotnet_diagnostic.MA0002.severity = suggestion
-dotnet_diagnostic.MA0004.severity = suggestion
+dotnet_diagnostic.MA0004.severity = warning
 dotnet_diagnostic.MA0006.severity = suggestion
 dotnet_diagnostic.MA0009.severity = suggestion
 dotnet_diagnostic.MA0011.severity = suggestion
@@ -255,3 +255,10 @@ dotnet_diagnostic.OOB0001.severity = none
 
 [**/OoBDev.TestUtilities/**.cs]
 dotnet_diagnostic.OOB0001.severity = none
+
+# Library layers append ConfigureAwait(false); applications, hosts and ASP.NET Core code do not need it
+[{Tools,Examples}/**.cs]
+dotnet_diagnostic.MA0004.severity = none
+
+[Framework/OoBDev.AspNetCore*/**.cs]
+dotnet_diagnostic.MA0004.severity = none

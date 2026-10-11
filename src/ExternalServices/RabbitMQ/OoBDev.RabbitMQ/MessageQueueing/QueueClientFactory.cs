@@ -56,8 +56,8 @@ public class QueueClientFactory : IQueueClientFactory
             factory.HandshakeContinuationTimeout = TimeSpan.FromMilliseconds(handshakeTimeout);
         }
 
-        var connection = await factory.CreateConnectionAsync();
-        var channel = await connection.CreateChannelAsync();
+        var connection = await factory.CreateConnectionAsync().ConfigureAwait(false);
+        var channel = await connection.CreateChannelAsync().ConfigureAwait(false);
 
         var queueName = config["QueueName"] ?? throw new ConfigurationMissingException($"{config.Path}:QueueName");
 

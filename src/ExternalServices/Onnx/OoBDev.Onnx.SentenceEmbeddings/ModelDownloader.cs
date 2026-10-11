@@ -7,6 +7,9 @@ using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 
+// await using declarations cannot take ConfigureAwait(false)
+#pragma warning disable MA0004
+
 namespace OoBDev.Onnx.SentenceEmbeddings;
 
 /// <summary>

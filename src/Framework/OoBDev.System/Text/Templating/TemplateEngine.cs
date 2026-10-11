@@ -44,7 +44,7 @@ public partial class TemplateEngine(
             return null;
         }
 
-        if (await template.provider.ApplyAsync(template.context, data, target))
+        if (await template.provider.ApplyAsync(template.context, data, target).ConfigureAwait(false))
         {
             LogApplied(logger, templateName, template.context);
             return template.context;
@@ -63,7 +63,7 @@ public partial class TemplateEngine(
     public virtual async Task<bool> ApplyAsync(ITemplateContext context, object data, Stream target)
     {
         var provider = providers.FirstOrDefault(p => p.CanApply(context));
-        return provider != null && await provider.ApplyAsync(context, data, target);
+        return provider != null && await provider.ApplyAsync(context, data, target).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -75,7 +75,7 @@ public partial class TemplateEngine(
     public virtual async Task<string?> ApplyAsync(string templateName, object data)
     {
         using var ms = new MemoryStream();
-        var context = await ApplyAsync(templateName, data, ms);
+        var context = await ApplyAsync(templateName, data, ms).ConfigureAwait(false);
         return context == null ? null : Encoding.UTF8.GetString(ms.ToArray());
     }
 
@@ -88,7 +88,7 @@ public partial class TemplateEngine(
     public virtual async Task<string?> ApplyAsync(ITemplateContext context, object data)
     {
         using var ms = new MemoryStream();
-        return !await ApplyAsync(context, data, ms) ? null : Encoding.UTF8.GetString(ms.ToArray());
+        return !await ApplyAsync(context, data, ms).ConfigureAwait(false) ? null : Encoding.UTF8.GetString(ms.ToArray());
     }
 
     /// <summary>

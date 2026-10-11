@@ -54,12 +54,12 @@ public class DocumentSummaryGenerationProvider
         foreach (var chunk in chunks)
         {
             x++;
-            var result = await GetCompletionAsync(_modelName, _promptTemplate, chunk);
+            var result = await GetCompletionAsync(_modelName, _promptTemplate, chunk).ConfigureAwait(false);
             sb.Append(result).Append(' ');
         }
         if (x <= 1)
             return sb.ToString();
-        var final = await GetCompletionAsync(_modelName, _promptTemplate, sb.ToString());
+        var final = await GetCompletionAsync(_modelName, _promptTemplate, sb.ToString()).ConfigureAwait(false);
         return final;
     }
 
@@ -67,7 +67,7 @@ public class DocumentSummaryGenerationProvider
     {
         var prompt = string.Format(CultureInfo.InvariantCulture, promptTemplate, content);
 
-        var completion = await _messageCompletion.GetCompletionAsync(modelName, prompt);
+        var completion = await _messageCompletion.GetCompletionAsync(modelName, prompt).ConfigureAwait(false);
 
         return completion;
     }

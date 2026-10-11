@@ -97,7 +97,7 @@ public class HandlebarsTemplateProvider(
             AutoFlush = true,
         };
         compiled(writer, context: data, data: context);
-        await writer.FlushAsync();
+        await writer.FlushAsync().ConfigureAwait(false);
         return true;
     }
 }

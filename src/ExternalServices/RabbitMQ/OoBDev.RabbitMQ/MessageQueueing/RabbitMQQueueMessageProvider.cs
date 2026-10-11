@@ -37,7 +37,7 @@ public partial class RabbitMQQueueMessageProvider(
     /// <returns>The message ID if the send operation is successful; otherwise, <c>null</c>.</returns>
     public async Task<string?> SendAsync(object message, IMessageContext context)
     {
-        var (connection, channel, queueName) = await clientFactory.CreateAsync(context.Config);
+        var (connection, channel, queueName) = await clientFactory.CreateAsync(context.Config).ConfigureAwait(false);
 
         var wrapped = new WrappedQueueMessage
         {
@@ -49,7 +49,7 @@ public partial class RabbitMQQueueMessageProvider(
         };
 
         using var stream = new MemoryStream();
-        await serializer.SerializeAsync(wrapped, stream, default);
+        await serializer.SerializeAsync(wrapped, stream, default).ConfigureAwait(false);
         ReadOnlyMemory<byte> body = stream.ToArray();
 
         using (connection)
@@ -61,7 +61,7 @@ public partial class RabbitMQQueueMessageProvider(
                 durable: true,
                 exclusive: false,
                 autoDelete: false,
-                arguments: null);
+                arguments: null).ConfigureAwait(false);
 
             // Create basic properties for the message
             var properties = new BasicProperties
@@ -77,7 +77,7 @@ public partial class RabbitMQQueueMessageProvider(
                 routingKey: queueName,
                 mandatory: true,
                 basicProperties: properties,
-                body: body);
+                body: body).ConfigureAwait(false);
 
             LogEnqueue(context.CorrelationId);
 
@@ -107,7 +107,7 @@ public partial class RabbitMQQueueMessageProvider(
     {
         // https://www.rabbitmq.com/tutorials/tutorial-one-dotnet.html
 
-        var (connection, channel, queueName) = await clientFactory.CreateAsync(_handlerProvider?.Config ?? throw new ConfigurationMissingException("UNKNOWN"));
+        var (connection, channel, queueName) = await clientFactory.CreateAsync(_handlerProvider?.Config ?? throw new ConfigurationMissingException("UNKNOWN")).ConfigureAwait(false);
         var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         var newCancellationToken = cts.Token;
 
@@ -126,17 +126,17 @@ public partial class RabbitMQQueueMessageProvider(
                 var message = Encoding.UTF8.GetString(body);
                 LogDequeue(deserialized.CorrelationId);
 
-                await _handlerProvider.HandleAsync(deserialized, deserialized.CorrelationId);
+                await _handlerProvider.HandleAsync(deserialized, deserialized.CorrelationId).ConfigureAwait(false);
 
                 LogDequeue(deserialized.CorrelationId);
 
             };
 
-            await channel.QueueDeclareAsync(queue: queueName, exclusive: false, cancellationToken: newCancellationToken);
+            await channel.QueueDeclareAsync(queue: queueName, exclusive: false, cancellationToken: newCancellationToken).ConfigureAwait(false);
             await channel.BasicConsumeAsync(queue: queueName,
                                  autoAck: true,
                                  consumer: consumer,
-                                 cancellationToken: newCancellationToken);
+                                 cancellationToken: newCancellationToken).ConfigureAwait(false);
 
             while (!newCancellationToken.IsCancellationRequested)
             {

@@ -63,7 +63,7 @@ public class WakeOnLan
         client.EnableBroadcast = true;
         client.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, 0);
 
-        var result = await client.SendAsync(magicPacket, magicPacket.Length);
+        var result = await client.SendAsync(magicPacket, magicPacket.Length).ConfigureAwait(false);
 
         return result == 102; /* MagicPacket length should be broadcast MAC + target MAX x 16 */
     }

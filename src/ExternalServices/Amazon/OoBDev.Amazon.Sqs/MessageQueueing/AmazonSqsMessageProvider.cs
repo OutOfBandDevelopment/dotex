@@ -34,7 +34,7 @@ public partial class AmazonSqsMessageProvider(
     /// <returns>The message ID if the send operation is successful; otherwise, <c>null</c>.</returns>
     public async Task<string?> SendAsync(object message, IMessageContext context)
     {
-        var (client, queueUrl) = await clientFactory.CreateAsync(context.Config);
+        var (client, queueUrl) = await clientFactory.CreateAsync(context.Config).ConfigureAwait(false);
 
         // Wrap message (standard pattern)
         var wrapped = new WrappedQueueMessage
@@ -49,7 +49,7 @@ public partial class AmazonSqsMessageProvider(
 
         // Serialize to JSON
         using var stream = new MemoryStream();
-        await serializer.SerializeAsync(wrapped, stream, default);
+        await serializer.SerializeAsync(wrapped, stream, default).ConfigureAwait(false);
         var messageBody = Encoding.UTF8.GetString(stream.ToArray());
 
         // Build SQS request
@@ -79,7 +79,7 @@ public partial class AmazonSqsMessageProvider(
         }
 
         // Send message
-        var response = await client.SendMessageAsync(request);
+        var response = await client.SendMessageAsync(request).ConfigureAwait(false);
 
         LogSent(response.MessageId, context.CorrelationId);
 

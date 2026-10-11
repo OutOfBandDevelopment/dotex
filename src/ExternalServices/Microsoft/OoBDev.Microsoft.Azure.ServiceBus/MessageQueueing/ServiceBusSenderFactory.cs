@@ -35,6 +35,6 @@ public class ServiceBusSenderFactory : IServiceBusSenderFactory
         var entityName = queueName ?? topicName!;
         var sender = client.CreateSender(entityName);
 
-        return await Task.FromResult((client, sender));
+        return await Task.FromResult((client, sender)).ConfigureAwait(false);
     }
 }

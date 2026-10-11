@@ -64,7 +64,7 @@ public partial class MessageHandlerProvider(
 
             foreach (var handler in _handlers)
             {
-                await handler.HandleAsync(payload, context);
+                await handler.HandleAsync(payload, context).ConfigureAwait(false);
             }
 
             LogHandled(messageId);

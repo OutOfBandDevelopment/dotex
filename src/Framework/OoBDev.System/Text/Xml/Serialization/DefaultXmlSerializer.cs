@@ -156,7 +156,7 @@ public class DefaultXmlSerializer : IXmlSerializer
             CloseOutput = false,
         });
         xml.Serialize(writer, obj);
-        await writer.FlushAsync();
+        await writer.FlushAsync().ConfigureAwait(false);
     }
 
     /// <summary>
@@ -175,6 +175,6 @@ public class DefaultXmlSerializer : IXmlSerializer
             CloseOutput = false,
         });
         xml.Serialize(writer, obj);
-        await writer.FlushAsync();
+        await writer.FlushAsync().ConfigureAwait(false);
     }
 }

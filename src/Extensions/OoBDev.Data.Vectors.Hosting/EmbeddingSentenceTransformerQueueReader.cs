@@ -58,8 +58,8 @@ public partial class EmbeddingSentenceTransformerQueueReader : IEmbeddingSentenc
         {
             using var connection = _database.GetConnection();
             if (connection.State != ConnectionState.Open)
-                await connection.OpenAsync(cancellationToken);
-            var transaction = await connection.BeginTransactionAsync(cancellationToken);
+                await connection.OpenAsync(cancellationToken).ConfigureAwait(false);
+            var transaction = await connection.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
             try
             {
                 using var receiver = connection.CreateCommand();
@@ -89,10 +89,10 @@ public partial class EmbeddingSentenceTransformerQueueReader : IEmbeddingSentenc
                 receiver.Parameters.Add(timeout);
 
                 var commands = new List<DbCommand>();
-                using (var reader = await receiver.ExecuteReaderAsync(cancellationToken))
+                using (var reader = await receiver.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false))
                 {
                     var read = false;
-                    while (await reader.ReadAsync(cancellationToken))
+                    while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false))
                     {
                         read = true;
                         var conversationGroupId = (Guid)reader["conversation_group_id"];
@@ -114,7 +114,7 @@ public partial class EmbeddingSentenceTransformerQueueReader : IEmbeddingSentenc
                             var value = (string?)xml.Attribute("value");
                             var tableName = (string?)xml.Attribute("tableName");
 
-                            var embedding = string.IsNullOrWhiteSpace(value) ? null : await _embedding.GenerateEmbeddingAsync(value, default, cancellationToken);
+                            var embedding = string.IsNullOrWhiteSpace(value) ? null : await _embedding.GenerateEmbeddingAsync(value, default, cancellationToken).ConfigureAwait(false);
                             var json = _json.Serialize(embedding.ToArray());
 
                             XNamespace sr = "oobdev://embedding/sentence-transformer/response";
@@ -178,16 +178,16 @@ public partial class EmbeddingSentenceTransformerQueueReader : IEmbeddingSentenc
 
                 foreach (var command in commands)
                 {
-                    await command.ExecuteNonQueryAsync(cancellationToken);
+                    await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
                 }
 
-                await transaction.CommitAsync(cancellationToken);
+                await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
                 LogFailure(ex.Message);
-                await transaction.RollbackAsync(cancellationToken);
-                await Task.Delay((int)_options.Value.ReadWaitTimeout.TotalMilliseconds, cancellationToken); 
+                await transaction.RollbackAsync(cancellationToken).ConfigureAwait(false);
+                await Task.Delay((int)_options.Value.ReadWaitTimeout.TotalMilliseconds, cancellationToken).ConfigureAwait(false); 
             }
         }
     }

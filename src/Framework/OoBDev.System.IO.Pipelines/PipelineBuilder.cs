@@ -169,8 +169,8 @@ public static class PipelineBuilder
         cancellationToken.Register(def.CancellationTokenSource.Cancel);
 
         return Task.WhenAll(
-            Task.Run(async () => await def.PipeWriter, cancellationToken),
-            Task.Run(async () => await def.PipeReader, cancellationToken)
+            Task.Run(async () => await def.PipeWriter.ConfigureAwait(false), cancellationToken),
+            Task.Run(async () => await def.PipeReader.ConfigureAwait(false), cancellationToken)
             );
     }
 }

@@ -69,7 +69,7 @@ public partial class MessageSender<TChannel>(
 
         try
         {
-            var sentId = await provider.SendAsync(message, context);
+            var sentId = await provider.SendAsync(message, context).ConfigureAwait(false);
 
             LogSent(originMessageId, correlationId, sentId);
 

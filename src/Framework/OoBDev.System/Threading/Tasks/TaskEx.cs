@@ -26,7 +26,7 @@ public static class TaskEx
         {
             try
             {
-                await task();
+                await task().ConfigureAwait(false);
             }
             catch (Exception e)
             {
@@ -59,7 +59,7 @@ public static class TaskEx
         {
             try
             {
-                ret = await task();
+                ret = await task().ConfigureAwait(false);
             }
             catch (Exception e)
             {

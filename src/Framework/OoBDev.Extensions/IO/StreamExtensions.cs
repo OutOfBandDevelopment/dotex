@@ -53,7 +53,7 @@ public static class StreamExtensions
         while (stream.Position < stream.Length)
         {
             var start = stream.Position;
-            var read = await reader.ReadBlockAsync(buffer, 0, contextLength);
+            var read = await reader.ReadBlockAsync(buffer, 0, contextLength).ConfigureAwait(false);
             if (read > 0)
                 yield return new(new string(buffer, 0, read), sequence, start, read);
             else if (read < contextLength)

@@ -100,7 +100,7 @@ public partial class MessageReceiverHost(
                 LogStarting(provider);
                 var task = provider.RunAsync(token);
                 LogStarted(provider);
-                await task;
+                await task.ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -108,7 +108,7 @@ public partial class MessageReceiverHost(
                 LogError(provider, ex);
 
                 LogWaitingForRestart(provider);
-                await Task.Delay(10000, token); // TODO: this should be configurable
+                await Task.Delay(10000, token).ConfigureAwait(false); // TODO: this should be configurable
             }
         }
     }
@@ -122,8 +122,8 @@ public partial class MessageReceiverHost(
     {
         LogRequestStop();
 
-        await _tokenSource.CancelAsync();
-        await Task.WhenAll(_tasks);
+        await _tokenSource.CancelAsync().ConfigureAwait(false);
+        await Task.WhenAll(_tasks).ConfigureAwait(false);
         _tasks.Clear();
 
         LogCompletedStop();

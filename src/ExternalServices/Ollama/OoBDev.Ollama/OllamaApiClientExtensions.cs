@@ -27,13 +27,13 @@ public static partial class OllamaApiClientExtensions
         )
     {
         LogListModels(logger);
-        var models = await ollama.ListLocalModelsAsync();
+        var models = await ollama.ListLocalModelsAsync().ConfigureAwait(false);
         foreach (var model in models)
             LogModel(logger, model.Name, model.Size);
 
         LogCreateMaybe(logger);
         if (models.Any(m => !m.Name.StartsWith(modelName, StringComparison.Ordinal)))
-            await ollama.CopyModelAsync("llama2", modelName); //TODO: fix this
+            await ollama.CopyModelAsync("llama2", modelName).ConfigureAwait(false); //TODO: fix this
         LogSelectModel(logger, modelName);
 
         //ollama.SelectedModel = modelName;
@@ -67,7 +67,7 @@ public static partial class OllamaApiClientExtensions
         string modelName
         )
     {
-        var doubles = await client.GetEmbeddingDoubleAsync(text, modelName);
+        var doubles = await client.GetEmbeddingDoubleAsync(text, modelName).ConfigureAwait(false);
         var floats = Array.ConvertAll(doubles.ToArray(), Convert.ToSingle);
         return floats;
     }
@@ -89,7 +89,7 @@ public static partial class OllamaApiClientExtensions
             Model = modelName,
             Input = [text],
         };
-        var response = await client.EmbedAsync(request);
+        var response = await client.EmbedAsync(request).ConfigureAwait(false);
         return response.Embeddings[0].Select(Convert.ToDouble).ToArray();
     }
 

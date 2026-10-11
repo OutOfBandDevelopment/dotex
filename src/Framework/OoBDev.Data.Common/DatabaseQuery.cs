@@ -95,17 +95,17 @@ public partial class DatabaseQuery<TDbOptions> : IDatabaseQuery<TDbOptions>
         command.Parameters.Add(resultParameter);
 
         if (connection.State != ConnectionState.Open)
-            await connection.OpenAsync(cancellationToken);
+            await connection.OpenAsync(cancellationToken).ConfigureAwait(false);
 
-        using var reader = await command.ExecuteReaderAsync(cancellationToken);
+        using var reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
         Func<DbDataReader, TResult>? itemMap = null;
-        while (!cancellationToken.IsCancellationRequested && await reader.ReadAsync(cancellationToken))
+        while (!cancellationToken.IsCancellationRequested && await reader.ReadAsync(cancellationToken).ConfigureAwait(false))
         {
             itemMap ??= _mapper.GetReaderMapper<TResult>(reader);
             yield return itemMap(reader);
         }
 
-        await reader.NextResultAsync(cancellationToken);
+        await reader.NextResultAsync(cancellationToken).ConfigureAwait(false);
 
         if (resultParameter.Value is int result)
             resultCallback(result);
@@ -143,10 +143,10 @@ public partial class DatabaseQuery<TDbOptions> : IDatabaseQuery<TDbOptions>
 
         if (connection.State != ConnectionState.Open)
         {
-            await connection.OpenAsync();
+            await connection.OpenAsync().ConfigureAwait(false);
         }
 
-        var result = await command.ExecuteScalarAsync();
+        var result = await command.ExecuteScalarAsync().ConfigureAwait(false);
         return result is T output ? output : default;
     }
 

@@ -44,7 +44,7 @@ public partial class AzureStorageQueueMessageProvider(
         var wrapped = _mapper.Wrap(message, context);
 
         var serialized = serializer.Serialize(wrapped);
-        var result = await client.SendMessageAsync(serialized);
+        var result = await client.SendMessageAsync(serialized).ConfigureAwait(false);
 
         return result.Value.MessageId;
     }
@@ -89,12 +89,12 @@ public partial class AzureStorageQueueMessageProvider(
 
         while (!newCancellationToken.IsCancellationRequested)
         {
-            var message = await client.ReceiveMessageAsync(TimeSpan.FromMinutes(1), newCancellationToken);
+            var message = await client.ReceiveMessageAsync(TimeSpan.FromMinutes(1), newCancellationToken).ConfigureAwait(false);
 
             if (message?.Value == null)
             {
                 LogNothingReceived();
-                await Task.Delay(_mapper.WaitDelay(_handlerProvider.Config), cancellationToken);
+                await Task.Delay(_mapper.WaitDelay(_handlerProvider.Config), cancellationToken).ConfigureAwait(false);
                 continue;
             }
 
@@ -102,10 +102,10 @@ public partial class AzureStorageQueueMessageProvider(
             var deserialized = serializer.Deserialize<WrappedQueueMessage>(stream)
                 ?? throw new NotSupportedException($"No payload found");
 
-            await _handlerProvider.HandleAsync(deserialized, message.Value.MessageId);
+            await _handlerProvider.HandleAsync(deserialized, message.Value.MessageId).ConfigureAwait(false);
 
             LogDequeue(message.Value.MessageId);
-            _ = await client.DeleteMessageAsync(message.Value.MessageId, message.Value.PopReceipt, newCancellationToken);
+            _ = await client.DeleteMessageAsync(message.Value.MessageId, message.Value.PopReceipt, newCancellationToken).ConfigureAwait(false);
         }
     }
 

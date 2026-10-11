@@ -46,7 +46,7 @@ public class SqsClientFactory : ISqsClientFactory
         {
             var queueName = config["QueueName"]
                 ?? throw new ConfigurationMissingException($"{config.Path}:QueueName");
-            var response = await client.GetQueueUrlAsync(queueName);
+            var response = await client.GetQueueUrlAsync(queueName).ConfigureAwait(false);
             queueUrl = response.QueueUrl;
         }
 

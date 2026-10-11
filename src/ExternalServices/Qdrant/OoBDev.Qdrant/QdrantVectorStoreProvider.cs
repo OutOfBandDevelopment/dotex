@@ -48,7 +48,7 @@ public class QdrantVectorStoreProvider : IVectorStoreProvider
         if (!(await _client.Collections.CollectionExistsAsync(new()
         {
             CollectionName = _collectionName,
-        })).Result.Exists)
+        }).ConfigureAwait(false)).Result.Exists)
         {
             await _client.Collections.CreateAsync(new()
             {
@@ -62,7 +62,7 @@ public class QdrantVectorStoreProvider : IVectorStoreProvider
                         Distance = Distance.Cosine, //TODO: these are configs or redefined
                     },
                 }
-            });
+            }).ConfigureAwait(false);
         }
     }
 
@@ -73,7 +73,7 @@ public class QdrantVectorStoreProvider : IVectorStoreProvider
         IEnumerable<ReadOnlyMemory<float>> embeddings,
         Dictionary<string, object> metadata
         ) =>
-        await StoreVectorsAsync(embeddings.Select(e => (e, new Dictionary<string, object>())), metadata);
+        await StoreVectorsAsync(embeddings.Select(e => (e, new Dictionary<string, object>())), metadata).ConfigureAwait(false);
 
     /// <summary>
     /// Gets or sets the name of the container.
@@ -84,7 +84,7 @@ public class QdrantVectorStoreProvider : IVectorStoreProvider
         )
     {
         if (_options.Value.EnsureCollectionExists)
-            await EnsureCollectionExistsAsync(items.First().embedding.Length);
+            await EnsureCollectionExistsAsync(items.First().embedding.Length).ConfigureAwait(false);
 
         List<PointStruct> points = [];
 
@@ -118,7 +118,7 @@ public class QdrantVectorStoreProvider : IVectorStoreProvider
         {
             CollectionName = _collectionName,
             Points = { points },
-        });
+        }).ConfigureAwait(false);
 
         return [];  //Note: want to return IDs but its not possible as the actual persistence is out of process.  
     }
@@ -210,7 +210,7 @@ public class QdrantVectorStoreProvider : IVectorStoreProvider
             Limit = (uint)1000,
             WithPayload = true,
             // WithVectors = true,
-        });
+        }).ConfigureAwait(false);
         foreach (var item in results.Result)
             yield return Convert(item);
     }
@@ -229,7 +229,7 @@ public class QdrantVectorStoreProvider : IVectorStoreProvider
             Query = ToQuery(find),
             WithPayload = true,
             //  WithVectors = true,
-        });
+        }).ConfigureAwait(false);
         foreach (var item in results.Result)
             yield return Convert(item);
     }
@@ -252,7 +252,7 @@ public class QdrantVectorStoreProvider : IVectorStoreProvider
 
             GroupBy = groupBy,
             GroupSize = 1,
-        });
+        }).ConfigureAwait(false);
         foreach (var item in results.Result.Groups.SelectMany(h => h.Hits))
             yield return Convert(item);
     }

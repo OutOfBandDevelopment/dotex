@@ -76,7 +76,7 @@ public class DefaultJsonSerializer(JsonSerializerOptions? options = null) : IJso
     /// Asynchronously serializes an object of a given type to a JSON string.
     /// </summary>
     public virtual async Task SerializeAsync(object? obj, Type type, Stream stream, CancellationToken cancellationToken = default) =>
-        await JsonSerializer.SerializeAsync(stream, obj, Options, cancellationToken);
+        await JsonSerializer.SerializeAsync(stream, obj, Options, cancellationToken).ConfigureAwait(false);
 
     /// <summary>
     /// Deserializes a JSON stream to an object of type T.
@@ -93,13 +93,13 @@ public class DefaultJsonSerializer(JsonSerializerOptions? options = null) : IJso
     /// Asynchronously deserializes a JSON stream to an object of type T.
     /// </summary>
     public virtual async ValueTask<T?> DeserializeAsync<T>(Stream stream, CancellationToken cancellationToken = default) =>
-        (T?)await DeserializeAsync(stream, typeof(T), cancellationToken);
+        (T?)await DeserializeAsync(stream, typeof(T), cancellationToken).ConfigureAwait(false);
 
     /// <summary>
     /// Asynchronously deserializes a JSON stream to an object of a given type.
     /// </summary>
     public virtual async ValueTask<object?> DeserializeAsync(Stream stream, Type type, CancellationToken cancellationToken = default) =>
-        await JsonSerializer.DeserializeAsync(stream, type, Options, cancellationToken);
+        await JsonSerializer.DeserializeAsync(stream, type, Options, cancellationToken).ConfigureAwait(false);
 
     /// <summary>
     /// Deserializes a JSON string to an object of type T.

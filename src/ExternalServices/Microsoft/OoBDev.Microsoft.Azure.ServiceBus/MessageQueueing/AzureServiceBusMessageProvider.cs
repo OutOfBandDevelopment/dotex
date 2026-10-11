@@ -32,7 +32,7 @@ public partial class AzureServiceBusMessageProvider(
     /// <returns>The correlation ID if the send operation is successful; otherwise, <c>null</c>.</returns>
     public async Task<string?> SendAsync(object message, IMessageContext context)
     {
-        var (client, sender) = await senderFactory.CreateAsync(context.Config);
+        var (client, sender) = await senderFactory.CreateAsync(context.Config).ConfigureAwait(false);
 
         try
         {
@@ -49,7 +49,7 @@ public partial class AzureServiceBusMessageProvider(
 
             // Serialize to JSON
             using var stream = new MemoryStream();
-            await serializer.SerializeAsync(wrapped, stream, default);
+            await serializer.SerializeAsync(wrapped, stream, default).ConfigureAwait(false);
 
             // Create Service Bus message
             var busMessage = new ServiceBusMessage(stream.ToArray())
@@ -70,7 +70,7 @@ public partial class AzureServiceBusMessageProvider(
             }
 
             // Send message
-            await sender.SendMessageAsync(busMessage);
+            await sender.SendMessageAsync(busMessage).ConfigureAwait(false);
 
             LogSent(busMessage.CorrelationId);
 
@@ -78,8 +78,8 @@ public partial class AzureServiceBusMessageProvider(
         }
         finally
         {
-            await sender.DisposeAsync();
-            await client.DisposeAsync();
+            await sender.DisposeAsync().ConfigureAwait(false);
+            await client.DisposeAsync().ConfigureAwait(false);
         }
     }
 

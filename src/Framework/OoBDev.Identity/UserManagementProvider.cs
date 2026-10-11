@@ -25,7 +25,7 @@ public class UserManagementProvider(
     {
         if (_user == null) throw new NotSupportedException($"No identity management provider registered");
 
-        var (objectid, password) = await _user.CreateIdentityUserAsync(model.EmailAddress, model.FirstName, model.LastName);
+        var (objectid, password) = await _user.CreateIdentityUserAsync(model.EmailAddress, model.FirstName, model.LastName).ConfigureAwait(false);
         return new UserCreatedModel
         {
             Password = password ?? "",

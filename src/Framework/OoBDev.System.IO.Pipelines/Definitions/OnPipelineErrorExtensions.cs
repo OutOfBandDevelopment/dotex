@@ -7,7 +7,7 @@ namespace OoBDev.System.IO.Pipelines.Definitions;
 internal static class OnPipelineErrorExtensions
 {
     internal static async Task<ErrorHandling> Handle(this OnException? handler, object sender, Exception exception) =>
-        await (handler ?? DefaultPipelineError).Invoke(sender, exception);
+        await (handler ?? DefaultPipelineError).Invoke(sender, exception).ConfigureAwait(false);
 
     internal static readonly OnException DefaultPipelineError = (s, e) =>
     {

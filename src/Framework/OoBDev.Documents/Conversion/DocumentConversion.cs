@@ -55,7 +55,7 @@ public partial class DocumentConversion : IDocumentConversion
         if (string.Equals(sourceContentType, destinationContentType, StringComparison.OrdinalIgnoreCase))
         {
             LogBypass(sourceContentType, destinationContentType);
-            await source.CopyToAsync(destination);
+            await source.CopyToAsync(destination).ConfigureAwait(false);
             return true;
         }
 
@@ -81,12 +81,12 @@ public partial class DocumentConversion : IDocumentConversion
         {
             if (recurse)
             {
-                var detectedType = await _tools.DetectContentTypeAsync(source);
+                var detectedType = await _tools.DetectContentTypeAsync(source).ConfigureAwait(false);
                 if (detectedType is not null && !string.Equals(sourceContentType, detectedType, StringComparison.OrdinalIgnoreCase))
                 {
                     LogDetected(sourceContentType, detectedType);
                     source.Position = 0;
-                    return await InternalConvertAsync(source, detectedType, destination, destinationContentType, false);
+                    return await InternalConvertAsync(source, detectedType, destination, destinationContentType, false).ConfigureAwait(false);
                 }
             }
             else
@@ -97,7 +97,7 @@ public partial class DocumentConversion : IDocumentConversion
         }
         else if (steps.Length == 1)
         {
-            await steps[0].Handler.ConvertAsync(source, sourceContentType, destination, destinationContentType);
+            await steps[0].Handler.ConvertAsync(source, sourceContentType, destination, destinationContentType).ConfigureAwait(false);
             return true;
         }
         else
@@ -106,11 +106,11 @@ public partial class DocumentConversion : IDocumentConversion
             foreach (var step in steps)
             {
                 temp = new MemoryStream();
-                await step.Handler.ConvertAsync(source, step.SourceContentType, temp, step.DestinationContentType);
+                await step.Handler.ConvertAsync(source, step.SourceContentType, temp, step.DestinationContentType).ConfigureAwait(false);
                 temp.Position = 0;
                 source = temp;
             }
-            await (temp ?? source).CopyToAsync(destination);
+            await (temp ?? source).CopyToAsync(destination).ConfigureAwait(false);
             destination.Position = 0;
             return steps.Length != 0;
         }

@@ -76,11 +76,11 @@ public partial class InProcessMessageProvider(
             if (!_queue.TryDequeue(out var wrapped))
             {
                 LogNothingReceived();
-                await Task.Delay(1000, cancellationToken);  // TODO: this should be configurable
+                await Task.Delay(1000, cancellationToken).ConfigureAwait(false);  // TODO: this should be configurable
                 continue;
             }
 
-            await _handlerProvider.HandleAsync(wrapped, wrapped.CorrelationId);
+            await _handlerProvider.HandleAsync(wrapped, wrapped.CorrelationId).ConfigureAwait(false);
 
             LogDequeue(wrapped.CorrelationId);
         }

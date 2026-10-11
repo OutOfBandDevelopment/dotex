@@ -31,7 +31,7 @@ public static partial class QdrantGrpcClientExtensions
         )
     {
         logger ??= NullLogger.Instance;
-        var collectionsResponse = await qdrant.Collections.ListAsync(new() { });
+        var collectionsResponse = await qdrant.Collections.ListAsync(new() { }).ConfigureAwait(false);
         foreach (var collection in collectionsResponse.Collections)
             LogList(logger, collection);
         if (!collectionsResponse.Collections.Any(d => d.Name == collectionName))
@@ -49,7 +49,7 @@ public static partial class QdrantGrpcClientExtensions
                             Distance = distanceCalculation,
                         },
                     }
-                });
+                }).ConfigureAwait(false);
             LogCreated(logger, collectionName);
         }
 

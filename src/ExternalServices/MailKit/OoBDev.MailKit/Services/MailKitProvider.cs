@@ -31,10 +31,10 @@ public partial class MailKitProvider(
     public async Task<string> SendAsync(EmailMessageModel message)
     {
         var model = email.Create(message);
-        using var client = await smtp.CreateAsync();
+        using var client = await smtp.CreateAsync().ConfigureAwait(false);
 
-        var reference = await client.SendAsync(model);
-        await client.DisconnectAsync(true);
+        var reference = await client.SendAsync(model).ConfigureAwait(false);
+        await client.DisconnectAsync(true).ConfigureAwait(false);
 
         LogSent(message.Subject, message.ToAddresses, reference);
 

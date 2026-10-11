@@ -59,7 +59,7 @@ public class OllamaMessageCompletion : IMessageCompletion, IEmbeddingProvider
         CancellationToken cancellationToken = default
 #endif
         ) =>
-        await _client.GetEmbeddingSingleAsync(content, model ?? _client.SelectedModel);
+        await _client.GetEmbeddingSingleAsync(content, model ?? _client.SelectedModel).ConfigureAwait(false);
 
     /// <summary>
     /// Generates a completion for the given prompt using the specified model.
@@ -75,7 +75,7 @@ public class OllamaMessageCompletion : IMessageCompletion, IEmbeddingProvider
             Messages = new[] { new Message(ChatRole.User, prompt) }
         };
 
-        var responses = await _client.ChatAsync(request).ToListAsync();
+        var responses = await _client.ChatAsync(request).ToListAsync().ConfigureAwait(false);
         var result = string.Join("", responses.Select(r => r?.Message.Content ?? ""));
         return result;
     }

@@ -22,7 +22,7 @@ public static class AsyncEnumerableExtensions
     public static async Task<List<T>> ToListAsync<T>(this IAsyncEnumerable<T> items)
     {
         var result = new List<T>();
-        await foreach (var item in items)
+        await foreach (var item in items.ConfigureAwait(false))
             result.Add(item);
         return result;
     }
@@ -42,7 +42,7 @@ public static class AsyncEnumerableExtensions
         // copied from EF Core 
         // https://github.com/dotnet/efcore/blob/main/src/EFCore/Extensions/EntityFrameworkQueryableExtensions.cs
         var list = new List<TModel>();
-        await foreach (var element in source.AsAsyncEnumerable(cancellationToken))
+        await foreach (var element in source.AsAsyncEnumerable(cancellationToken).ConfigureAwait(false))
         {
             list.Add(element);
         }
@@ -63,7 +63,7 @@ public static class AsyncEnumerableExtensions
         )
     {
         var list = new List<TModel>();
-        await foreach (var item in items)
+        await foreach (var item in items.ConfigureAwait(false))
         {
             if (token.IsCancellationRequested) break;
             list.Add(item);
@@ -83,7 +83,7 @@ public static class AsyncEnumerableExtensions
         [EnumeratorCancellation] CancellationToken cancellationToken = default
         )
     {
-        foreach (var item in await items)
+        foreach (var item in await items.ConfigureAwait(false))
         {
             if (cancellationToken.IsCancellationRequested) break;
             yield return item;
@@ -105,7 +105,7 @@ public static class AsyncEnumerableExtensions
         // Modified from EF Core to also enable Async iteration over enumerable that are not natively async.  
         if (items is IAsyncEnumerable<TModel> asyncItems)
         {
-            await foreach (var item in asyncItems)
+            await foreach (var item in asyncItems.ConfigureAwait(false))
             {
                 if (cancellationToken.IsCancellationRequested) break;
                 yield return item;
@@ -135,7 +135,7 @@ public static class AsyncEnumerableExtensions
         Func<T, TResult> map
         )
     {
-        await foreach (var item in items)
+        await foreach (var item in items.ConfigureAwait(false))
             yield return map(item);
     }
 
@@ -152,8 +152,8 @@ public static class AsyncEnumerableExtensions
         Func<T, Task<TResult>> map
         )
     {
-        await foreach (var item in items)
-            yield return await map(item);
+        await foreach (var item in items.ConfigureAwait(false))
+            yield return await map(item).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -169,7 +169,7 @@ public static class AsyncEnumerableExtensions
         )
     {
         var collection = new Collection<T>();
-        await foreach (var item in items)
+        await foreach (var item in items.ConfigureAwait(false))
             collection.Add(item);
         return collection;
     }
@@ -182,5 +182,5 @@ public static class AsyncEnumerableExtensions
     /// <returns>A task representing the asynchronous operation. The task result contains the set of elements in the sequence.</returns>
     [Obsolete($"change to .{nameof(ToListAsync)}()", error: true)]
     public static async Task<IEnumerable<T>> ToSetAsync<T>(this IAsyncEnumerable<T> items) =>
-        await items.ToListAsync();
+        await items.ToListAsync().ConfigureAwait(false);
 }

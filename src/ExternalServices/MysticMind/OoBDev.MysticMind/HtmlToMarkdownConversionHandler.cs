@@ -39,8 +39,8 @@ public class HtmlToMarkdownConversionHandler : IDocumentConversionHandler
 
         using var reader = new StreamReader(source, leaveOpen: true);
         using var writer = new StreamWriter(destination, leaveOpen: true) { AutoFlush = true, };
-        var markdown = _converter.Convert(await reader.ReadToEndAsync());
-        await writer.WriteAsync(markdown);
+        var markdown = _converter.Convert(await reader.ReadToEndAsync().ConfigureAwait(false));
+        await writer.WriteAsync(markdown).ConfigureAwait(false);
     }
 
     /// <summary>

@@ -87,7 +87,7 @@ public partial class EmbeddingSentenceTransformerQueueReaderHost : IHostedServic
                     LogStarting(reader);
                     var task =  reader.RunAsync(token);
                     LogStarted(reader);
-                    await task;
+                    await task.ConfigureAwait(false);
                 }
                 catch (Exception ex)
                 {
@@ -95,7 +95,7 @@ public partial class EmbeddingSentenceTransformerQueueReaderHost : IHostedServic
                     LogError(reader, ex);
 
                     LogWaitingForRestart(reader);
-                    await Task.Delay(10000, token); // TODO: this should be configurable
+                    await Task.Delay(10000, token).ConfigureAwait(false); // TODO: this should be configurable
                 }
             }
         }, cancellationToken);
@@ -120,8 +120,8 @@ public partial class EmbeddingSentenceTransformerQueueReaderHost : IHostedServic
             return;
         }
 
-        await _tokenSource.CancelAsync();
-        await _task;
+        await _tokenSource.CancelAsync().ConfigureAwait(false);
+        await _task.ConfigureAwait(false);
         _task = null;
 
         LogCompletedStop();

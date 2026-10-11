@@ -23,5 +23,5 @@ public class EchoServer(IPAddress? ipAddress = default, ushort port = 7) : Serve
     /// <param name="message">The message received from the client, which will be echoed back.</param>
     /// <param name="cancellationToken">A cancellation token for the operation.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
-    protected override async Task MessageReceivedAsync(int clientId, TcpClient accepted, Memory<byte> message, CancellationToken cancellationToken) => await accepted.GetStream().WriteAsync(message, cancellationToken);
+    protected override async Task MessageReceivedAsync(int clientId, TcpClient accepted, Memory<byte> message, CancellationToken cancellationToken) => await accepted.GetStream().WriteAsync(message, cancellationToken).ConfigureAwait(false);
 }

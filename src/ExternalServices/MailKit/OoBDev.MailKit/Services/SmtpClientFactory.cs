@@ -24,16 +24,16 @@ public class SmtpClientFactory(
 
         if (config.Value.Uri != null)
         {
-            await client.ConnectAsync(config.Value.Uri);
+            await client.ConnectAsync(config.Value.Uri).ConfigureAwait(false);
         }
         else
         {
-            await client.ConnectAsync(config.Value.Host, config.Value.Port, config.Value.SecureSocketOption);
+            await client.ConnectAsync(config.Value.Host, config.Value.Port, config.Value.SecureSocketOption).ConfigureAwait(false);
         }
 
         if (!string.IsNullOrWhiteSpace(config.Value.UserName) && !string.IsNullOrWhiteSpace(config.Value.Password))
         {
-            await client.AuthenticateAsync(config.Value.UserName, config.Value.Password);
+            await client.AuthenticateAsync(config.Value.UserName, config.Value.Password).ConfigureAwait(false);
         }
 
         return client;

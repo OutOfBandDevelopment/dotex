@@ -130,10 +130,10 @@ public class StreamDevice<TMessage> : IStreamDevice<TMessage>
     {
         if (!_token.IsCancellationRequested && _device is IDeviceDefinitionInitialize initializer)
         {
-            await ReportDeviceStatus(StreamDeviceStatus.Initializing);
+            await ReportDeviceStatus(StreamDeviceStatus.Initializing).ConfigureAwait(false);
             await initializer.InitializeAsync(_adapter, _token).ConfigureAwait(false);
         }
-        await ReportDeviceStatus(StreamDeviceStatus.Initialized);
+        await ReportDeviceStatus(StreamDeviceStatus.Initialized).ConfigureAwait(false);
         mre.Set();
     }
 
@@ -141,16 +141,16 @@ public class StreamDevice<TMessage> : IStreamDevice<TMessage>
     {
         while (!_token.IsCancellationRequested)
         {
-            await mre.WaitAsync();
+            await mre.WaitAsync().ConfigureAwait(false);
             try
             {
-                await ReportDeviceStatus(StreamDeviceStatus.Receiving);
+                await ReportDeviceStatus(StreamDeviceStatus.Receiving).ConfigureAwait(false);
                 await AdapterStream.Follow()
                              .With(_segmentDefintion!.ThenAs(_decoder!, OnMessageReceived))
                              .RunAsync(_token)
                              .ConfigureAwait(false);
                 _tokenSource.Cancel(true);
-                await ReportDeviceStatus(StreamDeviceStatus.Received);
+                await ReportDeviceStatus(StreamDeviceStatus.Received).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -179,16 +179,16 @@ public class StreamDevice<TMessage> : IStreamDevice<TMessage>
         if (encoder == null) return;
         while (!_token.IsCancellationRequested)
         {
-            await mre.WaitAsync();
+            await mre.WaitAsync().ConfigureAwait(false);
             while (!_token.IsCancellationRequested && _transmissionQueue.TryTake(out var item))
             {
                 try
                 {
-                    await ReportDeviceStatus(StreamDeviceStatus.Transmitting);
+                    await ReportDeviceStatus(StreamDeviceStatus.Transmitting).ConfigureAwait(false);
                     var requestBuffer = encoder.Encode(ref item);
                     await AdapterStream.WriteAsync(requestBuffer, _token)
                                  .ConfigureAwait(false);
-                    await ReportDeviceStatus(StreamDeviceStatus.Transmitted);
+                    await ReportDeviceStatus(StreamDeviceStatus.Transmitted).ConfigureAwait(false);
                 }
                 catch (Exception ex)
                 {
@@ -210,7 +210,7 @@ public class StreamDevice<TMessage> : IStreamDevice<TMessage>
 
                 if (!_token.IsCancellationRequested && _minimumTransmissionDelay > 0)
                 {
-                    await Task.Delay(_minimumTransmissionDelay);
+                    await Task.Delay(_minimumTransmissionDelay).ConfigureAwait(false);
                 }
             }
         }

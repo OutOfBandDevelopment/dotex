@@ -62,7 +62,7 @@ public class CachingManager : ICachingManager
     /// <inheritdoc/>
     public async Task<T?> RetrieveAsync<T>(string key) =>
 #pragma warning disable CS8603 // Possible null reference return.
-        (T?)((await RetrieveAsync(key, typeof(T))) ?? default(T));
+        (T?)((await RetrieveAsync(key, typeof(T)).ConfigureAwait(false)) ?? default(T));
 #pragma warning restore CS8603 // Possible null reference return.
 
     /// <inheritdoc/>

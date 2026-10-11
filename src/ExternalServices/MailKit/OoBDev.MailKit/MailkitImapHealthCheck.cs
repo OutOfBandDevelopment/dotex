@@ -33,7 +33,7 @@ public class MailkitImapHealthCheck : IHealthCheck
     {
         try
         {
-            using var client = await _client.CreateAsync();
+            using var client = await _client.CreateAsync().ConfigureAwait(false);
             return HealthCheckResult.Healthy(description: "Connected");
         }
         catch (Exception ex)

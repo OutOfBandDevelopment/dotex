@@ -26,7 +26,7 @@ public class DacPacMergeTemplateFactory : TemplateFactoryBase<DacPacMergeTemplat
     /// <inheritdoc/>
     public async Task<IDacPacMergeTemplate> Create()
     {
-        var template = await ReadTemplateFileAsync(_config.TemplatePath);
+        var template = await ReadTemplateFileAsync(_config.TemplatePath).ConfigureAwait(false);
 
         if (!string.IsNullOrWhiteSpace(_config.SourcePath)) template.SourcePath = _config.SourcePath;
         if (_config.SourcePatterns?.Length > 0) template.SourcePatterns = _config.SourcePatterns;

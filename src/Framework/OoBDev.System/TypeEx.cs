@@ -38,7 +38,7 @@ public static class TypeEx
     /// <param name="filename">name of resource</param>
     /// <returns>string content of resource</returns>
     public static async Task<string> GetResourceAsStringAsync(this Type context, string filename) =>
-        await context.GetResourceStream(filename).ReadAsStringAsync() ?? "";
+        await context.GetResourceStream(filename).ReadAsStringAsync().ConfigureAwait(false) ?? "";
 
     /// <summary>
     /// Resolve XML Name space for referenced object.  

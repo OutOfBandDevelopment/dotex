@@ -36,7 +36,7 @@ public class HtmlToPdfConversionHandler : IDocumentConversionHandler
         if (!SupportedDestination(destinationContentType)) throw new NotSupportedException($"Source Content Type \"{destinationContentType}\" is not supported");
 
         using var reader = new StreamReader(source, leaveOpen: true);
-        var html = await reader.ReadToEndAsync();
+        var html = await reader.ReadToEndAsync().ConfigureAwait(false);
 
         //TODO: change this to config stuff or create a conversion context/extension so this can be provided per instance
         var doc = new HtmlToPdfDocument()
@@ -57,7 +57,7 @@ public class HtmlToPdfConversionHandler : IDocumentConversionHandler
         };
 
         var pdf = _converter.Convert(doc);
-        await destination.WriteAsync(pdf);
+        await destination.WriteAsync(pdf).ConfigureAwait(false);
     }
 
     /// <summary>

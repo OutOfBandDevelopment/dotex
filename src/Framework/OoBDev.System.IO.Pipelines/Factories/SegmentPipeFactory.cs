@@ -20,14 +20,14 @@ internal sealed class SegmentPipeFactory
         var completed = false;
         while (!context.cancellationToken.IsCancellationRequested)
         {
-            var result = await context.pipeline.ReadAsync(context.cancellationToken);
+            var result = await context.pipeline.ReadAsync(context.cancellationToken).ConfigureAwait(false);
             try
             {
                 var buffer = result.Buffer;
 
                 while (!context.cancellationToken.IsCancellationRequested)
                 {
-                    var read = await segmenter.TryReadAsync(buffer);
+                    var read = await segmenter.TryReadAsync(buffer).ConfigureAwait(false);
                     buffer = read.RemainingData;
                     if (read.Status == SegmentationStatus.Incomplete)
                     {
@@ -44,7 +44,7 @@ internal sealed class SegmentPipeFactory
             }
             catch (Exception ex)
             {
-                var errorHandling = await context.onError.Handle(context.owner, ex);
+                var errorHandling = await context.onError.Handle(context.owner, ex).ConfigureAwait(false);
                 switch (errorHandling)
                 {
                     case ErrorHandling.Ignore:
