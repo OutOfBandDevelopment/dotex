@@ -1,4 +1,6 @@
-﻿namespace OoBDev.System.ExpressionCalculator.Evaluators;
+﻿using System.Globalization;
+
+namespace OoBDev.System.ExpressionCalculator.Evaluators;
 
 /// <summary>
 /// Provides arithmetic operations and value conversions for expression evaluation using the <see cref="sbyte"/> (Int8) type.
@@ -65,7 +67,7 @@ public sealed class Int8ExpressionEvaluator : IExpressionEvaluator<sbyte>
     /// </summary>
     /// <param name="input">The string to parse.</param>
     /// <returns>The parsed sbyte value if successful; otherwise, null.</returns>
-    public sbyte? TryParse(string input) => sbyte.TryParse(input, out var ret) ? ret : null;
+    public sbyte? TryParse(string input) => sbyte.TryParse(input, CultureInfo.InvariantCulture, out var ret) ? ret : null;
 
     /// <summary>
     /// Converts the specified integer value to a signed 8-bit integer.

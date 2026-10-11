@@ -1,4 +1,5 @@
-﻿using OoBDev.System;
+﻿using System.Globalization;
+using OoBDev.System;
 using Microsoft.Extensions.Configuration;
 using RabbitMQ.Client;
 using System;
@@ -27,7 +28,7 @@ public class QueueClientFactory : IQueueClientFactory
         };
 
         // Optional: Port (default 5672)
-        if (int.TryParse(config[nameof(ConnectionFactory.Port)], out var port))
+        if (int.TryParse(config[nameof(ConnectionFactory.Port)], CultureInfo.InvariantCulture, out var port))
         {
             factory.Port = port;
         }
@@ -45,13 +46,13 @@ public class QueueClientFactory : IQueueClientFactory
         }
 
         // Optional: Connection timeout (default 30 seconds) - set to shorter for tests
-        if (int.TryParse(config[nameof(ConnectionFactory.RequestedConnectionTimeout)], out var connectionTimeout))
+        if (int.TryParse(config[nameof(ConnectionFactory.RequestedConnectionTimeout)], CultureInfo.InvariantCulture, out var connectionTimeout))
         {
             factory.RequestedConnectionTimeout = TimeSpan.FromMilliseconds(connectionTimeout);
         }
 
         // Optional: Handshake timeout (default 10 seconds)
-        if (int.TryParse(config[nameof(ConnectionFactory.HandshakeContinuationTimeout)], out var handshakeTimeout))
+        if (int.TryParse(config[nameof(ConnectionFactory.HandshakeContinuationTimeout)], CultureInfo.InvariantCulture, out var handshakeTimeout))
         {
             factory.HandshakeContinuationTimeout = TimeSpan.FromMilliseconds(handshakeTimeout);
         }

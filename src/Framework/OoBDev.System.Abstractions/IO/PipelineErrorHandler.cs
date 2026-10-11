@@ -9,4 +9,4 @@ namespace OoBDev.System.IO;
 /// <param name="sender">object that caused the exception</param>
 /// <param name="exception">exception received by noted object</param>
 /// <returns>continuation option</returns>
-public delegate Task<ErrorHandling> OnException(object sender, Exception exception);
+public delegate Task<ErrorHandling> PipelineErrorHandler(object sender, Exception exception);

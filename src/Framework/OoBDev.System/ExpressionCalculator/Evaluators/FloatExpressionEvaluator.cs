@@ -1,4 +1,6 @@
-﻿namespace OoBDev.System.ExpressionCalculator.Evaluators;
+﻿using System.Globalization;
+
+namespace OoBDev.System.ExpressionCalculator.Evaluators;
 
 /// <summary>
 /// Provides arithmetic operations and value conversions for expression evaluation using the <see cref="float"/> type.
@@ -65,7 +67,7 @@ public sealed class FloatExpressionEvaluator : IExpressionEvaluator<float>
     /// </summary>
     /// <param name="input">The string to parse.</param>
     /// <returns>The parsed float value if successful; otherwise, null.</returns>
-    public float? TryParse(string input) => float.TryParse(input, out var ret) ? ret : null;
+    public float? TryParse(string input) => float.TryParse(input, CultureInfo.InvariantCulture, out var ret) ? ret : null;
 
     /// <summary>
     /// Converts the specified integer value to a single-precision floating-point value.

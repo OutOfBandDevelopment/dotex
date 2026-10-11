@@ -81,7 +81,7 @@ public enum EFileAttributes : uint
     /// <summary>
     /// Write operations will not go through any intermediate cache, they will go directly to disk.
     /// </summary>
-    Write_Through = 0x80000000,
+    WriteThrough = 0x80000000,
 
     /// <summary>
     /// The file is being opened or created for asynchronous I/O.

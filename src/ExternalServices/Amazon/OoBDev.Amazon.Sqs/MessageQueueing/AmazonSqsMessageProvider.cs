@@ -1,4 +1,5 @@
-﻿using Amazon.SQS.Model;
+﻿using System.Globalization;
+using Amazon.SQS.Model;
 using Microsoft.Extensions.Logging;
 using OoBDev.MessageQueueing.Services;
 using OoBDev.System.Text.Json.Serialization;
@@ -60,7 +61,7 @@ public partial class AmazonSqsMessageProvider(
         };
 
         // Add optional SQS-specific settings
-        if (int.TryParse(context.Config["DelaySeconds"], out var delay))
+        if (int.TryParse(context.Config["DelaySeconds"], CultureInfo.InvariantCulture, out var delay))
             request.DelaySeconds = delay;
 
         var messageGroupId = context.Config["MessageGroupId"];

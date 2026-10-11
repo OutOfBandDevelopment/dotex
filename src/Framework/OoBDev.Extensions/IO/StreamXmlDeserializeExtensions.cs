@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using System.Xml;
 using System.Xml.Serialization;
 
 namespace OoBDev.Extensions.IO;
@@ -21,7 +22,7 @@ public static class StreamXmlDeserializeExtensions
         ValueTask.FromResult(stream switch
         {
             null => default,
-            _ => (T?)new XmlSerializer(typeof(T), extraTypes).Deserialize(stream)
+            _ => (T?)new XmlSerializer(typeof(T), extraTypes).Deserialize(CreateReader(stream))
         });
 
     /// <summary>
@@ -35,7 +36,7 @@ public static class StreamXmlDeserializeExtensions
          ValueTask.FromResult(stream switch
          {
              null => default,
-             _ => new XmlSerializer(type, extraTypes).Deserialize(stream)
+             _ => new XmlSerializer(type, extraTypes).Deserialize(CreateReader(stream))
          });
 
     /// <summary>
@@ -49,7 +50,7 @@ public static class StreamXmlDeserializeExtensions
         stream switch
         {
             null => default,
-            _ => (T?)new XmlSerializer(typeof(T), extraTypes).Deserialize(stream)
+            _ => (T?)new XmlSerializer(typeof(T), extraTypes).Deserialize(CreateReader(stream))
         };
 
     /// <summary>
@@ -63,7 +64,10 @@ public static class StreamXmlDeserializeExtensions
          stream switch
          {
              null => default,
-             _ => new XmlSerializer(type, extraTypes).Deserialize(stream)
+             _ => new XmlSerializer(type, extraTypes).Deserialize(CreateReader(stream))
          };
 
+    // DTD processing is prohibited and no resolver is used so that untrusted documents cannot trigger XXE
+    private static XmlReader CreateReader(Stream stream) =>
+        XmlReader.Create(stream, new XmlReaderSettings { DtdProcessing = DtdProcessing.Prohibit, XmlResolver = null });
 }

@@ -54,9 +54,9 @@ public partial class FileRagEngineService : IHostedService
     public async Task StartAsync(CancellationToken cancellationToken)
     {
 #pragma warning disable CA2208 // Instantiate argument exceptions correctly
-        if (string.IsNullOrWhiteSpace(_settings.Value.InputPath)) throw new ArgumentNullException(nameof(_settings.Value.InputPath));
-        if (string.IsNullOrWhiteSpace(_settings.Value.Template)) throw new ArgumentNullException(nameof(_settings.Value.Template));
-        if (string.IsNullOrWhiteSpace(_settings.Value.OutputPath)) throw new ArgumentNullException(nameof(_settings.Value.OutputPath));
+        if (string.IsNullOrWhiteSpace(_settings.Value.InputPath)) throw new InvalidOperationException($"{nameof(_settings.Value.InputPath)} is required.");
+        if (string.IsNullOrWhiteSpace(_settings.Value.Template)) throw new InvalidOperationException($"{nameof(_settings.Value.Template)} is required.");
+        if (string.IsNullOrWhiteSpace(_settings.Value.OutputPath)) throw new InvalidOperationException($"{nameof(_settings.Value.OutputPath)} is required.");
 #pragma warning restore CA2208 // Instantiate argument exceptions correctly
 
         //app starts here

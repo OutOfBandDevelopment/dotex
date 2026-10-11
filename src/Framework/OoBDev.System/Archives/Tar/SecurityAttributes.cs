@@ -6,7 +6,7 @@ namespace OoBDev.System.Archives.Tar;
 /// Represents security attributes for Windows API calls (SECURITY_ATTRIBUTES structure).
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
-public struct SECURITY_ATTRIBUTES
+public struct SecurityAttributes
 {
     /// <summary>
     /// The size, in bytes, of this structure.

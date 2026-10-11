@@ -1,4 +1,6 @@
-﻿namespace OoBDev.System.ExpressionCalculator.Evaluators;
+﻿using System.Globalization;
+
+namespace OoBDev.System.ExpressionCalculator.Evaluators;
 
 /// <summary>
 /// Provides arithmetic operations and value conversions for expression evaluation using the <see cref="long"/> (Int64) type.
@@ -65,7 +67,7 @@ public sealed class Int64ExpressionEvaluator : IExpressionEvaluator<long>
     /// </summary>
     /// <param name="input">The string to parse.</param>
     /// <returns>The parsed long value if successful; otherwise, null.</returns>
-    public long? TryParse(string input) => long.TryParse(input, out var ret) ? ret : null;
+    public long? TryParse(string input) => long.TryParse(input, CultureInfo.InvariantCulture, out var ret) ? ret : null;
 
     /// <summary>
     /// Converts the specified integer value to a 64-bit integer.

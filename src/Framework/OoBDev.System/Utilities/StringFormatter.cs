@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using System.Text.RegularExpressions;
 
 namespace OoBDev.System.Utilities;
@@ -33,7 +34,7 @@ public class StringFormatter : IStringFormatter
 
                 // Handle property chains: {model.Property.SubProperty} -> value
                 // This regex captures: {paramName.prop1.prop2.prop3}
-                var propertyChainPattern = new Regex($@"{{\s*{Regex.Escape(paramName)}((?:\.\w+)+)\s*}}");
+                var propertyChainPattern = new Regex($@"{{\s*{Regex.Escape(paramName)}((?:\.\w+)+)\s*}}", RegexOptions.None, TimeSpan.FromSeconds(1));
                 var matches = propertyChainPattern.Matches(result);
                 foreach (Match match in matches)
                 {

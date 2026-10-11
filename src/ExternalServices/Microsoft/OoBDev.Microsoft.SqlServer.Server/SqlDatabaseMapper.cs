@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using System.Globalization;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using OoBDev.Data.Common;
 using OoBDev.System.ComponentModel.Data;
@@ -73,7 +74,7 @@ public class SqlDatabaseMapper : IDatabaseMapper
         var attribute = typeof(T).GetCustomAttribute<ConnectionStringNameAttribute>() ??
             throw new NotSupportedException($"Missing {nameof(ConnectionStringNameAttribute)} on type {typeof(T)}");
 
-        return int.TryParse(_configuration[$"CommandTimeouts:{attribute.ConnectionStringName}"], out var value) ? value : null;
+        return int.TryParse(_configuration[$"CommandTimeouts:{attribute.ConnectionStringName}"], CultureInfo.InvariantCulture, out var value) ? value : null;
     }
 
     /// <inheritdoc/>

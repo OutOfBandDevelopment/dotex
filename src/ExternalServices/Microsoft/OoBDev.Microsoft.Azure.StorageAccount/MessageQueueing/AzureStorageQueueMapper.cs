@@ -1,4 +1,5 @@
-﻿using OoBDev.MessageQueueing.Services;
+﻿using System.Globalization;
+using OoBDev.MessageQueueing.Services;
 using Microsoft.Extensions.Configuration;
 using System;
 
@@ -39,5 +40,5 @@ public class AzureStorageQueueMapper : IAzureStorageQueueMapper
     /// <param name="configuration">The configuration containing the wait delay value.</param>
     /// <returns>The wait delay value, in milliseconds.</returns>
     public int WaitDelay(IConfiguration configuration) =>
-        int.TryParse(configuration["WaitDelay"], out var result) ? result : 1000;
+        int.TryParse(configuration["WaitDelay"], CultureInfo.InvariantCulture, out var result) ? result : 1000;
 }

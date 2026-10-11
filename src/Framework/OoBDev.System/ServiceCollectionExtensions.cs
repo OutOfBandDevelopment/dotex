@@ -79,8 +79,8 @@ public static class ServiceCollectionExtensions
         services.TryAddSingleton<IHMACCalculator, HMAC256Calculator>();
         services.TryAddKeyedSingleton<IHMACCalculator, HMAC256Calculator>("hmac-256");
         services.TryAddKeyedSingleton<IHMACCalculator, HMAC512Calculator>("hmac-512");
-        services.TryAddKeyedSingleton<IHMACCalculator, HMAC3_256Calculator>("hmac3-256");
-        services.TryAddKeyedSingleton<IHMACCalculator, HMAC3_512Calculator>("hmac3-512");
+        services.TryAddKeyedSingleton<IHMACCalculator, HMACSha3256Calculator>("hmac3-256");
+        services.TryAddKeyedSingleton<IHMACCalculator, HMACSha3512Calculator>("hmac3-512");
 
         services.TryAddTransient<ILdapFilterBuilder, LdapFilterBuilder>();
 

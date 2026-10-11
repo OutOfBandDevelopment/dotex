@@ -88,7 +88,7 @@ public static class PipelineBuilder
     /// <param name="onPipelineError">The error handler to invoke when pipeline errors occur.</param>
     /// <returns>The configured pipeline build definition.</returns>
     /// <exception cref="NotSupportedException">Thrown if the pipeline type is not supported or already has a reader.</exception>
-    public static IPipelineBuildDefinition OnError(this IPipelineBuildDefinition pipeline, OnException onPipelineError)
+    public static IPipelineBuildDefinition OnError(this IPipelineBuildDefinition pipeline, PipelineErrorHandler onPipelineError)
     {
         if (pipeline is not PipelineBuildDefinition def)
         {
@@ -109,7 +109,7 @@ public static class PipelineBuilder
     /// <param name="onPipelineError">The error handler to invoke when reader errors occur.</param>
     /// <returns>The configured pipeline build definition.</returns>
     /// <exception cref="NotSupportedException">Thrown if the pipeline type is not supported or already has a reader.</exception>
-    public static IPipelineBuildDefinition OnReaderError(this IPipelineBuildDefinition pipeline, OnException onPipelineError)
+    public static IPipelineBuildDefinition OnReaderError(this IPipelineBuildDefinition pipeline, PipelineErrorHandler onPipelineError)
     {
         if (pipeline is not PipelineBuildDefinition def)
         {
@@ -130,7 +130,7 @@ public static class PipelineBuilder
     /// <param name="onPipelineError">The error handler to invoke when writer errors occur.</param>
     /// <returns>The configured pipeline build definition.</returns>
     /// <exception cref="NotSupportedException">Thrown if the pipeline type is not supported or already has a reader.</exception>
-    public static IPipelineBuildDefinition OnWriterError(this IPipelineBuildDefinition pipeline, OnException onPipelineError)
+    public static IPipelineBuildDefinition OnWriterError(this IPipelineBuildDefinition pipeline, PipelineErrorHandler onPipelineError)
     {
         if (pipeline is not PipelineBuildDefinition def)
         {

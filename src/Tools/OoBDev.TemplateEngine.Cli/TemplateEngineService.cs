@@ -31,9 +31,9 @@ public partial class TemplateEngineService(
     public async Task StartAsync(CancellationToken cancellationToken)
     {
 #pragma warning disable CA2208 // Instantiate argument exceptions correctly
-        if (string.IsNullOrWhiteSpace(_settings.Value.InputFile)) throw new ArgumentNullException(nameof(_settings.Value.InputFile));
-        if (string.IsNullOrWhiteSpace(_settings.Value.Template)) throw new ArgumentNullException(nameof(_settings.Value.Template));
-        if (string.IsNullOrWhiteSpace(_settings.Value.OutputFile)) throw new ArgumentNullException(nameof(_settings.Value.OutputFile));
+        if (string.IsNullOrWhiteSpace(_settings.Value.InputFile)) throw new InvalidOperationException($"{nameof(_settings.Value.InputFile)} is required.");
+        if (string.IsNullOrWhiteSpace(_settings.Value.Template)) throw new InvalidOperationException($"{nameof(_settings.Value.Template)} is required.");
+        if (string.IsNullOrWhiteSpace(_settings.Value.OutputFile)) throw new InvalidOperationException($"{nameof(_settings.Value.OutputFile)} is required.");
 #pragma warning restore CA2208 // Instantiate argument exceptions correctly
 
         var inputPath = Path.GetFullPath(Path.GetDirectoryName(_settings.Value.InputFile) ?? ".");

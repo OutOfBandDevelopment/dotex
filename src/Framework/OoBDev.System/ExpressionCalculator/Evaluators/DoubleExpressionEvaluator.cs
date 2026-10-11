@@ -1,4 +1,6 @@
-﻿namespace OoBDev.System.ExpressionCalculator.Evaluators;
+﻿using System.Globalization;
+
+namespace OoBDev.System.ExpressionCalculator.Evaluators;
 
 /// <summary>
 /// Provides arithmetic operations and value conversions for expression evaluation using the <see cref="double"/> type.
@@ -65,7 +67,7 @@ public sealed class DoubleExpressionEvaluator : IExpressionEvaluator<double>
     /// </summary>
     /// <param name="input">The string to parse.</param>
     /// <returns>The parsed double value if successful; otherwise, null.</returns>
-    public double? TryParse(string input) => double.TryParse(input, out var ret) ? ret : null;
+    public double? TryParse(string input) => double.TryParse(input, CultureInfo.InvariantCulture, out var ret) ? ret : null;
 
     /// <summary>
     /// Converts the specified integer value to a double-precision floating-point value.

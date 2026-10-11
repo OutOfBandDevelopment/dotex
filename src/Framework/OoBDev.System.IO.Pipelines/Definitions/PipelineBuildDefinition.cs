@@ -9,10 +9,10 @@ internal sealed class PipelineBuildDefinition : IPipelineBuildDefinition
     internal PipelineBuildDefinition(Pipe pipe) => Pipe = pipe;
 
     internal Pipe Pipe { get; }
-    internal OnException? OnError { get; set; }
+    internal PipelineErrorHandler? OnError { get; set; }
     internal Task? PipeWriter { get; set; }
-    internal OnException? OnWriterError { get; set; }
+    internal PipelineErrorHandler? OnWriterError { get; set; }
     internal Task? PipeReader { get; set; }
-    internal OnException? OnReaderError { get; set; }
+    internal PipelineErrorHandler? OnReaderError { get; set; }
     internal CancellationTokenSource CancellationTokenSource { get; } = new CancellationTokenSource();
 }

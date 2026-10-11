@@ -1,4 +1,5 @@
-﻿using Antlr4.Runtime;
+﻿using System.Globalization;
+using Antlr4.Runtime;
 using Antlr4.Runtime.Misc;
 using Antlr4.Runtime.Tree;
 using OoBDev.System.PathSegments;
@@ -284,8 +285,8 @@ public class JsonPathVisitor : JsonPathBaseVisitor<IPathSegment?>
 
             _ when value.Length == 0 => new StringPathSegment(""),
             _ when value[0] == '\'' => new QuotedStringPathSegment(value.Trim('\'')),
-            _ when int.TryParse(value, out var number) => new NumericPathSegment(number),
-            _ when decimal.TryParse(value, out var number) => new DecimalPathSegment(number),
+            _ when int.TryParse(value, CultureInfo.InvariantCulture, out var number) => new NumericPathSegment(number),
+            _ when decimal.TryParse(value, CultureInfo.InvariantCulture, out var number) => new DecimalPathSegment(number),
             _ => new StringPathSegment(value)
         };
     /// <summary>

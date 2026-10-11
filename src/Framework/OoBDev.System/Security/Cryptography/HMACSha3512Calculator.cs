@@ -7,7 +7,7 @@ namespace OoBDev.System.Security.Cryptography;
 /// <summary>
 /// Calculates HMAC-SHA3-512 hashes for message authentication.
 /// </summary>
-public class HMAC3_512Calculator : IHMACCalculator
+public class HMACSha3512Calculator : IHMACCalculator
 {
     /// <summary>
     /// Calculates the HMAC-SHA3-512 hash of a message using the provided secret key.

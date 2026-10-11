@@ -138,7 +138,7 @@ public partial class XmlDocumentationProvider
         return result.Length == 0 ? null : result;
     }
 
-    [GeneratedRegex(@"\s+")]
+    [GeneratedRegex(@"\s+", RegexOptions.None, 1000)]
     private static partial Regex Whitespace();
 
     [LoggerMessage(EventId = 1, Level = LogLevel.Debug, Message = "{File}: {Message}")]

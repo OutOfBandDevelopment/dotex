@@ -17,10 +17,10 @@ public class HtmlToMarkdownConversionHandler : IDocumentConversionHandler
     /// <summary>
     /// Constructor for HtmlToMarkdownConversionHandler
     /// </summary>
-    /// <param name="_converter"></param>
+    /// <param name="converter"></param>
     public HtmlToMarkdownConversionHandler(
-        Converter _converter
-        ) => this._converter = _converter;
+        Converter converter
+        ) => _converter = converter;
 
     /// <summary>
     /// Converts the content of a HTML document in the source stream to Markdown format
