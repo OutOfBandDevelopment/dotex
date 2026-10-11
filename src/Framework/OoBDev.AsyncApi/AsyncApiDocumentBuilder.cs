@@ -152,7 +152,7 @@ public class AsyncApiDocumentBuilder(
         return channel;
     }
 
-    private static JsonNode SchemaRef(AsyncApiDocument document, string name, Type type)
+    private static JsonObject SchemaRef(AsyncApiDocument document, string name, Type type)
     {
         if (!document.Components.Schemas.ContainsKey(name))
         {

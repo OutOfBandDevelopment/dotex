@@ -173,7 +173,7 @@ public class OllamaApiClientTests
         var fullResponse = string.Join("", responses.Select(r => r?.Message.Content ?? ""));
         TestContext.WriteLine($"Full response: {fullResponse}");
 
-        Assert.IsTrue(responses.Any(), "Should receive at least one response");
+        Assert.IsGreaterThan(0, responses.Count, "Should receive at least one response");
         Assert.IsFalse(string.IsNullOrWhiteSpace(fullResponse), "Response should not be empty");
     }
 
@@ -258,7 +258,7 @@ public class OllamaApiClientTests
         foreach (var localModel in modelsList)
             TestContext.WriteLine($"model: {localModel.Name} - {localModel.Size:#,##0} ({localModel.Digest})");
 
-        Assert.IsTrue(modelsList.Any(), "At least one model should be available");
+        Assert.IsGreaterThan(0, modelsList.Count, "At least one model should be available");
     }
 
     [TestCategory(TestCategories.DevLocal)]

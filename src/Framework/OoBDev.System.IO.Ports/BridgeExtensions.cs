@@ -21,7 +21,7 @@ public static class BridgeExtensions
             Parity.Mark => global::System.IO.Ports.Parity.Mark,
             Parity.Odd => global::System.IO.Ports.Parity.Odd,
             Parity.Space => global::System.IO.Ports.Parity.Space,
-            _ => throw new ArgumentException(nameof(parity))
+            _ => throw new ArgumentException("Unsupported parity value.", nameof(parity))
         };
 
     /// <summary>
@@ -37,6 +37,6 @@ public static class BridgeExtensions
             StopBits.One => global::System.IO.Ports.StopBits.One,
             StopBits.OnePointFive => global::System.IO.Ports.StopBits.OnePointFive,
             StopBits.Two => global::System.IO.Ports.StopBits.Two,
-            _ => throw new ArgumentException(nameof(stopBits))
+            _ => throw new ArgumentException("Unsupported stop bits value.", nameof(stopBits))
         };
 }

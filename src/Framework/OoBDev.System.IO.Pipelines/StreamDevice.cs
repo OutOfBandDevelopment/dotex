@@ -32,13 +32,13 @@ public class StreamDevice<TMessage> : IStreamDevice<TMessage>
     /// </summary>
     /// <param name="adapter">The device adapter providing access to the underlying stream.</param>
     /// <param name="device">The device definition describing the device's behavior.</param>
-    /// <param name="token">Optional cancellation token to stop the device operations.</param>
     /// <param name="minimumTransmissionDelay">Minimum delay between message transmissions in milliseconds (default is 1000ms).</param>
+    /// <param name="token">Optional cancellation token to stop the device operations.</param>
     public StreamDevice(
         IDeviceAdapter adapter,
         IDeviceDefinition device,
-        CancellationToken token = default,
-        int minimumTransmissionDelay = 1000 //TODO should this default be overideable from the devicedefinition or it's attributes?
+        int minimumTransmissionDelay = 1000, //TODO should this default be overideable from the devicedefinition or it's attributes?
+        CancellationToken token = default
         )
     {
         _tokenSource = CancellationTokenSource.CreateLinkedTokenSource(token);
@@ -123,7 +123,7 @@ public class StreamDevice<TMessage> : IStreamDevice<TMessage>
     private Task ReportDeviceStatus(StreamDeviceStatus status)
     {
         DeviceStatus?.Invoke(this, status);
-        return Task.FromResult(0);
+        return Task.CompletedTask;
     }
 
     private async Task Initializer(AsyncManualResetEvent mre)

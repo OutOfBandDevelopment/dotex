@@ -10,7 +10,7 @@ namespace OoBDev.WebApi.Controllers;
 /// </summary>
 [AllowAnonymous]
 [Route("[Controller]/[Action]")]
-[Obsolete]
+[Obsolete("Obsolete; retained until it is removed from the framework.")]
 [ExcludeFromCodeCoverage]
 public class SearchController : Controller
 {

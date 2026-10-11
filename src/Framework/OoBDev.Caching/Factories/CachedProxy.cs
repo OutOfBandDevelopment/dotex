@@ -64,7 +64,7 @@ public class CachedProxy<TInterface, TImplemention> : DispatchProxy
                         var cachedResult = _cachingManager.RetrieveAsync(cachingKey, targetReturnType).ConfigureAwait(false).GetAwaiter().GetResult();
                         if (cachedResult != null)
                         {
-                            _logger?.LogInformation($"Retrieved from Cache::{targetMethod.Name}::{cachingKey}");
+                            _logger?.LogInformation("Retrieved from Cache::{Method}::{Key}", targetMethod.Name, cachingKey);
                             return isTask ? ResultAwaiter.Wrap(cachedResult) : cachedResult;
                         }
 
@@ -79,7 +79,7 @@ public class CachedProxy<TInterface, TImplemention> : DispatchProxy
 
                         // store original
                         _cachingManager.StoreAsync(cachingKey, original, isCachableAttribute.LifeTime).ConfigureAwait(false).GetAwaiter().GetResult();
-                        _logger?.LogInformation($"Stored into Cache::{targetMethod.Name}::{cachingKey}");
+                        _logger?.LogInformation("Stored into Cache::{Method}::{Key}", targetMethod.Name, cachingKey);
 
                         return isTask ? ResultAwaiter.Wrap(original) : original;
                     }
@@ -89,15 +89,15 @@ public class CachedProxy<TInterface, TImplemention> : DispatchProxy
                 if (flushCacheAttribute != null)
                 {
                     var cachingKey = _cachingManager.BuildKey(method, args);
-                    _logger?.LogInformation($"Flush from Cache::{targetMethod.Name}::{cachingKey}");
+                    _logger?.LogInformation("Flush from Cache::{Method}::{Key}", targetMethod.Name, cachingKey);
                     // do flushable stuff
                     _cachingManager.FlushAsync(cachingKey).ConfigureAwait(false).GetAwaiter().GetResult();
                 }
             }
             catch (Exception ex)
             {
-                _logger?.LogError(ex.Message);
-                _logger?.LogDebug(ex.ToString());
+                _logger?.LogError("{Message}", ex.Message);
+                _logger?.LogDebug("{Exception}", ex.ToString());
                 //Note: we are eating this exception on purpose.  Is caching fails we still want the process to continue
 
 #if DEBUG

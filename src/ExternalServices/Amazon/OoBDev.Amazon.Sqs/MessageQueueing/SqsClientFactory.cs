@@ -36,7 +36,7 @@ public class SqsClientFactory : ISqsClientFactory
         }
 
         // Create client (uses AWS credential chain if keys not provided)
-        IAmazonSQS client = string.IsNullOrEmpty(accessKeyId)
+        var client = string.IsNullOrEmpty(accessKeyId)
             ? new AmazonSQSClient(clientConfig)
             : new AmazonSQSClient(accessKeyId, secretAccessKey, clientConfig);
 

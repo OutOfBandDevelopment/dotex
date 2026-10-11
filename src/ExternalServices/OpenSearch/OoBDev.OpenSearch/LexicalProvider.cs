@@ -6,7 +6,7 @@ namespace OoBDev.OpenSearch;
 /// <summary>
 /// Provides functionality for storing and searching lexical content using OpenSearch.
 /// </summary>
-[Obsolete]
+[Obsolete("Obsolete; retained until it is removed from the framework.")]
 [ExcludeFromCodeCoverage]
 public class LexicalProvider
 {

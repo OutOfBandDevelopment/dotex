@@ -3,6 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
+// The SQL CLR build also targets net48, which has no ThrowIf helpers.
+#pragma warning disable CA1512
+
 namespace OoBDev.Data.Vectors;
 
 internal sealed class ReadOnlyMatrix<T> : IReadOnlyMatrix<T>

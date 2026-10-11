@@ -11,7 +11,7 @@ namespace OoBDev.Microsoft.Caching.Providers;
 /// </summary>
 public class MicrosoftMemoryCachingProvider : ICachingProvider, IDisposable
 {
-    private readonly IMemoryCache _cache;
+    private readonly MemoryCache _cache;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MicrosoftMemoryCachingProvider"/> class.

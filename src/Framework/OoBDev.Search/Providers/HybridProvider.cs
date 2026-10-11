@@ -6,7 +6,7 @@ namespace OoBDev.Search.Providers;
 /// <summary>
 /// Represents a hybrid provider that combines results from lexical and semantic search providers.
 /// </summary>
-[Obsolete]
+[Obsolete("Obsolete; retained until it is removed from the framework.")]
 [ExcludeFromCodeCoverage]
 public class HybridProvider
 {

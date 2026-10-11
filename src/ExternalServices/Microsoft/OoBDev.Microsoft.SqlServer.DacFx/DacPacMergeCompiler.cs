@@ -39,7 +39,7 @@ public class DacpacMergeCompiler : IDacpacMergeCompiler
             using var sqlModel = DacTools.OpenDacPacModel(file);
             foreach (var source in sqlModel.ReadPackage())
             {
-                _logger.LogInformation($"{file}:{source.name}");
+                _logger.LogInformation("{File}:{Name}", file, source.name);
                 target.AddOrUpdateObjects(source.script, source.name, new TSqlObjectOptions()); //TODO: figure out how to carry TSqlObjectOptions forward
             }
 

@@ -807,7 +807,7 @@ public class DacPacBuilder : IDacPacBuilder
 
     #region Type Mapping
 
-    private static readonly IReadOnlyDictionary<string, string> _typeName = new Dictionary<string, string>
+    private static readonly Dictionary<string, string> _typeName = new Dictionary<string, string>
     {
         { "System.Data.SqlTypes.SqlByte", "[tinyint]" },
         { "System.Data.SqlTypes.SqlInt16", "[smallint]" },

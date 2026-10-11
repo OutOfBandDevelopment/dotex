@@ -11,7 +11,7 @@ namespace OoBDev.Search.Providers;
 /// <summary>
 /// Provides functionality to generate summaries for documents.
 /// </summary>
-[Obsolete]
+[Obsolete("Obsolete; retained until it is removed from the framework.")]
 [ExcludeFromCodeCoverage]
 public class DocumentSummaryGenerationProvider
 {

@@ -94,7 +94,7 @@ public class FileRagEngineService : IHostedService
                          }.Any(i => i == ext)
                          select file).ToArray();
 
-            if (!files.Any())
+            if (files.Length == 0)
             {
                 _log.LogWarning("path empty: {directory}", directory);
                 continue;
@@ -160,7 +160,7 @@ public class FileRagEngineService : IHostedService
                 }
             }
         }
-        if (exceptions.Any())
+        if (exceptions.Count > 0)
             throw new AggregateException(exceptions);
     }
 

@@ -20,7 +20,7 @@ public enum DacPackTools
     /// <summary>
     /// DACPAC merge tool.
     /// </summary>
-    Merge = 1,
+    Merge = 2,
 }
 
 /// <summary>
