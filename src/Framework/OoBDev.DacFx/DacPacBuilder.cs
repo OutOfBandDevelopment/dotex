@@ -14,7 +14,7 @@ namespace OoBDev.DacFx;
 /// <summary>
 /// Builds Data-tier Application Package (DACPAC) files from SQL CLR assemblies.
 /// </summary>
-public class DacPacBuilder : IDacPacBuilder
+public partial class DacPacBuilder : IDacPacBuilder
 {
     private readonly TimeProvider _timeProvider;
 
@@ -97,9 +97,9 @@ public class DacPacBuilder : IDacPacBuilder
         projectName ??= Path.GetFileNameWithoutExtension(assemblyFileFramework);
         projectVersion ??= "0.0.0.1";
 
-        _logger.LogInformation("Building DACPAC: {projectName} v{projectVersion}", projectName, projectVersion);
-        _logger.LogInformation("Assembly: {assemblyFileFramework}", assemblyFileFramework);
-        _logger.LogInformation("Output: {dacpacFile}", dacpacFile);
+        LogBuildingDacpacV(projectName, projectVersion);
+        LogAssembly(assemblyFileFramework);
+        LogOutput(dacpacFile);
 
         if (File.Exists(dacpacFile))
             File.Delete(dacpacFile);
@@ -112,7 +112,7 @@ public class DacPacBuilder : IDacPacBuilder
             // Save model.xml for debugging
             var debugModelPath = Path.ChangeExtension(dacpacFile, ".model.xml");
             modelXml.Save(debugModelPath);
-            _logger.LogInformation("DEBUG: Saved model.xml to {debugModelPath}", debugModelPath);
+            LogDebugSavedModelXml(debugModelPath);
 #endif 
 
             var modelHash = AddXmlToArchive(archive, "model.xml", modelXml);
@@ -127,7 +127,7 @@ public class DacPacBuilder : IDacPacBuilder
             AddXmlToArchive(archive, "[Content_Types].xml", contentTypeXml);
         }
 
-        _logger.LogInformation("DACPAC created successfully: {dacpacFile}", dacpacFile);
+        LogDacpacCreatedSuccessfully(dacpacFile);
 
         // Validate the DACPAC using Microsoft DacFx
         _validator.ValidateDacPac(dacpacFile);
@@ -138,7 +138,7 @@ public class DacPacBuilder : IDacPacBuilder
             if (dacpacFile != dacpacFile2)
             {
                 File.Copy(dacpacFile, dacpacFile2, overwrite: true);
-                _logger.LogInformation("Copied to: {dacpacFile2}", dacpacFile2);
+                LogCopiedTo(dacpacFile2);
             }
         }
     }
@@ -315,7 +315,7 @@ public class DacPacBuilder : IDacPacBuilder
                 continue;
 
             var name = GetAttributeName(attrData);
-            _logger.LogDebug("Processing aggregate: {typeName}, AttributeName: '{name}'", type.FullName, name ?? "(null)");
+            LogProcessingAggregateAttributename(type.FullName, name ?? "(null)");
 
             if (string.IsNullOrWhiteSpace(name))
                 throw new NotSupportedException($"SqlUserDefinedAggregate on {type.FullName} must have a non-empty Name");
@@ -366,7 +366,7 @@ public class DacPacBuilder : IDacPacBuilder
                 continue;
 
             var name = GetAttributeName(attrData);
-            _logger.LogDebug("Processing UDT: {typeName}, AttributeName: '{name}'", type.FullName, name ?? "(null)");
+            LogProcessingUdtAttributename(type.FullName, name ?? "(null)");
 
             if (string.IsNullOrWhiteSpace(name))
                 throw new NotSupportedException($"SqlUserDefinedType on {type.FullName} must have a non-empty Name");
@@ -412,8 +412,7 @@ public class DacPacBuilder : IDacPacBuilder
                     continue;
 
                 var functionName = GetAttributeName(attrData);
-                _logger.LogDebug("Processing function: {className}.{methodName}, AttributeName: '{name}'",
-                    functionClasses.FullName, function.Name, functionName ?? "(null)");
+                LogProcessingFunctionAttributename(functionClasses.FullName, function.Name, functionName ?? "(null)");
 
                 if (string.IsNullOrWhiteSpace(functionName))
                     throw new NotSupportedException($"SqlFunction on {functionClasses.FullName}.{function.Name} must have a non-empty Name");
@@ -936,4 +935,31 @@ public class DacPacBuilder : IDacPacBuilder
         Convert.ToHexString(SHA512.HashData(content));
 
     #endregion
+
+    [LoggerMessage(EventId = 1, Level = LogLevel.Information, Message = "Building DACPAC: {projectName} v{projectVersion}")]
+    private partial void LogBuildingDacpacV(string? projectName, string? projectVersion);
+
+    [LoggerMessage(EventId = 2, Level = LogLevel.Information, Message = "Assembly: {assemblyFileFramework}")]
+    private partial void LogAssembly(string? assemblyFileFramework);
+
+    [LoggerMessage(EventId = 3, Level = LogLevel.Information, Message = "Output: {dacpacFile}")]
+    private partial void LogOutput(string? dacpacFile);
+
+    [LoggerMessage(EventId = 4, Level = LogLevel.Information, Message = "DEBUG: Saved model.xml to {debugModelPath}")]
+    private partial void LogDebugSavedModelXml(string? debugModelPath);
+
+    [LoggerMessage(EventId = 5, Level = LogLevel.Information, Message = "DACPAC created successfully: {dacpacFile}")]
+    private partial void LogDacpacCreatedSuccessfully(string? dacpacFile);
+
+    [LoggerMessage(EventId = 6, Level = LogLevel.Information, Message = "Copied to: {dacpacFile2}")]
+    private partial void LogCopiedTo(string? dacpacFile2);
+
+    [LoggerMessage(EventId = 7, Level = LogLevel.Debug, Message = "Processing aggregate: {typeName}, AttributeName: '{name}'")]
+    private partial void LogProcessingAggregateAttributename(string? typeName, string? name);
+
+    [LoggerMessage(EventId = 8, Level = LogLevel.Debug, Message = "Processing UDT: {typeName}, AttributeName: '{name}'")]
+    private partial void LogProcessingUdtAttributename(string? typeName, string? name);
+
+    [LoggerMessage(EventId = 9, Level = LogLevel.Debug, Message = "Processing function: {className}.{methodName}, AttributeName: '{name}'")]
+    private partial void LogProcessingFunctionAttributename(string? className, string? methodName, string? name);
 }

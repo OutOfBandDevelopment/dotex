@@ -10,7 +10,7 @@ namespace OoBDev.DacFx;
 /// <summary>
 /// Validates DACPAC files using Microsoft DacFx APIs.
 /// </summary>
-public class DacPacValidator : IDacPacValidator
+public partial class DacPacValidator : IDacPacValidator
 {
     private readonly ILogger _logger;
 
@@ -25,22 +25,22 @@ public class DacPacValidator : IDacPacValidator
     /// </summary>
     public void ValidateDacPac(string dacpacFile)
     {
-        _logger.LogInformation("Validating DACPAC with Microsoft DacFx: {dacpacFile}", dacpacFile);
+        LogValidatingDacpacWithMicrosoft(dacpacFile);
 
         try
         {
             // Load the DACPAC using official DacFx
             using (var package = DacPackage.Load(dacpacFile))
             {
-                _logger.LogInformation("DACPAC loaded successfully by DacFx");
-                _logger.LogInformation("  Name: {name}", package.Name);
-                _logger.LogInformation("  Version: {version}", package.Version);
-                _logger.LogInformation("  Description: {description}", package.Description ?? "(none)");
+                LogDacpacLoadedSuccessfullyBy();
+                LogName(package.Name);
+                LogVersion(package.Version);
+                LogDescription(package.Description ?? "(none)");
             }
             // Load the TSqlModel to validate the schema
             using (var model = new TSqlModel(dacpacFile))
             {
-                _logger.LogInformation("TSqlModel loaded successfully");
+                LogTsqlmodelLoadedSuccessfully();
 
                 // Count objects in the model
                 var assemblies = model.GetObjects(DacQueryScopes.All, ModelSchema.Assembly).ToList();
@@ -48,47 +48,98 @@ public class DacPacValidator : IDacPacValidator
                 var aggregates = model.GetObjects(DacQueryScopes.All, ModelSchema.Aggregate).ToList();
                 var udts = model.GetObjects(DacQueryScopes.All, ModelSchema.UserDefinedType).ToList();
 
-                _logger.LogInformation("DACPAC contents:");
-                _logger.LogInformation("  Assemblies: {count}", assemblies.Count);
-                _logger.LogInformation("  Scalar Functions: {count}", functions.Count);
-                _logger.LogInformation("  Aggregates: {count}", aggregates.Count);
-                _logger.LogInformation("  User-Defined Types: {count}", udts.Count);
+                LogDacpacContents();
+                LogAssemblies(assemblies.Count);
+                LogScalarFunctions(functions.Count);
+                LogAggregates(aggregates.Count);
+                LogUserDefinedTypes(udts.Count);
 
                 // Validate each assembly
                 foreach (var assembly in assemblies)
                 {
                     var name = assembly.Name.ToString();
-                    _logger.LogInformation("  Assembly: {name}", name);
+                    LogAssembly(name);
                 }
 
                 // Validate each function
                 foreach (var function in functions)
                 {
                     var name = function.Name.ToString();
-                    _logger.LogInformation("  Function: {name}", name);
+                    LogFunction(name);
                 }
 
                 // Validate each aggregate
                 foreach (var aggregate in aggregates)
                 {
                     var name = aggregate.Name.ToString();
-                    _logger.LogInformation("  Aggregate: {name}", name);
+                    LogAggregate(name);
                 }
 
                 // Validate each UDT
                 foreach (var udt in udts)
                 {
                     var name = udt.Name.ToString();
-                    _logger.LogInformation("  UDT: {name}", name);
+                    LogUdt(name);
                 }
 
-                _logger.LogInformation("DACPAC validation successful!");
+                LogDacpacValidationSuccessful();
             }
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "DACPAC validation failed");
+            LogDacpacValidationFailed(ex);
             throw new InvalidOperationException($"Generated DACPAC is invalid: {ex.Message}", ex);
         }
     }
+
+    [LoggerMessage(EventId = 1, Level = LogLevel.Information, Message = "Validating DACPAC with Microsoft DacFx: {dacpacFile}")]
+    private partial void LogValidatingDacpacWithMicrosoft(string? dacpacFile);
+
+    [LoggerMessage(EventId = 2, Level = LogLevel.Information, Message = "DACPAC loaded successfully by DacFx")]
+    private partial void LogDacpacLoadedSuccessfullyBy();
+
+    [LoggerMessage(EventId = 3, Level = LogLevel.Information, Message = "  Name: {name}")]
+    private partial void LogName(string? name);
+
+    [LoggerMessage(EventId = 4, Level = LogLevel.Information, Message = "  Version: {version}")]
+    private partial void LogVersion(Version version);
+
+    [LoggerMessage(EventId = 5, Level = LogLevel.Information, Message = "  Description: {description}")]
+    private partial void LogDescription(string? description);
+
+    [LoggerMessage(EventId = 6, Level = LogLevel.Information, Message = "TSqlModel loaded successfully")]
+    private partial void LogTsqlmodelLoadedSuccessfully();
+
+    [LoggerMessage(EventId = 7, Level = LogLevel.Information, Message = "DACPAC contents:")]
+    private partial void LogDacpacContents();
+
+    [LoggerMessage(EventId = 8, Level = LogLevel.Information, Message = "  Assemblies: {count}")]
+    private partial void LogAssemblies(int count);
+
+    [LoggerMessage(EventId = 9, Level = LogLevel.Information, Message = "  Scalar Functions: {count}")]
+    private partial void LogScalarFunctions(int count);
+
+    [LoggerMessage(EventId = 10, Level = LogLevel.Information, Message = "  Aggregates: {count}")]
+    private partial void LogAggregates(int count);
+
+    [LoggerMessage(EventId = 11, Level = LogLevel.Information, Message = "  User-Defined Types: {count}")]
+    private partial void LogUserDefinedTypes(int count);
+
+    [LoggerMessage(EventId = 12, Level = LogLevel.Information, Message = "  Assembly: {name}")]
+    private partial void LogAssembly(string? name);
+
+    [LoggerMessage(EventId = 13, Level = LogLevel.Information, Message = "  Function: {name}")]
+    private partial void LogFunction(string? name);
+
+    [LoggerMessage(EventId = 14, Level = LogLevel.Information, Message = "  Aggregate: {name}")]
+    private partial void LogAggregate(string? name);
+
+    [LoggerMessage(EventId = 15, Level = LogLevel.Information, Message = "  UDT: {name}")]
+    private partial void LogUdt(string? name);
+
+    [LoggerMessage(EventId = 16, Level = LogLevel.Information, Message = "DACPAC validation successful!")]
+    private partial void LogDacpacValidationSuccessful();
+
+    [LoggerMessage(EventId = 17, Level = LogLevel.Error, Message = "DACPAC validation failed")]
+    private partial void LogDacpacValidationFailed(Exception exception);
 }
