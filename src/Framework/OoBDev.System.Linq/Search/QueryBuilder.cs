@@ -176,7 +176,7 @@ public class QueryBuilder<TModel>(
         }
         else
         {
-            _logger.LogInformation($"Execute : {{{nameof(query)}}}", ordered.ToString());
+            LinqLog.Execute(_logger, ordered);
             return new QueryResult<TModel>(ordered)
             {
                 Messages = _capture.Capture(),
@@ -206,11 +206,11 @@ public class QueryBuilder<TModel>(
         var queryIntercepts = query.ElementType.GetAttributes<ISearchQueryIntercept>();
         foreach (var interceptor in queryIntercepts)
         {
-            _logger.LogDebug($"Intercepted by: {{{nameof(interceptor)}}}", interceptor);
+            LinqLog.InterceptedBy(_logger, interceptor);
             searchQuery = interceptor.Intercept(searchQuery);
         }
 
-        _logger.LogInformation($"Build query for {{{nameof(searchQuery)}}}", searchQuery);
+        LinqLog.BuildQuery(_logger, searchQuery);
 
         var searched = SearchBy(query, searchQuery, stringComparison, true);
         var filtered = FilterBy(searched, searchQuery, stringComparison);
@@ -223,11 +223,7 @@ public class QueryBuilder<TModel>(
                 Message = SearchQuery.Messages.NoSearchQueryFilter,
                 MessageCode = SearchQuery.Messages.NoSearchQueryFilterCode,
             });
-            _logger.LogWarning(
-                $"No filtering detected: {{{nameof(query)}}}: {{{nameof(searchQuery)}}}",
-                query.ToString(),
-                searchQuery.ToString()
-                );
+            LinqLog.NoFiltering(_logger, query.ToString(), searchQuery.ToString());
         }
 
         var sorted = SortBy(filtered, searchQuery, stringComparison);
@@ -237,7 +233,7 @@ public class QueryBuilder<TModel>(
             var toVisit = sorted.Expression;
             foreach (var visitor in _postBuildVisitors)
             {
-                _logger.LogDebug($"Visited by: {{{nameof(visitor)}}}", visitor);
+                LinqLog.VisitedBy(_logger, visitor);
                 toVisit = visitor.Visit(toVisit) ?? toVisit;
             }
             sorted = (IOrderedQueryable<TModel>)query.Provider.CreateQuery<TModel>(toVisit);
@@ -268,7 +264,7 @@ public class QueryBuilder<TModel>(
             _ => [.. pagedQuery]
         };
 
-        _logger.LogInformation($"Execute (paged): {{{nameof(query)}}}", pagedQuery.ToString());
+        LinqLog.ExecutePaged(_logger, pagedQuery);
 
         var result = new PagedQueryResult<TModel>(
             currentPage: page,
@@ -325,7 +321,7 @@ public class QueryBuilder<TModel>(
                         Context = item.Key,
                         MetaData = item.Value,
                     });
-                    _logger.LogWarning($"No filter mapped for property: {{name}} => {{filter}}", item.Key, item.Value);
+                    LinqLog.NoFilterMapped(_logger, item.Key, item.Value);
                 }
             }
         }

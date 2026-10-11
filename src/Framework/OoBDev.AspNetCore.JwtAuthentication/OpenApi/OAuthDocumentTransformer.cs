@@ -14,7 +14,7 @@ namespace OoBDev.AspNetCore.JwtAuthentication.OpenApi;
 /// </summary>
 /// <param name="config">The OAuth2 options.</param>
 /// <param name="logger">Logger</param>
-public class OAuthDocumentTransformer(
+public partial class OAuthDocumentTransformer(
     IOptions<OAuth2OpenApiOptions> config,
     ILogger<OAuthDocumentTransformer> logger
     ) : IOpenApiDocumentTransformer
@@ -55,12 +55,12 @@ public class OAuthDocumentTransformer(
 
         if (string.IsNullOrEmpty(options.AuthorizationUrl))
         {
-            logger.LogWarning("{Section}:AuthorizationUrl is not configured", nameof(OAuth2OpenApiOptions));
+            LogAuthorizationUrlNotConfigured(logger, nameof(OAuth2OpenApiOptions));
             return Task.CompletedTask;
         }
         if (string.IsNullOrEmpty(options.TokenUrl))
         {
-            logger.LogWarning("{Section}:TokenUrl is not configured", nameof(OAuth2OpenApiOptions));
+            LogTokenUrlNotConfigured(logger, nameof(OAuth2OpenApiOptions));
             return Task.CompletedTask;
         }
 
@@ -91,4 +91,10 @@ public class OAuthDocumentTransformer(
 
         return Task.CompletedTask;
     }
+
+    [LoggerMessage(EventId = 1, Level = LogLevel.Warning, Message = "{Section}:AuthorizationUrl is not configured")]
+    private static partial void LogAuthorizationUrlNotConfigured(ILogger logger, string section);
+
+    [LoggerMessage(EventId = 2, Level = LogLevel.Warning, Message = "{Section}:TokenUrl is not configured")]
+    private static partial void LogTokenUrlNotConfigured(ILogger logger, string section);
 }

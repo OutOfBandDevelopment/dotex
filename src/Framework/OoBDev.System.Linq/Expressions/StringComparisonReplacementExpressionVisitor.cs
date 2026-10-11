@@ -78,7 +78,7 @@ public class StringComparisonReplacementExpressionVisitor(
         var args = input.Arguments.Concat(new[] { Expression.Constant(stringComparison) });
         var replacement = Expression.Call(input.Object, method, args);
 
-        _logger.LogDebug($"Replace: {{{nameof(input)}}} with {{{nameof(replacement)}}}", input, replacement);
+        LinqLog.Replace(_logger, input, replacement);
 
         return replacement;
 

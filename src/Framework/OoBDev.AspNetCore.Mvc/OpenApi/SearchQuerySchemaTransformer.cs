@@ -18,7 +18,7 @@ namespace OoBDev.AspNetCore.Mvc.OpenApi;
 /// Schema transformer that describes the paging, filter, sort and search term properties of <see cref="SearchQuery{TModel}"/>,
 /// including which model properties can be filtered, sorted and searched.
 /// </summary>
-public class SearchQuerySchemaTransformer(
+public partial class SearchQuerySchemaTransformer(
     IServiceProvider serviceProvider,
     ILogger<SearchQuerySchemaTransformer> logger
         ) : IOpenApiSchemaTransformer
@@ -55,7 +55,7 @@ public class SearchQuerySchemaTransformer(
         }
         catch (Exception ex)
         {
-            logger.LogDebug(ex, "Unable to describe {SearchQuery}", type);
+            LogUnableToDescribe(logger, ex, type);
         }
 
         return Task.CompletedTask;
@@ -83,4 +83,7 @@ public class SearchQuerySchemaTransformer(
         var defaultSort = treeBuilder.DefaultSortOrder().Select(o => $"{o.column} {o.direction.AsString()}").ToList();
         return defaultSort.Count == 0 ? "" : $"; **Default order:** {string.Join(", ", defaultSort)}";
     }
+
+    [LoggerMessage(EventId = 1, Level = LogLevel.Debug, Message = "Unable to describe {SearchQuery}")]
+    private static partial void LogUnableToDescribe(ILogger logger, Exception exception, Type searchQuery);
 }

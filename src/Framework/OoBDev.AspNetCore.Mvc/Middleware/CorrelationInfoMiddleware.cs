@@ -10,7 +10,7 @@ namespace OoBDev.AspNetCore.Mvc.Middleware;
 /// <summary>
 /// Middleware for handling correlation information in HTTP requests and responses.
 /// </summary>
-public class CorrelationInfoMiddleware
+public partial class CorrelationInfoMiddleware
 {
     private readonly RequestDelegate _next;
 
@@ -48,7 +48,10 @@ public class CorrelationInfoMiddleware
 
             correlationId = correlationAccessor.Value.CorrelationId = string.IsNullOrWhiteSpace(correlationId) ? Guid.NewGuid().ToString() : correlationId;
 
-            logger.LogInformation($"Invoke: {{{nameof(correlationId)}}}/{{{nameof(requestId)}}}", correlationId, requestId);
+            if (logger.IsEnabled(LogLevel.Information))
+#pragma warning disable CA1873 // guarded by IsEnabled
+                LogInvoke(logger, correlationId, requestId);
+#pragma warning restore CA1873
         }
 
         context.Response.OnStarting(state =>
@@ -61,7 +64,7 @@ public class CorrelationInfoMiddleware
             if (!string.IsNullOrWhiteSpace(correlationId)) context.Response.Headers[DefinedHttpHeaders.CorrelationIdHeader] = correlationId;
             if (!string.IsNullOrWhiteSpace(requestId)) context.Response.Headers[DefinedHttpHeaders.RequestIdHeader] = requestId;
 
-            logger.LogInformation($"Return: {{{nameof(correlationId)}}}/{{{nameof(requestId)}}}", correlationId, requestId);
+            LogReturn(logger, correlationId, requestId);
 
             return Task.CompletedTask;
 
@@ -69,4 +72,10 @@ public class CorrelationInfoMiddleware
 
         await _next.Invoke(context);
     }
+
+    [LoggerMessage(EventId = 1, Level = LogLevel.Information, Message = "Invoke: {correlationId}/{requestId}")]
+    private static partial void LogInvoke(ILogger logger, string? correlationId, string? requestId);
+
+    [LoggerMessage(EventId = 2, Level = LogLevel.Information, Message = "Return: {correlationId}/{requestId}")]
+    private static partial void LogReturn(ILogger logger, string? correlationId, string? requestId);
 }

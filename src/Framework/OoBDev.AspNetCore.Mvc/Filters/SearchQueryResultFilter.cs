@@ -20,7 +20,7 @@ namespace OoBDev.AspNetCore.Mvc.Filters;
 /// <see cref="IQueryResult{TModel}"/>
 /// <see cref="IPagedQueryResult{TModel}"/>
 /// </summary>
-public class SearchQueryResultFilter(
+public partial class SearchQueryResultFilter(
     IAccessor<ISearchQuery> searchQuery,
     ILogger<SearchQueryResultFilter> logger,
     IServiceProvider serviceProvider
@@ -47,7 +47,7 @@ public class SearchQueryResultFilter(
         {
             var elementType = query.ElementType;
 
-            _logger.LogInformation($"Base Query: {{{nameof(query)}}} ({{{nameof(query.ElementType)}}})", query.ToString(), elementType);
+            LogBaseQuery(query, elementType);
 
             if (elementType != null && searchQuery.Value != null)
             {
@@ -56,11 +56,14 @@ public class SearchQueryResultFilter(
             }
             else
             {
-                _logger.LogWarning(
-                    $"No {nameof(SearchQuery)} ({{{nameof(elementType)}}}) found, results will not be filtered",
-                    elementType
-                    );
+                LogNoSearchQuery(elementType);
             }
         }
     }
+
+    [LoggerMessage(EventId = 1, Level = LogLevel.Information, Message = "Base Query: {query} ({ElementType})")]
+    private partial void LogBaseQuery(IQueryable query, Type? elementType);
+
+    [LoggerMessage(EventId = 2, Level = LogLevel.Warning, Message = "No SearchQuery ({elementType}) found, results will not be filtered")]
+    private partial void LogNoSearchQuery(Type? elementType);
 }

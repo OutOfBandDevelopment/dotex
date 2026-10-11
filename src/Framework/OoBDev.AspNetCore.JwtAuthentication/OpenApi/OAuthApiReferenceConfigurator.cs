@@ -12,7 +12,7 @@ namespace OoBDev.AspNetCore.JwtAuthentication.OpenApi;
 /// <param name="jwt">The JwtBearer options.</param>
 /// <param name="oauth">The OAuth2 options.</param>
 /// <param name="logger">The logger.</param>
-public class OAuthApiReferenceConfigurator(
+public partial class OAuthApiReferenceConfigurator(
     IOptions<JwtBearerOptions> jwt,
     IOptions<OAuth2OpenApiOptions> oauth,
     ILogger<OAuthApiReferenceConfigurator> logger
@@ -26,7 +26,7 @@ public class OAuthApiReferenceConfigurator(
     {
         if (string.IsNullOrWhiteSpace(jwt.Value.Audience))
         {
-            logger.LogWarning("JwtBearerOptions:Audience is not configured");
+            LogAudienceNotConfigured(logger);
             return;
         }
 
@@ -40,4 +40,7 @@ public class OAuthApiReferenceConfigurator(
                 flow.SelectedScopes = [.. scopes];
             });
     }
+
+    [LoggerMessage(EventId = 1, Level = LogLevel.Warning, Message = "JwtBearerOptions:Audience is not configured")]
+    private static partial void LogAudienceNotConfigured(ILogger logger);
 }
