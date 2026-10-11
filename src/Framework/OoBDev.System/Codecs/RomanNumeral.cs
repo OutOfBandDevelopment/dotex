@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -9,7 +10,7 @@ namespace OoBDev.System.Codecs;
 /// </summary>
 public class RomanNumeral
 {
-    private readonly IReadOnlyDictionary<string, int> _map = new Dictionary<string, int>()
+    private readonly IReadOnlyDictionary<string, int> _map = new Dictionary<string, int>(StringComparer.Ordinal)
     {
         // with Vinculum 
         { "/M",    1000 * 1000 },

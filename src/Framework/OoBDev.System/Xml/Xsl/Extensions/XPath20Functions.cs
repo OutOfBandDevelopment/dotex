@@ -126,10 +126,9 @@ public class XPath20Functions
     [XsltFunction("distinct-values", HideOriginalName = true)]
     public XPathNodeIterator distinct_values(XPathNodeIterator input) =>
          new EnumerableXPathNodeIterator(
-            from i in input.AsNavigatorSet()
-            group i by i.Value into grouped
-            from i in grouped
-            select grouped.First());
+            input.AsNavigatorSet()
+                .GroupBy(i => i.Value, StringComparer.Ordinal)
+                .Select(grouped => grouped.First()));
 
     ////TODO: this does not seem supported at this time
     ///// <summary>

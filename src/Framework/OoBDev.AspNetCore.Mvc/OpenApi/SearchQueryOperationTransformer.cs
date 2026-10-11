@@ -62,13 +62,13 @@ public partial class SearchQueryOperationTransformer(
             from format in responseType.ApiResponseFormats
             where format.MediaType.EndsWith("/json", StringComparison.Ordinal)
             select format.MediaType
-            ).Distinct().ToList();
+            ).Distinct(StringComparer.Ordinal).ToList();
 
         if (context.Description.HttpMethod == "POST")
         {
             var requestSchema = await context.GetOrCreateSchemaAsync(requestType, null, cancellationToken);
             var body = operation.RequestBody as OpenApiRequestBody ?? new OpenApiRequestBody();
-            body.Content ??= new Dictionary<string, OpenApiMediaType>();
+            body.Content ??= new Dictionary<string, OpenApiMediaType>(StringComparer.Ordinal);
             ApplyContent(body.Content, requestSchema, jsonContentTypes);
             operation.RequestBody = body;
         }
@@ -84,12 +84,12 @@ public partial class SearchQueryOperationTransformer(
         operation.Responses ??= [];
         var ok = operation.Responses.TryGetValue("200", out var existingOk) ? existingOk as OpenApiResponse : null;
         ok ??= new OpenApiResponse { Description = "OK" };
-        ok.Content ??= new Dictionary<string, OpenApiMediaType>();
+        ok.Content ??= new Dictionary<string, OpenApiMediaType>(StringComparer.Ordinal);
         operation.Responses["200"] = ok;
         ApplyContent(
             ok.Content,
             pagedResponseSchema,
-            context.Description.SupportedResponseTypes.SelectMany(m => m.ApiResponseFormats.Select(i => i.MediaType)).Distinct());
+            context.Description.SupportedResponseTypes.SelectMany(m => m.ApiResponseFormats.Select(i => i.MediaType)).Distinct(StringComparer.Ordinal));
     }
 
     private async Task AddQueryParametersAsync(

@@ -1,4 +1,5 @@
-﻿using Azure.Storage.Blobs;
+﻿using System;
+using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using OoBDev.Documents.Containers;
 using OoBDev.Documents.Models;
@@ -52,14 +53,14 @@ public partial class AzureBlobContainerProvider : IBlobContainerProvider
     }
 
     /// <summary>
-    /// Retrieves the content of the specified file from Azure Blob storage.
+    /// Retrieves the content of the specified path from Azure Blob storage.
     /// </summary>
-    /// <param name="file">The name of the file to retrieve.</param>
+    /// <param name="path">The path to retrieve.</param>
     /// <returns>A ContentReference object representing the retrieved content.</returns>
-    public async Task<ContentReference?> GetContentAsync(string file)
+    public async Task<ContentReference?> GetContentAsync(string path)
     {
         await EnsureContainerExistsAsync().ConfigureAwait(false);
-        var blob = _blockBlobClient.GetBlobClient(file);
+        var blob = _blockBlobClient.GetBlobClient(path);
 
         if (!await blob.ExistsAsync().ConfigureAwait(false))
             return null;
@@ -69,7 +70,7 @@ public partial class AzureBlobContainerProvider : IBlobContainerProvider
         {
             Content = result.Value.Content,
             ContentType = result.Value.Details.ContentType,
-            FileName = Path.GetFileName(file)
+            FileName = Path.GetFileName(path)
         };
     }
 
@@ -89,7 +90,7 @@ public partial class AzureBlobContainerProvider : IBlobContainerProvider
         {
             FileName = blob.Name,
             ContentType = header.Value.ContentType,
-            MetaData = header.Value.Metadata.ToDictionary(k => k.Key, k => k.Value),
+            MetaData = header.Value.Metadata.ToDictionary(k => k.Key, k => k.Value, StringComparer.Ordinal),
         };
     }
 
@@ -121,7 +122,7 @@ public partial class AzureBlobContainerProvider : IBlobContainerProvider
 
         if (metadata != null)
         {
-            var data = metadata.ToDictionary(k => k.Key, v => $"{v.Value}");
+            var data = metadata.ToDictionary(k => k.Key, v => $"{v.Value}", StringComparer.Ordinal);
             await blob.SetMetadataAsync(data).ConfigureAwait(false);
         }
     }
@@ -163,7 +164,7 @@ public partial class AzureBlobContainerProvider : IBlobContainerProvider
                     {
                         FileName = b.Name,
                         ContentType = b.Properties.ContentType,
-                        MetaData = b.Metadata.ToDictionary(k => k.Key, k => k.Value),
+                        MetaData = b.Metadata.ToDictionary(k => k.Key, k => k.Value, StringComparer.Ordinal),
                     };
         return query.AsQueryable();
     }

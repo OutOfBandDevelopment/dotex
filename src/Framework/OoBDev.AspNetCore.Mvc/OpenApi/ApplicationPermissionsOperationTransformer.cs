@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.OpenApi;
 using Microsoft.OpenApi;
@@ -28,7 +29,7 @@ public class ApplicationPermissionsOperationTransformer : IOpenApiOperationTrans
         var allowAnonymous = metadata.OfType<AllowAnonymousAttribute>().Any();
         var applicationRights = metadata.OfType<ApplicationRightAttribute>().SelectMany(a => a.Rights);
 
-        operation.Extensions ??= new Dictionary<string, IOpenApiExtension>();
+        operation.Extensions ??= new Dictionary<string, IOpenApiExtension>(StringComparer.Ordinal);
         operation.Extensions["x-permissions"] = new ApiPermissionsExtension(allowAnonymous, applicationRights);
         return Task.CompletedTask;
     }

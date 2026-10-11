@@ -67,7 +67,7 @@ public partial class DacPacBuilder : IDacPacBuilder
 
         var paths = Directory.GetFiles(runtimeDir, "*.dll")
             .Concat(Directory.GetFiles(assemblyDir, "*.dll"))
-            .Distinct();
+            .Distinct(StringComparer.Ordinal);
 
         var resolver = new PathAssemblyResolver(paths);
         return new MetadataLoadContext(resolver, "mscorlib");
@@ -662,7 +662,7 @@ public partial class DacPacBuilder : IDacPacBuilder
             .Where(x => (string?)x.Attribute("Name") == "Schema")
             .SelectMany(x => x.Descendants(ns + "References"))
             .Select(x => (string?)x.Attribute("Name"))
-            .Distinct()
+            .Distinct(StringComparer.Ordinal)
         select new XElement(ns + "Element",
             new XAttribute("Type", "SqlSchema"),
             new XAttribute("Name", schema!),
@@ -806,7 +806,7 @@ public partial class DacPacBuilder : IDacPacBuilder
 
     #region Type Mapping
 
-    private static readonly Dictionary<string, string> _typeName = new Dictionary<string, string>
+    private static readonly Dictionary<string, string> _typeName = new Dictionary<string, string>(StringComparer.Ordinal)
     {
         { "System.Data.SqlTypes.SqlByte", "[tinyint]" },
         { "System.Data.SqlTypes.SqlInt16", "[smallint]" },

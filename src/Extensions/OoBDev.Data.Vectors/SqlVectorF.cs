@@ -258,38 +258,38 @@ public struct SqlVectorF : INullable, IBinarySerialize, IEquatable<SqlVectorF>
     /// <summary>
     /// Deserializes this vector from a binary reader.
     /// </summary>
-    /// <param name="reader">The binary reader.</param>
-    public void Read(BinaryReader reader)
+    /// <param name="r">The binary reader.</param>
+    public void Read(BinaryReader r)
     {
-        var header = reader.ReadInt32();
+        var header = r.ReadInt32();
         var version = (header & 0xff000000) >> 24;
         var length = header & 0x00ffffff;
 
         var values = new double[length];
         for (var i = 0; i < length; i++)
         {
-            values[i] = reader.ReadSingle();
+            values[i] = r.ReadSingle();
         }
         _values = values;
-        _magnitude = reader.ReadSingle();
+        _magnitude = r.ReadSingle();
     }
 
     /// <summary>
     /// Serializes this vector to a binary writer.
     /// </summary>
-    /// <param name="writer">The binary writer.</param>
-    public readonly void Write(BinaryWriter writer)
+    /// <param name="w">The binary writer.</param>
+    public readonly void Write(BinaryWriter w)
     {
         var count = _values.Count;
         if (count < 0 || count > 0x00ffffff) throw new NotSupportedException();
         var header = Version << 24 | count;
 
-        writer.Write(header);
+        w.Write(header);
         foreach (var value in _values)
         {
-            writer.Write((float)value);
+            w.Write((float)value);
         }
-        writer.Write((float)_magnitude);
+        w.Write((float)_magnitude);
     }
 
     /// <summary>
@@ -398,10 +398,10 @@ public struct SqlVectorF : INullable, IBinarySerialize, IEquatable<SqlVectorF>
     /// <summary>
     /// Determines whether this vector equals another object.
     /// </summary>
-    /// <param name="other">The object to compare.</param>
+    /// <param name="obj">The object to compare.</param>
     /// <returns>True if equal; otherwise, false.</returns>
-    public override readonly bool Equals(object other) =>
-        other is SqlVectorF matrix && Equals(matrix);
+    public override readonly bool Equals(object obj) =>
+        obj is SqlVectorF matrix && Equals(matrix);
 
     /// <summary>
     /// Determines whether this vector equals another SqlVectorF.

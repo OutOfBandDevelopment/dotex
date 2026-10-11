@@ -52,7 +52,7 @@ public static class EnumExtensions
 
         var map = from m in enumModel
                   from v in enumValues
-                  where m.PossibleNames.Contains(v)
+                  where m.PossibleNames.Contains(v, StringComparer.Ordinal)
                   select m;
 
         if (!map.Any()) return default;

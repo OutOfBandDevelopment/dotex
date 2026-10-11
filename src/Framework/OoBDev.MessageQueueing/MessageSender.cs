@@ -39,7 +39,7 @@ public partial class MessageSender<TChannel>(
     /// <returns>The ID of the sent message.</returns>
     public virtual async Task<string> SendAsync(
         object message,
-        string? correlationId = default,
+        string? messageId = default,
         [CallerMemberName] string? callerMember = default,
         [CallerFilePath] string? callerFile = default,
         [CallerLineNumber] int callerLine = default
@@ -48,15 +48,15 @@ public partial class MessageSender<TChannel>(
         var targetType = typeof(TChannel);
         var messageType = message.GetType();
 
-        var originMessageId = correlationId;
-        correlationId = resolver.MessageId(targetType, messageType, correlationId);
+        var originMessageId = messageId;
+        messageId = resolver.MessageId(targetType, messageType, messageId);
         var requestId = resolver.GenerateId(targetType, messageType);
         var config = resolver.Configuration(targetType, messageType);
         var context = _context.Create(
             targetType,
             messageType,
             originMessageId,
-            correlationId,
+            messageId,
             requestId,
             config,
             callerMember,
@@ -65,21 +65,21 @@ public partial class MessageSender<TChannel>(
         );
         var provider = _provider.Sender(targetType, messageType);
 
-        LogSending(message, originMessageId, correlationId, targetType, callerFile, callerMember);
+        LogSending(message, originMessageId, messageId, targetType, callerFile, callerMember);
 
         try
         {
             var sentId = await provider.SendAsync(message, context).ConfigureAwait(false);
 
-            LogSent(originMessageId, correlationId, sentId);
+            LogSent(originMessageId, messageId, sentId);
 
             context.SentId = sentId;
         }
         catch (Exception ex)
         {
-            LogFailed(ex.Message, originMessageId, correlationId);
+            LogFailed(ex.Message, originMessageId, messageId);
 
-            LogException(ex, originMessageId, correlationId);
+            LogException(ex, originMessageId, messageId);
 
             throw;
         }

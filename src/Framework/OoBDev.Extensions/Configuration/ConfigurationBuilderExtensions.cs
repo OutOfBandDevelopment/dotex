@@ -1,3 +1,4 @@
+using System;
 using OoBDev.Extensions.Configuration;
 using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
@@ -21,8 +22,8 @@ public static class ConfigurationBuilderExtensions
         IEnumerable<(string key, string? value)> initialData) =>
         configurationBuilder.AddInMemoryCollection(
             initialData
-            .GroupBy(i => i.key)
-            .ToDictionary(i => i.Key, i => i.First().value)
+            .GroupBy(i => i.key, StringComparer.Ordinal)
+            .ToDictionary(i => i.Key, i => i.First().value, StringComparer.Ordinal)
             );
 
     /// <summary>

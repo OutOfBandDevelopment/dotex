@@ -30,11 +30,12 @@ public class UsbHidFactory : IImplictDeviceFactory
         var config = def.GetCustomAttribute<UsbHidAttribute>();
         if (config == null) yield break;
 
-        var devices = from device in DeviceList.Local.GetAllDevices().OfType<HidDevice>()
-                      where device.VendorID == config.VendorId
-                      where (device.ProductID & config.ProductMask) == (config.ProductId & config.ProductMask)
-                      group device by device.DevicePath into hids
-                      select hids.First();
+        var devices = (from device in DeviceList.Local.GetAllDevices().OfType<HidDevice>()
+                       where device.VendorID == config.VendorId
+                       where (device.ProductID & config.ProductMask) == (config.ProductId & config.ProductMask)
+                       select device)
+                      .GroupBy(device => device.DevicePath, StringComparer.Ordinal)
+                      .Select(hids => hids.First());
 
         foreach (var device in devices)
             yield return new UsbHidDeviceAdapter(device);
@@ -46,6 +47,6 @@ public class UsbHidFactory : IImplictDeviceFactory
                   .GetAllDevices()
                   .OfType<HidDevice>()
                   .Select(s => s.DevicePath)
-                  .Distinct()
-                  .OrderBy(s => s);
+                  .Distinct(StringComparer.Ordinal)
+                  .OrderBy(s => s, StringComparer.Ordinal);
 }

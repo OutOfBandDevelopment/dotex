@@ -359,11 +359,11 @@ public class ExpressionTreeBuilder<TModel>(
             .Concat(from prop in modelType.GetProperties(ReflectionExtensions.PublicProperties)
                     from attrib in prop.GetCustomAttributes<SearchableAttribute>()
                     select attrib.TargetName ?? prop.Name)
-            .Distinct();
+            .Distinct(StringComparer.Ordinal);
 
         if (!properties.Any())
         {
-            properties = modelType.GetProperties(ReflectionExtensions.PublicProperties).Select(p => p.Name).Distinct();
+            properties = modelType.GetProperties(ReflectionExtensions.PublicProperties).Select(p => p.Name).Distinct(StringComparer.Ordinal);
         }
 
         var notSearchable = modelType
@@ -371,10 +371,10 @@ public class ExpressionTreeBuilder<TModel>(
             .Concat(from prop in modelType.GetProperties(ReflectionExtensions.PublicProperties)
                     from attrib in prop.GetCustomAttributes<NotSearchableAttribute>()
                     select attrib.TargetName ?? prop.Name)
-            .Distinct();
+            .Distinct(StringComparer.Ordinal);
 
         var results = properties
-            .Except(notSearchable)
+            .Except(notSearchable, StringComparer.Ordinal)
             .Where(s => !string.IsNullOrWhiteSpace(s))
             .Cast<string>()
             .ToArray();
@@ -394,17 +394,17 @@ public class ExpressionTreeBuilder<TModel>(
             .GetCustomAttributes<SearchableAttribute>().Select(a => a.TargetName)
             .Concat(from prop in modelType.GetProperties(ReflectionExtensions.PublicProperties)
                     select prop.Name)
-            .Distinct();
+            .Distinct(StringComparer.Ordinal);
 
         var notSearchable = modelType
             .GetCustomAttributes<NotSortableAttribute>().Select(a => a.TargetName)
             .Concat(from prop in modelType.GetProperties(ReflectionExtensions.PublicProperties)
                     from attrib in prop.GetCustomAttributes<NotSortableAttribute>()
                     select attrib.TargetName ?? prop.Name)
-            .Distinct();
+            .Distinct(StringComparer.Ordinal);
 
         var results = properties
-            .Except(notSearchable)
+            .Except(notSearchable, StringComparer.Ordinal)
             .Where(s => !string.IsNullOrWhiteSpace(s))
             .Cast<string>()
             .ToArray();
@@ -424,25 +424,25 @@ public class ExpressionTreeBuilder<TModel>(
             .GetCustomAttributes<SearchableAttribute>().Select(a => a.TargetName)
             .Concat(from prop in modelType.GetProperties(ReflectionExtensions.PublicProperties)
                     select prop.Name)
-            .Distinct();
+            .Distinct(StringComparer.Ordinal);
 
         var properties = modelType
             .GetCustomAttributes<FilterableAttribute>().Select(a => a.TargetName)
             .Concat(from prop in modelType.GetProperties(ReflectionExtensions.PublicProperties)
                     select prop.Name)
-            .Distinct();
+            .Distinct(StringComparer.Ordinal);
 
         var notSearchable = modelType
             .GetCustomAttributes<NotFilterableAttribute>().Select(a => a.TargetName)
             .Concat(from prop in modelType.GetProperties(ReflectionExtensions.PublicProperties)
                     from attrib in prop.GetCustomAttributes<NotFilterableAttribute>()
                     select attrib.TargetName ?? prop.Name)
-            .Distinct();
+            .Distinct(StringComparer.Ordinal);
 
         var results =
             searchableProperties
             .Concat(properties)
-            .Except(notSearchable)
+            .Except(notSearchable, StringComparer.Ordinal)
             .Where(s => !string.IsNullOrWhiteSpace(s))
             .Cast<string>()
             .ToArray();

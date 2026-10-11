@@ -16,9 +16,9 @@ public class HtmlNavigator : IToXPathNavigable
     /// <summary>
     /// Converts an HTML file to an XPath-navigable structure.
     /// </summary>
-    /// <param name="sourceFile">The path to the HTML file to convert.</param>
+    /// <param name="filePath">The path to the HTML file to convert.</param>
     /// <returns>An XPath-navigable representation of the HTML document.</returns>
-    public IXPathNavigable ToNavigable(string sourceFile)
+    public IXPathNavigable ToNavigable(string filePath)
     {
         var html = new HtmlDocument()
         {
@@ -35,7 +35,7 @@ public class HtmlNavigator : IToXPathNavigable
             //OptionWriteEmptyNodes = true,
 
         };
-        html.Load(sourceFile);
+        html.Load(filePath);
         var xpathNav = html.CreateNavigator();
         return xpathNav;
     }

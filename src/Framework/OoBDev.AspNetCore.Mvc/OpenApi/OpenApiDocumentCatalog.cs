@@ -54,7 +54,7 @@ public record OpenApiDocumentCatalog(IReadOnlyList<string> Names)
     /// <param name="assemblies">The controller assemblies.</param>
     /// <returns>The catalog.</returns>
     public static OpenApiDocumentCatalog From(IEnumerable<Assembly> assemblies) =>
-        new([AllDocumentName, .. assemblies.Select(a => a.GetName().Name!).Distinct()]);
+        new([AllDocumentName, .. assemblies.Select(a => a.GetName().Name!).Distinct(StringComparer.Ordinal)]);
 
     private static bool IsPlatform(string? name) =>
         name == null || name.StartsWith("System", StringComparison.Ordinal) || name.StartsWith("Microsoft", StringComparison.Ordinal) || name == "netstandard" || name == "mscorlib";

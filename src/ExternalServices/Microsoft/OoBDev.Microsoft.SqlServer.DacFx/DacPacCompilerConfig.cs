@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using System;
+using Microsoft.Extensions.Configuration;
 using OoBDev.DacFx;
 using OoBDev.System.Reflection;
 using System.Collections.Generic;
@@ -107,7 +108,7 @@ public class DacPacCompilerConfig : IDacPacCompilerConfig
     /// <summary>
     /// Gets the command-line switch mappings for configuration.
     /// </summary>
-    public static Dictionary<string, string> CommandLineSwitchMappings => new()
+    public static Dictionary<string, string> CommandLineSwitchMappings => new(StringComparer.Ordinal)
     {
         { "--template",TemplatePathKey},
         { "-t",TemplatePathKey},

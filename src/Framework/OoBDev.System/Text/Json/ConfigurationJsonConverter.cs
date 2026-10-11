@@ -48,7 +48,7 @@ public class ConfigurationJsonConverter<TConfig> : JsonConverter<TConfig>
     {
         var dict = value.AsEnumerable()
             .Where(l => !string.IsNullOrWhiteSpace(l.Value))
-            .ToDictionary(k => k.Key, k => k.Value);
+            .ToDictionary(k => k.Key, k => k.Value, StringComparer.Ordinal);
         JsonSerializer.Serialize(writer, dict, options);
     }
 }

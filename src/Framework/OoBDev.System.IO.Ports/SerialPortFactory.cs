@@ -45,5 +45,5 @@ public class SerialPortFactory : IDeviceFactory
     }
 
     /// <inheritdoc/>
-    public IEnumerable<string> GetDeviceNames() => SerialPort.GetPortNames().OrderBy(s => s);
+    public IEnumerable<string> GetDeviceNames() => SerialPort.GetPortNames().OrderBy(s => s, StringComparer.Ordinal);
 }

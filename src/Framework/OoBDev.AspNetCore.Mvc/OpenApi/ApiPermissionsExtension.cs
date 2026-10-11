@@ -1,4 +1,5 @@
-﻿using Microsoft.OpenApi;
+﻿using System;
+using Microsoft.OpenApi;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -19,7 +20,7 @@ public class ApiPermissionsExtension(bool allowAnonymous, IEnumerable<string> ri
     /// <summary>
     /// end point requires at least one of these permissions
     /// </summary>
-    public IReadOnlyCollection<string> Rights { get; } = rights.Distinct().ToList().AsReadOnly();
+    public IReadOnlyCollection<string> Rights { get; } = rights.Distinct(StringComparer.Ordinal).ToList().AsReadOnly();
 
     /// <summary>
     /// Writes the required permissions to the OpenAPI writer.

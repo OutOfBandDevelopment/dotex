@@ -43,7 +43,7 @@ public class SortBuilder<TModel>(
 
         var compositeSortMap =
               sortLookup.Select(kvp => (kvp.Key, Expression: kvp.Value, Weight: 2))
-              .GroupBy(k => k.Key).Select(i => (i.Key, i.OrderBy(x => x.Weight).First().Expression))
+              .GroupBy(k => k.Key, StringComparer.Ordinal).Select(i => (i.Key, i.OrderBy(x => x.Weight).First().Expression))
               .ToDictionary(k => k.Key, v => v.Expression, stringComparer)
               ;
 

@@ -1,3 +1,4 @@
+using System;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -16,7 +17,7 @@ public static class Program
     private const string OllamaSection = "OoBDev:Ollama";
     private const string GroqSection = "OoBDev:GroqCloud";
 
-    private static readonly Dictionary<string, string> _switches = new()
+    private static readonly Dictionary<string, string> _switches = new(StringComparer.Ordinal)
     {
         ["--input"] = $"{LlmCodeGenOptions.SectionName}:{nameof(LlmCodeGenOptions.InputPath)}",
         ["--output"] = $"{LlmCodeGenOptions.SectionName}:{nameof(LlmCodeGenOptions.OutputPath)}",
@@ -32,7 +33,7 @@ public static class Program
         await Host.CreateDefaultBuilder(args)
             .ConfigureAppConfiguration((context, config) =>
             {
-                config.AddInMemoryCollection(new Dictionary<string, string?>
+                config.AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal)
                 {
                     [$"{OllamaSection}:{nameof(OllamaApiClientOptions.Url)}"] = "http://localhost:11434",
                     [$"{OllamaSection}:{nameof(OllamaApiClientOptions.DefaultModel)}"] = "phi3",

@@ -203,7 +203,7 @@ public class XsltExtensionContext(NameTable nameTable) : XsltContext(nameTable)
 {
     public override bool Whitespace => true;
 
-    public override int CompareDocument(string baseUri, string nextBaseUri) => throw new NotImplementedException();
+    public override int CompareDocument(string baseUri, string nextbaseUri) => throw new NotImplementedException();
 
     public override bool PreserveWhitespace(XPathNavigator node) => true;
 

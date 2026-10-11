@@ -100,23 +100,23 @@ public class CentroidAggregate : IBinarySerialize
     /// <summary>
     /// Deserializes the aggregate state from a binary stream.
     /// </summary>
-    /// <param name="reader">The binary reader to read from.</param>
-    public void Read(BinaryReader reader)
+    /// <param name="r">The binary reader to read from.</param>
+    public void Read(BinaryReader r)
     {
         var vector = new SqlVector();
-        vector.Read(reader);
+        vector.Read(r);
         _sum = [.. vector.Values];
-        _count = reader.ReadInt32();
+        _count = r.ReadInt32();
     }
 
     /// <summary>
     /// Serializes the aggregate state to a binary stream.
     /// </summary>
-    /// <param name="writer">The binary writer to write to.</param>
-    public void Write(BinaryWriter writer)
+    /// <param name="w">The binary writer to write to.</param>
+    public void Write(BinaryWriter w)
     {
         var vector = new SqlVector(_sum);
-        vector.Write(writer);
-        writer.Write(_count);
+        vector.Write(w);
+        w.Write(_count);
     }
 }

@@ -31,7 +31,7 @@ public partial class OAuthDocumentTransformer(
     /// <returns>The scopes and their descriptions.</returns>
     public static Dictionary<string, string> GetScopes(OAuth2OpenApiOptions options)
     {
-        var scopes = new Dictionary<string, string>();
+        var scopes = new Dictionary<string, string>(StringComparer.Ordinal);
 
         if (!string.IsNullOrWhiteSpace(options.UserReadApiClaim))
         {
@@ -67,7 +67,7 @@ public partial class OAuthDocumentTransformer(
         var scopes = GetScopes(options);
 
         document.Components ??= new OpenApiComponents();
-        document.Components.SecuritySchemes ??= new Dictionary<string, IOpenApiSecurityScheme>();
+        document.Components.SecuritySchemes ??= new Dictionary<string, IOpenApiSecurityScheme>(StringComparer.Ordinal);
         document.Components.SecuritySchemes[SecuritySchemeName] = new OpenApiSecurityScheme
         {
             Type = SecuritySchemeType.OAuth2,

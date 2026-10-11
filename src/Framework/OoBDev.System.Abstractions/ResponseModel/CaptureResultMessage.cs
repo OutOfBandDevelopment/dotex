@@ -14,11 +14,11 @@ public class CaptureResultMessage : ICaptureResultMessage
     /// <summary>
     /// Publishes result messages to the capture stack.
     /// </summary>
-    /// <param name="resultMessages">The result messages to be published.</param>
-    public void Publish(params ResultMessage[] resultMessages)
+    /// <param name="resultMessage">The result messages to be published.</param>
+    public void Publish(params ResultMessage[] resultMessage)
     {
-        foreach (var resultMessage in resultMessages)
-            _stack.Add(resultMessage);
+        foreach (var message in resultMessage)
+            _stack.Add(message);
     }
 
     /// <summary>

@@ -16,19 +16,19 @@ public class JsonNavigator : IToXPathNavigable
     /// <summary>
     /// Converts a JSON file to an XPath-navigable structure.
     /// </summary>
-    /// <param name="inputFile">The path to the JSON file to convert.</param>
+    /// <param name="filePath">The path to the JSON file to convert.</param>
     /// <returns>An XPath-navigable representation of the JSON document.</returns>
-    public IXPathNavigable ToNavigable(string inputFile)
+    public IXPathNavigable ToNavigable(string filePath)
     {
-        using var file = File.OpenRead(inputFile);
+        using var file = File.OpenRead(filePath);
         return ToNavigable(file);
     }
 
     /// <summary>
     /// Converts a JSON stream to an XPath-navigable structure.
     /// </summary>
-    /// <param name="inputFile">The stream containing the JSON data to convert.</param>
+    /// <param name="filePath">The stream containing the JSON data to convert.</param>
     /// <returns>An XPath-navigable representation of the JSON document.</returns>
-    public IXPathNavigable ToNavigable(Stream inputFile) =>
-        JsonDocument.Parse(inputFile).ToNavigable();
+    public IXPathNavigable ToNavigable(Stream filePath) =>
+        JsonDocument.Parse(filePath).ToNavigable();
 }

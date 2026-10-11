@@ -73,7 +73,7 @@ public class QdrantVectorStoreProvider : IVectorStoreProvider
         IEnumerable<ReadOnlyMemory<float>> embeddings,
         Dictionary<string, object> metadata
         ) =>
-        await StoreVectorsAsync(embeddings.Select(e => (e, new Dictionary<string, object>())), metadata).ConfigureAwait(false);
+        await StoreVectorsAsync(embeddings.Select(e => (e, new Dictionary<string, object>(StringComparer.Ordinal))), metadata).ConfigureAwait(false);
 
     /// <summary>
     /// Gets or sets the name of the container.
@@ -165,7 +165,7 @@ public class QdrantVectorStoreProvider : IVectorStoreProvider
 
     private Dictionary<string, object> Convert(MapField<string, Value> values)
     {
-        var dict = new Dictionary<string, object>();
+        var dict = new Dictionary<string, object>(StringComparer.Ordinal);
         foreach (var item in values)
         {
             var value = Convert(item.Value);

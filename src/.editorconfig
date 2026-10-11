@@ -180,8 +180,8 @@ dotnet_diagnostic.IDE0005.severity = warning
 # Stock .NET analyzers (AnalysisMode Recommended): rules with large existing backlogs are suggestions until fixed in batches (see TODO.md)
 dotnet_diagnostic.CA1848.severity = warning
 dotnet_diagnostic.CA1873.severity = warning
-dotnet_diagnostic.CA1727.severity = suggestion
-dotnet_diagnostic.CA1725.severity = suggestion
+dotnet_diagnostic.CA1727.severity = warning
+dotnet_diagnostic.CA1725.severity = warning
 dotnet_diagnostic.CA1051.severity = warning
 dotnet_diagnostic.CA1711.severity = suggestion
 dotnet_diagnostic.CA1716.severity = suggestion
@@ -216,9 +216,9 @@ dotnet_diagnostic.CA5369.severity = suggestion
 dotnet_diagnostic.CA5350.severity = suggestion
 dotnet_diagnostic.CA5351.severity = suggestion
 # Meziantou.Analyzer: rules with an existing backlog are suggestions until fixed in batches (see TODO.md); every other MA rule is a warning
-dotnet_diagnostic.MA0002.severity = suggestion
+dotnet_diagnostic.MA0002.severity = warning
 dotnet_diagnostic.MA0004.severity = warning
-dotnet_diagnostic.MA0006.severity = suggestion
+dotnet_diagnostic.MA0006.severity = none
 dotnet_diagnostic.MA0009.severity = suggestion
 dotnet_diagnostic.MA0011.severity = suggestion
 dotnet_diagnostic.MA0012.severity = suggestion
