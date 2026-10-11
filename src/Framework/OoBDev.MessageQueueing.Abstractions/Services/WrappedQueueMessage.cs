@@ -30,5 +30,5 @@ public record WrappedQueueMessage : IQueueMessage
     /// <summary>
     /// Gets or initializes the properties associated with the message.
     /// </summary>
-    public required Dictionary<string, object?> Properties { get; init; }
+    public required IDictionary<string, object?> Properties { get; init; }
 }

@@ -31,7 +31,7 @@ public interface IBlobContainer
     /// <param name="metadata">The metadata to store.</param>
     /// <param name="overwrite">Whether to overwrite the existing content.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
-    Task StoreContentAsync(ContentReference reference, Dictionary<string, string>? metadata = null, bool overwrite = false);
+    Task StoreContentAsync(ContentReference reference, IDictionary<string, string>? metadata = null, bool overwrite = false);
 
     /// <summary>
     /// Stores the content metadata with the specified reference.

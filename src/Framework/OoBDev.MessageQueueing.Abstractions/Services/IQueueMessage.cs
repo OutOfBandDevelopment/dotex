@@ -29,5 +29,5 @@ public interface IQueueMessage
     /// <summary>
     /// Gets the properties associated with the message.
     /// </summary>
-    Dictionary<string, object?> Properties { get; }
+    IDictionary<string, object?> Properties { get; }
 }

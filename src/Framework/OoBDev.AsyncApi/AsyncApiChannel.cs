@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
@@ -15,11 +16,11 @@ public sealed class AsyncApiChannel
     /// <summary>Servers that host the channel.</summary>
     [JsonPropertyName("servers")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public List<AsyncApiReference>? Servers { get; set; }
+    public IList<AsyncApiReference>? Servers { get; set; }
 
     /// <summary>Messages by name.</summary>
     [JsonPropertyName("messages")]
-    public Dictionary<string, AsyncApiMessage> Messages { get; set; } = [];
+    public IDictionary<string, AsyncApiMessage> Messages { get; set; } = new Dictionary<string, AsyncApiMessage>(StringComparer.Ordinal);
 
     /// <summary>Provider specific bindings.</summary>
     [JsonPropertyName("bindings")]

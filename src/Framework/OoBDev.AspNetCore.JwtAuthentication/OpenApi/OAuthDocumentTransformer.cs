@@ -29,7 +29,7 @@ public partial class OAuthDocumentTransformer(
     /// </summary>
     /// <param name="options">The OAuth2 options.</param>
     /// <returns>The scopes and their descriptions.</returns>
-    public static Dictionary<string, string> GetScopes(OAuth2OpenApiOptions options)
+    public static IDictionary<string, string> GetScopes(OAuth2OpenApiOptions options)
     {
         var scopes = new Dictionary<string, string>(StringComparer.Ordinal);
 

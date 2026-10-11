@@ -1,3 +1,4 @@
+#pragma warning disable MA0016 // ToListAsync returns List<T> by name, like Enumerable.ToList
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

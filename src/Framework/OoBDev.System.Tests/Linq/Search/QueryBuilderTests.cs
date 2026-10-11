@@ -1,4 +1,5 @@
-﻿using OoBDev.System.Linq.Expressions;
+﻿using System.Collections.Generic;
+using OoBDev.System.Linq.Expressions;
 using OoBDev.System.Linq.Search;
 using OoBDev.System.ResponseModel;
 using OoBDev.System.Tests.Linq.TestTargets;
@@ -27,7 +28,7 @@ public class QueryBuilderTests
         {
             SearchTerm = "Search For",
 
-            Filter = new()
+            Filter = new Dictionary<string, FilterParameter>()
             {
                 { nameof(TestTargetModel.Name), new FilterParameter(){
                     EqualTo = "Name1",
@@ -37,7 +38,7 @@ public class QueryBuilderTests
                 } },
             },
 
-            OrderBy = new()
+            OrderBy = new Dictionary<string, OrderDirections>()
             {
                 { nameof(TestTargetModel.Name), OrderDirections.Descending },
                 { nameof(TestTargetModel.Email), OrderDirections.Descending },

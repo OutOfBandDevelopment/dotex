@@ -35,7 +35,7 @@ public class ManageKeycloakUser(
     /// </summary>
     /// <param name="emailAddress">The email address to search for.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains the list of user identity models or <c>null</c> if no users are found.</returns>
-    public Task<List<UserIdentityModel>?> GetIdentityUsersByEmail(string emailAddress) =>
+    public Task<IList<UserIdentityModel>?> GetIdentityUsersByEmail(string emailAddress) =>
            throw new NotSupportedException();
 
     /// <summary>

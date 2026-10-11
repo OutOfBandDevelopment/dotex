@@ -71,16 +71,16 @@ public class QdrantVectorStoreProvider : IVectorStoreProvider
     /// </summary>
     public virtual async Task<string[]> StoreVectorsAsync(
         IEnumerable<ReadOnlyMemory<float>> embeddings,
-        Dictionary<string, object> metadata
+        IDictionary<string, object> metadata
         ) =>
-        await StoreVectorsAsync(embeddings.Select(e => (e, new Dictionary<string, object>(StringComparer.Ordinal))), metadata).ConfigureAwait(false);
+        await StoreVectorsAsync(embeddings.Select(e => (e, (IDictionary<string, object>)new Dictionary<string, object>(StringComparer.Ordinal))), metadata).ConfigureAwait(false);
 
     /// <summary>
     /// Gets or sets the name of the container.
     /// </summary>
     public async Task<string[]> StoreVectorsAsync(
-        IEnumerable<(ReadOnlyMemory<float> embedding, Dictionary<string, object> metadata)> items,
-        Dictionary<string, object> metadata
+        IEnumerable<(ReadOnlyMemory<float> embedding, IDictionary<string, object> metadata)> items,
+        IDictionary<string, object> metadata
         )
     {
         if (_options.Value.EnsureCollectionExists)

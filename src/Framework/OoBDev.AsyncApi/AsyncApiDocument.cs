@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
@@ -17,15 +18,15 @@ public sealed class AsyncApiDocument
 
     /// <summary>Servers by name.</summary>
     [JsonPropertyName("servers")]
-    public Dictionary<string, AsyncApiServer> Servers { get; set; } = [];
+    public IDictionary<string, AsyncApiServer> Servers { get; set; } = new Dictionary<string, AsyncApiServer>(StringComparer.Ordinal);
 
     /// <summary>Channels by name.</summary>
     [JsonPropertyName("channels")]
-    public Dictionary<string, AsyncApiChannel> Channels { get; set; } = [];
+    public IDictionary<string, AsyncApiChannel> Channels { get; set; } = new Dictionary<string, AsyncApiChannel>(StringComparer.Ordinal);
 
     /// <summary>Operations by name.</summary>
     [JsonPropertyName("operations")]
-    public Dictionary<string, AsyncApiOperation> Operations { get; set; } = [];
+    public IDictionary<string, AsyncApiOperation> Operations { get; set; } = new Dictionary<string, AsyncApiOperation>(StringComparer.Ordinal);
 
     /// <summary>Reusable schemas.</summary>
     [JsonPropertyName("components")]

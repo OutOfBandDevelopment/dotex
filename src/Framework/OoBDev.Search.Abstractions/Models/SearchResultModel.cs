@@ -20,5 +20,5 @@ public record SearchResultModel
     /// <summary>
     /// Gets or initializes the item's metadata.
     /// </summary>
-    public Dictionary<string, object>? MetaData { get; init; }
+    public IDictionary<string, object>? MetaData { get; init; }
 }

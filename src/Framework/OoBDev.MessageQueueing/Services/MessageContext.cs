@@ -108,7 +108,7 @@ public class MessageContext : IMessageContext
     /// <summary>
     /// Gets the headers associated with the message context.
     /// </summary>
-    public Dictionary<string, object?> Headers { get; } = [];
+    public IDictionary<string, object?> Headers { get; } = new Dictionary<string, object?>(StringComparer.Ordinal);
 
     /// <summary>
     /// Gets or sets the configuration section associated with the message context.

@@ -88,9 +88,9 @@ public class MimeMessageFactory(
             Server = server,
             Path = path,
         };
-        received.ToAddresses.AddRange(message.To.Cast<InternetAddress>().Select(a => a.ToString()));
-        received.CcAddresses.AddRange(message.Cc.Cast<InternetAddress>().Select(a => a.ToString()));
-        received.BccAddresses.AddRange(message.Bcc.Cast<InternetAddress>().Select(a => a.ToString()));
+        foreach (var address in message.To.Cast<InternetAddress>().Select(a => a.ToString())) received.ToAddresses.Add(address);
+        foreach (var address in message.Cc.Cast<InternetAddress>().Select(a => a.ToString())) received.CcAddresses.Add(address);
+        foreach (var address in message.Bcc.Cast<InternetAddress>().Select(a => a.ToString())) received.BccAddresses.Add(address);
 
         foreach (var header in message.Headers)
         {

@@ -31,5 +31,5 @@ public class SmsMessageModel
     /// <summary>
     /// Gets or sets the headers associated with the SMS message.
     /// </summary>
-    public Dictionary<string, object> Headers { get; set; } = [];
+    public IDictionary<string, object> Headers { get; set; } = new Dictionary<string, object>(StringComparer.Ordinal);
 }

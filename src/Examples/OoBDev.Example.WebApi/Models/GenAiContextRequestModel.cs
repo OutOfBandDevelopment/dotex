@@ -15,10 +15,10 @@ public class GenAiContextRequestModel
     /// <summary>
     /// Gets or sets the prompt details.
     /// </summary>
-    public required List<string> PromptDetails { get; set; }
+    public required IList<string> PromptDetails { get; set; }
 
     /// <summary>
     /// Gets or sets the user input.
     /// </summary>
-    public required List<string> UserInput { get; set; }
+    public required IList<string> UserInput { get; set; }
 }

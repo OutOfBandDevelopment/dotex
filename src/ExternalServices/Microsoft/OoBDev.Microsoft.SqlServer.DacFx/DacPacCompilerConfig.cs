@@ -108,7 +108,7 @@ public class DacPacCompilerConfig : IDacPacCompilerConfig
     /// <summary>
     /// Gets the command-line switch mappings for configuration.
     /// </summary>
-    public static Dictionary<string, string> CommandLineSwitchMappings => new(StringComparer.Ordinal)
+    public static IDictionary<string, string> CommandLineSwitchMappings => new Dictionary<string, string>(StringComparer.Ordinal)
     {
         { "--template",TemplatePathKey},
         { "-t",TemplatePathKey},

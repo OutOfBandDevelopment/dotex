@@ -42,5 +42,5 @@ public partial class MailKitProvider(
     }
 
     [LoggerMessage(EventId = 1, Level = LogLevel.Information, Message = "Sent email \"{Subject}\" to \"{ToAddresses}\" [{reference}]")]
-    private partial void LogSent(string? subject, List<string> toAddresses, string reference);
+    private partial void LogSent(string? subject, IList<string> toAddresses, string reference);
 }

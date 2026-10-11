@@ -1,4 +1,5 @@
-﻿using OoBDev.Extensions.Reflection;
+﻿using System.Collections.Generic;
+using OoBDev.Extensions.Reflection;
 using OoBDev.System.Linq.Expressions;
 using OoBDev.System.Linq.Search;
 using OoBDev.System.ResponseModel;
@@ -108,12 +109,12 @@ public class QueryableExtensionsTests
 
         var query = new SearchQuery
         {
-            Filter = new()
+            Filter = new Dictionary<string, FilterParameter>()
             {
                 { propertyName, expressionOperator.AsFilter(filterValue, capture) },
                 { "Doesn't Exist", expressionOperator.AsFilter(filterValue, capture) }
             },
-            OrderBy = new()
+            OrderBy = new Dictionary<string, OrderDirections>()
             {
                 { "Doesn't Exist", OrderDirections.Ascending }
             }
@@ -314,7 +315,7 @@ public class QueryableExtensionsTests
 
         var query = new SearchQuery
         {
-            OrderBy = new()
+            OrderBy = new Dictionary<string, OrderDirections>()
             {
                 { fieldName, direction }
             }
@@ -342,7 +343,7 @@ public class QueryableExtensionsTests
 
         var query = new SearchQuery
         {
-            OrderBy = new()
+            OrderBy = new Dictionary<string, OrderDirections>()
             {
                 { fieldName, direction }
             }
