@@ -1,4 +1,6 @@
-﻿namespace OoBDev.System.ExpressionCalculator.Evaluators;
+﻿using System.Globalization;
+
+namespace OoBDev.System.ExpressionCalculator.Evaluators;
 
 /// <summary>
 /// Provides arithmetic operations and value conversions for expression evaluation using the <see cref="int"/> (Int32) type.
@@ -65,7 +67,7 @@ public sealed class Int32ExpressionEvaluator : IExpressionEvaluator<int>
     /// </summary>
     /// <param name="input">The string to parse.</param>
     /// <returns>The parsed int value if successful; otherwise, null.</returns>
-    public int? TryParse(string input) => int.TryParse(input, out var ret) ? ret : null;
+    public int? TryParse(string input) => int.TryParse(input, CultureInfo.InvariantCulture, out var ret) ? ret : null;
 
     /// <summary>
     /// Returns the specified integer value as-is.

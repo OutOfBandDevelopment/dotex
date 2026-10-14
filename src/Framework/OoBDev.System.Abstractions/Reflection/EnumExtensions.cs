@@ -48,11 +48,11 @@ public static class EnumExtensions
         else if (Enum.TryParse<TEnum>(input?.Replace('|', ','), out var parsed)) return parsed;
 
         var enumModel = AsModels<TEnum>();
-        var enumValues = input?.Split('|', ',') ?? throw new NotImplementedException();
+        var enumValues = input?.Split('|', ',') ?? throw new ArgumentNullException(nameof(input));
 
         var map = from m in enumModel
                   from v in enumValues
-                  where m.PossibleNames.Contains(v)
+                  where m.PossibleNames.Contains(v, StringComparer.Ordinal)
                   select m;
 
         if (!map.Any()) return default;
@@ -88,14 +88,14 @@ public static class EnumExtensions
             Id = Convert.ToInt32(@enum, CultureInfo.InvariantCulture),
 
             Name = First(displayValues?.Name, @enum.ToString().Replace("_", " ")) ??
-                throw new NullReferenceException(nameof(EnumModel<>.Name)),
+                throw new InvalidOperationException(nameof(EnumModel<>.Name)),
             Code = First(
                 enumValue?.Name,
                 enumMember?.Value,
                 displayValues?.ShortName,
                 displayValues?.Name,
                 @enum.ToString().ToUpperInvariant()) ??
-                throw new NullReferenceException(nameof(EnumModel<>.Code)),
+                throw new InvalidOperationException(nameof(EnumModel<>.Code)),
             Description = First(description, displayValues?.Description),
             Order = displayValues?.GetOrder() ?? 0,
 

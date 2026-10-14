@@ -1,3 +1,4 @@
+using System.Globalization;
 using System;
 using System.Linq;
 using System.Text.Json;
@@ -60,11 +61,11 @@ public class BsonDateTimeOffsetConverter : JsonConverter<object>
                 if (reader.TokenType == JsonTokenType.String)
                 {
                     var value = reader.GetString();
-                    if (DateTimeOffset.TryParse(value, out dt))
+                    if (DateTimeOffset.TryParse(value, CultureInfo.InvariantCulture, out dt))
                     {
                         dateTime = dt;
                     }
-                    else if (long.TryParse(value, out var ticks))
+                    else if (long.TryParse(value, CultureInfo.InvariantCulture, out var ticks))
                     {
                         dateTime = new DateTime(ticks, DateTimeKind.Utc);
                     }

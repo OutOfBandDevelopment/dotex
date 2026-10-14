@@ -1,4 +1,5 @@
-﻿using BinaryDataDecoders.Net;
+﻿using System;
+using BinaryDataDecoders.Net;
 using System.Text.RegularExpressions;
 
 namespace OoBDev.System.Net;
@@ -15,7 +16,7 @@ public static class MacAddressEx
     /// <returns>true if the string is a valid MAC address; otherwise, false.</returns>
     public static bool IsValid(string macAddress)
     {
-        var macPattern = new Regex("^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$", RegexOptions.Compiled);
+        var macPattern = new Regex("^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$", RegexOptions.Compiled | RegexOptions.ExplicitCapture, TimeSpan.FromSeconds(1));
         return macPattern.IsMatch(macAddress);
     }
 

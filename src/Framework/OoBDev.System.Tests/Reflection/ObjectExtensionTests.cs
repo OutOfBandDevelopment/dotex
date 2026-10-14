@@ -39,7 +39,7 @@ public class ObjectExtensionTests
     public void Test(object input, Type type, object expected)
     {
         var method = typeof(ObjectExtensions).GetMethod(nameof(ObjectExtensions.As), [typeof(object)])?.MakeGenericMethod(type)
-            ?? throw new ApplicationException("This is not expected!");
+            ?? throw new InvalidOperationException("This is not expected!");
         var result = method.Invoke(null, [input]);
 
         if (expected is IEnumerable and not string)

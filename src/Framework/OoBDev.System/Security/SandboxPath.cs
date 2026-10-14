@@ -27,7 +27,7 @@ public static class SandboxPath
             );
 
         return composedPath.StartsWith(sandbox, StringComparison.Ordinal)
-            ? throw new ApplicationException($"invalid path requested: {filePath}")
+            ? throw new InvalidOperationException($"invalid path requested: {filePath}")
             : PathEx.FixUpPath(composedPath);
     }
 

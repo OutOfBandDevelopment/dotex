@@ -13,7 +13,7 @@ public abstract class TemplateFactoryBase<T> where T : class, new()
     /// <summary>
     /// The object converter for deserializing template files.
     /// </summary>
-    protected readonly IObjectConverter _converter;
+    private readonly IObjectConverter _converter;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="TemplateFactoryBase{T}"/> class.

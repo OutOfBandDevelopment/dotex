@@ -7,6 +7,7 @@ namespace OoBDev.Caching.Factories;
 /// Generic helper for unwrapping and wrapping Task results.
 /// </summary>
 /// <typeparam name="T">The result type of the task.</typeparam>
+#pragma warning disable CA1000 // invoked by reflection through MakeGenericType
 public static class ResultAwaiter<T>
 {
 #pragma warning disable CS8603 // Possible null reference return.

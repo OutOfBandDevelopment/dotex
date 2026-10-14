@@ -28,6 +28,6 @@ public class DaytimeServer(IPAddress? ipAddress = default, ushort port = 13, Tim
     protected override async Task MessageReceivedAsync(int clientId, TcpClient accepted, Memory<byte> message, CancellationToken cancellationToken)
     {
         Memory<byte> buffer = Encoding.UTF8.GetBytes((timeProvider ?? TimeProvider.System).GetLocalNow().ToString(CultureInfo.InvariantCulture));
-        await accepted.GetStream().WriteAsync(buffer, cancellationToken);
+        await accepted.GetStream().WriteAsync(buffer, cancellationToken).ConfigureAwait(false);
     }
 }

@@ -51,11 +51,11 @@ public class HtmlToDocxConversionHandler : IDocumentConversionHandler
                     new Document(new Body()).Save(mainPart);
                 }
                 var converter = new HtmlConverter(mainPart);
-                await converter.ParseBody(html);
+                await converter.ParseBody(html).ConfigureAwait(false);
                 mainPart.Document?.Save();
             }
 
-            await destination.WriteAsync(generatedDocument.ToArray());
+            await destination.WriteAsync(generatedDocument.ToArray()).ConfigureAwait(false);
             destination.Position = 0;
         }
     }

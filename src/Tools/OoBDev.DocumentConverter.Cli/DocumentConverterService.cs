@@ -16,7 +16,7 @@ namespace OoBDev.DocumentConverter.Cli;
 /// <summary>
 /// Hosted service that converts documents between different formats.
 /// </summary>
-public class DocumentConverterService : IHostedService
+public partial class DocumentConverterService : IHostedService
 {
     private readonly ILogger _log;
     private readonly IOptions<DocumentConverterOptions> _settings;
@@ -56,16 +56,19 @@ public class DocumentConverterService : IHostedService
     {
         var sourceFileType =
             _documentTypes.FirstOrDefault(ft => ft.FileExtensions.Any(e => string.Equals(e, Path.GetExtension(_settings.Value.InputPath), StringComparison.OrdinalIgnoreCase)))
-            ?.ContentTypes[0] ?? throw new ApplicationException("Unable to identify input file type")
+            ?.ContentTypes[0] ?? throw new InvalidOperationException("Unable to identify input file type")
             ;
         var targetFileType =
             _documentTypes.FirstOrDefault(ft => ft.FileExtensions.Any(e => string.Equals(e, Path.GetExtension(_settings.Value.OutputPath), StringComparison.OrdinalIgnoreCase)))
-            ?.ContentTypes[0] ?? throw new ApplicationException("Unable to identify output file type")
+            ?.ContentTypes[0] ?? throw new InvalidOperationException("Unable to identify output file type")
             ;
 
-        _log.LogInformation("convert \"{sourceFileType}\" to \"{targetFileType}\" \"{inFile}\"", sourceFileType, targetFileType, Path.GetFileName(_settings.Value.InputPath));
+        #pragma warning disable CA1873 // guarded by IsEnabled
+        if (_log.IsEnabled(LogLevel.Information))
+            LogConvert(sourceFileType, targetFileType, Path.GetFileName(_settings.Value.InputPath));
+        #pragma warning restore CA1873
 
-        var sourcePath = _settings.Value.InputPath ?? throw new ApplicationException("Must provide input path");
+        var sourcePath = _settings.Value.InputPath ?? throw new InvalidOperationException("Must provide input path");
 
         using var source = new MemoryStream();
         using var sourceFile = await OpenPathAsync(sourcePath);
@@ -75,16 +78,19 @@ public class DocumentConverterService : IHostedService
         using var target = new MemoryStream();
         if (await _documentConversion.ConvertAsync(source, sourceFileType, target, targetFileType))
         {
-            await using var targetOut = File.Create(_settings.Value.OutputPath ?? throw new ApplicationException("Must provide output path"));
+            await using var targetOut = File.Create(_settings.Value.OutputPath ?? throw new InvalidOperationException("Must provide output path"));
 
-            _log.LogInformation("converted \"{sourceFileType}\" to \"{targetFileType}\" \"{outFile}\"", sourceFileType, targetFileType, Path.GetFileName(_settings.Value.OutputPath));
+            #pragma warning disable CA1873 // guarded by IsEnabled
+            if (_log.IsEnabled(LogLevel.Information))
+                LogConverted(sourceFileType, targetFileType, Path.GetFileName(_settings.Value.OutputPath));
+            #pragma warning restore CA1873
             await target.CopyToAsync(targetOut, cancellationToken);
             await targetOut.FlushAsync(cancellationToken);
             targetOut.Close();
         }
         else
         {
-            _log.LogInformation("no conversion \"{sourceFileType}\" to \"{targetFileType}\"", sourceFileType, targetFileType);
+            LogNoConversion(sourceFileType, targetFileType);
         }
     }
 
@@ -93,7 +99,7 @@ public class DocumentConverterService : IHostedService
     /// </summary>
     /// <param name="sourcePath">The file path or HTTP/HTTPS URL to open.</param>
     /// <returns>A stream for reading the content.</returns>
-    /// <exception cref="ApplicationException">Thrown when the file is not found.</exception>
+    /// <exception cref="InvalidOperationException">Thrown when the file is not found.</exception>
     private async Task<Stream> OpenPathAsync(string sourcePath)
     {
         if (sourcePath.StartsWith("http:", StringComparison.OrdinalIgnoreCase) ||
@@ -106,7 +112,7 @@ public class DocumentConverterService : IHostedService
         else
         {
             return !Path.Exists(sourcePath) ?
-                throw new ApplicationException("File not found") :
+                throw new InvalidOperationException("File not found") :
                 (Stream)File.OpenRead(sourcePath);
         }
     }
@@ -117,4 +123,13 @@ public class DocumentConverterService : IHostedService
     /// <param name="cancellationToken">Token to signal cancellation.</param>
     /// <returns>A completed task.</returns>
     public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
+
+    [LoggerMessage(EventId = 1, Level = LogLevel.Information, Message = "convert \"{sourceFileType}\" to \"{targetFileType}\" \"{inFile}\"")]
+    private partial void LogConvert(string sourceFileType, string targetFileType, string? inFile);
+
+    [LoggerMessage(EventId = 2, Level = LogLevel.Information, Message = "converted \"{sourceFileType}\" to \"{targetFileType}\" \"{outFile}\"")]
+    private partial void LogConverted(string sourceFileType, string targetFileType, string? outFile);
+
+    [LoggerMessage(EventId = 3, Level = LogLevel.Information, Message = "no conversion \"{sourceFileType}\" to \"{targetFileType}\"")]
+    private partial void LogNoConversion(string sourceFileType, string targetFileType);
 }

@@ -22,7 +22,7 @@ namespace OoBDev.OpenTelemetry.Tests;
 /// Tests that the custom OpenTelemetry processors add correlation and user information to spans and log records.
 /// </summary>
 [TestClass]
-public class TelemetryProcessorTests
+public partial class TelemetryProcessorTests
 {
     private const string SourceName = "OoBDev.Tests.TelemetryProcessors";
 
@@ -114,7 +114,8 @@ public class TelemetryProcessorTests
             options.AddProcessor(new CaptureLogProcessor(captured));
         })))
         {
-            factory.CreateLogger("test").LogInformation("hello {Name}", "world");
+            var logger = factory.CreateLogger("test");
+            LogHello(logger, "world");
         }
 
         // Assert
@@ -209,4 +210,7 @@ public class TelemetryProcessorTests
     {
         public HttpContext? HttpContext { get; set; } = httpContext;
     }
+
+    [LoggerMessage(EventId = 1, Level = LogLevel.Information, Message = "hello {Name}")]
+    private static partial void LogHello(ILogger logger, string name);
 }

@@ -19,7 +19,7 @@ namespace OoBDev.FileRagEngine.Cli;
 /// Hosted service that generates documentation using RAG (Retrieval-Augmented Generation) and LLM models.
 /// Scans directories, processes files, and generates documentation using templates and language models.
 /// </summary>
-public class FileRagEngineService : IHostedService
+public partial class FileRagEngineService : IHostedService
 {
     private readonly ILogger _log;
     private readonly IOptions<FileRagEngineOptions> _settings;
@@ -54,9 +54,9 @@ public class FileRagEngineService : IHostedService
     public async Task StartAsync(CancellationToken cancellationToken)
     {
 #pragma warning disable CA2208 // Instantiate argument exceptions correctly
-        if (string.IsNullOrWhiteSpace(_settings.Value.InputPath)) throw new ArgumentNullException(nameof(_settings.Value.InputPath));
-        if (string.IsNullOrWhiteSpace(_settings.Value.Template)) throw new ArgumentNullException(nameof(_settings.Value.Template));
-        if (string.IsNullOrWhiteSpace(_settings.Value.OutputPath)) throw new ArgumentNullException(nameof(_settings.Value.OutputPath));
+        if (string.IsNullOrWhiteSpace(_settings.Value.InputPath)) throw new InvalidOperationException($"{nameof(_settings.Value.InputPath)} is required.");
+        if (string.IsNullOrWhiteSpace(_settings.Value.Template)) throw new InvalidOperationException($"{nameof(_settings.Value.Template)} is required.");
+        if (string.IsNullOrWhiteSpace(_settings.Value.OutputPath)) throw new InvalidOperationException($"{nameof(_settings.Value.OutputPath)} is required.");
 #pragma warning restore CA2208 // Instantiate argument exceptions correctly
 
         //app starts here
@@ -78,11 +78,11 @@ public class FileRagEngineService : IHostedService
             if (new[] { @"\bin\", @"\obj\" }.Any(i => directory.Contains(i, StringComparison.OrdinalIgnoreCase)) ||
                 new[] { @"\bin", @"\obj" }.Any(i => directory.EndsWith(i, StringComparison.OrdinalIgnoreCase)))
             {
-                _log.LogWarning("skip path: {directory}", directory);
+                LogSkipPath(directory);
                 continue;
             }
 
-            _log.LogInformation("reading: {directory}", directory);
+            LogReading(directory);
 
             var outFolder = Path.Combine(outputPath, realative);
 
@@ -94,9 +94,9 @@ public class FileRagEngineService : IHostedService
                          }.Any(i => i == ext)
                          select file).ToArray();
 
-            if (!files.Any())
+            if (files.Length == 0)
             {
-                _log.LogWarning("path empty: {directory}", directory);
+                LogPathEmpty(directory);
                 continue;
             }
             if (!Path.Exists(outFolder)) Directory.CreateDirectory(outFolder);
@@ -120,7 +120,7 @@ public class FileRagEngineService : IHostedService
                         };
 
                         // per folder generate a prompt using handlebars
-                        _log.LogInformation("generate prompt: {directory}", directory);
+                        LogGeneratePrompt(directory);
 
                         using var promptStream = new MemoryStream();
                         var templateContext = await _engine.ApplyAsync(_settings.Value.Template, data, promptStream);
@@ -134,11 +134,11 @@ public class FileRagEngineService : IHostedService
                         }
 
                         // post prompt to ollama
-                        _log.LogInformation("request completion: {directory}", directory);
+                        LogRequestCompletion(directory);
                         var response = await client.GetCompletionAsync(new() { Prompt = promptReader.ReadToEnd() });
 
                         // capture response from ollama
-                        _log.LogInformation("write files: {directory}", directory);
+                        LogWriteFiles(directory);
                         await File.WriteAllTextAsync(realResponseFileContent, response.Response, cancellationToken);
 
                         if (_settings.Value.IncludeRawOutput)
@@ -150,8 +150,8 @@ public class FileRagEngineService : IHostedService
                     }
                     catch (Exception ex)
                     {
-                        _log.LogError("ERROR: {directory} ({x}) -> {error}", directory, x, ex.Message);
-                        _log.LogDebug("Exception: {exception}", ex);
+                        LogFailed(directory, x, ex.Message);
+                        LogException(ex);
 
                         var errorFile = Path.ChangeExtension(realResponseFileContent, ".error" + Path.GetExtension(responseFileContent));
                         await File.WriteAllTextAsync(errorFile, ex.ToString(), cancellationToken);
@@ -160,7 +160,7 @@ public class FileRagEngineService : IHostedService
                 }
             }
         }
-        if (exceptions.Any())
+        if (exceptions.Count > 0)
             throw new AggregateException(exceptions);
     }
 
@@ -181,4 +181,28 @@ public class FileRagEngineService : IHostedService
     /// <param name="cancellationToken">Token to signal cancellation.</param>
     /// <returns>A completed task.</returns>
     public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
+
+    [LoggerMessage(EventId = 1, Level = LogLevel.Warning, Message = "skip path: {directory}")]
+    private partial void LogSkipPath(string directory);
+
+    [LoggerMessage(EventId = 2, Level = LogLevel.Information, Message = "reading: {directory}")]
+    private partial void LogReading(string directory);
+
+    [LoggerMessage(EventId = 3, Level = LogLevel.Warning, Message = "path empty: {directory}")]
+    private partial void LogPathEmpty(string directory);
+
+    [LoggerMessage(EventId = 4, Level = LogLevel.Information, Message = "generate prompt: {directory}")]
+    private partial void LogGeneratePrompt(string directory);
+
+    [LoggerMessage(EventId = 5, Level = LogLevel.Information, Message = "request completion: {directory}")]
+    private partial void LogRequestCompletion(string directory);
+
+    [LoggerMessage(EventId = 6, Level = LogLevel.Information, Message = "write files: {directory}")]
+    private partial void LogWriteFiles(string directory);
+
+    [LoggerMessage(EventId = 7, Level = LogLevel.Error, Message = "{directory} ({x}) -> {error}")]
+    private partial void LogFailed(string directory, int x, string error);
+
+    [LoggerMessage(EventId = 8, Level = LogLevel.Debug, Message = "Exception: {exception}")]
+    private partial void LogException(object exception);
 }

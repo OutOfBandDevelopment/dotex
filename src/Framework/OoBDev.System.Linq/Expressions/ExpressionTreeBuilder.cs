@@ -143,7 +143,7 @@ public class ExpressionTreeBuilder<TModel>(
         }
 
         var queryParameterType = queryParameter?.GetType() ??
-            throw new NullReferenceException($"{nameof(queryParameter)} may not be null");
+            throw new InvalidOperationException($"{nameof(queryParameter)} may not be null");
 
         if (expressionOperator == Operators.InSet)
         {
@@ -277,12 +277,7 @@ public class ExpressionTreeBuilder<TModel>(
                         targetType = value?.GetType()?.FullName,
                     },
                 });
-                _logger.LogWarning(
-                    $"{{{nameof(queryString)}}} parsed to {{{nameof(value)}}} ({{type}})",
-                    queryString,
-                    value,
-                    value?.GetType()
-                    );
+                LinqLog.ParsedValue(_logger, queryString, value, value?.GetType());
                 queryParameter = value;
             }
         }
@@ -310,13 +305,7 @@ public class ExpressionTreeBuilder<TModel>(
                         source = queryParameter,
                     },
                 });
-                _logger.LogWarning(
-                    $"Unable to map filter expression: {{{nameof(expression)}}} {{{nameof(expressionOperator)}}} {{{nameof(queryParameter)}}} ({{type}})",
-                    expression,
-                    expressionOperator,
-                    queryParameter,
-                    queryParameter?.GetType()
-                    );
+                LinqLog.UnmappedFilter(_logger, expression, expressionOperator, queryParameter, queryParameter?.GetType());
 #if DEBUG
                 throw new NotSupportedException($"Filter not mapped: {expression} {expressionOperator} {queryParameter}");
 #endif
@@ -370,11 +359,11 @@ public class ExpressionTreeBuilder<TModel>(
             .Concat(from prop in modelType.GetProperties(ReflectionExtensions.PublicProperties)
                     from attrib in prop.GetCustomAttributes<SearchableAttribute>()
                     select attrib.TargetName ?? prop.Name)
-            .Distinct();
+            .Distinct(StringComparer.Ordinal);
 
         if (!properties.Any())
         {
-            properties = modelType.GetProperties(ReflectionExtensions.PublicProperties).Select(p => p.Name).Distinct();
+            properties = modelType.GetProperties(ReflectionExtensions.PublicProperties).Select(p => p.Name).Distinct(StringComparer.Ordinal);
         }
 
         var notSearchable = modelType
@@ -382,10 +371,10 @@ public class ExpressionTreeBuilder<TModel>(
             .Concat(from prop in modelType.GetProperties(ReflectionExtensions.PublicProperties)
                     from attrib in prop.GetCustomAttributes<NotSearchableAttribute>()
                     select attrib.TargetName ?? prop.Name)
-            .Distinct();
+            .Distinct(StringComparer.Ordinal);
 
         var results = properties
-            .Except(notSearchable)
+            .Except(notSearchable, StringComparer.Ordinal)
             .Where(s => !string.IsNullOrWhiteSpace(s))
             .Cast<string>()
             .ToArray();
@@ -405,17 +394,17 @@ public class ExpressionTreeBuilder<TModel>(
             .GetCustomAttributes<SearchableAttribute>().Select(a => a.TargetName)
             .Concat(from prop in modelType.GetProperties(ReflectionExtensions.PublicProperties)
                     select prop.Name)
-            .Distinct();
+            .Distinct(StringComparer.Ordinal);
 
         var notSearchable = modelType
             .GetCustomAttributes<NotSortableAttribute>().Select(a => a.TargetName)
             .Concat(from prop in modelType.GetProperties(ReflectionExtensions.PublicProperties)
                     from attrib in prop.GetCustomAttributes<NotSortableAttribute>()
                     select attrib.TargetName ?? prop.Name)
-            .Distinct();
+            .Distinct(StringComparer.Ordinal);
 
         var results = properties
-            .Except(notSearchable)
+            .Except(notSearchable, StringComparer.Ordinal)
             .Where(s => !string.IsNullOrWhiteSpace(s))
             .Cast<string>()
             .ToArray();
@@ -435,25 +424,25 @@ public class ExpressionTreeBuilder<TModel>(
             .GetCustomAttributes<SearchableAttribute>().Select(a => a.TargetName)
             .Concat(from prop in modelType.GetProperties(ReflectionExtensions.PublicProperties)
                     select prop.Name)
-            .Distinct();
+            .Distinct(StringComparer.Ordinal);
 
         var properties = modelType
             .GetCustomAttributes<FilterableAttribute>().Select(a => a.TargetName)
             .Concat(from prop in modelType.GetProperties(ReflectionExtensions.PublicProperties)
                     select prop.Name)
-            .Distinct();
+            .Distinct(StringComparer.Ordinal);
 
         var notSearchable = modelType
             .GetCustomAttributes<NotFilterableAttribute>().Select(a => a.TargetName)
             .Concat(from prop in modelType.GetProperties(ReflectionExtensions.PublicProperties)
                     from attrib in prop.GetCustomAttributes<NotFilterableAttribute>()
                     select attrib.TargetName ?? prop.Name)
-            .Distinct();
+            .Distinct(StringComparer.Ordinal);
 
         var results =
             searchableProperties
             .Concat(properties)
-            .Except(notSearchable)
+            .Except(notSearchable, StringComparer.Ordinal)
             .Where(s => !string.IsNullOrWhiteSpace(s))
             .Cast<string>()
             .ToArray();
@@ -600,7 +589,7 @@ public class ExpressionTreeBuilder<TModel>(
 
         if (expression == null)
         {
-            _logger.LogInformation($"{nameof(TryGetPropertyExpression)}: {{{nameof(name)}}}", name);
+            LinqLog.TryGetProperty(_logger, name);
         }
 
         return expression != null;

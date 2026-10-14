@@ -90,13 +90,13 @@ public class KeycloakUserManagementTests
         if (!response.IsSuccessStatusCode)
         {
             var error = await response.Content.ReadAsStringAsync();
-            throw new ApplicationException($"Failed to get admin token from master realm: {response.StatusCode} - {error}");
+            throw new InvalidOperationException($"Failed to get admin token from master realm: {response.StatusCode} - {error}");
         }
 
         var content = await response.Content.ReadAsStringAsync();
         var tokenResponse = JsonSerializer.Deserialize<JsonElement>(content);
         return tokenResponse.GetProperty("access_token").GetString()
-            ?? throw new ApplicationException("Admin token was null");
+            ?? throw new InvalidOperationException("Admin token was null");
     }
 
     /// <summary>

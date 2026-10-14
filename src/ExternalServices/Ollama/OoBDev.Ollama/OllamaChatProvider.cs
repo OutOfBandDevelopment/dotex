@@ -56,7 +56,7 @@ Always do the following.
         var result = await _chat.GetChatMessageContentAsync(
            chatHistory,
            executionSettings: executionSettings,
-           kernel: _kernel);
+           kernel: _kernel).ConfigureAwait(false);
 
         return result.Content;
     }

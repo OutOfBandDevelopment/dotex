@@ -59,7 +59,7 @@ public class OllamaMessageCompletion : IMessageCompletion, IEmbeddingProvider
         CancellationToken cancellationToken = default
 #endif
         ) =>
-        await _client.GetEmbeddingSingleAsync(content, model ?? _client.SelectedModel);
+        await _client.GetEmbeddingSingleAsync(content, model ?? _client.SelectedModel).ConfigureAwait(false);
 
     /// <summary>
     /// Generates a completion for the given prompt using the specified model.
@@ -75,7 +75,7 @@ public class OllamaMessageCompletion : IMessageCompletion, IEmbeddingProvider
             Messages = new[] { new Message(ChatRole.User, prompt) }
         };
 
-        var responses = await _client.ChatAsync(request).ToListAsync();
+        var responses = await _client.ChatAsync(request).ToListAsync().ConfigureAwait(false);
         var result = string.Join("", responses.Select(r => r?.Message.Content ?? ""));
         return result;
     }
@@ -86,7 +86,7 @@ public class OllamaMessageCompletion : IMessageCompletion, IEmbeddingProvider
     /// <param name="model">Completion request model</param>
     /// <returns>Resulting response object</returns>
     public  Task<CompletionResponse> GetCompletionAsync(CompletionRequest model) =>
-      throw new NotImplementedException(); //TODO: fix this!
+      throw new NotSupportedException(); //TODO: fix this!
     //_mapper.Map(await _client.GetCompletion(_mapper.Map(model with { Model = model.Model ?? _client.SelectedModel })));
 
 
@@ -103,7 +103,7 @@ public class OllamaMessageCompletion : IMessageCompletion, IEmbeddingProvider
     {
         var queue = new ConcurrentQueue<string>();
         //var completed = false;
-        throw new NotImplementedException(); //TODO: fix this!
+        throw new NotSupportedException(); //TODO: fix this!
        // yield break;
 
         //var streamer = new ActionResponseStreamer<GenerateCompletionResponseStream?>(response =>

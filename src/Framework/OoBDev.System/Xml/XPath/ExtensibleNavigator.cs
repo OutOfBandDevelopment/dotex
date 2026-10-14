@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using System.Xml.XPath;
@@ -31,7 +32,7 @@ public sealed class ExtensibleNavigator : XPathNavigator
         BaseURI = baseUri ?? "";
         _current = current;
         NameTable = nameTable ?? new ExtensibleNameTable();
-        _namespacePrefixes = namespacePrefixes ?? new Dictionary<string, string>();
+        _namespacePrefixes = namespacePrefixes ?? new Dictionary<string, string>(StringComparer.Ordinal);
     }
 
     /// <summary>

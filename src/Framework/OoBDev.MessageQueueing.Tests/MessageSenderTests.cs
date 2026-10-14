@@ -88,7 +88,7 @@ public class MessageSenderTests
 
         var sender = service.GetRequiredService<IMessageQueueSender<MessageSenderTests>>();
 
-        await Assert.ThrowsAsync<ApplicationException>(async () => await sender.SendAsync(new
+        await Assert.ThrowsAsync<InvalidOperationException>(async () => await sender.SendAsync(new
         {
             hello = "world",
         }));

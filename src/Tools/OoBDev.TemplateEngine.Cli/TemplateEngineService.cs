@@ -14,7 +14,7 @@ namespace OoBDev.TemplateEngine.Cli;
 /// <summary>
 /// Hosted service that processes templates with JSON or XML data files to generate output.
 /// </summary>
-public class TemplateEngineService(
+public partial class TemplateEngineService(
     ILogger<TemplateEngineService> log,
     IOptions<TemplateEngineOptions> settings,
     ITemplateEngine engine
@@ -31,9 +31,9 @@ public class TemplateEngineService(
     public async Task StartAsync(CancellationToken cancellationToken)
     {
 #pragma warning disable CA2208 // Instantiate argument exceptions correctly
-        if (string.IsNullOrWhiteSpace(_settings.Value.InputFile)) throw new ArgumentNullException(nameof(_settings.Value.InputFile));
-        if (string.IsNullOrWhiteSpace(_settings.Value.Template)) throw new ArgumentNullException(nameof(_settings.Value.Template));
-        if (string.IsNullOrWhiteSpace(_settings.Value.OutputFile)) throw new ArgumentNullException(nameof(_settings.Value.OutputFile));
+        if (string.IsNullOrWhiteSpace(_settings.Value.InputFile)) throw new InvalidOperationException($"{nameof(_settings.Value.InputFile)} is required.");
+        if (string.IsNullOrWhiteSpace(_settings.Value.Template)) throw new InvalidOperationException($"{nameof(_settings.Value.Template)} is required.");
+        if (string.IsNullOrWhiteSpace(_settings.Value.OutputFile)) throw new InvalidOperationException($"{nameof(_settings.Value.OutputFile)} is required.");
 #pragma warning restore CA2208 // Instantiate argument exceptions correctly
 
         var inputPath = Path.GetFullPath(Path.GetDirectoryName(_settings.Value.InputFile) ?? ".");
@@ -48,11 +48,7 @@ public class TemplateEngineService(
             var data = GetData(contentType, content) ??
                 throw new NotSupportedException($"No data found: ({contentType}:{content?.Length})");
 
-            _log.LogInformation(
-                $"Loaded: {{{nameof(file)}}} for {{{nameof(_settings.Value.Template)}}}",
-                _settings.Value.InputFile,
-                _settings.Value.Template
-                );
+            LogLoaded(_settings.Value.InputFile, _settings.Value.Template);
 
             var outFile = _settings.Value.OutputFile
                 .Replace("[file]", Path.GetFileNameWithoutExtension(file), StringComparison.OrdinalIgnoreCase)
@@ -63,7 +59,7 @@ public class TemplateEngineService(
 
             var result = await engine.ApplyAsync(_settings.Value.Template, data, fileWriter);
             await fileWriter.FlushAsync(cancellationToken);
-            _log.LogInformation($"Written: {{{nameof(outFile)}}}", outFile);
+            LogWritten(outFile);
         }
     }
 
@@ -90,4 +86,10 @@ public class TemplateEngineService(
     /// <param name="cancellationToken">Token to signal cancellation.</param>
     /// <returns>A completed task.</returns>
     public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
+
+    [LoggerMessage(EventId = 1, Level = LogLevel.Information, Message = "Loaded: {file} for {template}")]
+    private partial void LogLoaded(string? file, string? template);
+
+    [LoggerMessage(EventId = 2, Level = LogLevel.Information, Message = "Written: {outFile}")]
+    private partial void LogWritten(string outFile);
 }

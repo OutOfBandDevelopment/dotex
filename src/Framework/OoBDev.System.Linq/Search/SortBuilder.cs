@@ -43,7 +43,7 @@ public class SortBuilder<TModel>(
 
         var compositeSortMap =
               sortLookup.Select(kvp => (kvp.Key, Expression: kvp.Value, Weight: 2))
-              .GroupBy(k => k.Key).Select(i => (i.Key, i.OrderBy(x => x.Weight).First().Expression))
+              .GroupBy(k => k.Key, StringComparer.Ordinal).Select(i => (i.Key, i.OrderBy(x => x.Weight).First().Expression))
               .ToDictionary(k => k.Key, v => v.Expression, stringComparer)
               ;
 
@@ -62,10 +62,7 @@ public class SortBuilder<TModel>(
                     unmatchedKeys
                 }
             });
-            _logger.LogWarning(
-                $"Could not use properties: {{{nameof(unmatchedKeys)}}} as they are not on the model",
-                string.Join("; ", unmatchedKeys)
-                );
+            LinqLog.UnmatchedSortKeys(_logger, string.Join("; ", unmatchedKeys));
         }
 
         if (!matchedKeys.Any() && treeBuilder.DefaultSortOrder().Count != 0)
@@ -83,11 +80,10 @@ public class SortBuilder<TModel>(
                     defaultSort = treeBuilder.DefaultSortOrder().Select(t => new { t.column, t.direction }),
                 }
             });
-            _logger.LogInformation(
-                $"Applying default sort for {{type}}: {{{nameof(orderBys)}}}",
-                typeof(TModel),
-                string.Join("; ", treeBuilder.DefaultSortOrder())
-                );
+            if (_logger.IsEnabled(LogLevel.Information))
+#pragma warning disable CA1873 // guarded by IsEnabled
+                LinqLog.DefaultSort(_logger, typeof(TModel), string.Join("; ", treeBuilder.DefaultSortOrder()));
+#pragma warning restore CA1873
         }
 
         IOrderedQueryable<TModel>? ordered = null;
@@ -119,7 +115,7 @@ public class SortBuilder<TModel>(
                     defaultSort = new[] { new { column = "*", direction = OrderDirections.Ascending } },
                 }
             });
-            _logger.LogWarning($"Force sort by 0 applied for {{type}}", typeof(TModel));
+            LinqLog.ForcedSort(_logger, typeof(TModel));
             ordered ??= query.OrderBy(_ => 0);
         }
 

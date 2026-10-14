@@ -14,7 +14,7 @@ namespace OoBDev.Data.Common;
 /// Provides database query execution functionality with mapping support.
 /// </summary>
 /// <typeparam name="TDbOptions">The type of database options for connection configuration.</typeparam>
-public class DatabaseQuery<TDbOptions> : IDatabaseQuery<TDbOptions>
+public partial class DatabaseQuery<TDbOptions> : IDatabaseQuery<TDbOptions>
 {
     private readonly IDatabaseMapper _mapper;
     private readonly ILogger _logger;
@@ -35,14 +35,13 @@ public class DatabaseQuery<TDbOptions> : IDatabaseQuery<TDbOptions>
 
     private void LogCommand(IDbCommand command)
     {
-        _logger.LogInformation("{commandType}: {command}", command.CommandType, command.CommandText);
+        LogCommandText(command.CommandType, command.CommandText);
 
-        _logger.LogDebug(
-            "{commandType}: {command} ({parameters})",
-            command.CommandType,
-            command.CommandText,
-            string.Join(Environment.NewLine + "\t", command.Parameters.OfType<IDbDataParameter>().Select(p => $"{p.ParameterName}={p.Value}"))
-            );
+        if (_logger.IsEnabled(LogLevel.Debug))
+        {
+            var parameters = string.Join(Environment.NewLine + "\t", command.Parameters.OfType<IDbDataParameter>().Select(p => $"{p.ParameterName}={p.Value}"));
+            LogCommandWithParameters(command.CommandType, command.CommandText, parameters);
+        }
     }
 
     /// <summary>
@@ -96,17 +95,17 @@ public class DatabaseQuery<TDbOptions> : IDatabaseQuery<TDbOptions>
         command.Parameters.Add(resultParameter);
 
         if (connection.State != ConnectionState.Open)
-            await connection.OpenAsync(cancellationToken);
+            await connection.OpenAsync(cancellationToken).ConfigureAwait(false);
 
-        using var reader = await command.ExecuteReaderAsync(cancellationToken);
+        using var reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
         Func<DbDataReader, TResult>? itemMap = null;
-        while (!cancellationToken.IsCancellationRequested && await reader.ReadAsync(cancellationToken))
+        while (!cancellationToken.IsCancellationRequested && await reader.ReadAsync(cancellationToken).ConfigureAwait(false))
         {
             itemMap ??= _mapper.GetReaderMapper<TResult>(reader);
             yield return itemMap(reader);
         }
 
-        await reader.NextResultAsync(cancellationToken);
+        await reader.NextResultAsync(cancellationToken).ConfigureAwait(false);
 
         if (resultParameter.Value is int result)
             resultCallback(result);
@@ -144,10 +143,16 @@ public class DatabaseQuery<TDbOptions> : IDatabaseQuery<TDbOptions>
 
         if (connection.State != ConnectionState.Open)
         {
-            await connection.OpenAsync();
+            await connection.OpenAsync().ConfigureAwait(false);
         }
 
-        var result = await command.ExecuteScalarAsync();
+        var result = await command.ExecuteScalarAsync().ConfigureAwait(false);
         return result is T output ? output : default;
     }
+
+    [LoggerMessage(EventId = 1, Level = LogLevel.Information, Message = "{commandType}: {command}")]
+    private partial void LogCommandText(CommandType commandType, string? command);
+
+    [LoggerMessage(EventId = 2, Level = LogLevel.Debug, Message = "{commandType}: {command} ({parameters})")]
+    private partial void LogCommandWithParameters(CommandType commandType, string? command, string? parameters);
 }

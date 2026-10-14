@@ -52,7 +52,7 @@ public class LdapFilterBuilder : ILdapFilterBuilder
 
         if (string.IsNullOrWhiteSpace(filter.AttributeName))
         {
-            throw new NullReferenceException("filter.AttributeName must be provided");
+            throw new InvalidOperationException("filter.AttributeName must be provided");
         }
 
         var notAllowed = "()*\0";

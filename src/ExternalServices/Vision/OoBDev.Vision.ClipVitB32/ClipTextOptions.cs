@@ -1,3 +1,4 @@
+#pragma warning disable MA0015 // paramName names the invalid option property, which is not a method parameter
 using System;
 
 namespace OoBDev.Vision.ClipVitB32;

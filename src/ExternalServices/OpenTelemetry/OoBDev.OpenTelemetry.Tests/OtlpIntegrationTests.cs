@@ -20,7 +20,7 @@ namespace OoBDev.OpenTelemetry.Tests;
 /// Sends spans and logs over OTLP to the Grafana LGTM container and reads them back from Tempo and Loki.
 /// </summary>
 [TestClass]
-public class OtlpIntegrationTests
+public partial class OtlpIntegrationTests
 {
     private const string SourceName = "OoBDev.Tests.OtlpIntegration";
 
@@ -63,7 +63,8 @@ public class OtlpIntegrationTests
         var logs = provider.GetRequiredService<LoggerProvider>();
 
         // Test
-        provider.GetRequiredService<ILoggerFactory>().CreateLogger("integration").LogInformation("Hello {Name}", "otlp");
+        var logger = provider.GetRequiredService<ILoggerFactory>().CreateLogger("integration");
+        LogHello(logger, "otlp");
         Assert.IsTrue(logs.ForceFlush(10_000));
 
         // Assert
@@ -120,4 +121,7 @@ public class OtlpIntegrationTests
     {
         public CorrelationInfo? Value { get; set; } = value;
     }
+
+    [LoggerMessage(EventId = 1, Level = LogLevel.Information, Message = "Hello {Name}")]
+    private static partial void LogHello(ILogger logger, string name);
 }

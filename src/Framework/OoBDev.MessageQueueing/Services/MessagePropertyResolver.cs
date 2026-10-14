@@ -79,7 +79,7 @@ public class MessagePropertyResolver(IConfiguration configuration) : IMessagePro
     public virtual IConfigurationSection Configuration(Type channelType, Type messageType)
     {
         var (config, simpleTargetName, simpleMessageName, _) = ConfigurationSafe(channelType, messageType);
-        return config ?? throw new ApplicationException($"No configuration found for \"MessageQueue:{simpleTargetName}:{simpleMessageName}\"");
+        return config ?? throw new InvalidOperationException($"No configuration found for \"MessageQueue:{simpleTargetName}:{simpleMessageName}\"");
     }
 
     /// <summary>
@@ -125,6 +125,6 @@ public class MessagePropertyResolver(IConfiguration configuration) : IMessagePro
     public virtual string Provider(Type channelType, Type messageType)
     {
         var (providerKey, simpleTargetName, simpleMessageName, _) = ProviderSafe(channelType, messageType);
-        return providerKey ?? throw new ApplicationException($"No provider found for \"MessageQueue:{simpleTargetName}:{simpleMessageName}:Provider\"");
+        return providerKey ?? throw new InvalidOperationException($"No provider found for \"MessageQueue:{simpleTargetName}:{simpleMessageName}:Provider\"");
     }
 }

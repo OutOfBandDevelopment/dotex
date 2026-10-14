@@ -25,7 +25,7 @@ internal sealed class StreamPipelineFactory
             var memory = context.pipeline.GetMemory(minimumBufferSize);
             try
             {
-                var read = await context.owner.ReadAsync(memory, context.cancellationToken);
+                var read = await context.owner.ReadAsync(memory, context.cancellationToken).ConfigureAwait(false);
                 if (read == 0)
                 {
                     break;
@@ -36,7 +36,7 @@ internal sealed class StreamPipelineFactory
             }
             catch (Exception ex)
             {
-                var errorHandling = await context.onError.Handle(context.owner, ex);
+                var errorHandling = await context.onError.Handle(context.owner, ex).ConfigureAwait(false);
                 switch (errorHandling)
                 {
                     case ErrorHandling.Ignore:
@@ -55,7 +55,7 @@ internal sealed class StreamPipelineFactory
             }
 
             // Make the data available to the PipeReader
-            var result = await context.pipeline.FlushAsync();
+            var result = await context.pipeline.FlushAsync().ConfigureAwait(false);
             if (result.IsCompleted || completed)
             {
                 break;
@@ -66,5 +66,5 @@ internal sealed class StreamPipelineFactory
         context.pipeline.Complete();
     }
 
-    internal Task? CreateReader(PipelineBuildDefinition pipeline, Stream stream) => throw new NotImplementedException();
+    internal Task? CreateReader(PipelineBuildDefinition pipeline, Stream stream) => throw new NotSupportedException();
 }

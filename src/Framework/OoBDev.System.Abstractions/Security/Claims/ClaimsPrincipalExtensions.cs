@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -24,10 +25,9 @@ public static class ClaimsPrincipalExtensions
     /// <param name="claims"></param>
     /// <returns></returns>
     public static IEnumerable<(string claim, string value)> GetClaimValues(this ClaimsPrincipal principal, params string[] claims) =>
-        from t in claims
-        join c in principal.GetAllClaims() on t equals c.Type
-        where !string.IsNullOrWhiteSpace(c.Value)
-        select (t, c.Value);
+        claims
+            .Join(principal.GetAllClaims(), t => t, c => c.Type, (t, c) => (claim: t, value: c.Value), StringComparer.Ordinal)
+            .Where(i => !string.IsNullOrWhiteSpace(i.value));
 
     /// <summary>
     /// Get first matched <seealso cref="Claim"/> on <seealso cref="ClaimsPrincipal"/> 

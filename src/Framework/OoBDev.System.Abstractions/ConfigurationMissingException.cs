@@ -8,7 +8,7 @@ namespace OoBDev.System;
 /// <remarks>
 /// This exception is typically thrown when attempting to access a configuration value that is not present.
 /// </remarks>
-public class ConfigurationMissingException : ApplicationException
+public class ConfigurationMissingException : Exception
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="ConfigurationMissingException"/> class with the specified configuration key.

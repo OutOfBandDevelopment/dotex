@@ -17,7 +17,7 @@ namespace OoBDev.MessageQueueing.Services;
 /// <param name="serializer">The JSON serializer.</param>
 /// <param name="context">The factory for creating instances of <see cref="IMessageContext"/>.</param>
 /// <param name="logger">The logger for logging messages.</param>
-public class MessageHandlerProvider(
+public partial class MessageHandlerProvider(
     IJsonSerializer serializer,
     IMessageContextFactory context,
     ILogger<MessageHandlerProvider> logger
@@ -33,7 +33,7 @@ public class MessageHandlerProvider(
     /// <summary>
     /// Gets the configuration section associated with the message handler.
     /// </summary>
-    public IConfigurationSection Config { get => field ?? throw new ApplicationException($"Missing Configuration"); private set; } = null!;
+    public IConfigurationSection Config { get => field ?? throw new InvalidOperationException($"Missing Configuration"); private set; } = null!;
 
     /// <summary>
     /// Handles the specified queue message by invoking each registered message handler.
@@ -46,9 +46,9 @@ public class MessageHandlerProvider(
         if (message != null)
         {
             var context = _context.Create(
-                _channelType ?? throw new ApplicationException("No channel type"),
+                _channelType ?? throw new InvalidOperationException("No channel type"),
                 message,
-                Config ?? throw new ApplicationException("No channel configuration")
+                Config ?? throw new InvalidOperationException("No channel configuration")
                 );
 
             var payloadType = message.PayloadType == null ? null : Type.GetType(message.PayloadType);
@@ -59,19 +59,19 @@ public class MessageHandlerProvider(
                 payload = _serializer.Deserialize(convert, payloadType) ?? payload;
             }
 
-            _logger.LogInformation($"Handle: {{{nameof(messageId)}}}", messageId);
+            LogHandle(messageId);
             context.SentId = messageId;
 
             foreach (var handler in _handlers)
             {
-                await handler.HandleAsync(payload, context);
+                await handler.HandleAsync(payload, context).ConfigureAwait(false);
             }
 
-            _logger.LogInformation($"Handled: {{{nameof(messageId)}}}", messageId);
+            LogHandled(messageId);
         }
         else
         {
-            _logger.LogWarning($"Nothing to handle");
+            LogNothingToHandle();
         }
     }
 
@@ -90,8 +90,16 @@ public class MessageHandlerProvider(
 
     IMessageHandlerProviderWrapped IMessageHandlerProviderWrapped.SetConfig(IConfigurationSection config)
     {
-        Config = config ?? throw new ApplicationException($"Missing Configuration");
+        Config = config ?? throw new InvalidOperationException($"Missing Configuration");
         return this;
     }
 
+    [LoggerMessage(EventId = 1, Level = LogLevel.Information, Message = "Handle: {messageId}")]
+    private partial void LogHandle(string messageId);
+
+    [LoggerMessage(EventId = 2, Level = LogLevel.Information, Message = "Handled: {messageId}")]
+    private partial void LogHandled(string messageId);
+
+    [LoggerMessage(EventId = 3, Level = LogLevel.Warning, Message = "Nothing to handle")]
+    private partial void LogNothingToHandle();
 }

@@ -21,7 +21,7 @@ public static class StreamJsonDeserializeExtensions
         stream switch
         {
             null => default,
-            _ => await JsonSerializer.DeserializeAsync<T>(stream, options)
+            _ => await JsonSerializer.DeserializeAsync<T>(stream, options).ConfigureAwait(false)
         };
 
     /// <summary>
@@ -35,7 +35,7 @@ public static class StreamJsonDeserializeExtensions
         stream switch
         {
             null => default,
-            _ => await JsonSerializer.DeserializeAsync(stream, type, options)
+            _ => await JsonSerializer.DeserializeAsync(stream, type, options).ConfigureAwait(false)
         };
 
     /// <summary>

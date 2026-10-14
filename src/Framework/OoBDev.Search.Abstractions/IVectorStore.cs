@@ -16,7 +16,7 @@ public interface IVectorStore
     /// <param name="embeddings">The embeddings to store.</param>
     /// <param name="metadata">The metadata to store.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
-    Task<string[]> StoreVectorsAsync(IEnumerable<ReadOnlyMemory<float>> embeddings, Dictionary<string, object> metadata);
+    Task<string[]> StoreVectorsAsync(IEnumerable<ReadOnlyMemory<float>> embeddings, IDictionary<string, object> metadata);
 
     /// <summary>
     /// Stores the specified embeddings and metadata.
@@ -24,7 +24,7 @@ public interface IVectorStore
     /// <param name="items">The embeddings to store.</param>
     /// <param name="metadata">The metadata to store.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
-    Task<string[]> StoreVectorsAsync(IEnumerable<(ReadOnlyMemory<float> embedding, Dictionary<string, object> metadata)> items, Dictionary<string, object> metadata);
+    Task<string[]> StoreVectorsAsync(IEnumerable<(ReadOnlyMemory<float> embedding, IDictionary<string, object> metadata)> items, IDictionary<string, object> metadata);
 
     /// <summary>
     /// Lists the stored vectors.

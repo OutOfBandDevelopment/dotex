@@ -18,12 +18,12 @@ public readonly struct FileEntry(ReadOnlySpan<byte> span)
     /// byte contains a $00, the entry is assumed to have never been used and is available for use.
     /// (This means that track 0 can never be used for data entry if the DOS image is wiped off the diskette.)
     /// </summary>
-    public readonly byte Track = span[0x00];
+    public byte Track { get; } = span[0x00];
 
     /// <summary>
     /// Sector of the first track/sector list sector
     /// </summary>
-    public readonly byte Sector = span[0x01];
+    public byte Sector { get; } = span[0x01];
 
     /// <summary>
     /// File type and sector flags:
@@ -39,23 +39,23 @@ public readonly struct FileEntry(ReadOnlySpan<byte> span)
     ///   $40 - B type file
     ///   (Thus, $84 is a locked BINARY file, and $90 is a locked R type file.)
     /// </summary>
-    public readonly AppleFileType FileType = (AppleFileType)span[0x02];
+    public AppleFileType FileType { get; } = (AppleFileType)span[0x02];
 
     /// <summary>
     /// File name (30 characters) ... actually 29.. $20 is reserved for "OriginalTrack"
     /// </summary>
-    public readonly string Name = Apple2Encoding.Apple2.GetString(span.Slice(0x03, 29));
+    public string Name { get; } = Apple2Encoding.Apple2.GetString(span.Slice(0x03, 29));
 
     /// <summary>
     /// If the file is deleted the original track location is stored here
     /// </summary>
-    public readonly byte OriginalTrack = span[0x20];
+    public byte OriginalTrack { get; } = span[0x20];
 
     /// <summary>
     ///  Length of the file in sectors (LO/HI format). The CATALOG command will only format the
     ///  LO byte of this length giving 1-255, but a full 65535 may be stored here.
     /// </summary>
-    public readonly ushort FileSize = BitConverter.ToUInt16(span.Slice(0x21, 2));
+    public ushort FileSize { get; } = BitConverter.ToUInt16(span.Slice(0x21, 2));
 
     /// <summary>
     /// Simple mapping to the deleted flag in FileType

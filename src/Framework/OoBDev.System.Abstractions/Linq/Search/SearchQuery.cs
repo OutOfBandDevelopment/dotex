@@ -1,3 +1,4 @@
+using System;
 using System.Globalization;
 using System.Collections.Generic;
 using System.Text;
@@ -58,12 +59,12 @@ public record SearchQuery : ISearchQuery
     /// <summary>
     /// Gets or initializes the filters for the query.
     /// </summary>
-    public Dictionary<string, FilterParameter> Filter { get; init; } = [];
+    public IDictionary<string, FilterParameter> Filter { get; init; } = new Dictionary<string, FilterParameter>(StringComparer.Ordinal);
 
     /// <summary>
     /// Gets or initializes the sorting options for the query.
     /// </summary>
-    public Dictionary<string, OrderDirections> OrderBy { get; init; } = [];
+    public IDictionary<string, OrderDirections> OrderBy { get; init; } = new Dictionary<string, OrderDirections>(StringComparer.Ordinal);
 
     /// <inheritdoc cref="IFilterQuery.Filter"/>
     IDictionary<string, FilterParameter> IFilterQuery.Filter => Filter;
@@ -83,11 +84,11 @@ public record SearchQuery : ISearchQuery
         sb.AppendLine(CultureInfo.InvariantCulture, $"{nameof(ExcludePageCount)}: {ExcludePageCount}");
         sb.AppendLine(CultureInfo.InvariantCulture, $"{nameof(SearchTerm)}: {SearchTerm ?? "(null)"}");
 
-        foreach (var item in Filter ?? [])
+        foreach (var item in Filter ?? new Dictionary<string, FilterParameter>(StringComparer.Ordinal))
         {
             sb.AppendLine(CultureInfo.InvariantCulture, $"\tF:{item.Key}: {item.Value}");
         }
-        foreach (var item in OrderBy ?? [])
+        foreach (var item in OrderBy ?? new Dictionary<string, OrderDirections>(StringComparer.Ordinal))
         {
             sb.AppendLine(CultureInfo.InvariantCulture, $"\tS:{item.Key}: {item.Value}");
         }

@@ -2,16 +2,6 @@ using System;
 
 namespace OoBDev.Onnx.ImageEmbeddings;
 
-/// <summary>Resampling filter, numbered like Pillow's <c>Image.Resampling</c>.</summary>
-public enum ImageResample
-{
-    /// <summary>Triangle filter (Pillow <c>BILINEAR</c>, value 2).</summary>
-    Bilinear = 2,
-
-    /// <summary>Cubic filter with a = -0.5 (Pillow <c>BICUBIC</c>, value 3).</summary>
-    Bicubic = 3,
-}
-
 /// <summary>
 /// Antialiased resize that reproduces Pillow's 8-bit separable convolution (filter support grows with the reduction
 /// ratio, 22 bit fixed point coefficients, horizontal pass first), because the Python image processors the models

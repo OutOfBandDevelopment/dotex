@@ -16,7 +16,7 @@ public class OneTimeCode(TimeProvider? timeProvider = null)
     /// <summary>
     /// The Unix epoch timestamp (January 1, 1970, 00:00:00 UTC).
     /// </summary>
-    public static readonly DateTime UNIX_EPOCH = new(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+    public static readonly DateTime UnixEpoch = new(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
     /// <summary>
     /// Base32 codec for encoding and decoding secrets.
@@ -29,7 +29,7 @@ public class OneTimeCode(TimeProvider? timeProvider = null)
     /// <returns>The current counter value.</returns>
     public long GetCurrentCounter()
     {
-        var counter = (long)(_timeProvider.GetUtcNow().UtcDateTime - UNIX_EPOCH).TotalSeconds / 30;
+        var counter = (long)(_timeProvider.GetUtcNow().UtcDateTime - UnixEpoch).TotalSeconds / 30;
         return counter;
     }
 

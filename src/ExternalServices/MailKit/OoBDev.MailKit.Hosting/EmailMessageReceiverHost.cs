@@ -24,7 +24,7 @@ namespace OoBDev.MailKit.Hosting;
 /// <param name="imapClientFactory">The client factory.</param>
 /// <param name="config">imap config.</param>
 /// <param name="messageFactory">The message factory.</param>
-public class EmailMessageReceiverHost(
+public partial class EmailMessageReceiverHost(
     ILogger<EmailMessageReceiverHost> logger,
     IMessageQueueSender<ReceivedEmailMessageModel> queue,
     IImapClientFactory imapClientFactory,
@@ -62,9 +62,9 @@ public class EmailMessageReceiverHost(
         if (disposing)
         {
             // note: dispose managed state (managed objects).
-            logger.LogInformation("Request Dispose");
+            LogRequestDispose();
             _tokenSource.Cancel();
-            logger.LogInformation("Complete Dispose");
+            LogCompleteDispose();
         }
 
         // note: free unmanaged resources (unmanaged objects) and override a finalizer below.
@@ -85,18 +85,18 @@ public class EmailMessageReceiverHost(
 throw new NotSupportedException("this is still in development and is not currently supported");
 #endif
 
-        var client = await imapClientFactory.CreateAsync();
+        var client = await imapClientFactory.CreateAsync().ConfigureAwait(false);
 #pragma warning restore CS0162
 
-        await client.NoOpAsync(cancellationToken);
+        await client.NoOpAsync(cancellationToken).ConfigureAwait(false);
 
         var folder = client.Inbox;
 
-        var folderAccess = await folder.OpenAsync(FolderAccess.ReadWrite, cancellationToken);
+        var folderAccess = await folder.OpenAsync(FolderAccess.ReadWrite, cancellationToken).ConfigureAwait(false);
 
         // https://github.com/jstedfast/MailKit?tab=readme-ov-file#searching-an-imap-folder
 
-        var fetched = await folder.SearchAsync(SearchQuery.NotDeleted.And(SearchQuery.NotSeen), cancellationToken);
+        var fetched = await folder.SearchAsync(SearchQuery.NotDeleted.And(SearchQuery.NotSeen), cancellationToken).ConfigureAwait(false);
 
         //var fetched = await folder.FetchAsync(0, -1, new FetchRequest
         //{
@@ -112,7 +112,7 @@ throw new NotSupportedException("this is still in development and is not current
 
         foreach (var itemId in fetched)
         {
-            var message = await folder.GetMessageAsync(itemId);
+            var message = await folder.GetMessageAsync(itemId).ConfigureAwait(false);
 
             var received = messageFactory.ToReceived(
                 message,
@@ -120,9 +120,9 @@ throw new NotSupportedException("this is still in development and is not current
                 folder.Name
                 );
 
-            await queue.SendAsync(received, received.ReferenceId);
+            await queue.SendAsync(received, received.ReferenceId).ConfigureAwait(false);
 
-            var storedResult = await folder.StoreAsync(itemId, new StoreFlagsRequest(StoreAction.Add, MessageFlags.Seen) { Silent = true }, cancellationToken);
+            var storedResult = await folder.StoreAsync(itemId, new StoreFlagsRequest(StoreAction.Add, MessageFlags.Seen) { Silent = true }, cancellationToken).ConfigureAwait(false);
 
             /*
 folder.Store (uid, new StoreFlagsRequest (StoreAction.Add, MessageFlags.Deleted) { Silent = true });
@@ -180,12 +180,24 @@ folder.Expunge ();
     /// <returns>A task representing the stop operation.</returns>
     public async Task StopAsync(CancellationToken cancellationToken)
     {
-        logger.LogInformation("Request Stop");
+        LogRequestStop();
 
-        await _tokenSource.CancelAsync();
-        await Task.WhenAll(_tasks);
+        await _tokenSource.CancelAsync().ConfigureAwait(false);
+        await Task.WhenAll(_tasks).ConfigureAwait(false);
         _tasks.Clear();
 
-        logger.LogInformation("Completed Stop");
+        LogCompletedStop();
     }
+
+    [LoggerMessage(EventId = 1, Level = LogLevel.Information, Message = "Request Dispose")]
+    private partial void LogRequestDispose();
+
+    [LoggerMessage(EventId = 2, Level = LogLevel.Information, Message = "Complete Dispose")]
+    private partial void LogCompleteDispose();
+
+    [LoggerMessage(EventId = 3, Level = LogLevel.Information, Message = "Request Stop")]
+    private partial void LogRequestStop();
+
+    [LoggerMessage(EventId = 4, Level = LogLevel.Information, Message = "Completed Stop")]
+    private partial void LogCompletedStop();
 }

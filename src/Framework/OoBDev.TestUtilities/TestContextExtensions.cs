@@ -58,9 +58,9 @@ public static class TestContextExtensions
     /// <param name="testContext">The test context.</param>
     /// <param name="parameter">The property name to retrieve.</param>
     /// <returns>The property value.</returns>
-    /// <exception cref="ApplicationException">Thrown when the property is not found.</exception>
+    /// <exception cref="InvalidOperationException">Thrown when the property is not found.</exception>
     public static T GetRequiredProperty<T>(this TestContext testContext, string parameter) =>
-        testContext.TryGetProperty<T>(parameter, out var value) ? value : throw new ApplicationException($"Test Property {parameter} is required");
+        testContext.TryGetProperty<T>(parameter, out var value) ? value : throw new InvalidOperationException($"Test Property {parameter} is required");
 
     /// <summary>
     /// Gets a test property value, returning null if not found.

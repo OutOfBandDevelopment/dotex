@@ -7,7 +7,7 @@ namespace OoBDev.Data.Vectors.Hosting;
 /// Hosted service that manages the lifecycle of the embedding sentence transformer queue reader.
 /// Handles automatic restarts on errors and graceful shutdown.
 /// </summary>
-public class EmbeddingSentenceTransformerQueueReaderHost : IHostedService, IDisposable
+public partial class EmbeddingSentenceTransformerQueueReaderHost : IHostedService, IDisposable
 {
     private readonly IEmbeddingSentenceTransformerQueueReader _reader;
     private readonly ILogger _logger;
@@ -53,9 +53,9 @@ public class EmbeddingSentenceTransformerQueueReaderHost : IHostedService, IDisp
 
         if (disposing)
         {
-            _logger.LogInformation("Request Dispose");
+            LogRequestDispose();
             _tokenSource.Cancel();
-            _logger.LogInformation("Complete Dispose");
+            LogCompleteDispose();
         }
 
         _disposed = true;
@@ -73,7 +73,7 @@ public class EmbeddingSentenceTransformerQueueReaderHost : IHostedService, IDisp
             throw new InvalidOperationException($"Already started!");
         }
 
-        _logger.LogInformation("Request Start");
+        LogRequestStart();
         var token = _tokenSource.Token;
 
         _task = Task.Run(async () =>
@@ -84,23 +84,23 @@ public class EmbeddingSentenceTransformerQueueReaderHost : IHostedService, IDisp
                 var reader = _reader;
                 try
                 {
-                    _logger.LogInformation($"Starting: {{{nameof(reader)}}}", reader);
+                    LogStarting(reader);
                     var task =  reader.RunAsync(token);
-                    _logger.LogInformation($"Started: {{{nameof(reader)}}}", reader);
-                    await task;
+                    LogStarted(reader);
+                    await task.ConfigureAwait(false);
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError($"Exception: {{{nameof(reader)}}}: {{{nameof(Exception)}}}", reader, ex.Message);
-                    _logger.LogDebug($"Error: {{{nameof(reader)}}}: {{{nameof(Exception)}}}", reader, ex.ToString());
+                    LogException(reader, ex.Message);
+                    LogError(reader, ex);
 
-                    _logger.LogInformation($"Waiting for restart: {{{nameof(reader)}}}", reader);
-                    await Task.Delay(10000, token); // TODO: this should be configurable
+                    LogWaitingForRestart(reader);
+                    await Task.Delay(10000, token).ConfigureAwait(false); // TODO: this should be configurable
                 }
             }
         }, cancellationToken);
 
-        _logger.LogInformation("Completed Start");
+        LogCompletedStart();
 
         return Task.CompletedTask;
     }
@@ -112,19 +112,54 @@ public class EmbeddingSentenceTransformerQueueReaderHost : IHostedService, IDisp
     /// <returns>A task representing the stop operation.</returns>
     public async Task StopAsync(CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Request Stop");
+        LogRequestStop();
 
         if (_task == null)
         {
-            _logger.LogInformation("Not Running");
+            LogNotRunning();
             return;
         }
 
-        await _tokenSource.CancelAsync();
-        await _task;
+        await _tokenSource.CancelAsync().ConfigureAwait(false);
+        await _task.ConfigureAwait(false);
         _task = null;
 
-        _logger.LogInformation("Completed Stop");
+        LogCompletedStop();
     }
 
+    [LoggerMessage(EventId = 1, Level = LogLevel.Information, Message = "Request Dispose")]
+    private partial void LogRequestDispose();
+
+    [LoggerMessage(EventId = 2, Level = LogLevel.Information, Message = "Complete Dispose")]
+    private partial void LogCompleteDispose();
+
+    [LoggerMessage(EventId = 3, Level = LogLevel.Information, Message = "Request Start")]
+    private partial void LogRequestStart();
+
+    [LoggerMessage(EventId = 4, Level = LogLevel.Information, Message = "Starting: {reader}")]
+    private partial void LogStarting(IEmbeddingSentenceTransformerQueueReader reader);
+
+    [LoggerMessage(EventId = 5, Level = LogLevel.Information, Message = "Started: {reader}")]
+    private partial void LogStarted(IEmbeddingSentenceTransformerQueueReader reader);
+
+    [LoggerMessage(EventId = 6, Level = LogLevel.Error, Message = "Exception: {reader}: {exception}")]
+    private partial void LogException(IEmbeddingSentenceTransformerQueueReader reader, string exception);
+
+    [LoggerMessage(EventId = 7, Level = LogLevel.Debug, Message = "Failed: {reader}")]
+    private partial void LogError(IEmbeddingSentenceTransformerQueueReader reader, Exception exception);
+
+    [LoggerMessage(EventId = 8, Level = LogLevel.Information, Message = "Waiting for restart: {reader}")]
+    private partial void LogWaitingForRestart(IEmbeddingSentenceTransformerQueueReader reader);
+
+    [LoggerMessage(EventId = 9, Level = LogLevel.Information, Message = "Completed Start")]
+    private partial void LogCompletedStart();
+
+    [LoggerMessage(EventId = 10, Level = LogLevel.Information, Message = "Request Stop")]
+    private partial void LogRequestStop();
+
+    [LoggerMessage(EventId = 11, Level = LogLevel.Information, Message = "Not Running")]
+    private partial void LogNotRunning();
+
+    [LoggerMessage(EventId = 12, Level = LogLevel.Information, Message = "Completed Stop")]
+    private partial void LogCompletedStop();
 }

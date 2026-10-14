@@ -18,7 +18,7 @@ namespace OoBDev.Microsoft.Azure.StorageAccount.MessageQueueing;
 /// <param name="clientFactory">The factory for creating Azure Storage Queue clients.</param>
 /// <param name="mapper">The model mapper for Azure Storage Queues.</param>
 /// <param name="logger">The logger for logging messages.</param>
-public class AzureStorageQueueMessageProvider(
+public partial class AzureStorageQueueMessageProvider(
     IJsonSerializer serializer,
     IQueueClientFactory clientFactory,
     IAzureStorageQueueMapper mapper,
@@ -44,7 +44,7 @@ public class AzureStorageQueueMessageProvider(
         var wrapped = _mapper.Wrap(message, context);
 
         var serialized = serializer.Serialize(wrapped);
-        var result = await client.SendMessageAsync(serialized);
+        var result = await client.SendMessageAsync(serialized).ConfigureAwait(false);
 
         return result.Value.MessageId;
     }
@@ -75,12 +75,12 @@ public class AzureStorageQueueMessageProvider(
         {
             if (_mapper.EnsureQueueExists(_handlerProvider.Config))
             {
-                logger.LogWarning("Creating {queueName} as it does not exist", client.Name);
+                LogCreatingQueue(client.Name);
                 client.CreateIfNotExists(cancellationToken: cancellationToken);
             }
             else
             {
-                logger.LogError("Queue {queueName} does not exist", client.Name);
+                LogQueueMissing(client.Name);
                 throw new NotSupportedException($"Queue {client.Name} does not exist");
             }
         }
@@ -89,12 +89,12 @@ public class AzureStorageQueueMessageProvider(
 
         while (!newCancellationToken.IsCancellationRequested)
         {
-            var message = await client.ReceiveMessageAsync(TimeSpan.FromMinutes(1), newCancellationToken);
+            var message = await client.ReceiveMessageAsync(TimeSpan.FromMinutes(1), newCancellationToken).ConfigureAwait(false);
 
             if (message?.Value == null)
             {
-                logger.LogInformation($"Nothing Received waiting");
-                await Task.Delay(_mapper.WaitDelay(_handlerProvider.Config), cancellationToken);
+                LogNothingReceived();
+                await Task.Delay(_mapper.WaitDelay(_handlerProvider.Config), cancellationToken).ConfigureAwait(false);
                 continue;
             }
 
@@ -102,10 +102,22 @@ public class AzureStorageQueueMessageProvider(
             var deserialized = serializer.Deserialize<WrappedQueueMessage>(stream)
                 ?? throw new NotSupportedException($"No payload found");
 
-            await _handlerProvider.HandleAsync(deserialized, message.Value.MessageId);
+            await _handlerProvider.HandleAsync(deserialized, message.Value.MessageId).ConfigureAwait(false);
 
-            logger.LogInformation($"Dequeue: {{{nameof(message.Value.MessageId)}}}", message.Value.MessageId);
-            _ = await client.DeleteMessageAsync(message.Value.MessageId, message.Value.PopReceipt, newCancellationToken);
+            LogDequeue(message.Value.MessageId);
+            _ = await client.DeleteMessageAsync(message.Value.MessageId, message.Value.PopReceipt, newCancellationToken).ConfigureAwait(false);
         }
     }
+
+    [LoggerMessage(EventId = 1, Level = LogLevel.Warning, Message = "Creating {queueName} as it does not exist")]
+    private partial void LogCreatingQueue(string queueName);
+
+    [LoggerMessage(EventId = 2, Level = LogLevel.Error, Message = "Queue {queueName} does not exist")]
+    private partial void LogQueueMissing(string queueName);
+
+    [LoggerMessage(EventId = 3, Level = LogLevel.Information, Message = "Nothing Received waiting")]
+    private partial void LogNothingReceived();
+
+    [LoggerMessage(EventId = 4, Level = LogLevel.Information, Message = "Dequeue: {messageId}")]
+    private partial void LogDequeue(string messageId);
 }

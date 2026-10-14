@@ -32,7 +32,7 @@ public class MessageSenderProviderFactory(
         if (provider == null)
         {
             var providerType = Type.GetType(providerKey, true) ??
-                throw new ApplicationException($"Unable to resolve type for {providerKey}");
+                throw new InvalidOperationException($"Unable to resolve type for {providerKey}");
 
             provider = (IMessageSenderProvider)ActivatorUtilities.CreateInstance(serviceProvider, providerType);
         }

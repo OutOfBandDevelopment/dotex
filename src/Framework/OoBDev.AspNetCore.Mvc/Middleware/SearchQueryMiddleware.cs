@@ -11,7 +11,7 @@ namespace OoBDev.AspNetCore.Mvc.Middleware;
 /// <summary>
 /// ASP.Net MVC Middleware to enable IQueryable{T} responses from  Controller Actions
 /// </summary>
-public class SearchQueryMiddleware
+public partial class SearchQueryMiddleware
 {
     private readonly RequestDelegate _next;
     private readonly ILogger<SearchQueryMiddleware> _logger;
@@ -52,11 +52,11 @@ public class SearchQueryMiddleware
             {
                 if (searchModel == null)
                 {
-                    _logger.LogWarning($"SearchQuery not bound");
+                    LogNotBound();
                 }
                 else
                 {
-                    _logger.LogInformation($"Invoking: {{{nameof(searchModel)}}}", searchModel);
+                    LogInvoking(searchModel);
                 }
                 _searchQuery.Value = searchModel;
             }
@@ -64,9 +64,21 @@ public class SearchQueryMiddleware
         }
         catch (Exception ex)
         {
-            _logger.LogInformation("Error");
-            _logger.LogError($"{{{nameof(ex.Message)}}}", ex.Message);
+            LogError();
+            LogFailure(ex.Message);
             throw;
         }
     }
+
+    [LoggerMessage(EventId = 1, Level = LogLevel.Warning, Message = "SearchQuery not bound")]
+    private partial void LogNotBound();
+
+    [LoggerMessage(EventId = 2, Level = LogLevel.Information, Message = "Invoking: {searchModel}")]
+    private partial void LogInvoking(SearchQuery searchModel);
+
+    [LoggerMessage(EventId = 3, Level = LogLevel.Information, Message = "Error")]
+    private partial void LogError();
+
+    [LoggerMessage(EventId = 4, Level = LogLevel.Error, Message = "{Message}")]
+    private partial void LogFailure(string message);
 }

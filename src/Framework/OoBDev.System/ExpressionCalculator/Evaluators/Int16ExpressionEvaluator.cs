@@ -1,4 +1,6 @@
-﻿namespace OoBDev.System.ExpressionCalculator.Evaluators;
+﻿using System.Globalization;
+
+namespace OoBDev.System.ExpressionCalculator.Evaluators;
 
 /// <summary>
 /// Provides arithmetic operations and value conversions for expression evaluation using the <see cref="short"/> (Int16) type.
@@ -65,7 +67,7 @@ public sealed class Int16ExpressionEvaluator : IExpressionEvaluator<short>
     /// </summary>
     /// <param name="input">The string to parse.</param>
     /// <returns>The parsed short value if successful; otherwise, null.</returns>
-    public short? TryParse(string input) => short.TryParse(input, out var ret) ? ret : null;
+    public short? TryParse(string input) => short.TryParse(input, CultureInfo.InvariantCulture, out var ret) ? ret : null;
 
     /// <summary>
     /// Converts the specified integer value to a signed 16-bit integer.

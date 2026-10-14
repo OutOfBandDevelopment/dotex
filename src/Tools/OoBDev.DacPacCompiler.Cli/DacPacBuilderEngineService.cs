@@ -12,7 +12,7 @@ namespace OoBDev.DacPacCompiler.Cli;
 /// <summary>
 /// Hosted service that builds DACPAC files from SQL CLR assemblies.
 /// </summary>
-public class DacPacBuilderEngineService : IHostedService
+public partial class DacPacBuilderEngineService : IHostedService
 {
     private readonly ILogger _log;
     private readonly IOptions<DacPacBuilderEngineOptions> _settings;
@@ -46,11 +46,11 @@ public class DacPacBuilderEngineService : IHostedService
         --sqlclr "$(SolutionDir)Extensions\OoBDev.Data.Vectors\bin\Debug\net481\OoBDev.Data.Vectors.dll" 
         --dotnet "$(SolutionDir)Extensions\OoBDev.Data.Vectors\bin\Debug\net10.0\OoBDev.Data.Vectors.dll"
         */
-        _log.LogInformation("AssemblyFileFramework: {AssemblyFileFramework}", _settings.Value.AssemblyFileFramework);
-        _log.LogInformation("AssemblyPdbFramework: {AssemblyPdbFramework}", _settings.Value.AssemblyPdbFramework);
-        _log.LogInformation("DacpacFile: {DacpacFile}", _settings.Value.DacpacFile);
-        _log.LogInformation("ProjectName: {ProjectName}", _settings.Value.ProjectName);
-        _log.LogInformation("ProjectVersion: {ProjectVersion}", _settings.Value.ProjectVersion);
+        LogAssemblyfileframework(_settings.Value.AssemblyFileFramework);
+        LogAssemblypdbframework(_settings.Value.AssemblyPdbFramework);
+        LogDacpacfile(_settings.Value.DacpacFile);
+        LogProjectname(_settings.Value.ProjectName);
+        LogProjectversion(_settings.Value.ProjectVersion);
 
         _builder.BuildDacPac(
             assemblyFileFramework: _settings.Value.AssemblyFileFramework,
@@ -69,4 +69,19 @@ public class DacPacBuilderEngineService : IHostedService
     /// <param name="cancellationToken">Token to signal cancellation.</param>
     /// <returns>A completed task.</returns>
     public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
+
+    [LoggerMessage(EventId = 1, Level = LogLevel.Information, Message = "AssemblyFileFramework: {AssemblyFileFramework}")]
+    private partial void LogAssemblyfileframework(string? assemblyFileFramework);
+
+    [LoggerMessage(EventId = 2, Level = LogLevel.Information, Message = "AssemblyPdbFramework: {AssemblyPdbFramework}")]
+    private partial void LogAssemblypdbframework(string? assemblyPdbFramework);
+
+    [LoggerMessage(EventId = 3, Level = LogLevel.Information, Message = "DacpacFile: {DacpacFile}")]
+    private partial void LogDacpacfile(string? dacpacFile);
+
+    [LoggerMessage(EventId = 4, Level = LogLevel.Information, Message = "ProjectName: {ProjectName}")]
+    private partial void LogProjectname(string? projectName);
+
+    [LoggerMessage(EventId = 5, Level = LogLevel.Information, Message = "ProjectVersion: {ProjectVersion}")]
+    private partial void LogProjectversion(string? projectVersion);
 }

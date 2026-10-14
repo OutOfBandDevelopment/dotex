@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using System;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -15,7 +16,7 @@ internal sealed class Program
         await Host.CreateDefaultBuilder(args)
             .ConfigureAppConfiguration((context, config) => config.AddCommandLine(args,
                     CommandLine.BuildParameters<DacPacBuilderEngineOptions>()
-                    ).AddInMemoryCollection(new Dictionary<string, string?>()
+                    ).AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal)
                     {
                     }))
             .ConfigureServices((context, services) =>

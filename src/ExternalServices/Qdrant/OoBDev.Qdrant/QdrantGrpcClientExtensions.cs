@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Qdrant.Client.Grpc;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,7 +9,7 @@ namespace OoBDev.Qdrant;
 /// <summary>
 /// Extension methods for Qdrant gRPC client.
 /// </summary>
-public static class QdrantGrpcClientExtensions
+public static partial class QdrantGrpcClientExtensions
 {
     // https://github.com/qdrant/qdrant-dotnet
 
@@ -29,12 +30,13 @@ public static class QdrantGrpcClientExtensions
         ILogger? logger = null
         )
     {
-        var collectionsResponse = await qdrant.Collections.ListAsync(new() { });
+        logger ??= NullLogger.Instance;
+        var collectionsResponse = await qdrant.Collections.ListAsync(new() { }).ConfigureAwait(false);
         foreach (var collection in collectionsResponse.Collections)
-            logger?.LogInformation("List: {collection}", collection);
+            LogList(logger, collection);
         if (!collectionsResponse.Collections.Any(d => d.Name == collectionName))
         {
-            logger?.LogInformation("create {collection} on qdrant", collectionName);
+            LogCreate(logger, collectionName);
             await qdrant.Collections.CreateAsync(
                 new()
                 {
@@ -47,10 +49,19 @@ public static class QdrantGrpcClientExtensions
                             Distance = distanceCalculation,
                         },
                     }
-                });
-            logger?.LogInformation("created {collection} on qdrant", collectionName);
+                }).ConfigureAwait(false);
+            LogCreated(logger, collectionName);
         }
 
         return qdrant;
     }
+
+    [LoggerMessage(EventId = 1, Level = LogLevel.Information, Message = "List: {collection}")]
+    private static partial void LogList(ILogger logger, object collection);
+
+    [LoggerMessage(EventId = 2, Level = LogLevel.Information, Message = "create {collection} on qdrant")]
+    private static partial void LogCreate(ILogger logger, string collection);
+
+    [LoggerMessage(EventId = 3, Level = LogLevel.Information, Message = "created {collection} on qdrant")]
+    private static partial void LogCreated(ILogger logger, string collection);
 }

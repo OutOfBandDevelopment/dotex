@@ -40,11 +40,11 @@ public abstract class ServerBase : IServerBase
     /// Starts the TCP server and begins listening for client connections.
     /// Initializes the TCP listener and starts the service loop for accepting clients.
     /// </summary>
-    /// <exception cref="ApplicationException">Thrown if the server is already started.</exception>
+    /// <exception cref="InvalidOperationException">Thrown if the server is already started.</exception>
     public void Start()
     {
         if (_listener != null)
-            throw new ApplicationException("Already Started!");
+            throw new InvalidOperationException("Already Started!");
         Console.WriteLine($"{GetType()}::Starting: {Environment.CurrentManagedThreadId} [{IPAddress}:{Port}]");
         _listener = new TcpListener(IPAddress, Port);
         _listener.Start();
@@ -102,14 +102,14 @@ public abstract class ServerBase : IServerBase
             try
             {
                 Console.WriteLine($"{GetType()}::ServiceLoopAsync::Listening: {Environment.CurrentManagedThreadId}");
-                var accepted = await listener.AcceptTcpClientAsync(cts.Token);
+                var accepted = await listener.AcceptTcpClientAsync(cts.Token).ConfigureAwait(false);
                 var clientId = clientIdSeed++;
                 _clients.Add(clientId, accepted);
 
                 var clientTask = Task.Run(async () =>
                 {
                     Console.WriteLine($"{GetType()}::ServiceLoopAsync::Accepted: {clientId}-{Environment.CurrentManagedThreadId}");
-                    await AcceptClientAsync(clientId, accepted, cts.Token);
+                    await AcceptClientAsync(clientId, accepted, cts.Token).ConfigureAwait(false);
                     Console.WriteLine($"{GetType()}::ServiceLoopAsync::Closed:   {clientId}-{Environment.CurrentManagedThreadId}");
                 }, cts.Token);
                 _tasks.Add(clientTask);
@@ -150,12 +150,12 @@ public abstract class ServerBase : IServerBase
             {
                 if (stream.CanRead)
                 {
-                    var readLength = await stream.ReadAsync(buffer, cts.Token);
+                    var readLength = await stream.ReadAsync(buffer, cts.Token).ConfigureAwait(false);
                     if (readLength > 0)
                     {
                         var sliced = buffer[..readLength];
                         Console.WriteLine($"{GetType()}: {clientId}-{Environment.CurrentManagedThreadId}: {Encoding.UTF8.GetString(sliced.ToArray())}");
-                        await MessageReceivedAsync(clientId, accepted, sliced, cts.Token);
+                        await MessageReceivedAsync(clientId, accepted, sliced, cts.Token).ConfigureAwait(false);
                     }
                     else if (readLength <= 0)
                     {
@@ -206,7 +206,7 @@ public abstract class ServerBase : IServerBase
         await Task.WhenAll(
             _task ?? Task.CompletedTask,
             Task.WhenAll(_tasks)
-            );
+            ).ConfigureAwait(false);
 
         await Task.Yield();
 

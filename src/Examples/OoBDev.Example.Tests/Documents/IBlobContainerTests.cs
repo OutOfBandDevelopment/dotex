@@ -150,7 +150,7 @@ public class IBlobContainerTests
         public Task<ContentReference?> GetContentAsync(string path) => throw new global::System.NotImplementedException();
         public Task<ContentMetaDataReference?> GetContentMetaDataAsync(string path) => throw new global::System.NotImplementedException();
         public IQueryable<ContentMetaDataReference> QueryContent() => throw new global::System.NotImplementedException();
-        public Task StoreContentAsync(ContentReference reference, Dictionary<string, string>? metadata = null, bool overwrite = false) => throw new global::System.NotImplementedException();
+        public Task StoreContentAsync(ContentReference reference, IDictionary<string, string>? metadata = null, bool overwrite = false) => throw new global::System.NotImplementedException();
         public Task<bool> StoreContentMetaDataAsync(ContentMetaDataReference reference) => throw new global::System.NotImplementedException();
     }
 

@@ -22,7 +22,7 @@ public abstract class CommandBase : ICommand
     /// <summary>
     /// Raises the CanExecuteChanged event to notify subscribers that the command's execution status may have changed.
     /// </summary>
-    public virtual void RaiseCanExecuteChanged() => CanExecuteChanged?.Invoke(this, new EventArgs());
+    public virtual void RaiseCanExecuteChanged() => CanExecuteChanged?.Invoke(this, EventArgs.Empty);
 
     /// <summary>
     /// Defines the method to be called when the command is invoked.

@@ -17,7 +17,7 @@ namespace OoBDev.MessageQueueing.Hosting;
 /// </remarks>
 /// <param name="logger">The logger.</param>
 /// <param name="factory">The message receiver provider factory.</param>
-public class MessageReceiverHost(
+public partial class MessageReceiverHost(
     ILogger<MessageReceiverHost> logger,
     IMessageReceiverProviderFactory factory
     ) : IHostedService, IDisposable
@@ -52,9 +52,9 @@ public class MessageReceiverHost(
         if (disposing)
         {
             // note: dispose managed state (managed objects).
-            logger.LogInformation("Request Dispose");
+            LogRequestDispose();
             _tokenSource.Cancel();
-            logger.LogInformation("Complete Dispose");
+            LogCompleteDispose();
         }
 
         // note: free unmanaged resources (unmanaged objects) and override a finalizer below.
@@ -75,7 +75,7 @@ public class MessageReceiverHost(
             throw new InvalidOperationException($"Already started!");
         }
 
-        logger.LogInformation("Request Start");
+        LogRequestStart();
 
         var providers = factory.Create().ToArray();
 
@@ -86,7 +86,7 @@ public class MessageReceiverHost(
             _tasks.Add(Task.Run(() => StartProvider(provider, token), cancellationToken));
         }
 
-        logger.LogInformation("Completed Start");
+        LogCompletedStart();
 
         return Task.CompletedTask;
     }
@@ -97,18 +97,18 @@ public class MessageReceiverHost(
         {
             try
             {
-                logger.LogInformation($"Starting: {{{nameof(provider)}}}", provider);
+                LogStarting(provider);
                 var task = provider.RunAsync(token);
-                logger.LogInformation($"Started: {{{nameof(provider)}}}", provider);
-                await task;
+                LogStarted(provider);
+                await task.ConfigureAwait(false);
             }
             catch (Exception ex)
             {
-                logger.LogError($"Exception: {{{nameof(provider)}}}: {{{nameof(Exception)}}}", provider, ex.Message);
-                logger.LogDebug($"Error: {{{nameof(provider)}}}: {{{nameof(Exception)}}}", provider, ex.ToString());
+                LogException(provider, ex.Message);
+                LogError(provider, ex);
 
-                logger.LogInformation($"Waiting for restart: {{{nameof(provider)}}}", provider);
-                await Task.Delay(10000, token); // TODO: this should be configurable
+                LogWaitingForRestart(provider);
+                await Task.Delay(10000, token).ConfigureAwait(false); // TODO: this should be configurable
             }
         }
     }
@@ -120,12 +120,45 @@ public class MessageReceiverHost(
     /// <returns>A task representing the stop operation.</returns>
     public async Task StopAsync(CancellationToken cancellationToken)
     {
-        logger.LogInformation("Request Stop");
+        LogRequestStop();
 
-        await _tokenSource.CancelAsync();
-        await Task.WhenAll(_tasks);
+        await _tokenSource.CancelAsync().ConfigureAwait(false);
+        await Task.WhenAll(_tasks).ConfigureAwait(false);
         _tasks.Clear();
 
-        logger.LogInformation("Completed Stop");
+        LogCompletedStop();
     }
+
+    [LoggerMessage(EventId = 1, Level = LogLevel.Information, Message = "Request Dispose")]
+    private partial void LogRequestDispose();
+
+    [LoggerMessage(EventId = 2, Level = LogLevel.Information, Message = "Complete Dispose")]
+    private partial void LogCompleteDispose();
+
+    [LoggerMessage(EventId = 3, Level = LogLevel.Information, Message = "Request Start")]
+    private partial void LogRequestStart();
+
+    [LoggerMessage(EventId = 4, Level = LogLevel.Information, Message = "Completed Start")]
+    private partial void LogCompletedStart();
+
+    [LoggerMessage(EventId = 5, Level = LogLevel.Information, Message = "Starting: {provider}")]
+    private partial void LogStarting(IMessageReceiverProvider provider);
+
+    [LoggerMessage(EventId = 6, Level = LogLevel.Information, Message = "Started: {provider}")]
+    private partial void LogStarted(IMessageReceiverProvider provider);
+
+    [LoggerMessage(EventId = 7, Level = LogLevel.Error, Message = "Exception: {provider}: {exception}")]
+    private partial void LogException(IMessageReceiverProvider provider, string exception);
+
+    [LoggerMessage(EventId = 8, Level = LogLevel.Debug, Message = "Failed: {provider}")]
+    private partial void LogError(IMessageReceiverProvider provider, Exception exception);
+
+    [LoggerMessage(EventId = 9, Level = LogLevel.Information, Message = "Waiting for restart: {provider}")]
+    private partial void LogWaitingForRestart(IMessageReceiverProvider provider);
+
+    [LoggerMessage(EventId = 10, Level = LogLevel.Information, Message = "Request Stop")]
+    private partial void LogRequestStop();
+
+    [LoggerMessage(EventId = 11, Level = LogLevel.Information, Message = "Completed Stop")]
+    private partial void LogCompletedStop();
 }

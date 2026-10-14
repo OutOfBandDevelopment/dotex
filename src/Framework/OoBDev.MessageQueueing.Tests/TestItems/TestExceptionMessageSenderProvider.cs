@@ -7,5 +7,5 @@ namespace OoBDev.MessageQueueing.Tests.TestItems;
 public class TestExceptionMessageSenderProvider : IMessageSenderProvider
 {
     public Task<string?> SendAsync(object message, IMessageContext context) =>
-        Task.FromException<string?>(new ApplicationException());
+        Task.FromException<string?>(new InvalidOperationException());
 }

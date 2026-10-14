@@ -6,7 +6,7 @@ namespace OoBDev.Search.Providers;
 /// <summary>
 /// Provides search functionality combining semantic, lexical, and hybrid search approaches.
 /// </summary>
-[Obsolete]
+[Obsolete("Obsolete; retained until it is removed from the framework.")]
 [ExcludeFromCodeCoverage]
 public class SearchProvider
 {

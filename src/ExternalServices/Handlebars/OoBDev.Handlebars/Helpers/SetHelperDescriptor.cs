@@ -8,7 +8,7 @@ namespace OoBDev.Handlebars.Helpers;
 /// <summary>
 /// Represents a descriptor for a Handlebars helper that sets a value in a state store.
 /// </summary>
-public class SetHelperDescriptor : HelperDescriptorBase
+public partial class SetHelperDescriptor : HelperDescriptorBase
 {
     private readonly StateStore _store = new();
     private readonly ILogger _log;
@@ -33,10 +33,13 @@ public class SetHelperDescriptor : HelperDescriptorBase
     {
         var key = arguments.ElementAtOrDefault(0)?.ToString();
         var value = arguments.ElementAtOrDefault(1);
-        _log.LogDebug($"set: {{{nameof(key)}}}", key);
+        LogSet(key);
         if (!string.IsNullOrWhiteSpace(key))
         {
             _store[key] = value;
         }
     };
+
+    [LoggerMessage(EventId = 1, Level = LogLevel.Debug, Message = "set: {key}")]
+    private partial void LogSet(string? key);
 }

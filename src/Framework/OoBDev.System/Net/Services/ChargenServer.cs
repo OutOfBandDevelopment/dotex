@@ -37,7 +37,7 @@ public class ChargenServer(IPAddress? ipAddress = default, ushort port = 19) : S
                     if (rand.NextDouble() > 0.5)
                         continue;
                     Memory<byte> buffer = Guid.NewGuid().ToByteArray();
-                    await client.Value.GetStream().WriteAsync(buffer, cts.Token);
+                    await client.Value.GetStream().WriteAsync(buffer, cts.Token).ConfigureAwait(false);
                 }
                 catch (OperationCanceledException ocex)
                 {
@@ -45,7 +45,7 @@ public class ChargenServer(IPAddress? ipAddress = default, ushort port = 19) : S
                 }
             }
 
-            await Task.Delay(rand.Next(1, 10) * 100, cancellationToken);
+            await Task.Delay(rand.Next(1, 10) * 100, cancellationToken).ConfigureAwait(false);
         }
     }
 

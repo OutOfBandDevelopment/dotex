@@ -17,10 +17,10 @@ public class HtmlToMarkdownConversionHandler : IDocumentConversionHandler
     /// <summary>
     /// Constructor for HtmlToMarkdownConversionHandler
     /// </summary>
-    /// <param name="_converter"></param>
+    /// <param name="converter"></param>
     public HtmlToMarkdownConversionHandler(
-        Converter _converter
-        ) => this._converter = _converter;
+        Converter converter
+        ) => _converter = converter;
 
     /// <summary>
     /// Converts the content of a HTML document in the source stream to Markdown format
@@ -39,8 +39,8 @@ public class HtmlToMarkdownConversionHandler : IDocumentConversionHandler
 
         using var reader = new StreamReader(source, leaveOpen: true);
         using var writer = new StreamWriter(destination, leaveOpen: true) { AutoFlush = true, };
-        var markdown = _converter.Convert(await reader.ReadToEndAsync());
-        await writer.WriteAsync(markdown);
+        var markdown = _converter.Convert(await reader.ReadToEndAsync().ConfigureAwait(false));
+        await writer.WriteAsync(markdown).ConfigureAwait(false);
     }
 
     /// <summary>

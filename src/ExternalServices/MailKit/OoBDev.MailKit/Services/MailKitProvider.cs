@@ -3,6 +3,7 @@ using OoBDev.Communications.Services;
 using MailKit.Net.Smtp;
 using Microsoft.Extensions.Logging;
 using MimeKit;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace OoBDev.MailKit.Services;
@@ -16,7 +17,7 @@ namespace OoBDev.MailKit.Services;
 /// <param name="email">The factory for creating <see cref="MimeMessage"/> instances.</param>
 /// <param name="smtp">The factory for creating <see cref="SmtpClient"/> instances.</param>
 /// <param name="log">The logger for logging messages.</param>
-public class MailKitProvider(
+public partial class MailKitProvider(
     IMimeMessageFactory email,
     ISmtpClientFactory smtp,
     ILogger<MailKitProvider> log
@@ -30,18 +31,16 @@ public class MailKitProvider(
     public async Task<string> SendAsync(EmailMessageModel message)
     {
         var model = email.Create(message);
-        using var client = await smtp.CreateAsync();
+        using var client = await smtp.CreateAsync().ConfigureAwait(false);
 
-        var reference = await client.SendAsync(model);
-        await client.DisconnectAsync(true);
+        var reference = await client.SendAsync(model).ConfigureAwait(false);
+        await client.DisconnectAsync(true).ConfigureAwait(false);
 
-        log.LogInformation(
-            $@"Sent email ""{{{nameof(message.Subject)}}}"" to ""{{{nameof(message.ToAddresses)}}}"" [{{{nameof(reference)}}}]",
-            message.Subject,
-            message.ToAddresses,
-            reference
-            );
+        LogSent(message.Subject, message.ToAddresses, reference);
 
         return reference;
     }
+
+    [LoggerMessage(EventId = 1, Level = LogLevel.Information, Message = "Sent email \"{Subject}\" to \"{ToAddresses}\" [{reference}]")]
+    private partial void LogSent(string? subject, IList<string> toAddresses, string reference);
 }

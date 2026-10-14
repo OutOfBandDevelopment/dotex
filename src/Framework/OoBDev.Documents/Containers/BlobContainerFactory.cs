@@ -11,7 +11,7 @@ namespace OoBDev.Documents.Containers;
 /// <summary>
 /// Represents a factory for creating blob containers.
 /// </summary>
-public class BlobContainerFactory : IBlobContainerFactory
+public partial class BlobContainerFactory : IBlobContainerFactory
 {
     private readonly IServiceProvider _serviceProvider;
     private readonly IEnumerable<IBlobContainerProviderFactory> _factories;
@@ -50,7 +50,7 @@ public class BlobContainerFactory : IBlobContainerFactory
 
         provider.ContainerName = containerName;
 
-        _logger.LogInformation("Container: {containerName} -> {type}", containerName, provider.GetType());
+        LogContainer(containerName, provider.GetType());
 
         return provider;
     }
@@ -67,4 +67,7 @@ public class BlobContainerFactory : IBlobContainerFactory
             typeof(T).GetCustomAttribute<TableAttribute>()?.Name ??
             typeof(T).Name
             ));
+
+    [LoggerMessage(EventId = 1, Level = LogLevel.Information, Message = "Container: {containerName} -> {type}")]
+    private partial void LogContainer(string containerName, Type type);
 }

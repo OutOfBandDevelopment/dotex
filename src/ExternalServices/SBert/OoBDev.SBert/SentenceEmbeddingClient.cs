@@ -29,8 +29,8 @@ public class SentenceEmbeddingClient : ISentenceEmbeddingClient
     /// <returns>An array of single-precision floats representing the embedding.</returns>
     public async Task<ReadOnlyMemory<float>> GetEmbeddingAsync(string input)
     {
-        var results = await _httpClient.GetAsync($"/generate-embedding?query={input}");
-        var json = await results.Content.ReadAsStringAsync();
+        var results = await _httpClient.GetAsync($"/generate-embedding?query={input}").ConfigureAwait(false);
+        var json = await results.Content.ReadAsStringAsync().ConfigureAwait(false);
         var node = JsonSerializer.Deserialize<JsonNode>(json);
         var array = (JsonArray?)node?["embedding"];
         ReadOnlyMemory<float> floats = array?.OfType<JsonNode>().Select(i => (float)i).ToArray();
@@ -44,8 +44,8 @@ public class SentenceEmbeddingClient : ISentenceEmbeddingClient
     /// <returns>An array of double-precision floats representing the embedding.</returns>
     public async Task<ReadOnlyMemory<double>> GetEmbeddingDoubleAsync(string input)
     {
-        var results = await _httpClient.GetAsync($"/generate-embedding?query={input}");
-        var json = await results.Content.ReadAsStringAsync();
+        var results = await _httpClient.GetAsync($"/generate-embedding?query={input}").ConfigureAwait(false);
+        var json = await results.Content.ReadAsStringAsync().ConfigureAwait(false);
         var node = JsonSerializer.Deserialize<JsonNode>(json);
         var array = (JsonArray?)node?["embedding"];
         var floats = array?.OfType<JsonNode>().Select(i => (double)i).ToArray();
@@ -58,8 +58,8 @@ public class SentenceEmbeddingClient : ISentenceEmbeddingClient
     /// <returns></returns>
     public async Task<string> GetHealthAsync()
     {
-        var results = await _httpClient.GetAsync($"/health");
-        var response = await results.Content.ReadAsStringAsync();
+        var results = await _httpClient.GetAsync($"/health").ConfigureAwait(false);
+        var response = await results.Content.ReadAsStringAsync().ConfigureAwait(false);
         return response;
     }
 }

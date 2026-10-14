@@ -138,9 +138,9 @@ public class XsltTransformer(string sandbox, params object[] extensions) : IXslt
     /// <param name="template">path for XSLT style-sheet</param>
     /// <param name="input">Wild card allowed for multiple files</param>
     /// <param name="output">Output and suffix per file.</param>
-    /// <param name="excludeInputSource"></param>
-    public void TransformAll(string template, string input, string output, string? excludeInputSource = null) =>
-        TransformAll(template, input, ReadAsXml, output, excludeInputSource);
+    /// <param name="exclude"></param>
+    public void TransformAll(string template, string input, string output, string? exclude = null) =>
+        TransformAll(template, input, ReadAsXml, output, exclude);
 
     /// <summary>
     /// Multi-action transform. 
@@ -149,13 +149,13 @@ public class XsltTransformer(string sandbox, params object[] extensions) : IXslt
     /// <param name="input">Wild card allowed for multiple files</param>
     /// <param name="inputNavigatorFactory">function to load input file into IXPathNavigable</param>
     /// <param name="output">Output and suffix per file.</param>
-    /// <param name="excludeInputSource"></param>
-    public void TransformAll(string template, string input, Func<string, IXPathNavigable?> inputNavigatorFactory, string output, string? excludeInputSource = null)
+    /// <param name="exclude"></param>
+    public void TransformAll(string template, string input, Func<string, IXPathNavigable?> inputNavigatorFactory, string output, string? exclude = null)
     {
         var inputFullPath = Path.GetFullPath(input);
         var inputDir = PathEx.GetBasePath(input) ?? ".";
-        var excludeFiles = PathEx.EnumerateFiles(excludeInputSource);
-        var inputFiles = PathEx.EnumerateFiles(input).Select(Path.GetFullPath).Except(excludeFiles.Select(Path.GetFullPath));
+        var excludeFiles = PathEx.EnumerateFiles(exclude);
+        var inputFiles = PathEx.EnumerateFiles(input).Select(Path.GetFullPath).Except(excludeFiles.Select(Path.GetFullPath), StringComparer.Ordinal);
 
         var outputFullPath = Path.GetFullPath(output);
         var outputDir = Path.GetDirectoryName(outputFullPath) ?? ".";
@@ -224,8 +224,8 @@ public class XsltTransformer(string sandbox, params object[] extensions) : IXslt
     /// <param name="input">The path pattern for input files (supports wildcards).</param>
     /// <param name="inputNavigatorFactory">A factory function that converts file paths to IXPathNavigable instances.</param>
     /// <param name="output">The output file path for the transformation result.</param>
-    /// <param name="excludeInputSource">Optional path pattern for files to exclude from the merge.</param>
-    public void TransformMerge(string template, string input, Func<string, IXPathNavigable> inputNavigatorFactory, string output, string? excludeInputSource = null)
+    /// <param name="exclude">Optional path pattern for files to exclude from the merge.</param>
+    public void TransformMerge(string template, string input, Func<string, IXPathNavigable> inputNavigatorFactory, string output, string? exclude = null)
     {
         static Exception innerMost(Exception ex) => ex.InnerException == null ? ex : innerMost(ex.InnerException);
         var tid = Environment.CurrentManagedThreadId;
@@ -233,8 +233,8 @@ public class XsltTransformer(string sandbox, params object[] extensions) : IXslt
         {
             var inputFullPath = Path.GetFullPath(input);
             var inputDir = PathEx.GetBasePath(input);
-            var excludeFiles = PathEx.EnumerateFiles(excludeInputSource);
-            var inputFiles = PathEx.EnumerateFiles(input).Except(excludeFiles);
+            var excludeFiles = PathEx.EnumerateFiles(exclude);
+            var inputFiles = PathEx.EnumerateFiles(input).Except(excludeFiles, StringComparer.Ordinal);
 
             if (!inputFiles.Any())
                 throw new FileNotFoundException($"input");

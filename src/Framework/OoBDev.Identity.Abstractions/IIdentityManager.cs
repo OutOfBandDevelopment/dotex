@@ -13,7 +13,7 @@ public interface IIdentityManager
     /// </summary>
     /// <param name="emailAddress">The email address to search for.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains the list of user identity models or <c>null</c> if no users are found.</returns>
-    Task<List<UserIdentityModel>?> GetIdentityUsersByEmail(string emailAddress);
+    Task<IList<UserIdentityModel>?> GetIdentityUsersByEmail(string emailAddress);
 
     /// <summary>
     /// Creates a new identity user asynchronously with the specified details.

@@ -19,7 +19,7 @@ namespace OoBDev.AspNetCore.Mvc.OpenApi;
 /// Operation transformer that documents <c>IQueryable{T}</c> endpoints: tags, the sortable and search query parameters,
 /// the <see cref="SearchQuery{TModel}"/> request body and the <see cref="PagedQueryResult{T}"/> response.
 /// </summary>
-public class SearchQueryOperationTransformer(
+public partial class SearchQueryOperationTransformer(
      ILogger<SearchQueryOperationTransformer> logger,
      IServiceProvider serviceProvider,
      IJsonSerializer json
@@ -55,20 +55,20 @@ public class SearchQueryOperationTransformer(
         var requestType = typeof(SearchQuery<>).MakeGenericType(elementType);
         var pagedResponseType = typeof(PagedQueryResult<>).MakeGenericType(elementType);
 
-        logger.LogInformation("{DeclaringType}::{Method}:>{ElementType}", method.DeclaringType?.Name ?? "[Lambda]", method.Name, elementType);
+        LogOperation(logger, method.DeclaringType?.Name ?? "[Lambda]", method.Name, elementType);
 
         var jsonContentTypes = (
             from responseType in context.Description.SupportedResponseTypes
             from format in responseType.ApiResponseFormats
             where format.MediaType.EndsWith("/json", StringComparison.Ordinal)
             select format.MediaType
-            ).Distinct().ToList();
+            ).Distinct(StringComparer.Ordinal).ToList();
 
         if (context.Description.HttpMethod == "POST")
         {
             var requestSchema = await context.GetOrCreateSchemaAsync(requestType, null, cancellationToken);
             var body = operation.RequestBody as OpenApiRequestBody ?? new OpenApiRequestBody();
-            body.Content ??= new Dictionary<string, OpenApiMediaType>();
+            body.Content ??= new Dictionary<string, OpenApiMediaType>(StringComparer.Ordinal);
             ApplyContent(body.Content, requestSchema, jsonContentTypes);
             operation.RequestBody = body;
         }
@@ -84,12 +84,12 @@ public class SearchQueryOperationTransformer(
         operation.Responses ??= [];
         var ok = operation.Responses.TryGetValue("200", out var existingOk) ? existingOk as OpenApiResponse : null;
         ok ??= new OpenApiResponse { Description = "OK" };
-        ok.Content ??= new Dictionary<string, OpenApiMediaType>();
+        ok.Content ??= new Dictionary<string, OpenApiMediaType>(StringComparer.Ordinal);
         operation.Responses["200"] = ok;
         ApplyContent(
             ok.Content,
             pagedResponseSchema,
-            context.Description.SupportedResponseTypes.SelectMany(m => m.ApiResponseFormats.Select(i => i.MediaType)).Distinct());
+            context.Description.SupportedResponseTypes.SelectMany(m => m.ApiResponseFormats.Select(i => i.MediaType)).Distinct(StringComparer.Ordinal));
     }
 
     private async Task AddQueryParametersAsync(
@@ -162,4 +162,7 @@ public class SearchQueryOperationTransformer(
             content[contentType] = new OpenApiMediaType { Schema = schema };
         }
     }
+
+    [LoggerMessage(EventId = 1, Level = LogLevel.Information, Message = "{DeclaringType}::{Method}:>{ElementType}")]
+    private static partial void LogOperation(ILogger logger, string declaringType, string method, Type elementType);
 }

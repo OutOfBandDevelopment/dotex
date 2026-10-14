@@ -16,7 +16,7 @@ namespace OoBDev.Data.Vectors.Hosting;
 /// Processes messages, generates embeddings, and sends responses back through the queue.
 /// </summary>
 [ConnectionStringName("EmbeddingSentenceTransformer")]
-public class EmbeddingSentenceTransformerQueueReader : IEmbeddingSentenceTransformerQueueReader
+public partial class EmbeddingSentenceTransformerQueueReader : IEmbeddingSentenceTransformerQueueReader
 {
     private readonly IDatabaseQuery<EmbeddingSentenceTransformerQueueReader> _database;
     private readonly IEmbeddingProvider _embedding;
@@ -58,8 +58,8 @@ public class EmbeddingSentenceTransformerQueueReader : IEmbeddingSentenceTransfo
         {
             using var connection = _database.GetConnection();
             if (connection.State != ConnectionState.Open)
-                await connection.OpenAsync(cancellationToken);
-            var transaction = await connection.BeginTransactionAsync(cancellationToken);
+                await connection.OpenAsync(cancellationToken).ConfigureAwait(false);
+            var transaction = await connection.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
             try
             {
                 using var receiver = connection.CreateCommand();
@@ -89,10 +89,10 @@ public class EmbeddingSentenceTransformerQueueReader : IEmbeddingSentenceTransfo
                 receiver.Parameters.Add(timeout);
 
                 var commands = new List<DbCommand>();
-                using (var reader = await receiver.ExecuteReaderAsync(cancellationToken))
+                using (var reader = await receiver.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false))
                 {
                     var read = false;
-                    while (await reader.ReadAsync(cancellationToken))
+                    while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false))
                     {
                         read = true;
                         var conversationGroupId = (Guid)reader["conversation_group_id"];
@@ -100,7 +100,7 @@ public class EmbeddingSentenceTransformerQueueReader : IEmbeddingSentenceTransfo
                         var messageType = (string?)reader["message_type_name"];
                         var messageBodyXml = reader["message_body_xml"] == DBNull.Value ? null : (string)reader["message_body_xml"];
 
-                        _logger.LogInformation($"{{{nameof(conversationHandle)}}}: {{{nameof(messageType)}}}", conversationHandle, messageType);
+                        LogMessageReceived(conversationHandle, messageType);
 
                         if (messageType == "oobdev://embedding/sentence-transformer/request" && messageBodyXml != null)
                         {
@@ -114,7 +114,7 @@ public class EmbeddingSentenceTransformerQueueReader : IEmbeddingSentenceTransfo
                             var value = (string?)xml.Attribute("value");
                             var tableName = (string?)xml.Attribute("tableName");
 
-                            var embedding = string.IsNullOrWhiteSpace(value) ? null : await _embedding.GenerateEmbeddingAsync(value, default, cancellationToken);
+                            var embedding = string.IsNullOrWhiteSpace(value) ? null : await _embedding.GenerateEmbeddingAsync(value, default, cancellationToken).ConfigureAwait(false);
                             var json = _json.Serialize(embedding.ToArray());
 
                             XNamespace sr = "oobdev://embedding/sentence-transformer/response";
@@ -172,23 +172,32 @@ public class EmbeddingSentenceTransformerQueueReader : IEmbeddingSentenceTransfo
 
                     if (!read)
                     {
-                        _logger.LogWarning($"Timeout!  No messages received");
+                        LogTimeout();
                     }
                 }
 
                 foreach (var command in commands)
                 {
-                    await command.ExecuteNonQueryAsync(cancellationToken);
+                    await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
                 }
 
-                await transaction.CommitAsync(cancellationToken);
+                await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
-                _logger.LogError($"{{{nameof(ex.Message)}}}", ex.Message);
-                await transaction.RollbackAsync(cancellationToken);
-                await Task.Delay((int)_options.Value.ReadWaitTimeout.TotalMilliseconds, cancellationToken); 
+                LogFailure(ex.Message);
+                await transaction.RollbackAsync(cancellationToken).ConfigureAwait(false);
+                await Task.Delay((int)_options.Value.ReadWaitTimeout.TotalMilliseconds, cancellationToken).ConfigureAwait(false); 
             }
         }
     }
+
+    [LoggerMessage(EventId = 1, Level = LogLevel.Information, Message = "{conversationHandle}: {messageType}")]
+    private partial void LogMessageReceived(Guid conversationHandle, string? messageType);
+
+    [LoggerMessage(EventId = 2, Level = LogLevel.Warning, Message = "Timeout!  No messages received")]
+    private partial void LogTimeout();
+
+    [LoggerMessage(EventId = 3, Level = LogLevel.Error, Message = "{Message}")]
+    private partial void LogFailure(string message);
 }

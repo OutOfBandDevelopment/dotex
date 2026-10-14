@@ -40,7 +40,7 @@ public class DefaultXmlSerializer : IXmlSerializer
     /// <param name="stream"></param>
     /// <returns></returns>
     public virtual T? Deserialize<T>(Stream stream) =>
-        (T?)new XmlSerializer(typeof(T)).Deserialize(stream);
+        (T?)new XmlSerializer(typeof(T)).Deserialize(CreateReader(stream));
 
     /// <summary>
     /// convert stream into object
@@ -49,7 +49,7 @@ public class DefaultXmlSerializer : IXmlSerializer
     /// <param name="type">template model to deserialize</param>
     /// <returns></returns>
     public virtual object? Deserialize(Stream stream, Type type) =>
-        new XmlSerializer(type).Deserialize(stream);
+        new XmlSerializer(type).Deserialize(CreateReader(stream));
 
     /// <summary>
     /// convert stream into object
@@ -156,7 +156,7 @@ public class DefaultXmlSerializer : IXmlSerializer
             CloseOutput = false,
         });
         xml.Serialize(writer, obj);
-        await writer.FlushAsync();
+        await writer.FlushAsync().ConfigureAwait(false);
     }
 
     /// <summary>
@@ -175,6 +175,10 @@ public class DefaultXmlSerializer : IXmlSerializer
             CloseOutput = false,
         });
         xml.Serialize(writer, obj);
-        await writer.FlushAsync();
+        await writer.FlushAsync().ConfigureAwait(false);
     }
+
+    // DTD processing is prohibited and no resolver is used so that untrusted documents cannot trigger XXE
+    private static XmlReader CreateReader(Stream stream) =>
+        XmlReader.Create(stream, new XmlReaderSettings { DtdProcessing = DtdProcessing.Prohibit, XmlResolver = null });
 }

@@ -13,7 +13,7 @@ namespace OoBDev.LlmCodeGen.Cli;
 /// </summary>
 /// <param name="completion">The selected model provider.</param>
 /// <param name="log">Diagnostic output.</param>
-public class FolderPromptRunner(IMessageCompletion completion, ILogger<FolderPromptRunner> log)
+public partial class FolderPromptRunner(IMessageCompletion completion, ILogger<FolderPromptRunner> log)
 {
     /// <summary>
     /// Runs every folder under the input path.
@@ -49,7 +49,7 @@ public class FolderPromptRunner(IMessageCompletion completion, ILogger<FolderPro
             var responseFile = Path.Combine(target, name + ".response.md");
             if (File.Exists(responseFile) && !options.Overwrite)
             {
-                log.LogInformation("skip {Directory}: response exists", directory);
+                LogSkipExisting(log, directory);
                 continue;
             }
 
@@ -68,7 +68,7 @@ public class FolderPromptRunner(IMessageCompletion completion, ILogger<FolderPro
             Directory.CreateDirectory(target);
             await File.WriteAllTextAsync(Path.Combine(target, name + ".prompt.md"), prompt, cancellationToken);
 
-            log.LogInformation("ask {Provider} about {Directory} ({Count} files)", options.Provider, directory, files.Count);
+            LogAsk(log, options.Provider, directory, files.Count);
             var response = await completion.GetCompletionAsync(options.Model!, prompt);
             sent++;
 
@@ -90,11 +90,20 @@ public class FolderPromptRunner(IMessageCompletion completion, ILogger<FolderPro
             var destination = Path.GetFullPath(Path.Combine(target, file.RelativePath));
             if (!destination.StartsWith(target + Path.DirectorySeparatorChar, StringComparison.Ordinal))
             {
-                log.LogWarning("skip {Path}: outside the output folder", file.RelativePath);
+                LogSkipOutside(log, file.RelativePath);
                 continue;
             }
             Directory.CreateDirectory(Path.GetDirectoryName(destination)!);
             await File.WriteAllTextAsync(destination, file.Content, cancellationToken);
         }
     }
+
+    [LoggerMessage(EventId = 1, Level = LogLevel.Information, Message = "skip {Directory}: response exists")]
+    private static partial void LogSkipExisting(ILogger logger, string directory);
+
+    [LoggerMessage(EventId = 2, Level = LogLevel.Information, Message = "ask {Provider} about {Directory} ({Count} files)")]
+    private static partial void LogAsk(ILogger logger, string provider, string directory, int count);
+
+    [LoggerMessage(EventId = 3, Level = LogLevel.Warning, Message = "skip {Path}: outside the output folder")]
+    private static partial void LogSkipOutside(ILogger logger, string path);
 }

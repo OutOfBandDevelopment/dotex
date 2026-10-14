@@ -50,6 +50,6 @@ public partial class ConvertEx
     /// <returns>A string containing the hexadecimal representation of the byte array.</returns>
     public static string ToHexString(byte[] buffer) => buffer.Aggregate(new StringBuilder(), (sb, v) => sb.Append(v), sb => sb.ToString());
 
-    [GeneratedRegex("([0-9a-fA-F]{2}){1,}", RegexOptions.Compiled)]
+    [GeneratedRegex("([0-9a-fA-F]{2}){1,}", RegexOptions.ExplicitCapture, 1000)]
     private static partial Regex HexStringRegex();
 }

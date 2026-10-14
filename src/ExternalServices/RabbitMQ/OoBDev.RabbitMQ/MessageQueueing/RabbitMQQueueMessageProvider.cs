@@ -21,7 +21,7 @@ namespace OoBDev.RabbitMQ.MessageQueueing;
 /// <param name="serializer">The JSON serializer for message serialization and deserialization.</param>
 /// <param name="clientFactory">The factory for creating Rabbit MQ Queue clients.</param>
 /// <param name="logger">The logger for logging messages.</param>
-public class RabbitMQQueueMessageProvider(
+public partial class RabbitMQQueueMessageProvider(
     IJsonSerializer serializer,
     IQueueClientFactory clientFactory,
     ILogger<RabbitMQQueueMessageProvider> logger
@@ -37,7 +37,7 @@ public class RabbitMQQueueMessageProvider(
     /// <returns>The message ID if the send operation is successful; otherwise, <c>null</c>.</returns>
     public async Task<string?> SendAsync(object message, IMessageContext context)
     {
-        var (connection, channel, queueName) = await clientFactory.CreateAsync(context.Config);
+        var (connection, channel, queueName) = await clientFactory.CreateAsync(context.Config).ConfigureAwait(false);
 
         var wrapped = new WrappedQueueMessage
         {
@@ -49,7 +49,7 @@ public class RabbitMQQueueMessageProvider(
         };
 
         using var stream = new MemoryStream();
-        await serializer.SerializeAsync(wrapped, stream, default);
+        await serializer.SerializeAsync(wrapped, stream, default).ConfigureAwait(false);
         ReadOnlyMemory<byte> body = stream.ToArray();
 
         using (connection)
@@ -61,7 +61,7 @@ public class RabbitMQQueueMessageProvider(
                 durable: true,
                 exclusive: false,
                 autoDelete: false,
-                arguments: null);
+                arguments: null).ConfigureAwait(false);
 
             // Create basic properties for the message
             var properties = new BasicProperties
@@ -77,9 +77,9 @@ public class RabbitMQQueueMessageProvider(
                 routingKey: queueName,
                 mandatory: true,
                 basicProperties: properties,
-                body: body);
+                body: body).ConfigureAwait(false);
 
-            logger.LogInformation("Enqueue: {CorrelationId}", context.CorrelationId);
+            LogEnqueue(context.CorrelationId);
 
             return context.CorrelationId;
         }
@@ -107,7 +107,7 @@ public class RabbitMQQueueMessageProvider(
     {
         // https://www.rabbitmq.com/tutorials/tutorial-one-dotnet.html
 
-        var (connection, channel, queueName) = await clientFactory.CreateAsync(_handlerProvider?.Config ?? throw new ConfigurationMissingException("UNKNOWN"));
+        var (connection, channel, queueName) = await clientFactory.CreateAsync(_handlerProvider?.Config ?? throw new ConfigurationMissingException("UNKNOWN")).ConfigureAwait(false);
         var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         var newCancellationToken = cts.Token;
 
@@ -124,19 +124,19 @@ public class RabbitMQQueueMessageProvider(
                     ?? throw new NotSupportedException($"No payload found");
 
                 var message = Encoding.UTF8.GetString(body);
-                logger.LogInformation($"Dequeue: {{{nameof(deserialized.CorrelationId)}}}", deserialized.CorrelationId);
+                LogDequeue(deserialized.CorrelationId);
 
-                await _handlerProvider.HandleAsync(deserialized, deserialized.CorrelationId);
+                await _handlerProvider.HandleAsync(deserialized, deserialized.CorrelationId).ConfigureAwait(false);
 
-                logger.LogInformation($"Dequeue: {{{nameof(deserialized.CorrelationId)}}}", deserialized.CorrelationId);
+                LogDequeue(deserialized.CorrelationId);
 
             };
 
-            await channel.QueueDeclareAsync(queue: queueName, exclusive: false, cancellationToken: newCancellationToken);
+            await channel.QueueDeclareAsync(queue: queueName, exclusive: false, cancellationToken: newCancellationToken).ConfigureAwait(false);
             await channel.BasicConsumeAsync(queue: queueName,
                                  autoAck: true,
                                  consumer: consumer,
-                                 cancellationToken: newCancellationToken);
+                                 cancellationToken: newCancellationToken).ConfigureAwait(false);
 
             while (!newCancellationToken.IsCancellationRequested)
             {
@@ -144,4 +144,10 @@ public class RabbitMQQueueMessageProvider(
             }
         }
     }
+
+    [LoggerMessage(EventId = 1, Level = LogLevel.Information, Message = "Enqueue: {correlationId}")]
+    private partial void LogEnqueue(string? correlationId);
+
+    [LoggerMessage(EventId = 2, Level = LogLevel.Information, Message = "Dequeue: {correlationId}")]
+    private partial void LogDequeue(string? correlationId);
 }

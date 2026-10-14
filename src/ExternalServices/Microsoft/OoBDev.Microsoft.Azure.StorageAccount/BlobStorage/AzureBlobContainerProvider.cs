@@ -1,4 +1,5 @@
-﻿using Azure.Storage.Blobs;
+﻿using System;
+using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using OoBDev.Documents.Containers;
 using OoBDev.Documents.Models;
@@ -14,7 +15,7 @@ namespace OoBDev.Microsoft.Azure.StorageAccount.BlobStorage;
 /// <summary>
 /// Represents a provider for storing and searching content in Azure Blob storage.
 /// </summary>
-public class AzureBlobContainerProvider : IBlobContainerProvider
+public partial class AzureBlobContainerProvider : IBlobContainerProvider
 {
     private readonly BlobContainerClient _blockBlobClient;
     private readonly IOptions<AzureBlobProviderOptions> _options;
@@ -48,28 +49,28 @@ public class AzureBlobContainerProvider : IBlobContainerProvider
     private async Task EnsureContainerExistsAsync()
     {
         if (_options.Value.EnsureContainerExists)
-            await _blockBlobClient.CreateIfNotExistsAsync();
+            await _blockBlobClient.CreateIfNotExistsAsync().ConfigureAwait(false);
     }
 
     /// <summary>
-    /// Retrieves the content of the specified file from Azure Blob storage.
+    /// Retrieves the content of the specified path from Azure Blob storage.
     /// </summary>
-    /// <param name="file">The name of the file to retrieve.</param>
+    /// <param name="path">The path to retrieve.</param>
     /// <returns>A ContentReference object representing the retrieved content.</returns>
-    public async Task<ContentReference?> GetContentAsync(string file)
+    public async Task<ContentReference?> GetContentAsync(string path)
     {
-        await EnsureContainerExistsAsync();
-        var blob = _blockBlobClient.GetBlobClient(file);
+        await EnsureContainerExistsAsync().ConfigureAwait(false);
+        var blob = _blockBlobClient.GetBlobClient(path);
 
-        if (!await blob.ExistsAsync())
+        if (!await blob.ExistsAsync().ConfigureAwait(false))
             return null;
 
-        var result = await blob.DownloadStreamingAsync();
+        var result = await blob.DownloadStreamingAsync().ConfigureAwait(false);
         return new ContentReference
         {
             Content = result.Value.Content,
             ContentType = result.Value.Details.ContentType,
-            FileName = Path.GetFileName(file)
+            FileName = Path.GetFileName(path)
         };
     }
 
@@ -80,16 +81,16 @@ public class AzureBlobContainerProvider : IBlobContainerProvider
     /// <returns>A task representing the asynchronous operation. Returns the content metadata if it exists, otherwise returns null.</returns>
     public async Task<ContentMetaDataReference?> GetContentMetaDataAsync(string path)
     {
-        await EnsureContainerExistsAsync();
+        await EnsureContainerExistsAsync().ConfigureAwait(false);
         var blob = _blockBlobClient.GetBlobClient(path);
-        if (!await blob.ExistsAsync()) return null;
+        if (!await blob.ExistsAsync().ConfigureAwait(false)) return null;
 
-        var header = await blob.GetPropertiesAsync();
+        var header = await blob.GetPropertiesAsync().ConfigureAwait(false);
         return new ContentMetaDataReference
         {
             FileName = blob.Name,
             ContentType = header.Value.ContentType,
-            MetaData = header.Value.Metadata.ToDictionary(k => k.Key, k => k.Value),
+            MetaData = header.Value.Metadata.ToDictionary(k => k.Key, k => k.Value, StringComparer.Ordinal),
         };
     }
 
@@ -102,27 +103,27 @@ public class AzureBlobContainerProvider : IBlobContainerProvider
     /// <returns>A task representing the asynchronous operation.</returns>
     public async Task StoreContentAsync(
         ContentReference reference,
-        Dictionary<string, string>? metadata = null,
+        IDictionary<string, string>? metadata = null,
         bool overwrite = false
         )
     {
-        await EnsureContainerExistsAsync();
+        await EnsureContainerExistsAsync().ConfigureAwait(false);
         var blob = _blockBlobClient.GetBlobClient(reference.FileName);
 
-        _logger.LogInformation("upload -> {file}", reference.FileName);
-        _ = await blob.UploadAsync(reference.Content, overwrite: overwrite);
+        LogUpload(reference.FileName);
+        _ = await blob.UploadAsync(reference.Content, overwrite: overwrite).ConfigureAwait(false);
 
         _ = await blob.SetHttpHeadersAsync(new BlobHttpHeaders
         {
             ContentType = reference.ContentType,
-        });
+        }).ConfigureAwait(false);
 
         // https://learn.microsoft.com/en-us/azure/storage/blobs/storage-blob-properties-metadata
 
         if (metadata != null)
         {
-            var data = metadata.ToDictionary(k => k.Key, v => $"{v.Value}");
-            await blob.SetMetadataAsync(data);
+            var data = metadata.ToDictionary(k => k.Key, v => $"{v.Value}", StringComparer.Ordinal);
+            await blob.SetMetadataAsync(data).ConfigureAwait(false);
         }
     }
 
@@ -133,18 +134,18 @@ public class AzureBlobContainerProvider : IBlobContainerProvider
     /// <returns>A task representing the asynchronous operation. Returns true if the metadata is stored successfully, otherwise false.</returns>
     public async Task<bool> StoreContentMetaDataAsync(ContentMetaDataReference reference)
     {
-        await EnsureContainerExistsAsync();
+        await EnsureContainerExistsAsync().ConfigureAwait(false);
         var blob = _blockBlobClient.GetBlobClient(reference.FileName);
-        if (!await blob.ExistsAsync()) return false;
+        if (!await blob.ExistsAsync().ConfigureAwait(false)) return false;
 
-        _logger.LogInformation("update -> {file}", reference.FileName);
+        LogUpdate(reference.FileName);
 
         _ = await blob.SetHttpHeadersAsync(new BlobHttpHeaders
         {
             ContentType = reference.ContentType,
-        });
+        }).ConfigureAwait(false);
 
-        await blob.SetMetadataAsync(reference.MetaData);
+        await blob.SetMetadataAsync(reference.MetaData).ConfigureAwait(false);
 
         return true;
     }
@@ -163,7 +164,7 @@ public class AzureBlobContainerProvider : IBlobContainerProvider
                     {
                         FileName = b.Name,
                         ContentType = b.Properties.ContentType,
-                        MetaData = b.Metadata.ToDictionary(k => k.Key, k => k.Value),
+                        MetaData = b.Metadata.ToDictionary(k => k.Key, k => k.Value, StringComparer.Ordinal),
                     };
         return query.AsQueryable();
     }
@@ -175,10 +176,16 @@ public class AzureBlobContainerProvider : IBlobContainerProvider
     /// <returns>A task representing the asynchronous operation.</returns>
     public async Task DeleteContentAsync(string path)
     {
-        await EnsureContainerExistsAsync();
+        await EnsureContainerExistsAsync().ConfigureAwait(false);
         var blob = _blockBlobClient.GetBlobClient(path);
-        await blob.DeleteIfExistsAsync();
+        await blob.DeleteIfExistsAsync().ConfigureAwait(false);
     }
+
+    [LoggerMessage(EventId = 1, Level = LogLevel.Information, Message = "upload -> {file}")]
+    private partial void LogUpload(string file);
+
+    [LoggerMessage(EventId = 2, Level = LogLevel.Information, Message = "update -> {file}")]
+    private partial void LogUpdate(string file);
 }
 
 //public class BlobQueryProvider : IQueryProvider

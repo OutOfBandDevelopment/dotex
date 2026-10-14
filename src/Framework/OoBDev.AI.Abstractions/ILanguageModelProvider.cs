@@ -47,8 +47,8 @@ public interface ILanguageModelProvider
     /// <param name="cancellationToken">The Cancellation Token.</param>
     /// <returns>A task representing the asynchronous operation that returns the response.</returns>
     IAsyncEnumerable<string> GetStreamedContextResponseAsync(string assistantConfinment,
-        List<string> systemInteractions,
-        List<string> userInput,
+        IList<string> systemInteractions,
+        IList<string> userInput,
 #pragma warning disable CS8424 // The EnumeratorCancellationAttribute will have no effect. The attribute is only effective on a parameter of type CancellationToken in an async-iterator method returning IAsyncEnumerable
         [EnumeratorCancellation] CancellationToken cancellationToken = default);
 #pragma warning restore CS8424 // The EnumeratorCancellationAttribute will have no effect. The attribute is only effective on a parameter of type CancellationToken in an async-iterator method returning IAsyncEnumerable
@@ -73,8 +73,8 @@ public interface ILanguageModelProvider
     /// <param name="cancellationToken">The Cancellation Token.</param>
     /// <returns>A task representing the asynchronous operation that returns the response.</returns>
     Task<string> GetContextResponseAsync(string assistantConfinment,
-        List<string> systemInteractions,
-        List<string> userInput,
+        IList<string> systemInteractions,
+        IList<string> userInput,
 #pragma warning disable CS8424 // The EnumeratorCancellationAttribute will have no effect. The attribute is only effective on a parameter of type CancellationToken in an async-iterator method returning IAsyncEnumerable
         [EnumeratorCancellation] CancellationToken cancellationToken = default);
 #pragma warning restore CS8424 // The EnumeratorCancellationAttribute will have no effect. The attribute is only effective on a parameter of type CancellationToken in an async-iterator method returning IAsyncEnumerable
@@ -101,7 +101,7 @@ public interface ILanguageModelProvider
     /// <param name="userQuery">The userQuery</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A task representing the asynchronous operation. The task result contains the generated response.</returns>
-    IAsyncEnumerable<string> GetRAGResponseCitiationsAsync(List<KeyValuePairModel> ragData,
+    IAsyncEnumerable<string> GetRAGResponseCitiationsAsync(IList<KeyValuePairModel> ragData,
         string userQuery,
 #pragma warning disable CS8424 // The EnumeratorCancellationAttribute will have no effect. The attribute is only effective on a parameter of type CancellationToken in an async-iterator method returning IAsyncEnumerable
         [EnumeratorCancellation] CancellationToken cancellationToken = default);

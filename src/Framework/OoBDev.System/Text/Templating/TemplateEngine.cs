@@ -14,7 +14,7 @@ namespace OoBDev.System.Text.Templating;
 /// <param name="sources">An enumerable collection of template sources.</param>
 /// <param name="providers">An enumerable collection of template providers.</param>
 /// <param name="logger">The logger for capturing log messages.</param>
-public class TemplateEngine(
+public partial class TemplateEngine(
     IEnumerable<ITemplateSource> sources,
     IEnumerable<ITemplateProvider> providers,
     ILogger<TemplateEngine> logger
@@ -29,11 +29,7 @@ public class TemplateEngine(
     /// <returns>The applied template context or <c>null</c> if no matching template is found.</returns>
     public virtual async Task<ITemplateContext?> ApplyAsync(string templateName, object data, Stream target)
     {
-        logger.LogInformation(
-            $"Apply {{{nameof(templateName)}}} => {{{nameof(data)}}}",
-            templateName,
-            data
-            );
+        LogApply(logger, templateName, data);
 
         var templates =
             from context in GetAll(templateName)
@@ -44,20 +40,13 @@ public class TemplateEngine(
         var template = templates.FirstOrDefault();
         if (template == default || template.context == null)
         {
-            logger.LogInformation(
-                $"No template {{{nameof(templateName)}}}",
-                templateName
-                );
+            LogNoTemplate(logger, templateName);
             return null;
         }
 
-        if (await template.provider.ApplyAsync(template.context, data, target))
+        if (await template.provider.ApplyAsync(template.context, data, target).ConfigureAwait(false))
         {
-            logger.LogInformation(
-                $"Applied {{{nameof(templateName)}}} => {{{nameof(template)}}}",
-                templateName,
-                template
-                );
+            LogApplied(logger, templateName, template.context);
             return template.context;
         }
 
@@ -74,7 +63,7 @@ public class TemplateEngine(
     public virtual async Task<bool> ApplyAsync(ITemplateContext context, object data, Stream target)
     {
         var provider = providers.FirstOrDefault(p => p.CanApply(context));
-        return provider != null && await provider.ApplyAsync(context, data, target);
+        return provider != null && await provider.ApplyAsync(context, data, target).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -86,7 +75,7 @@ public class TemplateEngine(
     public virtual async Task<string?> ApplyAsync(string templateName, object data)
     {
         using var ms = new MemoryStream();
-        var context = await ApplyAsync(templateName, data, ms);
+        var context = await ApplyAsync(templateName, data, ms).ConfigureAwait(false);
         return context == null ? null : Encoding.UTF8.GetString(ms.ToArray());
     }
 
@@ -99,7 +88,7 @@ public class TemplateEngine(
     public virtual async Task<string?> ApplyAsync(ITemplateContext context, object data)
     {
         using var ms = new MemoryStream();
-        return !await ApplyAsync(context, data, ms) ? null : Encoding.UTF8.GetString(ms.ToArray());
+        return !await ApplyAsync(context, data, ms).ConfigureAwait(false) ? null : Encoding.UTF8.GetString(ms.ToArray());
     }
 
     /// <summary>
@@ -120,4 +109,13 @@ public class TemplateEngine(
         from context in source.Get(templateName)
         orderby context.Priority
         select context;
+
+    [LoggerMessage(EventId = 1, Level = LogLevel.Information, Message = "Apply {templateName} => {data}")]
+    private static partial void LogApply(ILogger logger, string templateName, object data);
+
+    [LoggerMessage(EventId = 2, Level = LogLevel.Information, Message = "No template {templateName}")]
+    private static partial void LogNoTemplate(ILogger logger, string templateName);
+
+    [LoggerMessage(EventId = 3, Level = LogLevel.Information, Message = "Applied {templateName} => {context}")]
+    private static partial void LogApplied(ILogger logger, string templateName, object context);
 }

@@ -53,7 +53,7 @@ public class DefaultJsonSerializer(JsonSerializerOptions? options = null) : IJso
     /// <summary>
     /// The JSON serializer options.
     /// </summary>
-    protected readonly JsonSerializerOptions _options = options ?? DefaultOptions;
+    protected JsonSerializerOptions Options { get; } = options ?? DefaultOptions;
 
     /// <summary>
     /// Serializes an object to a JSON string.
@@ -64,7 +64,7 @@ public class DefaultJsonSerializer(JsonSerializerOptions? options = null) : IJso
     /// Serializes an object of a given type to a JSON string.
     /// </summary>
     public virtual string Serialize(object? obj, Type type) =>
-        JsonSerializer.Serialize(obj, (type == typeof(object) ? obj?.GetType() : null) ?? type, _options);
+        JsonSerializer.Serialize(obj, (type == typeof(object) ? obj?.GetType() : null) ?? type, Options);
 
     /// <summary>
     /// Asynchronously serializes an object to a JSON string.
@@ -76,7 +76,7 @@ public class DefaultJsonSerializer(JsonSerializerOptions? options = null) : IJso
     /// Asynchronously serializes an object of a given type to a JSON string.
     /// </summary>
     public virtual async Task SerializeAsync(object? obj, Type type, Stream stream, CancellationToken cancellationToken = default) =>
-        await JsonSerializer.SerializeAsync(stream, obj, _options, cancellationToken);
+        await JsonSerializer.SerializeAsync(stream, obj, Options, cancellationToken).ConfigureAwait(false);
 
     /// <summary>
     /// Deserializes a JSON stream to an object of type T.
@@ -87,19 +87,19 @@ public class DefaultJsonSerializer(JsonSerializerOptions? options = null) : IJso
     /// Deserializes a JSON stream to an object of a given type.
     /// </summary>
     public virtual object? Deserialize(Stream stream, Type type) =>
-        JsonSerializer.Deserialize(stream, type, _options);
+        JsonSerializer.Deserialize(stream, type, Options);
 
     /// <summary>
     /// Asynchronously deserializes a JSON stream to an object of type T.
     /// </summary>
     public virtual async ValueTask<T?> DeserializeAsync<T>(Stream stream, CancellationToken cancellationToken = default) =>
-        (T?)await DeserializeAsync(stream, typeof(T), cancellationToken);
+        (T?)await DeserializeAsync(stream, typeof(T), cancellationToken).ConfigureAwait(false);
 
     /// <summary>
     /// Asynchronously deserializes a JSON stream to an object of a given type.
     /// </summary>
     public virtual async ValueTask<object?> DeserializeAsync(Stream stream, Type type, CancellationToken cancellationToken = default) =>
-        await JsonSerializer.DeserializeAsync(stream, type, _options, cancellationToken);
+        await JsonSerializer.DeserializeAsync(stream, type, Options, cancellationToken).ConfigureAwait(false);
 
     /// <summary>
     /// Deserializes a JSON string to an object of type T.
@@ -110,7 +110,7 @@ public class DefaultJsonSerializer(JsonSerializerOptions? options = null) : IJso
     /// Deserializes a JSON string to an object of a given type.
     /// </summary>
     public virtual object? Deserialize(string input, Type type) =>
-        JsonSerializer.Deserialize(input, type, _options);
+        JsonSerializer.Deserialize(input, type, Options);
 
     /// <summary>
     /// Use the configured property naming policy to change the provided value.
@@ -118,5 +118,5 @@ public class DefaultJsonSerializer(JsonSerializerOptions? options = null) : IJso
     /// <param name="propertyName">The property name to convert.</param>
     /// <returns>The converted property name.</returns>
     public virtual string AsPropertyName(string propertyName) =>
-        (_options.PropertyNamingPolicy ?? JsonNamingPolicy.CamelCase).ConvertName(propertyName);
+        (Options.PropertyNamingPolicy ?? JsonNamingPolicy.CamelCase).ConvertName(propertyName);
 }

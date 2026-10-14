@@ -10,7 +10,7 @@ namespace OoBDev.Microsoft.SqlServer.DacFx;
 /// <summary>
 /// Compiles multiple DacPac files into a single merged DacPac package.
 /// </summary>
-public class DacpacMergeCompiler : IDacpacMergeCompiler
+public partial class DacpacMergeCompiler : IDacpacMergeCompiler
 {
     private readonly ILogger<DacpacMergeCompiler> _logger;
 
@@ -25,7 +25,7 @@ public class DacpacMergeCompiler : IDacpacMergeCompiler
     {
         // ===== TSqlModel =====
 
-        _logger.LogInformation($"Create: {{{nameof(def.TargetPath)}}}", def.TargetPath);
+        LogCreate(def.TargetPath);
 
         var target = new TSqlModel(def.ServerVersion, def.ModelOptions);
 
@@ -34,12 +34,12 @@ public class DacpacMergeCompiler : IDacpacMergeCompiler
 
         foreach (var file in def.SourceFiles)
         {
-            _logger.LogInformation($"Read: {{{nameof(file)}}}", file);
+            LogRead(file);
 
             using var sqlModel = DacTools.OpenDacPacModel(file);
             foreach (var source in sqlModel.ReadPackage())
             {
-                _logger.LogInformation($"{file}:{source.name}");
+                LogMessage(file, source.name);
                 target.AddOrUpdateObjects(source.script, source.name, new TSqlObjectOptions()); //TODO: figure out how to carry TSqlObjectOptions forward
             }
 
@@ -51,17 +51,34 @@ public class DacpacMergeCompiler : IDacpacMergeCompiler
         if (!string.IsNullOrWhiteSpace(def.TargetBuildVersion))
             postDeploymentScript.AppendLine(DacTools.GenerateBuildVersionScript(def.TargetBuildVersion));
 
-        _logger.LogInformation($"Build: {{{nameof(def.TargetPath)}}}", def.TargetPath);
+        LogBuild(def.TargetPath);
 
         var parentPath = Path.GetDirectoryName(def.TargetPath);
         if (parentPath != null && !Directory.Exists(parentPath)) Directory.CreateDirectory(parentPath);
 
         DacPackageExtensions.BuildPackage(def.TargetPath, target, def.TargetPackageMetadata);
 
-        _logger.LogInformation($"Add scripts: {{{nameof(def.TargetPath)}}}", def.TargetPath);
+        LogAddScripts(def.TargetPath);
         DacTools.AddScripts(def.TargetPath, (preDeploymentScript.ToString(), postDeploymentScript.ToString()));
 
-        _logger.LogInformation($"Complete: {{{nameof(def.TargetPath)}}}", def.TargetPath);
+        LogComplete(def.TargetPath);
     }
 
+    [LoggerMessage(EventId = 1, Level = LogLevel.Information, Message = "Create: {TargetPath}")]
+    private partial void LogCreate(string? targetPath);
+
+    [LoggerMessage(EventId = 2, Level = LogLevel.Information, Message = "Read: {file}")]
+    private partial void LogRead(string? file);
+
+    [LoggerMessage(EventId = 3, Level = LogLevel.Information, Message = "{File}:{Name}")]
+    private partial void LogMessage(string? file, string? name);
+
+    [LoggerMessage(EventId = 4, Level = LogLevel.Information, Message = "Build: {TargetPath}")]
+    private partial void LogBuild(string? targetPath);
+
+    [LoggerMessage(EventId = 5, Level = LogLevel.Information, Message = "Add scripts: {TargetPath}")]
+    private partial void LogAddScripts(string? targetPath);
+
+    [LoggerMessage(EventId = 6, Level = LogLevel.Information, Message = "Complete: {TargetPath}")]
+    private partial void LogComplete(string? targetPath);
 }

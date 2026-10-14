@@ -12,7 +12,7 @@ public abstract class LdapFilterSetBase : ILdapFilter
     /// </summary>
     /// <param name="operation">The logical operation (AND or OR) to apply to the filter set.</param>
     /// <param name="filterSet">The collection of LDAP filters to combine.</param>
-    public LdapFilterSetBase(LdapFilterSetOperations operation, IEnumerable<ILdapFilter> filterSet)
+    protected LdapFilterSetBase(LdapFilterSetOperations operation, IEnumerable<ILdapFilter> filterSet)
     {
         Operation = operation;
         FilterSet = filterSet;

@@ -40,11 +40,11 @@ public readonly struct CatalogEntry
     /// <summary>
     /// Track number of the next catalog sector (usually $11)
     /// </summary>
-    public readonly byte NextCatalogTrack;
+    public byte NextCatalogTrack { get; }
     /// <summary>
     /// Sector number of next catalog sector
     /// </summary>
-    public readonly byte NextSectorTrack;
+    public byte NextSectorTrack { get; }
     /// <summary>
     /// Not used
     /// </summary>
@@ -58,7 +58,7 @@ public readonly struct CatalogEntry
     /// $BA-$DC Sixth file descriptive entry
     /// $DD-$FF Seventh file descriptive entry
     /// </summary>
-    public readonly FileEntry[] FileEntries;
+    public FileEntry[] FileEntries { get; }
 
     /// <summary>
     /// Returns a string representation of the catalog entry.

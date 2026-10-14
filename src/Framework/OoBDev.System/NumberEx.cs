@@ -1,4 +1,5 @@
-﻿using System;
+﻿using System.Globalization;
+using System;
 
 namespace OoBDev.System;
 
@@ -13,7 +14,7 @@ public static class NumberEx
     /// <param name="input">The string to parse.</param>
     /// <returns>The parsed float value if successful; otherwise, null.</returns>
     public static float? ToFloat(this string input) =>
-        float.TryParse(input, out var ret) ? ret : null;
+        float.TryParse(input, CultureInfo.InvariantCulture, out var ret) ? ret : null;
 
     /// <summary>
     /// Attempts to parse a string into a 32-bit signed integer.
@@ -21,7 +22,7 @@ public static class NumberEx
     /// <param name="input">The string to parse.</param>
     /// <returns>The parsed integer value if successful; otherwise, null.</returns>
     public static int? ToInteger(this string input) =>
-        int.TryParse(input, out var ret) ? ret : null;
+        int.TryParse(input, CultureInfo.InvariantCulture, out var ret) ? ret : null;
 
     /// <summary>
     /// Attempts to parse a string into a decimal number.
@@ -29,7 +30,7 @@ public static class NumberEx
     /// <param name="input">The string to parse.</param>
     /// <returns>The parsed decimal value if successful; otherwise, null.</returns>
     public static decimal? ToDecimal(this string input) =>
-        decimal.TryParse(input, out var ret) ? ret : null;
+        decimal.TryParse(input, CultureInfo.InvariantCulture, out var ret) ? ret : null;
 
     /// <summary>
     /// Attempts to parse a string into a double-precision floating-point number.
@@ -39,10 +40,10 @@ public static class NumberEx
     /// <returns>The parsed double value if successful; otherwise, null.</returns>
     public static double? ToDouble(this string input)
     {
-        if (double.TryParse(input, out var ret))
+        if (double.TryParse(input, CultureInfo.InvariantCulture, out var ret))
             return ret;
         else if (input?.Trim().StartsWith("1/", StringComparison.Ordinal) ?? false)
-            if (double.TryParse(input.Trim()[2..], out ret))
+            if (double.TryParse(input.Trim()[2..], CultureInfo.InvariantCulture, out ret))
                 return 1d / ret;
 
         return null;

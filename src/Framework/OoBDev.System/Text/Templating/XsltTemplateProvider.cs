@@ -71,7 +71,7 @@ public class XsltTemplateProvider : ITemplateProvider
         var xsltSettings = new XsltSettings(false, false);
         xslt.Load(styleSheet);
 
-        var navigator = await GetNavigatorAsync(data);
+        var navigator = await GetNavigatorAsync(data).ConfigureAwait(false);
 
         using var writer = XmlWriter.Create(target, new XmlWriterSettings
         {
@@ -114,9 +114,9 @@ public class XsltTemplateProvider : ITemplateProvider
         }
 
         using var xml = new MemoryStream();
-        await _xmlSerializer.SerializeAsync(data, data!.GetType(), xml);
+        await _xmlSerializer.SerializeAsync(data, data!.GetType(), xml).ConfigureAwait(false);
         xml.Position = 0;
-        var document = await XDocument.LoadAsync(xml, LoadOptions.None, CancellationToken.None);
+        var document = await XDocument.LoadAsync(xml, LoadOptions.None, CancellationToken.None).ConfigureAwait(false);
         var navigator = document.CreateNavigator();
         return navigator;
     }

@@ -1,4 +1,5 @@
-﻿using Amazon.SQS.Model;
+﻿using System.Globalization;
+using Amazon.SQS.Model;
 using Microsoft.Extensions.Logging;
 using OoBDev.MessageQueueing.Services;
 using OoBDev.System.Text.Json.Serialization;
@@ -19,7 +20,7 @@ namespace OoBDev.Amazon.Sqs.MessageQueueing;
 /// <param name="serializer">The JSON serializer for message serialization.</param>
 /// <param name="clientFactory">The factory for creating AWS SQS clients.</param>
 /// <param name="logger">The logger for logging messages.</param>
-public class AmazonSqsMessageProvider(
+public partial class AmazonSqsMessageProvider(
     IJsonSerializer serializer,
     ISqsClientFactory clientFactory,
     ILogger<AmazonSqsMessageProvider> logger
@@ -34,7 +35,7 @@ public class AmazonSqsMessageProvider(
     /// <returns>The message ID if the send operation is successful; otherwise, <c>null</c>.</returns>
     public async Task<string?> SendAsync(object message, IMessageContext context)
     {
-        var (client, queueUrl) = await clientFactory.CreateAsync(context.Config);
+        var (client, queueUrl) = await clientFactory.CreateAsync(context.Config).ConfigureAwait(false);
 
         // Wrap message (standard pattern)
         var wrapped = new WrappedQueueMessage
@@ -49,7 +50,7 @@ public class AmazonSqsMessageProvider(
 
         // Serialize to JSON
         using var stream = new MemoryStream();
-        await serializer.SerializeAsync(wrapped, stream, default);
+        await serializer.SerializeAsync(wrapped, stream, default).ConfigureAwait(false);
         var messageBody = Encoding.UTF8.GetString(stream.ToArray());
 
         // Build SQS request
@@ -60,7 +61,7 @@ public class AmazonSqsMessageProvider(
         };
 
         // Add optional SQS-specific settings
-        if (int.TryParse(context.Config["DelaySeconds"], out var delay))
+        if (int.TryParse(context.Config["DelaySeconds"], CultureInfo.InvariantCulture, out var delay))
             request.DelaySeconds = delay;
 
         var messageGroupId = context.Config["MessageGroupId"];
@@ -79,14 +80,13 @@ public class AmazonSqsMessageProvider(
         }
 
         // Send message
-        var response = await client.SendMessageAsync(request);
+        var response = await client.SendMessageAsync(request).ConfigureAwait(false);
 
-        logger.LogInformation(
-            "Sent SQS message: {MessageId}, CorrelationId: {CorrelationId}",
-            response.MessageId,
-            context.CorrelationId
-        );
+        LogSent(response.MessageId, context.CorrelationId);
 
         return response.MessageId;
     }
+
+    [LoggerMessage(EventId = 1, Level = LogLevel.Information, Message = "Sent SQS message: {MessageId}, CorrelationId: {CorrelationId}")]
+    private partial void LogSent(string? messageId, string? correlationId);
 }

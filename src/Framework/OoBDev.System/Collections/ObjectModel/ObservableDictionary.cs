@@ -239,7 +239,7 @@ public class ObservableDictionary<TKey, TValue> : IDictionary<TKey, TValue>, INo
         if (items.Count > 0)
         {
             if (items.Keys.Any(Dictionary.ContainsKey))
-                throw new ArgumentException("An item with the same key has already been added.");
+                throw new ArgumentException("An item with the same key has already been added.", nameof(items));
             else
                 foreach (var item in items) Dictionary.Add(item);
 
@@ -253,7 +253,7 @@ public class ObservableDictionary<TKey, TValue> : IDictionary<TKey, TValue>, INo
 
         if (Dictionary.TryGetValue(key, out TValue? item))
         {
-            if (add) throw new ArgumentException("An item with the same key has already been added.");
+            if (add) throw new ArgumentException("An item with the same key has already been added.", nameof(key));
             if (Equals(item, value)) return;
             Dictionary[key] = value;
 

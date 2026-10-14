@@ -43,17 +43,17 @@ public struct VolumeTableOfContents
     /// <summary>
     /// $01         Track number of first catalog sector
     /// </summary>
-    public readonly byte FirstCatalogTrack;
+    public byte FirstCatalogTrack { get; }
 
     /// <summary>
     /// $02         Sector number of first catalog sector
     /// </summary>
-    public readonly byte FirstCatalogSector;
+    public byte FirstCatalogSector { get; }
 
     /// <summary>
     /// $03         Release number of DOS used to INIT this diskette
     /// </summary>
-    public readonly byte DosReleaseNumber;
+    public byte DosReleaseNumber { get; }
 
     /// <summary>
     /// $04-$05     Not used
@@ -63,7 +63,7 @@ public struct VolumeTableOfContents
     /// <summary>
     /// $06         Diskette volume number
     /// </summary>
-    public readonly byte DiskVolumeNumber;
+    public byte DiskVolumeNumber { get; }
 
     /// <summary>
     /// $07-$26     Not used
@@ -73,7 +73,7 @@ public struct VolumeTableOfContents
     /// <summary>
     /// $27         Maximum number of track/sector pairs that will fit in one file/track sector list sector (122 for 256 byte sectors)
     /// </summary>
-    public readonly byte MaxTrackSectorPair;
+    public byte MaxTrackSectorPair { get; }
 
     /// <summary>
     /// $28-$2F     Not used
@@ -84,12 +84,12 @@ public struct VolumeTableOfContents
     /// $30         Last track where sectors were allocated
     /// </summary>
     //[FieldOffset(0x30)]
-    public readonly byte LastAllocatedTrack;
+    public byte LastAllocatedTrack { get; }
 
     /// <summary>
     /// $31         Direction of track allocation (+1 or -1)
     /// </summary>
-    public readonly byte DirectionOfAllocation;
+    public byte DirectionOfAllocation { get; }
 
     /// <summary>
     /// $32-$33     Not used
@@ -99,21 +99,21 @@ public struct VolumeTableOfContents
     /// <summary>
     /// $34         Number of tracks per diskette (normally 35)
     /// </summary>
-    public readonly byte NumberOfTracksPerDisk;
+    public byte NumberOfTracksPerDisk { get; }
 
     /// <summary>
     /// $35         Number of sectors per track
     /// </summary>
-    public readonly byte NumberOfSectorsPerTrack;
+    public byte NumberOfSectorsPerTrack { get; }
 
     /// <summary>
     /// $36-$37     Number of bytes per sector (LO/HI format)
     /// </summary>
-    public readonly ushort NumberOfBytesPerSector;
+    public ushort NumberOfBytesPerSector { get; }
 
     /// <summary>
     /// $38-$3B     Bit map of free sectors in track 0
     /// $3C-$FF     Bit maps for additional tracks if there are more
     /// </summary>
-    public uint[] BitmapFreeSectors;
+    public uint[] BitmapFreeSectors { get; set; }
 }

@@ -37,7 +37,7 @@ public class GroqCloudHealthCheck : IHealthCheck
         {
             // The Groq client has no cancellation overload, so the wait is cancelled instead
 #pragma warning disable CA2016
-            var response = await _client.GetChatCompletionsAsync(new GroqChatHistory() { new("Hello") }).WaitAsync(cancellationToken);
+            var response = await _client.GetChatCompletionsAsync(new GroqChatHistory() { new("Hello") }).WaitAsync(cancellationToken).ConfigureAwait(false);
 #pragma warning restore CA2016
             var result = _client.CurrentRateLimits;
             return HealthCheckResult.Healthy(description: $"Message: \"{response.Choices[0].Message.Content}\"");

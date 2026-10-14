@@ -126,7 +126,7 @@ public class CachingManagerTests
 
         // Test
         var manager = this.CreateManager();
-        Assert.Throws<ApplicationException>(() => manager.BuildKey(method, args));
+        Assert.Throws<InvalidOperationException>(() => manager.BuildKey(method, args));
 
         // Verify
         this.mockRepository.VerifyAll();

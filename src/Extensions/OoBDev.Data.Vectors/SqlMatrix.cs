@@ -127,13 +127,13 @@ public struct SqlMatrix : INullable, IBinarySerialize, IEquatable<SqlMatrix>
     /// <summary>
     /// Deserializes the matrix from binary format. Used by SQL Server CLR for data retrieval.
     /// </summary>
-    /// <param name="reader">The binary reader containing the serialized matrix data.</param>
-    public void Read(BinaryReader reader)
+    /// <param name="r">The binary reader containing the serialized matrix data.</param>
+    public void Read(BinaryReader r)
     {
-        _version = reader.ReadUInt16();
+        _version = r.ReadUInt16();
 
-        var rows = reader.ReadInt16();
-        var columns = reader.ReadInt16();
+        var rows = r.ReadInt16();
+        var columns = r.ReadInt16();
         if (rows == -1 || columns == -1)
         {
             _isNull = true;
@@ -144,9 +144,9 @@ public struct SqlMatrix : INullable, IBinarySerialize, IEquatable<SqlMatrix>
         _isNull = false;
         var data = new double[rows, columns];
         for (var c = 0; c < columns; c++)
-            for (var r = 0; r < rows; r++)
+            for (var row = 0; row < rows; row++)
             {
-                data[r, c] = reader.ReadSingle();
+                data[row, c] = r.ReadSingle();
             }
         _values = data;
     }
@@ -154,10 +154,10 @@ public struct SqlMatrix : INullable, IBinarySerialize, IEquatable<SqlMatrix>
     /// <summary>
     /// Serializes the matrix to binary format. Used by SQL Server CLR for data storage.
     /// </summary>
-    /// <param name="writer">The binary writer to write the serialized matrix data to.</param>
-    public readonly void Write(BinaryWriter writer)
+    /// <param name="w">The binary writer to write the serialized matrix data to.</param>
+    public readonly void Write(BinaryWriter w)
     {
-        writer.Write(Version);
+        w.Write(Version);
 
         short rows, columns;
 
@@ -172,13 +172,13 @@ public struct SqlMatrix : INullable, IBinarySerialize, IEquatable<SqlMatrix>
             columns = (short)(_values.GetUpperBound(1) + 1);
         }
 
-        writer.Write(rows);
-        writer.Write(columns);
+        w.Write(rows);
+        w.Write(columns);
 
         for (var c = 0; c < columns; c++)
             for (var r = 0; r < rows; r++)
             {
-                writer.Write(_values[r, c]);
+                w.Write(_values[r, c]);
             }
     }
 
@@ -250,10 +250,10 @@ public struct SqlMatrix : INullable, IBinarySerialize, IEquatable<SqlMatrix>
     /// <summary>
     /// Determines whether the specified object is equal to the current matrix.
     /// </summary>
-    /// <param name="other">The object to compare with the current matrix.</param>
+    /// <param name="obj">The object to compare with the current matrix.</param>
     /// <returns><c>true</c> if the specified object is a <see cref="SqlMatrix"/> and has the same dimensions and element values; otherwise, <c>false</c>.</returns>
-    public override readonly bool Equals(object other) =>
-        other is SqlMatrix matrix && Equals(matrix);
+    public override readonly bool Equals(object obj) =>
+        obj is SqlMatrix matrix && Equals(matrix);
 
     /// <summary>
     /// Determines whether the specified matrix is equal to the current matrix.

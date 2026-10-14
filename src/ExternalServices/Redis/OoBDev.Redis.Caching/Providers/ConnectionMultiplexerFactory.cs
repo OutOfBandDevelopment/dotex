@@ -26,5 +26,5 @@ public class ConnectionMultiplexerFactory : IConnectionMultiplexerFactory
 
     /// <inheritdoc/>
     public IConnectionMultiplexer Create() => ConnectionMultiplexer.Connect(_config[SourceConfigurationKey]??
-        throw new NullReferenceException($"Missing Configuration \"{SourceConfigurationKey}\""));
+        throw new InvalidOperationException($"Missing Configuration \"{SourceConfigurationKey}\""));
 }

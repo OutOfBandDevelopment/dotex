@@ -30,7 +30,7 @@ public static class ExpressionBaseExtensions
     /// <returns>An empty dictionary for storing variable name-value pairs.</returns>
     public static IDictionary<string, T> EmptySet<T>()
         where T : struct, IComparable<T>, IEquatable<T> =>
-            new Dictionary<string, T>();
+            new Dictionary<string, T>(StringComparer.Ordinal);
 
     /// <summary>
     /// Recursively retrieves all sub-expressions from an expression tree, including the root expression.
@@ -64,7 +64,7 @@ public static class ExpressionBaseExtensions
     /// <returns>The result of evaluating the expression with the provided variables.</returns>
     public static T Evaluate<T>(this ExpressionBase<T> expression, IEnumerable<(string name, T value)> variables)
         where T : struct, IComparable<T>, IEquatable<T> =>
-        expression.Evaluate(variables.ToDictionary(k => k.name, v => v.value));
+        expression.Evaluate(variables.ToDictionary(k => k.name, v => v.value, StringComparer.Ordinal));
 
     /// <summary>
     /// Evaluates the expression using variable values provided as a parameter array of name-value tuples.
@@ -87,7 +87,7 @@ public static class ExpressionBaseExtensions
         expression.GetAllExpressions()
                   .OfType<VariableExpression<T>>()
                   .Select(s => s.Name)
-                  .Distinct();
+                  .Distinct(StringComparer.Ordinal);
 
     /// <summary>
     /// Generates random test values for all variables in the expression, useful for testing and validation.
@@ -106,7 +106,7 @@ public static class ExpressionBaseExtensions
         var variableNames = expression.GetDistinctVariableNames();
         var rand = new Random();
 
-        var variables = new Dictionary<string, T>();
+        var variables = new Dictionary<string, T>(StringComparer.Ordinal);
         foreach (var variableName in variableNames)
         {
             var randomValue = global::System.Math.Round(rand.NextDouble() * global::System.Math.Pow(10, scale) * (includeNegatives && rand.Next() % 2 == 0 ? -1 : 1), places);

@@ -10,7 +10,7 @@ namespace OoBDev.System.Text.Templating;
 /// <summary>
 /// Access template from file system
 /// </summary>
-public class FileTemplateSource(
+public partial class FileTemplateSource(
     IOptions<FileTemplatingOptions> settings,
     IEnumerable<IFileType> fileTypes,
     ILogger<FileTemplateSource> logger
@@ -29,11 +29,7 @@ public class FileTemplateSource(
     {
         var sandbox = string.IsNullOrWhiteSpace(_settings.SandboxPath) ? null : Path.GetFullPath(_settings.SandboxPath + "/");
 
-        _logger.LogInformation(
-            $"Search for {{{nameof(templateName)}}} in \"{{{nameof(templateName)}}}\"",
-            templateName,
-            _settings.TemplatePath
-            );
+        LogSearch(templateName, _settings.TemplatePath);
 
         var templateTypes =
             from template in _fileTypes
@@ -75,4 +71,7 @@ public class FileTemplateSource(
 
         return possibleFiles;
     }
+
+    [LoggerMessage(EventId = 1, Level = LogLevel.Information, Message = "Search for {templateName} in \"{templatePath}\"")]
+    private partial void LogSearch(string templateName, string? templatePath);
 }

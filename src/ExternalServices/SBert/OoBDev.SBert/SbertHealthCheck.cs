@@ -32,7 +32,7 @@ public class SbertHealthCheck : IHealthCheck
     {
         try
         {
-            var result = await _client.GetHealthAsync();
+            var result = await _client.GetHealthAsync().ConfigureAwait(false);
             return HealthCheckResult.Healthy(description: result);
         }
         catch (Exception ex)

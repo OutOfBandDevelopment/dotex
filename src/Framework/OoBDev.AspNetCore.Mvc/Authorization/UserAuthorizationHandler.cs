@@ -15,7 +15,7 @@ namespace OoBDev.AspNetCore.Mvc.Authorization;
 /// Initializes a new instance of the <see cref="UserAuthorizationHandler"/> class.
 /// </remarks>
 /// <param name="logger">The logger.</param>
-public class UserAuthorizationHandler(ILogger<UserAuthorizationHandler> logger) : AuthorizationHandler<UserAuthorizationRequirement>
+public partial class UserAuthorizationHandler(ILogger<UserAuthorizationHandler> logger) : AuthorizationHandler<UserAuthorizationRequirement>
 {
     private readonly ILogger _logger = logger;
 
@@ -47,15 +47,21 @@ public class UserAuthorizationHandler(ILogger<UserAuthorizationHandler> logger) 
 
         if (isAuthorized)
         {
-            _logger.LogInformation($"{{{nameof(userName)}}} is authorized ({{{nameof(userId)}}})", userName, userId);
+            LogAuthorized(userName, userId);
             context.Succeed(requirement);
         }
         else
         {
-            _logger.LogWarning($"{{{nameof(userName)}}} is not authorized ({{{nameof(userId)}}})", userName, userId);
+            LogNotAuthorized(userName, userId);
             context.Fail(new AuthorizationFailureReason(this, "User not authorized"));
         }
 
         return Task.CompletedTask;
     }
+
+    [LoggerMessage(EventId = 1, Level = LogLevel.Information, Message = "{userName} is authorized ({userId})")]
+    private partial void LogAuthorized(string? userName, string? userId);
+
+    [LoggerMessage(EventId = 2, Level = LogLevel.Warning, Message = "{userName} is not authorized ({userId})")]
+    private partial void LogNotAuthorized(string? userName, string? userId);
 }

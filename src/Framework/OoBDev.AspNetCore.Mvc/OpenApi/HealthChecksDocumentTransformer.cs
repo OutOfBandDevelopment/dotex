@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.OpenApi;
 using Microsoft.OpenApi;
 using System.Collections.Generic;
@@ -30,7 +31,7 @@ public class HealthChecksDocumentTransformer : IOpenApiDocumentTransformer
         {
             Type = JsonSchemaType.Object,
             AdditionalPropertiesAllowed = true,
-            Properties = new Dictionary<string, IOpenApiSchema>
+            Properties = new Dictionary<string, IOpenApiSchema>(StringComparer.Ordinal)
             {
                 ["status"] = new OpenApiSchema { Type = JsonSchemaType.String },
                 ["errors"] = new OpenApiSchema { Type = JsonSchemaType.Array }
@@ -45,7 +46,7 @@ public class HealthChecksDocumentTransformer : IOpenApiDocumentTransformer
                 ["200"] = new OpenApiResponse
                 {
                     Description = "Health report",
-                    Content = new Dictionary<string, OpenApiMediaType>
+                    Content = new Dictionary<string, OpenApiMediaType>(StringComparer.Ordinal)
                     {
                         ["application/json"] = new OpenApiMediaType { Schema = schema }
                     }

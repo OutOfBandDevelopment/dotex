@@ -230,22 +230,22 @@ public struct SqlVector : INullable, IBinarySerialize, IEquatable<SqlVector>
     /// <summary>
     /// Deserializes the vector from a binary stream.
     /// </summary>
-    /// <param name="reader">The binary reader to read from.</param>
-    public void Read(BinaryReader reader)
+    /// <param name="r">The binary reader to read from.</param>
+    public void Read(BinaryReader r)
     {
-        var header = reader.ReadInt32();
+        var header = r.ReadInt32();
         var version = (header & 0xff000000) >> 24;
         var length = header & 0x00ffffff;
 
         var values = new double[length];
         for (var i = 0; i < length; i++)
         {
-            values[i] = reader.ReadDouble();
+            values[i] = r.ReadDouble();
         }
         _values = values;
-        if (reader.BaseStream.Position < reader.BaseStream.Length)
+        if (r.BaseStream.Position < r.BaseStream.Length)
         {
-            _magnitude = reader.ReadDouble();
+            _magnitude = r.ReadDouble();
         }
         else
         {
@@ -256,20 +256,20 @@ public struct SqlVector : INullable, IBinarySerialize, IEquatable<SqlVector>
     /// <summary>
     /// Serializes the vector to a binary stream.
     /// </summary>
-    /// <param name="writer">The binary writer to write to.</param>
+    /// <param name="w">The binary writer to write to.</param>
     /// <exception cref="NotSupportedException">Thrown when the vector length exceeds the maximum supported size.</exception>
-    public readonly void Write(BinaryWriter writer)
+    public readonly void Write(BinaryWriter w)
     {
         var count = _values.Count;
         if (count < 0 || count > 0x00ffffff) throw new NotSupportedException();
         var header = Version << 24 | count;
 
-        writer.Write(header);
+        w.Write(header);
         foreach (var value in _values)
         {
-            writer.Write(value);
+            w.Write(value);
         }
-        writer.Write(_magnitude);
+        w.Write(_magnitude);
     }
 
     /// <summary>
@@ -388,10 +388,10 @@ public struct SqlVector : INullable, IBinarySerialize, IEquatable<SqlVector>
     /// <summary>
     /// Determines whether the specified object is equal to this vector.
     /// </summary>
-    /// <param name="other">The object to compare.</param>
+    /// <param name="obj">The object to compare.</param>
     /// <returns>True if the objects are equal; otherwise, false.</returns>
-    public override readonly bool Equals(object other) =>
-        other is SqlVector matrix && Equals(matrix);
+    public override readonly bool Equals(object obj) =>
+        obj is SqlVector matrix && Equals(matrix);
 
     /// <summary>
     /// Determines whether the specified vector is equal to this vector.

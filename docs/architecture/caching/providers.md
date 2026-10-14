@@ -261,7 +261,7 @@ services.AddRedisCachingServices();
 - Requires Redis server
 - Serialization overhead
 
-**Full Documentation:** [OoBDev.Redis.Caching/README.md](../../../ExternalServices/Redis/OoBDev.Redis.Caching/README.md)
+**Full Documentation:** [OoBDev.Redis.Caching/README.md](../../../src/ExternalServices/Redis/OoBDev.Redis.Caching/README.Redis.Caching.md)
 
 ---
 
@@ -303,7 +303,7 @@ services.Configure<MemoryCacheOptions>(options =>
 - Not shared across instances
 - Memory consumption on single server
 
-**Full Documentation:** [OoBDev.Microsoft.Caching/README.md](../../../ExternalServices/Microsoft/OoBDev.Microsoft.Caching/README.md)
+**Full Documentation:** [OoBDev.Microsoft.Caching/README.md](../../../src/ExternalServices/Microsoft/OoBDev.Microsoft.Caching/README.Microsoft.Caching.md)
 
 ---
 

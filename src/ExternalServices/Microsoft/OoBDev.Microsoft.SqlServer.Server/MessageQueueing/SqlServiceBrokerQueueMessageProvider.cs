@@ -16,13 +16,13 @@ public class SqlServiceBrokerQueueMessageProvider : IMessageSenderProvider, IMes
     //TODO: finish this out
     /// <inheritdoc/>
     public Task RunAsync(CancellationToken cancellationToken = default) =>
-        throw new NotImplementedException();
+        throw new NotSupportedException();
 
     /// <inheritdoc/>
     public Task<string?> SendAsync(object message, IMessageContext context) =>
-        throw new NotImplementedException();
+        throw new NotSupportedException();
 
     /// <inheritdoc/>
     public IMessageReceiverProvider SetHandlerProvider(IMessageHandlerProvider handlerProvider) =>
-        throw new NotImplementedException();
+        throw new NotSupportedException();
 }

@@ -21,5 +21,5 @@ public record ContentMetaDataReference
     /// <summary>
     /// Gets or initializes the metadata associated with the content.
     /// </summary>
-    public Dictionary<string, string>? MetaData { get; init; }
+    public IDictionary<string, string>? MetaData { get; init; }
 }

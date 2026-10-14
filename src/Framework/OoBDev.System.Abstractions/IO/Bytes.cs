@@ -1,5 +1,8 @@
 ﻿// Ignore Spelling: Soh Sotx Eotx Eotr
 
+// the digit and letter constants are named after the character they map to (_0, _E, ...)
+#pragma warning disable CA1707
+
 namespace OoBDev.System.IO;
 
 /// <summary>

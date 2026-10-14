@@ -63,7 +63,7 @@ public interface IMessageContext
     /// <summary>
     /// Gets the collection of headers associated with the message.
     /// </summary>
-    Dictionary<string, object?> Headers { get; }
+    IDictionary<string, object?> Headers { get; }
 
     /// <summary>
     /// Gets the configuration section associated with the message context.

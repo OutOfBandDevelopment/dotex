@@ -59,10 +59,8 @@ public static class TestContextConfigurationExtensions
         TestContext testContext,
         string? prefix)
     {
-        if (builder == null)
-            throw new ArgumentNullException(nameof(builder));
-        if (testContext == null)
-            throw new ArgumentNullException(nameof(testContext));
+        ArgumentNullException.ThrowIfNull(builder);
+        ArgumentNullException.ThrowIfNull(testContext);
 
         return builder.Add(new TestContextConfigurationSource(testContext, prefix));
     }

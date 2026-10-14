@@ -50,7 +50,7 @@ public class StringOrderReplacementExpressionVisitor(
             ((node.Arguments[1] as UnaryExpression)?.Operand as LambdaExpression)?.Body.Type == typeof(string)
             )
         {
-            _logger.LogInformation("Rewrite VisitMethodCall: {method}({args}) -> {node} / {nt}", node.Method.Name, node.Arguments.Count, node, node.Arguments[1].Type);
+            LinqLog.RewriteMethodCall(_logger, node.Method.Name, node.Arguments.Count, node, node.Arguments[1].Type);
 
             var methodInfo = TargetedMethods.Single(m => m.Name == node.Method.Name).MakeGenericMethod(node.Method.GetGenericArguments());
             node = Expression.Call(methodInfo, node.Arguments[0], Rewriter.Visit(node.Arguments[1]));
@@ -78,7 +78,7 @@ public class StringOrderReplacementExpressionVisitor(
         {
             if (stringCasing != StringCasing.Default && node.Type == typeof(string))
             {
-                _logger.LogInformation("Rewriting VisitMember: {method} [{args}] -> {node}", node.Member, node.Expression, node);
+                LinqLog.RewriteMember(_logger, node.Member, node.Expression, node);
 
                 var newNode = Expression.Call(node, GetMethod(stringCasing));
                 return newNode;

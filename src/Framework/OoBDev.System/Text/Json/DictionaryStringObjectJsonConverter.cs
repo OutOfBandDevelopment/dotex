@@ -38,7 +38,7 @@ public class DictionaryStringObjectJsonConverter : JsonConverter<Dictionary<stri
             throw new JsonException($"JsonTokenType was of type {reader.TokenType}, only objects are supported");
         }
 
-        var dictionary = new Dictionary<string, object?>();
+        var dictionary = new Dictionary<string, object?>(StringComparer.Ordinal);
         while (reader.Read())
         {
             if (reader.TokenType == JsonTokenType.EndObject)

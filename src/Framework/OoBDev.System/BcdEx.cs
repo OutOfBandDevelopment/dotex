@@ -20,8 +20,8 @@ public static class BcdEx
         var high = (input & 0xf0) >> 4;
 
         return low > 9
-            ? throw new ArgumentOutOfRangeException("low nibble")
-            : high > 9 ? throw new ArgumentOutOfRangeException("high nibble") : low + high * 10;
+            ? throw new ArgumentOutOfRangeException(nameof(input), "low nibble is not a BCD digit")
+            : high > 9 ? throw new ArgumentOutOfRangeException(nameof(input), "high nibble is not a BCD digit") : low + high * 10;
     }
     /// <summary>
     /// convert decimal value to Binary code Decimal (BCD)
@@ -31,13 +31,13 @@ public static class BcdEx
     public static byte ToBCD(this int input)
     {
         if (input > 99 || input < 0)
-            throw new ArgumentOutOfRangeException();
+            throw new ArgumentOutOfRangeException(nameof(input), "BCD input must be between 0 and 99");
 
         var high = input / 10;
         var low = input - high * 10;
 
         return low > 9
-            ? throw new ArgumentOutOfRangeException("low nibble")
-            : high > 9 ? throw new ArgumentOutOfRangeException("high nibble") : (byte)(high << 4 | low);
+            ? throw new ArgumentOutOfRangeException(nameof(input), "low nibble is not a BCD digit")
+            : high > 9 ? throw new ArgumentOutOfRangeException(nameof(input), "high nibble is not a BCD digit") : (byte)(high << 4 | low);
     }
 }

@@ -34,7 +34,7 @@ public class GroqCloudMessageCompletion : IMessageCompletion
     /// <param name="prompt">The prompt for which completion is requested.</param>
     /// <returns>A task representing the asynchronous operation. The task result contains the completion response.</returns>
     public async Task<string> GetCompletionAsync(string modelName, string prompt) =>
-         (await this.GetCompletionAsync(new CompletionRequest() { Prompt = prompt, Model = modelName })).Response;
+         (await this.GetCompletionAsync(new CompletionRequest() { Prompt = prompt, Model = modelName }).ConfigureAwait(false)).Response;
 
     /// <summary>
     /// Retrieves a completion for the given prompt from the specified model.
@@ -48,6 +48,6 @@ public class GroqCloudMessageCompletion : IMessageCompletion
                 {
                     Prompt = model.Prompt,
                     Model = model.Model
-                }))
+                })).ConfigureAwait(false)
         );
 }

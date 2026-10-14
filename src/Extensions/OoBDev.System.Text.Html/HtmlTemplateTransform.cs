@@ -53,7 +53,7 @@ public class HtmlTemplateTransform(
     /// <returns>The transformed HTML string with data bindings resolved.</returns>
     public async Task<string> Transform(object source, string template)
     {
-        var pathResolver = await instanceFactory.GetPathResolver(source);
+        var pathResolver = await instanceFactory.GetPathResolver(source).ConfigureAwait(false);
 
         var html = new HtmlDocument()
         {
@@ -66,7 +66,7 @@ public class HtmlTemplateTransform(
             root: pathResolver,
             current: pathResolver,
             scoped: []
-            );
+            ).ConfigureAwait(false);
 
         return result.WriteTo();
     }

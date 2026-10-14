@@ -86,16 +86,16 @@ public class VectorToMatrixAggregate : IBinarySerialize
     /// <summary>
     /// Deserializes the aggregate state from a binary stream.
     /// </summary>
-    /// <param name="reader">The binary reader to read from.</param>
-    public void Read(BinaryReader reader)
+    /// <param name="r">The binary reader to read from.</param>
+    public void Read(BinaryReader r)
     {
-        _length = reader.ReadInt32();
-        var vectorCount = reader.ReadInt32();
+        _length = r.ReadInt32();
+        var vectorCount = r.ReadInt32();
 
         for (var v = 0; v < vectorCount; v++)
         {
             var vector = new SqlVector();
-            vector.Read(reader);
+            vector.Read(r);
             _vectors.Add(vector);
         }
     }
@@ -103,12 +103,12 @@ public class VectorToMatrixAggregate : IBinarySerialize
     /// <summary>
     /// Serializes the aggregate state to a binary stream.
     /// </summary>
-    /// <param name="writer">The binary writer to write to.</param>
-    public void Write(BinaryWriter writer)
+    /// <param name="w">The binary writer to write to.</param>
+    public void Write(BinaryWriter w)
     {
-        writer.Write(_length);
-        writer.Write(_vectors.Count);
+        w.Write(_length);
+        w.Write(_vectors.Count);
         foreach (var vector in _vectors)
-            vector.Write(writer);
+            vector.Write(w);
     }
 }

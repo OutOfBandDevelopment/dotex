@@ -17,7 +17,7 @@ namespace OoBDev.WebApi.Controllers;
 [AllowAnonymous]
 [Route("[Controller]/[Action]")]
 [BlobContainer(ContainerName = "docs")]
-public class DocumentController : Controller
+public partial class DocumentController : Controller
 {
     /// <summary>
     /// Represents a container for documents.
@@ -162,10 +162,10 @@ public class DocumentController : Controller
     {
 
         await Task.Yield();
-        _logger.LogDebug("Start Upload");
+        LogUploadStart();
         if (ModelState.IsValid)
         {
-            _logger.LogDebug("Upload Ok");
+            LogUploadOk();
             await _docs.StoreContentAsync(new()
             {
                 Content = content.OpenReadStream(),
@@ -175,7 +175,7 @@ public class DocumentController : Controller
             return Ok();
         }
 
-        _logger.LogDebug("Upload BadRequest");
+        LogUploadBadRequest();
         return BadRequest(ModelState);
     }
 
@@ -206,4 +206,13 @@ public class DocumentController : Controller
 
         return File(destination, targetContentType, fileDownloadName: targetFile);
     }
+
+    [LoggerMessage(EventId = 1, Level = LogLevel.Debug, Message = "Start Upload")]
+    private partial void LogUploadStart();
+
+    [LoggerMessage(EventId = 2, Level = LogLevel.Debug, Message = "Upload Ok")]
+    private partial void LogUploadOk();
+
+    [LoggerMessage(EventId = 3, Level = LogLevel.Debug, Message = "Upload BadRequest")]
+    private partial void LogUploadBadRequest();
 }

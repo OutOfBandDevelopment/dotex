@@ -10,7 +10,7 @@ namespace OoBDev.SemanticKernel;
 /// <summary>
 /// Semantic Kernel plugin that provides time-related functions.
 /// </summary>
-public class TimePlugIn : IKernelPlugIn
+public partial class TimePlugIn : IKernelPlugIn
 {
     private readonly ILogger _logger;
     private readonly IDataConverter _converter;
@@ -42,9 +42,9 @@ public class TimePlugIn : IKernelPlugIn
     [return: Description("current time")]
     public Task<DateTimeOffset> GetCurrentTime()
     {
-        _logger.LogInformation("Called: {method}", nameof(GetCurrentTime));
+        LogCalled(nameof(GetCurrentTime));
         var now = _timeProvider.GetLocalNow();
-        _logger.LogDebug("Current time: {now}", now);
+        LogNow(now);
         return Task.FromResult(now);
     }
 
@@ -60,13 +60,25 @@ public class TimePlugIn : IKernelPlugIn
         [Description("UTC time offset as dotnet TimeSpan string")] string timeOffset
         )
     {
-        _logger.LogInformation("Called: {method}({timeOffset})", nameof(AdjustCurrentTime), timeOffset);
+        LogCalledWithOffset(nameof(AdjustCurrentTime), timeOffset);
 
         var timeOffsetValue = _converter.ConvertTo<TimeSpan>(timeOffset);
 
         var now = _timeProvider.GetUtcNow().Add(timeOffsetValue);
-        _logger.LogDebug("Current time: {now} ({timeOffset})", now, timeOffset);
+        LogNowWithOffset(now, timeOffset);
         return Task.FromResult(now);
     }
+
+    [LoggerMessage(EventId = 1, Level = LogLevel.Information, Message = "Called: {method}")]
+    private partial void LogCalled(string method);
+
+    [LoggerMessage(EventId = 2, Level = LogLevel.Debug, Message = "Current time: {now}")]
+    private partial void LogNow(DateTimeOffset now);
+
+    [LoggerMessage(EventId = 3, Level = LogLevel.Information, Message = "Called: {method}({timeOffset})")]
+    private partial void LogCalledWithOffset(string method, string timeOffset);
+
+    [LoggerMessage(EventId = 4, Level = LogLevel.Debug, Message = "Current time: {now} ({timeOffset})")]
+    private partial void LogNowWithOffset(DateTimeOffset now, string timeOffset);
 }
 

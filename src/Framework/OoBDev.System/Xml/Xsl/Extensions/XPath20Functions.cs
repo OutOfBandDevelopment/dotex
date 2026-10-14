@@ -1,4 +1,5 @@
-﻿using OoBDev.System.Xml.XPath;
+﻿using System.Globalization;
+using OoBDev.System.Xml.XPath;
 using System;
 using System.Linq;
 using System.Xml.Serialization;
@@ -85,7 +86,7 @@ public class XPath20Functions
     public decimal sum(XPathNodeIterator input) =>
         (from i in input.AsNavigatorSet()
          where !string.IsNullOrWhiteSpace(i.Value)
-         let d = decimal.TryParse(i.Value, out var v) ? (decimal?)v : null
+         let d = decimal.TryParse(i.Value, CultureInfo.InvariantCulture, out var v) ? (decimal?)v : null
          where d.HasValue
          select d).Sum() ?? 0;
 
@@ -98,7 +99,7 @@ public class XPath20Functions
     public decimal max(XPathNodeIterator input) =>
         (from i in input.AsNavigatorSet()
          where !string.IsNullOrWhiteSpace(i.Value)
-         let d = decimal.TryParse(i.Value, out var v) ? (decimal?)v : null
+         let d = decimal.TryParse(i.Value, CultureInfo.InvariantCulture, out var v) ? (decimal?)v : null
          where d.HasValue
          select d).Max() ?? 0;
 
@@ -111,7 +112,7 @@ public class XPath20Functions
     public decimal min(XPathNodeIterator input) =>
         (from i in input.AsNavigatorSet()
          where !string.IsNullOrWhiteSpace(i.Value)
-         let d = decimal.TryParse(i.Value, out var v) ? (decimal?)v : null
+         let d = decimal.TryParse(i.Value, CultureInfo.InvariantCulture, out var v) ? (decimal?)v : null
          where d.HasValue
          select d).Min() ?? 0;
 
@@ -124,12 +125,11 @@ public class XPath20Functions
     /// <param name="input">The input node iterator.</param>
     /// <returns>An XPath node iterator containing only the first occurrence of each distinct value.</returns>
     [XsltFunction("distinct-values", HideOriginalName = true)]
-    public XPathNodeIterator distinct_values(XPathNodeIterator input) =>
+    public XPathNodeIterator DistinctValues(XPathNodeIterator input) =>
          new EnumerableXPathNodeIterator(
-            from i in input.AsNavigatorSet()
-            group i by i.Value into grouped
-            from i in grouped
-            select grouped.First());
+            input.AsNavigatorSet()
+                .GroupBy(i => i.Value, StringComparer.Ordinal)
+                .Select(grouped => grouped.First()));
 
     ////TODO: this does not seem supported at this time
     ///// <summary>

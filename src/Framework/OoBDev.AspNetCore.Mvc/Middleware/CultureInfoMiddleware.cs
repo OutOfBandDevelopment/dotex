@@ -13,7 +13,7 @@ namespace OoBDev.AspNetCore.Mvc.Middleware;
 /// request header as well as assignment for response header
 /// </summary>
 /// <param name="next">The next middleware in the pipeline.</param>
-public class CultureInfoMiddleware(
+public partial class CultureInfoMiddleware(
     RequestDelegate next
         )
 {
@@ -38,7 +38,7 @@ public class CultureInfoMiddleware(
             if (!string.IsNullOrWhiteSpace(fromHeader))
             {
                 var language = fromHeader.Split(',').Select(GetCultureInfo).FirstOrDefault();
-                logger.LogInformation($"Set CultureInfo to \"{{{nameof(fromHeader)}}}\"::{{{nameof(language)}}}", fromHeader, language);
+                LogSetCulture(logger, fromHeader, language);
 
                 cultureInfo.Value = language ?? CultureInfo.CurrentCulture;
                 CultureInfo.CurrentCulture = CultureInfo.CurrentUICulture = cultureInfo.Value;
@@ -50,7 +50,7 @@ public class CultureInfoMiddleware(
                 var culture = cultureInfo.Value?.ToString();
                 if (!string.IsNullOrWhiteSpace(culture))
                 {
-                    logger.LogInformation($"Return CultureInfo as {{{nameof(culture)}}}", culture);
+                    LogReturnCulture(logger, culture);
                     context.Response.Headers.ContentLanguage = culture;
                 }
 
@@ -62,8 +62,8 @@ public class CultureInfoMiddleware(
         }
         catch (Exception ex)
         {
-            logger.LogError($"{{{nameof(ex.Message)}}}", ex.Message);
-            logger.LogDebug($"{{{nameof(Exception)}}}", ex);
+            LogFailure(logger, ex.Message);
+            LogFailureDetails(logger, ex);
             throw;
         }
     }
@@ -80,4 +80,16 @@ public class CultureInfoMiddleware(
             return default;
         }
     }
+
+    [LoggerMessage(EventId = 1, Level = LogLevel.Information, Message = "Set CultureInfo to \"{fromHeader}\"::{language}")]
+    private static partial void LogSetCulture(ILogger logger, string fromHeader, CultureInfo? language);
+
+    [LoggerMessage(EventId = 2, Level = LogLevel.Information, Message = "Return CultureInfo as {culture}")]
+    private static partial void LogReturnCulture(ILogger logger, string culture);
+
+    [LoggerMessage(EventId = 3, Level = LogLevel.Error, Message = "{Message}")]
+    private static partial void LogFailure(ILogger logger, string message);
+
+    [LoggerMessage(EventId = 4, Level = LogLevel.Debug, Message = "Culture handling failed")]
+    private static partial void LogFailureDetails(ILogger logger, Exception exception);
 }

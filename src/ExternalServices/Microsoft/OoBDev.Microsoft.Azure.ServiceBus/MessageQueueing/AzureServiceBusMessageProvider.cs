@@ -18,7 +18,7 @@ namespace OoBDev.Microsoft.Azure.ServiceBus.MessageQueueing;
 /// <param name="serializer">The JSON serializer for message serialization.</param>
 /// <param name="senderFactory">The factory for creating Azure Service Bus senders.</param>
 /// <param name="logger">The logger for logging messages.</param>
-public class AzureServiceBusMessageProvider(
+public partial class AzureServiceBusMessageProvider(
     IJsonSerializer serializer,
     IServiceBusSenderFactory senderFactory,
     ILogger<AzureServiceBusMessageProvider> logger
@@ -32,7 +32,7 @@ public class AzureServiceBusMessageProvider(
     /// <returns>The correlation ID if the send operation is successful; otherwise, <c>null</c>.</returns>
     public async Task<string?> SendAsync(object message, IMessageContext context)
     {
-        var (client, sender) = await senderFactory.CreateAsync(context.Config);
+        var (client, sender) = await senderFactory.CreateAsync(context.Config).ConfigureAwait(false);
 
         try
         {
@@ -49,7 +49,7 @@ public class AzureServiceBusMessageProvider(
 
             // Serialize to JSON
             using var stream = new MemoryStream();
-            await serializer.SerializeAsync(wrapped, stream, default);
+            await serializer.SerializeAsync(wrapped, stream, default).ConfigureAwait(false);
 
             // Create Service Bus message
             var busMessage = new ServiceBusMessage(stream.ToArray())
@@ -70,19 +70,19 @@ public class AzureServiceBusMessageProvider(
             }
 
             // Send message
-            await sender.SendMessageAsync(busMessage);
+            await sender.SendMessageAsync(busMessage).ConfigureAwait(false);
 
-            logger.LogInformation(
-                "Sent Service Bus message: CorrelationId: {CorrelationId}",
-                busMessage.CorrelationId
-            );
+            LogSent(busMessage.CorrelationId);
 
             return busMessage.CorrelationId;
         }
         finally
         {
-            await sender.DisposeAsync();
-            await client.DisposeAsync();
+            await sender.DisposeAsync().ConfigureAwait(false);
+            await client.DisposeAsync().ConfigureAwait(false);
         }
     }
+
+    [LoggerMessage(EventId = 1, Level = LogLevel.Information, Message = "Sent Service Bus message: CorrelationId: {CorrelationId}")]
+    private partial void LogSent(string? correlationId);
 }
