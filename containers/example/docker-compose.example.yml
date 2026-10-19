@@ -1,0 +1,38 @@
+# OoBDev example application: SPA + API + the backend services they use.
+#
+# Usage:  docker compose -f containers/example/docker-compose.example.yml up -d --build
+# The SPA is on http://localhost:${EXAMPLE_PORT_WEB:-8088}; the backend services are the
+# integration test stack (see containers/testing/README.md) so there is one set of definitions.
+
+name: oobd-example
+
+include:
+  - path: ../testing/docker-compose.integration-tests.yml
+
+services:
+  example-api:
+    build:
+      context: ../..
+      dockerfile: src/Examples/OoBDev.Example.WebApi/Dockerfile
+    container_name: oobd-example-api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - IDENTITY_PROVIDER=None
+    networks:
+      - integration-test-net
+    depends_on:
+      ollama:
+        condition: service_started
+      redis:
+        condition: service_started
+
+  example-web:
+    build:
+      context: ../../src/Examples/OoBDev.Example.Web
+    container_name: oobd-example-web
+    ports:
+      - "${EXAMPLE_PORT_WEB:-8088}:80"
+    networks:
+      - integration-test-net
+    depends_on:
+      - example-api

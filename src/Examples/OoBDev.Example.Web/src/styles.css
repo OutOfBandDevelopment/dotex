@@ -1,0 +1,27 @@
+:root {
+  --shell-bg: #faf9f8;
+  --shell-nav-bg: #ffffff;
+  --shell-border: #e1dfdd;
+  --shell-text: #201f1e;
+  --shell-muted: #605e5c;
+  --shell-accent: #0078d4;
+  --shell-top: #0f6cbd;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --shell-bg: #1b1a19;
+    --shell-nav-bg: #252423;
+    --shell-border: #3b3a39;
+    --shell-text: #f3f2f1;
+    --shell-muted: #c8c6c4;
+    --shell-accent: #479ef5;
+    --shell-top: #0a3a63;
+  }
+}
+html, body, #app { height: 100%; margin: 0; }
+body { background: var(--shell-bg); color: var(--shell-text); font-family: 'Segoe UI', system-ui, sans-serif; }
+textarea, input, select { font: inherit; padding: 6px 8px; border: 1px solid var(--shell-border); background: var(--shell-nav-bg); color: var(--shell-text); border-radius: 4px; }
+pre.result { background: var(--shell-nav-bg); border: 1px solid var(--shell-border); padding: 12px; white-space: pre-wrap; min-height: 80px; }
+table.grid { border-collapse: collapse; width: 100%; }
+table.grid th, table.grid td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--shell-border); word-break: break-all; }
+.error { color: #c50f1f; }

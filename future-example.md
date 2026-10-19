@@ -152,25 +152,25 @@ Checklist (tick as work lands):
   - [ ] Confirm stack (Vue 3 + Fluent UI web components) and location
   - [ ] Confirm the section 6 questions
 - [ ] **Phase 1: shell**
-  - [ ] Create `OoBDev.Example.Web` (Vite, TypeScript, Pinia, Router)
-  - [ ] Portal layout: top bar, left nav, breadcrumb, blade, command bar, toasts
-  - [ ] Light and dark theme tokens
-  - [ ] OIDC sign in with Keycloak, route guards, user menu
+  - [x] Create `OoBDev.Example.Web` (Vite, TypeScript, Pinia, Router)
+  - [x] Portal layout: top bar, left nav, breadcrumb, blade (command bar and toasts still to do)
+  - [x] Light and dark theme tokens
+  - [x] OIDC sign in code and user menu (Keycloak client and route guards still to do)
   - [ ] Generated API client and error handling for RFC 9457 problem details
-  - [ ] Streaming helper for the streamed AI endpoints
-  - [ ] Command base class and view-model conventions documented
-  - [ ] Container image and compose entry
+  - [x] Streaming helper for the streamed AI endpoints
+  - [x] Command base class and view-model conventions documented (README.Example.Web.md)
+  - [x] Container images and compose entry (API image build unverified)
 - [ ] **Phase 2: covered features** (one screen each, specs in [screens.md](docs/design/example-ui/screens.md))
   - [ ] Overview dashboard
-  - [ ] AI chat (completion, streamed, context)
+  - [x] AI chat (completion and streamed; context mode still to do)
   - [ ] Embeddings lab (SBert, AllMiniLM) and RAG
   - [ ] Ollama and Groq consoles
   - [ ] Communications composer
   - [ ] Message queueing sender
   - [ ] Documents workbench (upload, convert, text, HTML, PDF, summary)
   - [ ] Text template runner
-  - [ ] Current user and claims
-  - [ ] Embedded API and event documentation links
+  - [x] Current user and claims
+  - [x] Embedded API and event documentation links
 - [ ] **Phase 3: partly covered**
   - [ ] Restore `SearchController` (list, semantic, lexical, hybrid) and the search screen
   - [ ] Template query and save endpoints and editor
@@ -190,8 +190,8 @@ Checklist (tick as work lands):
   - [ ] Operations (health, configuration)
   - [ ] CLI tool catalog
 - [ ] **Deployment (Docker Compose, from Phase 1 onward)**
-  - [ ] Compose file that runs the SPA, `OoBDev.Example.WebApi` and every backend service the examples need (extend `containers/testing` or add an example profile beside it)
-  - [ ] Dockerfiles for the API and the SPA (static files behind a small web server or the API)
+  - [x] Compose file that runs the SPA, `OoBDev.Example.WebApi` and every backend service the examples need (extend `containers/testing` or add an example profile beside it)
+  - [x] Dockerfiles for the API and the SPA (nginx)
   - [ ] Keycloak realm and client for the SPA imported at start-up
   - [ ] One command to start, wait for health, and open the app; one to stop and clean
   - [ ] Document the profile and ports (follow `integration-test-maintenance.md`)
@@ -201,7 +201,7 @@ Checklist (tick as work lands):
   - [ ] Publish usage so other applications can run the same tools in their pipelines
   - [ ] Identify doc tasks still done by LLM and replace them with scripts or tools where repeatable
 - [ ] **Phase 5: hardening**
-  - [ ] Vitest coverage on view-models and commands
+  - [ ] Vitest coverage on view-models and commands (command base done)
   - [ ] Playwright flows for every screen against the integration stack
   - [ ] Accessibility pass (keyboard, contrast, screen reader labels)
   - [ ] Docs validation (`python scripts/docs/validate-docs.py docs`) and README for the new project
