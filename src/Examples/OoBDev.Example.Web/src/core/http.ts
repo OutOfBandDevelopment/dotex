@@ -38,6 +38,21 @@ export const http = {
     const text = await r.text();
     try { return JSON.parse(text) as T; } catch { return text as unknown as T; }
   },
+  async getText(path: string): Promise<string> {
+    return (await send(path)).text();
+  },
+  async postForm(path: string, form: FormData): Promise<{ text: string; contentType: string }> {
+    const r = await send(path, { method: 'POST', body: form });
+    return { text: await r.text(), contentType: r.headers.get('Content-Type') ?? '' };
+  },
+  async postText(path: string, body: unknown): Promise<string> {
+    const r = await send(path, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    return r.text();
+  },
   /** Reads a streamed response (the streamed AI endpoints) chunk by chunk. */
   async postStream(path: string, body: unknown, onChunk: (text: string) => void, signal?: AbortSignal): Promise<void> {
     const r = await send(path, {

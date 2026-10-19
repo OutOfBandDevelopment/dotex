@@ -163,12 +163,12 @@ Checklist (tick as work lands):
 - [ ] **Phase 2: covered features** (one screen each, specs in [screens.md](docs/design/example-ui/screens.md))
   - [ ] Overview dashboard
   - [x] AI chat (completion and streamed; context mode still to do)
-  - [ ] Embeddings lab (SBert, AllMiniLM) and RAG
+  - [x] Embeddings lab (SBert, AllMiniLM); RAG still to do
   - [ ] Ollama and Groq consoles
-  - [ ] Communications composer
-  - [ ] Message queueing sender
-  - [ ] Documents workbench (upload, convert, text, HTML, PDF, summary)
-  - [ ] Text template runner
+  - [x] Communications composer
+  - [x] Message queueing sender
+  - [x] Documents workbench (convert, upload, text, download, PDF; HTML and summary views still to do)
+  - [x] Text template runner
   - [x] Current user and claims
   - [x] Embedded API and event documentation links
 - [ ] **Phase 3: partly covered**
