@@ -9,7 +9,7 @@
     "preview": "vite preview",
     "test": "vitest run",
     "e2e": "playwright test",
-    "api:generate": "openapi-typescript http://localhost:5000/openapi/all.json -o src/core/api-schema.d.ts"
+    "api:generate": "openapi-typescript http://localhost:8088/openapi/all.json -o src/core/api-schema.d.ts"
   },
   "dependencies": {
     "@fluentui/tokens": "1.0.0-alpha.24",

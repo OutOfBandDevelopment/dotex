@@ -1,13 +1,13 @@
 import { ref, type Ref } from 'vue';
 import { Command } from '../core/command';
-import { http } from '../core/http';
+import { api } from '../core/api';
 
 export interface Claim { type: string; value: string; issuer: string; }
 
 export class RefreshClaimsCommand extends Command {
   constructor(private readonly target: Ref<Claim[]>) { super(); }
   protected async run(): Promise<void> {
-    this.target.value = await http.getJson<Claim[]>('/api/User/claims');
+    this.target.value = (await api.get('/api/User/claims')) as unknown as Claim[];
   }
 }
 

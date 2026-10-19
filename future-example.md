@@ -156,7 +156,7 @@ Checklist (tick as work lands):
   - [x] Portal layout: top bar, left nav, breadcrumb, blade (command bar and toasts still to do)
   - [x] Light and dark theme tokens
   - [x] OIDC sign in code, user menu, route guard and runtime `config.json` (Keycloak client `oobdev-example-web`, deterministic dev users in `containers/example/keycloak/dev-users.md`)
-  - [ ] Generated API client and error handling for RFC 9457 problem details
+  - [x] Generated API client and error handling for RFC 9457 problem details
   - [x] Streaming helper for the streamed AI endpoints
   - [x] Command base class and view-model conventions documented (README.Example.Web.md)
   - [x] Container images and compose entry (API and SPA images build; verified 2026-10-19 through the SPA proxy: openapi, templates, embeddings answer 200, `api/User/claims` 401 without a token)
