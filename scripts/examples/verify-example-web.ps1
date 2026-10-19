@@ -4,8 +4,8 @@
 
 .DESCRIPTION
   Runs `npm ci` (skip with -SkipInstall), Vitest, the production build, and the Playwright journeys, which
-  rewrite docs/example (user guides, specs, screenshots). Then fails if the regenerated docs differ from what
-  is committed, so a UI change cannot be committed without its guide being refreshed.
+  rewrite docs/example (user guides, specs, screenshots). Then fails if the regenerated guides and specs (markdown) differ from what
+  is committed (screenshots are rewritten but not compared: they vary by sub-pixel rendering), so a UI change cannot be committed without its guide being refreshed.
   Use -Accept to keep the regenerated docs and not fail on a difference.
   Set E2E_BASE_URL first to run the journeys against the compose stack instead of the mocked API.
 #>
@@ -40,10 +40,9 @@ finally {
 
 Push-Location $repo
 try {
-    git add -N docs/example | Out-Null
-    $drift = git status --porcelain -- docs/example
+    $drift = git status --porcelain -- 'docs/example/*.md'
     if ($drift -and -not $Accept) {
-        Write-Host "Generated docs differ from the committed ones:" -ForegroundColor Yellow
+        Write-Host "Generated guides or specs differ from the committed ones:" -ForegroundColor Yellow
         $drift | ForEach-Object { Write-Host "  $_" }
         throw 'Review docs/example, commit it, or rerun with -Accept.'
     }
