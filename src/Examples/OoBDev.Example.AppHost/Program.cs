@@ -40,7 +40,10 @@ var ollama = builder.AddDockerfile("ollama", Path.Combine(testing, "ollama"))
     .WithEnvironment("OLLAMA_HOST", "0.0.0.0")
     .WithVolume("oobd-aspire-ollama", "/root/.ollama");
 
-var api = builder.AddProject<OoBDev_Example_WebApi>("example-api")
+var api = builder.AddProject<OoBDev_Example_WebApi>("example-api", options => options.ExcludeLaunchProfile = true)
+    // The API's launch profile names an https port, which turns on its https redirect; the host proxies plain http.
+    .WithHttpEndpoint(env: "ASPNETCORE_HTTP_PORTS")
+    .WithEnvironment("ASPNETCORE_ENVIRONMENT", "Development")
     .WithEnvironment("IDENTITY_PROVIDER", "None")
     .WithEnvironment("OllamaApiClientOptions__Url", ollama.GetEndpoint("http"))
     .WithEnvironment("OllamaApiClientOptions__DefaultModel", "phi3")
