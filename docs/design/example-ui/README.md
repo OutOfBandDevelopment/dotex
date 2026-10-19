@@ -60,7 +60,7 @@ The shell follows the Azure portal: a fixed top bar, a collapsible left navigati
 | Messaging | Communications, Queues, Queue adapters, Blob storage |
 | Data | Search, Vector stores, Vectors and matrices, Data access, Cache |
 | Identity and security | Current user, Identity management, Security helpers |
-| Compute and formats | Expression calculator, Pipelines, Archives and formats, Devices |
+| Compute and formats | Expression calculator, Pipelines, Archives and formats |
 | Developer | API reference, Event reference, Telemetry, CLI tools |
 
 ## Blade pattern

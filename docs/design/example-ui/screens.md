@@ -244,7 +244,7 @@ These follow the same blade pattern; each gets its own four design documents (re
 | Data access | query runner, DacPac build | Read-only by default |
 | Semantic Kernel | plug-in list, invoke | |
 | Text tools | Markdown, HTML, YAML converters | |
-| Formats and devices | file inspector, simulated serial and HID | Hardware simulated only |
+| Formats | file inspector | Device and hardware screens are deferred until the hardware projects are merged |
 | Operations | health, configuration | Secrets masked |
 | Developer | links to Scalar, AsyncAPI, Grafana, CLI catalog | |
 

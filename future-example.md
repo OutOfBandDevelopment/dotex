@@ -92,7 +92,7 @@ The example API exposes 11 controllers plus the shared pipeline (`TryAllCommonEx
 | Text tools | Text.Markdown, Html, Yaml, Xml/Xsl, HtmlToOpenXml, Markdig | yes: converter workbench |
 | Security helpers | Cryptography, OneTimeCode, HMAC | yes: hash, HMAC, TOTP tool |
 | Archives and formats | Tar, Retro Apple2, BCD, bit tools | yes: inspector |
-| Device IO | IO.Ports, IO.UsbHids | optional: needs hardware, simulated device only |
+| Device IO | IO.Ports, IO.UsbHids | deferred: owner is merging more hardware projects in later, so no UI now |
 | Operations | Health, configuration, integration stack | yes: status page |
 | CLI tools | DacPacCompiler, DocumentConverter, FileRagEngine, FixSourceLinks, LlmCodeGen, MigrationHelper, TemplateEngine | catalog page with run instructions, no execution from the browser |
 
@@ -146,6 +146,7 @@ Decisions proposed (all open to change):
 
 Checklist (tick as work lands):
 
+- [ ] **Deferred (not in this plan):** hardware and device IO UI, revisit after the hardware projects are merged
 - [ ] **Phase 0**
   - [ ] Confirm stack (Vue 3 + Fluent UI web components) and location
   - [ ] Confirm the section 6 questions
@@ -184,8 +185,7 @@ Checklist (tick as work lands):
   - [ ] Data access and DacPac builder
   - [ ] Queue adapters monitor and blob browser
   - [ ] Semantic Kernel plug-in tester
-  - [ ] Expression calculator, pipelines, text tools, security helpers, format inspectors
-  - [ ] Simulated device IO page
+  - [ ] Expression calculator, pipelines, text tools, security helpers, format inspectors (no device IO)
   - [ ] Operations (health, configuration)
   - [ ] CLI tool catalog
 - [ ] **Phase 5: hardening**
@@ -199,7 +199,7 @@ Checklist (tick as work lands):
 
 1. Fluent UI web components, or a different component library?
 2. Should the SPA live in the API project's static files or run as its own container?
-3. Hardware pages (serial, USB HID): simulated only, or support real devices through a local agent?
+3. ~~Hardware pages~~ Decided 2026-10-19: deferred. The owner will merge more hardware projects later and design the device UI then.
 4. Mail receive is disabled in the example today; build it now or leave it out?
 5. Which new endpoints may be added to `OoBDev.Example.WebApi` for Phase 4, or should each feature get its own small example host?
 6. Should the CLI tool catalog only document the tools, or also run them server side?
