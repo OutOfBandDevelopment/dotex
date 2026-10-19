@@ -168,7 +168,7 @@ Checklist (tick as work lands):
   - [x] Ollama and Groq consoles
   - [x] Communications composer
   - [x] Message queueing sender
-  - [x] Documents workbench (convert, upload, text, download, PDF; HTML and summary views still to do)
+  - [x] Documents workbench (convert, upload, text, HTML, summary, download, PDF)
   - [x] Text template runner
   - [x] Current user and claims
   - [x] Embedded API and event documentation links
