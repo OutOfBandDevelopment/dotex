@@ -1,3 +1,4 @@
+import { toasts } from './toast';
 import { computed, ref, type ComputedRef, type Ref } from 'vue';
 
 /** A user action: real, retestable class with injected dependencies (not an inline lambda). */
@@ -22,6 +23,7 @@ export abstract class Command<TArg = void> {
       await this.run(arg);
     } catch (e) {
       this.error.value = e instanceof Error ? e.message : String(e);
+      toasts.show(this.error.value, 'error');
     } finally {
       this.running.value = false;
     }

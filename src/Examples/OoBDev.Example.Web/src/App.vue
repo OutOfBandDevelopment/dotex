@@ -3,6 +3,7 @@ import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { navGroups } from './layout/nav';
 import { auth, authEnabled } from './core/auth';
+import { toasts } from './core/toast';
 
 const route = useRoute();
 const crumbs = computed(() => ['Home', ...((route.meta.crumbs as string[] | undefined) ?? [])]);
@@ -30,6 +31,9 @@ const crumbs = computed(() => ['Home', ...((route.meta.crumbs as string[] | unde
       <div class="crumbs">{{ crumbs.join(' > ') }}</div>
       <RouterView />
     </main>
+    <div class="toasts" aria-live="polite">
+      <div v-for="t in toasts.items" :key="t.id" class="toast" :class="t.kind" @click="toasts.dismiss(t.id)">{{ t.text }}</div>
+    </div>
   </div>
 </template>
 
@@ -42,6 +46,9 @@ const crumbs = computed(() => ['Home', ...((route.meta.crumbs as string[] | unde
 .item { display: block; padding: 6px 16px; color: var(--shell-text); text-decoration: none; }
 .item.router-link-active { border-left: 3px solid var(--shell-accent); padding-left: 13px; background: var(--shell-bg); }
 .blade { padding: 16px 24px; overflow: auto; }
+.toasts { position: fixed; right: 16px; bottom: 16px; display: grid; gap: 8px; max-width: 420px; }
+.toast { padding: 10px 14px; background: var(--shell-top); color: #fff; border-radius: 4px; cursor: pointer; }
+.toast.error { background: #a4262c; }
 .crumbs { color: var(--shell-muted); font-size: 12px; margin-bottom: 8px; }
 @media (max-width: 700px) { .shell { grid-template-columns: 1fr; } .left { display: none; } }
 </style>

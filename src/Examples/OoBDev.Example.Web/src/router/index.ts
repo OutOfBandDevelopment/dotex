@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import { auth } from '../core/auth';
+import { auth, authEnabled } from '../core/auth';
 
 export const router = createRouter({
   history: createWebHistory(),
@@ -14,13 +14,23 @@ export const router = createRouter({
       },
     },
     { path: '/ai/chat', component: () => import('../pages/ChatPage.vue'), meta: { crumbs: ['AI', 'Chat'] } },
+    { path: '/ai/ollama', component: () => import('../pages/OllamaPage.vue'), meta: { crumbs: ['AI', 'Ollama'] } },
+    { path: '/ai/groq', component: () => import('../pages/GroqPage.vue'), meta: { crumbs: ['AI', 'Groq cloud'] } },
     { path: '/ai/embeddings', component: () => import('../pages/EmbeddingsPage.vue'), meta: { crumbs: ['AI', 'Embeddings'] } },
     { path: '/content/documents', component: () => import('../pages/DocumentsPage.vue'), meta: { crumbs: ['Content', 'Documents'] } },
     { path: '/content/templates', component: () => import('../pages/TemplatesPage.vue'), meta: { crumbs: ['Content', 'Templates'] } },
     { path: '/messaging/communications', component: () => import('../pages/CommunicationsPage.vue'), meta: { crumbs: ['Messaging', 'Communications'] } },
     { path: '/messaging/queues', component: () => import('../pages/QueuesPage.vue'), meta: { crumbs: ['Messaging', 'Queues'] } },
-    { path: '/identity/me', component: () => import('../pages/CurrentUserPage.vue'), meta: { crumbs: ['Identity and security', 'Current user'] } },
+    { path: '/identity/me', component: () => import('../pages/CurrentUserPage.vue'), meta: { crumbs: ['Identity and security', 'Current user'], requiresAuth: true } },
     { path: '/developer/api', component: () => import('../pages/ExternalLinkPage.vue'), props: { title: 'API reference', href: '/scalar' }, meta: { crumbs: ['Developer', 'API reference'] } },
     { path: '/developer/events', component: () => import('../pages/ExternalLinkPage.vue'), props: { title: 'Event reference', href: '/asyncapi/all' }, meta: { crumbs: ['Developer', 'Event reference'] } },
   ],
+});
+
+/** Screens that need a token send the visitor to sign in first (only when OIDC is configured). */
+router.beforeEach(async to => {
+  if (to.meta.requiresAuth && authEnabled && !auth.accessToken) {
+    await auth.signIn();
+    return false;
+  }
 });
