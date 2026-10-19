@@ -1,0 +1,42 @@
+import type { Page, Route } from '@playwright/test';
+
+const json = (route: Route, body: unknown, status = 200) =>
+  route.fulfill({ status, contentType: 'application/json', body: JSON.stringify(body) });
+
+const text = (route: Route, body: string) => route.fulfill({ status: 200, contentType: 'text/plain', body });
+
+const vector = (seed: number) => Array.from({ length: 384 }, (_, i) => Math.sin(seed + i * 0.37) / 4);
+
+/**
+ * Stand-in for OoBDev.Example.WebApi so journeys are repeatable and the screenshots in the guide do not change
+ * between runs. Real behaviour is covered by running the journeys against the compose stack (E2E_BASE_URL).
+ */
+export async function mockApi(page: Page): Promise<void> {
+  let turn = 0;
+  await page.route(/\/(api|Document|openapi|asyncapi)\//, async route => {
+    const url = new URL(route.request().url());
+    const path = url.pathname;
+    const method = route.request().method();
+
+    if (path === '/api/Ollama' && method === 'POST') return text(route, 'An embedding turns text into a list of numbers so similar meanings end up close together.');
+    if (path === '/api/Ollama/Streamed') return json(route, ['An embedding ', 'turns text into ', 'numbers.']);
+    if (path === '/api/Ollama/Completion') {
+      turn++;
+      return json(route, { context: [1, 2, 3, turn], response: turn === 1 ? 'Hello! How can I help you today?' : 'Photosynthesis is how plants turn light into sugar.' });
+    }
+    if (path.startsWith('/api/AllMiniLM') || path.startsWith('/api/SBERT')) {
+      const t = url.searchParams.get('text') ?? '';
+      return json(route, vector(t.length % 2 === 0 ? 1 : 1.2));
+    }
+    if (path === '/api/TextTemplate/SupportedTemplates') return json(route, ['text/html', 'text/plain', 'text/markdown']);
+    if (path.startsWith('/api/TextTemplate/Apply')) return text(route, '<h1>Hello Ada</h1><p>Your order 1042 has shipped.</p>');
+    if (path.startsWith('/api/Communications/')) return text(route, '{"status":"accepted","referenceId":"7f3c1c1e-0b53-4b7c-9d1f-2a9d8e0a1111"}');
+    if (path.startsWith('/api/MessageQueueing/')) return text(route, '{"status":"queued","queue":"public"}');
+    if (path === '/api/User/claims') return json(route, [{ type: 'name', value: 'Ada Lovelace' }, { type: 'role', value: 'Reader' }]);
+    if (path.startsWith('/Document/Convert')) return text(route, 'Quarterly report\n\nRevenue grew 12 percent.');
+    if (path.startsWith('/Document/Upload')) return text(route, 'stored');
+    if (path.startsWith('/Document/Text')) return text(route, 'Quarterly report\n\nRevenue grew 12 percent.');
+    if (path.startsWith('/openapi/') || path.startsWith('/asyncapi/')) return json(route, {});
+    return route.continue();
+  });
+}

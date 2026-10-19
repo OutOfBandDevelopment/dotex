@@ -189,6 +189,14 @@ Checklist (tick as work lands):
   - [ ] Expression calculator, pipelines, text tools, security helpers, format inspectors (no device IO)
   - [ ] Operations (health, configuration)
   - [ ] CLI tool catalog
+- [ ] **Journeys, screenshots and generated user guides (Playwright)**
+  - [x] Journey definitions, runner, mocked API, guide and spec generators (`e2e/`, `npm run e2e`)
+  - [x] 9 journeys covering the screens built so far; guides, specs and screenshots in `docs/example`
+  - [x] Hand-written index and testing notes ([docs/example](docs/example/README.md))
+  - [ ] Add a journey (and refresh the guide) with every new screen
+  - [ ] CI job: run the journeys and fail on `git diff docs/example`
+  - [ ] Live run against the compose stack as a nightly check
+  - [ ] Sign-in journey once the Keycloak client exists
 - [ ] **Deployment (Docker Compose, from Phase 1 onward)**
   - [x] Compose file that runs the SPA, `OoBDev.Example.WebApi` and every backend service the examples need (extend `containers/testing` or add an example profile beside it)
   - [x] Dockerfiles for the API and the SPA (nginx)
