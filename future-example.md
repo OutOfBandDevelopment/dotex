@@ -1,0 +1,205 @@
+# Future Example Application: Plan and Checklist
+
+**Status:** planning (nothing built yet) · **Created:** 2026-10-19 · **Branch:** `dev/analyzer-burn-down`
+
+Goal: an example front end (Vue, Azure-portal style left navigation) that exercises every framework feature that can sensibly have a UI, backed by the existing `OoBDev.Example.WebApi`.
+
+Related documents:
+
+- [Design specs](docs/design/example-ui/README.md): shell, navigation, conventions
+- [Screen designs](docs/design/example-ui/screens.md): per-feature Salt mockups and API bindings
+
+## Table of Contents
+
+- [1. Review scope](#1-review-scope)
+- [2. What the example application covers today](#2-what-the-example-application-covers-today)
+- [3. What it does not cover](#3-what-it-does-not-cover)
+- [4. Front end approach](#4-front-end-approach)
+- [5. Work plan and checklist](#5-work-plan-and-checklist)
+- [6. Open questions](#6-open-questions)
+
+## List of Figures
+
+- [Figure 1: Example solution context](#4-front-end-approach)
+
+## List of Tables
+
+- Table 1: Covered features (section 2)
+- Table 2: Partly covered features (section 2)
+- Table 3: Features with no example (section 3)
+- Table 4: Phases (section 5)
+
+## 1. Review scope
+
+The request said "full remove of this project"; I read that as a **full review** and changed nothing. Nothing is deleted by this plan.
+
+Repository state when the review was done:
+
+- Working tree clean; all 7 local branches are level with `origin` (`G:/oobdev/dotex.git`), and all 33 tags are on `origin`.
+- Not on `origin`: the local-only stash `stash@{0}` ("discarded stale working tree 2026-10-09"). It was deliberately set aside earlier and is not source history.
+
+The review covered 4 layers: 6 Common, about 32 Framework, 7 Extensions and about 35 ExternalServices projects, plus 8 CLI tools, compared with the controllers in `src/Examples/OoBDev.Example.WebApi`.
+
+## 2. What the example application covers today
+
+The example API exposes 11 controllers plus the shared pipeline (`TryAllCommonExtensions`, OpenAPI with Scalar, AsyncAPI viewer, JWT bearer with Keycloak, OpenTelemetry).
+
+**Table 1 — Covered features**
+
+| Feature | Example endpoints | Framework area |
+|---|---|---|
+| Generative AI chat | `POST api/AI`, `api/AI/Streamed`, `api/AI/Context` | AI.Abstractions, Ollama, GroqCloud |
+| Embeddings | `POST api/AI/Embeddings`, `GET api/AllMiniLM`, `GET api/SBERT`, `GET api/SBERTDefault` | SBert, AllMiniLmL6V2 |
+| RAG | `POST api/AI/RaggedAnne` | AI, Search |
+| Ollama direct | `POST api/Ollama`, `api/Ollama/Streamed`, `api/Ollama/Completion`, `GET api/Ollama` | Ollama |
+| Groq direct | `POST api/GroqCloud/Completion` | GroqCloud |
+| Communications | `POST api/Communications/public`, `queued`, `private` | Communications, MailKit |
+| Message queueing | `POST api/MessageQueueing/public`, `private` | MessageQueueing and queue adapters |
+| Documents | `Document/Download`, `Text`, `Html`, `Pdf`, `Summary`, `Upload`, `Convert` | Documents, Tika, MysticMind, WkHtmlToPdf |
+| Text templates | `POST api/TextTemplate/SupportedTemplates`, `Apply` | Handlebars and template engines |
+| Current user | `GET api/User/claims` | Identity, Keycloak, JwtAuthentication |
+| API documentation | Scalar reference, `/openapi/{name}.json` | AspNetCore.Mvc |
+| Event documentation | `/asyncapi/{name}.json` and viewer | AsyncApi |
+
+**Table 2 — Partly covered features**
+
+| Feature | What exists | What is missing |
+|---|---|---|
+| Search | `SearchController` is fully commented out | list, semantic, lexical and hybrid search endpoints |
+| Text template management | `Query` and `Save` are commented out | template list, edit and save |
+| Caching | wired by the common builder, no endpoint | visible hit and miss, flush |
+| Telemetry | exported by OpenTelemetry | no in-app trace or log view |
+| Vector stores | Qdrant and OpenSearch adapters are wired for RAG only | collection browsing, upsert, query |
+| Mail receive | hosting is disabled (`DisableMailKit = true`) | inbox view |
+
+## 3. What it does not cover
+
+**Table 3 — Features with no example**
+
+| Area | Projects | UI worth building |
+|---|---|---|
+| Image embeddings and vision | Onnx.ImageEmbeddings (+Skia), Vision.ClipVitB32, Dinov2Small, VitBasePatch16 | yes: upload image, vector, similarity, zero-shot labels |
+| Sentence embeddings (ONNX) | Onnx.SentenceEmbeddings, SBert.AllMpnetBaseV2, NomicEmbedTextV1_5 | yes: model picker, compare vectors |
+| Vectors in SQL | Data.Vectors, Vectors.DB, Vectors.Hosting | yes: vector and matrix calculator |
+| Identity management | Identity, Keycloak user manager | yes: user lookup, rights, sessions |
+| Data access | Data.Common, MongoDB, SqlServer.Server, DacFx, DacPack builder | yes: query runner, dacpac build |
+| Queue adapters | Amazon.Sqs, Azure.ServiceBus, Azure.StorageAccount, RabbitMQ | yes: provider status, send and receive monitor |
+| Blob storage | Azure.StorageAccount, Documents containers | yes: container browser |
+| Redis and cache providers | Redis.Caching, Microsoft.Caching | yes: cache explorer |
+| Semantic Kernel | SemanticKernel, plug-ins | yes: plug-in tester |
+| Expression calculator | System.ExpressionCalculator | yes: evaluate and optimize |
+| Pipelines | System.IO.Pipelines | yes: pipeline builder view |
+| Text tools | Text.Markdown, Html, Yaml, Xml/Xsl, HtmlToOpenXml, Markdig | yes: converter workbench |
+| Security helpers | Cryptography, OneTimeCode, HMAC | yes: hash, HMAC, TOTP tool |
+| Archives and formats | Tar, Retro Apple2, BCD, bit tools | yes: inspector |
+| Device IO | IO.Ports, IO.UsbHids | optional: needs hardware, simulated device only |
+| Operations | Health, configuration, integration stack | yes: status page |
+| CLI tools | DacPacCompiler, DocumentConverter, FileRagEngine, FixSourceLinks, LlmCodeGen, MigrationHelper, TemplateEngine | catalog page with run instructions, no execution from the browser |
+
+No UI is planned for Abstractions projects, `OoBDev.Analyzers`, `OoBDev.TestUtilities` and the Common aggregators: they hold no runtime behavior to show.
+
+## 4. Front end approach
+
+```plantuml
+@startuml
+skinparam rectangle {
+  BackgroundColor<<new>> #E8F4FF
+}
+rectangle "Browser" {
+  rectangle "Vue SPA\n(OoBDev.Example.Web)" <<new>> as spa
+}
+rectangle "Keycloak\n(OIDC, PKCE)" as kc
+rectangle "OoBDev.Example.WebApi\n(REST, OpenAPI, SSE)" as api
+rectangle "Framework + adapters" as fw
+rectangle "Docker integration stack\n(Ollama, Qdrant, Redis, ...)" as stack
+spa --> kc : sign in
+spa --> api : JWT bearer
+api --> fw
+fw --> stack
+@enduml
+```
+
+*Figure 1 — Example solution context*
+
+Decisions proposed (all open to change):
+
+- **Stack:** Vue 3, TypeScript, Vite, Pinia, Vue Router, Fluent UI web components for the Azure-portal look. A small custom shell provides the portal chrome.
+- **Location:** `src/Examples/OoBDev.Example.Web`, served by Vite in development and static files behind the API in the container stack.
+- **API client:** generated from `/openapi/all.json` with `openapi-typescript`, so the UI follows the contract.
+- **Auth:** `oidc-client-ts` authorization code with PKCE against Keycloak; the SPA only holds tokens in memory.
+- **MVVM:** each screen has a view-model composable plus real command classes (for example `SendEmailCommand`) with injected services, not inline lambdas. Vue is not true MVVM, so the divergence is that the template binds through `ref`/`computed` rather than a binding engine.
+- **Tests:** Vitest for view-models and commands, Playwright for flows against the Docker stack.
+- **Shell:** left navigation of collapsible service groups, breadcrumb, top bar with global search, resource-blade pattern with a blade header, command bar and tabs (see the [shell design](docs/design/example-ui/README.md)).
+
+## 5. Work plan and checklist
+
+**Table 4 — Phases**
+
+| Phase | Outcome |
+|---|---|
+| 0 Decisions | answers to section 6 |
+| 1 Shell | portal layout, navigation, auth, API client, theming |
+| 2 Covered features | UI for everything in Table 1 |
+| 3 Partly covered | finish API gaps from Table 2, then UI |
+| 4 New features | new endpoints and UI for Table 3 |
+| 5 Hardening | tests, accessibility, container image, docs |
+
+Checklist (tick as work lands):
+
+- [ ] **Phase 0**
+  - [ ] Confirm stack (Vue 3 + Fluent UI web components) and location
+  - [ ] Confirm the section 6 questions
+- [ ] **Phase 1: shell**
+  - [ ] Create `OoBDev.Example.Web` (Vite, TypeScript, Pinia, Router)
+  - [ ] Portal layout: top bar, left nav, breadcrumb, blade, command bar, toasts
+  - [ ] Light and dark theme tokens
+  - [ ] OIDC sign in with Keycloak, route guards, user menu
+  - [ ] Generated API client and error handling for RFC 9457 problem details
+  - [ ] Streaming helper for the streamed AI endpoints
+  - [ ] Command base class and view-model conventions documented
+  - [ ] Container image and compose entry
+- [ ] **Phase 2: covered features** (one screen each, specs in [screens.md](docs/design/example-ui/screens.md))
+  - [ ] Overview dashboard
+  - [ ] AI chat (completion, streamed, context)
+  - [ ] Embeddings lab (SBert, AllMiniLM) and RAG
+  - [ ] Ollama and Groq consoles
+  - [ ] Communications composer
+  - [ ] Message queueing sender
+  - [ ] Documents workbench (upload, convert, text, HTML, PDF, summary)
+  - [ ] Text template runner
+  - [ ] Current user and claims
+  - [ ] Embedded API and event documentation links
+- [ ] **Phase 3: partly covered**
+  - [ ] Restore `SearchController` (list, semantic, lexical, hybrid) and the search screen
+  - [ ] Template query and save endpoints and editor
+  - [ ] Cache explorer endpoint and screen
+  - [ ] Telemetry view (link to Grafana plus recent trace ids)
+  - [ ] Vector store browser
+  - [ ] Decide on mail receive (see section 6)
+- [ ] **Phase 4: new features**
+  - [ ] Image embeddings and zero-shot labels
+  - [ ] ONNX sentence embeddings and model compare
+  - [ ] Vectors and matrix calculator
+  - [ ] Identity management
+  - [ ] Data access and DacPac builder
+  - [ ] Queue adapters monitor and blob browser
+  - [ ] Semantic Kernel plug-in tester
+  - [ ] Expression calculator, pipelines, text tools, security helpers, format inspectors
+  - [ ] Simulated device IO page
+  - [ ] Operations (health, configuration)
+  - [ ] CLI tool catalog
+- [ ] **Phase 5: hardening**
+  - [ ] Vitest coverage on view-models and commands
+  - [ ] Playwright flows for every screen against the integration stack
+  - [ ] Accessibility pass (keyboard, contrast, screen reader labels)
+  - [ ] Docs validation (`python scripts/docs/validate-docs.py docs`) and README for the new project
+  - [ ] Update `TODO.md` and `CLAUDE.md`
+
+## 6. Open questions
+
+1. Fluent UI web components, or a different component library?
+2. Should the SPA live in the API project's static files or run as its own container?
+3. Hardware pages (serial, USB HID): simulated only, or support real devices through a local agent?
+4. Mail receive is disabled in the example today; build it now or leave it out?
+5. Which new endpoints may be added to `OoBDev.Example.WebApi` for Phase 4, or should each feature get its own small example host?
+6. Should the CLI tool catalog only document the tools, or also run them server side?
