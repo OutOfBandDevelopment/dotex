@@ -143,6 +143,7 @@ Decisions proposed (all open to change):
 | 3 Partly covered | finish API gaps from Table 2, then UI |
 | 4 New features | new endpoints and UI for Table 3 |
 | 5 Hardening | tests, accessibility, container image, docs |
+| 6 Mail receive | finish the incomplete mail receive feature, then add its inbox screen (lowest priority) |
 
 Checklist (tick as work lands):
 
@@ -188,18 +189,34 @@ Checklist (tick as work lands):
   - [ ] Expression calculator, pipelines, text tools, security helpers, format inspectors (no device IO)
   - [ ] Operations (health, configuration)
   - [ ] CLI tool catalog
+- [ ] **Deployment (Docker Compose, from Phase 1 onward)**
+  - [ ] Compose file that runs the SPA, `OoBDev.Example.WebApi` and every backend service the examples need (extend `containers/testing` or add an example profile beside it)
+  - [ ] Dockerfiles for the API and the SPA (static files behind a small web server or the API)
+  - [ ] Keycloak realm and client for the SPA imported at start-up
+  - [ ] One command to start, wait for health, and open the app; one to stop and clean
+  - [ ] Document the profile and ports (follow `integration-test-maintenance.md`)
+- [ ] **CI/CD documentation tooling** (deterministic, no LLM)
+  - [ ] Catalog page lists each CLI tool: purpose, inputs, outputs, exit codes
+  - [ ] Add a workflow step that rebuilds generated docs with the tools and fails on drift
+  - [ ] Publish usage so other applications can run the same tools in their pipelines
+  - [ ] Identify doc tasks still done by LLM and replace them with scripts or tools where repeatable
 - [ ] **Phase 5: hardening**
   - [ ] Vitest coverage on view-models and commands
   - [ ] Playwright flows for every screen against the integration stack
   - [ ] Accessibility pass (keyboard, contrast, screen reader labels)
   - [ ] Docs validation (`python scripts/docs/validate-docs.py docs`) and README for the new project
   - [ ] Update `TODO.md` and `CLAUDE.md`
+- [ ] **Phase 6: mail receive (lowest priority)**
+  - [ ] Review what exists in MailKit hosting and why `DisableMailKit = true`
+  - [ ] Design the four documents (requirements, architecture, API design, testing) for receive
+  - [ ] Complete the framework feature with tests, using the SMTP4Dev container
+  - [ ] Enable it in the example and add the inbox screen
 
 ## 6. Open questions
 
-1. Fluent UI web components, or a different component library?
-2. Should the SPA live in the API project's static files or run as its own container?
+1. ~~Component library~~ Decided 2026-10-19: Fluent UI web components (owner is not concerned about the choice; examples: https://learn.microsoft.com/en-us/fluent-ui/web-components/ and https://storybooks.fluentui.dev/ ). Swappable later because screens only use the shell's own wrapper components.
+2. ~~SPA hosting~~ Decided 2026-10-19: the SPA and the API are both deployed with Docker Compose, together with the backend services (see the deployment checklist). "Frame service" in the request is read as the framework's compose stack; correct me if it meant something else.
 3. ~~Hardware pages~~ Decided 2026-10-19: deferred. The owner will merge more hardware projects later and design the device UI then.
-4. Mail receive is disabled in the example today; build it now or leave it out?
-5. Which new endpoints may be added to `OoBDev.Example.WebApi` for Phase 4, or should each feature get its own small example host?
-6. Should the CLI tool catalog only document the tools, or also run them server side?
+4. ~~Mail receive~~ Decided 2026-10-19: finish the feature (the framework side was never completed), but at the lowest priority: Phase 6, after everything else.
+5. ~~New endpoints~~ Decided 2026-10-19: `OoBDev.Example.WebApi` is the place to show how components are used, so it may be extended as needed as long as it follows the existing patterns and practices (builders, `TryAdd*`, providers, options, `[LoggerMessage]`, rights, OpenAPI).
+6. ~~CLI tools~~ Decided 2026-10-19: the tools are deterministic documentation builders meant to run in CI/CD (here and in other applications) so docs rebuild without LLM tokens. The catalog page documents them; it does not run them. See the CI checklist.
