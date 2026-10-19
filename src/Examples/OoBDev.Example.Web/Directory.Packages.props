@@ -1,0 +1,3 @@
+<Project>
+  <!-- The SPA is a JavaScript project: keep the .NET build settings of the parent folders out of it. -->
+</Project>

@@ -329,6 +329,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OoBDev.LlmCodeGen.Cli", "To
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OoBDev.LlmCodeGen.Cli.Tests", "Tools\OoBDev.LlmCodeGen.Cli.Tests\OoBDev.LlmCodeGen.Cli.Tests.csproj", "{A2A0BC42-255B-4819-A03D-0D52CC6551F5}"
 EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "OoBDev.Example.Web", "Examples\OoBDev.Example.Web\OoBDev.Example.Web.esproj", "{52F73CC7-2FDB-4B32-8941-C6AFF58F661C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -1947,6 +1949,12 @@ Global
 		{A2A0BC42-255B-4819-A03D-0D52CC6551F5}.Release|x64.Build.0 = Release|Any CPU
 		{A2A0BC42-255B-4819-A03D-0D52CC6551F5}.Release|x86.ActiveCfg = Release|Any CPU
 		{A2A0BC42-255B-4819-A03D-0D52CC6551F5}.Release|x86.Build.0 = Release|Any CPU
+		{52F73CC7-2FDB-4B32-8941-C6AFF58F661C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52F73CC7-2FDB-4B32-8941-C6AFF58F661C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{52F73CC7-2FDB-4B32-8941-C6AFF58F661C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{52F73CC7-2FDB-4B32-8941-C6AFF58F661C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52F73CC7-2FDB-4B32-8941-C6AFF58F661C}.Release|x64.ActiveCfg = Release|Any CPU
+		{52F73CC7-2FDB-4B32-8941-C6AFF58F661C}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -2105,6 +2113,7 @@ Global
 		{A1AAEE86-F8EE-416A-B2BC-E9A19E0F7CB3} = {44FA51E2-00C0-4F5A-8F6D-9D0D0F61F1AC}
 		{EA0D3C8E-0137-4DC0-842B-D56D5D3B638F} = {0D029514-4C08-465F-8842-D3E59E9F5099}
 		{A2A0BC42-255B-4819-A03D-0D52CC6551F5} = {0D029514-4C08-465F-8842-D3E59E9F5099}
+		{52F73CC7-2FDB-4B32-8941-C6AFF58F661C} = {B3B21062-BE2B-4DC6-BF6F-D94AF7096A9E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {92959CB8-A44C-4F0D-BBCF-C99B014BEEAD}
