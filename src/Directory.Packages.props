@@ -16,6 +16,7 @@
     <PackageVersion Include="ErikEJ.DacFX.SqlServer.Rules" Version="1.3.0" />
     <PackageVersion Include="ErikEJ.DacFX.TSQLSmellSCA" Version="1.3.0" />
     <PackageVersion Include="GitVersion.MsBuild" Version="6.8.2" />
+    <PackageVersion Include="System.Security.Cryptography.Pkcs" Version="10.0.13" />
     <PackageVersion Include="GroqNet" Version="1.0.1" />
     <PackageVersion Include="Handlebars.Net" Version="2.4.3" />
     <PackageVersion Include="Handlebars.Net.Extension.Json" Version="1.0.0" />
