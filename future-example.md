@@ -159,7 +159,7 @@ Checklist (tick as work lands):
   - [ ] Generated API client and error handling for RFC 9457 problem details
   - [x] Streaming helper for the streamed AI endpoints
   - [x] Command base class and view-model conventions documented (README.Example.Web.md)
-  - [x] Container images and compose entry (API image build unverified)
+  - [x] Container images and compose entry (API and SPA images build; verified 2026-10-19 through the SPA proxy: openapi, templates, embeddings answer 200, `api/User/claims` 401 without a token)
 - [ ] **Phase 2: covered features** (one screen each, specs in [screens.md](docs/design/example-ui/screens.md))
   - [ ] Overview dashboard
   - [x] AI chat (completion and streamed; context mode still to do)
