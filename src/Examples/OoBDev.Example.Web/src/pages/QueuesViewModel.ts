@@ -16,9 +16,10 @@ export class EnqueueCommand extends Command {
     try { JSON.parse(this.vm.data.value || 'null'); return true; } catch { return false; }
   }
   protected async run() {
-    this.vm.result.value = await http.postText(`/api/MessageQueueing/${this.vm.queue.value}`, {
+    const id = await http.postText(`/api/MessageQueueing/${this.vm.queue.value}`, {
       input: this.vm.input.value,
       data: JSON.parse(this.vm.data.value || 'null'),
     });
+    this.vm.result.value = `Queued${id ? ` (message ${id})` : ''}`;
   }
 }

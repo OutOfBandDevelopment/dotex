@@ -13,6 +13,6 @@
 | Step | Action | Expected result |
 | --- | --- | --- |
 | 1 | Choose a channel and write the message | The Public channel is selected by default. |
-| 2 | Send | The result shows status accepted. |
+| 2 | Send | The result says the mail was accepted. |
 
 Source: `e2e/journeys.ts` (journey `send-an-email`). Each expected result is asserted by the step's `run` function.

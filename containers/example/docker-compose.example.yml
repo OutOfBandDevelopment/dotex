@@ -26,6 +26,13 @@ services:
       - Keycloak__JwtBearerOptions__TokenValidationParameters__ValidIssuers__0=http://localhost:${TEST_PORT_KEYCLOAK:-8081}/realms/oobdev-example
       - Keycloak__OAuth2OpenApiOptions__AuthorizationUrl=http://localhost:${TEST_PORT_KEYCLOAK:-8081}/realms/oobdev-example/protocol/openid-connect/auth/
       - Keycloak__OAuth2OpenApiOptions__TokenUrl=http://localhost:${TEST_PORT_KEYCLOAK:-8081}/realms/oobdev-example/protocol/openid-connect/token
+      # Backend services by compose service name (the appsettings defaults point at localhost).
+      - MailKitSmtpClientOptions__Host=smtp4dev
+      - MailKitSmtpClientOptions__Port=25
+      - MailKitImapClientOptions__Host=smtp4dev
+      - MessageQueue__ExampleMessageProvider__Config__HostName=rabbitmq
+      - MessageQueue__EmailMessageModel__Config__HostName=rabbitmq
+      - MessageQueue__ReceivedEmailMessageModel__Config__HostName=rabbitmq
       - OllamaApiClientOptions__Url=http://ollama:11434
       - OllamaApiClientOptions__DefaultModel=phi3
     # Optional secrets and overrides, kept out of git: copy .env.example to .env in this folder.

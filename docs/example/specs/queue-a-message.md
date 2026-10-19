@@ -13,6 +13,6 @@
 | Step | Action | Expected result |
 | --- | --- | --- |
 | 1 | Write the message | The Enqueue button is enabled once input is entered. |
-| 2 | Enqueue | The result shows status queued.<br>The event reference link points to the "all" AsyncAPI document. |
+| 2 | Enqueue | The result says the message was queued.<br>The event reference link points to the "all" AsyncAPI document. |
 
 Source: `e2e/journeys.ts` (journey `queue-a-message`). Each expected result is asserted by the step's `run` function.

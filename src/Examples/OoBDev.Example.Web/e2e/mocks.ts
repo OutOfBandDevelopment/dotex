@@ -28,10 +28,10 @@ export async function mockApi(page: Page): Promise<void> {
       const t = url.searchParams.get('text') ?? '';
       return json(route, vector(t.length % 2 === 0 ? 1 : 1.2));
     }
-    if (path === '/api/TextTemplate/SupportedTemplates') return json(route, ['text/html', 'text/plain', 'text/markdown']);
+    if (path === '/api/TextTemplate/SupportedTemplates') return json(route, [{ extension: '.xslt', contentType: 'application/xslt+xml', isTemplateType: true }, { extension: '.hbs', contentType: 'text/x-handlebars-template', isTemplateType: true }]);
     if (path.startsWith('/api/TextTemplate/Apply')) return text(route, '<h1>Hello Ada</h1><p>Your order 1042 has shipped.</p>');
-    if (path.startsWith('/api/Communications/')) return text(route, '{"status":"accepted","referenceId":"7f3c1c1e-0b53-4b7c-9d1f-2a9d8e0a1111"}');
-    if (path.startsWith('/api/MessageQueueing/')) return text(route, '{"status":"queued","queue":"public"}');
+    if (path.startsWith('/api/Communications/')) return text(route, 'Mail accepted');
+    if (path.startsWith('/api/MessageQueueing/')) return text(route, '7f3c1c1e-0b53-4b7c-9d1f-2a9d8e0a1111');
     if (path === '/api/User/claims') return json(route, [{ type: 'name', value: 'Ada Lovelace' }, { type: 'role', value: 'Reader' }]);
     if (path.startsWith('/Document/Convert')) return text(route, 'Quarterly report\n\nRevenue grew 12 percent.');
     if (path.startsWith('/Document/Upload')) return text(route, 'stored');

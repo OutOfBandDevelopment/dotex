@@ -19,6 +19,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Templates\**" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\Common\OoBDev.Common.Complete\OoBDev.Common.Complete.csproj" />
   </ItemGroup>
 
