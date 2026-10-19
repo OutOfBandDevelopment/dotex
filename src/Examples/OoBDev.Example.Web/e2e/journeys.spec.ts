@@ -17,6 +17,10 @@ for (const journey of journeys) {
       await test.step(step.title, async () => {
         await step.run(page);
         await page.waitForLoadState('networkidle');
+        // Park the pointer and drop focus so hover and focus styling cannot make screenshots differ between runs.
+        await page.mouse.move(0, 0);
+        await page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur());
+        await page.waitForTimeout(300);
         await page.screenshot({ path: resolve(dir, stepImageName(i, step.title)), caret: 'hide', animations: 'disabled' });
       });
     }
