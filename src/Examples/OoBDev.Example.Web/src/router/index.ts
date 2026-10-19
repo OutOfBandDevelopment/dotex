@@ -21,6 +21,6 @@ export const router = createRouter({
     { path: '/messaging/queues', component: () => import('../pages/QueuesPage.vue'), meta: { crumbs: ['Messaging', 'Queues'] } },
     { path: '/identity/me', component: () => import('../pages/CurrentUserPage.vue'), meta: { crumbs: ['Identity and security', 'Current user'] } },
     { path: '/developer/api', component: () => import('../pages/ExternalLinkPage.vue'), props: { title: 'API reference', href: '/scalar' }, meta: { crumbs: ['Developer', 'API reference'] } },
-    { path: '/developer/events', component: () => import('../pages/ExternalLinkPage.vue'), props: { title: 'Event reference', href: '/asyncapi' }, meta: { crumbs: ['Developer', 'Event reference'] } },
+    { path: '/developer/events', component: () => import('../pages/ExternalLinkPage.vue'), props: { title: 'Event reference', href: '/asyncapi/all' }, meta: { crumbs: ['Developer', 'Event reference'] } },
   ],
 });

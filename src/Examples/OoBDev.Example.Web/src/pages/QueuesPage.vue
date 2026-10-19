@@ -15,7 +15,7 @@ const vm = new QueuesViewModel();
   <p><label>Data (JSON)<br /><textarea v-model="vm.data.value" rows="4" cols="60" /></label></p>
   <p>
     <fluent-button appearance="primary" :disabled="!vm.enqueue.canExecute.value" @click="vm.enqueue.execute()">Enqueue</fluent-button>
-    <a href="/asyncapi" target="_blank" rel="noopener">Open event reference</a>
+    <a href="/asyncapi/all" target="_blank" rel="noopener">Open event reference</a>
   </p>
   <p v-if="vm.enqueue.error.value" class="error">{{ vm.enqueue.error.value }}</p>
   <pre class="result">{{ vm.result.value }}</pre>
