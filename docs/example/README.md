@@ -49,4 +49,4 @@ cd src/Examples/OoBDev.Example.Web
 npm run e2e
 ```
 
-Then review the diff in `docs/example`: changed screenshots show UI changes, changed text shows journey changes. See [testing.md](testing.md) for running against the compose stack.
+Run `scripts/examples/verify-example-web.ps1` to do this plus the unit tests and build, and to fail when the docs drift. Then review the diff in `docs/example`: changed screenshots show UI changes, changed text shows journey changes. See [testing.md](testing.md) for running against the compose stack.

@@ -17,7 +17,7 @@ for (const journey of journeys) {
       await test.step(step.title, async () => {
         await step.run(page);
         await page.waitForLoadState('networkidle');
-        await page.screenshot({ path: resolve(dir, stepImageName(i, step.title)) });
+        await page.screenshot({ path: resolve(dir, stepImageName(i, step.title)), caret: 'hide', animations: 'disabled' });
       });
     }
 

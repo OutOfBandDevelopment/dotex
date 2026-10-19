@@ -194,7 +194,7 @@ Checklist (tick as work lands):
   - [x] 9 journeys covering the screens built so far; guides, specs and screenshots in `docs/example`
   - [x] Hand-written index and testing notes ([docs/example](docs/example/README.md))
   - [ ] Add a journey (and refresh the guide) with every new screen
-  - [ ] CI job: run the journeys and fail on `git diff docs/example`
+  - [x] Local check instead of CI: `scripts/examples/verify-example-web.ps1` (tests, build, journeys, fails when `docs/example` drifts from what is committed)
   - [ ] Live run against the compose stack as a nightly check
   - [ ] Sign-in journey once the Keycloak client exists
 - [ ] **Deployment (Docker Compose, from Phase 1 onward)**

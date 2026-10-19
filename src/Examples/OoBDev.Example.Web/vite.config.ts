@@ -12,5 +12,5 @@ export default defineConfig({
       '/openapi': 'http://localhost:5000',
     },
   },
-  test: { environment: 'node' },
+  test: { environment: 'node', include: ['src/**/*.test.ts'] },
 });
