@@ -18,6 +18,13 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - IDENTITY_PROVIDER=None
+      - OllamaApiClientOptions__Url=http://ollama:11434
+      - OllamaApiClientOptions__DefaultModel=phi3
+    # Optional secrets and overrides, kept out of git: copy .env.example to .env in this folder.
+    # Names use the .NET configuration form, e.g. GroqCloudApiClientOptions__ApiKey.
+    env_file:
+      - path: .env
+        required: false
     networks:
       - integration-test-net
     depends_on:

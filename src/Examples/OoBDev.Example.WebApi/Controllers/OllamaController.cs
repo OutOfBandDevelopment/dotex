@@ -18,24 +18,24 @@ namespace OoBDev.WebApi.Controllers;
 [ApiController]
 public class OllamaController : ControllerBase
 {
-    private readonly ILanguageModelProvider _llmProvider;
     private readonly IMessageCompletion _completion;
+    private readonly IStreamedCompletion _streamed;
     private readonly IEmbeddingProvider _embedding;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="AIController"/> class with the specified dependencies.
+    /// Initializes a new instance of the <see cref="OllamaController"/> class with the specified dependencies.
     /// </summary>
-    /// <param name="llmProvider">The language model provider.</param>
     /// <param name="completion">The completion provider.</param>
+    /// <param name="streamed">The streaming completion provider.</param>
     /// <param name="embedding">The embedding provider.</param>
     public OllamaController(
-        [FromKeyedServices(OllamaGlobals.ProviderKey)] ILanguageModelProvider llmProvider,
         [FromKeyedServices(OllamaGlobals.ProviderKey)] IMessageCompletion completion,
+        [FromKeyedServices(OllamaGlobals.ProviderKey)] IStreamedCompletion streamed,
         [FromKeyedServices(OllamaGlobals.ProviderKey)] IEmbeddingProvider embedding
         )
     {
-        _llmProvider = llmProvider;
         _completion = completion;
+        _streamed = streamed;
         _embedding = embedding;
     }
 
@@ -46,21 +46,16 @@ public class OllamaController : ControllerBase
     [HttpPost]
     [AllowAnonymous]
     public async Task<string> GetResponseAsync([FromBody] GenerativeAiRequestModel model) =>
-        await _llmProvider.GetResponseAsync(model.PromptDetails, model.UserInput);
+        (await _completion.GetCompletionAsync(new CompletionRequest { Prompt = model.UserInput, System = model.PromptDetails })).Response;
 
     /// <summary>
-    /// Generate an AbstractAI Streamed Response based on the prompt and user input
+    /// Generate a streamed response based on the prompt and user input
     /// </summary>
-    /// <returns>The streamed string responses from the AbstractAI</returns>
+    /// <returns>The streamed string responses from the model</returns>
     [HttpPost("Streamed")]
     [AllowAnonymous]
-    public async IAsyncEnumerable<string> GetStreamedResponseAsync([FromBody] GenerativeAiRequestModel model)
-    {
-        await foreach (var response in _llmProvider.GetStreamedResponseAsync(model.PromptDetails, model.UserInput))
-        {
-            yield return response;
-        }
-    }
+    public IAsyncEnumerable<string> GetStreamedResponseAsync([FromBody] GenerativeAiRequestModel model) =>
+        _streamed.GetStreamedResponseAsync(model.PromptDetails, model.UserInput, HttpContext.RequestAborted);
 
     /// <summary>
     /// Retrieves the embedding vector for the given text.

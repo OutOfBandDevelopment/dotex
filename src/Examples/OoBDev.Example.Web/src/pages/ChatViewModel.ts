@@ -16,8 +16,19 @@ export class SendPromptCommand extends Command {
   protected isAllowed() { return this.s.userInput.value.trim().length > 0; }
   protected async run() {
     this.s.response.value = '';
-    this.s.response.value = await http.postJson<string>('/api/AI', body(this.s));
+    this.s.response.value = await http.postJson<string>('/api/Ollama', body(this.s));
   }
+}
+
+/** The streamed endpoints return a JSON array of strings that arrives in pieces; join what has arrived so far. */
+export function joinStreamedStrings(buffer: string): string | null {
+  for (const candidate of [buffer, buffer.replace(/,\s*$/, '') + ']', buffer.replace(/,?\s*"[^"]*$/, '') + ']']) {
+    try {
+      const parsed = JSON.parse(candidate);
+      if (Array.isArray(parsed)) return parsed.join('');
+    } catch { /* incomplete, try the next repair */ }
+  }
+  return null;
 }
 
 export class StreamPromptCommand extends Command {
@@ -27,8 +38,12 @@ export class StreamPromptCommand extends Command {
   protected async run() {
     this.s.response.value = '';
     this.abort = new AbortController();
+    let buffer = '';
     try {
-      await http.postStream('/api/AI/Streamed', body(this.s), t => { this.s.response.value += t; }, this.abort.signal);
+      await http.postStream('/api/Ollama/Streamed', body(this.s), t => {
+        buffer += t;
+        this.s.response.value = joinStreamedStrings(buffer) ?? this.s.response.value;
+      }, this.abort.signal);
     } finally {
       this.abort = null;
     }

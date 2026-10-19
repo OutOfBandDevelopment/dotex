@@ -2,7 +2,9 @@
 using OoBDev.AI.Models;
 using OoBDev.Extensions.Linq;
 using OllamaSharp;
+using OllamaSharp.Models;
 using OllamaSharp.Models.Chat;
+using System.Text;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -16,7 +18,7 @@ namespace OoBDev.Ollama;
 /// <summary>
 /// Represents a class responsible for generating message completions using the Ollama API.
 /// </summary>
-public class OllamaMessageCompletion : IMessageCompletion, IEmbeddingProvider
+public class OllamaMessageCompletion : IMessageCompletion, IEmbeddingProvider, IStreamedCompletion
 {
     private readonly IOllamaApiClient _client;
     private readonly IOllamaModelMapper _mapper;
@@ -85,9 +87,22 @@ public class OllamaMessageCompletion : IMessageCompletion, IEmbeddingProvider
     /// </summary>
     /// <param name="model">Completion request model</param>
     /// <returns>Resulting response object</returns>
-    public  Task<CompletionResponse> GetCompletionAsync(CompletionRequest model) =>
-      throw new NotSupportedException(); //TODO: fix this!
-    //_mapper.Map(await _client.GetCompletion(_mapper.Map(model with { Model = model.Model ?? _client.SelectedModel })));
+    public async Task<CompletionResponse> GetCompletionAsync(CompletionRequest model)
+    {
+        var text = new StringBuilder();
+        long[] context = [];
+        await foreach (var part in _client.GenerateAsync(_mapper.Map(model, _client.SelectedModel)).ConfigureAwait(false))
+        {
+            text.Append(part?.Response);
+            if (part is GenerateDoneResponseStream done)
+            {
+#pragma warning disable CS0618 // Ollama deprecates generate context, but it is what carries the CompletionRequest.Context contract
+                context = done.Context ?? [];
+#pragma warning restore CS0618
+            }
+        }
+        return new() { Context = context, Response = text.ToString() };
+    }
 
 
     /// <summary>
@@ -97,39 +112,16 @@ public class OllamaMessageCompletion : IMessageCompletion, IEmbeddingProvider
     /// <param name="userInput">The user input.</param>
     /// <param name="cancellationToken">The Cancellation Token.</param>
     /// <returns>An asynchronous enumerable of strings representing the streamed response.</returns>
-#pragma warning disable CS8424 // The EnumeratorCancellationAttribute will have no effect. The attribute is only effective on a parameter of type CancellationToken in an async-iterator method returning IAsyncEnumerable
-    public  IAsyncEnumerable<string> GetStreamedResponseAsync(string promptDetails, string userInput, [EnumeratorCancellation] CancellationToken cancellationToken = default)
-#pragma warning restore CS8424 // The EnumeratorCancellationAttribute will have no effect. The attribute is only effective on a parameter of type CancellationToken in an async-iterator method returning IAsyncEnumerable
+    /// <inheritdoc />
+    public async IAsyncEnumerable<string> GetStreamedResponseAsync(string promptDetails, string userInput, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        var queue = new ConcurrentQueue<string>();
-        //var completed = false;
-        throw new NotSupportedException(); //TODO: fix this!
-       // yield break;
-
-        //var streamer = new ActionResponseStreamer<GenerateCompletionResponseStream?>(response =>
-        //{
-        //    if (response != null)
-        //    {
-        //        queue.Enqueue(response.Response);
-        //    }
-        //    completed = response?.Done ?? true;
-        //});
-        //var context = await _client.StreamCompletion(new()
-        //{
-        //    Model = _client.SelectedModel,
-        //    Prompt = $"SYSTEM: {promptDetails}" + //TODO: do something smarter here
-        //    $"" +
-        //    $"USER: {userInput}",
-        //    Stream = true,
-        //}, streamer, cancellationToken: cancellationToken);
-
-        //while (!cancellationToken.IsCancellationRequested)
-        //{
-        //    if (queue.TryDequeue(out var response) && response is not null)
-        //        yield return response;
-
-        //    if (queue.IsEmpty && completed)
-        //        break;
-        //}
+        var request = _mapper.Map(new() { Prompt = userInput, System = promptDetails }, _client.SelectedModel);
+        await foreach (var part in _client.GenerateAsync(request, cancellationToken).ConfigureAwait(false))
+        {
+            if (!string.IsNullOrEmpty(part?.Response))
+            {
+                yield return part.Response;
+            }
+        }
     }
 }

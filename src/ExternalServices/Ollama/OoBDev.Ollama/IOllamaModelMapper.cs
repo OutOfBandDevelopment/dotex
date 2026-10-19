@@ -1,22 +1,18 @@
-﻿namespace OoBDev.Ollama;
+﻿using OllamaSharp.Models;
+using OoBDev.AI.Models;
+
+namespace OoBDev.Ollama;
 
 /// <summary>
-/// Represents a mapper interface for llama models.
+/// Maps framework completion models to Ollama requests.
 /// </summary>
 public interface IOllamaModelMapper
 {
-    //TODO: fix this !
-    ///// <summary>
-    ///// Maps a <see cref="CompletionRequest"/> model to a <see cref="GenerateCompletionRequest"/> object.
-    ///// </summary>
-    ///// <param name="request">The completion request model to map.</param>
-    ///// <returns>A generated completion request object.</returns>
-    //GenerateCompletionRequest Map(CompletionRequest request);
-
-    ///// <summary>
-    ///// Maps a <see cref="ConversationContextWithResponse"/> object to a <see cref="CompletionResponse"/> object.
-    ///// </summary>
-    ///// <param name="response">The conversation context with response to map.</param>
-    ///// <returns>A completion response object.</returns>
-    //CompletionResponse Map(ConversationContextWithResponse response);
+    /// <summary>
+    /// Maps a framework completion request to an Ollama generate request.
+    /// </summary>
+    /// <param name="request">The framework request.</param>
+    /// <param name="defaultModel">The model to use when the request names none.</param>
+    /// <returns>The Ollama request.</returns>
+    GenerateRequest Map(CompletionRequest request, string defaultModel);
 }

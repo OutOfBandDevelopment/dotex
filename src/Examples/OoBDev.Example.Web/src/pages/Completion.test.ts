@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { CompletionViewModel } from './CompletionViewModel';
+import { joinStreamedStrings } from './ChatViewModel';
 import { isHealthy } from './OverviewViewModel';
 
 afterEach(() => vi.unstubAllGlobals());
@@ -31,5 +32,14 @@ describe('isHealthy', () => {
     const p = { name: '', method: 'GET' as const, path: '', to: '', ms: 1 };
     expect(isHealthy({ ...p, status: 401 })).toBe(true);
     expect(isHealthy({ ...p, status: 500 })).toBe(false);
+  });
+});
+
+describe('joinStreamedStrings', () => {
+  it('joins complete and partial JSON arrays', () => {
+    expect(joinStreamedStrings('["Hello","!"]')).toBe('Hello!');
+    expect(joinStreamedStrings('["Hello",')).toBe('Hello');
+    expect(joinStreamedStrings('["Hello","wor')).toBe('Hello');
+    expect(joinStreamedStrings('[')).toBe('');
   });
 });

@@ -45,6 +45,7 @@ public static class ServiceCollectionExtensions
 
         services.TryAddKeyedTransient<IMessageCompletion, OllamaMessageCompletion>(OllamaGlobals.ProviderKey);
         services.TryAddKeyedTransient<IEmbeddingProvider, OllamaMessageCompletion>(OllamaGlobals.ProviderKey);
+        services.TryAddKeyedTransient<IStreamedCompletion, OllamaMessageCompletion>(OllamaGlobals.ProviderKey);
 
         services.AddOptions<OllamaApiClientOptions>()
             .Bind(configuration.GetSection(ollamaApiClientOptionSection))
