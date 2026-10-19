@@ -214,7 +214,7 @@ Checklist (tick as work lands):
 
 ## 6. Open questions
 
-1. ~~Component library~~ Decided 2026-10-19: Fluent UI web components (owner is not concerned about the choice; examples: https://learn.microsoft.com/en-us/fluent-ui/web-components/ and https://storybooks.fluentui.dev/ ). Swappable later because screens only use the shell's own wrapper components.
+1. ~~Component library~~ Decided 2026-10-19: Fluent UI web components (owner is not concerned about the choice; overview: https://learn.microsoft.com/en-us/fluent-ui/web-components/ , source: https://github.com/microsoft/fluentui/tree/master/packages/web-components , package: https://www.npmjs.com/package/@fluentui/web-components ; live examples need a local Storybook from the repo package, `yarn start` ). Swappable later because screens only use the shell's own wrapper components.
 2. ~~SPA hosting~~ Decided 2026-10-19: the SPA and the API are both deployed with Docker Compose, together with the backend services (see the deployment checklist). "Frame service" in the request is read as the framework's compose stack; correct me if it meant something else.
 3. ~~Hardware pages~~ Decided 2026-10-19: deferred. The owner will merge more hardware projects later and design the device UI then.
 4. ~~Mail receive~~ Decided 2026-10-19: finish the feature (the framework side was never completed), but at the lowest priority: Phase 6, after everything else.
