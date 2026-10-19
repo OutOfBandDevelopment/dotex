@@ -1,5 +1,6 @@
 import { expect, type Page } from '@playwright/test';
 import type { Journey } from './journey';
+import { testUser } from './signin';
 
 const press = (page: Page, label: string) => page.locator('fluent-button', { hasText: label }).first().click();
 const nav = (page: Page, label: string) => page.locator('nav.left').getByRole('link', { name: label, exact: true }).click();
@@ -251,6 +252,47 @@ export const journeys: Journey[] = [
         run: async page => {
           await press(page, 'Convert');
           await expect(page.locator('pre.result')).toContainText('Revenue grew 12 percent');
+        },
+      },
+    ],
+  },
+  {
+    id: 'sign-in',
+    title: 'Sign in with Keycloak',
+    persona: 'A user opening the example for the first time',
+    goal: 'Sign in through the identity provider and land on the screen that was asked for.',
+    start: '/identity/me',
+    liveOnly: true,
+    prerequisites: ['The compose stack is running with sign-in on (the default) and the `oobdev-example` realm imported.', 'Use the sample user `ada` (password `ada`) or `grace` (password `grace`, also an admin).'],
+    features: ['OoBDev.Identity', 'OoBDev.AspNetCore.JwtAuthentication', 'Keycloak (authorization code with PKCE)'],
+    steps: [
+      {
+        title: 'Get sent to the identity provider',
+        narrative: 'Every screen needs a token, so the application sends you to Keycloak. The application never sees your password.',
+        expect: ['The Keycloak sign-in form is shown.'],
+        run: async page => {
+          await page.waitForURL(/\/realms\//);
+          await expect(page.locator('#kc-login')).toBeVisible();
+        },
+      },
+      {
+        title: 'Enter your credentials',
+        narrative: 'Type the user name and password of a sample user and sign in.',
+        expect: ['You return to the screen you asked for.', 'The header shows your user name.'],
+        run: async page => {
+          await page.locator('#username').fill(testUser.name);
+          await page.locator('#password').fill(testUser.password);
+          await page.locator('#kc-login').click();
+          await expect(page.locator('header')).toContainText(testUser.name);
+        },
+      },
+      {
+        title: 'Read your claims',
+        narrative: 'The current user screen lists the claims the API read from your access token.',
+        expect: ['The preferred user name claim is listed.'],
+        run: async page => {
+          await expect(page).toHaveURL(/identity\/me/);
+          await expect(page.getByText(testUser.name).first()).toBeVisible();
         },
       },
     ],

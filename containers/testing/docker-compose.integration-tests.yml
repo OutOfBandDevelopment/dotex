@@ -306,6 +306,7 @@ services:
     volumes:
       - keycloak-test-data:/opt/keycloak/data
       - ./keycloak-config/integration-test-realm.json:/opt/keycloak/data/import/integration-test-realm.json:ro
+      - ../example/keycloak/oobdev-example-realm.json:/opt/keycloak/data/import/oobdev-example-realm.json:ro
     command: start-dev --import-realm --features=scripts
     healthcheck:
       test: ["CMD-SHELL", "exec 3<>/dev/tcp/localhost/8080 && echo 'OK' || exit 1"]
@@ -313,6 +314,19 @@ services:
       timeout: 5s
       retries: 10
       start_period: 40s
+
+  # ============================================================================
+  # Documentation tooling
+  # ============================================================================
+
+  # Renders the PlantUML diagrams for scripts/docs/validate-docs.py (reuses a running container of this name).
+  plantuml:
+    image: plantuml/plantuml-server:jetty
+    container_name: dotex-plantuml
+    ports:
+      - "${TEST_PORT_PLANTUML:-18080}:8080"
+    networks:
+      - integration-test-net
 
   # ============================================================================
   # Reverse Proxy & Dashboard

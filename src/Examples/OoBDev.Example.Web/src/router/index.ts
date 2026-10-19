@@ -9,8 +9,7 @@ export const router = createRouter({
       path: '/signin-callback',
       component: () => import('../pages/OverviewPage.vue'),
       beforeEnter: async () => {
-        await auth.completeSignIn();
-        return '/';
+        return await auth.completeSignIn();
       },
     },
     { path: '/ai/chat', component: () => import('../pages/ChatPage.vue'), meta: { crumbs: ['AI', 'Chat'] } },
@@ -27,10 +26,10 @@ export const router = createRouter({
   ],
 });
 
-/** Screens that need a token send the visitor to sign in first (only when OIDC is configured). */
+/** With OIDC configured every screen needs a token (the API requires one), so visitors sign in first. */
 router.beforeEach(async to => {
-  if (to.meta.requiresAuth && authEnabled && !auth.accessToken) {
-    await auth.signIn();
+  if (authEnabled && !auth.accessToken && to.path !== '/signin-callback') {
+    await auth.signIn(to.fullPath);
     return false;
   }
 });

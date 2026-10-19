@@ -18,4 +18,5 @@ Step-by-step guides with screenshots, one per user journey. They are regenerated
 | [Send an email through a channel](send-an-email.md) | A developer wiring notifications into an application | Send a message through the public channel and read the acknowledgement. |
 | [Put a message on a queue](queue-a-message.md) | A developer testing asynchronous processing | Enqueue a message and find the event reference that describes the queue. |
 | [Convert and store a document](convert-a-document.md) | A developer handling uploaded files | Upload a file, convert it to plain text and keep it in the document store. |
+| [Sign in with Keycloak](sign-in.md) | A user opening the example for the first time | Sign in through the identity provider and land on the screen that was asked for. |
 | [See the claims on your token](see-who-you-are.md) | A developer checking authentication | Read the claims the API sees for the current user. |

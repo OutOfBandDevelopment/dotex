@@ -155,7 +155,7 @@ Checklist (tick as work lands):
   - [x] Create `OoBDev.Example.Web` (Vite, TypeScript, Pinia, Router)
   - [x] Portal layout: top bar, left nav, breadcrumb, blade (command bar and toasts still to do)
   - [x] Light and dark theme tokens
-  - [x] OIDC sign in code and user menu (Keycloak client and route guards still to do)
+  - [x] OIDC sign in code, user menu, route guard and runtime `config.json` (Keycloak client `oobdev-example-web`, deterministic dev users in `containers/example/keycloak/dev-users.md`)
   - [ ] Generated API client and error handling for RFC 9457 problem details
   - [x] Streaming helper for the streamed AI endpoints
   - [x] Command base class and view-model conventions documented (README.Example.Web.md)
@@ -196,11 +196,11 @@ Checklist (tick as work lands):
   - [ ] Add a journey (and refresh the guide) with every new screen
   - [x] Local check instead of CI: `scripts/examples/verify-example-web.ps1` (tests, build, journeys, fails when `docs/example` drifts from what is committed)
   - [ ] Live run against the compose stack as a nightly check
-  - [ ] Sign-in journey once the Keycloak client exists
+  - [x] Sign-in journey once the Keycloak client exists
 - [ ] **Deployment (Docker Compose, from Phase 1 onward)**
   - [x] Compose file that runs the SPA, `OoBDev.Example.WebApi` and every backend service the examples need (extend `containers/testing` or add an example profile beside it)
   - [x] Dockerfiles for the API and the SPA (nginx)
-  - [ ] Keycloak realm and client for the SPA imported at start-up
+  - [x] Keycloak realm and client for the SPA imported at start-up
   - [ ] One command to start, wait for health, and open the app; one to stop and clean
   - [ ] Document the profile and ports (follow `integration-test-maintenance.md`)
 - [ ] **CI/CD documentation tooling** (deterministic, no LLM)

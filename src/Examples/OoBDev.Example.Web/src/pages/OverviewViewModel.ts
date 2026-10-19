@@ -1,5 +1,6 @@
 import { ref } from 'vue';
 import { Command } from '../core/command';
+import { auth } from '../core/auth';
 
 export interface Probe { name: string; method: 'GET' | 'POST'; path: string; to: string; status: number | null; ms: number | null; }
 
@@ -23,7 +24,7 @@ export class CheckEndpointsCommand extends Command {
     await Promise.all(this.vm.probes.value.map(async p => {
       const start = performance.now();
       try {
-        const r = await fetch(p.path, { method: p.method, headers: p.method === 'POST' ? { 'Content-Type': 'application/json' } : {} });
+        const r = await fetch(p.path, { method: p.method, headers: { ...(p.method === 'POST' ? { 'Content-Type': 'application/json' } : {}), ...(auth.accessToken ? { Authorization: `Bearer ${auth.accessToken}` } : {}) } });
         p.status = r.status;
       } catch {
         p.status = 0;

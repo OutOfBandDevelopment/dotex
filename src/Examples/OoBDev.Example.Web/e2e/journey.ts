@@ -21,5 +21,7 @@ export interface Journey {
   prerequisites: string[];
   /** Related framework features (links the guide back to the framework docs). */
   features: string[];
+  /** Needs the real stack (identity provider); skipped when the API is mocked. */
+  liveOnly?: boolean;
   steps: Step[];
 }

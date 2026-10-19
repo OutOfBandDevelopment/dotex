@@ -1,0 +1,145 @@
+{
+  "realm": "oobdev-example",
+  "enabled": true,
+  "sslRequired": "none",
+  "registrationAllowed": false,
+  "loginWithEmailAllowed": true,
+  "accessTokenLifespan": 900,
+  "roles": {
+    "realm": [
+      {
+        "name": "reader",
+        "description": "Can read and try the example screens"
+      },
+      {
+        "name": "editor",
+        "description": "Can change content: templates, documents, messages"
+      },
+      {
+        "name": "operator",
+        "description": "Can run operations screens: queues, cache, health"
+      },
+      {
+        "name": "admin",
+        "description": "Can use every example screen, including identity management"
+      }
+    ]
+  },
+  "clients": [
+    {
+      "clientId": "oobdev-example-web",
+      "name": "OoBDev example web",
+      "enabled": true,
+      "publicClient": true,
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": false,
+      "attributes": {
+        "pkce.code.challenge.method": "S256",
+        "post.logout.redirect.uris": "+"
+      },
+      "redirectUris": [
+        "http://localhost:8088/*",
+        "http://localhost:5173/*",
+        "http://localhost:8080/*"
+      ],
+      "webOrigins": [
+        "+"
+      ],
+      "protocolMappers": [
+        {
+          "name": "example-api-audience",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-audience-mapper",
+          "config": {
+            "included.custom.audience": "oobdev-example-api",
+            "id.token.claim": "false",
+            "access.token.claim": "true"
+          }
+        }
+      ]
+    }
+  ],
+  "users": [
+    {
+      "id": "00000000-0000-4000-8000-000000000001",
+      "username": "ada",
+      "email": "ada@example.test",
+      "firstName": "Ada",
+      "lastName": "Lovelace",
+      "enabled": true,
+      "emailVerified": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "ada",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "reader"
+      ]
+    },
+    {
+      "id": "00000000-0000-4000-8000-000000000002",
+      "username": "alan",
+      "email": "alan@example.test",
+      "firstName": "Alan",
+      "lastName": "Turing",
+      "enabled": true,
+      "emailVerified": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "alan",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "reader",
+        "editor"
+      ]
+    },
+    {
+      "id": "00000000-0000-4000-8000-000000000003",
+      "username": "margaret",
+      "email": "margaret@example.test",
+      "firstName": "Margaret",
+      "lastName": "Hamilton",
+      "enabled": true,
+      "emailVerified": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "margaret",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "reader",
+        "operator"
+      ]
+    },
+    {
+      "id": "00000000-0000-4000-8000-000000000004",
+      "username": "grace",
+      "email": "grace@example.test",
+      "firstName": "Grace",
+      "lastName": "Hopper",
+      "enabled": true,
+      "emailVerified": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "grace",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "reader",
+        "editor",
+        "operator",
+        "admin"
+      ]
+    }
+  ]
+}

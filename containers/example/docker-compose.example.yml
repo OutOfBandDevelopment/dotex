@@ -17,7 +17,15 @@ services:
     container_name: oobd-example-api
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - IDENTITY_PROVIDER=None
+      # Sign-in is on by default: the SPA signs in against the oobdev-example realm and the API validates the JWT.
+      # Set EXAMPLE_IDENTITY_PROVIDER=None (and an empty EXAMPLE_OIDC_AUTHORITY) to run anonymously.
+      - IDENTITY_PROVIDER=${EXAMPLE_IDENTITY_PROVIDER:-Keycloak}
+      - Keycloak__JwtBearerOptions__Authority=http://keycloak:8080/realms/oobdev-example
+      - Keycloak__JwtBearerOptions__Audience=oobdev-example-api
+      - Keycloak__JwtBearerOptions__RequireHttpsMetadata=false
+      - Keycloak__JwtBearerOptions__TokenValidationParameters__ValidIssuers__0=http://localhost:${TEST_PORT_KEYCLOAK:-8081}/realms/oobdev-example
+      - Keycloak__OAuth2OpenApiOptions__AuthorizationUrl=http://localhost:${TEST_PORT_KEYCLOAK:-8081}/realms/oobdev-example/protocol/openid-connect/auth/
+      - Keycloak__OAuth2OpenApiOptions__TokenUrl=http://localhost:${TEST_PORT_KEYCLOAK:-8081}/realms/oobdev-example/protocol/openid-connect/token
       - OllamaApiClientOptions__Url=http://ollama:11434
       - OllamaApiClientOptions__DefaultModel=phi3
     # Optional secrets and overrides, kept out of git: copy .env.example to .env in this folder.
@@ -32,6 +40,8 @@ services:
         condition: service_started
       redis:
         condition: service_started
+      keycloak:
+        condition: service_healthy
 
   example-web:
     build:
@@ -39,7 +49,11 @@ services:
     container_name: oobd-example-web
     ports:
       - "${EXAMPLE_PORT_WEB:-8088}:80"
+    environment:
+      - OIDC_AUTHORITY=${EXAMPLE_OIDC_AUTHORITY-http://localhost:${TEST_PORT_KEYCLOAK:-8081}/realms/oobdev-example}
+      - OIDC_CLIENT_ID=oobdev-example-web
     networks:
       - integration-test-net
     depends_on:
       - example-api
+      - keycloak

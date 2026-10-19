@@ -18,4 +18,5 @@ Acceptance criteria for each journey. The same journeys run as Playwright tests.
 | [Send an email through a channel](send-an-email.md) | 2 | `/messaging/communications` |
 | [Put a message on a queue](queue-a-message.md) | 2 | `/messaging/queues` |
 | [Convert and store a document](convert-a-document.md) | 2 | `/content/documents` |
+| [Sign in with Keycloak](sign-in.md) | 3 | `/identity/me` |
 | [See the claims on your token](see-who-you-are.md) | 1 | `/identity/me` |
