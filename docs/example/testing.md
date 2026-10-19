@@ -8,7 +8,7 @@
 - [Writing a journey](#writing-a-journey)
 - [Mocked and live runs](#mocked-and-live-runs)
 - [Output](#output)
-- [CI](#ci)
+- [Local check instead of CI](#local-check-instead-of-ci)
 
 ## Approach
 
@@ -78,6 +78,6 @@ Live answers from the language model vary, so live runs are for verification; co
 
 Set `E2E_DOCS_DIR` to write somewhere else.
 
-## CI
+## Local check instead of CI
 
-Run `npm ci`, `npx playwright install chromium`, `npm run e2e`, then fail the build if `git diff --exit-code docs/example` shows changes, so a UI change cannot merge without its guide being refreshed.
+There is no CI workflow for the journeys. Run `scripts/examples/verify-example-web.ps1`: it runs the unit tests, the build and the journeys, then fails when the generated guides and specs differ from what is committed (screenshots are refreshed but not compared because of sub-pixel differences).

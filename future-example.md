@@ -161,10 +161,10 @@ Checklist (tick as work lands):
   - [x] Command base class and view-model conventions documented (README.Example.Web.md)
   - [x] Container images and compose entry (API and SPA images build; verified 2026-10-19 through the SPA proxy: openapi, templates, embeddings answer 200, `api/User/claims` 401 without a token)
 - [ ] **Phase 2: covered features** (one screen each, specs in [screens.md](docs/design/example-ui/screens.md))
-  - [ ] Overview dashboard
+  - [x] Overview dashboard
   - [x] AI chat (completion and streamed; context mode still to do)
   - [x] Embeddings lab (SBert, AllMiniLM); RAG still to do
-  - [ ] Ollama and Groq consoles
+  - [x] Ollama and Groq consoles
   - [x] Communications composer
   - [x] Message queueing sender
   - [x] Documents workbench (convert, upload, text, download, PDF; HTML and summary views still to do)
@@ -201,8 +201,8 @@ Checklist (tick as work lands):
   - [x] Compose file that runs the SPA, `OoBDev.Example.WebApi` and every backend service the examples need (extend `containers/testing` or add an example profile beside it)
   - [x] Dockerfiles for the API and the SPA (nginx)
   - [x] Keycloak realm and client for the SPA imported at start-up
-  - [ ] One command to start, wait for health, and open the app; one to stop and clean
-  - [ ] Document the profile and ports (follow `integration-test-maintenance.md`)
+  - [x] One command to start, wait for health, and open the app; one to stop and clean
+  - [x] Document the profile and ports (follow `integration-test-maintenance.md`)
 - [ ] **CI/CD documentation tooling** (deterministic, no LLM)
   - [ ] Catalog page lists each CLI tool: purpose, inputs, outputs, exit codes
   - [ ] Add a workflow step that rebuilds generated docs with the tools and fails on drift
