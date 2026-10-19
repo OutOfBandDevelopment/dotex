@@ -13,6 +13,8 @@ export default defineConfig({
       '/Document': api,
       '/Search': api,
       '/openapi': api,
+      '/scalar': api,
+      '/asyncapi': api,
     },
   },
   test: { environment: 'node', include: ['src/**/*.test.ts'] },
