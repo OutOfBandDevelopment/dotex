@@ -50,7 +50,7 @@ The example API exposes 11 controllers plus the shared pipeline (`TryAllCommonEx
 |---|---|---|
 | Generative AI chat | `POST api/AI`, `api/AI/Streamed`, `api/AI/Context` | AI.Abstractions, Ollama, GroqCloud |
 | Embeddings | `POST api/AI/Embeddings`, `GET api/AllMiniLM`, `GET api/SBERT`, `GET api/SBERTDefault` | SBert, AllMiniLmL6V2 |
-| RAG | `POST api/AI/RaggedAnne` | AI, Search |
+| RAG | `POST api/Rag` (replaces the broken AIController) | AI, Search |
 | Ollama direct | `POST api/Ollama`, `api/Ollama/Streamed`, `api/Ollama/Completion`, `GET api/Ollama` | Ollama |
 | Groq direct | `POST api/GroqCloud/Completion` | GroqCloud |
 | Communications | `POST api/Communications/public`, `queued`, `private` | Communications, MailKit |
@@ -163,7 +163,8 @@ Checklist (tick as work lands):
 - [ ] **Phase 2: covered features** (one screen each, specs in [screens.md](docs/design/example-ui/screens.md))
   - [x] Overview dashboard
   - [x] AI chat (completion and streamed; context mode still to do)
-  - [x] Embeddings lab (SBert, AllMiniLM); RAG still to do
+  - [x] Embeddings lab (SBert, AllMiniLM)
+  - [x] Retrieval (RAG) page: `POST api/Rag` embeds passages in process, answers through Ollama, lists sources
   - [x] Ollama and Groq consoles
   - [x] Communications composer
   - [x] Message queueing sender

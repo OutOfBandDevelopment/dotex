@@ -60,7 +60,7 @@ export const journeys: Journey[] = [
         expect: ['The answer appears in the result panel.'],
         run: async page => {
           await press(page, 'Send');
-          await expect(page.locator('pre.result')).not.toBeEmpty();
+          await expect(page.locator('pre.result')).not.toBeEmpty({ timeout: 120_000 });
         },
       },
     ],
@@ -133,6 +133,36 @@ export const journeys: Journey[] = [
           await press(page, 'Embed and compare');
           await expect(page.locator('pre.result')).toContainText('Dimensions: 384');
           await expect(page.locator('pre.result')).toContainText('Cosine similarity: ');
+        },
+      },
+    ],
+  },
+  {
+    id: 'ask-your-own-documents',
+    title: 'Ask a question about your own text',
+    persona: 'A developer learning retrieval augmented generation',
+    goal: 'Give the model a few passages, ask a question, and see which passages the answer came from.',
+    start: '/ai/rag',
+    prerequisites: ['The Ollama container is running with the phi3 model.'],
+    features: ['OoBDev.Onnx.SentenceEmbeddings', 'OoBDev.Ollama', 'OoBDev.AI.Abstractions'],
+    steps: [
+      {
+        title: 'Review the passages and the question',
+        narrative: 'Sample passages are filled in. Separate your own passages with a blank line.',
+        expect: ['The Ask button is enabled.'],
+        run: async page => {
+          await expect(page.getByLabel('Question')).toHaveValue(/queues/);
+          await expect(page.locator('fluent-button', { hasText: 'Ask' })).not.toHaveAttribute('disabled', '');
+        },
+      },
+      {
+        title: 'Ask',
+        narrative: 'The API finds the closest passages by cosine similarity and asks the model to answer from them only.',
+        expect: ['An answer is shown.', 'The sources table lists the passages used, closest first.'],
+        run: async page => {
+          await press(page, 'Ask');
+          await expect(page.locator('pre.result')).not.toBeEmpty({ timeout: 120_000 });
+          await expect(page.locator('table.grid tbody tr').first()).toBeVisible();
         },
       },
     ],

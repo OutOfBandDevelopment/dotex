@@ -24,6 +24,7 @@ export async function mockApi(page: Page): Promise<void> {
       turn++;
       return json(route, { context: [1, 2, 3, turn], response: turn === 1 ? 'Hello! How can I help you today?' : 'Photosynthesis is how plants turn light into sugar.' });
     }
+    if (path === '/api/Rag') return json(route, { answer: 'Queues are supported through adapters for RabbitMQ, Azure Service Bus, Azure Storage queues and Amazon SQS (passage p3).', sources: [{ id: 'p3', score: 0.712, text: 'Messages are put on a queue by an adapter: RabbitMQ, Azure Service Bus, Azure Storage queues or Amazon SQS.' }, { id: 'p1', score: 0.318, text: 'The framework resolves every provider through a keyed service, chosen from a configuration path.' }] });
     if (path.startsWith('/api/AllMiniLM') || path.startsWith('/api/SBERT')) {
       const t = url.searchParams.get('text') ?? '';
       return json(route, vector(t.length % 2 === 0 ? 1 : 1.2));

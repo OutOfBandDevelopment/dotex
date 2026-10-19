@@ -13,6 +13,7 @@ export const router = createRouter({
       },
     },
     { path: '/ai/chat', component: () => import('../pages/ChatPage.vue'), meta: { crumbs: ['AI', 'Chat'] } },
+    { path: '/ai/rag', component: () => import('../pages/RagPage.vue'), meta: { crumbs: ['AI', 'Retrieval (RAG)'] } },
     { path: '/ai/ollama', component: () => import('../pages/OllamaPage.vue'), meta: { crumbs: ['AI', 'Ollama'] } },
     { path: '/ai/groq', component: () => import('../pages/GroqPage.vue'), meta: { crumbs: ['AI', 'Groq cloud'] } },
     { path: '/ai/embeddings', component: () => import('../pages/EmbeddingsPage.vue'), meta: { crumbs: ['AI', 'Embeddings'] } },

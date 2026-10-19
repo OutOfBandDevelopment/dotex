@@ -17,7 +17,7 @@ public class SBERTController : ControllerBase
     private readonly IEmbeddingProvider _embedding;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="AIController"/> class with the specified dependencies.
+    /// Initializes a new instance of the <see cref="SBERTController"/> class with the specified dependencies.
     /// </summary>
     /// <param name="embedding">The embedding provider.</param>
     public SBERTController(
