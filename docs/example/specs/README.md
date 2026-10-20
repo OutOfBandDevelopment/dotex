@@ -23,6 +23,7 @@ Acceptance criteria for each journey. The same journeys run as Playwright tests.
 | [Compare a set of vectors](compare-vectors.md) | 1 | `/utilities/vector-lab` |
 | [Label an image without training](label-an-image.md) | 2 | `/ai/images` |
 | [Compare sentence embedding models](compare-embedding-models.md) | 1 | `/ai/model-compare` |
+| [See what the API just did](see-recent-traces.md) | 1 | `/operations/telemetry` |
 | [Render a text template](render-a-template.md) | 2 | `/content/templates` |
 | [Send an email through a channel](send-an-email.md) | 2 | `/messaging/communications` |
 | [Put a message on a queue](queue-a-message.md) | 2 | `/messaging/queues` |

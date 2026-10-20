@@ -37,6 +37,7 @@ export async function mockApi(page: Page): Promise<void> {
     if (path === '/api/Images/classify') return json(route, [{ label: 'a cat', probability: 0.91 }, { label: 'a dog', probability: 0.06 }, { label: 'a car', probability: 0.02 }, { label: 'a landscape', probability: 0.01 }]);
     if (path === '/api/Images/embed') return json(route, { length: 512, norm: 1, first: [0.012, -0.034, 0.051, 0.007, -0.022, 0.018, 0.043, -0.009] });
     if (path === '/api/ModelCompare/similarity') return json(route, [{ model: 'all-minilm-l6-v2', length: 384, similarity: 0.71, milliseconds: 18 }]);
+    if (path === '/api/Telemetry/recent') return json(route, { dashboardUrl: 'http://localhost:18888', traces: [{ traceId: '507e6ae8ea5f53be57e12a42af804fca', name: 'Microsoft.AspNetCore.Hosting.HttpRequestIn', started: '2026-10-20T08:15:18Z', durationMs: 12.4 }] });
     if (path === '/api/TextTools/xpath') return json(route, { count: 2, matches: ['<total>12.5</total>', '<total>40</total>'], xml: '<root><orders><total>12.5</total><total>40</total></orders></root>' });
     if (path === '/api/TextTools/markdown') return json(route, { html: '<h1>Title</h1>\n<ul><li>one</li><li>two</li></ul>\n' });
     if (path === '/api/Toolbox/hash') return json(route, { algorithm: 'sha512', result: '9b71d224bd62f3785d96d46ad3ea3d73319bfbc2890caadae2dff72519673ca72323c3d99ba5c11d7c7acc6e14b8c5da0c4663475c2e5c3adef46f73bcdec043' });

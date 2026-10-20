@@ -39,6 +39,9 @@ services:
       - OpenTelemetryOptions__OtlpEndpoint=http://otel-dashboard:18890
       - OpenTelemetryOptions__ServiceName=oobdev-example-api
       - OpenTelemetryOptions__Sources__0=Microsoft.AspNetCore
+      - Telemetry__DashboardUrl=http://otel-dashboard:18888
+      - Telemetry__PublicUrl=http://localhost:${TEST_PORT_OTEL_DASHBOARD:-18888}
+      - Telemetry__ApiKey=${OTEL_DASHBOARD_API_KEY:-oobdev-test-key}
     # Optional secrets and overrides, kept out of git: copy .env.example to .env in this folder.
     # Names use the .NET configuration form, e.g. GroqCloudApiClientOptions__ApiKey.
     env_file:

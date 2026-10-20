@@ -477,6 +477,32 @@ export const journeys: Journey[] = [
     ],
   },
   {
+    id: 'see-recent-traces',
+    title: 'See what the API just did',
+    persona: 'An operator checking a request',
+    goal: 'List the latest traces the API sent to the dashboard and jump to one.',
+    start: '/operations/telemetry',
+    prerequisites: ['The compose stack is running, which includes the Aspire dashboard.'],
+    features: ['OoBDev.OpenTelemetry (OTLP export)', 'Aspire dashboard telemetry API'],
+    why: 'Traces and logs leave the service over OTLP, so any dashboard can show them; this page reads the latest back and links into the dashboard for the detail.',
+    problems: [
+      { symptom: 'No traces yet', cause: 'Nothing has called the API since it started', fix: 'Use another screen, then refresh' },
+      { symptom: 'The dashboard could not be read', cause: 'The API cannot reach the dashboard or the API key is wrong', fix: 'Check Telemetry__DashboardUrl and Telemetry__ApiKey in the compose environment' },
+    ],
+    steps: [
+      {
+        title: 'Open the telemetry page',
+        narrative: 'The page loads the most recent traces on its own; use Refresh to reload them.',
+        expect: ['A table lists recent spans with their duration and a trace link.', 'A link opens the dashboard.'],
+        run: async page => {
+          await expect(page.getByLabel('Recent traces')).toContainText('HttpRequestIn');
+          await press(page, 'Refresh');
+          await expect(page.getByRole('link', { name: 'Open the dashboard' })).toBeVisible();
+        },
+      },
+    ],
+  },
+  {
     id: 'render-a-template',
     title: 'Render a text template',
     persona: 'A developer producing documents or email bodies from data',

@@ -23,6 +23,7 @@ How to verify each feature and what to do when it fails. Generated from the same
 | [Compare a set of vectors](compare-vectors.md) | Example stack running. |
 | [Label an image without training](label-an-image.md) | The first call downloads the CLIP model into the shared hub cache, so it needs internet once. |
 | [Compare sentence embedding models](compare-embedding-models.md) | Each model downloads once into the shared hub cache, so the first use of a model needs internet. |
+| [See what the API just did](see-recent-traces.md) | The compose stack is running, which includes the Aspire dashboard. |
 | [Render a text template](render-a-template.md) | Example stack running. |
 | [Send an email through a channel](send-an-email.md) | The SMTP4Dev container is running to receive the message. |
 | [Put a message on a queue](queue-a-message.md) | RabbitMQ (or another queue adapter) is running. |

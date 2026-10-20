@@ -935,6 +935,43 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/Telemetry/recent": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["OoBDev.WebApi.Models.TelemetryRecentModel"];
+                        "application/json": components["schemas"]["OoBDev.WebApi.Models.TelemetryRecentModel"];
+                        "text/json": components["schemas"]["OoBDev.WebApi.Models.TelemetryRecentModel"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/TextTemplate/SupportedTemplates": {
         parameters: {
             query?: never;
@@ -1757,6 +1794,18 @@ export interface components {
             /** Format: double */
             score?: number | string;
             text: string;
+        };
+        "OoBDev.WebApi.Models.TelemetryRecentModel": {
+            dashboardUrl: string;
+            traces: components["schemas"]["OoBDev.WebApi.Models.TelemetryTraceModel"][];
+        };
+        "OoBDev.WebApi.Models.TelemetryTraceModel": {
+            traceId: string;
+            name: string;
+            /** Format: date-time */
+            started?: string;
+            /** Format: double */
+            durationMs?: number | string;
         };
         "OoBDev.WebApi.Models.ToolResultModel": {
             algorithm: string;

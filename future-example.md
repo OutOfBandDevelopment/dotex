@@ -176,7 +176,7 @@ Checklist (tick as work lands):
   - [x] Vector store screen: store texts and search by meaning over `IVectorStore` (SQL Server provider `OoBDev.Data.Vectors.SqlStore` or in-memory); lexical and hybrid search still open
   - [ ] Template query and save endpoints and editor
   - [x] Cache lab: store, look up and remove by key through `ICachingProvider` (`api/Cache`); the provider interface cannot list keys, so it is a lab rather than a browser
-  - [ ] Telemetry view (link to the Aspire dashboard plus recent trace ids from its telemetry API)
+  - [x] Telemetry view (link to the Aspire dashboard plus recent trace ids from its telemetry API)
   - [ ] Vector store browser
   - [ ] Decide on mail receive (see section 6)
 - [ ] **Phase 4: new features**
