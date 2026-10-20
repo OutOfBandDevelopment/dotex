@@ -366,6 +366,94 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/Images/classify": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "multipart/form-data": {
+                        file?: components["schemas"]["Microsoft.AspNetCore.Http.IFormFile"];
+                    } & {
+                        labels?: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["OoBDev.WebApi.Models.ImageLabelModel"][];
+                        "application/json": components["schemas"]["OoBDev.WebApi.Models.ImageLabelModel"][];
+                        "text/json": components["schemas"]["OoBDev.WebApi.Models.ImageLabelModel"][];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/Images/embed": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "multipart/form-data": {
+                        file?: components["schemas"]["Microsoft.AspNetCore.Http.IFormFile"];
+                    };
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["OoBDev.WebApi.Models.ImageEmbeddingModel"];
+                        "application/json": components["schemas"]["OoBDev.WebApi.Models.ImageEmbeddingModel"];
+                        "text/json": components["schemas"]["OoBDev.WebApi.Models.ImageEmbeddingModel"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/MessageQueueing/public": {
         parameters: {
             query?: never;
@@ -446,6 +534,86 @@ export interface paths {
                         "text/plain": string;
                         "application/json": string;
                         "text/json": string;
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/ModelCompare/models": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": string[];
+                        "application/json": string[];
+                        "text/json": string[];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/ModelCompare/similarity": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["OoBDev.WebApi.Models.ModelCompareRequestModel"];
+                    "text/json": components["schemas"]["OoBDev.WebApi.Models.ModelCompareRequestModel"];
+                    "application/*+json": components["schemas"]["OoBDev.WebApi.Models.ModelCompareRequestModel"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["OoBDev.WebApi.Models.ModelScoreModel"][];
+                        "application/json": components["schemas"]["OoBDev.WebApi.Models.ModelScoreModel"][];
+                        "text/json": components["schemas"]["OoBDev.WebApi.Models.ModelScoreModel"][];
                     };
                 };
             };
@@ -1216,6 +1384,49 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/VectorLab/matrix": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["OoBDev.WebApi.Models.VectorMatrixRequestModel"];
+                    "text/json": components["schemas"]["OoBDev.WebApi.Models.VectorMatrixRequestModel"];
+                    "application/*+json": components["schemas"]["OoBDev.WebApi.Models.VectorMatrixRequestModel"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["OoBDev.WebApi.Models.VectorMatrixResponseModel"];
+                        "application/json": components["schemas"]["OoBDev.WebApi.Models.VectorMatrixResponseModel"];
+                        "text/json": components["schemas"]["OoBDev.WebApi.Models.VectorMatrixResponseModel"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/VectorStore/index": {
         parameters: {
             query?: never;
@@ -1383,6 +1594,8 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /** Format: binary */
+        "Microsoft.AspNetCore.Http.IFormFile": string;
         "OoBDev.AI.Models.CompletionRequest": {
             model?: null | string;
             context?: null | (number | string)[];
@@ -1474,11 +1687,37 @@ export interface components {
             secret: string;
             message: string;
         };
+        "OoBDev.WebApi.Models.ImageEmbeddingModel": {
+            /** Format: int32 */
+            length?: number | string;
+            /** Format: double */
+            norm?: number | string;
+            first: (number | string)[];
+        };
+        "OoBDev.WebApi.Models.ImageLabelModel": {
+            label: string;
+            /** Format: float */
+            probability?: number | string;
+        };
         "OoBDev.WebApi.Models.MarkdownRequestModel": {
             markdown: string;
         };
         "OoBDev.WebApi.Models.MarkdownResponseModel": {
             html: string;
+        };
+        "OoBDev.WebApi.Models.ModelCompareRequestModel": {
+            a: string;
+            b: string;
+            models: string[];
+        };
+        "OoBDev.WebApi.Models.ModelScoreModel": {
+            model: string;
+            /** Format: int32 */
+            length?: number | string;
+            /** Format: float */
+            similarity?: number | string;
+            /** Format: double */
+            milliseconds?: number | string;
         };
         "OoBDev.WebApi.Models.OperationsInfoModel": {
             environment: string;
@@ -1550,6 +1789,15 @@ export interface components {
         "OoBDev.WebApi.Models.VectorIndexResponseModel": {
             ids: string[];
             store: string;
+        };
+        "OoBDev.WebApi.Models.VectorMatrixRequestModel": {
+            vectors: (number | string)[][];
+            metric?: string;
+        };
+        "OoBDev.WebApi.Models.VectorMatrixResponseModel": {
+            matrix: (number | string)[][];
+            magnitudes: (number | string)[];
+            centroid: (number | string)[];
         };
         "OoBDev.WebApi.Models.VectorQueryRequestModel": {
             collection: string;

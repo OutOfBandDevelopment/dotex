@@ -41,7 +41,7 @@ Which test projects need which service. A test project that appears here must ma
 | `OoBDev.Keycloak.Tests` | Keycloak |
 | `OoBDev.SBert.Tests`, `OoBDev.SBert.AllMiniLmL6V2.Tests` | SBert |
 | `OoBDev.Ollama.Tests` | Ollama |
-| `OoBDev.OpenTelemetry.Tests` | Grafana LGTM (Tempo, Loki) |
+| `OoBDev.OpenTelemetry.Tests` | Aspire dashboard |
 | `OoBDev.Onnx.*.Tests` | None (models download into the shared hub cache) |
 
 Azurite has a stack entry and test variables, but no test project uses it yet.

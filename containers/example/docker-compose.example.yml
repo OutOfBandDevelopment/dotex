@@ -35,6 +35,10 @@ services:
       - MessageQueue__ReceivedEmailMessageModel__Config__HostName=rabbitmq
       - OllamaApiClientOptions__Url=http://ollama:11434
       - OllamaApiClientOptions__DefaultModel=phi3
+      # Traces and logs go to the Aspire dashboard (UI on http://localhost:${TEST_PORT_OTEL_DASHBOARD:-18888}).
+      - OpenTelemetryOptions__OtlpEndpoint=http://otel-dashboard:18890
+      - OpenTelemetryOptions__ServiceName=oobdev-example-api
+      - OpenTelemetryOptions__Sources__0=Microsoft.AspNetCore
     # Optional secrets and overrides, kept out of git: copy .env.example to .env in this folder.
     # Names use the .NET configuration form, e.g. GroqCloudApiClientOptions__ApiKey.
     env_file:
@@ -46,6 +50,8 @@ services:
       ollama:
         condition: service_started
       redis:
+        condition: service_started
+      otel-dashboard:
         condition: service_started
       keycloak:
         condition: service_healthy

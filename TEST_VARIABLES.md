@@ -28,7 +28,7 @@ This document lists all test properties used by Integration tests. These propert
    - [OpenSearch (Search Engine)](#opensearch-search-engine)
    - [SBert (Sentence Embeddings)](#sbert-sentence-embeddings---aiml)
    - [Ollama (LLM Inference)](#ollama-llm-inference---aiml)
-   - [OpenTelemetry (Grafana LGTM)](#opentelemetry-grafana-lgtm)
+   - [OpenTelemetry (Aspire dashboard)](#opentelemetry-aspire-dashboard)
    - [Qdrant (Vector Database)](#qdrant-vector-database)
    - [Azurite (Azure Storage Emulator)](#azurite-azure-storage-emulator)
    - [Moto (AWS Emulator)](#moto-aws-emulator)
@@ -249,23 +249,24 @@ Tests that require live cloud credentials. Manual execution only.
 
 ---
 
-### OpenTelemetry (Grafana LGTM)
+### OpenTelemetry (Aspire dashboard)
 
-**Service:** `grafana/otel-lgtm` - OTLP receiver with Tempo (traces), Loki (logs), Prometheus (metrics) and Grafana
+**Service:** `mcr.microsoft.com/dotnet/aspire-dashboard` - OTLP receiver, dashboard UI and telemetry API
 
 | Variable | Default | Description |
 |----------|---------|-------------|
 | `OTEL_EXPORTER_OTLP_ENDPOINT` | `http://localhost:4318` | OTLP HTTP endpoint the tests export to |
-| `OTEL_GRAFANA_URL` | `http://localhost:3000` | Grafana, used to read spans and logs back through the Tempo and Loki proxies |
+| `OTEL_DASHBOARD_URL` | `http://localhost:18888` | Aspire dashboard, used to read spans and logs back through its telemetry API |
+| `OTEL_DASHBOARD_API_KEY` | `oobdev-test-key` | API key sent as `x-api-key` to the telemetry API |
 
-**Docker Container:** `grafana/otel-lgtm:latest` (4317 OTLP gRPC, 4318 OTLP HTTP, 3000 Grafana)
+**Docker Container:** `mcr.microsoft.com/dotnet/aspire-dashboard:latest` (4317 OTLP gRPC, 4318 OTLP HTTP, 18888 dashboard)
 
 **Tests Using:**
-- `OoBDev.OpenTelemetry.Tests.OtlpIntegrationTests` (Integration): a span reaches Tempo and a log record reaches Loki, both with the correlation id
+- `OoBDev.OpenTelemetry.Tests.OtlpIntegrationTests` (Integration): a span and a log record reach the dashboard, both with the correlation id
 - `OoBDev.OpenTelemetry.Tests.TelemetryProcessorTests` (Unit): processors and registration, no container needed
 
 **Notes:**
-- Anonymous Grafana access is enabled in the test image, so no credentials are needed
+- The dashboard UI is unsecured in the test stack; the telemetry API uses the API key above
 - Each test uses a unique `service.name` so runs never see each other's data
 - Replaces the former Azurinsight emulator (2026-10-09)
 
@@ -443,9 +444,10 @@ Tests that require live cloud credentials. Manual execution only.
     <!-- Keycloak -->
     <Parameter name="KEYCLOAK_URL" value="http://localhost:8081" />
 
-    <!-- OpenTelemetry (Grafana LGTM) -->
+    <!-- OpenTelemetry (Aspire dashboard) -->
     <Parameter name="OTEL_EXPORTER_OTLP_ENDPOINT" value="http://localhost:4318" />
-    <Parameter name="OTEL_GRAFANA_URL" value="http://localhost:3000" />
+    <Parameter name="OTEL_DASHBOARD_URL" value="http://localhost:18888" />
+    <Parameter name="OTEL_DASHBOARD_API_KEY" value="oobdev-test-key" />
 
     <!-- Groq Cloud (LiveIntegration) -->
     <Parameter name="GROQ_API_KEY" value="your-api-key" />

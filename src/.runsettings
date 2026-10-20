@@ -181,9 +181,10 @@ https://github.com/coverlet-coverage/coverlet/blob/fc7ec26dcaed8fedba880ff13c6f1
 		<Parameter name="OLLAMA_MODEL" value="phi3" />
 		<Parameter name="OLLAMA_EMBEDDING_MODEL" value="all-minilm" />
 
-		<!-- OpenTelemetry (Grafana LGTM) -->
+		<!-- OpenTelemetry (Aspire dashboard) -->
 		<Parameter name="OTEL_EXPORTER_OTLP_ENDPOINT" value="http://localhost:4318" />
-		<Parameter name="OTEL_GRAFANA_URL" value="http://localhost:3000" />
+		<Parameter name="OTEL_DASHBOARD_URL" value="http://localhost:18888" />
+		<Parameter name="OTEL_DASHBOARD_API_KEY" value="oobdev-test-key" />
 
 		<!-- OpenSearch Dashboards -->
 		<Parameter name="OPENSEARCH_DASHBOARDS_URL" value="http://localhost:5601" />

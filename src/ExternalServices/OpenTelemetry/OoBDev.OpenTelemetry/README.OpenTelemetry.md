@@ -44,7 +44,7 @@ The standard `OTEL_*` variables (headers, protocol, resource attributes) are hon
 
 ## Testing
 
-Unit tests cover the processors and the registration. The Integration tests send spans and logs over OTLP to the `otel-lgtm` container (`grafana/otel-lgtm`, started by `containers/testing`) and read them back from Tempo and Loki through the Grafana proxy. They use the `OTEL_EXPORTER_OTLP_ENDPOINT` and `OTEL_GRAFANA_URL` test properties.
+Unit tests cover the processors and the registration. The Integration tests send spans and logs over OTLP to the `otel-dashboard` container (the Aspire dashboard, started by `containers/testing`) and read them back through its telemetry API. They use the `OTEL_EXPORTER_OTLP_ENDPOINT`, `OTEL_DASHBOARD_URL` and `OTEL_DASHBOARD_API_KEY` test properties.
 
 ## Notes
 

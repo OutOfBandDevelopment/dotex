@@ -147,7 +147,7 @@ These services don't require initialization (stateless) or tests create resource
 | **Azurite** | Emulator ready - tests create containers/blobs |
 | **Keycloak** | Imports `integration-test-realm.json` on startup |
 | **SBert** | Model loaded - ready immediately |
-| **OpenTelemetry (Grafana LGTM)** | Grafana, Tempo, Loki and the OTLP receiver start together - ready when `/api/health` answers (about 30 seconds) |
+| **OpenTelemetry (Aspire dashboard)** | The dashboard and the OTLP receiver start together - ready when `http://localhost:18888/` answers (a few seconds, no health check in the image) |
 
 ---
 

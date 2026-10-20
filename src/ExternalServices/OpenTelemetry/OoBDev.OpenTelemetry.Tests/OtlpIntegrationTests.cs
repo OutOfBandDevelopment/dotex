@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 namespace OoBDev.OpenTelemetry.Tests;
 
 /// <summary>
-/// Sends spans and logs over OTLP to the Grafana LGTM container and reads them back from Tempo and Loki.
+/// Sends spans and logs over OTLP to the Aspire dashboard container and reads them back from its telemetry API.
 /// </summary>
 [TestClass]
 public partial class OtlpIntegrationTests
@@ -28,7 +28,7 @@ public partial class OtlpIntegrationTests
 
     [TestMethod]
     [TestCategory(TestCategories.Integration)]
-    public async Task Spans_ShouldReachTempoWithCorrelationTags()
+    public async Task Spans_ShouldReachDashboardWithCorrelationTags()
     {
         // Stage
         var serviceName = $"oobdev-it-{Guid.NewGuid():N}";
@@ -47,14 +47,14 @@ public partial class OtlpIntegrationTests
         Assert.IsTrue(tracer.ForceFlush(10_000));
 
         // Assert
-        var trace = await PollAsync($"/api/datasources/proxy/uid/tempo/api/traces/{traceId}", body => body.Contains(correlationId));
-        Assert.IsNotNull(trace, "The trace with the correlation tag did not arrive in Tempo.");
+        var trace = await PollAsync($"/api/telemetry/spans?traceId={traceId}", body => body.Contains(correlationId));
+        Assert.IsNotNull(trace, "The trace with the correlation tag did not arrive in the Aspire dashboard.");
         StringAssert.Contains(trace, serviceName);
     }
 
     [TestMethod]
     [TestCategory(TestCategories.Integration)]
-    public async Task Logs_ShouldReachLokiWithCorrelationAttributes()
+    public async Task Logs_ShouldReachDashboardWithCorrelationAttributes()
     {
         // Stage
         var serviceName = $"oobdev-it-{Guid.NewGuid():N}";
@@ -68,11 +68,10 @@ public partial class OtlpIntegrationTests
         Assert.IsTrue(logs.ForceFlush(10_000));
 
         // Assert
-        var query = Uri.EscapeDataString($"{{service_name=\"{serviceName}\"}}");
         var result = await PollAsync(
-            $"/api/datasources/proxy/uid/loki/loki/api/v1/query_range?query={query}&limit=10",
+            $"/api/telemetry/logs?resource={Uri.EscapeDataString(serviceName)}",
             body => body.Contains(correlationId));
-        Assert.IsNotNull(result, "The log record with the correlation attribute did not arrive in Loki.");
+        Assert.IsNotNull(result, "The log record with the correlation attribute did not arrive in the Aspire dashboard.");
         StringAssert.Contains(result, "Hello {Name}");
     }
 
@@ -98,12 +97,13 @@ public partial class OtlpIntegrationTests
     }
 
     /// <summary>
-    /// Calls the Grafana proxy until the body satisfies <paramref name="accept"/>; returns null if it never does.
+    /// Calls the dashboard telemetry API until the body satisfies <paramref name="accept"/>; returns null if it never does.
     /// </summary>
     private async Task<string?> PollAsync(string path, Func<string, bool> accept)
     {
-        var grafana = TestContext.GetRequiredProperty<string>("OTEL_GRAFANA_URL");
-        using var client = new HttpClient { BaseAddress = new Uri(grafana) };
+        var dashboard = TestContext.GetRequiredProperty<string>("OTEL_DASHBOARD_URL");
+        using var client = new HttpClient { BaseAddress = new Uri(dashboard) };
+        client.DefaultRequestHeaders.Add("x-api-key", TestContext.GetPropertyOrDefault("OTEL_DASHBOARD_API_KEY", "oobdev-test-key"));
         for (var attempt = 0; attempt < 30; attempt++)
         {
             using var response = await client.GetAsync(path, TestContext.CancellationToken);

@@ -270,21 +270,23 @@ services:
     # Service logs "Emulator Service is Successfully Up!" when ready
     # Tests should handle connection retries gracefully
 
-  otel-lgtm:
-    image: grafana/otel-lgtm:latest
+  otel-dashboard:
+    image: mcr.microsoft.com/dotnet/aspire-dashboard:latest
     container_name: oobd-test-otel
+    environment:
+      - DASHBOARD__FRONTEND__AUTHMODE=Unsecured
+      - DASHBOARD__OTLP__AUTHMODE=Unsecured
+      - ASPIRE_ALLOW_UNSECURED_TRANSPORT=true
+      # Telemetry API the OpenTelemetry Integration tests read spans and logs back from
+      - DASHBOARD__API__ENABLED=true
+      - DASHBOARD__API__AUTHMODE=ApiKey
+      - DASHBOARD__API__PRIMARYAPIKEY=${OTEL_DASHBOARD_API_KEY:-oobdev-test-key}
     ports:
-      - "${TEST_PORT_GRAFANA:-3000}:3000"   # Grafana (also proxies the Tempo, Loki and Prometheus APIs)
-      - "${TEST_PORT_OTLP_GRPC:-4317}:4317"   # OTLP gRPC
-      - "${TEST_PORT_OTLP_HTTP:-4318}:4318"   # OTLP HTTP
+      - "${TEST_PORT_OTEL_DASHBOARD:-18888}:18888"   # Aspire dashboard UI and telemetry API
+      - "${TEST_PORT_OTLP_GRPC:-4317}:18889"   # OTLP gRPC
+      - "${TEST_PORT_OTLP_HTTP:-4318}:18890"   # OTLP HTTP
     networks:
       - integration-test-net
-    healthcheck:
-      test: ["CMD-SHELL", "curl -sf http://localhost:3000/api/health || exit 1"]
-      interval: 10s
-      timeout: 5s
-      retries: 12
-      start_period: 30s
 
   # ============================================================================
   # Identity & Access Management

@@ -96,7 +96,7 @@ echo   - Service Bus:        localhost:5672
 echo   - Keycloak:           http://localhost:8081 (admin/admin)
 echo   - SBert:              http://localhost:5080
 echo   - Ollama:             http://localhost:11435
-echo   - Grafana (OTel):     http://localhost:3000 (OTLP :4317 gRPC, :4318 HTTP)
+echo   - Aspire (OTel):      http://localhost:18888 (OTLP :4317 gRPC, :4318 HTTP)
 echo.
 
 REM Check if --wait flag is provided

@@ -27,7 +27,7 @@ rectangle "Developer machine or CI runner" as Host <<system>> {
     rectangle "Storage: Azurite" as Stor
     rectangle "Documents and mail: Tika, smtp4dev" as Doc
     rectangle "Identity and AI: Keycloak, SBert, Ollama" as IdAi
-    rectangle "Observability: Grafana LGTM" as Obs
+    rectangle "Observability: Aspire dashboard" as Obs
     rectangle "Dashboards: nginx, OpenSearch Dashboards" as Dash
   }
 }
@@ -66,7 +66,7 @@ Every host port is `${TEST_PORT_<NAME>:-default}`. Set the variable in the shell
 | Azurite | 10000, 10001, 10002 | blob, queue, table |
 | Moto | 4566 (5000) | AWS API |
 | Service Bus emulator | 5672 | AMQP |
-| Grafana LGTM | 3000, 4317, 4318 | UI and Tempo/Loki proxy, OTLP gRPC, OTLP HTTP |
+| Aspire dashboard | 18888, 4317, 4318 | UI and telemetry API, OTLP gRPC, OTLP HTTP |
 | Keycloak | 8081 (8080) | |
 | nginx dashboard | 8080 (80) | |
 | SBert | 5080 (5000) | |

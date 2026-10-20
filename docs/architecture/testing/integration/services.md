@@ -20,7 +20,7 @@ One section per stack. Values are the test defaults from `src/.runsettings`; the
 - [Keycloak](#keycloak)
 - [SBert](#sbert)
 - [Ollama](#ollama)
-- [Grafana LGTM](#grafana-lgtm)
+- [Aspire dashboard](#aspire-dashboard)
 - [Dashboards](#dashboards)
 
 **Table 1 — Summary**
@@ -41,7 +41,7 @@ One section per stack. Values are the test defaults from `src/.runsettings`; the
 | Keycloak | `keycloak/keycloak` | `http://localhost:8081` | `admin` / `admin` |
 | SBert | built from `containers/` | `http://localhost:5080` | none |
 | Ollama | `oobdev/ollama-phi3` (built) | `http://localhost:11435` | none |
-| Grafana LGTM | `grafana/otel-lgtm` | OTLP `http://localhost:4318`, UI `http://localhost:3000` | none |
+| Aspire dashboard | `mcr.microsoft.com/dotnet/aspire-dashboard` | OTLP `http://localhost:4318`, UI `http://localhost:18888` | API key header for the telemetry API |
 
 ## SQL Server
 
@@ -99,9 +99,9 @@ Python sentence-embedding service used by the SBert client tests and as the refe
 
 CPU-only inference with `phi3` baked into the image at build time, so first start does not download 2 GB. Published on 11435 to leave a local Ollama on 11434 alone. Keys: `OLLAMA_URL`, `OLLAMA_HOST`, `OLLAMA_PORT`, `OLLAMA_MODEL`, `OLLAMA_EMBEDDING_MODEL`.
 
-## Grafana LGTM
+## Aspire dashboard
 
-One container with an OTLP receiver (4317 gRPC, 4318 HTTP), Tempo, Loki, Prometheus and Grafana. The OpenTelemetry tests export spans and logs to OTLP and read them back through Grafana's Tempo and Loki proxies. Keys: `OTEL_EXPORTER_OTLP_ENDPOINT`, `OTEL_GRAFANA_URL`.
+One container with an OTLP receiver (4317 gRPC, 4318 HTTP) and the Aspire dashboard UI on 18888 (unsecured). The OpenTelemetry tests export spans and logs to OTLP and read them back through the dashboard telemetry API (`/api/telemetry/spans`, `/api/telemetry/logs`), which needs the `x-api-key` header. Keys: `OTEL_EXPORTER_OTLP_ENDPOINT`, `OTEL_DASHBOARD_URL`, `OTEL_DASHBOARD_API_KEY`.
 
 ## Dashboards
 

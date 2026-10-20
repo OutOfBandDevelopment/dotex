@@ -46,7 +46,7 @@ Week 4: Documentation            ░░░░░░░░░░░░░░░�
 12. ✅ Keycloak (Identity & Access Management)
 13. ✅ SBert (Sentence embeddings - CPU only)
 14. ✅ Ollama (LLM inference - CPU only, phi3 model)
-15. ✅ OpenTelemetry (Grafana LGTM; replaced Azurinsight 2026-10-09)
+15. ✅ OpenTelemetry (Aspire dashboard; replaced Azurinsight 2026-10-09, Grafana LGTM 2026-10-20)
 
 **Features**:
 - ✅ Health checks for all services
@@ -208,7 +208,7 @@ Week 4: Documentation            ░░░░░░░░░░░░░░░�
 
 ### Azurinsight Tests ➡️ REPLACED (2026-10-09)
 
-The Application Insights emulator (azurinsight) was replaced by plain OpenTelemetry. The `otel-lgtm` service (`grafana/otel-lgtm`: OTLP receiver on 4317/4318, Tempo, Loki, Grafana on 3000) takes its place, the test properties are `OTEL_EXPORTER_OTLP_ENDPOINT` and `OTEL_GRAFANA_URL`, and the tests live in `src/ExternalServices/OpenTelemetry/OoBDev.OpenTelemetry.Tests`. Details: [change document](../../docs/changes/migration-opentelemetry-2026-10-09.md).
+The Application Insights emulator (azurinsight) was replaced by plain OpenTelemetry. The `otel-dashboard` service (the Aspire dashboard: OTLP receiver on 4317/4318, dashboard UI and telemetry API on 18888) takes its place (it replaced Grafana LGTM on 2026-10-20), the test properties are `OTEL_EXPORTER_OTLP_ENDPOINT`, `OTEL_DASHBOARD_URL` and `OTEL_DASHBOARD_API_KEY`, and the tests live in `src/ExternalServices/OpenTelemetry/OoBDev.OpenTelemetry.Tests`. Details: [change document](../../docs/changes/migration-opentelemetry-2026-10-09.md).
 
 ### Qdrant Tests ⏭️ DEFERRED
 

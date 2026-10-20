@@ -376,7 +376,7 @@ cd ../containers/testing
 - Keycloak (Identity & Access Management)
 - SBert (Sentence embeddings - CPU only)
 - Ollama (LLM inference - CPU only, phi3 model auto-pulled)
-- OpenTelemetry (Grafana LGTM: OTLP receiver, Tempo, Loki, Grafana)
+- OpenTelemetry (Aspire dashboard: OTLP receiver, traces, logs, metrics; telemetry API for read-back)
 
 **Test Properties Pattern:**
 ```csharp
@@ -612,7 +612,7 @@ dotnet test src/ --collect:"XPlat Code Coverage"
 3. **Incoming Projects** - All investigated (decisions pending)
 
 **Latest Updates (2026-10-09):**
-- OpenTelemetry replaced Application Insights; Grafana LGTM replaced Azurinsight in the test stack
+- OpenTelemetry replaced Application Insights; Grafana LGTM replaced Azurinsight in the test stack, then the Aspire dashboard replaced Grafana LGTM (2026-10-20)
 - Azure B2C dropped; Keycloak is the identity provider
 - Test Ollama published on host port 11435
 
@@ -653,5 +653,5 @@ Instead of directly migrating code from SharedFramework, we've pivoted to compre
 - .runsettings how-to guide created
 - Configuration documentation complete (CONFIGURATION_SETTINGS.md)
 - Ollama integration complete (phi3 auto-setup)
-- 15 Docker services ready (Apache Tika, SMTP4Dev, MongoDB, SQL Server, RabbitMQ, Redis, OpenSearch, Qdrant, Azurite, Moto, Service Bus, Keycloak, SBert, Ollama, Grafana LGTM)
+- 15 Docker services ready (Apache Tika, SMTP4Dev, MongoDB, SQL Server, RabbitMQ, Redis, OpenSearch, Qdrant, Azurite, Moto, Service Bus, Keycloak, SBert, Ollama, Aspire dashboard)
 

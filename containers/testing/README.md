@@ -31,7 +31,7 @@ The nginx reverse proxy provides a unified web interface to all services with di
 | **Stateless** | Apache Tika, SMTP4Dev |
 | **Stateful** | MongoDB, SQL Server, RabbitMQ, Redis, OpenSearch, Qdrant |
 | **Visualization** | OpenSearch Dashboards |
-| **Emulators** | Azurite (Azure Storage), Moto (AWS), Azure Service Bus Emulator, Grafana LGTM (OpenTelemetry) |
+| **Emulators** | Azurite (Azure Storage), Moto (AWS), Azure Service Bus Emulator, Aspire dashboard (OpenTelemetry) |
 | **Identity** | Keycloak |
 | **AI/ML** | SBert (CPU-only), Ollama (CPU-only) |
 
@@ -116,8 +116,8 @@ package "oobd-integration-test-net (Bridge Network)" {
     }
 
     ' Monitoring Emulator
-    component "OTel LGTM\n:3000 :4317 :4318" <<Container>> #E8F4F8 {
-        [OTLP receiver, Tempo,\nLoki, Grafana]
+    component "Aspire dashboard\n:18888 :4317 :4318" <<Container>> #E8F4F8 {
+        [OTLP receiver, traces,\nlogs, metrics UI]
     }
 }
 
@@ -310,7 +310,7 @@ scripts\integration-down.bat --clean
 | **Azurite** | `mcr.microsoft.com/azure-storage/azurite` | 10000 (Blob)<br>10001 (Queue)<br>10002 (Table) | Azure Storage emulator | `nc -z localhost 10000` |
 | **Moto** | `motoserver/moto` | 4566 | AWS services emulator (SQS, S3, etc.) | `curl http://localhost:4566/moto-api/` |
 | **Service Bus Emulator** | `mcr.microsoft.com/azure-messaging/servicebus-emulator` | 5672 (AMQP) | Azure Service Bus emulator | `nc -z localhost 5672` |
-| **OpenTelemetry** | `grafana/otel-lgtm:latest` | 3000, 4317, 4318 | OTLP receiver, Tempo, Loki, Grafana | `curl http://localhost:3000/api/health` |
+| **OpenTelemetry** | `mcr.microsoft.com/dotnet/aspire-dashboard:latest` | 18888, 4317, 4318 | OTLP receiver, dashboard UI, telemetry API | `curl http://localhost:18888/` |
 
 ### Identity & AI/ML
 
@@ -615,7 +615,7 @@ netstat -ano | findstr :27017
 | `TEST_PORT_AZURITE_BLOB`, `TEST_PORT_AZURITE_QUEUE`, `TEST_PORT_AZURITE_TABLE` | 10000, 10001, 10002 | Azurite |
 | `TEST_PORT_MOTO` | 4566 | Moto |
 | `TEST_PORT_SERVICEBUS` | 5672 | Service Bus emulator |
-| `TEST_PORT_GRAFANA`, `TEST_PORT_OTLP_GRPC`, `TEST_PORT_OTLP_HTTP` | 3000, 4317, 4318 | Grafana LGTM |
+| `TEST_PORT_OTEL_DASHBOARD`, `TEST_PORT_OTLP_GRPC`, `TEST_PORT_OTLP_HTTP` | 18888, 4317, 4318 | Aspire dashboard |
 | `TEST_PORT_KEYCLOAK` | 8081 | Keycloak |
 | `TEST_PORT_NGINX` | 8080 | Dashboard |
 | `TEST_PORT_SBERT` | 5080 | SBert |

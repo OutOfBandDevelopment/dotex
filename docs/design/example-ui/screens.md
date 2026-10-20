@@ -246,6 +246,6 @@ These follow the same blade pattern; each gets its own four design documents (re
 | Text tools | Markdown, HTML, YAML converters | |
 | Formats | file inspector | Device and hardware screens are deferred until the hardware projects are merged |
 | Operations | health, configuration | Secrets masked |
-| Developer | links to Scalar, AsyncAPI, Grafana, CLI catalog | |
+| Developer | links to Scalar, AsyncAPI, Aspire dashboard, CLI catalog | |
 
 [Back to the plan](../../../future-example.md) · [Shell design](README.md)
