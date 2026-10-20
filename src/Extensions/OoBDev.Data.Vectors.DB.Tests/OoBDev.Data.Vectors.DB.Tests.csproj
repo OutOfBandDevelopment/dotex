@@ -25,6 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\OoBDev.Data.Vectors.SqlStore\OoBDev.Data.Vectors.SqlStore.csproj" />
     <ProjectReference Include="..\..\Framework\OoBDev.TestUtilities\OoBDev.TestUtilities.csproj" />
     <!-- Build order only: the Integration tests deploy this project's dacpac to SQL Server -->
     <ProjectReference Include="..\OoBDev.Data.Vectors.DB\OoBDev.Data.Vectors.DB.csproj" ReferenceOutputAssembly="false" />

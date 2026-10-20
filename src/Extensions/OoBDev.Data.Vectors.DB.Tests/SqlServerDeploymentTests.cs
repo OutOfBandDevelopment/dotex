@@ -65,6 +65,35 @@ public class SqlServerDeploymentTests
 
     [TestMethod]
     [TestCategory(TestCategories.Integration)]
+    public async Task SqlVectorStore_StoreAndFindNeighbors_RanksByCosineAndKeepsMetadata()
+    {
+        var options = Microsoft.Extensions.Options.Options.Create(new OoBDev.Data.Vectors.SqlStore.SqlVectorStoreOptions { ConnectionString = DatabaseConnection(), Limit = 10 });
+        var store = new OoBDev.Data.Vectors.SqlStore.SqlVectorStoreProvider(options, "notes");
+        var common = new global::System.Collections.Generic.Dictionary<string, object> { ["kind"] = "note" };
+
+        var ids = await store.StoreVectorsAsync(
+        [
+            (new float[] { 1, 0, 0 }, new global::System.Collections.Generic.Dictionary<string, object> { ["title"] = "x axis" }),
+            (new float[] { 0, 1, 0 }, new global::System.Collections.Generic.Dictionary<string, object> { ["title"] = "y axis" }),
+            (new float[] { 0.9f, 0.1f, 0 }, new global::System.Collections.Generic.Dictionary<string, object> { ["title"] = "near x" }),
+        ], common);
+
+        Assert.AreEqual(3, ids.Length);
+        var hits = new global::System.Collections.Generic.List<OoBDev.Search.Models.SearchResultModel>();
+        await foreach (var hit in store.FindNeighborsAsync(new float[] { 1, 0, 0 })) hits.Add(hit);
+        Assert.AreEqual(3, hits.Count);
+        Assert.AreEqual("x axis", hits[0].MetaData!["title"]);
+        Assert.AreEqual("near x", hits[1].MetaData!["title"]);
+        Assert.AreEqual("note", hits[0].MetaData!["kind"]);
+        Assert.IsTrue(hits[0].Score <= hits[1].Score);
+
+        var listed = 0;
+        await foreach (var _ in store.ListAsync()) listed++;
+        Assert.AreEqual(3, listed);
+    }
+
+    [TestMethod]
+    [TestCategory(TestCategories.Integration)]
     public async Task Distance_And_Angle_RunInsideSqlServer()
     {
         var db = DatabaseConnection();
