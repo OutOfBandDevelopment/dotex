@@ -19,6 +19,7 @@ How to verify each feature and what to do when it fails. Generated from the same
 | [Cache a value](cache-a-value.md) | Example stack running. |
 | [Hash, sign, compare and calculate](use-the-toolbox.md) | Example stack running. |
 | [Query a document and render Markdown](query-and-render-text.md) | Example stack running. |
+| [Store texts and find the closest](store-and-search-vectors.md) | Example stack running. |
 | [Render a text template](render-a-template.md) | Example stack running. |
 | [Send an email through a channel](send-an-email.md) | The SMTP4Dev container is running to receive the message. |
 | [Put a message on a queue](queue-a-message.md) | RabbitMQ (or another queue adapter) is running. |

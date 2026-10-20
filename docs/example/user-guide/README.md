@@ -19,6 +19,7 @@ Step-by-step guides with screenshots, one per user journey. They are regenerated
 | [Cache a value](cache-a-value.md) | A developer adding caching to a service | Store text under a key, read it back, and remove it. |
 | [Hash, sign, compare and calculate](use-the-toolbox.md) | A developer checking integrity and similarity | Hash some text, sign a message with a shared secret, measure how far apart two vectors are, evaluate an expression and get a one-time code. |
 | [Query a document and render Markdown](query-and-render-text.md) | A developer pulling values out of mixed documents | Query a JSON document with XPath, see the XML view XPath works on, and render Markdown. |
+| [Store texts and find the closest](store-and-search-vectors.md) | A developer adding semantic search to an application | Embed a few sentences into a collection and find the ones closest in meaning to a query. |
 | [Render a text template](render-a-template.md) | A developer producing documents or email bodies from data | Fill a template with JSON data and read the result. |
 | [Send an email through a channel](send-an-email.md) | A developer wiring notifications into an application | Send a message through the public channel and read the acknowledgement. |
 | [Put a message on a queue](queue-a-message.md) | A developer testing asynchronous processing | Enqueue a message and find the event reference that describes the queue. |

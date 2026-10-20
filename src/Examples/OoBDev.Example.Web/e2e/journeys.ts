@@ -358,6 +358,40 @@ export const journeys: Journey[] = [
     ],
   },
   {
+    id: 'store-and-search-vectors',
+    title: 'Store texts and find the closest',
+    persona: 'A developer adding semantic search to an application',
+    goal: 'Embed a few sentences into a collection and find the ones closest in meaning to a query.',
+    start: '/utilities/vectors',
+    prerequisites: [],
+    features: ['OoBDev.Search.Abstractions (`IVectorStore`)', 'OoBDev.Data.Vectors.SqlStore (`SqlVectorStoreProvider`)', 'OoBDev.SBert.AllMiniLmL6V2 (embeddings)'],
+    why: 'The vector store interface hides where vectors live, so the same code runs on SQL Server, Qdrant or in memory and ranks by meaning instead of keywords.',
+    problems: [
+      { symptom: 'Search returns nothing', cause: 'The collection is empty or holds vectors of a different length', fix: 'Press Store texts first, and keep one embedding model per collection' },
+      { symptom: 'Stored in the memory store', cause: 'No SqlVectorStoreOptions:ConnectionString is configured, so the in-process store is used and is lost on restart', fix: 'Deploy OoBDev.Data.Vectors.DB and set the connection string to keep vectors in SQL Server' },
+    ],
+    steps: [
+      {
+        title: 'Store the sample texts',
+        narrative: 'Four sentences are filled in, two about pets and two about money. Store them in the notes collection.',
+        expect: ['A line reports how many texts were stored and in which store.'],
+        run: async page => {
+          await press(page, 'Store texts');
+          await expect(page.getByLabel('Stored')).toContainText('Stored 4');
+        },
+      },
+      {
+        title: 'Search by meaning',
+        narrative: 'The query a sleeping pet shares no words with the stored sentences but is close to the cat and kitten ones.',
+        expect: ['The closest sentences are listed first with their distance.'],
+        run: async page => {
+          await press(page, 'Search');
+          await expect(page.getByLabel('Hits')).toContainText('kitten');
+        },
+      },
+    ],
+  },
+  {
     id: 'render-a-template',
     title: 'Render a text template',
     persona: 'A developer producing documents or email bodies from data',

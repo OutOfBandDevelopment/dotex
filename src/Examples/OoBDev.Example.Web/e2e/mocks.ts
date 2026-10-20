@@ -31,6 +31,8 @@ export async function mockApi(page: Page): Promise<void> {
     }
     if (path === '/api/Toolbox/calculate') return json(route, { result: 54, optimized: '54', variables: ['A'] });
     if (path === '/api/Toolbox/otp') return json(route, { secret: 'JBSWY3DPEHPK3PXP', code: '492039', uri: 'otpauth://totp/OoBDev%20Example:demo?secret=JBSWY3DPEHPK3PXP', valid: null });
+    if (path === '/api/VectorStore/index') return json(route, { ids: ['1', '2', '3', '4'], store: 'memory' });
+    if (path === '/api/VectorStore/query') return json(route, [{ id: '3', score: 0.31, text: 'A kitten curled up on the sofa to sleep.' }, { id: '1', score: 0.44, text: 'The cat sat on the warm windowsill.' }]);
     if (path === '/api/TextTools/xpath') return json(route, { count: 2, matches: ['<total>12.5</total>', '<total>40</total>'], xml: '<root><orders><total>12.5</total><total>40</total></orders></root>' });
     if (path === '/api/TextTools/markdown') return json(route, { html: '<h1>Title</h1>\n<ul><li>one</li><li>two</li></ul>\n' });
     if (path === '/api/Toolbox/hash') return json(route, { algorithm: 'sha512', result: '9b71d224bd62f3785d96d46ad3ea3d73319bfbc2890caadae2dff72519673ca72323c3d99ba5c11d7c7acc6e14b8c5da0c4663475c2e5c3adef46f73bcdec043' });

@@ -5,6 +5,7 @@ using OoBDev.Common.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
@@ -62,6 +63,13 @@ public static class Program
                 DisableMailKit = true, //TODO: this is not supported at this time so just skip it ...skipHosting,
                 //DisableMessageQueueing = true,  // skipHosting,
             });
+
+        // The vector store: SQL Server when configured, otherwise in memory (replaces the Qdrant default)
+        services.RemoveAll<OoBDev.Search.Semantic.IVectorStoreProviderFactory>();
+        if (!string.IsNullOrWhiteSpace(builder.Configuration["SqlVectorStoreOptions:ConnectionString"]))
+            OoBDev.Data.Vectors.SqlStore.ServiceCollectionExtensions.TryAddSqlVectorStore(services, builder.Configuration, "SqlVectorStoreOptions");
+        else
+            services.AddSingleton<OoBDev.Search.Semantic.IVectorStoreProviderFactory, OoBDev.WebApi.Services.InMemoryVectorStoreProviderFactory>();
 
         // Add services to the container.
         services.AddLogging(builder => builder

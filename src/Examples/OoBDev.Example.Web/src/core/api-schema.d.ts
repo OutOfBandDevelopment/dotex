@@ -1216,6 +1216,131 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/VectorStore/index": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["OoBDev.WebApi.Models.VectorIndexRequestModel"];
+                    "text/json": components["schemas"]["OoBDev.WebApi.Models.VectorIndexRequestModel"];
+                    "application/*+json": components["schemas"]["OoBDev.WebApi.Models.VectorIndexRequestModel"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["OoBDev.WebApi.Models.VectorIndexResponseModel"];
+                        "application/json": components["schemas"]["OoBDev.WebApi.Models.VectorIndexResponseModel"];
+                        "text/json": components["schemas"]["OoBDev.WebApi.Models.VectorIndexResponseModel"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/VectorStore/query": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["OoBDev.WebApi.Models.VectorQueryRequestModel"];
+                    "text/json": components["schemas"]["OoBDev.WebApi.Models.VectorQueryRequestModel"];
+                    "application/*+json": components["schemas"]["OoBDev.WebApi.Models.VectorQueryRequestModel"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["OoBDev.WebApi.Models.VectorHitModel"][];
+                        "application/json": components["schemas"]["OoBDev.WebApi.Models.VectorHitModel"][];
+                        "text/json": components["schemas"]["OoBDev.WebApi.Models.VectorHitModel"][];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/VectorStore/{collection}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    collection: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["OoBDev.WebApi.Models.VectorHitModel"][];
+                        "application/json": components["schemas"]["OoBDev.WebApi.Models.VectorHitModel"][];
+                        "text/json": components["schemas"]["OoBDev.WebApi.Models.VectorHitModel"][];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/health": {
         parameters: {
             query?: never;
@@ -1411,6 +1536,26 @@ export interface components {
             dotProduct?: number | string;
             /** Format: double */
             manhattan?: number | string;
+        };
+        "OoBDev.WebApi.Models.VectorHitModel": {
+            id: string;
+            /** Format: double */
+            score?: number | string;
+            text?: null | string;
+        };
+        "OoBDev.WebApi.Models.VectorIndexRequestModel": {
+            collection: string;
+            texts: string[];
+        };
+        "OoBDev.WebApi.Models.VectorIndexResponseModel": {
+            ids: string[];
+            store: string;
+        };
+        "OoBDev.WebApi.Models.VectorQueryRequestModel": {
+            collection: string;
+            query: string;
+            /** Format: int32 */
+            limit?: number | string;
         };
         "OoBDev.WebApi.Models.XPathQueryRequestModel": {
             format: string;

@@ -19,6 +19,7 @@ Acceptance criteria for each journey. The same journeys run as Playwright tests.
 | [Cache a value](cache-a-value.md) | 2 | `/data/cache` |
 | [Hash, sign, compare and calculate](use-the-toolbox.md) | 5 | `/utilities/toolbox` |
 | [Query a document and render Markdown](query-and-render-text.md) | 2 | `/utilities/text` |
+| [Store texts and find the closest](store-and-search-vectors.md) | 2 | `/utilities/vectors` |
 | [Render a text template](render-a-template.md) | 2 | `/content/templates` |
 | [Send an email through a channel](send-an-email.md) | 2 | `/messaging/communications` |
 | [Put a message on a queue](queue-a-message.md) | 2 | `/messaging/queues` |

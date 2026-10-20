@@ -173,7 +173,7 @@ Checklist (tick as work lands):
   - [x] Current user and claims
   - [x] Embedded API and event documentation links
 - [ ] **Phase 3: partly covered**
-  - [ ] Restore `SearchController` (list, semantic, lexical, hybrid) and the search screen
+  - [x] Vector store screen: store texts and search by meaning over `IVectorStore` (SQL Server provider `OoBDev.Data.Vectors.SqlStore` or in-memory); lexical and hybrid search still open
   - [ ] Template query and save endpoints and editor
   - [x] Cache lab: store, look up and remove by key through `ICachingProvider` (`api/Cache`); the provider interface cannot list keys, so it is a lab rather than a browser
   - [ ] Telemetry view (link to Grafana plus recent trace ids)

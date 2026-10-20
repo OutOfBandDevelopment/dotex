@@ -24,6 +24,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Common\OoBDev.Common.Complete\OoBDev.Common.Complete.csproj" />
+    <ProjectReference Include="..\..\Extensions\OoBDev.Data.Vectors.SqlStore\OoBDev.Data.Vectors.SqlStore.csproj" />
   </ItemGroup>
 
 </Project>
