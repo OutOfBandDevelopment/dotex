@@ -16,6 +16,7 @@ export const router = createRouter({
     { path: '/ai/rag', component: () => import('../pages/RagPage.vue'), meta: { crumbs: ['AI', 'Retrieval (RAG)'] } },
     { path: '/operations/info', component: () => import('../pages/OperationsPage.vue'), meta: { crumbs: ['Operations', 'Runtime and configuration'] } },
     { path: '/data/cache', component: () => import('../pages/CachePage.vue'), meta: { crumbs: ['Data', 'Cache lab'] } },
+    { path: '/utilities/toolbox', component: () => import('../pages/ToolboxPage.vue'), meta: { crumbs: ['Utilities', 'Toolbox'] } },
     { path: '/ai/ollama', component: () => import('../pages/OllamaPage.vue'), meta: { crumbs: ['AI', 'Ollama'] } },
     { path: '/ai/groq', component: () => import('../pages/GroqPage.vue'), meta: { crumbs: ['AI', 'Groq cloud'] } },
     { path: '/ai/embeddings', component: () => import('../pages/EmbeddingsPage.vue'), meta: { crumbs: ['AI', 'Embeddings'] } },

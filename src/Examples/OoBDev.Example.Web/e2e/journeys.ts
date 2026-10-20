@@ -261,6 +261,49 @@ export const journeys: Journey[] = [
     ],
   },
   {
+    id: 'use-the-toolbox',
+    title: 'Hash, sign and compare',
+    persona: 'A developer checking integrity and similarity',
+    goal: 'Hash some text, sign a message with a shared secret, and measure how far apart two vectors are.',
+    start: '/utilities/toolbox',
+    prerequisites: [],
+    features: ['OoBDev.System (`IHash`, `IHMACCalculator`)', 'OoBDev.System.Abstractions (`VectorMath`)'],
+    why: 'Pick the algorithm by key from configuration instead of hard-coding it; the default hash is SHA-512, and signing and vector math are one call each.',
+    problems: [
+      { symptom: 'Unknown algorithm error', cause: 'The key is not one of the registered keys', fix: 'Use the keys in the lists (sha512, hmac-256, ...)' },
+      { symptom: 'Compare is disabled', cause: 'The vectors are not numbers or differ in length', fix: 'Enter the same count of numbers in both' },
+    ],
+    steps: [
+      {
+        title: 'Hash some text',
+        narrative: 'Choose an algorithm and press Hash. The same text always gives the same hash.',
+        expect: ['A hash is shown.'],
+        run: async page => {
+          await press(page, 'Hash');
+          await expect(page.getByLabel('Hash result')).not.toBeEmpty();
+        },
+      },
+      {
+        title: 'Sign a message',
+        narrative: 'Sign a message with a shared secret; the receiver recomputes the signature to prove the message is unchanged.',
+        expect: ['A signature is shown.'],
+        run: async page => {
+          await press(page, 'Sign');
+          await expect(page.getByLabel('Signature')).not.toBeEmpty();
+        },
+      },
+      {
+        title: 'Compare two vectors',
+        narrative: 'Compare two number lists under cosine, Euclidean, dot product and Manhattan distance.',
+        expect: ['All four distances are shown.'],
+        run: async page => {
+          await press(page, 'Compare');
+          await expect(page.getByRole('table', { name: 'Distances' })).toContainText('Manhattan');
+        },
+      },
+    ],
+  },
+  {
     id: 'render-a-template',
     title: 'Render a text template',
     persona: 'A developer producing documents or email bodies from data',

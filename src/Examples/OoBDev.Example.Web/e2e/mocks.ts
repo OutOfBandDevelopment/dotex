@@ -29,6 +29,9 @@ export async function mockApi(page: Page): Promise<void> {
       if (route.request().method() === 'GET') return json(route, { key: 'greeting', found: true, value: 'hello from the cache', provider: 'MicrosoftMemoryCachingProvider' });
       return route.fulfill({ status: 204 });
     }
+    if (path === '/api/Toolbox/hash') return json(route, { algorithm: 'sha512', result: '9b71d224bd62f3785d96d46ad3ea3d73319bfbc2890caadae2dff72519673ca72323c3d99ba5c11d7c7acc6e14b8c5da0c4663475c2e5c3adef46f73bcdec043' });
+    if (path === '/api/Toolbox/hmac') return json(route, { algorithm: 'hmac-256', result: 'Zm9yIGRvY3VtZW50YXRpb24gb25seQ==' });
+    if (path === '/api/Toolbox/vector-distance') return json(route, { cosine: 0.001234, euclidean: 0.5, dotProduct: 27.5, manhattan: 0.5 });
     if (path === '/api/Rag') return json(route, { answer: 'Queues are supported through adapters for RabbitMQ, Azure Service Bus, Azure Storage queues and Amazon SQS (passage p3).', sources: [{ id: 'p3', score: 0.712, text: 'Messages are put on a queue by an adapter: RabbitMQ, Azure Service Bus, Azure Storage queues or Amazon SQS.' }, { id: 'p1', score: 0.318, text: 'The framework resolves every provider through a keyed service, chosen from a configuration path.' }] });
     if (path.startsWith('/api/AllMiniLM') || path.startsWith('/api/SBERT')) {
       const t = url.searchParams.get('text') ?? '';

@@ -15,6 +15,7 @@ export const navGroups: NavGroup[] = [
     { label: 'Templates', to: '/content/templates' },
   ] },
   { title: 'Data', items: [{ label: 'Cache lab', to: '/data/cache' }] },
+  { title: 'Utilities', items: [{ label: 'Toolbox', to: '/utilities/toolbox' }] },
   { title: 'Messaging', items: [
     { label: 'Communications', to: '/messaging/communications' },
     { label: 'Queues', to: '/messaging/queues' },
