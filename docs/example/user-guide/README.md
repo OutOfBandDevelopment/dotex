@@ -22,6 +22,7 @@ Step-by-step guides with screenshots, one per user journey. They are regenerated
 | [Store texts and find the closest](store-and-search-vectors.md) | A developer adding semantic search to an application | Embed a few sentences into a collection and find the ones closest in meaning to a query. |
 | [Compare a set of vectors](compare-vectors.md) | A data scientist checking how close embeddings are | Measure every pair in a small set of vectors and see their lengths and centroid. |
 | [Label an image without training](label-an-image.md) | A developer adding image understanding | Rank free-text labels against a picture and see its embedding. |
+| [Compare sentence embedding models](compare-embedding-models.md) | A developer choosing an embedding model | Score the same pair of sentences with a chosen model and see its vector size and speed. |
 | [Render a text template](render-a-template.md) | A developer producing documents or email bodies from data | Fill a template with JSON data and read the result. |
 | [Send an email through a channel](send-an-email.md) | A developer wiring notifications into an application | Send a message through the public channel and read the acknowledgement. |
 | [Put a message on a queue](queue-a-message.md) | A developer testing asynchronous processing | Enqueue a message and find the event reference that describes the queue. |

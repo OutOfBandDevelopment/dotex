@@ -10,6 +10,7 @@ export const navGroups: NavGroup[] = [
     { label: 'Ollama', to: '/ai/ollama' },
     { label: 'Groq cloud', to: '/ai/groq' },
     { label: 'Image labels', to: '/ai/images' },
+    { label: 'Model compare', to: '/ai/model-compare' },
   ] },
   { title: 'Content', items: [
     { label: 'Documents', to: '/content/documents' },

@@ -27,6 +27,8 @@
     <ProjectReference Include="..\..\Extensions\OoBDev.Data.Vectors.SqlStore\OoBDev.Data.Vectors.SqlStore.csproj" />
     <ProjectReference Include="..\..\ExternalServices\Vision\OoBDev.Vision.ClipVitB32\OoBDev.Vision.ClipVitB32.csproj" />
     <ProjectReference Include="..\..\ExternalServices\Onnx\OoBDev.Onnx.ImageEmbeddings.Skia\OoBDev.Onnx.ImageEmbeddings.Skia.csproj" />
+    <ProjectReference Include="..\..\ExternalServices\SBert\OoBDev.SBert.AllMpnetBaseV2\OoBDev.SBert.AllMpnetBaseV2.csproj" />
+    <ProjectReference Include="..\..\ExternalServices\SBert\OoBDev.SBert.NomicEmbedTextV1_5\OoBDev.SBert.NomicEmbedTextV1_5.csproj" />
   </ItemGroup>
 
 </Project>

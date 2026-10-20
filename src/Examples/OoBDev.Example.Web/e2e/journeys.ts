@@ -452,6 +452,31 @@ export const journeys: Journey[] = [
     ],
   },
   {
+    id: 'compare-embedding-models',
+    title: 'Compare sentence embedding models',
+    persona: 'A developer choosing an embedding model',
+    goal: 'Score the same pair of sentences with a chosen model and see its vector size and speed.',
+    start: '/ai/model-compare',
+    prerequisites: ['Each model downloads once into the shared hub cache, so the first use of a model needs internet.'],
+    features: ['OoBDev.SBert.AllMiniLmL6V2', 'OoBDev.SBert.AllMpnetBaseV2', 'OoBDev.SBert.NomicEmbedTextV1_5', 'OoBDev.Onnx.SentenceEmbeddings'],
+    why: 'Models are registered side by side under keys, so switching or comparing models is a change of key, not of code.',
+    problems: [
+      { symptom: 'Score is disabled', cause: 'A text is empty or no model is ticked', fix: 'Fill in both texts and tick at least one model' },
+      { symptom: 'A model fails on first use', cause: 'The model files could not be downloaded', fix: 'Provide internet access once, or copy the files into the shared hub cache folder' },
+    ],
+    steps: [
+      {
+        title: 'Score the sample sentences',
+        narrative: 'Two similar sentences are filled in with the first model ticked. Score them.',
+        expect: ['A table shows the model, its vector size, the similarity and the time taken.'],
+        run: async page => {
+          await press(page, 'Score');
+          await expect(page.getByLabel('Model scores')).toContainText('all-minilm-l6-v2');
+        },
+      },
+    ],
+  },
+  {
     id: 'render-a-template',
     title: 'Render a text template',
     persona: 'A developer producing documents or email bodies from data',

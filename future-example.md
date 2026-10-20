@@ -181,7 +181,7 @@ Checklist (tick as work lands):
   - [ ] Decide on mail receive (see section 6)
 - [ ] **Phase 4: new features**
   - [x] Image embeddings and zero-shot labels (CLIP; live model download not yet exercised)
-  - [ ] ONNX sentence embeddings and model compare
+  - [x] ONNX sentence embeddings and model compare
   - [x] Vectors and matrix calculator
   - [ ] Identity management
   - [ ] Data access and DacPac builder

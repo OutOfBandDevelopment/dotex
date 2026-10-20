@@ -71,6 +71,10 @@ public static class Program
         else
             services.AddSingleton<OoBDev.Search.Semantic.IVectorStoreProviderFactory, OoBDev.WebApi.Services.InMemoryVectorStoreProviderFactory>();
 
+        // Extra sentence models for the compare screen; downloaded only when first used
+        OoBDev.SBert.AllMpnetBaseV2.ServiceCollectionExtensions.TryAddAllMpnetBaseV2Services(services, builder.Configuration, "AllMpnetBaseV2");
+        OoBDev.SBert.NomicEmbedTextV1_5.ServiceCollectionExtensions.TryAddNomicEmbedTextV1_5Services(services, builder.Configuration, "NomicEmbedTextV1_5");
+
         // CLIP image embeddings; the model is only downloaded when first resolved
         OoBDev.Onnx.ImageEmbeddings.Skia.ServiceCollectionExtensions.TryAddSkiaImageDecoder(services);
         OoBDev.Vision.ClipVitB32.ServiceCollectionExtensions.TryAddClipVitB32Services(services, builder.Configuration, "ClipVitB32");
