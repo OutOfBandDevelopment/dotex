@@ -845,6 +845,92 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/TextTools/xpath": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["OoBDev.WebApi.Models.XPathQueryRequestModel"];
+                    "text/json": components["schemas"]["OoBDev.WebApi.Models.XPathQueryRequestModel"];
+                    "application/*+json": components["schemas"]["OoBDev.WebApi.Models.XPathQueryRequestModel"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["OoBDev.WebApi.Models.XPathQueryResponseModel"];
+                        "application/json": components["schemas"]["OoBDev.WebApi.Models.XPathQueryResponseModel"];
+                        "text/json": components["schemas"]["OoBDev.WebApi.Models.XPathQueryResponseModel"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/TextTools/markdown": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["OoBDev.WebApi.Models.MarkdownRequestModel"];
+                    "text/json": components["schemas"]["OoBDev.WebApi.Models.MarkdownRequestModel"];
+                    "application/*+json": components["schemas"]["OoBDev.WebApi.Models.MarkdownRequestModel"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["OoBDev.WebApi.Models.MarkdownResponseModel"];
+                        "application/json": components["schemas"]["OoBDev.WebApi.Models.MarkdownResponseModel"];
+                        "text/json": components["schemas"]["OoBDev.WebApi.Models.MarkdownResponseModel"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/Toolbox/algorithms": {
         parameters: {
             query?: never;
@@ -1263,6 +1349,12 @@ export interface components {
             secret: string;
             message: string;
         };
+        "OoBDev.WebApi.Models.MarkdownRequestModel": {
+            markdown: string;
+        };
+        "OoBDev.WebApi.Models.MarkdownResponseModel": {
+            html: string;
+        };
         "OoBDev.WebApi.Models.OperationsInfoModel": {
             environment: string;
             application: string;
@@ -1319,6 +1411,17 @@ export interface components {
             dotProduct?: number | string;
             /** Format: double */
             manhattan?: number | string;
+        };
+        "OoBDev.WebApi.Models.XPathQueryRequestModel": {
+            format: string;
+            content: string;
+            xPath: string;
+        };
+        "OoBDev.WebApi.Models.XPathQueryResponseModel": {
+            /** Format: int32 */
+            count?: number | string;
+            matches: string[];
+            xml: string;
         };
         "System.Text.Json.Nodes.JsonNode": unknown;
     };

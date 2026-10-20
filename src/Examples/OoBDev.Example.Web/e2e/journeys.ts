@@ -323,6 +323,41 @@ export const journeys: Journey[] = [
     ],
   },
   {
+    id: 'query-and-render-text',
+    title: 'Query a document and render Markdown',
+    persona: 'A developer pulling values out of mixed documents',
+    goal: 'Query a JSON document with XPath, see the XML view XPath works on, and render Markdown.',
+    start: '/utilities/text',
+    prerequisites: [],
+    features: ['OoBDev.System (`JsonNavigator`)', 'OoBDev.System.Text.Yaml (`YamlNavigator`)', 'OoBDev.System.Text.Html (`HtmlNavigator`)', 'OoBDev.System.Text.Markdown (Markdig)'],
+    why: 'One query language, XPath, reads JSON, YAML, HTML and XML, so extraction code does not change when the format does.',
+    problems: [
+      { symptom: 'Could not query the document', cause: 'The XPath is invalid or the document does not parse in the chosen format', fix: 'Check the format selector and open Document as XML to see the names XPath can use' },
+      { symptom: 'No matches', cause: 'JSON and YAML property names become element names', fix: 'Use // to search at any depth, for example //total' },
+    ],
+    steps: [
+      {
+        title: 'Run an XPath query',
+        narrative: 'The sample JSON document and query are filled in. Run the query to list every match.',
+        expect: ['The match count and the matching elements are shown.'],
+        run: async page => {
+          await press(page, 'Run query');
+          await expect(page.getByLabel('Match count')).toContainText('match');
+          await expect(page.getByLabel('Matches')).toContainText('total');
+        },
+      },
+      {
+        title: 'Render Markdown',
+        narrative: 'Render the sample Markdown to HTML; scripts and event handlers are stripped before it is shown.',
+        expect: ['The rendered preview appears.'],
+        run: async page => {
+          await press(page, 'Render');
+          await expect(page.getByLabel('Rendered Markdown')).toBeVisible();
+        },
+      },
+    ],
+  },
+  {
     id: 'render-a-template',
     title: 'Render a text template',
     persona: 'A developer producing documents or email bodies from data',

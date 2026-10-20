@@ -188,7 +188,8 @@ Checklist (tick as work lands):
   - [ ] Queue adapters monitor and blob browser
   - [ ] Semantic Kernel plug-in tester
   - [ ] Expression calculator, pipelines, text tools, security helpers, format inspectors (no device IO)
-  - [x] Toolbox page: hash, HMAC, vector distance, expression calculator and TOTP (text tools, pipelines, format inspectors still open)
+  - [x] Toolbox page: hash, HMAC, vector distance, expression calculator and TOTP
+  - [x] Text tools page: XPath over JSON, YAML, HTML and XML, Markdown rendering (pipelines, format inspectors still open)
   - [x] Operations: runtime facts and masked effective configuration (`GET api/Operations/info`); health probes stay on the overview
   - [ ] CLI tool catalog
 - [ ] **Journeys, screenshots and generated user guides (Playwright)**

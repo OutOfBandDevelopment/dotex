@@ -18,6 +18,7 @@ Acceptance criteria for each journey. The same journeys run as Playwright tests.
 | [Check the running service](check-the-running-service.md) | 2 | `/operations/info` |
 | [Cache a value](cache-a-value.md) | 2 | `/data/cache` |
 | [Hash, sign, compare and calculate](use-the-toolbox.md) | 5 | `/utilities/toolbox` |
+| [Query a document and render Markdown](query-and-render-text.md) | 2 | `/utilities/text` |
 | [Render a text template](render-a-template.md) | 2 | `/content/templates` |
 | [Send an email through a channel](send-an-email.md) | 2 | `/messaging/communications` |
 | [Put a message on a queue](queue-a-message.md) | 2 | `/messaging/queues` |
