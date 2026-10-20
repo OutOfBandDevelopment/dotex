@@ -25,6 +25,10 @@ export async function mockApi(page: Page): Promise<void> {
       return json(route, { context: [1, 2, 3, turn], response: turn === 1 ? 'Hello! How can I help you today?' : 'Photosynthesis is how plants turn light into sugar.' });
     }
     if (path === '/api/Operations/info') return json(route, { environment: 'Development', application: 'OoBDev.Example.WebApi', runtime: '.NET 10.0.0', machine: 'example-api', started: '2026-10-19T08:00:00+00:00', configuration: [{ key: 'AllowedHosts', value: '*' }, { key: 'FileTemplatingOptions:TemplatePath', value: 'Templates' }, { key: 'Identity:Keycloak:ClientSecret', value: '***' }, { key: 'Logging:LogLevel:Default', value: 'Information' }] });
+    if (path === '/api/Cache') {
+      if (route.request().method() === 'GET') return json(route, { key: 'greeting', found: true, value: 'hello from the cache', provider: 'MicrosoftMemoryCachingProvider' });
+      return route.fulfill({ status: 204 });
+    }
     if (path === '/api/Rag') return json(route, { answer: 'Queues are supported through adapters for RabbitMQ, Azure Service Bus, Azure Storage queues and Amazon SQS (passage p3).', sources: [{ id: 'p3', score: 0.712, text: 'Messages are put on a queue by an adapter: RabbitMQ, Azure Service Bus, Azure Storage queues or Amazon SQS.' }, { id: 'p1', score: 0.318, text: 'The framework resolves every provider through a keyed service, chosen from a configuration path.' }] });
     if (path.startsWith('/api/AllMiniLM') || path.startsWith('/api/SBERT')) {
       const t = url.searchParams.get('text') ?? '';

@@ -38,6 +38,10 @@ export const http = {
     const text = await r.text();
     try { return JSON.parse(text) as T; } catch { return text as unknown as T; }
   },
+  /** Sends JSON with a verb other than POST (PUT, DELETE, PATCH); the body is optional. */
+  async sendJson(method: 'PUT' | 'DELETE' | 'PATCH', path: string, body?: unknown): Promise<void> {
+    await send(path, body === undefined ? { method } : { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+  },
   async getText(path: string): Promise<string> {
     return (await send(path)).text();
   },

@@ -226,6 +226,41 @@ export const journeys: Journey[] = [
     ],
   },
   {
+    id: 'cache-a-value',
+    title: 'Cache a value',
+    persona: 'A developer adding caching to a service',
+    goal: 'Store text under a key, read it back, and remove it.',
+    start: '/data/cache',
+    prerequisites: [],
+    features: ['OoBDev.Caching (`ICachingProvider`)', 'OoBDev.Microsoft.Caching', 'OoBDev.Redis.Caching'],
+    why: 'Keep expensive results close by behind one interface; switch between in-memory and Redis by configuration, not code.',
+    problems: [
+      { symptom: 'Look up says not found right after Store', cause: 'The lifetime passed or the provider is per request', fix: 'Raise the seconds, and check which provider the lookup reports' },
+      { symptom: 'Error about no ICachingProvider', cause: 'No caching provider is registered or selected', fix: 'Register a provider and set OoBDev:CachingProvider:Type' },
+    ],
+    steps: [
+      {
+        title: 'Store a value',
+        narrative: 'Pick a key, some text and how long it should live, then press Store.',
+        expect: ['A confirmation names the key.'],
+        run: async page => {
+          await press(page, 'Store');
+          await expect(page.getByText('Stored "greeting"')).toBeVisible();
+        },
+      },
+      {
+        title: 'Look it up',
+        narrative: 'Look the key up. The result also names the caching provider that answered.',
+        expect: ['The stored text is shown.', 'The provider name is shown.'],
+        run: async page => {
+          await press(page, 'Look up');
+          await expect(page.locator('pre.result')).toContainText('hello from the cache');
+          await expect(page.locator('pre.result')).toContainText('Provider:');
+        },
+      },
+    ],
+  },
+  {
     id: 'render-a-template',
     title: 'Render a text template',
     persona: 'A developer producing documents or email bodies from data',

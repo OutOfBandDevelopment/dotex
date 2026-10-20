@@ -175,7 +175,7 @@ Checklist (tick as work lands):
 - [ ] **Phase 3: partly covered**
   - [ ] Restore `SearchController` (list, semantic, lexical, hybrid) and the search screen
   - [ ] Template query and save endpoints and editor
-  - [ ] Cache explorer endpoint and screen
+  - [x] Cache lab: store, look up and remove by key through `ICachingProvider` (`api/Cache`); the provider interface cannot list keys, so it is a lab rather than a browser
   - [ ] Telemetry view (link to Grafana plus recent trace ids)
   - [ ] Vector store browser
   - [ ] Decide on mail receive (see section 6)

@@ -113,6 +113,87 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/Cache": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: {
+                    key?: string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["OoBDev.WebApi.Models.CacheLookupModel"];
+                        "application/json": components["schemas"]["OoBDev.WebApi.Models.CacheLookupModel"];
+                        "text/json": components["schemas"]["OoBDev.WebApi.Models.CacheLookupModel"];
+                    };
+                };
+            };
+        };
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["OoBDev.WebApi.Models.CacheStoreModel"];
+                    "text/json": components["schemas"]["OoBDev.WebApi.Models.CacheStoreModel"];
+                    "application/*+json": components["schemas"]["OoBDev.WebApi.Models.CacheStoreModel"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        post?: never;
+        delete: {
+            parameters: {
+                query?: {
+                    key?: string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/Communications/public": {
         parameters: {
             query?: never;
@@ -877,6 +958,18 @@ export interface components {
             extension: string;
             contentType: string;
             isTemplateType?: boolean;
+        };
+        "OoBDev.WebApi.Models.CacheLookupModel": {
+            key: string;
+            found?: boolean;
+            value?: null | string;
+            provider: string;
+        };
+        "OoBDev.WebApi.Models.CacheStoreModel": {
+            key: string;
+            value: string;
+            /** Format: int32 */
+            seconds?: number | string;
         };
         "OoBDev.WebApi.Models.ClaimModel": {
             issuer: string;
