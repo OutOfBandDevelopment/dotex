@@ -20,6 +20,7 @@ export const router = createRouter({
     { path: '/utilities/text', component: () => import('../pages/TextToolsPage.vue'), meta: { crumbs: ['Utilities', 'Text tools'] } },
     { path: '/utilities/vectors', component: () => import('../pages/VectorStorePage.vue'), meta: { crumbs: ['Utilities', 'Vector store'] } },
     { path: '/utilities/vector-lab', component: () => import('../pages/VectorLabPage.vue'), meta: { crumbs: ['Utilities', 'Vector lab'] } },
+    { path: '/ai/images', component: () => import('../pages/ImagesPage.vue'), meta: { crumbs: ['AI', 'Image labels'] } },
     { path: '/ai/ollama', component: () => import('../pages/OllamaPage.vue'), meta: { crumbs: ['AI', 'Ollama'] } },
     { path: '/ai/groq', component: () => import('../pages/GroqPage.vue'), meta: { crumbs: ['AI', 'Groq cloud'] } },
     { path: '/ai/embeddings', component: () => import('../pages/EmbeddingsPage.vue'), meta: { crumbs: ['AI', 'Embeddings'] } },

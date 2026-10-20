@@ -418,6 +418,40 @@ export const journeys: Journey[] = [
     ],
   },
   {
+    id: 'label-an-image',
+    title: 'Label an image without training',
+    persona: 'A developer adding image understanding',
+    goal: 'Rank free-text labels against a picture and see its embedding.',
+    start: '/ai/images',
+    prerequisites: ['The first call downloads the CLIP model into the shared hub cache, so it needs internet once.'],
+    features: ['OoBDev.Vision.ClipVitB32 (zero-shot classifier)', 'OoBDev.Onnx.ImageEmbeddings', 'OoBDev.Onnx.ImageEmbeddings.Skia'],
+    why: 'CLIP scores any label you type against an image, so new categories need no retraining, and the same model gives a vector for image search.',
+    problems: [
+      { symptom: 'Classify is disabled', cause: 'No image is chosen or fewer than two labels are given', fix: 'Choose an image and enter at least two comma-separated labels' },
+      { symptom: 'The first call fails', cause: 'The model could not be downloaded', fix: 'Provide internet access once, or copy the model files into the shared hub cache folder' },
+    ],
+    steps: [
+      {
+        title: 'Choose an image',
+        narrative: 'Pick a picture; the default labels are already filled in.',
+        expect: ['The Classify and Embed buttons are enabled.'],
+        run: async page => {
+          const png = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==', 'base64');
+          await page.locator('input[type=file]').setInputFiles({ name: 'cat.png', mimeType: 'image/png', buffer: png });
+        },
+      },
+      {
+        title: 'Rank the labels',
+        narrative: 'Classify the image against the labels.',
+        expect: ['A table lists the labels with probabilities, best first.'],
+        run: async page => {
+          await press(page, 'Classify');
+          await expect(page.getByLabel('Ranked labels')).toContainText('a cat');
+        },
+      },
+    ],
+  },
+  {
     id: 'render-a-template',
     title: 'Render a text template',
     persona: 'A developer producing documents or email bodies from data',

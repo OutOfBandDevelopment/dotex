@@ -45,6 +45,9 @@ export const http = {
   async getText(path: string): Promise<string> {
     return (await send(path)).text();
   },
+  async postFormJson<T>(path: string, form: FormData): Promise<T> {
+    return (await send(path, { method: 'POST', body: form })).json() as Promise<T>;
+  },
   async postForm(path: string, form: FormData): Promise<{ text: string; contentType: string }> {
     const r = await send(path, { method: 'POST', body: form });
     return { text: await r.text(), contentType: r.headers.get('Content-Type') ?? '' };

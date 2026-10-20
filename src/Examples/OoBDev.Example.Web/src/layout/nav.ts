@@ -9,6 +9,7 @@ export const navGroups: NavGroup[] = [
     { label: 'Retrieval (RAG)', to: '/ai/rag' },
     { label: 'Ollama', to: '/ai/ollama' },
     { label: 'Groq cloud', to: '/ai/groq' },
+    { label: 'Image labels', to: '/ai/images' },
   ] },
   { title: 'Content', items: [
     { label: 'Documents', to: '/content/documents' },

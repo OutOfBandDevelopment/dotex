@@ -25,6 +25,8 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Common\OoBDev.Common.Complete\OoBDev.Common.Complete.csproj" />
     <ProjectReference Include="..\..\Extensions\OoBDev.Data.Vectors.SqlStore\OoBDev.Data.Vectors.SqlStore.csproj" />
+    <ProjectReference Include="..\..\ExternalServices\Vision\OoBDev.Vision.ClipVitB32\OoBDev.Vision.ClipVitB32.csproj" />
+    <ProjectReference Include="..\..\ExternalServices\Onnx\OoBDev.Onnx.ImageEmbeddings.Skia\OoBDev.Onnx.ImageEmbeddings.Skia.csproj" />
   </ItemGroup>
 
 </Project>

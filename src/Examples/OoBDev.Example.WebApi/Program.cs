@@ -71,6 +71,10 @@ public static class Program
         else
             services.AddSingleton<OoBDev.Search.Semantic.IVectorStoreProviderFactory, OoBDev.WebApi.Services.InMemoryVectorStoreProviderFactory>();
 
+        // CLIP image embeddings; the model is only downloaded when first resolved
+        OoBDev.Onnx.ImageEmbeddings.Skia.ServiceCollectionExtensions.TryAddSkiaImageDecoder(services);
+        OoBDev.Vision.ClipVitB32.ServiceCollectionExtensions.TryAddClipVitB32Services(services, builder.Configuration, "ClipVitB32");
+
         // Add services to the container.
         services.AddLogging(builder => builder
             .AddConsole()
