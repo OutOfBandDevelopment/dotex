@@ -60,3 +60,52 @@ public class VectorDistanceResponseModel
     /// <summary>Gets or sets the Manhattan distance.</summary>
     public double Manhattan { get; set; }
 }
+
+/// <summary>An arithmetic expression with optional named values.</summary>
+public class CalculateRequestModel
+{
+    /// <summary>Gets or sets the expression, for example <c>(A + 2) * 3 ^ 2</c> (variables start with a capital letter).</summary>
+    public required string Expression { get; set; }
+
+    /// <summary>Gets or sets values for the variables used in the expression.</summary>
+    public Dictionary<string, decimal> Variables { get; set; } = [];
+}
+
+/// <summary>The outcome of evaluating an expression.</summary>
+public class CalculateResponseModel
+{
+    /// <summary>Gets or sets the result.</summary>
+    public decimal Result { get; set; }
+
+    /// <summary>Gets or sets the optimized form of the expression.</summary>
+    public required string Optimized { get; set; }
+
+    /// <summary>Gets or sets the variable names found in the expression.</summary>
+    public required List<string> Variables { get; set; }
+}
+
+/// <summary>Request for a time based one-time code.</summary>
+public class OtpRequestModel
+{
+    /// <summary>Gets or sets the Base32 secret; a new one is generated when empty.</summary>
+    public string? Secret { get; set; }
+
+    /// <summary>Gets or sets a code to validate against the secret.</summary>
+    public string? Code { get; set; }
+}
+
+/// <summary>A one-time code for a secret.</summary>
+public class OtpResponseModel
+{
+    /// <summary>Gets or sets the secret used.</summary>
+    public required string Secret { get; set; }
+
+    /// <summary>Gets or sets the current code.</summary>
+    public required string Code { get; set; }
+
+    /// <summary>Gets or sets the otpauth URI for authenticator apps.</summary>
+    public required string Uri { get; set; }
+
+    /// <summary>Gets or sets whether the supplied code is valid, when one was supplied.</summary>
+    public bool? Valid { get; set; }
+}

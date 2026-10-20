@@ -1,10 +1,16 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { ToolboxViewModel, parseNumbers } from './ToolboxViewModel';
+import { ToolboxViewModel, parseNumbers, parseVariables } from './ToolboxViewModel';
 
 describe('parseNumbers', () => {
   it('parseNumbers_MixedSeparators_ReturnsNumbers', () => expect(parseNumbers('1, 2;3  4.5')).toEqual([1, 2, 3, 4.5]));
   it('parseNumbers_NotANumber_ReturnsNull', () => expect(parseNumbers('1, x')).toBeNull());
   it('parseNumbers_Empty_ReturnsNull', () => expect(parseNumbers(' ')).toBeNull());
+});
+
+describe('parseVariables', () => {
+  it('parseVariables_PairsOnLines_ReturnsRecord', () => expect(parseVariables('a = 4\nb=2.5')).toEqual({ a: 4, b: 2.5 }));
+  it('parseVariables_Malformed_ReturnsNull', () => expect(parseVariables('a 4')).toBeNull());
+  it('parseVariables_Empty_ReturnsEmptyRecord', () => expect(parseVariables('')).toEqual({}));
 });
 
 describe('toolbox commands', () => {

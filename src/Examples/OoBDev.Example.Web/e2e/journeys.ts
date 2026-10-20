@@ -262,15 +262,16 @@ export const journeys: Journey[] = [
   },
   {
     id: 'use-the-toolbox',
-    title: 'Hash, sign and compare',
+    title: 'Hash, sign, compare and calculate',
     persona: 'A developer checking integrity and similarity',
-    goal: 'Hash some text, sign a message with a shared secret, and measure how far apart two vectors are.',
+    goal: 'Hash some text, sign a message with a shared secret, measure how far apart two vectors are, evaluate an expression and get a one-time code.',
     start: '/utilities/toolbox',
     prerequisites: [],
     features: ['OoBDev.System (`IHash`, `IHMACCalculator`)', 'OoBDev.System.Abstractions (`VectorMath`)'],
     why: 'Pick the algorithm by key from configuration instead of hard-coding it; the default hash is SHA-512, and signing and vector math are one call each.',
     problems: [
       { symptom: 'Unknown algorithm error', cause: 'The key is not one of the registered keys', fix: 'Use the keys in the lists (sha512, hmac-256, ...)' },
+      { symptom: 'Could not evaluate the expression', cause: 'Variables must start with a capital letter and have a value', fix: 'Use A or Rate2, and give each a value as name = value' },
       { symptom: 'Compare is disabled', cause: 'The vectors are not numbers or differ in length', fix: 'Enter the same count of numbers in both' },
     ],
     steps: [
@@ -299,6 +300,24 @@ export const journeys: Journey[] = [
         run: async page => {
           await press(page, 'Compare');
           await expect(page.getByRole('table', { name: 'Distances' })).toContainText('Manhattan');
+        },
+      },
+      {
+        title: 'Calculate an expression',
+        narrative: 'Type an expression with a variable, give the variable a value and calculate. The service also shows the optimized form.',
+        expect: ['The result, optimized form and variable names are shown.'],
+        run: async page => {
+          await press(page, 'Calculate');
+          await expect(page.getByRole('table', { name: 'Calculation' })).toContainText('Result');
+        },
+      },
+      {
+        title: 'Get a one-time code',
+        narrative: 'Leave the secret empty to generate one, then read the current code and the authenticator URI.',
+        expect: ['A code and an otpauth URI are shown.'],
+        run: async page => {
+          await press(page, 'Get code');
+          await expect(page.getByRole('table', { name: 'One-time code' })).toContainText('otpauth://');
         },
       },
     ],

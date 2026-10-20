@@ -1,3 +1,4 @@
+using OoBDev.System.ExpressionCalculator.Expressions;
 using OoBDev.System.Math;
 using OoBDev.System.Security.Cryptography;
 using OoBDev.WebApi.Models;
@@ -64,5 +65,55 @@ public class ToolboxController(IServiceProvider services) : ControllerBase
             DotProduct = a.Distance(b, VectorDistanceMetrics.DotProduct) ?? double.NaN,
             Manhattan = a.Distance(b, VectorDistanceMetrics.Manhattan) ?? double.NaN,
         };
+    }
+
+    /// <summary>Evaluates an arithmetic expression.</summary>
+    /// <param name="model">The expression and variable values.</param>
+    /// <returns>The result, optimized form and variable names.</returns>
+    [HttpPost("calculate")]
+    public ActionResult<CalculateResponseModel> Calculate([FromBody] CalculateRequestModel model)
+    {
+        try
+        {
+            var expression = model.Expression.ParseAsExpression<decimal>();
+            var names = expression.GetDistinctVariableNames().ToList();
+            var missing = names.Where(n => !model.Variables.ContainsKey(n)).ToList();
+            if (missing.Count > 0)
+                return Problem(title: "Missing values", detail: $"Provide a value for: {string.Join(", ", missing)}.", statusCode: 400);
+            return new CalculateResponseModel
+            {
+                Result = expression.Evaluate(model.Variables.Select(v => (v.Key, v.Value))),
+                Optimized = expression.Optimize().ToString() ?? "",
+                Variables = names,
+            };
+        }
+        catch (Exception ex) when (ex is not OutOfMemoryException)
+        {
+            return Problem(title: "Could not evaluate the expression", detail: ex.Message, statusCode: 400);
+        }
+    }
+
+    /// <summary>Generates or checks a time based one-time code (the demo returns the secret; real systems never do).</summary>
+    /// <param name="model">An optional secret and an optional code to validate.</param>
+    /// <returns>The secret, current code and authenticator URI.</returns>
+    [HttpPost("otp")]
+    public ActionResult<OtpResponseModel> Otp([FromBody] OtpRequestModel model)
+    {
+        var otp = new OneTimeCode();
+        var secret = string.IsNullOrWhiteSpace(model.Secret) ? otp.GenerateSecret() : model.Secret.Trim();
+        try
+        {
+            return new OtpResponseModel
+            {
+                Secret = secret,
+                Code = otp.GetToken(secret),
+                Uri = otp.GetUri(secret, "OoBDev Example", "demo"),
+                Valid = string.IsNullOrWhiteSpace(model.Code) ? null : otp.IsValid(secret, model.Code.Trim()),
+            };
+        }
+        catch (Exception ex) when (ex is ArgumentException or FormatException)
+        {
+            return Problem(title: "The secret is not valid Base32", detail: ex.Message, statusCode: 400);
+        }
     }
 }

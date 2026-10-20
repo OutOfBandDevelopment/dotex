@@ -1007,6 +1007,92 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/Toolbox/calculate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["OoBDev.WebApi.Models.CalculateRequestModel"];
+                    "text/json": components["schemas"]["OoBDev.WebApi.Models.CalculateRequestModel"];
+                    "application/*+json": components["schemas"]["OoBDev.WebApi.Models.CalculateRequestModel"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["OoBDev.WebApi.Models.CalculateResponseModel"];
+                        "application/json": components["schemas"]["OoBDev.WebApi.Models.CalculateResponseModel"];
+                        "text/json": components["schemas"]["OoBDev.WebApi.Models.CalculateResponseModel"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/Toolbox/otp": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["OoBDev.WebApi.Models.OtpRequestModel"];
+                    "text/json": components["schemas"]["OoBDev.WebApi.Models.OtpRequestModel"];
+                    "application/*+json": components["schemas"]["OoBDev.WebApi.Models.OtpRequestModel"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["OoBDev.WebApi.Models.OtpResponseModel"];
+                        "application/json": components["schemas"]["OoBDev.WebApi.Models.OtpResponseModel"];
+                        "text/json": components["schemas"]["OoBDev.WebApi.Models.OtpResponseModel"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/User/claims": {
         parameters: {
             query?: never;
@@ -1133,6 +1219,18 @@ export interface components {
             /** Format: int32 */
             seconds?: number | string;
         };
+        "OoBDev.WebApi.Models.CalculateRequestModel": {
+            expression: string;
+            variables?: {
+                [key: string]: number | string;
+            };
+        };
+        "OoBDev.WebApi.Models.CalculateResponseModel": {
+            /** Format: double */
+            result?: number | string;
+            optimized: string;
+            variables: string[];
+        };
         "OoBDev.WebApi.Models.ClaimModel": {
             issuer: string;
             value: string;
@@ -1173,6 +1271,16 @@ export interface components {
             started?: string;
             machine: string;
             configuration: components["schemas"]["OoBDev.WebApi.Models.ConfigurationEntryModel"][];
+        };
+        "OoBDev.WebApi.Models.OtpRequestModel": {
+            secret?: null | string;
+            code?: null | string;
+        };
+        "OoBDev.WebApi.Models.OtpResponseModel": {
+            secret: string;
+            code: string;
+            uri: string;
+            valid?: null | boolean;
         };
         "OoBDev.WebApi.Models.RagPassage": {
             id: string;

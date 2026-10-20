@@ -29,6 +29,8 @@ export async function mockApi(page: Page): Promise<void> {
       if (route.request().method() === 'GET') return json(route, { key: 'greeting', found: true, value: 'hello from the cache', provider: 'MicrosoftMemoryCachingProvider' });
       return route.fulfill({ status: 204 });
     }
+    if (path === '/api/Toolbox/calculate') return json(route, { result: 54, optimized: '54', variables: ['A'] });
+    if (path === '/api/Toolbox/otp') return json(route, { secret: 'JBSWY3DPEHPK3PXP', code: '492039', uri: 'otpauth://totp/OoBDev%20Example:demo?secret=JBSWY3DPEHPK3PXP', valid: null });
     if (path === '/api/Toolbox/hash') return json(route, { algorithm: 'sha512', result: '9b71d224bd62f3785d96d46ad3ea3d73319bfbc2890caadae2dff72519673ca72323c3d99ba5c11d7c7acc6e14b8c5da0c4663475c2e5c3adef46f73bcdec043' });
     if (path === '/api/Toolbox/hmac') return json(route, { algorithm: 'hmac-256', result: 'Zm9yIGRvY3VtZW50YXRpb24gb25seQ==' });
     if (path === '/api/Toolbox/vector-distance') return json(route, { cosine: 0.001234, euclidean: 0.5, dotProduct: 27.5, manhattan: 0.5 });
