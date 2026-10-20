@@ -15,7 +15,7 @@ export const navGroups: NavGroup[] = [
     { label: 'Templates', to: '/content/templates' },
   ] },
   { title: 'Data', items: [{ label: 'Cache lab', to: '/data/cache' }] },
-  { title: 'Utilities', items: [{ label: 'Toolbox', to: '/utilities/toolbox' }, { label: 'Text tools', to: '/utilities/text' }, { label: 'Vector store', to: '/utilities/vectors' }] },
+  { title: 'Utilities', items: [{ label: 'Toolbox', to: '/utilities/toolbox' }, { label: 'Text tools', to: '/utilities/text' }, { label: 'Vector store', to: '/utilities/vectors' }, { label: 'Vector lab', to: '/utilities/vector-lab' } ] },
   { title: 'Messaging', items: [
     { label: 'Communications', to: '/messaging/communications' },
     { label: 'Queues', to: '/messaging/queues' },

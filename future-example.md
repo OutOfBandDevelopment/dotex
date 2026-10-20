@@ -182,7 +182,7 @@ Checklist (tick as work lands):
 - [ ] **Phase 4: new features**
   - [ ] Image embeddings and zero-shot labels
   - [ ] ONNX sentence embeddings and model compare
-  - [ ] Vectors and matrix calculator
+  - [x] Vectors and matrix calculator
   - [ ] Identity management
   - [ ] Data access and DacPac builder
   - [ ] Queue adapters monitor and blob browser

@@ -392,6 +392,32 @@ export const journeys: Journey[] = [
     ],
   },
   {
+    id: 'compare-vectors',
+    title: 'Compare a set of vectors',
+    persona: 'A data scientist checking how close embeddings are',
+    goal: 'Measure every pair in a small set of vectors and see their lengths and centroid.',
+    start: '/utilities/vector-lab',
+    prerequisites: [],
+    features: ['OoBDev.System.Abstractions (`Vector`, `VectorMath`, `VectorDistanceMetrics`)'],
+    why: 'One vector type and four metrics give a quick check of whether embeddings group the way you expect before they go into a store.',
+    problems: [
+      { symptom: 'Compare is disabled', cause: 'A line is not numeric or the lines have different lengths', fix: 'Give one vector per line with the same number of values' },
+      { symptom: 'Cosine distance is NaN', cause: 'A vector of all zeros has no direction', fix: 'Remove zero vectors or use the Euclidean metric' },
+    ],
+    steps: [
+      {
+        title: 'Compare the sample vectors',
+        narrative: 'Four three-value vectors are filled in. Compare them with the cosine metric.',
+        expect: ['A 4 by 4 distance matrix appears with zeros on the diagonal.', 'The lengths and centroid are shown.'],
+        run: async page => {
+          await press(page, 'Compare');
+          await expect(page.getByLabel('Distance matrix')).toBeVisible();
+          await expect(page.getByLabel('Centroid')).toContainText('Centroid');
+        },
+      },
+    ],
+  },
+  {
     id: 'render-a-template',
     title: 'Render a text template',
     persona: 'A developer producing documents or email bodies from data',
