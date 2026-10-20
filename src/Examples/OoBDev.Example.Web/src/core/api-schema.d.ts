@@ -845,6 +845,168 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/Toolbox/algorithms": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/Toolbox/hash": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["OoBDev.WebApi.Models.HashRequestModel"];
+                    "text/json": components["schemas"]["OoBDev.WebApi.Models.HashRequestModel"];
+                    "application/*+json": components["schemas"]["OoBDev.WebApi.Models.HashRequestModel"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["OoBDev.WebApi.Models.ToolResultModel"];
+                        "application/json": components["schemas"]["OoBDev.WebApi.Models.ToolResultModel"];
+                        "text/json": components["schemas"]["OoBDev.WebApi.Models.ToolResultModel"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/Toolbox/hmac": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["OoBDev.WebApi.Models.HmacRequestModel"];
+                    "text/json": components["schemas"]["OoBDev.WebApi.Models.HmacRequestModel"];
+                    "application/*+json": components["schemas"]["OoBDev.WebApi.Models.HmacRequestModel"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["OoBDev.WebApi.Models.ToolResultModel"];
+                        "application/json": components["schemas"]["OoBDev.WebApi.Models.ToolResultModel"];
+                        "text/json": components["schemas"]["OoBDev.WebApi.Models.ToolResultModel"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/Toolbox/vector-distance": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["OoBDev.WebApi.Models.VectorDistanceRequestModel"];
+                    "text/json": components["schemas"]["OoBDev.WebApi.Models.VectorDistanceRequestModel"];
+                    "application/*+json": components["schemas"]["OoBDev.WebApi.Models.VectorDistanceRequestModel"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["OoBDev.WebApi.Models.VectorDistanceResponseModel"];
+                        "application/json": components["schemas"]["OoBDev.WebApi.Models.VectorDistanceResponseModel"];
+                        "text/json": components["schemas"]["OoBDev.WebApi.Models.VectorDistanceResponseModel"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/User/claims": {
         parameters: {
             query?: never;
@@ -994,6 +1156,15 @@ export interface components {
             data: string;
             userInput: string;
         };
+        "OoBDev.WebApi.Models.HashRequestModel": {
+            algorithm: string;
+            value: string;
+        };
+        "OoBDev.WebApi.Models.HmacRequestModel": {
+            algorithm: string;
+            secret: string;
+            message: string;
+        };
         "OoBDev.WebApi.Models.OperationsInfoModel": {
             environment: string;
             application: string;
@@ -1022,6 +1193,24 @@ export interface components {
             /** Format: double */
             score?: number | string;
             text: string;
+        };
+        "OoBDev.WebApi.Models.ToolResultModel": {
+            algorithm: string;
+            result: string;
+        };
+        "OoBDev.WebApi.Models.VectorDistanceRequestModel": {
+            a: (number | string)[];
+            b: (number | string)[];
+        };
+        "OoBDev.WebApi.Models.VectorDistanceResponseModel": {
+            /** Format: double */
+            cosine?: number | string;
+            /** Format: double */
+            euclidean?: number | string;
+            /** Format: double */
+            dotProduct?: number | string;
+            /** Format: double */
+            manhattan?: number | string;
         };
         "System.Text.Json.Nodes.JsonNode": unknown;
     };
