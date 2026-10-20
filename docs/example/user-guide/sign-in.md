@@ -2,11 +2,12 @@
 
 # Sign in with Keycloak
 
-[User guides](README.md) | [Spec](../specs/sign-in.md)
+[User guides](README.md) | [Spec](../specs/sign-in.md) | [Run book](../runbooks/sign-in.md)
 
 ## Contents
 
 - [Goal](#goal)
+- [Why use it](#why-use-it)
 - [Before you start](#before-you-start)
 - [Journey at a glance](#journey-at-a-glance)
 - [Steps](#steps)
@@ -16,6 +17,10 @@
 **Who:** A user opening the example for the first time.
 
 Sign in through the identity provider and land on the screen that was asked for.
+
+## Why use it
+
+Authenticate with OpenID Connect and PKCE so the SPA and API handle only tokens, never passwords.
 
 ## Before you start
 

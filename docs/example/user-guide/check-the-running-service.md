@@ -2,11 +2,12 @@
 
 # Check the running service
 
-[User guides](README.md) | [Spec](../specs/check-the-running-service.md)
+[User guides](README.md) | [Spec](../specs/check-the-running-service.md) | [Run book](../runbooks/check-the-running-service.md)
 
 ## Contents
 
 - [Goal](#goal)
+- [Why use it](#why-use-it)
 - [Before you start](#before-you-start)
 - [Journey at a glance](#journey-at-a-glance)
 - [Steps](#steps)
@@ -16,6 +17,10 @@
 **Who:** An operator.
 
 See which environment the API runs in and find a configuration setting.
+
+## Why use it
+
+See the environment, runtime and effective configuration of a running API without shell access; secrets are masked.
 
 ## Before you start
 

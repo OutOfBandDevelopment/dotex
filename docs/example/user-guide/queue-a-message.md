@@ -2,11 +2,12 @@
 
 # Put a message on a queue
 
-[User guides](README.md) | [Spec](../specs/queue-a-message.md)
+[User guides](README.md) | [Spec](../specs/queue-a-message.md) | [Run book](../runbooks/queue-a-message.md)
 
 ## Contents
 
 - [Goal](#goal)
+- [Why use it](#why-use-it)
 - [Before you start](#before-you-start)
 - [Journey at a glance](#journey-at-a-glance)
 - [Steps](#steps)
@@ -16,6 +17,10 @@
 **Who:** A developer testing asynchronous processing.
 
 Enqueue a message and find the event reference that describes the queue.
+
+## Why use it
+
+Hand work to a queue through one interface so RabbitMQ, Service Bus, Storage queues or SQS can be swapped by configuration.
 
 ## Before you start
 

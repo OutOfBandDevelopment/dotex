@@ -2,11 +2,12 @@
 
 # Send an email through a channel
 
-[User guides](README.md) | [Spec](../specs/send-an-email.md)
+[User guides](README.md) | [Spec](../specs/send-an-email.md) | [Run book](../runbooks/send-an-email.md)
 
 ## Contents
 
 - [Goal](#goal)
+- [Why use it](#why-use-it)
 - [Before you start](#before-you-start)
 - [Journey at a glance](#journey-at-a-glance)
 - [Steps](#steps)
@@ -16,6 +17,10 @@
 **Who:** A developer wiring notifications into an application.
 
 Send a message through the public channel and read the acknowledgement.
+
+## Why use it
+
+Send mail through the communications abstraction, so channels can change without touching callers.
 
 ## Before you start
 

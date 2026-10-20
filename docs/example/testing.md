@@ -46,7 +46,9 @@ Add an entry to `e2e/journeys.ts`:
 | `id` | File name of the guide and spec, and the screenshot folder |
 | `title`, `persona`, `goal` | Shown at the top of the guide |
 | `start` | Route the browser opens first |
-| `prerequisites`, `features` | Shown under "Before you start" |
+| `prerequisites`, `features` | Shown under "Before you start" and in the run book |
+| `why` | Why to use the feature: guide section "Why use it", run book purpose, [features.md](features.md) |
+| `problems` | Symptom, cause and fix rows of the run book troubleshooting table |
 | `steps[].title`, `narrative` | Heading and explanation in the guide |
 | `steps[].expect` | Acceptance criteria listed in the spec |
 | `steps[].run` | Playwright actions and assertions for the step |
@@ -73,6 +75,9 @@ Live answers from the language model vary, so live runs are for verification; co
 | --- | --- |
 | `docs/example/user-guide/<id>.md` | Guide |
 | `docs/example/user-guide/images/<id>/NN-step.png` | Screenshots |
+| `docs/example/runbooks/<id>.md` | Run book: purpose, verification and troubleshooting |
+| `docs/example/specs/<id>.md` | Specification (acceptance criteria) |
+| `docs/example/features.md` | Capability catalog with why to use each |
 | `docs/example/specs/<id>.md` | Spec |
 | `docs/example/*/README.md` | Indexes |
 

@@ -14,6 +14,11 @@ export const journeys: Journey[] = [
     start: '/',
     prerequisites: ['The example stack is running (see the deployment guide).'],
     features: ['OoBDev.Example.WebApi', 'OoBDev.AspNetCore.Mvc (OpenAPI and AsyncAPI documents)'],
+    why: 'One place to confirm every example endpoint is alive and to jump to the API and event references, before you start coding against them.',
+    problems: [
+      { symptom: 'An endpoint shows a red status', cause: 'The API container is not running or still starting', fix: 'Run `scripts/examples/example-up.ps1`, wait for healthy, press Check again' },
+      { symptom: 'Every endpoint answers 0', cause: 'The browser cannot reach the API through the SPA proxy', fix: 'Open http://localhost:8088 (not the Vite port) or check `docker compose ps`' },
+    ],
     steps: [
       {
         title: 'Open the overview',
@@ -43,6 +48,11 @@ export const journeys: Journey[] = [
     start: '/ai/chat',
     prerequisites: ['The Ollama container is running with the phi3 model.'],
     features: ['OoBDev.AI.Abstractions (`IMessageCompletion`, `IStreamedCompletion`)', 'OoBDev.Ollama'],
+    why: 'Talk to a model that runs on your machine with no API key and no data leaving it, through the same `IMessageCompletion` interface you would use for a cloud model.',
+    problems: [
+      { symptom: 'Send never completes', cause: 'The phi3 model is still loading on first use', fix: 'Wait up to a minute, or check the Ollama container logs' },
+      { symptom: 'Error toast with 500 or 502', cause: 'Ollama is not reachable from the API', fix: 'Confirm the Ollama options host and that the container is healthy' },
+    ],
     steps: [
       {
         title: 'Write the instructions and the question',
@@ -73,6 +83,11 @@ export const journeys: Journey[] = [
     start: '/ai/ollama',
     prerequisites: ['The Ollama container is running.'],
     features: ['OoBDev.AI.Abstractions (`CompletionRequest.Context`)', 'OoBDev.Ollama'],
+    why: 'Keep context between questions by passing the previous exchange, so follow-ups are understood.',
+    problems: [
+      { symptom: 'Follow-up ignores earlier answers', cause: 'The conversation was reset', fix: 'Do not press New conversation between questions' },
+      { symptom: 'Slow replies late in a conversation', cause: 'The context grows with each turn', fix: 'Start a new conversation' },
+    ],
     steps: [
       {
         title: 'Ask the first question',
@@ -114,6 +129,11 @@ export const journeys: Journey[] = [
     start: '/ai/embeddings',
     prerequisites: ['The all-MiniLM embedder is available in the API.'],
     features: ['OoBDev.Onnx.SentenceEmbeddings', 'OoBDev.AI.Abstractions (`IEmbeddingProvider`)'],
+    why: 'Turn text into vectors and measure similarity in process, the basis of semantic search, deduplication and clustering without a remote service.',
+    problems: [
+      { symptom: 'First call is slow', cause: 'The ONNX model is downloaded on first use into the hub cache', fix: 'Wait once; later calls are fast' },
+      { symptom: 'Download fails', cause: 'No internet access for the first download', fix: 'Provide the model files in the shared hub cache folder' },
+    ],
     steps: [
       {
         title: 'Enter two texts',
@@ -145,6 +165,11 @@ export const journeys: Journey[] = [
     start: '/ai/rag',
     prerequisites: ['The Ollama container is running with the phi3 model.'],
     features: ['OoBDev.Onnx.SentenceEmbeddings', 'OoBDev.Ollama', 'OoBDev.AI.Abstractions'],
+    why: 'Ground answers in your own text (retrieval augmented generation) so the model answers from your passages instead of guessing.',
+    problems: [
+      { symptom: 'Answer ignores the passages', cause: 'Too few passages are selected', fix: 'Raise Passages to use' },
+      { symptom: 'Request times out', cause: 'The model is cold or CPU only', fix: 'Retry; the first call loads the model' },
+    ],
     steps: [
       {
         title: 'Review the passages and the question',
@@ -175,6 +200,11 @@ export const journeys: Journey[] = [
     start: '/operations/info',
     prerequisites: [],
     features: ['OoBDev.AspNetCore.Mvc', 'Microsoft.Extensions.Configuration'],
+    why: 'See the environment, runtime and effective configuration of a running API without shell access; secrets are masked.',
+    problems: [
+      { symptom: 'Configuration list is empty', cause: 'The call failed', fix: 'Read the error under Refresh and check authorization' },
+      { symptom: 'A setting is missing', cause: 'It is not set for this environment', fix: 'Check the compose environment and appsettings files' },
+    ],
     steps: [
       {
         title: 'Read the runtime facts',
@@ -203,6 +233,11 @@ export const journeys: Journey[] = [
     start: '/content/templates',
     prerequisites: [],
     features: ['OoBDev.Text.Templating'],
+    why: 'Generate emails, pages and documents from files named after template, target type and engine, so content changes without code changes.',
+    problems: [
+      { symptom: 'No supported types listed', cause: 'The template folder is wrong', fix: 'Check FileTemplatingOptions:TemplatePath and that the files are copied to the output' },
+      { symptom: 'Placeholders stay unreplaced', cause: 'The model property names differ from the template variables', fix: 'Match the JSON property names to the template' },
+    ],
     steps: [
       {
         title: 'See the supported template types',
@@ -233,6 +268,11 @@ export const journeys: Journey[] = [
     start: '/messaging/communications',
     prerequisites: ['The SMTP4Dev container is running to receive the message.'],
     features: ['OoBDev.Communications', 'OoBDev.MailKit'],
+    why: 'Send mail through the communications abstraction, so channels can change without touching callers.',
+    problems: [
+      { symptom: 'Send fails with connection refused', cause: 'The SMTP host points at localhost inside the container', fix: 'Set MailKitSmtpClientOptions__Host to the smtp4dev service name' },
+      { symptom: 'Message not seen', cause: 'Wrong inbox', fix: 'Open the smtp4dev web page and refresh' },
+    ],
     steps: [
       {
         title: 'Choose a channel and write the message',
@@ -264,6 +304,11 @@ export const journeys: Journey[] = [
     start: '/messaging/queues',
     prerequisites: ['RabbitMQ (or another queue adapter) is running.'],
     features: ['OoBDev.MessageQueue', 'OoBDev.AsyncApi'],
+    why: 'Hand work to a queue through one interface so RabbitMQ, Service Bus, Storage queues or SQS can be swapped by configuration.',
+    problems: [
+      { symptom: 'Queued but nothing consumes it', cause: 'No consumer is running for the example queue', fix: 'Check the AsyncAPI page for the channel and start a consumer' },
+      { symptom: 'Connection error', cause: 'The queue host is localhost inside the container', fix: 'Set MessageQueue__NAME__Config__HostName to the service name' },
+    ],
     steps: [
       {
         title: 'Write the message',
@@ -294,6 +339,11 @@ export const journeys: Journey[] = [
     start: '/content/documents',
     prerequisites: [],
     features: ['OoBDev.Documents'],
+    why: 'Convert and store documents (text, HTML, PDF, markdown) behind one service, so callers never depend on a converter library.',
+    problems: [
+      { symptom: 'Conversion shows a binary placeholder', cause: 'The target type is not text', fix: 'Use the Download or PDF links for binary results' },
+      { symptom: 'Upload does nothing', cause: 'The store name is empty', fix: 'Enter a name in store before uploading' },
+    ],
     steps: [
       {
         title: 'Choose a file',
@@ -323,6 +373,11 @@ export const journeys: Journey[] = [
     liveOnly: true,
     prerequisites: ['The compose stack is running with sign-in on (the default) and the `oobdev-example` realm imported.', 'Use the sample user `ada` (password `ada`) or `grace` (password `grace`, also an admin).'],
     features: ['OoBDev.Identity', 'OoBDev.AspNetCore.JwtAuthentication', 'Keycloak (authorization code with PKCE)'],
+    why: 'Authenticate with OpenID Connect and PKCE so the SPA and API handle only tokens, never passwords.',
+    problems: [
+      { symptom: 'Redirect error invalid_redirect_uri', cause: 'The client redirect URIs do not include this origin', fix: 'Update the realm client or re-import the realm (remove the Keycloak volume)' },
+      { symptom: 'Credentials rejected', cause: 'Wrong sample user', fix: 'See containers/example/keycloak/dev-users.md' },
+    ],
     steps: [
       {
         title: 'Get sent to the identity provider',
@@ -363,6 +418,11 @@ export const journeys: Journey[] = [
     start: '/identity/me',
     prerequisites: ['Sign-in is configured, or the API runs with identity disabled for local work.'],
     features: ['OoBDev.Identity', 'Keycloak (OIDC, JWT bearer)'],
+    why: 'Inspect the claims the API sees on your token, the quickest way to debug roles and rights.',
+    problems: [
+      { symptom: '401 Unauthorized', cause: 'Not signed in or the token expired', fix: 'Sign in again' },
+      { symptom: 'Expected role missing', cause: 'The user does not have the role in the realm', fix: 'Check the user in Keycloak and dev-users.md' },
+    ],
     steps: [
       {
         title: 'Open the current user screen',

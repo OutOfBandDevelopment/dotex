@@ -2,11 +2,12 @@
 
 # Convert and store a document
 
-[User guides](README.md) | [Spec](../specs/convert-a-document.md)
+[User guides](README.md) | [Spec](../specs/convert-a-document.md) | [Run book](../runbooks/convert-a-document.md)
 
 ## Contents
 
 - [Goal](#goal)
+- [Why use it](#why-use-it)
 - [Before you start](#before-you-start)
 - [Journey at a glance](#journey-at-a-glance)
 - [Steps](#steps)
@@ -16,6 +17,10 @@
 **Who:** A developer handling uploaded files.
 
 Upload a file, convert it to plain text and keep it in the document store.
+
+## Why use it
+
+Convert and store documents (text, HTML, PDF, markdown) behind one service, so callers never depend on a converter library.
 
 ## Before you start
 

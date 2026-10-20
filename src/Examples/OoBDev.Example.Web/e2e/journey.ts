@@ -10,6 +10,13 @@ export interface Step {
   run: (page: Page) => Promise<void>;
 }
 
+/** One troubleshooting entry of a run book. */
+export interface Problem {
+  symptom: string;
+  cause: string;
+  fix: string;
+}
+
 /** A goal-oriented path through the application. Drives the test, the screenshots, the guide and the spec. */
 export interface Journey {
   id: string;
@@ -21,6 +28,10 @@ export interface Journey {
   prerequisites: string[];
   /** Related framework features (links the guide back to the framework docs). */
   features: string[];
+  /** Why a developer would use the feature the journey shows (shown in the guide and the features page). */
+  why: string;
+  /** Known problems for the run book: how they look, why they happen, how to fix them. */
+  problems: Problem[];
   /** Needs the real stack (identity provider); skipped when the API is mocked. */
   liveOnly?: boolean;
   steps: Step[];

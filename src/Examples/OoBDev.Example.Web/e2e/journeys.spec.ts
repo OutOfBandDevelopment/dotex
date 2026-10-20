@@ -1,6 +1,6 @@
 import { test } from '@playwright/test';
 import { resolve } from 'node:path';
-import { imageDir, resetImages, stepImageName, writeGuide, writeIndexes, writeSpec } from './guide';
+import { imageDir, resetImages, stepImageName, writeGuide, writeIndexes, writeRunbook, writeSpec } from './guide';
 import { journeys } from './journeys';
 import { mockApi } from './mocks';
 import { signInIfAsked } from './signin';
@@ -32,6 +32,7 @@ for (const journey of journeys) {
 
     writeGuide(journey);
     writeSpec(journey);
+    writeRunbook(journey);
   });
 }
 

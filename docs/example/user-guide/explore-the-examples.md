@@ -2,11 +2,12 @@
 
 # Explore the examples
 
-[User guides](README.md) | [Spec](../specs/explore-the-examples.md)
+[User guides](README.md) | [Spec](../specs/explore-the-examples.md) | [Run book](../runbooks/explore-the-examples.md)
 
 ## Contents
 
 - [Goal](#goal)
+- [Why use it](#why-use-it)
 - [Before you start](#before-you-start)
 - [Journey at a glance](#journey-at-a-glance)
 - [Steps](#steps)
@@ -16,6 +17,10 @@
 **Who:** A developer evaluating the OoBDev framework.
 
 See which framework features have a working example and confirm the API behind them is healthy.
+
+## Why use it
+
+One place to confirm every example endpoint is alive and to jump to the API and event references, before you start coding against them.
 
 ## Before you start
 

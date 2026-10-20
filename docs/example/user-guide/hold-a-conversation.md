@@ -2,11 +2,12 @@
 
 # Hold a conversation with Ollama
 
-[User guides](README.md) | [Spec](../specs/hold-a-conversation.md)
+[User guides](README.md) | [Spec](../specs/hold-a-conversation.md) | [Run book](../runbooks/hold-a-conversation.md)
 
 ## Contents
 
 - [Goal](#goal)
+- [Why use it](#why-use-it)
 - [Before you start](#before-you-start)
 - [Journey at a glance](#journey-at-a-glance)
 - [Steps](#steps)
@@ -16,6 +17,10 @@
 **Who:** A developer checking that the model remembers earlier turns.
 
 Ask two questions in a row and see the conversation context carried between them.
+
+## Why use it
+
+Keep context between questions by passing the previous exchange, so follow-ups are understood.
 
 ## Before you start
 

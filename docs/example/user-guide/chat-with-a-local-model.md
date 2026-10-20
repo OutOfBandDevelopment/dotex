@@ -2,11 +2,12 @@
 
 # Chat with a local model
 
-[User guides](README.md) | [Spec](../specs/chat-with-a-local-model.md)
+[User guides](README.md) | [Spec](../specs/chat-with-a-local-model.md) | [Run book](../runbooks/chat-with-a-local-model.md)
 
 ## Contents
 
 - [Goal](#goal)
+- [Why use it](#why-use-it)
 - [Before you start](#before-you-start)
 - [Journey at a glance](#journey-at-a-glance)
 - [Steps](#steps)
@@ -16,6 +17,10 @@
 **Who:** A developer trying the AI abstractions without a cloud account.
 
 Ask a question and read the answer from a model that runs in the Ollama container.
+
+## Why use it
+
+Talk to a model that runs on your machine with no API key and no data leaving it, through the same `IMessageCompletion` interface you would use for a cloud model.
 
 ## Before you start
 

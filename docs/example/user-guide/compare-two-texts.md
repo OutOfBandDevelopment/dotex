@@ -2,11 +2,12 @@
 
 # Compare two texts with embeddings
 
-[User guides](README.md) | [Spec](../specs/compare-two-texts.md)
+[User guides](README.md) | [Spec](../specs/compare-two-texts.md) | [Run book](../runbooks/compare-two-texts.md)
 
 ## Contents
 
 - [Goal](#goal)
+- [Why use it](#why-use-it)
 - [Before you start](#before-you-start)
 - [Journey at a glance](#journey-at-a-glance)
 - [Steps](#steps)
@@ -16,6 +17,10 @@
 **Who:** A developer learning how semantic similarity works.
 
 Turn two sentences into vectors and read how close they are.
+
+## Why use it
+
+Turn text into vectors and measure similarity in process, the basis of semantic search, deduplication and clustering without a remote service.
 
 ## Before you start
 

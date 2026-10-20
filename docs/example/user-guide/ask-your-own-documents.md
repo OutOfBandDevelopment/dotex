@@ -2,11 +2,12 @@
 
 # Ask a question about your own text
 
-[User guides](README.md) | [Spec](../specs/ask-your-own-documents.md)
+[User guides](README.md) | [Spec](../specs/ask-your-own-documents.md) | [Run book](../runbooks/ask-your-own-documents.md)
 
 ## Contents
 
 - [Goal](#goal)
+- [Why use it](#why-use-it)
 - [Before you start](#before-you-start)
 - [Journey at a glance](#journey-at-a-glance)
 - [Steps](#steps)
@@ -16,6 +17,10 @@
 **Who:** A developer learning retrieval augmented generation.
 
 Give the model a few passages, ask a question, and see which passages the answer came from.
+
+## Why use it
+
+Ground answers in your own text (retrieval augmented generation) so the model answers from your passages instead of guessing.
 
 ## Before you start
 

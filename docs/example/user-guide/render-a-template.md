@@ -2,11 +2,12 @@
 
 # Render a text template
 
-[User guides](README.md) | [Spec](../specs/render-a-template.md)
+[User guides](README.md) | [Spec](../specs/render-a-template.md) | [Run book](../runbooks/render-a-template.md)
 
 ## Contents
 
 - [Goal](#goal)
+- [Why use it](#why-use-it)
 - [Before you start](#before-you-start)
 - [Journey at a glance](#journey-at-a-glance)
 - [Steps](#steps)
@@ -16,6 +17,10 @@
 **Who:** A developer producing documents or email bodies from data.
 
 Fill a template with JSON data and read the result.
+
+## Why use it
+
+Generate emails, pages and documents from files named after template, target type and engine, so content changes without code changes.
 
 ## Before you start
 

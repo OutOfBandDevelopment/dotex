@@ -2,11 +2,12 @@
 
 # See the claims on your token
 
-[User guides](README.md) | [Spec](../specs/see-who-you-are.md)
+[User guides](README.md) | [Spec](../specs/see-who-you-are.md) | [Run book](../runbooks/see-who-you-are.md)
 
 ## Contents
 
 - [Goal](#goal)
+- [Why use it](#why-use-it)
 - [Before you start](#before-you-start)
 - [Journey at a glance](#journey-at-a-glance)
 - [Steps](#steps)
@@ -16,6 +17,10 @@
 **Who:** A developer checking authentication.
 
 Read the claims the API sees for the current user.
+
+## Why use it
+
+Inspect the claims the API sees on your token, the quickest way to debug roles and rights.
 
 ## Before you start
 
