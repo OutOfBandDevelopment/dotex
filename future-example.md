@@ -188,7 +188,7 @@ Checklist (tick as work lands):
   - [ ] Queue adapters monitor and blob browser
   - [ ] Semantic Kernel plug-in tester
   - [ ] Expression calculator, pipelines, text tools, security helpers, format inspectors (no device IO)
-  - [ ] Operations (health, configuration)
+  - [x] Operations: runtime facts and masked effective configuration (`GET api/Operations/info`); health probes stay on the overview
   - [ ] CLI tool catalog
 - [ ] **Journeys, screenshots and generated user guides (Playwright)**
   - [x] Journey definitions, runner, mocked API, guide and spec generators (`e2e/`, `npm run e2e`)

@@ -15,6 +15,7 @@ Step-by-step guides with screenshots, one per user journey. They are regenerated
 | [Hold a conversation with Ollama](hold-a-conversation.md) | A developer checking that the model remembers earlier turns | Ask two questions in a row and see the conversation context carried between them. |
 | [Compare two texts with embeddings](compare-two-texts.md) | A developer learning how semantic similarity works | Turn two sentences into vectors and read how close they are. |
 | [Ask a question about your own text](ask-your-own-documents.md) | A developer learning retrieval augmented generation | Give the model a few passages, ask a question, and see which passages the answer came from. |
+| [Check the running service](check-the-running-service.md) | An operator | See which environment the API runs in and find a configuration setting. |
 | [Render a text template](render-a-template.md) | A developer producing documents or email bodies from data | Fill a template with JSON data and read the result. |
 | [Send an email through a channel](send-an-email.md) | A developer wiring notifications into an application | Send a message through the public channel and read the acknowledgement. |
 | [Put a message on a queue](queue-a-message.md) | A developer testing asynchronous processing | Enqueue a message and find the event reference that describes the queue. |

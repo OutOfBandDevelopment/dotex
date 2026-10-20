@@ -19,6 +19,7 @@ export const navGroups: NavGroup[] = [
     { label: 'Queues', to: '/messaging/queues' },
   ] },
   { title: 'Identity and security', items: [{ label: 'Current user', to: '/identity/me' }] },
+  { title: 'Operations', items: [{ label: 'Runtime and configuration', to: '/operations/info' }] },
   { title: 'Developer', items: [
     { label: 'API reference', to: '/developer/api' },
     { label: 'Event reference', to: '/developer/events' },

@@ -168,6 +168,34 @@ export const journeys: Journey[] = [
     ],
   },
   {
+    id: 'check-the-running-service',
+    title: 'Check the running service',
+    persona: 'An operator',
+    goal: 'See which environment the API runs in and find a configuration setting.',
+    start: '/operations/info',
+    prerequisites: [],
+    features: ['OoBDev.AspNetCore.Mvc', 'Microsoft.Extensions.Configuration'],
+    steps: [
+      {
+        title: 'Read the runtime facts',
+        narrative: 'The page loads the environment, runtime and machine the API runs on.',
+        expect: ['The environment is shown.'],
+        run: async page => {
+          await expect(page.getByRole('row', { name: /^Environment/ })).toBeVisible();
+        },
+      },
+      {
+        title: 'Find a setting',
+        narrative: 'Type part of a key to narrow the configuration list. Secret values are masked by the API.',
+        expect: ['Only matching settings remain.'],
+        run: async page => {
+          await page.getByLabel('Filter').fill('Templat');
+          await expect(page.locator('table.grid').last().locator('tbody tr')).not.toHaveCount(0);
+        },
+      },
+    ],
+  },
+  {
     id: 'render-a-template',
     title: 'Render a text template',
     persona: 'A developer producing documents or email bodies from data',
