@@ -9,3 +9,14 @@
   - [ ] ...
 - [ ] Error handling middleware with correlation 
     - [ ]  return original location of error
+- [ ] CGI middleware for Kestrel (feature request, 2026-10-22). `OoBDev.AspNetCore` gets one middleware, `CgiMiddleware`, with `CgiOptions` and a `UseCgi` extension, that runs CGI/1.1 (RFC 3875) programs as child processes. No changes to Kestrel itself.
+    - [ ] Map a URL prefix (default `/cgi-bin`) to a single script root. First path segment is the script, the rest is `PATH_INFO`. Clear the environment, then set the CGI meta-variables and `HTTP_*`. Never forward `Proxy` as `HTTP_PROXY`.
+    - [ ] Request body to stdin (limit default 10 MB, 413 before start). Parse script headers (`Status`, `Location`, others) and stream stdout to `Response.Body`. 502 for no `Content-Type` or no blank line, 500 for non-zero exit before output.
+    - [ ] Safe by default: extension allowlist via `Handlers` (unknown is 403), no shell, request data only in env and stdin (never arguments), reject paths and symlinks leaving the root, reject CR/LF/NUL in script headers, `.cmd`/`.bat` opt-in only. Script root must not be under static files.
+    - [ ] Limits: timeout (30 s) with process-tree kill, `MaxConcurrentProcesses` (default 2 x CPU, then 503 with `Retry-After`), response size limit, bounded stderr drain logged at Warning, kill on client disconnect.
+    - [ ] Tests: `WebApplicationFactory` with fixture scripts on Linux and Windows (traversal, injection, limits, disconnect), plus a benchmark to replace the process-cost estimates.
+    - [ ] Open questions: per-script concurrency cap, NPH scripts, run-as-user (`setuid` helper or left to the deployer), auth hook before the script versus ordinary authorization middleware ahead of `UseCgi`.
+    - [ ] Non-goals: FastCGI/SCGI, persistent workers, sandboxing beyond OS user and resource limits. Design notes: `projects/cgi-middleware-kestrel/` in the notes repo (mwwhited-notes/shared).
+- [ ] Where related work lives (pointer added 2026-10-22, from the notes repo index; commit hashes checked that day)
+    - [ ] BinaryDataDecoders, latest: `C:\repo\mine\binary-data-decoders` (origin `g:/mwwhited/binary-data-decoders.git`, HEAD `e590b420`, 2026-09-26). It has 78 .NET projects and was marked retired 2026-01-10 but still got commits after that. `Incoming/BinaryDecoders` in this repo is a 41-project renamed subset, so it can be behind. Check the mine copy before migrating a feature from it.
+    - [ ] dev-term: `C:\repo\oobdev\dev-term` (origin `g:/oobdev/dev-term.git`, upstream https://github.com/OutOfBandDevelopment/dev-term, HEAD `899bb15`, 2026-10-14). Modular device terminal (serial, TCP, USBTMC, BLE, VXI-11, SCPI). It took the Busylight and EByte protocols from the `Incoming/BinaryDecoders` copy, so check it for newer device code before migrating those. Parity comparison of device libraries across the three: `projects/device-parity.md` in the notes repo.
