@@ -41,7 +41,7 @@
 | REQ-006 | Must | `IApplicationRightChecker.Check` returns `Unauthenticated`, `Forbidden` or `Allowed`: unauthenticated callers never pass; with a non-empty required list the caller needs at least one listed right; an empty list requires only authentication. |
 | REQ-007 | Must | An unmapped role grants nothing (deny by default). |
 | REQ-008 | Must | `[ApplicationRight]` uses the checker: `Unauthenticated` yields a challenge (401), `Forbidden` yields 403. |
-| REQ-009 | Should | (Planned, BACKLOG) The CGI middleware decides `RequiredRights` and `ScriptRights` through the checker. |
+| REQ-009 | Should | The CGI middleware decides `RequiredRights` and `ScriptRights` through the checker. |
 | REQ-010 | Should | Registration is `TryAdd*`, options are validated at start, and (Planned) a right granted is logged at Debug with the role count only (no token contents). |
 | REQ-011 | Should | The mapper and checker are replaceable by registering another implementation first. |
 
