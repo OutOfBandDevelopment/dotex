@@ -8,13 +8,13 @@ Keep this file short (a handful of items). When an item starts, move it here fro
 
 ## In progress
 
+- [ ] Rights middleware (first of rights, then `QUERY`/OData, then GraphQL): design in [docs/design/ApplicationRights](docs/design/ApplicationRights/README.md); build the mapper, claims transformation and checker, move the MVC filter and CGI onto the checker
 
 ## Next
 
 - [ ] Compare designs to code with the `reconcile-designs-and-code` skill (all of `docs/design/`; details in the backlog)
 - [ ] **Incoming code recommendation plan**: written ([docs/migration/incoming-recommendation-plan.md](docs/migration/incoming-recommendation-plan.md) and [cross-check](docs/migration/incoming-harvest-crosscheck.md)); waiting for the owner to answer D1 to D9 (Q1 in OPEN-QUESTIONS.md). No migration until then. The sections marked verify need a second look before work starts.
 
-- [ ] Rights middleware, then `QUERY`/OData, then GraphQL (order decided; roles map to rights in configuration, `OoBDev:Authorization:Roles:<role>`, applied by a claims transformation; write the feature design first in `docs/design/`)
 - [ ] `OoBDev.DacFx.Tests` SQLCLR test project
 - [ ] AsyncAPI: send-only queues by type
 - [ ] Promote the clean analyzer `suggestion` rules to `warning` and fix or remove the `#warning` markers (decided)
