@@ -23,26 +23,29 @@ Each screen lists its purpose, the API it binds to, its commands and a mockup. "
 
 | Screen | Route | API | Status |
 |---|---|---|---|
-| Dashboard | `/` | health, links | New |
+| Dashboard | `/` | health, links | Exists (`OverviewPage`) |
 | AI chat | `/ai/chat` | `POST api/AI`, `Streamed`, `Context` | Exists |
 | Ollama console | `/ai/ollama` | `api/Ollama` | Exists |
 | Groq console | `/ai/groq` | `api/GroqCloud/Completion` | Exists (key needed) |
 | Embeddings lab | `/ai/embeddings` | `api/AI/Embeddings`, `api/SBERT`, `api/AllMiniLM` | Exists |
-| RAG | `/ai/rag` | `api/AI/RaggedAnne` | Exists |
+| RAG | `/ai/rag` | `api/Rag` (embeds passages in process, answers through Ollama) | Exists |
 | Documents | `/content/documents` | `Document/*` | Exists |
 | Templates | `/content/templates` | `api/TextTemplate/*` | Partly |
 | Communications | `/messaging/communications` | `api/Communications/*` | Exists |
 | Queues | `/messaging/queues` | `api/MessageQueueing/*` | Exists |
 | Current user | `/identity/me` | `api/User/claims` | Exists |
-| Search | `/data/search` | `Search/*` | Restore |
-| Cache | `/data/cache` | cache endpoints | New |
-| Vector stores | `/data/vectors` | vector store endpoints | New |
-| Image embeddings | `/ai/images` | image endpoints | New |
-| Vectors and matrices | `/data/matrices` | vector math endpoints | New |
-| Identity management | `/identity/users` | identity endpoints | New |
-| Expression calculator | `/compute/expressions` | expression endpoints | New |
-| Security helpers | `/security/tools` | hash, HMAC, TOTP endpoints | New |
-| Operations | `/ops` | health, configuration | New |
+| Search | `/data/search` | `Search/*` | Planned (needs the `SearchController` restored; not in the navigation) |
+| Cache | `/data/cache` | `api/Cache` | Exists as a lab (store, look up, remove; the provider cannot list keys) |
+| Vector stores | `/utilities/vectors` | vector store endpoints | Exists (store texts, search by meaning; lexical and hybrid Planned) |
+| Image embeddings | `/ai/images` | image endpoints | Exists (zero-shot labels) |
+| Vectors and matrices | `/utilities/vector-lab` | vector math endpoints | Exists |
+| Identity management | `/identity/users` | identity endpoints | Planned |
+| Expression calculator | `/utilities/toolbox` | expression endpoints | Exists inside the Toolbox page |
+| Security helpers | `/utilities/toolbox` | hash, HMAC, TOTP endpoints | Exists inside the Toolbox page |
+| Operations | `/operations/info` | `api/Operations/info` (runtime facts, masked configuration) | Exists |
+| Telemetry | `/operations/telemetry` | Aspire dashboard link and its telemetry API | Exists (added beyond this design) |
+| Model compare | `/ai/model-compare` | embedding models side by side | Exists (added beyond this design) |
+| Text tools | `/utilities/text` | XPath over JSON, YAML, HTML and XML, Markdown | Exists |
 
 ## AI chat
 
@@ -223,6 +226,8 @@ Purpose: lexical, semantic and hybrid search over indexed content, with a list-a
 *Figure 8 — Search*
 
 ## Remaining screens
+
+Built screens are listed in Table 1; the rows below are still open unless Table 1 says Exists. Not built: Identity management, Queue adapters and blob storage, Data access, Semantic Kernel, Formats and the CLI catalog.
 
 These follow the same blade pattern; each gets its own four design documents (requirements, architecture, API design, testing strategy) when the phase starts.
 

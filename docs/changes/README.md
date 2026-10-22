@@ -273,3 +273,7 @@ Each change document should include:
 **[documentation-llmcodegen-design-reconcile-2026-10-22.md](documentation-llmcodegen-design-reconcile-2026-10-22.md)**
 - LlmCodeGen design documents reconciled with the code; missing tests in the backlog
 - Status: ✅ Complete
+
+**[documentation-example-ui-design-reconcile-2026-10-22.md](documentation-example-ui-design-reconcile-2026-10-22.md)**
+- Example UI design documents reconciled with the code
+- Status: ✅ Complete
