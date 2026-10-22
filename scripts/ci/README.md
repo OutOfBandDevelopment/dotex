@@ -16,3 +16,7 @@ pwsh scripts/ci/run-tests.ps1 -Category Integration -KeepStack
 Results are written to `artifacts/test-results`. `LiveIntegration` needs credentials (for example `GROQ_API_KEY`, see `docs/architecture/testing/live-integration/groq.md`).
 
 Not covered yet: the release workflows (`release.yml`, `deploy-release.yml`, `scheduled-release.yml`), the `validated-v{version}` tag, and a schedule (use Windows Task Scheduler to run the script daily).
+
+| Script | What it does |
+|--------|--------------|
+| `new-runsettings.ps1` | Writes `artifacts/test.runsettings`, a copy of `src/.runsettings` whose ports follow `TEST_PORT_<NAME>` (environment or `containers/testing/.env`). `run-tests.ps1` calls it, so the stack and the tests share one source of truth. |

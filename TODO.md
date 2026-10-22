@@ -10,7 +10,6 @@ GitHub is no longer the primary repository (local bare repo `origin`), so nothin
 
 ## 1. Test infrastructure
 
-- [ ] `integration-up` scripts print default URLs and tests read ports from `.runsettings`, so a `TEST_PORT_<NAME>` override needs a matching settings file. Derive both from one `.env`.
 - [ ] Decide what replaces the legacy `.github/workflows/` (a local script that runs the Docker stack and the Integration suite, or remove the workflows). Owner decision.
 - [ ] Integration coverage gaps: Service Bus emulator (no health check, few tests), Azurite beyond blobs, Moto beyond SQS (S3).
 - [ ] `DevLocal` tests kept on purpose: Ollama (hard-coded LAN host, model pull and delete), USB HID (hardware), `PathEx`, `MergedXPathNavigator`, `ProjectTools.FixReadmes` (hard-coded `C:\Repos` paths), Markdown `TestMethod1` (writes files), DacFx `BuildPackageTest` (hard-coded path). Revisit Ollama when the owner says Ollama testing can resume.
