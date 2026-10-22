@@ -37,4 +37,4 @@
 | REQ-004 | Must | A `QUERY` request with no body or a non-JSON, non-form content type is rejected with a 415 problem details response. |
 | REQ-005 | Must | The override applies only to `POST`; a `GET`, `PUT`, `PATCH` or `DELETE` carrying the header is never rewritten (no verb escalation). |
 | REQ-006 | Should | (Planned, BACKLOG) Collection responses advertise `Accept-Query: "application/json"` so clients can discover support. |
-| REQ-007 | Should | (Registration test planned, BACKLOG) Registration is one extension, `UseHttpQueryVerb()`, called before routing; nothing happens unless it is added. |
+| REQ-007 | Should | Registration is one extension, `UseHttpQueryVerb()`, called before routing; nothing happens unless it is added. |

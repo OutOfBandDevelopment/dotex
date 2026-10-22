@@ -1,5 +1,8 @@
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using OoBDev.AspNetCore.Mvc;
 using OoBDev.AspNetCore.Mvc.Middleware;
 using System.Threading.Tasks;
 
@@ -23,6 +26,26 @@ public class QueryVerbMiddlewareTests
             context.Request.Headers[QueryVerbMiddleware.OverrideHeader] = overrideHeader;
         context.Response.Body = new global::System.IO.MemoryStream();
         return context;
+    }
+
+    [TestMethod]
+    [TestCategory("Unit")]
+    public async Task UseHttpQueryVerb_InPipeline_RoutesQueryAsGetAsync()
+    {
+        // Stage
+        var services = new ServiceCollection().BuildServiceProvider();
+        var seen = string.Empty;
+        var app = new ApplicationBuilder(services);
+        app.UseHttpQueryVerb();
+        app.Run(c => { seen = c.Request.Method; return Task.CompletedTask; });
+        var context = Request("QUERY");
+        context.RequestServices = services;
+
+        // Test
+        await app.Build()(context);
+
+        // Assert
+        Assert.AreEqual("GET", seen);
     }
 
     [TestMethod]

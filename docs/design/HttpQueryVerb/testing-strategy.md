@@ -29,4 +29,4 @@
 | REQ-004 | `QUERY` without JSON or form content returns 415 and does not call `next` | Unit |
 | REQ-005 | `PUT` with the header is untouched | Unit |
 | REQ-006 | Planned: `Accept-Query` header (BACKLOG) | Unit |
-| REQ-007 | Planned: `UseHttpQueryVerb` registration test (BACKLOG) | Unit |
+| REQ-007 | `UseHttpQueryVerb_InPipeline_RoutesQueryAsGetAsync` builds a pipeline with the extension | Unit |
