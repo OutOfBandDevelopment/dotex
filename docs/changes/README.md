@@ -122,6 +122,14 @@ Each change document should include:
 - AsyncAPI 3.0 document and viewer for the message queues (`OoBDev.AsyncApi`, adapter contributors, `MapAsyncApi()`)
 - Status: ✅ Complete
 
+**[apis-cgi-middleware-2026-10-22.md](apis-cgi-middleware-2026-10-22.md)**
+- CGI/1.1 middleware for Kestrel (`OoBDev.AspNetCore.Cgi`): safe defaults, limits, built-in rights check
+- Status: ✅ Complete (first cut)
+
+**[code-quality-and-tests-2026-10-22.md](code-quality-and-tests-2026-10-22.md)**
+- Analyzer cleanup, Azurite queue tests, search annotation example, local CI runner fix
+- Status: ✅ Complete
+
 ### Observability
 
 **[migration-opentelemetry-2026-10-09.md](migration-opentelemetry-2026-10-09.md)**

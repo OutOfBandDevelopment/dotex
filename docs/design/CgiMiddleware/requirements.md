@@ -49,6 +49,8 @@
 | REQ-013 | Should | Kill the process tree when the client disconnects. |
 | REQ-014 | Should | Fail startup when the script root is missing or under a static file root. |
 | REQ-015 | Could | A benchmark that replaces the process-cost estimates. |
+| REQ-016 | Must | Callers must be authenticated unless `AllowAnonymous` is set; `RequiredRights` (any one `app__application_right` claim) and per-script `ScriptRights` are checked before the program starts: 401 unauthenticated, 403 missing right. |
+| REQ-017 | Won't | Non-parsed-header (NPH) scripts are rejected. |
 
 ## Constraints
 
@@ -56,11 +58,14 @@
 - Follows the options pattern (`AddValidatedOptions<T>()`), `TimeProvider` and `[LoggerMessage]`.
 - No third-party libraries.
 
-## Open questions
+## Decisions
 
-- Per-script concurrency cap, in addition to the global one.
-- NPH (non-parsed header) scripts: support or reject.
-- Run-as-user: a `setuid` helper, or left to the deployer.
-- Auth hook before the script versus ordinary authorization middleware ahead of `UseCgi` (this design assumes the latter).
+Owner decisions, 2026-10-22:
+
+- Concurrency: a global cap only (no per-script cap) to start.
+- NPH scripts: rejected (REQ-017).
+- Run-as-user: left to the deployer's service account; a helper is a TODO in `TODO.md`.
+- Authorization: built into the middleware (REQ-016) with application rights, instead of relying only on middleware ahead of `UseCgi`.
+- Linux coverage: shell fixtures run in a Linux container (Docker, or Aspire into Docker), not WSL (open item in `TODO.md`).
 
 [↑ Overview](README.md) · [Architecture →](architecture.md)

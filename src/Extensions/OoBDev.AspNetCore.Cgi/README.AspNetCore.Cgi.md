@@ -12,7 +12,7 @@ Requests under a prefix (default `/cgi-bin`) map to scripts in a directory. Each
 builder.Services.TryAddCgiServices(builder.Configuration);
 // ...
 app.UseAuthentication();
-app.UseAuthorization();   // authorization is the host's job: put it ahead of UseCgi
+app.UseAuthorization();
 app.UseCgi();
 ```
 
@@ -37,9 +37,10 @@ app.UseCgi();
 - `MaxConcurrentProcesses` (2 x CPU) caps parallel processes; extra requests get 503 with `Retry-After`.
 - Headers containing CR or NUL, a missing blank line, or no `Content-Type`/`Location` give 502; a non-zero exit with no output gives 500. Self-produced errors are RFC 9457 problem details.
 - `Proxy` and `Authorization` request headers are not passed on.
+- Callers must be authenticated unless `AllowAnonymous` is true; `RequiredRights` and `ScriptRights` (application-right claims) give 403 when none match.
 
 ## Not included
 
 Batch files re-parse the environment with cmd.exe rules, so a value containing `&` can run commands; that is why `AllowBatchFiles` is off by default.
 
-Non-parsed-header (NPH) scripts, running as another user (use the deployment's service account) and authorization.
+Non-parsed-header (NPH) scripts and running as another user (use the deployment's service account).

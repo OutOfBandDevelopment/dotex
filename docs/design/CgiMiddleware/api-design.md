@@ -29,7 +29,7 @@ public static class ServiceCollectionExtensions
 
 public static class ApplicationBuilderExtensions
 {
-    /// <summary>Runs CGI programs under <see cref="CgiOptions.Prefix"/>. Place authorization ahead of it.</summary>
+    /// <summary>Runs CGI programs under <see cref="CgiOptions.Prefix"/>. Authentication goes ahead of it; rights are checked inside from <see cref="CgiOptions.RequiredRights"/>.</summary>
     public static IApplicationBuilder UseCgi(this IApplicationBuilder app);
 }
 ```
@@ -49,6 +49,15 @@ public class CgiOptions
     public int MaxConcurrentProcesses { get; set; } = Environment.ProcessorCount * 2;
     public int MaxStderrBytes { get; set; } = 64 * 1024;
     public bool AllowBatchFiles { get; set; }
+
+    /// <summary>Lets unauthenticated users run scripts. Off by default.</summary>
+    public bool AllowAnonymous { get; set; }
+
+    /// <summary>The user needs at least one of these application rights when the list is not empty.</summary>
+    public IList<string> RequiredRights { get; set; } = [];
+
+    /// <summary>Extra rights per script file name; the user needs at least one of the listed rights.</summary>
+    public IDictionary<string, IList<string>> ScriptRights { get; set; }
 }
 ```
 

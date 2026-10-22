@@ -40,6 +40,8 @@ Coverage 85% or more for the project. Tests run on Linux and Windows (fixtures e
 | REQ-013 | Client abort kills the process | Simulate |
 | REQ-014 | Missing root or root under static files fails startup | Unit |
 | REQ-015 | Benchmark (see below) | DevLocal |
+| REQ-016 | Anonymous gets 401 by default; `RequiredRights` needs one match (403 otherwise); `ScriptRights` checked per script | Simulate |
+| REQ-017 | NPH output has no `Status`/`Content-Type` and is rejected with 502 | Simulate |
 
 ## Fixtures
 
