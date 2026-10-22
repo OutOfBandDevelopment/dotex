@@ -122,6 +122,10 @@ Each change document should include:
 - AsyncAPI 3.0 document and viewer for the message queues (`OoBDev.AsyncApi`, adapter contributors, `MapAsyncApi()`)
 - Status: ✅ Complete
 
+**[tools-llmcodegen-provider-selection-2026-10-22.md](tools-llmcodegen-provider-selection-2026-10-22.md)**
+- LlmCodeGen provider selection extracted and unit tested; provider names are case-insensitive
+- Status: ✅ Complete
+
 **[documentation-image-embeddings-reconcile-2026-10-22.md](documentation-image-embeddings-reconcile-2026-10-22.md)**
 - ImageEmbeddings testing strategy matched to the real tests, with a requirement-coverage table
 - Status: ✅ Complete

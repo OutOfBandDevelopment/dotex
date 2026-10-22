@@ -28,9 +28,7 @@ public partial class LlmCodeGenService(
         try
         {
             var settings = options.Value;
-            var key = string.Equals(settings.Provider, GroqAlias, StringComparison.OrdinalIgnoreCase) ? GroqKey : settings.Provider;
-            var completion = services.GetKeyedService<IMessageCompletion>(key)
-                ?? throw new InvalidOperationException($"Provider \"{settings.Provider}\" is not available; configure OoBDev:Ollama:Url or the Groq API key.");
+            var completion = ResolveCompletion(services, settings.Provider);
 
             var sent = await new FolderPromptRunner(completion, loggerFactory.CreateLogger<FolderPromptRunner>())
                 .RunAsync(settings, stoppingToken);
@@ -49,6 +47,13 @@ public partial class LlmCodeGenService(
         {
             lifetime.StopApplication();
         }
+    }
+
+    internal static IMessageCompletion ResolveCompletion(IServiceProvider services, string provider)
+    {
+        var key = string.Equals(provider, GroqAlias, StringComparison.OrdinalIgnoreCase) ? GroqKey : provider.ToLowerInvariant();
+        return services.GetKeyedService<IMessageCompletion>(key)
+            ?? throw new InvalidOperationException($"Provider \"{provider}\" is not available; configure OoBDev:Ollama:Url or the Groq API key.");
     }
 
     [LoggerMessage(EventId = 1, Level = LogLevel.Information, Message = "done: {Count} prompts sent")]
