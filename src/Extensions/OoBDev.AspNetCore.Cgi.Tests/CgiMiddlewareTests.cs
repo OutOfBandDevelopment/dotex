@@ -16,6 +16,7 @@ using System.Net.Http;
 using System.Security.Claims;
 using OoBDev.System.Security.Claims;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace OoBDev.AspNetCore.Cgi.Tests;
@@ -232,6 +233,78 @@ public class CgiMiddlewareTests
 
         Assert.AreEqual(HttpStatusCode.OK, first.StatusCode);
         Assert.AreEqual(HttpStatusCode.Forbidden, second.StatusCode);
+    }
+
+    [TestMethod]
+    [TestCategory("Simulate")]
+    public async Task Get_ProgramOverTimeout_ReturnsGatewayTimeout()
+    {
+        await StartAsync(new() { ["OoBDev:Cgi:Timeout"] = "00:00:01" });
+        using var response = await _client!.GetAsync("/cgi-bin/sleep-first.cmd");
+        Assert.AreEqual(HttpStatusCode.GatewayTimeout, response.StatusCode);
+    }
+
+    [TestMethod]
+    [TestCategory("Simulate")]
+    public async Task Get_AllSlotsBusy_ReturnsServiceUnavailableWithRetryAfter()
+    {
+        // Stage
+        await StartAsync(new() { ["OoBDev:Cgi:MaxConcurrentProcesses"] = "1" });
+        var first = _client!.GetAsync("/cgi-bin/sleep.cmd");
+        await Task.Delay(TimeSpan.FromMilliseconds(750));
+
+        // Test
+        using var second = await _client.GetAsync("/cgi-bin/env.cmd");
+        using var firstResponse = await first;
+
+        // Assert
+        Assert.AreEqual(HttpStatusCode.ServiceUnavailable, second.StatusCode);
+        Assert.IsTrue(second.Headers.Contains("Retry-After"));
+        Assert.AreEqual(HttpStatusCode.OK, firstResponse.StatusCode);
+    }
+
+    [TestMethod]
+    [TestCategory("Simulate")]
+    public async Task Get_ResponseOverLimit_ReturnsBadGateway()
+    {
+        await StartAsync(new() { ["OoBDev:Cgi:MaxResponseBytes"] = "10" });
+        using var response = await _client!.GetAsync("/cgi-bin/env.cmd");
+        Assert.AreEqual(HttpStatusCode.BadGateway, response.StatusCode);
+    }
+
+    [TestMethod]
+    [TestCategory("Simulate")]
+    public async Task Get_StderrFlood_StillAnswersAndKeepsLimit()
+    {
+        await StartAsync(new() { ["OoBDev:Cgi:MaxStderrBytes"] = "100" });
+        using var response = await _client!.GetAsync("/cgi-bin/stderr-flood.cmd");
+        Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+        StringAssert.Contains(await response.Content.ReadAsStringAsync(), "ok");
+    }
+
+    [TestMethod]
+    [TestCategory("Simulate")]
+    public async Task Get_ClientAbort_FreesTheProcessSlot()
+    {
+        // Stage
+        await StartAsync(new() { ["OoBDev:Cgi:MaxConcurrentProcesses"] = "1" });
+        using var cancel = new CancellationTokenSource();
+        var aborted = _client!.GetAsync("/cgi-bin/sleep.cmd", HttpCompletionOption.ResponseContentRead, cancel.Token);
+        await Task.Delay(TimeSpan.FromMilliseconds(750));
+
+        // Test
+        await cancel.CancelAsync();
+        await Assert.ThrowsAsync<TaskCanceledException>(() => aborted);
+        var status = HttpStatusCode.ServiceUnavailable;
+        for (var attempt = 0; attempt < 20 && status == HttpStatusCode.ServiceUnavailable; attempt++)
+        {
+            await Task.Delay(TimeSpan.FromMilliseconds(250));
+            using var next = await _client.GetAsync("/cgi-bin/env.cmd");
+            status = next.StatusCode;
+        }
+
+        // Assert
+        Assert.AreEqual(HttpStatusCode.OK, status);
     }
 
     [TestMethod]
