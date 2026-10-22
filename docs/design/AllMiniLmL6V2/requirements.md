@@ -54,7 +54,7 @@ Observed in the fork (to be confirmed by tests, see [testing strategy](testing-s
 | REQ-008 | Options for model folder, maximum sequence length (default 256 per the model card), maximum concurrent inferences, intra-op threads; validated at startup | Must |
 | REQ-009 | Cancellation honoured before inference starts and between batches | Should |
 | REQ-010 | Batches larger than a configured size are split; padding per batch only to the longest sequence | Should |
-| REQ-011 | **Planned** — Emit `ActivitySource` and `Meter` telemetry (duration, batch size, token count) | Should |
+| REQ-011 | Emit `ActivitySource` and `Meter` telemetry named `OoBDev.Onnx.SentenceEmbeddings` (`oobdev.embeddings.duration`, `.batch_size`, `.tokens`; span `embeddings.batch`) | Should |
 | REQ-012 | Caching through platform `UseDistributedCache` middleware or the caching proxy rather than a bespoke cached embedder | Should |
 | REQ-013 | Model resolved from a folder; optional Hub id or download loader later | Could |
 | REQ-014 | No dependency on `Microsoft.ML`, `libtorch-*` or the fork after cutover; runs on Windows, Linux and macOS | Must |

@@ -94,7 +94,7 @@ Golden vectors are produced once from the fork (a small console or test helper, 
 | REQ-008 | Options validation failures (missing folder, zero batch size) | Unit |
 | REQ-009 | Cancellation tests | Unit |
 | REQ-010 | Batch splitting and padding to longest row only | Unit |
-| REQ-011 | `ActivityListener` and `MeterListener` observe one span and the metrics | Unit |
+| REQ-011 | `TelemetryTests.Generate_Batch_RecordsActivityAndMetrics` (`ActivityListener` and `MeterListener` on the real model) | Integration |
 | REQ-012 | Cache middleware returns the cached vector on second call | Unit |
 | REQ-017, REQ-019, REQ-020 | Truncation then re-normalise equals reference at 512/256/128/64; non-Matryoshka presets reject `Dimensions`; prefixes applied; CLS vs mean pooling on fake outputs | Unit / Simulate |
 | REQ-018 | mpnet vectors match Python reference; works without `token_type_ids` | Simulate |

@@ -122,6 +122,10 @@ Each change document should include:
 - AsyncAPI 3.0 document and viewer for the message queues (`OoBDev.AsyncApi`, adapter contributors, `MapAsyncApi()`)
 - Status: ✅ Complete
 
+**[migration-embedding-telemetry-2026-10-22.md](migration-embedding-telemetry-2026-10-22.md)**
+- ActivitySource and Meter for the ONNX sentence embedding generator (span, duration, batch size, tokens)
+- Status: ✅ Complete
+
 **[documentation-cgi-design-reconcile-2026-10-22.md](documentation-cgi-design-reconcile-2026-10-22.md)**
 - CgiMiddleware design compared with code; testing strategy now names real tests, gaps in BACKLOG
 - Status: ✅ Complete (other designs still to compare)
