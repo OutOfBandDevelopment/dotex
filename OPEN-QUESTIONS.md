@@ -4,6 +4,10 @@ Questions Claude has for the owner. Pick an option (or write your own) under **Y
 
 How this file is kept: see `.claude/rules/open-questions.md` and `.claude/rules/work-tracking.md`.
 
+## Requests
+
+- convert from .sln to .slnx for the solution
+
 ## Open
 
 ### Q1 — 2026-10-22 — Migration — Incoming code recommendation plan
