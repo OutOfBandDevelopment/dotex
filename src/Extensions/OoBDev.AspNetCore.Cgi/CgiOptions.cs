@@ -56,6 +56,21 @@ public class CgiOptions
     public int MaxStderrBytes { get; set; } = 64 * 1024;
 
     /// <summary>
+    /// Lets unauthenticated users run scripts. Off by default: callers must be authenticated.
+    /// </summary>
+    public bool AllowAnonymous { get; set; }
+
+    /// <summary>
+    /// Application rights (<c>CommonClaims.ApplicationRight</c>); the user needs at least one when the list is not empty.
+    /// </summary>
+    public IList<string> RequiredRights { get; set; } = [];
+
+    /// <summary>
+    /// Extra rights per script file name, checked after <see cref="RequiredRights"/>; the user needs at least one of the listed rights.
+    /// </summary>
+    public IDictionary<string, IList<string>> ScriptRights { get; set; } = new Dictionary<string, IList<string>>(StringComparer.OrdinalIgnoreCase);
+
+    /// <summary>
     /// Allows <c>.cmd</c> and <c>.bat</c> handlers (Windows). Off by default.
     /// </summary>
     public bool AllowBatchFiles { get; set; }

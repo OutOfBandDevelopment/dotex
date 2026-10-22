@@ -37,7 +37,7 @@ Places where existing documentation and the code disagree. The new documents fol
 | GitVersion location | `CLAUDE.md`: `/src/GitVersion.yml` | `GitVersion.yml` at the repository root | Done 2026-10-09: `CLAUDE.md` fixed |
 | Integration workflow | CLAUDE.md: runs daily at 4 PM UTC | The cron trigger is commented out | Enable the schedule or correct the text |
 | MailKit | Described as a common dependency | Compiled into Common only in Debug and disabled by the example app | Decide and document |
-| `ContractConfig` attribute | Present in the API | Unused | Owner decision pending ([OPEN_QUESTIONS.md](../../OPEN_QUESTIONS.md), Q5); replaced by the keyed selection factory |
+| `ContractConfig` attribute | Present in the API | Unused | Owner decision pending ([OPEN-QUESTIONS.md](../../OPEN-QUESTIONS.md), E5); replaced by the keyed selection factory |
 | Readme file names | Packed as `README.{Name}.md` | Files were named `ReadMe.*.md` | Done 2026-09-30: renamed to `README.*.md` (74 files) |
 | Project counts | CLAUDE.md: 112+ projects | 123 project files | Refresh counts |
 | `docs/architecture` | Presented as current | Older than the code in places | Review against these documents |

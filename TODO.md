@@ -1,7 +1,7 @@
 # TODO - OoBDev (dotex) Framework
 
 > **Single backlog.** This file lists open, valid work only. Finished work lives in the change history: [docs/changes/](docs/changes/README.md).
-> **Owner questions:** [OPEN_QUESTIONS.md](./OPEN_QUESTIONS.md) · **New to this project?** Read [CLAUDE.md](./CLAUDE.md) first.
+> **Owner questions:** [OPEN-QUESTIONS.md](./OPEN-QUESTIONS.md) · **New to this project?** Read [CLAUDE.md](./CLAUDE.md) first.
 > **Wish list (owner's own notes):** [docs/todo.md](docs/todo.md) · **Other repositories to harvest from:** [docs/harvest-candidates.md](docs/harvest-candidates.md)
 
 **Last Updated:** 2026-10-22 (consolidated from the former `TODO-*.md` files; the dropped items and why are in [docs/changes/todo-consolidation-2026-10-22.md](docs/changes/todo-consolidation-2026-10-22.md))
@@ -22,6 +22,8 @@ GitHub is no longer the primary repository (local bare repo `origin`), so nothin
 
 - [ ] AsyncAPI follow-up: describe send-only queues by type (senders are open generics, so only configured queues are listed); check the viewer in a browser; an `azure-storage-queue` contributor if wanted.
 - [ ] CGI middleware for Kestrel (feature request 2026-10-22): designed in [docs/design/CgiMiddleware](docs/design/CgiMiddleware/README.md) (not validated: no Python here) and implemented in `src/Extensions/OoBDev.AspNetCore.Cgi` with defaults for the open questions. Tests cover the Windows batch fixtures only (13 pass). Left: shell-script fixtures for Linux, timeout, concurrency 503, response limit, stderr flood and client-abort tests, the DevLocal benchmark, owner review of the open questions.
+  - [ ] CGI: shell-script fixtures run through WSL on this host (owner answer Q4), then the timeout, 503, response limit, stderr flood and client-abort tests.
+  - [ ] CGI: run the program as another user (owner answer Q3: leave as a TODO; deployments use the service account for now).
 - [ ] HTTP querying (OData over `QUERY` with `POST` fallback, GraphQL) and the rights middleware: design pending, see the [HTTP API](docs/patterns-discovery/03-practices-and-conventions/10-http-api-practices.md) and [authorization](docs/patterns-discovery/03-practices-and-conventions/11-authorization-practices.md) practices.
 
 ## 3. Code quality backlog

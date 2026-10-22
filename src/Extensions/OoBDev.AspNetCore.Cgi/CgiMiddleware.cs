@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using OoBDev.System.Security.Claims;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -62,7 +63,11 @@ public partial class CgiMiddleware(
 
     private async Task RunAsync(HttpContext context, CgiOptions settings, PathString prefix, PathString remaining)
     {
+        Authorize(context, settings.RequiredRights, settings.AllowAnonymous);
         var script = resolver.Resolve(remaining.Value ?? string.Empty);
+
+        if (settings.ScriptRights.TryGetValue(script.ScriptName, out var scriptRights))
+            Authorize(context, scriptRights, settings.AllowAnonymous);
 
         await using var body = await BufferBodyAsync(context, settings).ConfigureAwait(false);
         var environment = BuildEnvironment(context, prefix, script, body.Length);
@@ -89,6 +94,19 @@ public partial class CgiMiddleware(
                 throw new CgiResponseTooLargeException();
             await context.Response.Body.WriteAsync(buffer.AsMemory(0, read), context.RequestAborted).ConfigureAwait(false);
         }
+    }
+
+    private static void Authorize(HttpContext context, IList<string> rights, bool allowAnonymous)
+    {
+        var user = context.User;
+        if (user.Identity?.IsAuthenticated != true)
+        {
+            if (allowAnonymous && rights.Count == 0)
+                return;
+            throw new CgiException(401, "Authentication is required.");
+        }
+        if (rights.Count > 0 && !user.FindAll(CommonClaims.ApplicationRight).Any(c => rights.Contains(c.Value, StringComparer.Ordinal)))
+            throw new CgiException(403, "A required application right is missing.");
     }
 
     private static async Task<MemoryStream> BufferBodyAsync(HttpContext context, CgiOptions settings)
@@ -168,6 +186,7 @@ public partial class CgiMiddleware(
 
     private static string ReasonFor(int status) => status switch
     {
+        401 => "Unauthorized",
         403 => "Forbidden",
         404 => "Not Found",
         413 => "Content Too Large",

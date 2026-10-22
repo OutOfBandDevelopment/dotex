@@ -25,4 +25,4 @@ Eleven `TODO*.md` files were reviewed against the current code and docs and merg
 
 ## Kept
 
-`docs/todo.md` stays as the owner's own wish list (including the CGI middleware request); `OPEN_QUESTIONS.md` keeps the owner decisions.
+`docs/todo.md` stays as the owner's own wish list (including the CGI middleware request); `OPEN-QUESTIONS.md` keeps the owner decisions.

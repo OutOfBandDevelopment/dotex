@@ -13,6 +13,8 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Security.Claims;
+using OoBDev.System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -34,7 +36,7 @@ public class CgiMiddlewareTests
             await _app.DisposeAsync();
     }
 
-    private async Task StartAsync(Dictionary<string, string?>? overrides = null)
+    private async Task StartAsync(Dictionary<string, string?>? overrides = null, bool withUserHeaders = false)
     {
         if (!OperatingSystem.IsWindows())
             Assert.Inconclusive("Fixtures are batch files.");
@@ -44,6 +46,7 @@ public class CgiMiddlewareTests
             ["OoBDev:Cgi:ScriptRoot"] = Path.Combine(AppContext.BaseDirectory, "Fixtures"),
             ["OoBDev:Cgi:Handlers:.cmd"] = "",
             ["OoBDev:Cgi:AllowBatchFiles"] = "true",
+            ["OoBDev:Cgi:AllowAnonymous"] = "true",
         };
         foreach (var (key, value) in overrides ?? [])
             settings[key] = value;
@@ -54,6 +57,20 @@ public class CgiMiddlewareTests
         builder.Services.TryAddCgiServices(builder.Configuration, "OoBDev:Cgi");
 
         _app = builder.Build();
+        if (withUserHeaders)
+        {
+            // Stage: stand-in for real authentication; X-Test-Rights lists the rights, X-Test-User signs in
+            _app.Use((context, next) =>
+            {
+                if (context.Request.Headers.TryGetValue("X-Test-User", out var user))
+                {
+                    var claims = context.Request.Headers["X-Test-Rights"].ToString().Split(',', StringSplitOptions.RemoveEmptyEntries)
+                        .Select(r => new Claim(CommonClaims.ApplicationRight, r)).Append(new Claim(ClaimTypes.Name, user.ToString()));
+                    context.User = new ClaimsPrincipal(new ClaimsIdentity(claims, "test"));
+                }
+                return next(context);
+            });
+        }
         _app.UseCgi();
         await _app.StartAsync();
 
@@ -174,6 +191,47 @@ public class CgiMiddlewareTests
         await StartAsync();
         using var response = await _client!.GetAsync("/other");
         Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
+    }
+
+    [TestMethod]
+    [TestCategory("Simulate")]
+    public async Task Get_AnonymousByDefault_ReturnsUnauthorized()
+    {
+        await StartAsync(new() { ["OoBDev:Cgi:AllowAnonymous"] = "false" }, withUserHeaders: true);
+        using var response = await _client!.GetAsync("/cgi-bin/env.cmd");
+        Assert.AreEqual(HttpStatusCode.Unauthorized, response.StatusCode);
+    }
+
+    [TestMethod]
+    [TestCategory("Simulate")]
+    [DataRow("", HttpStatusCode.Forbidden)]
+    [DataRow("other", HttpStatusCode.Forbidden)]
+    [DataRow("other,cgi.run", HttpStatusCode.OK)]
+    public async Task Get_RequiredRights_NeedsOneMatch(string rights, HttpStatusCode expected)
+    {
+        await StartAsync(new() { ["OoBDev:Cgi:AllowAnonymous"] = "false", ["OoBDev:Cgi:RequiredRights:0"] = "cgi.run" }, withUserHeaders: true);
+        using var request = new HttpRequestMessage(HttpMethod.Get, "/cgi-bin/env.cmd");
+        request.Headers.Add("X-Test-User", "alice");
+        request.Headers.Add("X-Test-Rights", rights);
+        using var response = await _client!.SendAsync(request);
+        Assert.AreEqual(expected, response.StatusCode);
+    }
+
+    [TestMethod]
+    [TestCategory("Simulate")]
+    public async Task Get_ScriptRights_AreCheckedPerScript()
+    {
+        await StartAsync(new() { ["OoBDev:Cgi:AllowAnonymous"] = "false", ["OoBDev:Cgi:ScriptRights:status.cmd:0"] = "teapot" }, withUserHeaders: true);
+        using var allowed = new HttpRequestMessage(HttpMethod.Get, "/cgi-bin/env.cmd");
+        allowed.Headers.Add("X-Test-User", "alice");
+        using var denied = new HttpRequestMessage(HttpMethod.Get, "/cgi-bin/status.cmd");
+        denied.Headers.Add("X-Test-User", "alice");
+
+        using var first = await _client!.SendAsync(allowed);
+        using var second = await _client.SendAsync(denied);
+
+        Assert.AreEqual(HttpStatusCode.OK, first.StatusCode);
+        Assert.AreEqual(HttpStatusCode.Forbidden, second.StatusCode);
     }
 
     [TestMethod]

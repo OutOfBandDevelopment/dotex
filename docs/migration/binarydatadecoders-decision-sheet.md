@@ -2,7 +2,7 @@
 
 **Created:** 2026-10-09 · **Purpose:** one line per open decision, with a recommendation, so each can be answered yes or no.
 
-> **Parent:** [Critical Questions](./binarydatadecoders-critical-questions.md) · [TODO.md](../../TODO.md) · [OPEN_QUESTIONS.md](../../OPEN_QUESTIONS.md) (Q9)
+> **Parent:** [Critical Questions](./binarydatadecoders-critical-questions.md) · [TODO.md](../../TODO.md) · [OPEN-QUESTIONS.md](../../OPEN-QUESTIONS.md) (E9)
 
 Rules applied to the recommendations: every feature is migrated (phases are priority order, see [CLAUDE.md](../../CLAUDE.md)); breaking changes are fine while the framework is unreleased; prefer platform primitives and first-party code over third-party libraries; obsolete platforms are the only deletions.
 
