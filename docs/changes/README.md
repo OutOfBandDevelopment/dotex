@@ -282,6 +282,10 @@ Each change document should include:
 - Solution converted from `.sln` to `.slnx`; docs rendering reuses the existing PlantUML container
 - Status: ✅ Complete
 
+**[testing-aspire-sqlserver-vectors-2026-10-22.md](testing-aspire-sqlserver-vectors-2026-10-22.md)**
+- Aspire example host runs SQL Server 2019 with the vector types deployed from the dacpac
+- Status: ✅ Complete (host start not run)
+
 **[documentation-example-ui-design-reconcile-2026-10-22.md](documentation-example-ui-design-reconcile-2026-10-22.md)**
 - Example UI design documents reconciled with the code
 - Status: ✅ Complete

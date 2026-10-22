@@ -10,7 +10,7 @@ GitHub is no longer the primary repository (local bare repo `origin`), so nothin
 
 ## 1. Test infrastructure
 
-- [ ] Owner request 2026-10-22: the Aspire host is missing the SQL Server instance with the vector extensions; deploy it with Docker on SQL Server 2019 (the vector types come from the Vectors.DB dacpac, see `README.Data.Vectors.DB.md`), and add it to the integration stack and the Aspire AppHost.
+- [ ] Aspire `VectorDb`: have the example API use the `VectorDb` connection string (`SqlVectorStoreProvider`) instead of `InMemoryVectorStore`, and read the dacpac from the build configuration instead of a fixed `Debug` path.
 - [ ] Replace the legacy `.github/workflows/` with the local runner in `scripts/ci` (a script that starts the Docker stack and runs the Integration suite). Decided 2026-10-22; leave the workflows untouched until the runner is verified end to end (`scripts/ci/run-tests.ps1` has not been run end to end yet).
 - [ ] Integration coverage gaps (Azure runs on emulators only: Azurite and the Service Bus emulator, no Azure licence): Azurite queues and blobs are covered (queue tests added 2026-10-22); Service Bus emulator still has no health check and few tests (not run this session); Moto is only used for SQS because no other AWS adapter exists (S3 tests wait for an S3 adapter).
 - [ ] `DevLocal` tests kept on purpose: Ollama (hard-coded LAN host, model pull and delete), USB HID (hardware), `PathEx`, `MergedXPathNavigator`, `ProjectTools.FixReadmes` (hard-coded `C:\Repos` paths), Markdown `TestMethod1` (writes files), DacFx `BuildPackageTest` (hard-coded path). Revisit Ollama when the owner says Ollama testing can resume.

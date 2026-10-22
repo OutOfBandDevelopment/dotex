@@ -17,10 +17,16 @@
     <PackageReference Include="Aspire.Hosting.JavaScript" />
     <PackageReference Include="Aspire.Hosting.Redis" />
     <PackageReference Include="Aspire.Hosting.RabbitMQ" />
+    <PackageReference Include="Aspire.Hosting.SqlServer" />
+    <PackageReference Include="Microsoft.Data.SqlClient" />
+    <PackageReference Include="Microsoft.SqlServer.DacFx" />
+    <PackageReference Include="System.Security.Cryptography.Pkcs" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\OoBDev.Example.WebApi\OoBDev.Example.WebApi.csproj" />
+    <!-- Builds the vector database dacpac the host publishes; its output is a file, not an assembly. -->
+    <ProjectReference Include="..\..\Extensions\OoBDev.Data.Vectors.DB\OoBDev.Data.Vectors.DB.csproj" ReferenceOutputAssembly="false" IsAspireProjectResource="false" />
   </ItemGroup>
 
 </Project>
