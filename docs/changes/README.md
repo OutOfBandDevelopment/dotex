@@ -265,3 +265,7 @@ Each change document should include:
 **[documentation-image-embeddings-design-reconcile-2026-10-22.md](documentation-image-embeddings-design-reconcile-2026-10-22.md)**
 - Image embeddings design documents reconciled with the code
 - Status: ✅ Complete
+
+**[documentation-allminilm-design-reconcile-2026-10-22.md](documentation-allminilm-design-reconcile-2026-10-22.md)**
+- AllMiniLmL6V2 design documents reconciled with the code; three planned items in the backlog
+- Status: ✅ Complete

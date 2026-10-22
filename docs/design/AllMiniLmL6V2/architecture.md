@@ -1,6 +1,6 @@
 # AllMiniLmL6V2 — Architecture
 
-**Status:** Draft · 2026-10-07 · Epic: AI · Related: [README](README.md), [requirements](requirements.md), [api-design](api-design.md)
+**Status:** Implemented · 2026-10-08 (reconciled with the code 2026-10-22) · Epic: AI · Related: [README](README.md), [requirements](requirements.md), [api-design](api-design.md)
 
 [← Requirements](requirements.md) · [↑ Index](README.md) · [API design →](api-design.md)
 
@@ -19,7 +19,7 @@
 
 Both projects are ExternalServices (they wrap ONNX Runtime and a published model), following the existing `SBert` and `Ollama` vendor folders. The contract stays in `OoBDev.AI.Abstractions` (`IEmbeddingProvider`) and `Microsoft.Extensions.AI` (`IEmbeddingGenerator`), so no new abstractions project is needed.
 
-**Table 1 — Proposed projects**
+**Table 1 — Projects**
 
 | Project | Folder | Purpose | Replaces |
 |---------|--------|---------|----------|

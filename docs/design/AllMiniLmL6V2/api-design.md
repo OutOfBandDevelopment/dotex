@@ -1,10 +1,8 @@
 # AllMiniLmL6V2 — API Design
 
-**Status:** Draft · 2026-10-07 · Epic: AI · Related: [README](README.md), [architecture](architecture.md), [testing strategy](testing-strategy.md)
+**Status:** Implemented · 2026-10-08 (reconciled with the code 2026-10-22) · Epic: AI · Related: [README](README.md), [architecture](architecture.md), [testing strategy](testing-strategy.md)
 
 [← Architecture](architecture.md) · [↑ Index](README.md) · [Testing strategy →](testing-strategy.md)
-
-All members below are *Proposed*. Signatures are illustrative and will be compiled in phase 1.
 
 ## Contents
 
@@ -18,58 +16,50 @@ All members below are *Proposed*. Signatures are illustrative and will be compil
 
 Project `OoBDev.Onnx.SentenceEmbeddings`, namespace `OoBDev.Onnx.SentenceEmbeddings`.
 
+**Table 1 — `OnnxSentenceEmbeddingOptions` (a non-sealed class; presets set defaults on it)**
+
+| Option | Default | Meaning |
+|--------|---------|---------|
+| `ModelPath` | `model` | Folder with the model and vocabulary |
+| `ModelFiles` | empty | `ModelFileSource` list downloaded into the folder when missing (sha-256 checked) |
+| `ModelFileName`, `VocabFileName` | `model.onnx`, `vocab.txt` | Files inside the folder |
+| `MaxSequenceLength`, `MaxBatchSize` | 256, 32 | Truncation and batch size |
+| `MaxConcurrentInferences` | `Environment.ProcessorCount` | Concurrency gate |
+| `IntraOpThreads` | 0 | 0 lets ONNX Runtime choose |
+| `LowerCase` | true | Tokenizer casing |
+| `ClsToken`, `SepToken`, `UnkToken`, `PadToken`, `MaskToken` | BERT tokens | Special tokens |
+| `InputIdsName`, `AttentionMaskName`, `TokenTypeIdsName` | standard names | Session inputs; `TokenTypeIdsName` null for models without it (mpnet) |
+| `Pooling` | `Mean` | `Mean` or `Cls` |
+| `LayerNormalize` | false | Layer normalisation before the unit scaling |
+| `Normalize` | true | Scale to unit length |
+| `Prefix` | null | Text prepended to every value (for example `query: `) |
+| `Dimensions`, `SupportsDimensionTruncation` | null, false | Truncate and re-normalise; only for Matryoshka-trained models |
+
+`Validate()` checks the ranges and is called by the generator constructor.
+
 ```csharp
-public sealed class OnnxSentenceEmbeddingOptions
+public sealed partial class OnnxSentenceEmbeddingGenerator : IEmbeddingGenerator<string, Embedding<float>>
 {
-    /// <summary>Folder with model.onnx and vocab.txt.</summary>
-    public string ModelPath { get; set; } = "model";
-    public int MaxSequenceLength { get; set; } = 256;
-    public int MaxBatchSize { get; set; } = 32;
-    public int MaxConcurrentInferences { get; set; } = Environment.ProcessorCount;
-    /// <summary>0 lets ONNX Runtime choose.</summary>
-    public int IntraOpThreads { get; set; }
-    public bool LowerCase { get; set; } = true;
-    public string InputIdsName { get; set; } = "input_ids";
-    public string AttentionMaskName { get; set; } = "attention_mask";
-    public bool Normalize { get; set; } = true;
-    /// <summary>Mean (default) or Cls (for example bge models).</summary>
-    public EmbeddingPooling Pooling { get; set; } = EmbeddingPooling.Mean;
-    /// <summary>Optional text prepended to every value (for example "query: " for E5).</summary>
-    public string? Prefix { get; set; }
-    /// <summary>Null when the model has no token type ids input (mpnet).</summary>
-    public string? TokenTypeIdsName { get; set; } = "token_type_ids";
-    /// <summary>Output size after truncate and re-normalise; only valid for Matryoshka-trained models.</summary>
-    public int? Dimensions { get; set; }
-    public bool SupportsDimensionTruncation { get; set; }
-}
+    public OnnxSentenceEmbeddingGenerator(IOptions<OnnxSentenceEmbeddingOptions> options, ILogger<OnnxSentenceEmbeddingGenerator> logger);
 
-public sealed class OnnxSentenceEmbeddingGenerator
-    : IEmbeddingGenerator<string, Embedding<float>>
-{
-    public OnnxSentenceEmbeddingGenerator(
-        IOptions<OnnxSentenceEmbeddingOptions> options,
-        ILogger<OnnxSentenceEmbeddingGenerator> logger,
-        TimeProvider timeProvider);
+    public int Dimensions { get; }   // from the model metadata, or Options.Dimensions
 
-    /// <summary>Embedding dimension, read from the model metadata at construction.</summary>
-    public int Dimensions { get; }
+    public static Task<string> EnsureModelAsync(OnnxSentenceEmbeddingOptions options, ILogger logger, CancellationToken cancellationToken = default);
 
-    public Task<GeneratedEmbeddings<Embedding<float>>> GenerateAsync(
-        IEnumerable<string> values,
-        EmbeddingGenerationOptions? options,
-        CancellationToken cancellationToken);
-
-    public object? GetService(Type serviceType, object? serviceKey);
+    public Task<GeneratedEmbeddings<Embedding<float>>> GenerateAsync(IEnumerable<string> values, EmbeddingGenerationOptions? options = null, CancellationToken cancellationToken = default);
+    public object? GetService(Type serviceType, object? serviceKey = null);
     public void Dispose();
 }
 ```
 
 Behaviour:
 
+- The constructor validates the options, downloads missing `ModelFiles`, loads the model and vocabulary and reads the output size.
 - `GenerateAsync` tokenizes each value once, truncates to `MaxSequenceLength`, splits into batches of at most `MaxBatchSize`, pads each batch to its longest row, and runs the session under the concurrency gate.
-- Pooling is a masked mean over the last hidden state followed by L2 normalisation, implemented over spans (`System.Numerics.Tensors.TensorPrimitives`), not recursive tensor loops.
-- Empty or whitespace input returns an embedding of the correct length (all zeros) rather than a zero-length vector, so callers never have to special-case `Length`. This differs from the fork, which returns an empty array, and is called out in the compatibility tests as an intentional difference.
-- `GetService(typeof(EmbeddingGeneratorMetadata))` reports the provider name and dimensions.
+- Pooling is a masked mean (or CLS) over the last hidden state followed by L2 normalisation, computed over spans.
+- Empty or whitespace input returns an all-zero vector of length `Dimensions` without running the model. This differs from the fork, which returned an empty array.
+- `GetService(typeof(EmbeddingGeneratorMetadata))` reports the generator name, the model file name and the dimensions; a keyed request returns null.
+- No `TimeProvider` is injected (the design proposed one; nothing in the generator needs it).
 
 ## Model preset
 
@@ -79,69 +69,37 @@ Project `OoBDev.SBert.AllMiniLmL6V2`, namespace `OoBDev.SBert.AllMiniLmL6V2`.
 public static class SBertGlobals
 {
     public const string AllMiniLmL6V2Key = "all-minilm-l6-v2";
+    public const string DefaultSection = "AllMiniLmL6V2";
 }
 
-public sealed class AllMiniLmL6V2Options : OnnxSentenceEmbeddingOptions
+public static class AllMiniLmL6V2Model
 {
-    public const string ConfigPrefix = "SBert:AllMiniLmL6V2";
+    public const string Repository = "sentence-transformers/all-MiniLM-L6-v2";
+    public const string Revision = "1110a243fdf4706b3f48f1d95db1a4f5529b4d41";
+    public static string DefaultFolder { get; }
+    public static void ApplyDefaults(OnnxSentenceEmbeddingOptions options);   // pinned files with sha-256, folder, names
 }
 
-/// <summary>Adapts the generator to the existing IEmbeddingProvider contract.</summary>
-public sealed class AllMiniLmL6V2EmbeddingProvider : IEmbeddingProvider
+public class AllMiniLmL6V2EmbeddingProvider : IEmbeddingProvider
 {
-    public AllMiniLmL6V2EmbeddingProvider(
-        IEmbeddingGenerator<string, Embedding<float>> generator,
-        OnnxSentenceEmbeddingGenerator source);
-
+    public AllMiniLmL6V2EmbeddingProvider(OnnxSentenceEmbeddingGenerator generator);
     public int Length { get; }   // 384, from the model; no blocking call
-
-    public Task<ReadOnlyMemory<float>> GenerateEmbeddingAsync(
-        string content,
-#if DEBUG
-        string? model,
-        CancellationToken cancellationToken
-#else
-        string? model = default,
-        CancellationToken cancellationToken = default
-#endif
-        );
+    public Task<ReadOnlyMemory<float>> GenerateEmbeddingAsync(string content, string? model, CancellationToken cancellationToken = default);
 }
 ```
 
-`SBertGlobals` may already exist in `OoBDev.SBert`; the constant is added there rather than duplicated.
+The preset has no options subclass: `ApplyDefaults` configures the shared options class, then configuration overrides it. `SBertGlobals` lives in the preset project.
 
 ## Registration
 
 ```csharp
-public static class ServiceCollectionExtensions
-{
-    public static IServiceCollection TryAddAllMiniLmL6V2Services(
-        this IServiceCollection services,
-        IConfiguration configuration,
-#if DEBUG
-        string section
-#else
-        string section = AllMiniLmL6V2Options.ConfigPrefix
-#endif
-        )
-    {
-        services.AddValidatedOptions<AllMiniLmL6V2Options>(configuration, section);
-
-        services.TryAddKeyedSingleton<IEmbeddingGenerator<string, Embedding<float>>>(
-            SBertGlobals.AllMiniLmL6V2Key,
-            (sp, _) => new EmbeddingGeneratorBuilder<string, Embedding<float>>(sp)
-                .UseOpenTelemetry()
-                .UseLogging()
-                .Use(new OnnxSentenceEmbeddingGenerator(/* options, logger, time */)));
-
-        services.TryAddKeyedSingleton<IEmbeddingProvider, AllMiniLmL6V2EmbeddingProvider>(
-            SBertGlobals.AllMiniLmL6V2Key);
-        return services;
-    }
-}
+public static IServiceCollection TryAddAllMiniLmL6V2Services(
+    this IServiceCollection services, IConfiguration configuration, string allMiniLmL6V2OptionSection = SBertGlobals.DefaultSection);
 ```
 
-Compatibility: the method name `TryAddAllMiniLmL6V2Services` and the unkeyed `IEmbeddingProvider` default registration are kept so existing callers need no change; the legacy `ALLMINILM` key is registered as an alias for one release (`[Obsolete]` note in the readme). No breaking change to existing OoBDev APIs.
+Registers, in order: `Configure<OnnxSentenceEmbeddingOptions>` (defaults, then `configuration.Bind`), the generator as a singleton, `IEmbeddingGenerator<string, Embedding<float>>` as a singleton forwarding to it, `IEmbeddingProvider` as a transient that **replaces** any earlier default, and the keyed `IEmbeddingProvider` under `SBertGlobals.AllMiniLmL6V2Key`. The existing method name is kept so callers need no change.
+
+**Planned** (not in the code; see `BACKLOG.md`): `AddValidatedOptions` instead of `Configure`, keyed generator registration wrapped with `EmbeddingGeneratorBuilder` (`UseOpenTelemetry`, `UseLogging`), and the legacy `ALLMINILM` key alias. The alias is not needed while the framework is unreleased.
 
 ## Usage
 
@@ -167,14 +125,16 @@ class AllMiniLmL6V2EmbeddingProvider {
   +GenerateEmbeddingAsync(content, model, ct)
 }
 class OnnxSentenceEmbeddingOptions
-class AllMiniLmL6V2Options
+class AllMiniLmL6V2Model {
+  +ApplyDefaults(options)
+}
 class SBertGlobals {
   +AllMiniLmL6V2Key : string
 }
 IGen <|.. OnnxSentenceEmbeddingGenerator
 IEmbeddingProvider <|.. AllMiniLmL6V2EmbeddingProvider
-OnnxSentenceEmbeddingOptions <|-- AllMiniLmL6V2Options
-AllMiniLmL6V2EmbeddingProvider --> IGen
+AllMiniLmL6V2Model ..> OnnxSentenceEmbeddingOptions : defaults
+AllMiniLmL6V2EmbeddingProvider --> OnnxSentenceEmbeddingGenerator
 OnnxSentenceEmbeddingGenerator --> OnnxSentenceEmbeddingOptions
 @enduml
 ```

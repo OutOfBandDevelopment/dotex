@@ -1,6 +1,6 @@
 # AllMiniLmL6V2 — Testing Strategy
 
-**Status:** Draft · 2026-10-07 · Epic: AI · Related: [README](README.md), [requirements](requirements.md), [api-design](api-design.md)
+**Status:** Implemented · 2026-10-08 (reconciled with the code 2026-10-22) · Epic: AI · Related: [README](README.md), [requirements](requirements.md), [api-design](api-design.md)
 
 [← API design](api-design.md) · [↑ Index](README.md)
 
