@@ -538,7 +538,7 @@ See `/containers/testing/README.md` for detailed Docker infrastructure documenta
 - [Docker Infrastructure](./containers/testing/README.md) - Docker setup and usage
 - [Test Categories](./src/Framework/OoBDev.TestUtilities/TestCategories.cs) - Test category definitions
 - [.runsettings](./src/.runsettings) - Default test run configuration
-- [Integration Test Protocol](./src/.claude/protocols/software/integration-test-maintenance.md) - Maintenance checklist
+- [Add-integration-service skill](./.claude/skills/add-integration-service/SKILL.md) - Maintenance checklist
 
 ---
 

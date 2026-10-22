@@ -61,6 +61,6 @@ Settings can also bind to options through the `TestContext` configuration provid
 
 ## Adding a service
 
-Follow the `integration-test-maintenance` protocol (`.claude/protocols/`): compose entry with a `TEST_PORT_*` host port and a health check, nginx dashboard link where it has a UI, `.runsettings` parameters, [TEST_VARIABLES.md](../../../../TEST_VARIABLES.md), and a section in [Services](services.md) plus a row in the [dependency matrix](README.md#dependency-matrix).
+Follow the `add-integration-service` skill (`.claude/skills/add-integration-service/`): compose entry with a `TEST_PORT_*` host port and a health check, nginx dashboard link where it has a UI, `.runsettings` parameters, [TEST_VARIABLES.md](../../../../TEST_VARIABLES.md), and a section in [Services](services.md) plus a row in the [dependency matrix](README.md#dependency-matrix).
 
 [← Services](services.md) · [Integration testing](README.md)

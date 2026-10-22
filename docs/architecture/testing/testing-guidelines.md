@@ -836,7 +836,7 @@ public void MathOperation_ShouldReturnExpectedValue()
 - [TEST_VARIABLES.md](../../../TEST_VARIABLES.md) - Complete test property reference
 - [TestCategories.cs](../../../src/Framework/OoBDev.TestUtilities/TestCategories.cs) - Category definitions
 - [Docker Infrastructure](../../../containers/testing/README.md) - Docker setup guide
-- [Integration Test Protocol](../../../.claude/protocols/software/integration-test-maintenance.md) - Maintenance checklist
+- [Add-integration-service skill](../../../.claude/skills/add-integration-service/SKILL.md) - Maintenance checklist
 
 ---
 

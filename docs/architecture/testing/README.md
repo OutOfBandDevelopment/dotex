@@ -138,7 +138,7 @@ public class MyServiceIntegrationTests
 - [Testing Guidelines](./testing-guidelines.md) - Full testing standards
 - [Test Variables Reference](../../../TEST_VARIABLES.md) - Complete property list
 - [Docker Infrastructure](../../../containers/testing/README.md) - Docker setup
-- [Integration Test Protocol](../../../.claude/protocols/software/integration-test-maintenance.md) - Maintenance checklist
+- [Add-integration-service skill](../../../.claude/skills/add-integration-service/SKILL.md) - Maintenance checklist
 
 ---
 
@@ -148,7 +148,7 @@ When working with tests, follow these protocols:
 
 | Situation | Protocol |
 |-----------|----------|
-| Adding new Docker service | [integration-test-maintenance.md](../../../.claude/protocols/software/integration-test-maintenance.md) |
-| Adding new test parameters | [integration-test-maintenance.md](../../../.claude/protocols/software/integration-test-maintenance.md) |
+| Adding new Docker service | [add-integration-service skill](../../../.claude/skills/add-integration-service/SKILL.md) |
+| Adding new test parameters | [add-integration-service skill](../../../.claude/skills/add-integration-service/SKILL.md) |
 | Writing new integration tests | [testing-guidelines.md](./testing-guidelines.md) |
 
