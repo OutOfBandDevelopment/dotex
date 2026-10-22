@@ -17,7 +17,7 @@
 
 ## Targets
 
-Coverage 85% or more for the project. Tests run on Linux and Windows (fixtures exist for both). No Docker service is needed, so everything is `Unit`, `Simulate` or `DevLocal`.
+Coverage 85% or more for the project. Tests run on Linux and Windows (fixtures exist for both; Linux runs in the .NET SDK container with `scripts/ci/run-linux-tests.ps1`, not WSL). No Docker service is needed, so everything is `Unit`, `Simulate` or `DevLocal`.
 
 ## Requirement coverage
 

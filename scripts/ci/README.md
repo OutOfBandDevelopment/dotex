@@ -4,6 +4,7 @@ GitHub is no longer the primary repository, so the build and test pipelines run 
 
 | Script | Replaces | What it does |
 |--------|----------|--------------|
+| `run-linux-tests.ps1` | WSL for Linux-only tests | Copies `src/` into the `mcr.microsoft.com/dotnet/sdk:10.0` container (host build output is untouched, GitVersion off) and runs `dotnet test` there; default project is the CGI middleware tests (`.sh` fixtures). Results in `artifacts/test-results/linux` |
 | `run-tests.ps1` | `.github/workflows/dotnet.yml` (build and test) and `integration-tests.yml` | Restore, build and test `src/` for the chosen categories; starts and always stops the Docker stack when `Integration` is included |
 
 ```powershell

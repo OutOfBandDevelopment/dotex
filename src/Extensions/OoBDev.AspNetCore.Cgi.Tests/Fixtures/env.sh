@@ -1,0 +1,10 @@
+#!/bin/sh
+echo "Content-Type: text/plain"
+echo
+echo "METHOD=$REQUEST_METHOD"
+echo "QUERY_STRING=$QUERY_STRING"
+echo "PATHINFO=$PATH_INFO"
+echo "SCRIPT=$SCRIPT_NAME"
+echo "GATEWAY=$GATEWAY_INTERFACE"
+echo "PROXY=$HTTP_PROXY"
+echo "SECRET=$OOB_HOST_SECRET"

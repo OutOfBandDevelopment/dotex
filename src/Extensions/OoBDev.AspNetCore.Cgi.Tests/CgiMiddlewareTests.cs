@@ -21,11 +21,13 @@ using System.Threading.Tasks;
 
 namespace OoBDev.AspNetCore.Cgi.Tests;
 
-// The fixture scripts are Windows batch files; non-Windows runs are inconclusive until shell fixtures exist.
+// Fixtures: .cmd batch files on Windows, .sh scripts (run by /bin/sh) on Linux, see scripts/ci/run-linux-tests.sh.
 [TestClass]
 #pragma warning disable CA1001 // disposed in TestCleanup
 public class CgiMiddlewareTests
 {
+    private static string Ext => OperatingSystem.IsWindows() ? ".cmd" : ".sh";
+
     private WebApplication? _app;
     private HttpClient? _client;
 
@@ -39,14 +41,11 @@ public class CgiMiddlewareTests
 
     private async Task StartAsync(Dictionary<string, string?>? overrides = null, bool withUserHeaders = false)
     {
-        if (!OperatingSystem.IsWindows())
-            Assert.Inconclusive("Fixtures are batch files.");
-
         var settings = new Dictionary<string, string?>
         {
             ["OoBDev:Cgi:ScriptRoot"] = Path.Combine(AppContext.BaseDirectory, "Fixtures"),
-            ["OoBDev:Cgi:Handlers:.cmd"] = "",
             ["OoBDev:Cgi:AllowBatchFiles"] = "true",
+            [$"OoBDev:Cgi:Handlers:{Ext}"] = OperatingSystem.IsWindows() ? "" : "/bin/sh",
             ["OoBDev:Cgi:AllowAnonymous"] = "true",
         };
         foreach (var (key, value) in overrides ?? [])
@@ -85,7 +84,7 @@ public class CgiMiddlewareTests
     {
         // Stage
         await StartAsync();
-        using var request = new HttpRequestMessage(HttpMethod.Get, "/cgi-bin/env.cmd/extra/path?a=1&b=2");
+        using var request = new HttpRequestMessage(HttpMethod.Get, $"/cgi-bin/env{Ext}/extra/path?a=1&b=2");
         request.Headers.Add("Proxy", "http://evil");
 
         // Test
@@ -97,7 +96,7 @@ public class CgiMiddlewareTests
         StringAssert.Contains(text, "METHOD=GET");
         StringAssert.Contains(text, "QUERY_STRING=a=1&b=2");
         StringAssert.Contains(text, "PATHINFO=/extra/path");
-        StringAssert.Contains(text, "SCRIPT=/cgi-bin/env.cmd");
+        StringAssert.Contains(text, $"SCRIPT=/cgi-bin/env{Ext}");
         StringAssert.Contains(text, "GATEWAY=CGI/1.1");
         StringAssert.Contains(text, "PROXY=" + Environment.NewLine);
     }
@@ -110,7 +109,7 @@ public class CgiMiddlewareTests
         await StartAsync();
 
         // Test
-        using var response = await _client!.GetAsync("/cgi-bin/status.cmd");
+        using var response = await _client!.GetAsync($"/cgi-bin/status{Ext}");
 
         // Assert
         Assert.AreEqual((HttpStatusCode)418, response.StatusCode);
@@ -123,7 +122,7 @@ public class CgiMiddlewareTests
     public async Task Get_NoContentType_ReturnsBadGateway()
     {
         await StartAsync();
-        using var response = await _client!.GetAsync("/cgi-bin/no-content-type.cmd");
+        using var response = await _client!.GetAsync($"/cgi-bin/no-content-type{Ext}");
         Assert.AreEqual(HttpStatusCode.BadGateway, response.StatusCode);
     }
 
@@ -132,7 +131,7 @@ public class CgiMiddlewareTests
     public async Task Get_ExitWithoutOutput_ReturnsServerError()
     {
         await StartAsync();
-        using var response = await _client!.GetAsync("/cgi-bin/exit-1.cmd");
+        using var response = await _client!.GetAsync($"/cgi-bin/exit-1{Ext}");
         Assert.AreEqual(HttpStatusCode.InternalServerError, response.StatusCode);
     }
 
@@ -141,7 +140,7 @@ public class CgiMiddlewareTests
     public async Task Get_MissingScript_ReturnsNotFound()
     {
         await StartAsync();
-        using var response = await _client!.GetAsync("/cgi-bin/nope.cmd");
+        using var response = await _client!.GetAsync($"/cgi-bin/nope{Ext}");
         Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
     }
 
@@ -158,20 +157,22 @@ public class CgiMiddlewareTests
     [TestCategory("Simulate")]
     public async Task Get_BatchFileWithoutOptIn_ReturnsForbidden()
     {
+        if (!OperatingSystem.IsWindows())
+            Assert.Inconclusive("Batch files are Windows only.");
         await StartAsync(new() { ["OoBDev:Cgi:AllowBatchFiles"] = "false" });
-        using var response = await _client!.GetAsync("/cgi-bin/env.cmd");
+        using var response = await _client!.GetAsync($"/cgi-bin/env{Ext}");
         Assert.AreEqual(HttpStatusCode.Forbidden, response.StatusCode);
     }
 
     [TestMethod]
     [TestCategory("Simulate")]
-    [DataRow("/cgi-bin/..%2fenv.cmd")]
-    [DataRow("/cgi-bin/%2e%2e/env.cmd")]
-    [DataRow("/cgi-bin/sub%5c..%5cenv.cmd")]
+    [DataRow("/cgi-bin/..%2fenv")]
+    [DataRow("/cgi-bin/%2e%2e/env")]
+    [DataRow("/cgi-bin/sub%5c..%5cenv")]
     public async Task Get_Traversal_IsNotServed(string path)
     {
         await StartAsync();
-        using var response = await _client!.GetAsync(path);
+        using var response = await _client!.GetAsync(path + Ext);
         Assert.AreNotEqual(HttpStatusCode.OK, response.StatusCode);
     }
 
@@ -181,7 +182,7 @@ public class CgiMiddlewareTests
     {
         await StartAsync(new() { ["OoBDev:Cgi:MaxRequestBodyBytes"] = "10" });
         using var content = new StringContent(new string('x', 100), Encoding.UTF8, "text/plain");
-        using var response = await _client!.PostAsync("/cgi-bin/env.cmd", content);
+        using var response = await _client!.PostAsync($"/cgi-bin/env{Ext}", content);
         Assert.AreEqual(HttpStatusCode.RequestEntityTooLarge, response.StatusCode);
     }
 
@@ -199,7 +200,7 @@ public class CgiMiddlewareTests
     public async Task Get_AnonymousByDefault_ReturnsUnauthorized()
     {
         await StartAsync(new() { ["OoBDev:Cgi:AllowAnonymous"] = "false" }, withUserHeaders: true);
-        using var response = await _client!.GetAsync("/cgi-bin/env.cmd");
+        using var response = await _client!.GetAsync($"/cgi-bin/env{Ext}");
         Assert.AreEqual(HttpStatusCode.Unauthorized, response.StatusCode);
     }
 
@@ -211,7 +212,7 @@ public class CgiMiddlewareTests
     public async Task Get_RequiredRights_NeedsOneMatch(string rights, HttpStatusCode expected)
     {
         await StartAsync(new() { ["OoBDev:Cgi:AllowAnonymous"] = "false", ["OoBDev:Cgi:RequiredRights:0"] = "cgi.run" }, withUserHeaders: true);
-        using var request = new HttpRequestMessage(HttpMethod.Get, "/cgi-bin/env.cmd");
+        using var request = new HttpRequestMessage(HttpMethod.Get, $"/cgi-bin/env{Ext}");
         request.Headers.Add("X-Test-User", "alice");
         request.Headers.Add("X-Test-Rights", rights);
         using var response = await _client!.SendAsync(request);
@@ -222,10 +223,10 @@ public class CgiMiddlewareTests
     [TestCategory("Simulate")]
     public async Task Get_ScriptRights_AreCheckedPerScript()
     {
-        await StartAsync(new() { ["OoBDev:Cgi:AllowAnonymous"] = "false", ["OoBDev:Cgi:ScriptRights:status.cmd:0"] = "teapot" }, withUserHeaders: true);
-        using var allowed = new HttpRequestMessage(HttpMethod.Get, "/cgi-bin/env.cmd");
+        await StartAsync(new() { ["OoBDev:Cgi:AllowAnonymous"] = "false", [$"OoBDev:Cgi:ScriptRights:status{Ext}:0"] = "teapot" }, withUserHeaders: true);
+        using var allowed = new HttpRequestMessage(HttpMethod.Get, $"/cgi-bin/env{Ext}");
         allowed.Headers.Add("X-Test-User", "alice");
-        using var denied = new HttpRequestMessage(HttpMethod.Get, "/cgi-bin/status.cmd");
+        using var denied = new HttpRequestMessage(HttpMethod.Get, $"/cgi-bin/status{Ext}");
         denied.Headers.Add("X-Test-User", "alice");
 
         using var first = await _client!.SendAsync(allowed);
@@ -240,7 +241,7 @@ public class CgiMiddlewareTests
     public async Task Get_ProgramOverTimeout_ReturnsGatewayTimeout()
     {
         await StartAsync(new() { ["OoBDev:Cgi:Timeout"] = "00:00:01" });
-        using var response = await _client!.GetAsync("/cgi-bin/sleep-first.cmd");
+        using var response = await _client!.GetAsync($"/cgi-bin/sleep-first{Ext}");
         Assert.AreEqual(HttpStatusCode.GatewayTimeout, response.StatusCode);
     }
 
@@ -250,11 +251,11 @@ public class CgiMiddlewareTests
     {
         // Stage
         await StartAsync(new() { ["OoBDev:Cgi:MaxConcurrentProcesses"] = "1" });
-        var first = _client!.GetAsync("/cgi-bin/sleep.cmd");
+        var first = _client!.GetAsync($"/cgi-bin/sleep{Ext}");
         await Task.Delay(TimeSpan.FromMilliseconds(750));
 
         // Test
-        using var second = await _client.GetAsync("/cgi-bin/env.cmd");
+        using var second = await _client.GetAsync($"/cgi-bin/env{Ext}");
         using var firstResponse = await first;
 
         // Assert
@@ -268,7 +269,7 @@ public class CgiMiddlewareTests
     public async Task Get_ResponseOverLimit_ReturnsBadGateway()
     {
         await StartAsync(new() { ["OoBDev:Cgi:MaxResponseBytes"] = "10" });
-        using var response = await _client!.GetAsync("/cgi-bin/env.cmd");
+        using var response = await _client!.GetAsync($"/cgi-bin/env{Ext}");
         Assert.AreEqual(HttpStatusCode.BadGateway, response.StatusCode);
     }
 
@@ -277,7 +278,7 @@ public class CgiMiddlewareTests
     public async Task Get_StderrFlood_StillAnswersAndKeepsLimit()
     {
         await StartAsync(new() { ["OoBDev:Cgi:MaxStderrBytes"] = "100" });
-        using var response = await _client!.GetAsync("/cgi-bin/stderr-flood.cmd");
+        using var response = await _client!.GetAsync($"/cgi-bin/stderr-flood{Ext}");
         Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
         StringAssert.Contains(await response.Content.ReadAsStringAsync(), "ok");
     }
@@ -289,7 +290,7 @@ public class CgiMiddlewareTests
         // Stage
         await StartAsync(new() { ["OoBDev:Cgi:MaxConcurrentProcesses"] = "1" });
         using var cancel = new CancellationTokenSource();
-        var aborted = _client!.GetAsync("/cgi-bin/sleep.cmd", HttpCompletionOption.ResponseContentRead, cancel.Token);
+        var aborted = _client!.GetAsync($"/cgi-bin/sleep{Ext}", HttpCompletionOption.ResponseContentRead, cancel.Token);
         await Task.Delay(TimeSpan.FromMilliseconds(750));
 
         // Test
@@ -299,7 +300,7 @@ public class CgiMiddlewareTests
         for (var attempt = 0; attempt < 20 && status == HttpStatusCode.ServiceUnavailable; attempt++)
         {
             await Task.Delay(TimeSpan.FromMilliseconds(250));
-            using var next = await _client.GetAsync("/cgi-bin/env.cmd");
+            using var next = await _client.GetAsync($"/cgi-bin/env{Ext}");
             status = next.StatusCode;
         }
 
@@ -311,9 +312,6 @@ public class CgiMiddlewareTests
     [TestCategory("Unit")]
     public async Task Start_MissingScriptRoot_Fails()
     {
-        if (!OperatingSystem.IsWindows())
-            Assert.Inconclusive("Fixtures are batch files.");
-
         var builder = WebApplication.CreateBuilder();
         builder.WebHost.UseUrls("http://127.0.0.1:0");
         builder.Configuration.AddInMemoryCollection(new Dictionary<string, string?> { ["OoBDev:Cgi:ScriptRoot"] = Path.Combine(AppContext.BaseDirectory, "does-not-exist") });
