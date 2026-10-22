@@ -28,7 +28,7 @@ for (const entry of entries) {
 if (entries.length === 0) process.exit(0);
 const lines = [`OPEN-QUESTIONS.md: ${pending.length} open without an answer (${pending.join(', ') || 'none'}).`];
 if (waiting.length > 0)
-  lines.push(`Answered by the owner but not processed yet: ${waiting.join(', ')}. Act on them, then move them to Answered (rule open-questions).`);
+  lines.push(`Answered by the owner but not processed yet: ${waiting.join(', ')}. Act on them, then move them to removed after you record them (rule open-questions).`);
 
 console.log(JSON.stringify({
   hookSpecificOutput: { hookEventName: 'SessionStart', additionalContext: lines.join(' ') },

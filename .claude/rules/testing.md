@@ -10,6 +10,7 @@ paths:
 
 - MSTest. Framework layer needs 80%+ coverage. Method names `Method_Scenario_Expected`, with Stage / Mock / Test / Assert / Verify comments.
 - Every test carries one category: `Unit` (isolated, mocked), `Simulate` (full stack, in-memory persistence), `Integration` (Docker services), `DevLocal` (manual only), `LiveIntegration` (real cloud, manual only). A test that touches an external service is never `Unit`.
+- Tests that need anything outside the process (services, other operating systems, shells, scripts) run against Docker containers, or Aspire hosting them in Docker; not against host installs such as WSL. Start the stack with `containers/testing`; add services with the `add-integration-service` skill.
 - Read configuration with `TestContext.GetRequiredProperty<T>()` (URLs, credentials, connection strings) or `TestContext.GetPropertyOrDefault<T>()` (industry-standard ports). Never `Environment.GetEnvironmentVariable()`.
 - Integration tests use unique resource names per run (`$"Test_{Guid.NewGuid():N}"`) and clean up in `[TestCleanup]`.
 - Floating-point comparisons use `NumericAsserts.AreSimilar()`.

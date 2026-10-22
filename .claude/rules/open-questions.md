@@ -1,9 +1,8 @@
 # Open questions (always apply)
 
-- Questions for the owner are tracked in `/OPEN-QUESTIONS.md`. When a question comes up that you cannot settle from the request, code or sensible defaults, add it there (next `Q<n>`, date, area, question, the **Default** you will use meanwhile, an empty **Your answer:**), keep working on the default, and mention the new entry in your reply.
-- Read the file at the start of a session and before starting work in an area it names. A non-empty **Your answer** is an answer: act on it, move the entry to **Answered** with the date and what you did, and update `TODO.md` if it changes the backlog.
-- An answer given in chat counts the same as one written in the file. Copy it into the entry (quote it), move the entry to **Answered**, then act.
+- Questions for the owner are tracked in `/OPEN-QUESTIONS.md`, which holds open questions only. When a question comes up that you cannot settle from the request, code or sensible defaults, add it there (next `Q<n>`, date, area, question, the **Default** you will use meanwhile, an empty **Your answer:**), keep working on the default, and mention the new entry in your reply.
+- Read the file at the start of a session and before starting work in an area it names. A non-empty **Your answer** is an answer, and so is one given in chat. Act on it, then record it where it belongs and delete the entry: the feature doc (`docs/design/<Feature>/`), `BACKLOG.md` or `TODO.md`, a rule, and a change document when work finished (`work-tracking` rule). History stays in `git log`.
 - A SessionStart hook (`.claude/hooks/open-questions.mjs`) reports the open and unprocessed counts; act on its report.
-- Do not delete entries; answered ones stay under **Answered**. Do not reopen an answered question unless the owner asks.
+- If an answer is ambiguous (for example only "yes" to a choice), keep the entry with a follow-up that states your proposal and what to reply.
 - Do not ask the same question in chat again when it is already open in the file, unless the owner asks for a summary.
-- The file lives at the repo root by owner request; it is the only root file besides `README.md`, `CLAUDE.md`, `TODO.md`, `TEST_VARIABLES.md` and `CONFIGURATION_SETTINGS.md`.
+- The file lives at the repo root by owner request (root files: see the `work-tracking` rule).

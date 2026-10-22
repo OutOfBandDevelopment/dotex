@@ -14,7 +14,7 @@ Working agreements are enforced by files, not by this guide alone:
 | Mechanism | Location | What it holds |
 |-----------|----------|---------------|
 | Rules (always loaded, or loaded for matching files) | `.claude/rules/` | `git-workflow`, `owner-decisions`, `open-questions` (always); `coding-standards` (C#), `testing` (tests, runsettings, containers), `docs-and-diagrams` (docs, markdown) |
-| Skills (loaded when the task matches) | `.claude/skills/` | `add-integration-service`, `archive-completed-work`, `document-configuration`, `compare-incoming-codebase`, `architectural-analysis`, `security-audit`, `write-docs` |
+| Skills (loaded when the task matches) | `.claude/skills/` | `add-integration-service`, `archive-completed-work`, `document-configuration`, `compare-incoming-codebase`, `architectural-analysis`, `security-audit`, `write-docs`, `complete-work` |
 | Hook (deterministic guard) | `.claude/hooks/guard-git.mjs`, registered in `.claude/settings.json` | blocks AI attribution in commit messages, force pushes, `gh` usage and pushes to `upstream` |
 | Memory | `~/.claude/projects/.../memory/` | owner preferences and feedback |
 
@@ -33,7 +33,7 @@ OoBDev is a collection of .NET framework extensions at several utility levels: b
 ## Before Starting Any Work
 
 Read first:
-- `/TODO.md` - current status and pending work (the `Backlog:` sections hold open review items)
+- `/TODO.md` (active work) and `/BACKLOG.md` (full work list); finished work goes to `docs/changes/` (rule `work-tracking`, skill `complete-work`); owner questions are in `/OPEN-QUESTIONS.md`
 - `/docs/patterns-discovery/README.md` - how this codebase is built (patterns, conventions, blueprint, alternatives)
 - `/docs/architecture/README.md` and `/docs/architecture/architectural-standards.md`
 
@@ -114,7 +114,7 @@ dotnet test src/ --collect:"XPlat Code Coverage"
 
 ## Important Files
 
-- `/TODO.md`, `/Incoming/CHECKLIST.md` - work tracking and incoming project status
+- `/TODO.md`, `/BACKLOG.md`, `/Incoming/CHECKLIST.md` - work tracking and incoming project status
 - `/docs/architecture/`, `/docs/how-tos/` ([.runsettings variables](docs/how-tos/runsettings-variables-and-configuration.md)), `/docs/migration/`, `/docs/changes/`
 - Git: the primary repo is the local bare repo `origin` (`G:/oobdev/dotex.git`); GitHub (`upstream`) is no longer primary, so no `gh`, PRs or GitHub CI waits. Commit as you work on a branch, never on `main` (`.claude/rules/git-workflow.md`)
 - `/GitVersion.yml` (manual major, minor per merge into main, patch = commits past the last main tag on branches), `/src/.runsettings`, `/.github/workflows/dotnet.yml`
