@@ -21,7 +21,7 @@ GitHub is no longer the primary repository (local bare repo `origin`), so nothin
 ## 2. APIs and documents
 
 - [ ] AsyncAPI follow-up: describe send-only queues by type (senders are open generics, so only configured queues are listed); check the viewer in a browser; an `azure-storage-queue` contributor if wanted.
-- [ ] CGI middleware for Kestrel (feature request 2026-10-22): the four design documents are drafted in [docs/design/CgiMiddleware](docs/design/CgiMiddleware/README.md) (not validated: no Python here to run `validate-docs.py`). Next: owner review of the open questions, then the `OoBDev.AspNetCore.Cgi` project and tests.
+- [ ] CGI middleware for Kestrel (feature request 2026-10-22): designed in [docs/design/CgiMiddleware](docs/design/CgiMiddleware/README.md) (not validated: no Python here) and implemented in `src/Extensions/OoBDev.AspNetCore.Cgi` with defaults for the open questions. Tests cover the Windows batch fixtures only (13 pass). Left: shell-script fixtures for Linux, timeout, concurrency 503, response limit, stderr flood and client-abort tests, the DevLocal benchmark, owner review of the open questions.
 - [ ] HTTP querying (OData over `QUERY` with `POST` fallback, GraphQL) and the rights middleware: design pending, see the [HTTP API](docs/patterns-discovery/03-practices-and-conventions/10-http-api-practices.md) and [authorization](docs/patterns-discovery/03-practices-and-conventions/11-authorization-practices.md) practices.
 
 ## 3. Code quality backlog
