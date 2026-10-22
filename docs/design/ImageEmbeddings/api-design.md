@@ -32,9 +32,9 @@ CLIP additionally exposes `IEmbeddingGenerator<string, Embedding<float>>` for th
 
 | Option | Meaning |
 |--------|---------|
-| `ModelFolder`, `ModelFiles` | Same meaning as the text runner; sub-folder names allowed |
-| `ModelFile` | File inside the folder to load (`onnx/vision_model.onnx`) |
-| `InputName`, `OutputName` | Session names (defaults from model metadata) |
+| `ModelPath` (default `models`), `ModelFiles` | Same meaning as the text runner (`ModelFileSource` list); sub-folder names allowed |
+| `ModelFileName` (default `model.onnx`) | File inside the folder to load (`onnx/vision_model.onnx`) |
+| `InputName` (default `pixel_values`), `OutputName` | Session names; `OutputName` null takes the first output |
 | `ImageSize`, `ResizeShortestEdge`, `Resample`, `CenterCrop`, `Mean`, `Std` | Preprocessing, set by each preset |
 | `Pooling` | `Output` (model embedding), `Cls` (first token of the hidden states) or `MeanPatch` |
 | `Normalize` | Scale to unit length |

@@ -10,6 +10,8 @@ Pass bar: cosine 0.999 or better for every image; classifiers must agree on the 
 
 ## Unit tests (no model)
 
+In `OoBDev.Onnx.ImageEmbeddings.Tests`: `ImageResizerTests` (PIL-exact resize, same size, solid colour, bad arguments), `PreprocessorAndOptionsTests` (NCHW planes, shortest edge and crop, options defaults and ranges), `SkiaImageDecoderTests` (lossless PNG, pixel limit, not an image), `ClipUnitTests` (tokenizer, text options, zero-shot ranking) and `ConformanceTests` (empty input, bad input, size limits, cancellation, classifier probabilities). `ReferenceTests` (Python comparison) and `AllPresets_ResolveByKeyAndWork` need the models.
+
 - Resize against fixed expected pixels from PIL for bicubic and bilinear, shortest-edge and direct modes, up- and down-scaling.
 - Center crop, normalisation and NCHW layout.
 - Options validation; `MaxImageBytes` and `MaxPixels` rejection; decoder abstraction with a fake decoder.
