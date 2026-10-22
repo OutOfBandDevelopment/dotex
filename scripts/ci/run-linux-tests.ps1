@@ -28,7 +28,7 @@ set -e
 mkdir -p /work
 tar -C /source --exclude=bin --exclude=obj --exclude=.vs --exclude=publish --exclude=TestResults -cf - src GitVersion.yml | tar -C /work -xf -
 cd /work/src
-dotnet test $Project $filterArg -p:DisableGitVersionTask=true --logger 'trx;LogFileName=linux.trx' --results-directory /results
+dotnet test $Project $filterArg -p:DisableGitVersionTask=true --logger 'console;verbosity=normal' --logger 'trx;LogFileName=linux.trx' --results-directory /results
 "@
 
 docker run --rm -v "${root}:/source:ro" -v "${results}:/results" $Image bash -c $script.Replace("`r", '')

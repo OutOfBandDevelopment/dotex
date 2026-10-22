@@ -14,6 +14,7 @@
 ### List of Tables
 
 1. [Table 4 — Requirement coverage](#table-4)
+2. [Table 5 — Measured request cost](#table-5)
 
 ## Targets
 
@@ -49,6 +50,19 @@ Tiny scripts committed beside the tests, one per case: `env`, `echo`, `status`, 
 
 ## Benchmark
 
-A DevLocal benchmark measures request latency and throughput for a trivial script at several concurrency values, to replace the process-cost estimates.
+A DevLocal benchmark measures request latency and throughput for a trivial script at several concurrency values, to replace the process-cost estimates. It is `Benchmark_TrivialScript_ReportsLatencyAndThroughput` (100 requests of the `env` script at concurrency 1, 4 and 16, results printed to the test output). Measured 2026-10-22 on the development machine (shell fixtures run by `/bin/sh` in the .NET SDK container, batch fixtures on the Windows host):
+
+<a id="table-5"></a>**Table 5 — Measured request cost**
+
+| Platform | Concurrency | p50 | p95 | Throughput |
+|----------|-------------|-----|-----|------------|
+| Windows | 1 | 30.9 ms | 160.6 ms | 16.9/s |
+| Windows | 4 | 31.4 ms | 112.0 ms | 68.2/s |
+| Windows | 16 | 353.7 ms | 556.7 ms | 39.8/s |
+| Linux container | 1 | 0.9 ms | 1.9 ms | 936.8/s |
+| Linux container | 4 | 1.9 ms | 5.4 ms | 1445.0/s |
+| Linux container | 16 | 6.9 ms | 12.4 ms | 2260.2/s |
+
+Process start dominates on Windows (`cmd.exe`, about 30 ms) and peaks near 4 concurrent processes; Linux process start is cheap. Both ran with a tiny script, so real scripts add their own run time.
 
 [← API design](api-design.md) · [↑ Overview](README.md)

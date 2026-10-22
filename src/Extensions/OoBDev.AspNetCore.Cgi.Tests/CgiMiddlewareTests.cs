@@ -9,6 +9,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -306,6 +307,49 @@ public class CgiMiddlewareTests
 
         // Assert
         Assert.AreEqual(HttpStatusCode.OK, status);
+    }
+
+    [TestMethod]
+    [TestCategory("DevLocal")]
+    [DataRow(1)]
+    [DataRow(4)]
+    [DataRow(16)]
+    public async Task Benchmark_TrivialScript_ReportsLatencyAndThroughput(int concurrency)
+    {
+        // Stage
+        const int requests = 100;
+        await StartAsync(new() { ["OoBDev:Cgi:MaxConcurrentProcesses"] = "64" });
+        using var warmup = await _client!.GetAsync($"/cgi-bin/env{Ext}");
+        var latencies = new List<double>();
+        using var gate = new SemaphoreSlim(concurrency);
+        var clock = Stopwatch.StartNew();
+
+        // Test
+        await Task.WhenAll(Enumerable.Range(0, requests).Select(async _ =>
+        {
+            await gate.WaitAsync();
+            try
+            {
+                var started = Stopwatch.GetTimestamp();
+                using var response = await _client.GetAsync($"/cgi-bin/env{Ext}");
+                var elapsed = Stopwatch.GetElapsedTime(started).TotalMilliseconds;
+                Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+                lock (latencies)
+                    latencies.Add(elapsed);
+            }
+            finally
+            {
+                gate.Release();
+            }
+        }));
+        clock.Stop();
+
+        // Assert
+        latencies.Sort();
+        var p50 = latencies[latencies.Count / 2];
+        var p95 = latencies[(int)(latencies.Count * 0.95)];
+        Console.WriteLine($"{Environment.OSVersion} concurrency={concurrency} requests={requests} p50={p50:F1}ms p95={p95:F1}ms throughput={requests / clock.Elapsed.TotalSeconds:F1}/s");
+        Assert.HasCount(requests, latencies);
     }
 
     [TestMethod]

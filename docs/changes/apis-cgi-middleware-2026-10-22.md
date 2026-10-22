@@ -30,4 +30,4 @@ Global concurrency cap only; NPH scripts rejected; run-as-user left to the deplo
 
 ## Follow-up
 
-Shell fixtures in a Linux container; tests for timeout, the 503 cap, response limit, stderr flood and client abort; the benchmark; `validate-docs.py` on the design folder (no Python was available).
+Tests added later the same day: timeout (504), the 503 cap with `Retry-After`, response limit (502), stderr flood and client abort; the suite has 23 tests (all pass on Windows). `.sh` fixtures run by `/bin/sh` pass in the .NET SDK container with `scripts/ci/run-linux-tests.ps1` (22 pass, the batch-file opt-in test is skipped off Windows). The DevLocal benchmark (REQ-015) is `Benchmark_TrivialScript_ReportsLatencyAndThroughput`; results are in the [testing strategy](../design/CgiMiddleware/testing-strategy.md#benchmark). Run-as-another-user stays with the deployer.

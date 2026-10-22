@@ -8,10 +8,6 @@ Keep this file short (a handful of items). When an item starts, move it here fro
 
 ## In progress
 
-- [ ] **CGI middleware tests and docs** ([design](docs/design/CgiMiddleware/README.md), `src/Extensions/OoBDev.AspNetCore.Cgi`)
-  - [x] Shell-script fixtures (`.sh`), run in a Linux container with `scripts/ci/run-linux-tests.ps1` instead of WSL (22 pass, 1 Windows-only skipped, 2026-10-22)
-  - [x] Tests for timeout, 503 at the concurrency cap, response size limit, stderr flood, client abort (Windows batch fixtures, 23 pass 2026-10-22)
-  - [ ] DevLocal benchmark (REQ-015)
 
 ## Next
 
