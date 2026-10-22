@@ -109,6 +109,29 @@ public class CgiMiddlewareTests
 
     [TestMethod]
     [TestCategory("Simulate")]
+    public async Task Get_HostEnvironmentVariable_IsNotPassedToScript()
+    {
+        // Stage
+        await StartAsync();
+        Environment.SetEnvironmentVariable("OOB_HOST_SECRET", "leaked");
+        try
+        {
+            // Test
+            using var response = await _client!.GetAsync($"/cgi-bin/env{Ext}");
+            var text = await response.Content.ReadAsStringAsync();
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            Assert.IsFalse(text.Contains("leaked", StringComparison.Ordinal));
+        }
+        finally
+        {
+            Environment.SetEnvironmentVariable("OOB_HOST_SECRET", null);
+        }
+    }
+
+    [TestMethod]
+    [TestCategory("Simulate")]
     public async Task Get_StatusScript_UsesStatusAndHeaders()
     {
         // Stage

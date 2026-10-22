@@ -27,7 +27,7 @@ Coverage 85% or more for the project. Tests run on Linux and Windows (fixtures e
 | Requirement | Test | Category |
 |-------------|------|----------|
 | REQ-001 | `Get_EnvScript_ReceivesMetaVariablesAndNoProxy` (prefix, script, `PATH_INFO`); `Get_OutsidePrefix_FallsThrough`; `Resolve_ScriptWithPathInfo_SplitsNameAndPathInfo`, `Resolve_NoScriptNamed_ThrowsNotFound` | Simulate, Unit |
-| REQ-002 | `Get_EnvScript_ReceivesMetaVariablesAndNoProxy` (the `OOB_HOST_SECRET` clear check is in the fixture only; Planned assertion, BACKLOG) | Simulate |
+| REQ-002 | `Get_EnvScript_ReceivesMetaVariablesAndNoProxy`, `Get_HostEnvironmentVariable_IsNotPassedToScript` | Simulate |
 | REQ-003 | `Post_BodyOverLimit_ReturnsContentTooLarge`, `Post_Body_IsEchoedByScript` | Simulate |
 | REQ-004 | `Get_StatusScript_UsesStatusAndHeaders`, `Get_NoContentType_ReturnsBadGateway`, `Get_ExitWithoutOutput_ReturnsServerError`, `Get_LocationScript_ReturnsRedirectWithLocation`, `Get_NoBlankLineAfterHeaders_ReturnsBadGateway` | Simulate |
 | REQ-005 | `Get_UnlistedExtension_ReturnsForbidden` | Simulate |
