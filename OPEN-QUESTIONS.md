@@ -6,11 +6,4 @@ How this file is kept: see `.claude/rules/open-questions.md` and `.claude/rules/
 
 ## Open
 
-### Q10 — BinaryDataDecoders
-- **Asked:** 2026-10-22 · **Area:** Incoming · **Owner, 2026-10-22:** still pending (waiting for your review)
-- **Question:** About 14 migration decisions are pending. When you review it, do you want the decisions as an options-with-recommendation list?
-- **Options:**
-  - **A. Yes, I prepare the list so you can answer quickly (recommended).** Same format as this file; no source changes.
-  - B. No, you review the source directly. Nothing for me to prepare.
-- **Default:** A is prepared only when you ask; not worked on.
-- **Your answer:**
+No open questions.
