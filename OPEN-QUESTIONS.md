@@ -1,43 +1,55 @@
 # Open questions
 
-Questions Claude has for the owner. Write your answer under **Your answer** (or answer in chat, which counts the same). Claude keeps working on the **Default** until you answer. Answered questions are removed from this file once the answer is recorded in the feature docs, [BACKLOG.md](BACKLOG.md), [TODO.md](TODO.md) or the rules; history is in `git log`.
+Questions Claude has for the owner. Pick an option (or write your own) under **Your answer**; answering in chat counts the same. Claude keeps working on the **Default** until you answer. Answered questions are removed from this file once the answer is recorded in the feature docs, [BACKLOG.md](BACKLOG.md), [TODO.md](TODO.md) or the rules; history is in `git log`.
 
 How this file is kept: see `.claude/rules/open-questions.md` and `.claude/rules/work-tracking.md`.
 
 ## Open
 
 ### Q6 — HTTP querying and rights middleware
-- **Asked:** 2026-10-22 · **Area:** BACKLOG.md (HTTP querying)
-- **Question:** OData over `QUERY`, GraphQL, RBAC-to-rights translation: which direction should be built? Your answer so far was "yes", which does not pick a direction.
-- **Default:** build all three in order: the rights middleware first (roles to `app__application_right` claims, same check on every API surface), then `QUERY`/OData with `POST` fallback, then GraphQL; none breaks the custom search syntax. Not started until confirmed.
-- **Your answer:**
-
-### Q8 — `.github/workflows/`
-- **Asked:** 2026-10-22 · **Area:** CI
-- **Question:** Should the workflows eventually be replaced by the local runner in `scripts/ci`?
-- **Default:** left untouched.
+- **Asked:** 2026-10-22 · **Area:** BACKLOG.md (HTTP querying) · **Earlier answer:** "yes" (does not pick an option)
+- **Question:** Which of the three do we build, and in what order?
+- **Options:**
+  - **A. Rights middleware, then `QUERY`/OData with `POST` fallback, then GraphQL (recommended).** The rights check is needed by every surface, so it comes first and everything after reuses it; `QUERY`/OData extends the existing search, and GraphQL is the largest and least certain.
+  - B. Rights middleware only; decide the query styles after seeing it in use. Smallest step, but delays the evaluation you wanted.
+  - C. `QUERY`/OData first. Visible sooner, but each surface then needs authorization retrofitted.
+- **Default:** A; the rights middleware is started first, the rest waits.
 - **Your answer:**
 
 ### Q9 — Azure Monitor export
 - **Asked:** 2026-10-22 · **Area:** `OoBDev.OpenTelemetry`
-- **Question:** Still wanted, given Azure coverage is emulator-only?
-- **Default:** skipped.
+- **Question:** Add an Azure Monitor exporter?
+- **Options:**
+  - **A. Skip (recommended).** Azure coverage is emulator-only and no emulator accepts Azure Monitor export, so it could not be tested; OTLP already reaches any collector.
+  - B. Add it as an optional package with unit tests only. Works for real Azure users but ships unverified.
+- **Default:** A.
 - **Your answer:**
 
 ### Q10 — BinaryDataDecoders
 - **Asked:** 2026-10-22 · **Area:** Incoming
-- **Question:** Decisions pending (about 14 items). You said you will review it later.
-- **Default:** not worked on.
+- **Question:** About 14 migration decisions are pending. You said you will review it later; is that still the plan?
+- **Options:**
+  - **A. Keep waiting for your review (recommended).** The decisions shape the foundation phase, so guessing risks rework on about 50,000 lines.
+  - B. I list the decisions as options with recommendations and proceed on my picks. Faster, with a rework risk.
+- **Default:** A; not worked on.
 - **Your answer:**
 
 ### Q12 — Analyzer severities and `#warning` markers
 - **Asked:** 2026-10-22 · **Area:** build
-- **Question:** Promote more `suggestion` rules to `warning`, and remove the `#warning` markers (Mailkit hosting, RabbitMQ test)?
-- **Default:** leave as is.
+- **Question:** Promote more `suggestion` analyzer rules to `warning`, and remove the `#warning` markers (Mailkit hosting, RabbitMQ test)?
+- **Options:**
+  - **A. Promote the rules that are currently clean and fix or file the `#warning` markers (recommended).** Stops regressions with no cleanup cost now.
+  - B. Leave as is. No churn, but new code can drift.
+  - C. Promote everything. Strictest, but needs a large cleanup first.
+- **Default:** B until answered.
 - **Your answer:**
 
 ### Q13 — Doc validation without Python
 - **Asked:** 2026-10-22 · **Area:** docs
-- **Question:** `validate-docs.py` cannot run here, so new design docs (`docs/design/CgiMiddleware`) are unvalidated. Will you run it, or should this stay flagged?
-- **Default:** stays flagged in `TODO.md`.
+- **Question:** `validate-docs.py` cannot run on this machine, so `docs/design/CgiMiddleware` is unvalidated. How should it be handled?
+- **Options:**
+  - **A. Install Python here so I can run it (recommended).** Validation then belongs to the normal docs workflow, as the docs rule requires.
+  - B. You run it occasionally; I keep the item flagged. No setup, but problems surface late.
+  - C. Port the validator to Node, which the hooks already use. Removes the dependency at the cost of a port.
+- **Default:** B.
 - **Your answer:**
