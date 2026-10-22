@@ -66,6 +66,6 @@ Owner decisions, 2026-10-22:
 - NPH scripts: rejected (REQ-017).
 - Run-as-user: left to the deployer's service account; a helper is a TODO in `TODO.md`.
 - Authorization: built into the middleware (REQ-016) with application rights, instead of relying only on middleware ahead of `UseCgi`.
-- Linux coverage: shell fixtures run in a Linux container (Docker, or Aspire into Docker), not WSL (open item in `TODO.md`).
+- Linux coverage: shell fixtures run in the .NET SDK container with `scripts/ci/run-linux-tests.ps1`, not WSL (done 2026-10-22).
 
 [↑ Overview](README.md) · [Architecture →](architecture.md)

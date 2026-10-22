@@ -2,7 +2,7 @@
 
 [← Requirements](requirements.md) · [↑ Overview](README.md) · [API design →](api-design.md)
 
-**Status:** Draft · **Date:** 2026-10-22 · **Related:** [requirements](requirements.md)
+**Status:** Implemented · **Date:** 2026-10-22 · **Related:** [requirements](requirements.md)
 
 ## Contents
 
@@ -66,7 +66,7 @@ M -> M : prefix matches?
 M -> R : Resolve(path)
 R --> M : script and PATH_INFO (or 403/404)
 M -> M : size and concurrency checks (413, 503)
-M -> X : RunAsync(script, env, body)
+M -> X : StartAsync(request)
 X -> P : start (cleared env, no shell)
 X -> P : request body to stdin
 P --> X : headers, blank line, body
@@ -92,20 +92,24 @@ X --> M : exit code, stderr (logged)
 | `SERVER_SOFTWARE`, `SERVER_PROTOCOL`, `SERVER_NAME`, `SERVER_PORT` | Request and host |
 | `REQUEST_METHOD`, `QUERY_STRING` | Request |
 | `SCRIPT_NAME` | Prefix plus script segment |
-| `PATH_INFO`, `PATH_TRANSLATED` | Remaining path, inside the root only |
+| `PATH_INFO` | Remaining path |
+| `PATH_TRANSLATED` | Planned, not set yet (see `BACKLOG.md`) |
 | `CONTENT_TYPE`, `CONTENT_LENGTH` | Request headers |
 | `REMOTE_ADDR`, `REMOTE_USER` | Connection and authenticated principal name |
 | `HTTPS` | `on` when the request is TLS |
-| `HTTP_*` | Request headers, except `Proxy` |
+| `REQUEST_SCHEME` | Request scheme |
+| `HTTP_*` | Request headers, except `Proxy`, `Authorization`, `Content-Type` and `Content-Length` (the last two have their own variables) |
 
 ## Configuration
 
-Section `OoBDev:Cgi` (validated options): `Prefix` (`/cgi-bin`), `ScriptRoot` (required), `Handlers` (extension to executable map), `Timeout` (30 s), `MaxRequestBodyBytes` (10 MB), `MaxResponseBytes`, `MaxConcurrentProcesses` (2 x CPU), `MaxStderrBytes`, `AllowBatchFiles` (false). See [API design](api-design.md).
+Section `OoBDev:Cgi` (validated options): `Prefix` (`/cgi-bin`), `ScriptRoot` (required), `Handlers` (extension to executable map), `Timeout` (30 s), `MaxRequestBodyBytes` (10 MB), `MaxResponseBytes`, `MaxConcurrentProcesses` (2 x CPU), `MaxStderrBytes`, `AllowBatchFiles` (false), `AllowAnonymous` (false), `RequiredRights`, `ScriptRights`, `InheritedEnvironmentVariables` (`PATH`, `SystemRoot`). See [API design](api-design.md).
 
 ## Failure behavior
 
 | Condition | Result |
 |-----------|--------|
+| Not authenticated (and `AllowAnonymous` off) | 401 |
+| Missing required right | 403 |
 | Unknown extension, path or symlink outside the root | 403 (404 when nothing matches) |
 | Body over the limit | 413 before start |
 | No free process slot | 503 with `Retry-After` |

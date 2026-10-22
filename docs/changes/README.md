@@ -249,3 +249,7 @@ Each change document should include:
 **[documentation-docs-validation-tests-2026-10-22.md](documentation-docs-validation-tests-2026-10-22.md)**
 - `validate-docs.py` replaced by MSTest project `OoBDev.Docs.Tests` (PlantUML, links, captions)
 - Status: ✅ Complete
+
+**[documentation-cgi-design-reconcile-2026-10-22.md](documentation-cgi-design-reconcile-2026-10-22.md)**
+- CGI design documents reconciled with the code; `PATH_TRANSLATED` added to the backlog
+- Status: ✅ Complete
