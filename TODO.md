@@ -15,9 +15,10 @@ Keep this file short (a handful of items). When an item starts, move it here fro
 
 ## Next
 
-- [ ] Rights middleware, then `QUERY`/OData, then GraphQL (order decided; role-to-right mapping is Q16, default configuration)
+- [ ] **BinaryDataDecoders comparison and recommendation plan** (`compare-incoming-codebase` skill): compare `C:epomineinary-data-decoders` (newest) and `Incoming/BinaryDecoders` with what exists in `src/`, and write a plan the owner reviews (feature mapping, what exists, gaps, proposed phases and placement, each decision as options with a recommendation). No migration until the owner approves the plan.
+
+- [ ] Rights middleware, then `QUERY`/OData, then GraphQL (order decided; roles map to rights in configuration, `OoBDev:Authorization:Roles:<role>`, applied by a claims transformation; write the feature design first in `docs/design/`)
 - [ ] `OoBDev.DacFx.Tests` SQLCLR test project
 - [ ] AsyncAPI: send-only queues by type
 - [ ] Promote the clean analyzer `suggestion` rules to `warning` and fix or remove the `#warning` markers (decided)
-- [ ] Docs validation as a .NET test (Q15, default `src/Tools/OoBDev.Docs.Tests`)
-- [ ] OpenTelemetry Integration tests read back from the Aspire dashboard API (Q14)
+- [ ] Docs validation as a .NET test (decided: `src/Tools/OoBDev.Docs.Tests`, Integration category with the `plantuml/plantuml-server` container; link and caption checks also as Unit tests; remove `validate-docs.py` once it covers the same checks)

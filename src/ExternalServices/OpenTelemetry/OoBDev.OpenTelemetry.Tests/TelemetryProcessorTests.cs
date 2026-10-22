@@ -20,6 +20,7 @@ namespace OoBDev.OpenTelemetry.Tests;
 
 /// <summary>
 /// Tests that the custom OpenTelemetry processors add correlation and user information to spans and log records.
+/// They run on the standard hosting extensions (<c>AddOpenTelemetry</c>) with the in-memory exporter.
 /// </summary>
 [TestClass]
 public partial class TelemetryProcessorTests
@@ -32,21 +33,13 @@ public partial class TelemetryProcessorTests
     {
         // Stage
         var info = new CorrelationInfo { CorrelationId = "corr-1", RequestId = "req-1" };
-        var captured = new List<Activity>();
+        var exported = new List<Activity>();
 
         // Test
-        using (var provider = Sdk.CreateTracerProviderBuilder()
-            .AddSource(SourceName)
-            .AddProcessor(new CorrelationInfoTelemetryProcessor(new TestCorrelationAccessor(info)))
-            .AddProcessor(new CaptureActivityProcessor(captured))
-            .Build())
-        using (var source = new ActivitySource(SourceName))
-        using (source.StartActivity("work"))
-        {
-        }
+        RunSpan(exported, tracing => tracing.AddProcessor(new CorrelationInfoTelemetryProcessor(new TestCorrelationAccessor(info))));
 
         // Assert
-        var activity = Assert.ContainsSingle(captured);
+        var activity = Assert.ContainsSingle(exported);
         Assert.AreEqual("corr-1", activity.GetTagItem(DefinedHttpHeaders.CorrelationIdHeader));
         Assert.AreEqual("req-1", activity.GetTagItem(DefinedHttpHeaders.RequestIdHeader));
     }
@@ -56,21 +49,13 @@ public partial class TelemetryProcessorTests
     public void UserTelemetryProcessor_ShouldAddUserClaimTags()
     {
         // Stage
-        var captured = new List<Activity>();
+        var exported = new List<Activity>();
 
         // Test
-        using (var provider = Sdk.CreateTracerProviderBuilder()
-            .AddSource(SourceName)
-            .AddProcessor(new UserTelemetryProcessor(CreateUserAccessor("obj-1", "user-1")))
-            .AddProcessor(new CaptureActivityProcessor(captured))
-            .Build())
-        using (var source = new ActivitySource(SourceName))
-        using (source.StartActivity("work"))
-        {
-        }
+        RunSpan(exported, tracing => tracing.AddProcessor(new UserTelemetryProcessor(CreateUserAccessor("obj-1", "user-1"))));
 
         // Assert
-        var activity = Assert.ContainsSingle(captured);
+        var activity = Assert.ContainsSingle(exported);
         Assert.AreEqual("obj-1", activity.GetTagItem($"Claim-{CommonClaims.ObjectId}"));
         Assert.AreEqual("user-1", activity.GetTagItem($"Claim-{CommonClaims.UserId}"));
     }
@@ -80,21 +65,13 @@ public partial class TelemetryProcessorTests
     public void UserTelemetryProcessor_WithoutHttpContext_ShouldAddNothing()
     {
         // Stage
-        var captured = new List<Activity>();
+        var exported = new List<Activity>();
 
         // Test
-        using (var provider = Sdk.CreateTracerProviderBuilder()
-            .AddSource(SourceName)
-            .AddProcessor(new UserTelemetryProcessor(new HttpContextAccessor()))
-            .AddProcessor(new CaptureActivityProcessor(captured))
-            .Build())
-        using (var source = new ActivitySource(SourceName))
-        using (source.StartActivity("work"))
-        {
-        }
+        RunSpan(exported, tracing => tracing.AddProcessor(new UserTelemetryProcessor(new HttpContextAccessor())));
 
         // Assert
-        var activity = Assert.ContainsSingle(captured);
+        var activity = Assert.ContainsSingle(exported);
         Assert.IsFalse(activity.TagObjects.Any(t => t.Key.StartsWith("Claim-", StringComparison.Ordinal)));
     }
 
@@ -104,22 +81,27 @@ public partial class TelemetryProcessorTests
     {
         // Stage
         var info = new CorrelationInfo { CorrelationId = "corr-2", RequestId = "req-2" };
-        var captured = new List<Dictionary<string, object?>>();
+        var exported = new List<LogRecord>();
+        var services = new ServiceCollection();
+        services.AddLogging();
+        services.AddOpenTelemetry().WithLogging(logging =>
+        {
+            logging.AddProcessor(new CorrelationInfoLogProcessor(new TestCorrelationAccessor(info)));
+            logging.AddProcessor(new UserLogProcessor(CreateUserAccessor("obj-2", "user-2")));
+            logging.AddInMemoryExporter(exported);
+        });
 
         // Test
-        using (var factory = LoggerFactory.Create(builder => builder.AddOpenTelemetry(options =>
+        using (var provider = services.BuildServiceProvider())
         {
-            options.AddProcessor(new CorrelationInfoLogProcessor(new TestCorrelationAccessor(info)));
-            options.AddProcessor(new UserLogProcessor(CreateUserAccessor("obj-2", "user-2")));
-            options.AddProcessor(new CaptureLogProcessor(captured));
-        })))
-        {
-            var logger = factory.CreateLogger("test");
+            var logger = provider.GetRequiredService<ILoggerFactory>().CreateLogger("test");
             LogHello(logger, "world");
+            Assert.IsTrue(provider.GetRequiredService<LoggerProvider>().ForceFlush(10_000));
         }
 
         // Assert
-        var attributes = Assert.ContainsSingle(captured);
+        var record = Assert.ContainsSingle(exported);
+        var attributes = (record.Attributes ?? []).ToDictionary(a => a.Key, a => a.Value);
         Assert.AreEqual("corr-2", attributes[DefinedHttpHeaders.CorrelationIdHeader]);
         Assert.AreEqual("req-2", attributes[DefinedHttpHeaders.RequestIdHeader]);
         Assert.AreEqual("obj-2", attributes[$"Claim-{CommonClaims.ObjectId}"]);
@@ -182,23 +164,34 @@ public partial class TelemetryProcessorTests
         Assert.AreEqual("req-2", activity.GetTagItem(DefinedHttpHeaders.RequestIdHeader));
     }
 
+    /// <summary>
+    /// Builds a tracer provider through the hosting extensions, records one span and flushes it to <paramref name="exported"/>.
+    /// </summary>
+    private static void RunSpan(List<Activity> exported, Action<TracerProviderBuilder> configure)
+    {
+        var services = new ServiceCollection();
+        services.AddOpenTelemetry().WithTracing(tracing =>
+        {
+            tracing.AddSource(SourceName);
+            configure(tracing);
+            tracing.AddInMemoryExporter(exported);
+        });
+
+        using var provider = services.BuildServiceProvider();
+        using var tracer = provider.GetRequiredService<TracerProvider>();
+        using (var source = new ActivitySource(SourceName))
+        using (source.StartActivity("work"))
+        {
+        }
+        Assert.IsTrue(tracer.ForceFlush(10_000));
+    }
+
     private static TestHttpContextAccessor CreateUserAccessor(string objectId, string userId)
     {
         var identity = new ClaimsIdentity(
             [new Claim(CommonClaims.ObjectId, objectId), new Claim(CommonClaims.UserId, userId)],
             "TestAuth");
         return new TestHttpContextAccessor(new DefaultHttpContext { User = new ClaimsPrincipal(identity) });
-    }
-
-    private sealed class CaptureActivityProcessor(List<Activity> captured) : BaseProcessor<Activity>
-    {
-        public override void OnEnd(Activity data) => captured.Add(data);
-    }
-
-    private sealed class CaptureLogProcessor(List<Dictionary<string, object?>> captured) : BaseProcessor<LogRecord>
-    {
-        public override void OnEnd(LogRecord data)
-            => captured.Add((data.Attributes ?? []).ToDictionary(a => a.Key, a => a.Value));
     }
 
     private sealed class TestCorrelationAccessor(CorrelationInfo value) : IAccessor<CorrelationInfo>
