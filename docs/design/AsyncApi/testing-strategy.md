@@ -2,20 +2,20 @@
 
 [← API design](api-design.md) · [Overview](README.md)
 
-## Unit tests (Planned)
+## Unit tests
 
-None of these exist as unit tests yet; the Simulate tests below cover the SQS, Service Bus and RabbitMQ channels, the payload schema and the secrets check through the whole document. The missing isolated tests are in `BACKLOG.md`.
+The contributor rows exist as Unit tests (`SqsAsyncApiContributorTests` 5, `ServiceBusAsyncApiContributorTests` 3, `RabbitMQAsyncApiContributorTests` 3), including the secrets check per contributor. The builder rows (marked Planned) are covered only by the Simulate tests below, through the whole document; the missing isolated tests are in `BACKLOG.md`.
 
 **Table 1 — Builder and contributors**
 
 | Test | Checks |
 |------|--------|
-| Config resolution order | Channel section chosen by `{channel}:{message}`, `{message}`, `{channel}`, `Default` |
-| `[MessageQueue]` name | Attribute overrides the simple name |
-| Sender and handler | `send` and `receive` operations appear for the right types |
+| Config resolution order (Planned) | Channel section chosen by `{channel}:{message}`, `{message}`, `{channel}`, `Default` |
+| `[MessageQueue]` name (Planned) | Attribute overrides the simple name |
+| Sender and handler (Planned) | `send` and `receive` operations appear for the right types |
 | SQS, Service Bus, RabbitMQ contributors | Server host, protocol, address and bindings from sample configuration |
 | Secrets | `AccessKeyId`, `SecretAccessKey`, `ConnectionString` key, `Password` never appear in the JSON |
-| Payload schema | Properties, required, enums |
+| Payload schema (Planned) | Properties, required, enums |
 
 ## Simulate tests
 
