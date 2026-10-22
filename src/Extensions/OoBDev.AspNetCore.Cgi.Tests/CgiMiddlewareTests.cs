@@ -97,6 +97,8 @@ public class CgiMiddlewareTests
         StringAssert.Contains(text, "METHOD=GET");
         StringAssert.Contains(text, "QUERY_STRING=a=1&b=2");
         StringAssert.Contains(text, "PATHINFO=/extra/path");
+        StringAssert.Contains(text, "TRANSLATED=");
+        StringAssert.Contains(text, "extra" + global::System.IO.Path.DirectorySeparatorChar + "path");
         StringAssert.Contains(text, $"SCRIPT=/cgi-bin/env{Ext}");
         StringAssert.Contains(text, "GATEWAY=CGI/1.1");
         StringAssert.Contains(text, "PROXY=" + Environment.NewLine);

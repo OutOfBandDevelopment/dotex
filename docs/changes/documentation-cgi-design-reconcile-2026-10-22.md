@@ -11,7 +11,7 @@
 
 ## Design wanted, code lacks
 
-`PATH_TRANSLATED` is not set; it is marked Planned in the meta-variable table and added to `BACKLOG.md`.
+`PATH_TRANSLATED` was not set. It is now: script root plus `PATH_INFO` when the result stays inside the root (checked by the `env` test on Windows and in the Linux container; 23 pass, 22 and 1 skipped on Linux).
 
 ## Verification
 

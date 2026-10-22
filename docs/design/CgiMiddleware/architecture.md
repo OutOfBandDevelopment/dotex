@@ -93,7 +93,7 @@ X --> M : exit code, stderr (logged)
 | `REQUEST_METHOD`, `QUERY_STRING` | Request |
 | `SCRIPT_NAME` | Prefix plus script segment |
 | `PATH_INFO` | Remaining path |
-| `PATH_TRANSLATED` | Planned, not set yet (see `BACKLOG.md`) |
+| `PATH_TRANSLATED` | Script root plus `PATH_INFO`, only when it stays inside the root |
 | `CONTENT_TYPE`, `CONTENT_LENGTH` | Request headers |
 | `REMOTE_ADDR`, `REMOTE_USER` | Connection and authenticated principal name |
 | `HTTPS` | `on` when the request is TLS |

@@ -70,7 +70,7 @@ public partial class CgiMiddleware(
             Authorize(context, scriptRights, settings.AllowAnonymous);
 
         await using var body = await BufferBodyAsync(context, settings).ConfigureAwait(false);
-        var environment = BuildEnvironment(context, prefix, script, body.Length);
+        var environment = BuildEnvironment(context, settings, prefix, script, body.Length);
         body.Position = 0;
 
         await using var result = await runner.StartAsync(new CgiProcessRequest(script, environment, body), context.RequestAborted).ConfigureAwait(false);
@@ -130,7 +130,17 @@ public partial class CgiMiddleware(
         return memory;
     }
 
-    private static Dictionary<string, string> BuildEnvironment(HttpContext context, PathString prefix, CgiScript script, long contentLength)
+    private static string? TranslatePath(string scriptRoot, string pathInfo)
+    {
+        if (string.IsNullOrEmpty(pathInfo))
+            return null;
+        var root = global::System.IO.Path.GetFullPath(scriptRoot);
+        var translated = global::System.IO.Path.GetFullPath(global::System.IO.Path.Combine(root, pathInfo.TrimStart('/')));
+        var comparison = OperatingSystem.IsWindows() ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
+        return translated.StartsWith(root + global::System.IO.Path.DirectorySeparatorChar, comparison) ? translated : null;
+    }
+
+    private static Dictionary<string, string> BuildEnvironment(HttpContext context, CgiOptions settings, PathString prefix, CgiScript script, long contentLength)
     {
         var request = context.Request;
         var connection = context.Connection;
@@ -148,6 +158,8 @@ public partial class CgiMiddleware(
             ["REMOTE_ADDR"] = connection.RemoteIpAddress?.ToString() ?? string.Empty,
             ["REQUEST_SCHEME"] = request.Scheme,
         };
+        if (TranslatePath(settings.ScriptRoot, script.PathInfo) is { } translated)
+            environment["PATH_TRANSLATED"] = translated;
         if (request.Scheme == Uri.UriSchemeHttps)
             environment["HTTPS"] = "on";
         if (contentLength > 0)
