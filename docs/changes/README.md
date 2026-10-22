@@ -279,7 +279,7 @@ Each change document should include:
 - Status: ✅ Complete
 
 **[build-slnx-solution-2026-10-22.md](build-slnx-solution-2026-10-22.md)**
-- Solution converted from `.sln` to `.slnx`
+- Solution converted from `.sln` to `.slnx`; docs rendering reuses the existing PlantUML container
 - Status: ✅ Complete
 
 **[documentation-example-ui-design-reconcile-2026-10-22.md](documentation-example-ui-design-reconcile-2026-10-22.md)**

@@ -8,7 +8,7 @@ Keep this file short (a handful of items). When an item starts, move it here fro
 
 ## In progress
 
-- [ ] Owner requests (2026-10-22, first in order; `.slnx` done): reuse the existing PlantUML container, Aspire SQL Server 2019 with the vector extensions (details in BACKLOG section 1)
+- [ ] Owner requests (2026-10-22, first in order; `.slnx` and PlantUML reuse done): Aspire SQL Server 2019 with the vector extensions (details in BACKLOG section 1)
 
 ## Next
 

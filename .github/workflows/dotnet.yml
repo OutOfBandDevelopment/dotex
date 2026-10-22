@@ -14,7 +14,7 @@ on:
     paths:
     - 'src/**/*.cs'
     - 'src/**/*.csproj'
-    - 'src/**/*.sln'
+    - 'src/**/*.slnx'
     - 'src/**/*.props'
     - 'src/**/*.targets'
     - 'src/.runsettings'
@@ -28,7 +28,7 @@ on:
     paths:
     - 'src/**/*.cs'
     - 'src/**/*.csproj'
-    - 'src/**/*.sln'
+    - 'src/**/*.slnx'
     - 'src/**/*.props'
     - 'src/**/*.targets'
     - 'src/.runsettings'

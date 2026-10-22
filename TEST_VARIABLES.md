@@ -278,7 +278,7 @@ Tests that require live cloud credentials. Manual execution only.
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `PLANTUML_URL` | `http://localhost:18080` | PlantUML server (`dotex-plantuml`, host port `TEST_PORT_PLANTUML`) |
+| `PLANTUML_URL` | `http://localhost:8086` | The PlantUML server already running on the system (container `plantuml`); the test stack does not start its own |
 | `DOCS_VALIDATE_PATHS` | `docs/patterns-discovery` | `;`-separated repo-relative folders or files to validate |
 
 **Tests Using:** `OoBDev.Docs.Tests` (Unit for structure, links and captions; Integration for rendering)

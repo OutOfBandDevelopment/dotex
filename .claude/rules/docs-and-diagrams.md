@@ -15,4 +15,4 @@ paths:
 - Only `README.md`, `CLAUDE.md`, `TODO.md` and `BACKLOG.md` live at the repo root, besides the existing `TEST_VARIABLES.md`, `CONFIGURATION_SETTINGS.md` and `OPEN-QUESTIONS.md`. Everything else goes under `docs/`.
 - Patterns docs record the owner's preferences; do not "correct" them. Rough edges go to `BACKLOG.md`.
 - Prefer deterministic scripts in `scripts/docs/` over hand edits for validation, indexes, captions and link fixing.
-- Before finishing any doc change run `DOCS_VALIDATE_PATHS=<changed folder> dotnet test src/Tools/OoBDev.Docs.Tests` (Unit tests; the Integration render test needs the `dotex-plantuml` container on port 18080, `PLANTUML_URL`). Report problems you did not fix. Write helper scripts with the Write tool, not shell heredocs.
+- Before finishing any doc change run `DOCS_VALIDATE_PATHS=<changed folder> dotnet test src/Tools/OoBDev.Docs.Tests` (Unit tests; the Integration render test uses the existing `plantuml` container on port 8086 through `PLANTUML_URL`; never start another PlantUML container). Report problems you did not fix. Write helper scripts with the Write tool, not shell heredocs.

@@ -318,19 +318,6 @@ services:
       start_period: 40s
 
   # ============================================================================
-  # Documentation tooling
-  # ============================================================================
-
-  # Renders the PlantUML diagrams for OoBDev.Docs.Tests (reuses a running container of this name).
-  plantuml:
-    image: plantuml/plantuml-server:jetty
-    container_name: dotex-plantuml
-    ports:
-      - "${TEST_PORT_PLANTUML:-18080}:8080"
-    networks:
-      - integration-test-net
-
-  # ============================================================================
   # Reverse Proxy & Dashboard
   # ============================================================================
 
