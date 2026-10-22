@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -19,7 +20,7 @@ public class RoleRightOptions : IValidatableObject
     /// <summary>
     /// Role name to the rights it grants.
     /// </summary>
-    public Dictionary<string, string[]> Roles { get; set; } = [];
+    public IDictionary<string, string[]> Roles { get; set; } = new Dictionary<string, string[]>(StringComparer.Ordinal);
 
     /// <inheritdoc />
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)

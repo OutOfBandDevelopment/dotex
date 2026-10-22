@@ -27,7 +27,7 @@ public partial class RoleRightClaimsTransformation(
             return Task.FromResult(principal);
 
         var types = options.CurrentValue.RoleClaimTypes;
-        var roles = principal.Claims.Where(c => types.Contains(c.Type, StringComparer.Ordinal)).Select(c => c.Value).Distinct().ToArray();
+        var roles = principal.Claims.Where(c => types.Contains(c.Type, StringComparer.Ordinal)).Select(c => c.Value).Distinct(StringComparer.Ordinal).ToArray();
         var held = principal.FindAll(CommonClaims.ApplicationRight).Select(c => c.Value).ToHashSet(StringComparer.Ordinal);
         var missing = mapper.MapRights(roles).Where(r => !held.Contains(r)).ToArray();
         if (missing.Length == 0)

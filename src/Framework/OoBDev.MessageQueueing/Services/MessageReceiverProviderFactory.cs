@@ -62,10 +62,10 @@ public partial class MessageReceiverProviderFactory(
 
         foreach (var item in handlersByChannel)
         {
-            var handlers = item.Select(i => i.handler).ToList();
+            var channelHandlers = item.Select(i => i.handler).ToList();
             if (item.Key.providerKey == null)
             {
-                LogNoProvider(handlers);
+                LogNoProvider(channelHandlers);
                 continue;
             }
 
@@ -80,7 +80,7 @@ public partial class MessageReceiverProviderFactory(
 
             if (disableReceiver)
             {
-                LogProviderDisabled(handlers);
+                LogProviderDisabled(channelHandlers);
                 continue;
             }
 
@@ -89,7 +89,7 @@ public partial class MessageReceiverProviderFactory(
             if (handler is IMessageHandlerProviderWrapped wrapped)
             {
                 wrapped
-                .SetHandlers(handlers)
+                .SetHandlers(channelHandlers)
                 .SetChannelType(item.Key.channelType)
                 .SetConfig(config ?? throw new InvalidOperationException($"Missing Configuration"));
             }

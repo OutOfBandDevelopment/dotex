@@ -28,7 +28,7 @@ public class RoleRightTests
 {
     private static RoleRightOptions Options() => new()
     {
-        Roles = new()
+        Roles = new Dictionary<string, string[]>
         {
             ["order-clerk"] = ["orders.read"],
             ["order-manager"] = ["orders.read", "orders.approve"],
@@ -163,7 +163,7 @@ public class RoleRightTests
     public void Options_BlankRight_FailsValidation()
     {
         // Stage
-        var options = new RoleRightOptions { Roles = new() { ["clerk"] = [" "] } };
+        var options = new RoleRightOptions { Roles = new Dictionary<string, string[]> { ["clerk"] = [" "] } };
 
         // Test
         var results = options.Validate(new(options)).ToList();

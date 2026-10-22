@@ -126,6 +126,10 @@ Each change document should include:
 - CGI echo, Location, no-blank-line, shell-metacharacter and path-split tests
 - Status: ✅ Complete
 
+**[quality-analyzer-promotion-2026-10-22.md](quality-analyzer-promotion-2026-10-22.md)**
+- MA0070, MA0084, MA0132, MA0144, MA0151, MA0158, MA0169 now warnings; sites fixed
+- Status: ✅ Complete
+
 **[testing-example-web-viewmodels-2026-10-22.md](testing-example-web-viewmodels-2026-10-22.md)**
 - Vitest view-model tests for Communications, Current user, Queues and Templates
 - Status: ✅ Complete

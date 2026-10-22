@@ -63,7 +63,7 @@ public partial record TempFileHandle : ITempFile
         catch
         {
             //Note: yeah, I don't care why it failed.
-            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            if (!OperatingSystem.IsWindows())
                 throw;
 
             try
