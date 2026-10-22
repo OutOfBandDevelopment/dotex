@@ -2,7 +2,9 @@
 
 [← API design](api-design.md) · [Overview](README.md)
 
-## Unit tests
+## Unit tests (Planned)
+
+None of these exist as unit tests yet; the Simulate tests below cover the SQS, Service Bus and RabbitMQ channels, the payload schema and the secrets check through the whole document. The missing isolated tests are in `BACKLOG.md`.
 
 **Table 1 — Builder and contributors**
 
@@ -17,7 +19,7 @@
 
 ## Simulate tests
 
-`AsyncApiDocumentTests` starts a Kestrel host (as `OpenApiDocumentTests` does) with in-process handlers and stub provider configuration, then requests:
+`AsyncApiDocumentTests` (in `OoBDev.AspNetCore.Tests`, 7 tests) starts a Kestrel host (as `OpenApiDocumentTests` does) with in-process handlers and stub provider configuration, then requests:
 
 - `/asyncapi/all.json`: `asyncapi` is `3.0.0`, expected channels, operations and servers.
 - `/asyncapi/{assembly}.json`: only that assembly's channels (case-insensitive name).

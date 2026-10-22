@@ -12,7 +12,7 @@ services.TryAddAsyncApiServices();                  // builder; adapters add the
 app.MapAsyncApi();                                   // /asyncapi/{name}.json and /asyncapi/{name}
 ```
 
-Configuration (all optional):
+Configuration (all optional; `Title` defaults to `Messaging` for `all` and to the assembly name otherwise, `Version` to `1.0.0`, `ViewerScriptUrl` to `AsyncApiEndpointRouteBuilderExtensions.DefaultViewerScriptUrl`, the pinned unpkg build shown below):
 
 ```json
 "AsyncApi": {
@@ -28,11 +28,11 @@ Configuration (all optional):
 
 | Type | Role |
 |------|------|
-| `AsyncApiDocument`, `AsyncApiInfo`, `AsyncApiServer`, `AsyncApiChannel`, `AsyncApiOperation`, `AsyncApiMessage` | AsyncAPI 3.0 model (small classes) |
-| `AsyncApiDocumentBuilder` | Builds a document by name from the registered handlers and the `MessageQueue` configuration |
-| `IAsyncApiContributor` | `ProviderKey` and `Describe(IConfigurationSection config)`, which returns `AsyncApiContribution` (server, address, bindings) |
+| `AsyncApiDocument`, `AsyncApiInfo`, `AsyncApiServer`, `AsyncApiChannel`, `AsyncApiOperation`, `AsyncApiMessage`, `AsyncApiComponents`, `AsyncApiReference` | AsyncAPI 3.0 model (small classes) |
+| `AsyncApiDocumentBuilder` | `DocumentNames()` and `Build(name)` (null for an unknown name); `AllDocumentName` is `all`. Built from the injected handlers and the `MessageQueue` configuration |
+| `IAsyncApiContributor` | `ProviderKey` and `Describe(IConfigurationSection config)`, which returns `AsyncApiContribution?` (null when the queue cannot be described) |
 | `AsyncApiJsonWriter` | Serializes the model with `System.Text.Json` |
-| `AsyncApiContribution` | What an adapter returns: server, address, bindings |
+| `AsyncApiContribution` | Record returned by an adapter: `ServerName`, `Server`, `Address`, optional `Bindings` |
 
 **Table 2 — Namespace `OoBDev.AspNetCore.Mvc` (OoBDev.AspNetCore.Mvc project)**
 

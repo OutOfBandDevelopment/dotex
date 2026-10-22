@@ -253,3 +253,7 @@ Each change document should include:
 **[documentation-cgi-design-reconcile-2026-10-22.md](documentation-cgi-design-reconcile-2026-10-22.md)**
 - CGI design documents reconciled with the code; `PATH_TRANSLATED` now set
 - Status: ✅ Complete
+
+**[documentation-asyncapi-design-reconcile-2026-10-22.md](documentation-asyncapi-design-reconcile-2026-10-22.md)**
+- AsyncAPI design documents reconciled with the code; unit tests added to the backlog
+- Status: ✅ Complete
