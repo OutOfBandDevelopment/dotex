@@ -10,7 +10,7 @@ GitHub is no longer the primary repository (local bare repo `origin`), so nothin
 
 ## 1. Test infrastructure
 
-- [ ] Owner request 2026-10-22: convert the solution from `src/OoBDev.sln` to `.slnx` (update `src/Directory.Build.props`, `templates/README.md`, scripts, docs and the CI scripts that name the `.sln`; verify `dotnet build` and `dotnet test` on the `.slnx`).
+- [ ] Change the `src/**/*.sln` path filters in `.github/workflows/dotnet.yml` to `.slnx` when the workflows are next touched (after the local runner is verified).
 - [ ] Owner request 2026-10-22: reuse the PlantUML container already running on the system (`plantuml` on 8086, `dotex-plantuml` on 18080, `storage-plantuml` on 8085) instead of starting another one in `containers/testing`; `PLANTUML_URL` selects it.
 - [ ] Owner request 2026-10-22: the Aspire host is missing the SQL Server instance with the vector extensions; deploy it with Docker on SQL Server 2019 (the vector types come from the Vectors.DB dacpac, see `README.Data.Vectors.DB.md`), and add it to the integration stack and the Aspire AppHost.
 - [ ] Replace the legacy `.github/workflows/` with the local runner in `scripts/ci` (a script that starts the Docker stack and runs the Integration suite). Decided 2026-10-22; leave the workflows untouched until the runner is verified end to end (`scripts/ci/run-tests.ps1` has not been run end to end yet).

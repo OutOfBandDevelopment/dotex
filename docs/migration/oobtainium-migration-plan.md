@@ -215,7 +215,7 @@ src/Extensions/
 - [ ] Move all source files
 - [ ] Update `.csproj` files
 - [ ] Update namespaces (if changing from OoBDev.Oobtainium to OoBDev.Mocking)
-- [ ] Add to main solution (`src/OoBDev.sln`)
+- [ ] Add to main solution (`src/OoBDev.slnx`)
 - [ ] Update inter-project references
 
 **Namespace Decision:**

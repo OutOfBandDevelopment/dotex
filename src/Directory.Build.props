@@ -1,11 +1,11 @@
 <Project>
   <PropertyGroup Condition="'$(SolutionDir)' == ''">
-    <SolutionDir Condition="'$(SolutionDir)' == '' and Exists('$(MSBuildThisFileDirectory)OoBDev.sln')">$(MSBuildThisFileDirectory)</SolutionDir>
-    <SolutionDir Condition="'$(SolutionDir)' == '' and $([System.IO.Directory]::GetFiles('../', '*.sln').get_Length()) != 0">../</SolutionDir>
-    <SolutionDir Condition="'$(SolutionDir)' == '' and $([System.IO.Directory]::GetFiles('../../', '*.sln').get_Length()) != 0">../../</SolutionDir>
-    <SolutionDir Condition="'$(SolutionDir)' == '' and $([System.IO.Directory]::GetFiles('../../../', '*.sln').get_Length()) != 0">../../../</SolutionDir>
-    <SolutionDir Condition="'$(SolutionDir)' == '' and $([System.IO.Directory]::GetFiles('../../../../', '*.sln').get_Length()) != 0">../../../../</SolutionDir>
-    <SolutionDir Condition="'$(SolutionDir)' == '' and $([System.IO.Directory]::GetFiles('../../../../../', '*.sln').get_Length()) != 0">../../../../../</SolutionDir>
+    <SolutionDir Condition="'$(SolutionDir)' == '' and Exists('$(MSBuildThisFileDirectory)OoBDev.slnx')">$(MSBuildThisFileDirectory)</SolutionDir>
+    <SolutionDir Condition="'$(SolutionDir)' == '' and $([System.IO.Directory]::GetFiles('../', '*.slnx').get_Length()) != 0">../</SolutionDir>
+    <SolutionDir Condition="'$(SolutionDir)' == '' and $([System.IO.Directory]::GetFiles('../../', '*.slnx').get_Length()) != 0">../../</SolutionDir>
+    <SolutionDir Condition="'$(SolutionDir)' == '' and $([System.IO.Directory]::GetFiles('../../../', '*.slnx').get_Length()) != 0">../../../</SolutionDir>
+    <SolutionDir Condition="'$(SolutionDir)' == '' and $([System.IO.Directory]::GetFiles('../../../../', '*.slnx').get_Length()) != 0">../../../../</SolutionDir>
+    <SolutionDir Condition="'$(SolutionDir)' == '' and $([System.IO.Directory]::GetFiles('../../../../../', '*.slnx').get_Length()) != 0">../../../../../</SolutionDir>
     <SolutionDir Condition="'$(SolutionDir)' != ''">$([System.IO.Path]::GetFullPath('$(SolutionDir)'))</SolutionDir>
   </PropertyGroup>
 

@@ -1,0 +1,205 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/Common/">
+    <Project Path="Common/OoBDev.Common.Abstractions/OoBDev.Common.Abstractions.csproj" />
+    <Project Path="Common/OoBDev.Common.AspNetCore/OoBDev.Common.AspNetCore.csproj" />
+    <Project Path="Common/OoBDev.Common.Complete/OoBDev.Common.Complete.csproj" />
+    <Project Path="Common/OoBDev.Common.Extensions/OoBDev.Common.Extensions.csproj" />
+    <Project Path="Common/OoBDev.Common.Hosting/OoBDev.Common.Hosting.csproj" />
+    <Project Path="Common/OoBDev.Common/OoBDev.Common.csproj" />
+  </Folder>
+  <Folder Name="/Examples/">
+    <File Path="Examples/README.Examples.md" />
+    <Project Path="Examples/OoBDev.Example.AppHost/OoBDev.Example.AppHost.csproj" />
+    <Project Path="Examples/OoBDev.Example.DB/OoBDev.Example.DB.csproj" />
+    <Project Path="Examples/OoBDev.Example.Tests/OoBDev.Example.Tests.csproj" />
+    <Project Path="Examples/OoBDev.Example.Web/OoBDev.Example.Web.esproj">
+      <Platform Project="AnyCPU" />
+    </Project>
+    <Project Path="Examples/OoBDev.Example.WebApi/OoBDev.Example.WebApi.csproj" />
+  </Folder>
+  <Folder Name="/Extensions/">
+    <Project Path="Extensions/OoBDev.AspNetCore.Cgi.Tests/OoBDev.AspNetCore.Cgi.Tests.csproj" />
+    <Project Path="Extensions/OoBDev.AspNetCore.Cgi/OoBDev.AspNetCore.Cgi.csproj" />
+    <Project Path="Extensions/OoBDev.Data.Vectors.DB.Tests/OoBDev.Data.Vectors.DB.Tests.csproj" />
+    <Project Path="Extensions/OoBDev.Data.Vectors.DB/OoBDev.Data.Vectors.DB.csproj">
+      <BuildDependency Project="Tools/OoBDev.DacPacCompiler.Cli/OoBDev.DacPacCompiler.Cli.csproj" />
+    </Project>
+    <Project Path="Extensions/OoBDev.Data.Vectors.Hosting/OoBDev.Data.Vectors.Hosting.csproj" />
+    <Project Path="Extensions/OoBDev.Data.Vectors.Net481/OoBDev.Data.Vectors.Net481.csproj" />
+    <Project Path="Extensions/OoBDev.Data.Vectors.SqlStore/OoBDev.Data.Vectors.SqlStore.csproj" />
+    <Project Path="Extensions/OoBDev.Data.Vectors.Tests/OoBDev.Data.Vectors.Tests.csproj" />
+    <Project Path="Extensions/OoBDev.Data.Vectors/OoBDev.Data.Vectors.csproj" />
+    <Project Path="Extensions/OoBDev.System.Text.Html.Tests/OoBDev.System.Text.Html.Tests.csproj" />
+    <Project Path="Extensions/OoBDev.System.Text.Html/OoBDev.System.Text.Html.csproj" />
+    <Project Path="Extensions/OoBDev.System.Text.Markdown.Tests/OoBDev.System.Text.Markdown.Tests.csproj" />
+    <Project Path="Extensions/OoBDev.System.Text.Markdown/OoBDev.System.Text.Markdown.csproj" />
+    <Project Path="Extensions/OoBDev.System.Text.Yaml.Tests/OoBDev.System.Text.Yaml.Tests.csproj" />
+    <Project Path="Extensions/OoBDev.System.Text.Yaml/OoBDev.System.Text.Yaml.csproj" />
+  </Folder>
+  <Folder Name="/ExternalServices/">
+    <Project Path="ExternalServices/OpenTelemetry/OoBDev.OpenTelemetry.Tests/OoBDev.OpenTelemetry.Tests.csproj" />
+    <Project Path="ExternalServices/OpenTelemetry/OoBDev.OpenTelemetry/OoBDev.OpenTelemetry.csproj" />
+  </Folder>
+  <Folder Name="/ExternalServices/Amazon/">
+    <Project Path="ExternalServices/Amazon/OoBDev.Amazon.Sqs/OoBDev.Amazon.Sqs.csproj" />
+  </Folder>
+  <Folder Name="/ExternalServices/Apache/">
+    <Project Path="ExternalServices/Apache/OoBDev.Apache.Tika.Tests/OoBDev.Apache.Tika.Tests.csproj" />
+    <Project Path="ExternalServices/Apache/OoBDev.Apache.Tika/OoBDev.Apache.Tika.csproj" />
+  </Folder>
+  <Folder Name="/ExternalServices/GroqCloud/">
+    <Project Path="ExternalServices/GroqCloud/OoBDev.GroqCloud.Tests/OoBDev.GroqCloud.Tests.csproj" />
+    <Project Path="ExternalServices/GroqCloud/OoBDev.GroqCloud/OoBDev.GroqCloud.csproj" />
+  </Folder>
+  <Folder Name="/ExternalServices/Handlebars/">
+    <Project Path="ExternalServices/Handlebars/OoBDev.Handlebars.Tests/OoBDev.Handlebars.Tests.csproj" />
+    <Project Path="ExternalServices/Handlebars/OoBDev.Handlebars/OoBDev.Handlebars.csproj" />
+  </Folder>
+  <Folder Name="/ExternalServices/HtmlToOpenXml/">
+    <Project Path="ExternalServices/HtmlToOpenXml/OoBDev.HtmlToOpenXml.Tests/OoBDev.HtmlToOpenXml.Tests.csproj" />
+    <Project Path="ExternalServices/HtmlToOpenXml/OoBDev.HtmlToOpenXml/OoBDev.HtmlToOpenXml.csproj" />
+  </Folder>
+  <Folder Name="/ExternalServices/Keycloak/">
+    <Project Path="ExternalServices/Keycloak/OoBDev.Keycloak.Tests/OoBDev.Keycloak.Tests.csproj" />
+    <Project Path="ExternalServices/Keycloak/OoBDev.Keycloak/OoBDev.Keycloak.csproj" />
+  </Folder>
+  <Folder Name="/ExternalServices/MailKit/">
+    <Project Path="ExternalServices/MailKit/OoBDev.MailKit.Hosting/OoBDev.MailKit.Hosting.csproj" />
+    <Project Path="ExternalServices/MailKit/OoBDev.MailKit.Tests/OoBDev.MailKit.Tests.csproj" />
+    <Project Path="ExternalServices/MailKit/OoBDev.MailKit/OoBDev.MailKit.csproj" />
+  </Folder>
+  <Folder Name="/ExternalServices/Markdig/">
+    <Project Path="ExternalServices/Markdig/OoBDev.Markdig.Tests/OoBDev.Markdig.Tests.csproj" />
+    <Project Path="ExternalServices/Markdig/OoBDev.Markdig/OoBDev.Markdig.csproj" />
+  </Folder>
+  <Folder Name="/ExternalServices/Microsoft/">
+    <Project Path="ExternalServices/Microsoft/OoBDev.Microsoft.Azure.ServiceBus/OoBDev.Microsoft.Azure.ServiceBus.csproj" />
+    <Project Path="ExternalServices/Microsoft/OoBDev.Microsoft.Azure.StorageAccount.Tests/OoBDev.Microsoft.Azure.StorageAccount.Tests.csproj" />
+    <Project Path="ExternalServices/Microsoft/OoBDev.Microsoft.Azure.StorageAccount/OoBDev.Microsoft.Azure.StorageAccount.csproj" />
+    <Project Path="ExternalServices/Microsoft/OoBDev.Microsoft.Caching.Tests/OoBDev.Microsoft.Caching.Tests.csproj" />
+    <Project Path="ExternalServices/Microsoft/OoBDev.Microsoft.Caching/OoBDev.Microsoft.Caching.csproj" />
+    <Project Path="ExternalServices/Microsoft/OoBDev.Microsoft.SqlServer.DacFx.Tests/OoBDev.Microsoft.SqlServer.DacFx.Tests.csproj" />
+    <Project Path="ExternalServices/Microsoft/OoBDev.Microsoft.SqlServer.DacFx/OoBDev.Microsoft.SqlServer.DacFx.csproj" />
+    <Project Path="ExternalServices/Microsoft/OoBDev.Microsoft.SqlServer.Server.Tests/OoBDev.Microsoft.SqlServer.Server.Tests.csproj" />
+    <Project Path="ExternalServices/Microsoft/OoBDev.Microsoft.SqlServer.Server/OoBDev.Microsoft.SqlServer.Server.csproj" />
+  </Folder>
+  <Folder Name="/ExternalServices/MongoDb/">
+    <Project Path="ExternalServices/MongoDb/OoBDev.MongoDB.Tests/OoBDev.MongoDB.Tests.csproj" />
+    <Project Path="ExternalServices/MongoDb/OoBDev.MongoDB/OoBDev.MongoDB.csproj" />
+  </Folder>
+  <Folder Name="/ExternalServices/MysticMind/">
+    <Project Path="ExternalServices/MysticMind/OoBDev.MysticMind.Tests/OoBDev.MysticMind.Tests.csproj" />
+    <Project Path="ExternalServices/MysticMind/OoBDev.MysticMind/OoBDev.MysticMind.csproj" />
+  </Folder>
+  <Folder Name="/ExternalServices/Ollama/">
+    <Project Path="ExternalServices/Ollama/OoBDev.Ollama.Tests/OoBDev.Ollama.Tests.csproj" />
+    <Project Path="ExternalServices/Ollama/OoBDev.Ollama/OoBDev.Ollama.csproj" />
+  </Folder>
+  <Folder Name="/ExternalServices/Onnx/">
+    <Project Path="ExternalServices/Onnx/OoBDev.Onnx.ImageEmbeddings.Skia/OoBDev.Onnx.ImageEmbeddings.Skia.csproj" />
+    <Project Path="ExternalServices/Onnx/OoBDev.Onnx.ImageEmbeddings.Tests/OoBDev.Onnx.ImageEmbeddings.Tests.csproj" />
+    <Project Path="ExternalServices/Onnx/OoBDev.Onnx.ImageEmbeddings/OoBDev.Onnx.ImageEmbeddings.csproj" />
+    <Project Path="ExternalServices/Onnx/OoBDev.Onnx.SentenceEmbeddings.Tests/OoBDev.Onnx.SentenceEmbeddings.Tests.csproj" />
+    <Project Path="ExternalServices/Onnx/OoBDev.Onnx.SentenceEmbeddings/OoBDev.Onnx.SentenceEmbeddings.csproj" />
+  </Folder>
+  <Folder Name="/ExternalServices/OpenSearch/">
+    <Project Path="ExternalServices/OpenSearch/OoBDev.OpenSearch.Tests/OoBDev.OpenSearch.Tests.csproj" />
+    <Project Path="ExternalServices/OpenSearch/OoBDev.OpenSearch/OoBDev.OpenSearch.csproj" />
+  </Folder>
+  <Folder Name="/ExternalServices/Qdrant/">
+    <Project Path="ExternalServices/Qdrant/OoBDev.Qdrant.Tests/OoBDev.Qdrant.Tests.csproj" />
+    <Project Path="ExternalServices/Qdrant/OoBDev.Qdrant/OoBDev.Qdrant.csproj" />
+  </Folder>
+  <Folder Name="/ExternalServices/RabbitMQ/">
+    <Project Path="ExternalServices/RabbitMQ/OoBDev.RabbitMQ.Tests/OoBDev.RabbitMQ.Tests.csproj" />
+    <Project Path="ExternalServices/RabbitMQ/OoBDev.RabbitMQ/OoBDev.RabbitMQ.csproj" />
+  </Folder>
+  <Folder Name="/ExternalServices/Redis/">
+    <Project Path="ExternalServices/Redis/OoBDev.Redis.Caching.Tests/OoBDev.Redis.Caching.Tests.csproj" />
+    <Project Path="ExternalServices/Redis/OoBDev.Redis.Caching/OoBDev.Redis.Caching.csproj" />
+  </Folder>
+  <Folder Name="/ExternalServices/SBert/">
+    <Project Path="ExternalServices/SBert/OoBDev.SBert.AllMiniLmL6V2.Tests/OoBDev.SBert.AllMiniLmL6V2.Tests.csproj" />
+    <Project Path="ExternalServices/SBert/OoBDev.SBert.AllMiniLmL6V2/OoBDev.SBert.AllMiniLmL6V2.csproj" />
+    <Project Path="ExternalServices/SBert/OoBDev.SBert.AllMpnetBaseV2/OoBDev.SBert.AllMpnetBaseV2.csproj" />
+    <Project Path="ExternalServices/SBert/OoBDev.SBert.NomicEmbedTextV1_5/OoBDev.SBert.NomicEmbedTextV1_5.csproj" />
+    <Project Path="ExternalServices/SBert/OoBDev.SBert.Tests/OoBDev.SBert.Tests.csproj" />
+    <Project Path="ExternalServices/SBert/OoBDev.SBert/OoBDev.SBert.csproj" />
+  </Folder>
+  <Folder Name="/ExternalServices/Vision/">
+    <Project Path="ExternalServices/Vision/OoBDev.Vision.ClipVitB32/OoBDev.Vision.ClipVitB32.csproj" />
+    <Project Path="ExternalServices/Vision/OoBDev.Vision.Dinov2Small/OoBDev.Vision.Dinov2Small.csproj" />
+    <Project Path="ExternalServices/Vision/OoBDev.Vision.VitBasePatch16/OoBDev.Vision.VitBasePatch16.csproj" />
+  </Folder>
+  <Folder Name="/ExternalServices/WkHtmlToPdf/">
+    <Project Path="ExternalServices/WkHtmlToPdf/OoBDev.WkHtmlToPdf.Tests/OoBDev.WkHtmlToPdf.Tests.csproj" />
+    <Project Path="ExternalServices/WkHtmlToPdf/OoBDev.WkHtmlToPdf/OoBDev.WkHtmlToPdf.csproj" />
+  </Folder>
+  <Folder Name="/Framework/">
+    <Project Path="Framework/OoBDev.AI.Abstractions/OoBDev.AI.Abstractions.csproj" />
+    <Project Path="Framework/OoBDev.Analyzers.Tests/OoBDev.Analyzers.Tests.csproj" />
+    <Project Path="Framework/OoBDev.Analyzers/OoBDev.Analyzers.csproj" />
+    <Project Path="Framework/OoBDev.AspNetCore.Abstractions/OoBDev.AspNetCore.Abstractions.csproj" />
+    <Project Path="Framework/OoBDev.AspNetCore.JwtAuthentication/OoBDev.AspNetCore.JwtAuthentication.csproj" />
+    <Project Path="Framework/OoBDev.AspNetCore.Mvc/OoBDev.AspNetCore.Mvc.csproj" />
+    <Project Path="Framework/OoBDev.AspNetCore.Tests/OoBDev.AspNetCore.Tests.csproj" />
+    <Project Path="Framework/OoBDev.AsyncApi.Tests/OoBDev.AsyncApi.Tests.csproj" />
+    <Project Path="Framework/OoBDev.AsyncApi/OoBDev.AsyncApi.csproj" />
+    <Project Path="Framework/OoBDev.Caching.Abstractions/OoBDev.Caching.Abstractions.csproj" />
+    <Project Path="Framework/OoBDev.Caching.Tests/OoBDev.Caching.Tests.csproj" />
+    <Project Path="Framework/OoBDev.Caching/OoBDev.Caching.csproj" />
+    <Project Path="Framework/OoBDev.Communications.Abstractions/OoBDev.Communications.Abstractions.csproj" />
+    <Project Path="Framework/OoBDev.Communications.MessageQueueing/OoBDev.Communications.MessageQueueing.csproj" />
+    <Project Path="Framework/OoBDev.Communications.Tests/OoBDev.Communications.Tests.csproj" />
+    <Project Path="Framework/OoBDev.Communications/OoBDev.Communications.csproj" />
+    <Project Path="Framework/OoBDev.DacFx.Abstractions/OoBDev.DacFx.Abstractions.csproj" />
+    <Project Path="Framework/OoBDev.DacFx.Tests/OoBDev.DacFx.Tests.csproj" />
+    <Project Path="Framework/OoBDev.DacFx/OoBDev.DacFx.csproj" />
+    <Project Path="Framework/OoBDev.Data.Common.Abstractions/OoBDev.Data.Common.Abstractions.csproj" />
+    <Project Path="Framework/OoBDev.Data.Common.Tests/OoBDev.Data.Common.Tests.csproj" />
+    <Project Path="Framework/OoBDev.Data.Common/OoBDev.Data.Common.csproj" />
+    <Project Path="Framework/OoBDev.Documents.Abstractions/OoBDev.Documents.Abstractions.csproj" />
+    <Project Path="Framework/OoBDev.Documents.Tests/OoBDev.Documents.Tests.csproj" />
+    <Project Path="Framework/OoBDev.Documents/OoBDev.Documents.csproj" />
+    <Project Path="Framework/OoBDev.Extensions.Tests/OoBDev.Extensions.Tests.csproj" />
+    <Project Path="Framework/OoBDev.Extensions/OoBDev.Extensions.csproj" />
+    <Project Path="Framework/OoBDev.Identity.Abstractions/OoBDev.Identity.Abstractions.csproj" />
+    <Project Path="Framework/OoBDev.Identity.Tests/OoBDev.Identity.Tests.csproj" />
+    <Project Path="Framework/OoBDev.Identity/OoBDev.Identity.csproj" />
+    <Project Path="Framework/OoBDev.MessageQueueing.Abstractions/OoBDev.MessageQueueing.Abstractions.csproj" />
+    <Project Path="Framework/OoBDev.MessageQueueing.Hosting/OoBDev.MessageQueueing.Hosting.csproj" />
+    <Project Path="Framework/OoBDev.MessageQueueing.Tests/OoBDev.MessageQueueing.Tests.csproj" />
+    <Project Path="Framework/OoBDev.MessageQueueing/OoBDev.MessageQueueing.csproj" />
+    <Project Path="Framework/OoBDev.Search.Abstractions/OoBDev.Search.Abstractions.csproj" />
+    <Project Path="Framework/OoBDev.Search.Tests/OoBDev.Search.Tests.csproj" />
+    <Project Path="Framework/OoBDev.Search/OoBDev.Search.csproj" />
+    <Project Path="Framework/OoBDev.SemanticKernel.Abstractions/OoBDev.SemanticKernel.Abstractions.csproj" />
+    <Project Path="Framework/OoBDev.SemanticKernel/OoBDev.SemanticKernel.csproj" />
+    <Project Path="Framework/OoBDev.System.Abstractions/OoBDev.System.Abstractions.csproj" />
+    <Project Path="Framework/OoBDev.System.IO.Pipelines/OoBDev.System.IO.Pipelines.csproj" />
+    <Project Path="Framework/OoBDev.System.IO.Ports/OoBDev.System.IO.Ports.csproj" />
+    <Project Path="Framework/OoBDev.System.IO.UsbHids/OoBDev.System.IO.UsbHids.csproj" />
+    <Project Path="Framework/OoBDev.System.Linq/OoBDev.System.Linq.csproj" />
+    <Project Path="Framework/OoBDev.System.Tests/OoBDev.System.Tests.csproj" />
+    <Project Path="Framework/OoBDev.System/OoBDev.System.csproj" />
+    <Project Path="Framework/OoBDev.TestUtilities.Tests/OoBDev.TestUtilities.Tests.csproj" />
+    <Project Path="Framework/OoBDev.TestUtilities/OoBDev.TestUtilities.csproj" />
+  </Folder>
+  <Folder Name="/Tools/">
+    <Project Path="Tools/OoBDev.DacPacCompiler.Cli/OoBDev.DacPacCompiler.Cli.csproj" />
+    <Project Path="Tools/OoBDev.Docs.Tests/OoBDev.Docs.Tests.csproj" />
+    <Project Path="Tools/OoBDev.DocumentConverter.Cli/OoBDev.DocumentConverter.Cli.csproj" />
+    <Project Path="Tools/OoBDev.FileRagEngine.Cli/OoBDev.FileRagEngine.Cli.csproj" />
+    <Project Path="Tools/OoBDev.FixSourceLinks.Cli/OoBDev.FixSourceLinks.Cli.csproj" />
+    <Project Path="Tools/OoBDev.LlmCodeGen.Cli.Tests/OoBDev.LlmCodeGen.Cli.Tests.csproj" />
+    <Project Path="Tools/OoBDev.LlmCodeGen.Cli/OoBDev.LlmCodeGen.Cli.csproj" />
+    <Project Path="Tools/OoBDev.MigrationHelper.Cli/OoBDev.MigrationHelper.Cli.csproj" />
+    <Project Path="Tools/OoBDev.TemplateEngine.Cli/OoBDev.TemplateEngine.Cli.csproj" />
+  </Folder>
+  <Project Path="OoBDev.Notes/OoBDev.Notes.csproj" />
+</Solution>

@@ -35,7 +35,7 @@ cd ../../Examples
 dotnet new oobdev-webapp -n MyApp                    # OoBDev.MyApp
 ```
 
-The templates are in-repository templates: the generated projects rely on `src/Directory.Build.props` and use relative project references, so they must be created inside `src/`. Add the generated projects to `OoBDev.sln` afterwards (`dotnet sln src/OoBDev.sln add ...`).
+The templates are in-repository templates: the generated projects rely on `src/Directory.Build.props` and use relative project references, so they must be created inside `src/`. Add the generated projects to `OoBDev.slnx` afterwards (`dotnet sln src/OoBDev.slnx add ...`).
 
 ## Verify
 

@@ -44,7 +44,7 @@ try {
     Pop-Location
     $generated += Join-Path $ex 'OoBDev.ZzApp'
 
-    # Directory.Build.props finds the .sln relative to the current directory, so build from a folder one level below src
+    # Directory.Build.props finds the .slnx relative to the current directory, so build from a folder one level below src
     Push-Location $fw
     Invoke-Step 'test capability' { dotnet test (Join-Path $fw 'OoBDev.ZzCheck.Tests') --nologo -v q }
     Invoke-Step 'test adapter' { dotnet test (Join-Path $vendor 'OoBDev.ZzVendor.ZzCheck.Tests') --nologo -v q }

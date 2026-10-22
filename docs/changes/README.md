@@ -278,6 +278,10 @@ Each change document should include:
 - AsyncAPI builder, contributor and message resolver unit tests; resolver flat-configuration bug fixed
 - Status: ✅ Complete
 
+**[build-slnx-solution-2026-10-22.md](build-slnx-solution-2026-10-22.md)**
+- Solution converted from `.sln` to `.slnx`
+- Status: ✅ Complete
+
 **[documentation-example-ui-design-reconcile-2026-10-22.md](documentation-example-ui-design-reconcile-2026-10-22.md)**
 - Example UI design documents reconciled with the code
 - Status: ✅ Complete

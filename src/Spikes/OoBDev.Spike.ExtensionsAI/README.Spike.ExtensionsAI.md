@@ -4,7 +4,7 @@
 
 Spike: can the existing `OoBDev.AI.Abstractions` contracts (`ILanguageModelProvider`, `IEmbeddingProvider`) sit on top of `Microsoft.Extensions.AI` (`IChatClient`, `IEmbeddingGenerator<string, Embedding<float>>`)? The contracts predate that library. Findings and recommendation are in [the spike report](../../../docs/patterns-discovery/08-spikes/01-extensions-ai.md).
 
-This is throwaway evidence, not a product: it is not packaged and not part of `OoBDev.sln`.
+This is throwaway evidence, not a product: it is not packaged and not part of `OoBDev.slnx`.
 
 ## Contents
 
