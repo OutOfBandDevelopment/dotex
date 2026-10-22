@@ -122,6 +122,10 @@ Each change document should include:
 - AsyncAPI 3.0 document and viewer for the message queues (`OoBDev.AsyncApi`, adapter contributors, `MapAsyncApi()`)
 - Status: ✅ Complete
 
+**[apis-application-rights-2026-10-22.md](apis-application-rights-2026-10-22.md)**
+- Roles mapped to `app__application_right` claims from configuration, one shared right checker, `[ApplicationRight]` returns 401 or 403
+- Status: ✅ Complete (CGI move and Debug logging in BACKLOG)
+
 **[apis-cgi-middleware-2026-10-22.md](apis-cgi-middleware-2026-10-22.md)**
 - CGI/1.1 middleware for Kestrel (`OoBDev.AspNetCore.Cgi`): safe defaults, limits, built-in rights check
 - Status: ✅ Complete (first cut)

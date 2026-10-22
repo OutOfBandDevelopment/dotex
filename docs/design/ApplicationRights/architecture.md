@@ -22,7 +22,7 @@
 
 ## Layer placement
 
-The contracts (`IRoleRightMapper`, `IApplicationRightChecker`, `RightCheckResult`) sit in `OoBDev.AspNetCore.Abstractions` next to `[ApplicationRight]`, so adapters and extensions such as the CGI middleware can depend on them without the MVC project. The implementations (`ConfigurationRoleRightMapper`, `RoleRightClaimsTransformation`, `ApplicationRightChecker`) sit in `OoBDev.AspNetCore.Mvc` with the existing `UserAuthorizationHandler`.
+The contracts (`IRoleRightMapper`, `IApplicationRightChecker`, `RightCheckResult`) sit in `OoBDev.AspNetCore.Abstractions` next to `[ApplicationRight]`, so adapters and extensions such as the CGI middleware can depend on them without the MVC project. The default `ApplicationRightChecker` also sits in Abstractions, so the `[ApplicationRight]` filter falls back to it when none is registered. The mapper and transformation (`ConfigurationRoleRightMapper`, `RoleRightClaimsTransformation`) sit in `OoBDev.AspNetCore.Mvc` with the existing `UserAuthorizationHandler`.
 
 ## Request flow
 

@@ -8,7 +8,7 @@ Keep this file short (a handful of items). When an item starts, move it here fro
 
 ## In progress
 
-- [ ] Rights middleware (first of rights, then `QUERY`/OData, then GraphQL): design in [docs/design/ApplicationRights](docs/design/ApplicationRights/README.md); build the mapper, claims transformation and checker, move the MVC filter and CGI onto the checker
+- [ ] `QUERY`/OData with `POST` fallback (design first; rights check via `IApplicationRightChecker`), then GraphQL
 
 ## Next
 
