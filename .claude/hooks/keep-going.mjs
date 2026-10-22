@@ -14,5 +14,5 @@ try {
 
 console.log(JSON.stringify({
   decision: 'block',
-  reason: 'Autonomous mode is on until the owner says I am back (.claude/rules/autonomous-mode.md). Do not stop and do not write a status message. Take the next unblocked item from TODO.md, then BACKLOG.md, and work it with tests, docs and tracking. If an item needs an answer, add it to OPEN-QUESTIONS.md and take another. Only when the close-out audit finds nothing new and every remaining item is parked, delete .claude/autonomous.on and end the turn.',
+  reason: 'Autonomous mode is on until the owner says I am back (.claude/rules/autonomous-mode.md). Do not stop and do not write a status message. Re-read OPEN-QUESTIONS.md for new owner requests under ## Requests and answers. Take the next unblocked item from TODO.md, then BACKLOG.md, and work it with tests, docs and tracking. If an item needs an answer, add it to OPEN-QUESTIONS.md and take another. Only when the close-out audit finds nothing new and every remaining item is parked, delete .claude/autonomous.on and end the turn.',
 }));

@@ -6,9 +6,7 @@ How this file is kept: see `.claude/rules/open-questions.md` and `.claude/rules/
 
 ## Requests
 
-- convert from .sln to .slnx for the solution
-- reuse the plantuml container on this system isntead of creating your own.
-- aspire is missing the sql server instance with the vector extensions.  this should be deployed with docker and sql2019
+_(none waiting; processed requests are in BACKLOG.md and TODO.md)_
 
 ## Open
 

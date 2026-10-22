@@ -8,7 +8,7 @@ description: Work TODO.md and BACKLOG.md item by item with tests, docs and track
 Loop until the stop conditions below. Every item follows the full SDLC below (design, tests, docs, tracking, commit), also in autonomous mode. No progress reports between items. Standing rules: `work-tracking`, `open-questions`, `git-workflow`, `coding-standards`, `testing`, `owner-decisions`, `autonomous-mode`.
 
 ## Pick
-1. Read `OPEN-QUESTIONS.md` and act on answered entries first. Then read `TODO.md` and `BACKLOG.md`.
+1. Read `OPEN-QUESTIONS.md`: merge every bullet under `## Requests` into the docs and `BACKLOG.md` (owner requests rank first), then act on answered entries. Then read `TODO.md` and `BACKLOG.md`.
 2. Pick the next item you can finish without an owner answer: the owner's newest requests, then items that unblock others, then file order. If an item needs a decision, add a question with options and a recommendation, and move on.
 
 ## Work the item
