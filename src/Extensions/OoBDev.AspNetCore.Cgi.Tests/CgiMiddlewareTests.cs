@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.AspNetCore.Authorization;
@@ -364,10 +365,19 @@ public class CgiMiddlewareTests
     [TestCategory("Simulate")]
     public async Task Get_StderrFlood_StillAnswersAndKeepsLimit()
     {
-        await StartAsync(new() { ["OoBDev:Cgi:MaxStderrBytes"] = "100" });
+        // Stage
+        var logs = new CapturingLoggerProvider();
+        await StartAsync(new() { ["OoBDev:Cgi:MaxStderrBytes"] = "100" }, configure: s => s.AddLogging(b => b.AddProvider(logs)));
+
+        // Test
         using var response = await _client!.GetAsync($"/cgi-bin/stderr-flood{Ext}");
+
+        // Assert
         Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
         StringAssert.Contains(await response.Content.ReadAsStringAsync(), "ok");
+        var entry = logs.Entries.Single(e => e.Message.StartsWith("CGI stderr:", StringComparison.Ordinal));
+        Assert.AreEqual(LogLevel.Warning, entry.Level);
+        Assert.IsTrue(entry.Message.Length <= "CGI stderr: ".Length + 100);
     }
 
     [TestMethod]

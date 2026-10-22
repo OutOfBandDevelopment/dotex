@@ -37,7 +37,7 @@ Coverage 85% or more for the project. Tests run on Linux and Windows (fixtures e
 | REQ-009 | `Get_BatchFileWithoutOptIn_ReturnsForbidden` (Windows only) | Simulate |
 | REQ-010 | `Get_ProgramOverTimeout_ReturnsGatewayTimeout` (child kill is not asserted; Planned, BACKLOG) | Simulate |
 | REQ-011 | `Get_AllSlotsBusy_ReturnsServiceUnavailableWithRetryAfter` (cap of one) | Simulate |
-| REQ-012 | `Get_ResponseOverLimit_ReturnsBadGateway`, `Get_StderrFlood_StillAnswersAndKeepsLimit` (the Warning log is not asserted) | Simulate |
+| REQ-012 | `Get_ResponseOverLimit_ReturnsBadGateway`, `Get_StderrFlood_StillAnswersAndKeepsLimit` (asserts the single Warning entry and its size cap) | Simulate |
 | REQ-013 | `Get_ClientAbort_FreesTheProcessSlot` | Simulate |
 | REQ-014 | `Start_MissingScriptRoot_Fails`; the static-root case is Planned (BACKLOG) | Unit |
 | REQ-015 | `Benchmark_TrivialScript_ReportsLatencyAndThroughput` | DevLocal |
