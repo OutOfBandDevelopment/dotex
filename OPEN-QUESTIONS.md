@@ -33,3 +33,17 @@ The `QUERY` verb slice is built ([design](docs/design/HttpQueryVerb/README.md)).
 **Default:** nothing is added; the `QUERY` verb serves the custom syntax.
 
 **Your answer:**
+
+
+### Q3 — 2026-10-22 — HTTP API — Where does Accept-Query go?
+
+[HttpQueryVerb](docs/design/HttpQueryVerb/requirements.md) REQ-006 wants collection responses to advertise `Accept-Query: "application/json"`. The middleware cannot tell a collection endpoint from any other, so the header needs a rule for which responses carry it.
+
+**Options:**
+- **A (recommended):** an `[AcceptsQuery]` attribute (result filter) on the search actions; the header is added only where the owner marks it. Explicit, no false claims.
+- **B:** the middleware adds it to every successful GET response; one line, but advertises `QUERY` on endpoints that do not honor it.
+- **C:** only in the OpenAPI document, no header.
+
+**Default:** nothing is added (option A is what I will build once confirmed).
+
+**Your answer:**
