@@ -10,7 +10,7 @@
 
 ## Design wanted, code lacks
 
-Marked Planned and added to `BACKLOG.md`: extractor edge-case tests, options validation, provider selection, a live Ollama run, and `<template>.response.json`.
+Options validation tests were added with this change (2 Unit, 21 tests in the project pass). Still Planned and in `BACKLOG.md`: provider selection, a live Ollama run, and `<template>.response.json`.
 
 ## Verification
 
