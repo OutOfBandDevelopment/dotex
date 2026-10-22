@@ -14,7 +14,7 @@ Working agreements are enforced by files, not by this guide alone:
 | Mechanism | Location | What it holds |
 |-----------|----------|---------------|
 | Rules (always loaded, or loaded for matching files) | `.claude/rules/` | `git-workflow`, `owner-decisions`, `open-questions` (always); `coding-standards` (C#), `testing` (tests, runsettings, containers), `docs-and-diagrams` (docs, markdown) |
-| Skills (loaded when the task matches) | `.claude/skills/` | `add-integration-service`, `archive-completed-work`, `document-configuration`, `compare-incoming-codebase`, `architectural-analysis`, `security-audit`, `write-docs`, `complete-work`, `reconcile-designs-and-code` |
+| Skills (loaded when the task matches) | `.claude/skills/` | `add-integration-service`, `archive-completed-work`, `document-configuration`, `compare-incoming-codebase`, `architectural-analysis`, `security-audit`, `write-docs`, `complete-work`, `reconcile-designs-and-code`, `work-backlog`, `owner-interview` |
 | Hook (deterministic guard) | `.claude/hooks/guard-git.mjs`, registered in `.claude/settings.json` | blocks AI attribution in commit messages, force pushes, `gh` usage and pushes to `upstream` |
 | Memory | `~/.claude/projects/.../memory/` | owner preferences and feedback |
 
