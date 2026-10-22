@@ -11,7 +11,7 @@ GitHub is no longer the primary repository (local bare repo `origin`), so nothin
 ## 1. Test infrastructure
 
 - [ ] Decide what replaces the legacy `.github/workflows/` (a local script that runs the Docker stack and the Integration suite, or remove the workflows). Owner decision.
-- [ ] Integration coverage gaps: Service Bus emulator (no health check, few tests), Azurite beyond blobs, Moto beyond SQS (S3).
+- [ ] Integration coverage gaps (Azure runs on emulators only: Azurite and the Service Bus emulator, no Azure licence): Azurite queues and blobs are covered (queue tests added 2026-10-22); Service Bus emulator still has no health check and few tests (not run this session); Moto beyond SQS (S3).
 - [ ] `DevLocal` tests kept on purpose: Ollama (hard-coded LAN host, model pull and delete), USB HID (hardware), `PathEx`, `MergedXPathNavigator`, `ProjectTools.FixReadmes` (hard-coded `C:\Repos` paths), Markdown `TestMethod1` (writes files), DacFx `BuildPackageTest` (hard-coded path). Revisit Ollama when the owner says Ollama testing can resume.
 - [ ] Add a live-integration doc page per new cloud service (only Groq exists; its key was revoked 2026-10-09, so runs wait for the owner).
 - [ ] Azure Monitor export through a collector is untested (needs the owner's subscription).
