@@ -9,7 +9,7 @@ public class VectorIndexRequestModel
     public required string Collection { get; set; }
 
     /// <summary>Gets or sets the texts to embed; each is stored with its text as metadata.</summary>
-    public required List<string> Texts { get; set; }
+    public required IList<string> Texts { get; set; }
 }
 
 /// <summary>Ids of the stored vectors.</summary>

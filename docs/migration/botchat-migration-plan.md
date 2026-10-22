@@ -220,7 +220,7 @@ If keeping as reference, consider minor improvements:
   - [ ] Update assembly name and description
 
 - [ ] **Add to Solution**
-  - [ ] Add project to OoBDev.sln
+  - [ ] Add project to OoBDev.slnx
   - [ ] Add to Tools solution folder
   - [ ] Configure build order/dependencies
 
@@ -324,7 +324,7 @@ If keeping as reference, consider minor improvements:
 - [ ] **Create Hosting Project**
   - [ ] Create `src/Framework/OoBDev.System.Hosting/`
   - [ ] Create `OoBDev.System.Hosting.csproj`
-  - [ ] Add to OoBDev.sln
+  - [ ] Add to OoBDev.slnx
 
 - [ ] **Migrate Pattern**
   - [ ] Copy `IRunner.cs` to new project

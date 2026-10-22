@@ -12,4 +12,11 @@ public static class ServiceCollectionExtensions
         services.TryAddTransient<AsyncApiDocumentBuilder>();
         return services;
     }
+
+    /// <summary>Lists a message type that the application sends, so its channel gets a schema in the document.</summary>
+    public static IServiceCollection AddAsyncApiSendMessage<TChannel, TMessage>(this IServiceCollection services)
+    {
+        services.AddSingleton(new AsyncApiSendMessage(typeof(TChannel), typeof(TMessage)));
+        return services;
+    }
 }

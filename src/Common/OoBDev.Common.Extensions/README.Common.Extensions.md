@@ -80,10 +80,6 @@ Gets or sets the configuration section name of Apache Tika Client options.
 
 Gets or sets the identity provider to use. Specifies the identity provider for authentication. The default value is `None`.
 
-### `MicrosoftIdentityConfigurationSection`
-
-Gets or sets the configuration section name for Microsoft Identity options. Default is "MicrosoftIdentityOptions".
-
 ### `KeycloakIdentityConfigurationSection`
 
 Gets or sets the configuration section name for Keycloak identity options. Default is "KeycloakIdentityOptions".

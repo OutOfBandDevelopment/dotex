@@ -50,7 +50,9 @@ The shell follows the Azure portal: a fixed top bar, a collapsible left navigati
 
 ## Navigation groups
 
-**Table 1 — Left navigation**
+Table 1 is the target. The navigation in `src/layout/nav.ts` lists a screen once it is built (Table 2), so groups differ until the remaining screens exist.
+
+**Table 1 — Left navigation (target)**
 
 | Group | Entries |
 |---|---|
@@ -62,6 +64,21 @@ The shell follows the Azure portal: a fixed top bar, a collapsible left navigati
 | Identity and security | Current user, Identity management, Security helpers |
 | Compute and formats | Expression calculator, Pipelines, Archives and formats |
 | Developer | API reference, Event reference, Telemetry, CLI tools |
+
+**Table 2 — Left navigation as built (`src/layout/nav.ts`)**
+
+| Group | Entries |
+|---|---|
+| AI | Chat, Embeddings, Retrieval (RAG), Ollama, Groq cloud, Image labels, Model compare |
+| Content | Documents, Templates |
+| Data | Cache lab |
+| Utilities | Toolbox, Text tools, Vector store, Vector lab |
+| Messaging | Communications, Queues |
+| Identity and security | Current user |
+| Operations | Runtime and configuration, Telemetry |
+| Developer | API reference, Event reference |
+
+The Overview group is the home page (`OverviewPage`), not a navigation group.
 
 ## Blade pattern
 
@@ -100,7 +117,7 @@ Every feature page is one resource blade:
 - **Loading:** skeletons for blades, progress for long calls, cancel for streams.
 - **Theme:** light and dark tokens defined once; no hard-coded colors in components.
 - **Accessibility:** every control reachable by keyboard; navigation is a landmark; status is never color only.
-- **State:** Pinia stores hold session data only; nothing sensitive is persisted in browser storage.
+- **State:** Pinia stores hold session data only; nothing sensitive is persisted in browser storage. Tokens are kept in memory.
 - **Commands:** each user action is a class implementing `execute(): Promise<void>` and `canExecute: boolean`, injected with its service. View-model composables expose them to the template.
 
 [Back to the plan](../../../future-example.md)

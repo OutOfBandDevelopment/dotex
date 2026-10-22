@@ -228,7 +228,7 @@ public class DirectoryRecord : IEnumerable<DirectoryRecord>
     /// <summary>
     /// Gets a value indicating whether this record represents a directory.
     /// </summary>
-    public bool IsDirectory => (DirectoryType & DirectoryType.Directory) != 0;
+    public bool IsDirectory => DirectoryType.HasFlag(DirectoryType.Directory);
 
     /// <summary>
     /// Gets the child directory records if this is a directory.

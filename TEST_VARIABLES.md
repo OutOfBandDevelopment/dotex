@@ -272,6 +272,19 @@ Tests that require live cloud credentials. Manual execution only.
 
 ---
 
+### PlantUML and docs validation
+
+**Service:** PlantUML server used by `OoBDev.Docs.Tests`
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `PLANTUML_URL` | `http://localhost:8086` | The PlantUML server already running on the system (container `plantuml`); the test stack does not start its own |
+| `DOCS_VALIDATE_PATHS` | `docs/patterns-discovery` | `;`-separated repo-relative folders or files to validate |
+
+**Tests Using:** `OoBDev.Docs.Tests` (Unit for structure, links and captions; Integration for rendering)
+
+---
+
 ### Qdrant (Vector Database)
 
 **Service:** Qdrant vector similarity search engine
@@ -538,7 +551,7 @@ See `/containers/testing/README.md` for detailed Docker infrastructure documenta
 - [Docker Infrastructure](./containers/testing/README.md) - Docker setup and usage
 - [Test Categories](./src/Framework/OoBDev.TestUtilities/TestCategories.cs) - Test category definitions
 - [.runsettings](./src/.runsettings) - Default test run configuration
-- [Integration Test Protocol](./src/.claude/protocols/software/integration-test-maintenance.md) - Maintenance checklist
+- [Add-integration-service skill](./.claude/skills/add-integration-service/SKILL.md) - Maintenance checklist
 
 ---
 

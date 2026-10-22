@@ -538,7 +538,7 @@ OoBDev.Contracts
 ## Related Documentation
 
 - [Incoming/ContractParser/](../../Incoming/ContractParser/) - Grammar and examples
-- [TODO-migrations.md](../../TODO-migrations.md) - Migration tracking
+- [TODO.md](../../TODO.md) - Migration tracking
 - [docs/migration/](../../docs/migration/) - Migration planning
 
 ---

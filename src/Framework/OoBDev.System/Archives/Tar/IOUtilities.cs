@@ -43,7 +43,7 @@ public static class IOUtilities
             fileShare.Convert(),
             nint.Zero,
             fileMode.Convert(),
-            0, nint.Zero);
+            EFileAttributes.None, nint.Zero);
         var stream = new FileStream(handle, fileAccess);
         if (fileMode == FileMode.Append)
             stream.Seek(0, SeekOrigin.End);

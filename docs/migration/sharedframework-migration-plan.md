@@ -99,7 +99,7 @@ All migration work MUST follow `/docs/architecture` standards:
 1. Create target directory structure
 2. Copy source files to target
 3. Update namespace: Keep `OoBDev.Amazon.Sqs`
-4. Add project reference to OoBDev.sln under ExternalServices/Amazon
+4. Add project reference to OoBDev.slnx under ExternalServices/Amazon
 5. Add `AWSSDK.SQS` NuGet package
 6. Update to .NET 9.0
 7. Verify provider implements IMessageQueue or similar interface
@@ -124,7 +124,7 @@ All migration work MUST follow `/docs/architecture` standards:
 **Steps:**
 1. Create target directory structure
 2. Copy source files
-3. Add to OoBDev.sln under ExternalServices/Azure
+3. Add to OoBDev.slnx under ExternalServices/Azure
 4. Add `Azure.Messaging.ServiceBus` NuGet package
 5. Update to .NET 9.0
 6. Verify topics, sessions, dead-letter queue support
@@ -282,7 +282,7 @@ All migration work MUST follow `/docs/architecture` standards:
 1. Create new framework project
 2. Copy contracts: ILocationServices, address models
 3. Update namespace to `OoBDev.SpatialServices`
-4. Add to OoBDev.sln under Framework
+4. Add to OoBDev.slnx under Framework
 5. Create README
 
 **Validation:**
@@ -932,7 +932,7 @@ All migration work MUST follow `/docs/architecture` standards:
 ### Task 12.1: Solution-Wide Integration
 
 **Steps:**
-1. Verify all 52 projects added to OoBDev.sln
+1. Verify all 52 projects added to OoBDev.slnx
 2. Verify all projects compile together
 3. Resolve any circular dependencies
 4. Verify NuGet package restore works

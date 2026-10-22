@@ -28,7 +28,7 @@
 
 ## Protocols
 
-Repeatable documentation tasks have written protocols in `.claude/protocols/` (documentation style, standards, archival, configuration discovery). Use the protocol rather than improvising.
+Repeatable documentation tasks are Claude Code skills in `.claude/skills/` (`write-docs`, `archive-completed-work`, `document-configuration`, `architectural-analysis`), backed by the always-on rules in `.claude/rules/docs-and-diagrams.md`. Use the skill rather than improvising.
 
 ---
 

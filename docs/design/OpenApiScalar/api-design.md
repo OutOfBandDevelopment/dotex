@@ -26,6 +26,7 @@ app.MapApiReference();                                    // /openapi/{name}.jso
 | `ConfigureOpenApiOptions` | `IConfigureNamedOptions<OpenApiOptions>`: filter, schema ids and transformer registration |
 | `IApiReferenceConfigurator` | `Configure(ScalarOptions)`; implemented by libraries that need to change the reference |
 | `ApiInfoDocumentTransformer`, `HealthChecksDocumentTransformer` | Document transformers |
+| `ApiPermissionsExtension` | `IOpenApiExtension` that writes `x-permissions` (`anonymous`, `right`) for an operation |
 | `ApplicationPermissionsOperationTransformer`, `SearchQueryOperationTransformer`, `XmlDocumentationOperationTransformer` | Operation transformers |
 | `SearchQuerySchemaTransformer`, `XmlDocumentationSchemaTransformer` | Schema transformers |
 | `XmlDocumentationProvider` | Reads member comments from the XML files beside the application |

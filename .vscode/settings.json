@@ -1,6 +1,6 @@
 {
   "plantuml.render": "PlantUMLServer",
-  "plantuml.server": "http://localhost:18080",
+  "plantuml.server": "http://localhost:8086",
   "plantuml.diagramsRoot": "docs",
   "plantuml.exportFormat": "svg",
   "plantuml.previewAutoUpdate": true,

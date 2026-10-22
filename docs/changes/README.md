@@ -122,6 +122,74 @@ Each change document should include:
 - AsyncAPI 3.0 document and viewer for the message queues (`OoBDev.AsyncApi`, adapter contributors, `MapAsyncApi()`)
 - Status: ✅ Complete
 
+**[testing-cgi-roundtrip-2026-10-22.md](testing-cgi-roundtrip-2026-10-22.md)**
+- CGI echo, Location, no-blank-line, shell-metacharacter and path-split tests
+- Status: ✅ Complete
+
+**[quality-pack-warnings-2026-10-22.md](quality-pack-warnings-2026-10-22.md)**
+- NU5118 and NU5128 pack warnings removed
+- Status: ✅ Complete
+
+**[quality-analyzer-promotion-2026-10-22.md](quality-analyzer-promotion-2026-10-22.md)**
+- MA0070, MA0084, MA0132, MA0144, MA0151, MA0158, MA0169 now warnings; sites fixed
+- Status: ✅ Complete
+
+**[testing-example-web-viewmodels-2026-10-22.md](testing-example-web-viewmodels-2026-10-22.md)**
+- Vitest view-model tests for Communications, Current user, Queues and Templates
+- Status: ✅ Complete
+
+**[apis-rights-debug-logging-2026-10-22.md](apis-rights-debug-logging-2026-10-22.md)**
+- Role-to-right transformation logs counts at Debug; `OoBDev:Authorization` documented
+- Status: ✅ Complete
+
+**[apis-cgi-right-checker-2026-10-22.md](apis-cgi-right-checker-2026-10-22.md)**
+- CGI middleware decides 401/403 with the shared `IApplicationRightChecker`
+- Status: ✅ Complete
+
+**[documentation-example-ui-reconcile-2026-10-22.md](documentation-example-ui-reconcile-2026-10-22.md)**
+- example-ui navigation design checked against the built pages
+- Status: ✅ Complete
+
+**[apis-openapi-scalar-reconcile-2026-10-22.md](apis-openapi-scalar-reconcile-2026-10-22.md)**
+- OpenApiScalar OAuth2 sign-in and API info covered by Unit tests
+- Status: ✅ Complete
+
+**[tools-llmcodegen-provider-selection-2026-10-22.md](tools-llmcodegen-provider-selection-2026-10-22.md)**
+- LlmCodeGen provider selection extracted and unit tested; provider names are case-insensitive
+- Status: ✅ Complete
+
+**[documentation-image-embeddings-reconcile-2026-10-22.md](documentation-image-embeddings-reconcile-2026-10-22.md)**
+- ImageEmbeddings testing strategy matched to the real tests, with a requirement-coverage table
+- Status: ✅ Complete
+
+**[apis-asyncapi-send-messages-2026-10-22.md](apis-asyncapi-send-messages-2026-10-22.md)**
+- AsyncAPI send operations with schemas for registered message types
+- Status: ✅ Complete
+
+**[migration-embedding-telemetry-2026-10-22.md](migration-embedding-telemetry-2026-10-22.md)**
+- ActivitySource and Meter for the ONNX sentence embedding generator (span, duration, batch size, tokens)
+- Status: ✅ Complete
+
+**[documentation-cgi-design-reconcile-2026-10-22.md](documentation-cgi-design-reconcile-2026-10-22.md)**
+- CgiMiddleware design compared with code; testing strategy now names real tests, gaps in BACKLOG
+- Status: ✅ Complete (other designs still to compare)
+
+**[apis-http-query-verb-2026-10-22.md](apis-http-query-verb-2026-10-22.md)**
+- `UseHttpQueryVerb()`: HTTP `QUERY` (and `POST` + `X-HTTP-Method-Override`) routed as `GET` so one endpoint and one rights check serve all
+- Status: ✅ Complete (first slice; OData and GraphQL wait on Q2)
+
+**[apis-application-rights-2026-10-22.md](apis-application-rights-2026-10-22.md)**
+- Roles mapped to `app__application_right` claims from configuration, one shared right checker, `[ApplicationRight]` returns 401 or 403
+- Status: ✅ Complete (CGI move and Debug logging in BACKLOG)
+
+**[apis-cgi-middleware-2026-10-22.md](apis-cgi-middleware-2026-10-22.md)**
+- CGI/1.1 middleware for Kestrel (`OoBDev.AspNetCore.Cgi`): safe defaults, limits, built-in rights check
+- Status: ✅ Complete (first cut)
+
+**[code-quality-and-tests-2026-10-22.md](code-quality-and-tests-2026-10-22.md)**
+- Analyzer cleanup, Azurite queue tests, search annotation example, local CI runner fix
+- Status: ✅ Complete
+
 ### Observability
 
 **[migration-opentelemetry-2026-10-09.md](migration-opentelemetry-2026-10-09.md)**
@@ -237,3 +305,47 @@ Each change document should include:
 ---
 
 **Last Updated:** 2026-01-21
+
+**[documentation-docs-validation-tests-2026-10-22.md](documentation-docs-validation-tests-2026-10-22.md)**
+- `validate-docs.py` replaced by MSTest project `OoBDev.Docs.Tests` (PlantUML, links, captions)
+- Status: ✅ Complete
+
+**[documentation-cgi-design-reconcile-2026-10-22.md](documentation-cgi-design-reconcile-2026-10-22.md)**
+- CGI design documents reconciled with the code; `PATH_TRANSLATED` now set
+- Status: ✅ Complete
+
+**[documentation-asyncapi-design-reconcile-2026-10-22.md](documentation-asyncapi-design-reconcile-2026-10-22.md)**
+- AsyncAPI design documents reconciled with the code; unit tests added to the backlog
+- Status: ✅ Complete
+
+**[documentation-openapi-scalar-design-reconcile-2026-10-22.md](documentation-openapi-scalar-design-reconcile-2026-10-22.md)**
+- OpenAPI and Scalar design documents reconciled with the code
+- Status: ✅ Complete
+
+**[documentation-image-embeddings-design-reconcile-2026-10-22.md](documentation-image-embeddings-design-reconcile-2026-10-22.md)**
+- Image embeddings design documents reconciled with the code
+- Status: ✅ Complete
+
+**[documentation-allminilm-design-reconcile-2026-10-22.md](documentation-allminilm-design-reconcile-2026-10-22.md)**
+- AllMiniLmL6V2 design documents reconciled with the code; three planned items in the backlog
+- Status: ✅ Complete
+
+**[documentation-llmcodegen-design-reconcile-2026-10-22.md](documentation-llmcodegen-design-reconcile-2026-10-22.md)**
+- LlmCodeGen design documents reconciled with the code; missing tests in the backlog
+- Status: ✅ Complete
+
+**[testing-asyncapi-resolver-tests-2026-10-22.md](testing-asyncapi-resolver-tests-2026-10-22.md)**
+- AsyncAPI builder, contributor and message resolver unit tests; resolver flat-configuration bug fixed
+- Status: ✅ Complete
+
+**[build-slnx-solution-2026-10-22.md](build-slnx-solution-2026-10-22.md)**
+- Solution converted from `.sln` to `.slnx`; docs rendering reuses the existing PlantUML container
+- Status: ✅ Complete
+
+**[testing-aspire-sqlserver-vectors-2026-10-22.md](testing-aspire-sqlserver-vectors-2026-10-22.md)**
+- Aspire example host runs SQL Server 2019 with the vector types deployed from the dacpac
+- Status: ✅ Complete (host start not run)
+
+**[documentation-example-ui-design-reconcile-2026-10-22.md](documentation-example-ui-design-reconcile-2026-10-22.md)**
+- Example UI design documents reconciled with the code
+- Status: ✅ Complete

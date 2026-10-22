@@ -1,3 +1,4 @@
+#pragma warning disable MA0004 // "await using" declarations cannot take ConfigureAwait
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Options;
 using OoBDev.Search.Models;

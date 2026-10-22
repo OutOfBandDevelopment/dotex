@@ -36,7 +36,6 @@ The first start downloads images and the Ollama models, which takes a while.
 | `ollama` | 11435 (the script uses 21435) | `TEST_PORT_OLLAMA` | Chat and embeddings |
 | `smtp4dev` | web 7777, SMTP 25, IMAP 143 | `TEST_PORT_SMTP_WEB`, `TEST_PORT_SMTP`, `TEST_PORT_IMAP` | Communications |
 | `rabbitmq` | AMQP 5673, management 15672 | `TEST_PORT_RABBITMQ`, `TEST_PORT_RABBITMQ_MGMT` | Queues |
-| `plantuml` | 18080 | `TEST_PORT_PLANTUML` | Documentation validation |
 
 Every host port of the test stack can be overridden with `TEST_PORT_<NAME>`; see [the integration test infrastructure](../architecture/testing/integration/README.md). The scripts pick the Keycloak and Ollama ports above so the stack starts next to a locally installed Keycloak or Ollama.
 

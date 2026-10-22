@@ -207,6 +207,20 @@ services.Configure<FileTemplatingOptions>(options =>
 
 ---
 
+#### RoleRightOptions
+
+**Namespace:** `OoBDev.AspNetCore.Mvc.Authorization`
+**Configuration Section:** `OoBDev:Authorization`
+
+| Property | Default | Description |
+|----------|---------|-------------|
+| `RoleClaimTypes` | `ClaimTypes.Role`, `roles`, `role` | Claim types read as roles; at least one, none blank |
+| `Roles` | empty | Role name (case-insensitive) to the application rights it grants; no blank role or right |
+
+Unmapped roles grant nothing. See [ApplicationRights](docs/design/ApplicationRights/README.md).
+
+---
+
 #### OAuth2OpenApiOptions
 
 **Namespace:** `OoBDev.AspNetCore.JwtAuthentication.OpenApi`

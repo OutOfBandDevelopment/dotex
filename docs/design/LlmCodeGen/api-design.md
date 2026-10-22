@@ -9,24 +9,24 @@ public record LlmCodeGenOptions
 {
     public const string SectionName = "LlmCodeGen";
 
-    [Required] public required string InputPath { get; init; }
-    [Required] public required string OutputPath { get; init; }
-    [Required] public required string Template { get; init; }   // bundled name or file path
+    [Required] public string? InputPath { get; init; }
+    [Required] public string? OutputPath { get; init; }
+    [Required] public string? Template { get; init; }   // bundled name or file path
     [Required] public string Provider { get; init; } = "ollama"; // keyed IMessageCompletion: ollama or groq-cloud (alias groq)
-    [Required] public required string Model { get; init; }
+    [Required] public string? Model { get; init; }
     public string SearchPattern { get; init; } = "*.*";
     public bool Overwrite { get; init; }
     public bool ExtractFiles { get; init; } = true;
 }
 ```
 
-Bound with `AddOptions<LlmCodeGenOptions>().Bind(...).ValidateDataAnnotations()`. Provider endpoint, model and key stay in the adapters' own sections (`OoBDev:Ollama`, Groq), so credentials are never tool options.
+The properties are nullable because configuration binding fills them; `[Required]` rejects a missing value. Bound with `AddOptions<LlmCodeGenOptions>().Bind(...).ValidateDataAnnotations().ValidateOnStart()`. Provider endpoint, model and key stay in the adapters' own sections (`OoBDev:Ollama`, Groq), so credentials are never tool options.
 
 ## Command line
 
 `llmcodegen --input <dir> --output <dir> --template <name|path> --model <model> [--provider ollama|groq] [--pattern <glob>] [--overwrite] [--extract false]`
 
-Arguments override `appsettings.json`, which overrides defaults.
+Arguments override the configuration, which overrides defaults. The Ollama default (`http://localhost:11434`, model `phi3`) is added in memory in `Program`. The bundled templates are `angular-to-react`, `angular-to-vue`, `documentation` and `unit-tests` (`Templates/*.hbs`).
 
 ## Extractor
 
@@ -43,6 +43,6 @@ Recognized shapes are the two the prototype handled: a bold or back-ticked file 
 
 ## Output layout
 
-For input folder `a/b`: `<output>/a/b/<template>` (prompt), `<template>.response.md`, `<template>.response.json` (provider metadata where available) and the extracted files beside them.
+For input folder `a/b`: `<output>/a/b/<template>.prompt.md` (prompt), `<template>.response.md` and the extracted files beside them. **Planned:** `<template>.response.json` with provider metadata; `IMessageCompletion` returns text only, so it needs a richer contract first.
 
 [← Architecture](architecture.md) · [Overview](README.md) · [Testing strategy →](testing-strategy.md)

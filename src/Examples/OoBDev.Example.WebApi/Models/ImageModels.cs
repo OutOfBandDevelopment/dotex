@@ -22,5 +22,5 @@ public class ImageEmbeddingModel
     public double Norm { get; set; }
 
     /// <summary>Gets or sets the first values.</summary>
-    public required List<float> First { get; set; }
+    public required IList<float> First { get; set; }
 }

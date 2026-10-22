@@ -1,12 +1,16 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.OpenApi;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
+using OoBDev.AspNetCore.Authorization;
 using OoBDev.AspNetCore.Mvc.Authorization;
+using OoBDev.System;
 using OoBDev.AspNetCore.Mvc.Filters;
 using OoBDev.AspNetCore.Mvc.Middleware;
 using OoBDev.AspNetCore.Mvc.Providers.SearchQuery;
@@ -86,6 +90,22 @@ public static class ServiceCollectionExtensions
                 );
         }
 
+        return services;
+    }
+
+    /// <summary>
+    /// Adds role to application right mapping: validated options (<c>OoBDev:Authorization</c>), the configuration mapper,
+    /// the claims transformation and the shared right checker.
+    /// </summary>
+    /// <param name="services">The service collection.</param>
+    /// <param name="configuration">The configuration holding the <c>OoBDev:Authorization</c> section.</param>
+    /// <returns>The modified service collection.</returns>
+    public static IServiceCollection TryAddRoleRightMapping(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddValidatedOptions<RoleRightOptions>(configuration, "OoBDev:Authorization");
+        services.TryAddSingleton<IRoleRightMapper, ConfigurationRoleRightMapper>();
+        services.TryAddSingleton<IApplicationRightChecker, ApplicationRightChecker>();
+        services.TryAddTransient<IClaimsTransformation, RoleRightClaimsTransformation>();
         return services;
     }
 

@@ -4,7 +4,7 @@ namespace OoBDev.System.Collections;
 
 internal class DoubleLinkedList<T>(T item) : IDoubleLinkedList<T>
 {
-    private readonly object _lock = new();
+    private readonly global::System.Threading.Lock _lock = new();
 
     public IDoubleLinkedList<T>? Previous { get; private set; }
     public T Current { get; } = item;

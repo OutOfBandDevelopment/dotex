@@ -2,15 +2,9 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "docs: start PlantUML server",
-      "type": "shell",
-      "command": "docker rm -f dotex-plantuml; docker run -d --name dotex-plantuml -p 18080:8080 plantuml/plantuml-server:jetty",
-      "problemMatcher": []
-    },
-    {
       "label": "docs: validate (diagrams, links, captions)",
       "type": "shell",
-      "command": "python scripts/docs/validate-docs.py docs",
+      "command": "dotnet test src/Tools/OoBDev.Docs.Tests --filter TestCategory=Unit",
       "problemMatcher": {
         "owner": "docs",
         "fileLocation": ["relative", "${workspaceFolder}"],

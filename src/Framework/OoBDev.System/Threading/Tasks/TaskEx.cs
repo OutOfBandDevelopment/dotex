@@ -22,7 +22,12 @@ public static class TaskEx
         var oldContext = SynchronizationContext.Current;
         using var synch = new ExclusiveSynchronizationContext();
         SynchronizationContext.SetSynchronizationContext(synch);
-        synch.Post(async _ =>
+        synch.Post(_ => _ = RunAsync(), null);
+        synch.BeginMessageLoop();
+
+        SynchronizationContext.SetSynchronizationContext(oldContext);
+
+        async Task RunAsync()
         {
             try
             {
@@ -31,16 +36,12 @@ public static class TaskEx
             catch (Exception e)
             {
                 synch.InnerException = e;
-                throw;
             }
             finally
             {
                 synch.EndMessageLoop();
             }
-        }, null);
-        synch.BeginMessageLoop();
-
-        SynchronizationContext.SetSynchronizationContext(oldContext);
+        }
     }
 
     /// <summary>
@@ -55,7 +56,12 @@ public static class TaskEx
         using var synch = new ExclusiveSynchronizationContext();
         SynchronizationContext.SetSynchronizationContext(synch);
         T? ret = default;
-        synch.Post(async _ =>
+        synch.Post(_ => _ = RunAsync(), null);
+        synch.BeginMessageLoop();
+        SynchronizationContext.SetSynchronizationContext(oldContext);
+        return ret;
+
+        async Task RunAsync()
         {
             try
             {
@@ -64,16 +70,12 @@ public static class TaskEx
             catch (Exception e)
             {
                 synch.InnerException = e;
-                throw;
             }
             finally
             {
                 synch.EndMessageLoop();
             }
-        }, null);
-        synch.BeginMessageLoop();
-        SynchronizationContext.SetSynchronizationContext(oldContext);
-        return ret;
+        }
     }
 
     private sealed class ExclusiveSynchronizationContext : SynchronizationContext, IDisposable

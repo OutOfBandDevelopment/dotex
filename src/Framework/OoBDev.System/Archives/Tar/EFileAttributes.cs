@@ -9,6 +9,11 @@ namespace OoBDev.System.Archives.Tar;
 public enum EFileAttributes : uint
 {
     /// <summary>
+    /// No attributes.
+    /// </summary>
+    None = 0,
+
+    /// <summary>
     /// The file is read-only.
     /// </summary>
     Readonly = 0x00000001,

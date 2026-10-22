@@ -3,7 +3,7 @@
 # Enable error handling
 set -e
 
-TestProject="OoBDev.Libs.sln"
+TestProject="OoBDev.slnx"
 # Configuration="Debug" # Uncomment if needed
 Configuration="Release"
 

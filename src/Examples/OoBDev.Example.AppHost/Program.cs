@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using Aspire.Hosting;
 using Aspire.Hosting.ApplicationModel;
+using OoBDev.Example.AppHost;
 using Projects;
 
 // Runs the example application and the backend services it uses, reusing the definitions under containers/testing
@@ -17,6 +18,14 @@ var redis = builder.AddRedis("redis");
 
 var rabbitmq = builder.AddRabbitMQ("rabbitmq")
     .WithManagementPlugin();
+
+// SQL Server 2019 with the SQL CLR vector types from OoBDev.Data.Vectors.DB (the version the dacpac targets, Sql150).
+var sql = builder.AddSqlServer("sql")
+    .WithImageTag("2019-latest")
+    .WithDataVolume("oobd-aspire-sqlserver");
+
+var vectorDb = sql.AddDatabase("VectorDb")
+    .WithVectorTypes(Path.Combine(repoRoot, "src", "Extensions", "OoBDev.Data.Vectors.DB", "bin", "Debug", "netstandard2.1", "OoBDev.Data.Vectors.DB.dacpac"));
 
 var smtp = builder.AddContainer("smtp4dev", "rnwood/smtp4dev")
     .WithHttpEndpoint(targetPort: 80, name: "web")
@@ -49,6 +58,8 @@ var api = builder.AddProject<OoBDev_Example_WebApi>("example-api", options => op
     .WithEnvironment("OllamaApiClientOptions__DefaultModel", "phi3")
     .WithReference(redis)
     .WithReference(rabbitmq)
+    .WithReference(vectorDb)
+    .WaitFor(vectorDb)
     .WaitFor(ollama)
     .WaitFor(redis);
 

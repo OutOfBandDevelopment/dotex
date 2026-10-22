@@ -32,5 +32,5 @@ public class OperationsInfoModel
     public required string Machine { get; set; }
 
     /// <summary>Gets or sets the effective configuration, sorted by key.</summary>
-    public required List<ConfigurationEntryModel> Configuration { get; set; }
+    public required IList<ConfigurationEntryModel> Configuration { get; set; }
 }

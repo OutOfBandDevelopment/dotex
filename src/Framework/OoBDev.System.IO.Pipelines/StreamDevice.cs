@@ -155,7 +155,7 @@ public class StreamDevice<TMessage> : IStreamDevice<TMessage>
             catch (Exception ex)
             {
                 var eventArg = new DeviceErrorEventArgs(exception: ex, errorHandling: ErrorHandling.Throw);
-                MessageReceivedError?.Invoke(AdapterStream, eventArg);
+                MessageReceivedError?.Invoke(this, eventArg);
                 switch (eventArg.ErrorHandling)
                 {
                     case ErrorHandling.Ignore:
@@ -193,7 +193,7 @@ public class StreamDevice<TMessage> : IStreamDevice<TMessage>
                 catch (Exception ex)
                 {
                     var eventArg = new DeviceErrorEventArgs(exception: ex, errorHandling: ErrorHandling.Throw);
-                    MessageTransmitterError?.Invoke(AdapterStream, eventArg);
+                    MessageTransmitterError?.Invoke(this, eventArg);
                     switch (eventArg.ErrorHandling)
                     {
                         case ErrorHandling.Ignore:

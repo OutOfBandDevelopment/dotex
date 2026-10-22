@@ -7,6 +7,9 @@ using OoBDev.Vision.ClipVitB32;
 using OoBDev.Vision.Dinov2Small;
 using OoBDev.Vision.VitBasePatch16;
 using System;
+using System.Collections.Concurrent;
+using System.Diagnostics;
+using System.Diagnostics.Metrics;
 using System.IO;
 using System.Linq;
 using System.Numerics.Tensors;
@@ -150,5 +153,40 @@ public class ConformanceTests
         Assert.IsTrue(top.All(t => t.Probability is >= 0f and <= 1f));
         Assert.IsLessThanOrEqualTo(1.0001f, top.Sum(t => t.Probability));
         await Assert.ThrowsAsync<ArgumentException>(() => classifier.ClassifyAsync(new DataContent(new byte[] { 1 }, "text/plain")));
+    }
+
+    [TestCategory(TestCategories.Integration)]
+    [TestMethod]
+    public async Task Generate_Batch_RecordsActivityAndMetrics()
+    {
+        // Stage
+        using var generator = await CreateAsync("dinov2");
+        var activities = new ConcurrentBag<Activity>();
+        var measurements = new ConcurrentBag<(string Name, double Value)>();
+        using var activityListener = new ActivityListener
+        {
+            ShouldListenTo = source => source.Name == ImageEmbeddingTelemetry.Name,
+            Sample = (ref ActivityCreationOptions<ActivityContext> _) => ActivitySamplingResult.AllData,
+            ActivityStopped = activities.Add,
+        };
+        ActivitySource.AddActivityListener(activityListener);
+        using var meterListener = new MeterListener
+        {
+            InstrumentPublished = (instrument, listener) =>
+            {
+                if (instrument.Meter.Name == ImageEmbeddingTelemetry.Name) listener.EnableMeasurementEvents(instrument);
+            },
+        };
+        meterListener.SetMeasurementEventCallback<double>((i, v, _, _) => measurements.Add((i.Name, v)));
+        meterListener.SetMeasurementEventCallback<int>((i, v, _, _) => measurements.Add((i.Name, v)));
+        meterListener.Start();
+
+        // Test
+        await generator.GenerateAsync([Image(Files[0]), Image(Files[1])]);
+
+        // Assert
+        Assert.IsTrue(activities.Any(a => a.OperationName == "images.batch"));
+        Assert.IsTrue(measurements.Any(m => m.Name == "oobdev.images.batch_size" && m.Value == 2d));
+        Assert.IsTrue(measurements.Any(m => m.Name == "oobdev.images.duration"));
     }
 }

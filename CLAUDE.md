@@ -1,513 +1,123 @@
 # OoBDev (dotex) Framework - Claude Development Guide
 
-**Last Updated:** 2026-09-30
+**Last Updated:** 2026-10-22
 **Framework:** OoBDev (dotex) - Enterprise .NET Library Suite
 **Target:** net10.0
-**Current Work:** Patterns discovery (branch `dev/patterns-discovery`, see "Patterns Discovery Work" below) | Design-first approach for SharedFramework migrations | Docker testing ready for CI/CD
+**Current Work:** Patterns discovery (branch `dev/patterns-discovery`, see "Patterns Discovery Work" below) | Design-first approach for SharedFramework migrations | Integration test stack ready for CI/CD
+
+---
+
+## How Claude is configured in this repo
+
+Working agreements are enforced by files, not by this guide alone:
+
+| Mechanism | Location | What it holds |
+|-----------|----------|---------------|
+| Rules (always loaded, or loaded for matching files) | `.claude/rules/` | `git-workflow`, `owner-decisions`, `open-questions`, `autonomous-mode` (always); `coding-standards` (C#), `testing` (tests, runsettings, containers), `docs-and-diagrams` (docs, markdown) |
+| Skills (loaded when the task matches) | `.claude/skills/` | `add-integration-service`, `archive-completed-work`, `document-configuration`, `compare-incoming-codebase`, `architectural-analysis`, `security-audit`, `write-docs`, `complete-work`, `reconcile-designs-and-code`, `work-backlog`, `owner-interview` |
+| Hooks (deterministic guards) | `.claude/hooks/`, registered in `.claude/settings.json` | `guard-git.mjs` guards git (attribution, history rewrites, `gh`, `upstream`); `autonomous-mode.mjs` (UserPromptSubmit) and `keep-going.mjs` (Stop) keep the backlog loop running until the owner says "I'm back" (rule `autonomous-mode`) |
+| Memory | `~/.claude/projects/.../memory/` | owner preferences and feedback |
+
+The former `.claude/protocols/` set was converted into these on 2026-10-22. Workflow, DataGrid, schema, template and rewrite protocols were retired (they assumed branch-per-task PRs or a TypeScript stack); `git log` has them. Keep rules short and testable; put procedures in skills; put anything that must never happen in a hook.
 
 ---
 
 ## Overview
 
-OoBDev is a comprehensive collection of .NET framework extensions at various utility levels, providing:
-- Binary data processing and device communication
-- Code analysis and expression evaluation
-- File I/O, networking, and protocols
-- Template engines and document generation
-- Database access and data management
-- UI components (Windows Forms, WPF)
-- Specialized hardware and legacy system support
-- Desktop and server applications support
+OoBDev is a collection of .NET framework extensions at several utility levels: binary data and device communication, code analysis and expression evaluation, file I/O, networking and protocols, template engines and document generation, database access, UI components (Windows Forms, WPF), specialized hardware and legacy systems, and desktop/server applications.
 
-**Key Stats:**
-- 112+ projects across 4 architectural layers
-- net10.0 target framework
-- MSTest with 80%+ coverage requirement
-- Comprehensive architectural documentation
+112+ projects in 4 layers, net10.0, MSTest, 80%+ coverage for the Framework layer.
 
 ---
 
-## Quick Start for Claude
+## Before Starting Any Work
 
-### 1. Before Starting Any Work
+Read first:
+- `/TODO.md` (active work) and `/BACKLOG.md` (full work list); finished work goes to `docs/changes/` (rule `work-tracking`, skill `complete-work`); owner questions are in `/OPEN-QUESTIONS.md`
+- `/docs/patterns-discovery/README.md` - how this codebase is built (patterns, conventions, blueprint, alternatives)
+- `/docs/architecture/README.md` and `/docs/architecture/architectural-standards.md`
 
-**Read First:**
-- `/TODO.md` - Current migration status and pending work (the `📌 Backlog:` sections hold open review items)
-- `/docs/patterns-discovery/README.md` - How this codebase is actually built (patterns, conventions, blueprint, alternatives)
-- `/docs/architecture/README.md` - Architecture overview
-- `/docs/architecture/architectural-standards.md` - Enforceable coding standards
-
-**Key Principles:**
-- ALL features from BinaryDataDecoders will be migrated (phases = priority order, not selection)
-- Follow provider/factory pattern for extensibility
-- Use dependency injection (TryAdd* extensions)
-- 80% test coverage for Framework layer
-- `README.{Project}.md` (upper-case `README`) expected per project; `PackageReadmeFile` is derived from that name in `src/Directory.Build.props`, and a missing file is only warning OBDPK001
+Key principles:
+- ALL features from BinaryDataDecoders migrate (phases = priority order, not selection); the newest source is `C:\repo\mine\binary-data-decoders`, and `Incoming/BinaryDecoders` can be behind
+- Provider/factory pattern for extensibility; DI with `TryAdd*`
+- `README.{Project}.md` (upper-case `README`) per project; `PackageReadmeFile` derives from it (`src/Directory.Build.props`), and a missing file is only warning OBDPK001
 - Nullable enabled, ImplicitUsings disabled
+- Report outcomes faithfully: failing tests, skipped steps and unverified changes are stated plainly
 
-### 2. Available Protocols
-
-Located in `.claude/protocols/`:
-
-#### Software Analysis
-- **architectural-analysis.md** - Systematic architecture documentation
-- **incoming-codebase-comparison.md** (v1.1) - Compare incoming code with main codebase
-  - Updated with project type classifications, checklist management, and TODO.md integration
-- **security-audit.md** - API security audit
-- **protocol-validation.md** - Protocol quality assurance
-
-#### Documentation
-- **documentation-style-guide.md** - Content standards
-- **documentation-standards.md** - File organization
-- **change-documentation-archival.md** - Archive completed work to reduce context overhead
-- **configuration-documentation.md** - Discover and document all IConfiguration, IOptions, and Environment variables
-  - **Trigger:** "find all my configurations"
-  - Creates comprehensive CONFIGURATION_SETTINGS.md reference
-
-#### Code Generation
-- **template-development.md** - Template-based code generation
-- **template-swagger-documentation.md** - Template/OpenAPI maintenance (Swagger-era name; OpenAPI is now served by `Microsoft.AspNetCore.OpenApi` and Scalar)
-
-#### Testing & Integration
-- **integration-test-maintenance.md** - Maintain Docker-based integration test infrastructure
-  - **Trigger:** "add new container", "add integration test service"
-  - Checklist for Docker services, nginx config, dashboard, .runsettings, documentation
-
-#### Component Standards
-- **schema-integration.md** - Schema framework integration
-- **datagrid-style-guide.md** - DataGrid component standards
-
-### 3. Current Migration Work
-
-**Incoming Projects Pending Decisions:**
-- ⏸️ **BotChat** - Sample app, decision needed (archive, enhance, or extract patterns)
-- ⏸️ **BinaryDataDecoders** - ~50,000 LOC, awaiting 14+ critical decisions
-- ⏸️ **ContractParser** - Decision needed (implement now, later, or keep as spec)
-- ⏸️ **Tools** - Decision needed (consolidate BulkLlm tools or archive)
-
-**BinaryDataDecoders Migration** - ⏸️ BLOCKED (Awaiting decisions)
-
-**Phase 1: Foundation Enhancement** - ⏸️ PENDING (Awaiting decisions)
-- Endianness support improvements
-- Utility enhancements
-- BinaryPrimitives expansion
+Incoming projects pending owner decisions (BotChat was extracted 2026-10-09 and removed): BinaryDataDecoders (~50,000 LOC, 14+ decisions; Phase 1 foundation work is blocked on them), ContractParser (implement now, later, or keep as spec), Tools (consolidate BulkLlm or archive).
 
 ---
 
 ## Architecture Layers
 
-### Common Layer (6 projects)
-Foundation abstractions and contracts
-- Aggregator: MSBuild globs include/remove ProjectReferences (not purely interfaces)
+- **Common** (6 projects): foundation abstractions and contracts. The aggregator uses MSBuild globs to include/remove ProjectReferences (not purely interfaces).
+- **Framework** (39): core implementations; depends only on Common; 80%+ coverage; readme expected.
+- **Extensions** (6): optional enhancements; depends on Framework; packaged separately.
+- **ExternalServices** (40+): Azure, AWS, Google Cloud, database providers, external APIs.
 
-### Framework Layer (39 projects)
-Core functionality implementations
-- Depends only on Common
-- 80%+ test coverage required
-- `README.{Project}.md` expected (warning if missing)
+Core patterns: provider/factory (`IService` -> `IServiceProvider` -> `IServiceProviderFactory`), `TryAdd*` DI, options (`AddValidatedOptions<T>()`), handler (`IHandler<TRequest, TResponse>`). Details and naming are in `.claude/rules/coding-standards.md`.
 
-### Extensions Layer (6 projects)
-Optional enhancements and integrations
-- Depends on Framework
-- Domain-specific features
-- Package separately
-
-### ExternalServices Layer (40+ projects)
-Third-party integrations
-- Azure, AWS, Google Cloud
-- Database providers
-- External APIs
-
----
-
-## Key Patterns
-
-### 1. Provider/Factory Pattern
-```csharp
-IService → IServiceProvider → IServiceProviderFactory
-```
-
-### 2. Dependency Injection
-```csharp
-services.TryAddSingleton<IService, ServiceImpl>();
-services.AddServiceProvider(); // Extension method
-```
-
-### 3. Options Pattern
-```csharp
-services.Configure<ServiceOptions>(options => { });
-```
-
-### 4. Handler Pattern
-```csharp
-public interface IHandler<TRequest, TResponse>
-{
-    Task<TResponse> HandleAsync(TRequest request, CancellationToken ct);
-}
-```
+Packages: core `OoBDev.System`, `OoBDev.Extensions`, `OoBDev.IO.*`; specialized and separately packaged `OoBDev.Security.Cryptography.Classic` (educational, with warnings), `OoBDev.Extensions.Hardware.*`, `OoBDev.Retro.Apple2`, `OoBDev.Extensions.Windows.Forms`, `OoBDev.Extensions.Drawing.*`.
 
 ---
 
 ## Migration Scope
 
-**ALL features from BinaryDataDecoders will be migrated.**
+Everything from BinaryDataDecoders migrates: core, specialized (ISO 9660, hardware), niche (Apple II, fencing equipment), educational (classic cryptography with warnings), incomplete (migrate as-is, track TODOs) and UI features. Only stubs with zero implementation (for example Rigol), obsolete-platform code (Silverlight) and features with no net10.0 equivalent are deleted. Specialized features are packaged separately, and all code follows the architectural standards.
 
-### What Gets Migrated
-✅ Core features (obviously)
-✅ Highly specialized features (ISO 9660, hardware devices)
-✅ Niche features (Apple II, retro computing, fencing equipment)
-✅ Educational features (classic cryptography with warnings)
-✅ Incomplete features (migrate as-is, track TODOs)
-✅ UI components (Windows Forms validation controls)
+> "We maintain ALL features, even highly specialized ones, to preserve the complete functionality of BinaryDataDecoders. Phases indicate priority order for migration work, not a selection of which features to keep."
 
-### What Gets Deleted (Very Rare)
-❌ Stub projects with zero implementation (e.g., Rigol)
-❌ Silverlight-only or obsolete platform code
-❌ Features with no net10.0 equivalent
-
-### Migration Principles
-1. Phases indicate **priority order**, not feature selection
-2. Even incomplete features are migrated and tracked in TODO.md
-3. Specialized features packaged separately for target audiences
-4. Security warnings added where appropriate (e.g., broken ciphers)
-5. All code must follow architectural standards
-
----
-
-## Documentation Diagram Standards
-
-- **All diagrams in markdown documents MUST be PlantUML** (fenced ```` ```plantuml ```` blocks with `@startuml`/`@enduml`). Never use ASCII/box-drawing art or Mermaid.
-- **All UI mockups MUST be PlantUML + Salt** (`@startsalt`/`@endsalt`), embedded in the markdown document.
-- **Validate docs before finishing**: run `python scripts/docs/validate-docs.py docs` (renders every PlantUML diagram via the `plantuml/plantuml-server` docker image, checks links/captions). A diagram is not done until it renders. Never hand-type escape sequences in shell-heredoc'd Python; write scripts with the Write tool and build backslash-n as `chr(92)+'n'`.
-- **Prefer deterministic scripts over agentic LLM work** for repeatable tasks (validation, linting, TOC/caption generation, renames, link fixing). Put them in `scripts/` with a README, and reuse them.
-- **Architecture diagrams use C4 style (Context/Container/Component) written in plain PlantUML** (rectangles + stereotypes + skinparam). Never `!include` C4-PlantUML templates – they break in production rendering.
-- **Include a Table of Contents, List of Figures and List of Tables where useful** (3+ sections / 2+ figures / 2+ tables). Caption figures `*Figure N — title*` (after) and tables `**Table N — title**` (before).
-- **Split long documents** (>~250 lines or >~6 major sections) into a topic folder with a `README.md` index and one file per headline; nav links at top/bottom of each file. **Prefer valid relative cross references** (file + `#anchor`) wherever a concept has its own document; verify links resolve.
-- Design documents follow `docs/patterns-discovery/06-design-document-standard.md` (4 documents per feature).
-- Applies to every new or edited doc (`docs/**`, READMEs, design docs, protocols). Convert existing ASCII diagrams when touching a document.
-
----
-
-## Coding Standards
-
-### File Structure
-```
-OoBDev.{Layer}.{Feature}/
-├── README.{Project}.md (expected; upper-case README, warning if missing)
-├── {Feature}.csproj
-├── Abstractions/ (interfaces)
-├── Implementations/
-├── Extensions/ (DI registration)
-└── Tests/ (separate project)
-```
-
-### Naming Conventions
-- Interfaces: `I{Name}`
-- Implementations: `{Name}` (no suffix)
-- Providers: `{Name}Provider`
-- Factories: `{Name}Factory`
-- Extensions: `{Name}Extensions`; DI registration class is always `ServiceCollectionExtensions` (never `ServiceCollectionEx`; all projects renamed 2026-10-09)
-- Provider keys: kebab-case constants in each adapter's `{Vendor}Globals` (never a global registry; keeps adapters referencing only Abstractions)
-- Prefer platform primitives (e.g. `TimeProvider`) over hand-built abstractions; inject by interface
-
-### UI Preferences
-- MVVM with command binding wherever possible (e.g. WPF: view models, `ICommand`, data binding, minimal code-behind)
-- Commands are real, retestable command types (e.g. `SaveDocumentCommand : ICommand` with injected dependencies), not just relay commands routed to lambda expressions
-- When a JS/TS framework is required, prefer one that supports view-model binding and command-style handlers as closely as possible; note where it diverges from MVVM
-
-### Authentication Preferences
-- Use OAuth 2.0 / OIDC / JWT bearer wherever possible; applications validate tokens and never store passwords
-- Services only need to understand JWT: any other credential (API key, HMAC, basic auth, legacy bearer) is converted to JWT by the STS or an edge adapter, never by per-scheme code inside a service
-- Windows-integrated (Kerberos/NTLM) and SAML sign-in are SSO inputs too: the STS exchanges them for JWT so everything downstream is JWT only
-- When required, support an STS with token exchange (RFC 8693) that converts SSO tokens into application-specific tokens; optional and config-gated, injected by interface (see `docs/patterns-discovery/03-practices-and-conventions/09-authentication-practices.md`)
-
-### HTTP API and Authorization Preferences
-- REST wherever possible; OpenAPI is the contract; errors are RFC 9457 problem details
-- Evaluate OData over the HTTP `QUERY` verb (with a `POST` fallback) and GraphQL as additional query surfaces beside the custom search syntax; no breaking changes to the existing syntax
-- RBAC with application rights: endpoints declare rights (`[ApplicationRight]`), roles are translated to rights in middleware; claims exchange at the STS is an alternative only while tokens stay small
-- Same rights checks on every API surface (see `docs/patterns-discovery/03-practices-and-conventions/10-http-api-practices.md` and `11-authorization-practices.md`)
-
-### Rejected and Preferred Dependencies (owner decisions)
-- No third-party IoC/DI containers and no third-party logging libraries (use `Microsoft.Extensions.*` and `[LoggerMessage]`)
-- Avoid Polly (license change); add OpenTelemetry; default hash is SHA-512
-- MSTest stays; central package management is on (versions live only in `src/Directory.Packages.props`); GitVersion stays with app projects versioned together
-- Provider selection: a container-registered factory picks a keyed service from a configuration path (replaces `ISelectedService<T>`); shared options validation via `AddValidatedOptions<T>()`
-- Keep all .NET libraries/packages as current for .NET 10 as practical; Microsoft.Extensions.AI is expected to replace the hand-built AI abstractions (spike in `docs/patterns-discovery/08-spikes/`)
-- Abstractions projects (interfaces and models only) need no tests; if one holds testable implementation it gets a test library. Missing project readmes should be created
-- Owner answers are recorded under each verdict in `docs/patterns-discovery/05-industry-alternatives/`
-
-### Code Style
-- Nullable enabled
-- ImplicitUsings disabled (explicit using statements)
-- XML documentation on public APIs
-- Target framework: net10.0
-- Breaking changes to OoBDev APIs are acceptable while the framework is unreleased (owner decision 2026-10-09): rename or remove outright, no obsolete forwarders
-
-### Testing
-- MSTest framework
-- 80% coverage minimum for Framework layer
-- Test categories: Unit, Simulate, Integration, DevLocal
-- Use `NumericAsserts.AreSimilar()` for floating-point comparisons
+Procedure: the `compare-incoming-codebase` skill.
 
 ---
 
 ## Common Tasks
 
-### Starting New Migration Phase
-1. Read `/TODO.md` phase section
-2. Review architecture docs for layer placement
-3. Create project structure following standards
-4. Implement using provider/factory pattern
-5. Add comprehensive tests
-6. Create README.md with usage examples
-7. Update TODO.md progress
+| Task | Do this |
+|------|---------|
+| Add a Docker service or test parameter | `add-integration-service` skill |
+| "clean up your task list", TODO over ~400 lines | `archive-completed-work` skill |
+| "find all my configurations" | `document-configuration` skill |
+| Compare incoming code with main | `compare-incoming-codebase` skill |
+| Document or review architecture | `architectural-analysis` skill |
+| Audit API security | `security-audit` skill |
+| Write or restructure docs | `write-docs` skill and the `docs-and-diagrams` rule |
+| New migration phase, bug fix or feature | read `TODO.md`, check the layer and similar projects, implement with tests (80%+ Framework), update the project readme and `TODO.md` |
 
-### Fixing Bugs
-1. Read bug description in migration docs
-2. Verify current code state
-3. Apply fix following architectural standards
-4. Add/update tests
-5. Verify all tests pass
-6. Update TODO.md
+When in doubt: check `TODO.md`, read the architecture docs, look at a similar project, and ask the owner if requirements are unclear.
 
-### Adding Features
-1. Check if similar feature exists
-2. Determine correct architectural layer
-3. Design using appropriate pattern
-4. Follow dependency injection guidelines
-5. Add tests (80%+ coverage)
-6. Document in README.md
-7. Update TODO.md
+---
 
-### Creating Documentation
-1. Follow documentation standards protocol
-2. Use templates from existing docs
-3. Include code examples
-4. Link to related documentation
-5. Add to appropriate index/README
+## Testing Quick Reference
 
-### Archiving Completed Work
-1. **Trigger:** "clean up your task list" or when TODO files > 400 lines
-2. Follow `.claude/protocols/documentation/change-documentation-archival.md`
-3. Create change document in `docs/changes/`
-4. Update TODO files with summary + link
-5. Update CLAUDE.md "Recently Completed Work"
-6. Update `docs/changes/README.md` index
-7. Reduces context overhead by 30-50%
+Categories (details in `.claude/rules/testing.md`): `Unit`, `Simulate`, `Integration` (Docker; run locally), `DevLocal` (manual), `LiveIntegration` (cloud, manual).
+
+```bash
+cd containers/testing && ./scripts/integration-up.sh --wait      # start the 15-service stack
+cd ../../src && dotnet test --filter "TestCategory=Integration"
+cd ../containers/testing && ./scripts/integration-down.sh --clean
+```
+
+Services: Apache Tika, SMTP4Dev, MongoDB, SQL Server, RabbitMQ, Redis, OpenSearch, Qdrant, Azurite, Moto (AWS), Azure Service Bus emulator, Keycloak, SBert (CPU), Ollama (CPU, phi3), Aspire dashboard (OTLP, traces, logs, metrics, telemetry API). Every host port is overridable with `TEST_PORT_<NAME>`.
+
+See `TEST_VARIABLES.md` (30+ properties), `containers/testing/README.md`, `containers/testing/TESTING-CHECKLIST.md`, `docs/architecture/testing/integration/`.
+
+Build and test commands (the legacy GitHub pipeline triggered on `src/**/*.cs` and used `src/.runsettings`):
+
+```bash
+dotnet build src/
+dotnet test src/ --filter TestCategory=Unit
+dotnet test src/ --collect:"XPlat Code Coverage"
+```
 
 ---
 
 ## Important Files
 
-### Documentation
-- `/docs/architecture/` - Complete architecture documentation
-- `/docs/how-tos/` - Practical how-to guides
-  - [Variables in .runsettings](docs/how-tos/runsettings-variables-and-configuration.md)
-- `/docs/migration/` - Migration plans and feature mappings
-- `/TODO.md` - Current work tracking
-- `/Incoming/CHECKLIST.md` - Incoming project investigation status
-
-### Configuration
-- `/GitVersion.yml` - Semantic versioning
-- `/src/.runsettings` - Test configuration
-- `/.github/workflows/dotnet.yml` - CI/CD pipeline
-
-### Protocols
-- `/.claude/protocols/software/` - Software development protocols
-- `/.claude/protocols/documentation/` - Documentation protocols
-  - `change-documentation-archival.md` - Archive completed work (use "clean up your task list")
-
----
-
-## Testing Guidelines
-
-### Test Categories
-
-OoBDev uses **5 test categories** to organize tests by execution environment and dependencies:
-
-```csharp
-[TestCategory(TestCategories.Unit)]            // Fast, isolated, no external dependencies
-[TestCategory(TestCategories.Simulate)]        // Full stack, mocked persistence
-[TestCategory(TestCategories.Integration)]     // Docker-based external services (NEW)
-[TestCategory(TestCategories.DevLocal)]        // Manual/exploratory testing only
-[TestCategory(TestCategories.LiveIntegration)] // Cloud services only (NEW)
-```
-
-**Category Definitions:**
-
-| Category | Runs In CI/CD | External Services | Use Case |
-|----------|---------------|-------------------|----------|
-| **Unit** | YES (every PR/push) | Mocked | Pure logic, < 100ms |
-| **Simulate** | YES (every PR/push) | Mocked | End-to-end with in-memory persistence |
-| **Integration** | YES (daily at 4 PM UTC) | Docker containers | MongoDB, SQL Server, RabbitMQ, etc. |
-| **DevLocal** | NO (manual only) | Local services | Performance tests, GPU tests |
-| **LiveIntegration** | NO (manual only) | Live Azure/AWS/GCP | Groq |
-
-**Docker-Based Integration Tests:**
-
-Integration tests run against **15 Docker services** managed by the testing infrastructure:
-
-```bash
-# Start Docker services for integration testing
-cd containers/testing
-./scripts/integration-up.sh --wait
-
-# Run integration tests
-cd ../../src
-dotnet test --filter "TestCategory=Integration"
-
-# Stop and cleanup
-cd ../containers/testing
-./scripts/integration-down.sh --clean
-```
-
-**Services Available:**
-- Apache Tika (Document processing)
-- SMTP4Dev (Email testing)
-- MongoDB (NoSQL database)
-- SQL Server (Relational database)
-- RabbitMQ (Message queue)
-- Redis (Cache store)
-- OpenSearch (Search engine)
-- Qdrant (Vector database)
-- Azurite (Azure Storage emulator)
-- Moto (AWS emulator - SQS, S3, etc.)
-- Azure Service Bus Emulator (Message queue)
-- Keycloak (Identity & Access Management)
-- SBert (Sentence embeddings - CPU only)
-- Ollama (LLM inference - CPU only, phi3 model auto-pulled)
-- OpenTelemetry (Aspire dashboard: OTLP receiver, traces, logs, metrics; telemetry API for read-back)
-
-**Test Properties Pattern:**
-```csharp
-[TestMethod]
-[TestCategory(TestCategories.Integration)]
-public async Task TestMongoDBOperation()
-{
-    // ✅ CORRECT: Use GetRequiredProperty for required values
-    var connectionString = TestContext.GetRequiredProperty<string>("MONGODB_CONNECTION_STRING");
-
-    // ✅ CORRECT: Use GetPropertyOrDefault for industry-standard defaults
-    var port = TestContext.GetPropertyOrDefault("MONGODB_PORT", 27017);
-
-    var databaseName = $"IntegrationTest_{Guid.NewGuid():N}";  // Unique per run
-
-    // ... test logic
-
-    // Cleanup in [TestCleanup]
-    await client.DropDatabaseAsync(databaseName);
-}
-```
-
-**IMPORTANT:** Always use `TestContext.GetRequiredProperty<T>()` or `TestContext.GetPropertyOrDefault<T>()` instead of `Environment.GetEnvironmentVariable()` for test configuration. This integrates with `.runsettings` files and MSTest infrastructure.
-
-**Test Configuration:**
-- **All Variables:** See [TEST_VARIABLES.md](./TEST_VARIABLES.md) for complete list of 30+ test properties
-- **30+ Properties:** MongoDB, SQL Server, RabbitMQ, OpenSearch, SBert, Groq, etc.
-- **Configuration:** Use `.runsettings` file or test deployment context
-
-**See Also:**
-- [TEST_VARIABLES.md](./TEST_VARIABLES.md) - Complete test property reference
-- `/containers/testing/README.md` - Complete Docker infrastructure guide
-- `/containers/testing/TESTING-CHECKLIST.md` - Local validation steps
-- `/containers/testing/STATUS.md` - Implementation progress
-
-### Numeric Assertions
-```csharp
-// For floating-point comparisons (handles rounding differences)
-NumericAsserts.AreSimilar(expected, actual);
-NumericAsserts.AreSimilar(expected, actual, tolerance);
-```
-
-### Test Structure
-```csharp
-[TestMethod]
-public void MethodName_Scenario_ExpectedBehavior()
-{
-    // Stage (arrange)
-
-    // Mock (if needed)
-
-    // Test (act)
-
-    // Assert
-
-    // Verify (if using mocks)
-}
-```
-
----
-
-## Git Workflow
-
-### Commits
-- Only create when user explicitly requests
-- Follow security protocol (no force push, no amend unless specific conditions)
-- Commit messages must NEVER reference Claude or AI (no Co-Authored-By trailer, no "generated with" line)
-
-### Pull Requests
-- Use `gh pr create` for GitHub PRs
-- Include summary of all commits (not just latest)
-- Add test plan checklist
-
----
-
-## Build and Test
-
-### Commands
-```bash
-# Build entire solution
-dotnet build src/
-
-# Run all tests
-dotnet test src/
-
-# Run specific test category
-dotnet test src/ --filter TestCategory=Unit
-
-# Check code coverage
-dotnet test src/ --collect:"XPlat Code Coverage"
-```
-
-### Pipeline
-- Triggers on `src/**/*.cs` changes only
-- Builds on both push and PR
-- Runs all tests with coverage
-- Uses .runsettings for configuration
-
----
-
-## Package Structure
-
-### Core Packages
-- `OoBDev.System` - Core system utilities
-- `OoBDev.Extensions` - General extensions
-- `OoBDev.IO.*` - I/O and device communication
-
-### Specialized Packages (Separate)
-- `OoBDev.Security.Cryptography.Classic` - Educational only
-- `OoBDev.Extensions.Hardware.*` - Specialized devices
-- `OoBDev.Retro.Apple2` - Legacy computing
-- `OoBDev.Extensions.Windows.Forms` - Windows Forms UI components
-- `OoBDev.Extensions.Drawing.*` - Graphics and barcode generation
-
----
-
-## When in Doubt
-
-1. **Check TODO.md** for current priorities
-2. **Read architecture docs** for patterns
-3. **Look at similar existing projects** for examples
-4. **Follow the protocol** for the task type
-5. **Ask user** if requirements unclear
-
----
-
-## Migration Philosophy
-
-> "We maintain ALL features, even highly specialized ones, to preserve the complete functionality of BinaryDataDecoders. Phases indicate priority order for migration work, not a selection of which features to keep. Incomplete features are migrated and tracked for future completion."
-
-**Remember:** The goal is complete feature parity with improvements, not selective cherry-picking.
+- `/TODO.md`, `/BACKLOG.md`, `/Incoming/CHECKLIST.md` - work tracking and incoming project status
+- `/docs/architecture/`, `/docs/how-tos/` ([.runsettings variables](docs/how-tos/runsettings-variables-and-configuration.md)), `/docs/migration/`, `/docs/changes/`
+- Git: the primary repo is the local bare repo `origin` (`G:/oobdev/dotex.git`); GitHub (`upstream`) is no longer primary, so no `gh`, PRs or GitHub CI waits. Commit as you work on a branch, never on `main` (`.claude/rules/git-workflow.md`)
+- `/GitVersion.yml` (manual major, minor per merge into main, patch = commits past the last main tag on branches), `/src/.runsettings`, `/.github/workflows/dotnet.yml`
 
 ---
 
@@ -516,142 +126,49 @@ dotnet test src/ --collect:"XPlat Code Coverage"
 **Resume here.** Goal: document how the codebase is built so future products follow the same patterns, then compare with industry alternatives.
 
 - **Docs:** `docs/patterns-discovery/` (01 architecture, 02 design patterns, 03 practices, 04 new-project blueprint, 05 industry alternatives, 06 design-document standard; README has the doc/code drift table). Patterns are the owner's preferences: record them, don't "correct" them; rough edges go to `TODO.md` backlogs.
-- **Templates:** `templates/` (`dotnet new` pack: `oobdev-capability`, `oobdev-adapter`, `oobdev-webapp`); verify with `scripts/templates/verify-templates.ps1` (generates under `src/`, builds from `src/Framework` cwd because `Directory.Build.props` computes `SolutionDir` from the cwd, then cleans up).
-- **Scripts:** `scripts/docs/` (`validate-docs.py`, `build-index.py`, `build-project-catalog.py`, `fix-plantuml-newlines.py`). Validate with `python scripts/docs/validate-docs.py docs/patterns-discovery` (expect 80 files, 0 problems; the whole `docs/` tree has ~566 pre-existing problems, e.g. `docs/sbom`). Needs docker `plantuml/plantuml-server` on port 18080.
-- **Decisions made:** `#if DEBUG` required builder parameters are intentional (forces child builders to be forwarded); `ServiceCollectionExtensions` everywhere; provider keys kebab-case; readmes are `README.X.md`; options were deliberately unvalidated (strict/relaxed mode under analysis).
-- **Open backlogs in `TODO.md`:** naming consistency, Roslyn analyzers, options validation modes, message context caller info, replace hand-built providers with platform primitives (`TimeProvider`), HTTP querying and rights middleware, documentation coverage gaps (build these out in the listed order).
-- **Branch state:** history was rewritten to remove AI trailers from commit messages and the branch matches `origin/dev/patterns-discovery` (as of 3f54bfe). Never force-push without the owner's explicit approval.
+- **Templates:** `templates/` (`dotnet new` pack: `oobdev-capability`, `oobdev-adapter`, `oobdev-webapp`); verify with `scripts/templates/verify-templates.ps1` (builds from `src/Framework` cwd because `Directory.Build.props` computes `SolutionDir` from the cwd, then cleans up).
+- **Scripts:** `scripts/docs/` (see its README). `dotnet test src/Tools/OoBDev.Docs.Tests` validates PlantUML, links and captions (default scope `docs/patterns-discovery`, 0 problems expected; set `DOCS_VALIDATE_PATHS` to widen it; the whole `docs/` tree has old problems, for example `docs/sbom`). Diagram rendering is the Integration test and uses the existing `plantuml` container (port 8086, `PLANTUML_URL`); do not start another.
+- **Decisions made:** `#if DEBUG` required builder parameters are intentional (forces child builders to be forwarded); options were deliberately unvalidated (strict/relaxed mode under analysis).
+- **Open backlogs in `TODO.md`:** naming consistency, Roslyn analyzers, options validation modes, message context caller info, replace hand-built providers with platform primitives, HTTP querying and rights middleware, documentation coverage gaps (build in the listed order).
+- **Branch state:** history was rewritten to remove AI trailers; the branch matched `origin/dev/patterns-discovery` as of 3f54bfe. Never force-push without explicit approval (the hook also blocks it).
 
 ---
 
 ## Recently Completed Work
 
+Older entries (before 2026-10) live in `docs/changes/` (index: `docs/changes/README.md`).
+
+### 2026-10-22
+- **Claude configuration rebuilt** - protocols converted to `.claude/rules`, `.claude/skills` and a git guard hook (see top of this file)
+- **Aspire dashboard replaces Grafana LGTM** in the test stack; telemetry is read back through its API; telemetry page lists recent traces
+
 ### 2026-10-09
-- **Framework cleanup (unreleased, breaking)** - `ISelectedService<T>` replaced by `TryAddConfiguredKeyedService<T>` (caching path `OoBDev:CachingProvider:Type`), `IDateTimeProvider` removed for `TimeProvider`, `Retreive` renamed `Retrieve`, hash/serializer/HMAC provider keys lower-case kebab-case, message caller info via caller attributes, `AddValidatedOptions<T>()` added (adapter adoption blocked by the Abstractions-only reference rule, see TODO.md), Groq live tests on `openai/gpt-oss-20b`
-- **Integration test stack** - every host port overridable via `TEST_PORT_<NAME>`; Docker docs under `docs/architecture/testing/integration/` (infrastructure, services, dependency matrix, writing tests)
-- **AsyncAPI document and viewer** - `OoBDev.AsyncApi` (thin first-party AsyncAPI 3.0 model and builder), `IAsyncApiContributor` in the SQS, Service Bus and RabbitMQ adapters, `MapAsyncApi()` (`/asyncapi/{name}.json` and viewer), 7 Simulate tests. [Details](docs/changes/migration-asyncapi-2026-10-09.md)
-- **Swashbuckle replaced by OpenAPI transformers and Scalar** - `Microsoft.AspNetCore.OpenApi` documents (`/openapi/{name}.json`, `all` plus one per assembly), custom filters ported to transformers, Scalar reference with OAuth2 authorization code and PKCE, 4 Simulate tests; AsyncAPI viewer is phase 2. [Details](docs/changes/migration-openapi-scalar-2026-10-09.md)
-- **Azure B2C dropped** - library, tests, `IdentityProviders.AzureB2C`, example profile and test variables removed; Keycloak is the identity provider (default in `IdentityExtensionBuilder`)
-- **Test Ollama on host port 11435** - avoids the clash with a local Ollama on 11434; the in-container port is unchanged
-- **OpenTelemetry replaces Application Insights** - `OoBDev.OpenTelemetry` (config-gated `TryAddOpenTelemetryExtensions`, OTLP export, correlation and user processors), Grafana LGTM container replaces Azurinsight, Integration tests read spans and logs back from Tempo and Loki; most `DevLocal` tests fixed or moved to Unit/Integration. [Details](docs/changes/migration-opentelemetry-2026-10-09.md)
+- **Framework cleanup (unreleased, breaking)** - `ISelectedService<T>` replaced by `TryAddConfiguredKeyedService<T>` (path `OoBDev:CachingProvider:Type`), `IDateTimeProvider` removed for `TimeProvider`, `Retreive` renamed `Retrieve`, hash/serializer/HMAC provider keys kebab-case, message caller info via caller attributes, `AddValidatedOptions<T>()` added (adapter adoption blocked by the Abstractions-only reference rule, see TODO.md), Groq live tests on `openai/gpt-oss-20b`
+- **Integration test stack** - every host port overridable via `TEST_PORT_<NAME>`; Docker docs under `docs/architecture/testing/integration/`
+- **AsyncAPI document and viewer** - `OoBDev.AsyncApi`, `IAsyncApiContributor` in the SQS, Service Bus and RabbitMQ adapters, `MapAsyncApi()`. [Details](docs/changes/migration-asyncapi-2026-10-09.md)
+- **Swashbuckle replaced by OpenAPI transformers and Scalar** - `Microsoft.AspNetCore.OpenApi` documents, Scalar reference with OAuth2 code and PKCE. [Details](docs/changes/migration-openapi-scalar-2026-10-09.md)
+- **Azure B2C dropped** - Keycloak is the identity provider
+- **OpenTelemetry replaces Application Insights** - `OoBDev.OpenTelemetry` (config-gated, OTLP export). [Details](docs/changes/migration-opentelemetry-2026-10-09.md)
+- **Test Ollama on host port 11435** - avoids the clash with a local Ollama on 11434
 
 ### 2026-10-08
-- **Image embeddings** - in-process ONNX runner with Skia decoder, DINOv2-small, ViT-base and CLIP ViT-B/32 presets (zero-shot labels), compared with the Python models (ViT and CLIP exact, DINOv2 cosine 0.995+). [Details](docs/changes/migration-image-embeddings-2026-10-08.md)
-- **Embedding presets and version policy** - MPNet and Nomic presets verified against Hugging Face (cosine 0.999+), shared hub cache, `GitVersion.yml`: manual major, minor per merge into main, patch is commits past the last main tag on branches. [Details](docs/changes/migration-embedding-presets-2026-10-08.md)
-- **AllMiniLmL6V2 replaces the fork** - first-party ONNX embedder and tokenizer matching the Hugging Face model (34/34), model downloaded on first use into the shared hub cache, fork and both submodules removed. [Details](docs/changes/migration-allminilml6v2-embedder-2026-10-08.md)
-- **NULL-safe vectors and CI build order** - `Parse` and matrix accessors return NULL, `SqlMatrix.Element` is `SqlDouble`, `.DB` dacpac ordering fixed, SBert model project built before the AllMiniLm tests. [Details](docs/changes/testing-vectors-sqs-moto-ci-2026-10-08.md)
-- **CI, vectors, Moto** - CI restore fixed, vector `Angle` corrected and NULL-safe, SQL Server Integration tests, Moto replaces LocalStack, SQS tests repaired. [Details](docs/changes/testing-vectors-sqs-moto-ci-2026-10-08.md)
+- **Image embeddings** - in-process ONNX runner (DINOv2-small, ViT-base, CLIP ViT-B/32). [Details](docs/changes/migration-image-embeddings-2026-10-08.md)
+- **Embedding presets and version policy** - MPNet and Nomic presets, `GitVersion.yml` policy. [Details](docs/changes/migration-embedding-presets-2026-10-08.md)
+- **AllMiniLmL6V2 replaces the fork** - first-party ONNX embedder and tokenizer. [Details](docs/changes/migration-allminilml6v2-embedder-2026-10-08.md)
+- **NULL-safe vectors, CI order, Moto replaces LocalStack** - [Details](docs/changes/testing-vectors-sqs-moto-ci-2026-10-08.md)
 
 ### 2026-10-07
-- **Dependencies and build health** - central package management restored, all packages current, warnings triaged (about 12 distinct left), Application Insights migrated to the OpenTelemetry-based 3.x, Qdrant moved to the query API, test property default bug fixed
-- **AllMiniLmL6V2 design** - plan that replaced the `AllMiniLML6v2Sharp` fork (done 2026-10-08). [Design](docs/design/AllMiniLmL6V2/README.md)
+- **Dependencies and build health** - central package management restored, packages current, about 12 distinct warnings left (see TODO.md)
 
 ### 2026-09-30
-- **Patterns Discovery coverage** - security/observability/resilience/AI practices, worker recipe, project catalog, Extensions.AI spike. [Details](docs/changes/documentation-patterns-discovery-2026-09-30.md)
-- **Patterns Discovery** - architecture/patterns/practices/blueprint/alternatives docs, `dotnet new` templates, doc validation scripts, readme casing normalized (74 files), review backlogs recorded in `TODO.md`
-
-### 2026-01-29
-- **TestContext Configuration Provider** - Integrated MSTest `.runsettings` with .NET `IConfiguration`
-  - Added to OoBDev.TestUtilities (not separate package as originally planned)
-  - 12 unit tests + 8 integration tests
-  - Supports hierarchical configuration (`Database:Server` or `Database__Server`)
-  - Strong-typed binding with `IOptions<T>`
-  - Prefix filtering and case-insensitive keys
-  - Documentation: OoBDev.TestUtilities README + runsettings how-to guide updated
-- **Ollama Auto-Initialization** - Converted to Dockerfile approach with phi3 model baked into image
-  - Model pulled during build, not runtime
-  - Faster startup (no 2.2GB download on container start)
-  - Removed obsolete entrypoint script approach
-
-### 2026-01-24
-- **Integration Testing Scripts** - Enhanced integration-up scripts with `--build` flag, fixed Windows batch path handling (PUSHD)
-- **Health Check Fixes** - Updated all 15 Docker services to use universal bash TCP checks (`</dev/tcp/HOST/PORT`)
-  - Status: 13/15 services healthy (azurinsight, servicebus pending investigation)
-  - Replaced curl/wget/nc dependencies with bash/node/python built-ins
-- **Service Display** - Added all 15 services to startup script output (Redis, Service Bus, Ollama, Azurinsight)
-- **Protocol Updates** - Updated integration-test-maintenance.md to v1.1.0 with expanded checklists
-
-### 2026-01-22
-- **Strategic Pivot: Design-First Approach** - Replaced SharedFramework code migrations with comprehensive design documentation
-  - Following Epic 11 pattern for all features (4 documents per feature: requirements, architecture, api-design, testing-strategy)
-  - Updated TODO files: Communications (Epic 2), Text Templating (Epic 10), Identity (Epic 7), Documents (Epic 6)
-  - Benefits: Clean architecture, no technical debt, modern .NET 10.0 patterns, complete test coverage planning
-  - Design phase replaces code migration for 4 major feature areas
-- **Build Warnings** - Reduced from 95+ to 8 warnings (CS1573, CS8604, CS8618, CS8620, CA2022, CA2024 fixed)
-- **Test Categories** - Converted DevLocal tests to Integration/Unit/LiveIntegration categories
-- **.runsettings How-To** - Created comprehensive guide for variables and configuration
-- **HtmlNavigatorTests** - Fixed with ComplexTemplate.html resource and proper assertions
-- **Redis Tests** - Fixed IObjectConverter dependency and JSON serialization compatibility
-
-### 2026-01-21
-- **Configuration** - 157+ settings. [Details](docs/changes/documentation-configuration-settings-2026-01-21.md)
-- **Ollama** - 4 tests, auto-setup. [Details](docs/changes/testing-ollama-integration-2026-01-21.md)
-
-### 2026-01-20
-- **ANTLR/Keycloak** - Build & infra fixes. [Details](docs/changes/bug-fixes-antlr-keycloak-2026-01-20.md)
-- **Caching** - 4 projects + 3 tests. [Details](docs/changes/migration-caching-framework-2026-01-20.md)
-- **Message Queues** - SQS + Service Bus. [Details](docs/changes/migration-message-queues-2026-01-20.md)
-- **SharedFramework** - Phase 0 namespace cleanup (27 dirs). [Details](docs/changes/sharedframework-phase0-2026-01-20.md)
-- **Swashbuckle** - 10.1.0 + .NET 10.0 fixes. [Details](docs/changes/bug-fixes-swashbuckle-dotnet10-2026-01-20.md)
-
-### 2026-01-19
-- **Docker Testing** - 14 services, 23 tests. [Details](docs/changes/testing-docker-infrastructure-2026-01-19.md)
-
-### 2026-01-15
-- **MSTest** - 40 tests modernized. [Details](docs/changes/bug-fixes-mstest-expected-exception-2026-01-15.md)
-- **Phase 0 Bugs** - 6 critical fixes. [Details](docs/changes/bug-fixes-phase0-critical-2026-01-15.md)
+- **Patterns Discovery** - architecture/patterns/practices/blueprint/alternatives docs, `dotnet new` templates, doc scripts. [Details](docs/changes/documentation-patterns-discovery-2026-09-30.md)
 
 ---
 
 ## Current Work Context
 
-**Active Priorities:**
-1. **Integration Testing** - Finalizing health checks for all 15 Docker services (14/15 healthy; servicebus has no health check)
-   - Next: merge to `main` so the scheduled `integration-tests.yml` (daily 4 PM UTC, already enabled) runs for the first time on GitHub
-2. **SharedFramework** - Design-first approach (Epic 2, 6, 7, 10)
-3. **Incoming Projects** - All investigated (decisions pending)
-
-**Latest Updates (2026-10-09):**
-- OpenTelemetry replaced Application Insights; Grafana LGTM replaced Azurinsight in the test stack, then the Aspire dashboard replaced Grafana LGTM (2026-10-20)
-- Azure B2C dropped; Keycloak is the identity provider
-- Test Ollama published on host port 11435
-
-**Strategic Change (2026-01-22): Design-First Approach**
-
-Instead of directly migrating code from SharedFramework, we've pivoted to comprehensive design documentation following the Epic 11 pattern:
-
-**Why Design-First?**
-- Avoids technical debt from legacy SharedFramework code
-- Ensures modern .NET 10.0 patterns throughout
-- Integrates cleanly with new Epic 11 features (IDataContainer, schema discovery, path translation)
-- Enables comprehensive test planning upfront (85-90% coverage targets)
-- Documents architectural intent before implementation
-- No namespace migrations or breaking changes needed
-
-**Epics in Design Phase:**
-1. **Epic 2: Communications Platform** - Channel abstraction, send/receive, user preferences, multi-channel routing
-2. **Epic 10: Text Templating Extensions** - Template discovery, repository, caching, engine provider pattern
-3. **Epic 7: Identity & Session Management** - Claims enhancement, rights management, session management, Keycloak integration
-4. **Epic 6: Document Services** - Document packaging, resolvers, storage abstraction, 11 context-based services
-
-**Pattern: 4 Documents per Feature**
-- `requirements.md` - Business requirements and use cases
-- `architecture.md` - System design and component relationships
-- `api-design.md` - Interface definitions and contracts
-- `testing-strategy.md` - Test coverage plan (85-90% targets)
-
-**Active Priorities:**
-1. **Design Documentation** - Creating 16 design documents per Epic (64 total across 4 Epics)
-2. **Docker Testing** - Ready for CI/CD enablement (15 services, Integration suite passing)
-3. **Incoming Projects** - All investigated (decisions pending)
-
-**Latest Updates:**
-- Strategic pivot from code migration to design-first documentation (2026-01-22)
-- 4 TODO files updated to reflect design phase (Communications, Text Templating, Identity, Documents)
-- Build warnings: about 12 distinct remain (2026-10-08); see TODO.md
-- Test categories cleaned up (DevLocal → Integration/Unit/LiveIntegration)
-- .runsettings how-to guide created
-- Configuration documentation complete (CONFIGURATION_SETTINGS.md)
-- Ollama integration complete (phi3 auto-setup)
-- 15 Docker services ready (Apache Tika, SMTP4Dev, MongoDB, SQL Server, RabbitMQ, Redis, OpenSearch, Qdrant, Azurite, Moto, Service Bus, Keycloak, SBert, Ollama, Aspire dashboard)
-
+**Active priorities:**
+1. **Integration testing** - run the Docker stack and Integration suite locally; `.github/workflows/` (including the daily `integration-tests.yml`) are legacy GitHub Actions that no longer gate work, pending a decision on a local replacement
+2. **SharedFramework** - design-first (Epics 2 Communications, 6 Documents, 7 Identity, 10 Text Templating): four documents per feature (requirements, architecture, api-design, testing-strategy; 85-90% coverage targets) instead of code migration, per `docs/patterns-discovery/06-design-document-standard.md`
+3. **Incoming projects** - all investigated, decisions pending
+4. **Backlog** - single backlog in `TODO.md`; CGI middleware and related-work pointers are in `docs/todo.md` and `docs/harvest-candidates.md`

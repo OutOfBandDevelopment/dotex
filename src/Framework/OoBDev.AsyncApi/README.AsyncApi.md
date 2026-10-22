@@ -4,6 +4,7 @@ Builds an AsyncAPI 3.0 document for the message queue surfaces from the register
 
 ```csharp
 services.TryAddAsyncApiServices();
+services.AddAsyncApiSendMessage<OrdersChannel, OrderPlaced>(); // optional: list a sent message so its channel gets a schema
 var json = AsyncApiJsonWriter.Write(provider.GetRequiredService<AsyncApiDocumentBuilder>().Build("all")!);
 ```
 

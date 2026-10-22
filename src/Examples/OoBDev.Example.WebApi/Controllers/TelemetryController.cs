@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using OoBDev.WebApi.Models;
 using System;
+using System.Globalization;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -66,8 +67,8 @@ public class TelemetryController(IConfiguration configuration, IHttpClientFactor
                 if (!scope.TryGetProperty("spans", out var spans)) continue;
                 foreach (var span in spans.EnumerateArray())
                 {
-                    var start = long.Parse(span.GetProperty("startTimeUnixNano").GetString()!);
-                    var end = long.Parse(span.GetProperty("endTimeUnixNano").GetString()!);
+                    var start = long.Parse(span.GetProperty("startTimeUnixNano").GetString()!, CultureInfo.InvariantCulture);
+                    var end = long.Parse(span.GetProperty("endTimeUnixNano").GetString()!, CultureInfo.InvariantCulture);
                     yield return new TelemetryTraceModel
                     {
                         TraceId = span.GetProperty("traceId").GetString()!,

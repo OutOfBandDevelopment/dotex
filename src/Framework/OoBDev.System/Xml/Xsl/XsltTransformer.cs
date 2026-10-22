@@ -74,7 +74,7 @@ public class XsltTransformer(string sandbox, params object[] extensions) : IXslt
         template = PathEx.FixUpPath(template) ?? template;
         inputSource = PathEx.FixUpPath(inputSource) ?? inputSource;
         output = PathEx.FixUpPath(output) ?? output;
-        var sandbox = PathEx.FixUpPath(_sandbox);
+        var sandboxPath = PathEx.FixUpPath(_sandbox);
 
         var xsltArgumentList = new XsltArgumentList().AddExtensions(extensions);
 
@@ -87,7 +87,7 @@ public class XsltTransformer(string sandbox, params object[] extensions) : IXslt
             new XAttribute(nameof(input) + "Type", input.GetType().AssemblyQualifiedName ?? "UNKNOWN"),
             new XAttribute(nameof(output), Path.GetFullPath(output)),
             new XAttribute(nameof(output) + "Path", Path.GetDirectoryName(Path.GetFullPath(output)) ?? "."),
-            new XAttribute("sandbox", Path.GetFullPath(sandbox ?? "."))
+            new XAttribute("sandbox", Path.GetFullPath(sandboxPath ?? "."))
             ).ToXPathNavigable().CreateNavigator() ?? throw new NotSupportedException());
 
         var xslt = new XslCompiledTransform(false);

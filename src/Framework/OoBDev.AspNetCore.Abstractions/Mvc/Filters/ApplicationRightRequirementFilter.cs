@@ -1,6 +1,7 @@
-using OoBDev.System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.Extensions.DependencyInjection;
+using OoBDev.AspNetCore.Authorization;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -12,6 +13,7 @@ namespace OoBDev.AspNetCore.Mvc.Filters;
 public class ApplicationRightRequirementFilter(string[] rights) : IAuthorizationFilter
 {
     private readonly IReadOnlyList<string> _rights = rights;
+    private static readonly ApplicationRightChecker DefaultChecker = new();
 
     /// <summary>
     /// Ensure that current authenticated user matches as least one requested right
@@ -19,13 +21,13 @@ public class ApplicationRightRequirementFilter(string[] rights) : IAuthorization
     /// <param name="context"></param>
     public virtual void OnAuthorization(AuthorizationFilterContext context)
     {
-        var userAuthenticated = context.HttpContext.User.Identity?.IsAuthenticated;
-        var userRights = context.HttpContext.User.GetClaimValues(CommonClaims.ApplicationRight);
-
-        if (userAuthenticated is null or false)
-            context.Result = new ForbidResult();
-        else if (_rights.Any() && !Any(userRights.Select(c => c.value)))
-            context.Result = new ForbidResult();
+        var checker = context.HttpContext.RequestServices?.GetService<IApplicationRightChecker>() ?? DefaultChecker;
+        context.Result = checker.Check(context.HttpContext.User, _rights.ToArray()) switch
+        {
+            RightCheckResult.Unauthenticated => new ChallengeResult(),
+            RightCheckResult.Forbidden => new ForbidResult(),
+            _ => context.Result,
+        };
     }
 
     internal bool Any(IEnumerable<string> items) => items.Any(_rights.Contains);
