@@ -120,6 +120,10 @@ https://github.com/coverlet-coverage/coverlet/blob/fc7ec26dcaed8fedba880ff13c6f1
 		<Parameter name="OPENSEARCH_PASSWORD" value="IntegrationTest123!" />
 		<Parameter name="OPENSEARCH_USE_HTTPS" value="true" />
 
+		<!-- PlantUML renderer and docs validation -->
+		<Parameter name="PLANTUML_URL" value="http://localhost:18080" />
+		<Parameter name="DOCS_VALIDATE_PATHS" value="docs/patterns-discovery" />
+
 		<!-- Qdrant -->
 		<Parameter name="QDRANT_URL" value="http://localhost:6333" />
 		<Parameter name="QDRANT_HOST" value="localhost" />

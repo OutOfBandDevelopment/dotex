@@ -12,7 +12,7 @@ Only archive items that are marked complete AND were verified (build passes, tes
 3. In the TODO file replace the detail with a one-line summary plus a link to the change document. Keep open items and every `Backlog:` section.
 4. Add a line under "Recently Completed Work" in `CLAUDE.md` (newest date first, one line each with a details link). Trim older entries that now live only in `docs/changes/`.
 5. Add the document to the index in `docs/changes/README.md`.
-6. Run `python scripts/docs/validate-docs.py docs/changes` if the document has diagrams or links (PlantUML only; no ASCII art).
+6. Run `OoBDev.Docs.Tests` with `DOCS_VALIDATE_PATHS=docs/changes` if the document has diagrams or links (PlantUML only; no ASCII art).
 7. Report what moved, what stayed, and the line counts before and after. Do not commit unless asked.
 
 `reference.md` has the full original protocol and template. Its examples (for example the Swashbuckle entry) are historical.

@@ -22,4 +22,3 @@ Keep this file short (a handful of items). When an item starts, move it here fro
 - [ ] `OoBDev.DacFx.Tests` SQLCLR test project
 - [ ] AsyncAPI: send-only queues by type
 - [ ] Promote the clean analyzer `suggestion` rules to `warning` and fix or remove the `#warning` markers (decided)
-- [ ] Docs validation as a .NET test (decided: `src/Tools/OoBDev.Docs.Tests`, Integration category with the `plantuml/plantuml-server` container; link and caption checks also as Unit tests; remove `validate-docs.py` once it covers the same checks)

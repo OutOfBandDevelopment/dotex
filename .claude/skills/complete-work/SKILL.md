@@ -14,4 +14,4 @@ Only for work that was built and tested. If something was not run, finish only t
 5. **Tracking.** Remove the finished item from `TODO.md` and `BACKLOG.md`. Move leftovers into `BACKLOG.md` (and the next ones into `TODO.md`). If an owner question was answered by the work, drop it from `OPEN-QUESTIONS.md` and put the answer in the feature doc.
 6. **`CLAUDE.md`.** Add one line under "Recently Completed Work" only for work the next session must know about; link the change document.
 7. **Commit** in small steps on the working branch, staging explicit paths (`.claude/rules/git-workflow.md`): code and tests first, then the tracking and docs files, or together when small. No push or merge without the owner.
-8. Run `python scripts/docs/validate-docs.py <changed docs folder>` when Python is available; otherwise say it was not run.
+8. Run `OoBDev.Docs.Tests` with `DOCS_VALIDATE_PATHS=<changed docs folder>`; say so if it was not run.

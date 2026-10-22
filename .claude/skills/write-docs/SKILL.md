@@ -10,7 +10,7 @@ The enforceable rules (PlantUML only, captions, TOC, splitting, validation, root
 1. Look for an existing document first and extend it. Add new ones to the nearest `README.md` index.
 2. Features get four design documents (requirements, architecture, api-design, testing-strategy) per `docs/patterns-discovery/06-design-document-standard.md`.
 3. Include code examples, relative links to related documents, and a "Last Updated" date. Project readmes are `README.{Project}.md`.
-4. Run `python scripts/docs/validate-docs.py <folder>` (needs docker `plantuml/plantuml-server`), fix what you introduced, and report remaining problems. The whole `docs/` tree has about 566 old problems; `docs/patterns-discovery` should be 0.
+4. Run `OoBDev.Docs.Tests` with `DOCS_VALIDATE_PATHS=<folder>` (the render test needs the `dotex-plantuml` container), fix what you introduced, and report remaining problems. The default scope `docs/patterns-discovery` must stay at 0 problems; the whole `docs/` tree has old problems.
 5. Prefer scripts in `scripts/docs/` (index, captions, link fixes) over hand edits.
 
 Review checklist before you finish a document:

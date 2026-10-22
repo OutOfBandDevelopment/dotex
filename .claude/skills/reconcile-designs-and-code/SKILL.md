@@ -12,4 +12,4 @@ Designs are feature documents under `docs/design/<Feature>/` (requirements, arch
 3. **Code has a feature the design lacks:** update the design (requirements, api-design, testing-strategy rows, readme) in the same change. Mark the status honestly.
 4. **Design has a feature the code lacks:** do not delete it from the design. Add it to `BACKLOG.md` as an item that links the requirement id, and mark the requirement `Planned` in the design.
 5. **They disagree** (different default, name or behavior): ask the owner only if the intent is unclear; otherwise follow the owner-decisions and coding-standards rules, fix the side that is wrong, and note the decision in the design.
-6. Record the result in a `docs/changes/` document, then run the `complete-work` tracking steps. Run `validate-docs` on the changed folders (or say it was not run).
+6. Record the result in a `docs/changes/` document, then run the `complete-work` tracking steps. Run `OoBDev.Docs.Tests` on the changed folders (or say it was not run).

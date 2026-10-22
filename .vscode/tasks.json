@@ -10,7 +10,7 @@
     {
       "label": "docs: validate (diagrams, links, captions)",
       "type": "shell",
-      "command": "python scripts/docs/validate-docs.py docs",
+      "command": "dotnet test src/Tools/OoBDev.Docs.Tests --filter TestCategory=Unit",
       "problemMatcher": {
         "owner": "docs",
         "fileLocation": ["relative", "${workspaceFolder}"],

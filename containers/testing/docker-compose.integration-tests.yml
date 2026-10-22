@@ -321,7 +321,7 @@ services:
   # Documentation tooling
   # ============================================================================
 
-  # Renders the PlantUML diagrams for scripts/docs/validate-docs.py (reuses a running container of this name).
+  # Renders the PlantUML diagrams for OoBDev.Docs.Tests (reuses a running container of this name).
   plantuml:
     image: plantuml/plantuml-server:jetty
     container_name: dotex-plantuml

@@ -272,6 +272,19 @@ Tests that require live cloud credentials. Manual execution only.
 
 ---
 
+### PlantUML and docs validation
+
+**Service:** PlantUML server used by `OoBDev.Docs.Tests`
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `PLANTUML_URL` | `http://localhost:18080` | PlantUML server (`dotex-plantuml`, host port `TEST_PORT_PLANTUML`) |
+| `DOCS_VALIDATE_PATHS` | `docs/patterns-discovery` | `;`-separated repo-relative folders or files to validate |
+
+**Tests Using:** `OoBDev.Docs.Tests` (Unit for structure, links and captions; Integration for rendering)
+
+---
+
 ### Qdrant (Vector Database)
 
 **Service:** Qdrant vector similarity search engine

@@ -245,3 +245,7 @@ Each change document should include:
 ---
 
 **Last Updated:** 2026-01-21
+
+**[documentation-docs-validation-tests-2026-10-22.md](documentation-docs-validation-tests-2026-10-22.md)**
+- `validate-docs.py` replaced by MSTest project `OoBDev.Docs.Tests` (PlantUML, links, captions)
+- Status: ✅ Complete
