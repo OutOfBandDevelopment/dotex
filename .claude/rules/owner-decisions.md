@@ -7,3 +7,4 @@
 - **Scope:** all BinaryDataDecoders features are migrated (phases are priority order, not selection). Check `C:\repo\mine\binary-data-decoders` before migrating, since it can be ahead of `Incoming/BinaryDecoders`.
 - **Reference projects:** before building a feature from scratch, check `docs/harvest-candidates.md` for an existing implementation in the owner's other repositories (read-only references; ask before copying the event-sourcing material).
 - **Process:** read `/TODO.md` (the `Backlog:` sections) before starting work, and update it when work finishes.
+- **Open questions:** track questions for the owner in `OPEN-QUESTIONS.md` (`open-questions` rule); a chat answer counts as an answer.
