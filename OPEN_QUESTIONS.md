@@ -4,7 +4,7 @@
 
 Questions that block or shape work in the TODO files. Each has the source it came from (backlink), a suggested answer, and an **Answer** line to fill in offline. Leave the suggestion in place; write your decision under **Answer**. Once answered, tell Claude and the matching TODO item gets updated and this entry is moved to the change document.
 
-> **Parent:** [TODO.md](./TODO.md) · **See also:** [TODO-decisions.md](./TODO-decisions.md), [CLAUDE.md](./CLAUDE.md)
+> **Parent:** [TODO.md](./TODO.md) · **See also:** [TODO.md](./TODO.md), [CLAUDE.md](./CLAUDE.md)
 
 ## Contents
 
@@ -18,7 +18,7 @@ Questions that block or shape work in the TODO files. Each has the source it cam
 
 ### Q1 — Enable the scheduled integration tests?
 
-- **Source:** [TODO.md](./TODO.md) → "Backlog: CI/CD Enablement and Docker Test Infrastructure"; [TODO-testing-local-integration.md](./TODO-testing-local-integration.md); [containers/testing/STATUS.md](./containers/testing/STATUS.md)
+- **Source:** [TODO.md](./TODO.md) → "Backlog: CI/CD Enablement and Docker Test Infrastructure"; [TODO.md](./TODO.md); [containers/testing/STATUS.md](./containers/testing/STATUS.md)
 - **Question:** Turn on `integration-tests.yml` (daily 16:00 UTC plus `workflow_dispatch`) in `.github/workflows/`? It needs a runner with Docker. The Service Bus emulator has no health check.
 - **Suggestion:** Enable manual dispatch first, watch one full run, then enable the schedule.
 - **Answer:** Dispatch first: run `workflow_dispatch` once and watch a full run, then enable the schedule (2026-10-09).
@@ -32,7 +32,7 @@ Questions that block or shape work in the TODO files. Each has the source it cam
 
 ### Q3 — Live cloud tests (Groq)
 
-- **Source:** [TODO.md](./TODO.md) → "Backlog: Live Integration (Cloud) Tests"; [TODO-testing-live-integration.md](./TODO-testing-live-integration.md)
+- **Source:** [TODO.md](./TODO.md) → "Backlog: Live Integration (Cloud) Tests"; [TODO.md](./TODO.md)
 - **Question:** I can write the `.env.liveintegration.template`, project readmes, categories and `.gitignore` entry without credentials. Running them needs your accounts. Should I do the scaffolding now and leave the live runs to you?
 - **Suggestion:** Yes, scaffolding only.
 - **Answer:**
@@ -80,8 +80,8 @@ Questions that block or shape work in the TODO files. Each has the source it cam
 
 ### Q9 — BinaryDataDecoders (39 open decisions)
 
-- **Source:** [TODO-decisions.md](./TODO-decisions.md); [TODO-migrations-binarydatadecoders.md](./TODO-migrations-binarydatadecoders.md); [TODO.md](./TODO.md) → "Backlog: Migration Decisions"
-- **Question:** The decisions cover the endianness API, `BinaryPrimitives` naming, UI collections location, CodeAnalysis use case, archive formats, ExpressionCalculator and more. Should Claude read `TODO-decisions.md` and produce a one-page list with a recommendation next to each, so you can answer yes/no per line?
+- **Source:** [TODO.md](./TODO.md); [TODO.md](./TODO.md); [TODO.md](./TODO.md) → "Backlog: Migration Decisions"
+- **Question:** The decisions cover the endianness API, `BinaryPrimitives` naming, UI collections location, CodeAnalysis use case, archive formats, ExpressionCalculator and more. Should Claude read the decision sheet and produce a one-page list with a recommendation next to each, so you can answer yes/no per line?
 - **Suggestion:** Yes.
 - **Answer:** Yes, produce a one-page list with a recommendation per decision (2026-10-09). Done: [decision sheet](docs/migration/binarydatadecoders-decision-sheet.md).
 

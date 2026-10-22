@@ -171,4 +171,4 @@ Older entries (before 2026-10) live in `docs/changes/` (index: `docs/changes/REA
 1. **Integration testing** - run the Docker stack and Integration suite locally; `.github/workflows/` (including the daily `integration-tests.yml`) are legacy GitHub Actions that no longer gate work, pending a decision on a local replacement
 2. **SharedFramework** - design-first (Epics 2 Communications, 6 Documents, 7 Identity, 10 Text Templating): four documents per feature (requirements, architecture, api-design, testing-strategy; 85-90% coverage targets) instead of code migration, per `docs/patterns-discovery/06-design-document-standard.md`
 3. **Incoming projects** - all investigated, decisions pending
-4. **Backlog** - CGI middleware for Kestrel and related-work pointers are in the uncommitted `docs/todo.md` edit
+4. **Backlog** - single backlog in `TODO.md`; CGI middleware and related-work pointers are in `docs/todo.md` and `docs/harvest-candidates.md`

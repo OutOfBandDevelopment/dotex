@@ -1,1 +1,0 @@
-- Create a test SQLCLR project to support all SQLCLR features.  
