@@ -4,6 +4,6 @@
 
 - The testing strategy listed `ConformanceTests` as no-model unit tests; the code marks them Integration. The document now says so.
 - Added a requirement-coverage table that maps REQ-001 to REQ-010 to the existing tests. Every requirement has a test; no requirement lacks code.
-- Found: the image generator has no `ActivitySource` or `Meter` (the sentence embedding generator now has them). Added to BACKLOG.
+- Found: the image generator has no `ActivitySource` or `Meter` (the sentence embedding generator now has them). Implemented as REQ-011: `ImageEmbeddingTelemetry` (span `images.batch`, `oobdev.images.duration`, `oobdev.images.batch_size`), tested by `Generate_Batch_RecordsActivityAndMetrics` (Integration); the whole image test project passed, 39 of 39.
 
-Verification: `OoBDev.Docs.Tests` on `docs/design/ImageEmbeddings` passed. No code or tests ran.
+Verification: `OoBDev.Docs.Tests` on `docs/design/ImageEmbeddings` passed. Also ran `OoBDev.Onnx.ImageEmbeddings.Tests`.

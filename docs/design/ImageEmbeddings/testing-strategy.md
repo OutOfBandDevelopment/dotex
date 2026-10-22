@@ -48,6 +48,7 @@ Same checks for every preset: unit length, determinism, batch against single, or
 | REQ-008 | `ConformanceTests.Generate_RejectsBadInput`, `Generate_EnforcesSizeLimits`; `SkiaImageDecoderTests.Decode_TooManyPixels_Throws`, `Decode_NotAnImage_Throws` | Integration, Unit |
 | REQ-009 | `ConformanceTests.Generate_EmptyInputGivesEmptyResult`, `Generate_HonorsCancellation` use `IEmbeddingGenerator` | Integration |
 | REQ-010 | `IImageDecoder` seam; `OoBDev.Onnx.ImageEmbeddings.Skia` is the only decoder reference | Unit |
+| REQ-011 | `ConformanceTests.Generate_Batch_RecordsActivityAndMetrics` | Integration |
 
 ## Coverage
 
