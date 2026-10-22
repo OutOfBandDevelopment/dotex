@@ -12,7 +12,7 @@ Keep this file short (a handful of items). When an item starts, move it here fro
 
 ## Next
 
-- [ ] Compare designs to code with the `reconcile-designs-and-code` skill (`CgiMiddleware` done 2026-10-22; AllMiniLmL6V2, AsyncApi, HttpQueryVerb, ImageEmbeddings done 2026-10-22; LlmCodeGen provider selection done; OpenApiScalar done; remaining: ApplicationRights, example-ui, OpenApiScalar, example-ui)
+- [ ] Compare designs to code with the `reconcile-designs-and-code` skill (`CgiMiddleware` done 2026-10-22; AllMiniLmL6V2, AsyncApi, HttpQueryVerb, ImageEmbeddings done 2026-10-22; LlmCodeGen provider selection done; OpenApiScalar and example-ui done; remaining: ApplicationRights, OpenApiScalar, example-ui)
 - [ ] **Incoming code recommendation plan**: written ([docs/migration/incoming-recommendation-plan.md](docs/migration/incoming-recommendation-plan.md) and [cross-check](docs/migration/incoming-harvest-crosscheck.md)); waiting for the owner to answer D1 to D9 (Q1 in OPEN-QUESTIONS.md). No migration until then. The sections marked verify need a second look before work starts.
 
 - [ ] `OoBDev.DacFx.Tests` SQLCLR test project

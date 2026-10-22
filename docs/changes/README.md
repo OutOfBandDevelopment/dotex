@@ -122,6 +122,10 @@ Each change document should include:
 - AsyncAPI 3.0 document and viewer for the message queues (`OoBDev.AsyncApi`, adapter contributors, `MapAsyncApi()`)
 - Status: ✅ Complete
 
+**[documentation-example-ui-reconcile-2026-10-22.md](documentation-example-ui-reconcile-2026-10-22.md)**
+- example-ui navigation design checked against the built pages
+- Status: ✅ Complete
+
 **[apis-openapi-scalar-reconcile-2026-10-22.md](apis-openapi-scalar-reconcile-2026-10-22.md)**
 - OpenApiScalar OAuth2 sign-in and API info covered by Unit tests
 - Status: ✅ Complete
