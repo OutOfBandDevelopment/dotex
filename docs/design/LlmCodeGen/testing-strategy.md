@@ -2,15 +2,17 @@
 
 [← API design](api-design.md) · [Overview](README.md)
 
+Existing tests (`OoBDev.LlmCodeGen.Cli.Tests`): `ResponseFileExtractorTests` (7 Unit: no fences, bold name, back-ticked name, `// path` first line, unnamed blocks, several files, name separated by prose) and `FolderPromptRunnerTests` (5 Simulate: prompt, response and files per folder; existing response skipped unless `Overwrite`; extraction off; traversal name stays inside the output; cancellation; plus 1 Unit for an unknown template). Rows below marked Planned are not written yet and are in `BACKLOG.md`.
+
 **Table 3 — Test plan**
 
 | Area | Category | Cases |
 |------|----------|-------|
-| `ResponseFileExtractor` | Unit | bold name plus fence; back-ticked name; `// path` first line; unnamed block; invalid characters; `../x`; rooted path; multiple files; no fences |
-| Options | Unit | missing required values fail validation; defaults applied |
+| `ResponseFileExtractor` | Unit | (Planned for invalid characters, `../x` and rooted path at extractor level) bold name plus fence; back-ticked name; `// path` first line; unnamed block; invalid characters; `../x`; rooted path; multiple files; no fences |
+| Options | Unit (Planned) | missing required values fail validation; defaults applied |
 | `FolderPromptRunner` | Simulate | fake `IMessageCompletion` and temp folders: prompt, response and extracted files written; existing response skipped; `Overwrite` reruns; cancellation stops between folders |
-| Provider selection | Unit | `ollama` and `groq` keys resolve the right adapter; unknown key reports a clear error |
-| Live run | Integration / LiveIntegration | Ollama container (phi3) against a sample folder; Groq on demand with a fresh key |
+| Provider selection | Unit (Planned) | `ollama` and `groq` keys resolve the right adapter; unknown key reports a clear error |
+| Live run | Integration / LiveIntegration (Planned) | Ollama container (phi3) against a sample folder; Groq on demand with a fresh key |
 
 Target 85% line coverage for the extractor and runner. No test reads a real key; live Groq stays out of CI.
 

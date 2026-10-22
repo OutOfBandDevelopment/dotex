@@ -269,3 +269,7 @@ Each change document should include:
 **[documentation-allminilm-design-reconcile-2026-10-22.md](documentation-allminilm-design-reconcile-2026-10-22.md)**
 - AllMiniLmL6V2 design documents reconciled with the code; three planned items in the backlog
 - Status: ✅ Complete
+
+**[documentation-llmcodegen-design-reconcile-2026-10-22.md](documentation-llmcodegen-design-reconcile-2026-10-22.md)**
+- LlmCodeGen design documents reconciled with the code; missing tests in the backlog
+- Status: ✅ Complete
