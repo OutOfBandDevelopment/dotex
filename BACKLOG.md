@@ -26,9 +26,9 @@ GitHub is no longer the primary repository (local bare repo `origin`), so nothin
 - [ ] AllMiniLmL6V2 design items the code lacks: keyed `IEmbeddingGenerator` registration through `EmbeddingGeneratorBuilder`, `AddValidatedOptions` for the embedding options (blocked by the Abstractions-only adapter rule, see TODO backlog).
 - [ ] LlmCodeGen tests the design promises (`docs/design/LlmCodeGen/testing-strategy.md`): Ollama live run (Integration). Also `<template>.response.json` provider metadata (needs a richer completion contract).
 - [ ] Compare the remaining project `README.{Project}.md` files with their code beyond the identifier check (`reconcile-designs-and-code` skill). The identifier check of the Common, Framework and Extensions readmes was done 2026-10-22; ExternalServices readmes are not yet checked.
-- [ ] HTTP `QUERY` follow-up: `Accept-Query` response header (REQ-006) in [HttpQueryVerb](docs/design/HttpQueryVerb/README.md); parked on Q3
+- [ ] HTTP `QUERY` follow-up: `Accept-Query` response header (REQ-006) in [HttpQueryVerb](docs/design/HttpQueryVerb/README.md): decided 2026-10-22, an `[AcceptsQuery]` attribute (result filter) on the search actions adds it; no header elsewhere
 - [ ] CGI tests still missing against the design ([testing strategy](docs/design/CgiMiddleware/testing-strategy.md)): symlink out of the root (REQ-007; needs link privilege, Linux container), `bad-header` fixture with CR/LF/NUL (REQ-008, shell only), child kill on timeout (REQ-010). The new `.sh` fixtures (`echo`, `location`, `no-blank-line`) have not been run on Linux.
-- [ ] OData and GraphQL surfaces (rights middleware and the `QUERY` verb are done; library choice is Q2), none breaking the custom search syntax; roles map to rights in configuration (`OoBDev:Authorization:Roles:<role>`) through a claims transformation. See the [HTTP API](docs/patterns-discovery/03-practices-and-conventions/10-http-api-practices.md) and [authorization](docs/patterns-discovery/03-practices-and-conventions/11-authorization-practices.md) practices.
+- [ ] OData and GraphQL surfaces (rights middleware and the `QUERY` verb are done; decided 2026-10-22: OData now through `Microsoft.AspNetCore.OData` on the `IQueryable<T>` seam, GraphQL (HotChocolate) later on demand), none breaking the custom search syntax; roles map to rights in configuration (`OoBDev:Authorization:Roles:<role>`) through a claims transformation. See the [HTTP API](docs/patterns-discovery/03-practices-and-conventions/10-http-api-practices.md) and [authorization](docs/patterns-discovery/03-practices-and-conventions/11-authorization-practices.md) practices.
 
 ## 3. Code quality backlog
 
@@ -36,6 +36,7 @@ A clean rebuild (2026-10-22) has no analyzer warnings. Analyzers are wired from 
 
 - [ ] (decided 2026-10-22: promote the rules that are already clean, and the `#warning` markers became TODO comments, intent in Q4) Rules still at `suggestion` in `src/.editorconfig` (flip each to warning after fixing its backlog): MA0026 (TODO comments, about 50, kept on purpose), MA0046 (3, event payloads that are not `EventArgs`), MA0051 (26, method length), MA0061 (3, the DEBUG-only required parameters), CA1710, CA1720 and CA1708 (domain names, kept on purpose) and the rest listed in the editorconfig.
 - [ ] Remaining build warnings: `NU1902` MessagePack 2.5.302 (transitive via Aspire.Hosting 13.6.1 in `OoBDev.Example.AppHost`; wait for an Aspire update or pin), CS1030 `#warning` markers (Mailkit hosting not supported, two "is this needed" notes in queue tests).
+- [ ] MailKit hosting (decided 2026-10-22): register `TryAddMailKitHosting` in every build in `OoBDev.Common.Hosting` (remove the `#if DEBUG`, keep the `DisableMailKit` switch) and drop the TODO marker; keep `RabbitMQQueueMessageSenderProviderTests` and remove its TODO comment.
 - [ ] Remaining hand-built providers to replace with platform primitives, case by case (`TimeProvider` is done).
 
 ## 4. Migrations (blocked on the owner)
