@@ -142,6 +142,66 @@ public class CgiMiddlewareTests
 
     [TestMethod]
     [TestCategory("Simulate")]
+    public async Task Post_Body_IsEchoedByScript()
+    {
+        // Stage
+        await StartAsync();
+        using var content = new StringContent("hello body", Encoding.UTF8, "text/plain");
+
+        // Test
+        using var response = await _client!.PostAsync($"/cgi-bin/echo{Ext}", content);
+
+        // Assert
+        Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+        StringAssert.Contains(await response.Content.ReadAsStringAsync(), "hello body");
+    }
+
+    [TestMethod]
+    [TestCategory("Simulate")]
+    public async Task Get_LocationScript_ReturnsRedirectWithLocation()
+    {
+        // Stage
+        await StartAsync();
+        using var client = new HttpClient(new HttpClientHandler { AllowAutoRedirect = false }) { BaseAddress = _client!.BaseAddress };
+
+        // Test
+        using var response = await client.GetAsync($"/cgi-bin/location{Ext}");
+
+        // Assert
+        Assert.AreEqual(HttpStatusCode.Found, response.StatusCode);
+        Assert.AreEqual("/elsewhere", response.Headers.Location?.ToString());
+    }
+
+    [TestMethod]
+    [TestCategory("Simulate")]
+    public async Task Get_NoBlankLineAfterHeaders_ReturnsBadGateway()
+    {
+        // Stage
+        await StartAsync();
+
+        // Test
+        using var response = await _client!.GetAsync($"/cgi-bin/no-blank-line{Ext}");
+
+        // Assert
+        Assert.AreEqual(HttpStatusCode.BadGateway, response.StatusCode);
+    }
+
+    [TestMethod]
+    [TestCategory("Simulate")]
+    public async Task Get_QueryWithShellMetacharacters_ReachesScriptAsData()
+    {
+        // Stage
+        await StartAsync();
+
+        // Test
+        using var response = await _client!.GetAsync($"/cgi-bin/env{Ext}?x=%24(whoami)%3Bdir");
+
+        // Assert
+        StringAssert.Contains(await response.Content.ReadAsStringAsync(), "QUERY_STRING=x=%24(whoami)%3Bdir");
+    }
+
+    [TestMethod]
+    [TestCategory("Simulate")]
     public async Task Get_MissingScript_ReturnsNotFound()
     {
         await StartAsync();

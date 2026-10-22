@@ -122,6 +122,10 @@ Each change document should include:
 - AsyncAPI 3.0 document and viewer for the message queues (`OoBDev.AsyncApi`, adapter contributors, `MapAsyncApi()`)
 - Status: ✅ Complete
 
+**[testing-cgi-roundtrip-2026-10-22.md](testing-cgi-roundtrip-2026-10-22.md)**
+- CGI echo, Location, no-blank-line, shell-metacharacter and path-split tests
+- Status: ✅ Complete
+
 **[testing-example-web-viewmodels-2026-10-22.md](testing-example-web-viewmodels-2026-10-22.md)**
 - Vitest view-model tests for Communications, Current user, Queues and Templates
 - Status: ✅ Complete

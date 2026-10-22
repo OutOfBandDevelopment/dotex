@@ -26,12 +26,12 @@ Coverage 85% or more for the project. Tests run on Linux and Windows (fixtures e
 
 | Requirement | Test | Category |
 |-------------|------|----------|
-| REQ-001 | `Get_EnvScript_ReceivesMetaVariablesAndNoProxy` (prefix, script, `PATH_INFO`); `Get_OutsidePrefix_FallsThrough`; a path-split Unit test is Planned (BACKLOG) | Simulate |
+| REQ-001 | `Get_EnvScript_ReceivesMetaVariablesAndNoProxy` (prefix, script, `PATH_INFO`); `Get_OutsidePrefix_FallsThrough`; `Resolve_ScriptWithPathInfo_SplitsNameAndPathInfo`, `Resolve_NoScriptNamed_ThrowsNotFound` | Simulate, Unit |
 | REQ-002 | `Get_EnvScript_ReceivesMetaVariablesAndNoProxy` (the `OOB_HOST_SECRET` clear check is in the fixture only; Planned assertion, BACKLOG) | Simulate |
-| REQ-003 | `Post_BodyOverLimit_ReturnsContentTooLarge`; the echo round trip is Planned (no `echo` fixture, BACKLOG) | Simulate |
-| REQ-004 | `Get_StatusScript_UsesStatusAndHeaders`, `Get_NoContentType_ReturnsBadGateway`, `Get_ExitWithoutOutput_ReturnsServerError`; `Location` and no-blank-line fixtures are Planned (BACKLOG) | Simulate |
+| REQ-003 | `Post_BodyOverLimit_ReturnsContentTooLarge`, `Post_Body_IsEchoedByScript` | Simulate |
+| REQ-004 | `Get_StatusScript_UsesStatusAndHeaders`, `Get_NoContentType_ReturnsBadGateway`, `Get_ExitWithoutOutput_ReturnsServerError`, `Get_LocationScript_ReturnsRedirectWithLocation`, `Get_NoBlankLineAfterHeaders_ReturnsBadGateway` | Simulate |
 | REQ-005 | `Get_UnlistedExtension_ReturnsForbidden` | Simulate |
-| REQ-006 | Planned (BACKLOG): query string with shell metacharacters | Simulate |
+| REQ-006 | `Get_QueryWithShellMetacharacters_ReachesScriptAsData` | Simulate |
 | REQ-007 | `Get_Traversal_IsNotServed` (three encodings); the symlink case is Planned (BACKLOG) | Simulate |
 | REQ-008 | Planned (BACKLOG): no `bad-header` fixture exists yet | Simulate |
 | REQ-009 | `Get_BatchFileWithoutOptIn_ReturnsForbidden` (Windows only) | Simulate |
