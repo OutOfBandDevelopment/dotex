@@ -22,7 +22,6 @@ GitHub is no longer the primary repository (local bare repo `origin`), so nothin
 
 - [ ] AsyncAPI follow-up: describe send-only queues by type (senders are open generics, so only configured queues are listed); check the viewer in a browser; an `azure-storage-queue` contributor if wanted.
 - [ ] CGI middleware for Kestrel (feature request 2026-10-22; scope and open questions in [docs/todo.md](docs/todo.md); design in the notes repo `projects/cgi-middleware-kestrel/`). Follows the four-document design standard first.
-- [ ] Example project showing the `System.Abstractions/ComponentModel/Data` annotations (from a module note).
 - [ ] HTTP querying (OData over `QUERY` with `POST` fallback, GraphQL) and the rights middleware: design pending, see the [HTTP API](docs/patterns-discovery/03-practices-and-conventions/10-http-api-practices.md) and [authorization](docs/patterns-discovery/03-practices-and-conventions/11-authorization-practices.md) practices.
 
 ## 3. Code quality backlog
