@@ -15,6 +15,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\..\Framework\OoBDev.AspNetCore.Abstractions\OoBDev.AspNetCore.Abstractions.csproj" />
 		<ProjectReference Include="..\..\Framework\OoBDev.System\OoBDev.System.csproj" />
 	</ItemGroup>
 

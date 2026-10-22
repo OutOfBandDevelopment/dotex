@@ -1,9 +1,10 @@
 #pragma warning disable MA0004 // "await using" declarations cannot take ConfigureAwait
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using OoBDev.System.Security.Claims;
+using OoBDev.AspNetCore.Authorization;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -98,15 +99,17 @@ public partial class CgiMiddleware(
 
     private static void Authorize(HttpContext context, IList<string> rights, bool allowAnonymous)
     {
-        var user = context.User;
-        if (user.Identity?.IsAuthenticated != true)
+        if (allowAnonymous && rights.Count == 0)
+            return;
+
+        var checker = context.RequestServices?.GetService<IApplicationRightChecker>() ?? new ApplicationRightChecker();
+        switch (checker.Check(context.User, [.. rights]))
         {
-            if (allowAnonymous && rights.Count == 0)
-                return;
-            throw new CgiException(401, "Authentication is required.");
+            case RightCheckResult.Unauthenticated:
+                throw new CgiException(401, "Authentication is required.");
+            case RightCheckResult.Forbidden:
+                throw new CgiException(403, "A required application right is missing.");
         }
-        if (rights.Count > 0 && !user.FindAll(CommonClaims.ApplicationRight).Any(c => rights.Contains(c.Value, StringComparer.Ordinal)))
-            throw new CgiException(403, "A required application right is missing.");
     }
 
     private static async Task<MemoryStream> BufferBodyAsync(HttpContext context, CgiOptions settings)

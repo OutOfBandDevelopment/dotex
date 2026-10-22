@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using OoBDev.AspNetCore.Authorization;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -40,7 +41,7 @@ public class CgiMiddlewareTests
             await _app.DisposeAsync();
     }
 
-    private async Task StartAsync(Dictionary<string, string?>? overrides = null, bool withUserHeaders = false)
+    private async Task StartAsync(Dictionary<string, string?>? overrides = null, bool withUserHeaders = false, Action<IServiceCollection>? configure = null)
     {
         var settings = new Dictionary<string, string?>
         {
@@ -56,6 +57,7 @@ public class CgiMiddlewareTests
         builder.WebHost.UseUrls("http://127.0.0.1:0");
         builder.Configuration.AddInMemoryCollection(settings);
         builder.Services.TryAddCgiServices(builder.Configuration, "OoBDev:Cgi");
+        configure?.Invoke(builder.Services);
 
         _app = builder.Build();
         if (withUserHeaders)
@@ -220,6 +222,28 @@ public class CgiMiddlewareTests
         request.Headers.Add("X-Test-Rights", rights);
         using var response = await _client!.SendAsync(request);
         Assert.AreEqual(expected, response.StatusCode);
+    }
+
+    private sealed class DenyingChecker : IApplicationRightChecker
+    {
+        public RightCheckResult Check(ClaimsPrincipal principal, IReadOnlyCollection<string> requiredRights) => RightCheckResult.Forbidden;
+    }
+
+    [TestMethod]
+    [TestCategory("Simulate")]
+    public async Task Get_RegisteredChecker_DecidesTheOutcome()
+    {
+        // Stage
+        await StartAsync(new() { ["OoBDev:Cgi:AllowAnonymous"] = "false", ["OoBDev:Cgi:RequiredRights:0"] = "cgi.run" }, withUserHeaders: true, configure: s => s.AddSingleton<IApplicationRightChecker, DenyingChecker>());
+        using var request = new HttpRequestMessage(HttpMethod.Get, $"/cgi-bin/env{Ext}");
+        request.Headers.Add("X-Test-User", "alice");
+        request.Headers.Add("X-Test-Rights", "cgi.run");
+
+        // Test
+        using var response = await _client!.SendAsync(request);
+
+        // Assert
+        Assert.AreEqual(HttpStatusCode.Forbidden, response.StatusCode);
     }
 
     [TestMethod]
