@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace OoBDev.WebApi.Models;
@@ -39,10 +40,10 @@ public class ToolResultModel
 public class VectorDistanceRequestModel
 {
     /// <summary>Gets or sets the first vector.</summary>
-    public required List<double> A { get; set; }
+    public required IList<double> A { get; set; }
 
     /// <summary>Gets or sets the second vector.</summary>
-    public required List<double> B { get; set; }
+    public required IList<double> B { get; set; }
 }
 
 /// <summary>Distance between two vectors under every supported metric.</summary>
@@ -68,7 +69,7 @@ public class CalculateRequestModel
     public required string Expression { get; set; }
 
     /// <summary>Gets or sets values for the variables used in the expression.</summary>
-    public Dictionary<string, decimal> Variables { get; set; } = [];
+    public IDictionary<string, decimal> Variables { get; set; } = new Dictionary<string, decimal>(StringComparer.Ordinal);
 }
 
 /// <summary>The outcome of evaluating an expression.</summary>
@@ -81,7 +82,7 @@ public class CalculateResponseModel
     public required string Optimized { get; set; }
 
     /// <summary>Gets or sets the variable names found in the expression.</summary>
-    public required List<string> Variables { get; set; }
+    public required IList<string> Variables { get; set; }
 }
 
 /// <summary>Request for a time based one-time code.</summary>

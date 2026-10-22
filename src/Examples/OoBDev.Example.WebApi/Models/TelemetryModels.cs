@@ -10,7 +10,7 @@ public class TelemetryRecentModel
     public required string DashboardUrl { get; set; }
 
     /// <summary>Gets or sets the recent traces, newest first.</summary>
-    public required List<TelemetryTraceModel> Traces { get; set; }
+    public required IList<TelemetryTraceModel> Traces { get; set; }
 }
 
 /// <summary>One recent trace.</summary>

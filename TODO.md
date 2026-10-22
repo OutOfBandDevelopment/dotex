@@ -26,15 +26,13 @@ GitHub is no longer the primary repository (local bare repo `origin`), so nothin
 - [ ] Example project showing the `System.Abstractions/ComponentModel/Data` annotations (from a module note).
 - [ ] HTTP querying (OData over `QUERY` with `POST` fallback, GraphQL) and the rights middleware: design pending, see the [HTTP API](docs/patterns-discovery/03-practices-and-conventions/10-http-api-practices.md) and [authorization](docs/patterns-discovery/03-practices-and-conventions/11-authorization-practices.md) practices.
 
-## 3. Code quality backlog (burn down in rule-sized batches)
+## 3. Code quality backlog
 
-Analyzers are wired from `src/Directory.Build.props` (`OoBDev.Analyzers` OOB0001 to OOB0003, NetAnalyzers Recommended, Meziantou). Rules with a remaining backlog are `suggestion` in `src/.editorconfig`; flip each back to warning once fixed.
+A clean rebuild (2026-10-22) has no analyzer warnings. Analyzers are wired from `src/Directory.Build.props` (`OoBDev.Analyzers` OOB0001 to OOB0003, NetAnalyzers Recommended, Meziantou); `Tools` and `Examples` are exempt from MA0004 and MA0048 in `src/.editorconfig`.
 
-- [ ] CA rules: CA1000, CA1001, CA1010, CA1715, CA1510, CA1512, CA2208, CA1859, CA1860, CA1041, CA2254, CA1069.
-- [ ] Meziantou: MA0046 (3, event payloads that are not `EventArgs`), MA0051 (26, method length), MA0061 (3, the DEBUG-only required parameters) and the rest listed in the editorconfig.
-- [ ] Kept as `suggestion` on purpose: CA1710, CA1720, CA1708 (domain names), MA0026 (TODOs are tracked here).
+- [ ] Rules still at `suggestion` in `src/.editorconfig` (flip each to warning after fixing its backlog): MA0026 (TODO comments, about 50, kept on purpose), MA0046 (3, event payloads that are not `EventArgs`), MA0051 (26, method length), MA0061 (3, the DEBUG-only required parameters), CA1710, CA1720 and CA1708 (domain names, kept on purpose) and the rest listed in the editorconfig.
+- [ ] Remaining build warnings: `NU1902` MessagePack 2.5.302 (transitive via Aspire.Hosting 13.6.1 in `OoBDev.Example.AppHost`; wait for an Aspire update or pin), NU5118 and NU5128 pack warnings (Vectors.DB dacpac, `Retro/Apple2/Notes.txt`, a netstandard2.0 target without lib files), CS1030 `#warning` markers (Mailkit hosting not supported, two "is this needed" notes in queue tests).
 - [ ] Remaining hand-built providers to replace with platform primitives, case by case (`TimeProvider` is done).
-- [ ] Build warnings: about 12 distinct remain.
 
 ## 4. Migrations (blocked on the owner)
 

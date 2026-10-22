@@ -22,7 +22,7 @@ public class XPathQueryResponseModel
     public int Count { get; set; }
 
     /// <summary>Gets or sets the text of each match.</summary>
-    public required List<string> Matches { get; set; }
+    public required IList<string> Matches { get; set; }
 
     /// <summary>Gets or sets the document as XML, the shape XPath actually sees.</summary>
     public required string Xml { get; set; }

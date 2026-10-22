@@ -40,10 +40,10 @@ public class VectorStoreController(
         foreach (var text in model.Texts)
         {
             var vector = (await embedding.GenerateEmbeddingAsync(text, default, default)).ToArray();
-            items.Add((vector, new Dictionary<string, object> { ["text"] = text }));
+            items.Add((vector, new Dictionary<string, object>(StringComparer.Ordinal) { ["text"] = text }));
         }
 
-        var ids = await stores.Create(model.Collection).StoreVectorsAsync(items, new Dictionary<string, object>());
+        var ids = await stores.Create(model.Collection).StoreVectorsAsync(items, new Dictionary<string, object>(StringComparer.Ordinal));
         return new VectorIndexResponseModel { Ids = ids, Store = stores is Services.InMemoryVectorStoreProviderFactory ? "memory" : "sql" };
     }
 

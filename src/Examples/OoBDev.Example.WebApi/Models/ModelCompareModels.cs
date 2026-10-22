@@ -12,7 +12,7 @@ public class ModelCompareRequestModel
     public required string B { get; set; }
 
     /// <summary>Gets or sets the model keys.</summary>
-    public required List<string> Models { get; set; }
+    public required IList<string> Models { get; set; }
 }
 
 /// <summary>The similarity one model gives the two texts.</summary>

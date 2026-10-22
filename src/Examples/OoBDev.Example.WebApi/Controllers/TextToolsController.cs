@@ -45,7 +45,7 @@ public class TextToolsController : ControllerBase
         {
             using var stream = new MemoryStream(Encoding.UTF8.GetBytes(model.Content));
             var navigable = navigator.ToNavigable(stream) ?? throw new InvalidDataException("The document is empty.");
-            var nav = navigable.CreateNavigator();
+            var nav = navigable.CreateNavigator() ?? throw new InvalidDataException("The document has no navigator.");
             var matches = new global::System.Collections.Generic.List<string>();
             var evaluated = nav.Evaluate(model.XPath);
             if (evaluated is XPathNodeIterator iterator)

@@ -20,7 +20,7 @@ namespace OoBDev.WebApi.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 [AllowAnonymous]
-public class ModelCompareController(IServiceProvider services) : ControllerBase
+public class ModelCompareController(IServiceProvider services, TimeProvider timeProvider) : ControllerBase
 {
     private static readonly string[] Models =
     [
@@ -43,17 +43,17 @@ public class ModelCompareController(IServiceProvider services) : ControllerBase
     {
         if (string.IsNullOrWhiteSpace(request.A) || string.IsNullOrWhiteSpace(request.B))
             return Problem(title: "Invalid texts", detail: "Give both texts.", statusCode: StatusCodes.Status400BadRequest);
-        var unknown = request.Models.Where(m => !Models.Contains(m)).ToList();
+        var unknown = request.Models.Where(m => !Models.Contains(m, StringComparer.Ordinal)).ToList();
         if (request.Models.Count == 0 || unknown.Count > 0)
             return Problem(title: "Invalid models", detail: $"Choose from: {string.Join(", ", Models)}.", statusCode: StatusCodes.Status400BadRequest);
 
         var scores = new List<ModelScoreModel>();
-        foreach (var model in request.Models.Distinct())
+        foreach (var model in request.Models.Distinct(StringComparer.Ordinal))
         {
             try
             {
                 var provider = services.GetRequiredKeyedService<IEmbeddingProvider>(model);
-                var started = DateTimeOffset.UtcNow;
+                var started = timeProvider.GetTimestamp();
                 var a = await provider.GenerateEmbeddingAsync(request.A, default, cancellationToken);
                 var b = await provider.GenerateEmbeddingAsync(request.B, default, cancellationToken);
                 scores.Add(new ModelScoreModel
@@ -61,7 +61,7 @@ public class ModelCompareController(IServiceProvider services) : ControllerBase
                     Model = model,
                     Length = a.Length,
                     Similarity = TensorPrimitives.CosineSimilarity(a.Span, b.Span),
-                    Milliseconds = (DateTimeOffset.UtcNow - started).TotalMilliseconds,
+                    Milliseconds = timeProvider.GetElapsedTime(started).TotalMilliseconds,
                 });
             }
             catch (Exception ex) when (ex is not OperationCanceledException)

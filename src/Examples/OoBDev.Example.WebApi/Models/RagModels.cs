@@ -19,7 +19,7 @@ public class RagRequestModel
     public required string Question { get; set; }
 
     /// <summary>Gets or sets the passages to search.</summary>
-    public required List<RagPassage> Passages { get; set; }
+    public required IList<RagPassage> Passages { get; set; }
 
     /// <summary>Gets or sets how many of the closest passages are given to the model.</summary>
     public int TopK { get; set; } = 3;
@@ -45,5 +45,5 @@ public class RagResponseModel
     public required string Answer { get; set; }
 
     /// <summary>Gets or sets the passages given to the model, closest first.</summary>
-    public required List<RagSource> Sources { get; set; }
+    public required IList<RagSource> Sources { get; set; }
 }

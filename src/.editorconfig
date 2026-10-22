@@ -265,6 +265,8 @@ dotnet_diagnostic.CA1711.severity = none
 # Library layers append ConfigureAwait(false); applications, hosts and ASP.NET Core code do not need it
 [{Tools,Examples}/**.cs]
 dotnet_diagnostic.MA0004.severity = none
+# Example DTO files group several small models per file
+dotnet_diagnostic.MA0048.severity = none
 
 [Framework/OoBDev.AspNetCore*/**.cs]
 dotnet_diagnostic.MA0004.severity = none
