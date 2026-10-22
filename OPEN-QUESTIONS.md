@@ -32,7 +32,7 @@ The `QUERY` verb slice is built ([design](docs/design/HttpQueryVerb/README.md)).
 
 **Default:** nothing is added; the `QUERY` verb serves the custom syntax.
 
-**Your answer:**
+**Your answer:** A: OData now, GraphQL later (answered in chat 2026-10-22).
 
 
 ### Q3 — 2026-10-22 — HTTP API — Where does Accept-Query go?
@@ -46,7 +46,7 @@ The `QUERY` verb slice is built ([design](docs/design/HttpQueryVerb/README.md)).
 
 **Default:** nothing is added (option A is what I will build once confirmed).
 
-**Your answer:**
+**Your answer:** A: `[AcceptsQuery]` attribute (answered in chat 2026-10-22).
 
 
 ### Q4 — 2026-10-22 — Code quality — Two old #warning markers
@@ -63,4 +63,4 @@ The `#warning` markers are replaced by TODO comments so the build stays warning-
 
 **Default:** C (comments only).
 
-**Your answer:**
+**Your answer:** A: register MailKit hosting in every build, keep the RabbitMQ sender test (answered in chat 2026-10-22).
