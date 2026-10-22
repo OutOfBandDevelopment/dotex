@@ -261,3 +261,7 @@ Each change document should include:
 **[documentation-openapi-scalar-design-reconcile-2026-10-22.md](documentation-openapi-scalar-design-reconcile-2026-10-22.md)**
 - OpenAPI and Scalar design documents reconciled with the code
 - Status: ✅ Complete
+
+**[documentation-image-embeddings-design-reconcile-2026-10-22.md](documentation-image-embeddings-design-reconcile-2026-10-22.md)**
+- Image embeddings design documents reconciled with the code
+- Status: ✅ Complete
