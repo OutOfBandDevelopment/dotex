@@ -391,3 +391,6 @@ FodyWeavers.xsd
 .env.liveintegration
 
 containers/example/.env
+
+# Autonomous mode flag
+.claude/autonomous.on

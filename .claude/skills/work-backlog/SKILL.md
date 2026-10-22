@@ -5,7 +5,7 @@ description: Work TODO.md and BACKLOG.md item by item with tests, docs and track
 
 # Work the backlog
 
-Loop until the stop conditions below. No progress reports between items. Standing rules: `work-tracking`, `open-questions`, `git-workflow`, `coding-standards`, `testing`, `owner-decisions`, `autonomous-mode`.
+Loop until the stop conditions below. Every item follows the full SDLC below (design, tests, docs, tracking, commit), also in autonomous mode. No progress reports between items. Standing rules: `work-tracking`, `open-questions`, `git-workflow`, `coding-standards`, `testing`, `owner-decisions`, `autonomous-mode`.
 
 ## Pick
 1. Read `OPEN-QUESTIONS.md` and act on answered entries first. Then read `TODO.md` and `BACKLOG.md`.
@@ -28,4 +28,6 @@ Verify each item closed this run: the code exists, a test covers it, the docs ma
 ## Stop when
 - Nothing is left and an audit pass found nothing new; or
 - the owner interrupts or asks a question (answer it, then resume); or
-- every remaining item waits on an owner answer. With `autonomous-mode` on, record the questions and stop only after one audit; otherwise offer the `owner-interview` skill.
+- every remaining item waits on an owner answer. With `autonomous-mode` on, record the questions, run one audit, delete `.claude/autonomous.on` and stop; the `Stop` hook otherwise keeps the turn open until the owner says "I'm back". Without the mode, offer the `owner-interview` skill.
+
+With `autonomous-mode` on, never write a status message between items, and never stop because an item is blocked: park the question in `OPEN-QUESTIONS.md` and take the next item.

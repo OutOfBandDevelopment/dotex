@@ -13,9 +13,9 @@ Working agreements are enforced by files, not by this guide alone:
 
 | Mechanism | Location | What it holds |
 |-----------|----------|---------------|
-| Rules (always loaded, or loaded for matching files) | `.claude/rules/` | `git-workflow`, `owner-decisions`, `open-questions` (always); `coding-standards` (C#), `testing` (tests, runsettings, containers), `docs-and-diagrams` (docs, markdown) |
+| Rules (always loaded, or loaded for matching files) | `.claude/rules/` | `git-workflow`, `owner-decisions`, `open-questions`, `autonomous-mode` (always); `coding-standards` (C#), `testing` (tests, runsettings, containers), `docs-and-diagrams` (docs, markdown) |
 | Skills (loaded when the task matches) | `.claude/skills/` | `add-integration-service`, `archive-completed-work`, `document-configuration`, `compare-incoming-codebase`, `architectural-analysis`, `security-audit`, `write-docs`, `complete-work`, `reconcile-designs-and-code`, `work-backlog`, `owner-interview` |
-| Hook (deterministic guard) | `.claude/hooks/guard-git.mjs`, registered in `.claude/settings.json` | blocks AI attribution in commit messages, force pushes, `gh` usage and pushes to `upstream` |
+| Hooks (deterministic guards) | `.claude/hooks/`, registered in `.claude/settings.json` | `guard-git.mjs` guards git (attribution, history rewrites, `gh`, `upstream`); `autonomous-mode.mjs` (UserPromptSubmit) and `keep-going.mjs` (Stop) keep the backlog loop running until the owner says "I'm back" (rule `autonomous-mode`) |
 | Memory | `~/.claude/projects/.../memory/` | owner preferences and feedback |
 
 The former `.claude/protocols/` set was converted into these on 2026-10-22. Workflow, DataGrid, schema, template and rewrite protocols were retired (they assumed branch-per-task PRs or a TypeScript stack); `git log` has them. Keep rules short and testable; put procedures in skills; put anything that must never happen in a hook.
