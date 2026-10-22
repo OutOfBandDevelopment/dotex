@@ -1,6 +1,6 @@
 # OpenApiScalar — OpenAPI Transformers, Scalar Reference and AsyncAPI
 
-**Status:** Phase 1 (OpenAPI and Scalar) implemented 2026-10-09 ([change](../../changes/migration-openapi-scalar-2026-10-09.md)) · Phase 2 (AsyncAPI document and viewer) designed, not started · Epic: API documentation
+**Status:** Phase 1 (OpenAPI and Scalar) implemented 2026-10-09 ([change](../../changes/migration-openapi-scalar-2026-10-09.md)) · Phase 2 (AsyncAPI document and viewer) implemented 2026-10-09 ([AsyncApi](../AsyncApi/README.md)) · Epic: API documentation
 
 Swashbuckle is removed. Every custom filter and option is now a `Microsoft.AspNetCore.OpenApi` document, operation or schema transformer, and [Scalar](https://github.com/scalar/scalar) is the API reference. Phase 2 describes the message surfaces (SQS, Service Bus, RabbitMQ) with an AsyncAPI document and a viewer.
 

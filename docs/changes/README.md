@@ -257,3 +257,7 @@ Each change document should include:
 **[documentation-asyncapi-design-reconcile-2026-10-22.md](documentation-asyncapi-design-reconcile-2026-10-22.md)**
 - AsyncAPI design documents reconciled with the code; unit tests added to the backlog
 - Status: ✅ Complete
+
+**[documentation-openapi-scalar-design-reconcile-2026-10-22.md](documentation-openapi-scalar-design-reconcile-2026-10-22.md)**
+- OpenAPI and Scalar design documents reconciled with the code
+- Status: ✅ Complete

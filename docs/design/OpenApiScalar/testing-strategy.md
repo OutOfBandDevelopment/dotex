@@ -24,6 +24,6 @@ Run the example (`dotnet run --project src/Examples/OoBDev.Example.WebApi`), the
 ## Gaps
 
 - OAuth sign-in in the browser is not automated.
-- Phase 2 tests are defined with its own design.
+- Phase 2 tests are in the [AsyncApi testing strategy](../AsyncApi/testing-strategy.md).
 
 [← API design](api-design.md) · [Overview](README.md)
