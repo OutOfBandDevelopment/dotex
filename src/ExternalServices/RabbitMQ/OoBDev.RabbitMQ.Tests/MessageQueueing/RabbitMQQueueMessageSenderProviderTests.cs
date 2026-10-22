@@ -10,8 +10,7 @@ using System.Threading.Tasks;
 
 namespace OoBDev.RabbitMQ.Tests.MessageQueueing;
 
-#warning is this needed
-
+// TODO: the owner asked whether this class is needed (see OPEN-QUESTIONS Q4).
 [TestClass]
 [MessageQueue(QueueConfig)]
 public class RabbitMQQueueMessageSenderProviderTests

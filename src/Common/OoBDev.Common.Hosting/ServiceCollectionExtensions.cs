@@ -32,7 +32,7 @@ public static class ServiceCollectionExtensions
     {
         builder ??= new();
 
-#warning Mailkit hosting is not supported at this time.
+        // TODO: MailKit hosting is registered in DEBUG builds only (see OPEN-QUESTIONS Q4).
 #if DEBUG
         if (!builder.DisableMailKit)
             services.TryAddMailKitHosting();

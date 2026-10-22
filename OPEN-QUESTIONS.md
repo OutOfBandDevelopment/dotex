@@ -47,3 +47,20 @@ The `QUERY` verb slice is built ([design](docs/design/HttpQueryVerb/README.md)).
 **Default:** nothing is added (option A is what I will build once confirmed).
 
 **Your answer:**
+
+
+### Q4 — 2026-10-22 — Code quality — Two old #warning markers
+
+The `#warning` markers are replaced by TODO comments so the build stays warning-free. Their intent is the owner's to settle:
+
+1. `OoBDev.Common.Hosting` `TryAddCommonHosting`: MailKit hosting is registered in DEBUG builds only, with the note "Mailkit hosting is not supported at this time".
+2. `RabbitMQQueueMessageSenderProviderTests`: marked "is this needed".
+
+**Options:**
+- **A (recommended):** (1) register MailKit hosting in every build, as the other hosts are, with the `DisableMailKit` switch; (2) keep the test, since it is the only RabbitMQ sender round trip.
+- **B:** (1) remove the MailKit registration and the `DisableMailKit` switch until it is supported; (2) delete the test.
+- **C:** leave both as they are.
+
+**Default:** C (comments only).
+
+**Your answer:**
