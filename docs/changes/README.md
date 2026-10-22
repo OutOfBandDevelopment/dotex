@@ -122,6 +122,10 @@ Each change document should include:
 - AsyncAPI 3.0 document and viewer for the message queues (`OoBDev.AsyncApi`, adapter contributors, `MapAsyncApi()`)
 - Status: ✅ Complete
 
+**[apis-openapi-scalar-reconcile-2026-10-22.md](apis-openapi-scalar-reconcile-2026-10-22.md)**
+- OpenApiScalar OAuth2 sign-in and API info covered by Unit tests
+- Status: ✅ Complete
+
 **[tools-llmcodegen-provider-selection-2026-10-22.md](tools-llmcodegen-provider-selection-2026-10-22.md)**
 - LlmCodeGen provider selection extracted and unit tested; provider names are case-insensitive
 - Status: ✅ Complete
