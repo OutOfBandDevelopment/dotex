@@ -11,6 +11,12 @@ Practical guides for common tasks and scenarios in the OoBDev framework.
   - Best practices for Docker-based integration testing
   - Troubleshooting common issues
 
+## Operations
+
+- [**Production operations practices**](production-operations-practices.md)
+  - Read-only source data, migration approval by risk, restarts, deployment gates
+  - Testing migrations against production-shaped data
+
 ---
 
 ## Contributing

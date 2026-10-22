@@ -13,4 +13,13 @@ The enforceable rules (PlantUML only, captions, TOC, splitting, validation, root
 4. Run `python scripts/docs/validate-docs.py <folder>` (needs docker `plantuml/plantuml-server`), fix what you introduced, and report remaining problems. The whole `docs/` tree has about 566 old problems; `docs/patterns-discovery` should be 0.
 5. Prefer scripts in `scripts/docs/` (index, captions, link fixes) over hand edits.
 
+Review checklist before you finish a document:
+- Rules and constraints say why, not just what the code does.
+- Where a doc describes enforcement, the code has a one-line pointer to it; move long explanatory code comments into the doc when you touch the file.
+- A decision is a dated row that names the rejected alternative.
+- Never hand-edit generated references; hand-copied schema or option blocks are compared with the code.
+- Measured numbers carry the host and the date.
+- Claims match the running code or a test; open the code instead of trusting the old doc.
+- A feature doc starts with an at-a-glance summary: benefit, state, one diagram, one risk, in words a non-specialist follows.
+
 References (older, from the former protocols; the rule file wins on conflicts such as ASCII diagrams): `references/style-guide.md` (content standards and checklist), `references/structure.md` (templates), `references/standards.md` (file organization and naming).
