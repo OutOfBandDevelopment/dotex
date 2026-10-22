@@ -44,7 +44,7 @@ Key principles:
 - Nullable enabled, ImplicitUsings disabled
 - Report outcomes faithfully: failing tests, skipped steps and unverified changes are stated plainly
 
-Incoming projects pending owner decisions: BotChat (archive, enhance or extract patterns), BinaryDataDecoders (~50,000 LOC, 14+ decisions; Phase 1 foundation work is blocked on them), ContractParser (implement now, later, or keep as spec), Tools (consolidate BulkLlm or archive).
+Incoming projects pending owner decisions (BotChat was extracted 2026-10-09 and removed): BinaryDataDecoders (~50,000 LOC, 14+ decisions; Phase 1 foundation work is blocked on them), ContractParser (implement now, later, or keep as spec), Tools (consolidate BulkLlm or archive).
 
 ---
 
