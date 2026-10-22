@@ -174,7 +174,7 @@ Add C4 Context diagram directly in the architecture markdown file.
 'date: YYYY-MM-DD
 'reference: {ProjectName} @ {branch} ({commit-hash})
 
-!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+'NOTE: do not !include C4-PlantUML templates (they break in production rendering); use plain rectangles, stereotypes and skinparam. See .claude/rules/docs-and-diagrams.md
 
 LAYOUT_WITH_LEGEND()
 

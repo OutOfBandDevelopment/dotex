@@ -46,7 +46,9 @@ if (gitCommand('push')) {
   }
 }
 
-if (new RegExp(`${START}gh\\s`).test(command)) {
+// Quoted text (grep patterns, messages) is not a command, so blank it before looking for gh.
+const unquoted = command.replace(/"[^"]*"|'[^']*'/g, '""');
+if (new RegExp(`${START}gh\\s`).test(unquoted)) {
   block('GitHub is no longer the primary repo; do not use gh. The primary repo is the local bare repo `origin` (rule: .claude/rules/git-workflow.md).');
 }
 
