@@ -122,6 +122,10 @@ Each change document should include:
 - AsyncAPI 3.0 document and viewer for the message queues (`OoBDev.AsyncApi`, adapter contributors, `MapAsyncApi()`)
 - Status: ✅ Complete
 
+**[apis-asyncapi-send-messages-2026-10-22.md](apis-asyncapi-send-messages-2026-10-22.md)**
+- AsyncAPI send operations with schemas for registered message types
+- Status: ✅ Complete
+
 **[migration-embedding-telemetry-2026-10-22.md](migration-embedding-telemetry-2026-10-22.md)**
 - ActivitySource and Meter for the ONNX sentence embedding generator (span, duration, batch size, tokens)
 - Status: ✅ Complete

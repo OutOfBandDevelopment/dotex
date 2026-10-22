@@ -7,6 +7,7 @@
 ```csharp
 // services
 services.TryAddAsyncApiServices();                  // builder; adapters add their IAsyncApiContributor
+services.AddAsyncApiSendMessage<OrdersChannel, OrderPlaced>(); // optional: list a sent message so its channel gets a schema
 
 // pipeline
 app.MapAsyncApi();                                   // /asyncapi/{name}.json and /asyncapi/{name}

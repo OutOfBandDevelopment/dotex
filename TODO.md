@@ -16,5 +16,4 @@ Keep this file short (a handful of items). When an item starts, move it here fro
 - [ ] **Incoming code recommendation plan**: written ([docs/migration/incoming-recommendation-plan.md](docs/migration/incoming-recommendation-plan.md) and [cross-check](docs/migration/incoming-harvest-crosscheck.md)); waiting for the owner to answer D1 to D9 (Q1 in OPEN-QUESTIONS.md). No migration until then. The sections marked verify need a second look before work starts.
 
 - [ ] `OoBDev.DacFx.Tests` SQLCLR test project
-- [ ] AsyncAPI: send-only queues by type
 - [ ] Promote the clean analyzer `suggestion` rules to `warning` and fix or remove the `#warning` markers (decided)

@@ -47,7 +47,7 @@ public class AsyncApiDocumentBuilderTests
         return new ConfigurationBuilder().AddInMemoryCollection(data).Build();
     }
 
-    private static AsyncApiDocumentBuilder Builder(IConfiguration configuration, string? providerKey, string? path, IEnumerable<IAsyncApiContributor>? contributors = null, bool handlers = true)
+    private static AsyncApiDocumentBuilder Builder(IConfiguration configuration, string? providerKey, string? path, IEnumerable<IAsyncApiContributor>? contributors = null, bool handlers = true, IEnumerable<AsyncApiSendMessage>? sends = null)
     {
         var resolver = new Mock<IMessagePropertyResolver>();
         resolver.Setup(r => r.ConfigurationSafe(typeof(OrdersChannel), typeof(OrderPlaced)))
@@ -56,7 +56,24 @@ public class AsyncApiDocumentBuilderTests
             .Returns((providerKey, "Orders", "OrderPlaced", path));
 
         IMessageQueueHandler[] list = handlers ? [new OrderHandler()] : [];
-        return new AsyncApiDocumentBuilder(list, resolver.Object, configuration, contributors ?? []);
+        return new AsyncApiDocumentBuilder(list, resolver.Object, configuration, contributors ?? [], sends);
+    }
+
+    [TestMethod]
+    [TestCategory("Unit")]
+    public void Build_RegisteredSendMessage_AddsSendOperationWithSchema()
+    {
+        // Stage
+        var builder = Builder(Config(("MessageQueue:Orders:OrderPlaced:Provider", "in-process")), "in-process", "MessageQueue:Orders:OrderPlaced", handlers: false, sends: [new AsyncApiSendMessage(typeof(OrdersChannel), typeof(OrderPlaced))]);
+
+        // Test
+        var document = builder.Build("all");
+
+        // Assert
+        Assert.IsNotNull(document);
+        Assert.AreEqual("send", document.Operations["sendOrdersOrderPlaced"].Action);
+        Assert.IsTrue(document.Components.Schemas.ContainsKey("OrderPlaced"));
+        Assert.HasCount(1, document.Channels);
     }
 
     [TestMethod]

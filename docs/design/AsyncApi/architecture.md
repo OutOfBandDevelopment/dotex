@@ -66,7 +66,7 @@ Map -> Map : write JSON
 
 *Figure 2 — Building a document*
 
-The builder takes the injected `IEnumerable<IMessageQueueHandler>` (receive channels) and reads the `MessageQueue` configuration for queues that no handler covers (send channels): `IMessageQueueSender<T>` is an open generic, so senders cannot be enumerated by type. It builds the document on each request from those inputs. Document names match OpenAPI: `all` plus one per assembly that contains handlers, matched case-insensitively. Send-only queues from configuration appear only in `all`. A queue whose provider has no contributor (for example `in-process`) still gets a channel with the message name as address and a `Provider: {key}` description, without a server.
+The builder takes the injected `IEnumerable<IMessageQueueHandler>` (receive channels) and reads the `MessageQueue` configuration for queues that no handler covers (send channels): `IMessageQueueSender<T>` is an open generic, so senders cannot be enumerated by type; message types registered with `AddAsyncApiSendMessage<TChannel, TMessage>()` get a send operation and a schema, and configuration alone still lists the rest. It builds the document on each request from those inputs. Document names match OpenAPI: `all` plus one per assembly that contains handlers, matched case-insensitively. Send-only queues from configuration appear only in `all`. A queue whose provider has no contributor (for example `in-process`) still gets a channel with the message name as address and a `Provider: {key}` description, without a server.
 
 ## Adapter contributions
 
