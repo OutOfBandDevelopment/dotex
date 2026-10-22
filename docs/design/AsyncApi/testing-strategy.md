@@ -4,7 +4,7 @@
 
 ## Unit tests
 
-The contributor rows exist as Unit tests (`SqsAsyncApiContributorTests` 5, `ServiceBusAsyncApiContributorTests` 3, `RabbitMQAsyncApiContributorTests` 3), including the secrets check per contributor. The builder rows (marked Planned) are covered only by the Simulate tests below, through the whole document; the missing isolated tests are in `BACKLOG.md`.
+`AsyncApiDocumentBuilderTests` (in `OoBDev.AsyncApi.Tests`, 9 tests) covers the builder with a mocked `IMessagePropertyResolver`: document names, unknown name, receive operation, payload schema with enums, title and version, contributor wiring, provider-only description, and sender operations from configuration. The contributor rows exist as Unit tests in the adapter test projects (`SqsAsyncApiContributorTests` 5, `ServiceBusAsyncApiContributorTests` 3, `RabbitMQAsyncApiContributorTests` 3), including the secrets check per contributor. Config resolution order and the `[MessageQueue]` name override are behaviors of `IMessagePropertyResolver` (OoBDev.MessageQueueing), not of this builder; they are Planned there and tracked in `BACKLOG.md`.
 
 **Table 1 — Builder and contributors**
 
@@ -12,10 +12,10 @@ The contributor rows exist as Unit tests (`SqsAsyncApiContributorTests` 5, `Serv
 |------|--------|
 | Config resolution order (Planned) | Channel section chosen by `{channel}:{message}`, `{message}`, `{channel}`, `Default` |
 | `[MessageQueue]` name (Planned) | Attribute overrides the simple name |
-| Sender and handler (Planned) | `send` and `receive` operations appear for the right types |
+| Sender and handler | `send` and `receive` operations appear for the right types |
 | SQS, Service Bus, RabbitMQ contributors | Server host, protocol, address and bindings from sample configuration |
 | Secrets | `AccessKeyId`, `SecretAccessKey`, `ConnectionString` key, `Password` never appear in the JSON |
-| Payload schema (Planned) | Properties, required, enums |
+| Payload schema | Properties, required, enums |
 
 ## Simulate tests
 
