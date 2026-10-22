@@ -10,7 +10,7 @@ OpenTelemetry registration for OoBDev hosts: tracer and logger providers, OTLP e
 services.TryAddOpenTelemetryExtensions(configuration);   // section "OpenTelemetryOptions"
 ```
 
-Nothing is added unless the configuration section exists or `OTEL_EXPORTER_OTLP_ENDPOINT` is set, so hosts without telemetry settings are unchanged. The processors need `IAccessor<CorrelationInfo>` and `IHttpContextAccessor` in the container. `TryAddCommonExternalExtensions` calls this with `ExternalExtensionBuilder.OpenTelemetryOptionSection`.
+Nothing is added unless the configuration section exists or `OTEL_EXPORTER_OTLP_ENDPOINT` is set, so hosts without telemetry settings are unchanged. The processors need `IAccessor<CorrelationInfo>` and `IHttpContextAccessor` in the container. `TryCommonExternalExtensions` calls this with `ExternalExtensionBuilder.OpenTelemetryOptionSection`.
 
 **Table 1 — OpenTelemetryOptions**
 

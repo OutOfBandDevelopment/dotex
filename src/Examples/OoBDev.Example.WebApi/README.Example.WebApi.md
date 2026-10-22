@@ -12,14 +12,15 @@ A sample ASP.NET Core web API that composes the OoBDev framework the way a real 
 
 | Controller | Capability |
 |------------|-----------|
-| `AIController`, `OllamaController`, `GroqCloudController` | Language model providers selected by key (`OPENAI`, `OLLAMA`) |
+| `OllamaController`, `GroqCloudController`, `ModelCompareController` | Language model providers and side-by-side comparison |
 | `AllMiniLMController`, `SBERTController`, `SBERTDefaultController` | Embedding providers |
-| `SearchController` | Search and vector store |
+| `VectorStoreController`, `VectorLabController`, `RagController`, `ImagesController` | Vector store, vector experiments, retrieval and image embeddings |
 | `MessageQueueingController` | Message queue sender |
 | `CommunicationsController` | Email and other channels |
-| `DocumentController` | Document conversion |
+| `DocumentController`, `TextToolsController` | Document conversion and text tools |
 | `TextTemplateController` | Text templating |
 | `UserController` | Current user and claims |
+| `CacheController`, `OperationsController`, `TelemetryController`, `ToolboxController` | Caching, operations, telemetry readback and shared tools |
 
 ## Running
 
