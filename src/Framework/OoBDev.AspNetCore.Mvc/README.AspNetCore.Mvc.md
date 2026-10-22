@@ -61,3 +61,20 @@ required. Additionally, two authorization policies are added: one that requires
 authentication and two specific claims (scope), and another that requires authentication 
 and a specific claim (role). Finally, the OpenAPI and search query extensions are 
 enabled.
+
+## Application rights
+
+`TryAddRoleRightMapping(configuration)` maps role claims to `app__application_right` claims, so code checks rights (`[ApplicationRight("orders.read")]`) and never role names. The mapping is configuration:
+
+```json
+{
+  "OoBDev": {
+    "Authorization": {
+      "RoleClaimTypes": [ "roles" ],
+      "Roles": { "order-manager": [ "orders.read", "orders.approve" ] }
+    }
+  }
+}
+```
+
+Unmapped roles grant nothing. Granted rights are logged at Debug as counts only. Details: [ApplicationRights](../../../docs/design/ApplicationRights/README.md).

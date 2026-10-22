@@ -7,12 +7,15 @@ using Microsoft.AspNetCore.Routing;
 using OoBDev.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.AspNetCore.Authorization;
 using OoBDev.AspNetCore.Mvc;
 using OoBDev.AspNetCore.Mvc.Authorization;
 using OoBDev.System.Security.Claims;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -70,7 +73,7 @@ public class RoleRightTests
     {
         // Stage
         var options = Options();
-        var transformation = new RoleRightClaimsTransformation(Mapper(options), new FixedMonitor(options));
+        var transformation = new RoleRightClaimsTransformation(Mapper(options), new FixedMonitor(options), NullLogger<RoleRightClaimsTransformation>.Instance);
         var user = User(new Claim(ClaimTypes.Role, "order-manager"));
 
         // Test
@@ -82,6 +85,30 @@ public class RoleRightTests
         CollectionAssert.AreEqual(new[] { "orders.approve", "orders.read" }, rights);
     }
 
+    private sealed class CapturingLogger<T> : ILogger<T>
+    {
+        public List<string> Messages { get; } = [];
+        public IDisposable? BeginScope<TState>(TState state) where TState : notnull => null;
+        public bool IsEnabled(LogLevel logLevel) => true;
+        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter) => Messages.Add($"{logLevel}: {formatter(state, exception)}");
+    }
+
+    [TestMethod]
+    [TestCategory("Unit")]
+    public async Task Transform_GrantedRights_LogsCountsAtDebugAsync()
+    {
+        // Stage
+        var options = Options();
+        var logger = new CapturingLogger<RoleRightClaimsTransformation>();
+        var transformation = new RoleRightClaimsTransformation(Mapper(options), new FixedMonitor(options), logger);
+
+        // Test
+        await transformation.TransformAsync(User(new Claim(ClaimTypes.Role, "order-manager")));
+
+        // Assert
+        CollectionAssert.AreEqual(new[] { "Debug: Granted 2 application rights from 1 roles" }, logger.Messages);
+    }
+
     [TestMethod]
     [TestCategory("Unit")]
     public async Task Transform_CustomClaimTypeAndExistingRight_MergesWithoutDuplicatesAsync()
@@ -89,7 +116,7 @@ public class RoleRightTests
         // Stage
         var options = Options();
         options.RoleClaimTypes = ["groups"];
-        var transformation = new RoleRightClaimsTransformation(Mapper(options), new FixedMonitor(options));
+        var transformation = new RoleRightClaimsTransformation(Mapper(options), new FixedMonitor(options), NullLogger<RoleRightClaimsTransformation>.Instance);
         var user = User(new Claim("groups", "order-clerk"), new Claim("roles", "order-manager"), new Claim(CommonClaims.ApplicationRight, "orders.read"));
 
         // Test
@@ -106,7 +133,7 @@ public class RoleRightTests
     {
         // Stage
         var options = Options();
-        var transformation = new RoleRightClaimsTransformation(Mapper(options), new FixedMonitor(options));
+        var transformation = new RoleRightClaimsTransformation(Mapper(options), new FixedMonitor(options), NullLogger<RoleRightClaimsTransformation>.Instance);
         var anonymous = new ClaimsPrincipal(new ClaimsIdentity());
 
         // Test
@@ -153,6 +180,7 @@ public class RoleRightTests
         var configuration = new ConfigurationBuilder().Build();
         var custom = new CustomMapper();
         var services = new ServiceCollection();
+        services.AddLogging();
         services.AddSingleton<IRoleRightMapper>(custom);
 
         // Test

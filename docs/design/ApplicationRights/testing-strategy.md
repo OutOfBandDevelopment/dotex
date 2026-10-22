@@ -31,5 +31,5 @@ Coverage 85% or more for the new types. All tests are `Unit` in `OoBDev.AspNetCo
 | REQ-007 | Unmapped role grants nothing | Unit |
 | REQ-008 | Filter: 401 challenge, 403 forbid, allowed | Unit |
 | REQ-009 | CGI 401/403 tests stay green on the checker; `Get_RegisteredChecker_DecidesTheOutcome` shows a registered checker decides | Simulate |
-| REQ-010 | Options validation rejects a blank role or right; registration keeps an existing mapper | Unit |
+| REQ-010 | Debug log of rights granted (`Transform_GrantedRights_LogsCountsAtDebugAsync`); options validation rejects a blank role or right; registration keeps an existing mapper | Unit |
 | REQ-011 | A previously registered `IRoleRightMapper` wins over the default | Unit |
