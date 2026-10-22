@@ -126,6 +126,10 @@ Each change document should include:
 - CGI echo, Location, no-blank-line, shell-metacharacter and path-split tests
 - Status: ✅ Complete
 
+**[quality-pack-warnings-2026-10-22.md](quality-pack-warnings-2026-10-22.md)**
+- NU5118 and NU5128 pack warnings removed
+- Status: ✅ Complete
+
 **[quality-analyzer-promotion-2026-10-22.md](quality-analyzer-promotion-2026-10-22.md)**
 - MA0070, MA0084, MA0132, MA0144, MA0151, MA0158, MA0169 now warnings; sites fixed
 - Status: ✅ Complete

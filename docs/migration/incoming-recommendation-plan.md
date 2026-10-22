@@ -24,7 +24,7 @@ Tables: 1 Already in main, 2 Not in main, 3 Harvest recommendations, 4 Proposed 
 
 | Incoming project | Where in main | Remaining work |
 |---|---|---|
-| Apple2 | `OoBDev.System/Retro/Apple2` (Applesoft, DOS 3.3) | Diff against incoming; Notes.txt triggers NU5118 |
+| Apple2 | `OoBDev.System/Retro/Apple2` (Applesoft, DOS 3.3) | Diff against incoming; its notes file is `Apple2Notes.txt` so it no longer clashes with `Codecs/Notes.txt` in the package |
 | ExpressionCalculator | `OoBDev.System/ExpressionCalculator` | Diff only |
 | Archives (Tar, Zip) | `OoBDev.System/Archives` | Diff only |
 | FileSystems (ISO 9660) | `OoBDev.System/IO/Iso9660` | Diff only |
