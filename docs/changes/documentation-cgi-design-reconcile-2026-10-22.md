@@ -1,18 +1,13 @@
-# CGI middleware design reconciled with the code
+# CgiMiddleware design reconciled with code
 
-**Date:** 2026-10-22 · **Compared:** `docs/design/CgiMiddleware/*` and `README.AspNetCore.Cgi.md` against `src/Extensions/OoBDev.AspNetCore.Cgi` at the commit that added this file.
+**Date:** 2026-10-22 · **Compared:** `docs/design/CgiMiddleware` against `src/Extensions/OoBDev.AspNetCore.Cgi` and its tests
 
-## Design updated to match the code
+## Result
 
-- Overview: the project exists; architecture and API design are marked Implemented.
-- API design: `UseCgi` lives in `ServiceCollectionExtensions` (there is no `ApplicationBuilderExtensions`); `DefaultSection`, the section-name parameter, `CgiOptionsValidator`, `InheritedEnvironmentVariables`, the `ScriptRights` default, the real resolver and runner signatures (`Resolve`, `StartAsync`), the `CgiException` subtypes, and 401/404/500 in the error model.
-- Architecture: `StartAsync` in the sequence, `REQUEST_SCHEME`, the headers that are not passed on (`Authorization`, `Content-Type`, `Content-Length`), the authorization rows in the failure table, the new options in the configuration list.
-- Requirements: the Linux fixture decision is done.
+- Requirements REQ-001 to REQ-017 match the code (options, limits, rights check, 401/403/413/502/503/504 behavior); no requirement was removed.
+- The testing strategy listed tests that do not exist. Table 4 now names the real test for each requirement and marks the rest Planned; the missing tests are one BACKLOG item (path split, echo and header fixtures, shell metacharacters, symlink, child kill, stderr log, static root, environment clearing).
+- The rights check is still inside the middleware; moving it onto `IApplicationRightChecker` is in BACKLOG ([application rights](apis-application-rights-2026-10-22.md)).
 
-## Design wanted, code lacks
+## Not done
 
-`PATH_TRANSLATED` was not set. It is now: script root plus `PATH_INFO` when the result stays inside the root (checked by the `env` test on Windows and in the Linux container; 23 pass, 22 and 1 skipped on Linux).
-
-## Verification
-
-`OoBDev.Docs.Tests` run on `docs/design/CgiMiddleware` (see the commit).
+No code or tests were run for this change; the other designs under `docs/design/` are still to be compared (BACKLOG).

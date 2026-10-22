@@ -122,6 +122,10 @@ Each change document should include:
 - AsyncAPI 3.0 document and viewer for the message queues (`OoBDev.AsyncApi`, adapter contributors, `MapAsyncApi()`)
 - Status: ✅ Complete
 
+**[documentation-cgi-design-reconcile-2026-10-22.md](documentation-cgi-design-reconcile-2026-10-22.md)**
+- CgiMiddleware design compared with code; testing strategy now names real tests, gaps in BACKLOG
+- Status: ✅ Complete (other designs still to compare)
+
 **[apis-http-query-verb-2026-10-22.md](apis-http-query-verb-2026-10-22.md)**
 - `UseHttpQueryVerb()`: HTTP `QUERY` (and `POST` + `X-HTTP-Method-Override`) routed as `GET` so one endpoint and one rights check serve all
 - Status: ✅ Complete (first slice; OData and GraphQL wait on Q2)

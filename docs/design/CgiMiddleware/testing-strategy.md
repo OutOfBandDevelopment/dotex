@@ -26,23 +26,23 @@ Coverage 85% or more for the project. Tests run on Linux and Windows (fixtures e
 
 | Requirement | Test | Category |
 |-------------|------|----------|
-| REQ-001 | Prefix, script and `PATH_INFO` split for several paths | Unit |
-| REQ-002 | Script dumps its environment: cleared, meta-variables present, `Proxy` absent | Simulate |
-| REQ-003 | Echo script round-trips a body; an 11 MB body gets 413 and no process starts | Simulate |
-| REQ-004 | Fixtures for `Status`, `Location`, no `Content-Type`, no blank line, non-zero exit | Simulate |
-| REQ-005 | Unlisted extension gets 403 | Simulate |
-| REQ-006 | Query string with shell metacharacters reaches the script only through the environment | Simulate |
-| REQ-007 | `..`, encoded traversal and a symlink out of the root are rejected | Unit, Simulate |
-| REQ-008 | Script emitting CR, LF or NUL in a header gets 502 | Simulate |
-| REQ-009 | `.cmd` rejected unless `AllowBatchFiles` | Unit |
-| REQ-010 | Sleeping script is killed with its child | Simulate |
-| REQ-011 | Third parallel request with a cap of two gets 503 and `Retry-After` | Simulate |
-| REQ-012 | Large output stops at the limit; stderr flood is bounded and logged | Simulate |
-| REQ-013 | Client abort kills the process | Simulate |
-| REQ-014 | Missing root or root under static files fails startup | Unit |
-| REQ-015 | Benchmark (see below) | DevLocal |
-| REQ-016 | Anonymous gets 401 by default; `RequiredRights` needs one match (403 otherwise); `ScriptRights` checked per script | Simulate |
-| REQ-017 | NPH output has no `Status`/`Content-Type` and is rejected with 502 | Simulate |
+| REQ-001 | `Get_EnvScript_ReceivesMetaVariablesAndNoProxy` (prefix, script, `PATH_INFO`); `Get_OutsidePrefix_FallsThrough`; a path-split Unit test is Planned (BACKLOG) | Simulate |
+| REQ-002 | `Get_EnvScript_ReceivesMetaVariablesAndNoProxy` (the `OOB_HOST_SECRET` clear check is in the fixture only; Planned assertion, BACKLOG) | Simulate |
+| REQ-003 | `Post_BodyOverLimit_ReturnsContentTooLarge`; the echo round trip is Planned (no `echo` fixture, BACKLOG) | Simulate |
+| REQ-004 | `Get_StatusScript_UsesStatusAndHeaders`, `Get_NoContentType_ReturnsBadGateway`, `Get_ExitWithoutOutput_ReturnsServerError`; `Location` and no-blank-line fixtures are Planned (BACKLOG) | Simulate |
+| REQ-005 | `Get_UnlistedExtension_ReturnsForbidden` | Simulate |
+| REQ-006 | Planned (BACKLOG): query string with shell metacharacters | Simulate |
+| REQ-007 | `Get_Traversal_IsNotServed` (three encodings); the symlink case is Planned (BACKLOG) | Simulate |
+| REQ-008 | Planned (BACKLOG): no `bad-header` fixture exists yet | Simulate |
+| REQ-009 | `Get_BatchFileWithoutOptIn_ReturnsForbidden` (Windows only) | Simulate |
+| REQ-010 | `Get_ProgramOverTimeout_ReturnsGatewayTimeout` (child kill is not asserted; Planned, BACKLOG) | Simulate |
+| REQ-011 | `Get_AllSlotsBusy_ReturnsServiceUnavailableWithRetryAfter` (cap of one) | Simulate |
+| REQ-012 | `Get_ResponseOverLimit_ReturnsBadGateway`, `Get_StderrFlood_StillAnswersAndKeepsLimit` (the Warning log is not asserted) | Simulate |
+| REQ-013 | `Get_ClientAbort_FreesTheProcessSlot` | Simulate |
+| REQ-014 | `Start_MissingScriptRoot_Fails`; the static-root case is Planned (BACKLOG) | Unit |
+| REQ-015 | `Benchmark_TrivialScript_ReportsLatencyAndThroughput` | DevLocal |
+| REQ-016 | `Get_AnonymousByDefault_ReturnsUnauthorized`, `Get_RequiredRights_NeedsOneMatch`, `Get_ScriptRights_AreCheckedPerScript` | Simulate |
+| REQ-017 | Covered by `Get_NoContentType_ReturnsBadGateway` (the same 502 path) | Simulate |
 
 ## Fixtures
 
