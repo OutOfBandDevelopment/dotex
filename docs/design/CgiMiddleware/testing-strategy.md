@@ -39,7 +39,7 @@ Coverage 85% or more for the project. Tests run on Linux and Windows (fixtures e
 | REQ-011 | `Get_AllSlotsBusy_ReturnsServiceUnavailableWithRetryAfter` (cap of one) | Simulate |
 | REQ-012 | `Get_ResponseOverLimit_ReturnsBadGateway`, `Get_StderrFlood_StillAnswersAndKeepsLimit` (asserts the single Warning entry and its size cap) | Simulate |
 | REQ-013 | `Get_ClientAbort_FreesTheProcessSlot` | Simulate |
-| REQ-014 | `Start_MissingScriptRoot_Fails`; the static-root case is Planned (BACKLOG) | Unit |
+| REQ-014 | `Start_MissingScriptRoot_Fails`, `CgiOptionsValidatorTests` (under, equal to and beside the static root; no static root; missing root) | Unit |
 | REQ-015 | `Benchmark_TrivialScript_ReportsLatencyAndThroughput` | DevLocal |
 | REQ-016 | `Get_AnonymousByDefault_ReturnsUnauthorized`, `Get_RequiredRights_NeedsOneMatch`, `Get_ScriptRights_AreCheckedPerScript` | Simulate |
 | REQ-017 | Covered by `Get_NoContentType_ReturnsBadGateway` (the same 502 path) | Simulate |

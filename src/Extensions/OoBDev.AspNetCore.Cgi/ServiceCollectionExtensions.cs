@@ -71,13 +71,13 @@ public class CgiOptionsValidator(IWebHostEnvironment environment) : IValidateOpt
         if (!options.Prefix.StartsWith('/'))
             return ValidateOptionsResult.Fail("Prefix must start with a slash.");
 
-        var root = Path.GetFullPath(options.ScriptRoot);
+        var root = Path.TrimEndingDirectorySeparator(Path.GetFullPath(options.ScriptRoot));
         if (!Directory.Exists(root))
             return ValidateOptionsResult.Fail($"ScriptRoot '{root}' does not exist.");
 
         if (!string.IsNullOrEmpty(environment.WebRootPath))
         {
-            var web = Path.GetFullPath(environment.WebRootPath);
+            var web = Path.TrimEndingDirectorySeparator(Path.GetFullPath(environment.WebRootPath));
             var comparison = OperatingSystem.IsWindows() ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
             var separator = Path.DirectorySeparatorChar;
             if ((root + separator).StartsWith(web + separator, comparison))
