@@ -56,7 +56,7 @@ $text = Get-Content $runsettings -Raw
 $i = 0
 $pending = @{}
 foreach ($old in $changes.Keys) {
-    $token = "__PORT_$($i++)__"
+    $token = "__PORT_${i}__"; $i++
     $pending[$token] = $changes[$old]
     $text = [regex]::Replace($text, "(localhost[:,])$old(?!\d)", "`${1}$token")
     $text = [regex]::Replace($text, "(name=`"\w*PORT\w*`"\s+value=`")$old(`")", "`${1}$token`${2}")
