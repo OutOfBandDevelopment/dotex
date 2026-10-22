@@ -122,6 +122,10 @@ Each change document should include:
 - AsyncAPI 3.0 document and viewer for the message queues (`OoBDev.AsyncApi`, adapter contributors, `MapAsyncApi()`)
 - Status: ✅ Complete
 
+**[testing-example-web-viewmodels-2026-10-22.md](testing-example-web-viewmodels-2026-10-22.md)**
+- Vitest view-model tests for Communications, Current user, Queues and Templates
+- Status: ✅ Complete
+
 **[apis-rights-debug-logging-2026-10-22.md](apis-rights-debug-logging-2026-10-22.md)**
 - Role-to-right transformation logs counts at Debug; `OoBDev:Authorization` documented
 - Status: ✅ Complete
