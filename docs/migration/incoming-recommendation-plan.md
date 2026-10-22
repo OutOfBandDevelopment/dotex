@@ -2,7 +2,7 @@
 
 **Created:** 2026-10-22 · **Status:** proposal for owner review; nothing here is migrated. Evidence is `grep` of type names in `src/` against the incoming sources (a name that is absent from `src/` is reported as "not in main"; a rename could hide a match, so rows marked *verify* need a second look before work starts).
 
-Scope: everything waiting in `Incoming/` (BinaryDecoders, ContractParser, Tools), the newest source `C:\repo\mine\binary-data-decoders` (`e590b420`, 78 projects) and the reference projects in [harvest candidates](../harvest-candidates.md) (dev-term, proving-grounds, learning repos, notes). Earlier analysis this plan builds on: [feature mapping](binarydatadecoders-feature-mapping.md), [decision sheet](binarydatadecoders-decision-sheet.md), [migration plan](binarydatadecoders-migration-plan.md).
+Scope: everything waiting in `Incoming/` (BinaryDecoders, ContractParser, Tools), the newest source `C:\repo\mine\binary-data-decoders` (`e590b420`, 78 projects) and the reference projects in [harvest candidates](../harvest-candidates.md) (dev-term, proving-grounds, learning repos, notes). Cross-check of each feature against every harvest project: [incoming-harvest-crosscheck.md](incoming-harvest-crosscheck.md) (best source per feature). Earlier analysis this plan builds on: [feature mapping](binarydatadecoders-feature-mapping.md), [decision sheet](binarydatadecoders-decision-sheet.md), [migration plan](binarydatadecoders-migration-plan.md).
 
 Rejecting a feature is allowed, but every rejection below carries its reason, and nothing is rejected silently. Each decision lists options with a recommendation; reply with the letter, or "approve all recommendations".
 
@@ -112,7 +112,9 @@ Every migration follows the usual rules (net10.0, nullable, README per project, 
 | # | Question | Options | Recommendation |
 |---|---|---|---|
 | D1 | Section 1 projects | **A** diff then delete; **B** keep copies | **A**: less clutter, git history keeps them |
-| D2 | Hardware code source | **A** BinaryDataDecoders first, then merge dev-term fixes; **B** port dev-term modules instead; **C** share one core with dev-term | **A**: matches the all-features rule; **C** needs dev-term owner work and is a later step |
+| D2 | Hardware code source | **A** per device, the best-covered and tested implementation as the base (see the [cross-check](incoming-harvest-crosscheck.md)), merging the rest; **B** BinaryDataDecoders only; **C** share one core with dev-term | **A**: owner rule 2026-10-22, best feature coverage rather than first found; **C** needs dev-term owner work and is a later step |
+| D8 | ScoreMachine and HomeSeer applications | see the cross-check | **A** harvest library and emulator code only |
+| D9 | Vigenère from challenge-accepted | see the cross-check | **A** add it |
 | D3 | Hardware package layout | **A** one package per device under `OoBDev.Extensions.Hardware.*`; **B** one combined package | **A**: users take only what they own |
 | D4 | Fencing | **A** migrate, marked untested; **B** reject | **A**: the scope rule keeps niche features; **B** is reasonable if you will never use it |
 | D5 | ContractParser | **A** move to `docs/design/ContractParser/`; **B** leave in `Incoming/` | **A** |
