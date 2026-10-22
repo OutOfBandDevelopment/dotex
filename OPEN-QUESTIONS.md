@@ -6,4 +6,13 @@ How this file is kept: see `.claude/rules/open-questions.md` and `.claude/rules/
 
 ## Open
 
-No open questions.
+### Q1 — 2026-10-22 — Migration — Incoming code recommendation plan
+
+Review [docs/migration/incoming-recommendation-plan.md](docs/migration/incoming-recommendation-plan.md). It compares all incoming code and the harvest candidates with main and proposes what to migrate, defer or reject (with reasons).
+
+**Options:** reply per decision D1 to D7 in section 7 of the plan, or **A** (recommended): approve all recommendations, which starts the order in section 6; **B**: change individual decisions.
+
+**Default:** nothing migrates; only the D7 backlog entries exist.
+
+**Your answer:**
+

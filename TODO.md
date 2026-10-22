@@ -16,7 +16,7 @@ Keep this file short (a handful of items). When an item starts, move it here fro
 ## Next
 
 - [ ] Compare designs to code with the `reconcile-designs-and-code` skill (all of `docs/design/`; details in the backlog)
-- [ ] **BinaryDataDecoders comparison and recommendation plan** (`compare-incoming-codebase` skill): compare `C:epomineinary-data-decoders` (newest) and `Incoming/BinaryDecoders` with what exists in `src/`, and write a plan the owner reviews (feature mapping, what exists, gaps, proposed phases and placement, each decision as options with a recommendation). No migration until the owner approves the plan.
+- [ ] **Incoming code recommendation plan**: written ([docs/migration/incoming-recommendation-plan.md](docs/migration/incoming-recommendation-plan.md)); waiting for the owner to answer D1 to D7 (Q1 in OPEN-QUESTIONS.md). No migration until then. The sections marked verify need a second look before work starts.
 
 - [ ] Rights middleware, then `QUERY`/OData, then GraphQL (order decided; roles map to rights in configuration, `OoBDev:Authorization:Roles:<role>`, applied by a claims transformation; write the feature design first in `docs/design/`)
 - [ ] `OoBDev.DacFx.Tests` SQLCLR test project

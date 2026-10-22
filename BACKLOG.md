@@ -38,9 +38,11 @@ A clean rebuild (2026-10-22) has no analyzer warnings. Analyzers are wired from 
 
 Scope rule: every BinaryDataDecoders feature is migrated; phases are priority order ([CLAUDE.md](CLAUDE.md#migration-scope)).
 
-- [ ] **BinaryDataDecoders comparison and recommendation plan**: in `TODO.md` (requested 2026-10-22); the migration below waits for the owner's review of that plan.
+- [ ] **Incoming code recommendation plan** (BinaryDataDecoders, ContractParser, Tools, harvest candidates): written 2026-10-22 in [docs/migration/incoming-recommendation-plan.md](docs/migration/incoming-recommendation-plan.md), rejections carry their reasons; the migration below waits for the owner to answer D1 to D7.
 - [ ] **BinaryDataDecoders** (~50,000 LOC, `Incoming/BinaryDecoders`). Phases: 1 Foundation (endianness, utilities, `BinaryPrimitives`), 2 High-value (code analysis, expression calculator, archives, drawing, barcode), 3 Protocols (NMEA and others), 4 Specialized (8 hardware devices, classic crypto with warnings, Apple II, fencing, Windows Forms, UWP), 5 Tools and CLI (4 tools). Answer the decisions on the [decision sheet](docs/migration/binarydatadecoders-decision-sheet.md) (the owner answered Q9 on 2026-10-09 by asking for the sheet; the per-line answers are still open). Compare against the copies listed in [docs/harvest-candidates.md](docs/harvest-candidates.md) first: the `mine/binary-data-decoders` repo is newer (78 projects), and `dev-term` holds newer device code.
 - [ ] **ContractParser**: decided 2026-10-09 to keep as a specification; no work.
 - [ ] **BulkLlm**: decided to consolidate. `OoBDev.LlmCodeGen.Cli` is built; the live Ollama and Groq runs remain ([design](docs/design/LlmCodeGen/README.md)).
 - [ ] **SharedFramework** is design first (Epics 2, 6, 7, 10): four documents per feature (requirements, architecture, api-design, testing-strategy), 16 per epic. See [CLAUDE.md](CLAUDE.md#current-work-context).
 - [ ] **Harvest candidates**: nothing decided; the map is in [docs/harvest-candidates.md](docs/harvest-candidates.md).
+
+- [ ] Harvest candidates marked evaluate-later in the plan (decision D7): proving-grounds plugin-sandbox-poc, hybridsearch, Oobtainium, BuildFirstOnce, markdownplantuml, TotpExample, HandyClasses; Service Broker tools; postsql-playground (informs `OoBDev.DacFx`).
