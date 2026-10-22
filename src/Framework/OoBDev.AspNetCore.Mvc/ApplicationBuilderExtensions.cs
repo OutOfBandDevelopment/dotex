@@ -10,6 +10,14 @@ namespace OoBDev.AspNetCore.Mvc;
 public static class ApplicationBuilderExtensions
 {
     /// <summary>
+    /// Accepts the HTTP <c>QUERY</c> verb and its <c>POST</c> fallback on <c>GET</c> endpoints. Call before routing.
+    /// </summary>
+    /// <param name="builder">The application builder.</param>
+    /// <returns>The application builder.</returns>
+    public static IApplicationBuilder UseHttpQueryVerb(this IApplicationBuilder builder)
+        => builder.UseMiddleware<QueryVerbMiddleware>();
+
+    /// <summary>
     /// Add custom middleware to ASP.Net to support these extensions
     /// <see cref="CorrelationInfoMiddleware"/>
     /// <see cref="CultureInfoMiddleware"/> 

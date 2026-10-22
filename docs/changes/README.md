@@ -122,6 +122,10 @@ Each change document should include:
 - AsyncAPI 3.0 document and viewer for the message queues (`OoBDev.AsyncApi`, adapter contributors, `MapAsyncApi()`)
 - Status: ✅ Complete
 
+**[apis-http-query-verb-2026-10-22.md](apis-http-query-verb-2026-10-22.md)**
+- `UseHttpQueryVerb()`: HTTP `QUERY` (and `POST` + `X-HTTP-Method-Override`) routed as `GET` so one endpoint and one rights check serve all
+- Status: ✅ Complete (first slice; OData and GraphQL wait on Q2)
+
 **[apis-application-rights-2026-10-22.md](apis-application-rights-2026-10-22.md)**
 - Roles mapped to `app__application_right` claims from configuration, one shared right checker, `[ApplicationRight]` returns 401 or 403
 - Status: ✅ Complete (CGI move and Debug logging in BACKLOG)

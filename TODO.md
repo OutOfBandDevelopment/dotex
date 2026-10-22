@@ -8,7 +8,7 @@ Keep this file short (a handful of items). When an item starts, move it here fro
 
 ## In progress
 
-- [ ] `QUERY`/OData with `POST` fallback (design first; rights check via `IApplicationRightChecker`), then GraphQL
+- [ ] OData and GraphQL surfaces: waiting on Q2 (library choice); take the next item meanwhile
 
 ## Next
 

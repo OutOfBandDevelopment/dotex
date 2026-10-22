@@ -20,3 +20,16 @@ Review [docs/migration/incoming-recommendation-plan.md](docs/migration/incoming-
 
 **Your answer:**
 
+
+### Q2 — 2026-10-22 — HTTP API — OData and GraphQL libraries
+
+The `QUERY` verb slice is built ([design](docs/design/HttpQueryVerb/README.md)). OData and GraphQL need a library decision before design continues: both are large surfaces and both would be new third-party dependencies (rejected-dependency rules apply to IoC, logging and Polly only).
+
+**Options:**
+- **A (recommended):** OData through `Microsoft.AspNetCore.OData` on the existing `IQueryable<T>` seam, GraphQL later through HotChocolate. First-party-grade OData support and the nested `$expand` the custom syntax lacks; two new packages, each behind the shared rights checker.
+- **B:** Extend the custom search syntax with nested filters instead of OData; no new dependency, but a bespoke language to keep.
+- **C:** OData only now; decide GraphQL after real client demand.
+
+**Default:** nothing is added; the `QUERY` verb serves the custom syntax.
+
+**Your answer:**
