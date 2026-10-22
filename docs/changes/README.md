@@ -274,6 +274,10 @@ Each change document should include:
 - LlmCodeGen design documents reconciled with the code; missing tests in the backlog
 - Status: ✅ Complete
 
+**[testing-asyncapi-resolver-tests-2026-10-22.md](testing-asyncapi-resolver-tests-2026-10-22.md)**
+- AsyncAPI builder, contributor and message resolver unit tests; resolver flat-configuration bug fixed
+- Status: ✅ Complete
+
 **[documentation-example-ui-design-reconcile-2026-10-22.md](documentation-example-ui-design-reconcile-2026-10-22.md)**
 - Example UI design documents reconciled with the code
 - Status: ✅ Complete
