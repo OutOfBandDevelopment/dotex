@@ -122,6 +122,10 @@ Each change document should include:
 - AsyncAPI 3.0 document and viewer for the message queues (`OoBDev.AsyncApi`, adapter contributors, `MapAsyncApi()`)
 - Status: ✅ Complete
 
+**[documentation-image-embeddings-reconcile-2026-10-22.md](documentation-image-embeddings-reconcile-2026-10-22.md)**
+- ImageEmbeddings testing strategy matched to the real tests, with a requirement-coverage table
+- Status: ✅ Complete
+
 **[apis-asyncapi-send-messages-2026-10-22.md](apis-asyncapi-send-messages-2026-10-22.md)**
 - AsyncAPI send operations with schemas for registered message types
 - Status: ✅ Complete
