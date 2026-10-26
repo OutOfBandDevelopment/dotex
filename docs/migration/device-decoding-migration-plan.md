@@ -30,7 +30,7 @@ Source: `C:\repo\oobdev\dev-term` (branch `dev/zstick-s2`, commit `d777358`; the
 
 In scope: the protocol layer of every `DevTerm.Devices.*` project (framers, decoders, command builders, value models) and the shared contracts they need. The UI framework is also in scope (owner, 2026-10-26), with the aim of making it reusable here: the toolkit-neutral `DevTerm.UiDefinitions` model first, then a view-model layer and the renderers (section 3). The dev-term application shells (main windows, session management, plugin loading) are converted to use the OoBDev libraries rather than left behind (owner, 2026-10-26). Where dev-term ends up is Q4: either it becomes a tool or tool framework under this project, or it stays its own repository and depends on dotex over NuGet. Both work with the layering in section 3, because the shells only consume the packages. Transports and `DevTerm.DeviceManifests` are phases 8 and 9 and depend on Q3.
 
-Per the best-coverage rule, each device is first compared with the other copies (BinaryDataDecoders `Incoming/BinaryDecoders`, `C:\repo\mine\binary-data-decoders`) and the most complete, best-tested implementation is the base. The device parity note named in `harvest-candidates.md` (`projects/device-parity.md`) was not found under `C:\repo\mine\projects`; phase 0 rebuilds that table.
+Base decision (owner, 2026-10-26): for these protocols the dev-term implementations are better than the BinaryDataDecoders ones, so dev-term is the base for every device. The best-coverage rule still applies in a narrower form: each device is compared once with the BinaryDataDecoders copies (`Incoming/BinaryDecoders`, `C:\repo\mine\binary-data-decoders`) for anything dev-term lacks (message types, sentences, fields), and only those parts are merged; the rest of the older code is rejected with the reason recorded. The device parity note named in `harvest-candidates.md` (`projects/device-parity.md`) was not found under `C:\repo\mine\projects`; phase 0 rebuilds that table.
 
 ## 2. Inventory
 
@@ -104,7 +104,7 @@ Checked 2026-10-26 against `src/` (nothing in `Incoming/` has been brought in ye
 | `IChecksumCalculator.Simple16` | `.../IO/Functions` | Radex One word-sum, NMEA XOR, Z-Wave checksums | Add the missing algorithms here, tested against dev-term's byte-exact traces |
 | `SerialPortAttribute`, `Parity`, `StopBits`, `SerialPortFactory`, `UsbHidFactory` | `.../IO/Ports`, `OoBDev.System.IO.Ports`, `.UsbHids` | Serial settings and HID access used by every device | Use them; dev-term's own serial and HID transports are phase 9 comparisons |
 | `OoBDev.System.IO.Pipelines` (`PipelineBuilder`, `StreamDevice`) | Framework | Stream-to-message plumbing, replaces dev-term's `StreamToPipePump` | Use it |
-| `Incoming/BinaryDecoders`: Busylight, NMEA, K8055, Radex One, Zoom H4n | Not in `src/` | Older copies of five dev-term devices | Phase 0 comparison; they are not yet migrated, so no conflict in the build |
+| `Incoming/BinaryDecoders`: Busylight, NMEA, K8055, Radex One, Zoom H4n | Not in `src/` | Older copies of five dev-term devices | dev-term is the base (owner); phase 0 lists what, if anything, to merge from them and records the rejections |
 
 No name clash was found for `OoBDev.Devices`, `OoBDev.Extensions.Hardware.*`, `OoBDev.UiDefinitions`, `UiDefinition`, `ValueConstraint`, `ValueValidator`, `IControlSurface` or `IPresenter`, and `src/` has no UI project to conflict with the renderers. DE-5000, SCPI and Z-Wave have no counterpart anywhere in this repository.
 
@@ -150,7 +150,7 @@ Where this meets the dotex test rules (`.claude/rules/testing.md`: `Unit`, `Simu
 
 | Phase | Work | Exit |
 |------:|------|------|
-| 0 | Compare each device with BinaryDataDecoders and `mine/binary-data-decoders`; rebuild the parity table; pick a base per device and record rejections in [incoming-harvest-crosscheck.md](incoming-harvest-crosscheck.md) | Parity table in `docs/migration/`, bases chosen |
+| 0 | Compare each device with BinaryDataDecoders and `mine/binary-data-decoders` for missing parts only (dev-term is the base); rebuild the parity table; record merges and rejections in [incoming-harvest-crosscheck.md](incoming-harvest-crosscheck.md) | Parity table in `docs/migration/`, merge list and rejections recorded |
 | 1 | Feature docs `docs/design/DeviceDecoding/` (requirements, architecture, api-design, testing-strategy); additions to the existing IO model for the gaps in section 4 (no new device contract project unless they do not fit); test helpers per Q2; first end-to-end device as a template | Contracts reviewed, template device green |
 | 2 | Simple fixed-frame devices: DE-5000, Busylight, K8055 | Unit tests ported, `.ksy` and device docs moved |
 | 3 | NMEA, Radex One, Zoom H4n | As above; NMEA merged with the incoming copy |
@@ -167,7 +167,7 @@ Each device closes with the `complete-work` skill (change document, index, readm
 ## 8. Risks and open points
 
 - **Moving source.** dev-term has uncommitted history on `dev/zstick-s2`; record the commit ported from in each change document and re-diff before each phase.
-- **Overlap with hardware already in the incoming copy** (Busylight, NMEA, K8055 via HID): the best-coverage rule decides, and rejected code is documented.
+- **Overlap with hardware already in the incoming copy** (Busylight, NMEA, K8055 via HID): dev-term is the base, missing parts are merged, and rejected code is documented.
 - **UI rewrite cost.** About 19,500 lines of renderer and window code (Wpf, Console, Web) is code-behind; making it MVVM is a rewrite of the logic, not a move. Phase 7 covers the shared panel renderers; phase 10 converts the application shells to consume them and the other OoBDev libraries (hosting, options, logging, OpenTelemetry, OpenAPI/AsyncAPI for the web host).
 - **Contract split.** Separating framing, decoding and rendering changes every presenter; the template device in phase 1 proves it before the rest follow.
 - **Hardware verification.** Only dev-term's real-hardware tests prove behaviour on a device; ported copies must keep those tests, and the readmes say what was verified on hardware and what was not.
