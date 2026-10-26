@@ -26,12 +26,13 @@ Source: `C:\repo\oobdev\dev-term` (branch `dev/zstick-s2`, commit `d777358`; the
 3. Table 3 — Order of work
 4. Table 4 — Overlaps with existing code
 5. Table 5 — Naming and layout
+6. Table 6 — Device project names (vendor style)
 
 ## 1. Scope
 
 In scope: the protocol layer of every `DevTerm.Devices.*` project (framers, decoders, command builders, value models) and the shared contracts they need. The UI framework is also in scope (owner, 2026-10-26), with the aim of making it reusable here: the toolkit-neutral `DevTerm.UiDefinitions` model first, then a view-model layer and the renderers (section 3). The dev-term application shells (main windows, session management, plugin loading) are converted to use the OoBDev libraries rather than left behind (owner, 2026-10-26). Where dev-term ends up is Q4: either it becomes a tool or tool framework under this project, or it stays its own repository and depends on dotex over NuGet. Both work with the layering in section 3, because the shells only consume the packages. Transports and `DevTerm.DeviceManifests` are phases 8 and 9 and depend on Q3.
 
-Base decision (owner, 2026-10-26): for these protocols the dev-term implementations are better than the BinaryDataDecoders ones, so dev-term is the base for every device. The best-coverage rule still applies in a narrower form: each device is compared once with the BinaryDataDecoders copies (`Incoming/BinaryDecoders`, `C:\repo\mine\binary-data-decoders`) for anything dev-term lacks (message types, sentences, fields), and only those parts are merged; the rest of the older code is rejected with the reason recorded. The device parity note named in `harvest-candidates.md` (`projects/device-parity.md`) was not found under `C:\repo\mine\projects`; phase 0 rebuilds that table.
+Base decision (owner, 2026-10-26): for these protocols the dev-term implementations are better than the BinaryDataDecoders ones, so dev-term is the base for every device. The best-coverage rule still applies in a narrower form: each device is compared once with the BinaryDataDecoders source of truth, `C:\repo\mine\binary-data-decoders` (its `RETIRED.md` says it is moving to dotex; it is newer than and replaces the earlier pull-in at `Incoming/BinaryDecoders`) for anything dev-term lacks (message types, sentences, fields), and only those parts are merged; the rest of the older code is rejected with the reason recorded. The device parity note named in `harvest-candidates.md` (`projects/device-parity.md`) was not found under `C:\repo\mine\projects`; phase 0 rebuilds that table.
 
 ## 2. Inventory
 
@@ -42,11 +43,11 @@ Base decision (owner, 2026-10-26): for these protocols the dev-term implementati
 | `Devices.Scpi` | SCPI text, instrument profiles, auto-detect | 994 | 103 | Profiles are data; reply tracking is stateful |
 | `Devices.ZWave` | Z-Wave serial API frames, ACK responder, id tables | 1,688 | 64 | Active work upstream; `Data/*.json` tables |
 | `Devices.RadexOne` | Word-sum checksummed packets over virtual COM | 772 | 36 | Verified on hardware |
-| `Devices.Nmea` | NMEA 0183 sentences, GPS state | 486 | 29 | Overlaps `Incoming/BinaryDecoders/src/OoBDev.Nmea` |
+| `Devices.Nmea` | NMEA 0183 sentences, GPS state | 486 | 29 | Overlaps `BinaryDataDecoders.Nmea` in `mine/binary-data-decoders` |
 | `Devices.ZoomH4n` | Remote-control status byte and button commands | 418 | 16 | Bit fields |
 | `Devices.De5000` | 17-byte LCR meter packet, stream only | 417 | 23 | Verified on hardware |
 | `Devices.K8055` | HID input and output reports | 374 | 32 | Overlaps `UsbHids` |
-| `Devices.Busylight` | 9-byte command report, ASCII id | 369 | 22 | Overlaps `Incoming/BinaryDecoders/src/OoBDev.Kuando.Busylight` |
+| `Devices.Busylight` | 9-byte command report, ASCII id | 369 | 22 | Overlaps `BinaryDataDecoders.Kuando.Busylight` in `mine/binary-data-decoders` |
 | `UiDefinitions` | Serializable control model (toggle, slider, choice, numeric, chart, form), constraints, validator, JSON/XML | 3,036 | in `UiDefinitions.Tests` | Toolkit-neutral; the reuse core |
 | `Wpf` | WPF renderer (`FormRenderer`, live elements, theming) plus the app windows | 7,354 | in `Wpf.Tests` | Code-behind, not MVVM; 16 XAML files |
 | `Console` | Terminal.Gui TUI renderer (`FormRenderer`, cell charts) plus modes | 9,678 | in `Console.Tests` | Depends on `Terminal.Gui` 2.5 |
@@ -60,7 +61,7 @@ Each device also has a `.ksy` description and a `known-configuration.md` under d
 
 ## 3. Target shape
 
-Pure protocol libraries, one per device (the UI layers are described after Figure 1), built on the device model that already exists in `OoBDev.System.Abstractions` (section 4), packaged separately as `OoBDev.Extensions.Hardware.<Device>` (decision sheet line 19: mark what is untested on hardware in each readme). They reference only the abstractions, never UI or plugin loading.
+Pure protocol libraries, one per device (the UI layers are described after Figure 1), built on the device model that already exists in `OoBDev.System.Abstractions` (section 4), packaged separately and named `OoBDev.{Vendor}.{Device}` in the company style (Table 6; the decision sheet's line 19 requirement to mark what is untested on hardware in each readme still applies). They reference only the abstractions, never UI or plugin loading.
 
 ```plantuml
 @startuml
@@ -70,7 +71,7 @@ skinparam rectangle {
 }
 rectangle "OoBDev.System.Abstractions\n[Type: Framework, existing]\nIDeviceDefinition*, ISegmenter,\nIMessageDecoder, IMessageEncoder,\nIChecksumCalculator" <<existing>> as Abs
 rectangle "OoBDev.System.IO.Pipelines / .Ports / .UsbHids\n[Type: Framework, existing]\ntransport adapters" <<existing>> as Io
-rectangle "OoBDev.Extensions.Hardware.*\n[Type: Extension, new]\none package per device" <<new>> as Dev
+rectangle "OoBDev.{Vendor}.{Device}\n[Type: vendor adapter, new]\none package per device, for example\nOoBDev.Quarta.RadexOne" <<new>> as Dev
 rectangle "OoBDev.UiDefinitions.Abstractions\n[Type: Framework, new]\nserializable control model,\nconstraints, contracts" <<new>> as Ui
 rectangle "OoBDev.UiDefinitions\n[Type: Framework, new]\nvalidator, serializers,\nViewModels/ and Commands/ (ICommand types)" <<new>> as Vm
 rectangle "OoBDev.Extensions.UiDefinitions.Wpf / .Tui / .Web\n[Type: Extension, new]\nthin renderers bound to view models" <<new>> as Rend
@@ -105,7 +106,10 @@ Checked 2026-10-26 against `src/` (nothing in `Incoming/` has been brought in ye
 | `IChecksumCalculator.Simple16` | `.../IO/Functions` | Radex One word-sum, NMEA XOR, Z-Wave checksums | Add the missing algorithms here, tested against dev-term's byte-exact traces |
 | `SerialPortAttribute`, `Parity`, `StopBits`, `SerialPortFactory`, `UsbHidFactory` | `.../IO/Ports`, `OoBDev.System.IO.Ports`, `.UsbHids` | Serial settings and HID access used by every device | Use them; dev-term's own serial and HID transports are phase 9 comparisons |
 | `OoBDev.System.IO.Pipelines` (`PipelineBuilder`, `StreamDevice`) | Framework | Stream-to-message plumbing, replaces dev-term's `StreamToPipePump` | Use it |
-| `Incoming/BinaryDecoders`: Busylight, NMEA, K8055, Radex One, Zoom H4n | Not in `src/` | Older copies of five dev-term devices | dev-term is the base (owner); phase 0 lists what, if anything, to merge from them and records the rejections |
+| `BinaryDataDecoders.*` in `C:epomineinary-data-decoders`: Busylight, NMEA, K8055, Radex One, Zoom H4n (plus Rigol, LanC, EByte, Fencing) | Not in `src/` | The source of truth for BinaryDataDecoders (owner, 2026-10-26); it supersedes the copy in `Incoming/BinaryDecoders` | dev-term is the base for the five overlapping devices; phase 0 lists what to merge and records the rejections |
+| `SerialPortDeviceAdapter.TryOpen` catches only `IOException` | `OoBDev.System.IO.Ports` | The same defect as BUG-003 in the source repository: a busy port throws `UnauthorizedAccessException` | Fix with a test in phase 1; check BUG-001, BUG-002 and BUG-004 against `StreamDevice` and the pipeline factory at the same time |
+
+Source of truth. `C:\repo\mine\binary-data-decoders` (HEAD `e590b420`, `dev/dotnet10` merged) replaces the earlier pull-in at `Incoming/BinaryDecoders`, whose projects differ from it (for example Busylight). Its device projects other than the five above are: Rigol (18 lines, a stub, deleted under the migration scope rule), EByte (no source), LanC (304 lines, no tests), the Fencing scoring machines (438 lines, 3 tests) and Apple II (790 lines); these stay with the wider BinaryDataDecoders migration, not this plan. Most of its Nmea source size is generated WMI notes (`Notes/`), not decoding. Its `docs/bug-reports/` holds four open defects in the IO stack found while testing Radex One (BUG-001 to BUG-004); dotex shares the pipeline and serial code, and `TryOpen` has the BUG-003 defect (Table 4). Removing `Incoming/BinaryDecoders` is a separate decision for the owner and is not done here.
 
 No name clash was found for `OoBDev.Devices`, `OoBDev.Extensions.Hardware.*`, `OoBDev.UiDefinitions`, `UiDefinition`, `ValueConstraint`, `ValueValidator`, `IControlSurface` or `IPresenter`, and `src/` has no UI project to conflict with the renderers. DE-5000, SCPI and Z-Wave have no counterpart anywhere in this repository.
 
@@ -135,18 +139,31 @@ The migrated code follows this repository's patterns and practices, not dev-term
 
 | Item | dev-term | dotex name |
 |------|----------|------------|
-| Device project | `DevTerm.Devices.RadexOne` | `OoBDev.Extensions.Hardware.RadexOne` (owner decision sheet line 19; layer Extensions, depends on Framework only). The namespace equals the project name. No `.Abstractions` split per device, since the contracts are the existing IO ones |
+| Device project | `DevTerm.Devices.RadexOne` | The company style for third-party products, `OoBDev.{Vendor}.{Feature}` (owner, 2026-10-26; the same names binary-data-decoders already uses): see Table 6. It replaces the `OoBDev.Extensions.Hardware.*` idea from the decision sheet. Packaged separately; depends on Framework abstractions only. The namespace equals the project name. No `.Abstractions` split per device, since the contracts are the existing IO ones |
 | UI model and contracts | `DevTerm.UiDefinitions` | `OoBDev.UiDefinitions.Abstractions` (control model, constraints) plus `OoBDev.UiDefinitions` (validator, serializers, view models), following the `.Abstractions` / implementation split |
 | View models and commands | code-behind in renderers | `ViewModels/` and `Commands/` folders in `OoBDev.UiDefinitions`; one folder per role, plural |
 | Renderers | `DevTerm.Wpf`, `DevTerm.Console`, `DevTerm.Web` | `OoBDev.Extensions.UiDefinitions.Wpf`, `.Tui`, `.Web`, as optional packages like `OoBDev.Extensions.Windows.Forms` |
 | Text presenters | `DevTerm.Presenters.Text` | name settled in api-design (not a `Presenter` suffix on the decoder side); text rendering is separate from decoding |
 | Framer, decoder, command builder | `RadexOneFramer`, presenter, `RadexOneCommand` | `RadexOneSegmenter`, `RadexOneMessageDecoder`, `RadexOneMessageEncoder`, message record `RadexOneMessage`; implementations take no `Impl` suffix |
-| Provider key | plugin id | `RadexOneGlobals.ProviderKey = "radex-one"` (kebab-case, e.g. `"de-5000"`, `"zoom-h4n"`, `"z-wave"`), no global registry |
+| Provider key | plugin id | `{Vendor}Globals.ProviderKey`, kebab-case, for example `QuartaGlobals.ProviderKey = "radex-one"` in `OoBDev.Quarta.RadexOne` (Table 6 has the others), no global registry |
 | Registration | `IPluginModule` | `ServiceCollectionExtensions.TryAddRadexOneServices`, internal `RadexOneRegistrar` where a vendor registrar is needed |
 | Options | ad hoc | `RadexOneOptions`, validated with `AddValidatedOptions<T>()` |
 | Folders | flat | `Segmenters/`, `Messages/`, `Factories/`, `Providers/` per role, plural; `ServiceCollectionExtensions.cs` at the root |
-| Readme | none | `README.Extensions.Hardware.RadexOne.md` (the name derives from the project name without `OoBDev.`) |
-| Tests project | `DevTerm.Devices.RadexOne.Tests` | `OoBDev.Extensions.Hardware.RadexOne.Tests`; contents follow dev-term (section 6) |
+| Readme | none | `README.Quarta.RadexOne.md` (the name derives from the project name without `OoBDev.`) |
+| Tests project | `DevTerm.Devices.RadexOne.Tests` | `OoBDev.Quarta.RadexOne.Tests`; contents follow dev-term (section 6) |
+
+**Table 6 — Device project names (vendor style)**
+
+| Device | Project | Vendor key class | Note |
+|--------|---------|------------------|------|
+| Radex One | `OoBDev.Quarta.RadexOne` | `QuartaGlobals` | Same name as binary-data-decoders |
+| Busylight | `OoBDev.Kuando.Busylight` | `KuandoGlobals` | Same |
+| K8055 | `OoBDev.Velleman.K8055` | `VellemanGlobals` | Same |
+| Zoom H4n | `OoBDev.Zoom.H4n` | `ZoomGlobals` | Same |
+| DE-5000 | `OoBDev.DerEE.De5000` | `DerEEGlobals` | New; vendor spelling DER EE (confirm) |
+| NMEA 0183 | `OoBDev.Nmea` | `NmeaGlobals` | An open standard, so no vendor segment |
+| SCPI | `OoBDev.Scpi` | `ScpiGlobals` | An open standard; instrument profiles (Rigol, Tektronix, HP, Korad) are data, not projects |
+| Z-Wave | `OoBDev.ZWave` | `ZWaveGlobals` | The protocol, not the Aeotec stick; confirm |
 
 Analyzer warnings (Meziantou, NetAnalyzers, OOB rules) apply to the new projects from the start. The framework is unreleased, so names change outright with no forwarders. Rejected-dependency rules apply (no third-party DI or logging, no Polly).
 
@@ -169,7 +186,7 @@ Where this meets the dotex test rules (`.claude/rules/testing.md`: `Unit`, `Simu
 
 | Phase | Work | Exit |
 |------:|------|------|
-| 0 | Compare each device with BinaryDataDecoders and `mine/binary-data-decoders` for missing parts only (dev-term is the base); rebuild the parity table; record merges and rejections in [incoming-harvest-crosscheck.md](incoming-harvest-crosscheck.md) | Parity table in `docs/migration/`, merge list and rejections recorded |
+| 0 | Compare each device with `mine/binary-data-decoders` (not `Incoming/BinaryDecoders`, which is superseded) for missing parts only (dev-term is the base); rebuild the parity table; record merges and rejections in [incoming-harvest-crosscheck.md](incoming-harvest-crosscheck.md) | Parity table in `docs/migration/`, merge list and rejections recorded |
 | 1 | Feature docs `docs/design/DeviceDecoding/` (requirements, architecture, api-design, testing-strategy); additions to the existing IO model for the gaps in section 4 (no new device contract project unless they do not fit); test helpers per Q2; first end-to-end device as a template | Contracts reviewed, template device green |
 | 2 | Simple fixed-frame devices: DE-5000, Busylight, K8055 | Unit tests ported, `.ksy` and device docs moved |
 | 3 | NMEA, Radex One, Zoom H4n | As above; NMEA merged with the incoming copy |
