@@ -39,3 +39,13 @@ The plan migrates the UI model (`UiDefinitions`), then adds an MVVM view-model l
 **Default:** A. `Terminal.Gui` is not added until you accept it.
 
 **Your answer:**
+
+### Q4 — 2026-10-26 — Device decoding — Where dev-term lives after the shells use OoBDev libraries
+
+The dev-term shells (Console, Wpf, Web) will be converted to use the OoBDev libraries (phase 10 of the plan). Afterwards dev-term can live in two places.
+
+**Options:** **A** (recommended): keep it a separate repository that depends on the dotex packages over NuGet; the package boundary then proves the libraries are reusable, and dev-term keeps its own release rhythm and test-generated documentation. Cost: cross-repository changes need a package publish (a local feed works). **B**: move it under this project as a tool, or a tool framework other tools build on. Cost: a larger solution, and the tool framework needs its own design (project layering, packaging). **C**: decide after phase 7, once the first device panel runs end to end.
+
+**Default:** A for planning; nothing in phases 0 to 9 depends on the choice.
+
+**Your answer:**

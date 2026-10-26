@@ -26,7 +26,7 @@ Source: `C:\repo\oobdev\dev-term` (branch `dev/zstick-s2`, commit `d777358`; the
 
 ## 1. Scope
 
-In scope: the protocol layer of every `DevTerm.Devices.*` project (framers, decoders, command builders, value models) and the shared contracts they need. The UI framework is also in scope (owner, 2026-10-26), with the aim of making it reusable here: the toolkit-neutral `DevTerm.UiDefinitions` model first, then a view-model layer and the renderers (section 3). Plugin loading and the dev-term application shells (main windows, session management) stay in dev-term, which then references the dotex packages. Transports and `DevTerm.DeviceManifests` are phases 8 and 9 and depend on Q3.
+In scope: the protocol layer of every `DevTerm.Devices.*` project (framers, decoders, command builders, value models) and the shared contracts they need. The UI framework is also in scope (owner, 2026-10-26), with the aim of making it reusable here: the toolkit-neutral `DevTerm.UiDefinitions` model first, then a view-model layer and the renderers (section 3). The dev-term application shells (main windows, session management, plugin loading) are converted to use the OoBDev libraries rather than left behind (owner, 2026-10-26). Where dev-term ends up is Q4: either it becomes a tool or tool framework under this project, or it stays its own repository and depends on dotex over NuGet. Both work with the layering in section 3, because the shells only consume the packages. Transports and `DevTerm.DeviceManifests` are phases 8 and 9 and depend on Q3.
 
 Per the best-coverage rule, each device is first compared with the other copies (BinaryDataDecoders `Incoming/BinaryDecoders`, `C:\repo\mine\binary-data-decoders`) and the most complete, best-tested implementation is the base. The device parity note named in `harvest-candidates.md` (`projects/device-parity.md`) was not found under `C:\repo\mine\projects`; phase 0 rebuilds that table.
 
@@ -112,7 +112,7 @@ The migrated code follows this repository's patterns and practices, not dev-term
 | `DateTime.UtcNow`, `Task.Delay` pacing | `TimeProvider` |
 | `ILogger` calls with templates | `[LoggerMessage]` |
 | Long history comments (corrections, dates) in XML docs | XML docs state behaviour; history goes to the device `known-configuration.md` and `docs/changes/` |
-| `plugin.json`, `EnableDynamicLoading` | removed from the libraries; stays in dev-term |
+| `plugin.json`, `EnableDynamicLoading` | removed from the libraries; plugin loading belongs to the shell (phase 10) |
 | Package versions inline in csproj | `src/Directory.Packages.props` |
 | No project readme | `README.{Project}.md` per project |
 | `InternalsVisibleTo` via `AssemblyInfo.cs` | `InternalsVisibleTo` item in the csproj |
@@ -148,6 +148,7 @@ Where this meets the dotex test rules (`.claude/rules/testing.md`: `Unit`, `Simu
 | 7 | View-model layer with `ICommand` types; WPF renderer first, then Terminal.Gui and Blazor | One device panel rendered by each, driven by the same view model |
 | 8 | Device manifests and `.ksy` frame decoding (5,825 LOC) | Decision on Q3 |
 | 9 | Transports that dotex lacks (TCP, USBTMC, VXI-11, RFC 2217, BLE, brokers) | Decision on Q3 |
+| 10 | dev-term shells (Console, Wpf, Web) rebuilt on the OoBDev packages; dev-term moves under this project as a tool or tool framework, or consumes the packages over NuGet | Decision on Q4; dev-term builds with no copied framework code |
 
 Each device closes with the `complete-work` skill (change document, index, readme, `TODO.md`, `BACKLOG.md`), one commit series per device.
 
@@ -155,7 +156,7 @@ Each device closes with the `complete-work` skill (change document, index, readm
 
 - **Moving source.** dev-term has uncommitted history on `dev/zstick-s2`; record the commit ported from in each change document and re-diff before each phase.
 - **Overlap with hardware already in the incoming copy** (Busylight, NMEA, K8055 via HID): the best-coverage rule decides, and rejected code is documented.
-- **UI rewrite cost.** About 19,500 lines of renderer and window code (Wpf, Console, Web) is code-behind; making it MVVM is a rewrite of the logic, not a move. Only the shared panel renderers are planned (phase 7); the application shells stay in dev-term.
+- **UI rewrite cost.** About 19,500 lines of renderer and window code (Wpf, Console, Web) is code-behind; making it MVVM is a rewrite of the logic, not a move. Phase 7 covers the shared panel renderers; phase 10 converts the application shells to consume them and the other OoBDev libraries (hosting, options, logging, OpenTelemetry, OpenAPI/AsyncAPI for the web host).
 - **Contract split.** Separating framing, decoding and rendering changes every presenter; the template device in phase 1 proves it before the rest follow.
 - **Hardware verification.** Only dev-term's real-hardware tests prove behaviour on a device; ported copies must keep those tests, and the readmes say what was verified on hardware and what was not.
 - **Not run yet.** Nothing has been built or ported on this branch; this document is the only change.
