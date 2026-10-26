@@ -78,7 +78,7 @@ rectangle "OoBDev.Extensions.UiDefinitions.Wpf / .Tui / .Web\n[Type: Extension, 
 rectangle "dev-term shells\n[Type: application]\nConsole, Wpf, Web" as App
 Dev --> Abs : implements
 Dev --> Io : reads and writes through
-Dev --> Ui : declares panels with
+App --> Ui : loads panels from
 Vm --> Ui : implements
 Rend --> Vm : binds to
 App --> Dev : references
@@ -87,6 +87,8 @@ App --> Rend : references
 ```
 
 *Figure 1 — Target layering*
+
+UI separation (owner, 2026-10-26): the UI libraries are separate from and reusable without the hardware devices. No device package references any UI package, and no UI package references a device or a transport. A panel is data (a `UiDefinition` document) whose controls name commands by string id, as `IControlSurface.InvokeAsync(commandId, value)` already does; the shell, or an optional panel package per device, binds a panel to a device at the composition root. Rendering can therefore be tested with sample definitions and no hardware.
 
 UI reuse. `UiDefinition` already lets a device describe its controls once as data, and each front end renders that data (`ControlPanelMode` and `ControlPanelWindow` proved it with K8055 and Busylight). Migrating it means: (1) `DevTerm.UiDefinitions` moves nearly as is, converted per section 5; (2) a view-model layer is added, because dev-term's renderers are code-behind and this repository requires MVVM with command binding and real, retestable `ICommand` types with injected dependencies (`owner-decisions`); (3) the WPF, Terminal.Gui and Blazor renderers become thin binders over those view models, packaged separately so a consumer takes only the toolkit it uses. The shared logic duplicated today in the two `FormRenderer` classes (validation, command preview, section layout) moves into the view models once. UI libraries come in as they are needed, not up front (owner, 2026-10-26). A renderer targets plain `net10.0` where its toolkit allows it and `net10.0-windows` where it cannot (WPF), so the Windows-only package never constrains the rest; the view-model packages stay plain `net10.0`. `UiDefinition` is the canonical, toolkit-neutral description of a panel (owner, 2026-10-26: this is why it exists), so a new toolkit is only a new renderer over the same model and view models, and the model, validator and view models never reference a toolkit. The owner also wants a cross-platform control library so panels render on Linux and macOS. Candidates, to be settled in the phase 7 design: Avalonia (MIT, XAML with `ICommand` binding, so it keeps MVVM and could replace or sit beside WPF), GTK through GtkSharp (native look on Linux, weaker on macOS), and the existing Terminal.Gui and Blazor renderers, which are already cross-platform. Avalonia is the likely first choice because it reuses the same view models, and the owner wants a spike of it before the final go-ahead (backlog item "Avalonia spike for the device UI"); the owner's preference is the most MVVM with `ICommand` types where possible, which favours Avalonia over imperative toolkits; each is a third-party UI dependency and needs an owner decision (Q3).
 
