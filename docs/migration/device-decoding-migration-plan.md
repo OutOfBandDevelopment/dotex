@@ -11,7 +11,7 @@ Source: `C:\repo\oobdev\dev-term` (branch `dev/zstick-s2`, commit `d777358`; the
 - [3. Target shape](#3-target-shape)
 - [4. Conflicts with code already in the repository](#4-conflicts-with-code-already-in-the-repository)
 - [5. Conversion rules](#5-conversion-rules)
-- [6. Testing: keep the dev-term approach](#6-testing-keep-the-dev-term-approach)
+- [6. Testing and documentation: keep the dev-term approach](#6-testing-and-documentation-keep-the-dev-term-approach)
 - [7. Order of work](#7-order-of-work)
 - [8. Risks and open points](#8-risks-and-open-points)
 
@@ -25,6 +25,7 @@ Source: `C:\repo\oobdev\dev-term` (branch `dev/zstick-s2`, commit `d777358`; the
 2. Table 2 — Pattern conversions
 3. Table 3 — Order of work
 4. Table 4 — Overlaps with existing code
+5. Table 5 — Naming and layout
 
 ## 1. Scope
 
@@ -70,14 +71,14 @@ skinparam rectangle {
 rectangle "OoBDev.System.Abstractions\n[Type: Framework, existing]\nIDeviceDefinition*, ISegmenter,\nIMessageDecoder, IMessageEncoder,\nIChecksumCalculator" <<existing>> as Abs
 rectangle "OoBDev.System.IO.Pipelines / .Ports / .UsbHids\n[Type: Framework, existing]\ntransport adapters" <<existing>> as Io
 rectangle "OoBDev.Extensions.Hardware.*\n[Type: Extension, new]\none package per device" <<new>> as Dev
-rectangle "OoBDev.UiDefinitions\n[Type: Framework, new]\nserializable control model,\nconstraints, validator" <<new>> as Ui
-rectangle "OoBDev.UiDefinitions.ViewModels\n[Type: Framework, new]\nMVVM view models, ICommand types" <<new>> as Vm
-rectangle "OoBDev.UiDefinitions.Wpf / .Tui / .Web\n[Type: Extension, new]\nthin renderers bound to view models" <<new>> as Rend
+rectangle "OoBDev.UiDefinitions.Abstractions\n[Type: Framework, new]\nserializable control model,\nconstraints, contracts" <<new>> as Ui
+rectangle "OoBDev.UiDefinitions\n[Type: Framework, new]\nvalidator, serializers,\nViewModels/ and Commands/ (ICommand types)" <<new>> as Vm
+rectangle "OoBDev.Extensions.UiDefinitions.Wpf / .Tui / .Web\n[Type: Extension, new]\nthin renderers bound to view models" <<new>> as Rend
 rectangle "dev-term shells\n[Type: application]\nConsole, Wpf, Web" as App
 Dev --> Abs : implements
 Dev --> Io : reads and writes through
 Dev --> Ui : declares panels with
-Vm --> Ui : wraps
+Vm --> Ui : implements
 Rend --> Vm : binds to
 App --> Dev : references
 App --> Rend : references
@@ -110,7 +111,7 @@ No name clash was found for `OoBDev.Devices`, `OoBDev.Extensions.Hardware.*`, `O
 
 ## 5. Conversion rules
 
-The migrated code follows this repository's patterns and practices, not dev-term's (owner, 2026-10-26), except for testing (section 6).
+The migrated code follows this repository's patterns and practices, not dev-term's (owner, 2026-10-26), except for testing and documentation (section 6).
 
 **Table 2 — Pattern conversions**
 
@@ -125,15 +126,33 @@ The migrated code follows this repository's patterns and practices, not dev-term
 | `ILogger` calls with templates | `[LoggerMessage]` |
 | Long history comments (corrections, dates) in XML docs | XML docs state behaviour; history goes to the device `known-configuration.md` and `docs/changes/` |
 | `plugin.json`, `EnableDynamicLoading` | removed from the libraries; plugin loading belongs to the shell (phase 10) |
+| `DevTerm.*` names and namespaces | `OoBDev.*` per Table 5 |
 | Package versions inline in csproj | `src/Directory.Packages.props` |
 | No project readme | `README.{Project}.md` per project |
 | `InternalsVisibleTo` via `AssemblyInfo.cs` | `InternalsVisibleTo` item in the csproj |
 
+**Table 5 — Naming and layout** (checked against [01-naming-and-layout.md](../patterns-discovery/03-practices-and-conventions/01-naming-and-layout.md); names are proposals to confirm in the phase 1 api-design document)
+
+| Item | dev-term | dotex name |
+|------|----------|------------|
+| Device project | `DevTerm.Devices.RadexOne` | `OoBDev.Extensions.Hardware.RadexOne` (owner decision sheet line 19; layer Extensions, depends on Framework only). The namespace equals the project name. No `.Abstractions` split per device, since the contracts are the existing IO ones |
+| UI model and contracts | `DevTerm.UiDefinitions` | `OoBDev.UiDefinitions.Abstractions` (control model, constraints) plus `OoBDev.UiDefinitions` (validator, serializers, view models), following the `.Abstractions` / implementation split |
+| View models and commands | code-behind in renderers | `ViewModels/` and `Commands/` folders in `OoBDev.UiDefinitions`; one folder per role, plural |
+| Renderers | `DevTerm.Wpf`, `DevTerm.Console`, `DevTerm.Web` | `OoBDev.Extensions.UiDefinitions.Wpf`, `.Tui`, `.Web`, as optional packages like `OoBDev.Extensions.Windows.Forms` |
+| Text presenters | `DevTerm.Presenters.Text` | name settled in api-design (not a `Presenter` suffix on the decoder side); text rendering is separate from decoding |
+| Framer, decoder, command builder | `RadexOneFramer`, presenter, `RadexOneCommand` | `RadexOneSegmenter`, `RadexOneMessageDecoder`, `RadexOneMessageEncoder`, message record `RadexOneMessage`; implementations take no `Impl` suffix |
+| Provider key | plugin id | `RadexOneGlobals.ProviderKey = "radex-one"` (kebab-case, e.g. `"de-5000"`, `"zoom-h4n"`, `"z-wave"`), no global registry |
+| Registration | `IPluginModule` | `ServiceCollectionExtensions.TryAddRadexOneServices`, internal `RadexOneRegistrar` where a vendor registrar is needed |
+| Options | ad hoc | `RadexOneOptions`, validated with `AddValidatedOptions<T>()` |
+| Folders | flat | `Segmenters/`, `Messages/`, `Factories/`, `Providers/` per role, plural; `ServiceCollectionExtensions.cs` at the root |
+| Readme | none | `README.Extensions.Hardware.RadexOne.md` (the name derives from the project name without `OoBDev.`) |
+| Tests project | `DevTerm.Devices.RadexOne.Tests` | `OoBDev.Extensions.Hardware.RadexOne.Tests`; contents follow dev-term (section 6) |
+
 Analyzer warnings (Meziantou, NetAnalyzers, OOB rules) apply to the new projects from the start. The framework is unreleased, so names change outright with no forwarders. Rejected-dependency rules apply (no third-party DI or logging, no Polly).
 
-## 6. Testing: keep the dev-term approach
+## 6. Testing and documentation: keep the dev-term approach
 
-Tests do not convert to this repository's testing patterns. dev-term's are better documented and generate specs, runbooks and user guides from automated tests. Carry over, with their documentation:
+Tests and device documentation do not convert to this repository's patterns (owner, 2026-10-26). dev-term's are better documented and generate specs, runbooks and user guides from automated tests. The dotex documentation rules (`docs-and-diagrams`) still apply to the repository's own documents (`docs/migration`, `docs/design`, `docs/patterns-discovery`); the per-device documents and the generated outputs below keep the dev-term structure. Where they live in this repository (proposed `docs/devices/<Device>/` for `known-configuration.md` and `.ksy`, with the generated specs, user guide and bench reports beside the other generated output) is added to Q2. Carry over, with their documentation:
 
 - UI tests: the headless `ScreenshotTests` for TUI and WPF that produce the user-guide screenshots, and the `StaTestRunner` and `TuiTestRunner` harnesses.
 - Test categories and the rule that each test carries one, enforced by `DevTerm.CodingStandards.Tests`.
