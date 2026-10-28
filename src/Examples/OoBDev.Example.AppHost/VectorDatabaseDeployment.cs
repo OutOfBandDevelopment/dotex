@@ -24,6 +24,12 @@ internal static class VectorDatabaseDeployment
                 ?? throw new InvalidOperationException($"No connection string for {server.Name}.");
 
             await EnableClrAsync(serverConnection, cancellationToken);
+
+            // DacFx rebuilds tables with persisted computed columns over the CLR vector type on every upgrade and scripts the
+            // column as NVARCHAR (error 4936), so an existing schema is left alone. Reset the data volume to take schema changes.
+            if (await SchemaExistsAsync(serverConnection, database.Resource.DatabaseName, cancellationToken))
+                return;
+
             Deploy(serverConnection, database.Resource.DatabaseName, dacpacPath);
         });
 
@@ -42,6 +48,15 @@ internal static class VectorDatabaseDeployment
             EXEC sp_configure 'clr strict security', 0; RECONFIGURE;
             """, connection);
         await command.ExecuteNonQueryAsync(cancellationToken);
+    }
+
+    private static async Task<bool> SchemaExistsAsync(string serverConnection, string databaseName, CancellationToken cancellationToken)
+    {
+        var builder = new SqlConnectionStringBuilder(serverConnection) { InitialCatalog = databaseName };
+        await using var connection = new SqlConnection(builder.ConnectionString);
+        await connection.OpenAsync(cancellationToken);
+        await using var command = new SqlCommand("SELECT OBJECT_ID(N'[embedding].[HashPlanes]', N'U')", connection);
+        return await command.ExecuteScalarAsync(cancellationToken) is not (null or DBNull);
     }
 
     private static void Deploy(string serverConnection, string databaseName, string dacpacPath)
