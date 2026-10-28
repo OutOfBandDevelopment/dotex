@@ -148,6 +148,7 @@ public static class Segment
             SegmentBuildDefinition def => def.EndsWith.HasValue switch
             {
                 true when def.StartsWith.Length >= 1 => new BetweenSegmenter(onSegmentReceived, def.StartsWith, def.EndsWith ?? 0, def.MaxLength, def.Options),
+                false when def.StartsWith.Length == 0 && def.Length.HasValue => new FixedLengthSegmenter(onSegmentReceived, def.Length.Value, def.Options),
                 false when def.StartsWith.Length == 0 => new PassThroughSegmenter(onSegmentReceived, def.Length ?? 0L, def.Options),
                 false when def.Length.HasValue => new StartAndFixLengthSegmenter(onSegmentReceived, def.StartsWith, def.Length.Value, def.Options, def.ExtensionDefinition),
                 _ => throw new NotSupportedException("Unable to Build Segmenter")
