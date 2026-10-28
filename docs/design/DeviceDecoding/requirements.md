@@ -58,7 +58,6 @@
 
 ## Open questions
 
-- **Q2** where the shared test helpers and the category mapping live.
 - **Q3** whether UI, manifests and transports migrate, and in what order.
 - **Q4** where dev-term lives after the migration.
-- Names to confirm: `OoBDev.DerEE.De5000` (vendor spelling) and `OoBDev.ZWave` (protocol, not the stick).
+Decided 2026-10-28: package names `OoBDev.DerEE.De5000` and `OoBDev.ZWave` (the protocol, not the stick); test layout in the [testing strategy](testing-strategy.md).

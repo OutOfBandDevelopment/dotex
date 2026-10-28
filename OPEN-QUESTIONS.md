@@ -20,16 +20,6 @@ Review [docs/migration/incoming-recommendation-plan.md](docs/migration/incoming-
 
 **Your answer:**
 
-### Q2 — 2026-10-26 — Device decoding — Where the dev-term test approach lives
-
-You asked to keep dev-term's testing patterns (documented, generating specs, runbooks and user guides from tests) when the device libraries and UI move. The dotex testing rule uses the categories `Unit`, `Simulate`, `Integration`, `DevLocal`, `LiveIntegration` and Docker for anything outside the process; dev-term uses `Unit` and `Integration` (real hardware degrades to `Assert.Inconclusive` through `.runsettings`), `LoopbackTransport`, and generated docs. Plan: [docs/migration/device-decoding-migration-plan.md](docs/migration/device-decoding-migration-plan.md) section 6. The same applies to dev-term's device documentation (`known-configuration.md`, `.ksy`, generated specs, user guide and bench reports), which the owner also prefers (2026-10-26); the proposed home is `docs/devices/<Device>/`.
-
-**Options:** **A** (recommended): add dev-term's test utilities (categories, `RealHardware` preflight, `LoopbackTransport`, doc/screenshot generators) as a new `OoBDev.Devices.TestUtilities` project and let device tests use dev-term's two categories, leaving the rest of the repository unchanged; the dotex rule gets a short exception for device projects. Cost: two category vocabularies in one repo. **B**: merge them, mapping dev-term `Unit` to `Unit`, scripted loopback tests to `Simulate`, real hardware to `DevLocal`, and extend `OoBDev.TestUtilities`. Cost: dev-term's documented rules need rewriting. **C**: adopt dev-term's approach repository-wide. Cost: large churn in existing tests.
-
-**Default:** A.
-
-**Your answer:**
-
 ### Q3 — 2026-10-26 — Device decoding — UI framework, transports and manifests scope
 
 The plan migrates the UI model (`UiDefinitions`), then adds an MVVM view-model layer and thin WPF, Terminal.Gui and Blazor renderers (about 19,500 lines of code-behind in dev-term are not reused as is). It also lists `DeviceManifests` (5,825 lines) and the transports dotex lacks (TCP, USBTMC, VXI-11, RFC 2217, BLE, brokers).

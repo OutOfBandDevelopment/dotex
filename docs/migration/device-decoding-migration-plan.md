@@ -1,6 +1,6 @@
 # Device decoding migration plan (dev-term to dotex)
 
-**Written:** 2026-10-26 | **Branch:** `dev/device-decoding` | **Status:** plan, waiting on Q2 and Q3 in [OPEN-QUESTIONS.md](../../OPEN-QUESTIONS.md)
+**Written:** 2026-10-26 | **Branch:** `dev/device-decoding` | **Status:** plan, Q2 answered 2026-10-28, waiting on Q3 in [OPEN-QUESTIONS.md](../../OPEN-QUESTIONS.md)
 
 Source: `C:\repo\oobdev\dev-term` (branch `dev/zstick-s2`, commit `d777358`; the Z-Wave module is still changing there). The owner wants the binary protocol decoders in this framework, and dev-term rebuilt on top of them later ([harvest-candidates.md](../harvest-candidates.md)).
 
@@ -162,10 +162,10 @@ The migrated code follows this repository's patterns and practices, not dev-term
 | Busylight | `OoBDev.Kuando.Busylight` | `KuandoGlobals` | Same |
 | K8055 | `OoBDev.Velleman.K8055` | `VellemanGlobals` | Same |
 | Zoom H4n | `OoBDev.Zoom.H4n` | `ZoomGlobals` | Same |
-| DE-5000 | `OoBDev.DerEE.De5000` | `DerEEGlobals` | New; vendor spelling DER EE (confirm) |
+| DE-5000 | `OoBDev.DerEE.De5000` | `DerEEGlobals` | New; vendor spelling DER EE (confirmed 2026-10-28) |
 | NMEA 0183 | `OoBDev.Nmea` | `NmeaGlobals` | An open standard, so no vendor segment |
 | SCPI | `OoBDev.Scpi` | `ScpiGlobals` | An open standard; instrument profiles (Rigol, Tektronix, HP, Korad) are data, not projects |
-| Z-Wave | `OoBDev.ZWave` | `ZWaveGlobals` | The protocol, not the Aeotec stick; confirm |
+| Z-Wave | `OoBDev.ZWave` | `ZWaveGlobals` | The protocol, not the Aeotec stick (confirmed 2026-10-28) |
 
 Analyzer warnings (Meziantou, NetAnalyzers, OOB rules) apply to the new projects from the start. The framework is unreleased, so names change outright with no forwarders. Rejected-dependency rules apply (no third-party DI or logging, no Polly).
 
@@ -180,7 +180,7 @@ Tests and device documentation do not convert to this repository's patterns (own
 - Recorded samples and `SampleDataGenerator` for decoder tests; `.ksy` files checked by `DeviceKsyFilesTests`.
 - The documentation outputs: `docs/specs`, `docs/user-guide` (captured transcripts and screenshots from tests) and the bench reports in `docs/test`. See dev-term `docs/design/testing.md` and `docs/specs/README.md`.
 
-Where this meets the dotex test rules (`.claude/rules/testing.md`: `Unit`, `Simulate`, `Integration`, `DevLocal`, `LiveIntegration`, Docker for anything outside the process), the category mapping and where the shared test utilities live is Q2. Until it is answered, new device tests use the dev-term category names and helpers, copied unchanged.
+Where this meets the dotex test rules (`.claude/rules/testing.md`: `Unit`, `Simulate`, `Integration`, `DevLocal`, `LiveIntegration`, Docker for anything outside the process), the owner decided on 2026-10-28: one test project per library, a new `Hardware` category (Inconclusive when the device is absent) and shared helpers in a new `OoBDev.Devices.TestUtilities` project.
 
 ## 7. Order of work
 

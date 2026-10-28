@@ -31,7 +31,7 @@ Tests keep the dev-term approach (plan section 6, owner 2026-10-26): byte-exact 
 | Checksums | Each algorithm against dev-term's traces, including the inner Radex One checksum | `Unit` |
 | Scripted loopback | Request and reply sequences against a scripted fake (Busylight apply, Radex One reads) | `Simulate` |
 | Registration | `ServiceCollectionExtensions` registers the keyed services and validates options | `Unit` |
-| Real hardware | Target read from `.runsettings` run parameters, `Assert.Inconclusive` without the device | `DevLocal` |
+| Real hardware | Target read from `.runsettings` run parameters, `Assert.Inconclusive` without the device | `Hardware` |
 
 Recorded traces are copied from the dev-term tests with their source named in a comment next to each. A merged part (M1 to M5) has its own tests, and any hypothesis (M3, M4) is labelled as such in the test name.
 
@@ -41,8 +41,8 @@ Target 80% or better line coverage per package (Framework rule, applied to the d
 
 ## Documentation outputs
 
-Specs, user guide and bench reports stay generated from tests as in dev-term (`docs/specs`, `docs/user-guide`, `docs/test`); moving the generators is part of Q2 and is not started here.
+Specs, user guide and bench reports stay generated from tests as in dev-term (`docs/specs`, `docs/user-guide`, `docs/test`); moving the generators is not started here.
 
 ## Open point
 
-Q2 decides where the shared test helpers (loopback transport, sample data generator, category constants) live. Until it is answered the first packages copy dev-term's helpers unchanged into their test projects.
+Decided by the owner (2026-10-28): every device library has its own test project (`OoBDev.{Vendor}.{Device}.Tests`). Shared helpers (loopback transport, device-present preflight, trace and sample data helpers, category constants) live in a new `OoBDev.Devices.TestUtilities` project, and `OoBDev.TestUtilities` stays unchanged. A new category `Hardware` marks tests that need a physical device; they run in the normal run and end `Assert.Inconclusive` when the device is not detected, as in dev-term. The `testing` rule lists the category.
