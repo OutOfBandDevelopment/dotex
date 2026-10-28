@@ -9,6 +9,7 @@ Keep this file short (a handful of items). When an item starts, move it here fro
 ## In progress
 
 - [ ] OData and GraphQL surfaces: waiting on Q2 (library choice); take the next item meanwhile
+- [ ] Device decoding phase 0: first pass written ([device-parity.md](docs/migration/device-parity.md)); still to check the dev-term tests for M1 to M5 and the proving-grounds sources, then phase 1
 
 ## Next
 

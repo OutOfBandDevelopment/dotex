@@ -51,3 +51,7 @@ CodeAnalysis (semantic and syntax navigators), DacPac navigator and StructuredLo
 |---|---|---|---|
 | D8 | ScoreMachine and HomeSeer applications | **A** harvest library and emulator code only; **B** also migrate the web and TCP hosts as an example; **C** nothing beyond the BDD scope | **A**: best coverage without importing applications |
 | D9 | Add Vigenère from challenge-accepted | **A** yes, educational package; **B** no | **A**: more cipher coverage at a few dozen lines |
+
+## 4. Device decoding phase 0 (2026-10-28)
+
+The five devices that exist in both `mine/binary-data-decoders` and dev-term were compared in [device-parity.md](device-parity.md); dev-term is the base. Merges M1 to M5 are listed there. Rejected with reason: the BinaryDataDecoders Busylight `Class1` hardware loop (experiment code), the K8055 request and response structs (dev-term decodes the same offsets), the NMEA classes and notes (dev-term covers GGA, RMC, GSA, GSV and VTG), the Radex One write-settings request (setting fields zeroed, incomplete) and the Zoom H4n request enum and decoder (same codes and status bits as dev-term, which adds the handshake).
