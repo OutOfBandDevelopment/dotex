@@ -23,6 +23,8 @@
     <Project Path="Examples/OoBDev.Example.WebApi/OoBDev.Example.WebApi.csproj" />
   </Folder>
   <Folder Name="/Extensions/">
+    <Project Path="Extensions/OoBDev.AspNetCore.Cgi.OpenApi.Tests/OoBDev.AspNetCore.Cgi.OpenApi.Tests.csproj" />
+    <Project Path="Extensions/OoBDev.AspNetCore.Cgi.OpenApi/OoBDev.AspNetCore.Cgi.OpenApi.csproj" />
     <Project Path="Extensions/OoBDev.AspNetCore.Cgi.Tests/OoBDev.AspNetCore.Cgi.Tests.csproj" />
     <Project Path="Extensions/OoBDev.AspNetCore.Cgi/OoBDev.AspNetCore.Cgi.csproj" />
     <Project Path="Extensions/OoBDev.Data.Vectors.DB.Tests/OoBDev.Data.Vectors.DB.Tests.csproj" />
