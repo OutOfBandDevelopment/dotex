@@ -11,6 +11,7 @@ One place per kind of information; move work between them as it progresses.
 | Feature docs (`docs/design/<Feature>/`, project `README.{Project}.md`, `docs/patterns-discovery/`) | The current truth about the feature; update them in the same change as the code. |
 
 Lifecycle:
+0. Feature requests from others arrive as files in `docs/features/request/` (template and process in its `README.md`). Triage each file with `Status: new`: merge it into `docs/design/<Feature>/` and `BACKLOG.md`, then set `triaged` (or `declined` with the reason) and link both; set `done` with the change document when it ships.
 1. New work or a new finding goes to `BACKLOG.md`. A question for the owner goes to `OPEN-QUESTIONS.md` with a default.
 2. Starting an item moves it from `BACKLOG.md` to `TODO.md`.
 3. Finishing an item (build and tests verified, outcome stated plainly) triggers the `complete-work` skill: change document, index entry, feature docs, removal from `TODO.md` and `BACKLOG.md`.

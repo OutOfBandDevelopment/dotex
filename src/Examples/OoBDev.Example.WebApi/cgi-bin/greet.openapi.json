@@ -1,0 +1,75 @@
+{
+  "info": {
+    "title": "greet",
+    "version": "1.0.0"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/": {
+      "get": {
+        "parameters": [
+          {
+            "in": "query",
+            "name": "name",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "An HTML page"
+          }
+        },
+        "summary": "Shows the name form, or the greeting when ?name= is given",
+        "tags": [
+          "CGI greet"
+        ]
+      },
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "name"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "An HTML page that greets the name"
+          }
+        },
+        "summary": "Sends the submitted name back in a greeting",
+        "tags": [
+          "CGI greet"
+        ]
+      }
+    }
+  }
+}

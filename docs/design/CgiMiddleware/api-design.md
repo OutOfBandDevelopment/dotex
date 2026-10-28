@@ -10,6 +10,7 @@
 - [Options](#options)
 - [Types](#types)
 - [Configuration sample](#configuration-sample)
+- [OpenAPI listing](#openapi-listing)
 - [Error model](#error-model)
 
 ### List of Figures
@@ -98,6 +99,16 @@ ICgiProcessRunner ..> CgiResult
   }
 }
 ```
+
+## OpenAPI listing
+
+The opt-in project `OoBDev.AspNetCore.Cgi.OpenApi` lists CGI programs in the host's OpenAPI documents. `TryAddCgiOpenApi(configuration, "OoBDev:Cgi:OpenApi")` adds `CgiOpenApiDocumentTransformer` to the documents named in `CgiOpenApiOptions.Documents` (default `all`).
+
+- A program is described by `{program}.openapi.json` in the script root: `greet.exe` and `greet.cgi` are both described by `greet.openapi.json`, so one description serves every platform's build. The program owns the file; the example program writes it with `greet -openapi` during its build.
+- Paths in the description are relative to the program: `/` is the program itself and `/{id}` reaches it with `PATH_INFO`. The transformer publishes them under `{Prefix}/{program file}`, for example `/cgi-bin/greet.exe`.
+- Operations without tags get the program name as their tag. Component schemas are merged; a path or schema already in the document wins and the clash is logged.
+- A description without a program next to it (no listed handler matches), or one that is not valid OpenAPI, is skipped with a warning; it never fails the document.
+- The listing does not change what the middleware allows: authorization, rights and handler checks still decide each request.
 
 ## Error model
 
