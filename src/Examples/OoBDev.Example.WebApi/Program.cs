@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
+using System.IO;
 
 namespace OoBDev.WebApi;
 
@@ -89,6 +90,11 @@ public static class Program
 
         builder.Services.AddControllers();
 
+        // CGI programs (see cgi-src/ and README.Example.WebApi.md); their {program}.openapi.json files appear in the "all" OpenAPI document
+        builder.Configuration["OoBDev:Cgi:ScriptRoot"] = Path.Combine(builder.Environment.ContentRootPath, builder.Configuration["OoBDev:Cgi:ScriptRoot"] ?? "cgi-bin");
+        OoBDev.AspNetCore.Cgi.ServiceCollectionExtensions.TryAddCgiServices(services, builder.Configuration, "OoBDev:Cgi");
+        OoBDev.AspNetCore.Cgi.OpenApi.ServiceCollectionExtensions.TryAddCgiOpenApi(services, builder.Configuration, "OoBDev:Cgi:OpenApi");
+
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
@@ -109,6 +115,7 @@ public static class Program
 
         app.UseAuthentication();
         app.UseAuthorization();
+        OoBDev.AspNetCore.Cgi.ServiceCollectionExtensions.UseCgi(app);
 
         app.MapControllers();
 
