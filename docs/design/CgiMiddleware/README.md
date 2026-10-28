@@ -2,7 +2,7 @@
 
 **Status:** Implemented (first cut; see TODO.md for what is left) · **Date:** 2026-10-22 · **Related:** [docs/todo.md](../../todo.md), [design standard](../../patterns-discovery/06-design-document-standard.md)
 
-An opt-in ASP.NET Core middleware that runs CGI/1.1 ([RFC 3875](https://www.rfc-editor.org/rfc/rfc3875)) programs as child processes, so a Kestrel application can serve legacy scripts and small native tools without changing Kestrel. The project is `OoBDev.AspNetCore.Cgi` (Extensions layer) with tests in `OoBDev.AspNetCore.Cgi.Tests`.
+An opt-in ASP.NET Core middleware that runs CGI/1.1 ([RFC 3875](https://www.rfc-editor.org/rfc/rfc3875)) programs as child processes, so a Kestrel application can serve legacy scripts and small native tools without changing Kestrel. The project is `OoBDev.AspNetCore.Cgi` (Extensions layer) with tests in `OoBDev.AspNetCore.Cgi.Tests`. The opt-in `OoBDev.AspNetCore.Cgi.OpenApi` lists programs that ship a `{program}.openapi.json` in the OpenAPI documents ([API design](api-design.md#openapi-listing)). A Go program, `greet`, is the working example in `OoBDev.Example.WebApi`.
 
 ## Contents
 
