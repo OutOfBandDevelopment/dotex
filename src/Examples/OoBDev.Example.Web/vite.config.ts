@@ -8,14 +8,11 @@ export default defineConfig({
   plugins: [vue({ template: { compilerOptions: { isCustomElement: tag => tag.startsWith('fluent-') } } })],
   server: {
     port: 5173,
-    proxy: {
-      '/api': api,
-      '/Document': api,
-      '/Search': api,
-      '/openapi': api,
-      '/scalar': api,
-      '/asyncapi': api,
-    },
+    // The browser's Host header is kept so the OpenAPI documents name the site's own origin; otherwise Scalar sends its
+    // requests straight to the API's port, which is another origin, and the browser blocks them.
+    proxy: Object.fromEntries(
+      ['/api', '/Document', '/Search', '/openapi', '/scalar', '/asyncapi', '/cgi-bin'].map(path => [path, { target: api, changeOrigin: false }]),
+    ),
   },
   test: { environment: 'node', include: ['src/**/*.test.ts'] },
 });
