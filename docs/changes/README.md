@@ -353,3 +353,7 @@ Each change document should include:
 **[documentation-example-ui-design-reconcile-2026-10-22.md](documentation-example-ui-design-reconcile-2026-10-22.md)**
 - Example UI design documents reconciled with the code
 - Status: ✅ Complete
+
+**[examples-apphost-startup-fixes-2026-10-28.md](examples-apphost-startup-fixes-2026-10-28.md)**
+- Example AppHost: dacpac re-publish skipped, API binds the Aspire port, vector reader uses the Aspire database
+- Status: ✅ Complete (full AppHost start not rerun)
