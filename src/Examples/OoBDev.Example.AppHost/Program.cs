@@ -59,6 +59,8 @@ var api = builder.AddProject<OoBDev_Example_WebApi>("example-api", options => op
     .WithReference(redis)
     .WithReference(rabbitmq)
     .WithReference(vectorDb)
+    // The queue reader looks up its own connection string name; appsettings.json points it at a local SQL Server on 1433.
+    .WithEnvironment("ConnectionStrings__EmbeddingSentenceTransformer", vectorDb)
     .WaitFor(vectorDb)
     .WaitFor(ollama)
     .WaitFor(redis);
