@@ -38,4 +38,11 @@ public static class TestCategories
     /// active service subscriptions. Manual execution only, not run in CI/CD pipelines.
     /// </summary>
     public const string LiveIntegration = nameof(LiveIntegration);
+
+    /// <summary>
+    /// Tests that need a physical device (serial, USB HID, instruments). They run in the normal test run
+    /// and end with <c>Assert.Inconclusive</c> when the device is not detected, so the default run never
+    /// depends on hardware.
+    /// </summary>
+    public const string Hardware = nameof(Hardware);
 }

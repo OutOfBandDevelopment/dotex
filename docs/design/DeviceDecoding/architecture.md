@@ -66,6 +66,8 @@ OoBDev.Quarta.RadexOne/
 
 The tests project is `OoBDev.Quarta.RadexOne.Tests`.
 
+Device packages are specialized and separately packaged, so they sit in the Extensions layer (`src/Extensions/`) and reference `OoBDev.System.Abstractions` only. Their test projects sit beside them and reference `OoBDev.Devices.TestUtilities` (`src/Framework/`, beside `OoBDev.TestUtilities`). Stub projects for all eight devices and the helper project exist since 2026-10-28; they build and hold the provider key only.
+
 ## Template device
 
 The first device built end to end is DE-5000: a 17-byte packet on a stream, verified on real hardware, with no command side. It exercises the segmenter, a checksum-free or simple-checksum decode, the registration and the readme without the open questions that Busylight (state) and K8055 (HID report id) raise. What it teaches is written back into [api-design.md](api-design.md) before the other devices follow.

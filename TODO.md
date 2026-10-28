@@ -9,7 +9,7 @@ Keep this file short (a handful of items). When an item starts, move it here fro
 ## In progress
 
 - [ ] OData and GraphQL surfaces: waiting on Q2 (library choice); take the next item meanwhile
-- [ ] Device decoding phase 1: feature docs written ([docs/design/DeviceDecoding/](docs/design/DeviceDecoding/README.md), Draft); next the template device DE-5000 with the IO gaps from its api-design (checksums, segmenter, serial adapter fix); phase 0 open checks in [device-parity.md](docs/migration/device-parity.md) section 4
+- [ ] Device decoding phase 1: feature docs written ([docs/design/DeviceDecoding/](docs/design/DeviceDecoding/README.md), Draft); stub projects for all 8 devices, their test projects and `OoBDev.Devices.TestUtilities` exist (build only, 2026-10-28; Q2 answered: `Hardware` category); next the template device DE-5000 with the IO gaps from its api-design (checksums, segmenter, serial adapter fix); phase 0 open checks in [device-parity.md](docs/migration/device-parity.md) section 4
 
 ## Next
 
