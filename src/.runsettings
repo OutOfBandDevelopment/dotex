@@ -204,6 +204,9 @@ https://github.com/coverlet-coverage/coverlet/blob/fc7ec26dcaed8fedba880ff13c6f1
 		<Parameter name="DOCKER_NETWORK" value="oobd-integration-test-net" />
 		<Parameter name="DOCKER_COMPOSE_FILE" value="docker-compose.integration-tests.yml" />
 
+		<!-- Hardware tests: serial port of the plugged-in device (blank or absent port ends the test Inconclusive) -->
+		<Parameter name="ZWAVE_SERIAL_PORT" value="COM13" />
+
 		<!-- TestContext Configuration Provider Integration Tests -->
 		<!-- Flat values -->
 		<Parameter name="TestConfig_Environment" value="IntegrationTest" />

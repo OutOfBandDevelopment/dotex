@@ -16,6 +16,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\OoBDev.System.Abstractions\OoBDev.System.Abstractions.csproj" />
+		<ProjectReference Include="..\OoBDev.System.IO.Ports\OoBDev.System.IO.Ports.csproj" />
 		<ProjectReference Include="..\OoBDev.TestUtilities\OoBDev.TestUtilities.csproj" />
 	</ItemGroup>
 

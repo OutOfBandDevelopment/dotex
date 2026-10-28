@@ -285,6 +285,16 @@ Tests that require live cloud credentials. Manual execution only.
 
 ---
 
+### Hardware (physical devices)
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `ZWAVE_SERIAL_PORT` | `COM13` | Serial port of the plugged-in Z-Wave stick; blank or unlisted ends the Hardware test Inconclusive |
+
+**Tests Using:** `OoBDev.ZWave.Tests` (category `Hardware`)
+
+---
+
 ### Qdrant (Vector Database)
 
 **Service:** Qdrant vector similarity search engine

@@ -357,3 +357,4 @@ Each change document should include:
 **[examples-apphost-startup-fixes-2026-10-28.md](examples-apphost-startup-fixes-2026-10-28.md)**
 - Example AppHost: dacpac re-publish skipped, API binds the Aspire port, vector reader uses the Aspire database
 - Status: ✅ Complete (full AppHost start not rerun)
+- [Z-Wave core](devices-zwave-core-2026-10-28.md) - first device package, verified on a Z-Stick (2026-10-28)

@@ -1,4 +1,4 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.System.IO;
 using OoBDev.System.IO.Segmenters;
 using OoBDev.TestUtilities;
@@ -98,6 +98,24 @@ public class SegmenterTests
 
         Assert.AreEqual(SegmentationStatus.Complete, result.Status);
         CollectionAssert.AreEqual(new byte[] { 0xFF, 0x11 }, received[0]);
+    }
+
+    [TestMethod, TestCategory(TestCategories.Unit)]
+    public async Task UsingRunsACustomSegmenterFromTheBuilderTest()
+    {
+        var received = new List<byte[]>();
+        var segmenter = Build(Segment.Using(on => new FixedLengthSegmenterStub(on)), received);
+
+        var result = await segmenter.TryReadAsync(new ReadOnlySequence<byte>([0x01, 0x02, 0x03])).ConfigureAwait(false);
+
+        Assert.AreEqual(SegmentationStatus.Complete, result.Status);
+        CollectionAssert.AreEqual(new byte[] { 0x01 }, received[0]);
+    }
+
+    private sealed class FixedLengthSegmenterStub(OnSegmentReceived onSegmentReceived) : SegmenterBase(onSegmentReceived, SegmentionOptions.None)
+    {
+        protected override (SegmentationStatus status, ReadOnlySequence<byte>? segment) Read(ReadOnlySequence<byte> buffer) =>
+            buffer.IsEmpty ? (SegmentationStatus.Incomplete, null) : (SegmentationStatus.Complete, buffer.Slice(0, 1));
     }
 
     private sealed class Chunk : ReadOnlySequenceSegment<byte>
