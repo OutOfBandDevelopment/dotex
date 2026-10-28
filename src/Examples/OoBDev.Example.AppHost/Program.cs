@@ -63,6 +63,10 @@ var api = builder.AddProject<OoBDev_Example_WebApi>("example-api", options => op
     .WaitFor(ollama)
     .WaitFor(redis);
 
+// Under Visual Studio the child inherits ASPNETCORE_URLS=https://localhost:5001;http://localhost:5000, and URLS outranks HTTP_PORTS, so the API
+// would ignore the port the host proxies to and every request through the proxy (including the web site's) would hang.
+api.WithEnvironment("ASPNETCORE_URLS", ReferenceExpression.Create($"http://localhost:{api.GetEndpoint("http").Property(EndpointProperty.TargetPort)}"));
+
 // Optional secrets (for example GroqCloudApiClientOptions__ApiKey) come from containers/example/.env, the same file the compose stack reads.
 var envFile = Path.Combine(repoRoot, "containers", "example", ".env");
 if (File.Exists(envFile))
