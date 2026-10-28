@@ -19,3 +19,35 @@ Review [docs/migration/incoming-recommendation-plan.md](docs/migration/incoming-
 **Default:** nothing migrates; only the D7 backlog entries exist.
 
 **Your answer:**
+
+### Q2 — 2026-10-26 — Device decoding — Where the dev-term test approach lives
+
+You asked to keep dev-term's testing patterns (documented, generating specs, runbooks and user guides from tests) when the device libraries and UI move. The dotex testing rule uses the categories `Unit`, `Simulate`, `Integration`, `DevLocal`, `LiveIntegration` and Docker for anything outside the process; dev-term uses `Unit` and `Integration` (real hardware degrades to `Assert.Inconclusive` through `.runsettings`), `LoopbackTransport`, and generated docs. Plan: [docs/migration/device-decoding-migration-plan.md](docs/migration/device-decoding-migration-plan.md) section 6. The same applies to dev-term's device documentation (`known-configuration.md`, `.ksy`, generated specs, user guide and bench reports), which the owner also prefers (2026-10-26); the proposed home is `docs/devices/<Device>/`.
+
+**Options:** **A** (recommended): add dev-term's test utilities (categories, `RealHardware` preflight, `LoopbackTransport`, doc/screenshot generators) as a new `OoBDev.Devices.TestUtilities` project and let device tests use dev-term's two categories, leaving the rest of the repository unchanged; the dotex rule gets a short exception for device projects. Cost: two category vocabularies in one repo. **B**: merge them, mapping dev-term `Unit` to `Unit`, scripted loopback tests to `Simulate`, real hardware to `DevLocal`, and extend `OoBDev.TestUtilities`. Cost: dev-term's documented rules need rewriting. **C**: adopt dev-term's approach repository-wide. Cost: large churn in existing tests.
+
+**Default:** A.
+
+**Your answer:**
+
+### Q3 — 2026-10-26 — Device decoding — UI framework, transports and manifests scope
+
+The plan migrates the UI model (`UiDefinitions`), then adds an MVVM view-model layer and thin WPF, Terminal.Gui and Blazor renderers (about 19,500 lines of code-behind in dev-term are not reused as is). It also lists `DeviceManifests` (5,825 lines) and the transports dotex lacks (TCP, USBTMC, VXI-11, RFC 2217, BLE, brokers).
+
+**Options:** **A** (recommended): migrate the protocol libraries and `UiDefinitions` first, build the view models with the WPF renderer, and decide on Terminal.Gui, Blazor, manifests and transports after the first device panel works end to end. **B**: migrate everything in the plan's order, accepting `Terminal.Gui` as a dependency now. **C**: protocol libraries only, UI and transports stay in dev-term.
+
+**Cross-platform (your note, 2026-10-26):** UI libraries come in as needed, Windows-targeted (`net10.0-windows`) only where a toolkit forces it, and you want a control library that renders on Linux and macOS too. Candidates: **Avalonia** (recommended: MIT, XAML and `ICommand` binding, reuses the same view models, one codebase for Windows, Linux and macOS), **GtkSharp** (native on Linux, weak on macOS, needs GTK installed), or only the terminal and web renderers for non-Windows. Your preference (2026-10-26): the most MVVM with `ICommand` where possible, and a spike of Avalonia before the final go-ahead (backlog item added). Reply with a pick after the spike, or leave it to the phase 7 design.
+
+**Default:** A. `Terminal.Gui` and the cross-platform toolkit are not added until you accept them.
+
+**Your answer:**
+
+### Q4 — 2026-10-26 — Device decoding — Where dev-term lives after the shells use OoBDev libraries
+
+The dev-term shells (Console, Wpf, Web) will be converted to use the OoBDev libraries (phase 10 of the plan). Afterwards dev-term can live in two places.
+
+**Options:** **A** (recommended): keep it a separate repository that depends on the dotex packages over NuGet; the package boundary then proves the libraries are reusable, and dev-term keeps its own release rhythm and test-generated documentation. Cost: cross-repository changes need a package publish (a local feed works). **B**: move it under this project as a tool, or a tool framework other tools build on. Cost: a larger solution, and the tool framework needs its own design (project layering, packaging). **C**: decide after phase 7, once the first device panel runs end to end.
+
+**Default:** A for planning; nothing in phases 0 to 9 depends on the choice.
+
+**Your answer:**
