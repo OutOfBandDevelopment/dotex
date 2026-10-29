@@ -8,6 +8,8 @@ How this file is kept: see `.claude/rules/open-questions.md` and `.claude/rules/
 
 _(none waiting; processed requests are in BACKLOG.md and TODO.md)_
 
+- make sure TODO.md and BACKLOG.md are up-to-date
+
 ## Open
 
 ### Q1 — 2026-10-22 — Migration — Incoming code recommendation plan
