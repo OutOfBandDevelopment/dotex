@@ -382,6 +382,10 @@ Each change document should include:
 - Latency gate for the search syntax (500 ms log, 750 ms fail)
 - Status: ✅ Complete
 
+**[process-security-audit-operations-check-2026-10-29.md](process-security-audit-operations-check-2026-10-29.md)**
+- Operations check added to the security-audit skill
+- Status: ✅ Complete
+
 **[build-warnings-clean-2026-10-29.md](build-warnings-clean-2026-10-29.md)**
 - Last build warnings resolved or suppressed with reasons
 - Status: ✅ Complete
