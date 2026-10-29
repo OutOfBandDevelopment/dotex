@@ -483,3 +483,4 @@ Each change document should include:
 - [Manual CI and packaging on demand (2026-10-29)](build-manual-ci-packaging-2026-10-29.md) - pack only on `dotnet pack`, output `G:\nuget`, workflows removed
 - [Example AppHost SQL password and queue wiring (2026-10-29)](examples-apphost-sa-password-queues-2026-10-29.md) - fixed sa password, new volume, SMTP and RabbitMQ config from the host
 - [DevTerm engine contracts (2026-10-29)](devterm-core-contracts-2026-10-29.md) - `OoBDev.DevTerm.Core`: `ITransport`, `IPresenter`, pump and `StreamTransport` over `IDeviceAdapter`
+- [DevTerm loopback transport (2026-10-29)](devterm-loopback-transport-2026-10-29.md) - `OoBDev.DevTerm.Transports.Loopback`: scripted in-process `ITransport` for hardware-free sessions and shells
