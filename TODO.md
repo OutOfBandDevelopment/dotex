@@ -9,7 +9,7 @@ Keep this file short (a handful of items). When an item starts, move it here fro
 ## In progress
 
 - [ ] OData and GraphQL surfaces: waiting on Q2 (library choice); take the next item meanwhile
-- [ ] Device decoding phase 1: feature docs written ([docs/design/DeviceDecoding/](docs/design/DeviceDecoding/README.md), Draft); stub projects for all 8 devices, their test projects and `OoBDev.Devices.TestUtilities` exist (build only, 2026-10-28; Q2 answered: `Hardware` category); IO gaps closed (Xor8/word-sum checksums, fixed-length segmenter, busy-port fix, `Segment.Using` custom segmenter seam); Z-Wave core is done end to end and verified on the Z-Stick on COM13 ([change](docs/changes/devices-zwave-core-2026-10-28.md)); Z-Wave interpreter, node table, id tables, ACK responder follow, then DE-5000; phase 0 open checks in [device-parity.md](docs/migration/device-parity.md) section 4
+- [ ] Device decoding phase 1: feature docs written ([docs/design/DeviceDecoding/](docs/design/DeviceDecoding/README.md), Draft); stub projects for all 8 devices, their test projects and `OoBDev.Devices.TestUtilities` exist (build only, 2026-10-28; Q2 answered: `Hardware` category); IO gaps closed (Xor8/word-sum checksums, fixed-length segmenter, busy-port fix, `Segment.Using` custom segmenter seam); Z-Wave core is done end to end and verified on the Z-Stick on COM13 ([change](docs/changes/devices-zwave-core-2026-10-28.md)); Z-Wave interpreter, node table, names and the remaining requests are in (27 unit tests); id tables and the ACK responder follow, then DE-5000; phase 0 open checks in [device-parity.md](docs/migration/device-parity.md) section 4
 
 ## Next
 

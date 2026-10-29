@@ -73,4 +73,67 @@ public static class ZWaveRequests
     /// <param name="callbackId">The id the controller repeats in its transmit callback.</param>
     /// <returns>The request frame.</returns>
     public static ZWaveFrame LevelSet(byte node, byte level, byte callbackId) => SendData(node, [0x26, 0x01, level], callbackId);
+
+    /// <summary>Include mode: any node, with network-wide inclusion.</summary>
+    public const byte ModeAny = 0x01;
+
+    /// <summary>Stop include, exclude or learn mode.</summary>
+    public const byte ModeStop = 0x05;
+
+    /// <summary>Starts including a node; the callbacks report progress.</summary>
+    /// <param name="callbackId">The id the controller repeats in its callbacks.</param>
+    /// <returns>The request frame.</returns>
+    public static ZWaveFrame AddNode(byte callbackId) => For(ZWaveFunctions.AddNodeToNetwork, ModeAny, callbackId);
+
+    /// <summary>Starts excluding a node; the callbacks report progress.</summary>
+    /// <param name="callbackId">The id the controller repeats in its callbacks.</param>
+    /// <returns>The request frame.</returns>
+    public static ZWaveFrame RemoveNode(byte callbackId) => For(ZWaveFunctions.RemoveNodeFromNetwork, ModeAny, callbackId);
+
+    /// <summary>Stops include mode.</summary>
+    /// <param name="callbackId">The id the controller repeats in its callbacks.</param>
+    /// <returns>The request frame.</returns>
+    public static ZWaveFrame StopAddNode(byte callbackId) => For(ZWaveFunctions.AddNodeToNetwork, ModeStop, callbackId);
+
+    /// <summary>Stops exclude mode.</summary>
+    /// <param name="callbackId">The id the controller repeats in its callbacks.</param>
+    /// <returns>The request frame.</returns>
+    public static ZWaveFrame StopRemoveNode(byte callbackId) => For(ZWaveFunctions.RemoveNodeFromNetwork, ModeStop, callbackId);
+
+    /// <summary>Resets the controller to defaults. Destroys the network: every node is forgotten.</summary>
+    /// <param name="callbackId">The id the controller repeats in its callback.</param>
+    /// <returns>The request frame.</returns>
+    public static ZWaveFrame SetDefault(byte callbackId) => For(ZWaveFunctions.SetDefault, callbackId);
+
+    /// <summary>Starts or stops learn mode.</summary>
+    /// <param name="enable">Whether to enter learn mode.</param>
+    /// <param name="callbackId">The id the controller repeats in its callbacks.</param>
+    /// <returns>The request frame.</returns>
+    public static ZWaveFrame SetLearnMode(bool enable, byte callbackId) => For(ZWaveFunctions.SetLearnMode, enable ? (byte)0x01 : (byte)0x00, callbackId);
+
+    /// <summary>Asks <paramref name="node"/> to refresh its neighbour list.</summary>
+    /// <param name="node">The node.</param>
+    /// <param name="callbackId">The id the controller repeats in its callbacks.</param>
+    /// <returns>The request frame.</returns>
+    public static ZWaveFrame NeighborUpdate(byte node, byte callbackId) => For(ZWaveFunctions.RequestNodeNeighborUpdate, node, callbackId);
+
+    /// <summary>Asks whether the controller considers <paramref name="node"/> failed.</summary>
+    /// <param name="node">The node.</param>
+    /// <returns>The request frame.</returns>
+    public static ZWaveFrame IsFailedNode(byte node) => For(ZWaveFunctions.IsFailedNode, node);
+
+    /// <summary>Removes a node the controller considers failed.</summary>
+    /// <param name="node">The node.</param>
+    /// <param name="callbackId">The id the controller repeats in its callbacks.</param>
+    /// <returns>The request frame.</returns>
+    public static ZWaveFrame RemoveFailedNode(byte node, byte callbackId) => For(ZWaveFunctions.RemoveFailedNode, node, callbackId);
+
+    /// <summary>Asks <paramref name="node"/> for its node information frame.</summary>
+    /// <param name="node">The node.</param>
+    /// <returns>The request frame.</returns>
+    public static ZWaveFrame RequestNodeInfo(byte node) => For(ZWaveFunctions.RequestNodeInfo, node);
+
+    /// <summary>Restarts the Serial API application.</summary>
+    /// <returns>The request frame.</returns>
+    public static ZWaveFrame SoftReset() => For(ZWaveFunctions.SoftReset);
 }

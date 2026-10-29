@@ -290,6 +290,7 @@ Tests that require live cloud credentials. Manual execution only.
 | Variable | Default | Description |
 |----------|---------|-------------|
 | `ZWAVE_SERIAL_PORT` | `COM13` | Serial port of the plugged-in Z-Wave stick; blank or unlisted ends the Hardware test Inconclusive |
+| `ZWAVE_SWITCH_NODE` | `0` | Node id (2 to 232) of a Binary Switch relay; the toggle Hardware test actuates it and restores it, and ends Inconclusive while it is `0` |
 
 **Tests Using:** `OoBDev.ZWave.Tests` (category `Hardware`)
 

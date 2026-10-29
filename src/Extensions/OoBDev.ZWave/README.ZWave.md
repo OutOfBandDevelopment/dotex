@@ -12,14 +12,19 @@ Z-Wave Serial API framing, decoding and request building (the protocol, not one 
 | `ZWaveMessageDecoder` | Classifies a unit as `Ack`, `Nak`, `Can`, `Data` (checksum valid) or `Invalid` |
 | `ZWaveMessageEncoder` | Writes a frame's raw bytes |
 | `ZWaveFrame` | Wire bytes plus `Type`, `Function`, `Payload`; `Create` and `Checksum` (`0xFF` XOR len..payload) |
-| `ZWaveRequests` | Builders: GetVersion, MemoryGetId, GetInitData, GetNodeProtocolInfo, SendData, BasicGet, SwitchSet/Get, LevelSet |
+| `ZWaveRequests` | Builders: GetVersion, MemoryGetId, GetInitData, GetNodeProtocolInfo, SendData, BasicGet, SwitchSet/Get, LevelSet, AddNode, RemoveNode, SetDefault, SetLearnMode, NeighborUpdate, IsFailedNode, RemoveFailedNode, RequestNodeInfo, SoftReset |
+| `ZWaveInterpreter` / `ZWaveReading` | Frame to readable text plus named values; hex, node bitmap and command helpers |
+| `ZWaveNodeTable` / `ZWaveNodeRecord` | Per-node facts built from frames; `Expect(function, node)` attributes replies that do not name their node |
+| `ZWaveNames` | Function, command class, device class, library type and manufacturer names |
+| `ZWaveReports` | Typed readers for reports (Binary Switch) |
+| `ServiceCollectionExtensions` | `TryAddZWave()` registers the decoder and encoder |
 | `ZWaveFunctions` | Serial API function ids |
 
 The consumer must send `ZWaveFrame.Ack` for every received data frame, or the stick retransmits and answers CAN.
 
 ## Not yet ported
 
-Interpreter, node table, manufacturer/command-class id tables, control surface, and an automatic ACK responder. Network-management commands (include, exclude, reset) are not exercised on hardware.
+The manufacturer, product and configuration id tables (dev-term `Data/*.json`; names fall back to hex), the control surface (waits on owner question Q3), and an automatic ACK responder (the consumer sends `ZWaveFrame.Ack`; `ZWaveStick` in the tests shows how). Network-management commands (include, exclude, reset) are not exercised on hardware.
 
 ## Verified
 

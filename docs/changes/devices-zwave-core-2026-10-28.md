@@ -17,3 +17,9 @@ First real device package of the device decoding migration, done before DE-5000 
 ## Not done
 
 Interpreter, node table, id tables, control surface, automatic ACK responder, DI registration, network-management commands on hardware, `api-design.md` Table 2 update.
+
+## Addendum: interpreter, node table and relay toggle test
+
+- `ZWaveInterpreter`, `ZWaveReading`, `ZWaveNames`, `ZWaveNodeTable`/`ZWaveNodeRecord`, `ZWaveReports`, the remaining `ZWaveRequests` (include, exclude, reset, learn, neighbour update, failed-node, node info, soft reset) and `TryAddZWave()` are ported from dev-term as consumer types; no new device-layer interfaces.
+- Hardware test `Switch_AgainstRealNode_TogglesAndRestoresTest` (run parameter `ZWAVE_SWITCH_NODE`): not yet run on a real relay because the node id is not set.
+- Not ported: id tables (`Data/*.json`), ACK responder, control surface (Q3). 27 unit tests pass, 1 Hardware test Inconclusive.
