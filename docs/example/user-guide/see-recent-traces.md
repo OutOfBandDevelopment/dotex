@@ -26,7 +26,7 @@ Traces and logs leave the service over OTLP, so any dashboard can show them; thi
 
 - The compose stack is running, which includes the Aspire dashboard.
 
-Related framework features: OoBDev.OpenTelemetry (OTLP export); Aspire dashboard telemetry API.
+Related framework features: OoBDev.Telemetry (OTLP export); Aspire dashboard telemetry API.
 
 ## Journey at a glance
 

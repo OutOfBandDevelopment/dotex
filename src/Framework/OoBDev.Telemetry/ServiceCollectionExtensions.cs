@@ -8,7 +8,7 @@ using OpenTelemetry.Trace;
 using System;
 using System.Linq;
 
-namespace OoBDev.OpenTelemetry;
+namespace OoBDev.Telemetry;
 
 /// <summary>
 /// Extension methods for configuring OpenTelemetry services.
@@ -27,7 +27,7 @@ public static class ServiceCollectionExtensions
     /// <remarks>
     /// Nothing is added unless the configuration section exists or <c>OTEL_EXPORTER_OTLP_ENDPOINT</c> is set, so hosts
     /// without telemetry settings are unchanged. The processors need <c>IAccessor&lt;CorrelationInfo&gt;</c> and
-    /// <c>IHttpContextAccessor</c> in the container.
+    /// <c>ICurrentUserAccessor</c> in the container (the web host registers one over <c>IHttpContextAccessor</c>, command line and desktop applications use the Windows session).
     /// </remarks>
     /// <param name="services">The service collection to add the providers to.</param>
     /// <param name="configuration">The configuration containing the options section.</param>

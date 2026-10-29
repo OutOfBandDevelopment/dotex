@@ -804,7 +804,7 @@ var person = provider.Generate<PersonModel>();
 |---------|---------|---------|
 | Azure Blob Storage | OoBDev.Azure.StorageAccount | Blob container implementation |
 | Azure Storage Queues | OoBDev.Azure.StorageAccount | Message queue provider |
-| OpenTelemetry (OTLP) | OoBDev.OpenTelemetry | Telemetry |
+| OpenTelemetry (OTLP) | OoBDev.Telemetry | Telemetry |
 
 ### 4.2 Databases and Storage
 

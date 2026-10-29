@@ -1,6 +1,6 @@
 using System;
 
-namespace OoBDev.OpenTelemetry;
+namespace OoBDev.Telemetry;
 
 /// <summary>
 /// Settings for exporting traces and logs over OTLP.

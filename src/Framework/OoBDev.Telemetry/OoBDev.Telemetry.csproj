@@ -7,11 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <FrameworkReference Include="Microsoft.AspNetCore.App" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <InternalsVisibleTo Include="OoBDev.OpenTelemetry.Tests" />
+    <InternalsVisibleTo Include="OoBDev.Telemetry.Tests" />
   </ItemGroup>
   
 	<ItemGroup>
@@ -24,7 +20,7 @@
 	</ItemGroup>
   
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Framework\OoBDev.System.Abstractions\OoBDev.System.Abstractions.csproj" />
+    <ProjectReference Include="..\OoBDev.System.Abstractions\OoBDev.System.Abstractions.csproj" />
   </ItemGroup>
 
 </Project>

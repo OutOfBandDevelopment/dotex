@@ -5,7 +5,7 @@ using OoBDev.Microsoft.Azure.StorageAccount.BlobStorage;
 using OoBDev.MongoDB.Extensions;
 using OoBDev.Ollama;
 using OoBDev.OpenSearch;
-using OoBDev.OpenTelemetry;
+using OoBDev.Telemetry;
 using OoBDev.Qdrant;
 using OoBDev.SBert;
 

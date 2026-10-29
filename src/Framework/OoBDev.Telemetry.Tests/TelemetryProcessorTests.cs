@@ -1,10 +1,10 @@
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.System.Accessors;
 using OoBDev.System.Net.Http;
+using OoBDev.System.Security;
 using OoBDev.System.Security.Claims;
 using OoBDev.TestUtilities;
 using OpenTelemetry;
@@ -16,7 +16,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Security.Claims;
 
-namespace OoBDev.OpenTelemetry.Tests;
+namespace OoBDev.Telemetry.Tests;
 
 /// <summary>
 /// Tests that the custom OpenTelemetry processors add correlation and user information to spans and log records.
@@ -62,13 +62,13 @@ public partial class TelemetryProcessorTests
 
     [TestMethod]
     [TestCategory(TestCategories.Unit)]
-    public void UserTelemetryProcessor_WithoutHttpContext_ShouldAddNothing()
+    public void UserTelemetryProcessor_WithoutUser_ShouldAddNothing()
     {
         // Stage
         var exported = new List<Activity>();
 
         // Test
-        RunSpan(exported, tracing => tracing.AddProcessor(new UserTelemetryProcessor(new HttpContextAccessor())));
+        RunSpan(exported, tracing => tracing.AddProcessor(new UserTelemetryProcessor(new TestUserAccessor(null))));
 
         // Assert
         var activity = Assert.ContainsSingle(exported);
@@ -141,7 +141,7 @@ public partial class TelemetryProcessorTests
         var info = new CorrelationInfo { CorrelationId = "corr-2", RequestId = "req-2" };
         var services = new ServiceCollection();
         services.AddSingleton<IAccessor<CorrelationInfo>>(new TestCorrelationAccessor(info));
-        services.AddSingleton<IHttpContextAccessor>(new HttpContextAccessor());
+        services.AddSingleton<ICurrentUserAccessor>(new TestUserAccessor(null));
 
         // Test
         services.TryAddOpenTelemetryExtensions(configuration);
@@ -186,12 +186,12 @@ public partial class TelemetryProcessorTests
         Assert.IsTrue(tracer.ForceFlush(10_000));
     }
 
-    private static TestHttpContextAccessor CreateUserAccessor(string objectId, string userId)
+    private static TestUserAccessor CreateUserAccessor(string objectId, string userId)
     {
         var identity = new ClaimsIdentity(
             [new Claim(CommonClaims.ObjectId, objectId), new Claim(CommonClaims.UserId, userId)],
             "TestAuth");
-        return new TestHttpContextAccessor(new DefaultHttpContext { User = new ClaimsPrincipal(identity) });
+        return new TestUserAccessor(new ClaimsPrincipal(identity));
     }
 
     private sealed class TestCorrelationAccessor(CorrelationInfo value) : IAccessor<CorrelationInfo>
@@ -199,9 +199,9 @@ public partial class TelemetryProcessorTests
         public CorrelationInfo? Value { get; set; } = value;
     }
 
-    private sealed class TestHttpContextAccessor(HttpContext httpContext) : IHttpContextAccessor
+    private sealed class TestUserAccessor(ClaimsPrincipal? user) : ICurrentUserAccessor
     {
-        public HttpContext? HttpContext { get; set; } = httpContext;
+        public ClaimsPrincipal? User { get; } = user;
     }
 
     [LoggerMessage(EventId = 1, Level = LogLevel.Information, Message = "hello {Name}")]

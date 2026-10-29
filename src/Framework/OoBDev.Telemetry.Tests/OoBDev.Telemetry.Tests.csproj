@@ -27,10 +27,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Framework\OoBDev.System.Abstractions\OoBDev.System.Abstractions.csproj" />
-    <ProjectReference Include="..\OoBDev.OpenTelemetry\OoBDev.OpenTelemetry.csproj" />
-    <ProjectReference Include="..\..\..\Framework\OoBDev.TestUtilities\OoBDev.TestUtilities.csproj" />
-    <ProjectReference Include="..\..\..\Framework\OoBDev.System\OoBDev.System.csproj" />
+    <ProjectReference Include="..\OoBDev.System.Abstractions\OoBDev.System.Abstractions.csproj" />
+    <ProjectReference Include="..\OoBDev.Telemetry\OoBDev.Telemetry.csproj" />
+    <ProjectReference Include="..\OoBDev.TestUtilities\OoBDev.TestUtilities.csproj" />
+    <ProjectReference Include="..\OoBDev.System\OoBDev.System.csproj" />
   </ItemGroup>
 
 </Project>

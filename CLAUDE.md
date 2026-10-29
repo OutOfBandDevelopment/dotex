@@ -149,7 +149,7 @@ Older entries (before 2026-10) live in `docs/changes/` (index: `docs/changes/REA
 - **AsyncAPI document and viewer** - `OoBDev.AsyncApi`, `IAsyncApiContributor` in the SQS, Service Bus and RabbitMQ adapters, `MapAsyncApi()`. [Details](docs/changes/migration-asyncapi-2026-10-09.md)
 - **Swashbuckle replaced by OpenAPI transformers and Scalar** - `Microsoft.AspNetCore.OpenApi` documents, Scalar reference with OAuth2 code and PKCE. [Details](docs/changes/migration-openapi-scalar-2026-10-09.md)
 - **Azure B2C dropped** - Keycloak is the identity provider
-- **OpenTelemetry replaces Application Insights** - `OoBDev.OpenTelemetry` (config-gated, OTLP export). [Details](docs/changes/migration-opentelemetry-2026-10-09.md)
+- **OpenTelemetry replaces Application Insights** - `OoBDev.Telemetry` (was `OoBDev.OpenTelemetry`; config-gated, OTLP export). [Details](docs/changes/migration-opentelemetry-2026-10-09.md)
 - **Test Ollama on host port 11435** - avoids the clash with a local Ollama on 11434
 
 ### 2026-10-08

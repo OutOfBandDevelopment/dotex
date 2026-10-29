@@ -1,18 +1,18 @@
 using OoBDev.System.Security.Claims;
-using Microsoft.AspNetCore.Http;
+using OoBDev.System.Security;
 using OpenTelemetry;
 using OpenTelemetry.Logs;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
-namespace OoBDev.OpenTelemetry;
+namespace OoBDev.Telemetry;
 
 internal static class UserClaims
 {
-    public static IEnumerable<(string Key, string Value)> Read(IHttpContextAccessor accessor)
+    public static IEnumerable<(string Key, string Value)> Read(ICurrentUserAccessor accessor)
     {
-        var user = accessor.HttpContext?.User;
+        var user = accessor.User;
         if (user is null) yield break;
 
         var objectId = user.Claims.FirstOrDefault(c => c.Type == CommonClaims.ObjectId)?.Value;

@@ -1,25 +1,25 @@
 using OoBDev.System.Security.Claims;
-using Microsoft.AspNetCore.Http;
+using OoBDev.System.Security;
 using OpenTelemetry;
 using OpenTelemetry.Logs;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
-namespace OoBDev.OpenTelemetry;
+namespace OoBDev.Telemetry;
 
 /// <summary>
-/// OpenTelemetry processor that extracts user information from the HTTP context and adds it to spans.
+/// OpenTelemetry processor that extracts user information from the current user accessor and adds it to spans.
 /// </summary>
 public class UserTelemetryProcessor : BaseProcessor<Activity>
 {
-    private readonly IHttpContextAccessor _accessor;
+    private readonly ICurrentUserAccessor _accessor;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="UserTelemetryProcessor"/> class.
     /// </summary>
-    /// <param name="accessor">The accessor for accessing the current HTTP context.</param>
-    public UserTelemetryProcessor(IHttpContextAccessor accessor) => _accessor = accessor;
+    /// <param name="accessor">The accessor for the current user.</param>
+    public UserTelemetryProcessor(ICurrentUserAccessor accessor) => _accessor = accessor;
 
     /// <summary>
     /// Adds the user claims to the span tags when the span starts.

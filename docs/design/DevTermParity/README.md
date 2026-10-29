@@ -27,7 +27,7 @@ Of 34 dev-term projects, the eight device protocol libraries are in this reposit
 | Core | 5,892 / 166 | No (`MessageRouter`, `Session`, `PluginLoader`, `PresenterCatalog`, control server, HPGL converter all absent) | All | A Engine |
 | Configuration | 9,783 / 493 | No (view models such as `ConnectionEditorViewModel`, session builder) | All | A Engine |
 | Logging | 1,921 / 64 | No (session log, playback) | All | A Engine |
-| Observability | 67 / 3 | No (`TelemetryExporter`); `OoBDev.OpenTelemetry` exists | Wire up | A Engine |
+| Observability | 67 / 3 | No (`TelemetryExporter`); `OoBDev.Telemetry` exists | Wire up | A Engine |
 | Schemas | 60 / 4 | No | All | A Engine |
 | Presenters.Text | 290 / 35 | No (ASCII, UTF-8, hex, decimal, octal, binary) | All | B Presenters |
 | DeviceManifests | 5,825 / 154 | No (JSON/XML manifests, `.ksy` import, generic panels) | All | C Manifests |

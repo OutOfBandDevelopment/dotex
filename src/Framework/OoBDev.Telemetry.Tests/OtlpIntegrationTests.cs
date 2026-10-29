@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Http;
+using OoBDev.System.Security;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -14,7 +14,7 @@ using System.Diagnostics;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace OoBDev.OpenTelemetry.Tests;
+namespace OoBDev.Telemetry.Tests;
 
 /// <summary>
 /// Sends spans and logs over OTLP to the Aspire dashboard container and reads them back from its telemetry API.
@@ -91,7 +91,7 @@ public partial class OtlpIntegrationTests
         services.AddLogging();
         services.AddSingleton<IAccessor<CorrelationInfo>>(
             new TestCorrelationAccessor(new CorrelationInfo { CorrelationId = correlationId }));
-        services.AddSingleton<IHttpContextAccessor>(new HttpContextAccessor());
+        services.AddSingleton<ICurrentUserAccessor>(new EnvironmentUserAccessor());
         services.TryAddOpenTelemetryExtensions(configuration);
         return services.BuildServiceProvider();
     }

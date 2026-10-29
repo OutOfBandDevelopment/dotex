@@ -499,3 +499,4 @@ Each change document should include:
 - [DevTerm schemas (2026-10-29)](devterm-schemas-2026-10-29.md) - JSON Schema generator and drift test
 - [DevTerm TCP and serial transports (2026-10-29)](devterm-transports-tcp-serial-2026-10-29.md) - pipe transports for sockets and COM ports
 - [DevTerm RFC 2217 and VXI-11 transports (2026-10-29)](devterm-transports-rfc2217-vxi11-2026-10-29.md) - network serial and ONC-RPC instrument transports
+- [Telemetry library and user accessor (2026-10-29)](telemetry-user-accessor-2026-10-29.md) - OoBDev.Telemetry in Framework, ICurrentUserAccessor.User

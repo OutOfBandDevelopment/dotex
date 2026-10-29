@@ -1,25 +1,25 @@
 using OoBDev.System.Security.Claims;
-using Microsoft.AspNetCore.Http;
+using OoBDev.System.Security;
 using OpenTelemetry;
 using OpenTelemetry.Logs;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
-namespace OoBDev.OpenTelemetry;
+namespace OoBDev.Telemetry;
 
 /// <summary>
-/// OpenTelemetry processor that adds user information from the HTTP context to log records.
+/// OpenTelemetry processor that adds user information from the current user accessor to log records.
 /// </summary>
 public class UserLogProcessor : BaseProcessor<LogRecord>
 {
-    private readonly IHttpContextAccessor _accessor;
+    private readonly ICurrentUserAccessor _accessor;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="UserLogProcessor"/> class.
     /// </summary>
-    /// <param name="accessor">The accessor for accessing the current HTTP context.</param>
-    public UserLogProcessor(IHttpContextAccessor accessor) => _accessor = accessor;
+    /// <param name="accessor">The accessor for the current user.</param>
+    public UserLogProcessor(ICurrentUserAccessor accessor) => _accessor = accessor;
 
     /// <summary>
     /// Adds the user claims to the log record attributes.

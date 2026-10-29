@@ -87,10 +87,6 @@
     <Project Path="HardwareDevices/OoBDev.Zoom.H4n.Tests/OoBDev.Zoom.H4n.Tests.csproj" />
     <Project Path="HardwareDevices/OoBDev.Zoom.H4n/OoBDev.Zoom.H4n.csproj" />
   </Folder>
-  <Folder Name="/ExternalServices/">
-    <Project Path="ExternalServices/OpenTelemetry/OoBDev.OpenTelemetry.Tests/OoBDev.OpenTelemetry.Tests.csproj" />
-    <Project Path="ExternalServices/OpenTelemetry/OoBDev.OpenTelemetry/OoBDev.OpenTelemetry.csproj" />
-  </Folder>
   <Folder Name="/ExternalServices/Amazon/">
     <Project Path="ExternalServices/Amazon/OoBDev.Amazon.Sqs/OoBDev.Amazon.Sqs.csproj" />
   </Folder>
@@ -249,6 +245,8 @@
     <Project Path="Framework/OoBDev.Search/OoBDev.Search.csproj" />
     <Project Path="Framework/OoBDev.SemanticKernel.Abstractions/OoBDev.SemanticKernel.Abstractions.csproj" />
     <Project Path="Framework/OoBDev.SemanticKernel/OoBDev.SemanticKernel.csproj" />
+    <Project Path="Framework/OoBDev.Telemetry.Tests/OoBDev.Telemetry.Tests.csproj" />
+    <Project Path="Framework/OoBDev.Telemetry/OoBDev.Telemetry.csproj" />
     <Project Path="Framework/OoBDev.System.Abstractions/OoBDev.System.Abstractions.csproj" />
     <Project Path="Framework/OoBDev.System.IO.Pipelines/OoBDev.System.IO.Pipelines.csproj" />
     <Project Path="Framework/OoBDev.System.IO.Tcp.Tests/OoBDev.System.IO.Tcp.Tests.csproj" />

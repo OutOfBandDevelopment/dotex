@@ -1,25 +1,17 @@
-﻿using OoBDev.System.Security;
-using System.Security.Principal;
+using Microsoft.AspNetCore.Http;
+using OoBDev.System.Security;
+using System.Security.Claims;
 
 namespace OoBDev.AspNetCore.Mvc.Authorization;
 
 /// <summary>
-/// Provides access to the current user's identity from the HTTP context.
+/// Provides access to the current user from the HTTP context.
 /// </summary>
-public class HttpContextUserAccessor : ICurrentUserAccessor
+/// <param name="httpContextAccessor">The accessor for the current HTTP context.</param>
+public class HttpContextUserAccessor(IHttpContextAccessor httpContextAccessor) : ICurrentUserAccessor
 {
-    private IIdentity _identity;
-
     /// <summary>
-    /// Initializes a new instance of the <see cref="HttpContextUserAccessor"/> class.
+    /// Gets the principal of the current request, or <see langword="null"/> outside a request.
     /// </summary>
-    /// <param name="identity">The current user's identity.</param>
-    public HttpContextUserAccessor(
-        IIdentity identity
-        ) => _identity = identity;
-
-    /// <summary>
-    /// Gets the current user's username.
-    /// </summary>
-    public string? UserName => _identity?.Name;
+    public ClaimsPrincipal? User => httpContextAccessor.HttpContext?.User;
 }

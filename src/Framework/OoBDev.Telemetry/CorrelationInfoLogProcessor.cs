@@ -5,7 +5,7 @@ using OpenTelemetry.Logs;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace OoBDev.OpenTelemetry;
+namespace OoBDev.Telemetry;
 
 /// <summary>
 /// OpenTelemetry processor that adds correlation information to log records.
