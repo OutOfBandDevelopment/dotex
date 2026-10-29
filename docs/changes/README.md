@@ -451,6 +451,7 @@ Each change document should include:
 - [SCPI block replies](devices-scpi-block-replies-2026-10-29.md) - definite-length block framing and ScpiReply.Block (2026-10-29)
 - [Z-Wave ACK responder](devices-zwave-ack-responder-2026-10-29.md) - ZWaveAckResponder picks ACK or NAK per received frame (2026-10-29)
 - [Z-Wave session](devices-zwave-session-2026-10-29.md) - ZWaveSession owns a stream device, acknowledges frames and keeps the node table (2026-10-29)
+- [StreamDevice idle transmitter](framework-streamdevice-idle-2026-10-29.md) - transmit queue is a Channel, so an idle device no longer spins a core (2026-10-29)
 - [Vectors DB redeploy](data-vectors-db-redeploy-2026-10-29.md) - second deploy of the dacpac changes nothing (2026-10-29)
 - [LlmCodeGen response metadata](tools-llmcodegen-response-metadata-2026-10-29.md) - response.json beside each response (2026-10-29)
 - [DacFx build test path](testing-dacfx-buildpackage-path-2026-10-29.md) - BuildPackageTest finds the CLR build itself and asserts the dacpac (2026-10-29)
