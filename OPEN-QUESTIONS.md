@@ -10,4 +10,15 @@ _(none waiting; processed requests are in BACKLOG.md and TODO.md)_
 
 ## Open
 
-_(none)_
+### Q1 · 2026-10-29 · DevTerm parity · Transport contract
+
+dev-term's engine uses `ITransport` (async, state, PipeReader); the device libraries here use `IDeviceAdapter` (stream). See [architecture](docs/design/DevTermParity/architecture.md#contracts). Which contract do we build on?
+
+**Options**
+
+- A. Keep `IDeviceAdapter`, add `ITransport` beside it with an adapter in each direction (recommended: no change to the device libraries, one implementation of each transport, and it fits the owner's rule of building on the existing device model).
+- B. Replace `IDeviceAdapter` with `ITransport` everywhere (cleaner end state, rewrites every device library and test at once; allowed because the framework is unreleased).
+
+**Default:** A.
+
+**Your answer:**
