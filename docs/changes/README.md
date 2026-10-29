@@ -488,3 +488,4 @@ Each change document should include:
 - [DevTerm session engine core (2026-10-29)](devterm-session-core-2026-10-29.md) - `Session`, `Pipeline`, limits, observers and telemetry in `OoBDev.DevTerm.Core`
 - [DevTerm message router (2026-10-29)](devterm-message-router-2026-10-29.md) - `MessageRouter`, routing rules and sink in `OoBDev.DevTerm.Core`
 - [DevTerm stream content detection (2026-10-29)](devterm-stream-content-2026-10-29.md) - watcher, sniffer, end finder and HP-GL to SVG in `OoBDev.DevTerm.Core`
+- [DevTerm reply presenter and home folder (2026-10-29)](devterm-reply-presenter-2026-10-29.md) - `LineReplyPresenter`, `IReplyTracker`, `DevTermHome`

@@ -12,6 +12,8 @@ The engine contracts of the DevTerm tool, ported from dev-term (see [the parity 
 | `Pipeline`, `PresenterOutput`, `StructuredMessage` | Fans received bytes out to the presenters; content-capturing presenters take a chunk first |
 | `MessageRouter`, `RoutingRule`, `RoutingRuleSet`, `IMessageSink` | Regex routing between a device session and a broker, JSON rule sets, confirm-before-send |
 | `StreamContentWatcher`, `StreamContentSniffer`, `StreamContentEndFinder`, `HpglToSvgConverter`, `StreamCapture` | Detects and captures images, PostScript, PCL and HP-GL in the raw byte stream (declared hints or signature sniffing), converts HP-GL to SVG |
+| `LineReplyPresenter`, `IReplyTracker`, `ReplyMatch` | Base for line presenters that correlate reply lines with pending queries (CR, LF, CRLF and LFCR terminators, bounded buffer) |
+| `DevTermHome` | The per-user DevTerm folder (override by environment) |
 | `Session`, `ISessionFactory`, `SessionLimits`, `ISessionObserver`, `DevTermTelemetry` | Binds a transport to a pipeline: read loop, send throttle, connect retry and timeout, query with timeout, self-reported disconnect, observers, `DevTerm` activity source and meter |
 | `StreamToPipePump` | Copies a stream into a pipe, reading into the pipe's pooled buffers |
 | `StreamTransport` | An `ITransport` over any `IDeviceAdapter`, so the serial, HID and TCP adapters serve both contracts |
