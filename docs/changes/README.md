@@ -485,3 +485,4 @@ Each change document should include:
 - [DevTerm engine contracts (2026-10-29)](devterm-core-contracts-2026-10-29.md) - `OoBDev.DevTerm.Core`: `ITransport`, `IPresenter`, pump and `StreamTransport` over `IDeviceAdapter`
 - [DevTerm loopback transport (2026-10-29)](devterm-loopback-transport-2026-10-29.md) - `OoBDev.DevTerm.Transports.Loopback`: scripted in-process `ITransport` for hardware-free sessions and shells
 - [DevTerm text presenters (2026-10-29)](devterm-presenters-text-2026-10-29.md) - `OoBDev.DevTerm.Presenters.Text`: ascii, utf8, hex, decimal, octal, binary
+- [DevTerm session engine core (2026-10-29)](devterm-session-core-2026-10-29.md) - `Session`, `Pipeline`, limits, observers and telemetry in `OoBDev.DevTerm.Core`
