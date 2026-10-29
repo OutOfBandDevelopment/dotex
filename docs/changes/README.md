@@ -456,6 +456,7 @@ Each change document should include:
 - [AsyncAPI viewer browser check](apis-asyncapi-viewer-browser-check-2026-10-29.md) - viewer renders send and receive operations in Chromium (2026-10-29)
 - [Z-Wave product configs](devices-zwave-product-configs-2026-10-29.md) - ZWaveNames.ConfigParameters from the embedded product table (2026-10-29)
 - [UiDefinitions](devices-uidefinitions-2026-10-29.md) - OoBDev.UiDefinitions: toolkit-neutral control model, serializer, validator, expressions and forms from dev-term (2026-10-29)
+- [UiDefinitions view models](devices-uidefinitions-viewmodels-2026-10-29.md) - OoBDev.UiDefinitions.ViewModels: toolkit-neutral view models and ICommand types over forms (2026-10-29)
 - [Device bench notes](docs-device-bench-notes-2026-10-29.md) - dev-term known-configuration, .ksy and instrument manuals moved beside the packages (2026-10-29)
 - [JWS reference](identity-jws-reference-2026-10-29.md) - OoBDev.Identity.Jws: HS256 and RS256 sign and verify from RFC 7515 (2026-10-29)
 - [SQL Server Service Broker](sqlserver-service-broker-2026-10-29.md) - OoBDev.Microsoft.SqlServer.ServiceBroker: queue provider on Service Broker (2026-10-29)
