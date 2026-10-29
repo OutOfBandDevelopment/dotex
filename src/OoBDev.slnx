@@ -65,6 +65,8 @@
     <Project Path="HardwareDevices/OoBDev.DerEE.De5000/OoBDev.DerEE.De5000.csproj" />
     <Project Path="HardwareDevices/OoBDev.Fencing.ScoreMachines.Tests/OoBDev.Fencing.ScoreMachines.Tests.csproj" />
     <Project Path="HardwareDevices/OoBDev.Fencing.ScoreMachines/OoBDev.Fencing.ScoreMachines.csproj" />
+    <Project Path="HardwareDevices/OoBDev.LanC.Tests/OoBDev.LanC.Tests.csproj" />
+    <Project Path="HardwareDevices/OoBDev.LanC/OoBDev.LanC.csproj" />
     <Project Path="HardwareDevices/OoBDev.Kuando.Busylight.Tests/OoBDev.Kuando.Busylight.Tests.csproj" />
     <Project Path="HardwareDevices/OoBDev.Kuando.Busylight/OoBDev.Kuando.Busylight.csproj" />
     <Project Path="HardwareDevices/OoBDev.Quarta.RadexOne.Tests/OoBDev.Quarta.RadexOne.Tests.csproj" />

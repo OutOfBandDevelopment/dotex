@@ -459,6 +459,7 @@ Each change document should include:
 - [JWS reference](identity-jws-reference-2026-10-29.md) - OoBDev.Identity.Jws: HS256 and RS256 sign and verify from RFC 7515 (2026-10-29)
 - [SQL Server Service Broker](sqlserver-service-broker-2026-10-29.md) - OoBDev.Microsoft.SqlServer.ServiceBroker: queue provider on Service Broker (2026-10-29)
 - [BinaryDataDecoders Drawing (2026-10-29)](migration-drawing-2026-10-29.md) - Code 39, JPEG segments, PNG packing, Z-order curve and tile pyramid in `OoBDev.Extensions.Drawing`
+- [BinaryDataDecoders LanC (2026-10-29)](migration-lanc-2026-10-29.md) - Sony LANC command and status tables in `OoBDev.LanC`
 - [BinaryDataDecoders Fencing score machines (2026-10-29)](migration-fencing-2026-10-29.md) - Favero and Saint George frame decoders in `OoBDev.Fencing.ScoreMachines`
 - [BinaryDataDecoders Code analysis (2026-10-29)](migration-code-analysis-2026-10-29.md) - Roslyn C#/VB, DacPac and MSBuild binlog XPath navigators in `OoBDev.Extensions.CodeAnalysis*`
 - [BinaryDataDecoders NMEA helpers (2026-10-29)](migration-nmea-helpers-2026-10-29.md) - bearing, compass point and coordinate formatting in `OoBDev.Nmea`
