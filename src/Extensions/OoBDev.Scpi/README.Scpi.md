@@ -10,11 +10,12 @@ SCPI-style text instrument control: command and reply lines, with the command se
 - **Building commands.** `profile.Build("vset", ["5"])` returns a `ScpiRequest` (wire text with the terminator, query flag, response format). Substitution is a single pass; numeric values are clamped and formatted (`DecimalPlaces`, `IntegerDigits`), so the Korad `VSET1:05.00` fixed-width form is produced. `BuildCustom` sends text verbatim.
 - **Replies.** A profile with a terminator gets `ScpiReplySegmenter` (CR, LF or CRLF each end a line); a profile with an empty terminator (Korad) treats each arrival as one reply. `ScpiMessageDecoder` returns `ScpiReply.Text` without line endings.
 - **Catalog.** `ScpiProfileCatalog.Create(dropInDirectories)` loads the bundled profiles (embedded JSON) and any `*.json` in the given directories. Bad files are skipped and listed in `LoadErrors`. `TryMatchByIdn(reply)` picks a profile from an `*IDN?` reply; `ScpiProfileCatalog.Generic` is the fallback.
+- **Reply tracking.** `ScpiReplyTracker` pairs each query with its reply in order (`QueryAsync`, `OnReply`, `SendAsync` for commands, `Unsolicited` for strays); a timed-out query keeps its place and discards its late reply. `ScpiAutoDetect.IdentifyAsync` sends `*IDN?` and returns the matching profile, or the generic one.
 - `services.TryAddScpi()` registers the codecs and the bundled catalog.
 
 Bundled profiles: HP/Agilent/Keysight 34401A, Korad KA3005P and KA6003P, Rigol DG1022, DG1062Z, DM3058E and DS1102E, Tektronix 2230 and TDS2024. Their notes cite documents that live in the dev-term repository.
 
-Source: dev-term `Devices.Scpi` (base); BinaryDataDecoders has no SCPI package. The generated control panel, reply tracker and auto-detect flow of dev-term depend on its UI framework and come with the DevTerm merge. Design: [DeviceDecoding](../../../docs/design/DeviceDecoding/README.md).
+Source: dev-term `Devices.Scpi` (base); BinaryDataDecoders has no SCPI package. The generated control panel of dev-term depends on its UI framework and comes with the DevTerm merge. Design: [DeviceDecoding](../../../docs/design/DeviceDecoding/README.md).
 
 ## Limits
 
