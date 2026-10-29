@@ -33,7 +33,7 @@ Source: `C:\repo\mine\binary-data-decoders` at `e590b420` (78 project folders, t
 | Source project | Where in main | Evidence | What is left |
 |----------------|---------------|----------|--------------|
 | Apple2 (+ Tests) | `OoBDev.System/Retro/Apple2` | All 11 files present, 2 identical, 9 modernised | Nothing |
-| Archives, FileSystems | `OoBDev.System/Archives`, `IO/Iso9660` | 14 of 15 and 4 of 4 files present, changed files are not smaller | `SECURITY_ATTRIBUTES` (a P/Invoke struct) is not carried; confirm it is unused |
+| Archives, FileSystems | `OoBDev.System/Archives`, `IO/Iso9660` | 14 of 15 and 4 of 4 files present, changed files are not smaller | `SECURITY_ATTRIBUTES` is carried as `SecurityAttributes` |
 | Cryptography | `OoBDev.System/Cryptography` | 9 of 9 files | Educational warnings (checked when the project was built) |
 | ExpressionCalculator | `OoBDev.System/ExpressionCalculator` | 34 of 34 files | Nothing |
 | IO.Abstractions, IO.Ports, IO.Pipelines, IO.UsbHids | `OoBDev.IO.*` and `OoBDev.System.IO.Pipelines` | 46 of 47 files present | Nothing; the source bug reports `BUG-001..004` are about the IO Controller CLI (Table 3) |
@@ -42,7 +42,7 @@ Source: `C:\repo\mine\binary-data-decoders` at `e590b420` (78 project folders, t
 | ToolKit, ToolKit.Abstractions | `OoBDev.System`, `OoBDev.System.Abstractions` | 115 of 123 and 16 of 16 files | The eight files not carried by name are the numerics, now in `OoBDev.System` under other names |
 | TestUtilities | `OoBDev.TestUtilities` | 12 of 12 | Nothing |
 | Windows.Forms | `OoBDev.System/Windows/Forms` | `ValidTextBox` present | The decision to move it to a separate package is still open in the backlog |
-| Quarta.RadexOne, Velleman.K8055, Zoom.H4n, Kuando.Busylight, Nmea | `src/HardwareDevices`, `src/Extensions/OoBDev.Nmea` | Different type names (rebuilt from dev-term), covered by [device-parity.md](device-parity.md) | `GeneralHeading` and the WMI and HID import notes (Table 2) |
+| Quarta.RadexOne, Velleman.K8055, Zoom.H4n, Kuando.Busylight, Nmea | `src/HardwareDevices`, `src/Extensions/OoBDev.Nmea` | Different type names (rebuilt from dev-term), covered by [device-parity.md](device-parity.md) | The WMI and HID import notes (Table 2); `GeneralHeading` is `NmeaCompassPoint` and `NmeaBearing.Abbreviation` |
 
 ## Not in main
 
@@ -52,10 +52,7 @@ Checked again on 2026-10-29 by type name: the items the first re-review listed a
 
 | Item | Source | Notes |
 |------|--------|-------|
-| `GeneralHeading` | NMEA notes folder | Small value type; `NmeaBearing` and `NmeaCoordinate` exist |
 | WMI and HID import notes | `BinaryDataDecoders.Notes` | Documentation only; fold into the device docs if wanted |
-| `SECURITY_ATTRIBUTES` | Archives | One match in main; confirm it is carried and used |
-| LanC wiring diagram and readme | `BinaryDataDecoders.LanC` (`lanc2rs485.png`, `README.md`) | Docs for `OoBDev.LanC` |
 | Bitmap helpers on any platform | Drawing | Present but Windows only (`System.Drawing.Common`); the SkiaSharp port is a later backlog step. `GraphicsEx` is `SizeExtensions` and runs anywhere |
 
 ## Not migrated by decision

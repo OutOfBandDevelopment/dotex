@@ -51,7 +51,7 @@ dev-term-only types per device, all UI or hosting: `{Device}ControlSurface`, `{D
 
 | Source | Still to bring over |
 |--------|---------------------|
-| BinaryDataDecoders | The leftovers in the re-review: `GeneralHeading` and the WMI and HID import notes from NMEA, `SECURITY_ATTRIBUTES`, the LanC wiring diagram and readme, a behaviour check by running the source tests, and the Drawing port to SkiaSharp (later). The non-device projects are covered by the re-review |
+| BinaryDataDecoders | The leftovers in the re-review: the WMI and HID import notes from NMEA (`GeneralHeading` is already `NmeaCompassPoint`), a behaviour check by running the source tests, and the Drawing port to SkiaSharp (later). The non-device projects are covered by the re-review |
 | dev-term | Everything in the "DevTerm 100% parity" backlog item: the control surfaces and panels, the transports in Table 2, manifests, presenters, session log, and the Wpf, Tui and Web shells |
 | Both | Nothing is migrated twice: where both have the same thing, dev-term is the base because it is newer and tested |
 
