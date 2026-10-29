@@ -13,7 +13,6 @@ Phase 7 of [the device decoding plan](../../../docs/migration/device-decoding-mi
 | `ToggleViewModel`, `TextViewModel`, `ChoiceViewModel`, `ButtonViewModel` | One per form control kind (`TextViewModel` serves text field, numeric and slider) |
 | `ToggleCommand`, `SelectOptionCommand`, `ToggleOptionCommand`, `InvokeCommand` | Real `ICommand` types with the binding and control injected |
 | `ControlViewModelFactory` | Picks the view model for a control; live display controls are not form fields and throw |
-
 | `LiveDisplayViewModel` | Wraps a live display state (indicator, bar graph, strip chart, vector); `Revision` changes per published update |
 
 No code-behind, no lambdas as commands, no UI toolkit reference.
