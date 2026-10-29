@@ -1,4 +1,5 @@
 using System.Windows;
+using OoBDev.UiDefinitions.Wpf;
 
 namespace OoBDev.DevTerm.Wpf;
 
@@ -9,6 +10,6 @@ public partial class App : Application
     protected override void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
-        new MainWindow { DataContext = new ShellViewModel([new DemoPanelFactory()]) }.Show();
+        new MainWindow { DataContext = new ShellViewModel([new DemoPanelFactory(new WpfColorPicker())]) }.Show();
     }
 }

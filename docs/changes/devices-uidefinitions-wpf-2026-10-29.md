@@ -17,4 +17,4 @@
 
 ## Not done
 
-The `ColorPickerChoiceOption` link (picking selects the Custom option and the option re-applies the last pick), the DevTerm shell does not pass a picker yet, a look at the view on screen. Tracked in `BACKLOG.md`.
+The `ColorPickerChoiceOption` link (picking selects the Custom option and the option re-applies the last pick) (the DevTerm shell now passes `WpfColorPicker`), a look at the view on screen. Tracked in `BACKLOG.md`.
