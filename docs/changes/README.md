@@ -361,3 +361,4 @@ Each change document should include:
 - [DE-5000 core](devices-de5000-core-2026-10-28.md) - DE-5000 packet decoding, 13 unit tests, no hardware test yet (2026-10-28)
 - [Busylight core](devices-busylight-core-2026-10-28.md) - Busylight commands, program frame and poll verified on the light; device packages moved to src/HardwareDevices (2026-10-28)
 - [K8055 core](devices-k8055-core-2026-10-28.md) - K8055 reports, commands and named input bits; Hardware tests ported, not yet run on a board (2026-10-28)
+- [Radex One core](devices-radexone-core-2026-10-28.md) - Radex One packets, replies and requests; Hardware tests passed on a real device (2026-10-28)
