@@ -18,6 +18,7 @@ Plans, mappings and analyses for code brought into the framework from other repo
 |----------|---------|-------|
 | [binarydatadecoders-rereview-2026-10-29.md](binarydatadecoders-rereview-2026-10-29.md) | BinaryDataDecoders against `C:\repo\mine\binary-data-decoders` (replaces the January mapping, plan, decision sheet and critical questions) | Current; read first |
 | [device-decoding-migration-plan.md](device-decoding-migration-plan.md), [device-parity.md](device-parity.md) | dev-term device decoding | Packages done; transports, manifests and the shells are tracked as "DevTerm 100% parity" in the backlog |
+| [overlap-review-2026-10-29.md](overlap-review-2026-10-29.md) | BinaryDataDecoders against dev-term against dotex | Current; dev-term is the base wherever both have the code |
 | [sharedframework.md](sharedframework.md) | SharedFramework | Replaced by design documents (Epics 2, 6, 7, 10) |
 | [oobtainium.md](oobtainium.md) | Oobtainium mocking framework | Not migrated; evaluate later (decision D7) |
 | [incoming-recommendation-plan.md](incoming-recommendation-plan.md), [incoming-harvest-crosscheck.md](incoming-harvest-crosscheck.md) | Cross-project plan and rejected merges | Current |
