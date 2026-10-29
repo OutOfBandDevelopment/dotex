@@ -24,8 +24,14 @@ var sql = builder.AddSqlServer("sql")
     .WithImageTag("2019-latest")
     .WithDataVolume("oobd-aspire-sqlserver");
 
+#if DEBUG
+const string BuildConfiguration = "Debug";
+#else
+const string BuildConfiguration = "Release";
+#endif
+
 var vectorDb = sql.AddDatabase("VectorDb")
-    .WithVectorTypes(Path.Combine(repoRoot, "src", "Extensions", "OoBDev.Data.Vectors.DB", "bin", "Debug", "netstandard2.1", "OoBDev.Data.Vectors.DB.dacpac"));
+    .WithVectorTypes(Path.Combine(repoRoot, "src", "Extensions", "OoBDev.Data.Vectors.DB", "bin", BuildConfiguration, "netstandard2.1", "OoBDev.Data.Vectors.DB.dacpac"));
 
 var smtp = builder.AddContainer("smtp4dev", "rnwood/smtp4dev")
     .WithHttpEndpoint(targetPort: 80, name: "web")
@@ -61,6 +67,8 @@ var api = builder.AddProject<OoBDev_Example_WebApi>("example-api", options => op
     .WithReference(vectorDb)
     // The queue reader looks up its own connection string name; appsettings.json points it at a local SQL Server on 1433.
     .WithEnvironment("ConnectionStrings__EmbeddingSentenceTransformer", vectorDb)
+    // The vector store provider reads its own options section; without it the API falls back to the in-memory store.
+    .WithEnvironment("SqlVectorStoreOptions__ConnectionString", vectorDb)
     .WaitFor(vectorDb)
     .WaitFor(ollama)
     .WaitFor(redis);

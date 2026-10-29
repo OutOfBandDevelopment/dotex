@@ -354,6 +354,10 @@ Each change document should include:
 - Example UI design documents reconciled with the code
 - Status: ✅ Complete
 
+**[examples-aspire-vectordb-wiring-2026-10-28.md](examples-aspire-vectordb-wiring-2026-10-28.md)**
+- Example Aspire host gives the API the SQL vector store connection string
+- Status: Built, not run end to end
+
 **[examples-cgi-greet-linux-test-2026-10-28.md](examples-cgi-greet-linux-test-2026-10-28.md)**
 - CGI example built on Linux; automated form test through the middleware
 - Status: ✅ Complete
