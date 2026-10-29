@@ -15,3 +15,8 @@ Owner decisions of 2026-10-29: CI is manual only, the GitHub workflows do not ap
 
 - MSBuild evaluation: `IsPackable` false for `OoBDev.Example.WebApi`, `OoBDev.Example.AppHost`, `OoBDev.Testing.AppHost` and `OoBDev.System.Tests`; true for `OoBDev.System` and `OoBDev.PackMan.Cli`; `GeneratePackageOnBuild` false and `PackageOutputPath` `G:\nuget\` everywhere.
 - `pack.ps1 -Version 0.0.1-localtest` over the solution produced 115 packages (into a temporary folder before the output default moved to `G:\nuget`). That run predates the name filter; the filter was checked by property evaluation only, and `pack.ps1` was not re-run against `G:\nuget`.
+
+## Pack hook and versioning
+
+- `.githooks/post-merge` runs `scripts/ci/pack.ps1` when a merge commit lands on `main`; `.githooks/setup.ps1` sets `core.hooksPath` for a clone ([readme](../../.githooks/README.md)).
+- `GitVersion.yml` uses the `Mainline` strategy so the patch rises with every commit that reaches `main`; major.minor stay with the `v0.5.0` tag.
