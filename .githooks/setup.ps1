@@ -28,4 +28,4 @@ foreach ($hook in Get-ChildItem $PSScriptRoot -File | Where-Object { $_.Extensio
 }
 
 Write-Host "core.hooksPath = $(& git -C $root config --local core.hooksPath)"
-Write-Host 'Hooks: post-merge (dotnet pack when a merge commit lands on main).'
+Write-Host 'Hooks: pre-merge-commit (build and test before a merge commit on main), post-merge (pack after it).'

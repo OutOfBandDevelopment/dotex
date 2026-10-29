@@ -18,7 +18,7 @@ Results are written to `artifacts/test-results`. `LiveIntegration` needs credent
 
 | Script | What it does |
 |--------|--------------|
-| `pack.ps1` | Packs every packable project of `OoBDev.slnx` with the GitVersion version (`-Version` overrides) into `G:\nuget\`, the default `PackageOutputPath`. Packing happens only on `dotnet pack`, never on build. Test, example and AppHost projects are not packable; libraries and tools are. Publishing a package anywhere is a separate step. |
+| `pack.ps1` | Packs every packable project of `OoBDev.slnx` with the GitVersion version (`-Version` overrides) into `G:\nuget\`, the default `PackageOutputPath`. Packing happens only on `dotnet pack`, never on build. Test, example and AppHost projects are not packable; libraries and tools are. Publishing a package anywhere is a separate step.  and npm packages that are neither private nor examples into `G:\npm` |
 | `new-runsettings.ps1` | Writes `artifacts/test.runsettings`, a copy of `src/.runsettings` whose ports follow `TEST_PORT_<NAME>` (environment or `containers/testing/.env`). `run-tests.ps1` calls it, so the stack and the tests share one source of truth. |
 
-The versioned git hooks in `.githooks/` (install once with `pwsh .githooks/setup.ps1`) run `pack.ps1` automatically when a merge commit lands on `main`.
+The versioned git hooks in `.githooks/` (install once with `pwsh .githooks/setup.ps1`) run `run-tests.ps1` before a merge commit on `main` and `pack.ps1` after it.

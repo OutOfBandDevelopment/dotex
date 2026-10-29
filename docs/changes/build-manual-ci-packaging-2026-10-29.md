@@ -18,5 +18,5 @@ Owner decisions of 2026-10-29: CI is manual only, the GitHub workflows do not ap
 
 ## Pack hook and versioning
 
-- `.githooks/post-merge` runs `scripts/ci/pack.ps1` when a merge commit lands on `main`; `.githooks/setup.ps1` sets `core.hooksPath` for a clone ([readme](../../.githooks/README.md)).
+- `.githooks/pre-merge-commit` builds and tests (Unit, Simulate) the merge result before a merge commit on `main`; `.githooks/post-merge` then runs `scripts/ci/pack.ps1` (NuGet to `G:\nuget`, publishable non-private npm projects to `G:\npm`, one version). `.githooks/setup.ps1` sets `core.hooksPath` for a clone ([readme](../../.githooks/README.md)). `scripts/feeds/publish-packages.ps1` (depth-based version) is retired for `pack.ps1`.
 - `GitVersion.yml` uses the `Mainline` strategy so the patch rises with every commit that reaches `main`; major.minor stay with the `v0.5.0` tag.
