@@ -3,6 +3,9 @@ using Microsoft.SqlServer.Dac;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.TestUtilities;
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -19,6 +22,9 @@ namespace OoBDev.Data.Vectors.DB.Tests;
 [TestClass]
 public class SqlServerDeploymentTests
 {
+    private const int LogMilliseconds = 500;
+    private const int FailMilliseconds = 750;
+
     public required TestContext TestContext { get; set; }
 
     private string _masterConnection = default!;
@@ -157,6 +163,38 @@ public class SqlServerDeploymentTests
         Assert.IsTrue(reader.IsDBNull(2), "distance, different lengths");
         Assert.IsTrue(reader.IsDBNull(3), "distance, unsupported metric");
         Assert.AreEqual(0d, Convert.ToDouble(reader.GetValue(4)), 1e-6, "identical vectors");
+    }
+
+    [TestMethod]
+    [TestCategory(TestCategories.Integration)]
+    public async Task SqlVectorStore_FindNeighbors_StaysUnderTheLatencyGate()
+    {
+        // Stage
+        const int rows = 1000;
+        const int dimensions = 384;
+        var options = Microsoft.Extensions.Options.Options.Create(new OoBDev.Data.Vectors.SqlStore.SqlVectorStoreOptions { ConnectionString = DatabaseConnection(), Limit = 10 });
+        var store = new OoBDev.Data.Vectors.SqlStore.SqlVectorStoreProvider(options, "perf");
+        var random = new Random(42);
+        var items = Enumerable.Range(0, rows)
+            .Select(i => (embedding: (ReadOnlyMemory<float>)Enumerable.Range(0, dimensions).Select(_ => (float)random.NextDouble()).ToArray(),
+                          metadata: (IDictionary<string, object>)new Dictionary<string, object> { ["n"] = i }))
+            .ToList();
+        await store.StoreVectorsAsync(items, new Dictionary<string, object>());
+        var query = items[500].embedding;
+
+        // Test
+        var stopwatch = Stopwatch.StartNew();
+        var hits = new List<OoBDev.Search.Models.SearchResultModel>();
+        await foreach (var hit in store.FindNeighborsAsync(query)) hits.Add(hit);
+        stopwatch.Stop();
+
+        // Assert
+        TestContext.WriteLine($"nearest neighbours over {rows} x {dimensions}: {stopwatch.ElapsedMilliseconds} ms");
+        if (stopwatch.ElapsedMilliseconds > LogMilliseconds)
+            TestContext.WriteLine($"WARNING: over the {LogMilliseconds} ms log threshold");
+        Assert.HasCount(10, hits);
+        Assert.AreEqual(500, Convert.ToInt32(hits[0].MetaData!["n"], global::System.Globalization.CultureInfo.InvariantCulture));
+        Assert.IsLessThan(FailMilliseconds, stopwatch.ElapsedMilliseconds, "vector search latency gate");
     }
 
     private string DatabaseConnection() =>
