@@ -1,0 +1,193 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.IO.Pipelines;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
+using OoBDev.DevTerm;
+
+namespace OoBDev.DevTerm.Transports.Tcp;
+
+/// <summary>
+/// <see cref="ITransport"/> for a TCP connection, in either Client or Listener mode
+/// (a configuration choice, not two plugins). See docs/design/transports.md.
+/// </summary>
+public sealed class TcpTransport : ITransport
+{
+    private readonly ITcpConnectionSource _connectionSource;
+    private readonly IOptions<TcpTransportOptions> _options;
+    private ITcpConnection? _connection;
+    private Stream? _writeStream;
+    private ConnectionState _state = ConnectionState.Closed;
+    private Pipe? _pipe;
+    private CancellationTokenSource? _pumpCts;
+    private Task? _pumpTask;
+    private readonly XonXoffFlowControlGate _flowControlGate = new();
+
+    public TcpTransport(ITcpConnectionSource connectionSource, IOptions<TcpTransportOptions> options)
+    {
+        ArgumentNullException.ThrowIfNull(connectionSource);
+        ArgumentNullException.ThrowIfNull(options);
+
+        _connectionSource = connectionSource;
+        _options = options;
+        _flowControlGate.Enabled = options.Value.SoftwareFlowControl;
+    }
+
+    /// <summary>
+    /// Whether inbound XON/XOFF bytes pause/resume outbound writes - seeded from
+    /// <see cref="TcpTransportOptions.SoftwareFlowControl"/> but settable live on an open connection,
+    /// since whether a given serial-to-Ethernet bridge actually needs this often can't be confirmed
+    /// until after connecting. The gate persists for this transport's whole lifetime (survives
+    /// Close/Open), so toggling it once isn't lost across a reconnect.
+    /// </summary>
+    public bool SoftwareFlowControl
+    {
+        get => _flowControlGate.Enabled;
+        set => _flowControlGate.Enabled = value;
+    }
+
+    public ConnectionState State
+    {
+        get => _state;
+        private set
+        {
+            if (_state == value)
+            {
+                return;
+            }
+
+            var previous = _state;
+            _state = value;
+            StateChanged?.Invoke(this, new ConnectionStateChangedEventArgs(previous, value));
+        }
+    }
+
+    public event EventHandler<ConnectionStateChangedEventArgs>? StateChanged;
+
+    public PipeReader Input => _pipe?.Reader ?? throw new InvalidOperationException("The TCP transport has not been opened.");
+
+    public async Task OpenAsync(CancellationToken cancellationToken = default)
+    {
+        if (State is ConnectionState.Open or ConnectionState.Opening)
+        {
+            return;
+        }
+
+        State = ConnectionState.Opening;
+        var options = _options.Value;
+
+        ITcpConnection connection;
+        try
+        {
+            connection = options.Mode == TcpTransportMode.Client
+                ? await _connectionSource.ConnectAsync(options, cancellationToken).ConfigureAwait(false)
+                : await _connectionSource.AcceptAsync(options, cancellationToken).ConfigureAwait(false);
+        }
+        catch
+        {
+            State = ConnectionState.Faulted;
+            throw;
+        }
+
+        _connection = connection;
+        _writeStream = options.WriteByteDelayMs >= 0
+            ? new WriteDelayStream(connection.Stream, options.WriteByteDelayMs)
+            : null;
+        _pipe = new Pipe();
+        _pumpCts = new CancellationTokenSource();
+
+        var pipe = _pipe;
+        Stream pumpSource = new XonXoffReadStream(connection.Stream, _flowControlGate);
+        _pumpTask = Task.Run(() => StreamToPipePump.RunAsync(pumpSource, pipe.Writer, _pumpCts.Token), CancellationToken.None);
+        _ = _pumpTask.ContinueWith(
+            _ =>
+            {
+                // The pump ends either because we're deliberately closing (State already moved
+                // past Open by then) or because the remote peer disconnected underneath us.
+                if (State == ConnectionState.Open)
+                {
+                    State = ConnectionState.Closed;
+                }
+            },
+            CancellationToken.None,
+            TaskContinuationOptions.ExecuteSynchronously,
+            TaskScheduler.Default);
+
+        State = ConnectionState.Open;
+    }
+
+    public async Task CloseAsync(CancellationToken cancellationToken = default)
+    {
+        if (_connection is null)
+        {
+            return;
+        }
+
+        State = ConnectionState.Closing;
+
+        _pumpCts?.Cancel();
+        try
+        {
+            if (_pumpTask is not null)
+            {
+                await _pumpTask.ConfigureAwait(false);
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            // Expected: cancelling the pump while it's blocked flushing into a paused pipe can
+            // surface as the pump task itself completing Canceled rather than completing normally.
+        }
+        finally
+        {
+            _pumpCts?.Dispose();
+            _pumpCts = null;
+            _pumpTask = null;
+            _pipe = null;
+            _writeStream = null;
+
+            _connection.Dispose();
+            _connection = null;
+
+            State = ConnectionState.Closed;
+        }
+    }
+
+    public async Task WriteAsync(ReadOnlyMemory<byte> data, CancellationToken cancellationToken = default)
+    {
+        if (_connection is null || State != ConnectionState.Open)
+        {
+            throw new InvalidOperationException("The TCP transport is not open.");
+        }
+
+        using var timeoutCts = new CancellationTokenSource(_options.Value.WriteTimeoutMs);
+        using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeoutCts.Token);
+
+        try
+        {
+            await _flowControlGate.WaitUntilResumedAsync(linkedCts.Token).ConfigureAwait(false);
+
+            if (_writeStream is not null)
+            {
+                await _writeStream.WriteAsync(data, linkedCts.Token).ConfigureAwait(false);
+            }
+            else
+            {
+                await _connection.WriteAsync(data, linkedCts.Token).ConfigureAwait(false);
+            }
+        }
+        catch (OperationCanceledException) when (timeoutCts.IsCancellationRequested && !cancellationToken.IsCancellationRequested)
+        {
+            throw new TimeoutException($"Writing to the TCP connection timed out after {_options.Value.WriteTimeoutMs} ms.");
+        }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        await CloseAsync();
+        GC.SuppressFinalize(this);
+    }
+}
