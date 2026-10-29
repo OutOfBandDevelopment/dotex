@@ -354,6 +354,10 @@ Each change document should include:
 - Example UI design documents reconciled with the code
 - Status: ✅ Complete
 
+**[http-accepts-query-attribute-2026-10-28.md](http-accepts-query-attribute-2026-10-28.md)**
+- `[AcceptsQuery]` result filter adds the Accept-Query header
+- Status: ✅ Complete
+
 **[hosting-mailkit-all-builds-2026-10-28.md](hosting-mailkit-all-builds-2026-10-28.md)**
 - MailKit hosting registered in every build (was DEBUG only)
 - Status: ✅ Complete

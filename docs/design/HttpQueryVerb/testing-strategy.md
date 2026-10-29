@@ -28,5 +28,5 @@
 | REQ-003 | Body and content type are the same after the rewrite | Unit |
 | REQ-004 | `QUERY` without JSON or form content returns 415 and does not call `next` | Unit |
 | REQ-005 | `PUT` with the header is untouched | Unit |
-| REQ-006 | Planned: `Accept-Query` header (BACKLOG) | Unit |
+| REQ-006 | `OnResultExecuting_SearchAction_AddsAcceptQueryHeader` | Unit |
 | REQ-007 | `UseHttpQueryVerb_InPipeline_RoutesQueryAsGetAsync` builds a pipeline with the extension | Unit |
