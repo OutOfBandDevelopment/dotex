@@ -32,7 +32,7 @@ Coverage 85% or more for the project. Tests run on Linux and Windows (fixtures e
 | REQ-004 | `Get_StatusScript_UsesStatusAndHeaders`, `Get_NoContentType_ReturnsBadGateway`, `Get_ExitWithoutOutput_ReturnsServerError`, `Get_LocationScript_ReturnsRedirectWithLocation`, `Get_NoBlankLineAfterHeaders_ReturnsBadGateway` | Simulate |
 | REQ-005 | `Get_UnlistedExtension_ReturnsForbidden` | Simulate |
 | REQ-006 | `Get_QueryWithShellMetacharacters_ReachesScriptAsData` | Simulate |
-| REQ-007 | `Get_Traversal_IsNotServed` (three encodings); the symlink case is Planned (BACKLOG) | Simulate |
+| REQ-007 | `Get_Traversal_IsNotServed` (three encodings), `Get_SymlinkOutOfTheRoot_IsForbidden` (file and directory link; Linux container) | Simulate |
 | REQ-008 | `Get_HeaderWithControlCharacter_ReturnsBadGateway` (`bad-header.sh`, Linux container) | Simulate |
 | REQ-009 | `Get_BatchFileWithoutOptIn_ReturnsForbidden` (Windows only) | Simulate |
 | REQ-010 | `Get_ProgramOverTimeout_ReturnsGatewayTimeout`, `Get_ProgramOverTimeout_KillsTheProcess` (`pid-sleep.sh`, Linux container) | Simulate |
