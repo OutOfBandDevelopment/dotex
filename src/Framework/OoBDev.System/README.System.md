@@ -36,6 +36,17 @@ Adds support for shared templating.
 ## SystemExtensionBuilder
 Builder for configuring system extensions.
 
+## Numerics
+Numbers that format and parse in a notation, migrated from BinaryDataDecoders.
+
+| Type | Notation | Example |
+|------|----------|---------|
+| `ScientificNumber` | power of ten | `1.001e3` |
+| `EngineeringNumber` | SI prefix, base 1000 | `110m`, `1.5k` |
+| `ByteNumber` | SI prefix, base 1024, trailing `b` | `1kb`, `112.64mb` |
+
+`FormattableNumber.Parse(text)` accepts any of the three. All types implement `INumeric` (`AsDouble` to `AsInt64`), convert implicitly from and to the built-in numeric types and to each other, and format through `ScienceNotationFormatter`, `EngineeringNotationFormatter` or `ByteNotationFormatter` (usable with `string.Format`). Parsing and formatting use the invariant culture.
+
 ## Text.Json
 
 ### JsonSerializer
