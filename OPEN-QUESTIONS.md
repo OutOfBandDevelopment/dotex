@@ -10,15 +10,15 @@ _(none waiting; processed requests are in BACKLOG.md and TODO.md)_
 
 ## Open
 
-### Q2 · 2026-10-29 · DevTerm parity · Schema  host
+### Q2 · 2026-10-29 · DevTerm parity · Schema `$id` host
 
-The generated JSON Schemas carry an  URL (). The ported default is dev-term's GitHub raw URL, but GitHub is no longer the primary repository. Where should the schemas be served from?
+The generated JSON Schemas carry an `$id` URL (`SchemaGenerator.BaseUrl`). The ported default is dev-term's GitHub raw URL, but GitHub is no longer the primary repository. Where should the schemas be served from?
 
 **Options**
 
 - A. Keep the dev-term GitHub raw URL for now (recommended: reversible by changing one constant and regenerating; editors keep working while the schemas stay hosted there).
 - B. A URL on a domain you control (stable, but I need the address).
-- C. Relative s, no hosting (no editor auto-fetch).
+- C. Relative `$id`s, no hosting (no editor auto-fetch).
 
 **Default:** A.
 
