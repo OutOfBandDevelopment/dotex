@@ -4,7 +4,7 @@ using System.IO.Pipelines;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace OoBDev.DevTerm;
+namespace OoBDev.System.IO.Pipelines;
 
 /// <summary>
 /// Copies a readable <see cref="Stream"/> into a <see cref="PipeWriter"/>, reading straight into the pipe's pooled buffers.

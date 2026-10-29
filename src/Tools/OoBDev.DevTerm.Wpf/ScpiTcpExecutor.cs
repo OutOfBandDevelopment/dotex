@@ -3,6 +3,8 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using OoBDev.Scpi;
+using OoBDev.System.IO;
+using OoBDev.System.IO.Pipelines;
 using OoBDev.System.IO.Tcp;
 
 namespace OoBDev.DevTerm.Wpf;
@@ -14,6 +16,7 @@ public sealed class ScpiTcpExecutor(string host, int port = 5025) : IDisposable
 {
     private readonly TcpDeviceAdapter _adapter = new(host, port, TimeSpan.FromSeconds(3));
     private readonly global::System.Threading.Lock _gate = new();
+    private Stream? _stream;
 
     /// <summary>Sends the request and returns the reply line for a query, or null for a command.</summary>
     /// <param name="request">The request.</param>
@@ -22,16 +25,28 @@ public sealed class ScpiTcpExecutor(string host, int port = 5025) : IDisposable
     public Task<string?> ExecuteAsync(ScpiRequest request) => Task.Run(() => Execute(request));
 
     /// <summary>Closes the connection.</summary>
-    public void Dispose() => _adapter.Dispose();
+    public void Dispose() => _adapter.DisposeAsync().AsTask().GetAwaiter().GetResult();
 
     private string? Execute(ScpiRequest request)
     {
         lock (_gate)
         {
-            if (!_adapter.TryOpen(out var stream) || stream is null)
+            if (_adapter.State != ConnectionState.Open)
             {
-                throw new IOException($"Cannot connect to {_adapter.Path}.");
+                try
+                {
+                    _adapter.OpenAsync().GetAwaiter().GetResult();
+                }
+                catch (IOException)
+                {
+                    _adapter.CloseAsync().GetAwaiter().GetResult();
+                    throw new IOException($"Cannot connect to {_adapter.Path}.");
+                }
+
+                _stream = _adapter.AsStream();
             }
+
+            var stream = _stream!;
 
             var bytes = Encoding.ASCII.GetBytes(request.WireText);
             stream.Write(bytes, 0, bytes.Length);

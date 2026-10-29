@@ -15,5 +15,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\OoBDev.System.Abstractions\OoBDev.System.Abstractions.csproj" />
+    <ProjectReference Include="..\OoBDev.System.IO.Pipelines\OoBDev.System.IO.Pipelines.csproj" />
   </ItemGroup>
 </Project>

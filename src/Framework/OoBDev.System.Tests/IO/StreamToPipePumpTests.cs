@@ -2,11 +2,12 @@ using System.Buffers;
 using System;
 using System.IO;
 using System.IO.Pipelines;
+using OoBDev.System.IO.Pipelines;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace OoBDev.DevTerm.Core.Tests;
+namespace OoBDev.System.Tests.IO;
 
 /// <summary>The stream-to-pipe pump with in-memory streams.</summary>
 [TestCategory("Unit")]

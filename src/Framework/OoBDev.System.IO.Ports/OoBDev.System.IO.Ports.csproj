@@ -7,6 +7,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\OoBDev.System.Abstractions\OoBDev.System.Abstractions.csproj" />
+    <ProjectReference Include="..\OoBDev.System.IO.Pipelines\OoBDev.System.IO.Pipelines.csproj" />
     <PackageReference Include="GitVersion.MsBuild">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

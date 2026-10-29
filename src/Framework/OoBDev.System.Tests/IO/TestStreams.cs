@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 
-namespace OoBDev.DevTerm.Core.Tests;
+namespace OoBDev.System.Tests.IO;
 
 internal sealed class FailingStream : Stream
 {

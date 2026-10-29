@@ -44,7 +44,7 @@ Read from the code on 2026-10-28; each is closed in the template device or the d
 | Checksum algorithms: only `Simple16` over 16-bit values exists. Radex One needs `0xFFFF - (sum of little-endian words % 0xFFFF)` over bytes, NMEA needs XOR of the characters between `$` and `*` | dev-term `RadexOneFramer.ComputeChecksum`, `NmeaSentence` | Add the byte-oriented methods to `IChecksumCalculator`, tested with dev-term's byte-exact traces (R4) |
 | `IMessageDecoder<T>` is stateless, dev-term decoders are not | `K8055Decoder` buffers 9-byte frames and keeps `_lastValues` | Framing to the segmenter; change tracking to a consumer type (architecture, Table 1) |
 | `IMessageEncoder<T>.Encode(ref T)` returns bytes from one message, but Busylight commands come from accumulated UI state | `BusylightControlSurface.BuildFrame` | A record holding the full state is the message; the consumer owns the state |
-| The serial adapter catches only `IOException` when opening, so a busy port throws `UnauthorizedAccessException` | `OoBDev.System.IO.Ports` `SerialPortDeviceAdapter.TryOpen` | Fix with a test in the template device (R9); check the three sibling defects in the same pass |
+| The serial adapter catches only `IOException` when opening, so a busy port throws `UnauthorizedAccessException` | `OoBDev.System.IO.Ports` `SerialPortDeviceAdapter.OpenAsync` (was `TryOpen`) | Fix with a test in the template device (R9); check the three sibling defects in the same pass |
 
 ## Per device shape
 

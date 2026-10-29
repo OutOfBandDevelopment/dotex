@@ -2,6 +2,9 @@ using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
+using OoBDev.System.IO.Pipelines;
 
 namespace OoBDev.System.IO.Tcp;
 
@@ -18,24 +21,19 @@ public sealed class Rfc2217DeviceAdapter(
     uint baudRate = 9600,
     byte dataBits = 8,
     ComPortParity parity = ComPortParity.None,
-    ComPortStopBits stopBits = ComPortStopBits.One) : IDeviceAdapter, IDisposable
+    ComPortStopBits stopBits = ComPortStopBits.One) : StreamDeviceAdapter
 {
     private const byte SetBaudRate = 1;
     private const byte SetDataSize = 2;
     private const byte SetParity = 3;
     private const byte SetStopSize = 4;
 
-    private readonly TcpDeviceAdapter _tcp = new(host, port);
-    private TelnetStream? _stream;
 
     /// <inheritdoc />
-    public string Type => "Rfc2217";
+    public override string Type => "Rfc2217";
 
     /// <inheritdoc />
-    public string Path => _tcp.Path;
-
-    /// <inheritdoc />
-    public Stream Stream => _stream ?? throw new InvalidOperationException($"{Path} is not open; call {nameof(TryOpen)} first.");
+    public override string Path => $"{host}:{port}";
 
     /// <summary>The bytes sent after connecting: the option announcement and the four line-setting subnegotiations.</summary>
     /// <returns>The bytes.</returns>
@@ -52,31 +50,13 @@ public sealed class Rfc2217DeviceAdapter(
     }
 
     /// <inheritdoc />
-    public bool TryOpen(out Stream? stream)
+    protected override async Task<Stream?> ConnectAsync(CancellationToken cancellationToken)
     {
-        if (_stream is { } open)
-        {
-            stream = open;
-            return true;
-        }
-
-        if (!_tcp.TryOpen(out var connection))
-        {
-            stream = null;
-            return false;
-        }
-
-        _stream = new TelnetStream(connection!) { ComPortAnnounced = true };
-        _stream.SendRawAsync(Handshake()).AsTask().GetAwaiter().GetResult();
-        stream = _stream;
-        return true;
-    }
-
-    /// <summary>Closes the connection if it is open.</summary>
-    public void Dispose()
-    {
-        _stream?.Dispose();
-        _tcp.Dispose();
+        var connection = await TcpDeviceAdapter.ConnectStreamAsync(host, port, TimeSpan.FromSeconds(5), cancellationToken).ConfigureAwait(false);
+        if (connection is null) return null;
+        var telnet = new TelnetStream(connection) { ComPortAnnounced = true };
+        await telnet.SendRawAsync(Handshake(), cancellationToken).ConfigureAwait(false);
+        return telnet;
     }
 
     private static void AddSubNegotiation(List<byte> bytes, byte command, byte[] value)

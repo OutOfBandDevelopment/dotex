@@ -13,7 +13,7 @@ How the dev-term engine lands in this repository. Requirements, api-design and t
 
 ## Contracts
 
-dev-term has two core contracts, `ITransport` (an async, full-duplex connection with a `PipeReader Input`, `OpenAsync`, `CloseAsync`, `WriteAsync` and a state with change events) and `IPresenter` (`Render(ReadOnlySequence<byte>)` returns text lines). This repository's older contract is `IDeviceAdapter` (`Type`, `Path`, `TryOpen(out Stream)`, `Stream`), used by the serial, HID and TCP adapters and by the pipeline builder.
+dev-term has two core contracts, `ITransport` (an async, full-duplex connection with a `PipeReader Input`, `OpenAsync`, `CloseAsync`, `WriteAsync` and a state with change events) and `IPresenter` (`Render(ReadOnlySequence<byte>)` returns text lines). This repository's older contract was `IDeviceAdapter` (`Type`, `Path`, `TryOpen(out Stream)`, `Stream`); since 2026-10-29 it is pipe-based like `ITransport` (see [the restructure plan](restructure-plan.md#adapter-contract-step-1)), used by the serial, HID and TCP adapters and by the pipeline builder.
 
 **Table 1 — The two transport contracts**
 

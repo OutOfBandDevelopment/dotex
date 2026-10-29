@@ -1,6 +1,9 @@
 ﻿using HidSharp;
 using System;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
+using OoBDev.System.IO.Pipelines;
 
 namespace OoBDev.System.IO.UsbHids;
 
@@ -8,31 +11,15 @@ namespace OoBDev.System.IO.UsbHids;
 /// Adapter that wraps a USB HID device to provide a device interface.
 /// </summary>
 /// <param name="device">The USB HID device to wrap.</param>
-public class UsbHidDeviceAdapter(HidDevice device) : IDeviceAdapter
+public class UsbHidDeviceAdapter(HidDevice device) : StreamDeviceAdapter
 {
     /// <inheritdoc/>
-    public string Type => nameof(HidDevice);
+    public override string Type => nameof(HidDevice);
 
     /// <inheritdoc/>
-    public string Path => device.DevicePath;
+    public override string Path => device.DevicePath;
 
     /// <inheritdoc/>
-    public Stream Stream { get => field ?? throw new InvalidOperationException($"Stream for {device} is not open"); private set; }
-
-    //public void Open() => _device.Open();
-
-    /// <inheritdoc/>
-    public bool TryOpen(out Stream? stream)
-    {
-        if (device.TryOpen(out var s))
-        {
-            Stream = stream = s;
-            return true;
-        }
-        else
-        {
-            stream = null;
-            return false;
-        }
-    }
+    protected override Task<Stream?> ConnectAsync(CancellationToken cancellationToken) =>
+        Task.FromResult<Stream?>(device.TryOpen(out var stream) ? stream : null);
 }

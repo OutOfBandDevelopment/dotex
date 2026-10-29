@@ -23,7 +23,13 @@ Owner decisions, 2026-10-29 (planning session). They supersede the project layou
 - `UserLogProcessor`, `UserTelemetryProcessor` and `UserClaims` read the accessor, not `IHttpContextAccessor`.
 - The processors, options, DI extensions and the standalone OTLP exporter all live in one host-free Framework library, `OoBDev.Telemetry` (no ASP.NET reference). `ExternalServices/OpenTelemetry/OoBDev.OpenTelemetry` is retired, its tests move, and the Example web, API and AppHost references are updated.
 
-## Migration table (to confirm before step 1)
+## Adapter contract (step 1)
+
+- `OoBDev.System.Abstractions/IO`: `ConnectionState`, `ConnectionStateChangedEventArgs` and `IDeviceAdapter : IAsyncDisposable` with `Type`, `Path`, `State`, `StateChanged`, `PipeReader Input`, `PipeWriter Output`, `OpenAsync`, `CloseAsync`. `TryOpen` and `Stream` are gone; `IBufferedDeviceAdapter` keeps `BytesToRead`.
+- `OoBDev.System.IO.Pipelines`: `StreamToPipePump`, the abstract `StreamDeviceAdapter` (state machine, pump, `PipeWriter.Create`) and `AsStream(this IDeviceAdapter)` for stream-based callers. Serial, TCP, RFC 2217 and HID adapters derive from it.
+- `StreamDevice<T>` reads `Input` and writes `Output`; callers open the adapter first. `StreamTransport` is deleted; `ITransport` stays until step 2.
+
+## Migration table (confirmed 2026-10-29)
 
 | Project today | Target | Namespace | Notes |
 |---|---|---|---|

@@ -37,19 +37,20 @@ public class StreamDeviceTests
         }
     }
 
-    private sealed class FakeAdapter(Stream stream) : IDeviceAdapter
+    private sealed class FakeAdapter(Stream stream) : StreamDeviceAdapter
     {
-        public string Type => "fake";
+        public override string Type => "fake";
 
-        public string Path => "fake";
+        public override string Path => "fake";
 
-        public Stream Stream { get; } = stream;
+        protected override Task<Stream?> ConnectAsync(CancellationToken cancellationToken) => Task.FromResult<Stream?>(stream);
+    }
 
-        public bool TryOpen(out Stream? opened)
-        {
-            opened = Stream;
-            return true;
-        }
+    private static async Task<FakeAdapter> OpenAsync(Stream stream)
+    {
+        var adapter = new FakeAdapter(stream);
+        await adapter.OpenAsync().ConfigureAwait(false);
+        return adapter;
     }
 
     [TestMethod, TestCategory(TestCategories.Unit)]
@@ -60,7 +61,7 @@ public class StreamDeviceTests
         var written = new TaskCompletionSource();
         stream.Wrote += (_, _) => written.TrySetResult();
         using var cancel = new CancellationTokenSource();
-        using var device = new StreamDevice<string>(new FakeAdapter(stream), new SendOnlyDevice(), 0, cancel.Token);
+        using var device = new StreamDevice<string>(await OpenAsync(stream).ConfigureAwait(false), new SendOnlyDevice(), 0, cancel.Token);
 
         // Test
         var accepted = await device.Transmit("hello").ConfigureAwait(false);
@@ -84,7 +85,7 @@ public class StreamDeviceTests
             if (Interlocked.Increment(ref writes) == 2) both.TrySetResult();
         };
         using var cancel = new CancellationTokenSource();
-        using var device = new StreamDevice<string>(new FakeAdapter(stream), new SendOnlyDevice(), 0, cancel.Token);
+        using var device = new StreamDevice<string>(await OpenAsync(stream).ConfigureAwait(false), new SendOnlyDevice(), 0, cancel.Token);
 
         // Test
         await device.Transmit("a").ConfigureAwait(false);
@@ -113,7 +114,7 @@ public class StreamDeviceTests
         var window = TimeSpan.FromMilliseconds(700);
         var background = await ProcessorTimeOverAsync(window).ConfigureAwait(false);
         using var cancel = new CancellationTokenSource();
-        using var device = new StreamDevice<string>(new FakeAdapter(new WrittenStream()), new SendOnlyDevice(), 0, cancel.Token);
+        using var device = new StreamDevice<string>(await OpenAsync(new WrittenStream()).ConfigureAwait(false), new SendOnlyDevice(), 0, cancel.Token);
         await Task.Delay(200).ConfigureAwait(false);
 
         // Test

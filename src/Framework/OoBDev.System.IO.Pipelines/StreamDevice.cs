@@ -17,7 +17,6 @@ public class StreamDevice<TMessage> : IStreamDevice<TMessage>
 {
     private readonly Channel<TMessage> _transmissionQueue = Channel.CreateUnbounded<TMessage>(new UnboundedChannelOptions { SingleReader = true });
 
-    private Stream AdapterStream => _adapter.Stream;
     private readonly IDeviceAdapter _adapter;
     private readonly IDeviceDefinition _device;
     private readonly ISegmentBuildDefinition? _segmentDefintion;
@@ -30,7 +29,7 @@ public class StreamDevice<TMessage> : IStreamDevice<TMessage>
     /// <summary>
     /// Initializes a new instance of the StreamDevice class.
     /// </summary>
-    /// <param name="adapter">The device adapter providing access to the underlying stream.</param>
+    /// <param name="adapter">The opened device adapter providing the pipes; the device disposes it.</param>
     /// <param name="device">The device definition describing the device's behavior.</param>
     /// <param name="minimumTransmissionDelay">Minimum delay between message transmissions in milliseconds (default is 1000ms).</param>
     /// <param name="token">Optional cancellation token to stop the device operations.</param>
@@ -145,7 +144,7 @@ public class StreamDevice<TMessage> : IStreamDevice<TMessage>
             try
             {
                 await ReportDeviceStatus(StreamDeviceStatus.Receiving).ConfigureAwait(false);
-                await AdapterStream.Follow()
+                await _adapter.Input.AsStream().Follow()
                              .With(_segmentDefintion!.ThenAs(_decoder!, OnMessageReceived))
                              .RunAsync(_token)
                              .ConfigureAwait(false);
@@ -195,8 +194,7 @@ public class StreamDevice<TMessage> : IStreamDevice<TMessage>
                 {
                     await ReportDeviceStatus(StreamDeviceStatus.Transmitting).ConfigureAwait(false);
                     var requestBuffer = encoder.Encode(ref item);
-                    await AdapterStream.WriteAsync(requestBuffer, _token)
-                                 .ConfigureAwait(false);
+                    await _adapter.Output.WriteAsync(requestBuffer, _token).ConfigureAwait(false);
                     await ReportDeviceStatus(StreamDeviceStatus.Transmitted).ConfigureAwait(false);
                 }
                 catch (Exception ex)
@@ -232,7 +230,7 @@ public class StreamDevice<TMessage> : IStreamDevice<TMessage>
     {
         Runner.GetAwaiter().GetResult();
         _tokenSource.Cancel(false);
-        AdapterStream.Dispose();
+        _adapter.DisposeAsync().AsTask().GetAwaiter().GetResult();
         GC.SuppressFinalize(this);
     }
 }

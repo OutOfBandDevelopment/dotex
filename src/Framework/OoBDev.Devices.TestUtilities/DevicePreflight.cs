@@ -1,5 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.System.IO.UsbHids;
+using OoBDev.System.IO.Pipelines;
 using OoBDev.TestUtilities;
 using System;
 using System.IO;
@@ -48,8 +49,15 @@ public static class DevicePreflight
         var adapter = new UsbHidFactory().GetDevices(definition).FirstOrDefault();
         if (adapter is null)
             Assert.Inconclusive($"No USB HID device for {definition.GetType().Name} is enumerated: is it plugged in?");
-        if (!adapter.TryOpen(out var stream) || stream is null)
+        try
+        {
+            adapter.OpenAsync().GetAwaiter().GetResult();
+        }
+        catch (IOException)
+        {
             Assert.Inconclusive($"The {definition.GetType().Name} USB HID device is present but cannot be opened (is another program using it?).");
-        return stream;
+        }
+
+        return adapter.AsStream();
     }
 }
