@@ -23,4 +23,4 @@ The AppHost was started (20 resources, images pulled, sbert and ollama built) an
 - Aspire binds host ports to 127.0.0.1 only, so SqlClient waited out `::1` on `localhost`. `SQLSERVER_CONNECTION_STRING` and `SQLSERVER_HOST` in `src/.runsettings` now use 127.0.0.1 (works with compose too).
 - `OllamaApiClientTests.ListModelsTest` passed an empty model name that options validation rejects; it now uses `OLLAMA_MODEL`.
 
-Result after the fixes: all Integration tests pass except `OoBDev.MongoDB.Tests` (6 failures: `MongoDispatchProxy` is sealed and `DispatchProxy` rejects it, a code defect independent of the stack; added to `BACKLOG.md`).
+Result after the fixes: all Integration tests pass. The MongoDB failures (6) were a sealed `MongoDispatchProxy` (`DispatchProxy` rejects sealed bases); unsealed, all 6 pass.

@@ -10,7 +10,6 @@ Keep this file short (a handful of items). When an item starts, move it here fro
 
 - [ ] OData and GraphQL surfaces: waiting on Q2 (library choice); take the next item meanwhile
 - [ ] Device decoding: all eight device packages are in `src/HardwareDevices` and `src/Extensions` with unit and Hardware tests (change documents `docs/changes/devices-*-2026-10-28.md`; feature docs [docs/design/DeviceDecoding/](docs/design/DeviceDecoding/README.md)). Open: the DE-5000 Hardware test (needs a BLE transport), the phase 0 checks in [device-parity.md](docs/migration/device-parity.md) section 4, then the dev-term merge (blocked on Q3)
-- [ ] `OoBDev.MongoDB` integration tests fail (6): `MongoDispatchProxy` is sealed and `DispatchProxy` needs an unsealed base; unseal or replace it
 
 ## Next
 
