@@ -8,7 +8,7 @@ paths:
 # C# coding standards
 
 - net10.0, nullable enabled, `ImplicitUsings` disabled (explicit `using`), XML docs on public APIs.
-- Layers: Common (contracts) <- Framework (depends only on Common) <- Extensions <- ExternalServices. Adapters reference Abstractions only.
+- Layers: Common (contracts) <- Framework (depends only on Common) <- Extensions <- ExternalServices <- Applications (`src/Applications`, nothing references it). Adapters reference Abstractions only. Reusable, host-free code is Framework; see rule `layering-and-migration-plans`.
 - Pattern: `IService` -> `IServiceProvider` -> `IServiceProviderFactory`; DI via `TryAdd*`; the registration class is always `ServiceCollectionExtensions`.
 - Naming: `I{Name}`, `{Name}` (no suffix), `{Name}Provider`, `{Name}Factory`, `{Name}Extensions`. Provider keys are kebab-case constants in the adapter's `{Vendor}Globals`; never a global registry.
 - Prefer platform primitives (`TimeProvider`, `Microsoft.Extensions.*`, `[LoggerMessage]`) over hand-built abstractions. Options validation uses `AddValidatedOptions<T>()`. Provider selection uses `TryAddConfiguredKeyedService<T>`.
