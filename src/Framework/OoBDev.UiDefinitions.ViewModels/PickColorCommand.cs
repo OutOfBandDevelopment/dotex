@@ -16,6 +16,10 @@ public sealed class PickColorCommand(FormBinding binding, UiControl target, ICol
     /// <summary>The last colour that was picked, or null.</summary>
     public string? LastColor { get; private set; }
 
+    /// <summary>Writes the last picked colour again, so selecting the linked option brings it back.</summary>
+    /// <returns>False when nothing was picked yet or the model refused the colour.</returns>
+    public bool Reapply() => LastColor is { } color && _binding.SetText(_target, color).IsValid;
+
     /// <inheritdoc />
     public override void Execute(object? parameter)
     {

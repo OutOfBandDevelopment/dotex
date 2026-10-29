@@ -17,4 +17,8 @@
 
 ## Not done
 
-The `ColorPickerChoiceOption` link (picking selects the Custom option and the option re-applies the last pick) (the DevTerm shell now passes `WpfColorPicker`), a look at the view on screen. Tracked in `BACKLOG.md`.
+A look at the colour picker view on screen. Tracked in `BACKLOG.md`.
+
+## Colour picker link option
+
+`FormViewModel` now links a `ColorPickerChoiceOption` (found with `CustomColorChoices`): the choice row's Custom option gets `SelectCustomColorCommand`, which re-applies the last picked colour (`PickColorCommand.Reapply`) or opens the picker when none was picked, and a colour that is not one of the other options shows Custom as selected. The radio template needed no change, because it binds each option item's command. 5 Unit tests added (47 in the view models tests); not looked at on screen.

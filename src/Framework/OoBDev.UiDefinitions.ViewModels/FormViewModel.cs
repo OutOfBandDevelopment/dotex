@@ -22,6 +22,7 @@ public sealed class FormViewModel : ViewModelBase, IDisposable
         Definition = definition ?? throw new ArgumentNullException(nameof(definition));
         _binding = binding ?? throw new ArgumentNullException(nameof(binding));
         Sections = [.. definition.Sections.Select(s => new FormSectionViewModel(s, [.. s.Controls.Select(c => ControlViewModelFactory.Create(c, binding, colorPicker, s.Controls))]))];
+        LinkColorPickers(definition);
         _binding.Changed += OnModelChanged;
     }
 
@@ -50,6 +51,17 @@ public sealed class FormViewModel : ViewModelBase, IDisposable
 
     /// <inheritdoc />
     public void Dispose() => _binding.Changed -= OnModelChanged;
+
+    private void LinkColorPickers(UiDefinition definition)
+    {
+        foreach (var (choiceId, (button, option)) in CustomColorChoices.Find(definition))
+        {
+            if (Row(choiceId) is ChoiceViewModel choice && Row(button.Id) is ButtonViewModel { Invoke: PickColorCommand pick })
+            {
+                choice.LinkColorPicker(option, pick);
+            }
+        }
+    }
 
     private void OnModelChanged(object? sender, string? name) => Refresh();
 }

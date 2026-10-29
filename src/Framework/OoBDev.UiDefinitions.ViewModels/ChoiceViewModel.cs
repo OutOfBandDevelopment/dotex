@@ -11,6 +11,7 @@ public sealed class ChoiceViewModel : ControlViewModel
 {
     private string _selected = string.Empty;
     private IReadOnlyList<string> _checked = [];
+    private string? _customOption;
 
     /// <summary>Creates the view model and reads the model.</summary>
     /// <param name="control">The choice.</param>
@@ -65,6 +66,25 @@ public sealed class ChoiceViewModel : ControlViewModel
         }
     }
 
+    /// <summary>
+    /// Links the option that stands for a picked colour (<see cref="ButtonControl.ColorPickerChoiceOption"/>): selecting it brings the last
+    /// colour back or opens the picker, and a colour that is not one of the other options shows it as picked.
+    /// </summary>
+    /// <param name="option">The option text.</param>
+    /// <param name="pick">The colour picker button's command.</param>
+    internal void LinkColorPicker(string option, PickColorCommand pick)
+    {
+        var item = OptionItems.FirstOrDefault(o => string.Equals(o.Text, option, StringComparison.Ordinal));
+        if (item is null)
+        {
+            return;
+        }
+
+        _customOption = item.Text;
+        item.Command = new SelectCustomColorCommand(pick);
+        Refresh();
+    }
+
     /// <summary>Whether <paramref name="option"/> is checked (check list).</summary>
     public bool IsChecked(string option) => CheckedOptions.Contains(option, StringComparer.OrdinalIgnoreCase);
 
@@ -79,7 +99,7 @@ public sealed class ChoiceViewModel : ControlViewModel
         }
 
         var current = Binding.GetText(Id);
-        SelectedOption = Options.FirstOrDefault(o => string.Equals(o, current, StringComparison.OrdinalIgnoreCase)) ?? current;
+        SelectedOption = Options.FirstOrDefault(o => string.Equals(o, current, StringComparison.OrdinalIgnoreCase)) ?? (_customOption is not null && current.Length > 0 ? _customOption : current);
         MarkItems(o => string.Equals(o, SelectedOption, StringComparison.Ordinal));
     }
 

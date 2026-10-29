@@ -19,7 +19,7 @@ No code-behind, no lambdas as commands, no UI toolkit reference.
 
 ## Verified
 
-42 Unit tests: visibility conditions, validation errors, model-to-view refresh, the commands, disposal, the vector plot projection (XY, polar, XYZ, colour), the colour picker command and dialog state. Line coverage with the own test project (measured 2026-10-29): 96%.
+47 Unit tests: visibility conditions, validation errors, model-to-view refresh, the commands, disposal, the vector plot projection (XY, polar, XYZ, colour), the colour picker command and dialog state, the Custom option link (`SelectCustomColorCommand`). Line coverage with the own test project (measured 2026-10-29): 96%.
 
 ## Colour picker
 

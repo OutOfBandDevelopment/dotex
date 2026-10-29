@@ -6,6 +6,7 @@ namespace OoBDev.UiDefinitions.ViewModels;
 public sealed class ChoiceOptionViewModel : ViewModelBase
 {
     private bool _isSelected;
+    private ICommand _command;
 
     /// <summary>Creates the option.</summary>
     /// <param name="text">The option text.</param>
@@ -13,14 +14,18 @@ public sealed class ChoiceOptionViewModel : ViewModelBase
     public ChoiceOptionViewModel(string text, ICommand command)
     {
         Text = text;
-        Command = command;
+        _command = command;
     }
 
     /// <summary>The option text.</summary>
     public string Text { get; }
 
     /// <summary>Picks or checks the option; pass <see cref="Text"/> as the parameter.</summary>
-    public ICommand Command { get; }
+    public ICommand Command
+    {
+        get => _command;
+        internal set => SetProperty(ref _command, value);
+    }
 
     /// <summary>Whether the option is the picked one (dropdown, radio group) or checked (check list).</summary>
     public bool IsSelected
