@@ -390,6 +390,10 @@ Each change document should include:
 - ExternalServices readmes identifier-checked against code
 - Status: ✅ Complete
 
+**[apis-odata-query-2026-10-29.md](apis-odata-query-2026-10-29.md)**
+- OData query options on IQueryable actions, with limits, QUERY form bodies and tests
+- Status: ✅ Complete
+
 **[apis-cgi-symlink-test-2026-10-29.md](apis-cgi-symlink-test-2026-10-29.md)**
 - CGI symlink-out-of-root test (REQ-007)
 - Status: ✅ Complete

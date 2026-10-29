@@ -28,6 +28,8 @@
     <Project Path="Extensions/OoBDev.AspNetCore.Cgi.OpenApi/OoBDev.AspNetCore.Cgi.OpenApi.csproj" />
     <Project Path="Extensions/OoBDev.AspNetCore.Cgi.Tests/OoBDev.AspNetCore.Cgi.Tests.csproj" />
     <Project Path="Extensions/OoBDev.AspNetCore.Cgi/OoBDev.AspNetCore.Cgi.csproj" />
+    <Project Path="Extensions/OoBDev.AspNetCore.OData.Tests/OoBDev.AspNetCore.OData.Tests.csproj" />
+    <Project Path="Extensions/OoBDev.AspNetCore.OData/OoBDev.AspNetCore.OData.csproj" />
     <Project Path="Extensions/OoBDev.Data.Vectors.DB.Tests/OoBDev.Data.Vectors.DB.Tests.csproj" />
     <Project Path="Extensions/OoBDev.Data.Vectors.DB/OoBDev.Data.Vectors.DB.csproj">
       <BuildDependency Project="Tools/OoBDev.DacPacCompiler.Cli/OoBDev.DacPacCompiler.Cli.csproj" />
