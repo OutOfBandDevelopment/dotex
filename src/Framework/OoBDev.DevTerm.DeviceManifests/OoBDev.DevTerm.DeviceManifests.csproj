@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <NoWarn>$(NoWarn);MA0016;MA0023;MA0051</NoWarn>
+    <ImplicitUsings>false</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\OoBDev.DevTerm.Core\OoBDev.DevTerm.Core.csproj" />
+    <ProjectReference Include="..\OoBDev.DevTerm.Logging\OoBDev.DevTerm.Logging.csproj" />
+    <ProjectReference Include="..\OoBDev.UiDefinitions\OoBDev.UiDefinitions.csproj" />
+    <PackageReference Include="YamlDotNet" />
+    <PackageReference Include="GitVersion.MsBuild">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <!-- Pre-packaged manifests are copied to "manifests\{device}\..." next to every app that references this project. -->
+  <ItemGroup>
+    <None Include="Manifests\**\*" Link="manifests\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="OoBDev.DevTerm.DeviceManifests.Tests" />
+  </ItemGroup>
+
+</Project>

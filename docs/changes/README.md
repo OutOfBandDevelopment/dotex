@@ -494,3 +494,4 @@ Each change document should include:
 - [DevTerm session servers and clients (2026-10-29)](devterm-session-servers-2026-10-29.md) - pipe, control pipe, TCP share, HTTP control
 - [DevTerm KeyValue plugin (2026-10-29)](devterm-keyvalue-plugin-2026-10-29.md) - structured-message example plugin
 - [DevTerm observability (2026-10-29)](devterm-observability-2026-10-29.md) - OTLP exporter
+- [DevTerm device manifests (2026-10-29)](devterm-device-manifests-2026-10-29.md) - manifests, frames, .ksy import, presenters

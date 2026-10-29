@@ -212,6 +212,8 @@
     <Project Path="Framework/OoBDev.Data.Common.Tests/OoBDev.Data.Common.Tests.csproj" />
     <Project Path="Framework/OoBDev.Data.Common/OoBDev.Data.Common.csproj" />
     <Project Path="Framework/OoBDev.Devices.TestUtilities/OoBDev.Devices.TestUtilities.csproj" />
+    <Project Path="Framework/OoBDev.DevTerm.DeviceManifests/OoBDev.DevTerm.DeviceManifests.csproj" />
+    <Project Path="Extensions/OoBDev.DevTerm.DeviceManifests.Tests/OoBDev.DevTerm.DeviceManifests.Tests.csproj" />
     <Project Path="Framework/OoBDev.DevTerm.Logging.Tests/OoBDev.DevTerm.Logging.Tests.csproj" />
     <Project Path="Framework/OoBDev.DevTerm.Logging/OoBDev.DevTerm.Logging.csproj" />
     <Project Path="Framework/OoBDev.DevTerm.Core.Tests/OoBDev.DevTerm.Core.Tests.csproj" />
