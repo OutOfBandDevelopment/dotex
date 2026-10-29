@@ -18,7 +18,7 @@ Source: dev-term `Devices.Scpi` (base); BinaryDataDecoders has no SCPI package. 
 
 ## Limits
 
-- A reply that is a definite-length block (`#<n><length>...`, such as a screen dump) is not framed; the line segmenter would split it at the first CR or LF inside the data. `ExpectedResponseFormat` is carried for the layer that handles those replies.
+- A definite-length block reply (`#<n><length>` then that many bytes, such as a screen dump) is cut as one segment by `ScpiReplySegmenter` and decoded into `ScpiReply.Block`; a leading `#` not followed by a digit 1 to 9 is an ordinary line. Indefinite blocks (`#0`) are not supported. A profile with an empty terminator takes each arrival as one reply, so a block there is not reassembled. Turning the bytes into an image is left to the caller (`ExpectedResponseFormat` says when to expect one).
 
 ## Not yet verified on hardware
 

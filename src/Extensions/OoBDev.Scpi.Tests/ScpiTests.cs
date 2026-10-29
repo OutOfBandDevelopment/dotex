@@ -100,6 +100,54 @@ public class ScpiTests
     }
 
     [TestMethod, TestCategory(TestCategories.Unit)]
+    public async Task Device_DefiniteLengthBlock_IsOneReplyEvenWithLineEndingsInTheData()
+    {
+        // Stage
+        var data = new byte[] { 0x42, 0x4D, 0x0D, 0x0A, 0x00, 0x0A, 0x0D, 0xFF, 0x23, 0x31 };
+        var block = Encoding.ASCII.GetBytes("#210").Concat(data).Concat(Encoding.ASCII.GetBytes("\n")).ToArray();
+        var pump = new SegmentPump<ScpiReply>(new ScpiDevice(Profile("\n")));
+
+        // Test
+        await pump.PushAsync(block[..7]);
+        await pump.PushAsync(block[7..]);
+        await pump.PushAsync(Encoding.ASCII.GetBytes("OK\n"));
+
+        // Assert
+        Assert.AreEqual(2, pump.Messages.Count);
+        CollectionAssert.AreEqual(data, pump.Messages[0].Block.ToArray());
+        Assert.AreEqual("OK", pump.Messages[1].Text);
+    }
+
+    [TestMethod, TestCategory(TestCategories.Unit)]
+    [DataRow("#\n")]
+    [DataRow("#0abc\n")]
+    [DataRow("#x\n")]
+    [DataRow("#2ab\n")]
+    public async Task Device_HashThatIsNotABlockHeader_IsAnOrdinaryLine(string line)
+    {
+        // Stage
+        var pump = new SegmentPump<ScpiReply>(new ScpiDevice(Profile("\n")));
+
+        // Test
+        await pump.PushAsync(Encoding.ASCII.GetBytes(line));
+
+        // Assert
+        Assert.AreEqual(1, pump.Messages.Count);
+        Assert.AreEqual(line.TrimEnd('\n'), pump.Messages[0].Text);
+    }
+
+    [TestMethod, TestCategory(TestCategories.Unit)]
+    public void Decoder_TruncatedBlock_FallsBackToText()
+    {
+        // Test
+        var reply = new ScpiMessageDecoder().Decode(new ReadOnlySequence<byte>(Encoding.ASCII.GetBytes("#15ab")));
+
+        // Assert
+        Assert.AreEqual("#15ab", reply.Text);
+        Assert.IsTrue(reply.Block.IsEmpty);
+    }
+
+    [TestMethod, TestCategory(TestCategories.Unit)]
     public async Task Device_Unterminated_TreatsEachArrivalAsOneReply()
     {
         var pump = new SegmentPump<ScpiReply>(new ScpiDevice(Profile("")));
