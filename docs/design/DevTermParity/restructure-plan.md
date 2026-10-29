@@ -28,4 +28,4 @@ Owner decisions, 2026-10-29 (planning session). They supersede the project layou
 | 5 | Port the remaining transports (USBTMC, HID, BLE, MQTT, brokers) as `System.IO.*` libraries | their tests green |
 | 6 | Shells (`Wpf`, `Tui`, `Web`) in `src/Applications/` | per shell |
 
-Open point for step 3: `Core` carries the Tcp/serial-free logic only; any package a merged part needs (for example OpenTelemetry for Observability) becomes a Core dependency, which the owner may want to review.
+Observability (one file, `TelemetryExporter`, over `OpenTelemetry.Exporter.OpenTelemetryProtocol`) is application-specific, not shared framework (owner, 2026-10-29): it merges into Core as a Core folder, and the OTLP package becomes a Core dependency. The framework's own `OoBDev.OpenTelemetry` is not touched.
