@@ -34,3 +34,13 @@ The plan migrates the UI model (`UiDefinitions`), then adds an MVVM view-model l
 
 **Your answer:**
 
+
+### Q4 — 2026-10-28 — Documentation — Numbering of documents
+
+Inventory: the numbered names are in `docs/patterns-discovery/` (folders `01-architecture` to `08-spikes` and `06-design-document-standard.md`, 83 numbered entries below it, added 2026-09-30 as a reading order). The rest of `docs/` (918 Markdown files) is unnumbered. Nothing else uses a numbering scheme.
+
+**Options:** **A** (recommended): keep the numbers inside `patterns-discovery` as an explicit reading order, say so in its README, and number nothing else; this avoids breaking the many links that point at those paths. **B**: drop the numbers everywhere and rename with link fixing via `scripts/docs` (large diff, one pass). **C**: tell me which parts look wrong and I review only those.
+
+**Default:** no renames; the full content review (coverage of dev-term and merged products) stays in BACKLOG.md.
+
+**Your answer:**
