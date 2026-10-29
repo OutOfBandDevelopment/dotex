@@ -9,4 +9,4 @@
 
 ## Not done
 
-Vector plot, and colour picker widgets, the `OoBDev.DevTerm.Wpf` shell, a look at the view on screen. Tracked in `BACKLOG.md`.
+Vector plot and colour picker widgets, a look at the view on screen. Tracked in `BACKLOG.md`.
