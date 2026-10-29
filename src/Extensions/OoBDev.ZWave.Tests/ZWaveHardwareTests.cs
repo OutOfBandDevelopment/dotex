@@ -40,7 +40,7 @@ public class ZWaveHardwareTests
     /// whatever is plugged into that outlet.
     /// </summary>
     [TestMethod, TestCategory(TestCategories.Hardware)]
-    public async Task Switch_AgainstRealNode_TogglesAndRestoresTest()
+    public async Task Switch_AgainstRealNode_TogglesOffToOnToOffTest()
     {
         // Stage
         var portName = DevicePreflight.RequireSerialPort(TestContext, "ZWAVE_SERIAL_PORT");
@@ -62,29 +62,36 @@ public class ZWaveHardwareTests
             return on;
         }
 
+        async Task SetAndConfirmAsync(bool on)
+        {
+            stick.Send(ZWaveRequests.SwitchSet((byte)node, on, ++callback));
+            await Task.Delay(TimeSpan.FromSeconds(2)).ConfigureAwait(false);
+            await stick.WaitForAsync(_ => false, stick.Frames.Count, TimeSpan.FromMilliseconds(300)).ConfigureAwait(false);
+            Assert.AreEqual(on, await ReadStateAsync().ConfigureAwait(false), $"The node did not report {(on ? "on" : "off")}.");
+        }
+
         // Test
         var original = await ReadStateAsync().ConfigureAwait(false);
         Assert.IsNotNull(original, "The node did not answer Binary Switch Get.");
         try
         {
-            stick.Send(ZWaveRequests.SwitchSet((byte)node, !original.Value, ++callback));
-            await Task.Delay(TimeSpan.FromSeconds(2)).ConfigureAwait(false);
-            await stick.WaitForAsync(_ => false, stick.Frames.Count, TimeSpan.FromMilliseconds(300)).ConfigureAwait(false);
-
-            // Assert
-            Assert.AreEqual(!original.Value, await ReadStateAsync().ConfigureAwait(false), "The node did not report the switched state.");
+            // Assert: always off to on, then on to off, whatever state it started in
+            if (original.Value) await SetAndConfirmAsync(false).ConfigureAwait(false);
+            await SetAndConfirmAsync(true).ConfigureAwait(false);
+            await SetAndConfirmAsync(false).ConfigureAwait(false);
         }
         finally
         {
-            stick.Send(ZWaveRequests.SwitchSet((byte)node, original.Value, ++callback));
-            await Task.Delay(TimeSpan.FromSeconds(2)).ConfigureAwait(false);
-            await stick.WaitForAsync(_ => false, stick.Frames.Count, TimeSpan.FromMilliseconds(300)).ConfigureAwait(false);
+            if (original.Value)
+            {
+                stick.Send(ZWaveRequests.SwitchSet((byte)node, true, ++callback));
+                await Task.Delay(TimeSpan.FromSeconds(2)).ConfigureAwait(false);
+            }
         }
 
         // Verify
         Assert.AreEqual(original, await ReadStateAsync().ConfigureAwait(false), "The node was not restored to its original state.");
     }
-
     [TestMethod, TestCategory(TestCategories.Hardware)]
     public async Task Enumerate_OnTheStick_ListsNodesAndTheirProtocolInfoTest()
     {
