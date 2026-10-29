@@ -231,6 +231,8 @@
     <Project Path="Framework/OoBDev.UiDefinitions.Tests/OoBDev.UiDefinitions.Tests.csproj" />
     <Project Path="Framework/OoBDev.UiDefinitions.ViewModels.Tests/OoBDev.UiDefinitions.ViewModels.Tests.csproj" />
     <Project Path="Framework/OoBDev.UiDefinitions.ViewModels/OoBDev.UiDefinitions.ViewModels.csproj" />
+    <Project Path="Framework/OoBDev.UiDefinitions.Wpf.Tests/OoBDev.UiDefinitions.Wpf.Tests.csproj" />
+    <Project Path="Framework/OoBDev.UiDefinitions.Wpf/OoBDev.UiDefinitions.Wpf.csproj" />
     <Project Path="Framework/OoBDev.UiDefinitions/OoBDev.UiDefinitions.csproj" />
     <Project Path="Framework/OoBDev.TestUtilities/OoBDev.TestUtilities.csproj" />
   </Folder>

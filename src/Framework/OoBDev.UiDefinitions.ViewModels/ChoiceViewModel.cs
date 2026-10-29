@@ -21,6 +21,8 @@ public sealed class ChoiceViewModel : ControlViewModel
         Choice = control;
         Select = new SelectOptionCommand(binding, control);
         ToggleOption = new ToggleOptionCommand(binding, control);
+        var pick = control.Style == ChoiceStyle.CheckList ? ToggleOption : Select;
+        OptionItems = [.. control.Options.Select(o => new ChoiceOptionViewModel(o, pick))];
         Refresh();
     }
 
@@ -38,6 +40,9 @@ public sealed class ChoiceViewModel : ControlViewModel
 
     /// <summary>Checks or unchecks one option; the parameter is the option text (check list).</summary>
     public ICommand ToggleOption { get; }
+
+    /// <summary>The options as bindable items; each carries its command and whether it is picked or checked.</summary>
+    public IReadOnlyList<ChoiceOptionViewModel> OptionItems { get; }
 
     /// <summary>The picked option (dropdown and radio group), as the model spells it.</summary>
     public string SelectedOption
@@ -69,10 +74,20 @@ public sealed class ChoiceViewModel : ControlViewModel
         if (Style == ChoiceStyle.CheckList)
         {
             CheckedOptions = Binding.GetSelection(Id);
+            MarkItems(o => IsChecked(o));
             return;
         }
 
         var current = Binding.GetText(Id);
         SelectedOption = Options.FirstOrDefault(o => string.Equals(o, current, StringComparison.OrdinalIgnoreCase)) ?? current;
+        MarkItems(o => string.Equals(o, SelectedOption, StringComparison.Ordinal));
+    }
+
+    private void MarkItems(Func<string, bool> isSelected)
+    {
+        foreach (var item in OptionItems)
+        {
+            item.IsSelected = isSelected(item.Text);
+        }
     }
 }

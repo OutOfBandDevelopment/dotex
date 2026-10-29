@@ -252,6 +252,25 @@ public sealed class FormViewModelTests
     }
 
     [TestMethod]
+    public void OptionItems_PickAndCheck_TrackSelection()
+    {
+        // Stage
+        var (form, model) = Create();
+        var mode = (ChoiceViewModel)form.Row("Mode")!;
+        var tags = (ChoiceViewModel)form.Row("Tags")!;
+
+        // Test
+        mode.OptionItems[1].Command.Execute(mode.OptionItems[1].Text);
+        tags.OptionItems[2].Command.Execute(tags.OptionItems[2].Text);
+
+        // Assert
+        Assert.IsFalse(mode.OptionItems[0].IsSelected);
+        Assert.IsTrue(mode.OptionItems[1].IsSelected);
+        CollectionAssert.AreEqual(new[] { true, false, true }, tags.OptionItems.Select(i => i.IsSelected).ToArray());
+        Assert.AreEqual("High", model.Mode);
+    }
+
+    [TestMethod]
     public void Invoke_ModelCommand_RunsWhenAllowed()
     {
         // Stage
