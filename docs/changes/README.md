@@ -354,6 +354,10 @@ Each change document should include:
 - Example UI design documents reconciled with the code
 - Status: ✅ Complete
 
+**[examples-cgi-greet-linux-test-2026-10-28.md](examples-cgi-greet-linux-test-2026-10-28.md)**
+- CGI example built on Linux; automated form test through the middleware
+- Status: ✅ Complete
+
 **[apis-cgi-tests-bad-header-kill-2026-10-28.md](apis-cgi-tests-bad-header-kill-2026-10-28.md)**
 - CGI tests for control characters in headers and child kill on timeout
 - Status: ✅ Complete (Linux container)
