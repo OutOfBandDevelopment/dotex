@@ -197,6 +197,47 @@ public class SqlServerDeploymentTests
         Assert.IsLessThan(FailMilliseconds, stopwatch.ElapsedMilliseconds, "vector search latency gate");
     }
 
+    [TestMethod]
+    [TestCategory(TestCategories.Integration)]
+    public async Task RestoredCopy_WithNewBrokerId_KeepsTheDataAndIsQueryable()
+    {
+        // Stage: seed the deployed database, then back it up and restore it under another name with a new Service Broker id (the stand-in for a sanitized production dump)
+        var options = Microsoft.Extensions.Options.Options.Create(new OoBDev.Data.Vectors.SqlStore.SqlVectorStoreOptions { ConnectionString = DatabaseConnection(), Limit = 10 });
+        var store = new OoBDev.Data.Vectors.SqlStore.SqlVectorStoreProvider(options, "rehearsal");
+        await store.StoreVectorsAsync([(new float[] { 1, 0, 0 }, new Dictionary<string, object> { ["title"] = "kept" })], new Dictionary<string, object>());
+
+        var copyName = $"VectorCopy_{Guid.NewGuid():N}";
+        var backupFile = $"/var/opt/mssql/data/{copyName}.bak";
+        try
+        {
+            await ExecuteAsync(_masterConnection, $"BACKUP DATABASE [{_databaseName}] TO DISK = N'{backupFile}' WITH INIT, COPY_ONLY;");
+            await ExecuteAsync(_masterConnection, $@"
+                DECLARE @data nvarchar(260), @log nvarchar(260), @dataFile nvarchar(260), @logFile nvarchar(260);
+                DECLARE @files TABLE (LogicalName nvarchar(128), PhysicalName nvarchar(260), Type char(1), FileGroupName nvarchar(128), Size numeric(20,0), MaxSize numeric(20,0), FileId bigint, CreateLSN numeric(25,0), DropLSN numeric(25,0), UniqueId uniqueidentifier, ReadOnlyLSN numeric(25,0), ReadWriteLSN numeric(25,0), BackupSizeInBytes bigint, SourceBlockSize int, FileGroupId int, LogGroupGUID uniqueidentifier, DifferentialBaseLSN numeric(25,0), DifferentialBaseGUID uniqueidentifier, IsReadOnly bit, IsPresent bit, TDEThumbprint varbinary(32), SnapshotUrl nvarchar(360));
+                INSERT INTO @files EXEC('RESTORE FILELISTONLY FROM DISK = N''{backupFile}''');
+                SELECT @data = LogicalName FROM @files WHERE Type = 'D';
+                SELECT @log = LogicalName FROM @files WHERE Type = 'L';
+                DECLARE @sql nvarchar(max) = N'RESTORE DATABASE [{copyName}] FROM DISK = N''{backupFile}'' WITH NEW_BROKER, MOVE ''' + @data + N''' TO ''/var/opt/mssql/data/{copyName}.mdf'', MOVE ''' + @log + N''' TO ''/var/opt/mssql/data/{copyName}_log.ldf''';
+                EXEC(@sql);");
+
+            // Test: query the restored copy through the store
+            var copyConnection = new SqlConnectionStringBuilder(_masterConnection) { InitialCatalog = copyName }.ConnectionString;
+            Assert.AreEqual(1, await ScalarAsync<int>(copyConnection, "SELECT COUNT(*) FROM [embedding].[Vectors]"));
+            Assert.AreEqual("kept", await ScalarAsync<string>(copyConnection, "SELECT JSON_VALUE([Metadata], '$.title') FROM [embedding].[Vectors]"));
+            Assert.AreEqual(1d, await ScalarAsync<double>(copyConnection, "SELECT CAST([Value].Magnitude() AS float) FROM [embedding].[Vectors]"), 1e-5);
+        }
+        finally
+        {
+            SqlConnection.ClearAllPools();
+            await ExecuteAsync(_masterConnection, $@"
+                IF DB_ID('{copyName}') IS NOT NULL
+                BEGIN
+                    ALTER DATABASE [{copyName}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
+                    DROP DATABASE [{copyName}];
+                END");
+        }
+    }
+
     private string DatabaseConnection() =>
         new SqlConnectionStringBuilder(_masterConnection) { InitialCatalog = _databaseName }.ConnectionString;
 
