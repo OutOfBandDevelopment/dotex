@@ -253,4 +253,4 @@ These follow the same blade pattern; each gets its own four design documents (re
 | Operations | health, configuration | Secrets masked |
 | Developer | links to Scalar, AsyncAPI, Aspire dashboard, CLI catalog | |
 
-[Back to the plan](../../../future-example.md) · [Shell design](README.md)
+[Back to the plan](../../../future-example.md) · [Shell design](README.md) · [Missing screens review](missing-screens.md)
