@@ -1,0 +1,13 @@
+#!/bin/sh
+# Builds and runs the Unit and Simulate tests on the merge result before a merge commit is created on main.
+# A non-zero exit stops the merge commit; the merge stays staged, so fix the cause and commit it, or
+# run "git merge --abort". Skip it for one merge with "git merge --no-verify".
+branch=$(git symbolic-ref --short -q HEAD) || exit 0
+[ "$branch" = "main" ] || exit 0
+
+root=$(git rev-parse --show-toplevel)
+echo "pre-merge-commit: building and testing the merge result on main"
+pwsh -NoProfile -File "$root/scripts/ci/run-tests.ps1" || {
+    echo "pre-merge-commit: build or tests failed, the merge commit was not created" >&2
+    exit 1
+}
