@@ -358,6 +358,10 @@ Each change document should include:
 - SQLCLR aggregate Merge and double-matrix Read defects fixed; aggregate, matrix and serialization tests
 - Status: ✅ Complete
 
+**[tools-llmcodegen-ollama-live-run-2026-10-28.md](tools-llmcodegen-ollama-live-run-2026-10-28.md)**
+- LlmCodeGen folder runner Integration test against the stack Ollama (phi3)
+- Status: ✅ Complete
+
 **[examples-aspire-vectordb-wiring-2026-10-28.md](examples-aspire-vectordb-wiring-2026-10-28.md)**
 - Example Aspire host gives the API the SQL vector store connection string
 - Status: Built, not run end to end
