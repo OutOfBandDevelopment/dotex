@@ -26,3 +26,7 @@ A look at the colour picker view on screen. Tracked in `BACKLOG.md`.
 ## Parameterised buttons
 
 `InvokeCommand` honours `ButtonControl.ParameterFieldIds`: it reads the named sibling controls through the binding, joins their texts with `,` and hands the string to the model command as its parameter (`FormBinding.Invoke(id, parameter)`). A name with no sibling gives an empty slot. `ParameterExpressions` are still ignored (no evaluator in the view-model layer). Tests: 4 Unit (`InvokeCommandParameterTests`). This is the first step of the SCPI generated control panel; the dynamic model and the DevTerm wiring remain.
+
+## Models built at run time
+
+`Forms.DynamicModelFactory.Create(IEnumerable<DynamicProperty>)` emits a sealed class with public auto-properties (one type per call) and sets the initial values, so `FormBinding`, which reads models by reflection, can drive a form generated from data (an instrument profile). Command properties are typed `ICommand` and start with a real command instance. Tests: 5 Unit (`DynamicModelFactoryTests`: initial values, number write with change event, command, duplicate name, independent types). Next for the SCPI panel: `ScpiPanelBuilder` and the DevTerm wiring.

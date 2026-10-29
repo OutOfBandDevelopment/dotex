@@ -13,7 +13,7 @@ Ported from dev-term `UiDefinitions` (phase 6 of [the device decoding plan](../.
 | Values | `ValueConstraint`, `ValueKind`, `ValueValidator`, `ValueValidationResult` |
 | Rules | `Expression` (a small expression language for computed values and conditions), `UiCondition` |
 | Live display | `LiveDisplayState` with the per-control states (`BarGraphState`, `StripChartState`, `VectorState`, `IndicatorState`), `StripChartHistory`, `ChartPalette`, `CustomColorChoices` |
-| Forms | `Forms.FormDefinitionGenerator` builds a definition from a type with `FormField` and `FormSection` attributes; `Forms.FormBinding` reads and writes the values back |
+| Forms | `Forms.FormDefinitionGenerator` builds a definition from a type with `FormField` and `FormSection` attributes; `Forms.FormBinding` reads and writes the values back | `Forms.DynamicModelFactory` builds a model with public properties from a `DynamicProperty` list at run time, for forms generated from data. |
 
 ## Notes
 
