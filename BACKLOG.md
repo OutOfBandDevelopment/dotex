@@ -15,7 +15,7 @@ GitHub is no longer the primary repository (local bare repo `origin`), so nothin
 - [ ] `DevLocal` tests kept on purpose: Ollama (hard-coded LAN host, model pull and delete), USB HID (hardware), `PathEx`, `MergedXPathNavigator`, `ProjectTools.FixReadmes` (hard-coded `C:\Repos` paths), Markdown `TestMethod1` (writes files), DacFx `BuildPackageTest` (hard-coded path). Revisit Ollama when the owner says Ollama testing can resume.
 - [ ] Add a live-integration doc page per new cloud service (only Groq exists; its key was revoked 2026-10-09, so runs wait for the owner).
 - Azure Monitor exporter: not built (decided 2026-10-22). Telemetry is verified with OpenTelemetry and the Aspire dashboard in the Docker test stack; OTLP reaches any collector.
-- [ ] Goals: no flaky tests (10 consecutive runs pass), Integration suite under 5 minutes.
+- [ ] Goals: no flaky tests (10 consecutive runs pass), Integration suite under 5 minutes. Measured 2026-10-29 (`scripts/ci/run-tests.ps1 -Category Integration -Configuration Debug`, all green): 7 min 54 s end to end including the stack start and the build; the test projects run in parallel and total about 17 minutes of test time, led by the ONNX model tests (DINOv2 batch 102 s, CLIP, ViT, Nomic, MPNet each 30 to 60 s on CPU, model downloads included) and the SQL vector tests (69 s, 29 s, 23 s). Cutting it below 5 minutes means caching the models between runs and trimming those tests; the flaky-test goal has had one clean run, not ten.
 
 ## 2. APIs and documents
 
