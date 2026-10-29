@@ -222,6 +222,10 @@
     <Project Path="Extensions/OoBDev.DevTerm.Transports.Tcp.Tests/OoBDev.DevTerm.Transports.Tcp.Tests.csproj" />
     <Project Path="Extensions/OoBDev.DevTerm.Transports.Serial/OoBDev.DevTerm.Transports.Serial.csproj" />
     <Project Path="Extensions/OoBDev.DevTerm.Transports.Serial.Tests/OoBDev.DevTerm.Transports.Serial.Tests.csproj" />
+    <Project Path="Extensions/OoBDev.DevTerm.Transports.Rfc2217/OoBDev.DevTerm.Transports.Rfc2217.csproj" />
+    <Project Path="Extensions/OoBDev.DevTerm.Transports.Rfc2217.Tests/OoBDev.DevTerm.Transports.Rfc2217.Tests.csproj" />
+    <Project Path="Extensions/OoBDev.DevTerm.Transports.Vxi11/OoBDev.DevTerm.Transports.Vxi11.csproj" />
+    <Project Path="Extensions/OoBDev.DevTerm.Transports.Vxi11.Tests/OoBDev.DevTerm.Transports.Vxi11.Tests.csproj" />
     <Project Path="Framework/OoBDev.DevTerm.Logging.Tests/OoBDev.DevTerm.Logging.Tests.csproj" />
     <Project Path="Framework/OoBDev.DevTerm.Logging/OoBDev.DevTerm.Logging.csproj" />
     <Project Path="Framework/OoBDev.DevTerm.Core.Tests/OoBDev.DevTerm.Core.Tests.csproj" />
