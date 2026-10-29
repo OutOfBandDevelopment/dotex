@@ -26,6 +26,7 @@
 	<ItemGroup>
 		<ProjectReference Include="..\OoBDev.Kuando.Busylight\OoBDev.Kuando.Busylight.csproj" />
 		<ProjectReference Include="..\..\Framework\OoBDev.Devices.TestUtilities\OoBDev.Devices.TestUtilities.csproj" />
+		<ProjectReference Include="..\..\Framework\OoBDev.System.IO.UsbHids\OoBDev.System.IO.UsbHids.csproj" />
 	</ItemGroup>
 
 </Project>
