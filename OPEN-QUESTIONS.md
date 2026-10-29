@@ -29,7 +29,7 @@ Request: desired-state database tooling (`docs/design/DesiredStateDatabase/`). I
 
 **Default:** option A. Phase 0 (the bake-off) does not depend on the answer and goes first.
 
-**Your answer:**
+**Your answer:** phase 0 bake-off can be done after other backlog items are completed.
 
 ### Q6 — 2026-10-29 — Plugin sandbox — Home and platforms
 
@@ -39,4 +39,4 @@ Request: sandboxed plugin host (`docs/design/PluginSandbox/`). Inventory: no dot
 
 **Default:** option A, limited to phase 0 (threat model, PoC review) and phase 1 (protocol and manifest). No launcher code is written before an answer.
 
-**Your answer:**
+**Your answer:** a PoC spike should occure before this is scheduled for integration.
