@@ -33,7 +33,6 @@ A clean rebuild (2026-10-22) has no analyzer warnings. Analyzers are wired from 
 
 - [ ] (decided 2026-10-22: promote the rules that are already clean, and the `#warning` markers became TODO comments, intent in Q4) Rules still at `suggestion` in `src/.editorconfig` (flip each to warning after fixing its backlog): MA0026 (TODO comments, about 50, kept on purpose), MA0046 (3, event payloads that are not `EventArgs`), MA0051 (26, method length), MA0061 (3, the DEBUG-only required parameters), CA1710, CA1720 and CA1708 (domain names, kept on purpose) and the rest listed in the editorconfig.
 - [ ] Remaining build warnings: `NU1902` MessagePack 2.5.302 (transitive via Aspire.Hosting 13.6.1 in `OoBDev.Example.AppHost`; wait for an Aspire update or pin), CS1030 `#warning` markers (Mailkit hosting not supported, two "is this needed" notes in queue tests).
-- [ ] Remaining hand-built providers to replace with platform primitives, case by case (`TimeProvider` is done).
 
 ## 4. Migrations (blocked on the owner)
 

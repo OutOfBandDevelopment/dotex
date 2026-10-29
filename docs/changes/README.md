@@ -370,6 +370,10 @@ Each change document should include:
 - CGI middleware latency gate (log 500 ms, fail 750 ms) on Windows and Linux
 - Status: ✅ Complete
 
+**[framework-platform-primitives-audit-2026-10-29.md](framework-platform-primitives-audit-2026-10-29.md)**
+- Audit of hand-built providers: only IGuidProvider remains and it stays
+- Status: ✅ Complete
+
 **[examples-aspire-vectordb-wiring-2026-10-28.md](examples-aspire-vectordb-wiring-2026-10-28.md)**
 - Example Aspire host gives the API the SQL vector store connection string
 - Status: Built, not run end to end
