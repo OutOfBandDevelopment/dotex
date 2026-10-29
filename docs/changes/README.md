@@ -453,3 +453,4 @@ Each change document should include:
 - [Vectors DB redeploy](data-vectors-db-redeploy-2026-10-29.md) - second deploy of the dacpac changes nothing (2026-10-29)
 - [LlmCodeGen response metadata](tools-llmcodegen-response-metadata-2026-10-29.md) - response.json beside each response (2026-10-29)
 - [DacFx build test path](testing-dacfx-buildpackage-path-2026-10-29.md) - BuildPackageTest finds the CLR build itself and asserts the dacpac (2026-10-29)
+- [AsyncAPI viewer browser check](apis-asyncapi-viewer-browser-check-2026-10-29.md) - viewer renders send and receive operations in Chromium (2026-10-29)
