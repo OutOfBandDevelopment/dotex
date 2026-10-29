@@ -378,6 +378,10 @@ Each change document should include:
 - AsyncAPI contributor for Azure Storage queues
 - Status: ✅ Complete
 
+**[apis-search-latency-gate-2026-10-29.md](apis-search-latency-gate-2026-10-29.md)**
+- Latency gate for the search syntax (500 ms log, 750 ms fail)
+- Status: ✅ Complete
+
 **[build-warnings-clean-2026-10-29.md](build-warnings-clean-2026-10-29.md)**
 - Last build warnings resolved or suppressed with reasons
 - Status: ✅ Complete
