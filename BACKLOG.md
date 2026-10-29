@@ -48,7 +48,7 @@ Scope rule: every BinaryDataDecoders feature is migrated; phases are priority or
 - [ ] Harvest candidates marked evaluate-later in the plan (decision D7): proving-grounds plugin-sandbox-poc, hybridsearch, Oobtainium, BuildFirstOnce, markdownplantuml, TotpExample, HandyClasses; Service Broker tools; postsql-playground (informs `OoBDev.DacFx`).
 - [ ] Production-copy rehearsal, remaining: the restore step is done (2026-10-29); still to do is applying a real migration to the restored copy and running the Integration suite against it, once the redeploy defect below is fixed.
 - [ ] Vectors DB dacpac redeploy is not idempotent: deploying the same dacpac over a populated database drops all CLR functions and aggregates and rebuilds `embedding.HashPlanes`, which fails with Msg 4936 (persisted computed `Length` non-deterministic). Find why the compare sees a difference (the assembly, or the computed column text), fix it, then add an upgrade test with `BlockOnPossibleDataLoss`.
-- [ ] Performance gate for database-backed (non-vector) endpoints (the CGI middleware, in-memory search syntax and SQL vector search gates are done).
+- [ ] Performance gate for database-backed (non-vector) endpoints (the CGI middleware, in-memory search syntax and SQL vector search gates are done). Checked 2026-10-29: no non-vector database-backed endpoint exists in `src/` (the only SQL access is the vector store), so add the gate with the first such endpoint.
 
 ## Documentation review (owner, 2026-10-28)
 
