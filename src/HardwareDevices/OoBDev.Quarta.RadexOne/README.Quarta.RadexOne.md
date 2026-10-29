@@ -24,10 +24,10 @@ The device only applies Write Settings when it is sent three times in a row; rep
 ## Verified
 
 - Unit tests (14): requests and a reply matched to the captured traces, inner checksum rejection, noise and split-packet segmentation, DI.
-- Hardware tests (3, `RADEX_ONE_SERIAL_PORT`, default `COM8`) ran on a real device on 2026-10-28: Read Data gave `Ambient=14 Accumulated=3049 Cpm=18`, Read Settings gave `Alarm=Off Threshold=20`, and Read Serial Version answered.
+- Hardware tests (3, `RADEX_ONE_SERIAL_PORT`, default `COM8`) ran on a real device on 2026-10-28, and the owner confirmed the values look correct: Read Data gave `Ambient=14 Accumulated=3049 Cpm=18`, Read Settings gave `Alarm=Off Threshold=20`, and Read Serial Version answered.
 
 ## Not yet verified
 
-- The unit of each reading (BinaryDataDecoders scales 32-bit fields as hundredths of a microsievert per hour; here they are 16-bit fields with a reserved word between them).
+- The unit of each reading (the values are right, the unit is not documented; BinaryDataDecoders scales 32-bit fields as hundredths of a microsievert per hour; here they are 16-bit fields with a reserved word between them).
 - The serial and version layout: the payload is shown as ASCII with dots, and it does not reconcile with the documentation (merge M3).
 - Write Settings and Reset Accumulated against the device (no Hardware test sends them, because they change the device).
