@@ -55,10 +55,10 @@ builder.AddRabbitMQ("rabbitmq", rabbitUser, rabbitPassword, HostPort("TEST_PORT_
     .WithDataVolume("oobd-test-rabbitmq")
     .WithLifetime(ContainerLifetime.Persistent);
 
-// Plain container, not AddRedis: the Aspire integration enables TLS and a password, which the tests do not use.
-builder.AddContainer("redis", "redis", "7-alpine")
+// Valkey (BSD-licensed, Redis-compatible), as a plain container rather than AddRedis: the Aspire integration enables TLS and a password, which the tests do not use.
+builder.AddContainer("redis", "valkey/valkey", "8-alpine")
     .WithEndpoint(port: HostPort("TEST_PORT_REDIS", 6379), targetPort: 6379, name: "redis", scheme: "tcp", isProxied: false)
-    .WithArgs("redis-server", "--maxmemory", "256mb", "--maxmemory-policy", "allkeys-lru", "--appendonly", "no")
+    .WithArgs("valkey-server", "--maxmemory", "256mb", "--maxmemory-policy", "allkeys-lru", "--appendonly", "no")
     .WithVolume("oobd-test-redis", "/data")
     .WithLifetime(ContainerLifetime.Persistent);
 

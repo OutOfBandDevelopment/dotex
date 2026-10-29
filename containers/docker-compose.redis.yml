@@ -10,18 +10,18 @@
 #   8001 - RedisInsight web UI (optional, for local development)
 #
 # Health Check:
-#   redis-cli ping (returns "PONG" when healthy)
+#   valkey-cli ping (returns "PONG" when healthy)
 
 name: oobd-redis
 
 services:
   redis:
-    image: redis:7-alpine
+    image: valkey/valkey:8-alpine
     container_name: oobd-redis
     ports:
       - "6379:6379"
     command: >
-      redis-server
+      valkey-server
       --maxmemory 256mb
       --maxmemory-policy allkeys-lru
       --appendonly no

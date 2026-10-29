@@ -29,7 +29,7 @@ One section per stack. Values are the test defaults from `src/.runsettings`; the
 |---------|-------|------------------|-------------|
 | SQL Server | `mssql/server:2022-latest` | `localhost,1433` | `sa` / `IntegrationTest123!` |
 | MongoDB | `mongo:latest` | `mongodb://localhost:27017` | none |
-| Redis | `redis:7-alpine` | `localhost:6379` | none |
+| Redis | `valkey/valkey:8-alpine` | `localhost:6379` | none |
 | RabbitMQ | `rabbitmq:management` | `amqp://localhost:5673` | `guest` / `guest` |
 | OpenSearch | `opensearchproject/opensearch` | `https://localhost:9200` | `admin` / `IntegrationTest123!` |
 | Qdrant | `qdrant/qdrant` | `http://localhost:6333` | none |

@@ -13,6 +13,8 @@
 
 The whole Unit suite was run with only the plantuml container up. Everything passed except `DocsTests.Links_Relative_Resolve` (a link to the pending `templates/README.md` rename, not related). Heuristic scan of Unit files for processes, network addresses, file I/O and delays found only the two items above that really leave the process; the file, delay and mocked-client tests are in-process and stay `Unit`.
 
+- Redis is served by Valkey 8 (`valkey/valkey:8-alpine`, BSD-3), a drop-in for the Redis protocol; service and container names (`redis`, `oobd-test-redis`) and `REDIS_*` settings are unchanged.
+
 ## Verification
 
 The AppHost was started (20 resources, images pulled, sbert and ollama built) and `dotnet test --filter TestCategory=Integration` run against it. Fixes found by the run:

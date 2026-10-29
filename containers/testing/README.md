@@ -310,7 +310,7 @@ scripts\integration-down.bat --clean
 | **MongoDB** | `mongo:latest` | 27017 | NoSQL document database | `mongosh --eval "db.adminCommand('ping')"` |
 | **SQL Server** | `mcr.microsoft.com/mssql/server:2022-latest` | 1433 | Relational database | `sqlcmd -Q "SELECT 1"` |
 | **RabbitMQ** | `rabbitmq:latest` | 5673 (AMQP)<br>15672 (Management) | Message broker | `rabbitmq-diagnostics ping` |
-| **Redis** | `redis:7-alpine` | 6379 | In-memory cache store | `redis-cli ping` |
+| **Redis** | `valkey/valkey:8-alpine` | 6379 | In-memory cache store | `valkey-cli ping` |
 | **OpenSearch** | `opensearchproject/opensearch:latest` | 9200 (HTTP)<br>9600 (Performance) | Search engine | `curl https://localhost:9200/_cluster/health` |
 | **Qdrant** | `qdrant/qdrant` | 6333 (HTTP)<br>6334 (gRPC) | Vector database | `curl http://localhost:6333/health` |
 
