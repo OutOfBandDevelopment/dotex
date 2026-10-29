@@ -22,6 +22,7 @@
     <ProjectReference Include="..\OoBDev.Common.Abstractions\OoBDev.Common.Abstractions.csproj" />
     <ProjectReference Include="..\OoBDev.Common.AspNetCore\OoBDev.Common.AspNetCore.csproj" />
     <ProjectReference Include="..\OoBDev.Common.Extensions\OoBDev.Common.Extensions.csproj" />
+    <ProjectReference Include="..\OoBDev.Common.HardwareDevices\OoBDev.Common.HardwareDevices.csproj" />
     <ProjectReference Include="..\OoBDev.Common.Hosting\OoBDev.Common.Hosting.csproj" />
     <ProjectReference Include="..\OoBDev.Common\OoBDev.Common.csproj" />
     <ProjectReference Remove="..\**\*.Complete.csproj" />

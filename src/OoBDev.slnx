@@ -9,6 +9,7 @@
     <Project Path="Common/OoBDev.Common.AspNetCore/OoBDev.Common.AspNetCore.csproj" />
     <Project Path="Common/OoBDev.Common.Complete/OoBDev.Common.Complete.csproj" />
     <Project Path="Common/OoBDev.Common.Extensions/OoBDev.Common.Extensions.csproj" />
+    <Project Path="Common/OoBDev.Common.HardwareDevices/OoBDev.Common.HardwareDevices.csproj" />
     <Project Path="Common/OoBDev.Common.Hosting/OoBDev.Common.Hosting.csproj" />
     <Project Path="Common/OoBDev.Common/OoBDev.Common.csproj" />
   </Folder>

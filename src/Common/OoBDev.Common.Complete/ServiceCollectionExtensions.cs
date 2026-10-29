@@ -2,6 +2,7 @@ using OoBDev.AspNetCore.JwtAuthentication;
 using OoBDev.AspNetCore.Mvc;
 using OoBDev.Common.AspNetCore;
 using OoBDev.Common.Extensions;
+using OoBDev.Common.HardwareDevices;
 using OoBDev.Common.Hosting;
 using OoBDev.System;
 using Microsoft.Extensions.Configuration;
@@ -50,6 +51,7 @@ public static class ServiceCollectionExtensions
         services.TryCommonExtensions(configuration, systemBuilder);
         services.TryCommonAspNetCoreExtensions(configuration, aspNetBuilder, jwtBuilder);
         services.TryCommonExternalExtensions(configuration, identityBuilder, externalBuilder);
+        services.TryCommonHardwareDeviceExtensions();
         services.TryCommonHosting(configuration, hostingBuilder);
 
         return services;
