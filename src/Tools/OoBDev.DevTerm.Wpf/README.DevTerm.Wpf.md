@@ -11,10 +11,15 @@ A window with a panel list and the open panel's `FormView` from `OoBDev.UiDefini
 | `ShellViewModel` | The registered factories, the open panel, and the `Open` command |
 | `PanelViewModel` | A title and a `FormViewModel`; disposed when replaced |
 | `IPanelFactory` | How a device contributes a panel |
+| `ScpiPanelFactory` | A panel generated from a SCPI instrument profile (`OoBDev.Scpi.Panels`); the caller supplies the send function |
 | `DemoPanelFactory` | A panel generated from `DemoSettings`; stands in until device panels exist |
 
 Transports (serial, USB, network) are phases 8 and 9, so no device is connected yet.
 
 ## Verified
 
-4 Unit tests on the shell view model. The window itself has not been started or looked at on screen.
+5 Unit tests (shell view model, SCPI factory). The window itself has not been started or looked at on screen.
+
+## Notes
+
+- `App` and `MainWindow` live in the namespace `DevTermApp`: the XAML compiler writes unqualified `System.*` names, which would resolve to the `OoBDev.System` namespace once a SCPI/IO assembly is referenced.

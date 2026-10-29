@@ -59,6 +59,6 @@ public sealed class ShellViewModelTests
     public void Constructor_Null_Throws()
     {
         // Assert
-        Assert.ThrowsExactly<System.ArgumentNullException>(() => new ShellViewModel(null!));
+        Assert.ThrowsExactly<global::System.ArgumentNullException>(() => new ShellViewModel(null!));
     }
 }
