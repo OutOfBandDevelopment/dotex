@@ -44,3 +44,13 @@ Inventory: the numbered names are in `docs/patterns-discovery/` (folders `01-arc
 **Default:** no renames; the full content review (coverage of dev-term and merged products) stays in BACKLOG.md.
 
 **Your answer:**
+
+### Q5 — 2026-10-29 — Database tooling — Scope, wrap versus write, and stack
+
+Request: desired-state database tooling (`docs/design/DesiredStateDatabase/`). Inventory: only SQL Server is covered today (`OoBDev.DacFx`, `OoBDev.DacPacCompiler.Cli`); nothing exists for Postgres, SQLite or Oracle.
+
+**Options:** **A** (recommended): wrap the bake-off winner behind `IDesiredStateProvider`, schema objects only (tables, indexes, constraints) first, functions/triggers/views in a later phase, Oracle by hand-written repeatable scripts, .NET as the host (matches the rest of the repo, and wrapped tools run as external processes). **B**: write a custom catalog-diff engine per database; most control, highest cost. **C**: schema, functions, triggers and views from the start; broader but slower to a first result.
+
+**Default:** option A. Phase 0 (the bake-off) does not depend on the answer and goes first.
+
+**Your answer:**

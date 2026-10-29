@@ -1,6 +1,6 @@
 # Feature request: Desired-state database tooling
 
-- **Status:** new
+- **Status:** triaged
 - **Requested by:** owner (filed from the notes repository, `projects/dotex-consolidation/desired-state-database-tooling.md` and `sqldef-evaluation/`)
 - **Date:** 2026-10-28
 - **Area:** `OoBDev.DacFx`, `OoBDev.DacPacCompiler.Cli`, `OoBDev.ComplexEvents.DatabaseExtensions` (nearest existing areas); new area unknown
@@ -57,4 +57,4 @@ containers for testing. The cost is mostly test infrastructure: containers for P
 
 ## Triage notes
 
-Maintainers fill this in.
+2026-10-29: accepted as a phased design; phase 0 is the sqldef/pgschema/Atlas bake-off, nothing else is built before its result. Scope, wrap versus write, Oracle and stack are owner question Q5 in `OPEN-QUESTIONS.md` (default: wrap, schema objects first, .NET host). Design: [docs/design/DesiredStateDatabase](../../design/DesiredStateDatabase/README.md). Backlog: BACKLOG.md, database.

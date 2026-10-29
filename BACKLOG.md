@@ -45,6 +45,7 @@ Scope rule: every BinaryDataDecoders feature is migrated; phases are priority or
 
 - [ ] Harvest candidates marked evaluate-later in the plan (decision D7): proving-grounds plugin-sandbox-poc, hybridsearch, Oobtainium, BuildFirstOnce, markdownplantuml, TotpExample, HandyClasses; (Service Broker is now a design-backed item below); postsql-playground (informs `OoBDev.DacFx`).
 - [ ] SQL Server Service Broker queue provider `OoBDev.SqlServer.ServiceBroker` per `docs/design/SqlServiceBroker/` (request 2026-10-28; Integration tests on the test stack SQL Server)
+- [ ] Desired-state database tooling phase 0: bake-off of sqldef, pgschema and Atlas per `docs/design/DesiredStateDatabase/` and the notes test plan; record buy or build per engine with date, versions and licences (later phases follow Q5)
 - [ ] Performance gate for database-backed (non-vector) endpoints (the CGI middleware, in-memory search syntax and SQL vector search gates are done). Checked 2026-10-29: no non-vector database-backed endpoint exists in `src/` (the only SQL access is the vector store), so add the gate with the first such endpoint.
 
 ## Documentation review (owner, 2026-10-28)
