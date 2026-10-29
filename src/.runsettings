@@ -207,6 +207,7 @@ https://github.com/coverlet-coverage/coverlet/blob/fc7ec26dcaed8fedba880ff13c6f1
 		<!-- Hardware tests: serial port of the plugged-in device (blank or absent port ends the test Inconclusive) -->
 		<Parameter name="ZWAVE_SERIAL_PORT" value="COM13" />
 		<Parameter name="RADEX_ONE_SERIAL_PORT" value="COM8" />
+		<Parameter name="ZOOM_H4N_SERIAL_PORT" value="" />
 		<Parameter name="ZWAVE_SWITCH_NODE" value="2" />
 
 		<!-- TestContext Configuration Provider Integration Tests -->

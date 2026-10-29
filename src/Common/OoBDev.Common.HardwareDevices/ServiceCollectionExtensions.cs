@@ -3,6 +3,7 @@ using OoBDev.DerEE.De5000;
 using OoBDev.Kuando.Busylight;
 using OoBDev.Quarta.RadexOne;
 using OoBDev.Velleman.K8055;
+using OoBDev.Zoom.H4n;
 using System;
 
 namespace OoBDev.Common.HardwareDevices;
@@ -25,6 +26,7 @@ public static class ServiceCollectionExtensions
         services.TryAddDe5000();
         services.TryAddK8055();
         services.TryAddRadexOne();
+        services.TryAddZoomH4n();
 
         return services;
     }

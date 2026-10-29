@@ -291,6 +291,7 @@ Tests that require live cloud credentials. Manual execution only.
 |----------|---------|-------------|
 | `ZWAVE_SERIAL_PORT` | `COM13` | Serial port of the plugged-in Z-Wave stick; blank or unlisted ends the Hardware test Inconclusive |
 | `RADEX_ONE_SERIAL_PORT` | `COM8` | Serial port of the Radex One (9600 8-N-1); blank or unlisted ends its Hardware tests Inconclusive |
+| `ZOOM_H4N_SERIAL_PORT` | blank | Serial port of the h4n2rs485 adapter on the Zoom H4n remote port (2400 8-N-1); blank or unlisted ends its Hardware test Inconclusive |
 | `ZWAVE_SWITCH_NODE` | `2` | Node id (2 to 232) of a Binary Switch relay; the toggle Hardware test actuates it and restores it, and ends Inconclusive while it is `0` |
 
 **Tests Using:** `OoBDev.ZWave.Tests` (category `Hardware`)

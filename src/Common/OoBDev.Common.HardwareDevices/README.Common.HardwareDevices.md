@@ -8,9 +8,9 @@ MSBuild globs reference every project under `src/HardwareDevices` except the tes
 
 | Type | Role |
 |------|------|
-| `ServiceCollectionExtensions.TryCommonHardwareDeviceExtensions` | Calls each device's `TryAdd*` (`TryAddBusylight`, `TryAddDe5000`, `TryAddK8055`, `TryAddRadexOne`) |
+| `ServiceCollectionExtensions.TryCommonHardwareDeviceExtensions` | Calls each device's `TryAdd*` (`TryAddBusylight`, `TryAddDe5000`, `TryAddK8055`, `TryAddRadexOne`, `TryAddZoomH4n`) |
 
-The globs include every device project, but registration is a line per device, so a new package adds its `TryAdd*` call here when it gets one (the Zoom H4n has none yet). Generic protocols (NMEA, SCPI, Z-Wave) stay in `src/Extensions`.
+The globs include every device project, but registration is a line per device, so a new package adds its `TryAdd*` call here when it gets one. Generic protocols (NMEA, SCPI, Z-Wave) stay in `src/Extensions`.
 
 ## Verified
 
