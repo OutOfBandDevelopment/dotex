@@ -46,7 +46,6 @@ Scope rule: every BinaryDataDecoders feature is migrated; phases are priority or
 - [ ] **Harvest candidates**: nothing decided; the map is in [docs/harvest-candidates.md](docs/harvest-candidates.md).
 
 - [ ] Harvest candidates marked evaluate-later in the plan (decision D7): proving-grounds plugin-sandbox-poc, hybridsearch, Oobtainium, BuildFirstOnce, markdownplantuml, TotpExample, HandyClasses; Service Broker tools; postsql-playground (informs `OoBDev.DacFx`).
-- [ ] Production-copy rehearsal, remaining: the restore step is done (2026-10-29); still to do is applying a real migration to the restored copy and running the Integration suite against it; the redeploy defect is fixed (2026-10-29).
 - [ ] Performance gate for database-backed (non-vector) endpoints (the CGI middleware, in-memory search syntax and SQL vector search gates are done). Checked 2026-10-29: no non-vector database-backed endpoint exists in `src/` (the only SQL access is the vector store), so add the gate with the first such endpoint.
 
 ## Documentation review (owner, 2026-10-28)

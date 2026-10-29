@@ -217,7 +217,7 @@ public class SqlServerDeploymentTests
 
     [TestMethod]
     [TestCategory(TestCategories.Integration)]
-    public async Task RestoredCopy_WithNewBrokerId_KeepsTheDataAndIsQueryable()
+    public async Task RestoredCopy_WithNewBrokerId_KeepsTheDataAndTakesTheMigration()
     {
         // Stage: seed the deployed database, then back it up and restore it under another name with a new Service Broker id (the stand-in for a sanitized production dump)
         var options = Microsoft.Extensions.Options.Options.Create(new OoBDev.Data.Vectors.SqlStore.SqlVectorStoreOptions { ConnectionString = DatabaseConnection(), Limit = 10 });
@@ -242,6 +242,12 @@ public class SqlServerDeploymentTests
             var copyConnection = new SqlConnectionStringBuilder(_masterConnection) { InitialCatalog = copyName }.ConnectionString;
             Assert.AreEqual(1, await ScalarAsync<int>(copyConnection, "SELECT COUNT(*) FROM [embedding].[Vectors]"));
             Assert.AreEqual("kept", await ScalarAsync<string>(copyConnection, "SELECT JSON_VALUE([Metadata], '$.title') FROM [embedding].[Vectors]"));
+            Assert.AreEqual(1d, await ScalarAsync<double>(copyConnection, "SELECT CAST([Value].Magnitude() AS float) FROM [embedding].[Vectors]"), 1e-5);
+
+            // Test: apply the migration (this build of the dacpac) to the copy without allowing data loss, then query it again
+            using (var package = DacPackage.Load(FindDacpac()))
+                new DacServices(_masterConnection).Deploy(package, copyName, upgradeExisting: true, new DacDeployOptions { IncludeCompositeObjects = true, BlockOnPossibleDataLoss = true });
+            Assert.AreEqual(1, await ScalarAsync<int>(copyConnection, "SELECT COUNT(*) FROM [embedding].[Vectors]"));
             Assert.AreEqual(1d, await ScalarAsync<double>(copyConnection, "SELECT CAST([Value].Magnitude() AS float) FROM [embedding].[Vectors]"), 1e-5);
         }
         finally
