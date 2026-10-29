@@ -26,6 +26,8 @@
 	<ItemGroup>
 		<ProjectReference Include="..\OoBDev.ZWave\OoBDev.ZWave.csproj" />
 		<ProjectReference Include="..\..\Framework\OoBDev.Devices.TestUtilities\OoBDev.Devices.TestUtilities.csproj" />
+		<ProjectReference Include="..\..\Framework\OoBDev.System.IO.Pipelines\OoBDev.System.IO.Pipelines.csproj" />
+		<ProjectReference Include="..\..\Framework\OoBDev.System.IO.Ports\OoBDev.System.IO.Ports.csproj" />
 	</ItemGroup>
 
 </Project>
