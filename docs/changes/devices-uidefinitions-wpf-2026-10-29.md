@@ -11,6 +11,10 @@
 
 `LiveDisplayViewModel` exposes `PlotTrail`, `PlotX`, `PlotY` and `PlotColor` (a 100 by 100 box, origin top left, axes spanning the control range; XYZ uses an oblique projection). `LiveDisplayView` draws the box, axes, trail polyline and a point marker in a `Viewbox`; `CentreConverter` offsets the marker. 5 view model tests and 3 view tests added (30 and 11 in total).
 
+## Colour picker (added 2026-10-29)
+
+`IColorPicker`, `PickColorCommand`, `ColorPickerViewModel` and its two commands in the view models project; `ColorPickerView`, `ColorPickerWindow` and `WpfColorPicker` in the WPF project. 12 view model tests and 3 view tests added (42 and 14 in total).
+
 ## Not done
 
-Colour picker widgets, a look at the view on screen. Tracked in `BACKLOG.md`.
+The `ColorPickerChoiceOption` link (picking selects the Custom option and the option re-applies the last pick), the DevTerm shell does not pass a picker yet, a look at the view on screen. Tracked in `BACKLOG.md`.
