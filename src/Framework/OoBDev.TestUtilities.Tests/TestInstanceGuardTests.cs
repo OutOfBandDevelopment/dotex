@@ -10,14 +10,15 @@ public class TestInstanceGuardTests
     [DataRow("Server=127.0.0.1,1433;User Id=sa;Password=x;")]
     [DataRow("Data Source=localhost\\SQLEXPRESS;Integrated Security=true")]
     [DataRow("Server=tcp:localhost,1433;Database=t")]
-    [DataRow("localhost:6379", false)]
+    [DataRow("localhost:6379")]
+    [DataRow("localhost:6379,password=x,ssl=false")]
     [DataRow("mongodb://localhost:27017")]
     [DataRow("http://127.0.0.1:11435")]
     [DataRow("Host=host.docker.internal;Port=5432")]
-    public void IsTestInstance_LocalHost_ReturnsTrue(string connectionString, bool pairs = true)
+    public void IsTestInstance_LocalHost_ReturnsTrue(string connectionString)
     {
         // Test
-        var result = TestInstanceGuard.IsTestInstance(pairs ? connectionString : "Endpoint=" + connectionString);
+        var result = TestInstanceGuard.IsTestInstance(connectionString);
 
         // Assert
         Assert.IsTrue(result);
@@ -29,6 +30,8 @@ public class TestInstanceGuardTests
     [DataRow("Server=127.0.0.1;Data Source=prod.example.com")]
     [DataRow("https://api.example.com/v1")]
     [DataRow("Database=app;User Id=sa")]
+    [DataRow("cache.contoso.com:6380,password=x,ssl=true")]
+    [DataRow("localhost:6379,cache.contoso.com:6379")]
     public void IsTestInstance_RemoteOrUnknownHost_ReturnsFalse(string connectionString)
     {
         // Test

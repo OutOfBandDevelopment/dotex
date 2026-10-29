@@ -20,7 +20,7 @@ public class ExampleTests
     [TestCategory(TestCategories.Integration)]
     public async Task CachingDesignTest_WithRedisCache()
     {
-        var redisConnectionString = TestContext.GetRequiredProperty<string>("REDIS_CONNECTION_STRING");
+        var redisConnectionString = TestInstanceGuard.Require(TestContext.GetRequiredProperty<string>("REDIS_CONNECTION_STRING"));
 
         var configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(new Dictionary<string, string?>

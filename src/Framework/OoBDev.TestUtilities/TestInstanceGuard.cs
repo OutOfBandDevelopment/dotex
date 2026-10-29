@@ -43,6 +43,20 @@ public static class TestInstanceGuard
     private static List<string> HostsFromPairs(string connectionString)
     {
         var hosts = new List<string>();
+
+        // StackExchange.Redis style: "host:6379,password=x,ssl=true", the endpoints are the entries without '='.
+        if (!connectionString.Contains(';', StringComparison.Ordinal) && !connectionString.Split(',')[0].Contains('=', StringComparison.Ordinal))
+        {
+            foreach (var entry in connectionString.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+            {
+                if (entry.Contains('=', StringComparison.Ordinal))
+                    continue;
+                var host = !entry.StartsWith('[') && entry.Count(c => c == ':') == 1 ? entry.Split(':')[0] : entry;
+                hosts.Add(host);
+            }
+            return hosts;
+        }
+
         foreach (var pair in connectionString.Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
         {
             var index = pair.IndexOf('=', StringComparison.Ordinal);
