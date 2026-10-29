@@ -1,0 +1,86 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using OoBDev.DevTerm;
+
+namespace OoBDev.DevTerm.Configuration;
+
+/// <summary>
+/// Whether a Device menu panel makes sense for the current connection - shared by the TUI's and
+/// WPF's Device menus, which disable an item that can't work (opening the K8055 panel on a TCP
+/// oscilloscope connection, say, or any panel while disconnected) instead of letting it open a
+/// panel whose every command would fail.
+/// </summary>
+public static class DevicePanels
+{
+    // Velleman K8055/VM110: vendor 0x10CF, one product id per board address jumper setting (0-3).
+    private const int _k8055VendorId = 0x10CF;
+    private const int _k8055FirstProductId = 0x5500;
+    private const int _k8055LastProductId = 0x5503;
+
+    // Kuando Busylight: the bench unit (0x04D8:0xF848, Microchip's vendor id - real-hardware
+    // confirmed) plus Plenom's own vendor id, which newer Busylight models enumerate under.
+    private const int _busylightMicrochipVendorId = 0x04D8;
+    private const int _busylightMicrochipProductId = 0xF848;
+    private const int _plenomVendorId = 0x27BB;
+
+    /// <summary>Ids of panels the TUI and WPF menus have a built-in item for; a registered <see cref="Core.Control.IDevicePanelContribution"/> with one of these ids (the web host resolves them) is not listed a second time.</summary>
+    public static IReadOnlySet<string> BuiltInPanelIds { get; } = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { "k8055", "busylight" };
+
+    /// <summary>
+    /// Why a plugin-contributed panel's menu item is disabled, or null when it is enabled. A panel whose indicators come
+    /// from a presenter is disabled (not hidden) until that presenter is among the connection's selected ones.
+    /// </summary>
+    public static string? UnavailableReason(IDevicePanelContribution panel, CliOptions options, bool connected)
+    {
+        ArgumentNullException.ThrowIfNull(panel);
+        ArgumentNullException.ThrowIfNull(options);
+
+        if (!connected)
+        {
+            return "Connect first.";
+        }
+
+        if (!panel.IsAvailable(options.Transport, options.VendorId, options.ProductId))
+        {
+            return "This panel does not suit the current connection.";
+        }
+
+        if (panel.PresenterName is { Length: > 0 } presenter
+            && !options.EffectivePresenters.Contains(presenter, StringComparer.OrdinalIgnoreCase))
+        {
+            return $"Select the '{presenter}' presenter to use this panel.";
+        }
+
+        return null;
+    }
+
+    public static bool IsAvailable(DevicePanel panel, CliOptions options, bool connected)
+    {
+        ArgumentNullException.ThrowIfNull(options);
+
+        if (!connected)
+        {
+            return false;
+        }
+
+        var isHid = string.Equals(options.Transport, "hid", StringComparison.OrdinalIgnoreCase);
+        return panel switch
+        {
+            DevicePanel.K8055 => isHid
+                && options.VendorId == _k8055VendorId
+                && options.ProductId is >= _k8055FirstProductId and <= _k8055LastProductId,
+            DevicePanel.Busylight => isHid
+                && ((options.VendorId == _busylightMicrochipVendorId && options.ProductId == _busylightMicrochipProductId)
+                    || options.VendorId == _plenomVendorId),
+
+            // A manifest names its own transport and commands, so which manifests make sense is the
+            // user's call (the picker) - the item is enabled whenever connected.
+            DevicePanel.Manifest => true,
+            _ => false,
+        };
+    }
+}
