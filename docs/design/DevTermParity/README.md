@@ -11,6 +11,7 @@ Source: `C:\repo\oobdev\dev-term` at `8c66e74` (2026-10-28). Lines are C# lines 
 - [Summary](#summary)
 - [Matrix](#matrix)
 - [Open points](#open-points)
+- [Documentation inventory](#dev-term-documentation-inventory)
 - [Next steps](#next-steps)
 
 ## Summary
@@ -53,10 +54,26 @@ Of 34 dev-term projects, the eight device protocol libraries are in this reposit
 - Groups: the first five projects are the engine every other group needs, so A comes first, then B and E in parallel, then C, D, F, G and H.
 - Serial, HID, TCP and RFC 2217 exist here in two forms (the older `IDeviceAdapter` adapters and dev-term's newer `ITransport` implementations); the design for group E must pick one contract. This is a design question for the architecture document, not an owner question yet.
 - dev-term's test projects use their own helpers (`DevTerm.Test.Utilities`) and a coding-standards test (`DevTerm.CodingStandards.Tests`); how they map onto this repository's test categories is for the testing-strategy document.
-- The `docs/` tree of dev-term (devices, protocols, specs, user guide, test sessions) is part of parity and has not been inventoried.
 
 ## Next steps
 
-1. Inventory dev-term `docs/` and decide where each part lands (`docs/design/`, project readmes, `docs/how-tos/`).
+1. ~~Inventory dev-term `docs/`~~ done (Table 2); the files themselves move with their groups.
 2. Write requirements, architecture, api-design and testing-strategy for group A (engine), then E.
 3. Port group by group, each with its tests, as backlog items; the backlog item "DevTerm 100% parity" links here.
+
+## dev-term documentation inventory
+
+Counts from `C:\repo\oobdev\dev-term\docs` (2026-10-29).
+
+**Table 2 — dev-term documents and where they land**
+
+| Folder | Files / lines | Content | Landing place here |
+|--------|---------------|---------|--------------------|
+| `design` | 51 / 8,084 | Architecture, transports, presenters, manifests, plugin model, frontends, session logging, theming, UI definitions, USBTMC, VXI-11, RFC 2217; `proposals` and `rejected` | Source for the per-group requirements and architecture documents here; rejected designs are recorded where they affect a decision |
+| `specs` | 15 / 2,297 | Screen specifications (main windows, editors, stream monitor, routing, playback, Z-Wave panel) | `docs/design/DevTermParity/` screen specs, with the shells |
+| `devices` | 37 / 5,642 | Per-instrument notes (scopes, DMM, supplies, Z-Wave stick, TCP232 converter, and the eight device packages) | Device readmes and `docs/design/DeviceDecoding/`; instruments with no package here stay as notes |
+| `protocols` | 3 / 3,160 | USBTMC protocol notes | Transport design document |
+| `user-guide` | 179 / 2,418 | Task guides with images | `docs/how-tos/devterm/` once the shells exist |
+| `test` | 44 / 2,542 | Bench session records on real hardware | Kept as evidence in the device change documents; summarized, not copied |
+| `changes`, `bugs` | 21 + 72 | Dated change log and bug reports | `git log` of dev-term; open bugs go to the backlog when the matching code is ported |
+| `coding-standards.md` | 160 | dev-term's standards | Compared against `.claude/rules/coding-standards.md`; this repository's rule wins |
