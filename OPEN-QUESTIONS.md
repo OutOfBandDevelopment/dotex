@@ -28,16 +28,9 @@ The plan migrates the UI model (`UiDefinitions`), then adds an MVVM view-model l
 
 **Cross-platform (your note, 2026-10-26):** UI libraries come in as needed, Windows-targeted (`net10.0-windows`) only where a toolkit forces it, and you want a control library that renders on Linux and macOS too. Candidates: **Avalonia** (recommended: MIT, XAML and `ICommand` binding, reuses the same view models, one codebase for Windows, Linux and macOS), **GtkSharp** (native on Linux, weak on macOS, needs GTK installed), or only the terminal and web renderers for non-Windows. Your preference (2026-10-26): the most MVVM with `ICommand` where possible, and a spike of Avalonia before the final go-ahead (backlog item added). Reply with a pick after the spike, or leave it to the phase 7 design.
 
-**Default:** A. `Terminal.Gui` and the cross-platform toolkit are not added until you accept them.
+**Owner answer (2026-10-28):** dev-term is merged entirely into this framework, with no back-porting of packages into dev-term (see Q4 outcome in the migration plan). That settles the scope as option B (UI, Tui, Web and the rest come in); what stays open here is only the cross-platform toolkit pick (Avalonia spike) and the transports and manifests order.
+
+**Default:** B for scope; the toolkit pick waits for the Avalonia spike.
 
 **Your answer:**
 
-### Q4 — 2026-10-26 — Device decoding — Where dev-term lives after the shells use OoBDev libraries
-
-The dev-term shells (Console, Wpf, Web) will be converted to use the OoBDev libraries (phase 10 of the plan). Afterwards dev-term can live in two places.
-
-**Options:** **A** (recommended): keep it a separate repository that depends on the dotex packages over NuGet; the package boundary then proves the libraries are reusable, and dev-term keeps its own release rhythm and test-generated documentation. Cost: cross-repository changes need a package publish (a local feed works). **B**: move it under this project as a tool, or a tool framework other tools build on. Cost: a larger solution, and the tool framework needs its own design (project layering, packaging). **C**: decide after phase 7, once the first device panel runs end to end.
-
-**Default:** A for planning; nothing in phases 0 to 9 depends on the choice.
-
-**Your answer:**

@@ -59,5 +59,5 @@
 ## Open questions
 
 - **Q3** whether UI, manifests and transports migrate, and in what order.
-- **Q4** where dev-term lives after the migration.
+- Decided 2026-10-28 (was Q4): dev-term is merged entirely into this framework as `OoBDev.DevTerm.{Wpf|Tui|Web}` tools with generic per-platform control libraries under Framework.
 Decided 2026-10-28: package names `OoBDev.DerEE.De5000` and `OoBDev.ZWave` (the protocol, not the stick); test layout in the [testing strategy](testing-strategy.md).
