@@ -100,6 +100,24 @@ public class SqlServerDeploymentTests
 
     [TestMethod]
     [TestCategory(TestCategories.Integration)]
+    public void Redeploy_SameDacpac_ChangesNothing()
+    {
+        // Stage
+        var services = new DacServices(_masterConnection);
+        var options = new DacDeployOptions { IncludeCompositeObjects = true, BlockOnPossibleDataLoss = true };
+        using var package = DacPackage.Load(FindDacpac());
+
+        // Test
+        var script = services.GenerateDeployScript(package, _databaseName, options);
+        services.Deploy(package, _databaseName, upgradeExisting: true, options);
+
+        // Assert
+        Assert.IsFalse(script.Contains("Dropping User-Defined Type", StringComparison.Ordinal), script);
+        Assert.IsFalse(script.Contains("rebuilding table", StringComparison.Ordinal), script);
+    }
+
+    [TestMethod]
+    [TestCategory(TestCategories.Integration)]
     public async Task Distance_And_Angle_RunInsideSqlServer()
     {
         var db = DatabaseConnection();

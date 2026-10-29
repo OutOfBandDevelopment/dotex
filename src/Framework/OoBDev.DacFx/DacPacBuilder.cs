@@ -331,11 +331,9 @@ public partial class DacPacBuilder : IDacPacBuilder
             yield return new XElement(ns + "Element",
                 new XAttribute("Type", "SqlAggregate"),
                 new XAttribute("Name", name),
-                new XElement(ns + "Property", new XAttribute("Name", "Format"), new XAttribute("Value", format)),
                 new XElement(ns + "Property", new XAttribute("Name", "IsInvariantToDuplicates"), new XAttribute("Value", isInvariantToDuplicates ? "True" : "False")),
                 new XElement(ns + "Property", new XAttribute("Name", "IsInvariantToNulls"), new XAttribute("Value", isInvariantToNulls ? "True" : "False")),
                 new XElement(ns + "Property", new XAttribute("Name", "IsNullIfEmpty"), new XAttribute("Value", isNullIfEmpty ? "True" : "False")),
-                new XElement(ns + "Property", new XAttribute("Name", "MaxByteSize"), new XAttribute("Value", maxByteSize)),
                 new XElement(ns + "Property", new XAttribute("Name", "ClassName"), new XAttribute("Value", type.FullName!)),
                 new XElement(ns + "Relationship", new XAttribute("Name", "Assembly"),
                     new XElement(ns + "Entry",
@@ -378,16 +376,12 @@ public partial class DacPacBuilder : IDacPacBuilder
             yield return new XElement(ns + "Element",
                 new XAttribute("Type", "SqlUserDefinedType"),
                 new XAttribute("Name", name),
-                new XElement(ns + "Property", new XAttribute("Name", "Format"), new XAttribute("Value", format)),
-                new XElement(ns + "Property", new XAttribute("Name", "MaxByteSize"), new XAttribute("Value", maxByteSize)),
-                new XElement(ns + "Property", new XAttribute("Name", "IsByteOrdered"), new XAttribute("Value", isByteOrdered ? "True" : "False")),
                 new XElement(ns + "Property", new XAttribute("Name", "ClassName"), new XAttribute("Value", type.FullName!)),
                 new XElement(ns + "Relationship", new XAttribute("Name", "Assembly"),
                     new XElement(ns + "Entry",
                         new XElement(ns + "References", new XAttribute("Name", $"[{realAssemblyName}]"))
                     )
                 ),
-                Methods(assembly, realAssemblyName, type),
                 Schema(name)
             );
         }

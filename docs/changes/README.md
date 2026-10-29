@@ -450,3 +450,4 @@ Each change document should include:
 - [Service Bus readiness probe](testing-servicebus-health-probe-2026-10-29.md) - wait-for-services probes the AMQP port because the emulator has no shell (2026-10-29)
 - [SCPI block replies](devices-scpi-block-replies-2026-10-29.md) - definite-length block framing and ScpiReply.Block (2026-10-29)
 - [Z-Wave ACK responder](devices-zwave-ack-responder-2026-10-29.md) - ZWaveAckResponder picks ACK or NAK per received frame (2026-10-29)
+- [Vectors DB redeploy](data-vectors-db-redeploy-2026-10-29.md) - second deploy of the dacpac changes nothing (2026-10-29)
