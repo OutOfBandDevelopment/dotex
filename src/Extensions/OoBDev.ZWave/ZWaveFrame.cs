@@ -33,6 +33,9 @@ public sealed record ZWaveFrame(ZWaveFrameKind Kind, byte[] Raw)
     /// <summary>Gets a lone ACK, sent for every data frame the controller sends.</summary>
     public static ZWaveFrame Ack { get; } = new(ZWaveFrameKind.Ack, [AckByte]);
 
+    /// <summary>Gets a lone NAK, sent for a data frame whose checksum is wrong.</summary>
+    public static ZWaveFrame Nak { get; } = new(ZWaveFrameKind.Nak, [NakByte]);
+
     /// <summary>Gets the frame type: <see cref="Request"/> or <see cref="Response"/>.</summary>
     public byte Type => Raw[2];
 

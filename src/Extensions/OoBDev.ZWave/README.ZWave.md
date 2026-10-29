@@ -20,11 +20,11 @@ Z-Wave Serial API framing, decoding and request building (the protocol, not one 
 | `ServiceCollectionExtensions` | `TryAddZWave()` registers the decoder and encoder |
 | `ZWaveFunctions` | Serial API function ids |
 
-The consumer must send `ZWaveFrame.Ack` for every received data frame, or the stick retransmits and answers CAN.
+The consumer must answer every received data frame, or the stick retransmits and answers CAN: `ZWaveAckResponder.Respond(frame)` returns `ZWaveFrame.Ack` for a checksum-valid data frame, `ZWaveFrame.Nak` for a frame with a bad checksum, and `null` for everything else.
 
 ## Not yet ported
 
-The product configuration parameter table (dev-term `product-configs.json`, 2.2 MB; it feeds the configuration panel), the control surface (waits on owner question Q3), and an automatic ACK responder (the consumer sends `ZWaveFrame.Ack`; `ZWaveStick` in the tests shows how). Network-management commands (include, exclude, reset) are not exercised on hardware.
+The product configuration parameter table (dev-term `product-configs.json`, 2.2 MB; it feeds the configuration panel), the control surface (waits on owner question Q3), and a session-level responder that writes the answers itself (the framework has no session observer; `ZWaveAckResponder.Respond` picks the answer and the consumer writes it, as `ZWaveStick` in the tests does). Network-management commands (include, exclude, reset) are not exercised on hardware.
 
 ## Verified
 

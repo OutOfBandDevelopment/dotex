@@ -65,7 +65,7 @@ internal sealed class ZWaveStick : IDisposable
             }
 
             for (; _acked < Frames.Count; _acked++)
-                if (Frames[_acked].Kind == ZWaveFrameKind.Data) _port.Write(ZWaveFrame.Ack.Raw, 0, 1);
+                if (ZWaveAckResponder.Respond(Frames[_acked]) is { } answer) _port.Write(answer.Raw, 0, answer.Raw.Length);
         }
     }
 

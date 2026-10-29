@@ -449,3 +449,4 @@ Each change document should include:
 - [Local runner, Release build](testing-local-runner-release-build-2026-10-29.md) - runner verified for Unit, Simulate and Integration; Release-only MailKit using fixed (2026-10-29)
 - [Service Bus readiness probe](testing-servicebus-health-probe-2026-10-29.md) - wait-for-services probes the AMQP port because the emulator has no shell (2026-10-29)
 - [SCPI block replies](devices-scpi-block-replies-2026-10-29.md) - definite-length block framing and ScpiReply.Block (2026-10-29)
+- [Z-Wave ACK responder](devices-zwave-ack-responder-2026-10-29.md) - ZWaveAckResponder picks ACK or NAK per received frame (2026-10-29)
