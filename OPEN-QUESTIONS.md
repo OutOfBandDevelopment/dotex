@@ -54,3 +54,13 @@ Request: desired-state database tooling (`docs/design/DesiredStateDatabase/`). I
 **Default:** option A. Phase 0 (the bake-off) does not depend on the answer and goes first.
 
 **Your answer:**
+
+### Q6 — 2026-10-29 — Plugin sandbox — Home and platforms
+
+Request: sandboxed plugin host (`docs/design/PluginSandbox/`). Inventory: no dotex package for process isolation; `OoBDev.AspNetCore.Cgi` limits child processes but its non-goals exclude sandboxing. A proof of concept exists in proving-grounds (`examples/plugin-sandbox-poc`, last commit 2026-10-08).
+
+**Options:** **A** (recommended): a dotex package family, Windows plus Linux only, starting with a threat model and protocol design (no isolation code until the threat model is reviewed); keeps one repo, one test stack. **B**: keep it a separate project that dotex adopts later; avoids a security boundary in the framework until proven. **C**: A plus macOS; much more host work for no stated user.
+
+**Default:** option A, limited to phase 0 (threat model, PoC review) and phase 1 (protocol and manifest). No launcher code is written before an answer.
+
+**Your answer:**

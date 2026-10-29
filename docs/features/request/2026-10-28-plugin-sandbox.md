@@ -1,6 +1,6 @@
 # Feature request: Sandboxed plugin host
 
-- **Status:** new
+- **Status:** triaged
 - **Requested by:** owner (filed from the notes repository, `projects/dotex-consolidation/plugin-sandbox-project/README.md`)
 - **Date:** 2026-10-28
 - **Area:** unknown (a new package; no existing dotex area was identified)
@@ -52,4 +52,4 @@ is unaddressed.
 
 ## Triage notes
 
-Maintainers fill this in.
+2026-10-29: accepted as a phased design that begins with a threat model; no isolation code before it is reviewed. Home and platforms are owner question Q6 in `OPEN-QUESTIONS.md` (default: dotex package family, Windows and Linux). Design: [docs/design/PluginSandbox](../../design/PluginSandbox/README.md). Backlog: BACKLOG.md, security.
