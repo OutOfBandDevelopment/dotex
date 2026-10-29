@@ -1366,5 +1366,5 @@
     "Name"
   ],
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://raw.githubusercontent.com/OutOfBandDevelopment/dev-term/main/schemas/device-manifest.schema.json"
+  "$id": "oobdev://devterm/schemas/device-manifest.schema.json"
 }

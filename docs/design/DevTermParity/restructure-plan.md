@@ -10,6 +10,13 @@ Owner decisions, 2026-10-29 (planning session). They supersede the project layou
 4. **Layering follows from it.** Framework code never references `src/Applications`, so every contract a transport needs lives in Framework (`OoBDev.System.Abstractions`, `OoBDev.System.IO.Pipelines`), and `DevTerm.Core` consumes them.
 5. **Order.** Restructure first, then port the remaining transports straight into the new layout. Q2 (schema `$id` host) stays on its default.
 
+## Intent (owner, 2026-10-29, later the same session)
+
+- Transports must be reusable and independent of the decoders, and zero-copy where possible (pipe readers and writers, no intermediate copies). Nothing in `System.IO.*` may reference DevTerm.
+- Most shared DevTerm logic consolidates into the one core library used by the three front ends. Little reuse is expected across the former libraries, so they are not kept separate.
+- A `DevTerm.Abstractions` (for example the plugin model) may be extracted later if extension needs it; not now.
+- Schema identifiers use the `oobdev://{application}/{namespace}/...` scheme, not a hosted URL (Q2 answered): `oobdev://devterm/schemas/<file>`. They are names, not fetch locations.
+
 ## Steps
 
 | # | Step | Verify |

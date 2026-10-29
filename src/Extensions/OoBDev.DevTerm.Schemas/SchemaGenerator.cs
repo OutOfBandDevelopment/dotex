@@ -13,8 +13,8 @@ namespace OoBDev.DevTerm.Schemas;
 /// <summary>Exports a JSON Schema per hand-written format from the C# model itself, so a schema cannot drift from the code.</summary>
 public static class SchemaGenerator
 {
-    /// <summary>Where the committed schemas are served from; each schema's <c>$id</c> is this plus its file name, so an editor can fetch it by that URL.</summary>
-    public const string BaseUrl = "https://raw.githubusercontent.com/OutOfBandDevelopment/dev-term/main/schemas/";
+    /// <summary>Identifier prefix (<c>oobdev://{application}/{namespace}/</c>) for each schema; the <c>$id</c> is this plus the file name and is a name, not a fetchable location.</summary>
+    public const string BaseUrl = "oobdev://devterm/schemas/";
 
     private static readonly JsonSerializerOptions _options = new() { WriteIndented = true, PropertyNameCaseInsensitive = true, TypeInfoResolver = new DefaultJsonTypeInfoResolver() };
 
