@@ -447,3 +447,4 @@ Each change document should include:
 - [Service Bus emulator coverage](testing-servicebus-emulator-2026-10-29.md) - connection string fixed, topic subscription and session queue round trips (2026-10-29)
 - [Production-copy rehearsal](testing-production-copy-rehearsal-2026-10-29.md) - backup, restore with a new broker id and query a throwaway copy; redeploy defect found (2026-10-29)
 - [Local runner, Release build](testing-local-runner-release-build-2026-10-29.md) - runner verified for Unit, Simulate and Integration; Release-only MailKit using fixed (2026-10-29)
+- [Service Bus readiness probe](testing-servicebus-health-probe-2026-10-29.md) - wait-for-services probes the AMQP port because the emulator has no shell (2026-10-29)

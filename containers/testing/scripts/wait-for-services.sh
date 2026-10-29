@@ -87,6 +87,11 @@ check_container_health() {
     if [[ "$health_status" == "" || "$health_status" == "no_healthcheck" || "$health_status" == *"has no entry for key"* ]]; then
         local container_state=$(docker inspect --format='{{.State.Status}}' "$container_name" 2>/dev/null | tr -d '\n\r' || echo "unknown")
         if [ "$container_state" = "running" ]; then
+            # The Service Bus emulator image has no shell for a Docker health check, so probe its AMQP port instead
+            if [ "$container_name" = "oobd-test-servicebus" ] && ! (exec 3<>"/dev/tcp/localhost/${TEST_PORT_SERVICEBUS:-5672}") 2>/dev/null; then
+                echo "starting"
+                return
+            fi
             echo "running"
         else
             echo "not_running"

@@ -68,6 +68,13 @@ for %%s in (%SERVICES%) do (
         )
     )
 
+    REM The Service Bus emulator image has no shell for a Docker health check, so probe its AMQP port instead
+    if "%%s"=="oobd-test-servicebus" if "!health_status!"=="running" (
+        if not defined TEST_PORT_SERVICEBUS set TEST_PORT_SERVICEBUS=5672
+        powershell -NoProfile -Command "try { $c = New-Object Net.Sockets.TcpClient; $c.Connect(localhost, [int]$env:TEST_PORT_SERVICEBUS); $c.Close(); exit 0 } catch { exit 1 }" >nul 2>&1
+        if errorlevel 1 set health_status=starting
+    )
+
     REM Display status
     SET TARGET_HOST=%%s
     if "!health_status!"=="healthy" (
