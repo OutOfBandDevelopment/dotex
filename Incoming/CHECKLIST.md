@@ -105,8 +105,8 @@ This checklist tracks the investigation and migration status of all projects in 
 - [x] Project remains available for reference and experimentation
 
 **Documentation:**
-- [Feature Mapping](../docs/migration/oobtainium-feature-mapping.md)
-- [Migration Plan](../docs/migration/oobtainium-migration-plan.md) - All 4 options detailed
+- [Feature Mapping](../docs/migration/oobtainium.md)
+- [Migration Plan](../docs/migration/oobtainium.md) - All 4 options detailed
 
 **Migration Complexity:** N/A (moved to separate repository)
 
@@ -202,9 +202,9 @@ This checklist tracks the investigation and migration status of all projects in 
 - Can start Phase 1 with recommended defaults while later phases decided
 
 **Documentation:**
-- [Feature Mapping](../docs/migration/binarydatadecoders-feature-mapping.md)
-- [Migration Plan](../docs/migration/binarydatadecoders-migration-plan.md)
-- [Critical Questions](../docs/migration/binarydatadecoders-critical-questions.md) ⭐ **Start here**
+- [Feature Mapping](../docs/migration/binarydatadecoders-rereview-2026-10-29.md)
+- [Migration Plan](../docs/migration/binarydatadecoders-rereview-2026-10-29.md)
+- [Critical Questions](../docs/migration/binarydatadecoders-rereview-2026-10-29.md) ⭐ **Start here**
 
 **Next Steps:**
 - [ ] Answer Phase 1 critical questions (Endianness API, BinaryPrimitives, UI Collections)
@@ -432,8 +432,8 @@ Instead of migrating 52 projects of SharedFramework code (~28,582 LOC), we creat
 - [ ] Begin implementation based on approved designs
 
 **Documentation:**
-- [Feature Mapping](../docs/migration/sharedframework-feature-mapping.md) - Original 52-project analysis (archived)
-- [Migration Plan](../docs/migration/sharedframework-migration-plan.md) - Original 12-phase plan (archived)
+- [Feature Mapping](../docs/migration/sharedframework.md) - Original 52-project analysis (archived)
+- [Migration Plan](../docs/migration/sharedframework.md) - Original 12-phase plan (archived)
 
 ---
 

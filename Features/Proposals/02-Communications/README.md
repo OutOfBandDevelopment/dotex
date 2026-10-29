@@ -486,8 +486,8 @@ ITargetPreference {
 
 ## Related Documentation
 
-- [SharedFramework Feature Mapping](../../../docs/migration/sharedframework-feature-mapping.md#2-communications-6-projects-2500-loc)
-- [SharedFramework Migration Plan - Phase 2](../../../docs/migration/sharedframework-migration-plan.md#phase-2-communications-complete-implementation-critical)
+- [SharedFramework Feature Mapping](../../../docs/migration/sharedframework.md)
+- [SharedFramework Migration Plan - Phase 2](../../../docs/migration/sharedframework.md)
 
 ---
 

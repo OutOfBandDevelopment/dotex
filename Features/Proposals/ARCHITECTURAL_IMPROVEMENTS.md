@@ -400,4 +400,4 @@ services.DiscoverEnhancementProviders();
 - [Proposals Index](./README.md)
 - [Epic 11: Data Enhancement Pipeline](./11-DataEnhancement/README.md)
 - [Epic 2: Communications Platform (Revised)](./02-Communications/README-REVISED.md)
-- [SharedFramework Migration Plan](../docs/migration/sharedframework-migration-plan.md)
+- [SharedFramework Migration Plan](../docs/migration/sharedframework.md)

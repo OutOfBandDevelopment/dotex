@@ -1,6 +1,6 @@
 # BinaryDataDecoders — Re-review against current main
 
-**Created:** 2026-10-29 · **Status:** replaces the BinaryDataDecoders parts of [incoming-recommendation-plan.md](incoming-recommendation-plan.md), the [decision sheet](binarydatadecoders-decision-sheet.md) and the project tables in the [migration plan](binarydatadecoders-migration-plan.md) · **Requested by:** owner, 2026-10-29 (answer to Q1: the old document is out of date)
+**Created:** 2026-10-29 · **Status:** current; consolidated 2026-10-29, replacing the BinaryDataDecoders feature mapping, migration plan, decision sheet and critical questions (removed; `git log -- docs/migration` has them) and the BinaryDataDecoders parts of [incoming-recommendation-plan.md](incoming-recommendation-plan.md) · **Requested by:** owner, 2026-10-29 (answer to Q1: the old document is out of date)
 
 Source: `C:\repo\mine\binary-data-decoders` at `e590b420` (78 project folders, the newest copy; `RETIRED.md` says it moved here). Main: `src/` of this repository on `dev/example-app-fixes`. Method: a script compared every public or internal type name, then every `.cs` file by name (with namespaces and `using` lines stripped and whitespace removed), then the size of the changed files. A type or file counted as present when main has it under any project. A rename inside a file would hide a match, so the table lists what each result means and the checks that remain.
 
@@ -39,25 +39,24 @@ Source: `C:\repo\mine\binary-data-decoders` at `e590b420` (78 project folders, t
 | IO.Abstractions, IO.Ports, IO.Pipelines, IO.UsbHids | `OoBDev.IO.*` and `OoBDev.System.IO.Pipelines` | 46 of 47 files present | Nothing; the source bug reports `BUG-001..004` are about the IO Controller CLI (Table 3) |
 | Net, Net.ServiceHost.Cli | `OoBDev.System/Net` | 24 of 24 files | Service host CLI: see Table 3 |
 | Templating.*, Text.Json, Text.Markdown, Yaml | `OoBDev.System.Text.*`, `OoBDev.Extensions` | All files present | Nothing |
-| ToolKit, ToolKit.Abstractions | `OoBDev.System`, `OoBDev.System.Abstractions` | 115 of 123 and 16 of 16 files | The eight missing files are the numerics in Table 2 |
+| ToolKit, ToolKit.Abstractions | `OoBDev.System`, `OoBDev.System.Abstractions` | 115 of 123 and 16 of 16 files | The eight files not carried by name are the numerics, now in `OoBDev.System` under other names |
 | TestUtilities | `OoBDev.TestUtilities` | 12 of 12 | Nothing |
 | Windows.Forms | `OoBDev.System/Windows/Forms` | `ValidTextBox` present | The decision to move it to a separate package is still open in the backlog |
-| Quarta.RadexOne, Velleman.K8055, Zoom.H4n, Kuando.Busylight, Nmea | `src/HardwareDevices`, `src/Extensions/OoBDev.Nmea` | Different type names (rebuilt from dev-term), covered by [device-parity.md](device-parity.md) | The NMEA `Notes` folder: `Degree`, `Bearing`, `GeneralHeading` helpers and the WMI and HID import notes (Table 2) |
+| Quarta.RadexOne, Velleman.K8055, Zoom.H4n, Kuando.Busylight, Nmea | `src/HardwareDevices`, `src/Extensions/OoBDev.Nmea` | Different type names (rebuilt from dev-term), covered by [device-parity.md](device-parity.md) | `GeneralHeading` and the WMI and HID import notes (Table 2) |
 
 ## Not in main
 
+Checked again on 2026-10-29 by type name: the items the first re-review listed as missing (numerics, code analysis, drawing, fencing, LanC, the PackMan and Xslt CLIs, NMEA bearing and coordinate types) are in main. What is left:
+
 <a id="table-2"></a>**Table 2 — Not in main**
 
-| Item | Source size | Contents | Proposed home | Dependencies |
-|------|------------:|----------|---------------|--------------|
-| Numerics | 393 LOC, 7 test classes (281 LOC) | `ByteNumber`, `EngineeringNumber`, `ScientificNumber`, `FormattableNumber`, `INumeric`, three notation formatters | `OoBDev.System` (`Numerics`) with tests in `OoBDev.System.Tests` | none |
-| Code analysis | 875 LOC, tests 360 LOC | `CSharpNavigator`, `VisualBasicNavigator`, semantic and syntax navigator factories (XPath over Roslyn), `DacPacNavigator`, `StructuredLogNavigator` | `OoBDev.Extensions.CodeAnalysis` (Roslyn, MSBuild structured log) | Roslyn, `Microsoft.Build.Logging.StructuredLogger`, `OoBDev.DacFx` |
-| Drawing | 704 LOC, tests 157 LOC | `Code39`, `JpegSegmentReader`, `PngPack`, `ZOrderCurveEx`, `MultiScaleTileEx` (Deep Zoom tiles), `GraphicsEx` | `OoBDev.Extensions.Drawing.*` (separately packaged, as the framework guide says) | `System.Drawing.Common` for `GraphicsEx` only |
-| Fencing score machines | 451 LOC, tests 775 LOC | Favero and SG state decoders, `ScoreMachineState`, cards and lights | `OoBDev.Extensions.Hardware.Fencing` with a decoder over the existing IO abstractions | none; no device available, so Unit tests only |
-| LanC | 308 LOC | Camera and VTR control command tables | `OoBDev.Extensions.Hardware.LanC` | none |
-| PackMan CLI | 621 LOC | NuGet package manager command line | `src/Tools/OoBDev.PackMan.Cli` | `NuGet.*` |
-| Xslt CLI | 230 LOC | Sandboxed XSLT transform command line, `SandboxedTransformer` | `src/Tools/OoBDev.Xslt.Cli` (the sandboxed transformer is reusable) | none |
-| NMEA helpers | Notes folder | `Degree`, `Bearing`, `GeneralHeading` value types | `OoBDev.Nmea` or `OoBDev.System` | none |
+| Item | Source | Notes |
+|------|--------|-------|
+| `GeneralHeading` | NMEA notes folder | Small value type; `NmeaBearing` and `NmeaCoordinate` exist |
+| WMI and HID import notes | `BinaryDataDecoders.Notes` | Documentation only; fold into the device docs if wanted |
+| `SECURITY_ATTRIBUTES` | Archives | One match in main; confirm it is carried and used |
+| LanC wiring diagram and readme | `BinaryDataDecoders.LanC` (`lanc2rs485.png`, `README.md`) | Docs for `OoBDev.LanC` |
+| Bitmap helpers on any platform | Drawing | Present but Windows only (`System.Drawing.Common`); the SkiaSharp port is a later backlog step. `GraphicsEx` is `SizeExtensions` and runs anywhere |
 
 ## Not migrated by decision
 
@@ -78,12 +77,9 @@ Source: `C:\repo\mine\binary-data-decoders` at `e590b420` (78 project folders, t
 
 | Order | Item | Why this order |
 |------:|------|----------------|
-| 1 | Numerics | Smallest, no dependencies, has tests to port; the foundation phase |
-| 2 | NMEA helpers | Small value types; check `OoBDev.Nmea` first |
-| 3 | Drawing | Self-contained codecs with tests |
-| 4 | Code analysis | Roslyn dependency, needs the project and packaging decision |
-| 5 | Fencing, LanC | Protocol tables and decoders with Unit tests only |
-| 6 | PackMan and Xslt CLIs | Tools after the libraries they would use |
+| 1 | Behaviour check: run the source tests against main's types (`ExpressionCalculator`, `Archives`, `Net`, Numerics, Drawing) | Name matches do not prove equal behaviour |
+| 2 | The small leftovers in Table 2 | Cheap and independent |
+| 3 | Drawing on SkiaSharp | Later step, owner 2026-10-29 |
 
 Each item follows the `compare-incoming-codebase` skill: design note, port with tests (80%+ in Framework), project readme, `complete-work` tracking.
 
