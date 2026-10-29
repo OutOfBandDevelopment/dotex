@@ -120,6 +120,24 @@ public class SqlServerDeploymentTests
 
     [TestMethod]
     [TestCategory(TestCategories.Integration)]
+    public async Task MatrixAndDoubleVector_RunInsideSqlServer()
+    {
+        var db = DatabaseConnection();
+        const string matrix = "DECLARE @m embedding.MatrixF = embedding.MatrixF::Parse('1,2,3|4,5,6'); DECLARE @md embedding.Matrix = embedding.Matrix::Parse('1,2,3|4,5,6');";
+
+        Assert.AreEqual(5d, await ScalarAsync<double>(db, matrix + "SELECT CAST(@m.Row(1).Element(1) AS float)"), 1e-5);
+        Assert.AreEqual(6d, await ScalarAsync<double>(db, matrix + "SELECT CAST(@m.[Column](2).Element(1) AS float)"), 1e-5);
+        Assert.AreEqual(4d, await ScalarAsync<double>(db, matrix + "SELECT CAST(@md.Row(1).Element(0) AS float)"), 1e-9);
+        Assert.IsTrue(await ScalarAsync<bool>(db, matrix + "SELECT CASE WHEN @m.Row(5) IS NULL THEN 1 ELSE 0 END"), "row out of range is NULL");
+
+        const string vectors = "DECLARE @a embedding.Vector = embedding.Vector::Parse('3,4'); DECLARE @b embedding.Vector = embedding.Vector::Parse('0,0');";
+        Assert.AreEqual(5d, await ScalarAsync<double>(db, vectors + "SELECT CAST(@a.Magnitude() AS float)"), 1e-9);
+        Assert.AreEqual(5d, await ScalarAsync<double>(db, vectors + "SELECT CAST(@a.Distance(@b, 'euclidean') AS float)"), 1e-9);
+        Assert.AreEqual(2, await ScalarAsync<int>(db, vectors + "SELECT @a.Length()"));
+    }
+
+    [TestMethod]
+    [TestCategory(TestCategories.Integration)]
     public async Task UndefinedInputs_ReturnNull_WithoutFailingTheBatch()
     {
         const string sql = @"

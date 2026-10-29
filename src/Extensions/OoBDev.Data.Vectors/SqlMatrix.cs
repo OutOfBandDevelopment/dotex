@@ -146,7 +146,7 @@ public struct SqlMatrix : INullable, IBinarySerialize, IEquatable<SqlMatrix>
         for (var c = 0; c < columns; c++)
             for (var row = 0; row < rows; row++)
             {
-                data[row, c] = r.ReadSingle();
+                data[row, c] = r.ReadDouble();
             }
         _values = data;
     }

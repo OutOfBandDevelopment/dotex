@@ -355,7 +355,7 @@ Each change document should include:
 - Status: ✅ Complete
 
 **[data-vectors-aggregate-merge-2026-10-28.md](data-vectors-aggregate-merge-2026-10-28.md)**
-- SQLCLR aggregate Merge fixed (min/max added instead of compared); aggregate tests
+- SQLCLR aggregate Merge and double-matrix Read defects fixed; aggregate, matrix and serialization tests
 - Status: ✅ Complete
 
 **[examples-aspire-vectordb-wiring-2026-10-28.md](examples-aspire-vectordb-wiring-2026-10-28.md)**

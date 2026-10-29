@@ -15,4 +15,3 @@ Keep this file short (a handful of items). When an item starts, move it here fro
 
 - [ ] **Incoming code recommendation plan**: written ([docs/migration/incoming-recommendation-plan.md](docs/migration/incoming-recommendation-plan.md) and [cross-check](docs/migration/incoming-harvest-crosscheck.md)); waiting for the owner to answer D1 to D9 (Q1 in OPEN-QUESTIONS.md). No migration until then. The sections marked verify need a second look before work starts.
 
-- [ ] SQLCLR coverage inside SQL Server (`OoBDev.Data.Vectors.DB.Tests`): the `MatrixF` type and the double `Vector`/`Matrix` types; vector float distance/angle and the aggregates are done
