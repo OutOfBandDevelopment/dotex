@@ -14,8 +14,10 @@ Phase 7 of [the device decoding plan](../../../docs/migration/device-decoding-mi
 | `ToggleCommand`, `SelectOptionCommand`, `ToggleOptionCommand`, `InvokeCommand` | Real `ICommand` types with the binding and control injected |
 | `ControlViewModelFactory` | Picks the view model for a control; live display controls are not form fields and throw |
 
-No code-behind, no lambdas as commands, no UI toolkit reference. Live display controls (indicator, bar graph, strip chart, vector) get their view models with the renderers.
+| `LiveDisplayViewModel` | Wraps a live display state (indicator, bar graph, strip chart, vector); `Revision` changes per published update |
+
+No code-behind, no lambdas as commands, no UI toolkit reference.
 
 ## Verified
 
-16 Unit tests: visibility conditions, validation errors, model-to-view refresh, the commands, disposal.
+19 Unit tests: visibility conditions, validation errors, model-to-view refresh, the commands, disposal.

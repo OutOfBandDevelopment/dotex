@@ -1,6 +1,6 @@
 # UiDefinitions view models (2026-10-29)
 
-`src/Framework/OoBDev.UiDefinitions.ViewModels` with `OoBDev.UiDefinitions.ViewModels.Tests` (16 Unit tests, passing). First part of phase 7 of the device decoding plan.
+`src/Framework/OoBDev.UiDefinitions.ViewModels` with `OoBDev.UiDefinitions.ViewModels.Tests` (19 Unit tests, passing). First part of phase 7 of the device decoding plan.
 
 ## Decisions
 
@@ -10,4 +10,4 @@
 
 ## Not done
 
-WPF renderer and shell (`net10.0-windows`), live display view models, Avalonia spike, Terminal.Gui, Blazor (rest of phase 7 and phases 8 to 10). Coverage was not measured.
+WPF renderer and shell (`net10.0-windows`), Avalonia spike, Terminal.Gui, Blazor (rest of phase 7 and phases 8 to 10). Coverage was not measured.
