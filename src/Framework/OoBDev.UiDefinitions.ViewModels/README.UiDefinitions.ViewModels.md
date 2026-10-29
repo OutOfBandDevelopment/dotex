@@ -13,10 +13,10 @@ Phase 7 of [the device decoding plan](../../../docs/migration/device-decoding-mi
 | `ToggleViewModel`, `TextViewModel`, `ChoiceViewModel`, `ButtonViewModel` | One per form control kind (`TextViewModel` serves text field, numeric and slider) |
 | `ToggleCommand`, `SelectOptionCommand`, `ToggleOptionCommand`, `InvokeCommand` | Real `ICommand` types with the binding and control injected |
 | `ControlViewModelFactory` | Picks the view model for a control; live display controls are not form fields and throw |
-| `LiveDisplayViewModel`, `BarViewModel` | Wrap a live display state (indicator, bar graph, strip chart, vector); `Revision` changes per published update, an indicator has `Text`, a bar graph has `Bars` |
+| `LiveDisplayViewModel`, `BarViewModel`, `ChartLineViewModel` | Wrap a live display state (indicator, bar graph, strip chart, vector); `Revision` changes per published update; an indicator has `Text`, a bar graph `Bars`, a strip chart `Lines` (points in a 100 by 100 box), a vector `Readout` |
 
 No code-behind, no lambdas as commands, no UI toolkit reference.
 
 ## Verified
 
-22 Unit tests: visibility conditions, validation errors, model-to-view refresh, the commands, disposal.
+24 Unit tests: visibility conditions, validation errors, model-to-view refresh, the commands, disposal.

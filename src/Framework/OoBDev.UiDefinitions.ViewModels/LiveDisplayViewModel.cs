@@ -22,6 +22,7 @@ public sealed class LiveDisplayViewModel : ViewModelBase
         Control = control;
         State = LiveDisplayState.For(control) ?? throw new NotSupportedException($"'{control.GetType().Name}' is not a live display control.");
         Bars = control is BarGraphControl bar ? [.. bar.Channels.Select((c, i) => new BarViewModel(c, ChartPalette.ColorFor(c, i)))] : [];
+        Lines = control is StripChartControl chart ? [.. chart.Channels.Select((c, i) => new ChartLineViewModel(c, ChartPalette.ColorFor(c, i)))] : [];
     }
 
     /// <summary>Whether this shows an indicator (<see cref="Text"/>).</summary>
@@ -32,6 +33,18 @@ public sealed class LiveDisplayViewModel : ViewModelBase
 
     /// <summary>The bars of a bar graph; empty for the other kinds.</summary>
     public IReadOnlyList<BarViewModel> Bars { get; }
+
+    /// <summary>Whether this shows a strip chart (<see cref="Lines"/>).</summary>
+    public bool IsStripChart => State is StripChartState;
+
+    /// <summary>Whether this shows a vector (<see cref="Readout"/>).</summary>
+    public bool IsVector => State is VectorState;
+
+    /// <summary>The lines of a strip chart; empty for the other kinds.</summary>
+    public IReadOnlyList<ChartLineViewModel> Lines { get; }
+
+    /// <summary>A vector's readout text, or null for the other kinds.</summary>
+    public string? Readout => (State as VectorState)?.Readout();
 
     /// <summary>An indicator's display text, or null before a value arrives and for the other kinds.</summary>
     public string? Text => (State as IndicatorState)?.Text;
@@ -71,9 +84,18 @@ public sealed class LiveDisplayViewModel : ViewModelBase
             }
         }
 
+        if (State is StripChartState chart)
+        {
+            foreach (var line in Lines)
+            {
+                line.Update(chart);
+            }
+        }
+
         Revision++;
         OnPropertyChanged(nameof(State));
         OnPropertyChanged(nameof(Text));
+        OnPropertyChanged(nameof(Readout));
         return true;
     }
 }

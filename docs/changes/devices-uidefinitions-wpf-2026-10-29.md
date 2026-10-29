@@ -1,6 +1,6 @@
 # UiDefinitions WPF view (2026-10-29)
 
-`src/Framework/OoBDev.UiDefinitions.Wpf` (`net10.0-windows`) with `OoBDev.UiDefinitions.Wpf.Tests` (5 Unit tests, passing). Second part of phase 7.
+`src/Framework/OoBDev.UiDefinitions.Wpf` (`net10.0-windows`) with `OoBDev.UiDefinitions.Wpf.Tests` (7 Unit tests, passing). Second part of phase 7.
 
 ## Decisions
 
@@ -9,4 +9,4 @@
 
 ## Not done
 
-Strip chart and vector views, slider and colour picker widgets, the `OoBDev.DevTerm.Wpf` shell, a look at the view on screen. Tracked in `BACKLOG.md`.
+Vector plot, slider and colour picker widgets, the `OoBDev.DevTerm.Wpf` shell, a look at the view on screen. Tracked in `BACKLOG.md`.

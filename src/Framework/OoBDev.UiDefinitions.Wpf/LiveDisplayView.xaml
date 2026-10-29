@@ -27,5 +27,23 @@
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
+        <ItemsControl ItemsSource="{Binding Lines}"
+                      Height="120"
+                      Visibility="{Binding IsStripChart, Converter={StaticResource Visible}}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Grid />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate DataType="{x:Type vm:ChartLineViewModel}">
+                    <Polyline Points="{Binding Points}" Stretch="Fill" StrokeThickness="1.5"
+                              Stroke="{Binding Color}" ToolTip="{Binding Label}" />
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <TextBlock Text="{Binding Readout}"
+                   FontFamily="Consolas"
+                   Visibility="{Binding IsVector, Converter={StaticResource Visible}}" />
     </StackPanel>
 </UserControl>

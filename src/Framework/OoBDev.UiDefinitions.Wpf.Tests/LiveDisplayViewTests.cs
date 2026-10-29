@@ -60,6 +60,45 @@ public sealed class LiveDisplayViewTests
     }
 
     [STATestMethod]
+    public void Apply_StripChart_DrawsPolyline()
+    {
+        // Stage
+        var model = new LiveDisplayViewModel(new StripChartControl
+        {
+            Id = "chart",
+            Label = "Chart",
+            HistoryLength = 3,
+            Minimum = 0,
+            Maximum = 10,
+            Channels = [new ChartChannel { Id = "a", Label = "A" }],
+        });
+        var view = Render(model);
+
+        // Test
+        model.Apply("a", "0");
+        model.Apply("a", "10");
+        view.UpdateLayout();
+
+        // Assert
+        Assert.AreEqual(2, Find<System.Windows.Shapes.Polyline>(view).Single().Points.Count);
+    }
+
+    [STATestMethod]
+    public void Apply_Vector_ShowsReadout()
+    {
+        // Stage
+        var model = new LiveDisplayViewModel(new VectorControl { Id = "v", Label = "V", XId = "x", YId = "y" });
+        var view = Render(model);
+
+        // Test
+        model.Apply("x", "1");
+        view.UpdateLayout();
+
+        // Assert
+        Assert.IsTrue(Find<TextBlock>(view).Any(t => t.Text.StartsWith("x=1", System.StringComparison.Ordinal)));
+    }
+
+    [STATestMethod]
     public void Apply_Indicator_ShowsText()
     {
         // Stage

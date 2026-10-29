@@ -30,7 +30,7 @@ public sealed class LiveDisplayViewModelTests
         // Assert
         Assert.IsTrue(changed);
         Assert.AreEqual(1, model.Revision);
-        CollectionAssert.AreEqual(new[] { nameof(LiveDisplayViewModel.Revision), nameof(LiveDisplayViewModel.State), nameof(LiveDisplayViewModel.Text) }, raised);
+        CollectionAssert.AreEqual(new[] { nameof(LiveDisplayViewModel.Revision), nameof(LiveDisplayViewModel.State), nameof(LiveDisplayViewModel.Text), nameof(LiveDisplayViewModel.Readout) }, raised);
         Assert.AreEqual(42d, ((BarGraphState)model.State).ValueOf("a"));
     }
 
@@ -67,6 +67,43 @@ public sealed class LiveDisplayViewModelTests
         Assert.IsNull(before);
         Assert.IsTrue(model.IsIndicator);
         Assert.AreEqual("7", model.Text);
+    }
+
+    [TestMethod]
+    public void Apply_StripChart_BuildsPointsInUnitBox()
+    {
+        // Stage
+        var model = new LiveDisplayViewModel(new StripChartControl
+        {
+            Id = "chart",
+            Label = "Chart",
+            HistoryLength = 3,
+            Minimum = 0,
+            Maximum = 10,
+            Channels = [new ChartChannel { Id = "a", Label = "A" }],
+        });
+
+        // Test
+        model.Apply("a", "0");
+        model.Apply("a", "10");
+
+        // Assert
+        Assert.IsTrue(model.IsStripChart);
+        Assert.AreEqual("50,100 100,0", model.Lines[0].Points);
+    }
+
+    [TestMethod]
+    public void Apply_Vector_UpdatesReadout()
+    {
+        // Stage
+        var model = new LiveDisplayViewModel(new VectorControl { Id = "v", Label = "V", XId = "x", YId = "y" });
+
+        // Test
+        model.ApplyAll([new KeyValuePair<string, string>("x", "1"), new KeyValuePair<string, string>("y", "2")]);
+
+        // Assert
+        Assert.IsTrue(model.IsVector);
+        Assert.AreEqual("x=1 y=2", model.Readout);
     }
 
     [TestMethod]
