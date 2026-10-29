@@ -18,4 +18,8 @@
 		<ProjectReference Include="..\..\Framework\OoBDev.System.Abstractions\OoBDev.System.Abstractions.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+		<EmbeddedResource Update="Data/*.json" LogicalName="OoBDev.ZWave.Data.%(Filename)%(Extension)" />
+	</ItemGroup>
+
 </Project>

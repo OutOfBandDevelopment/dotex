@@ -1,0 +1,9364 @@
+[
+  {
+    "id": "0028",
+    "name": "2B Electronics"
+  },
+  {
+    "id": "0098",
+    "name": "2GIG Technologies",
+    "products": [
+      {
+        "type": "3200",
+        "id": "015e",
+        "name": "CT50e Thermostat"
+      },
+      {
+        "type": "1e10",
+        "id": "0158",
+        "name": "CT30 Thermostat"
+      },
+      {
+        "type": "1e12",
+        "id": "015c",
+        "name": "CT30 Thermostat"
+      },
+      {
+        "type": "1e12",
+        "id": "015e",
+        "name": "CT30 Thermostat"
+      },
+      {
+        "type": "2002",
+        "id": "0100",
+        "name": "CT32 Thermostat"
+      },
+      {
+        "type": "5002",
+        "id": "0100",
+        "name": "CT80 Thermostat"
+      },
+      {
+        "type": "5003",
+        "id": "0109",
+        "name": "CT80 Thermostat"
+      },
+      {
+        "type": "6401",
+        "id": "0105",
+        "name": "CT100 Thermostat"
+      },
+      {
+        "type": "6401",
+        "id": "0106",
+        "name": "CT100 Thermostat USA"
+      },
+      {
+        "type": "6401",
+        "id": "0107",
+        "name": "CT100 Thermostat USA"
+      },
+      {
+        "type": "6401",
+        "id": "01fd",
+        "name": "CT100 Thermostat USA"
+      },
+      {
+        "type": "6402",
+        "id": "0100",
+        "name": "CT100 Plus Thermostat"
+      },
+      {
+        "type": "6402",
+        "id": "0001",
+        "name": "CT100 Plus Thermostat"
+      },
+      {
+        "type": "6501",
+        "id": "000b",
+        "name": "CT101 Thermostat (Iris)"
+      },
+      {
+        "type": "6501",
+        "id": "000c",
+        "name": "CT101 Thermostat (Iris)"
+      },
+      {
+        "type": "6501",
+        "id": "000d",
+        "name": "CT101 Thermostat"
+      },
+      {
+        "type": "c801",
+        "id": "0022",
+        "name": "Vivint Element Thermostat"
+      },
+      {
+        "type": "c801",
+        "id": "001d",
+        "name": "Vivint Element Thermostat"
+      }
+    ]
+  },
+  {
+    "id": "002a",
+    "name": "3e Technologies"
+  },
+  {
+    "id": "0022",
+    "name": "A-1 Components"
+  },
+  {
+    "id": "0117",
+    "name": "Abilia"
+  },
+  {
+    "id": "0400",
+    "name": "Abode"
+  },
+  {
+    "id": "0409",
+    "name": "ABUS August Bremicker Sohne KG"
+  },
+  {
+    "id": "0403",
+    "name": "ABUS Security-Center GmbH Co. KG",
+    "products": [
+      {
+        "type": "0002",
+        "id": "0003",
+        "name": "Smart Smoke Sensor SHRM10000"
+      }
+    ]
+  },
+  {
+    "id": "034a",
+    "name": "AcroComm Corp"
+  },
+  {
+    "id": "0001",
+    "name": "ACT",
+    "products": [
+      {
+        "type": "4349",
+        "id": "3130",
+        "name": "ZCS101 Serial Interface"
+      },
+      {
+        "type": "4952",
+        "id": "3030",
+        "name": "ZIR000 PIR Motion Sensor"
+      },
+      {
+        "type": "4952",
+        "id": "3330",
+        "name": "ZIR010 PIR Motion Sensor"
+      },
+      {
+        "type": "4952",
+        "id": "3130",
+        "name": "ZIR010 PIR Motion Sensor"
+      },
+      {
+        "type": "4450",
+        "id": "3030",
+        "name": "ZDP100 Plugin Lamp Module"
+      },
+      {
+        "type": "4457",
+        "id": "3033",
+        "name": "ZDW103 Wall Dimmer Module"
+      },
+      {
+        "type": "4457",
+        "id": "3330",
+        "name": "ZDW230 Wall Dimmer Module"
+      },
+      {
+        "type": "4457",
+        "id": "3332",
+        "name": "ZDW232 Wall Dimmer Module"
+      },
+      {
+        "type": "444d",
+        "id": "3330",
+        "name": "ZDM230 Wall Dimmer Module"
+      },
+      {
+        "type": "5250",
+        "id": "3030",
+        "name": "ZRP100 Plugin Appliance Module"
+      },
+      {
+        "type": "5250",
+        "id": "3130",
+        "name": "ZRP110 Exterior Appliance Module"
+      },
+      {
+        "type": "5257",
+        "id": "3330",
+        "name": "ZRW230 Wall Appliance Module"
+      },
+      {
+        "type": "5246",
+        "id": "3133",
+        "name": "LFM-20 Relay Fixture Module"
+      },
+      {
+        "type": "5257",
+        "id": "3033",
+        "name": "ZRW103 Wall Switch Module"
+      },
+      {
+        "type": "524d",
+        "id": "3330",
+        "name": "ZRM230 Wall Appliance Module"
+      },
+      {
+        "type": "5457",
+        "id": "3330",
+        "name": "ZTW230 Wall Transmitter Module"
+      },
+      {
+        "type": "544d",
+        "id": "3330",
+        "name": "ZTM230 Wall Transmitter Module"
+      }
+    ]
+  },
+  {
+    "id": "0297",
+    "name": "AdMobilize, LLC"
+  },
+  {
+    "id": "0101",
+    "name": "ADOX, Inc."
+  },
+  {
+    "id": "025b",
+    "name": "AdTrustMedia LLC"
+  },
+  {
+    "id": "016c",
+    "name": "Advanced Optronic Devices"
+  },
+  {
+    "id": "009e",
+    "name": "Adventure Interactive"
+  },
+  {
+    "id": "035b",
+    "name": "Aeinnovation"
+  },
+  {
+    "id": "0405",
+    "name": "AEM Acotel Engineering and Manufacturing Spa"
+  },
+  {
+    "id": "0350",
+    "name": "AENSys Informatics Ltd"
+  },
+  {
+    "id": "0086",
+    "name": "AEON Labs",
+    "products": [
+      {
+        "type": "0000",
+        "id": "0000",
+        "name": "Z-Wave Extender"
+      },
+      {
+        "type": "0001",
+        "id": "0001",
+        "name": "Z-Stick"
+      },
+      {
+        "type": "0001",
+        "id": "0002",
+        "name": "DSA02203 Z-Stick S2"
+      },
+      {
+        "type": "0002",
+        "id": "0001",
+        "name": "DSA02203 Z-Stick S2"
+      },
+      {
+        "type": "0001",
+        "id": "0007",
+        "name": "DSA07203 Z-Stick Lite"
+      },
+      {
+        "type": "0001",
+        "id": "0003",
+        "name": "DSA03202 Minimote"
+      },
+      {
+        "type": "0001",
+        "id": "0016",
+        "name": "DSA22 Key Fob"
+      },
+      {
+        "type": "0001",
+        "id": "0026",
+        "name": "DSA38 Panic Button"
+      },
+      {
+        "type": "0002",
+        "id": "0005",
+        "name": "DSB05 Multisensor"
+      },
+      {
+        "type": "0002",
+        "id": "001c",
+        "name": "DSB28 Home Energy Meter (2nd Edition)"
+      },
+      {
+        "type": "0002",
+        "id": "001d",
+        "name": "DSB29 Door/Window Sensor (2nd Edition)"
+      },
+      {
+        "type": "0002",
+        "id": "002d",
+        "name": "DSB45 Water Sensor"
+      },
+      {
+        "type": "0002",
+        "id": "0036",
+        "name": "DSB54 Recessed Door Sensor"
+      },
+      {
+        "type": "0002",
+        "id": "0004",
+        "name": "DSB04100 Door/Window Sensor"
+      },
+      {
+        "type": "0002",
+        "id": "0009",
+        "name": "DSB09104 Home Energy Meter"
+      },
+      {
+        "type": "0003",
+        "id": "000a",
+        "name": "DSC10 Heavy-Duty Smart Switch"
+      },
+      {
+        "type": "0003",
+        "id": "000b",
+        "name": "DSC11 Smart Strip"
+      },
+      {
+        "type": "0003",
+        "id": "0018",
+        "name": "DSC24 Smart Switch (2nd Edition)"
+      },
+      {
+        "type": "0003",
+        "id": "0006",
+        "name": "DSC06106 Smart Energy Switch"
+      },
+      {
+        "type": "0003",
+        "id": "0008",
+        "name": "DSC08101 Smart Energy Illuminator"
+      },
+      {
+        "type": "0003",
+        "id": "000c",
+        "name": "DSC12104 Micro Smart Energy Switch"
+      },
+      {
+        "type": "0003",
+        "id": "000d",
+        "name": "DSC13104 Micro Smart Energy Illuminator"
+      },
+      {
+        "type": "0003",
+        "id": "000e",
+        "name": "DSC14104 Micro Motor Controller"
+      },
+      {
+        "type": "0003",
+        "id": "0012",
+        "name": "DSC18103 Micro Smart Switch (2nd Edition)"
+      },
+      {
+        "type": "0003",
+        "id": "0013",
+        "name": "DSC19103 Micro Smart Dimmer (2nd Edition)"
+      },
+      {
+        "type": "0003",
+        "id": "001a",
+        "name": "DSC26103 Micro Switch (2nd Edition)"
+      },
+      {
+        "type": "0003",
+        "id": "001b",
+        "name": "DSC27103 Micro Dimmer (2nd Edition)"
+      },
+      {
+        "type": "0003",
+        "id": "0011",
+        "name": "DSC35103 Micro Double Switch"
+      },
+      {
+        "type": "0004",
+        "id": "0025",
+        "name": "DSD37 Range Extender"
+      },
+      {
+        "type": "0004",
+        "id": "0038",
+        "name": "ZW056 Doorbell Gen5"
+      },
+      {
+        "type": "0104",
+        "id": "0038",
+        "name": "ZW056 Doorbell Gen5"
+      },
+      {
+        "type": "0204",
+        "id": "0038",
+        "name": "ZW056 Doorbell Gen5"
+      },
+      {
+        "type": "0304",
+        "id": "0038",
+        "name": "ZW056 Doorbell Gen5"
+      },
+      {
+        "type": "0904",
+        "id": "0038",
+        "name": "ZW056 Doorbell Gen5"
+      },
+      {
+        "type": "1d04",
+        "id": "0038",
+        "name": "ZW056 Doorbell Gen5"
+      },
+      {
+        "type": "1a04",
+        "id": "0038",
+        "name": "ZW056 Doorbell Gen5"
+      },
+      {
+        "type": "0a04",
+        "id": "0038",
+        "name": "ZW056 Doorbell Gen5"
+      },
+      {
+        "type": "0003",
+        "id": "003e",
+        "name": "ZW062 Garage Door Controller"
+      },
+      {
+        "type": "0103",
+        "id": "003e",
+        "name": "ZW062 Garage Door Controller"
+      },
+      {
+        "type": "0203",
+        "id": "003e",
+        "name": "ZW062 Garage Door Controller"
+      },
+      {
+        "type": "0002",
+        "id": "004a",
+        "name": "ZW074 MultiSensor Gen5"
+      },
+      {
+        "type": "0102",
+        "id": "004a",
+        "name": "ZW074 MultiSensor Gen5"
+      },
+      {
+        "type": "0202",
+        "id": "004a",
+        "name": "ZW074 MultiSensor Gen5"
+      },
+      {
+        "type": "0003",
+        "id": "004b",
+        "name": "ZW075 Smart Switch Gen5"
+      },
+      {
+        "type": "0103",
+        "id": "004b",
+        "name": "ZW075 Smart Switch Gen5"
+      },
+      {
+        "type": "0203",
+        "id": "004b",
+        "name": "ZW075 Smart Switch Gen5"
+      },
+      {
+        "type": "0003",
+        "id": "004e",
+        "name": "ZW078 Heavy Duty Smart Switch Gen5"
+      },
+      {
+        "type": "0103",
+        "id": "004e",
+        "name": "ZW078 Heavy Duty Smart Switch Gen5"
+      },
+      {
+        "type": "0203",
+        "id": "004e",
+        "name": "ZW078 Heavy Duty Smart Switch Gen5"
+      },
+      {
+        "type": "0004",
+        "id": "0050",
+        "name": "ZW080 Siren Gen5"
+      },
+      {
+        "type": "0104",
+        "id": "0050",
+        "name": "ZW080 Siren Gen5"
+      },
+      {
+        "type": "0204",
+        "id": "0050",
+        "name": "ZW080 Siren Gen5"
+      },
+      {
+        "type": "0001",
+        "id": "0058",
+        "name": "ZW088 Key Fob Gen5"
+      },
+      {
+        "type": "0101",
+        "id": "0058",
+        "name": "ZW088 Key Fob Gen5"
+      },
+      {
+        "type": "0201",
+        "id": "0058",
+        "name": "ZW088 Key Fob Gen5"
+      },
+      {
+        "type": "0002",
+        "id": "0059",
+        "name": "ZW089 Recessed Door Sensor Gen5"
+      },
+      {
+        "type": "0102",
+        "id": "0059",
+        "name": "ZW089 Recessed Door Sensor Gen5"
+      },
+      {
+        "type": "0202",
+        "id": "0059",
+        "name": "ZW089 Recessed Door Sensor Gen5"
+      },
+      {
+        "type": "0001",
+        "id": "005a",
+        "name": "ZW090 Z-Stick Gen5 EU"
+      },
+      {
+        "type": "0101",
+        "id": "005a",
+        "name": "ZW090 Z-Stick Gen5 US"
+      },
+      {
+        "type": "0201",
+        "id": "005a",
+        "name": "ZW090 Z-Stick Gen5 AU"
+      },
+      {
+        "type": "0001",
+        "id": "005c",
+        "name": "ZW092 Z-Stick Lite Gen5 EU"
+      },
+      {
+        "type": "0101",
+        "id": "005c",
+        "name": "ZW092 Z-Stick Lite Gen5 US"
+      },
+      {
+        "type": "0201",
+        "id": "005c",
+        "name": "ZW092 Z-Stick Lite Gen5 AU"
+      },
+      {
+        "type": "0002",
+        "id": "005f",
+        "name": "ZW095 Home Energy Meter Gen5"
+      },
+      {
+        "type": "0102",
+        "id": "005f",
+        "name": "ZW095 Home Energy Meter Gen5"
+      },
+      {
+        "type": "0202",
+        "id": "005f",
+        "name": "ZW095 Home Energy Meter Gen5"
+      },
+      {
+        "type": "0003",
+        "id": "0060",
+        "name": "ZW096 Smart Switch 6"
+      },
+      {
+        "type": "0103",
+        "id": "0060",
+        "name": "ZW096 Smart Switch 6"
+      },
+      {
+        "type": "0203",
+        "id": "0060",
+        "name": "ZW096 Smart Switch 6"
+      },
+      {
+        "type": "0002",
+        "id": "0061",
+        "name": "ZW097 Dry Contact Sensor Gen5"
+      },
+      {
+        "type": "0102",
+        "id": "0061",
+        "name": "ZW097 Dry Contact Sensor Gen5"
+      },
+      {
+        "type": "0202",
+        "id": "0061",
+        "name": "ZW097 Dry Contact Sensor Gen5"
+      },
+      {
+        "type": "0003",
+        "id": "0062",
+        "name": "ZW098 LED Bulb"
+      },
+      {
+        "type": "0103",
+        "id": "0062",
+        "name": "ZW098 LED Bulb"
+      },
+      {
+        "type": "0203",
+        "id": "0062",
+        "name": "ZW098 LED Bulb"
+      },
+      {
+        "type": "0003",
+        "id": "0063",
+        "name": "ZW099 Smart Dimmer 6"
+      },
+      {
+        "type": "0103",
+        "id": "0063",
+        "name": "ZW099 Smart Dimmer 6"
+      },
+      {
+        "type": "0203",
+        "id": "0063",
+        "name": "ZW099 Smart Dimmer 6"
+      },
+      {
+        "type": "1d03",
+        "id": "0063",
+        "name": "ZW099 Smart Dimmer 6"
+      },
+      {
+        "type": "0002",
+        "id": "0064",
+        "name": "ZW100 MultiSensor 6"
+      },
+      {
+        "type": "0102",
+        "id": "0064",
+        "name": "ZW100 MultiSensor 6"
+      },
+      {
+        "type": "0202",
+        "id": "0064",
+        "name": "ZW100 MultiSensor 6"
+      },
+      {
+        "type": "1a02",
+        "id": "0064",
+        "name": "ZW100 MultiSensor 6"
+      },
+      {
+        "type": "0003",
+        "id": "006f",
+        "name": "ZW111 Nano Dimmer"
+      },
+      {
+        "type": "0103",
+        "id": "006f",
+        "name": "ZW111 Nano Dimmer"
+      },
+      {
+        "type": "0203",
+        "id": "006f",
+        "name": "ZW111 Nano Dimmer"
+      },
+      {
+        "type": "1d03",
+        "id": "006f",
+        "name": "ZW111 Nano Dimmer"
+      },
+      {
+        "type": "0002",
+        "id": "0070",
+        "name": "ZW112 Door Window Sensor 6"
+      },
+      {
+        "type": "0102",
+        "id": "0070",
+        "name": "ZW112 Door Window Sensor 6"
+      },
+      {
+        "type": "0202",
+        "id": "0070",
+        "name": "ZW112 Door Window Sensor 6"
+      },
+      {
+        "type": "0003",
+        "id": "0074",
+        "name": "ZW116 Nano Switch"
+      },
+      {
+        "type": "0103",
+        "id": "0074",
+        "name": "ZW116 Nano Switch"
+      },
+      {
+        "type": "0203",
+        "id": "0074",
+        "name": "ZW116 Nano Switch"
+      },
+      {
+        "type": "1d03",
+        "id": "0074",
+        "name": "ZW116 Nano Switch"
+      },
+      {
+        "type": "0004",
+        "id": "0075",
+        "name": "ZW117 Range Extender 6"
+      },
+      {
+        "type": "0104",
+        "id": "0075",
+        "name": "ZW117 Range Extender 6"
+      },
+      {
+        "type": "0204",
+        "id": "0075",
+        "name": "ZW117 Range Extender 6"
+      },
+      {
+        "type": "1d04",
+        "id": "0075",
+        "name": "ZW117 Range Extender 6"
+      },
+      {
+        "type": "0002",
+        "id": "0078",
+        "name": "ZW120 Door Window Sensor Gen5"
+      },
+      {
+        "type": "0102",
+        "id": "0078",
+        "name": "ZW120 Door Window Sensor Gen5"
+      },
+      {
+        "type": "0202",
+        "id": "0078",
+        "name": "ZW120 Door Window Sensor Gen5"
+      },
+      {
+        "type": "0003",
+        "id": "0079",
+        "name": "ZW121 LED Strip"
+      },
+      {
+        "type": "0103",
+        "id": "0079",
+        "name": "ZW121 LED Strip"
+      },
+      {
+        "type": "0203",
+        "id": "0079",
+        "name": "ZW121 LED Strip"
+      },
+      {
+        "type": "0a03",
+        "id": "0079",
+        "name": "ZW121 LED Strip"
+      },
+      {
+        "type": "0002",
+        "id": "007a",
+        "name": "ZW122 Water Sensor 6"
+      },
+      {
+        "type": "0102",
+        "id": "007a",
+        "name": "ZW122 Water Sensor 6"
+      },
+      {
+        "type": "0202",
+        "id": "007a",
+        "name": "ZW122 Water Sensor 6"
+      },
+      {
+        "type": "0a02",
+        "id": "007a",
+        "name": "ZW122 Water Sensor 6"
+      },
+      {
+        "type": "0002",
+        "id": "0081",
+        "name": "ZW129 WallMote Duo"
+      },
+      {
+        "type": "0102",
+        "id": "0081",
+        "name": "ZW129 WallMote Duo"
+      },
+      {
+        "type": "0202",
+        "id": "0081",
+        "name": "ZW129 WallMote Duo"
+      },
+      {
+        "type": "1d02",
+        "id": "0081",
+        "name": "ZW129 WallMote Duo"
+      },
+      {
+        "type": "0002",
+        "id": "0082",
+        "name": "ZW130 WallMote Quad"
+      },
+      {
+        "type": "0102",
+        "id": "0082",
+        "name": "ZW130 WallMote Quad"
+      },
+      {
+        "type": "0202",
+        "id": "0082",
+        "name": "ZW130 WallMote Quad"
+      },
+      {
+        "type": "1d02",
+        "id": "0082",
+        "name": "ZW130 WallMote Quad"
+      },
+      {
+        "type": "0003",
+        "id": "0084",
+        "name": "ZW132 Dual Nano Switch"
+      },
+      {
+        "type": "0103",
+        "id": "0084",
+        "name": "ZW132 Dual Nano Switch"
+      },
+      {
+        "type": "0203",
+        "id": "0084",
+        "name": "ZW132 Dual Nano Switch"
+      },
+      {
+        "type": "1d03",
+        "id": "0084",
+        "name": "ZW132 Dual Nano Switch"
+      },
+      {
+        "type": "0003",
+        "id": "008b",
+        "name": "ZW139 Nano Switch"
+      },
+      {
+        "type": "0103",
+        "id": "008b",
+        "name": "ZW139 Nano Switch"
+      },
+      {
+        "type": "0203",
+        "id": "008b",
+        "name": "ZW139 Nano Switch"
+      },
+      {
+        "type": "1d03",
+        "id": "008b",
+        "name": "ZW139 Nano Switch"
+      },
+      {
+        "type": "0003",
+        "id": "008c",
+        "name": "ZW140 Dual Nano Switch"
+      },
+      {
+        "type": "0103",
+        "id": "008c",
+        "name": "ZW140 Dual Nano Switch"
+      },
+      {
+        "type": "0203",
+        "id": "008c",
+        "name": "ZW140 Dual Nano Switch"
+      },
+      {
+        "type": "1d03",
+        "id": "008c",
+        "name": "ZW140 Dual Nano Switch"
+      },
+      {
+        "type": "0003",
+        "id": "008d",
+        "name": "ZW141 Nano Shutter"
+      },
+      {
+        "type": "0103",
+        "id": "008d",
+        "name": "ZW141 Nano Shutter"
+      },
+      {
+        "type": "0203",
+        "id": "008d",
+        "name": "ZW141 Nano Shutter"
+      }
+    ]
+  },
+  {
+    "id": "0371",
+    "name": "Aeotec Limited",
+    "products": [
+      {
+        "type": "0003",
+        "id": "0001",
+        "name": "ZWA001 LED Bulb 6 Multi-White"
+      },
+      {
+        "type": "0103",
+        "id": "0001",
+        "name": "ZWA001 LED Bulb 6 Multi-White"
+      },
+      {
+        "type": "0003",
+        "id": "0002",
+        "name": "ZWA002 LED Bulb 6 Multi-Color"
+      },
+      {
+        "type": "0103",
+        "id": "0002",
+        "name": "ZWA002 LED Bulb 6 Multi-Color"
+      },
+      {
+        "type": "0002",
+        "id": "0003",
+        "name": "ZWA003 NanoMote Quad"
+      },
+      {
+        "type": "0102",
+        "id": "0003",
+        "name": "ZWA003 NanoMote Quad"
+      },
+      {
+        "type": "0002",
+        "id": "0004",
+        "name": "ZWA004 NanoMote One"
+      },
+      {
+        "type": "0102",
+        "id": "0004",
+        "name": "ZWA004 NanoMote One"
+      },
+      {
+        "type": "0002",
+        "id": "0005",
+        "name": "ZWA005 TriSensor"
+      },
+      {
+        "type": "0102",
+        "id": "0005",
+        "name": "ZWA005 TriSensor"
+      },
+      {
+        "type": "0202",
+        "id": "0005",
+        "name": "ZWA005 TriSensor"
+      },
+      {
+        "type": "0002",
+        "id": "0015",
+        "name": "ZWA021 Thermostatic Valve"
+      },
+      {
+        "type": "0003",
+        "id": "00a2",
+        "name": "ZW162 Doorbell 6"
+      },
+      {
+        "type": "0103",
+        "id": "00a2",
+        "name": "ZW162 Doorbell 6"
+      },
+      {
+        "type": "0203",
+        "id": "00a2",
+        "name": "ZW162 Doorbell 6"
+      },
+      {
+        "type": "1d03",
+        "id": "00a2",
+        "name": "ZW162 Doorbell 6"
+      },
+      {
+        "type": "0003",
+        "id": "00b4",
+        "name": "ZWA006 Smart Boost Timer Switch"
+      },
+      {
+        "type": "0103",
+        "id": "00b4",
+        "name": "ZWA006 Smart Boost Timer Switch"
+      },
+      {
+        "type": "0002",
+        "id": "0007",
+        "name": "ZWA008 Door Window Sensor 7"
+      },
+      {
+        "type": "0102",
+        "id": "0007",
+        "name": "ZWA008 Door Window Sensor 7"
+      },
+      {
+        "type": "0202",
+        "id": "0007",
+        "name": "ZWA008 Door Window Sensor 7"
+      },
+      {
+        "type": "0002",
+        "id": "0009",
+        "name": "ZWA009 AërQ Temperature & Humidity Sensor"
+      },
+      {
+        "type": "0102",
+        "id": "0009",
+        "name": "ZWA009 AërQ Temperature & Humidity Sensor"
+      },
+      {
+        "type": "0202",
+        "id": "0009",
+        "name": "ZWA009 AërQ Temperature & Humidity Sensor"
+      },
+      {
+        "type": "0002",
+        "id": "000b",
+        "name": "ZWA011 Door Window Sensor 7"
+      },
+      {
+        "type": "0002",
+        "id": "000c",
+        "name": "ZWA012 Door Window Sensor 7 Pro"
+      },
+      {
+        "type": "0102",
+        "id": "000c",
+        "name": "ZWA012 Door Window Sensor 7 Pro"
+      },
+      {
+        "type": "0202",
+        "id": "000c",
+        "name": "ZWA012 Door Window Sensor 7 Pro"
+      },
+      {
+        "type": "0002",
+        "id": "0013",
+        "name": "ZWA019 Water Sensor 7 Pro"
+      },
+      {
+        "type": "0102",
+        "id": "0013",
+        "name": "ZWA019 Water Sensor 7 Pro"
+      },
+      {
+        "type": "0202",
+        "id": "0013",
+        "name": "ZWA019 Water Sensor 7 Pro"
+      },
+      {
+        "type": "0103",
+        "id": "0017",
+        "name": "ZWA023 Smart Switch 7"
+      },
+      {
+        "type": "0003",
+        "id": "008d",
+        "name": "ZW141 Nano Shutter"
+      },
+      {
+        "type": "0103",
+        "id": "008d",
+        "name": "ZW141 Nano Shutter"
+      },
+      {
+        "type": "0203",
+        "id": "008d",
+        "name": "ZW141 Nano Shutter"
+      },
+      {
+        "type": "0003",
+        "id": "00a4",
+        "name": "ZW164 Indoor Siren 6"
+      },
+      {
+        "type": "0103",
+        "id": "00a4",
+        "name": "ZW164 Indoor Siren 6"
+      },
+      {
+        "type": "0003",
+        "id": "00af",
+        "name": "ZW175 Smart Switch 7"
+      },
+      {
+        "type": "0002",
+        "id": "00bb",
+        "name": "ZW187 Recessed Door Sensor 7"
+      },
+      {
+        "type": "0102",
+        "id": "00bb",
+        "name": "ZW187 Recessed Door Sensor 7"
+      },
+      {
+        "type": "0202",
+        "id": "00bb",
+        "name": "ZW187 Recessed Door Sensor 7"
+      },
+      {
+        "type": "0004",
+        "id": "00bd",
+        "name": "ZW189 Range Extender 7"
+      },
+      {
+        "type": "0104",
+        "id": "00bd",
+        "name": "ZW189 Range Extender 7"
+      },
+      {
+        "type": "0204",
+        "id": "00bd",
+        "name": "ZW189 Range Extender 7"
+      },
+      {
+        "type": "0404",
+        "id": "00bd",
+        "name": "ZW189 Range Extender 7"
+      }
+    ]
+  },
+  {
+    "id": "0088",
+    "name": "Airvent SAM S.p.A."
+  },
+  {
+    "id": "0094",
+    "name": "Alarm.com"
+  },
+  {
+    "id": "0126",
+    "name": "Alertme (Iris)",
+    "products": [
+      {
+        "type": "0002",
+        "id": "0001",
+        "name": "Range Extender"
+      }
+    ]
+  },
+  {
+    "id": "0372",
+    "name": "ALLEATO"
+  },
+  {
+    "id": "028e",
+    "name": "Alphanetworks"
+  },
+  {
+    "id": "0230",
+    "name": "Alphonsus Tech",
+    "products": [
+      {
+        "type": "0003",
+        "id": "0001",
+        "name": "ID Lock 101"
+      }
+    ]
+  },
+  {
+    "id": "029f",
+    "name": "AMADAS Co. LTD "
+  },
+  {
+    "id": "019c",
+    "name": "Amdocs"
+  },
+  {
+    "id": "005a",
+    "name": "American Grid Inc."
+  },
+  {
+    "id": "0384",
+    "name": "Ameta International Co. Ltd."
+  },
+  {
+    "id": "032b",
+    "name": "Anchor Tech"
+  },
+  {
+    "id": "0392",
+    "name": "Animus Home AB"
+  },
+  {
+    "id": "026d",
+    "name": "Antik Technology Ltd."
+  },
+  {
+    "id": "0078",
+    "name": "anyCOMM Corporation"
+  },
+  {
+    "id": "0144",
+    "name": "Applied Micro Electronics AME BV"
+  },
+  {
+    "id": "0291",
+    "name": "Arkea"
+  },
+  {
+    "id": "0029",
+    "name": "Asia Heading"
+  },
+  {
+    "id": "0231",
+    "name": "ASITEQ"
+  },
+  {
+    "id": "028a",
+    "name": "Askey Computer Corp."
+  },
+  {
+    "id": "0129",
+    "name": "Assa Abloy",
+    "products": [
+      {
+        "type": "0001",
+        "id": "0000",
+        "name": "Yale Touchscreen Lever (YRL220)"
+      },
+      {
+        "type": "0002",
+        "id": "0000",
+        "name": "Yale Touchscreen Deadbolt (YRD220)"
+      },
+      {
+        "type": "0002",
+        "id": "aa00",
+        "name": "Yale Touchscreen Deadbolt (YRD220)"
+      },
+      {
+        "type": "0002",
+        "id": "0209",
+        "name": "Yale Key Free Touchscreen Deadbolt (YRD240)"
+      },
+      {
+        "type": "8002",
+        "id": "0600",
+        "name": "Yale Key Free Touchscreen Deadbolt (YRD446)"
+      },
+      {
+        "type": "8002",
+        "id": "1000",
+        "name": "Yale Key Free Touchscreen Deadbolt (YRD446)"
+      },
+      {
+        "type": "0003",
+        "id": "0409",
+        "name": "Yale Push Button Lever Lock (YRL210)"
+      },
+      {
+        "type": "0003",
+        "id": "0800",
+        "name": "Yale Push Button Lever Lock (YRL210)"
+      },
+      {
+        "type": "800c",
+        "id": "0f00",
+        "name": "Yale Push Button Lever Lock (YRL226)"
+      },
+      {
+        "type": "0004",
+        "id": "0000",
+        "name": "Yale Push Button Deadbolt (YRD210)"
+      },
+      {
+        "type": "0004",
+        "id": "0209",
+        "name": "Yale Push Button Deadbolt (YRD210)"
+      },
+      {
+        "type": "0004",
+        "id": "aa00",
+        "name": "Yale Push Button Deadbolt (YRD210)"
+      },
+      {
+        "type": "8004",
+        "id": "0600",
+        "name": "Yale Push Button Deadbolt (YRD216)"
+      },
+      {
+        "type": "803b",
+        "id": "0508",
+        "name": "Yale ProSL Push Button Deadbolt (YRD136)"
+      },
+      {
+        "type": "0006",
+        "id": "0000",
+        "name": "Yale Key Free Touchscreen Deadbolt (YRD240)"
+      },
+      {
+        "type": "0007",
+        "id": "0000",
+        "name": "Yale Keyless Connected Smart Lock (YSL)"
+      },
+      {
+        "type": "1bef",
+        "id": "9230",
+        "name": "Yale Keyless Connected Smart Lock (YSL)"
+      },
+      {
+        "type": "6600",
+        "id": "0002",
+        "name": "Yale Conexis L1 (SD-L1000-CH)"
+      },
+      {
+        "type": "0007",
+        "id": "0001",
+        "name": "Keyless Connected (YD-01-CON)"
+      },
+      {
+        "type": "0006",
+        "id": "0001",
+        "name": "Yale Keyfree Connected Smart Lock (YKFCON)"
+      },
+      {
+        "type": "0600",
+        "id": "0000",
+        "name": "Yale Keyfree Connected Smart Lock (YKFCON)"
+      },
+      {
+        "type": "8001",
+        "id": "0b00",
+        "name": "Yale nexTouch Wireless Push Button (NTB610)"
+      },
+      {
+        "type": "8003",
+        "id": "0b00",
+        "name": "Yale nexTouch Wireless Push Button (NTB620)"
+      },
+      {
+        "type": "0004",
+        "id": "0800",
+        "name": "YRD110 Push Button Deadbolt"
+      },
+      {
+        "type": "0002",
+        "id": "0800",
+        "name": "YRD120 Touchscreen Deadbolt"
+      },
+      {
+        "type": "8014",
+        "id": "1604",
+        "name": "Yale Assure Lock for Andersen Patio Doors (YRM276)"
+      }
+    ]
+  },
+  {
+    "id": "013b",
+    "name": "AstraLink"
+  },
+  {
+    "id": "0134",
+    "name": "AT&T"
+  },
+  {
+    "id": "002b",
+    "name": "Atech"
+  },
+  {
+    "id": "0244",
+    "name": "Athom BV"
+  },
+  {
+    "id": "032a",
+    "name": "AUCEAN TECHNOLOGY. INC"
+  },
+  {
+    "id": "033f",
+    "name": "August",
+    "products": [
+      {
+        "type": "0001",
+        "id": "0001",
+        "name": "ASL-03 Smart Lock"
+      }
+    ]
+  },
+  {
+    "id": "025d",
+    "name": "Avadesign Technology Co."
+  },
+  {
+    "id": "0155",
+    "name": "Avadesign Technology Co. Ltd"
+  },
+  {
+    "id": "0146",
+    "name": "Axesstel Inc"
+  },
+  {
+    "id": "0018",
+    "name": "Balboa Inst."
+  },
+  {
+    "id": "0236",
+    "name": "Bandi Comm Tech Inc."
+  },
+  {
+    "id": "0204",
+    "name": "Beijing Sino-American Boyi Software Development Co. Ltd"
+  },
+  {
+    "id": "0251",
+    "name": "Beijing Universal Energy Huaxia Technology Co.Ltd"
+  },
+  {
+    "id": "0196",
+    "name": "Bellatrix Systems Inc."
+  },
+  {
+    "id": "032d",
+    "name": "Benetek"
+  },
+  {
+    "id": "008a",
+    "name": "BeNext",
+    "products": [
+      {
+        "type": "0001",
+        "id": "0100",
+        "name": "myGate"
+      },
+      {
+        "type": "0002",
+        "id": "0100",
+        "name": "myDisplay"
+      },
+      {
+        "type": "0003",
+        "id": "0100",
+        "name": "MoLiTe Sensor"
+      },
+      {
+        "type": "0003",
+        "id": "0101",
+        "name": "DHS-ZW-SNMT-01 Multi Sensor"
+      },
+      {
+        "type": "0004",
+        "id": "0100",
+        "name": "Door Sensor"
+      },
+      {
+        "type": "0004",
+        "id": "0101",
+        "name": "Door Sensor"
+      },
+      {
+        "type": "0005",
+        "id": "0101",
+        "name": "Alarm Sound"
+      },
+      {
+        "type": "0006",
+        "id": "0101",
+        "name": "Energy Switch"
+      },
+      {
+        "type": "0006",
+        "id": "0200",
+        "name": "Energy Switch"
+      },
+      {
+        "type": "0007",
+        "id": "0100",
+        "name": "Tag Reader"
+      },
+      {
+        "type": "0007",
+        "id": "0101",
+        "name": "Tag Reader"
+      },
+      {
+        "type": "0007",
+        "id": "0200",
+        "name": "Tag Reader 500"
+      },
+      {
+        "type": "0008",
+        "id": "0101",
+        "name": "Power Switch"
+      },
+      {
+        "type": "000d",
+        "id": "0100",
+        "name": "Built-in Dimmer"
+      },
+      {
+        "type": "0014",
+        "id": "0100",
+        "name": "Panic Button"
+      },
+      {
+        "type": "0014",
+        "id": "0101",
+        "name": "Panic Button"
+      },
+      {
+        "type": "0015",
+        "id": "0101",
+        "name": "Panic Watch"
+      },
+      {
+        "type": "0017",
+        "id": "0100",
+        "name": "Scene Controller"
+      },
+      {
+        "type": "0018",
+        "id": "0100",
+        "name": "Plug-in Dimmer"
+      },
+      {
+        "type": "001e",
+        "id": "0001",
+        "name": "1Pole Switch"
+      },
+      {
+        "type": "001f",
+        "id": "0001",
+        "name": "2Pole Switch"
+      },
+      {
+        "type": "0020",
+        "id": "0001",
+        "name": "Energy Switch plus"
+      },
+      {
+        "type": "0021",
+        "id": "0001",
+        "name": "Heating Control"
+      },
+      {
+        "type": "0021",
+        "id": "0100",
+        "name": "Heating Control"
+      },
+      {
+        "type": "0021",
+        "id": "0102",
+        "name": "Heating Control"
+      },
+      {
+        "type": "002f",
+        "id": "0100",
+        "name": "P1 Dongle"
+      }
+    ]
+  },
+  {
+    "id": "014b",
+    "name": "BFT S.p.A."
+  },
+  {
+    "id": "0052",
+    "name": "Bit7 Inc."
+  },
+  {
+    "id": "0311",
+    "name": "Blaze Automation"
+  },
+  {
+    "id": "0213",
+    "name": "BMS Evler LTD"
+  },
+  {
+    "id": "0023",
+    "name": "Boca Devices"
+  },
+  {
+    "id": "0169",
+    "name": "Bonig und Kallenbach oHG (Popp)",
+    "products": [
+      {
+        "type": "0001",
+        "id": "0001",
+        "name": "ZWeather"
+      }
+    ]
+  },
+  {
+    "id": "015c",
+    "name": "Bosch Security Systems Inc"
+  },
+  {
+    "id": "002d",
+    "name": "Broadband Energy Networks Inc."
+  },
+  {
+    "id": "024a",
+    "name": "BTSTAR(HK) TECHNOLOGY COMPANY LIMITED"
+  },
+  {
+    "id": "0145",
+    "name": "Buffalo",
+    "products": [
+      {
+        "type": "0001",
+        "id": "0004",
+        "name": "HW-100V15A-ZW Measure Power Monitor"
+      }
+    ]
+  },
+  {
+    "id": "0190",
+    "name": "Building 36 Technologies",
+    "products": [
+      {
+        "type": "0001",
+        "id": "0001",
+        "name": "B36-T10"
+      }
+    ]
+  },
+  {
+    "id": "0396",
+    "name": "Bulcraft Control"
+  },
+  {
+    "id": "0026",
+    "name": "BuLogics"
+  },
+  {
+    "id": "0398",
+    "name": "Calix"
+  },
+  {
+    "id": "009c",
+    "name": "Cameo Communications Inc."
+  },
+  {
+    "id": "002e",
+    "name": "Carrier"
+  },
+  {
+    "id": "000b",
+    "name": "CasaWorks"
+  },
+  {
+    "id": "0243",
+    "name": "casenio AG"
+  },
+  {
+    "id": "0404",
+    "name": "CCC Air Inc."
+  },
+  {
+    "id": "0246",
+    "name": "CentraLite Systems Inc"
+  },
+  {
+    "id": "033c",
+    "name": "Centurylink"
+  },
+  {
+    "id": "0359",
+    "name": "Chamberlain Group"
+  },
+  {
+    "id": "014e",
+    "name": "Check-It Solutions Inc."
+  },
+  {
+    "id": "038f",
+    "name": "CHENGPUTECH "
+  },
+  {
+    "id": "0320",
+    "name": "China Security and Fire IOT Sensing CO. LTD"
+  },
+  {
+    "id": "0116",
+    "name": "Chromagic Technologies Corporation",
+    "products": [
+      {
+        "type": "0001",
+        "id": "0001",
+        "name": "HSCP02 Motion Detector"
+      },
+      {
+        "type": "0002",
+        "id": "0001",
+        "name": "HSM02 Mini Door/Window Detector"
+      },
+      {
+        "type": "0010",
+        "id": "0001",
+        "name": "HAC01 Remote Button"
+      }
+    ]
+  },
+  {
+    "id": "0280",
+    "name": "Chuango Security Technology Corporation"
+  },
+  {
+    "id": "0082",
+    "name": "Cisco Consumer Business Group"
+  },
+  {
+    "id": "0194",
+    "name": "Clare Controls"
+  },
+  {
+    "id": "018e",
+    "name": "Climax Technology, Ltd."
+  },
+  {
+    "id": "0200",
+    "name": "Cloud Media "
+  },
+  {
+    "id": "002f",
+    "name": "Color Kinetics"
+  },
+  {
+    "id": "0329",
+    "name": "COMAP"
+  },
+  {
+    "id": "0309",
+    "name": "Comfortability"
+  },
+  {
+    "id": "0140",
+    "name": "Computime"
+  },
+  {
+    "id": "011b",
+    "name": "Connected Object"
+  },
+  {
+    "id": "0179",
+    "name": "ConnectHome",
+    "products": [
+      {
+        "type": "0013",
+        "id": "0021",
+        "name": "CH-201 Thermostat"
+      }
+    ]
+  },
+  {
+    "id": "0285",
+    "name": "CONNECTION TECHNOLOGY SYSTEMS"
+  },
+  {
+    "id": "025d",
+    "name": "Contec intelligent housing"
+  },
+  {
+    "id": "023f",
+    "name": "Control4 Corporation"
+  },
+  {
+    "id": "0019",
+    "name": "ControlThink"
+  },
+  {
+    "id": "000f",
+    "name": "ConvergeX"
+  },
+  {
+    "id": "007d",
+    "name": "CoolGuard"
+  },
+  {
+    "id": "0079",
+    "name": "Cooper Lighting"
+  },
+  {
+    "id": "001a",
+    "name": "Cooper Wiring Devices",
+    "products": [
+      {
+        "type": "4441",
+        "id": "0000",
+        "name": "RF9542-Z Accessory Dimmer"
+      },
+      {
+        "type": "4449",
+        "id": "0002",
+        "name": "RF9534DS Wall Dimmer Module"
+      },
+      {
+        "type": "4449",
+        "id": "0101",
+        "name": "RF9540-N All Load Dimmer Light Switch"
+      },
+      {
+        "type": "5244",
+        "id": "0000",
+        "name": "RF9505-T Split Control Duplex Receptacle"
+      },
+      {
+        "type": "534c",
+        "id": "0000",
+        "name": "RF9501 Light Switch"
+      },
+      {
+        "type": "5352",
+        "id": "0000",
+        "name": "RF9517 Accessory Light Switch"
+      },
+      {
+        "type": "574d",
+        "id": "0000",
+        "name": "RFWC5/RFWDC Scene Controller"
+      },
+      {
+        "type": "534c",
+        "id": "0503",
+        "name": "RF9601 Light Switch"
+      }
+    ]
+  },
+  {
+    "id": "009d",
+    "name": "Coventive Technologies Inc."
+  },
+  {
+    "id": "0379",
+    "name": "CPRO"
+  },
+  {
+    "id": "0383",
+    "name": "CribOS"
+  },
+  {
+    "id": "0328",
+    "name": "Cvnet"
+  },
+  {
+    "id": "0014",
+    "name": "Cyberhouse (GoControl)",
+    "products": [
+      {
+        "type": "5442",
+        "id": "5436",
+        "name": "GC-TBZ48L Battery Powered Z-Wave Plus Thermostat"
+      }
+    ]
+  },
+  {
+    "id": "0067",
+    "name": "CyberTAN Technology, Inc."
+  },
+  {
+    "id": "0030",
+    "name": "Cytech Technology Pre Ltd.",
+    "products": [
+      {
+        "type": "0001",
+        "id": "0001",
+        "name": "Comfort 9000 with UCM/Zwave"
+      }
+    ]
+  },
+  {
+    "id": "0294",
+    "name": "D-3 Technology Co. Ltd"
+  },
+  {
+    "id": "0108",
+    "name": "D-Link Corporation",
+    "products": [
+      {
+        "type": "0002",
+        "id": "000e",
+        "name": "DCH-Z110 Door/Window 3 in 1 sensor"
+      },
+      {
+        "type": "0002",
+        "id": "000d",
+        "name": "DCH-Z120 PIR/Motion 3 in 1 sensor"
+      },
+      {
+        "type": "0004",
+        "id": "000a",
+        "name": "DCH-Z510 Siren"
+      },
+      {
+        "type": "0001",
+        "id": "0011",
+        "name": "DCH-Z210 Gen5 Plug"
+      }
+    ]
+  },
+  {
+    "id": "0002",
+    "name": "Danfoss",
+    "products": [
+      {
+        "type": "0003",
+        "id": "8010",
+        "name": "RS Room Sensor"
+      },
+      {
+        "type": "8003",
+        "id": "8001",
+        "name": "RS Room Sensor"
+      },
+      {
+        "type": "0005",
+        "id": "0175",
+        "name": "Devolo Home Control Radiator Thermostat"
+      },
+      {
+        "type": "0005",
+        "id": "0003",
+        "name": "Z Thermostat"
+      },
+      {
+        "type": "0005",
+        "id": "0004",
+        "name": "Z Thermostat 014G0013"
+      },
+      {
+        "type": "0064",
+        "id": "0001",
+        "name": "RA Plus-W Radiator Thermostat"
+      },
+      {
+        "type": "0115",
+        "id": "a010",
+        "name": "Popp Radiator Thermostat"
+      },
+      {
+        "type": "8004",
+        "id": "2000",
+        "name": "RXZ3 RF relay Switching Unit"
+      },
+      {
+        "type": "8005",
+        "id": "0001",
+        "name": "Living Connect Radiator Thermostat"
+      }
+    ]
+  },
+  {
+    "id": "018c",
+    "name": "Dawon DNS"
+  },
+  {
+    "id": "020a",
+    "name": "Decoris Intelligent System Limited"
+  },
+  {
+    "id": "013f",
+    "name": "Defacontrols BV"
+  },
+  {
+    "id": "032e",
+    "name": "DEFARO"
+  },
+  {
+    "id": "040d",
+    "name": "Delaney Hardware"
+  },
+  {
+    "id": "0031",
+    "name": "Destiny Networks"
+  },
+  {
+    "id": "0175",
+    "name": "devolo Home Control",
+    "products": [
+      {
+        "type": "0001",
+        "id": "0011",
+        "name": "Metering Plug MT02646"
+      },
+      {
+        "type": "0001",
+        "id": "0012",
+        "name": "Smart Metering Plug MT02792"
+      },
+      {
+        "type": "0002",
+        "id": "000e",
+        "name": "Door/Window Contact MT02648"
+      },
+      {
+        "type": "0002",
+        "id": "0020",
+        "name": "Humidity Sensor MT02755"
+      },
+      {
+        "type": "0002",
+        "id": "0021",
+        "name": "Flood Sensor MT02756"
+      },
+      {
+        "type": "0002",
+        "id": "000d",
+        "name": "Motion Sensor MT02647"
+      },
+      {
+        "type": "0003",
+        "id": "8010",
+        "name": "Thermostats RS 014G0159"
+      },
+      {
+        "type": "0004",
+        "id": "000a",
+        "name": "Siren MT02758"
+      },
+      {
+        "type": "0005",
+        "id": "0175",
+        "name": "Thermostats Danfoss Connect Z"
+      },
+      {
+        "type": "0100",
+        "id": "0101",
+        "name": "Scene Switch MT2652"
+      },
+      {
+        "type": "0100",
+        "id": "0102",
+        "name": "Key MT2653"
+      },
+      {
+        "type": "2004",
+        "id": "04a4",
+        "name": "Smoke Detector MT2651"
+      },
+      {
+        "type": "2004",
+        "id": "2004",
+        "name": "Smoke Detector MT2651"
+      },
+      {
+        "type": "0003",
+        "id": "0052",
+        "name": "Home Control Shutter FM MT2761"
+      },
+      {
+        "type": "0002",
+        "id": "0052",
+        "name": "Home Control Switch FM MT2759"
+      },
+      {
+        "type": "0001",
+        "id": "0052",
+        "name": "Home Control Dimmer FM MT2760"
+      }
+    ]
+  },
+  {
+    "id": "0103",
+    "name": "Diehl AKO",
+    "products": [
+      {
+        "type": "0002",
+        "id": "0002",
+        "name": "Dimmer Actuator"
+      }
+    ]
+  },
+  {
+    "id": "0032",
+    "name": "Digital 5 Inc."
+  },
+  {
+    "id": "035d",
+    "name": "Digital Watchdog"
+  },
+  {
+    "id": "0228",
+    "name": "DigitalZone"
+  },
+  {
+    "id": "0127",
+    "name": "Digital Monitoring Products"
+  },
+  {
+    "id": "0177",
+    "name": "Domino sistemi d.o.o."
+  },
+  {
+    "id": "020e",
+    "name": "Domitech",
+    "products": [
+      {
+        "type": "4c42",
+        "id": "3134",
+        "name": "Smart LED Retrofit Kit ZE27EU"
+      },
+      {
+        "type": "4c42",
+        "id": "3135",
+        "name": "Smart LED Light Bulb ZB22UK"
+      }
+    ]
+  },
+  {
+    "id": "021c",
+    "name": "Domux Shenzhen iSurpass Technology Co.",
+    "products": [
+      {
+        "type": "0168",
+        "id": "0168",
+        "name": "Door Sensor DX1DS-Z"
+      },
+      {
+        "type": "8001",
+        "id": "1000",
+        "name": "Motion Sensor DX1MS-Z"
+      },
+      {
+        "type": "8002",
+        "id": "1000",
+        "name": "Smart Smoke Sensor DX1SA-Z"
+      },
+      {
+        "type": "8003",
+        "id": "1000",
+        "name": "Combustible Gas Sensor DX1CG-Z"
+      },
+      {
+        "type": "8004",
+        "id": "1000",
+        "name": "Water Leakage Sensor DX1WL-Z"
+      },
+      {
+        "type": "8005",
+        "id": "1000",
+        "name": "CO Sensor DX1CA-Z"
+      },
+      {
+        "type": "8006",
+        "id": "1000",
+        "name": "Smart Metering Plug DX2SK-Z"
+      },
+      {
+        "type": "8007",
+        "id": "1000",
+        "name": "Temperature Humidity Sensor DX1HT-Z"
+      },
+      {
+        "type": "8008",
+        "id": "1000",
+        "name": "Smart Plug DX2SK-Z"
+      }
+    ]
+  },
+  {
+    "id": "020c",
+    "name": "Dongguan Zhou Da Electronics Co.,Ltd"
+  },
+  {
+    "id": "017d",
+    "name": "DRACOR Inc."
+  },
+  {
+    "id": "0184",
+    "name": "Dragon Tech",
+    "products": [
+      {
+        "type": "4447",
+        "id": "3034",
+        "name": "In Wall Dimmer"
+      }
+    ]
+  },
+  {
+    "id": "0223",
+    "name": "DTV Research Unipessoal, Lda"
+  },
+  {
+    "id": "0272",
+    "name": "Dune-HD"
+  },
+  {
+    "id": "0334",
+    "name": "Dusun Electron Ltd."
+  },
+  {
+    "id": "031b",
+    "name": "DVACO GROUP"
+  },
+  {
+    "id": "0132",
+    "name": "DynaQuip Controls"
+  },
+  {
+    "id": "010d",
+    "name": "e-Home AUTOMATION"
+  },
+  {
+    "id": "0247",
+    "name": "EASY SAVER Co. Inc"
+  },
+  {
+    "id": "001a",
+    "name": "Eaton"
+  },
+  {
+    "id": "017c",
+    "name": "EbV"
+  },
+  {
+    "id": "016b",
+    "name": "Echostar"
+  },
+  {
+    "id": "028f",
+    "name": "Eco Automation"
+  },
+  {
+    "id": "0431",
+    "name": "EcoDim",
+    "products": [
+      {
+        "type": "0202",
+        "id": "0002",
+        "name": "ECO-DIM.07 Z-Wave LED dimmer"
+      }
+    ]
+  },
+  {
+    "id": "037c",
+    "name": "Eco Life Engineering Co. Ltd."
+  },
+  {
+    "id": "014a",
+    "name": "Ecolink",
+    "products": [
+      {
+        "type": "0001",
+        "id": "0001",
+        "name": "Motion Sensor"
+      },
+      {
+        "type": "0001",
+        "id": "0002",
+        "name": "Door/Window Sensor"
+      },
+      {
+        "type": "0001",
+        "id": "0003",
+        "name": "Tilt Sensor"
+      },
+      {
+        "type": "0004",
+        "id": "0001",
+        "name": "Motion Detector"
+      },
+      {
+        "type": "0004",
+        "id": "0002",
+        "name": "Door/Window Sensor"
+      },
+      {
+        "type": "0004",
+        "id": "0003",
+        "name": "Tilt Sensor"
+      },
+      {
+        "type": "0005",
+        "id": "0010",
+        "name": "Flood/Freeze Sensor"
+      },
+      {
+        "type": "0005",
+        "id": "000f",
+        "name": "FireFighter"
+      }
+    ]
+  },
+  {
+    "id": "015d",
+    "name": "EcoNet Controls",
+    "products": [
+      {
+        "type": "2003",
+        "id": "c41c",
+        "name": "EZW1204 Water Leak Sensor"
+      }
+    ]
+  },
+  {
+    "id": "039d",
+    "name": "ECS"
+  },
+  {
+    "id": "031f",
+    "name": "Eelectron SpA"
+  },
+  {
+    "id": "026b",
+    "name": "Ei Electronics"
+  },
+  {
+    "id": "0087",
+    "name": "Eka Systems"
+  },
+  {
+    "id": "0034",
+    "name": "El-Gev Electronics LTD"
+  },
+  {
+    "id": "0389",
+    "name": "Elear Solutions Tech Pvt. Ltd."
+  },
+  {
+    "id": "0033",
+    "name": "Electronic Solutions Inc",
+    "products": [
+      {
+        "type": "5250",
+        "id": "0002",
+        "name": "DBMZ Motor Control"
+      },
+      {
+        "type": "5250",
+        "id": "3032",
+        "name": "DBMZ Motor Control"
+      }
+    ]
+  },
+  {
+    "id": "021f",
+    "name": "Elexa Consumer Products Inc. (Dome)",
+    "products": [
+      {
+        "type": "0003",
+        "id": "0002",
+        "name": "Water Shut-Off Valve"
+      },
+      {
+        "type": "0003",
+        "id": "0083",
+        "name": "Motion Detector"
+      },
+      {
+        "type": "0003",
+        "id": "0085",
+        "name": "Leak Sensor"
+      },
+      {
+        "type": "0003",
+        "id": "0086",
+        "name": "Mouser"
+      },
+      {
+        "type": "0003",
+        "id": "0087",
+        "name": "On/Off Plug-In Switch"
+      },
+      {
+        "type": "0003",
+        "id": "0088",
+        "name": "Siren"
+      },
+      {
+        "type": "0003",
+        "id": "0101",
+        "name": "Door/Window Sensor"
+      },
+      {
+        "type": "0003",
+        "id": "0104",
+        "name": "Mouser"
+      },
+      {
+        "type": "0003",
+        "id": "0108",
+        "name": "DMEX1 Range Extender"
+      },
+      {
+        "type": "0003",
+        "id": "0201",
+        "name": "Door/Window Sensor Pro"
+      }
+    ]
+  },
+  {
+    "id": "001b",
+    "name": "ELK Products"
+  },
+  {
+    "id": "0393",
+    "name": "Embedded Data Systems"
+  },
+  {
+    "id": "020b",
+    "name": "Embedded System Design Limited"
+  },
+  {
+    "id": "0035",
+    "name": "Embedit A/S"
+  },
+  {
+    "id": "0284",
+    "name": "Empers Tech Co., Ltd."
+  },
+  {
+    "id": "0336",
+    "name": "EMT Controls"
+  },
+  {
+    "id": "014d",
+    "name": "Enblink",
+    "products": [
+      {
+        "type": "0001",
+        "id": "0001",
+        "name": "SS201-US-W Z-Wave Controller"
+      }
+    ]
+  },
+  {
+    "id": "0219",
+    "name": "Enwox Technologies s.r.o."
+  },
+  {
+    "id": "006f",
+    "name": "Erone",
+    "products": [
+      {
+        "type": "0102",
+        "id": "0001",
+        "name": "Door/Window Sensor"
+      },
+      {
+        "type": "0104",
+        "id": "0001",
+        "name": "HM-AM001 Plugin Appliance Module"
+      }
+    ]
+  },
+  {
+    "id": "0160",
+    "name": "Essence Security"
+  },
+  {
+    "id": "029b",
+    "name": "ESSENTIAL TECHNOLOGIES INC."
+  },
+  {
+    "id": "0148",
+    "name": "EUROtronic",
+    "products": [
+      {
+        "type": "0001",
+        "id": "0001",
+        "name": "EUR_STELLAZ Wall Radiator Thermostat Valve Control"
+      },
+      {
+        "type": "0002",
+        "id": "0001",
+        "name": "EUR_COMETZ Wall Radiator Thermostat Valve Control"
+      },
+      {
+        "type": "0003",
+        "id": "0001",
+        "name": "EUR_SPIRITZ Wall Radiator Thermostat"
+      },
+      {
+        "type": "0003",
+        "id": "0002",
+        "name": "EUR_SPIRITZ Wall Radiator Thermostat"
+      },
+      {
+        "type": "0003",
+        "id": "0003",
+        "name": "EUR_SPIRITZ Wall Radiator Thermostat"
+      },
+      {
+        "type": "0004",
+        "id": "0001",
+        "name": "Temperature and Humidity Sensor"
+      },
+      {
+        "type": "0005",
+        "id": "0001",
+        "name": "Air Quality Sensor"
+      }
+    ]
+  },
+  {
+    "id": "011a",
+    "name": "Enerwave",
+    "products": [
+      {
+        "type": "0601",
+        "id": "0901",
+        "name": "ZWN-BPC Ceiling Mounted PIR Motion Sensor"
+      },
+      {
+        "type": "0801",
+        "id": "0b03",
+        "name": "ZWN-SC7 7-Button Scene Controller"
+      },
+      {
+        "type": "0101",
+        "id": "0102",
+        "name": "ZW15S 15A On/Off Switch"
+      },
+      {
+        "type": "0101",
+        "id": "0603",
+        "name": "ZW20R 20A TR Duplex Receptacle"
+      },
+      {
+        "type": "0111",
+        "id": "0605",
+        "name": "ZWN-RSM1 PLUS—Smart Single Relay Switch Module"
+      },
+      {
+        "type": "0111",
+        "id": "0606",
+        "name": "ZWN-RSM2-PLUS Smart Single Relay Switch Module"
+      },
+      {
+        "type": "0111",
+        "id": "0101",
+        "name": "ZW20RM 20A TR Smart Meter Duplex Receptacle"
+      },
+      {
+        "type": "0102",
+        "id": "0201",
+        "name": "ZW500D 500W In-Wall Preset Dimmer Switch"
+      },
+      {
+        "type": "0111",
+        "id": "0105",
+        "name": "ZW15RM Plus 15A TR Smart Meter Duplex Receptacle"
+      }
+    ]
+  },
+  {
+    "id": "0060",
+    "name": "Everspring",
+    "products": [
+      {
+        "type": "0001",
+        "id": "0001",
+        "name": "HSP02 Motion Detector"
+      },
+      {
+        "type": "0001",
+        "id": "0002",
+        "name": "SP814 Motion Detector"
+      },
+      {
+        "type": "0001",
+        "id": "0004",
+        "name": "SP815 Pet Immune Pir Motion Detector"
+      },
+      {
+        "type": "0001",
+        "id": "0005",
+        "name": "SP816 Outdoor Motion Detector"
+      },
+      {
+        "type": "0002",
+        "id": "0001",
+        "name": "SM103 Door/Window Sensor"
+      },
+      {
+        "type": "0003",
+        "id": "0001",
+        "name": "AD142 Plug-in Dimmer Module"
+      },
+      {
+        "type": "0003",
+        "id": "0003",
+        "name": "AD147 Plug-in Dimmer Module"
+      },
+      {
+        "type": "0003",
+        "id": "0002",
+        "name": "AD146 In wall Dimmer Module"
+      },
+      {
+        "type": "0004",
+        "id": "0001",
+        "name": "AN157 Plug-in Appliance Module"
+      },
+      {
+        "type": "0004",
+        "id": "0002",
+        "name": "AN158 Plug-in Meter Appliance Module"
+      },
+      {
+        "type": "0004",
+        "id": "0005",
+        "name": "AN163 Plug-in On/Off with meter function"
+      },
+      {
+        "type": "0004",
+        "id": "0006",
+        "name": "AN181 Miniplug On/Off with meter function"
+      },
+      {
+        "type": "0004",
+        "id": "0007",
+        "name": "AN180 Plug-in ON/OFF Module"
+      },
+      {
+        "type": "0004",
+        "id": "0008",
+        "name": "AN179 In wall ON/OFF Module"
+      },
+      {
+        "type": "0006",
+        "id": "0001",
+        "name": "ST814 Temperature and Humidity Sensor"
+      },
+      {
+        "type": "0007",
+        "id": "0001",
+        "name": "ST815 Illumination Sensor"
+      },
+      {
+        "type": "0009",
+        "id": "0001",
+        "name": "TSE03 Door Bell"
+      },
+      {
+        "type": "000b",
+        "id": "0001",
+        "name": "ST812 Flood Detector"
+      },
+      {
+        "type": "000c",
+        "id": "0001",
+        "name": "SE812 Siren"
+      },
+      {
+        "type": "000d",
+        "id": "0001",
+        "name": "SF812 Smoke Alarm"
+      },
+      {
+        "type": "0010",
+        "id": "0001",
+        "name": "HAC01 In-wall Remote Module"
+      },
+      {
+        "type": "0011",
+        "id": "0001",
+        "name": "HAN01 In-wall Switch Module"
+      },
+      {
+        "type": "0011",
+        "id": "0002",
+        "name": "HAN02 In-wall Switch Module"
+      },
+      {
+        "type": "0101",
+        "id": "0001",
+        "name": "SP103 PIR Motion Sensor"
+      },
+      {
+        "type": "0104",
+        "id": "0001",
+        "name": "AN145 Lamp Screw In Module"
+      },
+      {
+        "type": "0202",
+        "id": "0001",
+        "name": "SM103 Door/Window Sensor"
+      }
+    ]
+  },
+  {
+    "id": "0113",
+    "name": "Evolve Guest Controls",
+    "products": [
+      {
+        "type": "4457",
+        "id": "3034",
+        "name": "LRM-AS Wall Dimmer 500W"
+      },
+      {
+        "type": "5246",
+        "id": "3133",
+        "name": "LFM-20 Fixture Module"
+      },
+      {
+        "type": "5257",
+        "id": "3533",
+        "name": "LSM-15 Wall Switch"
+      },
+      {
+        "type": "5457",
+        "id": "3033",
+        "name": "LTM-5 Wall Switch Transmitter"
+      },
+      {
+        "type": "4556",
+        "id": "5434",
+        "name": "T-100 Thermostat"
+      }
+    ]
+  },
+  {
+    "id": "036f",
+    "name": "Evolvere SpA"
+  },
+  {
+    "id": "0036",
+    "name": "Exceptional Innovations"
+  },
+  {
+    "id": "0004",
+    "name": "Exhausto"
+  },
+  {
+    "id": "009f",
+    "name": "Exigent"
+  },
+  {
+    "id": "0233",
+    "name": "eZEX Corporation"
+  },
+  {
+    "id": "0085",
+    "name": "Fakro",
+    "products": [
+      {
+        "type": "0001",
+        "id": "0001",
+        "name": "ZWP10 Remote Controller"
+      },
+      {
+        "type": "0002",
+        "id": "0002",
+        "name": "ARZ Roof Window Roller Shutter"
+      },
+      {
+        "type": "0002",
+        "id": "0005",
+        "name": "ZWS230 Chain actuator 230VAC"
+      },
+      {
+        "type": "0003",
+        "id": "0001",
+        "name": "ZWS12 Chain actuator 12VDC"
+      },
+      {
+        "type": "0003",
+        "id": "0002",
+        "name": "ZWS230 Chain actuator 230VAC"
+      },
+      {
+        "type": "0016",
+        "id": "0001",
+        "name": "ZWRS Roller Shutter FLiRS module"
+      },
+      {
+        "type": "0003",
+        "id": "0012",
+        "name": "ARZ SOLAR Roof Window Roller Shutter"
+      },
+      {
+        "type": "0001",
+        "id": "0004",
+        "name": "ZRH12 Portable Remote Controller"
+      }
+    ]
+  },
+  {
+    "id": "016a",
+    "name": "Fantem (Oomi)",
+    "products": [
+      {
+        "type": "0002",
+        "id": "0064",
+        "name": "FT100 MultiSensor 6"
+      },
+      {
+        "type": "0102",
+        "id": "0064",
+        "name": "FT100 MultiSensor 6"
+      },
+      {
+        "type": "0202",
+        "id": "0064",
+        "name": "FT100 MultiSensor 6"
+      },
+      {
+        "type": "1d02",
+        "id": "0064",
+        "name": "FT100 MultiSensor 6"
+      },
+      {
+        "type": "0103",
+        "id": "006f",
+        "name": "FT111 In Wall Dimmer"
+      },
+      {
+        "type": "0203",
+        "id": "006f",
+        "name": "FT111 In Wall Dimmer"
+      },
+      {
+        "type": "1d03",
+        "id": "006f",
+        "name": "FT111 In Wall Dimmer"
+      },
+      {
+        "type": "0002",
+        "id": "0070",
+        "name": "FT112 Door-window sensor"
+      },
+      {
+        "type": "0004",
+        "id": "0076",
+        "name": "FT118 Range extender 6"
+      }
+    ]
+  },
+  {
+    "id": "010f",
+    "name": "FIBARO System",
+    "products": [
+      {
+        "type": "0501",
+        "id": "0101",
+        "name": "FGBS001 Universal Binary Sensor"
+      },
+      {
+        "type": "0501",
+        "id": "0102",
+        "name": "FGBS001 Universal Binary Sensor"
+      },
+      {
+        "type": "0501",
+        "id": "0109",
+        "name": "FGBS001 Universal Binary Sensor"
+      },
+      {
+        "type": "0501",
+        "id": "1002",
+        "name": "FGBS001 Universal Binary Sensor"
+      },
+      {
+        "type": "0501",
+        "id": "3002",
+        "name": "FGBS001 Universal Binary Sensor"
+      },
+      {
+        "type": "0501",
+        "id": "4002",
+        "name": "FGBS001 Universal Binary Sensor"
+      },
+      {
+        "type": "0502",
+        "id": "1000",
+        "name": "FGBS222 Smart Implant"
+      },
+      {
+        "type": "0502",
+        "id": "2000",
+        "name": "FGBS222 Smart Implant"
+      },
+      {
+        "type": "0502",
+        "id": "3000",
+        "name": "FGBS222 Smart Implant"
+      },
+      {
+        "type": "0100",
+        "id": "0104",
+        "name": "FGD211 Universal Dimmer 500W"
+      },
+      {
+        "type": "0100",
+        "id": "0106",
+        "name": "FGD211 Universal Dimmer 500W"
+      },
+      {
+        "type": "0100",
+        "id": "0107",
+        "name": "FGD211 Universal Dimmer 500W"
+      },
+      {
+        "type": "0100",
+        "id": "0109",
+        "name": "FGD211 Universal Dimmer 500W"
+      },
+      {
+        "type": "0100",
+        "id": "100a",
+        "name": "FGD211 Universal Dimmer 500W"
+      },
+      {
+        "type": "0100",
+        "id": "300a",
+        "name": "FGD211 Universal Dimmer 500W"
+      },
+      {
+        "type": "0102",
+        "id": "1000",
+        "name": "FGD212 Dimmer 2"
+      },
+      {
+        "type": "0102",
+        "id": "2000",
+        "name": "FGD212 Dimmer 2"
+      },
+      {
+        "type": "0102",
+        "id": "3000",
+        "name": "FGD212 Dimmer 2"
+      },
+      {
+        "type": "0102",
+        "id": "4000",
+        "name": "FGD212 Dimmer 2"
+      },
+      {
+        "type": "0700",
+        "id": "1000",
+        "name": "FGK101 Door Opening Sensor"
+      },
+      {
+        "type": "0700",
+        "id": "2000",
+        "name": "FGK10x Door Opening Sensor"
+      },
+      {
+        "type": "0700",
+        "id": "3000",
+        "name": "FGK101 Door Opening Sensor"
+      },
+      {
+        "type": "0700",
+        "id": "4000",
+        "name": "FGK101 Door Opening Sensor"
+      },
+      {
+        "type": "0701",
+        "id": "1001",
+        "name": "FGK10x Door Opening Sensor"
+      },
+      {
+        "type": "0701",
+        "id": "2001",
+        "name": "FGK10x Door Opening Sensor"
+      },
+      {
+        "type": "0701",
+        "id": "3001",
+        "name": "FGK10x Door Opening Sensor"
+      },
+      {
+        "type": "0702",
+        "id": "1000",
+        "name": "FGDW002 Door Opening Sensor 2"
+      },
+      {
+        "type": "0702",
+        "id": "2000",
+        "name": "FGDW002 Door Opening Sensor 2"
+      },
+      {
+        "type": "0702",
+        "id": "3000",
+        "name": "FGDW002 Door Opening Sensor 2"
+      },
+      {
+        "type": "0300",
+        "id": "0104",
+        "name": "FGR221 Roller Shutter Controller"
+      },
+      {
+        "type": "0300",
+        "id": "100a",
+        "name": "FGR221 Roller Shutter Controller"
+      },
+      {
+        "type": "0300",
+        "id": "0106",
+        "name": "FGR221 Roller Shutter Controller"
+      },
+      {
+        "type": "0300",
+        "id": "0107",
+        "name": "FGR221 Roller Shutter Controller"
+      },
+      {
+        "type": "0300",
+        "id": "0109",
+        "name": "FGR221 Roller Shutter Controller"
+      },
+      {
+        "type": "0301",
+        "id": "1001",
+        "name": "FGRM222 Roller Shutter Controller 2"
+      },
+      {
+        "type": "0302",
+        "id": "1000",
+        "name": "FGRM222 Roller Shutter Controller 2"
+      },
+      {
+        "type": "0302",
+        "id": "3000",
+        "name": "FGRM222 Roller Shutter Controller 2"
+      },
+      {
+        "type": "0302",
+        "id": "4000",
+        "name": "FGRM222 Roller Shutter Controller 2"
+      },
+      {
+        "type": "0400",
+        "id": "0104",
+        "name": "FGS211 Switch 3kW"
+      },
+      {
+        "type": "0400",
+        "id": "0105",
+        "name": "FGS211 Switch 3kW"
+      },
+      {
+        "type": "0400",
+        "id": "0106",
+        "name": "FGS211 Switch 3kW"
+      },
+      {
+        "type": "0400",
+        "id": "0107",
+        "name": "FGS211 Switch 3kW"
+      },
+      {
+        "type": "0400",
+        "id": "0108",
+        "name": "FGS211 Switch 3kW"
+      },
+      {
+        "type": "0400",
+        "id": "0109",
+        "name": "FGS211 Switch 3kW"
+      },
+      {
+        "type": "0400",
+        "id": "100a",
+        "name": "FGS211 Switch 3kW"
+      },
+      {
+        "type": "0400",
+        "id": "400a",
+        "name": "FGS211 Switch 3kW"
+      },
+      {
+        "type": "0402",
+        "id": "1002",
+        "name": "FGS212 Switch 3kW"
+      },
+      {
+        "type": "0402",
+        "id": "3002",
+        "name": "FGS212 Switch 3kW"
+      },
+      {
+        "type": "0402",
+        "id": "4002",
+        "name": "FGS212 Switch 3kW"
+      },
+      {
+        "type": "0403",
+        "id": "1000",
+        "name": "FGS213 Switch"
+      },
+      {
+        "type": "0403",
+        "id": "2000",
+        "name": "FGS213 Switch"
+      },
+      {
+        "type": "0403",
+        "id": "3000",
+        "name": "FGS213 Switch"
+      },
+      {
+        "type": "0403",
+        "id": "4000",
+        "name": "FGS213 Switch"
+      },
+      {
+        "type": "0404",
+        "id": "1000",
+        "name": "FGS214 Single Relay Switch"
+      },
+      {
+        "type": "0404",
+        "id": "4000",
+        "name": "FGS214 Single Relay Switch"
+      },
+      {
+        "type": "0200",
+        "id": "0104",
+        "name": "FGS221 Double Relay Switch 2x1.5kW"
+      },
+      {
+        "type": "0200",
+        "id": "0105",
+        "name": "FGS221 Double Relay Switch 2x1.5kW"
+      },
+      {
+        "type": "0200",
+        "id": "0106",
+        "name": "FGS221 Double Relay Switch 2x1.5kW"
+      },
+      {
+        "type": "0200",
+        "id": "0107",
+        "name": "FGS221 Double Relay Switch 2x1.5kW"
+      },
+      {
+        "type": "0200",
+        "id": "0109",
+        "name": "FGS221 Double Relay Switch 2x1.5kW"
+      },
+      {
+        "type": "0200",
+        "id": "100a",
+        "name": "FGS221 Double Relay Switch 2x1.5kW"
+      },
+      {
+        "type": "0200",
+        "id": "300a",
+        "name": "FGS221 Double Relay Switch 2x1.5kW"
+      },
+      {
+        "type": "0200",
+        "id": "400a",
+        "name": "FGS221 Double Relay Switch 2x1.5kW"
+      },
+      {
+        "type": "0202",
+        "id": "1002",
+        "name": "FGS222 Double Relay Switch 2x1.5kW"
+      },
+      {
+        "type": "0202",
+        "id": "3002",
+        "name": "FGS222 Double Relay Switch 2x1.5kW"
+      },
+      {
+        "type": "0203",
+        "id": "1000",
+        "name": "FGS223 Double Relay"
+      },
+      {
+        "type": "0203",
+        "id": "2000",
+        "name": "FGS223 Double Relay"
+      },
+      {
+        "type": "0203",
+        "id": "3000",
+        "name": "FGS223 Double Relay"
+      },
+      {
+        "type": "0203",
+        "id": "4000",
+        "name": "FGS223 Double Relay"
+      },
+      {
+        "type": "0204",
+        "id": "1000",
+        "name": "FGS224 Double Smart Module"
+      },
+      {
+        "type": "0303",
+        "id": "1000",
+        "name": "FGR223 Roller Shutter Controller 3"
+      },
+      {
+        "type": "0600",
+        "id": "1000",
+        "name": "FGWPE/F Wall Plug"
+      },
+      {
+        "type": "0200",
+        "id": "1000",
+        "name": "FGWPE/F Wall Plug"
+      },
+      {
+        "type": "1f01",
+        "id": "1000",
+        "name": "FGWOE/F Walli Outlet"
+      },
+      {
+        "type": "1401",
+        "id": "2000",
+        "name": "FGWPB-121 Wall Plug"
+      },
+      {
+        "type": "0602",
+        "id": "1001",
+        "name": "FGWPE/F Wall Plug Gen5"
+      },
+      {
+        "type": "0602",
+        "id": "1003",
+        "name": "FGWPE/F Wall Plug Gen5"
+      },
+      {
+        "type": "0800",
+        "id": "1001",
+        "name": "FGMS001 Motion Sensor"
+      },
+      {
+        "type": "0800",
+        "id": "2001",
+        "name": "FGMS001 Motion Sensor"
+      },
+      {
+        "type": "0800",
+        "id": "3001",
+        "name": "FGMS001 Motion Sensor"
+      },
+      {
+        "type": "0800",
+        "id": "4001",
+        "name": "FGMS001 Motion Sensor"
+      },
+      {
+        "type": "0801",
+        "id": "1001",
+        "name": "FGMS001-ZW5 Motion Sensor"
+      },
+      {
+        "type": "0801",
+        "id": "1002",
+        "name": "FGMS001-ZW5 Motion Sensor"
+      },
+      {
+        "type": "0801",
+        "id": "2001",
+        "name": "FGMS001-ZW5 Motion Sensor"
+      },
+      {
+        "type": "0801",
+        "id": "2002",
+        "name": "FGMS001-ZW5 Motion Sensor"
+      },
+      {
+        "type": "0801",
+        "id": "3001",
+        "name": "FGMS001-ZW5 Motion Sensor"
+      },
+      {
+        "type": "0801",
+        "id": "3002",
+        "name": "FGMS001-ZW5 Motion Sensor"
+      },
+      {
+        "type": "0b00",
+        "id": "3001",
+        "name": "FGFS101 Flood Sensor"
+      },
+      {
+        "type": "0b00",
+        "id": "4001",
+        "name": "FGFS101 Flood Sensor"
+      },
+      {
+        "type": "0b00",
+        "id": "1001",
+        "name": "FGFS101 Flood Sensor"
+      },
+      {
+        "type": "0b00",
+        "id": "2001",
+        "name": "FGFS101 Flood Sensor"
+      },
+      {
+        "type": "0b00",
+        "id": "9e00",
+        "name": "FGFS101 Flood Sensor"
+      },
+      {
+        "type": "0b01",
+        "id": "1002",
+        "name": "FGFS101 Zwave+ Flood Sensor"
+      },
+      {
+        "type": "0b01",
+        "id": "1003",
+        "name": "FGFS101 Zwave+ Flood Sensor"
+      },
+      {
+        "type": "0b01",
+        "id": "2002",
+        "name": "FGFS101 Zwave+ Flood Sensor"
+      },
+      {
+        "type": "0b01",
+        "id": "2003",
+        "name": "FGFS101 Zwave+ Flood Sensor"
+      },
+      {
+        "type": "0b01",
+        "id": "3002",
+        "name": "FGFS101 Zwave+ Flood Sensor"
+      },
+      {
+        "type": "0900",
+        "id": "1000",
+        "name": "FGRGBWM441 RGBW Controller"
+      },
+      {
+        "type": "0900",
+        "id": "2000",
+        "name": "FGRGBWM441 RGBW Controller"
+      },
+      {
+        "type": "0900",
+        "id": "3000",
+        "name": "FGRGBWM441 RGBW Controller"
+      },
+      {
+        "type": "0900",
+        "id": "4000",
+        "name": "FGRGBWM441 RGBW Controller"
+      },
+      {
+        "type": "0902",
+        "id": "1000",
+        "name": "FGRGBW442 RGBW Controller 2"
+      },
+      {
+        "type": "0902",
+        "id": "2000",
+        "name": "FGRGBW442 RGBW Controller 2"
+      },
+      {
+        "type": "0902",
+        "id": "3000",
+        "name": "FGRGBW442 RGBW Controller 2"
+      },
+      {
+        "type": "0902",
+        "id": "4000",
+        "name": "FGRGBW442 RGBW Controller 2"
+      },
+      {
+        "type": "0c00",
+        "id": "1000",
+        "name": "FGSS101 Smoke Sensor"
+      },
+      {
+        "type": "0c02",
+        "id": "1002",
+        "name": "FGSD002 Smoke Sensor"
+      },
+      {
+        "type": "0c02",
+        "id": "1003",
+        "name": "FGSD002 Smoke Sensor"
+      },
+      {
+        "type": "0d01",
+        "id": "1000",
+        "name": "FGGC001 Swipe"
+      },
+      {
+        "type": "0d01",
+        "id": "2000",
+        "name": "FGGC001 Swipe"
+      },
+      {
+        "type": "0f01",
+        "id": "1000",
+        "name": "FGPB101 Button"
+      },
+      {
+        "type": "0f01",
+        "id": "2000",
+        "name": "FGPB101 Button"
+      },
+      {
+        "type": "0f01",
+        "id": "3000",
+        "name": "FGPB101 Button"
+      },
+      {
+        "type": "1001",
+        "id": "1000",
+        "name": "FGKF601 Keyfob"
+      },
+      {
+        "type": "1001",
+        "id": "2000",
+        "name": "FGKF601 Keyfob"
+      },
+      {
+        "type": "1201",
+        "id": "1000",
+        "name": "FGSD001 CO Sensor"
+      },
+      {
+        "type": "1201",
+        "id": "1001",
+        "name": "FGSD001 CO Sensor"
+      },
+      {
+        "type": "1301",
+        "id": "1000",
+        "name": "FGT001 Heat Controller"
+      },
+      {
+        "type": "1301",
+        "id": "1001",
+        "name": "FGT001 Heat Controller"
+      },
+      {
+        "type": "1701",
+        "id": "2000",
+        "name": "FGWPG111 US Wall Plug"
+      },
+      {
+        "type": "1801",
+        "id": "1000",
+        "name": "FGWPG111 UK Wall Plug"
+      },
+      {
+        "type": "1a01",
+        "id": "1000",
+        "name": "FGWDS221 Walli Double Switch (Single switch mode)"
+      },
+      {
+        "type": "1b01",
+        "id": "1000",
+        "name": "FGWDS221 Walli Double Switch"
+      },
+      {
+        "type": "1c01",
+        "id": "1000",
+        "name": "FGWD111 Walli Dimmer"
+      },
+      {
+        "type": "1d01",
+        "id": "1000",
+        "name": "FGWR111 Walli Roller Shutter"
+      },
+      {
+        "type": "2301",
+        "id": "1000",
+        "name": "FGWCEU201 Walli Controller"
+      }
+    ]
+  },
+  {
+    "id": "0295",
+    "name": "fifthplay nv"
+  },
+  {
+    "id": "0138",
+    "name": "First Alert (BRK Brands Inc)",
+    "products": [
+      {
+        "type": "0001",
+        "id": "0001",
+        "name": "ZSmoke Smoke Detector"
+      },
+      {
+        "type": "0001",
+        "id": "0002",
+        "name": "ZCombo Smoke and Carbon Monoxide Detector"
+      },
+      {
+        "type": "0001",
+        "id": "0003",
+        "name": "ZCombo-G Smoke/CO Alarm"
+      }
+    ]
+  },
+  {
+    "id": "002c",
+    "name": "Flex Automation"
+  },
+  {
+    "id": "004f",
+    "name": "Flex Automation"
+  },
+  {
+    "id": "018d",
+    "name": "Flextronics"
+  },
+  {
+    "id": "0024",
+    "name": "Flue Sentinel"
+  },
+  {
+    "id": "0037",
+    "name": "Foard Systems"
+  },
+  {
+    "id": "018f",
+    "name": "Focal Point Limited"
+  },
+  {
+    "id": "0137",
+    "name": "FollowGood Technology Company",
+    "products": [
+      {
+        "type": "3001",
+        "id": "0002",
+        "name": "SWZ-1002 Binary Power Switch"
+      }
+    ]
+  },
+  {
+    "id": "0207",
+    "name": "Forest Group Nederland B.V",
+    "products": [
+      {
+        "type": "0027",
+        "id": "0100",
+        "name": "Shuttle L Z-Wave"
+      }
+    ]
+  },
+  {
+    "id": "0084",
+    "name": "FortrezZ",
+    "products": [
+      {
+        "type": "0013",
+        "id": "0210",
+        "name": "WWA-01AA - Wireless Water and Freeze Alarm"
+      },
+      {
+        "type": "0021",
+        "id": "010a",
+        "name": "WWA-02 Water and Temperature Alarm"
+      },
+      {
+        "type": "0023",
+        "id": "0109",
+        "name": "WWA-02 Water and Temperature Alarm"
+      },
+      {
+        "type": "0053",
+        "id": "0216",
+        "name": "WWA-01AA Wireless Water and Freeze Alarm"
+      },
+      {
+        "type": "0213",
+        "id": "020c",
+        "name": "WV-01 Automated Water Shut-Off Valve"
+      },
+      {
+        "type": "0233",
+        "id": "aa06",
+        "name": "WV-01 Automated Water Shut-Off Valve"
+      },
+      {
+        "type": "0241",
+        "id": "0300",
+        "name": "WV-01 Automated Water Shut-Off Valve"
+      },
+      {
+        "type": "0243",
+        "id": "0216",
+        "name": "WV-01 Automated Water Shut-Off Valve"
+      },
+      {
+        "type": "0311",
+        "id": "0109",
+        "name": "SSA1 / SSA2 - Siren/Strobe Light Alarm"
+      },
+      {
+        "type": "0311",
+        "id": "010b",
+        "name": "SSA1 / SSA2 - Siren/Strobe Light Alarm"
+      },
+      {
+        "type": "0313",
+        "id": "0107",
+        "name": "SSA1 / SSA2 - Siren/Strobe Light Alarm"
+      },
+      {
+        "type": "0313",
+        "id": "010b",
+        "name": "SSA2 - Siren/Strobe Light Alarm"
+      },
+      {
+        "type": "0331",
+        "id": "010b",
+        "name": "SSA3 - Siren/Strobe Light Alarm"
+      },
+      {
+        "type": "0341",
+        "id": "0205",
+        "name": "SSA3 - Siren/Strobe Light Alarm"
+      },
+      {
+        "type": "0343",
+        "id": "0205",
+        "name": "SSA3 - Siren/Strobe Light Alarm"
+      },
+      {
+        "type": "0451",
+        "id": "0111",
+        "name": "MIMOlite"
+      },
+      {
+        "type": "0453",
+        "id": "0110",
+        "name": "MIMOlite"
+      },
+      {
+        "type": "0453",
+        "id": "0111",
+        "name": "MIMOlite"
+      },
+      {
+        "type": "0463",
+        "id": "0204",
+        "name": "MIMO2+"
+      },
+      {
+        "type": "0463",
+        "id": "0208",
+        "name": "MIMO2+"
+      },
+      {
+        "type": "0473",
+        "id": "0110",
+        "name": "FMI Flow Meter"
+      },
+      {
+        "type": "0513",
+        "id": "0111",
+        "name": "GDC1 Siren/Strobe Light Alarm"
+      },
+      {
+        "type": "00a3",
+        "id": "020a",
+        "name": "FTS05P Flood & Temperature Sensor"
+      },
+      {
+        "type": "00a3",
+        "id": "020e",
+        "name": "FTS05P Flood & Temperature Sensor"
+      }
+    ]
+  },
+  {
+    "id": "011d",
+    "name": "Foxconn"
+  },
+  {
+    "id": "039c",
+    "name": "Foxconn Industrial Internet"
+  },
+  {
+    "id": "0110",
+    "name": "Frostdale",
+    "products": [
+      {
+        "type": "2411",
+        "id": "0001",
+        "name": "Nanogrid: FDN2nxx light switch - where n is 1, 2, 3 or 4 buttons"
+      },
+      {
+        "type": "7333",
+        "id": "0031",
+        "name": "Nanogrid: FDN2nxx light switch - where n is 1, 2, 3 or 4 buttons"
+      }
+    ]
+  },
+  {
+    "id": "0305",
+    "name": "Future Home AS",
+    "products": [
+      {
+        "type": "0300",
+        "id": "a305",
+        "name": "Future Home AS (Heatit) Z-Push Button 8"
+      }
+    ]
+  },
+  {
+    "id": "033e",
+    "name": "GE"
+  },
+  {
+    "id": "0063",
+    "name": "GE (Jasco Products)",
+    "products": [
+      {
+        "type": "4450",
+        "id": "3030",
+        "name": "45602 Lamp Dimmer Module"
+      },
+      {
+        "type": "4457",
+        "id": "3230",
+        "name": "45606 2-Way Dimmer Switch"
+      },
+      {
+        "type": "4944",
+        "id": "3031",
+        "name": "12724 3-Way Dimmer Switch"
+      },
+      {
+        "type": "4944",
+        "id": "3033",
+        "name": "12729 3-Way Dimmer Switch"
+      },
+      {
+        "type": "4944",
+        "id": "3034",
+        "name": "12730 Fan Control Switch"
+      },
+      {
+        "type": "4944",
+        "id": "3131",
+        "name": "14287 Fan Control Switch"
+      },
+      {
+        "type": "4944",
+        "id": "3032",
+        "name": "12725 In-Wall 1000W Dimmer"
+      },
+      {
+        "type": "5044",
+        "id": "3033",
+        "name": "14280 Plug-In Two-Outlet Smart Dimmer with Simultaneous Control"
+      },
+      {
+        "type": "4952",
+        "id": "3134",
+        "name": "14288 In-Wall Tamper Resistant Smart Outlet"
+      },
+      {
+        "type": "4944",
+        "id": "3038",
+        "name": "14294 In-Wall Smart Dimmer"
+      },
+      {
+        "type": "4944",
+        "id": "3039",
+        "name": "14299 In-Wall 1000W Smart Dimmer"
+      },
+      {
+        "type": "4944",
+        "id": "3130",
+        "name": "14295 In-Wall Smart Toggle Dimmer"
+      },
+      {
+        "type": "4f50",
+        "id": "3034",
+        "name": "14298 Plug-in Outdoor Smart Switch"
+      },
+      {
+        "type": "4944",
+        "id": "3137",
+        "name": "14322 In-Wall Smart Toggle Dimmer"
+      },
+      {
+        "type": "494d",
+        "id": "3032",
+        "name": "26931 Smart Motion Switch"
+      },
+      {
+        "type": "494d",
+        "id": "3033",
+        "name": "26932 Smart Motion Dimmer"
+      },
+      {
+        "type": "494d",
+        "id": "3034",
+        "name": "26933 Smart Motion Dimmer"
+      },
+      {
+        "type": "4952",
+        "id": "3036",
+        "name": "14291 In-Wall Smart Switch"
+      },
+      {
+        "type": "4952",
+        "id": "3135",
+        "name": "46201 In-Wall Smart Switch"
+      },
+      {
+        "type": "4952",
+        "id": "3137",
+        "name": "46202 In-Wall Smart Switch"
+      },
+      {
+        "type": "4944",
+        "id": "3235",
+        "name": "46203 In-Wall Smart Dimmer"
+      },
+      {
+        "type": "4944",
+        "id": "3237",
+        "name": "In-Wall Smart Toggle Dimmer"
+      },
+      {
+        "type": "4952",
+        "id": "3037",
+        "name": "14292 In-Wall Smart Toggle Switch"
+      },
+      {
+        "type": "4952",
+        "id": "3038",
+        "name": "14293 In-Wall Smart Toggle Switch"
+      },
+      {
+        "type": "5250",
+        "id": "3030",
+        "name": "45603 Plugin Appliance Module"
+      },
+      {
+        "type": "5250",
+        "id": "3130",
+        "name": "45604 Outdoor Module"
+      },
+      {
+        "type": "4f50",
+        "id": "3031",
+        "name": "12720 Outdoor Smart Switch"
+      },
+      {
+        "type": "6363",
+        "id": "3130",
+        "name": "12720 Outdoor Smart Switch"
+      },
+      {
+        "type": "4f50",
+        "id": "3032",
+        "name": "14284 Outdoor Smart Switch"
+      },
+      {
+        "type": "4f44",
+        "id": "3032",
+        "name": "14285 Outdoor Smart Switch"
+      },
+      {
+        "type": "5252",
+        "id": "3530",
+        "name": "45605 Duplex Receptacle"
+      },
+      {
+        "type": "5044",
+        "id": "3038",
+        "name": "28167/ZW3104 Plug-In Smart Dimmer (Single Plug)"
+      },
+      {
+        "type": "4952",
+        "id": "3133",
+        "name": "14288 Duplex Receptacle"
+      },
+      {
+        "type": "5257",
+        "id": "3533",
+        "name": "45609 On/Off Relay Switch"
+      },
+      {
+        "type": "4457",
+        "id": "3033",
+        "name": "45613 3-Way Dimmer Switch"
+      },
+      {
+        "type": "4952",
+        "id": "3031",
+        "name": "12721 Lighting Control Duplex Receptacle"
+      },
+      {
+        "type": "4952",
+        "id": "3032",
+        "name": "12722 On/Off Relay Switch"
+      },
+      {
+        "type": "4952",
+        "id": "3033",
+        "name": "12727 In-Wall Smart Switch (Toggle)"
+      },
+      {
+        "type": "4953",
+        "id": "3032",
+        "name": "32563 Hinge Pin Smart Door Sensor"
+      },
+      {
+        "type": "5044",
+        "id": "3031",
+        "name": "12718 Plug-In Two-Outlet Smart Dimmer"
+      },
+      {
+        "type": "5052",
+        "id": "3031",
+        "name": "12719 Plug-in Smart Switch"
+      },
+      {
+        "type": "5052",
+        "id": "3033",
+        "name": "14282 Plug-In Two-Outlet Smart Switch"
+      },
+      {
+        "type": "5052",
+        "id": "3038",
+        "name": "28169 Plug-In One-Outlet Smart Switch"
+      },
+      {
+        "type": "6363",
+        "id": "3533",
+        "name": "ZW4001 In-Wall Decora Style On/Off Relay Switch"
+      },
+      {
+        "type": "4c42",
+        "id": "3031",
+        "name": "ZW7101 Smart LED Light Bulb ZE26I"
+      },
+      {
+        "type": "4953",
+        "id": "3133",
+        "name": "ZW6302 Portable Smart Motion Sensor"
+      },
+      {
+        "type": "4953",
+        "id": "3134",
+        "name": "ZW6302 Portable Smart Motion Sensor"
+      }
+    ]
+  },
+  {
+    "id": "0408",
+    "name": "Gerber Technology"
+  },
+  {
+    "id": "025a",
+    "name": "GES"
+  },
+  {
+    "id": "022b",
+    "name": "GKB Security Corporation"
+  },
+  {
+    "id": "018a",
+    "name": "Globalchina-Tech"
+  },
+  {
+    "id": "0076",
+    "name": "Goggin Research"
+  },
+  {
+    "id": "0068",
+    "name": "Good Way Technology Co. Ltd",
+    "products": [
+      {
+        "type": "0003",
+        "id": "000b",
+        "name": "RGBW Color LED Dimmer"
+      }
+    ]
+  },
+  {
+    "id": "0099",
+    "name": "GreenWave Reality Inc",
+    "products": [
+      {
+        "type": "0001",
+        "id": "0002",
+        "name": "One Gateway"
+      },
+      {
+        "type": "0002",
+        "id": "0002",
+        "name": "PowerNode 1 port"
+      },
+      {
+        "type": "0003",
+        "id": "0004",
+        "name": "PowerNode 6 port"
+      }
+    ]
+  },
+  {
+    "id": "0401",
+    "name": "Grenton Sp. z o.o."
+  },
+  {
+    "id": "018b",
+    "name": "Grib"
+  },
+  {
+    "id": "0391",
+    "name": "GUANGDONG PHNIX ECO-ENERGY SOLUTION LTD"
+  },
+  {
+    "id": "016d",
+    "name": "Guangzhou Ruixiang M&E Co. Ltd"
+  },
+  {
+    "id": "0158",
+    "name": "GuangZhou Zeewave Information Technology Co. Ltd"
+  },
+  {
+    "id": "0395",
+    "name": "Guangzhou_SIMT Limited"
+  },
+  {
+    "id": "037b",
+    "name": "Guardtec Inc",
+    "products": [
+      {
+        "type": "0002",
+        "id": "0001",
+        "name": "GKW-2000D Door Lock"
+      }
+    ]
+  },
+  {
+    "id": "0287",
+    "name": "HAB Home Intelligence LLC",
+    "products": [
+      {
+        "type": "0003",
+        "id": "000d",
+        "name": "iblinds V2"
+      },
+      {
+        "type": "0004",
+        "id": "0071",
+        "name": "iblinds V3"
+      }
+    ]
+  },
+  {
+    "id": "030d",
+    "name": "Hampoo"
+  },
+  {
+    "id": "040a",
+    "name": "Hangzhou Hikvision Digital Technology Co. Ltd"
+  },
+  {
+    "id": "0387",
+    "name": "HangZhou iMagic Technology Co. Ltd"
+  },
+  {
+    "id": "0208",
+    "name": "HANK Electronics Ltd",
+    "products": [
+      {
+        "type": "0101",
+        "id": "0005",
+        "name": "HKZW-SO01 Smart Plug"
+      },
+      {
+        "type": "0100",
+        "id": "000a",
+        "name": "HKZW-SO05 Smart Plug"
+      },
+      {
+        "type": "0200",
+        "id": "0006",
+        "name": "HKZW-MS01 Multisensor"
+      },
+      {
+        "type": "0200",
+        "id": "0012",
+        "name": "HKZW-MS02 Motion Sensor"
+      },
+      {
+        "type": "0300",
+        "id": "0012",
+        "name": "HKZW-MS02 Motion Sensor"
+      },
+      {
+        "type": "0200",
+        "id": "0008",
+        "name": "HKZW-DWS01 Door/Window Sensor"
+      },
+      {
+        "type": "0201",
+        "id": "0008",
+        "name": "HKZW-DWS01 Door/Window Sensor"
+      },
+      {
+        "type": "0200",
+        "id": "0009",
+        "name": "HKZW-SCN01 Scene Controller"
+      },
+      {
+        "type": "0200",
+        "id": "000b",
+        "name": "HKZW-SCN04 Scene Controller"
+      },
+      {
+        "type": "0201",
+        "id": "000b",
+        "name": "HKZW-SCN04 Scene Controller"
+      },
+      {
+        "type": "0100",
+        "id": "0004",
+        "name": "HKZW-RGB01 RGB bulb"
+      },
+      {
+        "type": "0101",
+        "id": "0004",
+        "name": "HKZW-RGB01 RGB bulb"
+      },
+      {
+        "type": "0101",
+        "id": "000a",
+        "name": "HKZW-SO03 Smart Plug"
+      },
+      {
+        "type": "0200",
+        "id": "000f",
+        "name": "HKZW-FLD01 Flood Sensor"
+      },
+      {
+        "type": "0100",
+        "id": "0019",
+        "name": "HKZW-SO08 Smart Plug"
+      }
+    ]
+  },
+  {
+    "id": "024c",
+    "name": "Hankook Gas Kiki CO.LTD"
+  },
+  {
+    "id": "025c",
+    "name": "Hauppauge"
+  },
+  {
+    "id": "0073",
+    "name": "Hawking Technologies Inc"
+  },
+  {
+    "id": "040c",
+    "name": "HEIGHTS TELECOM T LTD"
+  },
+  {
+    "id": "0260",
+    "name": "Heiman Technology Co. Ltd",
+    "products": [
+      {
+        "type": "0168",
+        "id": "0168",
+        "name": "Door Sensor HS1DS-Z"
+      },
+      {
+        "type": "8001",
+        "id": "1000",
+        "name": "Motion Sensor HS1MS-Z"
+      },
+      {
+        "type": "8002",
+        "id": "1000",
+        "name": "Smart Smoke Sensor HS1SA-Z"
+      },
+      {
+        "type": "8003",
+        "id": "1000",
+        "name": "Combustible Gas Sensor HS1CG-Z"
+      },
+      {
+        "type": "8004",
+        "id": "1000",
+        "name": "Water Leakage Sensor HS1WL-Z"
+      },
+      {
+        "type": "8005",
+        "id": "1000",
+        "name": "CO Sensor HS1CA-Z"
+      },
+      {
+        "type": "8006",
+        "id": "1000",
+        "name": "Smart Metering Plug HS2SK-Z"
+      },
+      {
+        "type": "8007",
+        "id": "1000",
+        "name": "Temperature Humidity Sensor HS1HT-Z"
+      },
+      {
+        "type": "8008",
+        "id": "1000",
+        "name": "Smart Plug HS2SK-Z"
+      }
+    ]
+  },
+  {
+    "id": "0344",
+    "name": "HELTUN",
+    "products": [
+      {
+        "type": "0003",
+        "id": "0001",
+        "name": "HE-ZW-THERM-FL2 Heating Thermostat"
+      },
+      {
+        "type": "0003",
+        "id": "0003",
+        "name": "HE-ZW-SW-5A-1 Touch Panel Switch"
+      },
+      {
+        "type": "0003",
+        "id": "0002",
+        "name": "HE-ZW-THERM-FC1 Fan Coil Thermostat"
+      },
+      {
+        "type": "0004",
+        "id": "0001",
+        "name": "Heating Thermostat HE-HT01"
+      },
+      {
+        "type": "0004",
+        "id": "0002",
+        "name": "Fan Coil Thermostat HE-FT01"
+      }
+    ]
+  },
+  {
+    "id": "020f",
+    "name": "Herald Datanetics Limited"
+  },
+  {
+    "id": "0017",
+    "name": "HiTech Automation"
+  },
+  {
+    "id": "024c",
+    "name": "Hankook Gas Kiki CO.LTD"
+  },
+  {
+    "id": "025c",
+    "name": "Hauppauge"
+  },
+  {
+    "id": "0073",
+    "name": "Hawking Technologies Inc"
+  },
+  {
+    "id": "040c",
+    "name": "HEIGHTS TELECOM T LTD"
+  },
+  {
+    "id": "0344",
+    "name": "HELTUN"
+  },
+  {
+    "id": "020f",
+    "name": "Herald Datanetics Limited"
+  },
+  {
+    "id": "0017",
+    "name": "HiTech Automation"
+  },
+  {
+    "id": "0181",
+    "name": "Holion Electronic Engineering Co. Ltd"
+  },
+  {
+    "id": "013e",
+    "name": "Holtec Electronics BV"
+  },
+  {
+    "id": "000d",
+    "name": "Home Automated Living"
+  },
+  {
+    "id": "009a",
+    "name": "Home Automation Europe"
+  },
+  {
+    "id": "005b",
+    "name": "Home Automation Inc."
+  },
+  {
+    "id": "0293",
+    "name": "Home controls"
+  },
+  {
+    "id": "0038",
+    "name": "Home Director"
+  },
+  {
+    "id": "0070",
+    "name": "Homemanageables Inc"
+  },
+  {
+    "id": "0050",
+    "name": "Homepro"
+  },
+  {
+    "id": "0162",
+    "name": "HomeScenario"
+  },
+  {
+    "id": "001e",
+    "name": "Homeseer (Express Controls)",
+    "products": [
+      {
+        "type": "0001",
+        "id": "0002",
+        "name": "ZTroller"
+      },
+      {
+        "type": "0002",
+        "id": "0001",
+        "name": "HSM100 Wireless Multi-Sensor"
+      },
+      {
+        "type": "0002",
+        "id": "0002",
+        "name": "EZMotion+ 3-in-1 Sensor"
+      },
+      {
+        "type": "0004",
+        "id": "0001",
+        "name": "HSM200 Wireless Multi-Sensor"
+      }
+    ]
+  },
+  {
+    "id": "000c",
+    "name": "HomeSeer Technologies",
+    "products": [
+      {
+        "type": "0004",
+        "id": "0001",
+        "name": "HSM200 Wireless Multi-Sensor"
+      },
+      {
+        "type": "4447",
+        "id": "3033",
+        "name": "HS-WS100+ Wall Switch"
+      },
+      {
+        "type": "4447",
+        "id": "3034",
+        "name": "HS-WD100+ Wall Dimmer"
+      },
+      {
+        "type": "4447",
+        "id": "3035",
+        "name": "HS-WS200+ Wall Switch"
+      },
+      {
+        "type": "4447",
+        "id": "3036",
+        "name": "HS-WD200+ Wall Dimmer"
+      },
+      {
+        "type": "0201",
+        "id": "0008",
+        "name": "HS-DS100+ Door/Window Sensor"
+      },
+      {
+        "type": "0201",
+        "id": "0009",
+        "name": "HS-MS100+ Motion Sensor"
+      },
+      {
+        "type": "0201",
+        "id": "000a",
+        "name": "HS-LS100+ Leak Sensor"
+      },
+      {
+        "type": "0201",
+        "id": "000b",
+        "name": "HS-FLS100+ Floodlight Sensor"
+      },
+      {
+        "type": "0203",
+        "id": "0001",
+        "name": "HS-FC200+ Z-Wave Plus Fan Controller"
+      },
+      {
+        "type": "0202",
+        "id": "0001",
+        "name": "HS-FS100+ Flex Sensor"
+      }
+    ]
+  },
+  {
+    "id": "0275",
+    "name": "Honest Technology"
+  },
+  {
+    "id": "023d",
+    "name": "Honest Technology Co. Ltd"
+  },
+  {
+    "id": "0039",
+    "name": "Honeywell",
+    "products": [
+      {
+        "type": "0011",
+        "id": "0001",
+        "name": "TH8320ZW1000 Touchscreen Thermostat"
+      },
+      {
+        "type": "0011",
+        "id": "0008",
+        "name": "TH6320ZW2003 T6 Pro Series Thermostat"
+      },
+      {
+        "type": "0001",
+        "id": "0003",
+        "name": "Lynx Touch L5100 / L7000"
+      },
+      {
+        "type": "4944",
+        "id": "3038",
+        "name": "39351 / ZW3005 In-Wall Smart Dimmer"
+      },
+      {
+        "type": "4952",
+        "id": "3036",
+        "name": "39348 / ZW4005 In-Wall Smart Switch"
+      },
+      {
+        "type": "4952",
+        "id": "3135",
+        "name": "39348 / ZW4008 In-Wall Smart Switch"
+      },
+      {
+        "type": "4952",
+        "id": "3133",
+        "name": "39349 / ZW1002 In-Wall Tamper Resistant Outlet"
+      },
+      {
+        "type": "4944",
+        "id": "3130",
+        "name": "39357 / ZW3004 In-Wall Smart Toggle Dimmer"
+      },
+      {
+        "type": "4944",
+        "id": "3235",
+        "name": "39351 / ZW3010 In-Wall Smart Dimmer"
+      },
+      {
+        "type": "4944",
+        "id": "3131",
+        "name": "39358 / ZW4002 In-Wall Fan Control"
+      },
+      {
+        "type": "5052",
+        "id": "3033",
+        "name": "39449 / ZW4106 Plug-in Smart Switch"
+      },
+      {
+        "type": "5044",
+        "id": "3038",
+        "name": "39336 / ZW3104 Plug-in Dimmer"
+      },
+      {
+        "type": "5044",
+        "id": "3033",
+        "name": "39446 / ZW3107 Plug-in Dimmer"
+      }
+    ]
+  },
+  {
+    "id": "0313",
+    "name": "Hoppe"
+  },
+  {
+    "id": "0377",
+    "name": "HORNBACH Baumarkt AG"
+  },
+  {
+    "id": "0059",
+    "name": "Horstmann (Secure Meters)",
+    "products": [
+      {
+        "type": "0001",
+        "id": "0001",
+        "name": "ASR-RF Thermostat Receiver"
+      },
+      {
+        "type": "0001",
+        "id": "0002",
+        "name": "AS2-RF Thermostat Transmitter"
+      },
+      {
+        "type": "0001",
+        "id": "0003",
+        "name": "HRT4-ZW Thermostat Transmitter"
+      },
+      {
+        "type": "0001",
+        "id": "0004",
+        "name": "SRT 323 Electronic Room Thermostat and Temperature"
+      },
+      {
+        "type": "0001",
+        "id": "0005",
+        "name": "SRT-321 Thermostat-HVAC"
+      },
+      {
+        "type": "0003",
+        "id": "0001",
+        "name": "ASR-ZW Thermostat Receiver"
+      },
+      {
+        "type": "0003",
+        "id": "0002",
+        "name": "SSR 302 2-zone Thermostat Receiver"
+      },
+      {
+        "type": "0003",
+        "id": "0005",
+        "name": "SSR 303 Thermostat Receiver"
+      },
+      {
+        "type": "0004",
+        "id": "0001",
+        "name": "SCSC17 Thermostat"
+      },
+      {
+        "type": "000d",
+        "id": "0001",
+        "name": "SES 301 Temperature Sensor"
+      },
+      {
+        "type": "000d",
+        "id": "0002",
+        "name": "SES 302 Temperature Sensor"
+      },
+      {
+        "type": "000d",
+        "id": "0003",
+        "name": "SES 303 Temperature and Humidity Sensor"
+      },
+      {
+        "type": "000f",
+        "id": "0001",
+        "name": "SWM01 Water Meter Sensor"
+      },
+      {
+        "type": "0010",
+        "id": "0001",
+        "name": "SIR321 RF Countdown Timer"
+      },
+      {
+        "type": "0010",
+        "id": "0002",
+        "name": "SIR321 RF Countdown Timer with temperature"
+      }
+    ]
+  },
+  {
+    "id": "0298",
+    "name": "Horus Smart Control"
+  },
+  {
+    "id": "0221",
+    "name": "HOSEOTELNET"
+  },
+  {
+    "id": "0180",
+    "name": "Huapin Information Technology Co.Ltd"
+  },
+  {
+    "id": "025f",
+    "name": "Huawei Device Co. Ltd"
+  },
+  {
+    "id": "024b",
+    "name": "Huawei Technologies Co. Ltd"
+  },
+  {
+    "id": "007c",
+    "name": "Hunter Douglas"
+  },
+  {
+    "id": "0374",
+    "name": "Hyundai Telecom"
+  },
+  {
+    "id": "038a",
+    "name": "iamsmart"
+  },
+  {
+    "id": "0218",
+    "name": "iAutomade Pte Ltd"
+  },
+  {
+    "id": "0011",
+    "name": "iCOM Technology b.v."
+  },
+  {
+    "id": "0106",
+    "name": "Icontrol Networks"
+  },
+  {
+    "id": "0373",
+    "name": "ID Lock AS",
+    "products": [
+      {
+        "type": "0003",
+        "id": "0001",
+        "name": "ID-150 Z-Wave Module"
+      }
+    ]
+  },
+  {
+    "id": "019e",
+    "name": "iEXERGY GmbH"
+  },
+  {
+    "id": "031c",
+    "name": "Ilevia srl"
+  },
+  {
+    "id": "0056",
+    "name": "Impact Technologies and Products"
+  },
+  {
+    "id": "0061",
+    "name": "Impact Technologies BV"
+  },
+  {
+    "id": "0385",
+    "name": "Inergy Systems LLC"
+  },
+  {
+    "id": "012b",
+    "name": "Infusion Development"
+  },
+  {
+    "id": "006c",
+    "name": "Ingersoll Rand (Schlage)"
+  },
+  {
+    "id": "011f",
+    "name": "Ingersoll Rand",
+    "products": [
+      {
+        "type": "0001",
+        "id": "0002",
+        "name": "DWZWAVE1"
+      }
+    ]
+  },
+  {
+    "id": "0256",
+    "name": "Inkel Corp"
+  },
+  {
+    "id": "003a",
+    "name": "Inlon Srl"
+  },
+  {
+    "id": "0141",
+    "name": "Innoband Technologies Inc"
+  },
+  {
+    "id": "0382",
+    "name": "INNOPIA Technologies Inc"
+  },
+  {
+    "id": "0077",
+    "name": "Innovus",
+    "products": [
+      {
+        "type": "0002",
+        "id": "0001",
+        "name": "SmoothRemote Controller"
+      },
+      {
+        "type": "0001",
+        "id": "0002",
+        "name": "RAone SmartPower Wall Appliance Module"
+      },
+      {
+        "type": "0001",
+        "id": "0001",
+        "name": "RAone SmartDimmer Wall Dimmer Module"
+      }
+    ]
+  },
+  {
+    "id": "0312",
+    "name": "Inovelli",
+    "products": [
+      {
+        "type": "ff00",
+        "id": "ff04",
+        "name": "LZW30 Switch"
+      },
+      {
+        "type": "1e01",
+        "id": "1e01",
+        "name": "NZW30 Smart Switch"
+      },
+      {
+        "type": "1e00",
+        "id": "1e00",
+        "name": "NZW30 Smart Switch (w/Scene)"
+      },
+      {
+        "type": "1e02",
+        "id": "1e02",
+        "name": "NZW30 Smart Toggle Switch (w/Scene)"
+      },
+      {
+        "type": "1f01",
+        "id": "1f01",
+        "name": "NZW31 Smart Dimmer"
+      },
+      {
+        "type": "1f00",
+        "id": "1f00",
+        "name": "NZW31 Smart Dimmer (w/Scene)"
+      },
+      {
+        "type": "1f02",
+        "id": "1f02",
+        "name": "NZW31 Smart Toggle Dimmer (w/Scene)"
+      },
+      {
+        "type": "b211",
+        "id": "241c",
+        "name": "NZW36 1-Channel Smart Plug-In Module"
+      },
+      {
+        "type": "2400",
+        "id": "2400",
+        "name": "NZW36 1-Channel Smart Plug (w/Scene)"
+      },
+      {
+        "type": "b221",
+        "id": "251c",
+        "name": "NZW37 2-Channel Smart Plug"
+      },
+      {
+        "type": "2500",
+        "id": "2500",
+        "name": "NZW37 2-Channel Smart Plug (w/Scene)"
+      },
+      {
+        "type": "b212",
+        "id": "271c",
+        "name": "NZW39 Smart Plug Dimmer"
+      },
+      {
+        "type": "2700",
+        "id": "2700",
+        "name": "NZW39 Smart Plug Dimmer (w/Scene)"
+      },
+      {
+        "type": "6000",
+        "id": "6000",
+        "name": "NZW96 1-Channel Outdoor Smart Plug"
+      },
+      {
+        "type": "6100",
+        "id": "6100",
+        "name": "NZW97 2-Channel Outdoor Smart Plug"
+      }
+    ]
+  },
+  {
+    "id": "031e",
+    "name": "Inovelli",
+    "products": [
+      {
+        "type": "0002",
+        "id": "0001",
+        "name": "LZW30-SN Switch Red Series"
+      },
+      {
+        "type": "0004",
+        "id": "0001",
+        "name": "LZW30 Switch"
+      },
+      {
+        "type": "0001",
+        "id": "0001",
+        "name": "LZW31-SN Dimmer Red Series"
+      },
+      {
+        "type": "0003",
+        "id": "0001",
+        "name": "LZW31 Dimmer"
+      },
+      {
+        "type": "0005",
+        "id": "0001",
+        "name": "LZW42 Multi-Color Bulb"
+      },
+      {
+        "type": "0006",
+        "id": "0001",
+        "name": "LZW41 Multi-White Bulb"
+      },
+      {
+        "type": "0007",
+        "id": "0001",
+        "name": "LZW40 Dimmable  Bulb"
+      },
+      {
+        "type": "000d",
+        "id": "0001",
+        "name": "LZW60 4-in-1 Sensor"
+      },
+      {
+        "type": "000e",
+        "id": "0001",
+        "name": "LZW36 Fan/Light Dimmer"
+      },
+      {
+        "type": "000a",
+        "id": "0001",
+        "name": "LZW45 Light Strip"
+      }
+    ]
+  },
+  {
+    "id": "0100",
+    "name": "Insignia"
+  },
+  {
+    "id": "0006",
+    "name": "Intel"
+  },
+  {
+    "id": "001c",
+    "name": "IntelliCon"
+  },
+  {
+    "id": "0072",
+    "name": "Interactive Electronics Systems"
+  },
+  {
+    "id": "0005",
+    "name": "Intermatic",
+    "products": [
+      {
+        "type": "0002",
+        "id": "0003",
+        "name": "HA-02 Appliance Module"
+      },
+      {
+        "type": "0003",
+        "id": "0003",
+        "name": "HA-03WD Lamp Module"
+      },
+      {
+        "type": "0004",
+        "id": "0003",
+        "name": "HA-04C Outdoor Module"
+      },
+      {
+        "type": "0005",
+        "id": "0003",
+        "name": "HA-05C Lamp Screw In Module"
+      },
+      {
+        "type": "0006",
+        "id": "0003",
+        "name": "HA-06 In-Wall Switch Dimmer"
+      },
+      {
+        "type": "4341",
+        "id": "0600",
+        "name": "CA600 Wall Dimmer"
+      },
+      {
+        "type": "4341",
+        "id": "3000",
+        "name": "CA3000 Wall Switch"
+      },
+      {
+        "type": "4341",
+        "id": "3500",
+        "name": "CA3560 Split-Duplex Receptacle"
+      },
+      {
+        "type": "4341",
+        "id": "8900",
+        "name": "CA8900 Digital Thermostat"
+      },
+      {
+        "type": "4341",
+        "id": "9000",
+        "name": "CA9000 PIR Occupancy Sensor"
+      }
+    ]
+  },
+  {
+    "id": "0338",
+    "name": "International Integrated Systems Inc"
+  },
+  {
+    "id": "0013",
+    "name": "Internet Dom"
+  },
+  {
+    "id": "0288",
+    "name": "INTERSOFT"
+  },
+  {
+    "id": "039e",
+    "name": "Invalance"
+  },
+  {
+    "id": "0278",
+    "name": "Inventec"
+  },
+  {
+    "id": "0368",
+    "name": "IOOOTA"
+  },
+  {
+    "id": "005f",
+    "name": "IQ-Group"
+  },
+  {
+    "id": "0212",
+    "name": "iRevo"
+  },
+  {
+    "id": "0253",
+    "name": "iungo.nl B.V."
+  },
+  {
+    "id": "0123",
+    "name": "IWATSU",
+    "products": [
+      {
+        "type": "0000",
+        "id": "0000",
+        "name": "TM-H2VHD081 HA Dongle"
+      },
+      {
+        "type": "0102",
+        "id": "0102",
+        "name": "NE-4CT-2P Electric Power Measuring Equipment"
+      },
+      {
+        "type": "0103",
+        "id": "0103",
+        "name": "NE-4CT Electric Power Measuring Equipment"
+      }
+    ]
+  },
+  {
+    "id": "015a",
+    "name": "Jin Tao Bao"
+  },
+  {
+    "id": "039f",
+    "name": "JLabs Corporation"
+  },
+  {
+    "id": "0164",
+    "name": "JSW Pacific Corporation"
+  },
+  {
+    "id": "0214",
+    "name": "Kaipule Technology Co. Ltd",
+    "products": [
+      {
+        "type": "0002",
+        "id": "0001",
+        "name": "IM20 Door/Window Sensor"
+      },
+      {
+        "type": "0003",
+        "id": "0002",
+        "name": "PIR Celling Sensor"
+      }
+    ]
+  },
+  {
+    "id": "0091",
+    "name": "Kamstrup A/S"
+  },
+  {
+    "id": "006a",
+    "name": "Kellendonk Elektronik"
+  },
+  {
+    "id": "0114",
+    "name": "Kichler"
+  },
+  {
+    "id": "035f",
+    "name": "KIWILAB"
+  },
+  {
+    "id": "0139",
+    "name": "KlickH Pvt Ltd"
+  },
+  {
+    "id": "0261",
+    "name": "KOOL KONCEPTS"
+  },
+  {
+    "id": "0174",
+    "name": "Kopera Development Inc"
+  },
+  {
+    "id": "023a",
+    "name": "KUMHO ELECTRIC INC"
+  },
+  {
+    "id": "0090",
+    "name": "Kwikset (Spectrum Brands)",
+    "products": [
+      {
+        "type": "0001",
+        "id": "0001",
+        "name": "Touchpad Electronic Deadbolt"
+      },
+      {
+        "type": "0001",
+        "id": "0642",
+        "name": "SmartCode 916"
+      },
+      {
+        "type": "0003",
+        "id": "0642",
+        "name": "SmartCode 916"
+      },
+      {
+        "type": "0003",
+        "id": "4006",
+        "name": "SmartCode 914"
+      },
+      {
+        "type": "0003",
+        "id": "0440",
+        "name": "SmartCode 914"
+      },
+      {
+        "type": "0003",
+        "id": "0236",
+        "name": "SmartCode 912"
+      },
+      {
+        "type": "0003",
+        "id": "0339",
+        "name": "SmartCode 912"
+      },
+      {
+        "type": "0001",
+        "id": "0236",
+        "name": "SmartCode 910"
+      },
+      {
+        "type": "0003",
+        "id": "0238",
+        "name": "SmartCode 910"
+      },
+      {
+        "type": "0001",
+        "id": "0001",
+        "name": "SmartCode 910"
+      },
+      {
+        "type": "0006",
+        "id": "0440",
+        "name": "SmartCode 10"
+      },
+      {
+        "type": "0003",
+        "id": "0742",
+        "name": "Obsidian"
+      },
+      {
+        "type": "0003",
+        "id": "0446",
+        "name": "Convert 914"
+      },
+      {
+        "type": "0003",
+        "id": "0541",
+        "name": "Smartcode 888"
+      }
+    ]
+  },
+  {
+    "id": "0051",
+    "name": "Lagotek Corp"
+  },
+  {
+    "id": "0173",
+    "name": "Leak Intelligence LLC"
+  },
+  {
+    "id": "0300",
+    "name": "LEEDARSON LIGHTING CO. LTD"
+  },
+  {
+    "id": "0187",
+    "name": "LEVION Technologies GmbH"
+  },
+  {
+    "id": "001d",
+    "name": "Leviton",
+    "products": [
+      {
+        "type": "0101",
+        "id": "0206",
+        "name": "RZP15-1LW Binary Scene Switch"
+      },
+      {
+        "type": "0201",
+        "id": "0206",
+        "name": "RZP03-1LW Binary Scene Switch"
+      },
+      {
+        "type": "0202",
+        "id": "030b",
+        "name": "VRP03-1LW Lamp Module"
+      },
+      {
+        "type": "0301",
+        "id": "0206",
+        "name": "RZS15-1LX Binary Scene Switch"
+      },
+      {
+        "type": "0301",
+        "id": "0209",
+        "name": "VRS15-1LZ Binary Scene Switch"
+      },
+      {
+        "type": "0301",
+        "id": "0334",
+        "name": "VRS15-1LZ Switch"
+      },
+      {
+        "type": "0401",
+        "id": "0206",
+        "name": "RZI10-1LX Multilevel Scene Switch"
+      },
+      {
+        "type": "0401",
+        "id": "0209",
+        "name": "VRI06-1LX Multilevel Scene Switch"
+      },
+      {
+        "type": "0501",
+        "id": "0206",
+        "name": "VRI10-1LX Multilevel Scene Switch"
+      },
+      {
+        "type": "0501",
+        "id": "0209",
+        "name": "VRI10-1LZ Scene Capable Dimmer"
+      },
+      {
+        "type": "0602",
+        "id": "0209",
+        "name": "VRMX1-1LZ Multilevel Scene Switch"
+      },
+      {
+        "type": "0602",
+        "id": "0334",
+        "name": "VRMX1-1LZ Multilevel Scene Switch"
+      },
+      {
+        "type": "0901",
+        "id": "0215",
+        "name": "VRC51-1LX One Scene Controller"
+      },
+      {
+        "type": "0702",
+        "id": "0261",
+        "name": "VRCZ4-M0Z 4-Button Zone Controller"
+      },
+      {
+        "type": "0b02",
+        "id": "030b",
+        "name": "VRC0P-1LW Plug-in Serial Interface Module"
+      },
+      {
+        "type": "0c01",
+        "id": "0206",
+        "name": "VRCPG-SG RF Handheld Remote Controller"
+      },
+      {
+        "type": "0e01",
+        "id": "0334",
+        "name": "VRE06-1LZ Multilevel Scene Switch"
+      },
+      {
+        "type": "1001",
+        "id": "0209",
+        "name": "VRF01-1LZ Scene Capable Quiet Fan Speed Control"
+      },
+      {
+        "type": "1001",
+        "id": "0334",
+        "name": "VRF01-1LZ Quiet Fan Speed Control"
+      },
+      {
+        "type": "1102",
+        "id": "0243",
+        "name": "VRCS2-MRZ 2-Button Scene Controller with Switches"
+      },
+      {
+        "type": "1202",
+        "id": "0243",
+        "name": "VRCZ4-MRZ 4-Button Zone Controller with Switch"
+      },
+      {
+        "type": "1902",
+        "id": "0334",
+        "name": "DZPD3-1LW Plug-In Dimming Lamp Module"
+      },
+      {
+        "type": "1a02",
+        "id": "0334",
+        "name": "DZPA1-1LW Plug-In Appliance Module"
+      },
+      {
+        "type": "1b03",
+        "id": "0334",
+        "name": "DZMX1-1LZ Dimmer"
+      },
+      {
+        "type": "1c02",
+        "id": "0334",
+        "name": "DZS15-1LZ Switch"
+      },
+      {
+        "type": "1d04",
+        "id": "0334",
+        "name": "DZR15-1LZ Receptacle"
+      },
+      {
+        "type": "3201",
+        "id": "0001",
+        "name": "DZ6HD-1BZ Decora 600W Smart Dimmer"
+      },
+      {
+        "type": "3301",
+        "id": "0001",
+        "name": "DZ1KD-1BZ Decora 1000W Smart Dimmer"
+      },
+      {
+        "type": "3401",
+        "id": "0001",
+        "name": "DZ15S-1BZ Decora Smart Switch"
+      },
+      {
+        "type": "3501",
+        "id": "0001",
+        "name": "DZPD3-2BW Decora 300W Plug-In Smart Dimmer"
+      },
+      {
+        "type": "1805",
+        "id": "0334",
+        "name": "Leviton VRPA1 Plug-In Outlet"
+      },
+      {
+        "type": "3601",
+        "id": "0001",
+        "name": "Leviton DZPA1 Plug-In Outlet"
+      },
+      {
+        "type": "1706",
+        "id": "0334",
+        "name": "Leviton VRPD3-1LW 300W Plug-In Lamp Dimming Module"
+      },
+      {
+        "type": "0038",
+        "id": "0002",
+        "name": "ZW4SF-1BW Decora Smart 4 Speed Fan Controller"
+      },
+      {
+        "type": "0037",
+        "id": "0002",
+        "name": "ZW15R Decora Smart Tamper-Resistant Outlet with Z-Wave Technology"
+      }
+    ]
+  },
+  {
+    "id": "0015",
+    "name": "Lexel"
+  },
+  {
+    "id": "015b",
+    "name": "LG Electronics"
+  },
+  {
+    "id": "0362",
+    "name": "LiaoningYouwang Lighting and Electronic Technology Pty Ltd"
+  },
+  {
+    "id": "0224",
+    "name": "LifeShield LLC"
+  },
+  {
+    "id": "003c",
+    "name": "Lifestyle Networks"
+  },
+  {
+    "id": "0210",
+    "name": "Light Engine Limited"
+  },
+  {
+    "id": "0342",
+    "name": "LIMEI"
+  },
+  {
+    "id": "014f",
+    "name": "Linear (Nortek Security Control LLC)",
+    "products": [
+      {
+        "type": "2001",
+        "id": "0102",
+        "name": "WADWAZ-1 Door/Window Sensor"
+      },
+      {
+        "type": "2002",
+        "id": "0203",
+        "name": "WAPIRZ-1 Motion Sensor"
+      },
+      {
+        "type": "2009",
+        "id": "0903",
+        "name": "WA105DBZ-1 Main Operated Siren"
+      },
+      {
+        "type": "4450",
+        "id": "3030",
+        "name": "PD300Z-2 Plug-in Dimmer Module"
+      },
+      {
+        "type": "4457",
+        "id": "3034",
+        "name": "WD500Z-1 Wall Dimmer Switch"
+      },
+      {
+        "type": "4457",
+        "id": "3331",
+        "name": "WD1000Z-1 Wall Dimmer Switch"
+      },
+      {
+        "type": "4744",
+        "id": "3030",
+        "name": "GD00Z-4 Garage Door Opener Remote Controller"
+      },
+      {
+        "type": "4744",
+        "id": "3530",
+        "name": "GD00Z-4 Garage Door Opener Remote Controller"
+      },
+      {
+        "type": "4744",
+        "id": "3531",
+        "name": "GD00Z-7 Garage Door Opener Remote Controller"
+      },
+      {
+        "type": "4754",
+        "id": "3038",
+        "name": "LB60Z-1 Dimmable LED Light Bulb"
+      },
+      {
+        "type": "4754",
+        "id": "4252",
+        "name": "LB30Z-1 Dimmable LED Light Bulb"
+      },
+      {
+        "type": "5246",
+        "id": "3133",
+        "name": "FS20Z Isolated Contact Fixture Module"
+      },
+      {
+        "type": "5250",
+        "id": "3030",
+        "name": "PS15Z-2 Plug-in Appliance Module"
+      },
+      {
+        "type": "5252",
+        "id": "3530",
+        "name": "WO15Z-1 Single Wall Outlet"
+      },
+      {
+        "type": "5257",
+        "id": "3533",
+        "name": "WS15Z-1 Wall Switch"
+      },
+      {
+        "type": "5343",
+        "id": "3132",
+        "name": "WA00Z-1 Scene Switch"
+      },
+      {
+        "type": "5457",
+        "id": "3033",
+        "name": "WT00Z-1 3-Way Wall Accessory Switch"
+      },
+      {
+        "type": "5442",
+        "id": "5431",
+        "name": "GC-TBZ48 Battery Powered Z-Wave Thermostat"
+      },
+      {
+        "type": "5442",
+        "id": "5436",
+        "name": "GC-TBZ48 Battery Powered Z-Wave Thermostat"
+      },
+      {
+        "type": "5442",
+        "id": "5437",
+        "name": "GC-TBZ48 Battery Powered Z-Wave Thermostat"
+      },
+      {
+        "type": "5744",
+        "id": "3530",
+        "name": "WD500Z5-1 Wall Mounted Dimmer"
+      },
+      {
+        "type": "5754",
+        "id": "3530",
+        "name": "WT00Z5-1 Smart 3-Way Switch/Dimmer"
+      }
+    ]
+  },
+  {
+    "id": "035c",
+    "name": "LINK ELECTRONICS Co. Ltd"
+  },
+  {
+    "id": "0316",
+    "name": "Lite Automation"
+  },
+  {
+    "id": "017a",
+    "name": "Liveguard Ltd"
+  },
+  {
+    "id": "013a",
+    "name": "Living Style Enterprises Ltd"
+  },
+  {
+    "id": "015e",
+    "name": "Locstar",
+    "products": [
+      {
+        "type": "8015",
+        "id": "0001",
+        "name": "LS-8015-ZW Single Latch Door Lock"
+      }
+    ]
+  },
+  {
+    "id": "0234",
+    "name": "Logic Soft",
+    "products": [
+      {
+        "type": "0003",
+        "id": "010a",
+        "name": "ZHC5010 Wall switch"
+      },
+      {
+        "type": "0003",
+        "id": "010c",
+        "name": "ZHC5002 Z-Scene Controller"
+      },
+      {
+        "type": "0003",
+        "id": "0121",
+        "name": "ZDB5100 Matrix"
+      }
+    ]
+  },
+  {
+    "id": "007f",
+    "name": "Logitech"
+  },
+  {
+    "id": "0025",
+    "name": "Loudwater Tech"
+  },
+  {
+    "id": "038c",
+    "name": "Lowes"
+  },
+  {
+    "id": "0071",
+    "name": "LS Control",
+    "products": [
+      {
+        "type": "0002",
+        "id": "035d",
+        "name": "ES 861 Temperature Sensor"
+      }
+    ]
+  },
+  {
+    "id": "036d",
+    "name": "Luffanet Co. Lte"
+  },
+  {
+    "id": "025e",
+    "name": "LUXEASY technology company LTD"
+  },
+  {
+    "id": "0062",
+    "name": "LVI Produkter AB"
+  },
+  {
+    "id": "0192",
+    "name": "m2m Solution"
+  },
+  {
+    "id": "0195",
+    "name": "M2M Solution"
+  },
+  {
+    "id": "006e",
+    "name": "Manodo / KTC"
+  },
+  {
+    "id": "003d",
+    "name": "Marmitek BV"
+  },
+  {
+    "id": "003e",
+    "name": "Martec Access"
+  },
+  {
+    "id": "0092",
+    "name": "Martin Renz GmbH"
+  },
+  {
+    "id": "008f",
+    "name": "MB Turn Key Design"
+  },
+  {
+    "id": "015f",
+    "name": "McoHome Technology Co Ltd",
+    "products": [
+      {
+        "type": "0001",
+        "id": "0001",
+        "name": "Mini Energy Dimmer"
+      },
+      {
+        "type": "0002",
+        "id": "0001",
+        "name": "Mini Energy Switch"
+      },
+      {
+        "type": "210a",
+        "id": "1302",
+        "name": "MH-P210 Mini Energy Dimmer"
+      },
+      {
+        "type": "220a",
+        "id": "1352",
+        "name": "MH-P220 Micro Dimmer"
+      },
+      {
+        "type": "220a",
+        "id": "5101",
+        "name": "MH-P220 Micro Dimmer"
+      },
+      {
+        "type": "220a",
+        "id": "5102",
+        "name": "MH-P220 Micro Dimmer"
+      },
+      {
+        "type": "2201",
+        "id": "1252",
+        "name": "MH-S220 One-Load"
+      },
+      {
+        "type": "3102",
+        "id": "0201",
+        "name": "MH-S311 One-load"
+      },
+      {
+        "type": "3102",
+        "id": "0202",
+        "name": "MH-S312 Two-load"
+      },
+      {
+        "type": "3102",
+        "id": "0204",
+        "name": "MH-S314 Four-load"
+      },
+      {
+        "type": "3141",
+        "id": "1302",
+        "name": "MH-S314 Four-load"
+      },
+      {
+        "type": "3141",
+        "id": "5102",
+        "name": "MH-S314 Four-load"
+      },
+      {
+        "type": "4102",
+        "id": "0201",
+        "name": "MH-S411 One-load"
+      },
+      {
+        "type": "4102",
+        "id": "0202",
+        "name": "MH-S412 Two-load"
+      },
+      {
+        "type": "4121",
+        "id": "1302",
+        "name": "MH-S412 Two-load"
+      },
+      {
+        "type": "4121",
+        "id": "5102",
+        "name": "MH-S412 Two-load"
+      },
+      {
+        "type": "0801",
+        "id": "3102",
+        "name": "MH8-FC-EU Thermostat"
+      },
+      {
+        "type": "0802",
+        "id": "3102",
+        "name": "MH8-FC4-EU Thermostat"
+      },
+      {
+        "type": "0803",
+        "id": "3102",
+        "name": "MH8-FC-EU Thermostat"
+      },
+      {
+        "type": "0803",
+        "id": "5102",
+        "name": "MH8-FC-EU Thermostat"
+      },
+      {
+        "type": "0905",
+        "id": "0201",
+        "name": "MH9-CO2-WD CO2 Monitor"
+      },
+      {
+        "type": "0901",
+        "id": "3102",
+        "name": "MH9-CO2-WD CO2 Monitor"
+      },
+      {
+        "type": "0901",
+        "id": "5102",
+        "name": "MH9-CO2-WD CO2 Monitor"
+      },
+      {
+        "type": "0902",
+        "id": "5102",
+        "name": "MH9-CO2-WD CO2 Monitor"
+      },
+      {
+        "type": "0a02",
+        "id": "5102",
+        "name": "MH10-PM2.5-WD PM 2.5 Monitor"
+      },
+      {
+        "type": "a800",
+        "id": "1352",
+        "name": "A8-9 Multi-sensor"
+      },
+      {
+        "type": "a803",
+        "id": "1352",
+        "name": "A8-9 Multi-sensor"
+      },
+      {
+        "type": "0701",
+        "id": "5102",
+        "name": "MH7H Water/Electrical Heating Thermostat"
+      },
+      {
+        "type": "0702",
+        "id": "5102",
+        "name": "MH7H Water/Electrical Heating Thermostat"
+      },
+      {
+        "type": "0712",
+        "id": "5102",
+        "name": "MH7H Water/Electrical Heating Thermostat"
+      },
+      {
+        "type": "0732",
+        "id": "5102",
+        "name": "MH7H Water/Electrical Heating Thermostat"
+      },
+      {
+        "type": "d411",
+        "id": "5102",
+        "name": "MH-DT411 Dimmer Switch"
+      },
+      {
+        "type": "0103",
+        "id": "5102",
+        "name": "MH-S513 Touch Panel Switch"
+      },
+      {
+        "type": "511a",
+        "id": "1453",
+        "name": "MH-P511 Dimmer Touch Panel Switch"
+      },
+      {
+        "type": "5131",
+        "id": "5103",
+        "name": "MH-S513 Touch Panel Switch"
+      }
+    ]
+  },
+  {
+    "id": "0222",
+    "name": "MCT CO. LTD"
+  },
+  {
+    "id": "0027",
+    "name": "Meedio LLC"
+  },
+  {
+    "id": "0107",
+    "name": "MegaChips"
+  },
+  {
+    "id": "022d",
+    "name": "Mercury Corporation"
+  },
+  {
+    "id": "007a",
+    "name": "Merten",
+    "products": [
+      {
+        "type": "8001",
+        "id": "0001",
+        "name": "Plug-in Appliance Module"
+      },
+      {
+        "type": "8002",
+        "id": "0001",
+        "name": "Plug-in Dimmer Module"
+      },
+      {
+        "type": "8003",
+        "id": "0001",
+        "name": "Plug-in Roller Shutter Module"
+      },
+      {
+        "type": "4003",
+        "id": "0001",
+        "name": "Wall Dimmer Module"
+      },
+      {
+        "type": "4002",
+        "id": "0001",
+        "name": "Wall Appliance Module"
+      },
+      {
+        "type": "4004",
+        "id": "0001",
+        "name": "Wall Roller Shutter Module"
+      },
+      {
+        "type": "8001",
+        "id": "8001",
+        "name": "Receiver Flush-Mounted 1-Gang Switch"
+      },
+      {
+        "type": "0003",
+        "id": "0004",
+        "name": "Transmitter Flush-Mounted 4-Gang Switch"
+      },
+      {
+        "type": "0001",
+        "id": "0002",
+        "name": "Transmitter 1-Gang Switch"
+      },
+      {
+        "type": "0001",
+        "id": "0004",
+        "name": "Transmitter 2-Gang Switch"
+      },
+      {
+        "type": "0002",
+        "id": "0001",
+        "name": "Transmitter Move"
+      }
+    ]
+  },
+  {
+    "id": "0238",
+    "name": "Milanity Inc"
+  },
+  {
+    "id": "0112",
+    "name": "MITSUMI"
+  },
+  {
+    "id": "019d",
+    "name": "MOBILUS MOTOR z o.o."
+  },
+  {
+    "id": "0232",
+    "name": "MODACOM CO. LTD"
+  },
+  {
+    "id": "008d",
+    "name": "Modstrom"
+  },
+  {
+    "id": "000e",
+    "name": "Mohito Networks"
+  },
+  {
+    "id": "0202",
+    "name": "Monoprice"
+  },
+  {
+    "id": "007e",
+    "name": "Monster Cable"
+  },
+  {
+    "id": "0125",
+    "name": "Motion Control Systems"
+  },
+  {
+    "id": "003f",
+    "name": "Motorola"
+  },
+  {
+    "id": "0122",
+    "name": "MSK Miyakawa Seisakusho",
+    "products": [
+      {
+        "type": "0001",
+        "id": "0001",
+        "name": "ME-D101 Electric Power Measuring Instrument"
+      },
+      {
+        "type": "8000",
+        "id": "0000",
+        "name": "ZW-GW Smart Bridge"
+      }
+    ]
+  },
+  {
+    "id": "0083",
+    "name": "MTC Maintronic"
+  },
+  {
+    "id": "0143",
+    "name": "myStrom"
+  },
+  {
+    "id": "0438",
+    "name": "Namron",
+    "products": [
+      {
+        "type": "0202",
+        "id": "0002",
+        "name": "LED Dimmer Z-Wave 200W"
+      },
+      {
+        "type": "0200",
+        "id": "d005",
+        "name": "Z-Wave Dimmer 400W"
+      },
+      {
+        "type": "0300",
+        "id": "a30f",
+        "name": "Z-wave 1 Kanal Bryter"
+      },
+      {
+        "type": "0200",
+        "id": "d006",
+        "name": "Z-Wave Switch 400W"
+      },
+      {
+        "type": "0200",
+        "id": "d00c",
+        "name": "Z-Wave Dimmer 2 400W"
+      },
+      {
+        "type": "0300",
+        "id": "a306",
+        "name": "Z-wave 2 Kanaler Bryter"
+      },
+      {
+        "type": "0300",
+        "id": "a305",
+        "name": "Z-wave 4 Channel Remote"
+      }
+    ]
+  },
+  {
+    "id": "016e",
+    "name": "Nanjing Easthouse Electrical Co"
+  },
+  {
+    "id": "0121",
+    "name": "Napco Security Technologies, Inc.",
+    "products": [
+      {
+        "type": "0001",
+        "id": "0001",
+        "name": "I-Bridge Z-Wave Controller"
+      }
+    ]
+  },
+  {
+    "id": "038d",
+    "name": "nCube"
+  },
+  {
+    "id": "036b",
+    "name": "NEC Platforms Ltd"
+  },
+  {
+    "id": "0241",
+    "name": "NEEO AG"
+  },
+  {
+    "id": "006d",
+    "name": "Nefit"
+  },
+  {
+    "id": "0312",
+    "name": "NEI Technology",
+    "products": [
+      {
+        "type": "ff00",
+        "id": "ff04",
+        "name": "MS11Z"
+      }
+    ]
+  },
+  {
+    "id": "0351",
+    "name": "NEOCONTROL US LLC"
+  },
+  {
+    "id": "0189",
+    "name": "Ness Corporation Pty Ltd"
+  },
+  {
+    "id": "0133",
+    "name": "Netgear"
+  },
+  {
+    "id": "0248",
+    "name": "neusta next GmbH Co. KG"
+  },
+  {
+    "id": "0203",
+    "name": "Newland Communication Science Technology Co. Ltd"
+  },
+  {
+    "id": "0268",
+    "name": "Nexa Trading AB"
+  },
+  {
+    "id": "0178",
+    "name": "Nexia",
+    "products": [
+      {
+        "type": "4442",
+        "id": "3130",
+        "name": "DB100Z Doorbell Sensor"
+      },
+      {
+        "type": "5448",
+        "id": "3130",
+        "name": "TH100NX Temperature & Humidity Sensor"
+      }
+    ]
+  },
+  {
+    "id": "0075",
+    "name": "NextEnergy"
+  },
+  {
+    "id": "0361",
+    "name": "NHN Entertainment"
+  },
+  {
+    "id": "0185",
+    "name": "Ningbo Sentek Electronics Co Ltd"
+  },
+  {
+    "id": "0165",
+    "name": "NodOn (ID-RF)",
+    "products": [
+      {
+        "type": "0001",
+        "id": "0001",
+        "name": "ASP-3-1-00 Smart Plug"
+      },
+      {
+        "type": "0001",
+        "id": "0003",
+        "name": "MSP-3-1-XX Micro Smart Plug"
+      },
+      {
+        "type": "0002",
+        "id": "0001",
+        "name": "CRC-3-1-00 Octan Remote"
+      },
+      {
+        "type": "0002",
+        "id": "0002",
+        "name": "CRC-3-6-0x Soft Remote"
+      },
+      {
+        "type": "0002",
+        "id": "0003",
+        "name": "CWS-3-1-01 Wall Switch"
+      }
+    ]
+  },
+  {
+    "id": "0252",
+    "name": "North China University of Technology"
+  },
+  {
+    "id": "0096",
+    "name": "NorthQ",
+    "products": [
+      {
+        "type": "0001",
+        "id": "0001",
+        "name": "NQ-92021 Power Reader"
+      },
+      {
+        "type": "0001",
+        "id": "0002",
+        "name": "NQ-9021 Power Reader"
+      },
+      {
+        "type": "0010",
+        "id": "0001",
+        "name": "NQ-9121 Gas Meter"
+      }
+    ]
+  },
+  {
+    "id": "0040",
+    "name": "Novar Electrical Devices and Systems"
+  },
+  {
+    "id": "020d",
+    "name": "Novateqni HK Ltd"
+  },
+  {
+    "id": "0296",
+    "name": "OBLO LIVING LLC "
+  },
+  {
+    "id": "0119",
+    "name": "Omnima Limited"
+  },
+  {
+    "id": "014c",
+    "name": "OnSite Pro"
+  },
+  {
+    "id": "0041",
+    "name": "OpenPeak Inc"
+  },
+  {
+    "id": "027d",
+    "name": "Oregon Automation"
+  },
+  {
+    "id": "0104",
+    "name": "Panasonic Electric Works Co. Ltd"
+  },
+  {
+    "id": "031a",
+    "name": "Panasonic ES Shin Dong-A Co Ltd"
+  },
+  {
+    "id": "028d",
+    "name": "Panodic Electric (Shenzhen) Limited"
+  },
+  {
+    "id": "0257",
+    "name": "PARATECH"
+  },
+  {
+    "id": "0172",
+    "name": "PassivSystems Limited"
+  },
+  {
+    "id": "0322",
+    "name": "Paxton Access Ltd"
+  },
+  {
+    "id": "0281",
+    "name": "PC Partner"
+  },
+  {
+    "id": "013d",
+    "name": "Pella"
+  },
+  {
+    "id": "0245",
+    "name": "permundo GmbH",
+    "products": [
+      {
+        "type": "0003",
+        "id": "0002",
+        "name": "PSC132ZW Smart Mini Plug"
+      },
+      {
+        "type": "0003",
+        "id": "0001",
+        "name": "PSC234ZW Smart Plug"
+      }
+    ]
+  },
+  {
+    "id": "0366",
+    "name": "PHILIA TECHNOLOGY Co. Ltd"
+  },
+  {
+    "id": "013c",
+    "name": "Philio Technology Corp",
+    "products": [
+      {
+        "type": "0001",
+        "id": "0001",
+        "name": "PAN11-4 Smart Energy Plug In Switch"
+      },
+      {
+        "type": "0001",
+        "id": "0003",
+        "name": "PAN04-1 Double Relay Switch 2x1.5kW with Power Measurement"
+      },
+      {
+        "type": "0001",
+        "id": "0010",
+        "name": "PAN05-1 In Wall Single relay (1 way) Switch"
+      },
+      {
+        "type": "0001",
+        "id": "0004",
+        "name": "PAN06-1 In Wall Dual Relay (1 Way) Switch Module"
+      },
+      {
+        "type": "0001",
+        "id": "0005",
+        "name": "PAN07-1 TWO SPDT Switch module with meter"
+      },
+      {
+        "type": "0001",
+        "id": "0006",
+        "name": "PAN08-1 In Wall Roller Shutter Controller"
+      },
+      {
+        "type": "0001",
+        "id": "000f",
+        "name": "PAN03 Switch Module with meter 3 KW X1"
+      },
+      {
+        "type": "0001",
+        "id": "0011",
+        "name": "PAN11 Smart Energy Plug In Switch"
+      },
+      {
+        "type": "0001",
+        "id": "0013",
+        "name": "PAN06-1 In Wall Dual Relay (1 Way) Switch Module"
+      },
+      {
+        "type": "0001",
+        "id": "0012",
+        "name": "PAN04-1 Double Relay Switch 2x1.5kW with Power Measurement"
+      },
+      {
+        "type": "0001",
+        "id": "0015",
+        "name": "PAN08-1 In Wall Roller Shutter Controller"
+      },
+      {
+        "type": "0001",
+        "id": "0029",
+        "name": "PAN16 Smart energy plug in switch"
+      },
+      {
+        "type": "0002",
+        "id": "0002",
+        "name": "PSM02-1 Slim Multi-Sensor"
+      },
+      {
+        "type": "0002",
+        "id": "0050",
+        "name": "PSP05 PIR/Motion"
+      },
+      {
+        "type": "0002",
+        "id": "000c",
+        "name": "PST02-A 4 in 1 Multi-Sensor"
+      },
+      {
+        "type": "0002",
+        "id": "000d",
+        "name": "PST02-B PIR/Motion 3 in 1 Sensor"
+      },
+      {
+        "type": "0002",
+        "id": "000e",
+        "name": "PST02-C Door/Window 3 in 1 sensor"
+      },
+      {
+        "type": "0002",
+        "id": "001e",
+        "name": "PH-PSG01 Smoke Sensor"
+      },
+      {
+        "type": "0002",
+        "id": "001f",
+        "name": "PH-PAT02.eu Flood Multisensor 3in1"
+      },
+      {
+        "type": "0002",
+        "id": "0020",
+        "name": "PH-PAT02-B.eu Multisensor 2in1"
+      },
+      {
+        "type": "0004",
+        "id": "000a",
+        "name": "PH-PSE02.eu Zipato Indoor Siren"
+      },
+      {
+        "type": "0005",
+        "id": "0031",
+        "name": "PH-PAD02.eu Smart Dimmer Socket E27"
+      },
+      {
+        "type": "0006",
+        "id": "001a",
+        "name": "PH-PAB01.eu Micromodule Energy Meter"
+      },
+      {
+        "type": "0008",
+        "id": "001d",
+        "name": "PSR03-1B.EU Keyfob 5 Remote"
+      },
+      {
+        "type": "0009",
+        "id": "0022",
+        "name": "PSR04 Smart Color Button"
+      }
+    ]
+  },
+  {
+    "id": "0277",
+    "name": "Pixela Corporation "
+  },
+  {
+    "id": "010e",
+    "name": "Poly-control",
+    "products": [
+      {
+        "type": "0002",
+        "id": "0001",
+        "name": "Danalock Keypad"
+      },
+      {
+        "type": "0003",
+        "id": "0002",
+        "name": "Danalock Circle/Square"
+      },
+      {
+        "type": "0001",
+        "id": "0001",
+        "name": "Polylock"
+      },
+      {
+        "type": "0008",
+        "id": "0002",
+        "name": "Danalock V2 BTZE"
+      },
+      {
+        "type": "0009",
+        "id": "0001",
+        "name": "Danalock V3 BTZE"
+      }
+    ]
+  },
+  {
+    "id": "0154",
+    "name": "Popp & Co",
+    "products": [
+      {
+        "type": "0001",
+        "id": "0001",
+        "name": "123658 Plug-in Switch plus Power Meter"
+      },
+      {
+        "type": "0003",
+        "id": "0001",
+        "name": "009105 Wall Plug Switch Schuko (IP44)"
+      },
+      {
+        "type": "0003",
+        "id": "000a",
+        "name": "700397 Wall Plug Switch Outdoor Schuko (IP44)"
+      },
+      {
+        "type": "0003",
+        "id": "1002",
+        "name": "700793 Smart Power Plug"
+      },
+      {
+        "type": "0004",
+        "id": "0002",
+        "name": "Solar Powered Outdoor Siren"
+      },
+      {
+        "type": "0004",
+        "id": "0003",
+        "name": "004407 CO Detector"
+      },
+      {
+        "type": "0004",
+        "id": "0004",
+        "name": "009402 10-Year Smoke Detector with Siren"
+      },
+      {
+        "type": "0004",
+        "id": "000d",
+        "name": "700342 10-Year Smoke Detector"
+      },
+      {
+        "type": "0004",
+        "id": "0010",
+        "name": "700342 10-Year Smoke Detector"
+      },
+      {
+        "type": "0005",
+        "id": "0003",
+        "name": "009501 Flow Stop"
+      },
+      {
+        "type": "0004",
+        "id": "0011",
+        "name": "Popp Z-Rain Rain Sensor"
+      },
+      {
+        "type": "0005",
+        "id": "0001",
+        "name": "012501 Strike Lock Control"
+      },
+      {
+        "type": "0005",
+        "id": "0002",
+        "name": "700045 Universal Keypad"
+      },
+      {
+        "type": "0100",
+        "id": "0101",
+        "name": "009303 Battery Wall Controller"
+      },
+      {
+        "type": "0100",
+        "id": "0103",
+        "name": "Popp KFOB-C Remote Control"
+      },
+      {
+        "type": "0004",
+        "id": "0007",
+        "name": "Window/Door Sensor with Tilt Detection"
+      },
+      {
+        "type": "0100",
+        "id": "0201",
+        "name": "Smoke Detector and Siren"
+      },
+      {
+        "type": "0100",
+        "id": "0400",
+        "name": "ZWeather"
+      },
+      {
+        "type": "1100",
+        "id": "0001",
+        "name": "123601 Plug-in Switch"
+      },
+      {
+        "type": "1100",
+        "id": "0002",
+        "name": "123580 Plug-in Dimmer"
+      },
+      {
+        "type": "0004",
+        "id": "0014",
+        "name": "701202 Mold Detector"
+      }
+    ]
+  },
+  {
+    "id": "0064",
+    "name": "Popp / Duwi (Reitz-Group.de)",
+    "products": [
+      {
+        "type": "0001",
+        "id": "0000",
+        "name": "ZW EDAN 300 Flush Mounted Dimmer"
+      },
+      {
+        "type": "1000",
+        "id": "0002",
+        "name": "Flush Mounted Switch"
+      },
+      {
+        "type": "1001",
+        "id": "0000",
+        "name": "Plugin Dimmer"
+      },
+      {
+        "type": "1000",
+        "id": "0009",
+        "name": "Wall Dimmer Set for Busch-Jaeger DURO 2000"
+      },
+      {
+        "type": "2001",
+        "id": "0000",
+        "name": "ZW ES 1000 Flush Mounted Switch"
+      },
+      {
+        "type": "3001",
+        "id": "0000",
+        "name": "ZW ZS 3500 Plugin Switch"
+      },
+      {
+        "type": "3002",
+        "id": "0000",
+        "name": "ZW ZSA 3500 Plugin Switch"
+      },
+      {
+        "type": "4001",
+        "id": "0000",
+        "name": "ZW ESJ Blind Control"
+      },
+      {
+        "type": "5001",
+        "id": "0000",
+        "name": "ZW FB Wireless remote control 10-channel"
+      },
+      {
+        "type": "5002",
+        "id": "0000",
+        "name": "Wireless Flush Mounted Switch"
+      },
+      {
+        "type": "5003",
+        "id": "0000",
+        "name": "Static Controller"
+      }
+    ]
+  },
+  {
+    "id": "0170",
+    "name": "Powerhouse Dynamics"
+  },
+  {
+    "id": "0074",
+    "name": "PowerLinx"
+  },
+  {
+    "id": "0016",
+    "name": "PowerLynx"
+  },
+  {
+    "id": "0042",
+    "name": "Pragmatic Cons"
+  },
+  {
+    "id": "0341",
+    "name": "Prodea"
+  },
+  {
+    "id": "0128",
+    "name": "Prodrive Technologies",
+    "products": [
+      {
+        "type": "0000",
+        "id": "0000",
+        "name": "ED2.0 Meter Adapter"
+      },
+      {
+        "type": "0128",
+        "id": "0000",
+        "name": "ED2.0 Display"
+      }
+    ]
+  },
+  {
+    "id": "0161",
+    "name": "Promixis LLC"
+  },
+  {
+    "id": "005d",
+    "name": "Pulse Technologies (Aspalis)",
+    "products": [
+      {
+        "type": "0202",
+        "id": "0511",
+        "name": "Plugin Lamp Module"
+      }
+    ]
+  },
+  {
+    "id": "0376",
+    "name": "Pytronic AB"
+  },
+  {
+    "id": "0095",
+    "name": "Qees",
+    "products": [
+      {
+        "type": "3101",
+        "id": "0001",
+        "name": "RETO Dimmer Plus 2013"
+      },
+      {
+        "type": "3103",
+        "id": "0001",
+        "name": "RETO Plug-in Switch Plus"
+      }
+    ]
+  },
+  {
+    "id": "0355",
+    "name": "Qingdao hongyu cles air conditioning co.ltd"
+  },
+  {
+    "id": "0433",
+    "name": "Q-light",
+    "products": [
+      {
+        "type": "0003",
+        "id": "000d",
+        "name": "Q-Light Zerodim"
+      },
+      {
+        "type": "0003",
+        "id": "000e",
+        "name": "Q-Light Zerodim 2pol"
+      },
+      {
+        "type": "0003",
+        "id": "0005",
+        "name": "Q-Light puck"
+      }
+    ]
+  },
+  {
+    "id": "012a",
+    "name": "Qolsys",
+    "products": [
+      {
+        "type": "4744",
+        "id": "3032",
+        "name": "QZ2140-840 Plug-In Dimmer"
+      }
+    ]
+  },
+  {
+    "id": "0159",
+    "name": "Qubino (Goap)",
+    "products": [
+      {
+        "type": "0001",
+        "id": "0001",
+        "name": "ZMNHDA2 Flush Dimmer"
+      },
+      {
+        "type": "0001",
+        "id": "0051",
+        "name": "ZMNHDD1 Flush Dimmer"
+      },
+      {
+        "type": "0001",
+        "id": "0052",
+        "name": "ZMNHSDx Din Dimmer"
+      },
+      {
+        "type": "0001",
+        "id": "0053",
+        "name": "ZMNHVDx Flush Dimmer 0-10V"
+      },
+      {
+        "type": "0001",
+        "id": "0054",
+        "name": "ZMNHWD1 Flush RGBW Dimmer"
+      },
+      {
+        "type": "0001",
+        "id": "0055",
+        "name": "ZMNHHDx Mini Dimmer"
+      },
+      {
+        "type": "0002",
+        "id": "0001",
+        "name": "ZMNHBA2 Flush 2 Relays"
+      },
+      {
+        "type": "0002",
+        "id": "0051",
+        "name": "ZMNHBDx Flush 2 Relays"
+      },
+      {
+        "type": "0002",
+        "id": "0002",
+        "name": "ZMNHAA2 Flush 1 Relay"
+      },
+      {
+        "type": "0002",
+        "id": "0052",
+        "name": "ZMNHADx Flush 1 Relay"
+      },
+      {
+        "type": "0002",
+        "id": "0053",
+        "name": "ZMNHND1 Flush 1D relay"
+      },
+      {
+        "type": "0002",
+        "id": "0054",
+        "name": "ZMNHYD1 Smart Plug 16A"
+      },
+      {
+        "type": "0003",
+        "id": "0002",
+        "name": "ZMNHCA2 Flush Shutter"
+      },
+      {
+        "type": "0003",
+        "id": "0052",
+        "name": "ZMNHCDx Flush Shutter"
+      },
+      {
+        "type": "0003",
+        "id": "0053",
+        "name": "ZMNHOD1 Flush Shutter DC"
+      },
+      {
+        "type": "0004",
+        "id": "0001",
+        "name": "ZMNHJA2 Flush Dimmer Pilot Wire"
+      },
+      {
+        "type": "0004",
+        "id": "0051",
+        "name": "ZMNHJD1 Flush Dimmer Pilot Wire"
+      },
+      {
+        "type": "0004",
+        "id": "0052",
+        "name": "ZMNHUD1 DIN Pilot Wire"
+      },
+      {
+        "type": "0005",
+        "id": "0001",
+        "name": "ZMNHIA2 Flush on/off thermostat"
+      },
+      {
+        "type": "0005",
+        "id": "0051",
+        "name": "ZMNHIDx Flush on/off thermostat (H1S2P1)"
+      },
+      {
+        "type": "0005",
+        "id": "0052",
+        "name": "ZMNHKDx Flush Heat and Cool thermostat"
+      },
+      {
+        "type": "0005",
+        "id": "0053",
+        "name": "ZMNHLDx Flush PWM thermostat"
+      },
+      {
+        "type": "0005",
+        "id": "0003",
+        "name": "ZMNHLA2 Flush PWM thermostat"
+      },
+      {
+        "type": "0007",
+        "id": "0052",
+        "name": "ZMNHTDx Smart meter S4 S5 S6"
+      },
+      {
+        "type": "0007",
+        "id": "0053",
+        "name": "ZMNHZDx Weather Station"
+      },
+      {
+        "type": "0007",
+        "id": "0054",
+        "name": "ZMNHXDx 3-phase Smart Meter"
+      },
+      {
+        "type": "0005",
+        "id": "0054",
+        "name": "ZMNKIDx OnOff Thermostat 2"
+      },
+      {
+        "type": "0008",
+        "id": "0051",
+        "name": "ZMNHQDx LUXY Smart Light"
+      },
+      {
+        "type": "0008",
+        "id": "0052",
+        "name": "ZMNKADx LUXY Smart Switch"
+      },
+      {
+        "type": "0006",
+        "id": "0051",
+        "name": "ZMNHMDx Smart leak protector"
+      }
+    ]
+  },
+  {
+    "id": "0130",
+    "name": "Quby",
+    "products": [
+      {
+        "type": "0001",
+        "id": "0001",
+        "name": "Energy Management System"
+      }
+    ]
+  },
+  {
+    "id": "0163",
+    "name": "Queenlock",
+    "products": [
+      {
+        "type": "3001",
+        "id": "0301",
+        "name": "ZW-702 Door Lock"
+      }
+    ]
+  },
+  {
+    "id": "0142",
+    "name": "Rademacher Gerate-Elektronik GmbH"
+  },
+  {
+    "id": "0098",
+    "name": "Radio Thermostat Company of America"
+  },
+  {
+    "id": "0314",
+    "name": "Raonix Co. Ltd"
+  },
+  {
+    "id": "008e",
+    "name": "Raritan"
+  },
+  {
+    "id": "040f",
+    "name": "RATOC Systems Inc"
+  },
+  {
+    "id": "0370",
+    "name": "Raylios"
+  },
+  {
+    "id": "021e",
+    "name": "Red Bee Co. Ltd"
+  },
+  {
+    "id": "022c",
+    "name": "Remote Solution"
+  },
+  {
+    "id": "0255",
+    "name": "Remote Technologies Incorporated"
+  },
+  {
+    "id": "5254",
+    "name": "Remotec",
+    "products": [
+      {
+        "type": "0000",
+        "id": "531f",
+        "name": "Z-URC"
+      },
+      {
+        "type": "0001",
+        "id": "8380",
+        "name": "ZRC-100"
+      },
+      {
+        "type": "0100",
+        "id": "8371",
+        "name": "ZXT-310US"
+      },
+      {
+        "type": "0101",
+        "id": "8371",
+        "name": "ZXT-310EU"
+      },
+      {
+        "type": "0102",
+        "id": "8371",
+        "name": "ZXT-310AU"
+      },
+      {
+        "type": "0103",
+        "id": "8371",
+        "name": "ZXT-310IN"
+      },
+      {
+        "type": "0106",
+        "id": "8371",
+        "name": "ZXT-310RU"
+      },
+      {
+        "type": "0107",
+        "id": "8371",
+        "name": "ZXT-310IL"
+      },
+      {
+        "type": "0108",
+        "id": "8371",
+        "name": "ZXT-310BR"
+      },
+      {
+        "type": "0100",
+        "id": "8377",
+        "name": "ZXT-120US"
+      },
+      {
+        "type": "0101",
+        "id": "8377",
+        "name": "ZXT-120EU"
+      },
+      {
+        "type": "0102",
+        "id": "8377",
+        "name": "ZXT-120AU"
+      },
+      {
+        "type": "0103",
+        "id": "8377",
+        "name": "ZXT-120IN"
+      },
+      {
+        "type": "0106",
+        "id": "8377",
+        "name": "ZXT-120RU"
+      },
+      {
+        "type": "0107",
+        "id": "8377",
+        "name": "ZXT-120IL"
+      },
+      {
+        "type": "0108",
+        "id": "8377",
+        "name": "ZXT-120BR"
+      },
+      {
+        "type": "0100",
+        "id": "8490",
+        "name": "ZXT-600US AC MASTER"
+      },
+      {
+        "type": "0101",
+        "id": "8490",
+        "name": "ZXT-600EU AC MASTER"
+      },
+      {
+        "type": "0102",
+        "id": "8490",
+        "name": "ZXT-600AU AC MASTER"
+      },
+      {
+        "type": "0103",
+        "id": "8490",
+        "name": "ZXT-600IN AC MASTER"
+      },
+      {
+        "type": "0001",
+        "id": "8510",
+        "name": "ZRC-90"
+      },
+      {
+        "type": "0002",
+        "id": "8510",
+        "name": "ZRC-90"
+      },
+      {
+        "type": "8201",
+        "id": "8120",
+        "name": "ZFM-X10EU Dual Mode Insert Module "
+      },
+      {
+        "type": "8000",
+        "id": "0002",
+        "name": "ZFM-80"
+      },
+      {
+        "type": "0200",
+        "id": "8031",
+        "name": "ZTS-110"
+      },
+      {
+        "type": "0202",
+        "id": "8031",
+        "name": "ZTS-110"
+      },
+      {
+        "type": "0200",
+        "id": "8170",
+        "name": "ZTS-500US"
+      },
+      {
+        "type": "0202",
+        "id": "8170",
+        "name": "ZTS-500 AU/NZ"
+      }
+    ]
+  },
+  {
+    "id": "039b",
+    "name": "Reply S.p.A."
+  },
+  {
+    "id": "0010",
+    "name": "Residential Control Systems",
+    "products": [
+      {
+        "type": "0001",
+        "id": "0002",
+        "name": "TZ43 Thermostat"
+      },
+      {
+        "type": "0001",
+        "id": "0005",
+        "name": "TZ43-IHD SMUD Thermostat"
+      },
+      {
+        "type": "0001",
+        "id": "0007",
+        "name": "TZ45-IHD SMUD Thermostat"
+      },
+      {
+        "type": "0001",
+        "id": "0009",
+        "name": "TZ45 Thermostat"
+      },
+      {
+        "type": "0001",
+        "id": "000a",
+        "name": "TZ4Z-IHD RCS Thermostat"
+      },
+      {
+        "type": "454d",
+        "id": "3532",
+        "name": "EM52-ZW Z-Wave Home Energy Meter"
+      },
+      {
+        "type": "504d",
+        "id": "3132",
+        "name": "PM12-ZW Z-Wave Power Monitoring Module"
+      },
+      {
+        "type": "5442",
+        "id": "5432",
+        "name": "TBZ48 Thermostat"
+      }
+    ]
+  },
+  {
+    "id": "0216",
+    "name": "RET Nanjing Intelligence System"
+  },
+  {
+    "id": "0153",
+    "name": "Revolv"
+  },
+  {
+    "id": "0346",
+    "name": "Ring",
+    "products": [
+      {
+        "type": "0301",
+        "id": "0201",
+        "name": "PIR-SS Motion Detector"
+      },
+      {
+        "type": "0201",
+        "id": "0301",
+        "name": "Contact Sensor"
+      },
+      {
+        "type": "0301",
+        "id": "0301",
+        "name": "Motion Detector"
+      },
+      {
+        "type": "0201",
+        "id": "0201",
+        "name": "DW-SS Contact Sensor"
+      }
+    ]
+  },
+  {
+    "id": "035e",
+    "name": "RISCO Group"
+  },
+  {
+    "id": "023b",
+    "name": "ROC-Connect"
+  },
+  {
+    "id": "0197",
+    "name": "RPE Ajax LLC"
+  },
+  {
+    "id": "0065",
+    "name": "RS Scene Automation"
+  },
+  {
+    "id": "029d",
+    "name": "Rubetek"
+  },
+  {
+    "id": "0290",
+    "name": "S1"
+  },
+  {
+    "id": "023c",
+    "name": "SafeTech Products"
+  },
+  {
+    "id": "0201",
+    "name": "Samsung Electronics"
+  },
+  {
+    "id": "022e",
+    "name": "Samsung SDS"
+  },
+  {
+    "id": "0093",
+    "name": "San Shih Electrical Enterprise"
+  },
+  {
+    "id": "0150",
+    "name": "Samsung SmartThings",
+    "products": [
+      {
+        "type": "0002",
+        "id": "0006",
+        "name": "SmartThings Hub v2"
+      },
+      {
+        "type": "0001",
+        "id": "0191",
+        "name": "SmartThings Hub v1"
+      }
+    ]
+  },
+  {
+    "id": "012c",
+    "name": "SANAV"
+  },
+  {
+    "id": "0307",
+    "name": "SATCO Products"
+  },
+  {
+    "id": "0318",
+    "name": "SBCK Corp"
+  },
+  {
+    "id": "003b",
+    "name": "Schlage (Allegion)",
+    "products": [
+      {
+        "type": "634b",
+        "id": "504c",
+        "name": "FE599GR Wireless Door Lock"
+      },
+      {
+        "type": "6341",
+        "id": "5044",
+        "name": "BE469 Touchscreen Deadbolt"
+      },
+      {
+        "type": "6349",
+        "id": "5044",
+        "name": "BE468 Touchscreen Deadbolt"
+      },
+      {
+        "type": "0001",
+        "id": "0469",
+        "name": "BE469ZP Connect Smart Deadbolt"
+      },
+      {
+        "type": "0001",
+        "id": "0468",
+        "name": "BE468ZP Connect Smart Deadbolt"
+      }
+    ]
+  },
+  {
+    "id": "0097",
+    "name": "Schlage Link (Wintop)",
+    "products": [
+      {
+        "type": "1182",
+        "id": "4501",
+        "name": "iTemp Dual Sensor"
+      },
+      {
+        "type": "1188",
+        "id": "4501",
+        "name": "iTemp Dual Sensor"
+      },
+      {
+        "type": "6131",
+        "id": "4501",
+        "name": "Mini Keypad RFID"
+      },
+      {
+        "type": "6131",
+        "id": "4101",
+        "name": "Mini Keypad RFID"
+      },
+      {
+        "type": "6941",
+        "id": "5501",
+        "name": "LE120 Appliance Module"
+      },
+      {
+        "type": "6943",
+        "id": "4501",
+        "name": "On-Wall Power Socket"
+      }
+    ]
+  },
+  {
+    "id": "001f",
+    "name": "Scientia Technologies"
+  },
+  {
+    "id": "029a",
+    "name": "Scout Alarm"
+  },
+  {
+    "id": "011e",
+    "name": "Secure Wireless"
+  },
+  {
+    "id": "0167",
+    "name": "SecureNet Technologies"
+  },
+  {
+    "id": "0182",
+    "name": "Securifi"
+  },
+  {
+    "id": "0069",
+    "name": "Seluxit"
+  },
+  {
+    "id": "0043",
+    "name": "Senmatic A/S"
+  },
+  {
+    "id": "019a",
+    "name": "Sensative",
+    "products": [
+      {
+        "type": "0003",
+        "id": "0003",
+        "name": "Strips"
+      },
+      {
+        "type": "0003",
+        "id": "000a",
+        "name": "Strips Comfort"
+      }
+    ]
+  },
+  {
+    "id": "0044",
+    "name": "Sequoia Tech"
+  },
+  {
+    "id": "0151",
+    "name": "Sercomm",
+    "products": [
+      {
+        "type": "0002",
+        "id": "0001",
+        "name": "SW-CLP01-EU Clamp Power Meter"
+      }
+    ]
+  },
+  {
+    "id": "0378",
+    "name": "Shandong Bittel Intelligent Technology"
+  },
+  {
+    "id": "030b",
+    "name": "Shandong Smart Life Data System"
+  },
+  {
+    "id": "0215",
+    "name": "Shangdong Smart Life Data System"
+  },
+  {
+    "id": "023e",
+    "name": "Shanghai Dorlink Intelligent Technologies"
+  },
+  {
+    "id": "0205",
+    "name": "Shanghai Longchuang Eco-energy Systems"
+  },
+  {
+    "id": "010b",
+    "name": "Sharp"
+  },
+  {
+    "id": "0357",
+    "name": "Shenzhen 3nod Acousticlink"
+  },
+  {
+    "id": "021a",
+    "name": "SHENZHEN AOYA INDUSTRY"
+  },
+  {
+    "id": "0286",
+    "name": "Shenzhen Easyhome Technology"
+  },
+  {
+    "id": "021c",
+    "name": "Shenzhen iSurpass Technology"
+  },
+  {
+    "id": "037a",
+    "name": "Shenzhen JBT Smart Lighting"
+  },
+  {
+    "id": "021d",
+    "name": "Shenzhen Kaadas Intelligent Technology",
+    "products": [
+      {
+        "type": "0003",
+        "id": "0001",
+        "name": "Alfred DB2 Deadbolt"
+      }
+    ]
+  },
+  {
+    "id": "0211",
+    "name": "Shenzhen Liao Wang Tong Da Technology"
+  },
+  {
+    "id": "0406",
+    "name": "Shenzhen Meian Technology"
+  },
+  {
+    "id": "0258",
+    "name": "Shenzhen Neo Electronics Co Ltd",
+    "products": [
+      {
+        "type": "0003",
+        "id": "0082",
+        "name": "Door/Window Detector"
+      },
+      {
+        "type": "0003",
+        "id": "1082",
+        "name": "Door/Window Detector"
+      },
+      {
+        "type": "0003",
+        "id": "2082",
+        "name": "Door/Window Detector"
+      },
+      {
+        "type": "0003",
+        "id": "0087",
+        "name": "NAS-WR01Z Power plug 12A"
+      },
+      {
+        "type": "0003",
+        "id": "1087",
+        "name": "NAS-WR01Z Power plug 12A"
+      },
+      {
+        "type": "0200",
+        "id": "102c",
+        "name": "NAS-SC03ZE Roller Shutter"
+      },
+      {
+        "type": "0100",
+        "id": "1027",
+        "name": "NAS-WR01ZE Power plug 12A"
+      },
+      {
+        "type": "0200",
+        "id": "1027",
+        "name": "NAS-WR01ZE Power plug 12A"
+      },
+      {
+        "type": "0003",
+        "id": "2087",
+        "name": "NAS-WR01Z Power plug 12A"
+      },
+      {
+        "type": "0003",
+        "id": "0083",
+        "name": "NAS-PD01Z Battery Powered PIR Sensor"
+      },
+      {
+        "type": "0003",
+        "id": "1083",
+        "name": "NAS-PD01Z Battery Powered PIR Sensor"
+      },
+      {
+        "type": "0003",
+        "id": "108d",
+        "name": "NAS-PD02Z Battery Powered PIR Sensor V2"
+      },
+      {
+        "type": "0003",
+        "id": "008d",
+        "name": "NAS-PD02Z Battery Powered PIR Sensor V2"
+      },
+      {
+        "type": "0200",
+        "id": "1031",
+        "name": "NAS-PD03Z Battery Powered PIR Sensor V2"
+      },
+      {
+        "type": "0003",
+        "id": "0085",
+        "name": "Water Leakage Detector"
+      },
+      {
+        "type": "0100",
+        "id": "1025",
+        "name": "Water Leakage Detector"
+      },
+      {
+        "type": "0003",
+        "id": "1085",
+        "name": "Water Leakage Detector"
+      },
+      {
+        "type": "0003",
+        "id": "6085",
+        "name": "Water Leakage Detector"
+      },
+      {
+        "type": "0003",
+        "id": "2085",
+        "name": "Water Leakage Detector"
+      },
+      {
+        "type": "0003",
+        "id": "0088",
+        "name": "Siren Alarm"
+      },
+      {
+        "type": "0003",
+        "id": "1088",
+        "name": "Siren Alarm"
+      },
+      {
+        "type": "0003",
+        "id": "6088",
+        "name": "Siren Alarm"
+      },
+      {
+        "type": "0003",
+        "id": "008a",
+        "name": "SOS/Remote Control"
+      },
+      {
+        "type": "0003",
+        "id": "108a",
+        "name": "SOS/Remote Control"
+      },
+      {
+        "type": "0200",
+        "id": "002b",
+        "name": "Wall Switch (3 channels)"
+      },
+      {
+        "type": "0200",
+        "id": "102b",
+        "name": "Wall Switch (3 channels)"
+      },
+      {
+        "type": "0003",
+        "id": "008b",
+        "name": "Wall Switch (2 channels)"
+      },
+      {
+        "type": "0003",
+        "id": "108b",
+        "name": "Wall Switch (2 channels)"
+      },
+      {
+        "type": "0003",
+        "id": "008c",
+        "name": "Wall Switch (1 channel)"
+      },
+      {
+        "type": "0003",
+        "id": "108c",
+        "name": "Wall Switch (1 channel)"
+      },
+      {
+        "type": "0200",
+        "id": "102c",
+        "name": "NAS-CS01Z Curtain Switch"
+      }
+    ]
+  },
+  {
+    "id": "041a",
+    "name": "Shenzhen Neo Electronics Co Ltd",
+    "products": [
+      {
+        "type": "0200",
+        "id": "0008",
+        "name": "NAS-WR01ZE Power plug 12A"
+      }
+    ]
+  },
+  {
+    "id": "032c",
+    "name": "Shenzhen Saykey Technology",
+    "products": [
+      {
+        "type": "3007",
+        "id": "0005",
+        "name": "Curtain Motor Control with external module"
+      }
+    ]
+  },
+  {
+    "id": "036c",
+    "name": "Shenzhen Sen5 Technology"
+  },
+  {
+    "id": "0381",
+    "name": "Shenzhen Thingsview Tech"
+  },
+  {
+    "id": "0250",
+    "name": "Shenzhen Tripath Digital Audio Equipment"
+  },
+  {
+    "id": "0356",
+    "name": "Shenzhen ZHIQU Technology Limited"
+  },
+  {
+    "id": "0081",
+    "name": "SIEGENIA-AUBI KG"
+  },
+  {
+    "id": "0267",
+    "name": "Simon",
+    "products": [
+      {
+        "type": "0007",
+        "id": "023a",
+        "name": "S100 Rocker iO for Dimmer"
+      },
+      {
+        "type": "0007",
+        "id": "0000",
+        "name": "S100 Rocker iO for Dimmer"
+      },
+      {
+        "type": "0001",
+        "id": "0000",
+        "name": "S100 Socket iO"
+      },
+      {
+        "type": "0001",
+        "id": "00da",
+        "name": "S100 Socket iO"
+      },
+      {
+        "type": "0009",
+        "id": "0022",
+        "name": "S100 Socket iO"
+      },
+      {
+        "type": "0004",
+        "id": "0000",
+        "name": "S100 Rocker iO for Roller Blind"
+      }
+    ]
+  },
+  {
+    "id": "0045",
+    "name": "Sine Wireless"
+  },
+  {
+    "id": "0266",
+    "name": "Siterwell Technology HK"
+  },
+  {
+    "id": "0282",
+    "name": "Smart Electronic Industrial"
+  },
+  {
+    "id": "0046",
+    "name": "Smart Products"
+  },
+  {
+    "id": "026a",
+    "name": "SmartAll"
+  },
+  {
+    "id": "0323",
+    "name": "SmartHome Partner GmbH"
+  },
+  {
+    "id": "024f",
+    "name": "Smartly AS"
+  },
+  {
+    "id": "0150",
+    "name": "SmartThings"
+  },
+  {
+    "id": "0102",
+    "name": "SMK Manufacturing"
+  },
+  {
+    "id": "029c",
+    "name": "SoftAtHome"
+  },
+  {
+    "id": "0047",
+    "name": "Somfy"
+  },
+  {
+    "id": "0394",
+    "name": "SONG JIANG YUN-AN TECHNOLOGY"
+  },
+  {
+    "id": "0402",
+    "name": "Sony Mobile Communications"
+  },
+  {
+    "id": "0274",
+    "name": "Soosan Hometech"
+  },
+  {
+    "id": "035a",
+    "name": "SOREL GmbH"
+  },
+  {
+    "id": "026e",
+    "name": "Springs Window Fashions (Graber)",
+    "products": [
+      {
+        "type": "4252",
+        "id": "5a31",
+        "name": "BRZ1 Remote Control"
+      },
+      {
+        "type": "5253",
+        "id": "5a31",
+        "name": "RSZ1 Roller Shade"
+      },
+      {
+        "type": "5643",
+        "id": "5a31",
+        "name": "VCZ1 Virtual Cord Remote Control"
+      },
+      {
+        "type": "4353",
+        "id": "5a31",
+        "name": "CSZ1 Cellular Shade"
+      },
+      {
+        "type": "4d43",
+        "id": "5a31",
+        "name": "MCZ1 Multi-Channel Remote"
+      }
+    ]
+  },
+  {
+    "id": "026f",
+    "name": "Sprue Safety Products"
+  },
+  {
+    "id": "0124",
+    "name": "Square Connect"
+  },
+  {
+    "id": "021b",
+    "name": "ST&T Electric Corporation"
+  },
+  {
+    "id": "0358",
+    "name": "Star Automation"
+  },
+  {
+    "id": "0259",
+    "name": "Starkoff"
+  },
+  {
+    "id": "0265",
+    "name": "StarVedia"
+  },
+  {
+    "id": "0271",
+    "name": "Steinel",
+    "products": [
+      {
+        "type": "0002",
+        "id": "1a72",
+        "name": "IS140-2"
+      },
+      {
+        "type": "0001",
+        "id": "1a74",
+        "name": "RS LED D2"
+      },
+      {
+        "type": "0001",
+        "id": "1a73",
+        "name": "XLED HOME 2"
+      },
+      {
+        "type": "0001",
+        "id": "1a75",
+        "name": "L810 LED iHF"
+      }
+    ]
+  },
+  {
+    "id": "0239",
+    "name": "Stelpro",
+    "products": [
+      {
+        "type": "0001",
+        "id": "0001",
+        "name": "STZW402+ Electronic Thermostat"
+      }
+    ]
+  },
+  {
+    "id": "0217",
+    "name": "Strattec Advanced Logic"
+  },
+  {
+    "id": "0168",
+    "name": "STRATTEC Security"
+  },
+  {
+    "id": "0105",
+    "name": "Sumitomo"
+  },
+  {
+    "id": "028b",
+    "name": "Sunjet Components"
+  },
+  {
+    "id": "0054",
+    "name": "Superna"
+  },
+  {
+    "id": "0191",
+    "name": "Swann Communications"
+  },
+  {
+    "id": "0339",
+    "name": "SWYCS"
+  },
+  {
+    "id": "0166",
+    "name": "Swiid (CBCC Domotique SAS)",
+    "products": [
+      {
+        "type": "0100",
+        "id": "0100",
+        "name": "SwiidInter"
+      },
+      {
+        "type": "2007",
+        "id": "0706",
+        "name": "SwiidPlug"
+      }
+    ]
+  },
+  {
+    "id": "0009",
+    "name": "Sylvania"
+  },
+  {
+    "id": "0136",
+    "name": "Systech Corporation"
+  },
+  {
+    "id": "0276",
+    "name": "Systemair Sverige AB"
+  },
+  {
+    "id": "0375",
+    "name": "T&W"
+  },
+  {
+    "id": "0235",
+    "name": "TAEWON Lighting"
+  },
+  {
+    "id": "0262",
+    "name": "Taiwan Fu Hsing Industrial"
+  },
+  {
+    "id": "0264",
+    "name": "Taiwan iCATCH"
+  },
+  {
+    "id": "0186",
+    "name": "Team Digital Limited"
+  },
+  {
+    "id": "0089",
+    "name": "Team Precision PCL"
+  },
+  {
+    "id": "0240",
+    "name": "Technicolor"
+  },
+  {
+    "id": "000a",
+    "name": "Techniku"
+  },
+  {
+    "id": "0299",
+    "name": "TechniSat",
+    "products": [
+      {
+        "type": "0002",
+        "id": "1a90",
+        "name": "Single-Switch"
+      },
+      {
+        "type": "0005",
+        "id": "1a93",
+        "name": "Shutter"
+      },
+      {
+        "type": "0004",
+        "id": "1a92",
+        "name": "Dimmer"
+      }
+    ]
+  },
+  {
+    "id": "012f",
+    "name": "Tecom"
+  },
+  {
+    "id": "0012",
+    "name": "Tell It Online",
+    "products": [
+      {
+        "type": "0001",
+        "id": "0001",
+        "name": "Switchkeeper Plug-in Appliance Module"
+      }
+    ]
+  },
+  {
+    "id": "0176",
+    "name": "Telldus",
+    "products": [
+      {
+        "type": "0003",
+        "id": "0001",
+        "name": "TZWP-100 Plug-in Switch"
+      },
+      {
+        "type": "0003",
+        "id": "0003",
+        "name": "TZWP-102 Plug-in Switch"
+      },
+      {
+        "type": "0005",
+        "id": "0001",
+        "name": "TZDW-100 Magnet Switch"
+      }
+    ]
+  },
+  {
+    "id": "0048",
+    "name": "Telsey"
+  },
+  {
+    "id": "017e",
+    "name": "Telular"
+  },
+  {
+    "id": "0397",
+    "name": "Teptron AB"
+  },
+  {
+    "id": "005c",
+    "name": "Terra Optima B.V."
+  },
+  {
+    "id": "010c",
+    "name": "There Corporation",
+    "products": [
+      {
+        "type": "0001",
+        "id": "0001",
+        "name": "ThereGate"
+      }
+    ]
+  },
+  {
+    "id": "019b",
+    "name": "ThermoFloor AS",
+    "products": [
+      {
+        "type": "0004",
+        "id": "3500",
+        "name": "Heatit ZM Single Relay 16A"
+      },
+      {
+        "type": "0001",
+        "id": "0001",
+        "name": "Heatit Thermostat TF 021"
+      },
+      {
+        "type": "0003",
+        "id": "0201",
+        "name": "Heatit Thermostat TF 016 (TF 021 FW > 1.92)"
+      },
+      {
+        "type": "0003",
+        "id": "0202",
+        "name": "Heatit Thermostat TF 056"
+      },
+      {
+        "type": "0003",
+        "id": "0203",
+        "name": "Heatit Thermostat TF 058"
+      },
+      {
+        "type": "0004",
+        "id": "0204",
+        "name": "Heatit Thermostat Z-Temp2"
+      },
+      {
+        "type": "0003",
+        "id": "2200",
+        "name": "Heatit ZDim"
+      },
+      {
+        "type": "0300",
+        "id": "a305",
+        "name": "Heatit Z-Push Button 8"
+      },
+      {
+        "type": "0003",
+        "id": "020a",
+        "name": "Heatit Z-Water TF 20a"
+      },
+      {
+        "type": "0300",
+        "id": "a306",
+        "name": "Heatit Z-Push Button 4"
+      }
+    ]
+  },
+  {
+    "id": "0317",
+    "name": "Think Simple srl"
+  },
+  {
+    "id": "022a",
+    "name": "TIMEVALVE"
+  },
+  {
+    "id": "033b",
+    "name": "Tingcore AB"
+  },
+  {
+    "id": "0118",
+    "name": "TKB Home",
+    "products": [
+      {
+        "type": "0001",
+        "id": "0001",
+        "name": "TZ88 Smart Energy Plug-in Switch"
+      },
+      {
+        "type": "0001",
+        "id": "0011",
+        "name": "TZ88 Smart Energy Plug-in Switch"
+      },
+      {
+        "type": "0002",
+        "id": "0001",
+        "name": "SM103 Door/Window Sensor"
+      },
+      {
+        "type": "0002",
+        "id": "0002",
+        "name": "TSP01 3 in 1 PIR Motion Sensor"
+      },
+      {
+        "type": "0003",
+        "id": "0002",
+        "name": "TZ68 On/Off Switch Socket"
+      },
+      {
+        "type": "0003",
+        "id": "0003",
+        "name": "TZ56 Wall Switch On/Off"
+      },
+      {
+        "type": "0003",
+        "id": "0004",
+        "name": "TZ55 Wall Switch Dimmer"
+      },
+      {
+        "type": "0004",
+        "id": "0002",
+        "name": "TZ69 Smart energy plug in switch"
+      },
+      {
+        "type": "0116",
+        "id": "3119",
+        "name": "TZ69F Smart energy plug in switch"
+      },
+      {
+        "type": "000b",
+        "id": "0001",
+        "name": "ST812 Flood Detector"
+      },
+      {
+        "type": "0808",
+        "id": "0808",
+        "name": "TZ65 Dual Wall Dimmer"
+      },
+      {
+        "type": "0101",
+        "id": "0103",
+        "name": "TZ68 On/Off Switch Socket"
+      },
+      {
+        "type": "0102",
+        "id": "1020",
+        "name": "TZ66D Dual Wall Switch"
+      },
+      {
+        "type": "0202",
+        "id": "0611",
+        "name": "TZ67 Wall Plug Dimmer"
+      },
+      {
+        "type": "0003",
+        "id": "0008",
+        "name": "TZ67G Wall Plug Dimmer"
+      },
+      {
+        "type": "0311",
+        "id": "0103",
+        "name": "TZ69E Smart energy plug in switch"
+      },
+      {
+        "type": "0311",
+        "id": "0202",
+        "name": "TZ56S On/Off wall switch"
+      },
+      {
+        "type": "0311",
+        "id": "0203",
+        "name": "TZ57 Two channel switch"
+      },
+      {
+        "type": "0311",
+        "id": "0305",
+        "name": "TZ79 Power meter Relay Switch"
+      },
+      {
+        "type": "0311",
+        "id": "0304",
+        "name": "TZ74 Dual Switch"
+      },
+      {
+        "type": "0003",
+        "id": "0005",
+        "name": "TZ78 In-Wall Single Relay Switch"
+      },
+      {
+        "type": "0311",
+        "id": "0302",
+        "name": "TZ77 RGBW Dimmer Switch"
+      },
+      {
+        "type": "0311",
+        "id": "0506",
+        "name": "TZE96 Color Touch Weekly Programming Heating Thermostat"
+      }
+    ]
+  },
+  {
+    "id": "011c",
+    "name": "TKH Group / Eminent"
+  },
+  {
+    "id": "0327",
+    "name": "TMC Technology"
+  },
+  {
+    "id": "0326",
+    "name": "TODKI"
+  },
+  {
+    "id": "0319",
+    "name": "Toledo"
+  },
+  {
+    "id": "034f",
+    "name": "TONG LUNG METAL INDUSTRY"
+  },
+  {
+    "id": "0333",
+    "name": "Toshiba Visual Solution"
+  },
+  {
+    "id": "0283",
+    "name": "TP-Link Technologies"
+  },
+  {
+    "id": "008b",
+    "name": "Trane Corporation",
+    "products": [
+      {
+        "type": "5452",
+        "id": "5431",
+        "name": "Model TZEMT400AB32MAA"
+      },
+      {
+        "type": "5452",
+        "id": "5433",
+        "name": "Model TZEMT400BB32MAA"
+      },
+      {
+        "type": "5452",
+        "id": "5436",
+        "name": "Model TZEMT400BB32MAA"
+      },
+      {
+        "type": "5452",
+        "id": "5442",
+        "name": "Model TZEMT524AA21MA"
+      },
+      {
+        "type": "5452",
+        "id": "5439",
+        "name": "Model TCONT624AS42DAA"
+      }
+    ]
+  },
+  {
+    "id": "0066",
+    "name": "TrickleStar"
+  },
+  {
+    "id": "006b",
+    "name": "Tricklestar"
+  },
+  {
+    "id": "0055",
+    "name": "Tridium"
+  },
+  {
+    "id": "0111",
+    "name": "Tronico Technology Co. Ltd.",
+    "products": [
+      {
+        "type": "8200",
+        "id": "0200",
+        "name": "ZDS-100"
+      }
+    ]
+  },
+  {
+    "id": "0330",
+    "name": "Sunricher",
+    "products": [
+      {
+        "type": "0003",
+        "id": "a10d",
+        "name": "Touch Panel Wall Controller - ZSC-01D"
+      },
+      {
+        "type": "0300",
+        "id": "b302",
+        "name": "SR-ZV9001 4 Channel Dimmer Remote Control"
+      },
+      {
+        "type": "0301",
+        "id": "b302",
+        "name": "SR-ZV9001 4 Channel Dimmer Remote Control"
+      },
+      {
+        "type": "0302",
+        "id": "b302",
+        "name": "SR-ZV9001 4 Channel Dimmer Remote Control"
+      },
+      {
+        "type": "0300",
+        "id": "b301",
+        "name": "SR-ZV9001 5 Channel Dimmer Remote Control"
+      },
+      {
+        "type": "0301",
+        "id": "b301",
+        "name": "SR-ZV9001 5 Channel Dimmer Remote Control"
+      },
+      {
+        "type": "0302",
+        "id": "b301",
+        "name": "SR-ZV9001 5 Channel Dimmer Remote Control"
+      },
+      {
+        "type": "0300",
+        "id": "a30f",
+        "name": "Wall Controller - SR-ZV9001K2-DIM"
+      },
+      {
+        "type": "0300",
+        "id": "a310",
+        "name": "Wall Controller - SR-ZV9001K4-DIM"
+      },
+      {
+        "type": "0300",
+        "id": "a306",
+        "name": "Wall Controller - SR-ZV9001K4-DIM-G2"
+      },
+      {
+        "type": "0300",
+        "id": "a305",
+        "name": "Wall Controller - SR-ZV9001K8"
+      },
+      {
+        "type": "0200",
+        "id": "d005",
+        "name": "Dimmer ZV-9101"
+      },
+      {
+        "type": "0200",
+        "id": "d00c",
+        "name": "Dimmer ZV9040"
+      },
+      {
+        "type": "0300",
+        "id": "a107",
+        "name": "Z-Wave Wall Controller - SR-ZV9003T4-RGBW-EU"
+      },
+      {
+        "type": "0200",
+        "id": "d017",
+        "name": "ZV2835RAC Smart Knob Dimmer"
+      },
+      {
+        "type": "0300",
+        "id": "a104",
+        "name": "Z-Wave Wall Controller - SR-ZV9001T-CCT-EU"
+      },
+      {
+        "type": "0200",
+        "id": "d002",
+        "name": "Dimmer ZV-9101FA"
+      },
+      {
+        "type": "0200",
+        "id": "d006",
+        "name": "AC Switch ZV-9101SAC-HP-Switch"
+      },
+      {
+        "type": "0200",
+        "id": "d00f",
+        "name": "SR-ZV9100A-A In-Wall Smart Switch"
+      }
+    ]
+  },
+  {
+    "id": "0049",
+    "name": "Twisthink"
+  },
+  {
+    "id": "0270",
+    "name": "Ubitech"
+  },
+  {
+    "id": "0152",
+    "name": "UFairy G.R. Tech",
+    "products": [
+      {
+        "type": "0500",
+        "id": "0005",
+        "name": "GRB3 Multichannel Switch"
+      },
+      {
+        "type": "0202",
+        "id": "0511",
+        "name": "GR105 Auto Valve"
+      },
+      {
+        "type": "0003",
+        "id": "0512",
+        "name": "GR105n Auto Valve"
+      },
+      {
+        "type": "0500",
+        "id": "0003",
+        "name": "ZSE02 Motion Sensor"
+      }
+    ]
+  },
+  {
+    "id": "0193",
+    "name": "Universal Devices"
+  },
+  {
+    "id": "0020",
+    "name": "Universal Electronics Inc.",
+    "products": [
+      {
+        "type": "8007",
+        "id": "1390",
+        "name": "Wireless Lighting Control"
+      },
+      {
+        "type": "8007",
+        "id": "1391",
+        "name": "45601 Advanced Remote"
+      }
+    ]
+  },
+  {
+    "id": "0183",
+    "name": "Universe Future"
+  },
+  {
+    "id": "0209",
+    "name": "UTC Fire and Security Americas Corp"
+  },
+  {
+    "id": "0388",
+    "name": "Vates"
+  },
+  {
+    "id": "030f",
+    "name": "Vemmio"
+  },
+  {
+    "id": "0198",
+    "name": "Venstar"
+  },
+  {
+    "id": "008c",
+    "name": "Vera Control",
+    "products": [
+      {
+        "type": "0001",
+        "id": "0001",
+        "name": "Vera Lite"
+      }
+    ]
+  },
+  {
+    "id": "0080",
+    "name": "Vero Duco",
+    "products": [
+      {
+        "type": "0003",
+        "id": "0001",
+        "name": "DucoBox Motor"
+      },
+      {
+        "type": "0004",
+        "id": "0001",
+        "name": "DucoBox CO/RH Sensor"
+      }
+    ]
+  },
+  {
+    "id": "0237",
+    "name": "Vestel Elektronik Ticaret ve Sanayi"
+  },
+  {
+    "id": "0053",
+    "name": "Viewsonic"
+  },
+  {
+    "id": "005e",
+    "name": "ViewSonic Corporation"
+  },
+  {
+    "id": "0007",
+    "name": "Vimar CRS"
+  },
+  {
+    "id": "0188",
+    "name": "Vipa-Star"
+  },
+  {
+    "id": "010a",
+    "name": "Vitrum (VDA)",
+    "products": [
+      {
+        "type": "1100",
+        "id": "4900",
+        "name": "Vitrum I EU Wireless Dimmer"
+      },
+      {
+        "type": "1100",
+        "id": "4a00",
+        "name": "Vitrum II EU Wireless Dimmer"
+      },
+      {
+        "type": "1100",
+        "id": "4b00",
+        "name": "Vitrum III EU Wireless Dimmer"
+      },
+      {
+        "type": "1200",
+        "id": "5100",
+        "name": "Vitrum I EU Wireless On-off"
+      },
+      {
+        "type": "1200",
+        "id": "5200",
+        "name": "Vitrum II EU Wireless On-off"
+      },
+      {
+        "type": "1200",
+        "id": "5300",
+        "name": "Vitrum III EU Wireless On-off"
+      },
+      {
+        "type": "1200",
+        "id": "5400",
+        "name": "Vitrum IV EU Wireless On-off"
+      },
+      {
+        "type": "1300",
+        "id": "5a00",
+        "name": "Vitrum II EU Roller Blind Control"
+      },
+      {
+        "type": "2100",
+        "id": "8a00",
+        "name": "Vitrum II BS Wireless Dimmer"
+      },
+      {
+        "type": "2200",
+        "id": "9100",
+        "name": "Vitrum I BS Wireless On-off"
+      },
+      {
+        "type": "2200",
+        "id": "9200",
+        "name": "Vitrum II BS Wireless On-off"
+      },
+      {
+        "type": "2200",
+        "id": "9400",
+        "name": "Vitrum IV BS Wireless On-off"
+      },
+      {
+        "type": "4400",
+        "id": "6400",
+        "name": "Vitrum IV EU Wireless On-off"
+      },
+      {
+        "type": "3400",
+        "id": "6400",
+        "name": "Vitrum IV EU Wireless On-off"
+      },
+      {
+        "type": "1400",
+        "id": "6600",
+        "name": "Vitrum VI EU Wireless On-off"
+      },
+      {
+        "type": "1400",
+        "id": "6100",
+        "name": "Vitrum I EU Wireless On-off"
+      }
+    ]
+  },
+  {
+    "id": "0109",
+    "name": "Vision Security",
+    "products": [
+      {
+        "type": "1001",
+        "id": "0101",
+        "name": "ZU1401 Z-Wave USB Stick"
+      },
+      {
+        "type": "1001",
+        "id": "0104",
+        "name": "ZU1401 Z-Wave USB Stick"
+      },
+      {
+        "type": "1001",
+        "id": "0105",
+        "name": "ZU1401 Z-Wave USB Stick"
+      },
+      {
+        "type": "2001",
+        "id": "0101",
+        "name": "ZD2102 US Door/Window Sensor"
+      },
+      {
+        "type": "2001",
+        "id": "0102",
+        "name": "ZD2102 AU Door/Window Sensor"
+      },
+      {
+        "type": "2001",
+        "id": "0104",
+        "name": "ZD2102 JP Door/Window Sensor"
+      },
+      {
+        "type": "2001",
+        "id": "0105",
+        "name": "ZD2102 EU Door/Window Sensor"
+      },
+      {
+        "type": "2001",
+        "id": "0106",
+        "name": "ZD2102 EU Door/Window Sensor"
+      },
+      {
+        "type": "2002",
+        "id": "0201",
+        "name": "ZP3102 PIR Motion Sensor"
+      },
+      {
+        "type": "2002",
+        "id": "0202",
+        "name": "ZP3102 PIR Motion Sensor"
+      },
+      {
+        "type": "2002",
+        "id": "0203",
+        "name": "ZP3102 PIR Motion Sensor"
+      },
+      {
+        "type": "2002",
+        "id": "0204",
+        "name": "ZP3102 PIR Motion Sensor"
+      },
+      {
+        "type": "2002",
+        "id": "0205",
+        "name": "ZP3102 PIR Motion Sensor"
+      },
+      {
+        "type": "2003",
+        "id": "0301",
+        "name": "ZS5101 Shock and Vibration Sensor"
+      },
+      {
+        "type": "2003",
+        "id": "0302",
+        "name": "ZS5101 Shock and Vibration Sensor"
+      },
+      {
+        "type": "2003",
+        "id": "0306",
+        "name": "ZS5101 Shock and Vibration Sensor"
+      },
+      {
+        "type": "2003",
+        "id": "0307",
+        "name": "ZS5101 Shock and Vibration Sensor"
+      },
+      {
+        "type": "2004",
+        "id": "0403",
+        "name": "ZS6101 Smoke Detector"
+      },
+      {
+        "type": "2005",
+        "id": "0503",
+        "name": "ZM1601 Battery Operated Siren"
+      },
+      {
+        "type": "2005",
+        "id": "0505",
+        "name": "ZM1601 Battery Operated Siren"
+      },
+      {
+        "type": "2005",
+        "id": "0508",
+        "name": "ZM1601EU-5 Battery Operated Siren"
+      },
+      {
+        "type": "2006",
+        "id": "0610",
+        "name": "ZM1701 Electronic Deadbolt Door Lock without Handle"
+      },
+      {
+        "type": "2006",
+        "id": "0620",
+        "name": "ZM1702 Electronic Deadbolt Door Lock with Handle"
+      },
+      {
+        "type": "2006",
+        "id": "0621",
+        "name": "ZM1701 Electronic Deadbolt Door Lock without Handle"
+      },
+      {
+        "type": "2007",
+        "id": "0703",
+        "name": "Plug-in Switch"
+      },
+      {
+        "type": "2008",
+        "id": "0803",
+        "name": "ZL7101 Plug-in Dimmer Module"
+      },
+      {
+        "type": "2009",
+        "id": "0903",
+        "name": "ZM1602 Main Operated Siren"
+      },
+      {
+        "type": "2009",
+        "id": "0908",
+        "name": "ZM1602+ DC/AC Power Siren"
+      },
+      {
+        "type": "200a",
+        "id": "0a02",
+        "name": "ZG8101 Garage Door Detector"
+      },
+      {
+        "type": "200c",
+        "id": "0c02",
+        "name": "ZL7431 In-Wall Switch Single Relay"
+      },
+      {
+        "type": "200f",
+        "id": "0f02",
+        "name": "ZS6301 CO Detector"
+      },
+      {
+        "type": "200f",
+        "id": "0f03",
+        "name": "ZS6301 CO Detector"
+      },
+      {
+        "type": "2012",
+        "id": "1203",
+        "name": "ZR1202 Repeater"
+      },
+      {
+        "type": "2014",
+        "id": "1401",
+        "name": "ZL7101 Plug-in Dimmer Module"
+      },
+      {
+        "type": "2017",
+        "id": "1717",
+        "name": "ZL7432 In-Wall Switch, Dual Relay"
+      },
+      {
+        "type": "201a",
+        "id": "1aa4",
+        "name": "ZL7261 Plug-in Power Monitor"
+      },
+      {
+        "type": "201c",
+        "id": "1c01",
+        "name": "ZF5201 Flood sensor"
+      },
+      {
+        "type": "201f",
+        "id": "1f10",
+        "name": "ZD2201 Multisensor 4in1"
+      },
+      {
+        "type": "201f",
+        "id": "1f20",
+        "name": "ZD2301 Multisensor 4in1"
+      },
+      {
+        "type": "2021",
+        "id": "2101",
+        "name": "ZP3111 Multisensor 4in1"
+      },
+      {
+        "type": "2022",
+        "id": "2201",
+        "name": "ZD2105US-5 Recessed Door/Window Sensor"
+      },
+      {
+        "type": "3001",
+        "id": "0104",
+        "name": "ZM1602 Main Operated Siren"
+      }
+    ]
+  },
+  {
+    "id": "004a",
+    "name": "Visualize"
+  },
+  {
+    "id": "0058",
+    "name": "Vitelec"
+  },
+  {
+    "id": "0263",
+    "name": "Viva Labs AS"
+  },
+  {
+    "id": "0156",
+    "name": "Vivint"
+  },
+  {
+    "id": "017b",
+    "name": "Vs-Safety AS"
+  },
+  {
+    "id": "004b",
+    "name": "Watt Stopper"
+  },
+  {
+    "id": "0008",
+    "name": "Wayne Dalton",
+    "products": [
+      {
+        "type": "0007",
+        "id": "0020",
+        "name": "WDTC-20 Thermostat"
+      }
+    ]
+  },
+  {
+    "id": "019f",
+    "name": "Webee Life"
+  },
+  {
+    "id": "0171",
+    "name": "WeBeHome AB",
+    "products": [
+      {
+        "type": "0001",
+        "id": "0001",
+        "name": "WBH HG-900 Home Gateway"
+      }
+    ]
+  },
+  {
+    "id": "026c",
+    "name": "Westcontrol AS"
+  },
+  {
+    "id": "0057",
+    "name": "Whirlpool"
+  },
+  {
+    "id": "027b",
+    "name": "White Rabbit"
+  },
+  {
+    "id": "0149",
+    "name": "wiDom",
+    "products": [
+      {
+        "type": "0012",
+        "id": "0104",
+        "name": "UBS104 Universal Relay Switch"
+      },
+      {
+        "type": "1214",
+        "id": "0304",
+        "name": "UME304 Energy Driven Switch"
+      },
+      {
+        "type": "1214",
+        "id": "0504",
+        "name": "WDS Universal Double Switch"
+      },
+      {
+        "type": "1214",
+        "id": "0900",
+        "name": "DRY Smart Dry Contact Switch"
+      },
+      {
+        "type": "1214",
+        "id": "0b00",
+        "name": "WDS2 Smart Double Switch"
+      },
+      {
+        "type": "1214",
+        "id": "0700",
+        "name": "WSP Smart Plug"
+      },
+      {
+        "type": "1214",
+        "id": "0a00",
+        "name": "WTED Smart TE Dimmer"
+      },
+      {
+        "type": "1214",
+        "id": "0800",
+        "name": "UMS2 Smart Roller Shutter"
+      }
+    ]
+  },
+  {
+    "id": "012d",
+    "name": "Wilshine Holding"
+  },
+  {
+    "id": "017f",
+    "name": "Wink",
+    "products": [
+      {
+        "type": "0101",
+        "id": "0001",
+        "name": "WNK-MOT1 Motion Sensor"
+      },
+      {
+        "type": "0200",
+        "id": "0001",
+        "name": "WNK-SIR1P Siren"
+      }
+    ]
+  },
+  {
+    "id": "004c",
+    "name": "Woodward Labs"
+  },
+  {
+    "id": "0242",
+    "name": "Winytechnology"
+  },
+  {
+    "id": "0199",
+    "name": "Wireless Maingate AB"
+  },
+  {
+    "id": "0269",
+    "name": "WOOREE Lighting"
+  },
+  {
+    "id": "0003",
+    "name": "Wrap"
+  },
+  {
+    "id": "022f",
+    "name": "WRT Intelligent Technology"
+  },
+  {
+    "id": "012e",
+    "name": "Wuhan NWD Technology"
+  },
+  {
+    "id": "004d",
+    "name": "Xanboo"
+  },
+  {
+    "id": "037d",
+    "name": "Xiamen AcTEC Electronics"
+  },
+  {
+    "id": "0000",
+    "name": "Z-Wave (Sigma Designs)",
+    "products": [
+      {
+        "type": "0001",
+        "id": "0001",
+        "name": "UZB Z-Wave USB Adapter"
+      },
+      {
+        "type": "0003",
+        "id": "0008",
+        "name": "UZB3 Z-Wave USB Adapter"
+      }
+    ]
+  },
+  {
+    "id": "031d",
+    "name": "Z-Wave Alliance"
+  },
+  {
+    "id": "004f",
+    "name": "Z-Wave Technologia"
+  },
+  {
+    "id": "0115",
+    "name": "Z-Wave.Me",
+    "products": [
+      {
+        "type": "0001",
+        "id": "0001",
+        "name": "Z-Wave USB Stick"
+      },
+      {
+        "type": "0001",
+        "id": "0069",
+        "name": "Key Fob"
+      },
+      {
+        "type": "0002",
+        "id": "0003",
+        "name": "Z-Wave USB Stick"
+      },
+      {
+        "type": "0024",
+        "id": "0001",
+        "name": "Floor Thermostat"
+      },
+      {
+        "type": "0100",
+        "id": "0001",
+        "name": "ZME_KFOB 4 Button Key Fob"
+      },
+      {
+        "type": "0100",
+        "id": "0004",
+        "name": "ZME_WCD2 Double Paddle Wall Controller"
+      },
+      {
+        "type": "0100",
+        "id": "0101",
+        "name": "ZME_WALLC-S Secure Wall Controller"
+      },
+      {
+        "type": "0100",
+        "id": "0102",
+        "name": "ZME_KFOB-S 4 Button Key Fob"
+      },
+      {
+        "type": "0100",
+        "id": "0103",
+        "name": "Popp KFOB-C Remote Control"
+      },
+      {
+        "type": "0100",
+        "id": "0200",
+        "name": "Smoke Detector"
+      },
+      {
+        "type": "0100",
+        "id": "0201",
+        "name": "Smoke Detector"
+      },
+      {
+        "type": "0100",
+        "id": "0400",
+        "name": "Z-Weather Wind and Weather Sensor"
+      },
+      {
+        "type": "0110",
+        "id": "0001",
+        "name": "Z-Uno"
+      },
+      {
+        "type": "0200",
+        "id": "0001",
+        "name": "iTemp Temperature Sensor"
+      },
+      {
+        "type": "0201",
+        "id": "0001",
+        "name": "iTemp Temperature Sensor"
+      },
+      {
+        "type": "0201",
+        "id": "0002",
+        "name": "Thermostat"
+      },
+      {
+        "type": "0201",
+        "id": "0003",
+        "name": "Binary Sensor"
+      },
+      {
+        "type": "0400",
+        "id": "0001",
+        "name": "ZME_UZB1 USB Stick"
+      },
+      {
+        "type": "1000",
+        "id": "0001",
+        "name": "ZME_054313Z Flush-Mountable Switch"
+      },
+      {
+        "type": "1000",
+        "id": "0002",
+        "name": "ZME_06433/05433 Wall Flush-Mountable Dimmer"
+      },
+      {
+        "type": "1000",
+        "id": "0003",
+        "name": "ZME_06436 Motor Control"
+      },
+      {
+        "type": "1000",
+        "id": "0004",
+        "name": "ZME_064435 Wall Controller"
+      },
+      {
+        "type": "1000",
+        "id": "0100",
+        "name": "ZME_05461 Dual Load Wall Switch"
+      },
+      {
+        "type": "1000",
+        "id": "0200",
+        "name": "ZME_064281 Wall Plug switch Schuko (IP44) Gen 5"
+      },
+      {
+        "type": "1000",
+        "id": "0300",
+        "name": "ZME_RC2 Remote Control"
+      },
+      {
+        "type": "1100",
+        "id": "0002",
+        "name": "PLDE Plug-in Dimmer"
+      }
+    ]
+  },
+  {
+    "id": "0147",
+    "name": "Z-Wave.Me",
+    "products": [
+      {
+        "type": "0002",
+        "id": "0003",
+        "name": "RaZberry Controller"
+      },
+      {
+        "type": "0400",
+        "id": "0001",
+        "name": "RaZberry Controller ZWave+"
+      },
+      {
+        "type": "0400",
+        "id": "0002",
+        "name": "RaZberry Controller 2016 ZWave+"
+      }
+    ]
+  },
+  {
+    "id": "024d",
+    "name": "Z-works"
+  },
+  {
+    "id": "024e",
+    "name": "zConnect"
+  },
+  {
+    "id": "004e",
+    "name": "Zdata"
+  },
+  {
+    "id": "016f",
+    "name": "Zhejiang Jiuxing Electric"
+  },
+  {
+    "id": "040e",
+    "name": "ZHONGSHAN YunJia INTELLIGENT TECHNOLOGY"
+  },
+  {
+    "id": "036e",
+    "name": "Zinno"
+  },
+  {
+    "id": "0131",
+    "name": "Zipato",
+    "products": [
+      {
+        "type": "0001",
+        "id": "0012",
+        "name": "Micro Module Switch Double PAN04"
+      },
+      {
+        "type": "0002",
+        "id": "0002",
+        "name": "RGBW LED Bulb"
+      },
+      {
+        "type": "0002",
+        "id": "0003",
+        "name": "Bulb 2"
+      },
+      {
+        "type": "0002",
+        "id": "000c",
+        "name": "PST02-A 4 in 1 Multi-Sensor"
+      },
+      {
+        "type": "0004",
+        "id": "000a",
+        "name": "Indoor Siren"
+      },
+      {
+        "type": "0005",
+        "id": "0031",
+        "name": "PH-PAD02.eu Smart Dimmer Socket E27"
+      },
+      {
+        "type": "0006",
+        "id": "001a",
+        "name": "PH-PAB01.eu Micromodule Energy Meter"
+      },
+      {
+        "type": "6131",
+        "id": "4501",
+        "name": "Zipato Mini Keypad"
+      },
+      {
+        "type": "2001",
+        "id": "0106",
+        "name": "VS-ZD2102 Door/Window Sensor"
+      },
+      {
+        "type": "2002",
+        "id": "0205",
+        "name": "ZP3102-EU Multisensor Duo"
+      },
+      {
+        "type": "201f",
+        "id": "1f20",
+        "name": "ZD2301 Multisensor 4in1"
+      },
+      {
+        "type": "8002",
+        "id": "1000",
+        "name": "Smart Smoke Sensor HS1SA-Z"
+      },
+      {
+        "type": "8003",
+        "id": "1000",
+        "name": "Combustible Gas Sensor HS1CG-Z"
+      },
+      {
+        "type": "8004",
+        "id": "1000",
+        "name": "Water Leakage Sensor HS1WL-Z"
+      },
+      {
+        "type": "8005",
+        "id": "1000",
+        "name": "CO Sensor HS1CA-Z"
+      },
+      {
+        "type": "0003",
+        "id": "1083",
+        "name": "Indoor Siren"
+      }
+    ]
+  },
+  {
+    "id": "0120",
+    "name": "Zonoff"
+  },
+  {
+    "id": "027a",
+    "name": "Zooz",
+    "products": [
+      {
+        "type": "0401",
+        "id": "0002",
+        "name": "ZST10 S2 Z-Wave Plus USB Stick"
+      },
+      {
+        "type": "0101",
+        "id": "000a",
+        "name": "ZEN06 Smart Plug"
+      },
+      {
+        "type": "0003",
+        "id": "0087",
+        "name": "ZEN07 Mini Plug"
+      },
+      {
+        "type": "0003",
+        "id": "0082",
+        "name": "ZSE08 Contact Sensor"
+      },
+      {
+        "type": "0003",
+        "id": "0083",
+        "name": "ZSE09 Mini Sensor"
+      },
+      {
+        "type": "0101",
+        "id": "000d",
+        "name": "ZEN15 Power Switch"
+      },
+      {
+        "type": "a000",
+        "id": "a00a",
+        "name": "ZEN16 Multirelay"
+      },
+      {
+        "type": "7000",
+        "id": "a00a",
+        "name": "ZEN17 Universal Relay"
+      },
+      {
+        "type": "0301",
+        "id": "0012",
+        "name": "ZSE18 Motion Sensor"
+      },
+      {
+        "type": "000c",
+        "id": "0003",
+        "name": "ZSE19 S2 Multisiren"
+      },
+      {
+        "type": "a000",
+        "id": "a004",
+        "name": "ZEN20 V2.0 Power Strip"
+      },
+      {
+        "type": "b111",
+        "id": "1e1c",
+        "name": "ZEN21 Switch V3"
+      },
+      {
+        "type": "b112",
+        "id": "1f1c",
+        "name": "ZEN22 Dimmer V2"
+      },
+      {
+        "type": "b111",
+        "id": "251c",
+        "name": "ZEN23 Toggle Switch"
+      },
+      {
+        "type": "b112",
+        "id": "261c",
+        "name": "ZEN24 Dimmer Switch V2"
+      },
+      {
+        "type": "a000",
+        "id": "a003",
+        "name": "ZEN25 S2 Double Plug with USB Port"
+      },
+      {
+        "type": "a000",
+        "id": "a001",
+        "name": "ZEN26 S2 On Off Wall Switch"
+      },
+      {
+        "type": "a000",
+        "id": "a002",
+        "name": "ZEN27 S2 Dimmer Wall Switch"
+      },
+      {
+        "type": "0001",
+        "id": "0005",
+        "name": "ZSE29 Outdoor Motion Sensor"
+      },
+      {
+        "type": "a000",
+        "id": "a008",
+        "name": "ZEN30 Double Switch"
+      },
+      {
+        "type": "0003",
+        "id": "0085",
+        "name": "ZSE30 Water Sensor"
+      },
+      {
+        "type": "0902",
+        "id": "2000",
+        "name": "ZEN31 RGBW Dimmer"
+      },
+      {
+        "type": "0003",
+        "id": "0088",
+        "name": "ZSE33 Smart Chime"
+      },
+      {
+        "type": "7000",
+        "id": "a008",
+        "name": "ZEN32 Scene Controller"
+      },
+      {
+        "type": "0004",
+        "id": "f001",
+        "name": "ZEN34 Remote Switch"
+      },
+      {
+        "type": "7000",
+        "id": "f001",
+        "name": "ZEN34 Remote Switch"
+      },
+      {
+        "type": "2021",
+        "id": "2101",
+        "name": "ZSE40 4-in-1 sensor"
+      },
+      {
+        "type": "7000",
+        "id": "a001",
+        "name": "ZEN71 On Off Switch"
+      },
+      {
+        "type": "7000",
+        "id": "a002",
+        "name": "ZEN72 Dimmer Switch"
+      },
+      {
+        "type": "7000",
+        "id": "a006",
+        "name": "ZEN76 S2 On Off Switch"
+      },
+      {
+        "type": "7000",
+        "id": "a007",
+        "name": "ZEN77 S2 Dimmer Switch"
+      }
+    ]
+  },
+  {
+    "id": "015d",
+    "name": "Zooz (Willis Electric)",
+    "products": [
+      {
+        "type": "0651",
+        "id": "f51c",
+        "name": "ZEN20 Power Strip"
+      },
+      {
+        "type": "0111",
+        "id": "231c",
+        "name": "ZEN21 Switch"
+      },
+      {
+        "type": "0112",
+        "id": "241c",
+        "name": "ZEN22 Dimmer"
+      },
+      {
+        "type": "1111",
+        "id": "1e1c",
+        "name": "ZEN23 Toggle Switch"
+      },
+      {
+        "type": "0111",
+        "id": "1f1c",
+        "name": "ZEN24 Dimmer Switch"
+      },
+      {
+        "type": "6100",
+        "id": "6100",
+        "name": "NZW97 Inovelli Dual Outdoor Z-Wave Plug"
+      },
+      {
+        "type": "1f01",
+        "id": "1f01",
+        "name": "NZW31 Inovelli Dimmer"
+      }
+    ]
+  },
+  {
+    "id": "0315",
+    "name": "zwaveproducts.com",
+    "products": [
+      {
+        "type": "4447",
+        "id": "3031",
+        "name": "PA-100"
+      },
+      {
+        "type": "4447",
+        "id": "3034",
+        "name": "WD-100"
+      }
+    ]
+  },
+  {
+    "id": "0021",
+    "name": "Zykronix"
+  },
+  {
+    "id": "0135",
+    "name": "ZyXEL"
+  }
+]
