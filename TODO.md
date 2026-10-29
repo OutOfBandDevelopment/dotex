@@ -8,7 +8,7 @@ Keep this file short (a handful of items). When an item starts, move it here fro
 
 ## In progress
 
-- [ ] Device decoding: all eight device packages are in `src/HardwareDevices` and `src/Extensions` with unit and Hardware tests (change documents `docs/changes/devices-*-2026-10-28.md`; feature docs [docs/design/DeviceDecoding/](docs/design/DeviceDecoding/README.md)). Open: the DE-5000 Hardware test (needs a BLE transport), the phase 0 checks in [device-parity.md](docs/migration/device-parity.md) section 4, then the dev-term merge (`OoBDev.UiDefinitions` is in; `OoBDev.UiDefinitions.ViewModels` form view models are in; `OoBDev.UiDefinitions.Wpf` `FormView` is in; next are the vector plot and slider widgets and the `OoBDev.DevTerm.Wpf` shell; unblocked 2026-10-29, owner answer to Q3: option A before the Avalonia spike, see the device decoding line in [BACKLOG.md](BACKLOG.md))
+- [ ] Device decoding: all eight device packages are in `src/HardwareDevices` and `src/Extensions` with unit and Hardware tests (change documents `docs/changes/devices-*-2026-10-28.md`; feature docs [docs/design/DeviceDecoding/](docs/design/DeviceDecoding/README.md)). Open: the DE-5000 Hardware test (needs a BLE transport), the phase 0 checks in [device-parity.md](docs/migration/device-parity.md) section 4, then the dev-term merge (`OoBDev.UiDefinitions` is in; `OoBDev.UiDefinitions.ViewModels` form view models are in; `OoBDev.UiDefinitions.Wpf` `FormView` is in; next are the vector plot and colour picker and the `OoBDev.DevTerm.Wpf` shell; unblocked 2026-10-29, owner answer to Q3: option A before the Avalonia spike, see the device decoding line in [BACKLOG.md](BACKLOG.md))
 
 ## Next
 

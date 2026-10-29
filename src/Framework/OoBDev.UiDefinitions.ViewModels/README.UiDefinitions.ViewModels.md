@@ -19,4 +19,4 @@ No code-behind, no lambdas as commands, no UI toolkit reference.
 
 ## Verified
 
-24 Unit tests: visibility conditions, validation errors, model-to-view refresh, the commands, disposal.
+25 Unit tests: visibility conditions, validation errors, model-to-view refresh, the commands, disposal.

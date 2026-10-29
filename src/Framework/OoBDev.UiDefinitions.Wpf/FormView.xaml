@@ -34,6 +34,11 @@
                 <TextBox Text="{Binding Text, UpdateSourceTrigger=LostFocus}"
                          IsEnabled="{Binding IsEnabled}"
                          ToolTip="{Binding Description}" />
+                <Slider Minimum="{Binding Minimum}" Maximum="{Binding Maximum}"
+                        SmallChange="{Binding Step}" TickFrequency="{Binding Step}" IsSnapToTickEnabled="True"
+                        Value="{Binding Value, Mode=TwoWay}"
+                        IsEnabled="{Binding IsEnabled}"
+                        Visibility="{Binding IsSlider, Converter={StaticResource Visible}}" />
                 <TextBlock Text="{Binding Error}" Foreground="Firebrick" />
             </StackPanel>
         </DataTemplate>

@@ -165,6 +165,33 @@ public sealed class FormViewModelTests
     }
 
     [TestMethod]
+    public void Slider_ValueSet_WritesModelAndExposesRange()
+    {
+        // Stage
+        var model = new SliderModel();
+        var definition = new UiDefinition
+        {
+            Name = "s",
+            Sections = [new UiSection { Label = "S", Controls = [new SliderControl { Id = "Level", Label = "Level", Minimum = 0, Maximum = 10, Step = 1 }] }],
+        };
+        using var form = new FormViewModel(definition, new FormBinding(model));
+        var row = (TextViewModel)form.Row("Level")!;
+
+        // Test
+        row.Value = 7;
+
+        // Assert
+        Assert.IsTrue(row.IsSlider);
+        Assert.AreEqual((0d, 10d), (row.Minimum, row.Maximum));
+        Assert.AreEqual(7, model.Level);
+    }
+
+    public sealed class SliderModel
+    {
+        public int Level { get; set; }
+    }
+
+    [TestMethod]
     public void Text_ModelChanged_RefreshesTextAndClearsError()
     {
         // Stage

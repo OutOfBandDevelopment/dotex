@@ -120,6 +120,32 @@ public sealed class FormViewTests
         Assert.IsTrue(Descendants<TextBox>(view).Any(IsShown));
     }
 
+    public sealed class LevelModel
+    {
+        public int Level { get; set; }
+    }
+
+    [STATestMethod]
+    public void Slide_SliderRow_WritesModel()
+    {
+        // Stage
+        var model = new LevelModel();
+        var definition = new UiDefinition
+        {
+            Name = "s",
+            Sections = [new UiSection { Label = "S", Controls = [new SliderControl { Id = "Level", Label = "Level", Minimum = 0, Maximum = 10, Step = 1 }] }],
+        };
+        using var form = new FormViewModel(definition, new FormBinding(model));
+        var view = Render(form);
+        var slider = Descendants<Slider>(view).Single();
+
+        // Test
+        slider.Value = 6;
+
+        // Assert
+        Assert.AreEqual(6, model.Level);
+    }
+
     private static bool IsShown(UIElement element) => IsVisibleInTree(element);
 
     private static bool IsVisibleInTree(DependencyObject element)
