@@ -19,10 +19,14 @@ var redis = builder.AddRedis("redis");
 var rabbitmq = builder.AddRabbitMQ("rabbitmq")
     .WithManagementPlugin();
 
+// The sa password is fixed to the SQL_SA_PASSWORD default the compose stacks use (containers/testing/.env.integration). A generated
+// password changes with the user secrets, and the persisted data volume below then rejects the login.
+var sqlPassword = builder.AddParameter("sql-password", Environment.GetEnvironmentVariable("SQL_SA_PASSWORD") ?? "IntegrationTest123!", secret: true);
+
 // SQL Server 2019 with the SQL CLR vector types from OoBDev.Data.Vectors.DB (the version the dacpac targets, Sql150).
-var sql = builder.AddSqlServer("sql")
+var sql = builder.AddSqlServer("sql", sqlPassword)
     .WithImageTag("2019-latest")
-    .WithDataVolume("oobd-aspire-sqlserver");
+    .WithDataVolume("oobd-aspire-sqlserver-fixed-sa");
 
 #if DEBUG
 const string BuildConfiguration = "Debug";
@@ -71,7 +75,19 @@ var api = builder.AddProject<OoBDev_Example_WebApi>("example-api", options => op
     .WithEnvironment("SqlVectorStoreOptions__ConnectionString", vectorDb)
     .WaitFor(vectorDb)
     .WaitFor(ollama)
-    .WaitFor(redis);
+    .WaitFor(redis)
+    // The mail client and the queue providers read host, port and credentials from their own sections (the compose file sets the same keys),
+    // not from the connection string the reference adds; without these they call localhost on the default ports and the send and queue calls fail.
+    .WithEnvironment("MailKitSmtpClientOptions__Host", smtp.GetEndpoint("smtp").Property(EndpointProperty.Host))
+    .WithEnvironment("MailKitSmtpClientOptions__Port", smtp.GetEndpoint("smtp").Property(EndpointProperty.Port));
+
+foreach (var queue in new[] { "ExampleMessageProvider", "EmailMessageModel", "ReceivedEmailMessageModel" })
+{
+    api.WithEnvironment($"MessageQueue__{queue}__Config__HostName", rabbitmq.GetEndpoint("tcp").Property(EndpointProperty.Host))
+        .WithEnvironment($"MessageQueue__{queue}__Config__Port", rabbitmq.GetEndpoint("tcp").Property(EndpointProperty.Port))
+        .WithEnvironment($"MessageQueue__{queue}__Config__UserName", rabbitmq.Resource.UserNameReference)
+        .WithEnvironment($"MessageQueue__{queue}__Config__Password", rabbitmq.Resource.PasswordParameter);
+}
 
 // Under Visual Studio the child inherits ASPNETCORE_URLS=https://localhost:5001;http://localhost:5000, and URLS outranks HTTP_PORTS, so the API
 // would ignore the port the host proxies to and every request through the proxy (including the web site's) would hang.
