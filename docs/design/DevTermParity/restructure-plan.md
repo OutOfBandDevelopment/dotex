@@ -17,12 +17,18 @@ Owner decisions, 2026-10-29 (planning session). They supersede the project layou
 - A `DevTerm.Abstractions` (for example the plugin model) may be extracted later if extension needs it; not now.
 - Schema identifiers use the `oobdev://{application}/{namespace}/...` scheme, not a hosted URL (Q2 answered): `oobdev://devterm/schemas/<file>`. They are names, not fetch locations.
 
+## Telemetry and the user accessor (owner, 2026-10-29)
+
+- `ICurrentUserAccessor` (`OoBDev.System.Abstractions`) gains `ClaimsPrincipal? User`; `UserName` derives from it. Implementations: `HttpContextUserAccessor` (`OoBDev.AspNetCore.Mvc`, wraps `IHttpContextAccessor`), `EnvironmentUserAccessor` (`OoBDev.System`, builds a principal from the active Windows identity for CLI and WPF), and any application-supplied one (token, SSO). Correlation already uses `IAccessor<CorrelationInfo>`.
+- `UserLogProcessor`, `UserTelemetryProcessor` and `UserClaims` read the accessor, not `IHttpContextAccessor`.
+- The processors, options, DI extensions and the standalone OTLP exporter all live in one host-free Framework library, `OoBDev.Telemetry` (no ASP.NET reference). `ExternalServices/OpenTelemetry/OoBDev.OpenTelemetry` is retired, its tests move, and the Example web, API and AppHost references are updated.
+
 ## Migration table (to confirm before step 1)
 
 | Project today | Target | Namespace | Notes |
 |---|---|---|---|
 | `OoBDev.DevTerm.Core`, `.Logging`, `.DeviceManifests`, `.Configuration`, `.Schemas`, `.Presenters.Text`, `.Plugins.*`, `.Loopback` | `src/Applications/OoBDev.DevTerm.Core` | `OoBDev.DevTerm.*` per folder | one assembly, one `Core.Tests` |
-| `OoBDev.DevTerm.Observability` | `src/Framework/OoBDev.Telemetry` | `OoBDev.Telemetry` | no ASP.NET reference |
+| `OoBDev.DevTerm.Observability` and `ExternalServices/OpenTelemetry/OoBDev.OpenTelemetry` (+ Tests) | `src/Framework/OoBDev.Telemetry` (+ Tests) | `OoBDev.Telemetry` (was `OoBDev.OpenTelemetry`) | no ASP.NET reference; Example projects re-referenced |
 | `OoBDev.DevTerm.Transports.Serial` | `OoBDev.System.IO.Ports` | `OoBDev.System.IO.Ports` | pipe `IDeviceAdapter` |
 | `OoBDev.DevTerm.Transports.Tcp`, `.Rfc2217`, `.Vxi11` | `OoBDev.System.IO.Tcp` | `OoBDev.System.IO.Tcp` | |
 | HID, USBTMC, BLE, MQTT, brokers (not yet ported) | `OoBDev.System.IO.UsbHids` and new `OoBDev.System.IO.*` | `OoBDev.System.IO.*` | |
