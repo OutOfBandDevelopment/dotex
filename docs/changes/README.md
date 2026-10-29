@@ -363,3 +363,4 @@ Each change document should include:
 - [K8055 core](devices-k8055-core-2026-10-28.md) - K8055 reports, commands and named input bits; Hardware tests ported, not yet run on a board (2026-10-28)
 - [Radex One core](devices-radexone-core-2026-10-28.md) - Radex One packets, replies and requests; Hardware tests passed on a real device (2026-10-28)
 - [Zoom H4n remote](devices-zoomh4n-core-2026-10-28.md) - H4n status flags, button codes and handshake constants; Hardware test ported, not yet run on the adapter (2026-10-28)
+- [NMEA 0183](devices-nmea-core-2026-10-28.md) - sentence segmenter, decoder, typed GGA/RMC/GSA/GSV/VTG; BT-20 Hardware test ported, not yet run on the receiver (2026-10-28)
