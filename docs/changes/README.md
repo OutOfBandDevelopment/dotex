@@ -364,3 +364,4 @@ Each change document should include:
 - [Radex One core](devices-radexone-core-2026-10-28.md) - Radex One packets, replies and requests; Hardware tests passed on a real device (2026-10-28)
 - [Zoom H4n remote](devices-zoomh4n-core-2026-10-28.md) - H4n status flags, button codes and handshake constants; Hardware test ported, not yet run on the adapter (2026-10-28)
 - [NMEA 0183](devices-nmea-core-2026-10-28.md) - sentence segmenter, decoder, typed GGA/RMC/GSA/GSV/VTG; BT-20 Hardware test ported, not yet run on the receiver (2026-10-28)
+- [SCPI instrument control](devices-scpi-core-2026-10-28.md) - profile model and catalog (nine bundled profiles), command builder, reply segmenter and codecs; no instrument tested yet (2026-10-28)
