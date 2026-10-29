@@ -9,6 +9,6 @@ Declarative device description for DevTerm: a YAML/JSON manifest (transport hint
 | Frames | `FrameSchema`, `FrameField`, `FrameLayout`, `FrameDecoder`, `KsyImporter` (Kaitai `.ksy` subset) |
 | Preview data | `ValuePathCatalog`, `SampleDataGenerator`, `RecordedSamples` |
 
-Pre-packaged manifests under `Manifests/` are copied to `manifests\{device}\` next to the app. Not yet ported: the manifest editor view models (`Editing`).
+Pre-packaged manifests under `Manifests/` are copied to `manifests\{device}\` next to the app. The manifest editor (`Editing`: `ManifestEditorViewModel`, the form classes, `ExpressionPickerViewModel`) is in; WPF and web forms rendering is separate.
 
 Tests: `OoBDev.DevTerm.DeviceManifests.Tests`.
