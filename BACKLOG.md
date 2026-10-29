@@ -16,7 +16,7 @@ GitHub is no longer the primary repository (local bare repo `origin`), so nothin
 - [ ] Add a live-integration doc page per new cloud service (only Groq exists; its key was revoked 2026-10-09, so runs wait for the owner).
 - Azure Monitor exporter: not built (decided 2026-10-22). Telemetry is verified with OpenTelemetry and the Aspire dashboard in the Docker test stack; OTLP reaches any collector.
 - [ ] Goals: no flaky tests (10 consecutive runs pass), Integration suite under 5 minutes.
-- [ ] New test project `OoBDev.DacFx.Tests`: a SQLCLR test project covering all SQLCLR features (from a module note).
+- [ ] SQLCLR coverage inside SQL Server (`OoBDev.Data.Vectors.DB.Tests`, from a module note): the `MatrixF` type and the double `Vector`/`Matrix` types remain; `VectorF` distance/angle and the six aggregates are covered (2026-10-28).
 
 ## 2. APIs and documents
 

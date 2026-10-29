@@ -1,4 +1,4 @@
-﻿using Microsoft.SqlServer.Server;
+using Microsoft.SqlServer.Server;
 using System;
 using System.IO;
 
@@ -58,7 +58,7 @@ public class MaximumFAggregate : IBinarySerialize
     /// <param name="other">The other aggregate instance to merge.</param>
     public void Merge(MaximumFAggregate other)
     {
-        if (other != null)
+        if (other != null && other._sum.Length > 0)
         {
             if (_sum.Length == 0)
             {
@@ -66,9 +66,13 @@ public class MaximumFAggregate : IBinarySerialize
             }
             else
             {
+                if (_sum.Length != other._sum.Length)
+                    throw new NotSupportedException("Vectors must be of the same length");
+
                 for (var i = 0; i < _sum.Length; i++)
                 {
-                    _sum[i] += other._sum[i];
+                    if (other._sum[i] > _sum[i])
+                        _sum[i] = other._sum[i];
                 }
             }
         }

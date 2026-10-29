@@ -106,6 +106,20 @@ public class SqlServerDeploymentTests
 
     [TestMethod]
     [TestCategory(TestCategories.Integration)]
+    public async Task Aggregates_RunInsideSqlServer()
+    {
+        var db = DatabaseConnection();
+        const string rows = "FROM (VALUES (embedding.VectorF::Parse('1,8,3')), (embedding.VectorF::Parse('4,2,9')), (embedding.VectorF::Parse('2,5,6'))) AS t(v)";
+
+        Assert.AreEqual(1d, await ScalarAsync<double>(db, $"SELECT CAST(embedding.MinimumF(v).Element(0) AS float) {rows}"), 1e-5);
+        Assert.AreEqual(2d, await ScalarAsync<double>(db, $"SELECT CAST(embedding.MinimumF(v).Element(1) AS float) {rows}"), 1e-5);
+        Assert.AreEqual(4d, await ScalarAsync<double>(db, $"SELECT CAST(embedding.MaximumF(v).Element(0) AS float) {rows}"), 1e-5);
+        Assert.AreEqual(9d, await ScalarAsync<double>(db, $"SELECT CAST(embedding.MaximumF(v).Element(2) AS float) {rows}"), 1e-5);
+        Assert.AreEqual(5d, await ScalarAsync<double>(db, $"SELECT CAST(embedding.CentroidF(v).Element(1) AS float) {rows}"), 1e-5);
+    }
+
+    [TestMethod]
+    [TestCategory(TestCategories.Integration)]
     public async Task UndefinedInputs_ReturnNull_WithoutFailingTheBatch()
     {
         const string sql = @"

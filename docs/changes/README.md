@@ -354,6 +354,10 @@ Each change document should include:
 - Example UI design documents reconciled with the code
 - Status: ✅ Complete
 
+**[data-vectors-aggregate-merge-2026-10-28.md](data-vectors-aggregate-merge-2026-10-28.md)**
+- SQLCLR aggregate Merge fixed (min/max added instead of compared); aggregate tests
+- Status: ✅ Complete
+
 **[examples-aspire-vectordb-wiring-2026-10-28.md](examples-aspire-vectordb-wiring-2026-10-28.md)**
 - Example Aspire host gives the API the SQL vector store connection string
 - Status: Built, not run end to end
