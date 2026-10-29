@@ -569,8 +569,8 @@ public class RunnerHost<T> : BackgroundService where T : IRunner
 ## Related Documents
 
 - [BotChat Migration Plan](./botchat-migration-plan.md) - Detailed execution steps
-- [Framework Feature Mapping](./framework-feature-mapping.md) - Related framework analysis
-- [Incomming Checklist](../../Incomming/CHECKLIST.md) - Overall tracking
+- [Framework Feature Mapping](./incoming-recommendation-plan.md) - Related framework analysis
+- [Incomming Checklist](../../Incoming/CHECKLIST.md) - Overall tracking
 
 ---
 

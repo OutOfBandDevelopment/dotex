@@ -365,6 +365,6 @@ exit 1
 
 **Related Documentation:**
 - [TODO.md](../../TODO.md) - Main project tracking
-- [TODO-testing-local-integration.md](../../TODO-testing-local-integration.md) - Local integration testing epic
+- [TODO-testing-local-integration.md](../../BACKLOG.md) - Local integration testing epic
 - [TEST_VARIABLES.md](../../TEST_VARIABLES.md) - Test property reference
 - [containers/testing/README.md](../../containers/testing/README.md) - Infrastructure guide

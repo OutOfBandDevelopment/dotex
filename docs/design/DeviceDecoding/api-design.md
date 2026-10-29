@@ -61,7 +61,7 @@ Read from the code on 2026-10-28; each is closed in the template device or the d
 
 ## Naming
 
-Names follow [Table 5 and Table 6 of the plan](../../migration/device-decoding-migration-plan.md): `{Device}MessageDecoder`, `{Device}MessageEncoder`, `{Device}Message` records, `{Vendor}Globals.ProviderKey`, `{Device}Options`, `TryAdd{Device}Services`. Implementations take no `Impl` suffix.
+Names follow [Table 4 and Table 5 of the plan](../../migration/device-decoding-migration-plan.md): `{Device}MessageDecoder`, `{Device}MessageEncoder`, `{Device}Message` records, `{Vendor}Globals.ProviderKey`, `{Device}Options`, `TryAdd{Device}Services`. Implementations take no `Impl` suffix.
 
 ## To confirm in the template device
 

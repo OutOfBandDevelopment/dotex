@@ -168,9 +168,9 @@ IMessageQueueHandler<TChannel, TMessage> where TMessage : class
 ### For Adding New Features
 
 1. Determine the appropriate layer (Common, Framework, Extensions, ExternalServices)
-2. Follow the [provider-factory-pattern.md](./provider-factory-pattern.md) if adding integrations
-3. Use the [dependency-injection.md](./dependency-injection.md) builder pattern
-4. Follow [testing-architecture.md](./testing-architecture.md) for test coverage
+2. Follow the [provider-factory-pattern.md](../patterns-discovery/02-design-patterns/03-provider-factory-keyed.md) if adding integrations
+3. Use the [dependency-injection.md](../patterns-discovery/02-design-patterns/01-abstractions-implementation-registration.md) builder pattern
+4. Follow [testing-architecture.md](./testing/testing-guidelines.md) for test coverage
 5. Document according to [../Libraries/](../Libraries/) examples
 
 ### For Integrating External Services
@@ -223,7 +223,7 @@ What makes OoBDev unique:
 - [../code/](../code/) - Per-project README files
 
 ### Feature Tracking
-- [../FEATURE_INVENTORY.md](../FEATURE_INVENTORY.md) - Comprehensive feature comparison
+- [../FEATURE_INVENTORY.md](../migration/README.md) - Comprehensive feature comparison
 
 ---
 

@@ -535,8 +535,8 @@ public static double CosineSimilarity(...) => dot / (mag1 * mag2);
 
 ## Related Documents
 
-- [Framework Feature Mapping](./framework-feature-mapping.md) - Incomming/Framework analysis
-- [Framework Migration Plan](./framework-migration-plan.md) - Overall migration strategy
+- [Framework Feature Mapping](./incoming-recommendation-plan.md) - Incomming/Framework analysis
+- [Framework Migration Plan](./incoming-recommendation-plan.md) - Overall migration strategy
 
 ---
 

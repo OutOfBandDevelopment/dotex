@@ -664,8 +664,8 @@ containers/testing/
 
 **Related Documentation:**
 - [TODO.md](../../TODO.md) - Main project tracking
-- [TODO-migrations.md](../../TODO-migrations.md) - Migration epic tracking
-- [TODO-migrations-caching.md](../../Features/Caching/TODO-migrations-caching.md) - Caching migration details
+- [TODO-migrations.md](../../BACKLOG.md) - Migration epic tracking
+- [TODO-migrations-caching.md](../../BACKLOG.md) - Caching migration details
 - [CLAUDE.md](../../CLAUDE.md) - Development guide
 - [Features/Caching/Caching.md](../../Features/Caching/Caching.md) - User documentation
 - [docs/architecture/caching/](../architecture/caching/) - Technical architecture documentation

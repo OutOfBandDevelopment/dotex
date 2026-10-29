@@ -1563,7 +1563,7 @@ If migration causes issues:
 - [Architectural Guidelines](../architecture/architectural-guidelines.md)
 - [Architectural Standards](../architecture/architectural-standards.md)
 - [Layering Architecture](../architecture/layering-architecture.md)
-- [Provider/Factory Pattern](../architecture/provider-factory-pattern.md)
+- [Provider/Factory Pattern](../patterns-discovery/02-design-patterns/03-provider-factory-keyed.md)
 
 ---
 

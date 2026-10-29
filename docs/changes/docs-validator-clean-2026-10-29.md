@@ -1,0 +1,5 @@
+# Documentation validators clean outside generated output (2026-10-29)
+
+Ran the `OoBDev.Docs.Tests` validators over the whole `docs/` tree (`DOCS_VALIDATE_PATHS=docs`). Fixed every problem in hand-written documents: broken relative links (the retired `provider-factory-pattern.md`, `dependency-injection.md`, `testing-architecture.md`, `TODO-*.md`, `Incomming/` spelling, `framework-*` plans, `TEST_VARIABLES.md` depth, a `hhttps` typo, two Libraries pages that never existed), 44 PlantUML blocks that lacked `@startuml`/`@enduml`, and the table captions of `docs/migration/device-decoding-migration-plan.md` (renumbered in reading order; the two design documents that cite them follow).
+
+Result: 0 problems in hand-written documents; the default scope still passes. Still failing under `docs/` (generated output, not edited by hand): `docs/sbom` (271, hash text read as links) and `docs/generated` (238, remote C4 `!include` and diagrams that fail to render). Whether to regenerate, fix the generator or retire them is left in `BACKLOG.md`.

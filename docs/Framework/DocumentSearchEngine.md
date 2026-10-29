@@ -9,6 +9,7 @@ This is a simplified design for an semantic search engine
 ### Upload File Process
 
 ```plantuml
+@startuml
 actor User
 boundary DocumentController as Controller
 collections ResourceContainer as Container
@@ -21,11 +22,13 @@ activate Controller
         Container -\ Queue : id
         return id
     return id
+@enduml
 ```
 
 ### File Uploaded (Resource Handler)
 
 ```plantuml
+@startuml
 actor System
 boundary ResourceHandler as Handler
 collections ResourceContainer as Source
@@ -45,11 +48,13 @@ activate Handler
     activate Target
         return stored-id
     Handler -\ Queue : Send(stored-id)
+@enduml
 ```
 
 ### File Converted (Text Resource Handler)
 
 ```plantuml
+@startuml
 actor System
 boundary TextResourceHandler as Handler
 collections TextResourceContainer as Source
@@ -73,11 +78,13 @@ activate Handler
         return summarized-id
 
     Handler -\ Queue : Send(summarized-id, 'summarized')
+@enduml
 ```
 
 ### Content Indexer (Index Handler)
 
 ```plantuml
+@startuml
 actor System
 boundary TextResourceHandler as Handler
 collections Container as Container
@@ -109,11 +116,13 @@ activate Handler
         Handler -> Container : StoreData(id, embedding-id[], metaData)
         activate Container
             return 
+@enduml
 ```
 
 ### Content Search 
 
 ```plantuml
+@startuml
 actor User
 boundary VectorController as Controller
 control IEmbeddingProvider as Embedding
@@ -130,11 +139,13 @@ activate Controller
         return metadata[]
 
     return metadata[]
+@enduml
 ```
 
 ## Controllers
 
 ```plantuml
+@startuml
 class DocumentController {
     + List() : ContentMetaDataReference[]
     + Download(file:string) : FileStreamResult
@@ -164,11 +175,13 @@ class VectorController {
     + Search(query:string) : SearchResultModel[]
     + SearchGrouped(query:string, groupedBy:string) : SearchResultModel[]
 }
+@enduml
 ```
 
 ## Entity Diagram
 
 ```plantuml
+@startuml
 entity ResourceProfilerContext {
     + Documents : DbSet<Document>
     + Vectors : DbSet<DocumentVector>
@@ -215,11 +228,13 @@ DocumentVector --> DocumentData : Data
 ResourceProfilerContext --> Document : Documents
 ResourceProfilerContext --> DocumentVector : Vectors
 ResourceProfilerContext --> MessageQueue : MessageQueue
+@enduml
 ```
 
 ## Database
 
 ```plantuml
+@startuml
 object Document {
     *Id : int, identity
     FileName : string
@@ -256,4 +271,5 @@ object MessageQueue {
 Document *-{ DocumentData : Data
 Document *-{ DocumentVector : Vectors
 DocumentVector *-{ DocumentData : Data
+@enduml
 ```

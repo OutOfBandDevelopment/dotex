@@ -43,7 +43,7 @@
 
 https://github.com/dotnet/roslyn-analyzers
 * Microsoft.CodeAnalysis.*
-  * [github](hhttps://github.com/dotnet/roslyn-analyzers)
+  * [github](https://github.com/dotnet/roslyn-analyzers)
 * Meziantou.Analyzer
   * [Blog](https://www.meziantou.net/the-roslyn-analyzers-i-use.htm)
   * [github](https://github.com/meziantou/Meziantou.Analyzer)

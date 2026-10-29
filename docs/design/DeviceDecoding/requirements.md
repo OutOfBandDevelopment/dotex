@@ -38,7 +38,7 @@
 
 | Id | Requirement | Source |
 |----|-------------|--------|
-| R1 | One package per device, named `OoBDev.{Vendor}.{Device}` (Table 6 of the plan), referencing Framework abstractions only | Plan section 3 |
+| R1 | One package per device, named `OoBDev.{Vendor}.{Device}` (Table 5 of the plan), referencing Framework abstractions only | Plan section 3 |
 | R2 | Framing is an `ISegmenter` built from an `ISegmentBuildDefinition`; decoding is `IMessageDecoder<T>`; encoding is `IMessageEncoder<T>`; a device exposes `IDeviceDefinitionReceiver<T>` and `IDeviceDefinitionTransmitter<T>` | Plan section 4 |
 | R3 | Decoders are stateless per segment; anything that remembers earlier frames (change tracking, reply correlation) is a separate, explicit component | Existing `IMessageDecoder<T>` contract |
 | R4 | Checksums go through `IChecksumCalculator`, with the missing algorithms added and tested against dev-term's recorded traces | Plan section 4 |

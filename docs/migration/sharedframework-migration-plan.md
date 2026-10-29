@@ -1058,7 +1058,7 @@ If migration causes critical issues:
 ## Related Documents
 
 - [Feature Mapping](./sharedframework-feature-mapping.md) - Comprehensive comparison
-- [Incomming Checklist](../../Incomming/CHECKLIST.md) - Overall tracking
+- [Incomming Checklist](../../Incoming/CHECKLIST.md) - Overall tracking
 - [Architectural Guidelines](../architecture/architectural-guidelines.md)
 
 ---

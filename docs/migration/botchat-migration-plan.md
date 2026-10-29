@@ -450,8 +450,8 @@ START
 ## Related Documents
 
 - [Feature Mapping](./botchat-feature-mapping.md) - Comprehensive BotChat analysis
-- [Incomming Checklist](../../Incomming/CHECKLIST.md) - Overall project tracking
-- [Framework Migration Plan](./framework-migration-plan.md) - Related framework work
+- [Incomming Checklist](../../Incoming/CHECKLIST.md) - Overall project tracking
+- [Framework Migration Plan](./incoming-recommendation-plan.md) - Related framework work
 
 ---
 

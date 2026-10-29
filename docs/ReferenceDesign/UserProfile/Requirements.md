@@ -7,6 +7,7 @@ This is a collection of the requirements for an application User Profile.
 ## Use Cases 
 
 ```plantuml
+@startuml
 User --> (Update Profile)
 User --> (Change Password)
 User --> (Login)
@@ -17,6 +18,7 @@ Admin --> (Update Selected User Password)
 Admin --> (Manage Selected User Roles)
 
 User <|-- Admin
+@enduml
 ```
 
 ## Required Permissions
@@ -50,6 +52,7 @@ User <|-- Admin
 ### User Profile
 
 ```plantuml
+@startuml
 class User {
    -UserId : guid
    +FirstName : string
@@ -78,5 +81,6 @@ enum ContactTypes {
 
 User o- Contact
 Contact *- ContactTypes
+@enduml
 ```
 

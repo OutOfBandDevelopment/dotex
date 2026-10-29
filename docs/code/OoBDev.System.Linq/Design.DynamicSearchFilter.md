@@ -44,6 +44,7 @@ exposure personally identifiable information it was determined an in-house solut
 ### HTTP Data Query
 
 ```plantuml
+@startuml
 title Query Process
 
 User -> WebApi: Send Query Request
@@ -61,6 +62,7 @@ activate WebApi
     end
   return PagedResult
 return PagedResult
+@enduml
 ```
 
 ## API Template
@@ -74,6 +76,7 @@ return PagedResult
 Note: the key values for `Filter` and `OrderBy` are based on fields from the `TModel` type
 
 ```plantuml
+@startuml
 class SearchQuery<TModel> {
   + CurrentPage : integer
   + PageSize : integer
@@ -100,6 +103,7 @@ enum OrderDirections {
 
 SearchQuery o-- FilterParameter
 SearchQuery o-- OrderDirections
+@enduml
 ```
 
 ### Response
@@ -110,6 +114,7 @@ if the `PageSize` is equal to `-1` on the request.  Paging will still occur but 
 counts will not be calculated if `ExcludePageCount` is `true` on the request.
 
 ```plantuml
+@startuml
 class QueryResult<TModel> {
   + Rows : TModel[]
 }
@@ -121,6 +126,7 @@ class PagedQueryResult<TModel> {
 
 PagedQueryResult <|-- QueryResult
 
+@enduml
 ```
 
 ## Technical Considerations
@@ -139,6 +145,7 @@ query provider allowing for data server processing including.
 ### Data Model
 
 ```plantuml
+@startuml
 class User {
   + FirstName : string
   + LastName : string
@@ -151,6 +158,7 @@ class User {
   + FirstLastName() => FirstName + " " + LastName
   + LastFirstName() => LastName + " " + FirstName
 }
+@enduml
 ```
 
 ### Request - Starts with

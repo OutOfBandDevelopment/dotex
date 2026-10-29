@@ -871,7 +871,7 @@ This architecture enables:
 - [architectural-guidelines.md](./architectural-guidelines.md) - High-level principles
 - [architectural-standards.md](./architectural-standards.md) - Concrete standards
 - [architectural-patterns.md](./architectural-patterns.md) - Pattern documentation
-- [provider-factory-pattern.md](./provider-factory-pattern.md) - Provider pattern details
+- [provider-factory-pattern.md](../patterns-discovery/02-design-patterns/03-provider-factory-keyed.md) - Provider pattern details
 
 ---
 

@@ -803,7 +803,7 @@ When making architectural decisions, ask:
 - [architectural-standards.md](./architectural-standards.md) - Concrete standards and rules
 - [architectural-patterns.md](./architectural-patterns.md) - Documented patterns
 - [layering-architecture.md](./layering-architecture.md) - Layer details
-- [provider-factory-pattern.md](./provider-factory-pattern.md) - Provider pattern guide
+- [provider-factory-pattern.md](../patterns-discovery/02-design-patterns/03-provider-factory-keyed.md) - Provider pattern guide
 
 ---
 

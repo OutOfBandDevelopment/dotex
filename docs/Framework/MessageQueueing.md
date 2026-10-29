@@ -29,8 +29,8 @@ Handlers are provided in process though an Hosting Engine extension.
   * [MessageQueueing.Hosting](../Libraries/OoBDev.MessageQueueing.Hosting.md)
 * [Azure.StorageAccount](../Libraries/OoBDev.Azure.StorageAccount.md)
 * [RabbitMQ](../Libraries/OoBDev.RabbitMQ.md)
-* [Amazon SQS](../Libraries/OoBDev.Amazon.Sqs.md)
-* [Azure Service Bus](../Libraries/OoBDev.Microsoft.Azure.ServiceBus.md)
+* [Amazon SQS](../../src/ExternalServices/Amazon/OoBDev.Amazon.Sqs/README.Amazon.Sqs.md)
+* [Azure Service Bus](../../src/ExternalServices/Microsoft/OoBDev.Microsoft.Azure.ServiceBus/README.Microsoft.Azure.ServiceBus.md)
 
 ## Integration Testing
 
@@ -67,6 +67,7 @@ See [TEST_VARIABLES.md](../../TEST_VARIABLES.md) for complete configuration refe
 ## Structure
 
 ```plantuml
+@startuml
 top to bottom direction 
 
 package Abstractions {
@@ -135,6 +136,7 @@ IMessageQueueHandler ^-- GenericHandler : implements
 
 MessageReceiverHost --* IMessageReceiverProviderFactory : uses
 
+@enduml
 ```
 
 ---

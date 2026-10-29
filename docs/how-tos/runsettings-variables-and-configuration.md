@@ -626,7 +626,7 @@ Then use relative path:
 
 ### Related OoBDev Documentation
 
-- [TEST_VARIABLES.md](../TEST_VARIABLES.md) - Complete list of test parameters
+- [TEST_VARIABLES.md](../../TEST_VARIABLES.md) - Complete list of test parameters
 - [containers/testing/README.md](../../containers/testing/README.md) - Docker infrastructure
 - [TESTING-CHECKLIST.md](../../containers/testing/TESTING-CHECKLIST.md) - Local validation
 

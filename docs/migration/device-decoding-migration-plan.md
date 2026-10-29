@@ -22,11 +22,11 @@ Source: `C:\repo\oobdev\dev-term` (branch `dev/zstick-s2`, commit `d777358`; the
 ### List of Tables
 
 1. Table 1 — Device projects in dev-term
-2. Table 2 — Pattern conversions
-3. Table 3 — Order of work
-4. Table 4 — Overlaps with existing code
-5. Table 5 — Naming and layout
-6. Table 6 — Device project names (vendor style)
+2. Table 2 — Overlaps with existing code
+3. Table 3 — Pattern conversions
+4. Table 4 — Naming and layout
+5. Table 5 — Device project names (vendor style)
+6. Table 6 — Order of work
 
 ## 1. Scope
 
@@ -61,7 +61,7 @@ Each device also has a `.ksy` description and a `known-configuration.md` under d
 
 ## 3. Target shape
 
-Pure protocol libraries, one per device (the UI layers are described after Figure 1), built on the device model that already exists in `OoBDev.System.Abstractions` (section 4), packaged separately and named `OoBDev.{Vendor}.{Device}` in the company style (Table 6; the decision sheet's line 19 requirement to mark what is untested on hardware in each readme still applies). They reference only the abstractions, never UI or plugin loading.
+Pure protocol libraries, one per device (the UI layers are described after Figure 1), built on the device model that already exists in `OoBDev.System.Abstractions` (section 4), packaged separately and named `OoBDev.{Vendor}.{Device}` in the company style (Table 5; the decision sheet's line 19 requirement to mark what is untested on hardware in each readme still applies). They reference only the abstractions, never UI or plugin loading.
 
 ```plantuml
 @startuml
@@ -98,7 +98,7 @@ Contract mapping (to be settled in the api-design document, phase 1). dev-term's
 
 Checked 2026-10-26 against `src/` (nothing in `Incoming/` has been brought in yet).
 
-**Table 4 — Overlaps with existing code**
+**Table 2 — Overlaps with existing code**
 
 | Existing | Where | Overlap | Resolution |
 |----------|-------|---------|------------|
@@ -111,7 +111,7 @@ Checked 2026-10-26 against `src/` (nothing in `Incoming/` has been brought in ye
 | `BinaryDataDecoders.*` in `C:epomineinary-data-decoders`: Busylight, NMEA, K8055, Radex One, Zoom H4n (plus Rigol, LanC, EByte, Fencing) | Not in `src/` | The source of truth for BinaryDataDecoders (owner, 2026-10-26); it supersedes the copy in `Incoming/BinaryDecoders` | dev-term is the base for the five overlapping devices; phase 0 lists what to merge and records the rejections |
 | `SerialPortDeviceAdapter.TryOpen` catches only `IOException` | `OoBDev.System.IO.Ports` | The same defect as BUG-003 in the source repository: a busy port throws `UnauthorizedAccessException` | Fix with a test in phase 1; check BUG-001, BUG-002 and BUG-004 against `StreamDevice` and the pipeline factory at the same time |
 
-Source of truth. `C:\repo\mine\binary-data-decoders` (HEAD `e590b420`, `dev/dotnet10` merged) replaces the earlier pull-in at `Incoming/BinaryDecoders`, whose projects differ from it (for example Busylight). Its device projects other than the five above are: Rigol (18 lines, a stub, deleted under the migration scope rule), EByte (no source), LanC (304 lines, no tests), the Fencing scoring machines (438 lines, 3 tests) and Apple II (790 lines); these stay with the wider BinaryDataDecoders migration, not this plan. Most of its Nmea source size is generated WMI notes (`Notes/`), not decoding. Its `docs/bug-reports/` holds four open defects in the IO stack found while testing Radex One (BUG-001 to BUG-004); dotex shares the pipeline and serial code, and `TryOpen` has the BUG-003 defect (Table 4). Removing `Incoming/BinaryDecoders` is a separate decision for the owner and is not done here.
+Source of truth. `C:\repo\mine\binary-data-decoders` (HEAD `e590b420`, `dev/dotnet10` merged) replaces the earlier pull-in at `Incoming/BinaryDecoders`, whose projects differ from it (for example Busylight). Its device projects other than the five above are: Rigol (18 lines, a stub, deleted under the migration scope rule), EByte (no source), LanC (304 lines, no tests), the Fencing scoring machines (438 lines, 3 tests) and Apple II (790 lines); these stay with the wider BinaryDataDecoders migration, not this plan. Most of its Nmea source size is generated WMI notes (`Notes/`), not decoding. Its `docs/bug-reports/` holds four open defects in the IO stack found while testing Radex One (BUG-001 to BUG-004); dotex shares the pipeline and serial code, and `TryOpen` has the BUG-003 defect (Table 2). Removing `Incoming/BinaryDecoders` is a separate decision for the owner and is not done here.
 
 No name clash was found for `OoBDev.Devices`, `OoBDev.Extensions.Hardware.*`, `OoBDev.UiDefinitions`, `UiDefinition`, `ValueConstraint`, `ValueValidator`, `IControlSurface` or `IPresenter`, and `src/` has no UI project to conflict with the renderers. DE-5000, SCPI and Z-Wave have no counterpart anywhere in this repository.
 
@@ -119,7 +119,7 @@ No name clash was found for `OoBDev.Devices`, `OoBDev.Extensions.Hardware.*`, `O
 
 The migrated code follows this repository's patterns and practices, not dev-term's (owner, 2026-10-26), except for testing and documentation (section 6).
 
-**Table 2 — Pattern conversions**
+**Table 3 — Pattern conversions**
 
 | dev-term | dotex |
 |----------|-------|
@@ -132,29 +132,29 @@ The migrated code follows this repository's patterns and practices, not dev-term
 | `ILogger` calls with templates | `[LoggerMessage]` |
 | Long history comments (corrections, dates) in XML docs | XML docs state behaviour; history goes to the device `known-configuration.md` and `docs/changes/` |
 | `plugin.json`, `EnableDynamicLoading` | removed from the libraries; plugin loading belongs to the shell (phase 10) |
-| `DevTerm.*` names and namespaces | `OoBDev.*` per Table 5 |
+| `DevTerm.*` names and namespaces | `OoBDev.*` per Table 4 |
 | Package versions inline in csproj | `src/Directory.Packages.props` |
 | No project readme | `README.{Project}.md` per project |
 | `InternalsVisibleTo` via `AssemblyInfo.cs` | `InternalsVisibleTo` item in the csproj |
 
-**Table 5 — Naming and layout** (checked against [01-naming-and-layout.md](../patterns-discovery/03-practices-and-conventions/01-naming-and-layout.md); names are proposals to confirm in the phase 1 api-design document)
+**Table 4 — Naming and layout** (checked against [01-naming-and-layout.md](../patterns-discovery/03-practices-and-conventions/01-naming-and-layout.md); names are proposals to confirm in the phase 1 api-design document)
 
 | Item | dev-term | dotex name |
 |------|----------|------------|
-| Device project | `DevTerm.Devices.RadexOne` | The company style for third-party products, `OoBDev.{Vendor}.{Feature}` (owner, 2026-10-26; the same names binary-data-decoders already uses): see Table 6. It replaces the `OoBDev.Extensions.Hardware.*` idea from the decision sheet. Packaged separately; depends on Framework abstractions only. The namespace equals the project name. No `.Abstractions` split per device, since the contracts are the existing IO ones |
+| Device project | `DevTerm.Devices.RadexOne` | The company style for third-party products, `OoBDev.{Vendor}.{Feature}` (owner, 2026-10-26; the same names binary-data-decoders already uses): see Table 5. It replaces the `OoBDev.Extensions.Hardware.*` idea from the decision sheet. Packaged separately; depends on Framework abstractions only. The namespace equals the project name. No `.Abstractions` split per device, since the contracts are the existing IO ones |
 | UI model and contracts | `DevTerm.UiDefinitions` | `OoBDev.UiDefinitions.Abstractions` (control model, constraints) plus `OoBDev.UiDefinitions` (validator, serializers, view models), following the `.Abstractions` / implementation split |
 | View models and commands | code-behind in renderers | `ViewModels/` and `Commands/` folders in `OoBDev.UiDefinitions`; one folder per role, plural |
 | Renderers | `DevTerm.Wpf`, `DevTerm.Console`, `DevTerm.Web` | `OoBDev.Extensions.UiDefinitions.Wpf`, `.Tui`, `.Web`, as optional packages like `OoBDev.Extensions.Windows.Forms` |
 | Text presenters | `DevTerm.Presenters.Text` | name settled in api-design (not a `Presenter` suffix on the decoder side); text rendering is separate from decoding |
 | Framer, decoder, command builder | `RadexOneFramer`, presenter, `RadexOneCommand` | `RadexOneSegmenter`, `RadexOneMessageDecoder`, `RadexOneMessageEncoder`, message record `RadexOneMessage`; implementations take no `Impl` suffix |
-| Provider key | plugin id | `{Vendor}Globals.ProviderKey`, kebab-case, for example `QuartaGlobals.ProviderKey = "radex-one"` in `OoBDev.Quarta.RadexOne` (Table 6 has the others), no global registry |
+| Provider key | plugin id | `{Vendor}Globals.ProviderKey`, kebab-case, for example `QuartaGlobals.ProviderKey = "radex-one"` in `OoBDev.Quarta.RadexOne` (Table 5 has the others), no global registry |
 | Registration | `IPluginModule` | `ServiceCollectionExtensions.TryAddRadexOneServices`, internal `RadexOneRegistrar` where a vendor registrar is needed |
 | Options | ad hoc | `RadexOneOptions`, validated with `AddValidatedOptions<T>()` |
 | Folders | flat | `Segmenters/`, `Messages/`, `Factories/`, `Providers/` per role, plural; `ServiceCollectionExtensions.cs` at the root |
 | Readme | none | `README.Quarta.RadexOne.md` (the name derives from the project name without `OoBDev.`) |
 | Tests project | `DevTerm.Devices.RadexOne.Tests` | `OoBDev.Quarta.RadexOne.Tests`; contents follow dev-term (section 6) |
 
-**Table 6 — Device project names (vendor style)**
+**Table 5 — Device project names (vendor style)**
 
 | Device | Project | Vendor key class | Note |
 |--------|---------|------------------|------|
@@ -184,7 +184,7 @@ Where this meets the dotex test rules (`.claude/rules/testing.md`: `Unit`, `Simu
 
 ## 7. Order of work
 
-**Table 3 — Order of work**
+**Table 6 — Order of work**
 
 | Phase | Work | Exit |
 |------:|------|------|
