@@ -224,6 +224,8 @@
     <Project Path="Framework/OoBDev.SemanticKernel/OoBDev.SemanticKernel.csproj" />
     <Project Path="Framework/OoBDev.System.Abstractions/OoBDev.System.Abstractions.csproj" />
     <Project Path="Framework/OoBDev.System.IO.Pipelines/OoBDev.System.IO.Pipelines.csproj" />
+    <Project Path="Framework/OoBDev.System.IO.Tcp.Tests/OoBDev.System.IO.Tcp.Tests.csproj" />
+    <Project Path="Framework/OoBDev.System.IO.Tcp/OoBDev.System.IO.Tcp.csproj" />
     <Project Path="Framework/OoBDev.System.IO.Ports/OoBDev.System.IO.Ports.csproj" />
     <Project Path="Framework/OoBDev.System.IO.UsbHids/OoBDev.System.IO.UsbHids.csproj" />
     <Project Path="Framework/OoBDev.System.Linq/OoBDev.System.Linq.csproj" />

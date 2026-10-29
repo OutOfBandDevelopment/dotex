@@ -455,6 +455,7 @@ Each change document should include:
 - [SCPI reply tracker](devices-scpi-reply-tracker-2026-10-29.md) - ScpiReplyTracker pairs queries with replies; ScpiAutoDetect identifies by *IDN? (2026-10-29)
 - [Docs validators clean](docs-validator-clean-2026-10-29.md) - links, PlantUML blocks and table captions fixed in hand-written docs; sbom and generated remain (2026-10-29)
 - [SCPI generated panel](devices-scpi-panels-2026-10-29.md) - OoBDev.Scpi.Panels builds a form, model and binding from an instrument profile (2026-10-29)
+- [TCP device transport](devices-tcp-transport-2026-10-29.md) - OoBDev.System.IO.Tcp: TcpDeviceAdapter, first phase 9 transport (2026-10-29)
 - [Vectors DB redeploy](data-vectors-db-redeploy-2026-10-29.md) - second deploy of the dacpac changes nothing (2026-10-29)
 - [LlmCodeGen response metadata](tools-llmcodegen-response-metadata-2026-10-29.md) - response.json beside each response (2026-10-29)
 - [DacFx build test path](testing-dacfx-buildpackage-path-2026-10-29.md) - BuildPackageTest finds the CLR build itself and asserts the dacpac (2026-10-29)
