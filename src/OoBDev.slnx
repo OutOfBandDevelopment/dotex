@@ -49,6 +49,8 @@
     <Project Path="Extensions/OoBDev.Extensions.Drawing/OoBDev.Extensions.Drawing.csproj" />
     <Project Path="Extensions/OoBDev.Nmea.Tests/OoBDev.Nmea.Tests.csproj" />
     <Project Path="Extensions/OoBDev.Nmea/OoBDev.Nmea.csproj" />
+    <Project Path="Extensions/OoBDev.Scpi.Panels.Tests/OoBDev.Scpi.Panels.Tests.csproj" />
+    <Project Path="Extensions/OoBDev.Scpi.Panels/OoBDev.Scpi.Panels.csproj" />
     <Project Path="Extensions/OoBDev.Scpi.Tests/OoBDev.Scpi.Tests.csproj" />
     <Project Path="Extensions/OoBDev.Scpi/OoBDev.Scpi.csproj" />
     <Project Path="Extensions/OoBDev.System.Text.Html.Tests/OoBDev.System.Text.Html.Tests.csproj" />
