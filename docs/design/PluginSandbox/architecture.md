@@ -50,7 +50,7 @@ The plugin has no direct network, file or environment access; the only channel i
 
 | Phase | Content | Needs |
 |-------|---------|-------|
-| 0 | Threat model; review of the PoC; list of its escape tests | Q6 not needed |
+| 0 | [Threat model and PoC review](threat-model.md) (written 2026-10-29, awaiting sign-off) | Q6 not needed |
 | 1 | Protocol and manifest schema (versioned) | Phase 0 |
 | 2 | Windows launcher and broker with limits | Windows host |
 | 3 | Linux shim and launcher | Linux host or container |

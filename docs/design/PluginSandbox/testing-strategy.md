@@ -22,4 +22,4 @@ Grant checking, manifest parsing, signature verification and limit arithmetic ar
 | REQ-006 | Unit | tampered and unsigned packages refused |
 | REQ-007 | Integration | one granted host reachable, another refused |
 | REQ-009 | Unit | protocol version mismatch rejected |
-| REQ-010 | Review | threat model document exists and is signed off |
+| REQ-010 | Review | [threat model](threat-model.md) exists and is signed off |
