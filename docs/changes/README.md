@@ -374,6 +374,10 @@ Each change document should include:
 - Audit of hand-built providers: only IGuidProvider remains and it stays
 - Status: ✅ Complete
 
+**[apis-asyncapi-azure-storage-queue-2026-10-29.md](apis-asyncapi-azure-storage-queue-2026-10-29.md)**
+- AsyncAPI contributor for Azure Storage queues
+- Status: ✅ Complete
+
 **[build-warnings-clean-2026-10-29.md](build-warnings-clean-2026-10-29.md)**
 - Last build warnings resolved or suppressed with reasons
 - Status: ✅ Complete

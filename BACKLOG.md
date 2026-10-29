@@ -19,7 +19,7 @@ GitHub is no longer the primary repository (local bare repo `origin`), so nothin
 
 ## 2. APIs and documents
 
-- [ ] AsyncAPI follow-up: check the viewer in a browser; an `azure-storage-queue` contributor if wanted.
+- [ ] AsyncAPI follow-up: check the viewer in a browser.
 - [ ] CGI middleware (`src/Extensions/OoBDev.AspNetCore.Cgi`, [design](docs/design/CgiMiddleware/README.md); first cut built, 23 tests pass on Windows batch fixtures, including timeout, 503 cap, response limit, stderr flood and client abort). Shell fixtures run in the .NET SDK container (`scripts/ci/run-linux-tests.ps1`). The DevLocal benchmark is done (see the testing strategy). Left: run-as-another-user (decided: left as a TODO, deployers use the service account).
 - [ ] AllMiniLmL6V2 design items the code lacks: keyed `IEmbeddingGenerator` registration through `EmbeddingGeneratorBuilder`, `AddValidatedOptions` for the embedding options (blocked by the Abstractions-only adapter rule, see TODO backlog).
 - [ ] LlmCodeGen tests the design promises (`docs/design/LlmCodeGen/testing-strategy.md`): Also `<template>.response.json` provider metadata (needs a richer completion contract).

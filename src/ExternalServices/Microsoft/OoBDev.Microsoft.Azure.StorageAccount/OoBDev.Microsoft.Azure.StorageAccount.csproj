@@ -20,6 +20,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\..\..\Framework\OoBDev.AsyncApi\OoBDev.AsyncApi.csproj" />
 		<ProjectReference Include="..\..\..\Framework\OoBDev.Documents.Abstractions\OoBDev.Documents.Abstractions.csproj" />
 		<ProjectReference Include="..\..\..\Framework\OoBDev.Extensions\OoBDev.Extensions.csproj" />
 		<ProjectReference Include="..\..\..\Framework\OoBDev.MessageQueueing.Abstractions\OoBDev.MessageQueueing.Abstractions.csproj" />
