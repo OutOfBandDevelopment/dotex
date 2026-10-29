@@ -110,6 +110,8 @@
     <Project Path="ExternalServices/Microsoft/OoBDev.Microsoft.SqlServer.DacFx/OoBDev.Microsoft.SqlServer.DacFx.csproj" />
     <Project Path="ExternalServices/Microsoft/OoBDev.Microsoft.SqlServer.Server.Tests/OoBDev.Microsoft.SqlServer.Server.Tests.csproj" />
     <Project Path="ExternalServices/Microsoft/OoBDev.Microsoft.SqlServer.Server/OoBDev.Microsoft.SqlServer.Server.csproj" />
+    <Project Path="ExternalServices/Microsoft/OoBDev.Microsoft.SqlServer.ServiceBroker.Tests/OoBDev.Microsoft.SqlServer.ServiceBroker.Tests.csproj" />
+    <Project Path="ExternalServices/Microsoft/OoBDev.Microsoft.SqlServer.ServiceBroker/OoBDev.Microsoft.SqlServer.ServiceBroker.csproj" />
   </Folder>
   <Folder Name="/ExternalServices/MongoDb/">
     <Project Path="ExternalServices/MongoDb/OoBDev.MongoDB.Tests/OoBDev.MongoDB.Tests.csproj" />

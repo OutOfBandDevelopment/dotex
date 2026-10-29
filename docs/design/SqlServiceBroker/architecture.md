@@ -41,7 +41,7 @@ prov --> sql : SEND / WAITFOR RECEIVE
 
 *Figure 1 — Components*
 
-Send: open a connection, `BEGIN DIALOG` to the target service, `SEND ON CONVERSATION` with the JSON body as `varbinary(max)`, end the conversation when the contract has a single message. Receive: a transaction per message, `WAITFOR (RECEIVE TOP (1) … FROM queue), TIMEOUT`, deserialize, call the handler provider, commit; on exception roll back and count retries by message id in memory, `END CONVERSATION … WITH ERROR` past the limit.
+Send: open a connection, `BEGIN DIALOG` to the target service, `SEND ON CONVERSATION` with the JSON body as `varbinary(max)`, the sending side ends its dialog right after the send. Receive: a transaction per message, `WAITFOR (RECEIVE TOP (1) … FROM queue), TIMEOUT`, deserialize, call the handler provider, commit (no END CONVERSATION on success); on exception roll back and count retries by conversation and queuing order in memory (a restart resets the count), `END CONVERSATION … WITH ERROR` past the limit.
 
 ## Alternatives considered
 

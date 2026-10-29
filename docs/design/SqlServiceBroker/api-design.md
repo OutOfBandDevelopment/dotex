@@ -6,7 +6,7 @@
 
 ## Public surface
 
-Namespace `OoBDev.SqlServer.ServiceBroker`:
+Namespace `OoBDev.Microsoft.SqlServer.ServiceBroker`:
 
 ```csharp
 public static class ServiceBrokerGlobals { public const string MessageProviderKey = "sql-service-broker"; }
