@@ -35,7 +35,7 @@ public class XsltTransformer(string sandbox, params object[] extensions) : IXslt
     {
         try
         {
-            var xmlreader = XmlReader.Create(fileName, new XmlReaderSettings
+            using var xmlreader = XmlReader.Create(fileName, new XmlReaderSettings
             {
                 DtdProcessing = DtdProcessing.Ignore,
                 ConformanceLevel = ConformanceLevel.Document,
