@@ -374,6 +374,10 @@ Each change document should include:
 - Audit of hand-built providers: only IGuidProvider remains and it stays
 - Status: ✅ Complete
 
+**[build-warnings-clean-2026-10-29.md](build-warnings-clean-2026-10-29.md)**
+- Last build warnings resolved or suppressed with reasons
+- Status: ✅ Complete
+
 **[examples-aspire-vectordb-wiring-2026-10-28.md](examples-aspire-vectordb-wiring-2026-10-28.md)**
 - Example Aspire host gives the API the SQL vector store connection string
 - Status: Built, not run end to end
