@@ -18,6 +18,7 @@
 	<ItemGroup>
 		<ProjectReference Include="..\..\Framework\OoBDev.UiDefinitions.Wpf\OoBDev.UiDefinitions.Wpf.csproj" />
 		<ProjectReference Include="..\..\Extensions\OoBDev.Scpi.Panels\OoBDev.Scpi.Panels.csproj" />
+		<ProjectReference Include="..\..\Framework\OoBDev.System.IO.Tcp\OoBDev.System.IO.Tcp.csproj" />
 	</ItemGroup>
 
 </Project>
