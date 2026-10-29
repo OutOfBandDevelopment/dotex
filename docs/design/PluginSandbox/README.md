@@ -11,6 +11,7 @@ A .NET 10 host that runs plugins written in any language as isolated processes, 
 3. [API design](api-design.md)
 4. [Testing strategy](testing-strategy.md)
 5. [Threat model and proof-of-concept review](threat-model.md)
+6. [Protocol and manifest schema](protocol-and-manifest.md)
 
 ### List of Tables
 
@@ -20,11 +21,15 @@ A .NET 10 host that runs plugins written in any language as isolated processes, 
 4. [Table 4 — Threats and status](threat-model.md#table-4)
 5. [Table 5 — Escape matrix of the proof of concept](threat-model.md#table-5)
 6. [Table 6 — Gaps](threat-model.md#table-6)
+7. [Table 7 — Envelope fields](protocol-and-manifest.md#table-7)
+8. [Table 8 — Host violations and reactions](protocol-and-manifest.md#table-8)
+9. [Table 9 — Manifest fields](protocol-and-manifest.md#table-9)
 
 ### List of Figures
 
 1. [Figure 1 — Host, broker and plugin](architecture.md#figure-1)
 2. [Figure 2 — Trust boundaries](threat-model.md#figure-2)
+3. [Figure 3 — Start, request and shutdown](protocol-and-manifest.md#figure-3)
 
 ## Summary
 

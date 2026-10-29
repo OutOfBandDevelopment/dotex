@@ -51,7 +51,7 @@ The plugin has no direct network, file or environment access; the only channel i
 | Phase | Content | Needs |
 |-------|---------|-------|
 | 0 | [Threat model and PoC review](threat-model.md) (written 2026-10-29, awaiting sign-off) | Q6 not needed |
-| 1 | Protocol and manifest schema (versioned) | Phase 0 |
+| 1 | [Protocol and manifest schema](protocol-and-manifest.md) (versioned; design written 2026-10-29; generated JSON Schema waits for the C# types) | Phase 0 |
 | 2 | Windows launcher and broker with limits | Windows host |
 | 3 | Linux shim and launcher | Linux host or container |
 | 4 | Signed packages; SDK for one language | Phase 1 |

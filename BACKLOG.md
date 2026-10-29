@@ -45,7 +45,7 @@ Scope rule: every BinaryDataDecoders feature is migrated; phases are priority or
 
 - [ ] Harvest candidates marked evaluate-later in the plan (decision D7): proving-grounds plugin-sandbox-poc (now a design-backed item below), hybridsearch, Oobtainium, BuildFirstOnce, markdownplantuml, TotpExample, HandyClasses; (Service Broker is now a design-backed item below); postsql-playground (informs `OoBDev.DacFx`).
 - [ ] Desired-state database tooling phase 0: bake-off of sqldef, pgschema and Atlas per `docs/design/DesiredStateDatabase/` and the notes test plan; record buy or build per engine with date, versions and licences (later phases follow Q5)
-- [ ] Plugin sandbox phase 1: protocol and manifest schema (versioned, REQ-009) per `docs/design/PluginSandbox/`; the threat model is written ([threat-model.md](docs/design/PluginSandbox/threat-model.md), gaps in its Table 6) and the launchers, broker and packaging wait on Q6 (placement) and the owner sign-off of REQ-010
+- [ ] Plugin sandbox: the threat model ([threat-model.md](docs/design/PluginSandbox/threat-model.md)) and the protocol and manifest design ([protocol-and-manifest.md](docs/design/PluginSandbox/protocol-and-manifest.md)) are written and wait for the owner sign-off of REQ-010; the protocol types, schema generation, launchers, broker and packaging wait on Q6 (placement)
 - [ ] Performance gate for database-backed (non-vector) endpoints (the CGI middleware, in-memory search syntax and SQL vector search gates are done). Checked 2026-10-29: no non-vector database-backed endpoint exists in `src/` (the only SQL access is the vector store), so add the gate with the first such endpoint.
 
 ## Documentation review (owner, 2026-10-28)

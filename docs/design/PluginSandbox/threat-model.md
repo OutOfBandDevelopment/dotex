@@ -1,6 +1,6 @@
 # Sandboxed Plugin Host — Threat model and proof-of-concept review
 
-[← Architecture](architecture.md) · [↑ Overview](README.md)
+[← Architecture](architecture.md) · [↑ Overview](README.md) · [Protocol and manifest →](protocol-and-manifest.md)
 
 **Status:** Draft for owner review · **Date:** 2026-10-29
 
