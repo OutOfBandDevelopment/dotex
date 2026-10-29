@@ -482,3 +482,4 @@ Each change document should include:
 - [Migration notes inventory (2026-10-29)](docs-migration-inventory-2026-10-29.md) - README as an inventory; BotChat and MailKit notes removed
 - [Manual CI and packaging on demand (2026-10-29)](build-manual-ci-packaging-2026-10-29.md) - pack only on `dotnet pack`, output `G:\nuget`, workflows removed
 - [Example AppHost SQL password and queue wiring (2026-10-29)](examples-apphost-sa-password-queues-2026-10-29.md) - fixed sa password, new volume, SMTP and RabbitMQ config from the host
+- [DevTerm engine contracts (2026-10-29)](devterm-core-contracts-2026-10-29.md) - `OoBDev.DevTerm.Core`: `ITransport`, `IPresenter`, pump and `StreamTransport` over `IDeviceAdapter`
