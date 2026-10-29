@@ -454,3 +454,4 @@ Each change document should include:
 - [LlmCodeGen response metadata](tools-llmcodegen-response-metadata-2026-10-29.md) - response.json beside each response (2026-10-29)
 - [DacFx build test path](testing-dacfx-buildpackage-path-2026-10-29.md) - BuildPackageTest finds the CLR build itself and asserts the dacpac (2026-10-29)
 - [AsyncAPI viewer browser check](apis-asyncapi-viewer-browser-check-2026-10-29.md) - viewer renders send and receive operations in Chromium (2026-10-29)
+- [Z-Wave product configs](devices-zwave-product-configs-2026-10-29.md) - ZWaveNames.ConfigParameters from the embedded product table (2026-10-29)

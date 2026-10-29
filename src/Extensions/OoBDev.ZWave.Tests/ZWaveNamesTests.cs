@@ -1,5 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.TestUtilities;
+using System.Linq;
 
 namespace OoBDev.ZWave.Tests;
 
@@ -33,4 +34,22 @@ public class ZWaveNamesTests
     [TestMethod, TestCategory(TestCategories.Unit)]
     public void DeviceClass_Registered_ReturnsName() =>
         Assert.AreEqual("Static PC Controller", ZWaveNames.DeviceClass(0x02, 0x01));
+
+    [TestMethod, TestCategory(TestCategories.Unit)]
+    public void ConfigParameters_KnownProduct_ListsTheManufacturersParameters()
+    {
+        // Test
+        var parameters = ZWaveNames.ConfigParameters(0x0086, 0x0101, 0x005A);
+
+        // Assert
+        Assert.IsNotEmpty(parameters);
+        var led = parameters.Single(p => p.Index == 81);
+        Assert.AreEqual(1, led.Size);
+        Assert.AreEqual(1L, led.Default);
+        Assert.HasCount(2, led.Items);
+    }
+
+    [TestMethod, TestCategory(TestCategories.Unit)]
+    public void ConfigParameters_UnknownProduct_IsEmpty() =>
+        Assert.IsEmpty(ZWaveNames.ConfigParameters(0xFFFF, 0x0001, 0x0001));
 }

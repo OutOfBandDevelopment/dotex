@@ -15,6 +15,7 @@ namespace OoBDev.ZWave;
 internal static class ZWaveRegistry
 {
     private static readonly Lazy<Registry> _registry = new(Load);
+    private static readonly Lazy<ConfigData> _configs = new(LoadConfigs);
 
     public static string? Manufacturer(ushort id) => _registry.Value.Manufacturers.GetValueOrDefault(id)?.Name;
 
@@ -25,6 +26,54 @@ internal static class ZWaveRegistry
 
     public static string? DeviceClass(byte generic, byte specific) =>
         _registry.Value.DeviceClasses.GetValueOrDefault((ushort)((generic << 8) | specific));
+
+    public static IReadOnlyList<ZWaveConfigParameter> ConfigParameters(ushort manufacturer, ushort type, ushort id)
+    {
+        var key = $"{manufacturer:X4}:{type:X4}:{id:X4}";
+        return _configs.Value.Products.TryGetValue(key, out var path) && _configs.Value.Configs.TryGetValue(path, out var parameters) ? parameters : [];
+    }
+
+    private static ConfigData LoadConfigs()
+    {
+        using var doc = Read("product-configs.json");
+        var products = doc.RootElement.GetProperty("products").EnumerateObject()
+            .ToDictionary(p => p.Name, p => p.Value.GetString() ?? string.Empty, StringComparer.Ordinal);
+        var configs = new Dictionary<string, IReadOnlyList<ZWaveConfigParameter>>(StringComparer.Ordinal);
+        foreach (var c in doc.RootElement.GetProperty("configs").EnumerateObject())
+        {
+            configs[c.Name] = [.. c.Value.GetProperty("parameters").EnumerateArray().Select(ReadParameter)];
+        }
+
+        return new ConfigData(products, configs);
+    }
+
+    private static ZWaveConfigParameter ReadParameter(JsonElement e)
+    {
+        var type = Text(e, "type") ?? string.Empty;
+        var size = e.GetProperty("size").GetInt32();
+        if (size == 0)
+        {
+            size = type switch { "short" => 2, "int" => 4, _ => 1 };
+        }
+
+        return new ZWaveConfigParameter(
+            e.GetProperty("index").GetInt32(),
+            Text(e, "label") ?? string.Empty,
+            size,
+            Long(e, "min"),
+            Long(e, "max"),
+            Long(e, "default"),
+            Text(e, "help"),
+            e.TryGetProperty("items", out var items)
+                ? [.. items.EnumerateArray().Select(i => new KeyValuePair<long, string>(i.GetProperty("value").GetInt64(), Text(i, "label") ?? string.Empty))]
+                : []);
+    }
+
+    // The generated data can hold an array where one value was expected (a repeated attribute in the source); take the first.
+    private static string? Text(JsonElement e, string name) =>
+        !e.TryGetProperty(name, out var v) ? null : v.ValueKind == JsonValueKind.Array ? (v.GetArrayLength() > 0 ? v[0].GetString() : null) : v.GetString();
+
+    private static long? Long(JsonElement e, string name) => e.TryGetProperty(name, out var v) ? v.GetInt64() : null;
 
     private static Registry Load()
     {
@@ -80,6 +129,8 @@ internal static class ZWaveRegistry
             ?? throw new InvalidOperationException($"Embedded Z-Wave data '{name}' is missing.");
         return JsonDocument.Parse(stream);
     }
+
+    private sealed record ConfigData(Dictionary<string, string> Products, Dictionary<string, IReadOnlyList<ZWaveConfigParameter>> Configs);
 
     private sealed record Registry(
         Dictionary<ushort, ManufacturerEntry> Manufacturers,

@@ -117,6 +117,14 @@ public static class ZWaveNames
     /// <returns>The name, or <see langword="null"/> when not registered.</returns>
     public static string? Product(ushort manufacturer, ushort type, ushort id) => ZWaveRegistry.Product(manufacturer, type, id);
 
+    /// <summary>Gets the configuration parameters the manufacturer documents for a product.</summary>
+    /// <param name="manufacturer">The manufacturer id.</param>
+    /// <param name="type">The product type.</param>
+    /// <param name="id">The product id.</param>
+    /// <returns>The parameters, or an empty list when the product is not in the table.</returns>
+    public static IReadOnlyList<ZWaveConfigParameter> ConfigParameters(ushort manufacturer, ushort type, ushort id) =>
+        ZWaveRegistry.ConfigParameters(manufacturer, type, id);
+
     /// <summary>Gets the registered name of a generic and specific device class pair, or <see langword="null"/>.</summary>
     /// <param name="generic">The generic device class.</param>
     /// <param name="specific">The specific device class.</param>
