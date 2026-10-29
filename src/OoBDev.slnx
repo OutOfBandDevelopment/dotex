@@ -228,6 +228,8 @@
     <Project Path="Framework/OoBDev.System.Tests/OoBDev.System.Tests.csproj" />
     <Project Path="Framework/OoBDev.System/OoBDev.System.csproj" />
     <Project Path="Framework/OoBDev.TestUtilities.Tests/OoBDev.TestUtilities.Tests.csproj" />
+    <Project Path="Framework/OoBDev.UiDefinitions.Tests/OoBDev.UiDefinitions.Tests.csproj" />
+    <Project Path="Framework/OoBDev.UiDefinitions/OoBDev.UiDefinitions.csproj" />
     <Project Path="Framework/OoBDev.TestUtilities/OoBDev.TestUtilities.csproj" />
   </Folder>
   <Folder Name="/Tools/">

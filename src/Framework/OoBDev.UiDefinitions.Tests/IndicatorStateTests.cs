@@ -1,0 +1,119 @@
+using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+namespace OoBDev.UiDefinitions.Tests;
+
+/// <summary>
+/// <see cref="IndicatorState"/> — the runtime companion for an <see cref="IndicatorControl"/> whose
+/// <see cref="IndicatorControl.Expression"/> is set. See docs/design/features/manifest-editor-expression-builder.md.
+/// </summary>
+[TestCategory("Unit")]
+[TestClass]
+public sealed class IndicatorStateTests
+{
+    [TestMethod]
+    public void For_AnIndicatorWithNoExpression_ReturnsNull() =>
+        Assert.IsNull(LiveDisplayState.For(new IndicatorControl { Id = "i", Label = "I" }));
+
+    [TestMethod]
+    public void For_AnIndicatorWithABlankExpression_ReturnsNull() =>
+        Assert.IsNull(LiveDisplayState.For(new IndicatorControl { Id = "i", Label = "I", Expression = "" }));
+
+    [TestMethod]
+    public void For_AnIndicatorWithAnExpression_ReturnsAnIndicatorState() =>
+        Assert.IsInstanceOfType<IndicatorState>(LiveDisplayState.For(new IndicatorControl { Id = "i", Label = "I", Expression = "{raw_mv} / 1000" }));
+
+    [TestMethod]
+    public void ValueIds_IsTheExpressionsReferencedIds_NotTheControlsOwnId()
+    {
+        var state = new IndicatorState(new IndicatorControl { Id = "i", Label = "I", Expression = "{raw_mv} / 1000" });
+
+        Assert.AreSequenceEqual(["raw_mv"], [.. state.ValueIds]);
+    }
+
+    [TestMethod]
+    public void Text_IsNull_UntilAReferencedIdArrives()
+    {
+        var state = new IndicatorState(new IndicatorControl { Id = "i", Label = "I", Expression = "{raw_mv} / 1000" });
+
+        Assert.IsNull(state.Text);
+        Assert.IsFalse(state.Apply("other", "1"), "An id the expression doesn't reference changes nothing.");
+        Assert.IsNull(state.Text);
+    }
+
+    [TestMethod]
+    public void Text_IsTheExpressionEvaluated_AndFormatted_OnceItsIdArrives()
+    {
+        var state = new IndicatorState(new IndicatorControl { Id = "i", Label = "I", Expression = "{raw_mv} / 1000" });
+
+        Assert.IsTrue(state.Apply("raw_mv", "5500"));
+        Assert.AreEqual("5.5", state.Text);
+    }
+
+    [TestMethod]
+    public void Constructor_NeverThrows_OnAnInvalidExpression_AndLeavesTextAlwaysNull()
+    {
+        var state = new IndicatorState(new IndicatorControl { Id = "i", Label = "I", Expression = "1 +" });
+
+        Assert.IsEmpty(state.ValueIds);
+        Assert.IsNull(state.Text);
+        Assert.IsFalse(state.Apply("i", "5"), "With no referenced ids, nothing this state sees can match.");
+    }
+
+    [TestMethod]
+    public void Constructor_NullControl_Throws() =>
+        Assert.ThrowsExactly<ArgumentNullException>(() => new IndicatorState(null!));
+
+    [TestMethod]
+    public void StringExpression_MatchesAgainstThePublishedText()
+    {
+        var state = new IndicatorState(new IndicatorControl { Id = "i", Label = "I", Expression = "matches({model}, '^KA') ? 'Korad' : 'Other'" });
+
+        Assert.IsNull(state.Text);
+        Assert.IsTrue(state.Apply("model", "KA3005P"), "A model name that holds digits is still published text.");
+        Assert.AreEqual("Korad", state.Text);
+        Assert.IsTrue(state.Apply("model", "RIGOL"), "Text with no number still changes the display.");
+        Assert.AreEqual("Other", state.Text);
+        Assert.IsFalse(state.Apply("model", "RIGOL"), "The same text again changes nothing.");
+    }
+
+    [TestMethod]
+    public void NumericArithmetic_StillReadsANumberOutOfUnitText()
+    {
+        var state = new IndicatorState(new IndicatorControl { Id = "i", Label = "I", Expression = "{v} * 2" });
+
+        state.Apply("v", "12.5 V");
+
+        Assert.AreEqual("25", state.Text);
+    }
+
+    [TestMethod]
+    public void Display_WithNoHint_ReturnsThePublishedText() =>
+        Assert.AreEqual("1.2345E+00", new IndicatorControl { Id = "i", Label = "I" }.Display("1.2345E+00"));
+
+    [TestMethod]
+    public void Display_FormatsTheNumber_ThenAppendsTheUnit() =>
+        Assert.AreEqual("1.23 V", new IndicatorControl { Id = "i", Label = "I", Format = "0.00", Unit = "V" }.Display("+1.2345E+00"));
+
+    [TestMethod]
+    public void Display_HexFormat_ShowsTheRawByteAsHex() =>
+        Assert.AreEqual("FF", new IndicatorControl { Id = "i", Label = "I", Format = "X2" }.Display("255"));
+
+    [TestMethod]
+    public void Display_TextWithNoNumber_IsUnchanged() =>
+        Assert.AreEqual("OVER", new IndicatorControl { Id = "i", Label = "I", Format = "0.00", Unit = "V" }.Display("OVER"));
+
+    [TestMethod]
+    public void Display_AnInvalidFormat_FallsBackToThePublishedText() =>
+        Assert.AreEqual("5", new IndicatorControl { Id = "i", Label = "I", Format = "Z9" }.Display("5"));
+
+    [TestMethod]
+    public void Text_AppliesTheIndicatorsFormatAndUnit()
+    {
+        var state = new IndicatorState(new IndicatorControl { Id = "i", Label = "I", Expression = "{raw_mv} / 1000", Format = "0.000", Unit = "V" });
+
+        state.Apply("raw_mv", "1234");
+
+        Assert.AreEqual("1.234 V", state.Text);
+    }
+}
