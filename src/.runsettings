@@ -92,8 +92,8 @@ https://github.com/coverlet-coverage/coverlet/blob/fc7ec26dcaed8fedba880ff13c6f1
 		<Parameter name="MONGODB_DATABASE_NAME" value="integration_tests" />
 
 		<!-- SQL Server -->
-		<Parameter name="SQLSERVER_CONNECTION_STRING" value="Server=localhost,1433;User Id=sa;Password=IntegrationTest123!;TrustServerCertificate=true;" />
-		<Parameter name="SQLSERVER_HOST" value="localhost" />
+		<Parameter name="SQLSERVER_CONNECTION_STRING" value="Server=127.0.0.1,1433;User Id=sa;Password=IntegrationTest123!;TrustServerCertificate=true;" />
+		<Parameter name="SQLSERVER_HOST" value="127.0.0.1" />
 		<Parameter name="SQLSERVER_PORT" value="1433" />
 		<Parameter name="SQLSERVER_USERNAME" value="sa" />
 		<Parameter name="SQLSERVER_PASSWORD" value="IntegrationTest123!" />

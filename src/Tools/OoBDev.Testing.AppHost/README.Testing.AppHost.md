@@ -15,3 +15,4 @@ dotnet test src/ --filter "TestCategory=Integration"
 - sbert and ollama build from the repository Dockerfiles (phi3 is baked into the Ollama image), so the first start is slow.
 - Do not run the compose stack and this host together: they use the same host ports. Use one or the other.
 - `OoBDev.Example.AppHost` is the example application host; this one is only the test stack.
+- Aspire binds host ports to 127.0.0.1 only; test settings use 127.0.0.1 rather than `localhost` where the client tries `::1` first (SQL Server).

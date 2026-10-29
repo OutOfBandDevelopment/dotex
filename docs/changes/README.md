@@ -356,7 +356,7 @@ Each change document should include:
 
 **[testing-aspire-test-stack-2026-10-28.md](testing-aspire-test-stack-2026-10-28.md)**
 - Aspire host for the integration test stack; wkhtmltopdf test moved to DevLocal; Tika URL from TestContext
-- Status: ✅ Built (AppHost not started end to end)
+- Status: ✅ Verified against the running stack (MongoDB tests fail on a code defect)
 
 **[examples-apphost-startup-fixes-2026-10-28.md](examples-apphost-startup-fixes-2026-10-28.md)**
 - Example AppHost: dacpac re-publish skipped, API binds the Aspire port, vector reader uses the Aspire database

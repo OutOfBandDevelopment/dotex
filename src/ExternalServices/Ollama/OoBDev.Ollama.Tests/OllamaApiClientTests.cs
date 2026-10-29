@@ -250,7 +250,7 @@ public class OllamaApiClientTests
     public async Task ListModelsTest()
     {
         var url = TestContext.GetRequiredProperty<string>("OLLAMA_URL");
-        var client = Build(url, "");
+        var client = Build(url, TestContext.GetPropertyOrDefault("OLLAMA_MODEL", "phi3"));
 
         var models = await client.ListLocalModelsAsync();
         var modelsList = models.ToList();

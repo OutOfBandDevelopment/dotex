@@ -1,7 +1,7 @@
 # Aspire host for the integration test stack, and Unit test re-categorisation
 
 **Date:** 2026-10-28
-**Status:** Built; the AppHost was not started end to end (see Verification)
+**Status:** Verified: AppHost started, Integration suite run against it
 
 ## What changed
 
@@ -15,5 +15,10 @@ The whole Unit suite was run with only the plantuml container up. Everything pas
 
 ## Verification
 
-- `dotnet build` of the AppHost: 0 errors (existing NU1902/NU1903 package advisories remain).
-- Not run: the AppHost itself and the Integration suite against it (needs pulling about 20 images and building the Ollama image).
+The AppHost was started (20 resources, images pulled, sbert and ollama built) and `dotnet test --filter TestCategory=Integration` run against it. Fixes found by the run:
+
+- Redis is a plain container: Aspire's `AddRedis` enables TLS and a password, which the tests do not use.
+- Aspire binds host ports to 127.0.0.1 only, so SqlClient waited out `::1` on `localhost`. `SQLSERVER_CONNECTION_STRING` and `SQLSERVER_HOST` in `src/.runsettings` now use 127.0.0.1 (works with compose too).
+- `OllamaApiClientTests.ListModelsTest` passed an empty model name that options validation rejects; it now uses `OLLAMA_MODEL`.
+
+Result after the fixes: all Integration tests pass except `OoBDev.MongoDB.Tests` (6 failures: `MongoDispatchProxy` is sealed and `DispatchProxy` rejects it, a code defect independent of the stack; added to `BACKLOG.md`).
