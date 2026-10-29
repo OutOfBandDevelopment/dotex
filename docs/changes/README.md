@@ -472,3 +472,4 @@ Each change document should include:
 - [BinaryDataDecoders Numerics (2026-10-29)](migration-numerics-2026-10-29.md) - byte, engineering and scientific notation numbers in `OoBDev.System`
 - [BinaryDataDecoders re-review against current main (2026-10-29)](docs-binarydatadecoders-rereview-2026-10-29.md) - refreshed comparison, gaps and order
 - [Plugin sandbox threat model](docs-plugin-sandbox-threat-model-2026-10-29.md) - phase 0: threats, PoC escape matrix review and gaps (2026-10-29)
+- [Documentation style guide](docs-style-guide-2026-10-29.md) - numbering and naming rules, readme renames, names check in Docs.Tests (2026-10-29)

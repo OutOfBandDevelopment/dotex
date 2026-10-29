@@ -11,6 +11,11 @@ Practical guides for common tasks and scenarios in the OoBDev framework.
   - Best practices for Docker-based integration testing
   - Troubleshooting common issues
 
+## Documentation
+
+- [**Documentation style guide**](documentation-style-guide.md)
+  - Names, numbering, structure, captions and how each rule is checked
+
 ## Operations
 
 - [**Production operations practices**](production-operations-practices.md)

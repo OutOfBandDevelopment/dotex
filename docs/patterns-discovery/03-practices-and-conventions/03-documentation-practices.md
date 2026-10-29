@@ -8,7 +8,7 @@
 
 | Artifact | Rule | Where |
 |----------|------|-------|
-| Project readme | One per packable project, named `README.{Name}.md` (in-repo files are written `ReadMe.{Name}.md`), purpose plus a usage example plus configuration keys | project folder |
+| Project readme | One per packable project, named `README.{Name}.md` (upper-case `README`), purpose plus a usage example plus configuration keys | project folder |
 | XML documentation | On public APIs; the documentation-file switch is currently commented out in the shared props | source |
 | Architecture docs | Layer rules, standards, patterns | `docs/architecture/` |
 | How-tos | Practical guides such as `.runsettings` variables | `docs/how-tos/` |
