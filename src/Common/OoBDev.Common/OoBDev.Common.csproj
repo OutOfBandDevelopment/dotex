@@ -34,6 +34,7 @@
     <ProjectReference Remove="..\..\Framework\**\OoBDev.AspNetCore.*.csproj" />
     <ProjectReference Remove="..\..\Framework\**\OoBDev.*.Hosting.csproj" />
     <ProjectReference Remove="..\..\Framework\**\OoBDev.*.DB.csproj" />
+    <ProjectReference Remove="..\..\Framework\**\OoBDev.*.Wpf.csproj" />
     <ProjectReference Remove="..\..\Extensions\**\OoBDev.*.net481.csproj" />
 	</ItemGroup>
 	

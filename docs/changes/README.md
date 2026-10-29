@@ -480,3 +480,4 @@ Each change document should include:
 - [Plugin sandbox threat model](docs-plugin-sandbox-threat-model-2026-10-29.md) - phase 0: threats, PoC escape matrix review and gaps (2026-10-29)
 - [Documentation style guide](docs-style-guide-2026-10-29.md) - numbering and naming rules, readme renames, names check in Docs.Tests (2026-10-29)
 - [Migration notes inventory (2026-10-29)](docs-migration-inventory-2026-10-29.md) - README as an inventory; BotChat and MailKit notes removed
+- [Manual CI and packaging on demand (2026-10-29)](build-manual-ci-packaging-2026-10-29.md) - pack only on `dotnet pack`, output `G:\nuget`, workflows removed

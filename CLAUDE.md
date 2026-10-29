@@ -118,7 +118,7 @@ dotnet test src/ --collect:"XPlat Code Coverage"
 - `/TODO.md`, `/BACKLOG.md`, `/Incoming/CHECKLIST.md` - work tracking and incoming project status
 - `/docs/architecture/`, `/docs/how-tos/` ([.runsettings variables](docs/how-tos/runsettings-variables-and-configuration.md)), `/docs/migration/`, `/docs/changes/`
 - Git: the primary repo is the local bare repo `origin` (`G:/oobdev/dotex.git`); GitHub (`upstream`) is no longer primary, so no `gh`, PRs or GitHub CI waits. Commit as you work on a branch, never on `main` (`.claude/rules/git-workflow.md`)
-- `/GitVersion.yml` (manual major, minor per merge into main, patch = commits past the last main tag on branches), `/src/.runsettings`, `/.github/workflows/dotnet.yml`
+- `/GitVersion.yml` (manual major, minor per merge into main, patch = commits past the last main tag on branches), `/src/.runsettings`, `scripts/ci` (manual CI)
 
 ---
 
@@ -169,7 +169,7 @@ Older entries (before 2026-10) live in `docs/changes/` (index: `docs/changes/REA
 ## Current Work Context
 
 **Active priorities:**
-1. **Integration testing** - run the Docker stack and Integration suite locally; `.github/workflows/` (including the daily `integration-tests.yml`) are legacy GitHub Actions that no longer gate work, pending a decision on a local replacement
+1. **Integration testing** - run the Docker stack and Integration suite locally; CI is manual only (`scripts/ci`): no scheduled or push builds, and the GitHub workflows are removed
 2. **SharedFramework** - design-first (Epics 2 Communications, 6 Documents, 7 Identity, 10 Text Templating): four documents per feature (requirements, architecture, api-design, testing-strategy; 85-90% coverage targets) instead of code migration, per `docs/patterns-discovery/06-design-document-standard.md`
 3. **Incoming projects** - all investigated, decisions pending
 4. **Backlog** - single backlog in `TODO.md`; CGI middleware and related-work pointers are in `docs/todo.md` and `docs/harvest-candidates.md`

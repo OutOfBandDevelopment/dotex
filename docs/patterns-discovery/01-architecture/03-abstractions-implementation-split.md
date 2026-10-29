@@ -17,7 +17,7 @@ Mechanics that make this ergonomic (all in `src/Directory.Build.props`):
 
 * `RootNamespace` strips `.Abstractions`, so the interface `ICachingProvider` lives in namespace `OoBDev.Caching` regardless of which assembly holds it. Consumers change *package* references, never `using` lines.
 * `InternalsVisibleTo` (csproj item or `AssemblyInfo.cs`) exposes internals to the matching `*.Tests` project instead of making things public for testing.
-* `IsPackable` / `GeneratePackageOnBuild` are inferred from the `.Tests` suffix.
+* `IsPackable` is false for `.Test(s)`, `.Example(s)` and `AppHost` projects (name-based); libraries and tools pack, and only on `dotnet pack` (`GeneratePackageOnBuild` is false).
 
 **Rule of thumb observed:** if something is a *contract others implement* (provider, factory, handler, attribute) it goes in `*.Abstractions`; if it is a *default behavior* it goes in the implementation project.
 

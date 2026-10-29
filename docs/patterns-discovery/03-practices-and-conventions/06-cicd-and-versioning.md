@@ -22,7 +22,7 @@ The build workflow accepts `build-configuration` (Release or Debug) and `build-p
 
 ## Packaging
 
-Every non-test project produces a NuGet package on build (`GeneratePackageOnBuild`), with the project readme and license inside. The workflow packs into the runner temp `Packages` folder and uploads `packages-{FullSemVerLower}` as an artifact for the release workflows.
+Every packable project (libraries and tools; not tests, examples or AppHost projects) produces a NuGet package with the project readme and license inside, only when `dotnet pack` runs (`scripts/ci/pack.ps1`), never on build. The default output is `G:\nuget`. CI is manual only: there are no scheduled or push builds.
 
 *Figure 2 — pipeline from commit to package*
 
