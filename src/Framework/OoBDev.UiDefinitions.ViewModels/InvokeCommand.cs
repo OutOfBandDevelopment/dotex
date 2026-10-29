@@ -1,6 +1,7 @@
 using System.Windows.Input;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using OoBDev.UiDefinitions.Forms;
 
@@ -22,7 +23,33 @@ public sealed class InvokeCommand(FormBinding binding, ButtonControl control, IR
     /// <inheritdoc />
     public override void Execute(object? parameter) => _binding.Invoke(_control.CommandId ?? _control.Id, Parameter());
 
-    private string? Parameter() => _control.ParameterFieldIds is { Count: > 0 } ids
-        ? string.Join(',', ids.Select(id => siblings?.Any(c => c.Id == id) == true ? _binding.GetText(id) : string.Empty))
-        : null;
+    private string? Parameter()
+    {
+        if (_control.ParameterFieldIds is not { Count: > 0 } ids) return null;
+
+        var known = siblings?.Select(c => c.Id).ToHashSet(StringComparer.Ordinal) ?? [];
+        var text = known.ToDictionary(id => id, _binding.GetText, StringComparer.Ordinal);
+        var numbers = text
+            .Where(pair => double.TryParse(pair.Value, NumberStyles.Float, CultureInfo.InvariantCulture, out _))
+            .ToDictionary(pair => pair.Key, pair => double.Parse(pair.Value, CultureInfo.InvariantCulture), StringComparer.Ordinal);
+        return string.Join(',', ids.Select((id, index) => Value(id, index, known, text, numbers)));
+    }
+
+    // A blank or unparsable expression keeps the bare field value, as ParameterExpressions documents.
+    private string Value(string id, int index, HashSet<string> known, Dictionary<string, string> text, Dictionary<string, double> numbers)
+    {
+        if (!known.Contains(id)) return string.Empty;
+
+        var source = _control.ParameterExpressions is { } list && index < list.Count ? list[index] : null;
+        if (string.IsNullOrWhiteSpace(source) || !Expression.TryParse(source, out var expression, out _)) return text[id];
+
+        try
+        {
+            return expression!.EvaluateToText(numbers, text);
+        }
+        catch (Exception ex) when (ex is InvalidOperationException or ArgumentException or FormatException or KeyNotFoundException)
+        {
+            return text[id];
+        }
+    }
 }

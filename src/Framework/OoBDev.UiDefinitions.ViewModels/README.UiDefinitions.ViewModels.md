@@ -11,7 +11,7 @@ Phase 7 of [the device decoding plan](../../../docs/migration/device-decoding-mi
 | `FormViewModel` | Sections of rows for a definition; refreshes every row when the model changes |
 | `ControlViewModel` | Base row: label, description, `IsVisible`, `IsEnabled`, `DisabledReason`, `Error` |
 | `ToggleViewModel`, `TextViewModel`, `ChoiceViewModel`, `ButtonViewModel` | One per form control kind (`TextViewModel` serves text field, numeric and slider) |
-| `ToggleCommand`, `SelectOptionCommand`, `ToggleOptionCommand`, `InvokeCommand` | Real `ICommand` types with the binding and control injected; `InvokeCommand` also takes the sibling controls and, for a button with `ParameterFieldIds`, passes their current texts joined by `,` as the command parameter (`ParameterExpressions` are not evaluated yet) |
+| `ToggleCommand`, `SelectOptionCommand`, `ToggleOptionCommand`, `InvokeCommand` | Real `ICommand` types with the binding and control injected; `InvokeCommand` also takes the sibling controls and, for a button with `ParameterFieldIds`, passes their current texts joined by `,` as the command parameter, each first run through its `ParameterExpressions` entry when set |
 | `ControlViewModelFactory` | Picks the view model for a control; live display controls are not form fields and throw |
 | `LiveDisplayViewModel`, `BarViewModel`, `ChartLineViewModel` | Wrap a live display state (indicator, bar graph, strip chart, vector); `Revision` changes per published update; an indicator has `Text`, a bar graph `Bars`, a strip chart `Lines` (points in a 100 by 100 box), a vector `Readout` |
 

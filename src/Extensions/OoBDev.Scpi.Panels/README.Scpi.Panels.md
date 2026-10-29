@@ -17,5 +17,5 @@ Builds a control panel from a SCPI instrument profile, so any profile (including
 ## Notes
 
 - A button packs its field values joined by `,` (the `InvokeCommand` convention), so a text value containing a comma splits into two values.
-- `ParameterExpressions` are not generated.
+- `ParameterExpressions` are not generated (a profile has no expressions).
 - Not run against a real instrument or rendered in WPF yet; the DevTerm shell wiring (`IPanelFactory`) is the next step.
