@@ -16,6 +16,7 @@ The engine contracts of the DevTerm tool, ported from dev-term (see [the parity 
 | `PresenterCatalog`, `PluginLoader`, `PluginTrust`, `LivePlugins`, `ExternalProcessPresenter` | Presenter lookup; in-process plugins (`IPluginModule`, `plugin.json`) and approval-gated out-of-process plugins (JSON over stdin/stdout) |
 | `IControlSurface`, `IDevicePanelContribution`, `IInstrumentPanelProvider`, `IDeviceConfigEditor`, `DeviceConfigSession`, `ICommandPreview`, `ParameterValueList` | Device control contracts: command surface, panel contribution, config editing with read-back and preview |
 | `IComPortControl`, `WriteDelayStream`, `ConnectionStateChangedEventArgs` | Serial-port control surface and a per-byte write delay |
+| `SessionPipeServer`, `SessionPipeClient`, `SessionControlPipeServer`, `SessionControlClient`, `SessionTcpShareServer`, `SessionHttpControlServer`, `SessionCommands` | Cross-process access to a live session: read-only pipe tail, control pipe, TCP share and HTTP control |
 | `AddDevTermCore` | Registers the catalog and session factory (`TryAdd*`) |
 | `DevTermHome` | The per-user DevTerm folder (override by environment) |
 | `Session`, `ISessionFactory`, `SessionLimits`, `ISessionObserver`, `DevTermTelemetry` | Binds a transport to a pipeline: read loop, send throttle, connect retry and timeout, query with timeout, self-reported disconnect, observers, `DevTerm` activity source and meter |

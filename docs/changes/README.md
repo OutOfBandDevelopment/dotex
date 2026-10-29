@@ -491,3 +491,4 @@ Each change document should include:
 - [DevTerm reply presenter and home folder (2026-10-29)](devterm-reply-presenter-2026-10-29.md) - `LineReplyPresenter`, `IReplyTracker`, `DevTermHome`
 - [DevTerm plugins and presenter catalog (2026-10-29)](devterm-plugins-2026-10-29.md) - plugin loader, trust, out-of-process presenters, sample plugin
 - [DevTerm control contracts and transport helpers (2026-10-29)](devterm-control-contracts-2026-10-29.md) - control surface, panel, config editor, write delay
+- [DevTerm session servers and clients (2026-10-29)](devterm-session-servers-2026-10-29.md) - pipe, control pipe, TCP share, HTTP control
