@@ -1,6 +1,6 @@
 # Feature request: SQL Server Service Broker support
 
-- **Status:** new
+- **Status:** triaged
 - **Requested by:** owner (filed from the notes repository, `projects/dotex-consolidation/sql-service-broker-tools.md`)
 - **Date:** 2026-10-28
 - **Area:** `OoBDev.MessageQueueing` (suggested `OoBDev.MessageQueueing.SqlServiceBroker`); dotex decides the name
@@ -51,4 +51,4 @@ the test stack (a SQL Server container already exists there).
 
 ## Triage notes
 
-Maintainers fill this in.
+2026-10-29: accepted. Decisions (reversible): write fresh against current abstractions, not from the prototypes (book origin, licence unchecked); new adapter `OoBDev.SqlServer.ServiceBroker` mirroring `OoBDev.RabbitMQ`; the desired-state tooling request stays separate and may later own the broker objects. Design: [docs/design/SqlServiceBroker](../../design/SqlServiceBroker/README.md). Backlog: BACKLOG.md, messaging.
