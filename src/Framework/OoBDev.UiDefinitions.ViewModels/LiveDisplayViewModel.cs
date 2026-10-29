@@ -46,6 +46,18 @@ public sealed class LiveDisplayViewModel : ViewModelBase
     /// <summary>A vector's readout text, or null for the other kinds.</summary>
     public string? Readout => (State as VectorState)?.Readout();
 
+    /// <summary>A vector's trail and current point as <c>x,y x,y</c> text in a 100 by 100 box (origin top left); empty for the other kinds.</summary>
+    public string PlotTrail => State is VectorState vector ? VectorPlot.Trail(vector) : string.Empty;
+
+    /// <summary>The horizontal position of a vector's current point in the 100 by 100 box.</summary>
+    public double PlotX => State is VectorState vector ? VectorPlot.Project(vector, vector.Point).X : 50;
+
+    /// <summary>The vertical position of a vector's current point in the 100 by 100 box (origin top left).</summary>
+    public double PlotY => State is VectorState vector ? VectorPlot.Project(vector, vector.Point).Y : 50;
+
+    /// <summary>The colour a vector's point is drawn in, as a hex string.</summary>
+    public string PlotColor => State is VectorState vector ? VectorPlot.ColorOf(vector) : VectorPlot.DefaultColor;
+
     /// <summary>An indicator's display text, or null before a value arrives and for the other kinds.</summary>
     public string? Text => (State as IndicatorState)?.Text;
 
@@ -96,6 +108,10 @@ public sealed class LiveDisplayViewModel : ViewModelBase
         OnPropertyChanged(nameof(State));
         OnPropertyChanged(nameof(Text));
         OnPropertyChanged(nameof(Readout));
+        OnPropertyChanged(nameof(PlotTrail));
+        OnPropertyChanged(nameof(PlotX));
+        OnPropertyChanged(nameof(PlotY));
+        OnPropertyChanged(nameof(PlotColor));
         return true;
     }
 }

@@ -2,6 +2,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Shapes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.UiDefinitions.ViewModels;
 
@@ -80,7 +81,7 @@ public sealed class LiveDisplayViewTests
         view.UpdateLayout();
 
         // Assert
-        Assert.AreEqual(2, Find<System.Windows.Shapes.Polyline>(view).Single().Points.Count);
+        Assert.AreEqual(2, Find<Polyline>(view).Single(p => p.Stroke is not null && p.Opacity == 1).Points.Count);
     }
 
     [STATestMethod]
@@ -96,6 +97,42 @@ public sealed class LiveDisplayViewTests
 
         // Assert
         Assert.IsTrue(Find<TextBlock>(view).Any(t => t.Text.StartsWith("x=1", System.StringComparison.Ordinal)));
+    }
+
+    [STATestMethod]
+    public void Apply_Vector_PlotsPointAndTrail()
+    {
+        // Stage
+        var model = new LiveDisplayViewModel(new VectorControl { Id = "v", Label = "V", XId = "x", YId = "y", Range = 2 });
+        var view = Render(model);
+        model.ApplyAll([new("x", "0"), new("y", "0")]);
+
+        // Test
+        model.ApplyAll([new("x", "2"), new("y", "0")]);
+        view.UpdateLayout();
+
+        // Assert
+        var marker = Find<Ellipse>(view).Single();
+        Assert.AreEqual(97.5, Canvas.GetLeft(marker), 0.001);
+        Assert.AreEqual(47.5, Canvas.GetTop(marker), 0.001);
+        Assert.HasCount(2, Find<Polyline>(view).Single(p => p.Opacity < 1).Points);
+    }
+
+    [STATestMethod]
+    public void Convert_NonNumber_ReturnsZero()
+    {
+        // Test
+        var result = new CentreConverter().Convert("x", typeof(double), null!, System.Globalization.CultureInfo.InvariantCulture);
+
+        // Assert
+        Assert.AreEqual(0d, result);
+    }
+
+    [STATestMethod]
+    public void ConvertBack_Always_Throws()
+    {
+        // Assert
+        Assert.ThrowsExactly<System.NotSupportedException>(() => new CentreConverter().ConvertBack(1d, typeof(double), null!, System.Globalization.CultureInfo.InvariantCulture));
     }
 
     [STATestMethod]

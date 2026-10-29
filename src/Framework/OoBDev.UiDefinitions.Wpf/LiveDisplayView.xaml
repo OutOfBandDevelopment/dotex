@@ -1,9 +1,11 @@
 <UserControl x:Class="OoBDev.UiDefinitions.Wpf.LiveDisplayView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:OoBDev.UiDefinitions.Wpf"
              xmlns:vm="clr-namespace:OoBDev.UiDefinitions.ViewModels;assembly=OoBDev.UiDefinitions.ViewModels">
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="Visible" />
+        <local:CentreConverter x:Key="Centre" />
     </UserControl.Resources>
     <StackPanel>
         <TextBlock Text="{Binding Text}"
@@ -42,8 +44,19 @@
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
-        <TextBlock Text="{Binding Readout}"
-                   FontFamily="Consolas"
-                   Visibility="{Binding IsVector, Converter={StaticResource Visible}}" />
+        <StackPanel Visibility="{Binding IsVector, Converter={StaticResource Visible}}">
+            <Viewbox Width="160" Height="160" HorizontalAlignment="Left">
+                <Canvas Width="100" Height="100" Background="Transparent">
+                    <Rectangle Width="100" Height="100" Stroke="Gray" StrokeThickness="0.5" />
+                    <Line X1="50" Y1="0" X2="50" Y2="100" Stroke="LightGray" StrokeThickness="0.5" />
+                    <Line X1="0" Y1="50" X2="100" Y2="50" Stroke="LightGray" StrokeThickness="0.5" />
+                    <Polyline Points="{Binding PlotTrail}" Stroke="{Binding PlotColor}" StrokeThickness="1" Opacity="0.5" />
+                    <Ellipse Width="5" Height="5" Fill="{Binding PlotColor}"
+                             Canvas.Left="{Binding PlotX, Converter={StaticResource Centre}}"
+                             Canvas.Top="{Binding PlotY, Converter={StaticResource Centre}}" />
+                </Canvas>
+            </Viewbox>
+            <TextBlock Text="{Binding Readout}" FontFamily="Consolas" />
+        </StackPanel>
     </StackPanel>
 </UserControl>
