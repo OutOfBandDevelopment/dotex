@@ -17,6 +17,7 @@ Z-Wave Serial API framing, decoding and request building (the protocol, not one 
 | `ZWaveNodeTable` / `ZWaveNodeRecord` | Per-node facts built from frames; `Expect(function, node)` attributes replies that do not name their node |
 | `ZWaveNames` | Function, command class, device class, library type, manufacturer and product names; the manufacturer, product, command class and device class tables are embedded JSON (`Data/`), with hex as the fallback |
 | `ZWaveConfigParameter` | One manufacturer-documented configuration parameter (command class 0x70: index, label, size, range, default, help, named values); `ZWaveNames.ConfigParameters(manufacturer, type, id)` reads them from the embedded `product-configs.json` (1,237 product ids over 830 configuration files; empty for an unknown product) |
+| `ZWaveSession` | Owns an `IStreamDevice<ZWaveFrame>` (for example `StreamDevice<ZWaveFrame>` with `minimumTransmissionDelay: 0`): acknowledges each received unit, keeps a `ZWaveNodeTable` current, raises `FrameReceived` and `AnswerFailed`, and `SendAsync` queues a request |
 | `ZWaveReports` | Typed readers for reports (Binary Switch) |
 | `ServiceCollectionExtensions` | `TryAddZWave()` registers the decoder and encoder |
 | `ZWaveFunctions` | Serial API function ids |
@@ -25,7 +26,7 @@ The consumer must answer every received data frame, or the stick retransmits and
 
 ## Not yet ported
 
-The control surface (waits on owner question Q3), and a session-level responder that writes the answers itself (the framework has no session observer; `ZWaveAckResponder.Respond` picks the answer and the consumer writes it, as `ZWaveStick` in the tests does). Network-management commands (include, exclude, reset) are not exercised on hardware.
+The control surface (waits on owner question Q3). `ZWaveStick` in the tests still writes the answers itself; `ZWaveSession` is the library way. Network-management commands (include, exclude, reset) are not exercised on hardware.
 
 ## Verified
 
