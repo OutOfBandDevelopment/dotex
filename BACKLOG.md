@@ -48,7 +48,7 @@ Scope rule: every BinaryDataDecoders feature is migrated; phases are priority or
 - [ ] **SharedFramework** is design first (Epics 2, 6, 7, 10): four documents per feature (requirements, architecture, api-design, testing-strategy), 16 per epic. See [CLAUDE.md](CLAUDE.md#current-work-context).
 - [ ] **Harvest candidates**: nothing decided; the map is in [docs/harvest-candidates.md](docs/harvest-candidates.md).
 
-- [ ] Harvest candidates marked evaluate-later in the plan (decision D7): proving-grounds plugin-sandbox-poc, hybridsearch, Oobtainium, BuildFirstOnce, markdownplantuml, TotpExample, HandyClasses; Service Broker tools; postsql-playground (informs `OoBDev.DacFx`).- [ ] Integration test guard: a test base class that refuses to run when a connection string is not a test instance (rule `testing`, `docs/how-tos/production-operations-practices.md`).
+- [ ] Harvest candidates marked evaluate-later in the plan (decision D7): proving-grounds plugin-sandbox-poc, hybridsearch, Oobtainium, BuildFirstOnce, markdownplantuml, TotpExample, HandyClasses; Service Broker tools; postsql-playground (informs `OoBDev.DacFx`).
 - [ ] Production-copy rehearsal test: restore a sanitized dump into the SQL Server container, apply the DacFx or EF migration, run the Integration suite (DevLocal first, Integration when stable).
 - [ ] Performance gates (log over 500 ms, fail over 750 ms) in the testing strategy of the CGI middleware and the search endpoints.
 - [ ] Add an operations check (read-only sources, migration approval, rollback) to the `security-audit` skill.

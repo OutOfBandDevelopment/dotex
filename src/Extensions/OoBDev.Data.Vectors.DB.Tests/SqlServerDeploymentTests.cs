@@ -29,7 +29,7 @@ public class SqlServerDeploymentTests
     [TestInitialize]
     public async Task InitializeAsync()
     {
-        _masterConnection = TestContext.GetRequiredProperty<string>("SQLSERVER_CONNECTION_STRING");
+        _masterConnection = TestInstanceGuard.Require(TestContext.GetRequiredProperty<string>("SQLSERVER_CONNECTION_STRING"));
         _databaseName = $"VectorDeploy_{Guid.NewGuid():N}";
 
         _originalClrEnabled = await ScalarAsync<int>(_masterConnection, "SELECT CAST(value_in_use AS int) FROM sys.configurations WHERE name = 'clr enabled'");

@@ -55,3 +55,7 @@ qualified name of the test class.
 This is intended to provide a named set of categories to provider to `TestCategoryAttribute` 
 as a means to consistence within your projects to make executing filtered sets for tests easier.
 
+
+## TestInstanceGuard
+
+`TestInstanceGuard.Require(connectionString)` fails an Integration test unless every host in the connection string (key/value pairs or URL) is loopback or `host.docker.internal`. Wrap the connection-string read with it; `IsTestInstance` returns the boolean. The SQL Server deployment tests use it. Rule: `testing`.

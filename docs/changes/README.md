@@ -362,6 +362,10 @@ Each change document should include:
 - LlmCodeGen folder runner Integration test against the stack Ollama (phi3)
 - Status: ✅ Complete
 
+**[testing-instance-guard-2026-10-29.md](testing-instance-guard-2026-10-29.md)**
+- TestInstanceGuard refuses non-local connection strings in Integration tests
+- Status: ✅ Complete
+
 **[examples-aspire-vectordb-wiring-2026-10-28.md](examples-aspire-vectordb-wiring-2026-10-28.md)**
 - Example Aspire host gives the API the SQL vector store connection string
 - Status: Built, not run end to end
