@@ -10,7 +10,7 @@ CI is manual only: nothing runs on push or on a schedule, and the former GitHub 
 
 ## Versioning
 
-`GitVersion.MsBuild` runs in every project (including tests) and derives the version from git history. The configuration file is `GitVersion.yml` at the **repository root** (older docs say `src/`; see [Doc/Code Drift](../README.md)). Major is bumped by hand, minor by every merge into `main` (always a merge commit, never a fast-forward), and a branch previews the next release: after `v0.5.0`, `dev/example-app-fixes` builds `0.6.0-dev-example-app-fixes.1`.
+`GitVersion.MsBuild` runs in every project (including tests) and derives the version from git history. The configuration file is `GitVersion.yml` at the **repository root** (older docs say `src/`; see [Doc/Code Drift](../README.md)). GitVersion 6 runs the `Mainline` strategy: major and minor come from the last release tag (`v0.5.0` today, changed by tagging a new base), and the patch rises with every commit that reaches `main`, so a merge adds its branch commits plus the merge commit and the number only goes up. `main` carries no label; another branch builds `0.5.67-dev-example-app-fixes.1+2` (`+2` is the commits in the branch). Merges into `main` are always merge commits, never fast-forwards.
 
 ## Packaging
 
