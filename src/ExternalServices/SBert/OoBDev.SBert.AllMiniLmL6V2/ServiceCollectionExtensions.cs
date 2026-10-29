@@ -38,6 +38,7 @@ public static class ServiceCollectionExtensions
 
         services.TryAddSingleton<OnnxSentenceEmbeddingGenerator>();
         services.TryAddSingleton<IEmbeddingGenerator<string, Embedding<float>>>(sp => sp.GetRequiredService<OnnxSentenceEmbeddingGenerator>());
+        services.TryAddKeyedSingleton<IEmbeddingGenerator<string, Embedding<float>>>(SBertGlobals.AllMiniLmL6V2Key, (sp, _) => sp.GetRequiredService<OnnxSentenceEmbeddingGenerator>());
 
         services.Replace(ServiceDescriptor.Transient<IEmbeddingProvider, AllMiniLmL6V2EmbeddingProvider>());
         services.TryAddKeyedTransient<IEmbeddingProvider, AllMiniLmL6V2EmbeddingProvider>(SBertGlobals.AllMiniLmL6V2Key);

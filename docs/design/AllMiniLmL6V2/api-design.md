@@ -97,9 +97,9 @@ public static IServiceCollection TryAddAllMiniLmL6V2Services(
     this IServiceCollection services, IConfiguration configuration, string allMiniLmL6V2OptionSection = SBertGlobals.DefaultSection);
 ```
 
-Registers, in order: `Configure<OnnxSentenceEmbeddingOptions>` (defaults, then `configuration.Bind`), the generator as a singleton, `IEmbeddingGenerator<string, Embedding<float>>` as a singleton forwarding to it, `IEmbeddingProvider` as a transient that **replaces** any earlier default, and the keyed `IEmbeddingProvider` under `SBertGlobals.AllMiniLmL6V2Key`. The existing method name is kept so callers need no change.
+Registers, in order: `Configure<OnnxSentenceEmbeddingOptions>` (defaults, then `configuration.Bind`), the generator as a singleton, `IEmbeddingGenerator<string, Embedding<float>>` as a singleton forwarding to it (also under the key `SBertGlobals.AllMiniLmL6V2Key`), `IEmbeddingProvider` as a transient that **replaces** any earlier default, and the keyed `IEmbeddingProvider` under `SBertGlobals.AllMiniLmL6V2Key`. The existing method name is kept so callers need no change.
 
-**Planned** (not in the code; see `BACKLOG.md`): `AddValidatedOptions` instead of `Configure`, keyed generator registration wrapped with `EmbeddingGeneratorBuilder` (`UseOpenTelemetry`, `UseLogging`), and the legacy `ALLMINILM` key alias. The alias is not needed while the framework is unreleased.
+**Planned** (not in the code; see `BACKLOG.md`): `AddValidatedOptions` instead of `Configure`, `EmbeddingGeneratorBuilder` wrapping (`UseOpenTelemetry`, `UseLogging`; the generator already emits its own span and metrics, so wrapping would double them and needs the full Microsoft.Extensions.AI package), and the legacy `ALLMINILM` key alias. The alias is not needed while the framework is unreleased.
 
 ## Usage
 

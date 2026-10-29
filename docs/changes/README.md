@@ -390,6 +390,10 @@ Each change document should include:
 - ExternalServices readmes identifier-checked against code
 - Status: ✅ Complete
 
+**[migration-embedding-keyed-generator-2026-10-29.md](migration-embedding-keyed-generator-2026-10-29.md)**
+- AllMiniLmL6V2 embedding generator also registered under its key
+- Status: ✅ Complete
+
 **[apis-odata-query-2026-10-29.md](apis-odata-query-2026-10-29.md)**
 - OData query options on IQueryable actions, with limits, QUERY form bodies and tests
 - Status: ✅ Complete

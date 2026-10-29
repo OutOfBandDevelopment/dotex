@@ -1,3 +1,4 @@
+using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -7,6 +8,7 @@ using OoBDev.TestUtilities;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Numerics.Tensors;
 using System.Threading.Tasks;
 
@@ -24,6 +26,24 @@ public class RegistrationTests
         services.AddLogging();
         services.TryAddAllMiniLmL6V2Services(configuration, SBertGlobals.DefaultSection);
         return services.BuildServiceProvider();
+    }
+
+    [TestCategory(TestCategories.Unit)]
+    [TestMethod]
+    public void Generator_IsRegisteredDefaultAndKeyed()
+    {
+        // Stage
+        var services = new ServiceCollection();
+        services.AddLogging();
+        services.TryAddAllMiniLmL6V2Services(new ConfigurationBuilder().Build(), SBertGlobals.DefaultSection);
+
+        // Test
+        var keyed = services.Count(d => d.ServiceType == typeof(IEmbeddingGenerator<string, Embedding<float>>) && Equals(d.ServiceKey, SBertGlobals.AllMiniLmL6V2Key));
+        var plain = services.Count(d => d.ServiceType == typeof(IEmbeddingGenerator<string, Embedding<float>>) && d.ServiceKey is null);
+
+        // Assert
+        Assert.AreEqual(1, keyed);
+        Assert.AreEqual(1, plain);
     }
 
     [TestCategory(TestCategories.Integration)]
