@@ -358,3 +358,4 @@ Each change document should include:
 - Example AppHost: dacpac re-publish skipped, API binds the Aspire port, vector reader uses the Aspire database
 - Status: ✅ Complete (full AppHost start not rerun)
 - [Z-Wave core](devices-zwave-core-2026-10-28.md) - first device package, verified on a Z-Stick (2026-10-28)
+- [DE-5000 core](devices-de5000-core-2026-10-28.md) - DE-5000 packet decoding, 13 unit tests, no hardware test yet (2026-10-28)
