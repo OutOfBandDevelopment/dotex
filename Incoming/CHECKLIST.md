@@ -76,7 +76,6 @@ This checklist tracks the investigation and migration status of all projects in 
 
 **Documentation:**
 - [Feature Mapping](../docs/migration/framework-feature-mapping.md) - Analysis of what was in Framework
-- [Vector Comparison](../docs/migration/vector-comparison.md) - Detailed vector implementation analysis
 
 ---
 

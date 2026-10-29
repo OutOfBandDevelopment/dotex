@@ -22,7 +22,6 @@ Plans, mappings and analyses for code brought into the framework from other repo
 | [device-decoding-migration-plan.md](device-decoding-migration-plan.md), [device-parity.md](device-parity.md) | dev-term device decoding | Packages done; transports and the shell wait on the Q3 scope |
 | [sharedframework-feature-mapping.md](sharedframework-feature-mapping.md), [sharedframework-migration-plan.md](sharedframework-migration-plan.md), [sharedframework-differs-detailed-comparison.md](sharedframework-differs-detailed-comparison.md), [sharedframework-phase0-coverage-analysis.md](sharedframework-phase0-coverage-analysis.md) | SharedFramework | Open: design first (Epics 2, 6, 7, 10) |
 | [oobtainium-feature-mapping.md](oobtainium-feature-mapping.md), [oobtainium-migration-plan.md](oobtainium-migration-plan.md) | Oobtainium mocking and proxy framework | Open: evaluate later (decision D7) |
-| [vector-comparison.md](vector-comparison.md) | Application-level vector math beside the SQL vectors | Open: recommendation to migrate, not done |
 | [incoming-recommendation-plan.md](incoming-recommendation-plan.md), [incoming-harvest-crosscheck.md](incoming-harvest-crosscheck.md) | Cross-project plan and rejected merges | Current |
 
 ## Rules
@@ -34,4 +33,5 @@ Plans, mappings and analyses for code brought into the framework from other repo
 ## Removed on 2026-10-29
 
 - BotChat mapping and plan: the patterns were extracted on 2026-10-09 and the sources removed.
+- Vector comparison: the application-level `Vector` type is in `OoBDev.System.Abstractions` (`Math`), documented in its readme and tested; the cosine distance versus similarity difference is recorded there.
 - MailKit and SendGrid integration analysis: both integrations are complete and described in `README.MailKit.md` and `README.MailKit.Hosting.md`.
