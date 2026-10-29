@@ -81,6 +81,15 @@ var api = builder.AddProject<OoBDev_Example_WebApi>("example-api", options => op
     .WithEnvironment("MailKitSmtpClientOptions__Host", smtp.GetEndpoint("smtp").Property(EndpointProperty.Host))
     .WithEnvironment("MailKitSmtpClientOptions__Port", smtp.GetEndpoint("smtp").Property(EndpointProperty.Port));
 
+// The Telemetry page links to the dashboard and reads recent traces through its API; the defaults point at the compose stack's port 18888.
+// ASPNETCORE_URLS is the host's own dashboard address (the launch profile's, or a dynamic one from the CLI).
+var dashboardUrl = (builder.Configuration["ASPNETCORE_URLS"] ?? "http://localhost:15888").Split(';')[0];
+api.WithEnvironment("Telemetry__DashboardUrl", dashboardUrl)
+    .WithEnvironment("Telemetry__PublicUrl", dashboardUrl)
+    .WithEnvironment("Telemetry__ApiKey", builder.Configuration["AppHost:DashboardApiKey"] ?? "")
+    .WithEnvironment("OpenTelemetryOptions__ServiceName", "example-api")
+    .WithEnvironment("OpenTelemetryOptions__Sources__0", "Microsoft.AspNetCore");
+
 foreach (var queue in new[] { "ExampleMessageProvider", "EmailMessageModel", "ReceivedEmailMessageModel" })
 {
     api.WithEnvironment($"MessageQueue__{queue}__Config__HostName", rabbitmq.GetEndpoint("tcp").Property(EndpointProperty.Host))
