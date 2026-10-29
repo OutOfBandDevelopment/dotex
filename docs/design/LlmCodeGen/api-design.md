@@ -43,6 +43,6 @@ Recognized shapes are the two the prototype handled: a bold or back-ticked file 
 
 ## Output layout
 
-For input folder `a/b`: `<output>/a/b/<template>.prompt.md` (prompt), `<template>.response.md` and the extracted files beside them. **Planned:** `<template>.response.json` with provider metadata; `IMessageCompletion` returns text only, so it needs a richer contract first.
+For input folder `a/b`: `<output>/a/b/<template>.prompt.md` (prompt), `<template>.response.md` and the extracted files beside them. `<template>.response.json` holds the run metadata: provider, model, template, folder, input file count, prompt and response lengths, start time (UTC), duration and the extracted file names. `IMessageCompletion` returns text only, so token counts and finish reasons are not recorded; that needs a richer contract.
 
 [← Architecture](architecture.md) · [Overview](README.md) · [Testing strategy →](testing-strategy.md)

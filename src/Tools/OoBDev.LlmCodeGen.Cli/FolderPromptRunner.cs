@@ -1,8 +1,10 @@
 using Microsoft.Extensions.Logging;
 using OoBDev.AI;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -13,8 +15,13 @@ namespace OoBDev.LlmCodeGen.Cli;
 /// </summary>
 /// <param name="completion">The selected model provider.</param>
 /// <param name="log">Diagnostic output.</param>
-public partial class FolderPromptRunner(IMessageCompletion completion, ILogger<FolderPromptRunner> log)
+/// <param name="time">The clock for the metadata file; the system clock when omitted.</param>
+public partial class FolderPromptRunner(IMessageCompletion completion, ILogger<FolderPromptRunner> log, TimeProvider? time = null)
 {
+    private static readonly JsonSerializerOptions _json = new() { WriteIndented = true };
+
+    private readonly TimeProvider _time = time ?? TimeProvider.System;
+
     /// <summary>
     /// Runs every folder under the input path.
     /// </summary>
@@ -69,22 +76,38 @@ public partial class FolderPromptRunner(IMessageCompletion completion, ILogger<F
             await File.WriteAllTextAsync(Path.Combine(target, name + ".prompt.md"), prompt, cancellationToken);
 
             LogAsk(log, options.Provider, directory, files.Count);
+            var started = _time.GetUtcNow();
+            var timestamp = _time.GetTimestamp();
             var response = await completion.GetCompletionAsync(options.Model!, prompt);
+            var elapsed = _time.GetElapsedTime(timestamp);
             sent++;
 
             await File.WriteAllTextAsync(responseFile, response, cancellationToken);
 
-            if (options.ExtractFiles)
+            var extracted = options.ExtractFiles ? await WriteExtractedAsync(target, response, cancellationToken) : new List<string>();
+
+            var metadata = new
             {
-                await WriteExtractedAsync(target, response, cancellationToken);
-            }
+                provider = options.Provider,
+                model = options.Model,
+                template = name,
+                folder = model.folder,
+                inputFiles = files.Count,
+                promptCharacters = prompt.Length,
+                responseCharacters = response.Length,
+                startedUtc = started,
+                durationMilliseconds = (long)elapsed.TotalMilliseconds,
+                extractedFiles = extracted,
+            };
+            await File.WriteAllTextAsync(Path.Combine(target, name + ".response.json"), JsonSerializer.Serialize(metadata, _json), cancellationToken);
         }
 
         return sent;
     }
 
-    private async Task WriteExtractedAsync(string target, string response, CancellationToken cancellationToken)
+    private async Task<List<string>> WriteExtractedAsync(string target, string response, CancellationToken cancellationToken)
     {
+        var written = new List<string>();
         foreach (var file in ResponseFileExtractor.Extract(response))
         {
             var destination = Path.GetFullPath(Path.Combine(target, file.RelativePath));
@@ -95,7 +118,10 @@ public partial class FolderPromptRunner(IMessageCompletion completion, ILogger<F
             }
             Directory.CreateDirectory(Path.GetDirectoryName(destination)!);
             await File.WriteAllTextAsync(destination, file.Content, cancellationToken);
+            written.Add(Path.GetRelativePath(target, destination).Replace('\\', '/'));
         }
+
+        return written;
     }
 
     [LoggerMessage(EventId = 1, Level = LogLevel.Information, Message = "skip {Directory}: response exists")]

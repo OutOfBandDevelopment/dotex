@@ -5,6 +5,7 @@ using OoBDev.AI;
 using OoBDev.TestUtilities;
 using System;
 using System.IO;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -65,6 +66,37 @@ public class FolderPromptRunnerTests
         Assert.AreEqual("sub:[b.txt=beta]", File.ReadAllText(Path.Combine(outRoot, "sub", "t.prompt.md")));
         Assert.IsTrue(File.Exists(Path.Combine(outRoot, "t.response.md")));
         Assert.AreEqual("made", File.ReadAllText(Path.Combine(outRoot, "sub", "gen.txt")));
+    }
+
+    private sealed class FixedTime(DateTimeOffset now) : TimeProvider
+    {
+        public override DateTimeOffset GetUtcNow() => now;
+    }
+
+    [TestMethod]
+    [TestCategory(TestCategories.Simulate)]
+    public async Task RunAsync_WritesResponseMetadataBesideTheResponse()
+    {
+        // Stage
+        var runner = new FolderPromptRunner(
+            Completion("**gen.txt**\n```\nmade\n```").Object,
+            NullLogger<FolderPromptRunner>.Instance,
+            new FixedTime(new DateTimeOffset(2026, 10, 29, 12, 0, 0, TimeSpan.Zero)));
+
+        // Test
+        await runner.RunAsync(Options(), CancellationToken.None);
+
+        // Assert
+        using var json = JsonDocument.Parse(File.ReadAllText(Path.Combine(_root, "out", "sub", "t.response.json")));
+        var root = json.RootElement;
+        Assert.AreEqual("m", root.GetProperty("model").GetString());
+        Assert.AreEqual("t", root.GetProperty("template").GetString());
+        Assert.AreEqual("sub", root.GetProperty("folder").GetString());
+        Assert.AreEqual(1, root.GetProperty("inputFiles").GetInt32());
+        Assert.AreEqual("sub:[b.txt=beta]".Length, root.GetProperty("promptCharacters").GetInt32());
+        Assert.AreEqual("**gen.txt**\n```\nmade\n```".Length, root.GetProperty("responseCharacters").GetInt32());
+        Assert.AreEqual(new DateTimeOffset(2026, 10, 29, 12, 0, 0, TimeSpan.Zero), root.GetProperty("startedUtc").GetDateTimeOffset());
+        Assert.AreEqual("gen.txt", root.GetProperty("extractedFiles")[0].GetString());
     }
 
     [TestMethod]

@@ -451,3 +451,4 @@ Each change document should include:
 - [SCPI block replies](devices-scpi-block-replies-2026-10-29.md) - definite-length block framing and ScpiReply.Block (2026-10-29)
 - [Z-Wave ACK responder](devices-zwave-ack-responder-2026-10-29.md) - ZWaveAckResponder picks ACK or NAK per received frame (2026-10-29)
 - [Vectors DB redeploy](data-vectors-db-redeploy-2026-10-29.md) - second deploy of the dacpac changes nothing (2026-10-29)
+- [LlmCodeGen response metadata](tools-llmcodegen-response-metadata-2026-10-29.md) - response.json beside each response (2026-10-29)
