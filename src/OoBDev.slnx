@@ -231,6 +231,8 @@
     <Project Path="Framework/OoBDev.TestUtilities/OoBDev.TestUtilities.csproj" />
   </Folder>
   <Folder Name="/Tools/">
+    <Project Path="Tools/OoBDev.PackMan.Cli.Tests/OoBDev.PackMan.Cli.Tests.csproj" />
+    <Project Path="Tools/OoBDev.PackMan.Cli/OoBDev.PackMan.Cli.csproj" />
     <Project Path="Tools/OoBDev.Xslt.Cli.Tests/OoBDev.Xslt.Cli.Tests.csproj" />
     <Project Path="Tools/OoBDev.Xslt.Cli/OoBDev.Xslt.Cli.csproj" />
     <Project Path="Tools/OoBDev.DacPacCompiler.Cli/OoBDev.DacPacCompiler.Cli.csproj" />

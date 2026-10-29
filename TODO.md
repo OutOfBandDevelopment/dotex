@@ -12,5 +12,5 @@ Keep this file short (a handful of items). When an item starts, move it here fro
 
 ## Next
 
-- [ ] **BinaryDataDecoders items** (re-review done 2026-10-29: [binarydatadecoders-rereview-2026-10-29.md](docs/migration/binarydatadecoders-rereview-2026-10-29.md)): Numerics, NMEA helpers, Drawing, Code analysis, Fencing, LanC and the Xslt CLI are done; next is the order in Table 4 of that document; backlog lines are in [BACKLOG.md](BACKLOG.md).
+- [ ] **BinaryDataDecoders items** (re-review done 2026-10-29: [binarydatadecoders-rereview-2026-10-29.md](docs/migration/binarydatadecoders-rereview-2026-10-29.md)): Numerics, NMEA helpers, Drawing, Code analysis, Fencing, LanC, the Xslt CLI and the PackMan CLI are done; next is the order in Table 4 of that document; backlog lines are in [BACKLOG.md](BACKLOG.md).
 
