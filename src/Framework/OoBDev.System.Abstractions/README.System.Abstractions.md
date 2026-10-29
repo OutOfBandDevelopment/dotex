@@ -15,4 +15,4 @@ OoBDev Common Framework
 | `VectorDistanceMetrics` | Cosine, Euclidean, DotProduct, Manhattan |
 | `VectorComparer` | Orders vectors by the sign of their distance for the chosen metric |
 
-Tests are in `OoBDev.System.Tests/Math`. Floating-point note: the comparer tests the distance against exactly zero, so two equal vectors compare as equal under Euclidean but may differ by rounding under Cosine.
+Tests are in `OoBDev.System.Tests/Math`. The comparer treats a distance within 1e-12 of zero as equal, so cosine rounding does not separate equal vectors.

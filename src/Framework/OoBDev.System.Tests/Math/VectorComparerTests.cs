@@ -23,6 +23,20 @@ public class VectorComparerTests
 
     [TestMethod]
     [TestCategory(TestCategories.Unit)]
+    public void Compare_IdenticalVectorsCosine_ReturnsZero()
+    {
+        // Stage
+        var comparer = new VectorComparer();
+
+        // Test
+        var result = comparer.Compare(new[] { 0.1d, 0.2d, 0.3d }, new[] { 0.1d, 0.2d, 0.3d });
+
+        // Assert
+        Assert.AreEqual(0, result);
+    }
+
+    [TestMethod]
+    [TestCategory(TestCategories.Unit)]
     public void Compare_DifferentVectors_ReturnsPositive()
     {
         // Stage
