@@ -30,7 +30,7 @@ GitHub is no longer the primary repository (local bare repo `origin`), so nothin
 
 A clean rebuild (2026-10-22) has no analyzer warnings. Analyzers are wired from `src/Directory.Build.props` (`OoBDev.Analyzers` OOB0001 to OOB0003, NetAnalyzers Recommended, Meziantou); `Tools` and `Examples` are exempt from MA0004 and MA0048 in `src/.editorconfig`.
 
-- [ ] (decided 2026-10-22: promote the rules that are already clean, and the `#warning` markers became TODO comments, intent in Q4) Rules still at `suggestion` in `src/.editorconfig` (flip each to warning after fixing its backlog): MA0026 (TODO comments, about 50, kept on purpose), MA0051 (26, method length), and the rules kept on purpose after a 2026-10-29 check: MA0046 (3, `EventHandler<TMessage>` on the device interfaces, idiomatic since .NET 4.5) and MA0061 (3, the DEBUG-only required parameters on the embedding providers), CA1710, CA1720 and CA1708 (domain names, kept on purpose) and the rest listed in the editorconfig.
+- [ ] (decided 2026-10-22: promote the rules that are already clean, and the `#warning` markers became TODO comments, intent in Q4) Rules still at `suggestion` in `src/.editorconfig` (flip each to warning after fixing its backlog): MA0026 (TODO comments, about 50, kept on purpose), and the rules kept on purpose after a 2026-10-29 check: MA0046 (3, `EventHandler<TMessage>` on the device interfaces, idiomatic since .NET 4.5) and MA0061 (3, the DEBUG-only required parameters on the embedding providers), CA1710, CA1720 and CA1708 (domain names, kept on purpose) and the rest listed in the editorconfig.
 
 ## 4. Migrations (blocked on the owner)
 

@@ -3,6 +3,7 @@ using OoBDev.System.Linq.Expressions;
 using OoBDev.System.ResponseModel;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace OoBDev.System.Linq.Search;
@@ -51,39 +52,11 @@ public class SortBuilder<TModel>(
         var matchedKeys = searchRequest.OrderBy.Keys.Intersect(compositeSortMap.Keys, stringComparer);
 
         if (unmatchedKeys.Any())
-        {
-            _messages.Publish(new ResultMessage
-            {
-                Level = MessageLevels.Warning,
-                Message = SearchQuery.Messages.SortPropertiesNotFound,
-                MessageCode = SearchQuery.Messages.SortPropertiesNotFoundCode,
-                MetaData = new
-                {
-                    unmatchedKeys
-                }
-            });
-            LinqLog.UnmatchedSortKeys(_logger, string.Join("; ", unmatchedKeys));
-        }
+            PublishUnmatched(unmatchedKeys);
 
         if (!matchedKeys.Any() && treeBuilder.DefaultSortOrder().Count != 0)
         {
-            orderBys = treeBuilder.DefaultSortOrder()
-              .ToDictionary(k => k.column, v => v.direction, stringComparer);
-
-            _messages.Publish(new ResultMessage
-            {
-                Level = MessageLevels.Information,
-                Message = SearchQuery.Messages.ApplySortDefault,
-                MessageCode = SearchQuery.Messages.ApplySortDefaultCode,
-                MetaData = new
-                {
-                    defaultSort = treeBuilder.DefaultSortOrder().Select(t => new { t.column, t.direction }),
-                }
-            });
-            if (_logger.IsEnabled(LogLevel.Information))
-#pragma warning disable CA1873 // guarded by IsEnabled
-                LinqLog.DefaultSort(_logger, typeof(TModel), string.Join("; ", treeBuilder.DefaultSortOrder()));
-#pragma warning restore CA1873
+            orderBys = PublishDefaultSort(treeBuilder, stringComparer);
         }
 
         IOrderedQueryable<TModel>? ordered = null;
@@ -120,5 +93,42 @@ public class SortBuilder<TModel>(
         }
 
         return ordered;
+    }
+
+    private void PublishUnmatched(IEnumerable<string> unmatchedKeys)
+    {
+        _messages.Publish(new ResultMessage
+        {
+            Level = MessageLevels.Warning,
+            Message = SearchQuery.Messages.SortPropertiesNotFound,
+            MessageCode = SearchQuery.Messages.SortPropertiesNotFoundCode,
+            MetaData = new
+            {
+                unmatchedKeys
+            }
+        });
+        LinqLog.UnmatchedSortKeys(_logger, string.Join("; ", unmatchedKeys));
+    }
+
+    private Dictionary<string, OrderDirections> PublishDefaultSort(IExpressionTreeBuilder<TModel> treeBuilder, StringComparer stringComparer)
+    {
+        var orderBys = treeBuilder.DefaultSortOrder()
+          .ToDictionary(k => k.column, v => v.direction, stringComparer);
+
+        _messages.Publish(new ResultMessage
+        {
+            Level = MessageLevels.Information,
+            Message = SearchQuery.Messages.ApplySortDefault,
+            MessageCode = SearchQuery.Messages.ApplySortDefaultCode,
+            MetaData = new
+            {
+                defaultSort = treeBuilder.DefaultSortOrder().Select(t => new { t.column, t.direction }),
+            }
+        });
+        if (_logger.IsEnabled(LogLevel.Information))
+#pragma warning disable CA1873 // guarded by IsEnabled
+            LinqLog.DefaultSort(_logger, typeof(TModel), string.Join("; ", treeBuilder.DefaultSortOrder()));
+#pragma warning restore CA1873
+        return orderBys;
     }
 }

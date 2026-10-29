@@ -46,27 +46,7 @@ public class VolumeDescription : IEnumerable<DirectoryRecord>, IDisposable
         SectorSize = buffer.GetUInt16(ref offset, 4);
         //  8      path table length in bytes, as a both endian double word
         PathTableLength = buffer.GetUInt32(ref offset, 8);
-        //  4      number of first sector in first little endian path table,
-        //           as a little endian double word
-        var v1 = buffer.GetUInt32(ref offset, 4);
-        //offset += 4;   // padding
-        //  4      number of first sector in second little endian path table,
-        //           as a little endian double word, or zero if there is no
-        //           second little endian path table
-        var v2 = buffer.GetUInt32(ref offset, 4);
-        //offset += 4;   // padding
-        //  4      number of first sector in first big endian path table,
-        //           as a big endian double word
-        FirstSectorFirst = buffer.GetUInt32(ref offset, 4);
-        //  4      number of first sector in second big endian path table,
-        //           as a big endian double word, or zero if there is no
-        //           second big endian path table
-        FirstSectorSecond = buffer.GetUInt32(ref offset, 4);
-        // 34      root directory record, as described below
-        var rootDir = new byte[34];
-        Array.Copy(buffer, offset, rootDir, 0, 34);
-        DirectoryRecord = new DirectoryRecord(rootDir, 0, reader, null);
-        offset += 34;    // 4 big endian
+        (FirstSectorFirst, FirstSectorSecond, DirectoryRecord) = ReadPathTablesAndRoot(buffer, ref offset, reader);
         //128      volume set identifier
         VolumeSetIdentifier = buffer.GetString(ref offset, 128, encoding);
         //128      publisher identifier
@@ -93,6 +73,32 @@ public class VolumeDescription : IEnumerable<DirectoryRecord>, IDisposable
         //  1      0
         //512      reserved for application use (usually zeros)
         //653      zeros
+    }
+
+    private static (uint First, uint Second, DirectoryRecord Root) ReadPathTablesAndRoot(byte[] buffer, ref int offset, Stream reader)
+    {
+        //  4      number of first sector in first little endian path table,
+        //           as a little endian double word
+        var v1 = buffer.GetUInt32(ref offset, 4);
+        //offset += 4;   // padding
+        //  4      number of first sector in second little endian path table,
+        //           as a little endian double word, or zero if there is no
+        //           second little endian path table
+        var v2 = buffer.GetUInt32(ref offset, 4);
+        //offset += 4;   // padding
+        //  4      number of first sector in first big endian path table,
+        //           as a big endian double word
+        var first = buffer.GetUInt32(ref offset, 4);
+        //  4      number of first sector in second big endian path table,
+        //           as a big endian double word, or zero if there is no
+        //           second big endian path table
+        var second = buffer.GetUInt32(ref offset, 4);
+        // 34      root directory record, as described below
+        var rootDir = new byte[34];
+        Array.Copy(buffer, offset, rootDir, 0, 34);
+        var root = new DirectoryRecord(rootDir, 0, reader, null);
+        offset += 34;    // 4 big endian
+        return (first, second, root);
     }
 
     /// <summary>

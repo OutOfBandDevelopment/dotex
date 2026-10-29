@@ -59,11 +59,9 @@ public partial class FileRagEngineService : IHostedService
         if (string.IsNullOrWhiteSpace(_settings.Value.OutputPath)) throw new InvalidOperationException($"{nameof(_settings.Value.OutputPath)} is required.");
 #pragma warning restore CA2208 // Instantiate argument exceptions correctly
 
-        //app starts here
         var inputPath = Path.GetFullPath(_settings.Value.InputPath);
         var outputPath = Path.GetFullPath(_settings.Value.OutputPath);
 
-        // create a connection to ollama
         var client = GetProvider();
 
         // scan directories from application
@@ -86,13 +84,7 @@ public partial class FileRagEngineService : IHostedService
 
             var outFolder = Path.Combine(outputPath, realative);
 
-            var files = (from file in Directory.GetFiles(directory)
-                         let ext = Path.GetExtension(file).ToUpperInvariant() //TODO: do something smarter
-                         where !new[] {
-                             ".PDF", ".DLL", ".EXE", ".PNG", ".GIF", ".JPG", ".ZIP", ".GZ", ".EPUB", ".RTF", ".DOC", ".DOCX" ,
-                             ".V2", ".DACPAC", ".BACPAC", ".SCMP", ".BIN", ".SVG", ".ICO",
-                         }.Any(i => i == ext)
-                         select file).ToArray();
+            var files = ProcessableFiles(directory);
 
             if (files.Length == 0)
             {
@@ -112,56 +104,72 @@ public partial class FileRagEngineService : IHostedService
                 {
                     var realResponseFileContent = x == 0 ? responseFileContent : Path.ChangeExtension(responseFileContent, $".{x}" + Path.GetExtension(responseFileContent));
 
-                    try
-                    {
-                        var data = new
-                        {
-                            files = files.Skip(x).Take(length).Select(file => new { name = Path.GetFileName(file), content = File.ReadAllText(file) }).ToArray(),
-                        };
-
-                        // per folder generate a prompt using handlebars
-                        LogGeneratePrompt(directory);
-
-                        using var promptStream = new MemoryStream();
-                        var templateContext = await _engine.ApplyAsync(_settings.Value.Template, data, promptStream);
-                        promptStream.Position = 0;
-                        var promptReader = new StreamReader(promptStream);
-
-                        if (_settings.Value.IncludePrompt)
-                        {
-                            var realPromptFile = x == 0 ? promptFile : Path.ChangeExtension(promptFile, $".{x}" + Path.GetExtension(promptFile));
-                            await File.WriteAllBytesAsync(realPromptFile, promptStream.ToArray(), cancellationToken);
-                        }
-
-                        // post prompt to ollama
-                        LogRequestCompletion(directory);
-                        var response = await client.GetCompletionAsync(new() { Prompt = promptReader.ReadToEnd() });
-
-                        // capture response from ollama
-                        LogWriteFiles(directory);
-                        await File.WriteAllTextAsync(realResponseFileContent, response.Response, cancellationToken);
-
-                        if (_settings.Value.IncludeRawOutput)
-                        {
-                            using var responseStream = File.Create(responseFile);
-                            await JsonSerializer.SerializeAsync(responseStream, response, cancellationToken: cancellationToken);
-                            await responseStream.FlushAsync(cancellationToken);
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        LogFailed(directory, x, ex.Message);
-                        LogException(ex);
-
-                        var errorFile = Path.ChangeExtension(realResponseFileContent, ".error" + Path.GetExtension(responseFileContent));
-                        await File.WriteAllTextAsync(errorFile, ex.ToString(), cancellationToken);
-                        exceptions.Add(ex);
-                    }
+                    if (await GenerateChunkAsync(client, directory, files, x, length, realResponseFileContent, responseFileContent, promptFile, responseFile, cancellationToken) is { } failure)
+                        exceptions.Add(failure);
                 }
             }
         }
         if (exceptions.Count > 0)
             throw new AggregateException(exceptions);
+    }
+
+    private static string[] ProcessableFiles(string directory) =>
+        (from file in Directory.GetFiles(directory)
+            let ext = Path.GetExtension(file).ToUpperInvariant() //TODO: do something smarter
+            where !new[] {
+                ".PDF", ".DLL", ".EXE", ".PNG", ".GIF", ".JPG", ".ZIP", ".GZ", ".EPUB", ".RTF", ".DOC", ".DOCX" ,
+                ".V2", ".DACPAC", ".BACPAC", ".SCMP", ".BIN", ".SVG", ".ICO",
+            }.Any(i => i == ext)
+            select file).ToArray();
+
+    private async Task<Exception?> GenerateChunkAsync(IMessageCompletion client, string directory, string[] files, int x, int length, string realResponseFileContent, string responseFileContent, string promptFile, string responseFile, CancellationToken cancellationToken)
+    {
+        try
+        {
+            var data = new
+            {
+                files = files.Skip(x).Take(length).Select(file => new { name = Path.GetFileName(file), content = File.ReadAllText(file) }).ToArray(),
+            };
+
+            // per folder generate a prompt using handlebars
+            LogGeneratePrompt(directory);
+
+            using var promptStream = new MemoryStream();
+            var templateContext = await _engine.ApplyAsync(_settings.Value.Template, data, promptStream);
+            promptStream.Position = 0;
+            var promptReader = new StreamReader(promptStream);
+
+            if (_settings.Value.IncludePrompt)
+            {
+                var realPromptFile = x == 0 ? promptFile : Path.ChangeExtension(promptFile, $".{x}" + Path.GetExtension(promptFile));
+                await File.WriteAllBytesAsync(realPromptFile, promptStream.ToArray(), cancellationToken);
+            }
+
+            // post prompt to ollama
+            LogRequestCompletion(directory);
+            var response = await client.GetCompletionAsync(new() { Prompt = promptReader.ReadToEnd() });
+
+            // capture response from ollama
+            LogWriteFiles(directory);
+            await File.WriteAllTextAsync(realResponseFileContent, response.Response, cancellationToken);
+
+            if (_settings.Value.IncludeRawOutput)
+            {
+                using var responseStream = File.Create(responseFile);
+                await JsonSerializer.SerializeAsync(responseStream, response, cancellationToken: cancellationToken);
+                await responseStream.FlushAsync(cancellationToken);
+            }
+        }
+        catch (Exception ex)
+        {
+            LogFailed(directory, x, ex.Message);
+            LogException(ex);
+
+            var errorFile = Path.ChangeExtension(realResponseFileContent, ".error" + Path.GetExtension(responseFileContent));
+            await File.WriteAllTextAsync(errorFile, ex.ToString(), cancellationToken);
+            return ex;
+        }
+        return null;
     }
 
     /// <summary>

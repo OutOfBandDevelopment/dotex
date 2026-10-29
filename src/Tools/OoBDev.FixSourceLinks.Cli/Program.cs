@@ -42,70 +42,80 @@ internal sealed class Program
         if (!files.Any())
         {
             Console.WriteLine($"No Matches!");
-            foreach (var item in Directory.EnumerateDirectories(search))
-            {
-                Console.WriteLine($"directory: {item}");
-            }
-            foreach (var item in Directory.EnumerateFiles(search))
-            {
-                Console.WriteLine($"file: {item}");
-            }
+            ListContents(search);
         }
         else
         {
             foreach (var file in files)
             {
-                Console.WriteLine(file);
-                try
+                FixFile(file, target);
+            }
+        }
+    }
+
+    private static void ListContents(string search)
+    {
+        foreach (var item in Directory.EnumerateDirectories(search))
+        {
+            Console.WriteLine($"directory: {item}");
+        }
+        foreach (var item in Directory.EnumerateFiles(search))
+        {
+            Console.WriteLine($"file: {item}");
+        }
+    }
+
+    private static void FixFile(string file, string target)
+    {
+        Console.WriteLine(file);
+        try
+        {
+            var xml = XDocument.Load(file);
+
+            var attributes = (
+                from element in xml.Descendants()
+                let attribute = element.Attribute("filename")
+                where attribute != null
+                let existingPath = attribute?.Value
+                where !string.IsNullOrWhiteSpace(existingPath)
+                where existingPath.StartsWith("https://", StringComparison.OrdinalIgnoreCase)
+                let uri = existingPath == null ? null : new Uri(existingPath)
+                where !string.IsNullOrWhiteSpace(uri.Query)
+                let path = uri == null ? null : HttpUtility.ParseQueryString(uri.Query)?["path"]?.TrimStart('/', '\\')
+                where !string.IsNullOrWhiteSpace(path)
+                let resultPath = path == null ? null : Path.GetFullPath(Path.Combine(target, path))
+                select new
                 {
-                    var xml = XDocument.Load(file);
-
-                    var attributes = (
-                        from element in xml.Descendants()
-                        let attribute = element.Attribute("filename")
-                        where attribute != null
-                        let existingPath = attribute?.Value
-                        where !string.IsNullOrWhiteSpace(existingPath)
-                        where existingPath.StartsWith("https://", StringComparison.OrdinalIgnoreCase)
-                        let uri = existingPath == null ? null : new Uri(existingPath)
-                        where !string.IsNullOrWhiteSpace(uri.Query)
-                        let path = uri == null ? null : HttpUtility.ParseQueryString(uri.Query)?["path"]?.TrimStart('/', '\\')
-                        where !string.IsNullOrWhiteSpace(path)
-                        let resultPath = path == null ? null : Path.GetFullPath(Path.Combine(target, path))
-                        select new
-                        {
-                            attribute,
-                            existingPath,
-                            uri,
-                            path,
-                            resultPath,
-                        }
-                    ).ToList();
-
-                    var changes = false;
-                    foreach (var item in attributes)
-                    {
-                        if (item.attribute != null && item.resultPath != null)
-                        {
-                            changes = true;
-                            Console.WriteLine($"\tValue: \"{item.attribute.Value}\" to  \"{item.resultPath}\"");
-                            item.attribute.Value = item.resultPath;
-                        }
-                        else
-                        {
-                            Console.WriteLine($"\tMissing: \"{item.attribute?.Value}\" to  \"{item.resultPath}\"");
-                        }
-                    }
-
-                    if (changes)
-                        xml.Save(file);
+                    attribute,
+                    existingPath,
+                    uri,
+                    path,
+                    resultPath,
                 }
-                catch (Exception ex)
+            ).ToList();
+
+            var changes = false;
+            foreach (var item in attributes)
+            {
+                if (item.attribute != null && item.resultPath != null)
                 {
-                    Console.Error.WriteLine(ex.Message);
-                    Console.Error.WriteLine(ex.ToString());
+                    changes = true;
+                    Console.WriteLine($"\tValue: \"{item.attribute.Value}\" to  \"{item.resultPath}\"");
+                    item.attribute.Value = item.resultPath;
+                }
+                else
+                {
+                    Console.WriteLine($"\tMissing: \"{item.attribute?.Value}\" to  \"{item.resultPath}\"");
                 }
             }
+
+            if (changes)
+                xml.Save(file);
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine(ex.Message);
+            Console.Error.WriteLine(ex.ToString());
         }
     }
 }

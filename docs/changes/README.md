@@ -442,3 +442,4 @@ Each change document should include:
 - [NMEA 0183](devices-nmea-core-2026-10-28.md) - sentence segmenter, decoder, typed GGA/RMC/GSA/GSV/VTG; BT-20 Hardware test ported, not yet run on the receiver (2026-10-28)
 - [SCPI instrument control](devices-scpi-core-2026-10-28.md) - profile model and catalog (nine bundled profiles), command builder, reply segmenter and codecs; no instrument tested yet (2026-10-28)
 - [Z-Wave id tables](devices-zwave-id-tables-2026-10-28.md) - embedded manufacturer, product, command class and device class names (2026-10-28)
+- [Method length rule](quality-method-length-2026-10-29.md) - MA0051 is a warning; 26 long methods split, one sample suppressed (2026-10-29)

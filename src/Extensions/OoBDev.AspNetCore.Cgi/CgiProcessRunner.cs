@@ -119,36 +119,13 @@ public sealed partial class CgiProcessRunner : ICgiProcessRunner, IDisposable
             Stream stdout = process.StandardOutput.BaseStream;
             var (head, leftover) = await ReadHeadAsync(stdout, linked.Token).ConfigureAwait(false);
             if (head is null)
-            {
-                await process.WaitForExitAsync(CancellationToken.None).ConfigureAwait(false);
-                if (process.ExitCode != 0)
-                    throw new CgiProcessFailedException($"The program exited with code {process.ExitCode.ToString(CultureInfo.InvariantCulture)} and wrote nothing.");
-                throw new CgiProtocolException("The program wrote no header block.");
-            }
+                await ThrowNoHeaderAsync(process).ConfigureAwait(false);
 
             var (status, headers) = ParseHead(head, request.Script.ScriptName);
             var body = new PrefixedStream(leftover, stdout);
 
             handedOver = true;
-            return new CgiResult(status, headers, body, async () =>
-            {
-                try
-                {
-                    Kill(started);
-                    await Task.WhenAll(stderr, stdin).ConfigureAwait(false);
-                }
-                catch (IOException)
-                {
-                    // the pipe closed because the process was killed
-                }
-                finally
-                {
-                    started.Dispose();
-                    linked.Dispose();
-                    timeout.Dispose();
-                    _slots.Release();
-                }
-            });
+            return new CgiResult(status, headers, body, () => new ValueTask(CompleteAsync(started, stderr, stdin, linked, timeout)));
         }
         catch (OperationCanceledException) when (timeout.IsCancellationRequested)
         {
@@ -167,6 +144,34 @@ public sealed partial class CgiProcessRunner : ICgiProcessRunner, IDisposable
                 timeout.Dispose();
                 _slots.Release();
             }
+        }
+    }
+
+    private static async Task ThrowNoHeaderAsync(Process process)
+    {
+        await process.WaitForExitAsync(CancellationToken.None).ConfigureAwait(false);
+        if (process.ExitCode != 0)
+            throw new CgiProcessFailedException($"The program exited with code {process.ExitCode.ToString(CultureInfo.InvariantCulture)} and wrote nothing.");
+        throw new CgiProtocolException("The program wrote no header block.");
+    }
+
+    private async Task CompleteAsync(Process started, Task stderr, Task stdin, CancellationTokenSource linked, CancellationTokenSource timeout)
+    {
+        try
+        {
+            Kill(started);
+            await Task.WhenAll(stderr, stdin).ConfigureAwait(false);
+        }
+        catch (IOException)
+        {
+            // the pipe closed because the process was killed
+        }
+        finally
+        {
+            started.Dispose();
+            linked.Dispose();
+            timeout.Dispose();
+            _slots.Release();
         }
     }
 

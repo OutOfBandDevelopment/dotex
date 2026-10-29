@@ -55,61 +55,68 @@ public static class ObjectXmlExtensions
         {
             ret.Add(input);
         }
-        else
+        else if (!AddComplexContent(ret, input, type, elementName))
         {
-            if (input is MemoryStream ms)
-            {
-                input = ms.ToArray();
-            }
-            if (input is Stream stream)
-            {
-                using var newMs = new MemoryStream();
-                stream.CopyTo(newMs);
-                input = newMs.ToArray();
-            }
-
-            var enumerable = input as IEnumerable;
-
-            if (enumerable != null)
-            {
-                if (input is IEnumerable<char> || input is char[])
-                {
-                    input = new string([.. enumerable.Cast<char>()]);
-                }
-                else if (input is IEnumerable<byte> || input is byte[])
-                {
-                    input = Convert.ToBase64String(enumerable.Cast<byte>().ToArray());
-                }
-            }
-            if (input is string) // ensure strings are written as text 
-            {
-                ret.Add(input);
-            }
-            else if (enumerable != null)
-            {
-                var itemName = enumerable.GetXmlItemName(elementName);
-
-                var elements = from item in enumerable.Cast<object>()
-                               where item != null
-                               let itemType = item.GetType()
-                               select ReflectObjectXml(item, itemName);
-
-                ret.Add(elements);
-                if (!ret.HasElements)
-                    return null;
-            }
-            else
-            {
-                var props = type.GetProperties();
-                var elements = from prop in props
-                               let value = ReflectPropertyXml(prop, input, elementName)
-                               where value != null
-                               select value;
-
-                ret.Add(elements);
-            }
+            return null;
         }
 
         return ret;
+    }
+
+    private static bool AddComplexContent(XElement ret, object input, Type type, XName elementName)
+    {
+        if (input is MemoryStream ms)
+        {
+            input = ms.ToArray();
+        }
+        if (input is Stream stream)
+        {
+            using var newMs = new MemoryStream();
+            stream.CopyTo(newMs);
+            input = newMs.ToArray();
+        }
+
+        var enumerable = input as IEnumerable;
+
+        if (enumerable != null)
+        {
+            if (input is IEnumerable<char> || input is char[])
+            {
+                input = new string([.. enumerable.Cast<char>()]);
+            }
+            else if (input is IEnumerable<byte> || input is byte[])
+            {
+                input = Convert.ToBase64String(enumerable.Cast<byte>().ToArray());
+            }
+        }
+        if (input is string) // ensure strings are written as text 
+        {
+            ret.Add(input);
+        }
+        else if (enumerable != null)
+        {
+            var itemName = enumerable.GetXmlItemName(elementName);
+
+            var elements = from item in enumerable.Cast<object>()
+                           where item != null
+                           let itemType = item.GetType()
+                           select ReflectObjectXml(item, itemName);
+
+            ret.Add(elements);
+            if (!ret.HasElements)
+                return false;
+        }
+        else
+        {
+            var props = type.GetProperties();
+            var elements = from prop in props
+                           let value = ReflectPropertyXml(prop, input, elementName)
+                           where value != null
+                           select value;
+
+            ret.Add(elements);
+        }
+
+        return true;
     }
 }

@@ -62,31 +62,7 @@ public partial class EmbeddingSentenceTransformerQueueReader : IEmbeddingSentenc
             var transaction = await connection.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
             try
             {
-                using var receiver = connection.CreateCommand();
-                receiver.Transaction = transaction;
-                receiver.CommandText = @"
-	WAITFOR (
-			RECEIVE TOP (@maxRead)
-				 conversation_group_id
-				,conversation_handle
-				,message_type_name
-				,CAST(message_body AS XML) AS [message_body_xml]
-				FROM [embedding].[oobdev://embedding/sentence-transformer/queue]
-		), TIMEOUT @timeout;";
-
-                var maxRead = receiver.CreateParameter();
-                maxRead.ParameterName = "@maxRead";
-                maxRead.DbType = DbType.Int32;
-                maxRead.Value = _options.Value.MaximumReadLength;
-                maxRead.Direction = ParameterDirection.Input;
-                receiver.Parameters.Add(maxRead);
-
-                var timeout = receiver.CreateParameter();
-                timeout.ParameterName = "@timeout";
-                timeout.DbType = DbType.Int32;
-                timeout.Value = _options.Value.ReadWaitTimeout.TotalMilliseconds;
-                timeout.Direction = ParameterDirection.Input;
-                receiver.Parameters.Add(timeout);
+                using var receiver = BuildReceiver(connection, transaction);
 
                 var commands = new List<DbCommand>();
                 using (var reader = await receiver.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false))
@@ -104,65 +80,13 @@ public partial class EmbeddingSentenceTransformerQueueReader : IEmbeddingSentenc
 
                         if (messageType == "oobdev://embedding/sentence-transformer/request" && messageBodyXml != null)
                         {
-                            // oobdev://embedding/sentence-transformer
-                            // ﻿<st:request xmlns:st="oobdev://embedding/sentence-transformer/request" id="1" value="gsdgs" tableName="[dbo].[Names]"/>
+                            var response = await BuildResponseAsync(messageBodyXml, cancellationToken).ConfigureAwait(false);
 
-                            XNamespace st = "oobdev://embedding/sentence-transformer/request";
-                            var xml = XElement.Parse(messageBodyXml);
-
-                            var id = (long?)xml.Attribute("id");
-                            var value = (string?)xml.Attribute("value");
-                            var tableName = (string?)xml.Attribute("tableName");
-
-                            var embedding = string.IsNullOrWhiteSpace(value) ? null : await _embedding.GenerateEmbeddingAsync(value, default, cancellationToken).ConfigureAwait(false);
-                            var json = _json.Serialize(embedding.ToArray());
-
-                            XNamespace sr = "oobdev://embedding/sentence-transformer/response";
-                            var response = new XElement(
-                                sr + "response",
-                                id.HasValue ? new XAttribute("id", id) : null,
-                                !string.IsNullOrWhiteSpace(value) ? new XAttribute("value", value) : null,
-                                !string.IsNullOrWhiteSpace(tableName) ? new XAttribute("tableName", tableName) : null,
-                                !string.IsNullOrWhiteSpace(json) ? new XAttribute("embedding", json) : null
-                            );
-
-                            var send = connection.CreateCommand();
-                            send.Transaction = transaction;
-                            send.CommandText = @"
-	SEND ON CONVERSATION @conversationHandle
-		MESSAGE TYPE [oobdev://embedding/sentence-transformer/response]
-		(@message);";
-
-                            var conversationHandleSend = receiver.CreateParameter();
-                            conversationHandleSend.ParameterName = "@conversationHandle";
-                            conversationHandleSend.DbType = DbType.Guid;
-                            conversationHandleSend.Value = conversationHandle;
-                            conversationHandleSend.Direction = ParameterDirection.Input;
-                            send.Parameters.Add(conversationHandleSend);
-
-                            var message = receiver.CreateParameter();
-                            message.ParameterName = "@message";
-                            message.DbType = DbType.String;
-                            message.Value = response.ToString();
-                            message.Direction = ParameterDirection.Input;
-                            send.Parameters.Add(message);
-
-                            commands.Add(send);
+                            commands.Add(BuildSend(connection, transaction, conversationHandle, response.ToString()));
                         }
                         else if (messageType == "http://schemas.microsoft.com/SQL/ServiceBroker/EndDialog")
                         {
-                            var end = connection.CreateCommand();
-                            end.Transaction = transaction;
-                            end.CommandText = "END CONVERSATION @conversationHandle;";
-
-                            var conversationHandleSend = receiver.CreateParameter();
-                            conversationHandleSend.ParameterName = "@conversationHandle";
-                            conversationHandleSend.DbType = DbType.Guid;
-                            conversationHandleSend.Value = conversationHandle;
-                            conversationHandleSend.Direction = ParameterDirection.Input;
-                            end.Parameters.Add(conversationHandleSend);
-
-                            commands.Add(end);
+                            commands.Add(BuildEnd(connection, transaction, conversationHandle));
                         }
                         else
                         {
@@ -171,9 +95,7 @@ public partial class EmbeddingSentenceTransformerQueueReader : IEmbeddingSentenc
                     }
 
                     if (!read)
-                    {
                         LogTimeout();
-                    }
                 }
 
                 foreach (var command in commands)
@@ -190,6 +112,83 @@ public partial class EmbeddingSentenceTransformerQueueReader : IEmbeddingSentenc
                 await Task.Delay((int)_options.Value.ReadWaitTimeout.TotalMilliseconds, cancellationToken).ConfigureAwait(false); 
             }
         }
+    }
+
+    private DbCommand BuildReceiver(DbConnection connection, DbTransaction transaction)
+    {
+        var receiver = connection.CreateCommand();
+        receiver.Transaction = transaction;
+        receiver.CommandText = @"
+	WAITFOR (
+			RECEIVE TOP (@maxRead)
+				 conversation_group_id
+				,conversation_handle
+				,message_type_name
+				,CAST(message_body AS XML) AS [message_body_xml]
+				FROM [embedding].[oobdev://embedding/sentence-transformer/queue]
+		), TIMEOUT @timeout;";
+
+        AddParameter(receiver, "@maxRead", DbType.Int32, _options.Value.MaximumReadLength);
+        AddParameter(receiver, "@timeout", DbType.Int32, _options.Value.ReadWaitTimeout.TotalMilliseconds);
+        return receiver;
+    }
+
+    private async Task<XElement> BuildResponseAsync(string messageBodyXml, CancellationToken cancellationToken)
+    {
+        // oobdev://embedding/sentence-transformer
+        // ﻿<st:request xmlns:st="oobdev://embedding/sentence-transformer/request" id="1" value="gsdgs" tableName="[dbo].[Names]"/>
+
+        XNamespace st = "oobdev://embedding/sentence-transformer/request";
+        var xml = XElement.Parse(messageBodyXml);
+
+        var id = (long?)xml.Attribute("id");
+        var value = (string?)xml.Attribute("value");
+        var tableName = (string?)xml.Attribute("tableName");
+
+        var embedding = string.IsNullOrWhiteSpace(value) ? null : await _embedding.GenerateEmbeddingAsync(value, default, cancellationToken).ConfigureAwait(false);
+        var json = _json.Serialize(embedding.ToArray());
+
+        XNamespace sr = "oobdev://embedding/sentence-transformer/response";
+        var response = new XElement(
+            sr + "response",
+            id.HasValue ? new XAttribute("id", id) : null,
+            !string.IsNullOrWhiteSpace(value) ? new XAttribute("value", value) : null,
+            !string.IsNullOrWhiteSpace(tableName) ? new XAttribute("tableName", tableName) : null,
+            !string.IsNullOrWhiteSpace(json) ? new XAttribute("embedding", json) : null
+        );
+        return response;
+    }
+
+    private static void AddParameter(DbCommand command, string name, DbType type, object value)
+    {
+        var parameter = command.CreateParameter();
+        parameter.ParameterName = name;
+        parameter.DbType = type;
+        parameter.Value = value;
+        parameter.Direction = ParameterDirection.Input;
+        command.Parameters.Add(parameter);
+    }
+
+    private static DbCommand BuildSend(DbConnection connection, DbTransaction transaction, Guid conversationHandle, string message)
+    {
+        var send = connection.CreateCommand();
+        send.Transaction = transaction;
+        send.CommandText = @"
+	SEND ON CONVERSATION @conversationHandle
+		MESSAGE TYPE [oobdev://embedding/sentence-transformer/response]
+		(@message);";
+        AddParameter(send, "@conversationHandle", DbType.Guid, conversationHandle);
+        AddParameter(send, "@message", DbType.String, message);
+        return send;
+    }
+
+    private static DbCommand BuildEnd(DbConnection connection, DbTransaction transaction, Guid conversationHandle)
+    {
+        var end = connection.CreateCommand();
+        end.Transaction = transaction;
+        end.CommandText = "END CONVERSATION @conversationHandle;";
+        AddParameter(end, "@conversationHandle", DbType.Guid, conversationHandle);
+        return end;
     }
 
     [LoggerMessage(EventId = 1, Level = LogLevel.Information, Message = "{conversationHandle}: {messageType}")]

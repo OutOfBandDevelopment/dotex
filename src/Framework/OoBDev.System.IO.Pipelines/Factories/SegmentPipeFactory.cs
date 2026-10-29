@@ -1,6 +1,7 @@
 ﻿using OoBDev.System.IO.Pipelines.Definitions;
 using OoBDev.System.IO.Segmenters;
 using System;
+using System.Buffers;
 using System.Threading.Tasks;
 
 namespace OoBDev.System.IO.Pipelines.Factories;
@@ -25,19 +26,7 @@ internal sealed class SegmentPipeFactory
             {
                 var buffer = result.Buffer;
 
-                while (!context.cancellationToken.IsCancellationRequested)
-                {
-                    var read = await segmenter.TryReadAsync(buffer).ConfigureAwait(false);
-                    buffer = read.RemainingData;
-                    if (read.Status == SegmentationStatus.Incomplete)
-                    {
-                        break;
-                    }
-                    else if (read.Status == SegmentationStatus.Invalid)
-                    {
-                        throw new InvalidSegmentationException();
-                    }
-                }
+                buffer = await ReadSegmentsAsync(segmenter, buffer, context.cancellationToken).ConfigureAwait(false);
 
                 // Tell the PipeReader how much of the buffer we have consumed
                 context.pipeline.AdvanceTo(buffer.Start, buffer.End);
@@ -71,5 +60,24 @@ internal sealed class SegmentPipeFactory
 
         //Mark the PipeReader as complete
         context.pipeline.Complete();
+    }
+
+    private static async Task<ReadOnlySequence<byte>> ReadSegmentsAsync(ISegmenter segmenter, ReadOnlySequence<byte> buffer, global::System.Threading.CancellationToken cancellationToken)
+    {
+        while (!cancellationToken.IsCancellationRequested)
+        {
+            var read = await segmenter.TryReadAsync(buffer).ConfigureAwait(false);
+            buffer = read.RemainingData;
+            if (read.Status == SegmentationStatus.Incomplete)
+            {
+                break;
+            }
+            else if (read.Status == SegmentationStatus.Invalid)
+            {
+                throw new InvalidSegmentationException();
+            }
+        }
+
+        return buffer;
     }
 }

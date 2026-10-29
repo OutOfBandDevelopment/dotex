@@ -104,107 +104,115 @@ public class ExtensibleElementNode<T> : IElementNode, ISimpleNode
         _namespacesSelector = namespacesSelector;
         _preserveWhitespace = preserveWhitespace;
 
-        _value = new Lazy<INode?>(() =>
-            _valueSelector?.Invoke(_item) switch
-            {
-                null => (INode?)null,
-                string value => string.IsNullOrWhiteSpace(value) switch
-                {
-                    true => new ExtensibleWhitespaceNode<T>(this, Name, _item, value),
-                    false => (_preserveWhitespace?.Invoke(_item) ?? false) switch
-                    {
-                        true => new ExtensibleSignificantWhitespaceNode<T>(this, Name, _item, value),
-                        false => new ExtensibleTextNode<T>(this, Name, _item, value)
-                    }
-                },
-            });
+        _value = new Lazy<INode?>(CreateValue);
 
-        _attributes = new Lazy<IAttributeNode?>(() =>
+        _attributes = new Lazy<IAttributeNode?>(CreateAttributes);
+
+        _children = new Lazy<INode?>(CreateChildren);
+
+        _namespaces = new Lazy<INamespaceNode?>(CreateNamespaces);
+    }
+
+    private INode? CreateValue() =>
+        _valueSelector?.Invoke(_item) switch
         {
-            var query = (_attributeSelector?.Invoke(_item) ?? []).GetEnumerator();
-            IAttributeNode? first = null;
-            IAttributeNode? previous = null;
-
-            while (query.MoveNext())
+            null => (INode?)null,
+            string value => string.IsNullOrWhiteSpace(value) switch
             {
-                if (query.Current.value == null) continue;
-
-                var newItem = new ExtensibleAttributeNode<T>(
-                    this,
-                    query.Current.name,
-                    _item,
-                    query.Current.value
-                    )
+                true => new ExtensibleWhitespaceNode<T>(this, Name, _item, value),
+                false => (_preserveWhitespace?.Invoke(_item) ?? false) switch
                 {
-                    Previous = previous,
-                };
-                if (previous is ExtensibleAttributeNode<T> node) node.Next = newItem;
-                first ??= newItem;
-                previous = newItem;
-            }
+                    true => new ExtensibleSignificantWhitespaceNode<T>(this, Name, _item, value),
+                    false => new ExtensibleTextNode<T>(this, Name, _item, value)
+                }
+            },
+        };
 
-            return first;
-        });
+    private IAttributeNode? CreateAttributes()
+    {
+        var query = (_attributeSelector?.Invoke(_item) ?? []).GetEnumerator();
+        IAttributeNode? first = null;
+        IAttributeNode? previous = null;
 
-        _children = new Lazy<INode?>(() =>
+        while (query.MoveNext())
         {
-            var query = (_childSelector?.Invoke(_item) ?? []).GetEnumerator();
-            INode? first = null;
-            INode? previous = null;
+            if (query.Current.value == null) continue;
 
-            while (query.MoveNext())
+            var newItem = new ExtensibleAttributeNode<T>(
+                this,
+                query.Current.name,
+                _item,
+                query.Current.value
+                )
             {
-                if (query.Current.child == null) continue;
-                var newItem = new ExtensibleElementNode<T>(
-                    this,
-                    query.Current.name,
-                    query.Current.child,
-                    _valueSelector,
-                    _attributeSelector,
-                    _childSelector,
-                    _namespacesSelector
-                    )
-                {
-                    Previous = previous,
-                };
-                // Console.WriteLine($"\t\t==={newItem.Name} +++ {newItem.NodeType}");
-                if (previous is ISimpleNode node) node.Next = newItem;
-                first ??= newItem;
-                previous = newItem;
-            }
+                Previous = previous,
+            };
+            if (previous is ExtensibleAttributeNode<T> node) node.Next = newItem;
+            first ??= newItem;
+            previous = newItem;
+        }
 
-            if (_value.Value is ISimpleNode next && previous is ISimpleNode last)
-            {
-                last.Next = next;
-                next.Previous = last;
-            }
+        return first;
+    }
 
-            return first ?? _value.Value;
-        });
+    private INode? CreateChildren()
+    {
+        var query = (_childSelector?.Invoke(_item) ?? []).GetEnumerator();
+        INode? first = null;
+        INode? previous = null;
 
-        _namespaces = new Lazy<INamespaceNode?>(() =>
+        while (query.MoveNext())
         {
-            var query = (_namespacesSelector?.Invoke(_item) ?? []).GetEnumerator();
-            INamespaceNode? first = null;
-            INamespaceNode? previous = null;
-
-            while (query.MoveNext())
+            if (query.Current.child == null) continue;
+            var newItem = new ExtensibleElementNode<T>(
+                this,
+                query.Current.name,
+                query.Current.child,
+                _valueSelector,
+                _attributeSelector,
+                _childSelector,
+                _namespacesSelector
+                )
             {
-                var newItem = new ExtensibleNamespaceNode<T>(
-                    this,
-                    query.Current,
-                    _item
-                    )
-                {
-                    Previous = previous,
-                };
-                if (previous is ExtensibleNamespaceNode<T> node) node.Next = newItem;
-                first ??= newItem;
-                previous = newItem;
-            }
+                Previous = previous,
+            };
+            // Console.WriteLine($"\t\t==={newItem.Name} +++ {newItem.NodeType}");
+            if (previous is ISimpleNode node) node.Next = newItem;
+            first ??= newItem;
+            previous = newItem;
+        }
 
-            return first;
-        });
+        if (_value.Value is ISimpleNode next && previous is ISimpleNode last)
+        {
+            last.Next = next;
+            next.Previous = last;
+        }
+
+        return first ?? _value.Value;
+    }
+
+    private INamespaceNode? CreateNamespaces()
+    {
+        var query = (_namespacesSelector?.Invoke(_item) ?? []).GetEnumerator();
+        INamespaceNode? first = null;
+        INamespaceNode? previous = null;
+
+        while (query.MoveNext())
+        {
+            var newItem = new ExtensibleNamespaceNode<T>(
+                this,
+                query.Current,
+                _item
+                )
+            {
+                Previous = previous,
+            };
+            if (previous is ExtensibleNamespaceNode<T> node) node.Next = newItem;
+            first ??= newItem;
+            previous = newItem;
+        }
+
+        return first;
     }
 
     /// <summary>

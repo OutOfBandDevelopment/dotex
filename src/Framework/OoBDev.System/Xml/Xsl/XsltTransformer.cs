@@ -76,30 +76,9 @@ public class XsltTransformer(string sandbox, params object[] extensions) : IXslt
         output = PathEx.FixUpPath(output) ?? output;
         var sandboxPath = PathEx.FixUpPath(_sandbox);
 
-        var xsltArgumentList = new XsltArgumentList().AddExtensions(extensions);
+        var xsltArgumentList = BuildArguments(template, inputSource, input, output, sandboxPath);
 
-        xsltArgumentList.XsltMessageEncountered += (sender, eventArgs) => Console.WriteLine($"\t\t[{Environment.CurrentManagedThreadId}]{eventArgs.Message}");
-
-        XNamespace ns = this.GetXmlNamespace();
-        xsltArgumentList.AddParam("files", "", new XElement(ns + "file",
-            new XAttribute(nameof(template), Path.GetFullPath(template)),
-            new XAttribute(nameof(input), Path.GetFullPath(inputSource)),
-            new XAttribute(nameof(input) + "Type", input.GetType().AssemblyQualifiedName ?? "UNKNOWN"),
-            new XAttribute(nameof(output), Path.GetFullPath(output)),
-            new XAttribute(nameof(output) + "Path", Path.GetDirectoryName(Path.GetFullPath(output)) ?? "."),
-            new XAttribute("sandbox", Path.GetFullPath(sandboxPath ?? "."))
-            ).ToXPathNavigable().CreateNavigator() ?? throw new NotSupportedException());
-
-        var xslt = new XslCompiledTransform(false);
-        using var xmlreader = XmlReader.Create(template, new XmlReaderSettings
-        {
-            DtdProcessing = DtdProcessing.Parse,
-            ConformanceLevel = ConformanceLevel.Document,
-            NameTable = new NameTable(),
-        });
-        var xsltSettings = new XsltSettings(false, false);
-
-        xslt.Load(xmlreader, xsltSettings, null);
+        var xslt = Compile(template);
 
         var outputDir = Path.GetDirectoryName(output) ?? throw new NotSupportedException($"{nameof(output)} not set");
         if (!Directory.Exists(outputDir))
@@ -130,6 +109,63 @@ public class XsltTransformer(string sandbox, params object[] extensions) : IXslt
         {
             Environment.CurrentDirectory = currentDirectory;
         }
+    }
+
+    private static Exception innerMost(Exception ex) => ex.InnerException == null ? ex : innerMost(ex.InnerException);
+
+    private XsltArgumentList BuildArguments(string template, string inputSource, IXPathNavigable input, string output, string? sandboxPath)
+    {
+        var xsltArgumentList = new XsltArgumentList().AddExtensions(extensions);
+
+        xsltArgumentList.XsltMessageEncountered += (sender, eventArgs) => Console.WriteLine($"\t\t[{Environment.CurrentManagedThreadId}]{eventArgs.Message}");
+
+        XNamespace ns = this.GetXmlNamespace();
+        xsltArgumentList.AddParam("files", "", new XElement(ns + "file",
+            new XAttribute(nameof(template), Path.GetFullPath(template)),
+            new XAttribute(nameof(input), Path.GetFullPath(inputSource)),
+            new XAttribute(nameof(input) + "Type", input.GetType().AssemblyQualifiedName ?? "UNKNOWN"),
+            new XAttribute(nameof(output), Path.GetFullPath(output)),
+            new XAttribute(nameof(output) + "Path", Path.GetDirectoryName(Path.GetFullPath(output)) ?? "."),
+            new XAttribute("sandbox", Path.GetFullPath(sandboxPath ?? "."))
+            ).ToXPathNavigable().CreateNavigator() ?? throw new NotSupportedException());
+        return xsltArgumentList;
+    }
+
+    private static XslCompiledTransform Compile(string template)
+    {
+        var xslt = new XslCompiledTransform(false);
+        using var xmlreader = XmlReader.Create(template, new XmlReaderSettings
+        {
+            DtdProcessing = DtdProcessing.Parse,
+            ConformanceLevel = ConformanceLevel.Document,
+            NameTable = new NameTable(),
+        });
+        var xsltSettings = new XsltSettings(false, false);
+
+        xslt.Load(xmlreader, xsltSettings, null);
+        return xslt;
+    }
+
+    private static Exception LogFailure(Exception ex, int tid, string inputFileClean, string outFileName, string outputFile)
+    {
+        var rex = innerMost(ex);
+        Console.Error.WriteLine($"!!! ERROR[{tid}]: \"{inputFileClean}\" => \"{outFileName}\" :: {rex.Message}");
+        try
+        {
+            File.AppendAllLines(outputFile,
+            [
+                "",
+                new string('=', 60),
+               $"!!! ERROR !!!: {ex.Message}",
+                new string('=', 60),
+                ex.ToString()
+            ]);
+        }
+        catch
+        {
+            // Eat and errors!
+        }
+        return rex;
     }
 
     /// <summary>
@@ -165,8 +201,6 @@ public class XsltTransformer(string sandbox, params object[] extensions) : IXslt
         if (!inputFiles.Any())
             throw new FileNotFoundException($"File Not Found Exception: input");
 
-        static Exception innerMost(Exception ex) => ex.InnerException == null ? ex : innerMost(ex.InnerException);
-
         var errors = new List<Exception>();
 #if PARALLEL
         inputFiles.AsParallel().ForAll(inputFile =>
@@ -190,24 +224,7 @@ public class XsltTransformer(string sandbox, params object[] extensions) : IXslt
             }
             catch (Exception ex)
             {
-                var rex = innerMost(ex);
-                errors.Add(rex);
-                Console.Error.WriteLine($"!!! ERROR[{tid}]: \"{inputFileClean}\" => \"{outFileName}\" :: {rex.Message}");
-                try
-                {
-                    File.AppendAllLines(outputFile,
-                    [
-                        "",
-                        new string('=', 60),
-                       $"!!! ERROR !!!: {ex.Message}",
-                        new string('=', 60),
-                        ex.ToString()
-                    ]);
-                }
-                catch
-                {
-                    // Eat and errors!
-                }
+                errors.Add(LogFailure(ex, tid, inputFileClean, outFileName, outputFile));
             }
         }
 #if PARALLEL

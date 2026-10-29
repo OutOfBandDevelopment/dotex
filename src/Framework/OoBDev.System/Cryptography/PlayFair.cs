@@ -155,6 +155,52 @@ public class PlayFair
         if (string.IsNullOrEmpty(message))
             throw new ArgumentNullException(nameof(message));
 
+        var (prepared, cSwap) = PrepareMessage(message, mode, swap);
+        message = prepared;
+
+        string sCryptic = new(cryptic);
+
+        List<char> cipherText = [];
+
+        for (var i = 0; i < message.Length; i += 2)
+        {
+            var p1 = sCryptic.IndexOf(message[i]);
+            var p2 = sCryptic.IndexOf(message[i + 1]);
+
+            var mn = global::System.Math.Min(p1, p2);
+            var mx = global::System.Math.Max(p1, p2);
+
+            var column = mn % 5 == mx % 5;
+            var row = mx - mn < 5;
+
+            if (row)
+            {
+                p1 = p1++ % 5 == 0 ? p1 - 5 : p1;
+                p2 = p2++ % 5 == 0 ? p2 - 5 : p2;
+            }
+            else if (column)
+            {
+                p1 = p1 += 5 >= 25 ? p1 - 25 : p1;
+                p2 = p2 += 5 >= 25 ? p2 - 25 : p2;
+            }
+            else
+            {
+                var x1 = p1 % 5;
+                var y1 = p1 / 5;
+
+                var x2 = p2 % 5;
+                var y2 = p2 / 5;
+            }
+
+            cipherText.Add(sCryptic[p1]);
+            cipherText.Add(sCryptic[p2]);
+        }
+
+        return new string([.. cipherText]);
+    }
+
+    private static (string Message, char Swap) PrepareMessage(string message, Mode mode, Swap swap)
+    {
         message = message.ToUpperInvariant();
 
         var cSwap = swap switch
@@ -198,44 +244,6 @@ public class PlayFair
 
         message = message.PadRight(message.Length + message.Length % 2, cSwap);
 
-        string sCryptic = new(cryptic);
-
-        List<char> cipherText = [];
-
-        for (var i = 0; i < message.Length; i += 2)
-        {
-            var p1 = sCryptic.IndexOf(message[i]);
-            var p2 = sCryptic.IndexOf(message[i + 1]);
-
-            var mn = global::System.Math.Min(p1, p2);
-            var mx = global::System.Math.Max(p1, p2);
-
-            var column = mn % 5 == mx % 5;
-            var row = mx - mn < 5;
-
-            if (row)
-            {
-                p1 = p1++ % 5 == 0 ? p1 - 5 : p1;
-                p2 = p2++ % 5 == 0 ? p2 - 5 : p2;
-            }
-            else if (column)
-            {
-                p1 = p1 += 5 >= 25 ? p1 - 25 : p1;
-                p2 = p2 += 5 >= 25 ? p2 - 25 : p2;
-            }
-            else
-            {
-                var x1 = p1 % 5;
-                var y1 = p1 / 5;
-
-                var x2 = p2 % 5;
-                var y2 = p2 / 5;
-            }
-
-            cipherText.Add(sCryptic[p1]);
-            cipherText.Add(sCryptic[p2]);
-        }
-
-        return new string([.. cipherText]);
+        return (message, cSwap);
     }
 }

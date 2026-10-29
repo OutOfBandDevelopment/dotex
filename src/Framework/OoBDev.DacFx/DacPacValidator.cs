@@ -42,47 +42,7 @@ public partial class DacPacValidator : IDacPacValidator
             {
                 LogTsqlmodelLoadedSuccessfully();
 
-                // Count objects in the model
-                var assemblies = model.GetObjects(DacQueryScopes.All, ModelSchema.Assembly).ToList();
-                var functions = model.GetObjects(DacQueryScopes.All, ModelSchema.ScalarFunction).ToList();
-                var aggregates = model.GetObjects(DacQueryScopes.All, ModelSchema.Aggregate).ToList();
-                var udts = model.GetObjects(DacQueryScopes.All, ModelSchema.UserDefinedType).ToList();
-
-                LogDacpacContents();
-                LogAssemblies(assemblies.Count);
-                LogScalarFunctions(functions.Count);
-                LogAggregates(aggregates.Count);
-                LogUserDefinedTypes(udts.Count);
-
-                // Validate each assembly
-                foreach (var assembly in assemblies)
-                {
-                    var name = assembly.Name.ToString();
-                    LogAssembly(name);
-                }
-
-                // Validate each function
-                foreach (var function in functions)
-                {
-                    var name = function.Name.ToString();
-                    LogFunction(name);
-                }
-
-                // Validate each aggregate
-                foreach (var aggregate in aggregates)
-                {
-                    var name = aggregate.Name.ToString();
-                    LogAggregate(name);
-                }
-
-                // Validate each UDT
-                foreach (var udt in udts)
-                {
-                    var name = udt.Name.ToString();
-                    LogUdt(name);
-                }
-
-                LogDacpacValidationSuccessful();
+                LogModelContents(model);
             }
         }
         catch (Exception ex)
@@ -90,6 +50,51 @@ public partial class DacPacValidator : IDacPacValidator
             LogDacpacValidationFailed(ex);
             throw new InvalidOperationException($"Generated DACPAC is invalid: {ex.Message}", ex);
         }
+    }
+
+    private void LogModelContents(TSqlModel model)
+    {
+        // Count objects in the model
+        var assemblies = model.GetObjects(DacQueryScopes.All, ModelSchema.Assembly).ToList();
+        var functions = model.GetObjects(DacQueryScopes.All, ModelSchema.ScalarFunction).ToList();
+        var aggregates = model.GetObjects(DacQueryScopes.All, ModelSchema.Aggregate).ToList();
+        var udts = model.GetObjects(DacQueryScopes.All, ModelSchema.UserDefinedType).ToList();
+
+        LogDacpacContents();
+        LogAssemblies(assemblies.Count);
+        LogScalarFunctions(functions.Count);
+        LogAggregates(aggregates.Count);
+        LogUserDefinedTypes(udts.Count);
+
+        // Validate each assembly
+        foreach (var assembly in assemblies)
+        {
+            var name = assembly.Name.ToString();
+            LogAssembly(name);
+        }
+
+        // Validate each function
+        foreach (var function in functions)
+        {
+            var name = function.Name.ToString();
+            LogFunction(name);
+        }
+
+        // Validate each aggregate
+        foreach (var aggregate in aggregates)
+        {
+            var name = aggregate.Name.ToString();
+            LogAggregate(name);
+        }
+
+        // Validate each UDT
+        foreach (var udt in udts)
+        {
+            var name = udt.Name.ToString();
+            LogUdt(name);
+        }
+
+        LogDacpacValidationSuccessful();
     }
 
     [LoggerMessage(EventId = 1, Level = LogLevel.Information, Message = "Validating DACPAC with Microsoft DacFx: {dacpacFile}")]

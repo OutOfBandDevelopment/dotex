@@ -111,24 +111,7 @@ throw new NotSupportedException("this is still in development and is not current
         //});
 
         foreach (var itemId in fetched)
-        {
-            var message = await folder.GetMessageAsync(itemId).ConfigureAwait(false);
-
-            var received = messageFactory.ToReceived(
-                message,
-                config.Value.Uri == null ? $"{config.Value.Host}:{config.Value.Port}" : config.Value.Uri.ToString(),
-                folder.Name
-                );
-
-            await queue.SendAsync(received, received.ReferenceId).ConfigureAwait(false);
-
-            var storedResult = await folder.StoreAsync(itemId, new StoreFlagsRequest(StoreAction.Add, MessageFlags.Seen) { Silent = true }, cancellationToken).ConfigureAwait(false);
-
-            /*
-folder.Store (uid, new StoreFlagsRequest (StoreAction.Add, MessageFlags.Deleted) { Silent = true });
-folder.Expunge ();
-             */
-        }
+            await ForwardAsync(folder, itemId, cancellationToken).ConfigureAwait(false);
 
         //if (_tasks.Count > 0)
         //{
@@ -172,6 +155,26 @@ folder.Expunge ();
     //        }
     //    }
     //}
+
+    private async Task ForwardAsync(IMailFolder folder, UniqueId itemId, CancellationToken cancellationToken)
+    {
+        var message = await folder.GetMessageAsync(itemId).ConfigureAwait(false);
+
+        var received = messageFactory.ToReceived(
+            message,
+            config.Value.Uri == null ? $"{config.Value.Host}:{config.Value.Port}" : config.Value.Uri.ToString(),
+            folder.Name
+            );
+
+        await queue.SendAsync(received, received.ReferenceId).ConfigureAwait(false);
+
+        var storedResult = await folder.StoreAsync(itemId, new StoreFlagsRequest(StoreAction.Add, MessageFlags.Seen) { Silent = true }, cancellationToken).ConfigureAwait(false);
+
+        /*
+folder.Store (uid, new StoreFlagsRequest (StoreAction.Add, MessageFlags.Deleted) { Silent = true });
+folder.Expunge ();
+         */
+    }
 
     /// <summary>
     /// Stops the message receiver host.
