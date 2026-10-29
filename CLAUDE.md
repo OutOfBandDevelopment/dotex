@@ -53,6 +53,7 @@ Incoming projects pending owner decisions (BotChat was extracted 2026-10-09 and 
 - **Common** (6 projects): foundation abstractions and contracts. The aggregator uses MSBuild globs to include/remove ProjectReferences (not purely interfaces).
 - **Framework** (39): core implementations; depends only on Common; 80%+ coverage; readme expected.
 - **Extensions** (6): optional enhancements; depends on Framework; packaged separately.
+- **HardwareDevices**: drivers for physical devices (Busylight, DE-5000, K8055, Radex One, Zoom H4n), separate from the generic protocols in Extensions, like ExternalServices; depends on Framework.
 - **ExternalServices** (40+): Azure, AWS, Google Cloud, database providers, external APIs.
 
 Core patterns: provider/factory (`IService` -> `IServiceProvider` -> `IServiceProviderFactory`), `TryAdd*` DI, options (`AddValidatedOptions<T>()`), handler (`IHandler<TRequest, TResponse>`). Details and naming are in `.claude/rules/coding-standards.md`.

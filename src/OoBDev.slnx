@@ -36,14 +36,8 @@
     <Project Path="Extensions/OoBDev.Data.Vectors.SqlStore/OoBDev.Data.Vectors.SqlStore.csproj" />
     <Project Path="Extensions/OoBDev.Data.Vectors.Tests/OoBDev.Data.Vectors.Tests.csproj" />
     <Project Path="Extensions/OoBDev.Data.Vectors/OoBDev.Data.Vectors.csproj" />
-    <Project Path="Extensions/OoBDev.DerEE.De5000.Tests/OoBDev.DerEE.De5000.Tests.csproj" />
-    <Project Path="Extensions/OoBDev.DerEE.De5000/OoBDev.DerEE.De5000.csproj" />
-    <Project Path="Extensions/OoBDev.Kuando.Busylight.Tests/OoBDev.Kuando.Busylight.Tests.csproj" />
-    <Project Path="Extensions/OoBDev.Kuando.Busylight/OoBDev.Kuando.Busylight.csproj" />
     <Project Path="Extensions/OoBDev.Nmea.Tests/OoBDev.Nmea.Tests.csproj" />
     <Project Path="Extensions/OoBDev.Nmea/OoBDev.Nmea.csproj" />
-    <Project Path="Extensions/OoBDev.Quarta.RadexOne.Tests/OoBDev.Quarta.RadexOne.Tests.csproj" />
-    <Project Path="Extensions/OoBDev.Quarta.RadexOne/OoBDev.Quarta.RadexOne.csproj" />
     <Project Path="Extensions/OoBDev.Scpi.Tests/OoBDev.Scpi.Tests.csproj" />
     <Project Path="Extensions/OoBDev.Scpi/OoBDev.Scpi.csproj" />
     <Project Path="Extensions/OoBDev.System.Text.Html.Tests/OoBDev.System.Text.Html.Tests.csproj" />
@@ -52,12 +46,20 @@
     <Project Path="Extensions/OoBDev.System.Text.Markdown/OoBDev.System.Text.Markdown.csproj" />
     <Project Path="Extensions/OoBDev.System.Text.Yaml.Tests/OoBDev.System.Text.Yaml.Tests.csproj" />
     <Project Path="Extensions/OoBDev.System.Text.Yaml/OoBDev.System.Text.Yaml.csproj" />
-    <Project Path="Extensions/OoBDev.Velleman.K8055.Tests/OoBDev.Velleman.K8055.Tests.csproj" />
-    <Project Path="Extensions/OoBDev.Velleman.K8055/OoBDev.Velleman.K8055.csproj" />
-    <Project Path="Extensions/OoBDev.Zoom.H4n.Tests/OoBDev.Zoom.H4n.Tests.csproj" />
-    <Project Path="Extensions/OoBDev.Zoom.H4n/OoBDev.Zoom.H4n.csproj" />
     <Project Path="Extensions/OoBDev.ZWave.Tests/OoBDev.ZWave.Tests.csproj" />
     <Project Path="Extensions/OoBDev.ZWave/OoBDev.ZWave.csproj" />
+  </Folder>
+  <Folder Name="/HardwareDevices/">
+    <Project Path="HardwareDevices/OoBDev.DerEE.De5000.Tests/OoBDev.DerEE.De5000.Tests.csproj" />
+    <Project Path="HardwareDevices/OoBDev.DerEE.De5000/OoBDev.DerEE.De5000.csproj" />
+    <Project Path="HardwareDevices/OoBDev.Kuando.Busylight.Tests/OoBDev.Kuando.Busylight.Tests.csproj" />
+    <Project Path="HardwareDevices/OoBDev.Kuando.Busylight/OoBDev.Kuando.Busylight.csproj" />
+    <Project Path="HardwareDevices/OoBDev.Quarta.RadexOne.Tests/OoBDev.Quarta.RadexOne.Tests.csproj" />
+    <Project Path="HardwareDevices/OoBDev.Quarta.RadexOne/OoBDev.Quarta.RadexOne.csproj" />
+    <Project Path="HardwareDevices/OoBDev.Velleman.K8055.Tests/OoBDev.Velleman.K8055.Tests.csproj" />
+    <Project Path="HardwareDevices/OoBDev.Velleman.K8055/OoBDev.Velleman.K8055.csproj" />
+    <Project Path="HardwareDevices/OoBDev.Zoom.H4n.Tests/OoBDev.Zoom.H4n.Tests.csproj" />
+    <Project Path="HardwareDevices/OoBDev.Zoom.H4n/OoBDev.Zoom.H4n.csproj" />
   </Folder>
   <Folder Name="/ExternalServices/">
     <Project Path="ExternalServices/OpenTelemetry/OoBDev.OpenTelemetry.Tests/OoBDev.OpenTelemetry.Tests.csproj" />
