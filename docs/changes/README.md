@@ -486,3 +486,4 @@ Each change document should include:
 - [DevTerm loopback transport (2026-10-29)](devterm-loopback-transport-2026-10-29.md) - `OoBDev.DevTerm.Transports.Loopback`: scripted in-process `ITransport` for hardware-free sessions and shells
 - [DevTerm text presenters (2026-10-29)](devterm-presenters-text-2026-10-29.md) - `OoBDev.DevTerm.Presenters.Text`: ascii, utf8, hex, decimal, octal, binary
 - [DevTerm session engine core (2026-10-29)](devterm-session-core-2026-10-29.md) - `Session`, `Pipeline`, limits, observers and telemetry in `OoBDev.DevTerm.Core`
+- [DevTerm message router (2026-10-29)](devterm-message-router-2026-10-29.md) - `MessageRouter`, routing rules and sink in `OoBDev.DevTerm.Core`
