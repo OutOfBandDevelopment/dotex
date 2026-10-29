@@ -172,10 +172,18 @@ public static class FormDefinitionGenerator
         var description = property.GetCustomAttribute<DescriptionAttribute>()?.Description;
         var current = defaults is null ? null : SafeGet(property, defaults);
         var visibleWhen = Condition(field.VisibleWhen, field.VisibleWhenValues);
+        var control = CreateControl(kind.Value, property, type, field, defaults, id, label, current);
+        control.Description = description;
+        control.VisibleWhen = visibleWhen;
+        return control;
+    }
+
+    private static UiControl CreateControl(FormFieldKind? kind, PropertyInfo property, Type type, FormFieldAttribute field, object? defaults, string id, string label, object? current)
+    {
         double? minimum = double.IsNaN(field.Minimum) ? null : field.Minimum;
         double? maximum = double.IsNaN(field.Maximum) ? null : field.Maximum;
 
-        UiControl control = kind switch
+        return kind switch
         {
             FormFieldKind.Toggle => new ToggleControl { Id = id, Label = label, DefaultValue = current is true },
             FormFieldKind.Choice => new ChoiceControl
@@ -222,10 +230,6 @@ public static class FormDefinitionGenerator
                 Constraint = Constraint(type, field, minimum, maximum),
             },
         };
-
-        control.Description = description;
-        control.VisibleWhen = visibleWhen;
-        return control;
     }
 
     private static FormFieldKind? InferKind(Type type, bool readOnly, FormFieldAttribute field)

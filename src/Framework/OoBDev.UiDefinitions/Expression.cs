@@ -404,6 +404,34 @@ public sealed partial class Expression
 
     private static partial class Lexer
     {
+        private static readonly (string Text, TokenKind Kind)[] TwoCharOperators =
+        [
+            ("<=", TokenKind.Le),
+            (">=", TokenKind.Ge),
+            ("==", TokenKind.EqEq),
+            ("!=", TokenKind.NotEq),
+            ("&&", TokenKind.AndAnd),
+            ("||", TokenKind.OrOr),
+        ];
+
+        private static readonly Dictionary<char, TokenKind> SingleCharOperators = new()
+        {
+            ['+'] = TokenKind.Plus,
+            ['-'] = TokenKind.Minus,
+            ['*'] = TokenKind.Star,
+            ['/'] = TokenKind.Slash,
+            ['('] = TokenKind.LParen,
+            [')'] = TokenKind.RParen,
+            [','] = TokenKind.Comma,
+            ['['] = TokenKind.LBracket,
+            [']'] = TokenKind.RBracket,
+            ['<'] = TokenKind.Lt,
+            ['>'] = TokenKind.Gt,
+            ['!'] = TokenKind.Not,
+            ['?'] = TokenKind.Question,
+            [':'] = TokenKind.Colon,
+        };
+
         public static List<Token> Tokenize(string text)
         {
             var tokens = new List<Token>();
@@ -414,184 +442,120 @@ public sealed partial class Expression
                 if (char.IsWhiteSpace(c))
                 {
                     i++;
-                    continue;
                 }
-
-                if (char.IsDigit(c) || (c == '.' && i + 1 < text.Length && char.IsDigit(text[i + 1])))
+                else if (char.IsDigit(c) || (c == '.' && i + 1 < text.Length && char.IsDigit(text[i + 1])))
                 {
-                    var start = i;
-                    while (i < text.Length && (char.IsDigit(text[i]) || text[i] == '.'))
-                    {
-                        i++;
-                    }
-
-                    if (i < text.Length && (text[i] == 'e' || text[i] == 'E'))
-                    {
-                        var j = i + 1;
-                        if (j < text.Length && (text[j] == '+' || text[j] == '-'))
-                        {
-                            j++;
-                        }
-
-                        if (j < text.Length && char.IsDigit(text[j]))
-                        {
-                            i = j;
-                            while (i < text.Length && char.IsDigit(text[i]))
-                            {
-                                i++;
-                            }
-                        }
-                    }
-
-                    var numberText = text[start..i];
-                    if (!double.TryParse(numberText, NumberStyles.Float, CultureInfo.InvariantCulture, out var number))
-                    {
-                        throw new ExpressionParseException($"'{numberText}' isn't a valid number.");
-                    }
-
-                    tokens.Add(new Token(TokenKind.Number, numberText, number));
-                    continue;
+                    i = ReadNumber(text, i, tokens);
                 }
-
-                if (c is '\'' or '"')
+                else if (c is '\'' or '"')
                 {
                     i = ReadString(text, i, tokens);
-                    continue;
                 }
-
-                if (c == '{')
+                else if (c == '{')
                 {
-                    var start = i + 1;
-                    var end = text.IndexOf('}', start);
-                    if (end < 0)
-                    {
-                        throw new ExpressionParseException("'{' has no matching '}'.");
-                    }
-
-                    var id = text[start..end];
-                    if (!VariableId().IsMatch(id))
-                    {
-                        throw new ExpressionParseException($"'{{{id}}}' isn't a valid variable reference.");
-                    }
-
-                    tokens.Add(new Token(TokenKind.Variable, id));
-                    i = end + 1;
-                    continue;
+                    i = ReadVariable(text, i, tokens);
                 }
-
-                if (char.IsLetter(c) || c == '_')
+                else if (char.IsLetter(c) || c == '_')
                 {
-                    var start = i;
-                    // A dot followed by a letter continues the name (gps.sats), so a bare identifier can be a dotted path.
-                    while (i < text.Length && (char.IsLetterOrDigit(text[i]) || text[i] == '_'
-                        || (text[i] == '.' && i + 1 < text.Length && (char.IsLetter(text[i + 1]) || text[i + 1] == '_'))))
-                    {
-                        i++;
-                    }
-
-                    tokens.Add(new Token(TokenKind.Identifier, text[start..i]));
-                    continue;
+                    i = ReadIdentifier(text, i, tokens);
                 }
-
-                switch (c)
+                else
                 {
-                    case '+':
-                        tokens.Add(new Token(TokenKind.Plus, "+"));
-                        i++;
-                        break;
-                    case '-':
-                        tokens.Add(new Token(TokenKind.Minus, "-"));
-                        i++;
-                        break;
-                    case '*':
-                        tokens.Add(new Token(TokenKind.Star, "*"));
-                        i++;
-                        break;
-                    case '/':
-                        tokens.Add(new Token(TokenKind.Slash, "/"));
-                        i++;
-                        break;
-                    case '(':
-                        tokens.Add(new Token(TokenKind.LParen, "("));
-                        i++;
-                        break;
-                    case ')':
-                        tokens.Add(new Token(TokenKind.RParen, ")"));
-                        i++;
-                        break;
-                    case ',':
-                        tokens.Add(new Token(TokenKind.Comma, ","));
-                        i++;
-                        break;
-                    case '[':
-                        tokens.Add(new Token(TokenKind.LBracket, "["));
-                        i++;
-                        break;
-                    case ']':
-                        tokens.Add(new Token(TokenKind.RBracket, "]"));
-                        i++;
-                        break;
-                    case '<':
-                        if (i + 1 < text.Length && text[i + 1] == '=')
-                        {
-                            tokens.Add(new Token(TokenKind.Le, "<="));
-                            i += 2;
-                        }
-                        else
-                        {
-                            tokens.Add(new Token(TokenKind.Lt, "<"));
-                            i++;
-                        }
-
-                        break;
-                    case '>':
-                        if (i + 1 < text.Length && text[i + 1] == '=')
-                        {
-                            tokens.Add(new Token(TokenKind.Ge, ">="));
-                            i += 2;
-                        }
-                        else
-                        {
-                            tokens.Add(new Token(TokenKind.Gt, ">"));
-                            i++;
-                        }
-
-                        break;
-                    case '=' when i + 1 < text.Length && text[i + 1] == '=':
-                        tokens.Add(new Token(TokenKind.EqEq, "=="));
-                        i += 2;
-                        break;
-                    case '!' when i + 1 < text.Length && text[i + 1] == '=':
-                        tokens.Add(new Token(TokenKind.NotEq, "!="));
-                        i += 2;
-                        break;
-                    case '!':
-                        tokens.Add(new Token(TokenKind.Not, "!"));
-                        i++;
-                        break;
-                    case '?':
-                        tokens.Add(new Token(TokenKind.Question, "?"));
-                        i++;
-                        break;
-                    case ':':
-                        tokens.Add(new Token(TokenKind.Colon, ":"));
-                        i++;
-                        break;
-                    case '&' when i + 1 < text.Length && text[i + 1] == '&':
-                        tokens.Add(new Token(TokenKind.AndAnd, "&&"));
-                        i += 2;
-                        break;
-                    case '|' when i + 1 < text.Length && text[i + 1] == '|':
-                        tokens.Add(new Token(TokenKind.OrOr, "||"));
-                        i += 2;
-                        break;
-                    default:
-                        throw new ExpressionParseException($"unexpected character '{c}'.");
+                    i = ReadOperator(text, i, tokens);
                 }
             }
 
             tokens.Add(new Token(TokenKind.End, string.Empty));
             return tokens;
+        }
+
+        private static int ReadNumber(string text, int start, List<Token> tokens)
+        {
+            var i = start;
+            while (i < text.Length && (char.IsDigit(text[i]) || text[i] == '.'))
+            {
+                i++;
+            }
+
+            if (i < text.Length && (text[i] == 'e' || text[i] == 'E'))
+            {
+                var j = i + 1;
+                if (j < text.Length && (text[j] == '+' || text[j] == '-'))
+                {
+                    j++;
+                }
+
+                if (j < text.Length && char.IsDigit(text[j]))
+                {
+                    i = j;
+                    while (i < text.Length && char.IsDigit(text[i]))
+                    {
+                        i++;
+                    }
+                }
+            }
+
+            var numberText = text[start..i];
+            if (!double.TryParse(numberText, NumberStyles.Float, CultureInfo.InvariantCulture, out var number))
+            {
+                throw new ExpressionParseException($"'{numberText}' isn't a valid number.");
+            }
+
+            tokens.Add(new Token(TokenKind.Number, numberText, number));
+            return i;
+        }
+
+        private static int ReadVariable(string text, int open, List<Token> tokens)
+        {
+            var start = open + 1;
+            var end = text.IndexOf('}', start);
+            if (end < 0)
+            {
+                throw new ExpressionParseException("'{' has no matching '}'.");
+            }
+
+            var id = text[start..end];
+            if (!VariableId().IsMatch(id))
+            {
+                throw new ExpressionParseException($"'{{{id}}}' isn't a valid variable reference.");
+            }
+
+            tokens.Add(new Token(TokenKind.Variable, id));
+            return end + 1;
+        }
+
+        private static int ReadIdentifier(string text, int start, List<Token> tokens)
+        {
+            var i = start;
+            // A dot followed by a letter continues the name (gps.sats), so a bare identifier can be a dotted path.
+            while (i < text.Length && (char.IsLetterOrDigit(text[i]) || text[i] == '_'
+                || (text[i] == '.' && i + 1 < text.Length && (char.IsLetter(text[i + 1]) || text[i + 1] == '_'))))
+            {
+                i++;
+            }
+
+            tokens.Add(new Token(TokenKind.Identifier, text[start..i]));
+            return i;
+        }
+
+        private static int ReadOperator(string text, int i, List<Token> tokens)
+        {
+            foreach (var (op, kind) in TwoCharOperators)
+            {
+                if (string.CompareOrdinal(text, i, op, 0, 2) == 0)
+                {
+                    tokens.Add(new Token(kind, op));
+                    return i + 2;
+                }
+            }
+
+            if (SingleCharOperators.TryGetValue(text[i], out var single))
+            {
+                tokens.Add(new Token(single, text[i].ToString()));
+                return i + 1;
+            }
+
+            throw new ExpressionParseException($"unexpected character '{text[i]}'.");
         }
 
         /// <summary>Reads a quoted literal starting at <paramref name="start"/> (either quote; backslash escapes n, r, t, the quote and backslash); returns the index after it.</summary>
@@ -814,43 +778,49 @@ public sealed partial class Expression
                     }
 
                 case TokenKind.LBracket:
-                    {
-                        _pos++;
-                        var items = new List<Node>();
-                        if (Current.Kind != TokenKind.RBracket)
-                        {
-                            items.Add(ParseTernary());
-                            while (Current.Kind == TokenKind.Comma)
-                            {
-                                _pos++;
-                                items.Add(ParseTernary());
-                            }
-                        }
-
-                        Expect(TokenKind.RBracket, "]");
-                        return new ListNode(items);
-                    }
+                    return ParseList();
 
                 case TokenKind.Identifier when tokens[_pos + 1].Kind == TokenKind.LParen:
                     return ParseCall();
 
                 case TokenKind.Identifier:
-                    {
-                        // A bare identifier (volts, gps.sats) is the same as {volts}; true and false are 1 and 0.
-                        var id = Current.Text;
-                        _pos++;
-                        if (id is "true" or "false")
-                        {
-                            return new NumberNode(id == "true" ? 1 : 0);
-                        }
-
-                        ReferencedIds.Add(id);
-                        return new VariableNode(id);
-                    }
+                    return ParseBareIdentifier();
 
                 default:
                     throw new ExpressionParseException($"expected a number, string, '{{variable}}', a name, '[', '(' or a function, found '{Current.Text}'.");
             }
+        }
+
+        private ListNode ParseList()
+        {
+            _pos++;
+            var items = new List<Node>();
+            if (Current.Kind != TokenKind.RBracket)
+            {
+                items.Add(ParseTernary());
+                while (Current.Kind == TokenKind.Comma)
+                {
+                    _pos++;
+                    items.Add(ParseTernary());
+                }
+            }
+
+            Expect(TokenKind.RBracket, "]");
+            return new ListNode(items);
+        }
+
+        // A bare identifier (volts, gps.sats) is the same as {volts}; true and false are 1 and 0.
+        private Node ParseBareIdentifier()
+        {
+            var id = Current.Text;
+            _pos++;
+            if (id is "true" or "false")
+            {
+                return new NumberNode(id == "true" ? 1 : 0);
+            }
+
+            ReferencedIds.Add(id);
+            return new VariableNode(id);
         }
 
         private Node ParseCall()
