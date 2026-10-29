@@ -84,4 +84,39 @@ public class ZWaveHardwareTests
         // Verify
         Assert.AreEqual(original, await ReadStateAsync().ConfigureAwait(false), "The node was not restored to its original state.");
     }
+
+    [TestMethod, TestCategory(TestCategories.Hardware)]
+    public async Task Enumerate_OnTheStick_ListsNodesAndTheirProtocolInfoTest()
+    {
+        // Stage
+        var portName = DevicePreflight.RequireSerialPort(TestContext, "ZWAVE_SERIAL_PORT");
+        using var stick = ZWaveStick.Open(portName);
+        var table = new ZWaveNodeTable();
+
+        // Test
+        stick.Send(ZWaveRequests.MemoryGetId());
+        var id = await stick.WaitForAsync(f => f.IsResponse && f.Function == ZWaveFunctions.MemoryGetId, 0, _timeout).ConfigureAwait(false);
+        Assert.IsNotNull(id);
+        table.Apply(id);
+
+        stick.Send(ZWaveRequests.GetInitData());
+        var init = await stick.WaitForAsync(f => f.IsResponse && f.Function == ZWaveFunctions.GetInitData, 0, _timeout).ConfigureAwait(false);
+        Assert.IsNotNull(init);
+        table.Apply(init);
+
+        foreach (var node in table.Nodes.Select(n => n.Node).ToList())
+        {
+            var from = stick.Frames.Count;
+            table.Expect(ZWaveFunctions.GetNodeProtocolInfo, node);
+            stick.Send(ZWaveRequests.GetNodeProtocolInfo((byte)node));
+            var reply = await stick.WaitForAsync(f => f.IsResponse && f.Function == ZWaveFunctions.GetNodeProtocolInfo, from, _timeout).ConfigureAwait(false);
+            if (reply is not null) table.Apply(reply);
+        }
+
+        // Assert
+        TestContext.WriteLine($"Home ID {table.HomeId}");
+        foreach (var n in table.Nodes) TestContext.WriteLine($"Node {n.Node}: {n.Protocol}");
+        Assert.IsFalse(string.IsNullOrEmpty(table.HomeId));
+        Assert.IsTrue(table.Nodes.Count >= 1);
+    }
 }
