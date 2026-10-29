@@ -50,7 +50,7 @@ Scope rule: every BinaryDataDecoders feature is migrated; phases are priority or
 
 - [ ] Harvest candidates marked evaluate-later in the plan (decision D7): proving-grounds plugin-sandbox-poc, hybridsearch, Oobtainium, BuildFirstOnce, markdownplantuml, TotpExample, HandyClasses; Service Broker tools; postsql-playground (informs `OoBDev.DacFx`).
 - [ ] Production-copy rehearsal test: restore a sanitized dump into the SQL Server container, apply the DacFx or EF migration, run the Integration suite (DevLocal first, Integration when stable).
-- [ ] Performance gates (log over 500 ms, fail over 750 ms) in the testing strategy of the CGI middleware and the search endpoints.
+- [ ] Performance gates (log over 500 ms, fail over 750 ms) for the search endpoints (the CGI middleware gate is done).
 - [ ] Add an operations check (read-only sources, migration approval, rollback) to the `security-audit` skill.
 
 ## Documentation review (owner, 2026-10-28)

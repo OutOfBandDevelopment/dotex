@@ -472,6 +472,33 @@ public class CgiMiddlewareTests
     }
 
     [TestMethod]
+    [TestCategory("Simulate")]
+    public async Task Get_TrivialScript_StaysUnderTheLatencyGate()
+    {
+        // Stage
+        const double logMilliseconds = 500;
+        const double failMilliseconds = 750;
+        await StartAsync(new() { ["OoBDev:Cgi:MaxConcurrentProcesses"] = "4" });
+        using var warmup = await _client!.GetAsync($"/cgi-bin/env{Ext}");
+        var slowest = 0d;
+
+        // Test
+        for (var request = 0; request < 20; request++)
+        {
+            var started = Stopwatch.GetTimestamp();
+            using var response = await _client.GetAsync($"/cgi-bin/env{Ext}");
+            var elapsed = Stopwatch.GetElapsedTime(started).TotalMilliseconds;
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            if (elapsed > logMilliseconds)
+                Console.WriteLine($"slow request {request}: {elapsed:F0} ms");
+            slowest = Math.Max(slowest, elapsed);
+        }
+
+        // Assert
+        Assert.IsLessThan(failMilliseconds, slowest, "a trivial script must answer within the latency gate");
+    }
+
+    [TestMethod]
     [TestCategory("DevLocal")]
     [DataRow(1)]
     [DataRow(4)]

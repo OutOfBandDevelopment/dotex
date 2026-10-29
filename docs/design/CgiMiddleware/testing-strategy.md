@@ -48,6 +48,10 @@ Coverage 85% or more for the project. Tests run on Linux and Windows (fixtures e
 
 Tiny scripts committed beside the tests, one per case: `env`, `echo`, `status`, `location`, `no-content-type`, `no-blank-line`, `exit-1`, `sleep`, `flood-stderr`, `bad-header`. Each exists as a shell script and a batch file, and tests pick by platform. `WebApplicationFactory` hosts the pipeline with `UseCgi`.
 
+## Latency gate
+
+`Get_TrivialScript_StaysUnderTheLatencyGate` (Simulate) sends 20 sequential requests of the `env` script, prints any over 500 ms and fails when one takes 750 ms or more. It passes on Windows and in the Linux container.
+
 ## Benchmark
 
 A DevLocal benchmark measures request latency and throughput for a trivial script at several concurrency values, to replace the process-cost estimates. It is `Benchmark_TrivialScript_ReportsLatencyAndThroughput` (100 requests of the `env` script at concurrency 1, 4 and 16, results printed to the test output). Measured 2026-10-22 on the development machine (shell fixtures run by `/bin/sh` in the .NET SDK container, batch fixtures on the Windows host):
