@@ -1,6 +1,6 @@
 # Feature request: JWS/JWT signing and verification from scratch
 
-- **Status:** new
+- **Status:** done
 - **Requested by:** owner (filed from the notes repository, `projects/dotex-consolidation/jws-jwt-from-scratch.md`)
 - **Date:** 2026-10-28
 - **Area:** `OoBDev.Identity` (or a new `OoBDev.Identity.Jwt`); the notes repository only suggests the name, dotex decides
@@ -54,4 +54,4 @@ that; the notes treat it as a learning and reference implementation. Pin the alg
 
 ## Triage notes
 
-Maintainers fill this in.
+2026-10-29: accepted and built the same day. Decisions on the open questions (reversible, recorded in the design): HS256 and RS256 both; a new `OoBDev.Identity.Jws` project beside `OoBDev.Identity` (the type has no use for user management); packable like the other Framework projects. Design: [docs/design/Jws](../../design/Jws/README.md). Done: [change document](../../changes/identity-jws-reference-2026-10-29.md).

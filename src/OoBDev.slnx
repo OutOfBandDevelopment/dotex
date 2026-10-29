@@ -193,6 +193,8 @@
     <Project Path="Framework/OoBDev.Extensions.Tests/OoBDev.Extensions.Tests.csproj" />
     <Project Path="Framework/OoBDev.Extensions/OoBDev.Extensions.csproj" />
     <Project Path="Framework/OoBDev.Identity.Abstractions/OoBDev.Identity.Abstractions.csproj" />
+    <Project Path="Framework/OoBDev.Identity.Jws.Tests/OoBDev.Identity.Jws.Tests.csproj" />
+    <Project Path="Framework/OoBDev.Identity.Jws/OoBDev.Identity.Jws.csproj" />
     <Project Path="Framework/OoBDev.Identity.Tests/OoBDev.Identity.Tests.csproj" />
     <Project Path="Framework/OoBDev.Identity/OoBDev.Identity.csproj" />
     <Project Path="Framework/OoBDev.MessageQueueing.Abstractions/OoBDev.MessageQueueing.Abstractions.csproj" />
