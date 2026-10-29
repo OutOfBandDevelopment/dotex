@@ -216,6 +216,8 @@
     <Project Path="Extensions/OoBDev.DevTerm.DeviceManifests.Tests/OoBDev.DevTerm.DeviceManifests.Tests.csproj" />
     <Project Path="Extensions/OoBDev.DevTerm.Configuration/OoBDev.DevTerm.Configuration.csproj" />
     <Project Path="Extensions/OoBDev.DevTerm.Configuration.Tests/OoBDev.DevTerm.Configuration.Tests.csproj" />
+    <Project Path="Extensions/OoBDev.DevTerm.Schemas/OoBDev.DevTerm.Schemas.csproj" />
+    <Project Path="Extensions/OoBDev.DevTerm.Schemas.Tests/OoBDev.DevTerm.Schemas.Tests.csproj" />
     <Project Path="Framework/OoBDev.DevTerm.Logging.Tests/OoBDev.DevTerm.Logging.Tests.csproj" />
     <Project Path="Framework/OoBDev.DevTerm.Logging/OoBDev.DevTerm.Logging.csproj" />
     <Project Path="Framework/OoBDev.DevTerm.Core.Tests/OoBDev.DevTerm.Core.Tests.csproj" />

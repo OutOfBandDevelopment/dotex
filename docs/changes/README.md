@@ -496,3 +496,4 @@ Each change document should include:
 - [DevTerm observability (2026-10-29)](devterm-observability-2026-10-29.md) - OTLP exporter
 - [DevTerm device manifests (2026-10-29)](devterm-device-manifests-2026-10-29.md) - manifests, frames, .ksy import, presenters
 - [DevTerm configuration (2026-10-29)](devterm-configuration-2026-10-29.md) - options, profiles, routing, discovery, session builder
+- [DevTerm schemas (2026-10-29)](devterm-schemas-2026-10-29.md) - JSON Schema generator and drift test
