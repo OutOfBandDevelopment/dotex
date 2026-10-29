@@ -1,8 +1,8 @@
 # Versioning policy
 #   Major: bumped by hand: a commit message containing "+semver: major" (or "next-version: 1.0.0" below)
 #   Minor: bumped by every merge into main; the build tags main with vX.Y.0
-#   Patch: on any other branch, the number of commits past the last tag on main (the workflow builds
-#          major.minor.patch-branch from CommitsSinceVersionSource; dev builds are not tagged)
+#   Other branches: preview the next release (inherit main's Minor increment), so a branch cut after the merge of 0.5.0 builds
+#          0.6.0-{branch}.N; the tag is the last release (vX.Y.0 on main, added by hand now that no workflow tags it)
 mode: ContinuousDelivery
 
 branches:
@@ -14,7 +14,7 @@ branches:
 
   feature:
     regex: ^(?!main$)(?<BranchName>.+)
-    increment: Patch
+    increment: Inherit
     label: '{BranchName}'
     track-merge-target: false
     source-branches: ['main']
