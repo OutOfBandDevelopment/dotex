@@ -493,3 +493,4 @@ Each change document should include:
 - [DevTerm control contracts and transport helpers (2026-10-29)](devterm-control-contracts-2026-10-29.md) - control surface, panel, config editor, write delay
 - [DevTerm session servers and clients (2026-10-29)](devterm-session-servers-2026-10-29.md) - pipe, control pipe, TCP share, HTTP control
 - [DevTerm KeyValue plugin (2026-10-29)](devterm-keyvalue-plugin-2026-10-29.md) - structured-message example plugin
+- [DevTerm observability (2026-10-29)](devterm-observability-2026-10-29.md) - OTLP exporter

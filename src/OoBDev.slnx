@@ -52,6 +52,8 @@
     <Project Path="Extensions/OoBDev.DevTerm.Transports.Loopback/OoBDev.DevTerm.Transports.Loopback.csproj" />
     <Project Path="Extensions/OoBDev.DevTerm.Plugins.KeyValue.Tests/OoBDev.DevTerm.Plugins.KeyValue.Tests.csproj" />
     <Project Path="Extensions/OoBDev.DevTerm.Plugins.KeyValue/OoBDev.DevTerm.Plugins.KeyValue.csproj" />
+    <Project Path="Extensions/OoBDev.DevTerm.Observability.Tests/OoBDev.DevTerm.Observability.Tests.csproj" />
+    <Project Path="Extensions/OoBDev.DevTerm.Observability/OoBDev.DevTerm.Observability.csproj" />
     <Project Path="Extensions/OoBDev.DevTerm.Plugins.Sample/OoBDev.DevTerm.Plugins.Sample.csproj" />
     <Project Path="Extensions/OoBDev.DevTerm.Presenters.Text.Tests/OoBDev.DevTerm.Presenters.Text.Tests.csproj" />
     <Project Path="Extensions/OoBDev.DevTerm.Presenters.Text/OoBDev.DevTerm.Presenters.Text.csproj" />
