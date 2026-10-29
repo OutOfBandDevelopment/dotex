@@ -39,6 +39,8 @@
     <Project Path="Extensions/OoBDev.Data.Vectors.SqlStore/OoBDev.Data.Vectors.SqlStore.csproj" />
     <Project Path="Extensions/OoBDev.Data.Vectors.Tests/OoBDev.Data.Vectors.Tests.csproj" />
     <Project Path="Extensions/OoBDev.Data.Vectors/OoBDev.Data.Vectors.csproj" />
+    <Project Path="Extensions/OoBDev.Extensions.Drawing.Tests/OoBDev.Extensions.Drawing.Tests.csproj" />
+    <Project Path="Extensions/OoBDev.Extensions.Drawing/OoBDev.Extensions.Drawing.csproj" />
     <Project Path="Extensions/OoBDev.Nmea.Tests/OoBDev.Nmea.Tests.csproj" />
     <Project Path="Extensions/OoBDev.Nmea/OoBDev.Nmea.csproj" />
     <Project Path="Extensions/OoBDev.Scpi.Tests/OoBDev.Scpi.Tests.csproj" />
