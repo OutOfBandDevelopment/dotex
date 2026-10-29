@@ -14,6 +14,8 @@ The engine contracts of the DevTerm tool, ported from dev-term (see [the parity 
 | `StreamContentWatcher`, `StreamContentSniffer`, `StreamContentEndFinder`, `HpglToSvgConverter`, `StreamCapture` | Detects and captures images, PostScript, PCL and HP-GL in the raw byte stream (declared hints or signature sniffing), converts HP-GL to SVG |
 | `LineReplyPresenter`, `IReplyTracker`, `ReplyMatch` | Base for line presenters that correlate reply lines with pending queries (CR, LF, CRLF and LFCR terminators, bounded buffer) |
 | `PresenterCatalog`, `PluginLoader`, `PluginTrust`, `LivePlugins`, `ExternalProcessPresenter` | Presenter lookup; in-process plugins (`IPluginModule`, `plugin.json`) and approval-gated out-of-process plugins (JSON over stdin/stdout) |
+| `IControlSurface`, `IDevicePanelContribution`, `IInstrumentPanelProvider`, `IDeviceConfigEditor`, `DeviceConfigSession`, `ICommandPreview`, `ParameterValueList` | Device control contracts: command surface, panel contribution, config editing with read-back and preview |
+| `IComPortControl`, `WriteDelayStream`, `ConnectionStateChangedEventArgs` | Serial-port control surface and a per-byte write delay |
 | `AddDevTermCore` | Registers the catalog and session factory (`TryAdd*`) |
 | `DevTermHome` | The per-user DevTerm folder (override by environment) |
 | `Session`, `ISessionFactory`, `SessionLimits`, `ISessionObserver`, `DevTermTelemetry` | Binds a transport to a pipeline: read loop, send throttle, connect retry and timeout, query with timeout, self-reported disconnect, observers, `DevTerm` activity source and meter |

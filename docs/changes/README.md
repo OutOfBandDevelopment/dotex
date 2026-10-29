@@ -490,3 +490,4 @@ Each change document should include:
 - [DevTerm stream content detection (2026-10-29)](devterm-stream-content-2026-10-29.md) - watcher, sniffer, end finder and HP-GL to SVG in `OoBDev.DevTerm.Core`
 - [DevTerm reply presenter and home folder (2026-10-29)](devterm-reply-presenter-2026-10-29.md) - `LineReplyPresenter`, `IReplyTracker`, `DevTermHome`
 - [DevTerm plugins and presenter catalog (2026-10-29)](devterm-plugins-2026-10-29.md) - plugin loader, trust, out-of-process presenters, sample plugin
+- [DevTerm control contracts and transport helpers (2026-10-29)](devterm-control-contracts-2026-10-29.md) - control surface, panel, config editor, write delay
