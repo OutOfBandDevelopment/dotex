@@ -30,7 +30,7 @@ if (-not $Version) {
     if ($LASTEXITCODE -ne 0) { throw 'dotnet-gitversion failed (dotnet tool install -g GitVersion.Tool)' }
     $Version = $json.FullSemVer.ToLowerInvariant()
 }
-$npmVersion = $Version -replace '\+.*
+$npmVersion = $Version -replace '\+.*$', ''
 
 Write-Host "==== Pack $Version ($Configuration) into $output" -ForegroundColor Cyan
 New-Item -ItemType Directory -Force $output | Out-Null
@@ -71,19 +71,3 @@ if (-not $SkipNpm) {
     }
     Write-Host "$(@($manifests).Count) npm package(s) in $npmOutput" -ForegroundColor Green
 }
-, ''
-
-Write-Host "==== Pack $Version ($Configuration) into $output" -ForegroundColor Cyan
-New-Item -ItemType Directory -Force $output | Out-Null
-
-Push-Location $src
-try {
-    dotnet pack OoBDev.slnx --configuration $Configuration "--property:Version=$Version" "--property:PackageVersion=$Version" "--property:SolutionDir=$src\" --output $output --nologo -v:q
-    if ($LASTEXITCODE -ne 0) { throw "dotnet pack failed with exit code $LASTEXITCODE" }
-}
-finally {
-    Pop-Location
-}
-
-$packages = Get-ChildItem $output -Filter '*.nupkg'
-Write-Host "$($packages.Count) packages in $output" -ForegroundColor Green
