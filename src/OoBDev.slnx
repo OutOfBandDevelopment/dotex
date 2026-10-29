@@ -222,6 +222,7 @@
     <Project Path="Tools/OoBDev.LlmCodeGen.Cli/OoBDev.LlmCodeGen.Cli.csproj" />
     <Project Path="Tools/OoBDev.MigrationHelper.Cli/OoBDev.MigrationHelper.Cli.csproj" />
     <Project Path="Tools/OoBDev.TemplateEngine.Cli/OoBDev.TemplateEngine.Cli.csproj" />
+    <Project Path="Tools/OoBDev.Testing.AppHost/OoBDev.Testing.AppHost.csproj" />
   </Folder>
   <Project Path="OoBDev.Notes/OoBDev.Notes.csproj" />
 </Solution>

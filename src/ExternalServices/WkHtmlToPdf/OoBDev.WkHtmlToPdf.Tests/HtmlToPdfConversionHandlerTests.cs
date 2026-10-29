@@ -14,7 +14,7 @@ public class HtmlToPdfConversionHandlerTests
 {
     public required TestContext TestContext { get; set; }
 
-    [TestCategory(TestCategories.Unit)]
+    [TestCategory(TestCategories.DevLocal)]
     [TestMethod]
     [DataRow("HelloWorld.html", "text/html", "application/pdf")]
     [DataRow("HelloWorld.html", "text/xhtml", "application/pdf")]

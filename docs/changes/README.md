@@ -354,6 +354,10 @@ Each change document should include:
 - Example UI design documents reconciled with the code
 - Status: ✅ Complete
 
+**[testing-aspire-test-stack-2026-10-28.md](testing-aspire-test-stack-2026-10-28.md)**
+- Aspire host for the integration test stack; wkhtmltopdf test moved to DevLocal; Tika URL from TestContext
+- Status: ✅ Built (AppHost not started end to end)
+
 **[examples-apphost-startup-fixes-2026-10-28.md](examples-apphost-startup-fixes-2026-10-28.md)**
 - Example AppHost: dacpac re-publish skipped, API binds the Aspire port, vector reader uses the Aspire database
 - Status: ✅ Complete (full AppHost start not rerun)

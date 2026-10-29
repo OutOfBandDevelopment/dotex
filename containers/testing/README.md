@@ -248,9 +248,22 @@ cd containers/testing
 # Run integration tests
 cd ../../src
 dotnet test --filter "TestCategory=Integration"
+```
 
-# Stop services and cleanup
-cd ../containers/testing
+### Start with Aspire instead of compose
+
+`src/Tools/OoBDev.Testing.AppHost` starts the same services, ports and credentials (see its `README.Testing.AppHost.md`):
+
+```bash
+dotnet run --project src/Tools/OoBDev.Testing.AppHost
+```
+
+Run either the compose stack or the Aspire host, not both (same host ports).
+
+Stop and clean up the compose stack:
+
+```bash
+cd containers/testing
 ./scripts/integration-down.sh --clean
 ```
 

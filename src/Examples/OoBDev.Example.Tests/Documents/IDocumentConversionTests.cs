@@ -58,7 +58,7 @@ public class IDocumentConversionTests
             configBuilder.AddInMemoryCollection(
                 new Dictionary<string, string?>
                 {
-                    { "ApacheTikaClientOptions:Url","http://127.0.0.1:9998"}
+                    { "ApacheTikaClientOptions:Url", TestContext.GetPropertyOrDefault("TIKA_URL", "http://127.0.0.1:9998") }
 
                 });
         }
