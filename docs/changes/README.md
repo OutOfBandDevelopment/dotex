@@ -360,3 +360,4 @@ Each change document should include:
 - [Z-Wave core](devices-zwave-core-2026-10-28.md) - first device package, verified on a Z-Stick (2026-10-28)
 - [DE-5000 core](devices-de5000-core-2026-10-28.md) - DE-5000 packet decoding, 13 unit tests, no hardware test yet (2026-10-28)
 - [Busylight core](devices-busylight-core-2026-10-28.md) - Busylight commands, program frame and poll verified on the light; device packages moved to src/HardwareDevices (2026-10-28)
+- [K8055 core](devices-k8055-core-2026-10-28.md) - K8055 reports, commands and named input bits; Hardware tests ported, not yet run on a board (2026-10-28)

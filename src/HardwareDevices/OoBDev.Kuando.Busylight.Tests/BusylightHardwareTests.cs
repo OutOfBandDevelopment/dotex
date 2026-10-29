@@ -1,5 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using OoBDev.System.IO.UsbHids;
+using OoBDev.Devices.TestUtilities;
 using OoBDev.TestUtilities;
 using System;
 using System.IO;
@@ -11,16 +11,6 @@ namespace OoBDev.Kuando.Busylight.Tests;
 [TestClass]
 public class BusylightHardwareTests
 {
-    private static Stream OpenOrInconclusive()
-    {
-        var adapter = new UsbHidFactory().GetDevices(new BusylightDevice()).FirstOrDefault();
-        if (adapter is null)
-            Assert.Inconclusive("No Kuando Busylight (USB 04D8:F848) is enumerated: is it plugged in?");
-        if (!adapter.TryOpen(out var stream) || stream is null)
-            Assert.Inconclusive("The Busylight is present but cannot be opened (is another program using it?).");
-        return stream;
-    }
-
     private static async Task SendAsync(Stream stream, byte[] report)
     {
         await stream.WriteAsync(report).ConfigureAwait(false);
@@ -31,7 +21,7 @@ public class BusylightHardwareTests
     public async Task SingleCommand_RedGreenBlueThenOff_ChangesTheLightTest()
     {
         // Stage
-        await using var stream = OpenOrInconclusive();
+        await using var stream = DevicePreflight.RequireUsbHid(new BusylightDevice());
         var encoder = new BusylightMessageEncoder();
 
         try
@@ -56,7 +46,7 @@ public class BusylightHardwareTests
     public async Task Poll_OnTheDevice_AnswersWithAnIdentificationTest()
     {
         // Stage
-        await using var stream = OpenOrInconclusive();
+        await using var stream = DevicePreflight.RequireUsbHid(new BusylightDevice());
         stream.ReadTimeout = 3000;
 
         // Test
@@ -76,7 +66,7 @@ public class BusylightHardwareTests
     public async Task Sequence_SixColorSteps_ProgramFrameIsSentTest()
     {
         // Stage: the big-endian checksum is the untested guess about why the earlier program frame did nothing; watch the light
-        await using var stream = OpenOrInconclusive();
+        await using var stream = DevicePreflight.RequireUsbHid(new BusylightDevice());
         static BusylightCommand Step(byte next, BusylightColor color) => new(next, 0x01, color, 0x05, 0x00, BusylightAudio.Muted);
         var frame = BusylightSequence.Encode(
         [

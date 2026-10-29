@@ -1,7 +1,10 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using OoBDev.System.IO.UsbHids;
 using OoBDev.TestUtilities;
 using System;
+using System.IO;
 using System.IO.Ports;
+using System.Linq;
 
 namespace OoBDev.Devices.TestUtilities;
 
@@ -30,5 +33,23 @@ public static class DevicePreflight
             Assert.Inconclusive($"'{port}' is not listed by the operating system: is the device plugged in?");
 
         return port;
+    }
+
+    /// <summary>
+    /// Opens the first USB HID device that matches the <c>[UsbHid]</c> attribute on <paramref name="definition"/>, or ends the test
+    /// Inconclusive when none is enumerated or it cannot be opened.
+    /// </summary>
+    /// <param name="definition">The device definition object carrying the <c>[UsbHid]</c> attribute.</param>
+    /// <returns>The open HID stream; the caller disposes it.</returns>
+    public static Stream RequireUsbHid(object definition)
+    {
+        ArgumentNullException.ThrowIfNull(definition);
+
+        var adapter = new UsbHidFactory().GetDevices(definition).FirstOrDefault();
+        if (adapter is null)
+            Assert.Inconclusive($"No USB HID device for {definition.GetType().Name} is enumerated: is it plugged in?");
+        if (!adapter.TryOpen(out var stream) || stream is null)
+            Assert.Inconclusive($"The {definition.GetType().Name} USB HID device is present but cannot be opened (is another program using it?).");
+        return stream;
     }
 }
