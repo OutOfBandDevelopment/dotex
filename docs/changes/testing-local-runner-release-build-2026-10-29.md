@@ -4,4 +4,4 @@
 
 It found a Release-only build break: `OoBDev.Common.Hosting` imported `OoBDev.MailKit.Hosting` under `#if DEBUG` but called `TryAddMailKitHosting` in every configuration. The `using` is now unconditional.
 
-Not yet run end to end: the `-Category Integration` path, because it starts and stops the Docker stack on the same ports as the Aspire stack that is running now.
+The `-Category Integration -Configuration Debug` path also ran end to end (about 8 minutes): the runner started the Docker stack, built, ran every Integration project with 0 failures, and stopped the stack with `--clean`.

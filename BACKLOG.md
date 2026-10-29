@@ -10,7 +10,7 @@ GitHub is no longer the primary repository (local bare repo `origin`), so nothin
 
 ## 1. Test infrastructure
 
-- [ ] Replace the legacy `.github/workflows/` with the local runner in `scripts/ci` (a script that starts the Docker stack and runs the Integration suite). Decided 2026-10-22; leave the workflows untouched until the runner is verified end to end (`scripts/ci/run-tests.ps1` ran end to end for Unit and Simulate on 2026-10-29; the Integration path, which starts the Docker stack, is not verified yet).
+- [ ] Replace the legacy `.github/workflows/` with the local runner in `scripts/ci` (a script that starts the Docker stack and runs the Integration suite). Decided 2026-10-22; leave the workflows untouched until the runner is verified end to end (`scripts/ci/run-tests.ps1` ran end to end for Unit, Simulate and Integration on 2026-10-29).
 - [ ] Integration coverage gaps (Azure runs on emulators only: Azurite and the Service Bus emulator, no Azure licence): Azurite queues and blobs are covered (queue tests added 2026-10-22); Service Bus emulator send and receive tests pass (queue, topic subscription, session queue; 2026-10-29) but it still has no health check; Moto is only used for SQS because no other AWS adapter exists (S3 tests wait for an S3 adapter).
 - [ ] `DevLocal` tests kept on purpose: Ollama (hard-coded LAN host, model pull and delete), USB HID (hardware), `PathEx`, `MergedXPathNavigator`, `ProjectTools.FixReadmes` (hard-coded `C:\Repos` paths), Markdown `TestMethod1` (writes files), DacFx `BuildPackageTest` (hard-coded path). Revisit Ollama when the owner says Ollama testing can resume.
 - [ ] Add a live-integration doc page per new cloud service (only Groq exists; its key was revoked 2026-10-09, so runs wait for the owner).
