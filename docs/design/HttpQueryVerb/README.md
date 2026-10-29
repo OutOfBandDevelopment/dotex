@@ -2,7 +2,7 @@
 
 **Status:** Draft · **Date:** 2026-10-22 · **Related:** [HTTP API practices](../../patterns-discovery/03-practices-and-conventions/10-http-api-practices.md), [HTTP API alternatives](../../patterns-discovery/05-industry-alternatives/10-http-api.md), [application rights](../ApplicationRights/README.md), [design standard](../../patterns-discovery/06-design-document-standard.md)
 
-Lets a client send a query as a request body with the HTTP `QUERY` verb (safe, idempotent), with a `POST` fallback for clients and proxies that cannot send `QUERY`. The first slice carries the existing custom search syntax; an OData query language rides on the same seam later (open question Q2 in `OPEN-QUESTIONS.md`).
+Lets a client send a query as a request body with the HTTP `QUERY` verb (safe, idempotent), with a `POST` fallback for clients and proxies that cannot send `QUERY`. The first slice carries the existing custom search syntax; an OData query language rides on the same seam through `[OoBDevEnableQuery]` (see [ODataQuery](../ODataQuery/README.md)).
 
 ## Contents
 
