@@ -12,5 +12,5 @@ Keep this file short (a handful of items). When an item starts, move it here fro
 
 ## Next
 
-- [ ] **Re-review BinaryDataDecoders** (owner, 2026-10-29: the recommendation plan is out of date; review the newest source again before any integration): redo the comparison against `C:\repo\mine\binary-data-decoders` and replace [incoming-recommendation-plan.md](docs/migration/incoming-recommendation-plan.md) and the decision sheet with a current plan. Then ask the owner for the per-line decisions.
+- [ ] **BinaryDataDecoders items** (re-review done 2026-10-29: [binarydatadecoders-rereview-2026-10-29.md](docs/migration/binarydatadecoders-rereview-2026-10-29.md)): start with Numerics (393 LOC and 7 test classes into `OoBDev.System`), then the order in Table 4 of that document; backlog lines are in [BACKLOG.md](BACKLOG.md).
 

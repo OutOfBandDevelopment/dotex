@@ -6,6 +6,8 @@ Scope: everything waiting in `Incoming/` (BinaryDecoders, ContractParser, Tools)
 
 Rejecting a feature is allowed, but every rejection below carries its reason, and nothing is rejected silently. Each decision lists options with a recommendation; reply with the letter, or "approve all recommendations".
 
+> **Superseded 2026-10-29** for BinaryDataDecoders by [binarydatadecoders-rereview-2026-10-29.md](binarydatadecoders-rereview-2026-10-29.md) (owner: the old document is out of date).
+
 ## Contents
 
 Tables: 1 Already in main, 2 Not in main, 3 Harvest recommendations, 4 Proposed rejections, 5 Decisions.

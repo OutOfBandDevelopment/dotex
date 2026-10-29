@@ -4,6 +4,8 @@
 
 > **Parent:** [Critical Questions](./binarydatadecoders-critical-questions.md) · [TODO.md](../../TODO.md) · [OPEN-QUESTIONS.md](../../OPEN-QUESTIONS.md) (E9)
 
+> **Superseded 2026-10-29** for BinaryDataDecoders by [binarydatadecoders-rereview-2026-10-29.md](./binarydatadecoders-rereview-2026-10-29.md) (owner: the old document is out of date).
+
 Rules applied to the recommendations: every feature is migrated (phases are priority order, see [CLAUDE.md](../../CLAUDE.md)); breaking changes are fine while the framework is unreleased; prefer platform primitives and first-party code over third-party libraries; obsolete platforms are the only deletions.
 
 ## Contents
