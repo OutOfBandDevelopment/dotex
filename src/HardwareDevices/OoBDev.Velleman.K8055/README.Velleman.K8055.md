@@ -23,7 +23,7 @@ The board sets every output with one report, so `K8055Outputs.WithDigital` retur
 ## Verified
 
 - Unit tests: decoder on the report dev-term recorded from a real board, named input bits, encoder frames, output state, stream segmentation, DI.
-- Hardware tests (reset counter, set outputs then all off, read a streamed report) ran on a real board at address 3 (product 0x5503) on 2026-10-28 and passed; they find the board at any address.
+- Hardware tests (reset counter, set outputs then all off, read a streamed report) run once per board address (0 to 3, products 0x5500 to 0x5503); on 2026-10-28 address 3 passed on a real board and addresses 0 to 2 ended Inconclusive (not plugged in).
 
 ## Not yet confirmed
 

@@ -20,20 +20,28 @@ public class K8055HardwareTests
     }
 
     [TestMethod, TestCategory(TestCategories.Hardware)]
-    public async Task ResetCounter1_OnTheBoard_CompletesWithoutFaultTest()
+    [DataRow(0)]
+    [DataRow(1)]
+    [DataRow(2)]
+    [DataRow(3)]
+    public async Task ResetCounter1_OnTheBoard_CompletesWithoutFaultTest(int address)
     {
         // Stage
-        await using var stream = K8055Boards.Require();
+        await using var stream = K8055Boards.Require(address);
 
         // Test: a fixed frame that touches no output, so the safest real action; there is no reply to wait for
         await SendAsync(stream, K8055Command.ResetCounter1).ConfigureAwait(false);
     }
 
     [TestMethod, TestCategory(TestCategories.Hardware)]
-    public async Task SetOutputs_OnTheBoard_ThenAllOffTest()
+    [DataRow(0)]
+    [DataRow(1)]
+    [DataRow(2)]
+    [DataRow(3)]
+    public async Task SetOutputs_OnTheBoard_ThenAllOffTest(int address)
     {
         // Stage
-        await using var stream = K8055Boards.Require();
+        await using var stream = K8055Boards.Require(address);
         var outputs = new K8055Outputs(0, 0, 0).WithDigital(1, true).WithDigital(3, true) with { AnalogOut1 = 128, AnalogOut2 = 255 };
 
         try
@@ -50,10 +58,14 @@ public class K8055HardwareTests
     }
 
     [TestMethod, TestCategory(TestCategories.Hardware)]
-    public async Task Board_StreamsInputReports_DecodedTest()
+    [DataRow(0)]
+    [DataRow(1)]
+    [DataRow(2)]
+    [DataRow(3)]
+    public async Task Board_StreamsInputReports_DecodedTest(int address)
     {
         // Stage
-        await using var stream = K8055Boards.Require();
+        await using var stream = K8055Boards.Require(address);
         var buffer = new byte[K8055Reading.Length];
 
         // Test: the board sends its inputs without being asked
