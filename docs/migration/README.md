@@ -1,326 +1,37 @@
-# Migration Documentation
+# Migration documentation
 
-**Last Updated:** 2026-01-12
+**Last Updated:** 2026-10-29
 
----
+Plans, mappings and analyses for code brought into the framework from other repositories. A migration that is finished lives on as feature documents (`docs/design/`, `docs/changes/`) and project readmes; its notes here are removed (owner request, 2026-10-29). `git log -- docs/migration` has the removed files.
 
-## Overview
+## Contents
 
-This directory contains migration plans and feature mappings for integrating code from legacy repositories into the OoBDev (dotex) framework.
+- [Inventory](#inventory)
+- [Rules](#rules)
+- [Removed on 2026-10-29](#removed-on-2026-10-29)
 
----
+## Inventory
 
-## Active Migrations
+**Table 1 — Migration notes and what is left**
 
-### BinaryDataDecoders Migration
+| Document | Subject | State |
+|----------|---------|-------|
+| [binarydatadecoders-rereview-2026-10-29.md](binarydatadecoders-rereview-2026-10-29.md) | Current state of the BinaryDataDecoders port against `C:\repo\mine\binary-data-decoders` | Current; read first |
+| [binarydatadecoders-feature-mapping.md](binarydatadecoders-feature-mapping.md), [binarydatadecoders-migration-plan.md](binarydatadecoders-migration-plan.md) | Original mapping and phases (January 2026) | Open: the port is partly done, the phases are priority order |
+| [binarydatadecoders-decision-sheet.md](binarydatadecoders-decision-sheet.md), [binarydatadecoders-critical-questions.md](binarydatadecoders-critical-questions.md) | Owner decisions | Open: awaiting decisions |
+| [device-decoding-migration-plan.md](device-decoding-migration-plan.md), [device-parity.md](device-parity.md) | dev-term device decoding | Packages done; transports and the shell wait on the Q3 scope |
+| [sharedframework-feature-mapping.md](sharedframework-feature-mapping.md), [sharedframework-migration-plan.md](sharedframework-migration-plan.md), [sharedframework-differs-detailed-comparison.md](sharedframework-differs-detailed-comparison.md), [sharedframework-phase0-coverage-analysis.md](sharedframework-phase0-coverage-analysis.md) | SharedFramework | Open: design first (Epics 2, 6, 7, 10) |
+| [oobtainium-feature-mapping.md](oobtainium-feature-mapping.md), [oobtainium-migration-plan.md](oobtainium-migration-plan.md) | Oobtainium mocking and proxy framework | Open: evaluate later (decision D7) |
+| [vector-comparison.md](vector-comparison.md) | Application-level vector math beside the SQL vectors | Open: recommendation to migrate, not done |
+| [incoming-recommendation-plan.md](incoming-recommendation-plan.md), [incoming-harvest-crosscheck.md](incoming-harvest-crosscheck.md) | Cross-project plan and rejected merges | Current |
 
-**Status:** Planning Complete
-**Priority:** HIGH
-**Documents:**
-- [Feature Mapping](./binarydatadecoders-feature-mapping.md) - Comprehensive feature-by-feature comparison
-- [Migration Plan](./binarydatadecoders-migration-plan.md) - Detailed actionable migration steps
+## Rules
 
-**Quick Summary:**
+- Everything from BinaryDataDecoders migrates; phases are priority order, not a selection (`CLAUDE.md`).
+- Compare every source and keep the best-covered implementation (`owner-decisions`); document rejections with the reason.
+- Open work is tracked in [BACKLOG.md](../../BACKLOG.md) and [TODO.md](../../TODO.md); finished work in [docs/changes](../changes/README.md).
 
-**Source:** `Incomming/BinaryDecoders` (41 projects, ~800 C# files)
+## Removed on 2026-10-29
 
-**Key Features to Migrate:**
-1. **CRITICAL (Phase 0):** 5 bug fixes in existing OoBDev code
-2. **HIGH (Phase 1):** Foundation utilities (endianness, BCD, collections)
-3. **HIGH (Phase 2):** CodeAnalysis (Roslyn XPath), ExpressionCalculator, Archives
-4. **MEDIUM (Phase 3):** NMEA GPS protocol, Drawing (selective)
-5. **LOW (Phase 4):** Specialized features (FileSystems, Cryptography, Apple II)
-
-**Critical Bugs Identified:**
-- BUG-001: PathEx lambda bug (HIGH) - Wildcard matching broken
-- BUG-002: StreamDevice nullable annotations (MEDIUM)
-- BUG-003: StreamDevice event typo (MEDIUM)
-- BUG-004: SerialPortFactory verbose ternary (LOW)
-- BUG-005: ShiftCommutativeVariablesRight stub (CRITICAL) - Expression normalization broken
-
-**Migration Status by Feature:**
-
-| Feature | Status | Priority | Action |
-|---------|--------|----------|--------|
-| Bug Fixes (5) | UPDATE | CRITICAL | Fix immediately |
-| ToolKit Foundation | UPDATE | CRITICAL | Merge into OoBDev.System |
-| CodeAnalysis | NEW | HIGH | Create OoBDev.CodeAnalysis |
-| ExpressionCalculator | UPDATE | CRITICAL | Fix broken optimizer |
-| Archives (TAR/ZIP) | UPDATE | MEDIUM | Create OoBDev.Archives |
-| NMEA GPS | NEW | MEDIUM | Create OoBDev.Protocols.Nmea |
-| Drawing/Barcodes | NEW | MEDIUM | Evaluate need, modernize |
-| Network Utils | EXISTS | LOW | Keep OoBDev |
-| FileSystems (ISO) | NEW | LOW | Migrate (Phase 4) |
-| Cryptography (Classic) | NEW | LOW | Migrate (Phase 4, educational) |
-| Apple II | NEW | VERY LOW | Migrate (Phase 4) |
-| Hardware (8 devices) | NEW | VERY LOW | Migrate (Phase 4) |
-| WinForms UI | NEW | LOW | Migrate (Phase 4/5) |
-| CLI Tools (4 tools) | MIXED | LOW | Migrate/Merge (Phase 4/5) |
-
-**Migration Scope:** ALL features will be migrated. Phases indicate priority order, not feature selection.
-
----
-
-## Migration Phases
-
-### Phase 0: Critical Bug Fixes (IMMEDIATE)
-**Blocking:** All other phases
-**Effort:** Small
-
-Tasks:
-1. Fix PathEx lambda bug
-2. Fix StreamDevice nullable annotations
-3. Fix StreamDevice event typo
-4. Fix SerialPortFactory verbose ternary
-5. Replace ShiftCommutativeVariablesRight stub
-
-**Completion Criteria:**
-- All bugs fixed
-- All tests pass
-- No warnings
-
----
-
-### Phase 1: Foundation Enhancement
-**Dependencies:** Phase 0
-**Effort:** Medium
-
-Tasks:
-1. Migrate endianness types (BigEndianInt32, etc.)
-2. Migrate FormattableNumber<T>
-3. Migrate BCD converter
-4. Migrate collections (DoubleLinkedList, ObservableDictionary)
-5. Migrate threading utilities
-
-**Completion Criteria:**
-- All utilities merged into OoBDev.System
-- 90%+ test coverage
-- Documentation complete
-
----
-
-### Phase 2: High-Value Features
-**Dependencies:** Phase 0
-**Effort:** Large
-
-Tasks:
-1. Migrate CodeAnalysis (Roslyn XPath navigation)
-2. Complete ExpressionCalculator migration
-3. Migrate Archives support (TAR/ZIP)
-
-**Completion Criteria:**
-- New Framework projects created
-- Provider/factory pattern implemented
-- 80%+ test coverage
-- Full documentation
-
----
-
-### Phase 3: Protocols & Extensions
-**Dependencies:** Phase 0
-**Effort:** Medium
-
-Tasks:
-1. Migrate NMEA GPS protocol decoder
-2. Evaluate and migrate Drawing features (selective)
-
-**Completion Criteria:**
-- NMEA protocol operational
-- Drawing uses modern library (SkiaSharp/ImageSharp)
-- Tests comprehensive
-
----
-
-### Phase 4: Specialized Domain Features
-**Dependencies:** Phase 0
-**Effort:** Medium
-
-Tasks:
-1. Migrate FileSystems (ISO 9660)
-2. Migrate Classic Cryptography (with security warnings)
-3. Migrate Apple II support
-4. Migrate Hardware devices (8 devices)
-5. Migrate Windows Forms components
-6. Migrate/Merge CLI Tools (4 tools)
-
-**Completion Criteria:**
-- ALL specialized features migrated
-- Packaged separately for specialized audiences
-- Clear documentation on use cases
-- Security warnings where appropriate
-
----
-
-### Phase 5: Cleanup & Documentation
-**Dependencies:** Phases 0-4
-**Effort:** Small
-
-Tasks:
-1. Update cross-references
-2. Create migration guide
-3. Archive BinaryDataDecoders repository
-4. Update CHANGELOG
-5. Tag release
-
-**Completion Criteria:**
-- All documentation updated
-- Migration guide complete
-- Release tagged
-
----
-
-## Architectural Compliance
-
-All migrations MUST follow OoBDev architectural patterns from `/docs/architecture`:
-
-**Layer Placement:**
-- **Framework:** CodeAnalysis, Archives, Protocols, core utilities
-- **Extensions:** Drawing, FileSystems, specialized features
-- **ExternalServices:** Roslyn wrappers (CSharp, VisualBasic)
-
-**Required Patterns:**
-- Provider/Factory for all integrations
-- Dependency Injection via TryAdd* extensions
-- IOptions<T> for configuration
-- Keyed services for multiple implementations
-
-**Testing Standards:**
-- Framework: 80% minimum coverage
-- LINQ/Expression: 90% minimum coverage
-- MSTest framework
-- Test categories: Unit, Simulate
-
-**Documentation Standards:**
-- README.md required (enforced by build)
-- XML documentation on all public APIs
-- Usage examples
-- PlantUML diagrams where appropriate
-
----
-
-## Success Metrics
-
-Migration is complete when:
-
-1. ✅ All critical bugs fixed (Phase 0)
-2. ✅ All HIGH priority features migrated
-3. ✅ Architectural compliance verified
-4. ✅ 80%+ test coverage maintained
-5. ✅ Documentation complete
-6. ✅ No breaking changes to existing APIs
-7. ✅ Build succeeds without warnings
-8. ✅ All tests pass
-9. ✅ NuGet packages generated
-10. ✅ Migration guide published
-
----
-
-## Quick Start for Contributors
-
-### Before Starting Any Migration:
-
-1. **Read Architecture Docs:**
-   - [Architectural Guidelines](../architecture/architectural-guidelines.md)
-   - [Architectural Standards](../architecture/architectural-standards.md)
-   - [Layering Architecture](../architecture/layering-architecture.md)
-
-2. **Review Feature Mapping:**
-   - [BinaryDataDecoders Feature Mapping](./binarydatadecoders-feature-mapping.md)
-
-3. **Follow Migration Plan:**
-   - [BinaryDataDecoders Migration Plan](./binarydatadecoders-migration-plan.md)
-
-4. **Start with Phase 0:**
-   - Fix critical bugs first
-   - All other phases depend on Phase 0
-
-### For Each Feature Migration:
-
-1. Create abstractions project (if new feature)
-2. Implement provider/factory pattern
-3. Add DI registration via TryAdd* extension
-4. Create comprehensive tests (80%+ coverage)
-5. Write README.md and XML documentation
-6. Verify build succeeds
-7. Update migration tracking
-
----
-
-## Migration Tracking
-
-### Phase 0: Critical Bug Fixes
-- [ ] BUG-001: PathEx lambda fix
-- [ ] BUG-002: StreamDevice nullable annotations
-- [ ] BUG-003: StreamDevice event typo
-- [ ] BUG-004: SerialPortFactory simplification
-- [ ] BUG-005: ShiftCommutativeVariablesRight replacement
-
-### Phase 1: Foundation
-- [ ] Endianness types (BigEndianInt32, etc.)
-- [ ] FormattableNumber<T>
-- [ ] BCD converter
-- [ ] DoubleLinkedList<T>
-- [ ] Threading utilities
-
-### Phase 2: High-Value Features
-- [ ] CodeAnalysis.Abstractions
-- [ ] CodeAnalysis implementation
-- [ ] Microsoft.CodeAnalysis.CSharp
-- [ ] Microsoft.CodeAnalysis.VisualBasic
-- [ ] ExpressionCalculator fixes
-- [ ] Archives (TAR)
-- [ ] Archives (ZIP enhancements)
-
-### Phase 3: Protocols
-- [ ] NMEA protocol decoder
-- [ ] Drawing (if needed)
-
-### Phase 4: Specialized
-- [ ] FileSystems (if needed)
-- [ ] Cryptography (if needed)
-
-### Phase 5: Cleanup
-- [ ] Migration guide
-- [ ] CHANGELOG update
-- [ ] BinaryDataDecoders archive
-- [ ] Release tag
-
----
-
-## Related Documentation
-
-### Architecture
-- [Architectural Guidelines](../architecture/architectural-guidelines.md)
-- [Architectural Standards](../architecture/architectural-standards.md)
-- [Architectural Patterns](../architecture/architectural-patterns.md)
-- [Layering Architecture](../architecture/layering-architecture.md)
-
-### Framework Documentation
-- [Major Functionality](../Framework/MajorFunctionality.md)
-- [Message Queueing](../Framework/MessageQueueing.md)
-- [Text Templating](../Framework/TextTemplating.md)
-
-### Migration
-- [Feature Mapping](./binarydatadecoders-feature-mapping.md)
-- [Migration Plan](./binarydatadecoders-migration-plan.md)
-
----
-
-## Support
-
-For questions or issues with migration:
-
-1. Review feature mapping and migration plan
-2. Check architectural documentation
-3. Review existing OoBDev patterns
-4. Document decisions and rationale
-
----
-
-## Change Log
-
-- 2026-01-12 v1.0: Initial migration documentation created
-  - BinaryDataDecoders feature mapping complete
-  - BinaryDataDecoders migration plan complete
-  - Migration phases defined
-  - Tracking checklist created
+- BotChat mapping and plan: the patterns were extracted on 2026-10-09 and the sources removed.
+- MailKit and SendGrid integration analysis: both integrations are complete and described in `README.MailKit.md` and `README.MailKit.Hosting.md`.

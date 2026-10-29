@@ -174,9 +174,7 @@ This checklist tracks the investigation and migration status of all projects in 
 - [ ] If enhancing: Update dependencies, improve UX, add to Tools/
 - [ ] If archiving: Add comprehensive README explaining usage
 
-**Documentation:**
-- [Feature Mapping](../docs/migration/botchat-feature-mapping.md)
-- [Migration Plan](../docs/migration/botchat-migration-plan.md)
+**Documentation:** the mapping and plan were removed 2026-10-29 once the patterns were extracted (see `git log` for `docs/migration/botchat-*`).
 
 **Migration Complexity:** LOW (if archiving), MEDIUM (if enhancing)
 
