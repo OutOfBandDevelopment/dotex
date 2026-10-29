@@ -11,8 +11,8 @@ var form = new FormViewModel(FormDefinitionGenerator.Generate(settings), new For
 window.Content = new FormView { DataContext = form };
 ```
 
-Targets `net10.0-windows`. Not yet rendered: live display controls (indicator, bar graph, strip chart, vector), sliders as slider widgets (they show as text boxes), colour picker buttons.
+`LiveDisplayView` renders an indicator (text) or a bar graph (progress bars) from a `LiveDisplayViewModel`. Targets `net10.0-windows`. Not yet rendered: strip chart and vector controls, sliders as slider widgets (they show as text boxes), colour picker buttons.
 
 ## Verified
 
-3 Unit tests on an STA thread (no window shown): the controls rendered, a command writing the model, a condition collapsing a row. Not looked at on screen.
+5 Unit tests on STA threads (no window shown; tests run serially because parallel STA threads deadlocked): controls rendered, a command writing the model, a condition collapsing a row, bar and indicator updates. Not looked at on screen.

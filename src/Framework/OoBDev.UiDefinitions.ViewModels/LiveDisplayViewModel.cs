@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace OoBDev.UiDefinitions.ViewModels;
 
@@ -20,7 +21,20 @@ public sealed class LiveDisplayViewModel : ViewModelBase
         ArgumentNullException.ThrowIfNull(control);
         Control = control;
         State = LiveDisplayState.For(control) ?? throw new NotSupportedException($"'{control.GetType().Name}' is not a live display control.");
+        Bars = control is BarGraphControl bar ? [.. bar.Channels.Select((c, i) => new BarViewModel(c, ChartPalette.ColorFor(c, i)))] : [];
     }
+
+    /// <summary>Whether this shows an indicator (<see cref="Text"/>).</summary>
+    public bool IsIndicator => State is IndicatorState;
+
+    /// <summary>Whether this shows a bar graph (<see cref="Bars"/>).</summary>
+    public bool IsBarGraph => State is BarGraphState;
+
+    /// <summary>The bars of a bar graph; empty for the other kinds.</summary>
+    public IReadOnlyList<BarViewModel> Bars { get; }
+
+    /// <summary>An indicator's display text, or null before a value arrives and for the other kinds.</summary>
+    public string? Text => (State as IndicatorState)?.Text;
 
     /// <summary>The control definition.</summary>
     public UiControl Control { get; }
@@ -49,7 +63,17 @@ public sealed class LiveDisplayViewModel : ViewModelBase
             return false;
         }
 
+        if (State is BarGraphState bars)
+        {
+            foreach (var bar in Bars)
+            {
+                bar.Update(bars);
+            }
+        }
+
         Revision++;
+        OnPropertyChanged(nameof(State));
+        OnPropertyChanged(nameof(Text));
         return true;
     }
 }

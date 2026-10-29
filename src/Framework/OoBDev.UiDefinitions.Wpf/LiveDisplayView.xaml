@@ -1,0 +1,31 @@
+<UserControl x:Class="OoBDev.UiDefinitions.Wpf.LiveDisplayView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:OoBDev.UiDefinitions.ViewModels;assembly=OoBDev.UiDefinitions.ViewModels">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="Visible" />
+    </UserControl.Resources>
+    <StackPanel>
+        <TextBlock Text="{Binding Text}"
+                   FontSize="20"
+                   Visibility="{Binding IsIndicator, Converter={StaticResource Visible}}" />
+        <ItemsControl ItemsSource="{Binding Bars}"
+                      Visibility="{Binding IsBarGraph, Converter={StaticResource Visible}}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate DataType="{x:Type vm:BarViewModel}">
+                    <Grid Margin="0,2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="120" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="90" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{Binding Label}" VerticalAlignment="Center" />
+                        <ProgressBar Grid.Column="1" Minimum="0" Maximum="1" Height="14"
+                                     Value="{Binding Fraction, Mode=OneWay}" />
+                        <TextBlock Grid.Column="2" Text="{Binding ValueText}" Margin="8,0,0,0" VerticalAlignment="Center" />
+                    </Grid>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </StackPanel>
+</UserControl>

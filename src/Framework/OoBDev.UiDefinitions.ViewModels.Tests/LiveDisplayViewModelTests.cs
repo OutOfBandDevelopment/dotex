@@ -30,8 +30,43 @@ public sealed class LiveDisplayViewModelTests
         // Assert
         Assert.IsTrue(changed);
         Assert.AreEqual(1, model.Revision);
-        CollectionAssert.AreEqual(new[] { nameof(LiveDisplayViewModel.Revision) }, raised);
+        CollectionAssert.AreEqual(new[] { nameof(LiveDisplayViewModel.Revision), nameof(LiveDisplayViewModel.State), nameof(LiveDisplayViewModel.Text) }, raised);
         Assert.AreEqual(42d, ((BarGraphState)model.State).ValueOf("a"));
+    }
+
+    [TestMethod]
+    public void Apply_BarGraph_UpdatesBars()
+    {
+        // Stage
+        var control = Bar();
+        control.Maximum = 200;
+        control.Unit = "V";
+        var model = new LiveDisplayViewModel(control);
+
+        // Test
+        model.Apply("a", "50");
+
+        // Assert
+        Assert.IsTrue(model.IsBarGraph);
+        Assert.IsFalse(model.IsIndicator);
+        Assert.AreEqual(0.25, model.Bars[0].Fraction, 1e-9);
+        Assert.AreEqual("50 V", model.Bars[0].ValueText);
+    }
+
+    [TestMethod]
+    public void Apply_Indicator_UpdatesText()
+    {
+        // Stage
+        var model = new LiveDisplayViewModel(new IndicatorControl { Id = "i", Label = "I", Expression = "a" });
+        var before = model.Text;
+
+        // Test
+        model.Apply("a", "7");
+
+        // Assert
+        Assert.IsNull(before);
+        Assert.IsTrue(model.IsIndicator);
+        Assert.AreEqual("7", model.Text);
     }
 
     [TestMethod]
