@@ -29,3 +29,7 @@ State holding (colour, track, volume set separately and applied together) is a c
 ## Not yet verified on hardware
 
 That the program frame makes the light cycle through its steps.
+
+## Device documentation
+
+[docs/known-configuration.md](docs/known-configuration.md) records how the device is reached on the bench (transport, framing, byte order, what was verified on hardware); the frame layouts are Kaitai Struct files in [docs/](docs/): `busylight-command.ksy`. Paths such as `docs/design/...`, `docs/test/...` and `src/DevTerm.*` inside those notes name files in the dev-term repository, where they were written.

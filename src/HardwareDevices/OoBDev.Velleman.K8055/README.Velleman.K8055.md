@@ -28,3 +28,7 @@ The board sets every output with one report, so `K8055Outputs.WithDigital` retur
 ## Not yet confirmed
 
 Which physical input pin sets which bit (the names come from BinaryDataDecoders; dev-term published the raw byte because it never wired an input), and the two trailing duration bytes, which are sent as zero. The streamed report was read with all inputs low.
+
+## Device documentation
+
+[docs/known-configuration.md](docs/known-configuration.md) records how the device is reached on the bench (transport, framing, byte order, what was verified on hardware); the frame layouts are Kaitai Struct files in [docs/](docs/): `k8055-input-report.ksy`, `k8055-output-report.ksy`. Paths such as `docs/design/...`, `docs/test/...` and `src/DevTerm.*` inside those notes name files in the dev-term repository, where they were written.

@@ -33,3 +33,7 @@ The control surface (waits on owner question Q3), and a session-level responder 
 - Hardware test `ZWaveHardwareTests` (run parameter `ZWAVE_SERIAL_PORT`) sent GetVersion to a Z-Stick S2 on COM13 and got "Z-Wave 2.78" with no CAN or NAK. It ends Inconclusive when the port is absent or busy.
 
 Design: [DeviceDecoding](../../../docs/design/DeviceDecoding/README.md), plan: [device-decoding-migration-plan.md](../../../docs/migration/device-decoding-migration-plan.md).
+
+## Device documentation
+
+[docs/aeotec-zstick-s2/known-configuration.md](docs/aeotec-zstick-s2/known-configuration.md) records the Aeotec Z-Stick S2 bench setup (COM port, framing, what was verified). Paths inside it such as `docs/test/...` name files in the dev-term repository.

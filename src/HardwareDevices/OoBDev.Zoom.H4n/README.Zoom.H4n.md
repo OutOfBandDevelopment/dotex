@@ -29,3 +29,7 @@ Unit tests: all 12 press codes, the release, status bits, stream segmentation, D
 ## Not yet verified on hardware
 
 Everything on the wire: the handshake, the button codes, and whether the recorder echoes status for a given unit (the dev-term test only proved no fault or timeout). Not ported: the per-recording-mode LED blink patterns, and the dev-term control surface (the panel, Q3).
+
+## Device documentation
+
+[docs/known-configuration.md](docs/known-configuration.md) records how the device is reached on the bench (transport, framing, byte order, what was verified on hardware); the frame layouts are Kaitai Struct files in [docs/](docs/): `zoom-h4n-command.ksy`, `zoom-h4n-status.ksy`. Paths such as `docs/design/...`, `docs/test/...` and `src/DevTerm.*` inside those notes name files in the dev-term repository, where they were written.

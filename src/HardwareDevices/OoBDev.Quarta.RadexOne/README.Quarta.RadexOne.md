@@ -31,3 +31,7 @@ The device only applies Write Settings when it is sent three times in a row; rep
 - The unit of each reading (the values are right, the unit is not documented; BinaryDataDecoders scales 32-bit fields as hundredths of a microsievert per hour; here they are 16-bit fields with a reserved word between them).
 - The serial and version layout: the payload is shown as ASCII with dots, and it does not reconcile with the documentation (merge M3).
 - Write Settings and Reset Accumulated against the device (no Hardware test sends them, because they change the device).
+
+## Device documentation
+
+[docs/known-configuration.md](docs/known-configuration.md) records how the device is reached on the bench (transport, framing, byte order, what was verified on hardware); the frame layouts are Kaitai Struct files in [docs/](docs/): `radexone-query-request.ksy`, `radexone-read-data-reply.ksy`, `radexone-serial-version-reply.ksy`, `radexone-write-settings-request.ksy`. Paths such as `docs/design/...`, `docs/test/...` and `src/DevTerm.*` inside those notes name files in the dev-term repository, where they were written.

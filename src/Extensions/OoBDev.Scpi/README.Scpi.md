@@ -23,3 +23,7 @@ Source: dev-term `Devices.Scpi` (base); BinaryDataDecoders has no SCPI package. 
 ## Not yet verified on hardware
 
 No instrument has been connected to this package. The profile contents are as verified in dev-term (the Korad and Tektronix notes come from real devices there).
+
+## Instrument documentation
+
+One folder per instrument under [docs/](docs/): the vendor programming manual (where kept) and a `known-configuration.md` with how it was reached on the bench: [hp-34401a](docs/hp-34401a/known-configuration.md), [korad-ka3005p-ka6003p](docs/korad-ka3005p-ka6003p/known-configuration.md), [rigol-dg1022](docs/rigol-dg1022/known-configuration.md), [rigol-dg1062z](docs/rigol-dg1062z/known-configuration.md), [rigol-dm3058e](docs/rigol-dm3058e/known-configuration.md), [rigol-ds1102e](docs/rigol-ds1102e/known-configuration.md), [tektronix-2230](docs/tektronix-2230/known-configuration.md), [tektronix-tds2024](docs/tektronix-tds2024/known-configuration.md), [usr-tcp232-302](docs/usr-tcp232-302/known-configurations.md). `usr-tcp232-302` is the serial-to-Ethernet bridge several instruments sit behind. Paths such as `docs/design/...` and `docs/test/...` inside the notes name files in the dev-term repository.

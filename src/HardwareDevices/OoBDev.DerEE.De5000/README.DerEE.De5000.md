@@ -24,3 +24,7 @@ Unit tests use the dev-term packet layout, including the sign-extended negative 
 ## Not yet verified on hardware
 
 No Hardware test yet: dev-term reaches the meter over BLE (device id and GATT UUIDs, still unconfirmed there), and dotex has no BLE adapter in this package.
+
+## Device documentation
+
+[docs/known-configuration.md](docs/known-configuration.md) records how the device is reached on the bench (transport, framing, byte order, what was verified on hardware); the frame layouts are Kaitai Struct files in [docs/](docs/): `de5000.ksy`. Paths such as `docs/design/...`, `docs/test/...` and `src/DevTerm.*` inside those notes name files in the dev-term repository, where they were written.
