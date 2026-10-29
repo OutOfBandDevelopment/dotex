@@ -386,6 +386,10 @@ Each change document should include:
 - Operations check added to the security-audit skill
 - Status: ✅ Complete
 
+**[documentation-externalservices-readme-check-2026-10-29.md](documentation-externalservices-readme-check-2026-10-29.md)**
+- ExternalServices readmes identifier-checked against code
+- Status: ✅ Complete
+
 **[build-warnings-clean-2026-10-29.md](build-warnings-clean-2026-10-29.md)**
 - Last build warnings resolved or suppressed with reasons
 - Status: ✅ Complete

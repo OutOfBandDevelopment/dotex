@@ -1,0 +1,3 @@
+# ExternalServices readme identifier check (2026-10-29)
+
+Every backticked PascalCase name (6+ characters) in each `README.*.md` under `src/ExternalServices` was searched for in that project's C# sources. All names exist except four that are correct as written: `Constructor` (a heading word in the Groq readme), `SizeLimit` (a `MemoryCacheOptions` property in the Caching readme), `TryCommonExternalExtensions` (lives in `OoBDev.Common.Extensions`, named by the OpenTelemetry readme) and `AllMiniLML6v2Sharp` (the replaced fork, named on purpose). No readme was changed. The check covers names only, not behaviour descriptions; a deeper reconcile stays in `BACKLOG.md`.
