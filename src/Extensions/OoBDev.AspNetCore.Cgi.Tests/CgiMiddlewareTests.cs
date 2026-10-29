@@ -358,6 +358,49 @@ public class CgiMiddlewareTests
 
     [TestMethod]
     [TestCategory("Simulate")]
+    public async Task Get_HeaderWithControlCharacter_ReturnsBadGateway()
+    {
+        // Stage
+        if (OperatingSystem.IsWindows())
+            Assert.Inconclusive("The bad-header fixture is a shell script; it runs in the Linux container.");
+        await StartAsync();
+
+        // Test
+        using var response = await _client!.GetAsync("/cgi-bin/bad-header.sh");
+
+        // Assert
+        Assert.AreEqual(HttpStatusCode.BadGateway, response.StatusCode);
+    }
+
+    [TestMethod]
+    [TestCategory("Simulate")]
+    public async Task Get_ProgramOverTimeout_KillsTheProcess()
+    {
+        // Stage
+        if (OperatingSystem.IsWindows())
+            Assert.Inconclusive("The pid-sleep fixture is a shell script; it runs in the Linux container.");
+        await StartAsync(new() { ["OoBDev:Cgi:Timeout"] = "00:00:01" });
+        var pidFile = Path.Combine(Path.GetTempPath(), $"cgi_pid_{Guid.NewGuid():N}");
+
+        try
+        {
+            // Test
+            using var response = await _client!.GetAsync($"/cgi-bin/pid-sleep.sh?{pidFile}");
+            await Task.Delay(TimeSpan.FromMilliseconds(500));
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.GatewayTimeout, response.StatusCode);
+            var pid = int.Parse(File.ReadAllText(pidFile).Trim(), global::System.Globalization.CultureInfo.InvariantCulture);
+            Assert.IsFalse(Directory.Exists($"/proc/{pid}"), "the CGI process should have been killed");
+        }
+        finally
+        {
+            File.Delete(pidFile);
+        }
+    }
+
+    [TestMethod]
+    [TestCategory("Simulate")]
     public async Task Get_AllSlotsBusy_ReturnsServiceUnavailableWithRetryAfter()
     {
         // Stage

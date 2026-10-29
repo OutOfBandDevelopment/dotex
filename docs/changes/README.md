@@ -354,6 +354,10 @@ Each change document should include:
 - Example UI design documents reconciled with the code
 - Status: ✅ Complete
 
+**[apis-cgi-tests-bad-header-kill-2026-10-28.md](apis-cgi-tests-bad-header-kill-2026-10-28.md)**
+- CGI tests for control characters in headers and child kill on timeout
+- Status: ✅ Complete (Linux container)
+
 **[http-accepts-query-attribute-2026-10-28.md](http-accepts-query-attribute-2026-10-28.md)**
 - `[AcceptsQuery]` result filter adds the Accept-Query header
 - Status: ✅ Complete
