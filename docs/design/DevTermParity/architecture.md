@@ -9,7 +9,7 @@ How the dev-term engine lands in this repository. Requirements, api-design and t
 - [Contracts](#contracts)
 - [Landing projects](#landing-projects)
 - [Order](#order)
-- [Decision for review](#decision-for-review)
+- [Decision](#decision)
 
 ## Contracts
 
@@ -49,6 +49,6 @@ Both are needed: the device libraries and the pipelines are built on streams, an
 4. Presenters and manifests.
 5. The remaining transports, then the shells, each with its screen specification.
 
-## Decision for review
+## Decision
 
-Keep `IDeviceAdapter` and add `ITransport` with adapters between them (recommended: no break to the device libraries, one implementation of each transport). The alternative is to replace `IDeviceAdapter` with `ITransport` everywhere, which is cleaner in the end but rewrites every device library and test in the same change; the framework is unreleased, so it is allowed, and this is the owner's call. It is recorded in `OPEN-QUESTIONS.md`.
+Owner, 2026-10-29: pipes everywhere. `ITransport` (a `PipeReader` plus a lifecycle, zero-copy) is the contract; `IDeviceAdapter` and its blocking `Stream` are to be replaced, with feature parity but not interface parity with dev-term. `StreamTransport` and `StreamToPipePump` stay only as a bridge until the serial, HID, TCP and RFC 2217 adapters and the device libraries move to pipes (backlog: "Move device libraries to pipes").
