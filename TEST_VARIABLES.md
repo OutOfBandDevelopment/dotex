@@ -339,6 +339,24 @@ Tests that require live cloud credentials. Manual execution only.
 
 ---
 
+### Service Bus emulator
+
+**Service:** Azure Service Bus emulator (queues, topics and sessions; no management API)
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `SERVICEBUS_CONNECTION_STRING` | `Endpoint=sb://localhost;...;UseDevelopmentEmulator=true;` | Emulator connection string (AMQP on port 5672) |
+| `SERVICEBUS_TEST_QUEUE` | `integration-test-queue` | Plain queue from `containers/testing/servicebus-config/Config.json` |
+| `SERVICEBUS_TEST_TOPIC` | `integration-test-topic` | Topic from the same file |
+| `SERVICEBUS_TEST_SUBSCRIPTION` | `test-subscription` | Subscription on the test topic |
+| `SERVICEBUS_SESSION_QUEUE` | `integration-test-session-queue` | Session-enabled queue |
+
+**Docker Container:** `mcr.microsoft.com/azure-messaging/servicebus-emulator` (needs the SQL Server container; restart it if SQL was recreated)
+
+**Tests Using:** `AzureServiceBusIntegrationTests` (send and receive on queue, topic subscription and session queue)
+
+---
+
 ### Moto (AWS Emulator)
 
 **Service:** AWS cloud service emulator for local development

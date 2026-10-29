@@ -145,11 +145,13 @@ https://github.com/coverlet-coverage/coverlet/blob/fc7ec26dcaed8fedba880ff13c6f1
 		<Parameter name="SQS_TEST_QUEUE" value="integration-test-queue" />
 
 		<!-- Azure Service Bus Emulator -->
-		<Parameter name="SERVICEBUS_CONNECTION_STRING" value="Endpoint=sb://localhost:5672/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=SAS_KEY_VALUE;" />
+		<Parameter name="SERVICEBUS_CONNECTION_STRING" value="Endpoint=sb://localhost;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=SAS_KEY_VALUE;UseDevelopmentEmulator=true;" />
 		<Parameter name="SERVICEBUS_HOST" value="localhost" />
 		<Parameter name="SERVICEBUS_PORT" value="5672" />
 		<Parameter name="SERVICEBUS_TEST_QUEUE" value="integration-test-queue" />
 		<Parameter name="SERVICEBUS_TEST_TOPIC" value="integration-test-topic" />
+		<Parameter name="SERVICEBUS_SESSION_QUEUE" value="integration-test-session-queue" />
+		<Parameter name="SERVICEBUS_TEST_SUBSCRIPTION" value="test-subscription" />
 
 		<!-- Keycloak -->
 		<Parameter name="KEYCLOAK_URL" value="http://localhost:8081" />
