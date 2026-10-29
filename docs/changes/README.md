@@ -390,6 +390,10 @@ Each change document should include:
 - ExternalServices readmes identifier-checked against code
 - Status: ✅ Complete
 
+**[apis-cgi-symlink-test-2026-10-29.md](apis-cgi-symlink-test-2026-10-29.md)**
+- CGI symlink-out-of-root test (REQ-007)
+- Status: ✅ Complete
+
 **[build-warnings-clean-2026-10-29.md](build-warnings-clean-2026-10-29.md)**
 - Last build warnings resolved or suppressed with reasons
 - Status: ✅ Complete

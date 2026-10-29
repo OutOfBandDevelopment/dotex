@@ -255,6 +255,50 @@ public class CgiMiddlewareTests
 
     [TestMethod]
     [TestCategory("Simulate")]
+    [DataRow(false)]
+    [DataRow(true)]
+    public async Task Get_SymlinkOutOfTheRoot_IsForbidden(bool linkTheDirectory)
+    {
+        // Stage: a script root that holds a link to a script outside of it
+        var temp = Path.Combine(Path.GetTempPath(), "cgi-link-" + Guid.NewGuid().ToString("N"));
+        var root = Path.Combine(temp, "root");
+        var outside = Path.Combine(temp, "outside");
+        Directory.CreateDirectory(root);
+        Directory.CreateDirectory(outside);
+        try
+        {
+            File.Copy(Path.Combine(AppContext.BaseDirectory, "Fixtures", "env" + Ext), Path.Combine(outside, "env" + Ext));
+            try
+            {
+                if (linkTheDirectory)
+                    Directory.CreateSymbolicLink(Path.Combine(root, "linked"), outside);
+                else
+                    File.CreateSymbolicLink(Path.Combine(root, "env" + Ext), Path.Combine(outside, "env" + Ext));
+            }
+            catch (IOException) when (OperatingSystem.IsWindows())
+            {
+                Assert.Inconclusive("Creating a symbolic link needs the link privilege.");
+            }
+            catch (UnauthorizedAccessException)
+            {
+                Assert.Inconclusive("Creating a symbolic link needs the link privilege.");
+            }
+            await StartAsync(new() { ["OoBDev:Cgi:ScriptRoot"] = root });
+
+            // Test
+            using var response = await _client!.GetAsync(linkTheDirectory ? $"/cgi-bin/linked/env{Ext}" : $"/cgi-bin/env{Ext}");
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.Forbidden, response.StatusCode);
+        }
+        finally
+        {
+            Directory.Delete(temp, recursive: true);
+        }
+    }
+
+    [TestMethod]
+    [TestCategory("Simulate")]
     [DataRow("/cgi-bin/..%2fenv")]
     [DataRow("/cgi-bin/%2e%2e/env")]
     [DataRow("/cgi-bin/sub%5c..%5cenv")]
