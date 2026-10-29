@@ -166,11 +166,13 @@ public sealed class FormBinding : IDisposable
     public bool IsVisible(UiCondition? condition) => condition is null || condition.IsMetBy(GetValue(condition.Id));
 
     /// <summary>Runs the <see cref="ICommand"/> property named <paramref name="id"/>; false when there's none, or it can't execute.</summary>
-    public bool Invoke(string id)
+    /// <param name="id">The command property.</param>
+    /// <param name="parameter">The value handed to the command, or null.</param>
+    public bool Invoke(string id, object? parameter = null)
     {
-        if (GetValue(id) is ICommand command && command.CanExecute(null))
+        if (GetValue(id) is ICommand command && command.CanExecute(parameter))
         {
-            command.Execute(null);
+            command.Execute(parameter);
             return true;
         }
 

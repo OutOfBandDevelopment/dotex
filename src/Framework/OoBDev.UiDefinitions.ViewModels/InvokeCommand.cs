@@ -1,5 +1,7 @@
 using System.Windows.Input;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using OoBDev.UiDefinitions.Forms;
 
 namespace OoBDev.UiDefinitions.ViewModels;
@@ -7,15 +9,20 @@ namespace OoBDev.UiDefinitions.ViewModels;
 /// <summary>Runs the model's command property named by a button (<see cref="ButtonControl.CommandId"/>, or the button's own id).</summary>
 /// <param name="binding">The bound model.</param>
 /// <param name="control">The button.</param>
-public sealed class InvokeCommand(FormBinding binding, ButtonControl control) : CommandBase
+/// <param name="siblings">The controls whose values a button with <see cref="ButtonControl.ParameterFieldIds"/> reads.</param>
+public sealed class InvokeCommand(FormBinding binding, ButtonControl control, IReadOnlyCollection<UiControl>? siblings = null) : CommandBase
 {
     private readonly FormBinding _binding = binding ?? throw new ArgumentNullException(nameof(binding));
     private readonly ButtonControl _control = control ?? throw new ArgumentNullException(nameof(control));
 
     /// <inheritdoc />
     public override bool CanExecute(object? parameter) =>
-        _binding.GetValue(_control.CommandId ?? _control.Id) is ICommand command && command.CanExecute(null);
+        _binding.GetValue(_control.CommandId ?? _control.Id) is ICommand command && command.CanExecute(Parameter());
 
     /// <inheritdoc />
-    public override void Execute(object? parameter) => _binding.Invoke(_control.CommandId ?? _control.Id);
+    public override void Execute(object? parameter) => _binding.Invoke(_control.CommandId ?? _control.Id, Parameter());
+
+    private string? Parameter() => _control.ParameterFieldIds is { Count: > 0 } ids
+        ? string.Join(',', ids.Select(id => siblings?.Any(c => c.Id == id) == true ? _binding.GetText(id) : string.Empty))
+        : null;
 }

@@ -18,7 +18,7 @@ public sealed class ButtonViewModel : ControlViewModel
     {
         Button = control;
         var target = colorPicker is not null && control.ColorPickerTargetCommandId is { } id ? siblings?.FirstOrDefault(c => c.Id == id) : null;
-        Invoke = target is null ? new InvokeCommand(binding, control) : new PickColorCommand(binding, target, colorPicker!);
+        Invoke = target is null ? new InvokeCommand(binding, control, siblings) : new PickColorCommand(binding, target, colorPicker!);
         Refresh();
     }
 

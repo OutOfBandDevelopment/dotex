@@ -22,3 +22,7 @@ A look at the colour picker view on screen. Tracked in `BACKLOG.md`.
 ## Colour picker link option
 
 `FormViewModel` now links a `ColorPickerChoiceOption` (found with `CustomColorChoices`): the choice row's Custom option gets `SelectCustomColorCommand`, which re-applies the last picked colour (`PickColorCommand.Reapply`) or opens the picker when none was picked, and a colour that is not one of the other options shows Custom as selected. The radio template needed no change, because it binds each option item's command. 5 Unit tests added (47 in the view models tests); not looked at on screen.
+
+## Parameterised buttons
+
+`InvokeCommand` honours `ButtonControl.ParameterFieldIds`: it reads the named sibling controls through the binding, joins their texts with `,` and hands the string to the model command as its parameter (`FormBinding.Invoke(id, parameter)`). A name with no sibling gives an empty slot. `ParameterExpressions` are still ignored (no evaluator in the view-model layer). Tests: 4 Unit (`InvokeCommandParameterTests`). This is the first step of the SCPI generated control panel; the dynamic model and the DevTerm wiring remain.
