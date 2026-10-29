@@ -285,6 +285,19 @@ Tests that require live cloud credentials. Manual execution only.
 
 ---
 
+### Hardware (physical devices)
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `ZWAVE_SERIAL_PORT` | `COM13` | Serial port of the plugged-in Z-Wave stick; blank or unlisted ends the Hardware test Inconclusive |
+| `RADEX_ONE_SERIAL_PORT` | `COM8` | Serial port of the Radex One (9600 8-N-1); blank or unlisted ends its Hardware tests Inconclusive |
+| `ZOOM_H4N_SERIAL_PORT` | blank | Serial port of the h4n2rs485 adapter on the Zoom H4n remote port (2400 8-N-1); blank or unlisted ends its Hardware test Inconclusive |
+| `ZWAVE_SWITCH_NODE` | `2` | Node id (2 to 232) of a Binary Switch relay; the toggle Hardware test actuates it and restores it, and ends Inconclusive while it is `0` |
+
+**Tests Using:** `OoBDev.ZWave.Tests` (category `Hardware`)
+
+---
+
 ### Qdrant (Vector Database)
 
 **Service:** Qdrant vector similarity search engine
@@ -323,6 +336,24 @@ Tests that require live cloud credentials. Manual execution only.
 **Notes:**
 - Default account: `devstoreaccount1`
 - Default key: `Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==`
+
+---
+
+### Service Bus emulator
+
+**Service:** Azure Service Bus emulator (queues, topics and sessions; no management API)
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `SERVICEBUS_CONNECTION_STRING` | `Endpoint=sb://localhost;...;UseDevelopmentEmulator=true;` | Emulator connection string (AMQP on port 5672) |
+| `SERVICEBUS_TEST_QUEUE` | `integration-test-queue` | Plain queue from `containers/testing/servicebus-config/Config.json` |
+| `SERVICEBUS_TEST_TOPIC` | `integration-test-topic` | Topic from the same file |
+| `SERVICEBUS_TEST_SUBSCRIPTION` | `test-subscription` | Subscription on the test topic |
+| `SERVICEBUS_SESSION_QUEUE` | `integration-test-session-queue` | Session-enabled queue |
+
+**Docker Container:** `mcr.microsoft.com/azure-messaging/servicebus-emulator` (needs the SQL Server container; restart it if SQL was recreated)
+
+**Tests Using:** `AzureServiceBusIntegrationTests` (send and receive on queue, topic subscription and session queue)
 
 ---
 

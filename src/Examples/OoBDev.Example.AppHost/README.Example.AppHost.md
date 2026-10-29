@@ -4,7 +4,7 @@ Aspire host for the example only: the API, the SPA and the few backing services 
 
 Run: `dotnet run --project src/Examples/OoBDev.Example.AppHost` (the dashboard link is printed).
 
-SQL Server runs the `2019-latest` image (the version `OoBDev.Data.Vectors.DB` targets, `Sql150`) with a data volume. When the `VectorDb` database is ready the host allows SQL CLR (`clr enabled`, `clr strict security` off; a development server only) and publishes `OoBDev.Data.Vectors.DB.dacpac` to it with DacFx, then the API gets the `VectorDb` connection string. The dacpac is built by the project reference; the host reads the Debug build output. The same deployment is covered by the `SqlServerDeploymentTests` Integration tests.
+SQL Server runs the `2019-latest` image (the version `OoBDev.Data.Vectors.DB` targets, `Sql150`) with a data volume. When the `VectorDb` database is ready the host allows SQL CLR (`clr enabled`, `clr strict security` off; a development server only) and publishes `OoBDev.Data.Vectors.DB.dacpac` to it with DacFx, then the API gets the `VectorDb` connection string (as `ConnectionStrings__VectorDb` and as `SqlVectorStoreOptions__ConnectionString`, so the API uses the SQL vector store instead of the in-memory one). The dacpac is built by the project reference; the host reads the build output of its own configuration (Debug or Release). The same deployment is covered by the `SqlServerDeploymentTests` Integration tests.
 
 Reuses `containers/testing/ollama/Dockerfile`, the Keycloak realm import and the optional `containers/example/.env`.
 

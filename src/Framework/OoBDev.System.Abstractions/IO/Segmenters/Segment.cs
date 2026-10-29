@@ -1,4 +1,4 @@
-﻿using OoBDev.System.IO.Messages;
+using OoBDev.System.IO.Messages;
 using System;
 using System.Linq;
 
@@ -43,6 +43,14 @@ public static class Segment
     /// </summary>
     /// <returns>A segment build definition that can be further configured.</returns>
     public static ISegmentBuildDefinition PassThough() => new SegmentBuildDefinition([]);
+
+    /// <summary>
+    /// Defines a segment cut by a device-specific segmenter, for streams the other builders cannot describe.
+    /// </summary>
+    /// <param name="factory">Creates the segmenter that reports each segment to the supplied callback.</param>
+    /// <returns>A segment build definition that cannot be configured further.</returns>
+    public static ISegmentBuildDefinition Using(Func<OnSegmentReceived, ISegmenter> factory) =>
+        new CustomSegmentBuildDefinition(factory);
 
     /// <summary>
     /// Configures the segment to end with a specific control character.
@@ -145,9 +153,11 @@ public static class Segment
     public static ISegmenter ThenDo(this ISegmentBuildDefinition builder, OnSegmentReceived onSegmentReceived) =>
         builder switch
         {
+            CustomSegmentBuildDefinition custom => custom.Create(onSegmentReceived),
             SegmentBuildDefinition def => def.EndsWith.HasValue switch
             {
                 true when def.StartsWith.Length >= 1 => new BetweenSegmenter(onSegmentReceived, def.StartsWith, def.EndsWith ?? 0, def.MaxLength, def.Options),
+                false when def.StartsWith.Length == 0 && def.Length.HasValue => new FixedLengthSegmenter(onSegmentReceived, def.Length.Value, def.Options),
                 false when def.StartsWith.Length == 0 => new PassThroughSegmenter(onSegmentReceived, def.Length ?? 0L, def.Options),
                 false when def.Length.HasValue => new StartAndFixLengthSegmenter(onSegmentReceived, def.StartsWith, def.Length.Value, def.Options, def.ExtensionDefinition),
                 _ => throw new NotSupportedException("Unable to Build Segmenter")

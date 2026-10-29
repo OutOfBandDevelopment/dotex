@@ -7,6 +7,7 @@ namespace OoBDev.System.Archives.Tar;
 
 internal class Entry
 {
+#pragma warning disable MA0051 // unreferenced sample kept as written in the migrated tar reader; splitting it would change a reference sample nobody calls
     public static void Sample(string[] args)
     {
         var file = @"XXX.tar.gz";

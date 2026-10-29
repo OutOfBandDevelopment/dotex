@@ -141,28 +141,7 @@ public static class ReflectionExtensions
 
         try
         {
-            if (input is IConvertible convertible)
-            {
-                return Convert.ChangeType(convertible, type, CultureInfo.InvariantCulture);
-            }
-            else if (input is JsonElement json)
-            {
-                return json.Deserialize(type);
-            }
-            else
-            {
-                var to = TypeDescriptor.GetConverter(type);
-                if (to.CanConvertFrom(input.GetType()))
-                {
-                    return to.ConvertFrom(input);
-                }
-
-                var from = TypeDescriptor.GetConverter(input);
-                if (from.CanConvertTo(type))
-                {
-                    return from.ConvertTo(input, type);
-                }
-            }
+            return ConvertByType(type, input);
         }
         catch (Exception ex)
         {
@@ -175,6 +154,27 @@ public static class ReflectionExtensions
         }
 
         return default;
+    }
+
+    private static object? ConvertByType(Type type, object input)
+    {
+        if (input is IConvertible convertible)
+        {
+            return Convert.ChangeType(convertible, type, CultureInfo.InvariantCulture);
+        }
+        else if (input is JsonElement json)
+        {
+            return json.Deserialize(type);
+        }
+
+        var to = TypeDescriptor.GetConverter(type);
+        if (to.CanConvertFrom(input.GetType()))
+        {
+            return to.ConvertFrom(input);
+        }
+
+        var from = TypeDescriptor.GetConverter(input);
+        return from.CanConvertTo(type) ? from.ConvertTo(input, type) : default;
     }
 
     /// <summary>
@@ -211,21 +211,10 @@ public static class ReflectionExtensions
                 parsed = value;
                 return true;
             }
-            else
+            else if (FindEnumByName(type, toParse) is { } enumValue)
             {
-                var enumValues = from ev in type.GetFields()
-                                 where ev.FieldType == type
-                                 let desc = ev.GetCustomAttribute<DescriptionAttribute>()?.Description
-                                 let enumVale = ev.GetCustomAttribute<EnumValueAttribute>()?.Name
-                                 where toParse.Equals(desc, StringComparison.OrdinalIgnoreCase) ||
-                                       toParse.Equals(enumVale, StringComparison.OrdinalIgnoreCase)
-                                 select ev.GetValue(null);
-                var enumValue = enumValues.FirstOrDefault();
-                if (enumValue != null)
-                {
-                    parsed = enumValue;
-                    return true;
-                }
+                parsed = enumValue;
+                return true;
             }
         }
 
@@ -267,6 +256,15 @@ public static class ReflectionExtensions
         parsed = default;
         return false;
     }
+
+    private static object? FindEnumByName(Type type, string toParse) =>
+        (from ev in type.GetFields()
+         where ev.FieldType == type
+         let desc = ev.GetCustomAttribute<DescriptionAttribute>()?.Description
+         let enumVale = ev.GetCustomAttribute<EnumValueAttribute>()?.Name
+         where toParse.Equals(desc, StringComparison.OrdinalIgnoreCase) ||
+               toParse.Equals(enumVale, StringComparison.OrdinalIgnoreCase)
+         select ev.GetValue(null)).FirstOrDefault();
 
     /// <summary>
     /// Type name with full namespace, name and assembly.  version is not included

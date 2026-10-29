@@ -32,10 +32,10 @@ Coverage 85% or more for the project. Tests run on Linux and Windows (fixtures e
 | REQ-004 | `Get_StatusScript_UsesStatusAndHeaders`, `Get_NoContentType_ReturnsBadGateway`, `Get_ExitWithoutOutput_ReturnsServerError`, `Get_LocationScript_ReturnsRedirectWithLocation`, `Get_NoBlankLineAfterHeaders_ReturnsBadGateway` | Simulate |
 | REQ-005 | `Get_UnlistedExtension_ReturnsForbidden` | Simulate |
 | REQ-006 | `Get_QueryWithShellMetacharacters_ReachesScriptAsData` | Simulate |
-| REQ-007 | `Get_Traversal_IsNotServed` (three encodings); the symlink case is Planned (BACKLOG) | Simulate |
-| REQ-008 | Planned (BACKLOG): no `bad-header` fixture exists yet | Simulate |
+| REQ-007 | `Get_Traversal_IsNotServed` (three encodings), `Get_SymlinkOutOfTheRoot_IsForbidden` (file and directory link; Linux container) | Simulate |
+| REQ-008 | `Get_HeaderWithControlCharacter_ReturnsBadGateway` (`bad-header.sh`, Linux container) | Simulate |
 | REQ-009 | `Get_BatchFileWithoutOptIn_ReturnsForbidden` (Windows only) | Simulate |
-| REQ-010 | `Get_ProgramOverTimeout_ReturnsGatewayTimeout` (child kill is not asserted; Planned, BACKLOG) | Simulate |
+| REQ-010 | `Get_ProgramOverTimeout_ReturnsGatewayTimeout`, `Get_ProgramOverTimeout_KillsTheProcess` (`pid-sleep.sh`, Linux container) | Simulate |
 | REQ-011 | `Get_AllSlotsBusy_ReturnsServiceUnavailableWithRetryAfter` (cap of one) | Simulate |
 | REQ-012 | `Get_ResponseOverLimit_ReturnsBadGateway`, `Get_StderrFlood_StillAnswersAndKeepsLimit` (asserts the single Warning entry and its size cap) | Simulate |
 | REQ-013 | `Get_ClientAbort_FreesTheProcessSlot` | Simulate |
@@ -47,6 +47,10 @@ Coverage 85% or more for the project. Tests run on Linux and Windows (fixtures e
 ## Fixtures
 
 Tiny scripts committed beside the tests, one per case: `env`, `echo`, `status`, `location`, `no-content-type`, `no-blank-line`, `exit-1`, `sleep`, `flood-stderr`, `bad-header`. Each exists as a shell script and a batch file, and tests pick by platform. `WebApplicationFactory` hosts the pipeline with `UseCgi`.
+
+## Latency gate
+
+`Get_TrivialScript_StaysUnderTheLatencyGate` (Simulate) sends 20 sequential requests of the `env` script, prints any over 500 ms and fails when one takes 750 ms or more. It passes on Windows and in the Linux container.
 
 ## Benchmark
 

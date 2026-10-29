@@ -21,4 +21,22 @@ public class ChecksumCalculator : IChecksumCalculator
             sum -= term;
         return (ushort)(sum % 0xffff);
     }
+
+    /// <inheritdoc/>
+    public byte Xor8(ReadOnlySpan<byte> buffer)
+    {
+        byte checksum = 0;
+        foreach (var value in buffer)
+            checksum ^= value;
+        return checksum;
+    }
+
+    /// <inheritdoc/>
+    public ushort WordSumComplement16(ReadOnlySpan<byte> buffer)
+    {
+        var sum = 0;
+        for (var i = 0; i + 1 < buffer.Length; i += 2)
+            sum += buffer[i] | (buffer[i + 1] << 8);
+        return (ushort)(0xFFFF - (sum % 0xFFFF));
+    }
 }

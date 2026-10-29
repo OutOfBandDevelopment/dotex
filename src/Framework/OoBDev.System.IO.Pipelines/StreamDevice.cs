@@ -2,9 +2,9 @@
 using OoBDev.System.IO.Segmenters;
 using OoBDev.System.Threading;
 using System;
-using System.Collections.Concurrent;
 using System.IO;
 using System.Threading;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 
 namespace OoBDev.System.IO.Pipelines;
@@ -15,7 +15,7 @@ namespace OoBDev.System.IO.Pipelines;
 /// <typeparam name="TMessage">The type of messages to send and receive.</typeparam>
 public class StreamDevice<TMessage> : IStreamDevice<TMessage>
 {
-    private readonly IProducerConsumerCollection<TMessage> _transmissionQueue = new ConcurrentQueue<TMessage>();
+    private readonly Channel<TMessage> _transmissionQueue = Channel.CreateUnbounded<TMessage>(new UnboundedChannelOptions { SingleReader = true });
 
     private Stream AdapterStream => _adapter.Stream;
     private readonly IDeviceAdapter _adapter;
@@ -113,7 +113,7 @@ public class StreamDevice<TMessage> : IStreamDevice<TMessage>
     /// </summary>
     /// <param name="message">The message to transmit.</param>
     /// <returns>A task that resolves to true if the message was successfully queued, false otherwise.</returns>
-    public Task<bool> Transmit(TMessage message) => Task.FromResult(_transmissionQueue.TryAdd(message));
+    public Task<bool> Transmit(TMessage message) => Task.FromResult(_transmissionQueue.Writer.TryWrite(message));
 
     private Task OnMessageReceived(TMessage message)
     {
@@ -180,7 +180,16 @@ public class StreamDevice<TMessage> : IStreamDevice<TMessage>
         while (!_token.IsCancellationRequested)
         {
             await mre.WaitAsync().ConfigureAwait(false);
-            while (!_token.IsCancellationRequested && _transmissionQueue.TryTake(out var item))
+            try
+            {
+                if (!await _transmissionQueue.Reader.WaitToReadAsync(_token).ConfigureAwait(false)) return;
+            }
+            catch (OperationCanceledException)
+            {
+                return;
+            }
+
+            while (!_token.IsCancellationRequested && _transmissionQueue.Reader.TryRead(out var item))
             {
                 try
                 {

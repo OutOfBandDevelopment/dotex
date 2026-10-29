@@ -248,9 +248,22 @@ cd containers/testing
 # Run integration tests
 cd ../../src
 dotnet test --filter "TestCategory=Integration"
+```
 
-# Stop services and cleanup
-cd ../containers/testing
+### Start with Aspire instead of compose
+
+`src/Tools/OoBDev.Testing.AppHost` starts the same services, ports and credentials (see its `README.Testing.AppHost.md`):
+
+```bash
+dotnet run --project src/Tools/OoBDev.Testing.AppHost
+```
+
+Run either the compose stack or the Aspire host, not both (same host ports).
+
+Stop and clean up the compose stack:
+
+```bash
+cd containers/testing
 ./scripts/integration-down.sh --clean
 ```
 
@@ -297,7 +310,7 @@ scripts\integration-down.bat --clean
 | **MongoDB** | `mongo:latest` | 27017 | NoSQL document database | `mongosh --eval "db.adminCommand('ping')"` |
 | **SQL Server** | `mcr.microsoft.com/mssql/server:2022-latest` | 1433 | Relational database | `sqlcmd -Q "SELECT 1"` |
 | **RabbitMQ** | `rabbitmq:latest` | 5673 (AMQP)<br>15672 (Management) | Message broker | `rabbitmq-diagnostics ping` |
-| **Redis** | `redis:7-alpine` | 6379 | In-memory cache store | `redis-cli ping` |
+| **Redis** | `valkey/valkey:8-alpine` | 6379 | In-memory cache store | `valkey-cli ping` |
 | **OpenSearch** | `opensearchproject/opensearch:latest` | 9200 (HTTP)<br>9600 (Performance) | Search engine | `curl https://localhost:9200/_cluster/health` |
 | **Qdrant** | `qdrant/qdrant` | 6333 (HTTP)<br>6334 (gRPC) | Vector database | `curl http://localhost:6333/health` |
 
@@ -447,67 +460,16 @@ public async Task TestMongoDBOperation()
 
 ## CI/CD Integration
 
-### GitHub Actions Workflow
+### Local runner
 
-Integration tests run **daily at 4 PM UTC** via `.github/workflows/integration-tests.yml`:
+GitHub is no longer the primary repository, so the build and the Integration run happen locally with `scripts/ci/run-tests.ps1` ([readme](../../scripts/ci/README.md)). It restores, builds and tests `src/`, starts the Docker stack when `Integration` is included and always stops it afterwards.
 
-```yaml
-# Triggered by:
-# - Scheduled: Daily at 4 PM UTC (cron: '0 16 * * *')
-# - Manual: workflow_dispatch
-
-steps:
-  - name: Start Integration Test Services
-    working-directory: ./containers/testing
-    run: |
-      docker compose -f docker-compose.integration-tests.yml up -d
-
-  - name: Wait for Services
-    working-directory: ./containers/testing
-    run: ./scripts/wait-for-services.sh
-    timeout-minutes: 5
-
-  - name: Run Integration Tests
-    working-directory: ./src
-    env:
-      MONGODB_CONNECTION_STRING: mongodb://localhost:27017
-      SQL_CONNECTION_STRING: Server=localhost,1433;User Id=sa;Password=IntegrationTest123!;TrustServerCertificate=True
-      # ... (other environment variables)
-    run: >
-      dotnet test
-      --configuration Release
-      --filter "TestCategory=Integration"
-      --collect:"XPlat Code Coverage"
-
-  - name: Stop Docker Services
-    if: always()
-    working-directory: ./containers/testing
-    run: docker compose -f docker-compose.integration-tests.yml down -v
+```powershell
+pwsh scripts/ci/run-tests.ps1                          # Unit and Simulate
+pwsh scripts/ci/run-tests.ps1 -Category Integration    # Docker stack, then Integration
 ```
 
-### Pipeline Flow
-
-```
-Build Pipeline (dotnet.yml)
-  ├─ Push/PR trigger
-  ├─ Build + Unit/Simulate tests
-  ├─ Create packages
-  ├─ Upload artifacts (90 days)
-  └─ Tag: v{version}
-          ↓
-Daily at 4 PM UTC
-          ↓
-Integration Tests (integration-tests.yml)
-  ├─ Start Docker services
-  ├─ Wait for health checks
-  ├─ Run Integration tests
-  ├─ Stop Docker services
-  └─ Tag: validated-v{version} (on success)
-          ↓
-Manual Release (release.yml)
-  ├─ Find validated artifact
-  └─ Deploy to NuGet
-```
+Results go to `artifacts/test-results`. The `.github/workflows/` files are legacy and no longer gate work; the release workflows have no local replacement yet.
 
 ---
 

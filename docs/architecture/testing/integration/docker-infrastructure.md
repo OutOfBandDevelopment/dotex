@@ -116,6 +116,6 @@ Windows uses the `.bat` equivalents. First start is slow: images pull, Ollama ba
 
 ## CI
 
-`.github/workflows/integration-tests.yml` brings the stack up on `ubuntu-latest`, runs the `Integration` category and tears it down. It runs daily at 4 PM UTC and on demand (`gh workflow run integration-tests.yml`). GitHub only runs scheduled workflows from the default branch, so the schedule starts once the workflow is on `main`; a successful run on `main` creates the `validated-v{version}` tag. It has not yet run on GitHub, so expect Linux fixes on the first runs.
+GitHub is no longer the primary repository. `scripts/ci/run-tests.ps1 -Category Integration` ([readme](../../../../scripts/ci/README.md)) starts this stack, runs the `Integration` category and stops the stack; a daily run is a Windows Task Scheduler entry for that command. `.github/workflows/integration-tests.yml` is legacy and no longer gates work.
 
 [← Integration testing](README.md) · [Services →](services.md)

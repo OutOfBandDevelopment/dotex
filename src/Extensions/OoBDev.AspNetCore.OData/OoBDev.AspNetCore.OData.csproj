@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net10.0</TargetFramework>
+		<ImplicitUsings>false</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+		<PackageReference Include="GitVersion.MsBuild">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.AspNetCore.OData" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\Framework\OoBDev.AspNetCore.Mvc\OoBDev.AspNetCore.Mvc.csproj" />
+		<ProjectReference Include="..\..\Framework\OoBDev.System.Abstractions\OoBDev.System.Abstractions.csproj" />
+		<ProjectReference Include="..\..\Framework\OoBDev.System\OoBDev.System.csproj" />
+	</ItemGroup>
+
+</Project>

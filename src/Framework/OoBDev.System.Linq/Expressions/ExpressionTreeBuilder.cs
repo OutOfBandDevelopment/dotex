@@ -121,63 +121,18 @@ public class ExpressionTreeBuilder<TModel>(
         if (queryParameter is FilterParameter search)
             return BuildPredicate(scope, expression, search, isSearchTerm);
 
-        var unwrapped = expression.Body;
-        if (expression.Body.NodeType is ExpressionType.Convert or
-            ExpressionType.ConvertChecked)
-        {
-            if (expression.Body is UnaryExpression unary)
-            {
-                unwrapped = unary.Operand;
-            }
-        }
+        var unwrapped = expression.Body is UnaryExpression { NodeType: ExpressionType.Convert or ExpressionType.ConvertChecked } unary
+            ? unary.Operand
+            : expression.Body;
 
         if (queryParameter is not string)
-        {
-            queryParameter = queryParameter switch
-            {
-                IEnumerable<char> charArray => new string([.. charArray]),
-                Array _ => queryParameter,
-                IEnumerable enumerable => enumerable.OfType<object>().ToArray(),
-                _ => Convert.ToString(queryParameter, CultureInfo.InvariantCulture)
-            };
-        }
+            queryParameter = NormalizeQueryParameter(queryParameter);
 
         var queryParameterType = queryParameter?.GetType() ??
             throw new InvalidOperationException($"{nameof(queryParameter)} may not be null");
 
         if (expressionOperator == Operators.InSet)
-        {
-            if (queryParameterType.IsArray) //TODO: should support IEnumerable<> as well
-            {
-                var elementType = queryParameterType.GetElementType();
-                if (elementType == unwrapped.Type)
-                {
-                    var enumerable = typeof(IEnumerable<>).MakeGenericType(elementType);
-
-                    Expression<Func<object, bool>> model = e => Enumerable.Contains((object[])queryParameter, e);
-                    var containsMethod = (model.Body as MethodCallExpression)?.Method.GetGenericMethodDefinition().MakeGenericMethod(elementType);
-                    if (containsMethod != null)
-                    {
-                        var containsCall = Expression.Call(method: containsMethod, Expression.Constant(queryParameter), unwrapped);
-                        var parameter = Expression.Parameter(typeof(TModel), "n");
-                        var replaced = new ParameterReplacerExpressionVisitor(parameter).Visit(containsCall);
-                        var lambda = Expression.Lambda<Func<TModel, bool>>(replaced, parameter);
-                        return lambda;
-                    }
-                }
-                else
-                {
-                    var safeArray = unwrapped.Type.MakeSafeArray((Array)queryParameter, _capture);
-                    if (safeArray != null)
-                    {
-                        var recursive = BuildPredicate(scope, expression, expressionOperator, safeArray, isSearchTerm);
-                        if (recursive != null) return recursive;
-                    }
-                }
-            }
-            throw new NotSupportedException($"{nameof(expressionOperator)}: {expressionOperator} does not support \"{queryParameterType}\"");
-
-        }
+            return BuildInSetPredicate(scope, expression, expressionOperator, unwrapped, queryParameter, queryParameterType, isSearchTerm);
 
         var isElementSet = IsElementSet(unwrapped.Type, out var unwrappedElementType);
 
@@ -189,95 +144,13 @@ public class ExpressionTreeBuilder<TModel>(
             }
             else if (unwrappedElementType == typeof(string))
             {
-                if (expressionOperator == Operators.NotEqualTo)
-                {
-                    var eq = BuildPredicate(scope, expression, Operators.EqualTo, queryParameter, isSearchTerm) ??
-                        throw new NotSupportedException(nameof(Operators.NotEqualTo));
-                    var predicate = Expression.Not(eq.Body);
-                    var parameter = Expression.Parameter(typeof(TModel), "n");
-                    var replaced = new ParameterReplacerExpressionVisitor(parameter).Visit(predicate);
-                    var lambda = Expression.Lambda<Func<TModel, bool>>(replaced, parameter);
-                    return lambda;
-                }
-                else
-                {
-                    if (queryString == "*") return null; // if only wildcard then exclude the predicate
-
-                    var (method, queryValue) = (queryString[..1], queryString[^1..]) switch
-                    {
-                        ("*", "*") => (
-                            typeof(string).GetInstanceMethod(nameof(string.Contains), typeof(string)),
-                            queryString[1..^1]
-                            ),
-
-                        ("*", _) => (
-                            typeof(string).GetInstanceMethod(nameof(string.EndsWith), typeof(string)),
-                            queryString[1..]
-                            ),
-
-                        (_, "*") => (
-                            typeof(string).GetInstanceMethod(nameof(string.StartsWith), typeof(string)),
-                            queryString[..^1]
-                            ),
-
-                        (_, _) => (
-                            typeof(string).GetInstanceMethod(nameof(string.Equals), typeof(string)),
-                            queryString
-                            )
-                    };
-                    if (method == null)
-                    {
-                        //  TODO: make null safe
-                        throw new NotSupportedException("Method not defined");
-                    }
-
-                    if (isElementSet)
-                    {
-                        //Note: target is a set
-
-                        Expression<Func<object[], bool>> example = i => i.Any(_ => true);
-                        var anyMethod = ((MethodCallExpression)example.Body).Method
-                            .GetGenericMethodDefinition()
-                            .MakeGenericMethod(unwrappedElementType)
-                            ;
-
-                        var childParameter = Expression.Parameter(unwrappedElementType, "child");
-                        var childCall = Expression.Call(childParameter, method, Expression.Constant(queryValue));
-                        var childLambda = Expression.Lambda(childCall, childParameter);
-
-                        var modelCall = Expression.Call(anyMethod, unwrapped, childLambda);
-
-                        var parameter = Expression.Parameter(typeof(TModel), "n");
-                        var replaced = new ParameterReplacerExpressionVisitor(parameter).Visit(modelCall);
-                        var lambda = Expression.Lambda<Func<TModel, bool>>(replaced, parameter);
-                        return lambda;
-                    }
-                    else
-                    {
-                        var predicate = Expression.Call(unwrapped, method, Expression.Constant(queryValue));
-
-                        var parameter = Expression.Parameter(typeof(TModel), "n");
-                        var replaced = new ParameterReplacerExpressionVisitor(parameter).Visit(predicate);
-                        var lambda = Expression.Lambda<Func<TModel, bool>>(replaced, parameter);
-                        return lambda;
-                    }
-                }
+                return expressionOperator == Operators.NotEqualTo
+                    ? BuildNegatedEquals(scope, expression, queryParameter, isSearchTerm)
+                    : BuildWildcardPredicate(unwrapped, queryString, isElementSet, unwrappedElementType);
             }
             else if (unwrapped.Type.TryParse(queryString, out var value, _capture))
             {
-                _capture.Publish(new ResultMessage
-                {
-                    Message = FilterParameterMessages.ParsedInput,
-                    MessageCode = FilterParameterMessages.ParsedInputCode,
-                    Context = scope,
-                    MetaData = new
-                    {
-                        source = queryString,
-                        target = value,
-                        targetType = value?.GetType()?.FullName,
-                    },
-                });
-                LinqLog.ParsedValue(_logger, queryString, value, value?.GetType());
+                PublishParsed(scope, queryString, value);
                 queryParameter = value;
             }
         }
@@ -294,26 +167,155 @@ public class ExpressionTreeBuilder<TModel>(
         else
         {
             if (!isSearchTerm)
-            {
-                _capture.Publish(new ResultMessage
-                {
-                    Message = FilterParameterMessages.UnableToMapFilter,
-                    MessageCode = FilterParameterMessages.UnableToMapFilterCode,
-                    Context = scope,
-                    MetaData = new
-                    {
-                        source = queryParameter,
-                    },
-                });
-                LinqLog.UnmappedFilter(_logger, expression, expressionOperator, queryParameter, queryParameter?.GetType());
-#if DEBUG
-                throw new NotSupportedException($"Filter not mapped: {expression} {expressionOperator} {queryParameter}");
-#endif
-            }
+                PublishUnmapped(scope, expression, expressionOperator, queryParameter);
 
             return default;
         }
     }
+
+    private Expression<Func<TModel, bool>>? BuildInSetPredicate(
+        string scope,
+        Expression<Func<TModel, object>> expression,
+        Operators expressionOperator,
+        Expression unwrapped,
+        object queryParameter,
+        Type queryParameterType,
+        bool isSearchTerm)
+    {
+        if (queryParameterType.IsArray) //TODO: should support IEnumerable<> as well
+        {
+            var elementType = queryParameterType.GetElementType();
+            if (elementType == unwrapped.Type)
+            {
+                var enumerable = typeof(IEnumerable<>).MakeGenericType(elementType);
+
+                Expression<Func<object, bool>> model = e => Enumerable.Contains((object[])queryParameter, e);
+                var containsMethod = (model.Body as MethodCallExpression)?.Method.GetGenericMethodDefinition().MakeGenericMethod(elementType);
+                if (containsMethod != null)
+                {
+                    var containsCall = Expression.Call(method: containsMethod, Expression.Constant(queryParameter), unwrapped);
+                    var parameter = Expression.Parameter(typeof(TModel), "n");
+                    var replaced = new ParameterReplacerExpressionVisitor(parameter).Visit(containsCall);
+                    var lambda = Expression.Lambda<Func<TModel, bool>>(replaced, parameter);
+                    return lambda;
+                }
+            }
+            else
+            {
+                var safeArray = unwrapped.Type.MakeSafeArray((Array)queryParameter, _capture);
+                if (safeArray != null)
+                {
+                    var recursive = BuildPredicate(scope, expression, expressionOperator, safeArray, isSearchTerm);
+                    if (recursive != null) return recursive;
+                }
+            }
+        }
+        throw new NotSupportedException($"{nameof(expressionOperator)}: {expressionOperator} does not support \"{queryParameterType}\"");
+
+    }
+
+    private Expression<Func<TModel, bool>> BuildNegatedEquals(string scope, Expression<Func<TModel, object>> expression, object queryParameter, bool isSearchTerm)
+    {
+        var eq = BuildPredicate(scope, expression, Operators.EqualTo, queryParameter, isSearchTerm) ??
+            throw new NotSupportedException(nameof(Operators.NotEqualTo));
+        var predicate = Expression.Not(eq.Body);
+        var parameter = Expression.Parameter(typeof(TModel), "n");
+        var replaced = new ParameterReplacerExpressionVisitor(parameter).Visit(predicate);
+        return Expression.Lambda<Func<TModel, bool>>(replaced, parameter);
+    }
+
+    private void PublishUnmapped(string scope, Expression<Func<TModel, object>> expression, Operators expressionOperator, object? queryParameter)
+    {
+        _capture.Publish(new ResultMessage
+        {
+            Message = FilterParameterMessages.UnableToMapFilter,
+            MessageCode = FilterParameterMessages.UnableToMapFilterCode,
+            Context = scope,
+            MetaData = new
+            {
+                source = queryParameter,
+            },
+        });
+        LinqLog.UnmappedFilter(_logger, expression, expressionOperator, queryParameter, queryParameter?.GetType());
+#if DEBUG
+        throw new NotSupportedException($"Filter not mapped: {expression} {expressionOperator} {queryParameter}");
+#endif
+    }
+
+    private static object? NormalizeQueryParameter(object queryParameter) => queryParameter switch
+    {
+        IEnumerable<char> charArray => new string([.. charArray]),
+        Array _ => queryParameter,
+        IEnumerable enumerable => enumerable.OfType<object>().ToArray(),
+        _ => Convert.ToString(queryParameter, CultureInfo.InvariantCulture)
+    };
+
+    private void PublishParsed(string scope, string queryString, object? value)
+    {
+        _capture.Publish(new ResultMessage
+        {
+            Message = FilterParameterMessages.ParsedInput,
+            MessageCode = FilterParameterMessages.ParsedInputCode,
+            Context = scope,
+            MetaData = new
+            {
+                source = queryString,
+                target = value,
+                targetType = value?.GetType()?.FullName,
+            },
+        });
+        LinqLog.ParsedValue(_logger, queryString, value, value?.GetType());
+    }
+
+    private static Expression<Func<TModel, bool>>? BuildWildcardPredicate(
+        Expression unwrapped,
+        string queryString,
+        bool isElementSet,
+        Type unwrappedElementType)
+    {
+        if (queryString == "*") return null; // if only wildcard then exclude the predicate
+
+        var (method, queryValue) = WildcardMethod(queryString);
+        if (method == null)
+        {
+            //  TODO: make null safe
+            throw new NotSupportedException("Method not defined");
+        }
+
+        Expression predicate;
+        if (isElementSet)
+        {
+            //Note: target is a set
+            Expression<Func<object[], bool>> example = i => i.Any(_ => true);
+            var anyMethod = ((MethodCallExpression)example.Body).Method
+                .GetGenericMethodDefinition()
+                .MakeGenericMethod(unwrappedElementType)
+                ;
+
+            var childParameter = Expression.Parameter(unwrappedElementType, "child");
+            var childCall = Expression.Call(childParameter, method, Expression.Constant(queryValue));
+            var childLambda = Expression.Lambda(childCall, childParameter);
+
+            predicate = Expression.Call(anyMethod, unwrapped, childLambda);
+        }
+        else
+        {
+            predicate = Expression.Call(unwrapped, method, Expression.Constant(queryValue));
+        }
+
+        var parameter = Expression.Parameter(typeof(TModel), "n");
+        var replaced = new ParameterReplacerExpressionVisitor(parameter).Visit(predicate);
+        return Expression.Lambda<Func<TModel, bool>>(replaced, parameter);
+    }
+
+    private static (MethodInfo? Method, string Value) WildcardMethod(string queryString) =>
+        (queryString[..1], queryString[^1..]) switch
+        {
+            ("*", "*") => (typeof(string).GetInstanceMethod(nameof(string.Contains), typeof(string)), queryString[1..^1]),
+            ("*", _) => (typeof(string).GetInstanceMethod(nameof(string.EndsWith), typeof(string)), queryString[1..]),
+            (_, "*") => (typeof(string).GetInstanceMethod(nameof(string.StartsWith), typeof(string)), queryString[..^1]),
+            (_, _) => (typeof(string).GetInstanceMethod(nameof(string.Equals), typeof(string)), queryString),
+        };
 
     private static bool IsElementSet(Type type, out Type elementType)
     {

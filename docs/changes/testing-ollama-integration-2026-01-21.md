@@ -323,6 +323,6 @@ if %ERRORLEVEL% equ 0 (
 
 **Related Documentation:**
 - [TODO.md](../../TODO.md) - Main project tracking
-- [TODO-testing-local-integration.md](../../TODO-testing-local-integration.md) - Integration testing epic
+- [TODO-testing-local-integration.md](../../BACKLOG.md) - Integration testing epic
 - [testing-docker-infrastructure-2026-01-19.md](./testing-docker-infrastructure-2026-01-19.md) - Docker infrastructure
 - [TEST_VARIABLES.md](../../TEST_VARIABLES.md) - Test property reference

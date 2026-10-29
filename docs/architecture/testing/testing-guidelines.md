@@ -567,83 +567,16 @@ cd ../containers/testing
 ./scripts/integration-down.sh --clean
 ```
 
-### GitHub Actions Workflow
+### Local runner
 
-Integration tests run **daily at 4 PM UTC** via `.github/workflows/integration-tests.yml`:
+GitHub is no longer the primary repository, so the build and the Integration run happen locally with `scripts/ci/run-tests.ps1` ([readme](../../../scripts/ci/README.md)). It restores, builds and tests `src/`, starts the Docker stack when `Integration` is included and always stops it afterwards.
 
-```yaml
-name: Integration Tests
-
-on:
-  schedule:
-    - cron: '0 16 * * *'  # Daily at 4 PM UTC
-  workflow_dispatch:      # Manual trigger
-
-jobs:
-  integration-tests:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Start Docker Services
-        working-directory: ./containers/testing
-        run: docker compose -f docker-compose.integration-tests.yml up -d
-
-      - name: Wait for Services
-        working-directory: ./containers/testing
-        run: ./scripts/wait-for-services.sh
-        timeout-minutes: 5
-
-      - name: Run Integration Tests
-        working-directory: ./src
-        run: |
-          dotnet test \
-            --configuration Release \
-            --filter "TestCategory=Integration" \
-            --logger "trx;LogFileName=integration-tests.trx"
-
-      - name: Stop Docker Services
-        if: always()
-        working-directory: ./containers/testing
-        run: docker compose -f docker-compose.integration-tests.yml down -v
-
-      - name: Upload Test Results
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: integration-test-results
-          path: '**/TestResults/**/*.trx'
+```powershell
+pwsh scripts/ci/run-tests.ps1                          # Unit and Simulate
+pwsh scripts/ci/run-tests.ps1 -Category Integration    # Docker stack, then Integration
 ```
 
-### Test Execution Flow
-
-```
-┌─────────────────────────────────────────┐
-│ Build Pipeline (dotnet.yml)             │
-│ - Every PR/push                          │
-│ - Unit + Simulate tests                  │
-│ - Create artifacts                       │
-│ - Tag: v{version}                        │
-└──────────────┬──────────────────────────┘
-               │
-               ▼
-┌─────────────────────────────────────────┐
-│ Integration Tests (integration-tests.yml)│
-│ - Daily at 4 PM UTC                      │
-│ - Manual trigger available               │
-│ - Integration tests                      │
-│ - Tag: validated-v{version}              │
-└──────────────┬──────────────────────────┘
-               │
-               ▼
-┌─────────────────────────────────────────┐
-│ Release Pipeline (release.yml)           │
-│ - Manual trigger                         │
-│ - Deploy validated builds                │
-└─────────────────────────────────────────┘
-```
+Results go to `artifacts/test-results`. The `.github/workflows/` files are legacy and no longer gate work; the release workflows have no local replacement yet.
 
 ---
 

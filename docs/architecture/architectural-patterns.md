@@ -1483,7 +1483,7 @@ These patterns work together to create a consistent, extensible, and maintainabl
 - [architectural-guidelines.md](./architectural-guidelines.md) - High-level principles
 - [architectural-standards.md](./architectural-standards.md) - Concrete standards
 - [layering-architecture.md](./layering-architecture.md) - Layer details
-- [provider-factory-pattern.md](./provider-factory-pattern.md) - Detailed provider pattern guide
+- [provider-factory-pattern.md](../patterns-discovery/02-design-patterns/03-provider-factory-keyed.md) - Detailed provider pattern guide
 
 ---
 

@@ -7,7 +7,7 @@
     <Authors>Matthew Whited</Authors>
     <Description>dotnet new templates for OoBDev framework capabilities, vendor adapters and web applications.</Description>
     <PackageTags>dotnet-new;templates;oobdev</PackageTags>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageReadmeFile>ReadMe.Templates.md</PackageReadmeFile>
     <TargetFramework>net10.0</TargetFramework>
     <IncludeContentInPack>true</IncludeContentInPack>
     <IncludeBuildOutput>false</IncludeBuildOutput>
@@ -20,7 +20,7 @@
   <ItemGroup>
     <Content Include="content\**\*" Exclude="content\**\bin\**;content\**\obj\**" />
     <Compile Remove="**\*" />
-    <None Include="README.md" Pack="true" PackagePath="\" />
+    <None Include="ReadMe.Templates.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
 </Project>

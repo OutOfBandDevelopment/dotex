@@ -37,7 +37,7 @@ public class OllamaMessageCompletionTests
     [TestMethod]
     public async Task IMessageCompletion_GetCompletionAsyncTest()
     {
-        var url = TestContext.GetRequiredProperty<string>("OLLAMA_URL");
+        var url = TestInstanceGuard.Require(TestContext.GetRequiredProperty<string>("OLLAMA_URL"));
         var model = TestContext.GetPropertyOrDefault("OLLAMA_MODEL", "phi3");
 
         var client = Build<IMessageCompletion>(url, model);

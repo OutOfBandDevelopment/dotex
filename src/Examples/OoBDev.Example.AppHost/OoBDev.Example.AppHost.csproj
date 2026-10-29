@@ -13,6 +13,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <!-- GHSA-qhrr-8q5h-9q3h: MessagePack 2.5.302 comes in through Aspire.Hosting RPC; the AppHost is a local development tool that never takes untrusted input and is not shipped. Remove when Aspire updates it. -->
+    <NuGetAuditSuppress Include="https://github.com/advisories/GHSA-qhrr-8q5h-9q3h" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Aspire.Hosting.Docker" />
     <PackageReference Include="Aspire.Hosting.JavaScript" />
     <PackageReference Include="Aspire.Hosting.Redis" />

@@ -50,9 +50,10 @@ Incoming projects pending owner decisions (BotChat was extracted 2026-10-09 and 
 
 ## Architecture Layers
 
-- **Common** (6 projects): foundation abstractions and contracts. The aggregator uses MSBuild globs to include/remove ProjectReferences (not purely interfaces).
+- **Common** (7 projects): foundation abstractions and contracts. The aggregator uses MSBuild globs to include/remove ProjectReferences (not purely interfaces).
 - **Framework** (39): core implementations; depends only on Common; 80%+ coverage; readme expected.
 - **Extensions** (6): optional enhancements; depends on Framework; packaged separately.
+- **HardwareDevices**: drivers for physical devices (Busylight, DE-5000, K8055, Radex One, Zoom H4n), separate from the generic protocols in Extensions, like ExternalServices; depends on Framework.
 - **ExternalServices** (40+): Azure, AWS, Google Cloud, database providers, external APIs.
 
 Core patterns: provider/factory (`IService` -> `IServiceProvider` -> `IServiceProviderFactory`), `TryAdd*` DI, options (`AddValidatedOptions<T>()`), handler (`IHandler<TRequest, TResponse>`). Details and naming are in `.claude/rules/coding-standards.md`.
@@ -117,7 +118,7 @@ dotnet test src/ --collect:"XPlat Code Coverage"
 - `/TODO.md`, `/BACKLOG.md`, `/Incoming/CHECKLIST.md` - work tracking and incoming project status
 - `/docs/architecture/`, `/docs/how-tos/` ([.runsettings variables](docs/how-tos/runsettings-variables-and-configuration.md)), `/docs/migration/`, `/docs/changes/`
 - Git: the primary repo is the local bare repo `origin` (`G:/oobdev/dotex.git`); GitHub (`upstream`) is no longer primary, so no `gh`, PRs or GitHub CI waits. Commit as you work on a branch, never on `main` (`.claude/rules/git-workflow.md`)
-- `/GitVersion.yml` (manual major, minor per merge into main, patch = commits past the last main tag on branches), `/src/.runsettings`, `/.github/workflows/dotnet.yml`
+- `/GitVersion.yml` (manual major, minor per merge into main, patch = commits past the last main tag on branches), `/src/.runsettings`, `scripts/ci` (manual CI)
 
 ---
 
@@ -127,7 +128,7 @@ dotnet test src/ --collect:"XPlat Code Coverage"
 
 - **Docs:** `docs/patterns-discovery/` (01 architecture, 02 design patterns, 03 practices, 04 new-project blueprint, 05 industry alternatives, 06 design-document standard; README has the doc/code drift table). Patterns are the owner's preferences: record them, don't "correct" them; rough edges go to `TODO.md` backlogs.
 - **Templates:** `templates/` (`dotnet new` pack: `oobdev-capability`, `oobdev-adapter`, `oobdev-webapp`); verify with `scripts/templates/verify-templates.ps1` (builds from `src/Framework` cwd because `Directory.Build.props` computes `SolutionDir` from the cwd, then cleans up).
-- **Scripts:** `scripts/docs/` (see its README). `dotnet test src/Tools/OoBDev.Docs.Tests` validates PlantUML, links and captions (default scope `docs/patterns-discovery`, 0 problems expected; set `DOCS_VALIDATE_PATHS` to widen it; the whole `docs/` tree has old problems, for example `docs/sbom`). Diagram rendering is the Integration test and uses the existing `plantuml` container (port 8086, `PLANTUML_URL`); do not start another.
+- **Scripts:** `scripts/docs/` (see its README). `dotnet test src/Tools/OoBDev.Docs.Tests` validates PlantUML, links and captions (default scope `docs/patterns-discovery`, 0 problems expected; set `DOCS_VALIDATE_PATHS` to widen it; the whole `docs` tree validates with 0 problems since 2026-10-29). Diagram rendering is the Integration test and uses the existing `plantuml` container (port 8086, `PLANTUML_URL`); do not start another.
 - **Decisions made:** `#if DEBUG` required builder parameters are intentional (forces child builders to be forwarded); options were deliberately unvalidated (strict/relaxed mode under analysis).
 - **Open backlogs in `TODO.md`:** naming consistency, Roslyn analyzers, options validation modes, message context caller info, replace hand-built providers with platform primitives, HTTP querying and rights middleware, documentation coverage gaps (build in the listed order).
 - **Branch state:** history was rewritten to remove AI trailers; the branch matched `origin/dev/patterns-discovery` as of 3f54bfe. Never force-push without explicit approval (the hook also blocks it).
@@ -168,7 +169,7 @@ Older entries (before 2026-10) live in `docs/changes/` (index: `docs/changes/REA
 ## Current Work Context
 
 **Active priorities:**
-1. **Integration testing** - run the Docker stack and Integration suite locally; `.github/workflows/` (including the daily `integration-tests.yml`) are legacy GitHub Actions that no longer gate work, pending a decision on a local replacement
+1. **Integration testing** - run the Docker stack and Integration suite locally; CI is manual only (`scripts/ci`): no scheduled or push builds, and the GitHub workflows are removed
 2. **SharedFramework** - design-first (Epics 2 Communications, 6 Documents, 7 Identity, 10 Text Templating): four documents per feature (requirements, architecture, api-design, testing-strategy; 85-90% coverage targets) instead of code migration, per `docs/patterns-discovery/06-design-document-standard.md`
 3. **Incoming projects** - all investigated, decisions pending
 4. **Backlog** - single backlog in `TODO.md`; CGI middleware and related-work pointers are in `docs/todo.md` and `docs/harvest-candidates.md`

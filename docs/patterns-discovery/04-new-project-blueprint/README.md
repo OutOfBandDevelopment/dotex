@@ -10,7 +10,7 @@ Choose a recipe:
 - a **new framework family** in a new repository → [Recipe 4](./04-new-framework-repository.md)
 - a **worker or command-line tool** (generic host, hosted service) → [Recipe 5](./05-new-worker-or-cli.md)
 
-Recipes 1 to 3 are also available as `dotnet new` templates (`oobdev-capability`, `oobdev-adapter`, `oobdev-webapp`); see [templates/README.md](../../../templates/README.md).
+Recipes 1 to 3 are also available as `dotnet new` templates (`oobdev-capability`, `oobdev-adapter`, `oobdev-webapp`); see [templates/ReadMe.Templates.md](../../../templates/ReadMe.Templates.md).
 
 <!-- toc:start -->
 ## Contents

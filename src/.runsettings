@@ -92,8 +92,8 @@ https://github.com/coverlet-coverage/coverlet/blob/fc7ec26dcaed8fedba880ff13c6f1
 		<Parameter name="MONGODB_DATABASE_NAME" value="integration_tests" />
 
 		<!-- SQL Server -->
-		<Parameter name="SQLSERVER_CONNECTION_STRING" value="Server=localhost,1433;User Id=sa;Password=IntegrationTest123!;TrustServerCertificate=true;" />
-		<Parameter name="SQLSERVER_HOST" value="localhost" />
+		<Parameter name="SQLSERVER_CONNECTION_STRING" value="Server=127.0.0.1,1433;User Id=sa;Password=IntegrationTest123!;TrustServerCertificate=true;" />
+		<Parameter name="SQLSERVER_HOST" value="127.0.0.1" />
 		<Parameter name="SQLSERVER_PORT" value="1433" />
 		<Parameter name="SQLSERVER_USERNAME" value="sa" />
 		<Parameter name="SQLSERVER_PASSWORD" value="IntegrationTest123!" />
@@ -145,11 +145,13 @@ https://github.com/coverlet-coverage/coverlet/blob/fc7ec26dcaed8fedba880ff13c6f1
 		<Parameter name="SQS_TEST_QUEUE" value="integration-test-queue" />
 
 		<!-- Azure Service Bus Emulator -->
-		<Parameter name="SERVICEBUS_CONNECTION_STRING" value="Endpoint=sb://localhost:5672/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=SAS_KEY_VALUE;" />
+		<Parameter name="SERVICEBUS_CONNECTION_STRING" value="Endpoint=sb://localhost;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=SAS_KEY_VALUE;UseDevelopmentEmulator=true;" />
 		<Parameter name="SERVICEBUS_HOST" value="localhost" />
 		<Parameter name="SERVICEBUS_PORT" value="5672" />
 		<Parameter name="SERVICEBUS_TEST_QUEUE" value="integration-test-queue" />
 		<Parameter name="SERVICEBUS_TEST_TOPIC" value="integration-test-topic" />
+		<Parameter name="SERVICEBUS_SESSION_QUEUE" value="integration-test-session-queue" />
+		<Parameter name="SERVICEBUS_TEST_SUBSCRIPTION" value="test-subscription" />
 
 		<!-- Keycloak -->
 		<Parameter name="KEYCLOAK_URL" value="http://localhost:8081" />
@@ -203,6 +205,12 @@ https://github.com/coverlet-coverage/coverlet/blob/fc7ec26dcaed8fedba880ff13c6f1
 		<!-- General Docker Network -->
 		<Parameter name="DOCKER_NETWORK" value="oobd-integration-test-net" />
 		<Parameter name="DOCKER_COMPOSE_FILE" value="docker-compose.integration-tests.yml" />
+
+		<!-- Hardware tests: serial port of the plugged-in device (blank or absent port ends the test Inconclusive) -->
+		<Parameter name="ZWAVE_SERIAL_PORT" value="COM13" />
+		<Parameter name="RADEX_ONE_SERIAL_PORT" value="COM8" />
+		<Parameter name="ZOOM_H4N_SERIAL_PORT" value="" />
+		<Parameter name="ZWAVE_SWITCH_NODE" value="2" />
 
 		<!-- TestContext Configuration Provider Integration Tests -->
 		<!-- Flat values -->

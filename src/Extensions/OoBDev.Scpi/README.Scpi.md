@@ -1,0 +1,30 @@
+# OoBDev.Scpi
+
+SCPI-style text instrument control: command and reply lines, with the command sets declared as JSON profiles.
+
+## Description
+
+`ScpiDevice(profile)` is an `IDeviceDefinitionReceiver<ScpiReply>` and `IDeviceDefinitionTransmitter<ScpiRequest>` from `OoBDev.System.Abstractions`; bytes travel through the existing adapters (serial, TCP, USB), so the package never opens a port.
+
+- **Profiles.** `ScpiInstrumentProfile` holds a name, an `*IDN?` match pattern, the terminator, notes and commands. A command has a template with `{Name}` tokens, parameters (numeric with bounds, fixed-width formatting and padding, choice, text), `IsQuery` and an expected response format.
+- **Building commands.** `profile.Build("vset", ["5"])` returns a `ScpiRequest` (wire text with the terminator, query flag, response format). Substitution is a single pass; numeric values are clamped and formatted (`DecimalPlaces`, `IntegerDigits`), so the Korad `VSET1:05.00` fixed-width form is produced. `BuildCustom` sends text verbatim.
+- **Replies.** A profile with a terminator gets `ScpiReplySegmenter` (CR, LF or CRLF each end a line); a profile with an empty terminator (Korad) treats each arrival as one reply. `ScpiMessageDecoder` returns `ScpiReply.Text` without line endings.
+- **Catalog.** `ScpiProfileCatalog.Create(dropInDirectories)` loads the bundled profiles (embedded JSON) and any `*.json` in the given directories. Bad files are skipped and listed in `LoadErrors`. `TryMatchByIdn(reply)` picks a profile from an `*IDN?` reply; `ScpiProfileCatalog.Generic` is the fallback.
+- **Reply tracking.** `ScpiReplyTracker` pairs each query with its reply in order (`QueryAsync`, `OnReply`, `SendAsync` for commands, `Unsolicited` for strays); a timed-out query keeps its place and discards its late reply. `ScpiAutoDetect.IdentifyAsync` sends `*IDN?` and returns the matching profile, or the generic one.
+- `services.TryAddScpi()` registers the codecs and the bundled catalog.
+
+Bundled profiles: HP/Agilent/Keysight 34401A, Korad KA3005P and KA6003P, Rigol DG1022, DG1062Z, DM3058E and DS1102E, Tektronix 2230 and TDS2024. Their notes cite documents that live in the dev-term repository.
+
+Source: dev-term `Devices.Scpi` (base); BinaryDataDecoders has no SCPI package. The generated control panel of dev-term depends on its UI framework and comes with the DevTerm merge. Design: [DeviceDecoding](../../../docs/design/DeviceDecoding/README.md).
+
+## Limits
+
+- A definite-length block reply (`#<n><length>` then that many bytes, such as a screen dump) is cut as one segment by `ScpiReplySegmenter` and decoded into `ScpiReply.Block`; a leading `#` not followed by a digit 1 to 9 is an ordinary line. Indefinite blocks (`#0`) are not supported. A profile with an empty terminator takes each arrival as one reply, so a block there is not reassembled. Turning the bytes into an image is left to the caller (`ExpectedResponseFormat` says when to expect one).
+
+## Not yet verified on hardware
+
+No instrument has been connected to this package. The profile contents are as verified in dev-term (the Korad and Tektronix notes come from real devices there).
+
+## Instrument documentation
+
+One folder per instrument under [docs/](docs/): the vendor programming manual (where kept) and a `known-configuration.md` with how it was reached on the bench: [hp-34401a](docs/hp-34401a/known-configuration.md), [korad-ka3005p-ka6003p](docs/korad-ka3005p-ka6003p/known-configuration.md), [rigol-dg1022](docs/rigol-dg1022/known-configuration.md), [rigol-dg1062z](docs/rigol-dg1062z/known-configuration.md), [rigol-dm3058e](docs/rigol-dm3058e/known-configuration.md), [rigol-ds1102e](docs/rigol-ds1102e/known-configuration.md), [tektronix-2230](docs/tektronix-2230/known-configuration.md), [tektronix-tds2024](docs/tektronix-tds2024/known-configuration.md), [usr-tcp232-302](docs/usr-tcp232-302/known-configurations.md). `usr-tcp232-302` is the serial-to-Ethernet bridge several instruments sit behind. Paths such as `docs/design/...` and `docs/test/...` inside the notes name files in the dev-term repository.

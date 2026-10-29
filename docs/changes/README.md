@@ -354,6 +354,130 @@ Each change document should include:
 - Example UI design documents reconciled with the code
 - Status: ✅ Complete
 
+**[data-vectors-aggregate-merge-2026-10-28.md](data-vectors-aggregate-merge-2026-10-28.md)**
+- SQLCLR aggregate Merge and double-matrix Read defects fixed; aggregate, matrix and serialization tests
+- Status: ✅ Complete
+
+**[tools-llmcodegen-ollama-live-run-2026-10-28.md](tools-llmcodegen-ollama-live-run-2026-10-28.md)**
+- LlmCodeGen folder runner Integration test against the stack Ollama (phi3)
+- Status: ✅ Complete
+
+**[testing-instance-guard-2026-10-29.md](testing-instance-guard-2026-10-29.md)**
+- TestInstanceGuard refuses non-local connection strings in Integration tests
+- Status: ✅ Complete
+
+**[apis-cgi-latency-gate-2026-10-29.md](apis-cgi-latency-gate-2026-10-29.md)**
+- CGI middleware latency gate (log 500 ms, fail 750 ms) on Windows and Linux
+- Status: ✅ Complete
+
+**[framework-platform-primitives-audit-2026-10-29.md](framework-platform-primitives-audit-2026-10-29.md)**
+- Audit of hand-built providers: only IGuidProvider remains and it stays
+- Status: ✅ Complete
+
+**[apis-asyncapi-azure-storage-queue-2026-10-29.md](apis-asyncapi-azure-storage-queue-2026-10-29.md)**
+- AsyncAPI contributor for Azure Storage queues
+- Status: ✅ Complete
+
+**[apis-search-latency-gate-2026-10-29.md](apis-search-latency-gate-2026-10-29.md)**
+- Latency gate for the search syntax (500 ms log, 750 ms fail)
+- Status: ✅ Complete
+
+**[process-security-audit-operations-check-2026-10-29.md](process-security-audit-operations-check-2026-10-29.md)**
+- Operations check added to the security-audit skill
+- Status: ✅ Complete
+
+**[documentation-externalservices-readme-check-2026-10-29.md](documentation-externalservices-readme-check-2026-10-29.md)**
+- ExternalServices readmes identifier-checked against code
+- Status: ✅ Complete
+
+**[migration-embedding-keyed-generator-2026-10-29.md](migration-embedding-keyed-generator-2026-10-29.md)**
+- AllMiniLmL6V2 embedding generator also registered under its key
+- Status: ✅ Complete
+
+**[apis-odata-query-2026-10-29.md](apis-odata-query-2026-10-29.md)**
+- OData query options on IQueryable actions, with limits, QUERY form bodies and tests
+- Status: ✅ Complete
+
+**[apis-cgi-symlink-test-2026-10-29.md](apis-cgi-symlink-test-2026-10-29.md)**
+- CGI symlink-out-of-root test (REQ-007)
+- Status: ✅ Complete
+
+**[build-warnings-clean-2026-10-29.md](build-warnings-clean-2026-10-29.md)**
+- Last build warnings resolved or suppressed with reasons
+- Status: ✅ Complete
+
+**[examples-aspire-vectordb-wiring-2026-10-28.md](examples-aspire-vectordb-wiring-2026-10-28.md)**
+- Example Aspire host gives the API the SQL vector store connection string
+- Status: Built, not run end to end
+
+**[examples-cgi-greet-linux-test-2026-10-28.md](examples-cgi-greet-linux-test-2026-10-28.md)**
+- CGI example built on Linux; automated form test through the middleware
+- Status: ✅ Complete
+
+**[apis-cgi-tests-bad-header-kill-2026-10-28.md](apis-cgi-tests-bad-header-kill-2026-10-28.md)**
+- CGI tests for control characters in headers and child kill on timeout
+- Status: ✅ Complete (Linux container)
+
+**[http-accepts-query-attribute-2026-10-28.md](http-accepts-query-attribute-2026-10-28.md)**
+- `[AcceptsQuery]` result filter adds the Accept-Query header
+- Status: ✅ Complete
+
+**[hosting-mailkit-all-builds-2026-10-28.md](hosting-mailkit-all-builds-2026-10-28.md)**
+- MailKit hosting registered in every build (was DEBUG only)
+- Status: ✅ Complete
+
+**[testing-aspire-test-stack-2026-10-28.md](testing-aspire-test-stack-2026-10-28.md)**
+- Aspire host for the integration test stack; wkhtmltopdf test moved to DevLocal; Tika URL from TestContext
+- Status: ✅ Verified against the running stack (MongoDB tests fail on a code defect)
+
 **[examples-apphost-startup-fixes-2026-10-28.md](examples-apphost-startup-fixes-2026-10-28.md)**
 - Example AppHost: dacpac re-publish skipped, API binds the Aspire port, vector reader uses the Aspire database
 - Status: ✅ Complete (full AppHost start not rerun)
+- [Z-Wave core](devices-zwave-core-2026-10-28.md) - first device package, verified on a Z-Stick (2026-10-28)
+- [DE-5000 core](devices-de5000-core-2026-10-28.md) - DE-5000 packet decoding, 13 unit tests, no hardware test yet (2026-10-28)
+- [Busylight core](devices-busylight-core-2026-10-28.md) - Busylight commands, program frame and poll verified on the light; device packages moved to src/HardwareDevices (2026-10-28)
+- [K8055 core](devices-k8055-core-2026-10-28.md) - K8055 reports, commands and named input bits; Hardware tests ported, not yet run on a board (2026-10-28)
+- [Radex One core](devices-radexone-core-2026-10-28.md) - Radex One packets, replies and requests; Hardware tests passed on a real device (2026-10-28)
+- [Zoom H4n remote](devices-zoomh4n-core-2026-10-28.md) - H4n status flags, button codes and handshake constants; Hardware test ported, not yet run on the adapter (2026-10-28)
+- [NMEA 0183](devices-nmea-core-2026-10-28.md) - sentence segmenter, decoder, typed GGA/RMC/GSA/GSV/VTG; BT-20 Hardware test ported, not yet run on the receiver (2026-10-28)
+- [SCPI instrument control](devices-scpi-core-2026-10-28.md) - profile model and catalog (nine bundled profiles), command builder, reply segmenter and codecs; no instrument tested yet (2026-10-28)
+- [Z-Wave id tables](devices-zwave-id-tables-2026-10-28.md) - embedded manufacturer, product, command class and device class names (2026-10-28)
+- [Method length rule](quality-method-length-2026-10-29.md) - MA0051 is a warning; 26 long methods split, one sample suppressed (2026-10-29)
+- [Vector search latency gate](testing-vector-search-latency-gate-2026-10-29.md) - SQL vector nearest-neighbour query over 1000 x 384 stays under 750 ms (2026-10-29)
+- [Service Bus emulator coverage](testing-servicebus-emulator-2026-10-29.md) - connection string fixed, topic subscription and session queue round trips (2026-10-29)
+- [Production-copy rehearsal](testing-production-copy-rehearsal-2026-10-29.md) - backup, restore with a new broker id and query a throwaway copy; redeploy defect found (2026-10-29)
+- [Local runner, Release build](testing-local-runner-release-build-2026-10-29.md) - runner verified for Unit, Simulate and Integration; Release-only MailKit using fixed (2026-10-29)
+- [Service Bus readiness probe](testing-servicebus-health-probe-2026-10-29.md) - wait-for-services probes the AMQP port because the emulator has no shell (2026-10-29)
+- [SCPI block replies](devices-scpi-block-replies-2026-10-29.md) - definite-length block framing and ScpiReply.Block (2026-10-29)
+- [Z-Wave ACK responder](devices-zwave-ack-responder-2026-10-29.md) - ZWaveAckResponder picks ACK or NAK per received frame (2026-10-29)
+- [Z-Wave session](devices-zwave-session-2026-10-29.md) - ZWaveSession owns a stream device, acknowledges frames and keeps the node table (2026-10-29)
+- [StreamDevice idle transmitter](framework-streamdevice-idle-2026-10-29.md) - transmit queue is a Channel, so an idle device no longer spins a core (2026-10-29)
+- [SCPI reply tracker](devices-scpi-reply-tracker-2026-10-29.md) - ScpiReplyTracker pairs queries with replies; ScpiAutoDetect identifies by *IDN? (2026-10-29)
+- [Docs validators clean](docs-validator-clean-2026-10-29.md) - links, PlantUML blocks and table captions fixed in hand-written docs; sbom and generated remain (2026-10-29)
+- [SCPI generated panel](devices-scpi-panels-2026-10-29.md) - OoBDev.Scpi.Panels builds a form, model and binding from an instrument profile (2026-10-29)
+- [TCP device transport](devices-tcp-transport-2026-10-29.md) - OoBDev.System.IO.Tcp: TcpDeviceAdapter, first phase 9 transport (2026-10-29)
+- [Vectors DB redeploy](data-vectors-db-redeploy-2026-10-29.md) - second deploy of the dacpac changes nothing (2026-10-29)
+- [LlmCodeGen response metadata](tools-llmcodegen-response-metadata-2026-10-29.md) - response.json beside each response (2026-10-29)
+- [DacFx build test path](testing-dacfx-buildpackage-path-2026-10-29.md) - BuildPackageTest finds the CLR build itself and asserts the dacpac (2026-10-29)
+- [AsyncAPI viewer browser check](apis-asyncapi-viewer-browser-check-2026-10-29.md) - viewer renders send and receive operations in Chromium (2026-10-29)
+- [Z-Wave product configs](devices-zwave-product-configs-2026-10-29.md) - ZWaveNames.ConfigParameters from the embedded product table (2026-10-29)
+- [UiDefinitions](devices-uidefinitions-2026-10-29.md) - OoBDev.UiDefinitions: toolkit-neutral control model, serializer, validator, expressions and forms from dev-term (2026-10-29)
+- [UiDefinitions view models](devices-uidefinitions-viewmodels-2026-10-29.md) - OoBDev.UiDefinitions.ViewModels: toolkit-neutral view models and ICommand types over forms (2026-10-29)
+- [UiDefinitions WPF view](devices-uidefinitions-wpf-2026-10-29.md) - OoBDev.UiDefinitions.Wpf: XAML FormView over the view models (2026-10-29)
+- [DevTerm WPF shell](devices-devterm-wpf-shell-2026-10-29.md) - OoBDev.DevTerm.Wpf: shell skeleton with panel factories and a demo panel (2026-10-29)
+- [Device bench notes](docs-device-bench-notes-2026-10-29.md) - dev-term known-configuration, .ksy and instrument manuals moved beside the packages (2026-10-29)
+- [JWS reference](identity-jws-reference-2026-10-29.md) - OoBDev.Identity.Jws: HS256 and RS256 sign and verify from RFC 7515 (2026-10-29)
+- [SQL Server Service Broker](sqlserver-service-broker-2026-10-29.md) - OoBDev.Microsoft.SqlServer.ServiceBroker: queue provider on Service Broker (2026-10-29)
+- [BinaryDataDecoders Drawing (2026-10-29)](migration-drawing-2026-10-29.md) - Code 39, JPEG segments, PNG packing, Z-order curve and tile pyramid in `OoBDev.Extensions.Drawing`
+- [BinaryDataDecoders LanC (2026-10-29)](migration-lanc-2026-10-29.md) - Sony LANC command and status tables in `OoBDev.LanC`
+- [BinaryDataDecoders Xslt CLI (2026-10-29)](migration-xslt-cli-2026-10-29.md) - `oobdev-xslt` tool with `SandboxedTransformer` over XML, HTML, JSON, YAML, C#, VB, binlog, DacPac and path inputs
+- [BinaryDataDecoders PackMan CLI (2026-10-29)](migration-packman-cli-2026-10-29.md) - `oobdev-packman` tool that updates Directory.Packages.props and project package versions
+- [BinaryDataDecoders Fencing score machines (2026-10-29)](migration-fencing-2026-10-29.md) - Favero and Saint George frame decoders in `OoBDev.Fencing.ScoreMachines`
+- [BinaryDataDecoders Code analysis (2026-10-29)](migration-code-analysis-2026-10-29.md) - Roslyn C#/VB, DacPac and MSBuild binlog XPath navigators in `OoBDev.Extensions.CodeAnalysis*`
+- [BinaryDataDecoders NMEA helpers (2026-10-29)](migration-nmea-helpers-2026-10-29.md) - bearing, compass point and coordinate formatting in `OoBDev.Nmea`
+- [BinaryDataDecoders Numerics (2026-10-29)](migration-numerics-2026-10-29.md) - byte, engineering and scientific notation numbers in `OoBDev.System`
+- [BinaryDataDecoders re-review against current main (2026-10-29)](docs-binarydatadecoders-rereview-2026-10-29.md) - refreshed comparison, gaps and order
+- [Plugin sandbox threat model](docs-plugin-sandbox-threat-model-2026-10-29.md) - phase 0: threats, PoC escape matrix review and gaps (2026-10-29)
+- [Documentation style guide](docs-style-guide-2026-10-29.md) - numbering and naming rules, readme renames, names check in Docs.Tests (2026-10-29)
+- [Migration notes inventory (2026-10-29)](docs-migration-inventory-2026-10-29.md) - README as an inventory; BotChat and MailKit notes removed
+- [Manual CI and packaging on demand (2026-10-29)](build-manual-ci-packaging-2026-10-29.md) - pack only on `dotnet pack`, output `G:\nuget`, workflows removed

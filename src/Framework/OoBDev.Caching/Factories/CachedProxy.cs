@@ -41,48 +41,7 @@ public partial class CachedProxy<TInterface, TImplemention> : DispatchProxy
                     var cachingKey = _cachingManager.BuildKey(method, args);
                     if (!string.IsNullOrWhiteSpace(cachingKey))
                     {
-                        // do cacheable stuff
-
-                        //TODO: add exception for void and non generic tasks
-
-                        var targetReturnType = method.ReturnType;
-                        var isTask = false;
-                        if (targetReturnType.IsGenericType && targetReturnType.GetGenericTypeDefinition() == typeof(Task<>))
-                        {
-                            //checking to see if Task<>
-                            targetReturnType = targetReturnType.GetGenericArguments().First();
-                            isTask = true;
-                        }
-                        else if (targetReturnType == typeof(Task))
-                        {
-                            throw new NotSupportedException($"Caching of Task not supported");
-                        }
-                        else if (targetReturnType == typeof(void))
-                        {
-                            throw new NotSupportedException($"Caching of Void not supported");
-                        }
-
-                        var cachedResult = _cachingManager.RetrieveAsync(cachingKey, targetReturnType).ConfigureAwait(false).GetAwaiter().GetResult();
-                        if (cachedResult != null)
-                        {
-                            if (_logger != null) LogRetrieved(_logger, targetMethod.Name, cachingKey);
-                            return isTask ? ResultAwaiter.Wrap(cachedResult) : cachedResult;
-                        }
-
-                        // look up original
-                        var original = method.Invoke(_decorated, args);
-                        if (original == null) return null; // no result to try to cache
-
-                        if (isTask)
-                        {
-                            original = ResultAwaiter.Unwrap(targetReturnType, original);
-                        }
-
-                        // store original
-                        _cachingManager.StoreAsync(cachingKey, original, isCachableAttribute.LifeTime).ConfigureAwait(false).GetAwaiter().GetResult();
-                        if (_logger != null) LogStored(_logger, targetMethod.Name, cachingKey);
-
-                        return isTask ? ResultAwaiter.Wrap(original) : original;
+                        return InvokeCached(method, targetMethod, args, cachingKey, isCachableAttribute.LifeTime);
                     }
                 }
 
@@ -135,6 +94,53 @@ public partial class CachedProxy<TInterface, TImplemention> : DispatchProxy
 #pragma warning disable CS8603 // Possible null reference return.
         return default;
 #pragma warning restore CS8603 // Possible null reference return.
+    }
+
+    private object? InvokeCached(MethodInfo method, MethodInfo targetMethod, object?[]? args, string cachingKey, TimeSpan lifeTime)
+    {
+        var cachingManager = _cachingManager!;
+        // do cacheable stuff
+
+        //TODO: add exception for void and non generic tasks
+
+        var targetReturnType = method.ReturnType;
+        var isTask = false;
+        if (targetReturnType.IsGenericType && targetReturnType.GetGenericTypeDefinition() == typeof(Task<>))
+        {
+            //checking to see if Task<>
+            targetReturnType = targetReturnType.GetGenericArguments().First();
+            isTask = true;
+        }
+        else if (targetReturnType == typeof(Task))
+        {
+            throw new NotSupportedException($"Caching of Task not supported");
+        }
+        else if (targetReturnType == typeof(void))
+        {
+            throw new NotSupportedException($"Caching of Void not supported");
+        }
+
+        var cachedResult = cachingManager.RetrieveAsync(cachingKey, targetReturnType).ConfigureAwait(false).GetAwaiter().GetResult();
+        if (cachedResult != null)
+        {
+            if (_logger != null) LogRetrieved(_logger, targetMethod.Name, cachingKey);
+            return isTask ? ResultAwaiter.Wrap(cachedResult) : cachedResult;
+        }
+
+        // look up original
+        var original = method.Invoke(_decorated, args);
+        if (original == null) return null; // no result to try to cache
+
+        if (isTask)
+        {
+            original = ResultAwaiter.Unwrap(targetReturnType, original);
+        }
+
+        // store original
+        cachingManager.StoreAsync(cachingKey, original, lifeTime).ConfigureAwait(false).GetAwaiter().GetResult();
+        if (_logger != null) LogStored(_logger, targetMethod.Name, cachingKey);
+
+        return isTask ? ResultAwaiter.Wrap(original) : original;
     }
 
     [LoggerMessage(EventId = 1, Level = LogLevel.Information, Message = "Retrieved from Cache::{Method}::{Key}")]

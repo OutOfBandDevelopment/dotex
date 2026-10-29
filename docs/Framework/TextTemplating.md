@@ -28,6 +28,7 @@ generate simple text content. `OoBDev.System.Text.Templating`
 ## Structure
 
 ```plantuml
+@startuml
 
 package Abstractions {
     interface "ILogger<>" as ILogger
@@ -114,6 +115,7 @@ ITemplateSource     ^-- FileTemplateSource : implements
 FileTemplateSource  --* ILogger : uses
 FileTemplateSource  --o IFileType : uses
 
+@enduml
 ```
 
 ## Features and Components 

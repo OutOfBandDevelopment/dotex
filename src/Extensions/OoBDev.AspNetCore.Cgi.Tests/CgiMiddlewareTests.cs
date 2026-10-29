@@ -255,6 +255,50 @@ public class CgiMiddlewareTests
 
     [TestMethod]
     [TestCategory("Simulate")]
+    [DataRow(false)]
+    [DataRow(true)]
+    public async Task Get_SymlinkOutOfTheRoot_IsForbidden(bool linkTheDirectory)
+    {
+        // Stage: a script root that holds a link to a script outside of it
+        var temp = Path.Combine(Path.GetTempPath(), "cgi-link-" + Guid.NewGuid().ToString("N"));
+        var root = Path.Combine(temp, "root");
+        var outside = Path.Combine(temp, "outside");
+        Directory.CreateDirectory(root);
+        Directory.CreateDirectory(outside);
+        try
+        {
+            File.Copy(Path.Combine(AppContext.BaseDirectory, "Fixtures", "env" + Ext), Path.Combine(outside, "env" + Ext));
+            try
+            {
+                if (linkTheDirectory)
+                    Directory.CreateSymbolicLink(Path.Combine(root, "linked"), outside);
+                else
+                    File.CreateSymbolicLink(Path.Combine(root, "env" + Ext), Path.Combine(outside, "env" + Ext));
+            }
+            catch (IOException) when (OperatingSystem.IsWindows())
+            {
+                Assert.Inconclusive("Creating a symbolic link needs the link privilege.");
+            }
+            catch (UnauthorizedAccessException)
+            {
+                Assert.Inconclusive("Creating a symbolic link needs the link privilege.");
+            }
+            await StartAsync(new() { ["OoBDev:Cgi:ScriptRoot"] = root });
+
+            // Test
+            using var response = await _client!.GetAsync(linkTheDirectory ? $"/cgi-bin/linked/env{Ext}" : $"/cgi-bin/env{Ext}");
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.Forbidden, response.StatusCode);
+        }
+        finally
+        {
+            Directory.Delete(temp, recursive: true);
+        }
+    }
+
+    [TestMethod]
+    [TestCategory("Simulate")]
     [DataRow("/cgi-bin/..%2fenv")]
     [DataRow("/cgi-bin/%2e%2e/env")]
     [DataRow("/cgi-bin/sub%5c..%5cenv")]
@@ -358,6 +402,49 @@ public class CgiMiddlewareTests
 
     [TestMethod]
     [TestCategory("Simulate")]
+    public async Task Get_HeaderWithControlCharacter_ReturnsBadGateway()
+    {
+        // Stage
+        if (OperatingSystem.IsWindows())
+            Assert.Inconclusive("The bad-header fixture is a shell script; it runs in the Linux container.");
+        await StartAsync();
+
+        // Test
+        using var response = await _client!.GetAsync("/cgi-bin/bad-header.sh");
+
+        // Assert
+        Assert.AreEqual(HttpStatusCode.BadGateway, response.StatusCode);
+    }
+
+    [TestMethod]
+    [TestCategory("Simulate")]
+    public async Task Get_ProgramOverTimeout_KillsTheProcess()
+    {
+        // Stage
+        if (OperatingSystem.IsWindows())
+            Assert.Inconclusive("The pid-sleep fixture is a shell script; it runs in the Linux container.");
+        await StartAsync(new() { ["OoBDev:Cgi:Timeout"] = "00:00:01" });
+        var pidFile = Path.Combine(Path.GetTempPath(), $"cgi_pid_{Guid.NewGuid():N}");
+
+        try
+        {
+            // Test
+            using var response = await _client!.GetAsync($"/cgi-bin/pid-sleep.sh?{pidFile}");
+            await Task.Delay(TimeSpan.FromMilliseconds(500));
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.GatewayTimeout, response.StatusCode);
+            var pid = int.Parse(File.ReadAllText(pidFile).Trim(), global::System.Globalization.CultureInfo.InvariantCulture);
+            Assert.IsFalse(Directory.Exists($"/proc/{pid}"), "the CGI process should have been killed");
+        }
+        finally
+        {
+            File.Delete(pidFile);
+        }
+    }
+
+    [TestMethod]
+    [TestCategory("Simulate")]
     public async Task Get_AllSlotsBusy_ReturnsServiceUnavailableWithRetryAfter()
     {
         // Stage
@@ -426,6 +513,33 @@ public class CgiMiddlewareTests
 
         // Assert
         Assert.AreEqual(HttpStatusCode.OK, status);
+    }
+
+    [TestMethod]
+    [TestCategory("Simulate")]
+    public async Task Get_TrivialScript_StaysUnderTheLatencyGate()
+    {
+        // Stage
+        const double logMilliseconds = 500;
+        const double failMilliseconds = 750;
+        await StartAsync(new() { ["OoBDev:Cgi:MaxConcurrentProcesses"] = "4" });
+        using var warmup = await _client!.GetAsync($"/cgi-bin/env{Ext}");
+        var slowest = 0d;
+
+        // Test
+        for (var request = 0; request < 20; request++)
+        {
+            var started = Stopwatch.GetTimestamp();
+            using var response = await _client.GetAsync($"/cgi-bin/env{Ext}");
+            var elapsed = Stopwatch.GetElapsedTime(started).TotalMilliseconds;
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            if (elapsed > logMilliseconds)
+                Console.WriteLine($"slow request {request}: {elapsed:F0} ms");
+            slowest = Math.Max(slowest, elapsed);
+        }
+
+        // Assert
+        Assert.IsLessThan(failMilliseconds, slowest, "a trivial script must answer within the latency gate");
     }
 
     [TestMethod]

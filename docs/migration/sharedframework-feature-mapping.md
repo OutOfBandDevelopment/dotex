@@ -523,7 +523,7 @@ SharedFramework contains a mix of **completely new capabilities** (24 projects) 
 ## Related Documents
 
 - [SharedFramework Migration Plan](./sharedframework-migration-plan.md) - Detailed execution steps
-- [Incomming Checklist](../../Incomming/CHECKLIST.md) - Overall tracking
+- [Incomming Checklist](../../Incoming/CHECKLIST.md) - Overall tracking
 
 ---
 

@@ -1,5 +1,6 @@
 ﻿using OoBDev.System.Xml.XPath;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -52,39 +53,9 @@ public static class PathNavigatorFactory
 
               attributeSelector: a => a switch
               {
-                  DirectoryInfo directory => new[]
-                  {
-                      (XName.Get(nameof(directory.Attributes), rootName.NamespaceName), directory.Attributes.ToString()),
-                      (XName.Get(nameof(directory.CreationTime), rootName.NamespaceName), directory.CreationTime.ToString(CultureInfo.InvariantCulture)),
-                      (XName.Get(nameof(directory.CreationTimeUtc), rootName.NamespaceName), directory.CreationTimeUtc.ToString(CultureInfo.InvariantCulture)),
-                      (XName.Get(nameof(directory.Extension), rootName.NamespaceName), directory.Extension),
-                      (XName.Get(nameof(directory.FullName), rootName.NamespaceName), directory.FullName),
-                      (XName.Get("RelativeName", rootName.NamespaceName), directory.FullName[trimLen..]),
-                      (XName.Get(nameof(directory.LastAccessTime), rootName.NamespaceName), directory.LastAccessTime.ToString(CultureInfo.InvariantCulture)),
-                      (XName.Get(nameof(directory.LastAccessTimeUtc), rootName.NamespaceName), directory.LastAccessTimeUtc.ToString(CultureInfo.InvariantCulture)),
-                      (XName.Get(nameof(directory.LastWriteTime), rootName.NamespaceName), directory.LastWriteTime.ToString(CultureInfo.InvariantCulture)),
-                      (XName.Get(nameof(directory.LastWriteTimeUtc), rootName.NamespaceName), directory.LastWriteTimeUtc.ToString(CultureInfo.InvariantCulture)),
-                      (XName.Get(nameof(directory.Name), rootName.NamespaceName), directory.Name),
-                      (XName.Get("WithoutExtension", rootName.NamespaceName), Path.GetFileNameWithoutExtension( directory.Name)),
-                  }.Select(i => (i.Item1, (string?)i.Item2)),
+                  DirectoryInfo directory => DirectoryAttributes(directory, rootName, trimLen),
 
-                  FileInfo file => new[]
-                  {
-                      (XName.Get(nameof(file.Attributes), rootName.NamespaceName), file.Attributes.ToString()),
-                      (XName.Get(nameof(file.CreationTime), rootName.NamespaceName), file.CreationTime.ToString(CultureInfo.InvariantCulture)),
-                      (XName.Get(nameof(file.CreationTimeUtc), rootName.NamespaceName), file.CreationTimeUtc.ToString(CultureInfo.InvariantCulture)),
-                      (XName.Get(nameof(file.Extension), rootName.NamespaceName), file.Extension),
-                      (XName.Get(nameof(file.FullName), rootName.NamespaceName), file.FullName),
-                      (XName.Get("RelativeName", rootName.NamespaceName), file.FullName[trimLen..]),
-                      (XName.Get(nameof(file.IsReadOnly), rootName.NamespaceName), file.IsReadOnly.ToString()),
-                      (XName.Get(nameof(file.LastAccessTime), rootName.NamespaceName), file.LastAccessTime.ToString(CultureInfo.InvariantCulture)),
-                      (XName.Get(nameof(file.LastAccessTimeUtc), rootName.NamespaceName), file.LastAccessTimeUtc.ToString(CultureInfo.InvariantCulture)),
-                      (XName.Get(nameof(file.LastWriteTime), rootName.NamespaceName), file.LastWriteTime.ToString(CultureInfo.InvariantCulture)),
-                      (XName.Get(nameof(file.LastWriteTimeUtc), rootName.NamespaceName), file.LastWriteTimeUtc.ToString(CultureInfo.InvariantCulture)),
-                      (XName.Get(nameof(file.Length), rootName.NamespaceName), file.Length.ToString(CultureInfo.InvariantCulture)),
-                      (XName.Get(nameof(file.Name), rootName.NamespaceName), file.Name),
-                      (XName.Get("WithoutExtension", rootName.NamespaceName), Path.GetFileNameWithoutExtension( file.Name)),
-                  }.Select(i => (i.Item1, (string?)i.Item2)),
+                  FileInfo file => FileAttributes(file, rootName, trimLen),
 
                   _ => throw new NotSupportedException(),
               },
@@ -99,5 +70,45 @@ public static class PathNavigatorFactory
                  _ => throw new NotSupportedException()
              }
         );
+    }
+
+    private static IEnumerable<(XName, string?)> DirectoryAttributes(DirectoryInfo directory, XName rootName, int trimLen)
+    {
+        return new[]
+        {
+            (XName.Get(nameof(directory.Attributes), rootName.NamespaceName), directory.Attributes.ToString()),
+            (XName.Get(nameof(directory.CreationTime), rootName.NamespaceName), directory.CreationTime.ToString(CultureInfo.InvariantCulture)),
+            (XName.Get(nameof(directory.CreationTimeUtc), rootName.NamespaceName), directory.CreationTimeUtc.ToString(CultureInfo.InvariantCulture)),
+            (XName.Get(nameof(directory.Extension), rootName.NamespaceName), directory.Extension),
+            (XName.Get(nameof(directory.FullName), rootName.NamespaceName), directory.FullName),
+            (XName.Get("RelativeName", rootName.NamespaceName), directory.FullName[trimLen..]),
+            (XName.Get(nameof(directory.LastAccessTime), rootName.NamespaceName), directory.LastAccessTime.ToString(CultureInfo.InvariantCulture)),
+            (XName.Get(nameof(directory.LastAccessTimeUtc), rootName.NamespaceName), directory.LastAccessTimeUtc.ToString(CultureInfo.InvariantCulture)),
+            (XName.Get(nameof(directory.LastWriteTime), rootName.NamespaceName), directory.LastWriteTime.ToString(CultureInfo.InvariantCulture)),
+            (XName.Get(nameof(directory.LastWriteTimeUtc), rootName.NamespaceName), directory.LastWriteTimeUtc.ToString(CultureInfo.InvariantCulture)),
+            (XName.Get(nameof(directory.Name), rootName.NamespaceName), directory.Name),
+            (XName.Get("WithoutExtension", rootName.NamespaceName), Path.GetFileNameWithoutExtension( directory.Name)),
+        }.Select(i => (i.Item1, (string?)i.Item2));
+    }
+
+    private static IEnumerable<(XName, string?)> FileAttributes(FileInfo file, XName rootName, int trimLen)
+    {
+        return new[]
+        {
+            (XName.Get(nameof(file.Attributes), rootName.NamespaceName), file.Attributes.ToString()),
+            (XName.Get(nameof(file.CreationTime), rootName.NamespaceName), file.CreationTime.ToString(CultureInfo.InvariantCulture)),
+            (XName.Get(nameof(file.CreationTimeUtc), rootName.NamespaceName), file.CreationTimeUtc.ToString(CultureInfo.InvariantCulture)),
+            (XName.Get(nameof(file.Extension), rootName.NamespaceName), file.Extension),
+            (XName.Get(nameof(file.FullName), rootName.NamespaceName), file.FullName),
+            (XName.Get("RelativeName", rootName.NamespaceName), file.FullName[trimLen..]),
+            (XName.Get(nameof(file.IsReadOnly), rootName.NamespaceName), file.IsReadOnly.ToString()),
+            (XName.Get(nameof(file.LastAccessTime), rootName.NamespaceName), file.LastAccessTime.ToString(CultureInfo.InvariantCulture)),
+            (XName.Get(nameof(file.LastAccessTimeUtc), rootName.NamespaceName), file.LastAccessTimeUtc.ToString(CultureInfo.InvariantCulture)),
+            (XName.Get(nameof(file.LastWriteTime), rootName.NamespaceName), file.LastWriteTime.ToString(CultureInfo.InvariantCulture)),
+            (XName.Get(nameof(file.LastWriteTimeUtc), rootName.NamespaceName), file.LastWriteTimeUtc.ToString(CultureInfo.InvariantCulture)),
+            (XName.Get(nameof(file.Length), rootName.NamespaceName), file.Length.ToString(CultureInfo.InvariantCulture)),
+            (XName.Get(nameof(file.Name), rootName.NamespaceName), file.Name),
+            (XName.Get("WithoutExtension", rootName.NamespaceName), Path.GetFileNameWithoutExtension( file.Name)),
+        }.Select(i => (i.Item1, (string?)i.Item2));
     }
 }

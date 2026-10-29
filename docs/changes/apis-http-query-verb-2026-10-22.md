@@ -13,4 +13,4 @@
 
 ## Not done
 
-`Accept-Query` header and a registration test (BACKLOG). OData and GraphQL wait on open question Q2.
+`Accept-Query` header and a registration test (BACKLOG). OData shipped later (apis-odata-query-2026-10-29.md); GraphQL stays on demand.

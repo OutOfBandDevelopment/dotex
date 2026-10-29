@@ -253,33 +253,27 @@ public class AzureServiceBusIntegrationTests
         // Assert
         Assert.IsNotNull(correlationId);
         TestContext.WriteLine($"Message sent to topic with correlation ID: {correlationId}");
+
+        await using var client = new ServiceBusClient(connectionString);
+        await using var receiver = client.CreateReceiver(topicName, TestContext.GetRequiredProperty<string>("SERVICEBUS_TEST_SUBSCRIPTION"));
+        var received = await receiver.ReceiveMessageAsync(TimeSpan.FromSeconds(10));
+        Assert.IsNotNull(received, "No message received from the subscription within the timeout");
+        Assert.AreEqual(correlationId, received.CorrelationId);
+        Assert.AreEqual("TopicTest", received.ApplicationProperties["MessageType"].ToString());
+        await receiver.CompleteMessageAsync(received);
     }
 
     /// <summary>
     /// Tests sending to a session-enabled queue.
-    /// Note: Requires a session-enabled queue to be created first.
+    /// Uses the session queue from containers/testing/servicebus-config/Config.json.
     /// </summary>
     [TestMethod]
     [TestCategory(TestCategories.Integration)]
     public async Task SendAsync_ToSessionQueue_WithSessionId_SendsSuccessfully()
     {
         // Arrange
-        var connectionString = TestContext.GetProperty<string>("SERVICEBUS_CONNECTION_STRING");
-
-        if (string.IsNullOrEmpty(connectionString) || connectionString.Contains("localhost"))
-        {
-            Assert.Inconclusive("Session-enabled queues require real Azure Service Bus");
-            return;
-        }
-
-        var queueName = TestContext.GetProperty<string>("SERVICEBUS_SESSION_QUEUE");
-
-        if (string.IsNullOrEmpty(queueName))
-        {
-            Assert.Inconclusive("SERVICEBUS_SESSION_QUEUE not configured in test settings");
-            return;
-        }
-
+        var connectionString = TestContext.GetRequiredProperty<string>("SERVICEBUS_CONNECTION_STRING");
+        var queueName = TestContext.GetRequiredProperty<string>("SERVICEBUS_SESSION_QUEUE");
         var sessionId = $"session-{Guid.NewGuid():N}";
 
         // Configure message provider
@@ -319,7 +313,14 @@ public class AzureServiceBusIntegrationTests
         // Assert
         Assert.IsNotNull(correlationId);
         TestContext.WriteLine($"Session message sent with correlation ID: {correlationId}");
-        TestContext.WriteLine($"Session ID: {sessionId}");
+
+        await using var client = new ServiceBusClient(connectionString);
+        await using var receiver = await client.AcceptSessionAsync(queueName, sessionId);
+        var received = await receiver.ReceiveMessageAsync(TimeSpan.FromSeconds(10));
+        Assert.IsNotNull(received, "No message received from the session within the timeout");
+        Assert.AreEqual(sessionId, received.SessionId);
+        Assert.AreEqual(correlationId, received.CorrelationId);
+        await receiver.CompleteMessageAsync(received);
     }
 
     private record TestMessage

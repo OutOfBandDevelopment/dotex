@@ -39,7 +39,7 @@ public class MongoDBIntegrationTests
 
     private ITestMongoDatabase BuildTestDatabase()
     {
-        var connectionString = TestContext.GetRequiredProperty<string>("MONGODB_CONNECTION_STRING");
+        var connectionString = TestInstanceGuard.Require(TestContext.GetRequiredProperty<string>("MONGODB_CONNECTION_STRING"));
 
         var config = new ConfigurationBuilder()
             .AddInMemoryCollection(new Dictionary<string, string?>

@@ -66,23 +66,7 @@ public class LorenzMachine(byte[] keySet, int[] startPosition)
 
         var output = new char[chars.Length];
 
-        var keyOffsets = new[]
-        {
-             _chiModulus.Take(0).Sum(),
-             _chiModulus.Take(1).Sum(),
-             _chiModulus.Take(2).Sum(),
-             _chiModulus.Take(3).Sum(),
-             _chiModulus.Take(4).Sum(),
-
-             _chiModulus.Concat(_muModulus.Take(0)).Sum(),
-             _chiModulus.Concat(_muModulus.Take(1)).Sum(),
-
-             _chiModulus.Concat(_muModulus).Concat(_psiModulus.Take(0)).Sum(),
-             _chiModulus.Concat(_muModulus).Concat(_psiModulus.Take(1)).Sum(),
-             _chiModulus.Concat(_muModulus).Concat(_psiModulus.Take(2)).Sum(),
-             _chiModulus.Concat(_muModulus).Concat(_psiModulus.Take(3)).Sum(),
-             _chiModulus.Concat(_muModulus).Concat(_psiModulus.Take(4)).Sum(),
-        };
+        var keyOffsets = KeyOffsets();
 
         for (int chi = 0, mu = 0, psi = 0; chi < chars.Length; chi++)
         {
@@ -123,6 +107,27 @@ public class LorenzMachine(byte[] keySet, int[] startPosition)
         }
 
         return new string(output);
+    }
+
+    private int[] KeyOffsets()
+    {
+        return new[]
+        {
+             _chiModulus.Take(0).Sum(),
+             _chiModulus.Take(1).Sum(),
+             _chiModulus.Take(2).Sum(),
+             _chiModulus.Take(3).Sum(),
+             _chiModulus.Take(4).Sum(),
+
+             _chiModulus.Concat(_muModulus.Take(0)).Sum(),
+             _chiModulus.Concat(_muModulus.Take(1)).Sum(),
+
+             _chiModulus.Concat(_muModulus).Concat(_psiModulus.Take(0)).Sum(),
+             _chiModulus.Concat(_muModulus).Concat(_psiModulus.Take(1)).Sum(),
+             _chiModulus.Concat(_muModulus).Concat(_psiModulus.Take(2)).Sum(),
+             _chiModulus.Concat(_muModulus).Concat(_psiModulus.Take(3)).Sum(),
+             _chiModulus.Concat(_muModulus).Concat(_psiModulus.Take(4)).Sum(),
+        };
     }
 
     /*

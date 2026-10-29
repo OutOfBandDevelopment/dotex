@@ -15,6 +15,18 @@
               "DuplicateDetectionHistoryTimeWindow": "PT5M",
               "RequiresDuplicateDetection": false
             }
+          },
+          {
+            "Name": "integration-test-session-queue",
+            "Properties": {
+              "LockDuration": "PT1M",
+              "MaxDeliveryCount": 10,
+              "RequiresSession": true,
+              "DefaultMessageTimeToLive": "PT30M",
+              "DeadLetteringOnMessageExpiration": false,
+              "DuplicateDetectionHistoryTimeWindow": "PT5M",
+              "RequiresDuplicateDetection": false
+            }
           }
         ],
         "Topics": [

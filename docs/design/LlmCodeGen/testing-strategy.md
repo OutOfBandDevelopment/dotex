@@ -12,7 +12,7 @@ Existing tests (`OoBDev.LlmCodeGen.Cli.Tests`): `ResponseFileExtractorTests` (8 
 | Options | Unit | missing required values fail validation; defaults applied |
 | `FolderPromptRunner` | Simulate | fake `IMessageCompletion` and temp folders: prompt, response and extracted files written; existing response skipped; `Overwrite` reruns; cancellation stops between folders |
 | Provider selection | Unit | `LlmCodeGenServiceTests`: `ollama`, `groq` and `groq-cloud` resolve the right adapter in any letter case; an unknown key reports a clear error |
-| Live run | Integration / LiveIntegration (Planned) | Ollama container (phi3) against a sample folder; Groq on demand with a fresh key |
+| Live run | Integration (Ollama, done) / LiveIntegration (Groq, planned) | Ollama container (phi3) against a sample folder; Groq on demand with a fresh key |
 
 Target 85% line coverage for the extractor and runner. No test reads a real key; live Groq stays out of CI.
 

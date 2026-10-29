@@ -3,12 +3,10 @@
 
   <PropertyGroup Condition="'$(IsPreRelease)'=='true' and '$(PreReleaseOnly)'=='true'">
     <IsPackable>true</IsPackable>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(IsPreRelease)'!='true' and '$(PreReleaseOnly)'=='true'">
     <IsPackable>false</IsPackable>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <!-- 

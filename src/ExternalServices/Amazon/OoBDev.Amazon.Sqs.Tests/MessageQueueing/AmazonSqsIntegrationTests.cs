@@ -36,7 +36,7 @@ public class AmazonSqsIntegrationTests
     public async Task ListQueues_WithMoto_ReturnsQueueUrls()
     {
         // Arrange
-        var endpoint = TestContext.GetRequiredProperty<string>("SQS_ENDPOINT");
+        var endpoint = TestInstanceGuard.Require(TestContext.GetRequiredProperty<string>("SQS_ENDPOINT"));
         var region = TestContext.GetRequiredProperty<string>("AWS_REGION");
         var accessKeyId = TestContext.GetRequiredProperty<string>("AWS_ACCESS_KEY_ID");
         var secretAccessKey = TestContext.GetRequiredProperty<string>("AWS_SECRET_ACCESS_KEY");
@@ -72,7 +72,7 @@ public class AmazonSqsIntegrationTests
     public async Task CreateQueue_WithMoto_CreatesSuccessfully()
     {
         // Arrange
-        var endpoint = TestContext.GetRequiredProperty<string>("SQS_ENDPOINT");
+        var endpoint = TestInstanceGuard.Require(TestContext.GetRequiredProperty<string>("SQS_ENDPOINT"));
         var region = TestContext.GetRequiredProperty<string>("AWS_REGION");
         var accessKeyId = TestContext.GetRequiredProperty<string>("AWS_ACCESS_KEY_ID");
         var secretAccessKey = TestContext.GetRequiredProperty<string>("AWS_SECRET_ACCESS_KEY");
@@ -134,7 +134,7 @@ public class AmazonSqsIntegrationTests
     public async Task SendAsync_ToMotoQueue_SendsSuccessfully()
     {
         // Arrange
-        var endpoint = TestContext.GetRequiredProperty<string>("SQS_ENDPOINT");
+        var endpoint = TestInstanceGuard.Require(TestContext.GetRequiredProperty<string>("SQS_ENDPOINT"));
         var region = TestContext.GetRequiredProperty<string>("AWS_REGION");
         var accessKeyId = TestContext.GetRequiredProperty<string>("AWS_ACCESS_KEY_ID");
         var secretAccessKey = TestContext.GetRequiredProperty<string>("AWS_SECRET_ACCESS_KEY");
@@ -231,7 +231,7 @@ public class AmazonSqsIntegrationTests
     public async Task SendAsync_ToFifoQueue_WithMessageGroupId_SendsSuccessfully()
     {
         // Arrange
-        var endpoint = TestContext.GetRequiredProperty<string>("SQS_ENDPOINT");
+        var endpoint = TestInstanceGuard.Require(TestContext.GetRequiredProperty<string>("SQS_ENDPOINT"));
         var region = TestContext.GetRequiredProperty<string>("AWS_REGION");
         var accessKeyId = TestContext.GetRequiredProperty<string>("AWS_ACCESS_KEY_ID");
         var secretAccessKey = TestContext.GetRequiredProperty<string>("AWS_SECRET_ACCESS_KEY");

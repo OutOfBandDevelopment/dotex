@@ -1,4 +1,4 @@
-﻿using Microsoft.SqlServer.Server;
+using Microsoft.SqlServer.Server;
 using System;
 using System.IO;
 
@@ -62,7 +62,7 @@ public class CentroidAggregate : IBinarySerialize
     /// <param name="other">The other aggregate instance to merge.</param>
     public void Merge(CentroidAggregate other)
     {
-        if (other != null)
+        if (other != null && other._sum.Length > 0)
         {
             if (_sum.Length == 0)
             {
@@ -71,6 +71,9 @@ public class CentroidAggregate : IBinarySerialize
             }
             else
             {
+                if (_sum.Length != other._sum.Length)
+                    throw new NotSupportedException("Vectors must be of the same length");
+
                 for (var i = 0; i < _sum.Length; i++)
                 {
                     _sum[i] += other._sum[i];

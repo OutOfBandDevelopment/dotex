@@ -38,7 +38,7 @@ public class RedisCachingProviderDevLocalTests
     public async Task FlushAsyncTest()
     {
         // Stage
-        var connectionString = TestContext.GetRequiredProperty<string>("REDIS_CONNECTION_STRING");
+        var connectionString = TestInstanceGuard.Require(TestContext.GetRequiredProperty<string>("REDIS_CONNECTION_STRING"));
 
         var configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(new Dictionary<string, string?>
@@ -67,7 +67,7 @@ public class RedisCachingProviderDevLocalTests
     public async Task RetrieveAsyncTest()
     {
         // Stage
-        var connectionString = TestContext.GetRequiredProperty<string>("REDIS_CONNECTION_STRING");
+        var connectionString = TestInstanceGuard.Require(TestContext.GetRequiredProperty<string>("REDIS_CONNECTION_STRING"));
 
         var configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(new Dictionary<string, string?>
@@ -104,7 +104,7 @@ public class RedisCachingProviderDevLocalTests
     public async Task StoreAsyncTest()
     {
         // Stage
-        var connectionString = TestContext.GetRequiredProperty<string>("REDIS_CONNECTION_STRING");
+        var connectionString = TestInstanceGuard.Require(TestContext.GetRequiredProperty<string>("REDIS_CONNECTION_STRING"));
 
         var configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(new Dictionary<string, string?>

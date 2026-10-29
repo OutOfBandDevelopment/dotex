@@ -80,6 +80,14 @@ public class DocsTests
     }
 
     [TestMethod]
+    [TestCategory(TestCategories.Unit)]
+    public void Names_Documents_FollowStyleGuide()
+    {
+        var root = RepoRoot();
+        AssertNoProblems(Documents(root).SelectMany(d => DocsValidator.CheckNames(root, d)));
+    }
+
+    [TestMethod]
     [TestCategory(TestCategories.Integration)]
     public async Task PlantUml_Blocks_Render()
     {

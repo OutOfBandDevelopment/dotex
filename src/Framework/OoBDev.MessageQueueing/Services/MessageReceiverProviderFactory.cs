@@ -34,11 +34,7 @@ public partial class MessageReceiverProviderFactory(
         var handlersByChannel = from handler in handlers
 
                                 let handlerType = handler.GetType()
-                                let handlerInterfaces = from @interface in handlerType.GetInterfaces()
-                                                        where typeof(IMessageQueueHandler).IsAssignableFrom(@interface)
-                                                        orderby @interface.GenericTypeArguments.Length descending
-                                                        select @interface
-                                let handlerInterface = handlerInterfaces.FirstOrDefault()
+                                let handlerInterface = MostSpecificHandlerInterface(handlerType)
                                 where handlerInterface != null
 
                                 let channelType = handlerInterface.GenericTypeArguments.FirstOrDefault() ?? typeof(object)
@@ -73,12 +69,7 @@ public partial class MessageReceiverProviderFactory(
 
             var config = item.First().config.configurationSection;
 
-            var disableReceiverValue = config?["DisableReceiver"];
-            var disableReceiver =
-                string.Equals("TRUE", disableReceiverValue, StringComparison.OrdinalIgnoreCase) ||
-                string.Equals("1", disableReceiverValue, StringComparison.OrdinalIgnoreCase);
-
-            if (disableReceiver)
+            if (IsDisabled(config?["DisableReceiver"]))
             {
                 LogProviderDisabled(channelHandlers);
                 continue;
@@ -99,6 +90,16 @@ public partial class MessageReceiverProviderFactory(
             yield return receiver;
         }
     }
+
+    private static Type? MostSpecificHandlerInterface(Type handlerType) =>
+        (from @interface in handlerType.GetInterfaces()
+         where typeof(IMessageQueueHandler).IsAssignableFrom(@interface)
+         orderby @interface.GenericTypeArguments.Length descending
+         select @interface).FirstOrDefault();
+
+    private static bool IsDisabled(string? disableReceiverValue) =>
+        string.Equals("TRUE", disableReceiverValue, StringComparison.OrdinalIgnoreCase) ||
+        string.Equals("1", disableReceiverValue, StringComparison.OrdinalIgnoreCase);
 
     private IMessageReceiverProvider Receiver(string providerKey)
     {

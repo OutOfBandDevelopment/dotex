@@ -65,6 +65,28 @@ public static partial class DocsValidator
         }
     }
 
+    /// <summary>Style guide names: a numbered prefix (<c>01-</c>) only inside <c>docs/patterns-discovery</c>, and project readmes spelled <c>README.{Name}.md</c>.</summary>
+    public static IEnumerable<string> CheckNames(string root, MarkdownDocument document)
+    {
+        var rel = Path.GetRelativePath(root, document.Path).Replace('\\', '/');
+        var name = Path.GetFileName(rel);
+        if (name.StartsWith("readme.", StringComparison.OrdinalIgnoreCase) && !name.StartsWith("README.", StringComparison.Ordinal)
+            && !rel.StartsWith("docs/generated/", StringComparison.Ordinal))
+        {
+            yield return $"{rel}: project readmes are named README.{{Name}}.md";
+        }
+
+        if (rel.Split('/').Any(s => NumberedRegex().IsMatch(s))
+            && !rel.StartsWith("docs/patterns-discovery/", StringComparison.Ordinal)
+            && !rel.Contains("/images/", StringComparison.Ordinal))
+        {
+            yield return $"{rel}: numbered names are only used under docs/patterns-discovery";
+        }
+    }
+
+    [GeneratedRegex(@"^\d{2}-")]
+    private static partial Regex NumberedRegex();
+
     [GeneratedRegex(@"^@start(uml|salt)\b")]
     private static partial Regex StartRegex();
 

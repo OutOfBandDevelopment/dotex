@@ -24,7 +24,15 @@ public static class Program
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+        ConfigureServices(builder);
 
+        var app = builder.Build();
+        ConfigurePipeline(app);
+        app.Run();
+    }
+
+    private static void ConfigureServices(WebApplicationBuilder builder)
+    {
         var services = builder.Services;
 
         // Add example application services 
@@ -65,20 +73,7 @@ public static class Program
                 //DisableMessageQueueing = true,  // skipHosting,
             });
 
-        // The vector store: SQL Server when configured, otherwise in memory (replaces the Qdrant default)
-        services.RemoveAll<OoBDev.Search.Semantic.IVectorStoreProviderFactory>();
-        if (!string.IsNullOrWhiteSpace(builder.Configuration["SqlVectorStoreOptions:ConnectionString"]))
-            OoBDev.Data.Vectors.SqlStore.ServiceCollectionExtensions.TryAddSqlVectorStore(services, builder.Configuration, "SqlVectorStoreOptions");
-        else
-            services.AddSingleton<OoBDev.Search.Semantic.IVectorStoreProviderFactory, OoBDev.WebApi.Services.InMemoryVectorStoreProviderFactory>();
-
-        // Extra sentence models for the compare screen; downloaded only when first used
-        OoBDev.SBert.AllMpnetBaseV2.ServiceCollectionExtensions.TryAddAllMpnetBaseV2Services(services, builder.Configuration, "AllMpnetBaseV2");
-        OoBDev.SBert.NomicEmbedTextV1_5.ServiceCollectionExtensions.TryAddNomicEmbedTextV1_5Services(services, builder.Configuration, "NomicEmbedTextV1_5");
-
-        // CLIP image embeddings; the model is only downloaded when first resolved
-        OoBDev.Onnx.ImageEmbeddings.Skia.ServiceCollectionExtensions.TryAddSkiaImageDecoder(services);
-        OoBDev.Vision.ClipVitB32.ServiceCollectionExtensions.TryAddClipVitB32Services(services, builder.Configuration, "ClipVitB32");
+        ConfigureVectorsAndModels(builder);
 
         // Add services to the container.
         services.AddLogging(builder => builder
@@ -95,8 +90,30 @@ public static class Program
         OoBDev.AspNetCore.Cgi.ServiceCollectionExtensions.TryAddCgiServices(services, builder.Configuration, "OoBDev:Cgi");
         OoBDev.AspNetCore.Cgi.OpenApi.ServiceCollectionExtensions.TryAddCgiOpenApi(services, builder.Configuration, "OoBDev:Cgi:OpenApi");
 
-        var app = builder.Build();
+    }
 
+    private static void ConfigureVectorsAndModels(WebApplicationBuilder builder)
+    {
+        var services = builder.Services;
+
+        // The vector store: SQL Server when configured, otherwise in memory (replaces the Qdrant default)
+        services.RemoveAll<OoBDev.Search.Semantic.IVectorStoreProviderFactory>();
+        if (!string.IsNullOrWhiteSpace(builder.Configuration["SqlVectorStoreOptions:ConnectionString"]))
+            OoBDev.Data.Vectors.SqlStore.ServiceCollectionExtensions.TryAddSqlVectorStore(services, builder.Configuration, "SqlVectorStoreOptions");
+        else
+            services.AddSingleton<OoBDev.Search.Semantic.IVectorStoreProviderFactory, OoBDev.WebApi.Services.InMemoryVectorStoreProviderFactory>();
+
+        // Extra sentence models for the compare screen; downloaded only when first used
+        OoBDev.SBert.AllMpnetBaseV2.ServiceCollectionExtensions.TryAddAllMpnetBaseV2Services(services, builder.Configuration, "AllMpnetBaseV2");
+        OoBDev.SBert.NomicEmbedTextV1_5.ServiceCollectionExtensions.TryAddNomicEmbedTextV1_5Services(services, builder.Configuration, "NomicEmbedTextV1_5");
+
+        // CLIP image embeddings; the model is only downloaded when first resolved
+        OoBDev.Onnx.ImageEmbeddings.Skia.ServiceCollectionExtensions.TryAddSkiaImageDecoder(services);
+        OoBDev.Vision.ClipVitB32.ServiceCollectionExtensions.TryAddClipVitB32Services(services, builder.Configuration, "ClipVitB32");
+    }
+
+    private static void ConfigurePipeline(WebApplication app)
+    {
         // Configure the HTTP request pipeline.
         // OpenAPI documents at /openapi/{document}.json and the Scalar API reference at /scalar;
         // AsyncAPI documents at /asyncapi/{document}.json and the viewer at /asyncapi/{document}
@@ -118,7 +135,5 @@ public static class Program
         OoBDev.AspNetCore.Cgi.ServiceCollectionExtensions.UseCgi(app);
 
         app.MapControllers();
-
-        app.Run();
     }
 }

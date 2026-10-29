@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net10.0</TargetFramework>
+		<ImplicitUsings>false</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<InternalsVisibleTo Include="OoBDev.Microsoft.SqlServer.ServiceBroker.Tests" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="GitVersion.MsBuild">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.Data.SqlClient" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\..\Framework\OoBDev.AsyncApi\OoBDev.AsyncApi.csproj" />
+		<ProjectReference Include="..\..\..\Framework\OoBDev.MessageQueueing.Abstractions\OoBDev.MessageQueueing.Abstractions.csproj" />
+		<ProjectReference Include="..\..\..\Framework\OoBDev.System.Abstractions\OoBDev.System.Abstractions.csproj" />
+	</ItemGroup>
+
+</Project>

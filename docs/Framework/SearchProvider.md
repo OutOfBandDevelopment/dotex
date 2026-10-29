@@ -74,6 +74,7 @@ Based on the uploaded content type the system will perform a summary generation.
 ### Architecture
 
 ```plantuml
+@startuml
 
 node "Authorization Services" as [AuthorizationServices] {
     [UpsertUser]
@@ -171,11 +172,13 @@ node "Document Indexer" as [DocumentIndexingService] {
 [ContentPersistence] --[hidden]> [ContentVectorization]
 [ContentVectorization] --[hidden]> [ContentLexicalAnalyzer]
 [ContentLexicalAnalyzer] --[hidden]> [ContentSummarizer]
+@enduml
 ```
 
 ### Document Indexer
 
 ```plantuml
+@startuml
 
 control FileScanner
 database ContentStore
@@ -214,11 +217,13 @@ FileScanner -> FileScanner : List of files
     end
   end
 
+@enduml
 ```
 
 ### Hybrid Search
 
 ```plantuml
+@startuml
 actor User
 boundary SearchController
 control HybridProvider
@@ -253,11 +258,13 @@ activate SearchController
   return results
 return results
 
+@enduml
 ```
 
 ### Document Summary
 
 ```plantuml
+@startuml
 control DocumentSummarizer
 control LargeLanguageModel
 
@@ -274,6 +281,7 @@ activate DocumentSummarizer
   return summary  
 
 return summary  
+@enduml
 ```
 
 ## Notes and References

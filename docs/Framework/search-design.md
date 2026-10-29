@@ -5,6 +5,7 @@
 ###  Upload Document
 
 ```plantuml
+@startuml
 start 
 
 :upload content;
@@ -42,11 +43,13 @@ fork again
 end fork
 
 stop
+@enduml
 ```
 
 ## Search content
 
 ```plantuml 
+@startuml
 start 
 
 :enter query;
@@ -56,11 +59,13 @@ start
 :return results;
 
 stop
+@enduml
 ```
 
 ### Upload Graphic
 
 ```plantuml
+@startuml
 start 
 
 :upload content;
@@ -89,6 +94,7 @@ fork again
 end fork
 
 stop
+@enduml
 ```
 
 ## Notes

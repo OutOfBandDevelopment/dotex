@@ -40,7 +40,7 @@ A template sees `folder` and `files` (each with `name`, `extension`, `content`).
 
 ## Output
 
-For each folder: `<template>.prompt.md`, `<template>.response.md` and the extracted files. A name that is rooted, contains `..` or has invalid characters is written to `error{n}.txt` instead, so nothing leaves the output folder. A block with no name becomes `unknown{n}.txt`.
+For each folder: `<template>.prompt.md`, `<template>.response.md`, `<template>.response.json` (provider, model, lengths, start time, duration, extracted file names) and the extracted files. A name that is rooted, contains `..` or has invalid characters is written to `error{n}.txt` instead, so nothing leaves the output folder. A block with no name becomes `unknown{n}.txt`.
 
 ## Example
 

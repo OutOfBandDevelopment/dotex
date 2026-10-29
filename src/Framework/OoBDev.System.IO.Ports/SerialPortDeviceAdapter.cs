@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using SerialPort = System.IO.Ports.SerialPort;
 
 namespace OoBDev.System.IO.Ports;
@@ -42,8 +43,9 @@ public class SerialPortDeviceAdapter(SerialPort device) : IBufferedDeviceAdapter
             stream = device.BaseStream;
             return true;
         }
-        catch (IOException)
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or InvalidOperationException)
         {
+            // A port held by another process throws UnauthorizedAccessException on Windows; a removed adapter throws IOException.
             stream = null;
             return false;
         }

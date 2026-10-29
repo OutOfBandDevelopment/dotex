@@ -1,9 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using OoBDev.Data.Vectors.Hosting;
-#if DEBUG
 using OoBDev.MailKit.Hosting;
-#endif
 using OoBDev.MessageQueueing.Hosting;
 
 namespace OoBDev.Common.Hosting;
@@ -32,11 +30,8 @@ public static class ServiceCollectionExtensions
     {
         builder ??= new();
 
-        // TODO: MailKit hosting is registered in DEBUG builds only (see OPEN-QUESTIONS Q4).
-#if DEBUG
         if (!builder.DisableMailKit)
             services.TryAddMailKitHosting();
-#endif
 
         if (!builder.DisableMessageQueueing)
             services.TryAddMessageQueueingHosting();

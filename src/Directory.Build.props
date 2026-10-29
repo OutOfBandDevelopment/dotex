@@ -23,10 +23,9 @@
     <GenerateDocumentationFile Condition="!$([System.Text.RegularExpressions.Regex]::IsMatch('$(MSBuildProjectName)', '\.Tests$'))">True</GenerateDocumentationFile>
     <GenerateDocumentationFile Condition="$([System.Text.RegularExpressions.Regex]::IsMatch('$(MSBuildProjectName)', '\.Tests$'))">false</GenerateDocumentationFile>
     -->
-    <IsPackable Condition="!$([System.Text.RegularExpressions.Regex]::IsMatch('$(MSBuildProjectName)', '\.Tests$'))">True</IsPackable>
-    <IsPackable Condition="$([System.Text.RegularExpressions.Regex]::IsMatch('$(MSBuildProjectName)', '\.Tests$'))">false</IsPackable>
-    <GeneratePackageOnBuild Condition="!$([System.Text.RegularExpressions.Regex]::IsMatch('$(MSBuildProjectName)', '\.Tests$'))">True</GeneratePackageOnBuild>
-    <GeneratePackageOnBuild Condition="$([System.Text.RegularExpressions.Regex]::IsMatch('$(MSBuildProjectName)', '\.Tests$'))">false</GeneratePackageOnBuild>
+    <IsPackable Condition="!$([System.Text.RegularExpressions.Regex]::IsMatch('$(MSBuildProjectName)', '\.(Tests?|Examples?|AppHost)$|\.Example\.'))">True</IsPackable>
+    <IsPackable Condition="$([System.Text.RegularExpressions.Regex]::IsMatch('$(MSBuildProjectName)', '\.(Tests?|Examples?|AppHost)$|\.Example\.'))">false</IsPackable>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 
     <RootNamespace>$(MSBuildProjectName.Replace(" ", "_").Replace(".Abstractions", ""))</RootNamespace>
     
@@ -124,7 +123,7 @@
 
   <PropertyGroup>
     <BasePublishPath>$(SolutionDir)publish\</BasePublishPath>
-    <PackageOutputPath>$(BasePublishPath)packages\</PackageOutputPath>
+    <PackageOutputPath>G:\nuget\</PackageOutputPath>
     <DocumentPath>$(SolutionDir)..\docs\</DocumentPath>
     <CodeDocumentPath>$(DocumentPath)code\</CodeDocumentPath>
   </PropertyGroup>

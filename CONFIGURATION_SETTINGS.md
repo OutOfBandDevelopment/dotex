@@ -1059,7 +1059,7 @@ Within each section:
 
 | Variable | Type | Default | Description |
 |----------|------|---------|-------------|
-| `SERVICEBUS_CONNECTION_STRING` | string | Endpoint=sb://localhost:5672/... | Service Bus connection |
+| `SERVICEBUS_CONNECTION_STRING` | string | Endpoint=sb://localhost;...;UseDevelopmentEmulator=true | Service Bus connection |
 | `SERVICEBUS_HOST` | string | localhost | Service Bus host |
 | `SERVICEBUS_PORT` | int | 5672 | AMQP port |
 | `SERVICEBUS_TEST_QUEUE` | string | integration-test-queue | Test queue name |
@@ -1251,7 +1251,7 @@ Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBek
 
 **Emulator Example:**
 ```
-Endpoint=sb://localhost:5672/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=...
+Endpoint=sb://localhost;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=...;UseDevelopmentEmulator=true
 ```
 
 #### RabbitMQ (AMQP)
