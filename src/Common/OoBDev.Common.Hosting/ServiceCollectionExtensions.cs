@@ -32,11 +32,8 @@ public static class ServiceCollectionExtensions
     {
         builder ??= new();
 
-        // TODO: MailKit hosting is registered in DEBUG builds only (see OPEN-QUESTIONS Q4).
-#if DEBUG
         if (!builder.DisableMailKit)
             services.TryAddMailKitHosting();
-#endif
 
         if (!builder.DisableMessageQueueing)
             services.TryAddMessageQueueingHosting();

@@ -354,6 +354,10 @@ Each change document should include:
 - Example UI design documents reconciled with the code
 - Status: ✅ Complete
 
+**[hosting-mailkit-all-builds-2026-10-28.md](hosting-mailkit-all-builds-2026-10-28.md)**
+- MailKit hosting registered in every build (was DEBUG only)
+- Status: ✅ Complete
+
 **[testing-aspire-test-stack-2026-10-28.md](testing-aspire-test-stack-2026-10-28.md)**
 - Aspire host for the integration test stack; wkhtmltopdf test moved to DevLocal; Tika URL from TestContext
 - Status: ✅ Verified against the running stack (MongoDB tests fail on a code defect)
