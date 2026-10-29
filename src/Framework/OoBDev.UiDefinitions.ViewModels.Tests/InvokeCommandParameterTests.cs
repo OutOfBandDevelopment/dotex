@@ -88,6 +88,36 @@ public sealed class InvokeCommandParameterTests
     }
 
     [TestMethod]
+    public void Execute_ParameterExpression_TransformsValue()
+    {
+        // Stage
+        var model = new Model();
+        var button = new ButtonControl { Id = "Apply", Label = "Apply", ParameterFieldIds = ["Volts", "Amps"], ParameterExpressions = ["{Volts} * 2", null] };
+        var command = new InvokeCommand(new FormBinding(model), button, Siblings);
+
+        // Test
+        command.Execute(null);
+
+        // Assert
+        Assert.AreEqual("10,2", model.Apply.Last);
+    }
+
+    [TestMethod]
+    public void Execute_BadExpression_KeepsBareValue()
+    {
+        // Stage
+        var model = new Model();
+        var button = new ButtonControl { Id = "Apply", Label = "Apply", ParameterFieldIds = ["Volts"], ParameterExpressions = ["{Volts"] };
+        var command = new InvokeCommand(new FormBinding(model), button, Siblings);
+
+        // Test
+        command.Execute(null);
+
+        // Assert
+        Assert.AreEqual("5", model.Apply.Last);
+    }
+
+    [TestMethod]
     public void CanExecute_ModelRefuses_ReturnsFalse()
     {
         // Stage
