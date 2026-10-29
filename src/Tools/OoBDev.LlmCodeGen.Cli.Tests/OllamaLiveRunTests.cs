@@ -23,7 +23,7 @@ public class OllamaLiveRunTests
     public async Task RunAsync_SampleFolderAgainstOllama_WritesPromptAndResponseAsync()
     {
         // Stage
-        var url = TestContext.GetRequiredProperty<string>("OLLAMA_URL");
+        var url = TestInstanceGuard.Require(TestContext.GetRequiredProperty<string>("OLLAMA_URL"));
         var model = TestContext.GetPropertyOrDefault("OLLAMA_MODEL", "phi3");
         var root = Path.Combine(Path.GetTempPath(), "llmcodegen-live-" + Guid.NewGuid().ToString("N"));
         try

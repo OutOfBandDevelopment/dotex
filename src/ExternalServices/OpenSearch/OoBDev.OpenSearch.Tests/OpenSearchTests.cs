@@ -40,7 +40,7 @@ public class OpenSearchTests
 
     private OpenSearchLowLevelClient GetClient()
     {
-        var url = TestContext.GetRequiredProperty<string>("OPENSEARCH_URL");
+        var url = TestInstanceGuard.Require(TestContext.GetRequiredProperty<string>("OPENSEARCH_URL"));
         var username = TestContext.GetRequiredProperty<string>("OPENSEARCH_USERNAME");
         var password = TestContext.GetRequiredProperty<string>("OPENSEARCH_PASSWORD");
 

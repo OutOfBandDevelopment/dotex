@@ -40,7 +40,7 @@ public class KeycloakUserManagementTests
     [TestInitialize]
     public async Task Setup()
     {
-        _baseUrl = TestContext.GetRequiredProperty<string>("KEYCLOAK_URL");
+        _baseUrl = TestInstanceGuard.Require(TestContext.GetRequiredProperty<string>("KEYCLOAK_URL"));
         var adminUsername = TestContext.GetRequiredProperty<string>("KEYCLOAK_ADMIN_USERNAME");
         var adminPassword = TestContext.GetRequiredProperty<string>("KEYCLOAK_ADMIN_PASSWORD");
         _realm = TestContext.GetRequiredProperty<string>("KEYCLOAK_REALM");

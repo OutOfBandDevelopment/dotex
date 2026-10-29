@@ -7,4 +7,4 @@ Also: the `templates/` readmes were renamed to `ReadMe.Templates.md` and `ReadMe
 ## Adoption (later 2026-10-29)
 
 - `TestInstanceGuard` now also reads StackExchange.Redis style strings (`host:6379,password=x`), and is applied in the MongoDB Integration tests and the Redis Integration and DevLocal tests. Verified against the running stack (Mongo 6 tests, Redis 10 tests passed).
-- Not yet applied: Service Bus (emulator string `Endpoint=sb://...` needs its own parsing), URL-based service tests (Tika, Ollama, OpenSearch, SBert, Keycloak, SQS).
+- Also applied to the URL based Integration tests (Tika, Ollama, OpenSearch, SBert, Keycloak, SQS, Documents, LlmCodeGen); all pass against the stack (SBert: 2 skipped as before). Not applied: Service Bus (emulator string `Endpoint=sb://...` needs its own parsing), the OTLP tests.

@@ -36,7 +36,7 @@ public class OllamaApiClientTests
             return;
         }
 
-        var url = context.GetRequiredProperty<string>("OLLAMA_URL");
+        var url = TestInstanceGuard.Require(context.GetRequiredProperty<string>("OLLAMA_URL"));
         var model = context.GetPropertyOrDefault("OLLAMA_MODEL", "phi3");
 
         context.WriteLine($"Initializing Ollama at {url}");
@@ -111,7 +111,7 @@ public class OllamaApiClientTests
     [TestMethod]
     public async Task GenerateEmbeddingsDoubleTest()
     {
-        var url = TestContext.GetRequiredProperty<string>("OLLAMA_URL");
+        var url = TestInstanceGuard.Require(TestContext.GetRequiredProperty<string>("OLLAMA_URL"));
         var model = TestContext.GetPropertyOrDefault("OLLAMA_EMBEDDING_MODEL", "all-minilm");
 
         var client = Build(url, model);
@@ -131,7 +131,7 @@ public class OllamaApiClientTests
     [TestMethod]
     public async Task GenerateEmbeddingsSingleTest()
     {
-        var url = TestContext.GetRequiredProperty<string>("OLLAMA_URL");
+        var url = TestInstanceGuard.Require(TestContext.GetRequiredProperty<string>("OLLAMA_URL"));
         var model = TestContext.GetPropertyOrDefault("OLLAMA_EMBEDDING_MODEL", "all-minilm");
 
         var client = Build(url, model);
@@ -151,7 +151,7 @@ public class OllamaApiClientTests
     [TestMethod]
     public async Task ChatAsyncTest()
     {
-        var url = TestContext.GetRequiredProperty<string>("OLLAMA_URL");
+        var url = TestInstanceGuard.Require(TestContext.GetRequiredProperty<string>("OLLAMA_URL"));
         var model = TestContext.GetPropertyOrDefault("OLLAMA_MODEL", "phi3");
 
         var client = Build(url, model);
@@ -249,7 +249,7 @@ public class OllamaApiClientTests
     [TestMethod]
     public async Task ListModelsTest()
     {
-        var url = TestContext.GetRequiredProperty<string>("OLLAMA_URL");
+        var url = TestInstanceGuard.Require(TestContext.GetRequiredProperty<string>("OLLAMA_URL"));
         var client = Build(url, TestContext.GetPropertyOrDefault("OLLAMA_MODEL", "phi3"));
 
         var models = await client.ListLocalModelsAsync();
