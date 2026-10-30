@@ -6,6 +6,7 @@
 - **Dependencies:** see the `coding-standards` rule. Owner answers are recorded under each verdict in `docs/patterns-discovery/05-industry-alternatives/`.
 - **Scope:** all BinaryDataDecoders features are migrated (phases are priority order, not selection). Check `C:\repo\mine\binary-data-decoders` before migrating, since it can be ahead of `Incoming/BinaryDecoders`.
 - **Best coverage:** when migrating or building a feature, compare every source (incoming code and all harvest projects), not the first one found; use the best-covered, tested implementation as the base and merge missing parts. Rejections are allowed but are documented with the reason (`docs/migration/incoming-harvest-crosscheck.md`).
+- **Migrate everything, including the surroundings (owner, 2026-10-30):** when migrating a project, review all of it, not just code: the project guide, `.claude` (rules, skills, hooks, settings), docs, open questions, TODO and BACKLOG, UIs, tests, scripts and future plans. Each item is migrated or rejected with a recorded reason, so no plan or workflow is lost.
 - **Reference projects:** before building a feature from scratch, check `docs/harvest-candidates.md` for an existing implementation in the owner's other repositories (read-only references; ask before copying the event-sourcing material).
 - **Process:** read `/TODO.md` (the `Backlog:` sections) before starting work, and update it when work finishes.
 - **Open questions:** track questions for the owner in `OPEN-QUESTIONS.md` (`open-questions` rule); a chat answer counts as an answer.

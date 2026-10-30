@@ -9,6 +9,7 @@ Policy: all BinaryDataDecoders features migrate; phases are priority order, not 
 
 1. Read `Incoming/CHECKLIST.md`, `/TODO.md`, `docs/architecture/architectural-standards.md`, and `docs/migration/`.
 2. **Find the latest source first.** For BinaryDataDecoders the newest copy is `C:\repo\mine\binary-data-decoders` (78 projects), and `Incoming/BinaryDecoders` is a 41-project renamed subset that can be behind. Device libraries may also be newer in `C:\repo\oobdev\dev-term`. Say which copy you compared and its commit.
+2a. **Review the whole project, not only code** (owner, 2026-10-30): the project guide, `.claude/` (rules, skills, hooks, settings), docs, open questions, TODO and BACKLOG (future plans), UIs, tests, scripts and run settings. Record each as migrated, merged or rejected with the reason.
 3. Classify each incoming project (Foundation, Feature, Specialized, UI, Test, Stub) and map each feature to main: Match, Partial, Gap, Superseded, Delete. Evidence is file paths from searching, never guesses.
 4. Place gaps in the right layer (Common, Framework, Extensions, ExternalServices), noting provider/factory and `TryAdd*` DI needs, package separation for specialized features, and security warnings (for example broken classic ciphers).
 5. Write outputs under `docs/migration/` using the templates in `reference.md` (PlantUML diagrams only), update the checklist in `Incoming/CHECKLIST.md`, and add prioritized items to `TODO.md`.
