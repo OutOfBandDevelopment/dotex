@@ -20,6 +20,7 @@ public partial class App : Application, IDisposable
     protected override void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
+        WpfTheme.AttachApplication(this);
         var services = new ServiceCollection().AddDevTermWpfShell();
         if (ScpiTarget(e.Args) is { } target)
         {

@@ -18,6 +18,8 @@
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
+            <TextBlock Text="Theme" Margin="4,4,4,0" />
+            <ComboBox ItemsSource="{Binding Themes.Names}" SelectedItem="{Binding Themes.Selected}" Margin="4" />
             <ListBox ItemsSource="{Binding Sessions}" SelectedItem="{Binding SelectedSession}" DisplayMemberPath="Title" Margin="4" MinHeight="60" />
             <ItemsControl ItemsSource="{Binding DevicePanels}">
                 <ItemsControl.ItemTemplate>

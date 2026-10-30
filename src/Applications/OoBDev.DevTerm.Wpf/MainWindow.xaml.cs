@@ -1,4 +1,5 @@
 using System.Windows;
+using OoBDev.DevTerm.Wpf;
 
 namespace DevTermApp;
 
@@ -6,5 +7,9 @@ namespace DevTermApp;
 public partial class MainWindow : Window
 {
     /// <summary>Creates the window.</summary>
-    public MainWindow() => InitializeComponent();
+    public MainWindow()
+    {
+        InitializeComponent();
+        WpfTheme.Attach(this);
+    }
 }

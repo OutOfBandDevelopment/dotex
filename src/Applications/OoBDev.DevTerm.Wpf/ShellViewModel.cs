@@ -101,6 +101,9 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
     /// <summary>The device panels plugins contribute.</summary>
     public IReadOnlyList<IDevicePanelContribution> DevicePanels { get; }
 
+    /// <summary>The theme choice.</summary>
+    public ThemeViewModel Themes { get; } = new();
+
     /// <summary>Opens the device panel passed as the parameter for the selected session.</summary>
     public ICommand OpenDevicePanelCommand { get; }
 

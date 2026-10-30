@@ -533,4 +533,5 @@ Each change document should include:
 - [DevTerm WPF serial fields (2026-10-30)](devterm-wpf-serial-fields-2026-10-30.md) - baud, data bits, parity, stop bits and flow control in the connection editor
 - [DevTerm WPF command previews (2026-10-30)](devterm-wpf-command-previews-2026-10-30.md) - device panel buttons show what they send in the tooltip
 - [DevTerm WPF session logging (2026-10-30)](devterm-wpf-session-logging-2026-10-30.md) - Log to file toggle per session
+- [DevTerm WPF theme (2026-10-30)](devterm-wpf-theme-2026-10-30.md) - WpfTheme, dark control templates and a theme chooser in the shell
 - [One USB HID adapter (2026-10-29)](system-io-usbhids-adapter-merge-2026-10-29.md) - UsbHidFactory returns the endpoint adapter; the thin one is gone
