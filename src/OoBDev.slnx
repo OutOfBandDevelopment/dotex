@@ -229,10 +229,12 @@
     <Project Path="Framework/OoBDev.System.IO.Pipelines/OoBDev.System.IO.Pipelines.csproj" />
     <Project Path="Framework/OoBDev.System.IO.Tcp.Tests/OoBDev.System.IO.Tcp.Tests.csproj" />
     <Project Path="Framework/OoBDev.System.IO.UsbHids.Tests/OoBDev.System.IO.UsbHids.Tests.csproj" />
+    <Project Path="Framework/OoBDev.System.IO.UsbTmc.Tests/OoBDev.System.IO.UsbTmc.Tests.csproj" />
     <Project Path="Framework/OoBDev.System.IO.Tcp/OoBDev.System.IO.Tcp.csproj" />
     <Project Path="Framework/OoBDev.System.IO.Ports.Tests/OoBDev.System.IO.Ports.Tests.csproj" />
     <Project Path="Framework/OoBDev.System.IO.Ports/OoBDev.System.IO.Ports.csproj" />
     <Project Path="Framework/OoBDev.System.IO.UsbHids/OoBDev.System.IO.UsbHids.csproj" />
+    <Project Path="Framework/OoBDev.System.IO.UsbTmc/OoBDev.System.IO.UsbTmc.csproj" />
     <Project Path="Framework/OoBDev.System.Linq/OoBDev.System.Linq.csproj" />
     <Project Path="Framework/OoBDev.System.Tests/OoBDev.System.Tests.csproj" />
     <Project Path="Framework/OoBDev.System/OoBDev.System.csproj" />

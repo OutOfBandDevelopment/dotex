@@ -34,3 +34,7 @@ The six `OoBDev.DevTerm.Transports.{Tcp,Rfc2217,Vxi11}` projects are gone. `TcpT
 ## Step 5a: HID moves into `System.IO.UsbHids`
 
 `DevTerm.Transports.Hid` is now `UsbHidEndpointDeviceAdapter` (`UsbHidEndpointOptions`, `AddUsbHidEndpointDeviceAdapter()`) in `OoBDev.System.IO.UsbHids`, with `IUsbHidDevice`, `IUsbHidDeviceFactory`, `SystemUsbHidDevice`, `UsbHidReadStream` and `IUsbHidDiscovery` (one type per file). The 11 adapter tests moved to the new `OoBDev.System.IO.UsbHids.Tests` (11 Unit tests passing; real-hardware behavior not re-verified). It sits beside the thin `UsbHidDeviceAdapter` and `UsbHidFactory`; merging them is in BACKLOG.md.
+
+## Step 5b: USBTMC moves into `System.IO.UsbTmc`
+
+`DevTerm.Transports.Usbtmc` is now `UsbTmcDeviceAdapter` (`UsbTmcDeviceAdapterOptions`, `AddUsbTmcDeviceAdapter()`) in the new `OoBDev.System.IO.UsbTmc`: an `IDeviceAdapter` (type `UsbTmc`) with `Output` built by `DeviceAdapterOutput`; the codec, device location, quirks, discovery and the LibUsbDotNet device are ported with one type per file. `LibUsbDotNet` 3.0.224 and `libusb-dynamic` 1.0.26 were added to `Directory.Packages.props`. 43 Unit tests moved to `OoBDev.System.IO.UsbTmc.Tests` and pass; no instrument was attached.
