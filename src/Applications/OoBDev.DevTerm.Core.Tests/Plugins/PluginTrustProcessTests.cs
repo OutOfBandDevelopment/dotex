@@ -25,7 +25,7 @@ public sealed class PluginTrustProcessTests
 
 
         var root = new DirectoryInfo(AppContext.BaseDirectory);
-        while (root is not null && !File.Exists(Path.Combine(root.FullName, "DevTerm.slnx")))
+        while (root is not null && !File.Exists(Path.Combine(root.FullName, "GitVersion.yml")))
         {
             root = root.Parent;
         }

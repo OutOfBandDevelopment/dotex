@@ -7,8 +7,9 @@
 - `OoBDev.DevTerm.Web.Tests` builds it first and copies it to `plugins/demo` (same pattern as the sample plugin in the Core tests).
 - Four Unit tests in `OoBDev.DevTerm.Devices.Tests` (availability, definition, the `SET LED=1 LEVEL=7` line, level clamp).
 - Result: the Web user-flow class passes (11 tests, Edge through Playwright).
+- The 61 failing DevLocal Web screenshot tests failed with `repo root not found`: three test helpers looked for a `DevTerm.slnx` marker that does not exist here and now look for `GitVersion.yml`. Web screenshot and layout tests: 55 pass.
 
 ## Not done
 
-- The 61 DevLocal Web screenshot tests were not rerun (they need the guide-image routing work in the backlog).
+- Guide images are not recommitted: a run rewrites them with noise, which the `image-mask sync` routing in the backlog will decide.
 - The Wpf and Tui flows do not load the plugin (the Tui flow says it has no panel).

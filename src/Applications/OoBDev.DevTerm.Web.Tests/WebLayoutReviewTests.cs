@@ -73,7 +73,7 @@ public sealed class WebLayoutReviewTests
     private static string ReviewDirectory()
     {
         var dir = new DirectoryInfo(AppContext.BaseDirectory);
-        while (dir is not null && !File.Exists(Path.Combine(dir.FullName, "DevTerm.slnx")))
+        while (dir is not null && !File.Exists(Path.Combine(dir.FullName, "GitVersion.yml")))
         {
             dir = dir.Parent;
         }
