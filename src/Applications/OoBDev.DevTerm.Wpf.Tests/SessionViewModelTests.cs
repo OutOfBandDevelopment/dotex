@@ -9,6 +9,7 @@ using OoBDev.DevTerm.Configuration;
 using OoBDev.DevTerm.Loopback;
 using OoBDev.DevTerm.Presenters.Text;
 using OoBDev.System.IO;
+using OoBDev.System.IO.Tcp;
 
 namespace OoBDev.DevTerm.Wpf.Tests;
 
@@ -149,6 +150,39 @@ public sealed class SessionViewModelTests
     {
         // Test / Assert
         Assert.ThrowsExactly<ArgumentException>(() => new SessionViewModel(new Session(new LoopbackTransport(Options.Create(new LoopbackTransportOptions())), new Pipeline([])), " "));
+    }
+
+    [TestMethod]
+    public async Task SoftwareFlowControl_LoopbackTransport_IsUnavailableAndStaysOff()
+    {
+        // Stage
+        await using var viewModel = Create();
+
+        // Test
+        viewModel.SoftwareFlowControl = true;
+
+        // Assert
+        Assert.IsFalse(viewModel.HasSoftwareFlowControl);
+        Assert.IsFalse(viewModel.SoftwareFlowControl);
+    }
+
+    [TestMethod]
+    public async Task SoftwareFlowControl_TcpTransport_TogglesTheAdapterAndRaisesChange()
+    {
+        // Stage
+        var transport = new TcpEndpointDeviceAdapter(new SystemTcpConnectionSource(), Options.Create(new TcpEndpointOptions()));
+        var ascii = new AsciiPresenter(Options.Create(new AsciiPresenterOptions()));
+        await using var viewModel = new SessionViewModel(new Session(transport, new Pipeline([ascii])), "Tcp");
+        var raised = 0;
+        viewModel.PropertyChanged += (_, e) => raised += e.PropertyName == nameof(SessionViewModel.SoftwareFlowControl) ? 1 : 0;
+
+        // Test
+        viewModel.SoftwareFlowControl = true;
+
+        // Assert
+        Assert.IsTrue(viewModel.HasSoftwareFlowControl);
+        Assert.IsTrue(transport.SoftwareFlowControl);
+        Assert.AreEqual(1, raised);
     }
 
     private static SessionViewModel Create()

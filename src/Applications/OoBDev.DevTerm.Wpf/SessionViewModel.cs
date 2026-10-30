@@ -8,6 +8,7 @@ using System.IO;
 using OoBDev.DevTerm.Configuration;
 using OoBDev.DevTerm.Logging;
 using OoBDev.System.IO;
+using OoBDev.System.IO.Tcp;
 using OoBDev.UiDefinitions.ViewModels;
 
 namespace OoBDev.DevTerm.Wpf;
@@ -62,6 +63,21 @@ public sealed class SessionViewModel : ViewModelBase, IAsyncDisposable
     {
         get => _echoSent;
         set => SetProperty(ref _echoSent, value);
+    }
+
+    /// <summary>Whether the transport is TCP, the only one with XON/XOFF software flow control.</summary>
+    public bool HasSoftwareFlowControl => _session.Transport is TcpEndpointDeviceAdapter;
+
+    /// <summary>XON/XOFF software flow control on a TCP transport, settable while connected; false for other transports.</summary>
+    public bool SoftwareFlowControl
+    {
+        get => _session.Transport is TcpEndpointDeviceAdapter tcp && tcp.SoftwareFlowControl;
+        set
+        {
+            if (_session.Transport is not TcpEndpointDeviceAdapter tcp || tcp.SoftwareFlowControl == value) return;
+            tcp.SoftwareFlowControl = value;
+            OnPropertyChanged();
+        }
     }
 
     /// <summary>Empties <see cref="OutputLines"/>.</summary>

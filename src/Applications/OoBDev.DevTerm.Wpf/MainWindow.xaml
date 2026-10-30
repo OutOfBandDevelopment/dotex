@@ -37,6 +37,7 @@
                 <MenuItem Header="_All sessions log..." Command="{Binding ShowMergedLogWindow}" />
                 <Separator />
                 <MenuItem Header="_Echo sent commands" IsCheckable="True" IsChecked="{Binding SelectedSession.EchoSent, Mode=TwoWay}" />
+                <MenuItem Header="_Software flow control (XON/XOFF)" IsCheckable="True" IsEnabled="{Binding SelectedSession.HasSoftwareFlowControl}" IsChecked="{Binding SelectedSession.SoftwareFlowControl, Mode=TwoWay}" />
                 <MenuItem Header="Clea_r output" Command="{Binding SelectedSession.ClearOutput}" />
             </MenuItem>
         </Menu>
