@@ -25,8 +25,6 @@ Owner: all protocols and features of dev-term must exist here. Status, slices an
 - [ ] Move `FakeDeviceConfigEditor`, `FakeTransport` and `ManualTimeProvider` into `OoBDev.DevTerm.TestUtilities` ([plan](docs/design/DevTermParity/test-utilities-plan.md)); each needs Core references.
 - [ ] Test gaps: Playwright DevLocal flows, an interactive Tui run, screenshot tests, serial and TCP real-hardware tests ([list](docs/design/DevTermParity/status.md#test-gaps)).
 - [ ] Register an `IDeviceConfigEditor` (port the Ebyte editor) so the Configure device button works; persist the theme through `ActiveTheme.Initialize`.
-- [ ] **Avalonia spike** for the cross-platform device UI, after the first WPF device panel works end to end: [avalonia-spike.md](docs/migration/avalonia-spike.md).
-- [ ] **UiDefinitions as a generic dashboard and form language for web front ends** (later, nothing required now): [ui-language-later.md](docs/design/DevTermParity/ui-language-later.md).
 - Decided 2026-10-30: the Web host keeps its own AsyncAPI document and viewer (offline viewer, stream channels); the SCPI control panel uses `DynamicModelFactory` (was Q3 and Q4).
 - Cleanup to tell the owner: removable Docker volume `oobd-aspire-sqlserver`; untracked `bin` and `obj` folders under `src/Extensions/OoBDev.DevTerm.*` and `OoBDev.Scpi.Panels*`.
 
@@ -82,3 +80,8 @@ Scope rule: every BinaryDataDecoders feature is migrated; phases are priority or
 ## 7. Documentation review (owner, 2026-10-28)
 
 - [ ] **Review and clean up all documents**: content and coverage review against the rules `docs-and-diagrams` and `work-tracking` and `docs/patterns-discovery/06-design-document-standard.md`; the DevTerm docs come with the parity work. Numbering, validator problems and stale generated docs are done (2026-10-29); use the `write-docs` skill and `scripts/docs` validators.
+
+## 8. Future ideas (not tied to DevTerm, nothing required now)
+
+- [ ] **Avalonia spike** for the cross-platform device UI, after the first WPF device panel works end to end: [avalonia-spike.md](docs/migration/avalonia-spike.md).
+- [ ] **UiDefinitions as a generic dashboard and form language for web front ends** (later, nothing required now): [ui-language-later.md](docs/design/DevTermParity/ui-language-later.md).
