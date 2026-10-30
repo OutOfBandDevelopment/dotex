@@ -28,9 +28,9 @@ The physical devices attached to the owner's test machine, and where each one is
 | Rigol DG1062Z function generator | USB (USBTMC) and LXI (VXI-11) | none; LXI found by discovery | |
 | Velleman K8055 | USB HID | none | online |
 | Kuando Busylight | USB HID | none | online |
-| HP 34401A multimeter | TCP `192.168.0.109:23` | `HP34401A_TCP_HOST` | serial-to-Ethernet bridge; send `SYST:REM` before queries; did not accept a connection on 2026-10-30 |
+| HP 34401A multimeter | TCP `192.168.0.109:23` | `HP34401A_TCP_HOST` | serial-to-Ethernet bridge; LF terminator, 50 ms between bytes (bursts are dropped), no `SYST:REM` needed; `*IDN?` answers `HEWLETT-PACKARD,34401A,0,5-1-1` (checked 2026-10-30) |
 | Tektronix TDS2024 oscilloscope | TCP `192.168.0.110:23` | `TDS2024_TCP_HOST` | `*IDN?` answers `TEKTRONIX,TDS 2024,0,CF:91.1CT FV:v4.12 TDS2CM:CMV:v1.04` |
-| Tektronix 2230 oscilloscope (1) | TCP `192.168.0.108:23` | `TEK2230_1_TCP_HOST` | pre-SCPI (`ID?`); no reply to `ID?` with an LF terminator on 2026-10-30 |
+| Tektronix 2230 oscilloscope (1) | TCP `192.168.0.108:23` | `TEK2230_1_TCP_HOST` | pre-SCPI (`ID?`); CR terminator, 175 ms between bytes; answers `ID TEK/2230,V81.1,VERS:13;` (checked 2026-10-30; the first reply after connecting can be a stale `STATUS 97;READY;` line) |
 | Tektronix 2230 oscilloscope (2) | TCP `192.168.0.107:23` | `TEK2230_2_TCP_HOST` | offline on 2026-10-30 |
 
 COM numbers change when a USB adapter is replugged: confirm them before blaming a test.
@@ -53,4 +53,5 @@ One project per call; two runs at once fight over the same port.
 
 ## Known gaps
 
+- The Hardware tests for the Korad supplies are not written yet (the settings exist).
 - The DevTerm TCP and serial real-device tests (`OoBDev.DevTerm.Tui.Tests`, category `DevLocal`) still read the dev-term parameter names (`RealTcpDeviceHost1` and so on) from dev-term's `devterm.runsettings`; moving them onto the parameters above is a backlog item.

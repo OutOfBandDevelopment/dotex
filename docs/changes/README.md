@@ -513,6 +513,7 @@ Each change document should include:
 - [LxiDeviceOption tests (2026-10-29)](devterm-lxi-device-option-tests-2026-10-29.md) - 6 Unit tests for the discovery-hit to picker-option mapping
 - [DevTerm one type per file (2026-10-29)](devterm-one-type-per-file-2026-10-29.md) - MA0048 splits across the DevTerm Core, Web, Tui and test projects
 - [Tui doc images go to artifacts (2026-10-29)](devterm-tui-doc-images-2026-10-29.md) - screenshot tests stop writing into docs/user-guide/images
+- [Bench instrument identify tests (2026-10-30)](scpi-bench-identify-tests-2026-10-30.md) - Hardware tests for the HP 34401A, TDS2024 and 2230 over their serial bridges (CR/LF and per-byte delay settings)
 - [DevTerm parity design documents (2026-10-29)](devterm-parity-design-docs-2026-10-29.md) - requirements, api-design and testing-strategy drafts
 - [DevTerm Core device panel gating (2026-10-29)](devterm-device-panel-gating-2026-10-29.md) - K8055 and Busylight ids leave Core; the panels own them
 - [RFC 2217 adapter open-path tests (2026-10-29)](system-io-tcp-rfc2217-adapter-tests-2026-10-29.md) - loopback tests for open, fault and close
