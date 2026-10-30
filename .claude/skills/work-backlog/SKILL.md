@@ -23,7 +23,7 @@ Loop until the stop conditions below. Every item follows the full SDLC below (de
 Run the `complete-work` skill: change document, index entry, feature docs, removal from `TODO.md` and `BACKLOG.md`. Then go back to Pick.
 
 ## Close-out audit (when nothing is left)
-Verify each item closed this run: the code exists, a test covers it, the docs match (`reconcile-designs-and-code` skill). Add missed work to `BACKLOG.md`, reopen items that fail the check, and loop to Pick. Stop only when an audit pass finds nothing new.
+Verify each item closed this run: the code exists, a test covers it, the docs match (`reconcile-designs-and-code` skill). Also run the tracking hygiene pass (rule `work-tracking`, "Keeping the files correct"): remove done or duplicate items, shorten run-on lines, regroup by area, refresh the dates and the `CLAUDE.md` priorities. Add missed work to `BACKLOG.md`, reopen items that fail the check, and loop to Pick. Stop only when an audit pass finds nothing new.
 
 ## Stop when
 - Nothing is left and an audit pass found nothing new; or

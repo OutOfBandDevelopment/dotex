@@ -21,4 +21,12 @@ Rules:
 - Do the tracking in the same commit series as the work, not afterwards. A commit that changes `src/` and finishes an item includes the tracking files; a hook reminds you at commit time.
 - Never mark something done that was not built and tested; say what was not run.
 - Rough edges found while working go to `BACKLOG.md`, not into the current change.
+## Keeping the files correct
+
+- `TODO.md`: at most about 15 items, one line each (about 400 characters). Detail goes in the feature doc or the change document, history in `git log`. Every item is something started or next, never a log of what was done.
+- `BACKLOG.md`: grouped by area (for example DevTerm, Devices, Test infrastructure, Migrations), not by when it was found. Each item lives in exactly one place; before adding one, search for an overlapping item and merge it. A decision the owner already made is recorded as one line in the matching feature doc, not as a backlog item. Keep "waiting for the owner" apart from "decided, waiting its turn".
+- When you start, finish, add or drop an item, set the `Last Updated` date (today) of the file you touched in the same edit. Delete an item the moment it is done or superseded; a done item that is still listed is a defect.
+- The "Current Work Context" priorities in `CLAUDE.md` must name what `TODO.md` In progress is working on. When the focus changes, change both in the same commit.
+- A `SessionStart` hook (`.claude/hooks/tracking-hygiene.mjs`) reports an over-long `TODO.md`, run-on items and stale dates; fix what it reports before new work.
+
 - The root holds only `README.md`, `CLAUDE.md`, `TODO.md`, `BACKLOG.md`, `OPEN-QUESTIONS.md`, `TEST_VARIABLES.md` and `CONFIGURATION_SETTINGS.md`.
