@@ -30,3 +30,7 @@ The six `OoBDev.DevTerm.Transports.{Tcp,Rfc2217,Vxi11}` projects are gone. `TcpT
 ## Step 3: DevTerm Core moves to `src/Applications`
 
 `OoBDev.DevTerm.Core` now holds Logging, DeviceManifests, Configuration, Schemas (`SchemaGenerator`), Presenters.Text and Loopback as folders (`OoBDev.DevTerm.Loopback` replaces `OoBDev.DevTerm.Transports.Loopback`); the old libraries and test projects are deleted and one `OoBDev.DevTerm.Core.Tests` carries all their tests (892 Unit tests passed, 5 skipped; hardware tests not run). The plugin assemblies (`Plugins.KeyValue`, `.KeyValue.Tests`, `Plugins.Sample`) moved to `src/Applications` as separate projects because they are loaded from a plugin folder. The libraries' readmes are appended to `README.DevTerm.Core.md`. `OoBDev.slnx` is updated; the whole solution builds with 0 errors.
+
+## Step 5a: HID moves into `System.IO.UsbHids`
+
+`DevTerm.Transports.Hid` is now `UsbHidEndpointDeviceAdapter` (`UsbHidEndpointOptions`, `AddUsbHidEndpointDeviceAdapter()`) in `OoBDev.System.IO.UsbHids`, with `IUsbHidDevice`, `IUsbHidDeviceFactory`, `SystemUsbHidDevice`, `UsbHidReadStream` and `IUsbHidDiscovery` (one type per file). The 11 adapter tests moved to the new `OoBDev.System.IO.UsbHids.Tests` (11 Unit tests passing; real-hardware behavior not re-verified). It sits beside the thin `UsbHidDeviceAdapter` and `UsbHidFactory`; merging them is in BACKLOG.md.
