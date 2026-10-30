@@ -39,6 +39,8 @@ public sealed class SessionViewModel : ViewModelBase, IAsyncDisposable
     /// <summary>The per-connection state the routing window edits, or null.</summary>
     public SessionTab? Tab { get; }
 
+    internal Session Session => _session;
+
     /// <summary>The tab title.</summary>
     public string Title { get; }
 

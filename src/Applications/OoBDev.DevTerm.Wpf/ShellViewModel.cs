@@ -14,6 +14,8 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
     private readonly ISessionViewModelFactory? _sessionFactory;
     private readonly IConnectionEditorDialog? _editorDialog;
     private readonly IRoutingDialog? _routingDialog;
+    private readonly IStreamMonitorDialog? _streamMonitorDialog;
+    private readonly StreamMonitor? _streamMonitor;
     private PanelViewModel? _selected;
     private SessionViewModel? _selectedSession;
     private int _connectionCount;
@@ -21,15 +23,20 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
     /// <summary>Creates the shell and opens the first panel, if any.</summary>
     /// <param name="factories">The registered panel factories.</param>
     /// <param name="sessionFactory">Creates the sessions the shell opens, or null when it cannot.</param>
+    /// <param name="streamMonitorDialog">Shows the stream monitor window, or null when the shell has no window to host it.</param>
+    /// <param name="streamMonitor">The stream monitor shared by the shell, or null.</param>
     /// <param name="routingDialog">Shows the routing window, or null when the shell has no window to host it.</param>
     /// <param name="editorDialog">Shows the connection editor, or null when the shell has no window to host it.</param>
-    public ShellViewModel(IEnumerable<IPanelFactory> factories, ISessionViewModelFactory? sessionFactory = null, IConnectionEditorDialog? editorDialog = null, IRoutingDialog? routingDialog = null)
+    public ShellViewModel(IEnumerable<IPanelFactory> factories, ISessionViewModelFactory? sessionFactory = null, IConnectionEditorDialog? editorDialog = null, IRoutingDialog? routingDialog = null, IStreamMonitorDialog? streamMonitorDialog = null, StreamMonitor? streamMonitor = null)
     {
         ArgumentNullException.ThrowIfNull(factories);
         Factories = [.. factories];
         _sessionFactory = sessionFactory;
         _editorDialog = editorDialog;
         _routingDialog = routingDialog;
+        _streamMonitorDialog = streamMonitorDialog;
+        _streamMonitor = streamMonitor;
+        ShowStreamMonitorWindow = new ShowStreamMonitorCommand(this);
         ShowRoutingWindow = new ShowRoutingCommand(this);
         NewConnection = new NewConnectionCommand(this);
         Open = new OpenPanelCommand(this);
@@ -61,6 +68,19 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
 
     /// <summary>Shows the routing window for the selected session.</summary>
     public ICommand ShowRoutingWindow { get; }
+
+    /// <summary>Shows the stream monitor for the selected session.</summary>
+    public ICommand ShowStreamMonitorWindow { get; }
+
+    internal bool CanShowStreamMonitor => _streamMonitorDialog is not null && _streamMonitor is not null && SelectedSession is not null;
+
+    internal void ShowStreamMonitor()
+    {
+        var selected = SelectedSession!;
+        _streamMonitor!.Track(selected, selected.Session, selected.Title, DevTermUserDataPaths.ExportsDirectory);
+        using var window = new StreamMonitorDialogViewModel(_streamMonitor);
+        _streamMonitorDialog!.Show(window);
+    }
 
     internal bool CanShowRouting => _routingDialog is not null && SelectedSession?.Tab is not null;
 
@@ -97,6 +117,7 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
             if (SetProperty(ref _selectedSession, value))
             {
                 ((CommandBase)ShowRoutingWindow).RaiseCanExecuteChanged();
+                ((CommandBase)ShowStreamMonitorWindow).RaiseCanExecuteChanged();
             }
         }
     }
