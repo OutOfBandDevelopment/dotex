@@ -22,6 +22,7 @@ Rules:
 - Never mark something done that was not built and tested; say what was not run.
 - Generated user guides and their screenshots (`docs/applications/devterm/user-guide/`) are committed in the same series as the protocol or application change that updates them (owner, 2026-10-30), by explicit paths.
 - Application documentation lives in `docs/applications/{app-name}/` as living documents (requirements, architecture, API design, testing strategy), updated with the code; no decision records (owner, 2026-10-30). A new user-facing screen or flow needs a screen spec there and a user guide entry with real captured screenshots, never hand-typed mockups. Reusable capability designs stay in `docs/design/<Feature>/`, protocol references in `docs/protocols/`. A migration keeps a transient map (`docs/migration/`) that is deleted once the move is complete.
+- Guides are generated, not written by hand (owner, 2026-10-30): user guides and screenshots for every front end (WPF, Tui, Web) come from test runs of the user journeys, API guides from the OpenAPI, AsyncAPI and ksy files by deterministic MSTest scripts (npm test for JavaScript projects). Output goes next to the application docs. Design: `docs/design/GeneratedGuides/`.
 - Rough edges found while working go to `BACKLOG.md`, not into the current change.
 ## Keeping the files correct
 

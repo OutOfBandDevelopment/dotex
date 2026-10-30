@@ -17,3 +17,15 @@ Policy: all BinaryDataDecoders features migrate; phases are priority order, not 
 7. Surface decisions the owner must make as a short list. Do not start migrating without them.
 
 `reference.md` is the full 1,400-line procedure with templates; open only the section you need.
+
+## Documentation and surroundings checklist (pattern approved by the owner 2026-10-30)
+
+Per migrated project, in the same series as the code. The DevTerm run is the worked example: [review](docs/migration/devterm-surroundings-review-2026-10-30.md) and [map](docs/migration/devterm-docs-map.md).
+
+1. Import its docs whole under `docs/applications/{app-name}/` (reusable designs later to `docs/design/<Feature>/`, protocol references to `docs/protocols/`); keep change history and bug reports.
+2. Write the transient map `docs/migration/{app}-docs-map.md` (folder, now at, living home, state); it is deleted when the move is complete.
+3. Write the surroundings review `docs/migration/{app}-surroundings-review-{date}.md`: guide, `.claude` (rules, skills, hooks, settings), TODO, BACKLOG, open questions, containers, scripts, tests, each migrated, merged or rejected with a reason.
+4. Constraints from its project guide become a path-scoped rule in `.claude/rules/` (see `devterm-constraints`); its skills are adapted, not copied blindly.
+5. Future plans become one-line items in `BACKLOG.md`; open questions go to `OPEN-QUESTIONS.md`.
+6. Guides and screenshots are produced by tests and land in `docs/applications/{app}/user-guide` (design: `docs/design/GeneratedGuides/`).
+7. Do not clean up imported history; cleanup is one plan after all migrations (rule `owner-decisions`).
