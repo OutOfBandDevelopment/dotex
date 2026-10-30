@@ -33,6 +33,39 @@ public sealed class ThemeTests
     }
 
     [TestMethod]
+    public void Choices_Built_HasOneEntryPerThemeAndMarksTheSelectedOne()
+    {
+        // Stage
+        ActiveTheme.Reset();
+        var themes = new ThemeViewModel();
+
+        // Test
+        var choices = themes.Choices;
+
+        // Assert
+        CollectionAssert.AreEqual(themes.Names.ToList(), choices.Select(choice => choice.Name).ToList());
+        Assert.AreEqual(1, choices.Count(choice => choice.IsSelected));
+        Assert.AreEqual(ActiveTheme.Selection, choices.Single(choice => choice.IsSelected).Name, ignoreCase: true);
+    }
+
+    [TestMethod]
+    public void Select_ChoiceExecuted_AppliesThatThemeAndMovesTheCheckMark()
+    {
+        // Stage
+        ActiveTheme.Reset();
+        var themes = new ThemeViewModel();
+        var dark = themes.Choices.Single(choice => choice.Name == BuiltInThemes.DarkName);
+
+        // Test
+        dark.Select.Execute(null);
+
+        // Assert
+        Assert.AreSame(BuiltInThemes.Dark, ActiveTheme.Current);
+        Assert.IsTrue(dark.IsSelected);
+        Assert.AreEqual(1, themes.Choices.Count(choice => choice.IsSelected));
+    }
+
+    [TestMethod]
     public void Apply_DarkTheme_AddsRoleBrushesAndDarkControlTemplates()
     {
         // Stage

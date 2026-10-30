@@ -12,7 +12,7 @@ GitHub is no longer the primary repository (local bare repo `origin`), so nothin
 
 Owner: all protocols and features of dev-term must exist here. Status, slices and leftovers: [status.md](docs/design/DevTermParity/status.md); matrix: [README](docs/design/DevTermParity/README.md); restructure steps 0 to 6 are done.
 
-- [ ] WPF shell slices 1 to 5 left (other per-transport fields and device pickers, Theme and View menus, Browse dialogs and detected-device pickers, routing rule editing and history, field-following previews and Notes); none of the WPF windows were viewed running.
+- [ ] WPF shell slices 1 to 5 left (other per-transport fields and device pickers, Software flow control toggle, Browse dialogs and detected-device pickers, routing rule editing and history, field-following previews and Notes); none of the WPF windows were viewed running.
 - [ ] Move `FakeDeviceConfigEditor`, `FakeTransport` and `ManualTimeProvider` into `OoBDev.DevTerm.TestUtilities` ([plan](docs/design/DevTermParity/test-utilities-plan.md)); each needs Core references.
 - [ ] Test gaps: Playwright DevLocal flows, an interactive Tui run, screenshot tests, serial and TCP real-hardware tests, Web screenshots still writing into `docs/user-guide/images` ([list](docs/design/DevTermParity/status.md#test-gaps)).
 - [ ] Register an `IDeviceConfigEditor` (port the Ebyte editor) so the Configure device button works; persist the theme through `ActiveTheme.Initialize`.

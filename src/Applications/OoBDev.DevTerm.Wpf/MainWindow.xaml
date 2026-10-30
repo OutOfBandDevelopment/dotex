@@ -4,6 +4,42 @@
         xmlns:ui="clr-namespace:UiDefinitionsWpf;assembly=OoBDev.UiDefinitions.Wpf"
         Title="OoBDev DevTerm" Width="900" Height="600">
     <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="_File">
+                <MenuItem Header="_New connection..." Command="{Binding NewConnection}" />
+                <MenuItem Header="New _loopback session" Command="{Binding NewLoopbackSession}" />
+                <MenuItem Header="Open log for _playback..." Command="{Binding OpenPlaybackWindow}" />
+                <Separator />
+                <MenuItem Header="Start _logging" Command="{Binding SelectedSession.ToggleLogging}" />
+                <MenuItem Header="Add _note to log..." Command="{Binding SelectedSession.AddLogNote}" />
+            </MenuItem>
+            <MenuItem Header="_Device">
+                <MenuItem Header="Device _manifest..." Command="{Binding OpenManifestPanel}" />
+                <MenuItem Header="_Edit device manifest..." Command="{Binding ShowManifestEditor}" />
+                <Separator />
+                <MenuItem Header="S_tream monitor..." Command="{Binding ShowStreamMonitorWindow}" />
+                <MenuItem Header="_Routing..." Command="{Binding ShowRoutingWindow}" />
+                <MenuItem Header="Converter _tools..." Command="{Binding ShowConverterTools}" />
+                <MenuItem Header="Confi_gure device..." Command="{Binding ShowConfigureDevice}" />
+            </MenuItem>
+            <MenuItem Header="_View">
+                <MenuItem Header="_Theme" ItemsSource="{Binding Themes.Choices}">
+                    <MenuItem.ItemContainerStyle>
+                        <Style TargetType="MenuItem">
+                            <Setter Property="Header" Value="{Binding Name}" />
+                            <Setter Property="IsCheckable" Value="True" />
+                            <Setter Property="IsChecked" Value="{Binding IsSelected, Mode=OneWay}" />
+                            <Setter Property="Command" Value="{Binding Select}" />
+                        </Style>
+                    </MenuItem.ItemContainerStyle>
+                </MenuItem>
+                <MenuItem Header="_Build or edit theme..." Command="{Binding BuildTheme}" />
+                <MenuItem Header="_All sessions log..." Command="{Binding ShowMergedLogWindow}" />
+                <Separator />
+                <MenuItem Header="_Echo sent commands" IsCheckable="True" IsChecked="{Binding SelectedSession.EchoSent, Mode=TwoWay}" />
+                <MenuItem Header="Clea_r output" Command="{Binding SelectedSession.ClearOutput}" />
+            </MenuItem>
+        </Menu>
         <StackPanel DockPanel.Dock="Left" Width="180">
             <Button Content="New connection..." Margin="4" Command="{Binding NewConnection}" />
             <Button Content="Open log for playback..." Margin="4" Command="{Binding OpenPlaybackWindow}" />
