@@ -9,8 +9,10 @@
   <ItemGroup>
     <ProjectReference Include="..\OoBDev.System.Abstractions\OoBDev.System.Abstractions.csproj" />
     <ProjectReference Include="..\OoBDev.System.IO.Pipelines\OoBDev.System.IO.Pipelines.csproj" />
+    <ProjectReference Include="..\OoBDev.System.IO.Tcp\OoBDev.System.IO.Tcp.csproj" />
     <ProjectReference Include="..\OoBDev.UiDefinitions\OoBDev.UiDefinitions.csproj" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+    <PackageReference Include="System.IO.Ports" />
     <PackageReference Include="GitVersion.MsBuild">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

@@ -3,6 +3,9 @@ namespace OoBDev.System.IO.Tcp;
 /// <summary>The parity values of the RFC 2217 SET-PARITY command.</summary>
 public enum ComPortParity : byte
 {
+    /// <summary>Asks the server to report its current parity.</summary>
+    Request = 0,
+
     /// <summary>No parity.</summary>
     None = 1,
 

@@ -13,7 +13,15 @@ await adapter.OpenAsync(); // then hand the adapter to StreamDevice<ScpiReply>, 
 
 `Rfc2217DeviceAdapter(host, port, baudRate, dataBits, parity, stopBits)` reaches a serial port on a terminal server with RFC 2217: it connects, announces the COM-PORT option and sends the four line-setting subnegotiations (`Handshake()` shows the bytes). `TelnetStream` does the Telnet part: doubles `IAC` on write, drops commands and subnegotiations on read, and answers option requests (only COM-PORT is accepted).
 
-## Notes
 
-- Phase 9 of [the device decoding plan](../../../docs/migration/device-decoding-migration-plan.md); USBTMC, VXI-11 and BLE are not done. RFC 2217 modem-control and flow-control commands and the server's subnegotiation replies are ignored.
-- Verified against an in-memory Telnet peer and a loopback listener only, not a real instrument.
+## Configured adapters
+
+These take options and register with DI (`ServiceCollectionExtensions`); each registers `IDeviceAdapter` and reuses `ITcpConnectionSource` (`TryAdd`).
+
+- `TcpEndpointDeviceAdapter` (`AddTcpEndpointDeviceAdapter()`, `TcpEndpointOptions`, validated by `TcpEndpointOptionsValidator`): raw or Telnet TCP for instruments and serial-to-Ethernet bridges, with optional XON/XOFF flow control. `LxiDiscovery` finds LXI devices.
+- `Rfc2217ClientDeviceAdapter` (`AddRfc2217ClientDeviceAdapter()`, `Rfc2217ClientOptions`): a serial port on a terminal server such as ser2net, with the full RFC 2217 codec (modem and line state, flow control, purge). Implements `IComPortControl` and `ILineStatusSource`.
+- `Vxi11DeviceAdapter` (`AddVxi11DeviceAdapter()`, `Vxi11DeviceAdapterOptions`): VXI-11 (ONC-RPC over TCP) instruments, tested against a loopback RPC server.
+
+The RFC 2217 server bridge (`Rfc2217ServerBridge`) shares a session and lives in `OoBDev.DevTerm.Core` until the Applications move; this assembly grants it `InternalsVisibleTo` for the codec.
+
+Verified against in-memory peers and loopback listeners; the real-hardware VXI-11 and ser2net tests end `Assert.Inconclusive` when the device is absent.

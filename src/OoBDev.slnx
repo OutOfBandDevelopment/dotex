@@ -214,12 +214,6 @@
     <Project Path="Extensions/OoBDev.DevTerm.Configuration.Tests/OoBDev.DevTerm.Configuration.Tests.csproj" />
     <Project Path="Extensions/OoBDev.DevTerm.Schemas/OoBDev.DevTerm.Schemas.csproj" />
     <Project Path="Extensions/OoBDev.DevTerm.Schemas.Tests/OoBDev.DevTerm.Schemas.Tests.csproj" />
-    <Project Path="Extensions/OoBDev.DevTerm.Transports.Tcp/OoBDev.DevTerm.Transports.Tcp.csproj" />
-    <Project Path="Extensions/OoBDev.DevTerm.Transports.Tcp.Tests/OoBDev.DevTerm.Transports.Tcp.Tests.csproj" />
-    <Project Path="Extensions/OoBDev.DevTerm.Transports.Rfc2217/OoBDev.DevTerm.Transports.Rfc2217.csproj" />
-    <Project Path="Extensions/OoBDev.DevTerm.Transports.Rfc2217.Tests/OoBDev.DevTerm.Transports.Rfc2217.Tests.csproj" />
-    <Project Path="Extensions/OoBDev.DevTerm.Transports.Vxi11/OoBDev.DevTerm.Transports.Vxi11.csproj" />
-    <Project Path="Extensions/OoBDev.DevTerm.Transports.Vxi11.Tests/OoBDev.DevTerm.Transports.Vxi11.Tests.csproj" />
     <Project Path="Framework/OoBDev.DevTerm.Logging.Tests/OoBDev.DevTerm.Logging.Tests.csproj" />
     <Project Path="Framework/OoBDev.DevTerm.Logging/OoBDev.DevTerm.Logging.csproj" />
     <Project Path="Framework/OoBDev.DevTerm.Core.Tests/OoBDev.DevTerm.Core.Tests.csproj" />
