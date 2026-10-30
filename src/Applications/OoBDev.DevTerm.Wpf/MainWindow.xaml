@@ -56,6 +56,7 @@
             <StackPanel Grid.Row="1" Grid.ColumnSpan="4" Orientation="Horizontal" Margin="0,4,0,0">
                 <CheckBox Content="Echo sent commands" IsChecked="{Binding EchoSent}" VerticalAlignment="Center" />
                 <Button Content="Clear output" Margin="8,0,0,0" Padding="8,0" Command="{Binding ClearOutput}" />
+                <ToggleButton Content="Log to file" Margin="8,0,0,0" Padding="8,0" IsChecked="{Binding IsLogging, Mode=OneWay}" Command="{Binding ToggleLogging}" ToolTip="{Binding LogPath}" />
             </StackPanel>
         </Grid>
         <TextBlock DockPanel.Dock="Bottom" DataContext="{Binding SelectedSession}" Text="{Binding ErrorMessage}" Foreground="Firebrick" Margin="4" />

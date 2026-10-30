@@ -4,7 +4,9 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using System.IO;
 using OoBDev.DevTerm.Configuration;
+using OoBDev.DevTerm.Logging;
 using OoBDev.System.IO;
 using OoBDev.UiDefinitions.ViewModels;
 
@@ -18,6 +20,7 @@ public sealed class SessionViewModel : ViewModelBase, IAsyncDisposable
     private string _sendText = string.Empty;
     private string? _errorMessage;
     private bool _echoSent;
+    private SessionLogger? _logger;
 
     /// <summary>Creates the view model over <paramref name="session"/> and listens to its output.</summary>
     /// <param name="session">The session; the view model owns it.</param>
@@ -34,6 +37,7 @@ public sealed class SessionViewModel : ViewModelBase, IAsyncDisposable
         Disconnect = new DisconnectSessionCommand(this);
         Send = new SendTextCommand(this);
         ClearOutput = new ClearOutputCommand(this);
+        ToggleLogging = new ToggleLoggingCommand(this);
         _session.Output += OnOutput;
         _session.Transport.StateChanged += OnStateChanged;
     }
@@ -58,6 +62,15 @@ public sealed class SessionViewModel : ViewModelBase, IAsyncDisposable
 
     /// <summary>Empties <see cref="OutputLines"/>.</summary>
     public ICommand ClearOutput { get; }
+
+    /// <summary>Starts or stops logging the session to its default log file; not available without per-connection options.</summary>
+    public ICommand ToggleLogging { get; }
+
+    /// <summary>Whether the session is being logged.</summary>
+    public bool IsLogging => _logger is not null;
+
+    /// <summary>The path of the log being written, or null.</summary>
+    public string? LogPath => _logger?.Path;
 
     /// <summary>The connection state of the session's adapter.</summary>
     public ConnectionState State => _session.State;
@@ -91,6 +104,33 @@ public sealed class SessionViewModel : ViewModelBase, IAsyncDisposable
     /// <summary>Sends <see cref="SendText"/>.</summary>
     public ICommand Send { get; }
 
+    internal bool CanLog => Tab is not null;
+
+    internal void SwitchLogging()
+    {
+        if (_logger is not null)
+        {
+            _logger.Dispose();
+            _logger = null;
+        }
+        else if (Tab is { } tab)
+        {
+            try
+            {
+                var path = SessionLogging.DefaultLogPath(tab.CliOptions, null, DateTimeOffset.Now);
+                _logger = SessionLogging.Start(path, _session, tab.CliOptions, tab.Parser, null, "wpf");
+                ErrorMessage = null;
+            }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or ArgumentException or NotSupportedException)
+            {
+                ErrorMessage = ex.Message;
+            }
+        }
+
+        OnPropertyChanged(nameof(IsLogging));
+        OnPropertyChanged(nameof(LogPath));
+    }
+
     internal bool CanConnect => State is ConnectionState.Closed or ConnectionState.Faulted;
 
     internal bool CanDisconnect => State == ConnectionState.Open;
@@ -119,6 +159,7 @@ public sealed class SessionViewModel : ViewModelBase, IAsyncDisposable
     /// <inheritdoc />
     public async ValueTask DisposeAsync()
     {
+        _logger?.Dispose();
         _session.Output -= OnOutput;
         _session.Transport.StateChanged -= OnStateChanged;
         await _session.DisposeAsync().ConfigureAwait(false);

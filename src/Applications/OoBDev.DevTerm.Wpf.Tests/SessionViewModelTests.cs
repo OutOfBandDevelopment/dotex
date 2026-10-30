@@ -1,9 +1,11 @@
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using OoBDev.DevTerm.Configuration;
 using OoBDev.DevTerm.Loopback;
 using OoBDev.DevTerm.Presenters.Text;
 using OoBDev.System.IO;
@@ -65,6 +67,51 @@ public sealed class SessionViewModelTests
 
         // Assert
         CollectionAssert.Contains(viewModel.OutputLines, "> hello");
+    }
+
+    [TestMethod]
+    public async Task ToggleLogging_NoTab_CannotExecute()
+    {
+        // Stage
+        await using var viewModel = Create();
+
+        // Assert
+        Assert.IsFalse(viewModel.ToggleLogging.CanExecute(null));
+    }
+
+    [TestMethod]
+    public async Task ToggleLogging_WithTab_StartsAndStopsALogFile()
+    {
+        // Stage
+        var home = Path.Combine(Path.GetTempPath(), "devterm-wpf-log-" + Guid.NewGuid().ToString("N"));
+        var saved = Environment.GetEnvironmentVariable(DevTermHome.EnvironmentVariable);
+        Environment.SetEnvironmentVariable(DevTermHome.EnvironmentVariable, home);
+        try
+        {
+            var transport = new LoopbackTransport(Options.Create(new LoopbackTransportOptions()));
+            var session = new Session(transport, new Pipeline([]));
+            var tab = new SessionTab(session, new PresenterCatalog([]), new CliOptions());
+            await using var viewModel = new SessionViewModel(session, "Loopback", tab);
+
+            // Test
+            viewModel.ToggleLogging.Execute(null);
+            var started = viewModel.IsLogging;
+            var path = viewModel.LogPath;
+            viewModel.ToggleLogging.Execute(null);
+
+            // Assert
+            Assert.IsTrue(started);
+            Assert.IsTrue(File.Exists(path));
+            Assert.IsFalse(viewModel.IsLogging);
+        }
+        finally
+        {
+            Environment.SetEnvironmentVariable(DevTermHome.EnvironmentVariable, saved);
+            if (Directory.Exists(home))
+            {
+                Directory.Delete(home, true);
+            }
+        }
     }
 
     [TestMethod]
