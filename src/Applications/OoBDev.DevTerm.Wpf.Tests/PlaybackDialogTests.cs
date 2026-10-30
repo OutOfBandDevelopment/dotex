@@ -112,6 +112,52 @@ public sealed class PlaybackDialogTests
     }
 
     [TestMethod]
+    public void TrimAndNote_MarkedRange_SavesTheTrimNextToTheLogAndTheNoteIntoIt()
+    {
+        // Stage
+        var directory = Path.Combine(Path.GetTempPath(), $"devterm-wpf-trim-{Guid.NewGuid():N}");
+        Directory.CreateDirectory(directory);
+        try
+        {
+            var path = Path.Combine(directory, "capture.jsonl");
+            var t0 = new DateTimeOffset(2026, 9, 25, 12, 0, 0, TimeSpan.Zero);
+            new SessionLog(
+                new SessionLogHeader { Created = t0, Connection = "loopback", Presenters = ["ascii"] },
+                [.. Enumerable.Range(0, 4).Select(i => new SessionLogRecord
+                {
+                    Kind = SessionLogRecordKind.Rx,
+                    Sequence = i + 1,
+                    Timestamp = t0.AddSeconds(i),
+                    Data = Encoding.ASCII.GetBytes($"line{i}\r"),
+                })]).Save(path);
+            var services = new ServiceCollection();
+            services.AddSingleton<IPlaybackDialog>(new FakePlaybackDialog(path, playback =>
+            {
+                playback.Step.Execute(null);
+                playback.MarkIn.Execute(null);
+                playback.Step.Execute(null);
+                playback.Step.Execute(null);
+                playback.MarkOut.Execute(null);
+                playback.SaveTrim.Execute(null);
+                playback.NoteText = "checked";
+                playback.AddNote.Execute(null);
+            }));
+            using var provider = services.AddDevTermWpfShell().BuildServiceProvider();
+
+            // Test
+            provider.GetRequiredService<ShellViewModel>().OpenPlaybackWindow.Execute(null);
+
+            // Assert
+            Assert.AreEqual(1, Directory.GetFiles(directory, "*.trim-*").Length);
+            Assert.IsTrue(File.ReadAllText(path).Contains("checked", StringComparison.Ordinal));
+        }
+        finally
+        {
+            Directory.Delete(directory, recursive: true);
+        }
+    }
+
+    [TestMethod]
     public void OpenPlaybackWindow_PickCancelled_ShowsNothing()
     {
         // Stage

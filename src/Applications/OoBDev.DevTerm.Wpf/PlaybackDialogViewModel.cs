@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using System.IO;
 using System.Windows.Input;
 using OoBDev.DevTerm.Logging;
 using OoBDev.UiDefinitions.ViewModels;
@@ -14,6 +15,7 @@ public sealed class PlaybackDialogViewModel : ViewModelBase
     private readonly PlaybackController _controller;
     private string _position;
     private string _jumpText = string.Empty;
+    private string _noteText = string.Empty;
     private string _statusText = string.Empty;
     private PlaybackSpeed _speed;
 
@@ -31,6 +33,24 @@ public sealed class PlaybackDialogViewModel : ViewModelBase
         FastForward = new PlaybackCommand(this, c => c.FastForward());
         SkipToEnd = new PlaybackCommand(this, c => c.SkipToEnd());
         Jump = new PlaybackCommand(this, c => c.JumpTo(JumpText));
+        AddNote = new PlaybackCommand(this, c => c.AddNote(NoteText));
+        MarkIn = new PlaybackCommand(this, c =>
+        {
+            c.MarkIn();
+            return PlaybackBatch.Empty;
+        });
+        MarkOut = new PlaybackCommand(this, c =>
+        {
+            c.MarkOut();
+            return PlaybackBatch.Empty;
+        });
+        SaveTrim = new PlaybackCommand(this, c =>
+        {
+            var path = c.DefaultTrimPath();
+            c.SaveSelection(path);
+            StatusText = $"Saved {path}";
+            return PlaybackBatch.Empty;
+        });
     }
 
     /// <summary>What is being played.</summary>
@@ -76,6 +96,25 @@ public sealed class PlaybackDialogViewModel : ViewModelBase
         private set => SetProperty(ref _statusText, value);
     }
 
+    /// <summary>The text of the note to add at the current position.</summary>
+    public string NoteText
+    {
+        get => _noteText;
+        set => SetProperty(ref _noteText, value);
+    }
+
+    /// <summary>Adds <see cref="NoteText"/> at the current position and saves the log.</summary>
+    public ICommand AddNote { get; }
+
+    /// <summary>Starts the trim selection at the current position.</summary>
+    public ICommand MarkIn { get; }
+
+    /// <summary>Ends the trim selection at the current position.</summary>
+    public ICommand MarkOut { get; }
+
+    /// <summary>Saves the selection as a new log next to the original.</summary>
+    public ICommand SaveTrim { get; }
+
     /// <summary>Jumps to <see cref="JumpText"/>.</summary>
     public ICommand Jump { get; }
 
@@ -101,10 +140,10 @@ public sealed class PlaybackDialogViewModel : ViewModelBase
     {
         try
         {
-            Apply(action(_controller));
             StatusText = string.Empty;
+            Apply(action(_controller));
         }
-        catch (FormatException ex)
+        catch (Exception ex) when (ex is FormatException or InvalidOperationException or ArgumentException or IOException)
         {
             StatusText = ex.Message;
         }
