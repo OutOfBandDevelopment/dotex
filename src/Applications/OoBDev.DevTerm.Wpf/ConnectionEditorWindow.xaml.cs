@@ -14,11 +14,14 @@ public partial class ConnectionEditorWindow : Window
 
     /// <summary>Creates the window over <paramref name="editor"/>.</summary>
     /// <param name="editor">The editor view model.</param>
-    public ConnectionEditorWindow(ConnectionEditorViewModel editor, ProfileZipBrowser? zipBrowser = null)
+    /// <param name="zipBrowser">The zip path pickers, or null when the host has none.</param>
+    /// <param name="scans">The device scan commands; the real scanners over <paramref name="editor"/> when null.</param>
+    public ConnectionEditorWindow(ConnectionEditorViewModel editor, ProfileZipBrowser? zipBrowser = null, ConnectionDeviceScans? scans = null)
     {
         ArgumentNullException.ThrowIfNull(editor);
         _editor = editor;
         ZipBrowser = zipBrowser;
+        Scans = scans ?? new ConnectionDeviceScans(editor);
         InitializeComponent();
         DataContext = editor;
         editor.CloseRequested += (_, _) => DialogResult = true;
@@ -27,6 +30,9 @@ public partial class ConnectionEditorWindow : Window
 
     /// <summary>The Browse and Save As commands for the zip path, or null when the host has no file pickers.</summary>
     public ProfileZipBrowser? ZipBrowser { get; }
+
+    /// <summary>The Scan network, Scan Bluetooth and Explore characteristics commands.</summary>
+    public ConnectionDeviceScans Scans { get; }
 
     private void ProfilesList_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
