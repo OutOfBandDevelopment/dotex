@@ -37,6 +37,11 @@ public sealed class DevicePanelTests
         }
     }
 
+    private sealed class FixedColor : OoBDev.UiDefinitions.ViewModels.IColorPicker
+    {
+        public string? Pick(string? current) => "255,0,0";
+    }
+
     private sealed class FakePanel(FakeSurface surface) : IDevicePanelContribution
     {
         public string Id => "fake";
@@ -50,7 +55,7 @@ public sealed class DevicePanelTests
         public UiDefinition BuildDefinition() => new()
         {
             Name = "Fake",
-            Sections = [new UiSection { Controls = [new ToggleControl { Id = "d1", Label = "D1" }, new ButtonControl { Id = "wipe", Label = "Wipe", CommandId = "WIPE", ConfirmMessage = "Erase?" }] }],
+            Sections = [new UiSection { Controls = [new ToggleControl { Id = "d1", Label = "D1" }, new ButtonControl { Id = "wipe", Label = "Wipe", CommandId = "WIPE", ConfirmMessage = "Erase?" }, new TextFieldControl { Id = "color", Label = "Color" }, new ButtonControl { Id = "pick", Label = "Pick", ColorPickerTargetCommandId = "color" }] }],
         };
 
         public IControlSurface CreateSurface(Session session) => surface;
@@ -106,6 +111,30 @@ public sealed class DevicePanelTests
         // Assert
         Assert.AreEqual("Erase?", decline.Asked);
         Assert.IsEmpty(surface.Sent);
+    }
+
+    [TestMethod]
+    public async Task Button_ColorPicked_SendsTheColorToTheTarget()
+    {
+        // Stage
+        var surface = new FakeSurface();
+        var services = new ServiceCollection();
+        services.AddSingleton<IDevicePanelContribution>(new FakePanel(surface));
+        services.AddSingleton<OoBDev.UiDefinitions.ViewModels.IColorPicker>(new FixedColor());
+        await using var provider = services.AddDevTermWpfShell().BuildServiceProvider();
+        var shell = provider.GetRequiredService<ShellViewModel>();
+        shell.NewLoopbackSession.Execute(null);
+        var session = shell.SelectedSession!;
+        session.Connect.Execute(null);
+        await WaitAsync(() => session.State == ConnectionState.Open);
+        shell.OpenDevicePanelCommand.Execute(shell.DevicePanels[0]);
+        var pick = (OoBDev.UiDefinitions.ViewModels.ButtonViewModel)shell.SelectedPanel!.Form.Row("pick")!;
+
+        // Test
+        pick.Invoke.Execute(null);
+
+        // Assert
+        CollectionAssert.AreEqual(new (string, string?)[] { ("color", "255,0,0") }, surface.Sent);
     }
 
     private static async Task WaitAsync(Func<bool> condition)
