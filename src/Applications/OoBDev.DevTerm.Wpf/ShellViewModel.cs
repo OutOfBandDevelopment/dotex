@@ -18,6 +18,8 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
     private readonly IConverterToolsDialog? _converterToolsDialog;
     private readonly IManifestPickerDialog? _manifestPickerDialog;
     private readonly IThemeBuilderDialog? _themeBuilderDialog;
+    private readonly IConfigureDeviceDialog? _configureDeviceDialog;
+    private readonly IReadOnlyList<OoBDev.System.IO.Devices.IDeviceConfigEditor> _configEditors;
     private readonly string? _themesDirectory;
     private readonly ConverterToolsStore? _converterToolsStore;
     private readonly StreamMonitor? _streamMonitor;
@@ -42,7 +44,7 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
     /// <param name="mergedLog">The log every opened session is recorded in, or null.</param>
     /// <param name="routingDialog">Shows the routing window, or null when the shell has no window to host it.</param>
     /// <param name="editorDialog">Shows the connection editor, or null when the shell has no window to host it.</param>
-    public ShellViewModel(IEnumerable<IPanelFactory> factories, ISessionViewModelFactory? sessionFactory = null, IConnectionEditorDialog? editorDialog = null, IRoutingDialog? routingDialog = null, IStreamMonitorDialog? streamMonitorDialog = null, StreamMonitor? streamMonitor = null, IMergedLogDialog? mergedLogDialog = null, MergedSessionLog? mergedLog = null, IPlaybackDialog? playbackDialog = null, PlaybackPresenters? playbackPresenters = null, IEnumerable<IDevicePanelContribution>? devicePanels = null, IConfirmPrompt? confirm = null, IColorPicker? colorPicker = null, IConverterToolsDialog? converterToolsDialog = null, ConverterToolsStore? converterToolsStore = null, IManifestPickerDialog? manifestPickerDialog = null, IThemeBuilderDialog? themeBuilderDialog = null, string? themesDirectory = null)
+    public ShellViewModel(IEnumerable<IPanelFactory> factories, ISessionViewModelFactory? sessionFactory = null, IConnectionEditorDialog? editorDialog = null, IRoutingDialog? routingDialog = null, IStreamMonitorDialog? streamMonitorDialog = null, StreamMonitor? streamMonitor = null, IMergedLogDialog? mergedLogDialog = null, MergedSessionLog? mergedLog = null, IPlaybackDialog? playbackDialog = null, PlaybackPresenters? playbackPresenters = null, IEnumerable<IDevicePanelContribution>? devicePanels = null, IConfirmPrompt? confirm = null, IColorPicker? colorPicker = null, IConverterToolsDialog? converterToolsDialog = null, ConverterToolsStore? converterToolsStore = null, IManifestPickerDialog? manifestPickerDialog = null, IThemeBuilderDialog? themeBuilderDialog = null, string? themesDirectory = null, IConfigureDeviceDialog? configureDeviceDialog = null, IEnumerable<OoBDev.System.IO.Devices.IDeviceConfigEditor>? configEditors = null)
     {
         ArgumentNullException.ThrowIfNull(factories);
         Factories = [.. factories];
@@ -53,6 +55,8 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
         _converterToolsDialog = converterToolsDialog;
         _manifestPickerDialog = manifestPickerDialog;
         _themeBuilderDialog = themeBuilderDialog;
+        _configureDeviceDialog = configureDeviceDialog;
+        _configEditors = [.. configEditors ?? []];
         _themesDirectory = themesDirectory;
         _converterToolsStore = converterToolsStore;
         _streamMonitor = streamMonitor;
@@ -70,6 +74,7 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
         ShowConverterTools = new ShowConverterToolsCommand(this);
         OpenManifestPanel = new OpenManifestCommand(this);
         BuildTheme = new BuildThemeCommand(this);
+        ShowConfigureDevice = new ShowConfigureDeviceCommand(this);
         ShowRoutingWindow = new ShowRoutingCommand(this);
         NewConnection = new NewConnectionCommand(this);
         Open = new OpenPanelCommand(this);
@@ -107,6 +112,9 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
 
     /// <summary>Edits the stream monitor's converter tools.</summary>
     public ICommand ShowConverterTools { get; }
+
+    /// <summary>Shows the Configure device window.</summary>
+    public ICommand ShowConfigureDevice { get; }
 
     /// <summary>Picks a seed theme and edits a new theme from it.</summary>
     public ICommand BuildTheme { get; }
@@ -149,6 +157,10 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
         var feed = new DevicePanelFeed(definition, source, built);
         SelectedPanel = new PanelViewModel(panel.MenuTitle.Replace("_", string.Empty, StringComparison.Ordinal).TrimEnd('.'), new FormViewModel(built.Definition, built.Binding, _colorPicker, _confirm), feed, feed.Displays);
     }
+
+    internal bool CanConfigureDevice => _configureDeviceDialog is not null && _configEditors.Count > 0;
+
+    internal void ConfigureDevice() => _configureDeviceDialog!.Show(new ConfigureDeviceDialogViewModel(_configEditors));
 
     internal bool CanBuildTheme => _themeBuilderDialog is not null;
 
