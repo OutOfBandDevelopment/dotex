@@ -69,3 +69,4 @@ Step 3 result (2026-10-29): `OoBDev.DevTerm.Core` and `OoBDev.DevTerm.Core.Tests
 | K8055 panel, surface, config | dev-term `DevTerm.Devices.K8055` | `OoBDev.Velleman.K8055` | adds `OoBDev.UiDefinitions` |
 | Busylight panel, surface, config | dev-term `DevTerm.Devices.Busylight` | `OoBDev.Kuando.Busylight` | adds `OoBDev.UiDefinitions` |
 | Generic panel contribution | not ported | `OoBDev.DevTerm.Core` | resolves the device pieces through DI |
+- **Namespaces (owner, 2026-10-29: "In a .io.devices .uidefinitions namespaces").** The assembly stays `OoBDev.System.Abstractions`; the namespaces name the concern. `IDeviceConfigEditor` and `DeviceConfigTarget` (with the types they use) go to `OoBDev.System.IO.Devices`. `IControlSurface`, `ICommandPreview`, `CommandPreviewFormat` and `IStructuredPresenter` go to `OoBDev.UiDefinitions`, the namespace of the panel definitions they serve. A later move to a dedicated project then changes no namespace.
