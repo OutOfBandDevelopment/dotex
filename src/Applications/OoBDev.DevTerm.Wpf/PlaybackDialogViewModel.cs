@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Windows.Input;
@@ -12,6 +13,9 @@ public sealed class PlaybackDialogViewModel : ViewModelBase
 {
     private readonly PlaybackController _controller;
     private string _position;
+    private string _jumpText = string.Empty;
+    private string _statusText = string.Empty;
+    private PlaybackSpeed _speed;
 
     /// <summary>Creates the view model over <paramref name="controller"/>.</summary>
     /// <param name="controller">The playback controller.</param>
@@ -20,11 +24,13 @@ public sealed class PlaybackDialogViewModel : ViewModelBase
         ArgumentNullException.ThrowIfNull(controller);
         _controller = controller;
         _position = controller.PositionText;
+        _speed = controller.Speed;
         PlayPause = new PlaybackCommand(this, c => c.TogglePlayPause());
         Step = new PlaybackCommand(this, c => c.Step());
         Rewind = new PlaybackCommand(this, c => c.Rewind());
         FastForward = new PlaybackCommand(this, c => c.FastForward());
         SkipToEnd = new PlaybackCommand(this, c => c.SkipToEnd());
+        Jump = new PlaybackCommand(this, c => c.JumpTo(JumpText));
     }
 
     /// <summary>What is being played.</summary>
@@ -39,6 +45,39 @@ public sealed class PlaybackDialogViewModel : ViewModelBase
 
     /// <summary>The replayed lines, oldest first.</summary>
     public ObservableCollection<string> Lines { get; } = [];
+
+    /// <summary>The speeds to choose from.</summary>
+    public IReadOnlyList<PlaybackSpeed> Speeds => PlaybackController.Speeds;
+
+    /// <summary>The playback speed.</summary>
+    public PlaybackSpeed Speed
+    {
+        get => _speed;
+        set
+        {
+            if (SetProperty(ref _speed, value))
+            {
+                _controller.SetSpeed(value);
+            }
+        }
+    }
+
+    /// <summary>A record number or log time to jump to.</summary>
+    public string JumpText
+    {
+        get => _jumpText;
+        set => SetProperty(ref _jumpText, value);
+    }
+
+    /// <summary>The outcome of the last action, such as a jump that could not be read.</summary>
+    public string StatusText
+    {
+        get => _statusText;
+        private set => SetProperty(ref _statusText, value);
+    }
+
+    /// <summary>Jumps to <see cref="JumpText"/>.</summary>
+    public ICommand Jump { get; }
 
     /// <summary>Starts or pauses playback.</summary>
     public ICommand PlayPause { get; }
@@ -58,7 +97,18 @@ public sealed class PlaybackDialogViewModel : ViewModelBase
     /// <summary>Advances playback by what the clock allows; called from the window timer.</summary>
     public void Tick() => Apply(_controller.Tick());
 
-    internal void Run(Func<PlaybackController, PlaybackBatch> action) => Apply(action(_controller));
+    internal void Run(Func<PlaybackController, PlaybackBatch> action)
+    {
+        try
+        {
+            Apply(action(_controller));
+            StatusText = string.Empty;
+        }
+        catch (FormatException ex)
+        {
+            StatusText = ex.Message;
+        }
+    }
 
     private void Apply(PlaybackBatch batch)
     {

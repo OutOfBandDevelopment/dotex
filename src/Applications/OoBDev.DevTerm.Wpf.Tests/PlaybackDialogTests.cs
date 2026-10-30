@@ -66,6 +66,52 @@ public sealed class PlaybackDialogTests
     }
 
     [TestMethod]
+    public void Jump_UnreadableTextThenRecordNumber_ReportsThenListsUpToThatRecord()
+    {
+        // Stage
+        var directory = Path.Combine(Path.GetTempPath(), $"devterm-wpf-jump-{Guid.NewGuid():N}");
+        Directory.CreateDirectory(directory);
+        try
+        {
+            var path = Path.Combine(directory, "capture.jsonl");
+            var t0 = new DateTimeOffset(2026, 9, 25, 12, 0, 0, TimeSpan.Zero);
+            new SessionLog(
+                new SessionLogHeader { Created = t0, Connection = "loopback", Presenters = ["ascii"] },
+                [.. Enumerable.Range(0, 4).Select(i => new SessionLogRecord
+                {
+                    Kind = SessionLogRecordKind.Rx,
+                    Sequence = i + 1,
+                    Timestamp = t0.AddSeconds(i),
+                    Data = Encoding.ASCII.GetBytes($"line{i}\r"),
+                })]).Save(path);
+            string? status = null;
+            var lines = -1;
+            var services = new ServiceCollection();
+            services.AddSingleton<IPlaybackDialog>(new FakePlaybackDialog(path, playback =>
+            {
+                playback.JumpText = "nonsense";
+                playback.Jump.Execute(null);
+                status = playback.StatusText;
+                playback.JumpText = "2";
+                playback.Jump.Execute(null);
+                lines = playback.Lines.Count;
+            }));
+            using var provider = services.AddDevTermWpfShell().BuildServiceProvider();
+
+            // Test
+            provider.GetRequiredService<ShellViewModel>().OpenPlaybackWindow.Execute(null);
+
+            // Assert
+            Assert.IsNotNull(status);
+            Assert.AreEqual(2, lines);
+        }
+        finally
+        {
+            Directory.Delete(directory, recursive: true);
+        }
+    }
+
+    [TestMethod]
     public void OpenPlaybackWindow_PickCancelled_ShowsNothing()
     {
         // Stage
