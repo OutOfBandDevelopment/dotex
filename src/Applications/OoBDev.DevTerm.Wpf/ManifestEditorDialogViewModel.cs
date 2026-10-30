@@ -312,10 +312,9 @@ public sealed class ManifestEditorDialogViewModel : ViewModelBase, IDisposable
         surface.PreviewInvoked += (_, sent) => PreviewSent = $"Would send: {sent}";
         var presenter = _editor.CreatePreviewPresenter();
         var built = SurfacePanelBuilder.Build(definition, surface);
-        DevicePanelPreviews.Apply(built.Definition, surface);
         var feed = new DevicePanelFeed(definition, presenter, built);
         _editor.PublishSampleData(presenter);
-        var form = new FormViewModel(built.Definition, built.Binding, _colorPicker, _confirm);
+        var form = new FormViewModel(built.Definition, built.Binding, _colorPicker, _confirm, surface as ICommandPreview);
         _previewPanel = new PanelViewModel(_editor.Manifest.Name, form, feed, feed.Displays);
         Preview = form;
     }

@@ -69,7 +69,7 @@
             <Button Content="{Binding Label}"
                     Command="{Binding Invoke}"
                     IsEnabled="{Binding IsEnabled}"
-                    ToolTip="{Binding Description}"
+                    ToolTip="{Binding ToolTip}"
                     HorizontalAlignment="Left" />
         </DataTemplate>
 

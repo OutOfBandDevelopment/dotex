@@ -32,7 +32,7 @@ public sealed class InvokeCommand(FormBinding binding, ButtonControl control, IR
         _binding.Invoke(_control.CommandId ?? _control.Id, Parameter());
     }
 
-    private string? Parameter()
+    internal string? Parameter()
     {
         if (_control.ParameterFieldIds is not { Count: > 0 } ids) return null;
 

@@ -175,9 +175,8 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
             source = presenter as OoBDev.UiDefinitions.IStructuredPresenter;
         }
 
-        DevicePanelPreviews.Apply(built.Definition, surface);
         var feed = new DevicePanelFeed(definition, source, built);
-        SelectedPanel = new PanelViewModel(panel.MenuTitle.Replace("_", string.Empty, StringComparison.Ordinal).TrimEnd('.'), new FormViewModel(built.Definition, built.Binding, _colorPicker, _confirm), feed, feed.Displays);
+        SelectedPanel = new PanelViewModel(panel.MenuTitle.Replace("_", string.Empty, StringComparison.Ordinal).TrimEnd('.'), new FormViewModel(built.Definition, built.Binding, _colorPicker, _confirm, surface as OoBDev.UiDefinitions.ICommandPreview), feed, feed.Displays);
     }
 
     internal bool CanOpenInstrument(IInstrumentPanelProvider provider) =>
@@ -215,9 +214,8 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
 
             var panel = provider.Open(choice, selected.Session, source);
             var built = OoBDev.DevTerm.Panels.SurfacePanelBuilder.Build(panel.Definition, panel.Surface);
-            DevicePanelPreviews.Apply(built.Definition, panel.Surface);
             var feed = new DevicePanelFeed(panel.Definition, source as OoBDev.UiDefinitions.IStructuredPresenter, built);
-            SelectedPanel = new PanelViewModel(panel.Title, new FormViewModel(built.Definition, built.Binding, _colorPicker, _confirm), feed, feed.Displays);
+            SelectedPanel = new PanelViewModel(panel.Title, new FormViewModel(built.Definition, built.Binding, _colorPicker, _confirm, panel.Surface as OoBDev.UiDefinitions.ICommandPreview), feed, feed.Displays);
         }
         catch (Exception ex)
         {
@@ -271,9 +269,8 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
 
         var panel = OoBDev.DevTerm.DeviceManifests.ManifestPanel.Attach(SelectedSession!.Session, manifest);
         var built = OoBDev.DevTerm.Panels.SurfacePanelBuilder.Build(panel.Definition, panel.Surface);
-        DevicePanelPreviews.Apply(built.Definition, panel.Surface);
         var feed = new DevicePanelFeed(panel.Definition, panel.Presenter, new PanelDisposal(built, panel));
-        SelectedPanel = new PanelViewModel(manifest.Name, new FormViewModel(built.Definition, built.Binding, _colorPicker, _confirm), feed, feed.Displays);
+        SelectedPanel = new PanelViewModel(manifest.Name, new FormViewModel(built.Definition, built.Binding, _colorPicker, _confirm, panel.Surface as OoBDev.UiDefinitions.ICommandPreview), feed, feed.Displays);
     }
 
     internal bool CanOpenPlayback => _playbackDialog is not null && _playbackPresenters is not null;

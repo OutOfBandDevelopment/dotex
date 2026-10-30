@@ -560,3 +560,4 @@ Each change document should include:
 - [WPF connection editor device pickers (2026-10-30)](devterm-wpf-device-pickers-2026-10-30.md) - per-transport fields, detected ports, LAN, HID, USBTMC and BLE pickers with scan commands
 - [Demo device plugin and Web flows (2026-10-30)](devterm-demo-plugin-web-flows-2026-10-30.md) - `OoBDev.DevTerm.Devices.Demo` migrated; the Web panel flow passes again
 - [Guide screenshots through image-mask sync (2026-10-30)](devterm-guide-images-image-mask-2026-10-30.md) - Tui and Web guide captures only replace committed images when they differ once masked
+- [WPF field-following previews (2026-10-30)](devterm-wpf-field-following-previews-2026-10-30.md) - a button tooltip's Sends line recomputes as its parameter fields change

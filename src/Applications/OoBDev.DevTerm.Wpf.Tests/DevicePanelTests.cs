@@ -121,7 +121,7 @@ public sealed class DevicePanelTests
         shell.OpenDevicePanelCommand.Execute(shell.DevicePanels[0]);
 
         // Assert
-        Assert.AreEqual("Sends: WIPE\n", shell.SelectedPanel!.Form.Row("wipe")!.Description);
+        Assert.AreEqual("Sends: WIPE\n", shell.SelectedPanel!.Form.Row("wipe") is OoBDev.UiDefinitions.ViewModels.ButtonViewModel b ? b.ToolTip : null);
     }
 
     [TestMethod]
