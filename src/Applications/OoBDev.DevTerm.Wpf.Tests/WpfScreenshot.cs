@@ -1,5 +1,7 @@
 using System;
 using System.IO;
+using System.Threading;
+using System.Windows.Threading;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -25,6 +27,56 @@ internal static class WpfScreenshot
 
     /// <summary>Renders <paramref name="window"/> and syncs it over <paramref name="path"/>; returns true when the committed image was replaced.</summary>
     public static bool Save(Window window, string path) => GuideImage.Write(path, temp => Render(window, temp));
+
+    /// <summary>Builds a window on a fresh STA thread, shows it off-screen, captures it as <paramref name="imageName"/> in the DevTerm user guide images folder, and closes it.</summary>
+    public static void Capture(Func<Window> build, string imageName, double width = 900, double height = 650)
+    {
+        var path = Path.Combine(RepoRoot(), "docs", "applications", "devterm", "user-guide", "images", imageName);
+        RunOnSta(() =>
+        {
+            var window = build();
+            ShowOffScreen(window, width, height);
+            Dispatcher.CurrentDispatcher.Invoke(() => { }, DispatcherPriority.Background);
+            window.UpdateLayout();
+            Save(window, path);
+            window.Close();
+        });
+    }
+
+    /// <summary>Runs <paramref name="action"/> on a new STA thread and rethrows its failure as an assertion failure.</summary>
+    public static void RunOnSta(Action action)
+    {
+        Exception? failure = null;
+        var thread = new Thread(() =>
+        {
+            try
+            {
+                action();
+            }
+            catch (Exception ex)
+            {
+                failure = ex;
+            }
+        });
+        thread.SetApartmentState(ApartmentState.STA);
+        thread.Start();
+        thread.Join();
+        if (failure is not null)
+        {
+            throw new Microsoft.VisualStudio.TestTools.UnitTesting.AssertFailedException(failure.Message, failure);
+        }
+    }
+
+    private static string RepoRoot()
+    {
+        var dir = new DirectoryInfo(AppContext.BaseDirectory);
+        while (dir is not null && !File.Exists(Path.Combine(dir.FullName, "GitVersion.yml")))
+        {
+            dir = dir.Parent;
+        }
+
+        return dir?.FullName ?? throw new InvalidOperationException("repo root not found");
+    }
 
     private static void Render(Window window, string path)
     {

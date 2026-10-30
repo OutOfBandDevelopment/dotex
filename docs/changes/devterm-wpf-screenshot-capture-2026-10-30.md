@@ -4,9 +4,10 @@
 
 - `WpfScreenshot` (Wpf.Tests) shows a window far off-screen and renders it with `RenderTargetBitmap`, writing through `GuideImage`, so a committed guide image is replaced only when the masked capture differs.
 - `ConnectionEditorScreenshotTests` (DevLocal) captures the connection editor for tcp, serial and loopback into `docs/applications/devterm/user-guide/images/wpf-device-profiles-*.png`; a second run leaves the images byte-identical.
+- `ToolWindowScreenshotTests` (DevLocal) captures the converter tools and the empty stream monitor (`wpf-converter-tools.png`, `wpf-stream-monitor.png`); `WpfScreenshot.Capture` builds a window on an STA thread, shows it off-screen, saves it through `GuideImage` and closes it.
 - `OoBDev.DevTerm.Wpf.Tests` references `OoBDev.DevTerm.TestUtilities`.
 
 ## Not done
 
-- The other windows (main shell, playback, converter tools, control panels, manifest editor, themes, routing, stream monitor) are not captured yet, nor dev-term's layout review tests.
+- The other windows (main shell, playback, control panels, manifest editor, themes, routing, color and expression pickers) are not captured yet, nor dev-term's layout review tests.
 - The test profile folder still comes from `Path.GetTempPath()` (`ITempFileFactory` makes files, not folders).
