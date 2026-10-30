@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace OoBDev.DevTerm;
+namespace OoBDev.UiDefinitions;
 
 /// <summary>Shared formatting for <see cref="ICommandPreview"/> implementations, so every surface renders previews the same way.</summary>
 public static class CommandPreviewFormat

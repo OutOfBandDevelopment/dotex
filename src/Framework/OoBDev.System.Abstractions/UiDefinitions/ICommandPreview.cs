@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace OoBDev.DevTerm;
+namespace OoBDev.UiDefinitions;
 
 /// <summary>
 /// Optional capability an <see cref="IControlSurface"/> can also implement: shows exactly what

@@ -15,12 +15,12 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 namespace OoBDev.DevTerm.Web;
 
-/// <summary>Body of <c>POST /api/invoke</c>: a control panel command id and its string value (see <see cref="OoBDev.DevTerm.IControlSurface"/>).</summary>
+/// <summary>Body of <c>POST /api/invoke</c>: a control panel command id and its string value (see <see cref="OoBDev.UiDefinitions.IControlSurface"/>).</summary>
 public sealed record InvokeRequest(string CommandId, string? Value);
 
 internal static class PanelApi
 {
-    public static async Task<IResult> InvokeAsync(HttpContext context, OoBDev.DevTerm.IControlSurface surface, InvokeRequest request)
+    public static async Task<IResult> InvokeAsync(HttpContext context, OoBDev.UiDefinitions.IControlSurface surface, InvokeRequest request)
     {
         if (context.Items.ContainsKey(AccessTokenMiddleware.ReadOnlyItem))
         {
