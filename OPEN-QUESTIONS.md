@@ -40,3 +40,16 @@ _(none waiting; processed requests are in BACKLOG.md and TODO.md)_
 **Default:** C until answered.
 
 **Your answer:**
+
+### Q3 (2026-10-29, DevTerm Web) Should the web host's AsyncAPI document use `OoBDev.AsyncApi`?
+
+`OoBDev.DevTerm.Web` serves a hand-written AsyncAPI 3.0 document (`/asyncapi.json`: the `/ws` and `/ws/{id}` text WebSockets and the `/api/events` SSE stream) and a dependency-free viewer page (`/asyncapi`). `OoBDev.AsyncApi` plus `MapAsyncApi()` (in `OoBDev.AspNetCore.Mvc`) builds documents from queue adapters' configuration and serves them with a viewer that loads a web component from unpkg. The Framework model has no channel parameters, no operations, no component messages and no non-queue servers, and its viewer needs a CDN, which a bench machine without internet cannot reach.
+
+**Options**
+- A. Keep the Web host's own document and viewer, and record why (recommended): it describes streams, not queues; the offline viewer is a requirement on a lab network. No Framework change; the cost is two AsyncAPI code paths.
+- B. Extend `OoBDev.AsyncApi` with static channels (parameters, operations, component messages) and a `ViewerScriptUrl` that can point at a bundled script, then have the Web host contribute its channels. One path and a reusable feature, but it grows a Framework library and the ASP.NET Core mvc project for one consumer, and needs a migration plan.
+- C. Use the Framework builder only for the document and keep the offline viewer. Smaller than B, but still needs the model extension.
+
+**Default:** A until answered.
+
+**Your answer:**
