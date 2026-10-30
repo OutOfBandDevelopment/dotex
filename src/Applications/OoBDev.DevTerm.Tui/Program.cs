@@ -10,6 +10,7 @@ using OoBDev.System.IO.Tcp;
 using OoBDev.DevTerm.Configuration;
 using OoBDev.DevTerm.Tui;
 using OoBDev.DevTerm;
+using OoBDev.DevTerm.Devices;
 using OoBDev.DevTerm.Presenters.Text;
 using OoBDev.System.IO.Bluetooth;
 using OoBDev.System.IO.UsbHids;
@@ -438,7 +439,7 @@ if (!useTui && !Console.IsInputRedirected)
 
 var hostBuilder = Host.CreateDefaultBuilder(args)
     .ConfigureAppConfiguration((context, config) => DevTermConfiguration.Configure(context, config, args))
-    .ConfigureServices((_, services) => services.AddDevTermFrontEnd(cliOptions));
+    .ConfigureServices((_, services) => { services.AddDevTermFrontEnd(cliOptions); services.AddDevTermDevicePanels(); });
 
 var host = hostBuilder.Build();
 

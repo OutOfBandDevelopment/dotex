@@ -165,7 +165,6 @@ public class WebHostTests
     }
 
     [TestMethod]
-    [Ignore("Needs the k8055 and busylight hardware panels, which are not ported to DevTerm.Core yet (BACKLOG: DevTerm 100% parity).")]
     public async Task DevicePanels_AreListedPerConnection_AndOpenedOnDemand()
     {
         var webPort = FreePort();

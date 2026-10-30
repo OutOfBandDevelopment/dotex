@@ -200,6 +200,7 @@
     <Project Path="Framework/OoBDev.Devices.TestUtilities/OoBDev.Devices.TestUtilities.csproj" />
     <Project Path="Applications/OoBDev.DevTerm.Core.Tests/OoBDev.DevTerm.Core.Tests.csproj" />
     <Project Path="Applications/OoBDev.DevTerm.Core/OoBDev.DevTerm.Core.csproj" />
+    <Project Path="Applications/OoBDev.DevTerm.Devices/OoBDev.DevTerm.Devices.csproj" />
     <Project Path="Applications/OoBDev.DevTerm.Wpf.Tests/OoBDev.DevTerm.Wpf.Tests.csproj" />
     <Project Path="Applications/OoBDev.DevTerm.Wpf/OoBDev.DevTerm.Wpf.csproj" />
     <Project Path="Applications/OoBDev.DevTerm.Tui/OoBDev.DevTerm.Tui.csproj" />

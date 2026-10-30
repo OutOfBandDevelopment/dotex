@@ -56,7 +56,6 @@ public class WebRolesTests
     }
 
     [TestMethod]
-    [Ignore("Needs the k8055 and busylight hardware panels, which are not ported to DevTerm.Core yet (BACKLOG: DevTerm 100% parity).")]
     public async Task BlazorPanelPage_RendersTheUiDefinitionGenerically_AndDisablesControlsForAReadOnlyViewer()
     {
         var (built, url) = await StartAsync("busylight");
@@ -77,7 +76,6 @@ public class WebRolesTests
     }
 
     [TestMethod]
-    [Ignore("Needs the k8055 and busylight hardware panels, which are not ported to DevTerm.Core yet (BACKLOG: DevTerm 100% parity).")]
     public async Task BlazorPanelPage_ShowsTheLatestPublishedIndicatorValue()
     {
         var (built, url) = await StartAsync("k8055");
@@ -148,7 +146,6 @@ public class WebRolesTests
     }
 
     [TestMethod]
-    [Ignore("Needs the k8055 and busylight hardware panels, which are not ported to DevTerm.Core yet (BACKLOG: DevTerm 100% parity).")]
     public async Task Panel_IsServedAsAUiDefinition_AndAReadOnlyViewerCannotInvoke()
     {
         var (built, url) = await StartAsync(panel: "busylight");

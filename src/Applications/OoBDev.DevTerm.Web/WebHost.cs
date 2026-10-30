@@ -1,3 +1,4 @@
+using OoBDev.DevTerm.Devices;
 using OoBDev.System.IO.Devices;
 using OoBDev.System.IO;
 using OoBDev.System.IO.Pipelines;
@@ -52,6 +53,7 @@ public static class WebHost
         var builder = WebApplication.CreateSlimBuilder(new WebApplicationOptions { Args = args, ApplicationName = typeof(WebHost).Assembly.GetName().Name }); // fixed so the static-asset manifests are found when hosted by a test host
         builder.WebHost.UseStaticWebAssets(); // otherwise only Development resolves framework assets such as blazor.web.js
         builder.Services.AddDevTermFrontEnd(cliOptions);
+        builder.Services.AddDevTermDevicePanels();
         builder.Services.AddSingleton(sp =>
         {
             var catalog = sp.GetRequiredService<PresenterCatalog>();

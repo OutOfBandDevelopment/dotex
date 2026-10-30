@@ -505,3 +505,4 @@ Each change document should include:
 - [Telemetry library and user accessor (2026-10-29)](telemetry-user-accessor-2026-10-29.md) - OoBDev.Telemetry in Framework, ICurrentUserAccessor.User
 - [Pipe-based device adapter (2026-10-29)](device-adapter-pipes-2026-10-29.md) - IDeviceAdapter exposes PipeReader/PipeWriter, state and events; StreamDeviceAdapter base
 - [Transports become device adapters (2026-10-29)](transports-as-device-adapters-2026-10-29.md) - ITransport deleted; transports implement IDeviceAdapter with Output via DeviceAdapterOutput
+- [K8055 and Busylight panels with their protocols (2026-10-29)](devices-panels-k8055-busylight-2026-10-29.md) - IDevicePanel contracts, panels in the protocol libraries, TryAddDevicePanel and the OoBDev.DevTerm.Devices bundle
