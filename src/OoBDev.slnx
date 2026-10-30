@@ -216,8 +216,6 @@
     <Project Path="Extensions/OoBDev.DevTerm.Schemas.Tests/OoBDev.DevTerm.Schemas.Tests.csproj" />
     <Project Path="Extensions/OoBDev.DevTerm.Transports.Tcp/OoBDev.DevTerm.Transports.Tcp.csproj" />
     <Project Path="Extensions/OoBDev.DevTerm.Transports.Tcp.Tests/OoBDev.DevTerm.Transports.Tcp.Tests.csproj" />
-    <Project Path="Extensions/OoBDev.DevTerm.Transports.Serial/OoBDev.DevTerm.Transports.Serial.csproj" />
-    <Project Path="Extensions/OoBDev.DevTerm.Transports.Serial.Tests/OoBDev.DevTerm.Transports.Serial.Tests.csproj" />
     <Project Path="Extensions/OoBDev.DevTerm.Transports.Rfc2217/OoBDev.DevTerm.Transports.Rfc2217.csproj" />
     <Project Path="Extensions/OoBDev.DevTerm.Transports.Rfc2217.Tests/OoBDev.DevTerm.Transports.Rfc2217.Tests.csproj" />
     <Project Path="Extensions/OoBDev.DevTerm.Transports.Vxi11/OoBDev.DevTerm.Transports.Vxi11.csproj" />
@@ -251,6 +249,7 @@
     <Project Path="Framework/OoBDev.System.IO.Pipelines/OoBDev.System.IO.Pipelines.csproj" />
     <Project Path="Framework/OoBDev.System.IO.Tcp.Tests/OoBDev.System.IO.Tcp.Tests.csproj" />
     <Project Path="Framework/OoBDev.System.IO.Tcp/OoBDev.System.IO.Tcp.csproj" />
+    <Project Path="Framework/OoBDev.System.IO.Ports.Tests/OoBDev.System.IO.Ports.Tests.csproj" />
     <Project Path="Framework/OoBDev.System.IO.Ports/OoBDev.System.IO.Ports.csproj" />
     <Project Path="Framework/OoBDev.System.IO.UsbHids/OoBDev.System.IO.UsbHids.csproj" />
     <Project Path="Framework/OoBDev.System.Linq/OoBDev.System.Linq.csproj" />

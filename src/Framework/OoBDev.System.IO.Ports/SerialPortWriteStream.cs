@@ -6,12 +6,11 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using OoBDev.DevTerm;
 
-namespace OoBDev.DevTerm.Transports.Serial;
+namespace OoBDev.System.IO.Ports;
 
 /// <summary>
-/// Write-only adapter over <see cref="ISerialPort.Write"/> so <see cref="SerialTransport"/> can
+/// Write-only adapter over <see cref="ISerialPort.Write"/> so <see cref="SerialDeviceAdapter"/> can
 /// wrap it in <see cref="WriteDelayStream"/> when write pacing is enabled.
 /// <see cref="ISerialPort.BaseStream"/> itself can't be reused here - its <c>Write</c> throws
 /// <see cref="NotSupportedException"/> deliberately, since that stream exists only for the read

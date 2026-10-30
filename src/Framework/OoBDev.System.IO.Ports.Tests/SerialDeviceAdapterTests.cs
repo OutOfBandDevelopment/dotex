@@ -11,16 +11,16 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using OoBDev.DevTerm;
 
-namespace OoBDev.DevTerm.Transports.Serial.Tests;
+namespace OoBDev.System.IO.Ports.Tests;
+
 
 [TestCategory("Unit")]
 [TestClass]
 public sealed class SerialTransportTests
 {
-    private static IOptions<SerialTransportOptions> Options(string portName = "COM1") =>
-        Microsoft.Extensions.Options.Options.Create(new SerialTransportOptions { PortName = portName });
+    private static IOptions<SerialDeviceAdapterOptions> Options(string portName = "COM1") =>
+        Microsoft.Extensions.Options.Options.Create(new SerialDeviceAdapterOptions { PortName = portName });
 
     /// <summary>
     /// A port double whose <see cref="ISerialPort.BaseStream"/> is backed by a real
@@ -41,9 +41,9 @@ public sealed class SerialTransportTests
     {
         var (port, _) = CreatePort();
         var factory = new Mock<ISerialPortFactory>();
-        factory.Setup(f => f.Create(It.IsAny<SerialTransportOptions>())).Returns(port.Object);
+        factory.Setup(f => f.Create(It.IsAny<SerialDeviceAdapterOptions>())).Returns(port.Object);
         var options = Options();
-        var transport = new SerialTransport(factory.Object, options);
+        var transport = new SerialDeviceAdapter(factory.Object, options);
         await transport.OpenAsync(TestContext.CancellationToken);
 
         var chained = transport.SetBaudRate(115200).SetDataBits(7).SetParity(ComParity.Even).SetStopBits(ComStopBits.Two).SetDtr(false).SetRts(false);
@@ -66,7 +66,7 @@ public sealed class SerialTransportTests
     public void LineSetters_OnAClosedTransport_OnlyRememberTheValues()
     {
         var options = Options();
-        var transport = new SerialTransport(Mock.Of<ISerialPortFactory>(), options);
+        var transport = new SerialDeviceAdapter(Mock.Of<ISerialPortFactory>(), options);
 
         transport.SetBaudRate(57600).SetDtr(false);
 
@@ -79,10 +79,10 @@ public sealed class SerialTransportTests
     {
         var (port, _) = CreatePort();
         var factory = new Mock<ISerialPortFactory>();
-        factory.Setup(f => f.Create(It.IsAny<SerialTransportOptions>())).Returns(port.Object);
+        factory.Setup(f => f.Create(It.IsAny<SerialDeviceAdapterOptions>())).Returns(port.Object);
         var options = Options();
         options.Value.Handshake = global::System.IO.Ports.Handshake.RequestToSend;
-        var transport = new SerialTransport(factory.Object, options);
+        var transport = new SerialDeviceAdapter(factory.Object, options);
         await transport.OpenAsync(TestContext.CancellationToken);
 
         transport.SetRts(false);
@@ -96,13 +96,13 @@ public sealed class SerialTransportTests
     {
         var (port, _) = CreatePort();
         var factory = new Mock<ISerialPortFactory>();
-        factory.Setup(f => f.Create(It.IsAny<SerialTransportOptions>())).Returns(port.Object);
+        factory.Setup(f => f.Create(It.IsAny<SerialDeviceAdapterOptions>())).Returns(port.Object);
 
-        var transport = new SerialTransport(factory.Object, Options("COM3"));
+        var transport = new SerialDeviceAdapter(factory.Object, Options("COM3"));
 
         await transport.OpenAsync(TestContext.CancellationToken);
 
-        factory.Verify(f => f.Create(It.Is<SerialTransportOptions>(o => o.PortName == "COM3")), Times.Once);
+        factory.Verify(f => f.Create(It.Is<SerialDeviceAdapterOptions>(o => o.PortName == "COM3")), Times.Once);
         port.Verify(p => p.Open(), Times.Once);
         Assert.AreEqual(ConnectionState.Open, transport.State);
 
@@ -114,9 +114,9 @@ public sealed class SerialTransportTests
     {
         var (port, _) = CreatePort();
         var factory = new Mock<ISerialPortFactory>();
-        factory.Setup(f => f.Create(It.IsAny<SerialTransportOptions>())).Returns(port.Object);
+        factory.Setup(f => f.Create(It.IsAny<SerialDeviceAdapterOptions>())).Returns(port.Object);
 
-        var transport = new SerialTransport(factory.Object, Options());
+        var transport = new SerialDeviceAdapter(factory.Object, Options());
         var states = new List<ConnectionState>();
         transport.StateChanged += (_, e) => states.Add(e.Current);
 
@@ -133,9 +133,9 @@ public sealed class SerialTransportTests
         var port = new Mock<ISerialPort>();
         port.Setup(p => p.Open()).Throws(new UnauthorizedAccessException("port in use"));
         var factory = new Mock<ISerialPortFactory>();
-        factory.Setup(f => f.Create(It.IsAny<SerialTransportOptions>())).Returns(port.Object);
+        factory.Setup(f => f.Create(It.IsAny<SerialDeviceAdapterOptions>())).Returns(port.Object);
 
-        var transport = new SerialTransport(factory.Object, Options());
+        var transport = new SerialDeviceAdapter(factory.Object, Options());
 
         await Assert.ThrowsExactlyAsync<UnauthorizedAccessException>(() => transport.OpenAsync(TestContext.CancellationToken));
         Assert.AreEqual(ConnectionState.Faulted, transport.State);
@@ -145,7 +145,7 @@ public sealed class SerialTransportTests
     [TestMethod]
     public async Task WriteAsync_WhenNotOpen_Throws()
     {
-        var transport = new SerialTransport(Mock.Of<ISerialPortFactory>(), Options());
+        var transport = new SerialDeviceAdapter(Mock.Of<ISerialPortFactory>(), Options());
 
         await Assert.ThrowsExactlyAsync<InvalidOperationException>(() => transport.WriteAsync(new byte[] { 1 }, TestContext.CancellationToken));
     }
@@ -155,9 +155,9 @@ public sealed class SerialTransportTests
     {
         var (port, _) = CreatePort();
         var factory = new Mock<ISerialPortFactory>();
-        factory.Setup(f => f.Create(It.IsAny<SerialTransportOptions>())).Returns(port.Object);
+        factory.Setup(f => f.Create(It.IsAny<SerialDeviceAdapterOptions>())).Returns(port.Object);
 
-        var transport = new SerialTransport(factory.Object, Options());
+        var transport = new SerialDeviceAdapter(factory.Object, Options());
         await transport.OpenAsync(TestContext.CancellationToken);
 
         var payload = new byte[] { 0x01, 0x02, 0x03 };
@@ -173,9 +173,9 @@ public sealed class SerialTransportTests
     {
         var (port, _) = CreatePort();
         var factory = new Mock<ISerialPortFactory>();
-        factory.Setup(f => f.Create(It.IsAny<SerialTransportOptions>())).Returns(port.Object);
+        factory.Setup(f => f.Create(It.IsAny<SerialDeviceAdapterOptions>())).Returns(port.Object);
 
-        var transport = new SerialTransport(factory.Object, Microsoft.Extensions.Options.Options.Create(new SerialTransportOptions { PortName = "COM1", WriteByteDelayMs = 0 }));
+        var transport = new SerialDeviceAdapter(factory.Object, Microsoft.Extensions.Options.Options.Create(new SerialDeviceAdapterOptions { PortName = "COM1", WriteByteDelayMs = 0 }));
         await transport.OpenAsync(TestContext.CancellationToken);
 
         await transport.WriteAsync(new byte[] { 1, 2, 3 }, TestContext.CancellationToken);
@@ -193,9 +193,9 @@ public sealed class SerialTransportTests
     {
         var (port, devicePipe) = CreatePort();
         var factory = new Mock<ISerialPortFactory>();
-        factory.Setup(f => f.Create(It.IsAny<SerialTransportOptions>())).Returns(port.Object);
+        factory.Setup(f => f.Create(It.IsAny<SerialDeviceAdapterOptions>())).Returns(port.Object);
 
-        var transport = new SerialTransport(factory.Object, Options());
+        var transport = new SerialDeviceAdapter(factory.Object, Options());
         await transport.OpenAsync(TestContext.CancellationToken);
 
         var payload = "ޭ"u8.ToArray();
@@ -213,9 +213,9 @@ public sealed class SerialTransportTests
     {
         var (port, devicePipe) = CreatePort();
         var factory = new Mock<ISerialPortFactory>();
-        factory.Setup(f => f.Create(It.IsAny<SerialTransportOptions>())).Returns(port.Object);
+        factory.Setup(f => f.Create(It.IsAny<SerialDeviceAdapterOptions>())).Returns(port.Object);
 
-        var transport = new SerialTransport(factory.Object, Options());
+        var transport = new SerialDeviceAdapter(factory.Object, Options());
         var closedTcs = new TaskCompletionSource();
         transport.StateChanged += (_, e) =>
         {
@@ -237,9 +237,9 @@ public sealed class SerialTransportTests
     {
         var (port, _) = CreatePort();
         var factory = new Mock<ISerialPortFactory>();
-        factory.Setup(f => f.Create(It.IsAny<SerialTransportOptions>())).Returns(port.Object);
+        factory.Setup(f => f.Create(It.IsAny<SerialDeviceAdapterOptions>())).Returns(port.Object);
 
-        var transport = new SerialTransport(factory.Object, Options());
+        var transport = new SerialDeviceAdapter(factory.Object, Options());
         await transport.OpenAsync(TestContext.CancellationToken);
 
         await transport.CloseAsync(TestContext.CancellationToken).WaitAsync(TimeSpan.FromSeconds(5), TestContext.CancellationToken);
@@ -253,11 +253,11 @@ public sealed class SerialTransportTests
     public async Task CloseAsync_WhenNeverOpened_DoesNothing()
     {
         var factory = new Mock<ISerialPortFactory>();
-        var transport = new SerialTransport(factory.Object, Options());
+        var transport = new SerialDeviceAdapter(factory.Object, Options());
 
         await transport.CloseAsync(TestContext.CancellationToken);
 
-        factory.Verify(f => f.Create(It.IsAny<SerialTransportOptions>()), Times.Never);
+        factory.Verify(f => f.Create(It.IsAny<SerialDeviceAdapterOptions>()), Times.Never);
     }
 
     public required TestContext TestContext { get; set; }

@@ -6,9 +6,8 @@ using System.Runtime.Versioning;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Win32;
-using OoBDev.DevTerm;
 
-namespace OoBDev.DevTerm.Transports.Serial;
+namespace OoBDev.System.IO.Ports;
 
 /// <summary>
 /// Reads Windows' friendly names for serial ports straight from the Plug-and-Play device registry

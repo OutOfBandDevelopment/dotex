@@ -8,12 +8,12 @@ using System.IO.Ports;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using OoBDev.DevTerm;
 
-namespace OoBDev.DevTerm.Transports.Serial;
+namespace OoBDev.System.IO.Ports;
+
 
 /// <summary>Configuration for a serial/UART session. Bound via the Options pattern.</summary>
-public sealed class SerialTransportOptions
+public sealed class SerialDeviceAdapterOptions
 {
     [Required(AllowEmptyStrings = false)]
     public string PortName { get; set; } = string.Empty;
@@ -24,11 +24,11 @@ public sealed class SerialTransportOptions
     [Range(5, 8)]
     public int DataBits { get; set; } = 8;
 
-    public Parity Parity { get; set; } = Parity.None;
+    public global::System.IO.Ports.Parity Parity { get; set; } = global::System.IO.Ports.Parity.None;
 
-    public StopBits StopBits { get; set; } = StopBits.One;
+    public global::System.IO.Ports.StopBits StopBits { get; set; } = global::System.IO.Ports.StopBits.One;
 
-    public Handshake Handshake { get; set; } = Handshake.None;
+    public global::System.IO.Ports.Handshake Handshake { get; set; } = global::System.IO.Ports.Handshake.None;
 
     /// <summary>
     /// Bounds a blocked write (e.g. hardware flow control enabled but the device never asserts

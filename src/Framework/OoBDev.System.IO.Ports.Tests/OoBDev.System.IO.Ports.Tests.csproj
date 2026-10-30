@@ -27,8 +27,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\OoBDev.DevTerm.Transports.Serial\OoBDev.DevTerm.Transports.Serial.csproj" />
-		<ProjectReference Include="..\..\Framework\OoBDev.DevTerm.Core\OoBDev.DevTerm.Core.csproj" />
+		<ProjectReference Include="..\OoBDev.System.IO.Ports\OoBDev.System.IO.Ports.csproj" />
 	</ItemGroup>
 
 </Project>

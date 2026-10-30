@@ -18,3 +18,7 @@ Whole `OoBDev.slnx` builds. Unit tests pass: DevTerm Core 211 (5 skipped), Loggi
 ## Step 2b-i: shared contracts move out of DevTerm Core
 
 `IComPortControl`, `ILineStatusSource`, `ComParity` and `ComStopBits` moved to `OoBDev.System.Abstractions` (`OoBDev.System.IO`); `WriteDelayStream` and its tests moved to `OoBDev.System.IO.Pipelines` / `OoBDev.System.Tests`. The serial and TCP libraries can now take the transport code without referencing DevTerm. Tests after the move: Core 207, System 1879, Configuration 381, Serial 61, Rfc2217 44 (Unit, all passing).
+
+## Step 2b-ii: serial moves into `System.IO.Ports`
+
+`OoBDev.DevTerm.Transports.Serial` and its tests are gone. `SerialTransport` is now `SerialDeviceAdapter` (options `SerialDeviceAdapterOptions`, DI `AddSerialDeviceAdapter()`) in `OoBDev.System.IO.Ports`, beside the thin `SerialPortDeviceAdapter(SerialPort)`; the port abstraction, discovery, per-OS descriptions and read/write streams moved with it. The tests live in the new `OoBDev.System.IO.Ports.Tests` (61 Unit tests pass, hardware tests not run). `Parity`, `StopBits` and `Handshake` are written as `global::System.IO.Ports.*` because `OoBDev.System.Abstractions` defines same-named enums in the same namespace.

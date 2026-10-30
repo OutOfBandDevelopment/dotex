@@ -4,9 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using OoBDev.DevTerm;
 
-namespace OoBDev.DevTerm.Transports.Serial;
+namespace OoBDev.System.IO.Ports;
 
 /// <summary>
 /// Derives a description for each Linux serial port from sysfs, the same attributes udev's

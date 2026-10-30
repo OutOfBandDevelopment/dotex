@@ -6,9 +6,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using OoBDev.DevTerm;
 
-namespace OoBDev.DevTerm.Transports.Serial.Tests;
+namespace OoBDev.System.IO.Ports.Tests;
+
 
 /// <summary>
 /// Opt-in real-hardware regression test for bug 057: a <see cref="SerialPortReadStream.ReadAsync"/>
@@ -45,7 +45,7 @@ public sealed class RealHardwareSerialPortReadStreamTests
             return;
         }
 
-        using var port = new SerialPort(portName, 9600, Parity.None, 8, StopBits.One) { Handshake = Handshake.None };
+        using var port = new SerialPort(portName, 9600, global::System.IO.Ports.Parity.None, 8, global::System.IO.Ports.StopBits.One) { Handshake = global::System.IO.Ports.Handshake.None };
         port.Open();
 
         var stream = new SerialPortReadStream(port);

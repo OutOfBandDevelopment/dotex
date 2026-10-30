@@ -9,9 +9,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
-using OoBDev.DevTerm;
 
-namespace OoBDev.DevTerm.Transports.Serial;
+namespace OoBDev.System.IO.Ports;
 
 /// <summary>
 /// Derives a description for each macOS serial port from the IOKit registry, via the stock

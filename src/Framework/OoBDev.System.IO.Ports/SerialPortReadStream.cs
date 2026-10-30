@@ -7,9 +7,8 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
-using OoBDev.DevTerm;
 
-namespace OoBDev.DevTerm.Transports.Serial;
+namespace OoBDev.System.IO.Ports;
 
 /// <summary>
 /// Read-side adapter over a real <see cref="SerialPort"/> that waits for data via the

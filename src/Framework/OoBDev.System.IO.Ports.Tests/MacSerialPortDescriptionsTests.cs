@@ -5,9 +5,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using OoBDev.DevTerm;
 
-namespace OoBDev.DevTerm.Transports.Serial.Tests;
+namespace OoBDev.System.IO.Ports.Tests;
 
 /// <summary>
 /// Parses sample <c>ioreg -a -l -r -c IOUSBHostDevice</c> output. The sample follows ioreg's real

@@ -8,18 +8,18 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
-using OoBDev.DevTerm;
 
-namespace OoBDev.DevTerm.Transports.Serial;
+namespace OoBDev.System.IO.Ports;
+
 
 /// <summary>
 /// <see cref="IDeviceAdapter"/> for a serial/UART connection. See docs/design/transports.md.
 /// </summary>
-public sealed class SerialTransport : IDeviceAdapter, IComPortControl
+public sealed class SerialDeviceAdapter : IDeviceAdapter, IComPortControl
 {
     private PipeWriter? _output;
     private readonly ISerialPortFactory _portFactory;
-    private readonly IOptions<SerialTransportOptions> _options;
+    private readonly IOptions<SerialDeviceAdapterOptions> _options;
     private ISerialPort? _port;
     private Stream? _writeStream;
     private ConnectionState _state = ConnectionState.Closed;
@@ -27,7 +27,7 @@ public sealed class SerialTransport : IDeviceAdapter, IComPortControl
     private CancellationTokenSource? _pumpCts;
     private Task? _pumpTask;
 
-    public SerialTransport(ISerialPortFactory portFactory, IOptions<SerialTransportOptions> options)
+    public SerialDeviceAdapter(ISerialPortFactory portFactory, IOptions<SerialDeviceAdapterOptions> options)
     {
         ArgumentNullException.ThrowIfNull(portFactory);
         ArgumentNullException.ThrowIfNull(options);

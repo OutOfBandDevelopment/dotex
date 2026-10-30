@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using global::System.IO.Ports;
 
-namespace OoBDev.DevTerm.Transports.Serial.Tests;
+namespace OoBDev.System.IO.Ports.Tests;
 
 internal static class RealDeviceReachability
 {

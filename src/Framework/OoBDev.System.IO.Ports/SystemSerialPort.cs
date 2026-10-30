@@ -4,20 +4,20 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using OoBDev.DevTerm;
 
-namespace OoBDev.DevTerm.Transports.Serial;
+namespace OoBDev.System.IO.Ports;
+
 
 /// <summary>
 /// <see cref="ISerialPort"/> implementation backed by the real
 /// <see cref="System.IO.Ports.SerialPort"/>. Deliberately thin — logic that's worth unit
-/// testing belongs in <see cref="SerialTransport"/>, which depends on the interface instead.
+/// testing belongs in <see cref="SerialDeviceAdapter"/>, which depends on the interface instead.
 /// </summary>
 public sealed class SystemSerialPort : ISerialPort
 {
     private readonly global::System.IO.Ports.SerialPort _port;
 
-    public SystemSerialPort(SerialTransportOptions options)
+    public SystemSerialPort(SerialDeviceAdapterOptions options)
     {
         ArgumentNullException.ThrowIfNull(options);
 
