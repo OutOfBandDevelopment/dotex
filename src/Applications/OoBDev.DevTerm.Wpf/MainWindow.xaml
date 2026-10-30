@@ -5,6 +5,7 @@
         Title="OoBDev DevTerm" Width="900" Height="600">
     <DockPanel>
         <StackPanel DockPanel.Dock="Left" Width="180">
+            <Button Content="New connection..." Margin="4" Command="{Binding NewConnection}" />
             <Button Content="New loopback session" Margin="4" Command="{Binding NewLoopbackSession}" />
             <ItemsControl ItemsSource="{Binding ProfileNames}" Margin="4">
                 <ItemsControl.ItemTemplate>

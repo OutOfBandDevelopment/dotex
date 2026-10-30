@@ -25,9 +25,15 @@ public sealed class SessionViewModelFactory(IOptions<LoopbackTransportOptions> l
     public IReadOnlyList<string> ListProfiles() => profiles.List();
 
     /// <inheritdoc />
-    public SessionViewModel CreateFromProfile(string name)
+    public SessionViewModel CreateFromProfile(string name) => CreateFromOptions(profiles.Load(name), name);
+
+    /// <inheritdoc />
+    public SessionViewModel CreateFromOptions(CliOptions options, string title)
     {
-        var built = DevTermSessionBuilder.Build(profiles.Load(name));
-        return new SessionViewModel(built.Session, name);
+        var built = DevTermSessionBuilder.Build(options);
+        return new SessionViewModel(built.Session, title);
     }
+
+    /// <inheritdoc />
+    public ConnectionEditorViewModel CreateEditor() => new(profiles, new CliOptions());
 }

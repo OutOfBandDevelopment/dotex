@@ -78,4 +78,65 @@ public sealed class ShellSessionTests
         // Assert
         Assert.IsFalse(shell.OpenProfileSession.CanExecute("bench"));
     }
+
+    [TestMethod]
+    public async Task NewConnection_EditorConnects_OpensASessionFromTheOptions()
+    {
+        // Stage
+        var directory = Path.Combine(Path.GetTempPath(), "devterm-" + Guid.NewGuid().ToString("N"));
+        try
+        {
+            var services = new ServiceCollection();
+            services.AddSingleton(new ConnectionProfileStore(directory));
+            services.AddSingleton<IConnectionEditorDialog>(new FakeConnectionEditorDialog(editor =>
+            {
+                editor.Transport = "loopback";
+                editor.ConnectCommand.Execute(null);
+            }));
+            await using var provider = services.AddDevTermWpfShell().BuildServiceProvider();
+            var shell = provider.GetRequiredService<ShellViewModel>();
+
+            // Test
+            shell.NewConnection.Execute(null);
+
+            // Assert
+            Assert.HasCount(1, shell.Sessions);
+            Assert.AreEqual("loopback 1", shell.SelectedSession?.Title);
+        }
+        finally
+        {
+            if (Directory.Exists(directory))
+            {
+                Directory.Delete(directory, true);
+            }
+        }
+    }
+
+    [TestMethod]
+    public async Task NewConnection_EditorCancelled_OpensNothing()
+    {
+        // Stage
+        var directory = Path.Combine(Path.GetTempPath(), "devterm-" + Guid.NewGuid().ToString("N"));
+        try
+        {
+            var services = new ServiceCollection();
+            services.AddSingleton(new ConnectionProfileStore(directory));
+            services.AddSingleton<IConnectionEditorDialog>(new FakeConnectionEditorDialog(_ => { }));
+            await using var provider = services.AddDevTermWpfShell().BuildServiceProvider();
+            var shell = provider.GetRequiredService<ShellViewModel>();
+
+            // Test
+            shell.NewConnection.Execute(null);
+
+            // Assert
+            Assert.IsEmpty(shell.Sessions);
+        }
+        finally
+        {
+            if (Directory.Exists(directory))
+            {
+                Directory.Delete(directory, true);
+            }
+        }
+    }
 }

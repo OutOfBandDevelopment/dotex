@@ -523,4 +523,5 @@ Each change document should include:
 - [DevTerm WPF DI composition (2026-10-29)](devterm-wpf-di-composition-2026-10-29.md) - the WPF shell composes core, device panels and shell through DI
 - [DevTerm WPF session view model (2026-10-29)](devterm-wpf-session-view-model-2026-10-29.md) - connect, disconnect, send and output over a Session
 - [DevTerm WPF profile sessions (2026-10-29)](devterm-wpf-profile-sessions-2026-10-29.md) - the shell opens sessions from saved connection profiles
+- [DevTerm WPF connection editor window (2026-10-29)](devterm-wpf-connection-editor-2026-10-29.md) - New connection dialog over ConnectionEditorViewModel
 - [One USB HID adapter (2026-10-29)](system-io-usbhids-adapter-merge-2026-10-29.md) - UsbHidFactory returns the endpoint adapter; the thin one is gone

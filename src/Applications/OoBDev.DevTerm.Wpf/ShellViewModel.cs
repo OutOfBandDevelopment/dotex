@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
+using OoBDev.DevTerm.Configuration;
 using OoBDev.UiDefinitions.ViewModels;
 
 namespace OoBDev.DevTerm.Wpf;
@@ -11,17 +12,22 @@ namespace OoBDev.DevTerm.Wpf;
 public sealed class ShellViewModel : ViewModelBase, IDisposable
 {
     private readonly ISessionViewModelFactory? _sessionFactory;
+    private readonly IConnectionEditorDialog? _editorDialog;
     private PanelViewModel? _selected;
     private SessionViewModel? _selectedSession;
+    private int _connectionCount;
 
     /// <summary>Creates the shell and opens the first panel, if any.</summary>
     /// <param name="factories">The registered panel factories.</param>
     /// <param name="sessionFactory">Creates the sessions the shell opens, or null when it cannot.</param>
-    public ShellViewModel(IEnumerable<IPanelFactory> factories, ISessionViewModelFactory? sessionFactory = null)
+    /// <param name="editorDialog">Shows the connection editor, or null when the shell has no window to host it.</param>
+    public ShellViewModel(IEnumerable<IPanelFactory> factories, ISessionViewModelFactory? sessionFactory = null, IConnectionEditorDialog? editorDialog = null)
     {
         ArgumentNullException.ThrowIfNull(factories);
         Factories = [.. factories];
         _sessionFactory = sessionFactory;
+        _editorDialog = editorDialog;
+        NewConnection = new NewConnectionCommand(this);
         Open = new OpenPanelCommand(this);
         NewLoopbackSession = new NewLoopbackSessionCommand(this);
         OpenProfileSession = new OpenProfileSessionCommand(this);
@@ -45,6 +51,27 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
 
     /// <summary>Opens a session from the saved profile named by the command parameter.</summary>
     public ICommand OpenProfileSession { get; }
+
+    /// <summary>Shows the connection editor and opens a session from what it returns.</summary>
+    public ICommand NewConnection { get; }
+
+    internal bool CanEditConnections => _sessionFactory is not null && _editorDialog is not null;
+
+    internal void EditConnection()
+    {
+        var editor = _sessionFactory!.CreateEditor();
+        using (editor)
+        {
+            if (_editorDialog!.Show(editor) is not { } options)
+            {
+                return;
+            }
+
+            var session = _sessionFactory.CreateFromOptions(options, $"{options.Transport} {++_connectionCount}");
+            Sessions.Add(session);
+            SelectedSession = session;
+        }
+    }
 
     /// <summary>The names of the saved connection profiles.</summary>
     public IReadOnlyList<string> ProfileNames => _sessionFactory?.ListProfiles() ?? [];
