@@ -10,6 +10,9 @@ GitHub is no longer the primary repository (local bare repo `origin`), so nothin
 
 ## 1. Test infrastructure
 
+- [ ] Rename `OoBDev.DevTerm.Plugins.Sample` to the test fixture `OoBDev.DevTerm.Core.TestPlugin` beside the tests (project, namespace, loader-test paths); owner decided 2026-10-30.
+- [ ] New `src/Applications/OoBDev.DevTerm.TestUtilities` test library for `UserFlowTestsBase` and `IFrontEndDriver` (copies in Web.Tests and Tui.Tests are deleted; `FakeDeviceConfigEditor`, `FakeTransport`, `ManualTimeProvider` can follow); owner decided 2026-10-30.
+- DevTerm Web keeps its own AsyncAPI document and viewer (offline viewer, stream channels); owner decided 2026-10-30.
 - [ ] Integration coverage gaps (Azure runs on emulators only: Azurite and the Service Bus emulator, no Azure licence): Azurite queues and blobs are covered (queue tests added 2026-10-22); Service Bus emulator send and receive tests pass (queue, topic subscription, session queue; 2026-10-29) its readiness is probed on the AMQP port by `wait-for-services` (no Docker health check is possible in the image); Moto is only used for SQS because no other AWS adapter exists (S3 tests wait for an S3 adapter).
 - [ ] `DevLocal` tests kept on purpose: Ollama (hard-coded LAN host, model pull and delete), USB HID (hardware), `PathEx`, `MergedXPathNavigator`, `ProjectTools.FixReadmes` (hard-coded `C:\Repos` paths), Markdown `TestMethod1` (writes files). Revisit Ollama when the owner says Ollama testing can resume.
 - [ ] Add a live-integration doc page per new cloud service (only Groq exists; its key was revoked 2026-10-09, so runs wait for the owner).

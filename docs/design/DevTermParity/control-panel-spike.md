@@ -31,4 +31,4 @@ Colour swatches for custom colour choices, `EnabledWhen` interlocks with `Disabl
 
 ## Next step
 
-When Q4 is answered B: implement steps 1 to 3 in `OoBDev.UiDefinitions` (80% coverage, tests first from `FormBindingTests`), then step 4 in the WPF shell with a `DevicePanelContribution` command in the shell, then port the dev-term control panel tests.
+Owner decision 2026-10-30: option C (`DynamicModelFactory` / `SurfacePanelBuilder`, already built); the B steps below are not planned. If B is chosen later: implement steps 1 to 3 in `OoBDev.UiDefinitions` (80% coverage, tests first from `FormBindingTests`), then step 4 in the WPF shell with a `DevicePanelContribution` command in the shell, then port the dev-term control panel tests.
