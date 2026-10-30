@@ -20,6 +20,7 @@ Lifecycle:
 Rules:
 - Do the tracking in the same commit series as the work, not afterwards. A commit that changes `src/` and finishes an item includes the tracking files; a hook reminds you at commit time.
 - Never mark something done that was not built and tested; say what was not run.
+- Generated user guides and their screenshots (`docs/user-guide/`) are committed in the same series as the protocol or application change that updates them (owner, 2026-10-30), by explicit paths.
 - Rough edges found while working go to `BACKLOG.md`, not into the current change.
 ## Keeping the files correct
 
