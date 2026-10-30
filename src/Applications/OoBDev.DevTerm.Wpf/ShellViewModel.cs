@@ -17,6 +17,8 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
     private readonly IStreamMonitorDialog? _streamMonitorDialog;
     private readonly StreamMonitor? _streamMonitor;
     private readonly IMergedLogDialog? _mergedLogDialog;
+    private readonly IPlaybackDialog? _playbackDialog;
+    private readonly PlaybackPresenters? _playbackPresenters;
     private readonly MergedSessionLog? _mergedLog;
     private PanelViewModel? _selected;
     private SessionViewModel? _selectedSession;
@@ -27,11 +29,13 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
     /// <param name="sessionFactory">Creates the sessions the shell opens, or null when it cannot.</param>
     /// <param name="streamMonitorDialog">Shows the stream monitor window, or null when the shell has no window to host it.</param>
     /// <param name="streamMonitor">The stream monitor shared by the shell, or null.</param>
+    /// <param name="playbackDialog">Picks and shows session log playback, or null when the shell has no window to host it.</param>
+    /// <param name="playbackPresenters">Opens session logs for playback, or null.</param>
     /// <param name="mergedLogDialog">Shows the merged log window, or null when the shell has no window to host it.</param>
     /// <param name="mergedLog">The log every opened session is recorded in, or null.</param>
     /// <param name="routingDialog">Shows the routing window, or null when the shell has no window to host it.</param>
     /// <param name="editorDialog">Shows the connection editor, or null when the shell has no window to host it.</param>
-    public ShellViewModel(IEnumerable<IPanelFactory> factories, ISessionViewModelFactory? sessionFactory = null, IConnectionEditorDialog? editorDialog = null, IRoutingDialog? routingDialog = null, IStreamMonitorDialog? streamMonitorDialog = null, StreamMonitor? streamMonitor = null, IMergedLogDialog? mergedLogDialog = null, MergedSessionLog? mergedLog = null)
+    public ShellViewModel(IEnumerable<IPanelFactory> factories, ISessionViewModelFactory? sessionFactory = null, IConnectionEditorDialog? editorDialog = null, IRoutingDialog? routingDialog = null, IStreamMonitorDialog? streamMonitorDialog = null, StreamMonitor? streamMonitor = null, IMergedLogDialog? mergedLogDialog = null, MergedSessionLog? mergedLog = null, IPlaybackDialog? playbackDialog = null, PlaybackPresenters? playbackPresenters = null)
     {
         ArgumentNullException.ThrowIfNull(factories);
         Factories = [.. factories];
@@ -42,6 +46,9 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
         _streamMonitor = streamMonitor;
         _mergedLogDialog = mergedLogDialog;
         _mergedLog = mergedLog;
+        _playbackDialog = playbackDialog;
+        _playbackPresenters = playbackPresenters;
+        OpenPlaybackWindow = new OpenPlaybackCommand(this);
         ShowMergedLogWindow = new ShowMergedLogCommand(this);
         ShowStreamMonitorWindow = new ShowStreamMonitorCommand(this);
         ShowRoutingWindow = new ShowRoutingCommand(this);
@@ -81,6 +88,19 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
 
     /// <summary>Shows the log of every open session, merged by time.</summary>
     public ICommand ShowMergedLogWindow { get; }
+
+    /// <summary>Picks a session log and replays it in the playback window.</summary>
+    public ICommand OpenPlaybackWindow { get; }
+
+    internal bool CanOpenPlayback => _playbackDialog is not null && _playbackPresenters is not null;
+
+    internal void OpenPlayback()
+    {
+        if (_playbackDialog!.PickLog() is { } path)
+        {
+            _playbackDialog.Show(new PlaybackDialogViewModel(_playbackPresenters!.Open(path)));
+        }
+    }
 
     internal bool CanShowMergedLog => _mergedLogDialog is not null && _mergedLog is not null;
 

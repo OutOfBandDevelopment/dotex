@@ -1,0 +1,5 @@
+# DevTerm WPF playback window (2026-10-29)
+
+WPF slice 4, fourth part: `OpenPlaybackWindow` picks a session log through the `IPlaybackDialog` seam (`WpfPlaybackDialog` uses the file dialog and `PlaybackWindow`; a fake in tests) and replays it with the Core `PlaybackController` opened by `PlaybackPresenters`. `PlaybackDialogViewModel` lists the presenter output lines with their offsets, shows the position and has `PlayPause`, `Step`, `Rewind`, `FastForward` and `SkipToEnd` commands (one `PlaybackCommand` type over controller actions). The window ticks the view model from a `DispatcherTimer`.
+
+Tests: `PlaybackDialogTests` (3 Unit: skip to end lists every record and rewind clears them; a cancelled pick shows nothing; no dialog means the command cannot execute); WPF test project 29 passed. The window was built but not viewed running. Speed, presenter choice, jump, trim and notes are still open in slice 4.

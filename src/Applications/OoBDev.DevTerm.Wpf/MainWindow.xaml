@@ -6,6 +6,7 @@
     <DockPanel>
         <StackPanel DockPanel.Dock="Left" Width="180">
             <Button Content="New connection..." Margin="4" Command="{Binding NewConnection}" />
+            <Button Content="Open log for playback..." Margin="4" Command="{Binding OpenPlaybackWindow}" />
             <Button Content="Merged log..." Margin="4" Command="{Binding ShowMergedLogWindow}" />
             <Button Content="Stream monitor..." Margin="4" Command="{Binding ShowStreamMonitorWindow}" />
             <Button Content="Routing..." Margin="4" Command="{Binding ShowRoutingWindow}" />
