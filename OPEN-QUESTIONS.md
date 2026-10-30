@@ -53,3 +53,16 @@ _(none waiting; processed requests are in BACKLOG.md and TODO.md)_
 **Default:** A until answered.
 
 **Your answer:**
+
+### Q4 (2026-10-29, DevTerm WPF) How does the WPF control panel render a `UiDefinition` driven by an `IControlSurface`?
+
+`FormView` (UiDefinitions.Wpf) renders a definition bound by control id to the properties and commands of a model object (reflection in `FormBinding`). A device panel contribution (`IDevicePanelContribution`: K8055, Busylight, Scpi, plugins) instead gives a definition plus an `IControlSurface` (`InvokeAsync(commandId, value)`) and indicator values from a structured presenter. dev-term's `ControlPanelWindow` (864 lines of code-behind) builds WPF controls straight from the definition and the surface; the TUI has the same shape in `ControlPanelMode`. The `ControlPanelWindow` parity item (BACKLOG slice 5) cannot reuse `FormView` as it is.
+
+**Options**
+- A. Port the dev-term code-behind renderer into `OoBDev.UiDefinitions.Wpf` (or the WPF app) as is. Proven behaviour (sections, VisibleWhen, EnabledWhen, previews, colour swatches) and one more renderer to keep in step with `FormView` and the TUI; not MVVM, and nothing for the web front ends.
+- B. Make `FormBinding` accept a dictionary-backed source (values by id, commands by id) and add a surface adapter that supplies it, so `FormView` renders panels and the same adapter serves the later web dashboard work (recommended): one WPF renderer, view-model tests without WPF, and it matches the owner's MVVM and generic-UiDefinition direction. Needs a spike first (how `FormBinding` reads values, `VisibleWhen`, `EnabledWhen`, live indicators and previews) and a Framework change to a library with 80% coverage.
+- C. Generate a property-bag class per definition at run time. No `FormBinding` change but dynamic type emission is hard to test and debug.
+
+**Default:** B, starting with the spike (a throwaway test over `FormBinding` with a dictionary source) before any Framework change.
+
+**Your answer:**
