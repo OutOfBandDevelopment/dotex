@@ -1,3 +1,4 @@
+using OoBDev.System.IO.Devices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -50,7 +51,7 @@ public class WebScreenshotTests
     }
 
     /// <summary>Starts a loopback web host and a headless Edge page, runs <paramref name="scenario"/>, then tears both down.</summary>
-    private async Task RunAsync(Func<IPage, string, Task> scenario, string? project = null, string? logsDirectory = null, CliOptions? options = null, Action<WebHost.Built>? configure = null, string? themesDirectory = null, string? converterToolsFile = null, string? manifestsDirectory = null, IEnumerable<OoBDev.DevTerm.IDeviceConfigEditor>? configEditors = null)
+    private async Task RunAsync(Func<IPage, string, Task> scenario, string? project = null, string? logsDirectory = null, CliOptions? options = null, Action<WebHost.Built>? configure = null, string? themesDirectory = null, string? converterToolsFile = null, string? manifestsDirectory = null, IEnumerable<OoBDev.System.IO.Devices.IDeviceConfigEditor>? configEditors = null)
     {
         var port = FreePort();
         var built = WebHost.Build(
@@ -683,7 +684,7 @@ public class WebScreenshotTests
         await Assertions.Expect(page.Locator("[data-project]")).ToHaveCountAsync(2);
     }, BenchProject());
 
-    private sealed class FakeConfigEditor : OoBDev.DevTerm.IDeviceConfigEditor
+    private sealed class FakeConfigEditor : OoBDev.System.IO.Devices.IDeviceConfigEditor
     {
         public Dictionary<string, string> Device { get; } = new() { ["ip"] = "192.168.0.201", ["baud"] = "9600" };
         public string Id => "fake";
@@ -693,15 +694,15 @@ public class WebScreenshotTests
             Name = "Fake",
             Sections = [new OoBDev.UiDefinitions.UiSection { Controls = [new OoBDev.UiDefinitions.TextFieldControl { Id = "ip", Label = "IP address" }, new OoBDev.UiDefinitions.TextFieldControl { Id = "baud", Label = "Baud" }] }],
         };
-        public Task<IReadOnlyDictionary<string, string>> ReadAsync(OoBDev.DevTerm.DeviceConfigTarget target, CancellationToken cancellationToken) =>
+        public Task<IReadOnlyDictionary<string, string>> ReadAsync(OoBDev.System.IO.Devices.DeviceConfigTarget target, CancellationToken cancellationToken) =>
             Task.FromResult<IReadOnlyDictionary<string, string>>(new Dictionary<string, string>(Device));
-        public IReadOnlyList<OoBDev.DevTerm.DeviceConfigIssue> Validate(IReadOnlyDictionary<string, string> values) =>
-            values["baud"] == "0" ? [new OoBDev.DevTerm.DeviceConfigIssue("baud", "must be positive")] : [];
-        public bool WillDropConnection(OoBDev.DevTerm.DeviceConfigTarget target, IReadOnlyDictionary<string, string> current, IReadOnlyDictionary<string, string> values) => current["ip"] != values["ip"];
-        public Task<OoBDev.DevTerm.DeviceConfigWriteResult> WriteAsync(OoBDev.DevTerm.DeviceConfigTarget target, IReadOnlyDictionary<string, string> values, CancellationToken cancellationToken)
+        public IReadOnlyList<OoBDev.System.IO.Devices.DeviceConfigIssue> Validate(IReadOnlyDictionary<string, string> values) =>
+            values["baud"] == "0" ? [new OoBDev.System.IO.Devices.DeviceConfigIssue("baud", "must be positive")] : [];
+        public bool WillDropConnection(OoBDev.System.IO.Devices.DeviceConfigTarget target, IReadOnlyDictionary<string, string> current, IReadOnlyDictionary<string, string> values) => current["ip"] != values["ip"];
+        public Task<OoBDev.System.IO.Devices.DeviceConfigWriteResult> WriteAsync(OoBDev.System.IO.Devices.DeviceConfigTarget target, IReadOnlyDictionary<string, string> values, CancellationToken cancellationToken)
         {
             foreach (var (k, v) in values) { Device[k] = v; }
-            return Task.FromResult(new OoBDev.DevTerm.DeviceConfigWriteResult(new Dictionary<string, string>(Device), RebootRequired: true));
+            return Task.FromResult(new OoBDev.System.IO.Devices.DeviceConfigWriteResult(new Dictionary<string, string>(Device), RebootRequired: true));
         }
     }
 

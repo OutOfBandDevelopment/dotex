@@ -1,12 +1,9 @@
-using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using OoBDev.UiDefinitions;
 
-namespace OoBDev.DevTerm;
+namespace OoBDev.System.IO.Devices;
 
 /// <summary>
 /// A device's own configuration (a network bridge's IP, work mode, serial settings) edited from dev-term instead of the vendor's tool

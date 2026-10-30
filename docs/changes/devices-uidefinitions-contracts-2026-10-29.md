@@ -14,3 +14,7 @@ Owner decision (restructure plan, "Plugins and device panels"): pure contracts (
 ## Verified
 
 Unit: UiDefinitions 194, ViewModels 53, Wpf 14, Scpi.Panels 6, DevTerm.Wpf 8, DevTerm Core 1037 (8 skipped), all passing; Tui and Web runs recorded in the commit series.
+
+## Device configuration contracts
+
+`IDeviceConfigEditor`, `DeviceConfigTarget`, `DeviceConfigIssue`, `DeviceConfigChange` and `DeviceConfigWriteResult` moved from DevTerm Core to `OoBDev.System.Abstractions/IO/Devices` (namespace `OoBDev.System.IO.Devices`), so device libraries can ship their configuration editors. `DeviceConfigSession` (logic) stays in Core. Unit: Core 1035, Tui 355, Web 43, all passing.

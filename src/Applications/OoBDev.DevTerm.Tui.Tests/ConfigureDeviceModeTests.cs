@@ -1,3 +1,4 @@
+using OoBDev.System.IO.Devices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -53,7 +54,7 @@ public sealed class ConfigureDeviceModeTests
         {
             parts.Read();
 
-            Assert.AreEqual(new OoBDev.DevTerm.DeviceConfigTarget("10.0.0.5", 8899), editor.LastTarget);
+            Assert.AreEqual(new OoBDev.System.IO.Devices.DeviceConfigTarget("10.0.0.5", 8899), editor.LastTarget);
             var fields = parts.Form.SubViews.OfType<TextField>().ToList();
             Assert.HasCount(2, fields);
             Assert.AreEqual("192.168.0.201", fields[0].Text);
