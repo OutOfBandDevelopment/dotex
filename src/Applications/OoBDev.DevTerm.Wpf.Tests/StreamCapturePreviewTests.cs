@@ -158,8 +158,27 @@ public sealed class StreamCapturePreviewTests
         global::System.IO.File.Delete(target);
     }
 
+    [TestMethod]
+    public void OpenFolder_ExportDialog_OpensTheSaveFolder()
+    {
+        // Stage
+        var export = new FixedExport("x");
+        using var viewModel = new StreamMonitorDialogViewModel(new StreamMonitor(), export);
+
+        // Test
+        viewModel.OpenFolder.Execute(null);
+
+        // Assert
+        Assert.IsNotNull(export.Opened);
+        StringAssert.StartsWith(viewModel.FolderText, "Saving to");
+    }
+
     private sealed class FixedExport(string path) : IStreamExportDialog
     {
+        public string? Opened { get; private set; }
+
         public string? PickExportPath(string suggestedName, string extension, string kindName) => path;
+
+        public void OpenFolder(string directory) => Opened = directory;
     }
 }

@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Microsoft.Win32;
 
 namespace OoBDev.DevTerm.Wpf;
@@ -16,4 +17,8 @@ public sealed class WpfStreamExportDialog : IStreamExportDialog
         };
         return dialog.ShowDialog() == true ? dialog.FileName : null;
     }
+
+    /// <inheritdoc />
+    public void OpenFolder(string directory) =>
+        Process.Start(new ProcessStartInfo { FileName = directory, UseShellExecute = true });
 }

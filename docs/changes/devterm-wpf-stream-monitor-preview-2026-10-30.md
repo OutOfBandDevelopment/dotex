@@ -10,4 +10,4 @@ The stream monitor window now has a split view: the capture list on the left, an
 The list has a search box, a content-type filter and a sort choice (oldest, newest, largest, kind, device), all through the shared `StreamCaptureView`, so the window shows the same rows in the same order as the terminal front end. `StreamMonitorDialogViewModel.AddCapture` lists a capture the monitor reported. The selected capture stays selected while it is still shown.
 
 - Tests (4 added to `StreamCapturePreviewTests`): search narrows, the type filter and its choices, largest-first sort, and Export writes the bytes where the dialog says (so the earlier "export write path has no test" note no longer applies). 106 Unit tests passing.
-- Still left for this window: per-device panes, Open Folder and Convert.
+- Open folder (via `IStreamExportDialog.OpenFolder`) and the "Saving to" line were added after; 107 Unit tests passing. Still left for this window: per-device panes and Convert.

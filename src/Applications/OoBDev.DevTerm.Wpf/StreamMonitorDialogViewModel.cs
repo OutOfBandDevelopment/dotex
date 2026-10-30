@@ -39,6 +39,7 @@ public sealed class StreamMonitorDialogViewModel : ViewModelBase, IDisposable
         Start = new StartStreamMonitorCommand(this);
         Stop = new StopStreamMonitorCommand(this);
         Export = new ExportStreamCaptureCommand(this);
+        OpenFolder = new OpenStreamFolderCommand(this);
         foreach (var capture in monitor.Captures)
         {
             _all.Add(capture);
@@ -122,7 +123,17 @@ public sealed class StreamMonitorDialogViewModel : ViewModelBase, IDisposable
     /// <summary>Why there is no preview, when there is none.</summary>
     public string PreviewMessage { get; private set; } = EmptyMessage;
 
-    /// <summary>The outcome of the last export.</summary>
+    /// <summary>Where captures are saved, with a count of any other folders.</summary>
+    public string FolderText
+    {
+        get
+        {
+            var others = _monitor.ExportDirectories.Count - 1;
+            return $"Saving to {StreamMonitor.DisplayPath(_monitor.ExportDirectory)}{(others > 0 ? $" (+{others} more)" : string.Empty)}";
+        }
+    }
+
+    /// <summary>The outcome of the last export or folder open.</summary>
     public string ExportStatus { get; private set; } = string.Empty;
 
     /// <summary>Whether the monitor is watching its sessions.</summary>
@@ -136,6 +147,11 @@ public sealed class StreamMonitorDialogViewModel : ViewModelBase, IDisposable
 
     /// <summary>Saves a copy of the selected capture where the user chooses.</summary>
     public ICommand Export { get; }
+
+    /// <summary>Shows the folder captures are saved to.</summary>
+    public ICommand OpenFolder { get; }
+
+    internal bool CanOpenFolder => _exportDialog is not null;
 
     internal bool CanExport => _exportDialog is not null && SelectedIndex >= 0 && SelectedIndex < _items.Count;
 
@@ -161,6 +177,23 @@ public sealed class StreamMonitorDialogViewModel : ViewModelBase, IDisposable
         catch (Exception ex) when (ex is global::System.IO.IOException or UnauthorizedAccessException)
         {
             ExportStatus = $"Could not save '{path}': {ex.Message}";
+        }
+
+        OnPropertyChanged(nameof(ExportStatus));
+    }
+
+    internal void OpenSaveFolder()
+    {
+        var directory = _monitor.ExportDirectory;
+        try
+        {
+            global::System.IO.Directory.CreateDirectory(directory);
+            _exportDialog!.OpenFolder(directory);
+            ExportStatus = string.Empty;
+        }
+        catch (Exception ex) when (ex is global::System.IO.IOException or UnauthorizedAccessException or global::System.ComponentModel.Win32Exception)
+        {
+            ExportStatus = $"Could not open '{directory}': {ex.Message}";
         }
 
         OnPropertyChanged(nameof(ExportStatus));

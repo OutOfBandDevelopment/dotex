@@ -1,6 +1,6 @@
 namespace OoBDev.DevTerm.Wpf;
 
-/// <summary>Asks where to export a stream capture.</summary>
+/// <summary>Asks where to export a stream capture and opens the folder captures are saved to.</summary>
 public interface IStreamExportDialog
 {
     /// <summary>Asks for a destination file.</summary>
@@ -9,4 +9,8 @@ public interface IStreamExportDialog
     /// <param name="kindName">The capture's display name, for the file filter.</param>
     /// <returns>The chosen path, or null when the user cancels.</returns>
     string? PickExportPath(string suggestedName, string extension, string kindName);
+
+    /// <summary>Shows <paramref name="directory"/> in the file manager.</summary>
+    /// <param name="directory">The folder to open.</param>
+    void OpenFolder(string directory);
 }
