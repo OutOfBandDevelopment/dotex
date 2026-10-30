@@ -11,7 +11,7 @@
     <ProjectReference Include="..\..\Framework\OoBDev.DevTerm.Core\OoBDev.DevTerm.Core.csproj" />
     <ProjectReference Include="..\..\Framework\OoBDev.DevTerm.Logging\OoBDev.DevTerm.Logging.csproj" />
     <ProjectReference Include="..\..\Framework\OoBDev.DevTerm.DeviceManifests\OoBDev.DevTerm.DeviceManifests.csproj" />
-    <ProjectReference Include="..\OoBDev.DevTerm.Observability\OoBDev.DevTerm.Observability.csproj" />
+    <ProjectReference Include="..\..\Framework\OoBDev.Telemetry\OoBDev.Telemetry.csproj" />
     <ProjectReference Include="..\OoBDev.DevTerm.Presenters.Text\OoBDev.DevTerm.Presenters.Text.csproj" />
     <ProjectReference Include="..\OoBDev.DevTerm.Transports.Loopback\OoBDev.DevTerm.Transports.Loopback.csproj" />
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" />

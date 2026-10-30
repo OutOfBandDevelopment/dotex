@@ -6,7 +6,7 @@ namespace OoBDev.DevTerm;
 /// <summary>
 /// dev-term's own diagnostics: one <see cref="ActivitySource"/> and one <see cref="Meter"/>, both named
 /// <see cref="Name"/>. They cost next to nothing with no listener, so <see cref="Session"/> always records into
-/// them; <c>DevTerm.Observability</c> subscribes an OpenTelemetry exporter when the user opts in.
+/// them; <c>OoBDev.Telemetry.TelemetryExporter</c> subscribes an OpenTelemetry exporter when the user opts in.
 /// </summary>
 public static class DevTermTelemetry
 {

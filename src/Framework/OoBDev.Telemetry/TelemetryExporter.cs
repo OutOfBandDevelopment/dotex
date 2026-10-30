@@ -4,16 +4,15 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using OoBDev.DevTerm;
 using OpenTelemetry;
 using OpenTelemetry.Exporter;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 
-namespace OoBDev.DevTerm.Observability;
+namespace OoBDev.Telemetry;
 
-/// <summary>Sends <see cref="DevTermTelemetry"/>'s traces and metrics to an OTLP collector (gRPC) until disposed.</summary>
+/// <summary>Sends the named activity sources' traces and meters' metrics to an OTLP collector (gRPC) until disposed.</summary>
 public sealed class TelemetryExporter : IDisposable
 {
     private readonly TracerProvider _tracer;
@@ -37,14 +36,16 @@ public sealed class TelemetryExporter : IDisposable
     }
 
     /// <summary>Starts exporting to <paramref name="endpoint"/>. Exporting is asynchronous and best effort: an unreachable collector never throws here or slows the app.</summary>
-    public static TelemetryExporter Start(Uri endpoint, string serviceName)
+    /// <param name="sourceNames">The activity source and meter names to export.</param>
+    public static TelemetryExporter Start(Uri endpoint, string serviceName, params string[] sourceNames)
     {
         ArgumentNullException.ThrowIfNull(endpoint);
+        ArgumentNullException.ThrowIfNull(sourceNames);
         var resource = ResourceBuilder.CreateDefault().AddService(serviceName);
 
         var tracer = Sdk.CreateTracerProviderBuilder()
             .SetResourceBuilder(resource)
-            .AddSource(DevTermTelemetry.Name)
+            .AddSource(sourceNames)
             .AddOtlpExporter(o =>
             {
                 o.Endpoint = endpoint;
@@ -53,7 +54,7 @@ public sealed class TelemetryExporter : IDisposable
             .Build();
         var meter = Sdk.CreateMeterProviderBuilder()
             .SetResourceBuilder(resource)
-            .AddMeter(DevTermTelemetry.Name)
+            .AddMeter(sourceNames)
             .AddOtlpExporter((o, reader) =>
             {
                 o.Endpoint = endpoint;

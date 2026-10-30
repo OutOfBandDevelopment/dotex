@@ -51,3 +51,7 @@ Unit tests cover the processors and the registration. The Integration tests send
 * https://learn.microsoft.com/en-us/dotnet/core/diagnostics/observability-with-otel
 * https://opentelemetry.io/docs/specs/otel/protocol/exporter/
 * [Change document](../../../docs/changes/migration-opentelemetry-2026-10-09.md)
+
+## Standalone OTLP exporter
+
+`TelemetryExporter` exports traces and metrics to an OTLP collector (gRPC) without a host, for desktop and console applications: `TelemetryExporter.ParseEndpoint(text)` reads the option (`true` means `http://localhost:4317`, anything that is not an http(s) URL gives `null`), and `TelemetryExporter.Start(endpoint, serviceName, sourceNames)` starts best-effort export of the named activity sources and meters. An unreachable collector never throws or slows the application. It moved here from `OoBDev.DevTerm.Observability`, which is deleted (2026-10-29).

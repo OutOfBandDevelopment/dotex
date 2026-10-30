@@ -1,7 +1,7 @@
 using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace OoBDev.DevTerm.Observability.Tests;
+namespace OoBDev.Telemetry.Tests;
 
 [TestCategory("Unit")]
 [TestClass]
@@ -28,7 +28,7 @@ public sealed class TelemetryExporterTests
     [TestMethod]
     public void Start_AgainstAnUnreachableCollector_DoesNotThrowAndDisposesCleanly()
     {
-        using var exporter = TelemetryExporter.Start(new Uri("http://127.0.0.1:1"), "devterm-test");
+        using var exporter = TelemetryExporter.Start(new Uri("http://127.0.0.1:1"), "telemetry-test", "Test");
 
         Assert.IsNotNull(exporter);
     }

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection;
 using OoBDev.DevTerm.Hosting;
-using OoBDev.DevTerm.Observability;
+using OoBDev.Telemetry;
 using OoBDev.DevTerm.Presenters.Text;
 using OoBDev.DevTerm.Transports.Loopback;
 
@@ -58,7 +58,7 @@ public static class ServiceCollectionExtensions
             return;
         }
 
-        var exporter = TelemetryExporter.Start(endpoint, "devterm");
+        var exporter = TelemetryExporter.Start(endpoint, "devterm", DevTermTelemetry.Name);
         AppDomain.CurrentDomain.ProcessExit += (_, _) => exporter.Dispose();
     }
 
