@@ -1,0 +1,25 @@
+┌┤dev-term — Korad KA6003P Power Supply├───────────────────────────────────────┐
+│[-] Common                                                                   ▲│
+│                           ⟦ Identify ⟧  (i)                                 █│
+│  Identify Reply:                                                            █│
+│                           ⟦ Query Status Byte ⟧  (i)                        █│
+│  Query Status Byte Reply:                                                   █│
+│                                                                             █│
+│[-] Source                                                                   █│
+│  Voltage:                 0          [0-60]V                                ░│
+│                           ⟦ Set Voltage ⟧  (i)                              ░│
+│  Current:                 0          [0-3]A                                 ░│
+│                           ⟦ Set Current ⟧  (i)                              ░│
+│                           ⟦ Query Set Voltage ⟧  (i)                        ░│
+│  Query Set Voltage Reply: 05.00                                             ░│
+│                           ⟦ Query Set Current ⟧  (i)                        ░│
+│  Query Set Current Reply:                                                   ░│
+│                                                                             ░│
+│[-] Measure                                                                  ░│
+│                              ⟦ Query Output Voltage ⟧  (i)                  ░│
+│  Query Output Voltage Reply:                                                ░│
+│                              ⟦ Query Output Current ⟧  (i)                  ░│
+│  Query Output Current Reply:                                                ▼│
+│                                                                              │
+│                                                                              │
+└──────────────────────────────────────────────────────────────────────────────┘

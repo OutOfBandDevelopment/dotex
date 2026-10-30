@@ -553,3 +553,4 @@ Each change document should include:
 - [DevTerm WPF profile zip Browse (2026-10-30)](devterm-wpf-profile-zip-browse-2026-10-30.md) - Browse and Save as for the import and export path
 - [DevTerm WPF routing rule editing (2026-10-30)](devterm-wpf-routing-rules-2026-10-30.md) - rule list editing, sample test and history in the routing window
 - [Z-Wave Hardware tests open the adapter (2026-10-30)](zwave-hardware-tests-adapter-open-2026-10-30.md) - the Z-Stick tests pass against real hardware
+- [DevTerm surroundings and documentation layout (2026-10-30)](devterm-surroundings-docs-2026-10-30.md) - application docs under docs/applications, protocols moved, surroundings review recorded

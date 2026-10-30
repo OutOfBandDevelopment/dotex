@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Opt-in real-hardware test parameters (see CLAUDE.md's "Testing" section). Not used unless a test
+  run explicitly passes this file via dotnet test's "settings" option followed by this file's path
+  (the literal flag spelling isn't written here because XML comments can't contain two consecutive
+  hyphens, which that flag needs).
+
+  Tests that read these (RealHardware*Tests classes) report Assert.Inconclusive - not a failure -
+  when run without this file, so the default `dotnet test` (no settings flag) stays hardware-free.
+  These are the same real devices already referenced by src/DevTerm.Console/Properties/launchSettings.json's
+  "TCP 192.168.0.107:23 ASCII" / "TCP 192.168.0.108:23 ASCII" profiles (a real Tektronix 2230
+  oscilloscope, reachable over a serial-to-Ethernet bridge) - override the values below (or pass
+  your own settings file) if those two hosts aren't reachable from wherever this runs.
+
+  RealTcpDeviceHost3 is a real Tektronix TDS2024 oscilloscope, also over a serial-to-Ethernet
+  bridge - a different, SCPI-based device family: it identifies via "*IDN?" (SCPI standard), not
+  the "ID?" the pre-SCPI 2230s above use.
+
+  The *Query and *ExpectedReply values below are each host's identity-query text and expected reply
+  substring, read by RealHardwareCliTests as separate parameters (not baked into the test as
+  literals) so a new real device can be added later with only new parameters plus one new DataRow,
+  no code change - and so an unverified guess can be corrected here instead of in code.
+  RealTcpDeviceHost3ExpectedReply is now the full real-hardware-confirmed reply
+  (docs/test/2026-09-25-15-02-44.md: "TEKTRONIX,TDS 2024,0,CF:91.1CT FV:v4.12 TDS2CM:CMV:v1.04") -
+  that confirmation had landed in that session's report but was never propagated here until
+  docs/test/2026-09-25-18-57-22.md caught the gap; tighten further only if a shorter/more specific
+  substring is ever needed.
+
+  Real Serial devices (RealHardwareSerialTests, in DevTerm.Console.Tests) - three bench SCPI power
+  supplies/meters, each on its own COM port (COM ports are reassigned by Windows whenever a USB
+  adapter is replugged into a different physical port, so these are per-machine parameters, not
+  literals - the whole point of parameterizing them per the user's request). Each *ExpectedReply
+  value is optional: leave it blank to skip the substring assertion and just require a non-null,
+  non-timed-out reply to each query (the "pass as long as it doesn't fault or timeout" bar) -
+  RealSerialKa6003pExpectedReply and RealSerialKa3005pExpectedIdnReply are filled in below because
+  both *IDN? replies are real-hardware confirmed (docs/changes/2026-09-23.md for the KA6003P;
+  docs/test/2026-09-25-15-02-44.md and docs/test/2026-09-25-18-57-22.md for the KA3005P); the HP
+  34401A is left blank rather than asserting an unverified guess.
+
+  Real USBTMC devices (RealHardwareUsbtmcTests, in DevTerm.Console.Tests) - four Rigol bench
+  instruments. VendorId/ProductId are decimal (Windows/libusb report hex; convert before setting
+  these, same convention as UsbtmcTransportOptions itself) and come from a real bench
+  `- -listusbtmcdevices true` enumeration, not guesses - see docs/test/2026-09-24-07-16-34.md.
+  0x1AB1 (Rigol Technologies) = 6833 decimal in every row below.
+
+  RealUsbtmcDs1102eSerialNumber/RealUsbtmcDg1022SerialNumber matter here in a way none of the other
+  real-hardware parameters do: the DS1102E and DG1022 enumerate under the exact same VID:PID
+  (0x1AB1:0x0588 = 6833:1416), so VendorId/ProductId alone can't tell them apart -
+  RealUsbtmcDs1102eSerialNumber is the DS1102E's own real, confirmed serial number
+  ("DS1ET180300759", see rigol-ds1102e.json's Notes) and RealHardwareUsbtmcTests only matches a
+  device whose serial number equals it exactly; RealUsbtmcDg1022SerialNumber is likewise the
+  DG1022's own real, confirmed serial number (see below). The DG1062Z/DM3058E
+  don't have a similar collision on this bench (nothing else shares their PID), so they don't
+  need a SerialNumber to disambiguate - both are filled in anyway, with real, confirmed values.
+
+  RealUsbtmcDs1102eExpectedIdnReply is filled in because the DS1102E's *IDN? reply is real-hardware
+  confirmed (docs/changes/2026-09-24.md: "RIGOL TECHNOLOGIES,DS1102E,DS1ET180300759,00.04.02.01.00").
+  RealUsbtmcDg1062zExpectedIdnReply is filled in too, for the same reason
+  (docs/test/2026-09-25-15-02-44.md: "Rigol Technologies,DG1062Z,DG1ZA232603118,03.01.12") - its
+  first attempts hit a USBTMC header-decode failure, since root-caused as a data-toggle desync from
+  clearing endpoint halts on open (docs/test/2026-09-25-18-03-06.md) and fixed. The
+  DM3058E row is filled in the same way (same report: "Rigol Technologies,DM3058E,DM3R232301438,
+  01.01.00.02.03.01"); its old parked bulk-IN stall no longer reproduces.
+-->
+<RunSettings>
+    <TestRunParameters>
+        <Parameter name="RealTcpDeviceHost1" value="192.168.0.107" />
+        <Parameter name="RealTcpDeviceHost2" value="192.168.0.108" />
+        <Parameter name="RealTcpDeviceHost3" value="192.168.0.110" />
+        <Parameter name="RealTcpDevicePort" value="23" />
+        <Parameter name="RealTcpDeviceHost1Query" value="ID?" />
+        <Parameter name="RealTcpDeviceHost2Query" value="ID?" />
+        <Parameter name="RealTcpDeviceHost3Query" value="*IDN?" />
+        <Parameter name="RealTcpDeviceHost1ExpectedReply" value="TEK/2230" />
+        <Parameter name="RealTcpDeviceHost2ExpectedReply" value="TEK/2230" />
+        <Parameter name="RealTcpDeviceHost3ExpectedReply" value="TEKTRONIX,TDS 2024" />
+
+        <!-- HP/Agilent/Keysight 34401A: 9600 8N2, no handshake, LF terminator, real hardware confirmed
+             (see docs/changes/2026-09-23.md). SYSTem:REMote must be sent before any query. -->
+        <Parameter name="RealSerialHp34401aPort" value="COM3" />
+        <Parameter name="RealSerialHp34401aBaud" value="9600" />
+        <Parameter name="RealSerialHp34401aDataBits" value="8" />
+        <Parameter name="RealSerialHp34401aParity" value="None" />
+        <Parameter name="RealSerialHp34401aStopBits" value="Two" />
+        <Parameter name="RealSerialHp34401aHandshake" value="None" />
+        <Parameter name="RealSerialHp34401aExpectedIdnReply" value="" />
+
+        <!-- Aeotec Z-Stick S2 (Z-Wave controller, CP210x virtual COM): 115200 8N1; home ID is this unit's. -->
+        <Parameter name="RealSerialZStickS2Port" value="COM13" />
+        <Parameter name="RealSerialZStickS2ExpectedHomeId" value="016A1C28" />
+        <Parameter name="RealSerialZStickS2SwitchNode" value="2" />
+
+        <!-- Korad KA3005P: 9600 8N1, no handshake, no terminator (empty Terminator in its profile). -->
+        <Parameter name="RealSerialKa3005pPort" value="COM6" />
+        <Parameter name="RealSerialKa3005pBaud" value="9600" />
+        <Parameter name="RealSerialKa3005pDataBits" value="8" />
+        <Parameter name="RealSerialKa3005pParity" value="None" />
+        <Parameter name="RealSerialKa3005pStopBits" value="One" />
+        <Parameter name="RealSerialKa3005pHandshake" value="None" />
+        <Parameter name="RealSerialKa3005pExpectedIdnReply" value="KORAD KA3005P" />
+
+        <!-- Korad KA6003P: same settings as the KA3005P above. *IDN? reply confirmed against real
+             hardware (docs/changes/2026-09-23.md): "KORAD KA6003P V5.8 SN:50266913" - the serial
+             number is unit-specific, so only the model prefix is asserted. -->
+        <Parameter name="RealSerialKa6003pPort" value="COM7" />
+        <Parameter name="RealSerialKa6003pBaud" value="9600" />
+        <Parameter name="RealSerialKa6003pDataBits" value="8" />
+        <Parameter name="RealSerialKa6003pParity" value="None" />
+        <Parameter name="RealSerialKa6003pStopBits" value="One" />
+        <Parameter name="RealSerialKa6003pHandshake" value="None" />
+        <Parameter name="RealSerialKa6003pExpectedIdnReply" value="KORAD KA6003P" />
+
+        <!-- Zoom H4n remote port (RealHardwareZoomH4nTests, in DevTerm.Devices.ZoomH4n.Tests): 2400
+             8-N-1, no handshake, via the h4n2rs485 adapter (see
+             docs/design/features/zoom-h4n-remote-protocol.md). Real-hardware confirmed 2026-10-01
+             at COM5 (docs/test/2026-10-01-08-15-06.md) - previously reported on COM3
+             (2026-09-25), reassigned since. -->
+        <Parameter name="RealSerialZoomH4nPort" value="COM11" />
+
+        <!-- Real HID devices (RealHardwareK8055Tests/RealHardwareBusylightTests) - identified by
+             DevicePath (preferred, per the user's request) with VendorId/ProductId as the fallback
+             match when DevicePath is blank, mirroring SystemHidDevice.Open's own match order. -->
+        <Parameter name="RealHidK8055-1-VendorId" value="4303" />
+        <Parameter name="RealHidK8055-1-ProductId" value="21760" />
+        <Parameter name="RealHidK8055-1-DevicePath" value="" />
+        <Parameter name="RealHidBusylightVendorId" value="1240" />
+        <Parameter name="RealHidBusylightProductId" value="63560" />
+        <Parameter name="RealHidBusylightDevicePath" value="" />
+        <Parameter name="RealHidEarthmateBt20-VendorId" value="4451" />
+        <Parameter name="RealHidEarthmateBt20-ProductId" value="512" />
+        <Parameter name="RealHidEarthmateBt20-DevicePath" value="" />
+
+        <!-- Radex One (RealHardwareRadexOneTests, in DevTerm.Devices.RadexOne.Tests): 9600 8-N-1, no
+             handshake - real-hardware confirmed 2026-09-26 as a plain virtual COM port at COM8, not
+             the USB HID device an earlier draft of this module wrongly assumed (a live `listhiddevices
+             true` enumeration that day found no matching device at all; `listports true` (CLAUDE.md's
+             Commands section) showed COM8 present). The underlying USB-serial bridge reports
+             VID 0xABBA / PID 0xA011 (Windows Device Manager, 2026-09-25) - not usable for HID
+             matching since the device isn't HID, but useful if COM8 needs auto-detecting later.
+             Corrects an earlier, unverified "2400 baud" claim (docs/bugs/fixed/061-radexone-wrong-baud-rate.md):
+             the device never actually replied at 2400; the real device answers at 9600.
+             See docs/changes/2026-09-26.md and docs/design/proposals/radex-one-protocol.md. -->
+        <Parameter name="RealSerialRadexOnePort" value="COM8" />
+
+        <!-- DE-5000 LCR meter's custom IR-to-BLE adapter (RealHardwareDe5000Tests, in
+             DevTerm.Devices.De5000.Tests) - GATT profile is still unconfirmed (see BACKLOG.md/
+             TODO.md), so the *CharacteristicUuid overrides are blank too, meaning "assume NUS"
+             (BleTransportOptions' own defaults) until proven otherwise. Left blank - no adapter has
+             been paired to confirm a device id yet; the test reports Assert.Inconclusive until this
+             is filled in with a real value from a `listbledevices true` run (CLAUDE.md's Commands
+             section). -->
+        <Parameter name="RealBleDe5000DeviceId" value="" />
+        <Parameter name="RealBleDe5000ServiceUuid" value="" />
+        <Parameter name="RealBleDe5000WriteCharacteristicUuid" value="" />
+        <Parameter name="RealBleDe5000NotifyCharacteristicUuid" value="" />
+
+        <!-- Rigol DM3058E multimeter: USBTMC, VID 0x1AB1 PID 0x09C4. SerialNumber/ExpectedIdnReply are
+             real-hardware confirmed (docs/test/2026-09-25-18-03-06.md). -->
+        <Parameter name="RealUsbtmcDm3058eVendorId" value="6833" />
+        <Parameter name="RealUsbtmcDm3058eProductId" value="2500" />
+        <Parameter name="RealUsbtmcDm3058eSerialNumber" value="DM3R232301438" />
+        <Parameter name="RealUsbtmcDm3058eExpectedIdnReply" value="DM3058E" />
+
+        <!-- Rigol DS1102E oscilloscope: USBTMC, VID 0x1AB1 PID 0x0588 - shares this exact VID:PID
+             with a Rigol DG1022 also on this bench, so SerialNumber is required to target the
+             DS1102E specifically (see the comment block above). -->
+        <Parameter name="RealUsbtmcDs1102eVendorId" value="6833" />
+        <Parameter name="RealUsbtmcDs1102eProductId" value="1416" />
+        <Parameter name="RealUsbtmcDs1102eSerialNumber" value="DS1ET180300759" />
+        <Parameter name="RealUsbtmcDs1102eExpectedIdnReply" value="DS1102E" />
+
+        <!-- Rigol DG1062Z function generator: USBTMC, VID 0x1AB1 PID 0x0642. SerialNumber
+             ("DG1ZA232603118") and ExpectedIdnReply ("DG1062Z") are real-hardware confirmed
+             (docs/test/2026-09-25-15-02-44.md's second follow-up): *IDN? ->
+             "Rigol Technologies,DG1062Z,DG1ZA232603118,03.01.12". SerialNumber isn't required to
+             disambiguate this device (nothing else on this bench shares its PID) but is filled in
+             here since it's now a confirmed real value. -->
+        <Parameter name="RealUsbtmcDg1062zVendorId" value="6833" />
+        <Parameter name="RealUsbtmcDg1062zProductId" value="1602" />
+        <Parameter name="RealUsbtmcDg1062zSerialNumber" value="DG1ZA232603118" />
+        <Parameter name="RealUsbtmcDg1062zExpectedIdnReply" value="DG1062Z" />
+
+        <!-- Rigol DG1022 function generator: USBTMC, VID 0x1AB1 PID 0x0588 - shares this exact
+             VID:PID with the DS1102E above, so SerialNumber is required to target the DG1022
+             specifically (see the comment block above and RealHardwareUsbtmcTests's class doc
+             comment). SerialNumber ("DG1D125306284") is real-hardware confirmed via
+             `- -listusbtmcdevices true` (docs/test/2026-09-24-17-39-35.md, re-confirmed in
+             docs/test/2026-09-25-18-03-06.md). ExpectedIdnReply ("DG1022") is real-hardware
+             confirmed too, now that its USBTMC "no reply" failures are fixed (same 2026-09-25 report):
+             *IDN? -> "RIGOL TECHNOLOGIES,DG1022 ,DG1D125306284,,00.02.00.06.00.02.07". -->
+        <Parameter name="RealUsbtmcDg1022VendorId" value="6833" />
+        <Parameter name="RealUsbtmcDg1022ProductId" value="1416" />
+        <Parameter name="RealUsbtmcDg1022SerialNumber" value="DG1D125306284" />
+        <Parameter name="RealUsbtmcDg1022ExpectedIdnReply" value="DG1022" />
+    </TestRunParameters>
+
+    <!-- Controls parallelism at the vstest.console.exe level (across test containers/assemblies) -->
+    <RunConfiguration>
+        <MaxCpuCount>0</MaxCpuCount>
+        <!-- 0 = use all available cores; or set a specific number like 4 -->
+        <EnvironmentVariables>
+            <!-- Keep test runs out of the real ~/.dev-term (profiles, preferences, logs, exports). Relative, so
+                 it resolves under each test host's own output folder. -->
+            <DEVTERM_HOME>devterm-test-home</DEVTERM_HOME>
+        </EnvironmentVariables>
+    </RunConfiguration>
+
+    <!-- Controls parallelism within MSTest (across classes/methods in the same assembly) -->
+    <MSTest>
+        <!-- This is a global per-test-method deadline enforced by the MSTest framework itself,
+             separate from (and overriding) any per-step WaitAsync timeout written into a test body.
+             Real-hardware tests that send several sequential commands (e.g. RealHardwareTcpTests's
+             TDS2024 test: *IDN?, CH1?, TRIGger:MAIn:FREQuency?) can legitimately take longer than a
+             short deadline to complete real round-trips - confirmed real-hardware-confirmed
+             (docs/test/2026-09-25-18-57-22.md): the TDS2024 test answered *IDN?/CH1? correctly but
+             was killed by this timeout mid-flight on the third query ("timed out after 5000ms"),
+             not because the device failed to answer. Left generous rather than tight. -->
+        <TestTimeout>60000</TestTimeout>
+        <Parallelize>
+            <Workers>0</Workers>
+            <!-- 0 = number of available cores -->
+            <Scope>MethodLevel</Scope>
+            <!-- or ClassLevel -->
+        </Parallelize>
+    </MSTest>
+</RunSettings>

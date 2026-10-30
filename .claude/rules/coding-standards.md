@@ -21,3 +21,4 @@ paths:
 - Comments: none that restate the name or the code. Write one only for a why that is not obvious (a constraint, a workaround, a rule). Public APIs keep XML docs.
 - No Python for agent work (owner, 2026-10-21 in the `_storage` project, applied here): edit with the Edit and Write tools and use shell, PowerShell or a .NET tool for automation. Python only inside isolated containers.
 - Do not edit generated or build output (`bin/`, `obj/`).
+- DevTerm hardware and UI constraints found the hard way (Moq and Span parameters, serial `BaseStream.ReadAsync` cancellation, DTR/RTS defaults, command-line configuration needs `--x true`, Terminal.Gui v2, HID read thread, WPF tests not in parallel) are kept in `docs/applications/devterm/source/project-guide.md`; read it before touching those areas.

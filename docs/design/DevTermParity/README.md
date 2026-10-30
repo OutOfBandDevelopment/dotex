@@ -20,6 +20,8 @@ Of 34 dev-term projects, the eight device protocol libraries are in this reposit
 
 ## Matrix
 
+The Gap column was written before the port started; the current state is in [status.md](status.md). The living documents moved to [docs/applications/devterm](../../applications/devterm/README.md).
+
 **Table 1 — Parity by dev-term project**
 
 | dev-term project | Lines / tests | In this repository | Gap | Group |
@@ -58,7 +60,7 @@ Of 34 dev-term projects, the eight device protocol libraries are in this reposit
 ## Next steps
 
 1. ~~Inventory dev-term `docs/`~~ done (Table 2); the files themselves move with their groups.
-2. ~~Write requirements, api-design and testing-strategy~~ done 2026-10-29: [requirements](requirements.md), [API design](api-design.md), [testing strategy](testing-strategy.md) (whole DevTerm, drafts awaiting owner review).
+2. ~~Write requirements, api-design and testing-strategy~~ done 2026-10-29: [requirements](../../applications/devterm/requirements.md), [API design](../../applications/devterm/api-design.md), [testing strategy](../../applications/devterm/testing-strategy.md) (whole DevTerm, drafts awaiting owner review).
 3. Port group by group, each with its tests, as backlog items; the backlog item "DevTerm 100% parity" links here.
 
 ## dev-term documentation inventory
@@ -70,7 +72,7 @@ Counts from `C:\repo\oobdev\dev-term\docs` (2026-10-29).
 | Folder | Files / lines | Content | Landing place here |
 |--------|---------------|---------|--------------------|
 | `design` | 51 / 8,084 | Architecture, transports, presenters, manifests, plugin model, frontends, session logging, theming, UI definitions, USBTMC, VXI-11, RFC 2217; `proposals` and `rejected` | Source for the per-group requirements and architecture documents here; rejected designs are recorded where they affect a decision |
-| `specs` | 15 / 2,297 | Screen specifications (main windows, editors, stream monitor, routing, playback, Z-Wave panel) | `docs/design/DevTermParity/` screen specs, with the shells |
+| `specs` | 15 / 2,297 | Screen specifications (main windows, editors, stream monitor, routing, playback, Z-Wave panel) | `docs/applications/devterm/specs/` (imported) |
 | `devices` | 37 / 5,642 | Per-instrument notes (scopes, DMM, supplies, Z-Wave stick, TCP232 converter, and the eight device packages) | Device readmes and `docs/design/DeviceDecoding/`; instruments with no package here stay as notes |
 | `protocols` | 3 / 3,160 | USBTMC protocol notes | Transport design document |
 | `user-guide` | 179 / 2,418 | Task guides with images | `docs/how-tos/devterm/` once the shells exist |

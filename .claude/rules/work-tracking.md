@@ -21,6 +21,7 @@ Rules:
 - Do the tracking in the same commit series as the work, not afterwards. A commit that changes `src/` and finishes an item includes the tracking files; a hook reminds you at commit time.
 - Never mark something done that was not built and tested; say what was not run.
 - Generated user guides and their screenshots (`docs/user-guide/`) are committed in the same series as the protocol or application change that updates them (owner, 2026-10-30), by explicit paths.
+- Application documentation lives in `docs/applications/{app-name}/` as living documents (requirements, architecture, API design, testing strategy), updated with the code; no decision records (owner, 2026-10-30). A new user-facing screen or flow needs a screen spec there and a user guide entry with real captured screenshots, never hand-typed mockups. Reusable capability designs stay in `docs/design/<Feature>/`, protocol references in `docs/protocols/`. A migration keeps a transient map (`docs/migration/`) that is deleted once the move is complete.
 - Rough edges found while working go to `BACKLOG.md`, not into the current change.
 ## Keeping the files correct
 

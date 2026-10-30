@@ -1,6 +1,6 @@
 # OoBDev.DevTerm.Core
 
-The engine contracts of the DevTerm tool, ported from dev-term (see [the parity matrix](../../../docs/design/DevTermParity/README.md) and [architecture](../../../docs/design/DevTermParity/architecture.md)).
+The engine contracts of the DevTerm tool, ported from dev-term (see [the parity matrix](../../../docs/design/DevTermParity/README.md) and [architecture](../../../docs/applications/devterm/architecture.md)).
 
 ## Description
 

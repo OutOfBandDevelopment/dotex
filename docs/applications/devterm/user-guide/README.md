@@ -1,0 +1,65 @@
+# User Guide
+
+Task-oriented walkthroughs of dev-term, one file per user flow — not per front end. Where a flow
+applies to more than one front end (CLI/TUI/WPF), that file shows all of them together, so you can
+see how the same action looks/works everywhere at a glance. Unlike
+[`docs/design/`](../design/README.md) (intent and rationale for people building dev-term) or
+[`docs/specs/`](../specs/README.md) (the precise per-screen field/action/state reference), these
+pages are about what you actually see and do when *using* dev-term.
+
+Every screenshot/transcript on these pages is real captured output from the actual built app, not
+hand-typed mockups or hand-drawn screenshots:
+
+- **CLI**: a real stdin/stdout transcript from the built console app.
+- **TUI**: a real Terminal.Gui screen buffer, headlessly rendered and captured to PNG (each cell's
+  actual color) by `DevTerm.Console.Tests.ScreenshotTests`/`TuiScreenshot`.
+- **WPF**: a real, off-screen-but-actually-shown `Window` rendered to PNG via `RenderTargetBitmap`
+  by `DevTerm.Wpf.Tests.ScreenshotTests`/`WpfScreenshot`.
+
+See [`docs/design/testing.md`](../design/testing.md) for how these harnesses work. Where a device is
+shown responding, it's either a real device or a small throwaway stand-in server/fake transport that
+speaks the exact reply the real device gives (e.g. `ID TEK/2230,V81.1,VERS:14` — the project's own
+Tektronix 2230 test device's real reply). **Re-run the relevant `ScreenshotTests` class and re-embed
+its output whenever a screen's layout changes** — see `.claude/skills/docs-sync/SKILL.md` and that
+test class's own doc comment.
+
+## Flows
+
+- [Connecting to a device](connecting.md) — CLI flags/discovery/errors, and the shared Connection
+  Editor screen (TUI/WPF) shown at startup when no valid connection is configured.
+- [Managing connection profiles](managing-profiles.md) — save, load, delete, refresh, import,
+  export, from the same Connection Editor screen, any time via **File > Device Profiles...**.
+- [Sending commands and viewing replies](sending-and-receiving.md) — the core interactive loop, once
+  connected, across all three front ends.
+- [Connecting and disconnecting without restarting](connect-disconnect.md) — the **File >
+  Connect/Disconnect** toggle in TUI/WPF, distinct from switching profiles.
+- [Running multiple sessions at once](multiple-sessions.md) — **File > New Session...**/**File >
+  Close Session** in TUI/WPF, each session in its own tab.
+- [Routing device messages to a broker](routing.md) — **Device > Routing...** in TUI/WPF: rules
+  that publish device lines to MQTT/AMQP/STOMP and send broker messages to the device.
+- [Logging and playing back a session](logging-and-playback.md) — recording everything sent and
+  received (`--log`, **File > Start Logging...**) and replaying it through any presenters, with
+  transport controls, trimming and notes (`--playback`, **File > Open Log for Playback...**).
+- [Controlling a device from a panel](device-control-panels.md) — the **Device** menu's K8055,
+  Busylight, SCPI Instrument, and Device Manifest control panels (including the bar graph, strip
+  chart, and vector displays), in TUI/WPF.
+- [Editing a device manifest](manifest-editor.md) — **Device > Edit Device Manifest...**: build or
+  change a device manifest's commands, reply patterns and control panel in forms, with a live preview
+  of the panel, in TUI/WPF.
+- [Expressions and the expression picker](expression-builder.md) — the expression language (indicator,
+  chart channels, button parameters) and the **Pick...** dialog that builds and checks one, in TUI/WPF.
+- [Using dev-term from a browser](web-terminal.md) — the `DevTerm.Web` host and its access rules.
+- [Capturing screen dumps, plots and print jobs](stream-monitor.md) — **Device > Stream
+  Monitor...**: auto-saving images, HP-GL, PostScript and PCL a device sends, with a live image
+  preview in WPF.
+- [Converting PostScript and PCL with Ghostscript](ghostscript-conversion.md) — installing a converter and
+  pointing the Stream Monitor at it.
+- [Keeping old logs and exports tidy](retention.md) — `LogRetention`/`ExportRetention` rules in `preferences.json`.
+- [Choosing a theme](themes.md) — **View > Theme** (Light, Dark, System) in TUI/WPF, `--theme`, and
+  writing your own JSON theme in `~/.dev-term/themes`.
+- [Saving and reopening a set of connections](projects.md) — `--saveproject`/`--project` project files.
+- [Looking at a Z-Wave network through a Z-Stick](zwave-controller.md) — connect with the `zwave` presenter, decode the Serial API, and use the read-only controller panel.
+- [Seeing which plugins loaded](plugins.md) — `--listplugins true` and **Device > Plugins...** in TUI/WPF; reviewing and revoking remembered approvals.
+
+For the precise field-by-field/action-by-action reference behind these screens, see
+[`docs/specs/`](../specs/README.md).

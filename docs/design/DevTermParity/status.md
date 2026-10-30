@@ -1,6 +1,6 @@
 # DevTerm parity: status and remaining work
 
-**Status:** Current, 2026-10-30 · [Parity matrix](README.md) · [Restructure plan](restructure-plan.md) · [Architecture](architecture.md)
+**Status:** Current, 2026-10-30 · [Parity matrix](README.md) · [Restructure plan](restructure-plan.md) · [Architecture](../../applications/devterm/architecture.md)
 
 This page holds the detail that used to sit in `TODO.md` and `BACKLOG.md`: what is done, and what is left, for the DevTerm merge. The backlog lines link here and stay short.
 

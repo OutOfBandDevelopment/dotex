@@ -1,6 +1,6 @@
 # DevTerm restructure plan
 
-Owner decisions, 2026-10-29 (planning session). They supersede the project layout in [architecture](architecture.md); the Q1 answer (pipes everywhere) still holds.
+Owner decisions, 2026-10-29 (planning session). They supersede the project layout in [architecture](../../applications/devterm/architecture.md); the Q1 answer (pipes everywhere) still holds.
 
 ## Decisions
 

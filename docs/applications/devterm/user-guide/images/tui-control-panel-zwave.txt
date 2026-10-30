@@ -1,0 +1,25 @@
+┌┤dev-term - Z-Wave controller├────────────────────────────────────────────────┐
+│[-] Controller                                                               ▲│
+│                     ⟦ Refresh ⟧  (i)                                        █│
+│  Z-Wave library:    Z-Wave 2.78, static controller                          █│
+│  Serial API:        3.7                                                     █│
+│  Manufacturer:      Aeotec                                                  █│
+│  Product type / id: 0x0002 / 0x0001                                         █│
+│  Home ID:           016A1C28                                                ░│
+│  Controller node:   1                                                       ░│
+│  Role:              was primary, SUC                                        ░│
+│  SUC node:          1                                                       ░│
+│                                                                             ░│
+│[-] Network                                                                  ░│
+│  Nodes included: 26                                                         ░│
+│  Node ids:       1-12,14-21,23-24,27-30                                     ░│
+│                                                                             ░│
+│[-] Enumerate                                                                ░│
+│                   ⟦ Enumerate nodes ⟧  (i)                                  ░│
+│  Nodes:           (press Enumerate nodes; a sleeping battery node only answe░│
+│                                                                             ░│
+│[-] Manufacturer parameters                                                  ▼│
+│◄█████████████████████████████████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░► │
+│                                                                              │
+│                                                                              │
+└──────────────────────────────────────────────────────────────────────────────┘
