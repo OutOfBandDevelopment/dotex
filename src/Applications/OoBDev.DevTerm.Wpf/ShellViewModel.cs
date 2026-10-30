@@ -16,6 +16,8 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
     private readonly IRoutingDialog? _routingDialog;
     private readonly IStreamMonitorDialog? _streamMonitorDialog;
     private readonly StreamMonitor? _streamMonitor;
+    private readonly IMergedLogDialog? _mergedLogDialog;
+    private readonly MergedSessionLog? _mergedLog;
     private PanelViewModel? _selected;
     private SessionViewModel? _selectedSession;
     private int _connectionCount;
@@ -25,9 +27,11 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
     /// <param name="sessionFactory">Creates the sessions the shell opens, or null when it cannot.</param>
     /// <param name="streamMonitorDialog">Shows the stream monitor window, or null when the shell has no window to host it.</param>
     /// <param name="streamMonitor">The stream monitor shared by the shell, or null.</param>
+    /// <param name="mergedLogDialog">Shows the merged log window, or null when the shell has no window to host it.</param>
+    /// <param name="mergedLog">The log every opened session is recorded in, or null.</param>
     /// <param name="routingDialog">Shows the routing window, or null when the shell has no window to host it.</param>
     /// <param name="editorDialog">Shows the connection editor, or null when the shell has no window to host it.</param>
-    public ShellViewModel(IEnumerable<IPanelFactory> factories, ISessionViewModelFactory? sessionFactory = null, IConnectionEditorDialog? editorDialog = null, IRoutingDialog? routingDialog = null, IStreamMonitorDialog? streamMonitorDialog = null, StreamMonitor? streamMonitor = null)
+    public ShellViewModel(IEnumerable<IPanelFactory> factories, ISessionViewModelFactory? sessionFactory = null, IConnectionEditorDialog? editorDialog = null, IRoutingDialog? routingDialog = null, IStreamMonitorDialog? streamMonitorDialog = null, StreamMonitor? streamMonitor = null, IMergedLogDialog? mergedLogDialog = null, MergedSessionLog? mergedLog = null)
     {
         ArgumentNullException.ThrowIfNull(factories);
         Factories = [.. factories];
@@ -36,6 +40,9 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
         _routingDialog = routingDialog;
         _streamMonitorDialog = streamMonitorDialog;
         _streamMonitor = streamMonitor;
+        _mergedLogDialog = mergedLogDialog;
+        _mergedLog = mergedLog;
+        ShowMergedLogWindow = new ShowMergedLogCommand(this);
         ShowStreamMonitorWindow = new ShowStreamMonitorCommand(this);
         ShowRoutingWindow = new ShowRoutingCommand(this);
         NewConnection = new NewConnectionCommand(this);
@@ -72,6 +79,20 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
     /// <summary>Shows the stream monitor for the selected session.</summary>
     public ICommand ShowStreamMonitorWindow { get; }
 
+    /// <summary>Shows the log of every open session, merged by time.</summary>
+    public ICommand ShowMergedLogWindow { get; }
+
+    internal bool CanShowMergedLog => _mergedLogDialog is not null && _mergedLog is not null;
+
+    internal void ShowMergedLog() => _mergedLogDialog!.Show(new MergedLogDialogViewModel(_mergedLog!));
+
+    private void AddSession(SessionViewModel session)
+    {
+        Sessions.Add(session);
+        _mergedLog?.Track(session, session.Session, session.Title);
+        SelectedSession = session;
+    }
+
     internal bool CanShowStreamMonitor => _streamMonitorDialog is not null && _streamMonitor is not null && SelectedSession is not null;
 
     internal void ShowStreamMonitor()
@@ -100,8 +121,7 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
             }
 
             var session = _sessionFactory.CreateFromOptions(options, $"{options.Transport} {++_connectionCount}");
-            Sessions.Add(session);
-            SelectedSession = session;
+            AddSession(session);
         }
     }
 
@@ -127,15 +147,13 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
     internal void AddLoopbackSession()
     {
         var session = _sessionFactory!.CreateLoopback();
-        Sessions.Add(session);
-        SelectedSession = session;
+        AddSession(session);
     }
 
     internal void AddProfileSession(string name)
     {
         var session = _sessionFactory!.CreateFromProfile(name);
-        Sessions.Add(session);
-        SelectedSession = session;
+        AddSession(session);
     }
 
     /// <summary>The open panel, or null.</summary>

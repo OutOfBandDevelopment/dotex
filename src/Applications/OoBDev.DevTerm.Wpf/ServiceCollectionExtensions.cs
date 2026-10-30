@@ -25,6 +25,8 @@ public static class ServiceCollectionExtensions
         services.TryAddTextPresenters();
         services.TryAddLoopbackTransport();
         services.TryAddSingleton(_ => new ConnectionProfileStore());
+        services.TryAddSingleton<IMergedLogDialog, WpfMergedLogDialog>();
+        services.TryAddSingleton(_ => new MergedSessionLog());
         services.TryAddSingleton<IStreamMonitorDialog, WpfStreamMonitorDialog>();
         services.TryAddSingleton(_ => new StreamMonitor());
         services.TryAddSingleton<IRoutingDialog, WpfRoutingDialog>();

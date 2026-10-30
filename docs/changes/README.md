@@ -526,4 +526,5 @@ Each change document should include:
 - [DevTerm WPF connection editor window (2026-10-29)](devterm-wpf-connection-editor-2026-10-29.md) - New connection dialog over ConnectionEditorViewModel
 - [DevTerm WPF routing window (2026-10-29)](devterm-wpf-routing-window-2026-10-29.md) - Routing... opens a window over RoutingViewModel for the selected session
 - [DevTerm WPF stream monitor window (2026-10-29)](devterm-wpf-stream-monitor-2026-10-29.md) - Stream monitor... tracks the selected session and lists captures
+- [DevTerm WPF merged log window (2026-10-29)](devterm-wpf-merged-log-2026-10-29.md) - Merged log... lists every opened session in time order
 - [One USB HID adapter (2026-10-29)](system-io-usbhids-adapter-merge-2026-10-29.md) - UsbHidFactory returns the endpoint adapter; the thin one is gone
