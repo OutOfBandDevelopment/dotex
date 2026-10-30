@@ -58,7 +58,16 @@
             </Grid.ColumnDefinitions>
             <ListBox Grid.Column="0" DataContext="{Binding SelectedSession}" ItemsSource="{Binding OutputLines}" FontFamily="Consolas" />
             <ScrollViewer Grid.Column="1" MaxWidth="420" VerticalScrollBarVisibility="Auto">
-                <ui:FormView DataContext="{Binding SelectedPanel.Form}" Margin="12" />
+                <StackPanel>
+                    <ItemsControl ItemsSource="{Binding SelectedPanel.Displays}" Margin="12,12,12,0">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <ui:LiveDisplayView Margin="0,0,0,8" />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <ui:FormView DataContext="{Binding SelectedPanel.Form}" Margin="12" />
+                </StackPanel>
             </ScrollViewer>
         </Grid>
     </DockPanel>

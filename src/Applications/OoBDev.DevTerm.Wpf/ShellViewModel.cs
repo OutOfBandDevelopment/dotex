@@ -108,8 +108,16 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
     internal void OpenDevicePanel(IDevicePanelContribution panel)
     {
         var surface = panel.CreateSurface(SelectedSession!.Session);
-        var built = OoBDev.DevTerm.Panels.SurfacePanelBuilder.Build(panel.BuildDefinition(), surface);
-        SelectedPanel = new PanelViewModel(panel.MenuTitle.Replace("_", string.Empty, StringComparison.Ordinal).TrimEnd('.'), new FormViewModel(built.Definition, built.Binding), built);
+        var definition = panel.BuildDefinition();
+        var built = OoBDev.DevTerm.Panels.SurfacePanelBuilder.Build(definition, surface);
+        OoBDev.UiDefinitions.IStructuredPresenter? source = null;
+        if (panel.PresenterName is { } name && SelectedSession.Tab?.Catalog.TryGet(name, out var presenter) == true)
+        {
+            source = presenter as OoBDev.UiDefinitions.IStructuredPresenter;
+        }
+
+        var feed = new DevicePanelFeed(definition, source, built);
+        SelectedPanel = new PanelViewModel(panel.MenuTitle.Replace("_", string.Empty, StringComparison.Ordinal).TrimEnd('.'), new FormViewModel(built.Definition, built.Binding), feed, feed.Displays);
     }
 
     internal bool CanOpenPlayback => _playbackDialog is not null && _playbackPresenters is not null;
