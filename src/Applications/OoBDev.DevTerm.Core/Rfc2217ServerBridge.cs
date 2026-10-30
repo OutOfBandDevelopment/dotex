@@ -17,9 +17,6 @@ using System.Threading.Tasks;
 
 namespace OoBDev.DevTerm;
 
-/// <summary>The serial settings a remote RFC 2217 client has asked for.</summary>
-public sealed record Rfc2217PortSettings(int BaudRate = 9600, int DataBits = 8, Parity Parity = Parity.None, StopBits StopBits = StopBits.One, bool Dtr = true, bool Rts = true);
-
 /// <summary>
 /// Shares one live session on a TCP port as an RFC 2217 (Telnet COM-PORT-OPTION) server, so a client such as pyserial's
 /// <c>rfc2217://host:port</c> can connect to it like a remote serial port. Data is Telnet-escaped both ways; the

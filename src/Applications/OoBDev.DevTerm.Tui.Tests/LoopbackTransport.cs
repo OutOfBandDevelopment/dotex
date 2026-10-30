@@ -16,50 +16,6 @@ using System.IO.Pipelines;
 namespace OoBDev.DevTerm.Tui.Tests;
 
 /// <summary>
-/// A single scripted command for <see cref="LoopbackTransport"/>: a regex matched against the
-/// ASCII-decoded, terminator-stripped line a caller wrote, and a generator producing zero or more
-/// response lines from that match. Each response line is pushed back as its own write, not
-/// concatenated, so a line-buffering presenter (e.g. <c>AsciiPresenter</c>) sees them as separate
-/// lines/events rather than one blob.
-/// </summary>
-internal sealed record LoopbackRule(Regex Pattern, Func<Match, IEnumerable<string>> Respond)
-{
-    /// <summary>An exact-text command producing one fixed response line, e.g. "hello" -&gt; "From Loopback test".</summary>
-    public static LoopbackRule Literal(string command, string response) =>
-        new(new Regex($"^{Regex.Escape(command)}$"), _ => [response]);
-
-    /// <summary>A regex command whose capture groups feed the response generator, e.g. "Send Events: (\d+)".</summary>
-    public static LoopbackRule Match(string pattern, Func<Match, IEnumerable<string>> respond) =>
-        new(new Regex(pattern), respond);
-}
-
-/// <summary>
-/// Deterministic response generators for <see cref="LoopbackRule"/> — no <see cref="Random"/>, so a
-/// given input always produces the same bytes and tests can assert on exact expected output.
-/// </summary>
-internal static class LoopbackGenerators
-{
-    /// <summary>A fixed-length, repeating A-Z run — a deterministic stand-in for "N bytes of ascii data".</summary>
-    public static string AsciiStream(int length) =>
-        string.Concat(Enumerable.Range(0, length).Select(i => (char)('A' + (i % 26))));
-
-    /// <summary>"Event 1".."Event N", one per response line.</summary>
-    public static IEnumerable<string> Events(int count) =>
-        Enumerable.Range(1, count).Select(i => $"Event {i}");
-}
-
-/// <summary>The default script — the example commands this transport was designed around.</summary>
-internal static class LoopbackScript
-{
-    public static IReadOnlyList<LoopbackRule> Default() =>
-    [
-        LoopbackRule.Literal("hello", "From Loopback test"),
-        LoopbackRule.Match(@"^Send Stream: (\d+), (\w+)$", m => [LoopbackGenerators.AsciiStream(int.Parse(m.Groups[1].Value))]),
-        LoopbackRule.Match(@"^Send Events: (\d+)$", m => LoopbackGenerators.Events(int.Parse(m.Groups[1].Value))),
-    ];
-}
-
-/// <summary>
 /// An in-process <see cref="ITransport"/> that answers scripted commands deterministically, instead
 /// of a real device or even a real socket — the same <see cref="Pipe"/>-backed shape as
 /// <see cref="FakeTransport"/>, but with request/response behavior baked in so a test doesn't have

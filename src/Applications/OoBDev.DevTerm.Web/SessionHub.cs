@@ -19,18 +19,6 @@ using OoBDev.DevTerm;
 using OoBDev.DevTerm.Logging;
 namespace OoBDev.DevTerm.Web;
 
-/// <summary>A broker-to-device message awaiting the viewer's decision.</summary>
-public sealed class PendingConfirm(int id, string topic, string text)
-{
-    public int Id { get; } = id;
-
-    public string Topic { get; } = topic;
-
-    public string Text { get; } = text;
-
-    internal TaskCompletionSource<RoutingConfirmChoice> Completion { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
-}
-
 /// <summary>
 /// The one live <see cref="Session"/> every browser viewer shares. Output is broadcast to all viewers (with a short replayed
 /// backlog for late joiners) and sends are serialized, so concurrent senders interleave whole lines, never bytes.

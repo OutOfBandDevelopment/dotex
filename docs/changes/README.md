@@ -511,3 +511,4 @@ Each change document should include:
 - [Tui tests for the device panels restored (2026-10-29)](devterm-tui-device-panel-tests-2026-10-29.md) - built-in panels in the test runner, SCPI profile CLI test, plugin panel menu test, panel layout tests
 - [DeviceConfigViewModel tests (2026-10-29)](devterm-device-config-viewmodel-tests-2026-10-29.md) - 5 Unit tests for the shared Configure device flow
 - [LxiDeviceOption tests (2026-10-29)](devterm-lxi-device-option-tests-2026-10-29.md) - 6 Unit tests for the discovery-hit to picker-option mapping
+- [DevTerm one type per file (2026-10-29)](devterm-one-type-per-file-2026-10-29.md) - MA0048 splits across the DevTerm Core, Web, Tui and test projects

@@ -13,9 +13,6 @@ using Terminal.Gui.ViewBase;
 using Terminal.Gui.Views;
 namespace OoBDev.DevTerm.Tui;
 
-/// <summary>The dialog and the actions a test can drive without key injection.</summary>
-internal sealed record ConfigureDeviceParts(Dialog Dialog, TextField HostField, TextField PortField, Action Read, Action Write, Label Status, View Form, Button WriteButton);
-
 /// <summary>
 /// The TUI's "Device > Configure device..." flow over <see cref="DeviceConfigViewModel"/>: pick an editor (when several are
 /// registered), type the host and port, Read, edit the form the editor declares, review the change list, then Write.
