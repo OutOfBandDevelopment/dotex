@@ -507,3 +507,4 @@ Each change document should include:
 - [Transports become device adapters (2026-10-29)](transports-as-device-adapters-2026-10-29.md) - ITransport deleted; transports implement IDeviceAdapter with Output via DeviceAdapterOutput
 - [K8055 and Busylight panels with their protocols (2026-10-29)](devices-panels-k8055-busylight-2026-10-29.md) - IDevicePanel contracts, panels in the protocol libraries, TryAddDevicePanel and the OoBDev.DevTerm.Devices bundle
 - [SCPI presenter and instrument panel in OoBDev.DevTerm.Devices (2026-10-29)](devices-scpi-panel-2026-10-29.md) - scpi presenter, auto-detect, control surface and provider registered by AddDevTermDevicePanels; 73 Unit tests
+- [Windows BLE backend copied next to the Tui and Web apps (2026-10-29)](devterm-ble-backend-copy-2026-10-29.md) - CopyWindowsBleBackend target in both csproj files
