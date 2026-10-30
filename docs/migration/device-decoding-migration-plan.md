@@ -53,7 +53,7 @@ Base decision (owner, 2026-10-26): for these protocols the dev-term implementati
 | `Console` | Terminal.Gui TUI renderer (`FormRenderer`, cell charts) plus modes | 9,678 | in `Console.Tests` | Depends on `Terminal.Gui` 2.5 |
 | `Web` | Loopback web host, Blazor pages, panel API, AsyncAPI | 2,465 | in `Web.Tests` | Overlaps `OoBDev.AsyncApi` and the OpenAPI/Scalar setup |
 | `Presenters.Text` | ASCII, UTF-8, hex, decimal, octal, binary presenters | 290 | in `Presenters.Text.Tests` | Phase 1 with the contracts |
-| `Devices.Demo` | Sample only | 100 | 0 | Not migrated |
+| `Devices.Demo` | Sample only | 100 | 0 | Migrated as `OoBDev.DevTerm.Devices.Demo` |
 | `DeviceManifests` | JSON/XML manifests, `.ksy` import, frame decoder | 5,825 | in `DeviceManifests.Tests` | Phase 6 |
 | `Core` (presenters, control, transports) | Contracts the devices use | 5,892 | in `Core.Tests` | Only the parts devices need |
 

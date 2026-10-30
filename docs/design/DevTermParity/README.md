@@ -45,7 +45,7 @@ The Gap column was written before the port started; the current state is in [sta
 | Transports.Brokers (AMQP, STOMP) | 837 / 18 | No | All | E Transports |
 | Transports.Loopback | 281 / 26 | No | All | E Transports |
 | Devices.Busylight, De5000, K8055, Nmea, RadexOne, Scpi, ZWave, ZoomH4n | 5,610 / 295 | Yes (protocol cores) | Control surface, UI definition, panel contribution, plugin module per device | F Devices |
-| Devices.Demo | 100 / 0 | No | Sample device for the shells | F Devices |
+| Devices.Demo | 100 / 0 | Yes | `OoBDev.DevTerm.Devices.Demo` plugin (loopback panel) loaded by the Web flows from `plugins/demo` | F Devices |
 | Plugins.KeyValue, Plugins.Sample | 102 / 0 | No | Plugin model samples | G Plugins |
 | Console | 9,678 / 328 | No (CLI and TUI) | All; becomes `OoBDev.DevTerm.Tui` and the CLI | H Shells |
 | Wpf | 7,354 / 218 | Minimal: `OoBDev.DevTerm.Wpf` (286 lines, SCPI over a raw socket) | Almost all | H Shells |

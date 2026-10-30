@@ -27,6 +27,16 @@
 	<ItemGroup>
 		<ProjectReference Include="..\OoBDev.DevTerm.Web\OoBDev.DevTerm.Web.csproj" />
 		<ProjectReference Include="..\OoBDev.DevTerm.TestUtilities\OoBDev.DevTerm.TestUtilities.csproj" />
+		<!-- Built first, not referenced as code: the flows load its output from plugins/demo like a real plugin. -->
+		<ProjectReference Include="..\OoBDev.DevTerm.Devices.Demo\OoBDev.DevTerm.Devices.Demo.csproj" ReferenceOutputAssembly="false" />
 	</ItemGroup>
+
+	<Target Name="CopyDemoPlugin" AfterTargets="Build">
+		<ItemGroup>
+			<DemoPluginFile Include="..\OoBDev.DevTerm.Devices.Demo\bin\$(Configuration)\net10.0\OoBDev.DevTerm.Devices.Demo.*" />
+			<DemoPluginFile Include="..\OoBDev.DevTerm.Devices.Demo\bin\$(Configuration)\net10.0\plugin.json" />
+		</ItemGroup>
+		<Copy SourceFiles="@(DemoPluginFile)" DestinationFolder="$(OutDir)plugins\demo" />
+	</Target>
 
 </Project>

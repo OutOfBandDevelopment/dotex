@@ -26,6 +26,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\OoBDev.DevTerm.Devices\OoBDev.DevTerm.Devices.csproj" />
+		<ProjectReference Include="..\OoBDev.DevTerm.Devices.Demo\OoBDev.DevTerm.Devices.Demo.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

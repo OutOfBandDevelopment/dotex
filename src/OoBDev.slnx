@@ -8,6 +8,7 @@
     <Project Path="Applications/OoBDev.DevTerm.Core.TestPlugin/OoBDev.DevTerm.Core.TestPlugin.csproj" />
     <Project Path="Applications/OoBDev.DevTerm.Core.Tests/OoBDev.DevTerm.Core.Tests.csproj" />
     <Project Path="Applications/OoBDev.DevTerm.Core/OoBDev.DevTerm.Core.csproj" />
+    <Project Path="Applications/OoBDev.DevTerm.Devices.Demo/OoBDev.DevTerm.Devices.Demo.csproj" />
     <Project Path="Applications/OoBDev.DevTerm.Devices.Tests/OoBDev.DevTerm.Devices.Tests.csproj" />
     <Project Path="Applications/OoBDev.DevTerm.Devices/OoBDev.DevTerm.Devices.csproj" />
     <Project Path="Applications/OoBDev.DevTerm.TestUtilities/OoBDev.DevTerm.TestUtilities.csproj" />
