@@ -42,6 +42,18 @@
                 <TextBlock DockPanel.Dock="Top" FontWeight="SemiBold" Text="{Binding PaneTitle}" Margin="0,0,0,4" />
                 <TextBlock DockPanel.Dock="Top" TextWrapping="Wrap" Text="{Binding Hint}" Margin="0,0,0,4" />
                 <Button DockPanel.Dock="Bottom" Content="Create panel from commands" Command="{Binding CreatePanel}" HorizontalAlignment="Left" Margin="0,4,0,0" Padding="8,3" />
+                <ItemsControl DockPanel.Dock="Bottom" ItemsSource="{Binding FieldPickers}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Button Content="{Binding Label, StringFormat='Pick {0}...'}" Command="{Binding Pick}" Margin="0,4,4,0" Padding="8,3" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
                 <TextBlock DockPanel.Dock="Bottom" TextWrapping="Wrap" Text="{Binding Readouts}" FontFamily="Consolas" Margin="0,4,0,0" />
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <ui:FormView DataContext="{Binding Form}" />

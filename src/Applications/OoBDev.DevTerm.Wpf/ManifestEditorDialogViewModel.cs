@@ -20,6 +20,7 @@ public sealed class ManifestEditorDialogViewModel : ViewModelBase, IDisposable
     private readonly IManifestFileDialogs _files;
     private readonly IColorPicker? _colorPicker;
     private readonly IConfirmPrompt? _confirm;
+    private readonly IExpressionPickerDialog? _pickerDialog;
     private readonly ManifestEditorCommand[] _stateful;
     private FormViewModel? _form;
     private FormViewModel? _preview;
@@ -34,7 +35,8 @@ public sealed class ManifestEditorDialogViewModel : ViewModelBase, IDisposable
     /// <param name="files">The file pickers.</param>
     /// <param name="colorPicker">The colour picker for the forms, or null.</param>
     /// <param name="confirm">The prompt for destructive actions, or null.</param>
-    public ManifestEditorDialogViewModel(ManifestEditorViewModel editor, IManifestFileDialogs files, IColorPicker? colorPicker = null, IConfirmPrompt? confirm = null)
+    /// <param name="pickerDialog">The expression picker, or null to leave the picker buttons out.</param>
+    public ManifestEditorDialogViewModel(ManifestEditorViewModel editor, IManifestFileDialogs files, IColorPicker? colorPicker = null, IConfirmPrompt? confirm = null, IExpressionPickerDialog? pickerDialog = null)
     {
         ArgumentNullException.ThrowIfNull(editor);
         ArgumentNullException.ThrowIfNull(files);
@@ -42,6 +44,7 @@ public sealed class ManifestEditorDialogViewModel : ViewModelBase, IDisposable
         _files = files;
         _colorPicker = colorPicker;
         _confirm = confirm;
+        _pickerDialog = pickerDialog;
         var undo = new ManifestEditorCommand(() => _editor.CanUndo, _editor.Undo);
         var redo = new ManifestEditorCommand(() => _editor.CanRedo, _editor.Redo);
         var add = new ManifestEditorCommand(() => _editor.AddLabel is not null, _editor.AddChild);
@@ -73,6 +76,7 @@ public sealed class ManifestEditorDialogViewModel : ViewModelBase, IDisposable
         {
             OnPropertyChanged(nameof(Title));
             OnPropertyChanged(nameof(Readouts));
+            ShowFieldPickers();
             RebuildPreview();
             RefreshCommands();
         };
@@ -120,6 +124,9 @@ public sealed class ManifestEditorDialogViewModel : ViewModelBase, IDisposable
 
     /// <summary>The read-only values of the selected part, one per line.</summary>
     public string Readouts => _formBinding is null ? string.Empty : string.Join(Environment.NewLine, _readouts.Select(r => $"{r.Label}: {_formBinding.GetText(r.Id)}"));
+
+    /// <summary>Buttons that open the expression picker for the selected control's visible expression fields.</summary>
+    public ObservableCollection<FieldPickerViewModel> FieldPickers { get; } = [];
 
     /// <summary>The live preview of the panel, or null.</summary>
     public FormViewModel? Preview
@@ -261,12 +268,40 @@ public sealed class ManifestEditorDialogViewModel : ViewModelBase, IDisposable
             Form = new FormViewModel(definition, _formBinding, _colorPicker, _confirm);
         }
 
+        ShowFieldPickers();
         OnPropertyChanged(nameof(Readouts));
         OnPropertyChanged(nameof(PaneTitle));
         OnPropertyChanged(nameof(Hint));
         OnPropertyChanged(nameof(AddLabel));
         OnPropertyChanged(nameof(Status));
         RefreshCommands();
+    }
+
+    private void ShowFieldPickers()
+    {
+        FieldPickers.Clear();
+        if (_pickerDialog is null || _form is null || _formBinding?.Source is not ControlForm)
+        {
+            return;
+        }
+
+        foreach (var (field, mode) in ExpressionPickerFields.ForControls)
+        {
+            if (_form.Row(field) is { IsVisible: true } row)
+            {
+                FieldPickers.Add(new FieldPickerViewModel(row.Label, new ManifestEditorCommand(() => true, () => PickField(row.Control, mode))));
+            }
+        }
+    }
+
+    private void PickField(UiControl control, PickerMode mode)
+    {
+        var picked = _pickerDialog!.Pick(_editor.CreatePicker(_formBinding!.GetText(control.Id), mode));
+        if (picked is not null)
+        {
+            _formBinding.SetText(control, picked);
+            _form!.Refresh();
+        }
     }
 
     private void RebuildPreview()

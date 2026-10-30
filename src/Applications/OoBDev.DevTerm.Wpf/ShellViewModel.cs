@@ -19,6 +19,7 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
     private readonly IManifestPickerDialog? _manifestPickerDialog;
     private readonly IManifestEditorDialog? _manifestEditorDialog;
     private readonly IManifestFileDialogs? _manifestFiles;
+    private readonly IExpressionPickerDialog? _expressionPicker;
     private readonly IThemeBuilderDialog? _themeBuilderDialog;
     private readonly IConfigureDeviceDialog? _configureDeviceDialog;
     private readonly IInstrumentPickerDialog? _instrumentPickerDialog;
@@ -47,7 +48,7 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
     /// <param name="mergedLog">The log every opened session is recorded in, or null.</param>
     /// <param name="routingDialog">Shows the routing window, or null when the shell has no window to host it.</param>
     /// <param name="editorDialog">Shows the connection editor, or null when the shell has no window to host it.</param>
-    public ShellViewModel(IEnumerable<IPanelFactory> factories, ISessionViewModelFactory? sessionFactory = null, IConnectionEditorDialog? editorDialog = null, IRoutingDialog? routingDialog = null, IStreamMonitorDialog? streamMonitorDialog = null, StreamMonitor? streamMonitor = null, IMergedLogDialog? mergedLogDialog = null, MergedSessionLog? mergedLog = null, IPlaybackDialog? playbackDialog = null, PlaybackPresenters? playbackPresenters = null, IEnumerable<IDevicePanelContribution>? devicePanels = null, IConfirmPrompt? confirm = null, IColorPicker? colorPicker = null, IConverterToolsDialog? converterToolsDialog = null, ConverterToolsStore? converterToolsStore = null, IManifestPickerDialog? manifestPickerDialog = null, IThemeBuilderDialog? themeBuilderDialog = null, string? themesDirectory = null, IConfigureDeviceDialog? configureDeviceDialog = null, IEnumerable<OoBDev.System.IO.Devices.IDeviceConfigEditor>? configEditors = null, IInstrumentPickerDialog? instrumentPickerDialog = null, IEnumerable<IInstrumentPanelProvider>? instruments = null, IManifestEditorDialog? manifestEditorDialog = null, IManifestFileDialogs? manifestFiles = null)
+    public ShellViewModel(IEnumerable<IPanelFactory> factories, ISessionViewModelFactory? sessionFactory = null, IConnectionEditorDialog? editorDialog = null, IRoutingDialog? routingDialog = null, IStreamMonitorDialog? streamMonitorDialog = null, StreamMonitor? streamMonitor = null, IMergedLogDialog? mergedLogDialog = null, MergedSessionLog? mergedLog = null, IPlaybackDialog? playbackDialog = null, PlaybackPresenters? playbackPresenters = null, IEnumerable<IDevicePanelContribution>? devicePanels = null, IConfirmPrompt? confirm = null, IColorPicker? colorPicker = null, IConverterToolsDialog? converterToolsDialog = null, ConverterToolsStore? converterToolsStore = null, IManifestPickerDialog? manifestPickerDialog = null, IThemeBuilderDialog? themeBuilderDialog = null, string? themesDirectory = null, IConfigureDeviceDialog? configureDeviceDialog = null, IEnumerable<OoBDev.System.IO.Devices.IDeviceConfigEditor>? configEditors = null, IInstrumentPickerDialog? instrumentPickerDialog = null, IEnumerable<IInstrumentPanelProvider>? instruments = null, IManifestEditorDialog? manifestEditorDialog = null, IManifestFileDialogs? manifestFiles = null, IExpressionPickerDialog? expressionPicker = null)
     {
         ArgumentNullException.ThrowIfNull(factories);
         Factories = [.. factories];
@@ -59,6 +60,7 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
         _manifestPickerDialog = manifestPickerDialog;
         _manifestEditorDialog = manifestEditorDialog;
         _manifestFiles = manifestFiles;
+        _expressionPicker = expressionPicker;
         _themeBuilderDialog = themeBuilderDialog;
         _configureDeviceDialog = configureDeviceDialog;
         _instrumentPickerDialog = instrumentPickerDialog;
@@ -252,7 +254,7 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
     internal void EditManifest()
     {
         var editor = new OoBDev.DevTerm.DeviceManifests.Editing.ManifestEditorViewModel(OoBDev.DevTerm.Configuration.DevTermUserDataPaths.UserManifestsDirectory, OoBDev.DevTerm.Configuration.DevTermUserDataPaths.AppManifestsDirectory);
-        _manifestEditorDialog!.Show(new ManifestEditorDialogViewModel(editor, _manifestFiles!, _colorPicker, _confirm));
+        _manifestEditorDialog!.Show(new ManifestEditorDialogViewModel(editor, _manifestFiles!, _colorPicker, _confirm, _expressionPicker));
     }
 
     internal bool CanOpenManifest => _manifestPickerDialog is not null && SelectedSession is not null;
