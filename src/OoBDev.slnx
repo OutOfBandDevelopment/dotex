@@ -52,8 +52,6 @@
     <Project Path="Applications/OoBDev.DevTerm.Plugins.KeyValue/OoBDev.DevTerm.Plugins.KeyValue.csproj" />
     <Project Path="Applications/OoBDev.DevTerm.Plugins.Sample/OoBDev.DevTerm.Plugins.Sample.csproj" />
     <Project Path="Extensions/OoBDev.Nmea/OoBDev.Nmea.csproj" />
-    <Project Path="Extensions/OoBDev.Scpi.Panels.Tests/OoBDev.Scpi.Panels.Tests.csproj" />
-    <Project Path="Extensions/OoBDev.Scpi.Panels/OoBDev.Scpi.Panels.csproj" />
     <Project Path="Extensions/OoBDev.Scpi.Tests/OoBDev.Scpi.Tests.csproj" />
     <Project Path="Extensions/OoBDev.Scpi/OoBDev.Scpi.csproj" />
     <Project Path="Extensions/OoBDev.System.Text.Html.Tests/OoBDev.System.Text.Html.Tests.csproj" />

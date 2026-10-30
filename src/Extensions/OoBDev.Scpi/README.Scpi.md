@@ -28,3 +28,23 @@ No instrument has been connected to this package. The profile contents are as ve
 ## Instrument documentation
 
 One folder per instrument under [docs/](docs/): the vendor programming manual (where kept) and a `known-configuration.md` with how it was reached on the bench: [hp-34401a](docs/hp-34401a/known-configuration.md), [korad-ka3005p-ka6003p](docs/korad-ka3005p-ka6003p/known-configuration.md), [rigol-dg1022](docs/rigol-dg1022/known-configuration.md), [rigol-dg1062z](docs/rigol-dg1062z/known-configuration.md), [rigol-dm3058e](docs/rigol-dm3058e/known-configuration.md), [rigol-ds1102e](docs/rigol-ds1102e/known-configuration.md), [tektronix-2230](docs/tektronix-2230/known-configuration.md), [tektronix-tds2024](docs/tektronix-tds2024/known-configuration.md), [usr-tcp232-302](docs/usr-tcp232-302/known-configurations.md). `usr-tcp232-302` is the serial-to-Ethernet bridge several instruments sit behind. Paths such as `docs/design/...` and `docs/test/...` inside the notes name files in the dev-term repository.
+
+## Panels
+
+The `OoBDev.Scpi.Panels` namespace builds a control panel from an instrument profile, so any profile (including the generic one) gets a usable front end without a bespoke form.
+
+`ScpiPanelBuilder.Build(profile, execute)` returns a `ScpiPanel`:
+
+| Part | What it is |
+|------|------------|
+| `Definition` | A `UiDefinition` with a section per command category. Each parameter becomes a numeric, slider, text or choice control (from `ScpiParameterDefinition.Control`, else its kind), each command a button whose `ParameterFieldIds` name its fields, each query a reply text field. |
+| `Model` | An object built at run time (`DynamicModelFactory`) with one property per field, an `ICommand` per button and a `string` per reply. |
+| `Binding` | The `FormBinding` over the model. A renderer uses it, and replies are written through it so `Changed` fires. |
+
+`execute` sends the request and returns the reply text for a query (for example `ScpiReplyTracker.QueryAsync`), or null. A failure is shown in the reply field as `Error: ...`. Control ids come from `ScpiPanelIds` (`{command}_{parameter}`, `{command}_reply`, letters and digits only).
+
+## Notes
+
+- A button packs its field values joined by `,` (the `InvokeCommand` convention), so a text value containing a comma splits into two values.
+- `ParameterExpressions` are not generated (a profile has no expressions).
+- Not run against a real instrument or rendered in WPF yet; the DevTerm shell wiring (`IPanelFactory`) is the next step.

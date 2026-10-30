@@ -18,3 +18,7 @@ Unit: UiDefinitions 194, ViewModels 53, Wpf 14, Scpi.Panels 6, DevTerm.Wpf 8, De
 ## Device configuration contracts
 
 `IDeviceConfigEditor`, `DeviceConfigTarget`, `DeviceConfigIssue`, `DeviceConfigChange` and `DeviceConfigWriteResult` moved from DevTerm Core to `OoBDev.System.Abstractions/IO/Devices` (namespace `OoBDev.System.IO.Devices`), so device libraries can ship their configuration editors. `DeviceConfigSession` (logic) stays in Core. Unit: Core 1035, Tui 355, Web 43, all passing.
+
+## Scpi.Panels folded into Scpi
+
+`OoBDev.Scpi.Panels` and its tests moved into `OoBDev.Scpi` (`Panels/`) and `OoBDev.Scpi.Tests` (`Panels/`); the namespace `OoBDev.Scpi.Panels` is unchanged, `OoBDev.Scpi` now references `OoBDev.UiDefinitions`, and the two projects left `OoBDev.slnx`. Scpi Unit tests: 52 passing (46 plus the 6 panel tests). `.Panels` is the sub-namespace convention for every protocol's UI definition (K8055 and Busylight are next, see the backlog).

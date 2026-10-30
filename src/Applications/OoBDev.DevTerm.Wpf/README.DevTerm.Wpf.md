@@ -11,7 +11,7 @@ A window with a panel list and the open panel's `FormView` from `OoBDev.UiDefini
 | `ShellViewModel` | The registered factories, the open panel, and the `Open` command |
 | `PanelViewModel` | A title and a `FormViewModel`; disposed when replaced |
 | `IPanelFactory` | How a device contributes a panel |
-| `ScpiPanelFactory` | A panel generated from a SCPI instrument profile (`OoBDev.Scpi.Panels`); the caller supplies the send function |
+| `ScpiPanelFactory` | A panel generated from a SCPI instrument profile (`OoBDev.Scpi`, namespace `OoBDev.Scpi.Panels`); the caller supplies the send function |
 | `ScpiTcpExecutor` | Sends a SCPI request to an instrument's raw socket (default port 5025) and reads one reply line for a query |
 | `DemoPanelFactory` | A panel generated from `DemoSettings`; stands in until device panels exist |
 
