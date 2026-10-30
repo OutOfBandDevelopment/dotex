@@ -35,7 +35,7 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
     /// <param name="mergedLog">The log every opened session is recorded in, or null.</param>
     /// <param name="routingDialog">Shows the routing window, or null when the shell has no window to host it.</param>
     /// <param name="editorDialog">Shows the connection editor, or null when the shell has no window to host it.</param>
-    public ShellViewModel(IEnumerable<IPanelFactory> factories, ISessionViewModelFactory? sessionFactory = null, IConnectionEditorDialog? editorDialog = null, IRoutingDialog? routingDialog = null, IStreamMonitorDialog? streamMonitorDialog = null, StreamMonitor? streamMonitor = null, IMergedLogDialog? mergedLogDialog = null, MergedSessionLog? mergedLog = null, IPlaybackDialog? playbackDialog = null, PlaybackPresenters? playbackPresenters = null)
+    public ShellViewModel(IEnumerable<IPanelFactory> factories, ISessionViewModelFactory? sessionFactory = null, IConnectionEditorDialog? editorDialog = null, IRoutingDialog? routingDialog = null, IStreamMonitorDialog? streamMonitorDialog = null, StreamMonitor? streamMonitor = null, IMergedLogDialog? mergedLogDialog = null, MergedSessionLog? mergedLog = null, IPlaybackDialog? playbackDialog = null, PlaybackPresenters? playbackPresenters = null, IEnumerable<IDevicePanelContribution>? devicePanels = null)
     {
         ArgumentNullException.ThrowIfNull(factories);
         Factories = [.. factories];
@@ -48,6 +48,8 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
         _mergedLog = mergedLog;
         _playbackDialog = playbackDialog;
         _playbackPresenters = playbackPresenters;
+        DevicePanels = [.. devicePanels ?? []];
+        OpenDevicePanelCommand = new OpenDevicePanelCommand(this);
         OpenPlaybackWindow = new OpenPlaybackCommand(this);
         ShowMergedLogWindow = new ShowMergedLogCommand(this);
         ShowStreamMonitorWindow = new ShowStreamMonitorCommand(this);
@@ -92,6 +94,24 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
     /// <summary>Picks a session log and replays it in the playback window.</summary>
     public ICommand OpenPlaybackWindow { get; }
 
+    /// <summary>The device panels plugins contribute.</summary>
+    public IReadOnlyList<IDevicePanelContribution> DevicePanels { get; }
+
+    /// <summary>Opens the device panel passed as the parameter for the selected session.</summary>
+    public ICommand OpenDevicePanelCommand { get; }
+
+    internal string? DevicePanelUnavailableReason(IDevicePanelContribution panel) =>
+        SelectedSession is not { } session
+            ? "Open a session first."
+            : OoBDev.DevTerm.Configuration.DevicePanels.UnavailableReason(panel, session.Tab?.CliOptions ?? new CliOptions(), session.State == OoBDev.System.IO.ConnectionState.Open);
+
+    internal void OpenDevicePanel(IDevicePanelContribution panel)
+    {
+        var surface = panel.CreateSurface(SelectedSession!.Session);
+        var built = OoBDev.DevTerm.Panels.SurfacePanelBuilder.Build(panel.BuildDefinition(), surface);
+        SelectedPanel = new PanelViewModel(panel.MenuTitle.Replace("_", string.Empty, StringComparison.Ordinal).TrimEnd('.'), new FormViewModel(built.Definition, built.Binding), built);
+    }
+
     internal bool CanOpenPlayback => _playbackDialog is not null && _playbackPresenters is not null;
 
     internal void OpenPlayback()
@@ -109,6 +129,13 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
     private void AddSession(SessionViewModel session)
     {
         Sessions.Add(session);
+        session.PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName == nameof(SessionViewModel.State))
+            {
+                ((CommandBase)OpenDevicePanelCommand).RaiseCanExecuteChanged();
+            }
+        };
         _mergedLog?.Track(session, session.Session, session.Title);
         SelectedSession = session;
     }
@@ -157,6 +184,7 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
             if (SetProperty(ref _selectedSession, value))
             {
                 ((CommandBase)ShowRoutingWindow).RaiseCanExecuteChanged();
+                ((CommandBase)OpenDevicePanelCommand).RaiseCanExecuteChanged();
                 ((CommandBase)ShowStreamMonitorWindow).RaiseCanExecuteChanged();
             }
         }

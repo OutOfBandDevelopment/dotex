@@ -19,6 +19,15 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
             <ListBox ItemsSource="{Binding Sessions}" SelectedItem="{Binding SelectedSession}" DisplayMemberPath="Title" Margin="4" MinHeight="60" />
+            <ItemsControl ItemsSource="{Binding DevicePanels}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Button Content="{Binding MenuTitle}" Margin="4"
+                                Command="{Binding DataContext.OpenDevicePanelCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                CommandParameter="{Binding}" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
             <ItemsControl ItemsSource="{Binding Factories}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>

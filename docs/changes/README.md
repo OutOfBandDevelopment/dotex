@@ -528,4 +528,5 @@ Each change document should include:
 - [DevTerm WPF stream monitor window (2026-10-29)](devterm-wpf-stream-monitor-2026-10-29.md) - Stream monitor... tracks the selected session and lists captures
 - [DevTerm WPF merged log window (2026-10-29)](devterm-wpf-merged-log-2026-10-29.md) - Merged log... lists every opened session in time order
 - [DevTerm WPF playback window (2026-10-29)](devterm-wpf-playback-window-2026-10-29.md) - Open log for playback... replays a session log with transport commands
+- [DevTerm WPF device panels (2026-10-30)](devterm-wpf-device-panels-2026-10-30.md) - plugin device panels open from the shell through a generated model and the control surface
 - [One USB HID adapter (2026-10-29)](system-io-usbhids-adapter-merge-2026-10-29.md) - UsbHidFactory returns the endpoint adapter; the thin one is gone
