@@ -42,3 +42,7 @@ The six `OoBDev.DevTerm.Transports.{Tcp,Rfc2217,Vxi11}` projects are gone. `TcpT
 ## Step 5c: BLE moves into `System.IO.Bluetooth`
 
 `DevTerm.Transports.Ble` is now `BleDeviceAdapter` (`BleDeviceAdapterOptions`, `AddBleDeviceAdapter()`) in `OoBDev.System.IO.Bluetooth`, an `IDeviceAdapter` of type `Ble`. The per-OS seam `IBleAdapter` is renamed `IBleConnection` (and its factory `IBleConnectionFactory`) so it is not confused with `IDeviceAdapter`. `DevTerm.Transports.Ble.Windows` is `OoBDev.System.IO.Bluetooth.Windows` (`WindowsBleConnection`, `AddWindowsBleConnection()`). The multi-type files are split, one type per file. 19 Unit tests moved to `OoBDev.System.IO.Bluetooth.Tests` and pass; the Windows backend only builds, and no peripheral was attached.
+
+## Step 5d: MQTT moves into `System.IO.Mqtt`
+
+`DevTerm.Transports.Mqtt` is now `MqttDeviceAdapter` (`MqttDeviceAdapterOptions`, `AddMqttDeviceAdapter()`) in the new `OoBDev.System.IO.Mqtt`: an `IDeviceAdapter` of type `Mqtt` (path `Host:Port`) over MQTTnet 5.2.0.1603 (added to `Directory.Packages.props`). The `IMqttConnection` seam and the MQTTnet connection and factory are ported with one type per file. `MqttRouterBridge` depends on the DevTerm `MessageRouter`, so it lives in `OoBDev.DevTerm.Core` (`Brokers/`, namespace `OoBDev.DevTerm.Brokers`) and Core references the new library. 10 Unit tests in `OoBDev.System.IO.Mqtt.Tests` and the bridge tests in `Core.Tests/Brokers` pass; the Mosquitto test is `DevLocal` and was not run (no broker).
