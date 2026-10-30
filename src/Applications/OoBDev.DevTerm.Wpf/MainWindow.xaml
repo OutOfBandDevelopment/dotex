@@ -39,6 +39,10 @@
             </ItemsControl>
         </StackPanel>
         <Grid DockPanel.Dock="Bottom" DataContext="{Binding SelectedSession}" Margin="4">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
@@ -49,6 +53,10 @@
             <Button Grid.Column="1" Content="Send" Margin="4,0,0,0" Command="{Binding Send}" />
             <Button Grid.Column="2" Content="Connect" Margin="4,0,0,0" Command="{Binding Connect}" />
             <Button Grid.Column="3" Content="Disconnect" Margin="4,0,0,0" Command="{Binding Disconnect}" />
+            <StackPanel Grid.Row="1" Grid.ColumnSpan="4" Orientation="Horizontal" Margin="0,4,0,0">
+                <CheckBox Content="Echo sent commands" IsChecked="{Binding EchoSent}" VerticalAlignment="Center" />
+                <Button Content="Clear output" Margin="8,0,0,0" Padding="8,0" Command="{Binding ClearOutput}" />
+            </StackPanel>
         </Grid>
         <TextBlock DockPanel.Dock="Bottom" DataContext="{Binding SelectedSession}" Text="{Binding ErrorMessage}" Foreground="Firebrick" Margin="4" />
         <Grid>

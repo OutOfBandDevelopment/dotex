@@ -17,6 +17,7 @@ public sealed class SessionViewModel : ViewModelBase, IAsyncDisposable
     private readonly SynchronizationContext? _context = SynchronizationContext.Current;
     private string _sendText = string.Empty;
     private string? _errorMessage;
+    private bool _echoSent;
 
     /// <summary>Creates the view model over <paramref name="session"/> and listens to its output.</summary>
     /// <param name="session">The session; the view model owns it.</param>
@@ -32,6 +33,7 @@ public sealed class SessionViewModel : ViewModelBase, IAsyncDisposable
         Connect = new ConnectSessionCommand(this);
         Disconnect = new DisconnectSessionCommand(this);
         Send = new SendTextCommand(this);
+        ClearOutput = new ClearOutputCommand(this);
         _session.Output += OnOutput;
         _session.Transport.StateChanged += OnStateChanged;
     }
@@ -46,6 +48,16 @@ public sealed class SessionViewModel : ViewModelBase, IAsyncDisposable
 
     /// <summary>The decoded lines, oldest first.</summary>
     public ObservableCollection<string> OutputLines { get; } = [];
+
+    /// <summary>Whether sent text is listed in the output as <c>&gt; text</c>.</summary>
+    public bool EchoSent
+    {
+        get => _echoSent;
+        set => SetProperty(ref _echoSent, value);
+    }
+
+    /// <summary>Empties <see cref="OutputLines"/>.</summary>
+    public ICommand ClearOutput { get; }
 
     /// <summary>The connection state of the session's adapter.</summary>
     public ConnectionState State => _session.State;
@@ -91,8 +103,17 @@ public sealed class SessionViewModel : ViewModelBase, IAsyncDisposable
 
     internal Task SendAsync() => RunAsync(async () =>
     {
-        await _session.SendAsync(Encoding.UTF8.GetBytes(SendText + "\n")).ConfigureAwait(false);
-        Post(() => SendText = string.Empty);
+        var text = SendText;
+        await _session.SendAsync(Encoding.UTF8.GetBytes(text + "\n")).ConfigureAwait(false);
+        Post(() =>
+        {
+            if (EchoSent)
+            {
+                OutputLines.Add($"> {text}");
+            }
+
+            SendText = string.Empty;
+        });
     });
 
     /// <inheritdoc />

@@ -50,6 +50,38 @@ public sealed class SessionViewModelTests
     }
 
     [TestMethod]
+    public async Task Send_EchoSentOn_ListsTheSentTextInTheOutput()
+    {
+        // Stage
+        await using var viewModel = Create();
+        viewModel.Connect.Execute(null);
+        await WaitAsync(() => viewModel.State == ConnectionState.Open);
+        viewModel.EchoSent = true;
+        viewModel.SendText = "hello";
+
+        // Test
+        viewModel.Send.Execute(null);
+        await WaitAsync(() => viewModel.SendText.Length == 0);
+
+        // Assert
+        CollectionAssert.Contains(viewModel.OutputLines, "> hello");
+    }
+
+    [TestMethod]
+    public async Task ClearOutput_LinesListed_EmptiesTheOutput()
+    {
+        // Stage
+        await using var viewModel = Create();
+        viewModel.OutputLines.Add("one");
+
+        // Test
+        viewModel.ClearOutput.Execute(null);
+
+        // Assert
+        Assert.AreEqual(0, viewModel.OutputLines.Count);
+    }
+
+    [TestMethod]
     public async Task Disconnect_Open_ClosesTheAdapter()
     {
         // Stage
