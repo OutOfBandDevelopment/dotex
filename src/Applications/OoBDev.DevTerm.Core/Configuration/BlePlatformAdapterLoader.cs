@@ -10,11 +10,11 @@ namespace OoBDev.DevTerm.Configuration;
 
 /// <summary>
 /// Loads the real, platform-specific BLE backend into DI at runtime, in place of
-/// <c>DevTerm.Transports.Ble</c>'s default "unsupported platform" registrations. This exists
+/// <c>OoBDev.System.IO.Bluetooth</c>'s default "unsupported platform" registrations. This exists
 /// because a per-OS BLE backend (<c>Windows.Devices.Bluetooth</c> on Windows, later BlueZ on Linux,
-/// CoreBluetooth on macOS - see 's "BLE" section) needs a Windows-versioned
+/// CoreBluetooth on macOS) needs a Windows-versioned
 /// TFM to compile against its native API, and neither front end that would offer BLE as a transport
-/// (<c>DevTerm.Console</c>, plain <c>net10.0</c>) can take a compile-time <c>ProjectReference</c> on
+/// (<c>OoBDev.DevTerm.Tui</c> and <c>OoBDev.DevTerm.Web</c>, plain <c>net10.0</c>) can take a compile-time <c>ProjectReference</c> on
 /// a project whose only TFM is Windows-specific - the .NET SDK refuses that reference at restore
 /// time as incompatible. Loading the assembly by reflection instead keeps every front end on its
 /// current TFM and degrades gracefully (the "unsupported platform" registrations stay in effect)
