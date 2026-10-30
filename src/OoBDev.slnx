@@ -226,8 +226,11 @@
     <Project Path="Framework/OoBDev.Telemetry.Tests/OoBDev.Telemetry.Tests.csproj" />
     <Project Path="Framework/OoBDev.Telemetry/OoBDev.Telemetry.csproj" />
     <Project Path="Framework/OoBDev.System.Abstractions/OoBDev.System.Abstractions.csproj" />
+    <Project Path="Framework/OoBDev.System.IO.Bluetooth/OoBDev.System.IO.Bluetooth.csproj" />
+    <Project Path="Framework/OoBDev.System.IO.Bluetooth.Windows/OoBDev.System.IO.Bluetooth.Windows.csproj" />
     <Project Path="Framework/OoBDev.System.IO.Pipelines/OoBDev.System.IO.Pipelines.csproj" />
     <Project Path="Framework/OoBDev.System.IO.Tcp.Tests/OoBDev.System.IO.Tcp.Tests.csproj" />
+    <Project Path="Framework/OoBDev.System.IO.Bluetooth.Tests/OoBDev.System.IO.Bluetooth.Tests.csproj" />
     <Project Path="Framework/OoBDev.System.IO.UsbHids.Tests/OoBDev.System.IO.UsbHids.Tests.csproj" />
     <Project Path="Framework/OoBDev.System.IO.UsbTmc.Tests/OoBDev.System.IO.UsbTmc.Tests.csproj" />
     <Project Path="Framework/OoBDev.System.IO.Tcp/OoBDev.System.IO.Tcp.csproj" />

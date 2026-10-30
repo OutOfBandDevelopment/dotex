@@ -70,3 +70,4 @@ pmoobdev-example-web-0.5.174-dev-example-app-fixes.tgz`.
 - [ ] Rfc2217DeviceAdapter and StreamDeviceAdapter: add open-path tests (loopback server that answers the COM-PORT handshake; Faulted on connect failure) - found in step 1 of the DevTerm restructure.
 - [ ] DevTerm Schemas: the generator lost its `Program.cs` entry point when it merged into Core; add a way to run `SchemaGenerator.Generate()` to a folder (for example a mode of the shell apps or a small tool).
 - [ ] Merge the thin `UsbHidDeviceAdapter` and `UsbHidFactory` (attribute-driven) with the options-driven `UsbHidEndpointDeviceAdapter` by best coverage; add HID open-path tests against a fake `HidDevice`-free seam.
+- [ ] DevTerm BLE: port `BlePlatformAdapterLoader` (loads `OoBDev.System.IO.Bluetooth.Windows` by reflection and calls `AddWindowsBleConnection`) and the `BleDeviceScanner` and BLE option classes into `OoBDev.DevTerm.Core` Configuration with the other deferred parity pieces.

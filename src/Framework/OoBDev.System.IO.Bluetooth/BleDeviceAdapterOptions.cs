@@ -1,0 +1,43 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
+
+namespace OoBDev.System.IO.Bluetooth;
+
+/// <summary>Configuration for a BLE peripheral connection. Bound via the Options pattern.</summary>
+public sealed class BleDeviceAdapterOptions
+{
+    /// <summary>
+    /// The peripheral to connect to, in whatever opaque form the active platform backend's own
+    /// <see cref="IBleDeviceDiscovery"/> produced (see <see cref="BleDeviceDescriptor.DeviceId"/>).
+    /// </summary>
+    [Required(AllowEmptyStrings = false)]
+    public string DeviceId { get; set; } = string.Empty;
+
+    /// <summary>GATT service UUID. Defaults to the Nordic UART Service.</summary>
+    public string ServiceUuid { get; set; } = NordicUartService.ServiceUuid;
+
+    /// <summary>Characteristic written to for host-to-device bytes. Defaults to the NUS RX characteristic.</summary>
+    public string WriteCharacteristicUuid { get; set; } = NordicUartService.WriteCharacteristicUuid;
+
+    /// <summary>Characteristic subscribed to for device-to-host bytes. Defaults to the NUS TX characteristic.</summary>
+    public string NotifyCharacteristicUuid { get; set; } = NordicUartService.NotifyCharacteristicUuid;
+
+    /// <summary>Bounds a hung connect attempt so it fails with a <see cref="TimeoutException"/> instead of hanging forever.</summary>
+    public int ConnectTimeoutMs { get; set; } = 10000;
+
+    /// <summary>Bounds a blocked write so it fails with a <see cref="TimeoutException"/> instead of hanging forever.</summary>
+    public int WriteTimeoutMs { get; set; } = 5000;
+
+    /// <summary>
+    /// The largest single GATT write a <see cref="IBleConnection"/> will send without splitting — see
+    /// <see cref="BleWriteChunker"/>. Defaults to 20: the usable payload of one ATT packet
+    /// (the default, unnegotiated 23-byte MTU minus its 3-byte header), safe for a peripheral this
+    /// hasn't negotiated a larger MTU with. Raise it for a device/profile known to support a larger MTU.
+    /// </summary>
+    public int MaxWriteChunkSize { get; set; } = 20;
+}

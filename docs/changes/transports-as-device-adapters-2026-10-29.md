@@ -38,3 +38,7 @@ The six `OoBDev.DevTerm.Transports.{Tcp,Rfc2217,Vxi11}` projects are gone. `TcpT
 ## Step 5b: USBTMC moves into `System.IO.UsbTmc`
 
 `DevTerm.Transports.Usbtmc` is now `UsbTmcDeviceAdapter` (`UsbTmcDeviceAdapterOptions`, `AddUsbTmcDeviceAdapter()`) in the new `OoBDev.System.IO.UsbTmc`: an `IDeviceAdapter` (type `UsbTmc`) with `Output` built by `DeviceAdapterOutput`; the codec, device location, quirks, discovery and the LibUsbDotNet device are ported with one type per file. `LibUsbDotNet` 3.0.224 and `libusb-dynamic` 1.0.26 were added to `Directory.Packages.props`. 43 Unit tests moved to `OoBDev.System.IO.UsbTmc.Tests` and pass; no instrument was attached.
+
+## Step 5c: BLE moves into `System.IO.Bluetooth`
+
+`DevTerm.Transports.Ble` is now `BleDeviceAdapter` (`BleDeviceAdapterOptions`, `AddBleDeviceAdapter()`) in `OoBDev.System.IO.Bluetooth`, an `IDeviceAdapter` of type `Ble`. The per-OS seam `IBleAdapter` is renamed `IBleConnection` (and its factory `IBleConnectionFactory`) so it is not confused with `IDeviceAdapter`. `DevTerm.Transports.Ble.Windows` is `OoBDev.System.IO.Bluetooth.Windows` (`WindowsBleConnection`, `AddWindowsBleConnection()`). The multi-type files are split, one type per file. 19 Unit tests moved to `OoBDev.System.IO.Bluetooth.Tests` and pass; the Windows backend only builds, and no peripheral was attached.
