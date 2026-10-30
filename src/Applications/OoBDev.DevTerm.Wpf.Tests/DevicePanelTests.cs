@@ -15,9 +15,11 @@ namespace OoBDev.DevTerm.Wpf.Tests;
 [TestClass]
 public sealed class DevicePanelTests
 {
-    private sealed class FakeSurface : IControlSurface
+    private sealed class FakeSurface : IControlSurface, ICommandPreview
     {
         public List<(string Id, string? Value)> Sent { get; } = [];
+
+        public string? PreviewCommand(string commandId, string? value) => commandId == "WIPE" ? "WIPE\n" : null;
 
         public Task InvokeAsync(string commandId, string? value, CancellationToken cancellationToken = default)
         {
@@ -59,6 +61,25 @@ public sealed class DevicePanelTests
         };
 
         public IControlSurface CreateSurface(Session session) => surface;
+    }
+
+    [TestMethod]
+    public async Task OpenDevicePanelCommand_SurfaceWithPreview_PutsTheSendsTextInTheButtonTooltip()
+    {
+        // Stage
+        var services = new ServiceCollection();
+        services.AddSingleton<IDevicePanelContribution>(new FakePanel(new FakeSurface()));
+        await using var provider = services.AddDevTermWpfShell().BuildServiceProvider();
+        var shell = provider.GetRequiredService<ShellViewModel>();
+        shell.NewLoopbackSession.Execute(null);
+        shell.SelectedSession!.Connect.Execute(null);
+        await WaitAsync(() => shell.SelectedSession.State == ConnectionState.Open);
+
+        // Test
+        shell.OpenDevicePanelCommand.Execute(shell.DevicePanels[0]);
+
+        // Assert
+        Assert.AreEqual("Sends: WIPE\n", shell.SelectedPanel!.Form.Row("wipe")!.Description);
     }
 
     [TestMethod]

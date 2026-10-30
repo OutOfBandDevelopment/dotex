@@ -120,6 +120,7 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
             source = presenter as OoBDev.UiDefinitions.IStructuredPresenter;
         }
 
+        DevicePanelPreviews.Apply(built.Definition, surface);
         var feed = new DevicePanelFeed(definition, source, built);
         SelectedPanel = new PanelViewModel(panel.MenuTitle.Replace("_", string.Empty, StringComparison.Ordinal).TrimEnd('.'), new FormViewModel(built.Definition, built.Binding, _colorPicker, _confirm), feed, feed.Displays);
     }
