@@ -18,6 +18,7 @@ using Microsoft.Extensions.Logging;
 using System.Net;
 using System.Net.Sockets;
 using OoBDev.DevTerm.Configuration;
+using OoBDev.DevTerm.TestUtilities;
 using OoBDev.DevTerm.Web.Tests;
 using Microsoft.Playwright;
 namespace OoBDev.DevTerm.Web.Tests;
@@ -92,8 +93,22 @@ public class WebScreenshotTests
         }
     }
 
-    private static Task SaveAsync(IPage page, string imageName) =>
-        page.ScreenshotAsync(new PageScreenshotOptions { Path = Path.Combine(RepoRoot(), "docs", "applications", "devterm", "user-guide", "images", imageName) });
+    private static string GuideImagePath(string imageName) =>
+        Path.Combine(RepoRoot(), "docs", "applications", "devterm", "user-guide", "images", imageName);
+
+    private static async Task SaveAsync(IPage page, string imageName)
+    {
+        var temp = Path.Combine(Path.GetTempPath(), $"guide_{Guid.NewGuid():N}.png");
+        try
+        {
+            await page.ScreenshotAsync(new PageScreenshotOptions { Path = temp });
+            GuideImage.Sync(temp, GuideImagePath(imageName));
+        }
+        finally
+        {
+            File.Delete(temp);
+        }
+    }
 
     private static async Task WaitConnectedAsync(IPage page) =>
         await Assertions.Expect(page.Locator("#status")).ToContainTextAsync("connected");
@@ -723,7 +738,10 @@ public class WebScreenshotTests
             await page.Locator("[data-cfg=baud] input").FillAsync("19200");
             await page.Locator("[data-cfg=baud] input").BlurAsync();
             await Assertions.Expect(page.Locator("[data-cfg-change=baud]")).ToContainTextAsync("9600 to 19200");
-            await page.Locator("#configure").ScreenshotAsync(new LocatorScreenshotOptions { Path = Path.Combine(RepoRoot(), "docs", "applications", "devterm", "user-guide", "images", "web-blazor-configure-device.png") });
+            var configureTemp = Path.Combine(Path.GetTempPath(), $"guide_{Guid.NewGuid():N}.png");
+            await page.Locator("#configure").ScreenshotAsync(new LocatorScreenshotOptions { Path = configureTemp });
+            GuideImage.Sync(configureTemp, GuideImagePath("web-blazor-configure-device.png"));
+            File.Delete(configureTemp);
             await page.Locator("#cfg-write").ClickAsync();
             await Assertions.Expect(page.Locator("[data-cfg-message]")).ToContainTextAsync("Restart the device");
             Assert.AreEqual("19200", editor.Device["baud"]);

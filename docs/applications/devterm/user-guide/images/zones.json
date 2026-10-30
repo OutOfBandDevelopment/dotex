@@ -1,0 +1,6 @@
+{
+  "zones": [
+    { "name": "temp-path-guid", "match": "tui-main-logging.png", "x": 18, "y": 104, "width": 690, "height": 44 },
+    { "name": "routing-timestamps", "match": "tui-routing.png", "x": 8, "y": 320, "width": 100, "height": 40 }
+  ]
+}

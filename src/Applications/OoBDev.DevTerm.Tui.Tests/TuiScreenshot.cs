@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.Versioning;
+using OoBDev.DevTerm.TestUtilities;
 [assembly: SupportedOSPlatform("windows")]
 
 
@@ -36,7 +37,9 @@ internal static class TuiScreenshot
     private const int _cellWidth = 9;
     private const int _cellHeight = 18;
 
-    public static void Save(string path)
+    public static void Save(string path) => GuideImage.Write(path, Render);
+
+    private static void Render(string path)
     {
         var buffer = TuiTestRunner.CurrentApp.Driver!.GetOutputBuffer();
         var width = buffer.Cols * _cellWidth;

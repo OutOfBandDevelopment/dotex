@@ -12,4 +12,8 @@
 		<PackageReference Include="MSTest.TestFramework" />
 	</ItemGroup>
 
+	<ItemGroup>
+		<ProjectReference Include="..\..\Tools\OoBDev.ImageMask.Cli\OoBDev.ImageMask.Cli.csproj" />
+	</ItemGroup>
+
 </Project>
