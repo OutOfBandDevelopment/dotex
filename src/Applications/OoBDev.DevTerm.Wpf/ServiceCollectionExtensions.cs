@@ -2,6 +2,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using OoBDev.DevTerm.Devices;
 using OoBDev.DevTerm.Hosting;
+using OoBDev.DevTerm.Loopback;
+using OoBDev.DevTerm.Presenters.Text;
 using OoBDev.UiDefinitions.ViewModels;
 using UiDefinitionsWpf;
 
@@ -19,6 +21,9 @@ public static class ServiceCollectionExtensions
         services.AddDevTermDevicePanels();
         services.TryAddSingleton<IColorPicker, WpfColorPicker>();
         services.TryAddEnumerable(ServiceDescriptor.Singleton<IPanelFactory, DemoPanelFactory>());
+        services.TryAddTextPresenters();
+        services.TryAddLoopbackTransport();
+        services.TryAddSingleton<ISessionViewModelFactory, SessionViewModelFactory>();
         services.TryAddSingleton<ShellViewModel>();
         return services;
     }
