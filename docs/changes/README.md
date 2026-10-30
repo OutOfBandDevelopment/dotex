@@ -521,4 +521,5 @@ Each change document should include:
 - [USBTMC hardware tests (2026-10-29)](system-io-usbtmc-hardware-tests-2026-10-29.md) - two Hardware tests, Inconclusive without a device
 - [DevTerm routing link factory (2026-10-29)](devterm-routing-link-factory-2026-10-29.md) - default IRoutingLinkFactory for MQTT, AMQP and STOMP
 - [DevTerm WPF DI composition (2026-10-29)](devterm-wpf-di-composition-2026-10-29.md) - the WPF shell composes core, device panels and shell through DI
+- [DevTerm WPF session view model (2026-10-29)](devterm-wpf-session-view-model-2026-10-29.md) - connect, disconnect, send and output over a Session
 - [One USB HID adapter (2026-10-29)](system-io-usbhids-adapter-merge-2026-10-29.md) - UsbHidFactory returns the endpoint adapter; the thin one is gone
