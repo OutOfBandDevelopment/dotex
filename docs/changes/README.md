@@ -530,4 +530,5 @@ Each change document should include:
 - [DevTerm WPF playback window (2026-10-29)](devterm-wpf-playback-window-2026-10-29.md) - Open log for playback... replays a session log with transport commands
 - [DevTerm WPF device panels (2026-10-30)](devterm-wpf-device-panels-2026-10-30.md) - plugin device panels open from the shell through a generated model and the control surface
 - [DevTerm WPF session output controls (2026-10-30)](devterm-wpf-session-output-2026-10-30.md) - echo sent commands and clear output per session
+- [DevTerm WPF serial fields (2026-10-30)](devterm-wpf-serial-fields-2026-10-30.md) - baud, data bits, parity, stop bits and flow control in the connection editor
 - [One USB HID adapter (2026-10-29)](system-io-usbhids-adapter-merge-2026-10-29.md) - UsbHidFactory returns the endpoint adapter; the thin one is gone
