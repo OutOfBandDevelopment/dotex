@@ -24,6 +24,7 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
         _sessionFactory = sessionFactory;
         Open = new OpenPanelCommand(this);
         NewLoopbackSession = new NewLoopbackSessionCommand(this);
+        OpenProfileSession = new OpenProfileSessionCommand(this);
         if (Factories.Count > 0)
         {
             Open.Execute(Factories[0]);
@@ -42,6 +43,12 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
     /// <summary>Opens a loopback session.</summary>
     public ICommand NewLoopbackSession { get; }
 
+    /// <summary>Opens a session from the saved profile named by the command parameter.</summary>
+    public ICommand OpenProfileSession { get; }
+
+    /// <summary>The names of the saved connection profiles.</summary>
+    public IReadOnlyList<string> ProfileNames => _sessionFactory?.ListProfiles() ?? [];
+
     /// <summary>The selected session, or null.</summary>
     public SessionViewModel? SelectedSession
     {
@@ -54,6 +61,13 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
     internal void AddLoopbackSession()
     {
         var session = _sessionFactory!.CreateLoopback();
+        Sessions.Add(session);
+        SelectedSession = session;
+    }
+
+    internal void AddProfileSession(string name)
+    {
+        var session = _sessionFactory!.CreateFromProfile(name);
         Sessions.Add(session);
         SelectedSession = session;
     }

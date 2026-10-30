@@ -1,5 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using OoBDev.DevTerm.Configuration;
 using OoBDev.DevTerm.Devices;
 using OoBDev.DevTerm.Hosting;
 using OoBDev.DevTerm.Loopback;
@@ -23,6 +24,7 @@ public static class ServiceCollectionExtensions
         services.TryAddEnumerable(ServiceDescriptor.Singleton<IPanelFactory, DemoPanelFactory>());
         services.TryAddTextPresenters();
         services.TryAddLoopbackTransport();
+        services.TryAddSingleton(_ => new ConnectionProfileStore());
         services.TryAddSingleton<ISessionViewModelFactory, SessionViewModelFactory>();
         services.TryAddSingleton<ShellViewModel>();
         return services;

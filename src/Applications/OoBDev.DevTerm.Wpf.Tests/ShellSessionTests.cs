@@ -1,6 +1,9 @@
+using System;
+using System.IO;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using OoBDev.DevTerm.Configuration;
 
 namespace OoBDev.DevTerm.Wpf.Tests;
 
@@ -33,5 +36,46 @@ public sealed class ShellSessionTests
         // Assert
         Assert.HasCount(2, shell.Sessions);
         Assert.AreEqual("Loopback 2", shell.SelectedSession?.Title);
+    }
+
+    [TestMethod]
+    public async Task OpenProfileSession_SavedLoopbackProfile_AddsASessionTitledByTheProfile()
+    {
+        // Stage
+        var directory = Path.Combine(Path.GetTempPath(), "devterm-" + Guid.NewGuid().ToString("N"));
+        try
+        {
+            var store = new ConnectionProfileStore(directory);
+            store.Save("bench", new CliOptions { Transport = "loopback" });
+            var services = new ServiceCollection();
+            services.AddSingleton(store);
+            await using var provider = services.AddDevTermWpfShell().BuildServiceProvider();
+            var shell = provider.GetRequiredService<ShellViewModel>();
+
+            // Test
+            shell.OpenProfileSession.Execute("bench");
+
+            // Assert
+            CollectionAssert.AreEqual(new[] { "bench" }, (global::System.Collections.ICollection)shell.ProfileNames);
+            Assert.HasCount(1, shell.Sessions);
+            Assert.AreEqual("bench", shell.SelectedSession?.Title);
+        }
+        finally
+        {
+            if (Directory.Exists(directory))
+            {
+                Directory.Delete(directory, true);
+            }
+        }
+    }
+
+    [TestMethod]
+    public void OpenProfileSession_NoParameter_CannotExecute()
+    {
+        // Stage
+        using var shell = new ShellViewModel([]);
+
+        // Assert
+        Assert.IsFalse(shell.OpenProfileSession.CanExecute("bench"));
     }
 }

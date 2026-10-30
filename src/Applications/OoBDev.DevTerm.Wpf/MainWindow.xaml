@@ -6,6 +6,13 @@
     <DockPanel>
         <StackPanel DockPanel.Dock="Left" Width="180">
             <Button Content="New loopback session" Margin="4" Command="{Binding NewLoopbackSession}" />
+            <ItemsControl ItemsSource="{Binding ProfileNames}" Margin="4">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Button Content="{Binding}" Command="{Binding DataContext.OpenProfileSession, RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding}" Margin="0,2" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
             <ListBox ItemsSource="{Binding Sessions}" SelectedItem="{Binding SelectedSession}" DisplayMemberPath="Title" Margin="4" MinHeight="60" />
             <ItemsControl ItemsSource="{Binding Factories}">
                 <ItemsControl.ItemTemplate>
