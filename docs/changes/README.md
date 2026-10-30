@@ -509,3 +509,4 @@ Each change document should include:
 - [SCPI presenter and instrument panel in OoBDev.DevTerm.Devices (2026-10-29)](devices-scpi-panel-2026-10-29.md) - scpi presenter, auto-detect, control surface and provider registered by AddDevTermDevicePanels; 73 Unit tests
 - [Windows BLE backend copied next to the Tui and Web apps (2026-10-29)](devterm-ble-backend-copy-2026-10-29.md) - CopyWindowsBleBackend target in both csproj files
 - [Tui tests for the device panels restored (2026-10-29)](devterm-tui-device-panel-tests-2026-10-29.md) - built-in panels in the test runner, SCPI profile CLI test, plugin panel menu test, panel layout tests
+- [DeviceConfigViewModel tests (2026-10-29)](devterm-device-config-viewmodel-tests-2026-10-29.md) - 5 Unit tests for the shared Configure device flow
