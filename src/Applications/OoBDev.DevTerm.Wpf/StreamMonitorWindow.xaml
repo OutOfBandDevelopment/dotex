@@ -7,6 +7,8 @@
             <Button Content="Start" Command="{Binding Start}" Padding="8,2" />
             <Button Content="Stop" Command="{Binding Stop}" Margin="4,0" Padding="8,2" />
             <Button Content="Export as..." Command="{Binding Export}" Margin="0,0,4,0" Padding="8,2" />
+            <ComboBox ItemsSource="{Binding ConvertChoices}" SelectedIndex="{Binding ConvertIndex}" MinWidth="140" Margin="0,0,4,0" />
+            <Button Content="Convert" Command="{Binding Convert}" Margin="0,0,4,0" Padding="8,2" />
             <Button Content="Open folder" Command="{Binding OpenFolder}" Margin="0,0,4,0" Padding="8,2" />
             <Button Content="Close" IsCancel="True" Padding="8,2" />
         </StackPanel>

@@ -173,6 +173,40 @@ public sealed class StreamCapturePreviewTests
         StringAssert.StartsWith(viewModel.FolderText, "Saving to");
     }
 
+    [TestMethod]
+    public async global::System.Threading.Tasks.Task ConvertSelectedAsync_Hpgl_WritesAnSvgBesideIt()
+    {
+        // Stage
+        var directory = global::System.IO.Directory.CreateTempSubdirectory("stream-convert").FullName;
+        var source = global::System.IO.Path.Combine(directory, "plot.hpgl");
+        var data = global::System.Text.Encoding.ASCII.GetBytes("IN;SP1;PU0,0;PD1000,1000;");
+        global::System.IO.File.WriteAllBytes(source, data);
+        var capture = new StreamMonitorCapture(new StreamCapture(StreamContentKind.Hpgl, data, DateTimeOffset.UnixEpoch, StreamCaptureEnd.Complete, false), "plotter", DateTimeOffset.UnixEpoch, source, null);
+        var options = new StreamCaptureConverterOptions { Mode = StreamConversionMode.InternalHpglToSvg };
+        using var viewModel = new StreamMonitorDialogViewModel(new StreamMonitor(), converterOptions: options);
+        viewModel.AddCapture(capture);
+        viewModel.SelectedIndex = 0;
+
+        // Test
+        await viewModel.ConvertSelectedAsync();
+
+        // Assert
+        Assert.IsTrue(global::System.IO.File.Exists(global::System.IO.Path.Combine(directory, "plot.svg")), viewModel.ExportStatus);
+        StringAssert.StartsWith(viewModel.ExportStatus, "Converted to plot.svg");
+        global::System.IO.Directory.Delete(directory, recursive: true);
+    }
+
+    [TestMethod]
+    public void Convert_NoConverterOptions_CannotExecute()
+    {
+        // Stage
+        using var viewModel = Filled();
+        viewModel.SelectedIndex = 0;
+
+        // Assert
+        Assert.IsFalse(viewModel.Convert.CanExecute(null));
+    }
+
     private sealed class FixedExport(string path) : IStreamExportDialog
     {
         public string? Opened { get; private set; }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media;
 using OoBDev.DevTerm.Configuration;
@@ -17,6 +18,10 @@ public sealed class StreamMonitorDialogViewModel : ViewModelBase, IDisposable
 
     private readonly StreamMonitor _monitor;
     private readonly IStreamExportDialog? _exportDialog;
+    private readonly StreamCaptureConverterOptions? _converterOptions;
+    private readonly StreamCaptureConverter? _converter;
+    private readonly IReadOnlyList<StreamConversionChoice> _choices = [];
+    private int _convertIndex;
     private const string AllKinds = "All types";
 
     private readonly List<StreamMonitorCapture> _all = [];
@@ -30,16 +35,30 @@ public sealed class StreamMonitorDialogViewModel : ViewModelBase, IDisposable
     /// <summary>Creates the view model over <paramref name="monitor"/> and lists its current captures.</summary>
     /// <param name="monitor">The monitor, with a session already tracked.</param>
     /// <param name="exportDialog">Asks where to export a capture; without it export is unavailable.</param>
-    public StreamMonitorDialogViewModel(StreamMonitor monitor, IStreamExportDialog? exportDialog = null)
+    /// <param name="converterOptions">How captures may be converted; without it Convert is unavailable.</param>
+    public StreamMonitorDialogViewModel(StreamMonitor monitor, IStreamExportDialog? exportDialog = null, StreamCaptureConverterOptions? converterOptions = null)
     {
         ArgumentNullException.ThrowIfNull(monitor);
         _monitor = monitor;
         _exportDialog = exportDialog;
+        if (converterOptions is not null)
+        {
+            _converterOptions = converterOptions;
+            _converter = new StreamCaptureConverter(Microsoft.Extensions.Options.Options.Create(converterOptions));
+            _choices = StreamConversionChoice.For(converterOptions);
+            _convertIndex = StreamConversionChoice.IndexOf(_choices, converterOptions);
+            foreach (var choice in _choices)
+            {
+                ConvertChoices.Add(choice.DisplayName);
+            }
+        }
+
         KindChoices.Add(AllKinds);
         Start = new StartStreamMonitorCommand(this);
         Stop = new StopStreamMonitorCommand(this);
         Export = new ExportStreamCaptureCommand(this);
         OpenFolder = new OpenStreamFolderCommand(this);
+        Convert = new ConvertStreamCaptureCommand(this);
         foreach (var capture in monitor.Captures)
         {
             _all.Add(capture);
@@ -147,6 +166,53 @@ public sealed class StreamMonitorDialogViewModel : ViewModelBase, IDisposable
 
     /// <summary>Saves a copy of the selected capture where the user chooses.</summary>
     public ICommand Export { get; }
+
+    /// <summary>The ways a capture can be converted.</summary>
+    public ObservableCollection<string> ConvertChoices { get; } = [];
+
+    /// <summary>The chosen way; applies to this window only.</summary>
+    public int ConvertIndex
+    {
+        get => _convertIndex;
+        set
+        {
+            if (SetProperty(ref _convertIndex, value) && value >= 0 && value < _choices.Count)
+            {
+                _choices[value].ApplyTo(_converterOptions!);
+            }
+        }
+    }
+
+    /// <summary>Converts the selected capture the chosen way.</summary>
+    public ICommand Convert { get; }
+
+    internal bool CanConvert => _converter is not null && SelectedIndex >= 0 && SelectedIndex < _items.Count;
+
+    /// <summary>Converts the selected capture and lists the result.</summary>
+    public async Task ConvertSelectedAsync()
+    {
+        if (!CanConvert)
+        {
+            return;
+        }
+
+        var capture = _items[SelectedIndex];
+        var result = await _converter!.ConvertAsync(capture).ConfigureAwait(true);
+        if (result.Success)
+        {
+            ExportStatus = $"Converted to {(global::System.IO.Path.GetFileName(result.OutputPath))}.";
+            if (result.OutputPath is not null)
+            {
+                _monitor.AddConverted(capture, result.OutputPath);
+            }
+        }
+        else
+        {
+            ExportStatus = result.Error ?? "The conversion failed.";
+        }
+
+        OnPropertyChanged(nameof(ExportStatus));
+    }
 
     /// <summary>Shows the folder captures are saved to.</summary>
     public ICommand OpenFolder { get; }
@@ -268,6 +334,7 @@ public sealed class StreamMonitorDialogViewModel : ViewModelBase, IDisposable
         OnPropertyChanged(nameof(Detail));
         OnPropertyChanged(nameof(SavedPath));
         ((CommandBase)Export).RaiseCanExecuteChanged();
+        ((CommandBase)Convert).RaiseCanExecuteChanged();
     }
 
     private void OnCaptureAdded(object? sender, StreamMonitorCapture capture) => Post(() => AddCapture(capture));
