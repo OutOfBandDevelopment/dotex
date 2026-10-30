@@ -9,6 +9,7 @@ A window with a panel list and the open panel's `FormView` from `OoBDev.UiDefini
 | Type | Role |
 |------|------|
 | `ShellViewModel` | The registered factories, the open panel, and the `Open` command |
+| `ServiceCollectionExtensions.AddDevTermWpfShell()` | Registers the core, the device panels, the colour picker, the demo panel factory and the shell; `App` composes through it |
 | `PanelViewModel` | A title and a `FormViewModel`; disposed when replaced |
 | `IPanelFactory` | How a device contributes a panel |
 | `ScpiPanelFactory` | A panel generated from a SCPI instrument profile (`OoBDev.Scpi`, namespace `OoBDev.Scpi.Panels`); the caller supplies the send function |

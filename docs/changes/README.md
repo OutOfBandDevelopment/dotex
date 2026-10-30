@@ -520,4 +520,5 @@ Each change document should include:
 - [DevTerm BLE platform loader test (2026-10-29)](devterm-ble-loader-test-2026-10-29.md) - loader degrades gracefully; stale backlog line removed
 - [USBTMC hardware tests (2026-10-29)](system-io-usbtmc-hardware-tests-2026-10-29.md) - two Hardware tests, Inconclusive without a device
 - [DevTerm routing link factory (2026-10-29)](devterm-routing-link-factory-2026-10-29.md) - default IRoutingLinkFactory for MQTT, AMQP and STOMP
+- [DevTerm WPF DI composition (2026-10-29)](devterm-wpf-di-composition-2026-10-29.md) - the WPF shell composes core, device panels and shell through DI
 - [One USB HID adapter (2026-10-29)](system-io-usbhids-adapter-merge-2026-10-29.md) - UsbHidFactory returns the endpoint adapter; the thin one is gone

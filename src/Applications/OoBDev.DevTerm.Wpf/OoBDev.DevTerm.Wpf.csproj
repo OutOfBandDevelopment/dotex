@@ -13,12 +13,15 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\Framework\OoBDev.UiDefinitions.Wpf\OoBDev.UiDefinitions.Wpf.csproj" />
 		<ProjectReference Include="..\..\Extensions\OoBDev.Scpi\OoBDev.Scpi.csproj" />
 		<ProjectReference Include="..\..\Framework\OoBDev.System.IO.Tcp\OoBDev.System.IO.Tcp.csproj" />
+		<ProjectReference Include="..\OoBDev.DevTerm.Core\OoBDev.DevTerm.Core.csproj" />
+		<ProjectReference Include="..\OoBDev.DevTerm.Devices\OoBDev.DevTerm.Devices.csproj" />
 	</ItemGroup>
 
 </Project>

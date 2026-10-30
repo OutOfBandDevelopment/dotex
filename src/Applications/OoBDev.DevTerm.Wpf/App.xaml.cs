@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
+using Microsoft.Extensions.DependencyInjection;
+using OoBDev.UiDefinitions.ViewModels;
 using OoBDev.DevTerm.Wpf;
 using OoBDev.Scpi;
 using UiDefinitionsWpf;
@@ -12,25 +14,27 @@ namespace DevTermApp;
 public partial class App : Application, IDisposable
 {
     private ScpiTcpExecutor? _scpi;
+    private ServiceProvider? _provider;
 
     /// <inheritdoc />
     protected override void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
-        var picker = new WpfColorPicker();
-        var factories = new List<IPanelFactory> { new DemoPanelFactory(picker) };
+        var services = new ServiceCollection().AddDevTermWpfShell();
         if (ScpiTarget(e.Args) is { } target)
         {
             _scpi = new ScpiTcpExecutor(target.Host, target.Port);
-            factories.Add(new ScpiPanelFactory(target.Profile, _scpi.ExecuteAsync, picker));
+            services.AddSingleton<IPanelFactory>(sp => new ScpiPanelFactory(target.Profile, _scpi.ExecuteAsync, sp.GetRequiredService<IColorPicker>()));
         }
 
-        new MainWindow { DataContext = new ShellViewModel(factories) }.Show();
+        _provider = services.BuildServiceProvider();
+        new MainWindow { DataContext = _provider.GetRequiredService<ShellViewModel>() }.Show();
     }
 
     /// <summary>Closes the instrument connection.</summary>
     public void Dispose()
     {
+        _provider?.Dispose();
         _scpi?.Dispose();
         GC.SuppressFinalize(this);
     }
