@@ -21,6 +21,8 @@
             <Button Content="Mark out" Command="{Binding MarkOut}" Margin="4,0" Padding="8,2" />
             <Button Content="Save trim" Command="{Binding SaveTrim}" Padding="8,2" />
             <TextBox Text="{Binding NoteText, UpdateSourceTrigger=PropertyChanged}" Width="200" Margin="12,0,0,0" />
+            <TextBox Text="{Binding PresenterText, UpdateSourceTrigger=PropertyChanged}" Width="120" Margin="12,0,0,0" ToolTip="Presenters, comma separated" />
+            <Button Content="Presenters" Command="{Binding ApplyPresenters}" Margin="4,0" Padding="8,2" />
             <Button Content="Add note" Command="{Binding AddNote}" Margin="4,0" Padding="8,2" />
         </StackPanel>
         <TextBlock DockPanel.Dock="Bottom" Text="{Binding StatusText}" Margin="0,4,0,0" />

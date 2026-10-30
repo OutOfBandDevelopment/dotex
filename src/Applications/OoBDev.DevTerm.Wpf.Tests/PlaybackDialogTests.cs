@@ -158,6 +158,43 @@ public sealed class PlaybackDialogTests
     }
 
     [TestMethod]
+    public void ApplyPresenters_HexChosen_ReplaysTheLinesThroughIt()
+    {
+        // Stage
+        var directory = Path.Combine(Path.GetTempPath(), $"devterm-wpf-presenters-{Guid.NewGuid():N}");
+        Directory.CreateDirectory(directory);
+        try
+        {
+            var path = Path.Combine(directory, "capture.jsonl");
+            var t0 = new DateTimeOffset(2026, 9, 25, 12, 0, 0, TimeSpan.Zero);
+            new SessionLog(
+                new SessionLogHeader { Created = t0, Connection = "loopback", Presenters = ["ascii"] },
+                [new SessionLogRecord { Kind = SessionLogRecordKind.Rx, Sequence = 1, Timestamp = t0, Data = Encoding.ASCII.GetBytes("abc") }]).Save(path);
+            string? line = null;
+            var services = new ServiceCollection();
+            services.AddSingleton<IPlaybackDialog>(new FakePlaybackDialog(path, playback =>
+            {
+                playback.SkipToEnd.Execute(null);
+                playback.PresenterText = "hex";
+                playback.ApplyPresenters.Execute(null);
+                line = playback.Lines.SingleOrDefault();
+            }));
+            using var provider = services.AddDevTermWpfShell().BuildServiceProvider();
+
+            // Test
+            provider.GetRequiredService<ShellViewModel>().OpenPlaybackWindow.Execute(null);
+
+            // Assert
+            Assert.IsNotNull(line);
+            StringAssert.Contains(line, "hex", StringComparison.OrdinalIgnoreCase);
+        }
+        finally
+        {
+            Directory.Delete(directory, recursive: true);
+        }
+    }
+
+    [TestMethod]
     public void OpenPlaybackWindow_PickCancelled_ShowsNothing()
     {
         // Stage

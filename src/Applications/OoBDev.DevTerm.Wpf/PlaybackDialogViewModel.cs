@@ -15,6 +15,7 @@ public sealed class PlaybackDialogViewModel : ViewModelBase
     private readonly PlaybackController _controller;
     private string _position;
     private string _jumpText = string.Empty;
+    private string _presenterText;
     private string _noteText = string.Empty;
     private string _statusText = string.Empty;
     private PlaybackSpeed _speed;
@@ -27,6 +28,8 @@ public sealed class PlaybackDialogViewModel : ViewModelBase
         _controller = controller;
         _position = controller.PositionText;
         _speed = controller.Speed;
+        _presenterText = string.Join(", ", controller.Presenters);
+        ApplyPresenters = new PlaybackCommand(this, c => c.SetPresenters(PresenterText.Split([',', ' '], StringSplitOptions.RemoveEmptyEntries)));
         PlayPause = new PlaybackCommand(this, c => c.TogglePlayPause());
         Step = new PlaybackCommand(this, c => c.Step());
         Rewind = new PlaybackCommand(this, c => c.Rewind());
@@ -95,6 +98,19 @@ public sealed class PlaybackDialogViewModel : ViewModelBase
         get => _statusText;
         private set => SetProperty(ref _statusText, value);
     }
+
+    /// <summary>The presenters the log is replayed through, separated by commas.</summary>
+    public string PresenterText
+    {
+        get => _presenterText;
+        set => SetProperty(ref _presenterText, value);
+    }
+
+    /// <summary>The presenter names that can be chosen.</summary>
+    public IReadOnlyList<string> AvailablePresenters => _controller.AvailablePresenters;
+
+    /// <summary>Replays up to the current position through <see cref="PresenterText"/>.</summary>
+    public ICommand ApplyPresenters { get; }
 
     /// <summary>The text of the note to add at the current position.</summary>
     public string NoteText
