@@ -6,15 +6,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-namespace OoBDev.DevTerm.Web.Tests;
+namespace OoBDev.DevTerm.TestUtilities;
 
 /// <summary>
 /// One front end (CLI, TUI, WPF or web) driven the way a user drives it, so <see cref="UserFlowTestsBase"/> can run the same

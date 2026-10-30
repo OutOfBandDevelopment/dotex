@@ -12,6 +12,5 @@ Keep this file short (about 15 one-line items). When an item starts, move it her
 
 ## Next
 
-- [ ] New `OoBDev.DevTerm.TestUtilities` test library for the shared user-flow test base (migration plan first; owner decided 2026-10-30).
 - [ ] Device decoding leftovers: DE-5000 Hardware test (needs BLE), phase 0 parity checks in [device-parity.md](docs/migration/device-parity.md).
 - [ ] BinaryDataDecoders items: next is the order in Table 4 of [the re-review](docs/migration/binarydatadecoders-rereview-2026-10-29.md).

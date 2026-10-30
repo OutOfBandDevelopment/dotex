@@ -26,6 +26,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\OoBDev.DevTerm.Web\OoBDev.DevTerm.Web.csproj" />
+		<ProjectReference Include="..\OoBDev.DevTerm.TestUtilities\OoBDev.DevTerm.TestUtilities.csproj" />
 	</ItemGroup>
 
 </Project>

@@ -38,6 +38,6 @@ dev-term `DevTerm.Wpf` is about 8,800 lines. Each slice is ported with view mode
 
 ## Other leftovers
 
-- `UserFlowTestsBase` and `IFrontEndDriver` are duplicated in `Web.Tests` and `Tui.Tests`; the owner chose a new `OoBDev.DevTerm.TestUtilities` project (2026-10-30).
+- `UserFlowTestsBase` and `IFrontEndDriver` live in `OoBDev.DevTerm.TestUtilities` ([plan](test-utilities-plan.md)); the Web `Panel_SettingTheControlsAndPressingApply` Playwright flow failed once after the move (locator count 0), not compared with before the move.
 - The Web host keeps its own AsyncAPI document and viewer (owner, 2026-10-30).
 - Cleanup to mention to the owner: the removable Docker volume `oobd-aspire-sqlserver`, and untracked `bin` and `obj` folders under `src/Extensions/OoBDev.DevTerm.*` and `OoBDev.Scpi.Panels*`.

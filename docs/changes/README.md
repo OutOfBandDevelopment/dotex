@@ -547,3 +547,4 @@ Each change document should include:
 - [One USB HID adapter (2026-10-29)](system-io-usbhids-adapter-merge-2026-10-29.md) - UsbHidFactory returns the endpoint adapter; the thin one is gone
 - [DevTerm WPF log path choice and notes (2026-10-30)](devterm-wpf-log-notes-2026-10-30.md) - save dialog for the log file, Add note command while logging
 - [DevTerm test plugin rename (2026-10-30)](devterm-core-testplugin-rename-2026-10-30.md) - Sample plugin is now OoBDev.DevTerm.Core.TestPlugin
+- [DevTerm shared test base (2026-10-30)](devterm-testutilities-2026-10-30.md) - OoBDev.DevTerm.TestUtilities holds UserFlowTestsBase and IFrontEndDriver
