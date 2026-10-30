@@ -14,3 +14,7 @@ Step 2a of the [DevTerm restructure](../design/DevTermParity/restructure-plan.md
 ## Verified
 
 Whole `OoBDev.slnx` builds. Unit tests pass: DevTerm Core 211 (5 skipped), Logging 78, Configuration 381, DeviceManifests 168, Serial 61, Tcp 31, Rfc2217 44, Vxi11 6, Loopback 18, `DeviceAdapterOutputTests` 3. Hardware tests were not run.
+
+## Step 2b-i: shared contracts move out of DevTerm Core
+
+`IComPortControl`, `ILineStatusSource`, `ComParity` and `ComStopBits` moved to `OoBDev.System.Abstractions` (`OoBDev.System.IO`); `WriteDelayStream` and its tests moved to `OoBDev.System.IO.Pipelines` / `OoBDev.System.Tests`. The serial and TCP libraries can now take the transport code without referencing DevTerm. Tests after the move: Core 207, System 1879, Configuration 381, Serial 61, Rfc2217 44 (Unit, all passing).

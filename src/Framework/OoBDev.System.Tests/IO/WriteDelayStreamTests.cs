@@ -1,9 +1,11 @@
+using OoBDev.System.IO;
+using OoBDev.System.IO.Pipelines;
 using System;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace OoBDev.DevTerm.Tests;
+namespace OoBDev.System.Tests.IO;
 
 [TestCategory("Unit")]
 [TestClass]

@@ -1,6 +1,8 @@
+using OoBDev.System.IO.Pipelines;
+using OoBDev.System.IO;
 using System;
 
-namespace OoBDev.DevTerm;
+namespace OoBDev.System.IO;
 
 /// <summary>
 /// A transport that learns of serial line / modem status changes out of band (an RFC 2217 server's

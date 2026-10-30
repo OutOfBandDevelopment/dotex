@@ -1,3 +1,4 @@
+using OoBDev.System.IO.Pipelines;
 using OoBDev.System.IO;
 using System;
 using System.Buffers;
