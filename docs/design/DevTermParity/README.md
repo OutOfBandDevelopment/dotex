@@ -58,7 +58,7 @@ Of 34 dev-term projects, the eight device protocol libraries are in this reposit
 ## Next steps
 
 1. ~~Inventory dev-term `docs/`~~ done (Table 2); the files themselves move with their groups.
-2. Write requirements, architecture, api-design and testing-strategy for group A (engine), then E.
+2. ~~Write requirements, api-design and testing-strategy~~ done 2026-10-29: [requirements](requirements.md), [API design](api-design.md), [testing strategy](testing-strategy.md) (whole DevTerm, drafts awaiting owner review).
 3. Port group by group, each with its tests, as backlog items; the backlog item "DevTerm 100% parity" links here.
 
 ## dev-term documentation inventory
