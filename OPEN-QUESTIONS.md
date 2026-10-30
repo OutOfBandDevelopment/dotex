@@ -12,6 +12,7 @@ _(none waiting; processed requests are in BACKLOG.md and TODO.md)_
 - We need a review over all .md files in the projects.  there seems to be a lot of out-of-date and possiblity reduant documents.  should be a lower priority after the migrations are complete
 - We should have a stack review... some tools like Xslt.cli and TemplateEngine seem like they are somewhat duplicative and can be merged... if template engine can be made to support different pathing engines such as the xpath navigator and host the xslt transforms then xslt.cli can probably go way.  as long as the functionality exists and a document on how to convert the templates/scripts I think this would be a fine plan.  
 - we should also review the binary data decoders users of the xslt.cli... it was orginally used to determinsitically generate much of the documentation.  that should beable to be ported to template engine.  might also want to move that generation to mstest entry points instead of scripts wrapped around dotnet tools so it can be more easily be integrated into the pipeline.  the dotnet tools are a fineway too as long as there are extensions in the .props and .targets correctly so maybe a shootout spike if this change hsould be made.
+- the image conversion for ghostscript in devterm around pcl, ps should probably be made more generic and used with the document conversion framework.  the hpgl to svg would be handy as well.  
 
 ## Open
 
