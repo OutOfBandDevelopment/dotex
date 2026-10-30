@@ -2,5 +2,5 @@
   "name": "Sample",
   "version": "1.0.0",
   "contract": 1,
-  "assembly": "OoBDev.DevTerm.Plugins.Sample.dll"
+  "assembly": "OoBDev.DevTerm.Core.TestPlugin.dll"
 }

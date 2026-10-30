@@ -1,6 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 
-namespace OoBDev.DevTerm.Plugins.Sample;
+namespace OoBDev.DevTerm.Core.TestPlugin;
 
 /// <summary>The smallest possible plugin: one presenter, "sample", that reports how many bytes each read held.</summary>
 public sealed class SamplePlugin : IPluginModule

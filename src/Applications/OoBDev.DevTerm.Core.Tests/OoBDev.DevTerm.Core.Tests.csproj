@@ -34,13 +34,13 @@
 	<ItemGroup>
 		<ProjectReference Include="..\OoBDev.DevTerm.Core\OoBDev.DevTerm.Core.csproj" />
 		<!-- Built first, not referenced as code: the loader tests load its output from plugins/sample like a real plugin. -->
-		<ProjectReference Include="..\OoBDev.DevTerm.Plugins.Sample\OoBDev.DevTerm.Plugins.Sample.csproj" ReferenceOutputAssembly="false" />
+		<ProjectReference Include="..\OoBDev.DevTerm.Core.TestPlugin\OoBDev.DevTerm.Core.TestPlugin.csproj" ReferenceOutputAssembly="false" />
 	</ItemGroup>
 
 	<Target Name="CopySamplePlugin" AfterTargets="Build">
 		<ItemGroup>
-			<SamplePluginFile Include="..\OoBDev.DevTerm.Plugins.Sample\bin\$(Configuration)\net10.0\OoBDev.DevTerm.Plugins.Sample.*" />
-			<SamplePluginFile Include="..\OoBDev.DevTerm.Plugins.Sample\bin\$(Configuration)\net10.0\plugin.json" />
+			<SamplePluginFile Include="..\OoBDev.DevTerm.Core.TestPlugin\bin\$(Configuration)\net10.0\OoBDev.DevTerm.Core.TestPlugin.*" />
+			<SamplePluginFile Include="..\OoBDev.DevTerm.Core.TestPlugin\bin\$(Configuration)\net10.0\plugin.json" />
 		</ItemGroup>
 		<Copy SourceFiles="@(SamplePluginFile)" DestinationFolder="$(OutDir)plugins\sample" />
 	</Target>

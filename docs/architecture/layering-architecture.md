@@ -650,7 +650,7 @@ OoBDev.{Vendor}/
 **Projects (DevTerm, see [the restructure plan](../design/DevTermParity/restructure-plan.md)):**
 - **OoBDev.DevTerm.Core** - session engine, presenters, logging, device manifests, configuration, schemas, loopback and session servers (one assembly, one `Core.Tests`)
 - **OoBDev.DevTerm.Wpf**, **OoBDev.DevTerm.Tui** (Terminal.Gui), **OoBDev.DevTerm.Web** (Blazor) - the three front ends, each with its own tests
-- **OoBDev.DevTerm.Plugins.KeyValue**, **OoBDev.DevTerm.Plugins.Sample** - plugin assemblies (merge into Core is an open owner question)
+- **OoBDev.DevTerm.Plugins.KeyValue**, **OoBDev.DevTerm.Core.TestPlugin** - plugin assemblies (merge into Core is an open owner question)
 
 **Dependencies:** Framework and Extensions (device transports are `OoBDev.System.IO.*` libraries that never reference DevTerm)
 

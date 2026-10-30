@@ -119,7 +119,7 @@ public sealed class PluginLoaderTests
         var directory = NewPluginsDirectory();
         try
         {
-            CopySample(directory, "escape", text => text.Replace("OoBDev.DevTerm.Plugins.Sample.dll", "..\\\\outside.dll", StringComparison.Ordinal));
+            CopySample(directory, "escape", text => text.Replace("OoBDev.DevTerm.Core.TestPlugin.dll", "..\\\\outside.dll", StringComparison.Ordinal));
 
             var result = PluginLoader.LoadAll(directory, new ServiceCollection()).Single();
 

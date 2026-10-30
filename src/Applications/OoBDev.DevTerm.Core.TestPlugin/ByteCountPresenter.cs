@@ -1,7 +1,7 @@
 using System.Buffers;
 using System.Collections.Generic;
 
-namespace OoBDev.DevTerm.Plugins.Sample;
+namespace OoBDev.DevTerm.Core.TestPlugin;
 
 /// <summary>Renders each read as <c>sample: N bytes</c>.</summary>
 public sealed class ByteCountPresenter : IPresenter

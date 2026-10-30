@@ -13,7 +13,6 @@ GitHub is no longer the primary repository (local bare repo `origin`), so nothin
 Owner: all protocols and features of dev-term must exist here. Status, slices and leftovers: [status.md](docs/design/DevTermParity/status.md); matrix: [README](docs/design/DevTermParity/README.md); restructure steps 0 to 6 are done.
 
 - [ ] WPF shell slices 1 to 5 left (other per-transport fields and device pickers, Theme and View menus, Browse dialogs and detected-device pickers, routing rule editing and history, field-following previews and Notes); none of the WPF windows were viewed running.
-- [ ] Rename `OoBDev.DevTerm.Plugins.Sample` to the test fixture `OoBDev.DevTerm.Core.TestPlugin` beside the tests (project, namespace, loader-test paths); owner decided 2026-10-30 (was Q1).
 - [ ] New `src/Applications/OoBDev.DevTerm.TestUtilities` for `UserFlowTestsBase` and `IFrontEndDriver`; delete the copies in Web.Tests and Tui.Tests; `FakeDeviceConfigEditor`, `FakeTransport`, `ManualTimeProvider` can follow. Owner decided 2026-10-30 (was Q2); write the migration plan first.
 - [ ] Test gaps: Playwright DevLocal flows, an interactive Tui run, screenshot tests, serial and TCP real-hardware tests, Web screenshots still writing into `docs/user-guide/images` ([list](docs/design/DevTermParity/status.md#test-gaps)).
 - [ ] Register an `IDeviceConfigEditor` (port the Ebyte editor) so the Configure device button works; persist the theme through `ActiveTheme.Initialize`.
