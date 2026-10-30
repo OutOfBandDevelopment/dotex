@@ -22,6 +22,7 @@
             </Grid.ColumnDefinitions>
             <DockPanel Grid.Column="0">
                 <TextBox DockPanel.Dock="Top" Text="{Binding Search, UpdateSourceTrigger=PropertyChanged}" ToolTip="Search device, type, end state, file name or time" />
+                <ComboBox DockPanel.Dock="Top" ItemsSource="{Binding Panes}" SelectedIndex="{Binding PaneIndex}" Margin="0,4,0,0" />
                 <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,4">
                     <ComboBox ItemsSource="{Binding KindChoices}" SelectedIndex="{Binding KindIndex}" MinWidth="120" />
                     <ComboBox ItemsSource="{Binding SortChoices}" SelectedIndex="{Binding SortIndex}" MinWidth="90" Margin="4,0,0,0" />

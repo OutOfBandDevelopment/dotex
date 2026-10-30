@@ -114,6 +114,20 @@ public sealed class StreamCapturePreviewTests
     }
 
     [TestMethod]
+    public void PaneIndex_OneDevice_ShowsOnlyItsCaptures()
+    {
+        // Stage
+        using var viewModel = Filled();
+        CollectionAssert.AreEqual(new[] { "All devices (3)", "printer (1)", "scope (2)" }, viewModel.Panes);
+
+        // Test
+        viewModel.PaneIndex = 2;
+
+        // Assert
+        Assert.AreEqual(2, viewModel.Captures.Count);
+    }
+
+    [TestMethod]
     public void KindIndex_OneType_ShowsOnlyThatType()
     {
         // Stage

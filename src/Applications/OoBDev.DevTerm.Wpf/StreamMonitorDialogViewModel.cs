@@ -26,9 +26,12 @@ public sealed class StreamMonitorDialogViewModel : ViewModelBase, IDisposable
 
     private readonly List<StreamMonitorCapture> _all = [];
     private List<StreamMonitorCapture> _items = [];
+    private IReadOnlyList<StreamDevicePane> _panes = [];
     private string _search = string.Empty;
     private int _kindIndex;
     private int _sortIndex;
+    private int _paneIndex;
+    private string? _paneDevice;
     private readonly SynchronizationContext? _context = SynchronizationContext.Current;
     private int _selectedIndex = -1;
 
@@ -96,6 +99,23 @@ public sealed class StreamMonitorDialogViewModel : ViewModelBase, IDisposable
         {
             if (SetProperty(ref _kindIndex, value))
             {
+                Rebuild();
+            }
+        }
+    }
+
+    /// <summary>"All devices" and one pane per device with its capture count.</summary>
+    public ObservableCollection<string> Panes { get; } = [];
+
+    /// <summary>The chosen pane; 0 is every device.</summary>
+    public int PaneIndex
+    {
+        get => _paneIndex;
+        set
+        {
+            if (SetProperty(ref _paneIndex, value))
+            {
+                _paneDevice = value > 0 && value < _panes.Count ? _panes[value].Device : null;
                 Rebuild();
             }
         }
@@ -297,9 +317,10 @@ public sealed class StreamMonitorDialogViewModel : ViewModelBase, IDisposable
             OnPropertyChanged(nameof(KindIndex));
         }
 
+        RefillPanes();
         var selected = SelectedIndex >= 0 && SelectedIndex < _items.Count ? _items[SelectedIndex] : null;
         var sort = _sortIndex >= 0 && _sortIndex < SortChoices.Count ? SortChoices[_sortIndex] : StreamCaptureSort.Oldest;
-        _items = [.. StreamCaptureView.Apply(_all, _search, _kindIndex > 0 ? KindChoices[_kindIndex] : null, null, sort)];
+        _items = [.. StreamCaptureView.Apply(_all, _search, _kindIndex > 0 ? KindChoices[_kindIndex] : null, _paneDevice, sort)];
         Captures.Clear();
         foreach (var capture in _items)
         {
@@ -309,6 +330,33 @@ public sealed class StreamMonitorDialogViewModel : ViewModelBase, IDisposable
         _selectedIndex = selected is null ? -1 : _items.IndexOf(selected);
         OnPropertyChanged(nameof(SelectedIndex));
         ShowSelected();
+    }
+
+    private void RefillPanes()
+    {
+        _panes = StreamCaptureView.Panes(_all);
+        var titles = _panes.Select(p => p.Title).ToList();
+        if (!Panes.SequenceEqual(titles, StringComparer.Ordinal))
+        {
+            Panes.Clear();
+            foreach (var title in titles)
+            {
+                Panes.Add(title);
+            }
+        }
+
+        var index = _paneDevice is null ? 0 : _panes.ToList().FindIndex(p => string.Equals(p.Device, _paneDevice, StringComparison.OrdinalIgnoreCase));
+        if (index < 0)
+        {
+            _paneDevice = null;
+            index = 0;
+        }
+
+        if (index != _paneIndex)
+        {
+            _paneIndex = index;
+            OnPropertyChanged(nameof(PaneIndex));
+        }
     }
 
     private void ShowSelected()
