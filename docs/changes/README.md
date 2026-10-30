@@ -536,4 +536,5 @@ Each change document should include:
 - [DevTerm WPF theme (2026-10-30)](devterm-wpf-theme-2026-10-30.md) - WpfTheme, dark control templates and a theme chooser in the shell
 - [DevTerm WPF converter tools window (2026-10-30)](devterm-wpf-converter-tools-2026-10-30.md) - edit, reorder and save the stream monitor converter tools from the shell
 - [DevTerm WPF device manifest picker (2026-10-30)](devterm-wpf-manifest-picker-2026-10-30.md) - pick or browse a manifest and open its panel on the session
+- [DevTerm WPF theme builder (2026-10-30)](devterm-wpf-theme-builder-2026-10-30.md) - seed picker, colour role editor with live preview, save as a user theme
 - [One USB HID adapter (2026-10-29)](system-io-usbhids-adapter-merge-2026-10-29.md) - UsbHidFactory returns the endpoint adapter; the thin one is gone

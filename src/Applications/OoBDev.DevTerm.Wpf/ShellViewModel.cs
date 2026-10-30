@@ -17,6 +17,8 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
     private readonly IStreamMonitorDialog? _streamMonitorDialog;
     private readonly IConverterToolsDialog? _converterToolsDialog;
     private readonly IManifestPickerDialog? _manifestPickerDialog;
+    private readonly IThemeBuilderDialog? _themeBuilderDialog;
+    private readonly string? _themesDirectory;
     private readonly ConverterToolsStore? _converterToolsStore;
     private readonly StreamMonitor? _streamMonitor;
     private readonly IMergedLogDialog? _mergedLogDialog;
@@ -40,7 +42,7 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
     /// <param name="mergedLog">The log every opened session is recorded in, or null.</param>
     /// <param name="routingDialog">Shows the routing window, or null when the shell has no window to host it.</param>
     /// <param name="editorDialog">Shows the connection editor, or null when the shell has no window to host it.</param>
-    public ShellViewModel(IEnumerable<IPanelFactory> factories, ISessionViewModelFactory? sessionFactory = null, IConnectionEditorDialog? editorDialog = null, IRoutingDialog? routingDialog = null, IStreamMonitorDialog? streamMonitorDialog = null, StreamMonitor? streamMonitor = null, IMergedLogDialog? mergedLogDialog = null, MergedSessionLog? mergedLog = null, IPlaybackDialog? playbackDialog = null, PlaybackPresenters? playbackPresenters = null, IEnumerable<IDevicePanelContribution>? devicePanels = null, IConfirmPrompt? confirm = null, IColorPicker? colorPicker = null, IConverterToolsDialog? converterToolsDialog = null, ConverterToolsStore? converterToolsStore = null, IManifestPickerDialog? manifestPickerDialog = null)
+    public ShellViewModel(IEnumerable<IPanelFactory> factories, ISessionViewModelFactory? sessionFactory = null, IConnectionEditorDialog? editorDialog = null, IRoutingDialog? routingDialog = null, IStreamMonitorDialog? streamMonitorDialog = null, StreamMonitor? streamMonitor = null, IMergedLogDialog? mergedLogDialog = null, MergedSessionLog? mergedLog = null, IPlaybackDialog? playbackDialog = null, PlaybackPresenters? playbackPresenters = null, IEnumerable<IDevicePanelContribution>? devicePanels = null, IConfirmPrompt? confirm = null, IColorPicker? colorPicker = null, IConverterToolsDialog? converterToolsDialog = null, ConverterToolsStore? converterToolsStore = null, IManifestPickerDialog? manifestPickerDialog = null, IThemeBuilderDialog? themeBuilderDialog = null, string? themesDirectory = null)
     {
         ArgumentNullException.ThrowIfNull(factories);
         Factories = [.. factories];
@@ -50,6 +52,8 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
         _streamMonitorDialog = streamMonitorDialog;
         _converterToolsDialog = converterToolsDialog;
         _manifestPickerDialog = manifestPickerDialog;
+        _themeBuilderDialog = themeBuilderDialog;
+        _themesDirectory = themesDirectory;
         _converterToolsStore = converterToolsStore;
         _streamMonitor = streamMonitor;
         _mergedLogDialog = mergedLogDialog;
@@ -65,6 +69,7 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
         ShowStreamMonitorWindow = new ShowStreamMonitorCommand(this);
         ShowConverterTools = new ShowConverterToolsCommand(this);
         OpenManifestPanel = new OpenManifestCommand(this);
+        BuildTheme = new BuildThemeCommand(this);
         ShowRoutingWindow = new ShowRoutingCommand(this);
         NewConnection = new NewConnectionCommand(this);
         Open = new OpenPanelCommand(this);
@@ -103,6 +108,9 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
     /// <summary>Edits the stream monitor's converter tools.</summary>
     public ICommand ShowConverterTools { get; }
 
+    /// <summary>Picks a seed theme and edits a new theme from it.</summary>
+    public ICommand BuildTheme { get; }
+
     /// <summary>Picks a device manifest and opens its panel on the selected session.</summary>
     public ICommand OpenManifestPanel { get; }
 
@@ -140,6 +148,28 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
         DevicePanelPreviews.Apply(built.Definition, surface);
         var feed = new DevicePanelFeed(definition, source, built);
         SelectedPanel = new PanelViewModel(panel.MenuTitle.Replace("_", string.Empty, StringComparison.Ordinal).TrimEnd('.'), new FormViewModel(built.Definition, built.Binding, _colorPicker, _confirm), feed, feed.Displays);
+    }
+
+    internal bool CanBuildTheme => _themeBuilderDialog is not null;
+
+    internal void BuildThemeFromSeed()
+    {
+        var picker = new ThemeSeedPickerViewModel(_confirm, _themesDirectory);
+        if (!_themeBuilderDialog!.PickSeed(picker) || picker.ChosenTheme is not { } seed || picker.ChosenName is not { } name)
+        {
+            return;
+        }
+
+        var builder = new ThemeBuilderDialogViewModel(new ThemeBuilderState(seed, name), _colorPicker, _confirm, _themesDirectory);
+        ActiveTheme.Preview(seed);
+        try
+        {
+            _themeBuilderDialog.Edit(builder);
+        }
+        finally
+        {
+            ActiveTheme.CancelPreview();
+        }
     }
 
     internal bool CanOpenManifest => _manifestPickerDialog is not null && SelectedSession is not null;
