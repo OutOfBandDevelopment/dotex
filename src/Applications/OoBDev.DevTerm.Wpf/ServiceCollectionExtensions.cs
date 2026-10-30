@@ -35,6 +35,8 @@ public static class ServiceCollectionExtensions
         services.TryAddSingleton<IRoutingDialog, WpfRoutingDialog>();
         services.TryAddSingleton<IConverterToolsDialog, WpfConverterToolsDialog>();
         services.TryAddSingleton<IManifestPickerDialog, WpfManifestPickerDialog>();
+        services.TryAddSingleton<IManifestEditorDialog, WpfManifestEditorDialog>();
+        services.TryAddSingleton<IManifestFileDialogs, WpfManifestFileDialogs>();
         services.TryAddSingleton<IThemeBuilderDialog, WpfThemeBuilderDialog>();
         services.TryAddSingleton<IConfigureDeviceDialog, WpfConfigureDeviceDialog>();
         services.TryAddSingleton<IInstrumentPickerDialog, WpfInstrumentPickerDialog>();

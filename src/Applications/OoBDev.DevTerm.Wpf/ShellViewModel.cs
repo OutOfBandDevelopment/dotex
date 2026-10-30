@@ -17,6 +17,8 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
     private readonly IStreamMonitorDialog? _streamMonitorDialog;
     private readonly IConverterToolsDialog? _converterToolsDialog;
     private readonly IManifestPickerDialog? _manifestPickerDialog;
+    private readonly IManifestEditorDialog? _manifestEditorDialog;
+    private readonly IManifestFileDialogs? _manifestFiles;
     private readonly IThemeBuilderDialog? _themeBuilderDialog;
     private readonly IConfigureDeviceDialog? _configureDeviceDialog;
     private readonly IInstrumentPickerDialog? _instrumentPickerDialog;
@@ -45,7 +47,7 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
     /// <param name="mergedLog">The log every opened session is recorded in, or null.</param>
     /// <param name="routingDialog">Shows the routing window, or null when the shell has no window to host it.</param>
     /// <param name="editorDialog">Shows the connection editor, or null when the shell has no window to host it.</param>
-    public ShellViewModel(IEnumerable<IPanelFactory> factories, ISessionViewModelFactory? sessionFactory = null, IConnectionEditorDialog? editorDialog = null, IRoutingDialog? routingDialog = null, IStreamMonitorDialog? streamMonitorDialog = null, StreamMonitor? streamMonitor = null, IMergedLogDialog? mergedLogDialog = null, MergedSessionLog? mergedLog = null, IPlaybackDialog? playbackDialog = null, PlaybackPresenters? playbackPresenters = null, IEnumerable<IDevicePanelContribution>? devicePanels = null, IConfirmPrompt? confirm = null, IColorPicker? colorPicker = null, IConverterToolsDialog? converterToolsDialog = null, ConverterToolsStore? converterToolsStore = null, IManifestPickerDialog? manifestPickerDialog = null, IThemeBuilderDialog? themeBuilderDialog = null, string? themesDirectory = null, IConfigureDeviceDialog? configureDeviceDialog = null, IEnumerable<OoBDev.System.IO.Devices.IDeviceConfigEditor>? configEditors = null, IInstrumentPickerDialog? instrumentPickerDialog = null, IEnumerable<IInstrumentPanelProvider>? instruments = null)
+    public ShellViewModel(IEnumerable<IPanelFactory> factories, ISessionViewModelFactory? sessionFactory = null, IConnectionEditorDialog? editorDialog = null, IRoutingDialog? routingDialog = null, IStreamMonitorDialog? streamMonitorDialog = null, StreamMonitor? streamMonitor = null, IMergedLogDialog? mergedLogDialog = null, MergedSessionLog? mergedLog = null, IPlaybackDialog? playbackDialog = null, PlaybackPresenters? playbackPresenters = null, IEnumerable<IDevicePanelContribution>? devicePanels = null, IConfirmPrompt? confirm = null, IColorPicker? colorPicker = null, IConverterToolsDialog? converterToolsDialog = null, ConverterToolsStore? converterToolsStore = null, IManifestPickerDialog? manifestPickerDialog = null, IThemeBuilderDialog? themeBuilderDialog = null, string? themesDirectory = null, IConfigureDeviceDialog? configureDeviceDialog = null, IEnumerable<OoBDev.System.IO.Devices.IDeviceConfigEditor>? configEditors = null, IInstrumentPickerDialog? instrumentPickerDialog = null, IEnumerable<IInstrumentPanelProvider>? instruments = null, IManifestEditorDialog? manifestEditorDialog = null, IManifestFileDialogs? manifestFiles = null)
     {
         ArgumentNullException.ThrowIfNull(factories);
         Factories = [.. factories];
@@ -55,6 +57,8 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
         _streamMonitorDialog = streamMonitorDialog;
         _converterToolsDialog = converterToolsDialog;
         _manifestPickerDialog = manifestPickerDialog;
+        _manifestEditorDialog = manifestEditorDialog;
+        _manifestFiles = manifestFiles;
         _themeBuilderDialog = themeBuilderDialog;
         _configureDeviceDialog = configureDeviceDialog;
         _instrumentPickerDialog = instrumentPickerDialog;
@@ -76,6 +80,7 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
         ShowStreamMonitorWindow = new ShowStreamMonitorCommand(this);
         ShowConverterTools = new ShowConverterToolsCommand(this);
         OpenManifestPanel = new OpenManifestCommand(this);
+        ShowManifestEditor = new ShowManifestEditorCommand(this);
         BuildTheme = new BuildThemeCommand(this);
         ShowConfigureDevice = new ShowConfigureDeviceCommand(this);
         OpenInstrumentPanel = new OpenInstrumentCommand(this);
@@ -131,6 +136,9 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
 
     /// <summary>Picks a device manifest and opens its panel on the selected session.</summary>
     public ICommand OpenManifestPanel { get; }
+
+    /// <summary>Opens the device manifest editor.</summary>
+    public ICommand ShowManifestEditor { get; }
 
     /// <summary>Shows the log of every open session, merged by time.</summary>
     public ICommand ShowMergedLogWindow { get; }
@@ -237,6 +245,14 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
         {
             ActiveTheme.CancelPreview();
         }
+    }
+
+    internal bool CanEditManifest => _manifestEditorDialog is not null && _manifestFiles is not null;
+
+    internal void EditManifest()
+    {
+        var editor = new OoBDev.DevTerm.DeviceManifests.Editing.ManifestEditorViewModel(OoBDev.DevTerm.Configuration.DevTermUserDataPaths.UserManifestsDirectory, OoBDev.DevTerm.Configuration.DevTermUserDataPaths.AppManifestsDirectory);
+        _manifestEditorDialog!.Show(new ManifestEditorDialogViewModel(editor, _manifestFiles!, _colorPicker, _confirm));
     }
 
     internal bool CanOpenManifest => _manifestPickerDialog is not null && SelectedSession is not null;

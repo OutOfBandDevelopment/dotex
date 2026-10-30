@@ -11,6 +11,7 @@
             <Button Content="Stream monitor..." Margin="4" Command="{Binding ShowStreamMonitorWindow}" />
             <Button Content="Routing..." Margin="4" Command="{Binding ShowRoutingWindow}" />
             <Button Content="Device manifest..." Margin="4" Command="{Binding OpenManifestPanel}" />
+            <Button Content="Edit manifest..." Margin="4" Command="{Binding ShowManifestEditor}" />
             <Button Content="Build theme..." Margin="4" Command="{Binding BuildTheme}" />
             <Button Content="Configure device..." Margin="4" Command="{Binding ShowConfigureDevice}" />
             <Button Content="Converter tools..." Margin="4" Command="{Binding ShowConverterTools}" />
