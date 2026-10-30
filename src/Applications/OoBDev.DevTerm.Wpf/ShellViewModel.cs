@@ -21,6 +21,7 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
     private readonly PlaybackPresenters? _playbackPresenters;
     private readonly MergedSessionLog? _mergedLog;
     private PanelViewModel? _selected;
+    private readonly IConfirmPrompt? _confirm;
     private SessionViewModel? _selectedSession;
     private int _connectionCount;
 
@@ -35,7 +36,7 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
     /// <param name="mergedLog">The log every opened session is recorded in, or null.</param>
     /// <param name="routingDialog">Shows the routing window, or null when the shell has no window to host it.</param>
     /// <param name="editorDialog">Shows the connection editor, or null when the shell has no window to host it.</param>
-    public ShellViewModel(IEnumerable<IPanelFactory> factories, ISessionViewModelFactory? sessionFactory = null, IConnectionEditorDialog? editorDialog = null, IRoutingDialog? routingDialog = null, IStreamMonitorDialog? streamMonitorDialog = null, StreamMonitor? streamMonitor = null, IMergedLogDialog? mergedLogDialog = null, MergedSessionLog? mergedLog = null, IPlaybackDialog? playbackDialog = null, PlaybackPresenters? playbackPresenters = null, IEnumerable<IDevicePanelContribution>? devicePanels = null)
+    public ShellViewModel(IEnumerable<IPanelFactory> factories, ISessionViewModelFactory? sessionFactory = null, IConnectionEditorDialog? editorDialog = null, IRoutingDialog? routingDialog = null, IStreamMonitorDialog? streamMonitorDialog = null, StreamMonitor? streamMonitor = null, IMergedLogDialog? mergedLogDialog = null, MergedSessionLog? mergedLog = null, IPlaybackDialog? playbackDialog = null, PlaybackPresenters? playbackPresenters = null, IEnumerable<IDevicePanelContribution>? devicePanels = null, IConfirmPrompt? confirm = null)
     {
         ArgumentNullException.ThrowIfNull(factories);
         Factories = [.. factories];
@@ -49,6 +50,7 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
         _playbackDialog = playbackDialog;
         _playbackPresenters = playbackPresenters;
         DevicePanels = [.. devicePanels ?? []];
+        _confirm = confirm;
         OpenDevicePanelCommand = new OpenDevicePanelCommand(this);
         OpenPlaybackWindow = new OpenPlaybackCommand(this);
         ShowMergedLogWindow = new ShowMergedLogCommand(this);
@@ -117,7 +119,7 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
         }
 
         var feed = new DevicePanelFeed(definition, source, built);
-        SelectedPanel = new PanelViewModel(panel.MenuTitle.Replace("_", string.Empty, StringComparison.Ordinal).TrimEnd('.'), new FormViewModel(built.Definition, built.Binding), feed, feed.Displays);
+        SelectedPanel = new PanelViewModel(panel.MenuTitle.Replace("_", string.Empty, StringComparison.Ordinal).TrimEnd('.'), new FormViewModel(built.Definition, built.Binding, confirm: _confirm), feed, feed.Displays);
     }
 
     internal bool CanOpenPlayback => _playbackDialog is not null && _playbackPresenters is not null;

@@ -24,3 +24,5 @@ No code-behind, no lambdas as commands, no UI toolkit reference.
 ## Colour picker
 
 `IColorPicker` is the dialog a view supplies. Pass it to `new FormViewModel(definition, binding, colorPicker)`; a `ButtonControl` with `ColorPickerTargetCommandId` then gets a `PickColorCommand` that writes the picked `r,g,b` text to that control (the dialog starts at the last pick or the current text). `ColorPickerViewModel` holds the dialog state (three channels, preview, accept and cancel commands).
+
+`IConfirmPrompt` is the yes/no dialog a view supplies (`WpfConfirmPrompt` in `OoBDev.UiDefinitions.Wpf` is a message box). Pass it as the `confirm` argument of `FormViewModel`; a button with a `ConfirmMessage` asks before its command runs and does nothing when declined.

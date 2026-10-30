@@ -17,11 +17,12 @@ public sealed class FormViewModel : ViewModelBase, IDisposable
     /// <param name="definition">The form definition, typically from <see cref="FormDefinitionGenerator"/>.</param>
     /// <param name="binding">The bound model; this view model listens to it but does not own it.</param>
     /// <param name="colorPicker">The dialog colour picker buttons open, or null.</param>
-    public FormViewModel(UiDefinition definition, FormBinding binding, IColorPicker? colorPicker = null)
+    /// <param name="confirm">Asks a button's confirm message before it runs, or null.</param>
+    public FormViewModel(UiDefinition definition, FormBinding binding, IColorPicker? colorPicker = null, IConfirmPrompt? confirm = null)
     {
         Definition = definition ?? throw new ArgumentNullException(nameof(definition));
         _binding = binding ?? throw new ArgumentNullException(nameof(binding));
-        Sections = [.. definition.Sections.Select(s => new FormSectionViewModel(s, [.. s.Controls.Select(c => ControlViewModelFactory.Create(c, binding, colorPicker, s.Controls))]))];
+        Sections = [.. definition.Sections.Select(s => new FormSectionViewModel(s, [.. s.Controls.Select(c => ControlViewModelFactory.Create(c, binding, colorPicker, s.Controls, confirm))]))];
         LinkColorPickers(definition);
         _binding.Changed += OnModelChanged;
     }

@@ -11,7 +11,8 @@ namespace OoBDev.UiDefinitions.ViewModels;
 /// <param name="binding">The bound model.</param>
 /// <param name="control">The button.</param>
 /// <param name="siblings">The controls whose values a button with <see cref="ButtonControl.ParameterFieldIds"/> reads.</param>
-public sealed class InvokeCommand(FormBinding binding, ButtonControl control, IReadOnlyCollection<UiControl>? siblings = null) : CommandBase
+/// <param name="confirm">Asks <see cref="ButtonControl.ConfirmMessage"/> before the command runs, or null to run without asking.</param>
+public sealed class InvokeCommand(FormBinding binding, ButtonControl control, IReadOnlyCollection<UiControl>? siblings = null, IConfirmPrompt? confirm = null) : CommandBase
 {
     private readonly FormBinding _binding = binding ?? throw new ArgumentNullException(nameof(binding));
     private readonly ButtonControl _control = control ?? throw new ArgumentNullException(nameof(control));
@@ -21,7 +22,15 @@ public sealed class InvokeCommand(FormBinding binding, ButtonControl control, IR
         _binding.GetValue(_control.CommandId ?? _control.Id) is ICommand command && command.CanExecute(Parameter());
 
     /// <inheritdoc />
-    public override void Execute(object? parameter) => _binding.Invoke(_control.CommandId ?? _control.Id, Parameter());
+    public override void Execute(object? parameter)
+    {
+        if (confirm is not null && !string.IsNullOrWhiteSpace(_control.ConfirmMessage) && !confirm.Confirm(_control.ConfirmMessage))
+        {
+            return;
+        }
+
+        _binding.Invoke(_control.CommandId ?? _control.Id, Parameter());
+    }
 
     private string? Parameter()
     {

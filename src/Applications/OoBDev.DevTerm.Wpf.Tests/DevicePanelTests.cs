@@ -26,6 +26,17 @@ public sealed class DevicePanelTests
         }
     }
 
+    private sealed class Decline : OoBDev.UiDefinitions.ViewModels.IConfirmPrompt
+    {
+        public string? Asked { get; private set; }
+
+        public bool Confirm(string message)
+        {
+            Asked = message;
+            return false;
+        }
+    }
+
     private sealed class FakePanel(FakeSurface surface) : IDevicePanelContribution
     {
         public string Id => "fake";
@@ -39,7 +50,7 @@ public sealed class DevicePanelTests
         public UiDefinition BuildDefinition() => new()
         {
             Name = "Fake",
-            Sections = [new UiSection { Controls = [new ToggleControl { Id = "d1", Label = "D1" }] }],
+            Sections = [new UiSection { Controls = [new ToggleControl { Id = "d1", Label = "D1" }, new ButtonControl { Id = "wipe", Label = "Wipe", CommandId = "WIPE", ConfirmMessage = "Erase?" }] }],
         };
 
         public IControlSurface CreateSurface(Session session) => surface;
@@ -69,6 +80,32 @@ public sealed class DevicePanelTests
         // Assert
         Assert.AreEqual("Fake panel", shell.SelectedPanel.Title);
         CollectionAssert.AreEqual(new (string, string?)[] { ("d1", "1") }, surface.Sent);
+    }
+
+    [TestMethod]
+    public async Task Button_ConfirmDeclined_DoesNotSend()
+    {
+        // Stage
+        var surface = new FakeSurface();
+        var decline = new Decline();
+        var services = new ServiceCollection();
+        services.AddSingleton<IDevicePanelContribution>(new FakePanel(surface));
+        services.AddSingleton<OoBDev.UiDefinitions.ViewModels.IConfirmPrompt>(decline);
+        await using var provider = services.AddDevTermWpfShell().BuildServiceProvider();
+        var shell = provider.GetRequiredService<ShellViewModel>();
+        shell.NewLoopbackSession.Execute(null);
+        var session = shell.SelectedSession!;
+        session.Connect.Execute(null);
+        await WaitAsync(() => session.State == ConnectionState.Open);
+        shell.OpenDevicePanelCommand.Execute(shell.DevicePanels[0]);
+        var wipe = (OoBDev.UiDefinitions.ViewModels.ButtonViewModel)shell.SelectedPanel!.Form.Row("wipe")!;
+
+        // Test
+        wipe.Invoke.Execute(null);
+
+        // Assert
+        Assert.AreEqual("Erase?", decline.Asked);
+        Assert.IsEmpty(surface.Sent);
     }
 
     private static async Task WaitAsync(Func<bool> condition)

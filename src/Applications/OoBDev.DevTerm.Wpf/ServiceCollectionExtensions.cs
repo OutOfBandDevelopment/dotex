@@ -21,6 +21,7 @@ public static class ServiceCollectionExtensions
         services.AddDevTermCore();
         services.AddDevTermDevicePanels();
         services.TryAddSingleton<IColorPicker, WpfColorPicker>();
+        services.TryAddSingleton<IConfirmPrompt, WpfConfirmPrompt>();
         services.TryAddEnumerable(ServiceDescriptor.Singleton<IPanelFactory, DemoPanelFactory>());
         services.TryAddTextPresenters();
         services.TryAddLoopbackTransport();

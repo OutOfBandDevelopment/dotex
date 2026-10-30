@@ -13,12 +13,13 @@ public sealed class ButtonViewModel : ControlViewModel
     /// <param name="binding">The bound model.</param>
     /// <param name="colorPicker">The dialog for a colour picker button, or null.</param>
     /// <param name="siblings">The controls the colour picker may write to.</param>
-    public ButtonViewModel(ButtonControl control, FormBinding binding, IColorPicker? colorPicker = null, IReadOnlyCollection<UiControl>? siblings = null)
+    /// <param name="confirm">Asks the button's confirm message before it runs, or null.</param>
+    public ButtonViewModel(ButtonControl control, FormBinding binding, IColorPicker? colorPicker = null, IReadOnlyCollection<UiControl>? siblings = null, IConfirmPrompt? confirm = null)
         : base(control, binding)
     {
         Button = control;
         var target = colorPicker is not null && control.ColorPickerTargetCommandId is { } id ? siblings?.FirstOrDefault(c => c.Id == id) : null;
-        Invoke = target is null ? new InvokeCommand(binding, control, siblings) : new PickColorCommand(binding, target, colorPicker!);
+        Invoke = target is null ? new InvokeCommand(binding, control, siblings, confirm) : new PickColorCommand(binding, target, colorPicker!);
         Refresh();
     }
 
