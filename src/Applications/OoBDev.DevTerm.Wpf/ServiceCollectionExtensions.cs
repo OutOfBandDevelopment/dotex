@@ -25,6 +25,7 @@ public static class ServiceCollectionExtensions
         services.TryAddTextPresenters();
         services.TryAddLoopbackTransport();
         services.TryAddSingleton(_ => new ConnectionProfileStore());
+        services.TryAddSingleton<IRoutingDialog, WpfRoutingDialog>();
         services.TryAddSingleton<IConnectionEditorDialog, WpfConnectionEditorDialog>();
         services.TryAddSingleton<ISessionViewModelFactory, SessionViewModelFactory>();
         services.TryAddSingleton<ShellViewModel>();

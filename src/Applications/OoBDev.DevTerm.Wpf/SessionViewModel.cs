@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using OoBDev.DevTerm.Configuration;
 using OoBDev.System.IO;
 using OoBDev.UiDefinitions.ViewModels;
 
@@ -20,18 +21,23 @@ public sealed class SessionViewModel : ViewModelBase, IAsyncDisposable
     /// <summary>Creates the view model over <paramref name="session"/> and listens to its output.</summary>
     /// <param name="session">The session; the view model owns it.</param>
     /// <param name="title">The tab title.</param>
-    public SessionViewModel(Session session, string title)
+    /// <param name="tab">The per-connection state (options, routing), or null when the session was not built from options.</param>
+    public SessionViewModel(Session session, string title, SessionTab? tab = null)
     {
         ArgumentNullException.ThrowIfNull(session);
         ArgumentException.ThrowIfNullOrWhiteSpace(title);
         _session = session;
         Title = title;
+        Tab = tab;
         Connect = new ConnectSessionCommand(this);
         Disconnect = new DisconnectSessionCommand(this);
         Send = new SendTextCommand(this);
         _session.Output += OnOutput;
         _session.Transport.StateChanged += OnStateChanged;
     }
+
+    /// <summary>The per-connection state the routing window edits, or null.</summary>
+    public SessionTab? Tab { get; }
 
     /// <summary>The tab title.</summary>
     public string Title { get; }

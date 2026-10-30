@@ -13,6 +13,7 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
 {
     private readonly ISessionViewModelFactory? _sessionFactory;
     private readonly IConnectionEditorDialog? _editorDialog;
+    private readonly IRoutingDialog? _routingDialog;
     private PanelViewModel? _selected;
     private SessionViewModel? _selectedSession;
     private int _connectionCount;
@@ -20,13 +21,16 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
     /// <summary>Creates the shell and opens the first panel, if any.</summary>
     /// <param name="factories">The registered panel factories.</param>
     /// <param name="sessionFactory">Creates the sessions the shell opens, or null when it cannot.</param>
+    /// <param name="routingDialog">Shows the routing window, or null when the shell has no window to host it.</param>
     /// <param name="editorDialog">Shows the connection editor, or null when the shell has no window to host it.</param>
-    public ShellViewModel(IEnumerable<IPanelFactory> factories, ISessionViewModelFactory? sessionFactory = null, IConnectionEditorDialog? editorDialog = null)
+    public ShellViewModel(IEnumerable<IPanelFactory> factories, ISessionViewModelFactory? sessionFactory = null, IConnectionEditorDialog? editorDialog = null, IRoutingDialog? routingDialog = null)
     {
         ArgumentNullException.ThrowIfNull(factories);
         Factories = [.. factories];
         _sessionFactory = sessionFactory;
         _editorDialog = editorDialog;
+        _routingDialog = routingDialog;
+        ShowRoutingWindow = new ShowRoutingCommand(this);
         NewConnection = new NewConnectionCommand(this);
         Open = new OpenPanelCommand(this);
         NewLoopbackSession = new NewLoopbackSessionCommand(this);
@@ -55,6 +59,14 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
     /// <summary>Shows the connection editor and opens a session from what it returns.</summary>
     public ICommand NewConnection { get; }
 
+    /// <summary>Shows the routing window for the selected session.</summary>
+    public ICommand ShowRoutingWindow { get; }
+
+    internal bool CanShowRouting => _routingDialog is not null && SelectedSession?.Tab is not null;
+
+    internal void ShowRouting() =>
+        _routingDialog!.Show(new RoutingDialogViewModel(new RoutingViewModel(SelectedSession!.Tab!, _sessionFactory?.ProfileStore)));
+
     internal bool CanEditConnections => _sessionFactory is not null && _editorDialog is not null;
 
     internal void EditConnection()
@@ -80,7 +92,13 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
     public SessionViewModel? SelectedSession
     {
         get => _selectedSession;
-        set => SetProperty(ref _selectedSession, value);
+        set
+        {
+            if (SetProperty(ref _selectedSession, value))
+            {
+                ((CommandBase)ShowRoutingWindow).RaiseCanExecuteChanged();
+            }
+        }
     }
 
     internal bool CanCreateSessions => _sessionFactory is not null;

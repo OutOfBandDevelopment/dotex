@@ -22,6 +22,9 @@ public sealed class SessionViewModelFactory(IOptions<LoopbackTransportOptions> l
     }
 
     /// <inheritdoc />
+    public ConnectionProfileStore ProfileStore => profiles;
+
+    /// <inheritdoc />
     public IReadOnlyList<string> ListProfiles() => profiles.List();
 
     /// <inheritdoc />
@@ -31,7 +34,7 @@ public sealed class SessionViewModelFactory(IOptions<LoopbackTransportOptions> l
     public SessionViewModel CreateFromOptions(CliOptions options, string title)
     {
         var built = DevTermSessionBuilder.Build(options);
-        return new SessionViewModel(built.Session, title);
+        return new SessionViewModel(built.Session, title, new SessionTab(built.Session, built.Catalog, options, built.Services));
     }
 
     /// <inheritdoc />

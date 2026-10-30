@@ -9,6 +9,9 @@ public interface ISessionViewModelFactory
     /// <summary>Creates a session over the loopback adapter with the ASCII presenter.</summary>
     SessionViewModel CreateLoopback();
 
+    /// <summary>The saved connection profiles.</summary>
+    ConnectionProfileStore ProfileStore { get; }
+
     /// <summary>The names of the saved connection profiles.</summary>
     IReadOnlyList<string> ListProfiles();
 
