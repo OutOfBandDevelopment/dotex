@@ -50,3 +50,7 @@ The six `OoBDev.DevTerm.Transports.{Tcp,Rfc2217,Vxi11}` projects are gone. `TcpT
 ## Step 5e: Brokers move into `System.IO.Brokers`
 
 `DevTerm.Transports.Brokers` is now `BrokerDeviceAdapter` (`BrokerDeviceAdapterOptions`, `AddAmqpDeviceAdapter()` and `AddStompDeviceAdapter()`) in the new `OoBDev.System.IO.Brokers`: an `IDeviceAdapter` of type `Broker` over RabbitMQ.Client (already in `Directory.Packages.props`) and the STOMP client. Multi-type files are split one type per file. `BrokerRouterBridge` and its tests moved beside the MQTT bridge in `OoBDev.DevTerm.Core` (`Brokers/`), and Core references the library. 8 Unit tests in `OoBDev.System.IO.Brokers.Tests` plus the bridge tests in `Core.Tests` pass (Core.Tests: 896 passed, 5 skipped); the RabbitMQ test is `DevLocal` and was not run. This completes step 5.
+
+## Step 6a: the Wpf shell moves to `src/Applications`
+
+`OoBDev.DevTerm.Wpf` and `OoBDev.DevTerm.Wpf.Tests` moved from `src/Tools` to `src/Applications` with `git mv` (same depth, so project references are unchanged) and the slnx entries moved with them. 8 Unit tests pass. The Tui and Web (Blazor) shells are still to be built.

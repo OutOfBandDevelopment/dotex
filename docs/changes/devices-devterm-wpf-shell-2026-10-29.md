@@ -1,6 +1,6 @@
 # DevTerm WPF shell skeleton (2026-10-29)
 
-`src/Tools/OoBDev.DevTerm.Wpf` (`net10.0-windows`, WinExe) with `OoBDev.DevTerm.Wpf.Tests` (4 Unit tests, passing). First part of phase 10.
+`src/Applications/OoBDev.DevTerm.Wpf` (moved from `src/Tools` in step 6) (`net10.0-windows`, WinExe) with `OoBDev.DevTerm.Wpf.Tests` (4 Unit tests, passing). First part of phase 10.
 
 ## Decisions
 

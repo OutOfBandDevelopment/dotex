@@ -204,6 +204,8 @@
     <Project Path="Framework/OoBDev.Devices.TestUtilities/OoBDev.Devices.TestUtilities.csproj" />
     <Project Path="Applications/OoBDev.DevTerm.Core.Tests/OoBDev.DevTerm.Core.Tests.csproj" />
     <Project Path="Applications/OoBDev.DevTerm.Core/OoBDev.DevTerm.Core.csproj" />
+    <Project Path="Applications/OoBDev.DevTerm.Wpf.Tests/OoBDev.DevTerm.Wpf.Tests.csproj" />
+    <Project Path="Applications/OoBDev.DevTerm.Wpf/OoBDev.DevTerm.Wpf.csproj" />
     <Project Path="Framework/OoBDev.Documents.Abstractions/OoBDev.Documents.Abstractions.csproj" />
     <Project Path="Framework/OoBDev.Documents.Tests/OoBDev.Documents.Tests.csproj" />
     <Project Path="Framework/OoBDev.Documents/OoBDev.Documents.csproj" />
@@ -260,8 +262,6 @@
     <Project Path="Tools/OoBDev.Xslt.Cli.Tests/OoBDev.Xslt.Cli.Tests.csproj" />
     <Project Path="Tools/OoBDev.Xslt.Cli/OoBDev.Xslt.Cli.csproj" />
     <Project Path="Tools/OoBDev.DacPacCompiler.Cli/OoBDev.DacPacCompiler.Cli.csproj" />
-    <Project Path="Tools/OoBDev.DevTerm.Wpf.Tests/OoBDev.DevTerm.Wpf.Tests.csproj" />
-    <Project Path="Tools/OoBDev.DevTerm.Wpf/OoBDev.DevTerm.Wpf.csproj" />
     <Project Path="Tools/OoBDev.Docs.Tests/OoBDev.Docs.Tests.csproj" />
     <Project Path="Tools/OoBDev.DocumentConverter.Cli/OoBDev.DocumentConverter.Cli.csproj" />
     <Project Path="Tools/OoBDev.FileRagEngine.Cli/OoBDev.FileRagEngine.Cli.csproj" />
