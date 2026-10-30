@@ -9,4 +9,5 @@
 
 ## Not done
 
-- The Notes section of the control panel and the profile-button refresh.
+- The Notes section of the control panel.
+- The connection editor window already had the Refresh button and the external-change refresh; `ConnectionEditorWindowTests` now covers the window (a profile saved by another store appears without pressing Refresh).
