@@ -16,6 +16,7 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
     private readonly IRoutingDialog? _routingDialog;
     private readonly IStreamMonitorDialog? _streamMonitorDialog;
     private readonly IConverterToolsDialog? _converterToolsDialog;
+    private readonly IManifestPickerDialog? _manifestPickerDialog;
     private readonly ConverterToolsStore? _converterToolsStore;
     private readonly StreamMonitor? _streamMonitor;
     private readonly IMergedLogDialog? _mergedLogDialog;
@@ -39,7 +40,7 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
     /// <param name="mergedLog">The log every opened session is recorded in, or null.</param>
     /// <param name="routingDialog">Shows the routing window, or null when the shell has no window to host it.</param>
     /// <param name="editorDialog">Shows the connection editor, or null when the shell has no window to host it.</param>
-    public ShellViewModel(IEnumerable<IPanelFactory> factories, ISessionViewModelFactory? sessionFactory = null, IConnectionEditorDialog? editorDialog = null, IRoutingDialog? routingDialog = null, IStreamMonitorDialog? streamMonitorDialog = null, StreamMonitor? streamMonitor = null, IMergedLogDialog? mergedLogDialog = null, MergedSessionLog? mergedLog = null, IPlaybackDialog? playbackDialog = null, PlaybackPresenters? playbackPresenters = null, IEnumerable<IDevicePanelContribution>? devicePanels = null, IConfirmPrompt? confirm = null, IColorPicker? colorPicker = null, IConverterToolsDialog? converterToolsDialog = null, ConverterToolsStore? converterToolsStore = null)
+    public ShellViewModel(IEnumerable<IPanelFactory> factories, ISessionViewModelFactory? sessionFactory = null, IConnectionEditorDialog? editorDialog = null, IRoutingDialog? routingDialog = null, IStreamMonitorDialog? streamMonitorDialog = null, StreamMonitor? streamMonitor = null, IMergedLogDialog? mergedLogDialog = null, MergedSessionLog? mergedLog = null, IPlaybackDialog? playbackDialog = null, PlaybackPresenters? playbackPresenters = null, IEnumerable<IDevicePanelContribution>? devicePanels = null, IConfirmPrompt? confirm = null, IColorPicker? colorPicker = null, IConverterToolsDialog? converterToolsDialog = null, ConverterToolsStore? converterToolsStore = null, IManifestPickerDialog? manifestPickerDialog = null)
     {
         ArgumentNullException.ThrowIfNull(factories);
         Factories = [.. factories];
@@ -48,6 +49,7 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
         _routingDialog = routingDialog;
         _streamMonitorDialog = streamMonitorDialog;
         _converterToolsDialog = converterToolsDialog;
+        _manifestPickerDialog = manifestPickerDialog;
         _converterToolsStore = converterToolsStore;
         _streamMonitor = streamMonitor;
         _mergedLogDialog = mergedLogDialog;
@@ -62,6 +64,7 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
         ShowMergedLogWindow = new ShowMergedLogCommand(this);
         ShowStreamMonitorWindow = new ShowStreamMonitorCommand(this);
         ShowConverterTools = new ShowConverterToolsCommand(this);
+        OpenManifestPanel = new OpenManifestCommand(this);
         ShowRoutingWindow = new ShowRoutingCommand(this);
         NewConnection = new NewConnectionCommand(this);
         Open = new OpenPanelCommand(this);
@@ -100,6 +103,9 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
     /// <summary>Edits the stream monitor's converter tools.</summary>
     public ICommand ShowConverterTools { get; }
 
+    /// <summary>Picks a device manifest and opens its panel on the selected session.</summary>
+    public ICommand OpenManifestPanel { get; }
+
     /// <summary>Shows the log of every open session, merged by time.</summary>
     public ICommand ShowMergedLogWindow { get; }
 
@@ -134,6 +140,23 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
         DevicePanelPreviews.Apply(built.Definition, surface);
         var feed = new DevicePanelFeed(definition, source, built);
         SelectedPanel = new PanelViewModel(panel.MenuTitle.Replace("_", string.Empty, StringComparison.Ordinal).TrimEnd('.'), new FormViewModel(built.Definition, built.Binding, _colorPicker, _confirm), feed, feed.Displays);
+    }
+
+    internal bool CanOpenManifest => _manifestPickerDialog is not null && SelectedSession is not null;
+
+    internal void OpenManifest()
+    {
+        var picker = new ManifestPickerDialogViewModel(OoBDev.DevTerm.Configuration.InstalledManifests.Discover());
+        if (!_manifestPickerDialog!.Pick(picker) || picker.Chosen is not { } manifest)
+        {
+            return;
+        }
+
+        var panel = OoBDev.DevTerm.DeviceManifests.ManifestPanel.Attach(SelectedSession!.Session, manifest);
+        var built = OoBDev.DevTerm.Panels.SurfacePanelBuilder.Build(panel.Definition, panel.Surface);
+        DevicePanelPreviews.Apply(built.Definition, panel.Surface);
+        var feed = new DevicePanelFeed(panel.Definition, panel.Presenter, new PanelDisposal(built, panel));
+        SelectedPanel = new PanelViewModel(manifest.Name, new FormViewModel(built.Definition, built.Binding, _colorPicker, _confirm), feed, feed.Displays);
     }
 
     internal bool CanOpenPlayback => _playbackDialog is not null && _playbackPresenters is not null;

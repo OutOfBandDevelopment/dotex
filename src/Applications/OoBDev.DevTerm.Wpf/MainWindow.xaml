@@ -10,6 +10,7 @@
             <Button Content="Merged log..." Margin="4" Command="{Binding ShowMergedLogWindow}" />
             <Button Content="Stream monitor..." Margin="4" Command="{Binding ShowStreamMonitorWindow}" />
             <Button Content="Routing..." Margin="4" Command="{Binding ShowRoutingWindow}" />
+            <Button Content="Device manifest..." Margin="4" Command="{Binding OpenManifestPanel}" />
             <Button Content="Converter tools..." Margin="4" Command="{Binding ShowConverterTools}" />
             <Button Content="New loopback session" Margin="4" Command="{Binding NewLoopbackSession}" />
             <ItemsControl ItemsSource="{Binding ProfileNames}" Margin="4">
