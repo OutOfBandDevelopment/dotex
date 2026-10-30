@@ -555,3 +555,4 @@ Each change document should include:
 - [Z-Wave Hardware tests open the adapter (2026-10-30)](zwave-hardware-tests-adapter-open-2026-10-30.md) - the Z-Stick tests pass against real hardware
 - [DevTerm surroundings and documentation layout (2026-10-30)](devterm-surroundings-docs-2026-10-30.md) - application docs under docs/applications, protocols moved, surroundings review recorded
 - [image-mask tool (2026-10-30)](tools-image-mask-2026-10-30.md) - dotnet tool that masks zones from a JSON file, diffs and syncs guide images
+- [WPF theme start-up (2026-10-30)](devterm-wpf-theme-startup-2026-10-30.md) - `--theme`, saved preference, persisted choices and system-theme refresh in the WPF app

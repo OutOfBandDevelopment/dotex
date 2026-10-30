@@ -15,11 +15,14 @@ public partial class App : Application, IDisposable
 {
     private ScpiTcpExecutor? _scpi;
     private ServiceProvider? _provider;
+    private IDisposable? _systemChanges;
 
     /// <inheritdoc />
     protected override void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
+        ThemeStartup.Initialize(e.Args);
+        _systemChanges = ThemeStartup.FollowSystemChanges(Dispatcher);
         WpfTheme.AttachApplication(this);
         var services = new ServiceCollection().AddDevTermWpfShell();
         if (ScpiTarget(e.Args) is { } target)
@@ -35,6 +38,7 @@ public partial class App : Application, IDisposable
     /// <summary>Closes the instrument connection.</summary>
     public void Dispose()
     {
+        _systemChanges?.Dispose();
         _provider?.Dispose();
         _scpi?.Dispose();
         GC.SuppressFinalize(this);
