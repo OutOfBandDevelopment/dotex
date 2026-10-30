@@ -23,3 +23,20 @@ _(none waiting; processed requests are in BACKLOG.md and TODO.md)_
 **Default:** A when answered; until then it stays as is.
 
 **Your answer:**
+
+### Q2 (2026-10-29, DevTerm tests) Where does the shared user-flow test base live?
+
+`UserFlowTestsBase` and `IFrontEndDriver` are identical copies in `OoBDev.DevTerm.Web.Tests` and `OoBDev.DevTerm.Tui.Tests` (only the namespace and a few usings differ). Layering rule: a new project needs a confirmed migration plan first.
+
+| Project | Current | Target | Namespace | Unit | References that change |
+|---|---|---|---|---|---|
+| `UserFlowTestsBase`, `IFrontEndDriver` | copied in `Web.Tests` and `Tui.Tests` | new `src/Applications/OoBDev.DevTerm.TestUtilities` | `OoBDev.DevTerm.TestUtilities` | test library, not packed | `Web.Tests` and `Tui.Tests` add a ProjectReference; the copies are deleted; `FakeDeviceConfigEditor`, `FakeTransport` and `ManualTimeProvider` (also duplicated in `Core.Tests` and `Tui.Tests`) can move later |
+
+**Options**
+- A. New `OoBDev.DevTerm.TestUtilities` project in `src/Applications` as above (recommended): one copy, the application layer stays the only place that knows DevTerm, and it follows the "device libraries share helpers" rule in `testing.md`.
+- B. Put them in `OoBDev.Devices.TestUtilities` (the shared device test helpers). One fewer project, but it would then reference DevTerm Core-level concepts, which a HardwareDevices-wide helper must not.
+- C. Leave the two copies. No work now, but every flow added must be edited twice.
+
+**Default:** C until answered.
+
+**Your answer:**
