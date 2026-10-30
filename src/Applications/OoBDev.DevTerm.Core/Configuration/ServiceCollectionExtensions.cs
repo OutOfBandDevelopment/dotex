@@ -1,3 +1,10 @@
+using OoBDev.System.IO.UsbTmc;
+using OoBDev.System.IO.UsbHids;
+using OoBDev.System.IO.Tcp;
+using OoBDev.System.IO.Ports;
+using OoBDev.System.IO.Mqtt;
+using OoBDev.System.IO.Brokers;
+using OoBDev.System.IO.Bluetooth;
 using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,21 +22,161 @@ public static class ServiceCollectionExtensions
     /// Registers the core engine, text presenters and the transport <paramref name="cliOptions"/> selects, configured from it.
     /// Every front end calls this so they all wire up identically from the same bound options.
     /// </summary>
-    /// <exception cref="NotSupportedException">The selected transport has not been ported to the pipe model yet.</exception>
     public static IServiceCollection AddDevTermFrontEnd(this IServiceCollection services, CliOptions cliOptions)
     {
         services.AddDevTermPresenters(cliOptions);
         StartTelemetry(cliOptions);
 
-        if (string.Equals(cliOptions.Transport, "loopback", StringComparison.OrdinalIgnoreCase))
+        var transport = cliOptions.Transport?.ToLowerInvariant();
+        switch (transport)
         {
-            services.TryAddLoopbackTransport();
-            services.Configure<LoopbackTransportOptions>(o => o.SampleIntervalMs = cliOptions.LoopbackSampleIntervalMs);
-            return services;
+            case "loopback":
+                services.TryAddLoopbackTransport();
+                services.Configure<LoopbackTransportOptions>(o => o.SampleIntervalMs = cliOptions.LoopbackSampleIntervalMs);
+                break;
+            case "tcp":
+                services.AddTcpEndpointDeviceAdapter();
+                services.Configure<TcpEndpointOptions>(o =>
+                {
+                    o.Mode = cliOptions.Listen ? TcpEndpointMode.Listener : TcpEndpointMode.Client;
+                    o.Host = cliOptions.Host;
+                    o.Port = int.TryParse(cliOptions.Port, out var tcpPort) ? tcpPort : 0;
+                    o.WriteTimeoutMs = cliOptions.WriteTimeoutMs;
+                    o.WriteByteDelayMs = cliOptions.WriteByteDelayMs;
+                });
+                break;
+            case "hid":
+                services.AddUsbHidEndpointDeviceAdapter();
+                services.Configure<UsbHidEndpointOptions>(o =>
+                {
+                    o.VendorId = cliOptions.VendorId;
+                    o.ProductId = cliOptions.ProductId;
+                    o.SerialNumber = cliOptions.SerialNumber;
+                    o.DevicePath = cliOptions.DevicePath;
+                });
+                break;
+            case "usbtmc":
+                services.AddUsbTmcDeviceAdapter();
+                services.Configure<UsbTmcDeviceAdapterOptions>(o =>
+                {
+                    o.VendorId = cliOptions.VendorId;
+                    o.ProductId = cliOptions.ProductId;
+                    o.SerialNumber = cliOptions.SerialNumber;
+                    o.DevicePath = cliOptions.DevicePath;
+                    o.WriteTimeoutMs = cliOptions.WriteTimeoutMs;
+                    o.ReadTimeoutMs = cliOptions.ReadTimeoutMs;
+                });
+                break;
+            case "ble":
+                services.AddBleDeviceAdapter();
+                services.Configure<BleDeviceAdapterOptions>(o =>
+                {
+                    o.DeviceId = cliOptions.BleDeviceId ?? string.Empty;
+                    if (cliOptions.BleServiceUuid is { Length: > 0 } serviceUuid)
+                    {
+                        o.ServiceUuid = serviceUuid;
+                    }
+
+                    if (cliOptions.BleWriteCharacteristicUuid is { Length: > 0 } writeUuid)
+                    {
+                        o.WriteCharacteristicUuid = writeUuid;
+                    }
+
+                    if (cliOptions.BleNotifyCharacteristicUuid is { Length: > 0 } notifyUuid)
+                    {
+                        o.NotifyCharacteristicUuid = notifyUuid;
+                    }
+
+                    o.WriteTimeoutMs = cliOptions.WriteTimeoutMs;
+                });
+                BlePlatformAdapterLoader.TryRegisterPlatformAdapter(services);
+                break;
+            case "rfc2217":
+                services.AddRfc2217ClientDeviceAdapter();
+                services.Configure<Rfc2217ClientOptions>(o =>
+                {
+                    o.Host = cliOptions.Host ?? string.Empty;
+                    o.Port = int.TryParse(cliOptions.Port, out var rfc2217Port) ? rfc2217Port : 0;
+                    o.BaudRate = cliOptions.Baud;
+                    o.DataBits = cliOptions.DataBits;
+                    o.Parity = cliOptions.Parity;
+                    o.StopBits = cliOptions.StopBits;
+                    o.DtrEnable = cliOptions.Dtr;
+                    o.RtsEnable = cliOptions.Rts;
+                    o.WriteTimeoutMs = cliOptions.WriteTimeoutMs;
+                    o.WriteByteDelayMs = cliOptions.WriteByteDelayMs;
+                });
+                break;
+            case "vxi11":
+                services.AddVxi11DeviceAdapter();
+                services.Configure<Vxi11DeviceAdapterOptions>(o =>
+                {
+                    o.Host = cliOptions.Host ?? string.Empty;
+                    o.Port = int.TryParse(cliOptions.Port, out var vxi11Port) ? vxi11Port : 0;
+                    o.WriteTimeoutMs = cliOptions.WriteTimeoutMs;
+                });
+                break;
+            case "mqtt":
+                services.AddMqttDeviceAdapter();
+                services.Configure<MqttDeviceAdapterOptions>(o =>
+                {
+                    o.Host = cliOptions.Host ?? string.Empty;
+                    o.Port = int.TryParse(cliOptions.Port, out var mqttPort) ? mqttPort : 1883;
+                    o.SubscribeTopics = Topics(cliOptions.Subscribe);
+                    o.PublishTopic = cliOptions.Publish;
+                    o.Username = cliOptions.Username;
+                    o.Password = cliOptions.Password;
+                    o.TimeoutMs = cliOptions.WriteTimeoutMs;
+                });
+                break;
+            case "amqp":
+            case "stomp":
+                if (transport == "amqp")
+                {
+                    services.AddAmqpDeviceAdapter();
+                }
+                else
+                {
+                    services.AddStompDeviceAdapter();
+                }
+
+                services.Configure<BrokerDeviceAdapterOptions>(o =>
+                {
+                    o.Host = cliOptions.Host ?? string.Empty;
+                    o.Port = int.TryParse(cliOptions.Port, out var brokerPort) ? brokerPort : 0;
+                    o.SubscribeTopics = Topics(cliOptions.Subscribe);
+                    o.PublishTopic = cliOptions.Publish;
+                    o.Username = cliOptions.Username;
+                    o.Password = cliOptions.Password;
+                    o.UseTls = cliOptions.Tls;
+                    o.TlsCaCertificatePath = cliOptions.CaCertificate;
+                    o.TimeoutMs = cliOptions.WriteTimeoutMs;
+                });
+                break;
+            default:
+                services.AddSerialDeviceAdapter();
+                services.Configure<SerialDeviceAdapterOptions>(o =>
+                {
+                    o.PortName = cliOptions.Port!;
+                    o.BaudRate = cliOptions.Baud;
+                    o.DataBits = cliOptions.DataBits;
+                    o.Parity = (global::System.IO.Ports.Parity)(int)cliOptions.Parity;
+                    o.StopBits = (global::System.IO.Ports.StopBits)(int)cliOptions.StopBits;
+                    o.Handshake = cliOptions.Handshake;
+                    o.WriteTimeoutMs = cliOptions.WriteTimeoutMs;
+                    o.ReadTimeoutMs = cliOptions.ReadTimeoutMs;
+                    o.DtrEnable = cliOptions.Dtr;
+                    o.RtsEnable = cliOptions.Rts;
+                    o.WriteByteDelayMs = cliOptions.WriteByteDelayMs;
+                });
+                break;
         }
 
-        throw new NotSupportedException($"The '{cliOptions.Transport}' transport is not available yet.");
+        return services;
     }
+
+    private static List<string> Topics(string? commaSeparated) =>
+        [.. (commaSeparated ?? string.Empty).Split(',', global::System.StringSplitOptions.RemoveEmptyEntries | global::System.StringSplitOptions.TrimEntries)];
 
     /// <summary>Loads plugins from <see cref="CliOptions.Plugins"/> (default: <c>plugins</c> next to the app) and registers their <see cref="PluginLoadResult"/>s.</summary>
     public static IServiceCollection AddPlugins(this IServiceCollection services, CliOptions cliOptions)
