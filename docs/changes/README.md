@@ -554,3 +554,4 @@ Each change document should include:
 - [DevTerm WPF routing rule editing (2026-10-30)](devterm-wpf-routing-rules-2026-10-30.md) - rule list editing, sample test and history in the routing window
 - [Z-Wave Hardware tests open the adapter (2026-10-30)](zwave-hardware-tests-adapter-open-2026-10-30.md) - the Z-Stick tests pass against real hardware
 - [DevTerm surroundings and documentation layout (2026-10-30)](devterm-surroundings-docs-2026-10-30.md) - application docs under docs/applications, protocols moved, surroundings review recorded
+- [image-mask tool (2026-10-30)](tools-image-mask-2026-10-30.md) - dotnet tool that masks zones from a JSON file, diffs and syncs guide images

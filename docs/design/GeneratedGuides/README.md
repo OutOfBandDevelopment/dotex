@@ -35,7 +35,12 @@ One journey definition drives every front end, so the guide text per step is sha
 
 ## Image comparison
 
-A masking diff tool compares a new capture with the committed one (owner suggestion, 2026-10-30). A deterministic .NET tool (a small MSTest helper first, a CLI later in `src/Tools`) reads a mask per image: rectangles or regex-matched text regions (clock, temp file names, ports, versions) are blanked in both images before the pixel comparison, so only real changes fail. Text captures (`.txt`) are masked with regular expressions the same way. Masks live next to the journey definition. dev-term's `image_diff` script (`scripts/devterm/`) is the reference.
+The `image-mask` dotnet tool ([`OoBDev.ImageMask.Cli`](../../../src/Tools/OoBDev.ImageMask.Cli/README.ImageMask.Cli.md), owner suggestion 2026-10-30) normalizes volatile regions with redaction blocks listed in a JSON zones file, so only real changes count.
+
+- **Committed images stay unmasked** (owner, 2026-10-30), so the user guides read naturally. Masks are used only to decide whether a fresh capture differs from the committed image.
+- `image-mask sync --new capture.png --committed guide.png --zones zones.json` replaces the committed image only when the two differ once masked, so a run that only moves a clock leaves no churn in git.
+- `image-mask diff` fails a test on a real difference and can write a diff image; `image-mask mask` writes a redacted copy for inspection.
+- Zones (x, y, width, height, optional name, file-name wildcard and color) live in one `zones.json` beside each guide's images. Text captures (`.txt`) keep their regex masking in the test that writes them.
 
 ## Decisions
 
@@ -44,4 +49,5 @@ A masking diff tool compares a new capture with the committed one (owner suggest
 
 ## Open points
 
-- The WPF journeys run only on a desktop session; the masking tool and mask format are not built yet.
+- The WPF journeys run only on a desktop session.
+- The screenshot tests still write the capture straight over the committed image; routing them through `image-mask sync` (zones file per guide) is open.
