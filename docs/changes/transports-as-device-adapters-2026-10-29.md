@@ -22,3 +22,7 @@ Whole `OoBDev.slnx` builds. Unit tests pass: DevTerm Core 211 (5 skipped), Loggi
 ## Step 2b-ii: serial moves into `System.IO.Ports`
 
 `OoBDev.DevTerm.Transports.Serial` and its tests are gone. `SerialTransport` is now `SerialDeviceAdapter` (options `SerialDeviceAdapterOptions`, DI `AddSerialDeviceAdapter()`) in `OoBDev.System.IO.Ports`, beside the thin `SerialPortDeviceAdapter(SerialPort)`; the port abstraction, discovery, per-OS descriptions and read/write streams moved with it. The tests live in the new `OoBDev.System.IO.Ports.Tests` (61 Unit tests pass, hardware tests not run). `Parity`, `StopBits` and `Handshake` are written as `global::System.IO.Ports.*` because `OoBDev.System.Abstractions` defines same-named enums in the same namespace.
+
+## Step 2b-iii: TCP, RFC 2217 and VXI-11 move into `System.IO.Tcp`
+
+The six `OoBDev.DevTerm.Transports.{Tcp,Rfc2217,Vxi11}` projects are gone. `TcpTransport` is `TcpEndpointDeviceAdapter` (`TcpEndpointOptions`, `AddTcpEndpointDeviceAdapter()`), `Rfc2217Transport` is `Rfc2217ClientDeviceAdapter` (`Rfc2217ClientOptions`, `AddRfc2217ClientDeviceAdapter()`) and `Vxi11Transport` is `Vxi11DeviceAdapter` (`Vxi11DeviceAdapterOptions`, `AddVxi11DeviceAdapter()`), all in `OoBDev.System.IO.Tcp` with one `ServiceCollectionExtensions`. The internal `ComPortParity` merged into the public one (gained `Request = 0`). `Rfc2217ServerBridge` depends on `Session`, so it moved to `OoBDev.DevTerm.Core` (with its test) and reads the codec through `InternalsVisibleTo\
