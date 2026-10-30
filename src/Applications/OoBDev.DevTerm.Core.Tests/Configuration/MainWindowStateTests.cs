@@ -25,21 +25,6 @@ public sealed class MainWindowStateTests
     private static CliOptions Hid(int vendorId, int productId) => new() { Transport = "hid", VendorId = vendorId, ProductId = productId };
 
     [TestMethod]
-    [DataRow(0x5500, true)]
-    [DataRow(0x5503, true)]
-    [DataRow(0x5504, false)]
-    public void K8055_OnlyForAK8055BoardAddress(int productId, bool expected) =>
-        Assert.AreEqual(expected, DevicePanels.IsAvailable(DevicePanel.K8055, Hid(0x10CF, productId), connected: true));
-
-    [TestMethod]
-    public void Busylight_ForTheKnownKuandoIds_NotOtherHidDevices()
-    {
-        Assert.IsTrue(DevicePanels.IsAvailable(DevicePanel.Busylight, Hid(0x04D8, 0xF848), connected: true));
-        Assert.IsTrue(DevicePanels.IsAvailable(DevicePanel.Busylight, Hid(0x27BB, 0x3BCD), connected: true));
-        Assert.IsFalse(DevicePanels.IsAvailable(DevicePanel.Busylight, Hid(0x10CF, 0x5500), connected: true));
-    }
-
-    [TestMethod]
     public void Manifest_ForAnyConnection()
     {
         Assert.IsTrue(DevicePanels.IsAvailable(DevicePanel.Manifest, new CliOptions { Transport = "loopback" }, connected: true));
@@ -49,7 +34,7 @@ public sealed class MainWindowStateTests
     [TestMethod]
     public void NoPanelWhileDisconnected()
     {
-        Assert.IsFalse(DevicePanels.IsAvailable(DevicePanel.K8055, Hid(0x10CF, 0x5500), connected: false));
+        Assert.IsFalse(DevicePanels.IsAvailable(DevicePanel.Manifest, Hid(0x10CF, 0x5500), connected: false));
         Assert.IsFalse(DevicePanels.IsAvailable(DevicePanel.Manifest, new CliOptions { Transport = "loopback" }, connected: false));
     }
 

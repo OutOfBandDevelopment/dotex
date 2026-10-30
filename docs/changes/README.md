@@ -514,3 +514,4 @@ Each change document should include:
 - [DevTerm one type per file (2026-10-29)](devterm-one-type-per-file-2026-10-29.md) - MA0048 splits across the DevTerm Core, Web, Tui and test projects
 - [Tui doc images go to artifacts (2026-10-29)](devterm-tui-doc-images-2026-10-29.md) - screenshot tests stop writing into docs/user-guide/images
 - [DevTerm parity design documents (2026-10-29)](devterm-parity-design-docs-2026-10-29.md) - requirements, api-design and testing-strategy drafts
+- [DevTerm Core device panel gating (2026-10-29)](devterm-device-panel-gating-2026-10-29.md) - K8055 and Busylight ids leave Core; the panels own them
