@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -16,7 +17,13 @@ public sealed class StreamMonitorDialogViewModel : ViewModelBase, IDisposable
 
     private readonly StreamMonitor _monitor;
     private readonly IStreamExportDialog? _exportDialog;
-    private readonly List<StreamMonitorCapture> _items = [];
+    private const string AllKinds = "All types";
+
+    private readonly List<StreamMonitorCapture> _all = [];
+    private List<StreamMonitorCapture> _items = [];
+    private string _search = string.Empty;
+    private int _kindIndex;
+    private int _sortIndex;
     private readonly SynchronizationContext? _context = SynchronizationContext.Current;
     private int _selectedIndex = -1;
 
@@ -28,20 +35,67 @@ public sealed class StreamMonitorDialogViewModel : ViewModelBase, IDisposable
         ArgumentNullException.ThrowIfNull(monitor);
         _monitor = monitor;
         _exportDialog = exportDialog;
-        foreach (var capture in monitor.Captures)
-        {
-            AddCapture(capture);
-        }
-
+        KindChoices.Add(AllKinds);
         Start = new StartStreamMonitorCommand(this);
         Stop = new StopStreamMonitorCommand(this);
         Export = new ExportStreamCaptureCommand(this);
+        foreach (var capture in monitor.Captures)
+        {
+            _all.Add(capture);
+        }
+
+        Rebuild();
         _monitor.CaptureAdded += OnCaptureAdded;
         _monitor.StateChanged += OnStateChanged;
     }
 
     /// <summary>One line per capture, oldest first.</summary>
     public ObservableCollection<string> Captures { get; } = [];
+
+    /// <summary>Text the device, type, end state, file name or time must contain.</summary>
+    public string Search
+    {
+        get => _search;
+        set
+        {
+            if (SetProperty(ref _search, value ?? string.Empty))
+            {
+                Rebuild();
+            }
+        }
+    }
+
+    /// <summary>"All types" and each content type captured so far.</summary>
+    public ObservableCollection<string> KindChoices { get; } = [];
+
+    /// <summary>The chosen content type; 0 is every type.</summary>
+    public int KindIndex
+    {
+        get => _kindIndex;
+        set
+        {
+            if (SetProperty(ref _kindIndex, value))
+            {
+                Rebuild();
+            }
+        }
+    }
+
+    /// <summary>The orders the list can take.</summary>
+    public IReadOnlyList<StreamCaptureSort> SortChoices { get; } = Enum.GetValues<StreamCaptureSort>();
+
+    /// <summary>The chosen order.</summary>
+    public int SortIndex
+    {
+        get => _sortIndex;
+        set
+        {
+            if (SetProperty(ref _sortIndex, value))
+            {
+                Rebuild();
+            }
+        }
+    }
 
     /// <summary>The selected capture, or -1.</summary>
     public int SelectedIndex
@@ -119,10 +173,43 @@ public sealed class StreamMonitorDialogViewModel : ViewModelBase, IDisposable
         _monitor.StateChanged -= OnStateChanged;
     }
 
-    private void AddCapture(StreamMonitorCapture capture)
+    /// <summary>Lists a capture the monitor reported, applying the current search, filter and sort.</summary>
+    /// <param name="capture">The capture.</param>
+    public void AddCapture(StreamMonitorCapture capture)
     {
-        _items.Add(capture);
-        Captures.Add(capture.Describe());
+        _all.Add(capture);
+        Rebuild();
+    }
+
+    private void Rebuild()
+    {
+        var kinds = StreamCaptureView.Kinds(_all);
+        if (!KindChoices.Skip(1).SequenceEqual(kinds, StringComparer.Ordinal))
+        {
+            var keep = _kindIndex > 0 && _kindIndex < KindChoices.Count ? KindChoices[_kindIndex] : null;
+            KindChoices.Clear();
+            KindChoices.Add(AllKinds);
+            foreach (var kind in kinds)
+            {
+                KindChoices.Add(kind);
+            }
+
+            _kindIndex = keep is null ? 0 : Math.Max(0, KindChoices.IndexOf(keep));
+            OnPropertyChanged(nameof(KindIndex));
+        }
+
+        var selected = SelectedIndex >= 0 && SelectedIndex < _items.Count ? _items[SelectedIndex] : null;
+        var sort = _sortIndex >= 0 && _sortIndex < SortChoices.Count ? SortChoices[_sortIndex] : StreamCaptureSort.Oldest;
+        _items = [.. StreamCaptureView.Apply(_all, _search, _kindIndex > 0 ? KindChoices[_kindIndex] : null, null, sort)];
+        Captures.Clear();
+        foreach (var capture in _items)
+        {
+            Captures.Add(capture.Describe());
+        }
+
+        _selectedIndex = selected is null ? -1 : _items.IndexOf(selected);
+        OnPropertyChanged(nameof(SelectedIndex));
+        ShowSelected();
     }
 
     private void ShowSelected()

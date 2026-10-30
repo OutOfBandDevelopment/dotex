@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.DevTerm.Configuration;
 
@@ -85,5 +86,80 @@ public sealed class StreamCapturePreviewTests
         // Assert
         StringAssert.StartsWith(viewModel.PreviewMessage, "Nothing captured yet");
         Assert.IsFalse(viewModel.Export.CanExecute(null));
+    }
+
+    private static StreamMonitorCapture Named(string device, StreamContentKind kind, int size, int minute) =>
+        new(new StreamCapture(kind, new byte[size], DateTimeOffset.UnixEpoch, StreamCaptureEnd.Complete, false), device, DateTimeOffset.UnixEpoch.AddMinutes(minute), null, null);
+
+    private static StreamMonitorDialogViewModel Filled()
+    {
+        var viewModel = new StreamMonitorDialogViewModel(new StreamMonitor());
+        viewModel.AddCapture(Named("scope", StreamContentKind.Png, 10, 1));
+        viewModel.AddCapture(Named("printer", StreamContentKind.Hpgl, 30, 2));
+        viewModel.AddCapture(Named("scope", StreamContentKind.Bmp, 20, 3));
+        return viewModel;
+    }
+
+    [TestMethod]
+    public void Search_DeviceName_NarrowsTheList()
+    {
+        // Stage
+        using var viewModel = Filled();
+
+        // Test
+        viewModel.Search = "printer";
+
+        // Assert
+        Assert.AreEqual(1, viewModel.Captures.Count);
+    }
+
+    [TestMethod]
+    public void KindIndex_OneType_ShowsOnlyThatType()
+    {
+        // Stage
+        using var viewModel = Filled();
+        CollectionAssert.AreEqual(new[] { "All types", "BMP image", "HP-GL plot", "PNG image" }, viewModel.KindChoices);
+
+        // Test
+        viewModel.KindIndex = 1;
+
+        // Assert
+        Assert.AreEqual(1, viewModel.Captures.Count);
+        StringAssert.Contains(viewModel.Captures[0], "BMP image");
+    }
+
+    [TestMethod]
+    public void SortIndex_Largest_PutsTheBiggestFirst()
+    {
+        // Stage
+        using var viewModel = Filled();
+
+        // Test
+        viewModel.SortIndex = viewModel.SortChoices.ToList().IndexOf(StreamCaptureSort.Largest);
+
+        // Assert
+        StringAssert.Contains(viewModel.Captures[0], "30 bytes");
+    }
+
+    [TestMethod]
+    public void Export_SelectedCapture_WritesItWhereTheDialogSays()
+    {
+        // Stage
+        var target = global::System.IO.Path.Combine(global::System.IO.Path.GetTempPath(), $"export-{Guid.NewGuid():N}.png");
+        using var viewModel = new StreamMonitorDialogViewModel(new StreamMonitor(), new FixedExport(target));
+        viewModel.AddCapture(Named("scope", StreamContentKind.Png, 7, 1));
+        viewModel.SelectedIndex = 0;
+
+        // Test
+        viewModel.Export.Execute(null);
+
+        // Assert
+        Assert.AreEqual(7, global::System.IO.File.ReadAllBytes(target).Length);
+        global::System.IO.File.Delete(target);
+    }
+
+    private sealed class FixedExport(string path) : IStreamExportDialog
+    {
+        public string? PickExportPath(string suggestedName, string extension, string kindName) => path;
     }
 }
