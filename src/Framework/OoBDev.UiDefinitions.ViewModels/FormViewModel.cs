@@ -31,6 +31,12 @@ public sealed class FormViewModel : ViewModelBase, IDisposable
     /// <summary>The form definition.</summary>
     public UiDefinition Definition { get; }
 
+    /// <summary>The definition's description, which a view shows as a final collapsible "Notes" section, or null.</summary>
+    public string? Notes => string.IsNullOrWhiteSpace(Definition.Description) ? null : Definition.Description;
+
+    /// <summary>Whether there are <see cref="Notes"/> to show.</summary>
+    public bool HasNotes => Notes is not null;
+
     /// <summary>The sections in definition order.</summary>
     public IReadOnlyList<FormSectionViewModel> Sections { get; }
 

@@ -7,7 +7,11 @@
 - The shell, the Manifest Editor preview and `FormView.xaml` use it; `DevicePanelPreviews` (a one-shot tooltip rewrite) is gone.
 - Tests: three Unit tests in `ButtonPreviewTests` (field edit, description plus Sends, no preview); `DevicePanelTests` asserts `ToolTip`. ViewModels tests 59 pass, Wpf Unit 134 pass.
 
+## Notes section
+
+- `FormViewModel.Notes` and `HasNotes` expose the definition description; `FormView.xaml` shows it as a final "Notes" expander (open by default). Three Unit tests in `FormNotesTests`.
+
 ## Not done
 
-- The Notes section of the control panel.
+- The Notes expander does not remember whether it was collapsed (dev-term kept that per definition).
 - The connection editor window already had the Refresh button and the external-change refresh; `ConnectionEditorWindowTests` now covers the window (a profile saved by another store appears without pressing Refresh).

@@ -8,7 +8,7 @@ Keep this file short (about 15 one-line items). When an item starts, move it her
 
 ## In progress
 
-- [ ] **DevTerm parity, WPF shell**: slices 1 to 5 still have small leftovers (the Notes section); detail in [status.md](docs/design/DevTermParity/status.md).
+- [ ] **DevTerm parity, WPF shell**: all five slices are built; left is viewing the windows running (migrate `WpfScreenshot` and the layout review); detail in [status.md](docs/design/DevTermParity/status.md).
 
 ## Next
 
