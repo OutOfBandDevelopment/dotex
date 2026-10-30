@@ -13,6 +13,7 @@ paths:
 - Tests that need anything outside the process (services, other operating systems, shells, scripts) run against Docker containers, or Aspire hosting them in Docker; not against host installs such as WSL. Start the stack with `containers/testing`; add services with the `add-integration-service` skill.
 - Read configuration with `TestContext.GetRequiredProperty<T>()` (URLs, credentials, connection strings) or `TestContext.GetPropertyOrDefault<T>()` (industry-standard ports). Never `Environment.GetEnvironmentVariable()`.
 - Integration tests use unique resource names per run (`$"Test_{Guid.NewGuid():N}"`) and clean up in `[TestCleanup]`.
+- Tests are deterministic (owner, 2026-10-30), above all when they persist screenshots, logs or other files in the repository: fixed clocks (`TimeProvider`), no random or machine-specific values in output, and masked zones for what cannot be fixed (`image-mask`).
 - Floating-point comparisons use `NumericAsserts.AreSimilar()`.
 - New or changed test properties go in `src/.runsettings` and `TEST_VARIABLES.md`. Adding a Docker service: use the `add-integration-service` skill.
 - Never test against live data or a live connection string. Tests use throwaway resources (a test database, unique names, rows created and deleted by exact key); an Integration test refuses to run when its connection string is not a test instance. Restoring a sanitized production dump into a throwaway database to test migrations is allowed (`docs/how-tos/production-operations-practices.md`).

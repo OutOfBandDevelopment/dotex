@@ -27,6 +27,9 @@ Owner: all protocols and features of dev-term must exist here. Done means what d
 - Decided 2026-10-30: the Web host keeps its own AsyncAPI document and viewer (offline viewer, stream channels); the SCPI control panel uses `DynamicModelFactory` (was Q3 and Q4).
 - Cleanup to tell the owner: removable Docker volume `oobd-aspire-sqlserver`; untracked `bin` and `obj` folders under `src/Extensions/OoBDev.DevTerm.*` and `OoBDev.Scpi.Panels*`.
 
+- [ ] Applications layout (owner, 2026-10-30): move to `src/Applications/{AppName}/{projects}` like ExternalServices; layering rule needs a confirmed migration plan first (project, current and target path, references) in `docs/design/DevTermParity/`, then the move.
+- [ ] Example apps that use the UiDefinitions language (forms and panels), beyond DevTerm; open spike question: whether the device projects need coverage in the example framework at all, since DevTerm covers them ([ui-language-later.md](docs/design/DevTermParity/ui-language-later.md)).
+
 ## 2. Devices
 
 - [ ] Device decoding leftovers: the DE-5000 Hardware test needs a BLE transport; the phase 0 checks in [device-parity.md](docs/migration/device-parity.md) section 4; a physical pass for K8055 input bit mapping, Busylight program frames, Radex settings and reset, Zoom H4n handshake, NMEA BT-20 framing and a real SCPI instrument. Plan: [device-decoding-migration-plan.md](docs/migration/device-decoding-migration-plan.md).
@@ -42,6 +45,9 @@ Owner: all protocols and features of dev-term must exist here. Done means what d
 - Azure Monitor exporter: not built (decided 2026-10-22); OTLP reaches any collector and is verified with the Aspire dashboard.
 
 ## 4. APIs and documents
+
+- [ ] Stack review of the template and transform tools (owner, 2026-10-30): `Xslt.Cli` and `TemplateEngine` overlap; if TemplateEngine takes pluggable path engines (XPath navigator) and hosts the XSLT transforms, `Xslt.Cli` can go once a document explains converting its templates and scripts. Also port the BinaryDataDecoders documentation generation off `xslt.cli` onto TemplateEngine, as MSTest entry points rather than scripts around dotnet tools (a dotnet tool stays fine if its `.props` and `.targets` extensions are right); start with a shootout spike.
+- [ ] Make the DevTerm Ghostscript conversion for PCL and PostScript generic and part of the document conversion framework, and add HP-GL to SVG.
 
 - [ ] CGI middleware ([design](docs/design/CgiMiddleware/README.md)): first cut built with 23 passing tests; left is run-as-another-user (decided: stays a TODO, deployers use the service account). Shell fixtures run through `scripts/ci/run-linux-tests.ps1`.
 - [ ] AllMiniLmL6V2: `AddValidatedOptions` for the embedding options (blocked by the Abstractions-only adapter rule).
@@ -78,6 +84,7 @@ Scope rule: every BinaryDataDecoders feature is migrated; phases are priority or
 
 ## 7. Documentation review (owner, 2026-10-28)
 
+- [ ] Lower priority, after the migrations: review every project `.md` file for out-of-date and redundant documents (owner, 2026-10-30).
 - [ ] **Review and clean up all documents**: content and coverage review against the rules `docs-and-diagrams` and `work-tracking` and `docs/patterns-discovery/06-design-document-standard.md`; the DevTerm docs come with the parity work. Numbering, validator problems and stale generated docs are done (2026-10-29); use the `write-docs` skill and `scripts/docs` validators.
 
 ## 8. Future ideas (not tied to DevTerm, nothing required now)
