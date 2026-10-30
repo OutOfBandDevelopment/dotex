@@ -534,4 +534,5 @@ Each change document should include:
 - [DevTerm WPF command previews (2026-10-30)](devterm-wpf-command-previews-2026-10-30.md) - device panel buttons show what they send in the tooltip
 - [DevTerm WPF session logging (2026-10-30)](devterm-wpf-session-logging-2026-10-30.md) - Log to file toggle per session
 - [DevTerm WPF theme (2026-10-30)](devterm-wpf-theme-2026-10-30.md) - WpfTheme, dark control templates and a theme chooser in the shell
+- [DevTerm WPF converter tools window (2026-10-30)](devterm-wpf-converter-tools-2026-10-30.md) - edit, reorder and save the stream monitor converter tools from the shell
 - [One USB HID adapter (2026-10-29)](system-io-usbhids-adapter-merge-2026-10-29.md) - UsbHidFactory returns the endpoint adapter; the thin one is gone

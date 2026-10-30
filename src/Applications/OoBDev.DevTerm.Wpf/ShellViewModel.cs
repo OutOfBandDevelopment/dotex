@@ -15,6 +15,8 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
     private readonly IConnectionEditorDialog? _editorDialog;
     private readonly IRoutingDialog? _routingDialog;
     private readonly IStreamMonitorDialog? _streamMonitorDialog;
+    private readonly IConverterToolsDialog? _converterToolsDialog;
+    private readonly ConverterToolsStore? _converterToolsStore;
     private readonly StreamMonitor? _streamMonitor;
     private readonly IMergedLogDialog? _mergedLogDialog;
     private readonly IPlaybackDialog? _playbackDialog;
@@ -37,7 +39,7 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
     /// <param name="mergedLog">The log every opened session is recorded in, or null.</param>
     /// <param name="routingDialog">Shows the routing window, or null when the shell has no window to host it.</param>
     /// <param name="editorDialog">Shows the connection editor, or null when the shell has no window to host it.</param>
-    public ShellViewModel(IEnumerable<IPanelFactory> factories, ISessionViewModelFactory? sessionFactory = null, IConnectionEditorDialog? editorDialog = null, IRoutingDialog? routingDialog = null, IStreamMonitorDialog? streamMonitorDialog = null, StreamMonitor? streamMonitor = null, IMergedLogDialog? mergedLogDialog = null, MergedSessionLog? mergedLog = null, IPlaybackDialog? playbackDialog = null, PlaybackPresenters? playbackPresenters = null, IEnumerable<IDevicePanelContribution>? devicePanels = null, IConfirmPrompt? confirm = null, IColorPicker? colorPicker = null)
+    public ShellViewModel(IEnumerable<IPanelFactory> factories, ISessionViewModelFactory? sessionFactory = null, IConnectionEditorDialog? editorDialog = null, IRoutingDialog? routingDialog = null, IStreamMonitorDialog? streamMonitorDialog = null, StreamMonitor? streamMonitor = null, IMergedLogDialog? mergedLogDialog = null, MergedSessionLog? mergedLog = null, IPlaybackDialog? playbackDialog = null, PlaybackPresenters? playbackPresenters = null, IEnumerable<IDevicePanelContribution>? devicePanels = null, IConfirmPrompt? confirm = null, IColorPicker? colorPicker = null, IConverterToolsDialog? converterToolsDialog = null, ConverterToolsStore? converterToolsStore = null)
     {
         ArgumentNullException.ThrowIfNull(factories);
         Factories = [.. factories];
@@ -45,6 +47,8 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
         _editorDialog = editorDialog;
         _routingDialog = routingDialog;
         _streamMonitorDialog = streamMonitorDialog;
+        _converterToolsDialog = converterToolsDialog;
+        _converterToolsStore = converterToolsStore;
         _streamMonitor = streamMonitor;
         _mergedLogDialog = mergedLogDialog;
         _mergedLog = mergedLog;
@@ -57,6 +61,7 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
         OpenPlaybackWindow = new OpenPlaybackCommand(this);
         ShowMergedLogWindow = new ShowMergedLogCommand(this);
         ShowStreamMonitorWindow = new ShowStreamMonitorCommand(this);
+        ShowConverterTools = new ShowConverterToolsCommand(this);
         ShowRoutingWindow = new ShowRoutingCommand(this);
         NewConnection = new NewConnectionCommand(this);
         Open = new OpenPanelCommand(this);
@@ -91,6 +96,9 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
 
     /// <summary>Shows the stream monitor for the selected session.</summary>
     public ICommand ShowStreamMonitorWindow { get; }
+
+    /// <summary>Edits the stream monitor's converter tools.</summary>
+    public ICommand ShowConverterTools { get; }
 
     /// <summary>Shows the log of every open session, merged by time.</summary>
     public ICommand ShowMergedLogWindow { get; }
@@ -164,6 +172,17 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
         _streamMonitor!.Track(selected, selected.Session, selected.Title, DevTermUserDataPaths.ExportsDirectory);
         using var window = new StreamMonitorDialogViewModel(_streamMonitor);
         _streamMonitorDialog!.Show(window);
+    }
+
+    internal bool CanEditConverterTools => _converterToolsDialog is not null && _converterToolsStore is not null;
+
+    internal void EditConverterTools()
+    {
+        var dialog = new ConverterToolsDialogViewModel(new ConverterToolsEditor(_converterToolsStore!.Load()));
+        if (_converterToolsDialog!.Edit(dialog))
+        {
+            _converterToolsStore.Save(dialog.Result);
+        }
     }
 
     internal bool CanShowRouting => _routingDialog is not null && SelectedSession?.Tab is not null;

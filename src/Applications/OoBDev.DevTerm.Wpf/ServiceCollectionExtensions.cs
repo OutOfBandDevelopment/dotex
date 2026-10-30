@@ -33,6 +33,8 @@ public static class ServiceCollectionExtensions
         services.TryAddSingleton<IStreamMonitorDialog, WpfStreamMonitorDialog>();
         services.TryAddSingleton(_ => new StreamMonitor());
         services.TryAddSingleton<IRoutingDialog, WpfRoutingDialog>();
+        services.TryAddSingleton<IConverterToolsDialog, WpfConverterToolsDialog>();
+        services.TryAddSingleton(_ => new ConverterToolsStore());
         services.TryAddSingleton<IConnectionEditorDialog, WpfConnectionEditorDialog>();
         services.TryAddSingleton<ISessionViewModelFactory, SessionViewModelFactory>();
         services.TryAddSingleton<ShellViewModel>();
