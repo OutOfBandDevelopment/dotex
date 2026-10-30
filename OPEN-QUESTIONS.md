@@ -8,6 +8,9 @@ How this file is kept: see `.claude/rules/open-questions.md` and `.claude/rules/
 
 _(none waiting; processed requests are in BACKLOG.md and TODO.md)_
 
+- I think for applications the pattern should be more like external services where `.\Applications\{AppName}\{projects}` versus `.\Applications\{projects}`
+- We need a review over all .md files in the projects.  there seems to be a lot of out-of-date and possiblity reduant documents.  should be a lower priority after the migrations are complete
+
 ## Open
 
 _(none open)_
