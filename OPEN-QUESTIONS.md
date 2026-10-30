@@ -10,4 +10,15 @@ _(none waiting; processed requests are in BACKLOG.md and TODO.md)_
 
 ## Open
 
-_(no open questions)_
+### Q1 (2026-10-29, DevTerm Core): keep the plugin assemblies separate?
+
+The owner's decision merges Plugins.* into `OoBDev.DevTerm.Core`. `Plugins.KeyValue` and `Plugins.Sample` exist to be loaded from a plugin folder (`plugin.json` names the assembly), and the loader tests use `Sample` that way, so a merged copy would no longer test the loader.
+
+**Options**
+- A (recommended): keep `Plugins.KeyValue`, `Plugins.Sample` and the KeyValue tests as separate assemblies in `src/Applications`; everything else is merged. Keeps the plugin loader honest; one more project pair.
+- B: merge them into Core as built-in features and drop the external plugin loader tests' sample. Fewer projects; loses the loader's real-world test.
+
+**Default:** A (done in step 3).
+
+**Your answer:**
+

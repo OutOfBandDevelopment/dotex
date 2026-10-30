@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>false</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <NoWarn>$(NoWarn);MA0016;MA0023;MA0051</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Framework\OoBDev.System.Abstractions\OoBDev.System.Abstractions.csproj" />
+    <ProjectReference Include="..\..\Framework\OoBDev.System.IO.Pipelines\OoBDev.System.IO.Pipelines.csproj" />
+    <ProjectReference Include="..\..\Framework\OoBDev.System.IO.Tcp\OoBDev.System.IO.Tcp.csproj" />
+    <ProjectReference Include="..\..\Framework\OoBDev.UiDefinitions\OoBDev.UiDefinitions.csproj" />
+    <ProjectReference Include="..\..\Framework\OoBDev.Telemetry\OoBDev.Telemetry.csproj" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.Options" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" />
+    <PackageReference Include="System.IO.Ports" />
+    <PackageReference Include="YamlDotNet" />
+    <PackageReference Include="GitVersion.MsBuild">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <!-- Pre-packaged manifests are copied to "manifests\{device}\..." next to every app that references this project. -->
+  <ItemGroup>
+    <None Include="DeviceManifests\Manifests\**\*" Link="manifests\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="OoBDev.DevTerm.Core.Tests" />
+  </ItemGroup>
+
+</Project>
