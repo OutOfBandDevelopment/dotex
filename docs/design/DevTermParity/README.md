@@ -77,3 +77,9 @@ Counts from `C:\repo\oobdev\dev-term\docs` (2026-10-29).
 | `test` | 44 / 2,542 | Bench session records on real hardware | Kept as evidence in the device change documents; summarized, not copied |
 | `changes`, `bugs` | 21 + 72 | Dated change log and bug reports | `git log` of dev-term; open bugs go to the backlog when the matching code is ported |
 | `coding-standards.md` | 160 | dev-term's standards | Compared against `.claude/rules/coding-standards.md`; this repository's rule wins |
+
+## Related documents
+
+- [Status and leftovers](status.md), [restructure plan](restructure-plan.md), [control panel spike](control-panel-spike.md)
+- [Test utilities plan](test-utilities-plan.md), [UI language (later)](ui-language-later.md)
+- [Avalonia spike](../../migration/avalonia-spike.md)
