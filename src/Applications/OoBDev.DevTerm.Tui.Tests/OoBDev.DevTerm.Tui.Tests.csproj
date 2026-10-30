@@ -35,4 +35,8 @@
 		<ProjectReference Include="..\OoBDev.DevTerm.TestUtilities\OoBDev.DevTerm.TestUtilities.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+		<Using Include="OoBDev.DevTerm.TestUtilities" />
+	</ItemGroup>
+
 </Project>

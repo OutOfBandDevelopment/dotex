@@ -10,4 +10,6 @@ Owner decision 2026-10-30 (Q2, option A).
 | `IFrontEndDriver` | copies in `Tui.Tests` and `Web.Tests` | same project | same | same | none |
 | `Tui.Tests`, `Web.Tests` | own copies | delete copies | unchanged | unchanged | add `ProjectReference` to the new project; `using OoBDev.DevTerm.TestUtilities;` |
 
-Later candidates: `FakeDeviceConfigEditor`, `FakeTransport`, `ManualTimeProvider` (they need Core references, so each is its own step).
+Done 2026-10-30: `ManualTimeProvider` and `FakeDeviceConfigEditor` (three and two copies became one; the project now references Core, and `Core.Tests` and `Tui.Tests` add a global using). Also `GuideImage` (guide screenshots through `image-mask sync`).
+
+Later candidate: `FakeTransport`. Five copies exist (`Core.Tests` Logging and DeviceManifests, `Devices.Tests`, `Tui.Tests`) and they differ in what they record, so merge them into one superset first.

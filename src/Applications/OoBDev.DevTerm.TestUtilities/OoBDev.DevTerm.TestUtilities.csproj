@@ -13,6 +13,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\OoBDev.DevTerm.Core\OoBDev.DevTerm.Core.csproj" />
 		<ProjectReference Include="..\..\Tools\OoBDev.ImageMask.Cli\OoBDev.ImageMask.Cli.csproj" />
 	</ItemGroup>
 

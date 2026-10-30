@@ -33,8 +33,13 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\OoBDev.DevTerm.Core\OoBDev.DevTerm.Core.csproj" />
+		<ProjectReference Include="..\OoBDev.DevTerm.TestUtilities\OoBDev.DevTerm.TestUtilities.csproj" />
 		<!-- Built first, not referenced as code: the loader tests load its output from plugins/sample like a real plugin. -->
 		<ProjectReference Include="..\OoBDev.DevTerm.Core.TestPlugin\OoBDev.DevTerm.Core.TestPlugin.csproj" ReferenceOutputAssembly="false" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Using Include="OoBDev.DevTerm.TestUtilities" />
 	</ItemGroup>
 
 	<Target Name="CopySamplePlugin" AfterTargets="Build">

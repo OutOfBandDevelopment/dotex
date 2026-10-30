@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using OoBDev.DevTerm;
 using OoBDev.UiDefinitions;
 
-namespace OoBDev.DevTerm.Tests;
+namespace OoBDev.DevTerm.TestUtilities;
 
 /// <summary>
 /// An in-memory <see cref="IDeviceConfigEditor"/> for the Configure device screens: a text IP, a text baud rate (0 is invalid),

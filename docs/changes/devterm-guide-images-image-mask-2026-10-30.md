@@ -10,3 +10,7 @@
 ## Not done
 
 - WPF: the capture code (`WpfScreenshot`) has not been migrated, so there is nothing to route yet (backlog).
+
+## Shared test fakes
+
+- `ManualTimeProvider` (three copies) and `FakeDeviceConfigEditor` (two copies) moved into `OoBDev.DevTerm.TestUtilities`, which now references Core; `Core.Tests` and `Tui.Tests` reference it with a global using. Core Unit 1063 pass (5 skipped), Tui Unit 271 pass. `FakeTransport` (five differing copies) is still to merge.
