@@ -206,6 +206,8 @@
     <Project Path="Applications/OoBDev.DevTerm.Core/OoBDev.DevTerm.Core.csproj" />
     <Project Path="Applications/OoBDev.DevTerm.Wpf.Tests/OoBDev.DevTerm.Wpf.Tests.csproj" />
     <Project Path="Applications/OoBDev.DevTerm.Wpf/OoBDev.DevTerm.Wpf.csproj" />
+    <Project Path="Applications/OoBDev.DevTerm.Tui/OoBDev.DevTerm.Tui.csproj" />
+    <Project Path="Applications/OoBDev.DevTerm.Tui.Tests/OoBDev.DevTerm.Tui.Tests.csproj" />
     <Project Path="Applications/OoBDev.DevTerm.Web.Tests/OoBDev.DevTerm.Web.Tests.csproj" />
     <Project Path="Applications/OoBDev.DevTerm.Web/OoBDev.DevTerm.Web.csproj" />
     <Project Path="Framework/OoBDev.Documents.Abstractions/OoBDev.Documents.Abstractions.csproj" />

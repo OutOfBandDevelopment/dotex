@@ -101,6 +101,8 @@
     <PackageVersion Include="StackExchange.Redis" Version="3.4.5" />
     <PackageVersion Include="Scalar.AspNetCore" Version="2.18.0" />
     <PackageVersion Include="System.Data.SqlClient" Version="4.9.1" />
+    <PackageVersion Include="Terminal.Gui" Version="2.5.0" />
+    <PackageVersion Include="Terminal.Gui.Editor" Version="2.5.7" />
     <PackageVersion Include="System.Drawing.Common" Version="10.0.13" />
     <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="8.23.0" />
     <PackageVersion Include="System.IO.Packaging" Version="10.0.13" />
