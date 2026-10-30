@@ -209,7 +209,16 @@ https://github.com/coverlet-coverage/coverlet/blob/fc7ec26dcaed8fedba880ff13c6f1
 		<!-- Hardware tests: serial port of the plugged-in device (blank or absent port ends the test Inconclusive) -->
 		<Parameter name="ZWAVE_SERIAL_PORT" value="COM13" />
 		<Parameter name="RADEX_ONE_SERIAL_PORT" value="COM8" />
-		<Parameter name="ZOOM_H4N_SERIAL_PORT" value="" />
+		<Parameter name="ZOOM_H4N_SERIAL_PORT" value="COM3" />
+
+		<!-- Hardware tests: bench instruments, see docs/how-tos/test-hardware.md -->
+		<Parameter name="KORAD_KA3005P_SERIAL_PORT" value="COM6" />
+		<Parameter name="KORAD_KA6003P_SERIAL_PORT" value="COM7" />
+		<Parameter name="TCP_DEVICE_PORT" value="23" />
+		<Parameter name="HP34401A_TCP_HOST" value="192.168.0.109" />
+		<Parameter name="TDS2024_TCP_HOST" value="192.168.0.110" />
+		<Parameter name="TEK2230_1_TCP_HOST" value="192.168.0.108" />
+		<Parameter name="TEK2230_2_TCP_HOST" value="192.168.0.107" />
 		<Parameter name="ZWAVE_SWITCH_NODE" value="2" />
 
 		<!-- TestContext Configuration Provider Integration Tests -->

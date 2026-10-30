@@ -25,12 +25,19 @@ internal sealed class ZWaveStick : IDisposable
     private ZWaveStick(SerialPort port)
     {
         _port = port;
-        var device = new StreamDevice<ZWaveFrame>(new SerialPortDeviceAdapter(port), new ZWaveDevice(), minimumTransmissionDelay: 50, token: _cancel.Token);
+        var device = new StreamDevice<ZWaveFrame>(OpenAdapter(port), new ZWaveDevice(), minimumTransmissionDelay: 50, token: _cancel.Token);
         _session = new ZWaveSession(device);
         _session.FrameReceived += (_, frame) =>
         {
             lock (_frames) _frames.Add(frame);
         };
+    }
+
+    private static SerialPortDeviceAdapter OpenAdapter(SerialPort port)
+    {
+        var adapter = new SerialPortDeviceAdapter(port);
+        adapter.OpenAsync().GetAwaiter().GetResult();
+        return adapter;
     }
 
     /// <summary>A snapshot of the frames received so far.</summary>
@@ -45,7 +52,7 @@ internal sealed class ZWaveStick : IDisposable
     /// <summary>Opens the port, or ends the test Inconclusive when it is busy.</summary>
     public static ZWaveStick Open(string portName)
     {
-        var port = new SerialPort(portName, 115200, global::System.IO.Ports.Parity.None, 8, global::System.IO.Ports.StopBits.One) { ReadTimeout = 100 };
+        var port = new SerialPort(portName, 115200, global::System.IO.Ports.Parity.None, 8, global::System.IO.Ports.StopBits.One);
         try
         {
             port.Open();

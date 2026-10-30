@@ -13,6 +13,7 @@ GitHub is no longer the primary repository (local bare repo `origin`), so nothin
 Owner: all protocols and features of dev-term must exist here. Status, slices and leftovers: [status.md](docs/design/DevTermParity/status.md); matrix: [README](docs/design/DevTermParity/README.md); restructure steps 0 to 6 are done.
 
 - [ ] WPF shell slices 1 to 5 left (other per-transport fields and device pickers, Software flow control toggle, detected-device pickers, field-following previews and Notes); none of the WPF windows were viewed running.
+- [ ] Bench hardware ([list](docs/how-tos/test-hardware.md)): write Hardware tests for the Korad KA3005P/KA6003P, TDS2024, 2230 and HP 34401A (the settings exist in `src/.runsettings`, no test reads them yet); move the Tui DevLocal tests off dev-term's `RealTcpDevice*` names; the HP 34401A (192.168.0.109) refused a connection and the 2230 at .108 gave no `ID?` reply on 2026-10-30.
 - [ ] Move `FakeDeviceConfigEditor`, `FakeTransport` and `ManualTimeProvider` into `OoBDev.DevTerm.TestUtilities` ([plan](docs/design/DevTermParity/test-utilities-plan.md)); each needs Core references.
 - [ ] Test gaps: Playwright DevLocal flows, an interactive Tui run, screenshot tests, serial and TCP real-hardware tests, Web screenshots still writing into `docs/user-guide/images` ([list](docs/design/DevTermParity/status.md#test-gaps)).
 - [ ] Register an `IDeviceConfigEditor` (port the Ebyte editor) so the Configure device button works; persist the theme through `ActiveTheme.Initialize`.
