@@ -519,4 +519,5 @@ Each change document should include:
 - [DevTerm schema generator entry point (2026-10-29)](devterm-schema-generator-entry-2026-10-29.md) - WriteTo and the Tui --write-schemas flag
 - [DevTerm BLE platform loader test (2026-10-29)](devterm-ble-loader-test-2026-10-29.md) - loader degrades gracefully; stale backlog line removed
 - [USBTMC hardware tests (2026-10-29)](system-io-usbtmc-hardware-tests-2026-10-29.md) - two Hardware tests, Inconclusive without a device
+- [DevTerm routing link factory (2026-10-29)](devterm-routing-link-factory-2026-10-29.md) - default IRoutingLinkFactory for MQTT, AMQP and STOMP
 - [One USB HID adapter (2026-10-29)](system-io-usbhids-adapter-merge-2026-10-29.md) - UsbHidFactory returns the endpoint adapter; the thin one is gone
