@@ -23,7 +23,7 @@ using Microsoft.Playwright;
 namespace OoBDev.DevTerm.Web.Tests;
 
 /// <summary>
-/// Real browser captures of the web host for docs/user-guide/web-terminal.md, driven by Playwright against the installed
+/// Real browser captures of the web host for docs/applications/devterm/user-guide/web-terminal.md, driven by Playwright against the installed
 /// Microsoft Edge (no browser download needed). Inconclusive when Edge cannot be launched.
 /// </summary>
 [TestClass]
@@ -93,7 +93,7 @@ public class WebScreenshotTests
     }
 
     private static Task SaveAsync(IPage page, string imageName) =>
-        page.ScreenshotAsync(new PageScreenshotOptions { Path = Path.Combine(RepoRoot(), "docs", "user-guide", "images", imageName) });
+        page.ScreenshotAsync(new PageScreenshotOptions { Path = Path.Combine(RepoRoot(), "docs", "applications", "devterm", "user-guide", "images", imageName) });
 
     private static async Task WaitConnectedAsync(IPage page) =>
         await Assertions.Expect(page.Locator("#status")).ToContainTextAsync("connected");
@@ -723,7 +723,7 @@ public class WebScreenshotTests
             await page.Locator("[data-cfg=baud] input").FillAsync("19200");
             await page.Locator("[data-cfg=baud] input").BlurAsync();
             await Assertions.Expect(page.Locator("[data-cfg-change=baud]")).ToContainTextAsync("9600 to 19200");
-            await page.Locator("#configure").ScreenshotAsync(new LocatorScreenshotOptions { Path = Path.Combine(RepoRoot(), "docs", "user-guide", "images", "web-blazor-configure-device.png") });
+            await page.Locator("#configure").ScreenshotAsync(new LocatorScreenshotOptions { Path = Path.Combine(RepoRoot(), "docs", "applications", "devterm", "user-guide", "images", "web-blazor-configure-device.png") });
             await page.Locator("#cfg-write").ClickAsync();
             await Assertions.Expect(page.Locator("[data-cfg-message]")).ToContainTextAsync("Restart the device");
             Assert.AreEqual("19200", editor.Device["baud"]);

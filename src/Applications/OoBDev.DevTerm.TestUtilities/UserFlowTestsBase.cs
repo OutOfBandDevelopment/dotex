@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace OoBDev.DevTerm.TestUtilities;
 
 /// <summary>
-/// The user flows from docs/user-guide, written once and run against every front end: each front end's test project derives
+/// The user flows from docs/applications/devterm/user-guide, written once and run against every front end: each front end's test project derives
 /// a <c>[TestClass]</c> from this and supplies <see cref="RunAsync"/>, which starts that front end against a loopback device
 /// and hands the flow an <see cref="IFrontEndDriver"/>. A flow a front end has no way to perform is reported Inconclusive,
 /// never silently passed.

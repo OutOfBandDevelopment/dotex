@@ -75,7 +75,7 @@ Counts from `C:\repo\oobdev\dev-term\docs` (2026-10-29).
 | `specs` | 15 / 2,297 | Screen specifications (main windows, editors, stream monitor, routing, playback, Z-Wave panel) | `docs/applications/devterm/specs/` (imported) |
 | `devices` | 37 / 5,642 | Per-instrument notes (scopes, DMM, supplies, Z-Wave stick, TCP232 converter, and the eight device packages) | Device readmes and `docs/design/DeviceDecoding/`; instruments with no package here stay as notes |
 | `protocols` | 3 / 3,160 | USBTMC protocol notes | Transport design document |
-| `user-guide` | 179 / 2,418 | Task guides with images | `docs/how-tos/devterm/` once the shells exist |
+| `user-guide` | 179 / 2,418 | Task guides with images | `docs/applications/devterm/user-guide/` (done; tests write there) |
 | `test` | 44 / 2,542 | Bench session records on real hardware | Kept as evidence in the device change documents; summarized, not copied |
 | `changes`, `bugs` | 21 + 72 | Dated change log and bug reports | `git log` of dev-term; open bugs go to the backlog when the matching code is ported |
 | `coding-standards.md` | 160 | dev-term's standards | Compared against `.claude/rules/coding-standards.md`; this repository's rule wins |

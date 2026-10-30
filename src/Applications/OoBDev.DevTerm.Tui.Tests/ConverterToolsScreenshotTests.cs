@@ -12,8 +12,8 @@ using Terminal.Gui.Views;
 namespace OoBDev.DevTerm.Tui.Tests;
 
 /// <summary>
-/// Captures the "Converter tools" dialog for docs/user-guide/stream-monitor.md and docs/specs/converter-tools-editor.md:
-/// the real dialog (see <see cref="TuiReview.Modal"/>) at 80x25 in the light theme, copied into <c>docs/user-guide/images/</c>.
+/// Captures the "Converter tools" dialog for docs/applications/devterm/user-guide/stream-monitor.md and docs/applications/devterm/specs/converter-tools-editor.md:
+/// the real dialog (see <see cref="TuiReview.Modal"/>) at 80x25 in the light theme, copied into <c>docs/applications/devterm/user-guide/images/</c>.
 /// Modal also runs the layout checks, so a clipped or overlapping field fails here.
 /// </summary>
 [TestCategory("DevLocal")]

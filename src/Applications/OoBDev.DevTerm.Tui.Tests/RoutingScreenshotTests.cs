@@ -10,7 +10,7 @@ using OoBDev.DevTerm.Configuration;
 using OoBDev.DevTerm;
 namespace OoBDev.DevTerm.Tui.Tests;
 
-/// <summary>The real TUI screenshot for docs/user-guide/routing.md: <see cref="RoutingMode"/> with a connected broker, two rules and some traffic.</summary>
+/// <summary>The real TUI screenshot for docs/applications/devterm/user-guide/routing.md: <see cref="RoutingMode"/> with a connected broker, two rules and some traffic.</summary>
 [TestCategory("Unit")]
 [TestClass]
 [DoNotParallelize]

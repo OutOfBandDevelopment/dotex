@@ -19,7 +19,7 @@ namespace OoBDev.DevTerm.Tui.Tests;
 /// Theming in the TUI (see <see cref="TuiTheme"/>, docs/design/theming.md): the role-to-scheme
 /// mapping, a live switch through View &gt; Theme repainting the real rendered cells (read from
 /// <c>Driver.GetOutputBuffer()</c> on the UI thread, not just the view's scheme), and the Light/Dark
-/// screenshots for docs/user-guide/themes.md. The active theme and Terminal.Gui's schemes are
+/// screenshots for docs/applications/devterm/user-guide/themes.md. The active theme and Terminal.Gui's schemes are
 /// process-wide, so every test puts both back afterwards and the class runs serially.
 /// </summary>
 [TestCategory("Unit")]

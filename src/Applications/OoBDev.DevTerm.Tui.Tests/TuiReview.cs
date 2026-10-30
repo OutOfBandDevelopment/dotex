@@ -15,7 +15,7 @@ namespace OoBDev.DevTerm.Tui.Tests;
 /// The harness behind the TUI layout-review tests: builds one real screen headlessly at a given
 /// terminal size and theme, runs <see cref="TuiLayoutAssert"/> over it, and saves a PNG of it
 /// (<see cref="TuiScreenshot"/>) into the untracked <c>artifacts/ui-review/tui/</c> folder at the repo
-/// root for a person to look through - never into docs/user-guide/images, which only holds doc images.
+/// root for a person to look through - never into docs/applications/devterm/user-guide/images, which only holds doc images.
 /// </summary>
 internal static class TuiReview
 {
@@ -29,7 +29,7 @@ internal static class TuiReview
 
     public static readonly string Directory = Path.Combine(FindRepoRoot(), "artifacts", "ui-review", "tui");
 
-    /// <summary>Where the screenshot tests that feed the user guide write their images; copy the ones worth keeping into docs/user-guide/images by hand.</summary>
+    /// <summary>Where the screenshot tests that feed the user guide write their images; copy the ones worth keeping into docs/applications/devterm/user-guide/images by hand.</summary>
     public static readonly string DocImages = global::System.IO.Directory.CreateDirectory(Path.Combine(FindRepoRoot(), "artifacts", "doc-images", "tui")).FullName;
 
     private static string FindRepoRoot()

@@ -163,7 +163,7 @@ internal static class TuiTestRunner
         _currentApp.LayoutAndDraw(true);
     }
 
-    /// <summary>Renders the current screen buffer as plain text, one line per row — a text "screenshot" of the TUI, usable both for assertions and for docs/user-guide.</summary>
+    /// <summary>Renders the current screen buffer as plain text, one line per row — a text "screenshot" of the TUI, usable both for assertions and for docs/applications/devterm/user-guide.</summary>
     public static string DumpBuffer()
     {
         var buffer = _currentApp!.Driver!.GetOutputBuffer();

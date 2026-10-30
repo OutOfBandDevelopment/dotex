@@ -16,11 +16,11 @@ using Microsoft.Extensions.Options;
 namespace OoBDev.DevTerm.Tui.Tests;
 
 /// <summary>
-/// Generates the real screenshots embedded in <c>docs/user-guide/</c> — a real, headlessly-rendered
+/// Generates the real screenshots embedded in <c>docs/applications/devterm/user-guide/</c> — a real, headlessly-rendered
 /// <see cref="ConfigureMode"/>/<see cref="TuiMode"/> window rendered to PNG via
 /// <see cref="TuiScreenshot"/> (each cell's actual foreground/background color, not a plain-text
 /// dump), the same "real captured output from the actual built app" convention
-/// <c>docs/user-guide/README.md</c> documents. A plain-text <see cref="TuiTestRunner.DumpBuffer"/>
+/// <c>docs/applications/devterm/user-guide/README.md</c> documents. A plain-text <see cref="TuiTestRunner.DumpBuffer"/>
 /// capture is kept alongside each PNG purely as a cheap, diffable regression signal — the PNG is
 /// what actually gets embedded in docs. These are real automated tests (each asserts the text dump
 /// contains the fields/labels expected for that state) that double as doc generation. Re-run this

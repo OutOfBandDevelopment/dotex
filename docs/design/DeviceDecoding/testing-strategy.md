@@ -41,7 +41,7 @@ Target 80% or better line coverage per package (Framework rule, applied to the d
 
 ## Documentation outputs
 
-Specs, user guide and bench reports stay generated from tests as in dev-term (`docs/specs`, `docs/user-guide`, `docs/test`); moving the generators is not started here.
+Specs, user guide and bench reports stay generated from tests as in dev-term (`docs/specs`, `docs/applications/devterm/user-guide`, `docs/test`); moving the generators is not started here.
 
 ## Open point
 

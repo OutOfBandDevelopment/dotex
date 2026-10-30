@@ -14,9 +14,9 @@ using Terminal.Gui.Views;
 namespace OoBDev.DevTerm.Tui.Tests;
 
 /// <summary>
-/// Captures the expression picker's states for docs/user-guide/expression-builder.md: a clean build, a syntax error, an
+/// Captures the expression picker's states for docs/applications/devterm/user-guide/expression-builder.md: a clean build, a syntax error, an
 /// unknown-value warning, a text expression, and Channels mode. Each runs the real dialog (see <see cref="TuiReview.Modal"/>)
-/// at 80x25 in the light theme and copies the capture into <c>docs/user-guide/images/</c>.
+/// at 80x25 in the light theme and copies the capture into <c>docs/applications/devterm/user-guide/images/</c>.
 /// </summary>
 [TestCategory("DevLocal")]
 [TestClass]

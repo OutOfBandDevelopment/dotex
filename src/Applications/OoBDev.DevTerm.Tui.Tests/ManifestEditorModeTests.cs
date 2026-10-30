@@ -16,7 +16,7 @@ namespace OoBDev.DevTerm.Tui.Tests;
 /// Drives the real <see cref="ManifestEditorMode"/> window headlessly against the bundled Loopback
 /// Sensor Demo manifest: the outline, a part's generated form writing the manifest, the live panel
 /// preview (drawn by <see cref="ControlPanelMode"/>, sending nothing), and Save. Also captures the
-/// docs/user-guide screenshots. Saves go to a temp folder, never the real <c>~/.dev-term/manifests</c>.
+/// docs/applications/devterm/user-guide screenshots. Saves go to a temp folder, never the real <c>~/.dev-term/manifests</c>.
 /// </summary>
 [TestCategory("Unit")]
 [TestClass]

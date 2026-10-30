@@ -7,19 +7,19 @@
 │  Detected HID devices: ⟦ Detect HID... ⟧                                    ░│
 │                                                                             ░│
 │                        (not found — no connected device matches this        ░│
-│                        vendor/product/serial)                               █│
+│                        vendor/product/serial)                               ░│
 │                                                                             █│
 │[-] Presentation                                                             █│
 │  Presenters:            ☐ ascii ☐ utf8 ☑ hex ☐ decimal ☐ octal              █│
-│                         ☐ binary ☐ k8055 ☐ busylight ☐ scpi                 █│
-│                         ☐ radexone ☐ zoomh4n ☐ de5000 ☐ nmea                █│
+│                         ☐ binary ☐ keyvalue                                 █│
 │  Send as:               ○ ascii  ○ utf8  ◉ hex  ○ decimal  ○ octal          █│
-│                         ○ binary  ○ k8055  ○ busylight  ○ scpi              █│
-│                         ○ radexone  ○ zoomh4n  ○ de5000  ○ nmea             █│
+│                         ○ binary  ○ keyvalue                                █│
 │  Line ending:           ◉ None  ○ Cr  ○ Lf  ○ CrLf                          █│
-│  ASCII max line length: 4096                                                ░│
+│  ASCII max line length: 4096                                                █│
+│                                                                             █│
+│Save as profile named:                      ⟦ Save Profile ⟧                 █│
+│                                                                             █│
+│Import/export file path:                                                     ░│
 │                                                                             ░│
-│Save as profile named:                      ⟦ Save Profile ⟧                 ░│
-│                                                                             ░│
-│Import/export file path:                                                     ▼│
+│⟦ Browse... ⟧  ⟦ Import ⟧  ⟦ Export ⟧  ⟦ Save As... ⟧  ⟦ Replace All ⟧       ▼│
 └──────────────────────────────────────────────────────────────────────────────┘
