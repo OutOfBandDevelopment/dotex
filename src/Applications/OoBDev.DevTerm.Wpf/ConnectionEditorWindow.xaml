@@ -33,7 +33,13 @@
                 <TextBlock Text="Save as profile named" />
                 <TextBox Text="{Binding SaveName, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
                 <TextBlock Text="Import or export zip path" />
-                <TextBox Text="{Binding ImportExportPath, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,4" />
+                <DockPanel Margin="0,2,0,4">
+                    <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                        <Button Content="Browse..." Command="{Binding ZipBrowser.Browse, RelativeSource={RelativeSource AncestorType=Window}}" Padding="8,2" Margin="4,0,0,0" />
+                        <Button Content="Save as..." Command="{Binding ZipBrowser.SaveAs, RelativeSource={RelativeSource AncestorType=Window}}" Padding="8,2" Margin="4,0,0,0" />
+                    </StackPanel>
+                    <TextBox Text="{Binding ImportExportPath, UpdateSourceTrigger=PropertyChanged}" />
+                </DockPanel>
                 <StackPanel Orientation="Horizontal">
                     <Button Content="Import" Command="{Binding ImportCommand}" Padding="8,2" Margin="0,0,4,0" />
                     <Button Content="Replace all from zip" Command="{Binding ReplaceAllFromZipCommand}" Padding="8,2" />

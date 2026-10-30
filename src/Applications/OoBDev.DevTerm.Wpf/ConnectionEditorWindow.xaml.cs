@@ -3,6 +3,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using OoBDev.DevTerm.Configuration;
+using OoBDev.DevTerm.Wpf;
 
 namespace DevTermApp;
 
@@ -13,15 +14,19 @@ public partial class ConnectionEditorWindow : Window
 
     /// <summary>Creates the window over <paramref name="editor"/>.</summary>
     /// <param name="editor">The editor view model.</param>
-    public ConnectionEditorWindow(ConnectionEditorViewModel editor)
+    public ConnectionEditorWindow(ConnectionEditorViewModel editor, ProfileZipBrowser? zipBrowser = null)
     {
         ArgumentNullException.ThrowIfNull(editor);
         _editor = editor;
+        ZipBrowser = zipBrowser;
         InitializeComponent();
         DataContext = editor;
         editor.CloseRequested += (_, _) => DialogResult = true;
         editor.ProfilesChangedExternally += (_, _) => Dispatcher.BeginInvoke(() => editor.RefreshCommand.Execute(null));
     }
+
+    /// <summary>The Browse and Save As commands for the zip path, or null when the host has no file pickers.</summary>
+    public ProfileZipBrowser? ZipBrowser { get; }
 
     private void ProfilesList_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {

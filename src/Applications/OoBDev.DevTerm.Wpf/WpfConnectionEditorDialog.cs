@@ -6,12 +6,12 @@ using UiDefinitionsWpf;
 namespace OoBDev.DevTerm.Wpf;
 
 /// <summary>Shows the connection editor in a <see cref="ConnectionEditorWindow"/>.</summary>
-public sealed class WpfConnectionEditorDialog : IConnectionEditorDialog
+public sealed class WpfConnectionEditorDialog(IProfileZipDialogs? zipDialogs = null) : IConnectionEditorDialog
 {
     /// <inheritdoc />
     public CliOptions? Show(ConnectionEditorViewModel editor)
     {
-        var window = new ConnectionEditorWindow(editor) { Owner = Application.Current?.MainWindow };
+        var window = new ConnectionEditorWindow(editor, zipDialogs is null ? null : new ProfileZipBrowser(editor, zipDialogs)) { Owner = Application.Current?.MainWindow };
         ConnectionEditorPrompts.Wire(editor, new WpfConfirmPrompt(window));
         editor.ResolveZipImportConflict = name => MessageBox.Show(
             window,
