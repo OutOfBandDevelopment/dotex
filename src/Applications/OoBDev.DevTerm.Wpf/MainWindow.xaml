@@ -34,6 +34,15 @@
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
+            <ItemsControl ItemsSource="{Binding Instruments}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Button Content="{Binding MenuTitle}" Margin="4"
+                                Command="{Binding DataContext.OpenInstrumentPanel, RelativeSource={RelativeSource AncestorType=Window}}"
+                                CommandParameter="{Binding}" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
             <ItemsControl ItemsSource="{Binding Factories}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>

@@ -19,6 +19,7 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
     private readonly IManifestPickerDialog? _manifestPickerDialog;
     private readonly IThemeBuilderDialog? _themeBuilderDialog;
     private readonly IConfigureDeviceDialog? _configureDeviceDialog;
+    private readonly IInstrumentPickerDialog? _instrumentPickerDialog;
     private readonly IReadOnlyList<OoBDev.System.IO.Devices.IDeviceConfigEditor> _configEditors;
     private readonly string? _themesDirectory;
     private readonly ConverterToolsStore? _converterToolsStore;
@@ -44,7 +45,7 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
     /// <param name="mergedLog">The log every opened session is recorded in, or null.</param>
     /// <param name="routingDialog">Shows the routing window, or null when the shell has no window to host it.</param>
     /// <param name="editorDialog">Shows the connection editor, or null when the shell has no window to host it.</param>
-    public ShellViewModel(IEnumerable<IPanelFactory> factories, ISessionViewModelFactory? sessionFactory = null, IConnectionEditorDialog? editorDialog = null, IRoutingDialog? routingDialog = null, IStreamMonitorDialog? streamMonitorDialog = null, StreamMonitor? streamMonitor = null, IMergedLogDialog? mergedLogDialog = null, MergedSessionLog? mergedLog = null, IPlaybackDialog? playbackDialog = null, PlaybackPresenters? playbackPresenters = null, IEnumerable<IDevicePanelContribution>? devicePanels = null, IConfirmPrompt? confirm = null, IColorPicker? colorPicker = null, IConverterToolsDialog? converterToolsDialog = null, ConverterToolsStore? converterToolsStore = null, IManifestPickerDialog? manifestPickerDialog = null, IThemeBuilderDialog? themeBuilderDialog = null, string? themesDirectory = null, IConfigureDeviceDialog? configureDeviceDialog = null, IEnumerable<OoBDev.System.IO.Devices.IDeviceConfigEditor>? configEditors = null)
+    public ShellViewModel(IEnumerable<IPanelFactory> factories, ISessionViewModelFactory? sessionFactory = null, IConnectionEditorDialog? editorDialog = null, IRoutingDialog? routingDialog = null, IStreamMonitorDialog? streamMonitorDialog = null, StreamMonitor? streamMonitor = null, IMergedLogDialog? mergedLogDialog = null, MergedSessionLog? mergedLog = null, IPlaybackDialog? playbackDialog = null, PlaybackPresenters? playbackPresenters = null, IEnumerable<IDevicePanelContribution>? devicePanels = null, IConfirmPrompt? confirm = null, IColorPicker? colorPicker = null, IConverterToolsDialog? converterToolsDialog = null, ConverterToolsStore? converterToolsStore = null, IManifestPickerDialog? manifestPickerDialog = null, IThemeBuilderDialog? themeBuilderDialog = null, string? themesDirectory = null, IConfigureDeviceDialog? configureDeviceDialog = null, IEnumerable<OoBDev.System.IO.Devices.IDeviceConfigEditor>? configEditors = null, IInstrumentPickerDialog? instrumentPickerDialog = null, IEnumerable<IInstrumentPanelProvider>? instruments = null)
     {
         ArgumentNullException.ThrowIfNull(factories);
         Factories = [.. factories];
@@ -56,6 +57,8 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
         _manifestPickerDialog = manifestPickerDialog;
         _themeBuilderDialog = themeBuilderDialog;
         _configureDeviceDialog = configureDeviceDialog;
+        _instrumentPickerDialog = instrumentPickerDialog;
+        Instruments = [.. instruments ?? []];
         _configEditors = [.. configEditors ?? []];
         _themesDirectory = themesDirectory;
         _converterToolsStore = converterToolsStore;
@@ -75,6 +78,7 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
         OpenManifestPanel = new OpenManifestCommand(this);
         BuildTheme = new BuildThemeCommand(this);
         ShowConfigureDevice = new ShowConfigureDeviceCommand(this);
+        OpenInstrumentPanel = new OpenInstrumentCommand(this);
         ShowRoutingWindow = new ShowRoutingCommand(this);
         NewConnection = new NewConnectionCommand(this);
         Open = new OpenPanelCommand(this);
@@ -112,6 +116,12 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
 
     /// <summary>Edits the stream monitor's converter tools.</summary>
     public ICommand ShowConverterTools { get; }
+
+    /// <summary>The instrument families plugins contribute (SCPI).</summary>
+    public IReadOnlyList<IInstrumentPanelProvider> Instruments { get; }
+
+    /// <summary>Opens the instrument panel of the provider passed as the parameter for the selected session.</summary>
+    public ICommand OpenInstrumentPanel { get; }
 
     /// <summary>Shows the Configure device window.</summary>
     public ICommand ShowConfigureDevice { get; }
@@ -156,6 +166,51 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
         DevicePanelPreviews.Apply(built.Definition, surface);
         var feed = new DevicePanelFeed(definition, source, built);
         SelectedPanel = new PanelViewModel(panel.MenuTitle.Replace("_", string.Empty, StringComparison.Ordinal).TrimEnd('.'), new FormViewModel(built.Definition, built.Binding, _colorPicker, _confirm), feed, feed.Displays);
+    }
+
+    internal bool CanOpenInstrument(IInstrumentPanelProvider provider) =>
+        _instrumentPickerDialog is not null
+        && SelectedSession is { Tab: { } tab } session
+        && session.State == OoBDev.System.IO.ConnectionState.Open
+        && provider.IsAvailable(tab.CliOptions.Transport, tab.CliOptions.VendorId, tab.CliOptions.ProductId);
+
+    internal async global::System.Threading.Tasks.Task OpenInstrumentAsync(IInstrumentPanelProvider provider)
+    {
+        var selected = SelectedSession!;
+        var picker = new InstrumentPickerDialogViewModel(provider);
+        if (!_instrumentPickerDialog!.Pick(picker) || picker.Chosen is not { } choice)
+        {
+            return;
+        }
+
+        try
+        {
+            IPresenter? source = null;
+            if (selected.Tab!.Catalog.TryGet(provider.PresenterName, out var presenter))
+            {
+                selected.Session.AddPresenter(presenter);
+                source = presenter;
+            }
+
+            if (choice == provider.AutoDetectChoice)
+            {
+                var timeout = TimeSpan.FromMilliseconds(selected.Tab.CliOptions.ScpiAutoDetectTimeoutMs);
+                selected.OutputLines.Add(provider.DetectProgressMessage(timeout));
+                var detection = await provider.DetectAsync(selected.Session, source, timeout);
+                selected.OutputLines.Add(detection.Message);
+                choice = detection.Choice;
+            }
+
+            var panel = provider.Open(choice, selected.Session, source);
+            var built = OoBDev.DevTerm.Panels.SurfacePanelBuilder.Build(panel.Definition, panel.Surface);
+            DevicePanelPreviews.Apply(built.Definition, panel.Surface);
+            var feed = new DevicePanelFeed(panel.Definition, source as OoBDev.UiDefinitions.IStructuredPresenter, built);
+            SelectedPanel = new PanelViewModel(panel.Title, new FormViewModel(built.Definition, built.Binding, _colorPicker, _confirm), feed, feed.Displays);
+        }
+        catch (Exception ex)
+        {
+            selected.OutputLines.Add($"Could not open the instrument panel: {ex.Message}");
+        }
     }
 
     internal bool CanConfigureDevice => _configureDeviceDialog is not null && _configEditors.Count > 0;
@@ -223,6 +278,7 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
             if (e.PropertyName == nameof(SessionViewModel.State))
             {
                 ((CommandBase)OpenDevicePanelCommand).RaiseCanExecuteChanged();
+                ((CommandBase)OpenInstrumentPanel).RaiseCanExecuteChanged();
             }
         };
         _mergedLog?.Track(session, session.Session, session.Title);
@@ -285,6 +341,7 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
             {
                 ((CommandBase)ShowRoutingWindow).RaiseCanExecuteChanged();
                 ((CommandBase)OpenDevicePanelCommand).RaiseCanExecuteChanged();
+                ((CommandBase)OpenInstrumentPanel).RaiseCanExecuteChanged();
                 ((CommandBase)ShowStreamMonitorWindow).RaiseCanExecuteChanged();
             }
         }

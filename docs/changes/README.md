@@ -538,4 +538,5 @@ Each change document should include:
 - [DevTerm WPF device manifest picker (2026-10-30)](devterm-wpf-manifest-picker-2026-10-30.md) - pick or browse a manifest and open its panel on the session
 - [DevTerm WPF theme builder (2026-10-30)](devterm-wpf-theme-builder-2026-10-30.md) - seed picker, colour role editor with live preview, save as a user theme
 - [DevTerm WPF Configure device window (2026-10-30)](devterm-wpf-configure-device-2026-10-30.md) - editor, host and port, read, edit, review changes, write
+- [DevTerm WPF instrument picker (2026-10-30)](devterm-wpf-instrument-picker-2026-10-30.md) - provider buttons, choice picker, auto-detect, panel
 - [One USB HID adapter (2026-10-29)](system-io-usbhids-adapter-merge-2026-10-29.md) - UsbHidFactory returns the endpoint adapter; the thin one is gone
