@@ -63,6 +63,48 @@ public sealed class DevicePanelTests
         public IControlSurface CreateSurface(Session session) => surface;
     }
 
+    private sealed class InterlockPanel(FakeSurface surface) : IDevicePanelContribution
+    {
+        public string Id => "interlock";
+
+        public string MenuTitle => "_Interlock...";
+
+        public string? PresenterName => null;
+
+        public bool IsAvailable(string transport, int vendorId, int productId) => true;
+
+        public UiDefinition BuildDefinition() => new()
+        {
+            Name = "Interlock",
+            Sections = [new UiSection { Controls = [new ToggleControl { Id = "arm", Label = "Arm" }, new ButtonControl { Id = "fire", Label = "Fire", CommandId = "FIRE", EnabledWhen = new UiCondition { Id = "arm", Values = ["True"] }, DisabledReason = "Arm first" }] }],
+        };
+
+        public IControlSurface CreateSurface(Session session) => surface;
+    }
+
+    [TestMethod]
+    public async Task OpenDevicePanelCommand_EnabledWhenToggleOn_EnablesTheButton()
+    {
+        // Stage
+        var services = new ServiceCollection();
+        services.AddSingleton<IDevicePanelContribution>(new InterlockPanel(new FakeSurface()));
+        await using var provider = services.AddDevTermWpfShell().BuildServiceProvider();
+        var shell = provider.GetRequiredService<ShellViewModel>();
+        shell.NewLoopbackSession.Execute(null);
+        shell.SelectedSession!.Connect.Execute(null);
+        await WaitAsync(() => shell.SelectedSession.State == ConnectionState.Open);
+        shell.OpenDevicePanelCommand.Execute(shell.DevicePanels[0]);
+        var fire = shell.SelectedPanel!.Form.Row("fire")!;
+        var disabledBefore = !fire.IsEnabled;
+
+        // Test
+        ((OoBDev.UiDefinitions.ViewModels.ToggleViewModel)shell.SelectedPanel.Form.Row("arm")!).Toggle.Execute(null);
+
+        // Assert
+        Assert.IsTrue(disabledBefore);
+        Assert.IsTrue(fire.IsEnabled);
+    }
+
     [TestMethod]
     public async Task OpenDevicePanelCommand_SurfaceWithPreview_PutsTheSendsTextInTheButtonTooltip()
     {
