@@ -10,7 +10,8 @@ namespace OoBDev.DevTerm.Wpf;
 /// <param name="sessions">The session factory.</param>
 /// <param name="presenters">The presenter catalog.</param>
 /// <param name="profiles">The saved connection profiles.</param>
-public sealed class SessionViewModelFactory(IOptions<LoopbackTransportOptions> loopbackOptions, ISessionFactory sessions, PresenterCatalog presenters, ConnectionProfileStore profiles) : ISessionViewModelFactory
+/// <param name="logDialog">Asks for log files and notes, or null.</param>
+public sealed class SessionViewModelFactory(IOptions<LoopbackTransportOptions> loopbackOptions, ISessionFactory sessions, PresenterCatalog presenters, ConnectionProfileStore profiles, ISessionLogDialog? logDialog = null) : ISessionViewModelFactory
 {
     private int _count;
 
@@ -18,7 +19,7 @@ public sealed class SessionViewModelFactory(IOptions<LoopbackTransportOptions> l
     public SessionViewModel CreateLoopback()
     {
         var session = sessions.Create(new LoopbackTransport(loopbackOptions), new Pipeline([presenters.Get("ascii")]));
-        return new SessionViewModel(session, $"Loopback {++_count}");
+        return new SessionViewModel(session, $"Loopback {++_count}", logDialog: logDialog);
     }
 
     /// <inheritdoc />
@@ -34,7 +35,7 @@ public sealed class SessionViewModelFactory(IOptions<LoopbackTransportOptions> l
     public SessionViewModel CreateFromOptions(CliOptions options, string title)
     {
         var built = DevTermSessionBuilder.Build(options);
-        return new SessionViewModel(built.Session, title, new SessionTab(built.Session, built.Catalog, options, built.Services));
+        return new SessionViewModel(built.Session, title, new SessionTab(built.Session, built.Catalog, options, built.Services), logDialog);
     }
 
     /// <inheritdoc />

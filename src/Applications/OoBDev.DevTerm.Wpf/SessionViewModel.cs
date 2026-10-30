@@ -20,24 +20,28 @@ public sealed class SessionViewModel : ViewModelBase, IAsyncDisposable
     private string _sendText = string.Empty;
     private string? _errorMessage;
     private bool _echoSent;
+    private readonly ISessionLogDialog? _logDialog;
     private SessionLogger? _logger;
 
     /// <summary>Creates the view model over <paramref name="session"/> and listens to its output.</summary>
     /// <param name="session">The session; the view model owns it.</param>
     /// <param name="title">The tab title.</param>
     /// <param name="tab">The per-connection state (options, routing), or null when the session was not built from options.</param>
-    public SessionViewModel(Session session, string title, SessionTab? tab = null)
+    /// <param name="logDialog">Asks for the log file and log notes; null logs to the default path and adds no notes.</param>
+    public SessionViewModel(Session session, string title, SessionTab? tab = null, ISessionLogDialog? logDialog = null)
     {
         ArgumentNullException.ThrowIfNull(session);
         ArgumentException.ThrowIfNullOrWhiteSpace(title);
         _session = session;
         Title = title;
         Tab = tab;
+        _logDialog = logDialog;
         Connect = new ConnectSessionCommand(this);
         Disconnect = new DisconnectSessionCommand(this);
         Send = new SendTextCommand(this);
         ClearOutput = new ClearOutputCommand(this);
         ToggleLogging = new ToggleLoggingCommand(this);
+        AddLogNote = new AddLogNoteCommand(this);
         _session.Output += OnOutput;
         _session.Transport.StateChanged += OnStateChanged;
     }
@@ -65,6 +69,9 @@ public sealed class SessionViewModel : ViewModelBase, IAsyncDisposable
 
     /// <summary>Starts or stops logging the session to its default log file; not available without per-connection options.</summary>
     public ICommand ToggleLogging { get; }
+
+    /// <summary>Adds a note to the running log; available only while logging and when a dialog is set.</summary>
+    public ICommand AddLogNote { get; }
 
     /// <summary>Whether the session is being logged.</summary>
     public bool IsLogging => _logger is not null;
@@ -118,6 +125,16 @@ public sealed class SessionViewModel : ViewModelBase, IAsyncDisposable
             try
             {
                 var path = SessionLogging.DefaultLogPath(tab.CliOptions, null, DateTimeOffset.Now);
+                if (_logDialog is not null)
+                {
+                    if (_logDialog.PickLogPath(path) is not { Length: > 0 } chosen)
+                    {
+                        return;
+                    }
+
+                    path = chosen;
+                }
+
                 _logger = SessionLogging.Start(path, _session, tab.CliOptions, tab.Parser, null, "wpf");
                 ErrorMessage = null;
             }
@@ -129,6 +146,15 @@ public sealed class SessionViewModel : ViewModelBase, IAsyncDisposable
 
         OnPropertyChanged(nameof(IsLogging));
         OnPropertyChanged(nameof(LogPath));
+        ((CommandBase)AddLogNote).RaiseCanExecuteChanged();
+    }
+
+    internal void AddNote()
+    {
+        if (_logger is not null && _logDialog?.PromptNote() is { } text && !string.IsNullOrWhiteSpace(text))
+        {
+            _logger.RecordNote(text);
+        }
     }
 
     internal bool CanConnect => State is ConnectionState.Closed or ConnectionState.Faulted;
