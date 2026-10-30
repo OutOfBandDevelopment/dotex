@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using OoBDev.DevTerm;
+using OoBDev.System.IO;
 
 namespace OoBDev.DevTerm.Configuration;
 
@@ -47,7 +48,7 @@ public static class DevTermSessionBuilder
         var catalog = provider.GetRequiredService<PresenterCatalog>();
         var presenters = ResolvePresenters(catalog, cliOptions);
 
-        var transport = provider.GetRequiredService<ITransport>();
+        var transport = provider.GetRequiredService<IDeviceAdapter>();
         var sessionFactory = provider.GetRequiredService<ISessionFactory>();
         var session = sessionFactory.Create(transport, new Pipeline(presenters));
         session.Limits = cliOptions.SessionLimits;

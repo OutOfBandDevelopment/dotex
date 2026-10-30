@@ -1,3 +1,4 @@
+using OoBDev.System.IO.Pipelines;
 using OoBDev.System.IO;
 using System;
 using System.Buffers;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 namespace OoBDev.DevTerm;
 
 /// <summary>
-/// Binds one <see cref="ITransport"/> to a <see cref="Pipeline"/> of presenters for a single
+/// Binds one <see cref="IDeviceAdapter"/> to a <see cref="Pipeline"/> of presenters for a single
 /// logical connection to a device.
 ///
 /// A connection that ends on its own — the read side fails, the device closes it, or a send
@@ -21,7 +22,7 @@ namespace OoBDev.DevTerm;
 /// </summary>
 public sealed class Session : IAsyncDisposable
 {
-    private readonly ITransport _transport;
+    private readonly IDeviceAdapter _transport;
     private readonly Pipeline _pipeline;
 
     // Serializes open/close so a self-initiated close (a fault) and a caller's CloseAsync/OpenAsync
@@ -50,7 +51,7 @@ public sealed class Session : IAsyncDisposable
     private readonly Lock _observersGate = new();
     private ISessionObserver[] _observers = [];
 
-    public Session(ITransport transport, Pipeline pipeline)
+    public Session(IDeviceAdapter transport, Pipeline pipeline)
     {
         ArgumentNullException.ThrowIfNull(transport);
         ArgumentNullException.ThrowIfNull(pipeline);
@@ -104,12 +105,12 @@ public sealed class Session : IAsyncDisposable
 
     /// <summary>
     /// The underlying transport, for a front end that needs a transport-specific capability no
-    /// generic <see cref="ITransport"/> member exposes (e.g. toggling
+    /// generic <see cref="IDeviceAdapter"/> member exposes (e.g. toggling
     /// a TCP transport's software flow control at runtime) - pattern-match on
-    /// the concrete type at the call site rather than growing <see cref="ITransport"/> itself with
+    /// the concrete type at the call site rather than growing <see cref="IDeviceAdapter"/> itself with
     /// one-off members only a single transport supports.
     /// </summary>
-    public ITransport Transport => _transport;
+    public IDeviceAdapter Transport => _transport;
 
     public IReadOnlyList<IPresenter> Presenters => _pipeline.Presenters;
 

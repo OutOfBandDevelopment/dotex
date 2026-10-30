@@ -1,3 +1,4 @@
+using OoBDev.System.IO.Pipelines;
 using OoBDev.System.IO;
 using System;
 using System.Collections.Generic;
@@ -12,9 +13,10 @@ using System.IO.Pipelines;
 
 namespace OoBDev.DevTerm.DeviceManifests.Tests;
 
-/// <summary>A minimal in-memory <see cref="ITransport"/>: records every write, and pushes "device" bytes back on demand.</summary>
-internal sealed class FakeTransport : ITransport
+/// <summary>A minimal in-memory <see cref="IDeviceAdapter"/>: records every write, and pushes "device" bytes back on demand.</summary>
+internal sealed class FakeTransport : IDeviceAdapter
 {
+    private PipeWriter? _output;
     private readonly Pipe _pipe = new();
     private ConnectionState _state = ConnectionState.Closed;
 
@@ -37,6 +39,12 @@ internal sealed class FakeTransport : ITransport
     public event EventHandler<ConnectionStateChangedEventArgs>? StateChanged;
 
     public PipeReader Input => _pipe.Reader;
+
+    public string Type => "Fake";
+
+    public string Path => "fake";
+
+    public PipeWriter Output => _output ??= DeviceAdapterOutput.Create(WriteAsync);
 
     public Task OpenAsync(CancellationToken cancellationToken = default)
     {

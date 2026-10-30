@@ -1,3 +1,4 @@
+using OoBDev.System.IO;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -23,7 +24,7 @@ public static class ServiceCollectionExtensions
 
         // TryAdd: idempotent if DevTerm.Transports.Tcp's own AddTcpTransport() already registered this.
         services.TryAddSingleton<ITcpConnectionSource, SystemTcpConnectionSource>();
-        services.AddTransient<ITransport, Vxi11Transport>();
+        services.AddTransient<IDeviceAdapter, Vxi11Transport>();
         return services;
     }
 }

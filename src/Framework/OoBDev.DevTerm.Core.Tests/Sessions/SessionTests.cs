@@ -1,3 +1,4 @@
+using OoBDev.System.IO.Pipelines;
 using OoBDev.System.IO;
 using System.IO;
 using System;
@@ -21,10 +22,10 @@ public sealed class SessionTests
     /// from <see cref="Pipe.Reader"/> for real, and the test plays "incoming device bytes" by
     /// writing to <see cref="Pipe.Writer"/> — no need to mock <see cref="PipeReader"/> itself.
     /// </summary>
-    private static (Mock<ITransport> Transport, Pipe Pipe) CreateOpenableTransport()
+    private static (Mock<IDeviceAdapter> Transport, Pipe Pipe) CreateOpenableTransport()
     {
         var pipe = new Pipe();
-        var transport = new Mock<ITransport>();
+        var transport = new Mock<IDeviceAdapter>();
         transport.SetupGet(t => t.Input).Returns(pipe.Reader);
         return (transport, pipe);
     }
@@ -57,7 +58,7 @@ public sealed class SessionTests
     [TestMethod]
     public async Task CloseAsync_DelegatesToTransport()
     {
-        var transport = new Mock<ITransport>();
+        var transport = new Mock<IDeviceAdapter>();
         await using var session = new Session(transport.Object, new Pipeline([]));
 
         await session.CloseAsync(TestContext.CancellationToken);
@@ -68,13 +69,19 @@ public sealed class SessionTests
     [TestMethod]
     public async Task SendAsync_DelegatesToTransport()
     {
-        var transport = new Mock<ITransport>();
+        var transport = new Mock<IDeviceAdapter>();
+        var written = new List<byte>();
+        transport.SetupGet(t => t.Output).Returns(DeviceAdapterOutput.Create((data, _) =>
+        {
+            written.AddRange(data.ToArray());
+            return Task.CompletedTask;
+        }));
         await using var session = new Session(transport.Object, new Pipeline([]));
         var payload = new byte[] { 1, 2, 3 };
 
         await session.SendAsync(payload, TestContext.CancellationToken);
 
-        transport.Verify(t => t.WriteAsync(payload, It.IsAny<CancellationToken>()), Times.Once);
+        CollectionAssert.AreEqual(payload, written);
     }
 
     [TestMethod]
@@ -167,7 +174,7 @@ public sealed class SessionTests
     [TestMethod]
     public async Task DisposeAsync_ClosesUnderlyingTransport()
     {
-        var transport = new Mock<ITransport>();
+        var transport = new Mock<IDeviceAdapter>();
 
         await using (new Session(transport.Object, new Pipeline([])))
         {
@@ -197,7 +204,7 @@ public sealed class SessionTests
         // and silently. A real scenario now that both front ends have a Connect/Disconnect menu
         // item, not just a hypothetical.
         var currentPipe = new Pipe();
-        var transport = new Mock<ITransport>();
+        var transport = new Mock<IDeviceAdapter>();
         transport.SetupGet(t => t.Input).Returns(() => currentPipe.Reader);
 
         var presenter = new Mock<IPresenter>();
@@ -247,7 +254,7 @@ public sealed class SessionTests
     [TestMethod]
     public void State_ReflectsTransportState()
     {
-        var transport = new Mock<ITransport>();
+        var transport = new Mock<IDeviceAdapter>();
         transport.SetupGet(t => t.State).Returns(ConnectionState.Open);
 
         var session = new Session(transport.Object, new Pipeline([]));
@@ -318,8 +325,7 @@ public sealed class SessionTests
     {
         var (transport, _) = CreateOpenableTransport();
         transport.SetupGet(t => t.State).Returns(ConnectionState.Open);
-        transport.Setup(t => t.WriteAsync(It.IsAny<ReadOnlyMemory<byte>>(), It.IsAny<CancellationToken>()))
-            .ThrowsAsync(new TimeoutException("device did not answer"));
+        transport.SetupGet(t => t.Output).Returns(DeviceAdapterOutput.Create((_, _) => Task.FromException(new TimeoutException("device did not answer"))));
         await using var session = new Session(transport.Object, new Pipeline([]));
         var disconnected = WaitForDisconnected(session);
         await session.OpenAsync(TestContext.CancellationToken);
@@ -345,8 +351,7 @@ public sealed class SessionTests
         // docs/bugs/resolved/039-sendasync-from-read-loop-deadlock.md.
         var (transport, pipe) = CreateOpenableTransport();
         transport.SetupGet(t => t.State).Returns(ConnectionState.Open);
-        transport.Setup(t => t.WriteAsync(It.IsAny<ReadOnlyMemory<byte>>(), It.IsAny<CancellationToken>()))
-            .ThrowsAsync(new TimeoutException("device did not answer"));
+        transport.SetupGet(t => t.Output).Returns(DeviceAdapterOutput.Create((_, _) => Task.FromException(new TimeoutException("device did not answer"))));
         var presenter = new Mock<IPresenter>();
         presenter.SetupGet(p => p.Name).Returns("p");
         presenter.Setup(p => p.Render(It.IsAny<ReadOnlySequence<byte>>())).Returns(["reply"]);
@@ -433,7 +438,7 @@ public sealed class SessionTests
     {
         var firstPipe = new Pipe();
         var secondPipe = new Pipe();
-        var transport = new Mock<ITransport>();
+        var transport = new Mock<IDeviceAdapter>();
         transport.SetupSequence(t => t.Input).Returns(firstPipe.Reader).Returns(secondPipe.Reader);
 
         var presenter = new Mock<IPresenter>();

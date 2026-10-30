@@ -1,3 +1,5 @@
+using OoBDev.System.IO.Pipelines;
+using OoBDev.System.IO;
 using System.IO;
 using System;
 using System.Collections.Generic;
@@ -17,10 +19,11 @@ public sealed class SessionLimitsTests
 {
     public TestContext TestContext { get; set; } = null!;
 
-    private static Mock<ITransport> OpenableTransport()
+    private static Mock<IDeviceAdapter> OpenableTransport()
     {
-        var transport = new Mock<ITransport>();
+        var transport = new Mock<IDeviceAdapter>();
         transport.SetupGet(t => t.Input).Returns(new Pipe().Reader);
+        transport.SetupGet(t => t.Output).Returns(DeviceAdapterOutput.Create((_, _) => Task.CompletedTask));
         return transport;
     }
 

@@ -1,3 +1,4 @@
+using OoBDev.System.IO;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -21,7 +22,7 @@ public static class ServiceCollectionExtensions
         services.AddOptions<SerialTransportOptions>().ValidateDataAnnotations();
         services.AddSingleton<ISerialPortFactory, SystemSerialPortFactory>();
         services.AddSingleton<ISerialPortDiscovery, SystemSerialPortDiscovery>();
-        services.AddTransient<ITransport, SerialTransport>();
+        services.AddTransient<IDeviceAdapter, SerialTransport>();
         return services;
     }
 }

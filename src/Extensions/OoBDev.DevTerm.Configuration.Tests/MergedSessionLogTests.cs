@@ -1,3 +1,4 @@
+using OoBDev.System.IO.Pipelines;
 using OoBDev.System.IO;
 using System;
 using System.Collections.Generic;
@@ -23,8 +24,9 @@ public sealed class MergedSessionLogTests
     private static (Session Session, Pipe Pipe) Live()
     {
         var pipe = new Pipe();
-        var transport = new Mock<ITransport>();
+        var transport = new Mock<IDeviceAdapter>();
         transport.SetupGet(t => t.Input).Returns(pipe.Reader);
+        transport.SetupGet(t => t.Output).Returns(DeviceAdapterOutput.Create((_, _) => Task.CompletedTask));
         transport.SetupGet(t => t.State).Returns(ConnectionState.Open);
         return (new Session(transport.Object, new Pipeline([])), pipe);
     }

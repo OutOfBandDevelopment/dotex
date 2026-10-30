@@ -13,10 +13,11 @@ using OoBDev.DevTerm;
 namespace OoBDev.DevTerm.Transports.Serial;
 
 /// <summary>
-/// <see cref="ITransport"/> for a serial/UART connection. See docs/design/transports.md.
+/// <see cref="IDeviceAdapter"/> for a serial/UART connection. See docs/design/transports.md.
 /// </summary>
-public sealed class SerialTransport : ITransport, IComPortControl
+public sealed class SerialTransport : IDeviceAdapter, IComPortControl
 {
+    private PipeWriter? _output;
     private readonly ISerialPortFactory _portFactory;
     private readonly IOptions<SerialTransportOptions> _options;
     private ISerialPort? _port;
@@ -54,6 +55,15 @@ public sealed class SerialTransport : ITransport, IComPortControl
     public event EventHandler<ConnectionStateChangedEventArgs>? StateChanged;
 
     public PipeReader Input => _pipe?.Reader ?? throw new InvalidOperationException("The serial transport has not been opened.");
+
+    /// <inheritdoc />
+    public string Type => "Serial";
+
+    /// <inheritdoc />
+    public string Path => _options.Value.PortName;
+
+    /// <inheritdoc />
+    public PipeWriter Output => _output ??= DeviceAdapterOutput.Create((data, ct) => WriteAsync(data, ct));
 
     public Task OpenAsync(CancellationToken cancellationToken = default)
     {

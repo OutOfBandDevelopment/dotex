@@ -14,14 +14,15 @@ using OoBDev.DevTerm.Transports.Tcp;
 namespace OoBDev.DevTerm.Transports.Rfc2217;
 
 /// <summary>
-/// <see cref="ITransport"/> for RFC 2217 (Telnet COM Port Control) client mode — a remote serial
+/// <see cref="IDeviceAdapter"/> for RFC 2217 (Telnet COM Port Control) client mode — a remote serial
 /// port (e.g. behind <c>ser2net</c>) controlled over a plain TCP socket. Reuses
 /// <c>DevTerm.Transports.Tcp</c>'s connect machinery for the socket itself; see
 /// docs/design/rfc2217.md for the wire format and <see cref="Rfc2217TelnetReadStream"/> for the
 /// Telnet framing layered on top of it.
 /// </summary>
-public sealed class Rfc2217Transport : ITransport, IComPortControl, ILineStatusSource
+public sealed class Rfc2217Transport : IDeviceAdapter, IComPortControl, ILineStatusSource
 {
+    private PipeWriter? _output;
     private readonly ITcpConnectionSource _connectionSource;
     private readonly IOptions<Rfc2217TransportOptions> _options;
     private ITcpConnection? _connection;
@@ -60,6 +61,15 @@ public sealed class Rfc2217Transport : ITransport, IComPortControl, ILineStatusS
     public event EventHandler<ConnectionStateChangedEventArgs>? StateChanged;
 
     public PipeReader Input => _pipe?.Reader ?? throw new InvalidOperationException("The RFC 2217 transport has not been opened.");
+
+    /// <inheritdoc />
+    public string Type => "Rfc2217";
+
+    /// <inheritdoc />
+    public string Path => $"{_options.Value.Host}:{_options.Value.Port}";
+
+    /// <inheritdoc />
+    public PipeWriter Output => _output ??= DeviceAdapterOutput.Create((data, ct) => WriteAsync(data, ct));
 
     /// <summary>
     /// Whether the remote peer accepted COM-PORT-OPTION negotiation. When <c>false</c> (the peer

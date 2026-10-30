@@ -1,3 +1,4 @@
+using OoBDev.System.IO.Pipelines;
 using OoBDev.System.IO;
 using System.IO;
 using System;
@@ -50,11 +51,12 @@ public sealed class SessionObserverTests
         }
     }
 
-    private static (Mock<ITransport> Transport, Pipe Pipe) CreateTransport()
+    private static (Mock<IDeviceAdapter> Transport, Pipe Pipe) CreateTransport()
     {
         var pipe = new Pipe();
-        var transport = new Mock<ITransport>();
+        var transport = new Mock<IDeviceAdapter>();
         transport.SetupGet(t => t.Input).Returns(pipe.Reader);
+        transport.SetupGet(t => t.Output).Returns(DeviceAdapterOutput.Create((_, _) => Task.CompletedTask));
         transport.SetupGet(t => t.State).Returns(ConnectionState.Open);
         return (transport, pipe);
     }

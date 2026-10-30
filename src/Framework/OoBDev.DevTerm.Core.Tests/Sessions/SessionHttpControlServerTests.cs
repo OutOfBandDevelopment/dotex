@@ -1,3 +1,4 @@
+using OoBDev.System.IO.Pipelines;
 using OoBDev.System.IO;
 using System.Net.Http;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -27,12 +28,18 @@ public sealed class SessionHttpControlServerTests
     {
         var pipe = new Pipe();
         var written = new List<byte>();
-        var transport = new Mock<ITransport>();
+        var transport = new Mock<IDeviceAdapter>();
         transport.SetupGet(t => t.Input).Returns(pipe.Reader);
         transport.SetupGet(t => t.State).Returns(ConnectionState.Open);
-        transport.Setup(t => t.WriteAsync(It.IsAny<ReadOnlyMemory<byte>>(), It.IsAny<CancellationToken>()))
-            .Callback<ReadOnlyMemory<byte>, CancellationToken>((data, _) => { lock (written) { written.AddRange(data.ToArray()); } })
-            .Returns(Task.CompletedTask);
+        transport.SetupGet(t => t.Output).Returns(DeviceAdapterOutput.Create((data, _) =>
+        {
+            lock (written)
+            {
+                written.AddRange(data.ToArray());
+            }
+
+            return Task.CompletedTask;
+        }));
         await using var session = new Session(transport.Object, new Pipeline([]));
         await session.OpenAsync(TestContext.CancellationToken);
         await using var server = new SessionHttpControlServer(session, 0, text => text == "bad" ? (null, "nope") : (Encoding.ASCII.GetBytes(text + "\n"), null), "secret");

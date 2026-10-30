@@ -1,3 +1,4 @@
+using OoBDev.System.IO.Pipelines;
 using OoBDev.System.IO;
 using System;
 using System.Collections.Generic;
@@ -11,11 +12,12 @@ using Microsoft.Extensions.Options;
 namespace OoBDev.DevTerm.Transports.Loopback;
 
 /// <summary>
-/// An in-process <see cref="ITransport"/> that answers scripted commands deterministically, so the shells and tests run without hardware.
+/// An in-process <see cref="IDeviceAdapter"/> that answers scripted commands deterministically, so the shells and tests run without hardware.
 /// Pipe-backed with no pump: there is no real stream underneath.
 /// </summary>
-public sealed class LoopbackTransport : ITransport
+public sealed class LoopbackTransport : IDeviceAdapter
 {
+    private PipeWriter? _output;
     private readonly IReadOnlyList<LoopbackRule> _rules = LoopbackScript.Default();
     private readonly LoopbackTransportOptions _options;
     private Pipe _pipe = new();
@@ -46,6 +48,15 @@ public sealed class LoopbackTransport : ITransport
 
     /// <inheritdoc />
     public PipeReader Input => _pipe.Reader;
+
+    /// <inheritdoc />
+    public string Type => "Loopback";
+
+    /// <inheritdoc />
+    public string Path => "loopback";
+
+    /// <inheritdoc />
+    public PipeWriter Output => _output ??= DeviceAdapterOutput.Create((data, ct) => WriteAsync(data, ct));
 
     /// <inheritdoc />
     public Task OpenAsync(CancellationToken cancellationToken = default)

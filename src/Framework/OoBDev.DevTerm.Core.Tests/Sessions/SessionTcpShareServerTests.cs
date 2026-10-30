@@ -1,3 +1,4 @@
+using OoBDev.System.IO.Pipelines;
 using OoBDev.System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
@@ -25,19 +26,18 @@ public sealed class SessionTcpShareServerTests
     {
         var pipe = new Pipe();
         var written = new List<byte>();
-        var transport = new Mock<ITransport>();
+        var transport = new Mock<IDeviceAdapter>();
         transport.SetupGet(t => t.Input).Returns(pipe.Reader);
         transport.SetupGet(t => t.State).Returns(ConnectionState.Open);
-        transport.Setup(t => t.WriteAsync(It.IsAny<ReadOnlyMemory<byte>>(), It.IsAny<CancellationToken>()))
-            .Returns((ReadOnlyMemory<byte> d, CancellationToken _) =>
+        transport.SetupGet(t => t.Output).Returns(DeviceAdapterOutput.Create((data, _) =>
+        {
+            lock (written)
             {
-                lock (written)
-                {
-                    written.AddRange(d.ToArray());
-                }
+                written.AddRange(data.ToArray());
+            }
 
-                return Task.CompletedTask;
-            });
+            return Task.CompletedTask;
+        }));
         await using var session = new Session(transport.Object, new Pipeline([]));
         await using var server = new SessionTcpShareServer(session, IPAddress.Loopback, 0);
         using var registration = session.AddObserver(server);
@@ -74,7 +74,7 @@ public sealed class SessionTcpShareServerTests
     [TestMethod]
     public async Task SecondClient_IsClosedWhileOneIsConnected()
     {
-        var transport = new Mock<ITransport>();
+        var transport = new Mock<IDeviceAdapter>();
         transport.SetupGet(t => t.Input).Returns(new Pipe().Reader);
         transport.SetupGet(t => t.State).Returns(ConnectionState.Open);
         await using var session = new Session(transport.Object, new Pipeline([]));

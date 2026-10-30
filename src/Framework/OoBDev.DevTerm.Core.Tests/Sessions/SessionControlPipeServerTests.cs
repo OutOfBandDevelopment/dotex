@@ -1,3 +1,4 @@
+using OoBDev.System.IO.Pipelines;
 using OoBDev.System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
@@ -25,12 +26,15 @@ public sealed class SessionControlPipeServerTests
     {
         var pipe = new Pipe();
         var written = new List<byte>();
-        var transport = new Mock<ITransport>();
+        var transport = new Mock<IDeviceAdapter>();
         transport.SetupGet(t => t.Input).Returns(pipe.Reader);
         transport.SetupGet(t => t.State).Returns(ConnectionState.Open);
-        transport.Setup(t => t.WriteAsync(It.IsAny<ReadOnlyMemory<byte>>(), It.IsAny<CancellationToken>()))
-            .Callback<ReadOnlyMemory<byte>, CancellationToken>((data, _) => written.AddRange(data.ToArray()))
-            .Returns(Task.CompletedTask);
+        transport.SetupGet(t => t.Output).Returns(DeviceAdapterOutput.Create((data, _) =>
+        {
+            written.AddRange(data.ToArray());
+
+            return Task.CompletedTask;
+        }));
         await using var session = new Session(transport.Object, new Pipeline([]));
         await session.OpenAsync(TestContext.CancellationToken);
 
@@ -59,10 +63,14 @@ public sealed class SessionControlPipeServerTests
     [TestMethod]
     public async Task ControlClient_SendsCommandsAndPrintsReplies()
     {
-        var transport = new Mock<ITransport>();
+        var transport = new Mock<IDeviceAdapter>();
         transport.SetupGet(t => t.Input).Returns(new Pipe().Reader);
         transport.SetupGet(t => t.State).Returns(ConnectionState.Open);
-        transport.Setup(t => t.WriteAsync(It.IsAny<ReadOnlyMemory<byte>>(), It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
+        transport.SetupGet(t => t.Output).Returns(DeviceAdapterOutput.Create((data, _) =>
+        {
+
+            return Task.CompletedTask;
+        }));
         await using var session = new Session(transport.Object, new Pipeline([]));
         await session.OpenAsync(TestContext.CancellationToken);
         var name = "test-" + Guid.NewGuid().ToString("N");

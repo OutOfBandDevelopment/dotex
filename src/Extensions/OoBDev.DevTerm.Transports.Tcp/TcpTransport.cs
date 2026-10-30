@@ -13,11 +13,12 @@ using OoBDev.DevTerm;
 namespace OoBDev.DevTerm.Transports.Tcp;
 
 /// <summary>
-/// <see cref="ITransport"/> for a TCP connection, in either Client or Listener mode
+/// <see cref="IDeviceAdapter"/> for a TCP connection, in either Client or Listener mode
 /// (a configuration choice, not two plugins). See docs/design/transports.md.
 /// </summary>
-public sealed class TcpTransport : ITransport
+public sealed class TcpTransport : IDeviceAdapter
 {
+    private PipeWriter? _output;
     private readonly ITcpConnectionSource _connectionSource;
     private readonly IOptions<TcpTransportOptions> _options;
     private ITcpConnection? _connection;
@@ -70,6 +71,15 @@ public sealed class TcpTransport : ITransport
     public event EventHandler<ConnectionStateChangedEventArgs>? StateChanged;
 
     public PipeReader Input => _pipe?.Reader ?? throw new InvalidOperationException("The TCP transport has not been opened.");
+
+    /// <inheritdoc />
+    public string Type => "Tcp";
+
+    /// <inheritdoc />
+    public string Path => $"{_options.Value.Host}:{_options.Value.Port}";
+
+    /// <inheritdoc />
+    public PipeWriter Output => _output ??= DeviceAdapterOutput.Create((data, ct) => WriteAsync(data, ct));
 
     public async Task OpenAsync(CancellationToken cancellationToken = default)
     {

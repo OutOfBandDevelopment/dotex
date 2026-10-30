@@ -1,3 +1,4 @@
+using OoBDev.System.IO.Pipelines;
 using OoBDev.System.IO;
 using System;
 using System.Collections.Generic;
@@ -27,12 +28,18 @@ public sealed class Rfc2217ServerBridgeTests
     {
         var pipe = new Pipe();
         var written = new List<byte>();
-        var transport = new Mock<ITransport>();
+        var transport = new Mock<IDeviceAdapter>();
         transport.SetupGet(t => t.Input).Returns(pipe.Reader);
         transport.SetupGet(t => t.State).Returns(ConnectionState.Open);
-        transport.Setup(t => t.WriteAsync(It.IsAny<ReadOnlyMemory<byte>>(), It.IsAny<CancellationToken>()))
-            .Callback<ReadOnlyMemory<byte>, CancellationToken>((data, _) => { lock (written) { written.AddRange(data.ToArray()); } })
-            .Returns(Task.CompletedTask);
+        transport.SetupGet(t => t.Output).Returns(DeviceAdapterOutput.Create((data, _) =>
+        {
+            lock (written)
+            {
+                written.AddRange(data.ToArray());
+            }
+
+            return Task.CompletedTask;
+        }));
         await using var session = new Session(transport.Object, new Pipeline([]));
         await session.OpenAsync(TestContext.CancellationToken);
         await using var bridge = new Rfc2217ServerBridge(session, IPAddress.Loopback, 0);
@@ -99,7 +106,7 @@ public sealed class Rfc2217ServerBridgeTests
     public async Task Client_SettingsAreAppliedToATransportThatImplementsIComPortControl()
     {
         var pipe = new Pipe();
-        var transport = new Mock<ITransport>();
+        var transport = new Mock<IDeviceAdapter>();
         var control = transport.As<IComPortControl>();
         control.Setup(c => c.SetBaudRate(It.IsAny<int>())).Returns(control.Object);
         control.Setup(c => c.SetDataBits(It.IsAny<int>())).Returns(control.Object);

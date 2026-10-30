@@ -1,5 +1,7 @@
 using System;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace OoBDev.System.IO.Pipelines;
 
@@ -13,5 +15,15 @@ public static class DeviceAdapterExtensions
     {
         ArgumentNullException.ThrowIfNull(adapter);
         return new DeviceAdapterStream(adapter);
+    }
+
+    /// <summary>Writes the bytes to <see cref="IDeviceAdapter.Output"/> and flushes them.</summary>
+    /// <param name="adapter">The opened adapter.</param>
+    /// <param name="data">The bytes to send.</param>
+    /// <param name="cancellationToken">A token to cancel the write.</param>
+    public static async Task WriteAsync(this IDeviceAdapter adapter, ReadOnlyMemory<byte> data, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(adapter);
+        await adapter.Output.WriteAsync(data, cancellationToken).ConfigureAwait(false);
     }
 }

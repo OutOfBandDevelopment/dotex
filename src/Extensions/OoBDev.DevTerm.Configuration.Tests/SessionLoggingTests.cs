@@ -1,3 +1,4 @@
+using OoBDev.System.IO;
 using System;
 using System.Buffers;
 using System.Collections.Generic;
@@ -95,7 +96,7 @@ public sealed class SessionLoggingTests
 
         var services = new ServiceCollection();
         services.AddDevTermPresenters(new CliOptions());
-        Assert.IsNull(services.BuildServiceProvider().GetService<ITransport>(), "Playback must never be able to reach a device.");
+        Assert.IsNull(services.BuildServiceProvider().GetService<IDeviceAdapter>(), "Playback must never be able to reach a device.");
     }
 
     [TestMethod]

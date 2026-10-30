@@ -1,3 +1,4 @@
+using OoBDev.System.IO.Pipelines;
 using OoBDev.System.IO;
 using System;
 using System.Collections.Generic;
@@ -13,14 +14,16 @@ using System.IO.Pipelines;
 namespace OoBDev.DevTerm.Logging.Tests;
 
 /// <summary>
-/// A minimal, in-memory <see cref="ITransport"/> for driving a real <c>Session</c> under the session
+/// A minimal, in-memory <see cref="IDeviceAdapter"/> for driving a real <c>Session</c> under the session
 /// logger without any real hardware/socket — a copy of <c>DevTerm.Console.Tests.FakeTransport</c>
 /// (test projects don't reference each other). Can also fail on demand (the next write,
 /// the read side, or the next open), and reopens with a fresh pipe after a close, so error/reconnect
 /// paths can be tested.
 /// </summary>
-internal sealed class FakeTransport : ITransport, ILineStatusSource
+internal sealed class FakeTransport : IDeviceAdapter, ILineStatusSource
 {
+    private PipeWriter? _output;
+
     public event EventHandler<string>? LineStatusChanged;
 
     public void RaiseLineStatus(string text) => LineStatusChanged?.Invoke(this, text);
@@ -54,6 +57,12 @@ internal sealed class FakeTransport : ITransport, ILineStatusSource
     public event EventHandler<ConnectionStateChangedEventArgs>? StateChanged;
 
     public PipeReader Input => _pipe.Reader;
+
+    public string Type => "Fake";
+
+    public string Path => "fake";
+
+    public PipeWriter Output => _output ??= DeviceAdapterOutput.Create(WriteAsync);
 
     public Task OpenAsync(CancellationToken cancellationToken = default)
     {

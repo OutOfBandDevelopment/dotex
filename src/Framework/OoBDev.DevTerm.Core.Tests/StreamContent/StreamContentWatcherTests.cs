@@ -349,7 +349,7 @@ public sealed class StreamContentWatcherTests
     public async Task BoundIntoALiveSession_OtherPresentersSeeTextButNotTheCapturedContent()
     {
         var pipe = new Pipe();
-        var transport = new Mock<ITransport>();
+        var transport = new Mock<IDeviceAdapter>();
         transport.SetupGet(t => t.Input).Returns(pipe.Reader);
         transport.SetupGet(t => t.State).Returns(ConnectionState.Open);
         await using var session = new Session(transport.Object, new Pipeline([new RawPresenter()]));

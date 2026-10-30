@@ -43,7 +43,7 @@ public sealed class StreamMonitorTests
 
         public LiveSession()
         {
-            var transport = new Mock<ITransport>();
+            var transport = new Mock<IDeviceAdapter>();
             transport.SetupGet(t => t.Input).Returns(_pipe.Reader);
             transport.SetupGet(t => t.State).Returns(ConnectionState.Open);
             Session = new Session(transport.Object, new Pipeline([]));

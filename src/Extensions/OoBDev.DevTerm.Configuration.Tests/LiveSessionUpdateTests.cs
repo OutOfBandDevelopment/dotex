@@ -1,3 +1,4 @@
+using OoBDev.System.IO;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -51,7 +52,7 @@ public sealed class LiveSessionUpdateTests
     {
         var catalog = DevTermSessionBuilder.Build(Serial()).Catalog;
         var current = Serial();
-        var transport = new Mock<ITransport>();
+        var transport = new Mock<IDeviceAdapter>();
         var control = transport.As<IComPortControl>();
         control.Setup(c => c.SetBaudRate(It.IsAny<int>())).Returns(control.Object);
         var session = new Session(transport.Object, new Pipeline(DevTermSessionBuilder.ResolvePresenters(catalog, current)));
@@ -73,7 +74,7 @@ public sealed class LiveSessionUpdateTests
     {
         var catalog = DevTermSessionBuilder.Build(Serial()).Catalog;
         var current = Serial();
-        var session = new Session(Mock.Of<ITransport>(), new Pipeline(DevTermSessionBuilder.ResolvePresenters(catalog, current)));
+        var session = new Session(Mock.Of<IDeviceAdapter>(), new Pipeline(DevTermSessionBuilder.ResolvePresenters(catalog, current)));
         var next = Serial();
         next.Presenter = ["nonesuch"];
 

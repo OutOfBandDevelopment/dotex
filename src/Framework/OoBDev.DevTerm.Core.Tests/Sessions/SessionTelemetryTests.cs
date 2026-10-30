@@ -1,3 +1,4 @@
+using OoBDev.System.IO.Pipelines;
 using OoBDev.System.IO;
 using System.IO;
 using System;
@@ -19,10 +20,11 @@ namespace OoBDev.DevTerm.Tests;
 [TestClass]
 public sealed class SessionTelemetryTests
 {
-    private static Mock<ITransport> Transport(Pipe pipe)
+    private static Mock<IDeviceAdapter> Transport(Pipe pipe)
     {
-        var transport = new Mock<ITransport>();
+        var transport = new Mock<IDeviceAdapter>();
         transport.SetupGet(t => t.Input).Returns(pipe.Reader);
+        transport.SetupGet(t => t.Output).Returns(DeviceAdapterOutput.Create((_, _) => Task.CompletedTask));
         transport.SetupGet(t => t.State).Returns(ConnectionState.Open);
         return transport;
     }
@@ -115,7 +117,7 @@ public sealed class SessionTelemetryTests
         };
         ActivitySource.AddActivityListener(activityListener);
 
-        var transport = new Mock<ITransport>();
+        var transport = new Mock<IDeviceAdapter>();
         transport.Setup(t => t.OpenAsync(It.IsAny<CancellationToken>())).ThrowsAsync(new IOException("no device"));
         await using var session = new Session(transport.Object, new Pipeline([]));
 

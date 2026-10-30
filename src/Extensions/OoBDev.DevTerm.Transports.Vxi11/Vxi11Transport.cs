@@ -1,3 +1,4 @@
+using OoBDev.System.IO.Pipelines;
 using OoBDev.System.IO;
 using System;
 using System.Collections.Generic;
@@ -13,15 +14,16 @@ using OoBDev.DevTerm.Transports.Tcp;
 namespace OoBDev.DevTerm.Transports.Vxi11;
 
 /// <summary>
-/// <see cref="ITransport"/> for VXI-11 (the ONC-RPC based LXI control protocol): create_link, then
+/// <see cref="IDeviceAdapter"/> for VXI-11 (the ONC-RPC based LXI control protocol): create_link, then
 /// device_write for what the session sends and a short-timeout device_read poll for what the
 /// instrument answers, destroy_link on close. Reuses <c>DevTerm.Transports.Tcp</c>'s connect
 /// machinery for both sockets (the portmapper on TCP 111 and the core channel). Not covered:
 /// the abort channel, SRQ/interrupt channel, locking, device_clear and the status byte. See
 /// docs/design/vxi11-transport.md.
 /// </summary>
-public sealed class Vxi11Transport : ITransport
+public sealed class Vxi11Transport : IDeviceAdapter
 {
+    private PipeWriter? _output;
     internal const uint PortmapperProgram = 100000;
     internal const uint CoreProgram = 0x0607AF;
     private const int _portmapperPort = 111;
@@ -75,6 +77,15 @@ public sealed class Vxi11Transport : ITransport
     public event EventHandler<ConnectionStateChangedEventArgs>? StateChanged;
 
     public PipeReader Input => _pipe?.Reader ?? throw new InvalidOperationException("The VXI-11 transport has not been opened.");
+
+    /// <inheritdoc />
+    public string Type => "Vxi11";
+
+    /// <inheritdoc />
+    public string Path => $"{_options.Value.Host}:{_options.Value.Port}/{_options.Value.Device}";
+
+    /// <inheritdoc />
+    public PipeWriter Output => _output ??= DeviceAdapterOutput.Create((data, ct) => WriteAsync(data, ct));
 
     public async Task OpenAsync(CancellationToken cancellationToken = default)
     {
