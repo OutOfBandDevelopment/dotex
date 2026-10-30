@@ -550,3 +550,4 @@ Each change document should include:
 - [DevTerm shared test base (2026-10-30)](devterm-testutilities-2026-10-30.md) - OoBDev.DevTerm.TestUtilities holds UserFlowTestsBase and IFrontEndDriver
 - [DevTerm WPF menu bar and Theme menu (2026-10-30)](devterm-wpf-menus-2026-10-30.md) - File, Device and View menus; checkable Theme submenu
 - [DevTerm WPF profile zip Browse (2026-10-30)](devterm-wpf-profile-zip-browse-2026-10-30.md) - Browse and Save as for the import and export path
+- [DevTerm WPF routing rule editing (2026-10-30)](devterm-wpf-routing-rules-2026-10-30.md) - rule list editing, sample test and history in the routing window
