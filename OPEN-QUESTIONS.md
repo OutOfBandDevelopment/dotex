@@ -65,4 +65,6 @@ _(none waiting; processed requests are in BACKLOG.md and TODO.md)_
 
 **Default:** B, starting with the spike (a throwaway test over `FormBinding` with a dictionary source) before any Framework change.
 
+**Assumption (2026-10-29):** Option C already exists as `DynamicModelFactory` (the SCPI panel precedent), so `SurfacePanelBuilder` in DevTerm Core builds toggles, sliders, numbers, choices, text fields and buttons that way with no Framework change. Live displays (indicators, bar graphs, charts, vectors) still need display view models; that part stays open.
+
 **Your answer:**
