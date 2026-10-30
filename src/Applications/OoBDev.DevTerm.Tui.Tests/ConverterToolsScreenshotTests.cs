@@ -39,7 +39,7 @@ public sealed class ConverterToolsScreenshotTests
             app => ConverterToolsDialog.Show(app, tools));
 
         var source = Path.Combine(TuiReview.Directory, "guide-tui-converter-tools-80x25-light.png");
-        var images = Path.Combine(TuiReview.Directory, "..", "..", "..", "docs", "user-guide", "images");
+        var images = TuiReview.DocImages;
         File.Copy(source, Path.Combine(Path.GetFullPath(images), "tui-converter-tools.png"), overwrite: true);
     }
 }

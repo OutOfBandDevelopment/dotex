@@ -27,22 +27,10 @@ namespace OoBDev.DevTerm.Tui.Tests;
 [DoNotParallelize]
 public sealed class TuiThemeTests
 {
-    private static readonly string _imagesDirectory = Path.Combine(FindRepoRoot(), "docs", "user-guide", "images");
+    private static readonly string _imagesDirectory = TuiReview.DocImages;
     private static readonly TimeSpan _waitTimeout = TimeSpan.FromSeconds(5);
 
     public required TestContext TestContext { get; set; }
-
-    private static string FindRepoRoot()
-    {
-        var directory = new DirectoryInfo(AppContext.BaseDirectory);
-        while (directory is not null && !File.Exists(Path.Combine(directory.FullName, "CLAUDE.md")))
-        {
-            directory = directory.Parent;
-        }
-
-        return directory?.FullName
-            ?? throw new InvalidOperationException($"Could not find the repo root (CLAUDE.md) above '{AppContext.BaseDirectory}'.");
-    }
 
     [TestCleanup]
     public void ResetTheme()

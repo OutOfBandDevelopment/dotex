@@ -16,17 +16,6 @@ namespace OoBDev.DevTerm.Tui.Tests;
 [DoNotParallelize]
 public sealed class RoutingScreenshotTests
 {
-    private static string FindRepoRoot()
-    {
-        var directory = new DirectoryInfo(AppContext.BaseDirectory);
-        while (directory is not null && !File.Exists(Path.Combine(directory.FullName, "CLAUDE.md")))
-        {
-            directory = directory.Parent;
-        }
-
-        return directory?.FullName ?? throw new InvalidOperationException("Could not find the repo root (CLAUDE.md).");
-    }
-
     [TestMethod]
     public async Task Routing_WithTraffic_IsCaptured()
     {
@@ -63,7 +52,7 @@ public sealed class RoutingScreenshotTests
                 parts.RunTest();
                 app.LayoutAndDraw(true);
                 dump = TuiTestRunner.DumpBuffer();
-                var images = Path.Combine(FindRepoRoot(), "docs", "user-guide", "images");
+                var images = TuiReview.DocImages;
                 Directory.CreateDirectory(images);
                 TuiScreenshot.Save(Path.Combine(images, "tui-routing.png"));
             }
@@ -74,7 +63,7 @@ public sealed class RoutingScreenshotTests
             }
         });
 
-        File.WriteAllText(Path.Combine(FindRepoRoot(), "docs", "user-guide", "images", "tui-routing.txt"), global::System.Text.RegularExpressions.Regex.Replace(dump, @"\d\d:\d\d:\d\d", "12:00:00"));
+        File.WriteAllText(Path.Combine(TuiReview.DocImages, "tui-routing.txt"), global::System.Text.RegularExpressions.Regex.Replace(dump, @"\d\d:\d\d:\d\d", "12:00:00"));
         await tab.Session.CloseAsync();
 
         Assert.Contains("Broker: Connected", dump);

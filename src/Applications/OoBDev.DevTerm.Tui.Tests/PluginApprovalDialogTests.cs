@@ -24,17 +24,6 @@ namespace OoBDev.DevTerm.Tui.Tests;
 [DoNotParallelize]
 public sealed class PluginApprovalDialogTests
 {
-    private static string ImagesDirectory()
-    {
-        var directory = new DirectoryInfo(AppContext.BaseDirectory);
-        while (directory is not null && !File.Exists(Path.Combine(directory.FullName, "CLAUDE.md")))
-        {
-            directory = directory.Parent;
-        }
-
-        return Path.Combine(directory!.FullName, "docs", "user-guide", "images");
-    }
-
     private static Button? Find(View root, string text)
     {
         foreach (var sub in root.SubViews)
@@ -68,7 +57,7 @@ public sealed class PluginApprovalDialogTests
         PluginLoader.LoadAll(Path.Combine(home, "plugins"), new ServiceCollection());
         Assert.AreEqual(1, LivePlugins.Pending.Count, "The plugin should be waiting for approval.");
 
-        var images = ImagesDirectory();
+        var images = TuiReview.DocImages;
         Directory.CreateDirectory(images);
         string? failure = null;
         using var done = new ManualResetEventSlim(false);

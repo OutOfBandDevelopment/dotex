@@ -123,7 +123,7 @@ public sealed class ExpressionPickerScreenshotTests
     private static void CopyToGuide(string imageName)
     {
         var source = Path.Combine(TuiReview.Directory, $"guide-{imageName}-80x25-light.png");
-        var images = Path.Combine(TuiReview.Directory, "..", "..", "..", "docs", "user-guide", "images");
+        var images = TuiReview.DocImages;
         File.Copy(source, Path.Combine(Path.GetFullPath(images), imageName + ".png"), overwrite: true);
     }
 

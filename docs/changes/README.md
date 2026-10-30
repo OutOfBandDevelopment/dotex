@@ -512,3 +512,4 @@ Each change document should include:
 - [DeviceConfigViewModel tests (2026-10-29)](devterm-device-config-viewmodel-tests-2026-10-29.md) - 5 Unit tests for the shared Configure device flow
 - [LxiDeviceOption tests (2026-10-29)](devterm-lxi-device-option-tests-2026-10-29.md) - 6 Unit tests for the discovery-hit to picker-option mapping
 - [DevTerm one type per file (2026-10-29)](devterm-one-type-per-file-2026-10-29.md) - MA0048 splits across the DevTerm Core, Web, Tui and test projects
+- [Tui doc images go to artifacts (2026-10-29)](devterm-tui-doc-images-2026-10-29.md) - screenshot tests stop writing into docs/user-guide/images

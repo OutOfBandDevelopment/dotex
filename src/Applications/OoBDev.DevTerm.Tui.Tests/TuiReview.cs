@@ -29,6 +29,9 @@ internal static class TuiReview
 
     public static readonly string Directory = Path.Combine(FindRepoRoot(), "artifacts", "ui-review", "tui");
 
+    /// <summary>Where the screenshot tests that feed the user guide write their images; copy the ones worth keeping into docs/user-guide/images by hand.</summary>
+    public static readonly string DocImages = global::System.IO.Directory.CreateDirectory(Path.Combine(FindRepoRoot(), "artifacts", "doc-images", "tui")).FullName;
+
     private static string FindRepoRoot()
     {
         var directory = new DirectoryInfo(AppContext.BaseDirectory);
