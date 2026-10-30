@@ -516,3 +516,4 @@ Each change document should include:
 - [DevTerm parity design documents (2026-10-29)](devterm-parity-design-docs-2026-10-29.md) - requirements, api-design and testing-strategy drafts
 - [DevTerm Core device panel gating (2026-10-29)](devterm-device-panel-gating-2026-10-29.md) - K8055 and Busylight ids leave Core; the panels own them
 - [RFC 2217 adapter open-path tests (2026-10-29)](system-io-tcp-rfc2217-adapter-tests-2026-10-29.md) - loopback tests for open, fault and close
+- [DevTerm schema generator entry point (2026-10-29)](devterm-schema-generator-entry-2026-10-29.md) - WriteTo and the Tui --write-schemas flag

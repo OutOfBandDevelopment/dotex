@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using global::System.Text.Json;
 using global::System.Text.Json.Nodes;
 using global::System.Text.Json.Schema;
@@ -25,6 +26,24 @@ public static class SchemaGenerator
         ["ui-definition.schema.json"] = For<UiDefinition>("ui-definition.schema.json"),
         ["connection-profile.schema.json"] = For<CliOptions>("connection-profile.schema.json", omit: [nameof(CliOptions.Password)]),
     };
+
+    /// <summary>Writes every generated schema into a folder, creating it when needed.</summary>
+    /// <param name="folder">The target folder.</param>
+    /// <returns>The paths written.</returns>
+    public static IReadOnlyList<string> WriteTo(string folder)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(folder);
+        Directory.CreateDirectory(folder);
+        var written = new List<string>();
+        foreach (var (name, text) in Generate())
+        {
+            var path = global::System.IO.Path.Combine(folder, name);
+            File.WriteAllText(path, text);
+            written.Add(path);
+        }
+
+        return written;
+    }
 
     private static string For<T>(string fileName, string[]? omit = null)
     {

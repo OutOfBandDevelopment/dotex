@@ -54,6 +54,7 @@ const string Usage =
     + "\nAdd --log <file.jsonl> (or --log true for a timestamped file under ~/.dev-term/logs) to any"
     + "\nconnection to record everything sent and received."
     + "\nAdd --otlp <http://host:4317> (or --otlp true for localhost) to export dev-term's own traces and metrics over OTLP."
+    + "\nAdd --write-schemas <folder> to write the JSON Schema files for the manifest, UI definition and connection profile formats, then exit."
     + "\nAdd --theme <light|dark|system|name> to pick the TUI's colors for this run (View > Theme saves a choice;"
     + "\ncustom themes are JSON files under ~/.dev-term/themes)."
     + "\nSettings can also come from environment variables (DEVTERM_PORT, DEVTERM_BAUD, ...) or"
@@ -64,6 +65,16 @@ const string Usage =
 // one-off action, not something that should go through the profile/env-var layering or transport
 // validation (which would otherwise demand e.g. a --port that the user is trying to discover).
 var earlyConfig = new ConfigurationBuilder().AddCommandLine(args).Build();
+
+if (earlyConfig["write-schemas"] is { Length: > 0 } schemaFolder)
+{
+    foreach (var written in OoBDev.DevTerm.Schemas.SchemaGenerator.WriteTo(schemaFolder))
+    {
+        Console.WriteLine(written);
+    }
+
+    return 0;
+}
 
 if (earlyConfig.GetValue<bool>(nameof(CliOptions.ListPorts)))
 {
