@@ -518,3 +518,4 @@ Each change document should include:
 - [RFC 2217 adapter open-path tests (2026-10-29)](system-io-tcp-rfc2217-adapter-tests-2026-10-29.md) - loopback tests for open, fault and close
 - [DevTerm schema generator entry point (2026-10-29)](devterm-schema-generator-entry-2026-10-29.md) - WriteTo and the Tui --write-schemas flag
 - [DevTerm BLE platform loader test (2026-10-29)](devterm-ble-loader-test-2026-10-29.md) - loader degrades gracefully; stale backlog line removed
+- [One USB HID adapter (2026-10-29)](system-io-usbhids-adapter-merge-2026-10-29.md) - UsbHidFactory returns the endpoint adapter; the thin one is gone

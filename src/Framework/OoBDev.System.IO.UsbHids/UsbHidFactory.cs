@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Microsoft.Extensions.Options;
 
 namespace OoBDev.System.IO.UsbHids;
 
@@ -38,7 +39,12 @@ public class UsbHidFactory : IImplictDeviceFactory
                       .Select(hids => hids.First());
 
         foreach (var device in devices)
-            yield return new UsbHidDeviceAdapter(device);
+            yield return new UsbHidEndpointDeviceAdapter(new SystemUsbHidDeviceFactory(), Options.Create(new UsbHidEndpointOptions
+            {
+                VendorId = device.VendorID,
+                ProductId = device.ProductID,
+                DevicePath = device.DevicePath,
+            }));
     }
 
     /// <inheritdoc/>
