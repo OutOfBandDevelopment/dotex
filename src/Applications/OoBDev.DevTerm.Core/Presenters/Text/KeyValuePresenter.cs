@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using OoBDev.DevTerm;
 
-namespace OoBDev.DevTerm.Plugins.KeyValue;
+namespace OoBDev.DevTerm.Presenters.Text;
 
 /// <summary>
 /// Line-buffers ASCII and, for each complete line of <c>name=value</c> tokens (<c>temp=21.50 C volts=3.30 V state=OK</c>; a token

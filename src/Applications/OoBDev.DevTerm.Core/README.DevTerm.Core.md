@@ -73,7 +73,7 @@ The committed copies live in `schemas/devterm/`; `SchemaDriftTests` fails when t
 
 ## OoBDev.DevTerm.Presenters.Text
 
-Presenters that turn received bytes into viewable text, ported from dev-term `DevTerm.Presenters.Text`.
+Presenters that turn received bytes into viewable text, ported from dev-term `DevTerm.Presenters.Text`. Includes `keyvalue` (formerly the KeyValue example plugin): it decodes `name=value [unit]` lines into a `StructuredMessage`.
 
 | Name | Behaviour |
 |------|-----------|

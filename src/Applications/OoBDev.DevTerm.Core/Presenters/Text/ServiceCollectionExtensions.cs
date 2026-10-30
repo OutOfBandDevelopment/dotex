@@ -20,6 +20,7 @@ public static class ServiceCollectionExtensions
         services.TryAddEnumerable(ServiceDescriptor.Transient<IPresenter, DecimalPresenter>());
         services.TryAddEnumerable(ServiceDescriptor.Transient<IPresenter, OctalPresenter>());
         services.TryAddEnumerable(ServiceDescriptor.Transient<IPresenter, BinaryPresenter>());
+        services.TryAddEnumerable(ServiceDescriptor.Transient<IPresenter, KeyValuePresenter>());
         return services;
     }
 }

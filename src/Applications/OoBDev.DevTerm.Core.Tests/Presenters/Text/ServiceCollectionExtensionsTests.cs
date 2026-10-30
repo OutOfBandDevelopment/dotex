@@ -19,6 +19,6 @@ public sealed class ServiceCollectionExtensionsTests
         var names = provider.GetServices<IPresenter>().Select(p => p.Name).Order().ToArray();
 
         // Assert
-        CollectionAssert.AreEqual(new[] { "ascii", "binary", "decimal", "hex", "octal", "utf8" }, names);
+        CollectionAssert.AreEqual(new[] { "ascii", "binary", "decimal", "hex", "keyvalue", "octal", "utf8" }, names);
     }
 }

@@ -6,7 +6,7 @@ using OoBDev.DevTerm;
 using System.Buffers;
 using System.Text;
 
-namespace OoBDev.DevTerm.Plugins.KeyValue.Tests;
+namespace OoBDev.DevTerm.Presenters.Text.Tests;
 
 /// <summary>The optional structured-message model (<see cref="StructuredMessage"/>), via the example <see cref="KeyValuePresenter"/>.</summary>
 [TestCategory("Unit")]

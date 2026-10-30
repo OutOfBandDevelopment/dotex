@@ -22,3 +22,7 @@ Unit: UiDefinitions 194, ViewModels 53, Wpf 14, Scpi.Panels 6, DevTerm.Wpf 8, De
 ## Scpi.Panels folded into Scpi
 
 `OoBDev.Scpi.Panels` and its tests moved into `OoBDev.Scpi` (`Panels/`) and `OoBDev.Scpi.Tests` (`Panels/`); the namespace `OoBDev.Scpi.Panels` is unchanged, `OoBDev.Scpi` now references `OoBDev.UiDefinitions`, and the two projects left `OoBDev.slnx`. Scpi Unit tests: 52 passing (46 plus the 6 panel tests). `.Panels` is the sub-namespace convention for every protocol's UI definition (K8055 and Busylight are next, see the backlog).
+
+## KeyValue plugin merged into Core
+
+`KeyValuePresenter` is now a built-in text presenter (`OoBDev.DevTerm.Presenters.Text`, registered by `TryAddTextPresenters`, name `keyvalue`); `OoBDev.DevTerm.Plugins.KeyValue` and its test project are gone, and its tests live in `Core.Tests/Presenters/Text`. The Tui connection form and the registration test list `keyvalue`. `OoBDev.DevTerm.Plugins.Sample` stays a separate assembly (the loader tests need a real external plugin); renaming it to a test fixture is in the backlog. Unit: Core 1039, Tui `ConfigureModeTests` 35.
