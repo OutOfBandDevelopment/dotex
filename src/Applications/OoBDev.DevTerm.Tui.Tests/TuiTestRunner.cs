@@ -103,9 +103,9 @@ internal static class TuiTestRunner
     /// developer's real <c>~/.dev-term/profiles</c> when its title asks "is this a saved profile?".
     /// </summary>
     /// <summary>The K8055 and Busylight contributions the app registers; the Device menu has no hand-written items for them.</summary>
-    internal static IReadOnlyList<OoBDev.DevTerm.IInstrumentPanelProvider> BuiltInInstruments { get; } = [];
+    internal static IReadOnlyList<OoBDev.DevTerm.IInstrumentPanelProvider> BuiltInInstruments { get; } = [new OoBDev.DevTerm.Devices.Scpi.ScpiInstrumentPanelProvider()];
 
-    internal static IReadOnlyList<OoBDev.DevTerm.IDevicePanelContribution> BuiltInPanels { get; } = [];
+    internal static IReadOnlyList<OoBDev.DevTerm.IDevicePanelContribution> BuiltInPanels { get; } = [new OoBDev.DevTerm.Panels.DevicePanelContribution(new OoBDev.Velleman.K8055.Panels.K8055Panel()), new OoBDev.DevTerm.Panels.DevicePanelContribution(new OoBDev.Kuando.Busylight.Panels.BusylightPanel())];
 
     public static ConnectionProfileStore EmptyProfiles() =>
         new(Path.Combine(Path.GetTempPath(), $"devterm-tests-{Guid.NewGuid():N}"));
