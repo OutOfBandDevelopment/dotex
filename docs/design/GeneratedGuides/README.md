@@ -33,8 +33,15 @@ One journey definition drives every front end, so the guide text per step is sha
 
 `docs/applications/{app-name}/user-guide/` (images in `images/`) and `docs/applications/{app-name}/api-guide/`. Captures are committed with the work that changes them (rule `work-tracking`).
 
+## Image comparison
+
+A masking diff tool compares a new capture with the committed one (owner suggestion, 2026-10-30). A deterministic .NET tool (a small MSTest helper first, a CLI later in `src/Tools`) reads a mask per image: rectangles or regex-matched text regions (clock, temp file names, ports, versions) are blanked in both images before the pixel comparison, so only real changes fail. Text captures (`.txt`) are masked with regular expressions the same way. Masks live next to the journey definition. dev-term's `image_diff` script (`scripts/devterm/`) is the reference.
+
+## Decisions
+
+- A guide per mode is generated even when mostly duplicated (Tui, WPF and Web each get their own); filtering one markdown source per type is not available, so generation does the work.
+- Tui screenshot tests write straight into `docs/applications/devterm/user-guide/images` (done).
+
 ## Open points
 
-- Failing on an image difference needs a tolerance rule (dev-term's `image_diff` script is the reference; see `scripts/devterm/`).
-- Tui tests currently write to `artifacts/doc-images` and a person copies the keepers; change them to write the guide folder directly.
-- The WPF journeys run only on a desktop session; decide whether the Web and WPF captures share one guide page or have one each.
+- The WPF journeys run only on a desktop session; the masking tool and mask format are not built yet.
