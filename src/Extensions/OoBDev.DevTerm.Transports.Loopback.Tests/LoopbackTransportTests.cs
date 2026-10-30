@@ -210,7 +210,7 @@ public sealed class LoopbackTransportTests
     {
         await using var provider = new ServiceCollection().TryAddLoopbackTransport().BuildServiceProvider();
 
-        var transport = provider.GetRequiredService<ITransport>();
+        var transport = provider.GetRequiredService<IDeviceAdapter>();
         await transport.OpenAsync();
 
         Assert.IsInstanceOfType<LoopbackTransport>(transport);
