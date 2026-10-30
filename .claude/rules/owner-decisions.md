@@ -10,3 +10,4 @@
 - **Reference projects:** before building a feature from scratch, check `docs/harvest-candidates.md` for an existing implementation in the owner's other repositories (read-only references; ask before copying the event-sourcing material).
 - **Process:** read `/TODO.md` (the `Backlog:` sections) before starting work, and update it when work finishes.
 - **Open questions:** track questions for the owner in `OPEN-QUESTIONS.md` (`open-questions` rule); a chat answer counts as an answer.
+- **Migration documentation pattern (owner, 2026-10-30):** import a migrated project's docs whole under `docs/applications/{app-name}/` (reusable designs to `docs/design/<Feature>/`, protocols to `docs/protocols/`), keep its change history and bug reports, and track the move in a transient map in `docs/migration/`. Do not clean up or delete imported history until every migration is done; then a documentation cleanup plan integrates it. Living documents, not ADRs.
