@@ -10,6 +10,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Framework\OoBDev.System.Abstractions\OoBDev.System.Abstractions.csproj" />
     <ProjectReference Include="..\..\Framework\OoBDev.System.IO.Pipelines\OoBDev.System.IO.Pipelines.csproj" />
+    <ProjectReference Include="..\..\Framework\OoBDev.System.IO.Brokers\OoBDev.System.IO.Brokers.csproj" />
     <ProjectReference Include="..\..\Framework\OoBDev.System.IO.Mqtt\OoBDev.System.IO.Mqtt.csproj" />
     <ProjectReference Include="..\..\Framework\OoBDev.System.IO.Tcp\OoBDev.System.IO.Tcp.csproj" />
     <ProjectReference Include="..\..\Framework\OoBDev.UiDefinitions\OoBDev.UiDefinitions.csproj" />

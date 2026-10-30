@@ -46,3 +46,7 @@ The six `OoBDev.DevTerm.Transports.{Tcp,Rfc2217,Vxi11}` projects are gone. `TcpT
 ## Step 5d: MQTT moves into `System.IO.Mqtt`
 
 `DevTerm.Transports.Mqtt` is now `MqttDeviceAdapter` (`MqttDeviceAdapterOptions`, `AddMqttDeviceAdapter()`) in the new `OoBDev.System.IO.Mqtt`: an `IDeviceAdapter` of type `Mqtt` (path `Host:Port`) over MQTTnet 5.2.0.1603 (added to `Directory.Packages.props`). The `IMqttConnection` seam and the MQTTnet connection and factory are ported with one type per file. `MqttRouterBridge` depends on the DevTerm `MessageRouter`, so it lives in `OoBDev.DevTerm.Core` (`Brokers/`, namespace `OoBDev.DevTerm.Brokers`) and Core references the new library. 10 Unit tests in `OoBDev.System.IO.Mqtt.Tests` and the bridge tests in `Core.Tests/Brokers` pass; the Mosquitto test is `DevLocal` and was not run (no broker).
+
+## Step 5e: Brokers move into `System.IO.Brokers`
+
+`DevTerm.Transports.Brokers` is now `BrokerDeviceAdapter` (`BrokerDeviceAdapterOptions`, `AddAmqpDeviceAdapter()` and `AddStompDeviceAdapter()`) in the new `OoBDev.System.IO.Brokers`: an `IDeviceAdapter` of type `Broker` over RabbitMQ.Client (already in `Directory.Packages.props`) and the STOMP client. Multi-type files are split one type per file. `BrokerRouterBridge` and its tests moved beside the MQTT bridge in `OoBDev.DevTerm.Core` (`Brokers/`), and Core references the library. 8 Unit tests in `OoBDev.System.IO.Brokers.Tests` plus the bridge tests in `Core.Tests` pass (Core.Tests: 896 passed, 5 skipped); the RabbitMQ test is `DevLocal` and was not run. This completes step 5.
