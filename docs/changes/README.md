@@ -506,3 +506,4 @@ Each change document should include:
 - [Pipe-based device adapter (2026-10-29)](device-adapter-pipes-2026-10-29.md) - IDeviceAdapter exposes PipeReader/PipeWriter, state and events; StreamDeviceAdapter base
 - [Transports become device adapters (2026-10-29)](transports-as-device-adapters-2026-10-29.md) - ITransport deleted; transports implement IDeviceAdapter with Output via DeviceAdapterOutput
 - [K8055 and Busylight panels with their protocols (2026-10-29)](devices-panels-k8055-busylight-2026-10-29.md) - IDevicePanel contracts, panels in the protocol libraries, TryAddDevicePanel and the OoBDev.DevTerm.Devices bundle
+- [SCPI presenter and instrument panel in OoBDev.DevTerm.Devices (2026-10-29)](devices-scpi-panel-2026-10-29.md) - scpi presenter, auto-detect, control surface and provider registered by AddDevTermDevicePanels; 73 Unit tests
