@@ -49,5 +49,6 @@ The `image-mask` dotnet tool ([`OoBDev.ImageMask.Cli`](../../../src/Tools/OoBDev
 
 ## Open points
 
+- The command-line tools in `src/Tools` (image-mask, PackMan, Xslt and the others) get generated user guides too (owner, 2026-10-30, later): each journey runs the tool in a test, captures its command lines and output (and screenshots where it has a UI) into a guide next to the tool readme. Not started.
 - The WPF journeys run only on a desktop session.
 - The screenshot tests still write the capture straight over the committed image; routing them through `image-mask sync` (zones file per guide) is open.
