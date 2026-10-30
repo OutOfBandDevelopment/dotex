@@ -1,4 +1,4 @@
-<UserControl x:Class="OoBDev.UiDefinitions.Wpf.FormView"
+<UserControl x:Class="UiDefinitionsWpf.FormView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="clr-namespace:OoBDev.UiDefinitions.ViewModels;assembly=OoBDev.UiDefinitions.ViewModels">

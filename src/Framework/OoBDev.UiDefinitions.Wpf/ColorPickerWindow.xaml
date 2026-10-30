@@ -1,7 +1,7 @@
-<Window x:Class="OoBDev.UiDefinitions.Wpf.ColorPickerWindow"
+<Window x:Class="UiDefinitionsWpf.ColorPickerWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:local="clr-namespace:OoBDev.UiDefinitions.Wpf"
+        xmlns:local="clr-namespace:UiDefinitionsWpf"
         Title="Pick a colour" SizeToContent="WidthAndHeight" ResizeMode="NoResize"
         WindowStartupLocation="CenterOwner" ShowInTaskbar="False">
     <local:ColorPickerView />

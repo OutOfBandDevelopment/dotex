@@ -1,9 +1,10 @@
+using OoBDev.UiDefinitions;
 using System.Linq;
 using System.Windows.Controls;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.UiDefinitions.ViewModels;
 
-namespace OoBDev.UiDefinitions.Wpf.Tests;
+namespace UiDefinitionsWpf.Tests;
 
 /// <summary>The colour dialog bindings.</summary>
 [TestClass]
@@ -43,8 +44,8 @@ public sealed class ColorPickerWindowTests
         // Stage
         var model = new ColorPickerViewModel(null);
         var window = new ColorPickerView { DataContext = model };
-        window.Measure(new System.Windows.Size(400, 400));
-        window.Arrange(new System.Windows.Rect(0, 0, 400, 400));
+        window.Measure(new global::System.Windows.Size(400, 400));
+        window.Arrange(new global::System.Windows.Rect(0, 0, 400, 400));
         window.UpdateLayout();
         var sliders = Descendants<Slider>(window).ToList();
 
@@ -56,10 +57,10 @@ public sealed class ColorPickerWindowTests
         Assert.AreEqual(200, model.Red);
     }
 
-    private static System.Collections.Generic.IEnumerable<T> Descendants<T>(System.Windows.DependencyObject root)
-        where T : System.Windows.DependencyObject
+    private static global::System.Collections.Generic.IEnumerable<T> Descendants<T>(global::System.Windows.DependencyObject root)
+        where T : global::System.Windows.DependencyObject
     {
-        foreach (var child in System.Windows.LogicalTreeHelper.GetChildren(root).OfType<System.Windows.DependencyObject>())
+        foreach (var child in global::System.Windows.LogicalTreeHelper.GetChildren(root).OfType<global::System.Windows.DependencyObject>())
         {
             if (child is T match)
             {

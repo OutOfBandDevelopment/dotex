@@ -16,3 +16,7 @@ OoBDev Common Framework
 | `VectorComparer` | Orders vectors by the sign of their distance for the chosen metric |
 
 Tests are in `OoBDev.System.Tests/Math`. The comparer treats a distance within 1e-12 of zero as equal, so cosine rounding does not separate equal vectors.
+
+## UiDefinitions contracts
+
+`UiDefinitions/` holds the toolkit-neutral definition model and the control-surface contracts (namespace `OoBDev.UiDefinitions`); the logic is in `OoBDev.UiDefinitions`.

@@ -1,3 +1,4 @@
+using OoBDev.UiDefinitions;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -6,7 +7,7 @@ using System.Windows.Shapes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.UiDefinitions.ViewModels;
 
-namespace OoBDev.UiDefinitions.Wpf.Tests;
+namespace UiDefinitionsWpf.Tests;
 
 /// <summary>The live display view against real view models.</summary>
 [TestCategory("Unit")]
@@ -25,7 +26,7 @@ public sealed class LiveDisplayViewTests
     private static T[] Find<T>(DependencyObject root)
         where T : DependencyObject
     {
-        var found = new System.Collections.Generic.List<T>();
+        var found = new global::System.Collections.Generic.List<T>();
         for (var i = 0; i < VisualTreeHelper.GetChildrenCount(root); i++)
         {
             var child = VisualTreeHelper.GetChild(root, i);
@@ -122,7 +123,7 @@ public sealed class LiveDisplayViewTests
     public void Convert_NonNumber_ReturnsZero()
     {
         // Test
-        var result = new CentreConverter().Convert("x", typeof(double), null!, System.Globalization.CultureInfo.InvariantCulture);
+        var result = new CentreConverter().Convert("x", typeof(double), null!, global::System.Globalization.CultureInfo.InvariantCulture);
 
         // Assert
         Assert.AreEqual(0d, result);
@@ -132,7 +133,7 @@ public sealed class LiveDisplayViewTests
     public void ConvertBack_Always_Throws()
     {
         // Assert
-        Assert.ThrowsExactly<System.NotSupportedException>(() => new CentreConverter().ConvertBack(1d, typeof(double), null!, System.Globalization.CultureInfo.InvariantCulture));
+        Assert.ThrowsExactly<System.NotSupportedException>(() => new CentreConverter().ConvertBack(1d, typeof(double), null!, global::System.Globalization.CultureInfo.InvariantCulture));
     }
 
     [STATestMethod]

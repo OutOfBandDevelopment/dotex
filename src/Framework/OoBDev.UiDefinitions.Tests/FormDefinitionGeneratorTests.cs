@@ -30,7 +30,7 @@ public sealed class FormDefinitionGeneratorTests
     {
         [Category("Link")]
         [DisplayName("Host name")]
-        [System.ComponentModel.Description("Where to connect.")]
+        [global::System.ComponentModel.Description("Where to connect.")]
         public string? Host { get; set; } = "localhost";
 
         [Category("Link")]

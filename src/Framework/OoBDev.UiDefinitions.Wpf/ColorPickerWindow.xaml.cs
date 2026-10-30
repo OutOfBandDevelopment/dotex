@@ -2,7 +2,7 @@ using System;
 using System.Windows;
 using OoBDev.UiDefinitions.ViewModels;
 
-namespace OoBDev.UiDefinitions.Wpf;
+namespace UiDefinitionsWpf;
 
 /// <summary>A red, green and blue colour dialog; the view holds only bindings and closes when the view model asks.</summary>
 public partial class ColorPickerWindow : Window

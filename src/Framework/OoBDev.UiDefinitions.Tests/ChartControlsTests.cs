@@ -166,7 +166,7 @@ public sealed class ChartControlsTests
 
         foreach (var value in new[] { 1, 2, 3, 4, 5, 6, 7 })
         {
-            state.Apply("a", value.ToString(System.Globalization.CultureInfo.InvariantCulture));
+            state.Apply("a", value.ToString(global::System.Globalization.CultureInfo.InvariantCulture));
         }
 
         Assert.AreSequenceEqual([3.0, 4, 5, 6, 7], [.. state.SamplesOf("a")]);
@@ -235,7 +235,7 @@ public sealed class ChartControlsTests
         Assert.IsFalse(state.HasPoint);
         Assert.AreEqual("r=— θ=— rad", state.Readout());
 
-        state.ApplyAll(new Dictionary<string, string> { ["r"] = "2", ["t"] = (Math.PI / 2).ToString(System.Globalization.CultureInfo.InvariantCulture), ["h"] = "120" });
+        state.ApplyAll(new Dictionary<string, string> { ["r"] = "2", ["t"] = (Math.PI / 2).ToString(global::System.Globalization.CultureInfo.InvariantCulture), ["h"] = "120" });
 
         Assert.IsTrue(state.HasPoint);
         Assert.AreEqual(0, state.Point.X, 1e-9);

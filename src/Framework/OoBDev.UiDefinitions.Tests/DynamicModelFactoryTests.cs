@@ -47,7 +47,7 @@ public sealed class DynamicModelFactoryTests
     {
         // Stage
         var ran = false;
-        var model = DynamicModelFactory.Create([new("Go", typeof(System.Windows.Input.ICommand), new Run(() => ran = true))]);
+        var model = DynamicModelFactory.Create([new("Go", typeof(global::System.Windows.Input.ICommand), new Run(() => ran = true))]);
 
         // Test
         var invoked = new FormBinding(model).Invoke("Go");
@@ -77,7 +77,7 @@ public sealed class DynamicModelFactoryTests
         Assert.AreEqual("x", new FormBinding(second).GetText("A"));
     }
 
-    private sealed class Run(Action action) : System.Windows.Input.ICommand
+    private sealed class Run(Action action) : global::System.Windows.Input.ICommand
     {
         public event EventHandler? CanExecuteChanged
         {

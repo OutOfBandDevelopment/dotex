@@ -1,0 +1,16 @@
+# UiDefinitions contracts move to System.Abstractions (2026-10-29)
+
+Owner decision (restructure plan, "Plugins and device panels"): pure contracts (DTOs, interfaces, enumerations) live in `OoBDev.System.Abstractions`, logic stays in the feature library.
+
+## What moved
+
+- `src/Framework/OoBDev.System.Abstractions/UiDefinitions/` now holds `IControlSurface`, `ICommandPreview`, `CommandPreviewFormat`, `IStructuredPresenter` (from DevTerm Core) and the `UiDefinition` model: `UiDefinition`, `UiSection`, `UiControl`, `UiCondition`, `ValueConstraint`, `ValueKind`, `ValueValidationResult` and the control types with their enums. The namespace stays `OoBDev.UiDefinitions`.
+- `OoBDev.UiDefinitions` keeps the logic (expressions, validation, states, serializer, forms) and references `OoBDev.System.Abstractions`.
+
+## Consequence: namespace shadowing
+
+`OoBDev.System.*` shadows `System.*` inside any `OoBDev.*` namespace that sees `OoBDev.System.Abstractions`. Fixed with `global::System.*` in `Expression`, `DynamicModelFactory` and the UiDefinitions tests. The XAML views cannot use `global::` in generated code, so the WPF views moved to the namespace `UiDefinitionsWpf` (the assembly is still `OoBDev.UiDefinitions.Wpf`), the same way `DevTerm.Wpf` uses `DevTermApp`; the WPF tests use `UiDefinitionsWpf.Tests`.
+
+## Verified
+
+Unit: UiDefinitions 194, ViewModels 53, Wpf 14, Scpi.Panels 6, DevTerm.Wpf 8, DevTerm Core 1037 (8 skipped), all passing; Tui and Web runs recorded in the commit series.

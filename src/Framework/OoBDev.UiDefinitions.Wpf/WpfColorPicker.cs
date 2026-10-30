@@ -1,7 +1,7 @@
 using System.Windows;
 using OoBDev.UiDefinitions.ViewModels;
 
-namespace OoBDev.UiDefinitions.Wpf;
+namespace UiDefinitionsWpf;
 
 /// <summary>Opens <see cref="ColorPickerWindow"/> as a modal dialog.</summary>
 /// <param name="owner">The window the dialog centres on, or null.</param>

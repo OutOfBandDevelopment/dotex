@@ -16,3 +16,5 @@ window.Content = new FormView { DataContext = form };
 ## Verified
 
 14 Unit tests on STA threads (no window shown; tests run serially because parallel STA threads deadlocked): controls rendered, a command writing the model, a condition collapsing a row, bar and indicator updates. Not looked at on screen.
+
+The views use the namespace `UiDefinitionsWpf`: inside an `OoBDev.*` namespace the generated XAML code resolves `System.*` to `OoBDev.System.*`.

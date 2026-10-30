@@ -562,7 +562,7 @@ public sealed partial class Expression
         private static int ReadString(string text, int start, List<Token> tokens)
         {
             var quote = text[start];
-            var builder = new System.Text.StringBuilder();
+            var builder = new global::System.Text.StringBuilder();
             var i = start + 1;
             while (i < text.Length)
             {

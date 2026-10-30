@@ -53,8 +53,8 @@ public sealed class IndicatorControl : UiControl
         try
         {
             text = !string.IsNullOrEmpty(Format) && Format[0] is 'x' or 'X'
-                ? ((long)Math.Round(number)).ToString(Format, System.Globalization.CultureInfo.InvariantCulture)
-                : number.ToString(string.IsNullOrEmpty(Format) ? "G" : Format, System.Globalization.CultureInfo.InvariantCulture);
+                ? ((long)Math.Round(number)).ToString(Format, global::System.Globalization.CultureInfo.InvariantCulture)
+                : number.ToString(string.IsNullOrEmpty(Format) ? "G" : Format, global::System.Globalization.CultureInfo.InvariantCulture);
         }
         catch (FormatException)
         {

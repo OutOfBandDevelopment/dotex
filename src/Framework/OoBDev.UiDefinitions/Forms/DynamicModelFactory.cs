@@ -34,7 +34,7 @@ public static class DynamicModelFactory
             }
         }
 
-        var type = Module.DefineType($"Model{System.Threading.Interlocked.Increment(ref _counter)}", TypeAttributes.Public | TypeAttributes.Class | TypeAttributes.Sealed);
+        var type = Module.DefineType($"Model{(global::System.Threading.Interlocked.Increment(ref _counter))}", TypeAttributes.Public | TypeAttributes.Class | TypeAttributes.Sealed);
         type.DefineDefaultConstructor(MethodAttributes.Public);
         foreach (var property in list)
         {

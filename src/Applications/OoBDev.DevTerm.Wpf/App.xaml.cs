@@ -4,7 +4,7 @@ using System.Linq;
 using System.Windows;
 using OoBDev.DevTerm.Wpf;
 using OoBDev.Scpi;
-using OoBDev.UiDefinitions.Wpf;
+using UiDefinitionsWpf;
 
 namespace DevTermApp;
 
