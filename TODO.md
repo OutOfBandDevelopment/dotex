@@ -8,7 +8,7 @@ Keep this file short (about 15 one-line items). When an item starts, move it her
 
 ## In progress
 
-- [ ] **DevTerm parity, WPF shell**: all five slices are built; left is viewing the windows running (`WpfScreenshot` is migrated and the connection editor, converter tools, stream monitor, expression pickers, routing and playback captured; the other windows and the layout review are left); detail in [status.md](docs/design/DevTermParity/status.md).
+- [ ] **DevTerm parity, WPF shell**: all five slices are built; left is viewing the windows running (`WpfScreenshot` is migrated and the connection editor, converter tools, stream monitor, expression pickers, routing, playback and configure device captured; the other windows and the layout review are left); detail in [status.md](docs/design/DevTermParity/status.md).
 
 ## Next
 
