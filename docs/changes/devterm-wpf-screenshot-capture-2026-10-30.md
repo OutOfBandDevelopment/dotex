@@ -6,6 +6,7 @@
 - `ConnectionEditorScreenshotTests` (DevLocal) captures the connection editor for tcp, serial and loopback into `docs/applications/devterm/user-guide/images/wpf-device-profiles-*.png`; a second run leaves the images byte-identical.
 - `ToolWindowScreenshotTests` (DevLocal) captures the converter tools and the empty stream monitor (`wpf-converter-tools.png`, `wpf-stream-monitor.png`); `WpfScreenshot.Capture` builds a window on an STA thread, shows it off-screen, saves it through `GuideImage` and closes it.
 - `ExpressionPickerScreenshotTests` (DevLocal) captures the expression picker in its seven states (`wpf-expression-picker*.png`: plain, error, warning, text, parameters, find, channels), identical across repeated runs.
+- `RoutingScreenshotTests` (DevLocal) captures the routing window with a fake broker link, two rules and traffic (`wpf-routing.png`); the history timestamps are a masked zone in `zones.json`.
 - `OoBDev.DevTerm.Wpf.Tests` references `OoBDev.DevTerm.TestUtilities`.
 
 ## Not done
