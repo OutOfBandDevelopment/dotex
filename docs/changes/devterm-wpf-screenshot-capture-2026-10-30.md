@@ -8,6 +8,7 @@
 - `ExpressionPickerScreenshotTests` (DevLocal) captures the expression picker in its seven states (`wpf-expression-picker*.png`: plain, error, warning, text, parameters, find, channels), identical across repeated runs.
 - `RoutingScreenshotTests` (DevLocal) captures the routing window with a fake broker link, two rules and traffic (`wpf-routing.png`); the history timestamps are a masked zone in `zones.json`.
 - `PlaybackScreenshotTests` (DevLocal) captures the playback window part way through a Tektronix 2230 session (`wpf-playback.png`, 1000 wide so the toolbar fits); the local-time part of the description is a masked zone.
+- `ShellScreenshotTests` (DevLocal) captures the shell over a loopback session with a temporary profile store (`wpf-main-window.png`); it replaces the dev-term original with a capture of this window.
 - `OoBDev.DevTerm.Wpf.Tests` references `OoBDev.DevTerm.TestUtilities`.
 
 ## Not done
