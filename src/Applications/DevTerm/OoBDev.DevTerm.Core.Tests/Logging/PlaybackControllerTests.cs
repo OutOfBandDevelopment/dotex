@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.DevTerm;
 using OoBDev.DevTerm.Logging;
+using OoBDev.System.IO;
 using System.Text;
 using OoBDev.DevTerm.Presenters.Text;
 using Microsoft.Extensions.Options;
@@ -22,14 +23,15 @@ public sealed class PlaybackControllerTests
     private static readonly DateTimeOffset _t0 = new(2026, 9, 25, 12, 0, 0, TimeSpan.Zero);
     private static readonly string[] _available = ["ascii", "hex"];
 
+    private TempDirectoryHandle _folder = null!;
     private string _directory = null!;
     private string _path = null!;
 
     [TestInitialize]
     public void CreateLog()
     {
-        _directory = Path.Combine(Path.GetTempPath(), $"devterm-playback-{Guid.NewGuid():N}");
-        Directory.CreateDirectory(_directory);
+        _folder = new TempDirectoryHandle();
+        _directory = _folder.DirectoryPath;
         _path = Path.Combine(_directory, "capture.jsonl");
         new SessionLog(
             new SessionLogHeader { Created = _t0, Connection = "tcp://192.168.0.107:23", Presenters = ["ascii", "scpi"] },
@@ -43,7 +45,7 @@ public sealed class PlaybackControllerTests
     }
 
     [TestCleanup]
-    public void DeleteLog() => Directory.Delete(_directory, recursive: true);
+    public void DeleteLog() => _folder.Dispose();
 
     private static Pipeline PipelineFor(IReadOnlyList<string> names) =>
         new(names.Select(n => n == "hex"

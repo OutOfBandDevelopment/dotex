@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.DevTerm;
 using OoBDev.DevTerm.Logging;
+using OoBDev.System.IO;
 using System.Text;
 
 namespace OoBDev.DevTerm.Logging.Tests;
@@ -18,13 +19,18 @@ namespace OoBDev.DevTerm.Logging.Tests;
 public sealed class IndexedSessionLogTests
 {
     private static readonly DateTimeOffset _t0 = new(2026, 10, 3, 12, 0, 0, TimeSpan.Zero);
+    private TempFileHandle _file = null!;
     private string _path = "";
 
     [TestInitialize]
-    public void Init() => _path = Path.Combine(Path.GetTempPath(), $"devterm-idx-{Guid.NewGuid():N}.jsonl");
+    public void Init()
+    {
+        _file = new TempFileHandle();
+        _path = _file.FilePath;
+    }
 
     [TestCleanup]
-    public void Cleanup() => File.Delete(_path);
+    public void Cleanup() => _file.Dispose();
 
     private static SessionLog Make(int rx)
     {

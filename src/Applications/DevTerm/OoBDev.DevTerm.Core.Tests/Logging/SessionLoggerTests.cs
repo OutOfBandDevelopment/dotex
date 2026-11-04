@@ -25,19 +25,18 @@ public sealed class SessionLoggerTests
 {
     private static readonly TimeSpan _timeout = TimeSpan.FromSeconds(5);
 
+    private TempFileHandle _file = null!;
     private string _path = null!;
 
     [TestInitialize]
-    public void CreatePath() => _path = Path.Combine(Path.GetTempPath(), $"devterm-logger-{Guid.NewGuid():N}.jsonl");
+    public void CreatePath()
+    {
+        _file = new TempFileHandle();
+        _path = _file.FilePath;
+    }
 
     [TestCleanup]
-    public void DeletePath()
-    {
-        if (File.Exists(_path))
-        {
-            File.Delete(_path);
-        }
-    }
+    public void DeletePath() => _file.Dispose();
 
     private static SessionLogHeader Header() => new() { Created = DateTimeOffset.MinValue, Connection = "loopback://", Presenters = ["ascii"] };
 

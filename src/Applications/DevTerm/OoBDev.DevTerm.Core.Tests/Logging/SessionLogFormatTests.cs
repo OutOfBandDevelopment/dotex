@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.DevTerm;
 using OoBDev.DevTerm.Logging;
+using OoBDev.System.IO;
 using System.Text;
 
 namespace OoBDev.DevTerm.Logging.Tests;
@@ -174,20 +175,14 @@ public sealed class SessionLogFormatTests
     [TestMethod]
     public void SaveAndLoad_RoundTripThroughARealFile_ReplacingItAtomically()
     {
-        var path = Path.Combine(Path.GetTempPath(), $"devterm-log-{Guid.NewGuid():N}.jsonl");
-        try
-        {
-            File.WriteAllText(path, "old content");
-            SampleLog().Save(path);
+        using var logFile = new TempFileHandle();
+        var path = logFile.FilePath;
+        File.WriteAllText(path, "old content");
+        SampleLog().Save(path);
 
-            var loaded = SessionLog.Load(path);
+        var loaded = SessionLog.Load(path);
 
-            Assert.HasCount(SampleLog().Records.Count, loaded.Records);
-            Assert.IsFalse(File.Exists(path + ".tmp"));
-        }
-        finally
-        {
-            File.Delete(path);
-        }
+        Assert.HasCount(SampleLog().Records.Count, loaded.Records);
+        Assert.IsFalse(File.Exists(path + ".tmp"));
     }
 }
