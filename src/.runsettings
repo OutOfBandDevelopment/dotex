@@ -122,7 +122,7 @@ https://github.com/coverlet-coverage/coverlet/blob/fc7ec26dcaed8fedba880ff13c6f1
 
 		<!-- PlantUML renderer and docs validation -->
 		<Parameter name="PLANTUML_URL" value="http://localhost:8086" />
-		<Parameter name="DOCS_VALIDATE_PATHS" value="docs/patterns-discovery" />
+		<Parameter name="DOCS_VALIDATE_PATHS" value="docs/patterns-discovery;docs/applications" />
 
 		<!-- Qdrant -->
 		<Parameter name="QDRANT_URL" value="http://localhost:6333" />

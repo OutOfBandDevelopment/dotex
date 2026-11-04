@@ -14,5 +14,5 @@ Serial, network, USB and BLE terminal and device-control tool with a command lin
 The dev-term design documents, devices, bugs and change log were imported whole so their links hold. They are folded into the living documents above feature by feature, following the [documentation map](../../migration/devterm-docs-map.md); each folder is deleted when its map rows are done.
 
 - [design](design/README.md): feature and transport designs written before implementation.
-- `devices`, `bugs`, `changes`, `scratchpad`, `source` (snapshots of dev-term's project guide, TODO, BACKLOG and open questions): history and evidence.
+- [`devices`](devices/), [`bugs`](bugs/), [`changes`](changes/), [`source`](source/) (snapshots of dev-term's project guide, TODO, BACKLOG and open questions): history and evidence.
 - [coding-standards.md](coding-standards.md): compared with the repository rule; the rule wins.
