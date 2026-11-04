@@ -47,3 +47,27 @@ The Example web app is already an `.esproj` project with `npm test` and generate
 **Default:** B until you answer (nothing is moved).
 
 **Your answer:**
+
+### Q4 - 2026-11-04 - Example AppHost - how do the live Keycloak journeys run?
+
+The Example AppHost starts the API with `IDENTITY_PROVIDER=None`, so the Keycloak sign-in and token-claims live journeys fail ([details](docs/design/example-ui/apphost-live-journeys.md)). The telemetry journey also fails live (OTLP from the host-run API does not reach the dashboard); that needs a live host run to diagnose and I take it after this answer.
+
+**Options**
+- A (recommended): wire Keycloak into the host (`IDENTITY_PROVIDER=Keycloak`, authority from the Keycloak endpoint) so the journeys run for real, as in the compose stack. Cost: the web client needs the host's Keycloak address, and sign-in becomes required for every other live journey (they already sign in through `signInIfAsked`).
+- B: keep the host anonymous and mark those journeys `liveOnly` plus `needsIdentity`, skipped when the API is anonymous. No wiring, but the host never proves sign-in.
+
+**Default:** B's behaviour (nothing changes) until you answer.
+
+**Your answer:**
+
+### Q5 - 2026-11-04 - Example apps - do the device projects need Example-framework coverage?
+
+BACKLOG section 1 lists example apps that use the UiDefinitions language beyond DevTerm, with the open spike question whether the device projects need coverage in the example framework at all, since DevTerm already covers them ([ui-language-later.md](docs/design/DevTermParity/ui-language-later.md)).
+
+**Options**
+- A (recommended): no. DevTerm is the reference application for devices; the Example apps cover non-device capabilities only. Smallest scope; the item becomes the list of Example screens in `missing-screens.md`.
+- B: yes, one Example panel per device family. Shows the language on a second host, at the cost of duplicating DevTerm's device UI.
+
+**Default:** A.
+
+**Your answer:**

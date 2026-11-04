@@ -16,9 +16,9 @@ Owner: all protocols and features of dev-term must exist here. Done means what d
 - [ ] **Generated guides** (owner, 2026-10-30): [design](docs/design/GeneratedGuides/README.md); journey-driven user guides and screenshots for Tui, WPF and Web written straight into `docs/applications/{app}/user-guide`; the DevTerm web host REST and streaming API guides are generated (2026-11-04); the device `.ksy` binary-format guide is generated too; left: API guides for other applications (the renderer placement waits on Q1 in OPEN-QUESTIONS.md). The Example web app is already an `.esproj` project with `npm test`; the guide folder placement waits on Q3.
 - The docs Unit tests `PlantUml_Blocks_AreWellFormed` and `Links_Relative_Resolve` fail on the imported DevTerm history; the planned documentation cleanup after all migrations fixes them (owner, 2026-10-30).
 - Generated user guides for the `src/Tools` command-line tools (journeys, captured output, screenshots where there is a UI); later, after the application guides, helper placement waits on Q1 in OPEN-QUESTIONS.md; see [GeneratedGuides](docs/design/GeneratedGuides/README.md).
-- [ ] Test gaps: Playwright DevLocal flows, an interactive Tui run, serial real-hardware tests ([list](docs/design/DevTermParity/status.md#test-gaps)).
+- [ ] Test gaps: Playwright DevLocal flows, an interactive Tui run (needs a real console session, not available to a headless run), serial real-hardware tests (need attached devices) ([list](docs/design/DevTermParity/status.md#test-gaps)).
 
-- [ ] Example apps that use the UiDefinitions language (forms and panels), beyond DevTerm; open spike question: whether the device projects need coverage in the example framework at all, since DevTerm covers them ([ui-language-later.md](docs/design/DevTermParity/ui-language-later.md)).
+- [ ] Example apps that use the UiDefinitions language (forms and panels), beyond DevTerm; open spike question Q5 in OPEN-QUESTIONS.md: whether the device projects need coverage in the example framework at all, since DevTerm covers them ([ui-language-later.md](docs/design/DevTermParity/ui-language-later.md)).
 
 ## 2. Devices
 
@@ -32,7 +32,7 @@ Owner: all protocols and features of dev-term must exist here. Done means what d
 - [ ] Integration suite under 5 minutes (now 7 min 54 s; the no-flaky-tests goal is met): [suite-timing.md](docs/architecture/testing/integration/suite-timing.md).
 - [ ] `DevLocal` tests kept on purpose: Ollama (hard-coded LAN host, model pull and delete; revisit when the owner says Ollama testing can resume), USB HID (hardware), `PathEx`, `MergedXPathNavigator`, `ProjectTools.FixReadmes` (hard-coded `C:\Repos` paths), Markdown `TestMethod1` (writes files).
 - [ ] Add a live-integration doc page per new cloud service (only Groq exists; its key was revoked 2026-10-09, so runs wait for the owner).
-- [ ] Example AppHost live journeys fail (Keycloak runs anonymously, telemetry does not reach the dashboard): [apphost-live-journeys.md](docs/design/example-ui/apphost-live-journeys.md).
+- [ ] Example AppHost live journeys fail (Keycloak runs anonymously, telemetry does not reach the dashboard; Q4 in OPEN-QUESTIONS.md): [apphost-live-journeys.md](docs/design/example-ui/apphost-live-journeys.md).
 - Azure Monitor exporter: not built (decided 2026-10-22); OTLP reaches any collector and is verified with the Aspire dashboard.
 
 ## 4. APIs and documents
