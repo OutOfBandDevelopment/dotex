@@ -125,6 +125,9 @@ instruments, so it needs to know which one you're talking to before it can build
   transport settings), the panel opens straight away with no extra step.
 - Otherwise, a small picker appears listing every built-in instrument profile plus two extra
   choices:
+
+  ![The WPF instrument picker](images/wpf-instrument-picker.png)
+
   - **Auto-detect (*IDN?)** — sends the standard SCPI `*IDN?` identification query and matches the
     reply against each profile automatically. This is a real round-trip to the device. While it
     waits, the main window's output shows
