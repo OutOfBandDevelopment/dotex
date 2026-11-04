@@ -69,15 +69,24 @@ public static class LxiDiscovery
     }
 
     /// <summary>Broadcasts on every up IPv4 interface and collects replies for <paramref name="listenFor"/>, then probes each host for a raw SCPI port.</summary>
-    public static async Task<IReadOnlyList<LxiDevice>> ScanAsync(TimeSpan listenFor, TimeSpan probeTimeout, CancellationToken cancellationToken = default)
+    /// <param name="listenFor">How long to collect portmapper replies.</param>
+    /// <param name="probeTimeout">Per-port timeout of the <c>*IDN?</c> probe.</param>
+    /// <param name="cancellationToken">Cancels the scan.</param>
+    /// <param name="target">Where the request goes; default is the IPv4 broadcast address on UDP 111. A fake responder uses its own endpoint.</param>
+    /// <param name="localAddresses">The interface addresses to send from; default is every up non-loopback IPv4 address.</param>
+    /// <param name="scpiPorts">The raw-SCPI ports probed; default is <see cref="ScpiPorts"/>.</param>
+    public static async Task<IReadOnlyList<LxiDevice>> ScanAsync(TimeSpan listenFor, TimeSpan probeTimeout, CancellationToken cancellationToken = default,
+        IPEndPoint? target = null, IEnumerable<IPAddress>? localAddresses = null, IReadOnlyList<int>? scpiPorts = null)
     {
         var found = new Dictionary<string, int>();
-        foreach (var address in LocalIPv4Addresses())
+        var destination = target ?? new IPEndPoint(IPAddress.Broadcast, _portmapperPort);
+        var ports = scpiPorts ?? ScpiPorts;
+        foreach (var address in localAddresses ?? LocalIPv4Addresses())
         {
-            await BroadcastFromAsync(address, listenFor, found, cancellationToken).ConfigureAwait(false);
+            await BroadcastFromAsync(address, destination, listenFor, found, cancellationToken).ConfigureAwait(false);
         }
 
-        var devices = await Task.WhenAll(found.OrderBy(kv => Version.Parse(kv.Key)).Select(kv => ProbeAsync(kv.Key, kv.Value, probeTimeout, cancellationToken))).ConfigureAwait(false);
+        var devices = await Task.WhenAll(found.OrderBy(kv => Version.Parse(kv.Key)).Select(kv => ProbeAsync(kv.Key, kv.Value, ports, probeTimeout, cancellationToken))).ConfigureAwait(false);
         return devices;
     }
 
@@ -88,14 +97,14 @@ public static class LxiDiscovery
             .Select(a => a.Address)
             .Where(a => a.AddressFamily == AddressFamily.InterNetwork);
 
-    private static async Task BroadcastFromAsync(IPAddress local, TimeSpan listenFor, Dictionary<string, int> found, CancellationToken cancellationToken)
+    private static async Task BroadcastFromAsync(IPAddress local, IPEndPoint destination, TimeSpan listenFor, Dictionary<string, int> found, CancellationToken cancellationToken)
     {
         try
         {
             using var udp = new UdpClient(new IPEndPoint(local, 0)) { EnableBroadcast = true };
             const uint xid = 0x44564D54;
             var request = BuildGetPortRequest(xid);
-            await udp.SendAsync(request, new IPEndPoint(IPAddress.Broadcast, _portmapperPort), cancellationToken).ConfigureAwait(false);
+            await udp.SendAsync(request, destination, cancellationToken).ConfigureAwait(false);
 
             using var window = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
             window.CancelAfter(listenFor);
@@ -118,9 +127,9 @@ public static class LxiDiscovery
         }
     }
 
-    private static async Task<LxiDevice> ProbeAsync(string host, int vxiPort, TimeSpan timeout, CancellationToken cancellationToken)
+    private static async Task<LxiDevice> ProbeAsync(string host, int vxiPort, IReadOnlyList<int> ports, TimeSpan timeout, CancellationToken cancellationToken)
     {
-        foreach (var port in ScpiPorts)
+        foreach (var port in ports)
         {
             if (await TryIdentifyAsync(host, port, timeout, cancellationToken).ConfigureAwait(false) is { Length: > 0 } identity)
             {

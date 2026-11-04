@@ -73,7 +73,7 @@ never answered it, so it is not used. Run against the bench network it found the
 (`192.168.0.87:5555  Rigol Technologies,DG1062Z,DG1ZA232603118,03.01.12`) and ignored a second host at 192.168.0.67 whose
 portmapper answered port 0 (no VXI-11). Surfaces: `--listlxidevices true`, a "Detect LXI..." picker under the TCP section in the
 TUI and WPF Connection Editor (`LxiDeviceScanner`, `ConnectionEditorViewModel.SelectedLxiDevice` fills Host and TCP port). Unit
-tests cover the request bytes, the real captured reply and the rejects; the scan itself is only hardware-verified.
+tests cover the request bytes, the real captured reply and the rejects; the scan itself is also covered by a loopback test with a fake portmapper responder and a fake raw-SCPI listener (`ScanAsync` takes an optional target endpoint, local addresses and SCPI ports; the defaults are the broadcast address, every up interface and 5025 and 5555), besides the hardware pass.
 
 ```plantuml
 @startuml

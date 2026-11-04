@@ -3,6 +3,9 @@ using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -13,6 +16,8 @@ namespace OoBDev.System.IO.Tcp.Tests;
 [TestClass]
 public sealed class LxiDiscoveryTests
 {
+    public TestContext TestContext { get; set; } = null!;
+
     private static byte[] Reply(uint xid, uint port, uint acceptStat = 0, uint messageType = 1)
     {
         // xid, REPLY, MSG_ACCEPTED, verifier flavor, verifier length, accept_stat, port.
@@ -65,5 +70,45 @@ public sealed class LxiDiscoveryTests
     {
         Assert.AreEqual("Rigol,DG1062Z  (192.168.0.87:5555)", new LxiDevice("192.168.0.87", 618, 5555, "Rigol,DG1062Z").Display);
         StringAssert.Contains(new LxiDevice("10.0.0.2", 111, 0, string.Empty).Display, "VXI-11 only");
+    }
+
+    [TestMethod]
+    public async Task ScanAsync_AgainstALoopbackResponder_FindsTheDeviceAndItsIdentity()
+    {
+        // Stage
+        using var responder = new UdpClient(new IPEndPoint(IPAddress.Loopback, 0));
+        using var scpi = new TcpListener(IPAddress.Loopback, 0);
+        scpi.Start();
+        var scpiPort = ((IPEndPoint)scpi.LocalEndpoint).Port;
+
+        var portmapper = Task.Run(async () =>
+        {
+            var request = await responder.ReceiveAsync(TestContext.CancellationToken);
+            var xid = BinaryPrimitives.ReadUInt32BigEndian(request.Buffer);
+            await responder.SendAsync(Reply(xid, 618), request.RemoteEndPoint, TestContext.CancellationToken);
+        }, TestContext.CancellationToken);
+        var instrument = Task.Run(async () =>
+        {
+            using var client = await scpi.AcceptTcpClientAsync(TestContext.CancellationToken);
+            var stream = client.GetStream();
+            var buffer = new byte[16];
+            _ = await stream.ReadAsync(buffer, TestContext.CancellationToken);
+            await stream.WriteAsync(Encoding.ASCII.GetBytes("Fake,Scope,1,2\n"), TestContext.CancellationToken);
+        }, TestContext.CancellationToken);
+
+        // Test
+        var devices = await LxiDiscovery.ScanAsync(
+            TimeSpan.FromMilliseconds(500),
+            TimeSpan.FromSeconds(2),
+            TestContext.CancellationToken,
+            target: (IPEndPoint)responder.Client.LocalEndPoint!,
+            localAddresses: [IPAddress.Loopback],
+            scpiPorts: [scpiPort]);
+        await portmapper;
+        await instrument;
+
+        // Assert
+        Assert.HasCount(1, devices);
+        Assert.AreEqual(new LxiDevice("127.0.0.1", 618, scpiPort, "Fake,Scope,1,2"), devices[0]);
     }
 }
