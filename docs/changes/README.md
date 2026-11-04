@@ -480,6 +480,7 @@ Each change document should include:
 - [DevTerm docs: plugin model, connection profiles, multi-session UI (2026-11-04)](devterm-docs-more-designs-2026-11-04.md) - three more designs folded into docs/design
 - [DevTerm docs: proposals (2026-11-04)](devterm-docs-proposals-2026-11-04.md) - proposals folded into docs/design and docs/protocols
 - [DevTerm docs: features and rejected (2026-11-04)](devterm-docs-features-2026-11-04.md) - feature designs folded into docs/design, rejected protocols into docs/protocols/rejected
+- [Whole-solution restore (2026-11-04)](build-slnx-restore-2026-11-04.md) - aggregator no longer references the Windows-only Bluetooth project
 - [DevTerm device notes with the device libraries](devterm-docs-devices-2026-11-04.md) - copies deleted, stale pointers repointed
 - [BinaryDataDecoders surroundings review (2026-11-04)](binarydatadecoders-surroundings-review-2026-11-04.md) - bug reports kept as history, pipeline and GitHub items rejected with reasons
 - [Shared FakeTransport (2026-11-03)](test-utilities-faketransport-2026-11-03.md) - four FakeTransport copies merged into OoBDev.DevTerm.TestUtilities
