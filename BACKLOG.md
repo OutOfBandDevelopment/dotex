@@ -18,7 +18,7 @@ Owner: all protocols and features of dev-term must exist here. Done means what d
 - Restore of the whole `src/OoBDev.slnx` fails with NU1201 (found 2026-11-04 while moving the DevTerm projects; unrelated to the move): find the project and fix its target framework or reference.
 - The docs Unit tests `PlantUml_Blocks_AreWellFormed` and `Links_Relative_Resolve` fail on the imported DevTerm history; the planned documentation cleanup after all migrations fixes them (owner, 2026-10-30).
 - Generated user guides for the `src/Tools` command-line tools (journeys, captured output, screenshots where there is a UI); later, after the application guides; see [GeneratedGuides](docs/design/GeneratedGuides/README.md).
-- [ ] Test gaps: Playwright DevLocal flows, an interactive Tui run, screenshot tests, serial and TCP real-hardware tests ([list](docs/design/DevTermParity/status.md#test-gaps)).
+- [ ] Test gaps: Playwright DevLocal flows, an interactive Tui run, the manifest-panel layout test, serial real-hardware tests ([list](docs/design/DevTermParity/status.md#test-gaps)).
 
 - [ ] Example apps that use the UiDefinitions language (forms and panels), beyond DevTerm; open spike question: whether the device projects need coverage in the example framework at all, since DevTerm covers them ([ui-language-later.md](docs/design/DevTermParity/ui-language-later.md)).
 
