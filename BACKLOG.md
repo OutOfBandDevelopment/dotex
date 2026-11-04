@@ -23,8 +23,7 @@ Owner: all protocols and features of dev-term must exist here. Done means what d
 ## 2. Devices
 
 - [ ] Run the new bench Hardware tests once with the bench on (Korad supplies on COM6 and COM7, network instruments online) and fix what the real replies show ([change](docs/changes/2026-11-04.md#bench-hardware-tests-2026-11-04)).
-- [ ] Device decoding leftovers: the DE-5000 Hardware test needs a BLE transport; phase 0 is done (merge status in [device-parity.md](docs/migration/device-parity.md) section 5; M3 needs a Radex capture); a physical pass for K8055 input bit mapping, Busylight program frames, Radex settings and reset, Zoom H4n handshake, NMEA BT-20 framing and a real SCPI instrument. Plan: [device-decoding-migration-plan.md](docs/migration/device-decoding-migration-plan.md).
-- [ ] Saint George score machine: priority is read from the `P` byte itself, so it is never set (ported as-is); settle the real byte from a captured frame, and add a Hardware test for Favero and Saint George when a machine is available.
+- [ ] Device decoding leftovers: the DE-5000 Hardware test needs a BLE transport; phase 0 is done (merge status in [device-parity.md](docs/migration/device-parity.md) section 5; M3 needs a Radex capture); a physical pass for K8055 input bit mapping, Busylight program frames, Radex settings and reset, Zoom H4n handshake, NMEA BT-20 framing and a real SCPI instrument. Favero and Saint George score machines have no hardware pass: the owner has no access to a machine (2026-11-04), so their decoders rest on the unit tests; Saint George priority is read from the `P` byte itself, so it is never set (ported as-is). Plan: [device-decoding-migration-plan.md](docs/migration/device-decoding-migration-plan.md).
 
 ## 3. Test infrastructure
 
