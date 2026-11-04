@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 using DevTermApp;
@@ -23,6 +24,8 @@ namespace OoBDev.DevTerm.Wpf.Tests;
 [DoNotParallelize]
 public sealed class UiLayoutReviewTests
 {
+    public TestContext TestContext { get; set; } = null!;
+
     [TestCleanup]
     public void ResetTheme() => ActiveTheme.Reset();
 
@@ -162,6 +165,17 @@ public sealed class UiLayoutReviewTests
         {
             directory.Delete(recursive: true);
         }
+    }
+
+    [TestMethod]
+    [DataRow(BuiltInThemes.LightName)]
+    [DataRow(BuiltInThemes.DarkName)]
+    public async Task MergedLogWindow_TwoDevices_HasNoLayoutProblems(string theme)
+    {
+        var (log, sessions) = await MergedLogScreenshotTests.BuildLogAsync(TestContext.CancellationToken);
+        await using var _ = sessions;
+
+        Review(theme, () => new MergedLogWindow(new MergedLogDialogViewModel(log)), 700, 360);
     }
 
     [TestMethod]

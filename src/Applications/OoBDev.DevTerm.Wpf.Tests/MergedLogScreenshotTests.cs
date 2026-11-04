@@ -32,21 +32,38 @@ public sealed class MergedLogScreenshotTests
         public ValueTask DisposeAsync() => ValueTask.CompletedTask;
     }
 
-    [TestMethod]
-    public async Task MergedLogWindow_TwoDevices_IsCaptured()
+    /// <summary>Two interleaved devices in a merged log; the sessions are returned so the caller disposes them after use.</summary>
+    internal static async Task<(MergedSessionLog Log, IAsyncDisposable Sessions)> BuildLogAsync(CancellationToken cancellationToken)
     {
         var log = new MergedSessionLog(new ManualTimeProvider());
         var scopePipe = new Pipe();
-        await using var scope = new Session(new FakeAdapter(scopePipe), new Pipeline([]));
-        await using var psu = new Session(new FakeAdapter(new Pipe()), new Pipeline([]));
+        var scope = new Session(new FakeAdapter(scopePipe), new Pipeline([]));
+        var psu = new Session(new FakeAdapter(new Pipe()), new Pipeline([]));
         log.Track("scope", scope, "scope");
         log.Track("psu", psu, "psu");
-        await scope.OpenAsync(TestContext.CancellationToken);
-        await psu.OpenAsync(TestContext.CancellationToken);
-        await scope.SendAsync("*IDN?\n"u8.ToArray(), TestContext.CancellationToken);
-        await psu.SendAsync("VOUT1?\n"u8.ToArray(), TestContext.CancellationToken);
-        await scopePipe.Writer.WriteAsync("TEKTRONIX,TDS2024C\n"u8.ToArray(), TestContext.CancellationToken);
+        await scope.OpenAsync(cancellationToken);
+        await psu.OpenAsync(cancellationToken);
+        await scope.SendAsync("*IDN?\n"u8.ToArray(), cancellationToken);
+        await psu.SendAsync("VOUT1?\n"u8.ToArray(), cancellationToken);
+        await scopePipe.Writer.WriteAsync("TEKTRONIX,TDS2024C\n"u8.ToArray(), cancellationToken);
         SpinWait.SpinUntil(() => log.Entries.Count >= 5, TimeSpan.FromSeconds(5));
+        return (log, new SessionPair(scope, psu));
+    }
+
+    internal sealed class SessionPair(Session first, Session second) : IAsyncDisposable
+    {
+        public async ValueTask DisposeAsync()
+        {
+            await first.DisposeAsync();
+            await second.DisposeAsync();
+        }
+    }
+
+    [TestMethod]
+    public async Task MergedLogWindow_TwoDevices_IsCaptured()
+    {
+        var (log, sessions) = await BuildLogAsync(TestContext.CancellationToken);
+        await using var _ = sessions;
 
         WpfScreenshot.Capture(() => new MergedLogWindow(new MergedLogDialogViewModel(log)), "wpf-merged-log.png", 700, 360);
     }
