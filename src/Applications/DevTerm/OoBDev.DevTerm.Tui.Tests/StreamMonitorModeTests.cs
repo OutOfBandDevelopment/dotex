@@ -1,5 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using OoBDev.System.IO;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -175,19 +176,15 @@ public sealed class StreamMonitorModeTests
     [TestMethod]
     public async Task Detail_ForAFailedSave_SaysWhy()
     {
-        var notADirectory = Path.Combine(Path.GetTempPath(), "devterm-streammonitor-file-" + Guid.NewGuid().ToString("N"));
+        using var notADirectoryFile = new TempFileHandle();
+        var notADirectory = notADirectoryFile.FilePath;
         await File.WriteAllTextAsync(notADirectory, "x");
-        try
         {
             await using var bench = await StreamMonitorBench.StartAsync("scope", notADirectory);
             var capture = await bench.CaptureAsync(StreamContentSamples.Bmp());
 
             StringAssert.Contains(StreamMonitorMode.Detail(capture), "\nNot saved: ");
             StringAssert.EndsWith(StreamMonitorMode.Row(capture), "NOT SAVED");
-        }
-        finally
-        {
-            File.Delete(notADirectory);
         }
     }
 

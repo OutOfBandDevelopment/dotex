@@ -1,16 +1,21 @@
 using System;
-using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using OoBDev.System.IO;
 
 namespace OoBDev.DevTerm.Tui.Tests;
 
 [TestClass]
 public static class TestEnvironment
 {
+    private static TempDirectoryHandle? _home;
+
     [AssemblyInitialize]
     public static void IsolateUserData(TestContext context)
     {
-        var home = Path.Combine(Path.GetTempPath(), "devterm-tui-tests-" + Guid.NewGuid().ToString("N"));
-        Environment.SetEnvironmentVariable(DevTermHome.EnvironmentVariable, home);
+        _home = new TempDirectoryHandle();
+        Environment.SetEnvironmentVariable(DevTermHome.EnvironmentVariable, _home.DirectoryPath);
     }
+
+    [AssemblyCleanup]
+    public static void DeleteUserData() => _home?.Dispose();
 }

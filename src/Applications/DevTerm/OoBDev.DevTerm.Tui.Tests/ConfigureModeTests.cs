@@ -1,5 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using OoBDev.System.IO;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -25,11 +26,24 @@ namespace OoBDev.DevTerm.Tui.Tests;
 [DoNotParallelize]
 public sealed class ConfigureModeTests
 {
-    private static string CreateTempProfilesDirectory()
+    private readonly List<TempDirectoryHandle> _directories = [];
+
+    [TestCleanup]
+    public void DeleteTempDirectories()
     {
-        var directory = Path.Combine(Path.GetTempPath(), "devterm-configuremode-tests-" + Guid.NewGuid().ToString("N"));
-        Directory.CreateDirectory(directory);
-        return directory;
+        foreach (var handle in _directories)
+        {
+            handle.Dispose();
+        }
+
+        _directories.Clear();
+    }
+
+    private string CreateTempProfilesDirectory()
+    {
+        var handle = new TempDirectoryHandle();
+        _directories.Add(handle);
+        return handle.DirectoryPath;
     }
 
     private static void RunHeadless(CliOptions initial, string? validationError, ConnectionProfileStore profileStore, Action<ConfigureWindowParts> body) =>
@@ -1084,7 +1098,7 @@ public sealed class ConfigureModeTests
         {
             var store = new ConnectionProfileStore(directory);
             store.Save("old-one", new CliOptions { Transport = "tcp", Host = "192.168.0.1", Port = "23" });
-            var zipPath = Path.Combine(Path.GetTempPath(), $"devterm-tests-{Guid.NewGuid():N}.zip");
+            var zipPath = Path.Combine(CreateTempProfilesDirectory(), "import.zip");
             using (var archive = global::System.IO.Compression.ZipFile.Open(zipPath, global::System.IO.Compression.ZipArchiveMode.Create))
             {
                 using var writer = new StreamWriter(archive.CreateEntry("new-one.json").Open());

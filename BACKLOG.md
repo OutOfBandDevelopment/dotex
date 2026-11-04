@@ -27,7 +27,7 @@ Owner: all protocols and features of dev-term must exist here. Done means what d
 - [ ] Saint George score machine: priority is read from the `P` byte itself, so it is never set (ported as-is); settle the real byte from a captured frame, and add a Hardware test for Favero and Saint George when a machine is available.
 
 ## 3. Test infrastructure
-- [x] Move the remaining test/tool files that build temp folders by hand (`Path.GetTempPath()`) onto `ITempFileFactory.GetTempDirectory()` (coding-standards rule), a project at a time. Done: `OoBDev.DevTerm.Core.Tests` and most of `Web.Tests`. Next: the rest of `WebScreenshotTests` and `WebUserFlowTests` in `Web.Tests`, then `Tui.Tests` and `Wpf.Tests`. Detail: [change](docs/changes/temp-directory-factory-2026-11-04.md).
+- [x] Move the remaining test/tool files that build temp folders by hand (`Path.GetTempPath()`) onto `ITempFileFactory.GetTempDirectory()` (coding-standards rule), a project at a time. Done: `OoBDev.DevTerm.Core.Tests`, `Tui.Tests` and most of `Web.Tests`. Next: the rest of `WebScreenshotTests` and `WebUserFlowTests` in `Web.Tests`, then `Wpf.Tests`. Detail: [change](docs/changes/temp-directory-factory-2026-11-04.md).
 
 - [ ] Integration coverage gaps: Azure runs on emulators only (Azurite, Service Bus emulator, no Azure licence); Moto is used only for SQS, so S3 tests wait for an S3 adapter.
 - [ ] Integration suite under 5 minutes (now 7 min 54 s; the no-flaky-tests goal is met): [suite-timing.md](docs/architecture/testing/integration/suite-timing.md).

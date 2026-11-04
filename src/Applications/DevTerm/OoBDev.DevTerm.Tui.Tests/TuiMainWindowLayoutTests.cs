@@ -1,5 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using OoBDev.System.IO;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -96,8 +97,8 @@ public sealed class TuiMainWindowLayoutTests
     {
         var (session, catalog, options) = Create();
         await session.OpenAsync(TestContext.CancellationToken);
-        var directory = Path.Combine(Path.GetTempPath(), "devterm-layout-logging-" + Guid.NewGuid().ToString("N"));
-        Directory.CreateDirectory(directory);
+        using var folder = new TempDirectoryHandle();
+        var directory = folder.DirectoryPath;
         try
         {
             TuiReview.Screen("main-logging", width, height, "light", MainWindow(session, catalog, options), (app, _) =>
@@ -109,7 +110,6 @@ public sealed class TuiMainWindowLayoutTests
         {
             _parts?.Logging.Logger()?.Dispose();
             await session.CloseAsync(TestContext.CancellationToken);
-            Directory.Delete(directory, recursive: true);
         }
     }
 

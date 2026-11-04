@@ -1,5 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using OoBDev.System.IO;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -35,11 +36,24 @@ public sealed class ScreenshotTests
     private static readonly string _imagesDirectory = TuiReview.DocImages;
     private static readonly TimeSpan _waitTimeout = TimeSpan.FromSeconds(5);
 
-    private static string CreateTempProfilesDirectory()
+    private readonly List<TempDirectoryHandle> _directories = [];
+
+    [TestCleanup]
+    public void DeleteTempDirectories()
     {
-        var directory = Path.Combine(Path.GetTempPath(), "devterm-configuremode-screenshots-" + Guid.NewGuid().ToString("N"));
-        Directory.CreateDirectory(directory);
-        return directory;
+        foreach (var handle in _directories)
+        {
+            handle.Dispose();
+        }
+
+        _directories.Clear();
+    }
+
+    private string CreateTempProfilesDirectory()
+    {
+        var handle = new TempDirectoryHandle();
+        _directories.Add(handle);
+        return handle.DirectoryPath;
     }
 
     private static string CaptureConfigureMode(CliOptions initial, ConnectionProfileStore store, string baseName)

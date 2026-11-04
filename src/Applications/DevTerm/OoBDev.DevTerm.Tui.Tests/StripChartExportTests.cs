@@ -1,5 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using OoBDev.System.IO;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -17,7 +18,8 @@ public sealed class StripChartExportTests
     [TestMethod]
     public void SaveHistoryCsv_WritesTheHistoryIntoTheExportFolder()
     {
-        var folder = Path.Combine(Path.GetTempPath(), "devterm-export-" + Guid.NewGuid().ToString("N"));
+        using var exportFolder = new TempDirectoryHandle();
+        var folder = exportFolder.DirectoryPath;
         var original = ControlPanelMode.ExportFolder;
         ControlPanelMode.ExportFolder = () => folder;
         try
@@ -33,10 +35,6 @@ public sealed class StripChartExportTests
         finally
         {
             ControlPanelMode.ExportFolder = original;
-            if (Directory.Exists(folder))
-            {
-                Directory.Delete(folder, recursive: true);
-            }
         }
     }
 }

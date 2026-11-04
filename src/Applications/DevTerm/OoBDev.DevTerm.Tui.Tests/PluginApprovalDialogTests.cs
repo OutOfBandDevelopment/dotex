@@ -1,5 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using OoBDev.System.IO;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -45,7 +46,8 @@ public sealed class PluginApprovalDialogTests
     [TestMethod]
     public void ApprovalDialog_ThenPicker_AreCapturedAndTheirChoicesTakeEffect()
     {
-        var root = Path.Combine(Path.GetTempPath(), "devterm-tui-plugins-" + Guid.NewGuid().ToString("N"));
+        using var rootFolder = new TempDirectoryHandle();
+        var root = rootFolder.DirectoryPath;
         var home = Path.Combine(root, "home");
         var folder = Path.Combine(home, "plugins", "shout");
         Directory.CreateDirectory(folder);
@@ -132,7 +134,6 @@ public sealed class PluginApprovalDialogTests
             PluginTrust.Approver = null;
             LivePlugins.Reset();
             Environment.SetEnvironmentVariable(DevTermHome.EnvironmentVariable, previous);
-            Directory.Delete(root, true);
         }
     }
 }

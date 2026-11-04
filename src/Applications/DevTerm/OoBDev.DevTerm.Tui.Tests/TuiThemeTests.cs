@@ -151,8 +151,8 @@ public sealed class TuiThemeTests
     [TestMethod]
     public void ViewThemeMenu_ListsBuiltInsThenUserThemes()
     {
-        var directory = Path.Combine(Path.GetTempPath(), "devterm-tui-themes", Path.GetRandomFileName());
-        Directory.CreateDirectory(directory);
+        using var folder = new TempDirectoryHandle();
+        var directory = folder.DirectoryPath;
         File.WriteAllText(Path.Combine(directory, "amber.json"), """{ "basedOn": "dark", "colors": { "foreground": "#FFB000" } }""");
         ActiveTheme.UseCatalog(ThemeCatalog.Load(directory));
 

@@ -1,5 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using OoBDev.System.IO;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -22,13 +23,15 @@ namespace OoBDev.DevTerm.Tui.Tests;
 [DoNotParallelize]
 public sealed class TuiConfigureLayoutTests
 {
+    private static TempDirectoryHandle? _folder;
     private static string _profiles = string.Empty;
     private static ConfigureWindowParts? _parts;
 
     [ClassInitialize]
     public static void CreateProfiles(TestContext context)
     {
-        _profiles = Path.Combine(Path.GetTempPath(), "devterm-layout-profiles-" + Guid.NewGuid().ToString("N"));
+        _folder = new TempDirectoryHandle();
+        _profiles = _folder.DirectoryPath;
         var store = new ConnectionProfileStore(_profiles);
         store.Save("bench-scope", new CliOptions { Transport = "tcp", Host = "192.168.0.107", Port = "23" });
         store.Save("korad-psu", new CliOptions { Transport = "serial", Port = "COM5", Baud = 9600 });
@@ -36,13 +39,7 @@ public sealed class TuiConfigureLayoutTests
     }
 
     [ClassCleanup]
-    public static void DeleteProfiles()
-    {
-        if (Directory.Exists(_profiles))
-        {
-            Directory.Delete(_profiles, recursive: true);
-        }
-    }
+    public static void DeleteProfiles() => _folder?.Dispose();
 
     [TestCleanup]
     public void Cleanup() => TuiReview.ResetTheme();

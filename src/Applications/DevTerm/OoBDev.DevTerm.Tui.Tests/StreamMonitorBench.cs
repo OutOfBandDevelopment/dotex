@@ -1,5 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using OoBDev.System.IO;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -22,9 +23,12 @@ internal sealed class StreamMonitorBench : IAsyncDisposable
 {
     private static readonly TimeSpan _waitTimeout = TimeSpan.FromSeconds(5);
 
-    private StreamMonitorBench(string exportDirectory)
+    private readonly TempDirectoryHandle? _ownedFolder;
+
+    private StreamMonitorBench(string? exportDirectory)
     {
-        ExportDirectory = exportDirectory;
+        _ownedFolder = exportDirectory is null ? new TempDirectoryHandle() : null;
+        ExportDirectory = exportDirectory ?? _ownedFolder!.DirectoryPath;
         Transport = new FakeTransport();
         Session = new Session(Transport, new Pipeline([]));
         Time = new FakeTimeProvider(new DateTimeOffset(2026, 9, 25, 14, 35, 12, TimeSpan.Zero));
@@ -43,7 +47,7 @@ internal sealed class StreamMonitorBench : IAsyncDisposable
 
     public static async Task<StreamMonitorBench> StartAsync(string deviceName, string? exportDirectory = null, bool start = true)
     {
-        var bench = new StreamMonitorBench(exportDirectory ?? Path.Combine(Path.GetTempPath(), "devterm-streammonitor-" + Guid.NewGuid().ToString("N")));
+        var bench = new StreamMonitorBench(exportDirectory);
         bench.Monitor.SetSession(bench.Session, deviceName, bench.ExportDirectory);
         if (start)
         {
@@ -94,6 +98,7 @@ internal sealed class StreamMonitorBench : IAsyncDisposable
     {
         Monitor.Dispose();
         await Session.DisposeAsync();
+        _ownedFolder?.Dispose();
         if (Directory.Exists(ExportDirectory))
         {
             Directory.Delete(ExportDirectory, recursive: true);

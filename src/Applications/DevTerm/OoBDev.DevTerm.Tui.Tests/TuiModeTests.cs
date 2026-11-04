@@ -2,6 +2,7 @@ using OoBDev.UiDefinitions;
 using OoBDev.System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using OoBDev.System.IO;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -312,7 +313,8 @@ public sealed class TuiModeTests
     {
         var (session, transport, presenter) = CreateSession();
         await session.OpenAsync(TestContext.CancellationToken);
-        var exportDirectory = Path.Combine(Path.GetTempPath(), "devterm-tests-streammonitor-" + Guid.NewGuid().ToString("N"));
+        using var exportFolder = new TempDirectoryHandle();
+        var exportDirectory = exportFolder.DirectoryPath;
         var cliOptions = new CliOptions { Transport = "loopback", ExportDirectory = exportDirectory, StreamAutoConvertHpgl = false };
 
         StreamMonitor? monitor = null;
@@ -357,10 +359,6 @@ public sealed class TuiModeTests
         finally
         {
             await session.CloseAsync(TestContext.CancellationToken);
-            if (Directory.Exists(exportDirectory))
-            {
-                Directory.Delete(exportDirectory, recursive: true);
-            }
         }
     }
 
@@ -507,8 +505,8 @@ public sealed class TuiModeTests
     {
         var (session, _, presenter) = CreateSession();
         await session.OpenAsync(TestContext.CancellationToken);
-        var directory = Path.Combine(Path.GetTempPath(), $"devterm-tests-{Guid.NewGuid():N}");
-        try
+        using var folder = new TempDirectoryHandle();
+        var directory = folder.DirectoryPath;
         {
             var cliOptions = new CliOptions { Transport = "tcp", Host = "127.0.0.1", Port = "23", Presenter = ["ascii"] };
             var store = new ConnectionProfileStore(directory);
@@ -519,10 +517,6 @@ public sealed class TuiModeTests
                 Assert.Contains("bench-scope", parts.Window.Title);
                 Assert.DoesNotContain("tcp://", parts.Window.Title, "A saved profile is titled by name, not by its connection string.");
             }, store);
-        }
-        finally
-        {
-            Directory.Delete(directory, recursive: true);
         }
     }
 

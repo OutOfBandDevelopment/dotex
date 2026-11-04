@@ -1,5 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using OoBDev.System.IO;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -27,24 +28,19 @@ namespace OoBDev.DevTerm.Tui.Tests;
 public sealed class TuiToolWindowLayoutTests
 {
     private static readonly string _bundled = Path.Combine(AppContext.BaseDirectory, "manifests", "loopback-sensor-demo");
+    private static TempDirectoryHandle? _folder;
     private static string _directory = string.Empty;
     private static ManifestEditorParts? _editor;
 
     [ClassInitialize]
     public static void CreateDirectory(TestContext context)
     {
-        _directory = Path.Combine(Path.GetTempPath(), "devterm-layout-tools-" + Guid.NewGuid().ToString("N"));
-        Directory.CreateDirectory(_directory);
+        _folder = new TempDirectoryHandle();
+        _directory = _folder.DirectoryPath;
     }
 
     [ClassCleanup]
-    public static void DeleteDirectory()
-    {
-        if (Directory.Exists(_directory))
-        {
-            Directory.Delete(_directory, recursive: true);
-        }
-    }
+    public static void DeleteDirectory() => _folder?.Dispose();
 
     [TestCleanup]
     public void Cleanup() => TuiReview.ResetTheme();

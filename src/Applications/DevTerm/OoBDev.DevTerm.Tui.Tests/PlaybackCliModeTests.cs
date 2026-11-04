@@ -1,5 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using OoBDev.System.IO;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -15,17 +16,18 @@ namespace OoBDev.DevTerm.Tui.Tests;
 [TestClass]
 public sealed class PlaybackCliModeTests
 {
+    private TempDirectoryHandle _folder = null!;
     private string _directory = null!;
 
     [TestInitialize]
     public void CreateDirectory()
     {
-        _directory = Path.Combine(Path.GetTempPath(), $"devterm-cli-playback-{Guid.NewGuid():N}");
-        Directory.CreateDirectory(_directory);
+        _folder = new TempDirectoryHandle();
+        _directory = _folder.DirectoryPath;
     }
 
     [TestCleanup]
-    public void DeleteDirectory() => Directory.Delete(_directory, recursive: true);
+    public void DeleteDirectory() => _folder.Dispose();
 
     private async Task<(int Exit, string Out, string Err)> RunAsync(CliOptions options, params string[] presenters)
     {

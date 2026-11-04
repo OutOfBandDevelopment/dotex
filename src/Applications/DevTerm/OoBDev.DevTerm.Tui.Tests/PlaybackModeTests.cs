@@ -1,5 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using OoBDev.System.IO;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -25,17 +26,18 @@ public sealed class PlaybackModeTests
 {
     private static readonly DateTimeOffset _t0 = new(2026, 9, 25, 12, 0, 0, TimeSpan.Zero);
 
+    private TempDirectoryHandle _folder = null!;
     private string _directory = null!;
 
     [TestInitialize]
     public void CreateDirectory()
     {
-        _directory = Path.Combine(Path.GetTempPath(), $"devterm-tui-playback-{Guid.NewGuid():N}");
-        Directory.CreateDirectory(_directory);
+        _folder = new TempDirectoryHandle();
+        _directory = _folder.DirectoryPath;
     }
 
     [TestCleanup]
-    public void DeleteDirectory() => Directory.Delete(_directory, recursive: true);
+    public void DeleteDirectory() => _folder.Dispose();
 
     /// <summary>A small, realistic capture: connect, a query, its reply split across two reads, a second query 5 s later, a hang-up.</summary>
     internal static string WriteSampleLog(string directory, string name = "tek2230.jsonl")

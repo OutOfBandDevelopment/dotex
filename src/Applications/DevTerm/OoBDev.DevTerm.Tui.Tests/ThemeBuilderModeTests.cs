@@ -1,5 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using OoBDev.System.IO;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -28,20 +29,21 @@ namespace OoBDev.DevTerm.Tui.Tests;
 [DoNotParallelize]
 public sealed class ThemeBuilderModeTests
 {
+    private TempDirectoryHandle _folder = null!;
     private string _themesDirectory = string.Empty;
 
     [TestInitialize]
     public void CreateDirectory()
     {
-        _themesDirectory = Path.Combine(Path.GetTempPath(), "devterm-theme-builder-tui", Path.GetRandomFileName());
-        Directory.CreateDirectory(_themesDirectory);
+        _folder = new TempDirectoryHandle();
+        _themesDirectory = _folder.DirectoryPath;
     }
 
     [TestCleanup]
     public void Cleanup()
     {
         ActiveTheme.Reset();
-        Directory.Delete(_themesDirectory, recursive: true);
+        _folder.Dispose();
     }
 
     private static void Click(Button button) => button.InvokeCommand(Command.Accept);

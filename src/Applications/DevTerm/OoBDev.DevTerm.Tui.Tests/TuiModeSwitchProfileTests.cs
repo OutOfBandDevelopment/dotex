@@ -197,8 +197,8 @@ public sealed class TuiModeSwitchProfileTests
     {
         var (session, _, presenter) = CreateSession();
         await session.OpenAsync(TestContext.CancellationToken);
-        var directory = Path.Combine(Path.GetTempPath(), $"devterm-tests-{Guid.NewGuid():N}");
-        try
+        using var folder = new TempDirectoryHandle();
+        var directory = folder.DirectoryPath;
         {
             var cliOptions = new CliOptions { Transport = "tcp", Host = "127.0.0.1", Port = "1", Presenter = ["ascii"] };
 
@@ -221,13 +221,6 @@ public sealed class TuiModeSwitchProfileTests
                 Assert.IsTrue(retitled, "Expected the title to name the saved profile just switched to.");
                 Assert.IsFalse(TuiTestRunner.InvokeOnLoop(() => parts.Window.Title.Contains("tcp://")));
             }, new ConnectionProfileStore(directory));
-        }
-        finally
-        {
-            if (Directory.Exists(directory))
-            {
-                Directory.Delete(directory, recursive: true);
-            }
         }
     }
 

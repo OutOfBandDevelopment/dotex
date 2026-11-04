@@ -1,5 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using OoBDev.System.IO;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -28,10 +29,10 @@ public sealed class ManifestEditorModeTests
 
     private static void Run(Action<ManifestEditorParts, string> body)
     {
-        var root = Path.Combine(Path.GetTempPath(), "devterm-manifest-editor-tui", Path.GetRandomFileName());
+        using var rootFolder = new TempDirectoryHandle();
+        var root = rootFolder.DirectoryPath;
         var userDirectory = Path.Combine(root, "user-manifests");
         Directory.CreateDirectory(userDirectory);
-        try
         {
             TuiTestRunner.RunHeadlessApp(app =>
             {
@@ -50,10 +51,6 @@ public sealed class ManifestEditorModeTests
                     parts.Window.Dispose();
                 }
             });
-        }
-        finally
-        {
-            Directory.Delete(root, recursive: true);
         }
     }
 

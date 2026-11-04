@@ -1,5 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using OoBDev.System.IO;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -53,10 +54,10 @@ public sealed class ConsoleAppCliTests
     [TestMethod]
     public async Task ListPlugins_ReportsASkippedPluginWithItsReason()
     {
-        var directory = Path.Combine(Path.GetTempPath(), "devterm-listplugins-" + Guid.NewGuid().ToString("N"));
+        using var folder = new TempDirectoryHandle();
+        var directory = folder.DirectoryPath;
         Directory.CreateDirectory(Path.Combine(directory, "broken"));
         File.WriteAllText(Path.Combine(directory, "broken", "plugin.json"), "{ not json");
-        try
         {
             using var job = new ChildProcessJob();
             using var process = Process.Start(BuildStartInfo($"--listplugins true --plugins \"{directory}\""))!;
@@ -67,21 +68,16 @@ public sealed class ConsoleAppCliTests
             Assert.AreEqual(0, process.ExitCode);
             StringAssert.Contains(output, "broken  skipped:");
         }
-        finally
-        {
-            Directory.Delete(directory, true);
-        }
     }
 
     [TestMethod]
     public async Task ListApprovals_ThenForgetPlugin_ShowsAndRemovesARememberedApproval()
     {
-        var home = Path.Combine(Path.GetTempPath(), "devterm-approvals-" + Guid.NewGuid().ToString("N"));
-        Directory.CreateDirectory(home);
+        using var homeFolder = new TempDirectoryHandle();
+        var home = homeFolder.DirectoryPath;
         File.WriteAllText(
             Path.Combine(home, "plugin-approvals.json"),
             """{"Approved":[{"Name":"shout","Hash":"0123456789ABCDEF0123","ApprovedAt":"2026-10-01T10:00:00+00:00"}]}""");
-        try
         {
             async Task<(int Code, string Output)> RunAsync(string arguments)
             {
@@ -105,10 +101,6 @@ public sealed class ConsoleAppCliTests
             var again = await RunAsync("--forgetplugin shout");
             Assert.AreEqual(1, again.Code);
             StringAssert.Contains((await RunAsync("--listapprovals true")).Output, "No plugin approvals");
-        }
-        finally
-        {
-            Directory.Delete(home, true);
         }
     }
 

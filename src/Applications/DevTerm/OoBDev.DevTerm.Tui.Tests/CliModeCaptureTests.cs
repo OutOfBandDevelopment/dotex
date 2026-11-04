@@ -1,5 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using OoBDev.System.IO;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -17,21 +18,20 @@ namespace OoBDev.DevTerm.Tui.Tests;
 [TestClass]
 public sealed class CliModeCaptureTests
 {
+    private TempDirectoryHandle _folder = null!;
     private string _directory = string.Empty;
 
     public required TestContext TestContext { get; set; }
 
     [TestInitialize]
-    public void Setup() => _directory = Path.Combine(Path.GetTempPath(), "devterm-capture-" + Guid.NewGuid().ToString("N"));
+    public void Setup()
+    {
+        _folder = new TempDirectoryHandle();
+        _directory = _folder.DirectoryPath;
+    }
 
     [TestCleanup]
-    public void Cleanup()
-    {
-        if (Directory.Exists(_directory))
-        {
-            Directory.Delete(_directory, recursive: true);
-        }
-    }
+    public void Cleanup() => _folder.Dispose();
 
     private sealed class EndedStdin : TextReader
     {
