@@ -210,7 +210,8 @@ public class WebHostTests
     [TestMethod]
     public async Task OpenedConnection_WithControlHttp_GetsItsOwnControlServerClosedWithIt()
     {
-        var file = Path.Combine(Path.GetTempPath(), $"devterm-web-ctl-{Guid.NewGuid():N}.json");
+        using var tempFile = new TempFileHandle();
+        var file = tempFile.FilePath;
         var controlPort = FreePort();
         var project = new ProjectFile { Name = "Bench" };
         project.Connections.Add(new ProjectConnection("Sim", $$"""{"Transport":"loopback","Presenter":["ascii"],"ControlHttp":{{controlPort}},"ControlToken":"ctl"}"""));
@@ -245,7 +246,8 @@ public class WebHostTests
     [TestMethod]
     public async Task ApiEvents_StreamsConnectionOpenedAndClosed()
     {
-        var file = Path.Combine(Path.GetTempPath(), $"devterm-web-events-{Guid.NewGuid():N}.json");
+        using var tempFile = new TempFileHandle();
+        var file = tempFile.FilePath;
         ProjectFile.From("Bench", [("Sim", new CliOptions { Transport = "loopback", Presenter = ["ascii"] })]).Save(file);
         var port = FreePort();
         var built = WebHost.Build(
@@ -398,7 +400,8 @@ public class WebHostTests
     [TestMethod]
     public async Task ApiProject_ListsTheProjectFilesConnections()
     {
-        var file = Path.Combine(Path.GetTempPath(), $"devterm-web-project-{Guid.NewGuid():N}.json");
+        using var tempFile = new TempFileHandle();
+        var file = tempFile.FilePath;
         ProjectFile.From("Bench", [("Scope", new CliOptions { Transport = "tcp", Host = "10.0.0.5", Port = "23" })]).Save(file);
         var port = FreePort();
         var built = WebHost.Build(
@@ -423,7 +426,8 @@ public class WebHostTests
     [TestMethod]
     public async Task ApiProject_PutAndDeleteAConnection_EditsTheProjectFile()
     {
-        var file = Path.Combine(Path.GetTempPath(), $"devterm-web-project-{Guid.NewGuid():N}.json");
+        using var tempFile = new TempFileHandle();
+        var file = tempFile.FilePath;
         ProjectFile.From("Bench", [("Echo", new CliOptions { Transport = "loopback", Presenter = ["ascii"], Parser = "ascii" })]).Save(file);
         var port = FreePort();
         var built = WebHost.Build(
@@ -467,7 +471,8 @@ public class WebHostTests
     [TestMethod]
     public async Task ApiConnections_OpenFromTheProject_ThenTunnelAndClose()
     {
-        var file = Path.Combine(Path.GetTempPath(), $"devterm-web-project-{Guid.NewGuid():N}.json");
+        using var tempFile = new TempFileHandle();
+        var file = tempFile.FilePath;
         ProjectFile.From("Bench", [("Echo", new CliOptions { Transport = "loopback", Presenter = ["ascii"], Parser = "ascii" })]).Save(file);
         var port = FreePort();
         var built = WebHost.Build(

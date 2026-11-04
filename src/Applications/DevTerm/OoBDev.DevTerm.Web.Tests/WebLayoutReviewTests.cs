@@ -1,3 +1,4 @@
+using OoBDev.System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -184,7 +185,8 @@ public sealed class WebLayoutReviewTests
             port = ((IPEndPoint)listener.LocalEndpoint).Port;
         }
 
-        var project = Path.Combine(Path.GetTempPath(), $"devterm-web-review-{Guid.NewGuid():N}.json");
+        using var projectFile = new TempFileHandle();
+        var project = projectFile.FilePath;
         ProjectFile.From("Review", [("Scope", new CliOptions { Transport = "loopback", Presenter = ["ascii"] })]).Save(project);
         var built = WebHost.Build(
             options ?? new CliOptions { Transport = "loopback", Presenter = ["ascii"], Tui = false, Cli = true, Project = project },
