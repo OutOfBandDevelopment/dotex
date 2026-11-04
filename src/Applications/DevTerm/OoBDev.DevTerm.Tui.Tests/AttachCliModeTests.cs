@@ -11,7 +11,6 @@ using OoBDev.DevTerm.Presenters.Text;
 using OoBDev.DevTerm;
 namespace OoBDev.DevTerm.Tui.Tests;
 
-[TestCategory("DevLocal")]
 [TestClass]
 public sealed class AttachCliModeTests
 {

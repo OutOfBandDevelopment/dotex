@@ -7,6 +7,7 @@ using OoBDev.UiDefinitions.ViewModels;
 namespace UiDefinitionsWpf.Tests;
 
 /// <summary>The colour dialog bindings.</summary>
+[TestCategory("Unit")]
 [TestClass]
 public sealed class ColorPickerWindowTests
 {

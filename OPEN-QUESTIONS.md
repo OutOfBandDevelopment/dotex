@@ -11,4 +11,8 @@ _(none waiting; processed requests are in BACKLOG.md and TODO.md)_
 
 ## Open
 
-_(none open)_
+### Q1 (2026-11-04, Tools): where does the repository-wide coding-standards test project live?
+
+`OoBDev.CodingStandards.Tests` scans every test source in the repository. **Options:** (A, recommended) `src/Tools`, beside `OoBDev.Docs.Tests`, the other repository-wide check; (B) `src/Framework` with the other test libraries, which implies the 80% coverage rule and a Framework layer entry for a project that tests no library.
+**Default:** A.
+**Your answer:**

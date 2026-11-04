@@ -269,6 +269,7 @@
     <Project Path="Tools/OoBDev.Xslt.Cli/OoBDev.Xslt.Cli.csproj" />
     <Project Path="Tools/OoBDev.DacPacCompiler.Cli/OoBDev.DacPacCompiler.Cli.csproj" />
     <Project Path="Tools/OoBDev.Docs.Tests/OoBDev.Docs.Tests.csproj" />
+    <Project Path="Tools/OoBDev.CodingStandards.Tests/OoBDev.CodingStandards.Tests.csproj" />
     <Project Path="Tools/OoBDev.DocumentConverter.Cli/OoBDev.DocumentConverter.Cli.csproj" />
     <Project Path="Tools/OoBDev.FileRagEngine.Cli/OoBDev.FileRagEngine.Cli.csproj" />
     <Project Path="Tools/OoBDev.FixSourceLinks.Cli/OoBDev.FixSourceLinks.Cli.csproj" />
