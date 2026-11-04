@@ -5,6 +5,15 @@
     { "name": "plugin-approvals-time", "match": "tui-plugin-approvals.png", "x": 440, "y": 158, "width": 232, "height": 20 },
     { "name": "routing-timestamps", "match": "tui-routing.png", "x": 8, "y": 320, "width": 100, "height": 40 },
     { "name": "wpf-routing-timestamps", "match": "wpf-routing.png", "x": 10, "y": 620, "width": 80, "height": 40 },
-    { "name": "wpf-playback-local-time", "match": "wpf-playback.png", "x": 170, "y": 8, "width": 180, "height": 18 }
+    { "name": "wpf-playback-local-time", "match": "wpf-playback.png", "x": 170, "y": 8, "width": 180, "height": 18 },
+    { "name": "web-plugins-temp-path", "match": "web-blazor-plugins.png", "x": 436, "y": 208, "width": 534, "height": 56 },
+    { "name": "web-monitor-port", "match": "web-blazor-monitor.png", "x": 188, "y": 138, "width": 70, "height": 18 },
+    { "name": "web-monitor-saving-path", "match": "web-blazor-monitor.png", "x": 375, "y": 170, "width": 260, "height": 18 },
+    { "name": "web-monitor-capture-time", "match": "web-blazor-monitor.png", "x": 32, "y": 344, "width": 62, "height": 18 },
+    { "name": "web-monitor-saved-path", "match": "web-blazor-monitor.png", "x": 455, "y": 464, "width": 460, "height": 18 },
+    { "name": "web-monitor-saved-path-wrap", "match": "web-blazor-monitor.png", "x": 28, "y": 482, "width": 70, "height": 18 },
+    { "name": "web-manifest-saved-path", "match": "web-blazor-manifest.png", "x": 465, "y": 100, "width": 420, "height": 18 },
+    { "name": "web-connections-project-open-rows", "match": "web-blazor-connections-project.png", "x": 28, "y": 596, "width": 382, "height": 50 },
+    { "name": "web-connections-open-id", "match": "web-blazor-connections.png", "x": 270, "y": 528, "width": 140, "height": 24 }
   ]
 }

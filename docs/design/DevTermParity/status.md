@@ -32,7 +32,7 @@ dev-term `DevTerm.Wpf` is about 8,800 lines. Each slice is ported with view mode
 ## Test gaps
 
 - Tui: serial real-hardware tests (TCP is covered by `LoopbackDeviceCliIntegrationTests` against the stack's loopback-device, real devices by `RealHardwareCliTests`), an interactive Tui run (control panel, loopback chart and stream-monitor screenshots exist in the user guide).
-- Web: the Playwright flows, screenshot and layout-review tests pass (55 run together); a run rewrites the guide images, so the `image-mask sync` routing is what keeps recaptures from churning the committed files.
+- Web: the Playwright flows, screenshot and layout-review tests pass (55 run together); `image-mask sync` with `zones.json` keeps recaptures from churning the committed images.
 - Hardware tests for the USBTMC path were skipped (no device attached).
 
 ## Other leftovers
