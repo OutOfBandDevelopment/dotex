@@ -2,6 +2,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using OoBDev.System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -20,25 +21,11 @@ namespace OoBDev.DevTerm.Configuration.Tests;
 [TestClass]
 public sealed class ConnectionEditorFormTests
 {
-    private static string CreateTempDirectory()
-    {
-        var path = Path.Combine(Path.GetTempPath(), "devterm-editor-form-tests", Path.GetRandomFileName());
-        Directory.CreateDirectory(path);
-        return path;
-    }
-
     private static void WithViewModel(CliOptions initial, Action<ConnectionEditorViewModel> body)
     {
-        var directory = CreateTempDirectory();
-        try
-        {
-            using var viewModel = new ConnectionEditorViewModel(new ConnectionProfileStore(directory), initial);
-            body(viewModel);
-        }
-        finally
-        {
-            Directory.Delete(directory, recursive: true);
-        }
+        using var folder = new TempDirectoryHandle();
+        using var viewModel = new ConnectionEditorViewModel(new ConnectionProfileStore(folder.DirectoryPath), initial);
+        body(viewModel);
     }
 
     private static IEnumerable<UiControl> Controls(UiDefinition definition) => definition.Sections.SelectMany(s => s.Controls);

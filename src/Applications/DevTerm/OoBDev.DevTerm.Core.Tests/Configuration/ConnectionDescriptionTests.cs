@@ -10,6 +10,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.DevTerm;
 
 using OoBDev.DevTerm.Configuration;
+using OoBDev.System.IO;
 using OoBDev.DevTerm.Configuration.Discovery;
 namespace OoBDev.DevTerm.Configuration.Tests;
 
@@ -130,7 +131,8 @@ public sealed class ConnectionDescriptionTests
     [TestMethod]
     public void Subject_ForANonSavedConnection_IsTheDefinition()
     {
-        var store = new ConnectionProfileStore(Path.Combine(Path.GetTempPath(), $"devterm-tests-{Guid.NewGuid():N}"));
+        using var folder = new TempDirectoryHandle();
+        var store = new ConnectionProfileStore(Path.Combine(folder.DirectoryPath, "profiles"));
         var options = new CliOptions { Transport = "tcp", Host = "192.168.0.110", Port = "23" };
 
         Assert.AreEqual("tcp://192.168.0.110:23", ConnectionDescription.Subject(options, store));
@@ -139,25 +141,19 @@ public sealed class ConnectionDescriptionTests
     [TestMethod]
     public void Subject_ForASavedProfile_IsTheProfileName()
     {
-        var directory = Path.Combine(Path.GetTempPath(), $"devterm-tests-{Guid.NewGuid():N}");
-        try
-        {
-            var store = new ConnectionProfileStore(directory);
-            var options = new CliOptions { Transport = "tcp", Host = "192.168.0.110", Port = "23" };
-            store.Save("tek2230", options);
+        using var folder = new TempDirectoryHandle();
+        var store = new ConnectionProfileStore(folder.DirectoryPath);
+        var options = new CliOptions { Transport = "tcp", Host = "192.168.0.110", Port = "23" };
+        store.Save("tek2230", options);
 
-            Assert.AreEqual("tek2230", ConnectionDescription.Subject(options, store));
-        }
-        finally
-        {
-            Directory.Delete(directory, recursive: true);
-        }
+        Assert.AreEqual("tek2230", ConnectionDescription.Subject(options, store));
     }
 
     [TestMethod]
     public void WindowTitle_ForANonSavedConnection_UsesTheDefinitionAndTheFormats()
     {
-        var store = new ConnectionProfileStore(Path.Combine(Path.GetTempPath(), $"devterm-tests-{Guid.NewGuid():N}"));
+        using var folder = new TempDirectoryHandle();
+        var store = new ConnectionProfileStore(Path.Combine(folder.DirectoryPath, "profiles"));
         var options = new CliOptions { Transport = "tcp", Host = "192.168.0.110", Port = "23", Presenter = ["ascii", "hex"], Parser = "hex" };
 
         Assert.AreEqual("dev-term — tcp://192.168.0.110:23 (ascii, hex; send as hex)", ConnectionDescription.WindowTitle(options, "hex", store));
@@ -166,18 +162,11 @@ public sealed class ConnectionDescriptionTests
     [TestMethod]
     public void WindowTitle_ForASavedProfile_UsesTheProfileName()
     {
-        var directory = Path.Combine(Path.GetTempPath(), $"devterm-tests-{Guid.NewGuid():N}");
-        try
-        {
-            var store = new ConnectionProfileStore(directory);
-            var options = new CliOptions { Transport = "tcp", Host = "192.168.0.110", Port = "23", Presenter = ["ascii"], Parser = "ascii" };
-            store.Save("tek2230", options);
+        using var folder = new TempDirectoryHandle();
+        var store = new ConnectionProfileStore(folder.DirectoryPath);
+        var options = new CliOptions { Transport = "tcp", Host = "192.168.0.110", Port = "23", Presenter = ["ascii"], Parser = "ascii" };
+        store.Save("tek2230", options);
 
-            Assert.AreEqual("dev-term — tek2230 (ascii; send as ascii)", ConnectionDescription.WindowTitle(options, "ascii", store));
-        }
-        finally
-        {
-            Directory.Delete(directory, recursive: true);
-        }
+        Assert.AreEqual("dev-term — tek2230 (ascii; send as ascii)", ConnectionDescription.WindowTitle(options, "ascii", store));
     }
 }

@@ -8,6 +8,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.DevTerm;
 
 using OoBDev.DevTerm.Configuration;
+using OoBDev.System.IO;
 using OoBDev.DevTerm.Configuration.Discovery;
 namespace OoBDev.DevTerm.Configuration.Tests;
 
@@ -25,25 +26,21 @@ public sealed class AtomicFileTests
     [TestCategory("Unit")]
     public void WriteAllText_OnSuccess_WritesContentsAndLeavesNoTemporaryFile()
     {
-        var path = Path.Combine(Path.GetTempPath(), $"devterm-atomicfile-{Guid.NewGuid():N}.json");
-        try
-        {
-            AtomicFile.WriteAllText(path, "{\"a\":1}");
+        using var folder = new TempDirectoryHandle();
+        var path = Path.Combine(folder.DirectoryPath, "atomic.json");
 
-            Assert.AreEqual("{\"a\":1}", File.ReadAllText(path));
-            Assert.IsFalse(File.Exists($"{path}.tmp"));
-        }
-        finally
-        {
-            File.Delete(path);
-        }
+        AtomicFile.WriteAllText(path, "{\"a\":1}");
+
+        Assert.AreEqual("{\"a\":1}", File.ReadAllText(path));
+        Assert.IsFalse(File.Exists($"{path}.tmp"));
     }
 
     [TestMethod]
     [TestCategory("Unit")]
     public void WriteAllText_WhenTheTemporaryFileCannotBeWritten_LeavesTheExistingFileUntouched()
     {
-        var path = Path.Combine(Path.GetTempPath(), $"devterm-atomicfile-{Guid.NewGuid():N}.json");
+        using var folder = new TempDirectoryHandle();
+        var path = Path.Combine(folder.DirectoryPath, "atomic.json");
         File.WriteAllText(path, "original");
         var temporary = $"{path}.tmp";
 
@@ -52,19 +49,11 @@ public sealed class AtomicFileTests
         // which a unit test can't otherwise trigger. The old, non-atomic code wrote straight to
         // `path`, so a failure here would have already started clobbering "original"; the fix
         // never touches `path` until the temp file is fully written and ready to move.
-        try
+        using (new FileStream(temporary, FileMode.Create, FileAccess.Write, FileShare.None))
         {
-            using (new FileStream(temporary, FileMode.Create, FileAccess.Write, FileShare.None))
-            {
-                Assert.ThrowsExactly<IOException>(() => AtomicFile.WriteAllText(path, "new"));
-            }
+            Assert.ThrowsExactly<IOException>(() => AtomicFile.WriteAllText(path, "new"));
+        }
 
-            Assert.AreEqual("original", File.ReadAllText(path));
-        }
-        finally
-        {
-            File.Delete(path);
-            File.Delete(temporary);
-        }
+        Assert.AreEqual("original", File.ReadAllText(path));
     }
 }
