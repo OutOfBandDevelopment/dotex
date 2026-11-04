@@ -52,7 +52,7 @@ Checked again on 2026-10-29 by type name: the items the first re-review listed a
 
 | Item | Source | Notes |
 |------|--------|-------|
-| Bitmap helpers on any platform | Drawing | Present but Windows only (`System.Drawing.Common`); the SkiaSharp port is a later backlog step. `GraphicsEx` is `SizeExtensions` and runs anywhere |
+| Bitmap helpers on any platform | Drawing | Done 2026-11-03: `Code39`, `MultiScaleTile` and `PngPack` run on SkiaSharp; `GraphicsEx` is `SizeExtensions` |
 
 ## Not migrated by decision
 
@@ -77,7 +77,7 @@ Checked again on 2026-10-29 by type name: the items the first re-review listed a
 |------:|------|----------------|
 | 1 | Done (2026-11-03, see the result at the end): behaviour check of the source tests against main | Name matches did not prove equal behaviour |
 | 2 | Done (2026-11-03): the notes are rejected in Table 3; the Drawing row of Table 2 is order 3 | Cheap and independent |
-| 3 | Drawing on SkiaSharp | Later step, owner 2026-10-29 |
+| 3 | Done (2026-11-03): Drawing on SkiaSharp | Later step, owner 2026-10-29 |
 
 Each item follows the `compare-incoming-codebase` skill: design note, port with tests (80%+ in Framework), project readme, `complete-work` tracking.
 

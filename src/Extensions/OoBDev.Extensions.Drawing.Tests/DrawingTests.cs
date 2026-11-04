@@ -1,10 +1,11 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using OoBDev.System.IO;
 using OoBDev.TestUtilities;
 using System;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using SkiaSharp;
 
 namespace OoBDev.Extensions.Drawing.Tests;
 
@@ -46,22 +47,18 @@ public class Code39Tests
         Assert.ThrowsExactly<InvalidOperationException>(() => Code39.ToStandard("é"));
 
     [TestMethod, TestCategory(TestCategories.Unit)]
-    public void EncodeStandard_Message_ProducesOneBitBitmapOfExpectedSize()
+    public void EncodeStandard_Message_ProducesGrayBitmapOfExpectedSize()
     {
-        if (!OperatingSystem.IsWindows()) Assert.Inconclusive("System.Drawing needs Windows.");
-
         using var image = Code39.EncodeStandard("HELLO");
 
         Assert.AreEqual(7 * 16, image.Width);
         Assert.AreEqual(Code39.BarHeight, image.Height);
-        Assert.AreEqual(PixelFormat.Format1bppIndexed, image.PixelFormat);
+        Assert.AreEqual(SKColorType.Gray8, image.ColorType);
     }
 
     [TestMethod, TestCategory(TestCategories.Unit)]
     public void EncodeFullAscii_Message_EncodesEscapedText()
     {
-        if (!OperatingSystem.IsWindows()) Assert.Inconclusive("System.Drawing needs Windows.");
-
         using var image = Code39.EncodeFullAscii("a");
 
         Assert.AreEqual(4 * 16, image.Width);
@@ -155,17 +152,10 @@ public class JpegSegmentReaderTests
     [TestMethod, TestCategory(TestCategories.Unit)]
     public void GetSegments_File_ReadsFromPath()
     {
-        var path = Path.GetTempFileName();
-        try
-        {
-            File.WriteAllBytes(path, _sample);
+        using var temp = new TempFileHandle();
+        File.WriteAllBytes(temp.FilePath, _sample);
 
-            Assert.AreEqual(4, JpegSegmentReader.GetSegments(path).Count());
-        }
-        finally
-        {
-            File.Delete(path);
-        }
+        Assert.AreEqual(4, JpegSegmentReader.GetSegments(temp.FilePath).Count());
     }
 
     [TestMethod, TestCategory(TestCategories.Unit)]
@@ -196,7 +186,6 @@ public class PngPackTests
     [DataRow(1000)]
     public void Pack_Bytes_RoundTrips(int length)
     {
-        if (!OperatingSystem.IsWindows()) Assert.Inconclusive("System.Drawing needs Windows.");
         var input = Enumerable.Range(0, length).Select(i => (byte)(i * 7 + 3)).ToArray();
 
         var png = PngPack.Pack(input);
@@ -209,31 +198,29 @@ public class PngPackTests
     [TestMethod, TestCategory(TestCategories.Unit)]
     public void Unpack_OrdinaryImage_ThrowsInvalidData()
     {
-        if (!OperatingSystem.IsWindows()) Assert.Inconclusive("System.Drawing needs Windows.");
-        using var bitmap = new Bitmap(2, 2, PixelFormat.Format32bppArgb);
-        bitmap.SetPixel(0, 0, Color.FromArgb(255, 255, 255, 255));
-        using var stream = new MemoryStream();
-        bitmap.Save(stream, ImageFormat.Png);
+        using var bitmap = new SKBitmap(2, 2);
+        bitmap.SetPixel(0, 0, SKColors.White);
+        using var picture = SKImage.FromBitmap(bitmap);
+        using var data = picture.Encode(SKEncodedImageFormat.Png, 100);
 
-        Assert.ThrowsExactly<InvalidDataException>(() => PngPack.Unpack(stream.ToArray()));
+        Assert.ThrowsExactly<InvalidDataException>(() => PngPack.Unpack(data.ToArray()));
     }
 }
 
 [TestClass]
 public class MultiScaleTileTests
 {
-    private static Bitmap CreateImage(int width, int height)
+    private static SKBitmap CreateImage(int width, int height)
     {
-        var bitmap = new Bitmap(width, height);
-        using var graphics = Graphics.FromImage(bitmap);
-        graphics.Clear(Color.CornflowerBlue);
+        var bitmap = new SKBitmap(width, height);
+        using var canvas = new SKCanvas(bitmap);
+        canvas.Clear(SKColors.CornflowerBlue);
         return bitmap;
     }
 
     [TestMethod, TestCategory(TestCategories.Unit)]
     public void GetMaxLevel_Image_UsesLongerSide()
     {
-        if (!OperatingSystem.IsWindows()) Assert.Inconclusive("System.Drawing needs Windows.");
         using var image = CreateImage(600, 300);
 
         Assert.AreEqual(10, image.GetMaxLevel());
@@ -246,7 +233,6 @@ public class MultiScaleTileTests
     [DataRow(0, 1, 1)]
     public void GetTileCount_Level_CoversScaledImage(int level, int columns, int rows)
     {
-        if (!OperatingSystem.IsWindows()) Assert.Inconclusive("System.Drawing needs Windows.");
         using var image = CreateImage(600, 300);
 
         Assert.AreEqual(new Size(columns, rows), image.GetTileCount(level));
@@ -255,29 +241,26 @@ public class MultiScaleTileTests
     [TestMethod, TestCategory(TestCategories.Unit)]
     public void GetTile_TopLevel_ReturnsTileSizedBlock()
     {
-        if (!OperatingSystem.IsWindows()) Assert.Inconclusive("System.Drawing needs Windows.");
         using var image = CreateImage(600, 300);
 
         using var tile = image.GetTile(10, 1, 0);
 
-        Assert.AreEqual(new Size(256, 256), tile.Size);
+        Assert.AreEqual(new Size(256, 256), new Size(tile.Width, tile.Height));
     }
 
     [TestMethod, TestCategory(TestCategories.Unit)]
     public void GetTile_LowLevel_ReturnsWholeScaledImage()
     {
-        if (!OperatingSystem.IsWindows()) Assert.Inconclusive("System.Drawing needs Windows.");
         using var image = CreateImage(600, 300);
 
         using var tile = image.GetTile(7, 0, 0);
 
-        Assert.AreEqual(new Size(75, 38), tile.Size);
+        Assert.AreEqual(new Size(75, 38), new Size(tile.Width, tile.Height));
     }
 
     [TestMethod, TestCategory(TestCategories.Unit)]
     public void GetTileAsBytes_Tile_IsJpeg()
     {
-        if (!OperatingSystem.IsWindows()) Assert.Inconclusive("System.Drawing needs Windows.");
         using var image = CreateImage(600, 300);
 
         var bytes = image.GetTileAsBytes(10, 0, 0);
@@ -288,7 +271,6 @@ public class MultiScaleTileTests
     [TestMethod, TestCategory(TestCategories.Unit)]
     public void GetTileAsStream_Tile_StartsAtBeginning()
     {
-        if (!OperatingSystem.IsWindows()) Assert.Inconclusive("System.Drawing needs Windows.");
         using var image = CreateImage(300, 300);
 
         using var stream = image.GetTileAsStream(9, 0, 0);
@@ -300,26 +282,30 @@ public class MultiScaleTileTests
     [TestMethod, TestCategory(TestCategories.Unit)]
     public void StreamAndPathOverloads_Image_MatchImageOverloads()
     {
-        if (!OperatingSystem.IsWindows()) Assert.Inconclusive("System.Drawing needs Windows.");
-        var path = Path.ChangeExtension(Path.GetTempFileName(), ".png");
-        try
-        {
-            using (var image = CreateImage(600, 300))
-                image.Save(path, ImageFormat.Png);
+        using var temp = new TempFileHandle();
+        var path = temp.FilePath;
+        using (var image = CreateImage(600, 300))
+        using (var picture = SKImage.FromBitmap(image))
+        using (var data = picture.Encode(SKEncodedImageFormat.Png, 100))
+            File.WriteAllBytes(path, data.ToArray());
 
-            using var stream = File.OpenRead(path);
-            Assert.AreEqual(10, path.GetMaxLevel());
-            Assert.AreEqual(new Size(3, 2), path.GetTileCount(10));
-            Assert.AreEqual(10, stream.GetMaxLevel());
-            stream.Position = 0;
-            Assert.AreEqual(new Size(3, 2), stream.GetTileCount(10));
-            stream.Position = 0;
-            Assert.IsTrue(stream.GetTileAsBytes(10, 0, 0).Length > 0);
-            Assert.IsTrue(path.GetTileAsBytes(10, 0, 0).Length > 0);
-        }
-        finally
-        {
-            File.Delete(path);
-        }
+        using var stream = File.OpenRead(path);
+        Assert.AreEqual(10, path.GetMaxLevel());
+        Assert.AreEqual(new Size(3, 2), path.GetTileCount(10));
+        Assert.AreEqual(10, stream.GetMaxLevel());
+        stream.Position = 0;
+        Assert.AreEqual(new Size(3, 2), stream.GetTileCount(10));
+        stream.Position = 0;
+        Assert.IsTrue(stream.GetTileAsBytes(10, 0, 0).Length > 0);
+        Assert.IsTrue(path.GetTileAsBytes(10, 0, 0).Length > 0);
+    }
+
+    [TestMethod, TestCategory(TestCategories.Unit)]
+    public void PathOverload_NotAnImage_ThrowsInvalidData()
+    {
+        using var temp = new TempFileHandle();
+        File.WriteAllText(temp.FilePath, "not an image");
+
+        Assert.ThrowsExactly<InvalidDataException>(() => temp.FilePath.GetMaxLevel());
     }
 }

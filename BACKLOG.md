@@ -76,7 +76,6 @@ Scope rule: every BinaryDataDecoders feature is migrated; phases are priority or
 - [ ] **SharedFramework** is design first (Epics 2, 6, 7, 10): four documents per feature (requirements, architecture, api-design, testing-strategy). See [CLAUDE.md](CLAUDE.md#current-work-context).
 - [ ] **BulkLlm**: consolidate. `OoBDev.LlmCodeGen.Cli` is built; the live Groq run remains ([design](docs/design/LlmCodeGen/README.md)).
 - [ ] Desired-state database tooling phase 0: bake-off of sqldef, pgschema and Atlas per `docs/design/DesiredStateDatabase/`; do it after the other backlog items (owner, 2026-10-29).
-- [ ] **Drawing cross-platform** (owner, 2026-10-29: Windows only for now): port `Code39`, `MultiScaleTile` and `PngPack` from `Bitmap`/`Graphics` to SkiaSharp, keep the pure helpers, run the tests on both platforms, drop `System.Drawing.Common`.
 - [ ] **Consolidate the migration projects** (owner, 2026-10-29): left are `device-decoding-migration-plan.md`, `device-parity.md` and the two `incoming-*` notes, which fold into the DevTerm and BinaryDataDecoders items when those finish ([inventory](docs/migration/README.md)).
 - ContractParser: keep as a specification; no work (decided 2026-10-09).
 

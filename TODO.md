@@ -11,4 +11,3 @@ Keep this file short (about 15 one-line items). When an item starts, move it her
 ## Next
 
 - [ ] Device decoding leftovers: DE-5000 Hardware test (needs BLE) and the physical passes; phase 0 is done ([device-parity.md](docs/migration/device-parity.md) section 5).
-- [ ] BinaryDataDecoders items: behaviour check and the notes decision done; next is Drawing on SkiaSharp (backlog "Drawing cross-platform").
