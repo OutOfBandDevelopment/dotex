@@ -51,4 +51,4 @@ The `image-mask` dotnet tool ([`OoBDev.ImageMask.Cli`](../../../src/Tools/OoBDev
 
 - The command-line tools in `src/Tools` (image-mask, PackMan, Xslt and the others) get generated user guides too (owner, 2026-10-30, later): each journey runs the tool in a test, captures its command lines and output (and screenshots where it has a UI) into a guide next to the tool readme. Not started.
 - The WPF journeys run only on a desktop session.
-- The Tui and Web screenshot tests go through `GuideImage` (`OoBDev.DevTerm.TestUtilities`), which runs `image-mask sync` with the `zones.json` beside the images. The WPF capture code has not been migrated yet (the committed `wpf-*.png` images came from dev-term), so it is not routed.
+- The Tui, Web and WPF screenshot tests all go through `GuideImage` (`OoBDev.DevTerm.TestUtilities`), which runs `image-mask sync` with the `zones.json` beside the images.
