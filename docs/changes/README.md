@@ -466,6 +466,7 @@ Each change document should include:
 - [UiDefinitions WPF view](devices-uidefinitions-wpf-2026-10-29.md) - OoBDev.UiDefinitions.Wpf: XAML FormView over the view models (2026-10-29)
 - [UiDefinitions contracts](devices-uidefinitions-contracts-2026-10-29.md) - UiDefinition model and control-surface contracts moved to System.Abstractions; WPF views namespace UiDefinitionsWpf (2026-10-29)
 - [DevTerm WPF shell](devices-devterm-wpf-shell-2026-10-29.md) - OoBDev.DevTerm.Wpf: shell skeleton with panel factories and a demo panel (2026-10-29)
+- [DevTerm WPF captures and layout review (2026-11-03)](devterm-wpf-captures-layout-review-2026-11-03.md) - every WPF window captured for the guide and checked in both themes; three theme and layout defects fixed
 - [DevTerm Web shell](devterm-web-shell-2026-10-29.md) - OoBDev.DevTerm.Web (Blazor), connection editor view model, transport selection in AddDevTermFrontEnd (2026-10-29)
 - [DevTerm Tui shell](devterm-tui-shell-2026-10-29.md) - OoBDev.DevTerm.Tui (Terminal.Gui) and its tests, LxiDeviceScanner (2026-10-29)
 - [Device bench notes](docs-device-bench-notes-2026-10-29.md) - dev-term known-configuration, .ksy and instrument manuals moved beside the packages (2026-10-29)
