@@ -2,6 +2,7 @@ using OoBDev.System.IO;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using OoBDev.System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -60,7 +61,8 @@ public sealed class MainWindowStateTests
     public void WindowTitle_SaysDisconnectedWhenItIs()
     {
         var options = new CliOptions { Transport = "tcp", Host = "192.168.0.110", Port = "23", Presenter = ["ascii"] };
-        var store = new ConnectionProfileStore(Path.Combine(Path.GetTempPath(), "devterm-title-tests", Path.GetRandomFileName()));
+        using var folder = new TempDirectoryHandle();
+        var store = new ConnectionProfileStore(Path.Combine(folder.DirectoryPath, "profiles"));
 
         Assert.DoesNotContain("disconnected", ConnectionDescription.WindowTitle(options, "ascii", store, connected: true));
         Assert.EndsWith(" — disconnected", ConnectionDescription.WindowTitle(options, "ascii", store, connected: false));

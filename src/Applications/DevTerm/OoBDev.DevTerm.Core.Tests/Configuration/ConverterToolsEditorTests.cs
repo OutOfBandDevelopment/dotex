@@ -2,6 +2,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using OoBDev.System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,6 +16,24 @@ namespace OoBDev.DevTerm.Configuration.Tests;
 [TestClass]
 public sealed class ConverterToolsEditorTests
 {
+    private readonly List<TempDirectoryHandle> _directories = [];
+
+    [TestCleanup]
+    public void DeleteTempDirectories()
+    {
+        foreach (var handle in _directories)
+        {
+            handle.Dispose();
+        }
+    }
+
+    private string CreateTempDirectory()
+    {
+        var handle = new TempDirectoryHandle();
+        _directories.Add(handle);
+        return handle.DirectoryPath;
+    }
+
     private static StreamConvertToolOptions Tool(string name, string path = "gs.exe") => new() { Name = name, Path = path, Arguments = "{input} {output}" };
 
     [TestMethod]
@@ -97,8 +116,7 @@ public sealed class ConverterToolsEditorTests
     [TestMethod]
     public void ConnectionEditor_CarriesTheToolsAndModeThroughBuildOptions_AndMarksEditsDirty()
     {
-        var directory = Path.Combine(Path.GetTempPath(), "devterm-converter-tools", Path.GetRandomFileName());
-        Directory.CreateDirectory(directory);
+        var directory = CreateTempDirectory();
         try
         {
             var initial = new CliOptions { Transport = "loopback", StreamConvertMode = "auto", StreamConvertDpi = 300, StreamConvertTools = [Tool("gs")] };
@@ -122,8 +140,7 @@ public sealed class ConverterToolsEditorTests
     [TestMethod]
     public void Profile_SaveThenLoad_RoundTripsTheTopLevelConverterSettings()
     {
-        var directory = Path.Combine(Path.GetTempPath(), "devterm-converter-tools", Path.GetRandomFileName());
-        Directory.CreateDirectory(directory);
+        var directory = CreateTempDirectory();
         try
         {
             var store = new ConnectionProfileStore(directory);
@@ -154,8 +171,7 @@ public sealed class ConverterToolsEditorTests
     [TestMethod]
     public void Profile_SaveThenLoad_RoundTripsTheConverterSettings()
     {
-        var directory = Path.Combine(Path.GetTempPath(), "devterm-converter-tools", Path.GetRandomFileName());
-        Directory.CreateDirectory(directory);
+        var directory = CreateTempDirectory();
         try
         {
             var store = new ConnectionProfileStore(directory);

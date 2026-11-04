@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using OoBDev.System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,10 +18,27 @@ public sealed class RetentionRuleTests
 {
     private static readonly DateTimeOffset _now = new(2026, 10, 3, 12, 0, 0, TimeSpan.Zero);
 
-    private static string Folder(params (string Name, int AgeDays)[] files)
+    private readonly List<TempDirectoryHandle> _directories = [];
+
+    [TestCleanup]
+    public void DeleteTempDirectories()
     {
-        var dir = Path.Combine(Path.GetTempPath(), "devterm-retention-" + Guid.NewGuid().ToString("N"));
-        Directory.CreateDirectory(dir);
+        foreach (var handle in _directories)
+        {
+            handle.Dispose();
+        }
+    }
+
+    private string CreateTempDirectory()
+    {
+        var handle = new TempDirectoryHandle();
+        _directories.Add(handle);
+        return handle.DirectoryPath;
+    }
+
+    private string Folder(params (string Name, int AgeDays)[] files)
+    {
+        var dir = CreateTempDirectory();
         foreach (var (name, age) in files)
         {
             var path = Path.Combine(dir, name);
@@ -73,7 +91,7 @@ public sealed class RetentionRuleTests
 
     [TestMethod]
     public void MissingFolder_IsANoOp() =>
-        Assert.AreEqual(0, new RetentionRule { MaxFiles = 1 }.Apply(Path.Combine(Path.GetTempPath(), "devterm-none-" + Guid.NewGuid().ToString("N")), "*", _now).Count);
+        Assert.AreEqual(0, new RetentionRule { MaxFiles = 1 }.Apply(Path.Combine(CreateTempDirectory(), "none"), "*", _now).Count);
 
     [TestMethod]
     public void Sweeper_AppliesLogAndExportRulesToTheirOwnFolders()

@@ -2,6 +2,7 @@ using OoBDev.System.IO;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using OoBDev.System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -86,7 +87,8 @@ public sealed class SessionTabTests
     [TestMethod]
     public void Title_ForANonSavedConnection_MatchesConnectionDescriptionWindowTitle()
     {
-        var store = new ConnectionProfileStore(Path.Combine(Path.GetTempPath(), $"devterm-tests-{Guid.NewGuid():N}"));
+        using var folder = new TempDirectoryHandle();
+        var store = new ConnectionProfileStore(Path.Combine(folder.DirectoryPath, "profiles"));
         var options = new CliOptions { Transport = "loopback", Presenter = ["ascii", "hex"] };
         var tab = SessionTab.Build(options);
 

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using OoBDev.System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -29,33 +30,28 @@ public sealed class DevTermConfigurationTests
     [TestMethod]
     public void CommandLine_OverridesJsonFile()
     {
-        var tempFile = Path.GetTempFileName();
-        try
-        {
-            File.WriteAllText(tempFile, """{"Port":"COM1","Baud":9600,"Presenter":"hex"}""");
+        using var configFile = new TempFileHandle();
+        var tempFile = configFile.FilePath;
+        File.WriteAllText(tempFile, """{"Port":"COM1","Baud":9600,"Presenter":"hex"}""");
 
-            var configuration = new ConfigurationBuilder()
-                .AddJsonFile(tempFile, optional: false)
-                .AddCommandLine(["--baud", "4800"])
-                .Build();
+        var configuration = new ConfigurationBuilder()
+            .AddJsonFile(tempFile, optional: false)
+            .AddCommandLine(["--baud", "4800"])
+            .Build();
 
-            var options = new CliOptions();
-            DevTermConfiguration.Bind(configuration, options);
+        var options = new CliOptions();
+        DevTermConfiguration.Bind(configuration, options);
 
-            Assert.AreEqual("COM1", options.Port, "Untouched settings should still come from the file.");
-            Assert.AreEqual(4800, options.Baud, "Command line should override the file.");
-            Assert.AreSequenceEqual(["hex"], options.Presenter, "An older profile's single-string Presenter still loads.");
-        }
-        finally
-        {
-            File.Delete(tempFile);
-        }
+        Assert.AreEqual("COM1", options.Port, "Untouched settings should still come from the file.");
+        Assert.AreEqual(4800, options.Baud, "Command line should override the file.");
+        Assert.AreSequenceEqual(["hex"], options.Presenter, "An older profile's single-string Presenter still loads.");
     }
 
     [TestMethod]
     public void EnvironmentVariables_OverrideJsonFile_ButLoseToCommandLine()
     {
-        var tempFile = Path.GetTempFileName();
+        using var configFile = new TempFileHandle();
+        var tempFile = configFile.FilePath;
         const string variable = DevTermConfiguration.EnvironmentVariablePrefix + "BAUD";
         try
         {
@@ -77,7 +73,6 @@ public sealed class DevTermConfigurationTests
         finally
         {
             Environment.SetEnvironmentVariable(variable, null);
-            File.Delete(tempFile);
         }
     }
 

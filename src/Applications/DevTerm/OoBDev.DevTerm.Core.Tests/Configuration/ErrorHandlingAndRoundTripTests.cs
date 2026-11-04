@@ -2,6 +2,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using OoBDev.System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -83,8 +84,8 @@ public sealed class ErrorHandlingAndRoundTripTests
     [TestMethod]
     public void Editor_LoadThenConnect_KeepsSettingsTheFormDoesNotShow_AndTheTitleFindsTheProfile()
     {
-        var directory = Path.Combine(Path.GetTempPath(), "devterm-roundtrip-tests", Path.GetRandomFileName());
-        Directory.CreateDirectory(directory);
+        using var folder = new TempDirectoryHandle();
+        var directory = folder.DirectoryPath;
         try
         {
             var store = new ConnectionProfileStore(directory);

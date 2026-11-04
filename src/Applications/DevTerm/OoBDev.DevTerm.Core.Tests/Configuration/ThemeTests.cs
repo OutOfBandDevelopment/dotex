@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using OoBDev.System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -24,20 +25,21 @@ namespace OoBDev.DevTerm.Configuration.Tests;
 [DoNotParallelize]
 public sealed class ThemeTests
 {
+    private TempDirectoryHandle _folder = null!;
     private string _directory = string.Empty;
 
     [TestInitialize]
     public void CreateDirectory()
     {
-        _directory = Path.Combine(Path.GetTempPath(), "devterm-theme-tests", Path.GetRandomFileName());
-        Directory.CreateDirectory(_directory);
+        _folder = new TempDirectoryHandle();
+        _directory = _folder.DirectoryPath;
     }
 
     [TestCleanup]
     public void Cleanup()
     {
         ActiveTheme.Reset();
-        Directory.Delete(_directory, recursive: true);
+        _folder.Dispose();
     }
 
     private string WriteTheme(string fileName, string json)

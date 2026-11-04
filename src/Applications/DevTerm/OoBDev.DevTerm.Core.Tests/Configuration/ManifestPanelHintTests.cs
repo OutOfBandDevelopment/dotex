@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using OoBDev.System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -46,6 +47,24 @@ public sealed class ManifestPanelHintTests
         Assert.HasCount(1, store.Load().UsedPanelHints);
     }
 
-    private static AppPreferencesStore TempStore() =>
-        new(Path.Combine(Path.GetTempPath(), "devterm-hint-" + Guid.NewGuid().ToString("N"), "preferences.json"));
+    private readonly List<TempDirectoryHandle> _directories = [];
+
+    [TestCleanup]
+    public void DeleteTempDirectories()
+    {
+        foreach (var handle in _directories)
+        {
+            handle.Dispose();
+        }
+    }
+
+    private string CreateTempDirectory()
+    {
+        var handle = new TempDirectoryHandle();
+        _directories.Add(handle);
+        return handle.DirectoryPath;
+    }
+
+    private AppPreferencesStore TempStore() =>
+        new(Path.Combine(CreateTempDirectory(), "preferences.json"));
 }

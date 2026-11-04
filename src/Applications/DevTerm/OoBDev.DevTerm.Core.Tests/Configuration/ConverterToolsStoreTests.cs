@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using OoBDev.System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -18,7 +19,25 @@ public sealed class ConverterToolsStoreTests
 {
     private static StreamConvertToolOptions Tool(string name, string path = "gs.exe") => new() { Name = name, Path = path, Arguments = "{input} {output}", Formats = "ps", Dpi = 200 };
 
-    private static string TempFile() => Path.Combine(Path.GetTempPath(), "devterm-converter-store", Path.GetRandomFileName(), "converter-tools.json");
+    private readonly List<TempDirectoryHandle> _directories = [];
+
+    [TestCleanup]
+    public void DeleteTempDirectories()
+    {
+        foreach (var handle in _directories)
+        {
+            handle.Dispose();
+        }
+    }
+
+    private string CreateTempDirectory()
+    {
+        var handle = new TempDirectoryHandle();
+        _directories.Add(handle);
+        return handle.DirectoryPath;
+    }
+
+    private string TempFile() => Path.Combine(CreateTempDirectory(), "converter-tools.json");
 
     [TestMethod]
     public void Load_MissingFile_IsEmpty()

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using OoBDev.System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -109,7 +110,8 @@ public sealed class RoutingServiceTests
         var json = DevTermConfiguration.ToProfileJson(options);
         StringAssert.Contains(json, "\"Routing\"");
 
-        var file = Path.GetTempFileName();
+        using var routingFile = new TempFileHandle();
+        var file = routingFile.FilePath;
         Environment.SetEnvironmentVariable("DEVTERM_ROUTING__PASSWORD", "FromEnv");
         try
         {
@@ -125,7 +127,6 @@ public sealed class RoutingServiceTests
         finally
         {
             Environment.SetEnvironmentVariable("DEVTERM_ROUTING__PASSWORD", null);
-            File.Delete(file);
         }
     }
 

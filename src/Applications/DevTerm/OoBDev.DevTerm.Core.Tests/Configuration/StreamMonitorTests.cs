@@ -2,6 +2,7 @@ using OoBDev.System.IO;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using OoBDev.System.IO;
 using System.IO.Pipelines;
 using System.Linq;
 using System.Threading;
@@ -20,22 +21,20 @@ namespace OoBDev.DevTerm.Configuration.Tests;
 [DoNotParallelize]
 public sealed class StreamMonitorTests
 {
+    private TempDirectoryHandle _exportFolder = null!;
     private string _exportDirectory = null!;
 
     public required TestContext TestContext { get; set; }
 
     [TestInitialize]
-    public void CreateExportDirectory() =>
-        _exportDirectory = Path.Combine(Path.GetTempPath(), "devterm-streammonitor-tests-" + Guid.NewGuid().ToString("N"));
+    public void CreateExportDirectory()
+    {
+        _exportFolder = new TempDirectoryHandle();
+        _exportDirectory = Path.Combine(_exportFolder.DirectoryPath, "exports");
+    }
 
     [TestCleanup]
-    public void DeleteExportDirectory()
-    {
-        if (Directory.Exists(_exportDirectory))
-        {
-            Directory.Delete(_exportDirectory, recursive: true);
-        }
-    }
+    public void DeleteExportDirectory() => _exportFolder.Dispose();
 
     private sealed class LiveSession : IAsyncDisposable
     {
@@ -392,7 +391,7 @@ public sealed class StreamMonitorTests
         Directory.CreateDirectory(_exportDirectory);
         File.WriteAllText(Path.Combine(_exportDirectory, "scope_20260101-100000.png"), "x");
         monitor.LoadFromDisk();
-        var target = Path.Combine(Path.GetTempPath(), "devterm-export-out-" + Guid.NewGuid().ToString("N"));
+        var target = Path.Combine(_exportFolder.DirectoryPath, "out");
 
         var first = CaptureExport.CopyTo(monitor.Captures, target);
         var second = CaptureExport.CopyTo(monitor.Captures, target);

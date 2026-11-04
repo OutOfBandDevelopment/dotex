@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using OoBDev.System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -49,7 +50,8 @@ public sealed class SectionExpansionStateTests
     public void UsePersistence_SavesCollapsedSections_AndRestoresThemFromTheFile()
     {
         const string definition = "SectionExpansionStateTests.Persisted";
-        var path = Path.Combine(Path.GetTempPath(), "devterm-sections-" + Guid.NewGuid().ToString("N"), "section-state.json");
+        using var folder = new TempDirectoryHandle();
+        var path = Path.Combine(folder.DirectoryPath, "section-state.json");
         try
         {
             SectionExpansionState.UsePersistence(path);
@@ -68,7 +70,6 @@ public sealed class SectionExpansionStateTests
         {
             SectionExpansionState.StopPersistence();
             SectionExpansionState.Forget(definition);
-            Directory.Delete(Path.GetDirectoryName(path)!, true);
         }
     }
 

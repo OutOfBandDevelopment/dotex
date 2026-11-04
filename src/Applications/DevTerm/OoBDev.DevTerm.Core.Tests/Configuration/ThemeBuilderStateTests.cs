@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using OoBDev.System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -20,17 +21,18 @@ namespace OoBDev.DevTerm.Configuration.Tests;
 [TestClass]
 public sealed class ThemeBuilderStateTests
 {
+    private TempDirectoryHandle _folder = null!;
     private string _directory = string.Empty;
 
     [TestInitialize]
     public void CreateDirectory()
     {
-        _directory = Path.Combine(Path.GetTempPath(), "devterm-theme-builder-tests", Path.GetRandomFileName());
-        Directory.CreateDirectory(_directory);
+        _folder = new TempDirectoryHandle();
+        _directory = _folder.DirectoryPath;
     }
 
     [TestCleanup]
-    public void Cleanup() => Directory.Delete(_directory, recursive: true);
+    public void Cleanup() => _folder.Dispose();
 
     [TestMethod]
     public void Indexer_ReadsTheSeedUntilOverridden()
