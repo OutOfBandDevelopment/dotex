@@ -12,7 +12,7 @@ Transient. Maps every imported dev-term documentation folder to its living home 
 | `docs/protocols/usbtmc` | `docs/protocols/usbtmc` | Done | Moved |
 | `docs/specs` | `docs/applications/devterm/specs/` | Stays as the app's screen specs | Imported |
 | `docs/user-guide` | `docs/applications/devterm/user-guide/` | Stays; generated guide and screenshots from the app tests go here (rule `work-tracking`) | Imported |
-| `docs/devices` | `docs/applications/devterm/devices/` and `src/Extensions/OoBDev.Scpi/docs` | Device notes live with the device libraries; the copy is deleted when each note is confirmed there | Imported |
+| `docs/devices` | `docs/applications/devterm/devices/` and `src/Extensions/OoBDev.Scpi/docs` | Device notes live with the device libraries; the copy is deleted when each note is confirmed there | Done 2026-11-04: copies deleted, library copies are the source, index in docs/how-tos/test-hardware.md |
 | `docs/test` | `docs/applications/devterm/test/` | Bench reports stay as evidence; new ones from the `hardware-test` skill | Imported |
 | `docs/bugs`, `docs/changes` | `docs/applications/devterm/bugs`, `changes` | History only; delete after the owner agrees | Imported |
 | `docs/coding-standards.md`, `CLAUDE.md`, `TODO.md`, `BACKLOG.md`, `OPEN_QUESTIONS.md` | `coding-standards.md`, `source/` | Rule `coding-standards`; open work is in `BACKLOG.md`; snapshots deleted when folded | Imported |

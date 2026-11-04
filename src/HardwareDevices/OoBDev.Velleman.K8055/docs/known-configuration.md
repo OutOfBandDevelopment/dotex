@@ -18,4 +18,4 @@ The four boards share one code path, so one board's hardware pass covers all fou
 (see the protocol doc); the `.ksy` files themselves are written from the code and checked only by unit tests.
 Quirk: a zero-length HID write is invalid on Windows, so dev-term no-ops on an empty send.
 
-Design notes: `docs/protocols/velleman-k8055-protocol.md` in the dev-term repository.
+Design notes: `docs/protocols/velleman-k8055-protocol.md`.

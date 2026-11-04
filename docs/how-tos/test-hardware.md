@@ -55,3 +55,19 @@ One project per call; two runs at once fight over the same port.
 
 - The Korad Hardware tests (`KoradSupplyTests` in `OoBDev.Scpi.Tests`) are read-only: identify, setpoint queries and the status byte. They never set a value or switch the output on. Written 2026-11-04 with the supplies not attached, so only the Inconclusive path ran; run them once with the supplies on COM6 and COM7.
 - The DevTerm identify tests through the command-line mode (`RealHardwareCliTests` in `OoBDev.DevTerm.Tui.Tests`, category `Hardware`) use the parameters above, with each device terminator and byte delay from the table. They also ended Inconclusive on 2026-11-04 because the bench network was offline.
+
+## Where each device's notes live
+
+Each device's `known-configuration.md` (how the bench reaches it) and its `.ksy` frame layouts sit with the library that drives it.
+
+**Table 1 — Device notes by library**
+
+| Devices | Folder |
+| --- | --- |
+| HP 34401A, Korad KA3005P/KA6003P, Rigol DM3058E, DS1102E, DG1022, DG1062Z, Tektronix 2230 and TDS2024, USR-TCP232-302 bridges (programming manuals too) | [src/Extensions/OoBDev.Scpi/docs](../../src/Extensions/OoBDev.Scpi/docs) |
+| Aeotec Z-Stick S2 | [src/Extensions/OoBDev.ZWave/docs](../../src/Extensions/OoBDev.ZWave/docs/aeotec-zstick-s2/known-configuration.md) |
+| DE-5000 | [src/HardwareDevices/OoBDev.DerEE.De5000/docs](../../src/HardwareDevices/OoBDev.DerEE.De5000/docs/known-configuration.md) |
+| Busylight | [src/HardwareDevices/OoBDev.Kuando.Busylight/docs](../../src/HardwareDevices/OoBDev.Kuando.Busylight/docs/known-configuration.md) |
+| Radex One | [src/HardwareDevices/OoBDev.Quarta.RadexOne/docs](../../src/HardwareDevices/OoBDev.Quarta.RadexOne/docs/known-configuration.md) |
+| Velleman K8055 | [src/HardwareDevices/OoBDev.Velleman.K8055/docs](../../src/HardwareDevices/OoBDev.Velleman.K8055/docs/known-configuration.md) |
+| Zoom H4n | [src/HardwareDevices/OoBDev.Zoom.H4n/docs](../../src/HardwareDevices/OoBDev.Zoom.H4n/docs/known-configuration.md) |

@@ -34,8 +34,8 @@ router reservation, not the module. If the router lease changes, the profiles in
 
 | Behind the bridge | dev-term arguments | Bridge UART must equal the instrument's | Source |
 | --- | --- | --- | --- |
-| Tektronix 2230 (.108) | `--transport tcp --host 192.168.0.108 --port 23 --presenter ascii --lineending Cr` | its PARAMETERS baud setting. Runs at 4800 (.108); bug 068 (fixed) found 9600 works with `--writebytedelayms 175` and a 512-char read buffer, set on .107 | 068 (dev-term `docs/bugs/resolved/068-tek2230-bridge-runs-at-4800-baud.md`) |
-| Tektronix TDS2024 (.110) | `--transport tcp --host 192.168.0.110 --port 23 --presenter ascii --lineending Lf --writebytedelayms 50` | the scope's RS-232 baud (19200 as read) | 2026-09-25 (dev-term `docs/changes/2026-09-25.md`) |
+| Tektronix 2230 (.108) | `--transport tcp --host 192.168.0.108 --port 23 --presenter ascii --lineending Cr` | its PARAMETERS baud setting. Runs at 4800 (.108); bug 068 (fixed) found 9600 works with `--writebytedelayms 175` and a 512-char read buffer, set on .107 | 068 (`docs/applications/devterm/bugs/resolved/068-tek2230-bridge-runs-at-4800-baud.md`) |
+| Tektronix TDS2024 (.110) | `--transport tcp --host 192.168.0.110 --port 23 --presenter ascii --lineending Lf --writebytedelayms 50` | the scope's RS-232 baud (19200 as read) | 2026-09-25 (`docs/applications/devterm/changes/2026-09-25.md`) |
 
 The TDS2024 gave no reply to `TRIGger...?` queries when written unpaced (2026-09-25); with `--writebytedelayms 50` they answer (see [tektronix-tds2024](../tektronix-tds2024/known-configuration.md)). Earlier reports ran it with `Cr`; the profile and the
 2026-09-25 notes use `Lf`. Both are recorded here because they differ.
