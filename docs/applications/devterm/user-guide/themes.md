@@ -77,11 +77,17 @@ what the saved theme will look like.
 1. Pick **View > Build/Edit Theme...**. A small picker opens first: choose a starting point
    (Light, Dark, System, or one of your own existing themes) and a name for the new theme — it
    defaults to `"{starting point} copy"`, e.g. `"Light copy"`.
+
+   ![The WPF theme seed picker](images/wpf-theme-seed-picker.png)
+
 2. Click **Create**. The builder window opens, already previewing the new theme everywhere — the
    main window behind it, any other open window — live.
 3. The builder lists every color role, one per row, with its current value. A row marked with a dot
    (`●`) has already been changed from the starting point; an unmarked row still shows that theme's
    own color.
+
+   ![The WPF theme builder](images/wpf-theme-builder.png)
+
 4. Select a row and click **Edit...** to change it:
    - **In WPF**, this opens the same RGB/HSV/hex color picker the Busylight panel uses.
    - **In the TUI**, you type a `#RRGGBB` hex value directly (there's no color-picker widget in the
