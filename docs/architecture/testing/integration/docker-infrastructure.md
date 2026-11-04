@@ -58,7 +58,10 @@ Every host port is `${TEST_PORT_<NAME>:-default}`. Set the variable in the shell
 | Apache Tika | 9998 | |
 | MongoDB | 27017 | |
 | SQL Server | 1433 | |
-| RabbitMQ | 5673 (5672), 15672 | AMQP shifted so it does not collide with the emulator |
+| RabbitMQ | 5673 (5672), 15672, 21613 STOMP, 5671 AMQPS, 21614 STOMP TLS | AMQP shifted so it does not collide with the emulator |
+| Mosquitto | 1883 | DevTerm MQTT peer |
+| ser2net | 2217 | RFC 2217 peer, echoes every byte |
+| loopback-device | 7778 | DevTerm line device over TCP |
 | Redis | 6379 | |
 | OpenSearch | 9200, 9600 | HTTPS |
 | OpenSearch Dashboards | 5601 | |

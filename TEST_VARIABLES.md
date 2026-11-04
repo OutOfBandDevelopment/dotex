@@ -141,7 +141,7 @@ Tests that require live cloud credentials. Manual execution only.
 | `RABBITMQ_HOST` | `localhost` | RabbitMQ server hostname |
 | `RABBITMQ_PORT` | `5673` | RabbitMQ AMQP port (5672 used by Service Bus emulator) |
 
-**Docker Container:** `rabbitmq:latest` (Ports 5673 AMQP, 15672 Management UI)
+**Docker Container:** `rabbitmq:latest` (Ports 5673 AMQP, 15672 Management UI, 21613 STOMP, 5671 AMQPS, 21614 STOMP TLS). DevTerm peers (Mosquitto 1883, ser2net 2217, loopback-device 7778) use `MOSQUITTO_*`, `SER2NET_*` and `LOOPBACK_DEVICE_*` (HOST and PORT each), see `src/.runsettings`.
 
 **Tests Using:**
 - `OoBDev.RabbitMQ.Tests.MessageQueueing.RabbitMQQueueMessageSenderProviderTests.SendAsyncTest_ByFullType`

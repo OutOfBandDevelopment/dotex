@@ -64,6 +64,11 @@ fi
 echo ""
 
 # Start services in detached mode
+if [ ! -f devterm/certs/ca.pem ]; then
+    echo "Generating the throwaway TLS certificates for the RabbitMQ TLS listeners..."
+    sh devterm/make-test-certs.sh
+fi
+
 docker compose -f docker-compose.integration-tests.yml up -d $BUILD_FLAG
 
 echo ""
@@ -85,6 +90,10 @@ echo "  - Keycloak:           http://localhost:8081 (admin/admin)"
 echo "  - SBert:              http://localhost:5080"
 echo "  - Ollama:             http://localhost:11435"
 echo "  - Aspire (OTel):      http://localhost:18888 (OTLP :4317 gRPC, :4318 HTTP)"
+echo "  - Mosquitto:          localhost:1883 (MQTT, anonymous)"
+echo "  - RabbitMQ STOMP:     localhost:21613 (TLS: 21614, AMQPS: 5671; guest/guest)"
+echo "  - ser2net:            localhost:2217 (RFC 2217 echo port)"
+echo "  - Loopback device:    localhost:7778 (TCP line device: hello, STATUS?, help)"
 echo ""
 
 # Check if --wait flag is provided

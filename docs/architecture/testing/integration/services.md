@@ -10,6 +10,7 @@ One section per stack. Values are the test defaults from `src/.runsettings`; the
 - [MongoDB](#mongodb)
 - [Redis](#redis)
 - [RabbitMQ](#rabbitmq)
+- [DevTerm peers](#devterm-peers-mosquitto-ser2net-loopback-device)
 - [OpenSearch](#opensearch)
 - [Qdrant](#qdrant)
 - [Apache Tika](#apache-tika)
@@ -58,6 +59,10 @@ Document store tests. Keys: `MONGODB_CONNECTION_STRING`, `MONGODB_DATABASE_NAME`
 ## RabbitMQ
 
 AMQP is published on 5673 so the Service Bus emulator can keep 5672; the management UI is on 15672. Keys: `RABBITMQ_HOST`, `RABBITMQ_PORT`, `RABBITMQ_AMQP_PORT`, `RABBITMQ_MANAGEMENT_PORT`, `RABBITMQ_USERNAME`, `RABBITMQ_PASSWORD`, `RABBITMQ_CONNECTION_STRING`.
+
+## DevTerm peers (Mosquitto, ser2net, loopback-device)
+
+Disposable peers for the DevTerm transports, configured under `containers/testing/devterm/`. Mosquitto is anonymous MQTT on 1883; ser2net serves RFC 2217 on 2217 with a port behind it that echoes every byte; loopback-device is a TCP line device on 7778. RabbitMQ also publishes STOMP (21613, because 61613 sits in a Windows reserved range), AMQPS (5671) and STOMP over TLS (21614); the TLS listeners need `sh containers/testing/devterm/make-test-certs.sh` first (git-ignored `devterm/certs/ca.pem`). Keys: `MOSQUITTO_HOST`, `MOSQUITTO_PORT`, `SER2NET_HOST`, `SER2NET_PORT`, `LOOPBACK_DEVICE_HOST`, `LOOPBACK_DEVICE_PORT`, `RABBITMQ_STOMP_PORT`, `RABBITMQ_STOMP_TLS_PORT`.
 
 ## OpenSearch
 

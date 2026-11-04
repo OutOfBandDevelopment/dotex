@@ -17,7 +17,6 @@ namespace OoBDev.DevTerm.Tests;
 
 /// <summary>The RFC 2217 server mode: a raw Telnet client negotiates, sets the line, and exchanges escaped data.</summary>
 [TestCategory("Integration")]
-[TestCategory("Integration")]
 [TestClass]
 public sealed class Rfc2217ServerBridgeTests
 {

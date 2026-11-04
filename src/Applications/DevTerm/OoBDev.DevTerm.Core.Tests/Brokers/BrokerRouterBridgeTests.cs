@@ -9,10 +9,11 @@ using System.Buffers;
 using System.Net.Sockets;
 using System.Text;
 using Microsoft.Extensions.Options;
+using OoBDev.TestUtilities;
 using OoBDev.System.IO.Brokers;
 namespace OoBDev.DevTerm.Brokers;
 
-/// <summary>A <see cref="MessageRouter"/> wired to AMQP and STOMP through <see cref="BrokerRouterBridge"/>: a fake connection, then the RabbitMQ container in containers/.</summary>
+/// <summary>A <see cref="MessageRouter"/> wired to AMQP and STOMP through <see cref="BrokerRouterBridge"/>: a fake connection, then the RabbitMQ container in containers/testing.</summary>
 [TestClass]
 public sealed class BrokerRouterBridgeTests
 {
@@ -103,30 +104,32 @@ public sealed class BrokerRouterBridgeTests
     }
 
     [TestMethod]
-    [TestCategory("DevLocal")]
+    [TestCategory("Integration")]
     public Task RealRabbitMq_Amqp_RoutesBothWays() =>
-        RoundTripAsync(new AmqpConnectionFactory(), 5672, "devterm-it.router.sensor", "devterm-it.router.cmd");
+        RoundTripAsync(new AmqpConnectionFactory(), "RABBITMQ_AMQP_PORT", 5673, "devterm-it.router.sensor", "devterm-it.router.cmd");
 
     [TestMethod]
-    [TestCategory("DevLocal")]
+    [TestCategory("Integration")]
     public Task RealRabbitMq_Stomp_RoutesBothWays() =>
-        RoundTripAsync(new StompConnectionFactory(), 21613, "/topic/devterm-it-router-sensor", "/topic/devterm-it-router-cmd");
+        RoundTripAsync(new StompConnectionFactory(), "RABBITMQ_STOMP_PORT", 21613, "/topic/devterm-it-router-sensor", "/topic/devterm-it-router-cmd");
 
-    private async Task RoundTripAsync(IBrokerConnectionFactory factory, int port, string sensor, string command)
+    private async Task RoundTripAsync(IBrokerConnectionFactory factory, string portParameter, int defaultPort, string sensor, string command)
     {
+        var host = TestContext.GetPropertyOrDefault("RABBITMQ_HOST", "127.0.0.1");
+        var port = TestContext.GetPropertyOrDefault(portParameter, defaultPort);
         using (var probe = new TcpClient())
         {
             try
             {
-                await probe.ConnectAsync("127.0.0.1", port, TestContext.CancellationToken);
+                await probe.ConnectAsync(host, port, TestContext.CancellationToken);
             }
             catch (SocketException)
             {
-                Assert.Inconclusive($"No broker on 127.0.0.1:{port}; start containers/docker-compose.yml.");
+                Assert.Inconclusive($"No broker on {host}:{port}; start containers/testing (integration-up).");
             }
         }
 
-        var options = new BrokerDeviceAdapterOptions { Host = "127.0.0.1", Port = port, Username = "devterm", Password = "devterm" };
+        var options = new BrokerDeviceAdapterOptions { Host = host, Port = port, Username = TestContext.GetPropertyOrDefault("RABBITMQ_USERNAME", "guest"), Password = TestContext.GetPropertyOrDefault("RABBITMQ_PASSWORD", "guest") };
         var rules = Rules(sensor, command);
         await using var bridge = new BrokerRouterBridge(factory, Options.Create(options), rules);
         var router = new MessageRouter(rules, bridge.Sink, terminator: "\n");

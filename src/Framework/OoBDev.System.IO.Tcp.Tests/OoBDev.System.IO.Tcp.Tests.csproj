@@ -26,6 +26,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\OoBDev.TestUtilities\OoBDev.TestUtilities.csproj" />
 		<ProjectReference Include="..\OoBDev.System.IO.Tcp\OoBDev.System.IO.Tcp.csproj" />
 	</ItemGroup>
 

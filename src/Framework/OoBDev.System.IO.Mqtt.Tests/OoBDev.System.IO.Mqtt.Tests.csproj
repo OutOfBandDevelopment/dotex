@@ -27,6 +27,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\OoBDev.TestUtilities\OoBDev.TestUtilities.csproj" />
 		<ProjectReference Include="..\OoBDev.System.IO.Mqtt\OoBDev.System.IO.Mqtt.csproj" />
 	</ItemGroup>
 

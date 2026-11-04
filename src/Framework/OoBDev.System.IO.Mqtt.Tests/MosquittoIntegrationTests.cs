@@ -9,11 +9,12 @@ using System.Net.Sockets;
 using System.Text;
 using OoBDev.System.IO.Pipelines;
 using Microsoft.Extensions.Options;
+using OoBDev.TestUtilities;
 
 namespace OoBDev.System.IO.Mqtt.Tests;
 
-/// <summary>Round trip through the real Mosquitto broker in containers/ (docker compose -f containers/docker-compose.yml up -d mosquitto).</summary>
-[TestCategory("DevLocal")]
+/// <summary>Round trip through the real Mosquitto broker in containers/testing (integration-up).</summary>
+[TestCategory("Integration")]
 [TestClass]
 public sealed class MosquittoIntegrationTests
 {
@@ -22,19 +23,21 @@ public sealed class MosquittoIntegrationTests
     [TestMethod]
     public async Task PublishedLine_ComesBackAsTopicTabPayload()
     {
+        var host = TestContext.GetPropertyOrDefault("MOSQUITTO_HOST", "127.0.0.1");
+        var port = TestContext.GetPropertyOrDefault("MOSQUITTO_PORT", 1883);
         using (var probe = new TcpClient())
         {
             try
             {
-                await probe.ConnectAsync("127.0.0.1", 1883, TestContext.CancellationToken);
+                await probe.ConnectAsync(host, port, TestContext.CancellationToken);
             }
             catch (SocketException)
             {
-                Assert.Inconclusive("No broker on 127.0.0.1:1883; start containers/docker-compose.yml.");
+                Assert.Inconclusive($"No broker on {host}:{port}; start containers/testing (integration-up).");
             }
         }
 
-        var options = new MqttDeviceAdapterOptions { Host = "127.0.0.1", Port = 1883, SubscribeTopics = ["devterm-it/#"], PublishTopic = "devterm-it/out" };
+        var options = new MqttDeviceAdapterOptions { Host = host, Port = port, SubscribeTopics = ["devterm-it/#"], PublishTopic = "devterm-it/out" };
         await using var transport = new MqttDeviceAdapter(new MqttNetConnectionFactory(), Options.Create(options));
         await transport.OpenAsync(TestContext.CancellationToken);
 

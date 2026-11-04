@@ -38,7 +38,7 @@ E --> C : OTLP/gRPC :4317
 ## Trying it
 
 ```bash
-docker compose -f containers/docker-compose.yml up -d aspire-dashboard
+docker compose -f containers/testing/docker-compose.integration-tests.yml up -d otel-dashboard
 dotnet run --project src/DevTerm.Console -- --transport loopback --otlp true --cli true
 # open http://localhost:18888
 ```

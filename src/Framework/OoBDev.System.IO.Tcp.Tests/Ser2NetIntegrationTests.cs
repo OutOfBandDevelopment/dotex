@@ -1,4 +1,5 @@
 using OoBDev.System.IO;
+using OoBDev.TestUtilities;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -12,8 +13,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace OoBDev.System.IO.Tcp.Tests;
 
-/// <summary>Round trip through the real ser2net RFC 2217 server in containers/ (its virtual port echoes).</summary>
-[TestCategory("Integration")]
+/// <summary>Round trip through the real ser2net RFC 2217 server in containers/testing (its virtual port echoes).</summary>
 [TestCategory("Integration")]
 [TestClass]
 public sealed class Ser2NetIntegrationTests
@@ -23,19 +23,21 @@ public sealed class Ser2NetIntegrationTests
     [TestMethod]
     public async Task SentBytes_ComeBackFromTheServersEchoPort()
     {
+        var host = TestContext.GetPropertyOrDefault("SER2NET_HOST", "127.0.0.1");
+        var port = TestContext.GetPropertyOrDefault("SER2NET_PORT", 2217);
         using (var probe = new TcpClient())
         {
             try
             {
-                await probe.ConnectAsync("127.0.0.1", 2217, TestContext.CancellationToken);
+                await probe.ConnectAsync(host, port, TestContext.CancellationToken);
             }
             catch (SocketException)
             {
-                Assert.Inconclusive("No ser2net on 127.0.0.1:2217; start containers/docker-compose.yml.");
+                Assert.Inconclusive($"No ser2net on {host}:{port}; start containers/testing (integration-up).");
             }
         }
 
-        var options = new Rfc2217ClientOptions { Host = "127.0.0.1", Port = 2217, BaudRate = 9600 };
+        var options = new Rfc2217ClientOptions { Host = host, Port = port, BaudRate = 9600 };
         await using var transport = new Rfc2217ClientDeviceAdapter(new SystemTcpConnectionSource(), Options.Create(options));
         await transport.OpenAsync(TestContext.CancellationToken);
 

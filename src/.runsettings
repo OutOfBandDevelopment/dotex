@@ -106,6 +106,15 @@ https://github.com/coverlet-coverage/coverlet/blob/fc7ec26dcaed8fedba880ff13c6f1
 		<Parameter name="RABBITMQ_USERNAME" value="guest" />
 		<Parameter name="RABBITMQ_PASSWORD" value="guest" />
 		<Parameter name="RABBITMQ_CONNECTION_STRING" value="amqp://guest:guest@localhost:5673/" />
+		<Parameter name="RABBITMQ_STOMP_PORT" value="21613" />
+		<Parameter name="RABBITMQ_AMQPS_PORT" value="5671" />
+		<Parameter name="RABBITMQ_STOMP_TLS_PORT" value="21614" />
+		<Parameter name="MOSQUITTO_HOST" value="localhost" />
+		<Parameter name="MOSQUITTO_PORT" value="1883" />
+		<Parameter name="SER2NET_HOST" value="localhost" />
+		<Parameter name="SER2NET_PORT" value="2217" />
+		<Parameter name="LOOPBACK_DEVICE_HOST" value="localhost" />
+		<Parameter name="LOOPBACK_DEVICE_PORT" value="7778" />
 
 		<!-- Redis -->
 		<Parameter name="REDIS_CONNECTION_STRING" value="localhost:6379" />

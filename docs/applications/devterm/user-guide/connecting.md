@@ -93,7 +93,7 @@ that expects exact bytes (the Zoom H4n remote port).
 
 `--transport mqtt` subscribes to topics and publishes lines. Each message that arrives is shown as one
 `topic<TAB>payload` line; a typed line goes to `--publish`, or type `topic<TAB>payload` to choose the topic.
-Real capture against the `containers/` Mosquitto broker (`docker compose -f containers/docker-compose.yml up -d mosquitto`),
+Real capture against the `containers/testing` Mosquitto broker (`docker compose -f containers/testing/docker-compose.integration-tests.yml up -d mosquitto`),
 having typed `smoke/out<TAB>hello from devterm`:
 
 ```

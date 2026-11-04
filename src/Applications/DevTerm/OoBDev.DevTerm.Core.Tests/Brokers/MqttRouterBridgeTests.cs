@@ -10,6 +10,7 @@ using System.Buffers;
 using System.Net.Sockets;
 using System.Text;
 using Microsoft.Extensions.Options;
+using OoBDev.TestUtilities;
 
 namespace OoBDev.DevTerm.Brokers;
 
@@ -105,24 +106,26 @@ public sealed class MqttRouterBridgeTests
     }
 
     [TestMethod]
-    [TestCategory("DevLocal")]
+    [TestCategory("Integration")]
     public async Task RealMosquitto_DeviceLineIsPublished_AndBrokerCommandReachesTheDevice()
     {
+        var host = TestContext.GetPropertyOrDefault("MOSQUITTO_HOST", "127.0.0.1");
+        var port = TestContext.GetPropertyOrDefault("MOSQUITTO_PORT", 1883);
         using (var probe = new TcpClient())
         {
             try
             {
-                await probe.ConnectAsync("127.0.0.1", 1883, TestContext.CancellationToken);
+                await probe.ConnectAsync(host, port, TestContext.CancellationToken);
             }
             catch (SocketException)
             {
-                Assert.Inconclusive("No broker on 127.0.0.1:1883; start containers/docker-compose.yml.");
+                Assert.Inconclusive($"No broker on {host}:{port}; start containers/testing (integration-up).");
             }
         }
 
         var rules = RoutingRuleSet.FromJson(_rulesJson);
         var factory = new MqttNetConnectionFactory();
-        await using var bridge = new MqttRouterBridge(factory, Options.Create(new MqttDeviceAdapterOptions { Host = "127.0.0.1" }), rules);
+        await using var bridge = new MqttRouterBridge(factory, Options.Create(new MqttDeviceAdapterOptions { Host = host, Port = port }), rules);
         var router = new MessageRouter(rules, bridge.Sink, terminator: "\n");
         var sent = new List<string>();
         router.Originated += (_, bytes) =>
@@ -144,7 +147,7 @@ public sealed class MqttRouterBridgeTests
                 heard.Add(topic + "=" + Encoding.UTF8.GetString(payload));
             }
         };
-        await peer.ConnectAsync(new MqttDeviceAdapterOptions { Host = "127.0.0.1" }, TestContext.CancellationToken);
+        await peer.ConnectAsync(new MqttDeviceAdapterOptions { Host = host, Port = port }, TestContext.CancellationToken);
         await peer.SubscribeAsync("devterm-it/router/sensor", 0, TestContext.CancellationToken);
 
         router.Render(new ReadOnlySequence<byte>("A=7.25\r\n"u8.ToArray()));
