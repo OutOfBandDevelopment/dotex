@@ -468,6 +468,7 @@ Each change document should include:
 - [DevTerm WPF shell](devices-devterm-wpf-shell-2026-10-29.md) - OoBDev.DevTerm.Wpf: shell skeleton with panel factories and a demo panel (2026-10-29)
 - [DevTerm WPF captures and layout review (2026-11-03)](devterm-wpf-captures-layout-review-2026-11-03.md) - every WPF window captured for the guide and checked in both themes; three theme and layout defects fixed
 - [Drawing on SkiaSharp (2026-11-03)](drawing-skiasharp-2026-11-03.md) - Code39, MultiScaleTile and PngPack on SkiaSharp; no System.Drawing.Common, tests run on any platform
+- [Shared FakeTransport (2026-11-03)](test-utilities-faketransport-2026-11-03.md) - four FakeTransport copies merged into OoBDev.DevTerm.TestUtilities
 - [Docs check for imported material (2026-11-03)](docs-imported-coverage-check-2026-11-03.md) - orphaned files under `docs/applications` fail the docs tests; default scope widened
 - [DevTerm Web shell](devterm-web-shell-2026-10-29.md) - OoBDev.DevTerm.Web (Blazor), connection editor view model, transport selection in AddDevTermFrontEnd (2026-10-29)
 - [DevTerm Tui shell](devterm-tui-shell-2026-10-29.md) - OoBDev.DevTerm.Tui (Terminal.Gui) and its tests, LxiDeviceScanner (2026-10-29)

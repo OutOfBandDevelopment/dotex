@@ -1,42 +1,44 @@
-using OoBDev.System.IO.Pipelines;
-using OoBDev.System.IO;
 using System;
 using System.Collections.Generic;
-using System.IO;
+using System.IO.Pipelines;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using OoBDev.DevTerm;
-using OoBDev.DevTerm.Logging;
-using System.IO.Pipelines;
+using OoBDev.System.IO;
+using OoBDev.System.IO.Pipelines;
 
-namespace OoBDev.DevTerm.Logging.Tests;
+namespace OoBDev.DevTerm.TestUtilities;
 
 /// <summary>
-/// A minimal, in-memory <see cref="IDeviceAdapter"/> for driving a real <c>Session</c> under the session
-/// logger without any real hardware/socket — a copy of <c>DevTerm.Console.Tests.FakeTransport</c>
-/// (test projects don't reference each other). Can also fail on demand (the next write,
-/// the read side, or the next open), and reopens with a fresh pipe after a close, so error/reconnect
-/// paths can be tested.
+/// An in-memory <see cref="IDeviceAdapter"/> for driving a real <c>Session</c> without hardware or a socket. It records
+/// every write, pushes "device" bytes back on demand or after every write, fails on demand (every write, the next
+/// write, the next open, the read side) and reopens with a fresh pipe after a close, so error and reconnect paths can be tested.
 /// </summary>
-internal sealed class FakeTransport : IDeviceAdapter, ILineStatusSource
+public sealed class FakeTransport : IDeviceAdapter, ILineStatusSource
 {
     private PipeWriter? _output;
-
-    public event EventHandler<string>? LineStatusChanged;
-
-    public void RaiseLineStatus(string text) => LineStatusChanged?.Invoke(this, text);
-
     private Pipe _pipe = new();
     private bool _pipeCompleted;
     private ConnectionState _state = ConnectionState.Closed;
     private Exception? _nextWriteFailure;
     private Exception? _nextOpenFailure;
 
+    public event EventHandler<string>? LineStatusChanged;
+
+    public event EventHandler<ConnectionStateChangedEventArgs>? StateChanged;
+
     public List<byte[]> WrittenPayloads { get; } = [];
 
+    public IEnumerable<string> WrittenText => WrittenPayloads.Select(Encoding.ASCII.GetString);
+
     public int OpenCount { get; private set; }
+
+    /// <summary>When set, every write throws this instead of being recorded.</summary>
+    public Exception? FailWritesWith { get; set; }
+
+    /// <summary>Text pushed back on the input (plus a newline) after every write; null leaves the device silent.</summary>
+    public string? ReplyToEveryWrite { get; set; }
 
     public ConnectionState State
     {
@@ -54,8 +56,6 @@ internal sealed class FakeTransport : IDeviceAdapter, ILineStatusSource
         }
     }
 
-    public event EventHandler<ConnectionStateChangedEventArgs>? StateChanged;
-
     public PipeReader Input => _pipe.Reader;
 
     public string Type => "Fake";
@@ -63,6 +63,8 @@ internal sealed class FakeTransport : IDeviceAdapter, ILineStatusSource
     public string Path => "fake";
 
     public PipeWriter Output => _output ??= DeviceAdapterOutput.Create(WriteAsync);
+
+    public void RaiseLineStatus(string text) => LineStatusChanged?.Invoke(this, text);
 
     public Task OpenAsync(CancellationToken cancellationToken = default)
     {
@@ -91,30 +93,38 @@ internal sealed class FakeTransport : IDeviceAdapter, ILineStatusSource
         State = ConnectionState.Closed;
     }
 
-    public Task WriteAsync(ReadOnlyMemory<byte> data, CancellationToken cancellationToken = default)
+    public async Task WriteAsync(ReadOnlyMemory<byte> data, CancellationToken cancellationToken = default)
     {
+        if (FailWritesWith is { } always)
+        {
+            throw always;
+        }
+
         if (_nextWriteFailure is { } failure)
         {
             _nextWriteFailure = null;
-            return Task.FromException(failure);
+            throw failure;
         }
 
         WrittenPayloads.Add(data.ToArray());
-        return Task.CompletedTask;
+        if (ReplyToEveryWrite is { } reply)
+        {
+            await _pipe.Writer.WriteAsync(Encoding.ASCII.GetBytes(reply + "\n"), CancellationToken.None);
+        }
     }
 
     public async ValueTask DisposeAsync() => await CloseAsync();
 
-    /// <summary>Simulates a device sending bytes back, as if they'd arrived over the wire.</summary>
+    /// <summary>Simulates a device sending bytes back, as if they had arrived over the wire.</summary>
     public async Task PushIncomingAsync(byte[] data) => await _pipe.Writer.WriteAsync(data);
 
-    /// <summary>Makes the next <see cref="WriteAsync"/> fail with <paramref name="failure"/>, as a real device I/O error would.</summary>
+    /// <summary>Makes the next write fail with <paramref name="failure"/>, as a real device I/O error would.</summary>
     public void FailNextWrite(Exception failure) => _nextWriteFailure = failure;
 
-    /// <summary>Makes the next <see cref="OpenAsync"/> fail with <paramref name="failure"/>.</summary>
+    /// <summary>Makes the next open fail with <paramref name="failure"/>.</summary>
     public void FailNextOpen(Exception failure) => _nextOpenFailure = failure;
 
-    /// <summary>Simulates the device/peer closing the connection cleanly.</summary>
+    /// <summary>Simulates the device or peer closing the connection cleanly.</summary>
     public async Task HangUpAsync()
     {
         await _pipe.Writer.CompleteAsync();

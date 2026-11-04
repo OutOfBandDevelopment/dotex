@@ -27,6 +27,7 @@
 	<ItemGroup>
 		<ProjectReference Include="..\OoBDev.DevTerm.Devices\OoBDev.DevTerm.Devices.csproj" />
 		<ProjectReference Include="..\OoBDev.DevTerm.Devices.Demo\OoBDev.DevTerm.Devices.Demo.csproj" />
+		<ProjectReference Include="..\OoBDev.DevTerm.TestUtilities\OoBDev.DevTerm.TestUtilities.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -34,6 +35,7 @@
 		<Using Include="Moq" />
 		<Using Include="OoBDev.System.IO" />
 		<Using Include="OoBDev.DevTerm" />
+		<Using Include="OoBDev.DevTerm.TestUtilities" />
 		<Using Include="OoBDev.Scpi" />
 		<Using Include="OoBDev.UiDefinitions" />
 	</ItemGroup>
