@@ -32,7 +32,7 @@ public sealed class PlaybackScreenshotTests
         }
     }
 
-    private static PlaybackWindow BuildWindow(string path)
+    internal static PlaybackWindow BuildWindow(string path)
     {
         var controller = new PlaybackPresenters().Open(path, new ManualTimeProvider());
         var dialog = new PlaybackDialogViewModel(controller);
@@ -48,7 +48,7 @@ public sealed class PlaybackScreenshotTests
         return new PlaybackWindow(dialog);
     }
 
-    private static string WriteSampleLog(string directory)
+    internal static string WriteSampleLog(string directory)
     {
         var path = Path.Combine(directory, "tek2230.jsonl");
         new SessionLog(

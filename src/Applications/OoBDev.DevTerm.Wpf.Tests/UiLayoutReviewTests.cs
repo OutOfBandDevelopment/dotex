@@ -151,6 +151,22 @@ public sealed class UiLayoutReviewTests
     [TestMethod]
     [DataRow(BuiltInThemes.LightName)]
     [DataRow(BuiltInThemes.DarkName)]
+    public void PlaybackWindow_PartWayThroughWithANote_HasNoLayoutProblems(string theme)
+    {
+        var directory = Directory.CreateTempSubdirectory("devterm-playback-review-");
+        try
+        {
+            Review(theme, () => PlaybackScreenshotTests.BuildWindow(PlaybackScreenshotTests.WriteSampleLog(directory.FullName)), 1000, 560);
+        }
+        finally
+        {
+            directory.Delete(recursive: true);
+        }
+    }
+
+    [TestMethod]
+    [DataRow(BuiltInThemes.LightName)]
+    [DataRow(BuiltInThemes.DarkName)]
     public void InstrumentPickerWindow_ScpiChoices_HasNoLayoutProblems(string theme) =>
         Review(theme, () => new InstrumentPickerWindow(new InstrumentPickerDialogViewModel(new InstrumentPickerScreenshotTests.GuideProvider())), 460, 340);
 }
