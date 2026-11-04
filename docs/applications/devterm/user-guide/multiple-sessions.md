@@ -57,6 +57,7 @@ chunk, `HH:mm:ss.fff [device] > received` or `< sent`, with control bytes shown 
 (it keeps the last 5,000 lines, across all tabs, and follows tabs opened, closed or re-pointed after that). WPF's window
 follows the log live and has Copy and Clear; the TUI dialog is a snapshot with Refresh, Clear and Close. This is separate from
 per-tab file logging, which is unchanged. The [Stream Monitor](stream-monitor.md) already lists captures from every tab in one list.
+
 ![The WPF All Sessions Log window](images/wpf-merged-log.png)
 
 ## Zero tabs
