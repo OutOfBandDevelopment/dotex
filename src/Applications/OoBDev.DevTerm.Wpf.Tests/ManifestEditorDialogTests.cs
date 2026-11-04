@@ -10,7 +10,7 @@ namespace OoBDev.DevTerm.Wpf.Tests;
 [TestClass]
 public sealed class ManifestEditorDialogTests
 {
-    private sealed class FakeFiles : IManifestFileDialogs
+    internal sealed class FakeFiles : IManifestFileDialogs
     {
         public string? SavePath { get; set; }
 

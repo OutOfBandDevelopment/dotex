@@ -141,6 +141,16 @@ public sealed class UiLayoutReviewTests
     [TestMethod]
     [DataRow(BuiltInThemes.LightName)]
     [DataRow(BuiltInThemes.DarkName)]
+    public void ManifestEditorWindow_NewManifest_HasNoLayoutProblems(string theme) =>
+        Review(
+            theme,
+            () => new ManifestEditorWindow(new ManifestEditorDialogViewModel(new ManifestEditorViewModel(TempDirectory()), new ManifestEditorDialogTests.FakeFiles())),
+            1100,
+            700);
+
+    [TestMethod]
+    [DataRow(BuiltInThemes.LightName)]
+    [DataRow(BuiltInThemes.DarkName)]
     public void InstrumentPickerWindow_ScpiChoices_HasNoLayoutProblems(string theme) =>
         Review(theme, () => new InstrumentPickerWindow(new InstrumentPickerDialogViewModel(new InstrumentPickerScreenshotTests.GuideProvider())), 460, 340);
 }
