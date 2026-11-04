@@ -25,6 +25,28 @@ try {
   process.exit(0);
 }
 
+// One change file per day (owner, 2026-11-04): a new or edited docs/changes file must be README.md or {YYYY-MM-DD}.md.
+let added = [];
+try {
+  added = execFileSync('git', ['diff', '--cached', '--name-only', '--diff-filter=AMR'], {
+    cwd: process.env.CLAUDE_PROJECT_DIR ?? process.cwd(),
+    encoding: 'utf8',
+  }).split('\n').filter(Boolean);
+} catch {
+  added = [];
+}
+const badChange = added.filter((f) => /^docs\/changes\/[^/]+\.md$/.test(f) && !/^docs\/changes\/(README|\d{4}-\d{2}-\d{2})\.md$/.test(f));
+if (badChange.length > 0) {
+  console.log(JSON.stringify({
+    hookSpecificOutput: {
+      hookEventName: 'PreToolUse',
+      additionalContext:
+        `work-tracking: ${badChange.join(', ')} is not a daily change file. Change history is one file per day, docs/changes/{YYYY-MM-DD}.md, with a ## section per task (rule work-tracking, skill complete-work); move the section into that day's file.`,
+    },
+  }));
+  process.exit(0);
+}
+
 const code = staged.filter((f) => /^src\/.*\.(cs|csproj|props)$/.test(f));
 const tracking = staged.filter((f) => /^(TODO\.md|BACKLOG\.md|OPEN-QUESTIONS\.md)$|^docs\/(changes|design)\/|(^|\/)README\.[^/]+\.md$/.test(f));
 if (code.length === 0 || tracking.length > 0) process.exit(0);

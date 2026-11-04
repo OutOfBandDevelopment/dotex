@@ -65,31 +65,16 @@
 docs/changes/{YYYY-MM-DD}.md (a `##` section per task)
 ```
 
-**Epic values:**
-- `bug-fixes` - Bug fixes and technical debt
-- `testing` - Testing infrastructure and test migrations
-- `migration` - Migration work (Incomming projects, BinaryDataDecoders, etc.)
-- `feature` - New features
-- `refactor` - Refactoring work
-- `infrastructure` - CI/CD, build system, tooling
-- `documentation` - Documentation updates
+**Task section:**
+- The title names the task; add the date only when the title would repeat within the file.
+- Headings inside the task sit one level lower (`###`), so the file stays one level-1 title (`# Changes {date}`) plus one `##` section per task.
+- A day with three or more tasks starts with a `## Contents` list.
+- The date is the completion date; the same day's file collects every task finished that day.
 
-**Feature values:**
-- Use kebab-case (lowercase with hyphens)
-- Be specific: `swashbuckle-dotnet10` not just `fixes`
-- Keep under 30 characters
-- Examples: `docker-infrastructure`, `mstest-expected-exception`, `phase0-critical`
-
-**Date format:**
-- Use completion date: `YYYY-MM-DD`
-- Example: `2026-01-20`
-
-**Example filenames:**
+**Example anchors:**
 ```
 2026-01-20.md#bug-fixes---swashbuckle-1010--net-100-breaking-changes
 2026-01-19.md#testing---docker-based-integration-testing-infrastructure
-migration-sharedframework-phase0-2026-01-15.md
-feature-search-query-pagination-2026-02-01.md
 ```
 
 ### Step 3: Write Change Document
@@ -97,10 +82,8 @@ feature-search-query-pagination-2026-02-01.md
 **Required sections:**
 
 ```markdown
-# {Epic Title} - {Feature Title}
+## {Task title}
 
-**Date:** YYYY-MM-DD
-**Epic:** {Epic Name}
 **Status:** ✅ COMPLETE [AND VERIFIED]
 **Impact:** {Brief summary of files/projects affected}
 
@@ -271,12 +254,10 @@ feature-search-query-pagination-2026-02-01.md
 
 **Update `docs/changes/README.md`:**
 
-Add entry to "Current Change Documents" section under appropriate epic:
+Add the day to "By day" if new, and an entry under the matching heading:
 
 ```markdown
-### {Epic Name}
-
-**[{filename}]({filename})**
+**[{Task title}]({YYYY-MM-DD}.md#{section-anchor})**
 - {One sentence summary}
 - {Key impact point}
 - Status: ✅ Complete [and verified]
@@ -457,10 +438,8 @@ Fixed some bugs.
 ## Template: Change Document
 
 ```markdown
-# {Epic} - {Feature}
+## {Task title}
 
-**Date:** YYYY-MM-DD
-**Epic:** {Epic Name}
 **Status:** ✅ COMPLETE [AND VERIFIED]
 **Impact:** {Brief summary}
 

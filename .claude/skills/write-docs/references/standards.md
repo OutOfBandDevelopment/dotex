@@ -92,7 +92,7 @@ Features, proposals, and implementation guides use **epic/feature style naming**
 |-------|------------|---------|
 | Epic | `{epic-name}.md` | `bulk-actions.md` |
 | Feature | `{feature-name}.md` | `user-authentication.md` |
-| Sub-feature | `{epic}-{feature}.md` | `bulk-actions-allocate.md` |
+| Change history | `{YYYY-MM-DD}.md` (a `##` section per task) | `2026-11-04.md` |
 
 **DO NOT use:**
 - Generic names like `SUGGESTED_CHANGES.md` or `CHANGES.md`

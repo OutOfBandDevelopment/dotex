@@ -18,7 +18,7 @@ Transient. Maps every imported dev-term documentation folder to its living home 
 | `docs/coding-standards.md`, `CLAUDE.md`, `TODO.md`, `BACKLOG.md`, `OPEN_QUESTIONS.md` | `coding-standards.md`, `source/` | Rule `coding-standards`; open work is in `BACKLOG.md`; snapshots deleted when folded | Imported |
 | `docs/design` requirements, API, testing (written here) | `docs/applications/devterm/` | Living documents | Done |
 
-Links inside `source/` and `changes/` still use dev-term paths; they are history and are not repaired.
+Links inside `source/` still use dev-term paths; they are history and are not repaired.
 
 **Table 2 — Folded so far**
 
