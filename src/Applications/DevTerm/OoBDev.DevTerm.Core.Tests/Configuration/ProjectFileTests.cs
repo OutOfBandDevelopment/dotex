@@ -10,6 +10,7 @@ using OoBDev.DevTerm;
 
 using OoBDev.DevTerm.Configuration;
 using OoBDev.DevTerm.Configuration.Discovery;
+using OoBDev.System.IO;
 namespace OoBDev.DevTerm.Configuration.Tests;
 
 [TestCategory("Unit")]
@@ -65,38 +66,28 @@ public sealed class ProjectFileTests
     [TestMethod]
     public void SaveThenLoad_UsesTheFile()
     {
-        var path = Path.Combine(Path.GetTempPath(), $"devterm-project-{Guid.NewGuid():N}.json");
-        try
-        {
-            Sample().Save(path);
-            Assert.HasCount(2, ProjectFile.Load(path).Connections);
-        }
-        finally
-        {
-            File.Delete(path);
-        }
+        using var projectFile = new TempFileHandle();
+        var path = projectFile.FilePath;
+
+        Sample().Save(path);
+
+        Assert.HasCount(2, ProjectFile.Load(path).Connections);
     }
 
     [TestMethod]
     public void ProjectFlag_LayersTheChosenConnectionUnderCommandLineFlags()
     {
-        var path = Path.Combine(Path.GetTempPath(), $"devterm-project-{Guid.NewGuid():N}.json");
-        try
-        {
-            Sample().Save(path);
-            var builder = new ConfigurationBuilder();
-            DevTermConfiguration.Configure(builder, ["--project", path, "--projectconnection", "Supply", "--baud", "9600"], "Production");
-            var options = new CliOptions();
-            DevTermConfiguration.Bind(builder.Build(), options);
+        using var projectFile = new TempFileHandle();
+        var path = projectFile.FilePath;
+        Sample().Save(path);
+        var builder = new ConfigurationBuilder();
+        DevTermConfiguration.Configure(builder, ["--project", path, "--projectconnection", "Supply", "--baud", "9600"], "Production");
+        var options = new CliOptions();
+        DevTermConfiguration.Bind(builder.Build(), options);
 
-            Assert.AreEqual("serial", options.Transport);
-            Assert.AreEqual("COM3", options.Port);
-            Assert.AreEqual(9600, options.Baud, "an explicit flag outranks the project.");
-        }
-        finally
-        {
-            File.Delete(path);
-        }
+        Assert.AreEqual("serial", options.Transport);
+        Assert.AreEqual("COM3", options.Port);
+        Assert.AreEqual(9600, options.Baud, "an explicit flag outranks the project.");
     }
 
     [TestMethod]
@@ -112,7 +103,8 @@ public sealed class ProjectFileTests
     [DoNotParallelize]
     public void ProfileFlag_LayersTheNamedSavedProfile_UnderCommandLineFlags_AndIgnoresAnUnknownOne()
     {
-        var home = Path.Combine(Path.GetTempPath(), $"devterm-home-{Guid.NewGuid():N}");
+        using var homeDirectory = new TempDirectoryHandle();
+        var home = homeDirectory.DirectoryPath;
         var previous = Environment.GetEnvironmentVariable("DEVTERM_HOME");
         try
         {
@@ -131,10 +123,6 @@ public sealed class ProjectFileTests
         finally
         {
             Environment.SetEnvironmentVariable("DEVTERM_HOME", previous);
-            if (Directory.Exists(home))
-            {
-                Directory.Delete(home, recursive: true);
-            }
         }
     }
 

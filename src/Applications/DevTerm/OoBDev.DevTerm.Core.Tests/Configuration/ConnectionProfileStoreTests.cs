@@ -11,6 +11,7 @@ using OoBDev.DevTerm;
 
 using OoBDev.DevTerm.Configuration;
 using OoBDev.DevTerm.Configuration.Discovery;
+using OoBDev.System.IO;
 namespace OoBDev.DevTerm.Configuration.Tests;
 
 [TestCategory("Unit")]
@@ -125,7 +126,7 @@ public sealed class ConnectionProfileStoreTests
     [TestMethod]
     public void List_WhenDirectoryDoesNotExist_ReturnsEmpty()
     {
-        var directory = Path.Combine(Path.GetTempPath(), "devterm-profile-tests", Path.GetRandomFileName());
+        var directory = Path.Combine(CreateTempDirectory(), "profiles");
         var store = new ConnectionProfileStore(directory);
 
         Assert.IsEmpty(store.List());
@@ -447,11 +448,22 @@ public sealed class ConnectionProfileStoreTests
         }
     }
 
-    private static string CreateTempDirectory()
+    private readonly List<TempDirectoryHandle> _directories = [];
+
+    [TestCleanup]
+    public void DeleteTempDirectories()
     {
-        var path = Path.Combine(Path.GetTempPath(), "devterm-profile-tests", Path.GetRandomFileName());
-        Directory.CreateDirectory(path);
-        return path;
+        foreach (var handle in _directories)
+        {
+            handle.Dispose();
+        }
+    }
+
+    private string CreateTempDirectory()
+    {
+        var handle = new TempDirectoryHandle();
+        _directories.Add(handle);
+        return handle.DirectoryPath;
     }
 
 
@@ -578,7 +590,7 @@ public sealed class ConnectionProfileStoreTests
     [TestMethod]
     public void FindName_WithNoProfilesDirectory_ReturnsNull()
     {
-        var store = new ConnectionProfileStore(Path.Combine(Path.GetTempPath(), $"devterm-tests-{Guid.NewGuid():N}"));
+        var store = new ConnectionProfileStore(Path.Combine(CreateTempDirectory(), "profiles"));
 
         Assert.IsNull(store.FindName(new CliOptions { Transport = "tcp", Host = "h", Port = "1" }));
     }
