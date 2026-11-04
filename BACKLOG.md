@@ -19,8 +19,6 @@ Owner: all protocols and features of dev-term must exist here. Done means what d
 - The docs Unit tests `PlantUml_Blocks_AreWellFormed` and `Links_Relative_Resolve` fail on the imported DevTerm history; the planned documentation cleanup after all migrations fixes them (owner, 2026-10-30).
 - Generated user guides for the `src/Tools` command-line tools (journeys, captured output, screenshots where there is a UI); later, after the application guides; see [GeneratedGuides](docs/design/GeneratedGuides/README.md).
 - [ ] Test gaps: Playwright DevLocal flows, an interactive Tui run, screenshot tests, serial and TCP real-hardware tests ([list](docs/design/DevTermParity/status.md#test-gaps)).
-- Decided 2026-10-30: the Web host keeps its own AsyncAPI document and viewer (offline viewer, stream channels); the SCPI control panel uses `DynamicModelFactory` (was Q3 and Q4).
-- Cleanup to tell the owner: removable Docker volume `oobd-aspire-sqlserver`; untracked `bin` and `obj` folders under `src/Extensions/OoBDev.DevTerm.*` and `OoBDev.Scpi.Panels*`.
 
 - [ ] Example apps that use the UiDefinitions language (forms and panels), beyond DevTerm; open spike question: whether the device projects need coverage in the example framework at all, since DevTerm covers them ([ui-language-later.md](docs/design/DevTermParity/ui-language-later.md)).
 
