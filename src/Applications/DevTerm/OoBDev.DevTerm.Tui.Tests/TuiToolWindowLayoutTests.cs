@@ -108,6 +108,26 @@ public sealed class TuiToolWindowLayoutTests
     public void ManifestEditor_Preview(int width, int height, string theme) =>
         TuiReview.Screen("manifest-editor-preview", width, height, theme, Editor(), (app, _) => _editor!.ShowPreview());
 
+    /// <summary>The device panel a manifest produces (bar graph, strip chart, vector displays, buttons) at each size and theme.</summary>
+    [TestMethod]
+    [DynamicData(nameof(SizesAndThemes))]
+    public void ManifestPanel_LoopbackSensorDemo(int width, int height, string theme)
+    {
+        var manifest = OoBDev.DevTerm.DeviceManifests.DeviceManifestLoader.Load(_bundled);
+        var transport = new OoBDev.DevTerm.Loopback.LoopbackTransport(Microsoft.Extensions.Options.Options.Create(new OoBDev.DevTerm.Loopback.LoopbackTransportOptions()));
+        var session = new Session(transport, new Pipeline([]));
+        session.OpenAsync().GetAwaiter().GetResult();
+        try
+        {
+            using var panel = OoBDev.DevTerm.DeviceManifests.ManifestPanel.Attach(session, manifest);
+            TuiReview.Screen("manifest-panel", width, height, theme, app => ManifestPanelMode.BuildWindow(app, panel).Window);
+        }
+        finally
+        {
+            session.DisposeAsync().AsTask().GetAwaiter().GetResult();
+        }
+    }
+
     /// <summary>A brand-new manifest's Panel node has no form yet: the hint text plus the "Create panel
     /// from commands" button, not reviewed by eye before now.</summary>
     [TestMethod]
