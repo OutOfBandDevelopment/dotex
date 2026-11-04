@@ -27,7 +27,7 @@ Owner decisions, 2026-10-29 (planning session). They supersede the project layou
 
 - `OoBDev.System.Abstractions/IO`: `ConnectionState`, `ConnectionStateChangedEventArgs` and `IDeviceAdapter : IAsyncDisposable` with `Type`, `Path`, `State`, `StateChanged`, `PipeReader Input`, `PipeWriter Output`, `OpenAsync`, `CloseAsync`. `TryOpen` and `Stream` are gone; `IBufferedDeviceAdapter` keeps `BytesToRead`.
 - `OoBDev.System.IO.Pipelines`: `StreamToPipePump`, the abstract `StreamDeviceAdapter` (state machine, pump, `PipeWriter.Create`) and `AsStream(this IDeviceAdapter)` for stream-based callers. Serial, TCP, RFC 2217 and HID adapters derive from it.
-- `StreamDevice<T>` reads `Input` and writes `Output`; callers open the adapter first. `StreamTransport` is deleted; `ITransport` was deleted in step 2a ([change](../../changes/transports-as-device-adapters-2026-10-29.md)).
+- `StreamDevice<T>` reads `Input` and writes `Output`; callers open the adapter first. `StreamTransport` is deleted; `ITransport` was deleted in step 2a ([change](../../changes/2026-10-29.md#transports-become-device-adapters-2026-10-29)).
 
 ## Migration table (confirmed 2026-10-29)
 

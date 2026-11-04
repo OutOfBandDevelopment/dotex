@@ -62,7 +62,7 @@
 
 **Naming Convention:**
 ```
-docs/changes/{epic}-{feature}-{YYYY-MM-DD}.md
+docs/changes/{YYYY-MM-DD}.md (a `##` section per task)
 ```
 
 **Epic values:**
@@ -86,8 +86,8 @@ docs/changes/{epic}-{feature}-{YYYY-MM-DD}.md
 
 **Example filenames:**
 ```
-bug-fixes-swashbuckle-dotnet10-2026-01-20.md
-testing-docker-infrastructure-2026-01-19.md
+2026-01-20.md#bug-fixes---swashbuckle-1010--net-100-breaking-changes
+2026-01-19.md#testing---docker-based-integration-testing-infrastructure
 migration-sharedframework-phase0-2026-01-15.md
 feature-search-query-pagination-2026-02-01.md
 ```
@@ -217,7 +217,7 @@ feature-search-query-pagination-2026-02-01.md
 - All 65 projects build successfully
 - Swagger Summary/Description properties now appear
 
-**Details:** [docs/changes/bug-fixes-swashbuckle-dotnet10-2026-01-20.md](docs/changes/bug-fixes-swashbuckle-dotnet10-2026-01-20.md)
+**Details:** [docs/changes/2026-01-20.md#bug-fixes---swashbuckle-1010--net-100-breaking-changes](docs/changes/2026-01-20.md#bug-fixes---swashbuckle-1010--net-100-breaking-changes)
 ```
 
 **What to keep in TODO files:**
@@ -359,7 +359,7 @@ Add entry to "Current Change Documents" section under appropriate epic:
 - All 65 projects build successfully
 - Swagger Summary/Description properties now appear
 
-**Details:** [docs/changes/bug-fixes-swashbuckle-dotnet10-2026-01-20.md](docs/changes/bug-fixes-swashbuckle-dotnet10-2026-01-20.md)
+**Details:** [docs/changes/2026-01-20.md#bug-fixes---swashbuckle-1010--net-100-breaking-changes](docs/changes/2026-01-20.md#bug-fixes---swashbuckle-1010--net-100-breaking-changes)
 ```
 
 ### Example 2: Archiving Testing Infrastructure
@@ -388,7 +388,7 @@ Add entry to "Current Change Documents" section under appropriate epic:
 
 Implemented complete Docker-based testing infrastructure with 11 services, CI/CD pipeline, and migrated 19 tests from DevLocal to Integration category.
 
-**Details:** [docs/changes/testing-docker-infrastructure-2026-01-19.md](docs/changes/testing-docker-infrastructure-2026-01-19.md)
+**Details:** [docs/changes/2026-01-19.md#testing---docker-based-integration-testing-infrastructure](docs/changes/2026-01-19.md#testing---docker-based-integration-testing-infrastructure)
 ```
 
 ---

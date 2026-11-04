@@ -50,7 +50,7 @@ Unit tests cover the processors and the registration. The Integration tests send
 
 * https://learn.microsoft.com/en-us/dotnet/core/diagnostics/observability-with-otel
 * https://opentelemetry.io/docs/specs/otel/protocol/exporter/
-* [Change document](../../../docs/changes/migration-opentelemetry-2026-10-09.md)
+* [Change document](../../../docs/changes/2026-10-09.md#application-insights-replaced-by-opentelemetry-broken-devlocal-tests-fixed)
 
 ## Standalone OTLP exporter
 

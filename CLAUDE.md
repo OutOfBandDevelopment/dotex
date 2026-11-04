@@ -146,23 +146,23 @@ Older entries (before 2026-10) live in `docs/changes/` (index: `docs/changes/REA
 ### 2026-10-09
 - **Framework cleanup (unreleased, breaking)** - `ISelectedService<T>` replaced by `TryAddConfiguredKeyedService<T>` (path `OoBDev:CachingProvider:Type`), `IDateTimeProvider` removed for `TimeProvider`, `Retreive` renamed `Retrieve`, hash/serializer/HMAC provider keys kebab-case, message caller info via caller attributes, `AddValidatedOptions<T>()` added (adapter adoption blocked by the Abstractions-only reference rule, see TODO.md), Groq live tests on `openai/gpt-oss-20b`
 - **Integration test stack** - every host port overridable via `TEST_PORT_<NAME>`; Docker docs under `docs/architecture/testing/integration/`
-- **AsyncAPI document and viewer** - `OoBDev.AsyncApi`, `IAsyncApiContributor` in the SQS, Service Bus and RabbitMQ adapters, `MapAsyncApi()`. [Details](docs/changes/migration-asyncapi-2026-10-09.md)
-- **Swashbuckle replaced by OpenAPI transformers and Scalar** - `Microsoft.AspNetCore.OpenApi` documents, Scalar reference with OAuth2 code and PKCE. [Details](docs/changes/migration-openapi-scalar-2026-10-09.md)
+- **AsyncAPI document and viewer** - `OoBDev.AsyncApi`, `IAsyncApiContributor` in the SQS, Service Bus and RabbitMQ adapters, `MapAsyncApi()`. [Details](docs/changes/2026-10-09.md#asyncapi-document-and-viewer-for-the-message-queues)
+- **Swashbuckle replaced by OpenAPI transformers and Scalar** - `Microsoft.AspNetCore.OpenApi` documents, Scalar reference with OAuth2 code and PKCE. [Details](docs/changes/2026-10-09.md#swashbuckle-replaced-by-openapi-transformers-and-scalar)
 - **Azure B2C dropped** - Keycloak is the identity provider
-- **OpenTelemetry replaces Application Insights** - `OoBDev.Telemetry` (was `OoBDev.OpenTelemetry`; config-gated, OTLP export). [Details](docs/changes/migration-opentelemetry-2026-10-09.md)
+- **OpenTelemetry replaces Application Insights** - `OoBDev.Telemetry` (was `OoBDev.OpenTelemetry`; config-gated, OTLP export). [Details](docs/changes/2026-10-09.md#application-insights-replaced-by-opentelemetry-broken-devlocal-tests-fixed)
 - **Test Ollama on host port 11435** - avoids the clash with a local Ollama on 11434
 
 ### 2026-10-08
-- **Image embeddings** - in-process ONNX runner (DINOv2-small, ViT-base, CLIP ViT-B/32). [Details](docs/changes/migration-image-embeddings-2026-10-08.md)
-- **Embedding presets and version policy** - MPNet and Nomic presets, `GitVersion.yml` policy. [Details](docs/changes/migration-embedding-presets-2026-10-08.md)
-- **AllMiniLmL6V2 replaces the fork** - first-party ONNX embedder and tokenizer. [Details](docs/changes/migration-allminilml6v2-embedder-2026-10-08.md)
-- **NULL-safe vectors, CI order, Moto replaces LocalStack** - [Details](docs/changes/testing-vectors-sqs-moto-ci-2026-10-08.md)
+- **Image embeddings** - in-process ONNX runner (DINOv2-small, ViT-base, CLIP ViT-B/32). [Details](docs/changes/2026-10-08.md#in-process-image-embeddings-and-classification-dinov2-vit-clip)
+- **Embedding presets and version policy** - MPNet and Nomic presets, `GitVersion.yml` policy. [Details](docs/changes/2026-10-08.md#embedding-presets-for-mpnet-and-nomic-shared-hugging-face-cache-version-policy)
+- **AllMiniLmL6V2 replaces the fork** - first-party ONNX embedder and tokenizer. [Details](docs/changes/2026-10-08.md#in-process-all-minilm-l6-v2-embedder-replaces-the-fork)
+- **NULL-safe vectors, CI order, Moto replaces LocalStack** - [Details](docs/changes/2026-10-08.md#ci-restore-vector-functions-and-moto-aws-emulator)
 
 ### 2026-10-07
 - **Dependencies and build health** - central package management restored, packages current, about 12 distinct warnings left (see TODO.md)
 
 ### 2026-09-30
-- **Patterns Discovery** - architecture/patterns/practices/blueprint/alternatives docs, `dotnet new` templates, doc scripts. [Details](docs/changes/documentation-patterns-discovery-2026-09-30.md)
+- **Patterns Discovery** - architecture/patterns/practices/blueprint/alternatives docs, `dotnet new` templates, doc scripts. [Details](docs/changes/2026-09-30.md#documentation---patterns-discovery-coverage-and-extensionsai-spike)
 
 ---
 

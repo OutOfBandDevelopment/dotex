@@ -53,4 +53,4 @@ the test stack (a SQL Server container already exists there).
 
 2026-10-29: accepted. Decisions (reversible): write fresh against current abstractions, not from the prototypes (book origin, licence unchecked); new adapter `OoBDev.Microsoft.SqlServer.ServiceBroker` mirroring `OoBDev.RabbitMQ`; the desired-state tooling request stays separate and may later own the broker objects. Design: [docs/design/SqlServiceBroker](../../design/SqlServiceBroker/README.md). Backlog: BACKLOG.md, messaging.
 
-2026-10-29: built. Done: [change document](../../changes/sqlserver-service-broker-2026-10-29.md).
+2026-10-29: built. Done: [change document](../../changes/2026-10-29.md#sql-server-service-broker-queue-provider).

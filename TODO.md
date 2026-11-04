@@ -8,7 +8,6 @@ Keep this file short (about 15 one-line items). When an item starts, move it her
 
 ## In progress
 
-- [x] Change history as one file per day ([plan](docs/issues/docs-changes-daily-files.md)).
 
 ## Next
 
