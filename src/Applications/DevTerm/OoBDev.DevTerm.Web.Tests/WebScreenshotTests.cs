@@ -1,3 +1,4 @@
+using OoBDev.System.IO;
 using OoBDev.System.IO.Devices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
@@ -514,7 +515,8 @@ public class WebScreenshotTests
     [TestMethod]
     public async Task MonitorPage_ShowsACapturedImage_AndSavesIt()
     {
-        var exports = Path.Combine(Path.GetTempPath(), $"devterm-web-exports-{Guid.NewGuid():N}");
+        using var exportsDirectory = new TempDirectoryHandle();
+        var exports = exportsDirectory.DirectoryPath;
         var bitmap = SampleBitmap();
         using var device = new TcpListener(IPAddress.Loopback, 0);
         device.Start();
