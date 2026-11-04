@@ -109,6 +109,9 @@ Where it saves:
 
 **Open...** takes a manifest from the same list **Device > Device Manifest...** offers, or any path to
 a manifest file, folder, or `.zip`. It opens a manifest even if it has errors, so you can fix it.
+
+![WPF manifest picker](images/wpf-manifest-picker.png)
+
 **New**, **Open...** and **Close** ask before throwing away unsaved changes; the title bar ends in
 ` *` while there are some.
 
