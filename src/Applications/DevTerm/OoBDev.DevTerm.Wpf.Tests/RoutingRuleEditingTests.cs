@@ -1,4 +1,5 @@
 using System;
+using OoBDev.System.IO;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -125,8 +126,8 @@ public sealed class RoutingRuleEditingTests
 
     private static async Task RunAsync(Action<RoutingDialogViewModel> body)
     {
-        var directory = Path.Combine(Path.GetTempPath(), "devterm-" + Guid.NewGuid().ToString("N"));
-        try
+        using var directoryFolder = new TempDirectoryHandle();
+        var directory = directoryFolder.DirectoryPath;
         {
             var services = new ServiceCollection();
             services.AddSingleton(new ConnectionProfileStore(directory));
@@ -136,13 +137,6 @@ public sealed class RoutingRuleEditingTests
             provider.GetRequiredService<ConnectionProfileStore>().Save("bench", new CliOptions { Transport = "loopback" });
             shell.OpenProfileSession.Execute("bench");
             shell.ShowRoutingWindow.Execute(null);
-        }
-        finally
-        {
-            if (Directory.Exists(directory))
-            {
-                Directory.Delete(directory, true);
-            }
         }
     }
 }

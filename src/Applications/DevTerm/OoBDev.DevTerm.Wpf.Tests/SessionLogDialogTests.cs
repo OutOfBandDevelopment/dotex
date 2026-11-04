@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using OoBDev.System.IO;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -20,7 +22,6 @@ public sealed class SessionLogDialogTests
     {
         // Stage
         var dir = NewDirectory();
-        try
         {
             var chosen = Path.Combine(dir, "mine.jsonl");
             var dialog = new FakeSessionLogDialog { PathToReturn = chosen };
@@ -33,10 +34,6 @@ public sealed class SessionLogDialogTests
             Assert.IsTrue(viewModel.IsLogging);
             Assert.AreEqual(chosen, viewModel.LogPath);
             Assert.IsNotNull(dialog.SuggestedPath);
-        }
-        finally
-        {
-            Directory.Delete(dir, true);
         }
     }
 
@@ -68,7 +65,6 @@ public sealed class SessionLogDialogTests
     {
         // Stage
         var dir = NewDirectory();
-        try
         {
             var chosen = Path.Combine(dir, "notes.jsonl");
             var dialog = new FakeSessionLogDialog { PathToReturn = chosen, NoteToReturn = "marker-note-42" };
@@ -84,10 +80,6 @@ public sealed class SessionLogDialogTests
             Assert.IsTrue(canAdd);
             Assert.IsTrue(File.ReadAllLines(chosen).Any(line => line.Contains("marker-note-42", StringComparison.Ordinal)));
         }
-        finally
-        {
-            Directory.Delete(dir, true);
-        }
     }
 
     [TestMethod]
@@ -95,7 +87,6 @@ public sealed class SessionLogDialogTests
     {
         // Stage
         var dir = NewDirectory();
-        try
         {
             var chosen = Path.Combine(dir, "blank.jsonl");
             var dialog = new FakeSessionLogDialog { PathToReturn = chosen, NoteToReturn = "   " };
@@ -109,10 +100,6 @@ public sealed class SessionLogDialogTests
             // Assert
             Assert.IsFalse(File.ReadAllLines(chosen).Any(line => line.Contains("\"note\"", StringComparison.Ordinal)));
         }
-        finally
-        {
-            Directory.Delete(dir, true);
-        }
     }
 
     private static SessionViewModel Create(ISessionLogDialog dialog)
@@ -123,10 +110,23 @@ public sealed class SessionLogDialogTests
         return new SessionViewModel(session, "Loopback", tab, dialog);
     }
 
-    private static string NewDirectory()
+    private readonly List<TempDirectoryHandle> _directories = [];
+
+    [TestCleanup]
+    public void DeleteTempDirectories()
     {
-        var dir = Path.Combine(Path.GetTempPath(), "devterm-wpf-note-" + Guid.NewGuid().ToString("N"));
-        Directory.CreateDirectory(dir);
-        return dir;
+        foreach (var handle in _directories)
+        {
+            handle.Dispose();
+        }
+
+        _directories.Clear();
+    }
+
+    private string NewDirectory()
+    {
+        var handle = new TempDirectoryHandle();
+        _directories.Add(handle);
+        return handle.DirectoryPath;
     }
 }

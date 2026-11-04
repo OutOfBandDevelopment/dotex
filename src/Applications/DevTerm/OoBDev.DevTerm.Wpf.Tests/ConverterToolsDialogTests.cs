@@ -1,4 +1,5 @@
 using System;
+using OoBDev.System.IO;
 using System.IO;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -20,8 +21,8 @@ public sealed class ConverterToolsDialogTests
     public void ShowConverterTools_ToolAddedAndAccepted_SavesTheTool()
     {
         // Stage
-        var path = Path.Combine(Path.GetTempPath(), $"tools_{Guid.NewGuid():N}.json");
-        try
+        using var folder = new TempDirectoryHandle();
+        var path = Path.Combine(folder.DirectoryPath, "tools.json");
         {
             var store = new ConverterToolsStore(path);
             var services = new ServiceCollection();
@@ -45,17 +46,14 @@ public sealed class ConverterToolsDialogTests
             Assert.HasCount(1, saved);
             Assert.AreEqual("magick", saved[0].Name);
         }
-        finally
-        {
-            File.Delete(path);
-        }
     }
 
     [TestMethod]
     public void ShowConverterTools_Cancelled_SavesNothing()
     {
         // Stage
-        var path = Path.Combine(Path.GetTempPath(), $"tools_{Guid.NewGuid():N}.json");
+        using var folder = new TempDirectoryHandle();
+        var path = Path.Combine(folder.DirectoryPath, "tools.json");
         var store = new ConverterToolsStore(path);
         var services = new ServiceCollection();
         services.AddSingleton<IConverterToolsDialog>(new FakeConverterToolsDialog(tools =>

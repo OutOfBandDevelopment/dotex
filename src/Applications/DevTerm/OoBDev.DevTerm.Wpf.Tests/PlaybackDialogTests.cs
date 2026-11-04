@@ -1,4 +1,5 @@
 using System;
+using OoBDev.System.IO;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -24,9 +25,8 @@ public sealed class PlaybackDialogTests
     public void OpenPlaybackWindow_LogChosen_SkipToEndListsEveryRecordAndRewindClearsThem()
     {
         // Stage
-        var directory = Path.Combine(Path.GetTempPath(), $"devterm-wpf-playback-{Guid.NewGuid():N}");
-        Directory.CreateDirectory(directory);
-        try
+        using var directoryFolder = new TempDirectoryHandle();
+        var directory = directoryFolder.DirectoryPath;
         {
             var path = Path.Combine(directory, "capture.jsonl");
             var t0 = new DateTimeOffset(2026, 9, 25, 12, 0, 0, TimeSpan.Zero);
@@ -59,19 +59,14 @@ public sealed class PlaybackDialogTests
             Assert.AreEqual(3, afterSkip);
             Assert.AreEqual(0, afterRewind);
         }
-        finally
-        {
-            Directory.Delete(directory, recursive: true);
-        }
     }
 
     [TestMethod]
     public void Jump_UnreadableTextThenRecordNumber_ReportsThenListsUpToThatRecord()
     {
         // Stage
-        var directory = Path.Combine(Path.GetTempPath(), $"devterm-wpf-jump-{Guid.NewGuid():N}");
-        Directory.CreateDirectory(directory);
-        try
+        using var directoryFolder = new TempDirectoryHandle();
+        var directory = directoryFolder.DirectoryPath;
         {
             var path = Path.Combine(directory, "capture.jsonl");
             var t0 = new DateTimeOffset(2026, 9, 25, 12, 0, 0, TimeSpan.Zero);
@@ -105,19 +100,14 @@ public sealed class PlaybackDialogTests
             Assert.IsNotNull(status);
             Assert.AreEqual(2, lines);
         }
-        finally
-        {
-            Directory.Delete(directory, recursive: true);
-        }
     }
 
     [TestMethod]
     public void TrimAndNote_MarkedRange_SavesTheTrimNextToTheLogAndTheNoteIntoIt()
     {
         // Stage
-        var directory = Path.Combine(Path.GetTempPath(), $"devterm-wpf-trim-{Guid.NewGuid():N}");
-        Directory.CreateDirectory(directory);
-        try
+        using var directoryFolder = new TempDirectoryHandle();
+        var directory = directoryFolder.DirectoryPath;
         {
             var path = Path.Combine(directory, "capture.jsonl");
             var t0 = new DateTimeOffset(2026, 9, 25, 12, 0, 0, TimeSpan.Zero);
@@ -151,19 +141,14 @@ public sealed class PlaybackDialogTests
             Assert.AreEqual(1, Directory.GetFiles(directory, "*.trim-*").Length);
             Assert.IsTrue(File.ReadAllText(path).Contains("checked", StringComparison.Ordinal));
         }
-        finally
-        {
-            Directory.Delete(directory, recursive: true);
-        }
     }
 
     [TestMethod]
     public void ApplyPresenters_HexChosen_ReplaysTheLinesThroughIt()
     {
         // Stage
-        var directory = Path.Combine(Path.GetTempPath(), $"devterm-wpf-presenters-{Guid.NewGuid():N}");
-        Directory.CreateDirectory(directory);
-        try
+        using var directoryFolder = new TempDirectoryHandle();
+        var directory = directoryFolder.DirectoryPath;
         {
             var path = Path.Combine(directory, "capture.jsonl");
             var t0 = new DateTimeOffset(2026, 9, 25, 12, 0, 0, TimeSpan.Zero);
@@ -187,10 +172,6 @@ public sealed class PlaybackDialogTests
             // Assert
             Assert.IsNotNull(line);
             StringAssert.Contains(line, "hex", StringComparison.OrdinalIgnoreCase);
-        }
-        finally
-        {
-            Directory.Delete(directory, recursive: true);
         }
     }
 

@@ -1,4 +1,5 @@
 using System;
+using OoBDev.System.IO;
 using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.DevTerm.Configuration;
@@ -11,20 +12,22 @@ namespace OoBDev.DevTerm.Wpf.Tests;
 [DoNotParallelize]
 public sealed class ThemeStartupTests
 {
+    private TempDirectoryHandle _folder = null!;
     private string _dir = string.Empty;
 
     [TestInitialize]
     public void Setup()
     {
         ActiveTheme.Reset();
-        _dir = Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), $"Test_{Guid.NewGuid():N}")).FullName;
+        _folder = new TempDirectoryHandle();
+        _dir = _folder.DirectoryPath;
     }
 
     [TestCleanup]
     public void Cleanup()
     {
         ActiveTheme.Reset();
-        Directory.Delete(_dir, recursive: true);
+        _folder.Dispose();
     }
 
     [TestMethod]

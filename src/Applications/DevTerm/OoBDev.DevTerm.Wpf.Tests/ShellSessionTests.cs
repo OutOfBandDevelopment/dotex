@@ -1,4 +1,5 @@
 using System;
+using OoBDev.System.IO;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
@@ -42,8 +43,8 @@ public sealed class ShellSessionTests
     public async Task OpenProfileSession_SavedLoopbackProfile_AddsASessionTitledByTheProfile()
     {
         // Stage
-        var directory = Path.Combine(Path.GetTempPath(), "devterm-" + Guid.NewGuid().ToString("N"));
-        try
+        using var directoryFolder = new TempDirectoryHandle();
+        var directory = directoryFolder.DirectoryPath;
         {
             var store = new ConnectionProfileStore(directory);
             store.Save("bench", new CliOptions { Transport = "loopback" });
@@ -59,13 +60,6 @@ public sealed class ShellSessionTests
             CollectionAssert.AreEqual(new[] { "bench" }, (global::System.Collections.ICollection)shell.ProfileNames);
             Assert.HasCount(1, shell.Sessions);
             Assert.AreEqual("bench", shell.SelectedSession?.Title);
-        }
-        finally
-        {
-            if (Directory.Exists(directory))
-            {
-                Directory.Delete(directory, true);
-            }
         }
     }
 
@@ -83,8 +77,8 @@ public sealed class ShellSessionTests
     public async Task NewConnection_EditorConnects_OpensASessionFromTheOptions()
     {
         // Stage
-        var directory = Path.Combine(Path.GetTempPath(), "devterm-" + Guid.NewGuid().ToString("N"));
-        try
+        using var directoryFolder = new TempDirectoryHandle();
+        var directory = directoryFolder.DirectoryPath;
         {
             var services = new ServiceCollection();
             services.AddSingleton(new ConnectionProfileStore(directory));
@@ -103,21 +97,14 @@ public sealed class ShellSessionTests
             Assert.HasCount(1, shell.Sessions);
             Assert.AreEqual("loopback 1", shell.SelectedSession?.Title);
         }
-        finally
-        {
-            if (Directory.Exists(directory))
-            {
-                Directory.Delete(directory, true);
-            }
-        }
     }
 
     [TestMethod]
     public async Task NewConnection_EditorCancelled_OpensNothing()
     {
         // Stage
-        var directory = Path.Combine(Path.GetTempPath(), "devterm-" + Guid.NewGuid().ToString("N"));
-        try
+        using var directoryFolder = new TempDirectoryHandle();
+        var directory = directoryFolder.DirectoryPath;
         {
             var services = new ServiceCollection();
             services.AddSingleton(new ConnectionProfileStore(directory));
@@ -130,13 +117,6 @@ public sealed class ShellSessionTests
 
             // Assert
             Assert.IsEmpty(shell.Sessions);
-        }
-        finally
-        {
-            if (Directory.Exists(directory))
-            {
-                Directory.Delete(directory, true);
-            }
         }
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using OoBDev.System.IO;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,8 +17,8 @@ public sealed class RoutingDialogTests
     public async Task ShowRoutingWindow_LoopbackProfileSession_OpensTheDialogAndApplyReportsTheProblem()
     {
         // Stage
-        var directory = Path.Combine(Path.GetTempPath(), "devterm-" + Guid.NewGuid().ToString("N"));
-        try
+        using var directoryFolder = new TempDirectoryHandle();
+        var directory = directoryFolder.DirectoryPath;
         {
             string? message = null;
             var services = new ServiceCollection();
@@ -39,13 +40,6 @@ public sealed class RoutingDialogTests
             // Assert
             Assert.IsTrue(shell.ShowRoutingWindow.CanExecute(null));
             Assert.IsFalse(string.IsNullOrEmpty(message));
-        }
-        finally
-        {
-            if (Directory.Exists(directory))
-            {
-                Directory.Delete(directory, true);
-            }
         }
     }
 

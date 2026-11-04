@@ -1,4 +1,5 @@
 using System;
+using OoBDev.System.IO;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
@@ -15,13 +16,18 @@ namespace OoBDev.DevTerm.Wpf.Tests;
 [TestClass]
 public sealed class ConnectionEditorWindowTests
 {
+    private TempDirectoryHandle _folder = null!;
     private string _dir = string.Empty;
 
     [TestInitialize]
-    public void Setup() => _dir = Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), $"Test_{Guid.NewGuid():N}")).FullName;
+    public void Setup()
+    {
+        _folder = new TempDirectoryHandle();
+        _dir = _folder.DirectoryPath;
+    }
 
     [TestCleanup]
-    public void Cleanup() => Directory.Delete(_dir, recursive: true);
+    public void Cleanup() => _folder.Dispose();
 
     [TestMethod]
     public void Window_ProfileSavedByAnotherStore_ListsItWithoutPressingRefresh()

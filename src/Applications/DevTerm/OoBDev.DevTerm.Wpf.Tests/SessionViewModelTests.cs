@@ -1,4 +1,5 @@
 using System;
+using OoBDev.System.IO;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -84,7 +85,8 @@ public sealed class SessionViewModelTests
     public async Task ToggleLogging_WithTab_StartsAndStopsALogFile()
     {
         // Stage
-        var home = Path.Combine(Path.GetTempPath(), "devterm-wpf-log-" + Guid.NewGuid().ToString("N"));
+        using var homeFolder = new TempDirectoryHandle();
+        var home = homeFolder.DirectoryPath;
         var saved = Environment.GetEnvironmentVariable(DevTermHome.EnvironmentVariable);
         Environment.SetEnvironmentVariable(DevTermHome.EnvironmentVariable, home);
         try
@@ -108,10 +110,6 @@ public sealed class SessionViewModelTests
         finally
         {
             Environment.SetEnvironmentVariable(DevTermHome.EnvironmentVariable, saved);
-            if (Directory.Exists(home))
-            {
-                Directory.Delete(home, true);
-            }
         }
     }
 

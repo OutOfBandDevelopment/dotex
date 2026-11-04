@@ -159,7 +159,8 @@ public sealed class StreamCapturePreviewTests
     public void Export_SelectedCapture_WritesItWhereTheDialogSays()
     {
         // Stage
-        var target = global::System.IO.Path.Combine(global::System.IO.Path.GetTempPath(), $"export-{Guid.NewGuid():N}.png");
+        using var exportFolder = new global::OoBDev.System.IO.TempDirectoryHandle();
+        var target = global::System.IO.Path.Combine(exportFolder.DirectoryPath, "export.png");
         using var viewModel = new StreamMonitorDialogViewModel(new StreamMonitor(), new FixedExport(target));
         viewModel.AddCapture(Named("scope", StreamContentKind.Png, 7, 1));
         viewModel.SelectedIndex = 0;
@@ -169,7 +170,6 @@ public sealed class StreamCapturePreviewTests
 
         // Assert
         Assert.AreEqual(7, global::System.IO.File.ReadAllBytes(target).Length);
-        global::System.IO.File.Delete(target);
     }
 
     [TestMethod]
@@ -191,7 +191,8 @@ public sealed class StreamCapturePreviewTests
     public async global::System.Threading.Tasks.Task ConvertSelectedAsync_Hpgl_WritesAnSvgBesideIt()
     {
         // Stage
-        var directory = global::System.IO.Directory.CreateTempSubdirectory("stream-convert").FullName;
+        using var folder = new global::OoBDev.System.IO.TempDirectoryHandle();
+        var directory = folder.DirectoryPath;
         var source = global::System.IO.Path.Combine(directory, "plot.hpgl");
         var data = global::System.Text.Encoding.ASCII.GetBytes("IN;SP1;PU0,0;PD1000,1000;");
         global::System.IO.File.WriteAllBytes(source, data);
@@ -207,7 +208,6 @@ public sealed class StreamCapturePreviewTests
         // Assert
         Assert.IsTrue(global::System.IO.File.Exists(global::System.IO.Path.Combine(directory, "plot.svg")), viewModel.ExportStatus);
         StringAssert.StartsWith(viewModel.ExportStatus, "Converted to plot.svg");
-        global::System.IO.Directory.Delete(directory, recursive: true);
     }
 
     [TestMethod]
