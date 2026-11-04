@@ -30,7 +30,7 @@ Owner: all protocols and features of dev-term must exist here. Done means what d
 
 ## 2. Devices
 
-- [ ] Device decoding leftovers: the DE-5000 Hardware test needs a BLE transport; the phase 0 checks in [device-parity.md](docs/migration/device-parity.md) section 4; a physical pass for K8055 input bit mapping, Busylight program frames, Radex settings and reset, Zoom H4n handshake, NMEA BT-20 framing and a real SCPI instrument. Plan: [device-decoding-migration-plan.md](docs/migration/device-decoding-migration-plan.md).
+- [ ] Device decoding leftovers: the DE-5000 Hardware test needs a BLE transport; phase 0 is done (merge status in [device-parity.md](docs/migration/device-parity.md) section 5; M3 needs a Radex capture); a physical pass for K8055 input bit mapping, Busylight program frames, Radex settings and reset, Zoom H4n handshake, NMEA BT-20 framing and a real SCPI instrument. Plan: [device-decoding-migration-plan.md](docs/migration/device-decoding-migration-plan.md).
 - [ ] Saint George score machine: priority is read from the `P` byte itself, so it is never set (ported as-is); settle the real byte from a captured frame, and add a Hardware test for Favero and Saint George when a machine is available.
 
 ## 3. Test infrastructure

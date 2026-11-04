@@ -10,5 +10,5 @@ Keep this file short (about 15 one-line items). When an item starts, move it her
 
 ## Next
 
-- [ ] Device decoding leftovers: DE-5000 Hardware test (needs BLE), phase 0 parity checks in [device-parity.md](docs/migration/device-parity.md).
+- [ ] Device decoding leftovers: DE-5000 Hardware test (needs BLE) and the physical passes; phase 0 is done ([device-parity.md](docs/migration/device-parity.md) section 5).
 - [ ] BinaryDataDecoders items: next is the order in Table 4 of [the re-review](docs/migration/binarydatadecoders-rereview-2026-10-29.md).
