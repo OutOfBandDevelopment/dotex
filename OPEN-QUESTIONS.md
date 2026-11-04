@@ -10,4 +10,15 @@ _(none waiting; processed requests are in BACKLOG.md and TODO.md)_
 
 ## Open
 
-_(none)_
+### Q1 - 2026-11-04 - Generated guides - where does the generic API guide renderer live?
+
+`ApiGuideRenderer` (OpenAPI/AsyncAPI document to a markdown guide) sits in `src/Applications/DevTerm/OoBDev.DevTerm.TestUtilities`. The Example WebApi guide and any other application guide need it too, and it has no DevTerm-specific names.
+
+**Options**
+- A (recommended): move it to a Framework test-utility library with a generic name (for example `OoBDev.Documents.Guides`, namespace `OoBDev.Documents.Guides`), and DevTerm, Example and later apps reference it. Rule `layering-and-migration-plans`: reusable means Framework. Cost: a new Framework project with readme and tests.
+- B: keep it in DevTerm.TestUtilities and let Example reference DevTerm test code. Cheapest, but a generic capability sits under an application and couples applications.
+- C: copy it into the Example test project. No coupling, but two copies drift.
+
+**Default:** none; the Example WebApi guide waits. Other items continue.
+
+**Your answer:**
