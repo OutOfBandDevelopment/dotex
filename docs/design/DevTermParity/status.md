@@ -31,7 +31,7 @@ dev-term `DevTerm.Wpf` is about 8,800 lines. Each slice is ported with view mode
 
 ## Test gaps
 
-- Tui: `ControlPanelScreenshotTests`, the manifest-panel layout test, serial and TCP real-hardware tests, loopback, stream-monitor and chart screenshots, an interactive Tui run.
+- Tui: `ControlPanelScreenshotTests`, the manifest-panel layout test, serial real-hardware tests (TCP is covered by `LoopbackDeviceCliIntegrationTests` against the stack's loopback-device, real devices by `RealHardwareCliTests`), loopback, stream-monitor and chart screenshots, an interactive Tui run.
 - Web: the Playwright flows, screenshot and layout-review tests pass (55 run together); a run rewrites the guide images, so the `image-mask sync` routing is what keeps recaptures from churning the committed files.
 - `LxiDeviceScanner` socket scan: deferred, because the scan broadcasts to UDP 111 on every interface and a fake responder needs `LxiDiscovery` to take a target endpoint first.
 - Hardware tests for the USBTMC path were skipped (no device attached).
