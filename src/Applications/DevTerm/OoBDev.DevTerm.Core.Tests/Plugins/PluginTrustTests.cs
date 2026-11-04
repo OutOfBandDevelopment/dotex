@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Buffers;
 using global::System.Diagnostics;
 using System.Text;
+using OoBDev.System.IO;
 
 namespace OoBDev.DevTerm.Tests;
 
@@ -18,6 +19,7 @@ namespace OoBDev.DevTerm.Tests;
 [TestClass]
 public sealed class PluginTrustTests
 {
+    private TempDirectoryHandle _homeFolder = null!;
     private string _home = "";
     private string _plugins = "";
     private string? _previousHome;
@@ -26,7 +28,8 @@ public sealed class PluginTrustTests
     public void Init()
     {
         _previousHome = Environment.GetEnvironmentVariable(DevTermHome.EnvironmentVariable);
-        _home = Path.Combine(Path.GetTempPath(), "devterm-trust-" + Guid.NewGuid().ToString("N"));
+        _homeFolder = new TempDirectoryHandle();
+        _home = _homeFolder.DirectoryPath;
         _plugins = Path.Combine(_home, "plugins");
         Directory.CreateDirectory(_plugins);
         Environment.SetEnvironmentVariable(DevTermHome.EnvironmentVariable, _home);
@@ -40,7 +43,7 @@ public sealed class PluginTrustTests
         PluginTrust.Approver = null;
         LivePlugins.Reset();
         Environment.SetEnvironmentVariable(DevTermHome.EnvironmentVariable, _previousHome);
-        Directory.Delete(_home, true);
+        _homeFolder.Dispose();
     }
 
     private string WriteProcessPlugin(string script = "print('x')", string command = "python")

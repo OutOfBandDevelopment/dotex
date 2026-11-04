@@ -8,6 +8,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Extensions.DependencyInjection;
 using OoBDev.DevTerm.Hosting;
 using System.Buffers;
+using OoBDev.System.IO;
 
 namespace OoBDev.DevTerm.Tests;
 
@@ -16,25 +17,6 @@ namespace OoBDev.DevTerm.Tests;
 public sealed class PluginLoaderTests
 {
     private static string SamplePluginFolder => Path.Combine(AppContext.BaseDirectory, "plugins", "sample");
-
-    private static string NewPluginsDirectory()
-    {
-        var directory = Path.Combine(Path.GetTempPath(), "devterm-plugins-" + Guid.NewGuid().ToString("N"));
-        Directory.CreateDirectory(directory);
-        return directory;
-    }
-
-    // A loaded plugin assembly stays locked for the life of the process (the load context isn't collectible), so cleanup is best effort.
-    private static void TryDelete(string directory)
-    {
-        try
-        {
-            Directory.Delete(directory, true);
-        }
-        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
-        {
-        }
-    }
 
     private static void CopySample(string pluginsDirectory, string folder, Func<string, string>? manifestEdit = null)
     {
@@ -71,65 +53,47 @@ public sealed class PluginLoaderTests
     [TestMethod]
     public void LoadAll_SkipsAPluginBuiltForAnotherContract_AndSaysWhy()
     {
-        var directory = NewPluginsDirectory();
-        try
-        {
-            CopySample(directory, "future", text => text.Replace("\"contract\": 1", "\"contract\": 99", StringComparison.Ordinal));
-            var services = new ServiceCollection();
+        using var pluginsFolder = new TempDirectoryHandle();
+        var directory = pluginsFolder.DirectoryPath;
+        CopySample(directory, "future", text => text.Replace("\"contract\": 1", "\"contract\": 99", StringComparison.Ordinal));
+        var services = new ServiceCollection();
 
-            var results = PluginLoader.LoadAll(directory, services);
+        var results = PluginLoader.LoadAll(directory, services);
 
-            Assert.IsFalse(results.Single().Loaded);
-            StringAssert.Contains(results.Single().Message, "contract 99");
-            Assert.AreEqual(0, services.Count);
-        }
-        finally
-        {
-            TryDelete(directory);
-        }
+        Assert.IsFalse(results.Single().Loaded);
+        StringAssert.Contains(results.Single().Message, "contract 99");
+        Assert.AreEqual(0, services.Count);
     }
 
     [TestMethod]
     public void LoadAll_ABrokenPluginDoesNotStopTheGoodOnes()
     {
-        var directory = NewPluginsDirectory();
-        try
-        {
-            Directory.CreateDirectory(Path.Combine(directory, "a-broken"));
-            File.WriteAllText(Path.Combine(directory, "a-broken", PluginManifest.FileName), "{ not json");
-            CopySample(directory, "b-good");
-            Directory.CreateDirectory(Path.Combine(directory, "no-manifest"));
-            var services = new ServiceCollection();
+        using var pluginsFolder = new TempDirectoryHandle();
+        var directory = pluginsFolder.DirectoryPath;
+        Directory.CreateDirectory(Path.Combine(directory, "a-broken"));
+        File.WriteAllText(Path.Combine(directory, "a-broken", PluginManifest.FileName), "{ not json");
+        CopySample(directory, "b-good");
+        Directory.CreateDirectory(Path.Combine(directory, "no-manifest"));
+        var services = new ServiceCollection();
 
-            var results = PluginLoader.LoadAll(directory, services);
+        var results = PluginLoader.LoadAll(directory, services);
 
-            Assert.AreEqual(2, results.Count);
-            Assert.IsFalse(results[0].Loaded);
-            Assert.IsTrue(results[1].Loaded, results[1].Message);
-        }
-        finally
-        {
-            TryDelete(directory);
-        }
+        Assert.AreEqual(2, results.Count);
+        Assert.IsFalse(results[0].Loaded);
+        Assert.IsTrue(results[1].Loaded, results[1].Message);
     }
 
     [TestMethod]
     public void LoadAll_RefusesAnAssemblyPathOutsideThePluginFolder()
     {
-        var directory = NewPluginsDirectory();
-        try
-        {
-            CopySample(directory, "escape", text => text.Replace("OoBDev.DevTerm.Core.TestPlugin.dll", "..\\\\outside.dll", StringComparison.Ordinal));
+        using var pluginsFolder = new TempDirectoryHandle();
+        var directory = pluginsFolder.DirectoryPath;
+        CopySample(directory, "escape", text => text.Replace("OoBDev.DevTerm.Core.TestPlugin.dll", "..\\\\outside.dll", StringComparison.Ordinal));
 
-            var result = PluginLoader.LoadAll(directory, new ServiceCollection()).Single();
+        var result = PluginLoader.LoadAll(directory, new ServiceCollection()).Single();
 
-            Assert.IsFalse(result.Loaded);
-            StringAssert.Contains(result.Message, "isn't in the plugin folder");
-        }
-        finally
-        {
-            TryDelete(directory);
-        }
+        Assert.IsFalse(result.Loaded);
+        StringAssert.Contains(result.Message, "isn't in the plugin folder");
     }
 
     [TestMethod]

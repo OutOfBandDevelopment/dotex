@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Buffers;
 using global::System.Diagnostics;
 using System.Text;
+using OoBDev.System.IO;
 
 namespace OoBDev.DevTerm.Tests;
 
@@ -30,7 +31,8 @@ public sealed class PluginTrustProcessTests
             root = root.Parent;
         }
 
-        var home = Path.Combine(Path.GetTempPath(), "devterm-trust-" + Guid.NewGuid().ToString("N"));
+        using var homeFolder = new TempDirectoryHandle();
+        var home = homeFolder.DirectoryPath;
         var previous = Environment.GetEnvironmentVariable(DevTermHome.EnvironmentVariable);
         var folder = Path.Combine(home, "plugins", "shout");
         Directory.CreateDirectory(folder);
@@ -60,20 +62,14 @@ public sealed class PluginTrustProcessTests
         {
             PluginTrust.Approver = null;
             Environment.SetEnvironmentVariable(DevTermHome.EnvironmentVariable, previous);
-            try
-            {
-                Directory.Delete(home, true);
-            }
-            catch (IOException)
-            {
-            }
         }
     }
 
     [TestMethod]
     public void Approvals_ListsWhatWasRemembered_AndForgetRemovesIt()
     {
-        var home = Path.Combine(Path.GetTempPath(), "devterm-trust-" + Guid.NewGuid().ToString("N"));
+        using var homeFolder = new TempDirectoryHandle();
+        var home = homeFolder.DirectoryPath;
         var previous = Environment.GetEnvironmentVariable(DevTermHome.EnvironmentVariable);
         try
         {
@@ -90,13 +86,6 @@ public sealed class PluginTrustProcessTests
         finally
         {
             Environment.SetEnvironmentVariable(DevTermHome.EnvironmentVariable, previous);
-            try
-            {
-                Directory.Delete(home, true);
-            }
-            catch (IOException)
-            {
-            }
         }
     }
 
