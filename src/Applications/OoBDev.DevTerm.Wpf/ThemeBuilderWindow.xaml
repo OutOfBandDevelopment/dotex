@@ -30,7 +30,7 @@
                 <Button Content="Reset to seed" Width="110" Command="{Binding Reset}" />
             </StackPanel>
         </Grid>
-        <TextBlock Grid.Row="3" Margin="0,8,0,0" TextWrapping="Wrap" Foreground="#B9770E" Text="{Binding Warnings}" />
+        <TextBlock Grid.Row="3" Margin="0,8,0,0" TextWrapping="Wrap" Foreground="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" Text="{Binding Warnings}" />
         <TextBlock Grid.Row="4" Margin="0,6,0,0" TextWrapping="Wrap" Foreground="#C0392B" Text="{Binding Error}" />
         <StackPanel Grid.Row="5" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
             <Button Content="Save" Width="80" Height="32" Margin="0,0,8,0" IsDefault="True" Click="Save_Click" />

@@ -14,7 +14,7 @@ namespace OoBDev.DevTerm.Wpf.Tests;
 [TestClass]
 public sealed class InstrumentPickerScreenshotTests
 {
-    private sealed class GuideProvider : IInstrumentPanelProvider
+    internal sealed class GuideProvider : IInstrumentPanelProvider
     {
         public string Id => "scpi";
 
