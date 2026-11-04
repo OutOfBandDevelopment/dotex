@@ -74,7 +74,7 @@ takes a `.zip`, not a single-profile `.json` file.
 Nothing from the Connection Editor's requested list is still open — the last item, descriptions for
 detected serial ports on Linux and macOS, landed 2026-09-25. See
 [`docs/specs/connection-editor.md`](../specs/connection-editor.md)'s Open items and
-[`BACKLOG.md`](../../BACKLOG.md) for smaller follow-ups.
+[`BACKLOG.md`](../../../../BACKLOG.md) for smaller follow-ups.
 
 ## Starting from a saved profile on the command line
 

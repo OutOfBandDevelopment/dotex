@@ -19,3 +19,9 @@ Transient. Maps every imported dev-term documentation folder to its living home 
 | `docs/design` requirements, API, testing (written here) | `docs/applications/devterm/` | Living documents | Done |
 
 Links inside `source/` and `changes/` still use dev-term paths; they are history and are not repaired.
+
+**Table 2 — Folded so far**
+
+| Document | Now at | Date |
+|----------|--------|------|
+| transports, rfc2217, vxi11-transport, usbtmc-transport | `docs/design/Transports/` | 2026-11-04 |

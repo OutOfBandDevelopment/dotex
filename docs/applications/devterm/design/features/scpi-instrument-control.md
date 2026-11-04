@@ -109,7 +109,7 @@ oscilloscope section is the one worth flagging — it records no interface at al
 checking further:
 
 - **Rigol DS1102E** — has USB (confirmed directly); Rigol scopes of this era commonly do USBTMC
-  over that port, matching the [USBTMC](../transports.md) gap already noted for the DG1022 family
+  over that port, matching the [USBTMC](../../../../design/Transports/transports.md) gap already noted for the DG1022 family
   — same "needs its own raw-USB transport" dependency as that device, not the existing serial/TCP
   transports.
 - **Tektronix TDS2024** — confirmed to support **GPIB and serial** as fitted options; the
@@ -140,7 +140,7 @@ SCPI is textual, not binary — this is a much softer decoder problem than Radex
 - **Transport-agnostic**: SCPI instruments show up over GPIB (out of scope — no GPIB transport
   planned), RS-232 (the existing serial transport), USB-CDC (also serial, from the OS's point of
   view), and LAN/LXI (the existing TCP transport) — no new `ITransport` is needed for the RS-232
-  and USB-CDC and LAN cases; see [transports.md](../transports.md).
+  and USB-CDC and LAN cases; see [transports.md](../../../../design/Transports/transports.md).
 
 ## Proposed shape
 
@@ -197,13 +197,13 @@ decoder --> user : Human-readable text baseline
 - **LXI (SCPI-over-LAN) instruments** use the RFC 2217-adjacent pattern of "serial protocol,
   network-reachable" but over a real TCP socket (LXI Core uses a raw TCP or VXI-11/RPC transport,
   not Telnet framing) — so this rides on the existing TCP transport directly, not on the RFC 2217
-  work in [rfc2217.md](../rfc2217.md). Worth double-checking against a real LXI-capable instrument
+  work in [rfc2217.md](../../../../design/Transports/rfc2217.md). Worth double-checking against a real LXI-capable instrument
   before assuming raw-TCP-SCPI is sufficient (the source project notes this as unverified/planning
   stage).
 - The source project's own "RS-232/Ethernet gateway" idea (a Raspberry Pi/BeagleBone bridging a
   GPIB/RS-232-only instrument onto the network) is a **transport-level concern**, not a
   control-module concern — if built, it belongs alongside the RFC 2217 work
-  ([rfc2217.md](../rfc2217.md)) rather than inside this module, since a generic serial-over-network
+  ([rfc2217.md](../../../../design/Transports/rfc2217.md)) rather than inside this module, since a generic serial-over-network
   bridge is useful to every dev-term session, not just SCPI ones.
 
 ## Open questions

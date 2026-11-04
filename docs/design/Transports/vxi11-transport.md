@@ -3,7 +3,7 @@
 `--transport vxi11 --host <ip>` talks to an LXI instrument over VXI-11 (ONC-RPC over TCP) instead of
 a raw SCPI socket. It is for instruments with no raw SCPI port; an instrument that has one (the Rigol
 DG1062Z answers on 5555) is still simpler over `--transport tcp`. Discovery is separate
-(see [LXI support](features/lxi-support.md)).
+(see [LXI support](../../applications/devterm/design/features/lxi-support.md)).
 
 ## Protocol subset
 

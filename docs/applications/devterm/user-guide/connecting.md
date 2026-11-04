@@ -32,7 +32,7 @@ Type a line and press Enter to send; Ctrl+C to exit.
 
 If the remote end doesn't actually speak RFC 2217 option negotiation (some vendor serial-to-TCP
 bridges advertise "RFC2217" without fully implementing it — see
-[`docs/design/rfc2217.md`](../design/rfc2217.md)'s vendor-variant warning), dev-term falls back to
+[`docs/design/rfc2217.md`](../../../design/Transports/rfc2217.md)'s vendor-variant warning), dev-term falls back to
 plain data pass-through with no baud/DTR/RTS control rather than failing the connection, unless the
 peer explicitly refuses the option (`WONT`/`DONT`), which is reported as a connection error.
 
@@ -40,7 +40,7 @@ peer explicitly refuses the option (`WONT`/`DONT`), which is reported as a conne
 
 `--listports true` lists serial ports; `--listhiddevices true` lists USB HID devices;
 `--listusbtmcdevices true` lists USBTMC instruments; `--listbledevices true` lists already-*paired*
-BLE peripherals (Windows only today — see [`docs/design/transports.md`](../design/transports.md)'s
+BLE peripherals (Windows only today — see [`docs/design/transports.md`](../../../design/Transports/transports.md)'s
 BLE section for why paired-only, not a live scan). All four exit immediately, no connection made —
 real output from a development machine:
 
@@ -222,7 +222,7 @@ exactly which fields that is.
 BLE, or Loopback): **Write byte delay (ms)**, for a slow device without a FIFO buffer that can't
 absorb a burst write. Leave it at `-1` (the default) for normal unpaced writes; `0` writes and
 flushes one byte at a time with no added delay; a positive value adds that many milliseconds between
-bytes. See [`docs/design/transports.md`](../design/transports.md)'s "Write pacing" section for how it
+bytes. See [`docs/design/transports.md`](../../../design/Transports/transports.md)'s "Write pacing" section for how it
 works under the hood.
 
 **USB HID** (the TUI capture is scrolled so the USB Device section starts at the top):
@@ -232,7 +232,7 @@ works under the hood.
 ![WPF connection editor, HID transport](images/wpf-device-profiles-hid.png)
 
 **Loopback** — a zero-configuration, in-process fake device for exercising the UI without any real
-hardware attached (see [`docs/design/transports.md`](../design/transports.md)); the only field is
+hardware attached (see [`docs/design/transports.md`](../../../design/Transports/transports.md)); the only field is
 an optional **Sample interval (ms)** (default `0`, instant delivery) that paces a scripted streaming
 response (`Samples: N`, `Send Events: N`) one line at a time instead of delivering it all at once —
 useful for demoing or verifying a strip chart or Stream Monitor capture at a believable cadence. No
@@ -271,7 +271,7 @@ and press **Stream Samples**. Its bar graph, strip chart and vector displays upd
 The stills are real captures from the `LoopbackSampleStreamScreenshotTests` and `LoopbackChartsScreenshotTests`
 classes (Console and Wpf test projects); `scripts/make_loopback_gif.py` assembles each front end's stills into its GIF.
 
-**BLE** (Windows only today — see [`docs/design/transports.md`](../design/transports.md)'s BLE
+**BLE** (Windows only today — see [`docs/design/transports.md`](../../../design/Transports/transports.md)'s BLE
 section): device id plus the three GATT UUIDs (service/write/notify — blank uses the Nordic UART
 Service defaults). No live "Detect..." picker yet, unlike Serial/HID/USBTMC — copy the device id from
 a `--listbledevices true` run:

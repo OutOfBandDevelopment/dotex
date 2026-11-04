@@ -34,7 +34,7 @@ logger is built on it. See [session-logging.md](session-logging.md).
 
 ### Transport
 
-`ITransport` — abstraction over a byte- or message-oriented, full-duplex (or receive-only) connection to a device: connection lifecycle (discover/open/close), device-specific configuration, and streaming bytes in and out. See [transports.md](transports.md).
+`ITransport` — abstraction over a byte- or message-oriented, full-duplex (or receive-only) connection to a device: connection lifecycle (discover/open/close), device-specific configuration, and streaming bytes in and out. See [transports.md](../../../design/Transports/transports.md).
 
 ### Presenter
 

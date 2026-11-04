@@ -12,7 +12,7 @@ point of view, one connection to one peer producing one byte/message stream (per
 connection to a broker, N independently-addressable topics/queues/exchanges subscribed at once, each
 producing its own stream of discrete messages. This is closer to UDP/BLE's "preserve message
 boundaries, don't flatten into one undifferentiated byte stream" precedent
-([transports.md](../transports.md)) than to a raw serial/TCP byte stream, but adds a dimension
+([transports.md](../../../../design/Transports/transports.md)) than to a raw serial/TCP byte stream, but adds a dimension
 neither of those has: per-message **topic addressing**, not just message boundaries.
 
 ## Design sketch

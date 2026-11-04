@@ -82,7 +82,7 @@ SHOW_LEGEND()
 
 ## Relationship to transports
 
-A device control module doesn't introduce a new transport — it rides on whatever `ITransport` the session is already using (most commonly serial for bench equipment, but nothing prevents TCP/LXI-style instruments — see [transports.md](transports.md)). The module is transport-agnostic in the same way protocol decoders are.
+A device control module doesn't introduce a new transport — it rides on whatever `ITransport` the session is already using (most commonly serial for bench equipment, but nothing prevents TCP/LXI-style instruments — see [transports.md](../../../design/Transports/transports.md)). The module is transport-agnostic in the same way protocol decoders are.
 
 ## Front-end rendering
 

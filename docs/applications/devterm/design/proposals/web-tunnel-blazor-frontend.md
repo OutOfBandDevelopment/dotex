@@ -48,7 +48,7 @@ power supplies, RF gear, anything with a "send arbitrary bytes" control surface)
 minimum, before real design work starts:
 
 - A default bind scope — the existing precedent in this codebase is
-  [RFC 2217 server](../rfc2217.md)'s "binds loopback-only by default," which this should almost
+  [RFC 2217 server](../../../../design/Transports/rfc2217.md)'s "binds loopback-only by default," which this should almost
   certainly copy rather than defaulting to any-interface.
 - Authentication — nothing in dev-term today has a concept of a user account or credential; this would
   be the first.

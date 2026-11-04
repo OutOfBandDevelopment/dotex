@@ -49,7 +49,7 @@ device-framed report/message per call, where splitting it into single-byte write
 framing rather than pace it; not offered for BLE or Loopback either, for the same "not a byte-stream
 write path" reason. `ConnectionEditorViewModel.SupportsWriteByteDelay` gates the Connection Editor's
 "Timing" form section to exactly these three transports — see
-[`docs/specs/connection-editor.md`](../specs/connection-editor.md).
+[`docs/specs/connection-editor.md`](../../applications/devterm/specs/connection-editor.md).
 
 ### TCP
 
@@ -58,7 +58,7 @@ Supports both directions from day one, since either the device or dev-term may b
 - **Client mode** — connect out to a host:port (the common case: a device exposing a TCP server).
 - **Listener mode** — bind and accept incoming connections on a local port, for devices that connect out to dev-term (e.g., a board acting as a TCP client). A listener session represents "waiting for a peer"; `OpenAsync` doesn't complete until a peer connects, and the session then behaves like any other connected transport for read/write. **v1 policy**: one peer at a time — the listening socket stops accepting as soon as one connection is accepted, so a second simultaneous inbound connection is simply not accepted until the session is closed and reopened. Queuing/multiplexing multiple concurrent peers on one listener session is not supported yet (see open questions).
 
-Which mode a given session uses is a configuration choice (see the Options pattern in [platform.md](platform.md)), not two different transport plugins.
+Which mode a given session uses is a configuration choice (see the Options pattern in [platform.md](../../applications/devterm/design/platform.md)), not two different transport plugins.
 
 **Software (XON/XOFF) flow control** (`TcpTransportOptions.SoftwareFlowControl`, landed
 2026-10-01): off by default — stripping 0x11/0x13 from a stream that isn't actually using them for
@@ -72,8 +72,8 @@ without reconnecting, since a bridge's actual behavior often can't be confirmed 
 already open. Disabling it releases any write currently paused on a stale XOFF rather than leaving it
 stuck forever. Both front ends expose this as a View > Software Flow Control (XON/XOFF) menu item,
 enabled only when the active tab's transport is `TcpTransport` — see
-[`docs/specs/tui-main-screen.md`](../specs/tui-main-screen.md) and
-[`docs/specs/wpf-main-window.md`](../specs/wpf-main-window.md).
+[`docs/specs/tui-main-screen.md`](../../applications/devterm/specs/tui-main-screen.md) and
+[`docs/specs/wpf-main-window.md`](../../applications/devterm/specs/wpf-main-window.md).
 
 ### VXI-11
 
@@ -90,11 +90,11 @@ Datagram-oriented; no connection lifecycle in the traditional sense, but still m
 - **Target mode** — send datagrams to a fixed host:port (and receive any replies from that same peer).
 - **Listener mode** — bind a local port to receive datagrams from any sender, useful for devices that push telemetry/broadcast data unprompted. A bound listener can still send (e.g., reply to whichever peer last sent data, or to a separately configured target), since UDP has no inherent client/server asymmetry.
 
-Because UDP preserves datagram boundaries, each received datagram is delivered to the presenter pipeline as one discrete message rather than merged into an undifferentiated byte stream (see [architecture.md](architecture.md)).
+Because UDP preserves datagram boundaries, each received datagram is delivered to the presenter pipeline as one discrete message rather than merged into an undifferentiated byte stream (see [architecture.md](../../applications/devterm/design/architecture.md)).
 
 ### USB HID
 
-Report-based I/O against a specific VID/PID (and usage page/usage where needed) — useful for devices that expose a HID interface for control/debug rather than a serial port. Direction: [HidSharp](https://www.nuget.org/packages/HidSharp) — cross-platform (Windows/Linux/macOS), no vendor driver install required since HID already has a generic OS-level class driver everywhere (unlike raw USB device classes, which is exactly why HID was ruled out for USBTMC-class instruments — see the note under "Extensibility" below). Not a fit for report-based protocols alone; a device that turns out to actually be a different USB class entirely (as [Radex One](../../../protocols/radex-one-protocol.md) initially seemed but wasn't confirmed to be until checked directly) needs re-verifying before assuming this transport applies.
+Report-based I/O against a specific VID/PID (and usage page/usage where needed) — useful for devices that expose a HID interface for control/debug rather than a serial port. Direction: [HidSharp](https://www.nuget.org/packages/HidSharp) — cross-platform (Windows/Linux/macOS), no vendor driver install required since HID already has a generic OS-level class driver everywhere (unlike raw USB device classes, which is exactly why HID was ruled out for USBTMC-class instruments — see the note under "Extensibility" below). Not a fit for report-based protocols alone; a device that turns out to actually be a different USB class entirely (as [Radex One](../../protocols/radex-one-protocol.md) initially seemed but wasn't confirmed to be until checked directly) needs re-verifying before assuming this transport applies.
 
 ### BLE
 
@@ -178,7 +178,7 @@ than silence. Matching is case-insensitive (`HELLO`, `Hello`, and `hello` all ma
 - `hello` → `From Loopback test`
 - `Send Stream: N, ascii` → a deterministic N-character ASCII run
 - `Send Events: N` → N separate lines, `Event 1` through `Event N`
-- `MEAS?` → the next simulated sensor sample (`A=50.00 B=90.00 C=0.00 X=0.80 Y=0.00 Z=0.00 R=0.50 T=0.00 H=0.00` first); `Samples: N` → the next N, one per line. The sample counter is per connection, so the sequence is deterministic from connect (`LoopbackGenerators.SensorSample(index)`); the bundled "Loopback Sensor Demo" [device manifest](device-manifests.md) charts it
+- `MEAS?` → the next simulated sensor sample (`A=50.00 B=90.00 C=0.00 X=0.80 Y=0.00 Z=0.00 R=0.50 T=0.00 H=0.00` first); `Samples: N` → the next N, one per line. The sample counter is per connection, so the sequence is deterministic from connect (`LoopbackGenerators.SensorSample(index)`); the bundled "Loopback Sensor Demo" [device manifest](../../applications/devterm/design/device-manifests.md) charts it
 - `STATUS?` → a labelled reading with units (`temp=21.50 C volts=3.30 V state=OK` first; the temperature drifts and `state` is `WARN` every fifth reading). The example input for the `keyvalue` plugin and `StructuredMessage`.
 - `help` or `?` → the command list above (`LoopbackScript.HelpLines`)
 
@@ -189,7 +189,7 @@ either front end, so both pickers show only an informational label/panel in its 
 
 This is a distinct, real production transport, not a repurposed version of the internal
 `LoopbackTransport` test helper in `tests/DevTerm.Console.Tests/` (documented in
-[testing.md](testing.md)) — that one stays a test-only prototype used to drive `Session`/`TuiMode`/
+[testing.md](../../applications/devterm/design/testing.md)) — that one stays a test-only prototype used to drive `Session`/`TuiMode`/
 `MainWindow` in automated tests; this one is registered through the same `AddDevTermFrontEnd` DI path
 as every other transport and is selectable by an actual end user.
 
@@ -197,7 +197,7 @@ as every other transport and is selectable by an actual end user.
 
 New transports (CAN bus, SPI/I2C bridge adapters, raw sockets, SSH, named pipes, etc.) implement the same `ITransport` contract and are picked up via the plugin host — no core changes required. RFC 2217 (a remote-controllable serial port over Telnet) is built as a client (`DevTerm.Transports.Rfc2217`), with a share-server option — see [rfc2217.md](rfc2217.md), including a real-world caveat about vendor-specific variants that don't actually match the IETF standard despite the name.
 
-**USBTMC** (the USB device class most bench test equipment actually uses for local USB control, e.g. Rigol/Keysight instruments) is its own transport (`DevTerm.Transports.Usbtmc`) rather than part of HID or Serial — it is neither HID nor a virtual COM port, but its own USB class with dedicated bulk endpoints and message framing, so it needs its own transport built against raw USB (WinUSB/LibUsbDotNet) rather than reusing HID or Serial, or an IVI/VISA driver (ruled out — Windows/.NET-Framework-oriented and a separate proprietary runtime install). See [usbtmc-transport.md](usbtmc-transport.md) for the design (protocol framing, library choice, why IVI.NET/VISA was rejected) and the [SCPI proposal](features/scpi-instrument-control.md) for target hardware; built and verified on bench instruments.
+**USBTMC** (the USB device class most bench test equipment actually uses for local USB control, e.g. Rigol/Keysight instruments) is its own transport (`DevTerm.Transports.Usbtmc`) rather than part of HID or Serial — it is neither HID nor a virtual COM port, but its own USB class with dedicated bulk endpoints and message framing, so it needs its own transport built against raw USB (WinUSB/LibUsbDotNet) rather than reusing HID or Serial, or an IVI/VISA driver (ruled out — Windows/.NET-Framework-oriented and a separate proprietary runtime install). See [usbtmc-transport.md](usbtmc-transport.md) for the design (protocol framing, library choice, why IVI.NET/VISA was rejected) and the [SCPI proposal](../../applications/devterm/design/features/scpi-instrument-control.md) for target hardware; built and verified on bench instruments.
 
 **GPIB** is out of scope (decided 2026-10-03): no GPIB hardware is on hand, so the Prologix-style adapter notes that used to be here were removed. It can be added back if it ever comes up; the existing serial and TCP transports would carry a Prologix adapter without a new `ITransport`.
 

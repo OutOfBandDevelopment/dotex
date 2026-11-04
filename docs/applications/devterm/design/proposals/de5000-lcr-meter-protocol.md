@@ -33,9 +33,9 @@ This isn't "plug in a cable" — three link-layer hops sit between the meter and
 1. **DE-5000 optical output** — UART frames, 9600-8N1, transmitted via IR.
 2. **A custom-built optical-to-BLE adapter** (already built) — receives the IR UART stream and
    re-transmits it over BLE. Exactly which GATT profile it exposes (Nordic UART Service, per
-   [transports.md](../transports.md)'s "BLE Serial" default, or a custom one) is **not yet known**
+   [transports.md](../../../../design/Transports/transports.md)'s "BLE Serial" default, or a custom one) is **not yet known**
    here and needs confirming before the BLE Serial transport can be pointed at it.
-2. **dev-term's BLE transport** ("BLE Serial" mode — see [transports.md](../transports.md)),
+2. **dev-term's BLE transport** ("BLE Serial" mode — see [transports.md](../../../../design/Transports/transports.md)),
    itself not yet built.
 3. **This decoder** — parses the same ES51919 UART frame the meter always sent; nothing about the
    frame format changes because it arrived over BLE instead of a direct wired UART. The decoder is

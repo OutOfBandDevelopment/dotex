@@ -23,7 +23,7 @@ from a different personal project — a local binary-protocol-decoder library:
 firmware `0x16`) — an Ethernet-to-serial bridge, conceptually the same role as the
 [USR-TCP232-302](https://shop.usriot.com/1-port-rs232-to-ethernet-converters-usr-tcp232-302.html)
 already used in this project (see the top-level [README](../../../../../README.md) and the vendor-variance
-caveat in [rfc2217.md](../rfc2217.md)), but a different manufacturer (Ebyte/`cdebyte.com`, Chinese)
+caveat in [rfc2217.md](../../../../design/Transports/rfc2217.md)), but a different manufacturer (Ebyte/`cdebyte.com`, Chinese)
 with an entirely different, non-RFC2217, non-USR configuration protocol. Bridges Ethernet to
 RS-485 (and possibly RS-422 electrically — the notes only cover the RS485 model variant).
 

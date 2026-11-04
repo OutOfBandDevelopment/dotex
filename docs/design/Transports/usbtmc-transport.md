@@ -157,7 +157,7 @@ project (its GitHub releases and wiki), not assumed:
   the GUI. That's arguably correct, not just a gap: it's the same kind of confirmation Windows itself
   requires (UAC) for any driver change.
 
-**What this repo provides instead**: [`scripts/usbtmc/New-ZadigPreset.ps1`](../../../../scripts/devterm/New-ZadigPreset.ps1)
+**What this repo provides instead**: [`scripts/usbtmc/New-ZadigPreset.ps1`](../../../scripts/devterm/New-ZadigPreset.ps1)
 generates a `zadig.ini` and one Zadig preset file per attached USBTMC device (by default, discovered
 by shelling out to this project's own `--listusbtmcdevices true`; VID/PID can also be passed
 directly). It writes files only — no elevation needed to run it, and it does not install anything
@@ -286,7 +286,7 @@ own repeated practice of not trusting a fix until checked against real hardware:
   investigation and this correction.
 - **Resolved (real-hardware, 2026-09-25)**: the "unverified end-to-end" status and the deprioritized
   packet-capture plan above are both now out of date. The USBTMC protocol-conformance rework (see
-  [`docs/design/features/usbtmc-protocol-conformance.md`](../../../protocols/usbtmc-protocol-conformance.md))
+  [`docs/design/features/usbtmc-protocol-conformance.md`](../../protocols/usbtmc-protocol-conformance.md))
   fixed the real bugs actually causing the DM3000/DM3058E-family symptoms — a naive libusb sequence
   never needed to replicate NI-VISA's handshake after all. DM3058E's stall was the bulk-IN
   header-re-decode bug (`usbtmc-bulk-in-reassembly-fix.md`); the DG1062Z's "2-byte first read" was a
@@ -320,7 +320,7 @@ own repeated practice of not trusting a fix until checked against real hardware:
     **this "fix" was wrong and has been reverted (2026-09-25)**: USB488 Table 15 defines
     `REN_CONTROL`'s `wValue` as the REN state itself (1 = assert, 0 = de-assert); only
     `GO_TO_LOCAL`/`LOCAL_LOCKOUT` use 0. Sending 0 on open actively de-asserted REN. See
-    [`features/usbtmc-protocol-conformance.md`](../../../protocols/usbtmc-protocol-conformance.md).
+    [`features/usbtmc-protocol-conformance.md`](../../protocols/usbtmc-protocol-conformance.md).
   - **Minor, fixed**: `TryGetSerialNumber`'s catch now logs the swallowed exception via
     `Debug.WriteLine` before returning `null`, so an unexpected "every candidate rejected" is
     traceable instead of silent.
@@ -337,7 +337,7 @@ own repeated practice of not trusting a fix until checked against real hardware:
   more than one physical transfer — turned out to be a second, independent cause of "communication
   locks up" reports, separate from the earlier DM3000/DM3058E MAV-never-sets mystery this section
   parked. Fixed, tested, and verified against real hardware: see
-  [`docs/design/features/usbtmc-bulk-in-reassembly-fix.md`](features/usbtmc-bulk-in-reassembly-fix.md).
+  [`docs/design/features/usbtmc-bulk-in-reassembly-fix.md`](../../applications/devterm/design/features/usbtmc-bulk-in-reassembly-fix.md).
   DM3058E and DS1102E both now complete a full query/reply round-trip correctly end-to-end. DG1022
   remains genuinely stuck at the device/USB level in the current bench state — possibly the same
   family of issue as the parked DM3000/DM3058E MAV mystery above, possibly something else entirely —
@@ -349,5 +349,5 @@ own repeated practice of not trusting a fix until checked against real hardware:
   `UsbtmcDeviceQuirks` now gives this VID:PID a 20 ms delay and also skips REN (the device times out
   `GO_TO_LOCAL`, and libsigrok blacklists remote/local for this PID too). After both fixes,
   `RealHardwareUsbtmcTests`'s DG1022 test passed 3 of 3 runs. See
-  [`docs/design/features/usbtmc-protocol-conformance.md`](../../../protocols/usbtmc-protocol-conformance.md)
+  [`docs/design/features/usbtmc-protocol-conformance.md`](../../protocols/usbtmc-protocol-conformance.md)
   and `docs/test/2026-09-25-18-03-06.md`.

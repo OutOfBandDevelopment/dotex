@@ -5,7 +5,7 @@ add a parameter for setting the sample rate to control how fast stream samples a
 
 ## Problem
 
-[The Loopback transport](../transports.md#loopback) pushes its `MEAS?`/`Samples: N` responses (and
+[The Loopback transport](../../../../design/Transports/transports.md#loopback) pushes its `MEAS?`/`Samples: N` responses (and
 every other scripted response) back as separate writes with no artificial delay between them — useful
 for exercising the UI end-to-end with no hardware, but it means anything that wants to visually verify
 *live-arriving* behavior (a `StripChartControl` scrolling in as samples arrive, a Stream Monitor

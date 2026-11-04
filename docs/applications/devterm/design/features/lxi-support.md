@@ -11,7 +11,7 @@ broadcast.
 ## What dev-term already covers, unmodified
 
 The common case — an instrument that just speaks SCPI over a raw TCP socket — needs **no new
-transport**. [Transports.md](../transports.md)'s existing TCP client mode plus
+transport**. [Transports.md](../../../../design/Transports/transports.md)'s existing TCP client mode plus
 [`DevTerm.Devices.Scpi`](scpi-instrument-control.md) already do exactly this: connect out
 to `host:5025`, send `*IDN?`/whatever profile commands, get a line back. This needs no new
 transport: the existing TCP transport already does the I/O. An LXI instrument with a raw-socket SCPI port is, from dev-term's
@@ -60,13 +60,13 @@ What was needed to close this out. Tick items as they land, in the same change.
 
 - [x] Confirm a real LXI instrument on the bench: Rigol DG1062Z at 192.168.0.87 (2026-10-02)
 - [x] Phase 1: LXI discovery scanner and picker feeding the existing TCP transport and SCPI module (2026-10-03)
-- [x] Phase 2: VXI-11 client built (2026-10-03) as `--transport vxi11`, verified against the DG1062Z: see [VXI-11 transport](../vxi11-transport.md)
+- [x] Phase 2: VXI-11 client built (2026-10-03) as `--transport vxi11`, verified against the DG1062Z: see [VXI-11 transport](../../../../design/Transports/vxi11-transport.md)
 - [x] Both front ends, plus `docs/specs/` and `docs/user-guide/` entries (Phase 1 picker)
 - [x] Real-hardware pass: see the latest `docs/test/` report for the DG1062Z (discovery plus read-only SCPI over TCP, 2026-10-03)
 
 ## Status
 
-**Done 2026-10-03: Phase 1 and Phase 2 built.** Phase 2 is the core-channel VXI-11 client (`--transport vxi11`, see [VXI-11 transport](../vxi11-transport.md)), added when asked to test against the DG1062Z; device_clear, status byte, SRQs and locking are still not built. Discovery is `DevTerm.Transports.Tcp.LxiDiscovery`: it broadcasts an
+**Done 2026-10-03: Phase 1 and Phase 2 built.** Phase 2 is the core-channel VXI-11 client (`--transport vxi11`, see [VXI-11 transport](../../../../design/Transports/vxi11-transport.md)), added when asked to test against the DG1062Z; device_clear, status byte, SRQs and locking are still not built. Discovery is `DevTerm.Transports.Tcp.LxiDiscovery`: it broadcasts an
 ONC-RPC portmapper `GETPORT` for the VXI-11 core program to UDP 111 on every up IPv4 interface and keeps hosts that answer with
 a non-zero port, then asks each for `*IDN?` on raw ports 5025 and 5555. mDNS (`_lxi._tcp`) was tried first and the DG1062Z
 never answered it, so it is not used. Run against the bench network it found the DG1062Z
