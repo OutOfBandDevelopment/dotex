@@ -1,7 +1,7 @@
 # Out-of-process plugins (any language)
 
 Owner direction (2026-10-03): plugin isolation should allow plugins written in other languages, hosted out of process.
-The in-process `AssemblyLoadContext` loader ([plugin-model.md](../plugin-model.md)) stays for .NET plugins; this is
+The in-process `AssemblyLoadContext` loader ([plugin-model.md](../../../../design/Plugins/plugin-model.md)) stays for .NET plugins; this is
 the second path for everything else.
 
 ## Shape

@@ -5,13 +5,13 @@
 Lets a user save a named connection configuration once and pick it again later from a menu, in
 either front end (TUI or WPF), instead of re-entering connection settings every session or only
 ever having the one untitled `appsettings.Local.json` profile. A profile can also point at a
-[device manifest](../../../design/UiDefinitions/device-manifests.md), so picking a profile can mean "connect this way, *and* load
+[device manifest](../UiDefinitions/device-manifests.md), so picking a profile can mean "connect this way, *and* load
 what this specific device can do and how to show it" in one step.
 
 ## Relationship to the existing `appsettings.Local.json`
 
 That file doesn't go away — it's still the always-loaded *default* profile (config layering, see
-[platform.md](platform.md)): no args, no menu, it's just what you get. Named profiles are an
+[platform.md](../../applications/devterm/design/platform.md)): no args, no menu, it's just what you get. Named profiles are an
 additional, separate mechanism for **explicit** selection: several saved configurations, browsable
 and pickable by name, each optionally tied to a device manifest. The default profile itself has no
 name and no manifest reference — it's the "just connect to whatever I usually use" shortcut; named
@@ -180,7 +180,7 @@ name; WPF's saved-profiles list grows/shrinks with the window. `CliOptions` gain
 `[Category]`/`[DisplayName]` attributes documenting the field groupings (metadata only for now).
 Full field-by-field/action-by-action reference, including what's still open (HID vendor/product ID
 enumeration, dirty-field confirmation, zip export/import with conflict
-resolution, a TUI file picker/scrollbar): [`docs/specs/connection-editor.md`](../specs/connection-editor.md) —
+resolution, a TUI file picker/scrollbar): [`docs/specs/connection-editor.md`](../../applications/devterm/specs/connection-editor.md) —
 the first of a new `docs/specs/` series, one file per screen/user-flow, precise where this doc is
 about intent and `docs/user-guide/` is about how to use it.
 
@@ -208,8 +208,8 @@ The console app reports an unknown or invalid name as a startup error. Decided 2
 
 - **Not wired to `IControlSurface`** — loading a profile's referenced manifest makes its
   `UiDefinition` available, but nothing yet renders it or turns it into a live control surface,
-  same "step one" scope as [ui-definitions.md](../../../design/UiDefinitions/ui-definitions.md) and
-  [device-manifests.md](../../../design/UiDefinitions/device-manifests.md) themselves.
+  same "step one" scope as [ui-definitions.md](../UiDefinitions/ui-definitions.md) and
+  [device-manifests.md](../UiDefinitions/device-manifests.md) themselves.
 - **Not a replacement for `appsettings.Local.json`** — see "Relationship" above; both exist,
   serving different purposes (implicit default vs. explicit named choice).
 

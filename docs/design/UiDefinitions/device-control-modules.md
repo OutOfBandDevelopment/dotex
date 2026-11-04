@@ -78,7 +78,7 @@ SHOW_LEGEND()
   `IStructuredPresenter` — the panel has no `IndicatorControl`s to drive). Registered and wired the
   identical way K8055 is (`AddBusylightPresenter`, `--presenter busylight`, a sibling menu item in
   both front ends) — no renderer code changed to support it.
-- A device control module registers an `IControlSurface` alongside one or more `IPresenter`s under one plugin manifest entry (see [plugin-model.md](../../applications/devterm/design/plugin-model.md)), but each half is still just an ordinary DI-registered service — nothing about the core pipeline needs to know "this is a bundled module" versus independently chosen pieces.
+- A device control module registers an `IControlSurface` alongside one or more `IPresenter`s under one plugin manifest entry (see [plugin-model.md](../Plugins/plugin-model.md)), but each half is still just an ordinary DI-registered service — nothing about the core pipeline needs to know "this is a bundled module" versus independently chosen pieces.
 
 ## Relationship to transports
 
@@ -106,7 +106,7 @@ For simple query/response devices (most bench gear — a command string in, a fo
 ## Open questions
 
 - How rich the control-surface metadata needs to be (flat parameter list vs. grouped/paged forms, conditional/interlocked parameters) — answered for the common case by [ui-definitions.md](ui-definitions.md)'s model (one level of grouping, ten control kinds — seven input/indicator kinds plus bar graph, strip chart and vector displays, 2026-09-25 — no conditional/interlocked support yet), now proven end-to-end against two real devices (K8055, Busylight) with no renderer changes between them; see that doc's own open questions for what's still undecided.
-- Whether/how a device control module gets registered via the declarative manifest/plugin-loading path (see [device-manifests.md](device-manifests.md)/[plugin-model.md](../../applications/devterm/design/plugin-model.md)) rather than a front end constructing its `IControlSurface` directly from a live `Session`, as `K8055ControlSurface` does today — the current wiring is a front-end-specific menu item (`_Device`/`Device` → "K8055 Control Panel..."). **Partly answered 2026-09-25**: a loaded `DeviceManifest` now drives a panel itself (Device > Device Manifest..., `DevTerm.DeviceManifests.ManifestPanel` — a declarative `IControlSurface` plus a reply/pattern presenter over the live session), with no per-device code; code plugins still aren't loaded dynamically.
+- Whether/how a device control module gets registered via the declarative manifest/plugin-loading path (see [device-manifests.md](device-manifests.md)/[plugin-model.md](../Plugins/plugin-model.md)) rather than a front end constructing its `IControlSurface` directly from a live `Session`, as `K8055ControlSurface` does today — the current wiring is a front-end-specific menu item (`_Device`/`Device` → "K8055 Control Panel..."). **Partly answered 2026-09-25**: a loaded `DeviceManifest` now drives a panel itself (Device > Device Manifest..., `DevTerm.DeviceManifests.ManifestPanel` — a declarative `IControlSurface` plus a reply/pattern presenter over the live session), with no per-device code; code plugins still aren't loaded dynamically.
 - ~~Whether commands can declare an expected reply pattern (request/response pairing)...~~
   **Answered 2026-09-23** for the plain-text/synchronous case by `DevTerm.Devices.Scpi`'s
   `ScpiReplyPresenter`/`IScpiReplyTracker`: a command that's a query registers a

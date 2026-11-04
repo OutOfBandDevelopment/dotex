@@ -29,3 +29,6 @@ Links inside `source/` and `changes/` still use dev-term paths; they are history
 | presenters | `docs/design/Presenters/` | 2026-11-04 |
 | session-logging | `docs/design/SessionLogging/` | 2026-11-04 |
 | theming | `docs/design/Theming/` | 2026-11-04 |
+| plugin-model | `docs/design/Plugins/` | 2026-11-04 |
+| connection-profiles | `docs/design/ConnectionProfiles/` | 2026-11-04 |
+| multi-session-ui | `docs/design/MultiSessionUi/` | 2026-11-04 |

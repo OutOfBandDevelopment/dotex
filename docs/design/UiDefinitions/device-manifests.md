@@ -109,7 +109,7 @@ case-insensitively, so hand-written camelCase manifests work.
 
 **Where they come from**: `DevTerm.Configuration.InstalledManifests.Discover()` lists
 `~/.dev-term/manifests` then the app's `manifests\` folder (the two locations
-[connection-profiles.md](../../applications/devterm/design/connection-profiles.md) already resolves a `ManifestName` from) — every
+[connection-profiles.md](../ConnectionProfiles/connection-profiles.md) already resolves a `ManifestName` from) — every
 subfolder with a `device.json`, every `.zip`, every other `.json` (`ManifestCatalog`) — and the
 picker also takes any path. The first bundled manifest is **Loopback Sensor Demo**
 (`src/DevTerm.DeviceManifests/Manifests/loopback-sensor-demo/device.json`, copied into every front
@@ -148,7 +148,7 @@ to `~/.dev-term/manifests` by default.
 
 ## What this explicitly is not (yet)
 
-- **Not a code plugin mechanism** — see [plugin-model.md](../../applications/devterm/design/plugin-model.md) for dynamic *code*
+- **Not a code plugin mechanism** — see [plugin-model.md](../Plugins/plugin-model.md) for dynamic *code*
   plugin loading, which is a separate, larger, not-yet-built concern. A device manifest is for the
   no-code case device-control-modules.md's declarative-schema section describes; a device needing
   real logic still needs a real plugin.
@@ -173,6 +173,6 @@ to `~/.dev-term/manifests` by default.
 - ~~Where package-mode manifests live on disk once loaded from a `.zip`~~ **Decided 2026-10-03:** default to a folder under the app data folder (`DevTermHome.Root`) rather than `%TEMP%`, **Built 2026-10-03:** `DevTermHome.Root/manifest-cache/<hash of path, size and mtime>`, so an unchanged zip is re-extracted into the same folder. Offering the user a choice of location is not built.
 - ~~Whether a single-file manifest may also reference an external `.ksy`~~ **Decided 2026-10-03:** allowed. Referenced files already resolve relative to the manifest's own location, so a lone `device.json` with a sibling `.ksy` just works; it is simply not self-contained. Rejecting it would add a check and a failure mode for no benefit.
 
-See [connection-profiles.md](../../applications/devterm/design/connection-profiles.md) for how a manifest gets *reached* in practice
+See [connection-profiles.md](../ConnectionProfiles/connection-profiles.md) for how a manifest gets *reached* in practice
 — a saved connection profile references one by path, so picking a profile from a menu is what
 actually loads a manifest, not something manifests trigger on their own.

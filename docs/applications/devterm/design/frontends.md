@@ -13,7 +13,7 @@ since there's no one to interact with a form): if the bound `CliOptions` already
 skip straight to the execution model — the connect-and-interact screen each already has. If not,
 both show a Configure screen instead of exiting with an error, and both also get a **"Device
 Profiles" menu** (available at any time, not just at startup) for picking a named, saved connection
-— see [connection-profiles.md](connection-profiles.md) for the full shape, including how a profile
+— see [connection-profiles.md](../../../design/ConnectionProfiles/connection-profiles.md) for the full shape, including how a profile
 can reference a [device manifest](../../../design/UiDefinitions/device-manifests.md) so picking one also loads what that specific
 device can do. **Implemented** (2026-09-15 through 2026-09-18) in both front ends — see
 connection-profiles.md's own Status for the full detail. A profile's device manifest is

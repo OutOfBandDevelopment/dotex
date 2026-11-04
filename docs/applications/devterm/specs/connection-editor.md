@@ -30,7 +30,7 @@ group", instead of one per front end. See
 Shown in two situations:
 
 1. **At startup**, when the bound `CliOptions` doesn't validate (see
-   [connection-profiles.md](../design/connection-profiles.md)'s startup flow) — instead of
+   [connection-profiles.md](../../../design/ConnectionProfiles/connection-profiles.md)'s startup flow) — instead of
    hard-failing. `Result`, once set, is used directly to build the DI host and connect immediately.
 2. **From "File > Device Profiles..."** in either front end, at any time, already connected —
    `Result`, once set, is saved as the untracked default profile *and* live-switched to

@@ -31,7 +31,7 @@ stays open with no tabs at all (see [Zero tabs](#zero-tabs) below).
 
 `DevTerm.Wpf.MainWindow` has the same **File > New Session...**/**File > Close Session** menu items
 over a `TabControl`, added alongside the TUI's in the same feature (see
-[`docs/design/multi-session-ui.md`](../design/multi-session-ui.md)): each tab is its own connection
+[`docs/design/multi-session-ui.md`](../../../design/MultiSessionUi/multi-session-ui.md)): each tab is its own connection
 with its own output list, send box and history, and the window's shared chrome follows whichever tab
 is active, the same way.
 

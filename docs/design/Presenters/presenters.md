@@ -108,7 +108,7 @@ Rather than hardcoding every field name, enum label, unit, or channel meaning in
 - Enum/status codes (a mode byte, an error code) map to short human labels the same way (e.g., `0x02 → "Calibrating"`), regardless of which decoder or channel they appear in.
 - A rendering presenter can use a mapping too — e.g., an HPGL pen number → a color name/RGB value for on-screen rendering and export.
 
-A mapping is loaded per-session (or per saved device profile) rather than compiled in, so the same decoder plugin serves many devices, and users can build/edit/share a mapping for a new device without writing code. Mappings are plain data (not logic), so they don't need the plugin isolation/versioning machinery that code plugins do — see [plugin-model.md](../../applications/devterm/design/plugin-model.md).
+A mapping is loaded per-session (or per saved device profile) rather than compiled in, so the same decoder plugin serves many devices, and users can build/edit/share a mapping for a new device without writing code. Mappings are plain data (not logic), so they don't need the plugin isolation/versioning machinery that code plugins do — see [plugin-model.md](../Plugins/plugin-model.md).
 
 ## Presenter contract shape (conceptual)
 

@@ -7,7 +7,7 @@ established (from CLI flags/environment, a saved profile, or the Connection Edit
 connects automatically on its `Loaded` event. A tab strip (one tab per open session), each with its
 own scrolling output list, sharing one send box/parser box/status bar/`File` menu for whichever tab
 is active — the WPF equivalent of the TUI's tab strip (`docs/specs/tui-main-screen.md`). See
-[`docs/design/multi-session-ui.md`](../design/multi-session-ui.md) for the design this implements.
+[`docs/design/multi-session-ui.md`](../../../design/MultiSessionUi/multi-session-ui.md) for the design this implements.
 
 ## Fields
 

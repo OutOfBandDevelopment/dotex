@@ -6,7 +6,7 @@ Pins down the concrete .NET technology choices underpinning the architecture des
 
 ## Target framework
 
-.NET 10+ across the core engine, plugins, and every front end (console, WPF and web). Plugins target the same framework version the host does, per their declared contract version (see [plugin-model.md](plugin-model.md)).
+.NET 10+ across the core engine, plugins, and every front end (console, WPF and web). Plugins target the same framework version the host does, per their declared contract version (see [plugin-model.md](../../../design/Plugins/plugin-model.md)).
 
 ## Dependency injection & hosting
 
@@ -14,7 +14,7 @@ The core engine, every plugin, and every front end are composed through standard
 
 - The core engine exposes a `services.AddDevTermCore(...)` style registration extension that every front end calls, so the console, WPF and web apps assemble the *same* core services (session management, plugin host, pipeline) rather than each having their own copy.
 - Each front end (console, WPF) builds its own `IHost`/`IServiceProvider` appropriate to its hosting model (a console `IHostedService`-driven app vs. a WPF `Application` wired to a host), but both bottom out in the same core registrations plus whatever plugins are discovered.
-- Plugins participate in DI rather than being instantiated ad hoc by the plugin loader: each plugin exposes a small entry point that registers its own services (transport/presenter implementations, their options types) into the host's `IServiceCollection` before the container is built. See [plugin-model.md](plugin-model.md) for the discovery/registration sequence.
+- Plugins participate in DI rather than being instantiated ad hoc by the plugin loader: each plugin exposes a small entry point that registers its own services (transport/presenter implementations, their options types) into the host's `IServiceCollection` before the container is built. See [plugin-model.md](../../../design/Plugins/plugin-model.md) for the discovery/registration sequence.
 
 ## Settings via the Options pattern
 

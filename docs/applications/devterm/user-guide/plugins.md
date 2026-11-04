@@ -1,7 +1,7 @@
 # Seeing which plugins loaded
 
 A plugin is a folder `<plugins>/<name>/plugin.json` plus its assemblies (see
-[`docs/design/plugin-model.md`](../design/plugin-model.md)). The plugins folder is `plugins` next to the app, or whatever
+[`docs/design/plugin-model.md`](../../../design/Plugins/plugin-model.md)). The plugins folder is `plugins` next to the app, or whatever
 `--plugins <folder>` (or `DEVTERM_PLUGINS`) points at. Plugins are loaded once, at startup.
 
 ## CLI

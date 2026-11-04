@@ -1,8 +1,8 @@
 # Multiple sessions per window
 
 Both front ends' main windows now hold a tab strip of `Session`s instead of exactly one — see
-[`docs/specs/tui-main-screen.md`](../specs/tui-main-screen.md) and
-[`docs/specs/wpf-main-window.md`](../specs/wpf-main-window.md) for the shipped behavior. This doc
+[`docs/specs/tui-main-screen.md`](../../applications/devterm/specs/tui-main-screen.md) and
+[`docs/specs/wpf-main-window.md`](../../applications/devterm/specs/wpf-main-window.md) for the shipped behavior. This doc
 designed the change: opening more than one connection at once, side by side, in the same window, in
 both front ends. Queued last in `TODO.md`'s UI batch on purpose — it restructures both main windows
 and touches more shared front-end code than any single item before it. All four implementation steps,
@@ -12,7 +12,7 @@ are complete — see **Status**.
 ## Why this was blocked until now
 
 Per-session isolation had to land first, or a second session would corrupt or leak into the first
-one's state. That happened 2026-09-25, [presenters.md](../../../design/Presenters/presenters.md) §"Stateful presenter lifetime
+one's state. That happened 2026-09-25, [presenters.md](../Presenters/presenters.md) §"Stateful presenter lifetime
 vs. DI registration": every `IPresenter` and `PresenterCatalog` registration is transient, one
 catalog is resolved per session, and two sessions in one process can't interleave partial frames
 through a shared presenter instance any more. `DevTermSessionBuilder.Build(CliOptions)`
@@ -174,7 +174,7 @@ across tabs (the shared timecode). Tab switching uses **Alt+Left / Alt+Right** i
     a line typed in another tab. Recommend per-tab, matching per-tab `PresenterCatalog`/output — but
     flagging since it's a visible behavior change, not just internal plumbing.
   - **Session logging**: today one log file follows one session across a live profile switch
-    ([session-logging.md](../../../design/SessionLogging/session-logging.md)). With multiple tabs open at once, does "Start
+    ([session-logging.md](../SessionLogging/session-logging.md)). With multiple tabs open at once, does "Start
     Logging..." log only the active tab, or could a user want several tabs logged to separate files
     concurrently? Recommend: logging stays a per-tab action (menu state reflects the active tab's
     logging status), so two tabs can log to two files independently — no design conflict with the
