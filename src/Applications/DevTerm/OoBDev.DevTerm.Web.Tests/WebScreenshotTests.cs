@@ -99,16 +99,9 @@ public class WebScreenshotTests
 
     private static async Task SaveAsync(IPage page, string imageName)
     {
-        var temp = Path.Combine(Path.GetTempPath(), $"guide_{Guid.NewGuid():N}.png");
-        try
-        {
-            await page.ScreenshotAsync(new PageScreenshotOptions { Path = temp });
-            GuideImage.Sync(temp, GuideImagePath(imageName));
-        }
-        finally
-        {
-            File.Delete(temp);
-        }
+        using var temp = new TempFileHandle();
+        await page.ScreenshotAsync(new PageScreenshotOptions { Path = temp.FilePath, Type = ScreenshotType.Png });
+        GuideImage.Sync(temp.FilePath, GuideImagePath(imageName));
     }
 
     private static async Task WaitConnectedAsync(IPage page) =>
@@ -740,10 +733,9 @@ public class WebScreenshotTests
             await page.Locator("[data-cfg=baud] input").FillAsync("19200");
             await page.Locator("[data-cfg=baud] input").BlurAsync();
             await Assertions.Expect(page.Locator("[data-cfg-change=baud]")).ToContainTextAsync("9600 to 19200");
-            var configureTemp = Path.Combine(Path.GetTempPath(), $"guide_{Guid.NewGuid():N}.png");
-            await page.Locator("#configure").ScreenshotAsync(new LocatorScreenshotOptions { Path = configureTemp });
-            GuideImage.Sync(configureTemp, GuideImagePath("web-blazor-configure-device.png"));
-            File.Delete(configureTemp);
+            using var configureTemp = new TempFileHandle();
+            await page.Locator("#configure").ScreenshotAsync(new LocatorScreenshotOptions { Path = configureTemp.FilePath, Type = ScreenshotType.Png });
+            GuideImage.Sync(configureTemp.FilePath, GuideImagePath("web-blazor-configure-device.png"));
             await page.Locator("#cfg-write").ClickAsync();
             await Assertions.Expect(page.Locator("[data-cfg-message]")).ToContainTextAsync("Restart the device");
             Assert.AreEqual("19200", editor.Device["baud"]);
