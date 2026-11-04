@@ -35,3 +35,15 @@ The BACKLOG item asks to make the DevTerm conversion for PCL and PostScript gene
 **Default:** none; the item waits and I take the next one.
 
 **Your answer:**
+
+### Q3 - 2026-11-04 - Generated guides - move the Example web guides from `docs/example` to `docs/applications/example`?
+
+The Example web app is already an `.esproj` project with `npm test` and generated journey guides, specs and run books, but they are written to `docs/example` (`e2e/guide.ts`, `scripts/examples/verify-example-web.ps1`, `future-example.md`). The `work-tracking` rule and the GeneratedGuides design put application docs in `docs/applications/{app-name}/`.
+
+**Options**
+- A (recommended): move the folder to `docs/applications/example/` and change the generator default, the verify script, the links and the docs map in one commit. Matches the rule and DevTerm; the docs tests cover the links.
+- B: keep `docs/example` and note it as the exception in the GeneratedGuides design. No churn, but two layouts.
+
+**Default:** B until you answer (nothing is moved).
+
+**Your answer:**
