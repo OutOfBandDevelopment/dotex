@@ -6,4 +6,4 @@
 
 Tests: `TempDirectoryHandleTests` (nested delete, double dispose, held-open file, distinct directories from the factory); `OoBDev.System.Tests` temp tests 6 of 6 pass.
 
-Callers moved so far: the project files in `OoBDev.DevTerm.Web.Tests` (`WebHostTests`, `WebLayoutReviewTests`) use `TempFileHandle`; the Web.Tests suite ran 105 passed, 0 failed, 1 skipped before the 5-minute run timeout aborted the run (about 4 m 48 s). The remaining callers are tracked in `BACKLOG.md`, section Test infrastructure.
+Callers moved so far: the project files in `OoBDev.DevTerm.Web.Tests` (`WebHostTests`, `WebLayoutReviewTests`) use `TempFileHandle`, and the folders in `ConnectionManagerStoreTests` and `WebManifestEditorTests` use `TempDirectoryHandle` (6 of 6 pass); the Web.Tests suite ran 105 passed, 0 failed, 1 skipped before the 5-minute run timeout aborted the run (about 4 m 48 s). The remaining callers are tracked in `BACKLOG.md`, section Test infrastructure.

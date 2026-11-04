@@ -1,3 +1,4 @@
+using OoBDev.System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -36,30 +37,22 @@ public class WebManifestEditorTests
     [TestMethod]
     public void SaveAs_WritesAFolderNamedFromTheTypedName_AndRefusesAnEmptyOne()
     {
-        var directory = Path.Combine(Path.GetTempPath(), $"devterm-web-editor-{Guid.NewGuid():N}");
-        try
-        {
-            var web = new WebManifestEditor(directory, null);
-            web.Editor.New();
-            Assert.IsFalse(web.SaveAs("   "));
-            Assert.IsTrue(web.SaveAs("../escape"));
-            Assert.IsTrue(File.Exists(Path.Combine(directory, "escape", "device.json")));
-            Assert.IsTrue(web.SaveAs("Bench Copy"));
-            Assert.IsTrue(File.Exists(Path.Combine(directory, "bench-copy", "device.json")));
-        }
-        finally
-        {
-            if (Directory.Exists(directory))
-            {
-                Directory.Delete(directory, recursive: true);
-            }
-        }
+        using var tempDirectory = new TempDirectoryHandle();
+        var directory = tempDirectory.DirectoryPath;
+        var web = new WebManifestEditor(directory, null);
+        web.Editor.New();
+        Assert.IsFalse(web.SaveAs("   "));
+        Assert.IsTrue(web.SaveAs("../escape"));
+        Assert.IsTrue(File.Exists(Path.Combine(directory, "escape", "device.json")));
+        Assert.IsTrue(web.SaveAs("Bench Copy"));
+        Assert.IsTrue(File.Exists(Path.Combine(directory, "bench-copy", "device.json")));
     }
 
     [TestMethod]
     public void ImportKsy_TakesAnUploadedFileAsTheFrame_AndLeavesNoTempFileBehind()
     {
-        var directory = Path.Combine(Path.GetTempPath(), $"devterm-web-editor-{Guid.NewGuid():N}");
+        using var tempDirectory = new TempDirectoryHandle();
+        var directory = tempDirectory.DirectoryPath;
         var web = new WebManifestEditor(directory, null);
         web.Editor.New();
         var before = Directory.GetDirectories(Path.GetTempPath(), "devterm-ksy-*").Length;
@@ -73,7 +66,8 @@ public class WebManifestEditorTests
     public void UseRecording_OnlyAcceptsALogFromThePlaybackFolder()
     {
         var logs = WebScreenshotTests.SampleLogs();
-        var web = new WebManifestEditor(Path.Combine(Path.GetTempPath(), $"devterm-web-editor-{Guid.NewGuid():N}"), null, new PlaybackLibrary(logs));
+        using var tempDirectory = new TempDirectoryHandle();
+        var web = new WebManifestEditor(tempDirectory.DirectoryPath, null, new PlaybackLibrary(logs));
         web.Editor.New();
 
         CollectionAssert.AreEqual(new[] { "20261008-120000_Scope.jsonl" }, web.Recordings().ToArray());
