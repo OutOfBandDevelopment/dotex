@@ -1,3 +1,4 @@
+using OoBDev.System.IO;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -29,24 +30,10 @@ public sealed class ManifestEditorTests
     private static readonly string _installed = Path.Combine(AppContext.BaseDirectory, "manifests");
     private static readonly string _bundled = Path.Combine(_installed, "loopback-sensor-demo");
 
-    private static string CreateTempDirectory()
-    {
-        var path = Path.Combine(Path.GetTempPath(), "devterm-manifest-editor-tests", Path.GetRandomFileName());
-        Directory.CreateDirectory(path);
-        return path;
-    }
-
     private static void InTemp(Action<string> body)
     {
-        var directory = CreateTempDirectory();
-        try
-        {
-            body(directory);
-        }
-        finally
-        {
-            Directory.Delete(directory, recursive: true);
-        }
+        using var temp = new TempDirectoryHandle();
+        body(temp.DirectoryPath);
     }
 
     /// <summary>Reads every field of every entry's generated form back into itself, as rendering and re-committing each field would.</summary>
