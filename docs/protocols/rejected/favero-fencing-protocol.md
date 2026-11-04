@@ -3,7 +3,7 @@
 > **Status: deprioritized.** No longer have access to a Favero scoring apparatus to test against,
 > so this isn't actionable right now — kept as a documented proposal (the protocol is fully
 > specified and the composite-decoder design point it makes is still valid) in case hardware access
-> comes back, but don't pick it up as active work. See [SCPI](../features/scpi-instrument-control.md) instead.
+> comes back, but don't pick it up as active work. See [SCPI](../../design/ScpiInstruments/scpi-instrument-control.md) instead.
 
 ## Source
 
@@ -36,13 +36,13 @@ than the request/response shape of the SCPI and Radex One proposals.
 
 - **Continuous push, not query/response** — the apparatus streams a fixed 10-byte packet every
   ~42ms (~24 Hz) unprompted. No control surface is needed or possible; per
-  [presenters.md](../../../../design/Presenters/presenters.md) §2, "a decoder can be receive-only if that doesn't make sense
+  [presenters.md](../../design/Presenters/presenters.md) §2, "a decoder can be receive-only if that doesn't make sense
   for the protocol" — this is that case.
 - **Fixed-size, checksum-framed packets** — `0xFF` start marker, 8 payload bytes, 1 checksum byte
   (unweighted sum of bytes 1–9, no carry) — simple enough to frame with a byte-counting parser
   rather than needing delimiter-scanning.
 - **Multiple independently-meaningful bitfields packed into single bytes** — this is the
-  motivating shape for [presenters.md](../../../../design/Presenters/presenters.md) §4's composite/channelized decoders,
+  motivating shape for [presenters.md](../../design/Presenters/presenters.md) §4's composite/channelized decoders,
   just at the sub-byte level rather than across multiple time-sliced sub-streams: byte 6 alone
   packs 6 independent lamp-state bits (left/right white, red, green, left/right yellow), byte 7
   packs a 2-bit match number plus 2 independent priorité flags, byte 9 packs 4 independent
@@ -108,7 +108,7 @@ composite --> text : Recombines into one line
 - **One `IMappable` opportunity**: match-number and priorité/lamp semantics differ slightly
   between weapons (foil, sabre, épée don't all use priorité the same way — the source doc notes
   priorité is "critical in foil and sabre, not épée") — a per-weapon label mapping on top of the
-  same generic bitfield decoder is a plausible [presenters.md](../../../../design/Presenters/presenters.md) §5 mappable-presenter
+  same generic bitfield decoder is a plausible [presenters.md](../../design/Presenters/presenters.md) §5 mappable-presenter
   case, though the raw bit semantics stay the same across weapons; only the human labels shown
   would change.
 - **Physical layer note for the transport, not the decoder**: since the device is 20mA

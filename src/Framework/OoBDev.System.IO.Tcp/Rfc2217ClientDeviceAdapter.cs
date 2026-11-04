@@ -15,7 +15,7 @@ namespace OoBDev.System.IO.Tcp;
 /// <see cref="IDeviceAdapter"/> for RFC 2217 (Telnet COM Port Control) client mode — a remote serial
 /// port (e.g. behind <c>ser2net</c>) controlled over a plain TCP socket. Reuses
 /// <c>DevTerm.Transports.Tcp</c>'s connect machinery for the socket itself; see
-/// docs/design/rfc2217.md for the wire format and <see cref="Rfc2217TelnetReadStream"/> for the
+/// docs/design/Transports/rfc2217.md for the wire format and <see cref="Rfc2217TelnetReadStream"/> for the
 /// Telnet framing layered on top of it.
 /// </summary>
 public sealed class Rfc2217ClientDeviceAdapter : IDeviceAdapter, IComPortControl, ILineStatusSource
@@ -342,7 +342,7 @@ public sealed class Rfc2217ClientDeviceAdapter : IDeviceAdapter, IComPortControl
         {
             throw new InvalidOperationException(
                 "The remote peer refused RFC 2217 COM-PORT-OPTION negotiation (WONT/DONT). It may not " +
-                "actually be a standards-compliant RFC 2217 server — see docs/design/rfc2217.md's " +
+                "actually be a standards-compliant RFC 2217 server — see docs/design/Transports/rfc2217.md's " +
                 "vendor-specific-variant warning.");
         }
 

@@ -142,7 +142,7 @@ What is needed before this proposal can be closed. Tick items as they land, in t
 ## Status
 
 Built 2026-10-02: model, decoder, presenter, panel wiring, catalog paths (`ValuePathSource.Frame`), validator checks,
-JSON/XML round trip, importer, and (2026-10-02) the manifest editors' **Binary frame** outline entry with field forms and an **Import** button in both front ends ([spec](../../specs/manifest-editor.md)). Unit- and screenshot-tested, plus one live check: the imported Radex One read-data frame was run through `ManifestFramePresenter` against a real unit on COM8 (every field published, three runs; `docs/test/2026-10-02-14-42-26.md`). The other devices' `.ksy` layouts (DE-5000, K8055, Zoom H4n) are checked against captured or documented bytes only. Not built:
+JSON/XML round trip, importer, and (2026-10-02) the manifest editors' **Binary frame** outline entry with field forms and an **Import** button in both front ends ([spec](../../applications/devterm/specs/manifest-editor.md)). Unit- and screenshot-tested, plus one live check: the imported Radex One read-data frame was run through `ManifestFramePresenter` against a real unit on COM8 (every field published, three runs; `docs/test/2026-10-02-14-42-26.md`). The other devices' `.ksy` layouts (DE-5000, K8055, Zoom H4n) are checked against captured or documented bytes only. Not built:
 
 - the live check of the Zoom H4n status `.ksy` against a real recorder (it decodes the documented masks only), and of the
   DE-5000 and K8055 layouts against captures. Deliberately deferred: extend when a device is on hand.

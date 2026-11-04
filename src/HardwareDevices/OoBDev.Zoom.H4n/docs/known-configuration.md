@@ -14,4 +14,4 @@ needs a wake handshake (`00` repeatedly until a reply byte with the high bit set
 
 Status: unit-tested; re-confirmed on a real recorder 2026-10-02 on COM10 (now on COM11), the `mic` press visibly switching the input from 1/2 to mic (`docs/test/2026-10-02-15-55-10.md`); see the protocol doc for what has been checked on a real recorder.
 
-Design notes: `docs/design/features/zoom-h4n-remote-protocol.md` in the dev-term repository.
+Design notes: `docs/protocols/zoom-h4n-remote-protocol.md` in the dev-term repository.

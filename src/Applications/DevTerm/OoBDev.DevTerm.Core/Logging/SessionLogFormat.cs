@@ -14,7 +14,7 @@ namespace OoBDev.DevTerm.Logging;
 
 /// <summary>
 /// Converts headers and records to and from their one-line JSON form. The file layout (one JSON
-/// object per line, header first) is documented in docs/design/session-logging.md; this class is
+/// object per line, header first) is documented in docs/design/SessionLogging/session-logging.md; this class is
 /// the single place that layout is encoded, used by both <see cref="SessionLogWriter"/> (streaming,
 /// while capturing) and <see cref="SessionLog"/> (load/save, trim, markup).
 /// </summary>

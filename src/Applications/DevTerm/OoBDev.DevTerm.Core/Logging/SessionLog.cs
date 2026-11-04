@@ -11,7 +11,7 @@ namespace OoBDev.DevTerm.Logging;
 
 /// <summary>
 /// A whole session log in memory: its header and every record, in file order. What playback reads,
-/// and what trim/markup edit and save back. See docs/design/session-logging.md.
+/// and what trim/markup edit and save back. See docs/design/SessionLogging/session-logging.md.
 /// </summary>
 public sealed class SessionLog
 {

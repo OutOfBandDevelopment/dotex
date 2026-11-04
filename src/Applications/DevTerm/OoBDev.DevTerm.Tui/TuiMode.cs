@@ -28,8 +28,8 @@ namespace OoBDev.DevTerm.Tui;
 /// </summary>
 /// <remarks>
 /// A first stub, not the full design (no live plugin selection, no rendering-presenter graphics) -
-/// see docs/design/frontends.md's TUI section for the target. Multiple sessions are supported via
-/// <see cref="Terminal.Gui.Views.Tabs"/> (see docs/design/multi-session-ui.md) - each open tab wraps
+/// see docs/applications/devterm/design/frontends.md's TUI section for the target. Multiple sessions are supported via
+/// <see cref="Terminal.Gui.Views.Tabs"/> (see docs/design/MultiSessionUi/multi-session-ui.md) - each open tab wraps
 /// its own <see cref="OoBDev.DevTerm.Configuration.SessionTab"/> in a <see cref="TuiWindowTab"/>.
 /// </remarks>
 public static class TuiMode
@@ -74,7 +74,7 @@ public static class TuiMode
 
         public CancellationTokenSource? SwitchCts { get; set; }
 
-        /// <summary>This tab's own running log, if any (docs/design/multi-session-ui.md's Step 4) — not a single window-level logger.</summary>
+        /// <summary>This tab's own running log, if any (docs/design/MultiSessionUi/multi-session-ui.md's Step 4) — not a single window-level logger.</summary>
         public SessionLogger? Logger { get; set; }
 
     }
@@ -540,7 +540,7 @@ public static class TuiMode
         // "●"/"  " marker (Terminal.Gui has no native checkable MenuItem in this v2 usage).
         static string ToggleTitle(string label, bool on) => (on ? "● " : "  ") + label;
 
-        // One Device-menu entry per plugin-contributed panel (docs/design/proposals/plugin-contributed-panels.md), enabled like the built-ins.
+        // One Device-menu entry per plugin-contributed panel (docs/design/Plugins/plugin-contributed-panels.md), enabled like the built-ins.
         foreach (var contribution in panels ?? [])
         {
             var captured = contribution;
@@ -1130,7 +1130,7 @@ public static class TuiMode
         }
 
         // File > Close Session: a no-op with only one tab left, mirroring MainWindow.xaml.cs's own
-        // Step 2 narrowing (docs/design/multi-session-ui.md's Open questions recommend the window
+        // Step 2 narrowing (docs/design/MultiSessionUi/multi-session-ui.md's Open questions recommend the window
         // staying open with zero tabs; true zero-tab support is deferred to Step 4, same as WPF).
         // Unlike WPF, there's no _openControlPanels-equivalent tracking to close here: a TUI device
         // control panel is opened via a nested, blocking app.Run(panelParts.Window) from within a menu

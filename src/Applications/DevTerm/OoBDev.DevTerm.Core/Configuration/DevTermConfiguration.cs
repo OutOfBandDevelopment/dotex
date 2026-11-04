@@ -38,7 +38,7 @@ public static class DevTermConfiguration
     /// Same layering as the <see cref="HostBuilderContext"/> overload, usable before a
     /// <see cref="IHost"/> exists — e.g. to bind and validate <see cref="CliOptions"/> early enough
     /// to decide whether to show a Configure screen instead of building the DI graph at all. See
-    /// docs/design/connection-profiles.md's startup flow.
+    /// docs/design/ConnectionProfiles/connection-profiles.md's startup flow.
     /// </summary>
     public static void Configure(IConfigurationBuilder config, string[] args, string environmentName)
     {
@@ -129,7 +129,7 @@ public static class DevTermConfiguration
     /// Projects the connection-relevant subset of <paramref name="options"/> — transport settings,
     /// presenter, line ending, and an optional device-manifest name — as indented JSON, in the
     /// same shape whether saved as the untracked default profile or a named one (see
-    /// docs/design/connection-profiles.md; both are bound back via the same
+    /// docs/design/ConnectionProfiles/connection-profiles.md; both are bound back via the same
     /// <c>Microsoft.Extensions.Configuration.Json</c> + <c>Bind()</c> pipeline, not a separate
     /// parallel type). Deliberately excludes one-shot action/mode flags
     /// (<see cref="CliOptions.ListPorts"/>, <see cref="CliOptions.Tui"/>, <see cref="CliOptions.Cli"/>,
@@ -221,7 +221,7 @@ public static class DevTermConfiguration
             profile[nameof(CliOptions.WriteByteDelayMs)] = options.WriteByteDelayMs;
 
             // Handshake deliberately omitted: RFC 2217's SET-CONTROL flow-control values exist in
-            // Rfc2217Enums, but wiring them end-to-end isn't built in v1 - see docs/design/rfc2217.md.
+            // Rfc2217Enums, but wiring them end-to-end isn't built in v1 - see docs/design/Transports/rfc2217.md.
         }
         else if (string.Equals(options.Transport, "vxi11", StringComparison.OrdinalIgnoreCase))
         {

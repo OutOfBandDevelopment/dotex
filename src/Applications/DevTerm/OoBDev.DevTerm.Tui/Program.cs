@@ -341,7 +341,7 @@ if (earlyConfig[nameof(CliOptions.Playback)] is { Length: > 0 })
 // Bind cliOptions from the same layered sources the host will use, but before building the host
 // at all — building the host eagerly wires a transport from cliOptions (AddDevTermFrontEnd), so an
 // invalid CliOptions has to be caught here, ahead of that, to decide whether to hard-fail (CLI) or
-// show a Configure screen instead (TUI) — see docs/design/connection-profiles.md's startup flow.
+// show a Configure screen instead (TUI) — see docs/design/ConnectionProfiles/connection-profiles.md's startup flow.
 var earlyConfigBuilder = new ConfigurationBuilder();
 DevTermConfiguration.Configure(earlyConfigBuilder, args, Environments.Production);
 var cliOptions = new CliOptions();

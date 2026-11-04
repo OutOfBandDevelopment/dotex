@@ -17,7 +17,7 @@ namespace OoBDev.System.IO.Tcp;
 /// instrument answers, destroy_link on close. Reuses <c>DevTerm.Transports.Tcp</c>'s connect
 /// machinery for both sockets (the portmapper on TCP 111 and the core channel). Not covered:
 /// the abort channel, SRQ/interrupt channel, locking, device_clear and the status byte. See
-/// docs/design/vxi11-transport.md.
+/// docs/design/Transports/vxi11-transport.md.
 /// </summary>
 public sealed class Vxi11DeviceAdapter : IDeviceAdapter
 {

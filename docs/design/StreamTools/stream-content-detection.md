@@ -8,7 +8,7 @@ the SCPI command know the response type should allow for proper presentation. I 
 would only automatically save the files by something like `(device name)_(timestamp).(ext)`."
 
 This is the concrete front-end feature that sits on top of two things already designed but not yet
-built in [presenters.md](../../../../design/Presenters/presenters.md)'s "Rendering presenters" section (§3): an HPGL/
+built in [presenters.md](../Presenters/presenters.md)'s "Rendering presenters" section (§3): an HPGL/
 PostScript/PCL presenter that renders a command stream to a drawing and exports it as SVG/PNG/JPG,
 and the general idea that a presenter "declares what representation(s) it produces" so a front end
 can show it generically. **Phase 1 is built (2026-09-25)** — see Status below.
@@ -35,8 +35,8 @@ it from the request..."):
    `ExpectedResponseFormat` (an enum: `Text` (default), `Hpgl`, `PostScript`, `Pcl`, `Image`,
    `Binary`). When set, `ScpiControlSurface` passes it along with the existing `QuerySent(id)`
    correlation call (see `IScpiReplyTracker` in
-   [scpi-instrument-control.md](scpi-instrument-control.md)) so the watcher below never has to
-   guess for that command. This is the general shape [device-manifests.md](../../../../design/UiDefinitions/device-manifests.md)
+   [scpi-instrument-control.md](../ScpiInstruments/scpi-instrument-control.md)) so the watcher below never has to
+   guess for that command. This is the general shape [device-manifests.md](../UiDefinitions/device-manifests.md)
    will eventually want too, once a manifest's own command schema exists independently of SCPI.
 2. **Sniffing**, for everything else (an unannotated command, a device with no profile at all, or
    an unsolicited/streamed reply that wasn't triggered by any tracked command). A small
@@ -162,7 +162,7 @@ Configuration lives alongside the existing Stream Monitor settings (per-profile 
   `ScpiReplyPresenter`'s FIFO already handles plain replies, or whether one-capture-at-a-time is
   good enough for how these commands are actually used in practice (a screen-dump command is
   usually a deliberate, single, waited-for action, unlike telemetry streaming).
-- ~~Retention/cleanup policy for the exports folder~~ **Built 2026-10-03:** `ExportRetention` (`MaxAgeDays`, `MaxFiles`) in `preferences.json`, applied at startup; see [retention](../../user-guide/retention.md). Size-based pruning is not built.  **Owner input 2026-10-03:** also wants the option to enumerate files already on disk, so earlier exports are listed after a restart. **Built 2026-10-03:** `StreamMonitor.LoadFromDisk`.
+- ~~Retention/cleanup policy for the exports folder~~ **Built 2026-10-03:** `ExportRetention` (`MaxAgeDays`, `MaxFiles`) in `preferences.json`, applied at startup; see [retention](../../applications/devterm/user-guide/retention.md). Size-based pruning is not built.  **Owner input 2026-10-03:** also wants the option to enumerate files already on disk, so earlier exports are listed after a restart. **Built 2026-10-03:** `StreamMonitor.LoadFromDisk`.
 - ~~Whether the external-tool and web-service converters are worth building~~ **Decided 2026-10-03:** dropped. A script can front them if one is ever needed, and no converter is required out of the box. The internal HP-GL to SVG converter is the one to build, optionally automatic by default. **Built 2026-10-03:** `StreamMonitor.AutoConvertHpgl` (profile `StreamAutoConvertHpgl`, default on).
 
 ## Completion checklist
@@ -183,8 +183,8 @@ What was needed to close this out. The unbuilt items moved to `BACKLOG.md`.
 ## Status
 
 **Implemented: Phase 1 on 2026-09-25, conversion (Phase 2) on 2026-10-01/02. Live PostScript/PCL rendering was not built (see `BACKLOG.md`).** Screen reference:
-[docs/specs/stream-monitor.md](../../specs/stream-monitor.md); walkthrough:
-[docs/user-guide/stream-monitor.md](../../user-guide/stream-monitor.md).
+[docs/specs/stream-monitor.md](../../applications/devterm/specs/stream-monitor.md); walkthrough:
+[docs/user-guide/stream-monitor.md](../../applications/devterm/user-guide/stream-monitor.md).
 
 What was built, and where it differs from the text above:
 

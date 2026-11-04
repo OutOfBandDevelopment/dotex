@@ -10,7 +10,7 @@ namespace OoBDev.System.IO.Tcp;
 
 /// <summary>
 /// Configuration for a VXI-11 (ONC-RPC core channel) session with an LXI instrument. Bound via the
-/// Options pattern. See docs/design/vxi11-transport.md.
+/// Options pattern. See docs/design/Transports/vxi11-transport.md.
 /// </summary>
 public sealed class Vxi11DeviceAdapterOptions
 {

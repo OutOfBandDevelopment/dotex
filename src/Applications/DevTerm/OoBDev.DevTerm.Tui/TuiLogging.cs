@@ -15,11 +15,11 @@ namespace OoBDev.DevTerm.Tui;
 /// <summary>
 /// The TUI main window's logger-mode helpers: the status-line text for a given logger and the File
 /// menu item's title constants, kept out of <see cref="TuiMode.BuildWindow"/> so that method only
-/// wires them in. Per-tab (docs/design/multi-session-ui.md's Step 4): each
+/// wires them in. Per-tab (docs/design/MultiSessionUi/multi-session-ui.md's Step 4): each
 /// <see cref="TuiMode.TuiWindowTab"/>-equivalent owns its own running <see cref="SessionLogger"/>
 /// directly rather than this class holding a single, window-level one, so two tabs can log to two
 /// different files at once and closing one tab's log doesn't touch another's. See
-/// docs/specs/tui-main-screen.md and docs/design/session-logging.md.
+/// docs/specs/tui-main-screen.md and docs/design/SessionLogging/session-logging.md.
 /// </summary>
 internal static class TuiLogging
 {

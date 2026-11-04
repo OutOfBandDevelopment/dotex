@@ -20,7 +20,7 @@ namespace OoBDev.DevTerm.DeviceManifests;
 /// arrive comma-joined from a <c>ButtonControl.ParameterFieldIds</c> button; a single-value
 /// control's value also fills a bare <c>{value}</c>), appends <see cref="DeviceManifest.Terminator"/>,
 /// and sends the ASCII bytes. A query registers its reply id with the <see cref="IReplyTracker"/>
-/// first, so the next complete line lands in that indicator. See docs/design/device-manifests.md.
+/// first, so the next complete line lands in that indicator. See docs/design/UiDefinitions/device-manifests.md.
 /// </summary>
 public sealed partial class ManifestControlSurface : IControlSurface, ICommandPreview
 {

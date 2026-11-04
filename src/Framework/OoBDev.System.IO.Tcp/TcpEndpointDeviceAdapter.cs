@@ -13,7 +13,7 @@ namespace OoBDev.System.IO.Tcp;
 
 /// <summary>
 /// <see cref="IDeviceAdapter"/> for a TCP connection, in either Client or Listener mode
-/// (a configuration choice, not two plugins). See docs/design/transports.md.
+/// (a configuration choice, not two plugins). See docs/design/Transports/transports.md.
 /// </summary>
 public sealed class TcpEndpointDeviceAdapter : IDeviceAdapter
 {

@@ -23,7 +23,7 @@ public static class ConnectionErrorMessages
         {
             "serial" => " Run with --listports to see available serial ports.",
             "hid" => " Run with --listhiddevices to see available USB HID devices.",
-            "rfc2217" => " Check --host/--port, and that the server actually speaks RFC 2217 option negotiation - some vendor bridges don't (see docs/design/rfc2217.md).",
+            "rfc2217" => " Check --host/--port, and that the server actually speaks RFC 2217 option negotiation - some vendor bridges don't (see docs/design/Transports/rfc2217.md).",
             "vxi11" => " Check --host, and that the instrument's LXI interface offers VXI-11 (its portmapper answers on TCP 111); try --port with the core channel's port if it does not.",
             "mqtt" => " Check --host/--port (1883 is the usual MQTT port), the credentials, and that the broker is running (docker compose -f containers/testing/docker-compose.integration-tests.yml up -d mosquitto).",
             "amqp" => " Check --host/--port (5672 is the usual AMQP port), the credentials, and that the broker is running (docker compose -f containers/testing/docker-compose.integration-tests.yml up -d rabbitmq).",

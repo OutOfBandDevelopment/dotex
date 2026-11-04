@@ -14,7 +14,7 @@ namespace OoBDev.DevTerm.Configuration;
 
 /// <summary>
 /// Wraps the "Convert/Rasterize" mechanisms proposed in
-/// docs/design/features/stream-content-detection.md's "Raster/convert tool integration" section —
+/// docs/design/StreamTools/stream-content-detection.md's "Raster/convert tool integration" section —
 /// registered external tools, a single legacy external tool, and the internal HP-GL-to-SVG converter — behind
 /// one call so the Stream Monitor windows' "Convert..." action doesn't need to know which is active.
 /// </summary>

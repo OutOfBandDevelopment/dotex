@@ -12,7 +12,7 @@ using OoBDev.DevTerm;
 namespace OoBDev.DevTerm.Configuration;
 
 /// <summary>
-/// One time-ordered log of the raw traffic of every open tab (docs/design/multi-session-ui.md): each tracked
+/// One time-ordered log of the raw traffic of every open tab (docs/design/MultiSessionUi/multi-session-ui.md): each tracked
 /// session's received and sent chunks, tagged with its device name and the time they arrived, interleaved in the
 /// order they happened. A bounded ring (<see cref="MaxEntries"/>), independent of per-tab file logging. Thread-safe;
 /// <see cref="EntryAdded"/> is raised on whichever thread the session raised the chunk on.

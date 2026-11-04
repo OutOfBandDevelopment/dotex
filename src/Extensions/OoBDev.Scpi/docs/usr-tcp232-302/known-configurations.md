@@ -24,7 +24,7 @@ Read with the script above, not typed from memory.
 Common to .107/.108/.109/.110: remote (target) address 192.168.0.201 and remote port 8234 (unused in TCP Server mode).
 "UART Set Parameter" (Expand Function page) is on for .109 only. The "Similar RFC2217" box on the Serial Port page is
 on for all four; what that does on the wire is unverified here (see `RFC2217-like Function Example.md` and
-`docs/design/rfc2217.md`).
+`docs/design/Transports/rfc2217.md`).
 
 The .108 and .110 units show "DHCP" in the IP page while answering on .108/.110, so those addresses come from a
 router reservation, not the module. If the router lease changes, the profiles in

@@ -16,7 +16,7 @@ namespace OoBDev.DevTerm.Logging;
 /// timestamp. It's a passive <see cref="ISessionObserver"/>, so it never changes what the
 /// presenters render. One logger follows the user across a live profile switch (<see cref="Attach"/>
 /// the new session; a <c>session</c> record marks the switch), so a log is per logging run, not per
-/// connection. See docs/design/session-logging.md.
+/// connection. See docs/design/SessionLogging/session-logging.md.
 /// </summary>
 public sealed class SessionLogger : ISessionObserver, IDisposable
 {

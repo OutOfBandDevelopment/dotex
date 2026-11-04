@@ -24,7 +24,7 @@ namespace OoBDev.DevTerm.Tui;
 /// of <see cref="ControlPanelMode"/>, which renders the same vocabulary as a <em>command</em> panel
 /// (a control there sends on commit; a field here writes a property). Returns an embeddable
 /// <see cref="View"/> rather than a window, so a host (the Connection Editor, the manifest editor)
-/// places it among its own hand-built parts. See docs/design/ui-definitions.md's "Forms from one
+/// places it among its own hand-built parts. See docs/design/UiDefinitions/ui-definitions.md's "Forms from one
 /// definition".
 /// </summary>
 /// <remarks>

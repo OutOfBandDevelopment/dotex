@@ -96,7 +96,7 @@ entry names the formats it handles, so Ghostscript takes PostScript and GhostPCL
 means any. With **Auto (by format)** selected, Convert... runs the first registered tool whose formats include the
 selected capture's. Picking a tool by its name in the conversion list (a profile's `"StreamConvertMode": "tool:gs"`) runs it
 whatever the capture's format. The conversion list shows Auto and each tool by name once any are registered.
-Design: [stream-converter-tools](../design/features/stream-converter-tools.md).
+Design: [stream-converter-tools](../../../design/StreamTools/stream-converter-tools.md).
 
 ## Verified
 

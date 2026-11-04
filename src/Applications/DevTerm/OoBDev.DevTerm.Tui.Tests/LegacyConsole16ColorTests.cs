@@ -18,7 +18,7 @@ namespace OoBDev.DevTerm.Tui.Tests;
 /// (<see cref="TgColor.GetClosestNamedColor16"/>). Two theme roles that must stay visually distinct
 /// (a focused field vs. a merely-editable one) collapse onto the same rendered color if they snap to
 /// the same named color - this is the root cause behind TODO.md's "startup editor looks unthemed in
-/// legacy conhost: invisible field backgrounds, faint focus". See docs/design/theming.md and
+/// legacy conhost: invisible field backgrounds, faint focus". See docs/design/Theming/theming.md and
 /// <see cref="BuiltInThemes.Dark"/>'s doc comment on <see cref="ThemeRole.SelectionBackground"/>.
 /// </summary>
 [TestCategory("Unit")]

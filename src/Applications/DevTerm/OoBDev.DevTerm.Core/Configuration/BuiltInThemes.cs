@@ -14,7 +14,7 @@ namespace OoBDev.DevTerm.Configuration;
 /// stock control chrome, the green/amber/red status line), so it looks the way dev-term always has -
 /// except <see cref="ThemeRole.Accent"/>/<see cref="ThemeRole.Warning"/>, whose legacy values (SteelBlue,
 /// DarkGoldenrod) read as text in Playback's sent/note lines at only 4.1:1/3.3:1, below the 4.5:1 text
-/// threshold; deepened just enough to clear it (2026-09-29, see docs/design/theming.md). <see cref="Dark"/>
+/// threshold; deepened just enough to clear it (2026-09-29, see docs/design/Theming/theming.md). <see cref="Dark"/>
 /// is new.
 /// </summary>
 public static class BuiltInThemes
@@ -64,7 +64,7 @@ public static class BuiltInThemes
     /// <summary>
     /// <see cref="ThemeRole.SelectionBackground"/> (<c>#2A66C2</c>) was brightened from the original
     /// VS-Code-style <c>#264F78</c> on 2026-09-30: under Terminal.Gui's legacy-conhost 16-color downgrade
-    /// (see docs/design/theming.md), the old value's nearest ANSI-16 color was the same "DarkGray" that
+    /// (see docs/design/Theming/theming.md), the old value's nearest ANSI-16 color was the same "DarkGray" that
     /// <see cref="ThemeRole.FieldBackground"/>/<see cref="ThemeRole.ControlHoverBackground"/> also snap to,
     /// so a focused field rendered the same background as a merely-editable one - "faint focus". The new
     /// value's nearest ANSI-16 color is "BrightBlue" instead, verified by

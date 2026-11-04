@@ -7,3 +7,7 @@ A framework-agnostic, serializable model for declaring a control panel once so e
 | [ui-definitions.md](ui-definitions.md) | The UI definition model, value constraints, charts and the forms engine |
 | [device-manifests.md](device-manifests.md) | One-file device configuration: command and response schema plus a UI definition |
 | [device-control-modules.md](device-control-modules.md) | Plugins that bundle control commands with telemetry decode and presentation |
+- [expression-picker-paths-and-cel.md](expression-picker-paths-and-cel.md) - expression picker paths and CEL
+- [manifest-editor-expression-builder.md](manifest-editor-expression-builder.md) - expression builder in the manifest editor
+- [ksy-importer.md](ksy-importer.md) - binary frames and the .ksy importer
+- [format-schema-files.md](format-schema-files.md) - generated JSON Schema files for the formats

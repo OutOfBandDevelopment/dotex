@@ -21,4 +21,4 @@ Quirks:
 - The baud rate is 9600. An earlier 2400 guess received nothing (bug 061 (dev-term `docs/bugs/resolved/061-radexone-wrong-baud-rate.md`)).
 - It enumerates as a plain COM port, not HID, so no report wrapping is needed.
 
-Design notes and protocol detail: `docs/design/features/radex-one-protocol.md` in the dev-term repository.
+Design notes and protocol detail: `docs/protocols/radex-one-protocol.md` in the dev-term repository.

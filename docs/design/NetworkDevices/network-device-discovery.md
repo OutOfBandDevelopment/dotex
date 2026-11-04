@@ -3,7 +3,7 @@
 ## Problem
 
 The Connection Editor's TCP **Detect LXI...** button finds only LXI instruments (VXI-11 portmapper broadcast, then
-`*IDN?` on raw ports 5025/5555; see [lxi-support.md](../../applications/devterm/design/features/lxi-support.md)). The network also holds
+`*IDN?` on raw ports 5025/5555; see [lxi-support.md](../Transports/lxi-support.md)). The network also holds
 serial-to-Ethernet bridges (USR-TCP232-302, EByte E810-DTU), RFC 2217 servers, MQTT/AMQP brokers and anything that
 announces itself over mDNS/DNS-SD or SSDP. The button should list any network device it can identify, and picking one
 should pre-fill what was learned.

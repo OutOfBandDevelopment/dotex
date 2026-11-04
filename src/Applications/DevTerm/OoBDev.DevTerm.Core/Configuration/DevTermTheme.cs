@@ -12,7 +12,7 @@ namespace OoBDev.DevTerm.Configuration;
 /// One complete, immutable theme: a name plus a color for every <see cref="ThemeRole"/> and the chart
 /// palette variant. Built-ins come from <see cref="BuiltInThemes"/>; user themes are loaded from JSON
 /// by <see cref="ThemeFile"/>, starting from a built-in and overriding some roles. See
-/// docs/design/theming.md.
+/// docs/design/Theming/theming.md.
 /// </summary>
 public sealed class DevTermTheme
 {
@@ -43,7 +43,7 @@ public sealed class DevTermTheme
     /// <summary>
     /// Whether this is a dark theme (its <see cref="ThemeRole.Background"/> is closer to black than
     /// white). WPF uses it to decide whether to swap in dev-term's own dark-capable control templates
-    /// instead of the stock ones, whose chrome is hard-coded light (see docs/design/theming.md).
+    /// instead of the stock ones, whose chrome is hard-coded light (see docs/design/Theming/theming.md).
     /// </summary>
     public bool IsDark => this[ThemeRole.Background].RelativeLuminance() < 0.25;
 
@@ -53,7 +53,7 @@ public sealed class DevTermTheme
     /// the nearest of 16): a light theme's field, hover and selection backgrounds are all near white and would collapse
     /// onto "White", so this spreads them over Gray, DarkGray and BrightCyan instead (dark text stays readable on all
     /// three). A dark theme is returned unchanged (its roles were separated in the theme itself). TUI-only; the WPF
-    /// palette is untouched. See docs/design/theming.md.
+    /// palette is untouched. See docs/design/Theming/theming.md.
     /// </summary>
     public DevTermTheme ForSixteenColors() => IsDark
         ? this

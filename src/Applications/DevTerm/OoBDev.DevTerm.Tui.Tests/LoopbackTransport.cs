@@ -21,7 +21,7 @@ namespace OoBDev.DevTerm.Tui.Tests;
 /// <see cref="FakeTransport"/>, but with request/response behavior baked in so a test doesn't have
 /// to manually call <c>PushIncomingAsync</c> after every write. Exists to exercise
 /// Session/TuiMode/MainWindow logic against realistic multi-line replies and "event stream" style
-/// output without any real transport I/O — see docs/design/testing.md.
+/// output without any real transport I/O — see docs/applications/devterm/design/testing.md.
 /// </summary>
 internal sealed class LoopbackTransport : IDeviceAdapter
 {

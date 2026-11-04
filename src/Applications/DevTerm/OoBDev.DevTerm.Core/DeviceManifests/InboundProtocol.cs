@@ -13,7 +13,7 @@ namespace OoBDev.DevTerm.DeviceManifests;
 /// <summary>The inbound half of the declarative schema: either a reference to a binary Kaitai Struct layout, or a list of text response patterns.</summary>
 public sealed class InboundProtocol
 {
-    /// <summary>Path to a Kaitai Struct (.ksy) file, relative to the manifest's own location. Referenced only — not parsed by dev-term itself (see docs/design/device-manifests.md).</summary>
+    /// <summary>Path to a Kaitai Struct (.ksy) file, relative to the manifest's own location. Referenced only — not parsed by dev-term itself (see docs/design/UiDefinitions/device-manifests.md).</summary>
     public string? KaitaiFile { get; set; }
 
     public List<ResponsePattern> Patterns { get; set; } = [];

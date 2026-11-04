@@ -15,7 +15,7 @@ namespace OoBDev.DevTerm.Logging;
 /// <see cref="Tick"/> from its UI timer and renders the returned batch, so nothing here raises events
 /// on a background thread, and a test drives it deterministically with a fake
 /// <see cref="TimeProvider"/>. Never touches a transport — the only thing it feeds is the pipeline.
-/// See docs/design/session-logging.md.
+/// See docs/design/SessionLogging/session-logging.md.
 /// </summary>
 public sealed class PlaybackEngine
 {

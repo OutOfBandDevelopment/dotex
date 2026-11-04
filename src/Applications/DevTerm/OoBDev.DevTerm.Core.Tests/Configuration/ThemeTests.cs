@@ -13,7 +13,7 @@ using OoBDev.DevTerm.Configuration.Discovery;
 namespace OoBDev.DevTerm.Configuration.Tests;
 
 /// <summary>
-/// The shared theme model (docs/design/theming.md): built-in themes are complete and readable, theme
+/// The shared theme model (docs/design/Theming/theming.md): built-in themes are complete and readable, theme
 /// files validate with clear errors and never throw, the catalog falls back rather than failing,
 /// <c>system</c> follows the OS hint, and the selection is an app preference - never part of a
 /// connection profile. <see cref="ActiveTheme"/> is process-wide, so the tests touching it run
@@ -83,7 +83,7 @@ public sealed class ThemeTests
     {
         // Unlike the other pre-theming colors, these two moved off their original legacy hex (SteelBlue
         // #4682B4, DarkGoldenrod #B8860B): both read as text in Playback's sent/note lines at only
-        // 4.1:1/3.3:1 there, below the 4.5:1 text threshold (2026-09-29, see docs/design/theming.md).
+        // 4.1:1/3.3:1 there, below the 4.5:1 text threshold (2026-09-29, see docs/design/Theming/theming.md).
         Assert.AreEqual("#2E6DA4", BuiltInThemes.Light[ThemeRole.Accent].ToHex());
         Assert.AreEqual("#8F6A09", BuiltInThemes.Light[ThemeRole.Warning].ToHex());
         Assert.IsGreaterThanOrEqualTo(4.5, ThemeColor.ContrastRatio(BuiltInThemes.Light[ThemeRole.Accent], BuiltInThemes.Light[ThemeRole.Background]));

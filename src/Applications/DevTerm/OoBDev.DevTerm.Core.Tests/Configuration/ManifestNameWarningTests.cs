@@ -13,7 +13,7 @@ namespace OoBDev.DevTerm.Configuration.Tests;
 
 /// <summary>
 /// The "a missing manifest is a warning, not a hard failure" policy from
-/// docs/design/connection-profiles.md — every front end calls <see cref="ManifestNameWarning.For"/>
+/// docs/design/ConnectionProfiles/connection-profiles.md — every front end calls <see cref="ManifestNameWarning.For"/>
 /// instead of resolving/formatting this itself.
 /// </summary>
 [TestCategory("Unit")]

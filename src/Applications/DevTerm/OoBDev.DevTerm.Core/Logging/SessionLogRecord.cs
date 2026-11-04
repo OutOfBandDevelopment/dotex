@@ -11,7 +11,7 @@ namespace OoBDev.DevTerm.Logging;
 /// <summary>
 /// One line of a session log after the header. Captured records (<see cref="SessionLogRecordKind.Session"/>
 /// through <see cref="SessionLogRecordKind.Rx"/>) carry a <see cref="Sequence"/> number, assigned in
-/// capture order; notes don't. See docs/design/session-logging.md for the on-disk shape.
+/// capture order; notes don't. See docs/design/SessionLogging/session-logging.md for the on-disk shape.
 /// </summary>
 public sealed record SessionLogRecord
 {

@@ -13,7 +13,7 @@ using OoBDev.UiDefinitions;
 namespace OoBDev.DevTerm.DeviceManifests;
 
 /// <summary>
-/// Loads a <see cref="DeviceManifest"/> from any of the three shapes docs/design/device-manifests.md
+/// Loads a <see cref="DeviceManifest"/> from any of the three shapes docs/design/UiDefinitions/device-manifests.md
 /// describes: a single manifest file, a folder containing <c>device.json</c> at its root, or a
 /// <c>.zip</c> of one (extracted to a local folder, then loaded exactly the same way as a folder —
 /// no separate zip-specific logic beyond the extraction step itself).

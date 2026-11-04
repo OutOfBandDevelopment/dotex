@@ -9,7 +9,7 @@ using OoBDev.UiDefinitions;
 namespace OoBDev.DevTerm;
 
 /// <summary>
-/// A device control panel a plugin contributes (docs/design/proposals/plugin-contributed-panels.md): register one from an
+/// A device control panel a plugin contributes (docs/design/Plugins/plugin-contributed-panels.md): register one from an
 /// <see cref="Plugins.IPluginModule"/> and every front end adds a Device-menu entry for it, enabled when the connection
 /// suits the device. The panel itself is the generic <see cref="UiDefinition"/> renderer, so a contribution is data plus a surface.
 /// </summary>

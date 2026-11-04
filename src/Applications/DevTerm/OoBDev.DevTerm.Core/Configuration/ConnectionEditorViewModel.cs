@@ -30,7 +30,7 @@ namespace OoBDev.DevTerm.Configuration;
 /// own, so it manually copies Terminal.Gui field values into these properties before calling a
 /// command's <see cref="ICommand.Execute"/> and copies back afterward — but the validation, I/O,
 /// and business logic itself (connect/load/save/import/export) lives here exactly once. See
-/// docs/design/connection-profiles.md.
+/// docs/design/ConnectionProfiles/connection-profiles.md.
 /// </summary>
 /// <remarks>
 /// It is also the <em>form model</em> of the editor's connection fields: the properties carrying
@@ -39,7 +39,7 @@ namespace OoBDev.DevTerm.Configuration;
 /// generic form renderers draw and bind back to these same properties — one declaration of the
 /// fields, their grouping, and which transport shows which group (<see cref="FormSectionAttribute"/>'s
 /// visibility conditions on <see cref="IsSerialTransport"/> etc.), instead of a hand-built field list
-/// per front end. See docs/design/ui-definitions.md's "Forms from one definition".
+/// per front end. See docs/design/UiDefinitions/ui-definitions.md's "Forms from one definition".
 /// </remarks>
 [FormSection("General", Label = "", Order = 0)]
 [FormSection("Serial", Order = 1, VisibleWhen = nameof(IsSerialLikeTransport))]
@@ -1357,7 +1357,7 @@ public sealed class ConnectionEditorViewModel : INotifyPropertyChanged, IDisposa
     }
 
     /// <summary>
-    /// Converter tools an older profile still carries (docs/design/features/stream-converter-tools.md). The list is now
+    /// Converter tools an older profile still carries (docs/design/StreamTools/stream-converter-tools.md). The list is now
     /// app-wide (<see cref="ConverterToolsStore"/>, Device &gt; Converter Tools...); a profile's own are kept so they survive a
     /// save and still merge in. Replaced as a whole
     /// (never mutated in place) so assigning it counts as an edit for <see cref="IsDirty"/>.

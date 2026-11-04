@@ -81,7 +81,7 @@ Names of the original dev-term projects (`DevTerm.*`) now map to `OoBDev.DevTerm
   thread instead of the STA thread that owns the UI, throwing "The calling thread cannot access
   this object because a different thread owns it." Only shows up with real I/O, not a fake
   transport whose "async" calls complete synchronously — see `DevTerm.Wpf.Tests.StaTestRunner` and
-  [`docs/design/testing.md`](docs/design/testing.md).
+  [`docs/applications/devterm/design/testing.md`](docs/applications/devterm/design/testing.md).
 - **Don't both call `MainWindow.Show()` and `MainWindow.ConnectAsync()` from the same caller** —
   `Show()` fires the real `Loaded` event, which calls `ConnectAsync` on its own; calling it again
   opens the session twice concurrently, and two concurrent readers on one `PipeReader` corrupts its
@@ -93,7 +93,7 @@ Names of the original dev-term projects (`DevTerm.*`) now map to `OoBDev.DevTerm
   it. Conversely, `IInputInjector.InjectKey`/`ProcessQueue()` only reliably reaches the focused view
   when there's *no* `Application.Run()` loop running concurrently on another thread — the two don't
   compose. See `DevTerm.Console.Tests.TuiTestRunner`'s two separate run modes
-  (`RunHeadless`/`RunWithLoop`) and [`docs/design/testing.md`](docs/design/testing.md).
+  (`RunHeadless`/`RunWithLoop`) and [`docs/applications/devterm/design/testing.md`](docs/applications/devterm/design/testing.md).
 - **`Session` recreates its read-loop `CancellationTokenSource` on every `OpenAsync`, not once for
   the object's lifetime** — a `CancellationTokenSource` can only ever be cancelled once, so reusing
   the same one across a Close-then-reopen would start the new read loop with an already-cancelled

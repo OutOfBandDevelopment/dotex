@@ -7,7 +7,7 @@ namespace OoBDev.System.IO.Devices;
 
 /// <summary>
 /// A device's own configuration (a network bridge's IP, work mode, serial settings) edited from dev-term instead of the vendor's tool
-/// (docs/design/proposals/network-device-config-editors.md). The form is a generic <see cref="UiDefinition"/>; values travel as
+/// (docs/design/NetworkDevices/network-device-config-editors.md). The form is a generic <see cref="UiDefinition"/>; values travel as
 /// strings keyed by control id so an editor never needs a front-end-specific settings type. Independent of any open session.
 /// </summary>
 public interface IDeviceConfigEditor

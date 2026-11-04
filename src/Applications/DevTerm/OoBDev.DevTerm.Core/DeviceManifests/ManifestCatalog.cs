@@ -9,7 +9,7 @@ using OoBDev.DevTerm;
 namespace OoBDev.DevTerm.DeviceManifests;
 
 /// <summary>
-/// Lists the manifests a picker offers, from the locations docs/design/connection-profiles.md
+/// Lists the manifests a picker offers, from the locations docs/design/ConnectionProfiles/connection-profiles.md
 /// describes (the user's <c>~/.dev-term/manifests</c> first, then the ones installed next to the
 /// app) — passed in by the caller, since those paths live in <c>DevTerm.Configuration</c>. In each
 /// location: every subfolder holding a <c>device.json</c>, every <c>*.zip</c>, and every other

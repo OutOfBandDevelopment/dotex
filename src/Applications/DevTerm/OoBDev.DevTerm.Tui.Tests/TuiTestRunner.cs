@@ -20,7 +20,7 @@ namespace OoBDev.DevTerm.Tui.Tests;
 /// built by the actual production <see cref="TuiMode.BuildWindow"/> — using Terminal.Gui v2.5.0's
 /// own official testing primitives (<c>Terminal.Gui.Testing.IInputInjector</c>, <c>IOutputBuffer</c>)
 /// rather than OS-level UI Automation: no real terminal, real display, or external automation
-/// library needed. See docs/design/testing.md for the investigation this came out of.
+/// library needed. See docs/applications/devterm/design/testing.md for the investigation this came out of.
 ///
 /// Two distinct modes exist here because of two real, empirically-confirmed constraints (not
 /// documented anywhere — found by actually running code against the installed package, the same

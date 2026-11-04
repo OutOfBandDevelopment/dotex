@@ -10,7 +10,7 @@ namespace OoBDev.DevTerm.Logging;
 
 /// <summary>
 /// The first line of every session log: identifies the file as one, its format version, and
-/// describes the connection it was captured from. See docs/design/session-logging.md.
+/// describes the connection it was captured from. See docs/design/SessionLogging/session-logging.md.
 /// </summary>
 public sealed record SessionLogHeader
 {

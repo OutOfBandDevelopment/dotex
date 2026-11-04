@@ -20,7 +20,7 @@ namespace OoBDev.DevTerm.Tui;
 /// <see cref="CliOptionsValidator"/>) and the TUI is the active mode, and from File > Device
 /// Profiles... — lets the user pick a saved connection profile (<see cref="ConnectionProfileStore"/>)
 /// or fill in a transport's fields by hand, and optionally save the result as a new named profile, or
-/// import/export one as a standalone file. See docs/design/connection-profiles.md and
+/// import/export one as a standalone file. See docs/design/ConnectionProfiles/connection-profiles.md and
 /// docs/specs/connection-editor.md.
 /// </summary>
 /// <remarks>

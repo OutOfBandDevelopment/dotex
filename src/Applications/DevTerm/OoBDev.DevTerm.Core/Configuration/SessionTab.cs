@@ -15,7 +15,7 @@ namespace OoBDev.DevTerm.Configuration;
 /// <c>MainWindow</c> today hold as window-level fields/closure variables that get reassigned together
 /// on a live profile switch (<see cref="Session"/>, <see cref="Catalog"/>, <see cref="CliOptions"/>,
 /// the current send-format <see cref="Parser"/>), plus its own <see cref="SendHistory"/>. First step
-/// toward docs/design/multi-session-ui.md's <c>SessionTab</c> — both front ends still hold exactly one
+/// toward docs/design/MultiSessionUi/multi-session-ui.md's <c>SessionTab</c> — both front ends still hold exactly one
 /// of these today; this is a pure extraction, not yet wired to a multi-tab UI.
 /// </summary>
 public sealed class SessionTab
@@ -73,7 +73,7 @@ public sealed class SessionTab
     /// <summary>The send format currently encoding typed lines — starts as <see cref="CliOptions"/>'s <see cref="Configuration.CliOptions.EffectiveParser"/>, then follows "Send as" selections for this tab only.</summary>
     public string Parser { get; set; }
 
-    /// <summary>This tab's own recall history for its send field/box — independent of every other open tab's, per docs/design/multi-session-ui.md's Open questions (recommended per-tab, not shared).</summary>
+    /// <summary>This tab's own recall history for its send field/box — independent of every other open tab's, per docs/design/MultiSessionUi/multi-session-ui.md's Open questions (recommended per-tab, not shared).</summary>
     public SendHistory SendHistory { get; } = new();
 
     /// <summary>Builds a new tab from a fresh <see cref="DevTermSessionBuilder.Build"/> result — the shape a live profile switch, or a future "File &gt; New Session", uses.</summary>

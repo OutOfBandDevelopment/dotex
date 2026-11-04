@@ -15,7 +15,7 @@ namespace OoBDev.DevTerm.Configuration.Tests;
 /// <summary>
 /// Covers <see cref="StreamCaptureConverter"/>'s three conversion mechanisms (internal HP-GL-to-SVG,
 /// external tool), placeholder-substitution safety, and each mechanism's failure paths.
-/// See docs/design/features/stream-content-detection.md's "Raster/convert tool integration".
+/// See docs/design/StreamTools/stream-content-detection.md's "Raster/convert tool integration".
 /// </summary>
 [TestClass]
 [TestCategory("Unit")]

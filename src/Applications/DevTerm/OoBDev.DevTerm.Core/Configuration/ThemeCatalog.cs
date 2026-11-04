@@ -11,7 +11,7 @@ namespace OoBDev.DevTerm.Configuration;
 /// <summary>
 /// Every theme a front end can offer: the built-ins plus each valid user theme file (<c>*.json</c>)
 /// in the themes directory, and the problems found loading the rest. Loading never throws - a bad
-/// or missing directory or file becomes a <see cref="Problems"/> entry. See docs/design/theming.md.
+/// or missing directory or file becomes a <see cref="Problems"/> entry. See docs/design/Theming/theming.md.
 /// </summary>
 public sealed class ThemeCatalog
 {

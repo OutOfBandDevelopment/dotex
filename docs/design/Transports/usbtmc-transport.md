@@ -337,7 +337,7 @@ own repeated practice of not trusting a fix until checked against real hardware:
   more than one physical transfer — turned out to be a second, independent cause of "communication
   locks up" reports, separate from the earlier DM3000/DM3058E MAV-never-sets mystery this section
   parked. Fixed, tested, and verified against real hardware: see
-  [`docs/design/features/usbtmc-bulk-in-reassembly-fix.md`](../../applications/devterm/design/features/usbtmc-bulk-in-reassembly-fix.md).
+  [`docs/design/features/usbtmc-bulk-in-reassembly-fix.md`](usbtmc-bulk-in-reassembly-fix.md).
   DM3058E and DS1102E both now complete a full query/reply round-trip correctly end-to-end. DG1022
   remains genuinely stuck at the device/USB level in the current bench state — possibly the same
   family of issue as the parked DM3000/DM3058E MAV mystery above, possibly something else entirely —

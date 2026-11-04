@@ -2,7 +2,7 @@
 
 The dialog that manages the app-wide list of converter tools the Stream Monitor can run. The list is shared by every
 profile, device and front end, and is stored in `~/.dev-term/converter-tools.json`. It is opened by **Device > Converter
-Tools...** (next to **Stream Monitor...**) in both the TUI and WPF. Design: [stream-converter-tools](../design/features/stream-converter-tools.md).
+Tools...** (next to **Stream Monitor...**) in both the TUI and WPF. Design: [stream-converter-tools](../../../design/StreamTools/stream-converter-tools.md).
 
 Logic is shared: `DevTerm.Configuration.ConverterToolsEditor` (a working copy of the list). WPF renders it as
 `ConverterToolsWindow`, the TUI as `ConverterToolsDialog`.

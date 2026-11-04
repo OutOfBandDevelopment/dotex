@@ -554,7 +554,7 @@ public sealed class ControlPanelModeTests
 
     /// <summary>
     /// TODO.md's "Control panels ignore VisibleWhen" item, control-only half: a control-level
-    /// VisibleWhen (see docs/design/ui-definitions.md) hides its row entirely — no gap — while unmet,
+    /// VisibleWhen (see docs/design/UiDefinitions/ui-definitions.md) hides its row entirely — no gap — while unmet,
     /// then reappears (and pushes the row after it back down) once the referenced sibling's value
     /// satisfies it. The WPF side of the same fix is <c>ControlPanelWindowTests</c>.
     /// </summary>

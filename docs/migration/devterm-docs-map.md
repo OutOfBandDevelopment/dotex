@@ -39,4 +39,10 @@ Links inside `source/` and `changes/` still use dev-term paths; they are history
 | project-state | `docs/design/ProjectState/` | 2026-11-04 |
 | web-tunnel-blazor-frontend | `docs/design/WebFrontend/` | 2026-11-04 |
 | z-wave-support | `docs/design/ZWave/` | 2026-11-04 |
+| features: lxi-support, usbtmc-bulk-in-reassembly-fix, loopback-sample-rate | `docs/design/Transports/` | 2026-11-04 |
+| features: theme-builder | `docs/design/Theming/` | 2026-11-04 |
+| features: expression-picker-paths-and-cel, manifest-editor-expression-builder, ksy-importer, format-schema-files | `docs/design/UiDefinitions/` | 2026-11-04 |
+| features: stream-content-detection, stream-converter-tools | `docs/design/StreamTools/` | 2026-11-04 |
+| features: scpi-instrument-control | `docs/design/ScpiInstruments/` | 2026-11-04 |
+| rejected: favero and saint-george fencing protocols | `docs/protocols/rejected/` | 2026-11-04 |
 | de5000-lcr-meter-protocol, ebyte-e810-dtu-config-protocol, bytecc-bt-up01-usb-network-bridge | `docs/protocols/` | 2026-11-04 |

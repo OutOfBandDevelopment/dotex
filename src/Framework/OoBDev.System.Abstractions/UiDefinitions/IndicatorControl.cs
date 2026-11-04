@@ -18,7 +18,7 @@ public sealed class IndicatorControl : UiControl
     /// When set, an <see cref="Expression"/> deriving this indicator's displayed number from the
     /// live published values (e.g. <c>{raw_mv} / 1000</c>) instead of showing <see cref="UiControl.Id"/>'s
     /// own published text verbatim. Unset (the default) keeps today's direct behavior. See
-    /// docs/design/features/manifest-editor-expression-builder.md.
+    /// docs/design/UiDefinitions/manifest-editor-expression-builder.md.
     /// </summary>
     public string? Expression { get; set; }
 

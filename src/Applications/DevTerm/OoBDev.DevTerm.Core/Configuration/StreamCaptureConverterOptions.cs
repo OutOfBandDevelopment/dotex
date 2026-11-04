@@ -25,7 +25,7 @@ public sealed class StreamCaptureConverterOptions
     /// <summary>The registered tool run when <see cref="Mode"/> is <see cref="StreamConversionMode.Tool"/>.</summary>
     public string? ToolName { get; set; }
 
-    /// <summary>Registered converter tools - see docs/design/features/stream-converter-tools.md.</summary>
+    /// <summary>Registered converter tools - see docs/design/StreamTools/stream-converter-tools.md.</summary>
     public List<StreamConvertToolOptions> Tools { get; set; } = [];
 
     public string? ExternalToolPath { get; set; }

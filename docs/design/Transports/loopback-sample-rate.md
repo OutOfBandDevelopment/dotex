@@ -5,7 +5,7 @@ add a parameter for setting the sample rate to control how fast stream samples a
 
 ## Problem
 
-[The Loopback transport](../../../../design/Transports/transports.md#loopback) pushes its `MEAS?`/`Samples: N` responses (and
+[The Loopback transport](transports.md#loopback) pushes its `MEAS?`/`Samples: N` responses (and
 every other scripted response) back as separate writes with no artificial delay between them — useful
 for exercising the UI end-to-end with no hardware, but it means anything that wants to visually verify
 *live-arriving* behavior (a `StripChartControl` scrolling in as samples arrive, a Stream Monitor
@@ -23,7 +23,7 @@ N`/`MEAS?` handling awaits between each pushed line.
 - **Surfaced in both front ends' connection editors** as a numeric field, visible only when the
   selected transport is `loopback` — the same transport-conditional `VisibleWhen` section pattern the
   Connection Editor already uses for every other transport's fields (see
-  [ui-definitions.md](../../../../design/UiDefinitions/ui-definitions.md)'s "Forms from one definition" section, settled answer #1:
+  [ui-definitions.md](../UiDefinitions/ui-definitions.md)'s "Forms from one definition" section, settled answer #1:
   "each transport's fields are one section with a visibility condition").
 - **CLI**: a `--loopbacksampleintervalms <N>` flag (or the equivalent `CliOptions` property name),
   following the existing "property names double as CLI flag names" convention

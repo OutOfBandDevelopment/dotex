@@ -21,7 +21,7 @@ docs/test/2026-09-24-09-54-39.md), Korad KA3005P, Korad KA6003P. See:
 - `ScpiParameterDefinition.Control` (2026-09-25) — an optional widget hint (`Numeric`, `Slider`,
   `Text`, `Choice`) independent of the parameter's `Kind`; e.g. `"Kind": "Numeric", "Control":
   "Text"` is a text field validated as a number within `Minimum`/`Maximum`. See
-  [ui-definitions.md](../../../../design/UiDefinitions/ui-definitions.md)'s "Values and widgets". No bundled profile uses it yet.
+  [ui-definitions.md](../UiDefinitions/ui-definitions.md)'s "Values and widgets". No bundled profile uses it yet.
 - `ScpiReplyPresenter` — line-buffered ASCII decoding plus FIFO query/reply correlation
   (`IScpiReplyTracker.QuerySent`), resolving the "can a command declare an expected reply pattern"
   open question below for the common synchronous case.
@@ -29,7 +29,7 @@ docs/test/2026-09-24-09-54-39.md), Korad KA3005P, Korad KA6003P. See:
   `IControlSurface` renderer (`ControlPanelMode`/`ControlPanelWindow`, proven against the K8055 and
   Busylight) rather than a bespoke "pick a command, fill parameters" widget; this needed one small,
   generic addition to the shared model, `ButtonControl.ParameterFieldIds` (see
-  [ui-definitions.md](../../../../design/UiDefinitions/ui-definitions.md)).
+  [ui-definitions.md](../UiDefinitions/ui-definitions.md)).
 - Auto-detect is honestly scoped to `*IDN?` plus a regex match against each profile's `IdnPattern`
   (`ScpiProfileCatalog.TryMatchByIdn`) — there is no standardized "list supported commands" SCPI
   query, so this is not real command discovery, just an identification shortcut with a Generic
@@ -64,7 +64,7 @@ docs/test/2026-09-24-09-54-39.md), Korad KA3005P, Korad KA6003P. See:
     addition to the bundled `Profiles/` and app-folder `ScpiProfiles/` drop-in), mirroring the
     existing per-user connection-profile/device-manifest storage convention.
 - The Tektronix 2230 remains explicitly out of scope for a full command set here — see the new
-  [tektronix-2230-protocol.md](../../../../protocols/tektronix-2230-protocol.md) proposal — though a minimal one-command
+  [tektronix-2230-protocol.md](../../protocols/tektronix-2230-protocol.md) proposal — though a minimal one-command
   profile (`ID?`) was added the same day; see `docs/changes/2026-09-23.md`.
 
 ## Source
@@ -81,14 +81,14 @@ That project's own stated goal (a custom .NET Core VISA driver plus an RS-232/Et
 for SCPI bench equipment) substantially overlaps with what dev-term already provides —
 serial and TCP transports are built, unit-tested, and verified against real hardware (a bench
 oscilloscope, both direct-serial and over a serial-to-Ethernet bridge, per the top-level
-[README](../../../../../README.md)). This proposal reframes that project's goal as a dev-term device
-control module rather than a from-scratch driver, per [device-control-modules.md](../../../../design/UiDefinitions/device-control-modules.md).
+[README](../../../README.md)). This proposal reframes that project's goal as a dev-term device
+control module rather than a from-scratch driver, per [device-control-modules.md](../UiDefinitions/device-control-modules.md).
 
 ## Purpose
 
 Give dev-term a device control module for SCPI-compatible bench test equipment: a control
 surface for outbound commands (set voltage, trigger, query measurement) plus a decoder for
-inbound replies/telemetry, bundled as one plugin per [device-control-modules.md](../../../../design/UiDefinitions/device-control-modules.md)'s
+inbound replies/telemetry, bundled as one plugin per [device-control-modules.md](../UiDefinitions/device-control-modules.md)'s
 "Motivating example," which is this exact scenario.
 
 ## Target hardware (from the source project)
@@ -109,7 +109,7 @@ oscilloscope section is the one worth flagging — it records no interface at al
 checking further:
 
 - **Rigol DS1102E** — has USB (confirmed directly); Rigol scopes of this era commonly do USBTMC
-  over that port, matching the [USBTMC](../../../../design/Transports/transports.md) gap already noted for the DG1022 family
+  over that port, matching the [USBTMC](../Transports/transports.md) gap already noted for the DG1022 family
   — same "needs its own raw-USB transport" dependency as that device, not the existing serial/TCP
   transports.
 - **Tektronix TDS2024** — confirmed to support **GPIB and serial** as fitted options; the
@@ -132,7 +132,7 @@ SCPI is textual, not binary — this is a much softer decoder problem than Radex
 - **Outbound**: plain ASCII command strings (e.g. `:VOLT 5.0`, `*IDN?`, `:MEAS:VOLT:DC?`) —
   these are exactly `IControlSurface` commands whose "encoding" is just the string itself plus a
   terminator, reusing the existing ASCII presenter's send path (`IPresenterInput`, see
-  [presenters.md](../../../../design/Presenters/presenters.md)) rather than needing custom binary framing.
+  [presenters.md](../Presenters/presenters.md)) rather than needing custom binary framing.
 - **Inbound**: replies are themselves ASCII (numeric readings, `*IDN?` strings, status bytes) —
   a decoder here is close to a thin wrapper over the existing ASCII/line-buffered presenter,
   with light structure extraction (e.g. parsing a `*IDN?` reply into make/model/serial/firmware
@@ -140,7 +140,7 @@ SCPI is textual, not binary — this is a much softer decoder problem than Radex
 - **Transport-agnostic**: SCPI instruments show up over GPIB (out of scope — no GPIB transport
   planned), RS-232 (the existing serial transport), USB-CDC (also serial, from the OS's point of
   view), and LAN/LXI (the existing TCP transport) — no new `ITransport` is needed for the RS-232
-  and USB-CDC and LAN cases; see [transports.md](../../../../design/Transports/transports.md).
+  and USB-CDC and LAN cases; see [transports.md](../Transports/transports.md).
 
 ## Proposed shape
 
@@ -177,8 +177,8 @@ decoder --> user : Human-readable text baseline
   `MEAS:CURR:DC?`, ...) and a power-supply profile (`SOUR:VOLT`, `SOUR:CURR`, `OUTP ON`/`OUTP OFF`,
   `MEAS:VOLT?`) cover the 34401A/DM3058E and KA3005P/KA6003P respectively, and a waveform-generator
   profile covers the DG1022/DG1022Z. This is the same "one generic thing, many devices via external
-  data" pattern as [presenters.md](../../../../design/Presenters/presenters.md)'s mappable presenters (§5) and
-  [device-control-modules.md](../../../../design/UiDefinitions/device-control-modules.md)'s open question about a declarative
+  data" pattern as [presenters.md](../Presenters/presenters.md)'s mappable presenters (§5) and
+  [device-control-modules.md](../UiDefinitions/device-control-modules.md)'s open question about a declarative
   command/response schema — SCPI is arguably the *best* fit for that declarative schema, since the
   command grammar is standardized enough (IEEE 488.2 common commands, `SCPI-99`) to describe
   generically rather than per-vendor.
@@ -189,7 +189,7 @@ decoder --> user : Human-readable text baseline
 - **Query/reply pairing matters here more than for streaming telemetry** — SCPI is
   request/response by nature (send `MEAS:VOLT:DC?`, get one line back), which is exactly the "does
   a command declare an expected reply pattern" open question already flagged in
-  [device-control-modules.md](../../../../design/UiDefinitions/device-control-modules.md). This project is a concrete forcing
+  [device-control-modules.md](../UiDefinitions/device-control-modules.md). This project is a concrete forcing
   function for resolving that question, not just a hypothetical.
 
 ## Relationship to other backlog items
@@ -197,13 +197,13 @@ decoder --> user : Human-readable text baseline
 - **LXI (SCPI-over-LAN) instruments** use the RFC 2217-adjacent pattern of "serial protocol,
   network-reachable" but over a real TCP socket (LXI Core uses a raw TCP or VXI-11/RPC transport,
   not Telnet framing) — so this rides on the existing TCP transport directly, not on the RFC 2217
-  work in [rfc2217.md](../../../../design/Transports/rfc2217.md). Worth double-checking against a real LXI-capable instrument
+  work in [rfc2217.md](../Transports/rfc2217.md). Worth double-checking against a real LXI-capable instrument
   before assuming raw-TCP-SCPI is sufficient (the source project notes this as unverified/planning
   stage).
 - The source project's own "RS-232/Ethernet gateway" idea (a Raspberry Pi/BeagleBone bridging a
   GPIB/RS-232-only instrument onto the network) is a **transport-level concern**, not a
   control-module concern — if built, it belongs alongside the RFC 2217 work
-  ([rfc2217.md](../../../../design/Transports/rfc2217.md)) rather than inside this module, since a generic serial-over-network
+  ([rfc2217.md](../Transports/rfc2217.md)) rather than inside this module, since a generic serial-over-network
   bridge is useful to every dev-term session, not just SCPI ones.
 
 ## Open questions

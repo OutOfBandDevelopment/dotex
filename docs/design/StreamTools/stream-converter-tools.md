@@ -8,7 +8,7 @@ anything else a user has).
 
 `StreamConvertExternalToolPath/Arguments` holds exactly one program. PostScript and PCL need different
 tools, so a user with both had to edit the profile between captures. The
-[Ghostscript guide](../../user-guide/ghostscript-conversion.md) lists "one tool at a time" as a limit.
+[Ghostscript guide](../../applications/devterm/user-guide/ghostscript-conversion.md) lists "one tool at a time" as a limit.
 
 ## Shape
 
@@ -109,7 +109,7 @@ What was needed to close this out.
 - The options, `StreamCaptureConverter` selection (Auto and by name), and the conversion list in both Stream Monitor
   windows.
 - The tool list is app-wide (`ConverterToolsStore`, `~/.dev-term/converter-tools.json`), edited from **Device > Converter
-  Tools...** in both front ends ([spec](../../specs/converter-tools-editor.md)). The earlier per-profile "Edit tools..."
+  Tools...** in both front ends ([spec](../../applications/devterm/specs/converter-tools-editor.md)). The earlier per-profile "Edit tools..."
   button was removed; a profile's own `StreamConvertTools` still loads and merges in.
 - Web service mode removed (`StreamConvertWebService*`, the `webservice` mode, its validator case, the HTTP client
   registration and its tests).

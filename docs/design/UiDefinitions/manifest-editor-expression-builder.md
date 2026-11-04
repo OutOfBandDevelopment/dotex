@@ -6,7 +6,7 @@ mapped to parameters for controls."
 
 ## Problem
 
-[UI definitions](../../../../design/UiDefinitions/ui-definitions.md)' live display controls (`IndicatorControl`,
+[UI definitions](ui-definitions.md)' live display controls (`IndicatorControl`,
 `BarGraphControl`, `StripChartControl`, `VectorControl`) bind directly to a decoder's published
 values by id — `IStructuredPresenter.ValuesChanged` publishes a dictionary keyed by `UiControl.Id`,
 and a control just shows whatever value arrives under its id, verbatim. There's no way to *derive* a
@@ -16,7 +16,7 @@ gap exists on the outbound side: `ButtonControl.ParameterFieldIds` reads each na
 raw current value and comma-joins them into the command — there's no way to transform a value (format
 a number, apply a scale) before it's sent.
 
-This matters specifically for the [device manifest](../../../../design/UiDefinitions/device-manifests.md) case (a no-code, JSON-only
+This matters specifically for the [device manifest](device-manifests.md) case (a no-code, JSON-only
 device configuration) — a code-based device module (K8055, Busylight) can always just write the
 transform in its decoder; a manifest has no code to write it in at all.
 
@@ -33,7 +33,7 @@ Add an optional `Expression` string to the places a value currently passes throu
 **Expression language**: a small, dev-term-owned arithmetic expression grammar (numeric literals, the
 published values as named variables, `+ - * /`, parentheses, and a handful of built-in functions —
 `round`, `min`, `max`, maybe a basic `if`/ternary) — not a general-purpose external DSL. This matches
-the precedent already set in [device-control-modules.md](../../../../design/UiDefinitions/device-control-modules.md)'s own
+the precedent already set in [device-control-modules.md](device-control-modules.md)'s own
 "declarative command/response schema" section, which deliberately chose a lightweight dev-term-owned
 schema over a heavyweight external dependency for the same reason (plain ASCII query/response gear
 doesn't need Kaitai Struct's weight; this doesn't need a general expression-engine dependency either).
@@ -46,9 +46,9 @@ Faster to start, but pulls in a runtime dependency for what's a genuinely small 
 Kaitai precedent above) this project has consistently preferred owning small schemas outright over
 taking on an external dependency for them. Worth revisiting only if the hand-rolled grammar's scope
 grows past simple arithmetic (e.g., string manipulation, lookups against an external map file — closer
-to the "mappable presenters" idea in [presenters.md](../../../../design/Presenters/presenters.md)).
+to the "mappable presenters" idea in [presenters.md](../Presenters/presenters.md)).
 
-**Where it's authored**: the [manifest editor](../../specs/manifest-editor.md) gains an "Expression"
+**Where it's authored**: the [manifest editor](../../applications/devterm/specs/manifest-editor.md) gains an "Expression"
 field next to the controls above, alongside the existing per-control fields it already edits
 (Description, Constraint). Validated live against the manifest's own sample/preview values (the editor
 already has a live panel preview — see `ui-definitions.md`'s "Display controls, manifest panels, and

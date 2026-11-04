@@ -12,9 +12,9 @@ namespace OoBDev.DevTerm.DeviceManifests;
 
 /// <summary>
 /// A complete, no-code description of a device: identity, a transport hint, the declarative
-/// command/response schema from docs/design/device-control-modules.md, and a control-panel
+/// command/response schema from docs/design/UiDefinitions/device-control-modules.md, and a control-panel
 /// <see cref="UiDefinition"/> — either inline or loaded from <see cref="UiFile"/> by
-/// <see cref="DeviceManifestLoader"/>. See docs/design/device-manifests.md.
+/// <see cref="DeviceManifestLoader"/>. See docs/design/UiDefinitions/device-manifests.md.
 /// </summary>
 public sealed class DeviceManifest
 {

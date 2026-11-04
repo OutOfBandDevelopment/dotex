@@ -140,7 +140,7 @@ Lang --> Val
 - **`{id}` or bare identifiers?** Both parse and mean the same; `{id}` stays canonical because it is what the picker
   inserts and what every bundled manifest uses. Manifests are not rewritten on load.
 - **Sample rate for time-series data?** Not needed as its own concept: a recorded session log (`RecordedSamples`) supplies
-  real series, and a paced loopback stream ([loopback sample rate](loopback-sample-rate.md)) covers live previews.
+  real series, and a paced loopback stream ([loopback sample rate](../Transports/loopback-sample-rate.md)) covers live previews.
 - **A regex tester pane?** No. The picker inserts and checks `matches()`; the editor's Pattern form already has a
   sample-line tester.
 

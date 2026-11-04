@@ -6,7 +6,7 @@ namespace OoBDev.UiDefinitions.Tests;
 
 /// <summary>
 /// <see cref="Expression"/>'s grammar, its never-throws <see cref="Expression.Evaluate"/>, and
-/// <see cref="Expression.ReferencedIds"/> — see docs/design/features/manifest-editor-expression-builder.md.
+/// <see cref="Expression.ReferencedIds"/> — see docs/design/UiDefinitions/manifest-editor-expression-builder.md.
 /// </summary>
 [TestCategory("Unit")]
 [TestClass]

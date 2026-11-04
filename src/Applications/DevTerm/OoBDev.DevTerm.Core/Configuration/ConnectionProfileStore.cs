@@ -14,7 +14,7 @@ namespace OoBDev.DevTerm.Configuration;
 /// Saves/lists/loads named connection profiles — <see cref="CliOptions"/>-shaped JSON files under
 /// <see cref="DevTermUserDataPaths.ProfilesDirectory"/> by default, separate from the single
 /// untracked <c>appsettings.Local.json</c> default profile each front end's own build output has.
-/// See docs/design/connection-profiles.md.
+/// See docs/design/ConnectionProfiles/connection-profiles.md.
 /// </summary>
 public sealed class ConnectionProfileStore(string? profilesDirectory = null)
 {

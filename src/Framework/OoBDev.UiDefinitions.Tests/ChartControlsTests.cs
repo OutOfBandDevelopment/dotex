@@ -9,7 +9,7 @@ namespace OoBDev.UiDefinitions.Tests;
 /// The display-only chart controls — <see cref="BarGraphControl"/>, <see cref="StripChartControl"/>,
 /// <see cref="VectorControl"/> — round-trip through both serializers, and their shared live state
 /// (<see cref="LiveDisplayState"/>, what both renderers draw from) clamps, scrolls, scales and
-/// converts coordinates as documented in docs/design/ui-definitions.md.
+/// converts coordinates as documented in docs/design/UiDefinitions/ui-definitions.md.
 /// </summary>
 [TestCategory("Unit")]
 [TestClass]

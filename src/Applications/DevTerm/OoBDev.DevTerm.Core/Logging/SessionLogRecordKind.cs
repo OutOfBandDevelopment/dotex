@@ -8,7 +8,7 @@ using OoBDev.DevTerm;
 
 namespace OoBDev.DevTerm.Logging;
 
-/// <summary>What a <see cref="SessionLogRecord"/> describes — its <c>"type"</c> in the file. See docs/design/session-logging.md.</summary>
+/// <summary>What a <see cref="SessionLogRecord"/> describes — its <c>"type"</c> in the file. See docs/design/SessionLogging/session-logging.md.</summary>
 public enum SessionLogRecordKind
 {
     /// <summary><c>"session"</c> — the logger attached to a session (logging started, or followed a profile switch): which connection, and whether it was already open.</summary>

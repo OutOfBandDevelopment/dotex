@@ -8,7 +8,7 @@ using OoBDev.DevTerm;
 
 namespace OoBDev.DevTerm.Configuration.Discovery;
 
-/// <summary>A single way of finding network devices (see docs/design/proposals/network-device-discovery.md).</summary>
+/// <summary>A single way of finding network devices (see docs/design/NetworkDevices/network-device-discovery.md).</summary>
 public interface INetworkDeviceProbe
 {
     string Name { get; }

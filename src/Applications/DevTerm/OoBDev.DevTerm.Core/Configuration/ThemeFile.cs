@@ -23,7 +23,7 @@ namespace OoBDev.DevTerm.Configuration;
 /// file name, <c>basedOn</c> to <c>light</c>, <c>chartPalette</c> to the base's. Roles left out keep
 /// the base theme's color. A bad file never throws - it comes back with <see cref="ThemeLoadResult.Errors"/>
 /// saying what's wrong (all of it, not just the first problem) so the front end can report it and
-/// keep going on a built-in. See docs/design/theming.md.
+/// keep going on a built-in. See docs/design/Theming/theming.md.
 /// </summary>
 public static class ThemeFile
 {

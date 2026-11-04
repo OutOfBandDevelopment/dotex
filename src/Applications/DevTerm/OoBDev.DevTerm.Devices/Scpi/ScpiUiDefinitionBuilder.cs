@@ -14,7 +14,7 @@ namespace OoBDev.DevTerm.Devices.Scpi;
 /// plus a button that invokes the command with those fields' values joined via
 /// <see cref="ButtonControl.ParameterFieldIds"/>, and a query's reply indicator. Every profile also
 /// gets an always-present "Custom Command" section so an uncurated command is never out of reach.
-/// See docs/design/features/scpi-instrument-control.md.
+/// See docs/design/ScpiInstruments/scpi-instrument-control.md.
 /// </summary>
 public static class ScpiUiDefinitionBuilder
 {

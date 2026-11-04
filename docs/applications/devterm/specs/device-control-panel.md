@@ -34,7 +34,7 @@ The items follow the connection live: they're recomputed on every connect, disco
 and profile switch, the same pass that refreshes the main window's title and status bar. See [`docs/design/ui-definitions.md`](../../../design/UiDefinitions/ui-definitions.md) and
 [`docs/design/device-control-modules.md`](../../../design/UiDefinitions/device-control-modules.md) for the design intent
 behind this being generic, and
-[`docs/design/features/scpi-instrument-control.md`](../design/features/scpi-instrument-control.md)
+[`docs/design/features/scpi-instrument-control.md`](../../../design/ScpiInstruments/scpi-instrument-control.md)
 for the SCPI module specifically.
 
 ## Fields

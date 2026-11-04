@@ -74,7 +74,7 @@ fields:
 
 - `ButtonControl` — invokes a command, no value of its own (e.g. "Apply", "Reboot", "Reset Counter").
   Optionally carries `ParameterFieldIds: List<string>?` (added 2026-09-23, for the SCPI module — see
-  [scpi-instrument-control.md](../../applications/devterm/design/features/scpi-instrument-control.md)): when set, the renderer reads
+  [scpi-instrument-control.md](../ScpiInstruments/scpi-instrument-control.md)): when set, the renderer reads
   each named sibling control's current value (a `TextFieldControl`/`NumericControl`'s text, a
   `ChoiceControl`'s selected option), comma-joins them, and invokes `CommandId ?? Id` with the
   joined string — the generic mechanism for "pick a command, fill in one or more parameter fields,
@@ -305,7 +305,7 @@ parameter's `Kind` fixed its widget.
   constraint (`Integer` when `DecimalPlaces` is 0) over its `Minimum`/`Maximum`; `"Slider"` becomes a
   `SliderControl` (step `10^-DecimalPlaces`). A hint that doesn't fit the kind (a slider for text, a
   choice with no options) falls back to the kind's default widget. See
-  [scpi-instrument-control.md](../../applications/devterm/design/features/scpi-instrument-control.md).
+  [scpi-instrument-control.md](../ScpiInstruments/scpi-instrument-control.md).
 
 The model says nothing about *what a control sends*; that's the surface's job. A surface that can
 describe it implements `DevTerm.Core.Control.ICommandPreview` alongside `IControlSurface` (kept

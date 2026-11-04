@@ -9,5 +9,8 @@ The `ITransport` contract and the transports built on it (serial, TCP, HID, USBT
 | [vxi11-transport.md](vxi11-transport.md) | VXI-11 core channel client for LXI instruments |
 | [usbtmc-transport.md](usbtmc-transport.md) | Raw USB Test and Measurement Class transport; protocol reference in [docs/protocols](../../protocols/usbtmc-protocol-conformance.md) |
 | [message-broker-protocols.md](message-broker-protocols.md) | MQTT, AMQP and STOMP transports |
+| [lxi-support.md](lxi-support.md) | LXI discovery and raw-socket SCPI |
+| [usbtmc-bulk-in-reassembly-fix.md](usbtmc-bulk-in-reassembly-fix.md) | USBTMC bulk-in reassembly fix |
+| [loopback-sample-rate.md](loopback-sample-rate.md) | Loopback transport sample rate |
 
 Test peers (ser2net, Mosquitto, RabbitMQ, loopback device) run in the shared stack: [integration services](../../architecture/testing/integration/services.md#devterm-peers-mosquitto-ser2net-loopback-device).

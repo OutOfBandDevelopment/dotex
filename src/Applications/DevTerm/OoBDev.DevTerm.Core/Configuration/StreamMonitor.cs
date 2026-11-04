@@ -11,7 +11,7 @@ using OoBDev.DevTerm;
 namespace OoBDev.DevTerm.Configuration;
 
 /// <summary>
-/// The Stream Monitor's front-end-independent half (docs/design/features/stream-content-detection.md,
+/// The Stream Monitor's front-end-independent half (docs/design/StreamTools/stream-content-detection.md,
 /// docs/specs/stream-monitor.md): owns one <see cref="StreamContentWatcher"/> per tracked session,
 /// each bound into that session's live pipeline while running, auto-saves every capture as
 /// <c>{device}_{yyyyMMdd-HHmmss}.{ext}</c> under that connection's export directory, and keeps one

@@ -49,12 +49,12 @@ public sealed class CliOptions
     /// <summary>
     /// Run the console app's full-screen TUI. Defaults to <c>true</c> — the TUI is the console
     /// app's default mode; pass <see cref="Cli"/> to force the plain scriptable loop instead. See
-    /// docs/design/frontends.md.
+    /// docs/applications/devterm/design/frontends.md.
     /// </summary>
     [Category("Mode")]
     public bool Tui { get; set; } = true;
 
-    /// <summary>Force the plain scriptable CLI loop instead of the default full-screen TUI — e.g. for automation/CI. See docs/design/frontends.md.</summary>
+    /// <summary>Force the plain scriptable CLI loop instead of the default full-screen TUI — e.g. for automation/CI. See docs/applications/devterm/design/frontends.md.</summary>
     [Category("Mode")]
     public bool Cli { get; set; }
 
@@ -433,7 +433,7 @@ public sealed class CliOptions
     /// resolves to <c>~/.dev-term/manifests/{ManifestName}</c> or this app's own
     /// <c>./manifests/{ManifestName}</c> (see <see cref="DevTermUserDataPaths.ResolveManifestDirectory"/>),
     /// so a saved profile stays portable instead of embedding a filesystem path. A name that
-    /// doesn't resolve is a warning, not a connection failure — see docs/design/connection-profiles.md.
+    /// doesn't resolve is a warning, not a connection failure — see docs/design/ConnectionProfiles/connection-profiles.md.
     /// </summary>
     [Category("General")]
     [DisplayName("Device manifest")]
@@ -463,7 +463,7 @@ public sealed class CliOptions
 
     /// <summary>
     /// Directory where auto-saved captures (e.g. the Stream Monitor's detected binary/image data —
-    /// see docs/design/features/stream-content-detection.md) are written. Unset means
+    /// see docs/design/StreamTools/stream-content-detection.md) are written. Unset means
     /// <see cref="DevTermUserDataPaths.ExportsDirectory"/> (<c>~/.dev-term/exports</c>) — see
     /// <see cref="EffectiveExportDirectory"/>. Bound the same as every other property here (a
     /// settings file, the <c>DEVTERM_</c>-prefixed environment variable, or <c>--exportdirectory</c>
@@ -483,7 +483,7 @@ public sealed class CliOptions
     /// this session-log file from startup (<c>--log capture.jsonl</c>). <c>--log true</c> picks a
     /// timestamped name under <see cref="DevTermUserDataPaths.LogsDirectory"/> instead (see
     /// <see cref="SessionLogging.ResolveLogPath"/>). Honored by every front end; the TUI/WPF can also
-    /// start and stop logging from File &gt; Start Logging.... See docs/design/session-logging.md.
+    /// start and stop logging from File &gt; Start Logging.... See docs/design/SessionLogging/session-logging.md.
     /// </summary>
     [Category("Mode")]
     [DisplayName("Log to file")]
@@ -491,7 +491,7 @@ public sealed class CliOptions
 
     /// <summary>
     /// Folder of plugins (<c>&lt;folder&gt;/&lt;plugin&gt;/plugin.json</c> + assemblies) loaded at startup. Defaults to a <c>plugins</c>
-    /// folder next to the app when that exists. See docs/design/plugin-model.md.
+    /// folder next to the app when that exists. See docs/design/Plugins/plugin-model.md.
     /// </summary>
     [Category("Mode")]
     [DisplayName("Plugins folder")]
@@ -500,7 +500,7 @@ public sealed class CliOptions
     /// <summary>
     /// Opt-in OpenTelemetry export of dev-term's own traces and metrics (connection open spans, bytes
     /// sent/received, disconnects) over OTLP/gRPC: <c>--otlp http://localhost:4317</c>, or <c>--otlp true</c> for that
-    /// default. Off when unset. See docs/design/observability.md.
+    /// default. Off when unset. See docs/applications/devterm/design/observability.md.
     /// </summary>
     [Category("Mode")]
     [DisplayName("OTLP endpoint")]
@@ -523,7 +523,7 @@ public sealed class CliOptions
 
     /// <summary>
     /// Which mechanism the Stream Monitor's "Convert..." action uses, from
-    /// docs/design/features/stream-content-detection.md's "Raster/convert tool integration":
+    /// docs/design/StreamTools/stream-content-detection.md's "Raster/convert tool integration":
     /// <c>none</c> (default - the action reports nothing is configured), <c>externaltool</c> (run a
     /// configured external converter, e.g. Ghostscript), <c>auto</c> / <c>tool:&lt;name&gt;</c> (a registered
     /// converter tool), or <c>internalhpgltosvg</c> (dev-term's own HP-GL-to-SVG converter -
@@ -578,7 +578,7 @@ public sealed class CliOptions
     public string? StreamConvertOutputExtension { get; set; }
 
     /// <summary>
-    /// External converter tools registered by name (docs/design/features/stream-converter-tools.md). Set in
+    /// External converter tools registered by name (docs/design/StreamTools/stream-converter-tools.md). Set in
     /// the profile JSON; <see cref="StreamConvertMode"/> <c>auto</c> picks the first whose formats match a
     /// capture, <c>tool:Name</c> runs one by name.
     /// </summary>

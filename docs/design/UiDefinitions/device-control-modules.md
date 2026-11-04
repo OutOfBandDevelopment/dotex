@@ -119,12 +119,12 @@ For simple query/response devices (most bench gear — a command string in, a fo
   can render or export it properly instead of just showing text/hex — is **built for SCPI commands
   (2026-09-25)** as `ScpiCommandDefinition.ExpectedResponseFormat`, consumed by the Stream Monitor;
   a device manifest's own command schema can't declare one yet. See
-  [stream content detection](../../applications/devterm/design/features/stream-content-detection.md).
+  [stream content detection](../StreamTools/stream-content-detection.md).
 - ~~Whether device control modules can be assembled declaratively...~~ **Answered 2026-09-23** by
   the same module: `ScpiInstrumentProfile`'s JSON schema (command id/label/category/template/
   parameters) plus `ScpiProfileCatalog`'s bundled-plus-drop-in-folder loading is exactly the
   "SCPI baseline as a zero-authoring fallback" candidate direction above, now built — see
-  [scpi-instrument-control.md](../../applications/devterm/design/features/scpi-instrument-control.md). It's SCPI-specific, not the
+  [scpi-instrument-control.md](../ScpiInstruments/scpi-instrument-control.md). It's SCPI-specific, not the
   general Kaitai-Struct-backed binary-response schema also sketched above, which remains
   unimplemented for genuinely binary devices.
 - Safety/interlock concerns specific to controlling real equipment. **Partly decided 2026-10-03:** read/write **rate limits** are wanted, as a core, configurable option (like the existing write byte delay). **Built 2026-10-03** as `SessionLimits` (`--sendintervalms`, `--readintervalms`). **Decided 2026-10-03:** confirming a destructive command lives **per device module** (a manifest or profile marks the commands that need confirmation); no core name list. **Built 2026-10-03 for manifests:** `OutboundCommand.ConfirmMessage` becomes `ButtonControl.ConfirmMessage`, and both panels ask Yes/No before sending (a SCPI profile can't declare one yet).

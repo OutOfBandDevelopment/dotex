@@ -13,7 +13,7 @@ namespace OoBDev.UiDefinitions;
 /// (case-insensitive). With no <see cref="Values"/>, the value must be true (a <c>bool</c>
 /// <see langword="true"/>, or the text <c>"true"</c>/<c>"1"</c>). A collection value matches when any
 /// of its items does (e.g. "the presenters list contains <c>scpi</c>"). See
-/// docs/design/ui-definitions.md's "Forms from one definition" section.
+/// docs/design/UiDefinitions/ui-definitions.md's "Forms from one definition" section.
 /// </summary>
 /// <remarks>
 /// A plain class holding a <see cref="List{T}"/> (no dictionary, no non-empty default list) so it

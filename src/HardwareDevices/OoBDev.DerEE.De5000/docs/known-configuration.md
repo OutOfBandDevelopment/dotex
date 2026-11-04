@@ -11,4 +11,4 @@
 Not yet checked against a real meter in this repo (the layout comes from the community decodings listed in the proposal);
 no COM port or bridge address is recorded here for that reason.
 
-Design notes: `docs/design/proposals/de5000-lcr-meter-protocol.md` in the dev-term repository.
+Design notes: `docs/protocols/de5000-lcr-meter-protocol.md` in the dev-term repository.

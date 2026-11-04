@@ -15,7 +15,7 @@ namespace OoBDev.DevTerm.Configuration;
 /// <summary>
 /// A project: a named set of connections, saved as one JSON file and reopened only on request
 /// (<c>--project &lt;file&gt;</c>), never automatically. Holds connection state only (profiles and their
-/// presenter choices) plus, optionally, each tab's send history and log setting and which tab was active; see docs/design/proposals/project-state.md.
+/// presenter choices) plus, optionally, each tab's send history and log setting and which tab was active; see docs/design/ProjectState/project-state.md.
 /// </summary>
 public sealed class ProjectFile
 {

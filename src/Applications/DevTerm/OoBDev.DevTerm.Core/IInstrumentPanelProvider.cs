@@ -12,7 +12,7 @@ namespace OoBDev.DevTerm;
 /// A family of instruments whose panel is picked from data rather than hand-coded per device (SCPI is the one today): the
 /// Device menu gets one item, which asks which instrument (or auto-detects it), then opens that instrument's panel. A plugin
 /// registers one next to its presenter; the front ends never name the plugin's project. See
-/// docs/design/proposals/plugin-contributed-panels.md. For a fixed single-device panel use <see cref="IDevicePanelContribution"/>.
+/// docs/design/Plugins/plugin-contributed-panels.md. For a fixed single-device panel use <see cref="IDevicePanelContribution"/>.
 /// </summary>
 public interface IInstrumentPanelProvider
 {

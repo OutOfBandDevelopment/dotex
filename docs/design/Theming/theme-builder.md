@@ -6,7 +6,7 @@ include color pickers, have ability to save/export/import, store/enumerate from 
 
 ## Problem
 
-[Theming](../../../../design/Theming/theming.md) (implemented 2026-09-25) already has everything a builder would produce or
+[Theming](theming.md) (implemented 2026-09-25) already has everything a builder would produce or
 consume — `ThemeFile` (`~/.dev-term/themes/*.json`), `ThemeCatalog` (enumerates built-ins plus every
 valid user theme, reports rejected files/duplicates/contrast warnings), `DevTermTheme.ContrastWarnings()`
 (WCAG checks) — but *creating* one today means hand-writing JSON: knowing every `ThemeRole` name,
@@ -22,7 +22,7 @@ model — no new persistence format:
 - **One row per `ThemeRole`**, grouped roughly the way `theming.md`'s role list already groups them
   (surface colors, control colors, status colors, chart colors) — reusing `UiDefinitions`' existing
   section/control vocabulary (a `UiSection` per group) rather than inventing new layout code, per
-  [ui-definitions.md](../../../../design/UiDefinitions/ui-definitions.md)'s convention of describing panels declaratively.
+  [ui-definitions.md](../UiDefinitions/ui-definitions.md)'s convention of describing panels declaratively.
 - **Live preview**: apply the in-progress theme to the builder window itself (or a small sample panel
   showing a focused field, a menu, a status line, a chart swatch) via the same `ActiveTheme`/
   `TuiTheme`/`WpfTheme` mechanism a real switch uses, not a separate rendering path — so what the
@@ -44,7 +44,7 @@ model — no new persistence format:
 
 - **WPF** has a native color picker path (a standard `ColorDialog`/a small custom RGB/HSV picker) —
   the Busylight panel already ships a custom RGB/HSV color-picker modal
-  ([Kuando Busylight protocol](../../../../protocols/kuando-busylight-protocol.md)) that's a reasonable
+  ([Kuando Busylight protocol](../../protocols/kuando-busylight-protocol.md)) that's a reasonable
   starting point/reusable component for per-role color entry here.
 - **TUI** has no true color-picker widget (Terminal.Gui v2.5.0's built-in controls don't include
   one). Editing a role's color as a `#RRGGBB` text field (validated the same way `ThemeFile` parsing

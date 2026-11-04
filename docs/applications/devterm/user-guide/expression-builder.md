@@ -8,8 +8,8 @@ field) helps you build it and checks it as you type.
 
 This page is the full manual. The exact field/action reference is
 [`docs/specs/expression-picker.md`](../specs/expression-picker.md); the design is
-[`docs/design/features/manifest-editor-expression-builder.md`](../design/features/manifest-editor-expression-builder.md)
-and [`expression-picker-paths-and-cel.md`](../design/features/expression-picker-paths-and-cel.md).
+[`docs/design/features/manifest-editor-expression-builder.md`](../../../design/UiDefinitions/manifest-editor-expression-builder.md)
+and [`expression-picker-paths-and-cel.md`](../../../design/UiDefinitions/expression-picker-paths-and-cel.md).
 
 ## Where an expression goes
 

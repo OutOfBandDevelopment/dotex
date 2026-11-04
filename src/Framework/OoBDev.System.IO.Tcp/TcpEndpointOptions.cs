@@ -18,7 +18,7 @@ public enum TcpEndpointMode
     Listener,
 }
 
-/// <summary>Configuration for a TCP session, in either direction. See docs/design/transports.md.</summary>
+/// <summary>Configuration for a TCP session, in either direction. See docs/design/Transports/transports.md.</summary>
 public sealed class TcpEndpointOptions
 {
     public TcpEndpointMode Mode { get; set; } = TcpEndpointMode.Client;
@@ -45,7 +45,7 @@ public sealed class TcpEndpointOptions
     /// decoded output and pauses/resumes dev-term's own writes on them instead. Only the initial
     /// value for a new <see cref="TcpEndpointDeviceAdapter"/> - once open, <see cref="TcpEndpointDeviceAdapter.SoftwareFlowControl"/>
     /// is the live, settable switch (a front end can toggle it without reconnecting). See
-    /// docs/design/transports.md.
+    /// docs/design/Transports/transports.md.
     /// </summary>
     public bool SoftwareFlowControl { get; set; }
 

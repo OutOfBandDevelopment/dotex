@@ -12,7 +12,7 @@ namespace OoBDev.DevTerm.Configuration;
 /// A semantic color role - what a color is <em>for</em>, not where it's drawn. Both front ends look
 /// colors up by role (WPF as <c>DynamicResource</c> brushes, the TUI as Terminal.Gui schemes and
 /// attributes), so a theme is one table of these. A theme file names them in camelCase
-/// (<c>"outputError": "#FF6B6B"</c>). See docs/design/theming.md.
+/// (<c>"outputError": "#FF6B6B"</c>). See docs/design/Theming/theming.md.
 /// </summary>
 public enum ThemeRole
 {

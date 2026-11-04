@@ -13,7 +13,7 @@ namespace OoBDev.DevTerm.DeviceManifests;
 /// <summary>
 /// Enumerates every path an <see cref="Expression"/> in a <see cref="DeviceManifest"/> can reference, from the manifest alone
 /// (no connected device). It is the single source for the expression picker, sample-data generation and the validator's
-/// unknown-reference check. See docs/design/features/expression-picker-paths-and-cel.md.
+/// unknown-reference check. See docs/design/UiDefinitions/expression-picker-paths-and-cel.md.
 /// </summary>
 public static partial class ValuePathCatalog
 {

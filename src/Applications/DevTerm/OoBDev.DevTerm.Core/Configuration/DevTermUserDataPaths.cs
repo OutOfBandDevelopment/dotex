@@ -12,7 +12,7 @@ namespace OoBDev.DevTerm.Configuration;
 /// Per-user/per-install storage locations for named connection profiles and device manifests —
 /// shared across every front end regardless of where each is built/run from, unlike the untracked
 /// <c>appsettings.Local.json</c> default profile (which deliberately stays next to each app's own
-/// output). See docs/design/connection-profiles.md and docs/design/device-manifests.md.
+/// output). See docs/design/ConnectionProfiles/connection-profiles.md and docs/design/UiDefinitions/device-manifests.md.
 /// </summary>
 public static class DevTermUserDataPaths
 {
@@ -25,7 +25,7 @@ public static class DevTermUserDataPaths
     /// <summary>
     /// <c>~/.dev-term/exports</c> — the default destination for auto-saved captures (e.g. the Stream
     /// Monitor's detected binary/image data, named <c>{device}_{timestamp}.{ext}</c>; see
-    /// docs/design/features/stream-content-detection.md) when <see cref="CliOptions.ExportDirectory"/>
+    /// docs/design/StreamTools/stream-content-detection.md) when <see cref="CliOptions.ExportDirectory"/>
     /// isn't set to something else.
     /// </summary>
     public static string ExportsDirectory => Path.Combine(DevTermHome.Root, "exports");
@@ -39,7 +39,7 @@ public static class DevTermUserDataPaths
 
     /// <summary>
     /// <c>~/.dev-term/themes</c> — user-defined theme files (<c>*.json</c>, see <see cref="ThemeFile"/>),
-    /// listed in both front ends' View &gt; Theme menu after the built-ins. See docs/design/theming.md.
+    /// listed in both front ends' View &gt; Theme menu after the built-ins. See docs/design/Theming/theming.md.
     /// </summary>
     public static string ThemesDirectory => Path.Combine(DevTermHome.Root, "themes");
 
@@ -59,7 +59,7 @@ public static class DevTermUserDataPaths
     /// <summary>
     /// <c>~/.dev-term/converter-tools.json</c> - the Stream Monitor's registered converter tools, shared by every
     /// profile and front end (Device &gt; Converter Tools...). See <see cref="ConverterToolsStore"/> and
-    /// docs/design/features/stream-converter-tools.md.
+    /// docs/design/StreamTools/stream-converter-tools.md.
     /// </summary>
     public static string ConverterToolsFile => Path.Combine(DevTermHome.Root, "converter-tools.json");
 
@@ -72,7 +72,7 @@ public static class DevTermUserDataPaths
     /// then this app's pre-packaged ones. Returns null if neither exists — this only resolves a
     /// path, it doesn't load or validate the manifest itself. A caller that can't resolve a name
     /// should warn and fall back to default behavior, not treat it as a hard failure — see
-    /// docs/design/connection-profiles.md.
+    /// docs/design/ConnectionProfiles/connection-profiles.md.
     /// </summary>
     public static string? ResolveManifestDirectory(string deviceName)
     {

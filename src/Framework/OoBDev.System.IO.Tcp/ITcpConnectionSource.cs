@@ -9,7 +9,7 @@ namespace OoBDev.System.IO.Tcp;
 
 /// <summary>
 /// Obtains an <see cref="ITcpConnection"/> for either TCP mode: dialing out (Client) or
-/// accepting one inbound peer (Listener). See docs/design/transports.md.
+/// accepting one inbound peer (Listener). See docs/design/Transports/transports.md.
 /// </summary>
 public interface ITcpConnectionSource
 {

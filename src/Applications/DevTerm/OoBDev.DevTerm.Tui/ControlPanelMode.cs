@@ -22,7 +22,7 @@ namespace OoBDev.DevTerm.Tui;
 /// <summary>
 /// Walks any <see cref="UiDefinition"/> and renders it as real, wired Terminal.Gui controls against
 /// any <see cref="IControlSurface"/> — the generic renderer described in
-/// docs/design/ui-definitions.md, proven first against the K8055's own definition
+/// docs/design/UiDefinitions/ui-definitions.md, proven first against the K8055's own definition
 /// (<c>DevTerm.Devices.K8055.K8055UiDefinition</c>) but not specific to it. Mirrors
 /// <see cref="ConfigureMode"/>'s split between a testable <see cref="BuildWindow"/> and the caller
 /// (<see cref="TuiMode"/>'s "_K8055 Control Panel..." menu item) owning the nested
@@ -132,7 +132,7 @@ internal static class ControlPanelMode
             var y = 0;
             foreach (var block in blocks)
             {
-                // VisibleWhen (see docs/design/ui-definitions.md): a section whose condition isn't
+                // VisibleWhen (see docs/design/UiDefinitions/ui-definitions.md): a section whose condition isn't
                 // met takes no rows at all — no header, no body, no blank separator row.
                 if (!block.ConditionMet)
                 {
@@ -189,7 +189,7 @@ internal static class ControlPanelMode
             }
         }
 
-        // VisibleWhen (see docs/design/ui-definitions.md): a control row's views (all sharing the
+        // VisibleWhen (see docs/design/UiDefinitions/ui-definitions.md): a control row's views (all sharing the
         // same absolute Y, so shifting a row is a plain re-assignment, never Pos arithmetic) collapse
         // together, and a section's whole header+body collapse the same way (Reflow, above). Every
         // control/choice change re-runs this; it only asks Reflow to re-run the outer layout when a

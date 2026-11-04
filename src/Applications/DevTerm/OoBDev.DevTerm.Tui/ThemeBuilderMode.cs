@@ -20,7 +20,7 @@ namespace OoBDev.DevTerm.Tui;
 /// file) or Cancel (<see cref="ActiveTheme.CancelPreview"/> reverts). All the color tracking,
 /// live-preview building, and saving logic is the framework-agnostic <see cref="ThemeBuilderState"/>,
 /// shared with any future WPF screen — this class is just the Terminal.Gui rendering of it. See
-/// docs/design/features/theme-builder.md.
+/// docs/design/Theming/theme-builder.md.
 /// </summary>
 internal static class ThemeBuilderMode
 {

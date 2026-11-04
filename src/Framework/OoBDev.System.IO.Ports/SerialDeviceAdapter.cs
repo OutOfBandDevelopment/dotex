@@ -13,7 +13,7 @@ namespace OoBDev.System.IO.Ports;
 
 
 /// <summary>
-/// <see cref="IDeviceAdapter"/> for a serial/UART connection. See docs/design/transports.md.
+/// <see cref="IDeviceAdapter"/> for a serial/UART connection. See docs/design/Transports/transports.md.
 /// </summary>
 public sealed class SerialDeviceAdapter : IDeviceAdapter, IComPortControl
 {

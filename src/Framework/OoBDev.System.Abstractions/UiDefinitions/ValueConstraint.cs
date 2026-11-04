@@ -7,7 +7,7 @@ namespace OoBDev.UiDefinitions;
 /// A value's data type and bounds, declared separately from the widget that collects it — so a
 /// number can be typed into a plain <see cref="TextFieldControl"/> and still be rejected when it
 /// isn't a number or is out of range. Checked by <see cref="ValueValidator"/>, the one validator
-/// both control-panel renderers share. See docs/design/ui-definitions.md's "Values and widgets"
+/// both control-panel renderers share. See docs/design/UiDefinitions/ui-definitions.md's "Values and widgets"
 /// section.
 /// </summary>
 /// <remarks>

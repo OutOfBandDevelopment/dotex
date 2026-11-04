@@ -23,7 +23,7 @@ namespace OoBDev.DevTerm;
 /// client's SET-BAUDRATE/DATASIZE/PARITY/STOPSIZE/CONTROL requests are acknowledged and recorded in
 /// <see cref="Settings"/> (raising <see cref="SettingsChanged"/>) and applied to the underlying device when its transport is an <see cref="IComPortControl"/>.
 /// One client at a time (a second connection is closed at once); loopback unless told otherwise, with no authentication
-/// or encryption. Register with <see cref="Session.AddObserver"/>. See docs/design/rfc2217.md ("Server mode").
+/// or encryption. Register with <see cref="Session.AddObserver"/>. See docs/design/Transports/rfc2217.md ("Server mode").
 /// </summary>
 public sealed class Rfc2217ServerBridge : ISessionObserver, IAsyncDisposable
 {

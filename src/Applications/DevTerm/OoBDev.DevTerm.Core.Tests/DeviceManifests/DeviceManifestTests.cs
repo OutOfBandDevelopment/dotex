@@ -15,7 +15,7 @@ namespace OoBDev.DevTerm.DeviceManifests.Tests;
 
 /// <summary>
 /// Round-trips and loads a real manifest — a Korad KA3005P-style bench power supply, matching
-/// docs/design/features/scpi-instrument-control.md's actual target hardware — rather than a
+/// docs/design/ScpiInstruments/scpi-instrument-control.md's actual target hardware — rather than a
 /// synthetic minimal example.
 /// </summary>
 [TestCategory("Unit")]

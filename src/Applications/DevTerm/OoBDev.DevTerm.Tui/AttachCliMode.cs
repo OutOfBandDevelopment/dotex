@@ -12,7 +12,7 @@ namespace OoBDev.DevTerm.Tui;
 /// <summary>
 /// <c>--attach &lt;name&gt; --cli true</c>: the ordinary REPL against another dev-term process's session (started with
 /// <c>--control &lt;name&gt;</c>). A typed line is sent through that session's own parser and line ending; traffic and
-/// replies print as they arrive. See docs/design/architecture.md (cross-session scripting).
+/// replies print as they arrive. See docs/applications/devterm/design/architecture.md (cross-session scripting).
 /// </summary>
 /// <remarks>
 /// Lines starting with <c>:</c> are commands for the attach itself: <c>:hex AA BB</c> sends raw bytes, <c>:ping</c> checks

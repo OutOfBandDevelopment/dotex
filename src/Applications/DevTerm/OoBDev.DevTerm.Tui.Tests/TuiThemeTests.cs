@@ -16,7 +16,7 @@ using TgColor = Terminal.Gui.Drawing.Color;
 namespace OoBDev.DevTerm.Tui.Tests;
 
 /// <summary>
-/// Theming in the TUI (see <see cref="TuiTheme"/>, docs/design/theming.md): the role-to-scheme
+/// Theming in the TUI (see <see cref="TuiTheme"/>, docs/design/Theming/theming.md): the role-to-scheme
 /// mapping, a live switch through View &gt; Theme repainting the real rendered cells (read from
 /// <c>Driver.GetOutputBuffer()</c> on the UI thread, not just the view's scheme), and the Light/Dark
 /// screenshots for docs/applications/devterm/user-guide/themes.md. The active theme and Terminal.Gui's schemes are

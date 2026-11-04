@@ -13,7 +13,7 @@ namespace OoBDev.DevTerm.Configuration;
 /// The app-wide list of Stream Monitor converter tools, kept in <see cref="DevTermUserDataPaths.ConverterToolsFile"/>
 /// so one registration serves every device and profile. A tool a profile still carries from before the list became
 /// global is kept (see <see cref="Merge"/>), so existing profiles keep working.
-/// See docs/design/features/stream-converter-tools.md.
+/// See docs/design/StreamTools/stream-converter-tools.md.
 /// </summary>
 public sealed class ConverterToolsStore
 {

@@ -10,7 +10,7 @@ namespace OoBDev.DevTerm.Configuration;
 
 /// <summary>
 /// The "a missing manifest is a warning, not a hard failure" policy from
-/// docs/design/connection-profiles.md, in one place so every front end shows the same message
+/// docs/design/ConnectionProfiles/connection-profiles.md, in one place so every front end shows the same message
 /// instead of duplicating the resolve-and-format logic three times.
 /// </summary>
 public static class ManifestNameWarning

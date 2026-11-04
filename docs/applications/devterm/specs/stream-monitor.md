@@ -9,7 +9,7 @@ answer (or spontaneously send) something other than a short text line: an oscill
 screen dump, a plotter's HP-GL stream, a hard copy in a printer language. Without it, those bytes
 only show up as garbage in the text presenters. The TUI shows a capture list only (Terminal.Gui can't
 draw images); WPF adds a live preview for the image formats it decodes natively. Design intent:
-[`docs/design/features/stream-content-detection.md`](../design/features/stream-content-detection.md).
+[`docs/design/features/stream-content-detection.md`](../../../design/StreamTools/stream-content-detection.md).
 How to use it: [`docs/user-guide/stream-monitor.md`](../user-guide/stream-monitor.md).
 
 The shared behavior lives outside both front ends: detection in `DevTerm.Core.StreamContent`

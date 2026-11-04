@@ -14,7 +14,7 @@ namespace OoBDev.DevTerm.Configuration;
 /// <summary>
 /// Front-end glue for logger mode: where a log goes by default, what its header says about the
 /// connection (from a <see cref="CliOptions"/>), and starting/re-attaching a <see cref="SessionLogger"/>
-/// the same way from the CLI, TUI and WPF. See docs/design/session-logging.md.
+/// the same way from the CLI, TUI and WPF. See docs/design/SessionLogging/session-logging.md.
 /// </summary>
 public static class SessionLogging
 {
