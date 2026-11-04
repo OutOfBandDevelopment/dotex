@@ -74,6 +74,7 @@ Scope rule: every BinaryDataDecoders feature is migrated; phases are priority or
 
 ## 7. Documentation review (owner, 2026-10-28)
 
+- [x] Change history as one file per day instead of one per task (owner, 2026-11-04): [plan](docs/issues/docs-changes-daily-files.md).
 - [ ] Lower priority, after the migrations: review every project `.md` file for out-of-date and redundant documents (owner, 2026-10-30).
 - [ ] **Review and clean up all documents**: content and coverage review against the rules `docs-and-diagrams` and `work-tracking` and `docs/patterns-discovery/06-design-document-standard.md`; the DevTerm docs come with the parity work. Numbering, validator problems and stale generated docs are done (2026-10-29); use the `write-docs` skill and `scripts/docs` validators.
 

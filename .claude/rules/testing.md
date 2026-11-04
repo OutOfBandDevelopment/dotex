@@ -18,4 +18,5 @@ paths:
 - New or changed test properties go in `src/.runsettings` and `TEST_VARIABLES.md`. Adding a Docker service: use the `add-integration-service` skill.
 - Never test against live data or a live connection string. Tests use throwaway resources (a test database, unique names, rows created and deleted by exact key); an Integration test refuses to run when its connection string is not a test instance. Restoring a sanitized production dump into a throwaway database to test migrations is allowed (`docs/how-tos/production-operations-practices.md`).
 - Performance gates for APIs: log a request over 500 ms and fail it over 750 ms where a feature's testing strategy sets a threshold.
+- Repository-wide check projects (`OoBDev.Docs.Tests`, `OoBDev.CodingStandards.Tests`) live in `src/Tools`, beside each other, not in a layer folder (owner, 2026-11-04).
 - Report test results as they are. If a test fails or was not run, say so.

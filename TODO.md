@@ -2,11 +2,13 @@
 
 > **Active work only.** The full work list is [BACKLOG.md](BACKLOG.md); finished work goes to [docs/changes/](docs/changes/README.md). Owner questions: [OPEN-QUESTIONS.md](OPEN-QUESTIONS.md).
 
-**Last Updated:** 2026-11-03 · **Branch:** `dev/example-ui-tests`
+**Last Updated:** 2026-11-04 · **Branch:** `dev/example-ui-tests`
 
 Keep this file short (about 15 one-line items). When an item starts, move it here from the backlog; when it finishes, remove it here and from the backlog, record it in `docs/changes/`, and update the feature docs it touched.
 
 ## In progress
+
+- [x] Change history as one file per day ([plan](docs/issues/docs-changes-daily-files.md)).
 
 ## Next
 
