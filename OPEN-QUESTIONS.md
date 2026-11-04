@@ -22,3 +22,16 @@ _(none waiting; processed requests are in BACKLOG.md and TODO.md)_
 **Default:** none; the Example WebApi guide waits. Other items continue.
 
 **Your answer:**
+
+### Q2 - 2026-11-04 - DevTerm - where does the generic external converter (Ghostscript, GhostPCL, HP-GL to SVG) live?
+
+The BACKLOG item asks to make the DevTerm conversion for PCL and PostScript generic and part of the document conversion framework. Today `StreamCaptureConverter` and `StreamConvertToolOptions` sit in `OoBDev.DevTerm.Core/Configuration`; the framework already has `IDocumentConversion` in `OoBDev.Documents.Abstractions` and `Conversion` in `OoBDev.Documents`.
+
+**Options**
+- A (recommended): a Framework `IDocumentConversion` provider that runs registered external tools (name, path, argument template, formats, output extension, dpi), plus an HP-GL to SVG converter; DevTerm keeps only its tool-list store and editor and calls the framework. Reusable means Framework (rule `layering-and-migration-plans`). Cost: a migration plan table first, a Documents project change, DevTerm refactor.
+- B: a new Framework project `OoBDev.Documents.ExternalTools` so `OoBDev.Documents` stays free of process execution. More projects, clearer dependencies.
+- C: leave it in DevTerm and add HP-GL to SVG there. No layering work, not reusable.
+
+**Default:** none; the item waits and I take the next one.
+
+**Your answer:**
