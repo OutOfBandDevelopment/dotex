@@ -74,7 +74,7 @@ Checked again on 2026-10-29 by type name: the items the first re-review listed a
 
 | Order | Item | Why this order |
 |------:|------|----------------|
-| 1 | Behaviour check: run the source tests against main's types (`ExpressionCalculator`, `Archives`, `Net`, Numerics, Drawing) | Name matches do not prove equal behaviour |
+| 1 | Done (2026-11-03, see the result at the end): behaviour check of the source tests against main | Name matches did not prove equal behaviour |
 | 2 | The small leftovers in Table 2 | Cheap and independent |
 | 3 | Drawing on SkiaSharp | Later step, owner 2026-10-29 |
 
@@ -85,3 +85,7 @@ Each item follows the `compare-incoming-codebase` skill: design note, port with 
 - The name and file comparison does not prove behavioural equality. Before an item in Table 1 is called finished, run the source's tests against main's types where the names match (a worthwhile one-off for `ExpressionCalculator`, `Archives` and `Net`).
 - Test counts (2026-10-29, test attributes): the source has 119 across 25 test projects (ToolKit 44, ExpressionCalculator 31, the rest 6 or fewer each, the Nmea tests 0); main has 755 in `OoBDev.System.Tests` (the ToolKit, ExpressionCalculator, archives, cryptography, Apple II, templating and text packages), 72 in `OoBDev.Nmea.Tests`, and a test project per ported library, so no project has fewer tests than its source. Behavioural check, done for two projects on 2026-10-29: the six ExpressionCalculator test files match main's by test and data row (only `DataTestMethod` became `TestMethod` and null-name asserts became expression bodies), and all 95 Numerics data rows of the source ran unchanged against main's types and passed (main keeps 60 rows; the other cases are covered by the rewritten tests). A test method name check of all 24 other source test projects against `src/` finds every name except nine, all in ports that were rebuilt and renamed on purpose: `TestXPath`, `MethodInput`, `MethodVoid` (CodeAnalysis), `PngPackTest`, `TestTileCreate` (Drawing), `TestDataExtractor` (Fencing), `Simple16Test` (IO), `BuidlRequestTest` (Busylight) and `DecoderSelector` (Radex One), besides the three Numerics names that ran above. Not run against main: the source tests of those nine, which need their types remapped; each port already carries its own tests.
 - `Incoming/BinaryDecoders` is superseded by the source above; deleting it is the owner's call (`BACKLOG.md`).
+
+## Behaviour check result (2026-11-03)
+
+Compared every source test method and `DataRow` against main's tests (by name, then by case). Result: all of ExpressionCalculator (28 methods), Archives, Net, Cryptography, Apple II, Templating, Text, Yaml, IO ports and pipelines exist in main by name; the ToolKit numerics and the IO checksum test were ported under new names. Eleven numeric `DataRow` cases and the `Simple16` Radex frame vector were missing and are now in `NumberNotationTests` and `ChecksumCalculatorTests` (all pass). The remaining source tests without a same-named match are the `TestXPath` navigator tests, the Drawing tile and PNG pack tests and the Fencing data extractors, which main covers under other names or as `DevLocal` extractors. Table 4 row 1 is done.

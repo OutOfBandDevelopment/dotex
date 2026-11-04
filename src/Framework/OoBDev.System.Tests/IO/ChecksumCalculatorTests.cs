@@ -1,3 +1,5 @@
+using System;
+using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.System.IO.Functions;
 using OoBDev.TestUtilities;
@@ -9,6 +11,16 @@ namespace OoBDev.System.Tests.IO;
 public class ChecksumCalculatorTests
 {
     private readonly ChecksumCalculator _calculator = new();
+    [TestMethod, TestCategory(TestCategories.Unit)]
+    public void Simple16RadexRequestFrameTest()
+    {
+        // The Radex One request recorded in BinaryDataDecoders (header, then request type): each word group carries its own checksum.
+        ReadOnlySpan<byte> bytes = [0x7B, 0xFF, 0x20, 0x00, 0x06, 0x00, 0x4E, 0x01, 0x00, 0x00, 0x00, 0x00, 0x03, 0x08, 0x00, 0x00, 0x00, 0x00];
+        var words = MemoryMarshal.Cast<byte, ushort>(bytes);
+
+        Assert.AreEqual((ushort)0xFF0F, _calculator.Simple16(words[..6]));
+        Assert.AreEqual((ushort)0xF7FC, _calculator.Simple16(words.Slice(6, 3)));
+    }
 
     [TestMethod, TestCategory(TestCategories.Unit)]
     public void Xor8NmeaSentenceBodyTest()
