@@ -13,6 +13,7 @@ public partial class MergedLogWindow : Window
     {
         ArgumentNullException.ThrowIfNull(log);
         InitializeComponent();
+        WpfTheme.Attach(this);
         DataContext = log;
     }
 }

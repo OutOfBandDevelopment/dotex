@@ -13,6 +13,7 @@ public partial class RoutingWindow : Window
     {
         ArgumentNullException.ThrowIfNull(routing);
         InitializeComponent();
+        WpfTheme.Attach(this);
         DataContext = routing;
     }
 }

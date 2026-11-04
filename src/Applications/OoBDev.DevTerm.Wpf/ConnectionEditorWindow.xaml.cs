@@ -23,6 +23,7 @@ public partial class ConnectionEditorWindow : Window
         ZipBrowser = zipBrowser;
         Scans = scans ?? new ConnectionDeviceScans(editor);
         InitializeComponent();
+        WpfTheme.Attach(this);
         DataContext = editor;
         editor.CloseRequested += (_, _) => DialogResult = true;
         editor.ProfilesChangedExternally += (_, _) => Dispatcher.BeginInvoke(() => editor.RefreshCommand.Execute(null));

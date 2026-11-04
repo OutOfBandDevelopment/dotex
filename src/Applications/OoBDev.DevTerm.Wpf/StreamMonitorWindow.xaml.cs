@@ -13,6 +13,7 @@ public partial class StreamMonitorWindow : Window
     {
         ArgumentNullException.ThrowIfNull(monitor);
         InitializeComponent();
+        WpfTheme.Attach(this);
         DataContext = monitor;
     }
 }

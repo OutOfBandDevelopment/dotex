@@ -14,6 +14,7 @@ public partial class PlaybackWindow : Window
     {
         ArgumentNullException.ThrowIfNull(playback);
         InitializeComponent();
+        WpfTheme.Attach(this);
         DataContext = playback;
         var timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(100) };
         timer.Tick += (_, _) => playback.Tick();
