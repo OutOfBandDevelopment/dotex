@@ -1,14 +1,14 @@
 # Out-of-process plugins (any language)
 
 Owner direction (2026-10-03): plugin isolation should allow plugins written in other languages, hosted out of process.
-The in-process `AssemblyLoadContext` loader ([plugin-model.md](../../../../design/Plugins/plugin-model.md)) stays for .NET plugins; this is
+The in-process `AssemblyLoadContext` loader ([plugin-model.md](plugin-model.md)) stays for .NET plugins; this is
 the second path for everything else.
 
 ## Shape
 
 - A plugin is a **program**: the host starts it as a child process and talks JSON lines over its stdin/stdout. Stdio
   was chosen for the prototype because every language can do it with no library and no port; the named-pipe and
-  localhost-web-service options in [cross-process-control-channel.md](cross-process-control-channel.md) remain open
+  localhost-web-service options in [cross-process-control-channel.md](../SessionChannel/cross-process-control-channel.md) remain open
   for plugins that outlive one host.
 - **Protocol 1** (one JSON object per line, one reply per request):
   - `{"type":"hello"}` is answered by `{"type":"hello","name":"...","protocol":1}`.

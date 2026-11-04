@@ -12,7 +12,7 @@ per device, and instead of a device module needing to know anything about Termin
 This directly answers device-control-modules.md's open question "how rich the control-surface
 metadata needs to be" with an actual shape, informed by real devices: the `@startsalt` mockups
 already written for [Kuando Busylight](../../protocols/kuando-busylight-protocol.md),
-[Velleman K8055](../../protocols/velleman-k8055-protocol.md), [EByte](../../applications/devterm/design/proposals/ebyte-e810-dtu-config-protocol.md),
+[Velleman K8055](../../protocols/velleman-k8055-protocol.md), [EByte](../../protocols/ebyte-e810-dtu-config-protocol.md),
 and [Zoom H4n](../../protocols/zoom-h4n-remote-protocol.md) are what this model needs to be able to
 describe — a color swatch picker, toggle switches, sliders, a device list plus a settings form, a
 button panel. The model is built from those concrete examples, not designed in the abstract first.

@@ -18,8 +18,8 @@ session from a browser, on a different machine, without something in front of it
 ## Design sketch
 
 A new front end — `DevTerm.Web` or similar — built on the same composition root every other front end
-uses (`AddDevTermFrontEnd`, per [platform.md](../platform.md) and
-[architecture.md](../architecture.md)'s "everything resolved through DI" convention), hosting one or
+uses (`AddDevTermFrontEnd`, per [platform.md](../../applications/devterm/design/platform.md) and
+[architecture.md](../../applications/devterm/design/architecture.md)'s "everything resolved through DI" convention), hosting one or
 more live `Session`s and exposing them to a browser:
 
 - **Transport, not a new one.** This doesn't need a new `ITransport` — it needs a new consumer of the
@@ -32,7 +32,7 @@ more live `Session`s and exposing them to a browser:
   typed-input box, growing toward the same generic `UiDefinition` rendering both TUI (`ControlPanelMode`/
   `FormRenderer`) and WPF (`ControlPanelWindow`/`FormRenderer`) already do — a third `UiDefinition`
   renderer, reusing the same model rather than inventing a web-specific one (per
-  [ui-definitions.md](../../../../design/UiDefinitions/ui-definitions.md)'s whole reason for existing: "every front end renders that
+  [ui-definitions.md](../UiDefinitions/ui-definitions.md)'s whole reason for existing: "every front end renders that
   description using its own native widgets").
 - **"Tunnels"**: read as "reach a session that isn't otherwise network-accessible" — i.e., this host
   service sits between a browser and a session bound to local hardware (serial/USB/HID on the host
@@ -48,7 +48,7 @@ power supplies, RF gear, anything with a "send arbitrary bytes" control surface)
 minimum, before real design work starts:
 
 - A default bind scope — the existing precedent in this codebase is
-  [RFC 2217 server](../../../../design/Transports/rfc2217.md)'s "binds loopback-only by default," which this should almost
+  [RFC 2217 server](../Transports/rfc2217.md)'s "binds loopback-only by default," which this should almost
   certainly copy rather than defaulting to any-interface.
 - Authentication — nothing in dev-term today has a concept of a user account or credential; this would
   be the first.

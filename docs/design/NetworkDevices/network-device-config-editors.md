@@ -4,7 +4,7 @@
 
 Changing a bridge's own settings (its IP, work mode, serial baud/parity, remote host/port, heartbeat) currently needs
 the vendor's Windows tool. The EByte E810-DTU's UDP configuration protocol is documented in
-[ebyte-e810-dtu-config-protocol.md](ebyte-e810-dtu-config-protocol.md) and the USR-TCP232-302 is used daily.
+[ebyte-e810-dtu-config-protocol.md](../../protocols/ebyte-e810-dtu-config-protocol.md) and the USR-TCP232-302 is used daily.
 
 ## Direction (2026-10-03)
 

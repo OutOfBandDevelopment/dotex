@@ -8,5 +8,6 @@ The `ITransport` contract and the transports built on it (serial, TCP, HID, USBT
 | [rfc2217.md](rfc2217.md) | RFC 2217 client and server modes |
 | [vxi11-transport.md](vxi11-transport.md) | VXI-11 core channel client for LXI instruments |
 | [usbtmc-transport.md](usbtmc-transport.md) | Raw USB Test and Measurement Class transport; protocol reference in [docs/protocols](../../protocols/usbtmc-protocol-conformance.md) |
+| [message-broker-protocols.md](message-broker-protocols.md) | MQTT, AMQP and STOMP transports |
 
 Test peers (ser2net, Mosquitto, RabbitMQ, loopback device) run in the shared stack: [integration services](../../architecture/testing/integration/services.md#devterm-peers-mosquitto-ser2net-loopback-device).

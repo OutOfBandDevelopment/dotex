@@ -1,6 +1,6 @@
 # Web terminal (`DevTerm.Web`)
 
-Reference for the browser front end. Intent and decisions: [proposal](../design/proposals/web-tunnel-blazor-frontend.md).
+Reference for the browser front end. Intent and decisions: [proposal](../../../design/WebFrontend/web-tunnel-blazor-frontend.md).
 
 ## Starting it
 

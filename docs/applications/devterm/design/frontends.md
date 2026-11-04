@@ -29,7 +29,7 @@ There are three deployable front-end applications. TUI and CLI are two *modes* o
 - **Web host** (`DevTerm.Web`) — an ASP.NET Core app exposing the core engine over a `/ws` WebSocket tunnel and `/api/*`
   endpoints, with a Blazor UI: loopback-only by default, a shared access token (https required off loopback). It reads the
   same layered configuration as the console app (its own settings under `Web:`). Rationale and status:
-  [the web proposal](proposals/web-tunnel-blazor-frontend.md). The MAUI idea in the original note was not built.
+  [the web proposal](../../../design/WebFrontend/web-tunnel-blazor-frontend.md). The MAUI idea in the original note was not built.
 
 ## TUI (full-screen terminal UI)
 
@@ -79,7 +79,7 @@ A richer visual front end for cases where a graphical view adds real value beyon
 
 ## Open questions
 
-- ~~How much session state is shareable between front ends~~ **Decided 2026-10-03:** sharing across processes is wanted, over a **named pipe or a localhost-only web service** (the owner's preferred IPC). Ties to the named-pipe session monitoring item in BACKLOG. Built: see the [cross-process session channel](proposals/cross-process-control-channel.md) (`SessionPipeServer`, `--controlhttp`).
+- ~~How much session state is shareable between front ends~~ **Decided 2026-10-03:** sharing across processes is wanted, over a **named pipe or a localhost-only web service** (the owner's preferred IPC). Ties to the named-pipe session monitoring item in BACKLOG. Built: see the [cross-process session channel](../../../design/SessionChannel/cross-process-control-channel.md) (`SessionPipeServer`, `--controlhttp`).
 - ~~Whether the console app selects CLI vs. TUI mode via an explicit flag, auto-detection of an interactive terminal (isatty-style), or both.~~ **Decided**: an explicit flag, and TUI is the default — `dev-term` with no mode flag opens the TUI; `--cli true` forces the plain scriptable loop instead (e.g. for automation/CI). No terminal auto-detection.
 - Whether GUI (WPF) ships in the same initial milestone as the console app (CLI/TUI) or follows later, given it's a separate, Windows-only executable.
 - ~~How much of a rendering presenter's drawing the TUI should approximate~~ **Decided 2026-10-03:** the TUI does its best; graphic rendering will never be possible there, and that is an accepted limit.

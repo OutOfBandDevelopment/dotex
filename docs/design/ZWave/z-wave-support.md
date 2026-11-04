@@ -8,7 +8,7 @@ ZWave RPi hat."
 Both named target devices are serial-attached — a Z-Stick (e.g. Aeotec's) is a USB-serial adapter
 exposing the Z-Wave Serial API over a virtual COM port, and Z-Wave Raspberry Pi HATs typically expose
 the same Serial API over UART. This needs **no new transport**: `DevTerm.Transports.Serial` as-is
-covers it, the same way (per the [LXI proposal](../features/lxi-support.md)) raw-socket LXI
+covers it, the same way (per the [LXI proposal](../../applications/devterm/design/features/lxi-support.md)) raw-socket LXI
 instruments need no new transport either — the new work here is entirely the protocol/decoder/
 control-module layer above the byte stream, not how the bytes arrive.
 
@@ -16,10 +16,10 @@ control-module layer above the byte stream, not how the bytes arrive.
 
 The Z-Wave Serial API is a binary, frame-based protocol (start-of-frame byte, length, frame type,
 command class, checksum, plus ACK/NAK/CAN handshake bytes) — squarely the shape
-[device-control-modules.md](../../../../design/UiDefinitions/device-control-modules.md) already flags Kaitai Struct (`.ksy`) as the
+[device-control-modules.md](../UiDefinitions/device-control-modules.md) already flags Kaitai Struct (`.ksy`) as the
 right tool for ("binary response layouts — byte-level fields, conditionals, repeats, bit widths"),
 rather than the lightweight text send-template/response-pattern schema `DevTerm.Devices.Scpi` uses for
-ASCII query/response gear. [Device manifests](../../../../design/UiDefinitions/device-manifests.md) already reference `.ksy` as part
+ASCII query/response gear. [Device manifests](../UiDefinitions/device-manifests.md) already reference `.ksy` as part
 of its design ("a folder/zip of one, when a binary Kaitai `.ksy` reference is needed") but that
 reference is still unimplemented — building Z-Wave support would be the first real forcing function to
 actually implement `.ksy` decoding rather than leave it purely speculative in the design docs.
@@ -58,9 +58,9 @@ dropped a confirmed-no-op batch-program format rather than keep chasing it):
 What is needed before this proposal can be closed. Tick items as they land, in the same change.
 
 - [x] Acquire a Z-Wave controller (Aeotec Z-Stick S2 on COM13)
-- [x] Capture real frames to ground the protocol work ([bench report](../../test/2026-10-26-15-43-09.md))
+- [x] Capture real frames to ground the protocol work ([bench report](../../applications/devterm/test/2026-10-26-15-43-09.md))
 - [x] Transport and codec with unit tests (no new transport; `ZWaveFramer`, `ZWaveInterpreter`, `ZWaveDecoder`)
-- [x] Both front ends, plus `docs/specs/` and `docs/user-guide/` entries ([spec](../../specs/zwave-panel.md), [guide](../../user-guide/zwave-controller.md))
+- [x] Both front ends, plus `docs/specs/` and `docs/user-guide/` entries ([spec](../../applications/devterm/specs/zwave-panel.md), [guide](../../applications/devterm/user-guide/zwave-controller.md))
 - [x] Real-hardware pass (`docs/test/2026-10-26-15-43-09.md`)
 - [x] Build switch (Binary Switch Get/Set, raw send), enumerate, include/exclude/learn/reset, heal, failed-node and event decoding (2026-10-26; byte-exact unit tests)
 - [ ] Verify the rest on the real stick and a reachable node: learn, reset, heal, remove failed (network-changing ones need your go-ahead). Switch, enumerate, add and remove are verified.

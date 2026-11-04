@@ -3,7 +3,7 @@
 ## Problem
 
 The Connection Editor's TCP **Detect LXI...** button finds only LXI instruments (VXI-11 portmapper broadcast, then
-`*IDN?` on raw ports 5025/5555; see [lxi-support.md](../features/lxi-support.md)). The network also holds
+`*IDN?` on raw ports 5025/5555; see [lxi-support.md](../../applications/devterm/design/features/lxi-support.md)). The network also holds
 serial-to-Ethernet bridges (USR-TCP232-302, EByte E810-DTU), RFC 2217 servers, MQTT/AMQP brokers and anything that
 announces itself over mDNS/DNS-SD or SSDP. The button should list any network device it can identify, and picking one
 should pre-fill what was learned.
@@ -17,7 +17,7 @@ should pre-fill what was learned.
   suggested transport + values (host, port, baud, profile/device manifest).
 - Probes: the existing LXI one (VXI-11 + raw SCPI `*IDN?`); **mDNS/DNS-SD** (`_scpi-raw._tcp`, `_lxi._tcp`,
   `_http._tcp`, `_telnet._tcp`, ...); **SSDP**; the **EByte UDP broadcast** (port 1901, see
-  [ebyte-e810-dtu-config-protocol.md](ebyte-e810-dtu-config-protocol.md)); the **USR search broadcast** (the vendor
+  [ebyte-e810-dtu-config-protocol.md](../../protocols/ebyte-e810-dtu-config-protocol.md)); the **USR search broadcast** (the vendor
   tool's UDP "search" packet, to be confirmed against a capture); and an optional TCP port sweep of a chosen subnet
   (off by default: slow and noisy).
 - Probes that need a real device to verify (USR, EByte) ship **unverified** until a capture or bench run confirms

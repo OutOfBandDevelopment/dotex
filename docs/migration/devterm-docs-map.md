@@ -32,3 +32,11 @@ Links inside `source/` and `changes/` still use dev-term paths; they are history
 | plugin-model | `docs/design/Plugins/` | 2026-11-04 |
 | connection-profiles | `docs/design/ConnectionProfiles/` | 2026-11-04 |
 | multi-session-ui | `docs/design/MultiSessionUi/` | 2026-11-04 |
+| out-of-process-plugins, plugin-contributed-panels | `docs/design/Plugins/` | 2026-11-04 |
+| message-broker-protocols | `docs/design/Transports/` | 2026-11-04 |
+| cross-process-control-channel | `docs/design/SessionChannel/` | 2026-11-04 |
+| network-device-discovery, network-device-config-editors | `docs/design/NetworkDevices/` | 2026-11-04 |
+| project-state | `docs/design/ProjectState/` | 2026-11-04 |
+| web-tunnel-blazor-frontend | `docs/design/WebFrontend/` | 2026-11-04 |
+| z-wave-support | `docs/design/ZWave/` | 2026-11-04 |
+| de5000-lcr-meter-protocol, ebyte-e810-dtu-config-protocol, bytecc-bt-up01-usb-network-bridge | `docs/protocols/` | 2026-11-04 |

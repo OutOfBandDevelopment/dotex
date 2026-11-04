@@ -8,11 +8,11 @@ the ability to trigger outbound events on to external services."
 
 Every transport dev-term has today (serial, TCP, UDP, HID, BLE, and Loopback) is, from `Session`'s
 point of view, one connection to one peer producing one byte/message stream (per
-[architecture.md](../architecture.md)). MQTT/AMQP/STOMP are message-**broker** protocols instead: one
+[architecture.md](../../applications/devterm/design/architecture.md)). MQTT/AMQP/STOMP are message-**broker** protocols instead: one
 connection to a broker, N independently-addressable topics/queues/exchanges subscribed at once, each
 producing its own stream of discrete messages. This is closer to UDP/BLE's "preserve message
 boundaries, don't flatten into one undifferentiated byte stream" precedent
-([transports.md](../../../../design/Transports/transports.md)) than to a raw serial/TCP byte stream, but adds a dimension
+([transports.md](transports.md)) than to a raw serial/TCP byte stream, but adds a dimension
 neither of those has: per-message **topic addressing**, not just message boundaries.
 
 ## Design sketch
@@ -34,7 +34,7 @@ neither of those has: per-message **topic addressing**, not just message boundar
   existing "send" path, reused as-is (`IPresenterInput`/`TypedInput.TryEncode`, per CLAUDE.md's send
   constraints) with the target topic coming from the profile's default-publish-topic setting or a
   per-command override. Read together with
-  [device-control-modules.md](../../../../design/UiDefinitions/device-control-modules.md)'s `IControlSurface`, this is really
+  [device-control-modules.md](../UiDefinitions/device-control-modules.md)'s `IControlSurface`, this is really
   "pair a broker transport with the existing control-surface/`UiDefinition` pattern" — a control
   panel's button publishes to a topic instead of writing bytes to a directly-attached instrument — not
   a new interaction pattern, just a new transport underneath the existing one.
@@ -112,7 +112,7 @@ What is needed before this proposal can be closed. Tick items as they land, in t
 - [x] Routing proxy proof of concept over loopback (rules, router, live add, shared timecode)
 - [x] Wire the router to a real MQTT broker (`MqttRouterBridge`, verified against Mosquitto 2026-10-03)
 - [x] Wire the router to AMQP and STOMP (`BrokerRouterBridge`, verified against RabbitMQ 2026-10-03)
-- [x] A front-end rule editor (WPF and TUI, [routing-window spec](../../specs/routing-window.md)) and loading rules from a profile (built 2026-10-03; manifest-embedded rules not built)
+- [x] A front-end rule editor (WPF and TUI, [routing-window spec](../../applications/devterm/specs/routing-window.md)) and loading rules from a profile (built 2026-10-03; manifest-embedded rules not built)
 - [ ] A real device or home-automation broker check for MQTT
 
 ## Status

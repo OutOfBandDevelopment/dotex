@@ -7,7 +7,7 @@ from a different personal project — a local binary-protocol-decoder library:
 
 - `C:\repo\oobdev\dotex\Incoming\BinaryDecoders\src\OoBDev.EByteElectronicTechnology\e810dturs485_notes.txt` —
   raw reverse-engineering notes (UDP packet captures + a hand-annotated field table), not a
-  finished writeup like [Radex One](../../../../protocols/radex-one-protocol.md)'s source — treat the field table below
+  finished writeup like [Radex One](radex-one-protocol.md)'s source — treat the field table below
   as a working hypothesis to verify against a fresh capture, not a settled spec.
 - `C:\repo\_archives\BinaryDataDecoders\src\BinaryDataDecoders.EByteElectronicTechnology\e810dturs485_notes.txt` —
   a second archived copy of the same raw notes (same filename, different archive path/project
@@ -22,8 +22,8 @@ from a different personal project — a local binary-protocol-decoder library:
 [EByte E810-DTU(RS485)](https://www.cdebyte.com/) (model code `0x03` in its own config response,
 firmware `0x16`) — an Ethernet-to-serial bridge, conceptually the same role as the
 [USR-TCP232-302](https://shop.usriot.com/1-port-rs232-to-ethernet-converters-usr-tcp232-302.html)
-already used in this project (see the top-level [README](../../../../../README.md) and the vendor-variance
-caveat in [rfc2217.md](../../../../design/Transports/rfc2217.md)), but a different manufacturer (Ebyte/`cdebyte.com`, Chinese)
+already used in this project (see the top-level [README](../../README.md) and the vendor-variance
+caveat in [rfc2217.md](../design/Transports/rfc2217.md)), but a different manufacturer (Ebyte/`cdebyte.com`, Chinese)
 with an entirely different, non-RFC2217, non-USR configuration protocol. Bridges Ethernet to
 RS-485 (and possibly RS-422 electrically — the notes only cover the RS485 model variant).
 
@@ -41,7 +41,7 @@ not something dev-term has needed to touch before:
   discover devices, read/write their network+serial+behavior settings, and reboot them. This is a
   genuinely new category for dev-term: not decoding telemetry from an instrument, but *configuring
   a piece of network infrastructure* (the bridge itself) — closer in spirit to
-  [device-control-modules.md](../../../../design/UiDefinitions/device-control-modules.md)'s `IControlSurface` concept, but aimed
+  [device-control-modules.md](../design/UiDefinitions/device-control-modules.md)'s `IControlSurface` concept, but aimed
   at the bridge hardware rather than a measurement instrument. If dev-term ever wants a "find and
   set up my serial-to-Ethernet bridges" feature, this is what it would look like.
 

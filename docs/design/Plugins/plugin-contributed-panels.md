@@ -1,6 +1,6 @@
 # Plugin-contributed control panels and menu entries
 
-The in-process plugin loader ([plugin-model.md](../../../../design/Plugins/plugin-model.md)) lets a plugin register presenters and transports, but
+The in-process plugin loader ([plugin-model.md](plugin-model.md)) lets a plugin register presenters and transports, but
 nothing else. The device projects (K8055, Busylight, SCPI, De5000, ZoomH4n, RadexOne, NMEA) stay compiled into the core
 because `TuiMode`, `MainWindow` and `WebHost` reference them directly for their control-panel menu items. Until a plugin
 can contribute a panel, those decoders cannot move into plugin folders (done 2026-10-08, see Status).

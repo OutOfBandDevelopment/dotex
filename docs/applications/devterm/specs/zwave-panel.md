@@ -53,7 +53,7 @@ None: all three front ends render the definition generically.
 
 ## Open items
 
-- Security (S0/S2) keys are not handled, and some network-management commands are still unverified on hardware (see Status); see [the proposal](../design/proposals/z-wave-support.md).
+- Security (S0/S2) keys are not handled, and some network-management commands are still unverified on hardware (see Status); see [the proposal](../../../design/ZWave/z-wave-support.md).
 - A Basic Get through the panel to a reachable node has not been exercised on the bench (the paired nodes were asleep or out of range, and nothing is switched without asking).
 
 ## No-reply handling

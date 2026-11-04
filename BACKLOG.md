@@ -80,7 +80,7 @@ Scope rule: every BinaryDataDecoders feature is migrated; phases are priority or
 
 ## 8. Future ideas (not tied to DevTerm, nothing required now)
 
-- [ ] An Ebyte `IDeviceConfigEditor` so the Configure device button has an editor (dev-term has only the interface and a fake; needs a fresh capture, see [the proposal](docs/applications/devterm/design/proposals/ebyte-e810-dtu-config-protocol.md)).
+- [ ] An Ebyte `IDeviceConfigEditor` so the Configure device button has an editor (dev-term has only the interface and a fake; needs a fresh capture, see [the proposal](docs/protocols/ebyte-e810-dtu-config-protocol.md)).
 - [ ] **Avalonia spike** for the cross-platform device UI, after the first WPF device panel works end to end: [avalonia-spike.md](docs/migration/avalonia-spike.md).
 - [ ] **UiDefinitions as a generic dashboard and form language for web front ends** (later, nothing required now): [ui-language-later.md](docs/design/DevTermParity/ui-language-later.md).
 - [ ] dev-term future plans, not in dev-term today and not needed to call the migration complete (owner, 2026-10-30) ([TODO and BACKLOG snapshots](docs/applications/devterm/source/BACKLOG.md)): BLE backends for Linux and macOS; UDP transport and the EByte E810-DTU config protocol (needs a fresh capture); HP-GL, PostScript and PCL presenters and SVG in the Tui; declarative SCPI control-module schema and DE-5000 bench pass; out-of-process plugins and the control channel (with the plugin sandbox below); the rest is listed in the snapshot linked above.

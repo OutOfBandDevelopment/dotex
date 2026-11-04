@@ -3,7 +3,7 @@
 **Purpose.** Lets a second process or script read and drive a session one dev-term process already has open: a read-only
 event pipe (`--pipe`), a read-write command pipe (`--control`) with a client (`--controlclient`), and a loopback HTTP variant
 (`--controlhttp`). Works in the console CLI, the TUI and WPF (the first tab's session only); `DevTerm.Web` offers
-`--controlhttp` for its shared session. Design and history: [cross-process-control-channel](../design/proposals/cross-process-control-channel.md).
+`--controlhttp` for its shared session. Design and history: [cross-process-control-channel](../../../design/SessionChannel/cross-process-control-channel.md).
 The user-facing walkthrough is in [sending-and-receiving](../user-guide/sending-and-receiving.md).
 
 ## Flags
