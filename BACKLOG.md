@@ -29,7 +29,7 @@ Owner: all protocols and features of dev-term must exist here. Done means what d
 ## 3. Test infrastructure
 
 - [ ] Integration coverage gaps: Azure runs on emulators only (Azurite, Service Bus emulator, no Azure licence); Moto is used only for SQS, so S3 tests wait for an S3 adapter.
-- [ ] Integration suite under 5 minutes (now 7 min 54 s; the no-flaky-tests goal is met): [suite-timing.md](docs/architecture/testing/integration/suite-timing.md).
+- [ ] Integration suite under 5 minutes (now 7 min 54 s; the no-flaky-tests goal is met; needs the full Docker stack for repeated timed runs, so it waits for a dedicated session): [suite-timing.md](docs/architecture/testing/integration/suite-timing.md).
 - [ ] `DevLocal` tests kept on purpose: Ollama (hard-coded LAN host, model pull and delete; revisit when the owner says Ollama testing can resume), USB HID (hardware), `PathEx`, `MergedXPathNavigator`, `ProjectTools.FixReadmes` (hard-coded `C:\Repos` paths), Markdown `TestMethod1` (writes files).
 - [ ] Add a live-integration doc page per new cloud service (only Groq exists; its key was revoked 2026-10-09, so runs wait for the owner).
 - [ ] Example AppHost live journeys fail (Keycloak runs anonymously, telemetry does not reach the dashboard; Q4 in OPEN-QUESTIONS.md): [apphost-live-journeys.md](docs/design/example-ui/apphost-live-journeys.md).
@@ -42,7 +42,7 @@ Owner: all protocols and features of dev-term must exist here. Done means what d
 
 - [ ] CGI middleware ([design](docs/design/CgiMiddleware/README.md)): first cut built with 23 passing tests; left is run-as-another-user (decided: stays a TODO, deployers use the service account). Shell fixtures run through `scripts/ci/run-linux-tests.ps1`.
 - [ ] AllMiniLmL6V2: `AddValidatedOptions` for the embedding options (blocked by the Abstractions-only adapter rule).
-- [ ] Compare the remaining project `README.{Project}.md` files with their code beyond the identifier check (`reconcile-designs-and-code` skill); identifier checks of Common, Framework, Extensions and ExternalServices readmes are done.
+- [ ] Compare the remaining project `README.{Project}.md` files with their code beyond the identifier check (behaviour review of about 100 readmes; take it project by project with its owning item) (`reconcile-designs-and-code` skill); identifier checks of Common, Framework, Extensions and ExternalServices readmes are done.
 - [ ] GraphQL surface (HotChocolate, on demand), without breaking the custom search syntax; adopt `[OoBDevEnableQuery]` in the example API when it gets an `IQueryable` endpoint. See the [HTTP API](docs/patterns-discovery/03-practices-and-conventions/10-http-api-practices.md) and [authorization](docs/patterns-discovery/03-practices-and-conventions/11-authorization-practices.md) practices.
 - [ ] Example app missing screens ([list](docs/design/example-ui/missing-screens.md)); the owner picks which of the unplanned areas deserve a screen.
 - [ ] Performance gate for database-backed (non-vector) endpoints: no such endpoint exists yet, so add the gate with the first one.
