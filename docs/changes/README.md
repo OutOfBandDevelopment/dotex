@@ -477,6 +477,7 @@ Each change document should include:
 - [DevTerm docs: reusable designs (2026-11-04)](devterm-docs-designs-2026-11-04.md) - UI definitions, presenters, session logging and theming moved to `docs/design/`
 - [DevTerm CLI loopback-device test (2026-11-04)](devterm-loopback-device-cli-test-2026-11-04.md) - TCP CLI path tested against the stack container
 - [DevTerm manifest-panel layout test (2026-11-04)](devterm-manifest-panel-layout-test-2026-11-04.md) - Tui layout check for the manifest device panel
+- [BinaryDataDecoders surroundings review (2026-11-04)](binarydatadecoders-surroundings-review-2026-11-04.md) - bug reports kept as history, pipeline and GitHub items rejected with reasons
 - [Shared FakeTransport (2026-11-03)](test-utilities-faketransport-2026-11-03.md) - four FakeTransport copies merged into OoBDev.DevTerm.TestUtilities
 - [Docs check for imported material (2026-11-03)](docs-imported-coverage-check-2026-11-03.md) - orphaned files under `docs/applications` fail the docs tests; default scope widened
 - [DevTerm Web shell](devterm-web-shell-2026-10-29.md) - OoBDev.DevTerm.Web (Blazor), connection editor view model, transport selection in AddDevTermFrontEnd (2026-10-29)
