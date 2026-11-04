@@ -6,6 +6,8 @@ using DevTermApp;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.DevTerm.Configuration;
 using OoBDev.DevTerm.DeviceManifests;
+using OoBDev.DevTerm.TestUtilities;
+using OoBDev.DevTerm.Wpf;
 using OoBDev.UiDefinitions.ViewModels;
 
 namespace OoBDev.DevTerm.Wpf.Tests;
@@ -74,6 +76,18 @@ public sealed class UiLayoutReviewTests
             ])),
             460,
             320);
+
+    [TestMethod]
+    [DataRow(BuiltInThemes.LightName)]
+    [DataRow(BuiltInThemes.DarkName)]
+    public void ConverterToolsWindow_Empty_HasNoLayoutProblems(string theme) =>
+        Review(theme, () => new ConverterToolsWindow(new ConverterToolsDialogViewModel(new ConverterToolsEditor([]))), 700, 450);
+
+    [TestMethod]
+    [DataRow(BuiltInThemes.LightName)]
+    [DataRow(BuiltInThemes.DarkName)]
+    public void StreamMonitorWindow_Empty_HasNoLayoutProblems(string theme) =>
+        Review(theme, () => new StreamMonitorWindow(new StreamMonitorDialogViewModel(new StreamMonitor())), 900, 650);
 
     [TestMethod]
     [DataRow(BuiltInThemes.LightName)]
