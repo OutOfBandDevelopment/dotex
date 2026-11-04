@@ -16,10 +16,10 @@ control-module layer above the byte stream, not how the bytes arrive.
 
 The Z-Wave Serial API is a binary, frame-based protocol (start-of-frame byte, length, frame type,
 command class, checksum, plus ACK/NAK/CAN handshake bytes) — squarely the shape
-[device-control-modules.md](../device-control-modules.md) already flags Kaitai Struct (`.ksy`) as the
+[device-control-modules.md](../../../../design/UiDefinitions/device-control-modules.md) already flags Kaitai Struct (`.ksy`) as the
 right tool for ("binary response layouts — byte-level fields, conditionals, repeats, bit widths"),
 rather than the lightweight text send-template/response-pattern schema `DevTerm.Devices.Scpi` uses for
-ASCII query/response gear. [Device manifests](../device-manifests.md) already reference `.ksy` as part
+ASCII query/response gear. [Device manifests](../../../../design/UiDefinitions/device-manifests.md) already reference `.ksy` as part
 of its design ("a folder/zip of one, when a binary Kaitai `.ksy` reference is needed") but that
 reference is still unimplemented — building Z-Wave support would be the first real forcing function to
 actually implement `.ksy` decoding rather than leave it purely speculative in the design docs.

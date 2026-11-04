@@ -5,7 +5,7 @@
 Lets a user save a named connection configuration once and pick it again later from a menu, in
 either front end (TUI or WPF), instead of re-entering connection settings every session or only
 ever having the one untitled `appsettings.Local.json` profile. A profile can also point at a
-[device manifest](device-manifests.md), so picking a profile can mean "connect this way, *and* load
+[device manifest](../../../design/UiDefinitions/device-manifests.md), so picking a profile can mean "connect this way, *and* load
 what this specific device can do and how to show it" in one step.
 
 ## Relationship to the existing `appsettings.Local.json`
@@ -208,8 +208,8 @@ The console app reports an unknown or invalid name as a startup error. Decided 2
 
 - **Not wired to `IControlSurface`** — loading a profile's referenced manifest makes its
   `UiDefinition` available, but nothing yet renders it or turns it into a live control surface,
-  same "step one" scope as [ui-definitions.md](ui-definitions.md) and
-  [device-manifests.md](device-manifests.md) themselves.
+  same "step one" scope as [ui-definitions.md](../../../design/UiDefinitions/ui-definitions.md) and
+  [device-manifests.md](../../../design/UiDefinitions/device-manifests.md) themselves.
 - **Not a replacement for `appsettings.Local.json`** — see "Relationship" above; both exist,
   serving different purposes (implicit default vs. explicit named choice).
 

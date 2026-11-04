@@ -27,7 +27,7 @@ All configurable settings — transport defaults (e.g., default baud rate), pres
 
 ### Options vs. mapping/device profiles
 
-The Options pattern is for **structural application/plugin settings** (how the app and its plugins are configured to run). It is deliberately *not* used for the mapping/device-profile data described in [presenters.md](presenters.md) (register maps, channel maps, enum labels) — those are user-authored, per-device data that's loaded, edited, and swapped independently of the app's own configuration, and are handled by a separate mapping-loader service rather than bound as `IOptions<T>`.
+The Options pattern is for **structural application/plugin settings** (how the app and its plugins are configured to run). It is deliberately *not* used for the mapping/device-profile data described in [presenters.md](../../../design/Presenters/presenters.md) (register maps, channel maps, enum labels) — those are user-authored, per-device data that's loaded, edited, and swapped independently of the app's own configuration, and are handled by a separate mapping-loader service rather than bound as `IOptions<T>`.
 
 ## Open questions
 

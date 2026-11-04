@@ -8,7 +8,7 @@ the SCPI command know the response type should allow for proper presentation. I 
 would only automatically save the files by something like `(device name)_(timestamp).(ext)`."
 
 This is the concrete front-end feature that sits on top of two things already designed but not yet
-built in [presenters.md](../presenters.md)'s "Rendering presenters" section (§3): an HPGL/
+built in [presenters.md](../../../../design/Presenters/presenters.md)'s "Rendering presenters" section (§3): an HPGL/
 PostScript/PCL presenter that renders a command stream to a drawing and exports it as SVG/PNG/JPG,
 and the general idea that a presenter "declares what representation(s) it produces" so a front end
 can show it generically. **Phase 1 is built (2026-09-25)** — see Status below.
@@ -36,7 +36,7 @@ it from the request..."):
    `Binary`). When set, `ScpiControlSurface` passes it along with the existing `QuerySent(id)`
    correlation call (see `IScpiReplyTracker` in
    [scpi-instrument-control.md](scpi-instrument-control.md)) so the watcher below never has to
-   guess for that command. This is the general shape [device-manifests.md](../device-manifests.md)
+   guess for that command. This is the general shape [device-manifests.md](../../../../design/UiDefinitions/device-manifests.md)
    will eventually want too, once a manifest's own command schema exists independently of SCPI.
 2. **Sniffing**, for everything else (an unannotated command, a device with no profile at all, or
    an unsolicited/streamed reply that wasn't triggered by any tracked command). A small

@@ -1,8 +1,8 @@
 # Theming
 
 Light/dark mode and user-defined themes for both front ends (TUI and WPF). Implemented 2026-09-25.
-Screens: View > Theme in the [TUI main screen](../specs/tui-main-screen.md) and the
-[WPF main window](../specs/wpf-main-window.md). How-to: [user guide](../user-guide/themes.md).
+Screens: View > Theme in the [TUI main screen](../../applications/devterm/specs/tui-main-screen.md) and the
+[WPF main window](../../applications/devterm/specs/wpf-main-window.md). How-to: [user guide](../../applications/devterm/user-guide/themes.md).
 
 ## What was investigated first
 

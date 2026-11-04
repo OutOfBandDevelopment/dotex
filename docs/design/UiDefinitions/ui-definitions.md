@@ -11,9 +11,9 @@ per device, and instead of a device module needing to know anything about Termin
 
 This directly answers device-control-modules.md's open question "how rich the control-surface
 metadata needs to be" with an actual shape, informed by real devices: the `@startsalt` mockups
-already written for [Kuando Busylight](../../../protocols/kuando-busylight-protocol.md),
-[Velleman K8055](../../../protocols/velleman-k8055-protocol.md), [EByte](proposals/ebyte-e810-dtu-config-protocol.md),
-and [Zoom H4n](../../../protocols/zoom-h4n-remote-protocol.md) are what this model needs to be able to
+already written for [Kuando Busylight](../../protocols/kuando-busylight-protocol.md),
+[Velleman K8055](../../protocols/velleman-k8055-protocol.md), [EByte](../../applications/devterm/design/proposals/ebyte-e810-dtu-config-protocol.md),
+and [Zoom H4n](../../protocols/zoom-h4n-remote-protocol.md) are what this model needs to be able to
 describe — a color swatch picker, toggle switches, sliders, a device list plus a settings form, a
 button panel. The model is built from those concrete examples, not designed in the abstract first.
 
@@ -43,7 +43,7 @@ device review deferred to the user); K8055's is done for WPF, still pending for 
 value with it before sending; an optional `DevTerm.Core.Control.ICommandPreview` capability that
 lets a surface show exactly what a control would send (implemented by the SCPI, K8055, and
 Busylight surfaces); and collapsible sections, aligned labels, and a bottom "Notes" section for
-`Description` in both renderers — see [docs/specs/device-control-panel.md](../specs/device-control-panel.md).
+`Description` in both renderers — see [docs/specs/device-control-panel.md](../../applications/devterm/specs/device-control-panel.md).
 
 **Display controls, manifest panels, and TUI fitting, landed 2026-09-25 (later the same day)**: three
 display-only chart controls — `BarGraphControl`, `StripChartControl`, `VectorControl` (below) — with
@@ -59,7 +59,7 @@ properties plus a reflection-based generator (`DevTerm.UiDefinitions.Forms`) tur
 into a `UiDefinition`, and a form-oriented renderer in each front end draws it two-way bound to the
 model — see [Forms from one definition](#forms-from-one-definition) below. The Connection Editor's
 connection fields are generated this way in both front ends, and the new
-[manifest editor](../specs/manifest-editor.md) builds all of its forms with it. Sections and
+[manifest editor](../../applications/devterm/specs/manifest-editor.md) builds all of its forms with it. Sections and
 controls gained an optional visibility condition (`VisibleWhen`), `UiControl` an optional
 `Description` (help text), `ChoiceStyle` a `CheckList` (multi-select), and `IndicatorControl` a
 `Style` (`Plain`/`Warning`).
@@ -74,7 +74,7 @@ fields:
 
 - `ButtonControl` — invokes a command, no value of its own (e.g. "Apply", "Reboot", "Reset Counter").
   Optionally carries `ParameterFieldIds: List<string>?` (added 2026-09-23, for the SCPI module — see
-  [scpi-instrument-control.md](features/scpi-instrument-control.md)): when set, the renderer reads
+  [scpi-instrument-control.md](../../applications/devterm/design/features/scpi-instrument-control.md)): when set, the renderer reads
   each named sibling control's current value (a `TextFieldControl`/`NumericControl`'s text, a
   `ChoiceControl`'s selected option), comma-joins them, and invokes `CommandId ?? Id` with the
   joined string — the generic mechanism for "pick a command, fill in one or more parameter fields,
@@ -213,7 +213,7 @@ first in each control object):
 
 ## Example
 
-The [Kuando Busylight](../../../protocols/kuando-busylight-protocol.md) panel, as both a mockup and the
+The [Kuando Busylight](../../protocols/kuando-busylight-protocol.md) panel, as both a mockup and the
 model that would produce it — this is the actual definition round-trip-tested against both JSON
 and XML serializers:
 
@@ -305,7 +305,7 @@ parameter's `Kind` fixed its widget.
   constraint (`Integer` when `DecimalPlaces` is 0) over its `Minimum`/`Maximum`; `"Slider"` becomes a
   `SliderControl` (step `10^-DecimalPlaces`). A hint that doesn't fit the kind (a slider for text, a
   choice with no options) falls back to the kind's default widget. See
-  [scpi-instrument-control.md](features/scpi-instrument-control.md).
+  [scpi-instrument-control.md](../../applications/devterm/design/features/scpi-instrument-control.md).
 
 The model says nothing about *what a control sends*; that's the surface's job. A surface that can
 describe it implements `DevTerm.Core.Control.ICommandPreview` alongside `IControlSurface` (kept

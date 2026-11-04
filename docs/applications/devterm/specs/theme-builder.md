@@ -16,7 +16,7 @@ per-role overrides, live-preview building, contrast checking, save/validation) l
 
 See [`docs/design/features/theme-builder.md`](../design/features/theme-builder.md) for the design
 rationale (including a sequence diagram and a wireframe) and
-[`docs/design/theming.md`](../design/theming.md) for the underlying `ThemeFile`/`ThemeCatalog`/
+[`docs/design/theming.md`](../../../design/Theming/theming.md) for the underlying `ThemeFile`/`ThemeCatalog`/
 `DevTermTheme` model this screen edits.
 
 No new persistence format: saving writes a `ThemeFile`-shaped JSON into

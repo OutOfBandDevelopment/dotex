@@ -166,7 +166,7 @@ plain text).
 ## Device manifests: a panel from a file
 
 **Device > Device Manifest...** opens a panel for any device described by a
-[device manifest](../design/device-manifests.md) — a JSON file (or a folder with a `device.json`, or
+[device manifest](../../../design/UiDefinitions/device-manifests.md) — a JSON file (or a folder with a `device.json`, or
 a `.zip` of one) that lists the device's commands, how to read its replies, and the panel's layout.
 No code, and nothing built into dev-term for that device.
 

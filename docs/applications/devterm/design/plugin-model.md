@@ -9,8 +9,8 @@ Describes how transports, presenters, and decoders are packaged, discovered, and
 Extension points, each a small interface package with no dependency on the core engine's internals or on any specific front end:
 
 - Transport contract (see [transports.md](../../../design/Transports/transports.md)).
-- Presenter/decoder contract, including the optional renderable, exportable, composite, and mappable capabilities (see [presenters.md](presenters.md)).
-- Control surface contract, for device control modules that need to declare outbound commands/parameters generically (see [device-control-modules.md](device-control-modules.md)). A device control module plugin typically registers a control surface alongside one or more presenters.
+- Presenter/decoder contract, including the optional renderable, exportable, composite, and mappable capabilities (see [presenters.md](../../../design/Presenters/presenters.md)).
+- Control surface contract, for device control modules that need to declare outbound commands/parameters generically (see [device-control-modules.md](../../../design/UiDefinitions/device-control-modules.md)). A device control module plugin typically registers a control surface alongside one or more presenters.
 - (Possible future) front-end widget contract, if the GUI/TUI need plugin-supplied custom views beyond what the shared drawing/canvas model and the control-surface metadata cover.
 
 ## Packaging & discovery
@@ -57,7 +57,7 @@ Host -> Services: BuildServiceProvider()
 
 The initial text-encoding and numeric-base presenters and the core transports (serial, TCP, USB HID, USBTMC, BLE, RFC 2217, VXI-11, MQTT/AMQP/STOMP, loopback) ship in-box, referenced directly by the front ends and wired by `AddDevTermFrontEnd`, but are implemented against the same `ITransport`/`IPresenter` contracts as third-party plugins. The device modules (`DevTerm.Devices.*`: K8055, Busylight, DE-5000, RadexOne, ZoomH4n, NMEA, SCPI, Demo) are real plugins: each has a `plugin.json` and an `IPluginModule`, and is copied into `plugins/<name>/` next to the app by the build (`BundleDevicePlugins`), so the core and front ends reference none of them. An HPGL-style rendering presenter is expected to be an ordinary plugin, not a special case.
 
-A separate, no-code path exists alongside this one for simple devices: see [device-manifests.md](device-manifests.md) — a declarative JSON manifest (or folder/zip of one) rather than a compiled plugin. The two aren't competing mechanisms; a device manifest is for gear simple enough not to need real code at all, and is loaded by dev-term's own manifest loader rather than this plugin loader.
+A separate, no-code path exists alongside this one for simple devices: see [device-manifests.md](../../../design/UiDefinitions/device-manifests.md) — a declarative JSON manifest (or folder/zip of one) rather than a compiled plugin. The two aren't competing mechanisms; a device manifest is for gear simple enough not to need real code at all, and is loaded by dev-term's own manifest loader rather than this plugin loader.
 
 ## Status
 

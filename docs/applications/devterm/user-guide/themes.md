@@ -5,7 +5,7 @@ Both the TUI and the WPF app come in **Light** and **Dark**, and can follow your
 
 The precise behavior is in [`docs/specs/tui-main-screen.md`](../specs/tui-main-screen.md) and
 [`docs/specs/wpf-main-window.md`](../specs/wpf-main-window.md) (**View > Theme**). How it works is in
-[`docs/design/theming.md`](../design/theming.md).
+[`docs/design/theming.md`](../../../design/Theming/theming.md).
 
 ## Switching theme
 

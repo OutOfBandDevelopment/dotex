@@ -474,6 +474,7 @@ Each change document should include:
 - [Coding-standards tests (2026-11-04)](coding-standards-tests-2026-11-04.md) - repository-wide test category check; two untagged or double-tagged test classes fixed
 - [DevTerm containers wiring (2026-11-04)](devterm-containers-wiring-2026-11-04.md) - mosquitto, ser2net, loopback-device and RabbitMQ STOMP/TLS in the integration stack
 - [DevTerm docs: transports (2026-11-04)](devterm-docs-transports-2026-11-04.md) - four transport designs moved to `docs/design/Transports/`
+- [DevTerm docs: reusable designs (2026-11-04)](devterm-docs-designs-2026-11-04.md) - UI definitions, presenters, session logging and theming moved to `docs/design/`
 - [Shared FakeTransport (2026-11-03)](test-utilities-faketransport-2026-11-03.md) - four FakeTransport copies merged into OoBDev.DevTerm.TestUtilities
 - [Docs check for imported material (2026-11-03)](docs-imported-coverage-check-2026-11-03.md) - orphaned files under `docs/applications` fail the docs tests; default scope widened
 - [DevTerm Web shell](devterm-web-shell-2026-10-29.md) - OoBDev.DevTerm.Web (Blazor), connection editor view model, transport selection in AddDevTermFrontEnd (2026-10-29)

@@ -159,7 +159,7 @@ a converter tool covers it, and a profile still saying `webservice` now fails va
   no transforms, gradients, text or CSS) and shows `Could not draw this SVG: …` otherwise; the TUI lists it
   but still can't draw (an accepted limit, 2026-10-03: the TUI will not render graphics). The list entry is for this session only (it isn't re-found after a restart). Live
   HP-GL/PostScript/PCL preview is still gated on the rendering presenter from
-  [presenters.md](../design/presenters.md) §3.
+  [presenters.md](../../../design/Presenters/presenters.md) §3.
 - **No `--presenter`**: it isn't selectable that way (it emits no text; see the proposal's Status for why it's bound in place instead). The CLI's `--capture <dir>` (2026-10-14) runs the same detection and saves each detected stream into that folder, printing `Captured ... to <path>.` per capture, for headless bench runs and CI.
 - **Declaring a format**: an SCPI profile command and a device manifest `OutboundCommand` both take `ExpectedResponseFormat` (2026-10-14); a command typed by hand in the send box declares nothing and is sniffed.
 - **One capture at a time**: a second declared/sniffed stream starting while one is still in progress

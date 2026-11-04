@@ -1,6 +1,6 @@
 # Editing a device manifest
 
-A [device manifest](../design/device-manifests.md) describes a device with no code: its commands,
+A [device manifest](../../../design/UiDefinitions/device-manifests.md) describes a device with no code: its commands,
 how to read its replies, and the control panel **Device > Device Manifest...** opens for it. The
 manifest editor lets you build one, or change an existing one, without hand-editing JSON — and shows
 the resulting panel as you go. Full field/action reference:

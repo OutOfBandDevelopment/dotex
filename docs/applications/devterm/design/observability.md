@@ -1,7 +1,7 @@
 # Observability
 
 dev-term can export its own traces and metrics (not the device's data; that is session logging, see
-[session-logging.md](session-logging.md)) to an OpenTelemetry collector. It is **off unless asked**: pass
+[session-logging.md](../../../design/SessionLogging/session-logging.md)) to an OpenTelemetry collector. It is **off unless asked**: pass
 `--otlp <url>` (or `--otlp true` for `http://localhost:4317`), or set `Otlp` in a profile / `DEVTERM_OTLP`.
 
 ## Design

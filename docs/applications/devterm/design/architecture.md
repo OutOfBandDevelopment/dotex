@@ -30,7 +30,7 @@ Every front end builds on that the same way:
 traffic and lifecycle. It sees each received chunk just before the pipeline renders it, each send
 just before the transport write, and each open and close. It sits outside the pipeline, so attaching
 one never changes what a presenter renders, and an observer that throws is ignored. The session
-logger is built on it. See [session-logging.md](session-logging.md).
+logger is built on it. See [session-logging.md](../../../design/SessionLogging/session-logging.md).
 
 ### Transport
 
@@ -38,17 +38,17 @@ logger is built on it. See [session-logging.md](session-logging.md).
 
 ### Presenter
 
-`IPresenter` — turns a raw byte stream into a viewable (and, where it makes sense, editable/sendable) representation. Presenters range from simple text/numeric-base views to stateful protocol decoders to renderers that produce graphics and export files. See [presenters.md](presenters.md).
+`IPresenter` — turns a raw byte stream into a viewable (and, where it makes sense, editable/sendable) representation. Presenters range from simple text/numeric-base views to stateful protocol decoders to renderers that produce graphics and export files. See [presenters.md](../../../design/Presenters/presenters.md).
 
 ### Pipeline
 
 A session's pipeline is a chain of presenters/decoders that a raw byte stream flows through, fanning out to one or more simultaneous views — e.g., raw hex and a decoded protocol view of the same stream at once, or a byte-unframer (SLIP/COBS) feeding an inner decoder.
 
-The pipeline isn't always a straight line: a **composite/channelized decoder** can demultiplex a single stream into several named channels (split by a header/discriminator byte, a time slot, or similar framing), each of which is then handed to its own sub-presenter — which might itself be a different text encoding, a different numeric base, or another nested decoder. See [presenters.md](presenters.md) for detail; this is the model for interlaced telemetry where different fields of the same frame carry differently-encoded data.
+The pipeline isn't always a straight line: a **composite/channelized decoder** can demultiplex a single stream into several named channels (split by a header/discriminator byte, a time slot, or similar framing), each of which is then handed to its own sub-presenter — which might itself be a different text encoding, a different numeric base, or another nested decoder. See [presenters.md](../../../design/Presenters/presenters.md) for detail; this is the model for interlaced telemetry where different fields of the same frame carry differently-encoded data.
 
 ### Device control modules
 
-Not every plugin is passive. A **device control module** composes a control surface (outbound commands/parameters that encode to bytes) with one or more presenters (typically a telemetry decoder and a rendering/plot presenter for the response) into one packaged plugin for driving and monitoring a specific piece of equipment — e.g., serial-based test equipment. It's built entirely out of the existing transport/presenter contracts rather than a separate pipeline mechanism. See [device-control-modules.md](device-control-modules.md).
+Not every plugin is passive. A **device control module** composes a control surface (outbound commands/parameters that encode to bytes) with one or more presenters (typically a telemetry decoder and a rendering/plot presenter for the response) into one packaged plugin for driving and monitoring a specific piece of equipment — e.g., serial-based test equipment. It's built entirely out of the existing transport/presenter contracts rather than a separate pipeline mechanism. See [device-control-modules.md](../../../design/UiDefinitions/device-control-modules.md).
 
 ### Plugin host
 

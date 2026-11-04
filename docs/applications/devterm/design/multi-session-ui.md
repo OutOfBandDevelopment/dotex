@@ -12,7 +12,7 @@ are complete — see **Status**.
 ## Why this was blocked until now
 
 Per-session isolation had to land first, or a second session would corrupt or leak into the first
-one's state. That happened 2026-09-25, [presenters.md](presenters.md) §"Stateful presenter lifetime
+one's state. That happened 2026-09-25, [presenters.md](../../../design/Presenters/presenters.md) §"Stateful presenter lifetime
 vs. DI registration": every `IPresenter` and `PresenterCatalog` registration is transient, one
 catalog is resolved per session, and two sessions in one process can't interleave partial frames
 through a shared presenter instance any more. `DevTermSessionBuilder.Build(CliOptions)`
@@ -174,7 +174,7 @@ across tabs (the shared timecode). Tab switching uses **Alt+Left / Alt+Right** i
     a line typed in another tab. Recommend per-tab, matching per-tab `PresenterCatalog`/output — but
     flagging since it's a visible behavior change, not just internal plumbing.
   - **Session logging**: today one log file follows one session across a live profile switch
-    ([session-logging.md](session-logging.md)). With multiple tabs open at once, does "Start
+    ([session-logging.md](../../../design/SessionLogging/session-logging.md)). With multiple tabs open at once, does "Start
     Logging..." log only the active tab, or could a user want several tabs logged to separate files
     concurrently? Recommend: logging stays a per-tab action (menu state reflects the active tab's
     logging status), so two tabs can log to two files independently — no design conflict with the

@@ -9,14 +9,14 @@ with someone who doesn't have the device, and reproducing a presenter/decoder bu
 without the hardware.
 
 It isn't the same as the rendering presenters' export formats (SVG/PNG from a decoded drawing, see
-[presenters.md](presenters.md)). A session log is the raw conversation, and anything decoded from it
+[presenters.md](../Presenters/presenters.md)). A session log is the raw conversation, and anything decoded from it
 can be decoded again.
 
 **Status (2026-09-25): implemented** in all three front ends. `DevTerm.Logging` holds the format,
 the recorder and the playback engine. `DevTerm.Configuration` holds the front-end glue
 (`SessionLogging`, `PlaybackPresenters`). The screens are specified in
-[`docs/specs/playback-window.md`](../specs/playback-window.md) and the main-window specs, and shown
-in [`docs/user-guide/logging-and-playback.md`](../user-guide/logging-and-playback.md). Nothing has
+[`docs/specs/playback-window.md`](../../applications/devterm/specs/playback-window.md) and the main-window specs, and shown
+in [`docs/user-guide/logging-and-playback.md`](../../applications/devterm/user-guide/logging-and-playback.md). Nothing has
 been verified against real hardware yet: all captures so far are from the loopback transport and
 test fakes.
 

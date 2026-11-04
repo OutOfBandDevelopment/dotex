@@ -14,10 +14,10 @@ skip straight to the execution model — the connect-and-interact screen each al
 both show a Configure screen instead of exiting with an error, and both also get a **"Device
 Profiles" menu** (available at any time, not just at startup) for picking a named, saved connection
 — see [connection-profiles.md](connection-profiles.md) for the full shape, including how a profile
-can reference a [device manifest](device-manifests.md) so picking one also loads what that specific
+can reference a [device manifest](../../../design/UiDefinitions/device-manifests.md) so picking one also loads what that specific
 device can do. **Implemented** (2026-09-15 through 2026-09-18) in both front ends — see
 connection-profiles.md's own Status for the full detail. A profile's device manifest is
-loaded as a live control panel (`ManifestControlSurface`); see [device-manifests.md](device-manifests.md).
+loaded as a live control panel (`ManifestControlSurface`); see [device-manifests.md](../../../design/UiDefinitions/device-manifests.md).
 
 ## Executables
 
@@ -71,11 +71,11 @@ session log, and `--playback <file>` is the first genuinely non-interactive mode
 through `--presenter` (or the log's own presenters), prints the decoded lines, and exits without
 connecting to anything, optionally paced by `--playbackspeed`. The TUI and WPF have the same through
 File > Start Logging... and File > Open Log for Playback.... See
-[session-logging.md](session-logging.md).
+[session-logging.md](../../../design/SessionLogging/session-logging.md).
 
 ## GUI (graphical desktop app, WPF)
 
-A richer visual front end for cases where a graphical view adds real value beyond what a terminal can show: live rendering-presenter output (HPGL/PostScript/PCL drawings, telemetry plots), device control module control panels (see [device-control-modules.md](device-control-modules.md), rendered from the declarative model in [ui-definitions.md](ui-definitions.md)), a hex-grid editor for composing binary sends, and drag-and-drop plugin/session management. Built with WPF, so it ships as a separate Windows desktop application from the console app, both consuming the same core engine via DI (see [platform.md](platform.md)).
+A richer visual front end for cases where a graphical view adds real value beyond what a terminal can show: live rendering-presenter output (HPGL/PostScript/PCL drawings, telemetry plots), device control module control panels (see [device-control-modules.md](../../../design/UiDefinitions/device-control-modules.md), rendered from the declarative model in [ui-definitions.md](../../../design/UiDefinitions/ui-definitions.md)), a hex-grid editor for composing binary sends, and drag-and-drop plugin/session management. Built with WPF, so it ships as a separate Windows desktop application from the console app, both consuming the same core engine via DI (see [platform.md](platform.md)).
 
 ## Open questions
 

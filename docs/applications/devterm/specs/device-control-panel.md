@@ -31,8 +31,8 @@ Each menu item is **enabled only when the current connection could be that devic
 | Device Manifest... | any transport (`DevicePanel.Manifest`) — a manifest names its own transport, so which one fits is the user's pick |
 
 The items follow the connection live: they're recomputed on every connect, disconnect, self-disconnect
-and profile switch, the same pass that refreshes the main window's title and status bar. See [`docs/design/ui-definitions.md`](../design/ui-definitions.md) and
-[`docs/design/device-control-modules.md`](../design/device-control-modules.md) for the design intent
+and profile switch, the same pass that refreshes the main window's title and status bar. See [`docs/design/ui-definitions.md`](../../../design/UiDefinitions/ui-definitions.md) and
+[`docs/design/device-control-modules.md`](../../../design/UiDefinitions/device-control-modules.md) for the design intent
 behind this being generic, and
 [`docs/design/features/scpi-instrument-control.md`](../design/features/scpi-instrument-control.md)
 for the SCPI module specifically.
@@ -82,7 +82,7 @@ if any field is invalid, nothing is sent.
   expanded the first time. Shared by both front ends; the console and WPF apps save the collapsed ones to
   `~/.dev-term/section-state.json` (`SectionExpansionState.UsePersistence`) and reload them at startup.
 - **A section's or control's `VisibleWhen`** (see
-  [ui-definitions.md](../design/ui-definitions.md#forms-from-one-definition)) is honored here too,
+  [ui-definitions.md](../../../design/UiDefinitions/ui-definitions.md#forms-from-one-definition)) is honored here too,
   not just by the form renderers: a hidden section has no header and takes no space (WPF: its
   `Expander`'s row collapses to zero height automatically; TUI: it's skipped entirely during layout,
   no header/body/separator row); a hidden control's own row disappears the same way, and every row

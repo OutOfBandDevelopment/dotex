@@ -7,7 +7,7 @@ the fact, send one to someone without the hardware, or re-decode a capture with 
 presenter.
 
 Logs go to `~/.dev-term/logs` by default, named `{yyyyMMdd-HHmmss}_{profile or connection}.jsonl`.
-The format is documented in [`docs/design/session-logging.md`](../design/session-logging.md).
+The format is documented in [`docs/design/session-logging.md`](../../../design/SessionLogging/session-logging.md).
 
 ## CLI
 

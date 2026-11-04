@@ -23,7 +23,7 @@ N`/`MEAS?` handling awaits between each pushed line.
 - **Surfaced in both front ends' connection editors** as a numeric field, visible only when the
   selected transport is `loopback` — the same transport-conditional `VisibleWhen` section pattern the
   Connection Editor already uses for every other transport's fields (see
-  [ui-definitions.md](../ui-definitions.md)'s "Forms from one definition" section, settled answer #1:
+  [ui-definitions.md](../../../../design/UiDefinitions/ui-definitions.md)'s "Forms from one definition" section, settled answer #1:
   "each transport's fields are one section with a visibility condition").
 - **CLI**: a `--loopbacksampleintervalms <N>` flag (or the equivalent `CliOptions` property name),
   following the existing "property names double as CLI flag names" convention

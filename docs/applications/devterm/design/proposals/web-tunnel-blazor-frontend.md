@@ -32,7 +32,7 @@ more live `Session`s and exposing them to a browser:
   typed-input box, growing toward the same generic `UiDefinition` rendering both TUI (`ControlPanelMode`/
   `FormRenderer`) and WPF (`ControlPanelWindow`/`FormRenderer`) already do — a third `UiDefinition`
   renderer, reusing the same model rather than inventing a web-specific one (per
-  [ui-definitions.md](../ui-definitions.md)'s whole reason for existing: "every front end renders that
+  [ui-definitions.md](../../../../design/UiDefinitions/ui-definitions.md)'s whole reason for existing: "every front end renders that
   description using its own native widgets").
 - **"Tunnels"**: read as "reach a session that isn't otherwise network-accessible" — i.e., this host
   service sits between a browser and a session bound to local hardware (serial/USB/HID on the host

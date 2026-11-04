@@ -21,7 +21,7 @@ docs/test/2026-09-24-09-54-39.md), Korad KA3005P, Korad KA6003P. See:
 - `ScpiParameterDefinition.Control` (2026-09-25) — an optional widget hint (`Numeric`, `Slider`,
   `Text`, `Choice`) independent of the parameter's `Kind`; e.g. `"Kind": "Numeric", "Control":
   "Text"` is a text field validated as a number within `Minimum`/`Maximum`. See
-  [ui-definitions.md](../ui-definitions.md)'s "Values and widgets". No bundled profile uses it yet.
+  [ui-definitions.md](../../../../design/UiDefinitions/ui-definitions.md)'s "Values and widgets". No bundled profile uses it yet.
 - `ScpiReplyPresenter` — line-buffered ASCII decoding plus FIFO query/reply correlation
   (`IScpiReplyTracker.QuerySent`), resolving the "can a command declare an expected reply pattern"
   open question below for the common synchronous case.
@@ -29,7 +29,7 @@ docs/test/2026-09-24-09-54-39.md), Korad KA3005P, Korad KA6003P. See:
   `IControlSurface` renderer (`ControlPanelMode`/`ControlPanelWindow`, proven against the K8055 and
   Busylight) rather than a bespoke "pick a command, fill parameters" widget; this needed one small,
   generic addition to the shared model, `ButtonControl.ParameterFieldIds` (see
-  [ui-definitions.md](../ui-definitions.md)).
+  [ui-definitions.md](../../../../design/UiDefinitions/ui-definitions.md)).
 - Auto-detect is honestly scoped to `*IDN?` plus a regex match against each profile's `IdnPattern`
   (`ScpiProfileCatalog.TryMatchByIdn`) — there is no standardized "list supported commands" SCPI
   query, so this is not real command discovery, just an identification shortcut with a Generic
@@ -82,13 +82,13 @@ for SCPI bench equipment) substantially overlaps with what dev-term already prov
 serial and TCP transports are built, unit-tested, and verified against real hardware (a bench
 oscilloscope, both direct-serial and over a serial-to-Ethernet bridge, per the top-level
 [README](../../../../../README.md)). This proposal reframes that project's goal as a dev-term device
-control module rather than a from-scratch driver, per [device-control-modules.md](../device-control-modules.md).
+control module rather than a from-scratch driver, per [device-control-modules.md](../../../../design/UiDefinitions/device-control-modules.md).
 
 ## Purpose
 
 Give dev-term a device control module for SCPI-compatible bench test equipment: a control
 surface for outbound commands (set voltage, trigger, query measurement) plus a decoder for
-inbound replies/telemetry, bundled as one plugin per [device-control-modules.md](../device-control-modules.md)'s
+inbound replies/telemetry, bundled as one plugin per [device-control-modules.md](../../../../design/UiDefinitions/device-control-modules.md)'s
 "Motivating example," which is this exact scenario.
 
 ## Target hardware (from the source project)
@@ -132,7 +132,7 @@ SCPI is textual, not binary — this is a much softer decoder problem than Radex
 - **Outbound**: plain ASCII command strings (e.g. `:VOLT 5.0`, `*IDN?`, `:MEAS:VOLT:DC?`) —
   these are exactly `IControlSurface` commands whose "encoding" is just the string itself plus a
   terminator, reusing the existing ASCII presenter's send path (`IPresenterInput`, see
-  [presenters.md](../presenters.md)) rather than needing custom binary framing.
+  [presenters.md](../../../../design/Presenters/presenters.md)) rather than needing custom binary framing.
 - **Inbound**: replies are themselves ASCII (numeric readings, `*IDN?` strings, status bytes) —
   a decoder here is close to a thin wrapper over the existing ASCII/line-buffered presenter,
   with light structure extraction (e.g. parsing a `*IDN?` reply into make/model/serial/firmware
@@ -177,8 +177,8 @@ decoder --> user : Human-readable text baseline
   `MEAS:CURR:DC?`, ...) and a power-supply profile (`SOUR:VOLT`, `SOUR:CURR`, `OUTP ON`/`OUTP OFF`,
   `MEAS:VOLT?`) cover the 34401A/DM3058E and KA3005P/KA6003P respectively, and a waveform-generator
   profile covers the DG1022/DG1022Z. This is the same "one generic thing, many devices via external
-  data" pattern as [presenters.md](../presenters.md)'s mappable presenters (§5) and
-  [device-control-modules.md](../device-control-modules.md)'s open question about a declarative
+  data" pattern as [presenters.md](../../../../design/Presenters/presenters.md)'s mappable presenters (§5) and
+  [device-control-modules.md](../../../../design/UiDefinitions/device-control-modules.md)'s open question about a declarative
   command/response schema — SCPI is arguably the *best* fit for that declarative schema, since the
   command grammar is standardized enough (IEEE 488.2 common commands, `SCPI-99`) to describe
   generically rather than per-vendor.
@@ -189,7 +189,7 @@ decoder --> user : Human-readable text baseline
 - **Query/reply pairing matters here more than for streaming telemetry** — SCPI is
   request/response by nature (send `MEAS:VOLT:DC?`, get one line back), which is exactly the "does
   a command declare an expected reply pattern" open question already flagged in
-  [device-control-modules.md](../device-control-modules.md). This project is a concrete forcing
+  [device-control-modules.md](../../../../design/UiDefinitions/device-control-modules.md). This project is a concrete forcing
   function for resolving that question, not just a hypothetical.
 
 ## Relationship to other backlog items

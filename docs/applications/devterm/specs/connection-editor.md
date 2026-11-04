@@ -19,7 +19,7 @@ generic form renderer (`DevTerm.Console.FormRenderer`, `DevTerm.Wpf.FormRenderer
 binds every field back to the same view-model property through `FormBinding`. One declaration of
 the field list, labels, grouping, choice lists, value types and "which transport shows which
 group", instead of one per front end. See
-[ui-definitions.md](../design/ui-definitions.md#forms-from-one-definition) for the engine.
+[ui-definitions.md](../../../design/UiDefinitions/ui-definitions.md#forms-from-one-definition) for the engine.
 
 | Part | Generated or hand-built | Why |
 |---|---|---|

@@ -41,7 +41,7 @@ not something dev-term has needed to touch before:
   discover devices, read/write their network+serial+behavior settings, and reboot them. This is a
   genuinely new category for dev-term: not decoding telemetry from an instrument, but *configuring
   a piece of network infrastructure* (the bridge itself) — closer in spirit to
-  [device-control-modules.md](../device-control-modules.md)'s `IControlSurface` concept, but aimed
+  [device-control-modules.md](../../../../design/UiDefinitions/device-control-modules.md)'s `IControlSurface` concept, but aimed
   at the bridge hardware rather than a measurement instrument. If dev-term ever wants a "find and
   set up my serial-to-Ethernet bridges" feature, this is what it would look like.
 

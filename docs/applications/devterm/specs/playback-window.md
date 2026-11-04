@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Replays a session log (see [`docs/design/session-logging.md`](../design/session-logging.md))
+Replays a session log (see [`docs/design/session-logging.md`](../../../design/SessionLogging/session-logging.md))
 through a chosen set of presenters, with transport controls, a position indicator, trimming and
 notes. It's opened from **File > Open Log for Playback...** in the TUI (`DevTerm.Console.PlaybackMode`,
 a nested modal) and WPF (`DevTerm.Wpf.PlaybackWindow`, non-modal like the control panels). Both
@@ -31,7 +31,7 @@ warning is its first output line.
 | Title | Window title | `dev-term — Playback: {file name}` |
 | Description | One line at the top | `{profile} ({connection}), {capture time, local}, {n} records`, then `, trimmed from {file}` for a trimmed log |
 | Presenters | TUI: text field (comma/space separated), with the installed names listed under it. WPF: one check box per installed presenter | Starts as the log header's `presenters`, limited to installed ones, or `hex` if none are left. Unknown names are ignored. At least one always stays selected (WPF puts the last check back) |
-| Output | TUI: read-only `Editor`, last 300 lines. WPF: `ListBox` of `PlaybackLine`, last 1000 | `{mm:ss.fff} [{source}] {text}` per line, where the offset is from the first record. `[ascii]`/`[hex]`/… is received data as that presenter rendered it. `[tx]` is sent bytes, escaped (`\r`, `\n`, `\t`, `\\`, `\xNN`). `[dev-term]` is an event (`Connected.`, `Disconnected.`, `Logging {connection}, connection open` or `closed`). `[error]` is a lost connection or a presenter failure. `[note]` is a note. WPF colors them by theme role: sent in `accent` (steel blue in Light), events italic in `outputStatus`, errors in `outputError`, notes bold in `warning` (see [`docs/design/theming.md`](../design/theming.md)) |
+| Output | TUI: read-only `Editor`, last 300 lines. WPF: `ListBox` of `PlaybackLine`, last 1000 | `{mm:ss.fff} [{source}] {text}` per line, where the offset is from the first record. `[ascii]`/`[hex]`/… is received data as that presenter rendered it. `[tx]` is sent bytes, escaped (`\r`, `\n`, `\t`, `\\`, `\xNN`). `[dev-term]` is an event (`Connected.`, `Disconnected.`, `Logging {connection}, connection open` or `closed`). `[error]` is a lost connection or a presenter failure. `[note]` is a note. WPF colors them by theme role: sent in `accent` (steel blue in Light), events italic in `outputStatus`, errors in `outputError`, notes bold in `warning` (see [`docs/design/theming.md`](../../../design/Theming/theming.md)) |
 | Position | Label | `{Playing/Paused/End}  {position}/{count}  {elapsed} / {duration}  {speed}  Selection {in}–{out}`. The position is how many records have played |
 | Seek slider | WPF only, `0`–`count` | Dragging or clicking seeks (see **Seek**) |
 | Jump to | TUI only: text field right of Presenters | A record number (`120`) or a log time (`1:23`, `0:02.5`, `1:02:03.250`). Enter jumps. Anything else shows an error dialog and doesn't move |

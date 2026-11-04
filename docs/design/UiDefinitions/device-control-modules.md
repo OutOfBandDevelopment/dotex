@@ -12,9 +12,9 @@ Serial-based test equipment: a signal generator, power supply, or similar bench 
 
 A device control module is a plugin that **composes**, rather than replaces, the existing extension points:
 
-- A **command set** — the outbound side: named commands/parameters (e.g., "Set Voltage" with a numeric parameter and unit; "Trigger" with no parameters; "Query Status" with a decoded reply) that encode to bytes over the session's transport, reusing the same send path presenters already use for sending (`IPresenterInput`, see [presenters.md](presenters.md)).
+- A **command set** — the outbound side: named commands/parameters (e.g., "Set Voltage" with a numeric parameter and unit; "Trigger" with no parameters; "Query Status" with a decoded reply) that encode to bytes over the session's transport, reusing the same send path presenters already use for sending (`IPresenterInput`, see [presenters.md](../Presenters/presenters.md)).
 - One or more **presenters** for the inbound side — typically a protocol/telemetry decoder (with its human-readable text baseline) and a rendering presenter for a live telemetry plot — exactly the presenter types already described in presenters.md, just bundled with the command set instead of assembled ad hoc.
-- A **control surface declaration** — a generic, declarative description of the module's commands/parameters (name, type, range/enum/unit, grouping) that front ends render as an actual control panel (buttons, sliders, dropdowns, numeric fields) without the module hand-building UI per front end. This is the control-surface analog of how composite decoders declare channels generically, and mappable presenters declare their mapping schema generically (see [presenters.md](presenters.md)): the module describes *what* controls exist, the front end decides *how* to draw them. See [ui-definitions.md](ui-definitions.md) for the concrete, serializable shape this takes (`DevTerm.UiDefinitions`) — built from real device mockups (Kuando Busylight, Velleman K8055, EByte, Zoom H4n), and, as of 2026-09-22, wired end-to-end: a real `IControlSurface` (`DevTerm.Devices.K8055`) driven by a generic renderer in both front ends.
+- A **control surface declaration** — a generic, declarative description of the module's commands/parameters (name, type, range/enum/unit, grouping) that front ends render as an actual control panel (buttons, sliders, dropdowns, numeric fields) without the module hand-building UI per front end. This is the control-surface analog of how composite decoders declare channels generically, and mappable presenters declare their mapping schema generically (see [presenters.md](../Presenters/presenters.md)): the module describes *what* controls exist, the front end decides *how* to draw them. See [ui-definitions.md](ui-definitions.md) for the concrete, serializable shape this takes (`DevTerm.UiDefinitions`) — built from real device mockups (Kuando Busylight, Velleman K8055, EByte, Zoom H4n), and, as of 2026-09-22, wired end-to-end: a real `IControlSurface` (`DevTerm.Devices.K8055`) driven by a generic renderer in both front ends.
 
 ```plantuml
 @startuml
@@ -78,16 +78,16 @@ SHOW_LEGEND()
   `IStructuredPresenter` — the panel has no `IndicatorControl`s to drive). Registered and wired the
   identical way K8055 is (`AddBusylightPresenter`, `--presenter busylight`, a sibling menu item in
   both front ends) — no renderer code changed to support it.
-- A device control module registers an `IControlSurface` alongside one or more `IPresenter`s under one plugin manifest entry (see [plugin-model.md](plugin-model.md)), but each half is still just an ordinary DI-registered service — nothing about the core pipeline needs to know "this is a bundled module" versus independently chosen pieces.
+- A device control module registers an `IControlSurface` alongside one or more `IPresenter`s under one plugin manifest entry (see [plugin-model.md](../../applications/devterm/design/plugin-model.md)), but each half is still just an ordinary DI-registered service — nothing about the core pipeline needs to know "this is a bundled module" versus independently chosen pieces.
 
 ## Relationship to transports
 
-A device control module doesn't introduce a new transport — it rides on whatever `ITransport` the session is already using (most commonly serial for bench equipment, but nothing prevents TCP/LXI-style instruments — see [transports.md](../../../design/Transports/transports.md)). The module is transport-agnostic in the same way protocol decoders are.
+A device control module doesn't introduce a new transport — it rides on whatever `ITransport` the session is already using (most commonly serial for bench equipment, but nothing prevents TCP/LXI-style instruments — see [transports.md](../Transports/transports.md)). The module is transport-agnostic in the same way protocol decoders are.
 
 ## Front-end rendering
 
 - **WPF** — a generic control-panel view driven by the `IControlSurface` metadata (sliders/dropdowns/buttons), alongside the module's live telemetry plot/decoded view in the same window.
-- **Console (TUI)** — a text-based form (labelled fields, a command palette) for the same commands, degrading gracefully like other rendering presenters (see [frontends.md](frontends.md)).
+- **Console (TUI)** — a text-based form (labelled fields, a command palette) for the same commands, degrading gracefully like other rendering presenters (see [frontends.md](../../applications/devterm/design/frontends.md)).
 - **Console (CLI)** — commands become scriptable flags/subcommands (e.g., `dev-term send --command set-voltage --value 5`), so instrument control is automatable the same way telemetry export already is.
 
 ## Declarative command/response schema (candidate direction for the "assembled declaratively" question below)
@@ -97,7 +97,7 @@ section: a single JSON manifest (or a folder/zip of one, when a binary `.ksy` re
 bundling this command/response schema together with a [UI definition](ui-definitions.md), loadable
 with no code.
 
-For simple query/response devices (most bench gear — a command string in, a formatted response string back, e.g. this project's own test device answering `ID?\r` with `ID TEK/2230,V81.1,VERS:14;`), a full code plugin is more than necessary. The candidate shape is a small, dev-term-specific schema — not a general-purpose external DSL — describing per command: its name, parameters (name/type/range/unit), the byte template to send, and how to recognize/parse the response (a literal pattern, a delimiter-based split, or, for genuinely binary responses, a reference to a [Kaitai Struct](https://kaitai.io/) (`.ksy`) definition). This reuses the mapping-file precedent already established in [presenters.md](presenters.md) (raw key → name/attributes) rather than inventing a second, unrelated data format:
+For simple query/response devices (most bench gear — a command string in, a formatted response string back, e.g. this project's own test device answering `ID?\r` with `ID TEK/2230,V81.1,VERS:14;`), a full code plugin is more than necessary. The candidate shape is a small, dev-term-specific schema — not a general-purpose external DSL — describing per command: its name, parameters (name/type/range/unit), the byte template to send, and how to recognize/parse the response (a literal pattern, a delimiter-based split, or, for genuinely binary responses, a reference to a [Kaitai Struct](https://kaitai.io/) (`.ksy`) definition). This reuses the mapping-file precedent already established in [presenters.md](../Presenters/presenters.md) (raw key → name/attributes) rather than inventing a second, unrelated data format:
 
 - **Kaitai Struct** is the right tool specifically for *binary* response layouts (byte-level fields, conditionals, repeats, bit widths) — it's a mature, cross-language DSL with a C# code-generation target and a web IDE that overlays the parsed structure on a real captured hex dump, useful for reverse-engineering an unfamiliar binary protocol from a capture. It has no concept of *sending* a command, though — it's read/parse-only, so it only ever covers the response half.
 - For plain ASCII query/response gear, a heavyweight external DSL is unwarranted; a lightweight dev-term-owned schema (send template + response pattern) covers it without a new dependency.
@@ -106,7 +106,7 @@ For simple query/response devices (most bench gear — a command string in, a fo
 ## Open questions
 
 - How rich the control-surface metadata needs to be (flat parameter list vs. grouped/paged forms, conditional/interlocked parameters) — answered for the common case by [ui-definitions.md](ui-definitions.md)'s model (one level of grouping, ten control kinds — seven input/indicator kinds plus bar graph, strip chart and vector displays, 2026-09-25 — no conditional/interlocked support yet), now proven end-to-end against two real devices (K8055, Busylight) with no renderer changes between them; see that doc's own open questions for what's still undecided.
-- Whether/how a device control module gets registered via the declarative manifest/plugin-loading path (see [device-manifests.md](device-manifests.md)/[plugin-model.md](plugin-model.md)) rather than a front end constructing its `IControlSurface` directly from a live `Session`, as `K8055ControlSurface` does today — the current wiring is a front-end-specific menu item (`_Device`/`Device` → "K8055 Control Panel..."). **Partly answered 2026-09-25**: a loaded `DeviceManifest` now drives a panel itself (Device > Device Manifest..., `DevTerm.DeviceManifests.ManifestPanel` — a declarative `IControlSurface` plus a reply/pattern presenter over the live session), with no per-device code; code plugins still aren't loaded dynamically.
+- Whether/how a device control module gets registered via the declarative manifest/plugin-loading path (see [device-manifests.md](device-manifests.md)/[plugin-model.md](../../applications/devterm/design/plugin-model.md)) rather than a front end constructing its `IControlSurface` directly from a live `Session`, as `K8055ControlSurface` does today — the current wiring is a front-end-specific menu item (`_Device`/`Device` → "K8055 Control Panel..."). **Partly answered 2026-09-25**: a loaded `DeviceManifest` now drives a panel itself (Device > Device Manifest..., `DevTerm.DeviceManifests.ManifestPanel` — a declarative `IControlSurface` plus a reply/pattern presenter over the live session), with no per-device code; code plugins still aren't loaded dynamically.
 - ~~Whether commands can declare an expected reply pattern (request/response pairing)...~~
   **Answered 2026-09-23** for the plain-text/synchronous case by `DevTerm.Devices.Scpi`'s
   `ScpiReplyPresenter`/`IScpiReplyTracker`: a command that's a query registers a
@@ -119,12 +119,12 @@ For simple query/response devices (most bench gear — a command string in, a fo
   can render or export it properly instead of just showing text/hex — is **built for SCPI commands
   (2026-09-25)** as `ScpiCommandDefinition.ExpectedResponseFormat`, consumed by the Stream Monitor;
   a device manifest's own command schema can't declare one yet. See
-  [stream content detection](features/stream-content-detection.md).
+  [stream content detection](../../applications/devterm/design/features/stream-content-detection.md).
 - ~~Whether device control modules can be assembled declaratively...~~ **Answered 2026-09-23** by
   the same module: `ScpiInstrumentProfile`'s JSON schema (command id/label/category/template/
   parameters) plus `ScpiProfileCatalog`'s bundled-plus-drop-in-folder loading is exactly the
   "SCPI baseline as a zero-authoring fallback" candidate direction above, now built — see
-  [scpi-instrument-control.md](features/scpi-instrument-control.md). It's SCPI-specific, not the
+  [scpi-instrument-control.md](../../applications/devterm/design/features/scpi-instrument-control.md). It's SCPI-specific, not the
   general Kaitai-Struct-backed binary-response schema also sketched above, which remains
   unimplemented for genuinely binary devices.
 - Safety/interlock concerns specific to controlling real equipment. **Partly decided 2026-10-03:** read/write **rate limits** are wanted, as a core, configurable option (like the existing write byte delay). **Built 2026-10-03** as `SessionLimits` (`--sendintervalms`, `--readintervalms`). **Decided 2026-10-03:** confirming a destructive command lives **per device module** (a manifest or profile marks the commands that need confirmation); no core name list. **Built 2026-10-03 for manifests:** `OutboundCommand.ConfirmMessage` becomes `ButtonControl.ConfirmMessage`, and both panels ask Yes/No before sending (a SCPI profile can't declare one yet).

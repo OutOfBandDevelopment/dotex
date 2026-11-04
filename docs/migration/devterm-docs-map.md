@@ -25,3 +25,7 @@ Links inside `source/` and `changes/` still use dev-term paths; they are history
 | Document | Now at | Date |
 |----------|--------|------|
 | transports, rfc2217, vxi11-transport, usbtmc-transport | `docs/design/Transports/` | 2026-11-04 |
+| ui-definitions, device-manifests, device-control-modules | `docs/design/UiDefinitions/` | 2026-11-04 |
+| presenters | `docs/design/Presenters/` | 2026-11-04 |
+| session-logging | `docs/design/SessionLogging/` | 2026-11-04 |
+| theming | `docs/design/Theming/` | 2026-11-04 |

@@ -34,7 +34,7 @@ neither of those has: per-message **topic addressing**, not just message boundar
   existing "send" path, reused as-is (`IPresenterInput`/`TypedInput.TryEncode`, per CLAUDE.md's send
   constraints) with the target topic coming from the profile's default-publish-topic setting or a
   per-command override. Read together with
-  [device-control-modules.md](../device-control-modules.md)'s `IControlSurface`, this is really
+  [device-control-modules.md](../../../../design/UiDefinitions/device-control-modules.md)'s `IControlSurface`, this is really
   "pair a broker transport with the existing control-surface/`UiDefinition` pattern" — a control
   panel's button publishes to a topic instead of writing bytes to a directly-attached instrument — not
   a new interaction pattern, just a new transport underneath the existing one.
