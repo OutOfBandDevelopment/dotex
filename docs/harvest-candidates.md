@@ -2,6 +2,8 @@
 
 **Created:** 2026-10-22 · **Status:** reference map, not a plan; maintained by Claude (owner handed it over 2026-10-22). Nothing here has been migrated or decided. Use it to find reference projects when working on a feature, and update a row when you compare or take code from it.
 
+
+**Surroundings rule (owner, 2026-10-30, applied 2026-11-04):** these repositories are read-only references and nothing in them is migrated, so no surroundings review is due yet. When a project is actually harvested, review its guide, `.claude`, docs, scripts and plans first and record the result in `docs/migration/{project}-surroundings-review-{date}.md` (done so far: [dev-term](migration/devterm-surroundings-review-2026-10-30.md), [BinaryDataDecoders](migration/binarydatadecoders-surroundings-review-2026-11-04.md)).
 The owner keeps several other repositories and a notes repository. This page says what each one is, roughly what it does and where it lives locally, so work on dotex can take what it wants. Descriptions come from the owner's notes repository (`C:\repo\_notes\shared`, index in `projects/repository-index.md`, `projects/proving-grounds-catalog.md`, `projects/device-parity.md`), read from file lists, READMEs and a few sources. Code was not compiled, run or diffed against dotex. A name match means "probably related, not compared". Check the code before relying on any line below.
 
 Related: [TODO](../TODO.md) (section 4), [dev-term pointer in docs/todo.md](todo.md), [BinaryDataDecoders re-review](migration/binarydatadecoders-rereview-2026-10-29.md).

@@ -5,4 +5,4 @@ Reviewed everything around the BinaryDataDecoders code (README, bug reports, gen
 - Migrated: the four bug reports and the review status, as history in `docs/applications/binary-data-decoders/bugs/`.
 - Rejected: pipeline-generated docs, XSLT templates, GitHub workflow, `act` scripts, badges (GitHub is no longer primary; the guides here are test-generated).
 - Verified: links in the new files checked by reading; the docs validator reports no problem in the new files (it still fails only on imported DevTerm history).
-- Not done: harvest projects (`proving-grounds`, `embedded-bakery`, `coding-challenges`, `mycloud-monitor`, `my-znet`) are still in the backlog item.
+- Harvest projects (`proving-grounds`, `embedded-bakery`, `coding-challenges`, `mycloud-monitor`, `my-znet`): no review due, since nothing in them is migrated; the rule is recorded in `docs/harvest-candidates.md` and the backlog item is closed.
