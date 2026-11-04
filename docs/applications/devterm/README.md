@@ -6,6 +6,7 @@ Serial, network, USB and BLE terminal and device-control tool with a command lin
 
 - [Requirements](requirements.md), [architecture](architecture.md), [API design](api-design.md), [testing strategy](testing-strategy.md): the current truth; change them with the code.
 - [Screen specifications](specs/README.md) and the [user guide](user-guide/README.md): every user-facing screen has a spec and a guide entry with real captured screenshots.
+- [API guide](api-guide/README.md): REST and streaming operations generated from the OpenAPI and AsyncAPI documents.
 - [Bench test reports](test/) from the `hardware-test` skill; the device list and settings are in [test hardware](../../how-tos/test-hardware.md).
 - Protocol references: [docs/protocols](../../protocols/); device notes: `src/Extensions/OoBDev.Scpi/docs` and the device libraries.
 - [Application design documents](design/README.md): core abstractions, front ends, platform, observability and test categories; living documents beside the four above (kept as their own files, not merged, because the requirements, architecture and API documents cite them by link).

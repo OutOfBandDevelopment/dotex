@@ -482,6 +482,7 @@ Each change document should include:
 - [DevTerm docs: features and rejected (2026-11-04)](devterm-docs-features-2026-11-04.md) - feature designs folded into docs/design, rejected protocols into docs/protocols/rejected
 - [Web guide image zones (2026-11-04)](web-guide-image-zones-2026-11-04.md) - volatile regions masked so reruns leave no image churn
 - [Temp directories from ITempFileFactory (2026-11-04)](temp-directory-factory-2026-11-04.md) - `GetTempDirectory()` with auto-cleanup; caller migration backlogged
+- [DevTerm web host API guide (2026-11-04)](devterm-api-guide-2026-11-04.md) - REST and streaming guides generated from the OpenAPI and AsyncAPI documents
 - [Web flow re-check (2026-11-04)](web-flow-flake-check-2026-11-04.md) - one-off failure not reproduced in three runs
 - [LXI discovery scan test (2026-11-04)](lxi-discovery-loopback-test-2026-11-04.md) - scan covered against loopback fakes
 - [Whole-solution restore (2026-11-04)](build-slnx-restore-2026-11-04.md) - aggregator no longer references the Windows-only Bluetooth project
