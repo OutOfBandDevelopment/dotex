@@ -42,7 +42,7 @@ Source: `C:\repo\mine\binary-data-decoders` at `e590b420` (78 project folders, t
 | ToolKit, ToolKit.Abstractions | `OoBDev.System`, `OoBDev.System.Abstractions` | 115 of 123 and 16 of 16 files | The eight files not carried by name are the numerics, now in `OoBDev.System` under other names |
 | TestUtilities | `OoBDev.TestUtilities` | 12 of 12 | Nothing |
 | Windows.Forms | `OoBDev.System/Windows/Forms` | `ValidTextBox` present | The decision to move it to a separate package is still open in the backlog |
-| Quarta.RadexOne, Velleman.K8055, Zoom.H4n, Kuando.Busylight, Nmea | `src/HardwareDevices`, `src/Extensions/OoBDev.Nmea` | Different type names (rebuilt from dev-term), covered by [device-parity.md](device-parity.md) | The WMI and HID import notes (Table 2); `GeneralHeading` is `NmeaCompassPoint` and `NmeaBearing.Abbreviation` |
+| Quarta.RadexOne, Velleman.K8055, Zoom.H4n, Kuando.Busylight, Nmea | `src/HardwareDevices`, `src/Extensions/OoBDev.Nmea` | Different type names (rebuilt from dev-term), covered by [device-parity.md](device-parity.md) | The WMI and HID import notes (rejected, Table 3); `GeneralHeading` is `NmeaCompassPoint` and `NmeaBearing.Abbreviation` |
 
 ## Not in main
 
@@ -52,7 +52,6 @@ Checked again on 2026-10-29 by type name: the items the first re-review listed a
 
 | Item | Source | Notes |
 |------|--------|-------|
-| WMI and HID import notes | `BinaryDataDecoders.Notes` | Documentation only; fold into the device docs if wanted |
 | Bitmap helpers on any platform | Drawing | Present but Windows only (`System.Drawing.Common`); the SkiaSharp port is a later backlog step. `GraphicsEx` is `SizeExtensions` and runs anywhere |
 
 ## Not migrated by decision
@@ -63,6 +62,8 @@ Checked again on 2026-10-29 by type name: the items the first re-review listed a
 |------|--------|
 | Rigol (one stub file, `Rigol.Tests` with one test) | Zero implementation (rule: stubs are deleted); `OoBDev.Scpi` covers oscilloscopes and generators through profiles |
 | EByteElectronicTechnology | Tests only, no source |
+| `Nmea/Notes` (WMI `Win32_*` classes, `HIDImports.cs`, a scratch `Program.cs`; `BinaryDataDecoders.Notes` itself is an empty project) | `mgmtclassgen` output (about 5,000 lines) and a third-party Wiimote P/Invoke sample (Coding4Fun) kept as scratch notes; HID access is HidSharp here, so nothing is carried over (checked 2026-11-03) |
+| `Nmea/Notes` (WMI `Win32_*` classes, `HIDImports.cs`, a scratch `Program.cs`; `BinaryDataDecoders.Notes` itself is an empty project) | `mgmtclassgen` output (about 5,000 lines) and a third-party Wiimote P/Invoke sample (Coding4Fun), kept as scratch notes; HID access is HidSharp here, so nothing is carried over (checked 2026-11-03) |
 | IO.Controller.Cli (`DeviceConsole`, `PortProvider`, `ZStickFactory`) | Replaced by the DevTerm tools (owner, 2026-10-28: dev-term merges entirely); the source's four bug reports describe code that is not carried over |
 | Net.ServiceHost.Cli | One 36-line host; main has the worker recipe and hosting packages |
 | FSharp.Samples, VisualBasic.Samples, SqlServer.Samples, WinForms.Samples | Empty or sample-only; revisit as `examples` only if the owner asks (they have no tests and no stated use) |
@@ -75,7 +76,7 @@ Checked again on 2026-10-29 by type name: the items the first re-review listed a
 | Order | Item | Why this order |
 |------:|------|----------------|
 | 1 | Done (2026-11-03, see the result at the end): behaviour check of the source tests against main | Name matches did not prove equal behaviour |
-| 2 | The small leftovers in Table 2 | Cheap and independent |
+| 2 | Done (2026-11-03): the notes are rejected in Table 3; the Drawing row of Table 2 is order 3 | Cheap and independent |
 | 3 | Drawing on SkiaSharp | Later step, owner 2026-10-29 |
 
 Each item follows the `compare-incoming-codebase` skill: design note, port with tests (80%+ in Framework), project readme, `complete-work` tracking.
