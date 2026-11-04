@@ -9,6 +9,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.DevTerm;
 using OoBDev.DevTerm.DeviceManifests;
 using System.IO.Compression;
+using OoBDev.System.IO;
 using OoBDev.UiDefinitions;
 
 namespace OoBDev.DevTerm.DeviceManifests.Tests;
@@ -591,10 +592,23 @@ public sealed class DeviceManifestTests
         Assert.IsTrue(result.IsValid);
     }
 
-    private static string CreateTempDirectory()
+    private readonly List<TempDirectoryHandle> _directories = [];
+
+    [TestCleanup]
+    public void DeleteTempDirectories()
     {
-        var path = Path.Combine(Path.GetTempPath(), "devterm-manifest-tests", Path.GetRandomFileName());
-        Directory.CreateDirectory(path);
-        return path;
+        foreach (var handle in _directories)
+        {
+            handle.Dispose();
+        }
+
+        _directories.Clear();
+    }
+
+    private string CreateTempDirectory()
+    {
+        var handle = new TempDirectoryHandle();
+        _directories.Add(handle);
+        return handle.DirectoryPath;
     }
 }

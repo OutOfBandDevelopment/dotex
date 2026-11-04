@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using OoBDev.System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -26,21 +27,9 @@ public sealed class DevTermUserDataPathsTests
         // folders. Pointing at Path.GetTempPath() (guaranteed to exist) proves the escape actually
         // worked, rather than merely asserting on a path that happens not to exist either way. See
         // docs/bugs/resolved/012-profile-names-not-validated.md.
-        var outsideDirectory = CreateTempDirectory();
-        try
-        {
-            Assert.IsNull(DevTermUserDataPaths.ResolveManifestDirectory(outsideDirectory));
-        }
-        finally
-        {
-            Directory.Delete(outsideDirectory, recursive: true);
-        }
-    }
+        using var folder = new TempDirectoryHandle();
+        var outsideDirectory = folder.DirectoryPath;
 
-    private static string CreateTempDirectory()
-    {
-        var path = Path.Combine(Path.GetTempPath(), "devterm-userdatapaths-tests", Path.GetRandomFileName());
-        Directory.CreateDirectory(path);
-        return path;
+        Assert.IsNull(DevTermUserDataPaths.ResolveManifestDirectory(outsideDirectory));
     }
 }

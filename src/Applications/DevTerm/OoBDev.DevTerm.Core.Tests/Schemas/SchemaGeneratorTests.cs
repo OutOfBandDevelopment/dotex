@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using OoBDev.System.IO;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -13,8 +14,8 @@ public sealed class SchemaGeneratorTests
     public void WriteTo_NewFolder_WritesEverySchemaFile()
     {
         // Stage
-        var folder = Path.Combine(Path.GetTempPath(), $"schemas_{Guid.NewGuid():N}");
-        try
+        using var temp = new TempDirectoryHandle();
+        var folder = Path.Combine(temp.DirectoryPath, "schemas");
         {
             // Test
             var written = SchemaGenerator.WriteTo(folder);
@@ -25,10 +26,6 @@ public sealed class SchemaGeneratorTests
             {
                 Assert.AreEqual(text, File.ReadAllText(Path.Combine(folder, name)));
             }
-        }
-        finally
-        {
-            Directory.Delete(folder, recursive: true);
         }
     }
 

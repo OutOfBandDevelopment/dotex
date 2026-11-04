@@ -2,6 +2,7 @@ using OoBDev.DevTerm.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using OoBDev.System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -431,7 +432,8 @@ public sealed class ManifestControlSurfaceTests
     [TestMethod]
     public void Catalog_FindsFoldersJsonFilesAndZips_UsingEachManifestsOwnName()
     {
-        var root = Path.Combine(Path.GetTempPath(), "devterm-manifest-catalog", Path.GetRandomFileName());
+        using var rootFolder = new TempDirectoryHandle();
+        var root = rootFolder.DirectoryPath;
         var folder = Path.Combine(root, "supply");
         Directory.CreateDirectory(folder);
         try
