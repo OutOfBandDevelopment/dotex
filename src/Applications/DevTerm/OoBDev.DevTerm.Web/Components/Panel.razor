@@ -1,0 +1,89 @@
+@page "/panel"
+@using OoBDev.UiDefinitions
+@using Microsoft.AspNetCore.Components.Web
+@inject PanelHostHolder Host
+@inject PersistentComponentState PersistedState
+@implements IDisposable
+
+@if (Host.Definition is null)
+{
+    <p class="note">No control panel is configured (set Web:Panel).</p>
+    return;
+}
+
+<h2>@Host.Definition.Name</h2>
+@if (!string.IsNullOrEmpty(Host.Definition!.Description)) { <p class="note">@Host.Definition!.Description</p> }
+@if (_readOnly) { <p class="note">Read-only viewer: controls are disabled.</p> }
+@if (_error is not null) { <p class="error">@_error</p> }
+
+<PanelControls Definition="Host.Definition!" Values="Host.Values" ReadOnly="_readOnly" Invoke="InvokeAsync" />
+
+@code {
+    private PersistingComponentStateSubscription _subscription;
+    private bool _readOnly;
+    private string? _error;
+
+    [CascadingParameter] private HttpContext? Http { get; set; }
+
+    protected override void OnInitialized()
+    {
+        // The read-only flag is known only while prerendering (the request); carry it into the interactive circuit.
+        if (Http is not null)
+        {
+            _readOnly = Http.Items.ContainsKey(AccessTokenMiddleware.ReadOnlyItem);
+            _subscription = PersistedState.RegisterOnPersisting(() =>
+            {
+                PersistedState.PersistAsJson("readOnly", _readOnly);
+                return Task.CompletedTask;
+            });
+        }
+        else if (PersistedState.TryTakeFromJson<bool>("readOnly", out var persisted))
+        {
+            _readOnly = persisted;
+        }
+        else
+        {
+            _readOnly = true; // unknown means no controls
+        }
+    }
+
+    private async Task InvokeAsync(string commandId, string? value)
+    {
+        if (_readOnly)
+        {
+            return;
+        }
+
+        try
+        {
+            await Host.Surface!.InvokeAsync(commandId, value);
+            _error = null;
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException)
+        {
+            _error = ex.Message;
+        }
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender && Http is null)
+        {
+            Host.ValuesChanged += OnValues;
+            _listening = true;
+        }
+    }
+
+    private bool _listening;
+
+    private void OnValues() => _ = InvokeAsync(StateHasChanged);
+
+    public void Dispose()
+    {
+        _subscription.Dispose();
+        if (_listening)
+        {
+            Host.ValuesChanged -= OnValues;
+        }
+    }
+}

@@ -1,0 +1,358 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text.Json;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
+using OoBDev.DevTerm;
+
+namespace OoBDev.DevTerm.Configuration;
+
+/// <summary>
+/// Composes a front end's configuration sources explicitly (rather than relying on
+/// <see cref="Host.CreateDefaultBuilder(string[])"/>'s built-in chain) so a personal, untracked
+/// settings file sits at exactly the precedence a "saved profile" needs: below environment
+/// variables and command-line overrides, but above the shipped defaults. Shared by every front
+/// end so the same profile works whichever one you run.
+/// </summary>
+public static class DevTermConfiguration
+{
+    /// <summary>Environment variables are only read with this prefix (stripped when bound), e.g. <c>DEVTERM_PORT=COM3</c>.</summary>
+    public const string EnvironmentVariablePrefix = "DEVTERM_";
+
+    /// <summary>An optional, untracked JSON file for a machine-local default profile (e.g. "COM3 4800 8N1 ascii"). Not meant to be committed — see .gitignore.</summary>
+    public const string LocalSettingsFileName = "appsettings.Local.json";
+
+    /// <summary>
+    /// Precedence, lowest to highest: appsettings.json &lt; appsettings.&lt;environment&gt;.json
+    /// &lt; appsettings.Local.json (a personal saved profile) &lt; environment variables (DEVTERM_*)
+    /// &lt; command-line arguments.
+    /// </summary>
+    public static void Configure(HostBuilderContext context, IConfigurationBuilder config, string[] args) =>
+        Configure(config, args, context.HostingEnvironment.EnvironmentName);
+
+    /// <summary>
+    /// Same layering as the <see cref="HostBuilderContext"/> overload, usable before a
+    /// <see cref="IHost"/> exists — e.g. to bind and validate <see cref="CliOptions"/> early enough
+    /// to decide whether to show a Configure screen instead of building the DI graph at all. See
+    /// docs/design/connection-profiles.md's startup flow.
+    /// </summary>
+    public static void Configure(IConfigurationBuilder config, string[] args, string environmentName)
+    {
+        config.Sources.Clear();
+        config.SetBasePath(AppContext.BaseDirectory);
+        config.AddJsonFile("appsettings.json", optional: true, reloadOnChange: false);
+        config.AddJsonFile($"appsettings.{environmentName}.json", optional: true, reloadOnChange: false);
+        config.AddJsonFile(LocalSettingsFileName, optional: true, reloadOnChange: false);
+        AddNamedProfile(config, args);
+        AddProjectConnection(config, args);
+        config.AddEnvironmentVariables(EnvironmentVariablePrefix);
+        config.AddCommandLine(args);
+    }
+
+    /// <summary>
+    /// When <c>--profile &lt;name&gt;</c> is on the command line, layers that saved profile (from
+    /// <see cref="DevTermUserDataPaths.ProfilesDirectory"/>) above the default profile and below the
+    /// project, environment variables and the other flags. An unknown or unreadable name is ignored
+    /// here (the flag stays visible as <see cref="CliOptions.Profile"/> for the front end to report).
+    /// </summary>
+    private static void AddNamedProfile(IConfigurationBuilder config, string[] args)
+    {
+        var peek = new ConfigurationBuilder().AddCommandLine(args).Build();
+        if (peek[nameof(CliOptions.Profile)] is not { Length: > 0 } name || !ProfileName.IsValid(name))
+        {
+            return;
+        }
+
+        var path = Path.Combine(DevTermUserDataPaths.ProfilesDirectory, $"{name}.json");
+        if (File.Exists(path))
+        {
+            config.AddJsonFile(path, optional: true, reloadOnChange: false);
+        }
+    }
+
+    /// <summary>
+    /// When <c>--project &lt;file&gt;</c> is on the command line, layers the chosen connection's profile
+    /// above the saved default profile and below environment variables and the other flags. A missing
+    /// or unreadable file is ignored here (the flag stays visible as <see cref="CliOptions.Project"/>, so
+    /// a front end can report it) rather than throwing before any front end is up.
+    /// </summary>
+    private static void AddProjectConnection(IConfigurationBuilder config, string[] args)
+    {
+        var peek = new ConfigurationBuilder().AddCommandLine(args).Build();
+        if (peek[nameof(CliOptions.Project)] is not { Length: > 0 } path)
+        {
+            return;
+        }
+
+        try
+        {
+            if (ProjectFile.Load(path).Find(peek[nameof(CliOptions.ProjectConnection)]) is { } connection)
+            {
+                config.AddJsonStream(new MemoryStream(global::System.Text.Encoding.UTF8.GetBytes(connection.ProfileJson)));
+            }
+        }
+        catch (Exception ex) when (ex is IOException or InvalidDataException or UnauthorizedAccessException)
+        {
+            // Reported by the front end through CliOptions.Project; startup must not fail here.
+        }
+    }
+
+    /// <summary>
+    /// Binds <paramref name="configuration"/> onto <paramref name="options"/> — plain
+    /// <c>configuration.Bind(options)</c> plus the one case it can't handle:
+    /// <see cref="CliOptions.Presenter"/> is a list, but a command-line flag (<c>--presenter ascii,hex</c>),
+    /// an environment variable, or a profile saved before it became a list (<c>"Presenter": "hex"</c>)
+    /// supplies it as a single scalar, which the binder would silently drop for an array property.
+    /// A scalar is split on commas; being a scalar means it came from an environment variable/command
+    /// line (which outrank any JSON layer) or from an old-format profile, so it wins over any array
+    /// bound alongside it. Every place that binds a <see cref="CliOptions"/> goes through this.
+    /// </summary>
+    public static void Bind(IConfiguration configuration, CliOptions options)
+    {
+        configuration.Bind(options);
+
+        if (configuration.GetSection(nameof(CliOptions.Presenter)).Value is { Length: > 0 } scalar)
+        {
+            options.Presenter = scalar.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+        }
+    }
+
+    /// <summary>Overwrites the untracked default profile (<see cref="LocalSettingsFileName"/>) with the connection-relevant subset of <paramref name="options"/> — see <see cref="ToProfileJson"/>.</summary>
+    public static void SaveLocalProfile(CliOptions options) =>
+        AtomicFile.WriteAllText(Path.Combine(AppContext.BaseDirectory, LocalSettingsFileName), ToProfileJson(options));
+
+    /// <summary>
+    /// Projects the connection-relevant subset of <paramref name="options"/> — transport settings,
+    /// presenter, line ending, and an optional device-manifest name — as indented JSON, in the
+    /// same shape whether saved as the untracked default profile or a named one (see
+    /// docs/design/connection-profiles.md; both are bound back via the same
+    /// <c>Microsoft.Extensions.Configuration.Json</c> + <c>Bind()</c> pipeline, not a separate
+    /// parallel type). Deliberately excludes one-shot action/mode flags
+    /// (<see cref="CliOptions.ListPorts"/>, <see cref="CliOptions.Tui"/>, <see cref="CliOptions.Cli"/>,
+    /// <see cref="CliOptions.ListHidDevices"/>) — those describe how this particular run was
+    /// invoked, not the device connection itself.
+    /// </summary>
+    public static string ToProfileJson(CliOptions options)
+    {
+        var profile = new Dictionary<string, object?>
+        {
+            [nameof(CliOptions.Transport)] = options.Transport,
+            [nameof(CliOptions.Presenter)] = options.EffectivePresenters,
+            [nameof(CliOptions.Parser)] = options.EffectiveParser,
+            [nameof(CliOptions.LineEnding)] = options.LineEnding.ToString(),
+            [nameof(CliOptions.AsciiMaxLineLength)] = options.AsciiMaxLineLength,
+        };
+
+        // Session limits are transport-independent; written only when set so existing profiles stay unchanged.
+        foreach (var (name, value) in new (string, int)[]
+        {
+            (nameof(CliOptions.SendIntervalMs), options.SendIntervalMs),
+            (nameof(CliOptions.ReadIntervalMs), options.ReadIntervalMs),
+            (nameof(CliOptions.ConnectTimeoutMs), options.ConnectTimeoutMs),
+            (nameof(CliOptions.ConnectRetries), options.ConnectRetries),
+        })
+        {
+            if (value != 0)
+            {
+                profile[name] = value;
+            }
+        }
+
+        if (options.ConnectRetryDelayMs != 1000)
+        {
+            profile[nameof(CliOptions.ConnectRetryDelayMs)] = options.ConnectRetryDelayMs;
+        }
+
+        if (string.Equals(options.Transport, "tcp", StringComparison.OrdinalIgnoreCase))
+        {
+            profile[nameof(CliOptions.Host)] = options.Host;
+            profile[nameof(CliOptions.Port)] = options.Port;
+            profile[nameof(CliOptions.Listen)] = options.Listen;
+            profile[nameof(CliOptions.WriteByteDelayMs)] = options.WriteByteDelayMs;
+        }
+        else if (string.Equals(options.Transport, "hid", StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(options.Transport, "usbtmc", StringComparison.OrdinalIgnoreCase))
+        {
+            profile[nameof(CliOptions.VendorId)] = options.VendorId;
+            profile[nameof(CliOptions.ProductId)] = options.ProductId;
+            if (options.SerialNumber is not null)
+            {
+                profile[nameof(CliOptions.SerialNumber)] = options.SerialNumber;
+            }
+
+            if (options.DevicePath is not null)
+            {
+                profile[nameof(CliOptions.DevicePath)] = options.DevicePath;
+            }
+        }
+        else if (string.Equals(options.Transport, "ble", StringComparison.OrdinalIgnoreCase))
+        {
+            profile[nameof(CliOptions.BleDeviceId)] = options.BleDeviceId;
+            if (options.BleServiceUuid is not null)
+            {
+                profile[nameof(CliOptions.BleServiceUuid)] = options.BleServiceUuid;
+            }
+
+            if (options.BleWriteCharacteristicUuid is not null)
+            {
+                profile[nameof(CliOptions.BleWriteCharacteristicUuid)] = options.BleWriteCharacteristicUuid;
+            }
+
+            if (options.BleNotifyCharacteristicUuid is not null)
+            {
+                profile[nameof(CliOptions.BleNotifyCharacteristicUuid)] = options.BleNotifyCharacteristicUuid;
+            }
+        }
+        else if (string.Equals(options.Transport, "rfc2217", StringComparison.OrdinalIgnoreCase))
+        {
+            profile[nameof(CliOptions.Host)] = options.Host;
+            profile[nameof(CliOptions.Port)] = options.Port;
+            profile[nameof(CliOptions.Baud)] = options.Baud;
+            profile[nameof(CliOptions.DataBits)] = options.DataBits;
+            profile[nameof(CliOptions.Parity)] = options.Parity.ToString();
+            profile[nameof(CliOptions.StopBits)] = options.StopBits.ToString();
+            profile[nameof(CliOptions.Dtr)] = options.Dtr;
+            profile[nameof(CliOptions.Rts)] = options.Rts;
+            profile[nameof(CliOptions.WriteTimeoutMs)] = options.WriteTimeoutMs;
+            profile[nameof(CliOptions.WriteByteDelayMs)] = options.WriteByteDelayMs;
+
+            // Handshake deliberately omitted: RFC 2217's SET-CONTROL flow-control values exist in
+            // Rfc2217Enums, but wiring them end-to-end isn't built in v1 - see docs/design/rfc2217.md.
+        }
+        else if (string.Equals(options.Transport, "vxi11", StringComparison.OrdinalIgnoreCase))
+        {
+            profile[nameof(CliOptions.Host)] = options.Host;
+            if (options.Port is not null)
+            {
+                profile[nameof(CliOptions.Port)] = options.Port;
+            }
+
+            profile[nameof(CliOptions.WriteTimeoutMs)] = options.WriteTimeoutMs;
+        }
+        else if (options.Transport is { } brokerKind&& brokerKind.ToLowerInvariant() is "mqtt" or "amqp" or "stomp")
+        {
+            profile[nameof(CliOptions.Host)] = options.Host;
+            profile[nameof(CliOptions.Port)] = options.Port;
+            if (options.Subscribe is not null)
+            {
+                profile[nameof(CliOptions.Subscribe)] = options.Subscribe;
+            }
+
+            if (options.Publish is not null)
+            {
+                profile[nameof(CliOptions.Publish)] = options.Publish;
+            }
+
+            if (options.Username is not null)
+            {
+                profile[nameof(CliOptions.Username)] = options.Username;
+            }
+
+            if (options.Tls)
+            {
+                profile[nameof(CliOptions.Tls)] = true;
+            }
+
+            if (options.CaCertificate is not null)
+            {
+                profile[nameof(CliOptions.CaCertificate)] = options.CaCertificate;
+            }
+
+            // Password deliberately never persisted: a profile is plain JSON on disk.
+        }
+        else if (string.Equals(options.Transport, "loopback", StringComparison.OrdinalIgnoreCase))
+        {
+            if (options.LoopbackSampleIntervalMs != 0)
+            {
+                profile[nameof(CliOptions.LoopbackSampleIntervalMs)] = options.LoopbackSampleIntervalMs;
+            }
+        }
+        else
+        {
+            profile[nameof(CliOptions.Port)] = options.Port;
+            profile[nameof(CliOptions.Baud)] = options.Baud;
+            profile[nameof(CliOptions.DataBits)] = options.DataBits;
+            profile[nameof(CliOptions.Parity)] = options.Parity.ToString();
+            profile[nameof(CliOptions.StopBits)] = options.StopBits.ToString();
+            profile[nameof(CliOptions.Handshake)] = options.Handshake.ToString();
+            profile[nameof(CliOptions.Dtr)] = options.Dtr;
+            profile[nameof(CliOptions.Rts)] = options.Rts;
+            profile[nameof(CliOptions.WriteTimeoutMs)] = options.WriteTimeoutMs;
+            profile[nameof(CliOptions.ReadTimeoutMs)] = options.ReadTimeoutMs;
+            profile[nameof(CliOptions.WriteByteDelayMs)] = options.WriteByteDelayMs;
+        }
+
+        if (options.ManifestName is not null)
+        {
+            profile[nameof(CliOptions.ManifestName)] = options.ManifestName;
+        }
+
+        if (options.Description is not null)
+        {
+            profile[nameof(CliOptions.Description)] = options.Description;
+        }
+
+        if (options.ScpiProfile is not null)
+        {
+            profile[nameof(CliOptions.ScpiProfile)] = options.ScpiProfile;
+        }
+
+        if (options.ScpiAutoDetectTimeoutMs != CliOptions.DefaultScpiAutoDetectTimeoutMs)
+        {
+            profile[nameof(CliOptions.ScpiAutoDetectTimeoutMs)] = options.ScpiAutoDetectTimeoutMs;
+        }
+
+        // Stream Monitor converter settings, written only when set so a plain profile stays small.
+        if (!options.StreamAutoConvertHpgl)
+        {
+            profile[nameof(CliOptions.StreamAutoConvertHpgl)] = false;
+        }
+
+        if (!string.IsNullOrWhiteSpace(options.StreamConvertMode))
+        {
+            profile[nameof(CliOptions.StreamConvertMode)] = options.StreamConvertMode;
+        }
+
+        if (options.StreamConvertTools.Count > 0)
+        {
+            profile[nameof(CliOptions.StreamConvertTools)] = options.StreamConvertTools;
+        }
+
+        if (options.StreamConvertExternalToolPath is not null)
+        {
+            profile[nameof(CliOptions.StreamConvertExternalToolPath)] = options.StreamConvertExternalToolPath;
+        }
+
+        if (options.StreamConvertExternalToolArguments is not null)
+        {
+            profile[nameof(CliOptions.StreamConvertExternalToolArguments)] = options.StreamConvertExternalToolArguments;
+        }
+
+        if (options.StreamConvertDpi != new CliOptions().StreamConvertDpi)
+        {
+            profile[nameof(CliOptions.StreamConvertDpi)] = options.StreamConvertDpi;
+        }
+
+        if (options.StreamIdleTimeoutMs != new CliOptions().StreamIdleTimeoutMs)
+        {
+            profile[nameof(CliOptions.StreamIdleTimeoutMs)] = options.StreamIdleTimeoutMs;
+        }
+
+        if (options.StreamConvertOutputExtension is not null)
+        {
+            profile[nameof(CliOptions.StreamConvertOutputExtension)] = options.StreamConvertOutputExtension;
+        }
+
+        // The routing section is written only when there is something to route, so existing profiles stay unchanged.
+        if (options.Routing.IsConfigured)
+        {
+            profile[nameof(CliOptions.Routing)] = options.Routing;
+        }
+
+        return JsonSerializer.Serialize(profile, new JsonSerializerOptions { WriteIndented = true, Converters = { new global::System.Text.Json.Serialization.JsonStringEnumConverter() } });
+    }
+}

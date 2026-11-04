@@ -1,0 +1,679 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.IO.Compression;
+using System.IO.Ports;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using OoBDev.DevTerm;
+
+using OoBDev.DevTerm.Configuration;
+using OoBDev.DevTerm.Configuration.Discovery;
+namespace OoBDev.DevTerm.Configuration.Tests;
+
+[TestCategory("Unit")]
+[TestClass]
+public sealed class ConnectionProfileStoreTests
+{
+    private static CliOptions BuildSerialOptions() => new()
+    {
+        Transport = "serial",
+        Port = "COM3",
+        Baud = 4800,
+        DataBits = 8,
+        Parity = Parity.None,
+        StopBits = StopBits.One,
+        Handshake = Handshake.RequestToSend,
+        Presenter = ["ascii"],
+        LineEnding = LineEnding.Cr,
+        AsciiMaxLineLength = 512,
+        ManifestName = "tek-2230",
+        // One-shot/mode flags should not survive a save/load round trip.
+        Tui = false,
+        Cli = true,
+        ListPorts = true,
+    };
+
+    [TestMethod]
+    public void SaveThenLoad_RoundTripsConnectionFields()
+    {
+        var directory = CreateTempDirectory();
+        try
+        {
+            var store = new ConnectionProfileStore(directory);
+            store.Save("tek2230", BuildSerialOptions());
+
+            var loaded = store.Load("tek2230");
+
+            Assert.AreEqual("serial", loaded.Transport);
+            Assert.AreEqual("COM3", loaded.Port);
+            Assert.AreEqual(4800, loaded.Baud);
+            Assert.AreEqual(Handshake.RequestToSend, loaded.Handshake);
+            Assert.AreSequenceEqual(["ascii"], loaded.Presenter);
+            Assert.AreEqual(LineEnding.Cr, loaded.LineEnding);
+            Assert.AreEqual(512, loaded.AsciiMaxLineLength);
+            Assert.AreEqual("tek-2230", loaded.ManifestName);
+        }
+        finally
+        {
+            Directory.Delete(directory, recursive: true);
+        }
+    }
+
+    [TestMethod]
+    public void SaveThenLoad_DoesNotPersistOneShotOrModeFlags()
+    {
+        var directory = CreateTempDirectory();
+        try
+        {
+            var store = new ConnectionProfileStore(directory);
+            store.Save("tek2230", BuildSerialOptions());
+
+            var loaded = store.Load("tek2230");
+
+            Assert.IsTrue(loaded.Tui, "Tui should come back as CliOptions' own default, not the saved value.");
+            Assert.IsFalse(loaded.Cli);
+            Assert.IsFalse(loaded.ListPorts);
+        }
+        finally
+        {
+            Directory.Delete(directory, recursive: true);
+        }
+    }
+
+    [TestMethod]
+    public void Save_TcpTransport_OnlySavesTcpFields()
+    {
+        var directory = CreateTempDirectory();
+        try
+        {
+            var store = new ConnectionProfileStore(directory);
+            store.Save("bridge", new CliOptions { Transport = "tcp", Host = "192.168.0.107", Port = "23" });
+
+            var loaded = store.Load("bridge");
+
+            Assert.AreEqual("192.168.0.107", loaded.Host);
+            Assert.AreEqual("23", loaded.Port);
+            Assert.AreEqual(9600, loaded.Baud, "A TCP profile shouldn't carry a non-default serial-specific field.");
+        }
+        finally
+        {
+            Directory.Delete(directory, recursive: true);
+        }
+    }
+
+    [TestMethod]
+    public void List_ReturnsSavedProfileNamesAlphabetically()
+    {
+        var directory = CreateTempDirectory();
+        try
+        {
+            var store = new ConnectionProfileStore(directory);
+            store.Save("zebra", BuildSerialOptions());
+            store.Save("alpha", BuildSerialOptions());
+
+            Assert.AreSequenceEqual(["alpha", "zebra"], [.. store.List()]);
+        }
+        finally
+        {
+            Directory.Delete(directory, recursive: true);
+        }
+    }
+
+    [TestMethod]
+    public void List_WhenDirectoryDoesNotExist_ReturnsEmpty()
+    {
+        var directory = Path.Combine(Path.GetTempPath(), "devterm-profile-tests", Path.GetRandomFileName());
+        var store = new ConnectionProfileStore(directory);
+
+        Assert.IsEmpty(store.List());
+    }
+
+    [TestMethod]
+    public void Load_UnknownProfile_Throws()
+    {
+        var directory = CreateTempDirectory();
+        try
+        {
+            var store = new ConnectionProfileStore(directory);
+
+            Assert.ThrowsExactly<FileNotFoundException>(() => store.Load("does-not-exist"));
+        }
+        finally
+        {
+            Directory.Delete(directory, recursive: true);
+        }
+    }
+
+    [TestMethod]
+    public void Delete_ExistingProfile_RemovesItAndReturnsTrue()
+    {
+        var directory = CreateTempDirectory();
+        try
+        {
+            var store = new ConnectionProfileStore(directory);
+            store.Save("tek2230", BuildSerialOptions());
+
+            Assert.IsTrue(store.Delete("tek2230"));
+            Assert.DoesNotContain("tek2230", [.. store.List()]);
+        }
+        finally
+        {
+            Directory.Delete(directory, recursive: true);
+        }
+    }
+
+    [TestMethod]
+    public void Delete_UnknownProfile_ReturnsFalse()
+    {
+        var directory = CreateTempDirectory();
+        try
+        {
+            var store = new ConnectionProfileStore(directory);
+
+            Assert.IsFalse(store.Delete("does-not-exist"));
+        }
+        finally
+        {
+            Directory.Delete(directory, recursive: true);
+        }
+    }
+
+    [TestMethod]
+    public void ExportToFile_ThenLoadFromFile_RoundTripsConnectionFields()
+    {
+        var directory = CreateTempDirectory();
+        try
+        {
+            var path = Path.Combine(directory, "exported.json");
+
+            ConnectionProfileStore.ExportToFile(path, BuildSerialOptions());
+            var loaded = ConnectionProfileStore.LoadFromFile(path);
+
+            Assert.AreEqual("serial", loaded.Transport);
+            Assert.AreEqual("COM3", loaded.Port);
+            Assert.AreEqual(4800, loaded.Baud);
+            Assert.AreSequenceEqual(["ascii"], loaded.Presenter);
+            Assert.AreEqual(LineEnding.Cr, loaded.LineEnding);
+            Assert.AreEqual("tek-2230", loaded.ManifestName);
+
+            // Same exclusions as a named profile save — see BuildSerialOptions' comment.
+            Assert.IsTrue(loaded.Tui);
+            Assert.IsFalse(loaded.Cli);
+            Assert.IsFalse(loaded.ListPorts);
+        }
+        finally
+        {
+            Directory.Delete(directory, recursive: true);
+        }
+    }
+
+    [TestMethod]
+    public void LoadFromFile_MissingFile_Throws()
+    {
+        var directory = CreateTempDirectory();
+        try
+        {
+            Assert.ThrowsExactly<FileNotFoundException>(() => ConnectionProfileStore.LoadFromFile(Path.Combine(directory, "missing.json")));
+        }
+        finally
+        {
+            Directory.Delete(directory, recursive: true);
+        }
+    }
+
+    [TestMethod]
+    public void ExportZip_ThenImportZip_RoundTripsSelectedProfilesOnly()
+    {
+        var sourceDirectory = CreateTempDirectory();
+        var destDirectory = CreateTempDirectory();
+        try
+        {
+            var source = new ConnectionProfileStore(sourceDirectory);
+            source.Save("alpha", BuildSerialOptions());
+            source.Save("beta", BuildSerialOptions());
+            source.Save("gamma", BuildSerialOptions());
+            var zipPath = Path.Combine(sourceDirectory, "export.zip");
+
+            source.ExportZip(zipPath, ["alpha", "beta"]);
+
+            var dest = new ConnectionProfileStore(destDirectory);
+            var result = dest.ImportZip(zipPath);
+
+            Assert.AreEqual(2, result.Imported);
+            Assert.AreEqual(0, result.Skipped);
+            Assert.AreEqual(0, result.Renamed);
+            Assert.AreSequenceEqual(["alpha", "beta"], [.. dest.List()]);
+        }
+        finally
+        {
+            Directory.Delete(sourceDirectory, recursive: true);
+            Directory.Delete(destDirectory, recursive: true);
+        }
+    }
+
+    [TestMethod]
+    public void ExportZip_UnknownProfileName_Throws()
+    {
+        var directory = CreateTempDirectory();
+        try
+        {
+            var store = new ConnectionProfileStore(directory);
+
+            Assert.ThrowsExactly<FileNotFoundException>(() => store.ExportZip(Path.Combine(directory, "export.zip"), ["does-not-exist"]));
+        }
+        finally
+        {
+            Directory.Delete(directory, recursive: true);
+        }
+    }
+
+    [TestMethod]
+    [TestCategory("Unit")]
+    public void ExportZip_WhenOneOfTheNamesIsMissing_LeavesAnExistingZipAtThatPathUntouched()
+    {
+        var directory = CreateTempDirectory();
+        try
+        {
+            var store = new ConnectionProfileStore(directory);
+            store.Save("alpha", BuildSerialOptions());
+            store.Save("gamma", BuildSerialOptions());
+            var zipPath = Path.Combine(directory, "export.zip");
+            store.ExportZip(zipPath, ["alpha", "gamma"]);
+
+            // "beta" doesn't exist - simulates another process deleting a profile between the user
+            // picking names to export and the export actually running (the watcher refresh is
+            // asynchronous, per the bug report). Without the fix, the existing 2-entry zip is
+            // deleted before "beta" is found missing, and a truncated 1-entry (alpha-only) zip is
+            // left in its place.
+            Assert.ThrowsExactly<FileNotFoundException>(() => store.ExportZip(zipPath, ["alpha", "beta"]));
+
+            Assert.IsTrue(File.Exists(zipPath));
+            using var archive = ZipFile.OpenRead(zipPath);
+            Assert.AreEqual(2, archive.Entries.Count);
+        }
+        finally
+        {
+            Directory.Delete(directory, recursive: true);
+        }
+    }
+
+    [TestMethod]
+    public void ImportZip_ConflictingName_DefaultsToReplaceWhenNoResolverGiven()
+    {
+        var directory = CreateTempDirectory();
+        try
+        {
+            var store = new ConnectionProfileStore(directory);
+            store.Save("tek2230", new CliOptions { Transport = "serial", Port = "COM9" });
+            var zipPath = Path.Combine(directory, "export.zip");
+            store.ExportZip(zipPath, ["tek2230"]);
+            store.Save("tek2230", new CliOptions { Transport = "serial", Port = "COM1" }); // changed after export
+
+            var result = store.ImportZip(zipPath);
+
+            Assert.AreEqual(1, result.Imported);
+            Assert.AreEqual(0, result.Skipped);
+            Assert.AreEqual(0, result.Renamed);
+            Assert.AreEqual("COM9", store.Load("tek2230").Port);
+        }
+        finally
+        {
+            Directory.Delete(directory, recursive: true);
+        }
+    }
+
+    [TestMethod]
+    public void ImportZip_ConflictingName_SkipsWhenResolverSaysSkip()
+    {
+        var directory = CreateTempDirectory();
+        try
+        {
+            var store = new ConnectionProfileStore(directory);
+            store.Save("tek2230", new CliOptions { Transport = "serial", Port = "COM9" });
+            var zipPath = Path.Combine(directory, "export.zip");
+            store.ExportZip(zipPath, ["tek2230"]);
+            store.Save("tek2230", new CliOptions { Transport = "serial", Port = "COM1" });
+
+            var result = store.ImportZip(zipPath, _ => ZipImportConflictResolution.Skip);
+
+            Assert.AreEqual(0, result.Imported);
+            Assert.AreEqual(1, result.Skipped);
+            Assert.AreEqual(0, result.Renamed);
+            Assert.AreEqual("COM1", store.Load("tek2230").Port);
+        }
+        finally
+        {
+            Directory.Delete(directory, recursive: true);
+        }
+    }
+
+    [TestMethod]
+    public void ImportZip_ConflictingName_RenamesWhenResolverSaysRename()
+    {
+        var directory = CreateTempDirectory();
+        try
+        {
+            var store = new ConnectionProfileStore(directory);
+            store.Save("tek2230", new CliOptions { Transport = "serial", Port = "COM9" });
+            var zipPath = Path.Combine(directory, "export.zip");
+            store.ExportZip(zipPath, ["tek2230"]);
+
+            var result = store.ImportZip(zipPath, _ => ZipImportConflictResolution.Rename);
+
+            Assert.AreEqual(1, result.Imported);
+            Assert.AreEqual(0, result.Skipped);
+            Assert.AreEqual(1, result.Renamed);
+            Assert.AreSequenceEqual(["tek2230", "tek2230 (2)"], [.. store.List()]);
+            Assert.AreEqual("COM9", store.Load("tek2230 (2)").Port);
+        }
+        finally
+        {
+            Directory.Delete(directory, recursive: true);
+        }
+    }
+
+    [TestMethod]
+    [TestCategory("Unit")]
+    [DataRow("..\\escaped")]
+    [DataRow("a:b")]
+    [DataRow("CON")]
+    public void Save_WithAnInvalidProfileName_ThrowsInsteadOfWritingIt(string name)
+    {
+        // Regression test for bug 012: "..\..\Desktop\x" escaped the profiles directory, "a:b" became
+        // an NTFS alternate data stream on a file named "a" (List() never shows it, so the saved
+        // profile silently vanishes), and reserved device names like "CON" fail on Windows. See
+        // docs/bugs/resolved/012-profile-names-not-validated.md.
+        var directory = CreateTempDirectory();
+        try
+        {
+            var store = new ConnectionProfileStore(directory);
+
+            Assert.ThrowsExactly<ArgumentException>(() => store.Save(name, new CliOptions { Transport = "tcp", Host = "h", Port = "1" }));
+            Assert.IsEmpty(store.List());
+        }
+        finally
+        {
+            Directory.Delete(directory, recursive: true);
+        }
+    }
+
+    [TestMethod]
+    [TestCategory("Unit")]
+    public void ImportZip_WithAnInvalidEntryName_SkipsItInsteadOfWritingIt()
+    {
+        // Regression test for bug 012: a zip entry named e.g. "a?b" is legal on Linux (where it could
+        // have been exported) but invalid on Windows; ImportZip used to write it anyway.
+        var directory = CreateTempDirectory();
+        try
+        {
+            var zip = WriteZip(directory, ("a?b.json", "{ \"Transport\": \"tcp\" }"), ("good.json", "{ \"Transport\": \"tcp\" }"));
+            var store = new ConnectionProfileStore(Path.Combine(directory, "profiles"));
+
+            var result = store.ImportZip(zip);
+
+            Assert.AreEqual(1, result.Imported);
+            Assert.AreEqual(1, result.Skipped);
+            Assert.AreSequenceEqual(["good"], [.. store.List()]);
+        }
+        finally
+        {
+            Directory.Delete(directory, recursive: true);
+        }
+    }
+
+    [TestMethod]
+    [TestCategory("Unit")]
+    public void ReadZip_WithAnEntryNameInvalidOnWindows_ThrowsSoReplaceAllRefusesBeforeDeletingAnything()
+    {
+        // Regression test for bug 012: ReadZip used to only check JSON syntax, not names, so a zip
+        // exported on Linux with a name invalid on Windows (e.g. "a?b") made ReplaceAll delete every
+        // existing profile and only then fail writing the bad entry, losing the originals for nothing.
+        var directory = CreateTempDirectory();
+        try
+        {
+            var store = new ConnectionProfileStore(Path.Combine(directory, "profiles"));
+            store.Save("keep-me", new CliOptions { Transport = "tcp", Host = "10.0.0.1", Port = "23" });
+            var zip = WriteZip(directory, ("a?b.json", "{ \"Transport\": \"tcp\" }"));
+
+            Assert.ThrowsExactly<InvalidDataException>(() => ConnectionProfileStore.ReadZip(zip));
+            Assert.AreSequenceEqual(["keep-me"], [.. store.List()]);
+        }
+        finally
+        {
+            Directory.Delete(directory, recursive: true);
+        }
+    }
+
+    private static string CreateTempDirectory()
+    {
+        var path = Path.Combine(Path.GetTempPath(), "devterm-profile-tests", Path.GetRandomFileName());
+        Directory.CreateDirectory(path);
+        return path;
+    }
+
+
+    [TestMethod]
+    public void FindName_ForOptionsThatMatchASavedProfile_ReturnsItsName()
+    {
+        var directory = CreateTempDirectory();
+        try
+        {
+            var store = new ConnectionProfileStore(directory);
+            store.Save("other", new CliOptions { Transport = "tcp", Host = "192.168.0.2", Port = "23" });
+            store.Save("tek2230", new CliOptions { Transport = "tcp", Host = "192.168.0.110", Port = "23", Presenter = ["ascii"] });
+
+            // Run-mode flags aren't part of a profile, so they can't cause a false mismatch.
+            var running = new CliOptions { Transport = "tcp", Host = "192.168.0.110", Port = "23", Presenter = ["ascii"], Cli = true };
+
+            Assert.AreEqual("tek2230", store.FindName(running));
+        }
+        finally
+        {
+            Directory.Delete(directory, recursive: true);
+        }
+    }
+
+    [TestMethod]
+    public void FindName_AfterAFieldIsEdited_ReturnsNull()
+    {
+        var directory = CreateTempDirectory();
+        try
+        {
+            var store = new ConnectionProfileStore(directory);
+            store.Save("tek2230", new CliOptions { Transport = "tcp", Host = "192.168.0.110", Port = "23" });
+
+            Assert.IsNull(store.FindName(new CliOptions { Transport = "tcp", Host = "192.168.0.110", Port = "24" }));
+        }
+        finally
+        {
+            Directory.Delete(directory, recursive: true);
+        }
+    }
+
+    [TestMethod]
+    public void FindName_MatchesAnOlderProfileWithNoParserAgainstItsEffectiveParser()
+    {
+        var directory = CreateTempDirectory();
+        try
+        {
+            var store = new ConnectionProfileStore(directory);
+            Directory.CreateDirectory(directory);
+            File.WriteAllText(Path.Combine(directory, "legacy.json"), "{ \"Transport\": \"tcp\", \"Host\": \"10.0.0.1\", \"Port\": 23, \"Presenter\": \"ascii\" }");
+
+            Assert.AreEqual("legacy", store.FindName(new CliOptions { Transport = "tcp", Host = "10.0.0.1", Port = "23", Presenter = ["ascii"], Parser = "ascii" }));
+        }
+        finally
+        {
+            Directory.Delete(directory, recursive: true);
+        }
+    }
+
+    [TestMethod]
+    public void FindName_SkipsAnUnreadableProfileAndKeepsLooking()
+    {
+        var directory = CreateTempDirectory();
+        try
+        {
+            var store = new ConnectionProfileStore(directory);
+            var options = new CliOptions { Transport = "tcp", Host = "192.168.0.110", Port = "23" };
+            Directory.CreateDirectory(directory);
+            File.WriteAllText(Path.Combine(directory, "a-broken.json"), "{ not json");
+            store.Save("b-good", options);
+
+            Assert.AreEqual("b-good", store.FindName(options));
+        }
+        finally
+        {
+            Directory.Delete(directory, recursive: true);
+        }
+    }
+
+    [TestMethod]
+    [TestCategory("Unit")]
+    public void FindName_SkipsAProfileWithAValueThatFailsToConvert_AndKeepsLooking()
+    {
+        // Regression test for bug 004: a profile value that fails ConfigurationBinder.Bind (e.g. a
+        // non-numeric Baud) throws InvalidOperationException, which FindName's catch filter didn't
+        // list - the exception used to propagate out and crash the TUI/WPF title lookup instead of
+        // being skipped like other unreadable profiles. See docs/bugs/resolved/004-bad-profile-value-crashes-title.md.
+        var directory = CreateTempDirectory();
+        try
+        {
+            var store = new ConnectionProfileStore(directory);
+            var options = new CliOptions { Transport = "serial", Port = "COM3", Baud = 4800 };
+            Directory.CreateDirectory(directory);
+            File.WriteAllText(Path.Combine(directory, "a-bad-baud.json"), "{ \"Transport\": \"serial\", \"Port\": \"COM3\", \"Baud\": \"fast\" }");
+            store.Save("b-good", options);
+
+            Assert.AreEqual("b-good", store.FindName(options));
+        }
+        finally
+        {
+            Directory.Delete(directory, recursive: true);
+        }
+    }
+
+    [TestMethod]
+    public void FindName_WithTwoIdenticalProfiles_ReturnsTheFirstAlphabetically()
+    {
+        var directory = CreateTempDirectory();
+        try
+        {
+            var store = new ConnectionProfileStore(directory);
+            var options = new CliOptions { Transport = "tcp", Host = "192.168.0.110", Port = "23" };
+            store.Save("zulu", options);
+            store.Save("alpha", options);
+
+            Assert.AreEqual("alpha", store.FindName(options));
+        }
+        finally
+        {
+            Directory.Delete(directory, recursive: true);
+        }
+    }
+
+    [TestMethod]
+    public void FindName_WithNoProfilesDirectory_ReturnsNull()
+    {
+        var store = new ConnectionProfileStore(Path.Combine(Path.GetTempPath(), $"devterm-tests-{Guid.NewGuid():N}"));
+
+        Assert.IsNull(store.FindName(new CliOptions { Transport = "tcp", Host = "h", Port = "1" }));
+    }
+
+
+    private static string WriteZip(string directory, params (string EntryName, string Content)[] entries)
+    {
+        var zipPath = Path.Combine(directory, $"{Guid.NewGuid():N}.zip");
+        using var archive = ZipFile.Open(zipPath, ZipArchiveMode.Create);
+        foreach (var (entryName, content) in entries)
+        {
+            var entry = archive.CreateEntry(entryName);
+            using var writer = new StreamWriter(entry.Open());
+            writer.Write(content);
+        }
+
+        return zipPath;
+    }
+
+    [TestMethod]
+    public void ReadZip_ReturnsEveryJsonEntryAndIgnoresOthers()
+    {
+        var directory = CreateTempDirectory();
+        try
+        {
+            var zip = WriteZip(directory, ("alpha.json", "{ \"Transport\": \"tcp\" }"), ("notes.txt", "hello"), ("beta.json", "{}"));
+
+            var profiles = ConnectionProfileStore.ReadZip(zip);
+
+            Assert.AreSequenceEqual(["alpha", "beta"], [.. profiles.Select(p => p.Name)], Microsoft.VisualStudio.TestTools.UnitTesting.SequenceOrder.InAnyOrder);
+            Assert.AreEqual("{ \"Transport\": \"tcp\" }", profiles.Single(p => p.Name == "alpha").Json);
+        }
+        finally
+        {
+            Directory.Delete(directory, recursive: true);
+        }
+    }
+
+    [TestMethod]
+    public void ReadZip_WithAnEntryThatIsNotJson_ThrowsNamingTheEntry()
+    {
+        var directory = CreateTempDirectory();
+        try
+        {
+            var zip = WriteZip(directory, ("good.json", "{}"), ("broken.json", "{ nope"));
+
+            var ex = Assert.ThrowsExactly<InvalidDataException>(() => ConnectionProfileStore.ReadZip(zip));
+
+            Assert.Contains("broken.json", ex.Message);
+        }
+        finally
+        {
+            Directory.Delete(directory, recursive: true);
+        }
+    }
+
+    [TestMethod]
+    public void ReadZip_WithTheSameNameInTwoFolders_KeepsTheLastOne()
+    {
+        var directory = CreateTempDirectory();
+        try
+        {
+            var zip = WriteZip(directory, ("a/dup.json", "{ \"Host\": \"first\" }"), ("b/dup.json", "{ \"Host\": \"last\" }"));
+
+            var profiles = ConnectionProfileStore.ReadZip(zip);
+
+            Assert.HasCount(1, profiles);
+            Assert.Contains("last", profiles[0].Json);
+        }
+        finally
+        {
+            Directory.Delete(directory, recursive: true);
+        }
+    }
+
+    [TestMethod]
+    public void ReplaceAll_DeletesEveryExistingProfileIncludingOnesTheZipDoesNotMention()
+    {
+        var directory = CreateTempDirectory();
+        try
+        {
+            var store = new ConnectionProfileStore(Path.Combine(directory, "profiles"));
+            store.Save("keep-me-not", new CliOptions { Transport = "tcp", Host = "10.0.0.1", Port = "23" });
+            store.Save("shared", new CliOptions { Transport = "tcp", Host = "10.0.0.2", Port = "23" });
+            var zip = WriteZip(directory, ("shared.json", "{ \"Transport\": \"tcp\", \"Host\": \"192.168.9.9\", \"Port\": 99 }"), ("fresh.json", "{ \"Transport\": \"tcp\", \"Host\": \"192.168.9.8\", \"Port\": 98 }"));
+
+            var removed = store.ReplaceAll(ConnectionProfileStore.ReadZip(zip));
+
+            Assert.AreEqual(2, removed);
+            Assert.AreSequenceEqual(["fresh", "shared"], [.. store.List()]);
+            Assert.AreEqual("192.168.9.9", store.Load("shared").Host, "An overwritten name takes the zip's content.");
+        }
+        finally
+        {
+            Directory.Delete(directory, recursive: true);
+        }
+    }
+}
