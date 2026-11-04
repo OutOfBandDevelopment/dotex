@@ -6,7 +6,7 @@ Transient. Maps every imported dev-term documentation folder to its living home 
 
 | dev-term path | Now at | Living home (target) | State |
 |---------------|--------|----------------------|-------|
-| `docs/design/*.md` (architecture, transports, presenters, plugin model, frontends, theming, session logging, UI definitions, manifests, observability) | `docs/applications/devterm/design/` | Fold into `architecture.md` and `api-design.md` of the app; reusable parts (transports, presenters, UI definitions, manifests, session logging) become `docs/design/<Feature>/` documents | Folded 2026-11-04 (capability designs in docs/design, five app docs stay) |
+| `docs/design/*.md` (architecture, transports, presenters, plugin model, frontends, theming, session logging, UI definitions, manifests, observability) | `docs/applications/devterm/design/` | Fold into `architecture.md` and `api-design.md` of the app; reusable parts (transports, presenters, UI definitions, manifests, session logging) become `docs/design/<Feature>/` documents | Folded 2026-11-04 (capability designs in docs/design, the five app docs stay as living documents, decided 2026-11-04) |
 | `docs/design/features`, `proposals`, `rejected` | `docs/applications/devterm/design/` | Built features: into the feature documents; proposals: `BACKLOG.md` items; rejected: one line in the feature document | Folded 2026-11-04 |
 | `docs/design/features/*-protocol.md`, `usbtmc-protocol-conformance.md` | `docs/protocols/` | Done (protocol references live there) | Moved |
 | `docs/protocols/usbtmc` | `docs/protocols/usbtmc` | Done | Moved |
