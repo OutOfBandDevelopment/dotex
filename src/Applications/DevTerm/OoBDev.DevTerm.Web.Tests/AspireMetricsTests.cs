@@ -48,7 +48,7 @@ public sealed class AspireMetricsTests
         await page.GotoAsync("http://127.0.0.1:18888/metrics/resource/devterm");
         await page.WaitForTimeoutAsync(5000);
         var text = await page.InnerTextAsync("body");
-        File.WriteAllText(Path.Combine(Path.GetTempPath(), "aspire-metrics.txt"), text);
+        File.WriteAllText(WebTestTemp.File("aspire-metrics.txt"), text);
         StringAssert.Contains(text, "devterm.bytes.sent");
     }
 }

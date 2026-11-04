@@ -109,7 +109,7 @@ public class WebScreenshotTests
 
     private static string BenchProject()
     {
-        var file = Path.Combine(Path.GetTempPath(), $"devterm-web-shot-{Guid.NewGuid():N}.json");
+        var file = WebTestTemp.File("bench.json");
         ProjectFile.From("Bench", [("Scope", new CliOptions { Transport = "loopback", Presenter = ["ascii"] }), ("Supply", new CliOptions { Transport = "loopback", Presenter = ["hex"] })]).Save(file);
         return file;
     }
@@ -117,8 +117,7 @@ public class WebScreenshotTests
     /// <summary>A small session log in a temp folder: connect, send "hello", a reply, then a note-free close.</summary>
     internal static string SampleLogs()
     {
-        var dir = Path.Combine(Path.GetTempPath(), $"devterm-web-logs-{Guid.NewGuid():N}");
-        Directory.CreateDirectory(dir);
+        var dir = WebTestTemp.Directory();
         var t0 = new DateTimeOffset(2026, 10, 8, 12, 0, 0, TimeSpan.Zero);
         var header = new OoBDev.DevTerm.Logging.SessionLogHeader { Created = t0, Connection = "loopback", Profile = "Scope", Presenters = ["ascii"] };
         OoBDev.DevTerm.Logging.SessionLogRecord Rec(OoBDev.DevTerm.Logging.SessionLogRecordKind kind, int ms, string? data = null) =>
@@ -184,7 +183,7 @@ public class WebScreenshotTests
     [TestMethod]
     public async Task ThemesPage_BuildsAndSavesATheme()
     {
-        var themes = Path.Combine(Path.GetTempPath(), "devterm-web-themes-" + Guid.NewGuid().ToString("N"));
+        var themes = WebTestTemp.Directory();
         await RunAsync(async (page, baseUrl) =>
         {
             await page.GotoAsync($"{baseUrl}/themes?token=demo-token");
@@ -230,7 +229,7 @@ public class WebScreenshotTests
     [TestMethod]
     public async Task ConvertersPage_AddsATool_ValidatesAndSaves()
     {
-        var file = Path.Combine(Path.GetTempPath(), "devterm-web-conv-" + Guid.NewGuid().ToString("N") + ".json");
+        var file = WebTestTemp.File("converters.json");
         await RunAsync(async (page, baseUrl) =>
         {
             await page.GotoAsync($"{baseUrl}/converters?token=demo-token");
@@ -273,7 +272,7 @@ public class WebScreenshotTests
     [TestMethod]
     public async Task PluginsPage_ApprovesAWaitingPluginLive_ThenForgetsIt()
     {
-        var home = Path.Combine(Path.GetTempPath(), $"devterm-web-plugins-{Guid.NewGuid():N}");
+        var home = WebTestTemp.Directory();
         var folder = Path.Combine(home, "plugins", "shout");
         Directory.CreateDirectory(folder);
         File.WriteAllText(Path.Combine(folder, "shout.py"), "print('x')");
@@ -312,7 +311,7 @@ public class WebScreenshotTests
     [TestMethod]
     public async Task PluginsPage_ReadOnlyViewer_CannotApprove()
     {
-        var home = Path.Combine(Path.GetTempPath(), $"devterm-web-plugins-{Guid.NewGuid():N}");
+        var home = WebTestTemp.Directory();
         var folder = Path.Combine(home, "plugins", "shout");
         Directory.CreateDirectory(folder);
         File.WriteAllText(Path.Combine(folder, "shout.py"), "print('x')");
@@ -343,7 +342,7 @@ public class WebScreenshotTests
     [TestMethod]
     public async Task ManifestPage_BuildsAManifest_ChecksAndSavesIt()
     {
-        var folder = Path.Combine(Path.GetTempPath(), $"devterm-web-manifests-{Guid.NewGuid():N}");
+        var folder = WebTestTemp.Directory();
         await RunAsync(async (page, baseUrl) =>
         {
             await page.GotoAsync($"{baseUrl}/manifest?token=demo-token");
@@ -377,7 +376,7 @@ public class WebScreenshotTests
     [TestMethod]
     public async Task ManifestPage_ImportsAKsyUpload_AndOffersTheRecordings()
     {
-        var folder = Path.Combine(Path.GetTempPath(), $"devterm-web-manifests-{Guid.NewGuid():N}");
+        var folder = WebTestTemp.Directory();
         await RunAsync(async (page, baseUrl) =>
         {
             await page.GotoAsync($"{baseUrl}/manifest?token=demo-token");
@@ -405,7 +404,7 @@ public class WebScreenshotTests
     [TestMethod]
     public async Task ManifestPage_PreviewsThePanel_PicksValues_AndSavesACopy()
     {
-        var folder = Path.Combine(Path.GetTempPath(), $"devterm-web-manifests-{Guid.NewGuid():N}");
+        var folder = WebTestTemp.Directory();
         await RunAsync(async (page, baseUrl) =>
         {
             await page.GotoAsync($"{baseUrl}/manifest?token=demo-token");

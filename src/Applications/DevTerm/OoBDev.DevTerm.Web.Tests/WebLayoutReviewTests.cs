@@ -164,7 +164,7 @@ public sealed class WebLayoutReviewTests
             await client.GetStream().WriteAsync(WebScreenshotTests.SampleBitmap());
             await Task.Delay(5000);
         });
-        var options = new CliOptions { Transport = "tcp", Host = "127.0.0.1", Port = ((IPEndPoint)device.LocalEndpoint).Port.ToString(global::System.Globalization.CultureInfo.InvariantCulture), Presenter = ["hex"], Tui = false, Cli = true, ExportDirectory = Path.Combine(Path.GetTempPath(), $"devterm-web-exports-{Guid.NewGuid():N}") };
+        var options = new CliOptions { Transport = "tcp", Host = "127.0.0.1", Port = ((IPEndPoint)device.LocalEndpoint).Port.ToString(global::System.Globalization.CultureInfo.InvariantCulture), Presenter = ["hex"], Tui = false, Cli = true, ExportDirectory = WebTestTemp.Directory() };
         var problems = await ReviewAsync("light", width, height, async (page, baseUrl) =>
         {
             await page.GotoAsync($"{baseUrl}/monitor?token=demo-token");

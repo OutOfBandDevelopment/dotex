@@ -29,7 +29,7 @@ public sealed class WebUserFlowTests : UserFlowTestsBase
 {
     private static string FlowProject()
     {
-        var file = Path.Combine(Path.GetTempPath(), $"devterm-web-flow-{Guid.NewGuid():N}.json");
+        var file = WebTestTemp.File("flow.json");
         ProjectFile.From("Flow", [("Fresh", new CliOptions { Transport = "loopback", Presenter = ["ascii"], Parser = "ascii" })]).Save(file);
         return file;
     }
