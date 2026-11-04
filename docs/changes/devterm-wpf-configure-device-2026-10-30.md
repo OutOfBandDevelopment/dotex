@@ -1,7 +1,0 @@
-# DevTerm WPF Configure device window (2026-10-30)
-
-A **Configure device...** button opens `ConfigureDeviceWindow` over `ConfigureDeviceDialogViewModel`, which wraps the Core `DeviceConfigViewModel`: choose an `IDeviceConfigEditor`, type the host and port, Read, edit the form the editor declares (text, choice and toggle fields as `ConfigTextFieldViewModel`, `ConfigChoiceFieldViewModel`, `ConfigToggleFieldViewModel`, rendered by data templates), review the change and problem lines, then Write; the read-back is compared and a restart or dropped connection is reported. Read and Write are async commands, so the window stays responsive. The shell takes the registered `IDeviceConfigEditor` services and disables the button when there are none. The seam is `IConfigureDeviceDialog` with `WpfConfigureDeviceDialog`.
-
-- Tests (`ConfigureDeviceDialogTests`): typed form after a read, change line and connection-drop warning, invalid value blocking the write, choice and toggle write with confirmed read-back, no editor chosen, and the shell command disabled without editors and showing the window with one. The WPF test project has 71 Unit tests passing.
-- Not done: no concrete editor is registered in dotex yet (the Ebyte editor is not ported), so the button is disabled in the app; the window was not viewed running.
-- Correction: the earlier note that `InstrumentPickerWindow` is superseded was wrong. `IInstrumentPanelProvider` and the SCPI provider exist in Core; the picker is back on the backlog.

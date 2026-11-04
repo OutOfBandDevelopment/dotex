@@ -1,3 +1,0 @@
-# Tui screenshot tests no longer write into the docs (2026-10-29)
-
-The seven Tui Unit screenshot tests (`ScreenshotTests`, `TuiThemeTests`, `ManifestEditorModeTests`, `PluginApprovalDialogTests`, `RoutingScreenshotTests`, `ConverterToolsScreenshotTests`, `ExpressionPickerScreenshotTests`) wrote their PNGs and text dumps into `docs/user-guide/images` on every run, dirtying the working tree. They now write to `artifacts/doc-images/tui` (`TuiReview.DocImages`, git-ignored); copy the images worth keeping into `docs/user-guide/images` by hand. The Web Playwright screenshot tests are DevLocal and still write there. Tui Unit screenshot-related tests: 56 passed.

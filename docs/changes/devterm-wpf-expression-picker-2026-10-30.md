@@ -1,6 +1,0 @@
-# DevTerm WPF expression picker (2026-10-30)
-
-`ExpressionPickerWindow` hosts the shared `ExpressionPickerViewModel`: expression text, a filterable list of readable values (double-click inserts at the caret), function buttons plus a "more functions" list, live diagnostics, the result against sample data and a Next sample button. The seam is `IExpressionPickerDialog` with `WpfExpressionPickerDialog`. The manifest editor shows a "Pick <field>..." button for each visible expression field of the selected control (Expression, Channels, the vector and colour value ids, the visible-when id and the parameter expressions; `ExpressionPickerFields` holds the field-to-mode map, taken from the terminal editor). The accepted text is written back through the form binding, and the picker is built over the manifest's own value paths and any loaded recording.
-
-- Tests (`ManifestEditorDialogTests`, 3 added): an indicator control offers the Expression picker, accepted text reaches the field, cancel leaves it. The WPF test project has 90 Unit tests passing.
-- Not done: the window was not viewed running. The picker buttons sit beside the form instead of inline in each field row because the shared form view has no per-field picker hook yet.
