@@ -23,7 +23,7 @@ Owner: all protocols and features of dev-term must exist here. Done means what d
 - Decided 2026-10-30: the Web host keeps its own AsyncAPI document and viewer (offline viewer, stream channels); the SCPI control panel uses `DynamicModelFactory` (was Q3 and Q4).
 - Cleanup to tell the owner: removable Docker volume `oobd-aspire-sqlserver`; untracked `bin` and `obj` folders under `src/Extensions/OoBDev.DevTerm.*` and `OoBDev.Scpi.Panels*`.
 
-- [ ] Applications layout (owner, 2026-10-30): move to `src/Applications/{AppName}/{projects}` like ExternalServices; layering rule needs a confirmed migration plan first (project, current and target path, references) in `docs/design/DevTermParity/`, then the move.
+- [ ] Applications layout: move the 16 flat `OoBDev.DevTerm.*` folders (TestUtilities and TestPlugin included) into `src/Applications/DevTerm/`, names, namespaces and packages unchanged (owner, 2026-11-03, confirmed); write the plan table (project, current and target path, changed references) in `docs/design/DevTermParity/` first, then `git mv`, then full build and tests.
 - [ ] Example apps that use the UiDefinitions language (forms and panels), beyond DevTerm; open spike question: whether the device projects need coverage in the example framework at all, since DevTerm covers them ([ui-language-later.md](docs/design/DevTermParity/ui-language-later.md)).
 
 ## 2. Devices
