@@ -33,12 +33,12 @@ Owner decisions, 2026-10-29 (planning session). They supersede the project layou
 
 | Project today | Target | Namespace | Notes |
 |---|---|---|---|
-| `OoBDev.DevTerm.Core`, `.Logging`, `.DeviceManifests`, `.Configuration`, `.Schemas`, `.Presenters.Text`, `.Plugins.*`, `.Loopback` | `src/Applications/OoBDev.DevTerm.Core` | `OoBDev.DevTerm.*` per folder | one assembly, one `Core.Tests` |
+| `OoBDev.DevTerm.Core`, `.Logging`, `.DeviceManifests`, `.Configuration`, `.Schemas`, `.Presenters.Text`, `.Plugins.*`, `.Loopback` | `src/Applications/DevTerm/OoBDev.DevTerm.Core` | `OoBDev.DevTerm.*` per folder | one assembly, one `Core.Tests` |
 | `OoBDev.DevTerm.Observability` and `ExternalServices/OpenTelemetry/OoBDev.OpenTelemetry` (+ Tests) | `src/Framework/OoBDev.Telemetry` (+ Tests) | `OoBDev.Telemetry` (was `OoBDev.OpenTelemetry`) | no ASP.NET reference; Example projects re-referenced |
 | `OoBDev.DevTerm.Transports.Serial` | `OoBDev.System.IO.Ports` | `OoBDev.System.IO.Ports` | pipe `IDeviceAdapter` |
 | `OoBDev.DevTerm.Transports.Tcp`, `.Rfc2217`, `.Vxi11` | `OoBDev.System.IO.Tcp` | `OoBDev.System.IO.Tcp` | |
 | HID, USBTMC, BLE, MQTT, brokers (not yet ported) | `OoBDev.System.IO.UsbHids` and new `OoBDev.System.IO.*` | `OoBDev.System.IO.*` | |
-| Wpf, Tui, Web | `src/Applications/OoBDev.DevTerm.Wpf`, `.Tui`, `.Web` | `OoBDev.DevTerm.*` | |
+| Wpf, Tui, Web | `src/Applications/DevTerm/OoBDev.DevTerm.Wpf`, `.Tui`, `.Web` | `OoBDev.DevTerm.*` | |
 
 ## Steps
 
@@ -46,7 +46,7 @@ Owner decisions, 2026-10-29 (planning session). They supersede the project layou
 |---|------|--------|
 | 1 | Rework `IDeviceAdapter` to pipes in `OoBDev.System.Abstractions`; adapt `System.IO.Ports/Tcp/UsbHids` and the eight device libraries and tests ("Move device libraries to pipes") | all affected test projects green |
 | 2 | Move the already-ported Serial, TCP, RFC 2217 and VXI-11 code and tests into `System.IO.*`; delete the `OoBDev.DevTerm.Transports.*` projects | transport tests green |
-| 3 (done 2026-10-29) | Create `src/Applications/OoBDev.DevTerm.Core`; merge the listed projects and their tests under namespaces per folder (`Logging`, `Manifests`, `Configuration`, `Schemas`, `Presenters`, `Plugins`, `Observability`); the Schemas generator becomes a `dotnet run` mode or tool inside Core | `OoBDev.DevTerm.Core.Tests` equals the sum of the old counts (381 + 168 + the rest) |
+| 3 (done 2026-10-29) | Create `src/Applications/DevTerm/OoBDev.DevTerm.Core`; merge the listed projects and their tests under namespaces per folder (`Logging`, `Manifests`, `Configuration`, `Schemas`, `Presenters`, `Plugins`, `Observability`); the Schemas generator becomes a `dotnet run` mode or tool inside Core | `OoBDev.DevTerm.Core.Tests` equals the sum of the old counts (381 + 168 + the rest) |
 | 3b (done 2026-10-29) | Create Framework `OoBDev.Telemetry` with the standalone OTLP exporter (and its tests); delete `OoBDev.DevTerm.Observability` | exporter tests green in the new home |
 | 4 | Update `OoBDev.slnx`, readmes (one `README.DevTerm.Core.md`), the change documents and this design folder | docs tests pass |
 | 5 | Port the remaining transports (USBTMC, HID, BLE, MQTT, brokers) as `System.IO.*` libraries | their tests green |

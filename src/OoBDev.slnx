@@ -4,20 +4,20 @@
     <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>
-  <Folder Name="/Applications/">
-    <Project Path="Applications/OoBDev.DevTerm.Core.TestPlugin/OoBDev.DevTerm.Core.TestPlugin.csproj" />
-    <Project Path="Applications/OoBDev.DevTerm.Core.Tests/OoBDev.DevTerm.Core.Tests.csproj" />
-    <Project Path="Applications/OoBDev.DevTerm.Core/OoBDev.DevTerm.Core.csproj" />
-    <Project Path="Applications/OoBDev.DevTerm.Devices.Demo/OoBDev.DevTerm.Devices.Demo.csproj" />
-    <Project Path="Applications/OoBDev.DevTerm.Devices.Tests/OoBDev.DevTerm.Devices.Tests.csproj" />
-    <Project Path="Applications/OoBDev.DevTerm.Devices/OoBDev.DevTerm.Devices.csproj" />
-    <Project Path="Applications/OoBDev.DevTerm.TestUtilities/OoBDev.DevTerm.TestUtilities.csproj" />
-    <Project Path="Applications/OoBDev.DevTerm.Tui.Tests/OoBDev.DevTerm.Tui.Tests.csproj" />
-    <Project Path="Applications/OoBDev.DevTerm.Tui/OoBDev.DevTerm.Tui.csproj" />
-    <Project Path="Applications/OoBDev.DevTerm.Web.Tests/OoBDev.DevTerm.Web.Tests.csproj" />
-    <Project Path="Applications/OoBDev.DevTerm.Web/OoBDev.DevTerm.Web.csproj" />
-    <Project Path="Applications/OoBDev.DevTerm.Wpf.Tests/OoBDev.DevTerm.Wpf.Tests.csproj" />
-    <Project Path="Applications/OoBDev.DevTerm.Wpf/OoBDev.DevTerm.Wpf.csproj" />
+  <Folder Name="/Applications/DevTerm/">
+    <Project Path="Applications/DevTerm/OoBDev.DevTerm.Core.TestPlugin/OoBDev.DevTerm.Core.TestPlugin.csproj" />
+    <Project Path="Applications/DevTerm/OoBDev.DevTerm.Core.Tests/OoBDev.DevTerm.Core.Tests.csproj" />
+    <Project Path="Applications/DevTerm/OoBDev.DevTerm.Core/OoBDev.DevTerm.Core.csproj" />
+    <Project Path="Applications/DevTerm/OoBDev.DevTerm.Devices.Demo/OoBDev.DevTerm.Devices.Demo.csproj" />
+    <Project Path="Applications/DevTerm/OoBDev.DevTerm.Devices.Tests/OoBDev.DevTerm.Devices.Tests.csproj" />
+    <Project Path="Applications/DevTerm/OoBDev.DevTerm.Devices/OoBDev.DevTerm.Devices.csproj" />
+    <Project Path="Applications/DevTerm/OoBDev.DevTerm.TestUtilities/OoBDev.DevTerm.TestUtilities.csproj" />
+    <Project Path="Applications/DevTerm/OoBDev.DevTerm.Tui.Tests/OoBDev.DevTerm.Tui.Tests.csproj" />
+    <Project Path="Applications/DevTerm/OoBDev.DevTerm.Tui/OoBDev.DevTerm.Tui.csproj" />
+    <Project Path="Applications/DevTerm/OoBDev.DevTerm.Web.Tests/OoBDev.DevTerm.Web.Tests.csproj" />
+    <Project Path="Applications/DevTerm/OoBDev.DevTerm.Web/OoBDev.DevTerm.Web.csproj" />
+    <Project Path="Applications/DevTerm/OoBDev.DevTerm.Wpf.Tests/OoBDev.DevTerm.Wpf.Tests.csproj" />
+    <Project Path="Applications/DevTerm/OoBDev.DevTerm.Wpf/OoBDev.DevTerm.Wpf.csproj" />
   </Folder>
   <Folder Name="/Common/">
     <Project Path="Common/OoBDev.Common.Abstractions/OoBDev.Common.Abstractions.csproj" />

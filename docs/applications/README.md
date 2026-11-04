@@ -4,4 +4,4 @@ Documentation that belongs to one application: requirements, architecture, API d
 
 | Application | Projects | Documents |
 |-------------|----------|-----------|
-| DevTerm | `src/Applications/OoBDev.DevTerm.*` | [devterm](devterm/README.md) |
+| DevTerm | `src/Applications/DevTerm/OoBDev.DevTerm.*` | [devterm](devterm/README.md) |

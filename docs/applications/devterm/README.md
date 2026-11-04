@@ -1,6 +1,6 @@
 # DevTerm
 
-Serial, network, USB and BLE terminal and device-control tool with a command line, Terminal.Gui, WPF and web front ends. Code: `src/Applications/OoBDev.DevTerm.*`; engine in `OoBDev.DevTerm.Core`, instrument profiles in `src/Extensions/OoBDev.Scpi`.
+Serial, network, USB and BLE terminal and device-control tool with a command line, Terminal.Gui, WPF and web front ends. Code: `src/Applications/DevTerm/OoBDev.DevTerm.*`; engine in `OoBDev.DevTerm.Core`, instrument profiles in `src/Extensions/OoBDev.Scpi`.
 
 ## Living documents
 

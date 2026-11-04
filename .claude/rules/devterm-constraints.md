@@ -1,6 +1,6 @@
 ---
 paths:
-  - "src/Applications/OoBDev.DevTerm*/**"
+  - "src/Applications/DevTerm/OoBDev.DevTerm*/**"
   - "src/Extensions/OoBDev.Scpi*/**"
   - "src/**/OoBDev.System.IO.*/**"
   - "src/**/OoBDev.Devices*/**"

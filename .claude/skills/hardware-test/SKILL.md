@@ -42,7 +42,7 @@ transport/connection itself without one.
 Use the DevTerm Tui project in scripted mode (the device list, settings and quirks are in docs/how-tos/test-hardware.md; the Hardware tests run with `--settings src/.runsettings`) in scripted mode (`--cli true`, not the TUI):
 
 ```bash
-dotnet run --project src/Applications/OoBDev.DevTerm.Tui -- --transport <serial|tcp|usbtmc|hid> <connection args> --presenter ascii --lineending <LineEnding> --cli true
+dotnet run --project src/Applications/DevTerm/OoBDev.DevTerm.Tui -- --transport <serial|tcp|usbtmc|hid> <connection args> --presenter ascii --lineending <LineEnding> --cli true
 ```
 
 For each device:
