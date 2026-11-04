@@ -469,6 +469,7 @@ Each change document should include:
 - [DevTerm WPF captures and layout review (2026-11-03)](devterm-wpf-captures-layout-review-2026-11-03.md) - every WPF window captured for the guide and checked in both themes; three theme and layout defects fixed
 - [Drawing on SkiaSharp (2026-11-03)](drawing-skiasharp-2026-11-03.md) - Code39, MultiScaleTile and PngPack on SkiaSharp; no System.Drawing.Common, tests run on any platform
 - [Applications layout (2026-11-04)](applications-layout-2026-11-04.md) - the 13 DevTerm projects moved under src/Applications/DevTerm/
+- [Tui guide determinism (2026-11-04)](tui-guide-determinism-2026-11-04.md) - Tui tests no longer rewrite the manifest-editor and plugin-approval guide images
 - [Shared FakeTransport (2026-11-03)](test-utilities-faketransport-2026-11-03.md) - four FakeTransport copies merged into OoBDev.DevTerm.TestUtilities
 - [Docs check for imported material (2026-11-03)](docs-imported-coverage-check-2026-11-03.md) - orphaned files under `docs/applications` fail the docs tests; default scope widened
 - [DevTerm Web shell](devterm-web-shell-2026-10-29.md) - OoBDev.DevTerm.Web (Blazor), connection editor view model, transport selection in AddDevTermFrontEnd (2026-10-29)

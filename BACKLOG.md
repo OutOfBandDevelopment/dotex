@@ -4,7 +4,7 @@
 > **Owner questions:** [OPEN-QUESTIONS.md](./OPEN-QUESTIONS.md) · **New to this project?** Read [CLAUDE.md](./CLAUDE.md) first.
 > **Wish list (owner's own notes):** [docs/todo.md](docs/todo.md) · **Other repositories to harvest from:** [docs/harvest-candidates.md](docs/harvest-candidates.md)
 
-**Last Updated:** 2026-11-03
+**Last Updated:** 2026-11-04
 
 GitHub is no longer the primary repository (local bare repo `origin`), so nothing here waits on GitHub Actions. Keep items to one short line; detail lives in the linked feature doc (rule `work-tracking`).
 
@@ -17,7 +17,8 @@ Owner: all protocols and features of dev-term must exist here. Done means what d
 - [ ] **Surroundings review of the other migrated projects** (owner, 2026-10-30; dev-term is done, see [the review](docs/migration/devterm-surroundings-review-2026-10-30.md)): repeat for BinaryDataDecoders and each harvest project: guide, `.claude` configuration, docs, open questions, TODO and BACKLOG, UIs, tests, scripts and plans, each migrated or rejected with a reason; application docs go to `docs/applications/{app-name}/`.
 - [ ] Bench hardware ([list](docs/how-tos/test-hardware.md)): write Hardware tests for the Korad KA3005P/KA6003P (settings exist in `src/.runsettings`); move the Tui DevLocal tests off dev-term's `RealTcpDevice*` names. The identify tests for the HP 34401A, TDS2024 and both 2230s exist (`BenchInstrumentTests`; the second 2230 is offline).
 - [ ] **Generated guides** (owner, 2026-10-30): [design](docs/design/GeneratedGuides/README.md); journey-driven user guides and screenshots for Tui, WPF and Web written straight into `docs/applications/{app}/user-guide`, API guides from OpenAPI, AsyncAPI and ksy files by MSTest scripts, JavaScript projects as `.esproj` with `npm test`.
-- Find why a full Tui Unit run rewrites `tui-manifest-editor*`, `tui-plugin-approval*` images and their `.txt` captures even through `image-mask sync` (nondeterministic content or a missing zone); then add zones.
+- Restore of the whole `src/OoBDev.slnx` fails with NU1201 (found 2026-11-04 while moving the DevTerm projects; unrelated to the move): find the project and fix its target framework or reference.
+- The docs Unit tests `PlantUml_Blocks_AreWellFormed` and `Links_Relative_Resolve` fail on the imported DevTerm history; the planned documentation cleanup after all migrations fixes them (owner, 2026-10-30).
 - Generated user guides for the `src/Tools` command-line tools (journeys, captured output, screenshots where there is a UI); later, after the application guides; see [GeneratedGuides](docs/design/GeneratedGuides/README.md).
 - [ ] Test gaps: Playwright DevLocal flows, an interactive Tui run, screenshot tests, serial and TCP real-hardware tests ([list](docs/design/DevTermParity/status.md#test-gaps)).
 - Decided 2026-10-30: the Web host keeps its own AsyncAPI document and viewer (offline viewer, stream channels); the SCPI control panel uses `DynamicModelFactory` (was Q3 and Q4).

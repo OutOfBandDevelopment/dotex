@@ -28,7 +28,8 @@ public sealed class ManifestEditorModeTests
 
     private static void Run(Action<ManifestEditorParts, string> body)
     {
-        var userDirectory = Path.Combine(Path.GetTempPath(), "devterm-manifest-editor-tui", Path.GetRandomFileName());
+        var root = Path.Combine(Path.GetTempPath(), "devterm-manifest-editor-tui", Path.GetRandomFileName());
+        var userDirectory = Path.Combine(root, "user-manifests");
         Directory.CreateDirectory(userDirectory);
         try
         {
@@ -52,7 +53,7 @@ public sealed class ManifestEditorModeTests
         }
         finally
         {
-            Directory.Delete(userDirectory, recursive: true);
+            Directory.Delete(root, recursive: true);
         }
     }
 

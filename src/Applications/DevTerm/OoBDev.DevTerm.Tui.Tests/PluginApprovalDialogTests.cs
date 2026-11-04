@@ -45,7 +45,8 @@ public sealed class PluginApprovalDialogTests
     [TestMethod]
     public void ApprovalDialog_ThenPicker_AreCapturedAndTheirChoicesTakeEffect()
     {
-        var home = Path.Combine(Path.GetTempPath(), "devterm-tui-plugins-" + Guid.NewGuid().ToString("N"));
+        var root = Path.Combine(Path.GetTempPath(), "devterm-tui-plugins-" + Guid.NewGuid().ToString("N"));
+        var home = Path.Combine(root, "home");
         var folder = Path.Combine(home, "plugins", "shout");
         Directory.CreateDirectory(folder);
         File.WriteAllText(Path.Combine(folder, "shout.py"), "print('x')");
@@ -131,7 +132,7 @@ public sealed class PluginApprovalDialogTests
             PluginTrust.Approver = null;
             LivePlugins.Reset();
             Environment.SetEnvironmentVariable(DevTermHome.EnvironmentVariable, previous);
-            Directory.Delete(home, true);
+            Directory.Delete(root, true);
         }
     }
 }
