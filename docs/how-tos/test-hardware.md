@@ -53,5 +53,5 @@ One project per call; two runs at once fight over the same port.
 
 ## Known gaps
 
-- The Hardware tests for the Korad supplies are not written yet (the settings exist).
-- The DevTerm TCP and serial real-device tests (`OoBDev.DevTerm.Tui.Tests`, category `DevLocal`) still read the dev-term parameter names (`RealTcpDeviceHost1` and so on) from dev-term's `devterm.runsettings`; moving them onto the parameters above is a backlog item.
+- The Korad Hardware tests (`KoradSupplyTests` in `OoBDev.Scpi.Tests`) are read-only: identify, setpoint queries and the status byte. They never set a value or switch the output on. Written 2026-11-04 with the supplies not attached, so only the Inconclusive path ran; run them once with the supplies on COM6 and COM7.
+- The DevTerm identify tests through the command-line mode (`RealHardwareCliTests` in `OoBDev.DevTerm.Tui.Tests`, category `Hardware`) use the parameters above, with each device terminator and byte delay from the table. They also ended Inconclusive on 2026-11-04 because the bench network was offline.
