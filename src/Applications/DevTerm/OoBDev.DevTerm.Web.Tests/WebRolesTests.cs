@@ -1,3 +1,4 @@
+using OoBDev.System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -195,31 +196,25 @@ public class WebRolesTests
         san.AddIpAddress(IPAddress.Loopback);
         request.CertificateExtensions.Add(san.Build());
         using var certificate = request.CreateSelfSigned(DateTimeOffset.UtcNow.AddMinutes(-5), DateTimeOffset.UtcNow.AddDays(1));
-        var pfx = Path.Combine(Path.GetTempPath(), "devterm-web-" + Guid.NewGuid().ToString("N") + ".pfx");
+        using var pfxFile = new TempFileHandle();
+        var pfx = pfxFile.FilePath;
         await File.WriteAllBytesAsync(pfx, certificate.Export(X509ContentType.Pfx));
-        try
+        var (built, url) = await StartAsync(scheme: "https", certificatePath: pfx);
+        await using (built.Hub)
         {
-            var (built, url) = await StartAsync(scheme: "https", certificatePath: pfx);
-            await using (built.Hub)
+            string? seenThumbprint = null;
+            using var handler = new HttpClientHandler
             {
-                string? seenThumbprint = null;
-                using var handler = new HttpClientHandler
+                ServerCertificateCustomValidationCallback = (_, cert, _, _) =>
                 {
-                    ServerCertificateCustomValidationCallback = (_, cert, _, _) =>
-                    {
-                        seenThumbprint = cert?.Thumbprint;
-                        return cert?.Thumbprint == certificate.Thumbprint;
-                    },
-                };
-                using var client = Client("secret", handler);
-                StringAssert.Contains(await client.GetStringAsync(url + "/api/status"), "Open");
-                Assert.AreEqual(certificate.Thumbprint, seenThumbprint);
-                await built.App.StopAsync();
-            }
-        }
-        finally
-        {
-            File.Delete(pfx);
+                    seenThumbprint = cert?.Thumbprint;
+                    return cert?.Thumbprint == certificate.Thumbprint;
+                },
+            };
+            using var client = Client("secret", handler);
+            StringAssert.Contains(await client.GetStringAsync(url + "/api/status"), "Open");
+            Assert.AreEqual(certificate.Thumbprint, seenThumbprint);
+            await built.App.StopAsync();
         }
     }
 
@@ -242,39 +237,33 @@ public class WebRolesTests
         leafRequest.CertificateExtensions.Add(new X509EnhancedKeyUsageExtension([new Oid("1.3.6.1.5.5.7.3.1")], false));
         using var issued = leafRequest.Create(ca, DateTimeOffset.UtcNow.AddMinutes(-5), DateTimeOffset.UtcNow.AddDays(1), RandomNumberGenerator.GetBytes(8));
         using var leaf = issued.CopyWithPrivateKey(leafKey);
-        var pfx = Path.Combine(Path.GetTempPath(), "devterm-web-ca-" + Guid.NewGuid().ToString("N") + ".pfx");
+        using var pfxFile = new TempFileHandle();
+        var pfx = pfxFile.FilePath;
         await File.WriteAllBytesAsync(pfx, leaf.Export(X509ContentType.Pfx));
-        try
+        var (built, url) = await StartAsync(scheme: "https", certificatePath: pfx);
+        await using (built.Hub)
         {
-            var (built, url) = await StartAsync(scheme: "https", certificatePath: pfx);
-            await using (built.Hub)
+            // A client trusting only this CA validates the chain for real (no thumbprint shortcut).
+            using var trusting = new HttpClientHandler
             {
-                // A client trusting only this CA validates the chain for real (no thumbprint shortcut).
-                using var trusting = new HttpClientHandler
+                ServerCertificateCustomValidationCallback = (_, cert, _, _) =>
                 {
-                    ServerCertificateCustomValidationCallback = (_, cert, _, _) =>
-                    {
-                        using var chain = new X509Chain();
-                        chain.ChainPolicy.TrustMode = X509ChainTrustMode.CustomRootTrust;
-                        chain.ChainPolicy.CustomTrustStore.Add(ca);
-                        chain.ChainPolicy.RevocationMode = X509RevocationMode.NoCheck;
-                        return cert is not null && chain.Build(cert);
-                    },
-                };
-                using (var client = Client("secret", trusting))
-                {
-                    StringAssert.Contains(await client.GetStringAsync(url + "/api/status"), "Open");
-                }
-
-                // The default trust store has never heard of the test CA, so the same server is refused.
-                using var untrusting = Client("secret", new HttpClientHandler());
-                await Assert.ThrowsExactlyAsync<HttpRequestException>(() => untrusting.GetStringAsync(url + "/api/status"));
-                await built.App.StopAsync();
+                    using var chain = new X509Chain();
+                    chain.ChainPolicy.TrustMode = X509ChainTrustMode.CustomRootTrust;
+                    chain.ChainPolicy.CustomTrustStore.Add(ca);
+                    chain.ChainPolicy.RevocationMode = X509RevocationMode.NoCheck;
+                    return cert is not null && chain.Build(cert);
+                },
+            };
+            using (var client = Client("secret", trusting))
+            {
+                StringAssert.Contains(await client.GetStringAsync(url + "/api/status"), "Open");
             }
-        }
-        finally
-        {
-            File.Delete(pfx);
+
+            // The default trust store has never heard of the test CA, so the same server is refused.
+            using var untrusting = Client("secret", new HttpClientHandler());
+            await Assert.ThrowsExactlyAsync<HttpRequestException>(() => untrusting.GetStringAsync(url + "/api/status"));
+            await built.App.StopAsync();
         }
     }
 }
