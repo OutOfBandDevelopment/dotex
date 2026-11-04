@@ -11,7 +11,7 @@ namespace OoBDev.DevTerm.Wpf.Tests;
 [TestClass]
 public sealed class ExpressionPickerScreenshotTests
 {
-    private static readonly ValuePath[] _paths =
+    internal static readonly ValuePath[] Paths =
     [
         new("volts", ValuePathType.Number, ValuePathSource.Control, "Voltage", "V", 0, 30),
         new("amps", ValuePathType.Number, ValuePathSource.Control, "Current", "A", 0, 5),
@@ -28,7 +28,7 @@ public sealed class ExpressionPickerScreenshotTests
     [DataRow("wpf-expression-picker-channels", "volts:Volts:#FF6600; amps", PickerMode.Channels, "")]
     public void Window_Mode_IsCaptured(string name, string text, PickerMode mode, string filter) =>
         WpfScreenshot.Capture(
-            () => new ExpressionPickerWindow(new ExpressionPickerViewModel(_paths, text, seed: 7, mode: mode) { Filter = filter }),
+            () => new ExpressionPickerWindow(new ExpressionPickerViewModel(Paths, text, seed: 7, mode: mode) { Filter = filter }),
             name + ".png",
             560,
             460);

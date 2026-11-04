@@ -14,7 +14,7 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <TextBlock x:Name="ExpressionLabel" Grid.Row="0" Text="Expression:" />
-        <TextBox x:Name="ExpressionBox" Grid.Row="1" Margin="0,4,0,0" VerticalContentAlignment="Center" FontFamily="Consolas" AcceptsReturn="False" TextChanged="ExpressionBox_TextChanged" />
+        <TextBox x:Name="ExpressionBox" Grid.Row="1" Margin="0,4,0,0" MinHeight="22" VerticalContentAlignment="Center" FontFamily="Consolas" AcceptsReturn="False" TextChanged="ExpressionBox_TextChanged" />
         <TextBlock x:Name="DiagnosticsText" Grid.Row="2" Margin="0,6,0,0" TextWrapping="Wrap" MinHeight="32" />
         <DockPanel Grid.Row="3" Margin="0,8,0,4">
             <TextBlock DockPanel.Dock="Left" Text="Find a value:" VerticalAlignment="Center" Margin="0,0,8,0" />

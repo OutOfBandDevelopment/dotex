@@ -6,6 +6,7 @@ using DevTermApp;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.DevTerm.Configuration;
 using OoBDev.DevTerm.DeviceManifests;
+using OoBDev.DevTerm.DeviceManifests.Editing;
 using OoBDev.DevTerm.TestUtilities;
 using OoBDev.DevTerm.Wpf;
 using OoBDev.UiDefinitions.ViewModels;
@@ -124,6 +125,18 @@ public sealed class UiLayoutReviewTests
             },
             900,
             700);
+
+    [TestMethod]
+    [DataRow(BuiltInThemes.LightName, "round({volts} * {amps}, 1)", PickerMode.Expression)]
+    [DataRow(BuiltInThemes.DarkName, "round({volts} * {amps}, 1)", PickerMode.Expression)]
+    [DataRow(BuiltInThemes.LightName, "round({volts} * ", PickerMode.Expression)]
+    [DataRow(BuiltInThemes.DarkName, "round({volts} * ", PickerMode.Expression)]
+    [DataRow(BuiltInThemes.LightName, "round({volts} * 100, 0); {amps}", PickerMode.ExpressionList)]
+    [DataRow(BuiltInThemes.DarkName, "round({volts} * 100, 0); {amps}", PickerMode.ExpressionList)]
+    [DataRow(BuiltInThemes.LightName, "volts:Volts:#FF6600; amps", PickerMode.Channels)]
+    [DataRow(BuiltInThemes.DarkName, "volts:Volts:#FF6600; amps", PickerMode.Channels)]
+    public void ExpressionPickerWindow_Mode_HasNoLayoutProblems(string theme, string text, PickerMode mode) =>
+        Review(theme, () => new ExpressionPickerWindow(new ExpressionPickerViewModel(ExpressionPickerScreenshotTests.Paths, text, seed: 7, mode: mode)), 560, 460);
 
     [TestMethod]
     [DataRow(BuiltInThemes.LightName)]
