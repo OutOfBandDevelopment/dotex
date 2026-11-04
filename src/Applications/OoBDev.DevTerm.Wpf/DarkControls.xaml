@@ -59,6 +59,42 @@
     </Setter>
   </Style>
 
+  <Style TargetType="ToggleButton">
+    <Setter Property="FocusVisualStyle" Value="{StaticResource DevTerm.FocusVisual}" />
+    <Setter Property="Background" Value="{DynamicResource DevTerm.ControlBackground}" />
+    <Setter Property="Foreground" Value="{DynamicResource DevTerm.ControlForeground}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource DevTerm.ControlBorder}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="HorizontalContentAlignment" Value="Center" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+    <Setter Property="Padding" Value="1" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="ToggleButton">
+          <Border x:Name="border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
+                  BorderThickness="{TemplateBinding BorderThickness}" SnapsToDevicePixels="True">
+            <ContentPresenter Margin="{TemplateBinding Padding}" Focusable="False" RecognizesAccessKey="True"
+                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+          </Border>
+          <ControlTemplate.Triggers>
+            <Trigger Property="IsChecked" Value="True">
+              <Setter TargetName="border" Property="Background" Value="{DynamicResource DevTerm.SelectionBackground}" />
+              <Setter Property="Foreground" Value="{DynamicResource DevTerm.SelectionForeground}" />
+            </Trigger>
+            <Trigger Property="IsMouseOver" Value="True">
+              <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource DevTerm.Accent}" />
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+              <Setter Property="Foreground" Value="{DynamicResource DevTerm.MutedForeground}" />
+              <Setter TargetName="border" Property="Background" Value="{DynamicResource DevTerm.Background}" />
+            </Trigger>
+          </ControlTemplate.Triggers>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
   <!-- Lists and menus: stock backgrounds are fixed white/#F0F0F0. -->
   <Style TargetType="ListBox">
     <Setter Property="Background" Value="{DynamicResource DevTerm.ControlBackground}" />

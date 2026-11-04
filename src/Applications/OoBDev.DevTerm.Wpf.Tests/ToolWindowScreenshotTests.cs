@@ -24,7 +24,7 @@ public sealed class ToolWindowScreenshotTests
     public void ConfigureDevice_AfterReadAndEdit_IsCaptured() =>
         WpfScreenshot.Capture(BuildConfigureDevice, "wpf-configure-device.png", 640, 520);
 
-    private static ConfigureDeviceWindow BuildConfigureDevice()
+    internal static ConfigureDeviceWindow BuildConfigureDevice()
     {
         var dialog = new ConfigureDeviceDialogViewModel([new FakeDeviceConfigEditor()], "192.168.0.50", "8899");
         dialog.ReadAsync().GetAwaiter().GetResult();

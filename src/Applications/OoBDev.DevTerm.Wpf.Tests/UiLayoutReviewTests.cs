@@ -92,6 +92,42 @@ public sealed class UiLayoutReviewTests
     [TestMethod]
     [DataRow(BuiltInThemes.LightName)]
     [DataRow(BuiltInThemes.DarkName)]
+    public void MainWindow_Connected_HasNoLayoutProblems(string theme) =>
+        Review(theme, ShellScreenshotTests.BuildWindow, 900, 650);
+
+    [TestMethod]
+    [DataRow(BuiltInThemes.LightName)]
+    [DataRow(BuiltInThemes.DarkName)]
+    public void RoutingWindow_WithTraffic_HasNoLayoutProblems(string theme) =>
+        Review(theme, RoutingScreenshotTests.BuildWindow, 760, 760);
+
+    [TestMethod]
+    [DataRow(BuiltInThemes.LightName)]
+    [DataRow(BuiltInThemes.DarkName)]
+    public void ConfigureDeviceWindow_AfterEdit_HasNoLayoutProblems(string theme) =>
+        Review(theme, ToolWindowScreenshotTests.BuildConfigureDevice, 640, 520);
+
+    [TestMethod]
+    [DataRow(BuiltInThemes.LightName, "tcp")]
+    [DataRow(BuiltInThemes.DarkName, "tcp")]
+    [DataRow(BuiltInThemes.LightName, "serial")]
+    [DataRow(BuiltInThemes.DarkName, "serial")]
+    [DataRow(BuiltInThemes.LightName, "loopback")]
+    [DataRow(BuiltInThemes.DarkName, "loopback")]
+    public void ConnectionEditorWindow_EachTransport_HasNoLayoutProblems(string theme, string transport) =>
+        Review(
+            theme,
+            () =>
+            {
+                var editor = new ConnectionEditorViewModel(new ConnectionProfileStore(TempDirectory()), new CliOptions { Transport = transport });
+                return new ConnectionEditorWindow(editor, scans: new ConnectionDeviceScans(editor));
+            },
+            900,
+            700);
+
+    [TestMethod]
+    [DataRow(BuiltInThemes.LightName)]
+    [DataRow(BuiltInThemes.DarkName)]
     public void InstrumentPickerWindow_ScpiChoices_HasNoLayoutProblems(string theme) =>
         Review(theme, () => new InstrumentPickerWindow(new InstrumentPickerDialogViewModel(new InstrumentPickerScreenshotTests.GuideProvider())), 460, 340);
 }

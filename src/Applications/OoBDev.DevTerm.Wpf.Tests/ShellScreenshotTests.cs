@@ -20,7 +20,7 @@ public sealed class ShellScreenshotTests
     public void MainWindow_LoopbackSessionWithTraffic_IsCaptured() =>
         WpfScreenshot.Capture(BuildWindow, "wpf-main-window.png", 900, 650);
 
-    private static MainWindow BuildWindow()
+    internal static MainWindow BuildWindow()
     {
         SynchronizationContext.SetSynchronizationContext(new DispatcherSynchronizationContext(Dispatcher.CurrentDispatcher));
         var directory = Directory.CreateTempSubdirectory("devterm-shell-");

@@ -21,7 +21,7 @@ public sealed class RoutingScreenshotTests
     public void RoutingWindow_WithTraffic_IsCaptured() =>
         WpfScreenshot.Capture(BuildWindow, "wpf-routing.png", 760, 760);
 
-    private static RoutingWindow BuildWindow()
+    internal static RoutingWindow BuildWindow()
     {
         var options = new CliOptions { Transport = "loopback" };
         options.Routing.Host = "localhost";
