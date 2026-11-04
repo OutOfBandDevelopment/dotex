@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using OoBDev.ImageMask.Cli;
+using OoBDev.System.IO;
 
 namespace OoBDev.DevTerm.TestUtilities;
 
@@ -16,16 +17,9 @@ public static class GuideImage
 
         var directory = Path.GetDirectoryName(committedPath)!;
         Directory.CreateDirectory(directory);
-        var temp = Path.Combine(Path.GetTempPath(), $"guide_{Guid.NewGuid():N}.png");
-        try
-        {
-            render(temp);
-            return Sync(temp, committedPath);
-        }
-        finally
-        {
-            File.Delete(temp);
-        }
+        using var temp = new TempFileHandle();
+        render(temp.FilePath);
+        return Sync(temp.FilePath, committedPath);
     }
 
     /// <summary>Syncs an existing capture over the committed image using the zones file next to it, when there is one.</summary>

@@ -1,3 +1,4 @@
+using OoBDev.System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -83,19 +84,13 @@ public abstract class UserFlowTestsBase
             Assert.Inconclusive($"{driver.Name} cannot start a session log while running.");
         }
 
-        var path = Path.Combine(Path.GetTempPath(), $"devterm-flow-{Guid.NewGuid():N}.jsonl");
-        try
-        {
-            await driver.StartLoggingAsync(path);
-            await driver.SendAsync("hello");
-            await ExpectAsync(driver, "From Loopback test");
-            await driver.StopLoggingAsync();
-            StringAssert.Contains(File.ReadAllText(path), Convert.ToBase64String("From Loopback test"u8.ToArray())[..20], $"{driver.Name}: the log should hold the reply (rx data is base64).");
-        }
-        finally
-        {
-            File.Delete(path);
-        }
+        using var logFile = new TempFileHandle();
+        var path = logFile.FilePath;
+        await driver.StartLoggingAsync(path);
+        await driver.SendAsync("hello");
+        await ExpectAsync(driver, "From Loopback test");
+        await driver.StopLoggingAsync();
+        StringAssert.Contains(File.ReadAllText(path), Convert.ToBase64String("From Loopback test"u8.ToArray())[..20], $"{driver.Name}: the log should hold the reply (rx data is base64).");
     });
 
     [TestMethod]
