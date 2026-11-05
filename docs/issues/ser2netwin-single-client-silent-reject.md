@@ -1,6 +1,6 @@
 # Ser2NetWin: a second client is accepted and then dropped without a reason
 
-Status: open (reported 2026-11-04 from the Z-Stick Hardware tests) | Code: `C:\repo\mine\proving-grounds\tools\Ser2NetWin\src\OoBDev.Ser2NetWin.Core\BridgeWorker.cs` | Backlog: [BACKLOG.md](../../BACKLOG.md) section 2 (Devices) (migration item in section 6)
+Status: fixed in Ser2NetWin 0.0.4 (reported 2026-11-04 from the Z-Stick Hardware tests); arrives with the [migration](../design/Ser2NetWin/migration-plan.md) | Code: `C:\repo\mine\proving-grounds\tools\Ser2NetWin\src\OoBDev.Ser2NetWin.Core\BridgeWorker.cs` | Backlog: [BACKLOG.md](../../BACKLOG.md) section 2 (Devices) (migration item in section 6)
 
 ## What happened
 
