@@ -44,14 +44,19 @@ var smtp = builder.AddContainer("smtp4dev", "rnwood/smtp4dev")
 builder.AddContainer("apache-tika", "apache/tika")
     .WithHttpEndpoint(targetPort: 9998, name: "http");
 
+// The port is fixed because the token issuer is the browser-visible address; a dynamic port would change the issuer on every run.
+var keycloakPort = int.Parse(Environment.GetEnvironmentVariable("TEST_PORT_KEYCLOAK") ?? "8081", System.Globalization.CultureInfo.InvariantCulture);
 var keycloak = builder.AddContainer("keycloak", "quay.io/keycloak/keycloak", "latest")
-    .WithHttpEndpoint(targetPort: 8080, name: "http")
+    .WithHttpEndpoint(port: keycloakPort, targetPort: 8080, name: "http")
     .WithEnvironment("KEYCLOAK_ADMIN", "admin")
     .WithEnvironment("KEYCLOAK_ADMIN_PASSWORD", "admin")
     .WithEnvironment("KC_HEALTH_ENABLED", "true")
     .WithEnvironment("KC_HOSTNAME_STRICT", "false")
     .WithBindMount(Path.Combine(testing, "keycloak-config", "integration-test-realm.json"), "/opt/keycloak/data/import/integration-test-realm.json", isReadOnly: true)
+    .WithBindMount(Path.Combine(repoRoot, "containers", "example", "keycloak", "oobdev-example-realm.json"), "/opt/keycloak/data/import/oobdev-example-realm.json", isReadOnly: true)
     .WithArgs("start-dev", "--import-realm", "--features=scripts");
+
+var keycloakRealm = $"http://localhost:{keycloakPort}/realms/oobdev-example";
 
 // phi3 is baked into the image at build time, so the first start builds it from the same Dockerfile the compose stack uses.
 var ollama = builder.AddDockerfile("ollama", Path.Combine(testing, "ollama"))
@@ -63,7 +68,14 @@ var api = builder.AddProject<OoBDev_Example_WebApi>("example-api", options => op
     // The API's launch profile names an https port, which turns on its https redirect; the host proxies plain http.
     .WithHttpEndpoint(env: "ASPNETCORE_HTTP_PORTS")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", "Development")
-    .WithEnvironment("IDENTITY_PROVIDER", "None")
+    .WithEnvironment("IDENTITY_PROVIDER", "Keycloak")
+    .WithEnvironment("Keycloak__JwtBearerOptions__Authority", keycloakRealm)
+    .WithEnvironment("Keycloak__JwtBearerOptions__Audience", "oobdev-example-api")
+    .WithEnvironment("Keycloak__JwtBearerOptions__RequireHttpsMetadata", "false")
+    .WithEnvironment("Keycloak__JwtBearerOptions__TokenValidationParameters__ValidIssuers__0", keycloakRealm)
+    .WithEnvironment("Keycloak__OAuth2OpenApiOptions__AuthorizationUrl", $"{keycloakRealm}/protocol/openid-connect/auth/")
+    .WithEnvironment("Keycloak__OAuth2OpenApiOptions__TokenUrl", $"{keycloakRealm}/protocol/openid-connect/token")
+    .WaitFor(keycloak)
     .WithEnvironment("OllamaApiClientOptions__Url", ollama.GetEndpoint("http"))
     .WithEnvironment("OllamaApiClientOptions__DefaultModel", "phi3")
     .WithReference(redis)
@@ -118,6 +130,8 @@ if (File.Exists(envFile))
 builder.AddViteApp("example-web", Path.Combine("..", "OoBDev.Example.Web"))
     .WithReference(api)
     .WaitFor(api)
+    .WithEnvironment("VITE_OIDC_AUTHORITY", keycloakRealm)
+    .WithEnvironment("VITE_OIDC_CLIENT_ID", "oobdev-example-web")
     .WithExternalHttpEndpoints();
 
 builder.Build().Run();

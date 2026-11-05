@@ -7,3 +7,5 @@
 - The dacpac build crashed once with exit code -1073741819 and passed on retry.
 
 **Decision (owner, 2026-11-04):** the Example AppHost runs Keycloak as a container under Aspire (realm import as in the compose stack), starts the API with `IDENTITY_PROVIDER=Keycloak` and the authority from the Keycloak endpoint, and gives the web client that address. The telemetry journey is diagnosed on a live host run afterwards.
+
+**Built (2026-11-04):** `Program.cs` mounts the example realm beside the integration realm, publishes Keycloak on a fixed host port (`TEST_PORT_KEYCLOAK`, default 8081, so the issuer `http://localhost:<port>/realms/oobdev-example` is stable), starts the API with `IDENTITY_PROVIDER=Keycloak` (authority, audience, issuer and OpenAPI URLs as in the compose file), waits for the container, and gives the Vite app `VITE_OIDC_AUTHORITY` and `VITE_OIDC_CLIENT_ID`. The project builds; the live run and the telemetry diagnosis are still to do.

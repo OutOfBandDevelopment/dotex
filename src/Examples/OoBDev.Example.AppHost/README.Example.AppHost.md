@@ -6,6 +6,8 @@ Run: `dotnet run --project src/Examples/OoBDev.Example.AppHost` (the dashboard l
 
 SQL Server runs the `2019-latest` image (the version `OoBDev.Data.Vectors.DB` targets, `Sql150`) with a data volume (`oobd-aspire-sqlserver-fixed-sa`) and a fixed `sa` password, the `SQL_SA_PASSWORD` default of the compose stacks (`IntegrationTest123!`), so the persisted volume keeps accepting the login. When the `VectorDb` database is ready the host allows SQL CLR (`clr enabled`, `clr strict security` off; a development server only) and publishes `OoBDev.Data.Vectors.DB.dacpac` to it with DacFx, then the API gets the `VectorDb` connection string (as `ConnectionStrings__VectorDb` and as `SqlVectorStoreOptions__ConnectionString`, so the API uses the SQL vector store instead of the in-memory one). The dacpac is built by the project reference; the host reads the build output of its own configuration (Debug or Release). The same deployment is covered by the `SqlServerDeploymentTests` Integration tests.
 
-Reuses `containers/testing/ollama/Dockerfile`, the Keycloak realm import and the optional `containers/example/.env`.
+Keycloak runs on host port 8081 (`TEST_PORT_KEYCLOAK`) with the example realm; the API validates its tokens (`IDENTITY_PROVIDER=Keycloak`) and the web app signs in against it.
+
+Reuses `containers/testing/ollama/Dockerfile`, the Keycloak realm imports and the optional `containers/example/.env`.
 
 Compose output: `dotnet run --project src/Examples/OoBDev.Example.AppHost -- --operation publish --publisher default --output-path <dir>` writes a `docker-compose.yaml` generated from this host (the image build step for the API may report an error; the compose file is still written).
