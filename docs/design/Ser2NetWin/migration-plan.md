@@ -1,6 +1,6 @@
 # Ser2NetWin migration plan
 
-Status: **plan written 2026-11-04, waiting for the owner to confirm the layering (Q1 in [OPEN-QUESTIONS.md](../../../OPEN-QUESTIONS.md))** | Source: `C:\repo\mine\proving-grounds\tools\Ser2NetWin` (git, version 0.0.4, about 2,300 lines in `src`, 10 test classes) | Rule: `layering-and-migration-plans`
+Status: **plan confirmed by the owner 2026-11-04 (option A: Framework bridge core, application CLI, the three packages added)** | Source: `C:\repo\mine\proving-grounds\tools\Ser2NetWin` (git, version 0.0.4, about 2,300 lines in `src`, 10 test classes) | Rule: `layering-and-migration-plans`
 
 Ser2NetWin bridges Windows COM ports to TCP (raw or RFC 2217, optionally advertised over mDNS). It hosts the Aeotec Z-Stick for the Z-Wave Hardware tests and is a Windows-native stand-in for Linux `ser2net`.
 
@@ -35,7 +35,7 @@ The single-client bug in [the issue](../../issues/ser2netwin-single-client-silen
 
 ## Order
 
-1. Owner confirms Q1 (layering and the two new third-party packages).
+1. Owner confirmed the layering and the packages (2026-11-04).
 2. Import docs whole under `docs/applications/ser2netwin/` with the transient map.
 3. Move the library and its tests, rename namespaces, register in `OoBDev.slnx`, fix analyzer warnings, run the tests.
 4. Move the CLI, its tests and the publish script; verify `ser2net-win list` and `ports`.

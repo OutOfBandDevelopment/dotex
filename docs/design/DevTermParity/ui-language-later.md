@@ -23,3 +23,5 @@ Time-boxed. If one gets too complex, native UIs per front end are an acceptable 
 3. A small JS renderer over the published definition and schema.
 
 **Decision (owner, 2026-11-04):** the device projects get an explicit Example panel per device family (not only DevTerm as the reference), and every control set built for Blazor, WPF, Tui or other hosts gets a small control-example app (controls only; the framework itself is demoed by the existing Example app).
+
+**Placement (owner, 2026-11-04):** an Example panel is one `UiDefinition` sample per device family in each device project's tests or samples folder (the panel definition plus a fake device, no application), so device projects take no UI reference. Each control set gets one control-example app per host in `src/Examples/OoBDev.Examples.Controls.<Host>` that shows every control with canned values; the generated guides screenshot these apps.
