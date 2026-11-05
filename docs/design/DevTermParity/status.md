@@ -1,6 +1,6 @@
 # DevTerm parity: status and remaining work
 
-**Status:** Current, 2026-10-30 · [Parity matrix](README.md) · [Restructure plan](restructure-plan.md) · [Architecture](../../applications/devterm/architecture.md)
+**Status:** Current, 2026-11-05 · [Parity matrix](README.md) · [Restructure plan](restructure-plan.md) · [Architecture](../../applications/devterm/architecture.md)
 
 This page holds the detail that used to sit in `TODO.md` and `BACKLOG.md`: what is done, and what is left, for the DevTerm merge. The backlog lines link here and stay short.
 
@@ -33,10 +33,9 @@ dev-term `DevTerm.Wpf` is about 8,800 lines. Each slice is ported with view mode
 
 - Tui: serial real-hardware tests (TCP is covered by `LoopbackDeviceCliIntegrationTests` against the stack's loopback-device, real devices by `RealHardwareCliTests`), an interactive Tui run (control panel, loopback chart and stream-monitor screenshots exist in the user guide).
 - Web: the Playwright flows, screenshot and layout-review tests pass (55 run together); `image-mask sync` with `zones.json` keeps recaptures from churning the committed images.
-- Hardware tests for the USBTMC path were skipped (no device attached).
+- Hardware: the USBTMC path (Rigol), LXI (DG1062Z), Korad serial, TDS2024, Z-Stick and the BLE loop-back through the HC-08 pass on the bench (2026-11-04 and 2026-11-05, see `docs/changes/2026-11-04.md`).
 
 ## Other leftovers
 
 - `UserFlowTestsBase` and `IFrontEndDriver` live in `OoBDev.DevTerm.TestUtilities` ([plan](test-utilities-plan.md)).
 - The Web host keeps its own AsyncAPI document and viewer (owner, 2026-10-30).
-- Cleanup to mention to the owner: the removable Docker volume `oobd-aspire-sqlserver`, and untracked `bin` and `obj` folders under `src/Extensions/OoBDev.DevTerm.*` and `OoBDev.Scpi.Panels*`.

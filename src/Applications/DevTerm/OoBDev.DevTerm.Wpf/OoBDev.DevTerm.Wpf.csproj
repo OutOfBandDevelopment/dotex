@@ -24,4 +24,17 @@
 		<ProjectReference Include="..\OoBDev.DevTerm.Devices\OoBDev.DevTerm.Devices.csproj" />
 	</ItemGroup>
 
+	<!-- This app targets net10.0-windows, below the Windows BLE backend's net10.0-windows10.0.19041.0, so it cannot reference the
+	     backend; BlePlatformAdapterLoader loads it next to the app, as in the Tui and Web projects. Without the copy the BLE
+	     transport and the device scan stay on the "unsupported platform" stubs. -->
+	<Target Name="CopyWindowsBleBackend" AfterTargets="Build" Condition="'$(OS)' == 'Windows_NT'">
+		<MSBuild Projects="..\..\..\Framework\OoBDev.System.IO.Bluetooth.Windows\OoBDev.System.IO.Bluetooth.Windows.csproj"
+		         Targets="Publish"
+		         Properties="Configuration=$(Configuration)" />
+		<ItemGroup>
+			<_BleWindowsBackendOutput Include="..\..\..\Framework\OoBDev.System.IO.Bluetooth.Windows\bin\$(Configuration)\**\publish\*.dll" />
+		</ItemGroup>
+		<Copy SourceFiles="@(_BleWindowsBackendOutput)" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" />
+	</Target>
+
 </Project>
