@@ -1,3 +1,4 @@
+using OoBDev.Documents.ExternalTools;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -262,7 +263,7 @@ public sealed class StreamCaptureConverterTests
     }
 
     /// <summary>A minimal <see cref="HttpMessageHandler"/> stub — no fake-HTTP pattern existed yet in this repo's tests.</summary>
-    private static StreamConvertToolOptions CopyTool(string name, string formats, string extension) => new()
+    private static ExternalToolOptions CopyTool(string name, string formats, string extension) => new()
     {
         Name = name,
         Path = "cmd.exe",
@@ -335,17 +336,17 @@ public sealed class StreamCaptureConverterTests
     [TestMethod]
     public void Handles_EmptyFormatsAcceptsAnything_AndTokensMatchFormatOrExtension()
     {
-        Assert.IsTrue(StreamCaptureConverter.Handles(new StreamConvertToolOptions(), StreamContentKind.Bmp));
-        Assert.IsTrue(StreamCaptureConverter.Handles(new StreamConvertToolOptions { Formats = "PostScript, eps" }, StreamContentKind.PostScript));
-        Assert.IsTrue(StreamCaptureConverter.Handles(new StreamConvertToolOptions { Formats = "bmp" }, StreamContentKind.Bmp));
-        Assert.IsTrue(StreamCaptureConverter.Handles(new StreamConvertToolOptions { Formats = "image" }, StreamContentKind.Png));
-        Assert.IsFalse(StreamCaptureConverter.Handles(new StreamConvertToolOptions { Formats = "pcl" }, StreamContentKind.PostScript));
+        Assert.IsTrue(StreamCaptureConverter.Handles(new ExternalToolOptions(), StreamContentKind.Bmp));
+        Assert.IsTrue(StreamCaptureConverter.Handles(new ExternalToolOptions { Formats = "PostScript, eps" }, StreamContentKind.PostScript));
+        Assert.IsTrue(StreamCaptureConverter.Handles(new ExternalToolOptions { Formats = "bmp" }, StreamContentKind.Bmp));
+        Assert.IsTrue(StreamCaptureConverter.Handles(new ExternalToolOptions { Formats = "image" }, StreamContentKind.Png));
+        Assert.IsFalse(StreamCaptureConverter.Handles(new ExternalToolOptions { Formats = "pcl" }, StreamContentKind.PostScript));
     }
 
     [TestMethod]
     public void CopyFrom_ReadsAutoAndToolModes_AndTheToolList()
     {
-        var tools = new List<StreamConvertToolOptions> { CopyTool("gs", "ps", "png") };
+        var tools = new List<ExternalToolOptions> { CopyTool("gs", "ps", "png") };
 
         var auto = StreamCaptureConverterOptions.FromCliOptions(new CliOptions { StreamConvertMode = "auto", StreamConvertTools = tools });
         var named = StreamCaptureConverterOptions.FromCliOptions(new CliOptions { StreamConvertMode = "tool:gs", StreamConvertTools = tools });

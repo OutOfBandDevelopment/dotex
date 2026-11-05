@@ -1,3 +1,4 @@
+using OoBDev.Documents.ExternalTools;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -24,7 +25,7 @@ public sealed class ConverterToolsScreenshotTests
     [TestMethod]
     public void ConverterToolsDialog_IsCaptured()
     {
-        StreamConvertToolOptions[] tools =
+        ExternalToolOptions[] tools =
         [
             new() { Name = "gs", Path = @"C:\Program Files\gs\bin\gswin64c.exe", Arguments = "-q -dNOPAUSE -sDEVICE=png16m -r{dpi} -sOutputFile={output} {input}", Formats = "ps, eps", OutputExtension = "png", Dpi = 150 },
             new() { Name = "gpcl", Path = @"C:\Program Files\gs\bin\gpcl6win64.exe", Arguments = "-sDEVICE=png16m -r{dpi} -o {output} {input}", Formats = "pcl", OutputExtension = "png", Dpi = 200 },

@@ -1,3 +1,4 @@
+using OoBDev.Documents.ExternalTools;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,26 +11,26 @@ namespace OoBDev.DevTerm.Configuration;
 
 /// <summary>
 /// The working copy behind both front ends' "Converter tools..." dialog: a list of
-/// <see cref="StreamConvertToolOptions"/> that can be added to, removed from and reordered (order matters,
+/// <see cref="ExternalToolOptions"/> that can be added to, removed from and reordered (order matters,
 /// since Auto picks the first tool whose formats match), plus the validation the dialog's OK button runs.
 /// Edits go to copies, so cancelling leaves the profile's tools untouched.
 /// See docs/design/StreamTools/stream-converter-tools.md.
 /// </summary>
 public sealed class ConverterToolsEditor
 {
-    private readonly List<StreamConvertToolOptions> _tools;
+    private readonly List<ExternalToolOptions> _tools;
 
-    public ConverterToolsEditor(IEnumerable<StreamConvertToolOptions> tools)
+    public ConverterToolsEditor(IEnumerable<ExternalToolOptions> tools)
     {
         ArgumentNullException.ThrowIfNull(tools);
-        _tools = [.. tools.Select(StreamConvertToolOptions.Clone)];
+        _tools = [.. tools.Select(ExternalToolOptions.Clone)];
     }
 
     /// <summary>The tools in their current order. Fields of the items may be edited in place.</summary>
-    public IReadOnlyList<StreamConvertToolOptions> Tools => _tools;
+    public IReadOnlyList<ExternalToolOptions> Tools => _tools;
 
     /// <summary>Appends a new tool with a name no other tool uses, and returns it.</summary>
-    public StreamConvertToolOptions Add()
+    public ExternalToolOptions Add()
     {
         var number = _tools.Count + 1;
         string name;
@@ -39,7 +40,7 @@ public sealed class ConverterToolsEditor
         }
         while (_tools.Any(t => string.Equals(t.Name, name, StringComparison.OrdinalIgnoreCase)));
 
-        var tool = new StreamConvertToolOptions { Name = name, Arguments = "{input} {output}" };
+        var tool = new ExternalToolOptions { Name = name, Arguments = "{input} {output}" };
         _tools.Add(tool);
         return tool;
     }
@@ -99,10 +100,10 @@ public sealed class ConverterToolsEditor
     }
 
     /// <summary>The edited list, trimmed, ready to store on a profile. Call <see cref="Validate"/> first.</summary>
-    public List<StreamConvertToolOptions> ToList() =>
+    public List<ExternalToolOptions> ToList() =>
         [.. _tools.Select(t =>
         {
-            var copy = StreamConvertToolOptions.Clone(t);
+            var copy = ExternalToolOptions.Clone(t);
             copy.Name = copy.Name.Trim();
             copy.Path = copy.Path?.Trim();
             copy.Formats = copy.Formats.Trim();

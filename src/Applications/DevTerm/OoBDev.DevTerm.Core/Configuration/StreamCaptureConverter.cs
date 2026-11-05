@@ -1,7 +1,11 @@
+using OoBDev.Documents.ExternalTools;
 using OoBDev.Documents.Hpgl;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using OoBDev.Documents.Conversion;
+using OoBDev.System.IO;
+using Microsoft.Extensions.DependencyInjection;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
@@ -29,6 +33,8 @@ namespace OoBDev.DevTerm.Configuration;
 /// </remarks>
 public sealed class StreamCaptureConverter
 {
+    private static readonly ITempFileFactory _temp = new TempFileFactory(new ServiceCollection().BuildServiceProvider());
+
     private readonly IOptions<StreamCaptureConverterOptions> _options;
 
     public StreamCaptureConverter(IOptions<StreamCaptureConverterOptions> options)
@@ -52,7 +58,7 @@ public sealed class StreamCaptureConverter
 
         return options.Mode switch
         {
-            StreamConversionMode.InternalHpglToSvg => ConvertInternal(capture, options),
+            StreamConversionMode.InternalHpglToSvg => await ConvertInternal(capture, options, cancellationToken).ConfigureAwait(false),
             StreamConversionMode.ExternalTool => await ConvertExternalAsync(capture, options, cancellationToken).ConfigureAwait(false),
             StreamConversionMode.Auto => await ConvertWithRegisteredToolAsync(capture, options, null, cancellationToken).ConfigureAwait(false),
             StreamConversionMode.Tool => await ConvertWithRegisteredToolAsync(capture, options, options.ToolName, cancellationToken).ConfigureAwait(false),
@@ -60,29 +66,14 @@ public sealed class StreamCaptureConverter
         };
     }
 
-    private static StreamConversionResult ConvertInternal(StreamMonitorCapture capture, StreamCaptureConverterOptions options)
+    private static Task<StreamConversionResult> ConvertInternal(StreamMonitorCapture capture, StreamCaptureConverterOptions options, CancellationToken cancellationToken)
     {
         if (capture.Capture.Kind.Format != StreamContentFormat.Hpgl)
         {
-            return new StreamConversionResult(false, null, $"The internal HP-GL-to-SVG converter only handles HP-GL captures, not {capture.Capture.Kind.DisplayName}.");
+            return Task.FromResult(new StreamConversionResult(false, null, $"The internal HP-GL-to-SVG converter only handles HP-GL captures, not {capture.Capture.Kind.DisplayName}."));
         }
 
-        var outputPath = OutputPathFor(capture, options.OutputExtension ?? "svg");
-        if (outputPath is null)
-        {
-            return new StreamConversionResult(false, null, "This capture was never saved to a file, so there is nowhere to write the converted output next to.");
-        }
-
-        try
-        {
-            var svg = HpglToSvgConverter.ConvertToSvg(capture.Capture.Data);
-            File.WriteAllText(outputPath, svg);
-            return new StreamConversionResult(true, outputPath, null);
-        }
-        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
-        {
-            return new StreamConversionResult(false, null, ex.Message);
-        }
+        return RunHandlerAsync(capture, new HpglToSvgConversionHandler(), HpglToSvgConversionHandler.SvgContentType, options.OutputExtension ?? "svg", cancellationToken);
     }
 
     private static Task<StreamConversionResult> ConvertExternalAsync(StreamMonitorCapture capture, StreamCaptureConverterOptions options, CancellationToken cancellationToken) =>
@@ -91,7 +82,7 @@ public sealed class StreamCaptureConverter
     /// <summary>Runs the tool named <paramref name="toolName"/>, or (null) the first registered tool whose formats include the capture's.</summary>
     private static Task<StreamConversionResult> ConvertWithRegisteredToolAsync(StreamMonitorCapture capture, StreamCaptureConverterOptions options, string? toolName, CancellationToken cancellationToken)
     {
-        StreamConvertToolOptions? tool;
+        ExternalToolOptions? tool;
         if (toolName is null)
         {
             tool = options.Tools.FirstOrDefault(t => Handles(t, capture.Capture.Kind));
@@ -113,7 +104,7 @@ public sealed class StreamCaptureConverter
     }
 
     /// <summary>Whether <paramref name="tool"/> accepts <paramref name="kind"/>: an empty <c>Formats</c> accepts anything, otherwise a token naming the format or the capture's extension.</summary>
-    public static bool Handles(StreamConvertToolOptions tool, StreamContentKind kind)
+    public static bool Handles(ExternalToolOptions tool, StreamContentKind kind)
     {
         var tokens = tool.Formats.Split([',', ';', ' '], StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
         if (tokens.Length == 0)
@@ -132,70 +123,49 @@ public sealed class StreamCaptureConverter
         return tokens.Any(t => names.Contains(t, StringComparer.OrdinalIgnoreCase) || string.Equals(t, kind.Extension, StringComparison.OrdinalIgnoreCase));
     }
 
-    private static async Task<StreamConversionResult> RunToolAsync(StreamMonitorCapture capture, string? toolPath, string arguments, int dpi, string outputExtension, CancellationToken cancellationToken)
+    private static Task<StreamConversionResult> RunToolAsync(StreamMonitorCapture capture, string? toolPath, string arguments, int dpi, string outputExtension, CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(toolPath))
         {
-            return new StreamConversionResult(false, null, "No external converter tool path is configured.");
+            return Task.FromResult(new StreamConversionResult(false, null, "No external converter tool path is configured."));
         }
 
-        if (capture.SavedPath is not { } inputPath)
+        // The registration's Formats only choose a tool (Handles); a tool picked explicitly runs on any capture, so the handler accepts any source.
+        var tool = new ExternalToolOptions { Name = Path.GetFileNameWithoutExtension(toolPath), Path = toolPath, Arguments = arguments, Dpi = dpi, OutputExtension = outputExtension };
+        var destinationType = ContentTypeNames.Resolve(outputExtension).FirstOrDefault() ?? outputExtension;
+        return RunHandlerAsync(capture, new ExternalToolConversionHandler(tool, _temp), destinationType, outputExtension, cancellationToken);
+    }
+
+    private static async Task<StreamConversionResult> RunHandlerAsync(StreamMonitorCapture capture, IDocumentConversionHandler handler, string destinationType, string outputExtension, CancellationToken cancellationToken)
+    {
+        if (capture.SavedPath is null)
         {
-            return new StreamConversionResult(false, null, "This capture was never saved to a file, so there is no input for the external tool.");
+            return new StreamConversionResult(false, null, "This capture was never saved to a file, so there is nowhere to write the converted output next to.");
         }
 
         var outputPath = OutputPathFor(capture, outputExtension)!;
-
-        var startInfo = new ProcessStartInfo
-        {
-            FileName = toolPath,
-            UseShellExecute = false,
-            RedirectStandardOutput = true,
-            RedirectStandardError = true,
-            CreateNoWindow = true,
-        };
-
-        // Split the raw template on whitespace, then substitute placeholders *inside* each resulting
-        // token before adding it to ArgumentList - never build one shell-parsed command string. A
-        // substituted path containing spaces still arrives at the process as exactly one argument,
-        // the same way it would if typed with surrounding quotes in a real shell, with no quoting/
-        // escaping step that a captured file name or device-supplied value could break out of.
-        foreach (var rawToken in arguments.Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries))
-        {
-            var token = rawToken
-                .Replace("{input}", inputPath, StringComparison.Ordinal)
-                .Replace("{output}", outputPath, StringComparison.Ordinal)
-                .Replace("{dpi}", dpi.ToString(CultureInfo.InvariantCulture), StringComparison.Ordinal);
-            startInfo.ArgumentList.Add(token);
-        }
-
         try
         {
-            using var process = Process.Start(startInfo);
-            if (process is null)
-            {
-                return new StreamConversionResult(false, null, $"Could not start '{toolPath}'.");
-            }
-
-            await process.WaitForExitAsync(cancellationToken).ConfigureAwait(false);
-            if (process.ExitCode != 0)
-            {
-                var stderr = await process.StandardError.ReadToEndAsync(cancellationToken).ConfigureAwait(false);
-                return new StreamConversionResult(false, null, $"'{toolPath}' exited with code {process.ExitCode}: {stderr.Trim()}");
-            }
-
-            if (!File.Exists(outputPath))
-            {
-                return new StreamConversionResult(false, null, $"'{toolPath}' exited successfully but did not produce '{outputPath}'.");
-            }
-
+            using var source = new MemoryStream(capture.Capture.Data.ToArray());
+            using var destination = new MemoryStream();
+            await handler.ConvertAsync(source, SourceContentType(capture.Capture.Kind), destination, destinationType).ConfigureAwait(false);
+            cancellationToken.ThrowIfCancellationRequested();
+            await File.WriteAllBytesAsync(outputPath, destination.ToArray(), cancellationToken).ConfigureAwait(false);
             return new StreamConversionResult(true, outputPath, null);
         }
-        catch (Exception ex) when (ex is Win32Exception or IOException or UnauthorizedAccessException)
+        catch (Exception ex) when (ex is InvalidOperationException or NotSupportedException or IOException or UnauthorizedAccessException)
         {
             return new StreamConversionResult(false, null, ex.Message);
         }
     }
+
+    private static string SourceContentType(StreamContentKind kind) => kind.Format switch
+    {
+        StreamContentFormat.Hpgl => HpglToSvgConversionHandler.HpglContentType,
+        StreamContentFormat.PostScript => "application/postscript",
+        StreamContentFormat.Pcl => "application/vnd.hp-pcl",
+        _ => ContentTypeNames.Resolve(kind.Extension).FirstOrDefault() ?? "application/octet-stream",
+    };
 
     /// <summary>The converted file's path: the saved capture's own directory and file-name stem, with <paramref name="extension"/> - or null when the capture was never saved.</summary>
     private static string? OutputPathFor(StreamMonitorCapture capture, string extension) =>

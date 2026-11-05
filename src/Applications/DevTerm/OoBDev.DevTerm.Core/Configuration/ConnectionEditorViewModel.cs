@@ -1,3 +1,4 @@
+using OoBDev.Documents.ExternalTools;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -98,7 +99,7 @@ public sealed class ConnectionEditorViewModel : INotifyPropertyChanged, IDisposa
 
     // The profile most recently loaded into the form - see BuildOptions for why it's kept.
     private CliOptions _loadedOptions = new();
-    private IReadOnlyList<StreamConvertToolOptions> _converterTools = [];
+    private IReadOnlyList<ExternalToolOptions> _converterTools = [];
     private bool _isDirty;
     private string? _selectedSerialPort;
     private HidDeviceOption? _selectedHidDevice;
@@ -1327,7 +1328,7 @@ public sealed class ConnectionEditorViewModel : INotifyPropertyChanged, IDisposa
         BleWriteCharacteristicUuid = options.BleWriteCharacteristicUuid ?? string.Empty;
         BleNotifyCharacteristicUuid = options.BleNotifyCharacteristicUuid ?? string.Empty;
         LoopbackSampleIntervalMs = options.LoopbackSampleIntervalMs.ToString(CultureInfo.InvariantCulture);
-        ConverterTools = [.. options.StreamConvertTools.Select(StreamConvertToolOptions.Clone)];
+        ConverterTools = [.. options.StreamConvertTools.Select(ExternalToolOptions.Clone)];
 
         // Bypasses SelectedHidDevice/SelectedUsbtmcDevice's own setters (SetField directly) —
         // those setters push VendorId/ProductId/SerialNumber/DevicePath from whichever device gets
@@ -1362,7 +1363,7 @@ public sealed class ConnectionEditorViewModel : INotifyPropertyChanged, IDisposa
     /// save and still merge in. Replaced as a whole
     /// (never mutated in place) so assigning it counts as an edit for <see cref="IsDirty"/>.
     /// </summary>
-    public IReadOnlyList<StreamConvertToolOptions> ConverterTools
+    public IReadOnlyList<ExternalToolOptions> ConverterTools
     {
         get => _converterTools;
         set => SetField(ref _converterTools, value);
@@ -1398,7 +1399,7 @@ public sealed class ConnectionEditorViewModel : INotifyPropertyChanged, IDisposa
             StreamConvertDpi = _loadedOptions.StreamConvertDpi,
             StreamIdleTimeoutMs = _loadedOptions.StreamIdleTimeoutMs,
             StreamConvertOutputExtension = _loadedOptions.StreamConvertOutputExtension,
-            StreamConvertTools = [.. _converterTools.Select(StreamConvertToolOptions.Clone)],
+            StreamConvertTools = [.. _converterTools.Select(ExternalToolOptions.Clone)],
             Parser = Parser.Trim() is { Length: > 0 } parser ? parser : CliOptions.DefaultPresenter,
             Description = Description.Trim() is { Length: > 0 } d ? d : null,
             ScpiProfile = ScpiProfile.Trim() is { Length: > 0 } sp ? sp : null,

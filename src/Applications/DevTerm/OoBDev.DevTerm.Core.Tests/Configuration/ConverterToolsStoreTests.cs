@@ -1,3 +1,4 @@
+using OoBDev.Documents.ExternalTools;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -17,7 +18,7 @@ namespace OoBDev.DevTerm.Configuration.Tests;
 [TestClass]
 public sealed class ConverterToolsStoreTests
 {
-    private static StreamConvertToolOptions Tool(string name, string path = "gs.exe") => new() { Name = name, Path = path, Arguments = "{input} {output}", Formats = "ps", Dpi = 200 };
+    private static ExternalToolOptions Tool(string name, string path = "gs.exe") => new() { Name = name, Path = path, Arguments = "{input} {output}", Formats = "ps", Dpi = 200 };
 
     private readonly List<TempDirectoryHandle> _directories = [];
 

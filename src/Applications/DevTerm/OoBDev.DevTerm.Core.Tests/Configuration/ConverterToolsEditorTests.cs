@@ -1,3 +1,4 @@
+using OoBDev.Documents.ExternalTools;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -34,7 +35,7 @@ public sealed class ConverterToolsEditorTests
         return handle.DirectoryPath;
     }
 
-    private static StreamConvertToolOptions Tool(string name, string path = "gs.exe") => new() { Name = name, Path = path, Arguments = "{input} {output}" };
+    private static ExternalToolOptions Tool(string name, string path = "gs.exe") => new() { Name = name, Path = path, Arguments = "{input} {output}" };
 
     [TestMethod]
     public void Edits_GoToCopies_SoCancellingLeavesTheOriginalsAlone()

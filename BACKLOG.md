@@ -38,7 +38,6 @@ Owner: all protocols and features of dev-term must exist here. Done means what d
 ## 4. APIs and documents
 
 - [ ] Stack review of the template and transform tools (owner, 2026-10-30): `Xslt.Cli` and `TemplateEngine` overlap; if TemplateEngine takes pluggable path engines (XPath navigator) and hosts the XSLT transforms, `Xslt.Cli` can go once a document explains converting its templates and scripts. Also port the BinaryDataDecoders documentation generation off `xslt.cli` onto TemplateEngine, as MSTest entry points rather than scripts around dotnet tools (a dotnet tool stays fine if its `.props` and `.targets` extensions are right); start with a shootout spike.
-- [ ] Make the DevTerm Ghostscript conversion for PCL and PostScript generic and part of the document conversion framework, and add HP-GL to SVG (decided 2026-11-04: onto the framework `IDocumentConversion` pattern, DevTerm calls it; [migration plan](docs/design/StreamTools/migration-plan.md); HP-GL and ExternalTools libraries done, left: the DevTerm adapter).
 
 - [ ] CGI middleware ([design](docs/design/CgiMiddleware/README.md)): first cut built with 23 passing tests; left is run-as-another-user (decided: stays a TODO, deployers use the service account). Shell fixtures run through `scripts/ci/run-linux-tests.ps1`.
 - [ ] AllMiniLmL6V2: `AddValidatedOptions` for the embedding options (blocked by the Abstractions-only adapter rule).

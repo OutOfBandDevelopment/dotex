@@ -1,3 +1,4 @@
+using OoBDev.Documents.ExternalTools;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -54,11 +55,11 @@ internal static class ConverterToolsDialog
         public required Button Cancel { get; init; }
 
         /// <summary>Set by OK once the list validated.</summary>
-        public IReadOnlyList<StreamConvertToolOptions>? Accepted { get; internal set; }
+        public IReadOnlyList<ExternalToolOptions>? Accepted { get; internal set; }
     }
 
     /// <summary>Opens the dialog over <paramref name="tools"/>; returns the edited list, or null when cancelled.</summary>
-    public static IReadOnlyList<StreamConvertToolOptions>? Show(IApplication app, IEnumerable<StreamConvertToolOptions> tools)
+    public static IReadOnlyList<ExternalToolOptions>? Show(IApplication app, IEnumerable<ExternalToolOptions> tools)
     {
         ArgumentNullException.ThrowIfNull(app);
         var parts = Build(app, new ConverterToolsEditor(tools));
@@ -121,7 +122,7 @@ internal static class ConverterToolsDialog
         var loading = false;
         var selected = -1;
 
-        static string Label(StreamConvertToolOptions tool) => string.IsNullOrWhiteSpace(tool.Name) ? "(unnamed)" : tool.Name;
+        static string Label(ExternalToolOptions tool) => string.IsNullOrWhiteSpace(tool.Name) ? "(unnamed)" : tool.Name;
 
         void LoadFields()
         {

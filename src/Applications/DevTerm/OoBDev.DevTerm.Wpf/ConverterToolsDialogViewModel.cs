@@ -1,3 +1,4 @@
+using OoBDev.Documents.ExternalTools;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -127,7 +128,7 @@ public sealed class ConverterToolsDialogViewModel : ViewModelBase
     public ICommand MoveDown { get; }
 
     /// <summary>The edited tools; read after <see cref="TryAccept"/> returned true.</summary>
-    public IReadOnlyList<StreamConvertToolOptions> Result => _editor.ToList();
+    public IReadOnlyList<ExternalToolOptions> Result => _editor.ToList();
 
     /// <summary>Validates the tools; returns false and sets <see cref="Error"/> when one is incomplete.</summary>
     public bool TryAccept()
@@ -136,7 +137,7 @@ public sealed class ConverterToolsDialogViewModel : ViewModelBase
         return Error.Length == 0;
     }
 
-    private void Edit(ref string field, string value, Action<StreamConvertToolOptions> apply, [CallerMemberName] string? name = null)
+    private void Edit(ref string field, string value, Action<ExternalToolOptions> apply, [CallerMemberName] string? name = null)
     {
         if (!SetProperty(ref field, value, name) || _loading || !HasSelection)
         {
@@ -151,7 +152,7 @@ public sealed class ConverterToolsDialogViewModel : ViewModelBase
         }
     }
 
-    private static string Label(StreamConvertToolOptions tool) => string.IsNullOrWhiteSpace(tool.Name) ? "(unnamed)" : tool.Name;
+    private static string Label(ExternalToolOptions tool) => string.IsNullOrWhiteSpace(tool.Name) ? "(unnamed)" : tool.Name;
 
     private void Refresh(int select)
     {

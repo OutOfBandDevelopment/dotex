@@ -1,3 +1,4 @@
+using OoBDev.Documents.ExternalTools;
 using OoBDev.System.IO;
 using OoBDev.System.IO.Devices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -525,7 +526,7 @@ public class WebScreenshotTests
         var options = new CliOptions { Transport = "tcp", Host = "127.0.0.1", Port = ((IPEndPoint)device.LocalEndpoint).Port.ToString(global::System.Globalization.CultureInfo.InvariantCulture), Presenter = ["hex"], Tui = false, Cli = true, ExportDirectory = exports };
         var toolsFile = Path.Combine(exports, "tools.json");
         Directory.CreateDirectory(exports);
-        new OoBDev.DevTerm.Configuration.ConverterToolsStore(toolsFile).Save([new OoBDev.DevTerm.Configuration.StreamConvertToolOptions { Name = "copyit", Path = "cmd.exe", Arguments = "/c copy /Y {input} {output}", OutputExtension = "png" }]);
+        new OoBDev.DevTerm.Configuration.ConverterToolsStore(toolsFile).Save([new OoBDev.Documents.ExternalTools.ExternalToolOptions { Name = "copyit", Path = "cmd.exe", Arguments = "/c copy /Y {input} {output}", OutputExtension = "png" }]);
         await RunAsync(async (page, baseUrl) =>
         {
             await page.GotoAsync($"{baseUrl}/monitor?token=demo-token");

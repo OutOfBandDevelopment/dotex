@@ -1,3 +1,4 @@
+using OoBDev.Documents.ExternalTools;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -17,7 +18,7 @@ namespace OoBDev.DevTerm.Tui.Tests;
 [DoNotParallelize]
 public sealed class ConverterToolsDialogTests
 {
-    private static StreamConvertToolOptions Tool(string name) => new() { Name = name, Path = "gs.exe", Arguments = "{input} {output}", Formats = "ps" };
+    private static ExternalToolOptions Tool(string name) => new() { Name = name, Path = "gs.exe", Arguments = "{input} {output}", Formats = "ps" };
 
     private static void Press(Button button) => button.InvokeCommand(Command.Accept);
 

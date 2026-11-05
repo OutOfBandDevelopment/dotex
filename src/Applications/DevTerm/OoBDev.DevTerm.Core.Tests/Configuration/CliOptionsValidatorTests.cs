@@ -1,3 +1,4 @@
+using OoBDev.Documents.ExternalTools;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -358,7 +359,7 @@ public sealed class CliOptionsValidatorTests
         Transport = "serial",
         Port = "COM3",
         StreamConvertMode = mode,
-        StreamConvertTools = [.. names.Select(n => new StreamConvertToolOptions { Name = n, Path = "gs" })],
+        StreamConvertTools = [.. names.Select(n => new ExternalToolOptions { Name = n, Path = "gs" })],
     };
 
     [TestMethod]

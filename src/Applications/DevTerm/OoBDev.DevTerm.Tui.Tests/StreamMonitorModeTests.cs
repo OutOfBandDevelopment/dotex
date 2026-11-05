@@ -1,3 +1,4 @@
+using OoBDev.Documents.ExternalTools;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using OoBDev.System.IO;
@@ -227,8 +228,8 @@ public sealed class StreamMonitorModeTests
     public async Task BuildWindow_OffersTheAppWideConverterTools_AheadOfAProfilesOwn()
     {
         await using var bench = await StreamMonitorBench.StartAsync("scope");
-        var cliOptions = new CliOptions { StreamConvertTools = [new StreamConvertToolOptions { Name = "old", Path = "old.exe" }, new StreamConvertToolOptions { Name = "gs", Path = "profile-gs.exe" }] };
-        StreamConvertToolOptions[] globalTools = [new() { Name = "gs", Path = "global-gs.exe" }];
+        var cliOptions = new CliOptions { StreamConvertTools = [new ExternalToolOptions { Name = "old", Path = "old.exe" }, new ExternalToolOptions { Name = "gs", Path = "profile-gs.exe" }] };
+        ExternalToolOptions[] globalTools = [new() { Name = "gs", Path = "global-gs.exe" }];
 
         StreamMonitorWindowParts? captured = null;
         TuiTestRunner.RunHeadlessApp(app => captured = StreamMonitorMode.BuildWindow(app, bench.Monitor, cliOptions, globalTools));
