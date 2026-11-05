@@ -183,4 +183,29 @@ public sealed class UiLayoutReviewTests
     [DataRow(BuiltInThemes.DarkName)]
     public void InstrumentPickerWindow_ScpiChoices_HasNoLayoutProblems(string theme) =>
         Review(theme, () => new InstrumentPickerWindow(new InstrumentPickerDialogViewModel(new InstrumentPickerScreenshotTests.GuideProvider())), 460, 340);
+
+    [TestMethod]
+    [DataRow(BuiltInThemes.LightName)]
+    [DataRow(BuiltInThemes.DarkName)]
+    public void MainWindow_WithScpiControlPanel_HasNoLayoutProblems(string theme) =>
+        Review(theme, BuildWindowWithScpiPanel, 900, 650);
+
+    private static MainWindow BuildWindowWithScpiPanel()
+    {
+        var profile = new OoBDev.Scpi.ScpiInstrumentProfile
+        {
+            Name = "Bench PSU",
+            Terminator = "\n",
+            Notes = "A long note about the instrument that has to wrap inside the Notes section of the panel without being clipped or running off the window.",
+            Commands =
+            [
+                new OoBDev.Scpi.ScpiCommandDefinition { Id = "idn", Label = "Identify", Category = "System", Template = "*IDN?", IsQuery = true },
+                new OoBDev.Scpi.ScpiCommandDefinition { Id = "rst", Label = "Reset", Category = "System", Template = "*RST" },
+                new OoBDev.Scpi.ScpiCommandDefinition { Id = "volt", Label = "Read voltage", Category = "Measure", Template = "MEAS:VOLT?", IsQuery = true },
+                new OoBDev.Scpi.ScpiCommandDefinition { Id = "curr", Label = "Read current", Category = "Measure", Template = "MEAS:CURR?", IsQuery = true },
+            ],
+        };
+        var shell = new ShellViewModel([new ScpiPanelFactory(profile, _ => Task.FromResult<string?>("ACME"))]);
+        return new MainWindow { DataContext = shell };
+    }
 }

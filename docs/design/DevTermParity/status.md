@@ -20,7 +20,7 @@ This page holds the detail that used to sit in `TODO.md` and `BACKLOG.md`: what 
 
 ## WPF shell slices
 
-dev-term `DevTerm.Wpf` is about 8,800 lines. Each slice is ported with view model tests. Every xaml window is captured for the user guide and checked in both themes by `UiLayoutReviewTests`; the code-built control panels are not yet reviewed.
+dev-term `DevTerm.Wpf` is about 8,800 lines. Each slice is ported with view model tests. Every xaml window is captured for the user guide and checked in both themes by `UiLayoutReviewTests`; the main window with a generated SCPI control panel open is reviewed too (2026-11-04).
 
 1. **Session workflow.** Done: `SessionViewModel`, tab host, loopback session, sessions from saved profiles, a basic connection editor (transport, serial port and fields, host and TCP port, profile list, save, connect). The editor shows the fields and detected-device pickers of each transport (ports, network scan, HID, USBTMC, BLE with explore). The Refresh button and the file-watcher refresh work and are tested.
 2. **Main window menus.** Done: Echo sent, Clear output, Log to file toggle, log path choice, log notes, and a File, Device and View menu bar (checkable Theme submenu) over the existing commands. The View menu has a Software flow control (XON/XOFF) toggle, enabled for TCP sessions.
