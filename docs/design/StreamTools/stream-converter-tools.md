@@ -71,12 +71,12 @@ StreamCaptureConverter --> StreamCaptureConverterOptions
 actor User
 participant "Stream Monitor window" as W
 participant StreamCaptureConverter as C
-participant "Tool (gs, gpcl6...)" as T
+participant "ExternalToolConversionHandler (gs, gpcl6...)" as T
 User -> W : select capture, choose "Auto", Convert...
 W -> C : ConvertAsync(capture)
 C -> C : first tool whose Formats contains capture format
 alt found
-  C -> T : run with {input} {output} {dpi}
+  C -> T : ConvertAsync(source stream, content types); the handler runs the tool with {input} {output} {dpi}
   T --> C : exit 0, output file
   C --> W : Success(outputPath)
 else none
