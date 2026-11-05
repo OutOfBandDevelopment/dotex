@@ -38,6 +38,40 @@ public sealed class ToolGuideTests
     private static void Write(string tool, string guide) =>
         ApiGuideRenderer.WriteIfChanged(Path.Combine(RepoRoot(), "docs", "applications", "tools", tool + ".md"), guide);
 
+    private async Task HelpGuideAsync(string assembly, string toolName, string synopsis, string mustContain)
+    {
+        // Stage
+        var help = await RunAsync(assembly, toolName, "Options", "Run the tool with `--help` to list its options.", "--help");
+
+        // Test
+        var guide = CliToolGuide.Render(toolName, synopsis, [help]);
+        Write(toolName, guide);
+
+        // Assert
+        Assert.AreEqual(0, help.ExitCode);
+        StringAssert.Contains(guide, mustContain);
+    }
+
+    [TestMethod]
+    public Task TemplateEngine_Help_WritesTheGuideAsync() =>
+        HelpGuideAsync("OoBDev.TemplateEngine.Cli", "oobdev-templateengine", "Renders a Handlebars template over an input file.", "--input-type");
+
+    [TestMethod]
+    public Task DocumentConverter_Help_WritesTheGuideAsync() =>
+        HelpGuideAsync("OoBDev.DocumentConverter.Cli", "oobdev-documentconverter", "Converts a document from one format to another.", "--output");
+
+    [TestMethod]
+    public Task FileRagEngine_Help_WritesTheGuideAsync() =>
+        HelpGuideAsync("OoBDev.FileRagEngine.Cli", "oobdev-filerag", "Runs a template over files with a language model.", "--include-prompt");
+
+    [TestMethod]
+    public Task DacPacCompiler_Help_WritesTheGuideAsync() =>
+        HelpGuideAsync("OoBDev.DacPacCompiler.Cli", "oobdev-dacpac", "Builds a DACPAC from a SQL CLR assembly.", "--sqlclr");
+
+    [TestMethod]
+    public Task LlmCodeGen_Help_WritesTheGuideAsync() =>
+        HelpGuideAsync("OoBDev.LlmCodeGen.Cli", "oobdev-llmcodegen", "Sends the files of each folder to a language model with a template and writes the responses.", "--provider");
+
     [TestMethod]
     public async Task Xslt_Help_WritesTheGuideAsync()
     {

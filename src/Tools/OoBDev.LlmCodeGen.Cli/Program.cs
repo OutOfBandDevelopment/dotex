@@ -29,7 +29,31 @@ public static class Program
         ["--extract"] = $"{LlmCodeGenOptions.SectionName}:{nameof(LlmCodeGenOptions.ExtractFiles)}",
     };
 
-    private static async Task Main(string[] args) =>
+    private const string Usage = """
+        oobdev-llmcodegen --input <folder> --output <folder> --template <name|file> --model <model> [--provider ollama|groq-cloud] [--pattern *.*] [--overwrite true|false] [--extract true|false]
+          --input      folder scanned recursively; every folder with matching files becomes one prompt (required)
+          --output     folder for prompts, responses and extracted files (required)
+          --template   bundled template name (for example documentation) or a Handlebars file (required)
+          --model      model name sent with each prompt (required)
+          --provider   ollama (default) or groq-cloud (alias groq)
+          --pattern    file pattern selecting the files in a prompt (default *.*)
+          --overwrite  rerun folders that already have a response (default false)
+          --extract    write files found in fenced blocks of the response beside it (default true)
+        """;
+
+    private static async Task<int> Main(string[] args)
+    {
+        if (args.Length > 0 && Array.Exists(args, a => a is "-h" or "--help" or "-?"))
+        {
+            Console.WriteLine(Usage);
+            return 0;
+        }
+
+        await RunHostAsync(args);
+        return 0;
+    }
+
+    private static async Task RunHostAsync(string[] args) =>
         await Host.CreateDefaultBuilder(args)
             .ConfigureAppConfiguration((context, config) =>
             {
