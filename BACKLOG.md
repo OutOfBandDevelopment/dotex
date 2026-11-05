@@ -87,4 +87,3 @@ Scope rule: every BinaryDataDecoders feature is migrated; phases are priority or
   - Session-log playback checkpoints, skip-silence cap and note revisions; manifest editor JSON only with a convert from `.xml` panels.
   - Network device discovery (one Detect button) and in-app config editors for network bridges.
 - [ ] DevTerm leftovers beyond the list above: Stream Monitor direct in-window preview of PCL, PostScript and HP-GL; a custom Roslyn analyzers project for DevTerm coding standards (the repo has `OoBDev.Analyzers`, so fold into it); Dockable MDI layout in WPF; read-write control channel and out-of-process plugins over a named pipe and a localhost web service (with the plugin sandbox item); research notes such as the BYTECC BT-UP01 bridge.
-- [ ] Layout review of the WPF code-built control panels (xaml windows are reviewed in both themes by `UiLayoutReviewTests`, the panels built in code are not).

@@ -190,6 +190,12 @@ public sealed class UiLayoutReviewTests
     public void MainWindow_WithScpiControlPanel_HasNoLayoutProblems(string theme) =>
         Review(theme, BuildWindowWithScpiPanel, 900, 650);
 
+    [TestMethod]
+    [DataRow(BuiltInThemes.LightName)]
+    [DataRow(BuiltInThemes.DarkName)]
+    public void SessionLogNotePrompt_CodeBuilt_HasNoLayoutProblems(string theme) =>
+        Review(theme, () => WpfSessionLogDialog.BuildNoteWindow(out _), 420, 140);
+
     private static MainWindow BuildWindowWithScpiPanel()
     {
         var profile = new OoBDev.Scpi.ScpiInstrumentProfile
