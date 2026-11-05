@@ -17,7 +17,7 @@ namespace OoBDev.DevTerm.Configuration.Discovery;
 public sealed class MdnsProbe(IUdpExchange exchange) : INetworkDeviceProbe
 {
     public static readonly IReadOnlyList<string> ServiceTypes =
-        ["_scpi-raw._tcp.local", "_lxi._tcp.local", "_vxi-11._tcp.local", "_mqtt._tcp.local", "_amqp._tcp.local", "_telnet._tcp.local", "_http._tcp.local"];
+        ["_scpi-raw._tcp.local", "_lxi._tcp.local", "_vxi-11._tcp.local", "_mqtt._tcp.local", "_amqp._tcp.local", "_telnet._tcp.local", "_http._tcp.local", "_ser2net._tcp.local", "_zwave._tcp.local"];
 
     public MdnsProbe() : this(new SystemUdpExchange())
     {
@@ -61,6 +61,7 @@ public sealed class MdnsProbe(IUdpExchange exchange) : INetworkDeviceProbe
         "_scpi-raw" or "_lxi" or "_vxi-11" => "lxi",
         "_mqtt" => "mqtt",
         "_amqp" => "amqp",
+        "_ser2net" or "_zwave" => "serial-bridge",
         _ => "unknown",
     };
 }

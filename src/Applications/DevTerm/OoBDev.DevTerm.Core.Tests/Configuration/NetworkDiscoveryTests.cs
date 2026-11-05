@@ -86,6 +86,32 @@ public sealed class NetworkDiscoveryTests
     }
 
     [TestMethod]
+    public async Task MdnsProbe_Ser2NetBridge_IsASerialBridgeHitOnItsTcpPort()
+    {
+        var probe = new MdnsProbe(new CannedExchange(new UdpReply(IPAddress.Parse("10.0.0.9"), MdnsAnswer("_ser2net._tcp", "overwatch-com4", 4000))));
+
+        var hits = await probe.ProbeAsync(TimeSpan.FromMilliseconds(10), TestContext.CancellationToken);
+
+        Assert.HasCount(1, hits);
+        Assert.AreEqual("10.0.0.5", hits[0].Address);
+        Assert.AreEqual(4000, hits[0].Port);
+        Assert.AreEqual("tcp", hits[0].Transport);
+        Assert.AreEqual("serial-bridge", hits[0].Kind);
+        Assert.AreEqual("overwatch-com4", hits[0].DisplayName);
+    }
+
+    [TestMethod]
+    public async Task MdnsProbe_ZWaveBridge_IsASerialBridgeHit()
+    {
+        var probe = new MdnsProbe(new CannedExchange(new UdpReply(IPAddress.Parse("10.0.0.9"), MdnsAnswer("_zwave._tcp", "zstick", 4000))));
+
+        var hits = await probe.ProbeAsync(TimeSpan.FromMilliseconds(10), TestContext.CancellationToken);
+
+        Assert.HasCount(1, hits);
+        Assert.AreEqual("serial-bridge", hits[0].Kind);
+    }
+
+    [TestMethod]
     public void ParseRecords_NeverThrowsOnGarbageOrTruncatedInput()
     {
         var answer = MdnsAnswer();
@@ -129,13 +155,13 @@ public sealed class NetworkDiscoveryTests
         Assert.AreEqual("10.0.0.10", merged[1].Address);
     }
 
-    private static byte[] MdnsAnswer()
+    private static byte[] MdnsAnswer(string service = "_mqtt._tcp", string instance = "broker", int port = 1883)
     {
         var message = new List<byte> { 0, 0, 0x84, 0, 0, 0, 0, 1, 0, 0, 0, 2 };
-        message.AddRange(Name("_mqtt._tcp.local"));
-        message.AddRange(Record(12, Name("broker._mqtt._tcp.local")));
-        message.AddRange(Name("broker._mqtt._tcp.local"));
-        message.AddRange(Record(33, [0, 0, 0, 0, 0x07, 0x5B, .. Name("host.local")]));
+        message.AddRange(Name(service + ".local"));
+        message.AddRange(Record(12, Name(instance + "." + service + ".local")));
+        message.AddRange(Name(instance + "." + service + ".local"));
+        message.AddRange(Record(33, [0, 0, 0, 0, (byte)(port >> 8), (byte)port, .. Name("host.local")]));
         message.AddRange(Name("host.local"));
         message.AddRange(Record(1, [10, 0, 0, 5]));
         message[7] = 1;
