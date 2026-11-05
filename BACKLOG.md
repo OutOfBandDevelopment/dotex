@@ -21,7 +21,7 @@ Owner: all protocols and features of dev-term must exist here. Done means what d
 
 ## 2. Devices
 
-- [ ] Run the new bench Hardware tests once with the bench on (Korad supplies on COM6 and COM7, network instruments online) and fix what the real replies show ([change](docs/changes/2026-11-04.md#bench-hardware-tests-2026-11-04)).
+- [ ] Rerun the bench Hardware tests for the instruments not yet on the network (HP 34401A at .109, Tektronix 2230 at .108 and .107) when they are attached; Korad, Rigol and TDS2024 passed 2026-11-05, and skipping these was the owner's decision ([bench notes](docs/how-tos/test-hardware.md#known-gaps)).
 - [ ] Device decoding leftovers: the DE-5000 Hardware test needs a BLE transport; phase 0 is done ([device-parity.md](docs/migration/device-parity.md) section 5; M3 needs a Radex capture); physical passes for K8055 input bits, Busylight program frames, Radex settings and reset, Zoom H4n handshake, NMEA BT-20 framing and a real SCPI instrument. Plan: [device-decoding-migration-plan.md](docs/migration/device-decoding-migration-plan.md).
   - Favero and Saint George score machines have no hardware pass (the owner has no machine, 2026-11-04); their decoders rest on unit tests, and Saint George priority is read from the `P` byte so it is never set (ported as-is).
 

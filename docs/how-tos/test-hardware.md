@@ -53,8 +53,9 @@ One project per call; two runs at once fight over the same port.
 
 ## Known gaps
 
-- The Korad Hardware tests (`KoradSupplyTests` in `OoBDev.Scpi.Tests`) are read-only: identify, setpoint queries and the status byte. They never set a value or switch the output on. Written 2026-11-04 with the supplies not attached, so only the Inconclusive path ran; run them once with the supplies on COM6 and COM7.
-- The DevTerm identify tests through the command-line mode (`RealHardwareCliTests` in `OoBDev.DevTerm.Tui.Tests`, category `Hardware`) use the parameters above, with each device terminator and byte delay from the table. They also ended Inconclusive on 2026-11-04 because the bench network was offline.
+- The Korad Hardware tests (`KoradSupplyTests` in `OoBDev.Scpi.Tests`) are read-only: identify, setpoint queries and the status byte. They never set a value or switch the output on. Verified against both supplies 2026-11-05 (COM6 and COM7, all 8 pass).
+- The DevTerm identify tests through the command-line mode (`RealHardwareCliTests` in `OoBDev.DevTerm.Tui.Tests`, category `Hardware`) use the parameters above, with each device terminator and byte delay from the table. 2026-11-05: the TDS2024 passes; the HP 34401A and both Tektronix 2230 scopes (192.168.0.107 to .109) are not on the network and are skipped by owner decision, since they use the same bridge and library as the TDS2024 (the 2230 differs only in its pre-SCPI command set). Rerun them when they are attached.
+- Rigol USBTMC (DS1102E, DM3058, DG1022 via enumeration) and the DG1062Z over LXI pass (2026-11-05).
 
 ## Where each device's notes live
 
