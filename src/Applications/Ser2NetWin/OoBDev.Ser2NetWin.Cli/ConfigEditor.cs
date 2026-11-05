@@ -39,51 +39,18 @@ public sealed class ConfigEditor
         {
             Render(bridges, config.Mdns, dirty);
 
-            var choices = new List<string> { "Add bridge" };
-            if (bridges.Count > 0)
-            {
-                choices.Add("Edit bridge");
-                choices.Add("Remove bridge");
-            }
-
-            choices.Add(config.Mdns.Enabled ? "Disable mDNS advertisement" : "Enable mDNS advertisement");
-            choices.Add("Save and exit");
-            choices.Add("Exit without saving");
-
-            var action = _console.Prompt(new SelectionPrompt<string>().Title("What next?").AddChoices(choices));
+            var action = _console.Prompt(new SelectionPrompt<string>().Title("What next?").AddChoices(Choices(bridges, config.Mdns)));
 
             switch (action)
             {
                 case "Add bridge":
-                    var added = Edit(null, bridges);
-                    if (added is not null)
-                    {
-                        bridges.Add(added);
-                        dirty = true;
-                    }
-
+                    dirty |= AddBridge(bridges);
                     break;
                 case "Edit bridge":
-                    var index = PickIndex(bridges, "Edit which bridge?");
-                    if (index >= 0)
-                    {
-                        var edited = Edit(bridges[index], bridges.Where((_, i) => i != index).ToList());
-                        if (edited is not null)
-                        {
-                            bridges[index] = edited;
-                            dirty = true;
-                        }
-                    }
-
+                    dirty |= EditBridge(bridges);
                     break;
                 case "Remove bridge":
-                    var removeIndex = PickIndex(bridges, "Remove which bridge?");
-                    if (removeIndex >= 0 && _console.Confirm($"Remove {bridges[removeIndex]}?", false))
-                    {
-                        bridges.RemoveAt(removeIndex);
-                        dirty = true;
-                    }
-
+                    dirty |= RemoveBridge(bridges);
                     break;
                 case "Enable mDNS advertisement":
                 case "Disable mDNS advertisement":
@@ -91,19 +58,12 @@ public sealed class ConfigEditor
                     dirty = true;
                     break;
                 case "Save and exit":
-                    var errors = ConfigValidator.Validate(bridges);
-                    if (errors.Count > 0)
+                    if (TrySave(config, bridges))
                     {
-                        ShowErrors(errors);
-                        _console.Prompt(new TextPrompt<string>("Press Enter to continue").AllowEmpty());
-                        break;
+                        return 0;
                     }
 
-                    config.Bridges = bridges;
-                    _store.Save(config);
-                    _console.MarkupLine($"[green]Saved[/] {Markup.Escape(_store.FilePath)}");
-                    OfferServiceRestart();
-                    return 0;
+                    break;
                 default:
                     if (!dirty || _console.Confirm("Discard unsaved changes?", false))
                     {
@@ -113,6 +73,80 @@ public sealed class ConfigEditor
                     break;
             }
         }
+    }
+
+    private static List<string> Choices(List<BridgeOptions> bridges, MdnsOptions mdns)
+    {
+        var choices = new List<string> { "Add bridge" };
+        if (bridges.Count > 0)
+        {
+            choices.Add("Edit bridge");
+            choices.Add("Remove bridge");
+        }
+
+        choices.Add(mdns.Enabled ? "Disable mDNS advertisement" : "Enable mDNS advertisement");
+        choices.Add("Save and exit");
+        choices.Add("Exit without saving");
+        return choices;
+    }
+
+    private bool AddBridge(List<BridgeOptions> bridges)
+    {
+        var added = Edit(null, bridges);
+        if (added is null)
+        {
+            return false;
+        }
+
+        bridges.Add(added);
+        return true;
+    }
+
+    private bool EditBridge(List<BridgeOptions> bridges)
+    {
+        var index = PickIndex(bridges, "Edit which bridge?");
+        if (index < 0)
+        {
+            return false;
+        }
+
+        var edited = Edit(bridges[index], bridges.Where((_, i) => i != index).ToList());
+        if (edited is null)
+        {
+            return false;
+        }
+
+        bridges[index] = edited;
+        return true;
+    }
+
+    private bool RemoveBridge(List<BridgeOptions> bridges)
+    {
+        var index = PickIndex(bridges, "Remove which bridge?");
+        if (index < 0 || !_console.Confirm($"Remove {bridges[index]}?", false))
+        {
+            return false;
+        }
+
+        bridges.RemoveAt(index);
+        return true;
+    }
+
+    private bool TrySave(Ser2NetConfig config, List<BridgeOptions> bridges)
+    {
+        var errors = ConfigValidator.Validate(bridges);
+        if (errors.Count > 0)
+        {
+            ShowErrors(errors);
+            _console.Prompt(new TextPrompt<string>("Press Enter to continue").AllowEmpty());
+            return false;
+        }
+
+        config.Bridges = bridges;
+        _store.Save(config);
+        _console.MarkupLine($"[green]Saved[/] {Markup.Escape(_store.FilePath)}");
+        OfferServiceRestart();
+        return true;
     }
 
     private void Render(List<BridgeOptions> bridges, MdnsOptions mdns, bool dirty)

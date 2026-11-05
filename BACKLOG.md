@@ -47,7 +47,6 @@ Owner: all protocols and features of dev-term must exist here. Done means what d
 
 A clean rebuild (2026-10-22) has no analyzer warnings. Analyzers are wired from `src/Directory.Build.props` (`OoBDev.Analyzers` OOB0001 to OOB0003, NetAnalyzers Recommended, Meziantou); `Tools` and `Examples` are exempt from MA0004 and MA0048 in `src/.editorconfig`.
 
-- [ ] Ser2NetWin long methods still suppressed with `NoWarn MA0051` in `OoBDev.System.IO.Ports.Bridge` and `OoBDev.Ser2NetWin.Cli`: `BridgeWorker.RunClientAsync` (78 lines), `ConfigValidator.Validate` (67), `Rfc2217Session` option parsing (85 and 96 lines); split them, then drop the `NoWarn`.
 - [ ] Rules still at `suggestion` in `src/.editorconfig`: flip each to warning after fixing its backlog. Kept on purpose: MA0026 (about 50 TODO comments), MA0046 (3, `EventHandler<TMessage>` on the device interfaces), MA0061 (3, DEBUG-only required parameters), CA1710, CA1720, CA1708 (domain names).
 
 ## 6. Migrations

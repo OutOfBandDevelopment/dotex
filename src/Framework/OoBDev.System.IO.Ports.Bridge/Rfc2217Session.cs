@@ -92,77 +92,20 @@ public sealed class Rfc2217Session
             switch (_state)
             {
                 case ParseState.Data:
-                    if (b == Iac)
-                    {
-                        _state = ParseState.Iac;
-                    }
-                    else
-                    {
-                        data.Add(b);
-                    }
-
+                    StepData(b, data);
                     break;
-
                 case ParseState.Iac:
-                    if (b == Iac)
-                    {
-                        data.Add(Iac);
-                        _state = ParseState.Data;
-                    }
-                    else if (b is Will or Wont or Do or Dont)
-                    {
-                        _verb = b;
-                        _state = ParseState.Verb;
-                    }
-                    else if (b == Sb)
-                    {
-                        _subnegotiation.Clear();
-                        _state = ParseState.Subnegotiation;
-                    }
-                    else
-                    {
-                        _state = ParseState.Data; // NOP, GA, etc.
-                    }
-
+                    StepIac(b, data);
                     break;
-
                 case ParseState.Verb:
                     Negotiate(_verb, b, reply);
                     _state = ParseState.Data;
                     break;
-
                 case ParseState.Subnegotiation:
-                    if (b == Iac)
-                    {
-                        _state = ParseState.SubnegotiationIac;
-                    }
-                    else if (_subnegotiation.Count < MaxSubnegotiationLength)
-                    {
-                        _subnegotiation.Add(b);
-                    }
-
+                    StepSubnegotiation(b);
                     break;
-
                 case ParseState.SubnegotiationIac:
-                    if (b == Se)
-                    {
-                        HandleSubnegotiation(reply);
-                        _state = ParseState.Data;
-                    }
-                    else if (b == Iac)
-                    {
-                        if (_subnegotiation.Count < MaxSubnegotiationLength)
-                        {
-                            _subnegotiation.Add(Iac);
-                        }
-
-                        _state = ParseState.Subnegotiation;
-                    }
-                    else
-                    {
-                        _state = ParseState.Data; // malformed; resynchronise
-                    }
-
+                    StepSubnegotiationIac(b, reply);
                     break;
             }
         }
@@ -170,6 +113,74 @@ public sealed class Rfc2217Session
         return new Rfc2217Result(data.ToArray(), reply.ToArray());
     }
 
+    private void StepData(byte b, List<byte> data)
+    {
+        if (b == Iac)
+        {
+            _state = ParseState.Iac;
+        }
+        else
+        {
+            data.Add(b);
+        }
+    }
+
+    private void StepIac(byte b, List<byte> data)
+    {
+        if (b == Iac)
+        {
+            data.Add(Iac);
+            _state = ParseState.Data;
+        }
+        else if (b is Will or Wont or Do or Dont)
+        {
+            _verb = b;
+            _state = ParseState.Verb;
+        }
+        else if (b == Sb)
+        {
+            _subnegotiation.Clear();
+            _state = ParseState.Subnegotiation;
+        }
+        else
+        {
+            _state = ParseState.Data; // NOP, GA, etc.
+        }
+    }
+
+    private void StepSubnegotiation(byte b)
+    {
+        if (b == Iac)
+        {
+            _state = ParseState.SubnegotiationIac;
+        }
+        else if (_subnegotiation.Count < MaxSubnegotiationLength)
+        {
+            _subnegotiation.Add(b);
+        }
+    }
+
+    private void StepSubnegotiationIac(byte b, List<byte> reply)
+    {
+        if (b == Se)
+        {
+            HandleSubnegotiation(reply);
+            _state = ParseState.Data;
+        }
+        else if (b == Iac)
+        {
+            if (_subnegotiation.Count < MaxSubnegotiationLength)
+            {
+                _subnegotiation.Add(Iac);
+            }
+
+            _state = ParseState.Subnegotiation;
+        }
+        else
+        {
+            _state = ParseState.Data; // malformed; resynchronise
+        }
+    }
     /// <summary>
     /// Returns a NOTIFY-MODEMSTATE frame if a masked modem line changed since the last poll (or on the
     /// first poll after the client set a mask), otherwise null.
@@ -340,41 +351,19 @@ public sealed class Rfc2217Session
                     break;
 
                 case SetBaudRate when arg.Length == 4:
-                    var requested = (arg[0] << 24) | (arg[1] << 16) | (arg[2] << 8) | arg[3];
-                    if (requested > 0 && control is not null)
-                    {
-                        control.BaudRate = requested;
-                    }
-
-                    var baud = control?.BaudRate ?? _options.BaudRate;
-                    Subnegotiation(reply, command, (byte)(baud >> 24), (byte)(baud >> 16), (byte)(baud >> 8), (byte)baud);
+                    ReplyBaudRate(reply, command, arg, control);
                     break;
 
                 case SetDataSize when arg.Length == 1:
-                    if (arg[0] is >= 5 and <= 8 && control is not null)
-                    {
-                        control.DataBits = arg[0];
-                    }
-
-                    Subnegotiation(reply, command, (byte)(control?.DataBits ?? _options.DataBits));
+                    ReplyDataSize(reply, command, arg[0], control);
                     break;
 
                 case SetParity when arg.Length == 1:
-                    if (control is not null && ParityFromCode(arg[0]) is { } parity)
-                    {
-                        control.Parity = parity;
-                    }
-
-                    Subnegotiation(reply, command, ParityCode(control?.Parity ?? _options.Parity));
+                    ReplyParity(reply, command, arg[0], control);
                     break;
 
                 case SetStopSize when arg.Length == 1:
-                    if (control is not null && StopBitsFromCode(arg[0]) is { } stopBits)
-                    {
-                        control.StopBits = stopBits;
-                    }
-
-                    Subnegotiation(reply, command, StopBitsCode(control?.StopBits ?? _options.StopBits));
+                    ReplyStopSize(reply, command, arg[0], control);
                     break;
 
                 case SetControl when arg.Length == 1:
@@ -386,25 +375,11 @@ public sealed class Rfc2217Session
                     break;
 
                 case SetModemStateMask when arg.Length == 1:
-                    _modemMask = arg[0];
-                    _lastModem = null; // report the full state on the next poll
-                    Subnegotiation(reply, command, arg[0]);
+                    ReplyModemMask(reply, command, arg[0]);
                     break;
 
                 case PurgeData when arg.Length == 1:
-                    if (control is not null)
-                    {
-                        if (arg[0] is 1 or 3)
-                        {
-                            control.DiscardInBuffer();
-                        }
-
-                        if (arg[0] is 2 or 3)
-                        {
-                            control.DiscardOutBuffer();
-                        }
-                    }
-
+                    Purge(arg[0], control);
                     Subnegotiation(reply, command, arg[0]);
                     break;
 
@@ -419,6 +394,72 @@ public sealed class Rfc2217Session
         }
     }
 
+    private void ReplyBaudRate(List<byte> reply, byte command, byte[] arg, ISerialControl? control)
+    {
+        var requested = (arg[0] << 24) | (arg[1] << 16) | (arg[2] << 8) | arg[3];
+        if (requested > 0 && control is not null)
+        {
+            control.BaudRate = requested;
+        }
+
+        var baud = control?.BaudRate ?? _options.BaudRate;
+        Subnegotiation(reply, command, (byte)(baud >> 24), (byte)(baud >> 16), (byte)(baud >> 8), (byte)baud);
+    }
+
+    private void ReplyDataSize(List<byte> reply, byte command, byte requested, ISerialControl? control)
+    {
+        if (requested is >= 5 and <= 8 && control is not null)
+        {
+            control.DataBits = requested;
+        }
+
+        Subnegotiation(reply, command, (byte)(control?.DataBits ?? _options.DataBits));
+    }
+
+    private void ReplyParity(List<byte> reply, byte command, byte requested, ISerialControl? control)
+    {
+        if (control is not null && ParityFromCode(requested) is { } parity)
+        {
+            control.Parity = parity;
+        }
+
+        Subnegotiation(reply, command, ParityCode(control?.Parity ?? _options.Parity));
+    }
+
+    private void ReplyStopSize(List<byte> reply, byte command, byte requested, ISerialControl? control)
+    {
+        if (control is not null && StopBitsFromCode(requested) is { } stopBits)
+        {
+            control.StopBits = stopBits;
+        }
+
+        Subnegotiation(reply, command, StopBitsCode(control?.StopBits ?? _options.StopBits));
+    }
+
+    private void ReplyModemMask(List<byte> reply, byte command, byte mask)
+    {
+        _modemMask = mask;
+        _lastModem = null; // report the full state on the next poll
+        Subnegotiation(reply, command, mask);
+    }
+
+    private static void Purge(byte which, ISerialControl? control)
+    {
+        if (control is null)
+        {
+            return;
+        }
+
+        if (which is 1 or 3)
+        {
+            control.DiscardInBuffer();
+        }
+
+        if (which is 2 or 3)
+        {
+            control.DiscardOutBuffer();
+        }
+    }
     private static byte ApplyControl(byte value, ISerialControl? control)
     {
         switch (value)

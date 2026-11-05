@@ -55,6 +55,13 @@ public static partial class ConfigValidator
             errors.Add($"{bridge.ComPort}: Name must be 63 characters or fewer.");
         }
 
+        ValidateServices(bridge, errors);
+
+        return errors;
+    }
+
+    private static void ValidateServices(BridgeOptions bridge, List<string> errors)
+    {
         foreach (var service in bridge.MdnsServices ?? [])
         {
             if (!ServiceTypePattern().IsMatch(service.ServiceType ?? string.Empty))
@@ -72,8 +79,6 @@ public static partial class ConfigValidator
                 errors.Add($"{bridge.ComPort}: mDNS name must be 63 characters or fewer.");
             }
         }
-
-        return errors;
     }
 
     [GeneratedRegex(@"^_[A-Za-z0-9][A-Za-z0-9-]{0,14}\._(tcp|udp)$", RegexOptions.ExplicitCapture, matchTimeoutMilliseconds: 250)]

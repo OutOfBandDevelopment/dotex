@@ -233,15 +233,12 @@ public sealed class BridgeWorker : IDisposable
     {
         var remote = client.Client.RemoteEndPoint;
         _logger.ClientConnected(_options.ComPort, remote);
-        var buffer = new byte[BufferSize];
         Rfc2217Session? session = null;
         using var clientCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         Task modemTask = Task.CompletedTask;
 
         try
         {
-            var stream = client.GetStream();
-
             if (_options.Protocol == BridgeProtocol.Rfc2217)
             {
                 session = new Rfc2217Session(_options, GetControl);
@@ -254,31 +251,7 @@ public sealed class BridgeWorker : IDisposable
                 modemTask = PollModemAsync(client, session, clientCts.Token);
             }
 
-            while (true)
-            {
-                var read = await stream.ReadAsync(buffer, cancellationToken).ConfigureAwait(false);
-                if (read == 0)
-                {
-                    break;
-                }
-
-                if (session is null)
-                {
-                    await WriteToSerialAsync(buffer.AsMemory(0, read), cancellationToken).ConfigureAwait(false);
-                    continue;
-                }
-
-                var result = session.Process(buffer.AsSpan(0, read));
-                if (result.Reply.Length > 0)
-                {
-                    await WriteToClientAsync(client, result.Reply, cancellationToken).ConfigureAwait(false);
-                }
-
-                if (result.SerialData.Length > 0)
-                {
-                    await WriteToSerialAsync(result.SerialData, cancellationToken).ConfigureAwait(false);
-                }
-            }
+            await PumpClientAsync(client, session, cancellationToken).ConfigureAwait(false);
         }
         catch (OperationCanceledException)
         {
@@ -295,21 +268,56 @@ public sealed class BridgeWorker : IDisposable
 
             session?.Reset();
             client.Dispose();
-
-            lock (_gate)
-            {
-                if (ReferenceEquals(_client, client))
-                {
-                    _client = null;
-                    _clientRemote = null;
-                    _session = null;
-                }
-            }
+            ReleaseClient(client);
 
             _logger.ClientDisconnected(_options.ComPort, remote);
         }
     }
 
+    private async Task PumpClientAsync(TcpClient client, Rfc2217Session? session, CancellationToken cancellationToken)
+    {
+        var buffer = new byte[BufferSize];
+        var stream = client.GetStream();
+
+        while (true)
+        {
+            var read = await stream.ReadAsync(buffer, cancellationToken).ConfigureAwait(false);
+            if (read == 0)
+            {
+                return;
+            }
+
+            if (session is null)
+            {
+                await WriteToSerialAsync(buffer.AsMemory(0, read), cancellationToken).ConfigureAwait(false);
+                continue;
+            }
+
+            var result = session.Process(buffer.AsSpan(0, read));
+            if (result.Reply.Length > 0)
+            {
+                await WriteToClientAsync(client, result.Reply, cancellationToken).ConfigureAwait(false);
+            }
+
+            if (result.SerialData.Length > 0)
+            {
+                await WriteToSerialAsync(result.SerialData, cancellationToken).ConfigureAwait(false);
+            }
+        }
+    }
+
+    private void ReleaseClient(TcpClient client)
+    {
+        lock (_gate)
+        {
+            if (ReferenceEquals(_client, client))
+            {
+                _client = null;
+                _clientRemote = null;
+                _session = null;
+            }
+        }
+    }
     private ISerialControl? GetControl()
     {
         lock (_gate)

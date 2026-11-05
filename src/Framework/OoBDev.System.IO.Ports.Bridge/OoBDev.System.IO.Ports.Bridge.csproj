@@ -3,7 +3,6 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
-    <NoWarn>$(NoWarn);MA0051</NoWarn>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
