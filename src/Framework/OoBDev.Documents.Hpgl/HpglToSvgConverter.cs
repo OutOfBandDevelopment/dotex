@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using System.Globalization;
 using System.Text;
 
-namespace OoBDev.DevTerm;
+namespace OoBDev.Documents.Hpgl;
 
 /// <summary>
 /// A small, dev-term-owned HP-GL instruction interpreter that emits a static SVG file — the

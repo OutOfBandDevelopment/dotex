@@ -1,6 +1,6 @@
 # Migration plan: external conversion onto the document conversion framework
 
-[StreamTools](README.md) | Status: **awaiting owner confirmation** (answer Q2, 2026-11-04: option A, the framework `IDocumentConversion` pattern; DevTerm uses it)
+[StreamTools](README.md) | Status: **in progress, built on the owner answer to Q2 (plan not yet formally confirmed)**; done: `OoBDev.Documents.Hpgl` (handler, moved converter and tests, DevTerm references it); left: `OoBDev.Documents.ExternalTools`, then the DevTerm adapter (answer Q2, 2026-11-04: option A, the framework `IDocumentConversion` pattern; DevTerm uses it)
 
 Today `StreamCaptureConverter` in `OoBDev.DevTerm.Core/Configuration` runs registered tools (Ghostscript, GhostPCL) and the built-in HP-GL to SVG converter. The framework has `IDocumentConversionHandler` (`OoBDev.Documents.Abstractions`) and `DocumentConversionChainBuilder` (`OoBDev.Documents`). Handlers take streams and content types, so a handler that needs files writes temp files.
 

@@ -7,7 +7,7 @@ using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Text;
 
-namespace OoBDev.DevTerm.Tests;
+namespace OoBDev.Documents.Hpgl.Tests;
 
 [TestCategory("Unit")]
 [TestClass]

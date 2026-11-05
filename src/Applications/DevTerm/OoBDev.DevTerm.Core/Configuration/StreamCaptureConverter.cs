@@ -1,3 +1,4 @@
+using OoBDev.Documents.Hpgl;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
