@@ -10,4 +10,4 @@ _(none waiting; processed requests are in BACKLOG.md and TODO.md)_
 
 ## Open
 
-_(none)_
+_(none open)_

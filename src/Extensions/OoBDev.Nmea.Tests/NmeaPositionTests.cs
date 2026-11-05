@@ -5,6 +5,7 @@ using System;
 namespace OoBDev.Nmea.Tests;
 
 [TestClass]
+[TestCategory(TestCategories.Delorme_EarthmateBt20)]
 public class NmeaBearingTests
 {
     [TestMethod, TestCategory(TestCategories.Unit)]
@@ -59,6 +60,7 @@ public class NmeaBearingTests
 }
 
 [TestClass]
+[TestCategory(TestCategories.Delorme_EarthmateBt20)]
 public class NmeaCoordinateTests
 {
     [TestMethod, TestCategory(TestCategories.Unit)]

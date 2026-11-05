@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 namespace OoBDev.Velleman.K8055.Tests;
 
 [TestClass]
+[TestCategory(TestCategories.Velleman_K8055)]
 public class K8055Tests
 {
     // report id 00, digital 00, 03, A1 76, A2 76, counter1 0x012A = 298, counter2 0 (dev-term, confirmed on a real board)

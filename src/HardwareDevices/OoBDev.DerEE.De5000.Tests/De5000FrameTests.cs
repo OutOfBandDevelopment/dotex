@@ -5,6 +5,7 @@ using System;
 namespace OoBDev.DerEE.De5000.Tests;
 
 [TestClass]
+[TestCategory(TestCategories.DerEe_De5000)]
 public class De5000FrameTests
 {
     // header 00 0D | flags 00 | freq/tol 40 00 | primary 01 04 D2 33 00 | secondary 01 00 0C 03 00 | footer 0D 0A

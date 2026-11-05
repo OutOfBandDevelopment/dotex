@@ -7,6 +7,7 @@ Practical guides for common tasks and scenarios in the OoBDev framework.
 ## Testing
 
 - [**Variables and Configuration in .runsettings Files**](runsettings-variables-and-configuration.md)
+- [**Test hardware (the bench)**](test-hardware.md) - devices, ports and the settings that point at them
   - Environment variables, relative paths, MSBuild variable workarounds
   - Best practices for Docker-based integration testing
   - Troubleshooting common issues

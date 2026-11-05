@@ -1,3 +1,6 @@
+using OoBDev.System.IO;
+using System.Collections.Generic;
+using System.IO;
 using System;
 using System.Net;
 using System.Net.Sockets;
@@ -13,56 +16,67 @@ namespace OoBDev.System.IO.Tcp.Tests;
 public sealed class TcpDeviceAdapterTests
 {
     [TestMethod]
-    public async Task TryOpen_Listener_ExchangesBytes()
+    public async Task OpenAsync_Listener_ExchangesBytes()
     {
         // Stage
         using var listener = new TcpListener(IPAddress.Loopback, 0);
         listener.Start();
         var port = ((IPEndPoint)listener.LocalEndpoint).Port;
         var accepted = listener.AcceptTcpClientAsync();
-        var adapter = new TcpDeviceAdapter("127.0.0.1", port);
+        await using var adapter = new TcpDeviceAdapter("127.0.0.1", port);
 
         // Test
-        var opened = adapter.TryOpen(out var stream);
+        await adapter.OpenAsync().ConfigureAwait(false);
         using var server = await accepted.ConfigureAwait(false);
-        await stream!.WriteAsync(Encoding.ASCII.GetBytes("*IDN?\n")).ConfigureAwait(false);
+        await adapter.Output.WriteAsync(Encoding.ASCII.GetBytes("*IDN?\n")).ConfigureAwait(false);
         var buffer = new byte[6];
         await server.GetStream().ReadExactlyAsync(buffer).ConfigureAwait(false);
+        await server.GetStream().WriteAsync("OK\n"u8.ToArray()).ConfigureAwait(false);
+        var reply = await adapter.Input.ReadAsync().ConfigureAwait(false);
 
         // Assert
-        Assert.IsTrue(opened);
+        Assert.AreEqual(ConnectionState.Open, adapter.State);
         Assert.AreEqual("*IDN?\n", Encoding.ASCII.GetString(buffer));
+        Assert.AreEqual("OK\n", Encoding.ASCII.GetString(reply.Buffer));
         Assert.AreEqual($"127.0.0.1:{port}", adapter.Path);
-        Assert.AreSame(stream, adapter.Stream);
-        stream.Dispose();
     }
 
     [TestMethod]
-    public void TryOpen_NothingListening_ReturnsFalse()
+    public async Task OpenAsync_NothingListening_FaultsAndThrows()
     {
         // Stage
         using var listener = new TcpListener(IPAddress.Loopback, 0);
         listener.Start();
         var port = ((IPEndPoint)listener.LocalEndpoint).Port;
         listener.Stop();
-        var adapter = new TcpDeviceAdapter("127.0.0.1", port, TimeSpan.FromSeconds(2));
+        await using var adapter = new TcpDeviceAdapter("127.0.0.1", port, TimeSpan.FromSeconds(2));
 
         // Test
-        var opened = adapter.TryOpen(out var stream);
+        await Assert.ThrowsExactlyAsync<IOException>(() => adapter.OpenAsync()).ConfigureAwait(false);
 
         // Assert
-        Assert.IsFalse(opened);
-        Assert.IsNull(stream);
+        Assert.AreEqual(ConnectionState.Faulted, adapter.State);
     }
 
     [TestMethod]
-    public void Stream_NotOpened_Throws()
+    public async Task CloseAsync_AfterOpen_ReturnsToClosedAndRaisesEvents()
     {
         // Stage
-        var adapter = new TcpDeviceAdapter("127.0.0.1", 1);
+        using var listener = new TcpListener(IPAddress.Loopback, 0);
+        listener.Start();
+        var port = ((IPEndPoint)listener.LocalEndpoint).Port;
+        var accepted = listener.AcceptTcpClientAsync();
+        await using var adapter = new TcpDeviceAdapter("127.0.0.1", port);
+        var states = new List<ConnectionState>();
+        adapter.StateChanged += (_, e) => states.Add(e.Current);
+
+        // Test
+        await adapter.OpenAsync().ConfigureAwait(false);
+        using var server = await accepted.ConfigureAwait(false);
+        await adapter.CloseAsync().ConfigureAwait(false);
 
         // Assert
-        Assert.ThrowsExactly<InvalidOperationException>(() => adapter.Stream);
+        CollectionAssert.AreEqual(new[] { ConnectionState.Opening, ConnectionState.Open, ConnectionState.Closing, ConnectionState.Closed }, states);
     }
 
     [TestMethod]

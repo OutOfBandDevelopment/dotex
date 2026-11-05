@@ -804,7 +804,7 @@ var person = provider.Generate<PersonModel>();
 |---------|---------|---------|
 | Azure Blob Storage | OoBDev.Azure.StorageAccount | Blob container implementation |
 | Azure Storage Queues | OoBDev.Azure.StorageAccount | Message queue provider |
-| OpenTelemetry (OTLP) | OoBDev.OpenTelemetry | Telemetry |
+| OpenTelemetry (OTLP) | OoBDev.Telemetry | Telemetry |
 
 ### 4.2 Databases and Storage
 
@@ -1452,7 +1452,7 @@ public class ProductSearchModel
 
 ### 14.12 MEDIUM Priority - Enhanced Swagger Options (6 files)
 
-> **Superseded 2026-10-09:** Swashbuckle was removed; these options are now OpenAPI transformers ([change](docs/changes/migration-openapi-scalar-2026-10-09.md)).
+> **Superseded 2026-10-09:** Swashbuckle was removed; these options are now OpenAPI transformers ([change](docs/changes/2026-10-09.md#swashbuckle-replaced-by-openapi-transformers-and-scalar)).
 
 **Locations:**
 - `Incomming/dotnet-lib/Framework/OobDev.AspNetCore.Mvc/SwaggerGen/`

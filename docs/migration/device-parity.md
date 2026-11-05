@@ -10,6 +10,7 @@ Base (owner, 2026-10-26): dev-term (`C:\repo\oobdev\dev-term`, branch `dev/zstic
 2. [Per device](#2-per-device)
 3. [Merge list](#3-merge-list)
 4. [Not yet checked](#4-not-yet-checked)
+5. [Merge status](#5-merge-status-2026-11-03)
 
 ## 1. Summary
 
@@ -52,3 +53,17 @@ Base (owner, 2026-10-26): dev-term (`C:\repo\oobdev\dev-term`, branch `dev/zstic
 - Whether the dev-term tests already cover M1 to M5 (they were not read in this pass).
 - The other sources named in [incoming-harvest-crosscheck.md](incoming-harvest-crosscheck.md) (`mine/proving-grounds` Zoom H4n and Busylight notes and providers).
 - De-5000, Scpi and Z-Wave: no BinaryDataDecoders counterpart, so they have no phase 0 comparison.
+
+## 5. Merge status (2026-11-03)
+
+**Table 3 — State of the merge list, checked against the code**
+
+| Id | State | Where |
+|---|---|---|
+| M1 | Merged at the library: `BusylightSequence.Encode` and `Poll` (big-endian checksum), with encoding tests. The control surface's `programSequence` stays a no-op on purpose (the device accepted the frame without visibly acting); a Hardware test sends it, and whether the light cycles has to be watched | `OoBDev.Kuando.Busylight` |
+| M2 | Merged: `K8055DigitalInputs` flags with a test; the raw value stays until the bit order is confirmed on hardware | `OoBDev.Velleman.K8055` |
+| M3 | Open: needs a recorded serial and version reply; `SerialVersionText` shows the payload as text and the layout is marked unconfirmed | `OoBDev.Quarta.RadexOne` |
+| M4 | Recorded as a hypothesis in the `RadexOneReadData` documentation; stays until a capture confirms the unit | `OoBDev.Quarta.RadexOne` |
+| M5 | Merged: `NmeaFixQuality` | `OoBDev.Nmea` |
+
+The remaining device work is therefore hardware-gated (a physical pass for K8055 bits, Busylight program frames, Radex serial and unit, Zoom H4n handshake, NMEA BT-20) and BLE for the DE-5000 Hardware test.

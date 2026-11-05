@@ -1,0 +1,57 @@
+# OoBDev.Telemetry
+
+## Summary
+
+OpenTelemetry registration for OoBDev hosts: tracer and logger providers, OTLP export to any collector, and processors that add correlation and user information to spans and log records. It replaces the former `OoBDev.Microsoft.ApplicationInsights` project; the vendor SDK is gone, so any OTLP backend works (Grafana, Jaeger, Azure Monitor through a collector, and others).
+
+## Usage
+
+```csharp
+services.TryAddOpenTelemetryExtensions(configuration);   // section "OpenTelemetryOptions"
+```
+
+Nothing is added unless the configuration section exists or `OTEL_EXPORTER_OTLP_ENDPOINT` is set, so hosts without telemetry settings are unchanged. The processors need `IAccessor<CorrelationInfo>` and `ICurrentUserAccessor` in the container. `TryCommonExternalExtensions` calls this with `ExternalExtensionBuilder.OpenTelemetryOptionSection`.
+
+**Table 1 — OpenTelemetryOptions**
+
+| Setting | Default | Purpose |
+|---------|---------|---------|
+| `OtlpEndpoint` | none (then `OTEL_EXPORTER_OTLP_ENDPOINT`) | Collector base address, for example `http://localhost:4318`. For `HttpProtobuf` the signal path (`v1/traces`, `v1/logs`) is added for you |
+| `Protocol` | `HttpProtobuf` | `HttpProtobuf` or `Grpc` |
+| `ServiceName` | exporter default | `service.name` resource attribute |
+| `Sources` | none | `ActivitySource` names to collect spans from |
+
+```json
+{
+  "OpenTelemetryOptions": {
+    "OtlpEndpoint": "http://otel-collector:4318",
+    "ServiceName": "my-api",
+    "Sources": [ "MyCompany.MyApi" ]
+  }
+}
+```
+
+The standard `OTEL_*` variables (headers, protocol, resource attributes) are honored by the exporter in addition to the options.
+
+**Table 2 — Processors**
+
+| Type | Signal | Adds |
+|------|--------|------|
+| `CorrelationInfoTelemetryProcessor` | spans (`OnStart`) | correlation id and request id tags |
+| `CorrelationInfoLogProcessor` | log records (`OnEnd`) | correlation id and request id attributes |
+| `UserTelemetryProcessor` | spans | `Claim-{ObjectId}` and `Claim-{UserId}` tags from the HTTP context |
+| `UserLogProcessor` | log records | the same claims as attributes |
+
+## Testing
+
+Unit tests cover the processors and the registration. The Integration tests send spans and logs over OTLP to the `otel-dashboard` container (the Aspire dashboard, started by `containers/testing`) and read them back through its telemetry API. They use the `OTEL_EXPORTER_OTLP_ENDPOINT`, `OTEL_DASHBOARD_URL` and `OTEL_DASHBOARD_API_KEY` test properties.
+
+## Notes
+
+* https://learn.microsoft.com/en-us/dotnet/core/diagnostics/observability-with-otel
+* https://opentelemetry.io/docs/specs/otel/protocol/exporter/
+* [Change document](../../../docs/changes/2026-10-09.md#application-insights-replaced-by-opentelemetry-broken-devlocal-tests-fixed)
+
+## Standalone OTLP exporter
+
+`TelemetryExporter` exports traces and metrics to an OTLP collector (gRPC) without a host, for desktop and console applications: `TelemetryExporter.ParseEndpoint(text)` reads the option (`true` means `http://localhost:4317`, anything that is not an http(s) URL gives `null`), and `TelemetryExporter.Start(endpoint, serviceName, sourceNames)` starts best-effort export of the named activity sources and meters. An unreachable collector never throws or slows the application. It moved here from `OoBDev.DevTerm.Observability`, which is deleted (2026-10-29).

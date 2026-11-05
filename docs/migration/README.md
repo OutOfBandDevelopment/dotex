@@ -16,12 +16,11 @@ Plans, mappings and analyses for code brought into the framework from other repo
 
 | Document | Subject | State |
 |----------|---------|-------|
-| [binarydatadecoders-rereview-2026-10-29.md](binarydatadecoders-rereview-2026-10-29.md) | Current state of the BinaryDataDecoders port against `C:\repo\mine\binary-data-decoders` | Current; read first |
-| [binarydatadecoders-feature-mapping.md](binarydatadecoders-feature-mapping.md), [binarydatadecoders-migration-plan.md](binarydatadecoders-migration-plan.md) | Original mapping and phases (January 2026) | Open: the port is partly done, the phases are priority order |
-| [binarydatadecoders-decision-sheet.md](binarydatadecoders-decision-sheet.md), [binarydatadecoders-critical-questions.md](binarydatadecoders-critical-questions.md) | Owner decisions | Open: awaiting decisions |
-| [device-decoding-migration-plan.md](device-decoding-migration-plan.md), [device-parity.md](device-parity.md) | dev-term device decoding | Packages done; transports and the shell wait on the Q3 scope |
-| [sharedframework-feature-mapping.md](sharedframework-feature-mapping.md), [sharedframework-migration-plan.md](sharedframework-migration-plan.md), [sharedframework-differs-detailed-comparison.md](sharedframework-differs-detailed-comparison.md), [sharedframework-phase0-coverage-analysis.md](sharedframework-phase0-coverage-analysis.md) | SharedFramework | Open: design first (Epics 2, 6, 7, 10) |
-| [oobtainium-feature-mapping.md](oobtainium-feature-mapping.md), [oobtainium-migration-plan.md](oobtainium-migration-plan.md) | Oobtainium mocking and proxy framework | Open: evaluate later (decision D7) |
+| [binarydatadecoders-rereview-2026-10-29.md](binarydatadecoders-rereview-2026-10-29.md) | BinaryDataDecoders against `C:\repo\mine\binary-data-decoders` (replaces the January mapping, plan, decision sheet and critical questions) | Current; read first |
+| [device-decoding-migration-plan.md](device-decoding-migration-plan.md), [device-parity.md](device-parity.md) | dev-term device decoding | Packages done; transports, manifests and the shells are tracked as "DevTerm 100% parity" in the backlog |
+| [overlap-review-2026-10-29.md](overlap-review-2026-10-29.md) | BinaryDataDecoders against dev-term against dotex | Current; dev-term is the base wherever both have the code |
+| [sharedframework.md](sharedframework.md) | SharedFramework | Replaced by design documents (Epics 2, 6, 7, 10) |
+| [oobtainium.md](oobtainium.md) | Oobtainium mocking framework | Not migrated; evaluate later (decision D7) |
 | [incoming-recommendation-plan.md](incoming-recommendation-plan.md), [incoming-harvest-crosscheck.md](incoming-harvest-crosscheck.md) | Cross-project plan and rejected merges | Current |
 
 ## Rules
@@ -35,3 +34,4 @@ Plans, mappings and analyses for code brought into the framework from other repo
 - BotChat mapping and plan: the patterns were extracted on 2026-10-09 and the sources removed.
 - Vector comparison: the application-level `Vector` type is in `OoBDev.System.Abstractions` (`Math`), documented in its readme and tested; the cosine distance versus similarity difference is recorded there.
 - MailKit and SendGrid integration analysis: both integrations are complete and described in `README.MailKit.md` and `README.MailKit.Hosting.md`.
+- Consolidated on 2026-10-29: the BinaryDataDecoders feature mapping, migration plan, decision sheet and critical questions (now the re-review), the four SharedFramework analyses (now `sharedframework.md`) and the two Oobtainium notes (now `oobtainium.md`).

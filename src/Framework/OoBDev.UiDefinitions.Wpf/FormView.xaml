@@ -1,4 +1,4 @@
-<UserControl x:Class="OoBDev.UiDefinitions.Wpf.FormView"
+<UserControl x:Class="UiDefinitionsWpf.FormView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="clr-namespace:OoBDev.UiDefinitions.ViewModels;assembly=OoBDev.UiDefinitions.ViewModels">
@@ -69,7 +69,7 @@
             <Button Content="{Binding Label}"
                     Command="{Binding Invoke}"
                     IsEnabled="{Binding IsEnabled}"
-                    ToolTip="{Binding Description}"
+                    ToolTip="{Binding ToolTip}"
                     HorizontalAlignment="Left" />
         </DataTemplate>
 
@@ -93,6 +93,12 @@
     </UserControl.Resources>
 
     <ScrollViewer VerticalScrollBarVisibility="Auto">
-        <ItemsControl ItemsSource="{Binding Sections}" />
+        <StackPanel>
+            <ItemsControl ItemsSource="{Binding Sections}" />
+            <Expander Header="Notes" IsExpanded="True" Margin="0,0,0,8"
+                      Visibility="{Binding HasNotes, Converter={StaticResource Visible}}">
+                <TextBlock Text="{Binding Notes}" TextWrapping="Wrap" Margin="12,4,4,2" />
+            </Expander>
+        </StackPanel>
     </ScrollViewer>
 </UserControl>

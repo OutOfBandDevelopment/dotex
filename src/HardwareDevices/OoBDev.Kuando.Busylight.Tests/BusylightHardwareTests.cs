@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 namespace OoBDev.Kuando.Busylight.Tests;
 
 [TestClass]
+[TestCategory(TestCategories.Kuando_Busylight)]
 public class BusylightHardwareTests
 {
     private static async Task SendAsync(Stream stream, byte[] report)
@@ -47,12 +48,12 @@ public class BusylightHardwareTests
     {
         // Stage
         await using var stream = DevicePreflight.RequireUsbHid(new BusylightDevice());
-        stream.ReadTimeout = 3000;
 
         // Test
         await SendAsync(stream, BusylightSequence.Poll()).ConfigureAwait(false);
         var buffer = new byte[256];
-        var read = await stream.ReadAsync(buffer).ConfigureAwait(false);
+        using var timeout = new global::System.Threading.CancellationTokenSource(TimeSpan.FromSeconds(3));
+        var read = await stream.ReadAsync(buffer, timeout.Token).ConfigureAwait(false);
 
         // Assert
         var identification = new BusylightMessageDecoder().Decode(new global::System.Buffers.ReadOnlySequence<byte>(buffer, 0, read));

@@ -6,6 +6,7 @@ using System.Linq;
 namespace OoBDev.Kuando.Busylight.Tests;
 
 [TestClass]
+[TestCategory(TestCategories.Kuando_Busylight)]
 public class BusylightEncodingTests
 {
     [TestMethod, TestCategory(TestCategories.Unit)]

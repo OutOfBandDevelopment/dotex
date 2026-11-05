@@ -13,12 +13,12 @@
 | Reply lengths | Read Data 34 bytes, Read Serial/Version 42, Read Settings 28 (each is `extension_length` + 12) |
 
 Verified against the real device: 2026-10-02, all three read commands answered first try
-(report (dev-term `docs/test/2026-10-02-14-42-26.md`), `scripts/radexone_probe.py`); the Read Data exchange is also a regression test in
+(report (`docs/applications/devterm/test/2026-10-02-14-42-26.md`), `scripts/radexone_probe.py`); the Read Data exchange is also a regression test in
 `DeviceKsyFilesTests`, and `RealHardwareRadexOneTests` runs the imported `.ksy` live through `ManifestFramePresenter` (it publishes
-every field). Write Settings was run on 2026-10-03 (threshold 10 to 20 and back, three sends each, acked and read back; report (dev-term `docs/test/2026-10-03-19-50-00.md`)). Reset Accumulated has not been run on the device.
+every field). Write Settings was run on 2026-10-03 (threshold 10 to 20 and back, three sends each, acked and read back; report (`docs/applications/devterm/test/2026-10-03-19-50-00.md`)). Reset Accumulated has not been run on the device.
 
 Quirks:
-- The baud rate is 9600. An earlier 2400 guess received nothing (bug 061 (dev-term `docs/bugs/resolved/061-radexone-wrong-baud-rate.md`)).
+- The baud rate is 9600. An earlier 2400 guess received nothing (bug 061 (`docs/applications/devterm/bugs/resolved/061-radexone-wrong-baud-rate.md`)).
 - It enumerates as a plain COM port, not HID, so no report wrapping is needed.
 
-Design notes and protocol detail: `docs/design/features/radex-one-protocol.md` in the dev-term repository.
+Design notes and protocol detail: `docs/protocols/radex-one-protocol.md`.

@@ -45,6 +45,9 @@ SERVICES=(
     "oobd-test-sbert"
     "oobd-test-ollama"
     "oobd-test-otel"
+    "oobd-test-mosquitto"
+    "oobd-test-ser2net"
+    "oobd-test-loopback-device"
 )
 
 # Colors for output (if terminal supports it)

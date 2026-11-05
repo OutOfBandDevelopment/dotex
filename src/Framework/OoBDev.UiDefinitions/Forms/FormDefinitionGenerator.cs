@@ -17,7 +17,7 @@ namespace OoBDev.UiDefinitions.Forms;
 /// per front end. Reads <c>[Category]</c>/<c>[DisplayName]</c>/<c>[Description]</c>/<c>[Browsable]</c>
 /// plus <see cref="FormFieldAttribute"/>/<see cref="FormSectionAttribute"/>; a control's
 /// <see cref="UiControl.Id"/> is the property name, which is what <see cref="FormBinding"/> binds it
-/// to. See docs/design/ui-definitions.md's "Forms from one definition".
+/// to. See docs/design/UiDefinitions/ui-definitions.md's "Forms from one definition".
 /// </summary>
 public static class FormDefinitionGenerator
 {

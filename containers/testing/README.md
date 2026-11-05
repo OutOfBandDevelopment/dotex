@@ -325,6 +325,19 @@ scripts\integration-down.bat --clean
 | **Service Bus Emulator** | `mcr.microsoft.com/azure-messaging/servicebus-emulator` | 5672 (AMQP) | Azure Service Bus emulator | `nc -z localhost 5672` |
 | **OpenTelemetry** | `mcr.microsoft.com/dotnet/aspire-dashboard:latest` | 18888, 4317, 4318 | OTLP receiver, dashboard UI, telemetry API | `curl http://localhost:18888/` |
 
+### DevTerm peers
+
+**Disposable peers for the DevTerm transports** (config in `containers/testing/devterm/`; the TLS listeners need `sh containers/testing/devterm/make-test-certs.sh` first, which writes a git-ignored `devterm/certs/ca.pem`)
+
+| Service | Image | Port(s) | Purpose | Health Check |
+|---------|-------|---------|---------|--------------|
+| **Mosquitto** | `eclipse-mosquitto` | 1883 (MQTT, anonymous) | MQTT transport and broker bridge | `nc -z localhost 1883` |
+| **ser2net** | Custom | 2217 (RFC 2217) | RFC 2217 client and server bridge; the port behind it echoes every byte | `nc -z localhost 2217` |
+| **loopback-device** | Custom | 7778 (TCP) | Line device (`hello`, `STATUS?`, `help`) for the TCP transport without hardware | `nc -z localhost 7778` |
+| **RabbitMQ** (shared) | `rabbitmq` | 5673 AMQP, 5671 AMQPS, 21613 STOMP, 21614 STOMP over TLS | AMQP and STOMP transports (STOMP's usual 61613 is in a Windows reserved range) | `rabbitmq-diagnostics ping` |
+
+Tests: `TestCategory=Integration` in `OoBDev.System.IO.{Mqtt,Brokers,Tcp}.Tests` and `OoBDev.DevTerm.Core.Tests`; each ends Inconclusive when its port is unreachable. Settings: `MOSQUITTO_*`, `SER2NET_*`, `LOOPBACK_DEVICE_*`, `RABBITMQ_*` in `src/.runsettings`.
+
 ### Identity & AI/ML
 
 | Service | Image | Port(s) | Purpose | Health Check |

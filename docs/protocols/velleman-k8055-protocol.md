@@ -1,0 +1,192 @@
+# Proposal: Velleman K8055 — USB HID Digital/Analog I/O Board
+
+## Source
+
+- `C:\repo\oobdev\dotex\Incoming\BinaryDecoders\src\OoBDev.Velleman.K8055\` — a working prior C#
+  implementation plus reverse-engineering notes, from the same local `dotex/Incoming/BinaryDecoders`
+  project as the [EByte](ebyte-e810-dtu-config-protocol.md) and [Kuando Busylight](kuando-busylight-protocol.md)
+  proposals. Cross-references two independent public sources: [rm-hull/k8055](https://github.com/rm-hull/k8055)
+  and [libk8055](http://libk8055.sourceforge.net/).
+
+## Device
+
+[Velleman K8055](https://www.velleman.eu/) — a generic USB experimenter I/O board (2 analog
+outputs, 8 digital outputs, 5 digital inputs, 2 analog inputs, 2 pulse counters). **Already owned**
+— it's in the local equipment inventory (`shared/.personal/incoming/test-equipment.md`, "Data
+Acquisition" category). USB HID, VID `0x10CF`; **the board address is a 2-position DIP switch, so
+only 4 PIDs are actually selectable in hardware** (`0x5500`–`0x5503`) despite the source code's
+product-ID mask (`0x5500` base, `0xFFF8` mask) technically spanning 8 values — the mask is just
+broader than what the physical switch can produce, confirmed directly rather than assumed from the
+mask alone.
+
+## Why this is a good decoder + control-surface candidate
+
+- **Genuinely bidirectional and stateful in an interesting way**: digital/analog outputs are
+  set-and-forget (fire-and-forget commands), while digital/analog inputs and the two pulse counters
+  are continuously readable state — a natural `IControlSurface` (outputs) + decoder (inputs)
+  pairing, the same shape [device-control-modules.md](../device-control-modules.md)'s motivating
+  example describes, but for a generic I/O board rather than a bench instrument.
+- **Multiple identical devices via a PID range, not a single VID/PID pair** — `HidTransportOptions`
+  today only matches one exact VendorId/ProductId (see `DevTerm.Transports.Hid`); this is a
+  concrete, real case for wanting a PID range/mask match if more than one K8055 is ever in play,
+  worth keeping in mind as a small future enhancement rather than urgent now (a single board works
+  fine with an exact PID today).
+- **Small, fully out in the open command set** — three commands, 8-byte reports, no
+  checksum/framing complexity at all, unlike the other binary proposals in this directory. A good
+  "simplest possible" decoder to pair against something more involved.
+
+## Real-hardware finding (2026-09-15)
+
+Connected via `dotnet run ... --transport hid --hidvendorid 4303 --hidproductid 21762 --presenter
+hex` (VID `0x10CF` PID `0x5502` — a different board address than the notes' own `0x5503` example,
+confirming the PID-range hypothesis directly). **The device streams its input report continuously
+and unprompted** — no `0x06` "read" command needed at all; reports just kept arriving one after
+another. A representative pair, back to back:
+
+```
+0000034C4C00000000
+0000034B4C00000000
+```
+
+Both are 9 bytes (not 8 — inbound and outbound report lengths differ). Reading against the known
+capabilities (5 digital in, 2 analog in, 2×16-bit counters): byte 2 is a constant `0x03`; byte 3
+tracks between `0x4B`/`0x4C` (75/76) across consecutive reports — exactly what an unconnected,
+electrically-floating analog input pin looks like — while byte 4 sits constant at `0x4C`; the
+trailing four bytes are `00 00 00 00`, consistent with two zeroed 16-bit counters (nothing wired to
+count). This reads as `[00, 00, 03, AnalogIn1, AnalogIn2, CounterLo1, CounterHi1, CounterLo2,
+CounterHi2]`, though digital-input bit positions weren't exercised (nothing was wired to them) and
+byte 0/1's role isn't confirmed beyond "zero when no digital inputs are active." Confirms the
+overall shape guessed at below; the `0x06` command's exact role (if it does anything beyond what
+the device already sends unprompted) is now the more interesting open question, not the reverse.
+
+## Protocol summary
+
+**8-byte HID reports**, `Commands` enum:
+
+```
+0x00 : None
+0x03 : Reset Counter 1
+0x04 : Reset Counter 2
+0x05 : Set Analog/Digital outputs
+0x06 : Read (status/inputs) - inferred, marked "? read ?" in the source notes
+```
+
+**Set Analog/Digital (`0x05`) report layout** (from the source notes' own examples):
+
+```
+Byte 0 : Command (0x05)
+Byte 1 : Digital outputs (bitmask, 8 channels)
+Byte 2 : Analog output 1 (0-255)
+Byte 3 : Analog output 2 (0-255)
+Byte 4 : (unused in the examples - always 0x00)
+Byte 5 : (unused in the examples - always 0x00)
+Byte 6 : Duration/debounce byte A (examples show 0x08, 0x01, 0x58 - unit unconfirmed)
+Byte 7 : Duration/debounce byte B (examples show 0x01, 0x58 - unit unconfirmed)
+```
+
+## Proposed shape
+
+```plantuml
+@startuml
+skinparam componentStyle rectangle
+skinparam backgroundColor #FEFEFE
+
+actor "User" as user
+
+package "Velleman K8055 Control Module (plugin)" {
+  [K8055 Control Surface] <<IControlSurface>> as surface
+  note bottom of surface : Set digital/analog outputs;\nreset counters
+  [K8055 Decoder] <<IPresenter>> as decoder
+  note bottom of decoder : Digital/analog inputs;\npulse counter values
+}
+
+[Session / Transport] <<ITransport>> as transport
+note right of transport : USB HID, VID 0x10CF\nPID 0x5500-0x5507 (board address)
+
+user --> surface : Invokes command\n(e.g. Set Digital Out 1, Reset Counter)
+surface --> transport : 8-byte HID output report
+transport --> decoder : 8-byte HID input report
+decoder --> user : Human-readable text baseline\n(e.g. "IN: D1=on D2=off A1=128 A2=0 C1=42 C2=0")
+@enduml
+```
+
+- **No new transport work** — `DevTerm.Transports.Hid` already exists and this device already
+  verified the read path live (see above), the same day as [Kuando Busylight](kuando-busylight-protocol.md).
+
+A generic I/O board is a natural fit for a live GUI panel — toggles/sliders for outputs, indicator
+lamps/counters for inputs, all updating in real time rather than reading a text log:
+
+```plantuml
+@startsalt
+{
+  {* File | Device | Help}
+  {
+    Digital Out: | [X] 1 [ ] 2 [ ] 3 [ ] 4 | [ ] 5 [ ] 6 [ ] 7 [ ] 8
+  }
+  {
+    Analog Out 1: | [-------|--] 128 | Analog Out 2: | [--|-------] 0
+  }
+  {
+    Digital In:  | (X) 1 ( ) 2 ( ) 3 ( ) 4 ( ) 5
+  }
+  {
+    Analog In 1: 96 | Analog In 2: 12
+  }
+  {
+    Counter 1: 4213 | [Reset] | Counter 2: 0 | [Reset]
+  }
+  {
+    VID 0x10CF PID 0x5502 | Connected
+  }
+}
+@endsalt
+```
+
+## Status
+
+**Implemented 2026-09-22** as the first concrete device module built against the generic
+`UiDefinition`/`IControlSurface` renderer (see [device-control-modules.md](../device-control-modules.md),
+[ui-definitions.md](../ui-definitions.md)): `DevTerm.Devices.K8055` (`K8055UiDefinition`,
+`K8055ControlSurface`, `K8055Decoder`), selectable via `--presenter k8055` and reachable from both
+front ends' new "K8055 Control Panel..." menu item. Verified by unit test against the frame shapes
+documented above, and now also **verified live against real hardware, same day** (WPF only — see
+`docs/changes/2026-09-22.md` for the full account): Analog In/Digital In indicators matched an
+independent CLI hex reading exactly; Digital Out/Analog Out/Counter-Reset commands all round-tripped
+without error. The apparent "Counter 1 didn't reset" anomaly hit during that pass turned out to be a
+real, physically-explainable board characteristic (a floating counter-input pin self-oscillating at
+a stable rate), not a decoder or encoding bug — see the changelog entry for the full reasoning.
+Genuinely still open: the digital-in bit mapping, the trailing duration/debounce bytes, what `0x06`
+does, and the TUI side (`ControlPanelMode`) — none of those were exercised yet. The decoder still
+ships the raw digital-in byte as `digitalInRaw` (hex) rather than guessing at 5 channel keys, and the
+control surface still sends `0x00, 0x00` for the two trailing bytes (static level, not a pulse).
+
+**Fixed same day, after a live "digital inputs don't seem to read in" report**: `K8055Decoder` had
+read `digitalInRaw` from byte 0 of the 9-byte frame — but byte 0 is the same leading HID report-ID
+byte confirmed elsewhere in this doc and in `BusylightControlSurface` (always `0x00`, never real
+device data, per the real-hardware finding above and `CLAUDE.md`'s own HID report-ID convention), so
+it could never have carried real digital-input state regardless of wiring. `digitalInRaw` now reads
+byte 1 instead — the true first byte of the 8-byte K8055 payload. This is a code-inspection fix,
+consistent with the already-confirmed report-ID convention, but **not yet re-verified against real
+hardware** (that reconfirmation, and the digital-in bit-to-channel mapping itself, both still need
+the board rewired one pin at a time — see the open questions below).
+
+## Open questions
+
+- **Answered 2026-10-03:** `0x06` has no visible effect (accepted without error, the stream and its rate unchanged); it is not a read command. A raw 9-byte write failing with "The parameter is incorrect" was the CLI's default line ending making the report 10 bytes: use `--lineending None`. See `docs/test/2026-10-03-14-42-02.md`.
+
+- The exact meaning/units of the two trailing bytes on the Set Analog/Digital command (labeled
+  duration/debounce above, per the source notes' own inline comments like "(10ms, 0ms)" — needs
+  confirming against the real board, not just the informal notes.
+- **Now the more interesting question, given the device streams unprompted**: what `0x06` actually
+  does, if anything — request an immediate report out of cycle? Change the streaming rate? Needs a
+  real test (send it, see if anything changes) rather than assuming it's a "read command" at all.
+- **Answered 2026-10-03** (`docs/test/2026-10-03-17-10-00.md`, two boards wired together): digital in I1 = `0x10`, I2 = `0x20` in byte 1, combining to `0x30`; I3 to I5 still unexercised. Original question: byte-for-byte confirmation of the input report's first two bytes (digital inputs) — not exercised
+  in the real test above since nothing was wired to the digital input pins; needs the board rewired
+  one pin at a time, which only the user can do.
+- **Answered 2026-10-03:** byte 2 is the board address + 1 (`0x01` for PID 0x5500, `0x03` for 0x5502, `0x04` for 0x5503). The DAC-to-ADC loop read 20 for 128 and 41 for 255, unexplained scaling. Original note: byte 2 of the input frame read a constant `0x01` this session (PID `0x5500`)
+  versus the constant `0x03` recorded in the original 2026-09-15 note (PID `0x5502`, a different
+  physical board) — not yet explained, and not currently decoded into anything (`digitalInRaw` reads
+  byte 1, not byte 2), so not blocking, but worth resolving alongside the digital-in bit mapping above.
+- Whether `HidTransportOptions` should eventually support a PID mask/range (this device is the
+  concrete motivating case) — not urgent for a single board, but worth remembering if a second
+  device with the same DIP-switch-address pattern shows up.

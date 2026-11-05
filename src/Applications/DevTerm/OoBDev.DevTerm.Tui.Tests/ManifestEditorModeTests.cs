@@ -1,0 +1,241 @@
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using OoBDev.System.IO;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Net.Http;
+using System.Threading;
+using System.Threading.Tasks;
+using OoBDev.DevTerm.DeviceManifests;
+using OoBDev.DevTerm.DeviceManifests.Editing;
+using Terminal.Gui.Input;
+using Terminal.Gui.Views;
+namespace OoBDev.DevTerm.Tui.Tests;
+
+/// <summary>
+/// Drives the real <see cref="ManifestEditorMode"/> window headlessly against the bundled Loopback
+/// Sensor Demo manifest: the outline, a part's generated form writing the manifest, the live panel
+/// preview (drawn by <see cref="ControlPanelMode"/>, sending nothing), and Save. Also captures the
+/// docs/applications/devterm/user-guide screenshots. Saves go to a temp folder, never the real <c>~/.dev-term/manifests</c>.
+/// </summary>
+[TestCategory("Unit")]
+[TestClass]
+[DoNotParallelize]
+public sealed class ManifestEditorModeTests
+{
+    private static readonly string _bundled = Path.Combine(AppContext.BaseDirectory, "manifests", "loopback-sensor-demo");
+    private static readonly string _imagesDirectory = TuiReview.DocImages;
+
+    private static void Run(Action<ManifestEditorParts, string> body)
+    {
+        using var rootFolder = new TempDirectoryHandle();
+        var root = rootFolder.DirectoryPath;
+        var userDirectory = Path.Combine(root, "user-manifests");
+        Directory.CreateDirectory(userDirectory);
+        {
+            TuiTestRunner.RunHeadlessApp(app =>
+            {
+                var editor = new ManifestEditorViewModel(userDirectory, Path.Combine(AppContext.BaseDirectory, "manifests"));
+                Assert.IsTrue(editor.Open(_bundled), editor.StatusMessage);
+                var parts = ManifestEditorMode.BuildWindow(app, editor);
+                var token = app.Begin(parts.Window) ?? throw new NotSupportedException();
+                app.LayoutAndDraw(true);
+                try
+                {
+                    body(parts, userDirectory);
+                }
+                finally
+                {
+                    app.End(token);
+                    parts.Window.Dispose();
+                }
+            });
+        }
+    }
+
+    private static void Select(ManifestEditorParts parts, string display)
+    {
+        parts.Outline.SelectedItem = parts.ViewModel.Nodes.ToList().FindIndex(n => n.Display.Trim() == display);
+        TuiTestRunner.CurrentApp.LayoutAndDraw(true);
+    }
+
+    [TestMethod]
+    public void SelectingAPart_ShowsItsGeneratedForm_WhichEditsTheManifest()
+    {
+        Run((parts, _) =>
+        {
+            var dump = TuiTestRunner.DumpBuffer();
+            Assert.Contains("Identity", dump);
+            Assert.Contains("Commands (3)", dump);
+            var name = (TextField)parts.Form!.ControlViews[nameof(ManifestIdentityForm.Name)];
+            Assert.AreEqual("Loopback Sensor Demo", name.Text);
+
+            Select(parts, "Stream Samples");
+            var template = (TextField)parts.Form!.ControlViews[nameof(CommandForm.Template)];
+            Assert.AreEqual("Samples: {count}", template.Text);
+            template.Text = "Samples: {count}\\r";
+            TuiTestRunner.CurrentApp.LayoutAndDraw(true);
+
+            Assert.AreEqual("Samples: {count}\r", parts.ViewModel.Manifest.OutboundCommands[1].Template);
+            Assert.EndsWith(" *", parts.Window.Title.ToString());
+            Assert.Contains("Samples: 40\\r\\n", TuiTestRunner.DumpBuffer(), "The form's Sends line shows the new wire text.");
+        });
+    }
+
+    [TestMethod]
+    public void AddButton_AddsUnderTheSelection_AndTheOutlineFollows()
+    {
+        Run((parts, _) =>
+        {
+            Select(parts, "Stream Samples");
+            Assert.AreEqual("Add parameter", parts.AddButton.Text);
+
+            parts.AddButton.InvokeCommand(Command.Accept);
+            TuiTestRunner.CurrentApp.LayoutAndDraw(true);
+
+            Assert.AreEqual("param1", parts.ViewModel.Manifest.OutboundCommands[1].Parameters[1].Name);
+            Assert.Contains("    param1 (string)", TuiTestRunner.DumpBuffer());
+            Assert.AreEqual(ManifestNodeKind.Parameter, parts.ViewModel.SelectedNode!.Kind);
+        });
+    }
+
+    [TestMethod]
+    public void UndoButton_RevertsTheLastEdit_AndRedoButtonReappliesIt()
+    {
+        Run((parts, _) =>
+        {
+            Assert.IsFalse(parts.UndoButton.Enabled);
+            Assert.IsFalse(parts.RedoButton.Enabled);
+
+            var name = (TextField)parts.Form!.ControlViews[nameof(ManifestIdentityForm.Name)];
+            name.Text = "Renamed";
+            TuiTestRunner.CurrentApp.LayoutAndDraw(true);
+            Assert.IsTrue(parts.UndoButton.Enabled);
+
+            parts.UndoButton.InvokeCommand(Command.Accept);
+            Assert.AreEqual("Loopback Sensor Demo", parts.ViewModel.Manifest.Name);
+            Assert.IsFalse(parts.UndoButton.Enabled);
+            Assert.IsTrue(parts.RedoButton.Enabled);
+
+            parts.RedoButton.InvokeCommand(Command.Accept);
+            Assert.AreEqual("Renamed", parts.ViewModel.Manifest.Name);
+            Assert.IsFalse(parts.RedoButton.Enabled);
+        });
+    }
+
+    [TestMethod]
+    public void Preview_DrawsThePanelLive_AndItsButtonsSendNothing()
+    {
+        Run((parts, _) =>
+        {
+            parts.ShowPreview();
+            TuiTestRunner.CurrentApp.LayoutAndDraw(true);
+
+            var dump = TuiTestRunner.DumpBuffer();
+            Assert.Contains("[-] Acquire", dump);
+            Assert.Contains("Stream Samples", dump);
+
+            ((Button)parts.Preview!.ControlViews["measure"]).InvokeCommand(Command.Accept);
+            Assert.AreEqual("Preview: would send MEAS?\\n", parts.StatusLabel.Text);
+
+            parts.PreviewButton.InvokeCommand(Command.Accept);
+            Assert.IsFalse(parts.ShowingPreview, "Preview toggles back to the form.");
+            Assert.IsNotNull(parts.Form);
+        });
+    }
+
+    [TestMethod]
+    public void SaveButton_WritesTheUsersOwnCopy_WhichLoadsBack()
+    {
+        Run((parts, userDirectory) =>
+        {
+            parts.SaveButton.InvokeCommand(Command.Accept);
+
+            var saved = Path.Combine(userDirectory, "loopback-sensor-demo");
+            Assert.StartsWith("Saved to", parts.StatusLabel.Text);
+            Assert.AreEqual("Loopback Sensor Demo", DeviceManifestLoader.Load(saved).Name);
+            Assert.DoesNotContain("*", parts.Window.Title.ToString());
+        });
+    }
+
+    [TestMethod]
+    public void AnIndicatorsExpression_HasAPickButton_ButOtherFormsDoNot()
+    {
+        Run((parts, _) =>
+        {
+            Assert.IsFalse(parts.Form!.PickButtons.ContainsKey(nameof(ControlForm.IndicatorExpression)));
+
+            Select(parts, parts.ViewModel.Nodes.First(n => n.Display.Contains("Last Sample", StringComparison.Ordinal)).Display.Trim());
+            Assert.IsTrue(parts.Form!.PickButtons.ContainsKey(nameof(ControlForm.IndicatorExpression)));
+
+            Assert.IsTrue(parts.Form!.PickButtons.ContainsKey(nameof(ControlForm.VisibleWhenId)));
+
+            Select(parts, "barGraph: Channels");
+            Assert.IsTrue(parts.Form!.PickButtons.ContainsKey(nameof(ControlForm.Channels)));
+
+            Select(parts, parts.ViewModel.Nodes.First(n => n.Kind == ManifestNodeKind.Control && n.Display.Trim().StartsWith("button", StringComparison.OrdinalIgnoreCase)).Display.Trim());
+            Assert.IsTrue(parts.Form!.PickButtons.ContainsKey(nameof(ControlForm.ParameterExpressions)));
+        });
+    }
+
+    [TestMethod]
+    public void Screens_AreCaptured()
+    {
+        Run((parts, _) =>
+        {
+            Select(parts, "Stream Samples");
+            Directory.CreateDirectory(_imagesDirectory);
+            File.WriteAllText(Path.Combine(_imagesDirectory, "tui-manifest-editor.txt"), TuiTestRunner.DumpBuffer());
+            TuiScreenshot.Save(Path.Combine(_imagesDirectory, "tui-manifest-editor.png"));
+
+            Select(parts, "barGraph: Channels");
+            File.WriteAllText(Path.Combine(_imagesDirectory, "tui-manifest-editor-control.txt"), TuiTestRunner.DumpBuffer());
+            TuiScreenshot.Save(Path.Combine(_imagesDirectory, "tui-manifest-editor-control.png"));
+
+            parts.ShowPreview();
+            TuiTestRunner.CurrentApp.LayoutAndDraw(true);
+            var preview = TuiTestRunner.DumpBuffer();
+            File.WriteAllText(Path.Combine(_imagesDirectory, "tui-manifest-editor-preview.txt"), preview);
+            TuiScreenshot.Save(Path.Combine(_imagesDirectory, "tui-manifest-editor-preview.png"));
+
+            Assert.Contains("[-] Acquire", preview);
+        });
+    }
+
+    [TestMethod]
+    public void ImportKsy_FillsTheFrameOutline_AndItsFieldFormShows()
+    {
+        Run((parts, userDirectory) =>
+        {
+            var ksy = Path.Combine(userDirectory, "demo.ksy");
+            File.WriteAllText(ksy, """
+                meta:
+                  id: demo
+                  endian: le
+                seq:
+                  - id: magic
+                    contents: [0xA5, 0x5A]
+                  - id: voltage
+                    type: u2
+                    doc: Battery voltage
+                  - id: current
+                    type: s2
+                  - id: name
+                    type: str
+                    size: 4
+                    encoding: ASCII
+                """);
+            Assert.IsTrue(parts.ViewModel.ImportKsy(ksy), parts.ViewModel.StatusMessage);
+            TuiTestRunner.CurrentApp.LayoutAndDraw(true);
+            Assert.IsTrue(parts.ViewModel.Nodes.Any(n => n.Kind == ManifestNodeKind.FrameField));
+
+            Select(parts, "voltage (u2)");
+            var dump = TuiTestRunner.DumpBuffer();
+            Assert.Contains("Binary frame (", dump);
+            Directory.CreateDirectory(_imagesDirectory);
+            File.WriteAllText(Path.Combine(_imagesDirectory, "tui-manifest-editor-frame.txt"), dump);
+            TuiScreenshot.Save(Path.Combine(_imagesDirectory, "tui-manifest-editor-frame.png"));
+        });
+    }
+}

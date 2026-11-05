@@ -141,7 +141,7 @@ Tests that require live cloud credentials. Manual execution only.
 | `RABBITMQ_HOST` | `localhost` | RabbitMQ server hostname |
 | `RABBITMQ_PORT` | `5673` | RabbitMQ AMQP port (5672 used by Service Bus emulator) |
 
-**Docker Container:** `rabbitmq:latest` (Ports 5673 AMQP, 15672 Management UI)
+**Docker Container:** `rabbitmq:latest` (Ports 5673 AMQP, 15672 Management UI, 21613 STOMP, 5671 AMQPS, 21614 STOMP TLS). DevTerm peers (Mosquitto 1883, ser2net 2217, loopback-device 7778) use `MOSQUITTO_*`, `SER2NET_*` and `LOOPBACK_DEVICE_*` (HOST and PORT each), see `src/.runsettings`.
 
 **Tests Using:**
 - `OoBDev.RabbitMQ.Tests.MessageQueueing.RabbitMQQueueMessageSenderProviderTests.SendAsyncTest_ByFullType`
@@ -279,7 +279,7 @@ Tests that require live cloud credentials. Manual execution only.
 | Variable | Default | Description |
 |----------|---------|-------------|
 | `PLANTUML_URL` | `http://localhost:8086` | The PlantUML server already running on the system (container `plantuml`); the test stack does not start its own |
-| `DOCS_VALIDATE_PATHS` | `docs/patterns-discovery` | `;`-separated repo-relative folders or files to validate |
+| `DOCS_VALIDATE_PATHS` | `docs/patterns-discovery;docs/applications` | `;`-separated repo-relative folders or files to validate |
 
 **Tests Using:** `OoBDev.Docs.Tests` (Unit for structure, links and captions; Integration for rendering)
 
@@ -290,9 +290,19 @@ Tests that require live cloud credentials. Manual execution only.
 | Variable | Default | Description |
 |----------|---------|-------------|
 | `ZWAVE_SERIAL_PORT` | `COM13` | Serial port of the plugged-in Z-Wave stick; blank or unlisted ends the Hardware test Inconclusive |
+| `ZWAVE_TCP_HOST` | `overwatch.local:4000` | Z-Wave stick behind a serial-to-Ethernet bridge (`host:port`); wins over `ZWAVE_SERIAL_PORT` when set; blank uses the serial port |
 | `RADEX_ONE_SERIAL_PORT` | `COM8` | Serial port of the Radex One (9600 8-N-1); blank or unlisted ends its Hardware tests Inconclusive |
-| `ZOOM_H4N_SERIAL_PORT` | blank | Serial port of the h4n2rs485 adapter on the Zoom H4n remote port (2400 8-N-1); blank or unlisted ends its Hardware test Inconclusive |
+| `ZOOM_H4N_SERIAL_PORT` | `COM3` | Serial port of the h4n2rs485 adapter on the Zoom H4n remote port (2400 8-N-1); blank or unlisted ends its Hardware test Inconclusive |
 | `ZWAVE_SWITCH_NODE` | `2` | Node id (2 to 232) of a Binary Switch relay; the toggle Hardware test actuates it and restores it, and ends Inconclusive while it is `0` |
+| `KORAD_KA3005P_SERIAL_PORT` | `COM6` | Korad KA3005P (9600 8-N-1) |
+| `KORAD_KA6003P_SERIAL_PORT` | `COM7` | Korad KA6003P (9600 8-N-1) |
+| `TCP_DEVICE_PORT` | `23` | Port of the serial-to-Ethernet bridges below |
+| `HP34401A_TCP_HOST` | `192.168.0.109` | HP 34401A multimeter |
+| `TDS2024_TCP_HOST` | `192.168.0.110` | Tektronix TDS2024 oscilloscope (SCPI, `*IDN?`) |
+| `TEK2230_1_TCP_HOST` | `192.168.0.108` | Tektronix 2230 oscilloscope (`ID?`) |
+| `TEK2230_2_TCP_HOST` | `192.168.0.107` | Second Tektronix 2230 (offline at times) |
+
+The device list with connections is in [docs/how-tos/test-hardware.md](docs/how-tos/test-hardware.md).
 
 **Tests Using:** `OoBDev.ZWave.Tests` (category `Hardware`)
 

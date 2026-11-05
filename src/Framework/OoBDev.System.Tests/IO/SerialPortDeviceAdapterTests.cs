@@ -1,8 +1,11 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.IO;
+using System.Threading.Tasks;
+using OoBDev.System.IO;
 using OoBDev.System.IO.Ports;
 using OoBDev.TestUtilities;
-using SerialPort = System.IO.Ports.SerialPort;
+using SerialPort = global::System.IO.Ports.SerialPort;
 
 namespace OoBDev.System.Tests.IO;
 
@@ -10,19 +13,18 @@ namespace OoBDev.System.Tests.IO;
 public class SerialPortDeviceAdapterTests
 {
     [TestMethod, TestCategory(TestCategories.Unit)]
-    public void TryOpenMissingPortReturnsFalseTest()
+    public async Task OpenAsyncMissingPortFaultsTest()
     {
         using var port = new SerialPort("COM9999");
         var adapter = new SerialPortDeviceAdapter(port);
 
-        var opened = adapter.TryOpen(out var stream);
+        await Assert.ThrowsExactlyAsync<IOException>(() => adapter.OpenAsync());
 
-        Assert.IsFalse(opened);
-        Assert.IsNull(stream);
+        Assert.AreEqual(ConnectionState.Faulted, adapter.State);
     }
 
     [TestMethod, TestCategory(TestCategories.Hardware)]
-    public void TryOpenPortHeldByAnotherHandleReturnsFalseTest()
+    public async Task OpenAsyncPortHeldByAnotherHandleFaultsTest()
     {
         var names = SerialPort.GetPortNames();
         if (names.Length == 0) Assert.Inconclusive("No serial port detected.");
@@ -32,9 +34,10 @@ public class SerialPortDeviceAdapterTests
         catch (Exception) { Assert.Inconclusive($"{names[0]} is already in use or cannot be opened."); }
 
         using var second = new SerialPort(names[0]);
-        var opened = new SerialPortDeviceAdapter(second).TryOpen(out var stream);
+        var adapter = new SerialPortDeviceAdapter(second);
 
-        Assert.IsFalse(opened);
-        Assert.IsNull(stream);
+        await Assert.ThrowsExactlyAsync<IOException>(() => adapter.OpenAsync());
+
+        Assert.AreEqual(ConnectionState.Faulted, adapter.State);
     }
 }

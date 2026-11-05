@@ -53,7 +53,7 @@ Base decision (owner, 2026-10-26): for these protocols the dev-term implementati
 | `Console` | Terminal.Gui TUI renderer (`FormRenderer`, cell charts) plus modes | 9,678 | in `Console.Tests` | Depends on `Terminal.Gui` 2.5 |
 | `Web` | Loopback web host, Blazor pages, panel API, AsyncAPI | 2,465 | in `Web.Tests` | Overlaps `OoBDev.AsyncApi` and the OpenAPI/Scalar setup |
 | `Presenters.Text` | ASCII, UTF-8, hex, decimal, octal, binary presenters | 290 | in `Presenters.Text.Tests` | Phase 1 with the contracts |
-| `Devices.Demo` | Sample only | 100 | 0 | Not migrated |
+| `Devices.Demo` | Sample only | 100 | 0 | Migrated as `OoBDev.DevTerm.Devices.Demo` |
 | `DeviceManifests` | JSON/XML manifests, `.ksy` import, frame decoder | 5,825 | in `DeviceManifests.Tests` | Phase 6 |
 | `Core` (presenters, control, transports) | Contracts the devices use | 5,892 | in `Core.Tests` | Only the parts devices need |
 
@@ -190,8 +190,8 @@ Where this meets the dotex test rules (`.claude/rules/testing.md`: `Unit`, `Simu
 |------:|------|------|
 | 0 | Compare each device with `mine/binary-data-decoders` (not `Incoming/BinaryDecoders`, which is superseded) for missing parts only (dev-term is the base); rebuild the parity table; record merges and rejections in [incoming-harvest-crosscheck.md](incoming-harvest-crosscheck.md) | Parity table in `docs/migration/`, merge list and rejections recorded. First pass done 2026-10-28: [device-parity.md](device-parity.md) (open checks in its section 4) |
 | 1 | Feature docs `docs/design/DeviceDecoding/` (requirements, architecture, api-design, testing-strategy); additions to the existing IO model for the gaps in section 4 (no new device contract project unless they do not fit); test helpers per Q2; first end-to-end device as a template | Contracts reviewed, template device green. Docs written as Draft 2026-10-28; template device not started |
-| 2 | Simple fixed-frame devices: DE-5000, Busylight, K8055 | Unit tests ported, `.ksy` and device docs moved |
-| 3 | NMEA, Radex One, Zoom H4n | As above; NMEA merged with the incoming copy |
+| 2 | ~~Simple fixed-frame devices: DE-5000, Busylight, K8055~~ | ~~Unit tests ported, `.ksy` and device docs moved~~ Cores are in main (2026-10-28); `.ksy` moves with phase 8 |
+| 3 | ~~NMEA, Radex One, Zoom H4n~~ | ~~As above; NMEA merged with the incoming copy~~ Cores are in main; the BinaryDataDecoders copies are superseded by dev-term ([overlap-review-2026-10-29.md](overlap-review-2026-10-29.md)) |
 | 4 | SCPI with profiles and auto-detect | Profile data loads through options; 103 tests ported |
 | 5 | Z-Wave, after the upstream `dev/zstick-s2` work settles | Id tables kept as data files |
 | 6 | `OoBDev.UiDefinitions` model, serializer, validator (ported with the phase 2 devices as their panels need it) | Round-trip and validator tests ported |

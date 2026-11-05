@@ -1,0 +1,90 @@
+using OoBDev.System.IO.Pipelines;
+using OoBDev.System.IO;
+using System.IO;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Diagnostics;
+using System.IO.Pipelines;
+using Moq;
+
+namespace OoBDev.DevTerm.Tests;
+
+[TestCategory("Unit")]
+[TestClass]
+public sealed class SessionLimitsTests
+{
+    public TestContext TestContext { get; set; } = null!;
+
+    private static Mock<IDeviceAdapter> OpenableTransport()
+    {
+        var transport = new Mock<IDeviceAdapter>();
+        transport.SetupGet(t => t.Input).Returns(new Pipe().Reader);
+        transport.SetupGet(t => t.Output).Returns(DeviceAdapterOutput.Create((_, _) => Task.CompletedTask));
+        return transport;
+    }
+
+    [TestMethod]
+    public async Task SendAsync_WithMinInterval_SpacesConsecutiveSends()
+    {
+        var transport = OpenableTransport();
+        await using var session = new Session(transport.Object, new Pipeline([]))
+        {
+            Limits = new SessionLimits { MinSendIntervalMs = 100 },
+        };
+
+        var clock = Stopwatch.StartNew();
+        await session.SendAsync(new byte[] { 1 }, TestContext.CancellationToken);
+        await session.SendAsync(new byte[] { 2 }, TestContext.CancellationToken);
+
+        Assert.IsGreaterThanOrEqualTo(90, clock.ElapsedMilliseconds);
+    }
+
+    [TestMethod]
+    public async Task OpenAsync_RetriesAfterFailure_ThenSucceeds()
+    {
+        var transport = OpenableTransport();
+        var calls = 0;
+        transport.Setup(t => t.OpenAsync(It.IsAny<CancellationToken>()))
+            .Returns(() => ++calls < 3 ? Task.FromException(new IOException("down")) : Task.CompletedTask);
+        await using var session = new Session(transport.Object, new Pipeline([]))
+        {
+            Limits = new SessionLimits { ConnectRetries = 2, ConnectRetryDelayMs = 1 },
+        };
+
+        await session.OpenAsync(TestContext.CancellationToken);
+
+        Assert.AreEqual(3, calls);
+    }
+
+    [TestMethod]
+    public async Task OpenAsync_ExhaustsRetries_ThrowsLastError()
+    {
+        var transport = OpenableTransport();
+        transport.Setup(t => t.OpenAsync(It.IsAny<CancellationToken>())).Returns(Task.FromException(new IOException("down")));
+        await using var session = new Session(transport.Object, new Pipeline([]))
+        {
+            Limits = new SessionLimits { ConnectRetries = 1, ConnectRetryDelayMs = 1 },
+        };
+
+        await Assert.ThrowsExactlyAsync<IOException>(() => session.OpenAsync(TestContext.CancellationToken));
+        transport.Verify(t => t.OpenAsync(It.IsAny<CancellationToken>()), Times.Exactly(2));
+    }
+
+    [TestMethod]
+    public async Task OpenAsync_ConnectTimeout_ThrowsTimeoutException()
+    {
+        var transport = OpenableTransport();
+        transport.Setup(t => t.OpenAsync(It.IsAny<CancellationToken>()))
+            .Returns<CancellationToken>(async ct => await Task.Delay(Timeout.Infinite, ct));
+        await using var session = new Session(transport.Object, new Pipeline([]))
+        {
+            Limits = new SessionLimits { ConnectTimeoutMs = 50 },
+        };
+
+        await Assert.ThrowsExactlyAsync<TimeoutException>(() => session.OpenAsync(TestContext.CancellationToken));
+    }
+}

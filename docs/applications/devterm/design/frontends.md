@@ -1,0 +1,85 @@
+# Front Ends: CLI, TUI, GUI
+
+## Purpose
+
+Describes the user-facing modes over the shared core engine — CLI and TUI (both in the console app), GUI (WPF) and the web host — and how responsibilities split between them.
+
+## Shared foundation
+
+All three modes operate on the same session/transport/presenter model from the core engine (see [architecture.md](architecture.md)). None of them talk to a transport or presenter plugin directly — they go through the core, so a plugin written once (a transport, a text/numeric presenter, a protocol decoder, a rendering presenter, a composite decoder) works identically in all three.
+
+**Startup/configure flow, TUI and GUI only** (CLI keeps today's hard-fail-on-bad-config behavior,
+since there's no one to interact with a form): if the bound `CliOptions` already validates, both
+skip straight to the execution model — the connect-and-interact screen each already has. If not,
+both show a Configure screen instead of exiting with an error, and both also get a **"Device
+Profiles" menu** (available at any time, not just at startup) for picking a named, saved connection
+— see [connection-profiles.md](../../../design/ConnectionProfiles/connection-profiles.md) for the full shape, including how a profile
+can reference a [device manifest](../../../design/UiDefinitions/device-manifests.md) so picking one also loads what that specific
+device can do. **Implemented** (2026-09-15 through 2026-09-18) in both front ends — see
+connection-profiles.md's own Status for the full detail. A profile's device manifest is
+loaded as a live control panel (`ManifestControlSurface`); see [device-manifests.md](../../../design/UiDefinitions/device-manifests.md).
+
+## Executables
+
+There are three deployable front-end applications. TUI and CLI are two *modes* of the same console executable, since both are text-only and share the same terminal-hosting concerns:
+
+- **Console app** — a single console executable providing both the CLI (scriptable/non-interactive) and TUI (full-screen interactive) modes described below. Mode selection is a startup concern (an explicit flag, or auto-detecting an interactive terminal vs. redirected/piped input/output) — see open questions. Built on .NET's Generic Host like every other part of the app (see [platform.md](platform.md)), so it composes the same core services as the WPF app.
+- **WPF app** — the GUI front end, built with WPF. This makes the GUI Windows-only by choice, while the console app (CLI + TUI) has no such constraint and can run cross-platform — a deliberate scoping trade-off: full graphical rendering (HPGL/PostScript/PCL drawings, telemetry plots) is a Windows-first feature, and non-Windows users still get the full core functionality through the console app's text views and export commands.
+
+- **Web host** (`DevTerm.Web`) — an ASP.NET Core app exposing the core engine over a `/ws` WebSocket tunnel and `/api/*`
+  endpoints, with a Blazor UI: loopback-only by default, a shared access token (https required off loopback). It reads the
+  same layered configuration as the console app (its own settings under `Web:`). Rationale and status:
+  [the web proposal](../../../design/WebFrontend/web-tunnel-blazor-frontend.md). The MAUI idea in the original note was not built.
+
+## TUI (full-screen terminal UI)
+
+The primary interactive mode for day-to-day device work: multiple panes (e.g., raw view, decoded view, send/command line), session switching, and live plugin selection, all inside the terminal. Closest in spirit to tools like a modern serial terminal or `tmux`-style multi-pane session. Rendering presenters (drawings, plots) degrade to a text/ASCII-art or summary representation where the terminal can't show real graphics, with a hint to use the GUI or export for the full rendering.
+
+```plantuml
+@startsalt
+{
+  {* File | Session | View | Help}
+  {SI
+    {T
+      Raw Hex
+      00 01 02 48 50 47 4C
+    }
+    |
+    {T
+      Decoded (HPGL)
+      PU;PA100,100;PD;PA200,200;
+    }
+  }
+  {
+    "Send:" | "PU;PA0,0;" | [Send]
+  }
+  {
+    COM3 @ 115200 8N1 | Connected
+  }
+}
+@endsalt
+```
+
+## CLI (scriptable, non-interactive)
+
+A command-line mode for automation, CI, and scripting: open a session, apply a transport + presenter configuration, and stream decoded output to stdout (or raw bytes, for piping into other tools), with exit codes and flags suited to scripting rather than an interactive human. This is also the natural place to trigger an export non-interactively (e.g., "decode this capture as HPGL and write out.svg").
+
+**Implemented** (`DevTerm.Console`): connects using a transport/presenter/config chosen via `CliOptions` (command-line args, env vars, or a saved `appsettings.Local.json` profile — see [platform.md](platform.md)), prints `[presenter] text` per line of output, and reads stdin for lines to send — so today's CLI is actually interactive-by-default (a REPL-like loop) rather than the pure batch/pipe mode described above; a dedicated non-interactive/scripted mode (env-driven, no stdin loop, explicit exit) is still just this section's original intent, not yet split out as its own thing.
+
+**Logging and playback (2026-09-25)**: `--log <file>` (or `--log true`) records the session to a
+session log, and `--playback <file>` is the first genuinely non-interactive mode. It replays a log
+through `--presenter` (or the log's own presenters), prints the decoded lines, and exits without
+connecting to anything, optionally paced by `--playbackspeed`. The TUI and WPF have the same through
+File > Start Logging... and File > Open Log for Playback.... See
+[session-logging.md](../../../design/SessionLogging/session-logging.md).
+
+## GUI (graphical desktop app, WPF)
+
+A richer visual front end for cases where a graphical view adds real value beyond what a terminal can show: live rendering-presenter output (HPGL/PostScript/PCL drawings, telemetry plots), device control module control panels (see [device-control-modules.md](../../../design/UiDefinitions/device-control-modules.md), rendered from the declarative model in [ui-definitions.md](../../../design/UiDefinitions/ui-definitions.md)), a hex-grid editor for composing binary sends, and drag-and-drop plugin/session management. Built with WPF, so it ships as a separate Windows desktop application from the console app, both consuming the same core engine via DI (see [platform.md](platform.md)).
+
+## Open questions
+
+- ~~How much session state is shareable between front ends~~ **Decided 2026-10-03:** sharing across processes is wanted, over a **named pipe or a localhost-only web service** (the owner's preferred IPC). Ties to the named-pipe session monitoring item in BACKLOG. Built: see the [cross-process session channel](../../../design/SessionChannel/cross-process-control-channel.md) (`SessionPipeServer`, `--controlhttp`).
+- ~~Whether the console app selects CLI vs. TUI mode via an explicit flag, auto-detection of an interactive terminal (isatty-style), or both.~~ **Decided**: an explicit flag, and TUI is the default — `dev-term` with no mode flag opens the TUI; `--cli true` forces the plain scriptable loop instead (e.g. for automation/CI). No terminal auto-detection.
+- Whether GUI (WPF) ships in the same initial milestone as the console app (CLI/TUI) or follows later, given it's a separate, Windows-only executable.
+- ~~How much of a rendering presenter's drawing the TUI should approximate~~ **Decided 2026-10-03:** the TUI does its best; graphic rendering will never be possible there, and that is an accepted limit.

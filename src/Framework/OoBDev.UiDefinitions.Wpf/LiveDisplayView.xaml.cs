@@ -1,6 +1,6 @@
 using System.Windows.Controls;
 
-namespace OoBDev.UiDefinitions.Wpf;
+namespace UiDefinitionsWpf;
 
 /// <summary>Renders a <see cref="ViewModels.LiveDisplayViewModel"/> set as the <c>DataContext</c>: an indicator's text or a bar graph's bars.</summary>
 public partial class LiveDisplayView : UserControl

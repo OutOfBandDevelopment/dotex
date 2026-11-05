@@ -194,11 +194,11 @@ Checklist (tick as work lands):
   - [ ] CLI tool catalog
 - [ ] **Journeys, screenshots and generated user guides (Playwright)**
   - [x] Journey definitions, runner, mocked API, guide and spec generators (`e2e/`, `npm run e2e`)
-  - [x] 9 journeys covering the screens built so far; guides, specs and screenshots in `docs/example`
-  - [x] Hand-written index and testing notes ([docs/example](docs/example/README.md))
+  - [x] 9 journeys covering the screens built so far; guides, specs and screenshots in `docs/applications/example`
+  - [x] Hand-written index and testing notes ([docs/applications/example](docs/applications/example/README.md))
   - [ ] Add a journey (and refresh the guide) with every new screen
   - [x] Run books and a features page (why to use each capability) generated from the journeys
-  - [x] Local check instead of CI: `scripts/examples/verify-example-web.ps1` (tests, build, journeys, fails when `docs/example` drifts from what is committed)
+  - [x] Local check instead of CI: `scripts/examples/verify-example-web.ps1` (tests, build, journeys, fails when `docs/applications/example` drifts from what is committed)
   - [ ] Live run against the compose stack as a nightly check
   - [x] Sign-in journey once the Keycloak client exists
 - [ ] **Deployment (Docker Compose, from Phase 1 onward)**

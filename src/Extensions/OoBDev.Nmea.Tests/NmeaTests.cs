@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 namespace OoBDev.Nmea.Tests;
 
 [TestClass]
+[TestCategory(TestCategories.Delorme_EarthmateBt20)]
 public class NmeaTests
 {
     private const string Gga = "$GPGGA,123519,4807.038,N,01131.000,E,1,08,0.9,545.4,M,46.9,M,,*47";

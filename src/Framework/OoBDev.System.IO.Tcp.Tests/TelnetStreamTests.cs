@@ -76,10 +76,10 @@ public sealed class TelnetStreamTests
     }
 
     [TestMethod]
-    public void Handshake_Settings_EncodesSubNegotiations()
+    public async Task Handshake_Settings_EncodesSubNegotiations()
     {
         // Stage
-        using var adapter = new Rfc2217DeviceAdapter("h", 1, 115200, 8, ComPortParity.Even, ComPortStopBits.Two);
+        await using var adapter = new Rfc2217DeviceAdapter("h", 1, 115200, 8, ComPortParity.Even, ComPortStopBits.Two);
 
         // Test
         var bytes = adapter.Handshake();
@@ -97,10 +97,10 @@ public sealed class TelnetStreamTests
     }
 
     [TestMethod]
-    public void Handshake_ByteEqualToIac_IsDoubled()
+    public async Task Handshake_ByteEqualToIac_IsDoubled()
     {
         // Stage
-        using var adapter = new Rfc2217DeviceAdapter("h", 1, 0x000000FF);
+        await using var adapter = new Rfc2217DeviceAdapter("h", 1, 0x000000FF);
 
         // Test
         var bytes = adapter.Handshake();

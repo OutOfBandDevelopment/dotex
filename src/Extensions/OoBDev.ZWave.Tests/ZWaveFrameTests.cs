@@ -5,6 +5,7 @@ using System;
 namespace OoBDev.ZWave.Tests;
 
 [TestClass]
+[TestCategory(TestCategories.Aeotec_ZStickS2)]
 public class ZWaveFrameTests
 {
     // Byte-exact frames from an Aeotec Z-Stick S2 (Z-Wave 2.78, home id 016A1C28), captured by dev-term.

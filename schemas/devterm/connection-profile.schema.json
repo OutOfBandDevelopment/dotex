@@ -1,0 +1,534 @@
+{
+  "type": [
+    "object",
+    "null"
+  ],
+  "properties": {
+    "Transport": {
+      "type": "string"
+    },
+    "Description": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "ListPorts": {
+      "type": "boolean"
+    },
+    "Tui": {
+      "type": "boolean"
+    },
+    "Cli": {
+      "type": "boolean"
+    },
+    "Presenter": {
+      "type": "array",
+      "items": {
+        "type": [
+          "string",
+          "null"
+        ]
+      }
+    },
+    "EffectivePresenters": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "type": [
+          "string",
+          "null"
+        ]
+      }
+    },
+    "Parser": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "Routing": {
+      "type": "object",
+      "properties": {
+        "Protocol": {
+          "type": "string"
+        },
+        "Host": {
+          "type": "string"
+        },
+        "Port": {
+          "type": "integer"
+        },
+        "Username": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "Password": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "Tls": {
+          "type": "boolean"
+        },
+        "Rules": {
+          "type": "array",
+          "items": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "Direction": {
+                "type": "integer"
+              },
+              "Topic": {
+                "type": "string"
+              },
+              "Match": {
+                "type": "string"
+              },
+              "Payload": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "Send": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "Confirm": {
+                "type": "boolean"
+              }
+            }
+          }
+        },
+        "IsConfigured": {
+          "type": "boolean"
+        },
+        "EffectivePort": {
+          "type": "integer"
+        }
+      }
+    },
+    "EffectiveParser": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "LineEnding": {
+      "type": "integer"
+    },
+    "AsciiMaxLineLength": {
+      "type": "integer"
+    },
+    "Port": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "Baud": {
+      "type": "integer"
+    },
+    "DataBits": {
+      "type": "integer"
+    },
+    "Parity": {
+      "type": "integer"
+    },
+    "StopBits": {
+      "type": "integer"
+    },
+    "Handshake": {
+      "type": "integer"
+    },
+    "WriteTimeoutMs": {
+      "type": "integer"
+    },
+    "WriteByteDelayMs": {
+      "type": "integer"
+    },
+    "SendIntervalMs": {
+      "type": "integer"
+    },
+    "ReadIntervalMs": {
+      "type": "integer"
+    },
+    "ConnectTimeoutMs": {
+      "type": "integer"
+    },
+    "ConnectRetries": {
+      "type": "integer"
+    },
+    "ConnectRetryDelayMs": {
+      "type": "integer"
+    },
+    "SessionLimits": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "MinSendIntervalMs": {
+          "type": "integer"
+        },
+        "MinReadIntervalMs": {
+          "type": "integer"
+        },
+        "ConnectTimeoutMs": {
+          "type": "integer"
+        },
+        "ResponseTimeoutMs": {
+          "type": "integer"
+        },
+        "ConnectRetries": {
+          "type": "integer"
+        },
+        "ConnectRetryDelayMs": {
+          "type": "integer"
+        }
+      }
+    },
+    "ReadTimeoutMs": {
+      "type": "integer"
+    },
+    "Dtr": {
+      "type": "boolean"
+    },
+    "Rts": {
+      "type": "boolean"
+    },
+    "LoopbackSampleIntervalMs": {
+      "type": "integer"
+    },
+    "Host": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "Listen": {
+      "type": "boolean"
+    },
+    "Subscribe": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "Publish": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "Tls": {
+      "type": "boolean"
+    },
+    "CaCertificate": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "Username": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "VendorId": {
+      "type": "integer"
+    },
+    "ProductId": {
+      "type": "integer"
+    },
+    "SerialNumber": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "DevicePath": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "ListHidDevices": {
+      "type": "boolean"
+    },
+    "ListUsbtmcDevices": {
+      "type": "boolean"
+    },
+    "BleDeviceId": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "BleServiceUuid": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "BleWriteCharacteristicUuid": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "BleNotifyCharacteristicUuid": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "ListLxiDevices": {
+      "type": "boolean"
+    },
+    "ListNetworkDevices": {
+      "type": "boolean"
+    },
+    "Pipe": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "Control": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "ShareTcp": {
+      "type": "integer"
+    },
+    "ShareRfc2217": {
+      "type": "boolean"
+    },
+    "ShareBind": {
+      "type": "string"
+    },
+    "ControlHttp": {
+      "type": "integer"
+    },
+    "ControlToken": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "ControlClient": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "Attach": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "Capture": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "ListCaptures": {
+      "type": "integer"
+    },
+    "ExportCaptures": {
+      "type": "integer"
+    },
+    "ExportTo": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "Project": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "Profile": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "SaveProject": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "ProjectConnection": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "ListPlugins": {
+      "type": "boolean"
+    },
+    "ListSessions": {
+      "type": "boolean"
+    },
+    "ListApprovals": {
+      "type": "boolean"
+    },
+    "ForgetPlugin": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "ListBleDevices": {
+      "type": "boolean"
+    },
+    "ListBleCharacteristics": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "ManifestName": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "ScpiProfile": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "ScpiAutoDetectTimeoutMs": {
+      "type": "integer"
+    },
+    "ExportDirectory": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "EffectiveExportDirectory": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "Log": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "Plugins": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "Otlp": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "Playback": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "PlaybackSpeed": {
+      "type": "number"
+    },
+    "StreamAutoConvertHpgl": {
+      "type": "boolean"
+    },
+    "StreamConvertMode": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "StreamConvertExternalToolPath": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "StreamConvertExternalToolArguments": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "StreamConvertDpi": {
+      "type": "integer"
+    },
+    "StreamIdleTimeoutMs": {
+      "type": "integer"
+    },
+    "StreamConvertOutputExtension": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "StreamConvertTools": {
+      "type": "array",
+      "items": {
+        "type": [
+          "object",
+          "null"
+        ],
+        "properties": {
+          "Name": {
+            "type": "string"
+          },
+          "Path": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "Arguments": {
+            "type": "string"
+          },
+          "Formats": {
+            "type": "string"
+          },
+          "OutputExtension": {
+            "type": "string"
+          },
+          "Dpi": {
+            "type": "integer"
+          }
+        }
+      }
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "oobdev://devterm/schemas/connection-profile.schema.json"
+}

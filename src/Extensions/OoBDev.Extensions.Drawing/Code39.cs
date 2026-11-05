@@ -1,12 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 using System.Text;
 using System.Text.RegularExpressions;
+using SkiaSharp;
 
 namespace OoBDev.Extensions.Drawing;
 
@@ -71,26 +68,21 @@ public static partial class Code39
         return message.SelectMany(c => _standard[c]).ToArray();
     }
 
-    /// <summary>Draws a full-ASCII message as a 1 bit per pixel bitmap, 16 pixels per symbol and <see cref="BarHeight"/> high.</summary>
-    [SupportedOSPlatform("windows")]
-    public static Image EncodeFullAscii(string message) => EncodeStandard(ToStandard(message));
+    /// <summary>Draws a full-ASCII message as a grayscale bitmap (pattern bit 1 white, 0 black), 16 pixels per symbol and <see cref="BarHeight"/> high.</summary>
+    public static SKBitmap EncodeFullAscii(string message) => EncodeStandard(ToStandard(message));
 
-    /// <summary>Draws a standard-set message as a 1 bit per pixel bitmap, 16 pixels per symbol and <see cref="BarHeight"/> high.</summary>
-    [SupportedOSPlatform("windows")]
-    public static Image EncodeStandard(string message)
+    /// <summary>Draws a standard-set message as a grayscale bitmap (pattern bit 1 white, 0 black), 16 pixels per symbol and <see cref="BarHeight"/> high.</summary>
+    public static SKBitmap EncodeStandard(string message)
     {
         var pattern = ToPattern(message);
 
-        var bitmap = new Bitmap(pattern.Length * 8, BarHeight, PixelFormat.Format1bppIndexed);
-        var data = bitmap.LockBits(new Rectangle(Point.Empty, bitmap.Size), ImageLockMode.WriteOnly, PixelFormat.Format1bppIndexed);
-        try
+        var bitmap = new SKBitmap(new SKImageInfo(pattern.Length * 8, BarHeight, SKColorType.Gray8, SKAlphaType.Opaque));
+        var pixels = bitmap.GetPixelSpan();
+        for (var line = 0; line < BarHeight; line++)
         {
-            for (var line = 0; line < BarHeight; line++)
-                Marshal.Copy(pattern, 0, data.Scan0 + (data.Stride * line), pattern.Length);
-        }
-        finally
-        {
-            bitmap.UnlockBits(data);
+            var row = pixels.Slice(line * bitmap.RowBytes, bitmap.Width);
+            for (var x = 0; x < row.Length; x++)
+                row[x] = (pattern[x / 8] & (0x80 >> (x % 8))) != 0 ? (byte)255 : (byte)0;
         }
 
         return bitmap;

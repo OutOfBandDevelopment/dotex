@@ -16,6 +16,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\Framework\OoBDev.System.Abstractions\OoBDev.System.Abstractions.csproj" />
+		<ProjectReference Include="..\..\Framework\OoBDev.UiDefinitions\OoBDev.UiDefinitions.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

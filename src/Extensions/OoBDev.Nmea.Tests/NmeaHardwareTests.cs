@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 namespace OoBDev.Nmea.Tests;
 
 [TestClass]
+[TestCategory(TestCategories.Delorme_EarthmateBt20)]
 public class NmeaHardwareTests
 {
     public TestContext TestContext { get; set; } = null!;

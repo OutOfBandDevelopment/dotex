@@ -83,7 +83,7 @@ Two status LEDs relevant to this interface, above the CRT:
 
 ### The RS-232-C PARAMETERS switch — configuration model is physical, not software
 
-Unlike every other instrument documented in this repo's `docs/devices/`, **Option 12's serial
+Unlike every other instrument documented in the device libraries' `docs` folders, **Option 12's serial
 port parameters are set by a physical 10-section DIP switch, read once at power-up** — not by
 a software command sent after connecting. Changing the switch after power-on has no effect
 until the next power cycle.

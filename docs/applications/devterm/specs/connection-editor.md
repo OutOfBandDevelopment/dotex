@@ -1,0 +1,449 @@
+# Connection Editor
+
+## Purpose
+
+Lets a user pick, create, edit, save, delete, and import/export a connection profile, and connect
+with the current fields. Shared logic (validation, `ConnectionProfileStore` I/O,
+`RelayCommand`-based commands) lives in `DevTerm.Configuration.ConnectionEditorViewModel`, used by
+both front ends:
+
+- **TUI**: `DevTerm.Console.ConfigureMode` — a Terminal.Gui `Window`.
+- **WPF**: `DevTerm.Wpf.DeviceProfilesWindow` — the profile list and action rows bound via XAML
+  `{Binding ...}`/`Command="{Binding ...}"`, no business logic in code-behind.
+
+**The connection fields are generated, not hand-built** (since 2026-09-25): the view model's own
+properties carry `[Category]`/`[DisplayName]`/`[FormField]` annotations (plus `[FormSection]` on the
+class for each transport group's visibility), `FormDefinitionGenerator` turns them into
+`ConnectionEditorViewModel.FormDefinition` — an ordinary `UiDefinition` — and each front end's
+generic form renderer (`DevTerm.Console.FormRenderer`, `DevTerm.Wpf.FormRenderer`) draws it and
+binds every field back to the same view-model property through `FormBinding`. One declaration of
+the field list, labels, grouping, choice lists, value types and "which transport shows which
+group", instead of one per front end. See
+[ui-definitions.md](../../../design/UiDefinitions/ui-definitions.md#forms-from-one-definition) for the engine.
+
+| Part | Generated or hand-built | Why |
+|---|---|---|
+| Transport, Description, every Serial/TCP/USB Device/Loopback field, the "not found" hints, the loopback note, Device manifest, Presenters, SCPI profile, SCPI auto-detect timeout, Send as, Line ending, ASCII max line length | **Generated** (`FormDefinition`) | Plain fields bound to view-model properties — exactly what the form vocabulary covers |
+| The "Detected ports" / "Detected HID devices" / "Detected USBTMC devices" rows | **Generated row, hand-built widget** (`TuiFormOptions`/`WpfFormOptions.CustomWidgets`) | The form places, labels and shows/hides the row with its transport; the widget needs the view model's rich device objects (a description-bearing `Display` over a short `Name`, a live-filtered list whose selection survives filtering), which a `ChoiceControl`'s plain option strings can't carry. WPF: the same bound `ComboBox`es as before; TUI: the same `Detect...` buttons and pick list |
+| Saved-profiles list and its buttons, Save as profile, the import/export path and its buttons, Connect/Close/Quit | **Hand-built** | Commands and list management (multi-select, double-click, native file dialogs), not fields of a model |
+
+Shown in two situations:
+
+1. **At startup**, when the bound `CliOptions` doesn't validate (see
+   [connection-profiles.md](../../../design/ConnectionProfiles/connection-profiles.md)'s startup flow) — instead of
+   hard-failing. `Result`, once set, is used directly to build the DI host and connect immediately.
+2. **From "File > Device Profiles..."** in either front end, at any time, already connected —
+   `Result`, once set, is saved as the untracked default profile *and* live-switched to
+   immediately (`DevTermSessionBuilder`/`MainWindow.SwitchProfileAsync`/`TuiMode.BuildWindow`'s
+   `SwitchProfileAsync`) — the running session tears down and the new one opens in place, no
+   restart needed.
+   **Exception, no reconnect:** if the edit changes only baud, data bits, parity, stop bits, DTR, RTS,
+   the display presenters, the send parser or the line ending, `LiveSessionUpdate` applies it to the
+   open session in place (no confirmation prompt, the connection stays open, output says "Connection
+   settings updated without reconnecting."). Anything that identifies the connection (transport, port,
+   host, handshake, timeouts, ...) still switches sessions. Tests: `LiveSessionUpdateTests`.
+
+## Fields
+
+| Field | Type | Default | Validation | Notes |
+|---|---|---|---|---|
+| Transport | one of `serial`/`tcp`/`hid`/`usbtmc`/`ble`/`rfc2217`/`vxi11`/`mqtt`/`amqp`/`stomp`/`loopback` | `serial` | Must be one of the eleven | Selecting a value shows only that transport's field group (see States); `rfc2217` reuses the Serial and TCP groups together rather than a group of its own — see States |
+| Description | free text | empty | none | Purely descriptive; never read by any transport |
+| Device manifest | free text (a manifest name, not a path) | empty | none | Names a manifest under `~/.dev-term/manifests/` or the app's `./manifests/` to load with the connection; blank means none (`CliOptions.ManifestName`) |
+| Port (serial) | free text, or picked from a "Detected ports"/"Detect..." list | empty | Required when Transport is `serial` | e.g. `COM3`, `/dev/ttyUSB0`; the list is whatever `ISerialPortDiscovery.GetPortNames()` (the same enumeration `--listports` uses) finds attached right now, captured once at construction; each entry the OS can describe is shown with that description — `COM3 — Prolific USB-to-Serial Comm Port` on Windows, `/dev/ttyUSB0 — FTDI FT232R USB UART (0403:6001, serial A50285BI)` on Linux/macOS (see Per-front-end notes) — but only the short name is written into the field |
+| Baud (serial) | integer, typed as text | `9600` | Declared `Integer`, at least 1: a value that isn't shows an inline message under/next to the field (`'96x' is not a whole number.`) while typing. The text is still kept as typed; on Connect/Save, `int.TryParse` ignores an unparseable value (keeps the previous one), as before | |
+| Data bits (serial) | integer, typed as text | `8` | Declared `Integer`, 5 to 8 (same inline message); same parse behavior as Baud | |
+| Parity (serial) | one of `None`/`Odd`/`Even`/`Mark`/`Space` | `None` | n/a (fixed set) | |
+| Stop bits (serial) | one of `None`/`One`/`Two`/`OnePointFive` | `One` | n/a (fixed set) | |
+| DTR (serial) | boolean | on | n/a | `SerialPort` itself defaults this to `false`, unlike most terminal tools; dev-term defaults it `true` since plenty of devices stay silent without it asserted (see `CLAUDE.md`'s constraints list) |
+| RTS (serial) | boolean | on | n/a | Same rationale/default as DTR |
+| Write timeout (ms) (serial) | integer, typed as text | `5000` | Declared `Integer`, at least -1 (same inline-message behavior as Baud) | `-1` means indefinite |
+| Read timeout (ms) (serial) | integer, typed as text | `1000` | Declared `Integer`, at least 0 (same inline-message behavior as Baud) | |
+| Host (tcp) | free text | empty | Required when Transport is `tcp` and Listen is off | Accepts a hostname, IPv4, or IPv6 literal — passed through as-is to `TcpTransport`/`.NET`'s own connect/resolve, not restricted to one format |
+| Port (tcp) | integer, typed as text | `0` | Required, 1–65535, when Transport is `tcp` (declared `Integer` 0–65535 for the inline message) | |
+| Listen (tcp) | boolean | off | none | Server mode; when on, Host is not required |
+| Detected network devices (tcp, vxi11, rfc2217, mqtt) | picked from a "Detect network devices..." list, via `SelectedLxiDevice` | empty | none | Runs every discovery probe (LXI: a VXI-11 portmapper broadcast then `*IDN?` on raw ports 5025/5555; mDNS/DNS-SD; SSDP; USR-TCP232 bridges, by sweeping port 80 of each local /24 for a Basic-auth realm starting `USR-TCP232`, suggested port 23) when the button is pressed, nothing at construction, about three seconds; hits are merged by address, port and transport, then grouped into one row per device (address, best name) with a badge per service (`NetworkDiscovery.GroupByDevice`; the CLI prints `address  name  [transport:port, ...]`, the web page shows a button per badge that prefills that service). Picking a row fills Host and the TCP Port, and switches Transport to what the hit is: `vxi11` for a VXI-11-only LXI unit (no port kept; its RPC port isn't a SCPI port), `mqtt` for an MQTT broker, otherwise `tcp`. The picker shows on every TCP-like transport. WPF scans off the UI thread; the TUI blocks for the scan like its BLE button. CLI equivalents: `--listnetworkdevices true` (all probes), `--listlxidevices true` (LXI only) |
+| Write byte delay (ms) (serial, tcp, rfc2217) | integer, typed as text | `-1` | Declared `Integer`, at least -1 (same inline-message behavior as Baud) | Lives in its own "Timing" section, shown only for the three byte-stream transports (`SupportsWriteByteDelay`) — see States. `-1` disables pacing (an unpaced write, as before); `0` writes and flushes one byte at a time with no delay; a positive value adds that many milliseconds of delay between bytes (never after the last one). See [`docs/design/transports.md`](../../../design/Transports/transports.md)'s "Write pacing" section |
+| Vendor ID (hid, usbtmc) | integer, typed as decimal or 4-digit hex (per "Show as hex"), or picked (with Product ID together) from a "Detected devices"/"Detect..." list | `0` | Required, 1–65535, when Transport is `hid` or `usbtmc` | **Shared by both USB-device transports** — one field, one value, regardless of which is selected — since both identify a device the same way; only the detected-devices picker differs (see below). Stored/validated as decimal internally regardless of display format — see `ConnectionEditorViewModel.VendorIdDisplay`; the picker list is whatever `IHidDeviceDiscovery.GetDevices()`/`IUsbtmcDeviceDiscovery.GetDevices()` (the same enumeration `--listhiddevices`/`--listusbtmcdevices` uses) finds attached right now, formatted `"{VID:X4}:{PID:X4}  {ProductName}"`. The picker is **filtered by the Vendor/Product ID fields**: a non-zero id keeps only devices with that id, `0` means any (see Per-front-end notes) |
+| Product ID (hid, usbtmc) | integer, typed as decimal or 4-digit hex, or picked together with Vendor ID (see above) | `0` | Required, 1–65535, when Transport is `hid` or `usbtmc` | Same as Vendor ID — shared field |
+| BLE device ID (ble) | free text | empty | Required when Transport is `ble` | Platform-specific peripheral identifier (Windows: a `BluetoothLEDevice` id string, not a MAC address) — typed by hand, or picked via the "Detect BLE..." picker (same idea as HID/USBTMC's, see below) |
+| Service UUID (ble) | free text | empty (Nordic UART Service default applied by the transport) | none | Blank means the transport's own Nordic UART Service default; set explicitly for a device with a custom GATT profile |
+| Write characteristic UUID (ble) | free text | empty (NUS default) | none | Same blank-means-default behavior as Service UUID; can also be filled by the "Detect characteristics..." picker below (writes Service UUID too) |
+| Notify characteristic UUID (ble) | free text | empty (NUS default) | none | Same blank-means-default behavior as Service UUID; can also be filled by the "Pick..." notify picker below (writes Service UUID too) |
+| Detected characteristics (write) (ble) | picked from a "Detect characteristics..." list, via `SelectedBleWriteCharacteristic` | empty | none | Enumerates BLE device ID's actual GATT services/characteristics (`IBleGattProfileExplorer.GetServices`) and lets picking one fill Service UUID + Write characteristic UUID together. Requires BLE device ID to be filled in first (both front ends show a message and do nothing if it's blank). Independent of the notify picker below — some peripherals (e.g. the SH-HC-08 family) expose the very same UUID as both their write and notify characteristic, so picking a row here doesn't touch Notify characteristic UUID |
+| Detected characteristics (notify) (ble) | picked from the same already-scanned list, via `SelectedBleNotifyCharacteristic` | empty | none | Same source list as the write picker (no separate rescan — the write picker's "Detect characteristics..." button populates it); picking a row fills Service UUID + Notify characteristic UUID together, independent of the write picker |
+| Sample interval (ms) (loopback) | integer, typed as text | `0` | Declared `Integer`, at least 0 (same inline-message behavior as Baud) | Paces each pushed line of a naturally multi-line/streaming scripted response (`Samples: N`, `Send Events: N`) via `Task.Delay` between lines — never before the first line or after the last, and never applied to a single-line reply like `hello`. `0` (the default) preserves instant delivery; only non-zero values are persisted to a saved profile. See [`docs/design/features/loopback-sample-rate.md`](../../../design/Transports/loopback-sample-rate.md) |
+| Show as hex (hid, usbtmc) | boolean | off (decimal) | n/a | Toggles Vendor ID/Product ID's display and typed-input format between decimal and 4-digit uppercase hex (no `0x` prefix, matching `--listhiddevices`/`--listusbtmcdevices`'s own formatting) — a display preference only, not part of a saved profile, and doesn't mark the editor dirty by itself |
+| Presenters | any non-empty subset of `ascii`/`utf8`/`hex`/`decimal`/`octal`/`binary`/`k8055`/`busylight`/`scpi`/`radexone`/`zoomh4n`/`de5000` (a row of checkboxes, a `ChoiceStyle.CheckList` bound to `PresentersText`, the checked names comma-joined) | `hex` | At least one must be checked — "Select at least one presenter." (n/a otherwise: fixed set — the six generic text presenters `AddTextPresenters` registers, plus one per device module that registers its own `IPresenter`) | **Display only**: every checked presenter renders each incoming chunk, side by side, each output line tagged `[name]`. Stored as `CliOptions.Presenter`, a JSON array in a saved profile (`"Presenter": ["ascii", "hex"]`); a profile saved before this became a list (`"Presenter": "hex"`) still loads, as does the command-line/environment form `--presenter ascii,hex` — see `DevTermConfiguration.Bind`. Nothing here affects what is *sent* — see Send as. `ConnectionEditorViewModel.PresenterOptions` is a hardcoded list, not resolved from the live `PresenterCatalog` (see that property's doc comment) — a new device module's presenter must be added there by hand or it silently won't appear in this picker, as happened with `radexone`/`zoomh4n`/`de5000` until 2026-09-25 |
+| SCPI profile | one of the SCPI profile choices (Auto-detect, Generic, every bundled instrument), or empty | empty (always ask) | n/a | Shown only while the `scpi` presenter is checked (`IsScpiPresenterSelected`). Preselects the Device > SCPI Instrument... choice |
+| SCPI auto-detect timeout (ms) | whole number | `3000` | 100 to 60000 | Shown only while the `scpi` presenter is checked; how long auto-detect waits for `*IDN?` (`CliOptions.ScpiAutoDetectTimeoutMs`) |
+| Send as | one of the presenters above | the first checked presenter (a profile with no `Parser`, i.e. one saved before this existed, sends as its first presenter — what it always did) | n/a (fixed set) | The **parser**: which presenter's input encoding (`IPresenterInput.Parse`) turns a typed line into bytes. Independent of Presenters. Stored as `CliOptions.Parser` (`--parser`). This is only the *starting* value: the main windows can switch it per typed line — see Per-front-end notes |
+| Line ending | one of `None`/`Cr`/`Lf`/`CrLf` | `None` | n/a (fixed set) | Appended to each typed line before sending |
+| ASCII max line length | integer, typed as text | `4096` (`AsciiPresenter.DefaultMaxLineLength`) | Declared `Integer`, at least 0 (same inline-message behavior as Baud) | How long a line the ASCII presenter buffers before flushing anyway, in case a terminator never arrives; `0` means unbounded |
+| Save as profile named | free text | empty | Must be non-empty to save | Auto-filled with the loaded profile's name after Load (see Actions) |
+| Import/export file path | free text, or picked via "Browse..." (existing file) / "Save As..." (new or existing file), both front ends | empty | Must be non-empty to import/export | A single-profile JSON path for Import/Export, or a `.zip` path (detected by extension) for Import/Export Selected/Export All — see Actions |
+| Saved profiles | list, one name per saved profile, multi-select | populated from `ConnectionProfileStore.List()` at construction | n/a | Double-clicking a row loads it — same as selecting it and pressing Load, not a separate action. Multiple rows can be marked/selected at once — see Export Selected below — independent of the single-item selection Load/Delete use |
+
+## Actions
+
+| Action | Behavior | Preconditions | On failure |
+|---|---|---|---|
+| **Connect** (also **Enter** in a field, in both front ends: it is the default button; in the TUI, Enter in the saved-profiles list loads instead) | Validates the current fields (`CliOptionsValidator`); on success sets `Result`, clears the dirty flag, and raises `CloseRequested`. Settings a saved profile holds but this form doesn't show (`ManifestName`, `ScpiAutoDetectTimeoutMs`) are carried over from whatever was loaded, not reset to defaults. The presenter order is kept as loaded unless the presenter selection itself was changed. As a result, Load then Connect produces exactly the saved profile, so the window title can name it (it used to lose the name, and silently reset, for example, a profile's DTR-off setting) | None | Shows the validation failure message; `Result` stays `null`, window stays open |
+| **Close** (WPF) / **Quit** or **Ctrl+Q** (TUI) | If fields have unsaved edits, asks for confirmation first; otherwise (or once confirmed) discards changes and `Result` stays `null` | None | Declining the confirmation leaves the editor open, untouched |
+| **Load** (button, or double-clicking the row) | If fields have unsaved edits, asks for confirmation first; otherwise (or once confirmed) loads the selected saved profile's fields into the editor and sets "Save as profile named" to that profile's name | A profile must be selected in the list | "Select a profile first." / "Load cancelled — you have unsaved changes." if declined / the underlying `IOException`'s message if the file can't be read |
+| **Save** | Validates the current fields; if the name already matches an existing profile, asks for confirmation first (a native dialog per front end); saves, refreshes the list, clears the name field | Name must be non-empty; fields must validate | Validation message, or "Not saved — '{name}' already exists." if overwrite is declined |
+| **Delete** | Deletes the selected saved profile; refreshes the list; clears the selection | A profile must be selected | "Select a profile first." |
+| **Refresh** | Re-reads the profiles directory (picks up a profile saved by another process, e.g. the other front end) | None | n/a — mostly redundant now that a real `FileSystemWatcher` does this automatically (see States), kept as a manual fallback |
+| **Import** | If the path ends in `.zip`, imports every `*.json` entry straight into the profile store (see Export Selected/Export All) and refreshes the list — does **not** load anything into the fields. Otherwise, reads a single `CliOptions`-shaped JSON file at the given path into the fields — does **not** save it as a profile by itself, review then Save | Path must be non-empty | "Could not import '{path}': {message}" — a missing/malformed file doesn't throw, it reports and leaves fields untouched |
+| **Replace All** | Restore-from-backup: reads the `.zip` at the given path, then deletes **every** saved profile (including ones the zip doesn't mention) and writes every profile in the zip. The whole archive is read and checked (each `*.json` entry must be valid JSON) *before* anything is deleted, then a native confirmation gives the saved-profile and zip-profile counts — skipped when nothing is saved yet, since there's nothing to lose. Clears the single and multi selections | Path must be non-empty and end in `.zip` | "Type a file path to import from." / "Replace All needs a .zip file …" / "Could not import '{path}': … Nothing was deleted." (unreadable/invalid zip) / "'{path}' contains no profiles. Nothing was deleted." / "Replace All cancelled." if declined / "Replace All failed partway: …" on a mid-write I/O error (see Per-front-end notes) |
+| **Export** | Validates the current fields; writes them to the given path as JSON (same shape a saved profile uses) | Path must be non-empty; fields must validate | Validation message |
+| **Export Selected** | Writes every profile marked/selected in the saved-profiles list to the given path as a single zip (one `{name}.json` entry per profile, the exact bytes already on disk, not a re-serialized round trip) | Path must be non-empty; at least one profile must be marked/selected | "Select one or more saved profiles to export first." / the underlying I/O exception's message |
+| **Export All** | Same as Export Selected, but always writes every saved profile regardless of what's marked/selected | Path must be non-empty | Same as Export Selected |
+| **Delete Selected** | Asks for confirmation naming the profiles about to go (a native dialog per front end — unlike single **Delete**, which doesn't ask), then deletes every profile marked/selected in the saved-profiles list, refreshes the list, and clears both the multi-selection and (if it was one of them) the single selection | At least one profile must be marked/selected | "Select one or more saved profiles to delete first." / "Delete cancelled." if declined / "Deleted N profile(s). M not found." when a profile had already been removed by another process |
+
+## States
+
+- **Transport-based field-group visibility**: only the field group matching the selected Transport
+  is shown (Serial / TCP / USB Device / Loopback) — each group is a generated section whose
+  visibility condition names the view model's `IsSerialTransport`/`IsTcpTransport`/
+  `IsUsbDeviceTransport`/`IsLoopbackTransport` (`[FormSection(..., VisibleWhen = ...)]`), re-evaluated
+  on every change. The shared Vendor/Product ID/Show-as-hex group is shown for either USB transport
+  via `IsUsbDeviceTransport` (= `IsHidTransport || IsUsbtmcTransport`); within that group, only the
+  Detected-devices row for the *selected* one of `hid`/`usbtmc` is shown (row conditions on
+  `IsHidTransport`/`IsUsbtmcTransport`), since they're separate discovery sources (see Per-front-end
+  notes). Presentation/Description/Save/Import-export are always visible regardless of Transport.
+  **`rfc2217` is a third selector on the same Serial and TCP groups, not a group of its own**: the
+  Serial section's `VisibleWhen` is `IsSerialLikeTransport` (= `IsSerialTransport || IsRfc2217Transport`)
+  and the TCP section's is `IsTcpLikeTransport` (= `IsTcpTransport || IsRfc2217Transport`) — "a serial
+  port, reached over the network" reuses both groups' fields (Baud/Data bits/Parity/Stop bits/DTR/RTS
+  from Serial, Host/Port from TCP) rather than duplicating an eighth copy of them. Three fields stay
+  Serial/TCP-exclusive even though their section is now shown for `rfc2217` too, each via its own
+  field-level `VisibleWhen` narrower than its section's: Listen (`rfc2217` has no listen mode),
+  Handshake text, and Read timeout (ms) (RFC 2217 flow-control/read-timeout wiring isn't built in v1 —
+  see `docs/design/rfc2217.md`). The Serial section's Port/Detected-ports row has no such guard and
+  still renders for `rfc2217` (harmless, unused clutter — `BuildOptions` routes the TCP group's Port
+  into `CliOptions.Port` for `rfc2217` via `IsTcpLikeTransport`, never the Serial group's).
+  **`mqtt`, `amqp` and `stomp` reuse the TCP group's Host/Port** (and share the one MQTT section below, whose
+  Subscribe/Publish are AMQP routing keys or STOMP destinations for those two; AMQP defaults to port 5672, STOMP 61613) (`IsTcpLikeTransport` includes it; Listen stays TCP-only) and adds
+  its own **MQTT** section (`IsMqttTransport`): Subscribe topics (comma-separated filters, wildcards allowed),
+  Publish topic, and User name. The password has no field: it is accepted as `--password` or `DEVTERM_PASSWORD`
+  only and is never written to a saved profile. At least one of Subscribe/Publish is required.
+  **Sections collapse** (both front ends): each labeled section header toggles its rows. The TUI header is a
+  focusable `[-] Serial` / `[+] Serial` button (Enter or click), the WPF one an `Expander`. The state is remembered
+  per form while the app runs (`SectionExpansionState`, the same store the control panels use) and is not saved to
+  a profile. A collapsed section's header stays; its rows take no space. The unlabeled General section has no
+  header and always shows. Only the connection editors opt in (`CollapsibleSections`); other generated forms keep
+  plain headers.
+  **Timing is a fourth, independent section**, shown whenever `SupportsWriteByteDelay`
+  (= `IsSerialTransport || IsTcpTransport || IsRfc2217Transport`) — overlapping Serial/TCP/rfc2217's
+  own visibility rather than nesting inside any one of them, since the same one field (Write byte
+  delay (ms)) applies across all three. Not shown for HID, USBTMC, BLE, or Loopback — none of them
+  write a byte stream `WriteDelayStream` can wrap (see `docs/design/transports.md`).
+  **A hidden group leaves no gap in either front end**: the TUI form re-lays out its rows on every
+  change (test `ConfigureModeTests.SwitchingTransport_ReflowsTheForm_SoAHiddenGroupLeavesNoGap`), and
+  within a section the widget column follows the longest *shown* label. **BLE's field group is still
+  hand-built** (`IsBleTransport`, toggled by hand in `ConfigureMode`/`DeviceProfilesWindow` — see the
+  "Generated or hand-built" table above), not yet converted to a `[FormSection]` like the other four.
+- **"Not found" hint** (`ConnectedDeviceNotFound`): when the loaded Port, or the USB identity (Vendor/Product
+  ID, serial number, and for USBTMC the device location), doesn't match anything detected right now, both front
+  ends show `(not found — this port isn't connected right now)` / `(not found — no connected device matches this
+  vendor/product/serial)` under the detected-devices row — a generated warning indicator
+  (`SerialPortNotFoundHint`/`UsbDeviceNotFoundHint`, shown while `ConnectedDeviceNotFound`), in the theme's Error color in both front ends (the TUI form renderer draws a warning indicator, and a field's inline `! ...` message, with the `Error` scheme since 2026-09-25). The TUI
+  showed a shorter `(not found)` beside the field before the form was generated. It never blocks Connect.
+- **USBTMC device location**: picking a detected USBTMC device also fills `DevicePath` with its physical USB
+  location (`usb:{bus}-{port chain}`, e.g. `usb:1-4.2`, the same form `--listusbtmcdevices` prints as
+  `at usb:…`). The transport consults it only when the serial number is blank, to tell identical serial-less
+  instruments apart. A serial number moves with the device between ports, a location doesn't, so the serial wins
+  whenever there is one.
+- **Status message**: a single line (`StatusMessage`) shows the most recent action's result or a
+  validation failure — success and failure share the same field, there's no separate "error" vs.
+  "info" styling today (WPF renders it in dark red regardless).
+- **Saved-profiles list auto-refreshes**: a real `FileSystemWatcher` on the profiles directory
+  (`ConnectionEditorViewModel`'s constructor) raises `ProfilesChangedExternally` whenever a profile
+  is added/removed/renamed on disk by anything other than this view model instance — the other
+  front end, or a user editing `~/.dev-term/profiles` by hand. Each front end marshals that onto its
+  own UI thread and calls the same `RefreshCommand` the Refresh button does. Disposed when the
+  editor closes (`IDisposable`); if the watcher can't be created at all (e.g. a permissions problem
+  on the profiles directory), the editor still works, just without auto-refresh — the manual Refresh
+  button always works regardless.
+- **Dirty tracking**: `IsDirty` flips true the moment any field changes (Transport, Port, Baud, ...
+  — everything except `StatusMessage`/`SelectedProfileName`/the `Is*Transport` flags themselves) and
+  clears on a successful Load, Save, Connect, or Import. Close/Quit and Load both check it via
+  `ConfirmClose()` before discarding whatever's currently unsaved; Connect doesn't need the check
+  since nothing is discarded by connecting with the fields as shown. Freshly opening the editor
+  (including from a saved profile's initial values) is never dirty — only an edit made *after* that
+  counts.
+
+## Per-front-end notes
+
+- **Widgets** (chosen by each form renderer from the same definition): WPF draws a dropdown choice
+  (Transport, Parity, Stop bits, Handshake, SCPI profile, Send as, Line ending) as a `ComboBox`, the
+  Presenters check list as a `WrapPanel` of `CheckBox`es, a text field as a `TextBox` with its inline
+  validation message under it, and a toggle as a `CheckBox` in the widget column — the same look as
+  the hand-built XAML it replaced (the regenerated screenshots are near pixel-identical). The TUI has
+  no combo box (Terminal.Gui v2.5.0), so a choice that fits on one line is a horizontal
+  `OptionSelector` (Transport, Parity, Stop bits, Handshake, Line ending); one too wide wraps onto up
+  to three lines as radio-style `CheckBox`es (Send as, whose nine options no longer fit one line); a
+  longer list is a text field plus a `Pick...` list (SCPI profile — the same "type it or pick it"
+  pattern this editor used before). Presenters is a wrapped row of `CheckBox`es. The two TUI-only
+  enums (`TransportChoice`, `PresenterChoice`) the hand-built editor needed to drive
+  `OptionSelector<TEnum>` are gone: the generic renderer uses the non-generic `OptionSelector` with
+  `Labels`. `ConfigureWindowParts` exposes each generated widget under its old name for tests
+  (`TransportSelector` et al. are now `TuiChoice`s — set `.Value = "tcp"` as a user would).
+- **Binding**: both front ends now bind live, both through `FormBinding` — editing a field writes the
+  view model immediately, and a view-model change (Load, Import, picking a detected device, the hex
+  toggle) re-reads the affected fields. The TUI's old push-before-each-command/pull-after scheme is
+  gone for the connection fields; only the hand-built Save-as name and import/export path are still
+  copied (on each keystroke), and the status line/profile list are re-read after each command.
+- **Field-group visibility reflows both layouts** (fixed 2026-09-25): the TUI's generated form
+  positions its rows absolutely and recomputes them on every change, so hiding the Serial group
+  moves TCP (and everything below, including the hand-built rows positioned under the form) up to
+  fill the space. Before, Terminal.Gui's `Pos.Bottom(view)` — computed from a view's frame whether it
+  was visible or not — left the hidden group's whole height blank. WPF's `StackPanel` layout
+  collapses a `Collapsed` section, as it always did.
+- **Saved-profiles list sizing**: WPF's list grows/shrinks proportionally with the window (a `Grid`
+  row sized `1*` against the field editor's `2*`, both with a `MinHeight`). The list row's minimum
+  (190px) is the height of its six-button column, so Refresh/Export Selected/Export All stay reachable
+  at the window's minimum size (420x520; the row minimum used to be 90px and the window's 480px, which
+  cut the bottom three buttons off). The WPF status line collapses while it's empty, and
+  Connect/Close are the same 80x32 buttons as the other dialogs' OK/Cancel. The generated form's label
+  column is at least 140px and grows to the longest label ("Detected USBTMC devices:" used to be cut
+  off). The TUI's list has a
+  fixed height (4 rows) — Terminal.Gui's absolute-position layout doesn't have an equivalent to
+  WPF's star-sized rows without a more involved container.
+- **Import/export path entry**: both front ends have a "Browse..." button next to the typed path
+  field — WPF's opens a native `OpenFileDialog` (code-behind, the one exception to pure command
+  binding, since a native dialog has no binding equivalent); the TUI's opens a real
+  `Terminal.Gui.Views.OpenDialog` the same way (`Application.Run(dialog)`, then reads `dialog.FilePaths`
+  if not `dialog.Canceled`) — an open-style picker (requires an existing file), the right fit for
+  Import. A second "Save As..." button next to it is the save-style counterpart, for Export
+  specifically: WPF's native `SaveFileDialog`, the TUI's `Terminal.Gui.Views.SaveDialog` (reading
+  `dialog.FileName`, not `.Path`, once accepted) — both let you type or navigate to a brand-new
+  filename that doesn't exist yet, not just pick among existing ones. Browse still works for Export
+  too (if the target file already exists); Save As isn't meant for Import (nothing stops picking a
+  non-existent path there, but Import will just report the resulting "file not found").
+- **The TUI's form scrolls; WPF's doesn't need to** — the TUI form routinely exceeds a default
+  terminal window, so its content sits in a `View` with a real Terminal.Gui viewport/scrollbar
+  (`SetContentSize` + `ViewportSettings |= AllowNegativeY | HasVerticalScrollBar`; the content height
+  is re-measured after each layout pass — the Quit button's bottom — since the generated form grows
+  and shrinks with the transport), scrollable via
+  PageUp/PageDown (bound on `Application.KeyDown`, skipped while the saved-profiles `ListView` has
+  focus so it doesn't steal that list's own PageUp/PageDown/arrow-key navigation — confirmed via
+  reflection that `ListView` already binds all of those itself) or the mouse wheel (bound on the
+  scrollable container directly, so a wheel over the profiles list itself still scrolls *that* list
+  first). Confirmed via a real headless probe against the installed Terminal.Gui v2.5.0 package that
+  `View` has no built-in `Command.ScrollDown`/`PageDown` implementation to invoke instead — both keys
+  and the wheel are wired by hand. WPF's `ScrollViewer` around the field editor already handled this
+  automatically from the start (see the WPF screenshots — the window itself is simply taller/resizable).
+  Two things the scrolling container needs that aren't obvious: **`CanFocus = true`** (a plain `View`
+  defaults to false, and an unfocusable container blocks focus for every child — without it no field
+  could be tabbed to or typed into; regression test `FormFields_CanTakeFocus_*`), and **scroll-into-
+  view on focus** (each hand-built direct child handles `HasFocusChanged`, and the generated form
+  reports its focused row through `TuiFormParts.RowFocused` — its own frame is the whole form — so the
+  viewport follows the focused control; Terminal.Gui doesn't do this itself; test
+  `FocusingAControlBelowTheFold_ScrollsItIntoView`). Because focus now really starts on the profiles
+  list, PageUp/PageDown page the list until focus moves off it.
+- **Overwrite/discard/bulk-delete confirmations are native per front end**: WPF uses
+  `MessageBox.Show`; the TUI uses `Terminal.Gui.Views.MessageBox.Query`. Both are wired through the
+  same `ConnectionEditorViewModel.ConfirmOverwrite`/`ConfirmDiscardChanges`/`ConfirmDeleteProfiles`
+  hooks so the view model itself has no UI dependency. Single-profile **Delete** doesn't confirm.
+- **Detected-hardware pickers fill fields rather than binding directly to them**: `Port` and the
+  shared `VendorId`/`ProductId` stay plain, freely-typable fields; a separate `SelectedSerialPort`/
+  `SelectedHidDevice`/`SelectedUsbtmcDevice`/`SelectedBleDevice` property on the view model is what a picker actually
+  binds to, and setting it copies the choice into the real field(s) (`SelectedHidDevice`/
+  `SelectedUsbtmcDevice` each set both Vendor and Product ID together, since they identify one
+  device). Deliberately not the same property, both to keep typing a custom value simple and because
+  a WPF editable `ComboBox`'s `Text` and `SelectedItem` don't share one format cleanly once the
+  display string (`"046D:C08B  G502 HERO Gaming Mouse"`) differs from the plain decimal the field
+  actually stores. Each is its own generated row ("Detected ports:"/"Detected HID devices:"/
+  "Detected USBTMC devices:"/"Detected BLE devices:"), only the row matching the selected transport
+  visible, with a hand-built widget: WPF an **editable, filter-as-you-type** `ComboBox` (BLE's is
+  paired with its own "Detect BLE..." button in one row, since — unlike the other three, which
+  discover eagerly and fast at construction — a BLE scan is slow (~4s) and only available via the
+  runtime-loaded Windows backend, so nothing populates the combobox until that button's clicked); the
+  TUI a "Detect..." / "Detect HID..." / "Detect USBTMC..." / "Detect BLE..." button that opens a small
+  modal picker with its own filter box (`FormRenderer.PickFromList`, a `Dialog` + `TextField` +
+  `ListView`, `Application.Run(dialog)` — Terminal.Gui has no built-in combobox widget, confirmed via
+  reflection against the installed v2.5.0 package); the BLE button runs its scan synchronously first
+  (blocking, like every other TUI Accepting handler), the WPF one runs it on a background thread
+  (`Task.Run`) so the window stays responsive. Before the form was generated, the TUI showed both USB
+  Detect buttons side by side on the Vendor/Product row. All are empty (not an error) if nothing's
+  detected or discovery itself fails.
+  **Both are searchable/filterable** (2026-09-29, requested directly — "they should be combo boxes so
+  I can search/filter the results"): WPF's `ComboBox`es are `IsEditable` with `IsTextSearchEnabled`
+  false and an `Items.Filter` predicate (`DeviceProfilesWindow.Matches`, case-insensitive substring
+  against the item's `Display`) set by a shared `MakeFilterable` helper — typing narrows the dropdown
+  without replacing `ItemsSource`, so a still-matching `SelectedItem`/binding survives. The TUI's
+  `PickFromList` modal gained a `TextField` above its `ListView`; typing calls a directly-testable
+  `FormRenderer.FilterIndices` helper and rebuilds the list's source from the filtered subset, while
+  Select/Enter maps the filtered position back through the retained index list to the original item —
+  picking row 2 of a filtered-down list still returns the right index into the full, unfiltered list.
+- **BLE GATT characteristic pickers are one level down from the device picker, sharing one scan
+  across two independent selections**: `SelectedBleWriteCharacteristic`/`SelectedBleNotifyCharacteristic`
+  (2026-09-29) bind against `BleCharacteristicOptions` — a flattened, one-row-per-characteristic list
+  built by `BleCharacteristicOption.FromServices` from `IBleGattProfileExplorer.GetServices(deviceId)`
+  (`BleDeviceScanner.ExploreCharacteristics`), each row labeled with its UUID, capability flags
+  (`[Read,WriteWithoutResponse,Notify]`, etc.), optional name, and parent service UUID. Only the
+  write-role picker's button ("Detect characteristics..." in both front ends) actually runs the scan
+  (`SetBleCharacteristicOptions`, which also clears whatever was previously picked for either role,
+  since a previous device's characteristics don't apply to a newly enumerated one); the notify-role
+  picker reuses that same list — in the TUI, its own "Pick..." button just reopens
+  `FormRenderer.PickFromList` against the already-populated `BleCharacteristicOptions` (showing "Run
+  Detect characteristics first." if it's still empty); in WPF, it's a second `ComboBox` bound to the
+  same `BleCharacteristicOptions` with no button of its own. Requires `BleDeviceId` to already be
+  filled in — picking a device only sets an id string, it doesn't scan its GATT profile automatically
+  (a fresh GATT session per keystroke would be needless overhead); both front ends show a message and
+  no-op if the write-role button is pressed with `BleDeviceId` blank. The two pickers are deliberately
+  independent rather than one combined "pick a characteristic pair" control, since some peripherals
+  (confirmed on a real SH-HC-08 BLE-to-serial bridge, `docs/changes/2026-09-29.md`) expose the exact
+  same UUID as both their write and notify characteristic, unlike Nordic UART Service's separate
+  RX/TX pair — assuming the two always differ would make that device unpickable.
+- **A detected serial port's description is a separate lookup, not part of the port list.**
+  `ISerialPortDiscovery` keeps `GetPortNames()` as-is (the `--listports` and `SerialPort` contract)
+  and gains a default-interface-method `GetPortDescriptions()` returning `port name → description`
+  (empty by default, so every existing implementation/fake keeps compiling). The view model builds
+  a `SerialPortOption(Name, Display)` per name from `GetPortNames()` and looks each one up
+  case-insensitively: `Display` is `"COM3 — Prolific USB-to-Serial Comm Port"`, or just `"COM3"` when
+  there's no description. Descriptions **only decorate ports `GetPortNames()` reported** — Windows'
+  Plug-and-Play registry remembers devices unplugged long ago (this machine's has a stale Prolific
+  COM3 with nothing attached), so it can never be a source of ports. A throwing description lookup
+  degrades to short names rather than failing construction, same as a throwing port lookup already
+  yields an empty list. `SelectedSerialPort` and `Port` still hold the short name only: WPF's
+  `DetectedPortsBox` uses `DisplayMemberPath="Display"` with `SelectedValuePath="Name"`/
+  `SelectedValue="{Binding SelectedSerialPort}"`; the TUI's Detect picker lists `Display` and writes
+  the chosen entry's `Name`.
+- **The Windows description comes straight from the registry, not WMI.**
+  `WindowsSerialPortDescriptions` walks `HKLM\SYSTEM\CurrentControlSet\Enum\{bus}\{device}\{instance}`,
+  pairing each instance's `Device Parameters\PortName` with its `FriendlyName`, then strips the
+  redundant trailing `(COMn)` Windows appends (`SystemSerialPortDiscovery.StripPortSuffix`), since the
+  picker already shows the name next to it. Chosen over `Win32_PnPEntity` because it needs no new
+  package and doesn't start the WMI service (~1 s cold vs ~6 ms measured here); read-only, no
+  elevation. Unreadable keys are skipped; if a port name appears under several stale instances the
+  first wins. Verified against this machine's real registry, first with nothing attached (the stale
+  COM3 entry was found and correctly not listed), then with a live Prolific USB-to-Serial adapter
+  (enumerated as COM4: `COM4 => Prolific USB-to-Serial Comm Port` returned, ghost COM3 still not
+  listed).
+- **Linux and macOS describe a port from its USB device's string descriptors** (landed 2026-09-25;
+  unit-tested against sample sysfs/`ioreg` data only, not yet run on a real Linux or macOS machine).
+  Both produce `<manufacturer> <product> (<vid>:<pid>, serial <serial>)` — the manufacturer dropped
+  when the product already starts with it, `USB device <vid>:<pid>` when the device has no strings —
+  keyed by the full path `GetPortNames()` reports there (`/dev/ttyUSB0`, `/dev/cu.usbserial-…`).
+  `LinuxSerialPortDescriptions` resolves `/sys/class/tty/<name>/device` (a physical realpath, since
+  `/sys/class/tty/<name>` is itself a link) and walks up to the nearest directory with `idVendor` —
+  the USB device, not its interface or an upstream hub — reading `manufacturer`/`product`/`serial`/
+  `idVendor`/`idProduct`. `MacSerialPortDescriptions` runs `/usr/sbin/ioreg -a -l -r -c
+  IOUSBHostDevice` (3 s bound, killed on timeout) and maps every `IOSerialBSDClient`'s
+  `IOCalloutDevice`/`IODialinDevice` (both `cu.*` and `tty.*`) to its nearest `IOUSBHostDevice`'s
+  `USB Vendor Name`/`USB Product Name`/`USB Serial Number` (or the `kUSB*String` twins). A port
+  with no USB device behind it (`ttyS0`, `cu.Bluetooth-Incoming-Port`), unreadable sysfs, or a
+  missing/failing/hung `ioreg` just gets no description.
+- **The HID and USBTMC pickers are each filtered by the shared ID fields, live, independently.**
+  `HidDeviceOptions`/`UsbtmcDeviceOptions` are not the raw discovery results: each is
+  `detected.Where(d => (vendorId == 0 || d.VendorId == vendorId) && (productId == 0 || d.ProductId
+  == productId))`, so typing a vendor id narrows both pickers to that vendor's devices, adding a
+  product id narrows each to one, and `0` (the default) lists everything. An id that isn't a number
+  yet (mid-typing, or a bad value) counts as `0` rather than emptying the list. Both are recomputed
+  whenever the canonical shared `VendorId`/`ProductId` change — from typing, the hex display field,
+  Load, or picking a device from *either* picker — by editing an `ObservableCollection` in place
+  (remove what no longer matches, insert what now does, detection order), not by replacing the list:
+  a bound WPF `ComboBox` follows it live and keeps a selection that still matches, where a replaced
+  `ItemsSource` would reset it. Each is exposed as `IReadOnlyList<HidDeviceOption>`/
+  `IReadOnlyList<UsbtmcDeviceOption>`; the `ObservableCollection` is the runtime type.
+  `HidDevicesHiddenByFilter`/`UsbtmcDevicesHiddenByFilter` (some detected device of that kind is
+  hidden only by the filter) lets the TUI say "No detected HID/USBTMC device matches the
+  Vendor/Product ID entered (0 means any)" instead of a misleading "Nothing was detected." for an
+  empty picker. The fields are bound live in both front ends, so the filter always reflects what's
+  typed. Consequence worth knowing: **picking a device fills in both ids, which then narrows
+  both lists to just devices matching that pair** — to pick a different one, clear an id (or set it
+  to 0) first. A device whose own vendor id is 0 is not treated as a wildcard.
+- **The decimal/hex toggle for the shared Vendor/Product ID fields is display-only, backed by a
+  separate `*Display` property per field** (`VendorIdDisplay`/`ProductIdDisplay`), not `VendorId`/
+  `ProductId` themselves — those two stay canonical decimal strings always (what `BuildOptions`/
+  `LoadIntoFields`/`SelectedHidDevice`/`SelectedUsbtmcDevice` all read and write), so validation/
+  Save/Connect/profile storage never need to know or care which format the user is currently
+  viewing, or which of the two USB transports is selected. Toggling `IdsShowHex` reformats whatever's
+  already entered rather than requiring it to be retyped. WPF binds a `TextBox` directly to
+  `VendorIdDisplay`/`ProductIdDisplay` (deliberately *not* re-raising that property's own change
+  notification from within its own setter — only from `IdsShowHex`'s setter or from `VendorId`/
+  `ProductId` changing some other way, e.g. Load or either detected-devices picker — so a bound
+  `TextBox` doesn't get its text reformatted, and its caret reset to the end, after every single
+  keystroke). Both generated forms now bind the two text fields to `VendorIdDisplay`/`ProductIdDisplay`
+  through `FormBinding`, which re-reads a field only when *its* property is notified — so the same
+  rule keeps the caret in place while typing, and toggling "Show as hex" (which does notify both)
+  reformats them immediately in either front end.
+- **Double-click-to-load is a per-row `MouseDoubleClick` handler in WPF, an event handler calling
+  the same command in the TUI**: the original WPF version was a `<ListBox.InputBindings><MouseBinding
+  MouseAction="LeftDoubleClick" Command="{Binding LoadCommand}" />` (pure binding, no code-behind) and
+  **never actually fired for a real double-click** — `ListBoxItem` marks the mouse-down handled in
+  order to select the row, so the `ListBox`'s own `InputBindings` never see it (it would only fire on
+  the empty area below the last row). Its test only asserted that the binding's `Command` was
+  `LoadCommand`, so it passed regardless. Fixed 2026-09-18: `ListBox.ItemContainerStyle` has an
+  `EventSetter` for `MouseDoubleClick` (which the `Control` base class raises even for a handled
+  mouse-down) → `ProfilesList_ItemDoubleClick`, which selects the clicked row — so a ctrl/shift
+  multi-selection can't leave Load acting on a different profile — and executes the same
+  `LoadCommand` the button is bound to. The tests now send real `MouseDown` events with
+  `ClickCount` 1 and 2 through the row (`DeviceProfilesWindowTests.ClickRow`). The TUI's `ListView` has no such binding concept; a double-click maps to `Command.Accept` there (confirmed
+  via reflection — a single click maps to a different command, `Activate`), so `ConfigureMode`
+  subscribes `profilesList.Accepting` to the same local `LoadSelectedProfile()` function the Load
+  button's own `Accepting` handler calls — one shared code path, not a duplicated one.
+
+- **Export Selected/Delete Selected's multi-select is a separate collection from the single-item `SelectedProfileName`
+  Load/Delete use** (`ConnectionEditorViewModel.SelectedProfileNames`, a plain `ObservableCollection<string>`
+  each front end populates itself, since neither front end's list control notifies the view model
+  live as marks/selection change). WPF's `ListBox` uses `SelectionMode="Extended"` (ctrl/shift-click)
+  with a code-behind `SelectionChanged` handler mirroring `SelectedItems` into it — `ListBox.SelectedItems`
+  has no dependency property of its own to bind two-way in pure XAML, the one other code-behind
+  exception besides the native file dialogs. The TUI's `ListView` uses `MarkMultiple`/`ShowMarks`
+  (checkbox-style marks, SPACE to toggle — confirmed against the installed Terminal.Gui v2.5.0
+  package that `ListWrapper<T>`, what `SetSource` builds, already implements the `IsMarked`/`SetMark`
+  storage needed) with no live-sync event at all; `ConfigureMode` just reads `GetAllMarkedItems()`
+  right before the Export Selected/Delete Selected button's own command runs, the same "copy into the
+  view model right before the command executes" pattern already used for the single-item case.
+  In the TUI, Delete Selected sits on the Export Selected/Export All row (an 80-column window has no
+  room for a fourth button on the Load/Delete/Refresh row); in WPF it's in the button column under Delete.
+- **Replace All is two store calls, not one, on purpose**: `ConnectionProfileStore.ReadZip(path)`
+  (static, no side effects — reads every `*.json` entry and rejects invalid JSON, naming the entry)
+  and then `ReplaceAll(profiles)` (deletes every saved profile, writes the given ones). Splitting
+  them means nothing is deleted unless the entire archive was readable, and it gives the
+  confirmation real counts to show. It isn't transactional past that point — an I/O failure while
+  writing leaves whatever had been written (the status line says "failed partway"); staging into a
+  temp folder and swapping would close that, and was judged more machinery than a failure that needs
+  a full disk or a permissions change mid-operation warrants. A name that appears twice in the zip
+  (entries in different folders) keeps the last one. Confirmation is the
+  `ConnectionEditorViewModel.ConfirmReplaceAllProfiles` hook, `Func<int, int, bool>` (saved count,
+  zip count), same "front end supplies a native dialog, unwired = proceeds" shape as
+  `ConfirmDeleteProfiles`. Placement: WPF's Import/Export row (between them), the TUI's
+  Browse/Import/Export/Save As row.
+- **A zip import's per-name conflict resolution is a `Func<string, ZipImportConflictResolution>`
+  hook** (`ConnectionEditorViewModel.ResolveZipImportConflict`), called once per name already in the
+  store — same "front end supplies a native dialog, view model has no UI dependency" shape as
+  `ConfirmOverwrite`/`ConfirmDiscardChanges`. WPF maps a three-way `MessageBox.Show` (Yes/No/Cancel)
+  onto Replace/Rename/Skip; the TUI maps a three-button `MessageBox.Query` the same way. Left
+  unwired (e.g. in a test), every conflict defaults to Replace, matching the existing "proceed
+  without asking" convention for the other two confirmation hooks.
+- **Send as, in the main windows** (not the editor itself, but where the parser is actually used):
+  the WPF main window has a "Send as:" `ComboBox` beside the Send button, the TUI a "Send as" menu-bar
+  menu with one entry per presenter that can encode input. Both start at the profile's parser and
+  switch it for every line typed afterward (the title bar shows the current one, e.g.
+  `dev-term — TCP 192.168.0.107:23 (ascii, hex; send as hex)`); switching profiles resets it to the new
+  profile's. The plain CLI has no such control — a stdin loop has no non-colliding way to say "this
+  line is hex" — so it uses `--parser` for the whole run.
+
+## Open items
+
+- The generated form shows only the fields the view model declares. Every saved-profile setting the editor shows is now
+  carried through `BuildOptions`; the settings still never exposed (`SendIntervalMs`, `ReadIntervalMs`, `ConnectTimeoutMs`,
+  the stream-conversion settings) are carried over untouched rather than shown.
+
+Everything requested 2026-09-16 has landed: the presenter picker and per-input-line parser on
+2026-09-18, serial-port descriptions on Linux/macOS on 2026-09-25, BLE's field group on 2026-09-25,
+its live "Detect BLE..." picker on 2026-09-29, and the generated form (which also fixed the TUI's
+gap under a hidden transport group) on 2026-09-25. DTR/RTS, the read/write timeouts, and the ASCII
+max line length (previously carried over silently, never shown) became real fields on 2026-09-29.
+The detected-device/-characteristic pickers became searchable/filterable in both front ends on
+2026-09-29. `rfc2217` (connect to a remote serial port over the network, e.g. `ser2net`) became a
+selectable transport on 2026-09-30, reusing the Serial and TCP field groups rather than adding a
+third copy of them — see States above and `docs/design/rfc2217.md`. Write byte delay (ms), a new
+"Timing" section shown for Serial/TCP/rfc2217, landed 2026-10-01 — see `docs/design/transports.md`'s
+"Write pacing" section. Remaining Connection Editor follow-ups live in `BACKLOG.md`.
+

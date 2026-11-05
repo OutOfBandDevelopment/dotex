@@ -2,7 +2,7 @@ using System;
 using System.Globalization;
 using System.Windows.Data;
 
-namespace OoBDev.UiDefinitions.Wpf;
+namespace UiDefinitionsWpf;
 
 /// <summary>Moves a marker's centre coordinate to the top-left offset a canvas wants (half the 5 unit marker).</summary>
 public sealed class CentreConverter : IValueConverter

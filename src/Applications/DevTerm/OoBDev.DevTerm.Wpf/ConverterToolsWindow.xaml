@@ -1,0 +1,65 @@
+<Window x:Class="DevTermApp.ConverterToolsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Converter tools" Height="420" Width="640" MinHeight="360" MinWidth="560"
+        WindowStartupLocation="CenterOwner" ShowInTaskbar="False">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" TextWrapping="Wrap" Margin="0,0,0,8"
+                   Text="Tools the stream monitor can run on a capture. Auto picks the first tool, in this order, whose formats match." />
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="170" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <DockPanel Grid.Column="0" Margin="0,0,10,0">
+                <UniformGrid DockPanel.Dock="Bottom" Columns="2" Margin="0,6,0,0">
+                    <Button Content="Add" Margin="0,0,3,3" Command="{Binding Add}" />
+                    <Button Content="Remove" Margin="3,0,0,3" Command="{Binding Remove}" />
+                    <Button Content="Move up" Margin="0,0,3,0" Command="{Binding MoveUp}" />
+                    <Button Content="Move down" Margin="3,0,0,0" Command="{Binding MoveDown}" />
+                </UniformGrid>
+                <ListBox ItemsSource="{Binding ToolNames}" SelectedIndex="{Binding SelectedIndex}" />
+            </DockPanel>
+            <Grid Grid.Column="1" IsEnabled="{Binding HasSelection}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Text="Name" VerticalAlignment="Center" Margin="0,0,8,6" />
+                <TextBox Grid.Row="0" Grid.Column="1" Margin="0,0,0,6" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" ToolTip="Shown in the conversion list; used as tool:Name" />
+                <TextBlock Grid.Row="1" Text="Path" VerticalAlignment="Center" Margin="0,0,8,6" />
+                <DockPanel Grid.Row="1" Grid.Column="1" Margin="0,0,0,6">
+                    <Button DockPanel.Dock="Right" Content="Browse..." Padding="8,1" Margin="4,0,0,0" Click="Browse_Click" />
+                    <TextBox Text="{Binding Path, UpdateSourceTrigger=PropertyChanged}" ToolTip="The converter's executable" />
+                </DockPanel>
+                <TextBlock Grid.Row="2" Text="Arguments" VerticalAlignment="Center" Margin="0,0,8,6" />
+                <TextBox Grid.Row="2" Grid.Column="1" Margin="0,0,0,6" Text="{Binding Arguments, UpdateSourceTrigger=PropertyChanged}" ToolTip="Split on spaces; {input}, {output} and {dpi} are substituted" />
+                <TextBlock Grid.Row="3" Text="Formats" VerticalAlignment="Center" Margin="0,0,8,6" />
+                <TextBox Grid.Row="3" Grid.Column="1" Margin="0,0,0,6" Text="{Binding Formats, UpdateSourceTrigger=PropertyChanged}" ToolTip="ps, pcl, hpgl, image or an extension such as bmp, comma-separated; empty means any" />
+                <TextBlock Grid.Row="4" Text="Output extension" VerticalAlignment="Center" Margin="0,0,8,6" />
+                <TextBox Grid.Row="4" Grid.Column="1" Margin="0,0,0,6" Text="{Binding OutputExtension, UpdateSourceTrigger=PropertyChanged}" ToolTip="Extension (no dot) of the file the tool writes" />
+                <TextBlock Grid.Row="5" Text="DPI" VerticalAlignment="Center" Margin="0,0,8,0" />
+                <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding DpiText, UpdateSourceTrigger=PropertyChanged}" ToolTip="The value substituted for {dpi}" />
+            </Grid>
+        </Grid>
+        <TextBlock Grid.Row="2" Margin="0,8,0,0" TextWrapping="Wrap" MinHeight="18" Foreground="#C0392B" Text="{Binding Error}" />
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,8,0,0">
+            <Button Content="OK" Width="80" Height="30" Margin="0,0,8,0" IsDefault="True" Click="Ok_Click" />
+            <Button Content="Cancel" Width="80" Height="30" IsCancel="True" />
+        </StackPanel>
+    </Grid>
+</Window>

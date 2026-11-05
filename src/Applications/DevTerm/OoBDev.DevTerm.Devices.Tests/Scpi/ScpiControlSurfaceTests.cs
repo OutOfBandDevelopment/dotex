@@ -1,0 +1,379 @@
+using OoBDev.DevTerm.Devices.Tests;
+using System.Text;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+using OoBDev.Scpi;
+using OoBDev.UiDefinitions;
+using OoBDev.TestUtilities;
+
+namespace OoBDev.DevTerm.Devices.Scpi.Tests;
+
+/// <summary>
+/// Verifies the exact bytes <see cref="ScpiControlSurface"/> sends for a command — template
+/// substitution, terminator handling, custom-command passthrough — against a mocked
+/// <see cref="IDeviceAdapter"/> behind a real <see cref="Session"/>, and its query/tracker
+/// correlation via a mocked <see cref="IReplyTracker"/>. No real instrument involved, so UNIT.
+/// </summary>
+[TestCategory("Unit")]
+[TestClass]
+[TestCategory(TestCategories.Scpi)]
+public sealed class ScpiControlSurfaceTests
+{
+    private static (Session Session, FakeTransport Transport) CreateSurfaceSession()
+    {
+        var transport = new FakeTransport();
+        var session = new Session(transport, new Pipeline([]));
+        session.OpenAsync().GetAwaiter().GetResult();
+        return (session, transport);
+    }
+
+    private static ScpiInstrumentProfile BuildProfile(string terminator = "\n") => new()
+    {
+        Name = "Test Instrument",
+        Terminator = terminator,
+        Commands =
+        [
+            new ScpiCommandDefinition { Id = "idn", Label = "Identify", Template = "*IDN?", IsQuery = true },
+            new ScpiCommandDefinition { Id = "rst", Label = "Reset", Template = "*RST" },
+            new ScpiCommandDefinition
+            {
+                Id = "freq",
+                Label = "Set Frequency",
+                Template = "SOUR1:FREQ {Frequency}",
+                Parameters = [new ScpiParameterDefinition { Name = "Frequency", Kind = ScpiParameterKind.Numeric, Minimum = 0, Maximum = 1000, DefaultValue = "10" }],
+            },
+            new ScpiCommandDefinition
+            {
+                Id = "conf",
+                Label = "Configure",
+                Template = "CONF:{Function} {Range}",
+                Parameters =
+                [
+                    new ScpiParameterDefinition { Name = "Function", Kind = ScpiParameterKind.Text, DefaultValue = "VOLT:DC" },
+                    new ScpiParameterDefinition { Name = "Range", Kind = ScpiParameterKind.Choice, Options = ["AUTO", "10"], DefaultValue = "AUTO" },
+                ],
+            },
+        ],
+    };
+
+    private static void VerifySent(FakeTransport transport, string expectedText) =>
+        CollectionAssert.Contains(transport.WrittenText.ToList(), expectedText);
+
+    [TestMethod]
+    public async Task InvokeAsync_ZeroParameterCommand_SendsTemplateVerbatimWithTerminator()
+    {
+        var (session, transport) = CreateSurfaceSession();
+        var surface = new ScpiControlSurface(session, BuildProfile(), tracker: null);
+
+        await surface.InvokeAsync("rst", null, TestContext.CancellationToken);
+
+        VerifySent(transport, "*RST\n");
+    }
+
+    [TestMethod]
+    public async Task InvokeAsync_SingleParameterCommand_SubstitutesToken()
+    {
+        var (session, transport) = CreateSurfaceSession();
+        var surface = new ScpiControlSurface(session, BuildProfile(), tracker: null);
+
+        await surface.InvokeAsync("freq", "123.5", TestContext.CancellationToken);
+
+        VerifySent(transport, "SOUR1:FREQ 123.5\n");
+    }
+
+    [TestMethod]
+    public async Task InvokeAsync_MultiParameterCommand_SubstitutesEachTokenPositionally()
+    {
+        var (session, transport) = CreateSurfaceSession();
+        var surface = new ScpiControlSurface(session, BuildProfile(), tracker: null);
+
+        await surface.InvokeAsync("conf", "VOLT:AC,10", TestContext.CancellationToken);
+
+        VerifySent(transport, "CONF:VOLT:AC 10\n");
+    }
+
+    [TestCategory(TestCategories.BugRegression)]
+    [TestMethod]
+    public async Task InvokeAsync_MultiParameterCommand_TextValueContainingAComma_SurvivesIntact()
+    {
+        // Regression test for bug 024: a text parameter's literal comma used to be mistaken for the
+        // separator between parameter values, truncating that parameter and shifting every later one
+        // onto the wrong token. See docs/bugs/resolved/024-comma-in-text-parameter.md. The joined string
+        // here is exactly what ControlPanelMode.TryReadParameters/ControlPanelWindow.TryReadParameters
+        // now produce via ParameterValueList.Join.
+        var (session, transport) = CreateSurfaceSession();
+        var surface = new ScpiControlSurface(session, BuildProfile(), tracker: null);
+
+        var joined = ParameterValueList.Join(["VOLT:AC,extra", "10"]);
+        await surface.InvokeAsync("conf", joined, TestContext.CancellationToken);
+
+        VerifySent(transport, "CONF:VOLT:AC,extra 10\n");
+    }
+
+    [TestCategory(TestCategories.BugRegression)]
+    [TestMethod]
+    public async Task InvokeAsync_MultiParameterCommand_EmptySecondValue_FallsBackToDefault()
+    {
+        // Secondary defect from bug 024: an empty (but present) split segment must fall back to the
+        // parameter's own DefaultValue, matching ManifestControlSurface.FormatTemplate's existing behavior.
+        var (session, transport) = CreateSurfaceSession();
+        var surface = new ScpiControlSurface(session, BuildProfile(), tracker: null);
+
+        await surface.InvokeAsync("conf", "VOLT:AC,", TestContext.CancellationToken);
+
+        VerifySent(transport, "CONF:VOLT:AC AUTO\n");
+    }
+
+    [TestCategory(TestCategories.BugRegression)]
+    [TestMethod]
+    public async Task InvokeAsync_MultiParameterCommand_EarlierValueContainingALaterPlaceholder_IsNotItselfSubstituted()
+    {
+        // Regression test for bug 043: parameters used to be substituted one after another with
+        // Replace, so a value typed into an earlier parameter that contains "{Later}" was itself
+        // replaced by the later parameter's value. See
+        // docs/bugs/resolved/043-template-substitution-not-single-pass.md.
+        var (session, transport) = CreateSurfaceSession();
+        var surface = new ScpiControlSurface(session, BuildProfile(), tracker: null);
+
+        var joined = ParameterValueList.Join(["{Range}", "10"]);
+        await surface.InvokeAsync("conf", joined, TestContext.CancellationToken);
+
+        VerifySent(transport, "CONF:{Range} 10\n");
+    }
+
+    [TestMethod]
+    public async Task InvokeAsync_NumericParameterOutOfRange_ClampsToBounds()
+    {
+        var (session, transport) = CreateSurfaceSession();
+        var surface = new ScpiControlSurface(session, BuildProfile(), tracker: null);
+
+        await surface.InvokeAsync("freq", "5000", TestContext.CancellationToken);
+
+        VerifySent(transport, "SOUR1:FREQ 1000\n");
+    }
+
+    [TestCategory(TestCategories.BugRegression)]
+    [TestMethod]
+    public async Task InvokeAsync_NumericParameterWithNoLimitsSet_IsNotForcedToZero()
+    {
+        // Regression test for bug 044: Minimum/Maximum used to be non-nullable double, so a
+        // parameter that (legitimately) omits both defaulted to 0/0 and Math.Clamp forced every
+        // value to 0. See docs/bugs/resolved/044-scpi-clamp-bad-limits.md.
+        var (session, transport) = CreateSurfaceSession();
+        var profile = new ScpiInstrumentProfile
+        {
+            Name = "Test Instrument",
+            Terminator = "\n",
+            Commands =
+            [
+                new ScpiCommandDefinition
+                {
+                    Id = "gain",
+                    Label = "Set Gain",
+                    Template = "GAIN {Value}",
+                    Parameters = [new ScpiParameterDefinition { Name = "Value", Kind = ScpiParameterKind.Numeric }],
+                },
+            ],
+        };
+        var surface = new ScpiControlSurface(session, profile, tracker: null);
+
+        await surface.InvokeAsync("gain", "12345", TestContext.CancellationToken);
+
+        VerifySent(transport, "GAIN 12345\n");
+    }
+
+    [TestMethod]
+    public async Task InvokeAsync_MissingParameterValue_FallsBackToDefault()
+    {
+        var (session, transport) = CreateSurfaceSession();
+        var surface = new ScpiControlSurface(session, BuildProfile(), tracker: null);
+
+        await surface.InvokeAsync("freq", null, TestContext.CancellationToken);
+
+        VerifySent(transport, "SOUR1:FREQ 10\n");
+    }
+
+    [TestMethod]
+    public async Task InvokeAsync_CustomTerminator_IsAppendedInsteadOfNewline()
+    {
+        var (session, transport) = CreateSurfaceSession();
+        var surface = new ScpiControlSurface(session, BuildProfile(terminator: string.Empty), tracker: null);
+
+        await surface.InvokeAsync("rst", null, TestContext.CancellationToken);
+
+        VerifySent(transport, "*RST");
+    }
+
+    [TestMethod]
+    public async Task InvokeAsync_SendCustomCommand_SendsValueVerbatimWithNoTemplate()
+    {
+        var (session, transport) = CreateSurfaceSession();
+        var surface = new ScpiControlSurface(session, BuildProfile(), tracker: null);
+
+        await surface.InvokeAsync(ScpiControlSurface.SendCustomCommandId, "MEAS:VOLT:DC?", TestContext.CancellationToken);
+
+        VerifySent(transport, "MEAS:VOLT:DC?\n");
+    }
+
+    [TestMethod]
+    public async Task InvokeAsync_QueryCommand_RegistersReplyIndicatorWithTrackerBeforeSending()
+    {
+        var (session, _) = CreateSurfaceSession();
+        var tracker = new Mock<IReplyTracker>();
+        var surface = new ScpiControlSurface(session, BuildProfile(), tracker.Object);
+
+        await surface.InvokeAsync("idn", null, TestContext.CancellationToken);
+
+        tracker.Verify(t => t.QuerySent("idn.reply"), Times.Once);
+    }
+
+    [TestCategory(TestCategories.BugRegression)]
+    [TestMethod]
+    public async Task InvokeAsync_QueryCommand_WhenSendFails_CancelsTheReplyIndicatorAndRethrows()
+    {
+        // Regression test for bug 006: a failed send used to leave the reply id QuerySent just
+        // registered pending forever, shifting the *next* query's reply onto the wrong field. See
+        // docs/bugs/resolved/006-reply-queue-desync.md.
+        var (session, transport) = CreateSurfaceSession();
+        transport.FailWritesWith = new IOException("write failed");
+        var tracker = new Mock<IReplyTracker>();
+        var surface = new ScpiControlSurface(session, BuildProfile(), tracker.Object);
+
+        await Assert.ThrowsExactlyAsync<IOException>(() => surface.InvokeAsync("idn", null, TestContext.CancellationToken));
+
+        tracker.Verify(t => t.Cancel("idn.reply"), Times.Once);
+    }
+
+    [TestMethod]
+    public async Task InvokeAsync_NonQueryCommand_NeverRegistersWithTracker()
+    {
+        var (session, _) = CreateSurfaceSession();
+        var tracker = new Mock<IReplyTracker>();
+        var surface = new ScpiControlSurface(session, BuildProfile(), tracker.Object);
+
+        await surface.InvokeAsync("rst", null, TestContext.CancellationToken);
+
+        tracker.Verify(t => t.QuerySent(It.IsAny<string>()), Times.Never);
+    }
+
+    [TestMethod]
+    public async Task InvokeAsync_SendCustomCommand_RegistersItsOwnReplyIndicator()
+    {
+        var (session, _) = CreateSurfaceSession();
+        var tracker = new Mock<IReplyTracker>();
+        var surface = new ScpiControlSurface(session, BuildProfile(), tracker.Object);
+
+        await surface.InvokeAsync(ScpiControlSurface.SendCustomCommandId, "*IDN?", TestContext.CancellationToken);
+
+        tracker.Verify(t => t.QuerySent($"{ScpiControlSurface.SendCustomCommandId}.reply"), Times.Once);
+    }
+
+    [TestMethod]
+    public async Task InvokeAsync_NumericParameterWithDecimalPlaces_PadsToFixedWidth()
+    {
+        // Real-hardware-confirmed: a Korad KA3005P/KA6003P has no command terminator and parses a
+        // fixed-width field after "VSET1:" — sending "12" instead of "12.00" desyncs its parser and
+        // the set silently fails. Confirmed on real hardware that even "5.00" (no leading zero) is
+        // one character short of the expected "05.00" width and the set still silently fails (a
+        // follow-up VSET1? query read back the unchanged previous value) — both DecimalPlaces and
+        // IntegerDigits are required. See ScpiParameterDefinition.DecimalPlaces/IntegerDigits.
+        var (session, transport) = CreateSurfaceSession();
+        var profile = new ScpiInstrumentProfile
+        {
+            Name = "Test Instrument",
+            Terminator = string.Empty,
+            Commands =
+            [
+                new ScpiCommandDefinition
+                {
+                    Id = "vset",
+                    Label = "Set Voltage",
+                    Template = "VSET1:{Voltage}",
+                    Parameters = [new ScpiParameterDefinition { Name = "Voltage", Kind = ScpiParameterKind.Numeric, Minimum = 0, Maximum = 30, DecimalPlaces = 2, IntegerDigits = 2 }],
+                },
+            ],
+        };
+        var surface = new ScpiControlSurface(session, profile, tracker: null);
+
+        await surface.InvokeAsync("vset", "5", TestContext.CancellationToken);
+
+        VerifySent(transport, "VSET1:05.00");
+    }
+
+    [TestMethod]
+    public async Task InvokeAsync_UnknownCommand_Throws()
+    {
+        var (session, _) = CreateSurfaceSession();
+        var surface = new ScpiControlSurface(session, BuildProfile(), tracker: null);
+
+        await Assert.ThrowsExactlyAsync<ArgumentException>(() => surface.InvokeAsync("notARealCommand", null, TestContext.CancellationToken));
+    }
+
+    [TestMethod]
+    public async Task InvokeAsync_ParameterFieldId_IsANoOpRatherThanThrowing()
+    {
+        // Real-hardware-confirmed on the KA6003P's WPF control panel: ScpiUiDefinitionBuilder gives
+        // a multi-parameter command's own field an id of "{command.Id}.{parameter.Name}" (e.g.
+        // "vset.Voltage") so it's unique across the panel, but it's a value holder read by the
+        // command's own button, not a command in its own right. The generic
+        // ControlPanelMode/ControlPanelWindow renderers commit every field on blur/Enter by calling
+        // InvokeAsync with the field's own id like any other field — that must not throw here, or
+        // simply tabbing off the field (with no button click at all) crashes the app.
+        var (session, transport) = CreateSurfaceSession();
+        var surface = new ScpiControlSurface(session, BuildProfile(), tracker: null);
+
+        await surface.InvokeAsync("freq.Frequency", "42", TestContext.CancellationToken);
+
+        Assert.AreEqual(0, transport.WrittenPayloads.Count);
+    }
+
+    [TestMethod]
+    public async Task InvokeAsync_CustomCommandFieldId_IsANoOpRatherThanThrowing()
+    {
+        // Same bug shape as above, for the always-present "Custom Command" text field (id
+        // "customCommand") that sendCustom's ParameterFieldIds reads from.
+        var (session, transport) = CreateSurfaceSession();
+        var surface = new ScpiControlSurface(session, BuildProfile(), tracker: null);
+
+        await surface.InvokeAsync(ScpiUiDefinitionBuilder.CustomCommandFieldId, "*IDN?", TestContext.CancellationToken);
+
+        Assert.AreEqual(0, transport.WrittenPayloads.Count);
+    }
+
+    [TestMethod]
+    public async Task InvokeAsync_CommandDeclaringAResponseFormat_TellsAStreamMonitorOnThePipelineToExpectIt()
+    {
+        var transport = new FakeTransport();
+        var sink = new Mock<IPresenter>();
+        sink.SetupGet(p => p.Name).Returns("streamwatch");
+        var hints = sink.As<IStreamContentHintSink>();
+        var session = new Session(transport, new Pipeline([sink.Object]));
+        session.OpenAsync().GetAwaiter().GetResult();
+        var profile = BuildProfile();
+        profile.Commands.Add(new ScpiCommandDefinition { Id = "dump", Label = "Screen Dump", Template = "HCOP:DATA?", IsQuery = true, ExpectedResponseFormat = ScpiResponseFormat.Image });
+        var surface = new ScpiControlSurface(session, profile, tracker: null);
+
+        await surface.InvokeAsync("idn", null, TestContext.CancellationToken);
+        hints.Verify(h => h.ExpectResponse(It.IsAny<StreamContentFormat>()), Times.Never);
+
+        await surface.InvokeAsync("dump", null, TestContext.CancellationToken);
+        hints.Verify(h => h.ExpectResponse(StreamContentFormat.Image), Times.Once);
+        VerifySent(transport, "HCOP:DATA?\n");
+    }
+
+    [TestMethod]
+    public async Task InvokeAsync_DeclaredFormatWithNoMonitorRunning_StillJustSends()
+    {
+        var (session, transport) = CreateSurfaceSession();
+        var profile = BuildProfile();
+        profile.Commands.Add(new ScpiCommandDefinition { Id = "dump", Label = "Screen Dump", Template = "HCOP:DATA?", IsQuery = true, ExpectedResponseFormat = ScpiResponseFormat.Image });
+        var surface = new ScpiControlSurface(session, profile, tracker: null);
+
+        await surface.InvokeAsync("dump", null, TestContext.CancellationToken);
+
+        VerifySent(transport, "HCOP:DATA?\n");
+    }
+
+
+    public required TestContext TestContext { get; set; }
+}

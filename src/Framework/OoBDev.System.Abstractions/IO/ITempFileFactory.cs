@@ -1,7 +1,7 @@
 namespace OoBDev.System.IO;
 
 /// <summary>
-/// this is a provider for managed temp files
+/// this is a provider for managed temp files and directories
 /// </summary>
 public interface ITempFileFactory
 {
@@ -10,4 +10,9 @@ public interface ITempFileFactory
     /// </summary>
     /// <returns></returns>
     ITempFile GetTempFile();
+
+    /// <summary>
+    /// Get a managed temporary directory. The directory and its contents are deleted when disposed.
+    /// </summary>
+    ITempDirectory GetTempDirectory();
 }

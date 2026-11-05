@@ -1,0 +1,170 @@
+using System.Collections.Generic;
+using System;
+using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.Extensions.Options;
+using static OoBDev.DevTerm.Presenters.Text.Tests.TestSequence;
+using OoBDev.TestUtilities;
+
+namespace OoBDev.DevTerm.Presenters.Text.Tests;
+
+[TestCategory("Unit")]
+[TestClass]
+public sealed class AsciiPresenterTests
+{
+    private readonly AsciiPresenter _presenter = Create();
+
+    private static AsciiPresenter Create(int maxLineLength = AsciiPresenter.DefaultMaxLineLength) =>
+        new(Options.Create(new AsciiPresenterOptions { MaxLineLength = maxLineLength }));
+
+    [TestMethod]
+    public void Name_IsAscii() => Assert.AreEqual("ascii", _presenter.Name);
+
+    [TestMethod]
+    public void Parse_EncodesAsciiBytes() =>
+        CollectionAssert.AreEqual("Hi!"u8.ToArray(), _presenter.Parse("Hi!"));
+
+    [TestMethod]
+    public void Render_WithoutATerminator_BuffersAndReturnsNothingYet()
+    {
+        var result = _presenter.Render(Of("Hi"u8.ToArray())); // "Hi", no CR/LF
+
+        Assert.IsEmpty(result);
+    }
+
+    [TestMethod]
+    public void Render_WithLineFeed_FlushesTheAccumulatedLine()
+    {
+        var result = _presenter.Render(Of("Hi!\n"u8.ToArray()));
+
+        CollectionAssert.AreEqual(new[] { "Hi!" }, result.ToArray());
+    }
+
+    [TestMethod]
+    public void Render_WithCarriageReturn_FlushesTheAccumulatedLine()
+    {
+        var result = _presenter.Render(Of("Hi!\r"u8.ToArray()));
+
+        CollectionAssert.AreEqual(new[] { "Hi!" }, result.ToArray());
+    }
+
+    [TestMethod]
+    public void Render_WithCarriageReturnLineFeed_FlushesOnlyOnce()
+    {
+        var result = _presenter.Render(Of("Hi!\r\n"u8.ToArray()));
+
+        CollectionAssert.AreEqual(new[] { "Hi!" }, result.ToArray());
+    }
+
+    [TestMethod]
+    public void Render_CrLfSplitAcrossTwoCalls_StillFlushesOnlyOnce()
+    {
+        var first = _presenter.Render(Of("Hi!\r"u8.ToArray()));
+        var second = _presenter.Render(Of("\nNext"u8.ToArray()));
+
+        CollectionAssert.AreEqual(new[] { "Hi!" }, first.ToArray());
+        Assert.IsEmpty(second, "The LF half of the CRLF pair should be swallowed, not start a new empty line.");
+    }
+
+    [TestMethod]
+    public void Render_AccumulatesAcrossMultipleCallsUntilATerminatorArrives()
+    {
+        var afterH = _presenter.Render(Of("H"u8.ToArray()));
+        var afterI = _presenter.Render(Of("i"u8.ToArray()));
+        var afterTerminator = _presenter.Render(Of("\n"u8.ToArray()));
+
+        Assert.IsEmpty(afterH);
+        Assert.IsEmpty(afterI);
+        CollectionAssert.AreEqual(new[] { "Hi" }, afterTerminator.ToArray());
+    }
+
+    [TestMethod]
+    public void Render_MultipleLinesInOneChunk_ReturnsEachLineSeparately()
+    {
+        var result = _presenter.Render(Of("one\ntwo\n"u8.ToArray()));
+
+        CollectionAssert.AreEqual(new[] { "one", "two" }, result.ToArray());
+    }
+
+    [TestMethod]
+    public void Render_MaxLineLengthReached_FlushesWithoutATerminator()
+    {
+        var presenter = Create(maxLineLength: 3);
+
+        var result = presenter.Render(Of("abcdef"u8.ToArray()));
+
+        CollectionAssert.AreEqual(new[] { "abc", "def" }, result.ToArray());
+    }
+
+    [TestCategory(TestCategories.BugRegression)]
+    [TestMethod]
+    public void Render_LineExactlyAtMaxLengthWithCrLf_IsNotFollowedByASpuriousEmptyLine()
+    {
+        var presenter = Create(maxLineLength: 4);
+
+        var result = presenter.Render(Of("ABCD\r\n"u8.ToArray()));
+
+        CollectionAssert.AreEqual(new[] { "ABCD" }, result.ToArray(), "The CRLF right after a length-triggered flush terminates that same line - it shouldn't also start a new, empty one.");
+    }
+
+    [TestCategory(TestCategories.BugRegression)]
+    [TestMethod]
+    public void Render_LineExactlyAtMaxLengthWithLf_IsNotFollowedByASpuriousEmptyLine()
+    {
+        var presenter = Create(maxLineLength: 4);
+
+        var result = presenter.Render(Of("ABCD\n"u8.ToArray()));
+
+        CollectionAssert.AreEqual(new[] { "ABCD" }, result.ToArray());
+    }
+
+    [TestCategory(TestCategories.BugRegression)]
+    [TestMethod]
+    public void Render_LineExactlyAtMaxLengthWithCr_IsNotFollowedByASpuriousEmptyLine()
+    {
+        var presenter = Create(maxLineLength: 4);
+
+        var result = presenter.Render(Of("ABCD\r"u8.ToArray()));
+
+        CollectionAssert.AreEqual(new[] { "ABCD" }, result.ToArray());
+    }
+
+    [TestCategory(TestCategories.BugRegression)]
+    [TestMethod]
+    public void Render_LengthTriggeredFlushFollowedByAnIntentionalBlankLine_StillReturnsThatBlankLine()
+    {
+        var presenter = Create(maxLineLength: 4);
+
+        var result = presenter.Render(Of("ABCD\r\n\r\n"u8.ToArray()));
+
+        CollectionAssert.AreEqual(new[] { "ABCD", "" }, result.ToArray(), "Only the terminator immediately after the length flush is swallowed - a second, genuinely empty line right after must still come through.");
+    }
+
+    [TestMethod]
+    public void Render_MaxLineLengthZero_IsUnboundedAndWaitsForTerminator()
+    {
+        var presenter = Create(maxLineLength: 0);
+
+        var longRun = presenter.Render(Of([.. new string('a', 10_000).Select(c => (byte)c)]));
+        Assert.IsEmpty(longRun, "Length alone should never flush when MaxLineLength is 0.");
+
+        var afterTerminator = presenter.Render(Of("\n"u8.ToArray()));
+        Assert.HasCount(1, afterTerminator);
+        Assert.AreEqual(10_000, afterTerminator[0].Length);
+    }
+
+    [TestMethod]
+    public void Constructor_NegativeMaxLineLength_Throws() =>
+        Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => Create(maxLineLength: -1));
+
+    [TestMethod]
+    public void RoundTrip_ParseThenRenderWithTerminator_ReturnsOriginalText()
+    {
+        const string original = "Hello, dev-term!";
+
+        var bytes = _presenter.Parse(original);
+        var result = _presenter.Render(Of([.. bytes, (byte)'\n']));
+
+        CollectionAssert.AreEqual(new[] { original }, result.ToArray());
+    }
+}

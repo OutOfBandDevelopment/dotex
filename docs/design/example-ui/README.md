@@ -121,3 +121,8 @@ Every feature page is one resource blade:
 - **Commands:** each user action is a class implementing `execute(): Promise<void>` and `canExecute: boolean`, injected with its service. View-model composables expose them to the template.
 
 [Back to the plan](../../../future-example.md)
+
+## Related documents
+
+- [Missing screens](missing-screens.md), [AppHost live journeys](apphost-live-journeys.md)
+- [Integration suite timing](../../architecture/testing/integration/suite-timing.md)

@@ -1,0 +1,187 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Buffers;
+using Moq;
+
+namespace OoBDev.DevTerm.Tests;
+
+[TestCategory("Unit")]
+[TestClass]
+public sealed class PipelineTests
+{
+    [TestMethod]
+    public void Render_FansOutToEveryPresenter()
+    {
+        var hex = new Mock<IPresenter>();
+        hex.SetupGet(p => p.Name).Returns("hex");
+        hex.Setup(p => p.Render(It.IsAny<ReadOnlySequence<byte>>())).Returns(["48 49"]);
+
+        var ascii = new Mock<IPresenter>();
+        ascii.SetupGet(p => p.Name).Returns("ascii");
+        ascii.Setup(p => p.Render(It.IsAny<ReadOnlySequence<byte>>())).Returns(["HI"]);
+
+        var pipeline = new Pipeline([hex.Object, ascii.Object]);
+
+        var outputs = pipeline.Render(new ReadOnlySequence<byte>([0x48, 0x49]));
+
+        TestAssert.AreSequenceEqual(
+            [new PresenterOutput("hex", "48 49"), new PresenterOutput("ascii", "HI")], [.. outputs]);
+    }
+
+    [TestMethod]
+    public void Render_PresenterReturningNoLines_ProducesNoOutput()
+    {
+        var buffering = new Mock<IPresenter>();
+        buffering.SetupGet(p => p.Name).Returns("buffering");
+        buffering.Setup(p => p.Render(It.IsAny<ReadOnlySequence<byte>>())).Returns([]);
+
+        var pipeline = new Pipeline([buffering.Object]);
+
+        var outputs = pipeline.Render(new ReadOnlySequence<byte>([0x48]));
+
+        Assert.IsEmpty(outputs);
+    }
+
+    [TestMethod]
+    public void Render_PresenterReturningMultipleLines_ProducesOneOutputPerLine()
+    {
+        var buffering = new Mock<IPresenter>();
+        buffering.SetupGet(p => p.Name).Returns("buffering");
+        buffering.Setup(p => p.Render(It.IsAny<ReadOnlySequence<byte>>())).Returns(["one", "two"]);
+
+        var pipeline = new Pipeline([buffering.Object]);
+
+        var outputs = pipeline.Render(new ReadOnlySequence<byte>([0x48]));
+
+        TestAssert.AreSequenceEqual(
+            [new PresenterOutput("buffering", "one"), new PresenterOutput("buffering", "two")], [.. outputs]);
+    }
+
+    [TestMethod]
+    public void Render_WithNoPresenters_ReturnsEmpty()
+    {
+        var pipeline = new Pipeline([]);
+
+        var outputs = pipeline.Render(new ReadOnlySequence<byte>([1, 2, 3]));
+
+        Assert.IsEmpty(outputs);
+    }
+
+    [TestMethod]
+    public void Presenters_ExposesConstructorPresentersInOrder()
+    {
+        var first = new Mock<IPresenter>();
+        first.SetupGet(p => p.Name).Returns("first");
+        var second = new Mock<IPresenter>();
+        second.SetupGet(p => p.Name).Returns("second");
+
+        var pipeline = new Pipeline([first.Object, second.Object]);
+
+        TestAssert.AreSequenceEqual([first.Object, second.Object], [.. pipeline.Presenters]);
+    }
+
+    [TestMethod]
+    public void AddPresenter_AppendsToTheSameLiveInstance()
+    {
+        var first = new Mock<IPresenter>();
+        first.SetupGet(p => p.Name).Returns("first");
+        var added = new Mock<IPresenter>();
+        added.SetupGet(p => p.Name).Returns("added");
+
+        var pipeline = new Pipeline([first.Object]);
+        pipeline.AddPresenter(added.Object);
+
+        TestAssert.AreSequenceEqual([first.Object, added.Object], [.. pipeline.Presenters]);
+    }
+
+    [TestMethod]
+    public void AddPresenter_AlreadyPresent_DoesNotDuplicate()
+    {
+        var presenter = new Mock<IPresenter>();
+        presenter.SetupGet(p => p.Name).Returns("scpi");
+
+        var pipeline = new Pipeline([presenter.Object]);
+        pipeline.AddPresenter(presenter.Object);
+
+        TestAssert.AreSequenceEqual([presenter.Object], [.. pipeline.Presenters]);
+    }
+
+    [TestMethod]
+    public void AddPresenter_AfterConstruction_IsPickedUpByRender()
+    {
+        var added = new Mock<IPresenter>();
+        added.SetupGet(p => p.Name).Returns("added");
+        added.Setup(p => p.Render(It.IsAny<ReadOnlySequence<byte>>())).Returns(["hi"]);
+
+        var pipeline = new Pipeline([]);
+        pipeline.AddPresenter(added.Object);
+
+        var outputs = pipeline.Render(new ReadOnlySequence<byte>([0x48]));
+
+        TestAssert.AreSequenceEqual([new PresenterOutput("added", "hi")], [.. outputs]);
+    }
+
+    [TestMethod]
+    public void RemovePresenter_StopsItBeingRendered_AndIsANoOpWhenAbsent()
+    {
+        var kept = new Mock<IPresenter>();
+        kept.SetupGet(p => p.Name).Returns("kept");
+        kept.Setup(p => p.Render(It.IsAny<ReadOnlySequence<byte>>())).Returns(["k"]);
+        var removed = new Mock<IPresenter>();
+        removed.SetupGet(p => p.Name).Returns("removed");
+        removed.Setup(p => p.Render(It.IsAny<ReadOnlySequence<byte>>())).Returns(["r"]);
+        var pipeline = new Pipeline([kept.Object, removed.Object]);
+
+        pipeline.RemovePresenter(removed.Object);
+        pipeline.RemovePresenter(removed.Object);
+
+        TestAssert.AreSequenceEqual([new PresenterOutput("kept", "k")], [.. pipeline.Render(new ReadOnlySequence<byte>([0x48]))]);
+        Assert.HasCount(1, pipeline.Presenters);
+    }
+
+    private sealed class LineBuffer : IPresenter
+    {
+        private readonly List<byte> _pending = [];
+
+        public string Name => "lines";
+
+        public IReadOnlyList<string> Render(ReadOnlySequence<byte> data)
+        {
+            var lines = new List<string>();
+            foreach (var b in data.ToArray())
+            {
+                if (b == (byte)'\n')
+                {
+                    lines.Add(global::System.Text.Encoding.ASCII.GetString([.. _pending]));
+                    _pending.Clear();
+                }
+                else
+                {
+                    _pending.Add(b);
+                }
+            }
+
+            return lines;
+        }
+    }
+
+    [TestMethod]
+    public void Render_WithholdsCapturedContentFromTextPresenters_SoNothingIsLeftInTheirBuffers()
+    {
+        var watcher = new StreamContentWatcher();
+        var lines = new LineBuffer();
+        var pipeline = new Pipeline([lines, watcher]);
+        var png = StreamContentSamples.Png();
+
+        pipeline.Render(new ReadOnlySequence<byte>("*IDN?\n"u8.ToArray()));
+        var duringImage = pipeline.Render(new ReadOnlySequence<byte>(png));
+        var after = pipeline.Render(new ReadOnlySequence<byte>("OK\n"u8.ToArray()));
+
+        Assert.IsEmpty(duringImage, "The image's bytes must not be printed as text.");
+        TestAssert.AreSequenceEqual([new PresenterOutput("lines", "OK")], [.. after]);
+    }
+}

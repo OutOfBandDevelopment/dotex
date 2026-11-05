@@ -17,17 +17,25 @@ public sealed class FormViewModel : ViewModelBase, IDisposable
     /// <param name="definition">The form definition, typically from <see cref="FormDefinitionGenerator"/>.</param>
     /// <param name="binding">The bound model; this view model listens to it but does not own it.</param>
     /// <param name="colorPicker">The dialog colour picker buttons open, or null.</param>
-    public FormViewModel(UiDefinition definition, FormBinding binding, IColorPicker? colorPicker = null)
+    /// <param name="confirm">Asks a button's confirm message before it runs, or null.</param>
+    /// <param name="preview">Shows what a button would send for the current field values, or null.</param>
+    public FormViewModel(UiDefinition definition, FormBinding binding, IColorPicker? colorPicker = null, IConfirmPrompt? confirm = null, ICommandPreview? preview = null)
     {
         Definition = definition ?? throw new ArgumentNullException(nameof(definition));
         _binding = binding ?? throw new ArgumentNullException(nameof(binding));
-        Sections = [.. definition.Sections.Select(s => new FormSectionViewModel(s, [.. s.Controls.Select(c => ControlViewModelFactory.Create(c, binding, colorPicker, s.Controls))]))];
+        Sections = [.. definition.Sections.Select(s => new FormSectionViewModel(s, [.. s.Controls.Select(c => ControlViewModelFactory.Create(c, binding, colorPicker, s.Controls, confirm, preview))]))];
         LinkColorPickers(definition);
         _binding.Changed += OnModelChanged;
     }
 
     /// <summary>The form definition.</summary>
     public UiDefinition Definition { get; }
+
+    /// <summary>The definition's description, which a view shows as a final collapsible "Notes" section, or null.</summary>
+    public string? Notes => string.IsNullOrWhiteSpace(Definition.Description) ? null : Definition.Description;
+
+    /// <summary>Whether there are <see cref="Notes"/> to show.</summary>
+    public bool HasNotes => Notes is not null;
 
     /// <summary>The sections in definition order.</summary>
     public IReadOnlyList<FormSectionViewModel> Sections { get; }

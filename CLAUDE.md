@@ -1,9 +1,9 @@
 # OoBDev (dotex) Framework - Claude Development Guide
 
-**Last Updated:** 2026-10-22
+**Last Updated:** 2026-10-30
 **Framework:** OoBDev (dotex) - Enterprise .NET Library Suite
 **Target:** net10.0
-**Current Work:** Patterns discovery (branch `dev/patterns-discovery`, see "Patterns Discovery Work" below) | Design-first approach for SharedFramework migrations | Integration test stack ready for CI/CD
+**Current Work:** DevTerm parity (branch `dev/example-ui-tests`, see [status](docs/design/DevTermParity/status.md)) | Patterns discovery (branch `dev/patterns-discovery`, see below) | Design-first approach for SharedFramework migrations
 
 ---
 
@@ -16,7 +16,7 @@ Working agreements are enforced by files, not by this guide alone:
 | Rules (always loaded, or loaded for matching files) | `.claude/rules/` | `git-workflow`, `owner-decisions`, `open-questions`, `autonomous-mode` (always); `coding-standards` (C#), `testing` (tests, runsettings, containers), `docs-and-diagrams` (docs, markdown) |
 | Skills (loaded when the task matches) | `.claude/skills/` | `add-integration-service`, `archive-completed-work`, `document-configuration`, `compare-incoming-codebase`, `architectural-analysis`, `security-audit`, `write-docs`, `complete-work`, `reconcile-designs-and-code`, `work-backlog`, `owner-interview` |
 | Hooks (deterministic guards) | `.claude/hooks/`, registered in `.claude/settings.json` | `guard-git.mjs` guards git (attribution, history rewrites, `gh`, `upstream`); `autonomous-mode.mjs` (UserPromptSubmit) and `keep-going.mjs` (Stop) keep the backlog loop running until the owner says "I'm back" (rule `autonomous-mode`) |
-| Memory | `~/.claude/projects/.../memory/` | owner preferences and feedback |
+| Memory | `.claude/memory/` (in the repository, never user-specific; index `MEMORY.md`) | owner preferences and feedback |
 
 The former `.claude/protocols/` set was converted into these on 2026-10-22. Workflow, DataGrid, schema, template and rewrite protocols were retired (they assumed branch-per-task PRs or a TypeScript stack); `git log` has them. Keep rules short and testable; put procedures in skills; put anything that must never happen in a hook.
 
@@ -128,7 +128,7 @@ dotnet test src/ --collect:"XPlat Code Coverage"
 
 - **Docs:** `docs/patterns-discovery/` (01 architecture, 02 design patterns, 03 practices, 04 new-project blueprint, 05 industry alternatives, 06 design-document standard; README has the doc/code drift table). Patterns are the owner's preferences: record them, don't "correct" them; rough edges go to `TODO.md` backlogs.
 - **Templates:** `templates/` (`dotnet new` pack: `oobdev-capability`, `oobdev-adapter`, `oobdev-webapp`); verify with `scripts/templates/verify-templates.ps1` (builds from `src/Framework` cwd because `Directory.Build.props` computes `SolutionDir` from the cwd, then cleans up).
-- **Scripts:** `scripts/docs/` (see its README). `dotnet test src/Tools/OoBDev.Docs.Tests` validates PlantUML, links and captions (default scope `docs/patterns-discovery`, 0 problems expected; set `DOCS_VALIDATE_PATHS` to widen it; the whole `docs` tree validates with 0 problems since 2026-10-29). Diagram rendering is the Integration test and uses the existing `plantuml` container (port 8086, `PLANTUML_URL`); do not start another.
+- **Scripts:** `scripts/docs/` (see its README). `dotnet test src/Tools/OoBDev.Docs.Tests` validates PlantUML, links and captions (default scope `docs/patterns-discovery` and `docs/applications`, 0 problems expected; set `DOCS_VALIDATE_PATHS` to widen it; the whole `docs` tree validates with 0 problems since 2026-10-29). Diagram rendering is the Integration test and uses the existing `plantuml` container (port 8086, `PLANTUML_URL`); do not start another.
 - **Decisions made:** `#if DEBUG` required builder parameters are intentional (forces child builders to be forwarded); options were deliberately unvalidated (strict/relaxed mode under analysis).
 - **Open backlogs in `TODO.md`:** naming consistency, Roslyn analyzers, options validation modes, message context caller info, replace hand-built providers with platform primitives, HTTP querying and rights middleware, documentation coverage gaps (build in the listed order).
 - **Branch state:** history was rewritten to remove AI trailers; the branch matched `origin/dev/patterns-discovery` as of 3f54bfe. Never force-push without explicit approval (the hook also blocks it).
@@ -146,30 +146,31 @@ Older entries (before 2026-10) live in `docs/changes/` (index: `docs/changes/REA
 ### 2026-10-09
 - **Framework cleanup (unreleased, breaking)** - `ISelectedService<T>` replaced by `TryAddConfiguredKeyedService<T>` (path `OoBDev:CachingProvider:Type`), `IDateTimeProvider` removed for `TimeProvider`, `Retreive` renamed `Retrieve`, hash/serializer/HMAC provider keys kebab-case, message caller info via caller attributes, `AddValidatedOptions<T>()` added (adapter adoption blocked by the Abstractions-only reference rule, see TODO.md), Groq live tests on `openai/gpt-oss-20b`
 - **Integration test stack** - every host port overridable via `TEST_PORT_<NAME>`; Docker docs under `docs/architecture/testing/integration/`
-- **AsyncAPI document and viewer** - `OoBDev.AsyncApi`, `IAsyncApiContributor` in the SQS, Service Bus and RabbitMQ adapters, `MapAsyncApi()`. [Details](docs/changes/migration-asyncapi-2026-10-09.md)
-- **Swashbuckle replaced by OpenAPI transformers and Scalar** - `Microsoft.AspNetCore.OpenApi` documents, Scalar reference with OAuth2 code and PKCE. [Details](docs/changes/migration-openapi-scalar-2026-10-09.md)
+- **AsyncAPI document and viewer** - `OoBDev.AsyncApi`, `IAsyncApiContributor` in the SQS, Service Bus and RabbitMQ adapters, `MapAsyncApi()`. [Details](docs/changes/2026-10-09.md#asyncapi-document-and-viewer-for-the-message-queues)
+- **Swashbuckle replaced by OpenAPI transformers and Scalar** - `Microsoft.AspNetCore.OpenApi` documents, Scalar reference with OAuth2 code and PKCE. [Details](docs/changes/2026-10-09.md#swashbuckle-replaced-by-openapi-transformers-and-scalar)
 - **Azure B2C dropped** - Keycloak is the identity provider
-- **OpenTelemetry replaces Application Insights** - `OoBDev.OpenTelemetry` (config-gated, OTLP export). [Details](docs/changes/migration-opentelemetry-2026-10-09.md)
+- **OpenTelemetry replaces Application Insights** - `OoBDev.Telemetry` (was `OoBDev.OpenTelemetry`; config-gated, OTLP export). [Details](docs/changes/2026-10-09.md#application-insights-replaced-by-opentelemetry-broken-devlocal-tests-fixed)
 - **Test Ollama on host port 11435** - avoids the clash with a local Ollama on 11434
 
 ### 2026-10-08
-- **Image embeddings** - in-process ONNX runner (DINOv2-small, ViT-base, CLIP ViT-B/32). [Details](docs/changes/migration-image-embeddings-2026-10-08.md)
-- **Embedding presets and version policy** - MPNet and Nomic presets, `GitVersion.yml` policy. [Details](docs/changes/migration-embedding-presets-2026-10-08.md)
-- **AllMiniLmL6V2 replaces the fork** - first-party ONNX embedder and tokenizer. [Details](docs/changes/migration-allminilml6v2-embedder-2026-10-08.md)
-- **NULL-safe vectors, CI order, Moto replaces LocalStack** - [Details](docs/changes/testing-vectors-sqs-moto-ci-2026-10-08.md)
+- **Image embeddings** - in-process ONNX runner (DINOv2-small, ViT-base, CLIP ViT-B/32). [Details](docs/changes/2026-10-08.md#in-process-image-embeddings-and-classification-dinov2-vit-clip)
+- **Embedding presets and version policy** - MPNet and Nomic presets, `GitVersion.yml` policy. [Details](docs/changes/2026-10-08.md#embedding-presets-for-mpnet-and-nomic-shared-hugging-face-cache-version-policy)
+- **AllMiniLmL6V2 replaces the fork** - first-party ONNX embedder and tokenizer. [Details](docs/changes/2026-10-08.md#in-process-all-minilm-l6-v2-embedder-replaces-the-fork)
+- **NULL-safe vectors, CI order, Moto replaces LocalStack** - [Details](docs/changes/2026-10-08.md#ci-restore-vector-functions-and-moto-aws-emulator)
 
 ### 2026-10-07
 - **Dependencies and build health** - central package management restored, packages current, about 12 distinct warnings left (see TODO.md)
 
 ### 2026-09-30
-- **Patterns Discovery** - architecture/patterns/practices/blueprint/alternatives docs, `dotnet new` templates, doc scripts. [Details](docs/changes/documentation-patterns-discovery-2026-09-30.md)
+- **Patterns Discovery** - architecture/patterns/practices/blueprint/alternatives docs, `dotnet new` templates, doc scripts. [Details](docs/changes/2026-09-30.md#documentation---patterns-discovery-coverage-and-extensionsai-spike)
 
 ---
 
 ## Current Work Context
 
-**Active priorities:**
-1. **Integration testing** - run the Docker stack and Integration suite locally; CI is manual only (`scripts/ci`): no scheduled or push builds, and the GitHub workflows are removed
-2. **SharedFramework** - design-first (Epics 2 Communications, 6 Documents, 7 Identity, 10 Text Templating): four documents per feature (requirements, architecture, api-design, testing-strategy; 85-90% coverage targets) instead of code migration, per `docs/patterns-discovery/06-design-document-standard.md`
-3. **Incoming projects** - all investigated, decisions pending
-4. **Backlog** - single backlog in `TODO.md`; CGI middleware and related-work pointers are in `docs/todo.md` and `docs/harvest-candidates.md`
+**Active priorities** (keep in step with `TODO.md`, rule `work-tracking`):
+1. **DevTerm parity** - merge of dev-term into this repo: WPF shell slices first, then the decided cleanups (test fixture rename, shared test utilities); detail in `docs/design/DevTermParity/status.md`
+2. **Integration testing** - run the Docker stack and Integration suite locally; CI is manual only (`scripts/ci`): no scheduled or push builds, and the GitHub workflows are removed
+3. **SharedFramework** - design-first (Epics 2 Communications, 6 Documents, 7 Identity, 10 Text Templating): four documents per feature (requirements, architecture, api-design, testing-strategy; 85-90% coverage targets) instead of code migration, per `docs/patterns-discovery/06-design-document-standard.md`
+4. **Incoming projects** - all investigated, decisions pending
+5. **Backlog** - single backlog in `BACKLOG.md`; CGI middleware and related-work pointers are in `docs/todo.md` and `docs/harvest-candidates.md`

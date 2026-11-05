@@ -40,4 +40,4 @@ The conventions every document in this repository follows. Where a rule can be c
 DOCS_VALIDATE_PATHS=docs/how-tos dotnet test src/Tools/OoBDev.Docs.Tests --filter "TestCategory!=Integration"
 ```
 
-The default scope is `docs/patterns-discovery`; widen it with `DOCS_VALIDATE_PATHS` (semicolon separated). The whole `docs/` tree still has older problems, so check the folder you changed.
+The default scope is `docs/patterns-discovery` and `docs/applications` (the latter also checks that imported application documents are linked or mapped); widen it with `DOCS_VALIDATE_PATHS` (semicolon separated). The whole `docs/` tree still has older problems, so check the folder you changed.

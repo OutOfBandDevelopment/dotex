@@ -20,7 +20,7 @@ using OoBDev.WkHtmlToPdf;
 using OoBDev.Microsoft.Azure.StorageAccount;
 using OoBDev.Microsoft.Caching;
 using OoBDev.Redis.Caching;
-using OoBDev.OpenTelemetry;
+using OoBDev.Telemetry;
 
 namespace OoBDev.Common.Extensions;
 

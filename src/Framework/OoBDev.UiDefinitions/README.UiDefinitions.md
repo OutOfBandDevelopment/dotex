@@ -20,3 +20,7 @@ Ported from dev-term `UiDefinitions` (phase 6 of [the device decoding plan](../.
 - No package dependency beyond the framework; the project is net10.0 and has no UI reference.
 - `MA0016` (List properties) stays: the serializers need settable concrete lists. `MA0051` stays on the expression parser and the form generator (long switch methods ported as they were).
 - The view-model layer with `ICommand` types is the next phase and lives in a separate project.
+
+## Contracts
+
+The definition model (`UiDefinition`, sections, controls, conditions, constraints) and the control-surface contracts (`IControlSurface`, `ICommandPreview`, `IStructuredPresenter`) live in `OoBDev.System.Abstractions` under the namespace `OoBDev.UiDefinitions`. This library holds the logic: expressions, validation, live states, the serializer and forms.

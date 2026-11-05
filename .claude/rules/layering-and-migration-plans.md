@@ -1,0 +1,7 @@
+# Layering questions and migration plans (always apply)
+
+- A layering or composition question is a question for the owner, raised before work starts, not a call to make mid-task. Examples: framework library or application code, which layer or folder a project belongs in, merge or keep separate, whether a dependency such as ASP.NET may reach a project, where a contract lives. Put it in `OPEN-QUESTIONS.md` (rule `open-questions`) with options, a recommendation and the layer consequences, and ask it in chat when the owner is present.
+- Before moving, merging, splitting or creating projects, write a migration plan and get it confirmed: a table of project, current and target location (layer folder), namespace, package or deployment unit, and the references that change. A plan lives in the feature's design folder (`docs/design/<Feature>/`) next to its architecture document.
+- When the right shape is unclear, recommend a spike (a throwaway branch or `src/Spikes` project with a short written result) before the plan, instead of guessing.
+- Reusable means Framework: a capability with no application-specific names is a Framework library with a generic name, even if one application is the first user. Application-specific logic goes to an application project. Do not put generic code under a host-bound library (for example one with an ASP.NET `FrameworkReference`) when the consumer is not a web host.
+- Check the target project's references (`FrameworkReference`, package set) before recommending it as a home.

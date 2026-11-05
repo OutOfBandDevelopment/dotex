@@ -10,7 +10,7 @@ namespace OoBDev.UiDefinitions;
 /// A small expression language for mapping published decoder values to a derived number — a bar
 /// graph/strip chart channel or an indicator's displayed text can show <c>({raw_mv} / 1000)</c>
 /// instead of the raw value, and a button's parameter can send <c>round({temp_c} * 9 / 5 + 32)</c>
-/// instead of a bare sibling-field lookup. See docs/design/features/manifest-editor-expression-builder.md.
+/// instead of a bare sibling-field lookup. See docs/design/UiDefinitions/manifest-editor-expression-builder.md.
 /// </summary>
 /// <remarks>
 /// <para>
@@ -562,7 +562,7 @@ public sealed partial class Expression
         private static int ReadString(string text, int start, List<Token> tokens)
         {
             var quote = text[start];
-            var builder = new System.Text.StringBuilder();
+            var builder = new global::System.Text.StringBuilder();
             var i = start + 1;
             while (i < text.Length)
             {

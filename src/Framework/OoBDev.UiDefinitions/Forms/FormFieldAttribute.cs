@@ -10,7 +10,7 @@ namespace OoBDev.UiDefinitions.Forms;
 /// <c>[Browsable(false)]</c> leaves a property out. Once any property of a type carries this
 /// attribute, only the properties that do become fields (opt-in); a type with none (e.g.
 /// <c>CliOptions</c>) gets a field for every browsable property of a supported type. See
-/// docs/design/ui-definitions.md's "Forms from one definition".
+/// docs/design/UiDefinitions/ui-definitions.md's "Forms from one definition".
 /// </summary>
 [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
 public sealed class FormFieldAttribute : Attribute

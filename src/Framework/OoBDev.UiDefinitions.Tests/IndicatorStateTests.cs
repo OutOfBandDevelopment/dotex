@@ -5,7 +5,7 @@ namespace OoBDev.UiDefinitions.Tests;
 
 /// <summary>
 /// <see cref="IndicatorState"/> — the runtime companion for an <see cref="IndicatorControl"/> whose
-/// <see cref="IndicatorControl.Expression"/> is set. See docs/design/features/manifest-editor-expression-builder.md.
+/// <see cref="IndicatorControl.Expression"/> is set. See docs/design/UiDefinitions/manifest-editor-expression-builder.md.
 /// </summary>
 [TestCategory("Unit")]
 [TestClass]

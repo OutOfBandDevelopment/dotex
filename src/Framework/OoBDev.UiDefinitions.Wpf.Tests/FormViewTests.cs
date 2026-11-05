@@ -1,3 +1,4 @@
+using OoBDev.UiDefinitions;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -7,7 +8,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.UiDefinitions.Forms;
 using OoBDev.UiDefinitions.ViewModels;
 
-namespace OoBDev.UiDefinitions.Wpf.Tests;
+namespace UiDefinitionsWpf.Tests;
 
 /// <summary>The XAML form view against real view models; needs an STA thread, no window is shown.</summary>
 [TestCategory("Unit")]

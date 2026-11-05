@@ -98,6 +98,9 @@ services:
     ports:
       - "${TEST_PORT_RABBITMQ:-5673}:5672"   # AMQP (default avoids the Service Bus emulator on 5672)
       - "${TEST_PORT_RABBITMQ_MGMT:-15672}:15672" # Management UI
+      - "${TEST_PORT_RABBITMQ_STOMP:-21613}:61613" # STOMP (61613 is in a Windows reserved range)
+      - "${TEST_PORT_RABBITMQ_AMQPS:-5671}:5671" # AMQPS (certificates from devterm/make-test-certs.sh)
+      - "${TEST_PORT_RABBITMQ_STOMP_TLS:-21614}:61614" # STOMP over TLS
     networks:
       - integration-test-net
     environment:
@@ -105,12 +108,41 @@ services:
       - RABBITMQ_DEFAULT_PASS=guest
     volumes:
       - rabbitmq-test-data:/var/lib/rabbitmq
+      - ./devterm/rabbitmq/enabled_plugins:/etc/rabbitmq/enabled_plugins:ro
+      - ./devterm/rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
+      - ./devterm/certs:/certs:ro
     healthcheck:
       test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
       interval: 10s
       timeout: 5s
       retries: 5
       start_period: 15s
+
+  mosquitto:
+    image: eclipse-mosquitto:2
+    container_name: oobd-test-mosquitto
+    ports:
+      - "${TEST_PORT_MOSQUITTO:-1883}:1883"   # MQTT, anonymous
+    networks:
+      - integration-test-net
+    volumes:
+      - ./devterm/mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+
+  ser2net:
+    build: ./devterm/ser2net
+    container_name: oobd-test-ser2net
+    ports:
+      - "${TEST_PORT_SER2NET:-2217}:2217"   # RFC 2217; bytes sent come back (virtual echo port)
+    networks:
+      - integration-test-net
+
+  loopback-device:
+    build: ./devterm/loopback-device
+    container_name: oobd-test-loopback-device
+    ports:
+      - "${TEST_PORT_LOOPBACK_DEVICE:-7778}:7777"   # a scripted TCP line device (hello, STATUS?, help); 7777 is SMTP4Dev's UI
+    networks:
+      - integration-test-net
 
   redis:
     image: valkey/valkey:8-alpine

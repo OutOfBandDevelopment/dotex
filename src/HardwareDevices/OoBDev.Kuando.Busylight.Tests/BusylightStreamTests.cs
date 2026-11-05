@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 namespace OoBDev.Kuando.Busylight.Tests;
 
 [TestClass]
+[TestCategory(TestCategories.Kuando_Busylight)]
 public class BusylightStreamTests
 {
     [TestMethod, TestCategory(TestCategories.Unit)]

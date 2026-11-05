@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using OoBDev.TestUtilities;
 
 namespace OoBDev.UiDefinitions.Tests;
 
@@ -9,7 +10,7 @@ namespace OoBDev.UiDefinitions.Tests;
 /// The display-only chart controls — <see cref="BarGraphControl"/>, <see cref="StripChartControl"/>,
 /// <see cref="VectorControl"/> — round-trip through both serializers, and their shared live state
 /// (<see cref="LiveDisplayState"/>, what both renderers draw from) clamps, scrolls, scales and
-/// converts coordinates as documented in docs/design/ui-definitions.md.
+/// converts coordinates as documented in docs/design/UiDefinitions/ui-definitions.md.
 /// </summary>
 [TestCategory("Unit")]
 [TestClass]
@@ -166,12 +167,13 @@ public sealed class ChartControlsTests
 
         foreach (var value in new[] { 1, 2, 3, 4, 5, 6, 7 })
         {
-            state.Apply("a", value.ToString(System.Globalization.CultureInfo.InvariantCulture));
+            state.Apply("a", value.ToString(global::System.Globalization.CultureInfo.InvariantCulture));
         }
 
         Assert.AreSequenceEqual([3.0, 4, 5, 6, 7], [.. state.SamplesOf("a")]);
     }
 
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     [TestCategory("Unit")]
     public void StripChart_HistoryLengthAboveTheHardMaximum_IsClampedRatherThanUnbounded()
@@ -235,7 +237,7 @@ public sealed class ChartControlsTests
         Assert.IsFalse(state.HasPoint);
         Assert.AreEqual("r=— θ=— rad", state.Readout());
 
-        state.ApplyAll(new Dictionary<string, string> { ["r"] = "2", ["t"] = (Math.PI / 2).ToString(System.Globalization.CultureInfo.InvariantCulture), ["h"] = "120" });
+        state.ApplyAll(new Dictionary<string, string> { ["r"] = "2", ["t"] = (Math.PI / 2).ToString(global::System.Globalization.CultureInfo.InvariantCulture), ["h"] = "120" });
 
         Assert.IsTrue(state.HasPoint);
         Assert.AreEqual(0, state.Point.X, 1e-9);

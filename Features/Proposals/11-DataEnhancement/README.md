@@ -411,7 +411,7 @@ public class ReportingService
 
 ## Related Documentation
 
-- [SharedFramework Analysis](../../docs/migration/sharedframework-feature-mapping.md)
+- [SharedFramework Analysis](../../docs/migration/sharedframework.md)
 - Epic 2: Communications Platform (consumer)
 - Epic 10: Text Templating (consumer)
 

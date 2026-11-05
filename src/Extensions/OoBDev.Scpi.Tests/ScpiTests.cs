@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 namespace OoBDev.Scpi.Tests;
 
 [TestClass]
+[TestCategory(TestCategories.Scpi)]
 public class ScpiTests
 {
     private static ScpiInstrumentProfile Profile(string terminator) => new()

@@ -208,7 +208,7 @@ Week 4: Documentation            ░░░░░░░░░░░░░░░�
 
 ### Azurinsight Tests ➡️ REPLACED (2026-10-09)
 
-The Application Insights emulator (azurinsight) was replaced by plain OpenTelemetry. The `otel-dashboard` service (the Aspire dashboard: OTLP receiver on 4317/4318, dashboard UI and telemetry API on 18888) takes its place (it replaced Grafana LGTM on 2026-10-20), the test properties are `OTEL_EXPORTER_OTLP_ENDPOINT`, `OTEL_DASHBOARD_URL` and `OTEL_DASHBOARD_API_KEY`, and the tests live in `src/ExternalServices/OpenTelemetry/OoBDev.OpenTelemetry.Tests`. Details: [change document](../../docs/changes/migration-opentelemetry-2026-10-09.md).
+The Application Insights emulator (azurinsight) was replaced by plain OpenTelemetry. The `otel-dashboard` service (the Aspire dashboard: OTLP receiver on 4317/4318, dashboard UI and telemetry API on 18888) takes its place (it replaced Grafana LGTM on 2026-10-20), the test properties are `OTEL_EXPORTER_OTLP_ENDPOINT`, `OTEL_DASHBOARD_URL` and `OTEL_DASHBOARD_API_KEY`, and the tests live in `src/ExternalServices/OpenTelemetry/OoBDev.OpenTelemetry.Tests`. Details: [change document](../../docs/changes/2026-10-09.md#application-insights-replaced-by-opentelemetry-broken-devlocal-tests-fixed).
 
 ### Qdrant Tests ⏭️ DEFERRED
 

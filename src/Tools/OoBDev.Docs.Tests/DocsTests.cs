@@ -27,7 +27,7 @@ public class DocsTests
 
     private IReadOnlyList<MarkdownDocument> Documents(string root)
     {
-        var configured = TestContext.GetPropertyOrDefault("DOCS_VALIDATE_PATHS", "docs/patterns-discovery");
+        var configured = TestContext.GetPropertyOrDefault("DOCS_VALIDATE_PATHS", "docs/patterns-discovery;docs/applications");
         return [.. configured
             .Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
             .SelectMany(p => MarkdownDocument.Find(root, p))
@@ -85,6 +85,24 @@ public class DocsTests
     {
         var root = RepoRoot();
         AssertNoProblems(Documents(root).SelectMany(d => DocsValidator.CheckNames(root, d)));
+    }
+
+
+    [TestMethod]
+    [TestCategory(TestCategories.Unit)]
+    public void Applications_ImportedDocuments_AreLinkedOrMapped()
+    {
+        // Stage
+        var root = RepoRoot();
+        var applications = Path.Combine(root, "docs", "applications");
+
+        // Test
+        var problems = Directory.EnumerateDirectories(applications)
+            .Order(StringComparer.Ordinal)
+            .SelectMany(folder => ImportedDocsCoverage.FindOrphans(root, folder));
+
+        // Assert
+        AssertNoProblems(problems);
     }
 
     [TestMethod]

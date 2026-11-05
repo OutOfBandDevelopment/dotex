@@ -1,0 +1,712 @@
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Net.Http;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Buffers;
+using OoBDev.DevTerm;
+using OoBDev.DevTerm.Presenters.Text;
+using OoBDev.UiDefinitions;
+using Terminal.Gui.App;
+using Terminal.Gui.Input;
+using Terminal.Gui.Testing;
+using Terminal.Gui.ViewBase;
+using Terminal.Gui.Views;
+using OoBDev.TestUtilities;
+namespace OoBDev.DevTerm.Tui.Tests;
+
+/// <summary>
+/// Drives a real <see cref="ControlPanelMode"/> window headlessly, the same conventions
+/// <see cref="ConfigureModeTests"/> established: a synthetic <see cref="UiDefinition"/> (not the
+/// K8055's own, since this renderer is meant to be generic — see
+/// <see cref="DevTerm.Devices.K8055.K8055UiDefinition"/> for the real one) plus a fake
+/// <see cref="IControlSurface"/>/<see cref="IStructuredPresenter"/> stand in for a real device.
+/// </summary>
+[TestCategory("Unit")]
+[TestClass]
+[DoNotParallelize]
+public sealed class ControlPanelModeTests
+{
+    private sealed class PreviewingControlSurface : IControlSurface, ICommandPreview
+    {
+        public Task InvokeAsync(string commandId, string? value, CancellationToken cancellationToken = default) => Task.CompletedTask;
+
+        public string? PreviewCommand(string commandId, string? value) => $"{commandId.ToUpperInvariant()}\n";
+    }
+
+    private sealed class FakeControlSurface : IControlSurface
+    {
+        public List<(string CommandId, string? Value)> Invocations { get; } = [];
+
+        public Task InvokeAsync(string commandId, string? value, CancellationToken cancellationToken = default)
+        {
+            Invocations.Add((commandId, value));
+            return Task.CompletedTask;
+        }
+    }
+
+    private sealed class FakeStructuredPresenter : IPresenter, IStructuredPresenter
+    {
+        public string Name => "fake";
+
+        public IReadOnlyList<string> Render(ReadOnlySequence<byte> data) => [];
+
+        public event EventHandler<IReadOnlyDictionary<string, string>>? ValuesChanged;
+
+        public void Fire(IReadOnlyDictionary<string, string> values) => ValuesChanged?.Invoke(this, values);
+    }
+
+    private sealed class FakeDisposableControlSurface : IControlSurface, IDisposable
+    {
+        public bool Disposed { get; private set; }
+
+        public Task InvokeAsync(string commandId, string? value, CancellationToken cancellationToken = default) => Task.CompletedTask;
+
+        public void Dispose() => Disposed = true;
+    }
+
+    private static UiDefinition BuildSampleDefinition() => new()
+    {
+        Name = "Sample Device",
+        Sections =
+        [
+            new UiSection
+            {
+                Label = "Outputs",
+                Controls =
+                [
+                    new ButtonControl { Id = "reset", Label = "Reset" },
+                    new ButtonControl { Id = "paramButton", Label = "Param Button", ParameterFieldIds = ["text1", "choice1"] },
+                    new ButtonControl { Id = "paramButton2", Label = "Param Button 2", CommandId = "paramCommand", ParameterFieldIds = ["text1"] },
+                    new ButtonControl { Id = "paramButtonExpr", Label = "Param Button Expr", ParameterFieldIds = ["numeric1"], ParameterExpressions = ["{numeric1} * 2"] },
+                    new ToggleControl { Id = "toggle1", Label = "Toggle 1", DefaultValue = false },
+                    new SliderControl { Id = "slider1", Label = "Slider 1", Minimum = 0, Maximum = 255, DefaultValue = 10 },
+                    new NumericControl { Id = "numeric1", Label = "Numeric 1", Minimum = 0, Maximum = 100, DefaultValue = 5 },
+                    new ChoiceControl { Id = "choice1", Label = "Choice 1", Options = ["a", "b"], DefaultValue = "a" },
+                    new TextFieldControl { Id = "text1", Label = "Text 1", DefaultValue = "hi" },
+                ],
+            },
+            new UiSection
+            {
+                Label = "Inputs",
+                Controls =
+                [
+                    new IndicatorControl { Id = "indicator1", Label = "Indicator 1", DefaultValue = "0" },
+                    new IndicatorControl { Id = "indicator2", Label = "Indicator 2", DefaultValue = "0", Expression = "{raw_mv} / 1000" },
+                ],
+            },
+        ],
+    };
+
+    private static void RunHeadless(IControlSurface surface, IPresenter? structuredSource, Action<ControlPanelWindowParts> body, Action<string>? echoSent = null) =>
+        TuiTestRunner.RunHeadlessApp(app =>
+        {
+            var parts = ControlPanelMode.BuildWindow(app, BuildSampleDefinition(), surface, structuredSource, "Test Panel", echoSent);
+            var token = app.Begin(parts.Window) ?? throw new NotSupportedException(); ;
+            app.LayoutAndDraw(true);
+
+            try
+            {
+                body(parts);
+            }
+            finally
+            {
+                app.End(token);
+            }
+        });
+
+    // Same InvokeCommand(Command.Accept) mechanism ConfigureModeTests.Click uses for Button — and
+    // it doubles as the way to commit a TextField-backed Slider/Numeric/TextField control here,
+    // since ControlPanelMode wires their commit logic to each field's own Accepting event rather
+    // than a separate Apply button.
+    private static void Accept(View view) => view.InvokeCommand(Command.Accept);
+
+    [TestMethod]
+    public void BuildWindow_RendersEachControlKindAsTheExpectedViewType()
+    {
+        RunHeadless(new FakeControlSurface(), null, parts =>
+        {
+            Assert.IsInstanceOfType<Button>(parts.ControlViews["reset"]);
+            Assert.IsInstanceOfType<CheckBox>(parts.ControlViews["toggle1"]);
+            Assert.IsInstanceOfType<TextField>(parts.ControlViews["slider1"]);
+            Assert.IsInstanceOfType<TextField>(parts.ControlViews["numeric1"]);
+            Assert.IsInstanceOfType<OptionSelector>(parts.ControlViews["choice1"]);
+            Assert.IsInstanceOfType<TextField>(parts.ControlViews["text1"]);
+            Assert.IsInstanceOfType<Label>(parts.ControlViews["indicator1"]);
+            Assert.IsTrue(parts.IndicatorLabels.ContainsKey("indicator1"));
+        });
+    }
+
+    [TestMethod]
+    public void Button_WhenClicked_InvokesItsIdWithNoValue()
+    {
+        var surface = new FakeControlSurface();
+        RunHeadless(surface, null, parts =>
+        {
+            Accept(parts.ControlViews["reset"]);
+
+            Assert.HasCount(1, surface.Invocations);
+            Assert.AreEqual(("reset", (string?)null), surface.Invocations[0]);
+        });
+    }
+
+    [TestMethod]
+    public void ButtonWithConfirmMessage_SendsOnlyWhenConfirmed()
+    {
+        var surface = new FakeControlSurface();
+        var previous = ControlPanelMode.ConfirmSend;
+        var asked = new List<string>();
+        var answer = false;
+        ControlPanelMode.ConfirmSend = (_, message) =>
+        {
+            asked.Add(message);
+            return answer;
+        };
+        try
+        {
+            TuiTestRunner.RunHeadlessApp(app =>
+            {
+                var definition = new UiDefinition
+                {
+                    Name = "Confirm Device",
+                    Sections = [new UiSection { Controls = [new ButtonControl { Id = "erase", Label = "Erase", ConfirmMessage = "Erase all?" }] }],
+                };
+                var parts = ControlPanelMode.BuildWindow(app, definition, surface, null, "Confirm Device");
+
+                Accept(parts.ControlViews["erase"]);
+                Assert.IsEmpty(surface.Invocations);
+
+                answer = true;
+                Accept(parts.ControlViews["erase"]);
+                Assert.HasCount(1, surface.Invocations);
+            });
+        }
+        finally
+        {
+            ControlPanelMode.ConfirmSend = previous;
+        }
+
+        Assert.AreSequenceEqual(["Erase all?", "Erase all?"], asked);
+    }
+
+    [TestMethod]
+    public void Button_WhenClicked_EchoesTheSentCommandsPreview()
+    {
+        // Bug 064: View > Echo Sent Commands used to cover only the typed send box.
+        var echoed = new List<string>();
+        RunHeadless(new PreviewingControlSurface(), null, parts =>
+        {
+            Accept(parts.ControlViews["reset"]);
+
+            CollectionAssert.AreEqual(new[] { "RESET\n" }, echoed);
+        }, echoed.Add);
+    }
+
+    [TestMethod]
+    public void ButtonWithParameterFieldIds_WhenClicked_InvokesWithJoinedSiblingValues()
+    {
+        var surface = new FakeControlSurface();
+        RunHeadless(surface, null, parts =>
+        {
+            Accept(parts.ControlViews["paramButton"]);
+
+            Assert.HasCount(1, surface.Invocations);
+            Assert.AreEqual(("paramButton", "hi,a"), surface.Invocations[0]);
+        });
+    }
+
+    [TestMethod]
+    public void ButtonWithParameterFieldIds_ReadsCurrentValueAndUsesCommandIdOverride()
+    {
+        var surface = new FakeControlSurface();
+        RunHeadless(surface, null, parts =>
+        {
+            ((TextField)parts.ControlViews["text1"]).Text = "updated";
+            Accept(parts.ControlViews["paramButton2"]);
+
+            Assert.HasCount(1, surface.Invocations);
+            Assert.AreEqual(("paramCommand", "updated"), surface.Invocations[0]);
+        });
+    }
+
+    [TestMethod]
+    public void ButtonWithParameterExpressions_WhenClicked_InvokesWithTheEvaluatedValue()
+    {
+        var surface = new FakeControlSurface();
+        RunHeadless(surface, null, parts =>
+        {
+            Accept(parts.ControlViews["paramButtonExpr"]);
+
+            Assert.HasCount(1, surface.Invocations);
+            Assert.AreEqual(("paramButtonExpr", "10"), surface.Invocations[0], "numeric1 defaults to 5; {numeric1} * 2 == 10.");
+        });
+    }
+
+    [TestMethod]
+    public void Toggle_WhenChecked_InvokesItsIdWithOne()
+    {
+        var surface = new FakeControlSurface();
+        RunHeadless(surface, null, parts =>
+        {
+            ((CheckBox)parts.ControlViews["toggle1"]).Value = CheckState.Checked;
+
+            Assert.HasCount(1, surface.Invocations);
+            Assert.AreEqual(("toggle1", "1"), surface.Invocations[0]);
+        });
+    }
+
+    [TestMethod]
+    public void Slider_WhenCommitted_ClampsAndInvokesItsIdWithTheValue()
+    {
+        var surface = new FakeControlSurface();
+        RunHeadless(surface, null, parts =>
+        {
+            var field = (TextField)parts.ControlViews["slider1"];
+            field.Text = "999"; // above Maximum=255, should clamp
+            Accept(field);
+
+            Assert.HasCount(1, surface.Invocations);
+            Assert.AreEqual(("slider1", "255"), surface.Invocations[0]);
+            Assert.AreEqual("255", field.Text.ToString());
+        });
+    }
+
+    [TestMethod]
+    public void Numeric_WhenCommitted_InvokesItsIdWithTheValue()
+    {
+        var surface = new FakeControlSurface();
+        RunHeadless(surface, null, parts =>
+        {
+            var field = (TextField)parts.ControlViews["numeric1"];
+            field.Text = "42";
+            Accept(field);
+
+            Assert.HasCount(1, surface.Invocations);
+            Assert.AreEqual(("numeric1", "42"), surface.Invocations[0]);
+        });
+    }
+
+    [TestMethod]
+    public void Choice_WhenSelectionChanges_InvokesItsIdWithTheSelectedOption()
+    {
+        var surface = new FakeControlSurface();
+        RunHeadless(surface, null, parts =>
+        {
+            ((OptionSelector)parts.ControlViews["choice1"]).Value = 1; // "b"
+
+            Assert.HasCount(1, surface.Invocations);
+            Assert.AreEqual(("choice1", "b"), surface.Invocations[0]);
+        });
+    }
+
+    [TestMethod]
+    public void TextField_WhenCommitted_InvokesItsIdWithTheTypedValue()
+    {
+        var surface = new FakeControlSurface();
+        RunHeadless(surface, null, parts =>
+        {
+            var field = (TextField)parts.ControlViews["text1"];
+            field.Text = "hello";
+            Accept(field);
+
+            Assert.HasCount(1, surface.Invocations);
+            Assert.AreEqual(("text1", "hello"), surface.Invocations[0]);
+        });
+    }
+
+    [TestMethod]
+    public void NoStructuredPresenter_ShowsTheNotDecodingStatusLine()
+    {
+        RunHeadless(new FakeControlSurface(), null, _ =>
+        {
+            Assert.Contains("Not decoding", TuiTestRunner.DumpBuffer());
+        });
+    }
+
+    /// <summary>
+    /// An output-only device (no <see cref="IndicatorControl"/>/<see cref="BarGraphControl"/>/
+    /// <see cref="StripChartControl"/>/<see cref="VectorControl"/> anywhere - Busylight is the real
+    /// example) has nothing a structured presenter could ever decode, so the warning is just noise -
+    /// see TODO.md's 2026-09-25 TUI layout review follow-up. The WPF half of the same fix is
+    /// <c>ControlPanelWindowTests.NoStructuredPresenter_OnAnOutputOnlyDevice_SuppressesTheNotDecodingStatusLine</c>.
+    /// </summary>
+    [TestMethod]
+    public void NoStructuredPresenter_OnAnOutputOnlyDevice_SuppressesTheNotDecodingStatusLine()
+    {
+        var surface = new FakeControlSurface();
+        TuiTestRunner.RunHeadlessApp(app =>
+        {
+            var definition = new UiDefinition
+            {
+                Name = "Output Only Device",
+                Sections = [new UiSection { Controls = [new ButtonControl { Id = "apply", Label = "Apply" }] }],
+            };
+            ControlPanelMode.BuildWindow(app, definition, surface, null, "Output Only Device");
+
+            Assert.DoesNotContain("Not decoding", TuiTestRunner.DumpBuffer());
+        });
+    }
+
+    [TestMethod]
+    public void ValuesChanged_UpdatesTheMatchingIndicatorLabel()
+    {
+        // Application.Invoke (which the production ValuesChanged handler marshals through) only
+        // ever flushes while a real Application.Run() loop is actively pumping - RunHeadless alone
+        // never drains it, per TuiTestRunner's own documented finding. This needs a real loop.
+        var surface = new FakeControlSurface();
+        var presenter = new FakeStructuredPresenter();
+
+        TuiWindowPartsHarness.RunWithLoop(surface, presenter, parts =>
+        {
+            presenter.Fire(new Dictionary<string, string> { ["indicator1"] = "42" });
+
+            var updated = TuiWindowPartsHarness.WaitUntil(
+                () => parts.IndicatorLabels["indicator1"].Text.ToString() == "42",
+                TimeSpan.FromSeconds(5));
+            Assert.IsTrue(updated, "The indicator label was never updated from ValuesChanged.");
+        });
+    }
+
+    [TestMethod]
+    public void ValuesChanged_UpdatesAnExpressionBackedIndicatorLabel_ComputedFromItsReferencedRawId()
+    {
+        var surface = new FakeControlSurface();
+        var presenter = new FakeStructuredPresenter();
+
+        TuiWindowPartsHarness.RunWithLoop(surface, presenter, parts =>
+        {
+            presenter.Fire(new Dictionary<string, string> { ["raw_mv"] = "5500" });
+
+            var updated = TuiWindowPartsHarness.WaitUntil(
+                () => parts.IndicatorLabels["indicator2"].Text.ToString() == "5.5",
+                TimeSpan.FromSeconds(5));
+            Assert.IsTrue(updated, "indicator2's Expression ({raw_mv} / 1000) was never evaluated from ValuesChanged.");
+        });
+    }
+
+    [TestCategory(TestCategories.BugRegression)]
+    [TestMethod]
+    public void WindowDispose_DisposesADisposableSurface()
+    {
+        // Regression test for bug 020: a surface that binds something into the session's live
+        // pipeline for the panel's lifetime (ZoomH4nControlSurface's wake watcher) needs the same
+        // Disposing-driven teardown ValuesChanged already gets above, or reopening its panel stacks
+        // up another leaked subscription each time.
+        var surface = new FakeDisposableControlSurface();
+        RunHeadless(surface, null, parts =>
+        {
+            parts.Window.Dispose();
+            Assert.IsTrue(surface.Disposed);
+        });
+    }
+
+    /// <summary>
+    /// A minimal <c>Application.Run()</c>-loop harness for <see cref="ControlPanelMode.BuildWindow"/>,
+    /// analogous to <see cref="TuiTestRunner.RunWithLoop"/> but built against this renderer's own
+    /// <c>(UiDefinition, IControlSurface, IPresenter?, string)</c> signature rather than
+    /// <c>TuiMode.BuildWindow</c>'s.
+    /// </summary>
+    private static class TuiWindowPartsHarness
+    {
+        private static readonly TimeSpan _startTimeout = TimeSpan.FromSeconds(5);
+        private static readonly TimeSpan _stopTimeout = TimeSpan.FromSeconds(5);
+        private static readonly TimeSpan _invokeTimeout = TimeSpan.FromSeconds(5);
+        private static IApplication? _currentApp;
+
+        public static void RunWithLoop(IControlSurface surface, IPresenter structuredSource, Action<ControlPanelWindowParts> body)
+        {
+            ControlPanelWindowParts? parts = null;
+            var ready = new ManualResetEventSlim(false);
+            Exception? threadException = null;
+
+            var thread = new Thread(() =>
+            {
+                try
+                {
+                    var app = Application.Create().Init("dotnet");
+                    _currentApp = app;
+                    parts = ControlPanelMode.BuildWindow(app, BuildSampleDefinition(), surface, structuredSource, "Test Panel");
+                    app.Invoke(() => ready.Set());
+                    app.Run(parts.Window);
+                }
+                catch (Exception ex)
+                {
+                    threadException = ex;
+                    ready.Set();
+                }
+            })
+            {
+                IsBackground = true,
+            };
+            thread.Start();
+
+            if (!ready.Wait(_startTimeout))
+            {
+                throw new TimeoutException("The TUI run loop did not start in time.");
+            }
+
+            if (threadException is not null)
+            {
+                throw new InvalidOperationException("The TUI run loop failed to start.", threadException);
+            }
+
+            try
+            {
+                body(parts!);
+            }
+            finally
+            {
+                _currentApp!.Invoke(() => _currentApp.RequestStop());
+                thread.Join(_stopTimeout);
+                _currentApp.Dispose();
+                _currentApp = null;
+            }
+        }
+
+        public static bool WaitUntil(Func<bool> predicate, TimeSpan timeout)
+        {
+            var deadline = DateTime.UtcNow + timeout;
+            while (DateTime.UtcNow < deadline)
+            {
+                var done = new ManualResetEventSlim(false);
+                var result = false;
+                _currentApp!.Invoke(() =>
+                {
+                    result = predicate();
+                    done.Set();
+                });
+
+                if (!done.Wait(_invokeTimeout))
+                {
+                    throw new TimeoutException("Application.Invoke did not run within the timeout.");
+                }
+
+                if (result)
+                {
+                    return true;
+                }
+
+                Thread.Sleep(20);
+            }
+
+            return false;
+        }
+    }
+
+    [TestMethod]
+    public void CustomColorSwatch_HiddenUntilSet_ThenShowsTheHexOnThatColor()
+    {
+        var unset = $"custom-{Guid.NewGuid():N}";
+        var set = $"custom-{Guid.NewGuid():N}";
+        OoBDev.DevTerm.Configuration.LastPickedColors.Set(set, (0x10, 0x20, 0x30));
+        var definition = new UiDefinition
+        {
+            Name = "Color Device",
+            Sections =
+            [
+                new UiSection
+                {
+                    Label = "Color",
+                    Controls =
+                    [
+                        new ButtonControl { Id = unset, Label = "Custom A...", ColorPickerTargetCommandId = "color" },
+                        new ButtonControl { Id = set, Label = "Custom B...", ColorPickerTargetCommandId = "color" },
+                    ],
+                },
+            ],
+        };
+
+        TuiTestRunner.RunHeadlessApp(app =>
+        {
+            var parts = ControlPanelMode.BuildWindow(app, definition, new FakeControlSurface(), null, "Colors");
+
+            Assert.IsFalse(parts.ControlViews[$"{unset}.swatch"].Visible);
+
+            var swatch = (Label)parts.ControlViews[$"{set}.swatch"];
+            Assert.IsTrue(swatch.Visible);
+            Assert.AreEqual(" #102030 ", swatch.Text);
+            Assert.AreEqual(new Terminal.Gui.Drawing.Color(0x10, 0x20, 0x30, 255), swatch.GetScheme().Normal.Background);
+        });
+    }
+
+    /// <summary>
+    /// A button already shows its own text ("Apply") as the button itself; a row label would repeat
+    /// it ("Apply: [ Apply ]") - see TODO.md's 2026-09-25 TUI layout review follow-up. The WPF half of
+    /// the same fix is <c>ControlPanelWindowTests.ButtonRow_HasNoLeadingLabel</c>.
+    /// </summary>
+    [TestMethod]
+    public void ButtonRow_HasNoLeadingLabel()
+    {
+        var surface = new FakeControlSurface();
+        TuiTestRunner.RunHeadlessApp(app =>
+        {
+            var definition = new UiDefinition
+            {
+                Name = "Sample Device",
+                Sections = [new UiSection { Controls = [new ButtonControl { Id = "apply", Label = "Apply" }] }],
+            };
+            ControlPanelMode.BuildWindow(app, definition, surface, null, "Sample Device");
+
+            Assert.IsFalse(TuiTestRunner.DumpBuffer().Contains("Apply:", StringComparison.Ordinal), "A button row shouldn't get a separate leading label.");
+        });
+    }
+
+    /// <summary>
+    /// TODO.md's "Control panels ignore VisibleWhen" item, control-only half: a control-level
+    /// VisibleWhen (see docs/design/UiDefinitions/ui-definitions.md) hides its row entirely — no gap — while unmet,
+    /// then reappears (and pushes the row after it back down) once the referenced sibling's value
+    /// satisfies it. The WPF side of the same fix is <c>ControlPanelWindowTests</c>.
+    /// </summary>
+    [TestMethod]
+    public void Control_VisibleWhen_HiddenUntilConditionMet_ThenShownAndRowsShift()
+    {
+        var definition = new UiDefinition
+        {
+            Name = "Conditional Device",
+            Sections =
+            [
+                new UiSection
+                {
+                    Label = "Section",
+                    Controls =
+                    [
+                        new ToggleControl { Id = "enable", Label = "Enable", DefaultValue = false },
+                        new TextFieldControl
+                        {
+                            Id = "conditional",
+                            Label = "Conditional",
+                            DefaultValue = "x",
+                            VisibleWhen = new UiCondition { Id = "enable", Values = ["1"] },
+                        },
+                        new ButtonControl { Id = "after", Label = "After" },
+                    ],
+                },
+            ],
+        };
+
+        TuiTestRunner.RunHeadlessApp(app =>
+        {
+            var parts = ControlPanelMode.BuildWindow(app, definition, new FakeControlSurface(), null, "Conditional");
+            var token = app.Begin(parts.Window) ?? throw new NotSupportedException();
+            app.LayoutAndDraw(true);
+
+            var conditional = parts.ControlViews["conditional"];
+            var after = parts.ControlViews["after"];
+            var enable = (CheckBox)parts.ControlViews["enable"];
+
+            Assert.IsFalse(conditional.Visible, "Hidden while its condition is unmet.");
+            var afterYWhileHidden = after.Frame.Y;
+
+            enable.Value = CheckState.Checked;
+            app.LayoutAndDraw(true);
+
+            Assert.IsTrue(conditional.Visible, "Shown once its condition is met.");
+            Assert.IsTrue(after.Frame.Y > afterYWhileHidden, "The row after it shifts down to make room.");
+
+            app.End(token);
+        });
+    }
+
+    /// <summary>An interlocked control (EnabledWhen) stays visible but disabled, showing its reason, until its condition holds.</summary>
+    [TestMethod]
+    public void Control_EnabledWhen_StaysVisibleButDisabled_UntilConditionMet()
+    {
+        var definition = new UiDefinition
+        {
+            Name = "Interlocked Device",
+            Sections =
+            [
+                new UiSection
+                {
+                    Label = "Section",
+                    Controls =
+                    [
+                        new ToggleControl { Id = "arm", Label = "Arm", DefaultValue = false },
+                        new TextFieldControl
+                        {
+                            Id = "fire",
+                            Label = "Fire",
+                            DefaultValue = "x",
+                            EnabledWhen = new UiCondition { Id = "arm", Values = ["1"] },
+                            DisabledReason = "Arm the output first",
+                        },
+                    ],
+                },
+            ],
+        };
+
+        TuiTestRunner.RunHeadlessApp(app =>
+        {
+            var parts = ControlPanelMode.BuildWindow(app, definition, new FakeControlSurface(), null, "Interlocked");
+            var token = app.Begin(parts.Window) ?? throw new NotSupportedException();
+            app.LayoutAndDraw(true);
+
+            var fire = parts.ControlViews["fire"];
+            Assert.IsTrue(fire.Visible);
+            Assert.IsFalse(fire.Enabled, "Disabled while the interlock is unmet.");
+            Assert.IsTrue(TuiTestRunner.DumpBuffer().Contains("Arm the output first", StringComparison.Ordinal), "The reason is shown.");
+
+            ((CheckBox)parts.ControlViews["arm"]).Value = CheckState.Checked;
+            app.LayoutAndDraw(true);
+
+            Assert.IsTrue(fire.Enabled, "Enabled once armed.");
+            app.End(token);
+        });
+    }
+
+    /// <summary>
+    /// TODO.md's "Control panels ignore VisibleWhen" item, section-only half: a whole section
+    /// (header + body) with its own VisibleWhen collapses to no rows at all while unmet — matching
+    /// what the form renderers already do for a section's VisibleWhen — and reappears (pushing any
+    /// section after it back down) once its referenced control's value satisfies it.
+    /// </summary>
+    [TestMethod]
+    public void Section_VisibleWhen_HiddenUntilConditionMet_ThenShownAndFollowingSectionsShift()
+    {
+        var definition = new UiDefinition
+        {
+            Name = "Conditional Sections",
+            Sections =
+            [
+                new UiSection
+                {
+                    Label = "Mode",
+                    Controls = [new ChoiceControl { Id = "mode", Label = "Mode", Options = ["basic", "advanced"], DefaultValue = "basic" }],
+                },
+                new UiSection
+                {
+                    Label = "Advanced",
+                    VisibleWhen = new UiCondition { Id = "mode", Values = ["advanced"] },
+                    Controls = [new ButtonControl { Id = "advancedButton", Label = "Advanced Button" }],
+                },
+                new UiSection
+                {
+                    Label = "After",
+                    Controls = [new ButtonControl { Id = "afterButton", Label = "After Button" }],
+                },
+            ],
+        };
+
+        TuiTestRunner.RunHeadlessApp(app =>
+        {
+            var parts = ControlPanelMode.BuildWindow(app, definition, new FakeControlSurface(), null, "Conditional Sections");
+            var token = app.Begin(parts.Window) ?? throw new NotSupportedException();
+            app.LayoutAndDraw(true);
+
+            Assert.IsFalse(parts.SectionHeaders["Advanced"].Visible, "Hidden while its condition is unmet.");
+            Assert.IsFalse(parts.SectionBodies["Advanced"].Visible);
+            var afterHeaderYWhileHidden = parts.SectionHeaders["After"].Frame.Y;
+
+            ((OptionSelector)parts.ControlViews["mode"]).Value = 1; // "advanced"
+            app.LayoutAndDraw(true);
+
+            Assert.IsTrue(parts.SectionHeaders["Advanced"].Visible, "Shown once its condition is met.");
+            Assert.IsTrue(parts.SectionHeaders["After"].Frame.Y > afterHeaderYWhileHidden, "The section after it shifts down to make room.");
+
+            app.End(token);
+        });
+    }
+}

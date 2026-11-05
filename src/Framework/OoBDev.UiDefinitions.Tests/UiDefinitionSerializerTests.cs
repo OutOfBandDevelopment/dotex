@@ -2,12 +2,13 @@ using System;
 using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.UiDefinitions;
+using OoBDev.TestUtilities;
 
 namespace OoBDev.UiDefinitions.Tests;
 
 /// <summary>
 /// Round-trips a real control panel — the Kuando Busylight color/blink/sound panel from
-/// docs/design/features/kuando-busylight-protocol.md's @startsalt mockup, in this model's shape —
+/// docs/protocols/kuando-busylight-protocol.md's @startsalt mockup, in this model's shape —
 /// through both serializers, rather than a synthetic minimal example.
 /// </summary>
 [TestCategory("Unit")]
@@ -126,6 +127,7 @@ public sealed class UiDefinitionSerializerTests
         Assert.Contains("<Slider>", xml);
     }
 
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     [TestCategory("Unit")]
     public void FromXml_DocumentWithAnInternalDtdEntity_DoesNotExpandIt()

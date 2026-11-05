@@ -1,0 +1,187 @@
+# Sending commands and viewing replies
+
+Once connected (see [Connecting to a device](connecting.md)), all three front ends do the same
+thing: type a line, press Enter (or Send), see the decoded reply appear. Screenshots/transcripts
+below are real captured output from the actual built app — see this folder's [README](README.md).
+
+## CLI
+
+```
+$ dotnet DevTerm.Console.dll --transport tcp --host 192.168.0.107 --port 23 --presenter ascii --lineending Cr --cli true
+Connected to TCP 192.168.0.107:23 using 'ascii' (send as 'ascii').
+Type a line and press Enter to send; Ctrl+C to exit.
+ID?
+[ascii] ID TEK/2230,V81.1,VERS:14
+```
+
+The banner and the `[ascii] ID TEK/2230,V81.1,VERS:14` line are real captured stdout (against a
+small throwaway TCP stand-in that answers `ID?` exactly like the project's real Tektronix 2230 test
+device does); `ID?` is what you'd type — a real terminal echoes your own keystrokes, which a piped
+capture doesn't show. Every line gets the configured line ending appended (`--lineending Cr` above)
+before it's sent. Ctrl+C exits; the session closes cleanly.
+
+The banner names two things: the **presenters** (how incoming bytes are shown — one or several, e.g.
+`--presenter ascii,hex` prints each reply once per presenter, tagged `[ascii]`/`[hex]`) and the
+**send format** (how the line you type is turned into bytes — `--parser`, defaulting to the first
+presenter). They're independent: `--presenter ascii,hex --parser hex` shows replies both ways but
+sends what you type as hex. The CLI fixes the send format for the whole run; a per-line choice
+lives in the TUI and WPF (below).
+
+## TUI
+
+Connected, nothing sent yet:
+
+![TUI main screen, connected, empty](images/tui-main-connected.png)
+
+Typed text lands in `Send:` as you type; nothing is sent until Enter:
+
+![TUI main screen, typing a command](images/tui-main-typing.png)
+
+Pressing Enter sends the line (with the configured line ending appended) and clears `Send:`
+immediately; the reply appears in the output pane as soon as the device answers — no polling:
+
+![TUI main screen, after a reply arrives](images/tui-main-after-reply.png)
+
+The **Send as** menu in the menu bar picks how typed text is encoded (ASCII, UTF-8, hex, decimal,
+octal, binary) — it starts as the profile's saved send format and can be changed at any time, even
+mid-session, without reconnecting. The title bar shows the current one
+(`dev-term — tcp://127.0.0.1:52311 (ascii; send as ascii)`) and names what you're connected to: the
+**profile's name** if the connection is exactly one of your saved profiles
+(`dev-term — tek2230 (ascii; send as ascii)`), otherwise its connection string (`tcp://host:port`,
+`serial://COM3:4800,8,n,1`, `hid://vendor.product.serial`). It updates as soon as you switch
+profiles from Device Profiles.
+
+Ctrl+Q quits and closes the session cleanly.
+
+Pressing **Up** in `Send:` recalls the last line you sent (press it again for the one before that);
+**Down** steps back toward the most recent. Up to the last 100 lines sent this run are kept — not
+saved across restarts. Editing and pressing Enter sends the edited version as a new entry, same as
+typing it fresh.
+
+## WPF
+
+The same flow, after a reply has arrived. The **Send as:** drop-down beside the Send button is the
+WPF equivalent of the TUI's Send as menu — it starts at the profile's saved send format and can be
+changed per line:
+
+![WPF main window, connected, showing a reply](images/wpf-main-window-connected.png)
+
+`ID TEK/2230,V81.1,VERS:14` is the same real Tektronix 2230 reply text used above, captured here
+against a `FakeTransport` that answers the same way rather than the real device.
+
+The send box is an editable drop-down: click its arrow to see recently sent lines, or, with the
+field focused, press **Up**/**Down** the same way the TUI does — the same 100-line, this-run-only
+history.
+
+## View menu: echo, flow control, clearing output
+
+Both the TUI and WPF have a **View** menu with three items beyond Theme (see
+[Choosing a theme](themes.md)):
+
+- **Echo Sent Commands** — when on, every line you send is also added to the output as
+  `Out> {line}`, so a busy session's scrollback shows what you sent interleaved with what came back,
+  not just the replies. Off by default. A window-level setting, not per-tab. `{line}` includes the
+  connection's line ending (CR/LF/CRLF/none), and every non-printable character — the line ending's
+  own bytes included — is escaped so it's visible instead of silently appended: `\r`, `\n`, `\t`,
+  `\0`, or `\xHH` for anything else, with a literal backslash doubled so it reads unambiguously. A
+  CRLF-terminated `AT` command echoes as `Out> AT\r\n`.
+- **Software Flow Control (XON/XOFF)** — only enabled for a TCP connection. Some serial-to-Ethernet
+  bridges forward the attached device's XON/XOFF bytes over the wire instead of honoring them
+  locally; turning this on makes dev-term strip those bytes from the display and pause its own sends
+  until the device's XON arrives, the way hardware flow control already works for a direct serial
+  connection. It's per-tab (each TCP connection has its own setting) and can be toggled at any time
+  without reconnecting.
+- **Clear Output** — empties the active tab's output pane. Other tabs are untouched.
+
+## Telling device output from dev-term's own messages
+
+The output pane mixes three kinds of line, and each looks different so you never mistake one for
+another:
+
+- **Device output** is in the normal text color. In the TUI each line is tagged with the presenter
+  that decoded it (`[ascii] ID TEK/2230,…`).
+- **dev-term's own notices** (connected, disconnected, logging started, a theme problem) are in
+  italics, in a dimmer color. The TUI also tags them `[dev-term]`.
+- **Errors** (a failed send, a lost connection) are red: bold in the TUI, where they're also tagged
+  `[error]`, and dark red in WPF.
+
+The exact colors follow the current theme (see [Choosing a theme](themes.md)). The CLI doesn't color
+or tag its own messages: device output is `[ascii] …` as above, and dev-term's messages are plain
+lines, with errors on stderr. For how these look around a disconnect, see
+[Connecting and disconnecting](connect-disconnect.md).
+
+## If something goes wrong
+
+No front end crashes or exits over an error once it's running. It tells you what happened, and you
+carry on from there.
+
+**A line the send format can't encode is rejected, not sent**, and the connection is left alone.
+Here the send format is hex and the first line isn't hex. This is a real capture against the
+built-in loopback device (the rejection goes to stderr):
+
+```text
+$ dotnet DevTerm.Console.dll --transport loopback --presenter ascii --parser hex --cli true
+Connected to Loopback using 'ascii' (send as 'hex').
+Type a line and press Enter to send; Ctrl+C to exit.
+OUTPut?
+Not sent: 'OUTPut?' isn't valid hex input (The input is not a valid hex string as its length is not a multiple of 2.)
+68656C6C6F0A
+[ascii] From Loopback test
+```
+
+**A lost connection disconnects cleanly and can be resumed.** Causes include a read or send failure
+(an unplugged cable, a reset socket, a device that stopped answering) and the device hanging up.
+The session closes, the reason is reported once, and:
+
+- **CLI**: the next line you type reconnects first, then sends. Here is a real capture against a
+  local TCP stand-in that hangs up about a second after connecting, then accepts the reconnect and
+  answers like the Tektronix 2230 above:
+
+  ```text
+  $ dotnet DevTerm.Console.dll --transport tcp --host 127.0.0.1 --port 5599 --presenter ascii --lineending Cr --cli true
+  Connected to TCP 127.0.0.1:5599 using 'ascii' (send as 'ascii').
+  Type a line and press Enter to send; Ctrl+C to exit.
+  The device closed the connection. The next line you send will reconnect.
+  ID?
+  Reconnecting to TCP 127.0.0.1:5599...
+  Reconnected to TCP 127.0.0.1:5599.
+  [ascii] ID TEK/2230,V81.1,VERS:14
+  ```
+
+  If the reconnect fails, you get the error and the line isn't sent; the next line tries again. The
+  CLI still exits (code 1) only when the *first* connection fails, so a script sees that.
+- **TUI and WPF**: the output shows `Connection lost: {reason} Use File > Connect to reconnect.`
+  (or `The device closed the connection. …`), the send field is disabled, and the menu item switches
+  to **Connect**. Use it to reconnect, or **File > Device Profiles...** to pick another connection.
+  If the connection fails at startup, the window opens anyway, disconnected, showing the error. It
+  used to exit (TUI) or show a message box and close (WPF).
+
+A serial timeout adds a hint about hardware flow control (CTS / `--handshake`); other transports
+don't, since CTS has nothing to do with them. See `Session.Disconnected`, `TypedInput` and
+`ConnectionErrorMessages` in [`docs/design/architecture.md`](../design/architecture.md).
+
+## Sharing a connection over TCP
+
+`dev-term --transport serial --port COM3 --cli true --sharetcp 2323` also listens on `127.0.0.1:2323`.
+Whatever the device sends is copied to the connected TCP client, and whatever that client sends is written to the
+device (try `telnet 127.0.0.1 2323`). One client at a time; a second connection is closed at once. There is no
+authentication or encryption, so it binds loopback unless you pass `--sharebind 0.0.0.0` (or another address).
+
+Add `--sharerfc2217 true` to make that port speak RFC 2217, so a serial-aware tool can open it as a remote serial port (for example pyserial's `serial.serial_for_url('rfc2217://127.0.0.1:2323')`). The client's baud rate, parity, stop bits and DTR/RTS requests are applied to the real device when the shared connection is a serial port or another RFC 2217 link.
+This is a plain byte proxy: it does not negotiate RFC 2217 baud/DTR/RTS changes.
+
+## Driving a session from another program
+
+`--control bench1` (console CLI mode) opens a local pipe `devterm-control-bench1` that only your own OS user can connect to. A script writes one command per line and reads `ok` or `error <why>` back: `send *IDN?` (typed text, encoded like what you type, line ending included), `sendhex 41 42`, or `ping`. The session's `open`/`rx`/`tx`/`closed` lines come back on the same pipe. Its sends interleave with your own typing.
+
+From a second terminal, `dev-term --controlclient bench1` does this for you: each line you type (or pipe in) is a command, for example `send *IDN?`, and every reply and event line is printed. It exits 1 if nothing is listening on that name.
+
+### Over HTTP
+
+`--controlhttp 8080` serves the same commands on `http://127.0.0.1:8080/` (loopback only). dev-term prints a per-run bearer token at startup (or set your own with `--controltoken`); send it as `Authorization: Bearer <token>` or `?token=`. `POST /command` takes the command line as its body and answers `ok` or `error <why>`; `GET /events` is a Server-Sent Events stream of the `open`/`rx`/`tx`/`closed` lines; `GET /ping` checks it is up. Without the token every request gets 401. A Python example that tails events and replies is in `examples/python/control-channel-client/`.
+
+`--control`, `--controlhttp`, `--sharetcp` and `--sharerfc2217` work in the console CLI, the TUI and WPF.
+
+## On the web
+
+The terminal page's send box does the same job. **Send as** picks the format typed lines are encoded with (ascii, hex, ...), **Echo sent commands** adds an `Out>` line for each send, **Clear output** empties the active tab, and Up/Down in the send box recall earlier lines. A send while the session is closed is refused with "Not connected" until you press Connect, as in the TUI and WPF. Covered by `WebScreenshotTests.TerminalPage_Toolbar_SendAsEchoClearHistoryAndTheme` and the shared flows in `WebUserFlowTests`.

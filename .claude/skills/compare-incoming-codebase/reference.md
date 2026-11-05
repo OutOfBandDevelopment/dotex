@@ -1320,8 +1320,7 @@ Result: OoBDev.System.IO exists, CodeAnalysis missing, etc.
 **Step 4-6: Create Documents**
 ```
 Created:
-- docs/migration/binarydatadecoders-feature-mapping.md
-- docs/migration/binarydatadecoders-migration-plan.md
+- docs/migration/binarydatadecoders-rereview-2026-10-29.md
 - docs/migration/README.md
 ```
 

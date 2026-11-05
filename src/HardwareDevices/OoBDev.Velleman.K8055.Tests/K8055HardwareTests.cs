@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 namespace OoBDev.Velleman.K8055.Tests;
 
 [TestClass]
+[TestCategory(TestCategories.Velleman_K8055)]
 public class K8055HardwareTests
 {
     private static async Task SendAsync(Stream stream, K8055Command command)

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 namespace OoBDev.Quarta.RadexOne.Tests;
 
 [TestClass]
+[TestCategory(TestCategories.Radex_One)]
 public class RadexOneHardwareTests
 {
     private static readonly TimeSpan _timeout = TimeSpan.FromSeconds(10);

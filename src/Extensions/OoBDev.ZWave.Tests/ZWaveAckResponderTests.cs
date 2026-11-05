@@ -5,6 +5,7 @@ using System;
 namespace OoBDev.ZWave.Tests;
 
 [TestClass]
+[TestCategory(TestCategories.Aeotec_ZStickS2)]
 public class ZWaveAckResponderTests
 {
     [TestMethod, TestCategory(TestCategories.Unit)]

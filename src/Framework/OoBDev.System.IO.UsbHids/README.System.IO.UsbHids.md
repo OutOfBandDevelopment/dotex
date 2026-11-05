@@ -37,6 +37,17 @@ var device = factory.GetDevice(new MyUsbDevice());
 var deviceNames = factory.GetDeviceNames();
 ```
 
+## Configured adapter
+
+`UsbHidEndpointDeviceAdapter` is an options-driven `IDeviceAdapter` (type `UsbHid`) for one HID device chosen by `UsbHidEndpointOptions`: `VendorId` and `ProductId` (decimal), then an optional `SerialNumber`, then an optional `DevicePath` (for devices that report no serial descriptor, such as the Velleman K8055), with `ReadTimeoutMs` and `WriteTimeoutMs`. Reports are read on a dedicated thread into a channel (`UsbHidReadStream`) and pumped into `Input`; `Output` writes one report per flush, and an empty write is ignored.
+
+```csharp
+services.AddUsbHidEndpointDeviceAdapter();
+services.Configure<UsbHidEndpointOptions>(o => { o.VendorId = 0x1915; o.ProductId = 0xAFDA; });
+```
+
+`IUsbHidDiscovery` (`SystemUsbHidDiscovery`) lists connected devices as `UsbHidDeviceDescriptor`. `IUsbHidDevice` and `IUsbHidDeviceFactory` are the test seams; the adapter is unit tested against a pipe-backed fake, and hardware tests are not part of this library.
+
 ## License
 
 See repository license file for details.

@@ -36,12 +36,13 @@ Which test projects need which service. A test project that appears here must ma
 | `OoBDev.Amazon.Sqs.Tests` | Moto |
 | `OoBDev.Microsoft.Azure.ServiceBus.Tests` | Service Bus emulator (and its SQL Server) |
 | `OoBDev.RabbitMQ.Tests` | RabbitMQ |
+| `OoBDev.System.IO.Mqtt.Tests`, `OoBDev.System.IO.Brokers.Tests`, `OoBDev.System.IO.Tcp.Tests`, `OoBDev.DevTerm.Core.Tests` | Mosquitto, RabbitMQ (AMQP, STOMP, TLS), ser2net |
 | `OoBDev.MailKit.Tests` | smtp4dev |
 | `OoBDev.Apache.Tika.Tests`, `OoBDev.Documents.Tests` (conversion), `OoBDev.Example.Tests` (document conversion) | Apache Tika |
 | `OoBDev.Keycloak.Tests` | Keycloak |
 | `OoBDev.SBert.Tests`, `OoBDev.SBert.AllMiniLmL6V2.Tests` | SBert |
 | `OoBDev.Ollama.Tests` | Ollama |
-| `OoBDev.OpenTelemetry.Tests` | Aspire dashboard |
+| `OoBDev.Telemetry.Tests` | Aspire dashboard |
 | `OoBDev.Onnx.*.Tests` | None (models download into the shared hub cache) |
 
 Azurite has a stack entry and test variables, but no test project uses it yet.
