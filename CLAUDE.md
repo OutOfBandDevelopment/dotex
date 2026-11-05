@@ -3,7 +3,7 @@
 **Last Updated:** 2026-10-30
 **Framework:** OoBDev (dotex) - Enterprise .NET Library Suite
 **Target:** net10.0
-**Current Work:** DevTerm parity (branch `dev/example-ui-tests`, see [status](docs/design/DevTermParity/status.md)) | Patterns discovery (branch `dev/patterns-discovery`, see below) | Design-first approach for SharedFramework migrations
+**Current Work:** DevTerm parity (branch `dev/hardware-report`, see [status](docs/design/DevTermParity/status.md)) | Patterns discovery (branch `dev/patterns-discovery`, see below) | Design-first approach for SharedFramework migrations
 
 ---
 
