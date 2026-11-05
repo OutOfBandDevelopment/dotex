@@ -9,7 +9,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.DevTerm;
 using OoBDev.DevTerm.DeviceManifests;
 using System.Text;
-using OoBDev.DevTerm.Logging;
 
 namespace OoBDev.DevTerm.DeviceManifests.Tests;
 

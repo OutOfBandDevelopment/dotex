@@ -12,9 +12,6 @@ using OoBDev.UiDefinitions;
 using OoBDev.UiDefinitions.Forms;
 
 using OoBDev.DevTerm.DeviceManifests;
-using OoBDev.DevTerm.DeviceManifests.Editing;
-using OoBDev.UiDefinitions;
-using OoBDev.UiDefinitions.Forms;
 namespace OoBDev.DevTerm.DeviceManifests.Tests;
 
 /// <summary>

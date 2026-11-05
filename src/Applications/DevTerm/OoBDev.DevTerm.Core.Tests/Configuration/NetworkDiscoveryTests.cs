@@ -11,7 +11,6 @@ using OoBDev.DevTerm;
 using OoBDev.DevTerm.Configuration.Discovery;
 
 using OoBDev.DevTerm.Configuration;
-using OoBDev.DevTerm.Configuration.Discovery;
 namespace OoBDev.DevTerm.Configuration.Tests;
 
 [TestClass]
