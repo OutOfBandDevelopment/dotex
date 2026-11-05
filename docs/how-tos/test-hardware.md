@@ -20,6 +20,7 @@ The physical devices attached to the owner's test machine, and where each one is
 | Korad KA3005P power supply | `COM6`, 9600 8N1 | `KORAD_KA3005P_SERIAL_PORT` | `*IDN?` answers `KORAD KA3005P V5.8 SN:03396447` (checked 2026-10-30) |
 | Korad KA6003P power supply | `COM7`, 9600 8N1 | `KORAD_KA6003P_SERIAL_PORT` | `*IDN?` answers `KORAD KA6003P V5.8 SN:50266913` (checked 2026-10-30) |
 | Aeotec Z-Stick (Z-Wave) | TCP `overwatch.local:4000` (was `COM13`, 115200 8N1) | `ZWAVE_TCP_HOST`, `ZWAVE_SERIAL_PORT`, `ZWAVE_SWITCH_NODE` | answered `Z-Wave 2.78` on `COM13`; node 2 is a Binary Switch relay. Over TCP on 2026-11-04 all three Hardware tests pass and the relay toggles; the bridge serves one client, so another program holding it makes it abort frames, and the test closes its connection before the next one opens |
+| SH-HC-08 BLE serial module (firmware SH-V1.251, named `DE-5000`, address 3414B5370DAC) | `COM4`, 9600 8N1 | `HC08_SERIAL_PORT` | BLE peripheral with a serial side; AT commands answer only while no BLE client is connected; service FFE0, characteristic FFE1; gives the BLE transport a loop-back (`Hc08BleRoundTripTests`) |
 | Radex One | `COM8`, 9600 8N1 | `RADEX_ONE_SERIAL_PORT` | plain virtual COM port |
 | Zoom H4n | `COM3`, 2400 8N1 via the h4n2rs485 adapter | `ZOOM_H4N_SERIAL_PORT` | remote port |
 | Rigol DS1102E oscilloscope | USB (USBTMC) | none; found by enumeration | shares VID:PID 0x1AB1:0x0588 with the DG1022 |
@@ -55,6 +56,7 @@ One project per call; two runs at once fight over the same port.
 
 - The Korad Hardware tests (`KoradSupplyTests` in `OoBDev.Scpi.Tests`) are read-only: identify, setpoint queries and the status byte. They never set a value or switch the output on. Verified against both supplies 2026-11-05 (COM6 and COM7, all 8 pass).
 - The DevTerm identify tests through the command-line mode (`RealHardwareCliTests` in `OoBDev.DevTerm.Tui.Tests`, category `Hardware`) use the parameters above, with each device terminator and byte delay from the table. 2026-11-05: the TDS2024 passes; the HP 34401A and both Tektronix 2230 scopes (192.168.0.107 to .109) are not on the network and are skipped by owner decision, since they use the same bridge and library as the TDS2024 (the 2230 differs only in its pre-SCPI command set). Rerun them when they are attached.
+- BLE loop-back through the HC-08 on COM4 passes both ways (BLE write to serial read, serial write to BLE notification), 2026-11-05.
 - Rigol USBTMC (DS1102E, DM3058, DG1022 via enumeration) and the DG1062Z over LXI pass (2026-11-05).
 
 ## Where each device's notes live

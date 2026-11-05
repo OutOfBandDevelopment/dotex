@@ -220,6 +220,7 @@ https://github.com/coverlet-coverage/coverlet/blob/fc7ec26dcaed8fedba880ff13c6f1
 		<Parameter name="ZWAVE_TCP_HOST" value="overwatch.local:4000" />
 		<Parameter name="RADEX_ONE_SERIAL_PORT" value="COM8" />
 		<Parameter name="ZOOM_H4N_SERIAL_PORT" value="COM3" />
+		<Parameter name="HC08_SERIAL_PORT" value="COM4" />
 
 		<!-- Hardware tests: bench instruments, see docs/how-tos/test-hardware.md -->
 		<Parameter name="KORAD_KA3005P_SERIAL_PORT" value="COM6" />
