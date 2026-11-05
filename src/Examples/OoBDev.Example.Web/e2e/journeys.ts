@@ -102,11 +102,11 @@ export const journeys: Journey[] = [
       {
         title: 'Ask a follow-up',
         narrative: 'The second request carries the context from the first, and the counter shows how much context is held.',
-        expect: ['Both turns are listed.', 'The context token counter is shown.'],
+        expect: ['Both exchanges are listed (a user and a model line each).', 'The context token counter is shown.'],
         run: async page => {
           await page.getByLabel('Prompt').fill('Explain photosynthesis');
           await press(page, 'Send');
-          await expect(page.locator('.turns p')).toHaveCount(2);
+          await expect(page.locator('.turns p')).toHaveCount(4);
           await expect(page.getByText('context tokens:')).toBeVisible();
         },
       },
