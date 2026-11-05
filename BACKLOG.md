@@ -31,6 +31,7 @@ Owner: all protocols and features of dev-term must exist here. Done means what d
 - [ ] Integration suite under 5 minutes (now 7 min 54 s; the no-flaky-tests goal is met; needs the full Docker stack for repeated timed runs, so it waits for a dedicated session): [suite-timing.md](docs/architecture/testing/integration/suite-timing.md).
 - [ ] `DevLocal` tests kept on purpose: Ollama (hard-coded LAN host, model pull and delete; revisit when the owner says Ollama testing can resume), USB HID (hardware), `PathEx`, `MergedXPathNavigator`, `ProjectTools.FixReadmes` (hard-coded `C:\Repos` paths), Markdown `TestMethod1` (writes files).
 - [ ] Add a live-integration doc page per new cloud service (only Groq exists; its key was revoked 2026-10-09, so runs wait for the owner).
+- [ ] Ser2NetWin (the Z-Stick TCP bridge) drops a second client without telling it why: [issue](docs/issues/ser2netwin-single-client-silent-reject.md).
 - [ ] Bench follow-up (2026-11-04): K8055 board not found (9 Hardware tests skip) ([results](docs/changes/2026-11-04.md#hardware-test-pass-on-the-bench-2026-11-04)).
 - [ ] Example journey "Hold a conversation with Ollama" fails on the `.turns p` count (expected 2, received 4); diagnose against the live Ollama service.
 - [ ] Example AppHost live journeys fail (Keycloak runs anonymously, telemetry does not reach the dashboard; decided 2026-11-04: Aspire runs Keycloak as a container and the API uses `IDENTITY_PROVIDER=Keycloak`): [apphost-live-journeys.md](docs/design/example-ui/apphost-live-journeys.md).
@@ -72,6 +73,7 @@ Scope rule: every BinaryDataDecoders feature is migrated; phases are priority or
 - [ ] Desired-state database tooling phase 0: bake-off of sqldef, pgschema and Atlas per `docs/design/DesiredStateDatabase/`; do it after the other backlog items (owner, 2026-10-29).
 - [ ] **Consolidate the migration projects** (owner, 2026-10-29): left are `device-decoding-migration-plan.md`, `device-parity.md` and the two `incoming-*` notes, which fold into the DevTerm and BinaryDataDecoders items when those finish ([inventory](docs/migration/README.md)).
 - ContractParser: keep as a specification; no work (decided 2026-10-09).
+- [ ] Migrate Ser2NetWin (`C:/repo/mine/proving-grounds/tools/Ser2NetWin`, the serial-to-TCP bridge that hosts the Z-Stick; Core and Cli, about 2,200 lines) into this repository as an application or tool (owner, 2026-11-04): write the migration plan table first (rule `layering-and-migration-plans`), review the whole project (readme, scripts, tests, plans) per the owner decision "migrate everything, including the surroundings", and fix [the single-client bug](docs/issues/ser2netwin-single-client-silent-reject.md) as part of it.
 
 ## 7. Documentation review (owner, 2026-10-28)
 
