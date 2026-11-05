@@ -20,6 +20,7 @@ namespace OoBDev.ZWave.Tests;
 internal sealed class ZWaveStick : IDisposable
 {
     private readonly SerialPort? _port;
+    private readonly IDeviceAdapter _adapter;
     private readonly CancellationTokenSource _cancel = new();
     private readonly ZWaveSession _session;
     private readonly List<ZWaveFrame> _frames = [];
@@ -27,6 +28,7 @@ internal sealed class ZWaveStick : IDisposable
     private ZWaveStick(SerialPort? port, IDeviceAdapter adapter)
     {
         _port = port;
+        _adapter = adapter;
         var device = new StreamDevice<ZWaveFrame>(adapter, new ZWaveDevice(), minimumTransmissionDelay: 50, token: _cancel.Token);
         _session = new ZWaveSession(device);
         _session.FrameReceived += (_, frame) =>
@@ -118,7 +120,10 @@ internal sealed class ZWaveStick : IDisposable
         Thread.Sleep(500); // lets the last ACK leave the queue, or the stick retransmits into the next test
         _cancel.Cancel();
         _session.Dispose();
+        _adapter.DisposeAsync().AsTask().GetAwaiter().GetResult();
         _port?.Dispose();
         _cancel.Dispose();
+        if (_port is null)
+            Thread.Sleep(3000); // the serial-to-Ethernet bridge serves one client and is slow to release a closed connection
     }
 }

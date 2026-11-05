@@ -19,7 +19,7 @@ The physical devices attached to the owner's test machine, and where each one is
 |---|---|---|---|
 | Korad KA3005P power supply | `COM6`, 9600 8N1 | `KORAD_KA3005P_SERIAL_PORT` | `*IDN?` answers `KORAD KA3005P V5.8 SN:03396447` (checked 2026-10-30) |
 | Korad KA6003P power supply | `COM7`, 9600 8N1 | `KORAD_KA6003P_SERIAL_PORT` | `*IDN?` answers `KORAD KA6003P V5.8 SN:50266913` (checked 2026-10-30) |
-| Aeotec Z-Stick (Z-Wave) | TCP `overwatch.local:4000` (was `COM13`, 115200 8N1) | `ZWAVE_TCP_HOST`, `ZWAVE_SERIAL_PORT`, `ZWAVE_SWITCH_NODE` | answered `Z-Wave 2.78` on `COM13`; node 2 is a Binary Switch relay. Over TCP on 2026-11-04 the bridge accepts the connection, then aborts it when a frame is written, so the three Hardware tests fail with no reply |
+| Aeotec Z-Stick (Z-Wave) | TCP `overwatch.local:4000` (was `COM13`, 115200 8N1) | `ZWAVE_TCP_HOST`, `ZWAVE_SERIAL_PORT`, `ZWAVE_SWITCH_NODE` | answered `Z-Wave 2.78` on `COM13`; node 2 is a Binary Switch relay. Over TCP on 2026-11-04 all three Hardware tests pass and the relay toggles; the bridge serves one client, so another program holding it makes it abort frames, and the test closes its connection before the next one opens |
 | Radex One | `COM8`, 9600 8N1 | `RADEX_ONE_SERIAL_PORT` | plain virtual COM port |
 | Zoom H4n | `COM3`, 2400 8N1 via the h4n2rs485 adapter | `ZOOM_H4N_SERIAL_PORT` | remote port |
 | Rigol DS1102E oscilloscope | USB (USBTMC) | none; found by enumeration | shares VID:PID 0x1AB1:0x0588 with the DG1022 |
