@@ -65,7 +65,7 @@ Each task section should include:
 
 ## By day
 
-- [2026-11-04](2026-11-04.md): 31 task(s)
+- [2026-11-04](2026-11-04.md): 32 task(s)
 - [2026-11-03](2026-11-03.md): 4 task(s)
 - [2026-10-30](2026-10-30.md): 33 task(s)
 - [2026-10-29](2026-10-29.md): 98 task(s)
@@ -484,6 +484,7 @@ Each task section should include:
 - [Drawing on SkiaSharp (2026-11-03)](2026-11-03.md#drawing-on-skiasharp-2026-11-03) - Code39, MultiScaleTile and PngPack on SkiaSharp; no System.Drawing.Common, tests run on any platform
 - [Applications layout (2026-11-04)](2026-11-04.md#applications-layout-2026-11-04) - the 13 DevTerm projects moved under src/Applications/DevTerm/
 - [Tui guide determinism (2026-11-04)](2026-11-04.md#tui-guide-determinism-2026-11-04) - Tui tests no longer rewrite the manifest-editor and plugin-approval guide images
+- [Flaky tests fixed](2026-11-04.md#flaky-tests-fixed) - StreamDevice cancellation race and the CGI latency gate
 - [Bench Hardware tests (2026-11-04)](2026-11-04.md#bench-hardware-tests-2026-11-04) - Korad supply tests and the DevTerm CLI identify tests on the shared bench parameters
 - [Coding-standards tests (2026-11-04)](2026-11-04.md#coding-standards-tests-2026-11-04) - repository-wide test category check; two untagged or double-tagged test classes fixed
 - [DevTerm containers wiring (2026-11-04)](2026-11-04.md#devterm-containers-wired-into-the-integration-stack-2026-11-04) - mosquitto, ser2net, loopback-device and RabbitMQ STOMP/TLS in the integration stack
