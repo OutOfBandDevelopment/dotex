@@ -73,13 +73,13 @@ Live answers from the language model vary, so live runs are for verification; co
 
 | Path | Content |
 | --- | --- |
-| `docs/example/user-guide/<id>.md` | Guide |
-| `docs/example/user-guide/images/<id>/NN-step.png` | Screenshots |
-| `docs/example/runbooks/<id>.md` | Run book: purpose, verification and troubleshooting |
-| `docs/example/specs/<id>.md` | Specification (acceptance criteria) |
-| `docs/example/features.md` | Capability catalog with why to use each |
-| `docs/example/specs/<id>.md` | Spec |
-| `docs/example/*/README.md` | Indexes |
+| `docs/applications/example/user-guide/<id>.md` | Guide |
+| `docs/applications/example/user-guide/images/<id>/NN-step.png` | Screenshots |
+| `docs/applications/example/runbooks/<id>.md` | Run book: purpose, verification and troubleshooting |
+| `docs/applications/example/specs/<id>.md` | Specification (acceptance criteria) |
+| `docs/applications/example/features.md` | Capability catalog with why to use each |
+| `docs/applications/example/specs/<id>.md` | Spec |
+| `docs/applications/example/*/README.md` | Indexes |
 
 Set `E2E_DOCS_DIR` to write somewhere else.
 

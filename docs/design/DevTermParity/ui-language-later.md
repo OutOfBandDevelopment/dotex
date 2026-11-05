@@ -21,3 +21,5 @@ Time-boxed. If one gets too complex, native UIs per front end are an acceptable 
 1. Definition-driven Blazor components as a Razor class library that takes a `UiDefinition`, a values source and a command callback.
 2. The same components as custom elements for Vue, React and Angular pages.
 3. A small JS renderer over the published definition and schema.
+
+**Decision (owner, 2026-11-04):** the device projects get an explicit Example panel per device family (not only DevTerm as the reference), and every control set built for Blazor, WPF, Tui or other hosts gets a small control-example app (controls only; the framework itself is demoed by the existing Example app).

@@ -36,4 +36,4 @@ By hand, in the example web application at `/operations/telemetry`:
 | No traces yet | Nothing has called the API since it started | Use another screen, then refresh |
 | The dashboard could not be read | The API cannot reach the dashboard or the API key is wrong | Check Telemetry__DashboardUrl and Telemetry__ApiKey in the compose environment |
 
-Related framework features: OoBDev.Telemetry (OTLP export); Aspire dashboard telemetry API.
+Related framework features: OoBDev.OpenTelemetry (OTLP export); Aspire dashboard telemetry API.

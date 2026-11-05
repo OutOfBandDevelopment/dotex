@@ -37,11 +37,11 @@ The first start downloads images and the Ollama models, which takes a while.
 | `smtp4dev` | web 7777, SMTP 25, IMAP 143 | `TEST_PORT_SMTP_WEB`, `TEST_PORT_SMTP`, `TEST_PORT_IMAP` | Communications |
 | `rabbitmq` | AMQP 5673, management 15672 | `TEST_PORT_RABBITMQ`, `TEST_PORT_RABBITMQ_MGMT` | Queues |
 
-Every host port of the test stack can be overridden with `TEST_PORT_<NAME>`; see [the integration test infrastructure](../architecture/testing/integration/README.md). The scripts pick the Keycloak and Ollama ports above so the stack starts next to a locally installed Keycloak or Ollama.
+Every host port of the test stack can be overridden with `TEST_PORT_<NAME>`; see [the integration test infrastructure](../../architecture/testing/integration/README.md). The scripts pick the Keycloak and Ollama ports above so the stack starts next to a locally installed Keycloak or Ollama.
 
 ## Signing in
 
-Sign-in is on by default. Use the sample users in [dev-users.md](../../containers/example/keycloak/dev-users.md) (for example `ada` / `ada`).
+Sign-in is on by default. Use the sample users in [dev-users.md](../../../containers/example/keycloak/dev-users.md) (for example `ada` / `ada`).
 
 ## Optional settings
 

@@ -2,8 +2,8 @@ import { mkdirSync, rmSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import type { Journey } from './journey';
 
-/** Where the generated guides, specs and screenshots go (repo root docs/example). */
-export const docsRoot = process.env.E2E_DOCS_DIR ?? resolve(process.cwd(), '../../../docs/example');
+/** Where the generated guides, specs and screenshots go (repo root docs/applications/example). */
+export const docsRoot = process.env.E2E_DOCS_DIR ?? resolve(process.cwd(), '../../../docs/applications/example');
 
 export interface ShotRecord { step: number; file: string }
 
