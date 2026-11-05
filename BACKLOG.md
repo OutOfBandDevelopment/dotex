@@ -47,6 +47,7 @@ Owner: all protocols and features of dev-term must exist here. Done means what d
 
 A clean rebuild (2026-10-22) has no analyzer warnings. Analyzers are wired from `src/Directory.Build.props` (`OoBDev.Analyzers` OOB0001 to OOB0003, NetAnalyzers Recommended, Meziantou); `Tools` and `Examples` are exempt from MA0004 and MA0048 in `src/.editorconfig`.
 
+- [ ] Ser2NetWin projects suppress analyzer warnings that need real refactors (`NoWarn` in `OoBDev.System.IO.Ports.Bridge` and `OoBDev.Ser2NetWin.Cli`): `[LoggerMessage]` logging (CA1848, CA1873), `TimeProvider` instead of `DateTime.UtcNow` (OOB0001), `BridgeWorker` disposable and `Lock` (CA1001, MA0158), long methods (MA0051), culture and comparer overloads. Fix them, then drop the `NoWarn`. Docs: [ser2netwin](docs/applications/ser2netwin/README.md).
 - [ ] Rules still at `suggestion` in `src/.editorconfig`: flip each to warning after fixing its backlog. Kept on purpose: MA0026 (about 50 TODO comments), MA0046 (3, `EventHandler<TMessage>` on the device interfaces), MA0061 (3, DEBUG-only required parameters), CA1710, CA1720, CA1708 (domain names).
 
 ## 6. Migrations
@@ -67,7 +68,6 @@ Scope rule: every BinaryDataDecoders feature is migrated; phases are priority or
 - [ ] Desired-state database tooling phase 0: bake-off of sqldef, pgschema and Atlas per `docs/design/DesiredStateDatabase/`; do it after the other backlog items (owner, 2026-10-29).
 - [ ] **Consolidate the migration projects** (owner, 2026-10-29): left are `device-decoding-migration-plan.md`, `device-parity.md` and the two `incoming-*` notes, which fold into the DevTerm and BinaryDataDecoders items when those finish ([inventory](docs/migration/README.md)).
 - ContractParser: keep as a specification; no work (decided 2026-10-09).
-- [ ] Migrate Ser2NetWin (`C:/repo/mine/proving-grounds/tools/Ser2NetWin`, the serial-to-TCP bridge that hosts the Z-Stick; Core and Cli, about 2,200 lines) into this repository as an application or tool (owner, 2026-11-04): write the migration plan table first (rule `layering-and-migration-plans`), review the whole project (readme, scripts, tests, plans) per the owner decision "migrate everything, including the surroundings", and the [single-client bug](docs/issues/ser2netwin-single-client-silent-reject.md) is already fixed in source 0.0.4 and comes with it. Plan written: [migration-plan.md](docs/design/Ser2NetWin/migration-plan.md); layering decided (owner, 2026-11-04): option A, bridge core as Framework `OoBDev.System.IO.Ports.Bridge`, CLI as an application, three packages added to central packages.
 
 ## 7. Documentation review (owner, 2026-10-28)
 

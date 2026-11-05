@@ -19,6 +19,10 @@
     <Project Path="Applications/DevTerm/OoBDev.DevTerm.Wpf.Tests/OoBDev.DevTerm.Wpf.Tests.csproj" />
     <Project Path="Applications/DevTerm/OoBDev.DevTerm.Wpf/OoBDev.DevTerm.Wpf.csproj" />
   </Folder>
+  <Folder Name="/Applications/Ser2NetWin/">
+    <Project Path="Applications/Ser2NetWin/OoBDev.Ser2NetWin.Cli.Tests/OoBDev.Ser2NetWin.Cli.Tests.csproj" />
+    <Project Path="Applications/Ser2NetWin/OoBDev.Ser2NetWin.Cli/OoBDev.Ser2NetWin.Cli.csproj" />
+  </Folder>
   <Folder Name="/Common/">
     <Project Path="Common/OoBDev.Common.Abstractions/OoBDev.Common.Abstractions.csproj" />
     <Project Path="Common/OoBDev.Common.AspNetCore/OoBDev.Common.AspNetCore.csproj" />
@@ -253,6 +257,8 @@
     <Project Path="Framework/OoBDev.System.IO.Mqtt.Tests/OoBDev.System.IO.Mqtt.Tests.csproj" />
     <Project Path="Framework/OoBDev.System.IO.Mqtt/OoBDev.System.IO.Mqtt.csproj" />
     <Project Path="Framework/OoBDev.System.IO.Tcp/OoBDev.System.IO.Tcp.csproj" />
+    <Project Path="Framework/OoBDev.System.IO.Ports.Bridge.Tests/OoBDev.System.IO.Ports.Bridge.Tests.csproj" />
+    <Project Path="Framework/OoBDev.System.IO.Ports.Bridge/OoBDev.System.IO.Ports.Bridge.csproj" />
     <Project Path="Framework/OoBDev.System.IO.Ports.Tests/OoBDev.System.IO.Ports.Tests.csproj" />
     <Project Path="Framework/OoBDev.System.IO.Ports/OoBDev.System.IO.Ports.csproj" />
     <Project Path="Framework/OoBDev.System.IO.UsbHids/OoBDev.System.IO.UsbHids.csproj" />

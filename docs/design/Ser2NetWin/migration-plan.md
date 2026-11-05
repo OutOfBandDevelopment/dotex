@@ -1,6 +1,6 @@
 # Ser2NetWin migration plan
 
-Status: **plan confirmed by the owner 2026-11-04 (option A: Framework bridge core, application CLI, the three packages added)** | Source: `C:\repo\mine\proving-grounds\tools\Ser2NetWin` (git, version 0.0.4, about 2,300 lines in `src`, 10 test classes) | Rule: `layering-and-migration-plans`
+Status: **done 2026-11-05** (moved as planned; map and CLI guide in `docs/applications/ser2netwin/`) | plan confirmed by the owner 2026-11-04 (option A: Framework bridge core, application CLI, the three packages added)** | Source: `C:\repo\mine\proving-grounds\tools\Ser2NetWin` (git, version 0.0.4, about 2,300 lines in `src`, 10 test classes) | Rule: `layering-and-migration-plans`
 
 Ser2NetWin bridges Windows COM ports to TCP (raw or RFC 2217, optionally advertised over mDNS). It hosts the Aeotec Z-Stick for the Z-Wave Hardware tests and is a Windows-native stand-in for Linux `ser2net`.
 
@@ -13,7 +13,7 @@ Ser2NetWin bridges Windows COM ports to TCP (raw or RFC 2217, optionally adverti
 | `tests/OoBDev.Ser2NetWin.Tests` | MSTest: bridge worker, client connection, CLI, config store and validator, mDNS plan, RFC 2217 session and bridge; `HardwareConnectionTests` against a real COM port; fake serial devices in `TestKit/` |
 | Surroundings | `README.md` (usage, settings, mDNS), `docs/bugs/single-client-silent-reject.md` (fixed in 0.0.4), `scripts/publish.ps1` (single-file self-contained publish), `Directory.Build.props`, solution file. No `.claude`, TODO, BACKLOG or plans folder |
 
-The single-client bug in [the issue](../../issues/ser2netwin-single-client-silent-reject.md) is already fixed in 0.0.4 of the source (reason line written to the rejected client, keep-alive, write timeout, reconnect grace, `ReplaceExistingClient`). The migration brings the fix; no new code is needed for it.
+The single-client bug in [the bug report](../../applications/ser2netwin/bugs/single-client-silent-reject.md) is already fixed in 0.0.4 of the source (reason line written to the rejected client, keep-alive, write timeout, reconnect grace, `ReplaceExistingClient`). The migration brings the fix; no new code is needed for it.
 
 ## Plan table
 

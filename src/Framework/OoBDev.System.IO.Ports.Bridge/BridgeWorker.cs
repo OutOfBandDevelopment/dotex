@@ -1,0 +1,463 @@
+using System.Net;
+using System.Net.Sockets;
+using Microsoft.Extensions.Logging;
+
+namespace OoBDev.System.IO.Ports.Bridge;
+
+/// <summary>
+/// One serial device bridged to one TCP listener. The serial port stays open while no
+/// client is connected (and is reopened after failures); one TCP client at a time is served.
+/// </summary>
+public sealed class BridgeWorker
+{
+    private const int BufferSize = 4096;
+
+    private readonly BridgeOptions _options;
+    private readonly ISerialPortFactory _serialFactory;
+    private readonly ILogger _logger;
+    private readonly TimeSpan _retryInterval;
+    private readonly object _gate = new();
+    private readonly IServiceAdvertiser? _advertiser;
+    private readonly SemaphoreSlim _writeLock = new(1, 1);
+
+    private TcpListener? _listener;
+    private ISerialLink? _link;
+    private TcpClient? _client;
+    private Task _clientTask = Task.CompletedTask;
+    private Rfc2217Session? _session;
+    private IDisposable? _advertisement;
+    private EndPoint? _clientRemote;
+    private DateTime _clientSince;
+
+    public BridgeWorker(BridgeOptions options, ISerialPortFactory serialFactory, ILogger logger, TimeSpan retryInterval, IServiceAdvertiser? advertiser = null)
+    {
+        _advertiser = advertiser;
+        _options = options;
+        _serialFactory = serialFactory;
+        _logger = logger;
+        _retryInterval = retryInterval;
+    }
+
+    public BridgeOptions Options => _options;
+
+    /// <summary>How long a new connection waits for the previous client to finish releasing the port before it is refused.</summary>
+    public TimeSpan ClientReleaseGrace { get; init; } = TimeSpan.FromSeconds(1);
+
+    /// <summary>A write to the client that makes no progress for this long drops the client, so a stalled peer cannot block the serial reader.</summary>
+    public TimeSpan ClientWriteTimeout { get; init; } = TimeSpan.FromSeconds(10);
+
+    /// <summary>The port the listener is actually bound to (useful when TcpPort is 0).</summary>
+    public int BoundPort => ((IPEndPoint)(_listener ?? throw new InvalidOperationException("Not started.")).LocalEndpoint).Port;
+
+    public bool IsSerialOpen
+    {
+        get { lock (_gate) { return _link is not null; } }
+    }
+
+    public bool IsClientConnected
+    {
+        get { lock (_gate) { return _client is not null; } }
+    }
+
+    /// <summary>Binds the TCP listener. Throws if the port is unavailable.</summary>
+    public void Start()
+    {
+        if (_listener is not null)
+        {
+            return;
+        }
+
+        var listener = new TcpListener(IPAddress.Parse(_options.BindAddress), _options.TcpPort);
+        listener.Start();
+        _listener = listener;
+        _logger.LogInformation("{Bridge}: listening on {Endpoint} ({Protocol})", _options.ComPort, listener.LocalEndpoint, _options.Protocol);
+
+        if (_advertiser is not null)
+        {
+            try
+            {
+                _advertisement = _advertiser.Advertise(_options, ((IPEndPoint)listener.LocalEndpoint).Port);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "{Bridge}: mDNS advertisement failed; bridge keeps running without it", _options.ComPort);
+            }
+        }
+    }
+
+    public async Task RunAsync(CancellationToken cancellationToken)
+    {
+        Start();
+        var listener = _listener!;
+        var serialTask = RunSerialAsync(cancellationToken);
+
+        try
+        {
+            while (true)
+            {
+                var client = await listener.AcceptTcpClientAsync(cancellationToken).ConfigureAwait(false);
+                await AcceptAsync(client, cancellationToken).ConfigureAwait(false);
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            // Normal shutdown.
+        }
+        finally
+        {
+            listener.Stop();
+            _advertisement?.Dispose();
+            await serialTask.ConfigureAwait(false);
+            await _clientTask.ConfigureAwait(false);
+        }
+    }
+
+    /// <summary>Applies keep-alive (a vanished peer is noticed in about a minute) and disables Nagle.</summary>
+    public static void ConfigureClientSocket(Socket socket)
+    {
+        socket.NoDelay = true;
+        try
+        {
+            socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
+            socket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveTime, 30);
+            socket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveInterval, 10);
+            socket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveRetryCount, 3);
+        }
+        catch (Exception ex) when (ex is SocketException or PlatformNotSupportedException)
+        {
+            // Keep-alive tuning is best effort; the default OS keep-alive still applies where enabled.
+        }
+    }
+
+    private async Task AcceptAsync(TcpClient client, CancellationToken cancellationToken)
+    {
+        try
+        {
+            ConfigureClientSocket(client.Client);
+            if (await TryClaimAsync(client, cancellationToken).ConfigureAwait(false))
+            {
+                return;
+            }
+
+            await RejectAsync(client, cancellationToken).ConfigureAwait(false);
+        }
+        catch (Exception ex) when (ex is IOException or SocketException or ObjectDisposedException or InvalidOperationException)
+        {
+            _logger.LogDebug(ex, "{Bridge}: dropped a connection while accepting it", _options.ComPort);
+            client.Dispose();
+        }
+    }
+
+    /// <summary>
+    /// Makes the client the active one. If another client holds the port, either disconnects it
+    /// (ReplaceExistingClient) or gives it a short grace period to finish releasing, which covers
+    /// a client that closed and reconnected immediately.
+    /// </summary>
+    private async Task<bool> TryClaimAsync(TcpClient client, CancellationToken cancellationToken)
+    {
+        var deadline = DateTime.UtcNow + ClientReleaseGrace;
+        var kicked = false;
+
+        while (true)
+        {
+            TcpClient? holder = null;
+            lock (_gate)
+            {
+                if (_client is null)
+                {
+                    _client = client;
+                    _clientRemote = client.Client.RemoteEndPoint;
+                    _clientSince = DateTime.UtcNow;
+                    _clientTask = RunClientAsync(client, cancellationToken);
+                    return true;
+                }
+
+                if (_options.ReplaceExistingClient && !kicked)
+                {
+                    holder = _client;
+                    kicked = true;
+                    _logger.LogInformation("{Bridge}: replacing client {Old} with {New}", _options.ComPort, _clientRemote, client.Client.RemoteEndPoint);
+                }
+            }
+
+            holder?.Dispose();
+
+            if (DateTime.UtcNow >= deadline)
+            {
+                return false;
+            }
+
+            await Task.Delay(10, cancellationToken).ConfigureAwait(false);
+        }
+    }
+
+    private async Task RejectAsync(TcpClient client, CancellationToken cancellationToken)
+    {
+        string holder;
+        lock (_gate)
+        {
+            holder = _clientRemote is null
+                ? "another client"
+                : $"{_clientRemote} for {(DateTime.UtcNow - _clientSince).TotalSeconds:0}s";
+        }
+
+        _logger.LogWarning("{Bridge}: rejected extra client {Remote}; port is held by {Holder}", _options.ComPort, client.Client.RemoteEndPoint, holder);
+
+        // Raw bridges can carry a plain-text reason; RFC 2217 clients expect telnet framing, so they just see the close.
+        if (_options.Protocol == BridgeProtocol.Raw)
+        {
+            try
+            {
+                using var timeout = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+                timeout.CancelAfter(TimeSpan.FromSeconds(2));
+                var message = global::System.Text.Encoding.ASCII.GetBytes($"ser2net: port busy, held by {holder}\r\n");
+                await client.GetStream().WriteAsync(message, timeout.Token).ConfigureAwait(false);
+                client.Client.Shutdown(SocketShutdown.Send);
+            }
+            catch (Exception ex) when (ex is IOException or SocketException or ObjectDisposedException or OperationCanceledException)
+            {
+                // The peer is already gone; closing is all that is left.
+            }
+        }
+
+        client.Dispose();
+    }
+
+    private async Task RunClientAsync(TcpClient client, CancellationToken cancellationToken)
+    {
+        var remote = client.Client.RemoteEndPoint;
+        _logger.LogInformation("{Bridge}: client connected {Remote}", _options.ComPort, remote);
+        var buffer = new byte[BufferSize];
+        Rfc2217Session? session = null;
+        using var clientCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        Task modemTask = Task.CompletedTask;
+
+        try
+        {
+            var stream = client.GetStream();
+
+            if (_options.Protocol == BridgeProtocol.Rfc2217)
+            {
+                session = new Rfc2217Session(_options, GetControl);
+                lock (_gate)
+                {
+                    _session = session;
+                }
+
+                await WriteToClientAsync(client, session.GetGreeting(), cancellationToken).ConfigureAwait(false);
+                modemTask = PollModemAsync(client, session, clientCts.Token);
+            }
+
+            while (true)
+            {
+                var read = await stream.ReadAsync(buffer, cancellationToken).ConfigureAwait(false);
+                if (read == 0)
+                {
+                    break;
+                }
+
+                if (session is null)
+                {
+                    await WriteToSerialAsync(buffer.AsMemory(0, read), cancellationToken).ConfigureAwait(false);
+                    continue;
+                }
+
+                var result = session.Process(buffer.AsSpan(0, read));
+                if (result.Reply.Length > 0)
+                {
+                    await WriteToClientAsync(client, result.Reply, cancellationToken).ConfigureAwait(false);
+                }
+
+                if (result.SerialData.Length > 0)
+                {
+                    await WriteToSerialAsync(result.SerialData, cancellationToken).ConfigureAwait(false);
+                }
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            // Shutdown.
+        }
+        catch (Exception ex) when (ex is IOException or SocketException or ObjectDisposedException or InvalidOperationException)
+        {
+            _logger.LogDebug(ex, "{Bridge}: client connection error", _options.ComPort);
+        }
+        finally
+        {
+            await clientCts.CancelAsync().ConfigureAwait(false);
+            await modemTask.ConfigureAwait(false);
+
+            session?.Reset();
+            client.Dispose();
+
+            lock (_gate)
+            {
+                if (ReferenceEquals(_client, client))
+                {
+                    _client = null;
+                    _clientRemote = null;
+                    _session = null;
+                }
+            }
+
+            _logger.LogInformation("{Bridge}: client disconnected {Remote}", _options.ComPort, remote);
+        }
+    }
+
+    private ISerialControl? GetControl()
+    {
+        lock (_gate)
+        {
+            return _link;
+        }
+    }
+
+    private async Task WriteToClientAsync(TcpClient client, ReadOnlyMemory<byte> data, CancellationToken cancellationToken)
+    {
+        using var timeout = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        timeout.CancelAfter(ClientWriteTimeout);
+        try
+        {
+            await _writeLock.WaitAsync(timeout.Token).ConfigureAwait(false);
+            try
+            {
+                await client.GetStream().WriteAsync(data, timeout.Token).ConfigureAwait(false);
+            }
+            finally
+            {
+                _writeLock.Release();
+            }
+        }
+        catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested)
+        {
+            throw new IOException($"Client did not accept data within {ClientWriteTimeout.TotalSeconds:0.#}s.");
+        }
+    }
+
+    private async Task PollModemAsync(TcpClient client, Rfc2217Session session, CancellationToken cancellationToken)
+    {
+        using var timer = new PeriodicTimer(TimeSpan.FromMilliseconds(250));
+        try
+        {
+            while (await timer.WaitForNextTickAsync(cancellationToken).ConfigureAwait(false))
+            {
+                if (session.PollModemState() is { } frame)
+                {
+                    await WriteToClientAsync(client, frame, cancellationToken).ConfigureAwait(false);
+                }
+            }
+        }
+        catch (Exception ex) when (ex is OperationCanceledException or IOException or SocketException or ObjectDisposedException or InvalidOperationException)
+        {
+            // Client left or shutdown; the read loop handles cleanup.
+        }
+    }
+
+    private async Task WriteToSerialAsync(ReadOnlyMemory<byte> data, CancellationToken cancellationToken)
+    {
+        ISerialLink? link;
+        lock (_gate)
+        {
+            link = _link;
+        }
+
+        if (link is null)
+        {
+            _logger.LogDebug("{Bridge}: serial port closed, dropped {Count} bytes from client", _options.ComPort, data.Length);
+            return;
+        }
+
+        try
+        {
+            await link.Stream.WriteAsync(data, cancellationToken).ConfigureAwait(false);
+        }
+        catch (Exception ex) when (ex is IOException or InvalidOperationException or ObjectDisposedException or UnauthorizedAccessException)
+        {
+            // The serial loop notices the dead port on its next read and reopens it.
+            _logger.LogWarning(ex, "{Bridge}: serial write failed, dropped {Count} bytes", _options.ComPort, data.Length);
+        }
+    }
+
+    private async Task RunSerialAsync(CancellationToken cancellationToken)
+    {
+        var buffer = new byte[BufferSize];
+
+        while (!cancellationToken.IsCancellationRequested)
+        {
+            try
+            {
+                using var link = _serialFactory.Open(_options);
+                using var registration = cancellationToken.Register(link.Dispose);
+
+                lock (_gate)
+                {
+                    _link = link;
+                }
+
+                _logger.LogInformation("{Bridge}: serial port open ({Settings})", _options.ComPort, _options);
+
+                while (true)
+                {
+                    var read = await link.Stream.ReadAsync(buffer, cancellationToken).ConfigureAwait(false);
+                    if (read == 0)
+                    {
+                        throw new EndOfStreamException("Serial stream ended.");
+                    }
+
+                    await ForwardToClientAsync(buffer.AsMemory(0, read), cancellationToken).ConfigureAwait(false);
+                }
+            }
+            catch (Exception) when (cancellationToken.IsCancellationRequested)
+            {
+                break;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning("{Bridge}: serial port unavailable ({Message}); retrying in {Seconds:0.#}s", _options.ComPort, ex.Message, _retryInterval.TotalSeconds);
+            }
+            finally
+            {
+                lock (_gate)
+                {
+                    _link = null;
+                }
+            }
+
+            try
+            {
+                await Task.Delay(_retryInterval, cancellationToken).ConfigureAwait(false);
+            }
+            catch (OperationCanceledException)
+            {
+                break;
+            }
+        }
+    }
+
+    private async Task ForwardToClientAsync(ReadOnlyMemory<byte> data, CancellationToken cancellationToken)
+    {
+        TcpClient? client;
+        Rfc2217Session? session;
+        lock (_gate)
+        {
+            client = _client;
+            session = _session;
+        }
+
+        if (client is null)
+        {
+            return;
+        }
+
+        try
+        {
+            var payload = session is null ? data : Rfc2217Session.Escape(data);
+            await WriteToClientAsync(client, payload, cancellationToken).ConfigureAwait(false);
+        }
+        catch (Exception ex) when (ex is IOException or SocketException or InvalidOperationException or ObjectDisposedException)
+        {
+            _logger.LogDebug(ex, "{Bridge}: dropping client after write failure", _options.ComPort);
+            client.Dispose();
+        }
+    }
+}
