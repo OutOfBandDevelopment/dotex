@@ -31,7 +31,7 @@ dev-term `DevTerm.Wpf` is about 8,800 lines. Each slice is ported with view mode
 
 ## Test gaps
 
-- Tui: serial real-hardware tests (TCP is covered by `LoopbackDeviceCliIntegrationTests` against the stack's loopback-device, real devices by `RealHardwareCliTests`), an interactive Tui run (control panel, loopback chart and stream-monitor screenshots exist in the user guide).
+- Tui: an interactive run in a real console is the one gap (see BACKLOG.md); serial hardware tests exist (`RealHardwareSerialCliTests`), TCP is covered by `LoopbackDeviceCliIntegrationTests`, and the Web DevLocal suite passed on 2026-11-05 (57 passed, 1 skipped).
 - Web: the Playwright flows, screenshot and layout-review tests pass (55 run together); `image-mask sync` with `zones.json` keeps recaptures from churning the committed images.
 - Hardware: the USBTMC path (Rigol), LXI (DG1062Z), Korad serial, TDS2024, Z-Stick and the BLE loop-back through the HC-08 pass on the bench (2026-11-04 and 2026-11-05, see `docs/changes/2026-11-04.md`).
 
