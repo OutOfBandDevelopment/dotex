@@ -29,7 +29,9 @@
 		<ProjectReference Include="..\OoBDev.DacPacCompiler.Cli\OoBDev.DacPacCompiler.Cli.csproj" />
 		<ProjectReference Include="..\OoBDev.DocumentConverter.Cli\OoBDev.DocumentConverter.Cli.csproj" />
 		<ProjectReference Include="..\OoBDev.FileRagEngine.Cli\OoBDev.FileRagEngine.Cli.csproj" />
+		<ProjectReference Include="..\OoBDev.FixSourceLinks.Cli\OoBDev.FixSourceLinks.Cli.csproj" />
 		<ProjectReference Include="..\OoBDev.ImageMask.Cli\OoBDev.ImageMask.Cli.csproj" />
+		<ProjectReference Include="..\OoBDev.MigrationHelper.Cli\OoBDev.MigrationHelper.Cli.csproj" />
 		<ProjectReference Include="..\OoBDev.LlmCodeGen.Cli\OoBDev.LlmCodeGen.Cli.csproj" />
 		<ProjectReference Include="..\OoBDev.PackMan.Cli\OoBDev.PackMan.Cli.csproj" />
 		<ProjectReference Include="..\OoBDev.TemplateEngine.Cli\OoBDev.TemplateEngine.Cli.csproj" />

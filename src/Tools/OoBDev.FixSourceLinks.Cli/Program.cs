@@ -11,8 +11,23 @@ namespace OoBDev.FixSourceLinks.Cli;
 
 internal sealed class Program
 {
+    private const string Usage = """
+        oobdev-fixsourcelinks [--include <glob;glob>] [--exclude <glob;glob>] [--search <folder>] [--target <folder>]
+          Rewrites https links in the filename attributes of the matching XML files (for example coverage reports) to local paths under the target folder.
+          --include  semicolon-separated globs of the files to fix (nothing is changed without it)
+          --exclude  semicolon-separated globs to skip
+          --search   folder searched for the files (default: the current folder)
+          --target   folder the rewritten paths point into (default: the search folder)
+        """;
+
     private static void Main(string[] args)
     {
+        if (args.Any(a => a is "-h" or "--help" or "-?"))
+        {
+            Console.WriteLine(Usage);
+            return;
+        }
+
         var services = new ServiceCollection()
             .AddSingleton<IConfiguration>(_ => new ConfigurationBuilder()
                 .AddCommandLine(args)

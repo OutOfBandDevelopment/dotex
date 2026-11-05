@@ -69,6 +69,14 @@ public sealed class ToolGuideTests
         HelpGuideAsync("OoBDev.DacPacCompiler.Cli", "oobdev-dacpac", "Builds a DACPAC from a SQL CLR assembly.", "--sqlclr");
 
     [TestMethod]
+    public Task FixSourceLinks_Help_WritesTheGuideAsync() =>
+        HelpGuideAsync("OoBDev.FixSourceLinks.Cli", "oobdev-fixsourcelinks", "Rewrites https links in XML reports to local paths.", "--include");
+
+    [TestMethod]
+    public Task MigrationHelper_Help_WritesTheGuideAsync() =>
+        HelpGuideAsync("OoBDev.MigrationHelper.Cli", "oobdev-migrationhelper", "Renames a project prefix in folder names, file names and file contents.", "--path");
+
+    [TestMethod]
     public Task LlmCodeGen_Help_WritesTheGuideAsync() =>
         HelpGuideAsync("OoBDev.LlmCodeGen.Cli", "oobdev-llmcodegen", "Sends the files of each folder to a language model with a template and writes the responses.", "--provider");
 
