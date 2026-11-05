@@ -24,7 +24,7 @@ public sealed class FormViewModel : ViewModelBase, IDisposable
     {
         Definition = definition ?? throw new ArgumentNullException(nameof(definition));
         _binding = binding ?? throw new ArgumentNullException(nameof(binding));
-        Sections = [.. definition.Sections.Select(s => new FormSectionViewModel(s, [.. s.Controls.Select(c => ControlViewModelFactory.Create(c, binding, colorPicker, s.Controls, confirm, preview))]))];
+        Sections = [.. definition.Sections.Select(s => new FormSectionViewModel(s, [.. s.Controls.Select(c => ControlViewModelFactory.Create(c, binding, colorPicker, s.Controls, confirm, preview))], binding))];
         LinkColorPickers(definition);
         _binding.Changed += OnModelChanged;
     }

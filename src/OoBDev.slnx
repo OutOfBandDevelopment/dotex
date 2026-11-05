@@ -41,6 +41,8 @@
       <Platform Project="AnyCPU" />
     </Project>
     <Project Path="Examples/OoBDev.Example.WebApi/OoBDev.Example.WebApi.csproj" />
+    <Project Path="Examples/OoBDev.Examples.Controls.Wpf.Tests/OoBDev.Examples.Controls.Wpf.Tests.csproj" />
+    <Project Path="Examples/OoBDev.Examples.Controls.Wpf/OoBDev.Examples.Controls.Wpf.csproj" />
   </Folder>
   <Folder Name="/Extensions/">
     <Project Path="Extensions/OoBDev.AspNetCore.Cgi.OpenApi.Tests/OoBDev.AspNetCore.Cgi.OpenApi.Tests.csproj" />

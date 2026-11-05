@@ -147,6 +147,35 @@ public sealed class FormViewModelTests
     }
 
     [TestMethod]
+    public void Section_OwnCondition_HidesTheWholeSectionWhileItFails()
+    {
+        // Stage
+        var model = new Model();
+        var definition = new UiDefinition
+        {
+            Name = "s",
+            Sections =
+            [
+                new UiSection
+                {
+                    Label = "Gated",
+                    VisibleWhen = new UiCondition { Id = nameof(Model.Advanced) },
+                    Controls = [new ToggleControl { Id = nameof(Model.Advanced), Label = "Advanced" }],
+                },
+            ],
+        };
+        using var form = new FormViewModel(definition, new FormBinding(model));
+        var hiddenBefore = !form.Sections[0].HasVisibleRows;
+
+        // Test
+        model.Advanced = true;
+
+        // Assert
+        Assert.IsTrue(hiddenBefore);
+        Assert.IsTrue(form.Sections[0].HasVisibleRows);
+    }
+
+    [TestMethod]
     public void Text_ValidAndInvalid_WritesOrReportsError()
     {
         // Stage
