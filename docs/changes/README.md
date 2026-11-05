@@ -65,7 +65,7 @@ Each task section should include:
 
 ## By day
 
-- [2026-11-04](2026-11-04.md): 26 task(s)
+- [2026-11-04](2026-11-04.md): 27 task(s)
 - [2026-11-03](2026-11-03.md): 4 task(s)
 - [2026-10-30](2026-10-30.md): 33 task(s)
 - [2026-10-29](2026-10-29.md): 98 task(s)
@@ -503,6 +503,7 @@ Each task section should include:
 - [Whole-solution restore (2026-11-04)](2026-11-04.md#whole-solution-restore-works-again) - aggregator no longer references the Windows-only Bluetooth project
 - [DevTerm device notes with the device libraries](2026-11-04.md#devterm-device-notes-live-with-the-device-libraries) - copies deleted, stale pointers repointed
 - [BinaryDataDecoders surroundings review (2026-11-04)](2026-11-04.md#binarydatadecoders-surroundings-review-2026-11-04) - bug reports kept as history, pipeline and GitHub items rejected with reasons
+- [WPF Notes section state (2026-11-04)](2026-11-04.md#wpf-notes-section-remembers-its-state) - the Notes expander remembers collapsed, shared with the Tui
 - [Shared FakeTransport (2026-11-03)](2026-11-03.md#shared-faketransport-2026-11-03) - four FakeTransport copies merged into OoBDev.DevTerm.TestUtilities
 - [Docs check for imported material (2026-11-03)](2026-11-03.md#docs-check-for-imported-material-2026-11-03) - orphaned files under `docs/applications` fail the docs tests; default scope widened
 - [DevTerm Web shell](2026-10-29.md#devterm-web-shell-and-connection-editor-2026-10-29) - OoBDev.DevTerm.Web (Blazor), connection editor view model, transport selection in AddDevTermFrontEnd (2026-10-29)

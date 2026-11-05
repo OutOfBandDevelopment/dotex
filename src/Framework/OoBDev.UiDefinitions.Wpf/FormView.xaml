@@ -95,7 +95,7 @@
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel>
             <ItemsControl ItemsSource="{Binding Sections}" />
-            <Expander Header="Notes" IsExpanded="True" Margin="0,0,0,8"
+            <Expander Header="Notes" IsExpanded="{Binding NotesExpanded, Mode=TwoWay}" Margin="0,0,0,8"
                       Visibility="{Binding HasNotes, Converter={StaticResource Visible}}">
                 <TextBlock Text="{Binding Notes}" TextWrapping="Wrap" Margin="12,4,4,2" />
             </Expander>
