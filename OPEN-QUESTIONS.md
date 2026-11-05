@@ -22,3 +22,16 @@ Where does Ser2NetWin go, and may it bring `Makaretu.Dns.Multicast.New`, `Spectr
 **Default:** A, not started; the plan waits for the answer.
 
 **Your answer:**
+
+### Q2 · 2026-11-04 · Example panels per device family and control-example apps
+
+You decided each device family gets an explicit Example panel and each control set (Blazor, WPF, Tui) gets a small control-example app. The design does not yet say where these live or what a device-family Example panel is. Detail: [ui-language-later.md](docs/design/DevTermParity/ui-language-later.md), [UiDefinitions](docs/design/UiDefinitions/README.md).
+
+**Options**
+- A (recommended): one `UiDefinition` sample per device family inside each device project's tests/samples folder (panel definition plus a fake device, no app), and one control-example app per host in `src/Examples/OoBDev.Examples.Controls.<Host>` showing every control with canned values. Smallest, keeps device projects free of UI references (layering), and the generated guides can screenshot the control apps.
+- B: an Example panel project per device family under `src/HardwareDevices`, referencing `OoBDev.UiDefinitions`. Closer to "explicit panel per device", but device libraries gain a UI-definition dependency and about ten new projects.
+- C: only the DevTerm reference panels now; control-example apps later. Least work; leaves the decision half done.
+
+**Default:** none started; the item waits for the answer (BACKLOG section 1).
+
+**Your answer:**

@@ -17,7 +17,7 @@ Owner: all protocols and features of dev-term must exist here. Done means what d
 - The docs Unit tests `PlantUml_Blocks_AreWellFormed` and `Links_Relative_Resolve` fail on the imported DevTerm history; the planned documentation cleanup after all migrations fixes them (owner, 2026-10-30).
 - [ ] Test gaps: Playwright DevLocal flows, an interactive Tui run (needs a real console session, not available to a headless run), serial real-hardware tests (need attached devices) ([list](docs/design/DevTermParity/status.md#test-gaps)).
 
-- [ ] Example apps that use the UiDefinitions language (forms and panels), beyond DevTerm; decided (owner, 2026-11-04): one explicit Example panel per device family, plus a small control-example app for each control set built for Blazor, WPF, Tui or others (controls only; the existing Example app demos the framework) ([ui-language-later.md](docs/design/DevTermParity/ui-language-later.md)).
+- [ ] Example apps that use the UiDefinitions language (forms and panels), beyond DevTerm; decided (owner, 2026-11-04): one explicit Example panel per device family, plus a small control-example app for each control set built for Blazor, WPF, Tui or others (controls only; the existing Example app demos the framework) (waits for the owner on Q2: where the panels and apps live) ([ui-language-later.md](docs/design/DevTermParity/ui-language-later.md)).
 
 ## 2. Devices
 
