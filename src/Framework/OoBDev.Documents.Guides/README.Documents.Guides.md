@@ -7,6 +7,8 @@ Deterministic markdown guides generated from machine-readable specifications, fo
 ## Key Classes
 
 - **ApiGuideRenderer**: `OpenApi(json, title)` and `AsyncApi(json, title)` render an OpenAPI or AsyncAPI document as markdown (operations sorted by path, channels with their parameters and messages); `WriteIfChanged(path, content)` writes LF text only when the file differs.
+- **CliToolGuide**: `Render(title, synopsis, examples)` turns captured `CliExample` runs (title, description, command line, output, exit code) into a markdown guide with `console` blocks.
+- **CliToolRunner**: `RunAsync(...)` starts a tool, captures stdout and stderr and returns a `CliExample`; `displayCommandLine` keeps machine paths out of the guide.
 
 ## Usage
 
@@ -21,4 +23,4 @@ BCL only (`System.Text.Json`); no test framework and no web host, so any test or
 
 ## Not here
 
-The Kaitai (`.ksy`) guide renderer stays with DevTerm because it reads the DevTerm importer's model (`KsyImporter`). The command-line tool guide helper is planned ([migration plan](../../../docs/design/GeneratedGuides/migration-plan.md)).
+The Kaitai (`.ksy`) guide renderer stays with DevTerm because it reads the DevTerm importer's model (`KsyImporter`). (See the [migration plan](../../../docs/design/GeneratedGuides/migration-plan.md)).
