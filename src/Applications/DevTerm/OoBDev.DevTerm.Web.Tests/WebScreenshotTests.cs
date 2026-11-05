@@ -22,6 +22,7 @@ using OoBDev.DevTerm.Configuration;
 using OoBDev.DevTerm.TestUtilities;
 using OoBDev.DevTerm.Web.Tests;
 using Microsoft.Playwright;
+using OoBDev.TestUtilities;
 namespace OoBDev.DevTerm.Web.Tests;
 
 /// <summary>
@@ -30,6 +31,7 @@ namespace OoBDev.DevTerm.Web.Tests;
 /// </summary>
 [TestClass]
 [TestCategory("DevLocal")]
+[TestCategory(TestCategories.Web)]
 public class WebScreenshotTests
 {
     public required TestContext TestContext { get; set; }

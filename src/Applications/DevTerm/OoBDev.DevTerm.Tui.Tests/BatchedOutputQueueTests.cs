@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using OoBDev.TestUtilities;
 namespace OoBDev.DevTerm.Tui.Tests;
 
 /// <summary>See docs/bugs/resolved/031-tui-output-no-backpressure.md.</summary>
@@ -13,6 +14,7 @@ namespace OoBDev.DevTerm.Tui.Tests;
 [TestClass]
 public sealed class BatchedOutputQueueTests
 {
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     public void Enqueue_ABurstOfLinesBeforeTheDrainRuns_SchedulesOnlyOneDrain()
     {
@@ -52,6 +54,7 @@ public sealed class BatchedOutputQueueTests
         Assert.IsFalse(called);
     }
 
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     public void Enqueue_AfterADrainCompletes_SchedulesAFreshDrainForTheNextBurst()
     {

@@ -15,6 +15,7 @@ using OoBDev.DevTerm.Presenters.Text;
 using OoBDev.DevTerm;
 using OoBDev.DevTerm.Presenters.Text;
 using Microsoft.Extensions.Options;
+using OoBDev.TestUtilities;
 namespace OoBDev.DevTerm.Tui.Tests;
 
 /// <summary>
@@ -78,6 +79,7 @@ public sealed class TuiModeSwitchProfileTests
         });
     }
 
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     public async Task SwitchProfileAsync_SupersededByAnotherSwitchBeforeItResolves_DoesNotStompTheNewerOne()
     {
@@ -132,6 +134,7 @@ public sealed class TuiModeSwitchProfileTests
         });
     }
 
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     public async Task CurrentSession_AfterASwitch_IsTheSwitchedToSessionNotTheOriginal()
     {

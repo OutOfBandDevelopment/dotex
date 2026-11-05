@@ -9,11 +9,13 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using OoBDev.TestUtilities;
 
 namespace OoBDev.System.IO.Tcp.Tests;
 
 [TestCategory("Unit")]
 [TestClass]
+[TestCategory(TestCategories.Tcp)]
 public sealed class LxiDiscoveryTests
 {
     public TestContext TestContext { get; set; } = null!;

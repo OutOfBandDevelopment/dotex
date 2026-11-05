@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 namespace OoBDev.Scpi.Tests;
 
 [TestClass]
+[TestCategory(TestCategories.Scpi)]
 public class ScpiReplyTrackerTests
 {
     private static readonly ScpiRequest Query = new("MEAS?\n", true, ScpiResponseFormat.Text);

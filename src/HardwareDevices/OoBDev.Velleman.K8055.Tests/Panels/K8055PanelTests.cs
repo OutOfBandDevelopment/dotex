@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 namespace OoBDev.Velleman.K8055.Panels.Tests;
 
 [TestClass]
+[TestCategory(TestCategories.Velleman_K8055)]
 public sealed class K8055PanelTests
 {
     [TestMethod, TestCategory(TestCategories.Unit)]

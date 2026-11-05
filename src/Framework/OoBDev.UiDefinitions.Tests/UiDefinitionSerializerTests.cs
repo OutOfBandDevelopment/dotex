@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.UiDefinitions;
+using OoBDev.TestUtilities;
 
 namespace OoBDev.UiDefinitions.Tests;
 
@@ -126,6 +127,7 @@ public sealed class UiDefinitionSerializerTests
         Assert.Contains("<Slider>", xml);
     }
 
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     [TestCategory("Unit")]
     public void FromXml_DocumentWithAnInternalDtdEntity_DoesNotExpandIt()

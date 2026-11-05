@@ -17,11 +17,13 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using OoBDev.DevTerm.Configuration;
 using OoBDev.DevTerm.Web.Tests;
+using OoBDev.TestUtilities;
 namespace OoBDev.DevTerm.Web.Tests;
 
 /// <summary>Without a <c>--project</c> file the manager works on the shared saved-profile store, the same one the TUI and WPF use.</summary>
 [TestClass]
 [TestCategory("Unit")]
+[TestCategory(TestCategories.Web)]
 public class ConnectionManagerStoreTests
 {
     [TestMethod]

@@ -17,6 +17,7 @@ using Microsoft.Extensions.Logging;
 using System.Net.Sockets;
 using OoBDev.DevTerm.Web.Tests;
 using Microsoft.Playwright;
+using OoBDev.TestUtilities;
 namespace OoBDev.DevTerm.Web.Tests;
 
 /// <summary>
@@ -25,6 +26,7 @@ namespace OoBDev.DevTerm.Web.Tests;
 /// </summary>
 [TestClass]
 [TestCategory("DevLocal")]
+[TestCategory(TestCategories.Web)]
 public sealed class AspireMetricsTests
 {
     [TestMethod]

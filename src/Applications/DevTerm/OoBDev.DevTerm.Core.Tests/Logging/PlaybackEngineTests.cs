@@ -10,6 +10,7 @@ using OoBDev.DevTerm.Logging;
 using System.Text;
 using OoBDev.DevTerm.Presenters.Text;
 using Microsoft.Extensions.Options;
+using OoBDev.TestUtilities;
 
 namespace OoBDev.DevTerm.Logging.Tests;
 
@@ -17,6 +18,7 @@ namespace OoBDev.DevTerm.Logging.Tests;
 [TestCategory("Unit")]
 [TestCategory("Unit")]
 [TestClass]
+[TestCategory(TestCategories.Logging)]
 public sealed class PlaybackEngineTests
 {
     private static readonly DateTimeOffset _t0 = new(2026, 9, 25, 12, 0, 0, TimeSpan.Zero);

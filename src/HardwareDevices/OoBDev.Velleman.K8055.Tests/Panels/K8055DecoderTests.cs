@@ -7,6 +7,8 @@ using System.Collections.Generic;
 namespace OoBDev.Velleman.K8055.Panels.Tests;
 
 [TestClass]
+[TestCategory(TestCategories.Hid)]
+[TestCategory(TestCategories.Velleman_K8055)]
 public sealed class K8055DecoderTests
 {
     // [00, 00, 03, AnalogIn1=0x4C(76), AnalogIn2=0x4C(76), CounterLo1=0x2A, CounterHi1=0x01, CounterLo2=0x00, CounterHi2=0x00]

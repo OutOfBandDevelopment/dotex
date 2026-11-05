@@ -10,6 +10,7 @@ using OoBDev.DevTerm;
 using OoBDev.DevTerm.Configuration;
 using OoBDev.System.IO;
 using OoBDev.DevTerm.Configuration.Discovery;
+using OoBDev.TestUtilities;
 namespace OoBDev.DevTerm.Configuration.Tests;
 
 /// <summary>
@@ -22,6 +23,7 @@ namespace OoBDev.DevTerm.Configuration.Tests;
 [TestClass]
 public sealed class AtomicFileTests
 {
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     [TestCategory("Unit")]
     public void WriteAllText_OnSuccess_WritesContentsAndLeavesNoTemporaryFile()
@@ -35,6 +37,7 @@ public sealed class AtomicFileTests
         Assert.IsFalse(File.Exists($"{path}.tmp"));
     }
 
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     [TestCategory("Unit")]
     public void WriteAllText_WhenTheTemporaryFileCannotBeWritten_LeavesTheExistingFileUntouched()

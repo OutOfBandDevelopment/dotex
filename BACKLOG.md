@@ -33,7 +33,6 @@ Owner: all protocols and features of dev-term must exist here. Done means what d
 - [ ] `DevLocal` tests kept on purpose: Ollama (hard-coded LAN host, model pull and delete; revisit when the owner says Ollama testing can resume), USB HID (hardware), `PathEx`, `MergedXPathNavigator`, `ProjectTools.FixReadmes` (hard-coded `C:\Repos` paths), Markdown `TestMethod1` (writes files).
 - [ ] Add a live-integration doc page per new cloud service (only Groq exists; its key was revoked 2026-10-09, so runs wait for the owner).
 - [ ] Ser2NetWin (the Z-Stick TCP bridge) drops a second client without telling it why: [issue](docs/issues/ser2netwin-single-client-silent-reject.md).
-- [ ] Bench follow-up (2026-11-04): K8055 board not found (9 Hardware tests skip) ([results](docs/changes/2026-11-04.md#hardware-test-pass-on-the-bench-2026-11-04)).
 - [ ] Example journey "Hold a conversation with Ollama" fails on the `.turns p` count (expected 2, received 4); diagnose against the live Ollama service.
 - [ ] Example AppHost live journeys fail (Keycloak runs anonymously, telemetry does not reach the dashboard; decided 2026-11-04: Aspire runs Keycloak as a container and the API uses `IDENTITY_PROVIDER=Keycloak`): [apphost-live-journeys.md](docs/design/example-ui/apphost-live-journeys.md).
 - Azure Monitor exporter: not built (decided 2026-10-22); OTLP reaches any collector and is verified with the Aspire dashboard.

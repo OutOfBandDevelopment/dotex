@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 namespace OoBDev.Kuando.Busylight.Panels.Tests;
 
 [TestClass]
+[TestCategory(TestCategories.Kuando_Busylight)]
 public sealed class BusylightPanelTests
 {
     [TestMethod, TestCategory(TestCategories.Unit)]

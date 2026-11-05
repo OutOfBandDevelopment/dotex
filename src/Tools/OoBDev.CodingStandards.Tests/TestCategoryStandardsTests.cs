@@ -13,8 +13,20 @@ namespace OoBDev.CodingStandards.Tests;
 [TestClass]
 public sealed class TestCategoryStandardsTests
 {
-    /// <summary>The categories the <c>testing</c> rule recognizes. Add one here in the same change that starts using it.</summary>
-    private static readonly string[] _knownCategories = ["Unit", "Simulate", "Integration", "DevLocal", "LiveIntegration", "Hardware"];
+    /// <summary>The tiers: every test carries exactly one.</summary>
+    private static readonly string[] _tiers = ["Unit", "Simulate", "Integration", "DevLocal", "LiveIntegration", "Hardware"];
+
+    /// <summary>Secondary categories (transport, feature, device): optional, any number, beside the tier. Add one here in the same change that starts using it.</summary>
+    private static readonly string[] _secondaryCategories =
+    [
+        "Serial", "Tcp", "Hid", "Usbtmc", "Ble", "Loopback", "Rfc2217", "Vxi11", "Mqtt", "Brokers", "Web", "Scpi",
+        "Logging", "BugRegression",
+        "Tektronix_2230", "Tektronix_Tds2024", "Korad_Ka3005p", "Korad_Ka6003p", "Hp_34401a", "Rigol_Ds1102e", "Rigol_Dm3058e",
+        "Rigol_Dg1022", "Rigol_Dg1062z", "Velleman_K8055", "Kuando_Busylight", "Radex_One", "Zoom_H4n", "DerEe_De5000",
+        "Delorme_EarthmateBt20", "Aeotec_ZStickS2",
+    ];
+
+    private static readonly string[] _knownCategories = [.. _tiers, .. _secondaryCategories];
 
     /// <summary>Classes that predate this check. Shrink this list; never add to it.</summary>
     private static readonly string[] _knownGaps = [];
@@ -39,9 +51,9 @@ public sealed class TestCategoryStandardsTests
         foreach (var type in TestClasses().Where(t => !_knownGaps.Contains(t.Name, StringComparer.Ordinal)))
         {
             var effective = type.ClassCategories.Concat(type.Methods.SelectMany(m => m.Categories)).ToList();
-            if (effective.Count == 0)
+            if (!effective.Any(c => _tiers.Contains(c, StringComparer.Ordinal)))
             {
-                problems.Add($"{type.File}: {type.Name} has no [TestCategory]");
+                problems.Add($"{type.File}: {type.Name} has no tier category");
                 continue;
             }
 
@@ -50,7 +62,7 @@ public sealed class TestCategoryStandardsTests
         }
 
         // Assert
-        Assert.IsEmpty(problems, $"Every [TestClass] needs a [TestCategory] from {{{string.Join(", ", _knownCategories)}}}:{Environment.NewLine}{string.Join(Environment.NewLine, problems)}");
+        Assert.IsEmpty(problems, $"Every [TestClass] needs a tier from {{{string.Join(", ", _tiers)}}} and may add secondary categories:{Environment.NewLine}{string.Join(Environment.NewLine, problems)}");
     }
 
     [TestMethod]
@@ -61,11 +73,11 @@ public sealed class TestCategoryStandardsTests
         foreach (var type in TestClasses().Where(t => !_knownGaps.Contains(t.Name, StringComparer.Ordinal)))
         {
             problems.AddRange(type.Methods
-                .Where(m => type.ClassCategories.Concat(m.Categories).Distinct(StringComparer.Ordinal).Count() > 1)
-                .Select(m => $"{type.File}: {type.Name}.{m.Name} has more than one category"));
+                .Where(m => type.ClassCategories.Concat(m.Categories).Where(c => _tiers.Contains(c, StringComparer.Ordinal)).Distinct(StringComparer.Ordinal).Count() != 1)
+                .Select(m => $"{type.File}: {type.Name}.{m.Name} does not have exactly one tier category"));
         }
 
         // Assert
-        Assert.IsEmpty(problems, $"A test carries one category:{Environment.NewLine}{string.Join(Environment.NewLine, problems)}");
+        Assert.IsEmpty(problems, $"A test carries exactly one tier:{Environment.NewLine}{string.Join(Environment.NewLine, problems)}");
     }
 }

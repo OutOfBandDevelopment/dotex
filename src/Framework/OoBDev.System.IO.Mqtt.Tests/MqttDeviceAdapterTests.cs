@@ -9,11 +9,13 @@ using System.IO.Pipelines;
 using System.Text;
 using OoBDev.System.IO.Pipelines;
 using Microsoft.Extensions.Options;
+using OoBDev.TestUtilities;
 
 namespace OoBDev.System.IO.Mqtt.Tests;
 
 [TestCategory("Unit")]
 [TestClass]
+[TestCategory(TestCategories.Mqtt)]
 public sealed class MqttDeviceAdapterTests
 {
     public TestContext TestContext { get; set; } = null!;

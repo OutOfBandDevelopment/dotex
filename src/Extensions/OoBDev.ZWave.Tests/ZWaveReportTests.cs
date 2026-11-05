@@ -4,6 +4,7 @@ using OoBDev.TestUtilities;
 namespace OoBDev.ZWave.Tests;
 
 [TestClass]
+[TestCategory(TestCategories.Aeotec_ZStickS2)]
 public class ZWaveReportTests
 {
     private static ZWaveFrame Report(byte node, byte value, byte commandClass = 0x25, byte command = 0x03) =>

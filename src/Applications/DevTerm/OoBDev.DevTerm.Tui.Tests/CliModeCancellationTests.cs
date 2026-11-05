@@ -10,6 +10,7 @@ using OoBDev.DevTerm.Configuration;
 using OoBDev.DevTerm.Presenters.Text;
 using OoBDev.DevTerm;
 using OoBDev.DevTerm.Presenters.Text;
+using OoBDev.TestUtilities;
 namespace OoBDev.DevTerm.Tui.Tests;
 
 /// <summary>
@@ -50,6 +51,7 @@ public sealed class CliModeCancellationTests
         }
     }
 
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     public async Task CtrlC_WhileStdinNeverObservesCancellation_StillExitsPromptly()
     {

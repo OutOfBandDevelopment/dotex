@@ -11,6 +11,7 @@ using System.IO.Pipelines;
 using System.Text;
 using Microsoft.Extensions.Options;
 using Moq;
+using OoBDev.TestUtilities;
 
 namespace OoBDev.System.IO.UsbTmc.Tests;
 
@@ -23,6 +24,7 @@ namespace OoBDev.System.IO.UsbTmc.Tests;
 /// </summary>
 [TestCategory("Unit")]
 [TestClass]
+[TestCategory(TestCategories.Usbtmc)]
 public sealed class UsbTmcDeviceAdapterTests
 {
     public required TestContext TestContext { get; set; }

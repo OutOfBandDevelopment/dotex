@@ -6,10 +6,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Text;
+using OoBDev.TestUtilities;
 namespace OoBDev.System.IO.Brokers.Tests;
 
 [TestCategory("Unit")]
 [TestClass]
+[TestCategory(TestCategories.Brokers)]
 public sealed class StompFrameTests
 {
     [TestMethod]

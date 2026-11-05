@@ -10,12 +10,14 @@ using OoBDev.DevTerm;
 
 using OoBDev.DevTerm.Configuration;
 using OoBDev.DevTerm.Configuration.Discovery;
+using OoBDev.TestUtilities;
 namespace OoBDev.DevTerm.Configuration.Tests;
 
 [TestCategory("Unit")]
 [TestClass]
 public sealed class DevTermUserDataPathsTests
 {
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     [TestCategory("Unit")]
     public void ResolveManifestDirectory_WithARootedNamePointingAtARealDirectory_ReturnsNullInsteadOfThatDirectory()

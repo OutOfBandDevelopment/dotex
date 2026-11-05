@@ -6,6 +6,7 @@ using System.Linq;
 namespace OoBDev.ZWave.Tests;
 
 [TestClass]
+[TestCategory(TestCategories.Aeotec_ZStickS2)]
 public class ZWaveInterpreterTests
 {
     private static ZWaveFrame Data(string hex) => new(ZWaveFrameKind.Data, ZWaveFrameTests.Bytes(hex));

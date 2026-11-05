@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Diagnostics;
+using OoBDev.TestUtilities;
 namespace OoBDev.DevTerm.Tui.Tests;
 
 /// <summary>
@@ -17,6 +18,7 @@ namespace OoBDev.DevTerm.Tui.Tests;
 /// </summary>
 [TestCategory("Hardware")]
 [TestClass]
+[TestCategory(TestCategories.Tcp)]
 public sealed class RealHardwareCliTests
 {
     public TestContext TestContext { get; set; } = null!;

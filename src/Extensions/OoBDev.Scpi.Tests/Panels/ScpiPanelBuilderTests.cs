@@ -3,12 +3,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.UiDefinitions;
+using OoBDev.TestUtilities;
 
 namespace OoBDev.Scpi.Panels.Tests;
 
 /// <summary>A panel generated from a profile, driven through its binding like a renderer does.</summary>
 [TestCategory("Unit")]
 [TestClass]
+[TestCategory(TestCategories.Scpi)]
 public sealed class ScpiPanelBuilderTests
 {
     private static ScpiInstrumentProfile Profile() => new()

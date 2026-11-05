@@ -1,10 +1,12 @@
 using Microsoft.Extensions.DependencyInjection;
+using OoBDev.TestUtilities;
 
 namespace OoBDev.DevTerm.Devices.Scpi.Tests;
 
 /// <summary>SCPI as an <see cref="IInstrumentPanelProvider"/>: availability, the picker's choices, and the plugin module that registers it.</summary>
 [TestCategory("Unit")]
 [TestClass]
+[TestCategory(TestCategories.Scpi)]
 public sealed class ScpiInstrumentPanelProviderTests
 {
     private readonly ScpiInstrumentPanelProvider _provider = new();

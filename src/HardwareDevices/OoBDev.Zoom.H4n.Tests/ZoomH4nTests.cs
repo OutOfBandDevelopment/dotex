@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 namespace OoBDev.Zoom.H4n.Tests;
 
 [TestClass]
+[TestCategory(TestCategories.Zoom_H4n)]
 public class ZoomH4nTests
 {
     private static byte[] Encode(ZoomH4nCommand command) => new ZoomH4nMessageEncoder().Encode(ref command).ToArray();

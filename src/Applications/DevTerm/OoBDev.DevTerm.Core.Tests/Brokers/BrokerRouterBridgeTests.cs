@@ -15,6 +15,7 @@ namespace OoBDev.DevTerm.Brokers;
 
 /// <summary>A <see cref="MessageRouter"/> wired to AMQP and STOMP through <see cref="BrokerRouterBridge"/>: a fake connection, then the RabbitMQ container in containers/testing.</summary>
 [TestClass]
+[TestCategory(TestCategories.Brokers)]
 public sealed class BrokerRouterBridgeTests
 {
     public TestContext TestContext { get; set; } = null!;

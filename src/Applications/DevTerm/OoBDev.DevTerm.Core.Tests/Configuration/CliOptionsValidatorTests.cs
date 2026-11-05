@@ -9,6 +9,7 @@ using OoBDev.DevTerm;
 
 using OoBDev.DevTerm.Configuration;
 using OoBDev.DevTerm.Configuration.Discovery;
+using OoBDev.TestUtilities;
 namespace OoBDev.DevTerm.Configuration.Tests;
 
 [TestCategory("Unit")]
@@ -274,6 +275,7 @@ public sealed class CliOptionsValidatorTests
         Assert.IsTrue(result.Succeeded);
     }
 
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     [TestCategory("Unit")]
     public void Validate_SerialWithNonPositiveBaud_Fails()
@@ -286,6 +288,7 @@ public sealed class CliOptionsValidatorTests
         Assert.IsTrue(result.Failed);
     }
 
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     [TestCategory("Unit")]
     public void Validate_SerialWithDataBitsOutOfRange_Fails()
@@ -297,6 +300,7 @@ public sealed class CliOptionsValidatorTests
         Assert.IsTrue(result.Failed);
     }
 
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     [TestCategory("Unit")]
     public void Validate_ReadTimeoutBelowNegativeOne_Fails()
@@ -308,6 +312,7 @@ public sealed class CliOptionsValidatorTests
         Assert.IsTrue(result.Failed);
     }
 
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     [TestCategory("Unit")]
     public void Validate_WriteTimeoutBelowNegativeOne_Fails()
@@ -337,6 +342,7 @@ public sealed class CliOptionsValidatorTests
         Assert.IsFalse(result.Failed);
     }
 
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     [TestCategory("Unit")]
     public void Validate_NegativePlaybackSpeed_Fails()

@@ -11,6 +11,7 @@ using OoBDev.DevTerm.Presenters.Text;
 using OoBDev.DevTerm;
 using OoBDev.DevTerm.Presenters.Text;
 using Microsoft.Extensions.Options;
+using OoBDev.TestUtilities;
 namespace OoBDev.DevTerm.Tui.Tests;
 
 /// <summary>
@@ -23,6 +24,7 @@ namespace OoBDev.DevTerm.Tui.Tests;
 /// </summary>
 [TestCategory("Unit")]
 [TestClass]
+[TestCategory(TestCategories.Loopback)]
 public sealed class LoopbackTransportTests
 {
     private static readonly TimeSpan _waitTimeout = TimeSpan.FromSeconds(5);

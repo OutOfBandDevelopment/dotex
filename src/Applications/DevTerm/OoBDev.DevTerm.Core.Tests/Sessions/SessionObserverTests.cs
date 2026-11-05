@@ -10,6 +10,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Buffers;
 using System.IO.Pipelines;
 using Moq;
+using OoBDev.TestUtilities;
 
 namespace OoBDev.DevTerm.Tests;
 
@@ -17,6 +18,7 @@ namespace OoBDev.DevTerm.Tests;
 [TestCategory("Unit")]
 [TestCategory("Unit")]
 [TestClass]
+[TestCategory(TestCategories.Logging)]
 public sealed class SessionObserverTests
 {
     private sealed class RecordingObserver : ISessionObserver

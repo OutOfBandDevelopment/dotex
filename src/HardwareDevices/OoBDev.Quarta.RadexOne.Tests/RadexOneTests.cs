@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 namespace OoBDev.Quarta.RadexOne.Tests;
 
 [TestClass]
+[TestCategory(TestCategories.Radex_One)]
 public class RadexOneTests
 {
     private static byte[] ReadDataExtension(ushort ambient, ushort accumulated, ushort cpm)

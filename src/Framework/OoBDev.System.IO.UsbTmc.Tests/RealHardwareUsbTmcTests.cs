@@ -6,12 +6,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using OoBDev.TestUtilities;
 
 namespace OoBDev.System.IO.UsbTmc.Tests;
 
 /// <summary>Back-to-back queries and reopen against any attached USBTMC device; Inconclusive when none is found.</summary>
 [TestCategory("Hardware")]
 [TestClass]
+[TestCategory(TestCategories.Usbtmc)]
 public sealed class RealHardwareUsbTmcTests
 {
     public TestContext TestContext { get; set; } = null!;

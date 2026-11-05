@@ -1,10 +1,12 @@
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using OoBDev.TestUtilities;
 
 namespace OoBDev.System.IO.UsbHids.Tests;
 
 [TestCategory("Unit")]
 [TestClass]
+[TestCategory(TestCategories.Hid)]
 public sealed class UsbHidFactoryTests
 {
     [UsbHid(0xFFFE, 0x0001)]

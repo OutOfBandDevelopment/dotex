@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 namespace OoBDev.Velleman.K8055.Panels.Tests;
 
 [TestClass]
+[TestCategory(TestCategories.Hid)]
+[TestCategory(TestCategories.Velleman_K8055)]
 public sealed class K8055ControlSurfaceTests
 {
     private static (K8055ControlSurface Surface, List<byte[]> Sent) CreateSurface()
@@ -152,6 +154,7 @@ public sealed class K8055ControlSurfaceTests
         Assert.AreEqual("00 05 00 00 00 00 00 00 00", surface.PreviewCommand("analogOut1", "abc"));
     }
 
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod, TestCategory(TestCategories.Unit)]
     public async Task InvokeAsync_AnalogOutWithNonNumericValue_DoesNotThrow_AndFallsBackToZero()
     {

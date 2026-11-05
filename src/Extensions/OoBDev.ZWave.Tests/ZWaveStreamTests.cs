@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 namespace OoBDev.ZWave.Tests;
 
 [TestClass]
+[TestCategory(TestCategories.Aeotec_ZStickS2)]
 public class ZWaveStreamTests
 {
     private static SegmentPump<ZWaveFrame> Pump() => new(new ZWaveDevice());

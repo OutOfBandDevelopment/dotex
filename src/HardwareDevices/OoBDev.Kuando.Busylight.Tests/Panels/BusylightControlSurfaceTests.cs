@@ -11,6 +11,8 @@ namespace OoBDev.Kuando.Busylight.Panels.Tests;
 
 
 [TestClass]
+[TestCategory(TestCategories.Hid)]
+[TestCategory(TestCategories.Kuando_Busylight)]
 public sealed class BusylightControlSurfaceTests
 {
     private static (BusylightControlSurface Surface, List<byte[]> Sent) CreateSurface()
@@ -143,6 +145,7 @@ public sealed class BusylightControlSurfaceTests
         Assert.IsNull(surface.PreviewCommand("customColor", null));
     }
 
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod, TestCategory(TestCategories.Unit)]
     public async Task InvokeAsync_OnMsWithNonNumericValue_DoesNotThrow_AndFallsBackToZero()
     {

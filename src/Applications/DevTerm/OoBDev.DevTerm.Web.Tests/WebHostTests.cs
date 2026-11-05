@@ -23,10 +23,12 @@ using System.Text;
 using OoBDev.DevTerm.Configuration;
 using OoBDev.DevTerm;
 using OoBDev.DevTerm.Web.Tests;
+using OoBDev.TestUtilities;
 namespace OoBDev.DevTerm.Web.Tests;
 
 [TestClass]
 [TestCategory("Unit")]
+[TestCategory(TestCategories.Web)]
 public class WebHostTests
 {
     public required TestContext TestContext { get; set; }

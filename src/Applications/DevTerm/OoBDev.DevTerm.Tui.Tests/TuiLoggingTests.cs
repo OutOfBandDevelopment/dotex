@@ -15,12 +15,14 @@ using OoBDev.DevTerm;
 using OoBDev.DevTerm.Logging;
 using OoBDev.DevTerm.Presenters.Text;
 using Microsoft.Extensions.Options;
+using OoBDev.TestUtilities;
 namespace OoBDev.DevTerm.Tui.Tests;
 
 /// <summary>The TUI main window's File &gt; Start Logging... / Stop Logging wiring (after the path prompt) and <c>--log</c>.</summary>
 [TestCategory("Unit")]
 [TestClass]
 [DoNotParallelize]
+[TestCategory(TestCategories.Logging)]
 public sealed class TuiLoggingTests
 {
     private static readonly TimeSpan _waitTimeout = TimeSpan.FromSeconds(15);

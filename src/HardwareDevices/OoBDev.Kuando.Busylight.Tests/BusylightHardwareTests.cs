@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 namespace OoBDev.Kuando.Busylight.Tests;
 
 [TestClass]
+[TestCategory(TestCategories.Kuando_Busylight)]
 public class BusylightHardwareTests
 {
     private static async Task SendAsync(Stream stream, byte[] report)

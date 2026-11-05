@@ -2,12 +2,14 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Globalization;
 using System.Threading.Tasks;
+using OoBDev.TestUtilities;
 
 namespace OoBDev.Scpi.Tests;
 
 /// <summary>Read-only queries against the Korad KA3005P and KA6003P supplies; nothing is set and the output is never switched on (see docs/how-tos/test-hardware.md).</summary>
 [TestCategory("Hardware")]
 [TestClass]
+[TestCategory(TestCategories.Scpi)]
 public sealed class KoradSupplyTests
 {
     private static readonly TimeSpan _quiet = TimeSpan.FromMilliseconds(250);

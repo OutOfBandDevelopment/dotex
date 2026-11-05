@@ -11,6 +11,7 @@ using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using OoBDev.TestUtilities;
 namespace OoBDev.DevTerm.Tui.Tests;
 
 /// <summary>
@@ -171,6 +172,7 @@ public sealed class ConsoleAppCliTests
         Assert.Contains("Usage:", stderr);
     }
 
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     public async Task InvalidNumericOption_PrintsErrorAndUsage_ExitsOne()
     {

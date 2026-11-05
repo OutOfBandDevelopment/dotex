@@ -5,11 +5,13 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using OoBDev.TestUtilities;
 
 namespace OoBDev.System.IO.Tcp.Tests;
 
 [TestCategory("Unit")]
 [TestClass]
+[TestCategory(TestCategories.Tcp)]
 public sealed class TcpTransportOptionsValidatorTests
 {
     private readonly TcpEndpointOptionsValidator _validator = new();

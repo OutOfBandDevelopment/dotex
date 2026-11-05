@@ -15,10 +15,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using OoBDev.DevTerm.Web.Tests;
+using OoBDev.TestUtilities;
 namespace OoBDev.DevTerm.Web.Tests;
 
 [TestClass]
 [TestCategory("Unit")]
+[TestCategory(TestCategories.Web)]
 public class HostEventsTests
 {
     public required TestContext TestContext { get; set; }

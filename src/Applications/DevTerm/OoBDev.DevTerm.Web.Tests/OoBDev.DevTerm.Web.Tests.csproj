@@ -26,6 +26,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\OoBDev.DevTerm.Web\OoBDev.DevTerm.Web.csproj" />
+		<ProjectReference Include="..\..\..\Framework\OoBDev.TestUtilities\OoBDev.TestUtilities.csproj" />
 		<ProjectReference Include="..\OoBDev.DevTerm.TestUtilities\OoBDev.DevTerm.TestUtilities.csproj" />
 		<!-- Built first, not referenced as code: the flows load its output from plugins/demo like a real plugin. -->
 		<ProjectReference Include="..\OoBDev.DevTerm.Devices.Demo\OoBDev.DevTerm.Devices.Demo.csproj" ReferenceOutputAssembly="false" />

@@ -11,6 +11,7 @@ using System.Text;
 using OoBDev.DevTerm.Configuration;
 using OoBDev.DevTerm.Logging;
 using Terminal.Gui.Input;
+using OoBDev.TestUtilities;
 namespace OoBDev.DevTerm.Tui.Tests;
 
 /// <summary>
@@ -22,6 +23,7 @@ namespace OoBDev.DevTerm.Tui.Tests;
 [TestCategory("Unit")]
 [TestClass]
 [DoNotParallelize]
+[TestCategory(TestCategories.Logging)]
 public sealed class PlaybackModeTests
 {
     private static readonly DateTimeOffset _t0 = new(2026, 9, 25, 12, 0, 0, TimeSpan.Zero);

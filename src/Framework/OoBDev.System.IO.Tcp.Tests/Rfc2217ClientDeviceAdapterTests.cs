@@ -8,11 +8,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using OoBDev.TestUtilities;
 
 namespace OoBDev.System.IO.Tcp.Tests;
 
 [TestCategory("Unit")]
 [TestClass]
+[TestCategory(TestCategories.Rfc2217)]
 public sealed class Rfc2217TransportTests
 {
     private static Rfc2217ClientDeviceAdapter CreateTransport(FakeRfc2217Server server, int negotiationTimeoutMs = 3000, int writeTimeoutMs = 5000, int writeByteDelayMs = -1)
@@ -220,6 +222,7 @@ public sealed class Rfc2217TransportTests
         await Assert.ThrowsExactlyAsync<InvalidOperationException>(() => transport.WriteAsync(new byte[] { 1 }, TestContext.CancellationToken));
     }
 
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     [TestCategory("Unit")]
     public async Task WriteAsync_ConnectionNeverDrains_ThrowsTimeoutExceptionAfterWriteTimeoutMs()

@@ -9,11 +9,13 @@ using System.Buffers;
 using OoBDev.System.IO.Pipelines;
 using Microsoft.Extensions.Options;
 using Moq;
+using OoBDev.TestUtilities;
 
 namespace OoBDev.System.IO.Bluetooth.Tests;
 
 [TestCategory("Unit")]
 [TestClass]
+[TestCategory(TestCategories.Ble)]
 public sealed class BleDeviceAdapterTests
 {
     private static IOptions<BleDeviceAdapterOptions> Options(

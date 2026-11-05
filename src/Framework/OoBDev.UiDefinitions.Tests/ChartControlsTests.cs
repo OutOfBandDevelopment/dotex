@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using OoBDev.TestUtilities;
 
 namespace OoBDev.UiDefinitions.Tests;
 
@@ -172,6 +173,7 @@ public sealed class ChartControlsTests
         Assert.AreSequenceEqual([3.0, 4, 5, 6, 7], [.. state.SamplesOf("a")]);
     }
 
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     [TestCategory("Unit")]
     public void StripChart_HistoryLengthAboveTheHardMaximum_IsClampedRatherThanUnbounded()

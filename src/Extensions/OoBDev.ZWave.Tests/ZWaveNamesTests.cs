@@ -5,6 +5,7 @@ using System.Linq;
 namespace OoBDev.ZWave.Tests;
 
 [TestClass]
+[TestCategory(TestCategories.Aeotec_ZStickS2)]
 public class ZWaveNamesTests
 {
     [TestMethod, TestCategory(TestCategories.Unit)]

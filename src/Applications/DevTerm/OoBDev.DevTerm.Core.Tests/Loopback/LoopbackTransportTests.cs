@@ -9,12 +9,14 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.DevTerm;
+using OoBDev.TestUtilities;
 
 namespace OoBDev.DevTerm.Loopback.Tests;
 
 /// <summary>The scripted loopback transport, driven directly.</summary>
 [TestCategory("Unit")]
 [TestClass]
+[TestCategory(TestCategories.Loopback)]
 public sealed class LoopbackTransportTests
 {
     private static LoopbackTransport Create(int intervalMs = 0) =>

@@ -12,6 +12,7 @@ using OoBDev.DevTerm;
 using OoBDev.DevTerm.Configuration;
 using OoBDev.DevTerm.Configuration.Discovery;
 using OoBDev.System.IO;
+using OoBDev.TestUtilities;
 namespace OoBDev.DevTerm.Configuration.Tests;
 
 [TestCategory("Unit")]
@@ -271,6 +272,7 @@ public sealed class ConnectionProfileStoreTests
         }
     }
 
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     [TestCategory("Unit")]
     public void ExportZip_WhenOneOfTheNamesIsMissing_LeavesAnExistingZipAtThatPathUntouched()
@@ -376,6 +378,7 @@ public sealed class ConnectionProfileStoreTests
         }
     }
 
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     [TestCategory("Unit")]
     [DataRow("..\\escaped")]
@@ -401,6 +404,7 @@ public sealed class ConnectionProfileStoreTests
         }
     }
 
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     [TestCategory("Unit")]
     public void ImportZip_WithAnInvalidEntryName_SkipsItInsteadOfWritingIt()
@@ -425,6 +429,7 @@ public sealed class ConnectionProfileStoreTests
         }
     }
 
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     [TestCategory("Unit")]
     public void ReadZip_WithAnEntryNameInvalidOnWindows_ThrowsSoReplaceAllRefusesBeforeDeletingAnything()
@@ -543,6 +548,7 @@ public sealed class ConnectionProfileStoreTests
         }
     }
 
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     [TestCategory("Unit")]
     public void FindName_SkipsAProfileWithAValueThatFailsToConvert_AndKeepsLooking()

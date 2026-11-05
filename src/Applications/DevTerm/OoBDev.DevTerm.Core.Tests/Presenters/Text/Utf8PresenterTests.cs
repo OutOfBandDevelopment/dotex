@@ -3,6 +3,7 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Text;
 using static OoBDev.DevTerm.Presenters.Text.Tests.TestSequence;
+using OoBDev.TestUtilities;
 
 namespace OoBDev.DevTerm.Presenters.Text.Tests;
 
@@ -25,6 +26,7 @@ public sealed class Utf8PresenterTests
         Assert.AreEqual(original, result);
     }
 
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     public void Render_MultiByteCharacterSplitAcrossTwoReads_DecodesCorrectlyOnceComplete()
     {

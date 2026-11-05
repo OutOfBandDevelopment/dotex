@@ -9,11 +9,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using OoBDev.DevTerm.Configuration;
+using OoBDev.TestUtilities;
 namespace OoBDev.DevTerm.Tui.Tests;
 
 /// <summary><c>--playback</c>: the non-interactive CLI replay, over its real <c>RunAsync</c> with captured stdout/stderr.</summary>
 [TestCategory("Unit")]
 [TestClass]
+[TestCategory(TestCategories.Logging)]
 public sealed class PlaybackCliModeTests
 {
     private TempDirectoryHandle _folder = null!;

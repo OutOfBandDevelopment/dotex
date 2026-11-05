@@ -7,11 +7,13 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using OoBDev.TestUtilities;
 
 namespace OoBDev.System.IO.Tcp.Tests;
 
 [TestCategory("Unit")]
 [TestClass]
+[TestCategory(TestCategories.Tcp)]
 public sealed class SystemTcpConnectionSourceTests
 {
     private readonly SystemTcpConnectionSource _source = new();
@@ -25,6 +27,7 @@ public sealed class SystemTcpConnectionSourceTests
         return port;
     }
 
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     [TestCategory("Unit")]
     public async Task AcceptAsync_WithAHostname_ResolvesItInsteadOfThrowingFormatException()
@@ -48,6 +51,7 @@ public sealed class SystemTcpConnectionSourceTests
         Assert.IsNotNull(connection);
     }
 
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     [TestCategory("Unit")]
     public async Task AcceptAsync_WithNoHost_AcceptsAnIPv6LoopbackPeer()

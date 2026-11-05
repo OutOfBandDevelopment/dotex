@@ -16,11 +16,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using OoBDev.DevTerm.Web.Tests;
+using OoBDev.TestUtilities;
 namespace OoBDev.DevTerm.Web.Tests;
 
 /// <summary>The web host's Manifest Editor service: Save As by name, an uploaded .ksy, and session-log sample data.</summary>
 [TestClass]
 [TestCategory("Unit")]
+[TestCategory(TestCategories.Web)]
 public class WebManifestEditorTests
 {
     private const string _ksy = """

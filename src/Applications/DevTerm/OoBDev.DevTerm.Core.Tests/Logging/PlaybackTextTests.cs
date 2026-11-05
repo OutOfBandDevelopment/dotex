@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.DevTerm;
 using OoBDev.DevTerm.Logging;
+using OoBDev.TestUtilities;
 
 namespace OoBDev.DevTerm.Logging.Tests;
 
@@ -14,8 +15,10 @@ namespace OoBDev.DevTerm.Logging.Tests;
 [TestCategory("Unit")]
 [TestCategory("Unit")]
 [TestClass]
+[TestCategory(TestCategories.Logging)]
 public sealed class PlaybackTextTests
 {
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     public void FormatOffset_PastTwentyFourHours_DoesNotWrap()
     {

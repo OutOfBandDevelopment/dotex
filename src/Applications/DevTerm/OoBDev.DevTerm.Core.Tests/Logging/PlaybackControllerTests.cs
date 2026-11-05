@@ -11,6 +11,7 @@ using OoBDev.System.IO;
 using System.Text;
 using OoBDev.DevTerm.Presenters.Text;
 using Microsoft.Extensions.Options;
+using OoBDev.TestUtilities;
 
 namespace OoBDev.DevTerm.Logging.Tests;
 
@@ -18,6 +19,7 @@ namespace OoBDev.DevTerm.Logging.Tests;
 [TestCategory("Unit")]
 [TestCategory("Unit")]
 [TestClass]
+[TestCategory(TestCategories.Logging)]
 public sealed class PlaybackControllerTests
 {
     private static readonly DateTimeOffset _t0 = new(2026, 9, 25, 12, 0, 0, TimeSpan.Zero);
@@ -168,6 +170,7 @@ public sealed class PlaybackControllerTests
         Assert.AreEqual(7, controller.SelectionEnd, "The selection end moved with the records after the note.");
     }
 
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     public void AddNote_WhenTheLogFileIsHeldOpenByAWriter_ThrowsAndLeavesMemoryUnchanged()
     {

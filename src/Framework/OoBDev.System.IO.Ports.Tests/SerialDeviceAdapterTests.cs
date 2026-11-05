@@ -11,12 +11,14 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using OoBDev.TestUtilities;
 
 namespace OoBDev.System.IO.Ports.Tests;
 
 
 [TestCategory("Unit")]
 [TestClass]
+[TestCategory(TestCategories.Serial)]
 public sealed class SerialTransportTests
 {
     private static IOptions<SerialDeviceAdapterOptions> Options(string portName = "COM1") =>

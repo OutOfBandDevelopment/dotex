@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 namespace OoBDev.ZWave.Tests;
 
 [TestClass]
+[TestCategory(TestCategories.Aeotec_ZStickS2)]
 public class ZWaveHardwareTests
 {
     private static readonly TimeSpan _timeout = TimeSpan.FromSeconds(10);

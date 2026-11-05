@@ -16,6 +16,7 @@ namespace OoBDev.System.IO.Mqtt.Tests;
 /// <summary>Round trip through the real Mosquitto broker in containers/testing (integration-up).</summary>
 [TestCategory("Integration")]
 [TestClass]
+[TestCategory(TestCategories.Mqtt)]
 public sealed class MosquittoIntegrationTests
 {
     public TestContext TestContext { get; set; } = null!;

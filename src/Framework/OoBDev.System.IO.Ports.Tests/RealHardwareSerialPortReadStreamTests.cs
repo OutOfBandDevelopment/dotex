@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using OoBDev.TestUtilities;
 
 namespace OoBDev.System.IO.Ports.Tests;
 
@@ -22,12 +23,14 @@ namespace OoBDev.System.IO.Ports.Tests;
 /// </summary>
 [TestCategory("Hardware")]
 [TestClass]
+[TestCategory(TestCategories.Serial)]
 public sealed class RealHardwareSerialPortReadStreamTests
 {
     public TestContext TestContext { get; set; } = null!;
 
     private string? GetProperty(string name) => TestContext.Properties.TryGetValue(name, out var value) ? value as string : null;
 
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     [TestCategory("Hardware")]
     public async Task RealDevice_PortGoesAwayWhileWaitingForData_ReadAsyncNoticesInsteadOfHangingForever()

@@ -15,6 +15,7 @@ namespace OoBDev.System.IO.Brokers.Tests;
 /// <summary>Round trips through the real RabbitMQ in containers/testing (integration-up): AMQP 0-9-1, STOMP, and the TLS listeners (ports and credentials from the RABBITMQ_* test parameters).</summary>
 [TestCategory("Integration")]
 [TestClass]
+[TestCategory(TestCategories.Brokers)]
 public sealed class RabbitMqIntegrationTests
 {
     public TestContext TestContext { get; set; } = null!;

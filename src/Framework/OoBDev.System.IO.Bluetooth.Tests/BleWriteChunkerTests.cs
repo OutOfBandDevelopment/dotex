@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using OoBDev.TestUtilities;
 
 namespace OoBDev.System.IO.Bluetooth.Tests;
 
@@ -15,8 +16,10 @@ namespace OoBDev.System.IO.Bluetooth.Tests;
 /// </summary>
 [TestCategory("Unit")]
 [TestClass]
+[TestCategory(TestCategories.Ble)]
 public sealed class BleWriteChunkerTests
 {
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     public void Chunk_DataLargerThanTheLimit_SplitsIntoChunksNoLargerThanTheLimit()
     {

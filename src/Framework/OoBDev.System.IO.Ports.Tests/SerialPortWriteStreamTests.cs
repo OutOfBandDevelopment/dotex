@@ -6,11 +6,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using OoBDev.TestUtilities;
 
 namespace OoBDev.System.IO.Ports.Tests;
 
 [TestCategory("Unit")]
 [TestClass]
+[TestCategory(TestCategories.Serial)]
 public sealed class SerialPortWriteStreamTests
 {
     [TestMethod]

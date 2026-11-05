@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using OoBDev.TestUtilities;
 
 namespace OoBDev.System.IO.Tcp.Tests;
 
@@ -15,6 +16,7 @@ namespace OoBDev.System.IO.Tcp.Tests;
 [TestCategory("Hardware")]
 [TestCategory("Hardware")]
 [TestClass]
+[TestCategory(TestCategories.Vxi11)]
 public sealed class RealHardwareVxi11Tests
 {
     public TestContext TestContext { get; set; } = null!;

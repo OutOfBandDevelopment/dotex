@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 namespace OoBDev.Kuando.Busylight.Panels.Tests;
 
 [TestClass]
+[TestCategory(TestCategories.Hid)]
+[TestCategory(TestCategories.Kuando_Busylight)]
 public sealed class BusylightDecoderTests
 {
     [TestMethod, TestCategory(TestCategories.Unit)]

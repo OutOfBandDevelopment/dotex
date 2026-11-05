@@ -11,6 +11,7 @@ using OoBDev.DevTerm;
 
 using OoBDev.DevTerm.Configuration;
 using OoBDev.DevTerm.Configuration.Discovery;
+using OoBDev.TestUtilities;
 namespace OoBDev.DevTerm.Configuration.Tests;
 
 /// <summary>
@@ -139,6 +140,7 @@ public sealed class DevTermConfigurationTests
         }
     }
 
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     [TestCategory("Unit")]
     public void Bind_ANonNumericValueForANumericField_ThrowsInvalidOperationException()

@@ -8,12 +8,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using OoBDev.TestUtilities;
 
 namespace OoBDev.System.IO.Tcp.Tests;
 
 /// <summary>Drives the transport against a real loopback ONC-RPC server (no hardware).</summary>
 [TestCategory("Unit")]
 [TestClass]
+[TestCategory(TestCategories.Vxi11)]
 public sealed class Vxi11TransportTests
 {
     public TestContext TestContext { get; set; } = null!;

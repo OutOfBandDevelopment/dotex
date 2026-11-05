@@ -4,6 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using OoBDev.Scpi;
 using OoBDev.UiDefinitions;
+using OoBDev.TestUtilities;
 
 namespace OoBDev.DevTerm.Devices.Scpi.Tests;
 
@@ -16,6 +17,7 @@ namespace OoBDev.DevTerm.Devices.Scpi.Tests;
 /// </summary>
 [TestCategory("Unit")]
 [TestClass]
+[TestCategory(TestCategories.Scpi)]
 public sealed class ScpiCommandPreviewTests
 {
     public TestContext TestContext { get; set; } = null!;

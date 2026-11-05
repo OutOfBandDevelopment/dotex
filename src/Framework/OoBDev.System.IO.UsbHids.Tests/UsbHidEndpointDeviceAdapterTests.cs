@@ -12,11 +12,13 @@ using OoBDev.System.IO.Pipelines;
 using OoBDev.System.IO;
 using Microsoft.Extensions.Options;
 using Moq;
+using OoBDev.TestUtilities;
 
 namespace OoBDev.System.IO.UsbHids.Tests;
 
 [TestCategory("Unit")]
 [TestClass]
+[TestCategory(TestCategories.Hid)]
 public sealed class UsbHidEndpointDeviceAdapterTests
 {
     private static IOptions<UsbHidEndpointOptions> Options(int vendorId = 0x1915, int productId = 0xAFDA) =>

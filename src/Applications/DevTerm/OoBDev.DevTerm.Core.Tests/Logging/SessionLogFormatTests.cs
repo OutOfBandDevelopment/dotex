@@ -9,12 +9,14 @@ using OoBDev.DevTerm;
 using OoBDev.DevTerm.Logging;
 using OoBDev.System.IO;
 using System.Text;
+using OoBDev.TestUtilities;
 
 namespace OoBDev.DevTerm.Logging.Tests;
 
 [TestCategory("Unit")]
 [TestCategory("Unit")]
 [TestClass]
+[TestCategory(TestCategories.Logging)]
 public sealed class SessionLogFormatTests
 {
     private static readonly DateTimeOffset _t0 = new(2026, 9, 25, 12, 0, 0, TimeSpan.Zero);

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using OoBDev.TestUtilities;
 
 namespace OoBDev.System.IO.Ports.Tests;
 
@@ -19,6 +20,7 @@ namespace OoBDev.System.IO.Ports.Tests;
 /// </summary>
 [TestCategory("Unit")]
 [TestClass]
+[TestCategory(TestCategories.Serial)]
 public sealed class LinuxSerialPortDescriptionsTests
 {
     private const string _hostController = "devices/pci0000_00/0000_00_14.0/usb1";

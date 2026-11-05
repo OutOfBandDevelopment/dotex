@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using OoBDev.TestUtilities;
 
 namespace OoBDev.DevTerm.Tests;
 
@@ -16,6 +17,7 @@ namespace OoBDev.DevTerm.Tests;
 [TestClass]
 public sealed class ParameterValueListTests
 {
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     public void Join_ThenSplit_RoundTripsAValueContainingALiteralComma()
     {

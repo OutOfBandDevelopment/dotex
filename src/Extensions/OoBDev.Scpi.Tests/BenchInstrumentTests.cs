@@ -1,12 +1,14 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Threading.Tasks;
+using OoBDev.TestUtilities;
 
 namespace OoBDev.Scpi.Tests;
 
 /// <summary>Identify queries against the network bench instruments (see docs/how-tos/test-hardware.md for the settings and quirks).</summary>
 [TestCategory("Hardware")]
 [TestClass]
+[TestCategory(TestCategories.Scpi)]
 public sealed class BenchInstrumentTests
 {
     public TestContext TestContext { get; set; } = null!;

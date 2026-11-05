@@ -16,6 +16,7 @@ namespace OoBDev.System.IO.Tcp.Tests;
 /// <summary>Round trip through the real ser2net RFC 2217 server in containers/testing (its virtual port echoes).</summary>
 [TestCategory("Integration")]
 [TestClass]
+[TestCategory(TestCategories.Rfc2217)]
 public sealed class Ser2NetIntegrationTests
 {
     public TestContext TestContext { get; set; } = null!;

@@ -15,6 +15,7 @@ using Terminal.Gui.Input;
 using Terminal.Gui.Testing;
 using Terminal.Gui.ViewBase;
 using Terminal.Gui.Views;
+using OoBDev.TestUtilities;
 namespace OoBDev.DevTerm.Tui.Tests;
 
 /// <summary>
@@ -386,6 +387,7 @@ public sealed class ControlPanelModeTests
         });
     }
 
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     public void WindowDispose_DisposesADisposableSurface()
     {

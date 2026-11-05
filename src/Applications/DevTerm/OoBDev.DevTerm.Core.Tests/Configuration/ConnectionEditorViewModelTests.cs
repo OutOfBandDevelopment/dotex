@@ -10,6 +10,7 @@ using System.IO.Compression;
 using OoBDev.System.IO.Bluetooth;
 using OoBDev.System.IO.UsbHids;
 using OoBDev.System.IO.Ports;
+using OoBDev.TestUtilities;
 namespace OoBDev.DevTerm.Configuration.Tests;
 
 /// <summary>
@@ -184,6 +185,7 @@ public sealed class ConnectionEditorViewModelTests
         }
     }
 
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     public void SaveCommand_WithAnInvalidName_SetsStatusMessageInsteadOfThrowing()
     {
@@ -214,6 +216,7 @@ public sealed class ConnectionEditorViewModelTests
         }
     }
 
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     public void SaveCommand_WithAnUnparseableBaud_SetsStatusMessageInsteadOfSavingWithTheDefault()
     {
@@ -299,6 +302,7 @@ public sealed class ConnectionEditorViewModelTests
         }
     }
 
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     public void ExportCommand_ToAPathInAMissingFolder_SetsStatusMessageInsteadOfThrowing()
     {
@@ -722,6 +726,7 @@ public sealed class ConnectionEditorViewModelTests
         }
     }
 
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     public void SaveCommand_WhenNameAlreadyExistsUnderADifferentCase_AsksForConfirmationFirst()
     {
@@ -2215,6 +2220,7 @@ public sealed class ConnectionEditorViewModelTests
         }
     }
 
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     public void SettingSaveNameOrImportExportPath_DoesNotMarkTheEditorDirty()
     {

@@ -15,12 +15,14 @@ using OoBDev.DevTerm.Logging;
 
 using OoBDev.DevTerm.Configuration;
 using OoBDev.DevTerm.Configuration.Discovery;
+using OoBDev.TestUtilities;
 namespace OoBDev.DevTerm.Configuration.Tests;
 
 /// <summary>The front-end glue for logger mode and playback: paths, headers, the new flags, and the transport-free presenter catalog.</summary>
 [TestCategory("Unit")]
 [TestCategory("Unit")]
 [TestClass]
+[TestCategory(TestCategories.Logging)]
 public sealed class SessionLoggingTests
 {
     private static readonly DateTimeOffset _now = new(2026, 9, 25, 12, 0, 0, TimeSpan.Zero);

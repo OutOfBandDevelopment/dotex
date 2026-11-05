@@ -1,5 +1,6 @@
 using System.Buffers;
 using System.Text;
+using OoBDev.TestUtilities;
 
 namespace OoBDev.DevTerm.Devices.Scpi.Tests;
 
@@ -10,6 +11,7 @@ namespace OoBDev.DevTerm.Devices.Scpi.Tests;
 /// </summary>
 [TestCategory("Unit")]
 [TestClass]
+[TestCategory(TestCategories.Scpi)]
 public sealed class ScpiReplyPresenterTests
 {
     private static ReadOnlySequence<byte> Bytes(string text) => new(Encoding.ASCII.GetBytes(text));
@@ -107,6 +109,7 @@ public sealed class ScpiReplyPresenterTests
         Assert.AreEqual("ACME,MODEL1,SN1,1.0", received!["idn.reply"]);
     }
 
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     public void Render_LfThenCr_CountsAsOneLine_NotAnExtraEmptyOne()
     {
@@ -188,6 +191,7 @@ public sealed class ScpiReplyPresenterTests
         Assert.IsEmpty(lines);
     }
 
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     public void QuerySent_ThenCancel_TheNextLineIsUnsolicitedInstead()
     {
@@ -207,6 +211,7 @@ public sealed class ScpiReplyPresenterTests
         Assert.IsFalse(raised);
     }
 
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     public void QuerySent_ThenCancel_LeavesAnEarlierStillPendingQueryInPlace()
     {
@@ -226,6 +231,7 @@ public sealed class ScpiReplyPresenterTests
         Assert.AreEqual("ONE", received[0].Value);
     }
 
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     public void Cancel_WithNoMatchingPendingId_IsANoOp()
     {
@@ -237,6 +243,7 @@ public sealed class ScpiReplyPresenterTests
         Assert.AreSequenceEqual(["HELLO"], [.. lines]);
     }
 
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     public void Reset_ClearsAPendingQueryAndAPartialLine()
     {

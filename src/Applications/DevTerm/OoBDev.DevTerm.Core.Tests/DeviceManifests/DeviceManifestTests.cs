@@ -11,6 +11,7 @@ using OoBDev.DevTerm.DeviceManifests;
 using System.IO.Compression;
 using OoBDev.System.IO;
 using OoBDev.UiDefinitions;
+using OoBDev.TestUtilities;
 
 namespace OoBDev.DevTerm.DeviceManifests.Tests;
 
@@ -128,6 +129,7 @@ public sealed class DeviceManifestTests
         }
     }
 
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     public void FromXml_DocumentWithAnInternalDtdEntity_DoesNotExpandIt()
     {
@@ -231,6 +233,7 @@ public sealed class DeviceManifestTests
         }
     }
 
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     public void Load_ZipWithTooManyEntries_ThrowsAndDoesNotExtract()
     {
@@ -255,6 +258,7 @@ public sealed class DeviceManifestTests
         }
     }
 
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     public void Load_SameZipTwice_ReusesOneExtractionFolderInsteadOfLeakingANewOneEachTime()
     {
@@ -325,6 +329,7 @@ public sealed class DeviceManifestTests
         }
     }
 
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     public void Load_UiFileIsARootedPath_ThrowsInsteadOfReadingIt()
     {
@@ -347,6 +352,7 @@ public sealed class DeviceManifestTests
         }
     }
 
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     public void Load_UiFileEscapesTheManifestFolderWithDotDot_Throws()
     {
@@ -364,6 +370,7 @@ public sealed class DeviceManifestTests
         }
     }
 
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     public void Load_KaitaiFileIsARootedPath_ThrowsInsteadOfProbingIt()
     {
@@ -382,6 +389,7 @@ public sealed class DeviceManifestTests
         }
     }
 
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     public void Save_UiFileIsARootedPath_ThrowsInsteadOfWritingOutsideTheManifestFolder()
     {
@@ -402,6 +410,7 @@ public sealed class DeviceManifestTests
         }
     }
 
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     public void Save_KaitaiFileEscapesTheManifestFolderWithDotDot_Throws()
     {
@@ -421,6 +430,7 @@ public sealed class DeviceManifestTests
         }
     }
 
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     public void Validate_UiFileOrKaitaiFileEscapesTheManifestFolder_ReportsAnError()
     {
@@ -434,6 +444,7 @@ public sealed class DeviceManifestTests
         Assert.Contains("KaitaiFile", string.Join(" ", result.Errors));
     }
 
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     public void Validate_StripChartHistoryLengthAboveTheHardMaximum_Warns()
     {

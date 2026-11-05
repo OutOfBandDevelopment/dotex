@@ -6,6 +6,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using OoBDev.Scpi;
 using OoBDev.UiDefinitions;
+using OoBDev.TestUtilities;
 
 namespace OoBDev.DevTerm.Devices.Scpi.Tests;
 
@@ -16,6 +17,7 @@ namespace OoBDev.DevTerm.Devices.Scpi.Tests;
 /// </summary>
 [TestCategory("Unit")]
 [TestClass]
+[TestCategory(TestCategories.Scpi)]
 public sealed class ScpiAutoDetectTests
 {
     public required TestContext TestContext { get; set; }
@@ -76,6 +78,7 @@ public sealed class ScpiAutoDetectTests
     public void ProgressMessage_SaysWhatItsWaitingForAndHowLong() =>
         Assert.AreEqual("Auto-detecting the SCPI instrument: sent *IDN?, waiting up to 8 s…", ScpiAutoDetect.ProgressMessage(TimeSpan.FromSeconds(8)));
 
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     public async Task DetectAsync_AfterNoReply_ALaterQueryStillCorrelatesCorrectly()
     {

@@ -4,6 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using OoBDev.Scpi;
 using OoBDev.UiDefinitions;
+using OoBDev.TestUtilities;
 
 namespace OoBDev.DevTerm.Devices.Scpi.Tests;
 
@@ -15,6 +16,7 @@ namespace OoBDev.DevTerm.Devices.Scpi.Tests;
 /// </summary>
 [TestCategory("Unit")]
 [TestClass]
+[TestCategory(TestCategories.Scpi)]
 public sealed class ScpiControlSurfaceTests
 {
     private static (Session Session, FakeTransport Transport) CreateSurfaceSession()
@@ -90,6 +92,7 @@ public sealed class ScpiControlSurfaceTests
         VerifySent(transport, "CONF:VOLT:AC 10\n");
     }
 
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     public async Task InvokeAsync_MultiParameterCommand_TextValueContainingAComma_SurvivesIntact()
     {
@@ -107,6 +110,7 @@ public sealed class ScpiControlSurfaceTests
         VerifySent(transport, "CONF:VOLT:AC,extra 10\n");
     }
 
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     public async Task InvokeAsync_MultiParameterCommand_EmptySecondValue_FallsBackToDefault()
     {
@@ -120,6 +124,7 @@ public sealed class ScpiControlSurfaceTests
         VerifySent(transport, "CONF:VOLT:AC AUTO\n");
     }
 
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     public async Task InvokeAsync_MultiParameterCommand_EarlierValueContainingALaterPlaceholder_IsNotItselfSubstituted()
     {
@@ -147,6 +152,7 @@ public sealed class ScpiControlSurfaceTests
         VerifySent(transport, "SOUR1:FREQ 1000\n");
     }
 
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     public async Task InvokeAsync_NumericParameterWithNoLimitsSet_IsNotForcedToZero()
     {
@@ -221,6 +227,7 @@ public sealed class ScpiControlSurfaceTests
         tracker.Verify(t => t.QuerySent("idn.reply"), Times.Once);
     }
 
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     public async Task InvokeAsync_QueryCommand_WhenSendFails_CancelsTheReplyIndicatorAndRethrows()
     {

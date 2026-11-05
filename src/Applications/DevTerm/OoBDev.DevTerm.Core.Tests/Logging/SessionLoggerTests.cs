@@ -11,6 +11,7 @@ using OoBDev.DevTerm.Logging;
 using System.Diagnostics;
 using OoBDev.DevTerm.Presenters.Text;
 using Microsoft.Extensions.Options;
+using OoBDev.TestUtilities;
 
 namespace OoBDev.DevTerm.Logging.Tests;
 
@@ -21,6 +22,7 @@ namespace OoBDev.DevTerm.Logging.Tests;
 [TestCategory("Unit")]
 [TestCategory("Unit")]
 [TestClass]
+[TestCategory(TestCategories.Logging)]
 public sealed class SessionLoggerTests
 {
     private static readonly TimeSpan _timeout = TimeSpan.FromSeconds(5);
@@ -258,6 +260,7 @@ public sealed class SessionLoggerTests
         Assert.HasCount(1, transport.WrittenPayloads);
     }
 
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     public async Task AWriteFailure_MarksTheLoggerInactive_AndStopsAdvancingTheRecordCount()
     {
@@ -284,6 +287,7 @@ public sealed class SessionLoggerTests
         Assert.AreEqual(lengthAfterFault, backing.Length, "Once faulted, no further record - valid or not - should be appended after the torn line, or SessionLog.Load's own end-of-file-only tolerance for a torn line breaks.");
     }
 
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     public async Task Write_WithASlowUnderlyingStream_ReturnsWithoutWaitingForTheDiskWrite()
     {

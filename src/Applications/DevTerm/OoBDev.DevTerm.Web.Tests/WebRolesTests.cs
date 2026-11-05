@@ -24,10 +24,12 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using OoBDev.DevTerm.Configuration;
 using OoBDev.DevTerm.Web.Tests;
+using OoBDev.TestUtilities;
 namespace OoBDev.DevTerm.Web.Tests;
 
 [TestClass]
 [TestCategory("Unit")]
+[TestCategory(TestCategories.Web)]
 public class WebRolesTests
 {
     private static int FreePort()

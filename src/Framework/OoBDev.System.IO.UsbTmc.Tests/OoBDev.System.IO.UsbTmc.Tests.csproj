@@ -28,6 +28,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\OoBDev.System.IO.UsbTmc\OoBDev.System.IO.UsbTmc.csproj" />
+		<ProjectReference Include="..\OoBDev.TestUtilities\OoBDev.TestUtilities.csproj" />
 	</ItemGroup>
 
 </Project>

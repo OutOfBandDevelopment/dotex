@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 namespace OoBDev.DerEE.De5000.Tests;
 
 [TestClass]
+[TestCategory(TestCategories.DerEe_De5000)]
 public class De5000StreamTests
 {
     private static SegmentPump<De5000Frame> Pump() => new(new De5000Device());

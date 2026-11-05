@@ -10,6 +10,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Buffers;
 using System.IO.Pipelines;
 using Moq;
+using OoBDev.TestUtilities;
 
 namespace OoBDev.DevTerm.Tests;
 
@@ -84,6 +85,7 @@ public sealed class SessionTests
         CollectionAssert.AreEqual(payload, written);
     }
 
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     public async Task OpenAsync_ResetsAnyResettablePresenterBeforeStartingTheReadLoop()
     {
@@ -101,6 +103,7 @@ public sealed class SessionTests
         resettable.Verify(r => r.Reset(), Times.Once);
     }
 
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     public async Task OpenAsync_AfterClose_ResetsTheResettablePresenterAgain()
     {
@@ -337,6 +340,7 @@ public sealed class SessionTests
         transport.Verify(t => t.CloseAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     public async Task SendAsync_CalledSynchronouslyFromTheReadLoopsOutputHandler_FailsFastInsteadOfDeadlockingWhenTheSendFails()
     {
@@ -404,6 +408,7 @@ public sealed class SessionTests
         await session.CloseAsync(TestContext.CancellationToken);
     }
 
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     public async Task OpenAsync_CalledAgainWhileAlreadyOpen_DoesNotStartASecondReadLoop()
     {

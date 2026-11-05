@@ -11,6 +11,7 @@ using System.IO.Pipelines;
 using System.Text;
 using Microsoft.Extensions.Time.Testing;
 using Moq;
+using OoBDev.TestUtilities;
 
 namespace OoBDev.DevTerm.Tests;
 
@@ -229,6 +230,7 @@ public sealed class StreamContentWatcherTests
         CollectionAssert.AreEqual(payload, captures[0].Data);
     }
 
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     public void DeclaredImage_InAnIndefiniteLengthBlock_IsCapturedByItsOwnStructuralEndWithNoHeaderBytes()
     {

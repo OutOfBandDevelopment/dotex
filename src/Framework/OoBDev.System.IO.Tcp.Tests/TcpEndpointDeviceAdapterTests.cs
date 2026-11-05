@@ -10,11 +10,13 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using OoBDev.TestUtilities;
 
 namespace OoBDev.System.IO.Tcp.Tests;
 
 [TestCategory("Unit")]
 [TestClass]
+[TestCategory(TestCategories.Tcp)]
 public sealed class TcpTransportTests
 {
     private static IOptions<TcpEndpointOptions> Options(TcpEndpointMode mode, string? host = "device.local", int port = 502, int writeTimeoutMs = 5000, bool softwareFlowControl = false) =>
@@ -156,6 +158,7 @@ public sealed class TcpTransportTests
         await transport.CloseAsync(TestContext.CancellationToken);
     }
 
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     [TestCategory("Unit")]
     public async Task WriteAsync_ConnectionNeverDrains_ThrowsTimeoutExceptionAfterWriteTimeoutMs()

@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Extensions.Options;
 using static OoBDev.DevTerm.Presenters.Text.Tests.TestSequence;
+using OoBDev.TestUtilities;
 
 namespace OoBDev.DevTerm.Presenters.Text.Tests;
 
@@ -95,6 +96,7 @@ public sealed class AsciiPresenterTests
         CollectionAssert.AreEqual(new[] { "abc", "def" }, result.ToArray());
     }
 
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     public void Render_LineExactlyAtMaxLengthWithCrLf_IsNotFollowedByASpuriousEmptyLine()
     {
@@ -105,6 +107,7 @@ public sealed class AsciiPresenterTests
         CollectionAssert.AreEqual(new[] { "ABCD" }, result.ToArray(), "The CRLF right after a length-triggered flush terminates that same line - it shouldn't also start a new, empty one.");
     }
 
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     public void Render_LineExactlyAtMaxLengthWithLf_IsNotFollowedByASpuriousEmptyLine()
     {
@@ -115,6 +118,7 @@ public sealed class AsciiPresenterTests
         CollectionAssert.AreEqual(new[] { "ABCD" }, result.ToArray());
     }
 
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     public void Render_LineExactlyAtMaxLengthWithCr_IsNotFollowedByASpuriousEmptyLine()
     {
@@ -125,6 +129,7 @@ public sealed class AsciiPresenterTests
         CollectionAssert.AreEqual(new[] { "ABCD" }, result.ToArray());
     }
 
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     public void Render_LengthTriggeredFlushFollowedByAnIntentionalBlankLine_StillReturnsThatBlankLine()
     {

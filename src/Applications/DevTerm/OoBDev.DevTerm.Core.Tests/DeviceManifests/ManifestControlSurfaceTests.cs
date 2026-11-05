@@ -16,6 +16,7 @@ using System.Text;
 using OoBDev.DevTerm.Loopback;
 using OoBDev.UiDefinitions;
 using Microsoft.Extensions.Options;
+using OoBDev.TestUtilities;
 
 namespace OoBDev.DevTerm.DeviceManifests.Tests;
 
@@ -134,6 +135,7 @@ public sealed class ManifestControlSurfaceTests
         Assert.AreEqual("OUT1\n", Sent(transport, 6), "A parameterless template's {value} takes the control's value.");
     }
 
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     public async Task InvokeAsync_NonFiniteNumericValue_DoesNotSendNaNOrInfinityLiterally()
     {
@@ -150,6 +152,7 @@ public sealed class ManifestControlSurfaceTests
         Assert.AreEqual("VSET1:05.00\n", Sent(transport, 0), "A non-finite value falls back to the parameter's default, not NaN itself.");
     }
 
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     public async Task InvokeAsync_IntegerParameterRoundingToAFractionalMaximum_IsStillClampedToIt()
     {
@@ -165,6 +168,7 @@ public sealed class ManifestControlSurfaceTests
         Assert.AreEqual("TRIM10.5\n", Sent(transport, 0), "Clamped to the fractional maximum after rounding, not rounded past it.");
     }
 
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     public async Task InvokeAsync_MultiParameterCommand_TextValueContainingAComma_SurvivesIntact()
     {
@@ -183,6 +187,7 @@ public sealed class ManifestControlSurfaceTests
         Assert.AreEqual("CH3:HIGH,extra\n", Sent(transport, 0));
     }
 
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     public async Task InvokeAsync_MultiParameterCommand_EarlierValueContainingALaterPlaceholder_IsNotItselfSubstituted()
     {
@@ -241,6 +246,7 @@ public sealed class ManifestControlSurfaceTests
         public void Cancel(string replyIndicatorId) => Cancelled.Add(replyIndicatorId);
     }
 
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     public async Task InvokeAsync_QueryCommand_WhenSendFails_CancelsTheReplyIndicatorAndRethrows()
     {

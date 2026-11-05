@@ -12,12 +12,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using OoBDev.TestUtilities;
 
 namespace OoBDev.DevTerm.Tests;
 
 /// <summary>The RFC 2217 server mode: a raw Telnet client negotiates, sets the line, and exchanges escaped data.</summary>
 [TestCategory("Integration")]
 [TestClass]
+[TestCategory(TestCategories.Rfc2217)]
 public sealed class Rfc2217ServerBridgeTests
 {
     public required TestContext TestContext { get; set; }

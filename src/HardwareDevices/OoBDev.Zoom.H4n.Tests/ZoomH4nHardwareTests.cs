@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 namespace OoBDev.Zoom.H4n.Tests;
 
 [TestClass]
+[TestCategory(TestCategories.Zoom_H4n)]
 public class ZoomH4nHardwareTests
 {
     public TestContext TestContext { get; set; } = null!;

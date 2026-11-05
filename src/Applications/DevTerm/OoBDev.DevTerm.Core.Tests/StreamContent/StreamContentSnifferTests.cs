@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Text;
+using OoBDev.TestUtilities;
 
 namespace OoBDev.DevTerm.Tests;
 
@@ -135,6 +136,7 @@ public sealed class StreamContentSnifferTests
         Assert.AreEqual(expectedPayloadLength, payloadLength);
     }
 
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     public void Find_IndefiniteLengthBlockWrappingAnImage_ReportsTheHeaderWithNoPayloadLength()
     {

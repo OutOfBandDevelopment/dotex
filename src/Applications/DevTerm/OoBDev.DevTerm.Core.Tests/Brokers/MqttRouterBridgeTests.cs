@@ -16,6 +16,7 @@ namespace OoBDev.DevTerm.Brokers;
 
 /// <summary>A <see cref="MessageRouter"/> wired to MQTT through <see cref="MqttRouterBridge"/>: a fake connection, then the real Mosquitto broker in containers/.</summary>
 [TestClass]
+[TestCategory(TestCategories.Mqtt)]
 public sealed class MqttRouterBridgeTests
 {
     private const string _rulesJson = """

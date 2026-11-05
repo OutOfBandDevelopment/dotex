@@ -6,11 +6,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Buffers.Binary;
+using OoBDev.TestUtilities;
 
 namespace OoBDev.System.IO.UsbTmc.Tests;
 
 [TestCategory("Unit")]
 [TestClass]
+[TestCategory(TestCategories.Usbtmc)]
 public sealed class UsbTmcCodecTests
 {
     private static byte[] BuildHeader(byte msgId, byte bTag, byte bTagInverse, int transferSize, bool eom)

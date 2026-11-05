@@ -8,10 +8,12 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Text;
 using OoBDev.System.IO.Pipelines;
 using Microsoft.Extensions.Options;
+using OoBDev.TestUtilities;
 namespace OoBDev.System.IO.Brokers.Tests;
 
 [TestCategory("Unit")]
 [TestClass]
+[TestCategory(TestCategories.Brokers)]
 public sealed class BrokerDeviceAdapterTests
 {
     public TestContext TestContext { get; set; } = null!;

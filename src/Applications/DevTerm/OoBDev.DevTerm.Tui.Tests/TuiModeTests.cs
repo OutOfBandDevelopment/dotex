@@ -16,6 +16,7 @@ using OoBDev.DevTerm.Presenters.Text;
 using OoBDev.DevTerm;
 using OoBDev.DevTerm.Presenters.Text;
 using Microsoft.Extensions.Options;
+using OoBDev.TestUtilities;
 namespace OoBDev.DevTerm.Tui.Tests;
 
 /// <summary>
@@ -308,6 +309,7 @@ public sealed class TuiModeTests
     /// <see cref="TuiLoggingTests"/> uses), since RunAsync itself can't easily be driven end-to-end
     /// here.
     /// </summary>
+    [TestCategory(TestCategories.BugRegression)]
     [TestMethod]
     public async Task Quitting_WithACaptureStillInProgress_FlushesAndSavesIt()
     {

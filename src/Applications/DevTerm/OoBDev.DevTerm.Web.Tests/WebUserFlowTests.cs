@@ -20,11 +20,13 @@ using System.Net.Sockets;
 using OoBDev.DevTerm.Configuration;
 using OoBDev.DevTerm.Web.Tests;
 using Microsoft.Playwright;
+using OoBDev.TestUtilities;
 namespace OoBDev.DevTerm.Web.Tests;
 
 /// <summary>The shared user flows, driven through the real web page in headless Edge (Playwright).</summary>
 [TestClass]
 [TestCategory("DevLocal")]
+[TestCategory(TestCategories.Web)]
 public sealed class WebUserFlowTests : UserFlowTestsBase
 {
     private static string FlowProject()
