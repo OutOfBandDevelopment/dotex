@@ -62,7 +62,7 @@ Scope rule: every BinaryDataDecoders feature is migrated; phases are priority or
 
 ### Decided, waiting its turn
 
-- [ ] **SharedFramework** is design first (Epics 2, 6, 7, 10): four documents per feature (requirements, architecture, api-design, testing-strategy). See [CLAUDE.md](CLAUDE.md#current-work-context).
+- [ ] **SharedFramework** (Epics 2, 6, 7, 10): the four design documents exist for every feature in `Features/Proposals` (Communications completed 2026-11-05). Implementation starts feature by feature, design first per [the standard](docs/patterns-discovery/06-design-document-standard.md); first step is moving each feature set into `docs/design/<Feature>/` with a migration plan (rule `layering-and-migration-plans`).
 - [ ] **BulkLlm**: consolidate. `OoBDev.LlmCodeGen.Cli` is built; the live Groq run remains ([design](docs/design/LlmCodeGen/README.md)).
 - [ ] Desired-state database tooling phase 0: bake-off of sqldef, pgschema and Atlas per `docs/design/DesiredStateDatabase/`; do it after the other backlog items (owner, 2026-10-29).
 - [ ] **Consolidate the migration projects** (owner, 2026-10-29): left are `device-decoding-migration-plan.md`, `device-parity.md` and the two `incoming-*` notes, which fold into the DevTerm and BinaryDataDecoders items when those finish ([inventory](docs/migration/README.md)).
