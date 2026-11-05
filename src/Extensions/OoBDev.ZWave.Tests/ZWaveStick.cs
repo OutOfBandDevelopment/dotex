@@ -2,7 +2,9 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.System.IO;
 using OoBDev.System.IO.Pipelines;
 using OoBDev.System.IO.Ports;
+using OoBDev.System.IO.Tcp;
 using System;
+using OoBDev.Devices.TestUtilities;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Ports;
@@ -17,15 +19,15 @@ namespace OoBDev.ZWave.Tests;
 /// </summary>
 internal sealed class ZWaveStick : IDisposable
 {
-    private readonly SerialPort _port;
+    private readonly SerialPort? _port;
     private readonly CancellationTokenSource _cancel = new();
     private readonly ZWaveSession _session;
     private readonly List<ZWaveFrame> _frames = [];
 
-    private ZWaveStick(SerialPort port)
+    private ZWaveStick(SerialPort? port, IDeviceAdapter adapter)
     {
         _port = port;
-        var device = new StreamDevice<ZWaveFrame>(OpenAdapter(port), new ZWaveDevice(), minimumTransmissionDelay: 50, token: _cancel.Token);
+        var device = new StreamDevice<ZWaveFrame>(adapter, new ZWaveDevice(), minimumTransmissionDelay: 50, token: _cancel.Token);
         _session = new ZWaveSession(device);
         _session.FrameReceived += (_, frame) =>
         {
@@ -33,11 +35,37 @@ internal sealed class ZWaveStick : IDisposable
         };
     }
 
-    private static SerialPortDeviceAdapter OpenAdapter(SerialPort port)
+    private static IDeviceAdapter OpenAdapter(IDeviceAdapter adapter)
     {
-        var adapter = new SerialPortDeviceAdapter(port);
         adapter.OpenAsync().GetAwaiter().GetResult();
         return adapter;
+    }
+
+    /// <summary>
+    /// Opens the stick the run parameters name: <c>ZWAVE_TCP_HOST</c> (<c>host:port</c>, a serial-to-Ethernet bridge) wins over
+    /// <c>ZWAVE_SERIAL_PORT</c>; the test ends Inconclusive when neither is set or the stick cannot be reached.
+    /// </summary>
+    public static ZWaveStick Open(TestContext testContext)
+    {
+        var endpoint = testContext.Properties["ZWAVE_TCP_HOST"]?.ToString();
+        if (string.IsNullOrWhiteSpace(endpoint))
+            return Open(DevicePreflight.RequireSerialPort(testContext, "ZWAVE_SERIAL_PORT"));
+
+        endpoint = endpoint.Replace("tcp://", string.Empty, StringComparison.OrdinalIgnoreCase);
+        var tcpPort = 0;
+        var split = endpoint.LastIndexOf(':');
+        if (split <= 0 || !int.TryParse(endpoint[(split + 1)..], out tcpPort))
+            Assert.Inconclusive($"'ZWAVE_TCP_HOST' must be host:port, not '{endpoint}'.");
+
+        try
+        {
+            return new ZWaveStick(null, OpenAdapter(new TcpDeviceAdapter(endpoint[..split], tcpPort)));
+        }
+        catch (Exception ex) when (ex is IOException or global::System.Net.Sockets.SocketException or InvalidOperationException or TimeoutException)
+        {
+            Assert.Inconclusive($"'{endpoint}' cannot be reached: {ex.Message}");
+            throw;
+        }
     }
 
     /// <summary>A snapshot of the frames received so far.</summary>
@@ -65,7 +93,7 @@ internal sealed class ZWaveStick : IDisposable
         }
 
         port.DiscardInBuffer();
-        return new ZWaveStick(port);
+        return new ZWaveStick(port, OpenAdapter(new SerialPortDeviceAdapter(port)));
     }
 
     public void Send(ZWaveFrame frame) => _session.SendAsync(frame).GetAwaiter().GetResult();
@@ -90,7 +118,7 @@ internal sealed class ZWaveStick : IDisposable
         Thread.Sleep(500); // lets the last ACK leave the queue, or the stick retransmits into the next test
         _cancel.Cancel();
         _session.Dispose();
-        _port.Dispose();
+        _port?.Dispose();
         _cancel.Dispose();
     }
 }

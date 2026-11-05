@@ -19,8 +19,7 @@ public class ZWaveHardwareTests
     public async Task GetVersion_OnTheStick_AnswersWithALibraryNameAndNoCanTest()
     {
         // Stage
-        var portName = DevicePreflight.RequireSerialPort(TestContext, "ZWAVE_SERIAL_PORT");
-        using var stick = ZWaveStick.Open(portName);
+        using var stick = ZWaveStick.Open(TestContext);
 
         // Test
         stick.Send(ZWaveRequests.GetVersion());
@@ -43,12 +42,11 @@ public class ZWaveHardwareTests
     public async Task Switch_AgainstRealNode_TogglesOffToOnToOffTest()
     {
         // Stage
-        var portName = DevicePreflight.RequireSerialPort(TestContext, "ZWAVE_SERIAL_PORT");
         var node = TestContext.GetPropertyOrDefault("ZWAVE_SWITCH_NODE", 0);
         if (node is < 2 or > 232)
             Assert.Inconclusive("No 'ZWAVE_SWITCH_NODE' run parameter: it actuates a real outlet, so name the relay node (2 to 232) in .runsettings.");
 
-        using var stick = ZWaveStick.Open(portName);
+        using var stick = ZWaveStick.Open(TestContext);
         byte callback = 0;
 
         async Task<bool?> ReadStateAsync()
@@ -96,8 +94,7 @@ public class ZWaveHardwareTests
     public async Task Enumerate_OnTheStick_ListsNodesAndTheirProtocolInfoTest()
     {
         // Stage
-        var portName = DevicePreflight.RequireSerialPort(TestContext, "ZWAVE_SERIAL_PORT");
-        using var stick = ZWaveStick.Open(portName);
+        using var stick = ZWaveStick.Open(TestContext);
         var table = new ZWaveNodeTable();
 
         // Test
