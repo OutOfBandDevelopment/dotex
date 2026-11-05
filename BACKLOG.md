@@ -29,7 +29,7 @@ Owner: all protocols and features of dev-term must exist here. Done means what d
 - [ ] Integration suite under 5 minutes (now 7 min 54 s; the no-flaky-tests goal is met; needs the full Docker stack for repeated timed runs, so it waits for a dedicated session): [suite-timing.md](docs/architecture/testing/integration/suite-timing.md).
 - [ ] `DevLocal` tests kept on purpose: Ollama (hard-coded LAN host, model pull and delete; revisit when the owner says Ollama testing can resume), USB HID (hardware), `PathEx`, `MergedXPathNavigator`, `ProjectTools.FixReadmes` (hard-coded `C:\Repos` paths), Markdown `TestMethod1` (writes files).
 - [ ] Add a live-integration doc page per new cloud service (only Groq exists; its key was revoked 2026-10-09, so runs wait for the owner).
-- [ ] Example AppHost live journeys: Keycloak wiring is built (2026-11-04) but not run live; run the host with Docker and the journeys, then diagnose why the API traces do not reach the dashboard ([apphost-live-journeys.md](docs/design/example-ui/apphost-live-journeys.md)).
+- [ ] Example AppHost live journeys: Keycloak wiring is built but not run live. The OTLP protocol bug is fixed and unit tested (2026-11-05); re-run the host once the stale DCP process holding port 16890 is stopped (needs an owner kill, the tool refused it), then check traces reach the dashboard and run the journeys ([apphost-live-journeys.md](docs/design/example-ui/apphost-live-journeys.md)).
 - Azure Monitor exporter: not built (decided 2026-10-22); OTLP reaches any collector and is verified with the Aspire dashboard.
 
 ## 4. APIs and documents

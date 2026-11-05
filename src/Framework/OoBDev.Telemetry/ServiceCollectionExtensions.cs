@@ -92,12 +92,14 @@ public static class ServiceCollectionExtensions
 
     // An endpoint set in code is used as given, so the HTTP signal path has to be added here (the environment
     // variable gets it appended by the exporter).
-    private static void Apply(OtlpExporterOptions exporter, OpenTelemetryOptions options, string httpSignalPath)
+    internal static void Apply(OtlpExporterOptions exporter, OpenTelemetryOptions options, string httpSignalPath)
     {
-        var protocol = Enum.TryParse<OtlpExportProtocol>(options.Protocol, ignoreCase: true, out var parsed)
-            ? parsed
-            : OtlpExportProtocol.HttpProtobuf;
-        exporter.Protocol = protocol;
+        // Setting the protocol in code overrides OTEL_EXPORTER_OTLP_PROTOCOL, which made an Aspire gRPC endpoint receive HTTP.
+        var fromEnvironment = !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("OTEL_EXPORTER_OTLP_PROTOCOL"));
+        var configured = Enum.TryParse<OtlpExportProtocol>(options.Protocol, ignoreCase: true, out var parsed);
+        if (configured || !fromEnvironment)
+            exporter.Protocol = configured ? parsed : OtlpExportProtocol.HttpProtobuf;
+        var protocol = exporter.Protocol;
         if (options.OtlpEndpoint is null)
             return;
 
