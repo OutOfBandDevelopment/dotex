@@ -65,7 +65,7 @@ Each task section should include:
 
 ## By day
 
-- [2026-11-04](2026-11-04.md): 29 task(s)
+- [2026-11-04](2026-11-04.md): 30 task(s)
 - [2026-11-03](2026-11-03.md): 4 task(s)
 - [2026-10-30](2026-10-30.md): 33 task(s)
 - [2026-10-29](2026-10-29.md): 98 task(s)
@@ -604,3 +604,4 @@ Each task section should include:
 - [Guide screenshots through image-mask sync (2026-10-30)](2026-10-30.md#guide-screenshots-through-image-mask-sync-2026-10-30) - Tui and Web guide captures only replace committed images when they differ once masked
 - [WPF screenshot capture (2026-10-30)](2026-10-30.md#wpf-screenshot-capture-2026-10-30) - `WpfScreenshot` through `GuideImage`; connection editor captured
 - [WPF field-following previews (2026-10-30)](2026-10-30.md#wpf-field-following-previews-2026-10-30) - a button tooltip's Sends line recomputes as its parameter fields change
+- [Guide renderer moved to OoBDev.Documents.Guides (2026-11-04)](2026-11-04.md#guide-renderer-moved-to-oobdevdocumentsguides) - `ApiGuideRenderer` is now a Framework library with its own tests

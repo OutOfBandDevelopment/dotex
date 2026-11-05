@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 
-namespace OoBDev.DevTerm.TestUtilities;
+namespace OoBDev.Documents.Guides;
 
 /// <summary>Renders an API guide (markdown) from an OpenAPI or AsyncAPI document, deterministically: same document, same bytes.</summary>
 public static class ApiGuideRenderer

@@ -15,6 +15,7 @@
 	<ItemGroup>
 		<ProjectReference Include="..\OoBDev.DevTerm.Core\OoBDev.DevTerm.Core.csproj" />
 		<ProjectReference Include="..\..\..\Tools\OoBDev.ImageMask.Cli\OoBDev.ImageMask.Cli.csproj" />
+		<ProjectReference Include="..\..\..\Framework\OoBDev.Documents.Guides\OoBDev.Documents.Guides.csproj" />
 	</ItemGroup>
 
 </Project>

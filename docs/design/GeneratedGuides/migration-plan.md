@@ -1,6 +1,6 @@
 # Migration plan: guide renderers to a Framework library
 
-[GeneratedGuides](README.md) | Status: **awaiting owner confirmation** (answer Q1, 2026-11-04: option A, a Framework library with a generic name)
+[GeneratedGuides](README.md) | Status: **confirmed by the owner (2026-11-04); `ApiGuideRenderer` moved 2026-11-04** (answer Q1: option A, a Framework library with a generic name). `KsyGuideRenderer` stays in `OoBDev.DevTerm.TestUtilities` because it uses `KsyImporter` from `OoBDev.DevTerm.Core`; `CliToolGuide` is still to build.
 
 Rule `layering-and-migration-plans`: reusable means Framework. `ApiGuideRenderer` and `KsyGuideRenderer` have no DevTerm names, and the Example WebApi guide and the `src/Tools` command-line guides need the same helpers.
 

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.DevTerm.Configuration;
 using OoBDev.DevTerm.TestUtilities;
+using OoBDev.Documents.Guides;
 
 namespace OoBDev.DevTerm.Web.Tests;
 
