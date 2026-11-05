@@ -38,7 +38,7 @@ public sealed class BridgeHostedService : BackgroundService
 
         if (_config.Bridges.Count == 0)
         {
-            _logger.LogWarning("No bridges configured. Run 'ser2net-win config' to add one.");
+            _logger.NoBridges();
             await Task.Delay(Timeout.Infinite, stoppingToken).ConfigureAwait(false);
             return;
         }
@@ -51,7 +51,8 @@ public sealed class BridgeHostedService : BackgroundService
         var logger = _loggerFactory.CreateLogger($"Bridge.{options.ComPort}");
         try
         {
-            await new BridgeWorker(options, _serialFactory, logger, RetryInterval, _advertiser).RunAsync(stoppingToken).ConfigureAwait(false);
+            using var worker = new BridgeWorker(options, _serialFactory, logger, RetryInterval, _advertiser);
+            await worker.RunAsync(stoppingToken).ConfigureAwait(false);
         }
         catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested)
         {
@@ -59,7 +60,7 @@ public sealed class BridgeHostedService : BackgroundService
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "{Bridge}: bridge failed and was stopped (other bridges keep running)", options.ComPort);
+            logger.BridgeFailed(ex, options.ComPort);
         }
     }
 }

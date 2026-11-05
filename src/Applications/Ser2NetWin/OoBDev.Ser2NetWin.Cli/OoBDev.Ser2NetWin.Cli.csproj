@@ -5,7 +5,7 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <NoWarn>$(NoWarn);CA1305;MA0011;MA0051;MA0002;MA0004</NoWarn>
+    <NoWarn>$(NoWarn);MA0051</NoWarn>
     <AssemblyName>ser2net-win</AssemblyName>
     <RootNamespace>OoBDev.Ser2NetWin.Cli</RootNamespace>
     <PackAsTool>true</PackAsTool>

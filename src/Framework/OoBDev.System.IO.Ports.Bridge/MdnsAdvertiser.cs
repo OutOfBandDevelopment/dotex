@@ -9,7 +9,7 @@ namespace OoBDev.System.IO.Ports.Bridge;
 public sealed class MdnsAdvertiser : IServiceAdvertiser, IDisposable
 {
     private readonly MdnsOptions _options;
-    private readonly object _gate = new();
+    private readonly Lock _gate = new();
     private MulticastService? _mdns;
     private ServiceDiscovery? _discovery;
 
@@ -23,7 +23,7 @@ public sealed class MdnsAdvertiser : IServiceAdvertiser, IDisposable
     /// </summary>
     public static IReadOnlyList<MdnsService> Plan(BridgeOptions bridge, int port, string defaultServiceType)
     {
-        var defaultTxt = new Dictionary<string, string>
+        var defaultTxt = new Dictionary<string, string>(StringComparer.Ordinal)
         {
             ["protocol"] = bridge.Protocol == BridgeProtocol.Rfc2217 ? "rfc2217" : "raw",
             ["port"] = bridge.ComPort,

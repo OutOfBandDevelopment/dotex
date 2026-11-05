@@ -8,7 +8,7 @@ namespace OoBDev.System.IO.Ports.Bridge;
 /// One serial device bridged to one TCP listener. The serial port stays open while no
 /// client is connected (and is reopened after failures); one TCP client at a time is served.
 /// </summary>
-public sealed class BridgeWorker
+public sealed class BridgeWorker : IDisposable
 {
     private const int BufferSize = 4096;
 
@@ -16,7 +16,7 @@ public sealed class BridgeWorker
     private readonly ISerialPortFactory _serialFactory;
     private readonly ILogger _logger;
     private readonly TimeSpan _retryInterval;
-    private readonly object _gate = new();
+    private readonly Lock _gate = new();
     private readonly IServiceAdvertiser? _advertiser;
     private readonly SemaphoreSlim _writeLock = new(1, 1);
 
@@ -27,7 +27,7 @@ public sealed class BridgeWorker
     private Rfc2217Session? _session;
     private IDisposable? _advertisement;
     private EndPoint? _clientRemote;
-    private DateTime _clientSince;
+    private DateTimeOffset _clientSince;
 
     public BridgeWorker(BridgeOptions options, ISerialPortFactory serialFactory, ILogger logger, TimeSpan retryInterval, IServiceAdvertiser? advertiser = null)
     {
@@ -39,6 +39,12 @@ public sealed class BridgeWorker
     }
 
     public BridgeOptions Options => _options;
+
+    /// <summary>The clock for client timing; replaced in tests.</summary>
+    public TimeProvider TimeProvider { get; init; } = TimeProvider.System;
+
+    /// <inheritdoc />
+    public void Dispose() => _writeLock.Dispose();
 
     /// <summary>How long a new connection waits for the previous client to finish releasing the port before it is refused.</summary>
     public TimeSpan ClientReleaseGrace { get; init; } = TimeSpan.FromSeconds(1);
@@ -70,7 +76,7 @@ public sealed class BridgeWorker
         var listener = new TcpListener(IPAddress.Parse(_options.BindAddress), _options.TcpPort);
         listener.Start();
         _listener = listener;
-        _logger.LogInformation("{Bridge}: listening on {Endpoint} ({Protocol})", _options.ComPort, listener.LocalEndpoint, _options.Protocol);
+        _logger.Listening(_options.ComPort, listener.LocalEndpoint, _options.Protocol);
 
         if (_advertiser is not null)
         {
@@ -80,7 +86,7 @@ public sealed class BridgeWorker
             }
             catch (Exception ex)
             {
-                _logger.LogWarning(ex, "{Bridge}: mDNS advertisement failed; bridge keeps running without it", _options.ComPort);
+                _logger.AdvertisementFailed(ex, _options.ComPort);
             }
         }
     }
@@ -143,7 +149,7 @@ public sealed class BridgeWorker
         }
         catch (Exception ex) when (ex is IOException or SocketException or ObjectDisposedException or InvalidOperationException)
         {
-            _logger.LogDebug(ex, "{Bridge}: dropped a connection while accepting it", _options.ComPort);
+            _logger.AcceptDropped(ex, _options.ComPort);
             client.Dispose();
         }
     }
@@ -155,7 +161,7 @@ public sealed class BridgeWorker
     /// </summary>
     private async Task<bool> TryClaimAsync(TcpClient client, CancellationToken cancellationToken)
     {
-        var deadline = DateTime.UtcNow + ClientReleaseGrace;
+        var deadline = TimeProvider.GetUtcNow() + ClientReleaseGrace;
         var kicked = false;
 
         while (true)
@@ -167,7 +173,7 @@ public sealed class BridgeWorker
                 {
                     _client = client;
                     _clientRemote = client.Client.RemoteEndPoint;
-                    _clientSince = DateTime.UtcNow;
+                    _clientSince = TimeProvider.GetUtcNow();
                     _clientTask = RunClientAsync(client, cancellationToken);
                     return true;
                 }
@@ -176,13 +182,13 @@ public sealed class BridgeWorker
                 {
                     holder = _client;
                     kicked = true;
-                    _logger.LogInformation("{Bridge}: replacing client {Old} with {New}", _options.ComPort, _clientRemote, client.Client.RemoteEndPoint);
+                    _logger.ReplacingClient(_options.ComPort, _clientRemote, client.Client.RemoteEndPoint);
                 }
             }
 
             holder?.Dispose();
 
-            if (DateTime.UtcNow >= deadline)
+            if (TimeProvider.GetUtcNow() >= deadline)
             {
                 return false;
             }
@@ -198,10 +204,10 @@ public sealed class BridgeWorker
         {
             holder = _clientRemote is null
                 ? "another client"
-                : $"{_clientRemote} for {(DateTime.UtcNow - _clientSince).TotalSeconds:0}s";
+                : $"{_clientRemote} for {(TimeProvider.GetUtcNow() - _clientSince).TotalSeconds:0}s";
         }
 
-        _logger.LogWarning("{Bridge}: rejected extra client {Remote}; port is held by {Holder}", _options.ComPort, client.Client.RemoteEndPoint, holder);
+        _logger.RejectedClient(_options.ComPort, client.Client.RemoteEndPoint, holder);
 
         // Raw bridges can carry a plain-text reason; RFC 2217 clients expect telnet framing, so they just see the close.
         if (_options.Protocol == BridgeProtocol.Raw)
@@ -226,7 +232,7 @@ public sealed class BridgeWorker
     private async Task RunClientAsync(TcpClient client, CancellationToken cancellationToken)
     {
         var remote = client.Client.RemoteEndPoint;
-        _logger.LogInformation("{Bridge}: client connected {Remote}", _options.ComPort, remote);
+        _logger.ClientConnected(_options.ComPort, remote);
         var buffer = new byte[BufferSize];
         Rfc2217Session? session = null;
         using var clientCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
@@ -280,7 +286,7 @@ public sealed class BridgeWorker
         }
         catch (Exception ex) when (ex is IOException or SocketException or ObjectDisposedException or InvalidOperationException)
         {
-            _logger.LogDebug(ex, "{Bridge}: client connection error", _options.ComPort);
+            _logger.ClientError(ex, _options.ComPort);
         }
         finally
         {
@@ -300,7 +306,7 @@ public sealed class BridgeWorker
                 }
             }
 
-            _logger.LogInformation("{Bridge}: client disconnected {Remote}", _options.ComPort, remote);
+            _logger.ClientDisconnected(_options.ComPort, remote);
         }
     }
 
@@ -328,15 +334,15 @@ public sealed class BridgeWorker
                 _writeLock.Release();
             }
         }
-        catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested)
+        catch (OperationCanceledException ex) when (!cancellationToken.IsCancellationRequested)
         {
-            throw new IOException($"Client did not accept data within {ClientWriteTimeout.TotalSeconds:0.#}s.");
+            throw new IOException($"Client did not accept data within {ClientWriteTimeout.TotalSeconds:0.#}s.", ex);
         }
     }
 
     private async Task PollModemAsync(TcpClient client, Rfc2217Session session, CancellationToken cancellationToken)
     {
-        using var timer = new PeriodicTimer(TimeSpan.FromMilliseconds(250));
+        using var timer = new PeriodicTimer(TimeSpan.FromMilliseconds(250), TimeProvider);
         try
         {
             while (await timer.WaitForNextTickAsync(cancellationToken).ConfigureAwait(false))
@@ -363,7 +369,7 @@ public sealed class BridgeWorker
 
         if (link is null)
         {
-            _logger.LogDebug("{Bridge}: serial port closed, dropped {Count} bytes from client", _options.ComPort, data.Length);
+            _logger.SerialClosedDropped(_options.ComPort, data.Length);
             return;
         }
 
@@ -374,7 +380,7 @@ public sealed class BridgeWorker
         catch (Exception ex) when (ex is IOException or InvalidOperationException or ObjectDisposedException or UnauthorizedAccessException)
         {
             // The serial loop notices the dead port on its next read and reopens it.
-            _logger.LogWarning(ex, "{Bridge}: serial write failed, dropped {Count} bytes", _options.ComPort, data.Length);
+            _logger.SerialWriteFailed(ex, _options.ComPort, data.Length);
         }
     }
 
@@ -394,7 +400,7 @@ public sealed class BridgeWorker
                     _link = link;
                 }
 
-                _logger.LogInformation("{Bridge}: serial port open ({Settings})", _options.ComPort, _options);
+                _logger.SerialOpen(_options.ComPort, _options);
 
                 while (true)
                 {
@@ -413,7 +419,7 @@ public sealed class BridgeWorker
             }
             catch (Exception ex)
             {
-                _logger.LogWarning("{Bridge}: serial port unavailable ({Message}); retrying in {Seconds:0.#}s", _options.ComPort, ex.Message, _retryInterval.TotalSeconds);
+                _logger.SerialUnavailable(_options.ComPort, ex.Message, _retryInterval.TotalSeconds);
             }
             finally
             {
@@ -456,7 +462,7 @@ public sealed class BridgeWorker
         }
         catch (Exception ex) when (ex is IOException or SocketException or InvalidOperationException or ObjectDisposedException)
         {
-            _logger.LogDebug(ex, "{Bridge}: dropping client after write failure", _options.ComPort);
+            _logger.ClientDropped(ex, _options.ComPort);
             client.Dispose();
         }
     }

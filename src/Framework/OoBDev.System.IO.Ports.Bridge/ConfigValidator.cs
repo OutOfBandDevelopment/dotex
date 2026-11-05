@@ -76,7 +76,7 @@ public static partial class ConfigValidator
         return errors;
     }
 
-    [GeneratedRegex(@"^_[A-Za-z0-9][A-Za-z0-9-]{0,14}\._(tcp|udp)$")]
+    [GeneratedRegex(@"^_[A-Za-z0-9][A-Za-z0-9-]{0,14}\._(tcp|udp)$", RegexOptions.ExplicitCapture, matchTimeoutMilliseconds: 250)]
     private static partial Regex ServiceTypePattern();
 
     public static IReadOnlyList<string> Validate(IEnumerable<BridgeOptions> bridges)

@@ -16,5 +16,5 @@ public sealed record MdnsService
     public int? Port { get; init; }
 
     /// <summary>TXT record entries. When omitted the default protocol/port/baud entries are used.</summary>
-    public Dictionary<string, string>? Txt { get; init; }
+    public IDictionary<string, string>? Txt { get; init; }
 }

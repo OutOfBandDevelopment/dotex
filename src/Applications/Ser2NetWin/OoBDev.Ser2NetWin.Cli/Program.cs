@@ -27,7 +27,7 @@ const string Usage = """
 // The SCM launches the exe with the arguments baked into the service binPath; just run.
 if (WindowsServiceHelpers.IsWindowsService())
 {
-    return await HostRunner.RunAsync(CliOptions.Parse(args).ResolvedConfigPath);
+    return await HostRunner.RunAsync(CliOptions.Parse(args).ResolvedConfigPath).ConfigureAwait(false);
 }
 
 var options = CliOptions.Parse(args);
@@ -62,7 +62,7 @@ string? ServiceCommand(string? error, string success)
 switch (options.Command)
 {
     case "run":
-        return await HostRunner.RunAsync(options.ResolvedConfigPath);
+        return await HostRunner.RunAsync(options.ResolvedConfigPath).ConfigureAwait(false);
 
     case "config":
         return new ConfigEditor(new ConfigStore(options.ResolvedConfigPath), AnsiConsole.Console).Run();
@@ -78,7 +78,7 @@ switch (options.Command)
         return 0;
 
     case "ports":
-        foreach (var port in SerialPort.GetPortNames().OrderBy(p => p.Length).ThenBy(p => p))
+        foreach (var port in SerialPort.GetPortNames().OrderBy(p => p.Length).ThenBy(p => p, StringComparer.Ordinal))
         {
             Console.WriteLine(port);
         }

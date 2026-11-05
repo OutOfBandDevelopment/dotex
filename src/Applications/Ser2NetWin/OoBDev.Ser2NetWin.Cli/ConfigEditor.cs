@@ -1,4 +1,5 @@
 using OoBDev.System.IO.Ports.Bridge;
+using System.Globalization;
 using System.IO.Ports;
 using System.Net;
 using Spectre.Console;
@@ -131,8 +132,8 @@ public sealed class ConfigEditor
         {
             table.AddRow(
                 Markup.Escape(b.ComPort),
-                b.BaudRate.ToString(),
-                b.DataBits.ToString(),
+                b.BaudRate.ToString(CultureInfo.InvariantCulture),
+                b.DataBits.ToString(CultureInfo.InvariantCulture),
                 b.Parity.ToString(),
                 b.StopBits.ToString(),
                 b.Protocol.ToString(),
@@ -214,7 +215,7 @@ public sealed class ConfigEditor
         }
     }
 
-    private List<MdnsService> EditServices(List<MdnsService>? existing)
+    private List<MdnsService> EditServices(IList<MdnsService>? existing)
     {
         var services = existing?.ToList() ?? [];
         if (!_console.Confirm(services.Count == 0 ? "Add secondary mDNS entries?" : $"Edit the {services.Count} secondary mDNS entries?", false))
@@ -233,7 +234,7 @@ public sealed class ConfigEditor
             choices.Add("Done");
             _console.MarkupLine(services.Count == 0
                 ? "[grey]No secondary entries.[/]"
-                : string.Join(Environment.NewLine, services.Select(s => $"[grey]- {Markup.Escape(s.ServiceType)} name={Markup.Escape(s.Name ?? "(bridge)")} port={(s.Port?.ToString() ?? "(bridge)")}[/]")));
+                : string.Join(Environment.NewLine, services.Select(s => $"[grey]- {Markup.Escape(s.ServiceType)} name={Markup.Escape(s.Name ?? "(bridge)")} port={(s.Port?.ToString(CultureInfo.InvariantCulture) ?? "(bridge)")}[/]")));
 
             switch (_console.Prompt(new SelectionPrompt<string>().Title("Secondary mDNS entries:").AddChoices(choices)))
             {
@@ -274,7 +275,7 @@ public sealed class ConfigEditor
             return null;
         }
 
-        var result = new Dictionary<string, string>();
+        var result = new Dictionary<string, string>(StringComparer.Ordinal);
         foreach (var pair in text.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
         {
             var index = pair.IndexOf('=');
@@ -317,7 +318,7 @@ public sealed class ConfigEditor
         var picked = _console.Prompt(new SelectionPrompt<int>()
             .Title("Baud rate:")
             .AddChoices(rates)
-            .UseConverter(r => r == customMarker ? Custom : r.ToString()));
+            .UseConverter(r => r == customMarker ? Custom : r.ToString(CultureInfo.InvariantCulture)));
         return picked == customMarker
             ? _console.Prompt(new TextPrompt<int>("Baud rate:").DefaultValue(current).Validate(r => r > 0))
             : picked;

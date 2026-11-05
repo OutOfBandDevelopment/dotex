@@ -27,7 +27,7 @@ public sealed record BridgeOptions
     public string? Name { get; init; }
 
     /// <summary>Extra mDNS announcements for this bridge, in addition to the default entry.</summary>
-    public List<MdnsService>? MdnsServices { get; init; }
+    public IList<MdnsService>? MdnsServices { get; init; }
 
     /// <summary>When true a new connection disconnects the current client instead of being refused (newest program wins).</summary>
     public bool ReplaceExistingClient { get; init; }

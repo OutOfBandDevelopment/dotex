@@ -26,7 +26,7 @@ public sealed class MdnsPlanTests
             MdnsServices =
             [
                 new MdnsService { ServiceType = "_zwave._tcp" },
-                new MdnsService { ServiceType = "_other._tcp", Name = "alt", Port = 5000, Txt = new() { ["k"] = "v" } },
+                new MdnsService { ServiceType = "_other._tcp", Name = "alt", Port = 5000, Txt = new Dictionary<string, string> { ["k"] = "v" } },
             ],
         };
 

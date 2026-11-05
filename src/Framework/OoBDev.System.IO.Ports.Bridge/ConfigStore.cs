@@ -22,8 +22,6 @@ public sealed class ConfigStore
         Converters = { new JsonStringEnumConverter() },
     };
 
-    private static readonly JsonNodeOptions NodeOptions = new();
-
     private static readonly JsonDocumentOptions DocumentOptions = new()
     {
         CommentHandling = JsonCommentHandling.Skip,
@@ -68,6 +66,6 @@ public sealed class ConfigStore
     }
 
     private JsonObject ParseRoot() =>
-        JsonNode.Parse(File.ReadAllText(FilePath), NodeOptions, DocumentOptions) as JsonObject
+        JsonNode.Parse(File.ReadAllText(FilePath), null, DocumentOptions) as JsonObject
         ?? throw new InvalidDataException($"{FilePath} does not contain a JSON object.");
 }
