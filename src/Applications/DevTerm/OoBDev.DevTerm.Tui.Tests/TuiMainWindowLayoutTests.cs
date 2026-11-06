@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 using OoBDev.DevTerm.Configuration;
 using OoBDev.DevTerm.Presenters.Text;
 using OoBDev.DevTerm;
-using OoBDev.DevTerm.Presenters.Text;
 using Microsoft.Extensions.Options;
 using Terminal.Gui.App;
 using Terminal.Gui.ViewBase;

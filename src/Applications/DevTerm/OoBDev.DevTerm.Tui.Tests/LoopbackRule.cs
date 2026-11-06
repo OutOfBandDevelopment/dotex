@@ -12,7 +12,6 @@ using System.Text.RegularExpressions;
 using OoBDev.DevTerm;
 using OoBDev.System.IO;
 using OoBDev.System.IO.Pipelines;
-using System.IO.Pipelines;
 namespace OoBDev.DevTerm.Tui.Tests;
 
 /// <summary>

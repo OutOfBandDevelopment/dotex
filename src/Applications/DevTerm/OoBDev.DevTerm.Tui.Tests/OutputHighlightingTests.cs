@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using OoBDev.DevTerm.Configuration;
 using OoBDev.DevTerm.Presenters.Text;
 using OoBDev.DevTerm;
-using OoBDev.DevTerm.Presenters.Text;
 using Microsoft.Extensions.Options;
 namespace OoBDev.DevTerm.Tui.Tests;
 

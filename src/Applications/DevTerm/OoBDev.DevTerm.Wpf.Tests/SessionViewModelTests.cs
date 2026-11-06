@@ -9,7 +9,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.DevTerm.Configuration;
 using OoBDev.DevTerm.Loopback;
 using OoBDev.DevTerm.Presenters.Text;
-using OoBDev.System.IO;
 using OoBDev.System.IO.Tcp;
 
 namespace OoBDev.DevTerm.Wpf.Tests;

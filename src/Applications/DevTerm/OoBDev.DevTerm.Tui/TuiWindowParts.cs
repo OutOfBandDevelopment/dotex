@@ -14,7 +14,6 @@ using OoBDev.DevTerm.Configuration;
 using OoBDev.DevTerm;
 using OoBDev.DevTerm.Presenters.Text;
 using OoBDev.DevTerm.Logging;
-using OoBDev.System.IO.Tcp;
 using Terminal.Gui.App;
 using Terminal.Gui.Editor;
 using Terminal.Gui.Input;

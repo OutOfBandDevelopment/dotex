@@ -13,7 +13,6 @@ using OoBDev.DevTerm.Configuration;
 using OoBDev.DevTerm.Presenters.Text;
 using OoBDev.DevTerm;
 using OoBDev.DevTerm.Logging;
-using OoBDev.DevTerm.Presenters.Text;
 using Microsoft.Extensions.Options;
 using OoBDev.TestUtilities;
 namespace OoBDev.DevTerm.Tui.Tests;

@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 using OoBDev.DevTerm.Configuration;
 using OoBDev.DevTerm.Presenters.Text;
 using OoBDev.DevTerm;
-using OoBDev.DevTerm.Presenters.Text;
 namespace OoBDev.DevTerm.Tui.Tests;
 
 /// <summary><c>--capture &lt;dir&gt;</c>: the CLI saves detected streams as files and prints one line each.</summary>

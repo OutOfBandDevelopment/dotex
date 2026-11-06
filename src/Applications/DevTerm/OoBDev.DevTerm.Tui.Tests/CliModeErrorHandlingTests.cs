@@ -11,7 +11,6 @@ using System.Threading.Channels;
 using OoBDev.DevTerm.Configuration;
 using OoBDev.DevTerm.Presenters.Text;
 using OoBDev.DevTerm;
-using OoBDev.DevTerm.Presenters.Text;
 namespace OoBDev.DevTerm.Tui.Tests;
 
 /// <summary>
