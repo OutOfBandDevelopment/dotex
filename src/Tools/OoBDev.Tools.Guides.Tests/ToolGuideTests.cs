@@ -54,7 +54,7 @@ public sealed class ToolGuideTests
 
     [TestMethod]
     public Task TemplateEngine_Help_WritesTheGuideAsync() =>
-        HelpGuideAsync("OoBDev.TemplateEngine.Cli", "oobdev-templateengine", "Renders a Handlebars template over an input file.", "--input-type");
+        HelpGuideAsync("OoBDev.TemplateEngine.Cli", "oobdev-templateengine", "Renders a Handlebars or XSLT template over input files.", "--merge");
 
     [TestMethod]
     public Task DocumentConverter_Help_WritesTheGuideAsync() =>
@@ -79,21 +79,6 @@ public sealed class ToolGuideTests
     [TestMethod]
     public Task LlmCodeGen_Help_WritesTheGuideAsync() =>
         HelpGuideAsync("OoBDev.LlmCodeGen.Cli", "oobdev-llmcodegen", "Sends the files of each folder to a language model with a template and writes the responses.", "--provider");
-
-    [TestMethod]
-    public async Task Xslt_Help_WritesTheGuideAsync()
-    {
-        // Stage
-        var help = await RunAsync("OoBDev.Xslt.Cli", "oobdev-xslt", "Options", "Run the tool with `--help` to list its options.", "--help");
-
-        // Test
-        var guide = CliToolGuide.Render("oobdev-xslt", "Applies an XSLT template to XML, HTML, JSON, YAML, C#, VB, MSBuild structured logs, DACPACs or paths.", [help]);
-        Write("oobdev-xslt", guide);
-
-        // Assert
-        Assert.AreEqual(0, help.ExitCode);
-        StringAssert.Contains(guide, "--template");
-    }
 
     [TestMethod]
     public async Task PackMan_Help_WritesTheGuideAsync()

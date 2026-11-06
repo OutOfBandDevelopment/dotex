@@ -17,6 +17,10 @@ Practical guides for common tasks and scenarios in the OoBDev framework.
 - [**Documentation style guide**](documentation-style-guide.md)
   - Names, numbering, structure, captions and how each rule is checked
 
+## Tools
+
+- [**Converting `oobdev-xslt` calls to `oobdev-templateengine`**](converting-xslt-cli-to-templateengine.md)
+
 ## Operations
 
 - [**Production operations practices**](production-operations-practices.md)

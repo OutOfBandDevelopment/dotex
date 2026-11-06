@@ -35,7 +35,6 @@
 		<ProjectReference Include="..\OoBDev.LlmCodeGen.Cli\OoBDev.LlmCodeGen.Cli.csproj" />
 		<ProjectReference Include="..\OoBDev.PackMan.Cli\OoBDev.PackMan.Cli.csproj" />
 		<ProjectReference Include="..\OoBDev.TemplateEngine.Cli\OoBDev.TemplateEngine.Cli.csproj" />
-		<ProjectReference Include="..\OoBDev.Xslt.Cli\OoBDev.Xslt.Cli.csproj" />
 	</ItemGroup>
 
 </Project>
