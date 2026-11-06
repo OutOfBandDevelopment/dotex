@@ -44,6 +44,31 @@ public sealed class InMemoryDeliveryTracker(TimeProvider timeProvider) : IDelive
             .FirstOrDefault());
 
     /// <inheritdoc />
+    public Task<bool> UpdateStatusAsync(DeliveryStatusUpdate update, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(update);
+        var changed = false;
+        foreach (var key in _entries.Keys.Where(k => string.Equals(k.MessageId, update.MessageId, StringComparison.Ordinal)))
+        {
+            _entries.AddOrUpdate(
+                key,
+                _ => throw new InvalidOperationException(),
+                (_, entry) =>
+                {
+                    if (update.NewStatus <= entry.Record.Status)
+                    {
+                        return entry;
+                    }
+
+                    changed = true;
+                    return (entry.Result, entry.Record with { Status = update.NewStatus, StatusDetails = update.StatusDetails ?? entry.Record.StatusDetails });
+                });
+        }
+
+        return Task.FromResult(changed);
+    }
+
+    /// <inheritdoc />
     public Task<IReadOnlyList<DeliveryStatusRecord>> GetByCorrelationIdAsync(string correlationId, CancellationToken cancellationToken = default)
         => Task.FromResult<IReadOnlyList<DeliveryStatusRecord>>(_entries.Values
             .Select(e => e.Record)

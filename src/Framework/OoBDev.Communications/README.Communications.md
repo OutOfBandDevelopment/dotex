@@ -40,3 +40,14 @@ services.TryAddSendReceive();   // settings: OoBDev:Communications (RetryCount, 
 ```
 
 `ICommunicationSender<>` and the message models stay until the MailKit adapter, the example WebApi and Common are ported.
+
+### Receiving webhooks
+
+`IReceiveService.HandleWebhookAsync(channel, WebhookRequest)` finds the channel and the provider's `IWebhookProcessor`
+(`IWebhookProcessorFactory`, case-insensitive key), rejects a call older or newer than `WebhookClockTolerance`
+(default 5 minutes), checks the signature over the raw body, parses it into `MessageReceivedEvent` and
+`DeliveryStatusEvent`, then runs the registered `IMessageReceivedHandler` and `IDeliveryStatusHandler` instances in
+registration order. A throwing handler is logged and the others still run. Bad input comes back as a failed
+`WebhookResult`, never an exception. Status events move the `IDeliveryTracker` record forward only
+(`Queued`, `Sent`, `Delivered`/`Failed`/`Bounced`, `Opened`, `Clicked`); a late `Sent` after `Bounced` is ignored.
+Polling (`PollAsync`) and the anonymous `POST /webhooks/{channel}` route are not built yet.

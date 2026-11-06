@@ -37,6 +37,8 @@ public static class ServiceCollectionExtensions
         services.TryAddSingleton(TimeProvider.System);
         services.TryAddSingleton<IDeliveryTracker, InMemoryDeliveryTracker>();
         services.TryAddSingleton<ISendService, SendService>();
+        services.TryAddSingleton<IWebhookProcessorFactory, WebhookProcessorFactory>();
+        services.TryAddSingleton<IReceiveService, ReceiveService>();
         return services;
     }
 }

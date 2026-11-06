@@ -16,4 +16,7 @@ public sealed class SendReceiveOptions
 
     /// <summary>Gets or sets the longest delay between two attempts.</summary>
     public TimeSpan MaxRetryDelay { get; set; } = TimeSpan.FromSeconds(30);
+
+    /// <summary>Gets or sets how far a webhook call may differ from the clock before it is rejected.</summary>
+    public TimeSpan WebhookClockTolerance { get; set; } = TimeSpan.FromMinutes(5);
 }
