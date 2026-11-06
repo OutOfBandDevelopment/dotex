@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\ExternalServices\Handlebars\OoBDev.Handlebars\OoBDev.Handlebars.csproj" />
+    <ProjectReference Include="..\..\Extensions\OoBDev.System.Text.Templating.Xslt\OoBDev.System.Text.Templating.Xslt.csproj" />
     <ProjectReference Include="..\..\Framework\OoBDev.Extensions\OoBDev.Extensions.csproj" />
     <ProjectReference Include="..\..\Framework\OoBDev.System\OoBDev.System.csproj" />
   </ItemGroup>
@@ -33,6 +34,10 @@
     <None Update="*.xslt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="OoBDev.TemplateEngine.Cli.Tests" />
   </ItemGroup>
 
 </Project>
