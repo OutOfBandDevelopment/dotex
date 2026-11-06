@@ -61,3 +61,16 @@ The spike ([result](docs/design/TemplateTools/README.md)) shows `Xslt.Cli` does 
 **Default:** A once you confirm; nothing moves until then.
 
 **Your answer:**
+
+### Q5 (2026-11-05, Communications) May `OoBDev.Communications` reference `OoBDev.System` for `AddValidatedOptions<T>()`?
+
+The coding standard says options validation uses `AddValidatedOptions<T>()`, which lives in `OoBDev.System`. `OoBDev.Communications` does not reference it, so `SendReceiveOptions` and the other options use data annotations with `ValidateOnStart` (same effect, different call). This is a layering question (rule `layering-and-migration-plans`).
+
+**Options**
+- A (recommended): keep the data-annotation form in Communications. No new dependency and the behaviour is the same; cost: one place that does not follow the standard call, noted in the readme.
+- B: reference `OoBDev.System` and switch to `AddValidatedOptions<T>()`. One validation style everywhere; cost: Communications (and its adapters, through it) take on the whole `OoBDev.System` surface.
+- C: move `AddValidatedOptions<T>()` into a small options-only Common project that both can reference. Cleanest layering; cost: a new project and a migration plan.
+
+**Default:** A.
+
+**Your answer:**
