@@ -35,3 +35,16 @@ There is no Blazor renderer for the UiDefinitions language yet (only WPF and the
 **Default:** A, after a migration plan in `docs/design/example-ui/`; nothing is created until you confirm.
 
 **Your answer:**
+
+### Q3 (2026-11-05, Template tools) Fold `Xslt.Cli` into the template engine?
+
+The spike ([result](docs/design/TemplateTools/README.md)) shows `Xslt.Cli` does much more than `TemplateEngine.Cli` (11 input types, merge, sandbox) and the engine's XSLT provider cannot yet run its templates. Folding means moving `SandboxedTransformer` and the input-type mapping from `src/Tools` into a library.
+
+**Options**
+- A (recommended): fold in three steps (engine XSLT provider with extensions and navigators, CLI switches, MSTest docs run), then retire `Xslt.Cli` with a conversion note. Matches your 2026-10-30 direction; cost: the library move needs your confirmed plan.
+- B: keep both tools; only document when to use which. No move, but the overlap stays.
+- C: drop `TemplateEngine.Cli` and make `Xslt.Cli` the one tool (Handlebars would need a switch there).
+
+**Default:** A, starting only with the parts that move nothing (step 1 inside `OoBDev.System`); the library move waits for your answer.
+
+**Your answer:**
