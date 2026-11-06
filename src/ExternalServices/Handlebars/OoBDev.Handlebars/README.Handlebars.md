@@ -11,6 +11,10 @@ Handlebars templates for the framework template engine (`OoBDev.System.Text.Temp
 | Helper | Arguments | Output |
 |--------|-----------|--------|
 | `date_now` | optional .NET format string | the local time from `TimeProvider`, formatted with the invariant culture |
+| `format_date` | value, optional .NET format (default `yyyy-MM-dd`) | `DateTime`, `DateTimeOffset` or a parsable string, invariant culture; nothing for other values |
+| `format_number` | value, optional format (default `N2`), optional culture name | falls back to the value text when it is not a number |
+| `currency` | value, optional format (default `C`), optional culture name | same helper as `format_number` with a currency default |
+| `json` | value, optional `true` to indent | `System.Text.Json` |
 | `guid_new` | none | a new GUID from `IGuidProvider` |
 | `hash` | one value | the hash of its text from the registered `IHash` |
 | `set` | key, value | stores the value for the rest of the render (async-local store), writes nothing |
@@ -31,10 +35,12 @@ var text = await engine.ApplyAsync("welcome.hbs", new { Name = "Ada" });
 
 ## Not built yet
 
-The design set in `Features/Proposals/10-TextTemplating/HandlebarsProvider` goes further. Not in the code: a compiled-template cache (every call recompiles and re-registers helpers), the formatting helpers `formatDate`, `formatNumber`, `currency`, `uppercase`, `lowercase` and `json`, the `IDataContainer` adapter (needs Epic 11), and the database template source. They are tracked in `BACKLOG.md`.
+The design set in `Features/Proposals/10-TextTemplating/HandlebarsProvider` goes further. Not in the code: a compiled-template cache (every call recompiles and re-registers helpers), the `IDataContainer` adapter (needs Epic 11), and the database template source. They are tracked in `BACKLOG.md`.
 
 ## Notes and references
 
 * https://github.com/Handlebars-Net/Handlebars.Net
 * https://github.com/Handlebars-Net/Handlebars.Net.Extension.Json
 * https://github.com/Handlebars-Net/Handlebars.Net.Helpers
+
+The formatting helpers use snake_case names like the other helpers (the design says camelCase); `uppercase` and `lowercase` come from `Handlebars.Net.Helpers`.
