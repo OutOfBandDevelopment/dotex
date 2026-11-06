@@ -233,7 +233,7 @@ public sealed class SerialDeviceAdapter : IDeviceAdapter, IComPortControl
 
     public async ValueTask DisposeAsync()
     {
-        await CloseAsync();
+        await CloseAsync().ConfigureAwait(false);
         GC.SuppressFinalize(this);
     }
 }

@@ -319,17 +319,17 @@ public sealed class ConnectionManager
                 registration = connection.Session.AddObserver(control);
             }
 
-            await connection.StartAsync(cancellationToken);
+            await connection.StartAsync(cancellationToken).ConfigureAwait(false);
         }
         catch
         {
             registration?.Dispose();
             if (control is not null)
             {
-                await control.DisposeAsync();
+                await control.DisposeAsync().ConfigureAwait(false);
             }
 
-            await connection.DisposeAsync();
+            await connection.DisposeAsync().ConfigureAwait(false);
             throw;
         }
 
@@ -351,11 +351,11 @@ public sealed class ConnectionManager
         removed.Registration?.Dispose();
         if (removed.Control is not null)
         {
-            await removed.Control.DisposeAsync();
+            await removed.Control.DisposeAsync().ConfigureAwait(false);
         }
 
         ConnectionClosed?.Invoke(id);
-        await removed.Hub.DisposeAsync();
+        await removed.Hub.DisposeAsync().ConfigureAwait(false);
         Events.Publish("connection-closed", new { id });
         return true;
     }
@@ -364,7 +364,7 @@ public sealed class ConnectionManager
     {
         foreach (var id in _open.Keys.ToArray())
         {
-            await CloseAsync(id);
+            await CloseAsync(id).ConfigureAwait(false);
         }
     }
 }

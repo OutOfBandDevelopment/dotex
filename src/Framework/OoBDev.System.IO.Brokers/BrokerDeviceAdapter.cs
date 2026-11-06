@@ -83,17 +83,17 @@ public sealed class BrokerDeviceAdapter : IDeviceAdapter
         {
             using var timeout = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
             timeout.CancelAfter(_options.TimeoutMs);
-            await connection.ConnectAsync(_options, timeout.Token);
+            await connection.ConnectAsync(_options, timeout.Token).ConfigureAwait(false);
             foreach (var topic in _options.SubscribeTopics.Where(t => !string.IsNullOrWhiteSpace(t)))
             {
-                await connection.SubscribeAsync(topic.Trim(), timeout.Token);
+                await connection.SubscribeAsync(topic.Trim(), timeout.Token).ConfigureAwait(false);
             }
         }
         catch
         {
             connection.MessageReceived -= OnMessage;
             connection.Disconnected -= OnDisconnected;
-            await connection.DisposeAsync();
+            await connection.DisposeAsync().ConfigureAwait(false);
             _connection = null;
             State = ConnectionState.Faulted;
             throw;
@@ -114,14 +114,14 @@ public sealed class BrokerDeviceAdapter : IDeviceAdapter
             connection.Disconnected -= OnDisconnected;
             try
             {
-                await connection.DisconnectAsync(cancellationToken);
+                await connection.DisconnectAsync(cancellationToken).ConfigureAwait(false);
             }
             catch (Exception)
             {
                 // Already gone: closing is idempotent.
             }
 
-            await connection.DisposeAsync();
+            await connection.DisposeAsync().ConfigureAwait(false);
         }
 
         PipeWriter writer;
@@ -130,7 +130,7 @@ public sealed class BrokerDeviceAdapter : IDeviceAdapter
             writer = _pipe.Writer;
         }
 
-        await writer.CompleteAsync();
+        await writer.CompleteAsync().ConfigureAwait(false);
         State = ConnectionState.Closed;
     }
 
@@ -165,7 +165,7 @@ public sealed class BrokerDeviceAdapter : IDeviceAdapter
         timeout.CancelAfter(_options.TimeoutMs);
         try
         {
-            await connection.PublishAsync(topic, Encoding.UTF8.GetBytes(payload), timeout.Token);
+            await connection.PublishAsync(topic, Encoding.UTF8.GetBytes(payload), timeout.Token).ConfigureAwait(false);
         }
         catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested)
         {

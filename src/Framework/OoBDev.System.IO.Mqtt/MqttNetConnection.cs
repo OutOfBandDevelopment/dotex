@@ -50,7 +50,7 @@ internal sealed class MqttNetConnection : IMqttConnection
             builder.WithCredentials(options.Username, options.Password);
         }
 
-        await _client.ConnectAsync(builder.Build(), cancellationToken);
+        await _client.ConnectAsync(builder.Build(), cancellationToken).ConfigureAwait(false);
     }
 
     public async Task SubscribeAsync(string topicFilter, int qualityOfService, CancellationToken cancellationToken)
@@ -58,7 +58,7 @@ internal sealed class MqttNetConnection : IMqttConnection
         var subscribe = _factory.CreateSubscribeOptionsBuilder()
             .WithTopicFilter(topicFilter, (MqttQualityOfServiceLevel)qualityOfService)
             .Build();
-        await _client.SubscribeAsync(subscribe, cancellationToken);
+        await _client.SubscribeAsync(subscribe, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task PublishAsync(string topic, ReadOnlyMemory<byte> payload, int qualityOfService, CancellationToken cancellationToken)
@@ -68,14 +68,14 @@ internal sealed class MqttNetConnection : IMqttConnection
             .WithPayload(payload.ToArray())
             .WithQualityOfServiceLevel((MqttQualityOfServiceLevel)qualityOfService)
             .Build();
-        await _client.PublishAsync(message, cancellationToken);
+        await _client.PublishAsync(message, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task DisconnectAsync(CancellationToken cancellationToken)
     {
         if (_client.IsConnected)
         {
-            await _client.DisconnectAsync(cancellationToken: cancellationToken);
+            await _client.DisconnectAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
         }
     }
 

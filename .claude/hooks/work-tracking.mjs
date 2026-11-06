@@ -47,6 +47,38 @@ if (badChange.length > 0) {
   process.exit(0);
 }
 
+// A new task section belongs in today's file (owner, 2026-11-05): the local date decides, not the newest file.
+const pad = (n) => String(n).padStart(2, '0');
+const now = new Date();
+const today = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+const wrongDay = [];
+for (const f of added) {
+  const m = /^docs\/changes\/(\d{4}-\d{2}-\d{2})\.md$/.exec(f);
+  if (!m) continue;
+  let diff = '';
+  try {
+    diff = execFileSync('git', ['diff', '--cached', '-U0', '--', f], {
+      cwd: process.env.CLAUDE_PROJECT_DIR ?? process.cwd(),
+      encoding: 'utf8',
+    });
+  } catch {
+    continue;
+  }
+  const headings = diff.split('\n').filter((l) => /^\+## /.test(l) && !/^\+## (Contents|By day)\b/.test(l));
+  const datedOther = headings.filter((l) => /\(\d{4}-\d{2}-\d{2}\)\s*$/.test(l) && !l.includes(`(${m[1]})`));
+  if ((headings.length > 0 && m[1] !== today) || datedOther.length > 0) wrongDay.push(`${f} (today is ${today})`);
+}
+if (wrongDay.length > 0) {
+  console.log(JSON.stringify({
+    hookSpecificOutput: {
+      hookEventName: 'PreToolUse',
+      additionalContext:
+        `work-tracking: ${wrongDay.join(', ')} gets a new task section whose date is not that file's day. A finished task goes in docs/changes/${today}.md (the system date, not the newest existing file); create it with the title, contents list and a By day line in README.md when the date has rolled over.`,
+    },
+  }));
+  process.exit(0);
+}
+
 const code = staged.filter((f) => /^src\/.*\.(cs|csproj|props)$/.test(f));
 const tracking = staged.filter((f) => /^(TODO\.md|BACKLOG\.md|OPEN-QUESTIONS\.md)$|^docs\/(changes|design)\/|(^|\/)README\.[^/]+\.md$/.test(f));
 if (code.length === 0 || tracking.length > 0) process.exit(0);

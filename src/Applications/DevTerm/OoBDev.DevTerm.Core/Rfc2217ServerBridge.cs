@@ -86,7 +86,7 @@ public sealed class Rfc2217ServerBridge : ISessionObserver, IAsyncDisposable
 
     public async ValueTask DisposeAsync()
     {
-        await _stop.CancelAsync();
+        await _stop.CancelAsync().ConfigureAwait(false);
         _listener.Stop();
         try
         {

@@ -43,14 +43,14 @@ internal sealed class AccessTokenMiddleware(RequestDelegate next, string token, 
         var cookie = request.Cookies[CookieName];
         if (AccessPolicy.TokenMatches(token, bearer) || AccessPolicy.TokenMatches(token, cookie))
         {
-            await next(context);
+            await next(context).ConfigureAwait(false);
             return;
         }
 
         if (IsReadOnlyToken(bearer) || IsReadOnlyToken(cookie))
         {
             context.Items[ReadOnlyItem] = true;
-            await next(context);
+            await next(context).ConfigureAwait(false);
             return;
         }
 
@@ -69,6 +69,6 @@ internal sealed class AccessTokenMiddleware(RequestDelegate next, string token, 
 
         context.Response.StatusCode = StatusCodes.Status401Unauthorized;
         context.Response.Headers.WWWAuthenticate = "Bearer";
-        await context.Response.WriteAsync("dev-term: access token required (open the URL printed at startup).");
+        await context.Response.WriteAsync("dev-term: access token required (open the URL printed at startup).").ConfigureAwait(false);
     }
 }

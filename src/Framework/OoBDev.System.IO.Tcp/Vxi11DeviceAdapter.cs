@@ -221,7 +221,7 @@ public sealed class Vxi11DeviceAdapter : IDeviceAdapter
 
     public async ValueTask DisposeAsync()
     {
-        await CloseAsync();
+        await CloseAsync().ConfigureAwait(false);
         GC.SuppressFinalize(this);
     }
 

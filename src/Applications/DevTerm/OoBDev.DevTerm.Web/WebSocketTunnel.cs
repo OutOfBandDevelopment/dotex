@@ -49,7 +49,7 @@ internal static class WebSocketTunnel
             {
                 await foreach (var line in outgoing.Reader.ReadAllAsync(abort))
                 {
-                    await socket.SendAsync(Encoding.UTF8.GetBytes(line), WebSocketMessageType.Text, true, abort);
+                    await socket.SendAsync(Encoding.UTF8.GetBytes(line), WebSocketMessageType.Text, true, abort).ConfigureAwait(false);
                 }
             },
             CancellationToken.None);
@@ -79,7 +79,7 @@ internal static class WebSocketTunnel
                 }
                 else if (result.MessageType == WebSocketMessageType.Text)
                 {
-                    var error = await hub.SendLineAsync(Encoding.UTF8.GetString(buffer, 0, length), abort);
+                    var error = await hub.SendLineAsync(Encoding.UTF8.GetString(buffer, 0, length), abort).ConfigureAwait(false);
                     if (error is not null)
                     {
                         outgoing.Writer.TryWrite($"! {error}");

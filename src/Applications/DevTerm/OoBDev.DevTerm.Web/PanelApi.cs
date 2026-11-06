@@ -31,7 +31,7 @@ internal static class PanelApi
 
         try
         {
-            await surface.InvokeAsync(request.CommandId, request.Value, context.RequestAborted);
+            await surface.InvokeAsync(request.CommandId, request.Value, context.RequestAborted).ConfigureAwait(false);
             return Results.Ok(new { ok = true });
         }
         catch (Exception ex) when (ex is not OperationCanceledException)

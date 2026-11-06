@@ -62,7 +62,7 @@ catch (InvalidOperationException ex)
 
 await using (built.Hub)
 {
-    await built.Hub.StartAsync();
+    await built.Hub.StartAsync().ConfigureAwait(false);
     var first = webOptions.Urls.Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)[0];
     Console.WriteLine($"dev-term web: {first}/?token={built.Token}");
     if (built.ControlHttp is { } controlHttp)
@@ -70,7 +70,7 @@ await using (built.Hub)
         Console.WriteLine($"dev-term control: http://127.0.0.1:{controlHttp.Port}/ with header 'Authorization: Bearer {controlHttp.Token}' (POST /command, GET /events, GET /ping).");
     }
 
-    await built.App.RunAsync();
+    await built.App.RunAsync().ConfigureAwait(false);
 }
 
 return 0;

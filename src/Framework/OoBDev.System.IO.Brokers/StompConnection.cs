@@ -33,13 +33,13 @@ internal sealed class StompConnection : IBrokerConnection
     public async Task ConnectAsync(BrokerDeviceAdapterOptions options, CancellationToken cancellationToken)
     {
         _client = new TcpClient();
-        await _client.ConnectAsync(options.Host, options.Port, cancellationToken);
+        await _client.ConnectAsync(options.Host, options.Port, cancellationToken).ConfigureAwait(false);
         _stream = _client.GetStream();
         if (options.UseTls)
         {
             var tls = new SslStream(_stream, leaveInnerStreamOpen: false, BrokerTls.Validator(options));
             _stream = tls;
-            await tls.AuthenticateAsClientAsync(new SslClientAuthenticationOptions { TargetHost = options.Host }, cancellationToken);
+            await tls.AuthenticateAsClientAsync(new SslClientAuthenticationOptions { TargetHost = options.Host }, cancellationToken).ConfigureAwait(false);
         }
 
         _readTask = Task.Run(() => ReadLoopAsync(_readCts.Token), CancellationToken.None);
@@ -56,8 +56,8 @@ internal sealed class StompConnection : IBrokerConnection
             headers.Add(new("passcode", options.Password ?? string.Empty));
         }
 
-        await SendFrameAsync(new StompFrame("CONNECT", headers, []), cancellationToken);
-        await _connected.Task.WaitAsync(cancellationToken);
+        await SendFrameAsync(new StompFrame("CONNECT", headers, []), cancellationToken).ConfigureAwait(false);
+        await _connected.Task.WaitAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public Task SubscribeAsync(string address, CancellationToken cancellationToken) =>
@@ -80,7 +80,7 @@ internal sealed class StompConnection : IBrokerConnection
         {
             try
             {
-                await SendFrameAsync(new StompFrame("DISCONNECT", [], []), cancellationToken);
+                await SendFrameAsync(new StompFrame("DISCONNECT", [], []), cancellationToken).ConfigureAwait(false);
             }
             catch (Exception ex) when (ex is IOException or ObjectDisposedException or SocketException)
             {
@@ -92,7 +92,7 @@ internal sealed class StompConnection : IBrokerConnection
     public async ValueTask DisposeAsync()
     {
         _closing = true;
-        await _readCts.CancelAsync();
+        await _readCts.CancelAsync().ConfigureAwait(false);
         _client?.Dispose();
         if (_readTask is not null)
         {
@@ -106,10 +106,10 @@ internal sealed class StompConnection : IBrokerConnection
     private async Task SendFrameAsync(StompFrame frame, CancellationToken cancellationToken)
     {
         var stream = _stream ?? throw new InvalidOperationException("The STOMP connection is not open.");
-        await _writeLock.WaitAsync(cancellationToken);
+        await _writeLock.WaitAsync(cancellationToken).ConfigureAwait(false);
         try
         {
-            await stream.WriteAsync(frame.Encode(), cancellationToken);
+            await stream.WriteAsync(frame.Encode(), cancellationToken).ConfigureAwait(false);
         }
         finally
         {
@@ -127,7 +127,7 @@ internal sealed class StompConnection : IBrokerConnection
         {
             while (!cancellationToken.IsCancellationRequested)
             {
-                var read = await stream.ReadAsync(chunk, cancellationToken);
+                var read = await stream.ReadAsync(chunk, cancellationToken).ConfigureAwait(false);
                 if (read == 0)
                 {
                     break;
