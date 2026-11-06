@@ -8,7 +8,10 @@ using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Collections.Concurrent;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace OoBDev.Handlebars.Templating;
@@ -33,6 +36,11 @@ public class HandlebarsTemplateProvider(
     ) : ITemplateProvider
 {
     private readonly ILogger _log = log;
+    private readonly ConcurrentDictionary<string, HandlebarsTemplate<TextWriter, object, object>> _cache = new();
+    private readonly object _gate = new();
+    private IHandlebars? _handlebars;
+
+    private IHandlebars Environment { get { lock (_gate) { return _handlebars ??= CreateEnvironment(); } } }
 
     /// <summary>
     /// Gets the collection of supported content types by the template provider.
@@ -60,6 +68,44 @@ public class HandlebarsTemplateProvider(
     /// <param name="target">The target stream where the processed template is written.</param>
     /// <returns>A task representing the asynchronous operation. The task result is <c>true</c> if successful, <c>false</c> otherwise.</returns>
     public async Task<bool> ApplyAsync(ITemplateContext context, object data, Stream target)
+    {
+        using var template = context.OpenTemplate(context);
+        using var reader = new StreamReader(template);
+        var text = await reader.ReadToEndAsync().ConfigureAwait(false);
+        var compiled = Compile(text);
+
+        using var writer = new StreamWriter(target, leaveOpen: true)
+        {
+            AutoFlush = true,
+        };
+        compiled(writer, context: data, data: context);
+        await writer.FlushAsync().ConfigureAwait(false);
+        return true;
+    }
+
+    /// <summary>
+    /// Gets the number of compiled templates currently cached.
+    /// </summary>
+    public int CachedTemplateCount => _cache.Count;
+
+    private HandlebarsTemplate<TextWriter, object, object> Compile(string text)
+    {
+        var settings = options?.Value ?? new HandlebarsOptions();
+        if (!settings.EnableCompilationCache)
+            return Environment.Compile(new StringReader(text));
+
+        var key = Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(text)));
+        if (_cache.TryGetValue(key, out var found))
+            return found;
+
+        var compiled = Environment.Compile(new StringReader(text));
+        if (_cache.Count >= Math.Max(1, settings.MaxCachedTemplates))
+            _cache.Clear();
+        _cache[key] = compiled;
+        return compiled;
+    }
+
+    private IHandlebars CreateEnvironment()
     {
         var config = new HandlebarsConfiguration()
         {
@@ -91,16 +137,6 @@ public class HandlebarsTemplateProvider(
             handlebar.RegisterHelper(helper);
         }
 
-        using var template = context.OpenTemplate(context);
-        var reader = new StreamReader(template);
-        var compiled = handlebar.Compile(reader);
-
-        using var writer = new StreamWriter(target, leaveOpen: true)
-        {
-            AutoFlush = true,
-        };
-        compiled(writer, context: data, data: context);
-        await writer.FlushAsync().ConfigureAwait(false);
-        return true;
+        return handlebar;
     }
 }

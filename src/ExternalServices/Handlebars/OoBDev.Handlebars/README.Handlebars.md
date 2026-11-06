@@ -44,3 +44,7 @@ The design set in `Features/Proposals/10-TextTemplating/HandlebarsProvider` goes
 * https://github.com/Handlebars-Net/Handlebars.Net.Helpers
 
 The formatting helpers use snake_case names like the other helpers (the design says camelCase); `uppercase` and `lowercase` come from `Handlebars.Net.Helpers`.
+
+## Compilation cache
+
+The helpers are registered once per provider instance, and compiled templates are cached by the SHA-256 of the template text, so an edited template compiles again and nothing needs invalidating. `HandlebarsOptions.EnableCompilationCache` (default on) and `MaxCachedTemplates` (default 100; the cache is cleared when full) control it.
