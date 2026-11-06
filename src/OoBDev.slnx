@@ -209,6 +209,7 @@
     <Project Path="Framework/OoBDev.Caching/OoBDev.Caching.csproj" />
     <Project Path="Framework/OoBDev.Communications.Abstractions/OoBDev.Communications.Abstractions.csproj" />
     <Project Path="Framework/OoBDev.Communications.MessageQueueing/OoBDev.Communications.MessageQueueing.csproj" />
+    <Project Path="Framework/OoBDev.Communications.MessageQueueing.Tests/OoBDev.Communications.MessageQueueing.Tests.csproj" />
     <Project Path="Framework/OoBDev.Communications.Tests/OoBDev.Communications.Tests.csproj" />
     <Project Path="Framework/OoBDev.Communications/OoBDev.Communications.csproj" />
     <Project Path="Framework/OoBDev.DacFx.Abstractions/OoBDev.DacFx.Abstractions.csproj" />
