@@ -101,7 +101,7 @@ public sealed class RetentionRuleTests
 
         var removed = RetentionSweeper.Sweep(
             new AppPreferences { LogRetention = new RetentionRule { MaxAgeDays = 30 }, ExportRetention = new RetentionRule { MaxFiles = 1 } },
-            _now, logs, exports);
+            new Microsoft.Extensions.Time.Testing.FakeTimeProvider(_now), logs, exports);
 
         Assert.AreEqual(2, removed.Count);
         Assert.IsTrue(File.Exists(Path.Combine(logs, "b.jsonl")));

@@ -37,8 +37,11 @@ public sealed class SessionHub : IAsyncDisposable
     /// <summary>The options the current session was built from (they change on a profile switch).</summary>
     public CliOptions Options => _options;
 
-    public SessionHub(Session session, PresenterCatalog catalog, CliOptions options, int backlogLines)
+    private readonly TimeProvider _time;
+
+    public SessionHub(Session session, PresenterCatalog catalog, CliOptions options, int backlogLines, TimeProvider? timeProvider = null)
     {
+        _time = timeProvider ?? TimeProvider.System;
         _backlogLimit = Math.Max(1, backlogLines);
         _session = session;
         _options = options;
@@ -205,7 +208,7 @@ public sealed class SessionHub : IAsyncDisposable
     public string StartLogging(string? path = null)
     {
         StopLogging();
-        var target = path ?? SessionLogging.DefaultLogPath(_options, ProfileName, DateTimeOffset.Now);
+        var target = path ?? SessionLogging.DefaultLogPath(_options, ProfileName, _time.GetLocalNow());
         Directory.CreateDirectory(Path.GetDirectoryName(target)!);
         _logger = SessionLogging.Start(target, _session, _options, _parser, ProfileName, "web");
         Publish($"Logging to {SessionLogging.DisplayPath(_logger.Path!)}.");
