@@ -13,6 +13,8 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
 using System.Xml.Xsl;
+using OoBDev.System.Xml.Xsl;
+using Microsoft.Extensions.Options;
 
 namespace OoBDev.System.Text.Templating;
 
@@ -22,14 +24,21 @@ namespace OoBDev.System.Text.Templating;
 public class XsltTemplateProvider : ITemplateProvider
 {
     private readonly IXmlSerializer _xmlSerializer;
+    private readonly XsltTemplateOptions _options;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="XsltTemplateProvider"/> class with the specified XML serializer.
     /// </summary>
     /// <param name="xmlSerializer">The XML serializer to be used by the provider.</param>
+    /// <param name="options">The options; no extension functions are available when omitted.</param>
     public XsltTemplateProvider(
-        IXmlSerializer xmlSerializer
-        ) => _xmlSerializer = xmlSerializer;
+        IXmlSerializer xmlSerializer,
+        IOptions<XsltTemplateOptions>? options = null
+        )
+    {
+        _xmlSerializer = xmlSerializer;
+        _options = options?.Value ?? new XsltTemplateOptions();
+    }
 
     /// <summary>
     /// Gets the collection of supported content types by the template provider.
@@ -78,7 +87,8 @@ public class XsltTemplateProvider : ITemplateProvider
             CloseOutput = false,
             ConformanceLevel = ConformanceLevel.Auto,
         });
-        xslt.Transform(navigator, writer);
+        var arguments = new XsltArgumentList().AddExtensions([.. _options.Extensions]);
+        xslt.Transform(navigator, arguments, writer);
         return true;
     }
 

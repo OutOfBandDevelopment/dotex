@@ -28,7 +28,7 @@ Backlog item: stack review of `OoBDev.Xslt.Cli` and `OoBDev.TemplateEngine.Cli` 
 
 A, three steps, each its own commit:
 
-1. Give the engine an XSLT provider variant that takes the same extension objects and an `IToXPathNavigable` input (an `ITemplateTransform` or a data wrapper), with the sandbox as an option.
+1. **Done 2026-11-05:** `XsltTemplateProvider` takes `XsltTemplateOptions.Extensions` (the extension objects) and already accepts any `IXPathNavigable` as data; the sandbox stays in the extension objects (`PathExtensions(root)`, `FileExtensions(root)`).
 2. Make `TemplateEngine.Cli` accept the `Xslt.Cli` switches (`--input-type`, `--merge`, `--exclude`, `--sandbox`) and reuse `SandboxedTransformer`'s input mapping from a Framework library.
 3. Port the BinaryDataDecoders documentation run to an MSTest entry point that calls the engine, then retire `Xslt.Cli` with a conversion note (`docs/how-tos/`). Keep the dotnet tool packaging with its `.props` and `.targets` if the owner still wants one.
 
