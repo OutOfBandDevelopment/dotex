@@ -247,7 +247,7 @@ public interface IEmailMessage : IMessage
     string Subject { get; }
     string? TextContent { get; }
     string? HtmlContent { get; }
-    IEnumerable<Attachment>? Attachments { get; }
+    IReadOnlyList<IEmailAttachment> Attachments { get; }
 }
 ```
 
@@ -476,6 +476,6 @@ public class SendException : Exception
 
 ## Decisions (2026-11-05)
 
-- **Attachments (owner, OPEN-QUESTIONS Q6):** `IEmailAttachment` (name, content type, content) on `IEmailMessage`; a stored reference is resolved in the queue handler once Epic 6 has a store. Content must not be a Stream-only contract: it is copied to a temp file (the framework's disposable `ITempFileFactory` file), held as `byte[]`, or passed as zero-copy `ReadOnlyMemory<byte>`. Zero-copy is preferred, and replacing Stream entirely is to be considered in the api-design.
+- **Attachments (owner, OPEN-QUESTIONS Q6):** `IEmailAttachment` (name, content type, content) on `IEmailMessage`; a stored reference is resolved in the queue handler once Epic 6 has a store. Content must not be a Stream-only contract: it is copied to a temp file (the framework's disposable `ITempFileFactory` file), held as `byte[]`, or passed as zero-copy `ReadOnlyMemory<byte>`. Zero-copy is preferred, and replacing Stream entirely is to be considered in the api-design. Built 2026-11-06: `IEmailAttachment` (`GetContentAsync` returns `ReadOnlyMemory<byte>`, optional `ContentId` for inline), `EmailAttachment.FromBytes/FromMemory/FromFile`, `IMimeMessageFactory.CreateAsync`; the stored-reference resolution waits for Epic 6.
 - **First vendor adapter (owner, Q7):** AWS SES (send) and SNS (delivery notifications) are added where the Moto emulator supports them. There are no live connections for testing, so every adapter document and readme states that it is tested against emulators only.
 - **Options validation (owner, Q5):** `OoBDev.Communications` keeps data annotations with `ValidateOnStart` and does not reference `OoBDev.System`; `AddValidatedOptions<T>()` is not used there.

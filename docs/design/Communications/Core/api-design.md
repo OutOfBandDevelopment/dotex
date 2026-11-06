@@ -706,7 +706,7 @@ public interface IEmailMessage
     /// <summary>
     /// Email attachments (optional)
     /// </summary>
-    ICollection<IEmailAttachment>? Attachments { get; }
+    IReadOnlyList<IEmailAttachment> Attachments { get; }  // FromBytes, FromMemory (zero-copy), FromFile; no Stream
 }
 ```
 

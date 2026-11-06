@@ -3,7 +3,10 @@ using OoBDev.Communications.Models;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace OoBDev.MailKit.Services;
 
@@ -22,7 +25,22 @@ public class MimeMessageFactory(
     /// </summary>
     /// <param name="message">The email message model containing information for creating the MimeMessage.</param>
     /// <returns>A MimeMessage instance representing the email message.</returns>
-    public MimeMessage Create(EmailMessageModel message)
+    public MimeMessage Create(EmailMessageModel message) => Build(message, []);
+
+    /// <inheritdoc />
+    public async Task<MimeMessage> CreateAsync(EmailMessageModel message, IReadOnlyList<IEmailAttachment> attachments, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(attachments);
+        var resolved = new List<(IEmailAttachment Attachment, ReadOnlyMemory<byte> Content)>(attachments.Count);
+        foreach (var attachment in attachments)
+        {
+            resolved.Add((attachment, await attachment.GetContentAsync(cancellationToken).ConfigureAwait(false)));
+        }
+
+        return Build(message, resolved);
+    }
+
+    private MimeMessage Build(EmailMessageModel message, IReadOnlyList<(IEmailAttachment Attachment, ReadOnlyMemory<byte> Content)> attachments)
     {
         var email = new MimeMessage
         {
@@ -61,9 +79,18 @@ public class MimeMessageFactory(
         {
             bodyBuilder.HtmlBody = message.HtmlContent;
         }
-        email.Body = bodyBuilder.ToMessageBody();
+        foreach (var (attachment, content) in attachments)
+        {
+            var contentType = ContentType.Parse(attachment.ContentType);
+            var part = (MimePart)bodyBuilder.Attachments.Add(attachment.FileName, content.ToArray(), contentType);
+            part.ContentId = attachment.ContentId;
+            if (attachment.ContentId is not null)
+            {
+                part.ContentDisposition = new ContentDisposition(ContentDisposition.Inline) { FileName = attachment.FileName };
+            }
+        }
 
-        //TODO: add attachment support
+        email.Body = bodyBuilder.ToMessageBody();
 
         return email;
     }

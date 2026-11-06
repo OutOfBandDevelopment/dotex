@@ -1,6 +1,8 @@
+using System.Collections.Generic;
+
 namespace OoBDev.Communications.Abstractions;
 
-/// <summary>An email; attachments follow with the attachment design.</summary>
+/// <summary>An email.</summary>
 public interface IEmailMessage : IMessage
 {
     /// <summary>Gets the recipients.</summary>
@@ -26,4 +28,7 @@ public interface IEmailMessage : IMessage
 
     /// <summary>Gets the HTML body.</summary>
     string? HtmlContent { get; }
+
+    /// <summary>Gets the attachments.</summary>
+    IReadOnlyList<IEmailAttachment> Attachments { get; }
 }

@@ -56,7 +56,7 @@ public sealed partial class MailKitChannelProvider(
                 model.Headers["Reply-To"] = email.ReplyTo;
             }
 
-            var mimeMessage = mime.Create(model);
+            var mimeMessage = await mime.CreateAsync(model, email.Attachments, cancellationToken).ConfigureAwait(false);
             using var client = await smtp.CreateAsync().ConfigureAwait(false);
             var reference = await client.SendAsync(mimeMessage, cancellationToken).ConfigureAwait(false);
             await client.DisconnectAsync(true, cancellationToken).ConfigureAwait(false);

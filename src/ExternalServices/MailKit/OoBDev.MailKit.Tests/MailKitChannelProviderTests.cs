@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -27,7 +28,7 @@ public class MailKitChannelProviderTests
     {
         var client = new Mock<ISmtpClient>();
         var mime = new Mock<IMimeMessageFactory>();
-        mime.Setup(m => m.Create(It.IsAny<EmailMessageModel>())).Returns(new MimeMessage());
+        mime.Setup(m => m.CreateAsync(It.IsAny<EmailMessageModel>(), It.IsAny<IReadOnlyList<IEmailAttachment>>(), It.IsAny<CancellationToken>())).ReturnsAsync(new MimeMessage());
         var factory = new Mock<ISmtpClientFactory>();
         factory.Setup(f => f.CreateAsync()).ReturnsAsync(client.Object);
         return (new MailKitChannelProvider(mime.Object, factory.Object, new FakeTimeProvider(), NullLogger<MailKitChannelProvider>.Instance), client, mime);
@@ -59,7 +60,7 @@ public class MailKitChannelProviderTests
         Assert.IsTrue(result.Success);
         Assert.AreEqual("250 queued", result.ProviderMessageId);
         Assert.AreEqual("c1", result.CorrelationId);
-        mime.Verify(m => m.Create(It.Is<EmailMessageModel>(e => e.ReferenceId == "m1" && e.Headers["Reply-To"] == "reply@example.test" && e.ToAddresses.Count == 1)), Times.Once);
+        mime.Verify(m => m.CreateAsync(It.Is<EmailMessageModel>(e => e.ReferenceId == "m1" && e.Headers["Reply-To"] == "reply@example.test" && e.ToAddresses.Count == 1), It.IsAny<IReadOnlyList<IEmailAttachment>>(), It.IsAny<CancellationToken>()), Times.Once);
         client.Verify(c => c.DisconnectAsync(true, It.IsAny<CancellationToken>()), Times.Once);
     }
 
@@ -124,7 +125,7 @@ public class MailKitChannelProviderTests
     public async Task SendAsync_MessageWithoutBody_IsPermanent()
     {
         var (provider, _, mime) = Create();
-        mime.Setup(m => m.Create(It.IsAny<EmailMessageModel>())).Throws(new NotSupportedException("You must provide Text or Html Body"));
+        mime.Setup(m => m.CreateAsync(It.IsAny<EmailMessageModel>(), It.IsAny<IReadOnlyList<IEmailAttachment>>(), It.IsAny<CancellationToken>())).ThrowsAsync(new NotSupportedException("You must provide Text or Html Body"));
 
         var result = await provider.SendAsync(Channel, Email());
 

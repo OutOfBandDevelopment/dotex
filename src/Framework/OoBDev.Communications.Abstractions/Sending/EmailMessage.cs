@@ -41,4 +41,7 @@ public sealed class EmailMessage : IEmailMessage
 
     /// <inheritdoc />
     public string? HtmlContent { get; init; }
+
+    /// <inheritdoc />
+    public IReadOnlyList<IEmailAttachment> Attachments { get; init; } = [];
 }
