@@ -1,8 +1,10 @@
+using Microsoft.Extensions.DependencyInjection;
+using OoBDev.System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.IO;
 
-namespace OoBDev.Xslt.Cli.Tests;
+namespace OoBDev.System.Text.Templating.Xslt.Tests;
 
 [TestClass]
 public class SandboxedTransformerTests
@@ -14,17 +16,18 @@ public class SandboxedTransformerTests
         </xsl:stylesheet>
         """;
 
+    private ITempDirectory? _temp;
     private string _folder = string.Empty;
 
     [TestInitialize]
     public void Init()
     {
-        _folder = Path.Combine(Path.GetTempPath(), $"Test_{Guid.NewGuid():N}");
-        Directory.CreateDirectory(_folder);
+        _temp = new TempFileFactory(new ServiceCollection().BuildServiceProvider()).GetTempDirectory();
+        _folder = _temp.DirectoryPath;
     }
 
     [TestCleanup]
-    public void Cleanup() => Directory.Delete(_folder, recursive: true);
+    public void Cleanup() => _temp?.Dispose();
 
     [TestMethod]
     [TestCategory("Unit")]

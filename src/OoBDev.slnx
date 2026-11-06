@@ -83,6 +83,8 @@
     <Project Path="Extensions/OoBDev.System.Text.Html/OoBDev.System.Text.Html.csproj" />
     <Project Path="Extensions/OoBDev.System.Text.Markdown.Tests/OoBDev.System.Text.Markdown.Tests.csproj" />
     <Project Path="Extensions/OoBDev.System.Text.Markdown/OoBDev.System.Text.Markdown.csproj" />
+    <Project Path="Extensions/OoBDev.System.Text.Templating.Xslt.Tests/OoBDev.System.Text.Templating.Xslt.Tests.csproj" />
+    <Project Path="Extensions/OoBDev.System.Text.Templating.Xslt/OoBDev.System.Text.Templating.Xslt.csproj" />
     <Project Path="Extensions/OoBDev.System.Text.Yaml.Tests/OoBDev.System.Text.Yaml.Tests.csproj" />
     <Project Path="Extensions/OoBDev.System.Text.Yaml/OoBDev.System.Text.Yaml.csproj" />
     <Project Path="Extensions/OoBDev.ZWave.Tests/OoBDev.ZWave.Tests.csproj" />

@@ -19,13 +19,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\Extensions\OoBDev.Extensions.CodeAnalysis.DacFx\OoBDev.Extensions.CodeAnalysis.DacFx.csproj" />
-		<ProjectReference Include="..\..\Extensions\OoBDev.Extensions.CodeAnalysis.StructuredLog\OoBDev.Extensions.CodeAnalysis.StructuredLog.csproj" />
-		<ProjectReference Include="..\..\Extensions\OoBDev.Extensions.CodeAnalysis\OoBDev.Extensions.CodeAnalysis.csproj" />
-		<ProjectReference Include="..\..\Extensions\OoBDev.System.Text.Html\OoBDev.System.Text.Html.csproj" />
-		<ProjectReference Include="..\..\Extensions\OoBDev.System.Text.Yaml\OoBDev.System.Text.Yaml.csproj" />
+		<ProjectReference Include="..\..\Extensions\OoBDev.System.Text.Templating.Xslt\OoBDev.System.Text.Templating.Xslt.csproj" />
 		<ProjectReference Include="..\..\Framework\OoBDev.System\OoBDev.System.csproj" />
-		<ProjectReference Include="..\..\Framework\OoBDev.TestUtilities\OoBDev.TestUtilities.csproj" />
 	</ItemGroup>
 
 </Project>

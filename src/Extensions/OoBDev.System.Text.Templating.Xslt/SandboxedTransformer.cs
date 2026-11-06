@@ -15,7 +15,7 @@ using global::System.Globalization;
 using global::System.IO;
 using global::System.Xml.XPath;
 
-namespace OoBDev.Xslt.Cli;
+namespace OoBDev.System.Text.Templating.Xslt;
 
 /// <summary>Runs an XSLT template over inputs of many types; file functions in the template reach only the sandbox folder.</summary>
 public sealed class SandboxedTransformer

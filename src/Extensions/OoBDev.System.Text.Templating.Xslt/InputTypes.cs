@@ -1,4 +1,4 @@
-namespace OoBDev.Xslt.Cli;
+namespace OoBDev.System.Text.Templating.Xslt;
 
 /// <summary>How an input file is turned into an XPath-navigable document.</summary>
 public enum InputTypes
