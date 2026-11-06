@@ -6,9 +6,8 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using OoBDev.DevTerm;
 
-namespace OoBDev.DevTerm.Configuration;
+namespace OoBDev.UiDefinitions;
 
 /// <summary>
 /// Whether each control-panel section was last left expanded or collapsed, keyed by the panel's

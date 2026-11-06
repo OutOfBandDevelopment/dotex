@@ -6,16 +6,12 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using OoBDev.DevTerm;
 
-using OoBDev.DevTerm.Configuration;
-using OoBDev.DevTerm.Configuration.Discovery;
-namespace OoBDev.DevTerm.Configuration.Tests;
+namespace OoBDev.UiDefinitions.Tests;
 
 /// <summary>
 /// <see cref="SectionExpansionState"/> — the remembered expand/collapse state both control-panel
-/// renderers restore when a panel reopens — and <see cref="InstalledManifests"/>, which finds the
-/// manifests bundled next to the app.
+/// renderers restore when a panel reopens.
 /// </summary>
 [TestCategory("Unit")]
 [TestClass]
@@ -84,14 +80,5 @@ public sealed class SectionExpansionStateTests
         Assert.IsTrue(SectionExpansionState.IsExpanded("A.Forget", "S"));
         Assert.IsFalse(SectionExpansionState.IsExpanded("B.Forget", "S"));
         SectionExpansionState.Forget("B.Forget");
-    }
-
-    [TestMethod]
-    public void InstalledManifests_IncludesTheBundledLoopbackDemo()
-    {
-        var entry = InstalledManifests.Discover().FirstOrDefault(e => e.Name == "Loopback Sensor Demo" && e.Source == InstalledManifests.InstalledSource);
-
-        Assert.IsNotNull(entry, "The bundled manifest is copied to manifests\\ next to every app referencing DevTerm.Configuration.");
-        Assert.AreEqual(InstalledManifests.InstalledSource, entry.Source);
     }
 }

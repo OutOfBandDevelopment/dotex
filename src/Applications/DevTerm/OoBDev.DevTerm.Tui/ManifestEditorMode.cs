@@ -16,6 +16,7 @@ using Terminal.Gui.App;
 using Terminal.Gui.Input;
 using Terminal.Gui.ViewBase;
 using Terminal.Gui.Views;
+using OoBDev.UiDefinitions.Tui;
 namespace OoBDev.DevTerm.Tui;
 
 /// <summary>
@@ -59,7 +60,7 @@ internal static class ManifestEditorMode
             message ?? string.Empty,
             @"(?<![\w\\])(?:[A-Za-z]:\\|\\\\)[^\s']+?(?=\.?(?:\s|'|$))",
             match => TuiText.CompactPath(match.Value, MaxStatusPathLength));
-        var lines = ControlPanelMode.WordWrap(compact, width);
+        var lines = TuiTextWrap.WordWrap(compact, width);
         if (lines.Count <= 2)
         {
             return string.Join('\n', lines);
@@ -203,7 +204,7 @@ internal static class ManifestEditorMode
             pane.Title = node.Display.Trim();
             if (node.Form is not { } form)
             {
-                var hint = new Label { X = 0, Y = 0, Width = Dim.Fill(), Text = string.Join('\n', ControlPanelMode.WordWrap(node.Hint ?? string.Empty, 44)) };
+                var hint = new Label { X = 0, Y = 0, Width = Dim.Fill(), Text = string.Join('\n', TuiTextWrap.WordWrap(node.Hint ?? string.Empty, 44)) };
                 pane.Add(hint);
                 if (node.Kind == ManifestNodeKind.Panel)
                 {

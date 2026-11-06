@@ -12,6 +12,7 @@ using OoBDev.DevTerm.Configuration;
 using Terminal.Gui.App;
 using Terminal.Gui.ViewBase;
 using Terminal.Gui.Views;
+using OoBDev.UiDefinitions.Tui;
 namespace OoBDev.DevTerm.Tui;
 
 /// <summary>

@@ -11,6 +11,7 @@
 	<ItemGroup>
 		<ProjectReference Include="..\OoBDev.DevTerm.Core\OoBDev.DevTerm.Core.csproj" />
 		<ProjectReference Include="..\OoBDev.DevTerm.Devices\OoBDev.DevTerm.Devices.csproj" />
+		<ProjectReference Include="..\..\..\Framework\OoBDev.UiDefinitions.Tui\OoBDev.UiDefinitions.Tui.csproj" />
 		<ProjectReference Include="..\..\..\Framework\OoBDev.System.IO.Ports\OoBDev.System.IO.Ports.csproj" />
 		<ProjectReference Include="..\..\..\Framework\OoBDev.System.IO.UsbHids\OoBDev.System.IO.UsbHids.csproj" />
 		<ProjectReference Include="..\..\..\Framework\OoBDev.System.IO.UsbTmc\OoBDev.System.IO.UsbTmc.csproj" />

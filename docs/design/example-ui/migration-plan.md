@@ -1,6 +1,6 @@
 # Control examples: renderer migration plan
 
-Status: confirmed by the owner on 2026-11-05 (OPEN-QUESTIONS Q1 and Q2, both option A). Implementation is a backlog item; nothing has moved yet.
+Status: confirmed by the owner on 2026-11-05 (Q1 and Q2, option A). Step 1 done 2026-11-06 (`OoBDev.UiDefinitions.Tui`); steps 2 to 4 are backlog work.
 
 Why: the Tui and Blazor control examples (`src/Examples`) need a renderer for the UiDefinitions form language. An example cannot reference an Applications project, and the Terminal.Gui renderer has no DevTerm-specific names, so it is reusable and belongs in a library (rule `layering-and-migration-plans`).
 

@@ -13,6 +13,7 @@ using Terminal.Gui.App;
 using Terminal.Gui.Input;
 using Terminal.Gui.ViewBase;
 using Terminal.Gui.Views;
+using OoBDev.UiDefinitions.Tui;
 namespace OoBDev.DevTerm.Tui;
 
 /// <summary>The controls a test needs to drive <see cref="ConfigureMode"/> headlessly — the generated form's widgets looked up by field id, plus the hand-built parts.</summary>

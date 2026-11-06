@@ -8,14 +8,13 @@ using System.Threading.Tasks;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Text;
-using OoBDev.DevTerm.Configuration;
 using OoBDev.UiDefinitions;
 using OoBDev.UiDefinitions.Forms;
 using Terminal.Gui.App;
 using Terminal.Gui.Input;
 using Terminal.Gui.ViewBase;
 using Terminal.Gui.Views;
-namespace OoBDev.DevTerm.Tui;
+namespace OoBDev.UiDefinitions.Tui;
 
 /// <summary>
 /// The TUI's generic <em>form</em> renderer: walks a <see cref="UiDefinition"/> (typically one
@@ -45,7 +44,7 @@ namespace OoBDev.DevTerm.Tui;
 /// detected-device pickers — while the form still owns its label, alignment and visibility.
 /// </para>
 /// </remarks>
-internal static class FormRenderer
+public static class FormRenderer
 {
     internal const int MaxWrappedChoiceRows = 3;
 
@@ -53,7 +52,7 @@ internal static class FormRenderer
     internal const int Indent = 2;
 
     /// <summary>The Terminal.Gui scheme warning text is drawn with - the theme's <c>Error</c> role (see <see cref="TuiTheme"/>), so a theme switch recolors it.</summary>
-    internal const string ErrorSchemeName = "Error";
+    public const string ErrorSchemeName = "Error";
 
     public static TuiFormParts Build(IApplication app, UiDefinition definition, FormBinding binding, TuiFormOptions? options = null)
     {
@@ -236,7 +235,7 @@ internal static class FormRenderer
     /// fixed 60 columns and were cut off) but never wider than the screen, and at least 60. Its list
     /// leaves the last two rows to the Select/Cancel row and its shadow, which a one-row gap cut off.
     /// </summary>
-    internal static int ListDialogWidth(IApplication app, IReadOnlyList<string> items)
+    public static int ListDialogWidth(IApplication app, IReadOnlyList<string> items)
     {
         var screen = app.Screen.Width > 0 ? app.Screen.Width : 80;
         var widest = items.Count == 0 ? 0 : items.Max(i => i.Length);
@@ -345,7 +344,7 @@ internal static class FormRenderer
                     row.Refresh = () =>
                     {
                         var text = binding.Has(control.Id) ? binding.GetText(control.Id) : indicator.DefaultValue ?? string.Empty;
-                        var lines = ControlPanelMode.WordWrap(text, width);
+                        var lines = TuiTextWrap.WordWrap(text, width);
                         label.Text = string.Join('\n', lines);
                         label.Width = Math.Max(lines.Max(l => l.Length), 1);
                         label.Height = lines.Count;

@@ -65,6 +65,7 @@ Each task section should include:
 
 ## By day
 
+- [2026-11-06](2026-11-06.md): 1 task(s)
 - [2026-11-05](2026-11-05.md): 39 task(s)
 - [2026-11-04](2026-11-04.md): 37 task(s)
 - [2026-11-03](2026-11-03.md): 4 task(s)

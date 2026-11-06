@@ -8,17 +8,16 @@ using System.Threading.Tasks;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Text;
-using OoBDev.DevTerm.Configuration;
 using OoBDev.UiDefinitions;
 using OoBDev.UiDefinitions.Forms;
 using Terminal.Gui.App;
 using Terminal.Gui.Input;
 using Terminal.Gui.ViewBase;
 using Terminal.Gui.Views;
-namespace OoBDev.DevTerm.Tui;
+namespace OoBDev.UiDefinitions.Tui;
 
 /// <summary>What a host adds to a <see cref="FormRenderer"/> form: its own widget for a control, or a button's action.</summary>
-internal sealed class TuiFormOptions
+public sealed class TuiFormOptions
 {
     /// <summary>Replaces a control's widget (the form keeps its label, column and visibility); keyed by <see cref="UiControl.Id"/>.</summary>
     public Dictionary<string, Func<UiControl, TuiCustomWidget>> CustomWidgets { get; } = new(StringComparer.Ordinal);

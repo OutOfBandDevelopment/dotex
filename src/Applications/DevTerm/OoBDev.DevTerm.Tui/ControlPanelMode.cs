@@ -12,6 +12,7 @@ using OoBDev.DevTerm.Configuration;
 using OoBDev.DevTerm;
 using OoBDev.DevTerm.Presenters.Text;
 using OoBDev.UiDefinitions;
+using OoBDev.UiDefinitions.Tui;
 using Terminal.Gui.App;
 using Terminal.Gui.Editor;
 using Terminal.Gui.Input;
@@ -600,14 +601,14 @@ internal static class ControlPanelMode
         // layout), then re-wrapped to the form's real visible width after every layout pass that
         // changed it - a terminal resize included (see Rewrap below, and BuildWindow).
         var screenWidth = app.Screen.Width > 0 ? app.Screen.Width : 80;
-        var lines = WordWrap(description, NotesWrapWidth(screenWidth - 3));
+        var lines = TuiTextWrap.WordWrap(description, NotesWrapWidth(screenWidth - 3));
         var body = new View { X = 2, Width = _bodyWidth, Height = lines.Count, CanFocus = false };
         var text = new Label { X = 0, Y = 0, Width = lines.Max(l => l.Length), Height = lines.Count, Text = string.Join('\n', lines) };
         body.Add(text);
         var block = new SectionBlock { Label = NotesSectionLabel, Header = CreateHeader(NotesSectionLabel), Body = body, Rows = lines.Count };
         block.Rewrap = viewportWidth =>
         {
-            var wrapped = WordWrap(description, NotesWrapWidth(viewportWidth));
+            var wrapped = TuiTextWrap.WordWrap(description, NotesWrapWidth(viewportWidth));
             var joined = string.Join('\n', wrapped);
             if (joined == text.Text)
             {
@@ -661,47 +662,6 @@ internal static class ControlPanelMode
         return width;
     }
 
-    /// <summary>Greedy word wrap to <paramref name="width"/> columns, keeping explicit line breaks; a single word longer than the width is split.</summary>
-    internal static List<string> WordWrap(string text, int width)
-    {
-        var lines = new List<string>();
-        foreach (var paragraph in text.Replace("\r\n", "\n", StringComparison.Ordinal).Split('\n'))
-        {
-            var line = new StringBuilder();
-            foreach (var word in paragraph.Split(' ', StringSplitOptions.RemoveEmptyEntries))
-            {
-                var remaining = word;
-                while (remaining.Length > 0)
-                {
-                    var needed = line.Length == 0 ? remaining.Length : line.Length + 1 + remaining.Length;
-                    if (needed <= width)
-                    {
-                        if (line.Length > 0)
-                        {
-                            line.Append(' ');
-                        }
-
-                        line.Append(remaining);
-                        remaining = string.Empty;
-                    }
-                    else if (line.Length > 0)
-                    {
-                        lines.Add(line.ToString());
-                        line.Clear();
-                    }
-                    else
-                    {
-                        lines.Add(remaining[..width]);
-                        remaining = remaining[width..];
-                    }
-                }
-            }
-
-            lines.Add(line.ToString());
-        }
-
-        return lines;
-    }
 
     /// <summary>
     /// A command button in a one-line row: shadowless, since every row is one line - a button's

@@ -8,17 +8,16 @@ using System.Threading.Tasks;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Text;
-using OoBDev.DevTerm.Configuration;
 using OoBDev.UiDefinitions;
 using OoBDev.UiDefinitions.Forms;
 using Terminal.Gui.App;
 using Terminal.Gui.Input;
 using Terminal.Gui.ViewBase;
 using Terminal.Gui.Views;
-namespace OoBDev.DevTerm.Tui;
+namespace OoBDev.UiDefinitions.Tui;
 
 /// <summary>One control's views (each at a line offset within the row), its height, and how to re-read it from the model.</summary>
-internal sealed class FormRow(UiControl control)
+public sealed class FormRow(UiControl control)
 {
     private readonly Dictionary<View, int> _columnOffsets = [];
 

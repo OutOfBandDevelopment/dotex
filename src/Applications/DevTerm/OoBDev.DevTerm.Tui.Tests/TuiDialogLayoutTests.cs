@@ -11,6 +11,7 @@ using OoBDev.DevTerm.DeviceManifests.Editing;
 using Terminal.Gui.App;
 using Terminal.Gui.ViewBase;
 using Terminal.Gui.Views;
+using OoBDev.UiDefinitions.Tui;
 namespace OoBDev.DevTerm.Tui.Tests;
 
 /// <summary>

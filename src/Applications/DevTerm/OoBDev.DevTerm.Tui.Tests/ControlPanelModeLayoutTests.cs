@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using OoBDev.DevTerm;
 using OoBDev.UiDefinitions;
+using OoBDev.UiDefinitions.Tui;
 using Terminal.Gui.App;
 using Terminal.Gui.Input;
 using Terminal.Gui.ViewBase;
@@ -177,8 +178,8 @@ public sealed class ControlPanelModeLayoutTests
     [TestMethod]
     public void WordWrap_BreaksAtSpacesAndKeepsExplicitLineBreaks()
     {
-        Assert.AreSequenceEqual(_expected, ControlPanelMode.WordWrap("one two three\nfour", 8));
-        Assert.AreSequenceEqual(["abcd", "ef"], ControlPanelMode.WordWrap("abcdef", 4));
+        Assert.AreSequenceEqual(_expected, TuiTextWrap.WordWrap("one two three\nfour", 8));
+        Assert.AreSequenceEqual(["abcd", "ef"], TuiTextWrap.WordWrap("abcdef", 4));
     }
 
     [TestMethod]

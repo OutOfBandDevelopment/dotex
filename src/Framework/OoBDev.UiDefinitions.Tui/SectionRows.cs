@@ -8,17 +8,16 @@ using System.Threading.Tasks;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Text;
-using OoBDev.DevTerm.Configuration;
 using OoBDev.UiDefinitions;
 using OoBDev.UiDefinitions.Forms;
 using Terminal.Gui.App;
 using Terminal.Gui.Input;
 using Terminal.Gui.ViewBase;
 using Terminal.Gui.Views;
-namespace OoBDev.DevTerm.Tui;
+namespace OoBDev.UiDefinitions.Tui;
 
 /// <summary>One section's header (null when unlabeled) and rows.</summary>
-internal sealed class SectionRows(UiSection section)
+public sealed class SectionRows(UiSection section)
 {
     public UiSection Section { get; } = section;
 

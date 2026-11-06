@@ -8,17 +8,16 @@ using System.Threading.Tasks;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Text;
-using OoBDev.DevTerm.Configuration;
 using OoBDev.UiDefinitions;
 using OoBDev.UiDefinitions.Forms;
 using Terminal.Gui.App;
 using Terminal.Gui.Input;
 using Terminal.Gui.ViewBase;
 using Terminal.Gui.Views;
-namespace OoBDev.DevTerm.Tui;
+namespace OoBDev.UiDefinitions.Tui;
 
 /// <summary>One rendered form: its root view plus the lookups a host or test needs, keyed by <see cref="UiControl.Id"/>.</summary>
-internal sealed class TuiFormParts
+public sealed class TuiFormParts
 {
     private int _refreshing;
 

@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using OoBDev.DevTerm.Configuration;
+using OoBDev.UiDefinitions.Tui;
 namespace OoBDev.DevTerm.Tui;
 
 /// <summary>Text shortening for the TUI's one-line displays, where a Terminal.Gui label silently drops whatever doesn't fit.</summary>
