@@ -14,13 +14,8 @@ Messages: `EmailMessageModel`
 
 Messages: `Object`
 
-### ReceivedEmailMessageModel.ReceivedEmailMessageModel `email-receive`
-
-Messages: `ReceivedEmailMessageModel`
-
 ## Operations
 
 - `receiveEmailMessageModelEmailMessageModel`: receive on `EmailMessageModel.EmailMessageModel`
 - `receiveExampleMessageProviderObject`: receive on `ExampleMessageProvider.Object`
-- `sendReceivedEmailMessageModelReceivedEmailMessageModel`: send on `ReceivedEmailMessageModel.ReceivedEmailMessageModel`
 

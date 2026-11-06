@@ -47,12 +47,11 @@ public class MailKitImapChannelProviderTests
             factory.Setup(f => f.CreateAsync()).ReturnsAsync(Client.Object);
             var mime = new Mock<IMimeMessageFactory>();
             mime.Setup(m => m.ToReceived(It.IsAny<MimeMessage>(), It.IsAny<string>(), It.IsAny<string>()))
-                .Returns((MimeMessage m, string server, string path) => new ReceivedEmailMessageModel
+                .Returns((MimeMessage m, string server, string path) => new EmailMessage
                 {
-                    ReferenceId = m.MessageId,
-                    Subject = m.Subject,
-                    Server = server,
-                    Path = path,
+                    MessageId = m.MessageId,
+                    Subject = m.Subject ?? string.Empty,
+                    Metadata = { ["server"] = server, ["path"] = path },
                 });
             Provider = new MailKitImapChannelProvider(
                 factory.Object,

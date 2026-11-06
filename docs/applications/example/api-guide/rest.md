@@ -51,6 +51,7 @@ Request body: `application/json`, `text/json`, `application/*+json`
 Responses:
 
 - `200` OK (`text/plain`, `application/json`, `text/json`)
+- `502` Bad Gateway (`text/plain`, `application/json`, `text/json`)
 
 ### POST `/api/Communications/public`
 
@@ -59,6 +60,7 @@ Request body: `application/json`, `text/json`, `application/*+json`
 Responses:
 
 - `200` OK (`text/plain`, `application/json`, `text/json`)
+- `502` Bad Gateway (`text/plain`, `application/json`, `text/json`)
 
 ### POST `/api/Communications/queued`
 
@@ -350,4 +352,16 @@ Responses:
 Responses:
 
 - `200` Health report (`application/json`)
+
+### POST `/webhooks/{channel}`
+
+Parameters:
+
+- `channel` (path, string, required)
+
+Responses:
+
+- `204` No Content
+- `400` Bad Request (`text/plain`, `application/json`, `text/json`)
+- `404` Not Found (`text/plain`, `application/json`, `text/json`)
 

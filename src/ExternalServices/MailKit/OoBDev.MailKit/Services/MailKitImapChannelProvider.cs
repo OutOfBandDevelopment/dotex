@@ -52,9 +52,7 @@ public sealed partial class MailKitImapChannelProvider(
         foreach (var id in ids.Take(maxMessages))
         {
             var message = await inbox.GetMessageAsync(id, cancellationToken).ConfigureAwait(false);
-            var email = mime.ToReceived(message, server, inbox.Name).ToEmailMessage();
-            email.Metadata["server"] = server;
-            email.Metadata["path"] = inbox.Name;
+            var email = mime.ToReceived(message, server, inbox.Name);
             polled.Add(new PolledMessage(email, Receipt(inbox.UidValidity, id)));
         }
 

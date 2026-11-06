@@ -1,3 +1,4 @@
+using OoBDev.Communications.Abstractions;
 using OoBDev.Communications.Models;
 using MimeKit;
 
@@ -16,12 +17,12 @@ public interface IMimeMessageFactory
     MimeMessage Create(EmailMessageModel message);
 
     /// <summary>
-    /// Creates a <see cref="ReceivedEmailMessageModel"/> from the specified <see cref="MimeMessage"/>.
+    /// Creates an <see cref="EmailMessage"/> from the specified <see cref="MimeMessage"/>
     /// and inbound metadata such as host and mailbox path.
     /// </summary>
     /// <param name="message"></param>
     /// <param name="server"></param>
     /// <param name="path"></param>
     /// <returns></returns>
-    ReceivedEmailMessageModel ToReceived(MimeMessage message, string server, string path);
+    EmailMessage ToReceived(MimeMessage message, string server, string path);
 }

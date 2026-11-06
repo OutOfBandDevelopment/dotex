@@ -102,7 +102,7 @@ api.WithEnvironment("Telemetry__DashboardUrl", dashboardUrl)
     .WithEnvironment("OpenTelemetryOptions__ServiceName", "example-api")
     .WithEnvironment("OpenTelemetryOptions__Sources__0", "Microsoft.AspNetCore");
 
-foreach (var queue in new[] { "ExampleMessageProvider", "EmailMessageModel", "ReceivedEmailMessageModel" })
+foreach (var queue in new[] { "ExampleMessageProvider", "EmailMessageModel" })
 {
     api.WithEnvironment($"MessageQueue__{queue}__Config__HostName", rabbitmq.GetEndpoint("tcp").Property(EndpointProperty.Host))
         .WithEnvironment($"MessageQueue__{queue}__Config__Port", rabbitmq.GetEndpoint("tcp").Property(EndpointProperty.Port))

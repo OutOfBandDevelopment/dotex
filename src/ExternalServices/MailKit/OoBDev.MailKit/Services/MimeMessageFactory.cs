@@ -1,3 +1,4 @@
+using OoBDev.Communications.Abstractions;
 using OoBDev.Communications.Models;
 using Microsoft.Extensions.Options;
 using MimeKit;
@@ -68,35 +69,30 @@ public class MimeMessageFactory(
     }
 
     /// <summary>
-    /// Creates a <see cref="ReceivedEmailMessageModel"/> from the specified <see cref="MimeMessage"/>.
-    /// and inbound metadata such as host and mailbox path.
+    /// Creates an <see cref="EmailMessage"/> from the specified <see cref="MimeMessage"/>; the host and mailbox path go into <c>Metadata</c> (<c>server</c>, <c>path</c>).
     /// </summary>
-    /// <param name="message"></param>
-    /// <param name="server"></param>
-    /// <param name="path"></param>
-    /// <returns></returns>
-    public ReceivedEmailMessageModel ToReceived(MimeMessage message, string server, string path)
+    /// <param name="message">The received MIME message.</param>
+    /// <param name="server">The server the message came from.</param>
+    /// <param name="path">The mailbox path.</param>
+    /// <returns>The email message.</returns>
+    public EmailMessage ToReceived(MimeMessage message, string server, string path)
     {
-        var received = new ReceivedEmailMessageModel
+        ArgumentNullException.ThrowIfNull(message);
+        var received = new EmailMessage
         {
-            FromAddress = string.Join(';', message.From.Cast<InternetAddress>()),
-            Subject = message.Subject,
+            MessageId = message.MessageId ?? Guid.NewGuid().ToString("N"),
+            Timestamp = message.Date,
+            From = message.From.Count == 0 ? null : string.Join(';', message.From.Cast<InternetAddress>()),
+            To = [.. message.To.Cast<InternetAddress>().Select(a => a.ToString())],
+            Cc = [.. message.Cc.Cast<InternetAddress>().Select(a => a.ToString())],
+            Bcc = [.. message.Bcc.Cast<InternetAddress>().Select(a => a.ToString())],
+            ReplyTo = message.ReplyTo.Count == 0 ? null : string.Join(';', message.ReplyTo.Cast<InternetAddress>()),
+            Subject = message.Subject ?? string.Empty,
             TextContent = message.TextBody,
             HtmlContent = message.HtmlBody,
-            ReferenceId = message.MessageId,
-
-            Server = server,
-            Path = path,
         };
-        foreach (var address in message.To.Cast<InternetAddress>().Select(a => a.ToString())) received.ToAddresses.Add(address);
-        foreach (var address in message.Cc.Cast<InternetAddress>().Select(a => a.ToString())) received.CcAddresses.Add(address);
-        foreach (var address in message.Bcc.Cast<InternetAddress>().Select(a => a.ToString())) received.BccAddresses.Add(address);
-
-        foreach (var header in message.Headers)
-        {
-            received.Headers.Add(header.Field, header.Value);
-        }
-
+        received.Metadata["server"] = server;
+        received.Metadata["path"] = path;
         return received;
     }
 
