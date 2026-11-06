@@ -513,7 +513,7 @@ The code is the stub the design replaces, so implementation starts from the cont
 
 | Project (`src/Framework`) | Holds today | Design says |
 |---|---|---|
-| `OoBDev.Communications.Abstractions` | `ICommunicationSender<TMessageType>` (one `SendAsync` returning an id, no cancellation token), `EmailMessageModel`, `SmsMessageModel`, `ReceivedEmailMessageModel`, `AttachmentReferenceModel` (settable properties) | `ISendService`, `IReceiveService`, `IDeliveryTracker`, handler interfaces, immutable records, `CancellationToken` on every call; namespaces `OoBDev.Communications.Abstractions` (code uses `OoBDev.Communications.Models` and `.Services`) |
+| `OoBDev.Communications.Abstractions` | `ICommunicationSender<TMessageType>` (removed 2026-11-05) (one `SendAsync` returning an id, no cancellation token), `EmailMessageModel`, `SmsMessageModel`, `ReceivedEmailMessageModel`, `AttachmentReferenceModel` (settable properties) | `ISendService`, `IReceiveService`, `IDeliveryTracker`, handler interfaces, immutable records, `CancellationToken` on every call; namespaces `OoBDev.Communications.Abstractions` (code uses `OoBDev.Communications.Models` and `.Services`) |
 | `OoBDev.Communications` | `TryAddCommunicationsServices()`, which registers nothing | `TryAddSendReceive`, `TryAddDeliveryTracker` and the services behind them |
 | `OoBDev.Communications.MessageQueueing` | `EmailMessageHandler` (queue message to `ICommunicationSender<EmailMessageModel>`) | the deferral and queued-send path over `OoBDev.MessageQueueing` |
 | `OoBDev.Communications.Tests` | no tests | the Unit set in each `testing-strategy.md` |

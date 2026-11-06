@@ -187,14 +187,13 @@ Framework projects are organized by domain:
 **Reference:** `src/Framework/OoBDev.AspNetCore/`
 
 #### Communications (3 projects)
-- **OoBDev.Communications.Abstractions** - Email/SMS models
+- **OoBDev.Communications.Abstractions** - send/receive contracts, email message and models
 - **OoBDev.Communications** - Core implementation
 - **OoBDev.Communications.MessageQueueing** - Message queue integration
 
 **Key Interfaces:**
-- `ICommunicationSender<T>` - Send communication
-- `EmailMessageModel` - Email message
-- `SmsMessageModel` - SMS message
+- `ISendService` - Send a message through a named channel
+- `IChannelProvider` - Delivery by one provider (MailKit for email)
 
 **Reference:** `src/Framework/OoBDev.Communications.Abstractions/`
 

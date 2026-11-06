@@ -1,7 +1,6 @@
 using OoBDev.Communications.Abstractions;
 using OoBDev.Communications.Models;
 using System;
-using OoBDev.Communications.Services;
 using OoBDev.MailKit.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -49,7 +48,6 @@ public static class ServiceCollectionExtensions
         if (!string.IsNullOrWhiteSpace(smtp))
         {
             services.AddHealthChecks().AddCheck<MailkitSmtpHealthCheck>("mailkit-smtp");
-            services.TryAddTransient<ICommunicationSender<EmailMessageModel>, MailKitProvider>();
             services.TryAddSingleton(TimeProvider.System);
             services.TryAddEnumerable(ServiceDescriptor.Transient<IChannelProvider, MailKitChannelProvider>());
             services.TryAddTransient<ISmtpClientFactory, SmtpClientFactory>();

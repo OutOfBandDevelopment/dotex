@@ -21,4 +21,4 @@ It sends any `IEmailMessage` (for example `EmailMessage`) through the configured
 `TryAddMailKitExtensions` when SMTP is configured. Failures come back as a failed `SendResult`: a busy, unavailable
 or full mailbox, a dropped connection and a timeout are `Transient` (retried by `SendService`); other SMTP replies,
 authentication errors and a message without a body are `Permanent`; a message that is not an email is `Rejected`.
-Attachments are not mapped yet (`MimeMessageFactory` has the same TODO). The older `ICommunicationSender<EmailMessageModel>` path stays until its consumers move.
+Attachments are not mapped yet (`MimeMessageFactory` has the same TODO).
