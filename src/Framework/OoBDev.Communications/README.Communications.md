@@ -50,4 +50,4 @@ services.TryAddSendReceive();   // settings: OoBDev:Communications (RetryCount, 
 registration order. A throwing handler is logged and the others still run. Bad input comes back as a failed
 `WebhookResult`, never an exception. Status events move the `IDeliveryTracker` record forward only
 (`Queued`, `Sent`, `Delivered`/`Failed`/`Bounced`, `Opened`, `Clicked`); a late `Sent` after `Bounced` is ignored.
-Polling (`PollAsync`) and the anonymous `POST /webhooks/{channel}` route are not built yet.
+Settings are validated at start-up (retry count 0 to 100, delays positive, factor at least 1). Polling (`PollAsync`) and the anonymous `POST /webhooks/{channel}` route are not built yet.

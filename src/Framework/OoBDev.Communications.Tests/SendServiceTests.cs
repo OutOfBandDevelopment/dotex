@@ -286,4 +286,23 @@ public class SendServiceTests
         Assert.AreEqual(7, provider.GetRequiredService<IOptions<SendReceiveOptions>>().Value.RetryCount);
         Assert.AreEqual(1, services.Count(s => s.ServiceType == typeof(ISendService)));
     }
+
+    [TestMethod]
+    [TestCategory(TestCategories.Unit)]
+    [DataRow(-1, 1.0)]
+    [DataRow(3, 0.5)]
+    public void TryAddSendReceive_InvalidOptions_FailOnFirstUse(int retryCount, double factor)
+    {
+        var services = new ServiceCollection();
+        services.AddSingleton<IConfiguration>(new ConfigurationBuilder().Build());
+
+        services.TryAddSendReceive(o =>
+        {
+            o.RetryCount = retryCount;
+            o.BackoffFactor = factor;
+        });
+        using var provider = services.BuildServiceProvider();
+
+        Assert.ThrowsExactly<OptionsValidationException>(() => provider.GetRequiredService<IOptions<SendReceiveOptions>>().Value);
+    }
 }

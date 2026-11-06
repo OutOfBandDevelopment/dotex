@@ -28,7 +28,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection TryAddSendReceive(this IServiceCollection services, Action<SendReceiveOptions>? configure = null)
     {
         ArgumentNullException.ThrowIfNull(services);
-        services.AddOptions<SendReceiveOptions>().BindConfiguration("OoBDev:Communications");
+        services.AddOptions<SendReceiveOptions>().BindConfiguration("OoBDev:Communications").ValidateDataAnnotations().ValidateOnStart();
         if (configure is not null)
         {
             services.Configure(configure);
