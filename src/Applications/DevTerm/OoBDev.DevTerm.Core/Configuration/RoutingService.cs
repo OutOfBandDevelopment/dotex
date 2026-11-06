@@ -154,7 +154,7 @@ public sealed class RoutingService : IAsyncDisposable
             {
                 if (ct.IsCancellationRequested)
                 {
-                    _ = link.DisposeAsync();
+                    _ = link.DisposeAsync().AsTask();
                     return;
                 }
 

@@ -185,7 +185,7 @@ public sealed class BrokerDeviceAdapter : IDeviceAdapter
             prefix.CopyTo(line, 0);
             payload.CopyTo(line, prefix.Length);
             line[^1] = (byte)'\n';
-            _ = _pipe.Writer.WriteAsync(line);
+            _ = _pipe.Writer.WriteAsync(line).AsTask();
         }
     }
 
