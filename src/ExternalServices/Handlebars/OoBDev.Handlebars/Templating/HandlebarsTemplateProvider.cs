@@ -4,6 +4,7 @@ using HandlebarsDotNet;
 using HandlebarsDotNet.Extension.Json;
 using HandlebarsDotNet.Helpers;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -22,11 +23,13 @@ namespace OoBDev.Handlebars.Templating;
 /// <param name="blockHelperDescriptors">The collection of helpers registries.</param>
 /// <param name="helperDescriptors">The collection of helpers registries.</param>
 /// <param name="log">The logger instance.</param>
+/// <param name="options">The provider options; <c>NoEscape</c> is on when omitted.</param>
 public class HandlebarsTemplateProvider(
     IEnumerable<IHelpersRegistry> helpersRegistry,
     IEnumerable<IHelperDescriptor<BlockHelperOptions>> blockHelperDescriptors,
     IEnumerable<IHelperDescriptor<HelperOptions>> helperDescriptors,
-    ILogger<HandlebarsTemplateProvider> log
+    ILogger<HandlebarsTemplateProvider> log,
+    IOptions<HandlebarsOptions>? options = null
     ) : ITemplateProvider
 {
     private readonly ILogger _log = log;
@@ -60,7 +63,7 @@ public class HandlebarsTemplateProvider(
     {
         var config = new HandlebarsConfiguration()
         {
-            NoEscape = true, //TODO: make this configurable
+            NoEscape = options?.Value.NoEscape ?? true,
         };
 
         // https://github.com/Handlebars-Net/Handlebars.Net
