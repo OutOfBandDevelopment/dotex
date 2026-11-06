@@ -502,3 +502,20 @@ ITargetPreference {
    - Phase 3: Twilio SMS Provider (enables SMS channel)
 5. **Comprehensive testing** (Unit, Integration with Docker, LiveIntegration with real services)
 6. **Documentation** (README per project, usage examples, migration guide)
+
+---
+
+## Current code versus the design (2026-11-05)
+
+The code is the stub the design replaces, so implementation starts from the contracts in [SendReceive/api-design.md](SendReceive/api-design.md).
+
+**Table 1 — What exists**
+
+| Project (`src/Framework`) | Holds today | Design says |
+|---|---|---|
+| `OoBDev.Communications.Abstractions` | `ICommunicationSender<TMessageType>` (one `SendAsync` returning an id, no cancellation token), `EmailMessageModel`, `SmsMessageModel`, `ReceivedEmailMessageModel`, `AttachmentReferenceModel` (settable properties) | `ISendService`, `IReceiveService`, `IDeliveryTracker`, handler interfaces, immutable records, `CancellationToken` on every call; namespaces `OoBDev.Communications.Abstractions` (code uses `OoBDev.Communications.Models` and `.Services`) |
+| `OoBDev.Communications` | `TryAddCommunicationsServices()`, which registers nothing | `TryAddSendReceive`, `TryAddDeliveryTracker` and the services behind them |
+| `OoBDev.Communications.MessageQueueing` | `EmailMessageHandler` (queue message to `ICommunicationSender<EmailMessageModel>`) | the deferral and queued-send path over `OoBDev.MessageQueueing` |
+| `OoBDev.Communications.Tests` | no tests | the Unit set in each `testing-strategy.md` |
+
+Breaking changes are allowed (unreleased framework), so the first implementation step renames and replaces these types outright, and `EmailMessageHandler` is ported to the new contracts in the same change.
