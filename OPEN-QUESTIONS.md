@@ -74,3 +74,29 @@ The coding standard says options validation uses `AddValidatedOptions<T>()`, whi
 **Default:** A.
 
 **Your answer:**
+
+### Q6 (2026-11-05, Communications) How do email attachments travel in `IEmailMessage`?
+
+The requirements put attachments in phase 2. Today `EmailMessageModel.Attachments` holds references (`AttachmentReferenceModel`: container and key) that nothing resolves, and `IEmailMessage` has no attachments. The send path needs bytes at the provider.
+
+**Options**
+- A (recommended): `IEmailAttachment` (name, content type, `Func<CancellationToken, Task<Stream>>` opener) on `IEmailMessage`; a resolver in the queue handler turns a stored reference into an opener once Epic 6 (Documents) has a store. Small messages work now and large files are not buffered; cost: the resolver waits for Epic 6.
+- B: attachments as `byte[]` inline. Simplest, tested with MailKit now; cost: memory use and the 10 MB limit in the requirements apply to every send.
+- C: references only, each provider fetches the document itself. No copy in the message; cost: every adapter needs store access (layering).
+
+**Default:** A, built without the resolver; not started until you confirm.
+
+**Your answer:**
+
+### Q7 (2026-11-05, Communications) Which vendor gets the first provider adapter and webhook processor?
+
+Only MailKit (SMTP and IMAP) exists. The design names SendGrid and Twilio; Azure Communication Services and AWS SES/SNS also fit the repo's cloud adapters. An adapter and its webhook processor can only be Integration-tested with an emulator or a real account (Moto covers AWS).
+
+**Options**
+- A (recommended): AWS SES (send) plus SNS delivery notifications as the webhook processor: Moto is already in the test stack, so Integration tests run locally without an account.
+- B: SendGrid (email) then Twilio (SMS): the designs' examples; cost: only live tests (`LiveIntegration`, manual) because there is no emulator.
+- C: Azure Communication Services: matches the Azure adapters; cost: no emulator either.
+
+**Default:** A once you confirm.
+
+**Your answer:**
