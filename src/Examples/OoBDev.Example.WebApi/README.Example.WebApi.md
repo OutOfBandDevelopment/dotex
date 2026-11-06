@@ -47,3 +47,7 @@ Most controllers need a backing service. Start the Docker services from `contain
 - `RequireApplicationUserId` is set to `false` so the samples run without a signed-in user.
 - The MailKit hosted receiver is disabled in `Program.cs`; enable it only with a reachable mailbox.
 - This project is not packaged.
+
+## Tests
+
+`OoBDev.Example.WebApi.Tests` (Unit) calls the controllers directly with mocked services: `CommunicationsController` (send accepted, provider rejection to a 502 problem, enqueue) and `WebhooksController` (raw body, headers, query and clock reach `IReceiveService`; 204, 404 and 400 mapping).
