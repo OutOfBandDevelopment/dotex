@@ -44,3 +44,10 @@ registration order. A throwing handler is logged and the others still run. Bad i
 `WebhookResult`, never an exception. Status events move the `IDeliveryTracker` record forward only
 (`Queued`, `Sent`, `Delivered`/`Failed`/`Bounced`, `Opened`, `Clicked`); a late `Sent` after `Bounced` is ignored.
 Settings are validated at start-up (retry count 0 to 100, delays positive, factor at least 1). Polling (`PollAsync`) and the anonymous `POST /webhooks/{channel}` route are not built yet.
+
+### Polling
+
+`IReceiveService.PollAsync(channel, maxMessages)` asks a provider that implements `IPollableChannelProvider` for unread messages and hands each to the
+`IMessageReceivedHandler` instances. A message is acknowledged (marked read at the vendor) only after every handler returned, so a failing handler
+loses nothing and the message comes back on the next poll. It returns the messages that were handled; an unknown channel or provider throws, and a
+provider that cannot be polled throws `NotSupportedException`. The caller (a hosted service on `SendReceiveOptions.PollInterval`) decides when to poll.

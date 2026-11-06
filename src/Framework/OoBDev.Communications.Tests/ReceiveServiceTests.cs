@@ -65,6 +65,7 @@ public class ReceiveServiceTests
             factory.Setup(f => f.GetProcessor("fake")).Returns(processorExists ? Processor.Object : null);
             Service = new ReceiveService(
                 repository.Object,
+                Mock.Of<IChannelRegistry>(),
                 factory.Object,
                 Tracker,
                 [new RecordingMessageHandler(Log, "first", throws: true), new RecordingMessageHandler(Log, "second")],

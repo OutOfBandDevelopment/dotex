@@ -12,6 +12,7 @@ namespace OoBDev.Communications;
 /// <summary>Verifies webhook calls, tracks delivery status and dispatches events to the handlers.</summary>
 public sealed partial class ReceiveService(
     IChannelRepository channels,
+    IChannelRegistry registry,
     IWebhookProcessorFactory processors,
     IDeliveryTracker tracker,
     IEnumerable<IMessageReceivedHandler> messageHandlers,
@@ -75,17 +76,58 @@ public sealed partial class ReceiveService(
         return new WebhookResult(true, events.Count, events.Select(e => e.MessageId).ToList());
     }
 
+    /// <inheritdoc />
+    public async Task<IReadOnlyList<IMessage>> PollAsync(string channelName, int maxMessages = 10, CancellationToken cancellationToken = default)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(channelName);
+        ArgumentOutOfRangeException.ThrowIfLessThan(maxMessages, 1);
+
+        var channel = await channels.GetByNameAsync(channelName, cancellationToken).ConfigureAwait(false)
+            ?? throw new ChannelNotFoundException(channelName);
+        var provider = registry.GetProvider(channel.Protocol, channel.Provider)
+            ?? throw new ProviderNotFoundException(channel.Protocol, channel.Provider);
+        if (provider is not IPollableChannelProvider pollable)
+        {
+            throw new NotSupportedException($"Provider '{channel.Provider}' cannot be polled.");
+        }
+
+        var polled = await pollable.PollAsync(channel, maxMessages, cancellationToken).ConfigureAwait(false);
+        var handled = new List<PolledMessage>();
+        foreach (var item in polled.Take(maxMessages))
+        {
+            var failed = false;
+            foreach (var handler in messageHandlers)
+            {
+                failed |= !await RunAsync(item.Message.MessageId, () => handler.HandleAsync(item.Message, cancellationToken)).ConfigureAwait(false);
+            }
+
+            if (!failed)
+            {
+                handled.Add(item);
+            }
+        }
+
+        if (handled.Count > 0)
+        {
+            await pollable.AcknowledgeAsync(channel, [.. handled.Select(h => h.Receipt)], cancellationToken).ConfigureAwait(false);
+        }
+
+        return [.. handled.Select(h => h.Message)];
+    }
+
     private static WebhookResult Fail(string message) => new(false, 0, [], message);
 
-    private async Task RunAsync(string messageId, Func<Task> handler)
+    private async Task<bool> RunAsync(string messageId, Func<Task> handler)
     {
         try
         {
             await handler().ConfigureAwait(false);
+            return true;
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
             LogHandlerFailed(ex, messageId);
+            return false;
         }
     }
 

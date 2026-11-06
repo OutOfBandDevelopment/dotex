@@ -49,6 +49,13 @@ public interface IReceiveService
     Task<IReadOnlyList<IMessage>> PollAsync(string channelName, int maxMessages = 10, CancellationToken cancellationToken = default);
 }
 
+/// Implemented by a provider that fetches inbound messages (IMAP). The poll returns unread messages; the receive service acknowledges them after the handlers returned.
+public interface IPollableChannelProvider : IChannelProvider
+{
+    Task<IReadOnlyList<PolledMessage>> PollAsync(IChannel channel, int maxMessages, CancellationToken cancellationToken = default);
+    Task AcknowledgeAsync(IChannel channel, IReadOnlyCollection<string> receipts, CancellationToken cancellationToken = default);
+}
+
 public interface IMessageReceivedHandler
 {
     Task HandleAsync(IMessage message, CancellationToken cancellationToken = default);
@@ -144,7 +151,7 @@ public sealed class SendReceiveOptions
 | `ScheduledDeliveryTime` | The call records the message as `Queued` and hands it to the deferral queue (Core `IDeferralManager`); it does not wait. |
 | `HandleWebhookAsync` | Unknown channel or provider returns `Success = false` (the endpoint must not throw on foreign input). A failed signature returns `Success = false` with `ErrorMessage = "invalid signature"` and no handler runs. A request older than `WebhookClockTolerance` is rejected when the provider signs a timestamp. Handlers run in registration order; an exception in one handler is logged and does not stop the others or fail the webhook. |
 | `UpdateStatusAsync` | Status moves forward only along `Queued -> Sent -> Delivered`/`Failed`/`Bounced`, then `Opened`, `Clicked`; a stale event is ignored (logged at debug). An unknown message id is logged and ignored, never created. |
-| `PollAsync` | Returns at most `maxMessages`, marks them read only after the handlers returned. |
+| `PollAsync` | Returns at most `maxMessages`, marks them read only after the handlers returned (a message whose handler threw stays unread and is not returned). Unknown channel or provider throws; a provider that is not an `IPollableChannelProvider` throws `NotSupportedException`. |
 
 ---
 
