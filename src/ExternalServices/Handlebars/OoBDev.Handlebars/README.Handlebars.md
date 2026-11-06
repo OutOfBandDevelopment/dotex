@@ -4,7 +4,7 @@ Handlebars templates for the framework template engine (`OoBDev.System.Text.Temp
 
 ## Description
 
-`HandlebarsTemplateProvider` is an `ITemplateProvider` for the content type `text/x-handlebars-template` (files ending `.hbs`). For each `ApplyAsync` it creates a Handlebars environment (`NoEscape` from `HandlebarsOptions`, default true; JSON support from `Handlebars.Net.Extension.Json`), registers every helper found in the container, compiles the template that `context.OpenTemplate` returns and writes the result to the target stream. The data object is the Handlebars context; the `ITemplateContext` is passed as the Handlebars `data`.
+`HandlebarsTemplateProvider` is an `ITemplateProvider` for the content type `text/x-handlebars-template` (files ending `.hbs`). It builds one Handlebars environment per provider instance (`NoEscape` from `HandlebarsOptions`, default true; JSON support from `Handlebars.Net.Extension.Json`), registers every helper found in the container, and for each `ApplyAsync` compiles (or reuses, see Compilation cache) the template that `context.OpenTemplate` returns and writes the result to the target stream. The data object is the Handlebars context; the `ITemplateContext` is passed as the Handlebars `data`.
 
 `TryAddHandlebarServices()` registers the provider (plain and keyed `handlebars`, `HandlebarsGlobals.ProviderKey`), the `.hbs` file type with `IsTemplateType = true`, and the helpers below. Helper sets from `Handlebars.Net.Helpers` (`IHelpersRegistry`) and any extra `IHelperDescriptor<HelperOptions>` or block descriptor in the container are registered too, so an application adds a helper by registering a descriptor.
 
@@ -35,7 +35,7 @@ var text = await engine.ApplyAsync("welcome.hbs", new { Name = "Ada" });
 
 ## Not built yet
 
-The design set in `Features/Proposals/10-TextTemplating/HandlebarsProvider` goes further. Not in the code: a compiled-template cache (every call recompiles and re-registers helpers), the `IDataContainer` adapter (needs Epic 11), and the database template source. They are tracked in `BACKLOG.md`.
+The design set in `Features/Proposals/10-TextTemplating/HandlebarsProvider` goes further. Not in the code: the `IDataContainer` adapter (needs Epic 11), and the database template source. They are tracked in `BACKLOG.md`.
 
 ## Notes and references
 
