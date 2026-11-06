@@ -119,7 +119,7 @@ public sealed partial class CgiProcessRunner : ICgiProcessRunner, IDisposable
             Stream stdout = process.StandardOutput.BaseStream;
             var (head, leftover) = await ReadHeadAsync(stdout, linked.Token).ConfigureAwait(false);
             if (head is null)
-                await ThrowNoHeaderAsync(process).ConfigureAwait(false);
+                throw await NoHeaderExceptionAsync(process).ConfigureAwait(false);
 
             var (status, headers) = ParseHead(head, request.Script.ScriptName);
             var body = new PrefixedStream(leftover, stdout);
@@ -147,12 +147,12 @@ public sealed partial class CgiProcessRunner : ICgiProcessRunner, IDisposable
         }
     }
 
-    private static async Task ThrowNoHeaderAsync(Process process)
+    private static async Task<Exception> NoHeaderExceptionAsync(Process process)
     {
         await process.WaitForExitAsync(CancellationToken.None).ConfigureAwait(false);
         if (process.ExitCode != 0)
-            throw new CgiProcessFailedException($"The program exited with code {process.ExitCode.ToString(CultureInfo.InvariantCulture)} and wrote nothing.");
-        throw new CgiProtocolException("The program wrote no header block.");
+            return new CgiProcessFailedException($"The program exited with code {process.ExitCode.ToString(CultureInfo.InvariantCulture)} and wrote nothing.");
+        return new CgiProtocolException("The program wrote no header block.");
     }
 
     private async Task CompleteAsync(Process started, Task stderr, Task stdin, CancellationTokenSource linked, CancellationTokenSource timeout)

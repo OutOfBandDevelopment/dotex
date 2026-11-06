@@ -16,7 +16,7 @@ namespace OoBDev.DevTerm.Configuration;
 public sealed class RoutingService : IAsyncDisposable
 {
     private readonly RoutingOptions _options;
-    private readonly IRoutingLinkFactory _factory;
+    private readonly IRoutingLinkFactory? _factory;
     private readonly Lock _gate = new();
     private Session? _session;
     private CancellationTokenSource? _cts;
@@ -24,7 +24,7 @@ public sealed class RoutingService : IAsyncDisposable
     private IRoutingLink? _link;
     private int _dropped;
 
-    public RoutingService(RoutingOptions options, IRoutingLinkFactory factory)
+    public RoutingService(RoutingOptions options, IRoutingLinkFactory? factory)
     {
         ArgumentNullException.ThrowIfNull(options);
         _options = options;
@@ -131,7 +131,7 @@ public sealed class RoutingService : IAsyncDisposable
         for (var attempt = 0; !ct.IsCancellationRequested; attempt++)
         {
             var lost = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
-            var link = _factory.Create(_options);
+            var link = (_factory ?? throw new InvalidOperationException("No IRoutingLinkFactory was supplied; routing cannot open a broker link.")).Create(_options);
             link.Lost += error => lost.TrySetResult();
             try
             {
