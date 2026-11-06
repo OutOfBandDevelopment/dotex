@@ -36,4 +36,15 @@ public static class ServiceCollectionExtensions
         services.TryAddSingleton<IReceiveService, ReceiveService>();
         return services;
     }
+
+    /// <summary>Adds <see cref="ReceivePollingHost"/>, which polls the channels that set a <c>PollInterval</c>.</summary>
+    /// <param name="services">The service collection.</param>
+    /// <returns>The modified <see cref="IServiceCollection"/>.</returns>
+    public static IServiceCollection TryAddReceivePolling(this IServiceCollection services)
+    {
+        ArgumentNullException.ThrowIfNull(services);
+        services.TryAddSendReceive();
+        services.TryAddEnumerable(ServiceDescriptor.Singleton<Microsoft.Extensions.Hosting.IHostedService, ReceivePollingHost>());
+        return services;
+    }
 }
