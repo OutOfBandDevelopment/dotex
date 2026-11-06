@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace OoBDev.Communications;
@@ -25,4 +26,7 @@ public sealed class SendReceiveOptions
     /// <summary>Gets or sets how far a webhook call may differ from the clock before it is rejected.</summary>
     [Range(typeof(TimeSpan), "00:00:00.001", "1.00:00:00")]
     public TimeSpan WebhookClockTolerance { get; set; } = TimeSpan.FromMinutes(5);
+
+    /// <summary>Gets or sets the configured channels.</summary>
+    public IList<ChannelDefinition> Channels { get; set; } = [];
 }

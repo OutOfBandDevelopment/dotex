@@ -20,7 +20,7 @@ public static class ServiceCollectionExtensions
 
     /// <summary>
     /// Adds <see cref="ISendService"/> and an in-memory <see cref="IDeliveryTracker"/>. The caller registers
-    /// <see cref="IChannelRepository"/>, <see cref="IChannelRegistry"/> and the providers.
+    /// the <see cref="IChannelProvider"/> implementations (channels come from configuration unless <see cref="IChannelRepository"/> is replaced).
     /// </summary>
     /// <param name="services">The service collection.</param>
     /// <param name="configure">Optional settings override.</param>
@@ -36,6 +36,8 @@ public static class ServiceCollectionExtensions
 
         services.TryAddSingleton(TimeProvider.System);
         services.TryAddSingleton<IDeliveryTracker, InMemoryDeliveryTracker>();
+        services.TryAddSingleton<IChannelRepository, ConfigurationChannelRepository>();
+        services.TryAddSingleton<IChannelRegistry, ChannelRegistry>();
         services.TryAddSingleton<ISendService, SendService>();
         services.TryAddSingleton<IWebhookProcessorFactory, WebhookProcessorFactory>();
         services.TryAddSingleton<IReceiveService, ReceiveService>();

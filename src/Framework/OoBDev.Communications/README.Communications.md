@@ -36,7 +36,8 @@ public class ExampleClass (
 
 ```csharp
 services.TryAddSendReceive();   // settings: OoBDev:Communications (RetryCount, RetryDelay, BackoffFactor, MaxRetryDelay)
-// the host registers IChannelRepository, IChannelRegistry and the IChannelProvider implementations
+// channels: OoBDev:Communications:Channels:0:Name / Protocol / Provider (ConfigurationChannelRepository);
+// the host registers the IChannelProvider implementations; ChannelRegistry matches provider key and protocol
 ```
 
 `ICommunicationSender<>` and the message models stay until the MailKit adapter, the example WebApi and Common are ported.
