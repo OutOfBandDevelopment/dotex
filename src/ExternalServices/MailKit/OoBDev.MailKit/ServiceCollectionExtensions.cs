@@ -1,4 +1,6 @@
+using OoBDev.Communications.Abstractions;
 using OoBDev.Communications.Models;
+using System;
 using OoBDev.Communications.Services;
 using OoBDev.MailKit.Services;
 using Microsoft.Extensions.Configuration;
@@ -48,6 +50,8 @@ public static class ServiceCollectionExtensions
         {
             services.AddHealthChecks().AddCheck<MailkitSmtpHealthCheck>("mailkit-smtp");
             services.TryAddTransient<ICommunicationSender<EmailMessageModel>, MailKitProvider>();
+            services.TryAddSingleton(TimeProvider.System);
+            services.TryAddEnumerable(ServiceDescriptor.Transient<IChannelProvider, MailKitChannelProvider>());
             services.TryAddTransient<ISmtpClientFactory, SmtpClientFactory>();
             services.AddOptions<MailKitSmtpClientOptions>()
             .Bind(configuration.GetSection(smtpConfigurationSection))
