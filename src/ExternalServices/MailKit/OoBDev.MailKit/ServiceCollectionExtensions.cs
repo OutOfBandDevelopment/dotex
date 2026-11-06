@@ -60,6 +60,8 @@ public static class ServiceCollectionExtensions
         {
             services.AddHealthChecks().AddCheck<MailkitImapHealthCheck>("mailkit-imap");
             services.TryAddTransient<IImapClientFactory, ImapClientFactory>();
+            services.TryAddSingleton(TimeProvider.System);
+            services.TryAddEnumerable(ServiceDescriptor.Transient<IChannelProvider, MailKitImapChannelProvider>());
             services.AddOptions<MailKitImapClientOptions>()
             .Bind(configuration.GetSection(imapConfigurationSection))
             .ValidateDataAnnotations();
