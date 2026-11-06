@@ -48,3 +48,16 @@ The spike ([result](docs/design/TemplateTools/README.md)) shows `Xslt.Cli` does 
 **Default:** A, starting only with the parts that move nothing (step 1 inside `OoBDev.System`); the library move waits for your answer.
 
 **Your answer:**
+
+### Q4 (2026-11-05, SharedFramework) Move the proposal folders into `docs/design/`?
+
+`Features/Proposals/` holds 134 design files in eight epic folders, outside the `docs/design/<Feature>/` convention. The [plan](docs/design/SharedFramework/migration-plan.md) moves them without changing content.
+
+**Options**
+- A (recommended): move as planned (documents only, no code), rewrite links, validate, delete `Features/`. Matches the rule that designs live in `docs/design`; cost: one large commit and link churn in the change documents.
+- B: leave `Features/Proposals/` where it is and add a pointer from `docs/design/README`. No churn, but two places for designs.
+- C: move only Communications and Text templating (the ones with code or started work) now, the rest later.
+
+**Default:** A once you confirm; nothing moves until then.
+
+**Your answer:**
