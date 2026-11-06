@@ -1,6 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
 		<ImplicitUsings>false</ImplicitUsings>
@@ -8,22 +7,15 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<InternalsVisibleTo Include="OoBDev.MailKit.Tests" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<PackageReference Include="GitVersion.MsBuild">
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
 		<PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\..\..\Framework\OoBDev.MessageQueueing.Abstractions\OoBDev.MessageQueueing.Abstractions.csproj" />
-	  <ProjectReference Include="..\OoBDev.MailKit\OoBDev.MailKit.csproj" />
+		<ProjectReference Include="..\OoBDev.Communications\OoBDev.Communications.csproj" />
 	</ItemGroup>
 
 </Project>

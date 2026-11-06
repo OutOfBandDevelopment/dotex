@@ -8,9 +8,11 @@ using Microsoft.Extensions.Time.Testing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using OoBDev.Communications.Abstractions;
+using OoBDev.Communications;
+using OoBDev.Communications.Hosting;
 using OoBDev.TestUtilities;
 
-namespace OoBDev.Communications.Tests;
+namespace OoBDev.Communications.Hosting.Tests;
 
 [TestClass]
 public class ReceivePollingHostTests

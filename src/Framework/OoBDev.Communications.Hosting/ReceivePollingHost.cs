@@ -7,8 +7,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using OoBDev.Communications.Abstractions;
+using OoBDev.Communications;
 
-namespace OoBDev.Communications;
+namespace OoBDev.Communications.Hosting;
 
 /// <summary>Polls every configured channel that sets <see cref="ChannelDefinition.PollInterval"/> through <see cref="IReceiveService.PollAsync"/>.</summary>
 public sealed partial class ReceivePollingHost(

@@ -33,5 +33,5 @@ Plans, mappings and analyses for code brought into the framework from other repo
 
 - BotChat mapping and plan: the patterns were extracted on 2026-10-09 and the sources removed.
 - Vector comparison: the application-level `Vector` type is in `OoBDev.System.Abstractions` (`Math`), documented in its readme and tested; the cosine distance versus similarity difference is recorded there.
-- MailKit and SendGrid integration analysis: both integrations are complete and described in `README.MailKit.md` and `README.MailKit.Hosting.md`.
+- MailKit and SendGrid integration analysis: both integrations are complete and described in `README.MailKit.md`.
 - Consolidated on 2026-10-29: the BinaryDataDecoders feature mapping, migration plan, decision sheet and critical questions (now the re-review), the four SharedFramework analyses (now `sharedframework.md`) and the two Oobtainium notes (now `oobtainium.md`).

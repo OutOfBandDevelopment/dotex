@@ -121,7 +121,6 @@
     <Project Path="ExternalServices/Keycloak/OoBDev.Keycloak/OoBDev.Keycloak.csproj" />
   </Folder>
   <Folder Name="/ExternalServices/MailKit/">
-    <Project Path="ExternalServices/MailKit/OoBDev.MailKit.Hosting/OoBDev.MailKit.Hosting.csproj" />
     <Project Path="ExternalServices/MailKit/OoBDev.MailKit.Tests/OoBDev.MailKit.Tests.csproj" />
     <Project Path="ExternalServices/MailKit/OoBDev.MailKit/OoBDev.MailKit.csproj" />
   </Folder>
@@ -208,6 +207,8 @@
     <Project Path="Framework/OoBDev.Caching.Tests/OoBDev.Caching.Tests.csproj" />
     <Project Path="Framework/OoBDev.Caching/OoBDev.Caching.csproj" />
     <Project Path="Framework/OoBDev.Communications.Abstractions/OoBDev.Communications.Abstractions.csproj" />
+    <Project Path="Framework/OoBDev.Communications.Hosting/OoBDev.Communications.Hosting.csproj" />
+    <Project Path="Framework/OoBDev.Communications.Hosting.Tests/OoBDev.Communications.Hosting.Tests.csproj" />
     <Project Path="Framework/OoBDev.Communications.MessageQueueing/OoBDev.Communications.MessageQueueing.csproj" />
     <Project Path="Framework/OoBDev.Communications.MessageQueueing.Tests/OoBDev.Communications.MessageQueueing.Tests.csproj" />
     <Project Path="Framework/OoBDev.Communications.Tests/OoBDev.Communications.Tests.csproj" />

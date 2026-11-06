@@ -19,7 +19,7 @@ public sealed class ChannelDefinition : IChannel
     [Required]
     public string Provider { get; set; } = string.Empty;
 
-    /// <summary>Gets or sets how often <see cref="ReceivePollingHost"/> polls the channel; <c>null</c> means the channel is not polled.</summary>
+    /// <summary>Gets or sets how often <c>ReceivePollingHost</c> polls the channel; <c>null</c> means the channel is not polled.</summary>
     public TimeSpan? PollInterval { get; set; }
 
     /// <summary>Gets or sets the most messages taken per poll.</summary>
