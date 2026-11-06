@@ -123,4 +123,4 @@ Every migration follows the usual rules (net10.0, nullable, README per project, 
 | D6 | CLI tools and De5000 | **A** migrate PackMan, Xslt, Net.ServiceHost; drop IO.Controller.Cli and De5000 (dev-term has both); **B** migrate all; **C** reject all | **A**: dev-term covers the device ones |
 | D7 | Harvest items marked defer | **A** add to `BACKLOG.md` as evaluate-later; **B** drop | **A**: costs nothing |
 
-Default until you answer: nothing migrates; only the BACKLOG additions in D7 are made.
+**Owner answers (2026-11-05, interview):** D1 A, D2 A, D3 A, D4 A, D5 A, D6 A, D7 A (the recommendations). D8 and D9 were not asked yet and keep their recommendation as the default. The migration of each item is now unblocked and follows the table above.
