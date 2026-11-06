@@ -16,3 +16,4 @@
 - [Generated guides and esproj](feedback-generated-guides-esproj.md) — journey-driven guides for all modes, API guides from specs, JS/TS as esproj
 - [Define once, issues folder](feedback-define-once-issues.md) — backlog items link feature docs; docs/issues for working detail
 - [Change doc per day](feedback-change-doc-by-date.md) — log work in docs/changes/{today}.md, a new file when the date rolls over
+- [Embedded PlantUML only](feedback-embedded-plantuml.md) — no ASCII diagrams anywhere; hook blocks them

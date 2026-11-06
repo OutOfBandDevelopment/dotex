@@ -51,3 +51,9 @@ Settings are validated at start-up (retry count 0 to 100, delays positive, facto
 `IMessageReceivedHandler` instances. A message is acknowledged (marked read at the vendor) only after every handler returned, so a failing handler
 loses nothing and the message comes back on the next poll. It returns the messages that were handled; an unknown channel or provider throws, and a
 provider that cannot be polled throws `NotSupportedException`. `services.TryAddCommunicationsHosting()` (`OoBDev.Communications.Hosting`) adds `ReceivePollingHost`, which polls every channel that sets `PollInterval` (and `PollBatchSize`, default 10) on a `PeriodicTimer`; a failed poll is logged and retried on the next tick. Without it the caller decides when to poll.
+
+## Decisions
+
+- Options (`SendReceiveOptions` and the others) are validated with data annotations and `ValidateOnStart` instead of `AddValidatedOptions<T>()`, so this library does not reference `OoBDev.System` (owner, 2026-11-05).
+- Attachments will not be Stream-only: temp file, `byte[]` or zero-copy `ReadOnlyMemory<byte>`; see the [requirements](../../../docs/design/Communications/SendReceive/requirements.md#decisions-2026-11-05).
+- Provider adapters (AWS SES and SNS first) are tested against emulators only, and their documents say so.

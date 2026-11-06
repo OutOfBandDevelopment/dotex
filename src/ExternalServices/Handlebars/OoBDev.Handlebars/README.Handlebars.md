@@ -35,7 +35,7 @@ var text = await engine.ApplyAsync("welcome.hbs", new { Name = "Ada" });
 
 ## Not built yet
 
-The design set in `Features/Proposals/10-TextTemplating/HandlebarsProvider` goes further. Not in the code: the `IDataContainer` adapter (needs Epic 11), and the database template source. They are tracked in `BACKLOG.md`.
+The design set in `docs/design/TextTemplating/HandlebarsProvider` goes further. Not in the code: the `IDataContainer` adapter (needs Epic 11), and the database template source. They are tracked in `BACKLOG.md`.
 
 ## Notes and references
 
