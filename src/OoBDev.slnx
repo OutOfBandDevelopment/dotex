@@ -67,6 +67,8 @@
     <Project Path="Extensions/OoBDev.Extensions.CodeAnalysis.DacFx/OoBDev.Extensions.CodeAnalysis.DacFx.csproj" />
     <Project Path="Extensions/OoBDev.Extensions.CodeAnalysis.StructuredLog.Tests/OoBDev.Extensions.CodeAnalysis.StructuredLog.Tests.csproj" />
     <Project Path="Extensions/OoBDev.Extensions.CodeAnalysis.StructuredLog/OoBDev.Extensions.CodeAnalysis.StructuredLog.csproj" />
+    <Project Path="Extensions/OoBDev.UiDefinitions.Blazor.Tests/OoBDev.UiDefinitions.Blazor.Tests.csproj" />
+    <Project Path="Extensions/OoBDev.UiDefinitions.Blazor/OoBDev.UiDefinitions.Blazor.csproj" />
     <Project Path="Extensions/OoBDev.Extensions.CodeAnalysis.Tests/OoBDev.Extensions.CodeAnalysis.Tests.csproj" />
     <Project Path="Extensions/OoBDev.Extensions.CodeAnalysis/OoBDev.Extensions.CodeAnalysis.csproj" />
     <Project Path="Extensions/OoBDev.Extensions.Drawing.Tests/OoBDev.Extensions.Drawing.Tests.csproj" />

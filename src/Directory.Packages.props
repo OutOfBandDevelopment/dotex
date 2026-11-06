@@ -101,6 +101,7 @@
     <PackageVersion Include="RabbitMQ.Client" Version="7.2.2" />
     <PackageVersion Include="ReverseMarkdown" Version="6.2.1" />
     <PackageVersion Include="StackExchange.Redis" Version="3.4.5" />
+    <PackageVersion Include="bunit" Version="1.40.0" />
     <PackageVersion Include="Scalar.AspNetCore" Version="2.18.0" />
     <PackageVersion Include="System.Data.SqlClient" Version="4.9.1" />
     <PackageVersion Include="Terminal.Gui" Version="2.5.0" />

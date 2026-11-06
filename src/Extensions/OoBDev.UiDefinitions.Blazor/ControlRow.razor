@@ -1,0 +1,67 @@
+<div class="uidef-row" data-id="@Row.Id">
+    @switch (Row)
+    {
+        case ToggleViewModel toggle:
+            <label>
+                <input type="checkbox" checked="@toggle.IsChecked" disabled="@(!toggle.IsEnabled)" @onchange="() => toggle.Toggle.Execute(null)" />
+                @toggle.Label
+            </label>
+            break;
+        case TextViewModel { IsSlider: true } slider:
+            <label>@slider.Label</label>
+            <input type="range" min="@slider.Minimum" max="@slider.Maximum" step="@slider.Step" value="@slider.Value"
+                   disabled="@(!slider.IsEnabled)" @onchange="e => slider.Text = e.Value?.ToString() ?? string.Empty" />
+            <output>@slider.Text</output>
+            break;
+        case TextViewModel text:
+            <label>@text.Label</label>
+            <input type="text" value="@text.Text" disabled="@(!text.IsEnabled)" @onchange="e => text.Text = e.Value?.ToString() ?? string.Empty" />
+            break;
+        case ChoiceViewModel choice when choice.Style == ChoiceStyle.CheckList:
+            <span class="uidef-label">@choice.Label</span>
+            @foreach (var option in choice.Options)
+            {
+                <label>
+                    <input type="checkbox" checked="@choice.IsChecked(option)" disabled="@(!choice.IsEnabled)" @onchange="() => choice.ToggleOption.Execute(option)" />
+                    @option
+                </label>
+            }
+            break;
+        case ChoiceViewModel choice when choice.Style == ChoiceStyle.RadioGroup:
+            <span class="uidef-label">@choice.Label</span>
+            @foreach (var option in choice.Options)
+            {
+                <label>
+                    <input type="radio" name="@choice.Id" checked="@(string.Equals(choice.SelectedOption, option, StringComparison.Ordinal))"
+                           disabled="@(!choice.IsEnabled)" @onchange="() => choice.Select.Execute(option)" />
+                    @option
+                </label>
+            }
+            break;
+        case ChoiceViewModel choice:
+            <label>@choice.Label</label>
+            <select disabled="@(!choice.IsEnabled)" @onchange="e => choice.Select.Execute(e.Value?.ToString())">
+                @foreach (var option in choice.Options)
+                {
+                    <option value="@option" selected="@(string.Equals(choice.SelectedOption, option, StringComparison.Ordinal))">@option</option>
+                }
+            </select>
+            break;
+        case ButtonViewModel button:
+            <button type="button" title="@button.ToolTip" disabled="@(!button.IsEnabled)" @onclick="() => button.Invoke.Execute(null)">@button.Label</button>
+            break;
+        default:
+            <span>@Row.Label</span>
+            break;
+    }
+    @if (Row.Error is { } error)
+    {
+        <span class="uidef-error" role="alert">@error</span>
+    }
+</div>
+
+@code {
+    /// <summary>The row to render.</summary>
+    [Parameter, EditorRequired]
+    public ControlViewModel Row { get; set; } = default!;
+}
