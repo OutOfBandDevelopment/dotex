@@ -16,7 +16,7 @@ A sample ASP.NET Core web API that composes the OoBDev framework the way a real 
 | `AllMiniLMController`, `SBERTController`, `SBERTDefaultController` | Embedding providers |
 | `VectorStoreController`, `VectorLabController`, `RagController`, `ImagesController` | Vector store, vector experiments, retrieval and image embeddings |
 | `MessageQueueingController` | Message queue sender |
-| `CommunicationsController` | Email and other channels |
+| `CommunicationsController` | Email through `ISendService` (channel `email`), directly or queued |
 | `DocumentController`, `TextToolsController` | Document conversion and text tools |
 | `TextTemplateController` | Text templating |
 | `UserController` | Current user and claims |

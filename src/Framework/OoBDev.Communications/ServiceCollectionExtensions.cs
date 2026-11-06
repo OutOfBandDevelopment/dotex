@@ -12,13 +12,6 @@ namespace OoBDev.Communications;
 public static class ServiceCollectionExtensions
 {
     /// <summary>
-    /// Tries to add communication-related services to the specified <see cref="IServiceCollection"/>.
-    /// </summary>
-    /// <param name="services">The <see cref="IServiceCollection"/> to add the services to.</param>
-    /// <returns>The modified <see cref="IServiceCollection"/>.</returns>
-    public static IServiceCollection TryAddCommunicationsServices(this IServiceCollection services) => services;
-
-    /// <summary>
     /// Adds <see cref="ISendService"/> and an in-memory <see cref="IDeliveryTracker"/>. The caller registers
     /// the <see cref="IChannelProvider"/> implementations (channels come from configuration unless <see cref="IChannelRepository"/> is replaced).
     /// </summary>

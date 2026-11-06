@@ -1,54 +1,61 @@
-using OoBDev.Communications.Models;
-using OoBDev.Communications.Services;
-using OoBDev.MessageQueueing;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using OoBDev.Communications.Abstractions;
+using OoBDev.Communications.Models;
+using OoBDev.MessageQueueing;
 
 namespace OoBDev.WebApi.Controllers;
 
-/// <summary>
-/// Controller for handling communication-related operations, such as sending emails and messages to a queue.
-/// </summary>
-/// <remarks>
-/// Initializes a new instance of the <see cref="CommunicationsController"/> class.
-/// </remarks>
-/// <param name="email">The email communication sender.</param>
+/// <summary>Sends emails through the <c>email</c> channel, directly or through the message queue.</summary>
+/// <param name="send">The send service.</param>
 /// <param name="queue">The message queue sender.</param>
 [ApiController]
 [Route("api/[controller]")]
 public class CommunicationsController(
-    ICommunicationSender<EmailMessageModel> email,
+    ISendService send,
     IMessageQueueSender<EmailMessageModel> queue
     ) : ControllerBase
 {
-    /// <summary>
-    /// Sends an email publicly without requiring authentication.
-    /// </summary>
+    private const string EmailChannel = "email";
+
+    /// <summary>Sends an email without requiring authentication.</summary>
     /// <param name="model">The email message model.</param>
-    /// <returns>A task representing the asynchronous operation and containing a string result.</returns>
+    /// <param name="cancellationToken">The request cancellation token.</param>
+    /// <returns>The send result, or a problem when the provider did not accept the message.</returns>
     [HttpPost("public")]
     [AllowAnonymous]
-    public async Task<string> SendAnonymous([FromBody] EmailMessageModel model) =>
-        await email.SendAsync(model);
+    [ProducesResponseType<SendResult>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status502BadGateway)]
+    public Task<ActionResult<SendResult>> SendAnonymous([FromBody] EmailMessageModel model, CancellationToken cancellationToken) =>
+        SendAsync(model, cancellationToken);
 
-    /// <summary>
-    /// Enqueues an email message to be processed asynchronously.
-    /// </summary>
+    /// <summary>Enqueues an email message to be processed asynchronously.</summary>
     /// <param name="model">The email message model.</param>
-    /// <returns>A task representing the asynchronous operation and containing a string result.</returns>
+    /// <returns>The queue message id.</returns>
     [HttpPost("queued")]
     [AllowAnonymous]
     public async Task<string> Enqueue([FromBody] EmailMessageModel model) =>
         await queue.SendAsync(model, model.ReferenceId);
 
-    /// <summary>
-    /// Sends an email with authorization, requiring the caller to be authenticated.
-    /// </summary>
+    /// <summary>Sends an email; the caller must be authenticated.</summary>
     /// <param name="model">The email message model.</param>
-    /// <returns>A task representing the asynchronous operation and containing a string result.</returns>
+    /// <param name="cancellationToken">The request cancellation token.</param>
+    /// <returns>The send result, or a problem when the provider did not accept the message.</returns>
     [HttpPost("private")]
     [Authorize]
-    public async Task<string> SendAuthorize([FromBody] EmailMessageModel model) =>
-        await email.SendAsync(model);
+    [ProducesResponseType<SendResult>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status502BadGateway)]
+    public Task<ActionResult<SendResult>> SendAuthorize([FromBody] EmailMessageModel model, CancellationToken cancellationToken) =>
+        SendAsync(model, cancellationToken);
+
+    private async Task<ActionResult<SendResult>> SendAsync(EmailMessageModel model, CancellationToken cancellationToken)
+    {
+        var result = await send.SendAsync(EmailChannel, model.ToEmailMessage(), cancellationToken: cancellationToken);
+        return result.Success
+            ? result
+            : Problem(result.Failure?.Message, statusCode: StatusCodes.Status502BadGateway, title: $"Email not sent ({result.Failure?.Kind})");
+    }
 }

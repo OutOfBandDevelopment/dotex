@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -53,19 +52,7 @@ public partial class EmailMessageHandler : IMessageQueueHandler<EmailMessageMode
 
         var id = message.ReferenceId ?? context.CorrelationId;
         LogSending(message.Subject, message.FromAddress, id);
-        var email = new EmailMessage
-        {
-            MessageId = id ?? Guid.NewGuid().ToString("N"),
-            CorrelationId = context.CorrelationId,
-            From = message.FromAddress,
-            To = [.. message.ToAddresses],
-            Cc = [.. message.CcAddresses],
-            Bcc = [.. message.BccAddresses],
-            ReplyTo = message.Headers.TryGetValue("Reply-To", out var replyTo) ? replyTo : null,
-            Subject = message.Subject ?? string.Empty,
-            TextContent = message.TextContent,
-            HtmlContent = message.HtmlContent,
-        };
+        var email = message.ToEmailMessage(context.CorrelationId);
 
         var result = await _send.SendAsync(_channelName, email).ConfigureAwait(false);
         if (!result.Success)
