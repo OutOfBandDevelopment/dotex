@@ -82,14 +82,23 @@ public sealed class LiveDisplayViewTests
     }
 
     [TestMethod]
-    public void Render_VectorState_ShowsUnsupportedNote()
+    public void Render_Vector_ShowsNoPointUntilItArrives_ThenPlotsItAndTheTrail()
     {
         // Test
         using var context = new Bunit.TestContext();
-        var state = LiveDisplayState.For(new VectorControl { Id = "v", Label = "V", XId = "x", YId = "y" })!;
+        var state = (VectorState)LiveDisplayState.For(new VectorControl { Id = "v", Label = "V", XId = "x", YId = "y", Range = 10 })!;
         var cut = Render(context, state);
+        var before = cut.FindAll("circle.uidef-point").Count;
+        state.ApplyAll([new KeyValuePair<string, string>("x", "0"), new KeyValuePair<string, string>("y", "0")]);
+        state.ApplyAll([new KeyValuePair<string, string>("x", "5"), new KeyValuePair<string, string>("y", "-5")]);
+        cut.Instance.Refresh();
 
         // Assert
-        StringAssert.Contains(cut.Markup, "Unsupported live display");
+        Assert.AreEqual(0, before);
+        var point = cut.Find("circle.uidef-point");
+        Assert.AreEqual("75", point.GetAttribute("cx"));
+        Assert.AreEqual("75", point.GetAttribute("cy"));
+        Assert.AreEqual("50,50", cut.Find("polyline.uidef-trail").GetAttribute("points"));
+        Assert.AreEqual("x=5 y=-5", cut.Find("[data-readout=v]").TextContent);
     }
 }
