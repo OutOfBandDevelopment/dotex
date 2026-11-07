@@ -52,7 +52,7 @@ Owner: all protocols and features of dev-term must exist here. Done means what d
 
 A clean rebuild after the 2026-11-06 pass reports no analyzer warnings (218 before). Analyzers are wired from `src/Directory.Build.props` (`OoBDev.Analyzers` OOB0001 to OOB0003, NetAnalyzers Recommended, Meziantou); `Tools`, `Examples` and `Applications` are exempt from MA0004, and `Tools` and `Examples` from MA0048, in `src/.editorconfig`.
 
-- [ ] Rules still at `suggestion` in `src/.editorconfig`: flip each to warning after fixing its backlog. Kept on purpose: MA0026 (about 50 TODO comments), MA0046 (3, `EventHandler<TMessage>` on the device interfaces), MA0061 (3, DEBUG-only required parameters), CA1710, CA1720, CA1708 (domain names).
+- [ ] Rules kept at `suggestion` on purpose in `src/.editorconfig` (nothing to flip unless the owner decides otherwise):: MA0026 (about 50 TODO comments), MA0046 (3, `EventHandler<TMessage>` on the device interfaces), MA0061 (3, DEBUG-only required parameters), CA1710, CA1720, CA1708 (domain names).
 
 ## 6. Migrations
 
@@ -61,6 +61,7 @@ Scope rule: every BinaryDataDecoders feature is migrated; phases are priority or
 ### Waiting on the owner
 
 - [ ] **Incoming code recommendation plan** ([plan](docs/migration/incoming-recommendation-plan.md)): D1 to D7 answered A on 2026-11-05 (D8 and D9 still on their default A); migrate item by item per the plan: diff-then-delete section 1, hardware per device from the best-covered source in one package each, fencing (untested), ContractParser to `docs/design`, PackMan, Xslt and Net.ServiceHost.
+  - Diff-then-delete section 1, first pass (2026-11-06, file names normalised, usings and doc comments ignored): every incoming file of Apple2, ExpressionCalculator, Archives, FileSystems, Cryptography and Net has a counterpart in main (SECURITY_ATTRIBUTES is `SecurityAttributes`), but the bodies differ (Apple2 91 changed lines over 11 files, ExpressionCalculator 327 over 34, Archives 396 over 14, FileSystems 399 over 4, Cryptography 378 over 9, Net 248 over 24), so nothing is deleted yet; the per-file review of those deltas against `C:epominebinary-data-decoders` is the remaining work.
 - [ ] **BinaryDataDecoders** (~50,000 LOC, source `C:\repo\mine\binary-data-decoders`, newer than `Incoming/BinaryDecoders`, which is superseded; removing it is the owner's call). Done: Numerics, NMEA helpers, Drawing, Code analysis, Fencing, LanC, the Xslt CLI, the PackMan CLI and the eight hardware devices (from dev-term). Next is the order in Table 4 of [the re-review](docs/migration/binarydatadecoders-rereview-2026-10-29.md); compare against [harvest candidates](docs/harvest-candidates.md) first.
 - [ ] **Harvest candidates**: nothing decided; map in [docs/harvest-candidates.md](docs/harvest-candidates.md). Evaluate later (decision D7): hybridsearch, Oobtainium, BuildFirstOnce, markdownplantuml, TotpExample, HandyClasses, postsql-playground (informs `OoBDev.DacFx`).
 - [ ] Plugin sandbox: the [threat model](docs/design/PluginSandbox/threat-model.md) and [protocol and manifest design](docs/design/PluginSandbox/protocol-and-manifest.md) wait for the owner sign-off of REQ-010; a proof-of-concept spike comes before scheduling (owner, 2026-10-29).
