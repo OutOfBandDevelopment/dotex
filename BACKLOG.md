@@ -16,7 +16,6 @@ Owner: all protocols and features of dev-term must exist here. Done means what d
 - The docs Unit tests `PlantUml_Blocks_AreWellFormed` and `Links_Relative_Resolve` fail on the imported DevTerm history; the planned documentation cleanup after all migrations fixes them (owner, 2026-10-30).
 - [ ] Test gap: an interactive Tui run in a real console (a spike drove `conhost.exe` with `AttachConsole` and `WriteConsoleInput`; typing and screen reads worked, but the app exited at once in some runs and Ctrl+Q never ended it, so the code was dropped; retry in a spike; deferred 2026-11-05: it needs `AttachConsole` and `WriteConsoleInput` interop while the machine is still crashing for unknown reasons, so run it when the owner is present) ([list](docs/design/DevTermParity/status.md#test-gaps)).
 
-- [ ] WinForms control example app `OoBDev.Examples.Controls.WinForms` (owner request, 2026-11-06): presents the Windows Forms custom controls (`ValidTextBox` so far) and a UiDefinitions renderer if one exists, like the WPF, Tui and Blazor examples; new example apps for other UI frameworks follow whenever a host has custom controls to show ([migration plan](docs/design/example-ui/migration-plan.md)).
 
 ## 2. Devices
 

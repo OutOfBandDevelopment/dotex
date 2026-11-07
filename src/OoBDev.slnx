@@ -47,6 +47,8 @@
     <Project Path="Examples/OoBDev.Examples.Controls.Tui.Tests/OoBDev.Examples.Controls.Tui.Tests.csproj" />
     <Project Path="Examples/OoBDev.Examples.Controls.Tui/OoBDev.Examples.Controls.Tui.csproj" />
     <Project Path="Examples/OoBDev.Examples.Controls.Wpf.Tests/OoBDev.Examples.Controls.Wpf.Tests.csproj" />
+    <Project Path="Examples/OoBDev.Examples.Controls.WinForms.Tests/OoBDev.Examples.Controls.WinForms.Tests.csproj" />
+    <Project Path="Examples/OoBDev.Examples.Controls.WinForms/OoBDev.Examples.Controls.WinForms.csproj" />
     <Project Path="Examples/OoBDev.Examples.Controls.Wpf/OoBDev.Examples.Controls.Wpf.csproj" />
   </Folder>
   <Folder Name="/Extensions/">
