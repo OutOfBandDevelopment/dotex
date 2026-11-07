@@ -21,6 +21,6 @@ The reconciliation of all five SharedFramework epics against the code (2026-11-0
 - **C. Identity roles and claims**: ties into the rights middleware decision, so it is the most valuable but needs the layering answers first.
 - **D. None for now**: keep them as designs until a consumer appears.
 
-**Default:** A (reversible, no live data, no layering change).
+**Default:** D until answered: option A needs a layering answer first (which project hosts a database-backed source without a data-access reference in Framework: a new adapter under ExternalServices, recommended, or `OoBDev.Data.Common`), and the rule `layering-and-migration-plans` forbids deciding that mid-task. Reply with the letter and the host project.
 
 **Your answer:**
