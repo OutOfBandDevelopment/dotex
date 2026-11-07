@@ -122,11 +122,11 @@ public sealed class Vxi11DeviceAdapter : IDeviceAdapter
             var maxReceive = reader.UInt32();
             _requestSize = maxReceive is > 0 and < _maxRequestSize ? (int)maxReceive : _maxRequestSize;
         }
-        catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested)
+        catch (OperationCanceledException canceled) when (!cancellationToken.IsCancellationRequested)
         {
             State = ConnectionState.Faulted;
             Release();
-            throw new TimeoutException($"Opening the VXI-11 link timed out after {options.WriteTimeoutMs} ms.");
+            throw new TimeoutException($"Opening the VXI-11 link timed out after {options.WriteTimeoutMs} ms.", canceled);
         }
         catch
         {
@@ -213,9 +213,9 @@ public sealed class Vxi11DeviceAdapter : IDeviceAdapter
                 _channelGate.Release();
             }
         }
-        catch (OperationCanceledException) when (timeoutCts.IsCancellationRequested && !cancellationToken.IsCancellationRequested)
+        catch (OperationCanceledException canceled) when (timeoutCts.IsCancellationRequested && !cancellationToken.IsCancellationRequested)
         {
-            throw new TimeoutException($"Writing to the VXI-11 link timed out after {timeoutMs} ms.");
+            throw new TimeoutException($"Writing to the VXI-11 link timed out after {timeoutMs} ms.", canceled);
         }
     }
 

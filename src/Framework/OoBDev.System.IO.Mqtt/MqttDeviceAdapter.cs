@@ -168,9 +168,9 @@ public sealed class MqttDeviceAdapter : IDeviceAdapter
         {
             await connection.PublishAsync(topic, Encoding.UTF8.GetBytes(payload), _options.QualityOfService, timeout.Token).ConfigureAwait(false);
         }
-        catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested)
+        catch (OperationCanceledException canceled) when (!cancellationToken.IsCancellationRequested)
         {
-            throw new TimeoutException($"Publishing to '{topic}' timed out after {_options.TimeoutMs} ms.");
+            throw new TimeoutException($"Publishing to '{topic}' timed out after {_options.TimeoutMs} ms.", canceled);
         }
     }
 

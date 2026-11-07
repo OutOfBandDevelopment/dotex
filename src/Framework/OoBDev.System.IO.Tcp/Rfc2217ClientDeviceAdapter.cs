@@ -308,9 +308,9 @@ public sealed class Rfc2217ClientDeviceAdapter : IDeviceAdapter, IComPortControl
                 await _telnetStream.WriteAsync(data, linkedCts.Token).ConfigureAwait(false);
             }
         }
-        catch (OperationCanceledException) when (timeoutCts.IsCancellationRequested && !cancellationToken.IsCancellationRequested)
+        catch (OperationCanceledException canceled) when (timeoutCts.IsCancellationRequested && !cancellationToken.IsCancellationRequested)
         {
-            throw new TimeoutException($"Writing to the RFC 2217 connection timed out after {_options.Value.WriteTimeoutMs} ms.");
+            throw new TimeoutException($"Writing to the RFC 2217 connection timed out after {_options.Value.WriteTimeoutMs} ms.", canceled);
         }
     }
 

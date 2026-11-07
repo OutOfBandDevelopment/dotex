@@ -190,9 +190,9 @@ public sealed class TcpEndpointDeviceAdapter : IDeviceAdapter
                 await _connection.WriteAsync(data, linkedCts.Token).ConfigureAwait(false);
             }
         }
-        catch (OperationCanceledException) when (timeoutCts.IsCancellationRequested && !cancellationToken.IsCancellationRequested)
+        catch (OperationCanceledException canceled) when (timeoutCts.IsCancellationRequested && !cancellationToken.IsCancellationRequested)
         {
-            throw new TimeoutException($"Writing to the TCP connection timed out after {_options.Value.WriteTimeoutMs} ms.");
+            throw new TimeoutException($"Writing to the TCP connection timed out after {_options.Value.WriteTimeoutMs} ms.", canceled);
         }
     }
 
