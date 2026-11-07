@@ -1,6 +1,6 @@
 # Windows Forms extensions: migration plan
 
-Status: option confirmed by the owner on 2026-11-06 (Q9, option A); no project created yet.
+Status: option confirmed by the owner on 2026-11-06 (Q9, option A). Steps 1 to 3 done 2026-11-06; the incoming copy stays until the owner deletes `Incoming` (D1).
 
 Why: the incoming `OoBDev.Windows.Forms` holds `ValidTextBox` (a `TextBox` whose background shows whether the text matches a regex `Filter`) and `ValidationEventArgs`. Main only has them commented out in `OoBDev.System/Windows/Forms` ("TODO: Port this out"), and a Framework library cannot reference Windows Forms (rule `layering-and-migration-plans`).
 
