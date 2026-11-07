@@ -10,31 +10,5 @@ _(none waiting; processed requests are in BACKLOG.md and TODO.md)_
 
 ## Open
 
-### Q1 (2026-11-06, SharedFramework): which unbuilt design is implemented first?
 
-The reconciliation of all five SharedFramework epics against the code (2026-11-06) shows the built parts and the unbuilt ones: background tasks and cache warming (Caching); profiles, roles and claims, sessions and tokens (Identity); extraction, OCR, rendering, splitting, packing, unpacking and composition (Documents); database template source, `IDataContainer` and compiled templates (Text Templating); channel routing and message composition (Communications, partly).
-
-**Options**
-
-- **A. Text Templating database source** (recommended): smallest (about 400 LOC per the design), builds on the working engine and Handlebars provider, and the Example API already has a template controller to show it.
-- **B. Documents packing and unpacking**: reuses the Archives (Zip, Tar) code already in `OoBDev.System`; medium size.
-- **C. Identity roles and claims**: ties into the rights middleware decision, so it is the most valuable but needs the layering answers first.
-- **D. None for now**: keep them as designs until a consumer appears.
-
-**Default:** D until answered: option A needs a layering answer first (which project hosts a database-backed source without a data-access reference in Framework: a new adapter under ExternalServices, recommended, or `OoBDev.Data.Common`), and the rule `layering-and-migration-plans` forbids deciding that mid-task. Reply with the letter and the host project.
-
-**Your answer:**
-
-### Q2 (2026-11-06, DesiredStateDatabase): where is the bake-off test plan?
-
-Phase 0 (sqldef, pgschema and Atlas on a real schema) follows `sqldef-evaluation/01-test-plan.md` from your notes, but that file is not in this repository or under `C:\repo\mine`. Without it the scoring criteria would be my own.
-
-**Options**
-
-- **A. Give the path** (recommended): I score against your plan, as the request and REQ-005 state.
-- **B. I write the plan**: criteria from the acceptance criteria in the request (create from scripts, apply only the difference, refuse unsafe changes, ensure scripts idempotent); you review it before the run.
-- **C. Drop the bake-off** and build the diff provider directly over `OoBDev.DacFx`.
-
-**Default:** none; the item stays parked (it needs tool binaries and containers and a plan to score against).
-
-**Your answer:**
+_(none)_
