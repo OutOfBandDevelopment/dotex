@@ -633,3 +633,19 @@ services/Configure<HandlebarsTemplateOptions>(options =>
 **Last Updated:** 2026-01-22
 **Documentation Status:** 6/12 documents complete (50%)
 **Implementation Status:** 0% (design phase)
+
+---
+
+## Implementation status
+
+Reconciled with the code on 2026-11-06. The designs are proposals; the code is the current truth where they differ.
+
+**Table 1 — Designed features against the code**
+
+| Feature | Code | State |
+|---------|------|-------|
+| Existing engine (`ITemplateEngine`, `ITemplateProvider`, `ITemplateSource`, `ITemplateContext`, `XsltTemplateProvider`, `FileTemplateSource`) | `OoBDev.System.Abstractions/Text/Templating`, `OoBDev.System/Text/Templating` | built |
+| Handlebars provider | `OoBDev.Handlebars` (`HandlebarsTemplateProvider`, helper descriptors, `HandlebarsOptions`), used by the example `TextTemplateController` | built |
+| Database template source (versioning) | none (`DatabaseTemplateSource` does not exist) | not built |
+| `IDataContainer` integration (lazy evaluation) | none | not built |
+| `ICompiledTemplate` | none | not built |
