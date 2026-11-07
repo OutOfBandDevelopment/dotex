@@ -6,4 +6,4 @@ Run: `dotnet run --project src/Examples/OoBDev.Examples.Controls.Blazor`, then o
 
 Tests: `OoBDev.Examples.Controls.Blazor.Tests` (bUnit, Unit tier) renders the page and toggles the advanced section. Not run in a browser.
 
-`ControlsSampleSettings` is a copy of the WPF and Tui examples' class; a shared source is a backlog item.
+`ControlsSampleSettings` is the shared source `src/Examples/OoBDev.Examples.Controls.Shared/ControlsSampleSettings.cs`, linked into the WPF, Tui and Blazor examples.

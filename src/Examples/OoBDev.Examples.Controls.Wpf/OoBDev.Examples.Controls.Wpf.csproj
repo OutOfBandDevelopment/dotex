@@ -10,6 +10,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<Compile Include="../OoBDev.Examples.Controls.Shared/ControlsSampleSettings.cs" Link="ControlsSampleSettings.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="GitVersion.MsBuild">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
