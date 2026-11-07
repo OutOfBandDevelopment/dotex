@@ -1,0 +1,80 @@
+@using global::System.Globalization
+
+@* One live display (indicator, bar graph, strip chart) drawn from its framework-agnostic LiveDisplayState; the host applies values to the state and calls Refresh. *@
+<div class="uidef-live" data-id="@Control?.Id">
+    @switch (State)
+    {
+        case IndicatorState indicator:
+            <span class="uidef-label">@indicator.Control.Label</span>
+            <output data-indicator="@indicator.Control.Id">@(indicator.Text ?? indicator.Control.DefaultValue ?? "-")</output>
+            break;
+        case BarGraphState bars:
+            <span class="uidef-label">@bars.Control.Label</span>
+            @for (var i = 0; i < bars.Control.Channels.Count; i++)
+            {
+                var channel = bars.Control.Channels[i];
+                var color = ChartPalette.ColorFor(channel, i, Dark);
+                var fraction = bars.FractionOf(channel.Id);
+                <div class="uidef-bar" data-channel="@channel.Id">
+                    <span>@(channel.Label ?? channel.Id)</span>
+                    <svg viewBox="0 0 100 10" preserveAspectRatio="none" role="img" aria-label="@(channel.Label ?? channel.Id)">
+                        <rect x="0" y="0" width="100" height="10" fill="none" stroke="@ChartPalette.Overflow" />
+                        <rect class="uidef-bar-fill" x="0" y="0" width="@Num(fraction * 100)" height="10" fill="@color" />
+                    </svg>
+                    <output>@(bars.ValueOf(channel.Id) is { } v ? ChartValue.Format(v, bars.Control.Unit) : "-")</output>
+                </div>
+            }
+            break;
+        case StripChartState strip:
+            var (min, max) = strip.Scale();
+            var span = max - min;
+            <span class="uidef-label">@strip.Control.Label</span>
+            <svg class="uidef-strip" viewBox="0 0 100 40" preserveAspectRatio="none" role="img" aria-label="@strip.Control.Label">
+                <rect x="0" y="0" width="100" height="40" fill="none" stroke="@ChartPalette.Overflow" />
+                @for (var i = 0; i < strip.Control.Channels.Count; i++)
+                {
+                    var channel = strip.Control.Channels[i];
+                    var samples = strip.SamplesOf(channel.Id);
+                    if (samples.Count == 0) { continue; }
+                    var offset = strip.Capacity - samples.Count;
+                    var points = string.Join(' ', samples.Select((s, n) =>
+                        Num((offset + n) * 100.0 / Math.Max(1, strip.Capacity - 1)) + "," + Num(40 - Math.Clamp((s - min) / span, 0, 1) * 40)));
+                    <polyline data-channel="@channel.Id" points="@points" fill="none" stroke="@ChartPalette.ColorFor(channel, i, Dark)" stroke-width="1" vector-effect="non-scaling-stroke" />
+                }
+            </svg>
+            <span class="uidef-legend">
+                @for (var i = 0; i < strip.Control.Channels.Count; i++)
+                {
+                    var channel = strip.Control.Channels[i];
+                    <span style="color:@ChartPalette.ColorFor(channel, i, Dark)">@(channel.Label ?? channel.Id)</span>
+                }
+            </span>
+            break;
+        default:
+            <span>@(State is null ? string.Empty : "Unsupported live display")</span>
+            break;
+    }
+</div>
+
+@code {
+    /// <summary>The state to draw (from <see cref="LiveDisplayState.For"/>).</summary>
+    [Parameter, EditorRequired]
+    public LiveDisplayState State { get; set; } = default!;
+
+    /// <summary>Uses the dark chart palette.</summary>
+    [Parameter]
+    public bool Dark { get; set; }
+
+    /// <summary>Redraws after the host applied new values to <see cref="State"/>.</summary>
+    public void Refresh() => InvokeAsync(StateHasChanged);
+
+    private UiControl? Control => State switch
+    {
+        IndicatorState i => i.Control,
+        BarGraphState b => b.Control,
+        StripChartState s => s.Control,
+        _ => null,
+    };
+
+    private static string Num(double value) => value.ToString("0.##", CultureInfo.InvariantCulture);
+}

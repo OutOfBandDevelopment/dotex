@@ -10,8 +10,12 @@ A Blazor renderer for `OoBDev.UiDefinitions.ViewModels` (step 3 of the [control-
 <FormView Form="form" />
 ```
 
-Live displays (bar, chart, vector) are not rendered yet.
+`LiveDisplayView` takes a `LiveDisplayState` (from `LiveDisplayState.For`) and draws an expression indicator (text), a bar graph (SVG bars per channel) and a strip chart (SVG polylines per channel, palette from `ChartPalette`, `Dark` switches it). The host applies values to the state and calls `Refresh()`. Vector displays are not rendered yet (shows a note).
+
+```razor
+<LiveDisplayView State="state" Dark="false" />
+```
 
 ## Verified
 
-3 Unit tests with bUnit (`OoBDev.UiDefinitions.Blazor.Tests`): each control kind renders and the conditional section stays hidden, input changes write the model and reveal the section, and a change made in code re-renders. Not looked at in a browser.
+7 Unit tests with bUnit (`OoBDev.UiDefinitions.Blazor.Tests`): each control kind renders and the conditional section stays hidden, input changes write the model and reveal the section, a change made in code re-renders, and `LiveDisplayView` draws the indicator, bars and chart and redraws on `Refresh`. Not looked at in a browser.
