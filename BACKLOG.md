@@ -16,7 +16,10 @@ Owner: all protocols and features of dev-term must exist here. Done means what d
 - The docs Unit tests `PlantUml_Blocks_AreWellFormed` and `Links_Relative_Resolve` fail on the imported DevTerm history; the planned documentation cleanup after all migrations fixes them (owner, 2026-10-30).
 - [ ] Test gap: an interactive Tui run in a real console (a spike drove `conhost.exe` with `AttachConsole` and `WriteConsoleInput`; typing and screen reads worked, but the app exited at once in some runs and Ctrl+Q never ended it, so the code was dropped; retry in a spike; deferred 2026-11-05: it needs `AttachConsole` and `WriteConsoleInput` interop while the machine is still crashing for unknown reasons, so run it when the owner is present) ([list](docs/design/DevTermParity/status.md#test-gaps)).
 
-- [ ] Example apps (WPF control example done 2026-11-05; Blazor example done 2026-11-06 (migration plan steps 1 to 4 complete; live displays not rendered in Blazor; dedupe the `ControlsSampleSettings` copies in a shared source) per the [migration plan](docs/design/example-ui/migration-plan.md) (confirmed 2026-11-05), and the per-device Example panels remain) that use the UiDefinitions language (forms and panels), beyond DevTerm; decided (owner, 2026-11-04): one explicit Example panel per device family, plus a small control-example app for each control set built for Blazor, WPF, Tui or others (controls only; the existing Example app demos the framework) (placement decided: samples in each device project's tests plus `src/Examples/OoBDev.Examples.Controls.<Host>` apps) ([ui-language-later.md](docs/design/DevTermParity/ui-language-later.md)).
+- [ ] Example apps that use the UiDefinitions language (forms and panels), beyond DevTerm: one explicit Example panel per device family, plus a small control-example app per host (controls only; the existing Example app demos the framework). Decided (owner, 2026-11-04); placement: samples in each device project's tests plus `src/Examples/OoBDev.Examples.Controls.<Host>` apps ([migration plan](docs/design/example-ui/migration-plan.md), [ui-language-later.md](docs/design/DevTermParity/ui-language-later.md)).
+  - [ ] Per-device Example panels remain.
+  - [ ] Dedupe the `ControlsSampleSettings` copies (WPF, Tui, Blazor) in a shared source; live displays are not rendered in Blazor yet.
+  - WPF (2026-11-05), Tui and Blazor (2026-11-06) control examples are done.
 
 ## 2. Devices
 
@@ -34,7 +37,9 @@ Owner: all protocols and features of dev-term must exist here. Done means what d
 
 ## 4. APIs and documents
 
-- [ ] Stack review of the template and transform tools (owner, 2026-10-30; [plan](docs/design/TemplateTools/migration-plan.md) steps 1, 2 and 4 done; step 3 open only for the BinaryDataDecoders documentation run): `Xslt.Cli` and `TemplateEngine` overlap; if TemplateEngine takes pluggable path engines (XPath navigator) and hosts the XSLT transforms, `Xslt.Cli` can go once a document explains converting its templates and scripts. Also port the BinaryDataDecoders documentation generation off `xslt.cli` onto TemplateEngine, as MSTest entry points rather than scripts around dotnet tools (a dotnet tool stays fine if its `.props` and `.targets` extensions are right); the shootout spike is written ([result](docs/design/TemplateTools/README.md)); the fold-in follows the [confirmed plan](docs/design/TemplateTools/migration-plan.md) (step 1 is done).
+- [ ] Stack review of the template and transform tools (owner, 2026-10-30; [plan](docs/design/TemplateTools/migration-plan.md) steps 1, 2 and 4 done): `Xslt.Cli` is retired into `TemplateEngine.Cli`; the shootout result is in the [design](docs/design/TemplateTools/README.md).
+  - [ ] Step 3: port the BinaryDataDecoders documentation generation off `xslt.cli` onto TemplateEngine as MSTest entry points rather than scripts around dotnet tools (a dotnet tool stays fine if its `.props` and `.targets` extensions are right); the templates live in the external repository.
+  - [ ] `XsltTemplateProvider` taking input-type navigators.
 
 - [ ] CGI middleware ([design](docs/design/CgiMiddleware/README.md)): first cut built with 23 passing tests; left is run-as-another-user (decided: stays a TODO, deployers use the service account). Shell fixtures run through `scripts/ci/run-linux-tests.ps1`.
 - [ ] AllMiniLmL6V2: `AddValidatedOptions` for the embedding options (blocked by the Abstractions-only adapter rule).
