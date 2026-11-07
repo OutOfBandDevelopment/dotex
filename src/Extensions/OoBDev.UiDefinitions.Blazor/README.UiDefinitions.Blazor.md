@@ -10,7 +10,7 @@ A Blazor renderer for `OoBDev.UiDefinitions.ViewModels` (step 3 of the [control-
 <FormView Form="form" />
 ```
 
-`LiveDisplayView` takes a `LiveDisplayState` (from `LiveDisplayState.For`) and draws an expression indicator (text), a bar graph (SVG bars per channel) and a strip chart (SVG polylines per channel, palette from `ChartPalette`, `Dark` switches it). The host applies values to the state and calls `Refresh()`. Vector displays are not rendered yet (shows a note).
+`LiveDisplayView` takes a `LiveDisplayState` (from `LiveDisplayState.For`) and draws an expression indicator (text), a bar graph (SVG bars per channel) and a strip chart (SVG polylines per channel, palette from `ChartPalette`, `Dark` switches it). The host applies values to the state and calls `Refresh()`. A vector display is an SVG plot of the current point (scaled by `Range`), its trail and the hue color, with a text readout.
 
 ```razor
 <LiveDisplayView State="state" Dark="false" />
