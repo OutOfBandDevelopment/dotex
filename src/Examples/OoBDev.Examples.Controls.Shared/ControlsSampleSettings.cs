@@ -3,7 +3,7 @@ using System.ComponentModel;
 using OoBDev.UiDefinitions;
 using OoBDev.UiDefinitions.Forms;
 
-namespace OoBDev.Examples.Controls.Tui;
+namespace OoBDev.Examples.Controls;
 
 /// <summary>One property per control kind the form generator supports; the sample form is generated from this class.</summary>
 [FormSection("Basics", Order = 0)]
