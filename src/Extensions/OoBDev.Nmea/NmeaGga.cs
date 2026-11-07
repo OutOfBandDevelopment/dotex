@@ -14,6 +14,7 @@ namespace OoBDev.Nmea;
 /// <param name="SatellitesUsed">Satellites used in the fix.</param>
 /// <param name="Hdop">Horizontal dilution of precision.</param>
 /// <param name="AltitudeMeters">Altitude above mean sea level.</param>
+/// <param name="GeoidSeparationMeters">Height of the geoid (mean sea level) above the WGS84 ellipsoid; <see langword="null"/> when the sentence stops at the altitude.</param>
 [StructLayout(LayoutKind.Auto)]
 public readonly record struct NmeaGga(
     TimeOnly? Time,
@@ -22,7 +23,8 @@ public readonly record struct NmeaGga(
     NmeaFixQuality Quality,
     int? SatellitesUsed,
     double? Hdop,
-    double? AltitudeMeters)
+    double? AltitudeMeters,
+    double? GeoidSeparationMeters = null)
 {
     /// <summary>Reads a GGA sentence.</summary>
     /// <param name="sentence">Any sentence.</param>
@@ -52,7 +54,8 @@ public readonly record struct NmeaGga(
             },
             NmeaFields.Int(f[6]),
             NmeaFields.Double(f[7]),
-            NmeaFields.Double(f[8]));
+            NmeaFields.Double(f[8]),
+            f.Count > 10 ? NmeaFields.Double(f[10]) : null);
         return true;
     }
 }
