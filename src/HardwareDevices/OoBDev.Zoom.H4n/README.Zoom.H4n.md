@@ -33,3 +33,7 @@ Everything on the wire: the handshake, the button codes, and whether the recorde
 ## Device documentation
 
 [docs/known-configuration.md](docs/known-configuration.md) records how the device is reached on the bench (transport, framing, byte order, what was verified on hardware); the frame layouts are Kaitai Struct files in [docs/](docs/): `zoom-h4n-command.ksy`, `zoom-h4n-status.ksy`. Paths such as `docs/design/...`, `docs/test/...` and `src/DevTerm.*` inside those notes name files in the dev-term repository, where they were written.
+
+## Device panel
+
+`Panels/ZoomH4nPanel` is the device's `IDevicePanel` for DevTerm: a button per remote key (`ZoomH4nUiDefinition`), `ZoomH4nControlSurface` sending the press and release frames with a hex preview, and `ZoomH4nDecoder` turning received status bytes into live indicator values. It is registered in `OoBDev.DevTerm.Devices` with `TryAddDevicePanel<ZoomH4nPanel>()`. Unit tests (`Panels/ZoomH4nPanelTests`) cover the definition, surface and decoder; the panel is not yet checked on hardware or on screen.

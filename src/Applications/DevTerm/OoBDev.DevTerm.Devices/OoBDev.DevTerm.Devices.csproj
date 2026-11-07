@@ -11,6 +11,7 @@
     <ProjectReference Include="..\..\..\Extensions\OoBDev.Scpi\OoBDev.Scpi.csproj" />
     <ProjectReference Include="..\..\..\HardwareDevices\OoBDev.Velleman.K8055\OoBDev.Velleman.K8055.csproj" />
     <ProjectReference Include="..\..\..\HardwareDevices\OoBDev.Kuando.Busylight\OoBDev.Kuando.Busylight.csproj" />
+    <ProjectReference Include="..\..\..\HardwareDevices\OoBDev.Zoom.H4n\OoBDev.Zoom.H4n.csproj" />
   </ItemGroup>
 
 </Project>

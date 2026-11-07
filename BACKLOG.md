@@ -17,7 +17,7 @@ Owner: all protocols and features of dev-term must exist here. Done means what d
 - [ ] Test gap: an interactive Tui run in a real console (a spike drove `conhost.exe` with `AttachConsole` and `WriteConsoleInput`; typing and screen reads worked, but the app exited at once in some runs and Ctrl+Q never ended it, so the code was dropped; retry in a spike; deferred 2026-11-05: it needs `AttachConsole` and `WriteConsoleInput` interop while the machine is still crashing for unknown reasons, so run it when the owner is present) ([list](docs/design/DevTermParity/status.md#test-gaps)).
 
 - [ ] Example apps that use the UiDefinitions language (forms and panels), beyond DevTerm: one explicit Example panel per device family, plus a small control-example app per host (controls only; the existing Example app demos the framework). Decided (owner, 2026-11-04); placement: samples in each device project's tests plus `src/Examples/OoBDev.Examples.Controls.<Host>` apps ([migration plan](docs/design/example-ui/migration-plan.md), [ui-language-later.md](docs/design/DevTermParity/ui-language-later.md)).
-  - [ ] Per-device Example panels remain.
+  - [ ] Per-device Example panels remain: Radex One, DE-5000, Fencing, LanC (Busylight, K8055 and Zoom H4n done).
   - [ ] Live displays in the Tui control example (waits on OPEN-QUESTIONS Q8; shared `LiveSampleFeed` is ready) (2026-11-06).
   - WPF (2026-11-05), Tui and Blazor (2026-11-06) control examples are done.
 
