@@ -229,7 +229,8 @@ public sealed class Vxi11DeviceAdapter : IDeviceAdapter
     {
         using var connection = await ConnectAsync(options, _portmapperPort, cancellationToken).ConfigureAwait(false);
         var arguments = new XdrWriter().UInt32(CoreProgram).UInt32(1).UInt32(_tcpProtocol).UInt32(0).ToArray();
-        var reply = await new OncRpcClient(connection.Stream).CallAsync(PortmapperProgram, 2, 3, arguments, cancellationToken).ConfigureAwait(false);
+        using var rpc = new OncRpcClient(connection.Stream);
+        var reply = await rpc.CallAsync(PortmapperProgram, 2, 3, arguments, cancellationToken).ConfigureAwait(false);
         var port = new XdrReader(reply).UInt32();
         return port is > 0 and <= 65535
             ? (int)port
@@ -339,6 +340,7 @@ public sealed class Vxi11DeviceAdapter : IDeviceAdapter
     {
         _connection?.Dispose();
         _connection = null;
+        _rpc?.Dispose();
         _rpc = null;
     }
 }

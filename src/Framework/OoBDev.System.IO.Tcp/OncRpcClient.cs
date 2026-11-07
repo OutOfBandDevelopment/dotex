@@ -12,7 +12,7 @@ namespace OoBDev.System.IO.Tcp;
 /// A minimal ONC-RPC (RFC 5531) client over one TCP stream: AUTH_NONE calls, record marking
 /// (RFC 5531 section 11), one call at a time. Enough for the portmapper and the VXI-11 core channel.
 /// </summary>
-internal sealed class OncRpcClient(Stream stream)
+internal sealed class OncRpcClient(Stream stream) : IDisposable
 {
     private const uint _callMessage = 0;
     private const uint _replyMessage = 1;
@@ -92,4 +92,7 @@ internal sealed class OncRpcClient(Stream stream)
             }
         }
     }
+
+    /// <summary>Releases the call gate; the stream stays open and belongs to the caller.</summary>
+    public void Dispose() => _gate.Dispose();
 }
