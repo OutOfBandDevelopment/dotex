@@ -35,3 +35,7 @@ The device only applies Write Settings when it is sent three times in a row; rep
 ## Device documentation
 
 [docs/known-configuration.md](docs/known-configuration.md) records how the device is reached on the bench (transport, framing, byte order, what was verified on hardware); the frame layouts are Kaitai Struct files in [docs/](docs/): `radexone-query-request.ksy`, `radexone-read-data-reply.ksy`, `radexone-serial-version-reply.ksy`, `radexone-write-settings-request.ksy`. Paths such as `docs/design/...`, `docs/test/...` and `src/DevTerm.*` inside those notes name files in the dev-term repository, where they were written.
+
+## Device panel
+
+`Panels/RadexOnePanel` is the device's `IDevicePanel` for DevTerm: query buttons (read data, settings, serial and version), the accumulated-dose reset, and indicators for the last readings and settings. `RadexOneControlSurface` sends one request per button with a rising packet number and a hex preview (Write Settings is not offered, since the device needs it three times in a row). `RadexOneDecoder` buffers the stream, drops noise, and publishes the values of each reply. It is registered in `OoBDev.DevTerm.Devices` with `TryAddDevicePanel<RadexOnePanel>()`. `Panels/RadexOnePanelTests` cover it (8 tests); the panel is not yet checked on screen or against the device.
