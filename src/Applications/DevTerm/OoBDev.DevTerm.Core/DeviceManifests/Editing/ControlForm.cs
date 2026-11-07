@@ -587,7 +587,7 @@ public sealed class ControlForm : EditorForm
         }
     }
 
-    private static IEnumerable<ChartChannel> ChannelsOf(UiControl control) => control switch
+    private static List<ChartChannel> ChannelsOf(UiControl control) => control switch
     {
         BarGraphControl b => b.Channels,
         StripChartControl s => s.Channels,

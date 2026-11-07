@@ -8,6 +8,7 @@ using OoBDev.DevTerm;
 
 namespace OoBDev.DevTerm.Configuration;
 
+[global::System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1000:Do not declare static members on generic types", Justification = "Default mirrors EqualityComparer<T>.Default.")]
 public sealed class UsbDeviceOptionEqualityComparer<T> : IEqualityComparer<T> where T : IUsbDeviceOption
 {
     private static readonly UsbDeviceOptionEqualityComparer<T> _instance = new();

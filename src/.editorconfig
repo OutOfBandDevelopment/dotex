@@ -275,3 +275,15 @@ dotnet_diagnostic.MA0004.severity = none
 
 [Framework/OoBDev.AspNetCore*/**.cs]
 dotnet_diagnostic.MA0004.severity = none
+
+# Definition DTOs expose settable List<T> so the XML and JSON serializers round-trip them
+[Framework/OoBDev.System.Abstractions/UiDefinitions/**.cs]
+dotnet_diagnostic.MA0016.severity = none
+
+# Test fakes expose their recorded lists for assertions
+[Applications/DevTerm/OoBDev.DevTerm.TestUtilities/**.cs]
+dotnet_diagnostic.MA0016.severity = none
+
+# A XAML ResourceDictionary subclass is a resource container, not a collection type
+[Applications/DevTerm/OoBDev.DevTerm.Wpf/DarkControls.xaml.cs]
+dotnet_diagnostic.CA1010.severity = none

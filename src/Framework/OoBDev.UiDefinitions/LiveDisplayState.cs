@@ -17,8 +17,10 @@ public abstract class LiveDisplayState
     /// <summary>The published value ids this display reads.</summary>
     public abstract IReadOnlyList<string> ValueIds { get; }
 
-    /// <summary>The latest raw text published for each of <see cref="ValueIds"/>, so an expression can match or compare it as a string.</summary>
-    protected Dictionary<string, string> Texts { get; } = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, string> _texts = new(StringComparer.Ordinal);
+
+    /// <summary>The latest raw text per published id, for expressions that compare it as a string.</summary>
+    protected IReadOnlyDictionary<string, string> Texts => _texts;
 
     /// <summary>Applies one published value; false when the id isn't one of <see cref="ValueIds"/> or the text holds no number (nothing changes).</summary>
     public bool Apply(string id, string text) => ApplyAll([new KeyValuePair<string, string>(id, text)]);
@@ -43,7 +45,7 @@ public abstract class LiveDisplayState
             var previousText = Texts.TryGetValue(id, out var old) ? old : null;
             if (ReadsText)
             {
-                Texts[id] = text;
+                _texts[id] = text;
             }
 
             if (ChartValue.TryParse(text, out var value))

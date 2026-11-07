@@ -14,6 +14,7 @@ namespace OoBDev.DevTerm.Configuration;
 /// Front ends convert it to their own color type (a WPF <c>SolidColorBrush</c>, a Terminal.Gui
 /// <c>Color</c>); this type stays UI-framework-free so both share one theme model.
 /// </summary>
+[global::System.Runtime.InteropServices.StructLayout(global::System.Runtime.InteropServices.LayoutKind.Auto)]
 public readonly record struct ThemeColor(byte R, byte G, byte B)
 {
     /// <summary><c>#RRGGBB</c>, upper-case.</summary>

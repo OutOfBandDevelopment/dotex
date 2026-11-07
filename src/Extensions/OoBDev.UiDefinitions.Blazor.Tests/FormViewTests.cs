@@ -76,7 +76,8 @@ public sealed class FormViewTests
 
         // Test
         cut.Find("[data-id=Name] input[type=text]").Change("second");
-        cut.FindAll("[data-id=Size] input[type=radio]").Last().Change(true);
+        var sizes = cut.FindAll("[data-id=Size] input[type=radio]");
+        sizes[^1].Change(true);
         cut.Find("[data-id=ShowExtra] input[type=checkbox]").Change(true);
 
         // Assert

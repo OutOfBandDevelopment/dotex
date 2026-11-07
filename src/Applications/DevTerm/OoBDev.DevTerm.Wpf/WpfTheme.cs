@@ -150,7 +150,7 @@ public static class WpfTheme
             }
             else if (!application.Dispatcher.HasShutdownStarted)
             {
-                application.Dispatcher.BeginInvoke(() => Apply(application.Resources, theme));
+                _ = application.Dispatcher.BeginInvoke(() => Apply(application.Resources, theme));
             }
         }
 
@@ -162,7 +162,7 @@ public static class WpfTheme
             }
             else if (!window.Dispatcher.HasShutdownStarted)
             {
-                window.Dispatcher.BeginInvoke(() => Apply(window, theme));
+                _ = window.Dispatcher.BeginInvoke(() => Apply(window, theme));
             }
         }
     }

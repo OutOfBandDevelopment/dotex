@@ -13,7 +13,7 @@ public sealed class EmailMessage : IEmailMessage
     public string? CorrelationId { get; init; }
 
     /// <inheritdoc />
-    public DateTimeOffset Timestamp { get; init; } = DateTimeOffset.UtcNow;
+    public DateTimeOffset Timestamp { get; init; } = TimeProvider.System.GetUtcNow();
 
     /// <inheritdoc />
     public IDictionary<string, object> Metadata { get; init; } = new Dictionary<string, object>(StringComparer.Ordinal);

@@ -110,6 +110,6 @@ public sealed partial class UsrBridgeProbe : INetworkDeviceProbe
         }
     }
 
-    [GeneratedRegex("""WWW-Authenticate:\s*Basic\s+realm="(?<model>USR-TCP232[^"]*)""", RegexOptions.IgnoreCase)]
+    [GeneratedRegex("""WWW-Authenticate:\s*Basic\s+realm="(?<model>USR-TCP232[^"]*)""", RegexOptions.IgnoreCase, matchTimeoutMilliseconds: 1000)]
     private static partial Regex RealmPattern();
 }

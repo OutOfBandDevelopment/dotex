@@ -16,7 +16,7 @@ namespace OoBDev.DevTerm.Configuration;
 /// </summary>
 public sealed class DevTermTheme
 {
-    private readonly IReadOnlyDictionary<ThemeRole, ThemeColor> _colors;
+    private readonly Dictionary<ThemeRole, ThemeColor> _colors;
 
     public DevTermTheme(string name, IReadOnlyDictionary<ThemeRole, ThemeColor> colors, ChartPaletteVariant chartPalette)
     {

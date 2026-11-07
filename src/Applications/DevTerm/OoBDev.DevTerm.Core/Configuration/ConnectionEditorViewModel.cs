@@ -103,7 +103,7 @@ public sealed class ConnectionEditorViewModel : INotifyPropertyChanged, IDisposa
     private bool _isDirty;
     private string? _selectedSerialPort;
     private HidDeviceOption? _selectedHidDevice;
-    private IReadOnlyList<HidDeviceOption> _detectedHidDevices = [];
+    private List<HidDeviceOption> _detectedHidDevices = [];
     private readonly ObservableCollection<HidDeviceOption> _hidDeviceOptions = [];
     private UsbtmcDeviceOption? _selectedUsbtmcDevice;
     private IReadOnlyList<UsbtmcDeviceOption> _detectedUsbtmcDevices = [];
@@ -284,7 +284,7 @@ public sealed class ConnectionEditorViewModel : INotifyPropertyChanged, IDisposa
         return [.. names.Select(name => SerialPortOption.From(name, descriptions))];
     }
 
-    private static IReadOnlyList<HidDeviceOption> SafeDiscover(IUsbHidDiscovery discovery)
+    private static List<HidDeviceOption> SafeDiscover(IUsbHidDiscovery discovery)
     {
         try
         {
@@ -1824,7 +1824,7 @@ public sealed class ConnectionEditorViewModel : INotifyPropertyChanged, IDisposa
         StatusMessage = $"Exported to '{path}'.";
     }
 
-    private void ExportProfilesZip(IReadOnlyCollection<string> names)
+    private void ExportProfilesZip(ObservableCollection<string> names)
     {
         var path = ImportExportPath.Trim();
         if (path.Length == 0)
