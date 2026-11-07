@@ -62,6 +62,11 @@ public sealed class FormViewModel : ViewModelBase, IDisposable
             row.Refresh();
         }
 
+        foreach (var section in Sections)
+        {
+            section.Refresh();
+        }
+
         OnPropertyChanged(nameof(Sections));
     }
 

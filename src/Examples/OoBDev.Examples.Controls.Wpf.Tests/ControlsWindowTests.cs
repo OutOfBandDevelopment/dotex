@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Reflection;
+using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.Examples.Controls.Wpf;
@@ -44,6 +46,33 @@ public sealed class ControlsWindowTests
 
         // Assert
         Assert.IsTrue(form.Sections.Single(s => s.Label == "Advanced").HasVisibleRows);
+    }
+
+    [TestMethod]
+    public void Click_ShowAdvancedCheckBox_ShowsTheAdvancedGroupOnScreen()
+    {
+        // Test
+        var settings = new ControlsSampleSettings();
+        var (before, after) = Run(() =>
+        {
+            var window = ControlsWindow.Build(settings, out _);
+            var view = (FrameworkElement)window.Content;
+            view.Measure(new Size(480, 520));
+            view.Arrange(new Rect(0, 0, 480, 520));
+            view.UpdateLayout();
+            var group = Descendants<GroupBox>(view).Single(g => (string?)g.Header == "Advanced");
+            var box = Descendants<CheckBox>(view).Single(c => c.DataContext is ToggleViewModel { Id: "ShowAdvanced" });
+            var hidden = group.Visibility;
+
+            typeof(ButtonBase).GetMethod("OnClick", BindingFlags.Instance | BindingFlags.NonPublic)!.Invoke(box, null);
+            view.UpdateLayout();
+            return (hidden, group.Visibility);
+        });
+
+        // Assert
+        Assert.AreEqual(Visibility.Collapsed, before);
+        Assert.IsTrue(settings.ShowAdvanced, "the click did not reach the model");
+        Assert.AreEqual(Visibility.Visible, after);
     }
 
     [TestMethod]
