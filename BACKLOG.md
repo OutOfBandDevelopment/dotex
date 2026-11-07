@@ -33,7 +33,6 @@ Owner: all protocols and features of dev-term must exist here. Done means what d
 
 ## 4. APIs and documents
 
-- [ ] Stack review of the template and transform tools (owner, 2026-10-30; [plan](docs/design/TemplateTools/migration-plan.md) steps 1, 2 and 4 done): `Xslt.Cli` is retired into `TemplateEngine.Cli`; the shootout result is in the [design](docs/design/TemplateTools/README.md).
   - [ ] Step 3: port the BinaryDataDecoders documentation generation off `xslt.cli` onto TemplateEngine as MSTest entry points rather than scripts around dotnet tools (a dotnet tool stays fine if its `.props` and `.targets` extensions are right); the templates live in the external repository.
   - [ ] `XsltTemplateProvider` taking input-type navigators.
 
