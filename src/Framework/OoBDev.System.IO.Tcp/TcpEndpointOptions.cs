@@ -9,15 +9,6 @@ using System.Threading.Tasks;
 
 namespace OoBDev.System.IO.Tcp;
 
-public enum TcpEndpointMode
-{
-    /// <summary>Connect out to a remote host:port.</summary>
-    Client,
-
-    /// <summary>Bind a local port and accept one inbound connection.</summary>
-    Listener,
-}
-
 /// <summary>Configuration for a TCP session, in either direction. See docs/design/Transports/transports.md.</summary>
 public sealed class TcpEndpointOptions
 {

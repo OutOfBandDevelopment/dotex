@@ -15,8 +15,3 @@ public interface ISerialPortFactory
 {
     ISerialPort Create(SerialDeviceAdapterOptions options);
 }
-
-public sealed class SystemSerialPortFactory : ISerialPortFactory
-{
-    public ISerialPort Create(SerialDeviceAdapterOptions options) => new SystemSerialPort(options);
-}
