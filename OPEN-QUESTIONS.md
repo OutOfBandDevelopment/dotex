@@ -10,4 +10,17 @@ _(none waiting; processed requests are in BACKLOG.md and TODO.md)_
 
 ## Open
 
-_(none; Q1-Q7 answered and recorded 2026-11-05)_
+### Q8 (2026-11-06, Examples / UiDefinitions.Tui): where do the Tui live displays live?
+
+The Tui control example needs the indicator, bar graph and strip chart. The renderers (`CellCanvasView`, `CellCharts`) are `internal` in the application project `DevTerm.Tui`, and an Example must not reference an application.
+
+**Options**
+- A. Move them into `OoBDev.UiDefinitions.Tui` (Framework, generic names, public), and DevTerm.Tui and the example both use them (recommended: reusable code without application names is Framework, rule `layering-and-migration-plans`; mirrors the existing WPF and Blazor `LiveDisplayView`).
+- B. Write a second, simpler Tui renderer in the example only (duplicates code; no layer change).
+- C. Leave the Tui example without live displays.
+
+A move needs a confirmed migration plan first (`docs/design/UiDefinitions/`).
+
+**Default:** C until answered (nothing is moved).
+
+**Your answer:**
