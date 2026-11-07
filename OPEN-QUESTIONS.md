@@ -24,3 +24,18 @@ A move needs a confirmed migration plan first (`docs/design/UiDefinitions/`).
 **Default:** C until answered (nothing is moved).
 
 **Your answer:**
+
+### Q9 (2026-11-06, Migrations / Windows.Forms): where does `ValidTextBox` live?
+
+The incoming `OoBDev.Windows.Forms` holds `ValidTextBox` (a `TextBox` whose background shows whether the text matches a regex `Filter`) and `ValidationEventArgs`. Main only has them commented out in `OoBDev.System/Windows/Forms` with "TODO: Port this out"; a Framework library cannot reference Windows Forms. No Windows Forms project exists in main.
+
+**Options**
+- A. New project `src/Extensions/OoBDev.Extensions.Windows.Forms` (`net10.0-windows`, `UseWindowsForms`), package `OoBDev.Extensions.Windows.Forms` as already named in `CLAUDE.md`; `ValidationEventArgs` stays in Framework as the host-free part (recommended: matches the documented package name and the layer rules).
+- B. Fold it into the existing Drawing extensions (mixes UI toolkits into an imaging package).
+- C. Drop it (the control is small and WinForms-only), keeping the all-features rule as an exception.
+
+A new project needs a confirmed migration plan (`layering-and-migration-plans`).
+
+**Default:** A is the plan; nothing is created until answered.
+
+**Your answer:**
