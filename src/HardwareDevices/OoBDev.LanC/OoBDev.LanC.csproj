@@ -13,4 +13,8 @@
 		</PackageReference>
 	</ItemGroup>
 
+	<ItemGroup>
+		<ProjectReference Include="..\..\Framework\OoBDev.System.Abstractions\OoBDev.System.Abstractions.csproj" />
+	</ItemGroup>
+
 </Project>
