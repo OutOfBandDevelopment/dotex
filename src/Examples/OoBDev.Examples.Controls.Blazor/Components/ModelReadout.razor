@@ -1,0 +1,31 @@
+@implements IDisposable
+
+@* What the form has written to the bound settings object, read back through the binding after every change. *@
+<section class="readout" data-id="readout">
+    <h2>Bound model</h2>
+    <table>
+        <tbody>
+            @foreach (var row in Form.Rows)
+            {
+                <tr data-readout="@row.Id">
+                    <th>@row.Id</th>
+                    <td>@Binding.GetText(row.Id)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</section>
+
+@code {
+    [Parameter, EditorRequired]
+    public FormViewModel Form { get; set; } = default!;
+
+    [Parameter, EditorRequired]
+    public FormBinding Binding { get; set; } = default!;
+
+    protected override void OnInitialized() => Form.PropertyChanged += OnChanged;
+
+    private void OnChanged(object? sender, global::System.ComponentModel.PropertyChangedEventArgs e) => _ = InvokeAsync(StateHasChanged);
+
+    public void Dispose() => Form.PropertyChanged -= OnChanged;
+}

@@ -2,12 +2,19 @@
 @implements IDisposable
 
 <h1>UiDefinitions controls: Blazor</h1>
-<FormView Form="_form" />
+<p class="lede">The form below is generated from <code>ControlsSampleSettings</code>. Every control writes the settings object; the preview and the bound-model table read it back.</p>
+<div class="layout">
+    <FormView Form="_form" />
+    <div class="side">
+        <SamplePreview Settings="_settings" Form="_form" />
+        <ModelReadout Form="_form" Binding="_binding" />
+    </div>
+</div>
 <LiveSample />
 
 @code {
     private readonly ControlsSampleSettings _settings = new();
-    private FormBinding? _binding;
+    private FormBinding _binding = default!;
     private FormViewModel _form = default!;
 
     protected override void OnInitialized()
@@ -19,6 +26,6 @@
     public void Dispose()
     {
         _form.Dispose();
-        _binding?.Dispose();
+        _binding.Dispose();
     }
 }

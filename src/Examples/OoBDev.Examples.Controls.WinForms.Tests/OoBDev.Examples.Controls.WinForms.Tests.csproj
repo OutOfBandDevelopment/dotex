@@ -27,6 +27,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\OoBDev.Examples.Controls.WinForms\OoBDev.Examples.Controls.WinForms.csproj" />
+		<ProjectReference Include="..\OoBDev.Examples.TestUtilities\OoBDev.Examples.TestUtilities.csproj" />
 	</ItemGroup>
 
 </Project>

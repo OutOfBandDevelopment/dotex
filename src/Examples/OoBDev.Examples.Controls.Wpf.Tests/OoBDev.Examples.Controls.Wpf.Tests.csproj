@@ -27,6 +27,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\OoBDev.Examples.Controls.Wpf\OoBDev.Examples.Controls.Wpf.csproj" />
+		<ProjectReference Include="..\OoBDev.Examples.TestUtilities\OoBDev.Examples.TestUtilities.csproj" />
 	</ItemGroup>
 
 </Project>

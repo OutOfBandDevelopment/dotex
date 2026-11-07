@@ -50,6 +50,7 @@
     <Project Path="Examples/OoBDev.Examples.Controls.WinForms.Tests/OoBDev.Examples.Controls.WinForms.Tests.csproj" />
     <Project Path="Examples/OoBDev.Examples.Controls.WinForms/OoBDev.Examples.Controls.WinForms.csproj" />
     <Project Path="Examples/OoBDev.Examples.Controls.Wpf/OoBDev.Examples.Controls.Wpf.csproj" />
+    <Project Path="Examples/OoBDev.Examples.TestUtilities/OoBDev.Examples.TestUtilities.csproj" />
   </Folder>
   <Folder Name="/Extensions/">
     <Project Path="Extensions/OoBDev.AspNetCore.Cgi.OpenApi.Tests/OoBDev.AspNetCore.Cgi.OpenApi.Tests.csproj" />
