@@ -10,4 +10,4 @@ dotnet run --project src/Examples/OoBDev.Examples.Controls.Wpf
 
 ## Verified
 
-3 Unit tests in `OoBDev.Examples.Controls.Wpf.Tests` (STA thread, no window shown): the generated rows, the advanced section appearing when its toggle is set, and a rendered control per row. The app has not been looked at on screen.
+6 Unit tests in `OoBDev.Examples.Controls.Wpf.Tests` (STA thread, no window shown): the generated rows, the advanced section appearing when its toggle is set, a rendered control per row, and the live displays (one per feed control, `Step` reaching every display, the panel placed in the window). Below the form, `LiveSample` hosts an indicator, a bar graph and a strip chart (`LiveDisplayView`) fed by the shared `LiveSampleFeed`; `Program` steps it every 500 ms on a `DispatcherTimer`. The app has not been looked at on screen.

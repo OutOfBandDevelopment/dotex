@@ -18,7 +18,7 @@ Owner: all protocols and features of dev-term must exist here. Done means what d
 
 - [ ] Example apps that use the UiDefinitions language (forms and panels), beyond DevTerm: one explicit Example panel per device family, plus a small control-example app per host (controls only; the existing Example app demos the framework). Decided (owner, 2026-11-04); placement: samples in each device project's tests plus `src/Examples/OoBDev.Examples.Controls.<Host>` apps ([migration plan](docs/design/example-ui/migration-plan.md), [ui-language-later.md](docs/design/DevTermParity/ui-language-later.md)).
   - [ ] Per-device Example panels remain.
-  - [ ] Live displays (indicator, bar graph, strip chart) in the WPF and Tui control examples, and vector rendering in the Blazor `LiveDisplayView` (2026-11-06).
+  - [ ] Live displays in the Tui control example (shared `LiveSampleFeed` is ready), and vector rendering in the Blazor `LiveDisplayView` (2026-11-06).
   - WPF (2026-11-05), Tui and Blazor (2026-11-06) control examples are done.
 
 ## 2. Devices
