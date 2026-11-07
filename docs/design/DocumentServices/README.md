@@ -5,6 +5,7 @@ Design documents for the document-processing services of the SharedFramework (Ep
 ## Contents
 
 - [Services](#services)
+- [Implementation status](#implementation-status)
 
 ## Services
 
@@ -23,3 +24,18 @@ Design documents for the document-processing services of the SharedFramework (Ep
 | Retrieval | [requirements](RetrievalService/requirements.md) | [architecture](RetrievalService/architecture.md) | [api-design](RetrievalService/api-design.md) | [testing-strategy](RetrievalService/testing-strategy.md) |
 | Splitting | [requirements](SplittingService/requirements.md) | [architecture](SplittingService/architecture.md) | [api-design](SplittingService/api-design.md) | [testing-strategy](SplittingService/testing-strategy.md) |
 | Unpacking | [requirements](UnpackingService/requirements.md) | [architecture](UnpackingService/architecture.md) | [api-design](UnpackingService/api-design.md) | [testing-strategy](UnpackingService/testing-strategy.md) |
+
+## Implementation status
+
+Reconciled with `src/Framework/OoBDev.Documents`, `.Abstractions`, `.ExternalTools`, `.Hpgl` and `.Guides` on 2026-11-06. The designs are proposals; the code is the current truth where they differ.
+
+**Table 2 — Designed services against the code**
+
+| Service | Code | State |
+|---------|------|-------|
+| Conversion | `IDocumentConversion`, `IDocumentConversionHandler`, `DocumentConversionChainBuilder` (chained steps), `ExternalToolConversionHandler`, `HpglToSvgConversionHandler` | built under other names than `IDocumentConversionService` and `IDocumentConversionProvider` |
+| Media type detection | `IContentTypeDetector`, `IDocumentTypeTools`, `DocumentTypeTools` | built under other names than `IMediaTypeDetectionService` |
+| Persistence and retrieval | `IBlobContainer`, `IBlobContainerProvider`, `IBlobContainerProviderFactory`, `IBlobContainerFactory`, `BlobContainerAttribute`, `ContentReference` and `ContentMetaDataReference` | partly built: one blob container abstraction covers both the persistence and retrieval services |
+| Extraction, OCR, rendering, splitting, packing, unpacking, composition | none | not built |
+
+`OoBDev.Documents.Guides` (API and CLI guide rendering) is not in the designs; it implements [GeneratedGuides](../GeneratedGuides/README.md).
