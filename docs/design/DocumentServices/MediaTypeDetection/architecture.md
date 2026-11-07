@@ -10,18 +10,25 @@
 
 The Media Type Detection Service uses **multiple detection strategies** with a **signature database** for accurate format identification.
 
+```plantuml
+@startuml
+skinparam rectangle {
+  BackgroundColor White
+  BorderColor #444444
+}
+rectangle "IMediaTypeDetectionService" as Svc <<service>>
+rectangle "Magic Bytes\nDetector" as D1 <<detector>>
+rectangle "Extension\nDetector" as D2 <<detector>>
+rectangle "MIME Type\nDetector" as D3 <<detector>>
+rectangle "Content\nAnalyzer" as D4 <<detector>>
+Svc --> D1
+Svc --> D2
+Svc --> D3
+Svc --> D4
+@enduml
 ```
-┌─────────────────────────────────────────────────────────────┐
-│          IMediaTypeDetectionService                          │
-└────────────────────┬────────────────────────────────────────┘
-                     │
-         ┌───────────┼────────────┬────────────┐
-         ↓           ↓            ↓            ↓
-┌──────────────┐ ┌────────┐ ┌─────────┐ ┌──────────┐
-│ Magic Bytes  │ │Extension│ │MIME Type│ │ Content  │
-│  Detector    │ │Detector │ │ Detector│ │ Analyzer │
-└──────────────┘ └────────┘ └─────────┘ └──────────┘
-```
+
+*Figure 1 — Media type detection service and detectors*
 
 ---
 

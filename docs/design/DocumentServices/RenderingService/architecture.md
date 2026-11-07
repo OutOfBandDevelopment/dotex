@@ -10,34 +10,39 @@
 
 The Document Rendering Service implements a **Provider Pattern** with **Context-Based Rendering** for transforming documents into images, thumbnails, and previews. Applications provide operational context that providers use to optimize rendering quality, resolution, and performance.
 
+```plantuml
+@startuml
+skinparam rectangle {
+  BackgroundColor White
+  BorderColor #444444
+}
+rectangle "Application Layer\n(Document Management, Preview Generator, CMS)" as App <<layer>>
+rectangle "IDocumentRenderingService\n- RenderPageAsync(content, format, page, context)\n- RenderPagesAsync(content, format, pages[], context)\n- RenderAllPagesAsync(content, format, context)\n- GenerateThumbnailAsync(content, format, context)" as Svc <<service>>
+rectangle "PDFium\nProvider" as P1 <<provider>>
+rectangle "MuPDF\nProvider" as P2 <<provider>>
+rectangle "LibreOffice\nProvider" as P3 <<provider>>
+rectangle "Playwright\nProvider" as P4 <<provider>>
+rectangle "ImageMagick\nProvider" as P5 <<provider>>
+rectangle "PDF Render\nHigh Quality" as E1 <<capability>>
+rectangle "Fast PDF\nRender" as E2 <<capability>>
+rectangle "Office → IMG\nRender" as E3 <<capability>>
+rectangle "HTML → IMG\nWeb Render" as E4 <<capability>>
+rectangle "Image Xfrm\nFormat Cvt" as E5 <<capability>>
+App --> Svc : RenderPageAsync(content, format, page, context)
+Svc --> P1
+Svc --> P2
+Svc --> P3
+Svc --> P4
+Svc --> P5
+P1 --> E1
+P2 --> E2
+P3 --> E3
+P4 --> E4
+P5 --> E5
+@enduml
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                   Application Layer                          │
-│    (Document Management, Preview Generator, CMS)             │
-└────────────────────┬────────────────────────────────────────┘
-                     │ RenderPageAsync(content, format, page, context)
-                     ↓
-┌─────────────────────────────────────────────────────────────┐
-│          IDocumentRenderingService                           │
-│  - RenderPageAsync(content, format, page, context)           │
-│  - RenderPagesAsync(content, format, pages[], context)       │
-│  - RenderAllPagesAsync(content, format, context)             │
-│  - GenerateThumbnailAsync(content, format, context)          │
-└────────────────────┬────────────────────────────────────────┘
-                     │
-         ┌───────────┼────────────┬────────────┬────────────┐
-         ↓           ↓            ↓            ↓            ↓
-┌──────────────┐ ┌────────┐ ┌─────────┐ ┌──────────┐ ┌──────────┐
-│   PDFium     │ │ MuPDF  │ │LibreOffice│ │Playwright│ │ImageMagic│
-│  Provider    │ │Provider│ │ Provider │ │ Provider │ │ Provider │
-└──────┬───────┘ └────┬───┘ └────┬────┘ └────┬─────┘ └────┬─────┘
-       │              │          │            │            │
-       ↓              ↓          ↓            ↓            ↓
-┌──────────────┐ ┌────────┐ ┌─────────┐ ┌──────────┐ ┌──────────┐
-│ PDF Render   │ │Fast PDF│ │Office→IMG│ │ HTML→IMG │ │Image Xfrm│
-│ High Quality │ │Render  │ │Render    │ │Web Render│ │Format Cvt│
-└──────────────┘ └────────┘ └─────────┘ └──────────┘ └──────────┘
-```
+
+*Figure 1 — Rendering service, providers and capabilities*
 
 ---
 
@@ -571,40 +576,26 @@ public class PlaywrightRenderingProvider : IDocumentRenderingProvider
 
 ### Sequence: Document Page Rendering with Caching
 
+```plantuml
+@startuml
+participant "Application" as App
+participant "RenderingService" as Svc
+participant "Cache" as Cache
+participant "Provider" as Prov
+App -> Svc : RenderPageAsync()
+Svc -> Cache : Check cache
+Cache --> Svc : Cache miss
+Svc -> Prov : SelectProvider()
+Svc -> Prov : RenderPageAsync()
+Prov -> Prov : Render page
+Prov --> Svc : RenderingResult
+Svc -> Svc : ApplyWatermark()
+Svc -> Cache : Cache result
+Svc --> App : RenderingResult
+@enduml
 ```
-┌───────────┐     ┌──────────────────┐     ┌──────────┐     ┌──────────┐
-│Application│     │RenderingService  │     │  Cache   │     │ Provider │
-└─────┬─────┘     └────────┬─────────┘     └─────┬────┘     └─────┬────┘
-      │                    │                      │                 │
-      │ RenderPageAsync()  │                      │                 │
-      ├───────────────────>│                      │                 │
-      │                    │                      │                 │
-      │                    │ Check cache          │                 │
-      │                    ├─────────────────────>│                 │
-      │                    │                      │                 │
-      │                    │ Cache miss           │                 │
-      │                    │<─────────────────────┤                 │
-      │                    │                      │                 │
-      │                    │ SelectProvider()     │                 │
-      │                    ├─────────────────────────────────────>│
-      │                    │                      │                 │
-      │                    │ RenderPageAsync()    │                 │
-      │                    ├─────────────────────────────────────>│
-      │                    │                      │                 │
-      │                    │                      │   Render page   │
-      │                    │                      │                 │
-      │                    │ RenderingResult      │                 │
-      │                    │<─────────────────────────────────────┤
-      │                    │                      │                 │
-      │                    │ ApplyWatermark()     │                 │
-      │                    │                      │                 │
-      │                    │ Cache result         │                 │
-      │                    ├─────────────────────>│                 │
-      │                    │                      │                 │
-      │ RenderingResult    │                      │                 │
-      │<───────────────────┤                      │                 │
-      │                    │                      │                 │
-```
+
+*Figure 2 — Rendering data flow with cache*
 
 ---
 

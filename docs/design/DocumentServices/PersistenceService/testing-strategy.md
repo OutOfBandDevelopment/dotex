@@ -20,20 +20,21 @@
 
 ## Test Pyramid
 
+```plantuml
+@startuml
+skinparam rectangle {
+  BackgroundColor White
+  BorderColor #444444
+}
+rectangle "Performance Tests\n(12 tests)" as T3
+rectangle "Integration Tests\n(30 tests)" as T2
+rectangle "Unit Tests\n(55+ tests)" as T1
+T3 -[hidden]down- T2
+T2 -[hidden]down- T1
+@enduml
 ```
-                    ┌─────────────┐
-                    │ Performance │  (12 tests)
-                    │   Tests     │
-                    └─────────────┘
-                  ┌───────────────────┐
-                  │  Integration Tests│  (30 tests)
-                  │                   │
-                  └───────────────────┘
-            ┌─────────────────────────────┐
-            │       Unit Tests            │  (55+ tests)
-            │                             │
-            └─────────────────────────────┘
-```
+
+*Figure 1 — Test pyramid*
 
 ---
 

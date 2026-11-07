@@ -15,17 +15,17 @@ Comprehensive testing strategy for lazy data provider system, ensuring reliable 
 
 ## Test Pyramid
 
+```plantuml
+@startuml
+rectangle "Performance Benchmarks\n5 tests (benchmarks)" as Perf
+rectangle "Integration Tests\n20 tests (provider integration, E2E scenarios)" as Int
+rectangle "Unit Tests\n65+ tests (providers, registry, lazy loading, path matching)" as Unit
+Perf -[hidden]down- Int
+Int -[hidden]down- Unit
+@enduml
 ```
-        ┌─────────────────┐
-        │  Performance    │  5 tests (benchmarks)
-        │   Benchmarks    │
-        ├─────────────────┤
-        │   Integration   │  20 tests (provider integration, E2E scenarios)
-        │      Tests      │
-        ├─────────────────┤
-        │   Unit Tests    │  65+ tests (providers, registry, lazy loading, path matching)
-        └─────────────────┘
-```
+
+*Figure 1 — Test pyramid*
 
 **Coverage Goals:**
 - IDataProvider implementations: 90%+

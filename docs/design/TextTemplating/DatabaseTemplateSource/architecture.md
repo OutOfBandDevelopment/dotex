@@ -10,33 +10,26 @@
 
 Database Template Source provides persistent, versioned, multi-tenant template storage using relational databases. It implements the existing `ITemplateSource` interface for seamless integration with the OoBDev template engine.
 
+```plantuml
+@startuml
+skinparam shadowing false
+skinparam rectangle {
+  BackgroundColor White
+  BorderColor #444444
+}
+rectangle "Template Engine\n- GetAll() -> discovers all template sources" as Engine <<Component>>
+rectangle "File Source\n(Existing)" as File <<Component>>
+rectangle "Database Source\n(NEW)" as Db <<Component>>
+rectangle "ITemplateRepository\n- GetActive()\n- GetByName()\n- GetById()" as Repo <<Component>>
+rectangle "Database Layer\nSQL Server | PostgreSQL | MySQL\n- Templates table\n- TemplateAudit table\n- Indexes for fast lookup" as DbLayer <<Container>>
+Engine --> File
+Engine --> Db
+Db --> Repo
+Repo --> DbLayer
+@enduml
 ```
-┌──────────────────────────────────────────────────────────────┐
-│                    Template Engine                            │
-│  - GetAll() → discovers all template sources                  │
-└────────────────┬──────────────┬──────────────────────────────┘
-                 ↓              ↓
-      ┌──────────────┐ ┌──────────────┐
-      │     File     │ │   Database   │
-      │   Source     │ │   Source     │
-      │  (Existing)  │ │    (NEW)     │
-      └──────────────┘ └──────┬───────┘
-                              ↓
-                   ┌────────────────────┐
-                   │ ITemplateRepository│
-                   │ - GetActive()      │
-                   │ - GetByName()      │
-                   │ - GetById()        │
-                   └────────┬───────────┘
-                            ↓
-         ┌─────────────────────────────────────┐
-         │        Database Layer                │
-         │  SQL Server | PostgreSQL | MySQL     │
-         │  - Templates table                   │
-         │  - TemplateAudit table               │
-         │  - Indexes for fast lookup           │
-         └──────────────────────────────────────┘
-```
+
+*Figure 1 — Database template source overview*
 
 **Key Principle:** Leverage existing `ITemplateSource` abstraction, add database persistence with versioning and multi-tenancy.
 
@@ -582,63 +575,47 @@ public class SqlServerTemplateRepository : ITemplateRepository
 
 ### Template Query Flow
 
+```plantuml
+@startuml
+skinparam shadowing false
+skinparam rectangle {
+  BackgroundColor White
+  BorderColor #444444
+}
+rectangle "Template Engine" as Engine <<Component>>
+rectangle "DatabaseTemplateSource\n1. Get tenant/culture from options\n2. Query repository" as Source <<Component>>
+rectangle "SqlServerTemplateRepository\n1. Open connection\n2. Execute parameterized query\n3. Map rows to TemplateEntity" as Repo <<Component>>
+rectangle "SQL Server\nSELECT * FROM Templates\nWHERE IsActive = 1\n  AND TenantId = @TenantId\n  AND Culture = @Culture" as Sql <<Container>>
+Engine --> Source : GetAll()
+Source --> Repo
+Repo --> Sql
+@enduml
 ```
-┌──────────────────┐
-│  Template Engine │   GetAll()
-└────────┬─────────┘
-         ↓
-┌─────────────────────────────────────────────────────┐
-│      DatabaseTemplateSource                         │
-│  1. Get tenant/culture from options                 │
-│  2. Query repository                                │
-└────────┬────────────────────────────────────────────┘
-         ↓
-┌─────────────────────────────────────────────────────┐
-│      SqlServerTemplateRepository                    │
-│  1. Open connection                                 │
-│  2. Execute parameterized query                     │
-│  3. Map rows to TemplateEntity                      │
-└────────┬────────────────────────────────────────────┘
-         ↓
-┌─────────────────────────────────────────────────────┐
-│         SQL Server                                  │
-│  SELECT * FROM Templates                            │
-│  WHERE IsActive = 1                                 │
-│    AND TenantId = @TenantId                         │
-│    AND Culture = @Culture                           │
-└─────────────────────────────────────────────────────┘
-```
+
+*Figure 2 — Template query flow*
 
 ### Template Content Loading Flow
 
+```plantuml
+@startuml
+skinparam shadowing false
+skinparam rectangle {
+  BackgroundColor White
+  BorderColor #444444
+}
+rectangle "Template Provider" as Provider <<Component>>
+rectangle "ITemplateContext\ncontext.Source.GetContentAsync()" as Ctx <<Component>>
+rectangle "DatabaseTemplateContentSource\n1. Check cache\n2. If not cached, query repository\n3. Cache result\n4. Return content" as Content <<Component>>
+rectangle "SqlServerTemplateRepository\nGetByIdAsync(templateId)" as Repo <<Component>>
+rectangle "SQL Server\nSELECT Content FROM Templates WHERE Id = @Id" as Sql <<Container>>
+Provider --> Ctx : ApplyAsync(context, data)
+Ctx --> Content
+Content --> Repo
+Repo --> Sql
+@enduml
 ```
-┌──────────────────┐
-│ Template Provider│   ApplyAsync(context, data)
-└────────┬─────────┘
-         ↓
-┌─────────────────────────────────────────────────────┐
-│      ITemplateContext                               │
-│  context.Source.GetContentAsync()                   │
-└────────┬────────────────────────────────────────────┘
-         ↓
-┌─────────────────────────────────────────────────────┐
-│      DatabaseTemplateContentSource                  │
-│  1. Check cache                                     │
-│  2. If not cached, query repository                 │
-│  3. Cache result                                    │
-│  4. Return content                                  │
-└────────┬────────────────────────────────────────────┘
-         ↓
-┌─────────────────────────────────────────────────────┐
-│      SqlServerTemplateRepository                    │
-│  GetByIdAsync(templateId)                           │
-└────────┬────────────────────────────────────────────┘
-         ↓
-┌─────────────────────────────────────────────────────┐
-│         SQL Server                                  │
-│  SELECT Content FROM Templates WHERE Id = @Id       │
-└─────────────────────────────────────────────────────┘
-```
+
+*Figure 3 — Template content loading flow*
 
 ---
 

@@ -15,17 +15,17 @@ Comprehensive testing strategy for schema discovery and translation system, ensu
 
 ## Test Pyramid
 
+```plantuml
+@startuml
+rectangle "Performance Benchmarks\n5 tests (benchmarks)" as Perf
+rectangle "Integration Tests\n20 tests (provider integration, DataContainer)" as Int
+rectangle "Unit Tests\n70+ tests (providers, inference, translation, validation)" as Unit
+Perf -[hidden]down- Int
+Int -[hidden]down- Unit
+@enduml
 ```
-        ┌─────────────────┐
-        │  Performance    │  5 tests (benchmarks)
-        │   Benchmarks    │
-        ├─────────────────┤
-        │   Integration   │  20 tests (provider integration, DataContainer)
-        │      Tests      │
-        ├─────────────────┤
-        │   Unit Tests    │  70+ tests (providers, inference, translation, validation)
-        └─────────────────┘
-```
+
+*Figure 1 — Test pyramid*
 
 **Coverage Goals:**
 - ISchemaProvider implementations: 90%+

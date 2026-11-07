@@ -10,33 +10,35 @@
 
 The Document Retrieval Service implements a **Provider Pattern** with **Context-Based Retrieval** for fetching documents from multiple storage backends. Applications provide operational context that providers use to optimize retrieval behavior.
 
+```plantuml
+@startuml
+skinparam rectangle {
+  BackgroundColor White
+  BorderColor #444444
+}
+rectangle "Application Layer\n(Invoice Processor, Report Generator, etc.)" as App <<layer>>
+rectangle "IDocumentRetrievalService\n- GetAsync(id, context)\n- QueryAsync(query, context)\n- GetVersionAsync(id, version, context)" as Svc <<service>>
+rectangle "Database\nProvider" as P1 <<provider>>
+rectangle "File System\nProvider" as P2 <<provider>>
+rectangle "Azure Blob\nProvider" as P3 <<provider>>
+rectangle "S3\nProvider" as P4 <<provider>>
+rectangle "SQL Server\nMongoDB" as S1 <<storage>>
+rectangle "Disk\nNAS" as S2 <<storage>>
+rectangle "Azure\nStorage" as S3 <<storage>>
+rectangle "AWS\nS3" as S4 <<storage>>
+App --> Svc : GetAsync(id, context)
+Svc --> P1
+Svc --> P2
+Svc --> P3
+Svc --> P4
+P1 --> S1
+P2 --> S2
+P3 --> S3
+P4 --> S4
+@enduml
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                   Application Layer                          │
-│         (Invoice Processor, Report Generator, etc.)          │
-└────────────────────┬────────────────────────────────────────┘
-                     │ GetAsync(id, context)
-                     ↓
-┌─────────────────────────────────────────────────────────────┐
-│            IDocumentRetrievalService                         │
-│  - GetAsync(id, context)                                    │
-│  - QueryAsync(query, context)                               │
-│  - GetVersionAsync(id, version, context)                    │
-└────────────────────┬────────────────────────────────────────┘
-                     │
-         ┌───────────┼────────────┬────────────┐
-         ↓           ↓            ↓            ↓
-┌──────────────┐ ┌────────┐ ┌─────────┐ ┌─────────┐
-│ Database     │ │  File  │ │  Azure  │ │   S3    │
-│ Provider     │ │ System │ │  Blob   │ │ Provider│
-└──────┬───────┘ └────┬───┘ └────┬────┘ └────┬────┘
-       │              │          │            │
-       ↓              ↓          ↓            ↓
-┌──────────────┐ ┌────────┐ ┌─────────┐ ┌─────────┐
-│  SQL Server  │ │  Disk  │ │  Azure  │ │   AWS   │
-│  MongoDB     │ │  NAS   │ │ Storage │ │   S3    │
-└──────────────┘ └────────┘ └─────────┘ └─────────┘
-```
+
+*Figure 1 — Retrieval service, providers and storage*
 
 ---
 
@@ -454,36 +456,24 @@ public class FileSystemRetrievalProvider : IDocumentRetrievalProvider
 
 ### Sequence: Document Retrieval with Context
 
+```plantuml
+@startuml
+participant "Application" as App
+participant "RetrievalService" as Svc
+participant "Provider" as Prov
+participant "Storage" as Store
+App -> Svc : GetAsync(id, ctx)
+Svc -> Prov : SelectProvider(ctx)
+Prov --> Svc : Provider instance
+Svc -> Prov : GetAsync(id, ctx)
+Prov -> Store : Load document
+Store --> Prov : Document data
+Prov --> Svc : Document
+Svc --> App : Document
+@enduml
 ```
-┌───────────┐      ┌──────────────────┐      ┌──────────┐      ┌──────────┐
-│Application│      │RetrievalService  │      │ Provider │      │  Storage │
-└─────┬─────┘      └────────┬─────────┘      └─────┬────┘      └─────┬────┘
-      │                     │                       │                  │
-      │ GetAsync(id, ctx)   │                       │                  │
-      ├────────────────────>│                       │                  │
-      │                     │                       │                  │
-      │                     │ SelectProvider(ctx)   │                  │
-      │                     ├──────────────────────>│                  │
-      │                     │                       │                  │
-      │                     │ Provider instance     │                  │
-      │                     │<──────────────────────┤                  │
-      │                     │                       │                  │
-      │                     │ GetAsync(id, ctx)     │                  │
-      │                     ├──────────────────────>│                  │
-      │                     │                       │                  │
-      │                     │                       │ Load document    │
-      │                     │                       ├─────────────────>│
-      │                     │                       │                  │
-      │                     │                       │ Document data    │
-      │                     │                       │<─────────────────┤
-      │                     │                       │                  │
-      │                     │ Document              │                  │
-      │                     │<──────────────────────┤                  │
-      │                     │                       │                  │
-      │ Document            │                       │                  │
-      │<────────────────────┤                       │                  │
-      │                     │                       │                  │
-```
+
+*Figure 2 — Retrieval data flow*
 
 **Key Points:**
 1. Application provides retrieval context

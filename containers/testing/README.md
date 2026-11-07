@@ -13,6 +13,11 @@ This directory contains Docker-based testing infrastructure for running integrat
 - [CI/CD Integration](#cicd-integration)
 - [Troubleshooting](#troubleshooting)
 
+**List of figures**
+
+1. Container deployment diagram
+2. Network topology
+
 ---
 
 ## Overview
@@ -183,45 +188,53 @@ end note
 @enduml
 ```
 
+*Figure 1 — Container deployment diagram*
+
 ### Network Topology
 
-```plaintext
-┌─────────────────────────────────────────────────────────────┐
-│  oobd-integration-test-net (Bridge Network)                 │
-│                                                             │
-│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐     │
-│  │  Tika    │  │  SMTP    │  │  Mongo   │  │   SQL    │     │
-│  │  :9998   │  │  :25     │  │  :27017  │  │  :1433   │     │
-│  └──────────┘  └──────────┘  └──────────┘  └──────────┘     │
-│                                                             │
-│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐     │
-│  │ RabbitMQ │  │  Redis   │  │OpenSearch│  │  Qdrant  │     │
-│  │  :5673   │  │  :6379   │  │  :9200   │  │  :6333   │     │
-│  └──────────┘  └──────────┘  └──────────┘  └──────────┘     │
-│                                                             │
-│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐     │
-│  │ Azurite  │  │Moto│  │ Keycloak │  │  SBert   │     │
-│  │  :10000  │  │  :4566   │  │  :8081   │  │  :5080   │     │
-│  └──────────┘  └──────────┘  └──────────┘  └──────────┘     │
-│                                                             │
-│  ┌──────────┐  ┌──────────┐                                 │
-│  │ Service  │  │  Ollama  │                                 │
-│  │   Bus    │  │ :11434   │                                 │
-│  │  :5672   │  │          │                                 │
-│  └──────────┘  └──────────┘                                 │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
-         ↑
-         │ (port mapping)
-         ↓
-    Docker Host
-    (localhost)
-         ↑
-         │
-         ↓
-  .NET Integration Tests
-  (TestCategory=Integration)
+```plantuml
+@startuml
+skinparam rectangle {
+  BackgroundColor White
+  BorderColor #444444
+}
+rectangle "oobd-integration-test-net (Bridge Network)" as net {
+  rectangle "Tika\n:9998" as tika
+  rectangle "SMTP\n:25" as smtp
+  rectangle "Mongo\n:27017" as mongo
+  rectangle "SQL\n:1433" as sql
+  rectangle "RabbitMQ\n:5673" as rabbit
+  rectangle "Redis\n:6379" as redis
+  rectangle "OpenSearch\n:9200" as os
+  rectangle "Qdrant\n:6333" as qdrant
+  rectangle "Azurite\n:10000" as azurite
+  rectangle "Moto\n:4566" as moto
+  rectangle "Keycloak\n:8081" as keycloak
+  rectangle "SBert\n:5080" as sbert
+  rectangle "Service Bus\n:5672" as sb
+  rectangle "Ollama\n:11434" as ollama
+  tika -[hidden]right- smtp
+  smtp -[hidden]right- mongo
+  mongo -[hidden]right- sql
+  rabbit -[hidden]right- redis
+  redis -[hidden]right- os
+  os -[hidden]right- qdrant
+  azurite -[hidden]right- moto
+  moto -[hidden]right- keycloak
+  keycloak -[hidden]right- sbert
+  sb -[hidden]right- ollama
+  tika -[hidden]down- rabbit
+  rabbit -[hidden]down- azurite
+  azurite -[hidden]down- sb
+}
+rectangle "Docker Host\n(localhost)" as host
+rectangle ".NET Integration Tests\n(TestCategory=Integration)" as tests
+net <--> host : port mapping
+host <--> tests
+@enduml
 ```
+
+*Figure 2 — Network topology*
 
 ---
 

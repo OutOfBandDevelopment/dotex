@@ -10,39 +10,37 @@
 
 The Message Composition Service implements an **Orchestrator Pattern** that coordinates template rendering (Epic 10), data enhancement (Epic 11), and document conversion (Epic 6) to produce pre-formatted messages ready for delivery.
 
+```plantuml
+@startuml
+skinparam rectangle {
+  BackgroundColor White
+  BorderColor #444444
+}
+rectangle "Consumer\n(Application, API, Background Job)" as Consumer
+rectangle "IMessageComposer\n- ComposeEmailAsync(type, userId, data, format)\n- ComposeSmsAsync(type, userId, data)\n- ComposeMultiChannelAsync(type, userId, data)" as Composer <<component>>
+rectangle "Template\nSelector" as Sel <<component>>
+rectangle "Message\nRenderer" as Rend <<component>>
+rectangle "Format\nConverter" as Conv <<component>>
+rectangle "Template\nProvider\n(Epic 10)" as TP <<dependency>>
+rectangle "Data\nContainer\n(Epic 11)" as DC <<dependency>>
+rectangle "Conversion\nPipeline\n(Epic 6)" as CP <<dependency>>
+rectangle "Template\nStorage" as TS <<storage>>
+rectangle "Data\nProviders" as DPr <<storage>>
+rectangle "Document\nConverters" as DCv <<storage>>
+Consumer --> Composer
+Composer --> Sel
+Composer --> Rend
+Composer --> Conv
+Sel --> TP
+Rend --> DC
+Conv --> CP
+TP --> TS
+DC --> DPr
+CP --> DCv
+@enduml
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                         Consumer                                │
-│              (Application, API, Background Job)                 │
-└────────────────────────────┬────────────────────────────────────┘
-                             │
-                             ↓
-┌─────────────────────────────────────────────────────────────────┐
-│                    IMessageComposer                             │
-│  - ComposeEmailAsync(type, userId, data, format)               │
-│  - ComposeSmsAsync(type, userId, data)                         │
-│  - ComposeMultiChannelAsync(type, userId, data)                │
-└──────┬──────────────┬───────────────┬──────────────────────────┘
-       │              │               │
-       ↓              ↓               ↓
-┌─────────────┐ ┌──────────────┐ ┌───────────────┐
-│  Template   │ │    Message   │ │    Format     │
-│  Selector   │ │   Renderer   │ │  Converter    │
-└──────┬──────┘ └──────┬───────┘ └───────┬───────┘
-       │              │                  │
-       ↓              ↓                  ↓
-┌─────────────┐ ┌──────────────┐ ┌───────────────┐
-│  Template   │ │     Data     │ │  Conversion   │
-│  Provider   │ │  Container   │ │   Pipeline    │
-│ (Epic 10)   │ │  (Epic 11)   │ │   (Epic 6)    │
-└─────────────┘ └──────────────┘ └───────────────┘
-       │              │                  │
-       ↓              ↓                  ↓
-┌─────────────┐ ┌──────────────┐ ┌───────────────┐
-│  Template   │ │     Data     │ │  Document     │
-│  Storage    │ │  Providers   │ │  Converters   │
-└─────────────┘ └──────────────┘ └───────────────┘
-```
+
+*Figure 1 — Message composition architecture*
 
 ---
 
@@ -445,49 +443,31 @@ public class FormatConverter : IFormatConverter
 
 ### Sequence: Compose Email Message
 
+```plantuml
+@startuml
+participant Consumer
+participant MessageComposer
+participant "Template\nSelector" as Sel
+participant "Message\nRenderer" as Rend
+participant "Format\nConverter" as Conv
+
+Consumer -> MessageComposer : ComposeEmailAsync
+MessageComposer -> Sel : GetUserCulture
+Sel --> MessageComposer : (lazy eval)
+MessageComposer -> Sel : SelectTemplateAsync
+Sel --> MessageComposer : Template ID
+MessageComposer -> Rend : RenderAsync(templateId, data)
+note over Rend : (Template engine accesses data container)\n(ONLY used providers execute - lazy)
+Rend --> MessageComposer : RenderedContent
+MessageComposer -> Conv : ConvertAsync(content, source, target)
+note over Conv : (Conversion: Markdown → HTML)
+Conv --> MessageComposer : ConvertedContent
+note over MessageComposer : AssembleMessage
+MessageComposer --> Consumer : ComposedMessage
+@enduml
 ```
-┌─────────┐  ┌──────────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐
-│Consumer │  │MessageComposer│ │ Template │  │ Message  │  │  Format  │
-│         │  │               │  │ Selector │  │ Renderer │  │Converter │
-└────┬────┘  └──────┬────────┘  └────┬─────┘  └────┬─────┘  └────┬─────┘
-     │              │                │             │             │
-     │ComposeEmailAsync              │             │             │
-     ├─────────────>│                │             │             │
-     │              │                │             │             │
-     │              │GetUserCulture  │             │             │
-     │              ├───────────────>│             │             │
-     │              │  (lazy eval)   │             │             │
-     │              │<───────────────┤             │             │
-     │              │                │             │             │
-     │              │SelectTemplateAsync           │             │
-     │              ├────────────────>│             │             │
-     │              │                 │             │             │
-     │              │Template ID      │             │             │
-     │              │<────────────────┤             │             │
-     │              │                 │             │             │
-     │              │RenderAsync(templateId, data)  │             │
-     │              ├───────────────────────────────>│             │
-     │              │                                │             │
-     │              │ (Template engine accesses data container)   │
-     │              │ (ONLY used providers execute - lazy)        │
-     │              │                                │             │
-     │              │RenderedContent                 │             │
-     │              │<───────────────────────────────┤             │
-     │              │                                │             │
-     │              │ConvertAsync(content, source, target)        │
-     │              ├─────────────────────────────────────────────>│
-     │              │                                              │
-     │              │ (Conversion: Markdown → HTML)               │
-     │              │                                              │
-     │              │ConvertedContent                              │
-     │              │<─────────────────────────────────────────────┤
-     │              │                                              │
-     │              │AssembleMessage                               │
-     │              │                                              │
-     │ComposedMessage│                                              │
-     │<─────────────┤                                              │
-     │              │                                              │
-```
+
+*Figure 2 — Sequence: Compose Email Message*
 
 **Key Points:**
 1. User culture retrieved from IDataContainer (lazy evaluation)

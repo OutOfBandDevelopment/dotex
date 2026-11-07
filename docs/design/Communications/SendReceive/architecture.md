@@ -10,35 +10,29 @@
 
 The Send & Receive implementation uses the **Command Pattern** for sending messages and **Observer Pattern** for receiving messages via webhooks and polling.
 
+```plantuml
+@startuml
+skinparam rectangle {
+  BackgroundColor White
+  BorderColor #444444
+}
+rectangle "Application Service" as app
+rectangle "ISendService\n- SendAsync()\n- SendMultiple()" as send
+rectangle "IReceiveService\n- HandleWebhook()\n- PollAsync()" as receive
+rectangle "IChannelProvider\n- SendAsync()" as provider
+rectangle "IWebhookProcessor\n- Process()" as webhook
+rectangle "IDeliveryTracker\n- RecordSent()\n- UpdateStatus()" as tracker
+rectangle "Event Emitter\n- OnReceived()\n- OnStatusUpdate()" as emitter
+app --> send
+app --> receive
+send --> provider
+receive --> webhook
+provider --> tracker
+webhook --> emitter
+@enduml
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                  Application Service                        │
-└────────────────────┬────────────────────────────────────────┘
-                     │
-         ┌───────────┴───────────┐
-         ↓                       ↓
-┌──────────────────┐   ┌──────────────────┐
-│   ISendService   │   │ IReceiveService  │
-│                  │   │                  │
-│ - SendAsync()    │   │ - HandleWebhook()│
-│ - SendMultiple() │   │ - PollAsync()    │
-└────────┬─────────┘   └────────┬─────────┘
-         │                      │
-         ↓                      ↓
-┌──────────────────┐   ┌──────────────────┐
-│ IChannelProvider │   │IWebhookProcessor │
-│                  │   │                  │
-│ - SendAsync()    │   │ - Process()      │
-└────────┬─────────┘   └────────┬─────────┘
-         │                      │
-         ↓                      ↓
-┌──────────────────┐   ┌──────────────────┐
-│IDeliveryTracker  │   │  Event Emitter   │
-│                  │   │                  │
-│ - RecordSent()   │   │ - OnReceived()   │
-│ - UpdateStatus() │   │ - OnStatusUpdate()│
-└──────────────────┘   └──────────────────┘
-```
+
+*Figure 1 — Send and receive architecture*
 
 ---
 
@@ -365,44 +359,29 @@ public class DeliveryTracker : IDeliveryTracker
 
 ### Sequence: Send Message with Retry
 
+```plantuml
+@startuml
+participant App
+participant SendService
+participant Provider
+participant Tracker
+participant API
+App -> SendService : SendAsync()
+SendService -> SendService : Get channel\nGet provider
+SendService -> Provider : SendAsync()
+Provider -> API : Call API
+API --> Provider : 500 Error
+note over SendService : Wait 30s (retry backoff)
+SendService -> Provider : SendAsync()
+Provider -> API : Call API
+API --> Provider : 200 OK
+Provider --> SendService : Success
+SendService -> Tracker : RecordSentAsync()
+SendService --> App : SendResult
+@enduml
 ```
-┌─────────┐    ┌──────────┐    ┌──────────┐    ┌──────────┐    ┌──────────┐
-│   App   │    │SendService│   │  Provider│    │ Tracker  │    │   API    │
-└────┬────┘    └─────┬────┘    └─────┬────┘    └─────┬────┘    └─────┬────┘
-     │               │               │               │               │
-     │ SendAsync()   │               │               │               │
-     ├──────────────>│               │               │               │
-     │               │ Get channel   │               │               │
-     │               │ Get provider  │               │               │
-     │               │               │               │               │
-     │               │ SendAsync()   │               │               │
-     │               ├──────────────>│               │               │
-     │               │               │ Call API      │               │
-     │               │               ├──────────────────────────────>│
-     │               │               │               │               │
-     │               │               │ 500 Error     │               │
-     │               │               │<──────────────────────────────┤
-     │               │               │               │               │
-     │               │ Wait 30s (retry backoff)      │               │
-     │               │               │               │               │
-     │               │ SendAsync()   │               │               │
-     │               ├──────────────>│               │               │
-     │               │               │ Call API      │               │
-     │               │               ├──────────────────────────────>│
-     │               │               │               │               │
-     │               │               │ 200 OK        │               │
-     │               │               │<──────────────────────────────┤
-     │               │               │               │               │
-     │               │ Success       │               │               │
-     │               │<──────────────┤               │               │
-     │               │               │               │               │
-     │               │ RecordSentAsync()             │               │
-     │               ├──────────────────────────────>│               │
-     │               │               │               │               │
-     │ SendResult    │               │               │               │
-     │<──────────────┤               │               │               │
-     │               │               │               │               │
-```
+
+*Figure 2 — Send message with retry sequence*
 
 ---
 

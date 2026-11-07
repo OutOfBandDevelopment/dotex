@@ -30,6 +30,12 @@ This document provides a complete, phased roadmap for implementing integration t
 - [Success Metrics](#success-metrics)
 - [Next Steps](#next-steps)
 
+**List of figures**
+
+1. Integration testing architecture overview
+2. Test categories decision tree
+3. When to run integration tests
+
 ## Context: What Are Integration Tests?
 
 Integration testing adds a third layer of validation beyond Unit and Simulate tests. Unlike mocked tests, Integration tests run against **real external dependencies** (databases, file system, network, etc.).
@@ -92,6 +98,8 @@ INTTESTS --> OUT
 
 @enduml
 ```
+
+*Figure 1 — Integration testing architecture overview*
 
 ## Implementation Phases
 
@@ -198,20 +206,32 @@ jobs:
 
 ## Test Categories Decision Tree
 
+```plantuml
+@startuml
+start
+if (Does the test mock all external dependencies?) then (YES)
+  :UNIT or SIMULATE;
+else (NO)
+  if (Does it need Docker/external service?) then (YES)
+    :INTEGRATION;
+  else (NO)
+    if (Is it specific to local development?) then (YES)
+      :DEVLOCAL;
+    else (NO)
+      :INTEGRATION;
+    endif
+  endif
+endif
+partition "Should it run in CI?" {
+  :UNIT/SIMULATE: YES (every push)
+  INTEGRATION: MAYBE (main only, or scheduled)
+  DEVLOCAL: NO (unless converted to Integration);
+}
+stop
+@enduml
 ```
-┌─ Does the test mock all external dependencies?
-│  YES → UNIT or SIMULATE
-│  NO  ├─ Does it need Docker/external service?
-│       │  YES → INTEGRATION
-│       │  NO  ├─ Is it specific to local development?
-│       │       │  YES → DEVLOCAL
-│       │       │  NO  → INTEGRATION
-│
-└─ Should it run in CI?
-   UNIT/SIMULATE: YES (every push)
-   INTEGRATION: MAYBE (main only, or scheduled)
-   DEVLOCAL: NO (unless converted to Integration)
-```
+
+*Figure 2 — Test categories decision tree*
 
 ## Service Container Decisions
 
@@ -250,23 +270,31 @@ jobs:
 
 ### When to Run Integration Tests
 
+```plantuml
+@startuml
+rectangle "Event: Push to main" as push {
+  rectangle "Build & test (Unit + Simulate)\nMust pass" as p1
+  rectangle "Create package\nIf tests pass" as p2
+  rectangle "Run integration tests (optional)\n- If database tests: Start SQL Server\n- If file I/O tests: Setup volumes\n- Run tests & report results" as p3
+  p1 --> p2
+  p2 --> p3
+}
+rectangle "Event: PR to main" as pr {
+  rectangle "Build & test (Unit + Simulate)\nMust pass" as q1
+  rectangle "Report: \"Integration tests pending on merge\"" as q2
+  q1 --> q2
+}
+rectangle "Event: Merge to main" as merge {
+  rectangle "Full test suite (Unit + Simulate + Integration)" as m1
+  rectangle "Create release\nIf all pass" as m2
+  m1 --> m2
+}
+push -[hidden]down- pr
+pr -[hidden]down- merge
+@enduml
 ```
-Event: Push to main
-├─ Build & test (Unit + Simulate) → Must pass
-├─ Create package → If tests pass
-└─ Run integration tests (optional)
-    ├─ If database tests → Start SQL Server
-    ├─ If file I/O tests → Setup volumes
-    └─ Run tests & report results
 
-Event: PR to main
-├─ Build & test (Unit + Simulate) → Must pass
-└─ Report: "Integration tests pending on merge"
-
-Event: Merge to main
-├─ Full test suite (Unit + Simulate + Integration)
-└─ Create release (if all pass)
-```
+*Figure 3 — When to run integration tests*
 
 ### Approval Strategy
 

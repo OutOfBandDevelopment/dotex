@@ -24,29 +24,39 @@ The Communications Core uses a **layered architecture** with **provider pattern*
 
 ```plantuml
 @startuml C4_Context
-!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+skinparam rectangle {
+    BackgroundColor<<System>> #1168BD
+    FontColor<<System>> #FFFFFF
+    BackgroundColor<<External>> #999999
+    FontColor<<External>> #FFFFFF
+    BorderColor Black
+}
+skinparam actor {
+    BackgroundColor #08427B
+    BorderColor Black
+}
 
 title System Context - Communications Platform
 
-Person(user, "User", "Receives notifications")
-System(app, "Application Services", "Order Service, User Service, etc.")
+actor "User\nReceives notifications" as user
+rectangle "Application Services\n<<System>>\nOrder Service, User Service, etc." as app <<System>>
 
-System_Boundary(communications, "Communications Platform") {
-    System(core, "Communications Core", "Multi-channel message orchestration")
+rectangle "Communications Platform" {
+    rectangle "Communications Core\n<<System>>\nMulti-channel message orchestration" as core <<System>>
 }
 
-System_Ext(sendgrid, "SendGrid", "Cloud email service")
-System_Ext(twilio, "Twilio", "SMS service")
-System_Ext(preference_db, "Preference Store", "User channel preferences")
-System_Ext(template_store, "Template Store", "Message templates")
+rectangle "SendGrid\n<<External System>>\nCloud email service" as sendgrid <<External>>
+rectangle "Twilio\n<<External System>>\nSMS service" as twilio <<External>>
+rectangle "Preference Store\n<<External System>>\nUser channel preferences" as preference_db <<External>>
+rectangle "Template Store\n<<External System>>\nMessage templates" as template_store <<External>>
 
-Rel(app, core, "Sends messages via", "ICommunicationProvider")
-Rel(core, preference_db, "Looks up preferences", "ITargetPreferenceManager")
-Rel(core, template_store, "Loads templates", "ITemplateProvider")
-Rel(core, sendgrid, "Sends emails", "SendGrid SDK")
-Rel(core, twilio, "Sends SMS", "Twilio SDK")
-Rel_Back(user, sendgrid, "Receives emails")
-Rel_Back(user, twilio, "Receives SMS")
+app --> core : Sends messages via\n(ICommunicationProvider)
+core --> preference_db : Looks up preferences\n(ITargetPreferenceManager)
+core --> template_store : Loads templates\n(ITemplateProvider)
+core --> sendgrid : Sends emails\n(SendGrid SDK)
+core --> twilio : Sends SMS\n(Twilio SDK)
+user <-- sendgrid : Receives emails
+user <-- twilio : Receives SMS
 
 @enduml
 ```
@@ -57,41 +67,53 @@ Rel_Back(user, twilio, "Receives SMS")
 
 ```plantuml
 @startuml C4_Container
-!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+skinparam rectangle {
+    BackgroundColor<<System>> #1168BD
+    FontColor<<System>> #FFFFFF
+    BackgroundColor<<Container>> #438DD5
+    FontColor<<Container>> #FFFFFF
+    BackgroundColor<<External>> #999999
+    FontColor<<External>> #FFFFFF
+    BorderColor Black
+}
+skinparam actor {
+    BackgroundColor #08427B
+    BorderColor Black
+}
 
 title Container Diagram - Communications Platform
 
-Person(user, "User")
-System(app, "Application Services")
+actor "User" as user
+rectangle "Application Services\n<<System>>" as app <<System>>
 
-System_Boundary(communications, "Communications Platform") {
-    Container(abstractions, "Abstractions", ".NET Library", "Interfaces and contracts")
-    Container(core, "Core Orchestration", ".NET Library", "Multi-channel coordination")
-    Container(sendgrid_provider, "SendGrid Provider", ".NET Library", "Email via SendGrid")
-    Container(twilio_provider, "Twilio Provider", ".NET Library", "SMS via Twilio")
-    Container(deferral_queue, "Deferral Queue", "Message Queue", "Scheduled message storage")
+rectangle "Communications Platform" {
+    rectangle "Abstractions\n[.NET Library]\nInterfaces and contracts" as abstractions <<Container>>
+    rectangle "Core Orchestration\n[.NET Library]\nMulti-channel coordination" as core <<Container>>
+    rectangle "SendGrid Provider\n[.NET Library]\nEmail via SendGrid" as sendgrid_provider <<Container>>
+    rectangle "Twilio Provider\n[.NET Library]\nSMS via Twilio" as twilio_provider <<Container>>
+    rectangle "Deferral Queue\n[Message Queue]\nScheduled message storage" as deferral_queue <<Container>>
 }
 
-System_Ext(sendgrid, "SendGrid API")
-System_Ext(twilio, "Twilio API")
-System_Ext(preference_db, "Preference DB")
-System_Ext(template_store, "Template Store")
+rectangle "SendGrid API\n<<External System>>" as sendgrid <<External>>
+rectangle "Twilio API\n<<External System>>" as twilio <<External>>
+rectangle "Preference DB\n<<External System>>" as preference_db <<External>>
+rectangle "Template Store\n<<External System>>" as template_store <<External>>
 
-Rel(app, core, "Sends via", "ICommunicationProvider")
-Rel(core, abstractions, "Uses contracts")
-Rel(sendgrid_provider, abstractions, "Implements", "ISendEmailProvider")
-Rel(twilio_provider, abstractions, "Implements", "ISendSmsProvider")
+app --> core : Sends via\n(ICommunicationProvider)
+core --> abstractions : Uses contracts
+sendgrid_provider --> abstractions : Implements\n(ISendEmailProvider)
+twilio_provider --> abstractions : Implements\n(ISendSmsProvider)
 
-Rel(core, preference_db, "Reads preferences", "SQL/API")
-Rel(core, template_store, "Loads templates", "Files/DB")
-Rel(core, sendgrid_provider, "Sends email", "ISendEmailProvider")
-Rel(core, twilio_provider, "Sends SMS", "ISendSmsProvider")
-Rel(core, deferral_queue, "Enqueues deferred", "Message Queue")
+core --> preference_db : Reads preferences\n(SQL/API)
+core --> template_store : Loads templates\n(Files/DB)
+core --> sendgrid_provider : Sends email\n(ISendEmailProvider)
+core --> twilio_provider : Sends SMS\n(ISendSmsProvider)
+core --> deferral_queue : Enqueues deferred\n(Message Queue)
 
-Rel(sendgrid_provider, sendgrid, "HTTPS", "SendGrid SDK")
-Rel(twilio_provider, twilio, "HTTPS", "Twilio SDK")
-Rel_Back(user, sendgrid, "Email")
-Rel_Back(user, twilio, "SMS")
+sendgrid_provider --> sendgrid : HTTPS\n(SendGrid SDK)
+twilio_provider --> twilio : HTTPS\n(Twilio SDK)
+user <-- sendgrid : Email
+user <-- twilio : SMS
 
 @enduml
 ```
@@ -102,43 +124,49 @@ Rel_Back(user, twilio, "SMS")
 
 ```plantuml
 @startuml C4_Component
-!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+skinparam rectangle {
+    BackgroundColor<<Component>> #85BBF0
+    FontColor<<Component>> #000000
+    BackgroundColor<<ExternalContainer>> #B3B3B3
+    FontColor<<ExternalContainer>> #000000
+    BorderColor Black
+}
 
 title Component Diagram - Communications Core
 
-Container_Boundary(core, "Communications Core") {
-    Component(provider, "Communication Provider", "Facade", "Main entry point")
-    Component(processor, "Central Processor", "Orchestrator", "Multi-channel coordinator")
-    Component(preference_mgr, "Preference Manager", "Service", "User preference lookup")
-    Component(enhancement_mgr, "Enhancement Manager", "Service", "Data enrichment coordinator")
-    Component(composer_factory, "Composer Factory", "Factory", "Creates channel composers")
-    Component(email_composer, "Email Composer", "Strategy", "Email message generation")
-    Component(sms_composer, "SMS Composer", "Strategy", "SMS message generation")
-    Component(template_provider, "Template Provider", "Service", "Template loading")
-    Component(deferral_mgr, "Deferral Manager", "Service", "Scheduled delivery")
+rectangle "Communications Core" {
+    rectangle "Communication Provider\n[Facade]\nMain entry point" as provider <<Component>>
+    rectangle "Central Processor\n[Orchestrator]\nMulti-channel coordinator" as processor <<Component>>
+    rectangle "Preference Manager\n[Service]\nUser preference lookup" as preference_mgr <<Component>>
+    rectangle "Enhancement Manager\n[Service]\nData enrichment coordinator" as enhancement_mgr <<Component>>
+    rectangle "Composer Factory\n[Factory]\nCreates channel composers" as composer_factory <<Component>>
+    rectangle "Email Composer\n[Strategy]\nEmail message generation" as email_composer <<Component>>
+    rectangle "SMS Composer\n[Strategy]\nSMS message generation" as sms_composer <<Component>>
+    rectangle "Template Provider\n[Service]\nTemplate loading" as template_provider <<Component>>
+    rectangle "Deferral Manager\n[Service]\nScheduled delivery" as deferral_mgr <<Component>>
 }
 
-Container_Ext(abstractions, "Abstractions", "Interfaces")
-Container_Ext(email_provider, "Email Provider", "ISendEmailProvider")
-Container_Ext(sms_provider, "SMS Provider", "ISendSmsProvider")
-Container_Ext(enhancement_providers, "Enhancement Providers", "[Communication] attributed")
+rectangle "Abstractions\n[Interfaces]" as abstractions <<ExternalContainer>>
+rectangle "Email Provider\n[ISendEmailProvider]" as email_provider <<ExternalContainer>>
+rectangle "SMS Provider\n[ISendSmsProvider]" as sms_provider <<ExternalContainer>>
+rectangle "Enhancement Providers\n[[Communication] attributed]" as enhancement_providers <<ExternalContainer>>
 
-Rel(provider, processor, "Delegates to")
-Rel(processor, preference_mgr, "Looks up preferences")
-Rel(processor, enhancement_mgr, "Enhances data")
-Rel(processor, composer_factory, "Gets composers")
-Rel(processor, deferral_mgr, "Defers requests")
+provider --> processor : Delegates to
+processor --> preference_mgr : Looks up preferences
+processor --> enhancement_mgr : Enhances data
+processor --> composer_factory : Gets composers
+processor --> deferral_mgr : Defers requests
 
-Rel(composer_factory, email_composer, "Creates")
-Rel(composer_factory, sms_composer, "Creates")
+composer_factory --> email_composer : Creates
+composer_factory --> sms_composer : Creates
 
-Rel(email_composer, template_provider, "Loads templates")
-Rel(email_composer, email_provider, "Sends via")
-Rel(sms_composer, template_provider, "Loads templates")
-Rel(sms_composer, sms_provider, "Sends via")
+email_composer --> template_provider : Loads templates
+email_composer --> email_provider : Sends via
+sms_composer --> template_provider : Loads templates
+sms_composer --> sms_provider : Sends via
 
-Rel(enhancement_mgr, enhancement_providers, "Discovers via attributes")
-Rel(processor, abstractions, "Uses contracts")
+enhancement_mgr --> enhancement_providers : Discovers via attributes
+processor --> abstractions : Uses contracts
 
 @enduml
 ```

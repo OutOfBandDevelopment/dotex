@@ -6,21 +6,26 @@ namespace OoBDev.Docs.Tests;
 
 public sealed partial class MarkdownDocument
 {
-    private MarkdownDocument(string path, IReadOnlyList<PlantUmlBlock> blocks, IReadOnlyList<(int Line, string Text)> prose)
+    private MarkdownDocument(string path, IReadOnlyList<PlantUmlBlock> blocks, IReadOnlyList<(int Line, string Text)> prose, IReadOnlyList<(int Line, string Text)> otherFenced)
     {
         Path = path;
         Blocks = blocks;
         Prose = prose;
+        OtherFenced = otherFenced;
     }
 
     public string Path { get; }
     public IReadOnlyList<PlantUmlBlock> Blocks { get; }
     public IReadOnlyList<(int Line, string Text)> Prose { get; }
 
+    /// <summary>Lines inside fenced blocks that are not PlantUML (code, directory trees, text).</summary>
+    public IReadOnlyList<(int Line, string Text)> OtherFenced { get; }
+
     public static MarkdownDocument Parse(string path)
     {
         var blocks = new List<PlantUmlBlock>();
         var prose = new List<(int, string)>();
+        var otherFenced = new List<(int, string)>();
         string? fence = null;
         var language = "";
         var start = 0;
@@ -54,9 +59,13 @@ public sealed partial class MarkdownDocument
             else
             {
                 body.Add(text);
+                if (language != "plantuml")
+                {
+                    otherFenced.Add((number, text));
+                }
             }
         }
-        return new MarkdownDocument(path, blocks, prose);
+        return new MarkdownDocument(path, blocks, prose, otherFenced);
     }
 
     public static IEnumerable<string> Find(string root, string relative)

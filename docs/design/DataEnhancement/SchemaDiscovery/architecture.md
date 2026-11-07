@@ -25,43 +25,30 @@ Schema discovery and translation system that allows runtime introspection of dat
 
 ## System Architecture
 
+```plantuml
+@startuml
+skinparam rectangle {
+  BackgroundColor White
+  BorderColor #444444
+}
+rectangle "Schema Discovery Service" as SDS <<container>> {
+  rectangle "Runtime Inference\n\n- IDataContainer → ICanonicalSchema\n- CLR Type → ICanonicalSchema" as Inf <<component>>
+  rectangle "Schema Translation\n\nXSD ←→ Canonical ←→ JSON Schema\n↕\nYAML Schema\n↕\nOpenAPI Schema" as Trans <<component>>
+  rectangle "ISchemaProvider Abstraction Layer" as Layer <<component>> {
+    rectangle "XSD Provider\nParse\nFormat\nValidate" as PX
+    rectangle "JSON Schema Provider\nParse\nFormat\nValidate" as PJ
+    rectangle "YAML Schema Provider\nParse\nFormat\nValidate" as PY
+    rectangle "OpenAPI Provider\nParse\nFormat\nValidate" as PO
+  }
+  rectangle "Canonical Schema Representation\n\nICanonicalSchema (format-agnostic internal representation)\n- ISchemaType hierarchy (object, array, string, number, etc.)\n- Constraints (required, min/max, patterns, enum values)\n- Metadata (title, description, examples)\n- References (definitions, $ref, allOf, oneOf, anyOf)" as Canon <<component>>
+  Inf -[hidden]right- Trans
+  Inf -[hidden]down- Layer
+  Layer -[hidden]down- Canon
+}
+@enduml
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    Schema Discovery Service                          │
-│                                                                       │
-│  ┌──────────────────────┐      ┌──────────────────────────────────┐│
-│  │ Runtime Inference    │      │   Schema Translation             ││
-│  │                      │      │                                  ││
-│  │ - IDataContainer →   │      │  XSD ←→ Canonical ←→ JSON Schema││
-│  │   ICanonicalSchema   │      │                ↕                 ││
-│  │ - CLR Type →         │      │           YAML Schema            ││
-│  │   ICanonicalSchema   │      │                ↕                 ││
-│  │                      │      │          OpenAPI Schema          ││
-│  └──────────────────────┘      └──────────────────────────────────┘│
-│                                                                       │
-│  ┌─────────────────────────────────────────────────────────────────┐│
-│  │             ISchemaProvider Abstraction Layer                   ││
-│  │                                                                  ││
-│  │  ┌───────────┐  ┌────────────┐  ┌─────────────┐  ┌──────────┐ ││
-│  │  │    XSD    │  │JSON Schema │  │YAML Schema  │  │  OpenAPI │ ││
-│  │  │ Provider  │  │  Provider  │  │  Provider   │  │ Provider │ ││
-│  │  └───────────┘  └────────────┘  └─────────────┘  └──────────┘ ││
-│  │      Parse           Parse           Parse           Parse      ││
-│  │      Format          Format          Format          Format    ││
-│  │      Validate        Validate        Validate        Validate  ││
-│  └─────────────────────────────────────────────────────────────────┘│
-│                                                                       │
-│  ┌─────────────────────────────────────────────────────────────────┐│
-│  │            Canonical Schema Representation                       ││
-│  │                                                                  ││
-│  │  ICanonicalSchema (format-agnostic internal representation)     ││
-│  │  - ISchemaType hierarchy (object, array, string, number, etc.)  ││
-│  │  - Constraints (required, min/max, patterns, enum values)       ││
-│  │  - Metadata (title, description, examples)                      ││
-│  │  - References (definitions, $ref, allOf, oneOf, anyOf)          ││
-│  └─────────────────────────────────────────────────────────────────┘│
-└─────────────────────────────────────────────────────────────────────┘
-```
+
+*Figure 1 — Schema Discovery Service architecture*
 
 ---
 
@@ -390,18 +377,23 @@ public interface ISchemaDiscoveryService
 
 Similar to IPathNavigator, each schema format is a provider.
 
+```plantuml
+@startuml
+rectangle "ISchemaProvider" as P
+rectangle "XSD\nProvider" as A
+rectangle "JSON\nSchema" as B
+rectangle "YAML\nSchema" as C
+rectangle "OpenAPI\nSchema" as D
+rectangle "Custom\nProvider" as E
+P <|-- A
+P <|-- B
+P <|-- C
+P <|-- D
+P <|-- E
+@enduml
 ```
-┌─────────────────┐
-│ ISchemaProvider │
-└────────┬────────┘
-         │
-    ┌────┴────┬────────────┬──────────────┬────────────┐
-    │         │            │              │            │
-┌───▼───┐ ┌──▼───┐ ┌──────▼──────┐ ┌─────▼──────┐ ┌──▼──────┐
-│  XSD  │ │ JSON │ │    YAML     │ │  OpenAPI   │ │ Custom  │
-│Provider│ │Schema│ │   Schema    │ │   Schema   │ │Provider │
-└────────┘ └──────┘ └─────────────┘ └────────────┘ └─────────┘
-```
+
+*Figure 2 — ISchemaProvider implementations*
 
 ### 2. Value Object Pattern (Canonical Schema)
 
@@ -425,90 +417,64 @@ Traverse schema tree for analysis, documentation generation, etc.
 
 ### Schema Discovery Flow
 
+```plantuml
+@startuml
+rectangle "IDataContainer\n(runtime data)" as A
+rectangle "Schema Inference\n- Properties\n- Types\n- Constraints" as B
+rectangle "ICanonicalSchema" as C
+rectangle "ISchemaProvider\n.Format()" as D
+rectangle "Schema Document\n(string)" as E
+A --> B
+B --> C
+C --> D
+D --> E
+note right of B : Analyze data structure\nDetermine types\nExtract constraints
+note right of C : Internal representation
+note right of D : Format as XSD, JSON Schema, etc.
+note right of E : XSD, JSON Schema, YAML Schema
+@enduml
 ```
-┌─────────────────┐
-│ IDataContainer  │
-│ (runtime data)  │
-└────────┬────────┘
-         │
-         ▼
-┌─────────────────────┐
-│ Schema Inference    │  Analyze data structure
-│ - Properties        │  Determine types
-│ - Types             │  Extract constraints
-│ - Constraints       │
-└────────┬────────────┘
-         │
-         ▼
-┌─────────────────────┐
-│ ICanonicalSchema    │  Internal representation
-└────────┬────────────┘
-         │
-         ▼
-┌─────────────────────┐
-│ ISchemaProvider     │  Format as XSD, JSON Schema, etc.
-│ .Format()           │
-└────────┬────────────┘
-         │
-         ▼
-┌─────────────────────┐
-│ Schema Document     │  XSD, JSON Schema, YAML Schema
-│ (string)            │
-└─────────────────────┘
-```
+
+*Figure 3 — Schema inference flow*
 
 ### Schema Translation Flow
 
+```plantuml
+@startuml
+rectangle "XSD Document" as A
+rectangle "XsdSchemaProvider\n.Parse()" as B
+rectangle "ICanonicalSchema" as C
+rectangle "JsonSchemaProvider\n.Format()" as D
+rectangle "JSON Schema Document" as E
+A --> B
+B --> C
+C --> D
+D --> E
+note right of A : Source format
+note right of B : Parse XSD → Canonical
+note right of C : Internal representation
+note right of D : Format Canonical → JSON Schema
+note right of E : Target format
+@enduml
 ```
-┌─────────────────────┐
-│ XSD Document        │  Source format
-└────────┬────────────┘
-         │
-         ▼
-┌─────────────────────┐
-│ XsdSchemaProvider   │  Parse XSD → Canonical
-│ .Parse()            │
-└────────┬────────────┘
-         │
-         ▼
-┌─────────────────────┐
-│ ICanonicalSchema    │  Internal representation
-└────────┬────────────┘
-         │
-         ▼
-┌─────────────────────┐
-│ JsonSchemaProvider  │  Format Canonical → JSON Schema
-│ .Format()           │
-└────────┬────────────┘
-         │
-         ▼
-┌─────────────────────┐
-│ JSON Schema Document│  Target format
-└─────────────────────┘
-```
+
+*Figure 4 — Schema translation flow (XSD to JSON Schema)*
 
 ### Runtime Validation Flow
 
+```plantuml
+@startuml
+rectangle "Data Instance" as A
+rectangle "ICanonicalSchema" as B
+rectangle "ISchemaProvider\n.Validate()" as C
+rectangle "ValidationResult\n- IsValid\n- Errors\n- Warnings" as D
+A --> C
+B --> C
+C --> D
+@enduml
 ```
-┌─────────────────┐     ┌─────────────────┐
-│ Data Instance   │     │ ICanonicalSchema│
-└────────┬────────┘     └────────┬────────┘
-         │                       │
-         └───────────┬───────────┘
-                     ▼
-         ┌─────────────────────┐
-         │ ISchemaProvider     │
-         │ .Validate()         │
-         └────────┬────────────┘
-                  │
-                  ▼
-         ┌─────────────────────┐
-         │ ValidationResult    │
-         │ - IsValid           │
-         │ - Errors            │
-         │ - Warnings          │
-         └─────────────────────┘
-```
+
+*Figure 5 — Schema validation flow*
 
 ---
 

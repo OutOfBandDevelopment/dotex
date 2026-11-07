@@ -36,29 +36,27 @@ The Test Data Loader provides infrastructure for creating, loading, and managing
 
 ## System Context
 
+```plantuml
+@startuml
+skinparam rectangle {
+  BackgroundColor White
+  BorderColor #444444
+}
+rectangle "Test Execution Layer\n(MSTest, xUnit, NUnit)" as Exec <<container>>
+rectangle "Test Data Loader" as TDL <<container>> {
+  rectangle "ITestData\nLoader" as L <<component>>
+  rectangle "ITestData\nCleanup" as C <<component>>
+  rectangle "ITestDataBuilder" as B <<component>>
+}
+rectangle "Isolated Test Database\n(SQL Server, PostgreSQL, In-Memory, MongoDB)" as DB <<container>>
+Exec --> TDL : Uses
+TDL --> DB : Persists to
+@enduml
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    Test Execution Layer                      │
-│  (MSTest, xUnit, NUnit)                                     │
-└──────────────────────────┬──────────────────────────────────┘
-                           │
-                           │ Uses
-                           ▼
-┌─────────────────────────────────────────────────────────────┐
-│                  Test Data Loader                            │
-│  ┌──────────────┐  ┌────────────┐  ┌────────────────────┐  │
-│  │  ITestData   │  │  ITestData │  │  ITestDataBuilder  │  │
-│  │  Loader      │  │  Cleanup   │  │                    │  │
-│  └──────────────┘  └────────────┘  └────────────────────┘  │
-└──────────────────────────┬──────────────────────────────────┘
-                           │
-                           │ Persists to
-                           ▼
-┌─────────────────────────────────────────────────────────────┐
-│                  Isolated Test Database                      │
-│  (SQL Server, PostgreSQL, In-Memory, MongoDB)               │
-└─────────────────────────────────────────────────────────────┘
 
+*Figure 1 — Test Data Loader system context*
+
+```
 Data Sources:
 ├── Scenario Templates (JSON/YAML)
 ├── Builder API (C# fluent)
@@ -345,57 +343,27 @@ public class BogusGenerator : ITestDataGenerator
 
 ### Scenario Loading Sequence
 
+```plantuml
+@startuml
+participant "Test\nMethod" as Test
+participant "TestData\nLoader" as Loader
+participant "Scenario\nProvider" as Provider
+
+Test -> Loader : LoadScenarioAsync\n("OrderProcessing")
+Loader -> Provider : GetScenario
+Provider --> Loader : Scenario JSON
+note over Loader : Create Unique Database
+note over Loader : Parse Scenario
+note over Loader : Load Entities
+note over Loader : Register Cleanup
+Loader --> Test : TestDataSet
+note over Test : [Test executes]
+Test -> Loader : CleanupAsync
+note over Loader : Drop Database
+@enduml
 ```
-┌─────────┐          ┌──────────────┐          ┌────────────┐
-│  Test   │          │  TestData    │          │ Scenario   │
-│ Method  │          │  Loader      │          │ Provider   │
-└────┬────┘          └──────┬───────┘          └─────┬──────┘
-     │                      │                        │
-     │ LoadScenarioAsync    │                        │
-     │ ("OrderProcessing")  │                        │
-     ├─────────────────────>│                        │
-     │                      │                        │
-     │                      │ GetScenario            │
-     │                      ├───────────────────────>│
-     │                      │                        │
-     │                      │  Scenario JSON         │
-     │                      │<───────────────────────┤
-     │                      │                        │
-     │                      ▼                        │
-     │           ┌─────────────────┐                 │
-     │           │ Create Unique   │                 │
-     │           │ Database        │                 │
-     │           └────────┬────────┘                 │
-     │                    │                          │
-     │                    ▼                          │
-     │           ┌─────────────────┐                 │
-     │           │ Parse Scenario  │                 │
-     │           └────────┬────────┘                 │
-     │                    │                          │
-     │                    ▼                          │
-     │           ┌─────────────────┐                 │
-     │           │ Load Entities   │                 │
-     │           └────────┬────────┘                 │
-     │                    │                          │
-     │                    ▼                          │
-     │           ┌─────────────────┐                 │
-     │           │ Register        │                 │
-     │           │ Cleanup         │                 │
-     │           └────────┬────────┘                 │
-     │                    │                          │
-     │   TestDataSet      │                          │
-     │<───────────────────┤                          │
-     │                    │                          │
-     │  [Test executes]   │                          │
-     │                    │                          │
-     │  CleanupAsync      │                          │
-     ├───────────────────>│                          │
-     │                    │                          │
-     │                    ▼                          │
-     │           ┌─────────────────┐                 │
-     │           │ Drop Database   │                 │
-     │           └─────────────────┘                 │
-```
+
+*Figure 2 — Scenario loading sequence*
 
 ---
 

@@ -65,6 +65,14 @@ public class DocsTests
 
     [TestMethod]
     [TestCategory(TestCategories.Unit)]
+    public void Diagrams_AreNotAsciiArt()
+    {
+        var root = RepoRoot();
+        AssertNoProblems(Documents(root).SelectMany(d => DocsValidator.CheckNoAsciiDiagrams(root, d)));
+    }
+
+    [TestMethod]
+    [TestCategory(TestCategories.Unit)]
     public void Links_Relative_Resolve()
     {
         var root = RepoRoot();

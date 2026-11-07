@@ -10,35 +10,28 @@
 
 The Handlebars Template Provider implements the **ITemplateProvider** abstraction using Handlebars.NET, enabling dynamic text generation with lazy-evaluated data from **IDataContainer**.
 
+```plantuml
+@startuml
+skinparam shadowing false
+skinparam rectangle {
+  BackgroundColor White
+  BorderColor #444444
+}
+rectangle "Consumer Application\n(Email, Report, Document Generation)" as Consumer <<Component>>
+rectangle "ITemplateProvider Interface\n- RenderAsync(template, data)\n- CompileAsync(template) -> ICompiledTemplate" as Iface <<Component>>
+rectangle "HandlebarsTemplateProvider\n- Handlebars.NET integration\n- IDataContainer adapter\n- Custom helper registration\n- Template compilation cache" as Provider <<Component>>
+rectangle "Handlebars\nEngine" as Engine <<Component>>
+rectangle "IDataContainer\nAdapter" as Adapter <<Component>>
+rectangle "Helper\nRegistry" as Registry <<Component>>
+Consumer --> Iface
+Iface --> Provider
+Provider --> Engine
+Provider --> Adapter
+Provider --> Registry
+@enduml
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                     Consumer Application                    │
-│              (Email, Report, Document Generation)           │
-└────────────────────┬────────────────────────────────────────┘
-                     │
-                     ↓
-┌─────────────────────────────────────────────────────────────┐
-│              ITemplateProvider Interface                    │
-│  - RenderAsync(template, data)                             │
-│  - CompileAsync(template) → ICompiledTemplate              │
-└────────────────────┬────────────────────────────────────────┘
-                     │
-                     ↓
-┌─────────────────────────────────────────────────────────────┐
-│         HandlebarsTemplateProvider                          │
-│  - Handlebars.NET integration                              │
-│  - IDataContainer adapter                                   │
-│  - Custom helper registration                               │
-│  - Template compilation cache                               │
-└────────────────────┬────────────────────────────────────────┘
-                     │
-         ┌───────────┼───────────┐
-         ↓           ↓           ↓
-┌─────────────┐ ┌─────────────┐ ┌─────────────┐
-│  Handlebars │ │IDataContainer│ │   Helper    │
-│   Engine    │ │   Adapter   │ │  Registry   │
-└─────────────┘ └─────────────┘ └─────────────┘
-```
+
+*Figure 1 — Handlebars provider overview*
 
 ---
 
@@ -293,50 +286,29 @@ public class HandlebarsCompiledTemplate : ICompiledTemplate
 
 ### Sequence: Render Template with IDataContainer
 
+```plantuml
+@startuml
+participant Consumer
+participant "Handlebars\nProvider" as Provider
+participant "Adapter\nProxy" as Proxy
+participant Container
+participant "Provider" as DataProvider
+Consumer -> Provider : RenderAsync()
+Provider -> Proxy : Adapt(container)
+Proxy --> Provider : DataContainerProxy
+note over Provider : Compile(template)\n(cached)
+note over Provider : Render(proxy)\n(Handlebars eval)
+Provider -> Proxy : Access {{Customer.FirstName}}
+Proxy -> Container : Evaluate(path)
+Container -> DataProvider : ProvideAsync()
+DataProvider --> Container : Customer data
+Container --> Proxy : "John"
+Proxy --> Provider : "John" (cached)
+Provider --> Consumer : Rendered text
+@enduml
 ```
-┌─────────┐      ┌──────────────┐      ┌──────────┐      ┌──────────┐      ┌──────────┐
-│Consumer │      │  Handlebars  │      │  Adapter │      │Container │      │ Provider │
-└────┬────┘      │   Provider   │      │  Proxy   │      └────┬─────┘      └────┬─────┘
-     │           └──────┬───────┘      └────┬─────┘            │                 │
-     │                  │                   │                  │                 │
-     │ RenderAsync()    │                   │                  │                 │
-     ├─────────────────>│                   │                  │                 │
-     │                  │                   │                  │                 │
-     │                  │ Adapt(container)  │                  │                 │
-     │                  ├──────────────────>│                  │                 │
-     │                  │                   │                  │                 │
-     │                  │ DataContainerProxy│                  │                 │
-     │                  │<──────────────────┤                  │                 │
-     │                  │                   │                  │                 │
-     │                  │ Compile(template) │                  │                 │
-     │                  │ (cached)          │                  │                 │
-     │                  │                   │                  │                 │
-     │                  │ Render(proxy)     │                  │                 │
-     │                  │ (Handlebars eval) │                  │                 │
-     │                  │                   │                  │                 │
-     │                  │ Access {{Customer.FirstName}}       │                 │
-     │                  ├──────────────────>│                  │                 │
-     │                  │                   │                  │                 │
-     │                  │                   │ Evaluate(path)   │                 │
-     │                  │                   ├─────────────────>│                 │
-     │                  │                   │                  │                 │
-     │                  │                   │                  │ ProvideAsync()  │
-     │                  │                   │                  ├────────────────>│
-     │                  │                   │                  │                 │
-     │                  │                   │                  │ Customer data   │
-     │                  │                   │                  │<────────────────┤
-     │                  │                   │                  │                 │
-     │                  │                   │ "John"           │                 │
-     │                  │                   │<─────────────────┤                 │
-     │                  │                   │                  │                 │
-     │                  │ "John" (cached)   │                  │                 │
-     │                  │<──────────────────┤                  │                 │
-     │                  │                   │                  │                 │
-     │                  │ Rendered text     │                  │                 │
-     │ Rendered text    │                   │                  │                 │
-     │<─────────────────┤                   │                  │                 │
-     │                  │                   │                  │                 │
-```
+
+*Figure 2 — Render template with IDataContainer sequence*
 
 **Key Points:**
 1. Template rendering starts with RenderAsync call

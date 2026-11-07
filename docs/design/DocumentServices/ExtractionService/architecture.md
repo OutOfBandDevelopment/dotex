@@ -10,34 +10,39 @@
 
 The Document Extraction Service implements a **Provider Pattern** with **Context-Based Extraction** for extracting text, metadata, images, and tables from documents using multiple extraction engines. Applications provide operational context that providers use to optimize extraction behavior.
 
+```plantuml
+@startuml
+skinparam rectangle {
+  BackgroundColor White
+  BorderColor #444444
+}
+rectangle "Application Layer\n(Search Indexer, Content Analyzer, etc.)" as App <<layer>>
+rectangle "IDocumentExtractionService\n- ExtractTextAsync(content, format, context)\n- ExtractMetadataAsync(content, format, context)\n- ExtractImagesAsync(content, format, context)\n- ExtractTablesAsync(content, format, context)" as Svc <<service>>
+rectangle "Tika\nProvider" as P1 <<provider>>
+rectangle "iText\nProvider" as P2 <<provider>>
+rectangle "PDFSharp\nProvider" as P3 <<provider>>
+rectangle "OpenXML\nProvider" as P4 <<provider>>
+rectangle "Tesseract\nOCR" as P5 <<provider>>
+rectangle "Universal\nFormat" as E1 <<capability>>
+rectangle "PDF Text\nExtract" as E2 <<capability>>
+rectangle "PDF Meta\nExtract" as E3 <<capability>>
+rectangle "Office Fmt\nExtract" as E4 <<capability>>
+rectangle "Image Text\n(OCR)" as E5 <<capability>>
+App --> Svc : ExtractTextAsync(content, format, context)
+Svc --> P1
+Svc --> P2
+Svc --> P3
+Svc --> P4
+Svc --> P5
+P1 --> E1
+P2 --> E2
+P3 --> E3
+P4 --> E4
+P5 --> E5
+@enduml
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                   Application Layer                          │
-│         (Search Indexer, Content Analyzer, etc.)             │
-└────────────────────┬────────────────────────────────────────┘
-                     │ ExtractTextAsync(content, format, context)
-                     ↓
-┌─────────────────────────────────────────────────────────────┐
-│           IDocumentExtractionService                         │
-│  - ExtractTextAsync(content, format, context)                │
-│  - ExtractMetadataAsync(content, format, context)            │
-│  - ExtractImagesAsync(content, format, context)              │
-│  - ExtractTablesAsync(content, format, context)              │
-└────────────────────┬────────────────────────────────────────┘
-                     │
-         ┌───────────┼────────────┬────────────┬────────────┐
-         ↓           ↓            ↓            ↓            ↓
-┌──────────────┐ ┌────────┐ ┌─────────┐ ┌──────────┐ ┌──────────┐
-│    Tika      │ │ iText  │ │PDFSharp │ │ OpenXML  │ │Tesseract │
-│  Provider    │ │Provider│ │ Provider│ │ Provider │ │   OCR    │
-└──────┬───────┘ └────┬───┘ └────┬────┘ └────┬─────┘ └────┬─────┘
-       │              │          │            │            │
-       ↓              ↓          ↓            ↓            ↓
-┌──────────────┐ ┌────────┐ ┌─────────┐ ┌──────────┐ ┌──────────┐
-│ Universal    │ │PDF Text│ │PDF Meta │ │Office Fmt│ │Image Text│
-│ Format       │ │Extract │ │Extract  │ │Extract   │ │  (OCR)   │
-└──────────────┘ └────────┘ └─────────┘ └──────────┘ └──────────┘
-```
+
+*Figure 1 — Extraction service, providers and capabilities*
 
 ---
 
@@ -571,35 +576,24 @@ public class OpenXmlExtractionProvider : IDocumentExtractionProvider
 
 ### Sequence: Text Extraction with OCR Fallback
 
+```plantuml
+@startuml
+participant "Application" as App
+participant "ExtractionService" as Svc
+participant "Provider" as Prov
+participant "OcrService" as Ocr
+App -> Svc : ExtractText(...)
+Svc -> Prov : SelectProvider()
+Svc -> Prov : ExtractAsync()
+Prov --> Svc : Extraction result
+Svc -> Svc : IsScanned? (Yes)
+Svc -> Ocr : ExtractTextAsync()
+Ocr --> Svc : OCR result
+Svc --> App : ExtractionResult
+@enduml
 ```
-┌───────────┐     ┌──────────────────┐     ┌──────────┐     ┌──────────┐
-│Application│     │ExtractionService │     │ Provider │     │OcrService│
-└─────┬─────┘     └────────┬─────────┘     └─────┬────┘     └─────┬────┘
-      │                    │                      │                 │
-      │ ExtractText(...)   │                      │                 │
-      ├───────────────────>│                      │                 │
-      │                    │                      │                 │
-      │                    │ SelectProvider()     │                 │
-      │                    ├─────────────────────>│                 │
-      │                    │                      │                 │
-      │                    │ ExtractAsync()       │                 │
-      │                    ├─────────────────────>│                 │
-      │                    │                      │                 │
-      │                    │ Extraction result    │                 │
-      │                    │<─────────────────────┤                 │
-      │                    │                      │                 │
-      │                    │ IsScanned? (Yes)     │                 │
-      │                    │                      │                 │
-      │                    │ ExtractTextAsync()   │                 │
-      │                    ├─────────────────────────────────────────>│
-      │                    │                      │                 │
-      │                    │ OCR result           │                 │
-      │                    │<─────────────────────────────────────────┤
-      │                    │                      │                 │
-      │ ExtractionResult   │                      │                 │
-      │<───────────────────┤                      │                 │
-      │                    │                      │                 │
-```
+
+*Figure 2 — Extraction data flow*
 
 ---
 

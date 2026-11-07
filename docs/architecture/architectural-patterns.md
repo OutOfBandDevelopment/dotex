@@ -46,17 +46,23 @@ Organize the codebase into distinct layers with clear responsibilities and unidi
 ### Implementation
 
 **Layer Structure:**
+```plantuml
+@startuml
+skinparam rectangle {
+  BackgroundColor White
+  BorderColor #444444
+}
+rectangle "Common (Orchestration Layer)\nAll-in-one packages, service wiring" <<layer>> as common
+rectangle "Framework (Domain Libraries)\nCore business logic, abstractions" <<layer>> as framework
+rectangle "Extensions (System Extensions)\nCustom .NET extensions" <<layer>> as extensions
+rectangle "ExternalServices (Integrations)\nThird-party service wrappers" <<layer>> as external
+common -[hidden]down- framework
+framework -[hidden]down- extensions
+extensions -[hidden]down- external
+@enduml
 ```
-┌─────────────────────────────────────┐
-│   Common (Orchestration Layer)     │  ← All-in-one packages, service wiring
-├─────────────────────────────────────┤
-│   Framework (Domain Libraries)     │  ← Core business logic, abstractions
-├─────────────────────────────────────┤
-│   Extensions (System Extensions)   │  ← Custom .NET extensions
-├─────────────────────────────────────┤
-│  ExternalServices (Integrations)   │  ← Third-party service wrappers
-└─────────────────────────────────────┘
-```
+
+*Figure 1 — Layer structure*
 
 **Dependency Rule:** Dependencies flow downward only.
 

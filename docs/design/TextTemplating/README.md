@@ -29,35 +29,30 @@
 
 ## Architecture Layers
 
+```plantuml
+@startuml
+skinparam shadowing false
+skinparam rectangle {
+  BackgroundColor White
+  BorderColor #444444
+}
+rectangle "Consumer Applications\nEmail | Reports | Documents | SMS | Notifications" as Consumers <<Component>>
+rectangle "ITemplateEngine\n- ApplyAsync(templateName, data)\n- Get(templateName)\n- GetAll(templateName)" as Engine <<Component>>
+rectangle "XSLT Provider\n(Existing)" as Xslt <<Component>>
+rectangle "Handlebars Provider\n(NEW)" as Hbs <<Component>>
+rectangle "Liquid Provider\n(Future)" as Liquid <<Component>>
+rectangle "IDataContainer\nIntegration (NEW)" as DC <<Component>>
+rectangle "Template Sources\nFile (Existing) | Database (NEW)" as Sources <<Component>>
+Consumers --> Engine
+Engine --> Xslt
+Engine --> Hbs
+Engine --> Liquid
+Hbs --> DC
+DC --> Sources
+@enduml
 ```
-┌──────────────────────────────────────────────────────────────┐
-│                    Consumer Applications                      │
-│  Email | Reports | Documents | SMS | Notifications           │
-└────────────────┬──────────────┬──────────────────────────────┘
-                 ↓              ↓
-┌─────────────────────────────────────────────────────────────┐
-│              ITemplateEngine                                │
-│  - ApplyAsync(templateName, data)                           │
-│  - Get(templateName)                                        │
-│  - GetAll(templateName)                                     │
-└────────────────┬──────────────┬──────────────┬──────────────┘
-                 ↓              ↓              ↓
-      ┌──────────────┐ ┌──────────────┐ ┌──────────────┐
-      │    XSLT      │ │  Handlebars  │ │   Liquid     │
-      │  Provider    │ │   Provider   │ │  Provider    │
-      │  (Existing)  │ │    (NEW)     │ │  (Future)    │
-      └──────────────┘ └──────┬───────┘ └──────────────┘
-                              ↓
-                   ┌────────────────────┐
-                   │ IDataContainer     │
-                   │ Integration (NEW)  │
-                   └────────────────────┘
-                              ↓
-         ┌──────────────────────────────────────┐
-         │       Template Sources               │
-         │  File (Existing) | Database (NEW)    │
-         └──────────────────────────────────────┘
-```
+
+*Figure 1 — Text templating architecture layers*
 
 **Key Principle:** Extend existing OoBDev template engine with industry-standard providers and enhanced storage/
 

@@ -25,53 +25,29 @@ Pluggable provider architecture for lazy-loading data from diverse sources (data
 
 ## System Architecture
 
+```plantuml
+@startuml
+skinparam rectangle {
+  BackgroundColor White
+  BorderColor #444444
+}
+rectangle "IDataContainer" as Container <<container>> {
+  rectangle "IDataProviderRegistry\n\nRegistered Providers:\n""Customer/*"" → DatabaseProvider\n""Customer/Orders/**"" → OrderServiceProvider (higher priority)\n""Config/**"" → ConfigurationProvider\n""Weather/**"" → ApiProvider\n""**"" → DefaultProvider (fallback)\n\nFindProvider(path) → IDataProvider" as Registry <<component>>
+  rectangle "IDataNode (Lazy Loading)\n\n- Value (lazy, cached)\n- GetValueAsync<T>()\n- Provider selection on first access\n- Result caching after first load" as Node <<component>>
+  Registry --> Node
+}
+rectangle "IDataProvider Implementations\n\n- DatabaseProvider\n- ConfigProvider\n- StaticProvider" as ImplA <<provider>>
+rectangle "IDataProvider Implementations\n\n- ApiProvider\n- FileProvider\n- CustomProvider" as ImplB <<provider>>
+rectangle "Data Source\n(Database, EF)" as SrcA <<source>>
+rectangle "Data Source\n(HTTP API, Files)" as SrcB <<source>>
+Container --> ImplA
+Container --> ImplB
+ImplA --> SrcA
+ImplB --> SrcB
+@enduml
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                         IDataContainer                                   │
-│                                                                           │
-│  ┌──────────────────────────────────────────────────────────────────┐  │
-│  │                    IDataProviderRegistry                          │  │
-│  │                                                                    │  │
-│  │  Registered Providers:                                            │  │
-│  │  ┌──────────────────────────────────────────────────────────────┐│  │
-│  │  │ "Customer/*"         → DatabaseProvider                       ││  │
-│  │  │ "Customer/Orders/**" → OrderServiceProvider (higher priority) ││  │
-│  │  │ "Config/**"          → ConfigurationProvider                  ││  │
-│  │  │ "Weather/**"         → ApiProvider                            ││  │
-│  │  │ "**"                 → DefaultProvider (fallback)             ││  │
-│  │  └──────────────────────────────────────────────────────────────┘│  │
-│  │                                                                    │  │
-│  │  FindProvider(path) → IDataProvider                               │  │
-│  └──────────────────────────────────────────────────────────────────┘  │
-│                                ↓                                         │
-│  ┌──────────────────────────────────────────────────────────────────┐  │
-│  │                    IDataNode (Lazy Loading)                       │  │
-│  │                                                                    │  │
-│  │  - Value (lazy, cached)                                           │  │
-│  │  - GetValueAsync<T>()                                             │  │
-│  │  - Provider selection on first access                             │  │
-│  │  - Result caching after first load                                │  │
-│  └──────────────────────────────────────────────────────────────────┘  │
-└─────────────────────────────────────────────────────────────────────────┘
-                                 ↓
-         ┌───────────────────────┴───────────────────────┐
-         │                                               │
-         ▼                                               ▼
-┌─────────────────────┐                    ┌─────────────────────────┐
-│   IDataProvider     │                    │   IDataProvider         │
-│   Implementations   │                    │   Implementations       │
-│                     │                    │                         │
-│ - DatabaseProvider  │                    │ - ApiProvider           │
-│ - ConfigProvider    │                    │ - FileProvider          │
-│ - StaticProvider    │                    │ - CustomProvider        │
-└─────────────────────┘                    └─────────────────────────┘
-         │                                               │
-         ▼                                               ▼
-┌─────────────────────┐                    ┌─────────────────────────┐
-│  Data Source        │                    │  Data Source            │
-│  (Database, EF)     │                    │  (HTTP API, Files)      │
-└─────────────────────┘                    └─────────────────────────┘
-```
+
+*Figure 1 — Lazy data providers architecture*
 
 ---
 
@@ -367,18 +343,23 @@ public class DataNode : IDataNode
 
 Each IDataProvider implementation is a strategy for loading data.
 
+```plantuml
+@startuml
+rectangle "IDataProvider" as P
+rectangle "Static\nProvider" as A
+rectangle "DB\nProvider" as B
+rectangle "API\nProvider" as C
+rectangle "Config\nProvider" as D
+rectangle "Custom\nProvider" as E
+P <|-- A
+P <|-- B
+P <|-- C
+P <|-- D
+P <|-- E
+@enduml
 ```
-┌──────────────────┐
-│  IDataProvider   │
-└────────┬─────────┘
-         │
-    ┌────┴────┬──────────┬────────────┬──────────┐
-    │         │          │            │          │
-┌───▼───┐ ┌──▼───┐ ┌────▼─────┐ ┌────▼────┐ ┌──▼──────┐
-│Static │ │ DB   │ │   API    │ │ Config  │ │ Custom  │
-│Provider│ │Provider│ │ Provider │ │Provider │ │Provider │
-└────────┘ └──────┘ └──────────┘ └─────────┘ └─────────┘
-```
+
+*Figure 2 — IDataProvider implementations*
 
 ### 2. Registry Pattern
 
@@ -409,62 +390,33 @@ public async Task<T?> GetValueAsync<T>()
 
 ### Provider Registration Flow
 
+```plantuml
+@startuml
+rectangle "Application Code\ncontainer.Register(\n  ""Customer/*"",\n  dbProvider)" as App
+rectangle "IDataProviderRegistry\n- Store pattern\n- Store provider\n- Create matcher" as Reg
+App --> Reg
+@enduml
 ```
-┌─────────────────────────┐
-│ Application Code        │
-│ container.Register(     │
-│   "Customer/*",         │
-│   dbProvider)           │
-└────────┬────────────────┘
-         │
-         ▼
-┌─────────────────────────┐
-│ IDataProviderRegistry   │
-│ - Store pattern         │
-│ - Store provider        │
-│ - Create matcher        │
-└─────────────────────────┘
-```
+
+*Figure 3 — Provider registration flow*
 
 ### Lazy Loading Flow
 
+```plantuml
+@startuml
+rectangle "Application Code\nvar orders = await\n  node.GetValueAsync()" as App
+rectangle "DataNode\n- Check if loaded\n- If not: find provider" as Node1
+rectangle "IDataProviderRegistry\n- Match path pattern\n- Return best provider" as Reg
+rectangle "IDataProvider\n- ProvideAsync()\n- Load from source\n- Return data" as Prov
+rectangle "DataNode\n- Cache result\n- Mark as loaded\n- Return to caller" as Node2
+App --> Node1
+Node1 --> Reg
+Reg --> Prov
+Prov --> Node2
+@enduml
 ```
-┌─────────────────────────┐
-│ Application Code        │
-│ var orders = await      │
-│   node.GetValueAsync()  │
-└────────┬────────────────┘
-         │
-         ▼
-┌─────────────────────────┐
-│ DataNode                │
-│ - Check if loaded       │
-│ - If not: find provider │
-└────────┬────────────────┘
-         │
-         ▼
-┌─────────────────────────┐
-│ IDataProviderRegistry   │
-│ - Match path pattern    │
-│ - Return best provider  │
-└────────┬────────────────┘
-         │
-         ▼
-┌─────────────────────────┐
-│ IDataProvider           │
-│ - ProvideAsync()        │
-│ - Load from source      │
-│ - Return data           │
-└────────┬────────────────┘
-         │
-         ▼
-┌─────────────────────────┐
-│ DataNode                │
-│ - Cache result          │
-│ - Mark as loaded        │
-│ - Return to caller      │
-└─────────────────────────┘
-```
+
+*Figure 4 — Lazy value load flow*
 
 ### Provider Selection Algorithm
 

@@ -359,37 +359,23 @@ public class ConvertedContent
 6. **Message Assembly** - Assemble final ComposedMessage
 
 **Flow Diagram:**
+```plantuml
+@startuml
+rectangle "Template Selection\n(by type + culture)" as A
+rectangle "Data Enhancement\n(register providers)" as B
+rectangle "Template Rendering\n(lazy evaluation)" as C
+rectangle "Format Conversion\n(if needed)" as D
+rectangle "Attachment Gen.\n(if requested)" as E
+rectangle "Message Assembly\n(ComposedMessage)" as F
+A --> B
+B --> C
+C --> D
+D --> E
+E --> F
+@enduml
 ```
-┌──────────────────────┐
-│ Template Selection   │
-│ (by type + culture)  │
-└──────────┬───────────┘
-           ↓
-┌──────────────────────┐
-│ Data Enhancement     │
-│ (register providers) │
-└──────────┬───────────┘
-           ↓
-┌──────────────────────┐
-│ Template Rendering   │
-│ (lazy evaluation)    │
-└──────────┬───────────┘
-           ↓
-┌──────────────────────┐
-│ Format Conversion    │
-│ (if needed)          │
-└──────────┬───────────┘
-           ↓
-┌──────────────────────┐
-│ Attachment Gen.      │
-│ (if requested)       │
-└──────────┬───────────┘
-           ↓
-┌──────────────────────┐
-│ Message Assembly     │
-│ (ComposedMessage)    │
-└──────────────────────┘
-```
+
+*Figure 1 — Message composition flow*
 
 ---
 

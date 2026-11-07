@@ -37,29 +37,27 @@ The Master Data Loader provides a comprehensive infrastructure for loading, vers
 
 ## System Context
 
+```plantuml
+@startuml
+skinparam rectangle {
+  BackgroundColor White
+  BorderColor #444444
+}
+rectangle "Application Layer\n(Web APIs, Background Services, CLI Tools, EF Migrations)" as App <<container>>
+rectangle "Master Data Loader" as MDL <<container>> {
+  rectangle "IMasterData\nLoader" as L <<component>>
+  rectangle "IDataSource\nProvider" as P <<component>>
+  rectangle "ILoading\nStrategy" as S <<component>>
+}
+rectangle "Data Storage Layer\n(SQL Server, PostgreSQL, MongoDB, Azure Table Storage)" as Store <<container>>
+App --> MDL : Uses
+MDL --> Store : Persists to
+@enduml
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                        Application Layer                         │
-│  (Web APIs, Background Services, CLI Tools, EF Migrations)      │
-└───────────────────────────┬─────────────────────────────────────┘
-                            │
-                            │ Uses
-                            ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                     Master Data Loader                           │
-│  ┌──────────────────┐  ┌─────────────────┐  ┌────────────────┐ │
-│  │  IMasterData     │  │  IDataSource    │  │  ILoading      │ │
-│  │  Loader          │  │  Provider       │  │  Strategy      │ │
-│  └──────────────────┘  └─────────────────┘  └────────────────┘ │
-└───────────────────────────┬─────────────────────────────────────┘
-                            │
-                            │ Persists to
-                            ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                      Data Storage Layer                          │
-│  (SQL Server, PostgreSQL, MongoDB, Azure Table Storage)         │
-└─────────────────────────────────────────────────────────────────┘
 
+*Figure 1 — Master Data Loader system context*
+
+```
 External Data Sources:
 ├── JSON Files (file system, blob storage)
 ├── CSV Files (file system, network shares)
@@ -417,65 +415,30 @@ public enum ChangeOperation
 
 ### Loading Sequence Diagram
 
+```plantuml
+@startuml
+participant Client
+participant "MasterData\nLoader" as Loader
+participant "Dependency\nResolver" as Resolver
+participant "DataSource\nProvider" as Provider
+participant "Loading\nStrategy" as Strategy
+
+Client -> Loader : LoadAsync("States")
+Loader -> Resolver : ResolveAsync("States")
+Resolver --> Loader : ["Countries", "States"]
+note over Loader : Load "Countries"
+Loader -> Provider : LoadAsync("countries.json")
+note over Provider : DataSet
+Provider --> Loader : DataSet
+Loader -> Strategy : UpsertAsync()
+note over Strategy : Database
+note over Strategy : Change Tracker
+note over Loader : Load "States" (repeat)
+Loader --> Client : LoadResult
+@enduml
 ```
-┌─────────┐          ┌──────────────┐          ┌────────────────┐
-│ Client  │          │ MasterData   │          │  Dependency    │
-│         │          │ Loader       │          │  Resolver      │
-└────┬────┘          └──────┬───────┘          └────────┬───────┘
-     │                      │                           │
-     │ LoadAsync("States")  │                           │
-     ├─────────────────────>│                           │
-     │                      │                           │
-     │                      │ ResolveAsync("States")    │
-     │                      ├──────────────────────────>│
-     │                      │                           │
-     │                      │  ["Countries", "States"]  │
-     │                      │<──────────────────────────┤
-     │                      │                           │
-     │                      ▼                           │
-     │           ┌──────────────────┐                  │
-     │           │ Load "Countries" │                  │
-     │           └────────┬─────────┘                  │
-     │                    │                            │
-     │                    ▼                            │
-     │           ┌──────────────────┐                  │
-     │           │  DataSource      │                  │
-     │           │  Provider        │                  │
-     │           └────────┬─────────┘                  │
-     │                    │                            │
-     │                    │ LoadAsync("countries.json")│
-     │                    ▼                            │
-     │           ┌──────────────────┐                  │
-     │           │   DataSet        │                  │
-     │           └────────┬─────────┘                  │
-     │                    │                            │
-     │                    ▼                            │
-     │           ┌──────────────────┐                  │
-     │           │  Loading         │                  │
-     │           │  Strategy        │                  │
-     │           └────────┬─────────┘                  │
-     │                    │                            │
-     │                    │ UpsertAsync()              │
-     │                    ▼                            │
-     │           ┌──────────────────┐                  │
-     │           │   Database       │                  │
-     │           └────────┬─────────┘                  │
-     │                    │                            │
-     │                    ▼                            │
-     │           ┌──────────────────┐                  │
-     │           │  Change Tracker  │                  │
-     │           └────────┬─────────┘                  │
-     │                    │                            │
-     │                    ▼                            │
-     │           ┌──────────────────┐                  │
-     │           │ Load "States"    │                  │
-     │           │ (repeat)         │                  │
-     │           └────────┬─────────┘                  │
-     │                    │                            │
-     │   LoadResult       │                            │
-     │<───────────────────┤                            │
-     │                    │                            │
-```
+
+*Figure 2 — Loading sequence*
 
 ---
 

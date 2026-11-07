@@ -10,43 +10,31 @@
 
 Path Translation provides a modular, provider-based system for converting between different path syntaxes. **XPath is one of many navigation providers**, not THE navigation system. All syntaxes translate through a canonical internal representation.
 
+```plantuml
+@startuml
+skinparam rectangle {
+  BackgroundColor White
+  BorderColor #444444
+}
+rectangle "Consumer Applications\n(Templates, Services, Data Queries)" as Consumer
+rectangle "IPathTranslationService\n- RegisterNavigator()\n- Translate(source, target)\n- ParseAny() - auto-detect syntax" as Svc <<service>>
+rectangle "XPathNavigator\n\nParse()\nFormat()" as X <<navigator>>
+rectangle "JSONNavigator\n\nParse()\nFormat()" as J <<navigator>>
+rectangle "DotNavigator\n\nParse()\nFormat()" as D <<navigator>>
+rectangle "ICanonicalPath\n\nSegments[]\nIsAbsolute" as Canon
+rectangle "DataContainer\n(Uses canonical)" as DC
+Consumer --> Svc : XPath Syntax / JSONPath Syntax /\nDot Notation / Custom Syntax
+Svc --> X
+Svc --> J
+Svc --> D
+X --> Canon
+J --> Canon
+D --> Canon
+Canon --> DC
+@enduml
 ```
-┌──────────────────────────────────────────────────────────────┐
-│                    Consumer Applications                      │
-│         (Templates, Services, Data Queries)                   │
-└────────────────┬──────────────┬──────────────┬────────────────┘
-                 │              │              │
-        XPath    │    JSONPath  │    Dot       │    Custom
-       Syntax    │    Syntax    │  Notation    │    Syntax
-                 ↓              ↓              ↓
-┌─────────────────────────────────────────────────────────────┐
-│            IPathTranslationService                          │
-│  - RegisterNavigator()                                      │
-│  - Translate(source, target)                                │
-│  - ParseAny() - auto-detect syntax                          │
-└────────────────┬──────────────┬──────────────┬──────────────┘
-                 ↓              ↓              ↓
-      ┌──────────────┐ ┌──────────────┐ ┌──────────────┐
-      │XPathNavigator│ │JSONNavigator │ │ DotNavigator │
-      │              │ │              │ │              │
-      │Parse()       │ │Parse()       │ │Parse()       │
-      │Format()      │ │Format()      │ │Format()      │
-      └──────┬───────┘ └──────┬───────┘ └──────┬───────┘
-             │                │                │
-             └────────────────┼────────────────┘
-                              ↓
-                   ┌────────────────────┐
-                   │  ICanonicalPath    │
-                   │                    │
-                   │ Segments[]         │
-                   │ IsAbsolute         │
-                   └────────────────────┘
-                              ↓
-                   ┌────────────────────┐
-                   │  DataContainer     │
-                   │  (Uses canonical)  │
-                   └────────────────────┘
-```
+
+*Figure 1 — Path translation architecture*
 
 **Key Principle:** Syntax translation happens at the edges (parse/format), core container uses canonical representation internally.
 
@@ -597,29 +585,17 @@ public class PathTranslationService : IPathTranslationService
 
 ### Translation Flow
 
+```plantuml
+@startuml
+rectangle "XPath String\n""Customer/Orders/0/Total""" as XP
+rectangle "ICanonicalPath\n\nSegments:\n [0] Property: Customer\n [1] Property: Orders\n [2] ArrayIndex: 0\n [3] Property: Total" as CP
+rectangle "JSONPath String\n""$.Customer.Orders[0].Total""" as JP
+XP --> CP : Parse(xpath)
+CP --> JP : Format(jsonpath)
+@enduml
 ```
-┌──────────┐
-│  XPath   │   "Customer/Orders/0/Total"
-│  String  │
-└────┬─────┘
-     │ Parse(xpath)
-     ↓
-┌──────────────────────────┐
-│   ICanonicalPath         │
-│                          │
-│ Segments:                │
-│  [0] Property: Customer  │
-│  [1] Property: Orders    │
-│  [2] ArrayIndex: 0       │
-│  [3] Property: Total     │
-└────┬─────────────────────┘
-     │ Format(jsonpath)
-     ↓
-┌──────────┐
-│JSONPath  │   "$.Customer.Orders[0].Total"
-│ String   │
-└──────────┘
-```
+
+*Figure 2 — XPath to JSONPath translation*
 
 **Key Points:**
 1. Source syntax parsed to canonical (syntax-agnostic)

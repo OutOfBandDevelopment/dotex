@@ -26,49 +26,57 @@ The Modular Profile Management system provides an extensible framework for manag
 
 ## System Context
 
+```plantuml
+@startuml
+skinparam shadowing false
+skinparam rectangle {
+  BackgroundColor White
+  BorderColor #444444
+}
+rectangle "Client Applications\n(Web UI, Mobile Apps, Admin Portals, Third-party Integrations)" as Clients <<Context>>
+rectangle "Profile Service Layer" as ServiceLayer <<Container>> {
+  rectangle "Profile\nService" as ProfileSvc <<Component>>
+  rectangle "Versioning\nService" as VersionSvc <<Component>>
+  rectangle "Visibility\nService" as VisSvc <<Component>>
+  rectangle "Import/\nExport" as ImpExp <<Component>>
+}
+rectangle "Profile Module Registry" as Registry <<Container>> {
+  rectangle "User\nCore" as UserCore <<Module>>
+  rectangle "Org\nCore" as OrgCore <<Module>>
+  rectangle "Social\nLinks" as Social <<Module>>
+  rectangle "Contact\nPrefs" as Contact <<Module>>
+  rectangle "Custom\nModules" as Custom <<Module>>
+}
+rectangle "Storage Provider Abstraction" as Abstraction <<Container>> {
+  rectangle "SQL\nProvider" as SqlP <<Component>>
+  rectangle "NoSQL\nProvider" as NoSqlP <<Component>>
+  rectangle "Blob\nStorage" as BlobP <<Component>>
+  rectangle "Hybrid\nProvider" as HybridP <<Component>>
+}
+rectangle "Physical Storage" as Physical <<Container>> {
+  rectangle "SQL Server/\nPostgreSQL" as Sql <<Store>>
+  rectangle "MongoDB/\nCosmosDB" as Mongo <<Store>>
+  rectangle "Azure Blob/\nAWS S3" as Blob <<Store>>
+  rectangle "Redis\nCache" as Redis <<Store>>
+}
+Clients --> ServiceLayer : HTTPS / REST / GraphQL
+ProfileSvc --> Registry
+VersionSvc --> Registry
+VisSvc --> Registry
+ImpExp --> Registry
+UserCore --> Abstraction
+OrgCore --> Abstraction
+Social --> Abstraction
+Contact --> Abstraction
+Custom --> Abstraction
+SqlP --> Sql
+NoSqlP --> Mongo
+BlobP --> Blob
+HybridP --> Redis
+@enduml
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                      Client Applications                         │
-│  (Web UI, Mobile Apps, Admin Portals, Third-party Integrations) │
-└────────────────────────┬────────────────────────────────────────┘
-                         │
-                         │ HTTPS / REST / GraphQL
-                         ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                    Profile Service Layer                         │
-│  ┌──────────────┬──────────────┬──────────────┬──────────────┐  │
-│  │   Profile    │   Versioning │  Visibility  │  Import/     │  │
-│  │   Service    │   Service    │  Service     │  Export      │  │
-│  └──────┬───────┴──────┬───────┴──────┬───────┴──────┬───────┘  │
-└─────────┼──────────────┼──────────────┼──────────────┼──────────┘
-          │              │              │              │
-          ▼              ▼              ▼              ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                    Profile Module Registry                       │
-│  ┌──────────┬──────────┬──────────┬──────────┬──────────────┐   │
-│  │   User   │   Org    │  Social  │ Contact  │   Custom     │   │
-│  │   Core   │   Core   │  Links   │  Prefs   │   Modules    │   │
-│  └────┬─────┴────┬─────┴────┬─────┴────┬─────┴──────┬───────┘   │
-└───────┼──────────┼──────────┼──────────┼────────────┼───────────┘
-        │          │          │          │            │
-        ▼          ▼          ▼          ▼            ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                  Storage Provider Abstraction                    │
-│  ┌──────────────┬──────────────┬──────────────┬──────────────┐  │
-│  │   SQL        │   NoSQL      │   Blob       │   Hybrid     │  │
-│  │   Provider   │   Provider   │   Storage    │   Provider   │  │
-│  └──────┬───────┴──────┬───────┴──────┬───────┴──────┬───────┘  │
-└─────────┼──────────────┼──────────────┼──────────────┼──────────┘
-          │              │              │              │
-          ▼              ▼              ▼              ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                      Physical Storage                            │
-│  ┌──────────────┬──────────────┬──────────────┬──────────────┐  │
-│  │  SQL Server/ │   MongoDB/   │  Azure Blob/ │   Redis      │  │
-│  │  PostgreSQL  │   CosmosDB   │  AWS S3      │   Cache      │  │
-│  └──────────────┴──────────────┴──────────────┴──────────────┘  │
-└─────────────────────────────────────────────────────────────────┘
-```
+
+*Figure 1 — System context*
 
 ### External Dependencies
 
@@ -84,238 +92,120 @@ The Modular Profile Management system provides an extensible framework for manag
 
 ### Core Components
 
+```plantuml
+@startuml
+skinparam shadowing false
+skinparam rectangle {
+  BackgroundColor White
+  BorderColor #444444
+}
+rectangle "Profile Service" as ProfileService <<Container>> {
+  rectangle "IProfileService\n\n- GetModuleAsync<TData>(profileId, moduleName)\n- SaveModuleAsync<TData>(profileId, moduleName, data)\n- DeleteModuleAsync(profileId, moduleName)\n- GetProfileSnapshotAsync(profileId)\n- GetCompletenessScoreAsync(profileId)\n- GetAvailableModulesAsync()\n- GetActiveModulesAsync(profileId)" as IService <<Component>>
+  rectangle "IProfileModuleRegistry\n\n- GetModule(moduleName)\n- GetAllModules()\n- IsModuleActive(profileId, moduleName)\n- ActivateModule(profileId, moduleName)\n- DeactivateModule(profileId, moduleName)" as IRegistry <<Component>>
+}
+rectangle "Profile Module Framework" as Framework <<Container>> {
+  rectangle "IProfileModule<TData>\n\n+ Name: string\n+ Category: string\n+ Version: Version\n+ Dependencies: IReadOnlyList<string>\n\n- ValidateAsync(data, ct): ValidationResult\n- GetDefaultDataAsync(ct): TData" as IModule <<Component>>
+  rectangle "Built-In Modules" as BuiltIn <<Group>> {
+    rectangle "UserProfile\nCore" as M1 <<Module>>
+    rectangle "OrgCore\nModule" as M2 <<Module>>
+    rectangle "Social\nLinks" as M3 <<Module>>
+    rectangle "Contact\nPrefs" as M4 <<Module>>
+  }
+}
+IService --> IRegistry : Uses
+IRegistry --> Framework : Coordinates
+@enduml
 ```
-┌────────────────────────────────────────────────────────────────────┐
-│                         Profile Service                             │
-│                                                                     │
-│  ┌──────────────────────────────────────────────────────────────┐  │
-│  │ IProfileService                                               │  │
-│  │                                                               │  │
-│  │  - GetModuleAsync<TData>(profileId, moduleName)              │  │
-│  │  - SaveModuleAsync<TData>(profileId, moduleName, data)       │  │
-│  │  - DeleteModuleAsync(profileId, moduleName)                  │  │
-│  │  - GetProfileSnapshotAsync(profileId)                        │  │
-│  │  - GetCompletenessScoreAsync(profileId)                      │  │
-│  │  - GetAvailableModulesAsync()                                │  │
-│  │  - GetActiveModulesAsync(profileId)                          │  │
-│  └───────────┬──────────────────────────────────────────────────┘  │
-│              │                                                      │
-│              │ Uses                                                 │
-│              ▼                                                      │
-│  ┌──────────────────────────────────────────────────────────────┐  │
-│  │ IProfileModuleRegistry                                        │  │
-│  │                                                               │  │
-│  │  - GetModule(moduleName)                                      │  │
-│  │  - GetAllModules()                                            │  │
-│  │  - IsModuleActive(profileId, moduleName)                     │  │
-│  │  - ActivateModule(profileId, moduleName)                     │  │
-│  │  - DeactivateModule(profileId, moduleName)                   │  │
-│  └───────────┬──────────────────────────────────────────────────┘  │
-└──────────────┼─────────────────────────────────────────────────────┘
-               │
-               │ Coordinates
-               ▼
-┌────────────────────────────────────────────────────────────────────┐
-│                    Profile Module Framework                         │
-│                                                                     │
-│  ┌──────────────────────────────────────────────────────────────┐  │
-│  │ IProfileModule<TData>                                         │  │
-│  │                                                               │  │
-│  │  + Name: string                                               │  │
-│  │  + Category: string                                           │  │
-│  │  + Version: Version                                           │  │
-│  │  + Dependencies: IReadOnlyList<string>                        │  │
-│  │                                                               │  │
-│  │  - ValidateAsync(data, ct): ValidationResult                  │  │
-│  │  - GetDefaultDataAsync(ct): TData                             │  │
-│  └──────────────────────────────────────────────────────────────┘  │
-│                                                                     │
-│  Built-In Modules:                                                  │
-│  ┌────────────┬────────────┬────────────┬────────────┐             │
-│  │ UserProfile│   OrgCore  │  Social    │  Contact   │             │
-│  │    Core    │   Module   │  Links     │  Prefs     │             │
-│  └────────────┴────────────┴────────────┴────────────┘             │
-└────────────────────────────────────────────────────────────────────┘
-```
+
+*Figure 2 — Core components*
 
 ### Storage Layer
 
+```plantuml
+@startuml
+skinparam shadowing false
+skinparam rectangle {
+  BackgroundColor White
+  BorderColor #444444
+}
+rectangle "Storage Provider Layer" as Layer <<Container>> {
+  rectangle "IProfileModuleStorageProvider\n\n- GetAsync<TData>(profileId, moduleName)\n- SaveAsync<TData>(profileId, moduleName, data, metadata)\n- DeleteAsync(profileId, moduleName)\n- GetVersionHistoryAsync(profileId, moduleName)" as IStorage <<Component>>
+  rectangle "Concrete Providers:\n\nSqlProfileStorageProvider       (EF Core, relational)\nMongoProfileStorageProvider     (MongoDB, flexible schema)\nCosmosProfileStorageProvider    (CosmosDB, global)\nHybridProfileStorageProvider    (metadata+blob split)\nInMemoryProfileStorageProvider  (testing only)" as Concrete <<Component>>
+  rectangle "IProfileBlobStorageProvider\n\n- GetBlobAsync(profileId, moduleName, blobKey)\n- SaveBlobAsync(profileId, moduleName, blobKey, stream)\n- DeleteBlobAsync(profileId, moduleName, blobKey)" as IBlob <<Component>>
+  rectangle "Concrete Blob Providers:\n\nAzureBlobProfileStorageProvider    (Azure Blob Storage)\nS3ProfileBlobStorageProvider       (AWS S3)\nFileSystemBlobStorageProvider      (local files, dev only)" as ConcreteBlob <<Component>>
+}
+IStorage --> Concrete : Implemented By
+Concrete -[hidden]down- IBlob
+IBlob --> ConcreteBlob : Implemented By
+@enduml
 ```
-┌────────────────────────────────────────────────────────────────────┐
-│                    Storage Provider Layer                           │
-│                                                                     │
-│  ┌──────────────────────────────────────────────────────────────┐  │
-│  │ IProfileModuleStorageProvider                                 │  │
-│  │                                                               │  │
-│  │  - GetAsync<TData>(profileId, moduleName)                    │  │
-│  │  - SaveAsync<TData>(profileId, moduleName, data, metadata)   │  │
-│  │  - DeleteAsync(profileId, moduleName)                        │  │
-│  │  - GetVersionHistoryAsync(profileId, moduleName)             │  │
-│  └───────────┬──────────────────────────────────────────────────┘  │
-│              │                                                      │
-│              │ Implemented By                                       │
-│              ▼                                                      │
-│  ┌──────────────────────────────────────────────────────────────┐  │
-│  │ Concrete Providers:                                           │  │
-│  │                                                               │  │
-│  │  SqlProfileStorageProvider       (EF Core, relational)       │  │
-│  │  MongoProfileStorageProvider     (MongoDB, flexible schema)  │  │
-│  │  CosmosProfileStorageProvider    (CosmosDB, global)          │  │
-│  │  HybridProfileStorageProvider    (metadata+blob split)       │  │
-│  │  InMemoryProfileStorageProvider  (testing only)              │  │
-│  └──────────────────────────────────────────────────────────────┘  │
-│                                                                     │
-│  ┌──────────────────────────────────────────────────────────────┐  │
-│  │ IProfileBlobStorageProvider                                   │  │
-│  │                                                               │  │
-│  │  - GetBlobAsync(profileId, moduleName, blobKey)              │  │
-│  │  - SaveBlobAsync(profileId, moduleName, blobKey, stream)     │  │
-│  │  - DeleteBlobAsync(profileId, moduleName, blobKey)           │  │
-│  └───────────┬──────────────────────────────────────────────────┘  │
-│              │                                                      │
-│              │ Implemented By                                       │
-│              ▼                                                      │
-│  ┌──────────────────────────────────────────────────────────────┐  │
-│  │ Concrete Blob Providers:                                      │  │
-│  │                                                               │  │
-│  │  AzureBlobProfileStorageProvider    (Azure Blob Storage)     │  │
-│  │  S3ProfileBlobStorageProvider       (AWS S3)                 │  │
-│  │  FileSystemBlobStorageProvider      (local files, dev only)  │  │
-│  └──────────────────────────────────────────────────────────────┘  │
-└────────────────────────────────────────────────────────────────────┘
-```
+
+*Figure 3 — Storage layer*
 
 ### Versioning and Audit
 
+```plantuml
+@startuml
+skinparam shadowing false
+skinparam rectangle {
+  BackgroundColor White
+  BorderColor #444444
+}
+rectangle "Versioning System" as System <<Container>> {
+  rectangle "IProfileVersioningService\n\n- CreateVersionAsync<TData>(profileId, moduleName, data)\n- GetVersionHistoryAsync(profileId, moduleName)\n- GetVersionDataAsync<TData>(versionId)\n- RollbackToVersionAsync(versionId, reason)\n- CompareVersionsAsync(version1Id, version2Id)" as IVersioning <<Component>>
+  rectangle "ProfileModuleVersion (Record)\n\n+ Id: string\n+ ProfileId: string\n+ ModuleName: string\n+ VersionNumber: int\n+ CreatedAt: DateTime\n+ CreatedBy: string\n+ CreatedByIpAddress: string?\n+ CreatedByUserAgent: string?\n+ ChangeReason: string?\n+ DataJson: string (complete snapshot)\n+ Metadata: ProfileModuleMetadata" as Version <<Component>>
+  rectangle "Storage Strategy:\n- Versions stored in separate partition/table\n- Indexed by (ProfileId, ModuleName, VersionNumber)\n- Data stored as JSON for flexibility\n- Retention policy: configurable per tenant\n- Archival: move old versions to cold storage" as Strategy <<Note>>
+}
+IVersioning --> Version : Creates
+Version -[hidden]down- Strategy
+@enduml
 ```
-┌────────────────────────────────────────────────────────────────────┐
-│                     Versioning System                               │
-│                                                                     │
-│  ┌──────────────────────────────────────────────────────────────┐  │
-│  │ IProfileVersioningService                                     │  │
-│  │                                                               │  │
-│  │  - CreateVersionAsync<TData>(profileId, moduleName, data)    │  │
-│  │  - GetVersionHistoryAsync(profileId, moduleName)             │  │
-│  │  - GetVersionDataAsync<TData>(versionId)                     │  │
-│  │  - RollbackToVersionAsync(versionId, reason)                 │  │
-│  │  - CompareVersionsAsync(version1Id, version2Id)              │  │
-│  └───────────┬──────────────────────────────────────────────────┘  │
-│              │                                                      │
-│              │ Creates                                              │
-│              ▼                                                      │
-│  ┌──────────────────────────────────────────────────────────────┐  │
-│  │ ProfileModuleVersion (Record)                                 │  │
-│  │                                                               │  │
-│  │  + Id: string                                                 │  │
-│  │  + ProfileId: string                                          │  │
-│  │  + ModuleName: string                                         │  │
-│  │  + VersionNumber: int                                         │  │
-│  │  + CreatedAt: DateTime                                        │  │
-│  │  + CreatedBy: string                                          │  │
-│  │  + CreatedByIpAddress: string?                                │  │
-│  │  + CreatedByUserAgent: string?                                │  │
-│  │  + ChangeReason: string?                                      │  │
-│  │  + DataJson: string (complete snapshot)                       │  │
-│  │  + Metadata: ProfileModuleMetadata                            │  │
-│  └──────────────────────────────────────────────────────────────┘  │
-│                                                                     │
-│  Storage Strategy:                                                  │
-│  - Versions stored in separate partition/table                     │
-│  - Indexed by (ProfileId, ModuleName, VersionNumber)               │
-│  - Data stored as JSON for flexibility                             │
-│  - Retention policy: configurable per tenant                       │
-│  - Archival: move old versions to cold storage                     │
-└────────────────────────────────────────────────────────────────────┘
-```
+
+*Figure 4 — Versioning and audit*
 
 ### Validation Framework
 
+```plantuml
+@startuml
+skinparam shadowing false
+skinparam rectangle {
+  BackgroundColor White
+  BorderColor #444444
+}
+rectangle "Validation Framework" as Framework <<Container>> {
+  rectangle "IProfileModuleValidator<TData>\n\n- ValidateAsync(data, context, ct): ValidationResult" as IValidator <<Component>>
+  rectangle "Built-In Validators:\n\nRequiredFieldValidator<TData>\nRegexValidator<TData>\nRangeValidator<TData>\nLengthValidator<TData>\nEmailValidator<TData>\nPhoneNumberValidator<TData>\nUrlValidator<TData>\nUniqueValueValidator<TData>    (async, database query)\nCompositeValidator<TData>      (combines validators)" as BuiltIn <<Component>>
+  rectangle "ValidationResult (Record)\n\n+ IsValid: bool\n+ Errors: IReadOnlyList<ValidationError>\n+ Warnings: IReadOnlyList<ValidationWarning>\n\nStatic Methods:\n- Success(): ValidationResult\n- Failure(errors): ValidationResult\n- Combine(results): ValidationResult" as Result <<Component>>
+}
+IValidator --> BuiltIn : Implemented By
+BuiltIn -[hidden]down- Result
+@enduml
 ```
-┌────────────────────────────────────────────────────────────────────┐
-│                    Validation Framework                             │
-│                                                                     │
-│  ┌──────────────────────────────────────────────────────────────┐  │
-│  │ IProfileModuleValidator<TData>                                │  │
-│  │                                                               │  │
-│  │  - ValidateAsync(data, context, ct): ValidationResult         │  │
-│  └───────────┬──────────────────────────────────────────────────┘  │
-│              │                                                      │
-│              │ Implemented By                                       │
-│              ▼                                                      │
-│  ┌──────────────────────────────────────────────────────────────┐  │
-│  │ Built-In Validators:                                          │  │
-│  │                                                               │  │
-│  │  RequiredFieldValidator<TData>                                │  │
-│  │  RegexValidator<TData>                                        │  │
-│  │  RangeValidator<TData>                                        │  │
-│  │  LengthValidator<TData>                                       │  │
-│  │  EmailValidator<TData>                                        │  │
-│  │  PhoneNumberValidator<TData>                                  │  │
-│  │  UrlValidator<TData>                                          │  │
-│  │  UniqueValueValidator<TData>    (async, database query)      │  │
-│  │  CompositeValidator<TData>      (combines validators)        │  │
-│  └──────────────────────────────────────────────────────────────┘  │
-│                                                                     │
-│  ┌──────────────────────────────────────────────────────────────┐  │
-│  │ ValidationResult (Record)                                     │  │
-│  │                                                               │  │
-│  │  + IsValid: bool                                              │  │
-│  │  + Errors: IReadOnlyList<ValidationError>                     │  │
-│  │  + Warnings: IReadOnlyList<ValidationWarning>                 │  │
-│  │                                                               │  │
-│  │  Static Methods:                                              │  │
-│  │  - Success(): ValidationResult                                │  │
-│  │  - Failure(errors): ValidationResult                          │  │
-│  │  - Combine(results): ValidationResult                         │  │
-│  └──────────────────────────────────────────────────────────────┘  │
-└────────────────────────────────────────────────────────────────────┘
-```
+
+*Figure 5 — Validation framework*
 
 ### Visibility and Privacy
 
+```plantuml
+@startuml
+skinparam shadowing false
+skinparam rectangle {
+  BackgroundColor White
+  BorderColor #444444
+}
+rectangle "Visibility Service" as Service <<Container>> {
+  rectangle "IProfileVisibilityService\n\n- CanViewModuleAsync(profileId, moduleName, viewerId)\n- ApplyVisibilityFilterAsync<TData>(data, viewerId)\n- SetModuleVisibilityAsync(profileId, moduleName, level)\n- SetFieldVisibilityAsync(profileId, field, level)\n- GetVisibilitySettingsAsync(profileId, moduleName)" as IVis <<Component>>
+  rectangle "ProfileModuleVisibility (Enum)\n\nPrivate        - Only profile owner\nTeam           - Profile owner + team members\nOrganization   - All organization members\nAuthenticated  - All authenticated users\nPublic         - Anyone (including anonymous)" as Enum <<Component>>
+  rectangle "ProfileFieldVisibility (Record)\n\n+ FieldPath: string\n+ Visibility: ProfileModuleVisibility\n+ ExplicitUsers: IReadOnlyList<string>\n+ ExplicitRoles: IReadOnlyList<string>" as Field <<Component>>
+  rectangle "Visibility Resolution Algorithm:\n1. Check module-level visibility\n2. For fields, check field-level overrides\n3. Evaluate explicit user grants\n4. Evaluate explicit role grants\n5. Filter data based on viewer context" as Algo <<Note>>
+}
+IVis --> Enum : Uses
+Enum -[hidden]down- Field
+Field -[hidden]down- Algo
+@enduml
 ```
-┌────────────────────────────────────────────────────────────────────┐
-│                   Visibility Service                                │
-│                                                                     │
-│  ┌──────────────────────────────────────────────────────────────┐  │
-│  │ IProfileVisibilityService                                     │  │
-│  │                                                               │  │
-│  │  - CanViewModuleAsync(profileId, moduleName, viewerId)       │  │
-│  │  - ApplyVisibilityFilterAsync<TData>(data, viewerId)         │  │
-│  │  - SetModuleVisibilityAsync(profileId, moduleName, level)    │  │
-│  │  - SetFieldVisibilityAsync(profileId, field, level)          │  │
-│  │  - GetVisibilitySettingsAsync(profileId, moduleName)         │  │
-│  └───────────┬──────────────────────────────────────────────────┘  │
-│              │                                                      │
-│              │ Uses                                                 │
-│              ▼                                                      │
-│  ┌──────────────────────────────────────────────────────────────┐  │
-│  │ ProfileModuleVisibility (Enum)                                │  │
-│  │                                                               │  │
-│  │  Private        - Only profile owner                          │  │
-│  │  Team           - Profile owner + team members                │  │
-│  │  Organization   - All organization members                    │  │
-│  │  Authenticated  - All authenticated users                     │  │
-│  │  Public         - Anyone (including anonymous)                │  │
-│  └──────────────────────────────────────────────────────────────┘  │
-│                                                                     │
-│  ┌──────────────────────────────────────────────────────────────┐  │
-│  │ ProfileFieldVisibility (Record)                               │  │
-│  │                                                               │  │
-│  │  + FieldPath: string                                          │  │
-│  │  + Visibility: ProfileModuleVisibility                        │  │
-│  │  + ExplicitUsers: IReadOnlyList<string>                       │  │
-│  │  + ExplicitRoles: IReadOnlyList<string>                       │  │
-│  └──────────────────────────────────────────────────────────────┘  │
-│                                                                     │
-│  Visibility Resolution Algorithm:                                   │
-│  1. Check module-level visibility                                  │
-│  2. For fields, check field-level overrides                        │
-│  3. Evaluate explicit user grants                                  │
-│  4. Evaluate explicit role grants                                  │
-│  5. Filter data based on viewer context                            │
-└────────────────────────────────────────────────────────────────────┘
-```
+
+*Figure 6 — Visibility and privacy*
 
 ---
 
@@ -323,206 +213,101 @@ The Modular Profile Management system provides an extensible framework for manag
 
 ### Profile Module Save Operation
 
+```plantuml
+@startuml
+skinparam shadowing false
+skinparam rectangle {
+  BackgroundColor White
+  BorderColor #444444
+}
+rectangle "Client Request (Save Profile Module)" as Client
+rectangle "Profile Controller\n(API Layer)" as Controller
+rectangle "Profile Service\nSaveModuleAsync" as Service
+rectangle "Module Registry\nGetModule()" as Registry
+rectangle "Profile Module\nValidateAsync()" as Module
+rectangle "Validation Result\nIsValid: true/false" as Result
+rectangle "Visibility Service\nCheck permissions" as Visibility
+rectangle "Versioning Service\nCreateVersionAsync" as Versioning
+rectangle "Storage Provider\nSaveAsync()" as Storage
+rectangle "Cache Invalidation" as Cache
+rectangle "Event Publishing\n(Optional)" as Events
+rectangle "Success Response\n(HTTP 200/204)" as Response
+Client --> Controller : 1. POST /api/profiles/{profileId}/modules/{moduleName}
+Controller --> Service : 2. Deserialize TData, get user context
+Service --> Registry : 3. Get module from registry
+Registry --> Module : 4. Return IProfileModule<TData>
+Module --> Result : 5. Validation rules execute\n- Required fields\n- Format validation\n- Cross-field rules\n- Async validators (DB checks)
+Result --> Visibility : 6. If invalid, return errors to client\nIf valid, continue
+Visibility --> Versioning : 7. Verify user can modify module
+Versioning --> Storage : 8. Create version record\n- Capture audit fields\n- Serialize current data\n- Store version metadata
+Storage --> Cache : 9. Persist to appropriate storage\n- SQL for structured data\n- NoSQL for flexible schema\n- Blob for binary data
+Cache --> Events : 10. Invalidate cached module data\nInvalidate completeness score
+Events --> Response : 11. Publish ProfileModuleUpdated event
+@enduml
 ```
-Client Request (Save Profile Module)
-         │
-         │ 1. POST /api/profiles/{profileId}/modules/{moduleName}
-         ▼
-┌─────────────────────┐
-│  Profile Controller │
-│  (API Layer)        │
-└──────────┬──────────┘
-           │ 2. Deserialize TData, get user context
-           ▼
-┌─────────────────────┐
-│  Profile Service    │
-│  SaveModuleAsync    │
-└──────────┬──────────┘
-           │ 3. Get module from registry
-           ▼
-┌─────────────────────┐
-│  Module Registry    │
-│  GetModule()        │
-└──────────┬──────────┘
-           │ 4. Return IProfileModule<TData>
-           ▼
-┌─────────────────────┐
-│  Profile Module     │
-│  ValidateAsync()    │
-└──────────┬──────────┘
-           │ 5. Validation rules execute
-           │    ├─ Required fields
-           │    ├─ Format validation
-           │    ├─ Cross-field rules
-           │    └─ Async validators (DB checks)
-           ▼
-┌─────────────────────┐
-│  Validation Result  │
-│  IsValid: true/false│
-└──────────┬──────────┘
-           │ 6. If invalid, return errors to client
-           │    If valid, continue
-           ▼
-┌─────────────────────┐
-│  Visibility Service │
-│  Check permissions  │
-└──────────┬──────────┘
-           │ 7. Verify user can modify module
-           ▼
-┌─────────────────────┐
-│  Versioning Service │
-│  CreateVersionAsync │
-└──────────┬──────────┘
-           │ 8. Create version record
-           │    - Capture audit fields
-           │    - Serialize current data
-           │    - Store version metadata
-           ▼
-┌─────────────────────┐
-│  Storage Provider   │
-│  SaveAsync()        │
-└──────────┬──────────┘
-           │ 9. Persist to appropriate storage
-           │    - SQL for structured data
-           │    - NoSQL for flexible schema
-           │    - Blob for binary data
-           ▼
-┌─────────────────────┐
-│  Cache Invalidation │
-└──────────┬──────────┘
-           │ 10. Invalidate cached module data
-           │     Invalidate completeness score
-           ▼
-┌─────────────────────┐
-│  Event Publishing   │
-│  (Optional)         │
-└──────────┬──────────┘
-           │ 11. Publish ProfileModuleUpdated event
-           ▼
-     Success Response
-     (HTTP 200/204)
-```
+
+*Figure 7 — Profile module save operation*
 
 ### Profile Snapshot Retrieval
 
+```plantuml
+@startuml
+skinparam shadowing false
+skinparam rectangle {
+  BackgroundColor White
+  BorderColor #444444
+}
+rectangle "Client Request (Get Full Profile)" as Client
+rectangle "Profile Controller" as Controller
+rectangle "Profile Service\nGetSnapshotAsync" as Service
+rectangle "Module Registry\nGetActiveModules()" as Registry
+rectangle "Parallel Module Loading\n\nFor each module:" as Loading {
+  rectangle "1. Check cache\n- Hit: return cached\n- Miss: load from storage" as L1
+  rectangle "2. Check visibility\n- Can view: continue\n- Cannot: skip module" as L2
+  rectangle "3. Apply field filtering\n- Remove private fields\n- Mask sensitive data" as L3
+}
+rectangle "Profile Snapshot\n{\n  ProfileId: '...',\n  ProfileType: User\n  LastModified: ...\n  Modules: {\n    UserCore: {...}\n    ContactPrefs: ...\n    SocialLinks: ...\n  }\n}" as Snapshot
+rectangle "JSON Response\n(HTTP 200)" as Response
+Client --> Controller : 1. GET /api/profiles/{profileId}/snapshot
+Controller --> Service : 2. Get viewer context
+Service --> Registry : 3. Get active modules for profile
+Registry --> Loading : 4. Return list of module names\n[UserCore, ContactPrefs, SocialLinks, ...]
+L1 -[hidden]down- L2
+L2 -[hidden]down- L3
+Loading --> Snapshot : 5. Aggregate results
+Snapshot --> Response : 6. Cache snapshot (short TTL)
+@enduml
 ```
-Client Request (Get Full Profile)
-         │
-         │ 1. GET /api/profiles/{profileId}/snapshot
-         ▼
-┌─────────────────────┐
-│  Profile Controller │
-└──────────┬──────────┘
-           │ 2. Get viewer context
-           ▼
-┌─────────────────────┐
-│  Profile Service    │
-│  GetSnapshotAsync   │
-└──────────┬──────────┘
-           │ 3. Get active modules for profile
-           ▼
-┌─────────────────────┐
-│  Module Registry    │
-│  GetActiveModules() │
-└──────────┬──────────┘
-           │ 4. Return list of module names
-           │    [UserCore, ContactPrefs, SocialLinks, ...]
-           ▼
-┌─────────────────────────────────────┐
-│  Parallel Module Loading             │
-│                                     │
-│  For each module:                   │
-│  ┌───────────────────────────────┐  │
-│  │ 1. Check cache               │  │
-│  │    ├─ Hit: return cached     │  │
-│  │    └─ Miss: load from storage│  │
-│  └───────────────────────────────┘  │
-│                                     │
-│  ┌───────────────────────────────┐  │
-│  │ 2. Check visibility           │  │
-│  │    ├─ Can view: continue      │  │
-│  │    └─ Cannot: skip module     │  │
-│  └───────────────────────────────┘  │
-│                                     │
-│  ┌───────────────────────────────┐  │
-│  │ 3. Apply field filtering      │  │
-│  │    - Remove private fields    │  │
-│  │    - Mask sensitive data      │  │
-│  └───────────────────────────────┘  │
-└─────────────┬───────────────────────┘
-              │ 5. Aggregate results
-              ▼
-┌─────────────────────┐
-│  Profile Snapshot   │
-│  {                  │
-│    ProfileId: "...",│
-│    ProfileType: User│
-│    LastModified: ...│
-│    Modules: {       │
-│      UserCore: {...}│
-│      ContactPrefs:..│
-│      SocialLinks:.. │
-│    }                │
-│  }                  │
-└──────────┬──────────┘
-           │ 6. Cache snapshot (short TTL)
-           ▼
-     JSON Response
-     (HTTP 200)
-```
+
+*Figure 8 — Profile snapshot retrieval*
 
 ### Profile Completeness Calculation
 
+```plantuml
+@startuml
+skinparam shadowing false
+skinparam rectangle {
+  BackgroundColor White
+  BorderColor #444444
+}
+rectangle "Completeness Score Request" as Request
+rectangle "Profile Service\nGetCompleteness" as Service
+rectangle "Cache Hit?" as Decision <<Decision>>
+rectangle "Module Registry\nGetRequiredModules" as Registry
+rectangle "Load Modules\n(parallel)" as Load
+rectangle "Calculate Score\n\nFor each required module:\n- Module exists? +weight\n- Required fields:\n  - Populated? +points\n  - Empty? +0\n- Optional fields:\n  - Populated? +bonus\n  - Empty? +0\n\nScore = (points / total) * 100" as Calc
+rectangle "Return Score\n(0-100)" as Return
+Request --> Service : 1. Calculate score for profile
+Service --> Decision : 2. Check cache\nKey: 'completeness:{profileId}'
+Decision --> Return : Yes
+Decision --> Registry : No
+Registry --> Load : 3. Get list of required modules\nand their required fields
+Load --> Calc : 4. Load all required modules
+Calc --> Return : 5. Cache result (10 min TTL)
+@enduml
 ```
-Completeness Score Request
-         │
-         │ 1. Calculate score for profile
-         ▼
-┌─────────────────────┐
-│  Profile Service    │
-│  GetCompleteness    │
-└──────────┬──────────┘
-           │ 2. Check cache
-           │    Key: "completeness:{profileId}"
-           ▼
-     Cache Hit?
-      ╱      ╲
-    Yes       No
-     │         │
-     │         ▼
-     │   ┌─────────────────────┐
-     │   │  Module Registry    │
-     │   │  GetRequiredModules │
-     │   └──────────┬──────────┘
-     │              │ 3. Get list of required modules
-     │              │    and their required fields
-     │              ▼
-     │   ┌─────────────────────┐
-     │   │  Load Modules       │
-     │   │  (parallel)         │
-     │   └──────────┬──────────┘
-     │              │ 4. Load all required modules
-     │              ▼
-     │   ┌─────────────────────────────┐
-     │   │  Calculate Score            │
-     │   │                             │
-     │   │  For each required module:  │
-     │   │  ├─ Module exists? +weight  │
-     │   │  ├─ Required fields:        │
-     │   │  │  ├─ Populated? +points   │
-     │   │  │  └─ Empty? +0            │
-     │   │  └─ Optional fields:        │
-     │   │     ├─ Populated? +bonus    │
-     │   │     └─ Empty? +0            │
-     │   │                             │
-     │   │  Score = (points / total)   │
-     │   │         * 100               │
-     │   └──────────┬──────────────────┘
-     │              │ 5. Cache result (10 min TTL)
-     │              ▼
-     └───────────>  Return Score
-                    (0-100)
-```
+
+*Figure 9 — Profile completeness calculation*
 
 ---
 
@@ -574,59 +359,30 @@ public void ConfigureServices(IServiceCollection services)
 
 ### Module Discovery Process
 
+```plantuml
+@startuml
+skinparam shadowing false
+skinparam rectangle {
+  BackgroundColor White
+  BorderColor #444444
+}
+rectangle "Application Startup" as Startup
+rectangle "Profile Module\nRegistry Builder" as Builder
+rectangle "Module Discovery\n\nFor each IProfileModule<TData>:" as Discovery {
+  rectangle "1. Extract metadata\n- Name\n- Category\n- Version\n- Dependencies\n- Data type\n- Storage provider" as D1
+  rectangle "2. Validate module\n- No circular dependencies\n- Dependencies exist\n- Storage provider valid" as D2
+  rectangle "3. Build dependency graph\n- Topological sort\n- Detect cycles" as D3
+}
+rectangle "Module Registry\n(Ready for use)\n\nModules:\n- UserCore\n- OrgCore\n- ContactPrefs\n- SocialLinks\n- UserSkills\n- CompanyBranding" as Registry
+Startup --> Builder : 1. DI container initialization
+Builder --> Discovery : 2. Scan for IProfileModule<TData> registrations
+D1 -[hidden]down- D2
+D2 -[hidden]down- D3
+Discovery --> Registry : 4. Register in registry
+@enduml
 ```
-Application Startup
-         │
-         │ 1. DI container initialization
-         ▼
-┌─────────────────────┐
-│  Profile Module     │
-│  Registry Builder   │
-└──────────┬──────────┘
-           │ 2. Scan for IProfileModule<TData> registrations
-           ▼
-┌─────────────────────────────────────┐
-│  Module Discovery                   │
-│                                     │
-│  For each IProfileModule<TData>:    │
-│  ┌───────────────────────────────┐  │
-│  │ 1. Extract metadata           │  │
-│  │    - Name                     │  │
-│  │    - Category                 │  │
-│  │    - Version                  │  │
-│  │    - Dependencies             │  │
-│  │    - Data type                │  │
-│  │    - Storage provider         │  │
-│  └───────────────────────────────┘  │
-│                                     │
-│  ┌───────────────────────────────┐  │
-│  │ 2. Validate module            │  │
-│  │    - No circular dependencies │  │
-│  │    - Dependencies exist       │  │
-│  │    - Storage provider valid   │  │
-│  └───────────────────────────────┘  │
-│                                     │
-│  ┌───────────────────────────────┐  │
-│  │ 3. Build dependency graph     │  │
-│  │    - Topological sort         │  │
-│  │    - Detect cycles            │  │
-│  └───────────────────────────────┘  │
-└─────────────┬───────────────────────┘
-              │ 4. Register in registry
-              ▼
-┌─────────────────────┐
-│  Module Registry    │
-│  (Ready for use)    │
-│                     │
-│  Modules:           │
-│  - UserCore         │
-│  - OrgCore          │
-│  - ContactPrefs     │
-│  - SocialLinks      │
-│  - UserSkills       │
-│  - CompanyBranding  │
-└─────────────────────┘
-```
+
+*Figure 10 — Module discovery process*
 
 ---
 
@@ -634,27 +390,28 @@ Application Startup
 
 ### Storage Strategy Decision Tree
 
+```plantuml
+@startuml
+skinparam shadowing false
+skinparam rectangle {
+  BackgroundColor White
+  BorderColor #444444
+}
+rectangle "Profile Module Data" as Data
+rectangle "What type of data?" as Question <<Decision>>
+rectangle "SQL Storage Provider\n(Entity Framework)" as Sql
+rectangle "NoSQL Storage Provider\n(MongoDB, CosmosDB)" as NoSql
+rectangle "Blob Storage Provider\n(Azure Blob, S3)" as Blob
+rectangle "Hybrid Storage Provider\n(SQL + Blob)" as Hybrid
+Data --> Question
+Question --> Sql : Yes - Structured, relational?\n(normalize, joins, ACID)
+Question --> NoSql : Yes - Flexible schema, high write?\n(frequent changes, scale)
+Question --> Blob : Yes - Binary data (images, docs)?\n(>1MB, streaming)
+Question --> Hybrid : Yes - Hybrid (metadata + blobs)?\n(profile photo with metadata)
+@enduml
 ```
-Profile Module Data
-         │
-         ▼
-┌─────────────────────────────────┐
-│ What type of data?              │
-├─────────────────────────────────┤
-│                                 │
-│ Structured, relational?         │───Yes──> SQL Storage Provider
-│  (normalize, joins, ACID)       │          (Entity Framework)
-│                                 │
-│ Flexible schema, high write?   │───Yes──> NoSQL Storage Provider
-│  (frequent changes, scale)      │          (MongoDB, CosmosDB)
-│                                 │
-│ Binary data (images, docs)?    │───Yes──> Blob Storage Provider
-│  (>1MB, streaming)              │          (Azure Blob, S3)
-│                                 │
-│ Hybrid (metadata + blobs)?     │───Yes──> Hybrid Storage Provider
-│  (profile photo with metadata)  │          (SQL + Blob)
-└─────────────────────────────────┘
-```
+
+*Figure 11 — Storage strategy decision tree*
 
 ### Storage Provider Configuration
 
@@ -713,44 +470,24 @@ public class CompanyBrandingModule : IProfileModule<CompanyBrandingData>
 
 ### Multi-Level Caching
 
+```plantuml
+@startuml
+skinparam shadowing false
+skinparam rectangle {
+  BackgroundColor White
+  BorderColor #444444
+}
+rectangle "Cache Hierarchy" as Hierarchy <<Container>> {
+  rectangle "Level 1: In-Memory Cache (L1)\n\nIMemoryCache\n- Individual module data\n- TTL: 5 minutes (configurable)\n- Size limit: 1000 entries per node\n- Eviction: LRU\n\nKeys:\n  'profile:module:{profileId}:{moduleName}'\n  'profile:completeness:{profileId}'\n  'profile:visibility:{profileId}:{moduleName}'" as L1 <<Cache>>
+  rectangle "Level 2: Distributed Cache (L2)\n\nIDistributedCache (Redis)\n- Profile snapshots\n- TTL: 10 minutes\n- Shared across all nodes\n\nKeys:\n  'profile:snapshot:{profileId}'\n  'profile:modules:active:{profileId}'" as L2 <<Cache>>
+  rectangle "Level 3: Storage Layer (L3)\n\nDatabase / Blob Storage\n- Source of truth\n- Always consistent" as L3 <<Store>>
+}
+L1 -[hidden]down- L2
+L2 -[hidden]down- L3
+@enduml
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                      Cache Hierarchy                             │
-│                                                                  │
-│  Level 1: In-Memory Cache (L1)                                  │
-│  ┌────────────────────────────────────────────────────────────┐ │
-│  │ IMemoryCache                                                │ │
-│  │ - Individual module data                                    │ │
-│  │ - TTL: 5 minutes (configurable)                             │ │
-│  │ - Size limit: 1000 entries per node                         │ │
-│  │ - Eviction: LRU                                             │ │
-│  │                                                              │ │
-│  │ Keys:                                                        │ │
-│  │   "profile:module:{profileId}:{moduleName}"                 │ │
-│  │   "profile:completeness:{profileId}"                        │ │
-│  │   "profile:visibility:{profileId}:{moduleName}"             │ │
-│  └────────────────────────────────────────────────────────────┘ │
-│                                                                  │
-│  Level 2: Distributed Cache (L2)                                │
-│  ┌────────────────────────────────────────────────────────────┐ │
-│  │ IDistributedCache (Redis)                                   │ │
-│  │ - Profile snapshots                                         │ │
-│  │ - TTL: 10 minutes                                           │ │
-│  │ - Shared across all nodes                                   │ │
-│  │                                                              │ │
-│  │ Keys:                                                        │ │
-│  │   "profile:snapshot:{profileId}"                            │ │
-│  │   "profile:modules:active:{profileId}"                      │ │
-│  └────────────────────────────────────────────────────────────┘ │
-│                                                                  │
-│  Level 3: Storage Layer (L3)                                    │
-│  ┌────────────────────────────────────────────────────────────┐ │
-│  │ Database / Blob Storage                                     │ │
-│  │ - Source of truth                                           │ │
-│  │ - Always consistent                                         │ │
-│  └────────────────────────────────────────────────────────────┘ │
-└─────────────────────────────────────────────────────────────────┘
-```
+
+*Figure 12 — Multi-level cache hierarchy*
 
 ### Cache Invalidation Strategy
 
@@ -789,108 +526,57 @@ public async Task SaveModuleAsync<TData>(
 
 ### Access Control Flow
 
+```plantuml
+@startuml
+skinparam shadowing false
+skinparam rectangle {
+  BackgroundColor White
+  BorderColor #444444
+}
+rectangle "API Request" as Request
+rectangle "Identity Context\n- UserId\n- Roles\n- Claims\n- TenantId" as Identity
+rectangle "Authorization Middleware\n- Verify user authenticated\n- Check tenant isolation" as Auth
+rectangle "Profile Service\n- Receive request\n- Get target profileId" as Service
+rectangle "Visibility Service\n\nCan user view module?\n1. Get module visibility level\n   Private / Team / Org / Auth / Public\n2. Check ownership\n   Is user the profile owner?\n3. Check visibility level\n   Private: owner only\n   Team: owner + team members\n   Organization: same tenant\n   Authenticated: any user\n   Public: anyone\n4. Check explicit grants\n   User explicitly granted access?\n   User has required role?" as Visibility
+rectangle "Granted?" as Decision <<Decision>>
+rectangle "HTTP 403 Forbidden" as Forbidden
+rectangle "Load Module Data" as Load
+rectangle "Field Visibility Filter\n- Remove private fields\n- Mask sensitive data" as Filter
+rectangle "HTTP 200 OK" as Ok
+Request --> Identity : 1. Authentication (JWT, Cookie, etc.)
+Identity --> Auth : 2. Extract context
+Auth --> Service : 3. Authorized request
+Service --> Visibility : 4. Check module visibility
+Visibility --> Decision : 5. Access decision
+Decision --> Forbidden : No
+Decision --> Load : Yes
+Load --> Filter : 6. Apply field-level filtering
+Filter --> Ok : 7. Return filtered data
+@enduml
 ```
-API Request
-    │
-    │ 1. Authentication (JWT, Cookie, etc.)
-    ▼
-┌─────────────────┐
-│ Identity Context│
-│ - UserId        │
-│ - Roles         │
-│ - Claims        │
-│ - TenantId      │
-└────────┬────────┘
-         │ 2. Extract context
-         ▼
-┌─────────────────────────────┐
-│ Authorization Middleware    │
-│ - Verify user authenticated │
-│ - Check tenant isolation    │
-└────────┬────────────────────┘
-         │ 3. Authorized request
-         ▼
-┌─────────────────────────────┐
-│ Profile Service             │
-│ - Receive request           │
-│ - Get target profileId      │
-└────────┬────────────────────┘
-         │ 4. Check module visibility
-         ▼
-┌─────────────────────────────────────────────────┐
-│ Visibility Service                              │
-│                                                 │
-│ Can user view module?                           │
-│ ┌─────────────────────────────────────────────┐ │
-│ │ 1. Get module visibility level              │ │
-│ │    Private / Team / Org / Auth / Public     │ │
-│ ├─────────────────────────────────────────────┤ │
-│ │ 2. Check ownership                          │ │
-│ │    Is user the profile owner?               │ │
-│ ├─────────────────────────────────────────────┤ │
-│ │ 3. Check visibility level                   │ │
-│ │    Private: owner only                      │ │
-│ │    Team: owner + team members               │ │
-│ │    Organization: same tenant                │ │
-│ │    Authenticated: any user                  │ │
-│ │    Public: anyone                           │ │
-│ ├─────────────────────────────────────────────┤ │
-│ │ 4. Check explicit grants                    │ │
-│ │    User explicitly granted access?          │ │
-│ │    User has required role?                  │ │
-│ └─────────────────────────────────────────────┘ │
-└────────┬────────────────────────────────────────┘
-         │ 5. Access decision
-         │
-    Granted?
-    ╱      ╲
-  Yes       No
-   │         │
-   │         └──> HTTP 403 Forbidden
-   │
-   ▼
-┌─────────────────────────────┐
-│ Load Module Data            │
-└────────┬────────────────────┘
-         │ 6. Apply field-level filtering
-         ▼
-┌─────────────────────────────┐
-│ Field Visibility Filter     │
-│ - Remove private fields     │
-│ - Mask sensitive data       │
-└────────┬────────────────────┘
-         │ 7. Return filtered data
-         ▼
-    HTTP 200 OK
-```
+
+*Figure 13 — Access control flow*
 
 ### Data Encryption
 
+```plantuml
+@startuml
+skinparam shadowing false
+skinparam rectangle {
+  BackgroundColor White
+  BorderColor #444444
+}
+rectangle "Encryption Layers" as Layers <<Container>> {
+  rectangle "Transport Layer (TLS 1.2+)\n- HTTPS for all API calls\n- Certificate-based authentication" as Transport <<Layer>>
+  rectangle "Application Layer\n- Sensitive fields encrypted (SSN, credit cards)\n- Field-level encryption with Azure Key Vault\n- Searchable encryption for indexed fields" as App <<Layer>>
+  rectangle "Storage Layer\n- Database encryption at rest (TDE)\n- Blob storage encryption (AES-256)\n- Encrypted backups" as Storage <<Layer>>
+}
+Transport --> App
+App --> Storage
+@enduml
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    Encryption Layers                             │
-│                                                                  │
-│  ┌────────────────────────────────────────────────────────────┐ │
-│  │ Transport Layer (TLS 1.2+)                                  │ │
-│  │ - HTTPS for all API calls                                   │ │
-│  │ - Certificate-based authentication                          │ │
-│  └────────────────────────────────────────────────────────────┘ │
-│                           ▼                                      │
-│  ┌────────────────────────────────────────────────────────────┐ │
-│  │ Application Layer                                           │ │
-│  │ - Sensitive fields encrypted (SSN, credit cards)            │ │
-│  │ - Field-level encryption with Azure Key Vault              │ │
-│  │ - Searchable encryption for indexed fields                  │ │
-│  └────────────────────────────────────────────────────────────┘ │
-│                           ▼                                      │
-│  ┌────────────────────────────────────────────────────────────┐ │
-│  │ Storage Layer                                               │ │
-│  │ - Database encryption at rest (TDE)                         │ │
-│  │ - Blob storage encryption (AES-256)                         │ │
-│  │ - Encrypted backups                                         │ │
-│  └────────────────────────────────────────────────────────────┘ │
-└─────────────────────────────────────────────────────────────────┘
-```
+
+*Figure 14 — Encryption layers*
 
 ---
 
@@ -1069,43 +755,40 @@ public class ProfileService : IProfileService
 
 ### Multi-Tenant Deployment
 
+```plantuml
+@startuml
+skinparam shadowing false
+skinparam rectangle {
+  BackgroundColor White
+  BorderColor #444444
+}
+rectangle "Load Balancer\n(Azure Front Door / AWS ALB)" as LB <<Container>>
+rectangle "Web Tier 1\n(API + UI)" as Web1 <<Container>>
+rectangle "Web Tier 2\n(API + UI)" as Web2 <<Container>>
+rectangle "Web Tier 3\n(API + UI)" as Web3 <<Container>>
+rectangle "Redis Cache Cluster\n(Distributed cache L2)" as Redis <<Container>>
+rectangle "SQL Database\n(Primary +\n Read\n Replicas)" as Sql <<Store>>
+rectangle "NoSQL Store\n(MongoDB/\n CosmosDB)" as NoSql <<Store>>
+rectangle "Blob Storage\n(Azure Blob/\n AWS S3)" as Blob <<Store>>
+LB --> Web1
+LB --> Web2
+LB --> Web3
+Web1 --> Redis
+Web2 --> Redis
+Web3 --> Redis
+Redis --> Sql
+Redis --> NoSql
+Redis --> Blob
+note bottom of Redis
+  Tenant Isolation Strategy:
+  - Row-level security (TenantId in all tables)
+  - Separate databases per tier (optional)
+  - Separate blob containers per tenant
+end note
+@enduml
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                          Load Balancer                           │
-│                     (Azure Front Door / AWS ALB)                 │
-└──────────────────────────┬──────────────────────────────────────┘
-                           │
-          ┌────────────────┼────────────────┐
-          │                │                │
-          ▼                ▼                ▼
-┌──────────────┐  ┌──────────────┐  ┌──────────────┐
-│ Web Tier 1   │  │ Web Tier 2   │  │ Web Tier 3   │
-│ (API + UI)   │  │ (API + UI)   │  │ (API + UI)   │
-└──────┬───────┘  └──────┬───────┘  └──────┬───────┘
-       │                 │                 │
-       └─────────────────┼─────────────────┘
-                         │
-                         ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                     Redis Cache Cluster                          │
-│                  (Distributed cache L2)                          │
-└──────────────────────────┬──────────────────────────────────────┘
-                           │
-          ┌────────────────┼────────────────┐
-          │                │                │
-          ▼                ▼                ▼
-┌──────────────┐  ┌──────────────┐  ┌──────────────┐
-│ SQL Database │  │ NoSQL Store  │  │ Blob Storage │
-│ (Primary +   │  │ (MongoDB/    │  │ (Azure Blob/ │
-│  Read        │  │  CosmosDB)   │  │  AWS S3)     │
-│  Replicas)   │  │              │  │              │
-└──────────────┘  └──────────────┘  └──────────────┘
 
-Tenant Isolation Strategy:
-- Row-level security (TenantId in all tables)
-- Separate databases per tier (optional)
-- Separate blob containers per tenant
-```
+*Figure 15 — Multi-tenant deployment*
 
 ---
 

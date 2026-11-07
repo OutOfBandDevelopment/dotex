@@ -10,34 +10,39 @@
 
 The Document Conversion Service implements a **Provider Pattern** with **Context-Based Conversion** for transforming documents between formats using multiple conversion engines. Applications provide operational context that providers use to optimize conversion quality, speed, and options.
 
+```plantuml
+@startuml
+skinparam rectangle {
+  BackgroundColor White
+  BorderColor #444444
+}
+rectangle "Application Layer\n(Report Generator, Document Processor, API Gateway)" as App <<layer>>
+rectangle "IDocumentConversionService\n- ConvertAsync(content, source, target, context)\n- ConvertBatchAsync(requests, context)\n- IsSupportedAsync(source, target)\n- GetSupportedTargetFormatsAsync(source)" as Svc <<service>>
+rectangle "LibreOffice\nProvider" as P1 <<provider>>
+rectangle "Tika\nProvider" as P2 <<provider>>
+rectangle "PDFSharp\nProvider" as P3 <<provider>>
+rectangle "ImageMagick\nProvider" as P4 <<provider>>
+rectangle "Playwright\nProvider" as P5 <<provider>>
+rectangle "Office → PDF\nPDF → Office" as E1 <<capability>>
+rectangle "Metadata\nExtract" as E2 <<capability>>
+rectangle "PDF Ops\n.NET Only" as E3 <<capability>>
+rectangle "Image Cvt\nFormat Cvt" as E4 <<capability>>
+rectangle "HTML → PDF\nHTML → IMG" as E5 <<capability>>
+App --> Svc : ConvertAsync(content, source, target, context)
+Svc --> P1
+Svc --> P2
+Svc --> P3
+Svc --> P4
+Svc --> P5
+P1 --> E1
+P2 --> E2
+P3 --> E3
+P4 --> E4
+P5 --> E5
+@enduml
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                   Application Layer                          │
-│    (Report Generator, Document Processor, API Gateway)       │
-└────────────────────┬────────────────────────────────────────┘
-                     │ ConvertAsync(content, source, target, context)
-                     ↓
-┌─────────────────────────────────────────────────────────────┐
-│          IDocumentConversionService                          │
-│  - ConvertAsync(content, source, target, context)            │
-│  - ConvertBatchAsync(requests, context)                      │
-│  - IsSupportedAsync(source, target)                          │
-│  - GetSupportedTargetFormatsAsync(source)                    │
-└────────────────────┬────────────────────────────────────────┘
-                     │
-         ┌───────────┼────────────┬────────────┬────────────┐
-         ↓           ↓            ↓            ↓            ↓
-┌──────────────┐ ┌────────┐ ┌─────────┐ ┌──────────┐ ┌──────────┐
-│ LibreOffice  │ │  Tika  │ │PDFSharp │ │ImageMagic│ │Playwright│
-│  Provider    │ │Provider│ │ Provider│ │ Provider │ │ Provider │
-└──────┬───────┘ └────┬───┘ └────┬────┘ └────┬─────┘ └────┬─────┘
-       │              │          │            │            │
-       ↓              ↓          ↓            ↓            ↓
-┌──────────────┐ ┌────────┐ ┌─────────┐ ┌──────────┐ ┌──────────┐
-│ Office →PDF  │ │Metadata│ │PDF Ops  │ │Image Cvt │ │ HTML→PDF │
-│ PDF → Office │ │Extract │ │.NET Only│ │Format Cvt│ │ HTML→IMG │
-└──────────────┘ └────────┘ └─────────┘ └──────────┘ └──────────┘
-```
+
+*Figure 1 — Conversion service, providers and capabilities*
 
 ---
 
@@ -614,38 +619,25 @@ public class PlaywrightConversionProvider : IDocumentConversionProvider
 
 ### Sequence: Document Conversion with Provider Selection
 
+```plantuml
+@startuml
+participant "Application" as App
+participant "ConversionService" as Svc
+participant "Provider" as Prov
+participant "Engine" as Eng
+App -> Svc : ConvertAsync(...)
+Svc -> Prov : SelectProvider()
+Prov --> Svc : Provider instance
+Svc -> Prov : ConvertAsync(...)
+Prov -> Eng : Execute conversion
+Eng --> Prov : Converted data
+Prov --> Svc : ConversionResult
+Svc -> Svc : ValidateResult()
+Svc --> App : ConversionResult
+@enduml
 ```
-┌───────────┐     ┌──────────────────┐     ┌──────────┐     ┌──────────┐
-│Application│     │ConversionService │     │ Provider │     │  Engine  │
-└─────┬─────┘     └────────┬─────────┘     └─────┬────┘     └─────┬────┘
-      │                    │                      │                 │
-      │ ConvertAsync(...)  │                      │                 │
-      ├───────────────────>│                      │                 │
-      │                    │                      │                 │
-      │                    │ SelectProvider()     │                 │
-      │                    ├─────────────────────>│                 │
-      │                    │                      │                 │
-      │                    │ Provider instance    │                 │
-      │                    │<─────────────────────┤                 │
-      │                    │                      │                 │
-      │                    │ ConvertAsync(...)    │                 │
-      │                    ├─────────────────────>│                 │
-      │                    │                      │                 │
-      │                    │                      │ Execute conversion
-      │                    │                      ├────────────────>│
-      │                    │                      │                 │
-      │                    │                      │ Converted data  │
-      │                    │                      │<────────────────┤
-      │                    │                      │                 │
-      │                    │ ConversionResult     │                 │
-      │                    │<─────────────────────┤                 │
-      │                    │                      │                 │
-      │                    │ ValidateResult()     │                 │
-      │                    │                      │                 │
-      │ ConversionResult   │                      │                 │
-      │<───────────────────┤                      │                 │
-      │                    │                      │                 │
-```
+
+*Figure 2 — Conversion data flow*
 
 ---
 

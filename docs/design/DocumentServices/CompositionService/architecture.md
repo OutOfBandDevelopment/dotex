@@ -10,26 +10,27 @@
 
 The Document Composition Service implements a **Provider Pattern** with **Context-Based Merging** for combining multiple documents into a single output with bookmark preservation, metadata consolidation, and intelligent page ordering.
 
+```plantuml
+@startuml
+skinparam rectangle {
+  BackgroundColor White
+  BorderColor #444444
+}
+rectangle "Application Layer" as App <<layer>>
+rectangle "IDocumentCompositionService\n- MergeAsync(documents[], context)\n- ComposeFromPagesAsync(pageSources[], context)\n- InsertAsync(target, insert, position, context)" as Svc <<service>>
+rectangle "PDFSharp\nProvider" as P1 <<provider>>
+rectangle "iText\nProvider" as P2 <<provider>>
+rectangle "PDFBox\nProvider" as P3 <<provider>>
+rectangle "Custom\nProvider" as P4 <<provider>>
+App --> Svc : MergeAsync(documents[], context)
+Svc --> P1
+Svc --> P2
+Svc --> P3
+Svc --> P4
+@enduml
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                   Application Layer                          │
-└────────────────────┬────────────────────────────────────────┘
-                     │ MergeAsync(documents[], context)
-                     ↓
-┌─────────────────────────────────────────────────────────────┐
-│          IDocumentCompositionService                         │
-│  - MergeAsync(documents[], context)                          │
-│  - ComposeFromPagesAsync(pageSources[], context)             │
-│  - InsertAsync(target, insert, position, context)            │
-└────────────────────┬────────────────────────────────────────┘
-                     │
-         ┌───────────┼────────────┬────────────┐
-         ↓           ↓            ↓            ↓
-┌──────────────┐ ┌────────┐ ┌─────────┐ ┌──────────┐
-│  PDFSharp    │ │ iText  │ │ PDFBox  │ │  Custom  │
-│  Provider    │ │Provider│ │ Provider│ │ Provider │
-└──────────────┘ └────────┘ └─────────┘ └──────────┘
-```
+
+*Figure 1 — Composition service and providers*
 
 ---
 

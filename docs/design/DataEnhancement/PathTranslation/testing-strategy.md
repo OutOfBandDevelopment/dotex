@@ -15,17 +15,17 @@ Comprehensive testing strategy for path syntax translation system, ensuring reli
 
 ## Test Pyramid
 
+```plantuml
+@startuml
+rectangle "Performance Benchmarks\n5 tests (benchmarks)" as Perf
+rectangle "Integration Tests\n15 tests (DataContainer integration)" as Int
+rectangle "Unit Tests\n60+ tests (navigators, translation, parsing)" as Unit
+Perf -[hidden]down- Int
+Int -[hidden]down- Unit
+@enduml
 ```
-        ┌─────────────────┐
-        │  Performance    │  5 tests (benchmarks)
-        │   Benchmarks    │
-        ├─────────────────┤
-        │   Integration   │  15 tests (DataContainer integration)
-        │      Tests      │
-        ├─────────────────┤
-        │   Unit Tests    │  60+ tests (navigators, translation, parsing)
-        └─────────────────┘
-```
+
+*Figure 1 — Test pyramid*
 
 **Coverage Goals:**
 - IPathNavigator implementations: 90%+

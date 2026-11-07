@@ -50,17 +50,23 @@ The OoBDev framework provides shared libraries and extensions for faster, more c
 
 ### Architectural Layers
 
+```plantuml
+@startuml
+skinparam rectangle {
+  BackgroundColor White
+  BorderColor #444444
+}
+rectangle "Common (Orchestration Layer)\nAll-in-one packages" <<layer>> as common
+rectangle "Framework (Domain Libraries)\nCore business logic" <<layer>> as framework
+rectangle "Extensions (System Extensions)\nCustom .NET extensions" <<layer>> as extensions
+rectangle "ExternalServices (Integrations)\nThird-party wrappers" <<layer>> as external
+common -[hidden]down- framework
+framework -[hidden]down- extensions
+extensions -[hidden]down- external
+@enduml
 ```
-┌─────────────────────────────────────┐
-│   Common (Orchestration Layer)     │  ← All-in-one packages
-├─────────────────────────────────────┤
-│   Framework (Domain Libraries)     │  ← Core business logic
-├─────────────────────────────────────┤
-│   Extensions (System Extensions)   │  ← Custom .NET extensions
-├─────────────────────────────────────┤
-│  ExternalServices (Integrations)   │  ← Third-party wrappers
-└─────────────────────────────────────┘
-```
+
+*Figure 1 — Architectural layers*
 
 **Dependency Rule:** Lower layers cannot depend on higher layers.
 

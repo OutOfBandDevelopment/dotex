@@ -10,34 +10,39 @@
 
 The Document Splitting Service implements a **Provider Pattern** with **Context-Based Splitting** for dividing documents into smaller parts based on pages, size, bookmarks, or sections. Applications provide operational context that providers use to optimize splitting behavior.
 
+```plantuml
+@startuml
+skinparam rectangle {
+  BackgroundColor White
+  BorderColor #444444
+}
+rectangle "Application Layer\n(Document Processor, Batch Splitter, Archive Manager)" as App <<layer>>
+rectangle "IDocumentSplittingService\n- SplitByPagesAsync(content, ranges, context)\n- SplitEveryNPagesAsync(content, N, context)\n- SplitBySizeAsync(content, maxSize, context)\n- SplitByBookmarksAsync(content, depth, context)" as Svc <<service>>
+rectangle "PDFSharp\nProvider" as P1 <<provider>>
+rectangle "iText\nProvider" as P2 <<provider>>
+rectangle "PDFBox\nProvider" as P3 <<provider>>
+rectangle "OpenXML\nProvider" as P4 <<provider>>
+rectangle "Custom\nProvider" as P5 <<provider>>
+rectangle "PDF Split\nBasic Ops" as E1 <<capability>>
+rectangle "Advanced\nPDF Ops" as E2 <<capability>>
+rectangle "Java-Based\nPDF Split" as E3 <<capability>>
+rectangle "Office Doc\nSplitting" as E4 <<capability>>
+rectangle "Text/Other\nFormats" as E5 <<capability>>
+App --> Svc : SplitByPagesAsync(content, ranges, context)
+Svc --> P1
+Svc --> P2
+Svc --> P3
+Svc --> P4
+Svc --> P5
+P1 --> E1
+P2 --> E2
+P3 --> E3
+P4 --> E4
+P5 --> E5
+@enduml
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                   Application Layer                          │
-│    (Document Processor, Batch Splitter, Archive Manager)    │
-└────────────────────┬────────────────────────────────────────┘
-                     │ SplitByPagesAsync(content, ranges, context)
-                     ↓
-┌─────────────────────────────────────────────────────────────┐
-│          IDocumentSplittingService                           │
-│  - SplitByPagesAsync(content, ranges, context)               │
-│  - SplitEveryNPagesAsync(content, N, context)                │
-│  - SplitBySizeAsync(content, maxSize, context)               │
-│  - SplitByBookmarksAsync(content, depth, context)            │
-└────────────────────┬────────────────────────────────────────┘
-                     │
-         ┌───────────┼────────────┬────────────┬────────────┐
-         ↓           ↓            ↓            ↓            ↓
-┌──────────────┐ ┌────────┐ ┌─────────┐ ┌──────────┐ ┌──────────┐
-│  PDFSharp    │ │ iText  │ │ PDFBox  │ │ OpenXML  │ │  Custom  │
-│  Provider    │ │Provider│ │ Provider│ │ Provider │ │ Provider │
-└──────┬───────┘ └────┬───┘ └────┬────┘ └────┬─────┘ └────┬─────┘
-       │              │          │            │            │
-       ↓              ↓          ↓            ↓            ↓
-┌──────────────┐ ┌────────┐ ┌─────────┐ ┌──────────┐ ┌──────────┐
-│ PDF Split    │ │Advanced│ │Java-Based│ │Office Doc│ │Text/Other│
-│ Basic Ops    │ │PDF Ops │ │PDF Split │ │ Splitting│ │ Formats  │
-└──────────────┘ └────────┘ └─────────┘ └──────────┘ └──────────┘
-```
+
+*Figure 1 — Splitting service, providers and capabilities*
 
 ---
 
@@ -344,35 +349,24 @@ public class PDFSharpSplittingProvider : IDocumentSplittingProvider
 
 ### Sequence: Document Splitting
 
+```plantuml
+@startuml
+participant "Application" as App
+participant "SplittingService" as Svc
+participant "Provider" as Prov
+participant "Parts" as Parts
+App -> Svc : SplitByPagesAsync()
+Svc -> Prov : SelectProvider()
+Svc -> Prov : SplitAsync()
+Prov -> Parts : Split document
+Parts --> Prov : Part 1, 2, 3...
+Prov --> Svc : SplittingResult
+Svc -> Svc : ValidateSplit()
+Svc --> App : SplittingResult
+@enduml
 ```
-┌───────────┐     ┌──────────────────┐     ┌──────────┐     ┌──────────┐
-│Application│     │SplittingService  │     │ Provider │     │  Parts   │
-└─────┬─────┘     └────────┬─────────┘     └─────┬────┘     └─────┬────┘
-      │                    │                      │                 │
-      │ SplitByPagesAsync()│                      │                 │
-      ├───────────────────>│                      │                 │
-      │                    │                      │                 │
-      │                    │ SelectProvider()     │                 │
-      │                    ├─────────────────────>│                 │
-      │                    │                      │                 │
-      │                    │ SplitAsync()         │                 │
-      │                    ├─────────────────────>│                 │
-      │                    │                      │                 │
-      │                    │                      │ Split document  │
-      │                    │                      ├────────────────>│
-      │                    │                      │                 │
-      │                    │                      │ Part 1, 2, 3... │
-      │                    │                      │<────────────────┤
-      │                    │                      │                 │
-      │                    │ SplittingResult      │                 │
-      │                    │<─────────────────────┤                 │
-      │                    │                      │                 │
-      │                    │ ValidateSplit()      │                 │
-      │                    │                      │                 │
-      │ SplittingResult    │                      │                 │
-      │<───────────────────┤                      │                 │
-      │                    │                      │                 │
-```
+
+*Figure 2 — Splitting data flow*
 
 ---
 

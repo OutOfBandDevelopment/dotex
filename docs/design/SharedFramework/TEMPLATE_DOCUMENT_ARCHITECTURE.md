@@ -584,29 +584,24 @@ XML → JSON (direct)
 
 ## Architecture Diagram
 
+```plantuml
+@startuml
+skinparam rectangle {
+  BackgroundColor White
+  BorderColor #444444
+}
+rectangle "Message Composition Service\n- Orchestrates rendering + conversion" as mcs
+rectangle "Template Engine\n- Render to native format\nMarkdown → MD\nHandlebars → HTML\nXSLT → XML" as te
+rectangle "Conversion Pipeline\n- Convert between media types\nMD → HTML\nHTML → PDF\nXML → JSON" as cp
+rectangle "Output (Email, PDF, DOCX, etc.)" as out
+mcs --> te
+mcs --> cp
+te --> out
+cp --> out
+@enduml
 ```
-┌─────────────────────────────────────────┐
-│ Message Composition Service              │
-│ - Orchestrates rendering + conversion    │
-└──────────────┬──────────────────────────┘
-               ↓
-     ┌─────────┴─────────┐
-     ↓                   ↓
-┌────────────────┐  ┌──────────────────────┐
-│ Template Engine│  │ Conversion Pipeline   │
-│                │  │                       │
-│ - Render to    │  │ - Convert between     │
-│   native format│  │   media types         │
-│                │  │                       │
-│ Markdown → MD  │  │ MD → HTML            │
-│ Handlebars→HTML│  │ HTML → PDF           │
-│ XSLT → XML     │  │ XML → JSON           │
-└────────────────┘  └──────────────────────┘
-       ↓                      ↓
-┌─────────────────────────────────────────┐
-│ Output (Email, PDF, DOCX, etc.)          │
-└──────────────────────────────────────────┘
-```
+
+*Figure 1 — Message composition architecture*
 
 ---
 

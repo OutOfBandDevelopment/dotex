@@ -10,31 +10,30 @@
 
 Transparent caching using **Dynamic Proxy Pattern** and **Interceptor Pattern** to wrap service interfaces with caching logic. Zero cache code in business implementations.
 
+```plantuml
+@startuml
+skinparam shadowing false
+skinparam rectangle {
+  BackgroundColor White
+  BorderColor #444444
+}
+rectangle "Consumer\n(Controllers, Services)" as Consumer <<Component>>
+rectangle "DynamicProxy<IOrderService>\n(Castle DynamicProxy/DispatchProxy)" as Proxy <<Component>>
+rectangle "Cache\nCheck" as Check <<Component>>
+rectangle "Intercept\nLogic" as Logic <<Component>>
+rectangle "Target\nService" as Target <<Component>>
+rectangle "ICacheService\n(Memory, Redis, SQL Server)" as Cache <<Component>>
+Consumer --> Proxy : IOrderService
+Proxy --> Check
+Proxy --> Logic
+Proxy --> Target
+Check --> Cache
+Logic --> Cache
+Target --> Cache
+@enduml
 ```
-┌──────────────────────────────────────────────────────────────┐
-│                       Consumer                               │
-│                 (Controllers, Services)                      │
-└────────────────────────┬─────────────────────────────────────┘
-                         │ IOrderService
-                         ↓
-┌──────────────────────────────────────────────────────────────┐
-│                   DynamicProxy<IOrderService>                │
-│              (Castle DynamicProxy/DispatchProxy)             │
-└────────────────────────┬─────────────────────────────────────┘
-                         │
-          ┌──────────────┼──────────────┐
-          ↓              ↓              ↓
-    ┌──────────┐   ┌──────────┐   ┌──────────┐
-    │  Cache   │   │Intercept │   │  Target  │
-    │  Check   │   │  Logic   │   │  Service │
-    └────┬─────┘   └────┬─────┘   └────┬─────┘
-         │              │              │
-         ↓              ↓              ↓
-    ┌────────────────────────────────────────┐
-    │         ICacheService                  │
-    │  (Memory, Redis, SQL Server)           │
-    └────────────────────────────────────────┘
-```
+
+*Figure 1 — Transparent AOP caching overview*
 
 ---
 
@@ -342,48 +341,29 @@ public class CacheKeyBuilder : ICacheKeyBuilder
 
 ### Sequence: Cached Method Call
 
+```plantuml
+@startuml
+participant Consumer
+participant Proxy
+participant Interceptor
+participant Cache
+participant Target
+Consumer -> Proxy : GetOrderAsync(123)
+Proxy -> Interceptor : Intercept()
+note over Interceptor : BuildKey()\n"app:Order.Get(123)"
+Interceptor -> Cache : GetAsync(key)
+Cache --> Interceptor : Cache MISS
+Interceptor -> Cache : AcquireLock(key)
+Interceptor -> Target : Proceed()
+Target --> Interceptor : Order object
+Interceptor -> Cache : SetAsync(key, order)
+Interceptor -> Cache : ReleaseLock()
+Interceptor --> Proxy : Order object
+Proxy --> Consumer : Order object
+@enduml
 ```
-┌──────────┐       ┌─────────────┐       ┌──────────────┐       ┌─────────┐       ┌─────────┐
-│ Consumer │       │ Proxy       │       │ Interceptor  │       │  Cache  │       │ Target  │
-└────┬─────┘       └──────┬──────┘       └──────┬───────┘       └────┬────┘       └────┬────┘
-     │                    │                     │                     │                 │
-     │ GetOrderAsync(123) │                     │                     │                 │
-     ├───────────────────>│                     │                     │                 │
-     │                    │                     │                     │                 │
-     │                    │ Intercept()         │                     │                 │
-     │                    ├────────────────────>│                     │                 │
-     │                    │                     │                     │                 │
-     │                    │                     │ BuildKey()          │                 │
-     │                    │                     │ "app:Order.Get(123)"│                 │
-     │                    │                     │                     │                 │
-     │                    │                     │ GetAsync(key)       │                 │
-     │                    │                     ├────────────────────>│                 │
-     │                    │                     │                     │                 │
-     │                    │                     │ Cache MISS          │                 │
-     │                    │                     │<────────────────────┤                 │
-     │                    │                     │                     │                 │
-     │                    │                     │ AcquireLock(key)    │                 │
-     │                    │                     ├────────────────────>│                 │
-     │                    │                     │                     │                 │
-     │                    │                     │ Proceed()           │                 │
-     │                    │                     ├─────────────────────────────────────>│
-     │                    │                     │                     │                 │
-     │                    │                     │ Order object        │                 │
-     │                    │                     │<─────────────────────────────────────┤
-     │                    │                     │                     │                 │
-     │                    │                     │ SetAsync(key, order)│                 │
-     │                    │                     ├────────────────────>│                 │
-     │                    │                     │                     │                 │
-     │                    │                     │ ReleaseLock()       │                 │
-     │                    │                     ├────────────────────>│                 │
-     │                    │                     │                     │                 │
-     │                    │ Order object        │                     │                 │
-     │                    │<────────────────────┤                     │                 │
-     │                    │                     │                     │                 │
-     │ Order object       │                     │                     │                 │
-     │<───────────────────┤                     │                     │                 │
-     │                    │                     │                     │                 │
-```
+
+*Figure 2 — Transparent AOP caching data flow*
 
 **Key Points:**
 1. Consumer calls method on proxy (transparent)

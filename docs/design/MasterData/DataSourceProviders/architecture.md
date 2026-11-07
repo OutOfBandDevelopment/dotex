@@ -25,35 +25,23 @@ Data Source Providers implement a plugin architecture for loading data from vari
 
 ## System Context
 
+```plantuml
+@startuml
+skinparam rectangle {
+  BackgroundColor White
+  BorderColor #444444
+}
+rectangle "Master Data Loader" as Loader <<system>>
+rectangle "Data Source Provider Factory" as Factory <<component>>
+rectangle "IDataSourceProvider Implementations\n- JsonDataSourceProvider\n- CsvDataSourceProvider\n- XmlDataSourceProvider\n- SqlDataSourceProvider\n- ApiDataSourceProvider" as Impl <<component>>
+rectangle "External Data Sources\n(Files, Databases, APIs)" as Ext <<external>>
+Loader --> Factory : Uses
+Factory --> Impl : Selects
+Impl --> Ext : Reads from
+@enduml
 ```
-┌─────────────────────────────────────────────────────────┐
-│               Master Data Loader                         │
-└─────────────────────┬───────────────────────────────────┘
-                      │
-                      │ Uses
-                      ▼
-┌─────────────────────────────────────────────────────────┐
-│          Data Source Provider Factory                    │
-└─────────────────────┬───────────────────────────────────┘
-                      │
-                      │ Selects
-                      ▼
-┌─────────────────────────────────────────────────────────┐
-│  IDataSourceProvider Implementations                     │
-│  ├── JsonDataSourceProvider                            │
-│  ├── CsvDataSourceProvider                             │
-│  ├── XmlDataSourceProvider                             │
-│  ├── SqlDataSourceProvider                             │
-│  └── ApiDataSourceProvider                             │
-└─────────────────────┬───────────────────────────────────┘
-                      │
-                      │ Reads from
-                      ▼
-┌─────────────────────────────────────────────────────────┐
-│              External Data Sources                       │
-│  (Files, Databases, APIs)                               │
-└─────────────────────────────────────────────────────────┘
-```
+
+*Figure 1 — Data source providers system context*
 
 ---
 

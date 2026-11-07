@@ -2589,49 +2589,38 @@ var rendered = await _templateEngine.RenderAsync("welcome-message", container);
 
 ## Architecture Summary
 
+```plantuml
+@startuml
+skinparam rectangle {
+  BackgroundColor White
+  BorderColor #444444
+}
+rectangle "Application (Order Service, User Service, etc.)" as app
+rectangle "Epic 12: Message Composition Service\n- Orchestrates: Data Enhancement + Templating + Conversion\n- Produces: Pre-formatted IMessage (Email/SMS/Slack/Teams)" as e12
+rectangle "Epic 11: Data Enhancement\n- IDataContainer\n- Lazy eval\n- XPath/JSON\n- Path xlation" as e11
+rectangle "Epic 10: Templating Extensions\n- Handlebars\n- XSLT\n- DB source\n- Lazy int." as e10
+rectangle "Epic 6.2: Document Conversion\n- Markdown→HTML\n- HTML→PDF\n- XML→JSON\n- Multi-step" as e62
+rectangle "Epic 2: Communications Platform\n- Send & Receive via Channels\n- Channel: Protocol + Provider + Name\n- User Preferences: Quiet hours, weekends, holidays" as e2
+rectangle "Email Channel\nProtocol: email\nProvider: SendGrid" as email
+rectangle "SMS Channel\nProtocol: sms\nProvider: Twilio" as sms
+rectangle "Slack Channel\nProtocol: slack\nProvider: slack-api" as slack
+rectangle "Teams Channel\nProtocol: teams\nProvider: ms-teams" as teams
+app --> e12
+e12 --> e11
+e12 --> e10
+e12 --> e62
+e11 --> e2
+e2 --> email
+e2 --> sms
+e2 --> slack
+e2 --> teams
+note bottom of e2
+  Data Flow: Application → Composition → (Enhancement + Templates + Conversion) → Communications → Channels
+end note
+@enduml
 ```
-┌────────────────────────────────────────────────────────────────┐
-│ Application (Order Service, User Service, etc.)                │
-└──────────────────────────┬─────────────────────────────────────┘
-                           ↓
-┌───────────────────────────────────────────────────────────────┐
-│ Epic 12: Message Composition Service                          │
-│ - Orchestrates: Data Enhancement + Templating + Conversion    │
-│ - Produces: Pre-formatted IMessage (Email/SMS/Slack/Teams)    │
-└──────────────────────────┬────────────────────────────────────┘
-                           ↓
-          ┌────────────────┼────────────────┐
-          ↓                ↓                ↓
-┌─────────────────┐ ┌──────────────┐ ┌─────────────────┐
-│ Epic 11:        │ │ Epic 10:     │ │ Epic 6.2:       │
-│ Data            │ │ Templating   │ │ Document        │
-│ Enhancement     │ │ Extensions   │ │ Conversion      │
-│                 │ │              │ │                 │
-│ - IDataContainer│ │ - Handlebars │ │ - Markdown→HTML │
-│ - Lazy eval     │ │ - XSLT       │ │ - HTML→PDF      │
-│ - XPath/JSON    │ │ - DB source  │ │ - XML→JSON      │
-│ - Path xlation  │ │ - Lazy int.  │ │ - Multi-step    │
-└─────────────────┘ └──────────────┘ └─────────────────┘
-          ↓
-┌───────────────────────────────────────────────────────────────┐
-│ Epic 2: Communications Platform                               │
-│ - Send & Receive via Channels                                 │
-│ - Channel: Protocol + Provider + Name                         │
-│ - User Preferences: Quiet hours, weekends, holidays           │
-└──────────────────────────┬────────────────────────────────────┘
-                           ↓
-          ┌────────────────┼────────────────┬────────────────┐
-          ↓                ↓                ↓                ↓
-┌─────────────────┐ ┌──────────────┐ ┌──────────────┐ ┌──────────────┐
-│ Email Channel   │ │ SMS Channel  │ │ Slack Channel│ │ Teams Channel│
-│ Protocol: email │ │ Protocol: sms│ │ Protocol:    │ │ Protocol:    │
-│ Provider:       │ │ Provider:    │ │   slack      │ │   teams      │
-│   SendGrid      │ │   Twilio     │ │ Provider:    │ │ Provider:    │
-│                 │ │              │ │   slack-api  │ │   ms-teams   │
-└─────────────────┘ └──────────────┘ └──────────────┘ └──────────────┘
 
-** Data Flow: Application → Composition → (Enhancement + Templates + Conversion) → Communications → Channels **
-```
+*Figure 1 — Architecture summary*
 
 ---
 

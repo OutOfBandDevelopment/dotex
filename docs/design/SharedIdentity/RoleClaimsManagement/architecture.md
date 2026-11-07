@@ -10,44 +10,41 @@
 
 The Role & Claims Management system implements a hierarchical RBAC (Role-Based Access Control) architecture with dynamic claims enhancement, permission checking, and efficient caching strategies.
 
+```plantuml
+@startuml
+skinparam shadowing false
+skinparam rectangle {
+  BackgroundColor White
+  BorderColor #444444
+}
+rectangle "API / Application Layer\n(Controllers, Authorization Handlers)" as Api <<Container>>
+rectangle "IRoleService\n- CreateRole\n- AssignRole\n- Hierarchy" as RoleSvc <<Component>>
+rectangle "IClaimsService\n- AddClaim\n- RemoveClaim\n- GetClaims" as ClaimsSvc <<Component>>
+rectangle "IUserRights\n- HasPermission\n- HasAnyPermission\n- HasAllPermissions" as Rights <<Component>>
+rectangle "IRoleRepo\n- GetRoles\n- SaveRole\n- Hierarchy" as RoleRepo <<Component>>
+rectangle "IClaimsRp\n- GetClms\n- AddClm\n- RemClm" as ClaimsRepo <<Component>>
+rectangle "IClaimsEnh\n(Multiple)\n- Enhance Claims" as Enh <<Component>>
+rectangle "IDistribCache\n- Get/Set\n- Remove" as Cache <<Component>>
+rectangle "IEventPub\n- Publish Events" as Events <<Component>>
+rectangle "Data Layer (Database)\nRoles | Claims | Role Hierarchy" as Data <<Container>>
+package "Service Layer" {
+  RoleSvc -[hidden]right- ClaimsSvc
+  ClaimsSvc -[hidden]right- Rights
+}
+Api --> RoleSvc
+Api --> ClaimsSvc
+Api --> Rights
+RoleSvc --> RoleRepo
+RoleSvc --> ClaimsRepo
+RoleSvc --> Enh
+RoleSvc --> Cache
+RoleSvc --> Events
+RoleRepo --> Data
+ClaimsRepo --> Data
+@enduml
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                      API / Application Layer                    │
-│              (Controllers, Authorization Handlers)              │
-└────────────────────┬────────────────────────────────────────────┘
-                     │
-                     ↓
-┌─────────────────────────────────────────────────────────────────┐
-│                    Service Layer                                │
-│  ┌────────────────┬──────────────────┬────────────────────┐    │
-│  │ IRoleService   │ IClaimsService   │ IUserRights        │    │
-│  │                │                  │                    │    │
-│  │ - CreateRole   │ - AddClaim       │ - HasPermission    │    │
-│  │ - AssignRole   │ - RemoveClaim    │ - HasAnyPermission │    │
-│  │ - Hierarchy    │ - GetClaims      │ - HasAllPermissions│    │
-│  └────────────────┴──────────────────┴────────────────────┘    │
-└────────────────────┬────────────────────────────────────────────┘
-                     │
-         ┌───────────┼───────────┬─────────────┬──────────────┐
-         ↓           ↓           ↓             ↓              ↓
-┌─────────────┐ ┌─────────┐ ┌──────────┐ ┌──────────────┐ ┌─────────────┐
-│IRoleRepo    │ │IClaimsRp│ │IClaimsEnh│ │IDistribCache │ │IEventPub    │
-│             │ │         │ │(Multiple)│ │              │ │             │
-│- GetRoles   │ │- GetClms│ │          │ │- Get/Set     │ │- Publish    │
-│- SaveRole   │ │- AddClm │ │- Enhance │ │- Remove      │ │  Events     │
-│- Hierarchy  │ │- RemClm │ │  Claims  │ │              │ │             │
-└─────────────┘ └─────────┘ └──────────┘ └──────────────┘ └─────────────┘
-       │             │
-       ↓             ↓
-┌─────────────────────────────────────────────────────────────────┐
-│                   Data Layer (Database)                         │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐            │
-│  │    Roles    │  │   Claims    │  │    Role     │            │
-│  │             │  │             │  │  Hierarchy  │            │
-│  │             │  │             │  │             │            │
-│  └─────────────┘  └─────────────┘  └─────────────┘            │
-└─────────────────────────────────────────────────────────────────┘
-```
+
+*Figure 1 — Role and claims management architecture overview*
 
 ---
 
@@ -624,83 +621,49 @@ public class ClaimsEnhancementService
 
 ### Sequence: Assign Role with Hierarchy Resolution
 
+```plantuml
+@startuml
+participant Client
+participant RoleService
+participant IRoleRepo
+participant ICache
+Client -> RoleService : AssignRole
+RoleService -> IRoleRepo : GetRoleByName
+IRoleRepo --> RoleService : Role
+RoleService -> IRoleRepo : HasRole (check dup)
+IRoleRepo --> RoleService : false
+RoleService -> IRoleRepo : AssignRole
+IRoleRepo --> RoleService : Success
+RoleService -> ICache : Invalidate Cache
+note right of ICache : Remove:\n- account-roles\n- account-claims\n- permissions
+RoleService --> Client : Success
+@enduml
 ```
-┌────────┐      ┌──────────────┐      ┌──────────────┐      ┌──────────┐
-│ Client │      │ RoleService  │      │IRoleRepo     │      │ICache    │
-└───┬────┘      └──────┬───────┘      └──────┬───────┘      └────┬─────┘
-    │                  │                     │                   │
-    │ AssignRole       │                     │                   │
-    ├─────────────────>│                     │                   │
-    │                  │                     │                   │
-    │                  │ GetRoleByName       │                   │
-    │                  ├────────────────────>│                   │
-    │                  │                     │                   │
-    │                  │ Role                │                   │
-    │                  │<────────────────────┤                   │
-    │                  │                     │                   │
-    │                  │ HasRole (check dup) │                   │
-    │                  ├────────────────────>│                   │
-    │                  │                     │                   │
-    │                  │ false               │                   │
-    │                  │<────────────────────┤                   │
-    │                  │                     │                   │
-    │                  │ AssignRole          │                   │
-    │                  ├────────────────────>│                   │
-    │                  │                     │                   │
-    │                  │ Success             │                   │
-    │                  │<────────────────────┤                   │
-    │                  │                     │                   │
-    │                  │ Invalidate Cache    │                   │
-    │                  ├────────────────────────────────────────>│
-    │                  │                     │                   │
-    │                  │                     │                   │ Remove:
-    │                  │                     │                   │ - account-roles
-    │                  │                     │                   │ - account-claims
-    │                  │                     │                   │ - permissions
-    │                  │                     │                   │
-    │ Success          │                     │                   │
-    │<─────────────────┤                     │                   │
-    │                  │                     │                   │
-```
+
+*Figure 2 — Assign role with hierarchy resolution sequence*
 
 ### Sequence: Permission Check with Caching
 
+```plantuml
+@startuml
+participant Client
+participant UserRights
+participant IClaimsService
+participant ICache
+Client -> UserRights : HasPermission
+UserRights -> ICache : GetFromCache
+ICache --> UserRights : Cache MISS
+UserRights -> IClaimsService : GetAccountClaims
+IClaimsService -> ICache : GetFromCache
+ICache --> IClaimsService : Cache HIT
+IClaimsService --> UserRights : Claims
+note over UserRights : CheckPermission\n(in memory)
+UserRights -> ICache : SetCache(result)
+UserRights --> Client : true/false
+@enduml
 ```
-┌────────┐      ┌──────────────┐      ┌──────────────┐      ┌──────────┐
-│ Client │      │UserRights    │      │IClaimsService│      │ICache    │
-└───┬────┘      └──────┬───────┘      └──────┬───────┘      └────┬─────┘
-    │                  │                     │                   │
-    │ HasPermission    │                     │                   │
-    ├─────────────────>│                     │                   │
-    │                  │                     │                   │
-    │                  │ GetFromCache        │                   │
-    │                  ├────────────────────────────────────────>│
-    │                  │                     │                   │
-    │                  │ Cache MISS          │                   │
-    │                  │<────────────────────────────────────────┤
-    │                  │                     │                   │
-    │                  │ GetAccountClaims    │                   │
-    │                  ├────────────────────>│                   │
-    │                  │                     │                   │
-    │                  │                     │ GetFromCache      │
-    │                  │                     ├──────────────────>│
-    │                  │                     │                   │
-    │                  │                     │ Cache HIT         │
-    │                  │                     │<──────────────────┤
-    │                  │                     │                   │
-    │                  │ Claims              │                   │
-    │                  │<────────────────────┤                   │
-    │                  │                     │                   │
-    │                  │ CheckPermission     │                   │
-    │                  │ (in memory)         │                   │
-    │                  │                     │                   │
-    │                  │ SetCache(result)    │                   │
-    │                  ├────────────────────────────────────────>│
-    │                  │                     │                   │
-    │ true/false       │                     │                   │
-    │<─────────────────┤                     │                   │
-    │                  │                     │                   │
-```
+
+*Figure 3 — Permission check with caching sequence*
 
 ---
 

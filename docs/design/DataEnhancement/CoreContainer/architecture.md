@@ -10,41 +10,37 @@
 
 The Core Container implements a lazy-evaluated, XPath-like data navigation system using the **Navigator Pattern** combined with **Lazy Loading** and **Provider Pattern**.
 
+```plantuml
+@startuml
+skinparam rectangle {
+  BackgroundColor White
+  BorderColor #444444
+}
+rectangle "Consumer\n(Templates, Reports, Services)" as Consumer
+rectangle "IDataContainer\n- Navigate(path) → IDataNode\n- Evaluate(path) → object?\n- RegisterProvider(pattern, provider)" as Container <<container>>
+rectangle "IDataNode\n/Customer\nValue (lazy)" as N1 <<node>>
+rectangle "IDataNode\n/Order\nValue (lazy)" as N2 <<node>>
+rectangle "IDataNode\n/System\nValue (lazy)" as N3 <<node>>
+rectangle "IDataProvider\nCustomer" as P1 <<provider>>
+rectangle "IDataProvider\nOrder" as P2 <<provider>>
+rectangle "IDataProvider\nSystem" as P3 <<provider>>
+rectangle "Database" as S1 <<source>>
+rectangle "API" as S2 <<source>>
+rectangle "Config" as S3 <<source>>
+Consumer --> Container
+Container --> N1
+Container --> N2
+Container --> N3
+N1 --> P1
+N2 --> P2
+N3 --> P3
+P1 --> S1
+P2 --> S2
+P3 --> S3
+@enduml
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                        Consumer                             │
-│              (Templates, Reports, Services)                 │
-└────────────────────┬────────────────────────────────────────┘
-                     │
-                     ↓
-┌─────────────────────────────────────────────────────────────┐
-│                   IDataContainer                            │
-│  - Navigate(path) → IDataNode                              │
-│  - Evaluate(path) → object?                                │
-│  - RegisterProvider(pattern, provider)                     │
-└────────────────────┬────────────────────────────────────────┘
-                     │
-         ┌───────────┼───────────┐
-         ↓           ↓           ↓
-┌─────────────┐ ┌─────────────┐ ┌─────────────┐
-│  IDataNode  │ │  IDataNode  │ │  IDataNode  │
-│   /Customer │ │    /Order   │ │   /System   │
-│             │ │             │ │             │
-│ Value       │ │ Value       │ │ Value       │
-│ (lazy)  ────┼─┤ (lazy)  ────┼─┤ (lazy)  ────┤
-└─────────────┘ └─────────────┘ └─────────────┘
-      │               │               │
-      ↓               ↓               ↓
-┌─────────────┐ ┌─────────────┐ ┌─────────────┐
-│IDataProvider│ │IDataProvider│ │IDataProvider│
-│  Customer   │ │    Order    │ │   System    │
-└─────────────┘ └─────────────┘ └─────────────┘
-      │               │               │
-      ↓               ↓               ↓
-┌─────────────┐ ┌─────────────┐ ┌─────────────┐
-│  Database   │ │     API     │ │   Config    │
-└─────────────┘ └─────────────┘ └─────────────┘
-```
+
+*Figure 1 — Core Container architecture overview*
 
 ---
 
@@ -362,52 +358,31 @@ public class SystemConfigProvider : IDataProvider
 
 ### Sequence: Navigate and Evaluate
 
+```plantuml
+@startuml
+participant Consumer
+participant DataContainer
+participant DataNode
+participant Provider
+
+Consumer -> DataContainer : Navigate("Order")
+DataContainer -> DataNode : CheckCache("Order")
+DataNode --> DataContainer : Cache miss
+DataContainer -> DataNode : CreateNode("Order")
+DataNode --> DataContainer : CacheNode("Order")
+DataContainer --> Consumer : IDataNode (Order)
+Consumer -> DataNode : node.Value
+DataNode -> Provider : FindProvider(path)
+Provider --> DataNode : Provider found
+DataNode -> Provider : ProvideAsync()
+note over Provider : (DB/API call)
+Provider --> DataNode : object (Order data)
+note over DataNode : CacheValue(Order)
+DataNode --> Consumer : Order object
+@enduml
 ```
-┌─────────┐         ┌──────────────┐         ┌──────────┐         ┌──────────┐
-│Consumer │         │DataContainer │         │ DataNode │         │ Provider │
-└────┬────┘         └──────┬───────┘         └────┬─────┘         └────┬─────┘
-     │                     │                      │                     │
-     │ Navigate("Order")   │                      │                     │
-     ├────────────────────>│                      │                     │
-     │                     │                      │                     │
-     │                     │ CheckCache("Order")  │                     │
-     │                     ├─────────────────────>│                     │
-     │                     │                      │                     │
-     │                     │ Cache miss           │                     │
-     │                     │<─────────────────────┤                     │
-     │                     │                      │                     │
-     │                     │ CreateNode("Order")  │                     │
-     │                     ├─────────────────────>│                     │
-     │                     │                      │                     │
-     │                     │ CacheNode("Order")   │                     │
-     │                     │<─────────────────────┤                     │
-     │                     │                      │                     │
-     │ IDataNode (Order)   │                      │                     │
-     │<────────────────────┤                      │                     │
-     │                     │                      │                     │
-     │ node.Value          │                      │                     │
-     ├──────────────────────────────────────────>│                     │
-     │                     │                      │                     │
-     │                     │                      │ FindProvider(path)  │
-     │                     │                      ├────────────────────>│
-     │                     │                      │                     │
-     │                     │                      │ Provider found      │
-     │                     │                      │<────────────────────┤
-     │                     │                      │                     │
-     │                     │                      │ ProvideAsync()      │
-     │                     │                      ├────────────────────>│
-     │                     │                      │                     │
-     │                     │                      │ (DB/API call)       │
-     │                     │                      │                     │
-     │                     │                      │ object (Order data) │
-     │                     │                      │<────────────────────┤
-     │                     │                      │                     │
-     │                     │                      │ CacheValue(Order)   │
-     │                     │                      │                     │
-     │ Order object        │                      │                     │
-     │<──────────────────────────────────────────┤                     │
-     │                     │                      │                     │
-```
+
+*Figure 2 — Sequence: Navigate and Evaluate*
 
 **Key Points:**
 1. Navigation creates node but does NOT execute provider

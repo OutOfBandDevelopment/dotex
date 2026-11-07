@@ -10,34 +10,35 @@
 
 The Document Persistence Service implements a **Provider Pattern** with **Context-Based Storage** for writing documents to multiple storage backends. The service supports versioning, deduplication, soft delete, and storage tier management based on operational context.
 
+```plantuml
+@startuml
+skinparam rectangle {
+  BackgroundColor White
+  BorderColor #444444
+}
+rectangle "Application Layer\n(Invoice Processor, Report Generator, etc.)" as App <<layer>>
+rectangle "IDocumentPersistenceService\n- CreateAsync(request, context)\n- UpdateAsync(id, request, context)\n- DeleteAsync(id, context)\n- CreateBatchAsync(requests, context)" as Svc <<service>>
+rectangle "Database\nProvider" as P1 <<provider>>
+rectangle "File System\nProvider" as P2 <<provider>>
+rectangle "Azure Blob\nProvider" as P3 <<provider>>
+rectangle "S3\nProvider" as P4 <<provider>>
+rectangle "SQL Server\nMongoDB" as S1 <<storage>>
+rectangle "Disk\nNAS" as S2 <<storage>>
+rectangle "Azure\nStorage" as S3 <<storage>>
+rectangle "AWS\nS3" as S4 <<storage>>
+App --> Svc : CreateAsync(request, context)
+Svc --> P1
+Svc --> P2
+Svc --> P3
+Svc --> P4
+P1 --> S1
+P2 --> S2
+P3 --> S3
+P4 --> S4
+@enduml
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                   Application Layer                          │
-│         (Invoice Processor, Report Generator, etc.)          │
-└────────────────────┬────────────────────────────────────────┘
-                     │ CreateAsync(request, context)
-                     ↓
-┌─────────────────────────────────────────────────────────────┐
-│            IDocumentPersistenceService                      │
-│  - CreateAsync(request, context)                            │
-│  - UpdateAsync(id, request, context)                        │
-│  - DeleteAsync(id, context)                                 │
-│  - CreateBatchAsync(requests, context)                      │
-└────────────────────┬────────────────────────────────────────┘
-                     │
-         ┌───────────┼────────────┬────────────┐
-         ↓           ↓            ↓            ↓
-┌──────────────┐ ┌────────┐ ┌─────────┐ ┌─────────┐
-│ Database     │ │  File  │ │  Azure  │ │   S3    │
-│ Provider     │ │ System │ │  Blob   │ │ Provider│
-└──────┬───────┘ └────┬───┘ └────┬────┘ └────┬────┘
-       │              │          │            │
-       ↓              ↓          ↓            ↓
-┌──────────────┐ ┌────────┐ ┌─────────┐ ┌─────────┐
-│  SQL Server  │ │  Disk  │ │  Azure  │ │   AWS   │
-│  MongoDB     │ │  NAS   │ │ Storage │ │   S3    │
-└──────────────┘ └────────┘ └─────────┘ └─────────┘
-```
+
+*Figure 1 — Persistence service, providers and storage*
 
 ---
 
@@ -654,39 +655,26 @@ public class AzureBlobPersistenceProvider : IDocumentPersistenceProvider
 
 ### Sequence: Document Create with Deduplication
 
+```plantuml
+@startuml
+participant "Application" as App
+participant "PersistenceService" as Svc
+participant "Deduplication" as Dedup
+participant "Provider" as Prov
+App -> Svc : CreateAsync(req, ctx)
+Svc -> Dedup : ComputeHash(content)
+Dedup --> Svc : SHA256 hash
+Svc -> Dedup : FindContentByHash()
+Dedup --> Svc : Existing content ID
+Svc -> Prov : CreateAsync(req, ctx)
+Prov -> Prov : Store metadata\n(reference content)
+Prov --> Svc : Document ID
+Svc -> Dedup : RegisterContent(id, hash)
+Svc --> App : Document ID
+@enduml
 ```
-┌───────────┐      ┌──────────────────┐      ┌──────────────┐      ┌──────────┐
-│Application│      │PersistenceService│      │Deduplication │      │ Provider │
-└─────┬─────┘      └────────┬─────────┘      └──────┬───────┘      └─────┬────┘
-      │                     │                        │                     │
-      │ CreateAsync(req,ctx)│                        │                     │
-      ├────────────────────>│                        │                     │
-      │                     │ ComputeHash(content)   │                     │
-      │                     ├───────────────────────>│                     │
-      │                     │ SHA256 hash            │                     │
-      │                     │<───────────────────────┤                     │
-      │                     │                        │                     │
-      │                     │ FindContentByHash()    │                     │
-      │                     ├───────────────────────>│                     │
-      │                     │ Existing content ID    │                     │
-      │                     │<───────────────────────┤                     │
-      │                     │                        │                     │
-      │                     │ CreateAsync(req, ctx)  │                     │
-      │                     ├────────────────────────────────────────────>│
-      │                     │                        │                     │
-      │                     │                        │  Store metadata     │
-      │                     │                        │  (reference content)│
-      │                     │                        │                     │
-      │                     │ Document ID            │                     │
-      │                     │<────────────────────────────────────────────┤
-      │                     │                        │                     │
-      │                     │ RegisterContent(id,hash)                    │
-      │                     ├───────────────────────>│                     │
-      │                     │                        │                     │
-      │ Document ID         │                        │                     │
-      │<────────────────────┤                        │                     │
-      │                     │                        │                     │
-```
+
+*Figure 2 — Persistence data flow with deduplication*
 
 ---
 

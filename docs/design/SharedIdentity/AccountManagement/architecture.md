@@ -10,42 +10,32 @@
 
 The Account Management system implements a layered architecture using the **Repository Pattern**, **Service Layer Pattern**, and **Provider Pattern** for extensible authentication and Azure AD B2C integration.
 
+```plantuml
+@startuml
+skinparam shadowing false
+skinparam rectangle {
+  BackgroundColor White
+  BorderColor #444444
+}
+rectangle "API / Application Layer\n(Controllers, SignalR Hubs)" as Api <<Container>>
+rectangle "IAccountService (Service Layer)\nCreateAccount | ChangePassword | InitiateMfaSetup\nUpdateAccount | PasswordReset | LinkProvider\nDeactivate | EmailVerification | SearchAccounts" as Svc <<Container>>
+rectangle "IAccountRepo\n- GetById\n- GetByEmail\n- Save\n- Search" as Repo <<Component>>
+rectangle "IPasswordHasher\n- Hash\n- Verify" as Hasher <<Component>>
+rectangle "IMfaService\n- GenerateSecret\n- VerifyOtp" as Mfa <<Component>>
+rectangle "IEmailService\n- SendVerification\n- SendReset" as Email <<Component>>
+rectangle "IManageGraphUser (Azure)\n- CreateUser\n- UpdateUser\n- DeleteUser" as Graph <<Component>>
+rectangle "Data Layer (Database)\nAccounts Table | Password History | External Providers" as Data <<Container>>
+Api --> Svc
+Svc --> Repo
+Svc --> Hasher
+Svc --> Mfa
+Svc --> Email
+Svc --> Graph
+Repo --> Data
+@enduml
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                      API / Application Layer                    │
-│                  (Controllers, SignalR Hubs)                    │
-└────────────────────┬────────────────────────────────────────────┘
-                     │
-                     ↓
-┌─────────────────────────────────────────────────────────────────┐
-│                    IAccountService (Service Layer)              │
-│  ┌────────────────┬──────────────────┬────────────────────┐    │
-│  │ CreateAccount  │ ChangePassword   │ InitiateMfaSetup   │    │
-│  │ UpdateAccount  │ PasswordReset    │ LinkProvider       │    │
-│  │ Deactivate     │ EmailVerification│ SearchAccounts     │    │
-│  └────────────────┴──────────────────┴────────────────────┘    │
-└────────────────────┬────────────────────────────────────────────┘
-                     │
-         ┌───────────┼───────────┬─────────────┬──────────────┐
-         ↓           ↓           ↓             ↓              ↓
-┌─────────────┐ ┌─────────┐ ┌──────────┐ ┌──────────┐ ┌──────────────┐
-│IAccountRepo │ │IPassword│ │  IMfa    │ │IEmail    │ │IManageGraph  │
-│             │ │Hasher   │ │Service   │ │Service   │ │User (Azure)  │
-│- GetById    │ │         │ │          │ │          │ │              │
-│- GetByEmail │ │- Hash   │ │- Generate│ │- SendVeri│ │- CreateUser  │
-│- Save       │ │- Verify │ │  Secret  │ │  fication│ │- UpdateUser  │
-│- Search     │ │         │ │- VerifyOtp│ │- SendReset│ │- DeleteUser  │
-└─────────────┘ └─────────┘ └──────────┘ └──────────┘ └──────────────┘
-       │
-       ↓
-┌─────────────────────────────────────────────────────────────────┐
-│                   Data Layer (Database)                         │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐            │
-│  │  Accounts   │  │  Password   │  │   External  │            │
-│  │    Table    │  │   History   │  │  Providers  │            │
-│  └─────────────┘  └─────────────┘  └─────────────┘            │
-└─────────────────────────────────────────────────────────────────┘
-```
+
+*Figure 1 — Account management architecture overview*
 
 ---
 
@@ -574,51 +564,30 @@ public class AzureAdB2CGraphService : IManageGraphUser
 
 ### Sequence: Create Account with Azure AD B2C Sync
 
+```plantuml
+@startuml
+participant Client
+participant AccountService
+participant IAccountRepo
+participant IManageGrp
+participant IEmail
+Client -> AccountService : CreateAccount
+AccountService -> IAccountRepo : ValidateUniqueness
+IAccountRepo --> AccountService : Email unique
+note over AccountService : HashPassword\n(bcrypt work=12)
+AccountService -> IAccountRepo : SaveAccount
+IAccountRepo --> AccountService : Account saved
+AccountService -> IManageGrp : CreateAzureUser
+note right of IManageGrp : Graph API\n(HTTP POST)
+IManageGrp --> AccountService : AzureId
+AccountService -> IAccountRepo : UpdateAzureId
+AccountService -> IEmail : SendVerificationEmail
+note right of IEmail : Email\nQueued
+AccountService --> Client : Account
+@enduml
 ```
-┌────────┐      ┌──────────────┐      ┌──────────────┐      ┌──────────┐      ┌─────────┐
-│ Client │      │AccountService│      │IAccountRepo  │      │IManageGrp│      │IEmail   │
-└───┬────┘      └──────┬───────┘      └──────┬───────┘      └────┬─────┘      └────┬────┘
-    │                  │                     │                   │                 │
-    │ CreateAccount    │                     │                   │                 │
-    ├─────────────────>│                     │                   │                 │
-    │                  │                     │                   │                 │
-    │                  │ ValidateUniqueness  │                   │                 │
-    │                  ├────────────────────>│                   │                 │
-    │                  │                     │                   │                 │
-    │                  │ Email unique        │                   │                 │
-    │                  │<────────────────────┤                   │                 │
-    │                  │                     │                   │                 │
-    │                  │ HashPassword        │                   │                 │
-    │                  │ (bcrypt work=12)    │                   │                 │
-    │                  │                     │                   │                 │
-    │                  │ SaveAccount         │                   │                 │
-    │                  ├────────────────────>│                   │                 │
-    │                  │                     │                   │                 │
-    │                  │ Account saved       │                   │                 │
-    │                  │<────────────────────┤                   │                 │
-    │                  │                     │                   │                 │
-    │                  │ CreateAzureUser     │                   │                 │
-    │                  ├────────────────────────────────────────>│                 │
-    │                  │                     │                   │                 │
-    │                  │                     │                   │ Graph API       │
-    │                  │                     │                   │ (HTTP POST)     │
-    │                  │                     │                   │                 │
-    │                  │ AzureId             │                   │                 │
-    │                  │<────────────────────────────────────────┤                 │
-    │                  │                     │                   │                 │
-    │                  │ UpdateAzureId       │                   │                 │
-    │                  ├────────────────────>│                   │                 │
-    │                  │                     │                   │                 │
-    │                  │ SendVerificationEmail                   │                 │
-    │                  ├─────────────────────────────────────────────────────────>│
-    │                  │                     │                   │                 │
-    │                  │                     │                   │                 │ Email
-    │                  │                     │                   │                 │ Queued
-    │                  │                     │                   │                 │
-    │ Account          │                     │                   │                 │
-    │<─────────────────┤                     │                   │                 │
-    │                  │                     │                   │                 │
-```
+
+*Figure 2 — Create account sequence*
 
 ---
 

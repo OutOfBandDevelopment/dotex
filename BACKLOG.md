@@ -4,7 +4,7 @@
 > **Owner questions:** [OPEN-QUESTIONS.md](./OPEN-QUESTIONS.md) · **New to this project?** Read [CLAUDE.md](./CLAUDE.md) first.
 > **Wish list (owner's own notes):** [docs/todo.md](docs/todo.md) · **Other repositories to harvest from:** [docs/harvest-candidates.md](docs/harvest-candidates.md)
 
-**Last Updated:** 2026-11-05
+**Last Updated:** 2026-11-06
 
 GitHub is no longer the primary repository (local bare repo `origin`), so nothing here waits on GitHub Actions. Keep items to one short line; detail lives in the linked feature doc (rule `work-tracking`).
 
@@ -76,7 +76,7 @@ Scope rule: every BinaryDataDecoders feature is migrated; phases are priority or
 
 ## 7. Documentation review (owner, 2026-10-28)
 
-- [ ] **Convert ASCII-art diagrams to embedded PlantUML** (owner, 2026-11-05): about 95 markdown files still draw boxes with box-drawing characters (list with `git grep -lP "[┌┐┘┬┴┼]|│[^│]*│" -- "*.md"`; `docs/design/Communications/ChannelAbstraction/architecture.md` is done). New ones are blocked by the `no-ascii-diagrams` hook; add a Docs.Tests check once the existing ones are converted. Do folder by folder, with figure captions. The same pass fixes what `docs/design` validation reports since the move (161 links to never-written documents, nine C4 `!include` blocks) and then adds `docs/design` to the default validated paths.
+- [ ] **Fix the dead links in `docs/design`, then validate it by default** (owner, 2026-11-05): about 110 links point at never-written documents (`business-rules.md`, `configuration.md`, per-provider folders under Communications and TextTemplating, `../README.md` index files, `Features/Proposals` paths). For each: write the document, retarget the link, or drop it, then add `docs/design` to the default `DOCS_VALIDATE_PATHS` in `DocsTests`. List them with `DOCS_VALIDATE_PATHS=docs/design dotnet test src/Tools/OoBDev.Docs.Tests --filter TestCategory=Unit`.
 
 - [ ] Lower priority, after the migrations: review every project `.md` file for out-of-date and redundant documents (owner, 2026-10-30).
 - [ ] **Review and clean up all documents**: content and coverage review against the rules `docs-and-diagrams` and `work-tracking` and `docs/patterns-discovery/06-design-document-standard.md`; the DevTerm docs come with the parity work. Numbering, validator problems and stale generated docs are done (2026-10-29); use the `write-docs` skill and `scripts/docs` validators.

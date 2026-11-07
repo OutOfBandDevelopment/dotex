@@ -14,45 +14,23 @@ The OoBDev framework is organized into four distinct layers, each with specific 
 
 ## Architecture Diagram
 
+```plantuml
+@startuml
+skinparam rectangle {
+  BackgroundColor White
+  BorderColor #444444
+}
+rectangle "Common Layer\n(Orchestration, All-in-One Packages)\n- OoBDev.Common.Abstractions\n- OoBDev.Common\n- OoBDev.Common.AspNetCore\n- OoBDev.Common.Complete\n- OoBDev.Common.Extensions\n- OoBDev.Common.Hosting" <<layer>> as common
+rectangle "Framework Layer\n(Domain-Specific Libraries, Core Business Logic)\n- AI, AspNetCore, Communications\n- Database, Documents, Identity\n- MessageQueueing, Search, System\n- TestUtilities" <<layer>> as framework
+rectangle "Extensions Layer\n(Custom .NET System Extensions)\n- OoBDev.Data.Vectors\n- OoBDev.System.Text.Html\n- OoBDev.System.Text.Markdown\n- OoBDev.System.Text.Yaml" <<layer>> as extensions
+rectangle "ExternalServices Layer\n(Third-Party Integrations, Vendor Wrappers)\n- Apache, Azure, GroqCloud, Handlebars\n- Keycloak, MailKit, Markdig, Microsoft\n- MongoDB, Ollama, OpenSearch, Qdrant\n- RabbitMQ, SBert, WkHtmlToPdf" <<layer>> as external
+common --> framework : depends on
+framework --> extensions : depends on
+extensions --> external : depends on
+@enduml
 ```
-┌─────────────────────────────────────────────────────────┐
-│                 Common Layer                            │
-│  (Orchestration, All-in-One Packages)                   │
-│  - OoBDev.Common.Abstractions                           │
-│  - OoBDev.Common                                        │
-│  - OoBDev.Common.AspNetCore                             │
-│  - OoBDev.Common.Complete                               │
-│  - OoBDev.Common.Extensions                             │
-│  - OoBDev.Common.Hosting                                │
-└─────────────────────────────────────────────────────────┘
-                          ↓ depends on
-┌─────────────────────────────────────────────────────────┐
-│                Framework Layer                          │
-│  (Domain-Specific Libraries, Core Business Logic)       │
-│  - AI, AspNetCore, Communications                       │
-│  - Database, Documents, Identity                        │
-│  - MessageQueueing, Search, System                      │
-│  - TestUtilities                                        │
-└─────────────────────────────────────────────────────────┘
-                          ↓ depends on
-┌─────────────────────────────────────────────────────────┐
-│               Extensions Layer                          │
-│  (Custom .NET System Extensions)                        │
-│  - OoBDev.Data.Vectors                                  │
-│  - OoBDev.System.Text.Html                              │
-│  - OoBDev.System.Text.Markdown                          │
-│  - OoBDev.System.Text.Yaml                              │
-└─────────────────────────────────────────────────────────┘
-                          ↓ depends on
-┌─────────────────────────────────────────────────────────┐
-│            ExternalServices Layer                       │
-│  (Third-Party Integrations, Vendor Wrappers)            │
-│  - Apache, Azure, GroqCloud, Handlebars                 │
-│  - Keycloak, MailKit, Markdig, Microsoft                │
-│  - MongoDB, Ollama, OpenSearch, Qdrant                  │
-│  - RabbitMQ, SBert, WkHtmlToPdf                         │
-└─────────────────────────────────────────────────────────┘
-```
+
+*Figure 1 — Layering architecture*
 
 **Dependency Rule:** Dependencies flow downward only. Lower layers cannot depend on higher layers.
 

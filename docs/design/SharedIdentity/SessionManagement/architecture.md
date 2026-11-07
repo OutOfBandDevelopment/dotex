@@ -10,39 +10,32 @@
 
 The Session Management system implements a distributed session architecture with JWT-based access tokens, refresh tokens, device tracking, and multi-layer caching for high performance and scalability.
 
+```plantuml
+@startuml
+skinparam shadowing false
+skinparam rectangle {
+  BackgroundColor White
+  BorderColor #444444
+}
+rectangle "API / Application Layer\n(Controllers, Authentication Middleware)" as Api <<Container>>
+rectangle "ISessionService (Service Layer)\nCreateSession | ValidateSession | RefreshSession\nRevokeSession | GetSessions | CleanupExpired" as Svc <<Container>>
+rectangle "ITokenService\n- GenerateJWT\n- ValidateJWT\n- GenRefresh" as Token <<Component>>
+rectangle "ICache (Redis)\n- Get/Set\n- Remove" as Cache <<Component>>
+rectangle "ISessionRp\n- Save\n- GetById\n- GetByAcc" as Repo <<Component>>
+rectangle "IDeviceParser\n- ParseUA\n- GetIP" as Device <<Component>>
+rectangle "IEventPub\n- Publish Events" as Events <<Component>>
+rectangle "Database (Persistence)\nSessions" as Db <<Container>>
+Api --> Svc
+Svc --> Token
+Svc --> Cache
+Svc --> Repo
+Svc --> Device
+Svc --> Events
+Repo --> Db
+@enduml
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                      API / Application Layer                    │
-│              (Controllers, Authentication Middleware)           │
-└────────────────────┬────────────────────────────────────────────┘
-                     │
-                     ↓
-┌─────────────────────────────────────────────────────────────────┐
-│                    ISessionService (Service Layer)              │
-│  ┌────────────────┬──────────────────┬────────────────────┐    │
-│  │ CreateSession  │ ValidateSession  │ RefreshSession     │    │
-│  │ RevokeSession  │ GetSessions      │ CleanupExpired     │    │
-│  └────────────────┴──────────────────┴────────────────────┘    │
-└────────────────────┬────────────────────────────────────────────┘
-                     │
-         ┌───────────┼───────────┬─────────────┬──────────────┐
-         ↓           ↓           ↓             ↓              ↓
-┌─────────────┐ ┌─────────┐ ┌──────────┐ ┌──────────────┐ ┌─────────┐
-│ITokenService│ │ICache   │ │ISessionRp│ │IDevice       │ │IEventPub│
-│             │ │(Redis)  │ │          │ │  Parser      │ │         │
-│- GenerateJWT│ │         │ │- Save    │ │              │ │- Publish│
-│- ValidateJWT│ │- Get/Set│ │- GetById │ │- ParseUA     │ │  Events │
-│- GenRefresh │ │- Remove │ │- GetByAcc│ │- GetIP       │ │         │
-└─────────────┘ └─────────┘ └──────────┘ └──────────────┘ └─────────┘
-                                  │
-                                  ↓
-                    ┌─────────────────────────┐
-                    │  Database (Persistence) │
-                    │  ┌─────────────────┐    │
-                    │  │    Sessions     │    │
-                    │  └─────────────────┘    │
-                    └─────────────────────────┘
-```
+
+*Figure 1 — Session management architecture overview*
 
 ---
 
@@ -492,38 +485,25 @@ public class DeviceParser : IDeviceParser
 
 ### Sequence: Session Creation
 
+```plantuml
+@startuml
+participant Client
+participant SessionService
+participant ITokenService
+participant ICache
+Client -> SessionService : CreateSession
+note over SessionService : CheckConcurrent\nSessionLimit
+SessionService -> ITokenService : GenerateAccessToken
+ITokenService --> SessionService : JWT
+SessionService -> ITokenService : GenerateRefreshToken
+ITokenService --> SessionService : RefreshToken
+note over SessionService : SaveToDatabase
+SessionService -> ICache : CacheSession
+SessionService --> Client : SessionResult
+@enduml
 ```
-┌────────┐      ┌──────────────┐      ┌──────────────┐      ┌──────────┐
-│ Client │      │SessionService│      │ITokenService │      │ICache    │
-└───┬────┘      └──────┬───────┘      └──────┬───────┘      └────┬─────┘
-    │                  │                     │                   │
-    │ CreateSession    │                     │                   │
-    ├─────────────────>│                     │                   │
-    │                  │                     │                   │
-    │                  │ CheckConcurrent     │                   │
-    │                  │ SessionLimit        │                   │
-    │                  │                     │                   │
-    │                  │ GenerateAccessToken │                   │
-    │                  ├────────────────────>│                   │
-    │                  │                     │                   │
-    │                  │ JWT                 │                   │
-    │                  │<────────────────────┤                   │
-    │                  │                     │                   │
-    │                  │ GenerateRefreshToken│                   │
-    │                  ├────────────────────>│                   │
-    │                  │                     │                   │
-    │                  │ RefreshToken        │                   │
-    │                  │<────────────────────┤                   │
-    │                  │                     │                   │
-    │                  │ SaveToDatabase      │                   │
-    │                  │                     │                   │
-    │                  │ CacheSession        │                   │
-    │                  ├────────────────────────────────────────>│
-    │                  │                     │                   │
-    │ SessionResult    │                     │                   │
-    │<─────────────────┤                     │                   │
-    │                  │                     │                   │
-```
+
+*Figure 2 — Create session sequence*
 
 ---
 

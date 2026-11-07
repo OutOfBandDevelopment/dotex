@@ -8,18 +8,25 @@
 
 ## Architectural Overview
 
+```plantuml
+@startuml
+skinparam rectangle {
+  BackgroundColor White
+  BorderColor #444444
+}
+rectangle "IDocumentUnpackingService" as Svc <<service>>
+rectangle "ZIP\nProvider" as P1 <<provider>>
+rectangle "TAR\nProvider" as P2 <<provider>>
+rectangle "7Z\nProvider" as P3 <<provider>>
+rectangle "RAR\nProvider" as P4 <<provider>>
+Svc --> P1
+Svc --> P2
+Svc --> P3
+Svc --> P4
+@enduml
 ```
-┌─────────────────────────────────────────────────────────────┐
-│          IDocumentUnpackingService                           │
-└────────────────────┬────────────────────────────────────────┘
-                     │
-         ┌───────────┼────────────┬────────────┐
-         ↓           ↓            ↓            ↓
-┌──────────────┐ ┌────────┐ ┌─────────┐ ┌──────────┐
-│     ZIP      │ │  TAR   │ │   7Z    │ │   RAR    │
-│   Provider   │ │Provider│ │ Provider│ │ Provider │
-└──────────────┘ └────────┘ └─────────┘ └──────────┘
-```
+
+*Figure 1 — Unpacking service and providers*
 
 ---
 

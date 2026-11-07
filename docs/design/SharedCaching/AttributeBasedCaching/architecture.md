@@ -10,30 +10,26 @@
 
 Attribute-based caching builds on Transparent AOP Caching, adding declarative configuration via C# attributes. Interceptor reads `[Cacheable]` and `[CacheInvalidate]` attributes at runtime to configure caching behavior.
 
+```plantuml
+@startuml
+skinparam shadowing false
+skinparam rectangle {
+  BackgroundColor White
+  BorderColor #444444
+}
+rectangle "IOrderService\n\n[Cacheable(Duration=300)]\nTask<Order> GetOrderAsync(int orderId);\n\n[CacheInvalidate(Pattern='orders:*')]\nTask UpdateOrderAsync(Order order);" as Svc <<Component>>
+rectangle "AttributeBasedCacheInterceptor\n(extends CacheInterceptor)" as Interceptor <<Component>>
+rectangle "Attribute\nReader" as Reader <<Component>>
+rectangle "Condition\nEvaluator" as Cond <<Component>>
+rectangle "Cache\nInvalidate" as Inval <<Component>>
+Svc --> Interceptor
+Interceptor --> Reader
+Interceptor --> Cond
+Interceptor --> Inval
+@enduml
 ```
-┌────────────────────────────────────────────────────────────┐
-│                    IOrderService                           │
-│                                                            │
-│  [Cacheable(Duration=300)]                                │
-│  Task<Order> GetOrderAsync(int orderId);                  │
-│                                                            │
-│  [CacheInvalidate(Pattern="orders:*")]                    │
-│  Task UpdateOrderAsync(Order order);                      │
-└────────────────────┬───────────────────────────────────────┘
-                     │
-                     ↓
-┌────────────────────────────────────────────────────────────┐
-│      AttributeBasedCacheInterceptor                        │
-│   (extends CacheInterceptor)                              │
-└────────────────────┬───────────────────────────────────────┘
-                     │
-          ┌──────────┼──────────┐
-          ↓          ↓          ↓
-   ┌──────────┐ ┌──────────┐ ┌──────────┐
-   │Attribute │ │Condition │ │  Cache   │
-   │ Reader   │ │Evaluator │ │Invalidate│
-   └──────────┘ └──────────┘ └──────────┘
-```
+
+*Figure 1 — Attribute-based caching overview*
 
 ---
 
@@ -231,39 +227,25 @@ public class AttributeBasedCacheInterceptor : ICacheInterceptor
 
 ### Sequence: Cached Method with Attribute
 
+```plantuml
+@startuml
+participant Consumer
+participant Proxy
+participant Interceptor
+participant Cache
+Consumer -> Proxy : GetOrderAsync(123)
+Proxy -> Interceptor : Intercept()
+note over Interceptor : Read [Cacheable]\nDuration=300
+note over Interceptor : BuildKey()
+Interceptor -> Cache : GetAsync(key)
+Cache --> Interceptor : Cache MISS
+note over Interceptor : Proceed()
+note over Interceptor : Evaluate Condition\n(if specified)
+Interceptor -> Cache : SetAsync(key, result, 300 seconds)
+@enduml
 ```
-┌──────────┐    ┌─────────┐    ┌──────────────┐    ┌─────────┐
-│ Consumer │    │  Proxy  │    │ Interceptor  │    │  Cache  │
-└────┬─────┘    └────┬────┘    └──────┬───────┘    └────┬────┘
-     │               │                │                 │
-     │ GetOrderAsync(123)             │                 │
-     ├──────────────>│                │                 │
-     │               │ Intercept()    │                 │
-     │               ├───────────────>│                 │
-     │               │                │                 │
-     │               │                │ Read [Cacheable]│
-     │               │                │ Duration=300    │
-     │               │                │                 │
-     │               │                │ BuildKey()      │
-     │               │                │                 │
-     │               │                │ GetAsync(key)   │
-     │               │                ├────────────────>│
-     │               │                │                 │
-     │               │                │ Cache MISS      │
-     │               │                │<────────────────┤
-     │               │                │                 │
-     │               │                │ Proceed()       │
-     │               │                │                 │
-     │               │                │ Evaluate        │
-     │               │                │ Condition       │
-     │               │                │ (if specified)  │
-     │               │                │                 │
-     │               │                │ SetAsync(       │
-     │               │                │   key, result,  │
-     │               │                │   300 seconds)  │
-     │               │                ├────────────────>│
-     │               │                │                 │
-```
+
+*Figure 2 — Attribute-based caching data flow*
 
 ---
 

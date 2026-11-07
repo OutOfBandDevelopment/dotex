@@ -15,43 +15,38 @@
 6. [Performance Considerations](#performance-considerations)
 7. [Extension Points](#extension-points)
 
+**List of figures**
+
+1. Layered architecture
+2. Method call decision flow
+3. Cacheable method call flow
+4. FlushCache method call flow
+
 ---
 
 ## Architectural Overview
 
 The OoBDev Caching Framework follows a **layered architecture** with clear separation of concerns:
 
+```plantuml
+@startuml
+skinparam rectangle {
+  BackgroundColor White
+  BorderColor #444444
+}
+rectangle "Application Layer\n- Business logic with [IsCacheable] attributes\n- Dependency injection setup" as app
+rectangle "Factory Layer\n- CacheableFactory: Creates proxies\n- ICacheableFactory: Factory interface" as factory
+rectangle "Proxy Layer\n- CachedProxy: Dynamic method interception\n- ResultAwaiter: Task unwrapping utilities" as proxy
+rectangle "Manager Layer\n- CachingManager: Orchestrates caching operations\n- ICachingManager: Manager interface" as manager
+rectangle "Provider Layer\n- ICachingProvider: Abstraction for storage\n- Implementations: Redis, Microsoft Memory Cache" as provider
+app --> factory
+factory --> proxy
+proxy --> manager
+manager --> provider
+@enduml
 ```
-┌────────────────────────────────────────────────────────────┐
-│                    Application Layer                        │
-│  - Business logic with [IsCacheable] attributes            │
-│  - Dependency injection setup                               │
-└────────────────────┬───────────────────────────────────────┘
-                     │
-┌────────────────────▼───────────────────────────────────────┐
-│                   Factory Layer                             │
-│  - CacheableFactory: Creates proxies                        │
-│  - ICacheableFactory: Factory interface                     │
-└────────────────────┬───────────────────────────────────────┘
-                     │
-┌────────────────────▼───────────────────────────────────────┐
-│                    Proxy Layer                              │
-│  - CachedProxy: Dynamic method interception                │
-│  - ResultAwaiter: Task unwrapping utilities                │
-└────────────────────┬───────────────────────────────────────┘
-                     │
-┌────────────────────▼───────────────────────────────────────┐
-│                  Manager Layer                              │
-│  - CachingManager: Orchestrates caching operations         │
-│  - ICachingManager: Manager interface                      │
-└────────────────────┬───────────────────────────────────────┘
-                     │
-┌────────────────────▼───────────────────────────────────────┐
-│                  Provider Layer                             │
-│  - ICachingProvider: Abstraction for storage               │
-│  - Implementations: Redis, Microsoft Memory Cache          │
-└────────────────────────────────────────────────────────────┘
-```
+
+*Figure 1 — Layered architecture*
 
 ### Design Principles
 
@@ -312,47 +307,29 @@ public class CachedProxy<TInterface, TImplementation> : DispatchProxy
 
 **Method Interception Logic:**
 
+```plantuml
+@startuml
+start
+:Method Call: repository.GetUserAsync(123);
+:Proxy.Invoke() called;
+if (Check for [IsCacheable]?) then (YES)
+  :Build cache key\nfrom template;
+  :Check cache;
+  if (Result) then (HIT)
+  else (MISS)
+    :Invoke method;
+    :Store in cache;
+  endif
+else (NO)
+  :Invoke method\ndirectly;
+  stop
+endif
+:Return result;
+stop
+@enduml
 ```
-┌─────────────────────────────────────────────────────────┐
-│  Method Call: repository.GetUserAsync(123)              │
-└────────────────────┬────────────────────────────────────┘
-                     │
-         ┌───────────▼────────────┐
-         │ Proxy.Invoke() called  │
-         └───────────┬────────────┘
-                     │
-         ┌───────────▼────────────────────┐
-         │ Check for [IsCacheable]?       │
-         └─┬─────────────────────────┬────┘
-           │ YES                      │ NO
-           │                          │
-    ┌──────▼──────────┐        ┌─────▼──────┐
-    │ Build cache key │        │ Invoke     │
-    │ from template   │        │ method     │
-    └──────┬──────────┘        │ directly   │
-           │                   └────────────┘
-    ┌──────▼──────────┐
-    │ Check cache     │
-    └──────┬──────────┘
-           │
-     ┌─────┴─────┐
-     │           │
-  ┌──▼──┐   ┌───▼────┐
-  │ HIT │   │ MISS   │
-  └──┬──┘   └───┬────┘
-     │          │
-     │   ┌──────▼──────────┐
-     │   │ Invoke method   │
-     │   └──────┬──────────┘
-     │          │
-     │   ┌──────▼──────────┐
-     │   │ Store in cache  │
-     │   └──────┬──────────┘
-     │          │
-  ┌──▼──────────▼──┐
-  │ Return result  │
-  └────────────────┘
-```
+
+*Figure 2 — Method call decision flow*
 
 #### CachingManager
 
@@ -599,53 +576,49 @@ var cached = CachedProxy.Create(new UserRepository(), ...);
 
 ### Cacheable Method Call Flow
 
+```plantuml
+@startuml
+participant "1. Client Code" as client
+participant "2. Proxy Layer (CachedProxy)" as proxy
+participant "ICachingProvider" as provider
+participant "userRepository" as repo
+client -> proxy : repository.GetUserAsync(123)
+proxy -> proxy : Extract [IsCacheable("user:{userId}", "01:00:00")]
+proxy -> proxy : Build key via CachingManager\n"user:123"
+proxy -> provider : Check cache via CachingManager:\nRetrieveAsync("user:123", typeof(User))
+alt Cache HIT
+  proxy --> client : Return cached value
+else Cache MISS (continue to step 3)
+  proxy -> repo : Invoke original method:\nuserRepository.GetUserAsync(123)
+  repo --> proxy : Result: User object
+  proxy -> provider : 3. Store in Cache:\nStoreAsync("user:123", userObject, TimeSpan.FromHours(1))
+  proxy --> client : 4. Return Result: User object
+end
+@enduml
 ```
-1. Client Code
-   └─> repository.GetUserAsync(123)
 
-2. Proxy Layer (CachedProxy)
-   ├─> Extract [IsCacheable("user:{userId}", "01:00:00")]
-   ├─> Build key via CachingManager
-   │   └─> "user:123"
-   ├─> Check cache via CachingManager
-   │   └─> ICachingProvider.RetrieveAsync("user:123", typeof(User))
-   │
-   ├─> Cache HIT?
-   │   ├─> YES: Return cached value
-   │   └─> NO: Continue to step 3
-   │
-   └─> Invoke original method
-       └─> userRepository.GetUserAsync(123)
-           └─> Result: User object
-
-3. Store in Cache
-   └─> ICachingProvider.StoreAsync("user:123", userObject, TimeSpan.FromHours(1))
-
-4. Return Result
-   └─> User object
-```
+*Figure 3 — Cacheable method call flow*
 
 ### FlushCache Method Call Flow
 
+```plantuml
+@startuml
+participant "1. Client Code" as client
+participant "2. Proxy Layer (CachedProxy)" as proxy
+participant "userRepository" as repo
+participant "ICachingProvider" as provider
+client -> proxy : repository.UpdateUserAsync(123, updatedUser)
+proxy -> proxy : Extract [FlushCache("user:{userId}")]
+proxy -> proxy : Build key via CachingManager\n"user:123"
+proxy -> repo : userRepository.UpdateUserAsync(123, updatedUser)
+repo -> repo : Update database
+repo --> proxy
+proxy -> provider : 3. Flush Cache: FlushAsync("user:123")
+proxy --> client : 4. Return Result: void (or Task)
+@enduml
 ```
-1. Client Code
-   └─> repository.UpdateUserAsync(123, updatedUser)
 
-2. Proxy Layer (CachedProxy)
-   ├─> Extract [FlushCache("user:{userId}")]
-   ├─> Build key via CachingManager
-   │   └─> "user:123"
-   │
-   └─> Invoke original method
-       └─> userRepository.UpdateUserAsync(123, updatedUser)
-           └─> Update database
-
-3. Flush Cache
-   └─> ICachingProvider.FlushAsync("user:123")
-
-4. Return Result
-   └─> void (or Task)
-```
+*Figure 4 — FlushCache method call flow*
 
 ---
 

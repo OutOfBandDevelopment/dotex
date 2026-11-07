@@ -293,29 +293,34 @@ public class LocalFileSystemTests
 
 Use this tree to categorize a new test:
 
+```plantuml
+@startuml
+start
+if (Does it test pure logic without I/O?) then (YES)
+  :Go to Unit;
+  stop
+else (NO)
+endif
+if (Does it depend on external services?\n(database, network, file)) then (YES)
+  if (Can we mock the dependency?) then (YES)
+    :Go to Simulate;
+    stop
+  else (NO)
+    :Go to Integration;
+    stop
+  endif
+else (NO)
+endif
+if (Does it require local development setup?\n(special folders, user paths, local tools)) then (YES)
+  :Go to DevLocal;
+else (NO)
+  :Go to Unit;
+endif
+stop
+@enduml
 ```
-┌─ Start: New test
-│
-├─ Does it test pure logic without I/O?
-│  ├─ YES: Go to Unit ✓
-│  └─ NO: Continue
-│
-├─ Does it depend on external services?
-│  ├─ YES (database, network, file):
-│  │  ├─ Can we mock the dependency?
-│  │  │  ├─ YES: Go to Simulate ✓
-│  │  │  └─ NO: Go to Integration ✓
-│  │
-│  └─ NO: Continue
-│
-├─ Does it require local development setup?
-│  ├─ YES (special folders, user paths, local tools):
-│  │  └─ Go to DevLocal ✓
-│  │
-│  └─ NO: Go to Unit ✓
-│
-└─ End
-```
+
+*Figure 1 — Test category decision tree*
 
 ## Real-World Examples for OoBDev
 

@@ -322,23 +322,19 @@ You can build a type-safe generic layer as a **facade** over the flexible contex
 
 ## Layered Architecture Pattern
 
+```plantuml
+@startuml
+skinparam rectangle {
+  BackgroundColor White
+  BorderColor #444444
+}
+rectangle "Application Layer (Type-Safe Generic Interface)\nIMessageSenderProvider<TChannel>\n- Compile-time type safety\n- Self-documenting dependencies" as app
+rectangle "Infrastructure Layer (Flexible Context Interface)\nIMessageSenderProvider (non-generic)\n- Provider implementations (SQS, ServiceBus, RabbitMQ)\n- Full access to native platform features" as infra
+app --> infra : Adapter Layer
+@enduml
 ```
-┌─────────────────────────────────────────────────────────────┐
-│  Application Layer (Type-Safe Generic Interface)            │
-│  IMessageSenderProvider<TChannel>                           │
-│  - Compile-time type safety                                 │
-│  - Self-documenting dependencies                            │
-└─────────────────────────────────────────────────────────────┘
-                            │
-                            │ Adapter Layer
-                            ▼
-┌─────────────────────────────────────────────────────────────┐
-│  Infrastructure Layer (Flexible Context Interface)          │
-│  IMessageSenderProvider (non-generic)                       │
-│  - Provider implementations (SQS, ServiceBus, RabbitMQ)     │
-│  - Full access to native platform features                  │
-└─────────────────────────────────────────────────────────────┘
-```
+
+*Figure 1 — Layered architecture pattern*
 
 ---
 

@@ -66,26 +66,34 @@ Structural diagrams in these docs follow the [C4 model](https://c4model.com) usi
 
 ```plantuml
 @startuml
-!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+skinparam rectangle {
+    BackgroundColor<<System>> #1168BD
+    FontColor<<System>> #FFFFFF
+    BackgroundColor<<External>> #999999
+    FontColor<<External>> #FFFFFF
+    BorderColor Black
+}
+skinparam actor {
+    BackgroundColor #08427B
+    BorderColor Black
+}
 
-Person(developer, "Developer", "Debugs, drives, and monitors hardware/network devices")
+actor "Developer\nDebugs, drives, and monitors hardware/network devices" as developer
 
-System(devterm, "dev-term", "Modular, extensible development terminal")
+rectangle "dev-term\n<<System>>\nModular, extensible development terminal" as devterm <<System>>
 
-System_Ext(serialDevice, "Serial Device", "UART-connected board/instrument")
-System_Ext(networkDevice, "Network Device / Service", "TCP/UDP endpoint")
-System_Ext(hidDevice, "USB HID Device", "Control/debug interface over HID reports")
-System_Ext(bleDevice, "BLE Peripheral", "GATT-based device")
-System_Ext(testEquipment, "Serial Test Equipment", "Bench instrument driven via a device control module")
+rectangle "Serial Device\n<<External System>>\nUART-connected board/instrument" as serialDevice <<External>>
+rectangle "Network Device / Service\n<<External System>>\nTCP/UDP endpoint" as networkDevice <<External>>
+rectangle "USB HID Device\n<<External System>>\nControl/debug interface over HID reports" as hidDevice <<External>>
+rectangle "BLE Peripheral\n<<External System>>\nGATT-based device" as bleDevice <<External>>
+rectangle "Serial Test Equipment\n<<External System>>\nBench instrument driven via a device control module" as testEquipment <<External>>
 
-Rel(developer, devterm, "Opens sessions, sends commands, views/exports telemetry")
-Rel(devterm, serialDevice, "Reads/writes bytes", "Serial/UART")
-Rel(devterm, networkDevice, "Reads/writes bytes", "TCP/UDP (client or listener)")
-Rel(devterm, hidDevice, "Reads/writes reports", "USB HID")
-Rel(devterm, bleDevice, "Reads/writes characteristics", "BLE/GATT")
-Rel(devterm, testEquipment, "Sends commands, receives telemetry", "Serial + control surface")
-
-SHOW_LEGEND()
+developer --> devterm : Opens sessions, sends commands, views/exports telemetry
+devterm --> serialDevice : Reads/writes bytes\n(Serial/UART)
+devterm --> networkDevice : Reads/writes bytes\n(TCP/UDP (client or listener))
+devterm --> hidDevice : Reads/writes reports\n(USB HID)
+devterm --> bleDevice : Reads/writes characteristics\n(BLE/GATT)
+devterm --> testEquipment : Sends commands, receives telemetry\n(Serial + control surface)
 @enduml
 ```
 
@@ -93,27 +101,35 @@ SHOW_LEGEND()
 
 ```plantuml
 @startuml
-!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
-
-Person(developer, "Developer")
-
-System_Boundary(devterm, "dev-term") {
-  Container(consoleApp, "Console App", ".NET 10, Generic Host", "CLI (scriptable) and TUI (full-screen) modes")
-  Container(wpfApp, "WPF App", ".NET 10, WPF, Generic Host", "GUI: rendering presenters, plots, device control panels")
-  Container(core, "Core Engine", ".NET 10 class library", "Session, Pipeline, Plugin Host, DI composition")
-  Container(plugins, "Plugins", ".NET assemblies, DI-registered", "Transports, presenters/decoders, control surfaces")
+skinparam rectangle {
+    BackgroundColor<<Container>> #438DD5
+    FontColor<<Container>> #FFFFFF
+    BackgroundColor<<External>> #999999
+    FontColor<<External>> #FFFFFF
+    BorderColor Black
+}
+skinparam actor {
+    BackgroundColor #08427B
+    BorderColor Black
 }
 
-System_Ext(devices, "Devices", "Serial / TCP / UDP / USB HID / BLE / test equipment")
+actor "Developer" as developer
 
-Rel(developer, consoleApp, "Uses", "Terminal")
-Rel(developer, wpfApp, "Uses", "Desktop UI")
-Rel(consoleApp, core, "Uses", "In-process")
-Rel(wpfApp, core, "Uses", "In-process")
-Rel(core, plugins, "Discovers, loads, registers into DI")
-Rel(plugins, devices, "Reads/writes bytes", "Transport-specific")
+rectangle "dev-term" {
+  rectangle "Console App\n[.NET 10, Generic Host]\nCLI (scriptable) and TUI (full-screen) modes" as consoleApp <<Container>>
+  rectangle "WPF App\n[.NET 10, WPF, Generic Host]\nGUI: rendering presenters, plots, device control panels" as wpfApp <<Container>>
+  rectangle "Core Engine\n[.NET 10 class library]\nSession, Pipeline, Plugin Host, DI composition" as core <<Container>>
+  rectangle "Plugins\n[.NET assemblies, DI-registered]\nTransports, presenters/decoders, control surfaces" as plugins <<Container>>
+}
 
-SHOW_LEGEND()
+rectangle "Devices\n<<External System>>\nSerial / TCP / UDP / USB HID / BLE / test equipment" as devices <<External>>
+
+developer --> consoleApp : Uses\n(Terminal)
+developer --> wpfApp : Uses\n(Desktop UI)
+consoleApp --> core : Uses\n(In-process)
+wpfApp --> core : Uses\n(In-process)
+core --> plugins : Discovers, loads, registers into DI
+plugins --> devices : Reads/writes bytes\n(Transport-specific)
 @enduml
 ```
 
@@ -121,27 +137,31 @@ SHOW_LEGEND()
 
 ```plantuml
 @startuml
-!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
-
-Container(consoleApp, "Console App", ".NET 10", "CLI + TUI")
-Container(wpfApp, "WPF App", ".NET 10, WPF", "GUI")
-Container(plugins, "Plugins", ".NET assemblies", "Transports, presenters, control surfaces")
-
-Container_Boundary(core, "Core Engine") {
-  Component(pluginHost, "Plugin Host", "AssemblyLoadContext", "Discovers, validates, and loads plugins; registers them into DI")
-  Component(session, "Session", ".NET", "Binds one Transport to a Pipeline for one logical device connection")
-  Component(pipeline, "Pipeline", ".NET", "Chains/fans out presenters over a session's byte stream; supports demux for composite decoders")
-  Component(options, "Options/Configuration", "Microsoft.Extensions.Options", "Layered settings for transports, plugins, and front ends")
+skinparam rectangle {
+    BackgroundColor<<Container>> #438DD5
+    FontColor<<Container>> #FFFFFF
+    BackgroundColor<<Component>> #85BBF0
+    FontColor<<Component>> #000000
+    BorderColor Black
 }
 
-Rel(consoleApp, session, "Opens/controls sessions")
-Rel(wpfApp, session, "Opens/controls sessions")
-Rel(pluginHost, plugins, "Loads, registers into DI")
-Rel(session, pipeline, "Feeds raw bytes through")
-Rel(pipeline, plugins, "Invokes presenter/transport instances")
-Rel(session, options, "Reads configuration")
+rectangle "Console App\n[.NET 10]\nCLI + TUI" as consoleApp <<Container>>
+rectangle "WPF App\n[.NET 10, WPF]\nGUI" as wpfApp <<Container>>
+rectangle "Plugins\n[.NET assemblies]\nTransports, presenters, control surfaces" as plugins <<Container>>
 
-SHOW_LEGEND()
+rectangle "Core Engine" {
+  rectangle "Plugin Host\n[AssemblyLoadContext]\nDiscovers, validates, and loads plugins; registers them into DI" as pluginHost <<Component>>
+  rectangle "Session\n[.NET]\nBinds one Transport to a Pipeline for one logical device connection" as session <<Component>>
+  rectangle "Pipeline\n[.NET]\nChains/fans out presenters over a session's byte stream; supports demux for composite decoders" as pipeline <<Component>>
+  rectangle "Options/Configuration\n[Microsoft.Extensions.Options]\nLayered settings for transports, plugins, and front ends" as options <<Component>>
+}
+
+consoleApp --> session : Opens/controls sessions
+wpfApp --> session : Opens/controls sessions
+pluginHost --> plugins : Loads, registers into DI
+session --> pipeline : Feeds raw bytes through
+pipeline --> plugins : Invokes presenter/transport instances
+session --> options : Reads configuration
 @enduml
 ```
 

@@ -10,33 +10,32 @@
 
 Platform-agnostic background tasks using **Template Method Pattern** and **Strategy Pattern**. Business logic in `IBackgroundTask` remains platform-independent; platform-specific scheduling in `IBackgroundTaskScheduler` implementations.
 
+```plantuml
+@startuml
+skinparam shadowing false
+skinparam rectangle {
+  BackgroundColor White
+  BorderColor #444444
+}
+rectangle "IBackgroundTask\n(Platform-Agnostic Logic)\n\nCacheWarmingTask    CacheEvictionTask\nDataExportTask      ReportGenerationTask" as Task <<Component>>
+rectangle "IBackgroundTaskScheduler\n(Platform-Specific Scheduling)" as Sched <<Component>>
+rectangle "HostedService\nScheduler" as Hosted <<Scheduler>>
+rectangle "Azure\nFunctions" as Azure <<Scheduler>>
+rectangle "AWS\nLambda" as Aws <<Scheduler>>
+rectangle "Quartz\nScheduler" as Quartz <<Scheduler>>
+rectangle "Hangfire\nScheduler" as Hangfire <<Scheduler>>
+rectangle "Windows\nService" as Win <<Scheduler>>
+Task --> Sched
+Sched --> Hosted
+Sched --> Azure
+Sched --> Aws
+Sched --> Quartz
+Sched --> Hangfire
+Sched --> Win
+@enduml
 ```
-┌────────────────────────────────────────────────────────┐
-│              IBackgroundTask                           │
-│         (Platform-Agnostic Logic)                      │
-│                                                        │
-│  CacheWarmingTask    CacheEvictionTask                │
-│  DataExportTask      ReportGenerationTask             │
-└───────────────────────┬────────────────────────────────┘
-                        │
-                        ↓
-┌────────────────────────────────────────────────────────┐
-│        IBackgroundTaskScheduler                        │
-│      (Platform-Specific Scheduling)                    │
-└───────────────────────┬────────────────────────────────┘
-                        │
-      ┌─────────────────┼─────────────────┐
-      ↓                 ↓                 ↓
-┌──────────────┐ ┌──────────────┐ ┌──────────────┐
-│HostedService │ │   Azure      │ │     AWS      │
-│  Scheduler   │ │  Functions   │ │   Lambda     │
-└──────────────┘ └──────────────┘ └──────────────┘
-      ↓                 ↓                 ↓
-┌──────────────┐ ┌──────────────┐ ┌──────────────┐
-│   Quartz     │ │   Hangfire   │ │   Windows    │
-│  Scheduler   │ │  Scheduler   │ │   Service    │
-└──────────────┘ └──────────────┘ └──────────────┘
-```
+
+*Figure 1 — Background task architecture*
 
 ---
 
@@ -219,31 +218,22 @@ public class HangfireTaskScheduler : IBackgroundTaskScheduler
 
 ### Sequence: Task Scheduling and Execution
 
+```plantuml
+@startuml
+participant Startup
+participant Scheduler
+participant Platform
+participant Task
+Startup -> Scheduler : Schedule(task, cron)
+Scheduler -> Platform : Platform-specific scheduling
+... Time passes ...
+Platform -> Platform : Trigger (cron match)
+Platform -> Task : Execute()
+note over Task : Business logic runs
+@enduml
 ```
-┌──────────┐   ┌───────────┐   ┌──────────┐   ┌──────────┐
-│ Startup  │   │ Scheduler │   │ Platform │   │   Task   │
-└────┬─────┘   └─────┬─────┘   └────┬─────┘   └────┬─────┘
-     │               │              │              │
-     │ Schedule(task, cron)         │              │
-     ├──────────────>│              │              │
-     │               │              │              │
-     │               │ Platform-    │              │
-     │               │ specific     │              │
-     │               │ scheduling   │              │
-     │               ├─────────────>│              │
-     │               │              │              │
-     │               │              │ (Time passes)│
-     │               │              │              │
-     │               │              │ Trigger      │
-     │               │              │ (cron match) │
-     │               │              │              │
-     │               │              │ Execute()    │
-     │               │              ├─────────────>│
-     │               │              │              │
-     │               │              │ Business     │
-     │               │              │ logic runs   │
-     │               │              │              │
-```
+
+*Figure 2 — Background task scheduling flow*
 
 ---
 

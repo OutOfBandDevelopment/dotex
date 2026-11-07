@@ -10,30 +10,24 @@
 
 Data Container Integration provides a bridge between IDataContainer (Epic 11) and template providers, enabling lazy evaluation where templates only trigger provider execution for paths they actually access.
 
+```plantuml
+@startuml
+skinparam shadowing false
+skinparam rectangle {
+  BackgroundColor White
+  BorderColor #444444
+}
+rectangle "Template Engine\n- ApplyAsync(templateName, IDataContainer)\n- Detects IDataContainer vs. POCO" as Engine <<Component>>
+rectangle "IDataContainerAdapter\n- Adapt(container)" as Adapter <<Component>>
+rectangle "DataContainerProxy\n- DynamicObject\n- Lazy path evaluation" as Proxy <<Component>>
+rectangle "IDataContainer\n- Evaluate(path)\n- Triggers providers" as Container <<Component>>
+Engine --> Adapter
+Adapter --> Proxy
+Proxy --> Container
+@enduml
 ```
-┌──────────────────────────────────────────────────────────────┐
-│                    Template Engine                            │
-│  - ApplyAsync(templateName, IDataContainer)                   │
-│  - Detects IDataContainer vs. POCO                            │
-└────────────────┬──────────────────────────────────────────────┘
-                 ↓
-      ┌──────────────────────────┐
-      │  IDataContainerAdapter   │
-      │  - Adapt(container)      │
-      └──────────┬───────────────┘
-                 ↓
-      ┌──────────────────────────┐
-      │  DataContainerProxy      │
-      │  - DynamicObject         │
-      │  - Lazy path evaluation  │
-      └──────────┬───────────────┘
-                 ↓
-      ┌──────────────────────────┐
-      │     IDataContainer       │
-      │  - Evaluate(path)        │
-      │  - Triggers providers    │
-      └──────────────────────────┘
-```
+
+*Figure 1 — Data container integration overview*
 
 **Key Principle:** Transparent adapter that preserves lazy evaluation while making IDataContainer work with any template provider.
 
@@ -329,56 +323,32 @@ public class TemplateEngine : ITemplateEngine
 
 ### Lazy Evaluation Flow
 
+```plantuml
+@startuml
+skinparam shadowing false
+skinparam rectangle {
+  BackgroundColor White
+  BorderColor #444444
+}
+rectangle "1. Template Rendering Started\n_templateEngine.ApplyAsync('welcome', container)" as S1
+rectangle "2. Detect IDataContainer\nif (data is IDataContainer container)\n    adaptedData = _dataAdapter.Adapt(container)" as S2
+rectangle "3. Create DataContainerProxy\nnew DataContainerProxy(container)" as S3
+rectangle "4. Template Accesses Path\nTemplate: '{{Customer/FirstName}}'\nHandlebars calls: proxy.Customer.FirstName" as S4
+rectangle "5. TryGetMember('Customer')\npath = 'Customer'\nvalue = _container.Evaluate('Customer')\nreturn new DataContainerProxy(_container, 'Customer')" as S5
+rectangle "6. IDataContainer.Evaluate('Customer')\nProvider executes NOW (lazy evaluation triggered)\ncustomerData = await customerProvider.ProvideAsync()" as S6
+rectangle "7. TryGetMember('FirstName')\npath = 'Customer/FirstName'\nvalue = _container.Evaluate('Customer/FirstName')\nreturn 'John' (primitive value)" as S7
+rectangle "8. Template Rendering Complete\nResult: 'Hello John!'\nProviders executed: 1 (Customer only)\nProviders skipped: 2 (Order, Inventory never accessed)" as S8
+S1 --> S2
+S2 --> S3
+S3 --> S4
+S4 --> S5
+S5 --> S6
+S6 --> S7
+S7 --> S8
+@enduml
 ```
-┌────────────────────────────────────────────────────────────┐
-│  1. Template Rendering Started                             │
-│     _templateEngine.ApplyAsync("welcome", container)       │
-└────────────────┬───────────────────────────────────────────┘
-                 ↓
-┌────────────────────────────────────────────────────────────┐
-│  2. Detect IDataContainer                                  │
-│     if (data is IDataContainer container)                  │
-│         adaptedData = _dataAdapter.Adapt(container)        │
-└────────────────┬───────────────────────────────────────────┘
-                 ↓
-┌────────────────────────────────────────────────────────────┐
-│  3. Create DataContainerProxy                              │
-│     new DataContainerProxy(container)                      │
-└────────────────┬───────────────────────────────────────────┘
-                 ↓
-┌────────────────────────────────────────────────────────────┐
-│  4. Template Accesses Path                                 │
-│     Template: "{{Customer/FirstName}}"                     │
-│     Handlebars calls: proxy.Customer.FirstName             │
-└────────────────┬───────────────────────────────────────────┘
-                 ↓
-┌────────────────────────────────────────────────────────────┐
-│  5. TryGetMember("Customer")                               │
-│     path = "Customer"                                      │
-│     value = _container.Evaluate("Customer")                │
-│     return new DataContainerProxy(_container, "Customer")  │
-└────────────────┬───────────────────────────────────────────┘
-                 ↓
-┌────────────────────────────────────────────────────────────┐
-│  6. IDataContainer.Evaluate("Customer")                    │
-│     Provider executes NOW (lazy evaluation triggered)      │
-│     customerData = await customerProvider.ProvideAsync()   │
-└────────────────┬───────────────────────────────────────────┘
-                 ↓
-┌────────────────────────────────────────────────────────────┐
-│  7. TryGetMember("FirstName")                              │
-│     path = "Customer/FirstName"                            │
-│     value = _container.Evaluate("Customer/FirstName")      │
-│     return "John" (primitive value)                        │
-└────────────────┬───────────────────────────────────────────┘
-                 ↓
-┌────────────────────────────────────────────────────────────┐
-│  8. Template Rendering Complete                            │
-│     Result: "Hello John!"                                  │
-│     Providers executed: 1 (Customer only)                  │
-│     Providers skipped: 2 (Order, Inventory never accessed) │
-└────────────────────────────────────────────────────────────┘
-```
+
+*Figure 2 — Lazy evaluation flow*
 
 ---
 

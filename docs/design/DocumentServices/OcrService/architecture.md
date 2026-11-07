@@ -10,26 +10,29 @@
 
 The OCR Service implements a **Provider Pattern** with **Multi-Engine Support** for text extraction from images using Tesseract, cloud-based OCR services, and custom engines.
 
+```plantuml
+@startuml
+skinparam rectangle {
+  BackgroundColor White
+  BorderColor #444444
+}
+rectangle "Application Layer" as App <<layer>>
+rectangle "IOcrService\n- RecognizeAsync(image, context)\n- RecognizeBatchAsync(images[], context)" as Svc <<service>>
+rectangle "Tesseract\nProvider" as P1 <<provider>>
+rectangle "Azure Computer\nVision" as P2 <<provider>>
+rectangle "Google Cloud\nVision" as P3 <<provider>>
+rectangle "Amazon Textract\nProvider" as P4 <<provider>>
+rectangle "Custom\nProvider" as P5 <<provider>>
+App --> Svc : RecognizeAsync(image, context)
+Svc --> P1
+Svc --> P2
+Svc --> P3
+Svc --> P4
+Svc --> P5
+@enduml
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                   Application Layer                          │
-└────────────────────┬────────────────────────────────────────┘
-                     │ RecognizeAsync(image, context)
-                     ↓
-┌─────────────────────────────────────────────────────────────┐
-│          IOcrService                                         │
-│  - RecognizeAsync(image, context)                            │
-│  - RecognizeBatchAsync(images[], context)                    │
-└────────────────────┬────────────────────────────────────────┘
-                     │
-         ┌───────────┼────────────┬────────────┬────────────┐
-         ↓           ↓            ↓            ↓            ↓
-┌──────────────┐ ┌────────┐ ┌─────────┐ ┌──────────┐ ┌──────────┐
-│  Tesseract   │ │ Azure  │ │ Google  │ │  Amazon  │ │  Custom  │
-│   Provider   │ │Computer│ │  Cloud  │ │ Textract │ │ Provider │
-│              │ │ Vision │ │ Vision  │ │ Provider │ │          │
-└──────────────┘ └────────┘ └─────────┘ └──────────┘ └──────────┘
-```
+
+*Figure 1 — OCR service and providers*
 
 ---
 

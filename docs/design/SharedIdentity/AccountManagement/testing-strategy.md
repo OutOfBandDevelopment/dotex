@@ -20,24 +20,24 @@
 
 ## Test Pyramid
 
+```plantuml
+@startuml
+skinparam shadowing false
+skinparam rectangle {
+  BackgroundColor White
+  BorderColor #444444
+}
+rectangle "Security Tests\n(10 tests)" as Sec <<Test level>>
+rectangle "Azure AD Tests\n(8 tests)" as Azure <<Test level>>
+rectangle "Integration Tests\n(15 tests)" as Integ <<Test level>>
+rectangle "Unit Tests\n(50+ tests)" as Unit <<Test level>>
+Sec -[hidden]down- Azure
+Azure -[hidden]down- Integ
+Integ -[hidden]down- Unit
+@enduml
 ```
-                ┌─────────────┐
-                │  Security   │  (10 tests)
-                │   Tests     │
-                └─────────────┘
-              ┌───────────────────┐
-              │ Azure AD Tests    │  (8 tests)
-              │                   │
-              └───────────────────┘
-            ┌─────────────────────────┐
-            │  Integration Tests      │  (15 tests)
-            │                         │
-            └─────────────────────────┘
-      ┌───────────────────────────────────┐
-      │        Unit Tests                 │  (50+ tests)
-      │                                   │
-      └───────────────────────────────────┘
-```
+
+*Figure 1 — Test pyramid*
 
 ---
 

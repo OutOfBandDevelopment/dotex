@@ -263,29 +263,39 @@ location /myservice/ {
 
 ## Architecture
 
+```plantuml
+@startuml
+skinparam rectangle {
+  BackgroundColor White
+  BorderColor #444444
+}
+rectangle "Browser" as browser
+rectangle "Nginx (Port 8080)\n- Dashboard (/)\n- Reverse Proxy" as nginx
+rectangle "smtp4dev:80" as smtp4dev
+rectangle "rabbitmq:15672" as rabbitmq
+rectangle "keycloak:8080" as keycloak
+rectangle "qdrant:6333" as qdrant
+rectangle "opensearch-dashboards:5601" as osd
+rectangle "apache-tika:9998" as tika
+rectangle "opensearch:9200" as os
+rectangle "qdrant:6333 (API)" as qdrantapi
+rectangle "moto:5000" as moto
+rectangle "sbert:5000" as sbert
+browser --> nginx : http://localhost:8080
+nginx --> smtp4dev : /smtp4dev/
+nginx --> rabbitmq : /rabbitmq/
+nginx --> keycloak : /keycloak/
+nginx --> qdrant : /qdrant/
+nginx --> osd : /opensearch-dashboards/
+nginx --> tika : /tika/
+nginx --> os : /opensearch-api/
+nginx --> qdrantapi : /qdrant-api/
+nginx --> moto : /moto/
+nginx --> sbert : /sbert/
+@enduml
 ```
-┌─────────────┐
-│   Browser   │
-└──────┬──────┘
-       │ http://localhost:8080
-       ▼
-┌─────────────────────┐
-│  Nginx (Port 8080)  │
-│  - Dashboard (/)    │
-│  - Reverse Proxy    │
-└──────┬──────────────┘
-       │
-       ├──────────────► /smtp4dev/        → smtp4dev:80
-       ├──────────────► /rabbitmq/        → rabbitmq:15672
-       ├──────────────► /keycloak/        → keycloak:8080
-       ├──────────────► /qdrant/          → qdrant:6333
-       ├──────────────► /opensearch-dashboards/ → opensearch-dashboards:5601
-       ├──────────────► /tika/            → apache-tika:9998
-       ├──────────────► /opensearch-api/  → opensearch:9200
-       ├──────────────► /qdrant-api/      → qdrant:6333
-       ├──────────────► /moto/      → moto:5000
-       └──────────────► /sbert/           → sbert:5000
-```
+
+*Figure 1 — Nginx reverse proxy routing*
 
 ## Benefits
 

@@ -20,20 +20,17 @@
 
 ## Test Pyramid
 
+```plantuml
+@startuml
+rectangle "Performance Tests\n(8 tests)" as Perf
+rectangle "Integration Tests\n(20 tests)" as Int
+rectangle "Unit Tests\n(45+ tests)" as Unit
+Perf -[hidden]down- Int
+Int -[hidden]down- Unit
+@enduml
 ```
-                    ┌─────────────┐
-                    │ Performance │  (8 tests)
-                    │   Tests     │
-                    └─────────────┘
-                  ┌───────────────────┐
-                  │  Integration Tests│  (20 tests)
-                  │                   │
-                  └───────────────────┘
-            ┌─────────────────────────────┐
-            │       Unit Tests            │  (45+ tests)
-            │                             │
-            └─────────────────────────────┘
-```
+
+*Figure 1 — Test pyramid*
 
 ---
 
