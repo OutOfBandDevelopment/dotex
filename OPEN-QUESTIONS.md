@@ -10,4 +10,17 @@ _(none waiting; processed requests are in BACKLOG.md and TODO.md)_
 
 ## Open
 
-_(none)_
+### Q1 (2026-11-06, SharedFramework): which unbuilt design is implemented first?
+
+The reconciliation of all five SharedFramework epics against the code (2026-11-06) shows the built parts and the unbuilt ones: background tasks and cache warming (Caching); profiles, roles and claims, sessions and tokens (Identity); extraction, OCR, rendering, splitting, packing, unpacking and composition (Documents); database template source, `IDataContainer` and compiled templates (Text Templating); channel routing and message composition (Communications, partly).
+
+**Options**
+
+- **A. Text Templating database source** (recommended): smallest (about 400 LOC per the design), builds on the working engine and Handlebars provider, and the Example API already has a template controller to show it.
+- **B. Documents packing and unpacking**: reuses the Archives (Zip, Tar) code already in `OoBDev.System`; medium size.
+- **C. Identity roles and claims**: ties into the rights middleware decision, so it is the most valuable but needs the layering answers first.
+- **D. None for now**: keep them as designs until a consumer appears.
+
+**Default:** A (reversible, no live data, no layering change).
+
+**Your answer:**
