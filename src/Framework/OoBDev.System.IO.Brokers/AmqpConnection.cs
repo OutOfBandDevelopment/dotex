@@ -45,7 +45,7 @@ internal sealed class AmqpConnection : IBrokerConnection
         }
 
         _exchange = string.IsNullOrWhiteSpace(options.Exchange) ? _defaultExchange : options.Exchange;
-        _connection = await factory.CreateConnectionAsync(cancellationToken);
+        _connection = await factory.CreateConnectionAsync(cancellationToken).ConfigureAwait(false);
         _connection.ConnectionShutdownAsync += (_, e) =>
         {
             if (!_closing)
@@ -55,13 +55,13 @@ internal sealed class AmqpConnection : IBrokerConnection
 
             return Task.CompletedTask;
         };
-        _channel = await _connection.CreateChannelAsync(cancellationToken: cancellationToken);
+        _channel = await _connection.CreateChannelAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 
     public async Task SubscribeAsync(string address, CancellationToken cancellationToken)
     {
         var channel = _channel ?? throw new InvalidOperationException("The AMQP connection is not open.");
-        var queue = (await channel.QueueDeclareAsync(string.Empty, durable: false, exclusive: true, autoDelete: true, cancellationToken: cancellationToken)).QueueName;
+        var queue = (await channel.QueueDeclareAsync(string.Empty, durable: false, exclusive: true, autoDelete: true, cancellationToken: cancellationToken).ConfigureAwait(false)).QueueName;
         await channel.QueueBindAsync(queue, _exchange, address, cancellationToken: cancellationToken).ConfigureAwait(false);
         var consumer = new AsyncEventingBasicConsumer(channel);
         consumer.ReceivedAsync += (_, e) =>

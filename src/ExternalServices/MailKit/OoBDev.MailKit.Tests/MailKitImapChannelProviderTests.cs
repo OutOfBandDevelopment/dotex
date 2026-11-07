@@ -49,7 +49,7 @@ public class MailKitImapChannelProviderTests
             mime.Setup(m => m.ToReceived(It.IsAny<MimeMessage>(), It.IsAny<string>(), It.IsAny<string>()))
                 .Returns((MimeMessage m, string server, string path) => new EmailMessage
                 {
-                    MessageId = m.MessageId,
+                    MessageId = m.MessageId!,
                     Subject = m.Subject ?? string.Empty,
                     Metadata = { ["server"] = server, ["path"] = path },
                 });

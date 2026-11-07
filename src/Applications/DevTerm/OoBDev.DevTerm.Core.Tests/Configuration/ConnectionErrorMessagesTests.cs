@@ -45,7 +45,7 @@ public sealed class ConnectionErrorMessagesTests
     [TestMethod]
     public void IsConnectionFailure_StillRejectsAnUnrelatedBug()
     {
-        Assert.IsFalse(ConnectionErrorMessages.IsConnectionFailure(new NullReferenceException()));
+        Assert.IsFalse(ConnectionErrorMessages.IsConnectionFailure(new InvalidCastException()));
         Assert.IsFalse(ConnectionErrorMessages.IsConnectionFailure(new NotSupportedException()));
     }
 

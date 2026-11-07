@@ -64,7 +64,7 @@ public sealed class IndexedSessionLogTests
             CollectionAssert.AreEqual(loaded.Records[i].Data.ToArray(), indexed.Records[i].Data.ToArray());
         }
 
-        Assert.AreEqual(1001, indexed.Records.Count());
+        Assert.AreEqual(1001, indexed.Records.Count);
     }
 
     [TestMethod]

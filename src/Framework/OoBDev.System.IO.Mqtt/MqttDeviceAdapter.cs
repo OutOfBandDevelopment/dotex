@@ -175,7 +175,7 @@ public sealed class MqttDeviceAdapter : IDeviceAdapter
     }
 
     /// <inheritdoc />
-    public async ValueTask DisposeAsync() => await CloseAsync();
+    public async ValueTask DisposeAsync() => await CloseAsync().ConfigureAwait(false);
 
     private void OnMessage(string topic, byte[] payload)
     {

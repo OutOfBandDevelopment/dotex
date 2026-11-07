@@ -51,7 +51,7 @@ public class MimeMessageFactoryAttachmentTests
         Assert.AreEqual("a.bin", parts[0].FileName);
         Assert.AreEqual("text/plain", parts[1].ContentType.MimeType);
         using var stream = new MemoryStream();
-        await parts[0].Content.DecodeToAsync(stream, TestContext.CancellationToken);
+        await parts[0].Content!.DecodeToAsync(stream, TestContext.CancellationToken);
         CollectionAssert.AreEqual(bytes, stream.ToArray());
     }
 
@@ -70,7 +70,7 @@ public class MimeMessageFactoryAttachmentTests
         // Assert
         var part = Parts(message).Single();
         using var stream = new MemoryStream();
-        await part.Content.DecodeToAsync(stream, TestContext.CancellationToken);
+        await part.Content!.DecodeToAsync(stream, TestContext.CancellationToken);
         Assert.AreEqual("a,b", global::System.Text.Encoding.UTF8.GetString(stream.ToArray()));
     }
 

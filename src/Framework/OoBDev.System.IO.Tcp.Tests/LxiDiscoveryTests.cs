@@ -102,10 +102,10 @@ public sealed class LxiDiscoveryTests
         var devices = await LxiDiscovery.ScanAsync(
             TimeSpan.FromMilliseconds(500),
             TimeSpan.FromSeconds(2),
-            TestContext.CancellationToken,
             target: (IPEndPoint)responder.Client.LocalEndPoint!,
             localAddresses: [IPAddress.Loopback],
-            scpiPorts: [scpiPort]);
+            scpiPorts: [scpiPort],
+            cancellationToken: TestContext.CancellationToken);
         await portmapper;
         await instrument;
 

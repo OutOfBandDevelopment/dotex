@@ -65,8 +65,8 @@ public static class LxiDiscovery
     /// <param name="target">Where the request goes; default is the IPv4 broadcast address on UDP 111. A fake responder uses its own endpoint.</param>
     /// <param name="localAddresses">The interface addresses to send from; default is every up non-loopback IPv4 address.</param>
     /// <param name="scpiPorts">The raw-SCPI ports probed; default is <see cref="ScpiPorts"/>.</param>
-    public static async Task<IReadOnlyList<LxiDevice>> ScanAsync(TimeSpan listenFor, TimeSpan probeTimeout, CancellationToken cancellationToken = default,
-        IPEndPoint? target = null, IEnumerable<IPAddress>? localAddresses = null, IReadOnlyList<int>? scpiPorts = null)
+    public static async Task<IReadOnlyList<LxiDevice>> ScanAsync(TimeSpan listenFor, TimeSpan probeTimeout, IPEndPoint? target = null, IEnumerable<IPAddress>? localAddresses = null, IReadOnlyList<int>? scpiPorts = null,
+        CancellationToken cancellationToken = default)
     {
         var found = new Dictionary<string, int>(StringComparer.Ordinal);
         var destination = target ?? new IPEndPoint(IPAddress.Broadcast, _portmapperPort);
