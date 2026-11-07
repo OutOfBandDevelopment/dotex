@@ -80,7 +80,7 @@ internal sealed class SessionPanels(IEnumerable<IDevicePanelContribution> contri
     public async Task<OpenPanel?> OpenInstrumentAsync(SessionHub hub, string id)
     {
         var parts = id.Split('~');
-        if (parts.Length != 3 || parts[0] + "~" != _instrumentPrefix || !int.TryParse(parts[2], out var index)
+        if (parts.Length != 3 || parts[0] + "~" != _instrumentPrefix || !int.TryParse(parts[2], global::System.Globalization.CultureInfo.InvariantCulture, out var index)
             || _instruments.FirstOrDefault(p => string.Equals(p.Id, parts[1], StringComparison.OrdinalIgnoreCase)) is not { } provider)
         {
             return null;

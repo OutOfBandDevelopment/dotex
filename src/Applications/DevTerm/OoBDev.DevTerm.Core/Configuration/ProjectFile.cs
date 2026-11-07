@@ -60,12 +60,12 @@ public sealed class ProjectFile
     {
         var root = new JsonObject
         {
-            ["Name"] = Name,
-            ["Active"] = Active,
-            ["Window"] = Window is { } w ? new JsonObject { ["Left"] = w.Left, ["Top"] = w.Top, ["Width"] = w.Width, ["Height"] = w.Height, ["Maximized"] = w.Maximized } : null,
-            ["Connections"] = new JsonArray([.. Connections.Select(c => (JsonNode?)new JsonObject
+            [nameof(Name)] = Name,
+            [nameof(Active)] = Active,
+            [nameof(Window)] = Window is { } w ? new JsonObject { ["Left"] = w.Left, ["Top"] = w.Top, ["Width"] = w.Width, ["Height"] = w.Height, ["Maximized"] = w.Maximized } : null,
+            [nameof(Connections)] = new JsonArray([.. Connections.Select(c => (JsonNode?)new JsonObject
             {
-                ["Name"] = c.Name,
+                [nameof(c.Name)] = c.Name,
                 ["Profile"] = JsonNode.Parse(c.ProfileJson),
                 ["History"] = c.History is { Count: > 0 } ? new JsonArray([.. c.History.Select(h => (JsonNode?)JsonValue.Create(h))]) : null,
                 ["Log"] = c.Log,
@@ -80,8 +80,8 @@ public sealed class ProjectFile
         try
         {
             var root = JsonNode.Parse(json) as JsonObject ?? throw new InvalidDataException("A project file must be a JSON object.");
-            var project = new ProjectFile { Name = (string?)root["Name"] ?? string.Empty, Active = (string?)root["Active"] };
-            if (root["Window"] is JsonObject window
+            var project = new ProjectFile { Name = (string?)root[nameof(Name)] ?? string.Empty, Active = (string?)root[nameof(Active)] };
+            if (root[nameof(Window)] is JsonObject window
                 && window["Left"] is JsonValue left && window["Top"] is JsonValue top
                 && window["Width"] is JsonValue width && window["Height"] is JsonValue height
                 && left.TryGetValue<double>(out var l) && top.TryGetValue<double>(out var t)
@@ -90,7 +90,7 @@ public sealed class ProjectFile
                 project.Window = new ProjectWindowBounds(l, t, w, h, window["Maximized"] is JsonValue m && m.TryGetValue<bool>(out var max) && max);
             }
 
-            foreach (var node in root["Connections"] as JsonArray ?? [])
+            foreach (var node in root[nameof(Connections)] as JsonArray ?? [])
             {
                 if (node is not JsonObject connection || connection["Profile"] is not JsonObject profile)
                 {
@@ -98,7 +98,7 @@ public sealed class ProjectFile
                 }
 
                 var history = (connection["History"] as JsonArray)?.Select(h => (string?)h).OfType<string>().ToList();
-                project.Connections.Add(new ProjectConnection((string?)connection["Name"] ?? string.Empty, profile.ToJsonString(), history, (string?)connection["Log"]));
+                project.Connections.Add(new ProjectConnection((string?)connection[nameof(ProjectConnection.Name)] ?? string.Empty, profile.ToJsonString(), history, (string?)connection["Log"]));
             }
 
             return project;

@@ -144,7 +144,7 @@ public sealed class CliOptionsValidator : IValidateOptions<CliOptions>
                 break;
 
             case "tcp":
-                if (!int.TryParse(options.Port, out var tcpPort) || tcpPort is < 1 or > 65535)
+                if (!int.TryParse(options.Port, global::System.Globalization.CultureInfo.InvariantCulture, out var tcpPort) || tcpPort is < 1 or > 65535)
                 {
                     return ValidateOptionsResult.Fail("Missing or invalid '--port' for the TCP transport (expected 1-65535).");
                 }
@@ -191,7 +191,7 @@ public sealed class CliOptionsValidator : IValidateOptions<CliOptions>
                 break;
 
             case "rfc2217":
-                if (!int.TryParse(options.Port, out var rfc2217Port) || rfc2217Port is < 1 or > 65535)
+                if (!int.TryParse(options.Port, global::System.Globalization.CultureInfo.InvariantCulture, out var rfc2217Port) || rfc2217Port is < 1 or > 65535)
                 {
                     return ValidateOptionsResult.Fail("Missing or invalid '--port' for the RFC 2217 transport (expected 1-65535).");
                 }
@@ -214,7 +214,7 @@ public sealed class CliOptionsValidator : IValidateOptions<CliOptions>
                 break;
 
             case "vxi11":
-                if (!string.IsNullOrWhiteSpace(options.Port) && (!int.TryParse(options.Port, out var vxi11Port) || vxi11Port is < 0 or > 65535))
+                if (!string.IsNullOrWhiteSpace(options.Port) && (!int.TryParse(options.Port, global::System.Globalization.CultureInfo.InvariantCulture, out var vxi11Port) || vxi11Port is < 0 or > 65535))
                 {
                     return ValidateOptionsResult.Fail("Invalid '--port' for the VXI-11 transport (expected 1-65535, or omit it to ask the instrument's portmapper).");
                 }
@@ -234,7 +234,7 @@ public sealed class CliOptionsValidator : IValidateOptions<CliOptions>
                     return ValidateOptionsResult.Fail($"Missing required '--host' for the {options.Transport.ToUpperInvariant()} transport.");
                 }
 
-                if (!int.TryParse(options.Port, out var mqttPort) || mqttPort is < 1 or > 65535)
+                if (!int.TryParse(options.Port, global::System.Globalization.CultureInfo.InvariantCulture, out var mqttPort) || mqttPort is < 1 or > 65535)
                 {
                     return ValidateOptionsResult.Fail($"Missing or invalid '--port' for the {options.Transport.ToUpperInvariant()} transport (expected 1-65535; usual: mqtt 1883, amqp 5672, stomp 61613).");
                 }

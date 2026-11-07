@@ -36,8 +36,8 @@ public class HandlebarsTemplateProvider(
     ) : ITemplateProvider
 {
     private readonly ILogger _log = log;
-    private readonly ConcurrentDictionary<string, HandlebarsTemplate<TextWriter, object, object>> _cache = new();
-    private readonly object _gate = new();
+    private readonly ConcurrentDictionary<string, HandlebarsTemplate<TextWriter, object, object>> _cache = new(StringComparer.Ordinal);
+    private readonly global::System.Threading.Lock _gate = new();
     private IHandlebars? _handlebars;
 
     private IHandlebars Environment { get { lock (_gate) { return _handlebars ??= CreateEnvironment(); } } }

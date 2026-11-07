@@ -78,7 +78,7 @@ public static class LxiDiscovery
     public static async Task<IReadOnlyList<LxiDevice>> ScanAsync(TimeSpan listenFor, TimeSpan probeTimeout, CancellationToken cancellationToken = default,
         IPEndPoint? target = null, IEnumerable<IPAddress>? localAddresses = null, IReadOnlyList<int>? scpiPorts = null)
     {
-        var found = new Dictionary<string, int>();
+        var found = new Dictionary<string, int>(StringComparer.Ordinal);
         var destination = target ?? new IPEndPoint(IPAddress.Broadcast, _portmapperPort);
         var ports = scpiPorts ?? ScpiPorts;
         foreach (var address in localAddresses ?? LocalIPv4Addresses())

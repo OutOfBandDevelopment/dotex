@@ -28,7 +28,7 @@ public sealed class ConnectionEditorScreenshotTests
     [TestCleanup]
     public void Cleanup() => _folder.Dispose();
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow("tcp", "wpf-device-profiles-tcp.png")]
     [DataRow("serial", "wpf-device-profiles-serial.png")]
     [DataRow("loopback", "wpf-device-profiles-loopback.png")]

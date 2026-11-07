@@ -20,7 +20,8 @@ namespace OoBDev.UiDefinitions;
 public static class SectionExpansionState
 {
     private static readonly ConcurrentDictionary<(string Definition, string Section), bool> _expanded = new();
-    private static readonly object _fileLock = new();
+    private static readonly global::System.Threading.Lock _fileLock = new();
+    private static readonly JsonSerializerOptions IndentedJson = new() { WriteIndented = true };
     private static string? _path;
 
     /// <summary>
@@ -86,10 +87,10 @@ public static class SectionExpansionState
             {
                 var collapsed = _expanded
                     .Where(pair => !pair.Value)
-                    .GroupBy(pair => pair.Key.Definition)
-                    .ToDictionary(group => group.Key, group => group.Select(pair => pair.Key.Section).Order(StringComparer.Ordinal).ToList());
+                    .GroupBy(pair => pair.Key.Definition, StringComparer.Ordinal)
+                    .ToDictionary(group => group.Key, group => group.Select(pair => pair.Key.Section).Order(StringComparer.Ordinal).ToList(), StringComparer.Ordinal);
                 Directory.CreateDirectory(Path.GetDirectoryName(Path.GetFullPath(_path))!);
-                File.WriteAllText(_path, JsonSerializer.Serialize(collapsed, new JsonSerializerOptions { WriteIndented = true }));
+                File.WriteAllText(_path, JsonSerializer.Serialize(collapsed, IndentedJson));
             }
             catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
             {

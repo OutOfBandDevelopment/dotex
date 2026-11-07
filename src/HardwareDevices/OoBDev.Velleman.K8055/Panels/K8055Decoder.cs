@@ -76,7 +76,7 @@ public sealed class K8055Decoder : IDeviceDecoder
         var counter1Text = counter1.ToString(CultureInfo.InvariantCulture);
         var counter2Text = counter2.ToString(CultureInfo.InvariantCulture);
 
-        values = new Dictionary<string, string>
+        values = new Dictionary<string, string>(StringComparer.Ordinal)
         {
             ["digitalInRaw"] = digitalInRawText,
             ["analogIn1"] = analogIn1Text,

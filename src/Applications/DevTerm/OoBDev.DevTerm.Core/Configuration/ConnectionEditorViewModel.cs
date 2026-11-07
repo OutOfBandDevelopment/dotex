@@ -278,7 +278,7 @@ public sealed class ConnectionEditorViewModel : INotifyPropertyChanged, IDisposa
         }
         catch (SystemException)
         {
-            descriptions = new Dictionary<string, string>();
+            descriptions = new Dictionary<string, string>(StringComparer.Ordinal);
         }
 
         return [.. names.Select(name => SerialPortOption.From(name, descriptions))];
@@ -1006,7 +1006,7 @@ public sealed class ConnectionEditorViewModel : INotifyPropertyChanged, IDisposa
             if (value is not null)
             {
                 // The hit's kind decides the transport (a VXI-11 instrument, an MQTT broker, or plain tcp), so one pick fills the lot.
-                if (TransportOptions.Contains(value.Transport))
+                if (TransportOptions.Contains(value.Transport, StringComparer.Ordinal))
                 {
                     Transport = value.Transport;
                 }
@@ -1299,8 +1299,8 @@ public sealed class ConnectionEditorViewModel : INotifyPropertyChanged, IDisposa
         Transport = options.Transport;
         Port = options.Port ?? string.Empty;
         SelectedSerialPort = SerialPortOptions.FirstOrDefault(p => string.Equals(p.Name, Port, StringComparison.Ordinal))?.Name;
-        Baud = options.Baud.ToString();
-        DataBits = options.DataBits.ToString();
+        Baud = options.Baud.ToString(global::System.Globalization.CultureInfo.InvariantCulture);
+        DataBits = options.DataBits.ToString(global::System.Globalization.CultureInfo.InvariantCulture);
         ParityText = options.Parity.ToString();
         StopBitsText = options.StopBits.ToString();
         HandshakeText = options.Handshake.ToString();
@@ -1319,8 +1319,8 @@ public sealed class ConnectionEditorViewModel : INotifyPropertyChanged, IDisposa
         Subscribe = options.Subscribe ?? string.Empty;
         Publish = options.Publish ?? string.Empty;
         Username = options.Username ?? string.Empty;
-        VendorId = options.VendorId.ToString();
-        ProductId = options.ProductId.ToString();
+        VendorId = options.VendorId.ToString(global::System.Globalization.CultureInfo.InvariantCulture);
+        ProductId = options.ProductId.ToString(global::System.Globalization.CultureInfo.InvariantCulture);
         SerialNumber = options.SerialNumber ?? string.Empty;
         DevicePath = options.DevicePath ?? string.Empty;
         BleDeviceId = options.BleDeviceId ?? string.Empty;
@@ -1417,12 +1417,12 @@ public sealed class ConnectionEditorViewModel : INotifyPropertyChanged, IDisposa
             BleNotifyCharacteristicUuid = BleNotifyCharacteristicUuid.Trim() is { Length: > 0 } bnu ? bnu : null,
         };
 
-        if (int.TryParse(Baud, out var baud))
+        if (int.TryParse(Baud, global::System.Globalization.CultureInfo.InvariantCulture, out var baud))
         {
             options.Baud = baud;
         }
 
-        if (int.TryParse(DataBits, out var dataBits))
+        if (int.TryParse(DataBits, global::System.Globalization.CultureInfo.InvariantCulture, out var dataBits))
         {
             options.DataBits = dataBits;
         }
@@ -1442,42 +1442,42 @@ public sealed class ConnectionEditorViewModel : INotifyPropertyChanged, IDisposa
             options.Handshake = handshake;
         }
 
-        if (int.TryParse(WriteTimeoutMs, out var writeTimeoutMs))
+        if (int.TryParse(WriteTimeoutMs, global::System.Globalization.CultureInfo.InvariantCulture, out var writeTimeoutMs))
         {
             options.WriteTimeoutMs = writeTimeoutMs;
         }
 
-        if (int.TryParse(ReadTimeoutMs, out var readTimeoutMs))
+        if (int.TryParse(ReadTimeoutMs, global::System.Globalization.CultureInfo.InvariantCulture, out var readTimeoutMs))
         {
             options.ReadTimeoutMs = readTimeoutMs;
         }
 
-        if (int.TryParse(WriteByteDelayMs, out var writeByteDelayMs))
+        if (int.TryParse(WriteByteDelayMs, global::System.Globalization.CultureInfo.InvariantCulture, out var writeByteDelayMs))
         {
             options.WriteByteDelayMs = writeByteDelayMs;
         }
 
-        if (int.TryParse(AsciiMaxLineLength, out var asciiMaxLineLength))
+        if (int.TryParse(AsciiMaxLineLength, global::System.Globalization.CultureInfo.InvariantCulture, out var asciiMaxLineLength))
         {
             options.AsciiMaxLineLength = asciiMaxLineLength;
         }
 
-        if (int.TryParse(ScpiAutoDetectTimeoutMs, out var scpiAutoDetectTimeoutMs))
+        if (int.TryParse(ScpiAutoDetectTimeoutMs, global::System.Globalization.CultureInfo.InvariantCulture, out var scpiAutoDetectTimeoutMs))
         {
             options.ScpiAutoDetectTimeoutMs = scpiAutoDetectTimeoutMs;
         }
 
-        if (int.TryParse(VendorId, out var vendorId))
+        if (int.TryParse(VendorId, global::System.Globalization.CultureInfo.InvariantCulture, out var vendorId))
         {
             options.VendorId = vendorId;
         }
 
-        if (int.TryParse(ProductId, out var productId))
+        if (int.TryParse(ProductId, global::System.Globalization.CultureInfo.InvariantCulture, out var productId))
         {
             options.ProductId = productId;
         }
 
-        if (int.TryParse(LoopbackSampleIntervalMs, out var loopbackSampleIntervalMs))
+        if (int.TryParse(LoopbackSampleIntervalMs, global::System.Globalization.CultureInfo.InvariantCulture, out var loopbackSampleIntervalMs))
         {
             options.LoopbackSampleIntervalMs = loopbackSampleIntervalMs;
         }
@@ -1506,47 +1506,47 @@ public sealed class ConnectionEditorViewModel : INotifyPropertyChanged, IDisposa
             return ValidateOptionsResult.Fail("Select at least one presenter.");
         }
 
-        if (!int.TryParse(Baud, out _))
+        if (!int.TryParse(Baud, global::System.Globalization.CultureInfo.InvariantCulture, out _))
         {
             return ValidateOptionsResult.Fail($"'{Baud}' isn't a valid baud rate.");
         }
 
-        if (!int.TryParse(DataBits, out _))
+        if (!int.TryParse(DataBits, global::System.Globalization.CultureInfo.InvariantCulture, out _))
         {
             return ValidateOptionsResult.Fail($"'{DataBits}' isn't a valid data bits value.");
         }
 
-        if (!int.TryParse(WriteTimeoutMs, out _))
+        if (!int.TryParse(WriteTimeoutMs, global::System.Globalization.CultureInfo.InvariantCulture, out _))
         {
             return ValidateOptionsResult.Fail($"'{WriteTimeoutMs}' isn't a valid write timeout.");
         }
 
-        if (!int.TryParse(ReadTimeoutMs, out _))
+        if (!int.TryParse(ReadTimeoutMs, global::System.Globalization.CultureInfo.InvariantCulture, out _))
         {
             return ValidateOptionsResult.Fail($"'{ReadTimeoutMs}' isn't a valid read timeout.");
         }
 
-        if (!int.TryParse(WriteByteDelayMs, out _))
+        if (!int.TryParse(WriteByteDelayMs, global::System.Globalization.CultureInfo.InvariantCulture, out _))
         {
             return ValidateOptionsResult.Fail($"'{WriteByteDelayMs}' isn't a valid write byte delay.");
         }
 
-        if (!int.TryParse(ScpiAutoDetectTimeoutMs, out _))
+        if (!int.TryParse(ScpiAutoDetectTimeoutMs, global::System.Globalization.CultureInfo.InvariantCulture, out _))
         {
             return ValidateOptionsResult.Fail($"'{ScpiAutoDetectTimeoutMs}' isn't a valid SCPI auto-detect timeout.");
         }
 
-        if (!int.TryParse(AsciiMaxLineLength, out _))
+        if (!int.TryParse(AsciiMaxLineLength, global::System.Globalization.CultureInfo.InvariantCulture, out _))
         {
             return ValidateOptionsResult.Fail($"'{AsciiMaxLineLength}' isn't a valid ASCII max line length.");
         }
 
-        if (!int.TryParse(VendorId, out _))
+        if (!int.TryParse(VendorId, global::System.Globalization.CultureInfo.InvariantCulture, out _))
         {
             return ValidateOptionsResult.Fail($"'{VendorId}' isn't a valid vendor id.");
         }
 
-        if (!int.TryParse(ProductId, out _))
+        if (!int.TryParse(ProductId, global::System.Globalization.CultureInfo.InvariantCulture, out _))
         {
             return ValidateOptionsResult.Fail($"'{ProductId}' isn't a valid product id.");
         }

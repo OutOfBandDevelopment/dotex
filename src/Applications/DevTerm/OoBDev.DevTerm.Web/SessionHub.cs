@@ -31,7 +31,7 @@ public sealed class SessionHub : IAsyncDisposable
     private string _parser;
     private readonly int _backlogLimit;
     private readonly SemaphoreSlim _sendLock = new(1, 1);
-    private readonly object _gate = new();
+    private readonly global::System.Threading.Lock _gate = new();
     private readonly Queue<string> _backlog = new();
 
     /// <summary>The options the current session was built from (they change on a profile switch).</summary>

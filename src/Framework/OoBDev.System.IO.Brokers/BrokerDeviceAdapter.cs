@@ -18,7 +18,7 @@ public sealed class BrokerDeviceAdapter : IDeviceAdapter
 {
     private readonly IBrokerConnectionFactory _factory;
     private readonly BrokerDeviceAdapterOptions _options;
-    private readonly object _pipeLock = new();
+    private readonly global::System.Threading.Lock _pipeLock = new();
     private IBrokerConnection? _connection;
     private Pipe _pipe = new();
     private PipeWriter? _output;

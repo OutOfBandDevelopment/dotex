@@ -19,7 +19,7 @@ public sealed class MqttDeviceAdapter : IDeviceAdapter
 {
     private readonly IMqttConnectionFactory _factory;
     private readonly MqttDeviceAdapterOptions _options;
-    private readonly object _pipeLock = new();
+    private readonly global::System.Threading.Lock _pipeLock = new();
     private IMqttConnection? _connection;
     private Pipe _pipe = new();
     private PipeWriter? _output;

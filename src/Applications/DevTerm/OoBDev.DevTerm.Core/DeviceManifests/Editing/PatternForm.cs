@@ -107,7 +107,7 @@ public sealed class PatternForm : EditorForm
                 }
 
                 var values = new List<string> { $"{Pattern.Name}={(match.Groups.Count > 1 ? match.Groups[1].Value : match.Value)}" };
-                values.AddRange(match.Groups.Cast<Group>().Where(g => g.Success && !int.TryParse(g.Name, out _)).Select(g => $"{g.Name}={g.Value}"));
+                values.AddRange(match.Groups.Cast<Group>().Where(g => g.Success && !int.TryParse(g.Name, global::System.Globalization.CultureInfo.InvariantCulture, out _)).Select(g => $"{g.Name}={g.Value}"));
                 return string.Join("  ", values);
             }
             catch (ArgumentException ex)

@@ -22,7 +22,7 @@ namespace OoBDev.System.IO.Tcp;
 /// </summary>
 internal sealed class XonXoffFlowControlGate
 {
-    private readonly object _lock = new();
+    private readonly global::System.Threading.Lock _lock = new();
     private TaskCompletionSource? _pausedUntilXon;
     private bool _enabled;
 

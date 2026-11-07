@@ -18,7 +18,7 @@ public sealed class ExpressionPickerScreenshotTests
         new("status", ValuePathType.Text, ValuePathSource.ResponsePattern, "Status"),
     ];
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow("wpf-expression-picker", "round({volts} * {amps}, 1)", PickerMode.Expression, "")]
     [DataRow("wpf-expression-picker-error", "round({volts} * ", PickerMode.Expression, "")]
     [DataRow("wpf-expression-picker-warning", "{volts} * {watts}", PickerMode.Expression, "")]

@@ -253,6 +253,8 @@ dotnet_diagnostic.OOB0001.severity = warning
 
 [**/*.Tests/**.cs]
 dotnet_diagnostic.OOB0001.severity = none
+# test fixtures create and dispose disposable fields in [TestInitialize]/[TestCleanup]
+dotnet_diagnostic.CA1001.severity = none
 # test names follow Method_Scenario_ExpectedBehavior
 dotnet_diagnostic.CA1707.severity = none
 dotnet_diagnostic.CA1711.severity = none
@@ -267,6 +269,9 @@ dotnet_diagnostic.CA1711.severity = none
 dotnet_diagnostic.MA0004.severity = none
 # Example DTO files group several small models per file
 dotnet_diagnostic.MA0048.severity = none
+
+[Applications/**.cs]
+dotnet_diagnostic.MA0004.severity = none
 
 [Framework/OoBDev.AspNetCore*/**.cs]
 dotnet_diagnostic.MA0004.severity = none

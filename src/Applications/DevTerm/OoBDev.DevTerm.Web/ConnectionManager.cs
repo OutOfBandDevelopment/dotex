@@ -23,8 +23,8 @@ public sealed class ConnectionManager
     private readonly string? _projectPath;
     private readonly ConnectionProfileStore? _store;
     private readonly int _backlogLines;
-    private readonly ConcurrentDictionary<string, (string Name, SessionHub Hub, SessionHttpControlServer? Control, IDisposable? Registration)> _open = new();
-    private readonly object _projectLock = new();
+    private readonly ConcurrentDictionary<string, (string Name, SessionHub Hub, SessionHttpControlServer? Control, IDisposable? Registration)> _open = new(StringComparer.Ordinal);
+    private readonly global::System.Threading.Lock _projectLock = new();
 
     /// <param name="store">The saved-profile store the TUI and WPF use; the connection set when there is no <paramref name="projectPath"/>.</param>
     public ConnectionManager(string? projectPath, int backlogLines, HostEvents events, ConnectionProfileStore? store = null)

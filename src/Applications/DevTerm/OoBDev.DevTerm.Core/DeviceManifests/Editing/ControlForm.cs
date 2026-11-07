@@ -96,7 +96,7 @@ public sealed class ControlForm : EditorForm
         get => KindOf(Control);
         set
         {
-            if (value == Kind || !Kinds.Contains(value))
+            if (value == Kind || !Kinds.Contains(value, StringComparer.Ordinal))
             {
                 return;
             }
