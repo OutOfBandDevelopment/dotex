@@ -35,7 +35,7 @@ Tables: 1 Already in main, 2 Not in main, 3 Harvest recommendations, 4 Proposed 
 | ToolKit, ToolKit.Abstractions | `OoBDev.System` (BcdEx, ByteEx, Codecs, Collections, PathSegments) | Diff only |
 | Windows.Forms (ValidTextBox) | decision 22: `OoBDev.Extensions.Windows.Forms` | Confirm it exists; not found by this check, *verify* |
 
-Recommendation (**A**): run the `compare-incoming-codebase` diff for these once, record "identical" or the delta in `Incoming/CHECKLIST.md`, then delete the incoming copy. Option B: keep the copies until everything else is done (safer, but clutters the tree).
+Recommendation (**A**, chosen by the owner as D1; done 2026-11-06): diffed once, deltas were refactors only, and the incoming copies of the projects above (except Windows.Forms) were deleted. Option B: keep the copies until everything else is done (safer, but clutters the tree).
 
 ## 2. Not in main: BinaryDataDecoders
 
