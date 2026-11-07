@@ -26,13 +26,23 @@ public sealed class ToolGuideTests
         return dir?.FullName ?? throw new InvalidOperationException("repo root not found");
     }
 
+    /// <summary>The tool's own build output: it holds every package the tool needs, which the test's bin folder lacks for packages that come from the shared ASP.NET Core framework.</summary>
+    private static string ToolDirectory(string assembly)
+    {
+        var baseDirectory = new DirectoryInfo(AppContext.BaseDirectory.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar));
+        var framework = baseDirectory.Name;
+        var configuration = baseDirectory.Parent!.Name;
+        return Path.Combine(RepoRoot(), "src", "Tools", assembly, "bin", configuration, framework);
+    }
+
     private Task<CliExample> RunAsync(string assembly, string toolName, string title, string description, params string[] arguments)
     {
-        var dll = Path.Combine(AppContext.BaseDirectory, assembly + ".dll");
+        var toolDirectory = ToolDirectory(assembly);
+        var dll = Path.Combine(toolDirectory, assembly + ".dll");
         var all = new List<string> { dll };
         all.AddRange(arguments);
         var shown = toolName + (arguments.Length == 0 ? string.Empty : " " + string.Join(' ', arguments));
-        return CliToolRunner.RunAsync(title, description, "dotnet", all, shown, AppContext.BaseDirectory, TestContext.CancellationToken);
+        return CliToolRunner.RunAsync(title, description, "dotnet", all, shown, toolDirectory, TestContext.CancellationToken);
     }
 
     private static void Write(string tool, string guide) =>

@@ -54,7 +54,6 @@ A clean rebuild after the 2026-11-06 pass reports about 103 distinct analyzer wa
 
 - [ ] Rules still at `suggestion` in `src/.editorconfig`: flip each to warning after fixing its backlog. Kept on purpose: MA0026 (about 50 TODO comments), MA0046 (3, `EventHandler<TMessage>` on the device interfaces), MA0061 (3, DEBUG-only required parameters), CA1710, CA1720, CA1708 (domain names).
 - [ ] Fix the remaining analyzer warnings: MA0054, MA0051, MA0016, MA0134, CA1859, CA1826, CS8601/CS8602, MA0009, MA0023, MA0132, MA0008, CA1000, CA1010, CA1068, CA2201, OOB0001 in `EmailMessage.cs`, NU1902/NU1903.
-- [ ] `OoBDev.Tools.Guides.Tests` has 4 failures at HEAD: the tool dlls miss `Microsoft.Extensions.Logging.Abstractions` in the test bin folder; the test run also rewrites four tracked `docs/applications/tools/*.md` files.
 
 ## 6. Migrations
 
