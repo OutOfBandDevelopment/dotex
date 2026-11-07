@@ -270,10 +270,10 @@ This checklist tracks the investigation and migration status of all projects in 
 2. **Full Implementation** - Build parser + code generators (~230 hours)
 3. **Extract Patterns** - Document requirements, implement when prioritized
 
-**Recommendation:** Option 1 (Specification Only) - Captured in Features/ContractParser/README.md
+**Recommendation:** Option 1 (Specification Only) - Captured in docs/design/ContractParser/README.md
 
 **Documentation Created:**
-- `Features/ContractParser/README.md` - Comprehensive feature specification
+- `docs/design/ContractParser/README.md` - Comprehensive feature specification
   - 5 use cases with user journeys
   - Functional and non-functional requirements
   - Technical specifications (grammar features, limitations, enhancements)
@@ -555,7 +555,7 @@ Projects Pending: 4/8 (50%)
 - 2026-01-13: Initial checklist created
 - 2026-01-13: Added dotnet-lib (DELETED), Framework, Oobtainium, BotChat, BinaryDecoders status
 - 2026-01-13: Identified 4 remaining projects to investigate
-- 2026-01-20: ContractParser investigation complete - Feature specification in Features/ContractParser/
+- 2026-01-20: ContractParser investigation complete - Feature specification in docs/design/ContractParser/
 - 2026-01-20: Tools investigation complete - 4 CLI tools analyzed in Features/Tools/
 - 2026-01-20: Removed CloudOrchestrator (doesn't exist in Incoming directory)
 - 2026-01-20: Updated Oobtainium status - Moved to proving-grounds repository

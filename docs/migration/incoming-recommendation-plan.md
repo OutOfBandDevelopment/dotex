@@ -65,7 +65,7 @@ Hardware devices: the code is byte-identical between the original repository and
 
 ## 3. ContractParser and Tools
 
-- **ContractParser** (`Incoming/ContractParser/examples`): two ANTLR grammars (`ServiceContract.g4`, 66 lines; `_v2.g4`, 45 lines) and five sample contracts; no parser code. Decided 2026-10-09 to keep as a specification. Recommendation: move the folder to `docs/design/ContractParser/` as reference material so `Incoming/` empties out.
+- **ContractParser** (`docs/design/ContractParser/examples` (moved there 2026-11-06, D5)): two ANTLR grammars (`ServiceContract.g4`, 66 lines; `_v2.g4`, 45 lines) and five sample contracts; no parser code. Decided 2026-10-09 to keep as a specification. Recommendation: move the folder to `docs/design/ContractParser/` as reference material so `Incoming/` empties out.
 - **Tools / OoBDev.De5000.Ble.Cli**: 75-line `Program.cs` bridging a DE-5000 LCR meter over a serial BLE link; its own readme says it "needs improved". dev-term has `Devices.De5000`.
 
 ## 4. Harvest candidates
