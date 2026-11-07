@@ -48,33 +48,40 @@ public static class ApiGuideRenderer
                     text.Append("Request body: ").Append(string.Join(", ", content.EnumerateObject().Select(c => $"`{c.Name}`"))).Append("\n\n");
                 }
 
-                if (operation.TryGetProperty("responses", out var responses))
-                {
-                    text.Append("Responses:\n\n");
-                    foreach (var response in responses.EnumerateObject().OrderBy(r => r.Name, StringComparer.Ordinal))
-                    {
-                        var description = Str(response.Value, "description");
-                        var types = response.Value.TryGetProperty("content", out var rc) ? string.Join(", ", rc.EnumerateObject().Select(c => $"`{c.Name}`")) : string.Empty;
-                        text.Append("- `").Append(response.Name).Append('`');
-                        if (description.Length > 0)
-                        {
-                            text.Append(' ').Append(description);
-                        }
-
-                        if (types.Length > 0)
-                        {
-                            text.Append(" (").Append(types).Append(')');
-                        }
-
-                        text.Append('\n');
-                    }
-
-                    text.Append('\n');
-                }
+                AppendResponses(text, operation);
             }
         }
 
         return text.ToString();
+    }
+
+    private static void AppendResponses(StringBuilder text, JsonElement operation)
+    {
+        if (!operation.TryGetProperty("responses", out var responses))
+        {
+            return;
+        }
+
+        text.Append("Responses:\n\n");
+        foreach (var response in responses.EnumerateObject().OrderBy(r => r.Name, StringComparer.Ordinal))
+        {
+            var description = Str(response.Value, "description");
+            var types = response.Value.TryGetProperty("content", out var rc) ? string.Join(", ", rc.EnumerateObject().Select(c => $"`{c.Name}`")) : string.Empty;
+            text.Append("- `").Append(response.Name).Append('`');
+            if (description.Length > 0)
+            {
+                text.Append(' ').Append(description);
+            }
+
+            if (types.Length > 0)
+            {
+                text.Append(" (").Append(types).Append(')');
+            }
+
+            text.Append('\n');
+        }
+
+        text.Append('\n');
     }
 
     /// <summary>Channels with their address, description and messages, then the operations and the message payloads.</summary>
@@ -97,31 +104,7 @@ public static class ApiGuideRenderer
 
         if (root.TryGetProperty("channels", out var channels))
         {
-            text.Append("## Channels\n\n");
-            foreach (var channel in channels.EnumerateObject().OrderBy(c => c.Name, StringComparer.Ordinal))
-            {
-                text.Append("### ").Append(channel.Name).Append(" `").Append(Str(channel.Value, "address")).Append("`\n\n");
-                var description = Str(channel.Value, "description");
-                if (description.Length > 0)
-                {
-                    text.Append(description).Append("\n\n");
-                }
-
-                if (channel.Value.TryGetProperty("parameters", out var parameters))
-                {
-                    foreach (var parameter in parameters.EnumerateObject())
-                    {
-                        text.Append("- Parameter `").Append(parameter.Name).Append("`: ").Append(Str(parameter.Value, "description")).Append('\n');
-                    }
-
-                    text.Append('\n');
-                }
-
-                if (channel.Value.TryGetProperty("messages", out var messages))
-                {
-                    text.Append("Messages: ").Append(string.Join(", ", messages.EnumerateObject().Select(m => $"`{m.Name}`"))).Append("\n\n");
-                }
-            }
+            AppendChannels(text, channels);
         }
 
         if (root.TryGetProperty("operations", out var operations))
@@ -160,6 +143,35 @@ public static class ApiGuideRenderer
         }
 
         return text.ToString();
+    }
+
+    private static void AppendChannels(StringBuilder text, JsonElement channels)
+    {
+        text.Append("## Channels\n\n");
+        foreach (var channel in channels.EnumerateObject().OrderBy(c => c.Name, StringComparer.Ordinal))
+        {
+            text.Append("### ").Append(channel.Name).Append(" `").Append(Str(channel.Value, "address")).Append("`\n\n");
+            var description = Str(channel.Value, "description");
+            if (description.Length > 0)
+            {
+                text.Append(description).Append("\n\n");
+            }
+
+            if (channel.Value.TryGetProperty("parameters", out var parameters))
+            {
+                foreach (var parameter in parameters.EnumerateObject())
+                {
+                    text.Append("- Parameter `").Append(parameter.Name).Append("`: ").Append(Str(parameter.Value, "description")).Append('\n');
+                }
+
+                text.Append('\n');
+            }
+
+            if (channel.Value.TryGetProperty("messages", out var messages))
+            {
+                text.Append("Messages: ").Append(string.Join(", ", messages.EnumerateObject().Select(m => $"`{m.Name}`"))).Append("\n\n");
+            }
+        }
     }
 
     /// <summary>Writes <paramref name="content"/> (LF endings) only when it differs from the file, so reruns leave git alone; true when written.</summary>

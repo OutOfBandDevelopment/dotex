@@ -102,32 +102,14 @@ public partial class ServiceBrokerQueueMessageProvider(
     {
         using var transaction = connection.BeginTransaction();
 
-        Guid conversation = Guid.Empty;
-        long order = 0;
-        string messageType = "";
-        byte[]? body = null;
-        var found = false;
-
-        using (var command = new SqlCommand(receive, connection, transaction))
-        {
-            command.CommandTimeout = options.ReceiveTimeoutSeconds + 30;
-            command.Parameters.Add("@timeout", SqlDbType.Int).Value = options.ReceiveTimeoutSeconds * 1000;
-            using var reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
-            found = await reader.ReadAsync(cancellationToken).ConfigureAwait(false);
-            if (found)
-            {
-                order = reader.GetInt64(0);
-                conversation = reader.GetGuid(1);
-                messageType = reader.GetString(2);
-                body = reader.IsDBNull(3) ? null : reader.GetSqlBinary(3).Value;
-            }
-        }
-
-        if (!found)
+        var received = await ReceiveRowAsync(connection, transaction, receive, options, cancellationToken).ConfigureAwait(false);
+        if (received is null)
         {
             await transaction.CommitAsync(CancellationToken.None).ConfigureAwait(false);
             return;
         }
+
+        var (order, conversation, messageType, body) = received.Value;
 
         if (messageType is EndDialogType or ErrorType)
         {
@@ -164,6 +146,25 @@ public partial class ServiceBrokerQueueMessageProvider(
                 await transaction.RollbackAsync(CancellationToken.None).ConfigureAwait(false);
             }
         }
+    }
+
+    private static async Task<(long Order, Guid Conversation, string MessageType, byte[]? Body)?> ReceiveRowAsync(
+        SqlConnection connection,
+        SqlTransaction transaction,
+        string receive,
+        ServiceBrokerOptions options,
+        CancellationToken cancellationToken)
+    {
+        using var command = new SqlCommand(receive, connection, transaction);
+        command.CommandTimeout = options.ReceiveTimeoutSeconds + 30;
+        command.Parameters.Add("@timeout", SqlDbType.Int).Value = options.ReceiveTimeoutSeconds * 1000;
+        using var reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
+        if (!await reader.ReadAsync(cancellationToken).ConfigureAwait(false))
+        {
+            return null;
+        }
+
+        return (reader.GetInt64(0), reader.GetGuid(1), reader.GetString(2), reader.IsDBNull(3) ? null : reader.GetSqlBinary(3).Value);
     }
 
     private static async Task EndConversationAsync(SqlConnection connection, SqlTransaction transaction, Guid conversation, string? error)

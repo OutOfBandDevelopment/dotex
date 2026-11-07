@@ -50,10 +50,9 @@ Owner: all protocols and features of dev-term must exist here. Done means what d
 
 ## 5. Code quality backlog
 
-A clean rebuild after the 2026-11-06 pass reports about 103 distinct analyzer warnings (218 before). Analyzers are wired from `src/Directory.Build.props` (`OoBDev.Analyzers` OOB0001 to OOB0003, NetAnalyzers Recommended, Meziantou); `Tools`, `Examples` and `Applications` are exempt from MA0004, and `Tools` and `Examples` from MA0048, in `src/.editorconfig`.
+A clean rebuild after the 2026-11-06 pass reports no analyzer warnings (218 before). Analyzers are wired from `src/Directory.Build.props` (`OoBDev.Analyzers` OOB0001 to OOB0003, NetAnalyzers Recommended, Meziantou); `Tools`, `Examples` and `Applications` are exempt from MA0004, and `Tools` and `Examples` from MA0048, in `src/.editorconfig`.
 
 - [ ] Rules still at `suggestion` in `src/.editorconfig`: flip each to warning after fixing its backlog. Kept on purpose: MA0026 (about 50 TODO comments), MA0046 (3, `EventHandler<TMessage>` on the device interfaces), MA0061 (3, DEBUG-only required parameters), CA1710, CA1720, CA1708 (domain names).
-- [ ] Fix the remaining analyzer warnings: MA0051 (8 sites: `ManifestEditorDialogViewModel`, `ShellViewModel`, `ServiceBrokerQueueMessageProvider`, `ApiGuideRenderer` x2, `BusylightUiDefinition`, `FolderPromptRunner`) and NU1902/NU1903 (vulnerable packages).
 
 ## 6. Migrations
 

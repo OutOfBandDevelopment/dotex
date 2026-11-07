@@ -67,6 +67,13 @@ public sealed class ManifestEditorDialogViewModel : ViewModelBase, IDisposable
         Check = new ManifestEditorCommand(() => true, () => _editor.Validate());
         ImportKsy = new ManifestEditorCommand(() => true, ImportKsyFile);
         ToggleRecording = new ManifestEditorCommand(() => true, ToggleRecordingFile);
+        WireEditor();
+        ShowSelection();
+        RebuildPreview();
+    }
+
+    private void WireEditor()
+    {
         _editor.ConfirmDiscardChanges = () => _confirm?.Confirm("The manifest has unsaved changes. Discard them?") ?? true;
         _editor.ConfirmOverwrite = target => _confirm?.Confirm($"'{target}' already exists. Overwrite it?") ?? true;
         _editor.SelectionChanged += (_, _) => ShowSelection();
@@ -80,8 +87,6 @@ public sealed class ManifestEditorDialogViewModel : ViewModelBase, IDisposable
             RebuildPreview();
             RefreshCommands();
         };
-        ShowSelection();
-        RebuildPreview();
     }
 
     /// <summary>The window title, with a star when there are unsaved edits.</summary>

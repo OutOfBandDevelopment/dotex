@@ -12,6 +12,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MessagePack" />
+    <PackageReference Include="System.Security.Cryptography.Pkcs" />
     <PackageReference Include="Aspire.Hosting.RabbitMQ" />
     <PackageReference Include="Aspire.Hosting.SqlServer" />
   </ItemGroup>

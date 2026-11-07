@@ -42,67 +42,75 @@ public partial class FolderPromptRunner(IMessageCompletion completion, ILogger<F
         foreach (var directory in directories)
         {
             cancellationToken.ThrowIfCancellationRequested();
-
-            var files = Directory.EnumerateFiles(directory, options.SearchPattern, SearchOption.TopDirectoryOnly)
-                .Order(StringComparer.Ordinal)
-                .ToList();
-            if (files.Count == 0)
+            if (await RunFolderAsync(options, (input, output, name, source), directory, cancellationToken))
             {
-                continue;
+                sent++;
             }
-
-            var relative = Path.GetRelativePath(input, directory);
-            var target = relative == "." ? output : Path.GetFullPath(Path.Combine(output, relative));
-            var responseFile = Path.Combine(target, name + ".response.md");
-            if (File.Exists(responseFile) && !options.Overwrite)
-            {
-                LogSkipExisting(log, directory);
-                continue;
-            }
-
-            var model = new
-            {
-                folder = relative == "." ? Path.GetFileName(input) : relative.Replace('\\', '/'),
-                files = files.Select(f => new
-                {
-                    name = Path.GetFileName(f),
-                    extension = Path.GetExtension(f),
-                    content = File.ReadAllText(f),
-                }).ToList(),
-            };
-            var prompt = PromptRenderer.Render(source, model);
-
-            Directory.CreateDirectory(target);
-            await File.WriteAllTextAsync(Path.Combine(target, name + ".prompt.md"), prompt, cancellationToken);
-
-            LogAsk(log, options.Provider, directory, files.Count);
-            var started = _time.GetUtcNow();
-            var timestamp = _time.GetTimestamp();
-            var response = await completion.GetCompletionAsync(options.Model!, prompt);
-            var elapsed = _time.GetElapsedTime(timestamp);
-            sent++;
-
-            await File.WriteAllTextAsync(responseFile, response, cancellationToken);
-
-            var extracted = options.ExtractFiles ? await WriteExtractedAsync(target, response, cancellationToken) : new List<string>();
-
-            var metadata = new
-            {
-                provider = options.Provider,
-                model = options.Model,
-                template = name,
-                folder = model.folder,
-                inputFiles = files.Count,
-                promptCharacters = prompt.Length,
-                responseCharacters = response.Length,
-                startedUtc = started,
-                durationMilliseconds = (long)elapsed.TotalMilliseconds,
-                extractedFiles = extracted,
-            };
-            await File.WriteAllTextAsync(Path.Combine(target, name + ".response.json"), JsonSerializer.Serialize(metadata, _json), cancellationToken);
         }
 
         return sent;
+    }
+
+    private async Task<bool> RunFolderAsync(LlmCodeGenOptions options, (string Input, string Output, string Name, string Source) run, string directory, CancellationToken cancellationToken)
+    {
+        var (input, output, name, source) = run;
+        var files = Directory.EnumerateFiles(directory, options.SearchPattern, SearchOption.TopDirectoryOnly)
+            .Order(StringComparer.Ordinal)
+            .ToList();
+        if (files.Count == 0)
+        {
+            return false;
+        }
+
+        var relative = Path.GetRelativePath(input, directory);
+        var target = relative == "." ? output : Path.GetFullPath(Path.Combine(output, relative));
+        var responseFile = Path.Combine(target, name + ".response.md");
+        if (File.Exists(responseFile) && !options.Overwrite)
+        {
+            LogSkipExisting(log, directory);
+            return false;
+        }
+
+        var folder = relative == "." ? Path.GetFileName(input) : relative.Replace('\\', '/');
+        var model = new
+        {
+            folder,
+            files = files.Select(f => new
+            {
+                name = Path.GetFileName(f),
+                extension = Path.GetExtension(f),
+                content = File.ReadAllText(f),
+            }).ToList(),
+        };
+        var prompt = PromptRenderer.Render(source, model);
+
+        Directory.CreateDirectory(target);
+        await File.WriteAllTextAsync(Path.Combine(target, name + ".prompt.md"), prompt, cancellationToken);
+
+        LogAsk(log, options.Provider, directory, files.Count);
+        var started = _time.GetUtcNow();
+        var timestamp = _time.GetTimestamp();
+        var response = await completion.GetCompletionAsync(options.Model!, prompt);
+        var elapsed = _time.GetElapsedTime(timestamp);
+
+        await File.WriteAllTextAsync(responseFile, response, cancellationToken);
+
+        var extracted = options.ExtractFiles ? await WriteExtractedAsync(target, response, cancellationToken) : new List<string>();
+        var metadata = new
+        {
+            provider = options.Provider,
+            model = options.Model,
+            template = name,
+            folder,
+            inputFiles = files.Count,
+            promptCharacters = prompt.Length,
+            responseCharacters = response.Length,
+            startedUtc = started,
+            durationMilliseconds = (long)elapsed.TotalMilliseconds,
+            extractedFiles = extracted,
+        };
+        await File.WriteAllTextAsync(Path.Combine(target, name + ".response.json"), JsonSerializer.Serialize(metadata, _json), cancellationToken);
+        return true;
     }
 
     private async Task<List<string>> WriteExtractedAsync(string target, string response, CancellationToken cancellationToken)

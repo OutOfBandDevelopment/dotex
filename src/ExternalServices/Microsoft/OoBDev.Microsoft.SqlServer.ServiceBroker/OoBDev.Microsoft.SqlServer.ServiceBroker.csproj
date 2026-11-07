@@ -11,6 +11,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="System.Security.Cryptography.Pkcs" />
 		<PackageReference Include="GitVersion.MsBuild">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
