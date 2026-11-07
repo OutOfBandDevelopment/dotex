@@ -6,15 +6,14 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Text;
-using OoBDev.DevTerm.Configuration;
 using OoBDev.UiDefinitions;
-namespace OoBDev.DevTerm.Tui;
+namespace OoBDev.UiDefinitions.Tui;
 
 /// <summary>One character cell of a chart: its glyph and an optional <c>#RRGGBB</c> foreground (null draws in the view's normal color).</summary>
-internal readonly record struct CellGlyph(char Char, string? Color);
+public readonly record struct CellGlyph(char Char, string? Color);
 
 /// <summary>A fixed-size grid of <see cref="CellGlyph"/>s — what a TUI chart renders to, before <see cref="CellCanvasView"/> draws it.</summary>
-internal sealed class CellGrid
+public sealed class CellGrid
 {
     private readonly CellGlyph[,] _cells;
 

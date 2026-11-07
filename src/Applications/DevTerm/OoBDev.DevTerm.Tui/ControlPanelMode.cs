@@ -935,6 +935,7 @@ internal static class ControlPanelMode
             case BarGraphControl or StripChartControl or VectorControl:
                 {
                     var state = LiveDisplayState.For(control)!;
+                    DevTermChartStyle.Install();
                     Func<CellGrid> render = state switch
                     {
                         BarGraphState bars => () => CellCharts.RenderBarGraph(bars),

@@ -7,7 +7,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using OoBDev.UiDefinitions;
-namespace OoBDev.DevTerm.Tui.Tests;
+namespace OoBDev.UiDefinitions.Tui.Tests;
 
 /// <summary>
 /// The TUI's character-cell chart renderings (<see cref="CellCharts"/>) — block-character bars, a

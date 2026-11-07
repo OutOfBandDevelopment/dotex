@@ -10,6 +10,7 @@
 
 	<ItemGroup>
 		<Compile Include="../OoBDev.Examples.Controls.Shared/ControlsSampleSettings.cs" Link="ControlsSampleSettings.cs" />
+		<Compile Include="../OoBDev.Examples.Controls.Shared/LiveSampleFeed.cs" Link="LiveSampleFeed.cs" />
 	</ItemGroup>
 
 	<ItemGroup>

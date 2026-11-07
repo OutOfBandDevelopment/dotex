@@ -12,6 +12,7 @@ using OoBDev.DevTerm.Configuration;
 using OoBDev.DevTerm;
 using OoBDev.DevTerm.Presenters.Text;
 using OoBDev.UiDefinitions;
+using OoBDev.UiDefinitions.Tui;
 using Terminal.Gui.App;
 using Terminal.Gui.Editor;
 using Terminal.Gui.Input;

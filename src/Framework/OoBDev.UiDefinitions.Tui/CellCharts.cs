@@ -6,28 +6,27 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Text;
-using OoBDev.DevTerm.Configuration;
 using OoBDev.UiDefinitions;
-namespace OoBDev.DevTerm.Tui;
+namespace OoBDev.UiDefinitions.Tui;
 
 /// <summary>
 /// Character-cell renderings of the live display controls for the TUI: block-character bars, a
 /// braille strip chart, and braille vector/coordinate plots. Pure functions of the shared
 /// <see cref="LiveDisplayState"/>, so they're tested directly, without a terminal.
 /// </summary>
-internal static class CellCharts
+public static class CellCharts
 {
     /// <summary>Muted ink for axes, rings and trails: the theme's <c>chartMuted</c>.</summary>
-    internal static string Muted => ActiveTheme.Current[ThemeRole.ChartMuted].ToHex();
+    public static string Muted => CellChartStyle.Muted;
 
     /// <summary>Whether the current theme uses <see cref="ChartPalette.DarkSlots"/> (same hues and order, stepped for a dark surface).</summary>
-    private static bool DarkPalette => ActiveTheme.Current.ChartPalette == ChartPaletteVariant.Dark;
+    private static bool DarkPalette => CellChartStyle.DarkPalette;
 
-    internal const int BarWidth = 30;
-    internal const int StripPlotWidth = 40;
-    internal const int StripPlotHeight = 8;
-    internal const int VectorWidth = 21;
-    internal const int VectorHeight = 9;
+    public const int BarWidth = 30;
+    public const int StripPlotWidth = 40;
+    public const int StripPlotHeight = 8;
+    public const int VectorWidth = 21;
+    public const int VectorHeight = 9;
 
     private const string _eighths = " ▏▎▍▌▋▊▉█";
 

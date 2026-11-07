@@ -6,16 +6,15 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Text;
-using OoBDev.DevTerm.Configuration;
 using OoBDev.UiDefinitions;
-namespace OoBDev.DevTerm.Tui;
+namespace OoBDev.UiDefinitions.Tui;
 
 /// <summary>
 /// A braille-dot canvas: each character cell holds a 2×4 grid of dots (U+2800–U+28FF), so a
 /// terminal plot gets 2× horizontal and 4× vertical resolution — with a cell about twice as tall
 /// as it is wide, the dots come out roughly square. A cell's color is the last one plotted into it.
 /// </summary>
-internal sealed class BrailleCanvas
+public sealed class BrailleCanvas
 {
     // Dot bit for (column, row) within a cell — the Unicode braille pattern numbering.
     private static readonly int[,] _dotBits = { { 0x01, 0x02, 0x04, 0x40 }, { 0x08, 0x10, 0x20, 0x80 } };

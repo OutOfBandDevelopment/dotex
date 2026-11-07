@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using OoBDev.UiDefinitions;
 using Terminal.Gui.Drawing;
 using Terminal.Gui.ViewBase;
-namespace OoBDev.DevTerm.Tui;
+namespace OoBDev.UiDefinitions.Tui;
 
 /// <summary>
 /// Draws a live display control (bar graph, strip chart, vector plot) in the TUI control panel: its
@@ -17,7 +17,7 @@ namespace OoBDev.DevTerm.Tui;
 /// each in its own color — one <c>Label</c> can only have one color, and a chart needs one per
 /// channel. Fixed-size: the size of what <see cref="Render"/> produces.
 /// </summary>
-internal sealed class CellCanvasView : View
+public sealed class CellCanvasView : View
 {
     private readonly Func<CellGrid> _render;
 

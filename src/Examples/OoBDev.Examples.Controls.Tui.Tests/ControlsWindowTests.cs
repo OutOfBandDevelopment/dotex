@@ -14,7 +14,7 @@ public sealed class ControlsWindowTests
     private static void Run(ControlsSampleSettings settings, Action<IApplication, OoBDev.UiDefinitions.Tui.TuiFormParts> body)
     {
         using var app = Application.Create().Init("dotnet");
-        using var window = ControlsWindow.Build(app, settings, out var binding, out var parts);
+        using var window = ControlsWindow.Build(app, settings, out var binding, out var parts, out _);
         using (binding)
         {
             var token = app.Begin(window) ?? throw new NotSupportedException();

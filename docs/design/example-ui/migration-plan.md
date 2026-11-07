@@ -2,6 +2,8 @@
 
 Status: confirmed by the owner on 2026-11-05 (Q1 and Q2, option A). Steps 1 to 4 done 2026-11-06.
 
+Addendum (owner, 2026-11-06, Q8 option A): the live display renderers `CellCharts`, `CellCanvasView`, `CellGlyph`/`CellGrid` and `BrailleCanvas` moved from `OoBDev.DevTerm.Tui` to `OoBDev.UiDefinitions.Tui` (namespace `OoBDev.UiDefinitions.Tui`, public); the theme inputs come through `CellChartStyle.Source`; `CellChartsTests` moved to `OoBDev.UiDefinitions.Tui.Tests`. The Tui example shows them.
+
 Why: the Tui and Blazor control examples (`src/Examples`) need a renderer for the UiDefinitions form language. An example cannot reference an Applications project, and the Terminal.Gui renderer has no DevTerm-specific names, so it is reusable and belongs in a library (rule `layering-and-migration-plans`).
 
 **Table 1 — Projects**
