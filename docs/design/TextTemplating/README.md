@@ -94,10 +94,10 @@ Thank you for your order!
 ```
 
 **Documentation:**
-- ✅ [Requirements](HandlebarsProvider/requirements/md) - Complete with BR/TR/NFR
-- ✅ [Architecture](HandlebarsProvider/architecture/md) - Complete with patterns and data flow
-- ✅ [API Design](HandlebarsProvider/api-design/md) - Complete with 7+ usage examples
-- ✅ [Testing Strategy](HandlebarsProvider/testing-strategy/md) - Complete with 50+ test cases
+- ✅ [Requirements](HandlebarsProvider/requirements.md) - Complete with BR/TR/NFR
+- ✅ [Architecture](HandlebarsProvider/architecture.md) - Complete with patterns and data flow
+- ✅ [API Design](HandlebarsProvider/api-design.md) - Complete with 7+ usage examples
+- ✅ [Testing Strategy](HandlebarsProvider/testing-strategy.md) - Complete with 50+ test cases
 
 ---
 
@@ -144,10 +144,10 @@ CREATE TABLE Templates (
 - Soft delete (IsActive flag)
 
 **Documentation:**
-- ✅ [Requirements](DatabaseTemplateSource/requirements/md) - Complete with schema
-- ✅ [Architecture](DatabaseTemplateSource/architecture/md) - Complete with SQL Server implementation
-- ⏳ [API Design](DatabaseTemplateSource/api-design/md) - TODO: API examples and usage
-- ⏳ [Testing Strategy](DatabaseTemplateSource/testing-strategy/md) - TODO: Repository tests
+- ✅ [Requirements](DatabaseTemplateSource/requirements.md) - Complete with schema
+- ✅ [Architecture](DatabaseTemplateSource/architecture.md) - Complete with SQL Server implementation
+- ⏳ [API Design](DatabaseTemplateSource/api-design.md) - TODO: API examples and usage
+- ⏳ [Testing Strategy](DatabaseTemplateSource/testing-strategy.md) - TODO: Repository tests
 
 ---
 
@@ -197,10 +197,10 @@ public class LazyDataProxy : DynamicObject
 ```
 
 **Documentation Status:**
-- ⏳ [Requirements](DataContainerIntegration/requirements/md) - TODO
-- ⏳ [Architecture](DataContainerIntegration/architecture/md) - TODO
-- ⏳ [API Design](DataContainerIntegration/api-design/md) - TODO
-- ⏳ [Testing Strategy](DataContainerIntegration/testing-strategy/md) - TODO
+- ⏳ [Requirements](DataContainerIntegration/requirements.md) - TODO
+- ⏳ [Architecture](DataContainerIntegration/architecture.md) - TODO
+- ⏳ [API Design](DataContainerIntegration/api-design.md) - TODO
+- ⏳ [Testing Strategy](DataContainerIntegration/testing-strategy.md) - TODO
 
 ---
 
@@ -596,18 +596,18 @@ services/Configure<HandlebarsTemplateOptions>(options =>
 ## Related Documentation
 
 ### This Epic
-- ✅ [Handlebars Provider](/////////Features/Proposals/10-TextTemplating/HandlebarsProvider/) - Complete (4/4 docs)
-- 🔄 [Database Template Source](/////////Features/Proposals/10-TextTemplating/DatabaseTemplateSource/) - Partial (2/4 docs)
-- ⏳ [Data Container Integration](/////////Features/Proposals/10-TextTemplating/DataContainerIntegration/) - Pending (0/4 docs)
+- ✅ [Handlebars Provider](HandlebarsProvider/requirements.md) - Complete (4/4 docs)
+- 🔄 [Database Template Source](DatabaseTemplateSource/requirements.md) - Partial (2/4 docs)
+- ⏳ [Data Container Integration](DataContainerIntegration/requirements.md) - Pending (0/4 docs)
 
 ### Related Epics
-- [Epic 11: Data Enhancement Pipeline](///DataEnhancement/README/md)
-- [Epic 2: Communications Platform](///Communications/README/md)
-- [Epic 6: Document Management](///06-DocumentManagement/README/md)
+- [Epic 11: Data Enhancement Pipeline](../DataEnhancement/README.md)
+- [Epic 2: Communications Platform](../Communications/README.md)
+- [Epic 6: Document Management](../DocumentServices/README.md)
 
 ### Framework
-- [Existing Template Engine](/////////Framework/OoBDev/System/Text/Templating/)
-- [ITemplateProvider Pattern](/////////Framework/OoBDev/System/Abstractions/Text/Templating/)
+- [Existing Template Engine](../../../src/Framework/OoBDev.System/Text/Templating/)
+- [ITemplateProvider Pattern](../../../src/Framework/OoBDev.System.Abstractions/Text/Templating/)
 
 ---
 

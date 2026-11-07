@@ -1289,6 +1289,6 @@ public async Task SendComplexMessageAsync(Guid userId, Order order)
 
 - [Requirements](requirements.md)
 - [Architecture](architecture.md)
-- [Business Rules](./business-rules.md)
-- [Configuration](./configuration.md)
+- Business Rules
+- Configuration
 - [Testing Strategy](testing-strategy.md)

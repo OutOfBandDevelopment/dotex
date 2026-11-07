@@ -51,9 +51,9 @@ Each feature proposal follows this structure:
 **Capabilities:** AWS SQS, Azure Service Bus providers with unified abstraction
 
 **Features:**
-- [AWS SQS Provider](./01-MessageQueueing/AwsSqsProvider/) - Amazon Simple Queue Service integration
-- [Azure Service Bus Provider](./01-MessageQueueing/AzureServiceBusProvider/) - Topics, sessions, dead-letter queues
-- [Message Queueing Abstractions](./01-MessageQueueing/Abstractions/) - Unified provider interface
+- AWS SQS Provider - Amazon Simple Queue Service integration
+- Azure Service Bus Provider - Topics, sessions, dead-letter queues
+- Message Queueing Abstractions - Unified provider interface
 
 **Source Analysis:** ~600 LOC, fills critical gap in cloud deployments
 
@@ -65,10 +65,10 @@ Each feature proposal follows this structure:
 **Capabilities:** Multi-channel communications (email, SMS) with orchestration
 
 **Features:**
-- [Communications Core](../../../Features/Proposals/02-Communications/Core/) - Multi-channel orchestration engine (1,145 LOC)
-- [SendGrid Provider](./02-Communications/SendGridProvider/) - Cloud email service
-- [Twilio SMS Provider](./02-Communications/TwilioSmsProvider/) - SMS messaging
-- [Communications Abstractions](./02-Communications/Abstractions/) - Email/SMS contracts (695 LOC)
+- Communications Core - Multi-channel orchestration engine (1,145 LOC)
+- SendGrid Provider - Cloud email service
+- Twilio SMS Provider - SMS messaging
+- Communications Abstractions - Email/SMS contracts (695 LOC)
 
 **Source Analysis:** ~2,500 LOC, replaces 16 LOC stub with full implementation
 
@@ -80,10 +80,10 @@ Each feature proposal follows this structure:
 **Capabilities:** Geocoding and location services with multiple providers
 
 **Features:**
-- [Spatial Services Abstractions](./03-SpatialServices/Abstractions/) - ILocationServices interface
-- [Census Geocoding Provider](./03-SpatialServices/CensusGeocodingProvider/) - Free US government data
-- [Google Maps Provider](./03-SpatialServices/GoogleMapsProvider/) - High-quality geocoding
-- [Bing Maps Provider](./03-SpatialServices/BingMapsProvider/) - Alternative provider
+- Spatial Services Abstractions - ILocationServices interface
+- Census Geocoding Provider - Free US government data
+- Google Maps Provider - High-quality geocoding
+- Bing Maps Provider - Alternative provider
 
 **Source Analysis:** ~1,100 LOC, new capability (main has zero spatial services)
 
@@ -95,10 +95,10 @@ Each feature proposal follows this structure:
 **Capabilities:** Distributed caching with attribute-based API
 
 **Features:**
-- [Caching Abstractions](./04-DistributedCaching/Abstractions/) - `[IsCacheable]`, `[FlushCache]` attributes
-- [Caching Core](./04-DistributedCaching/Core/) - Factories, managers, property chains
-- [Redis Provider](./04-DistributedCaching/RedisProvider/) - Distributed cache
-- [Microsoft Caching Provider](./04-DistributedCaching/MicrosoftCachingProvider/) - In-memory cache
+- Caching Abstractions - `[IsCacheable]`, `[FlushCache]` attributes
+- Caching Core - Factories, managers, property chains
+- Redis Provider - Distributed cache
+- Microsoft Caching Provider - In-memory cache
 
 **Source Analysis:** ~600 LOC, enables distributed application patterns
 
@@ -110,9 +110,9 @@ Each feature proposal follows this structure:
 **Capabilities:** ETL pipeline for CSV/JSON to database with CLI tool
 
 **Features:**
-- [DataLoader Abstractions](./05-DataLoading/Abstractions/) - ETL interfaces (435 LOC)
-- [DataLoader Core](./05-DataLoading/Core/) - CSV/JSON pipeline, alternative key lookup (1,633 LOC)
-- [DataLoader CLI](./05-DataLoading/Cli/) - Command-line tool for deployments (228 LOC)
+- DataLoader Abstractions - ETL interfaces (435 LOC)
+- DataLoader Core - CSV/JSON pipeline, alternative key lookup (1,633 LOC)
+- DataLoader CLI - Command-line tool for deployments (228 LOC)
 
 **Source Analysis:** ~2,300 LOC, critical for deployment automation
 
@@ -124,8 +124,8 @@ Each feature proposal follows this structure:
 **Capabilities:** Enhanced document center with packaging and conversion
 
 **Features:**
-- [Document Abstractions](./06-DocumentManagement/Abstractions/) - Handlers, providers, storage (422 LOC)
-- [Document Core](./06-DocumentManagement/Core/) - Enhanced implementation (911 LOC vs 531 LOC in main)
+- Document Abstractions - Handlers, providers, storage (422 LOC)
+- Document Core - Enhanced implementation (911 LOC vs 531 LOC in main)
 
 **Source Analysis:** ~1,300 LOC, completes main's partial implementation
 
@@ -137,8 +137,8 @@ Each feature proposal follows this structure:
 **Capabilities:** Enhanced identity with sessions, rights, and claims
 
 **Features:**
-- [Identity Abstractions](./07-Identity/Abstractions/) - Sessions, rights, claims (291 LOC vs 125 LOC in main)
-- [Identity Extensions](./07-Identity/Extensions/) - Authorization, globalization (204 LOC)
+- Identity Abstractions - Sessions, rights, claims (291 LOC vs 125 LOC in main)
+- Identity Extensions - Authorization, globalization (204 LOC)
 
 **Source Analysis:** ~500 LOC, 2.3x larger than main
 
@@ -150,10 +150,10 @@ Each feature proposal follows this structure:
 **Capabilities:** Event sourcing, CQRS, cron-based scheduling
 
 **Features:**
-- [Complex Events Abstractions](./08-ComplexEvents/Abstractions/) - Event sourcing contracts (315 LOC)
-- [Complex Events Core](./08-ComplexEvents/Core/) - CQRS, `[ScheduleAt("0 */45 * * * *")]` (680 LOC)
-- [Complex Events Database](./08-ComplexEvents/Database/) - T-SQL schema and EF Core (252 LOC)
-- [Azure EventHub Provider](./08-ComplexEvents/AzureEventHubProvider/) - Big data streaming (141 LOC)
+- Complex Events Abstractions - Event sourcing contracts (315 LOC)
+- Complex Events Core - CQRS, `[ScheduleAt("0 */45 * * * *")]` (680 LOC)
+- Complex Events Database - T-SQL schema and EF Core (252 LOC)
+- Azure EventHub Provider - Big data streaming (141 LOC)
 
 **Source Analysis:** ~1,400 LOC, advanced architecture patterns
 
@@ -165,8 +165,8 @@ Each feature proposal follows this structure:
 **Capabilities:** Attribute-driven test data generation
 
 **Features:**
-- [Generations Abstractions](./09-TestDataGeneration/Abstractions/) - Generation rules (488 LOC)
-- [Generations Core](./09-TestDataGeneration/Core/) - `[EmailAddress]`, `[Address]`, `[Phone]` generators (1,256 LOC)
+- Generations Abstractions - Generation rules (488 LOC)
+- Generations Core - `[EmailAddress]`, `[Address]`, `[Phone]` generators (1,256 LOC)
 
 **Source Analysis:** ~1,800 LOC, alternative to Bogus with attribute-driven API
 
@@ -178,8 +178,8 @@ Each feature proposal follows this structure:
 **Capabilities:** Unified templating engine with persistence
 
 **Features:**
-- [Templating Abstractions](./10-TextTemplating/Abstractions/) - Template contracts (117 LOC)
-- [Templating Core](./10-TextTemplating/Core/) - Complete engine (424 LOC vs scattered in main)
+- Templating Abstractions - Template contracts (117 LOC)
+- Templating Core - Complete engine (424 LOC vs scattered in main)
 
 **Source Analysis:** ~550 LOC, unifies main's scattered implementation
 

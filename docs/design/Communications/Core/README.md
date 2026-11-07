@@ -28,8 +28,8 @@ The Communications Core provides the central orchestration engine that coordinat
 - **[Requirements](requirements.md)** - Functional and non-functional requirements
 - **[Architecture](architecture.md)** - Component design with C4 diagrams
 - **[API Design](api-design.md)** - Interfaces and contracts
-- **[Business Rules](./business-rules.md)** - Processing logic and flows
-- **[Configuration](./configuration.md)** - Settings and options
+- **Business Rules** - Processing logic and flows
+- **Configuration** - Settings and options
 - **[Testing Strategy](testing-strategy.md)** - Test approach and coverage
 
 ---
@@ -194,4 +194,4 @@ ITargetPreference {
 1. Review [requirements.md](requirements.md) for detailed functional requirements
 2. Study [architecture.md](architecture.md) for component design
 3. Review [api-design.md](api-design.md) for interface contracts
-4. Understand [business-rules.md](./business-rules.md) for processing logic
+4. Understand business-rules.md for processing logic

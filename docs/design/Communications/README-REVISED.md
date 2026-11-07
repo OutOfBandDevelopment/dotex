@@ -204,41 +204,41 @@ public class OrderService
 **Description:** Routes messages to appropriate channels based on user preferences
 
 **Documentation:**
-- [Requirements](./ChannelRouting/requirements.md)
-- [Architecture](./ChannelRouting/architecture.md)
-- [API Design](./ChannelRouting/api-design.md)
-- [Configuration](./ChannelRouting/configuration.md)
-- [Testing Strategy](./ChannelRouting/testing-strategy.md)
+- Requirements
+- Architecture
+- API Design
+- Configuration
+- Testing Strategy
 
 ### Feature 2: SendGrid Email Provider
 **Path:** `./SendGridProvider/`
 **Description:** Email delivery via SendGrid API
 
 **Documentation:**
-- [Requirements](./SendGridProvider/requirements.md)
-- [Architecture](./SendGridProvider/architecture.md)
-- [API Design](./SendGridProvider/api-design.md)
-- [Configuration](./SendGridProvider/configuration.md)
-- [Testing Strategy](./SendGridProvider/testing-strategy.md)
+- Requirements
+- Architecture
+- API Design
+- Configuration
+- Testing Strategy
 
 ### Feature 3: Twilio SMS Provider
 **Path:** `./TwilioSmsProvider/`
 **Description:** SMS delivery via Twilio API
 
 **Documentation:**
-- [Requirements](./TwilioSmsProvider/requirements.md)
-- [Architecture](./TwilioSmsProvider/architecture.md)
-- [API Design](./TwilioSmsProvider/api-design.md)
-- [Configuration](./TwilioSmsProvider/configuration.md)
-- [Testing Strategy](./TwilioSmsProvider/testing-strategy.md)
+- Requirements
+- Architecture
+- API Design
+- Configuration
+- Testing Strategy
 
 ### Feature 4: Deferral Management
 **Path:** `./DeferralManagement/`
 **Description:** Scheduled message delivery
 
 **Documentation:**
-- [Requirements](./DeferralManagement/requirements.md)
-- [Architecture](./DeferralManagement/architecture.md)
+- Requirements
+- Architecture
 
 ---
 

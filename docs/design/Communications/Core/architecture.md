@@ -983,6 +983,6 @@ private string SanitizeValue(object? value)
 
 - [Requirements](requirements.md)
 - [API Design](api-design.md)
-- [Business Rules](./business-rules.md)
-- [Configuration](./configuration.md)
+- Business Rules
+- Configuration
 - [Testing Strategy](testing-strategy.md)

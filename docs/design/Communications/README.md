@@ -166,8 +166,8 @@ The Communications Platform provides a **multi-channel communications orchestrat
 - [Requirements](Core/requirements.md)
 - [Architecture](Core/architecture.md)
 - [API Design](Core/api-design.md)
-- [Business Rules](./Core/business-rules.md)
-- [Configuration](./Core/configuration.md)
+- Business Rules
+- Configuration
 - [Testing Strategy](Core/testing-strategy.md)
 
 ### Feature 2: SendGrid Email Provider
@@ -177,11 +177,11 @@ The Communications Platform provides a **multi-channel communications orchestrat
 **Description:** Cloud email service via SendGrid API.
 
 **Documentation:**
-- [Requirements](./SendGridProvider/requirements.md)
-- [Architecture](./SendGridProvider/architecture.md)
-- [API Design](./SendGridProvider/api-design.md)
-- [Configuration](./SendGridProvider/configuration.md)
-- [Testing Strategy](./SendGridProvider/testing-strategy.md)
+- Requirements
+- Architecture
+- API Design
+- Configuration
+- Testing Strategy
 
 ### Feature 3: Twilio SMS Provider
 **Path:** `./TwilioSmsProvider/`
@@ -190,11 +190,11 @@ The Communications Platform provides a **multi-channel communications orchestrat
 **Description:** SMS messaging via Twilio API.
 
 **Documentation:**
-- [Requirements](./TwilioSmsProvider/requirements.md)
-- [Architecture](./TwilioSmsProvider/architecture.md)
-- [API Design](./TwilioSmsProvider/api-design.md)
-- [Configuration](./TwilioSmsProvider/configuration.md)
-- [Testing Strategy](./TwilioSmsProvider/testing-strategy.md)
+- Requirements
+- Architecture
+- API Design
+- Configuration
+- Testing Strategy
 
 ### Feature 4: Communications Abstractions
 **Path:** `./Abstractions/`
@@ -203,8 +203,8 @@ The Communications Platform provides a **multi-channel communications orchestrat
 **Description:** Core interfaces and contracts for all communication channels.
 
 **Documentation:**
-- [Requirements](./Abstractions/requirements.md)
-- [API Design](./Abstractions/api-design.md)
+- Requirements
+- API Design
 
 ---
 

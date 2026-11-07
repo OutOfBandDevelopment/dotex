@@ -540,7 +540,7 @@ container.RegisterProvider("Report/Sales", new SalesDataProvider());
 - [Requirements](CoreContainer/requirements.md)
 - [Architecture](CoreContainer/architecture.md)
 - [API Design](CoreContainer/api-design.md)
-- [Business Rules](./CoreContainer/business-rules.md)
+- Business Rules
 - [Testing Strategy](CoreContainer/testing-strategy.md)
 
 ### Feature 2: Lazy Data Providers
@@ -548,17 +548,17 @@ container.RegisterProvider("Report/Sales", new SalesDataProvider());
 **Description:** IDataProvider abstraction with attribute discovery and lazy evaluation
 
 **Documentation:**
-- [Requirements](./LazyProviders/requirements.md)
-- [Architecture](./LazyProviders/architecture.md)
-- [API Design](./LazyProviders/api-design.md)
+- Requirements
+- Architecture
+- API Design
 
 ### Feature 3: Path Pattern Matching
 **Path:** `./PathMatching/`
 **Description:** Wildcard path pattern matching for provider registration
 
 **Documentation:**
-- [Requirements](./PathMatching/requirements.md)
-- [Architecture](./PathMatching/architecture.md)
+- Requirements
+- Architecture
 
 ---
 

@@ -183,21 +183,21 @@ public sealed class EnhancementContextAttribute : Attribute
 **Description:** Main enhancement orchestration engine
 
 **Documentation:**
-- [Requirements](./CorePipeline/requirements.md)
-- [Architecture](./CorePipeline/architecture.md)
-- [API Design](./CorePipeline/api-design.md)
-- [Business Rules](./CorePipeline/business-rules.md)
-- [Configuration](./CorePipeline/configuration.md)
-- [Testing Strategy](./CorePipeline/testing-strategy.md)
+- Requirements
+- Architecture
+- API Design
+- Business Rules
+- Configuration
+- Testing Strategy
 
 ### Feature 2: Provider Discovery
 **Path:** `./ProviderDiscovery/`
 **Description:** Attribute-based provider discovery and registration
 
 **Documentation:**
-- [Requirements](./ProviderDiscovery/requirements.md)
-- [Architecture](./ProviderDiscovery/architecture.md)
-- [API Design](./ProviderDiscovery/api-design.md)
+- Requirements
+- Architecture
+- API Design
 
 ---
 
@@ -411,7 +411,7 @@ public class ReportingService
 
 ## Related Documentation
 
-- [SharedFramework Analysis](../../docs/migration/sharedframework.md)
+- [SharedFramework Analysis](../../migration/sharedframework.md)
 - Epic 2: Communications Platform (consumer)
 - Epic 10: Text Templating (consumer)
 

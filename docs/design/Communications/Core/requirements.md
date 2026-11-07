@@ -539,6 +539,6 @@ These may be added in future phases based on demand.
 
 - [Architecture Design](architecture.md)
 - [API Design](api-design.md)
-- [Business Rules](./business-rules.md)
-- [Configuration](./configuration.md)
+- Business Rules
+- Configuration
 - [Testing Strategy](testing-strategy.md)
