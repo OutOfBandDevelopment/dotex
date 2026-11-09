@@ -13,7 +13,7 @@ const vector = (seed: number) => Array.from({ length: 384 }, (_, i) => Math.sin(
  */
 export async function mockApi(page: Page): Promise<void> {
   let turn = 0;
-  await page.route(/\/(api|Document|openapi|asyncapi)\//, async route => {
+  await page.route(/\/(api|Document|openapi|asyncapi|cgi-bin|webhooks)\//, async route => {
     const url = new URL(route.request().url());
     const path = url.pathname;
     const method = route.request().method();
@@ -25,6 +25,9 @@ export async function mockApi(page: Page): Promise<void> {
       return json(route, { context: [1, 2, 3, turn], response: turn === 1 ? 'Hello! How can I help you today?' : 'Photosynthesis is how plants turn light into sugar.' });
     }
     if (path === '/api/Operations/info') return json(route, { environment: 'Development', application: 'OoBDev.Example.WebApi', runtime: '.NET 10.0.0', machine: 'example-api', started: '2026-10-19T08:00:00+00:00', configuration: [{ key: 'AllowedHosts', value: '*' }, { key: 'FileTemplatingOptions:TemplatePath', value: 'Templates' }, { key: 'Identity:Keycloak:ClientSecret', value: '***' }, { key: 'Logging:LogLevel:Default', value: 'Information' }] });
+    if (path === '/api/CgiPrograms') return json(route, [{ name: 'greet.exe', path: '/cgi-bin/greet.exe' }]);
+    if (path === '/cgi-bin/greet.exe') return route.fulfill({ status: 200, contentType: 'text/html', body: '<h1>Hello, Ada!</h1>' });
+    if (path.startsWith('/webhooks/')) return route.fulfill({ status: 404, contentType: 'application/problem+json', body: JSON.stringify({ title: 'Webhook rejected', status: 404, detail: 'Channel not found' }) });
     if (path === '/api/Cache') {
       if (route.request().method() === 'GET') return json(route, { key: 'greeting', found: true, value: 'hello from the cache', provider: 'MicrosoftMemoryCachingProvider' });
       return route.fulfill({ status: 204 });

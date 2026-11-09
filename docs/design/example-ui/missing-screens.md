@@ -35,7 +35,6 @@ These have no row in `future-example.md` or `screens.md`; whether each deserves 
 | Area | Projects | Possible screen |
 | --- | --- | --- |
 | Query over HTTP | `OoBDev.AspNetCore.OData` (`[OoBDevEnableQuery]`, `QUERY` verb) | Query builder against an `IQueryable` endpoint; needs one in the example API |
-| CGI hosting | `OoBDev.AspNetCore.Cgi` (+ OpenApi; referenced by the example API) | Script list, run a script, see the OpenAPI it produced |
 | Complex events | `OoBDev.ComplexEvents` (+ DatabaseExtensions, EntityFrameworkCore) | Event stream and rule viewer |
 | Spatial and geocoding | `OoBDev.SpatialServices`, `OoBDev.Census.Geocoding` | Address to coordinates, distance between points |
 | Data loading | `OoBDev.DataLoader` | Load a file into a table with a preview of the mapping |

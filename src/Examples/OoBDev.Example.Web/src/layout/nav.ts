@@ -22,10 +22,12 @@ export const navGroups: NavGroup[] = [
   { title: 'Messaging', items: [
     { label: 'Communications', to: '/messaging/communications' },
     { label: 'Queues', to: '/messaging/queues' },
+    { label: 'Webhooks', to: '/messaging/webhooks' },
   ] },
   { title: 'Identity and security', items: [{ label: 'Current user', to: '/identity/me' }] },
   { title: 'Operations', items: [{ label: 'Runtime and configuration', to: '/operations/info' }, { label: 'Telemetry', to: '/operations/telemetry' } ] },
   { title: 'Developer', items: [
+    { label: 'CGI programs', to: '/developer/cgi' },
     { label: 'API reference', to: '/developer/api' },
     { label: 'Event reference', to: '/developer/events' },
   ] },

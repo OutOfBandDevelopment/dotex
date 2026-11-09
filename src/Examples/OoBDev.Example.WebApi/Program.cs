@@ -78,6 +78,7 @@ public static class Program
         builder.Services.Configure<OoBDev.WebApi.Models.QueueChannelsOptions>(builder.Configuration.GetSection("MessageQueue"));
         builder.Services.AddTransient<OoBDev.WebApi.Services.QueueChannelCatalog>();
         builder.Services.AddSingleton<OoBDev.WebApi.Services.ReceivedMessageLog>();
+        builder.Services.AddTransient<OoBDev.WebApi.Services.CgiProgramCatalog>();
 
         // Add services to the container.
         services.AddLogging(builder => builder

@@ -33,3 +33,5 @@ How to verify each feature and what to do when it fails. Generated from the same
 | [Search passages by keyword, meaning and both](search-three-ways.md) | The all-MiniLM embedder is available in the API. |
 | [Open and preview a template](preview-a-template.md) | The example Templates folder holds the sample templates. |
 | [See the queue channels and received messages](watch-the-queues.md) | The example API is running. |
+| [Run a CGI program](run-a-cgi-program.md) | The example API is running and cgi-bin holds a program built for this system. |
+| [Send a webhook to a channel](send-a-webhook.md) | The example API is running. |

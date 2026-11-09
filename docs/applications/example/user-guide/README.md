@@ -33,3 +33,5 @@ Step-by-step guides with screenshots, one per user journey. They are regenerated
 | [Search passages by keyword, meaning and both](search-three-ways.md) | A developer choosing a search strategy | Run one query three ways and see what each mode finds. |
 | [Open and preview a template](preview-a-template.md) | A developer working with text templates | Open a template file, change its text and see it rendered with sample data without saving anything. |
 | [See the queue channels and received messages](watch-the-queues.md) | A developer checking the message queue wiring | Confirm which provider and queue each channel uses and whether this host receives from it. |
+| [Run a CGI program](run-a-cgi-program.md) | A developer checking the CGI hosting | Pick a program the host can start and see its answer. |
+| [Send a webhook to a channel](send-a-webhook.md) | A developer testing inbound provider calls | Post a provider call to a channel and see how the host answers. |

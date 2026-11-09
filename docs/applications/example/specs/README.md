@@ -33,3 +33,5 @@ Acceptance criteria for each journey. The same journeys run as Playwright tests.
 | [Search passages by keyword, meaning and both](search-three-ways.md) | 2 | `/ai/search` |
 | [Open and preview a template](preview-a-template.md) | 2 | `/content/templates` |
 | [See the queue channels and received messages](watch-the-queues.md) | 2 | `/messaging/queues` |
+| [Run a CGI program](run-a-cgi-program.md) | 1 | `/developer/cgi` |
+| [Send a webhook to a channel](send-a-webhook.md) | 1 | `/messaging/webhooks` |

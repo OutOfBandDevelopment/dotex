@@ -820,4 +820,56 @@ export const journeys: Journey[] = [
       },
     ],
   },
+  {
+    id: 'run-a-cgi-program',
+    title: 'Run a CGI program',
+    persona: 'A developer checking the CGI hosting',
+    goal: 'Pick a program the host can start and see its answer.',
+    start: '/developer/cgi',
+    prerequisites: ['The example API is running and cgi-bin holds a program built for this system.'],
+    features: ['OoBDev.AspNetCore.Cgi', 'OoBDev.AspNetCore.Cgi.OpenApi'],
+    why: 'See a CGI program answer through the middleware, with its status, without a command line.',
+    problems: [
+      { symptom: 'The program list is empty', cause: 'No program for this system is in cgi-bin', fix: 'Run cgi-src/build.ps1' },
+      { symptom: '500 The program could not start', cause: 'A binary for another system', fix: 'Build the program for this system' },
+    ],
+    steps: [
+      {
+        title: 'Run the program',
+        narrative: 'The first program is selected. Get calls it with the name; the status and the page it returned are shown.',
+        expect: ['The status is 200.', 'The answer greets the name.'],
+        run: async page => {
+          await press(page, 'Get');
+          await expect(page.locator('.cgi-status')).toContainText('200');
+          await expect(page.locator('pre.result')).toContainText('Hello, Ada');
+        },
+      },
+    ],
+  },
+  {
+    id: 'send-a-webhook',
+    title: 'Send a webhook to a channel',
+    persona: 'A developer testing inbound provider calls',
+    goal: 'Post a provider call to a channel and see how the host answers.',
+    start: '/messaging/webhooks',
+    prerequisites: ['The example API is running.'],
+    features: ['OoBDev.Communications (`IReceiveService`)'],
+    why: 'See how the host answers a provider call: 204 when processed, 400 for a bad signature, 404 for an unknown channel.',
+    problems: [
+      { symptom: '404 Webhook rejected', cause: 'The channel is not in OoBDev:Communications:Channels', fix: 'Use a configured channel name' },
+      { symptom: '400 Webhook rejected', cause: 'The vendor signature is missing or wrong', fix: 'Send the call from the provider, or sign it as the vendor does' },
+    ],
+    steps: [
+      {
+        title: 'Send the call',
+        narrative: 'The channel and a sample body are filled in. The response status and problem details are shown.',
+        expect: ['A response status is shown.', 'The problem details name the rejection.'],
+        run: async page => {
+          await press(page, 'Send webhook');
+          await expect(page.locator('.webhook-status')).toContainText('404');
+          await expect(page.locator('pre.result')).toContainText('Webhook rejected');
+        },
+      },
+    ],
+  },
 ];
