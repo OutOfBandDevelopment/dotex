@@ -6,7 +6,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OllamaSharp;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,7 +17,7 @@ namespace OoBDev.Ollama.Tests;
 /// <summary>
 /// Tests for OllamaApiClient functionality.
 /// Integration tests use TestContext properties (OLLAMA_URL, OLLAMA_MODEL) and run against Docker Ollama.
-/// DevLocal tests are for manual/exploratory testing with specific models and configurations.
+/// The vision, pull and delete tests fetch their models into the Docker Ollama on first run.
 /// </summary>
 [TestClass]
 public class OllamaApiClientTests
@@ -177,72 +176,60 @@ public class OllamaApiClientTests
         Assert.IsFalse(string.IsNullOrWhiteSpace(fullResponse), "Response should not be empty");
     }
 
-    [TestCategory(TestCategories.DevLocal)]
+    [TestCategory(TestCategories.Integration)]
     [TestMethod]
-    [DataRow("http://192.168.1.170:11434", "llama2:7b", "tell me a story about a cat")]
-    public async Task ChatAsyncTest_DevLocal(string hostName, string model, string prompt)
+    public async Task ChatAsyncTest_SamplingOptions_AnswersAsync()
     {
-        var client = Build(hostName, model);
+        var url = TestInstanceGuard.Require(TestContext.GetRequiredProperty<string>("OLLAMA_URL"));
+        var model = TestContext.GetPropertyOrDefault("OLLAMA_MODEL", "phi3");
+
+        var client = Build(url, model);
         var responses = await client.ChatAsync(new()
         {
             Model = model,
-            Messages = new[] { new Message(ChatRole.User, prompt) },
+            Messages = new[] { new Message(ChatRole.User, "Tell me a story about a cat in two sentences.") },
             Options = new OllamaSharp.Models.RequestOptions
             {
                 Seed = 12312542,
                 TopK = 100,
-                TopP = 2,
+                TopP = 0.9f,
                 Temperature = 1f,
             },
         }).ToListAsync();
 
-        TestContext.AddResult(responses);
+        var text = string.Join("", responses.Select(r => r?.Message.Content ?? ""));
+        TestContext.WriteLine(string.Join(Environment.NewLine, text.SplitBy(50)));
 
-        TestContext.WriteLine(
-            string.Join(
-                Environment.NewLine,
-                responses.Select(s => s?.Message.Content?.SplitBy(50))
-                ));
+        Assert.IsFalse(string.IsNullOrWhiteSpace(text), "Response should not be empty");
     }
 
-    [TestCategory(TestCategories.DevLocal)]
+    [TestCategory(TestCategories.Integration)]
     [TestMethod]
-    [DataRow("http://192.168.1.170:11434", "llava-phi3", "describe the image", "LadyDancingWithDog.jpg")]
-    [DataRow("http://192.168.1.170:11434", "llava-phi3", "describe the image", "RobotsTalking.jpg")]
-    [DataRow("http://192.168.1.170:11434", "llava-phi3", "describe the image in less than 10 words", "RobotsTalking.jpg")]
-    [DataRow("http://192.168.1.170:11434", "llava-phi3", "describe the image and what color are the characters", "RobotsTalking.jpg")]
-    [DataRow("http://192.168.1.170:11434", "llava-phi3", "list items found in this image as json", "LadyDancingWithDog.jpg")]
-    [DataRow("http://192.168.1.170:11434", "llava-phi3", "what is the left robot doing with its left hand", "RobotsTalking.jpg")]
-    public async Task ChatWithVisionTest_DevLocal(string hostName, string model, string prompt, string imageName)
+    [DataRow("describe the image", "LadyDancingWithDog.jpg")]
+    [DataRow("describe the image in less than 10 words", "RobotsTalking.jpg")]
+    public async Task ChatWithVisionTest(string prompt, string imageName)
     {
+        var url = TestInstanceGuard.Require(TestContext.GetRequiredProperty<string>("OLLAMA_URL"));
+        var model = TestContext.GetPropertyOrDefault("OLLAMA_VISION_MODEL", "llava-phi3");
         using var img = GetType().Assembly.GetManifestResourceStream($"OoBDev.Ollama.Tests.TestData.{imageName}")!;
         using var ms = new MemoryStream();
         img.CopyTo(ms);
-
         var base64 = Convert.ToBase64String(ms.ToArray());
 
-        TestContext.WriteLine($"hostName: {hostName}");
-        TestContext.WriteLine($"model: {model}");
-        TestContext.WriteLine($"prompt: {prompt}");
-        TestContext.WriteLine($"imageName: {imageName}");
-
-        var client = Build(hostName, model);
+        var client = Build(url, model);
+        await EnsureModelAsync(client, model);
         var responses = await client.ChatAsync(new()
         {
             Model = model,
-            Messages = new[]
-            {
-                 new Message(ChatRole.User, prompt, [base64])
-            },
+            Messages = new[] { new Message(ChatRole.User, prompt, [base64]) },
             Options = new OllamaSharp.Models.RequestOptions(),
         }).ToListAsync();
 
-        TestContext.WriteLine(new string('-', 80));
-        TestContext.WriteLine(
-            string.Join(
-                Environment.NewLine,
-                responses.Select(s => s?.Message.Content?.SplitBy(50))
-                ));
+        var text = string.Join("", responses.Select(r => r?.Message.Content ?? ""));
+        TestContext.WriteLine($"model: {model}, image: {imageName}, prompt: {prompt}");
+        TestContext.WriteLine(string.Join(Environment.NewLine, text.SplitBy(50)));
+
+        Assert.IsFalse(string.IsNullOrWhiteSpace(text), "Response should not be empty");
     }
 
     [TestCategory(TestCategories.Integration)]
@@ -261,33 +248,49 @@ public class OllamaApiClientTests
         Assert.IsGreaterThan(0, modelsList.Count, "At least one model should be available");
     }
 
-    [TestCategory(TestCategories.DevLocal)]
+    [TestCategory(TestCategories.Integration)]
     [TestMethod]
-    [DataRow("http://192.168.1.170:11434", "phi3")]
-    [DataRow("http://192.168.1.170:11434", "llava-phi3")]
-    [DataRow("http://192.168.1.170:11434", "all-minilm")]
-    public async Task PullModelTest_DevLocal(string hostName, string model)
+    public async Task PullModelTest_EmbeddingModel_IsListedAfterwardsAsync()
     {
-        var client = Build(hostName, model);
-        double? last = default;
+        var url = TestInstanceGuard.Require(TestContext.GetRequiredProperty<string>("OLLAMA_URL"));
+        var model = TestContext.GetPropertyOrDefault("OLLAMA_EMBEDDING_MODEL", "all-minilm");
+        var client = Build(url, model);
 
-        await foreach (var ps in client.PullModelAsync(model))
+        await foreach (var _ in client.PullModelAsync(model))
         {
-            if (ps == null) continue;
-            if (ps.Percent != last)
-            {
-                Debug.WriteLine($"{model}: Pulled: {ps.Percent}% / {ps.Status} / {ps.Total:#,##0}");
-                last = ps.Percent;
-            }
         }
+
+        var models = await client.ListLocalModelsAsync();
+        Assert.IsTrue(models.Any(m => m.Name.StartsWith(model, StringComparison.Ordinal)), $"{model} is listed");
     }
 
-    [TestCategory(TestCategories.DevLocal)]
+    [TestCategory(TestCategories.Integration)]
     [TestMethod]
-    [DataRow("http://192.168.1.170:11434", "test-model")]
-    public async Task DeleteModelTest_DevLocal(string hostName, string model)
+    public async Task DeleteModelTest_CopyOfAModel_IsGoneAfterwardsAsync()
     {
-        var client = Build(hostName, model);
-        await client.DeleteModelAsync(model);
+        var url = TestInstanceGuard.Require(TestContext.GetRequiredProperty<string>("OLLAMA_URL"));
+        var source = TestContext.GetPropertyOrDefault("OLLAMA_EMBEDDING_MODEL", "all-minilm");
+        var copy = $"test-model-{Guid.NewGuid():N}";
+        var client = Build(url, source);
+        await EnsureModelAsync(client, source);
+        await client.CopyModelAsync(source, copy);
+
+        await client.DeleteModelAsync(copy);
+
+        var models = await client.ListLocalModelsAsync();
+        Assert.IsFalse(models.Any(m => m.Name.StartsWith(copy, StringComparison.Ordinal)), "the copy was deleted");
+    }
+
+    private static async Task EnsureModelAsync(IOllamaApiClient client, string model)
+    {
+        var models = await client.ListLocalModelsAsync();
+        if (models.Any(m => m.Name.StartsWith(model, StringComparison.Ordinal)))
+        {
+            return;
+        }
+
+        await foreach (var _ in client.PullModelAsync(model))
+        {
+        }
     }
 }

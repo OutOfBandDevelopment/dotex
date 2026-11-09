@@ -2,7 +2,7 @@
 
 > **Active work only.** The full work list is [BACKLOG.md](BACKLOG.md); finished work goes to [docs/changes/](docs/changes/README.md). Owner questions: [OPEN-QUESTIONS.md](OPEN-QUESTIONS.md).
 
-**Last Updated:** 2026-11-09 · **Branch:** `dev/hardware-report`
+**Last Updated:** 2026-11-09
 
 Keep this file short (about 15 one-line items). When an item starts, move it here from the backlog; when it finishes, remove it here and from the backlog, record it in `docs/changes/`, and update the feature docs it touched.
 
@@ -11,6 +11,6 @@ Keep this file short (about 15 one-line items). When an item starts, move it her
 
 ## Next
 
-- [ ] Order (owner, 2026-11-09): the cleanup follow-ups first (example guide cleanup, the desired-state bake-off test plan, the Ollama DevLocal tests onto the Docker Ollama), then the DevTerm parity WPF slices ([status](docs/design/DevTermParity/status.md)).
+- [ ] Order (owner, 2026-11-09): the cleanup follow-ups first (the desired-state bake-off test plan; example guide cleanup and the Ollama tests are done), then the DevTerm parity WPF slices ([status](docs/design/DevTermParity/status.md)).
 
 - [ ] Device decoding leftovers: DE-5000 Hardware test (needs BLE) and the physical passes; phase 0 is done ([device-parity.md](docs/migration/device-parity.md) section 5).

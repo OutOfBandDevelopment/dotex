@@ -228,6 +228,7 @@ Tests that require live cloud credentials. Manual execution only.
 | `OLLAMA_PORT` | `11435` | Ollama port |
 | `OLLAMA_MODEL` | `phi3` | Model name to use for testing |
 | `OLLAMA_EMBEDDING_MODEL` | `all-minilm` | Embedding model (chat models such as phi3 reject embedding requests) |
+| `OLLAMA_VISION_MODEL` | `llava-phi3` | Vision model for the image chat tests (pulled on first run, about 3 GB, CPU-slow) |
 
 **Docker Container:** `ollama/ollama:latest` (Host port 11435, container 11434)
 
