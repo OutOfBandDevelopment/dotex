@@ -74,6 +74,7 @@ public static class Program
             });
 
         ConfigureVectorsAndModels(builder);
+        builder.Services.AddTransient<OoBDev.WebApi.Services.TemplateCatalog>();
 
         // Add services to the container.
         services.AddLogging(builder => builder

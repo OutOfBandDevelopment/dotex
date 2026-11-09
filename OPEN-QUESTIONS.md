@@ -22,3 +22,16 @@ _(none waiting; processed requests are in BACKLOG.md and TODO.md)_
 **Default:** B until answered.
 
 **Your answer:**
+
+### Q2 (2026-11-09, Example app, Template management): may the example save edited templates?
+
+The Templates screen lists, opens and previews templates; saving would write files into the example `Templates` folder, which is a source folder in the repository.
+
+**Options**
+- A. No persistence: preview only (recommended: nothing in the repo changes from a running demo, and the framework has no write-side template source yet).
+- B. Save to a separate writable folder configured as `TemplatePath` overlay (a copy under the app data folder; the repo stays clean, but needs a second template source in the engine).
+- C. Save over the repository files (simple; a demo click edits tracked files).
+
+**Default:** A until answered.
+
+**Your answer:**

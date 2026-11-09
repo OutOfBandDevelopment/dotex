@@ -17,7 +17,7 @@ Review of the example web app (`src/Examples/OoBDev.Example.Web`) and API agains
 
 | Screen | Framework projects | What the screen would show | Needs |
 | --- | --- | --- | --- |
-| Template management | `OoBDev.TextTemplating`, Handlebars | List, edit, save and preview templates | `Query` and `Save` endpoints are commented out |
+| Template management | `OoBDev.TextTemplating`, Handlebars | List, edit, save and preview templates | List, open and preview built 2026-11-09; save waits for OPEN-QUESTIONS Q2 |
 | Identity management | `OoBDev.Identity`, `OoBDev.Identity.Jws`, Keycloak | User lookup, rights, sessions | Keycloak admin scope; the host runs the API anonymously today |
 | Queue adapters and blob browser | RabbitMQ, SQS, Service Bus, Storage queues, Azure Storage containers | Provider status, receive monitor, container browser | Queue receive endpoint, blob list endpoint (Azurite and Moto exist in the test stack) |
 | Data access and DacPac builder | `OoBDev.Data.Common`, MongoDB, `OoBDev.DacFx` | Read-only query runner, dacpac build and diff | Read-only guard design |
@@ -60,7 +60,7 @@ These have no row in `future-example.md` or `screens.md`; whether each deserves 
 ## Recommended order
 
 1. ~~Search~~ (built 2026-11-09 as `/ai/search`).
-2. Template management, which finishes a partly built screen.
+2. ~~Template management~~ (list, open and preview built 2026-11-09; save waits for Q2).
 3. Queue adapters and blob browser, reusing the Azurite and Moto stack.
 4. Rights and roles, then Identity management, because they show the authorization model that every other API surface relies on.
 5. Server-driven UI, since it is the framework's own UI contract.
