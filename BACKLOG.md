@@ -88,6 +88,6 @@ Scope rule: every BinaryDataDecoders feature is migrated; phases are priority or
   - Front-end tab per accepted TCP peer and a UDP session view showing each datagram with its sender (`TcpPeerListener` and `UdpEndpointDeviceAdapter` libraries are built 2026-11-09) per [Transports](docs/design/Transports/README.md).
   - Raster export as a core service every front end calls; plugin `.zip` packaging with approval at install.
   - SCPI profiles layered (generic plus device sub-types) apart from `DeviceManifest`; expression picker (parameter fields first, then channel segments).
-  - Session-log playback checkpoints, skip-silence control in the Tui playback bar (engine `MaxGap`, controller `SkipSilence` and the WPF checkbox are built 2026-11-09) and note revisions; manifest editor JSON only with a convert from `.xml` panels.
+  - Session-log playback checkpoints, skip-silence control (built 2026-11-09 in the engine, controller, WPF and Tui) and note revisions; manifest editor JSON only with a convert from `.xml` panels.
   - Network device discovery (one Detect button) and in-app config editors for network bridges.
 - [ ] DevTerm leftovers beyond the list above: Stream Monitor direct in-window preview of PCL, PostScript and HP-GL; a custom Roslyn analyzers project for DevTerm coding standards (the repo has `OoBDev.Analyzers`, so fold into it); Dockable MDI layout in WPF; read-write control channel and out-of-process plugins over a named pipe and a localhost web service (with the plugin sandbox item); research notes such as the BYTECC BT-UP01 bridge.

@@ -130,7 +130,9 @@ public static class PlaybackMode
             WordWrap = true,
         };
 
-        var positionLabel = new Label { X = 0, Y = Pos.Bottom(output), Width = Dim.Fill() };
+        var positionLabel = new Label { X = 0, Y = Pos.Bottom(output), Width = Dim.Fill(18) };
+        var silenceBox = new CheckBox { X = Pos.AnchorEnd(16), Y = Pos.Bottom(output), Text = "Skip _silence", Value = CheckState.UnChecked };
+        silenceBox.ValueChanged += (_, _) => controller.SkipSilence = silenceBox.Value == CheckState.Checked;
 
         var transportRow = Pos.Bottom(positionLabel);
         var rewindButton = new Button { X = 0, Y = transportRow, Text = "_Rewind", ShadowStyle = ShadowStyles.None };
@@ -140,6 +142,7 @@ public static class PlaybackMode
         var endButton = new Button { X = Pos.Right(forwardButton) + 1, Y = transportRow, Text = "_End", ShadowStyle = ShadowStyles.None };
         var slowerButton = new Button { X = Pos.Right(endButton) + 1, Y = transportRow, Text = "Slo_wer", ShadowStyle = ShadowStyles.None };
         var fasterButton = new Button { X = Pos.Right(slowerButton) + 1, Y = transportRow, Text = "_Faster", ShadowStyle = ShadowStyles.None };
+
 
         var editRow = Pos.Bottom(positionLabel) + 1;
         var markInButton = new Button { X = 0, Y = editRow, Text = "Mark _In", ShadowStyle = ShadowStyles.None };
@@ -271,7 +274,7 @@ public static class PlaybackMode
 
         window.Add(
             description, presentersLabel, presentersField, jumpLabel, jumpField, availableLabel, output, positionLabel,
-            rewindButton, stepButton, playButton, forwardButton, endButton, slowerButton, fasterButton,
+            rewindButton, stepButton, playButton, forwardButton, endButton, slowerButton, fasterButton, silenceBox,
             markInButton, markOutButton, saveButton, noteButton, closeButton);
 
         foreach (var warning in controller.Log.Warnings)
