@@ -1,10 +1,8 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using DevTermApp;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using OoBDev.DevTerm.Presenters.Text;
-using OoBDev.System.IO;
 
 namespace OoBDev.DevTerm.Wpf.Tests;
 

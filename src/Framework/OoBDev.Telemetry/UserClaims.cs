@@ -1,9 +1,6 @@
-using OoBDev.System.Security.Claims;
+﻿using OoBDev.System.Security.Claims;
 using OoBDev.System.Security;
-using OpenTelemetry;
-using OpenTelemetry.Logs;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 
 namespace OoBDev.Telemetry;

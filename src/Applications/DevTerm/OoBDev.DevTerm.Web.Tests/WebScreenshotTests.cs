@@ -1,26 +1,15 @@
-using OoBDev.System.IO;
-using OoBDev.System.IO.Devices;
+﻿using OoBDev.System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using System.Net;
 using System.Net.Sockets;
 using OoBDev.DevTerm.Configuration;
 using OoBDev.DevTerm.TestUtilities;
-using OoBDev.DevTerm.Web.Tests;
 using Microsoft.Playwright;
 using OoBDev.TestUtilities;
 namespace OoBDev.DevTerm.Web.Tests;
@@ -525,7 +514,7 @@ public class WebScreenshotTests
         var options = new CliOptions { Transport = "tcp", Host = "127.0.0.1", Port = ((IPEndPoint)device.LocalEndpoint).Port.ToString(global::System.Globalization.CultureInfo.InvariantCulture), Presenter = ["hex"], Tui = false, Cli = true, ExportDirectory = exports };
         var toolsFile = Path.Combine(exports, "tools.json");
         Directory.CreateDirectory(exports);
-        new OoBDev.DevTerm.Configuration.ConverterToolsStore(toolsFile).Save([new OoBDev.DevTerm.Configuration.StreamConvertToolOptions { Name = "copyit", Path = "cmd.exe", Arguments = "/c copy /Y {input} {output}", OutputExtension = "png" }]);
+        new OoBDev.DevTerm.Configuration.ConverterToolsStore(toolsFile).Save([new OoBDev.Documents.ExternalTools.ExternalToolOptions { Name = "copyit", Path = "cmd.exe", Arguments = "/c copy /Y {input} {output}", OutputExtension = "png" }]);
         await RunAsync(async (page, baseUrl) =>
         {
             await page.GotoAsync($"{baseUrl}/monitor?token=demo-token");

@@ -1,5 +1,8 @@
 using OoBDev.Documents;
 using OoBDev.Documents.Models;
+using OoBDev.WebApi.Models;
+using System;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -59,6 +62,17 @@ public partial class DocumentController : Controller
         _docs = docs;
         _summary = summary;
     }
+
+    /// <summary>
+    /// Lists the documents stored in the docs container.
+    /// </summary>
+    /// <returns>The stored documents, ordered by file name.</returns>
+    [HttpGet]
+    public IReadOnlyList<DocumentInfoModel> List() =>
+        [.. _docs.QueryContent()
+            .Select(c => new DocumentInfoModel { FileName = c.FileName, ContentType = c.ContentType })
+            .AsEnumerable()
+            .OrderBy(d => d.FileName, StringComparer.OrdinalIgnoreCase)];
 
     /// <summary>
     /// Downloads the specified file.

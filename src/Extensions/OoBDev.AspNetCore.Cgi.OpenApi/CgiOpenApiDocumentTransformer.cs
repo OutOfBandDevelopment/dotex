@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace OoBDev.AspNetCore.Cgi.OpenApi;
 
 /// <summary>
-/// Adds the operations that a CGI program describes in its own <c>{program}.openapi.json</c> to the OpenAPI document.
+/// Adds the operations that a CGI program describes (one path per runnable file, for example both greet.exe and greet.cgi) in its own <c>{program}.openapi.json</c> to the OpenAPI document.
 /// Paths in the description are relative to the program: <c>/</c> is the program itself and <c>/{id}</c> reaches it with PATH_INFO.
 /// </summary>
 /// <param name="cgi">The CGI options (prefix, script root and handlers).</param>
@@ -35,31 +35,45 @@ public partial class CgiOpenApiDocumentTransformer(
         foreach (var file in Directory.EnumerateFiles(root, "*" + suffix).Order(StringComparer.OrdinalIgnoreCase))
         {
             var baseName = Path.GetFileName(file)[..^suffix.Length];
-            var script = FindScript(root, baseName);
-            if (script == null)
+            var scripts = FindScripts(root, baseName);
+            if (scripts.Count == 0)
             {
                 LogNoProgram(Path.GetFileName(file));
                 continue;
             }
 
             var text = await File.ReadAllTextAsync(file, cancellationToken).ConfigureAwait(false);
-            var read = OpenApiDocument.Parse(text, OpenApiConstants.Json);
-            if (read.Document == null || read.Diagnostic?.Errors.Count > 0)
+            foreach (var script in scripts)
             {
-                LogInvalid(Path.GetFileName(file), string.Join("; ", read.Diagnostic?.Errors.Select(e => e.Message) ?? []));
-                continue;
-            }
+                // Each program gets its own parse so the operations are not shared between paths.
+                var read = OpenApiDocument.Parse(text, OpenApiConstants.Json);
+                if (read.Document == null || read.Diagnostic?.Errors.Count > 0)
+                {
+                    LogInvalid(Path.GetFileName(file), string.Join("; ", read.Diagnostic?.Errors.Select(e => e.Message) ?? []));
+                    break;
+                }
 
-            Merge(document, read.Document, $"{prefix}/{script}", baseName);
+                Merge(document, read.Document, $"{prefix}/{script}", baseName, scripts.Count > 1 ? Path.GetExtension(script).TrimStart('.') : null);
+            }
         }
     }
 
-    private string? FindScript(string root, string baseName) =>
-        cgi.Value.Handlers.Keys
+    private List<string> FindScripts(string root, string baseName) =>
+        [.. cgi.Value.Handlers.Keys
             .Select(extension => baseName + extension)
-            .FirstOrDefault(name => File.Exists(Path.Combine(root, name)));
+            .Where(name => File.Exists(Path.Combine(root, name)))
+            .Where(name => !OperatingSystem.IsWindows() || !IsElf(Path.Combine(root, name)))
+            .Order(StringComparer.OrdinalIgnoreCase)];
 
-    private void Merge(OpenApiDocument target, OpenApiDocument source, string basePath, string tagName)
+    // A Linux build left in the script root cannot start on Windows (the middleware answers 500), so it is not advertised.
+    private static bool IsElf(string file)
+    {
+        Span<byte> head = stackalloc byte[4];
+        using var stream = File.OpenRead(file);
+        return stream.Read(head) == 4 && head[0] == 0x7F && head[1] == (byte)'E' && head[2] == (byte)'L' && head[3] == (byte)'F';
+    }
+
+    private void Merge(OpenApiDocument target, OpenApiDocument source, string basePath, string tagName, string? idSuffix)
     {
         target.Paths ??= [];
         foreach (var (path, item) in source.Paths ?? [])
@@ -74,6 +88,8 @@ public partial class CgiOpenApiDocumentTransformer(
             {
                 foreach (var operation in item.Operations.Values)
                 {
+                    if (idSuffix != null && operation.OperationId != null)
+                        operation.OperationId += "_" + idSuffix;
                     if (operation.Tags == null || operation.Tags.Count == 0)
                         operation.Tags = new HashSet<OpenApiTagReference> { new(tagName) };
                 }

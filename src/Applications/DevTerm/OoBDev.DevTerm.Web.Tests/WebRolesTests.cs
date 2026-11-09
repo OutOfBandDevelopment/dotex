@@ -1,4 +1,4 @@
-using OoBDev.System.IO;
+﻿using OoBDev.System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -7,14 +7,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using System.Net;
 using System.Net.Http.Json;
 using System.Net.Sockets;
@@ -23,7 +16,6 @@ using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using OoBDev.DevTerm.Configuration;
-using OoBDev.DevTerm.Web.Tests;
 using OoBDev.TestUtilities;
 namespace OoBDev.DevTerm.Web.Tests;
 

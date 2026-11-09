@@ -1,11 +1,7 @@
-using OoBDev.System.IO;
+﻿using OoBDev.System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Net.Http;
-using System.Threading;
 using System.Threading.Tasks;
 namespace OoBDev.DevTerm.TestUtilities;
 
@@ -90,7 +86,7 @@ public abstract class UserFlowTestsBase
         await driver.SendAsync("hello");
         await ExpectAsync(driver, "From Loopback test");
         await driver.StopLoggingAsync();
-        StringAssert.Contains(File.ReadAllText(path), Convert.ToBase64String("From Loopback test"u8.ToArray())[..20], $"{driver.Name}: the log should hold the reply (rx data is base64).");
+        StringAssert.Contains(File.ReadAllText(path), Convert.ToBase64String("From Loopback test"u8.ToArray())[..20], StringComparison.Ordinal, $"{driver.Name}: the log should hold the reply (rx data is base64).");
     });
 
     [TestMethod]
@@ -137,7 +133,7 @@ public abstract class UserFlowTestsBase
         }
 
         Assert.AreEqual(2, CountOf(output, "From Loopback test"), $"{driver.Name}: expected two replies to hello.{Environment.NewLine}{output}");
-        StringAssert.Contains(output, "Unrecognized: again");
+        StringAssert.Contains(output, "Unrecognized: again", StringComparison.Ordinal);
     });
 
     [TestMethod]

@@ -1,12 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using OoBDev.DevTerm;
-
-namespace OoBDev.DevTerm.Configuration.Discovery;
+﻿namespace OoBDev.DevTerm.Configuration.Discovery;
 
 /// <summary>One device or service a discovery probe found, with what the Connection Editor needs to pre-fill a profile.</summary>
 /// <param name="Address">Dotted IPv4 address.</param>

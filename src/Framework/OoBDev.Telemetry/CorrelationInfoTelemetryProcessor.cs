@@ -1,8 +1,6 @@
-using OoBDev.System.Accessors;
+﻿using OoBDev.System.Accessors;
 using OoBDev.System.Net.Http;
 using OpenTelemetry;
-using OpenTelemetry.Logs;
-using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace OoBDev.Telemetry;

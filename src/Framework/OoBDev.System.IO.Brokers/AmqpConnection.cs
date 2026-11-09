@@ -1,7 +1,5 @@
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.IO;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using RabbitMQ.Client;
@@ -45,7 +43,7 @@ internal sealed class AmqpConnection : IBrokerConnection
         }
 
         _exchange = string.IsNullOrWhiteSpace(options.Exchange) ? _defaultExchange : options.Exchange;
-        _connection = await factory.CreateConnectionAsync(cancellationToken);
+        _connection = await factory.CreateConnectionAsync(cancellationToken).ConfigureAwait(false);
         _connection.ConnectionShutdownAsync += (_, e) =>
         {
             if (!_closing)
@@ -55,27 +53,27 @@ internal sealed class AmqpConnection : IBrokerConnection
 
             return Task.CompletedTask;
         };
-        _channel = await _connection.CreateChannelAsync(cancellationToken: cancellationToken);
+        _channel = await _connection.CreateChannelAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 
     public async Task SubscribeAsync(string address, CancellationToken cancellationToken)
     {
         var channel = _channel ?? throw new InvalidOperationException("The AMQP connection is not open.");
-        var queue = (await channel.QueueDeclareAsync(string.Empty, durable: false, exclusive: true, autoDelete: true, cancellationToken: cancellationToken)).QueueName;
-        await channel.QueueBindAsync(queue, _exchange, address, cancellationToken: cancellationToken);
+        var queue = (await channel.QueueDeclareAsync(string.Empty, durable: false, exclusive: true, autoDelete: true, cancellationToken: cancellationToken).ConfigureAwait(false)).QueueName;
+        await channel.QueueBindAsync(queue, _exchange, address, cancellationToken: cancellationToken).ConfigureAwait(false);
         var consumer = new AsyncEventingBasicConsumer(channel);
         consumer.ReceivedAsync += (_, e) =>
         {
             MessageReceived?.Invoke(e.RoutingKey, e.Body.ToArray());
             return Task.CompletedTask;
         };
-        await channel.BasicConsumeAsync(queue, autoAck: true, consumer, cancellationToken);
+        await channel.BasicConsumeAsync(queue, autoAck: true, consumer, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task PublishAsync(string address, ReadOnlyMemory<byte> payload, CancellationToken cancellationToken)
     {
         var channel = _channel ?? throw new InvalidOperationException("The AMQP connection is not open.");
-        await channel.BasicPublishAsync(_exchange, address, payload, cancellationToken);
+        await channel.BasicPublishAsync(_exchange, address, payload, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task DisconnectAsync(CancellationToken cancellationToken)
@@ -83,7 +81,7 @@ internal sealed class AmqpConnection : IBrokerConnection
         _closing = true;
         if (_connection is { IsOpen: true })
         {
-            await _connection.CloseAsync(cancellationToken);
+            await _connection.CloseAsync(cancellationToken).ConfigureAwait(false);
         }
     }
 
@@ -92,12 +90,12 @@ internal sealed class AmqpConnection : IBrokerConnection
         _closing = true;
         if (_channel is not null)
         {
-            await _channel.DisposeAsync();
+            await _channel.DisposeAsync().ConfigureAwait(false);
         }
 
         if (_connection is not null)
         {
-            await _connection.DisposeAsync();
+            await _connection.DisposeAsync().ConfigureAwait(false);
         }
     }
 }

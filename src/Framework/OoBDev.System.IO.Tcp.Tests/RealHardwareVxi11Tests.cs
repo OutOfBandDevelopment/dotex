@@ -1,6 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -25,7 +23,7 @@ public sealed class RealHardwareVxi11Tests
     public async Task Dg1062z_AnswersIdentify()
     {
         // The unit takes a DHCP address (.87, then .127), so find it by LXI discovery instead of a fixed host.
-        var found = await LxiDiscovery.ScanAsync(TimeSpan.FromSeconds(2), TimeSpan.FromSeconds(1), TestContext.CancellationToken);
+        var found = await LxiDiscovery.ScanAsync(TimeSpan.FromSeconds(2), TimeSpan.FromSeconds(1), cancellationToken: TestContext.CancellationToken);
         var device = found.FirstOrDefault(d => d.Identity.Contains("DG1062Z", StringComparison.OrdinalIgnoreCase));
         if (device is null)
         {

@@ -79,7 +79,7 @@ public sealed class OoBDevEnableQueryAttribute : EnableQueryAttribute
         if (actionExecutedContext.Result is ObjectResult { Value: IEnumerable items and not string } ok
             && actionExecutedContext.HttpContext.ODataFeature().TotalCount is { } total)
         {
-            ok.Value = new Dictionary<string, object?> { ["@odata.count"] = total, ["value"] = items };
+            ok.Value = new Dictionary<string, object?>(StringComparer.Ordinal) { ["@odata.count"] = total, ["value"] = items };
         }
     }
 

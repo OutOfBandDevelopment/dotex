@@ -1,18 +1,12 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.IO.Pipelines;
 using System.Text;
-using System.Text.RegularExpressions;
-using OoBDev.DevTerm;
 using OoBDev.System.IO;
 using OoBDev.System.IO.Pipelines;
-using System.IO.Pipelines;
 namespace OoBDev.DevTerm.Tui.Tests;
 
 /// <summary>

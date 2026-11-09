@@ -1,11 +1,10 @@
-using OoBDev.System.IO.Pipelines;
+﻿using OoBDev.System.IO.Pipelines;
 using OoBDev.System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using System.IO.Pipelines;
 using global::System.IO.Pipes;

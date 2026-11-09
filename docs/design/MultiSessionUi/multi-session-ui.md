@@ -33,24 +33,28 @@ today:
 
 ```plantuml
 @startuml
-!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
-
-Container_Boundary(config, "DevTerm.Configuration") {
-  Component(tab, "SessionTab", "record/class", "Owns one connection's Session, PresenterCatalog, IServiceProvider, SendHistory, and display state (title, output lines, status)")
-  Component(builder, "DevTermSessionBuilder", "static class", "Builds an independent (Session, Catalog, Services) triple from CliOptions — unchanged")
+skinparam rectangle {
+    BackgroundColor<<Component>> #85BBF0
+    FontColor<<Component>> #000000
+    BorderColor Black
 }
 
-Container_Boundary(tui, "DevTerm.Console") {
-  Component(tuimode, "TuiMode", "Terminal.Gui window", "Owns a Tabs strip of SessionTabs; routes menu actions to the active one")
+rectangle "DevTerm.Configuration" {
+  rectangle "SessionTab\n[record/class]\nOwns one connection's Session, PresenterCatalog, IServiceProvider, SendHistory, and display state (title, output lines, status)" as tab <<Component>>
+  rectangle "DevTermSessionBuilder\n[static class]\nBuilds an independent (Session, Catalog, Services) triple from CliOptions — unchanged" as builder <<Component>>
 }
 
-Container_Boundary(wpf, "DevTerm.Wpf") {
-  Component(mainwindow, "MainWindow", "WPF window", "Owns a TabControl of SessionTabs; routes menu actions to the active one")
+rectangle "DevTerm.Console" {
+  rectangle "TuiMode\n[Terminal.Gui window]\nOwns a Tabs strip of SessionTabs; routes menu actions to the active one" as tuimode <<Component>>
 }
 
-Rel(tab, builder, "created by")
-Rel(tuimode, tab, "holds N, one active")
-Rel(mainwindow, tab, "holds N, one active")
+rectangle "DevTerm.Wpf" {
+  rectangle "MainWindow\n[WPF window]\nOwns a TabControl of SessionTabs; routes menu actions to the active one" as mainwindow <<Component>>
+}
+
+tab --> builder : created by
+tuimode --> tab : holds N, one active
+mainwindow --> tab : holds N, one active
 @enduml
 ```
 

@@ -13,7 +13,7 @@
 | Step | Action | Expected result |
 | --- | --- | --- |
 | 1 | Ask the first question | The model answer appears as a turn in the conversation. |
-| 2 | Ask a follow-up | Both turns are listed.<br>The context token counter is shown. |
+| 2 | Ask a follow-up | Both exchanges are listed (a user and a model line each).<br>The context token counter is shown. |
 | 3 | Start a new conversation | The turn list is empty. |
 
 Source: `e2e/journeys.ts` (journey `hold-a-conversation`). Each expected result is asserted by the step's `run` function.

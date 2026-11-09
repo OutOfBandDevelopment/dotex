@@ -1,0 +1,63 @@
+@implements IDisposable
+
+<div class="uidef-form">
+    @if (Form.HasNotes)
+    {
+        <p class="uidef-notes">@Form.Notes</p>
+    }
+    @foreach (var section in Form.Sections.Where(s => s.HasVisibleRows))
+    {
+        <fieldset class="uidef-section">
+            @if (!string.IsNullOrEmpty(section.Label))
+            {
+                <legend>@section.Label</legend>
+            }
+            @foreach (var row in section.Rows.Where(r => r.IsVisible))
+            {
+                <ControlRow Row="row" @key="row.Id" />
+            }
+        </fieldset>
+    }
+</div>
+
+@code {
+    /// <summary>The form to render; the component re-renders when a row or the form changes.</summary>
+    [Parameter, EditorRequired]
+    public FormViewModel Form { get; set; } = default!;
+
+    private FormViewModel? _subscribed;
+
+    protected override void OnParametersSet()
+    {
+        if (ReferenceEquals(_subscribed, Form))
+        {
+            return;
+        }
+
+        Unsubscribe();
+        _subscribed = Form;
+        Form.PropertyChanged += OnChanged;
+        foreach (var row in Form.Rows)
+        {
+            row.PropertyChanged += OnChanged;
+        }
+    }
+
+    private void OnChanged(object? sender, global::System.ComponentModel.PropertyChangedEventArgs e) => _ = InvokeAsync(StateHasChanged);
+
+    private void Unsubscribe()
+    {
+        if (_subscribed is null)
+        {
+            return;
+        }
+
+        _subscribed.PropertyChanged -= OnChanged;
+        foreach (var row in _subscribed.Rows)
+        {
+            row.PropertyChanged -= OnChanged;
+        }
+    }
+
+    public void Dispose() => Unsubscribe();
+}

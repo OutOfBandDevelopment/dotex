@@ -27,6 +27,7 @@ public class ModelCompareController(IServiceProvider services, TimeProvider time
         OoBDev.SBert.AllMiniLmL6V2.SBertGlobals.AllMiniLmL6V2Key,
         OoBDev.SBert.AllMpnetBaseV2.SBertGlobals.AllMpnetBaseV2Key,
         OoBDev.SBert.NomicEmbedTextV1_5.SBertGlobals.NomicEmbedTextV1_5Key,
+        OoBDev.Ollama.OllamaGlobals.ProviderKey,
     ];
 
     /// <summary>Lists the model keys that can be compared.</summary>

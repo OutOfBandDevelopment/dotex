@@ -65,20 +65,23 @@ Each task section should include:
 
 ## By day
 
-- [2026-11-04](2026-11-04.md): 26 task(s)
+- [2026-11-09](2026-11-09.md): 17 task(s)
+- [2026-11-06](2026-11-06.md): 47 task(s)
+- [2026-11-05](2026-11-05.md): 39 task(s)
+- [2026-11-04](2026-11-04.md): 39 task(s)
 - [2026-11-03](2026-11-03.md): 4 task(s)
-- [2026-10-30](2026-10-30.md): 33 task(s)
-- [2026-10-29](2026-10-29.md): 98 task(s)
-- [2026-10-28](2026-10-28.md): 19 task(s)
+- [2026-10-30](2026-10-30.md): 34 task(s)
+- [2026-10-29](2026-10-29.md): 99 task(s)
+- [2026-10-28](2026-10-28.md): 21 task(s)
 - [2026-10-22](2026-10-22.md): 29 task(s)
 - [2026-10-09](2026-10-09.md): 6 task(s)
 - [2026-10-08](2026-10-08.md): 4 task(s)
-- [2026-10-07](2026-10-07.md): 1 task(s)
-- [2026-09-30](2026-09-30.md): 1 task(s)
+- [2026-10-07](2026-10-07.md): 3 task(s)
+- [2026-09-30](2026-09-30.md): 3 task(s)
 - [2026-01-21](2026-01-21.md): 9 task(s)
-- [2026-01-20](2026-01-20.md): 8 task(s)
-- [2026-01-19](2026-01-19.md): 1 task(s)
-- [2026-01-15](2026-01-15.md): 2 task(s)
+- [2026-01-20](2026-01-20.md): 9 task(s)
+- [2026-01-19](2026-01-19.md): 3 task(s)
+- [2026-01-15](2026-01-15.md): 3 task(s)
 
 ---
 
@@ -484,6 +487,9 @@ Each task section should include:
 - [Drawing on SkiaSharp (2026-11-03)](2026-11-03.md#drawing-on-skiasharp-2026-11-03) - Code39, MultiScaleTile and PngPack on SkiaSharp; no System.Drawing.Common, tests run on any platform
 - [Applications layout (2026-11-04)](2026-11-04.md#applications-layout-2026-11-04) - the 13 DevTerm projects moved under src/Applications/DevTerm/
 - [Tui guide determinism (2026-11-04)](2026-11-04.md#tui-guide-determinism-2026-11-04) - Tui tests no longer rewrite the manifest-editor and plugin-approval guide images
+- [OoBDev.Documents.ExternalTools library (2026-11-04)](2026-11-04.md#oobdevdocumentsexternaltools-library) - external tool conversion handler
+- [HP-GL conversion moved to OoBDev.Documents.Hpgl](2026-11-04.md#hp-gl-conversion-moved-to-oobdevdocumentshpgl) - Framework library with a document conversion handler
+- [Flaky tests fixed](2026-11-04.md#flaky-tests-fixed) - StreamDevice cancellation race and the CGI latency gate
 - [Bench Hardware tests (2026-11-04)](2026-11-04.md#bench-hardware-tests-2026-11-04) - Korad supply tests and the DevTerm CLI identify tests on the shared bench parameters
 - [Coding-standards tests (2026-11-04)](2026-11-04.md#coding-standards-tests-2026-11-04) - repository-wide test category check; two untagged or double-tagged test classes fixed
 - [DevTerm containers wiring (2026-11-04)](2026-11-04.md#devterm-containers-wired-into-the-integration-stack-2026-11-04) - mosquitto, ser2net, loopback-device and RabbitMQ STOMP/TLS in the integration stack
@@ -503,6 +509,9 @@ Each task section should include:
 - [Whole-solution restore (2026-11-04)](2026-11-04.md#whole-solution-restore-works-again) - aggregator no longer references the Windows-only Bluetooth project
 - [DevTerm device notes with the device libraries](2026-11-04.md#devterm-device-notes-live-with-the-device-libraries) - copies deleted, stale pointers repointed
 - [BinaryDataDecoders surroundings review (2026-11-04)](2026-11-04.md#binarydatadecoders-surroundings-review-2026-11-04) - bug reports kept as history, pipeline and GitHub items rejected with reasons
+- [WPF Notes section state (2026-11-04)](2026-11-04.md#wpf-notes-section-remembers-its-state) - the Notes expander remembers collapsed, shared with the Tui
+- [mDNS Ser2NetWin bridges (2026-11-04)](2026-11-04.md#mdns-discovery-lists-ser2netwin-bridges) - the mDNS probe finds _ser2net._tcp and _zwave._tcp bridges
+- [WPF panel layout review (2026-11-04)](2026-11-04.md#wpf-layout-review-covers-a-code-built-control-panel) - main window with a generated SCPI panel checked in both themes
 - [Shared FakeTransport (2026-11-03)](2026-11-03.md#shared-faketransport-2026-11-03) - four FakeTransport copies merged into OoBDev.DevTerm.TestUtilities
 - [Docs check for imported material (2026-11-03)](2026-11-03.md#docs-check-for-imported-material-2026-11-03) - orphaned files under `docs/applications` fail the docs tests; default scope widened
 - [DevTerm Web shell](2026-10-29.md#devterm-web-shell-and-connection-editor-2026-10-29) - OoBDev.DevTerm.Web (Blazor), connection editor view model, transport selection in AddDevTermFrontEnd (2026-10-29)
@@ -601,3 +610,5 @@ Each task section should include:
 - [Guide screenshots through image-mask sync (2026-10-30)](2026-10-30.md#guide-screenshots-through-image-mask-sync-2026-10-30) - Tui and Web guide captures only replace committed images when they differ once masked
 - [WPF screenshot capture (2026-10-30)](2026-10-30.md#wpf-screenshot-capture-2026-10-30) - `WpfScreenshot` through `GuideImage`; connection editor captured
 - [WPF field-following previews (2026-10-30)](2026-10-30.md#wpf-field-following-previews-2026-10-30) - a button tooltip's Sends line recomputes as its parameter fields change
+- [Guide renderer moved to OoBDev.Documents.Guides (2026-11-04)](2026-11-04.md#guide-renderer-moved-to-oobdevdocumentsguides) - `ApiGuideRenderer` is now a Framework library with its own tests
+- [Command-line tool guides generated (2026-11-04)](2026-11-04.md#command-line-tool-guides-generated) - xslt, packman and image-mask guides in docs/applications/tools

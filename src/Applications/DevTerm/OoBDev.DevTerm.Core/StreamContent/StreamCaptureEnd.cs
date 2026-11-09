@@ -1,6 +1,4 @@
-using System;
-
-namespace OoBDev.DevTerm;
+﻿namespace OoBDev.DevTerm;
 
 /// <summary>Why a <see cref="StreamCapture"/> ended.</summary>
 public enum StreamCaptureEnd

@@ -1,5 +1,5 @@
-using OoBDev.Communications.Models;
-using OoBDev.Communications.Services;
+﻿using OoBDev.Communications.Abstractions;
+using System;
 using OoBDev.MailKit.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -47,7 +47,8 @@ public static class ServiceCollectionExtensions
         if (!string.IsNullOrWhiteSpace(smtp))
         {
             services.AddHealthChecks().AddCheck<MailkitSmtpHealthCheck>("mailkit-smtp");
-            services.TryAddTransient<ICommunicationSender<EmailMessageModel>, MailKitProvider>();
+            services.TryAddSingleton(TimeProvider.System);
+            services.TryAddEnumerable(ServiceDescriptor.Transient<IChannelProvider, MailKitChannelProvider>());
             services.TryAddTransient<ISmtpClientFactory, SmtpClientFactory>();
             services.AddOptions<MailKitSmtpClientOptions>()
             .Bind(configuration.GetSection(smtpConfigurationSection))
@@ -58,6 +59,8 @@ public static class ServiceCollectionExtensions
         {
             services.AddHealthChecks().AddCheck<MailkitImapHealthCheck>("mailkit-imap");
             services.TryAddTransient<IImapClientFactory, ImapClientFactory>();
+            services.TryAddSingleton(TimeProvider.System);
+            services.TryAddEnumerable(ServiceDescriptor.Transient<IChannelProvider, MailKitImapChannelProvider>());
             services.AddOptions<MailKitImapClientOptions>()
             .Bind(configuration.GetSection(imapConfigurationSection))
             .ValidateDataAnnotations();

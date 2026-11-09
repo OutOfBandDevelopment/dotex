@@ -1,7 +1,4 @@
-using System;
-using System.Buffers;
-using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Buffers;
 
 namespace OoBDev.DevTerm.Presenters.Text.Tests;
 

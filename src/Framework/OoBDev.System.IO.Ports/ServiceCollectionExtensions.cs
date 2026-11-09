@@ -1,5 +1,4 @@
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.DependencyInjection;
 
 namespace OoBDev.System.IO.Ports;
 

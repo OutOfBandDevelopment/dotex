@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,7 +9,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using OoBDev.DevTerm;
 
 namespace OoBDev.DevTerm.Configuration.Discovery;
 
@@ -110,6 +109,6 @@ public sealed partial class UsrBridgeProbe : INetworkDeviceProbe
         }
     }
 
-    [GeneratedRegex("""WWW-Authenticate:\s*Basic\s+realm="(?<model>USR-TCP232[^"]*)""", RegexOptions.IgnoreCase)]
+    [GeneratedRegex("""WWW-Authenticate:\s*Basic\s+realm="(?<model>USR-TCP232[^"]*)""", RegexOptions.IgnoreCase, matchTimeoutMilliseconds: 1000)]
     private static partial Regex RealmPattern();
 }

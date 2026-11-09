@@ -29,12 +29,12 @@ Each screen lists its purpose, the API it binds to, its commands and a mockup. "
 | Groq console | `/ai/groq` | `api/GroqCloud/Completion` | Exists (key needed) |
 | Embeddings lab | `/ai/embeddings` | `api/AI/Embeddings`, `api/SBERT`, `api/AllMiniLM` | Exists |
 | RAG | `/ai/rag` | `api/Rag` (embeds passages in process, answers through Ollama) | Exists |
+| Search | `/ai/search` | `api/Search` (BM25 keywords, in-process embeddings and reciprocal rank fusion over pasted passages) | Exists |
 | Documents | `/content/documents` | `Document/*` | Exists |
-| Templates | `/content/templates` | `api/TextTemplate/*` | Partly |
+| Templates | `/content/templates` | `api/TextTemplate/*` | Yes (list, open, preview; no save) |
 | Communications | `/messaging/communications` | `api/Communications/*` | Exists |
 | Queues | `/messaging/queues` | `api/MessageQueueing/*` | Exists |
 | Current user | `/identity/me` | `api/User/claims` | Exists |
-| Search | `/data/search` | `Search/*` | Planned (needs the `SearchController` restored; not in the navigation) |
 | Cache | `/data/cache` | `api/Cache` | Exists as a lab (store, look up, remove; the provider cannot list keys) |
 | Vector stores | `/utilities/vectors` | vector store endpoints | Exists (store texts, search by meaning; lexical and hybrid Planned) |
 | Image embeddings | `/ai/images` | image endpoints | Exists (zero-shot labels) |
@@ -97,7 +97,7 @@ Purpose: turn text into a vector with each available model and compare them. Com
 
 ## Documents workbench
 
-Purpose: upload a file, view it as text, HTML, PDF or summary, or convert between types. Commands: `UploadCommand`, `ConvertCommand`, `DownloadCommand`.
+Purpose: upload a file, browse the stored documents (blob browser over `GET Document/List`, which reads the `docs` container through `IBlobContainer`), view one as text, HTML, PDF or summary, or convert between types. Commands: `ListStoredCommand`, `PickStoredCommand`, `UploadCommand`, `ConvertCommand`, `DownloadCommand`.
 
 ```plantuml
 @startsalt
@@ -106,6 +106,7 @@ Purpose: upload a file, view it as text, HTML, PDF or summary, or convert betwee
   File: [ Choose file ] report.docx
   Name in store: "reports/report.docx    "
   [ Upload ] | [ Download ]
+  Stored: [ report.docx ] [ notes.txt ]
   ----
   {/ Text | Html | Pdf | Summary | Convert }
   {+
@@ -142,7 +143,7 @@ Purpose: send a message through the public, queued or private channel. Commands:
 
 ## Queues
 
-Purpose: send a sample message to the public or private queue and show the AsyncAPI contract for it. Commands: `EnqueueCommand`.
+Purpose: send a sample message to the public or private queue, show the AsyncAPI contract for it, list the configured channels (`GET api/MessageQueueing/channels`: provider, queue, host and receiver flag; connection strings and other secrets are never returned) and show the last 50 messages the example handler received (`GET api/MessageQueueing/received`, newest first, kept in memory). Commands: `EnqueueCommand`, `RefreshChannelsCommand`, `RefreshReceivedCommand`.
 
 ```plantuml
 @startsalt
@@ -162,16 +163,18 @@ Purpose: send a sample message to the public or private queue and show the Async
 
 ## Templates
 
-Purpose: pick a template, supply JSON data and render it. The list comes from `SupportedTemplates`; save and query are Phase 3. Commands: `ApplyTemplateCommand`.
+Purpose: browse the template files of the example `Templates` folder, open one, edit the text and data, and preview the draft. Binds to `GET api/TextTemplate/List`, `GET api/TextTemplate/Read?file=` (only a listed file name is opened), `POST api/TextTemplate/Preview` (renders draft text, saves nothing) and `Apply` for a named template. Saving is not built; it waits for the owner (OPEN-QUESTIONS Q2). Commands: `ListTemplatesCommand`, `OpenTemplateCommand`, `PreviewTemplateCommand`, `ApplyTemplateCommand`.
 
 ```plantuml
 @startsalt
 {+
   <b>Templates
-  Template: ^welcome.hbs^
+  Files: [ order-shipped.html.hbs ] [ order-shipped.txt.hbs ]
+  Source:
+  "<h1>Hello {{name}}</h1>          "
   Data (JSON):
   "{ ""name"": ""Ada"" }              "
-  [ Apply ]
+  [ Preview draft ]  [ Apply ]
   ----
   {+
     Rendered output
@@ -180,7 +183,7 @@ Purpose: pick a template, supply JSON data and render it. The list comes from `S
 @endsalt
 ```
 
-*Figure 6 — Template runner*
+*Figure 6 — Template browser and preview*
 
 ## Current user
 
@@ -204,7 +207,7 @@ Purpose: show who the token says you are. Binds to `GET api/User/claims`; the sa
 *Figure 7 — Claims*
 
 ## Search
-
+Purpose: run one query three ways (keywords by BM25, meaning by in-process embeddings, and both fused by reciprocal rank fusion) over passages pasted into the page, and show the three lists side by side. Built 2026-11-09 as `SearchController` (`POST api/Search`); searching an indexed store with a list-all mode stays a later step. Commands: `SearchCommand`.
 Purpose: lexical, semantic and hybrid search over indexed content, with a list-all mode. Needs the commented-out `SearchController` restored. Commands: `SearchCommand`.
 
 ```plantuml

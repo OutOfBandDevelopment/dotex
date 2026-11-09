@@ -37,6 +37,7 @@
     <ProjectReference Remove="..\..\Framework\**\OoBDev.*.Wpf.csproj" />
     <ProjectReference Remove="..\..\Framework\**\OoBDev.*.Windows.csproj" />
     <ProjectReference Remove="..\..\Extensions\**\OoBDev.*.net481.csproj" />
+    <ProjectReference Remove="..\..\Extensions\**\OoBDev.*.Windows.Forms.csproj" />
 	</ItemGroup>
 	
 	<ItemGroup>

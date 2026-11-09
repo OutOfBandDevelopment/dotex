@@ -1,14 +1,7 @@
+﻿using OoBDev.Documents.ExternalTools;
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using OoBDev.DevTerm;
-
-using OoBDev.DevTerm.Configuration;
-using OoBDev.DevTerm.Configuration.Discovery;
 using OoBDev.TestUtilities;
 namespace OoBDev.DevTerm.Configuration.Tests;
 
@@ -358,7 +351,7 @@ public sealed class CliOptionsValidatorTests
         Transport = "serial",
         Port = "COM3",
         StreamConvertMode = mode,
-        StreamConvertTools = [.. names.Select(n => new StreamConvertToolOptions { Name = n, Path = "gs" })],
+        StreamConvertTools = [.. names.Select(n => new ExternalToolOptions { Name = n, Path = "gs" })],
     };
 
     [TestMethod]

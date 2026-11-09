@@ -17,7 +17,7 @@ Nothing is added unless the configuration section exists or `OTEL_EXPORTER_OTLP_
 | Setting | Default | Purpose |
 |---------|---------|---------|
 | `OtlpEndpoint` | none (then `OTEL_EXPORTER_OTLP_ENDPOINT`) | Collector base address, for example `http://localhost:4318`. For `HttpProtobuf` the signal path (`v1/traces`, `v1/logs`) is added for you |
-| `Protocol` | `HttpProtobuf` | `HttpProtobuf` or `Grpc` |
+| `Protocol` | from `OTEL_EXPORTER_OTLP_PROTOCOL`, else `HttpProtobuf` | `HttpProtobuf` or `Grpc` |
 | `ServiceName` | exporter default | `service.name` resource attribute |
 | `Sources` | none | `ActivitySource` names to collect spans from |
 

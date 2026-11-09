@@ -70,8 +70,8 @@
     <MSTest_ParallelWorkers>0</MSTest_ParallelWorkers>
   </PropertyGroup>
 
-  <ItemGroup Condition=" '$(MSBuildProjectName.EndsWith(`.Tests`))' ">
-    <!-- Add the shared assembly info file to all *.Tests projects -->
+  <ItemGroup Condition=" '$(MSBuildProjectName.EndsWith(`.Tests`))' and '$(SerialTests)' != 'true' ">
+    <!-- Add the shared assembly info file to all *.Tests projects; a project that sets SerialTests=true declares DoNotParallelize itself -->
     <Compile Include="$(SolutionDir)TestAssemblyInfo.cs" />
   </ItemGroup>
 

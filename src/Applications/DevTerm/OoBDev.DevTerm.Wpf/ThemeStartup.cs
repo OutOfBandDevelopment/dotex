@@ -33,7 +33,7 @@ public static class ThemeStartup
         void OnChanged(object sender, UserPreferenceChangedEventArgs e)
         {
             if (e.Category is UserPreferenceCategory.General or UserPreferenceCategory.Color)
-                dispatcher.BeginInvoke(ActiveTheme.RefreshSystem);
+                _ = dispatcher.BeginInvoke(ActiveTheme.RefreshSystem);
         }
 
         SystemEvents.UserPreferenceChanged += OnChanged;

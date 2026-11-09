@@ -1,10 +1,9 @@
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.TestUtilities;
 using Qdrant.Client.Grpc;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace OoBDev.Qdrant.Tests;

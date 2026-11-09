@@ -1,6 +1,4 @@
-using System.Collections.Generic;
-
-namespace OoBDev.DevTerm;
+﻿namespace OoBDev.DevTerm;
 
 /// <summary>One named value of a <see cref="StructuredMessage"/>, with the unit it is in when the decoder knows it.</summary>
 public sealed record StructuredField(string Name, string Value, string? Unit = null)

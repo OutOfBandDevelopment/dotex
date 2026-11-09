@@ -1,12 +1,7 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using OoBDev.DevTerm;
-using OoBDev.DevTerm.Logging;
 using OoBDev.System.IO;
 using System.Text;
 using OoBDev.TestUtilities;
@@ -64,7 +59,7 @@ public sealed class IndexedSessionLogTests
             CollectionAssert.AreEqual(loaded.Records[i].Data.ToArray(), indexed.Records[i].Data.ToArray());
         }
 
-        Assert.AreEqual(1001, indexed.Records.Count());
+        Assert.AreEqual(1001, indexed.Records.Count);
     }
 
     [TestMethod]

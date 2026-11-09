@@ -102,11 +102,11 @@ export const journeys: Journey[] = [
       {
         title: 'Ask a follow-up',
         narrative: 'The second request carries the context from the first, and the counter shows how much context is held.',
-        expect: ['Both turns are listed.', 'The context token counter is shown.'],
+        expect: ['Both exchanges are listed (a user and a model line each).', 'The context token counter is shown.'],
         run: async page => {
           await page.getByLabel('Prompt').fill('Explain photosynthesis');
           await press(page, 'Send');
-          await expect(page.locator('.turns p')).toHaveCount(2);
+          await expect(page.locator('.turns p')).toHaveCount(4);
           await expect(page.getByText('context tokens:')).toBeVisible();
         },
       },
@@ -639,6 +639,15 @@ export const journeys: Journey[] = [
           await expect(page.locator('pre.result')).toContainText('Revenue grew 12 percent');
         },
       },
+      {
+        title: 'See what is stored',
+        narrative: 'The Stored documents list shows every document in the store; choosing a name fills the Name in store box.',
+        expect: ['The stored document is listed.'],
+        run: async page => {
+          await expect(page.locator('.stored-list li').first()).toContainText('quarterly-report.docx');
+          await press(page, 'quarterly-report.docx');
+        },
+      },
     ],
   },
   {
@@ -707,6 +716,158 @@ export const journeys: Journey[] = [
         expect: ['The name claim is listed.'],
         run: async page => {
           await expect(page.getByText('Ada Lovelace')).toBeVisible();
+        },
+      },
+    ],
+  },
+  {
+    id: 'search-three-ways',
+    title: 'Search passages by keyword, meaning and both',
+    persona: 'A developer choosing a search strategy',
+    goal: 'Run one query three ways and see what each mode finds.',
+    start: '/ai/search',
+    prerequisites: ['The all-MiniLM embedder is available in the API.'],
+    features: ['OoBDev.Onnx.SentenceEmbeddings', 'OoBDev.AI.Abstractions (`IEmbeddingProvider`)'],
+    why: 'See why keyword search misses paraphrases, why embeddings rank everything, and how rank fusion combines them, with the scoring in plain view.',
+    problems: [
+      { symptom: 'Keywords find nothing', cause: 'The query shares no word with any passage', fix: 'Use the meaning or hybrid list, or reword the query' },
+      { symptom: 'Bad request', cause: 'The query or the passages are empty', fix: 'Fill in both' },
+    ],
+    steps: [
+      {
+        title: 'Review the passages and the query',
+        narrative: 'Sample passages and a query are filled in. Separate your own passages with a blank line.',
+        expect: ['The Search button is enabled.'],
+        run: async page => {
+          await expect(page.locator('fluent-button', { hasText: 'Search' })).not.toHaveAttribute('disabled', '');
+        },
+      },
+      {
+        title: 'Search',
+        narrative: 'The same query runs by keywords (BM25), by meaning (embeddings) and by reciprocal rank fusion of both.',
+        expect: ['Three result lists are shown.', 'The first list has a hit with a score.'],
+        run: async page => {
+          await press(page, 'Search');
+          await expect(page.getByRole('heading', { name: 'Hybrid (rank fusion)' })).toBeVisible();
+          await expect(page.locator('table.grid tbody tr').first()).toBeVisible();
+        },
+      },
+    ],
+  },
+  {
+    id: 'preview-a-template',
+    title: 'Open and preview a template',
+    persona: 'A developer working with text templates',
+    goal: 'Open a template file, change its text and see it rendered with sample data without saving anything.',
+    start: '/content/templates',
+    prerequisites: ['The example Templates folder holds the sample templates.'],
+    features: ['OoBDev.System (`ITemplateEngine`, `FileTemplateSource`)', 'OoBDev.Handlebars'],
+    why: 'Try a Handlebars template against JSON data and see the output at once, before wiring it into code.',
+    problems: [
+      { symptom: 'Preview shows a template error', cause: 'The draft text is not valid for the engine', fix: 'Fix the braces or the helper name shown in the message' },
+      { symptom: 'The file list is empty', cause: 'The template folder does not exist or holds no template files', fix: 'Check the file template path option' },
+    ],
+    steps: [
+      {
+        title: 'Open a template file',
+        narrative: 'The list shows every template file; choosing one loads its text into the source box.',
+        expect: ['The source box holds the template text.'],
+        run: async page => {
+          await press(page, 'order-shipped.html.hbs');
+          await expect(page.getByLabel('Template source')).toHaveValue(/Hello/);
+        },
+      },
+      {
+        title: 'Preview the draft',
+        narrative: 'Preview renders the text in the box with the JSON data. Nothing is saved.',
+        expect: ['The output shows the rendered text.'],
+        run: async page => {
+          await press(page, 'Preview draft');
+          await expect(page.locator('pre.result').first()).toContainText('Hello Ada');
+        },
+      },
+    ],
+  },
+  {
+    id: 'watch-the-queues',
+    title: 'See the queue channels and received messages',
+    persona: 'A developer checking the message queue wiring',
+    goal: 'Confirm which provider and queue each channel uses and whether this host receives from it.',
+    start: '/messaging/queues',
+    prerequisites: ['The example API is running.'],
+    features: ['OoBDev.MessageQueueing', 'OoBDev.RabbitMq, OoBDev.Microsoft.Azure.StorageAccount'],
+    why: 'See the configured channels without opening configuration files, and watch what the handler receives.',
+    problems: [
+      { symptom: 'Received list stays empty', cause: 'The channel has DisableReceiver set, or nothing was sent', fix: 'Enable the receiver in the MessageQueue section and send a message' },
+    ],
+    steps: [
+      {
+        title: 'Read the configured channels',
+        narrative: 'The table lists each channel with its provider, queue, host and whether the receiver is on. Connection strings are never shown.',
+        expect: ['The channel table lists the provider and queue.'],
+        run: async page => {
+          await expect(page.locator('table.channels tbody tr').first()).toContainText('rabbit-mq');
+        },
+      },
+      {
+        title: 'Look at the received messages',
+        narrative: 'The list shows the last messages this host received, newest first. Refresh to update it.',
+        expect: ['A received message is listed with its time and text.'],
+        run: async page => {
+          await press(page, 'Refresh');
+          await expect(page.locator('.received-list li').first()).toContainText('hello');
+        },
+      },
+    ],
+  },
+  {
+    id: 'run-a-cgi-program',
+    title: 'Run a CGI program',
+    persona: 'A developer checking the CGI hosting',
+    goal: 'Pick a program the host can start and see its answer.',
+    start: '/developer/cgi',
+    prerequisites: ['The example API is running and cgi-bin holds a program built for this system.'],
+    features: ['OoBDev.AspNetCore.Cgi', 'OoBDev.AspNetCore.Cgi.OpenApi'],
+    why: 'See a CGI program answer through the middleware, with its status, without a command line.',
+    problems: [
+      { symptom: 'The program list is empty', cause: 'No program for this system is in cgi-bin', fix: 'Run cgi-src/build.ps1' },
+      { symptom: '500 The program could not start', cause: 'A binary for another system', fix: 'Build the program for this system' },
+    ],
+    steps: [
+      {
+        title: 'Run the program',
+        narrative: 'The first program is selected. Get calls it with the name; the status and the page it returned are shown.',
+        expect: ['The status is 200.', 'The answer greets the name.'],
+        run: async page => {
+          await press(page, 'Get');
+          await expect(page.locator('.cgi-status')).toContainText('200');
+          await expect(page.locator('pre.result')).toContainText('Hello, Ada');
+        },
+      },
+    ],
+  },
+  {
+    id: 'send-a-webhook',
+    title: 'Send a webhook to a channel',
+    persona: 'A developer testing inbound provider calls',
+    goal: 'Post a provider call to a channel and see how the host answers.',
+    start: '/messaging/webhooks',
+    prerequisites: ['The example API is running.'],
+    features: ['OoBDev.Communications (`IReceiveService`)'],
+    why: 'See how the host answers a provider call: 204 when processed, 400 for a bad signature, 404 for an unknown channel.',
+    problems: [
+      { symptom: '404 Webhook rejected', cause: 'The channel is not in OoBDev:Communications:Channels', fix: 'Use a configured channel name' },
+      { symptom: '400 Webhook rejected', cause: 'The vendor signature is missing or wrong', fix: 'Send the call from the provider, or sign it as the vendor does' },
+    ],
+    steps: [
+      {
+        title: 'Send the call',
+        narrative: 'The channel and a sample body are filled in. The response status and problem details are shown.',
+        expect: ['A response status is shown.', 'The problem details name the rejection.'],
+        run: async page => {
+          await press(page, 'Send webhook');
+          await expect(page.locator('.webhook-status')).toContainText('404');
+          await expect(page.locator('pre.result')).toContainText('Webhook rejected');
         },
       },
     ],

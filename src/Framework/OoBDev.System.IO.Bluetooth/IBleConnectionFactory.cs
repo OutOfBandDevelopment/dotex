@@ -1,10 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-namespace OoBDev.System.IO.Bluetooth;
+﻿namespace OoBDev.System.IO.Bluetooth;
 
 /// <summary>
 /// Creates the <see cref="IBleConnection"/> a <see cref="BleDeviceAdapter"/> connects through. Indirection

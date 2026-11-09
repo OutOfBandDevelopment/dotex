@@ -33,7 +33,16 @@ public sealed class WpfSessionLogDialog : ISessionLogDialog
     /// <inheritdoc />
     public string? PromptNote()
     {
-        var box = new TextBox { MinWidth = 320, Margin = new Thickness(0, 0, 0, 12) };
+        var dialog = BuildNoteWindow(out var box);
+        return dialog.ShowDialog() == true ? box.Text : null;
+    }
+
+    /// <summary>Builds the themed note prompt window without showing it.</summary>
+    /// <param name="box">The text box that receives the note.</param>
+    /// <returns>The window; OK sets its dialog result.</returns>
+    public static Window BuildNoteWindow(out TextBox box)
+    {
+        box = new TextBox { MinWidth = 320, Margin = new Thickness(0, 0, 0, 12) };
         var ok = new Button { Content = "OK", IsDefault = true, MinWidth = 72, Margin = new Thickness(0, 0, 8, 0) };
         var cancel = new Button { Content = "Cancel", IsCancel = true, MinWidth = 72 };
         var buttons = new StackPanel { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Right };
@@ -53,7 +62,8 @@ public sealed class WpfSessionLogDialog : ISessionLogDialog
         };
         WpfTheme.Attach(dialog);
         ok.Click += (_, _) => dialog.DialogResult = true;
-        dialog.Loaded += (_, _) => box.Focus();
-        return dialog.ShowDialog() == true ? box.Text : null;
+        var noteBox = box;
+        dialog.Loaded += (_, _) => noteBox.Focus();
+        return dialog;
     }
 }

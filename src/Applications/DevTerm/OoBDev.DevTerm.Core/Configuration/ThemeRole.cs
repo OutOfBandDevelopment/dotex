@@ -1,12 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using OoBDev.DevTerm;
-
-namespace OoBDev.DevTerm.Configuration;
+﻿namespace OoBDev.DevTerm.Configuration;
 
 /// <summary>
 /// A semantic color role - what a color is <em>for</em>, not where it's drawn. Both front ends look

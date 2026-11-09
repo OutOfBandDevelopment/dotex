@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 
 namespace OoBDev.System.IO.Tcp;
@@ -22,7 +18,7 @@ namespace OoBDev.System.IO.Tcp;
 /// </summary>
 internal sealed class XonXoffFlowControlGate
 {
-    private readonly object _lock = new();
+    private readonly global::System.Threading.Lock _lock = new();
     private TaskCompletionSource? _pausedUntilXon;
     private bool _enabled;
 

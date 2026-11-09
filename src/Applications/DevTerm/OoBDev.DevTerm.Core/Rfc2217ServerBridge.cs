@@ -1,5 +1,4 @@
-using OoBDev.System.IO.Pipelines;
-using OoBDev.System.IO;
+﻿using OoBDev.System.IO;
 using OoBDev.System.IO.Tcp;
 using System;
 using System.Buffers;
@@ -86,7 +85,7 @@ public sealed class Rfc2217ServerBridge : ISessionObserver, IAsyncDisposable
 
     public async ValueTask DisposeAsync()
     {
-        await _stop.CancelAsync();
+        await _stop.CancelAsync().ConfigureAwait(false);
         _listener.Stop();
         try
         {

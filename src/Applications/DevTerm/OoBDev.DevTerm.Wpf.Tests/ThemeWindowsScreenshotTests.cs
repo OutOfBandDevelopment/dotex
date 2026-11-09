@@ -1,8 +1,7 @@
-using System.IO;
+﻿using System.IO;
 using DevTermApp;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.DevTerm.Configuration;
-using OoBDev.UiDefinitions.ViewModels;
 
 namespace OoBDev.DevTerm.Wpf.Tests;
 

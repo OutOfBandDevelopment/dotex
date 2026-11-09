@@ -1,10 +1,7 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using OoBDev.DevTerm;
 
 namespace OoBDev.DevTerm.Configuration;
 
@@ -49,7 +46,7 @@ public sealed class RetentionRule
         for (var i = 0; i < files.Count; i++)
         {
             var tooMany = MaxFiles is > 0 && i >= MaxFiles;
-            var tooOld = MaxAgeDays is > 0 && now - files[i].LastWriteTimeUtc > TimeSpan.FromDays(MaxAgeDays.Value);
+            var tooOld = MaxAgeDays is > 0 && now - new DateTimeOffset(files[i].LastWriteTimeUtc, TimeSpan.Zero) > TimeSpan.FromDays(MaxAgeDays.Value);
             if (!tooMany && !tooOld)
             {
                 continue;

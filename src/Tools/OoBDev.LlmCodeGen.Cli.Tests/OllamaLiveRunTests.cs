@@ -1,8 +1,7 @@
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using OoBDev.AI;
 using OoBDev.Ollama;
 using OoBDev.TestUtilities;
 using System;

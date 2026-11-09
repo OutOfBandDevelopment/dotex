@@ -1,10 +1,6 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using OoBDev.DevTerm;
 
 namespace OoBDev.DevTerm.Configuration;
 
@@ -16,7 +12,7 @@ namespace OoBDev.DevTerm.Configuration;
 /// </summary>
 public sealed class DevTermTheme
 {
-    private readonly IReadOnlyDictionary<ThemeRole, ThemeColor> _colors;
+    private readonly Dictionary<ThemeRole, ThemeColor> _colors;
 
     public DevTermTheme(string name, IReadOnlyDictionary<ThemeRole, ThemeColor> colors, ChartPaletteVariant chartPalette)
     {

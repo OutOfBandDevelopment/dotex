@@ -12,6 +12,7 @@ namespace OoBDev.UiDefinitions.ViewModels;
 public sealed class FormViewModel : ViewModelBase, IDisposable
 {
     private readonly FormBinding _binding;
+    private bool _notesExpanded = true;
 
     /// <summary>Builds the view models for <paramref name="definition"/>.</summary>
     /// <param name="definition">The form definition, typically from <see cref="FormDefinitionGenerator"/>.</param>
@@ -23,7 +24,7 @@ public sealed class FormViewModel : ViewModelBase, IDisposable
     {
         Definition = definition ?? throw new ArgumentNullException(nameof(definition));
         _binding = binding ?? throw new ArgumentNullException(nameof(binding));
-        Sections = [.. definition.Sections.Select(s => new FormSectionViewModel(s, [.. s.Controls.Select(c => ControlViewModelFactory.Create(c, binding, colorPicker, s.Controls, confirm, preview))]))];
+        Sections = [.. definition.Sections.Select(s => new FormSectionViewModel(s, [.. s.Controls.Select(c => ControlViewModelFactory.Create(c, binding, colorPicker, s.Controls, confirm, preview))], binding))];
         LinkColorPickers(definition);
         _binding.Changed += OnModelChanged;
     }
@@ -33,6 +34,13 @@ public sealed class FormViewModel : ViewModelBase, IDisposable
 
     /// <summary>The definition's description, which a view shows as a final collapsible "Notes" section, or null.</summary>
     public string? Notes => string.IsNullOrWhiteSpace(Definition.Description) ? null : Definition.Description;
+
+    /// <summary>Whether the Notes section is expanded (the view binds two-way; a host can seed and persist it).</summary>
+    public bool NotesExpanded
+    {
+        get => _notesExpanded;
+        set => SetProperty(ref _notesExpanded, value);
+    }
 
     /// <summary>Whether there are <see cref="Notes"/> to show.</summary>
     public bool HasNotes => Notes is not null;
@@ -52,6 +60,11 @@ public sealed class FormViewModel : ViewModelBase, IDisposable
         foreach (var row in Rows)
         {
             row.Refresh();
+        }
+
+        foreach (var section in Sections)
+        {
+            section.Refresh();
         }
 
         OnPropertyChanged(nameof(Sections));

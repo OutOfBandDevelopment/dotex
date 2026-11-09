@@ -1,13 +1,11 @@
-using System;
+﻿using System;
 using System.Buffers;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using DevTermApp;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using OoBDev.DevTerm;
 using OoBDev.DevTerm.Configuration;
-using OoBDev.DevTerm.Wpf;
 
 namespace OoBDev.DevTerm.Wpf.Tests;
 

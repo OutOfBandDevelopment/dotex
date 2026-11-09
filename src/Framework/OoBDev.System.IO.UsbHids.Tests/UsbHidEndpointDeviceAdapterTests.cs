@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -8,8 +8,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Buffers;
 using System.Diagnostics;
 using System.IO.Pipelines;
-using OoBDev.System.IO.Pipelines;
-using OoBDev.System.IO;
 using Microsoft.Extensions.Options;
 using Moq;
 using OoBDev.TestUtilities;

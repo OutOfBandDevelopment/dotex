@@ -1,5 +1,4 @@
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -128,17 +127,42 @@ public sealed class WindowsBleConnection : IBleConnection
         }
     }
 
-    public Task DisconnectAsync(CancellationToken cancellationToken = default)
+    public async Task DisconnectAsync(CancellationToken cancellationToken = default)
     {
+        await UnsubscribeAsync(cancellationToken).ConfigureAwait(false);
         Cleanup();
-        return Task.CompletedTask;
     }
 
-    public ValueTask DisposeAsync()
+    public async ValueTask DisposeAsync()
     {
+        await UnsubscribeAsync(CancellationToken.None).ConfigureAwait(false);
         Cleanup();
         GC.SuppressFinalize(this);
-        return ValueTask.CompletedTask;
+    }
+
+    /// <summary>
+    /// Turns the notification subscription off before the handles are released. A peripheral that accepts one central keeps its
+    /// link up while the subscription is still on, so without this it can stay "connected" for a long time after a disconnect and
+    /// refuse the next connection.
+    /// </summary>
+    private async Task UnsubscribeAsync(CancellationToken cancellationToken)
+    {
+        if (_notifyCharacteristic is null)
+        {
+            return;
+        }
+
+        try
+        {
+            await _notifyCharacteristic
+                .WriteClientCharacteristicConfigurationDescriptorAsync(GattClientCharacteristicConfigurationDescriptorValue.None)
+                .AsTask(cancellationToken)
+                .ConfigureAwait(false);
+        }
+        catch (Exception ex) when (ex is InvalidOperationException or ObjectDisposedException or IOException or global::System.Runtime.InteropServices.COMException)
+        {
+            // The link is already gone, which is the state this method is after.
+        }
     }
 
     private void OnValueChanged(GattCharacteristic sender, GattValueChangedEventArgs args) =>

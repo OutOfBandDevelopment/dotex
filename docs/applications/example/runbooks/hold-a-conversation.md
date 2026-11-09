@@ -26,7 +26,7 @@ Automatically: `npx playwright test e2e/journeys.spec.ts -g "Hold a conversation
 By hand, in the example web application at `/ai/ollama`:
 
 1. **Ask the first question.** Keep context between turns is on by default, so the model returns a context that the next request sends back. Expect: The model answer appears as a turn in the conversation.
-2. **Ask a follow-up.** The second request carries the context from the first, and the counter shows how much context is held. Expect: Both turns are listed. The context token counter is shown.
+2. **Ask a follow-up.** The second request carries the context from the first, and the counter shows how much context is held. Expect: Both exchanges are listed (a user and a model line each). The context token counter is shown.
 3. **Start a new conversation.** New conversation clears the turns and the stored context. Expect: The turn list is empty.
 
 ## Troubleshooting

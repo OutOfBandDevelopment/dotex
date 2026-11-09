@@ -1,6 +1,4 @@
-using System;
-
-namespace OoBDev.UiDefinitions.Forms;
+﻿namespace OoBDev.UiDefinitions.Forms;
 
 /// <summary>Which <see cref="UiControl"/> a generated form field becomes — the same vocabulary a device panel uses.</summary>
 public enum FormFieldKind

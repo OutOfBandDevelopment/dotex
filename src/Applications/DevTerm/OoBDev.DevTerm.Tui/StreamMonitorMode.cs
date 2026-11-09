@@ -1,8 +1,8 @@
+﻿using OoBDev.Documents.ExternalTools;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.ObjectModel;
@@ -12,6 +12,7 @@ using OoBDev.DevTerm.Configuration;
 using Terminal.Gui.App;
 using Terminal.Gui.ViewBase;
 using Terminal.Gui.Views;
+using OoBDev.UiDefinitions.Tui;
 namespace OoBDev.DevTerm.Tui;
 
 /// <summary>
@@ -35,7 +36,7 @@ internal static class StreamMonitorMode
         return $"Convert as: {choices[StreamConversionChoice.IndexOf(choices, options)].DisplayName}";
     }
 
-    internal static StreamMonitorWindowParts BuildWindow(IApplication app, StreamMonitor monitor, CliOptions? cliOptions = null, IEnumerable<StreamConvertToolOptions>? globalTools = null)
+    internal static StreamMonitorWindowParts BuildWindow(IApplication app, StreamMonitor monitor, CliOptions? cliOptions = null, IEnumerable<ExternalToolOptions>? globalTools = null)
     {
         ArgumentNullException.ThrowIfNull(app);
         ArgumentNullException.ThrowIfNull(monitor);

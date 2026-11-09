@@ -1,9 +1,4 @@
-﻿using OoBDev.System.ExpressionCalculator.Expressions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace OoBDev.System.ExpressionCalculator.Optimizers;
+﻿namespace OoBDev.System.ExpressionCalculator.Optimizers;
 
 /*
 	private static ExpressionBase replaceVariables(ExpressionBase expression, HashMap<String, BigDecimal> variables) {

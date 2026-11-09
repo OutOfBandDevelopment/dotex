@@ -33,3 +33,76 @@ public sealed class TelemetryExporterTests
         Assert.IsNotNull(exporter);
     }
 }
+
+[TestCategory("Unit")]
+[TestClass]
+public sealed class OtlpProtocolTests
+{
+    private const string Variable = "OTEL_EXPORTER_OTLP_PROTOCOL";
+
+    [TestMethod]
+    public void Apply_WithNoProtocolAndNoVariable_UsesHttpProtobuf()
+    {
+        // Stage
+        var saved = Environment.GetEnvironmentVariable(Variable);
+        Environment.SetEnvironmentVariable(Variable, null);
+        try
+        {
+            var exporter = new OpenTelemetry.Exporter.OtlpExporterOptions();
+
+            // Test
+            ServiceCollectionExtensions.Apply(exporter, new OpenTelemetryOptions(), "v1/traces");
+
+            // Assert
+            Assert.AreEqual(OpenTelemetry.Exporter.OtlpExportProtocol.HttpProtobuf, exporter.Protocol);
+        }
+        finally
+        {
+            Environment.SetEnvironmentVariable(Variable, saved);
+        }
+    }
+
+    [TestMethod]
+    public void Apply_WithNoProtocolAndGrpcVariable_KeepsGrpc()
+    {
+        // Stage
+        var saved = Environment.GetEnvironmentVariable(Variable);
+        Environment.SetEnvironmentVariable(Variable, "grpc");
+        try
+        {
+            var exporter = new OpenTelemetry.Exporter.OtlpExporterOptions();
+
+            // Test
+            ServiceCollectionExtensions.Apply(exporter, new OpenTelemetryOptions(), "v1/traces");
+
+            // Assert
+            Assert.AreEqual(OpenTelemetry.Exporter.OtlpExportProtocol.Grpc, exporter.Protocol);
+        }
+        finally
+        {
+            Environment.SetEnvironmentVariable(Variable, saved);
+        }
+    }
+
+    [TestMethod]
+    public void Apply_WithConfiguredProtocol_WinsOverTheVariable()
+    {
+        // Stage
+        var saved = Environment.GetEnvironmentVariable(Variable);
+        Environment.SetEnvironmentVariable(Variable, "grpc");
+        try
+        {
+            var exporter = new OpenTelemetry.Exporter.OtlpExporterOptions();
+
+            // Test
+            ServiceCollectionExtensions.Apply(exporter, new OpenTelemetryOptions { Protocol = "HttpProtobuf" }, "v1/traces");
+
+            // Assert
+            Assert.AreEqual(OpenTelemetry.Exporter.OtlpExportProtocol.HttpProtobuf, exporter.Protocol);
+        }
+        finally
+        {
+            Environment.SetEnvironmentVariable(Variable, saved);
+        }
+    }
+}

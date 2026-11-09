@@ -37,10 +37,10 @@ public sealed class ScpiTcpExecutor(string host, int port = 5025) : IDisposable
                 {
                     _adapter.OpenAsync().GetAwaiter().GetResult();
                 }
-                catch (IOException)
+                catch (IOException connectFailure)
                 {
                     _adapter.CloseAsync().GetAwaiter().GetResult();
-                    throw new IOException($"Cannot connect to {_adapter.Path}.");
+                    throw new IOException($"Cannot connect to {_adapter.Path}.", connectFailure);
                 }
 
                 _stream = _adapter.AsStream();

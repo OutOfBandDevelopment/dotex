@@ -40,7 +40,7 @@ public static class ServiceCollectionExtensions
                 {
                     o.Mode = cliOptions.Listen ? TcpEndpointMode.Listener : TcpEndpointMode.Client;
                     o.Host = cliOptions.Host;
-                    o.Port = int.TryParse(cliOptions.Port, out var tcpPort) ? tcpPort : 0;
+                    o.Port = int.TryParse(cliOptions.Port, global::System.Globalization.CultureInfo.InvariantCulture, out var tcpPort) ? tcpPort : 0;
                     o.WriteTimeoutMs = cliOptions.WriteTimeoutMs;
                     o.WriteByteDelayMs = cliOptions.WriteByteDelayMs;
                 });
@@ -96,7 +96,7 @@ public static class ServiceCollectionExtensions
                 services.Configure<Rfc2217ClientOptions>(o =>
                 {
                     o.Host = cliOptions.Host ?? string.Empty;
-                    o.Port = int.TryParse(cliOptions.Port, out var rfc2217Port) ? rfc2217Port : 0;
+                    o.Port = int.TryParse(cliOptions.Port, global::System.Globalization.CultureInfo.InvariantCulture, out var rfc2217Port) ? rfc2217Port : 0;
                     o.BaudRate = cliOptions.Baud;
                     o.DataBits = cliOptions.DataBits;
                     o.Parity = cliOptions.Parity;
@@ -112,7 +112,7 @@ public static class ServiceCollectionExtensions
                 services.Configure<Vxi11DeviceAdapterOptions>(o =>
                 {
                     o.Host = cliOptions.Host ?? string.Empty;
-                    o.Port = int.TryParse(cliOptions.Port, out var vxi11Port) ? vxi11Port : 0;
+                    o.Port = int.TryParse(cliOptions.Port, global::System.Globalization.CultureInfo.InvariantCulture, out var vxi11Port) ? vxi11Port : 0;
                     o.WriteTimeoutMs = cliOptions.WriteTimeoutMs;
                 });
                 break;
@@ -121,7 +121,7 @@ public static class ServiceCollectionExtensions
                 services.Configure<MqttDeviceAdapterOptions>(o =>
                 {
                     o.Host = cliOptions.Host ?? string.Empty;
-                    o.Port = int.TryParse(cliOptions.Port, out var mqttPort) ? mqttPort : 1883;
+                    o.Port = int.TryParse(cliOptions.Port, global::System.Globalization.CultureInfo.InvariantCulture, out var mqttPort) ? mqttPort : 1883;
                     o.SubscribeTopics = Topics(cliOptions.Subscribe);
                     o.PublishTopic = cliOptions.Publish;
                     o.Username = cliOptions.Username;
@@ -143,7 +143,7 @@ public static class ServiceCollectionExtensions
                 services.Configure<BrokerDeviceAdapterOptions>(o =>
                 {
                     o.Host = cliOptions.Host ?? string.Empty;
-                    o.Port = int.TryParse(cliOptions.Port, out var brokerPort) ? brokerPort : 0;
+                    o.Port = int.TryParse(cliOptions.Port, global::System.Globalization.CultureInfo.InvariantCulture, out var brokerPort) ? brokerPort : 0;
                     o.SubscribeTopics = Topics(cliOptions.Subscribe);
                     o.PublishTopic = cliOptions.Publish;
                     o.Username = cliOptions.Username;

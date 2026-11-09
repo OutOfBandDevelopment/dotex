@@ -87,7 +87,7 @@ public static class SvgPreview
         _ => null,
     };
 
-    private static Geometry? Poly(XElement e)
+    private static PathGeometry? Poly(XElement e)
     {
         var numbers = (e.Attribute("points")?.Value ?? string.Empty)
             .Split([' ', ',', '\t', '\n', '\r'], StringSplitOptions.RemoveEmptyEntries)

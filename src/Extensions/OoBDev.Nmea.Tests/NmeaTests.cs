@@ -72,6 +72,20 @@ public class NmeaTests
     }
 
     [TestMethod, TestCategory(TestCategories.Unit)]
+    public void Gga_WithoutGeoidFields_LeavesSeparationNull()
+    {
+        Assert.IsTrue(NmeaGga.TryParse(Decode("$GPGGA,123519,4807.038,N,01131.000,E,1,08,0.9,545.4,M"), out var gga));
+        Assert.IsNull(gga!.Value.GeoidSeparationMeters);
+    }
+
+    [TestMethod, TestCategory(TestCategories.Unit), TestCategory(TestCategories.BugRegression)]
+    public void Gga_TryParse_KeepsGeoidSeparation()
+    {
+        Assert.IsTrue(NmeaGga.TryParse(Decode(Gga), out var gga));
+        Assert.AreEqual(46.9, gga!.Value.GeoidSeparationMeters);
+    }
+
+    [TestMethod, TestCategory(TestCategories.Unit)]
     public void Gga_SouthWest_AreNegative()
     {
         Assert.IsTrue(NmeaGga.TryParse(Decode("$GPGGA,000000,3354.000,S,15112.000,W,0,00,,,"

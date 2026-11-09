@@ -1,11 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace OoBDev.System.IO.Ports;
+﻿namespace OoBDev.System.IO.Ports;
 
 /// <summary>
 /// Creates the <see cref="ISerialPort"/> a <see cref="SerialDeviceAdapter"/> opens. Indirection
@@ -14,9 +7,4 @@ namespace OoBDev.System.IO.Ports;
 public interface ISerialPortFactory
 {
     ISerialPort Create(SerialDeviceAdapterOptions options);
-}
-
-public sealed class SystemSerialPortFactory : ISerialPortFactory
-{
-    public ISerialPort Create(SerialDeviceAdapterOptions options) => new SystemSerialPort(options);
 }

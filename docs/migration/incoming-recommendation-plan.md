@@ -35,7 +35,7 @@ Tables: 1 Already in main, 2 Not in main, 3 Harvest recommendations, 4 Proposed 
 | ToolKit, ToolKit.Abstractions | `OoBDev.System` (BcdEx, ByteEx, Codecs, Collections, PathSegments) | Diff only |
 | Windows.Forms (ValidTextBox) | decision 22: `OoBDev.Extensions.Windows.Forms` | Confirm it exists; not found by this check, *verify* |
 
-Recommendation (**A**): run the `compare-incoming-codebase` diff for these once, record "identical" or the delta in `Incoming/CHECKLIST.md`, then delete the incoming copy. Option B: keep the copies until everything else is done (safer, but clutters the tree).
+Recommendation (**A**, chosen by the owner as D1; done 2026-11-06): diffed once, deltas were refactors only, and the incoming copies of the projects above (except Windows.Forms) were deleted. Option B: keep the copies until everything else is done (safer, but clutters the tree).
 
 ## 2. Not in main: BinaryDataDecoders
 
@@ -65,7 +65,7 @@ Hardware devices: the code is byte-identical between the original repository and
 
 ## 3. ContractParser and Tools
 
-- **ContractParser** (`Incoming/ContractParser/examples`): two ANTLR grammars (`ServiceContract.g4`, 66 lines; `_v2.g4`, 45 lines) and five sample contracts; no parser code. Decided 2026-10-09 to keep as a specification. Recommendation: move the folder to `docs/design/ContractParser/` as reference material so `Incoming/` empties out.
+- **ContractParser** (`docs/design/ContractParser/examples` (moved there 2026-11-06, D5)): two ANTLR grammars (`ServiceContract.g4`, 66 lines; `_v2.g4`, 45 lines) and five sample contracts; no parser code. Decided 2026-10-09 to keep as a specification. Recommendation: move the folder to `docs/design/ContractParser/` as reference material so `Incoming/` empties out.
 - **Tools / OoBDev.De5000.Ble.Cli**: 75-line `Program.cs` bridging a DE-5000 LCR meter over a serial BLE link; its own readme says it "needs improved". dev-term has `Devices.De5000`.
 
 ## 4. Harvest candidates
@@ -123,4 +123,4 @@ Every migration follows the usual rules (net10.0, nullable, README per project, 
 | D6 | CLI tools and De5000 | **A** migrate PackMan, Xslt, Net.ServiceHost; drop IO.Controller.Cli and De5000 (dev-term has both); **B** migrate all; **C** reject all | **A**: dev-term covers the device ones |
 | D7 | Harvest items marked defer | **A** add to `BACKLOG.md` as evaluate-later; **B** drop | **A**: costs nothing |
 
-Default until you answer: nothing migrates; only the BACKLOG additions in D7 are made.
+**Owner answers (2026-11-05, interview):** D1 A, D2 A, D3 A, D4 A, D5 A, D6 A, D7 A (the recommendations). **2026-11-09, interview:** D8 A (libraries and emulators only) and D9 A (add Vigenère; compare with main's copy and keep the best-covered one). Every decision is answered; migration of each item follows the table above. Owner, 2026-11-09: copies of code inside this repository (for example `Incoming/BinaryDecoders`) may be deleted once migrated; code left in older repositories stays there for history.

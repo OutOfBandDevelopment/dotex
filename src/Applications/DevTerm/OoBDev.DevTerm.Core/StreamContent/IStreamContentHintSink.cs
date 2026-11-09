@@ -1,9 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-namespace OoBDev.DevTerm;
+﻿namespace OoBDev.DevTerm;
 
 /// <summary>
 /// Something in a session's presenter pipeline that wants to know, ahead of time, what the next

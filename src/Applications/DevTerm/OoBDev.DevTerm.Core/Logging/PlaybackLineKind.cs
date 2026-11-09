@@ -1,14 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using OoBDev.DevTerm;
-
-namespace OoBDev.DevTerm.Logging;
+﻿namespace OoBDev.DevTerm.Logging;
 
 /// <summary>What a playback line shows — the front ends style by it (WPF colors, the TUI's text tags).</summary>
 public enum PlaybackLineKind

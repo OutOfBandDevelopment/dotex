@@ -1,16 +1,14 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
 using OoBDev.DevTerm.DeviceManifests;
 using OoBDev.DevTerm.DeviceManifests.Editing;
 using Terminal.Gui.App;
 using Terminal.Gui.ViewBase;
 using Terminal.Gui.Views;
+using OoBDev.UiDefinitions.Tui;
 namespace OoBDev.DevTerm.Tui.Tests;
 
 /// <summary>

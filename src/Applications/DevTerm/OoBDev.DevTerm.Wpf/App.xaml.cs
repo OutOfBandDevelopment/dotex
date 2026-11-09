@@ -1,12 +1,10 @@
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
 using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using OoBDev.UiDefinitions.ViewModels;
 using OoBDev.DevTerm.Wpf;
 using OoBDev.Scpi;
-using UiDefinitionsWpf;
 
 namespace DevTermApp;
 

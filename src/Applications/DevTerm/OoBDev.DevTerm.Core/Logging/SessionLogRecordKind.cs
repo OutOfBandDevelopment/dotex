@@ -1,12 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using OoBDev.DevTerm;
-
-namespace OoBDev.DevTerm.Logging;
+﻿namespace OoBDev.DevTerm.Logging;
 
 /// <summary>What a <see cref="SessionLogRecord"/> describes — its <c>"type"</c> in the file. See docs/design/SessionLogging/session-logging.md.</summary>
 public enum SessionLogRecordKind

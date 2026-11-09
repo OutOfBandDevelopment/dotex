@@ -27,6 +27,7 @@ By hand, in the example web application at `/content/documents`:
 
 1. **Choose a file.** Pick the file to work with; every action below uses it. Expect: The Convert button is enabled once a file is chosen.
 2. **Convert it.** Choose the target type and convert. The converted text appears below. Expect: The converted text appears in the result panel.
+3. **See what is stored.** The Stored documents list shows every document in the store; choosing a name fills the Name in store box. Expect: The stored document is listed.
 
 ## Troubleshooting
 

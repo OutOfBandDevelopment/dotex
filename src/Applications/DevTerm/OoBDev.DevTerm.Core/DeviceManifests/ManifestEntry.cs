@@ -1,12 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using OoBDev.DevTerm;
-
-namespace OoBDev.DevTerm.DeviceManifests;
+﻿namespace OoBDev.DevTerm.DeviceManifests;
 
 /// <summary>One manifest found on disk by <see cref="ManifestCatalog.Discover"/>.</summary>
 /// <param name="Name">The manifest's own <see cref="DeviceManifest.Name"/> when it loads, else its file/folder name.</param>

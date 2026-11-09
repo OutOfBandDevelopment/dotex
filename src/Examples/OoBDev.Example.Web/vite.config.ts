@@ -11,7 +11,7 @@ export default defineConfig({
     // The browser's Host header is kept so the OpenAPI documents name the site's own origin; otherwise Scalar sends its
     // requests straight to the API's port, which is another origin, and the browser blocks them.
     proxy: Object.fromEntries(
-      ['/api', '/Document', '/Search', '/openapi', '/scalar', '/asyncapi', '/cgi-bin'].map(path => [path, { target: api, changeOrigin: false }]),
+      ['/api', '/Document', '/Search', '/openapi', '/scalar', '/asyncapi', '/cgi-bin', '/webhooks'].map(path => [path, { target: api, changeOrigin: false }]),
     ),
   },
   test: { environment: 'node', include: ['src/**/*.test.ts'] },

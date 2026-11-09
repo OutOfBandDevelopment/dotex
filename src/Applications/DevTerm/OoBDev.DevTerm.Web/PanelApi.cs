@@ -1,18 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net.Http;
-using System.Threading;
+﻿using System;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 namespace OoBDev.DevTerm.Web;
 
 internal static class PanelApi
@@ -31,7 +19,7 @@ internal static class PanelApi
 
         try
         {
-            await surface.InvokeAsync(request.CommandId, request.Value, context.RequestAborted);
+            await surface.InvokeAsync(request.CommandId, request.Value, context.RequestAborted).ConfigureAwait(false);
             return Results.Ok(new { ok = true });
         }
         catch (Exception ex) when (ex is not OperationCanceledException)

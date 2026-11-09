@@ -16,7 +16,7 @@ should pre-fill what was learned.
   service/port, a kind (`lxi`, `usr-tcp232`, `ebyte-e810`, `rfc2217`, `mqtt`, `unknown`), a display name, and a
   suggested transport + values (host, port, baud, profile/device manifest).
 - Probes: the existing LXI one (VXI-11 + raw SCPI `*IDN?`); **mDNS/DNS-SD** (`_scpi-raw._tcp`, `_lxi._tcp`,
-  `_http._tcp`, `_telnet._tcp`, ...); **SSDP**; the **EByte UDP broadcast** (port 1901, see
+  `_http._tcp`, `_telnet._tcp`, and the Ser2NetWin bridge types `_ser2net._tcp` and `_zwave._tcp`, kind `serial-bridge`, picked as a TCP connection); **SSDP**; the **EByte UDP broadcast** (port 1901, see
   [ebyte-e810-dtu-config-protocol.md](../../protocols/ebyte-e810-dtu-config-protocol.md)); the **USR search broadcast** (the vendor
   tool's UDP "search" packet, to be confirmed against a capture); and an optional TCP port sweep of a chosen subnet
   (off by default: slow and noisy).

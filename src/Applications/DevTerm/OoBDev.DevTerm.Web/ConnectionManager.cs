@@ -1,21 +1,11 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using System.Collections.Concurrent;
 using OoBDev.DevTerm.Configuration;
-using OoBDev.DevTerm;
 namespace OoBDev.DevTerm.Web;
 
 public sealed class ConnectionManager
@@ -23,8 +13,8 @@ public sealed class ConnectionManager
     private readonly string? _projectPath;
     private readonly ConnectionProfileStore? _store;
     private readonly int _backlogLines;
-    private readonly ConcurrentDictionary<string, (string Name, SessionHub Hub, SessionHttpControlServer? Control, IDisposable? Registration)> _open = new();
-    private readonly object _projectLock = new();
+    private readonly ConcurrentDictionary<string, (string Name, SessionHub Hub, SessionHttpControlServer? Control, IDisposable? Registration)> _open = new(StringComparer.Ordinal);
+    private readonly global::System.Threading.Lock _projectLock = new();
 
     /// <param name="store">The saved-profile store the TUI and WPF use; the connection set when there is no <paramref name="projectPath"/>.</param>
     public ConnectionManager(string? projectPath, int backlogLines, HostEvents events, ConnectionProfileStore? store = null)
@@ -319,17 +309,17 @@ public sealed class ConnectionManager
                 registration = connection.Session.AddObserver(control);
             }
 
-            await connection.StartAsync(cancellationToken);
+            await connection.StartAsync(cancellationToken).ConfigureAwait(false);
         }
         catch
         {
             registration?.Dispose();
             if (control is not null)
             {
-                await control.DisposeAsync();
+                await control.DisposeAsync().ConfigureAwait(false);
             }
 
-            await connection.DisposeAsync();
+            await connection.DisposeAsync().ConfigureAwait(false);
             throw;
         }
 
@@ -351,11 +341,11 @@ public sealed class ConnectionManager
         removed.Registration?.Dispose();
         if (removed.Control is not null)
         {
-            await removed.Control.DisposeAsync();
+            await removed.Control.DisposeAsync().ConfigureAwait(false);
         }
 
         ConnectionClosed?.Invoke(id);
-        await removed.Hub.DisposeAsync();
+        await removed.Hub.DisposeAsync().ConfigureAwait(false);
         Events.Publish("connection-closed", new { id });
         return true;
     }
@@ -364,7 +354,7 @@ public sealed class ConnectionManager
     {
         foreach (var id in _open.Keys.ToArray())
         {
-            await CloseAsync(id);
+            await CloseAsync(id).ConfigureAwait(false);
         }
     }
 }

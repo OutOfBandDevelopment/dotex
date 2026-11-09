@@ -23,13 +23,15 @@ public sealed class SessionViewModel : ViewModelBase, IAsyncDisposable
     private bool _echoSent;
     private readonly ISessionLogDialog? _logDialog;
     private SessionLogger? _logger;
+    private readonly TimeProvider _time;
 
     /// <summary>Creates the view model over <paramref name="session"/> and listens to its output.</summary>
     /// <param name="session">The session; the view model owns it.</param>
     /// <param name="title">The tab title.</param>
     /// <param name="tab">The per-connection state (options, routing), or null when the session was not built from options.</param>
     /// <param name="logDialog">Asks for the log file and log notes; null logs to the default path and adds no notes.</param>
-    public SessionViewModel(Session session, string title, SessionTab? tab = null, ISessionLogDialog? logDialog = null)
+    /// <param name="timeProvider">The clock for default log names; null uses the system clock.</param>
+    public SessionViewModel(Session session, string title, SessionTab? tab = null, ISessionLogDialog? logDialog = null, TimeProvider? timeProvider = null)
     {
         ArgumentNullException.ThrowIfNull(session);
         ArgumentException.ThrowIfNullOrWhiteSpace(title);
@@ -37,6 +39,7 @@ public sealed class SessionViewModel : ViewModelBase, IAsyncDisposable
         Title = title;
         Tab = tab;
         _logDialog = logDialog;
+        _time = timeProvider ?? TimeProvider.System;
         Connect = new ConnectSessionCommand(this);
         Disconnect = new DisconnectSessionCommand(this);
         Send = new SendTextCommand(this);
@@ -140,7 +143,7 @@ public sealed class SessionViewModel : ViewModelBase, IAsyncDisposable
         {
             try
             {
-                var path = SessionLogging.DefaultLogPath(tab.CliOptions, null, DateTimeOffset.Now);
+                var path = SessionLogging.DefaultLogPath(tab.CliOptions, null, _time.GetLocalNow());
                 if (_logDialog is not null)
                 {
                     if (_logDialog.PickLogPath(path) is not { Length: > 0 } chosen)

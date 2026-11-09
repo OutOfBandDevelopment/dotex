@@ -17,10 +17,8 @@ Review of the example web app (`src/Examples/OoBDev.Example.Web`) and API agains
 
 | Screen | Framework projects | What the screen would show | Needs |
 | --- | --- | --- | --- |
-| Search (lexical, hybrid, semantic) | `OoBDev.Search`, vector store providers | One query across the three modes, results side by side | `SearchController` is commented out; restore it |
-| Template management | `OoBDev.TextTemplating`, Handlebars | List, edit, save and preview templates | `Query` and `Save` endpoints are commented out |
+| Template management | `OoBDev.TextTemplating`, Handlebars | List, edit, save and preview templates | List, open and preview built 2026-11-09; save waits for OPEN-QUESTIONS Q2 |
 | Identity management | `OoBDev.Identity`, `OoBDev.Identity.Jws`, Keycloak | User lookup, rights, sessions | Keycloak admin scope; the host runs the API anonymously today |
-| Queue adapters and blob browser | RabbitMQ, SQS, Service Bus, Storage queues, Azure Storage containers | Provider status, receive monitor, container browser | Queue receive endpoint, blob list endpoint (Azurite and Moto exist in the test stack) |
 | Data access and DacPac builder | `OoBDev.Data.Common`, MongoDB, `OoBDev.DacFx` | Read-only query runner, dacpac build and diff | Read-only guard design |
 | Semantic Kernel plug-in tester | `OoBDev.SemanticKernel` | Plug-in list and invoke | Controller |
 | Vector store browser | Qdrant, OpenSearch, SQL store | Collection list, upsert, query | Collection listing on the vector store interface |
@@ -37,7 +35,6 @@ These have no row in `future-example.md` or `screens.md`; whether each deserves 
 | Area | Projects | Possible screen |
 | --- | --- | --- |
 | Query over HTTP | `OoBDev.AspNetCore.OData` (`[OoBDevEnableQuery]`, `QUERY` verb) | Query builder against an `IQueryable` endpoint; needs one in the example API |
-| CGI hosting | `OoBDev.AspNetCore.Cgi` (+ OpenApi; referenced by the example API) | Script list, run a script, see the OpenAPI it produced |
 | Complex events | `OoBDev.ComplexEvents` (+ DatabaseExtensions, EntityFrameworkCore) | Event stream and rule viewer |
 | Spatial and geocoding | `OoBDev.SpatialServices`, `OoBDev.Census.Geocoding` | Address to coordinates, distance between points |
 | Data loading | `OoBDev.DataLoader` | Load a file into a table with a preview of the mapping |
@@ -60,9 +57,9 @@ These have no row in `future-example.md` or `screens.md`; whether each deserves 
 
 ## Recommended order
 
-1. Search, because the controller and the vector store pieces already exist and it completes the retrieval story (Search, RAG, Vector store).
-2. Template management, which finishes a partly built screen.
-3. Queue adapters and blob browser, reusing the Azurite and Moto stack.
+1. ~~Search~~ (built 2026-11-09 as `/ai/search`).
+2. ~~Template management~~ (list, open and preview built 2026-11-09; save waits for Q2).
+3. ~~Queue adapters and blob browser~~ (channel list and received monitor on the Queues screen, stored-documents list on the Documents screen, built 2026-11-09).
 4. Rights and roles, then Identity management, because they show the authorization model that every other API surface relies on.
 5. Server-driven UI, since it is the framework's own UI contract.
 6. The rest as the owner prioritizes; instrument protocols stay deferred.

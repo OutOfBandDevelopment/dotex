@@ -1,9 +1,6 @@
-using OoBDev.System.IO.Pipelines;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.IO;
 using System.IO.Ports;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;

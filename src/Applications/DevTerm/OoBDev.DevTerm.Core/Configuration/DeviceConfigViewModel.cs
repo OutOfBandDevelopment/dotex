@@ -1,11 +1,9 @@
-using OoBDev.System.IO.Devices;
+﻿using OoBDev.System.IO.Devices;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using OoBDev.DevTerm;
 using OoBDev.UiDefinitions;
 
 namespace OoBDev.DevTerm.Configuration;
@@ -43,7 +41,7 @@ public sealed class DeviceConfigViewModel(IReadOnlyList<IDeviceConfigEditor> edi
     public IReadOnlyList<UiControl> Fields =>
         Editor is null ? [] : [.. Editor.BuildDefinition().Sections.SelectMany(section => section.Controls).Where(control => control is not ButtonControl)];
 
-    public DeviceConfigTarget Target => new(Host.Trim(), int.TryParse(Port, out var port) ? port : 0);
+    public DeviceConfigTarget Target => new(Host.Trim(), int.TryParse(Port, global::System.Globalization.CultureInfo.InvariantCulture, out var port) ? port : 0);
 
     public string Value(string fieldId) => Session?.Values.GetValueOrDefault(fieldId) ?? string.Empty;
 

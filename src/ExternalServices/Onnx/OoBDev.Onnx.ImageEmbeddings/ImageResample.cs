@@ -1,6 +1,4 @@
-using System;
-
-namespace OoBDev.Onnx.ImageEmbeddings;
+﻿namespace OoBDev.Onnx.ImageEmbeddings;
 
 /// <summary>Resampling filter, numbered like Pillow's <c>Image.Resampling</c>.</summary>
 public enum ImageResample

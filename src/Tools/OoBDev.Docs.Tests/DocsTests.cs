@@ -27,7 +27,7 @@ public class DocsTests
 
     private IReadOnlyList<MarkdownDocument> Documents(string root)
     {
-        var configured = TestContext.GetPropertyOrDefault("DOCS_VALIDATE_PATHS", "docs/patterns-discovery;docs/applications");
+        var configured = TestContext.GetPropertyOrDefault("DOCS_VALIDATE_PATHS", "docs/patterns-discovery;docs/applications;docs/design");
         return [.. configured
             .Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
             .SelectMany(p => MarkdownDocument.Find(root, p))
@@ -61,6 +61,14 @@ public class DocsTests
     {
         var root = RepoRoot();
         AssertNoProblems(Documents(root).SelectMany(d => DocsValidator.CheckPlantUml(root, d)));
+    }
+
+    [TestMethod]
+    [TestCategory(TestCategories.Unit)]
+    public void Diagrams_AreNotAsciiArt()
+    {
+        var root = RepoRoot();
+        AssertNoProblems(Documents(root).SelectMany(d => DocsValidator.CheckNoAsciiDiagrams(root, d)));
     }
 
     [TestMethod]

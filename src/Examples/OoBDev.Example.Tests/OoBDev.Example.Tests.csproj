@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
@@ -30,6 +30,8 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Framework\OoBDev.TestUtilities\OoBDev.TestUtilities.csproj" />
     <ProjectReference Include="..\..\Common\OoBDev.Common.Complete\OoBDev.Common.Complete.csproj" />
+    <ProjectReference Include="..\..\Framework\OoBDev.Documents.Guides\OoBDev.Documents.Guides.csproj" />
+    <ProjectReference Include="..\OoBDev.Example.WebApi\OoBDev.Example.WebApi.csproj" ReferenceOutputAssembly="false" />
   </ItemGroup>
   
 </Project>

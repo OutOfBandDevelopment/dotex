@@ -1,13 +1,9 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text.Json;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using OoBDev.DevTerm;
 
 namespace OoBDev.DevTerm.Configuration;
 
@@ -20,6 +16,8 @@ namespace OoBDev.DevTerm.Configuration;
 /// </summary>
 public static class DevTermConfiguration
 {
+    private static readonly JsonSerializerOptions ProfileJson = new() { WriteIndented = true, Converters = { new global::System.Text.Json.Serialization.JsonStringEnumConverter() } };
+
     /// <summary>Environment variables are only read with this prefix (stripped when bound), e.g. <c>DEVTERM_PORT=COM3</c>.</summary>
     public const string EnvironmentVariablePrefix = "DEVTERM_";
 
@@ -138,7 +136,7 @@ public static class DevTermConfiguration
     /// </summary>
     public static string ToProfileJson(CliOptions options)
     {
-        var profile = new Dictionary<string, object?>
+        var profile = new Dictionary<string, object?>(StringComparer.Ordinal)
         {
             [nameof(CliOptions.Transport)] = options.Transport,
             [nameof(CliOptions.Presenter)] = options.EffectivePresenters,
@@ -353,6 +351,6 @@ public static class DevTermConfiguration
             profile[nameof(CliOptions.Routing)] = options.Routing;
         }
 
-        return JsonSerializer.Serialize(profile, new JsonSerializerOptions { WriteIndented = true, Converters = { new global::System.Text.Json.Serialization.JsonStringEnumConverter() } });
+        return JsonSerializer.Serialize(profile, ProfileJson);
     }
 }

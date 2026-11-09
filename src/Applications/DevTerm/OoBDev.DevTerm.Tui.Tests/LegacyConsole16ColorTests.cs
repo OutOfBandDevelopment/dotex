@@ -1,11 +1,5 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
-using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
 using OoBDev.DevTerm.Configuration;
 using TgColor = Terminal.Gui.Drawing.Color;
 namespace OoBDev.DevTerm.Tui.Tests;

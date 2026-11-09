@@ -50,16 +50,4 @@ public class OllamaMessageCompletionTests
         Assert.IsFalse(string.IsNullOrWhiteSpace(response));
     }
 
-    [TestCategory(TestCategories.DevLocal)]
-    [TestMethod]
-    [DataRow("http://127.0.0.1:11434", "phi", "Hello World!")]
-    public async Task IMessageCompletion_GetCompletionAsyncTest_DevLocal(string hostName, string model, string prompt)
-    {
-        var client = Build<IMessageCompletion>(hostName, model);
-        var embedding = await client.GetCompletionAsync(model, prompt);
-        TestContext.WriteLine(embedding);
-
-        Assert.IsFalse(string.IsNullOrWhiteSpace(embedding));
-    }
-
 }

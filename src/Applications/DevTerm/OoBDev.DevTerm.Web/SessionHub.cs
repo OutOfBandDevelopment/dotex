@@ -1,21 +1,10 @@
-using OoBDev.System.IO;
+﻿using OoBDev.System.IO;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using OoBDev.DevTerm.Configuration;
-using OoBDev.DevTerm;
 using OoBDev.DevTerm.Logging;
 namespace OoBDev.DevTerm.Web;
 
@@ -31,14 +20,17 @@ public sealed class SessionHub : IAsyncDisposable
     private string _parser;
     private readonly int _backlogLimit;
     private readonly SemaphoreSlim _sendLock = new(1, 1);
-    private readonly object _gate = new();
+    private readonly global::System.Threading.Lock _gate = new();
     private readonly Queue<string> _backlog = new();
 
     /// <summary>The options the current session was built from (they change on a profile switch).</summary>
     public CliOptions Options => _options;
 
-    public SessionHub(Session session, PresenterCatalog catalog, CliOptions options, int backlogLines)
+    private readonly TimeProvider _time;
+
+    public SessionHub(Session session, PresenterCatalog catalog, CliOptions options, int backlogLines, TimeProvider? timeProvider = null)
     {
+        _time = timeProvider ?? TimeProvider.System;
         _backlogLimit = Math.Max(1, backlogLines);
         _session = session;
         _options = options;
@@ -205,7 +197,7 @@ public sealed class SessionHub : IAsyncDisposable
     public string StartLogging(string? path = null)
     {
         StopLogging();
-        var target = path ?? SessionLogging.DefaultLogPath(_options, ProfileName, DateTimeOffset.Now);
+        var target = path ?? SessionLogging.DefaultLogPath(_options, ProfileName, _time.GetLocalNow());
         Directory.CreateDirectory(Path.GetDirectoryName(target)!);
         _logger = SessionLogging.Start(target, _session, _options, _parser, ProfileName, "web");
         Publish($"Logging to {SessionLogging.DisplayPath(_logger.Path!)}.");

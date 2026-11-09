@@ -151,6 +151,10 @@ public class StreamDevice<TMessage> : IStreamDevice<TMessage>
                 _tokenSource.Cancel(true);
                 await ReportDeviceStatus(StreamDeviceStatus.Received).ConfigureAwait(false);
             }
+            catch (OperationCanceledException) when (_token.IsCancellationRequested)
+            {
+                return;
+            }
             catch (Exception ex)
             {
                 var eventArg = new DeviceErrorEventArgs(exception: ex, errorHandling: ErrorHandling.Throw);
@@ -196,6 +200,10 @@ public class StreamDevice<TMessage> : IStreamDevice<TMessage>
                     var requestBuffer = encoder.Encode(ref item);
                     await _adapter.Output.WriteAsync(requestBuffer, _token).ConfigureAwait(false);
                     await ReportDeviceStatus(StreamDeviceStatus.Transmitted).ConfigureAwait(false);
+                }
+                catch (OperationCanceledException) when (_token.IsCancellationRequested)
+                {
+                    return;
                 }
                 catch (Exception ex)
                 {

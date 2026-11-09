@@ -4,7 +4,7 @@
 [↑ 03 — Practices and Conventions](./README.md) · [← Observability Practices (Metrics, Tracing and Health Checks)](./13-observability-practices.md) · [AI, Vector and RAG Practices →](./15-ai-vector-rag-practices.md)
 <!-- nav -->
 
-Current state, from a search of `src`: there is no shared retry, timeout or circuit breaker code. Background hosts poll with fixed `Task.Delay` values, several marked `TODO: this should be configurable` (`MessageReceiverHost` 10 s, `InProcessMessageProvider` 1 s, `EmailMessageReceiverHost`, `EmbeddingSentenceTransformerQueueReaderHost`), and `TestContextExtensions` retries a file write with exponential backoff. The owner decision is to **avoid Polly** because of its license change; `Microsoft.Extensions.Resilience` must be checked first because it builds on Polly ([alternatives](../05-industry-alternatives/14-resilience.md)).
+Current state, from a search of `src`: there is no shared retry, timeout or circuit breaker code. Background hosts poll with fixed `Task.Delay` values, several marked `TODO: this should be configurable` (`MessageReceiverHost` 10 s, `InProcessMessageProvider` 1 s, `EmbeddingSentenceTransformerQueueReaderHost`), and `TestContextExtensions` retries a file write with exponential backoff. The owner decision is to **avoid Polly** because of its license change; `Microsoft.Extensions.Resilience` must be checked first because it builds on Polly ([alternatives](../05-industry-alternatives/14-resilience.md)).
 
 ## Rules
 

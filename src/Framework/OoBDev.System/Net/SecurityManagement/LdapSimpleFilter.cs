@@ -83,4 +83,19 @@ public record LdapSimpleFilter : ILdapFilter
     /// Gets the unescaped suffix appended to the value (used for wildcard patterns).
     /// </summary>
     internal string? UnEscapedSuffix { get; }
+
+    /// <summary>LDAP attribute names and values compare case-insensitively.</summary>
+    public virtual bool Equals(LdapSimpleFilter? other) =>
+        other is not null
+        && string.Equals(AttributeName, other.AttributeName, StringComparison.OrdinalIgnoreCase)
+        && Operation == other.Operation
+        && string.Equals(Value ?? "", other.Value ?? "", StringComparison.OrdinalIgnoreCase)
+        && string.Equals(UnEscapedSuffix ?? "", other.UnEscapedSuffix ?? "", StringComparison.OrdinalIgnoreCase);
+
+    /// <inheritdoc />
+    public override int GetHashCode() => HashCode.Combine(
+        AttributeName.ToUpperInvariant(),
+        Operation,
+        (Value ?? "").ToUpperInvariant(),
+        (UnEscapedSuffix ?? "").ToUpperInvariant());
 }

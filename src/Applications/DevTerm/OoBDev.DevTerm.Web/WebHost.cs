@@ -1,4 +1,4 @@
-using OoBDev.DevTerm.Devices;
+﻿using OoBDev.DevTerm.Devices;
 using OoBDev.System.IO.Devices;
 using OoBDev.System.IO;
 using OoBDev.System.IO.Pipelines;
@@ -6,23 +6,16 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using System.Security.Cryptography.X509Certificates;
 using OoBDev.DevTerm.Configuration;
 using OoBDev.DevTerm.Configuration.Discovery;
-using OoBDev.DevTerm;
 using OoBDev.UiDefinitions;
-using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Scalar.AspNetCore;
 namespace OoBDev.DevTerm.Web;
 
@@ -115,7 +108,7 @@ public static class WebHost
                 return Results.StatusCode(StatusCodes.Status403Forbidden);
             }
 
-            await hub.StartAsync(context.RequestAborted);
+            await hub.StartAsync(context.RequestAborted).ConfigureAwait(false);
             return Results.Json(new { state = hub.State.ToString() });
         }).WithSummary("Connect the host's own session (a no-op when open or when no connection is configured); 403 read-only");
         app.MapPost("/api/session/profile", async (HttpContext context, string name) =>
@@ -133,7 +126,7 @@ public static class WebHost
 
             try
             {
-                await hub.SwitchAsync(options, name);
+                await hub.SwitchAsync(options, name).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -149,7 +142,7 @@ public static class WebHost
                 return Results.StatusCode(StatusCodes.Status403Forbidden);
             }
 
-            await hub.DisconnectAsync();
+            await hub.DisconnectAsync().ConfigureAwait(false);
             return Results.Json(new { state = hub.State.ToString() });
         }).WithSummary("Disconnect the host's own session; a send while closed is refused until Connect. 403 read-only");
         app.MapGet("/api/status", (HttpContext context) => Results.Json(new { configured = hub.Configured, profile = hub.ProfileName, state = hub.State.ToString(), connection = hub.Description, readOnly = context.Items.ContainsKey(AccessTokenMiddleware.ReadOnlyItem) })).WithSummary("State and description of the shared session");
@@ -266,14 +259,14 @@ public static class WebHost
         {
             context.Response.ContentType = "text/event-stream";
             context.Response.Headers.CacheControl = "no-cache";
-            await context.Response.WriteAsync(": connected\n\n", context.RequestAborted);
-            await context.Response.Body.FlushAsync(context.RequestAborted);
+            await context.Response.WriteAsync(": connected\n\n", context.RequestAborted).ConfigureAwait(false);
+            await context.Response.Body.FlushAsync(context.RequestAborted).ConfigureAwait(false);
             try
             {
                 await foreach (var frame in events.SubscribeAsync(context.RequestAborted))
                 {
-                    await context.Response.WriteAsync(frame, context.RequestAborted);
-                    await context.Response.Body.FlushAsync(context.RequestAborted);
+                    await context.Response.WriteAsync(frame, context.RequestAborted).ConfigureAwait(false);
+                    await context.Response.Body.FlushAsync(context.RequestAborted).ConfigureAwait(false);
                 }
             }
             catch (OperationCanceledException)
@@ -288,7 +281,7 @@ public static class WebHost
         app.MapGet("/api/discover", async (HttpContext context, int? seconds) =>
         {
             var listenFor = TimeSpan.FromSeconds(Math.Clamp(seconds ?? 3, 1, 10));
-            var hits = await NetworkDiscovery.CreateDefault().DiscoverAsync(listenFor, context.RequestAborted);
+            var hits = await NetworkDiscovery.CreateDefault().DiscoverAsync(listenFor, context.RequestAborted).ConfigureAwait(false);
             return Results.Json(hits.Select(h => new { address = h.Address, port = h.Port, transport = h.Transport, kind = h.Kind, name = h.DisplayName, source = h.Source, hostname = h.Hostname }));
         }).WithSummary("Network devices found by the LXI, mDNS and SSDP probes (?seconds=1..10, default 3)");
 
@@ -364,7 +357,7 @@ public static class WebHost
                 return Results.StatusCode(StatusCodes.Status403Forbidden);
             }
 
-            await connections.CloseAsync(id);
+            await connections.CloseAsync(id).ConfigureAwait(false);
             return Results.NoContent();
         }).WithSummary("Close an opened connection; 204 whether or not it was open, 403 read-only");
         app.Map("/ws/{id}", (HttpContext context, string id) => connections.TryGet(id, out var found) ? WebSocketTunnel.HandleAsync(context, found) : Task.FromResult(context.Response.StatusCode = StatusCodes.Status404NotFound));

@@ -1,10 +1,7 @@
-using OoBDev.System.IO.Pipelines;
-using OoBDev.System.IO;
+﻿using OoBDev.System.IO.Pipelines;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.IO.Pipelines;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
@@ -308,15 +305,15 @@ public sealed class Rfc2217ClientDeviceAdapter : IDeviceAdapter, IComPortControl
                 await _telnetStream.WriteAsync(data, linkedCts.Token).ConfigureAwait(false);
             }
         }
-        catch (OperationCanceledException) when (timeoutCts.IsCancellationRequested && !cancellationToken.IsCancellationRequested)
+        catch (OperationCanceledException canceled) when (timeoutCts.IsCancellationRequested && !cancellationToken.IsCancellationRequested)
         {
-            throw new TimeoutException($"Writing to the RFC 2217 connection timed out after {_options.Value.WriteTimeoutMs} ms.");
+            throw new TimeoutException($"Writing to the RFC 2217 connection timed out after {_options.Value.WriteTimeoutMs} ms.", canceled);
         }
     }
 
     public async ValueTask DisposeAsync()
     {
-        await CloseAsync();
+        await CloseAsync().ConfigureAwait(false);
         GC.SuppressFinalize(this);
     }
 

@@ -1,10 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-namespace OoBDev.System.IO.Bluetooth.Windows;
+﻿namespace OoBDev.System.IO.Bluetooth.Windows;
 
 public sealed class WindowsBleConnectionFactory : IBleConnectionFactory
 {

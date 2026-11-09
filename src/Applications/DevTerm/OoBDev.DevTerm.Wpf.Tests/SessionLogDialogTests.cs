@@ -8,7 +8,6 @@ using Microsoft.Extensions.Options;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.DevTerm.Configuration;
 using OoBDev.DevTerm.Loopback;
-using OoBDev.System.IO;
 
 namespace OoBDev.DevTerm.Wpf.Tests;
 

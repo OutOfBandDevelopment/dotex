@@ -1,13 +1,9 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using OoBDev.DevTerm.Configuration;
-using OoBDev.DevTerm;
 namespace OoBDev.DevTerm.Tui.Tests;
 
 /// <summary>The real TUI screenshot for docs/applications/devterm/user-guide/routing.md: <see cref="RoutingMode"/> with a connected broker, two rules and some traffic.</summary>

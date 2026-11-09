@@ -1,10 +1,7 @@
-using OoBDev.System.IO.Pipelines;
-using OoBDev.System.IO;
+﻿using OoBDev.System.IO.Pipelines;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.IO.Pipelines;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
@@ -233,7 +230,7 @@ public sealed class SerialDeviceAdapter : IDeviceAdapter, IComPortControl
 
     public async ValueTask DisposeAsync()
     {
-        await CloseAsync();
+        await CloseAsync().ConfigureAwait(false);
         GC.SuppressFinalize(this);
     }
 }

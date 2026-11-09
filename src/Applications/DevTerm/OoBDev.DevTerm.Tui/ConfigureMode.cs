@@ -1,10 +1,6 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Collections.ObjectModel;
 using System.Drawing;
 using OoBDev.DevTerm.Configuration;
@@ -13,6 +9,7 @@ using Terminal.Gui.App;
 using Terminal.Gui.Input;
 using Terminal.Gui.ViewBase;
 using Terminal.Gui.Views;
+using OoBDev.UiDefinitions.Tui;
 namespace OoBDev.DevTerm.Tui;
 
 /// <summary>

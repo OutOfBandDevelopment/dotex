@@ -1,12 +1,7 @@
-using OoBDev.System.IO;
+﻿using OoBDev.System.IO;
 using System;
 using System.Buffers;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
-using OoBDev.DevTerm;
 
 namespace OoBDev.DevTerm.Configuration;
 
@@ -18,7 +13,7 @@ namespace OoBDev.DevTerm.Configuration;
 /// toward docs/design/MultiSessionUi/multi-session-ui.md's <c>SessionTab</c> — both front ends still hold exactly one
 /// of these today; this is a pure extraction, not yet wired to a multi-tab UI.
 /// </summary>
-public sealed class SessionTab
+public sealed class SessionTab : IDisposable
 {
     private Session _session;
     private readonly RoutingObserver _observer;
@@ -63,6 +58,9 @@ public sealed class SessionTab
             _observerHandle = value.AddObserver(_observer);
         }
     }
+
+    /// <summary>Stops observing the session (the session itself, its catalog and services are not disposed here).</summary>
+    public void Dispose() => _observerHandle.Dispose();
 
     public PresenterCatalog Catalog { get; set; }
 

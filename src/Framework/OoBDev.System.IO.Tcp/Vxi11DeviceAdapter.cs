@@ -1,10 +1,7 @@
-using OoBDev.System.IO.Pipelines;
-using OoBDev.System.IO;
+﻿using OoBDev.System.IO.Pipelines;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.IO.Pipelines;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
@@ -122,11 +119,11 @@ public sealed class Vxi11DeviceAdapter : IDeviceAdapter
             var maxReceive = reader.UInt32();
             _requestSize = maxReceive is > 0 and < _maxRequestSize ? (int)maxReceive : _maxRequestSize;
         }
-        catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested)
+        catch (OperationCanceledException canceled) when (!cancellationToken.IsCancellationRequested)
         {
             State = ConnectionState.Faulted;
             Release();
-            throw new TimeoutException($"Opening the VXI-11 link timed out after {options.WriteTimeoutMs} ms.");
+            throw new TimeoutException($"Opening the VXI-11 link timed out after {options.WriteTimeoutMs} ms.", canceled);
         }
         catch
         {
@@ -213,15 +210,15 @@ public sealed class Vxi11DeviceAdapter : IDeviceAdapter
                 _channelGate.Release();
             }
         }
-        catch (OperationCanceledException) when (timeoutCts.IsCancellationRequested && !cancellationToken.IsCancellationRequested)
+        catch (OperationCanceledException canceled) when (timeoutCts.IsCancellationRequested && !cancellationToken.IsCancellationRequested)
         {
-            throw new TimeoutException($"Writing to the VXI-11 link timed out after {timeoutMs} ms.");
+            throw new TimeoutException($"Writing to the VXI-11 link timed out after {timeoutMs} ms.", canceled);
         }
     }
 
     public async ValueTask DisposeAsync()
     {
-        await CloseAsync();
+        await CloseAsync().ConfigureAwait(false);
         GC.SuppressFinalize(this);
     }
 
@@ -229,7 +226,8 @@ public sealed class Vxi11DeviceAdapter : IDeviceAdapter
     {
         using var connection = await ConnectAsync(options, _portmapperPort, cancellationToken).ConfigureAwait(false);
         var arguments = new XdrWriter().UInt32(CoreProgram).UInt32(1).UInt32(_tcpProtocol).UInt32(0).ToArray();
-        var reply = await new OncRpcClient(connection.Stream).CallAsync(PortmapperProgram, 2, 3, arguments, cancellationToken).ConfigureAwait(false);
+        using var rpc = new OncRpcClient(connection.Stream);
+        var reply = await rpc.CallAsync(PortmapperProgram, 2, 3, arguments, cancellationToken).ConfigureAwait(false);
         var port = new XdrReader(reply).UInt32();
         return port is > 0 and <= 65535
             ? (int)port
@@ -339,6 +337,7 @@ public sealed class Vxi11DeviceAdapter : IDeviceAdapter
     {
         _connection?.Dispose();
         _connection = null;
+        _rpc?.Dispose();
         _rpc = null;
     }
 }

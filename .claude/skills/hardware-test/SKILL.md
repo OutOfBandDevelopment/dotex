@@ -81,6 +81,10 @@ matching `docs/changes/2026-09-24.md`'s bench-test entry:
 6. **Summary line**: what changed in the code itself as a result of this pass, if anything (usually
    "none — every profile tested round-tripped as already shipped").
 
+## Step 4b — Update the coverage table
+
+Update the rows of every device the pass touched in `docs/applications/devterm/test/hardware-coverage.md` (last passed date, by what, result, gap), and re-sort oldest first so the least-tested device stays on top. Do this for a Hardware-category run as well as a scripted pass.
+
 ## Step 5 — Follow-up
 
 This step alone does not update `TODO.md`, `BACKLOG.md`, `OPEN-QUESTIONS.md`, or `docs/changes/`. A bench result that answers (or raises) an open question still gets its `OPEN-QUESTIONS.md` line removed (or added) as separate follow-up. If the session

@@ -1,15 +1,7 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.IO;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.Versioning;
-using OoBDev.DevTerm.TestUtilities;
 [assembly: SupportedOSPlatform("windows")]
 
 

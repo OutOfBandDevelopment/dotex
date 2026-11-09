@@ -81,7 +81,7 @@ Generates a templating engine that tries to use the best match for source and pr
 - **ApplyAsync**: Applies the template asynchronously to the provided data.
 
 ### XsltTemplateProvider
-Provides template processing using XSLT.
+Provides template processing using XSLT. Data may be an `IXPathNavigable`, JSON, XML or any serializable object. `XsltTemplateOptions.Extensions` lists extension objects (for example `StringExtensions`, `PathExtensions`) whose methods become XSLT functions; none are available by default.
 
 ## Xml.Serialization
 

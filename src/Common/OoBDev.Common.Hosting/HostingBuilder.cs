@@ -8,13 +8,13 @@ namespace OoBDev.Common.Hosting;
 public record HostingBuilder
 {
     /// <summary>
-    /// Gets or sets a value indicating whether MailKit functionality should be disabled.
+    /// Gets or sets a value indicating whether the communications hosting (channel polling) should be disabled.
     /// </summary>
     /// <remarks>
-    /// Set to <c>true</c> to disable MailKit functionality; otherwise, set to <c>false</c>.
+    /// Set to <c>true</c> to disable communications hosting; otherwise, set to <c>false</c>.
     /// The default value is <c>false</c>.
     /// </remarks>
-    public bool DisableMailKit { get; init; }
+    public bool DisableCommunications { get; init; }
 
     /// <summary>
     /// Gets or sets a value indicating whether message queueing should be disabled.

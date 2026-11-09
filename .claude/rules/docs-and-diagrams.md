@@ -7,7 +7,7 @@ paths:
 
 # Documentation rules
 
-- All diagrams are PlantUML fenced blocks (`@startuml`). UI mockups are PlantUML Salt (`@startsalt`). Never ASCII art or Mermaid. Convert existing ASCII diagrams when touching a document. Directory trees in code blocks are fine.
+- All diagrams are PlantUML fenced blocks (`@startuml`). UI mockups are PlantUML Salt (`@startsalt`). Never ASCII art or Mermaid. Convert existing ASCII diagrams when touching a document. The hook `no-ascii-diagrams.mjs` blocks writing a drawn box (box-drawing corners, two bars on a line, +---+) into markdown outside a plantuml/salt fence (owner, 2026-11-05); directory trees pass. Directory trees in code blocks are fine.
 - Architecture diagrams use C4 style (Context/Container/Component) in plain PlantUML: rectangles, stereotypes, skinparam. Never `!include` C4-PlantUML templates.
 - Add a table of contents, list of figures and list of tables when a document has 3+ sections, 2+ figures or 2+ tables. Captions: `*Figure N — title*` after a figure, `**Table N — title**` before a table.
 - Split documents longer than about 250 lines or 6 major sections into a folder with a `README.md` index and one file per headline, with nav links. Use relative cross references (file plus `#anchor`); the daily change files in `docs/changes/` are exempt (owner, 2026-11-04: one file per day, however long).

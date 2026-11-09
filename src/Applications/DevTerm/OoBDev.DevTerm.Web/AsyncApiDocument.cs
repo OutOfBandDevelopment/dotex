@@ -1,19 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-namespace OoBDev.DevTerm.Web;
+﻿namespace OoBDev.DevTerm.Web;
 
 /// <summary>
 /// The host's streaming channels described as AsyncAPI 3.0 (served at <c>/asyncapi.json</c>): the text WebSocket per session

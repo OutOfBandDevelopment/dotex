@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -7,7 +7,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Extensions.Options;
 using OoBDev.DevTerm.Configuration;
 using OoBDev.DevTerm.Loopback;
-using OoBDev.DevTerm.Presenters.Text;
 using OoBDev.System.IO;
 using OoBDev.UiDefinitions;
 

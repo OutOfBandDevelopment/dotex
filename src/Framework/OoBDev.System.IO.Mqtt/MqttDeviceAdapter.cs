@@ -19,7 +19,7 @@ public sealed class MqttDeviceAdapter : IDeviceAdapter
 {
     private readonly IMqttConnectionFactory _factory;
     private readonly MqttDeviceAdapterOptions _options;
-    private readonly object _pipeLock = new();
+    private readonly global::System.Threading.Lock _pipeLock = new();
     private IMqttConnection? _connection;
     private Pipe _pipe = new();
     private PipeWriter? _output;
@@ -84,17 +84,17 @@ public sealed class MqttDeviceAdapter : IDeviceAdapter
         {
             using var timeout = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
             timeout.CancelAfter(_options.TimeoutMs);
-            await connection.ConnectAsync(_options, timeout.Token);
+            await connection.ConnectAsync(_options, timeout.Token).ConfigureAwait(false);
             foreach (var topic in _options.SubscribeTopics.Where(t => !string.IsNullOrWhiteSpace(t)))
             {
-                await connection.SubscribeAsync(topic.Trim(), _options.QualityOfService, timeout.Token);
+                await connection.SubscribeAsync(topic.Trim(), _options.QualityOfService, timeout.Token).ConfigureAwait(false);
             }
         }
         catch
         {
             connection.MessageReceived -= OnMessage;
             connection.Disconnected -= OnDisconnected;
-            await connection.DisposeAsync();
+            await connection.DisposeAsync().ConfigureAwait(false);
             _connection = null;
             State = ConnectionState.Faulted;
             throw;
@@ -115,14 +115,14 @@ public sealed class MqttDeviceAdapter : IDeviceAdapter
             connection.Disconnected -= OnDisconnected;
             try
             {
-                await connection.DisconnectAsync(cancellationToken);
+                await connection.DisconnectAsync(cancellationToken).ConfigureAwait(false);
             }
             catch (Exception)
             {
                 // Already gone: closing is idempotent.
             }
 
-            await connection.DisposeAsync();
+            await connection.DisposeAsync().ConfigureAwait(false);
         }
 
         PipeWriter writer;
@@ -131,7 +131,7 @@ public sealed class MqttDeviceAdapter : IDeviceAdapter
             writer = _pipe.Writer;
         }
 
-        await writer.CompleteAsync();
+        await writer.CompleteAsync().ConfigureAwait(false);
         State = ConnectionState.Closed;
     }
 
@@ -166,16 +166,16 @@ public sealed class MqttDeviceAdapter : IDeviceAdapter
         timeout.CancelAfter(_options.TimeoutMs);
         try
         {
-            await connection.PublishAsync(topic, Encoding.UTF8.GetBytes(payload), _options.QualityOfService, timeout.Token);
+            await connection.PublishAsync(topic, Encoding.UTF8.GetBytes(payload), _options.QualityOfService, timeout.Token).ConfigureAwait(false);
         }
-        catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested)
+        catch (OperationCanceledException canceled) when (!cancellationToken.IsCancellationRequested)
         {
-            throw new TimeoutException($"Publishing to '{topic}' timed out after {_options.TimeoutMs} ms.");
+            throw new TimeoutException($"Publishing to '{topic}' timed out after {_options.TimeoutMs} ms.", canceled);
         }
     }
 
     /// <inheritdoc />
-    public async ValueTask DisposeAsync() => await CloseAsync();
+    public async ValueTask DisposeAsync() => await CloseAsync().ConfigureAwait(false);
 
     private void OnMessage(string topic, byte[] payload)
     {
@@ -186,7 +186,7 @@ public sealed class MqttDeviceAdapter : IDeviceAdapter
             prefix.CopyTo(line, 0);
             payload.CopyTo(line, prefix.Length);
             line[^1] = (byte)'\n';
-            _ = _pipe.Writer.WriteAsync(line);
+            _ = _pipe.Writer.WriteAsync(line).AsTask();
         }
     }
 

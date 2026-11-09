@@ -1,17 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net.Http;
-using System.Threading;
+﻿using System;
 using System.Threading.Tasks;
-using System.Collections.ObjectModel;
-using System.Globalization;
-using System.Text;
-using OoBDev.DevTerm.Configuration;
-using OoBDev.DevTerm;
-using Terminal.Gui.App;
-using Terminal.Gui.ViewBase;
 using Terminal.Gui.Views;
 namespace OoBDev.DevTerm.Tui;
 

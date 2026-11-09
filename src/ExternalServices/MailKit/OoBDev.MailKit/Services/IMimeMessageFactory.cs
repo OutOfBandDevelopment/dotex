@@ -1,5 +1,9 @@
+using OoBDev.Communications.Abstractions;
 using OoBDev.Communications.Models;
 using MimeKit;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace OoBDev.MailKit.Services;
 
@@ -15,13 +19,20 @@ public interface IMimeMessageFactory
     /// <returns>A <see cref="MimeMessage"/> instance.</returns>
     MimeMessage Create(EmailMessageModel message);
 
+    /// <summary>Creates a <see cref="MimeMessage"/> with the attachments, reading each attachment's content.</summary>
+    /// <param name="message">The email message model.</param>
+    /// <param name="attachments">The attachments.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A <see cref="MimeMessage"/> instance.</returns>
+    Task<MimeMessage> CreateAsync(EmailMessageModel message, IReadOnlyList<IEmailAttachment> attachments, CancellationToken cancellationToken = default);
+
     /// <summary>
-    /// Creates a <see cref="ReceivedEmailMessageModel"/> from the specified <see cref="MimeMessage"/>.
+    /// Creates an <see cref="EmailMessage"/> from the specified <see cref="MimeMessage"/>
     /// and inbound metadata such as host and mailbox path.
     /// </summary>
     /// <param name="message"></param>
     /// <param name="server"></param>
     /// <param name="path"></param>
     /// <returns></returns>
-    ReceivedEmailMessageModel ToReceived(MimeMessage message, string server, string path);
+    EmailMessage ToReceived(MimeMessage message, string server, string path);
 }

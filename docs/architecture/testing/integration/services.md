@@ -102,7 +102,7 @@ Python sentence-embedding service used by the SBert client tests and as the refe
 
 ## Ollama
 
-CPU-only inference with `phi3` baked into the image at build time, so first start does not download 2 GB. Published on 11435 to leave a local Ollama on 11434 alone. Keys: `OLLAMA_URL`, `OLLAMA_HOST`, `OLLAMA_PORT`, `OLLAMA_MODEL`, `OLLAMA_EMBEDDING_MODEL`.
+CPU-only inference with `phi3` baked into the image at build time, so first start does not download 2 GB. Published on 11435 to leave a local Ollama on 11434 alone. Keys: `OLLAMA_URL`, `OLLAMA_HOST`, `OLLAMA_PORT`, `OLLAMA_MODEL`, `OLLAMA_EMBEDDING_MODEL`, `OLLAMA_VISION_MODEL`.
 
 ## Aspire dashboard
 

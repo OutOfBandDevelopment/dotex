@@ -1,4 +1,4 @@
-﻿using OoBDev.SBert;
+﻿using OoBDev.SBert.AllMpnetBaseV2;
 using OoBDev.AI;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace OoBDev.WebApi.Controllers;
 
 /// <summary>
-/// Controller for AI-related operations.
+/// Embeds text with the in-process all-mpnet-base-v2 ONNX model (the same model the Python SBERT container hosts).
 /// </summary>
 [Route("api/[controller]")]
 [ApiController]
@@ -21,7 +21,7 @@ public class SBERTController : ControllerBase
     /// </summary>
     /// <param name="embedding">The embedding provider.</param>
     public SBERTController(
-        [FromKeyedServices(SBertProviderGlobals.ProviderKey)] IEmbeddingProvider embedding
+        [FromKeyedServices(SBertGlobals.AllMpnetBaseV2Key)] IEmbeddingProvider embedding
         ) => _embedding = embedding;
 
     /// <summary>

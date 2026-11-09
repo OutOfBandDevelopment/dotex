@@ -39,19 +39,26 @@ var vectorDb = sql.AddDatabase("VectorDb")
 
 var smtp = builder.AddContainer("smtp4dev", "rnwood/smtp4dev")
     .WithHttpEndpoint(targetPort: 80, name: "web")
-    .WithEndpoint(targetPort: 25, name: "smtp");
+    .WithEndpoint(targetPort: 25, name: "smtp")
+    .WithEndpoint(targetPort: 143, name: "imap");
 
-builder.AddContainer("apache-tika", "apache/tika")
+var tika = builder.AddContainer("apache-tika", "apache/tika")
     .WithHttpEndpoint(targetPort: 9998, name: "http");
 
+
+// The port is fixed because the token issuer is the browser-visible address; a dynamic port would change the issuer on every run.
+var keycloakPort = int.Parse(Environment.GetEnvironmentVariable("TEST_PORT_KEYCLOAK") ?? "8081", System.Globalization.CultureInfo.InvariantCulture);
 var keycloak = builder.AddContainer("keycloak", "quay.io/keycloak/keycloak", "latest")
-    .WithHttpEndpoint(targetPort: 8080, name: "http")
+    .WithHttpEndpoint(port: keycloakPort, targetPort: 8080, name: "http")
     .WithEnvironment("KEYCLOAK_ADMIN", "admin")
     .WithEnvironment("KEYCLOAK_ADMIN_PASSWORD", "admin")
     .WithEnvironment("KC_HEALTH_ENABLED", "true")
     .WithEnvironment("KC_HOSTNAME_STRICT", "false")
     .WithBindMount(Path.Combine(testing, "keycloak-config", "integration-test-realm.json"), "/opt/keycloak/data/import/integration-test-realm.json", isReadOnly: true)
+    .WithBindMount(Path.Combine(repoRoot, "containers", "example", "keycloak", "oobdev-example-realm.json"), "/opt/keycloak/data/import/oobdev-example-realm.json", isReadOnly: true)
     .WithArgs("start-dev", "--import-realm", "--features=scripts");
+
+var keycloakRealm = $"http://localhost:{keycloakPort}/realms/oobdev-example";
 
 // phi3 is baked into the image at build time, so the first start builds it from the same Dockerfile the compose stack uses.
 var ollama = builder.AddDockerfile("ollama", Path.Combine(testing, "ollama"))
@@ -63,9 +70,19 @@ var api = builder.AddProject<OoBDev_Example_WebApi>("example-api", options => op
     // The API's launch profile names an https port, which turns on its https redirect; the host proxies plain http.
     .WithHttpEndpoint(env: "ASPNETCORE_HTTP_PORTS")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", "Development")
-    .WithEnvironment("IDENTITY_PROVIDER", "None")
+    .WithEnvironment("IDENTITY_PROVIDER", "Keycloak")
+    .WithEnvironment("Keycloak__JwtBearerOptions__Authority", keycloakRealm)
+    .WithEnvironment("Keycloak__JwtBearerOptions__Audience", "oobdev-example-api")
+    .WithEnvironment("Keycloak__JwtBearerOptions__RequireHttpsMetadata", "false")
+    .WithEnvironment("Keycloak__JwtBearerOptions__TokenValidationParameters__ValidIssuers__0", keycloakRealm)
+    .WithEnvironment("Keycloak__OAuth2OpenApiOptions__AuthorizationUrl", $"{keycloakRealm}/protocol/openid-connect/auth/")
+    .WithEnvironment("Keycloak__OAuth2OpenApiOptions__TokenUrl", $"{keycloakRealm}/protocol/openid-connect/token")
+    .WithEnvironment("Keycloak__OAuth2OpenApiOptions__ClientId", "oobdev-example-scalar")
+    .WaitFor(keycloak)
     .WithEnvironment("OllamaApiClientOptions__Url", ollama.GetEndpoint("http"))
     .WithEnvironment("OllamaApiClientOptions__DefaultModel", "phi3")
+    .WithEnvironment("ApacheTikaClientOptions__Url", tika.GetEndpoint("http"))
+    .WaitFor(tika)
     .WithReference(redis)
     .WithReference(rabbitmq)
     .WithReference(vectorDb)
@@ -79,7 +96,10 @@ var api = builder.AddProject<OoBDev_Example_WebApi>("example-api", options => op
     // The mail client and the queue providers read host, port and credentials from their own sections (the compose file sets the same keys),
     // not from the connection string the reference adds; without these they call localhost on the default ports and the send and queue calls fail.
     .WithEnvironment("MailKitSmtpClientOptions__Host", smtp.GetEndpoint("smtp").Property(EndpointProperty.Host))
-    .WithEnvironment("MailKitSmtpClientOptions__Port", smtp.GetEndpoint("smtp").Property(EndpointProperty.Port));
+    .WithEnvironment("MailKitSmtpClientOptions__Port", smtp.GetEndpoint("smtp").Property(EndpointProperty.Port))
+    .WithEnvironment("MailKitImapClientOptions__Host", smtp.GetEndpoint("imap").Property(EndpointProperty.Host))
+    .WithEnvironment("MailKitImapClientOptions__Port", smtp.GetEndpoint("imap").Property(EndpointProperty.Port))
+    .WaitFor(smtp);
 
 // The Telemetry page links to the dashboard and reads recent traces through its API; the defaults point at the compose stack's port 18888.
 // ASPNETCORE_URLS is the host's own dashboard address (the launch profile's, or a dynamic one from the CLI).
@@ -90,13 +110,20 @@ api.WithEnvironment("Telemetry__DashboardUrl", dashboardUrl)
     .WithEnvironment("OpenTelemetryOptions__ServiceName", "example-api")
     .WithEnvironment("OpenTelemetryOptions__Sources__0", "Microsoft.AspNetCore");
 
-foreach (var queue in new[] { "ExampleMessageProvider", "EmailMessageModel", "ReceivedEmailMessageModel" })
+foreach (var queue in new[] { "ExampleMessageProvider", "EmailMessageModel" })
 {
     api.WithEnvironment($"MessageQueue__{queue}__Config__HostName", rabbitmq.GetEndpoint("tcp").Property(EndpointProperty.Host))
         .WithEnvironment($"MessageQueue__{queue}__Config__Port", rabbitmq.GetEndpoint("tcp").Property(EndpointProperty.Port))
         .WithEnvironment($"MessageQueue__{queue}__Config__UserName", rabbitmq.Resource.UserNameReference)
         .WithEnvironment($"MessageQueue__{queue}__Config__Password", rabbitmq.Resource.PasswordParameter);
 }
+
+// The dashboard link opens the API reference (the API has no page at its root).
+api.WithUrlForEndpoint("http", url =>
+{
+    url.Url = "/scalar";
+    url.DisplayText = "Scalar API reference";
+});
 
 // Under Visual Studio the child inherits ASPNETCORE_URLS=https://localhost:5001;http://localhost:5000, and URLS outranks HTTP_PORTS, so the API
 // would ignore the port the host proxies to and every request through the proxy (including the web site's) would hang.
@@ -118,6 +145,10 @@ if (File.Exists(envFile))
 builder.AddViteApp("example-web", Path.Combine("..", "OoBDev.Example.Web"))
     .WithReference(api)
     .WaitFor(api)
+    .WithEnvironment("VITE_OIDC_AUTHORITY", keycloakRealm)
+    .WithEnvironment("VITE_OIDC_CLIENT_ID", "oobdev-example-web")
+    // The realm only allows the redirect URIs 8088, 5173 and 8080; a dynamic port gives Keycloak "Invalid parameter: redirect_uri".
+    .WithEndpoint("http", endpoint => endpoint.Port = 5173)
     .WithExternalHttpEndpoints();
 
 builder.Build().Run();

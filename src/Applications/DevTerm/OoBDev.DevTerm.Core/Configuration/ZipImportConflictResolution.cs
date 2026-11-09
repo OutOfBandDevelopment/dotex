@@ -1,14 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.IO.Compression;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
-using OoBDev.DevTerm;
-
-namespace OoBDev.DevTerm.Configuration;
+﻿namespace OoBDev.DevTerm.Configuration;
 
 /// <summary>How <see cref="ConnectionProfileStore.ImportZip"/> handles a zip entry whose name already matches a saved profile.</summary>
 public enum ZipImportConflictResolution

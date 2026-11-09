@@ -1,25 +1,21 @@
-using OoBDev.System.IO.Devices;
+﻿using OoBDev.System.IO.Devices;
 using OoBDev.System.IO;
 using OoBDev.System.IO.Tcp;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.ObjectModel;
-using System.Text;
 using OoBDev.DevTerm.Configuration;
-using OoBDev.DevTerm;
-using OoBDev.DevTerm.Presenters.Text;
 using OoBDev.DevTerm.Logging;
-using OoBDev.System.IO.Tcp;
 using Terminal.Gui.App;
 using Terminal.Gui.Editor;
 using Terminal.Gui.Input;
 using Terminal.Gui.ViewBase;
 using Terminal.Gui.Views;
+using OoBDev.UiDefinitions.Tui;
 namespace OoBDev.DevTerm.Tui;
 
 /// <summary>

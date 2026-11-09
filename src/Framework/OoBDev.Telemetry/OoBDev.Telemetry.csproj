@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <InternalsVisibleTo Include="OoBDev.Telemetry.Tests" />
+    <InternalsVisibleTo Include="OoBDev.Telemetry.Tests" />
   </ItemGroup>
   
 	<ItemGroup>

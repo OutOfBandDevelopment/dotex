@@ -167,9 +167,9 @@ public sealed class BleDeviceAdapter : IDeviceAdapter
         {
             await operation(linkedCts.Token).ConfigureAwait(false);
         }
-        catch (OperationCanceledException) when (timeoutCts.IsCancellationRequested && !cancellationToken.IsCancellationRequested)
+        catch (OperationCanceledException canceled) when (timeoutCts.IsCancellationRequested && !cancellationToken.IsCancellationRequested)
         {
-            throw new TimeoutException(timeoutMessage);
+            throw new TimeoutException(timeoutMessage, canceled);
         }
     }
 

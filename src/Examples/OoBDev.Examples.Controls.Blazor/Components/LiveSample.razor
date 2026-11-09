@@ -1,0 +1,90 @@
+@using global::System.Threading
+@using OoBDev.UiDefinitions
+@implements IDisposable
+
+@* The live displays of the UiDefinitions language fed by a simulated device: a sine wave and a ramp drive an indicator, a bar graph and a strip chart. *@
+<h2>Live displays</h2>
+<LiveDisplayView @ref="_indicatorView" State="_indicator" />
+<LiveDisplayView @ref="_barsView" State="_bars" />
+<LiveDisplayView @ref="_stripView" State="_strip" />
+
+@code {
+    private readonly IndicatorState _indicator = (IndicatorState)LiveDisplayState.For(
+        new IndicatorControl { Id = "sum", Label = "Wave + ramp", Expression = "wave + ramp", Unit = "V" })!;
+    private readonly BarGraphState _bars = (BarGraphState)LiveDisplayState.For(new BarGraphControl
+    {
+        Id = "bars",
+        Label = "Channels",
+        Minimum = 0,
+        Maximum = 10,
+        Unit = "V",
+        Channels = [new ChartChannel { Id = "wave", Label = "Wave" }, new ChartChannel { Id = "ramp", Label = "Ramp" }],
+    })!;
+    private readonly StripChartState _strip = (StripChartState)LiveDisplayState.For(new StripChartControl
+    {
+        Id = "strip",
+        Label = "Trend",
+        Minimum = 0,
+        Maximum = 10,
+        HistoryLength = 60,
+        Unit = "V",
+        Channels = [new ChartChannel { Id = "wave", Label = "Wave" }, new ChartChannel { Id = "ramp", Label = "Ramp" }],
+    })!;
+    private LiveDisplayView? _indicatorView;
+    private LiveDisplayView? _barsView;
+    private LiveDisplayView? _stripView;
+    private CancellationTokenSource? _cts;
+    private int _tick;
+
+    /// <summary>Runs the simulated feed on a timer; tests turn it off and call <see cref="Step"/>.</summary>
+    [Parameter]
+    public bool AutoRun { get; set; } = true;
+
+    /// <summary>Publishes the next simulated sample to every display.</summary>
+    public void Step()
+    {
+        var wave = (5 + (4 * Math.Sin(_tick / 5.0))).ToString("0.###", global::System.Globalization.CultureInfo.InvariantCulture);
+        var ramp = ((_tick % 20) / 2.0).ToString("0.###", global::System.Globalization.CultureInfo.InvariantCulture);
+        KeyValuePair<string, string>[] batch = [new("wave", wave), new("ramp", ramp)];
+        _tick++;
+        _indicator.ApplyAll(batch);
+        _bars.ApplyAll(batch);
+        _strip.ApplyAll(batch);
+        _indicatorView?.Refresh();
+        _barsView?.Refresh();
+        _stripView?.Refresh();
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (!firstRender || !AutoRun)
+        {
+            return;
+        }
+
+        _cts = new CancellationTokenSource();
+        _ = RunAsync(_cts.Token);
+    }
+
+    private async Task RunAsync(CancellationToken cancellationToken)
+    {
+        using var timer = new PeriodicTimer(TimeSpan.FromMilliseconds(500));
+        try
+        {
+            while (await timer.WaitForNextTickAsync(cancellationToken))
+            {
+                Step();
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            // The page was left.
+        }
+    }
+
+    public void Dispose()
+    {
+        _cts?.Cancel();
+        _cts?.Dispose();
+    }
+}

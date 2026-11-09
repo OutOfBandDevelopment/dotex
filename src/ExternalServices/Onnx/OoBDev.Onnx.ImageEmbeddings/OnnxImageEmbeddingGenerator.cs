@@ -1,10 +1,9 @@
-using Microsoft.Extensions.AI;
+﻿using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using OoBDev.Onnx.SentenceEmbeddings;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 

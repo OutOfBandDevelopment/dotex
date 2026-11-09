@@ -1,9 +1,7 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace OoBDev.System.IO.Ports;
 
@@ -199,7 +197,7 @@ internal sealed class LinuxSerialPortDescriptions
         return current;
     }
 
-    private static IEnumerable<string> Split(string path) =>
+    private static string[] Split(string path) =>
         path.Split([Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar], StringSplitOptions.RemoveEmptyEntries);
 
     private static string? ReadAttribute(string directory, string name)

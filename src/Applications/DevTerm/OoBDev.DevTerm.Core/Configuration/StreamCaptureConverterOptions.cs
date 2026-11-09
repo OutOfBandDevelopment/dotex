@@ -1,14 +1,6 @@
+﻿using OoBDev.Documents.ExternalTools;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Options;
-using OoBDev.DevTerm;
 
 namespace OoBDev.DevTerm.Configuration;
 
@@ -26,7 +18,7 @@ public sealed class StreamCaptureConverterOptions
     public string? ToolName { get; set; }
 
     /// <summary>Registered converter tools - see docs/design/StreamTools/stream-converter-tools.md.</summary>
-    public List<StreamConvertToolOptions> Tools { get; set; } = [];
+    public List<ExternalToolOptions> Tools { get; set; } = [];
 
     public string? ExternalToolPath { get; set; }
 
@@ -37,7 +29,7 @@ public sealed class StreamCaptureConverterOptions
     public string? OutputExtension { get; set; }
 
     /// <summary>Builds a fresh <see cref="StreamCaptureConverterOptions"/> from <paramref name="cliOptions"/> (or all-defaults/<see cref="StreamConversionMode.None"/> when null) plus <paramref name="globalTools"/>, the app-wide list the caller loaded from <see cref="ConverterToolsStore"/> (not read here, so tests never touch the user's own file) - for ad hoc construction outside DI (TUI/WPF, which build <see cref="StreamMonitor"/> the same ad hoc way).</summary>
-    public static StreamCaptureConverterOptions FromCliOptions(CliOptions? cliOptions, IEnumerable<StreamConvertToolOptions>? globalTools = null)
+    public static StreamCaptureConverterOptions FromCliOptions(CliOptions? cliOptions, IEnumerable<ExternalToolOptions>? globalTools = null)
     {
         var options = new StreamCaptureConverterOptions();
         if (cliOptions is not null)

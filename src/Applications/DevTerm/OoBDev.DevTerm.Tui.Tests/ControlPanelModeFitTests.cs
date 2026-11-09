@@ -1,9 +1,8 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using OoBDev.DevTerm.Configuration;
 using OoBDev.DevTerm.Devices.Scpi;
 using OoBDev.Scpi;
 using OoBDev.UiDefinitions;

@@ -1,9 +1,8 @@
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using OoBDev.MessageQueueing;
 using OoBDev.MessageQueueing.Services;
-using System;
 using System.Collections.Generic;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
@@ -124,8 +123,8 @@ public class AsyncApiDocumentBuilderTests
         var document = Builder(Config(), null, null).Build("all")!;
 
         // Assert
-        var schema = document.Components.Schemas["OrderPlaced"];
-        var properties = schema["properties"]!.AsObject();
+        var schema = document.Components!.Schemas["OrderPlaced"];
+        var properties = schema!["properties"]!.AsObject();
         Assert.IsTrue(properties.ContainsKey("id"));
         Assert.IsTrue(properties.ContainsKey("customer"));
         var priority = properties["priority"]!.AsObject();

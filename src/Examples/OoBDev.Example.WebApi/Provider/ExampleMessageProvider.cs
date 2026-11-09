@@ -1,6 +1,7 @@
 using OoBDev.MessageQueueing;
 using OoBDev.MessageQueueing.Services;
 using Microsoft.Extensions.Logging;
+using OoBDev.WebApi.Services;
 using System.Threading.Tasks;
 
 namespace OoBDev.WebApi.Provider;
@@ -16,7 +17,8 @@ namespace OoBDev.WebApi.Provider;
 /// <param name="logger">The logger for logging messages.</param>
 public partial class ExampleMessageProvider(
     IMessageQueueSender<ExampleMessageProvider> sender,
-    ILogger<ExampleMessageProvider> logger) : IExampleMessageProvider, IMessageQueueHandler<ExampleMessageProvider>
+    ILogger<ExampleMessageProvider> logger,
+    ReceivedMessageLog receivedLog) : IExampleMessageProvider, IMessageQueueHandler<ExampleMessageProvider>
 {
     /// <summary>
     /// Posts an example message asynchronously.
@@ -41,6 +43,7 @@ public partial class ExampleMessageProvider(
     public Task HandleAsync(object message, IMessageContext context)
     {
         LogReceived(message, context.CorrelationId);
+        receivedLog.Add(message, context.CorrelationId);
         return Task.CompletedTask;
     }
 

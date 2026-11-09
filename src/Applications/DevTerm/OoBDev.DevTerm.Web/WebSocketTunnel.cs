@@ -1,18 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net.Http;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using System.Net.WebSockets;
 using System.Text;
 using System.Threading.Channels;
@@ -49,7 +38,7 @@ internal static class WebSocketTunnel
             {
                 await foreach (var line in outgoing.Reader.ReadAllAsync(abort))
                 {
-                    await socket.SendAsync(Encoding.UTF8.GetBytes(line), WebSocketMessageType.Text, true, abort);
+                    await socket.SendAsync(Encoding.UTF8.GetBytes(line), WebSocketMessageType.Text, true, abort).ConfigureAwait(false);
                 }
             },
             CancellationToken.None);
@@ -79,7 +68,7 @@ internal static class WebSocketTunnel
                 }
                 else if (result.MessageType == WebSocketMessageType.Text)
                 {
-                    var error = await hub.SendLineAsync(Encoding.UTF8.GetString(buffer, 0, length), abort);
+                    var error = await hub.SendLineAsync(Encoding.UTF8.GetString(buffer, 0, length), abort).ConfigureAwait(false);
                     if (error is not null)
                     {
                         outgoing.Writer.TryWrite($"! {error}");

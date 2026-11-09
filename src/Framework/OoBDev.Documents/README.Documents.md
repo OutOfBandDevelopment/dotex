@@ -15,6 +15,8 @@ in their applications.
 - **DocumentTypeTools**: Provides tools for managing document types, including content type detection.
 - **ServiceCollectionExtensions**: Extension methods for configuring document-related services in dependency injection.
 
+Conversion handlers (IDocumentConversionHandler) live in their own libraries: [OoBDev.Documents.Hpgl](../OoBDev.Documents.Hpgl/README.Documents.Hpgl.md) (HP-GL to SVG) and [OoBDev.Documents.ExternalTools](../OoBDev.Documents.ExternalTools/README.Documents.ExternalTools.md) (a registered external tool such as Ghostscript or GhostPCL).
+
 
 ## Usage Example
 

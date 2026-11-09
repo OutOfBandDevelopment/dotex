@@ -1,7 +1,9 @@
 ﻿using OoBDev.System.PathSegments;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Linq;
 using System.Xml.XPath;
 
 namespace OoBDev.System.Xml.XPath;
@@ -66,4 +68,41 @@ public static class XPathExtensions
     /// <returns>An enumerable sequence of XPath navigators representing the input item(s).</returns>
     public static IEnumerable<XPathNavigator?> AsNodeSet(this XPathNodeIterator item) =>
         item.OfType<XPathNavigator>();
+
+    /// <summary>
+    /// Converts any object into XPath navigators: a sequence contributes one navigator per member (navigables, navigator sequences and iterators are unwrapped), and anything else becomes a text node of its string form.
+    /// </summary>
+    /// <param name="item">The object or sequence to convert.</param>
+    /// <returns>The navigators for the input.</returns>
+    public static IEnumerable<XPathNavigator?> AsNodeSet(this object item)
+    {
+        var items = item as IEnumerable;
+        if (items is null || item is string)
+        {
+            foreach (var child in AsNodeSet(new[] { item }))
+                yield return child;
+            yield break;
+        }
+
+        foreach (var current in items)
+        {
+            switch (current)
+            {
+                case IXPathNavigable navigable:
+                    yield return navigable.CreateNavigator();
+                    break;
+                case IEnumerable<XPathNavigator> navigators:
+                    foreach (var navigator in navigators)
+                        yield return navigator.CreateNavigator();
+                    break;
+                case XPathNodeIterator iterator:
+                    while (iterator.MoveNext())
+                        yield return iterator.Current?.CreateNavigator();
+                    break;
+                default:
+                    yield return new XText($"{current}").ToXPathNavigable().CreateNavigator();
+                    break;
+            }
+        }
+    }
 }

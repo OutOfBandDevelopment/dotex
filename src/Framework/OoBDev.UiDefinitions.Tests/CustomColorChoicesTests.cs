@@ -1,6 +1,5 @@
-using System.Linq;
+﻿using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using OoBDev.UiDefinitions;
 
 namespace OoBDev.UiDefinitions.Tests;
 

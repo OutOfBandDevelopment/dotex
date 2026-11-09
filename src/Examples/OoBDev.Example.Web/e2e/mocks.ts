@@ -13,7 +13,7 @@ const vector = (seed: number) => Array.from({ length: 384 }, (_, i) => Math.sin(
  */
 export async function mockApi(page: Page): Promise<void> {
   let turn = 0;
-  await page.route(/\/(api|Document|openapi|asyncapi)\//, async route => {
+  await page.route(/\/(api|Document|openapi|asyncapi|cgi-bin|webhooks)\//, async route => {
     const url = new URL(route.request().url());
     const path = url.pathname;
     const method = route.request().method();
@@ -25,6 +25,9 @@ export async function mockApi(page: Page): Promise<void> {
       return json(route, { context: [1, 2, 3, turn], response: turn === 1 ? 'Hello! How can I help you today?' : 'Photosynthesis is how plants turn light into sugar.' });
     }
     if (path === '/api/Operations/info') return json(route, { environment: 'Development', application: 'OoBDev.Example.WebApi', runtime: '.NET 10.0.0', machine: 'example-api', started: '2026-10-19T08:00:00+00:00', configuration: [{ key: 'AllowedHosts', value: '*' }, { key: 'FileTemplatingOptions:TemplatePath', value: 'Templates' }, { key: 'Identity:Keycloak:ClientSecret', value: '***' }, { key: 'Logging:LogLevel:Default', value: 'Information' }] });
+    if (path === '/api/CgiPrograms') return json(route, [{ name: 'greet.exe', path: '/cgi-bin/greet.exe' }]);
+    if (path === '/cgi-bin/greet.exe') return route.fulfill({ status: 200, contentType: 'text/html', body: '<h1>Hello, Ada!</h1>' });
+    if (path.startsWith('/webhooks/')) return route.fulfill({ status: 404, contentType: 'application/problem+json', body: JSON.stringify({ title: 'Webhook rejected', status: 404, detail: 'Channel not found' }) });
     if (path === '/api/Cache') {
       if (route.request().method() === 'GET') return json(route, { key: 'greeting', found: true, value: 'hello from the cache', provider: 'MicrosoftMemoryCachingProvider' });
       return route.fulfill({ status: 204 });
@@ -44,15 +47,22 @@ export async function mockApi(page: Page): Promise<void> {
     if (path === '/api/Toolbox/hmac') return json(route, { algorithm: 'hmac-256', result: 'Zm9yIGRvY3VtZW50YXRpb24gb25seQ==' });
     if (path === '/api/Toolbox/vector-distance') return json(route, { cosine: 0.001234, euclidean: 0.5, dotProduct: 27.5, manhattan: 0.5 });
     if (path === '/api/Rag') return json(route, { answer: 'Queues are supported through adapters for RabbitMQ, Azure Service Bus, Azure Storage queues and Amazon SQS (passage p3).', sources: [{ id: 'p3', score: 0.712, text: 'Messages are put on a queue by an adapter: RabbitMQ, Azure Service Bus, Azure Storage queues or Amazon SQS.' }, { id: 'p1', score: 0.318, text: 'The framework resolves every provider through a keyed service, chosen from a configuration path.' }] });
+    if (path === '/api/Search') return json(route, { lexical: [{ id: 'p3', score: 1.412, text: 'Messages are put on a queue by an adapter: RabbitMQ, Azure Service Bus, Azure Storage queues or Amazon SQS.' }], semantic: [{ id: 'p3', score: 0.655, text: 'Messages are put on a queue by an adapter: RabbitMQ, Azure Service Bus, Azure Storage queues or Amazon SQS.' }, { id: 'p1', score: 0.201, text: 'The framework resolves every provider through a keyed service, chosen from a configuration path.' }], hybrid: [{ id: 'p3', score: 0.033, text: 'Messages are put on a queue by an adapter: RabbitMQ, Azure Service Bus, Azure Storage queues or Amazon SQS.' }, { id: 'p1', score: 0.016, text: 'The framework resolves every provider through a keyed service, chosen from a configuration path.' }] });
     if (path.startsWith('/api/AllMiniLM') || path.startsWith('/api/SBERT')) {
       const t = url.searchParams.get('text') ?? '';
       return json(route, vector(t.length % 2 === 0 ? 1 : 1.2));
     }
     if (path === '/api/TextTemplate/SupportedTemplates') return json(route, [{ extension: '.xslt', contentType: 'application/xslt+xml', isTemplateType: true }, { extension: '.hbs', contentType: 'text/x-handlebars-template', isTemplateType: true }]);
+    if (path === '/api/TextTemplate/List') return json(route, [{ name: 'order-shipped', file: 'order-shipped.html.hbs', templateContentType: 'text/x-handlebars-template', targetExtension: '.html' }]);
+    if (path === '/api/TextTemplate/Read') return json(route, { info: { name: 'order-shipped', file: 'order-shipped.html.hbs', templateContentType: 'text/x-handlebars-template', targetExtension: '.html' }, text: '<h1>Hello {{name}}</h1><p>Your order {{orderId}} has shipped.</p>' });
+    if (path === '/api/TextTemplate/Preview') return text(route, '<h1>Hello Ada</h1><p>Your order 1042 has shipped.</p>');
     if (path.startsWith('/api/TextTemplate/Apply')) return text(route, '<h1>Hello Ada</h1><p>Your order 1042 has shipped.</p>');
     if (path.startsWith('/api/Communications/')) return text(route, 'Mail accepted');
+    if (path === '/api/MessageQueueing/channels') return json(route, [{ channel: 'EmailMessageModel', provider: 'rabbit-mq', queueName: 'email-receive', hostName: 'localhost', receiverEnabled: false }, { channel: 'ExampleMessageProvider', provider: 'rabbit-mq', queueName: 'email-receive', hostName: 'localhost', receiverEnabled: false }]);
+    if (path === '/api/MessageQueueing/received') return json(route, [{ receivedAt: '2026-11-09T12:00:00Z', correlationId: 'demo-1', message: '{"Input":"hello"}' }]);
     if (path.startsWith('/api/MessageQueueing/')) return text(route, '7f3c1c1e-0b53-4b7c-9d1f-2a9d8e0a1111');
     if (path === '/api/User/claims') return json(route, [{ type: 'name', value: 'Ada Lovelace' }, { type: 'role', value: 'Reader' }]);
+    if (path === '/Document/List') return json(route, [{ fileName: 'quarterly-report.docx', contentType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' }]);
     if (path.startsWith('/Document/Convert')) return text(route, 'Quarterly report\n\nRevenue grew 12 percent.');
     if (path.startsWith('/Document/Upload')) return text(route, 'stored');
     if (path.startsWith('/Document/Text')) return text(route, 'Quarterly report\n\nRevenue grew 12 percent.');

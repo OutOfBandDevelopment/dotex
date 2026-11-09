@@ -1,9 +1,8 @@
+﻿using OoBDev.Documents.ExternalTools;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Globalization;
@@ -12,7 +11,6 @@ using Parity = global::System.IO.Ports.Parity;
 using StopBits = global::System.IO.Ports.StopBits;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
-using OoBDev.DevTerm;
 using OoBDev.System.IO.Bluetooth;
 using OoBDev.System.IO.UsbHids;
 using OoBDev.System.IO.Ports;
@@ -98,11 +96,11 @@ public sealed class ConnectionEditorViewModel : INotifyPropertyChanged, IDisposa
 
     // The profile most recently loaded into the form - see BuildOptions for why it's kept.
     private CliOptions _loadedOptions = new();
-    private IReadOnlyList<StreamConvertToolOptions> _converterTools = [];
+    private IReadOnlyList<ExternalToolOptions> _converterTools = [];
     private bool _isDirty;
     private string? _selectedSerialPort;
     private HidDeviceOption? _selectedHidDevice;
-    private IReadOnlyList<HidDeviceOption> _detectedHidDevices = [];
+    private List<HidDeviceOption> _detectedHidDevices = [];
     private readonly ObservableCollection<HidDeviceOption> _hidDeviceOptions = [];
     private UsbtmcDeviceOption? _selectedUsbtmcDevice;
     private IReadOnlyList<UsbtmcDeviceOption> _detectedUsbtmcDevices = [];
@@ -277,13 +275,13 @@ public sealed class ConnectionEditorViewModel : INotifyPropertyChanged, IDisposa
         }
         catch (SystemException)
         {
-            descriptions = new Dictionary<string, string>();
+            descriptions = new Dictionary<string, string>(StringComparer.Ordinal);
         }
 
         return [.. names.Select(name => SerialPortOption.From(name, descriptions))];
     }
 
-    private static IReadOnlyList<HidDeviceOption> SafeDiscover(IUsbHidDiscovery discovery)
+    private static List<HidDeviceOption> SafeDiscover(IUsbHidDiscovery discovery)
     {
         try
         {
@@ -1005,7 +1003,7 @@ public sealed class ConnectionEditorViewModel : INotifyPropertyChanged, IDisposa
             if (value is not null)
             {
                 // The hit's kind decides the transport (a VXI-11 instrument, an MQTT broker, or plain tcp), so one pick fills the lot.
-                if (TransportOptions.Contains(value.Transport))
+                if (TransportOptions.Contains(value.Transport, StringComparer.Ordinal))
                 {
                     Transport = value.Transport;
                 }
@@ -1298,8 +1296,8 @@ public sealed class ConnectionEditorViewModel : INotifyPropertyChanged, IDisposa
         Transport = options.Transport;
         Port = options.Port ?? string.Empty;
         SelectedSerialPort = SerialPortOptions.FirstOrDefault(p => string.Equals(p.Name, Port, StringComparison.Ordinal))?.Name;
-        Baud = options.Baud.ToString();
-        DataBits = options.DataBits.ToString();
+        Baud = options.Baud.ToString(global::System.Globalization.CultureInfo.InvariantCulture);
+        DataBits = options.DataBits.ToString(global::System.Globalization.CultureInfo.InvariantCulture);
         ParityText = options.Parity.ToString();
         StopBitsText = options.StopBits.ToString();
         HandshakeText = options.Handshake.ToString();
@@ -1318,8 +1316,8 @@ public sealed class ConnectionEditorViewModel : INotifyPropertyChanged, IDisposa
         Subscribe = options.Subscribe ?? string.Empty;
         Publish = options.Publish ?? string.Empty;
         Username = options.Username ?? string.Empty;
-        VendorId = options.VendorId.ToString();
-        ProductId = options.ProductId.ToString();
+        VendorId = options.VendorId.ToString(global::System.Globalization.CultureInfo.InvariantCulture);
+        ProductId = options.ProductId.ToString(global::System.Globalization.CultureInfo.InvariantCulture);
         SerialNumber = options.SerialNumber ?? string.Empty;
         DevicePath = options.DevicePath ?? string.Empty;
         BleDeviceId = options.BleDeviceId ?? string.Empty;
@@ -1327,7 +1325,7 @@ public sealed class ConnectionEditorViewModel : INotifyPropertyChanged, IDisposa
         BleWriteCharacteristicUuid = options.BleWriteCharacteristicUuid ?? string.Empty;
         BleNotifyCharacteristicUuid = options.BleNotifyCharacteristicUuid ?? string.Empty;
         LoopbackSampleIntervalMs = options.LoopbackSampleIntervalMs.ToString(CultureInfo.InvariantCulture);
-        ConverterTools = [.. options.StreamConvertTools.Select(StreamConvertToolOptions.Clone)];
+        ConverterTools = [.. options.StreamConvertTools.Select(ExternalToolOptions.Clone)];
 
         // Bypasses SelectedHidDevice/SelectedUsbtmcDevice's own setters (SetField directly) —
         // those setters push VendorId/ProductId/SerialNumber/DevicePath from whichever device gets
@@ -1362,7 +1360,7 @@ public sealed class ConnectionEditorViewModel : INotifyPropertyChanged, IDisposa
     /// save and still merge in. Replaced as a whole
     /// (never mutated in place) so assigning it counts as an edit for <see cref="IsDirty"/>.
     /// </summary>
-    public IReadOnlyList<StreamConvertToolOptions> ConverterTools
+    public IReadOnlyList<ExternalToolOptions> ConverterTools
     {
         get => _converterTools;
         set => SetField(ref _converterTools, value);
@@ -1398,7 +1396,7 @@ public sealed class ConnectionEditorViewModel : INotifyPropertyChanged, IDisposa
             StreamConvertDpi = _loadedOptions.StreamConvertDpi,
             StreamIdleTimeoutMs = _loadedOptions.StreamIdleTimeoutMs,
             StreamConvertOutputExtension = _loadedOptions.StreamConvertOutputExtension,
-            StreamConvertTools = [.. _converterTools.Select(StreamConvertToolOptions.Clone)],
+            StreamConvertTools = [.. _converterTools.Select(ExternalToolOptions.Clone)],
             Parser = Parser.Trim() is { Length: > 0 } parser ? parser : CliOptions.DefaultPresenter,
             Description = Description.Trim() is { Length: > 0 } d ? d : null,
             ScpiProfile = ScpiProfile.Trim() is { Length: > 0 } sp ? sp : null,
@@ -1416,12 +1414,12 @@ public sealed class ConnectionEditorViewModel : INotifyPropertyChanged, IDisposa
             BleNotifyCharacteristicUuid = BleNotifyCharacteristicUuid.Trim() is { Length: > 0 } bnu ? bnu : null,
         };
 
-        if (int.TryParse(Baud, out var baud))
+        if (int.TryParse(Baud, global::System.Globalization.CultureInfo.InvariantCulture, out var baud))
         {
             options.Baud = baud;
         }
 
-        if (int.TryParse(DataBits, out var dataBits))
+        if (int.TryParse(DataBits, global::System.Globalization.CultureInfo.InvariantCulture, out var dataBits))
         {
             options.DataBits = dataBits;
         }
@@ -1441,42 +1439,42 @@ public sealed class ConnectionEditorViewModel : INotifyPropertyChanged, IDisposa
             options.Handshake = handshake;
         }
 
-        if (int.TryParse(WriteTimeoutMs, out var writeTimeoutMs))
+        if (int.TryParse(WriteTimeoutMs, global::System.Globalization.CultureInfo.InvariantCulture, out var writeTimeoutMs))
         {
             options.WriteTimeoutMs = writeTimeoutMs;
         }
 
-        if (int.TryParse(ReadTimeoutMs, out var readTimeoutMs))
+        if (int.TryParse(ReadTimeoutMs, global::System.Globalization.CultureInfo.InvariantCulture, out var readTimeoutMs))
         {
             options.ReadTimeoutMs = readTimeoutMs;
         }
 
-        if (int.TryParse(WriteByteDelayMs, out var writeByteDelayMs))
+        if (int.TryParse(WriteByteDelayMs, global::System.Globalization.CultureInfo.InvariantCulture, out var writeByteDelayMs))
         {
             options.WriteByteDelayMs = writeByteDelayMs;
         }
 
-        if (int.TryParse(AsciiMaxLineLength, out var asciiMaxLineLength))
+        if (int.TryParse(AsciiMaxLineLength, global::System.Globalization.CultureInfo.InvariantCulture, out var asciiMaxLineLength))
         {
             options.AsciiMaxLineLength = asciiMaxLineLength;
         }
 
-        if (int.TryParse(ScpiAutoDetectTimeoutMs, out var scpiAutoDetectTimeoutMs))
+        if (int.TryParse(ScpiAutoDetectTimeoutMs, global::System.Globalization.CultureInfo.InvariantCulture, out var scpiAutoDetectTimeoutMs))
         {
             options.ScpiAutoDetectTimeoutMs = scpiAutoDetectTimeoutMs;
         }
 
-        if (int.TryParse(VendorId, out var vendorId))
+        if (int.TryParse(VendorId, global::System.Globalization.CultureInfo.InvariantCulture, out var vendorId))
         {
             options.VendorId = vendorId;
         }
 
-        if (int.TryParse(ProductId, out var productId))
+        if (int.TryParse(ProductId, global::System.Globalization.CultureInfo.InvariantCulture, out var productId))
         {
             options.ProductId = productId;
         }
 
-        if (int.TryParse(LoopbackSampleIntervalMs, out var loopbackSampleIntervalMs))
+        if (int.TryParse(LoopbackSampleIntervalMs, global::System.Globalization.CultureInfo.InvariantCulture, out var loopbackSampleIntervalMs))
         {
             options.LoopbackSampleIntervalMs = loopbackSampleIntervalMs;
         }
@@ -1505,47 +1503,47 @@ public sealed class ConnectionEditorViewModel : INotifyPropertyChanged, IDisposa
             return ValidateOptionsResult.Fail("Select at least one presenter.");
         }
 
-        if (!int.TryParse(Baud, out _))
+        if (!int.TryParse(Baud, global::System.Globalization.CultureInfo.InvariantCulture, out _))
         {
             return ValidateOptionsResult.Fail($"'{Baud}' isn't a valid baud rate.");
         }
 
-        if (!int.TryParse(DataBits, out _))
+        if (!int.TryParse(DataBits, global::System.Globalization.CultureInfo.InvariantCulture, out _))
         {
             return ValidateOptionsResult.Fail($"'{DataBits}' isn't a valid data bits value.");
         }
 
-        if (!int.TryParse(WriteTimeoutMs, out _))
+        if (!int.TryParse(WriteTimeoutMs, global::System.Globalization.CultureInfo.InvariantCulture, out _))
         {
             return ValidateOptionsResult.Fail($"'{WriteTimeoutMs}' isn't a valid write timeout.");
         }
 
-        if (!int.TryParse(ReadTimeoutMs, out _))
+        if (!int.TryParse(ReadTimeoutMs, global::System.Globalization.CultureInfo.InvariantCulture, out _))
         {
             return ValidateOptionsResult.Fail($"'{ReadTimeoutMs}' isn't a valid read timeout.");
         }
 
-        if (!int.TryParse(WriteByteDelayMs, out _))
+        if (!int.TryParse(WriteByteDelayMs, global::System.Globalization.CultureInfo.InvariantCulture, out _))
         {
             return ValidateOptionsResult.Fail($"'{WriteByteDelayMs}' isn't a valid write byte delay.");
         }
 
-        if (!int.TryParse(ScpiAutoDetectTimeoutMs, out _))
+        if (!int.TryParse(ScpiAutoDetectTimeoutMs, global::System.Globalization.CultureInfo.InvariantCulture, out _))
         {
             return ValidateOptionsResult.Fail($"'{ScpiAutoDetectTimeoutMs}' isn't a valid SCPI auto-detect timeout.");
         }
 
-        if (!int.TryParse(AsciiMaxLineLength, out _))
+        if (!int.TryParse(AsciiMaxLineLength, global::System.Globalization.CultureInfo.InvariantCulture, out _))
         {
             return ValidateOptionsResult.Fail($"'{AsciiMaxLineLength}' isn't a valid ASCII max line length.");
         }
 
-        if (!int.TryParse(VendorId, out _))
+        if (!int.TryParse(VendorId, global::System.Globalization.CultureInfo.InvariantCulture, out _))
         {
             return ValidateOptionsResult.Fail($"'{VendorId}' isn't a valid vendor id.");
         }
 
-        if (!int.TryParse(ProductId, out _))
+        if (!int.TryParse(ProductId, global::System.Globalization.CultureInfo.InvariantCulture, out _))
         {
             return ValidateOptionsResult.Fail($"'{ProductId}' isn't a valid product id.");
         }
@@ -1823,7 +1821,7 @@ public sealed class ConnectionEditorViewModel : INotifyPropertyChanged, IDisposa
         StatusMessage = $"Exported to '{path}'.";
     }
 
-    private void ExportProfilesZip(IReadOnlyCollection<string> names)
+    private void ExportProfilesZip(ObservableCollection<string> names)
     {
         var path = ImportExportPath.Trim();
         if (path.Length == 0)

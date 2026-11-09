@@ -18,26 +18,34 @@ A device control module is a plugin that **composes**, rather than replaces, the
 
 ```plantuml
 @startuml
-!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
-
-Person(user, "User", "WPF panel / TUI form / CLI flags")
-
-Container_Boundary(module, "Device Control Module (plugin)") {
-  Component(surface, "Control Surface", "IControlSurface", "Commands / parameters")
-  Component(decoder, "Telemetry Decoder", "IPresenter", "Human-readable text baseline")
-  Component(plot, "Telemetry Plot", "IPresenter (rendering)", "Live chart + export")
+skinparam rectangle {
+    BackgroundColor<<Container>> #438DD5
+    FontColor<<Container>> #FFFFFF
+    BackgroundColor<<Component>> #85BBF0
+    FontColor<<Component>> #000000
+    BorderColor Black
+}
+skinparam actor {
+    BackgroundColor #08427B
+    BorderColor Black
 }
 
-Container(transport, "Session / Transport", "ITransport", "Serial or other")
+actor "User\nWPF panel / TUI form / CLI flags" as user
 
-Rel(user, surface, "Invokes command + args")
-Rel(surface, transport, "Encoded bytes out")
-Rel(transport, decoder, "Raw bytes in")
-Rel(decoder, plot, "Decoded values")
-Rel(plot, user, "Live view / export (SVG, PNG/JPG)")
-Rel(decoder, user, "Human-readable text baseline")
+rectangle "Device Control Module (plugin)" {
+  rectangle "Control Surface\n[IControlSurface]\nCommands / parameters" as surface <<Component>>
+  rectangle "Telemetry Decoder\n[IPresenter]\nHuman-readable text baseline" as decoder <<Component>>
+  rectangle "Telemetry Plot\n[IPresenter (rendering)]\nLive chart + export" as plot <<Component>>
+}
 
-SHOW_LEGEND()
+rectangle "Session / Transport\n[ITransport]\nSerial or other" as transport <<Container>>
+
+user --> surface : Invokes command + args
+surface --> transport : Encoded bytes out
+transport --> decoder : Raw bytes in
+decoder --> plot : Decoded values
+plot --> user : Live view / export (SVG, PNG/JPG)
+decoder --> user : Human-readable text baseline
 @enduml
 ```
 

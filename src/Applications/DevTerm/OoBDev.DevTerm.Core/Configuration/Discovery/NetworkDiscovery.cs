@@ -1,10 +1,8 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using OoBDev.DevTerm;
 
 namespace OoBDev.DevTerm.Configuration.Discovery;
 
@@ -31,7 +29,7 @@ public sealed class NetworkDiscovery(IEnumerable<INetworkDeviceProbe> probes)
 
     /// <summary>Groups hits by address into one row per device, its services as the badges (ordered by address).</summary>
     public static IReadOnlyList<NetworkDevice> GroupByDevice(IEnumerable<NetworkDeviceHit> hits) =>
-        [.. Merge(hits).GroupBy(h => h.Address)
+        [.. Merge(hits).GroupBy(h => h.Address, StringComparer.Ordinal)
             .Select(g => new NetworkDevice(
                 g.Key,
                 g.OrderByDescending(h => h.Kind != "unknown").ThenByDescending(h => h.DisplayName.Length).First().DisplayName,

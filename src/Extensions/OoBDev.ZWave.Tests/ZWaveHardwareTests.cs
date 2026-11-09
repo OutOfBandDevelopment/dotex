@@ -1,5 +1,4 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using OoBDev.Devices.TestUtilities;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.TestUtilities;
 using System;
 using System.Linq;

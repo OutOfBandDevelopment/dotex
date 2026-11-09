@@ -1,15 +1,9 @@
-using System;
+﻿using OoBDev.Documents.ExternalTools;
 using System.Collections.Generic;
 using System.IO;
 using OoBDev.System.IO;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using OoBDev.DevTerm;
-
-using OoBDev.DevTerm.Configuration;
-using OoBDev.DevTerm.Configuration.Discovery;
 namespace OoBDev.DevTerm.Configuration.Tests;
 
 /// <summary>The app-wide converter tools (<see cref="ConverterToolsStore"/>) and how they merge with a profile's older ones.</summary>
@@ -17,7 +11,7 @@ namespace OoBDev.DevTerm.Configuration.Tests;
 [TestClass]
 public sealed class ConverterToolsStoreTests
 {
-    private static StreamConvertToolOptions Tool(string name, string path = "gs.exe") => new() { Name = name, Path = path, Arguments = "{input} {output}", Formats = "ps", Dpi = 200 };
+    private static ExternalToolOptions Tool(string name, string path = "gs.exe") => new() { Name = name, Path = path, Arguments = "{input} {output}", Formats = "ps", Dpi = 200 };
 
     private readonly List<TempDirectoryHandle> _directories = [];
 

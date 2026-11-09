@@ -1,17 +1,9 @@
-using OoBDev.System.IO;
+﻿using OoBDev.System.IO;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using OoBDev.DevTerm;
-using OoBDev.DevTerm.DeviceManifests.Editing;
-using OoBDev.UiDefinitions;
-using OoBDev.UiDefinitions.Forms;
-
-using OoBDev.DevTerm.DeviceManifests;
 using OoBDev.DevTerm.DeviceManifests.Editing;
 using OoBDev.UiDefinitions;
 using OoBDev.UiDefinitions.Forms;

@@ -88,4 +88,24 @@ public class XFragmentTests
         var xml = @"<test />";
         Assert.AreEqual(xml, (string?)fragment);
     }
+
+    [TestMethod, TestCategory(TestCategories.Unit)]
+    public void CreateNavigator_FragmentWithOneRoot_SelectsItsElements()
+    {
+        var fragment = XFragment.Parse("<b><c /><c /></b>");
+
+        var navigator = fragment.CreateNavigator();
+
+        Assert.IsNotNull(navigator);
+        Assert.AreEqual(1, navigator.Select("/*").Count);
+        Assert.AreEqual(2, navigator.Select("/b/c").Count);
+    }
+
+    [TestMethod, TestCategory(TestCategories.Unit)]
+    public void CreateNavigator_FragmentWithTwoRoots_Throws()
+    {
+        var fragment = XFragment.Parse("<a /><b />");
+
+        Assert.ThrowsExactly<global::System.InvalidOperationException>(() => fragment.CreateNavigator());
+    }
 }

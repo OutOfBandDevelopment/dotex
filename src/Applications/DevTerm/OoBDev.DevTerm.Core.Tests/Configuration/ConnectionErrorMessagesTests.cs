@@ -1,14 +1,6 @@
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.IO;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using OoBDev.DevTerm;
-
-using OoBDev.DevTerm.Configuration;
-using OoBDev.DevTerm.Configuration.Discovery;
 namespace OoBDev.DevTerm.Configuration.Tests;
 
 [TestCategory("Unit")]
@@ -45,7 +37,7 @@ public sealed class ConnectionErrorMessagesTests
     [TestMethod]
     public void IsConnectionFailure_StillRejectsAnUnrelatedBug()
     {
-        Assert.IsFalse(ConnectionErrorMessages.IsConnectionFailure(new NullReferenceException()));
+        Assert.IsFalse(ConnectionErrorMessages.IsConnectionFailure(new InvalidCastException()));
         Assert.IsFalse(ConnectionErrorMessages.IsConnectionFailure(new NotSupportedException()));
     }
 

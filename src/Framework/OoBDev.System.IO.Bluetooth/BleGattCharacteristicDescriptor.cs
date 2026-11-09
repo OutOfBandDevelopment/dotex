@@ -1,10 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-namespace OoBDev.System.IO.Bluetooth;
+﻿namespace OoBDev.System.IO.Bluetooth;
 
 /// <summary>
 /// One GATT characteristic under a <see cref="BleGattServiceDescriptor"/>, as seen during profile

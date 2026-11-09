@@ -1,4 +1,4 @@
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -7,7 +7,6 @@ using OoBDev.System.Net.Http;
 using OoBDev.System.Security;
 using OoBDev.System.Security.Claims;
 using OoBDev.TestUtilities;
-using OpenTelemetry;
 using OpenTelemetry.Logs;
 using OpenTelemetry.Trace;
 using System;

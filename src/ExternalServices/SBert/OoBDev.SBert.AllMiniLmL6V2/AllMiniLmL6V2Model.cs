@@ -1,7 +1,6 @@
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using OoBDev.Onnx.SentenceEmbeddings;
 using System;
-using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 

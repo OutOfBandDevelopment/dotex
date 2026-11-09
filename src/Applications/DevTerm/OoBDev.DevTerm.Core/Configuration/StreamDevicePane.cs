@@ -1,12 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using OoBDev.DevTerm;
-
-namespace OoBDev.DevTerm.Configuration;
+﻿namespace OoBDev.DevTerm.Configuration;
 
 /// <summary>One device's pane in the Stream Monitor: its name (null for the "all devices" pane) and how many captures it holds.</summary>
 public sealed record StreamDevicePane(string? Device, int Count)

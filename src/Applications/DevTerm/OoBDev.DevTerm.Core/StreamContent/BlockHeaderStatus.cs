@@ -1,6 +1,4 @@
-using System;
-
-namespace OoBDev.DevTerm;
+﻿namespace OoBDev.DevTerm;
 
 /// <summary>The result of <see cref="StreamContentSniffer.ParseBlockHeader"/>.</summary>
 public enum BlockHeaderStatus

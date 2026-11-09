@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net10.0-windows</TargetFramework>
+		<UseWPF>true</UseWPF>
+		<UseWindowsForms>true</UseWindowsForms>
+		<ImplicitUsings>false</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<IsPackable>false</IsPackable>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\Tools\OoBDev.ImageMask.Cli\OoBDev.ImageMask.Cli.csproj" />
+		<ProjectReference Include="..\..\Framework\OoBDev.System\OoBDev.System.csproj" />
+	</ItemGroup>
+
+</Project>

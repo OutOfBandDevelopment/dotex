@@ -1,8 +1,7 @@
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using OoBDev.Scpi;
 using OoBDev.Scpi.Panels;
-using OoBDev.UiDefinitions.Forms;
 using OoBDev.UiDefinitions.ViewModels;
 
 namespace OoBDev.DevTerm.Wpf;

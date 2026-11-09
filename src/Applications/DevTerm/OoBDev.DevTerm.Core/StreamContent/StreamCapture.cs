@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System;
 namespace OoBDev.DevTerm;
 
 /// <summary>One detected, captured piece of renderable/binary content from a session's incoming bytes.</summary>

@@ -7,6 +7,7 @@ export const navGroups: NavGroup[] = [
     { label: 'Chat', to: '/ai/chat' },
     { label: 'Embeddings', to: '/ai/embeddings' },
     { label: 'Retrieval (RAG)', to: '/ai/rag' },
+    { label: 'Search', to: '/ai/search' },
     { label: 'Ollama', to: '/ai/ollama' },
     { label: 'Groq cloud', to: '/ai/groq' },
     { label: 'Image labels', to: '/ai/images' },
@@ -21,10 +22,12 @@ export const navGroups: NavGroup[] = [
   { title: 'Messaging', items: [
     { label: 'Communications', to: '/messaging/communications' },
     { label: 'Queues', to: '/messaging/queues' },
+    { label: 'Webhooks', to: '/messaging/webhooks' },
   ] },
   { title: 'Identity and security', items: [{ label: 'Current user', to: '/identity/me' }] },
   { title: 'Operations', items: [{ label: 'Runtime and configuration', to: '/operations/info' }, { label: 'Telemetry', to: '/operations/telemetry' } ] },
   { title: 'Developer', items: [
+    { label: 'CGI programs', to: '/developer/cgi' },
     { label: 'API reference', to: '/developer/api' },
     { label: 'Event reference', to: '/developer/events' },
   ] },

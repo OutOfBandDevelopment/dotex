@@ -27,6 +27,11 @@ Acceptance criteria for each journey. The same journeys run as Playwright tests.
 | [Render a text template](render-a-template.md) | 2 | `/content/templates` |
 | [Send an email through a channel](send-an-email.md) | 2 | `/messaging/communications` |
 | [Put a message on a queue](queue-a-message.md) | 2 | `/messaging/queues` |
-| [Convert and store a document](convert-a-document.md) | 2 | `/content/documents` |
+| [Convert and store a document](convert-a-document.md) | 3 | `/content/documents` |
 | [Sign in with Keycloak](sign-in.md) | 3 | `/identity/me` |
 | [See the claims on your token](see-who-you-are.md) | 1 | `/identity/me` |
+| [Search passages by keyword, meaning and both](search-three-ways.md) | 2 | `/ai/search` |
+| [Open and preview a template](preview-a-template.md) | 2 | `/content/templates` |
+| [See the queue channels and received messages](watch-the-queues.md) | 2 | `/messaging/queues` |
+| [Run a CGI program](run-a-cgi-program.md) | 1 | `/developer/cgi` |
+| [Send a webhook to a channel](send-a-webhook.md) | 1 | `/messaging/webhooks` |

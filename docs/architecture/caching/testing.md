@@ -21,15 +21,21 @@
 
 OoBDev Caching uses a **layered testing strategy** aligned with the test pyramid:
 
+```plantuml
+@startuml
+skinparam rectangle {
+  BackgroundColor White
+  BorderColor #444444
+}
+rectangle "Integration\nReal Redis/Memory Cache (10%)" <<tests>> as integration
+rectangle "Simulation\nMocked providers, full stack (20%)" <<tests>> as simulation
+rectangle "Unit\nMocked dependencies, isolated (70%)" <<tests>> as unit
+integration -[hidden]down- simulation
+simulation -[hidden]down- unit
+@enduml
 ```
-           ┌─────────────┐
-          ╱  Integration  ╲  ← Real Redis/Memory Cache (10%)
-         ├─────────────────┤
-        ╱    Simulation    ╲  ← Mocked providers, full stack (20%)
-       ├───────────────────┤
-      ╱       Unit          ╲  ← Mocked dependencies, isolated (70%)
-     └───────────────────────┘
-```
+
+*Figure 1 — Test pyramid*
 
 ### Test Distribution Goal
 

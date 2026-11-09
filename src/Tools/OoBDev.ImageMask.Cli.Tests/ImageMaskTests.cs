@@ -180,6 +180,37 @@ public sealed class ImageMaskTests
     }
 
     [TestMethod]
+    public void RunBesideZonesFile_ZonesFileNextToTheImage_MasksItsZones()
+    {
+        // Stage
+        var committed = Image("guide.png", SKColors.White, SKColors.Black);
+        var capture = Image("new.png", SKColors.White, SKColors.Gray);
+        File.WriteAllText(Path.Combine(_dir, ImageSync.ZonesFileName), ClockZone("guide.png").ToJson());
+        var before = File.ReadAllBytes(committed);
+
+        // Test
+        var updated = ImageSync.RunBesideZonesFile(capture, committed);
+
+        // Assert
+        Assert.IsFalse(updated);
+        CollectionAssert.AreEqual(before, File.ReadAllBytes(committed));
+    }
+
+    [TestMethod]
+    public void RunBesideZonesFile_NoZonesFile_ComparesExactly()
+    {
+        // Stage
+        var committed = Image("guide.png", SKColors.White, SKColors.Black);
+        var capture = Image("new.png", SKColors.White, SKColors.Gray);
+
+        // Test
+        var updated = ImageSync.RunBesideZonesFile(capture, committed);
+
+        // Assert
+        Assert.IsTrue(updated);
+    }
+
+    [TestMethod]
     public void Run_NoCommittedImage_CopiesTheCapture()
     {
         // Stage

@@ -1,15 +1,9 @@
-using OoBDev.System.IO;
+﻿using OoBDev.System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Net.Http;
-using System.Threading;
 using System.Threading.Tasks;
 using OoBDev.DevTerm.Configuration;
-using OoBDev.DevTerm.Presenters.Text;
-using OoBDev.DevTerm;
 using OoBDev.DevTerm.Presenters.Text;
 using Microsoft.Extensions.Options;
 using Terminal.Gui.App;

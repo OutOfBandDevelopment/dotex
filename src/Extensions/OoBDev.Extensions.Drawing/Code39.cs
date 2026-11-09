@@ -35,7 +35,7 @@ public static partial class Code39
 
     private static readonly Dictionary<char, string> _fullAscii = BuildFullAscii();
 
-    [GeneratedRegex(@"^(\*[-0-9A-Z.$/+% ]+\*|[-0-9A-Z.$/+% ]+)$")]
+    [GeneratedRegex(@"^(\*[-0-9A-Z.$/+% ]+\*|[-0-9A-Z.$/+% ]+)$", RegexOptions.ExplicitCapture, matchTimeoutMilliseconds: 1000)]
     private static partial Regex ValidStandard();
 
     /// <summary>Converts text to the standard set using the full-ASCII escapes (<c>+A</c> for <c>a</c>, <c>/A</c> for <c>!</c>, and so on).</summary>

@@ -1,3 +1,4 @@
+﻿using OoBDev.UiDefinitions;
 using System;
 using System.Collections.Generic;
 using OoBDev.UiDefinitions.ViewModels;
@@ -20,8 +21,25 @@ public sealed class PanelViewModel : IDisposable
         ArgumentNullException.ThrowIfNull(form);
         Title = title;
         Form = form;
+        RememberNotes(form);
         _owned = owned;
         Displays = displays ?? [];
+    }
+
+    /// <summary>The label of the Notes section in the shared <see cref="SectionExpansionState"/> (the Tui uses the same).</summary>
+    public const string NotesSectionLabel = "Notes";
+
+    private static void RememberNotes(FormViewModel form)
+    {
+        var name = form.Definition.Name;
+        form.NotesExpanded = SectionExpansionState.IsExpanded(name, NotesSectionLabel);
+        form.PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName == nameof(FormViewModel.NotesExpanded))
+            {
+                SectionExpansionState.Set(name, NotesSectionLabel, form.NotesExpanded);
+            }
+        };
     }
 
     /// <summary>The title.</summary>

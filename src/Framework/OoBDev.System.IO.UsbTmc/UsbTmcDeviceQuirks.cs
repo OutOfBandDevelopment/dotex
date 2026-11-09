@@ -1,10 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-namespace OoBDev.System.IO.UsbTmc;
+﻿namespace OoBDev.System.IO.UsbTmc;
 
 /// <summary>
 /// Per-device deviations from USBTMC 1.0/USB488 that <see cref="UsbTmcDeviceAdapter"/> has to work

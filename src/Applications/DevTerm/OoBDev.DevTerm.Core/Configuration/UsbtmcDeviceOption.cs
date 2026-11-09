@@ -1,10 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Globalization;
+﻿using System.Globalization;
 using OoBDev.System.IO.UsbTmc;
 namespace OoBDev.DevTerm.Configuration;
 

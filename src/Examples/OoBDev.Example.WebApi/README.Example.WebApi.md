@@ -14,11 +14,13 @@ A sample ASP.NET Core web API that composes the OoBDev framework the way a real 
 |------------|-----------|
 | `OllamaController`, `GroqCloudController`, `ModelCompareController` | Language model providers and side-by-side comparison |
 | `AllMiniLMController`, `SBERTController`, `SBERTDefaultController` | Embedding providers |
-| `VectorStoreController`, `VectorLabController`, `RagController`, `ImagesController` | Vector store, vector experiments, retrieval and image embeddings |
-| `MessageQueueingController` | Message queue sender |
-| `CommunicationsController` | Email and other channels |
-| `DocumentController`, `TextToolsController` | Document conversion and text tools |
-| `TextTemplateController` | Text templating |
+| `VectorStoreController`, `VectorLabController`, `RagController`, `SearchController`, `ImagesController` | Vector store, vector experiments, retrieval, keyword, semantic and hybrid search, and image embeddings |
+| `CgiProgramsController` | `GET api/CgiPrograms`: the CGI programs this host can start (Linux binaries are left out on Windows) |
+| `MessageQueueingController` | Message queue sender, configured channels (no secrets) and the received-message monitor |
+| `CommunicationsController` | Email through `ISendService` (channel `email`), directly or queued |
+| `WebhooksController` | Anonymous `POST /webhooks/{channel}`: raw body to `IReceiveService.HandleWebhookAsync` (204, 400 or 404 problem details) |
+| `DocumentController`, `TextToolsController` | Document conversion, the stored-documents list and text tools |
+| `TextTemplateController` | Text templating: list and read the example template files, preview a draft, apply a named template |
 | `UserController` | Current user and claims |
 | `CacheController`, `OperationsController`, `TelemetryController`, `ToolboxController` | Caching, operations, telemetry readback and shared tools |
 
@@ -33,6 +35,8 @@ dotnet run --project src/Examples/OoBDev.Example.WebApi
 
 Needs Go on the path. The built files are not committed (`cgi-bin/.gitignore`). `AllowAnonymous` is on in `appsettings.json` for the example only.
 
+On Windows call `greet.exe`. A `greet.cgi` left in `cgi-bin/` by a Linux or container build is an ELF binary, which Windows cannot start, so `/cgi-bin/greet.cgi` answers `500 The program could not start.` (the log line "CGI script greet.cgi could not start" names the script). Delete it or ignore it; `build.ps1` builds the file for the current system.
+
 ## Running
 
 ```bash
@@ -46,3 +50,7 @@ Most controllers need a backing service. Start the Docker services from `contain
 - `RequireApplicationUserId` is set to `false` so the samples run without a signed-in user.
 - The MailKit hosted receiver is disabled in `Program.cs`; enable it only with a reachable mailbox.
 - This project is not packaged.
+
+## Tests
+
+`OoBDev.Example.WebApi.Tests` (Unit) calls the controllers directly with mocked services: `CommunicationsController` (send accepted, provider rejection to a 502 problem, enqueue) and `WebhooksController` (raw body, headers, query and clock reach `IReceiveService`; 204, 404 and 400 mapping).

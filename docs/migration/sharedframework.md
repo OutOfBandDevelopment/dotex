@@ -13,7 +13,7 @@ SharedFramework (52 projects, about 28,600 LOC, from `Incoming/SharedFramework`)
 
 ## Outcome
 
-- Design documents for the epics live in [Features/Proposals](../../Features/Proposals/README.md) (Communications, Caching, Master data, Document services, Identity, Text templating, Data enhancement, Message composition). Four documents per feature: requirements, architecture, api-design, testing-strategy ([standard](../patterns-discovery/06-design-document-standard.md)).
+- Design documents for the epics live in [docs/design](../design/SharedFramework/README.md) (Communications, Caching, Master data, Document services, Identity, Text templating, Data enhancement, Message composition). Four documents per feature: requirements, architecture, api-design, testing-strategy ([standard](../patterns-discovery/06-design-document-standard.md)).
 - Code is written from those designs in the layers and patterns of this framework (rule `coding-standards`), not ported.
 - Phase 0 (net10.0 and namespace cleanup) was already done in main.
 

@@ -1,12 +1,8 @@
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.IO;
 using System.Linq;
 using global::System.Text.Json.Nodes;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using OoBDev.DevTerm;
 
 namespace OoBDev.DevTerm.Schemas.Tests;
 

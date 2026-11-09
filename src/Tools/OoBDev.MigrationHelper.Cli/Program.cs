@@ -1,12 +1,33 @@
-﻿namespace OoBDev.MigrationHelper.Cli;
+using Microsoft.Extensions.Configuration;
+
+namespace OoBDev.MigrationHelper.Cli;
 
 internal sealed class Program
 {
-    static void Main(string[] args)
+    private const string Usage = """
+        oobdev-migrationhelper --path <folder> [--from BinaryDataDecoders] [--to OoBDev]
+          Renames folders and files that start with the --from prefix and replaces the prefix inside every text file under --path.
+          It changes files in place, so run it on a clean working tree only.
+          --path  folder to rewrite (required)
+          --from  prefix to replace (default BinaryDataDecoders)
+          --to    new prefix (default OoBDev)
+        """;
+
+    static int Main(string[] args)
     {
-        var path = @"C:\repo\oobdev\dotex\Incoming\BinaryDecoders\src";
-        var sourcePrefix = "BinaryDataDecoders";
-        var targetPrefix = "OoBDev";
+        var options = new ConfigurationBuilder().AddCommandLine(args).Build();
+        if (args.Any(a => a is "-h" or "--help" or "-?") || string.IsNullOrWhiteSpace(options["path"]))
+        {
+            Console.WriteLine(Usage);
+            return args.Any(a => a is "-h" or "--help" or "-?") ? 0 : 1;
+        }
+
+        Run(options["path"]!, options["from"] ?? "BinaryDataDecoders", options["to"] ?? "OoBDev");
+        return 0;
+    }
+
+    private static void Run(string path, string sourcePrefix, string targetPrefix)
+    {
 
         foreach (var folder in Directory.EnumerateDirectories(path, "*.*", SearchOption.AllDirectories))
         {

@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
+﻿using System.Globalization;
 using System.Text.RegularExpressions;
 
 namespace OoBDev.UiDefinitions;
@@ -37,6 +34,6 @@ public static partial class ChartValue
     public static string Format(double value, string? unit = null) =>
         value.ToString("0.###", CultureInfo.InvariantCulture) + (string.IsNullOrEmpty(unit) ? string.Empty : " " + unit);
 
-    [GeneratedRegex(@"[-+]?(\d+\.?\d*|\.\d+)([eE][-+]?\d+)?", RegexOptions.None, matchTimeoutMilliseconds: 1000)]
+    [GeneratedRegex(@"[-+]?(\d+\.?\d*|\.\d+)([eE][-+]?\d+)?", RegexOptions.ExplicitCapture, matchTimeoutMilliseconds: 1000)]
     private static partial Regex FirstNumber();
 }

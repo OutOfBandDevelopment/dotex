@@ -1,8 +1,4 @@
-using OoBDev.Onnx.SentenceEmbeddings;
-using System;
-using System.Collections.Generic;
-
-namespace OoBDev.Onnx.ImageEmbeddings;
+﻿namespace OoBDev.Onnx.ImageEmbeddings;
 
 /// <summary>How the model output becomes one vector per image.</summary>
 public enum ImagePooling

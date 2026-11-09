@@ -15,7 +15,7 @@ public static class ServiceCollectionExtensions
     /// <returns>The modified service collection.</returns>
     public static IServiceCollection TryAddCommunicationQueueServices(this IServiceCollection services)
     {
-        // Adds a transient registration for the email message handler
+        services.AddOptions<EmailMessageHandlerOptions>().BindConfiguration("OoBDev:Communications:EmailQueue");
         services.AddTransient<IMessageQueueHandler, EmailMessageHandler>();
 
         return services;

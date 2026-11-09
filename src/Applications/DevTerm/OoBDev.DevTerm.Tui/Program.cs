@@ -1,3 +1,4 @@
+﻿using OoBDev.UiDefinitions;
 using OoBDev.System.IO.Devices;
 using System;
 using System.Collections.Generic;
@@ -6,12 +7,10 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using OoBDev.System.IO;
-using OoBDev.System.IO.Tcp;
 using OoBDev.DevTerm.Configuration;
 using OoBDev.DevTerm.Tui;
 using OoBDev.DevTerm;
 using OoBDev.DevTerm.Devices;
-using OoBDev.DevTerm.Presenters.Text;
 using OoBDev.System.IO.Bluetooth;
 using OoBDev.System.IO.UsbHids;
 using OoBDev.System.IO.Ports;
@@ -19,7 +18,6 @@ using OoBDev.System.IO.UsbTmc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Options;
 
 // A faulted background Task whose exception nobody ever observed (no await, no .Result, no
 // continuation checking it) used to crash the process when its finalizer ran - .NET no longer does

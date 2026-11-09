@@ -28,3 +28,7 @@ No Hardware test yet: dev-term reaches the meter over BLE (device id and GATT UU
 ## Device documentation
 
 [docs/known-configuration.md](docs/known-configuration.md) records how the device is reached on the bench (transport, framing, byte order, what was verified on hardware); the frame layouts are Kaitai Struct files in [docs/](docs/): `de5000.ksy`. Paths such as `docs/design/...`, `docs/test/...` and `src/DevTerm.*` inside those notes name files in the dev-term repository, where they were written.
+
+## Device panel
+
+`Panels/De5000Panel` is the meter's read-only `IDevicePanel` for DevTerm, offered on serial and BLE connections: indicators for the primary and secondary measurement, the frequency and the mode flags, and no buttons (`De5000ControlSurface` rejects every command, since the meter only transmits). `De5000Decoder` buffers the stream into 17-byte packets, resyncs on noise, writes the readable line of each and publishes only the values that changed. It is registered in `OoBDev.DevTerm.Devices` with `TryAddDevicePanel<De5000Panel>()`. `Panels/De5000PanelTests` cover it (5 tests, plus the transport rows); it is not yet checked on screen or against the meter.

@@ -1,14 +1,4 @@
-using System;
-using System.Buffers.Binary;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using OoBDev.DevTerm;
-
-namespace OoBDev.DevTerm.Configuration.Discovery;
+﻿namespace OoBDev.DevTerm.Configuration.Discovery;
 
 /// <summary>One resource record from a DNS answer, decoded for the types DNS-SD needs.</summary>
 /// <param name="Name">The owner name.</param>

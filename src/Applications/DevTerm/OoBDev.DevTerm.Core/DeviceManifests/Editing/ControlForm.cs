@@ -1,12 +1,8 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
-using System.IO;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using OoBDev.DevTerm.DeviceManifests;
 using OoBDev.UiDefinitions;
 using OoBDev.UiDefinitions.Forms;
 
@@ -96,7 +92,7 @@ public sealed class ControlForm : EditorForm
         get => KindOf(Control);
         set
         {
-            if (value == Kind || !Kinds.Contains(value))
+            if (value == Kind || !Kinds.Contains(value, StringComparer.Ordinal))
             {
                 return;
             }
@@ -587,7 +583,7 @@ public sealed class ControlForm : EditorForm
         }
     }
 
-    private static IEnumerable<ChartChannel> ChannelsOf(UiControl control) => control switch
+    private static List<ChartChannel> ChannelsOf(UiControl control) => control switch
     {
         BarGraphControl b => b.Channels,
         StripChartControl s => s.Channels,

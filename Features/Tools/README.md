@@ -92,7 +92,7 @@ The Incoming/Tools directory contains 4 standalone CLI applications for various 
 
 - [Incoming/Tools/](../../Incoming/Tools/) - Source code
 - [TODO.md](../../TODO.md) - Migration tracking
-- [Features/ContractParser/](../ContractParser/) - Related code generation feature
+- [docs/design/ContractParser/](../../docs/design/ContractParser/) - Related code generation feature
 
 ---
 

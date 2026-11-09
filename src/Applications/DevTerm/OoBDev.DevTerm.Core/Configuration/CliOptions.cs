@@ -1,14 +1,10 @@
+﻿using OoBDev.Documents.ExternalTools;
 using OoBDev.System.IO.Pipelines;
-using OoBDev.System.IO;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
 using System.IO.Ports;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using OoBDev.DevTerm;
 
 namespace OoBDev.DevTerm.Configuration;
 
@@ -583,5 +579,5 @@ public sealed class CliOptions
     /// capture, <c>tool:Name</c> runs one by name.
     /// </summary>
     [Browsable(false)]
-    public List<StreamConvertToolOptions> StreamConvertTools { get; set; } = [];
+    public List<ExternalToolOptions> StreamConvertTools { get; set; } = [];
 }

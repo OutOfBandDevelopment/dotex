@@ -41,24 +41,26 @@ Both are "rendering presenters" in the same sense, they just target different re
 
 ```plantuml
 @startuml
-!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
-
-Container_Boundary(pipeline, "Session Pipeline") {
-  Component(raw, "Raw Byte Stream", "Session", "Bytes from the transport")
-  Component(render, "Rendering Presenter", "Plugin", "HPGL / PostScript / PCL / telemetry plot")
-  Component(text, "Text View", "Presenter output", "Human-readable baseline")
-  Component(canvas, "Drawing / Plot Canvas", "Presenter output", "Renderable scene")
-  Component(svg, "SVG Export", "Exporter", "Vector output")
-  Component(raster, "PNG/JPG Export", "Exporter", "Raster output")
+skinparam rectangle {
+    BackgroundColor<<Component>> #85BBF0
+    FontColor<<Component>> #000000
+    BorderColor Black
 }
 
-Rel(raw, render, "Feeds")
-Rel(render, text, "Always produces")
-Rel(render, canvas, "Where supported")
-Rel(canvas, svg, "Exports as")
-Rel(canvas, raster, "Exports as")
+rectangle "Session Pipeline" {
+  rectangle "Raw Byte Stream\n[Session]\nBytes from the transport" as raw <<Component>>
+  rectangle "Rendering Presenter\n[Plugin]\nHPGL / PostScript / PCL / telemetry plot" as render <<Component>>
+  rectangle "Text View\n[Presenter output]\nHuman-readable baseline" as text <<Component>>
+  rectangle "Drawing / Plot Canvas\n[Presenter output]\nRenderable scene" as canvas <<Component>>
+  rectangle "SVG Export\n[Exporter]\nVector output" as svg <<Component>>
+  rectangle "PNG/JPG Export\n[Exporter]\nRaster output" as raster <<Component>>
+}
 
-SHOW_LEGEND()
+raw --> render : Feeds
+render --> text : Always produces
+render --> canvas : Where supported
+canvas --> svg : Exports as
+canvas --> raster : Exports as
 @enduml
 ```
 
@@ -74,26 +76,28 @@ A composite decoder handles this by:
 
 ```plantuml
 @startuml
-!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
-
-Container_Boundary(pipeline, "Session Pipeline") {
-  Component(raw, "Raw Byte Stream", "Session", "Bytes from the transport")
-  Component(composite, "Composite Decoder", "Plugin", "Demultiplexes by header/time-slot")
-  Component(ch1, "Channel: ASCII Text", "Sub-presenter")
-  Component(ch2, "Channel: Hex/Decimal/Binary", "Sub-presenter")
-  Component(ch3, "Channel: Nested Decoder", "Sub-presenter", "May itself be composite")
-  Component(combined, "Combined Channel View", "Pipeline output", "Recombined per-channel output")
+skinparam rectangle {
+    BackgroundColor<<Component>> #85BBF0
+    FontColor<<Component>> #000000
+    BorderColor Black
 }
 
-Rel(raw, composite, "Feeds")
-Rel(composite, ch1, "Demuxes to")
-Rel(composite, ch2, "Demuxes to")
-Rel(composite, ch3, "Demuxes to")
-Rel(ch1, combined, "Contributes to")
-Rel(ch2, combined, "Contributes to")
-Rel(ch3, combined, "Contributes to")
+rectangle "Session Pipeline" {
+  rectangle "Raw Byte Stream\n[Session]\nBytes from the transport" as raw <<Component>>
+  rectangle "Composite Decoder\n[Plugin]\nDemultiplexes by header/time-slot" as composite <<Component>>
+  rectangle "Channel: ASCII Text\n[Sub-presenter]" as ch1 <<Component>>
+  rectangle "Channel: Hex/Decimal/Binary\n[Sub-presenter]" as ch2 <<Component>>
+  rectangle "Channel: Nested Decoder\n[Sub-presenter]\nMay itself be composite" as ch3 <<Component>>
+  rectangle "Combined Channel View\n[Pipeline output]\nRecombined per-channel output" as combined <<Component>>
+}
 
-SHOW_LEGEND()
+raw --> composite : Feeds
+composite --> ch1 : Demuxes to
+composite --> ch2 : Demuxes to
+composite --> ch3 : Demuxes to
+ch1 --> combined : Contributes to
+ch2 --> combined : Contributes to
+ch3 --> combined : Contributes to
 @enduml
 ```
 

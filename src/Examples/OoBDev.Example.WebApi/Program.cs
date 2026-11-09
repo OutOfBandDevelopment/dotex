@@ -69,11 +69,16 @@ public static class Program
             hostingBuilder: new()
             {
                 //TODO: add a run profile that disable hosting
-                DisableMailKit = true, //TODO: this is not supported at this time so just skip it ...skipHosting,
+                DisableCommunications = false,
                 //DisableMessageQueueing = true,  // skipHosting,
             });
 
         ConfigureVectorsAndModels(builder);
+        builder.Services.AddTransient<OoBDev.WebApi.Services.TemplateCatalog>();
+        builder.Services.Configure<OoBDev.WebApi.Models.QueueChannelsOptions>(builder.Configuration.GetSection("MessageQueue"));
+        builder.Services.AddTransient<OoBDev.WebApi.Services.QueueChannelCatalog>();
+        builder.Services.AddSingleton<OoBDev.WebApi.Services.ReceivedMessageLog>();
+        builder.Services.AddTransient<OoBDev.WebApi.Services.CgiProgramCatalog>();
 
         // Add services to the container.
         services.AddLogging(builder => builder

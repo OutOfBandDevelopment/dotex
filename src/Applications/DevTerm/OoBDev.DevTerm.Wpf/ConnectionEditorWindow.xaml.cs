@@ -26,7 +26,7 @@ public partial class ConnectionEditorWindow : Window
         WpfTheme.Attach(this);
         DataContext = editor;
         editor.CloseRequested += (_, _) => DialogResult = true;
-        editor.ProfilesChangedExternally += (_, _) => Dispatcher.BeginInvoke(() => editor.RefreshCommand.Execute(null));
+        editor.ProfilesChangedExternally += (_, _) => _ = Dispatcher.BeginInvoke(() => editor.RefreshCommand.Execute(null));
     }
 
     /// <summary>The Browse and Save As commands for the zip path, or null when the host has no file pickers.</summary>

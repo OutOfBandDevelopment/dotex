@@ -1,10 +1,4 @@
-using OoBDev.DevTerm.Devices.Tests;
-using System.Text;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
-using OoBDev.Scpi;
-using OoBDev.UiDefinitions;
-using OoBDev.TestUtilities;
+﻿using OoBDev.TestUtilities;
 
 namespace OoBDev.DevTerm.Devices.Scpi.Tests;
 

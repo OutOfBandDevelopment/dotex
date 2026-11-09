@@ -1,14 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text.Json.Serialization;
-using System.Threading;
-using System.Threading.Tasks;
-using OoBDev.DevTerm;
-using OoBDev.UiDefinitions;
-
-namespace OoBDev.DevTerm.DeviceManifests;
+﻿namespace OoBDev.DevTerm.DeviceManifests;
 
 /// <summary>
 /// One recognizable response shape for a text protocol: a regex tested against every complete

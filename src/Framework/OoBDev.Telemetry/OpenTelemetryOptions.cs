@@ -18,9 +18,9 @@ public class OpenTelemetryOptions
     public Uri? OtlpEndpoint { get; set; }
 
     /// <summary>
-    /// Gets or sets the OTLP protocol (<c>Grpc</c> or <c>HttpProtobuf</c>). Default is <c>HttpProtobuf</c>.
+    /// Gets or sets the OTLP protocol (<c>Grpc</c> or <c>HttpProtobuf</c>). When empty, <c>OTEL_EXPORTER_OTLP_PROTOCOL</c> decides (Aspire sets it to gRPC), else <c>HttpProtobuf</c>.
     /// </summary>
-    public string Protocol { get; set; } = "HttpProtobuf";
+    public string? Protocol { get; set; }
 
     /// <summary>
     /// Gets or sets the <c>service.name</c> resource attribute. When empty the exporter default is kept.

@@ -1,7 +1,6 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
 using System.Threading.Tasks;
-using OoBDev.DevTerm.Tests;
 
 namespace OoBDev.DevTerm.Configuration.Tests;
 

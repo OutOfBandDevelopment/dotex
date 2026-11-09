@@ -1,12 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using OoBDev.DevTerm;
-using OoBDev.DevTerm.Logging;
 using System.Text;
 using OoBDev.DevTerm.Presenters.Text;
 using Microsoft.Extensions.Options;
@@ -263,5 +257,56 @@ public sealed class PlaybackEngineTests
         Assert.AreEqual(3, engine.Position);
         Assert.AreEqual(TimeSpan.FromSeconds(1), item.Offset, "It takes the time of the record before it.");
         Assert.AreEqual("00:01.000 [note] reply ok", PlaybackText.Lines(item).Single().Text);
+    }
+
+    [TestMethod]
+    public void MaxGap_LongGap_WaitsOnlyTheCapAndKeepsLogTime()
+    {
+        // Stage
+        var (engine, clock) = Create();
+        engine.MaxGap = TimeSpan.FromSeconds(1);
+        engine.Play();
+        engine.Tick();
+        clock.Advance(TimeSpan.FromSeconds(1));
+        engine.Tick();
+        clock.Advance(TimeSpan.FromSeconds(1));
+        engine.Tick();
+
+        // Test
+        var wait = engine.TimeUntilNextDue();
+        clock.Advance(TimeSpan.FromSeconds(1));
+        var batch = engine.Tick();
+
+        // Assert
+        Assert.AreEqual(TimeSpan.FromSeconds(1), wait, "The 8 s gap before the last record plays as 1 s.");
+        Assert.HasCount(1, batch.Items);
+        Assert.AreEqual(TimeSpan.FromSeconds(10), engine.Elapsed, "Log time still shows the real offset.");
+    }
+
+    [TestMethod]
+    public void MaxGap_Unset_PlaysEveryGapInFull()
+    {
+        // Stage
+        var (engine, clock) = Create();
+        engine.Play();
+        engine.Tick();
+        clock.Advance(TimeSpan.FromSeconds(1));
+        engine.Tick();
+        clock.Advance(TimeSpan.FromSeconds(1));
+        engine.Tick();
+
+        // Test + Assert
+        Assert.AreEqual(TimeSpan.FromSeconds(8), engine.TimeUntilNextDue());
+        Assert.IsNull(engine.MaxGap);
+    }
+
+    [TestMethod]
+    public void MaxGap_NotPositive_Throws()
+    {
+        // Stage
+        var (engine, _) = Create();
+
+        // Test + Assert
+        Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => engine.MaxGap = TimeSpan.Zero);
     }
 }

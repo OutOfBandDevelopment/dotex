@@ -7,7 +7,7 @@ One place per kind of information; move work between them as it progresses.
 | `OPEN-QUESTIONS.md` | Only questions still waiting for the owner (rule `open-questions`). |
 | `BACKLOG.md` | The full list of open, valid work, grouped by area. |
 | `TODO.md` | Active work only: what is in progress and the few items next. Keep it to about 15 lines of items. |
-| `docs/changes/` | Finished and verified work, one file per day (`{YYYY-MM-DD}.md`, one `##` section per task; owner, 2026-11-04), indexed in `docs/changes/README.md`. |
+| `docs/changes/` | Finished and verified work, one file per day (`{YYYY-MM-DD}.md`, one `##` section per task; owner, 2026-11-04), named for the system date when the task finished (`date +%F`): a session that runs past midnight starts a new file, and the `work-tracking` hook warns when a section lands in another day's file (owner, 2026-11-05), indexed in `docs/changes/README.md`. |
 | Feature docs (`docs/design/<Feature>/`, project `README.{Project}.md`, `docs/patterns-discovery/`) | The current truth about the feature; update them in the same change as the code. |
 
 Lifecycle:

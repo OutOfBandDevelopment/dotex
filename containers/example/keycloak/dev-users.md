@@ -47,6 +47,7 @@ Roles arrive in the access token's `realm_access.roles` claim; the API translate
 | Client id | Type | Use |
 | --- | --- | --- |
 | `oobdev-example-web` | public, authorization code with PKCE | The Vue single page application. Redirect URIs: `http://localhost:8088/*`, `http://localhost:5173/*`, `http://localhost:8080/*`. Its tokens carry the audience `oobdev-example-api`. |
+| `oobdev-example-scalar` | public, authorization code with PKCE | The Scalar API reference of the example API (`/scalar`); set through `Keycloak__OAuth2OpenApiOptions__ClientId` in the AppHost and the compose file. Redirect URI: `http://localhost:*`. Local development only. Its tokens carry the audience `oobdev-example-api`. |
 
 ## Other accounts in the stack
 

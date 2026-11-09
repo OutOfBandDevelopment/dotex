@@ -240,11 +240,15 @@ System Response:
 ## Wireframes
 
 ### {Screen Name}
+```plantuml
+@startsalt
+{+
+  {Salt wireframe}
+}
+@endsalt
 ```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│  {ASCII wireframe}                                                          │
-└─────────────────────────────────────────────────────────────────────────────┘
-```
+
+*Figure N — {Screen Name} wireframe*
 
 ---
 

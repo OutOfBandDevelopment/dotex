@@ -9,6 +9,7 @@ Phase 7 of [the device decoding plan](../../../docs/migration/device-decoding-mi
 | Type | Role |
 |------|------|
 | `FormViewModel` | Sections of rows for a definition; refreshes every row when the model changes |
+| `FormSectionViewModel` | One section; `HasVisibleRows` is false when its own `VisibleWhen` fails or every row is hidden |
 | `ControlViewModel` | Base row: label, description, `IsVisible`, `IsEnabled`, `DisabledReason`, `Error` |
 | `ToggleViewModel`, `TextViewModel`, `ChoiceViewModel`, `ButtonViewModel` | One per form control kind (`TextViewModel` serves text field, numeric and slider) |
 | `ToggleCommand`, `SelectOptionCommand`, `ToggleOptionCommand`, `InvokeCommand` | Real `ICommand` types with the binding and control injected; `InvokeCommand` also takes the sibling controls and, for a button with `ParameterFieldIds`, passes their current texts joined by `,` as the command parameter, each first run through its `ParameterExpressions` entry when set |

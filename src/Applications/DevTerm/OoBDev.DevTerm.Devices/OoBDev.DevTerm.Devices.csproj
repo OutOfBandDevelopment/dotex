@@ -11,6 +11,11 @@
     <ProjectReference Include="..\..\..\Extensions\OoBDev.Scpi\OoBDev.Scpi.csproj" />
     <ProjectReference Include="..\..\..\HardwareDevices\OoBDev.Velleman.K8055\OoBDev.Velleman.K8055.csproj" />
     <ProjectReference Include="..\..\..\HardwareDevices\OoBDev.Kuando.Busylight\OoBDev.Kuando.Busylight.csproj" />
+    <ProjectReference Include="..\..\..\HardwareDevices\OoBDev.Zoom.H4n\OoBDev.Zoom.H4n.csproj" />
+    <ProjectReference Include="..\..\..\HardwareDevices\OoBDev.DerEE.De5000\OoBDev.DerEE.De5000.csproj" />
+    <ProjectReference Include="..\..\..\HardwareDevices\OoBDev.LanC\OoBDev.LanC.csproj" />
+    <ProjectReference Include="..\..\..\HardwareDevices\OoBDev.Fencing.ScoreMachines\OoBDev.Fencing.ScoreMachines.csproj" />
+    <ProjectReference Include="..\..\..\HardwareDevices\OoBDev.Quarta.RadexOne\OoBDev.Quarta.RadexOne.csproj" />
   </ItemGroup>
 
 </Project>
