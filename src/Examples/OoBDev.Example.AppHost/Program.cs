@@ -45,9 +45,6 @@ var smtp = builder.AddContainer("smtp4dev", "rnwood/smtp4dev")
 var tika = builder.AddContainer("apache-tika", "apache/tika")
     .WithHttpEndpoint(targetPort: 9998, name: "http");
 
-// The sentence-embedding service behind the embedding lab; the first start builds the image and downloads the model.
-var sbert = builder.AddDockerfile("sbert", Path.Combine(repoRoot, "containers"), "DockerFile.sbert")
-    .WithHttpEndpoint(targetPort: 5000, name: "http");
 
 // The port is fixed because the token issuer is the browser-visible address; a dynamic port would change the issuer on every run.
 var keycloakPort = int.Parse(Environment.GetEnvironmentVariable("TEST_PORT_KEYCLOAK") ?? "8081", System.Globalization.CultureInfo.InvariantCulture);
@@ -84,9 +81,7 @@ var api = builder.AddProject<OoBDev_Example_WebApi>("example-api", options => op
     .WithEnvironment("OllamaApiClientOptions__Url", ollama.GetEndpoint("http"))
     .WithEnvironment("OllamaApiClientOptions__DefaultModel", "phi3")
     .WithEnvironment("ApacheTikaClientOptions__Url", tika.GetEndpoint("http"))
-    .WithEnvironment("SentenceEmbeddingOptions__Url", sbert.GetEndpoint("http"))
     .WaitFor(tika)
-    .WaitFor(sbert)
     .WithReference(redis)
     .WithReference(rabbitmq)
     .WithReference(vectorDb)
