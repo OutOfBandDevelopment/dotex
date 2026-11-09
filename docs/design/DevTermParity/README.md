@@ -48,7 +48,7 @@ The Gap column was written before the port started; the current state is in [sta
 | Devices.Demo | 100 / 0 | Yes | `OoBDev.DevTerm.Devices.Demo` plugin (loopback panel) loaded by the Web flows from `plugins/demo` | F Devices |
 | Plugins.KeyValue, Plugins.Sample | 102 / 0 | No | Plugin model samples | G Plugins |
 | Console | 9,678 / 328 | No (CLI and TUI) | All; becomes `OoBDev.DevTerm.Tui` and the CLI | H Shells |
-| Wpf | 7,354 / 218 | Minimal: `OoBDev.DevTerm.Wpf` (286 lines, SCPI over a raw socket) | Almost all | H Shells |
+| Wpf | 7,354 / 218 | Yes: `OoBDev.DevTerm.Wpf` with all six slices (see [status](status.md
 | Web | 2,465 / 89 | No | All | H Shells |
 
 ## Open points
