@@ -7,6 +7,7 @@ export const navGroups: NavGroup[] = [
     { label: 'Chat', to: '/ai/chat' },
     { label: 'Embeddings', to: '/ai/embeddings' },
     { label: 'Retrieval (RAG)', to: '/ai/rag' },
+    { label: 'Search', to: '/ai/search' },
     { label: 'Ollama', to: '/ai/ollama' },
     { label: 'Groq cloud', to: '/ai/groq' },
     { label: 'Image labels', to: '/ai/images' },

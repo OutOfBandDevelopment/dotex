@@ -29,12 +29,12 @@ Each screen lists its purpose, the API it binds to, its commands and a mockup. "
 | Groq console | `/ai/groq` | `api/GroqCloud/Completion` | Exists (key needed) |
 | Embeddings lab | `/ai/embeddings` | `api/AI/Embeddings`, `api/SBERT`, `api/AllMiniLM` | Exists |
 | RAG | `/ai/rag` | `api/Rag` (embeds passages in process, answers through Ollama) | Exists |
+| Search | `/ai/search` | `api/Search` (BM25 keywords, in-process embeddings and reciprocal rank fusion over pasted passages) | Exists |
 | Documents | `/content/documents` | `Document/*` | Exists |
 | Templates | `/content/templates` | `api/TextTemplate/*` | Partly |
 | Communications | `/messaging/communications` | `api/Communications/*` | Exists |
 | Queues | `/messaging/queues` | `api/MessageQueueing/*` | Exists |
 | Current user | `/identity/me` | `api/User/claims` | Exists |
-| Search | `/data/search` | `Search/*` | Planned (needs the `SearchController` restored; not in the navigation) |
 | Cache | `/data/cache` | `api/Cache` | Exists as a lab (store, look up, remove; the provider cannot list keys) |
 | Vector stores | `/utilities/vectors` | vector store endpoints | Exists (store texts, search by meaning; lexical and hybrid Planned) |
 | Image embeddings | `/ai/images` | image endpoints | Exists (zero-shot labels) |
@@ -204,7 +204,7 @@ Purpose: show who the token says you are. Binds to `GET api/User/claims`; the sa
 *Figure 7 — Claims*
 
 ## Search
-
+Purpose: run one query three ways (keywords by BM25, meaning by in-process embeddings, and both fused by reciprocal rank fusion) over passages pasted into the page, and show the three lists side by side. Built 2026-11-09 as `SearchController` (`POST api/Search`); searching an indexed store with a list-all mode stays a later step. Commands: `SearchCommand`.
 Purpose: lexical, semantic and hybrid search over indexed content, with a list-all mode. Needs the commented-out `SearchController` restored. Commands: `SearchCommand`.
 
 ```plantuml

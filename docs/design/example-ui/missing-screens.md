@@ -17,7 +17,6 @@ Review of the example web app (`src/Examples/OoBDev.Example.Web`) and API agains
 
 | Screen | Framework projects | What the screen would show | Needs |
 | --- | --- | --- | --- |
-| Search (lexical, hybrid, semantic) | `OoBDev.Search`, vector store providers | One query across the three modes, results side by side | `SearchController` is commented out; restore it |
 | Template management | `OoBDev.TextTemplating`, Handlebars | List, edit, save and preview templates | `Query` and `Save` endpoints are commented out |
 | Identity management | `OoBDev.Identity`, `OoBDev.Identity.Jws`, Keycloak | User lookup, rights, sessions | Keycloak admin scope; the host runs the API anonymously today |
 | Queue adapters and blob browser | RabbitMQ, SQS, Service Bus, Storage queues, Azure Storage containers | Provider status, receive monitor, container browser | Queue receive endpoint, blob list endpoint (Azurite and Moto exist in the test stack) |
@@ -60,7 +59,7 @@ These have no row in `future-example.md` or `screens.md`; whether each deserves 
 
 ## Recommended order
 
-1. Search, because the controller and the vector store pieces already exist and it completes the retrieval story (Search, RAG, Vector store).
+1. ~~Search~~ (built 2026-11-09 as `/ai/search`).
 2. Template management, which finishes a partly built screen.
 3. Queue adapters and blob browser, reusing the Azurite and Moto stack.
 4. Rights and roles, then Identity management, because they show the authorization model that every other API surface relies on.
