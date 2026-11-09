@@ -1,13 +1,6 @@
-using OoBDev.Documents.ExternalTools;
+﻿using OoBDev.Documents.ExternalTools;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
-using OoBDev.DevTerm.Configuration;
 using Terminal.Gui.ViewBase;
 using Terminal.Gui.Views;
 namespace OoBDev.DevTerm.Tui.Tests;

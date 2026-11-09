@@ -1,9 +1,8 @@
-#pragma warning disable MA0048 // related small types share a file
+﻿#pragma warning disable MA0048 // related small types share a file
 using Microsoft.Extensions.Options;
 using System;
 using System.Buffers;
 using System.IO;
-using System.Linq;
 
 namespace OoBDev.AspNetCore.Cgi;
 

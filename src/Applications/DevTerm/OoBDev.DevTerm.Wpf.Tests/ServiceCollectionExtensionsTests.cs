@@ -1,7 +1,6 @@
-using System.Linq;
+﻿using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using OoBDev.DevTerm.Configuration;
 
 namespace OoBDev.DevTerm.Wpf.Tests;
 

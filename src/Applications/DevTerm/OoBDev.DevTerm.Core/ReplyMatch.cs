@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-namespace OoBDev.DevTerm;
+﻿namespace OoBDev.DevTerm;
 
 /// <summary>How one received line relates to a pending query's reply id (see <see cref="LineReplyPresenter"/>).</summary>
 public enum ReplyMatch

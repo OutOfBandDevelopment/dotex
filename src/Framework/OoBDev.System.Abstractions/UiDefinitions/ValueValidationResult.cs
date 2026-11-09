@@ -1,7 +1,4 @@
-using System;
-using System.Globalization;
-
-namespace OoBDev.UiDefinitions;
+﻿namespace OoBDev.UiDefinitions;
 
 /// <summary>The outcome of <see cref="ValueValidator.Validate(ValueConstraint?, string?)"/>.</summary>
 public sealed class ValueValidationResult

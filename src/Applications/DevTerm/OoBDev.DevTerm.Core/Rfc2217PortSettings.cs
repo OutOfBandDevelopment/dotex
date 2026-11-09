@@ -1,19 +1,4 @@
-using OoBDev.System.IO.Pipelines;
-using OoBDev.System.IO;
-using OoBDev.System.IO.Tcp;
-using System;
-using System.Buffers;
-using System.Buffers.Binary;
-using System.Collections.Generic;
-using System.IO;
-using System.IO.Ports;
-using System.Linq;
-using System.Net;
-using System.Net.Sockets;
-using System.Text;
-using System.Threading;
-using System.Threading.Channels;
-using System.Threading.Tasks;
+﻿using System.IO.Ports;
 
 namespace OoBDev.DevTerm;
 

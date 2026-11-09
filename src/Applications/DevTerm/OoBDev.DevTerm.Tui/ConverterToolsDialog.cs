@@ -1,11 +1,7 @@
-using OoBDev.Documents.ExternalTools;
+﻿using OoBDev.Documents.ExternalTools;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using OoBDev.DevTerm.Configuration;

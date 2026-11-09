@@ -1,16 +1,13 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Drawing;
 using System.Globalization;
 using System.Text;
 using OoBDev.DevTerm.Configuration;
-using OoBDev.DevTerm;
-using OoBDev.DevTerm.Presenters.Text;
 using OoBDev.UiDefinitions;
 using OoBDev.UiDefinitions.Tui;
 using Terminal.Gui.App;

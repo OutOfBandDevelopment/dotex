@@ -1,11 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace OoBDev.System.IO.Tcp;
+﻿namespace OoBDev.System.IO.Tcp;
 
 /// <summary>RFC 2217 SET-STOPSIZE wire values. <see cref="Request"/> asks the server to report the current value.</summary>
 internal enum ComPortStopSize : byte

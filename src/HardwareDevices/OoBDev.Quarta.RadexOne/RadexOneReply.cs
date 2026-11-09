@@ -1,6 +1,4 @@
-using System;
-
-namespace OoBDev.Quarta.RadexOne;
+﻿namespace OoBDev.Quarta.RadexOne;
 
 /// <summary>
 /// A validated reply. The extension is kept whole and read through the typed accessors, because the shape depends on the command.

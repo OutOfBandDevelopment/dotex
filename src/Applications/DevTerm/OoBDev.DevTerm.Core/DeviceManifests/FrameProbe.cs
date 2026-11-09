@@ -1,15 +1,4 @@
-using System;
-using System.Buffers.Binary;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using OoBDev.DevTerm;
-using OoBDev.UiDefinitions;
-
-namespace OoBDev.DevTerm.DeviceManifests;
+﻿namespace OoBDev.DevTerm.DeviceManifests;
 
 /// <summary>What <see cref="FrameDecoder.Probe"/> found at the start of a buffer.</summary>
 public enum FrameProbe

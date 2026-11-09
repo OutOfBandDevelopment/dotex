@@ -1,16 +1,4 @@
-using System;
-using System.Buffers.Binary;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Net.NetworkInformation;
-using System.Net.Sockets;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace OoBDev.System.IO.Tcp;
+﻿namespace OoBDev.System.IO.Tcp;
 
 /// <summary>One LAN instrument found by <see cref="LxiDiscovery"/>.</summary>
 /// <param name="Host">Dotted IPv4 address.</param>

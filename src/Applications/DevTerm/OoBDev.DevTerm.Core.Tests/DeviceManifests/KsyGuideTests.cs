@@ -1,8 +1,7 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using OoBDev.DevTerm.TestUtilities;
 using OoBDev.Documents.Guides;
 
 namespace OoBDev.DevTerm.DeviceManifests.Tests;

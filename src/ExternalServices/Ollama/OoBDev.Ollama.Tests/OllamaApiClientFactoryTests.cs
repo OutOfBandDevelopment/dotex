@@ -1,8 +1,7 @@
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OllamaSharp;
 using OoBDev.TestUtilities;
-using System.Linq;
 
 namespace OoBDev.Ollama.Tests;
 

@@ -1,12 +1,6 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Text;
-using OoBDev.UiDefinitions;
 namespace OoBDev.UiDefinitions.Tui;
 
 /// <summary>One character cell of a chart: its glyph and an optional <c>#RRGGBB</c> foreground (null draws in the view's normal color).</summary>

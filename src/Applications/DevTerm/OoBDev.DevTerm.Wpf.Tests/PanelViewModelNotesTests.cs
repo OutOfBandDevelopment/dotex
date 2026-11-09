@@ -1,5 +1,4 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using OoBDev.DevTerm.Configuration;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.UiDefinitions;
 using OoBDev.UiDefinitions.Forms;
 using OoBDev.UiDefinitions.ViewModels;

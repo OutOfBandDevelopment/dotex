@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Runtime.ExceptionServices;
 using System.Threading;
 using System.Collections.Generic;
@@ -9,7 +9,6 @@ using System.Reflection;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using OoBDev.Examples.Controls.Wpf;
 using OoBDev.UiDefinitions.ViewModels;
 
 namespace OoBDev.Examples.Controls.Wpf.Tests;

@@ -1,5 +1,4 @@
-using Microsoft.Extensions.Logging.Abstractions;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Logging.Abstractions;
 using OoBDev.SBert.AllMiniLmL6V2;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;

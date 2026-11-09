@@ -1,12 +1,8 @@
-using OoBDev.System.IO;
+﻿using OoBDev.System.IO;
 using System;
 using System.Buffers;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
-using OoBDev.DevTerm;
 
 namespace OoBDev.DevTerm.Logging;
 

@@ -1,14 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Threading;
-using System.Threading.Tasks;
-using OoBDev.DevTerm;
-using OoBDev.UiDefinitions;
-
-namespace OoBDev.DevTerm.DeviceManifests;
+﻿namespace OoBDev.DevTerm.DeviceManifests;
 
 /// <summary>Where a <see cref="ValuePath"/> comes from in the manifest.</summary>
 public enum ValuePathSource

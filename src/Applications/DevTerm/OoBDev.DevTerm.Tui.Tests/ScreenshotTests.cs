@@ -1,16 +1,13 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using OoBDev.System.IO;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Text;
 using OoBDev.DevTerm.Configuration;
 using OoBDev.DevTerm.Presenters.Text;
-using OoBDev.DevTerm;
 using OoBDev.DevTerm.Logging;
 using Microsoft.Extensions.Options;
 namespace OoBDev.DevTerm.Tui.Tests;

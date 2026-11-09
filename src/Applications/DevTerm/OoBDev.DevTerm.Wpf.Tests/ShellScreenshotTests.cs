@@ -1,12 +1,10 @@
-using System;
-using System.IO;
+﻿using System.IO;
 using System.Threading;
 using System.Windows.Threading;
 using DevTermApp;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.DevTerm.Configuration;
-using OoBDev.DevTerm.Wpf;
 
 namespace OoBDev.DevTerm.Wpf.Tests;
 

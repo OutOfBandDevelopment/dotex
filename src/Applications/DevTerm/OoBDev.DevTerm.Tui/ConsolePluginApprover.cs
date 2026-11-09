@@ -1,12 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
-using OoBDev.DevTerm;
-namespace OoBDev.DevTerm.Tui;
+﻿namespace OoBDev.DevTerm.Tui;
 
 /// <summary>
 /// Asks on the terminal whether an out-of-process plugin may run, before the UI starts. One keypress: <c>y</c> for this start,

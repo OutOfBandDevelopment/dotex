@@ -1,10 +1,7 @@
-using System;
+﻿using System;
 using OoBDev.System.IO;
-using System.Collections.Generic;
-using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.DevTerm.Configuration;
-using OoBDev.DevTerm.Wpf;
 using OoBDev.System.IO.Bluetooth;
 
 namespace OoBDev.DevTerm.Wpf.Tests;

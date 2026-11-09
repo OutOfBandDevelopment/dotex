@@ -1,10 +1,8 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using OoBDev.Devices.TestUtilities;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.TestUtilities;
 using System;
 using System.Buffers;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace OoBDev.Velleman.K8055.Tests;

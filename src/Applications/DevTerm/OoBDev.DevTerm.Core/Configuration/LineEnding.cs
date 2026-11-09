@@ -1,12 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using OoBDev.DevTerm;
-
-namespace OoBDev.DevTerm.Configuration;
+﻿namespace OoBDev.DevTerm.Configuration;
 
 /// <summary>
 /// What to append to a typed line before sending it, when the presenter can encode outgoing

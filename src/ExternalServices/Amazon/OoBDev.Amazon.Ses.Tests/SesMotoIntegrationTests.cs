@@ -1,6 +1,5 @@
-using System;
+﻿using System;
 using System.Threading.Tasks;
-using Amazon.SimpleEmailV2;
 using Amazon.SimpleEmailV2.Model;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;

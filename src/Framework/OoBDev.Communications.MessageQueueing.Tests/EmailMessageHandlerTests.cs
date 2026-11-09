@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -6,7 +6,6 @@ using Microsoft.Extensions.Options;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using OoBDev.Communications.Abstractions;
-using OoBDev.Communications.MessageQueueing;
 using OoBDev.Communications.Models;
 using OoBDev.MessageQueueing.Services;
 using OoBDev.TestUtilities;

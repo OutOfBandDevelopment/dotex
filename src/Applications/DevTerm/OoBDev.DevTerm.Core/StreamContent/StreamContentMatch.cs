@@ -1,6 +1,4 @@
-using System;
-
-namespace OoBDev.DevTerm;
+﻿namespace OoBDev.DevTerm;
 
 /// <summary>Where a <see cref="StreamContentSniffer.Find"/> match starts, and — for content wrapped in an IEEE 488.2 definite-length block (<c>#&lt;n&gt;&lt;length&gt;&lt;payload&gt;</c>) — how long the block header is and how many payload bytes follow it.</summary>
 /// <param name="Kind">What the content was recognized as.</param>

@@ -1,5 +1,4 @@
-using System.IO.Ports;
-using OoBDev.System.IO.Ports.Bridge.Tests.TestKit;
+﻿using OoBDev.System.IO.Ports.Bridge.Tests.TestKit;
 using static OoBDev.System.IO.Ports.Bridge.Rfc2217Codes;
 using OoBDev.TestUtilities;
 

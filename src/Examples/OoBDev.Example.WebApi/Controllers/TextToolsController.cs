@@ -1,4 +1,4 @@
-
+﻿
 using Microsoft.AspNetCore.Mvc;
 using OoBDev.System.Text.Html;
 using OoBDev.System.Text.Json;
@@ -7,7 +7,6 @@ using OoBDev.System.Xml.XPath;
 using OoBDev.WebApi.Models;
 using System;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;

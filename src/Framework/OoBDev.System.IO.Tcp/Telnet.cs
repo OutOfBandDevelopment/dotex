@@ -1,11 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace OoBDev.System.IO.Tcp;
+﻿namespace OoBDev.System.IO.Tcp;
 
 /// <summary>Raw Telnet protocol byte constants (RFC 854) needed to carry RFC 2217's COM-PORT-OPTION.</summary>
 internal static class Telnet

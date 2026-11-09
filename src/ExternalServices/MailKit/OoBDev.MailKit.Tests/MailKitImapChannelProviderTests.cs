@@ -1,5 +1,4 @@
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,7 +12,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MimeKit;
 using Moq;
 using OoBDev.Communications.Abstractions;
-using OoBDev.Communications.Models;
 using OoBDev.MailKit.Services;
 using OoBDev.TestUtilities;
 

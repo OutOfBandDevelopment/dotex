@@ -1,5 +1,4 @@
-using System.IO.Ports;
-using OoBDev.TestUtilities;
+﻿using OoBDev.TestUtilities;
 
 namespace OoBDev.System.IO.Ports.Bridge.Tests;
 

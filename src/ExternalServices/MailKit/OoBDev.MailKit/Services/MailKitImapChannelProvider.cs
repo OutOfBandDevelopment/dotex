@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -8,7 +8,6 @@ using MailKit.Search;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using OoBDev.Communications.Abstractions;
-using OoBDev.Communications.Models;
 
 namespace OoBDev.MailKit.Services;
 

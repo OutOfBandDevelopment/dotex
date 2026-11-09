@@ -1,15 +1,11 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using OoBDev.System.IO;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using OoBDev.DevTerm.Configuration;
 using OoBDev.DevTerm.Presenters.Text;
-using OoBDev.DevTerm;
 namespace OoBDev.DevTerm.Tui.Tests;
 
 /// <summary><c>--capture &lt;dir&gt;</c>: the CLI saves detected streams as files and prints one line each.</summary>

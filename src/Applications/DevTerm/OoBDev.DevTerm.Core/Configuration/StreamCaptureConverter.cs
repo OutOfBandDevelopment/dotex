@@ -1,19 +1,14 @@
-using OoBDev.Documents.ExternalTools;
+﻿using OoBDev.Documents.ExternalTools;
 using OoBDev.Documents.Hpgl;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using OoBDev.Documents.Conversion;
 using OoBDev.System.IO;
 using Microsoft.Extensions.DependencyInjection;
-using System.Diagnostics;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
-using OoBDev.DevTerm;
 
 namespace OoBDev.DevTerm.Configuration;
 

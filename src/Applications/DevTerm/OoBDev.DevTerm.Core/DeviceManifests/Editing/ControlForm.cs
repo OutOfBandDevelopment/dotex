@@ -1,12 +1,8 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
-using System.IO;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using OoBDev.DevTerm.DeviceManifests;
 using OoBDev.UiDefinitions;
 using OoBDev.UiDefinitions.Forms;
 

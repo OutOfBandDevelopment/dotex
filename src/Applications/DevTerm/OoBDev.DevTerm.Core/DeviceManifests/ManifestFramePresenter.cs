@@ -1,12 +1,7 @@
-using OoBDev.UiDefinitions;
+﻿using OoBDev.UiDefinitions;
 using System;
 using System.Buffers;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using OoBDev.DevTerm;
 
 namespace OoBDev.DevTerm.DeviceManifests;
 

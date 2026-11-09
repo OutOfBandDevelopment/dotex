@@ -1,4 +1,4 @@
-using OoBDev.AI;
+﻿using OoBDev.AI;
 using OoBDev.Search.Semantic;
 using OoBDev.SBert.AllMiniLmL6V2;
 using OoBDev.WebApi.Models;
@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace OoBDev.WebApi.Controllers;

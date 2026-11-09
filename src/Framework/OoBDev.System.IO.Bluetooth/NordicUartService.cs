@@ -1,10 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-namespace OoBDev.System.IO.Bluetooth;
+﻿namespace OoBDev.System.IO.Bluetooth;
 
 /// <summary>
 /// The de facto "BLE Serial" GATT profile most hobbyist/embedded BLE devices use to emulate a UART

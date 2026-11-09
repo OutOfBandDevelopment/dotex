@@ -1,11 +1,5 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
-using OoBDev.UiDefinitions;
 using Terminal.Gui.Drawing;
 using Terminal.Gui.ViewBase;
 namespace OoBDev.UiDefinitions.Tui;

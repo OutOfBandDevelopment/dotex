@@ -1,5 +1,4 @@
-using Microsoft.Extensions.AI;
-using OoBDev.AI;
+﻿using OoBDev.AI;
 using OoBDev.Onnx.SentenceEmbeddings;
 using System;
 using System.Threading;

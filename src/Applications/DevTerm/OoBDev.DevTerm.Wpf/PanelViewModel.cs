@@ -1,7 +1,6 @@
-using OoBDev.UiDefinitions;
+﻿using OoBDev.UiDefinitions;
 using System;
 using System.Collections.Generic;
-using OoBDev.DevTerm.Configuration;
 using OoBDev.UiDefinitions.ViewModels;
 
 namespace OoBDev.DevTerm.Wpf;

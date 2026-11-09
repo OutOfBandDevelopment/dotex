@@ -6,7 +6,6 @@ using OllamaSharp.Models;
 using OllamaSharp.Models.Chat;
 using System.Text;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;

@@ -1,13 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace OoBDev.UiDefinitions;
+﻿namespace OoBDev.UiDefinitions;
 
 /// <summary>
 /// Optional capability an <see cref="IControlSurface"/> can also implement: shows exactly what

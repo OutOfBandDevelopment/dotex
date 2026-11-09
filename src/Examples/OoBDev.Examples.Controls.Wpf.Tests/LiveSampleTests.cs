@@ -1,9 +1,8 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Runtime.ExceptionServices;
 using System.Threading;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using OoBDev.Examples.Controls.Wpf;
 
 namespace OoBDev.Examples.Controls.Wpf.Tests;
 

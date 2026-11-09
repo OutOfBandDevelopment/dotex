@@ -1,5 +1,4 @@
-using NuGet.Common;
-using NuGet.Protocol;
+﻿using NuGet.Protocol;
 using NuGet.Protocol.Core.Types;
 using NuGet.Versioning;
 using System.Collections.Generic;

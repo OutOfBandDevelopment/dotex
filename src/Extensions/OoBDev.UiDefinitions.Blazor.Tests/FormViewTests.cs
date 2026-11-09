@@ -1,10 +1,8 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using Bunit;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using OoBDev.UiDefinitions;
-using OoBDev.UiDefinitions.Blazor;
 using OoBDev.UiDefinitions.Forms;
 using OoBDev.UiDefinitions.ViewModels;
 

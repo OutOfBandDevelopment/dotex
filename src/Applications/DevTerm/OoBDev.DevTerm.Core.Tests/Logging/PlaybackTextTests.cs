@@ -1,12 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using OoBDev.DevTerm;
-using OoBDev.DevTerm.Logging;
 using OoBDev.TestUtilities;
 
 namespace OoBDev.DevTerm.Logging.Tests;

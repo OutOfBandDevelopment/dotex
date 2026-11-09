@@ -1,5 +1,4 @@
-using OoBDev.Communications.Abstractions;
-using OoBDev.Communications.Models;
+﻿using OoBDev.Communications.Abstractions;
 using System;
 using OoBDev.MailKit.Services;
 using Microsoft.Extensions.Configuration;

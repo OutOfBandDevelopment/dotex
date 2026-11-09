@@ -1,8 +1,6 @@
-using OoBDev.UiDefinitions;
+﻿using OoBDev.UiDefinitions;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Buffers;
 using System.Runtime.InteropServices;
 using System.Text;

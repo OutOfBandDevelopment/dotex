@@ -1,16 +1,5 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Drawing;
-using System.Text;
-using Terminal.Gui.App;
+﻿using System.Collections.Generic;
 using Terminal.Gui.ViewBase;
-using Terminal.Gui.Views;
 namespace OoBDev.DevTerm.Tui.Tests;
 
 /// <summary>Deliberate exceptions for <see cref="TuiLayoutAssert"/> - each should say why in a comment at the call site.</summary>

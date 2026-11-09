@@ -1,7 +1,6 @@
-using System;
+﻿using System;
 using OoBDev.System.IO;
 using System.Diagnostics;
-using System.IO;
 using System.Threading;
 using System.Windows.Threading;
 using DevTermApp;

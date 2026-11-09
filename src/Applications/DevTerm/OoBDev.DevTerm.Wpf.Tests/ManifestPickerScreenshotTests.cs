@@ -1,7 +1,6 @@
-using DevTermApp;
+﻿using DevTermApp;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.DevTerm.DeviceManifests;
-using OoBDev.DevTerm.Wpf;
 
 namespace OoBDev.DevTerm.Wpf.Tests;
 

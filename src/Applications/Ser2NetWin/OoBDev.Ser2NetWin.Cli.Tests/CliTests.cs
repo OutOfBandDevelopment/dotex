@@ -1,5 +1,4 @@
-using OoBDev.Ser2NetWin.Cli;
-using OoBDev.TestUtilities;
+﻿using OoBDev.TestUtilities;
 
 namespace OoBDev.Ser2NetWin.Cli.Tests;
 

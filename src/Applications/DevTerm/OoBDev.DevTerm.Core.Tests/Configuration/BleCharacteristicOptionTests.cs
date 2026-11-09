@@ -1,10 +1,5 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using OoBDev.System.IO.Bluetooth;
 namespace OoBDev.DevTerm.Configuration.Tests;
 

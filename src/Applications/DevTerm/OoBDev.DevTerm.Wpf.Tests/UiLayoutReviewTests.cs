@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
@@ -8,9 +8,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.DevTerm.Configuration;
 using OoBDev.DevTerm.DeviceManifests;
 using OoBDev.DevTerm.DeviceManifests.Editing;
-using OoBDev.DevTerm.TestUtilities;
-using OoBDev.DevTerm.Wpf;
-using OoBDev.UiDefinitions.ViewModels;
 
 namespace OoBDev.DevTerm.Wpf.Tests;
 

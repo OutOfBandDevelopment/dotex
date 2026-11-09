@@ -1,6 +1,4 @@
-﻿using OoBDev.System.Configuration;
-
-namespace OoBDev.DacPacCompiler.Cli;
+﻿namespace OoBDev.DacPacCompiler.Cli;
 
 /// <summary>
 /// Available DACPAC compilation tools.

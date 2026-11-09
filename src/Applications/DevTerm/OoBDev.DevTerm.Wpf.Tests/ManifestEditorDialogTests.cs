@@ -1,5 +1,4 @@
-using System.Linq;
-using Microsoft.Extensions.DependencyInjection;
+﻿using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.DevTerm.DeviceManifests.Editing;
 

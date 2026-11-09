@@ -1,11 +1,10 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using OoBDev.System.IO;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 using System.IO.Compression;
 using OoBDev.System.IO.Bluetooth;
 using OoBDev.System.IO.UsbHids;

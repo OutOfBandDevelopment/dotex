@@ -1,5 +1,4 @@
-using OoBDev.UiDefinitions;
-using System.Linq;
+﻿using System.Linq;
 using System.Windows.Controls;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.UiDefinitions.ViewModels;

@@ -1,9 +1,8 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.Devices.TestUtilities;
 using OoBDev.TestUtilities;
 using System;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace OoBDev.Kuando.Busylight.Tests;

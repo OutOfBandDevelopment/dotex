@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -8,8 +8,6 @@ using Microsoft.Extensions.Time.Testing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using OoBDev.Communications.Abstractions;
-using OoBDev.Communications;
-using OoBDev.Communications.Hosting;
 using OoBDev.TestUtilities;
 
 namespace OoBDev.Communications.Hosting.Tests;

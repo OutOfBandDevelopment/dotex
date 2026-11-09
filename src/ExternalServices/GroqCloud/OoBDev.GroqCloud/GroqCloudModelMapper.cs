@@ -1,6 +1,5 @@
 ﻿using OoBDev.AI.Models;
 using GroqNet.ChatCompletions;
-using System.Linq;
 
 namespace OoBDev.GroqCloud;
 

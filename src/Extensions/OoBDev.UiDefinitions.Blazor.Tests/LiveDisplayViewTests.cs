@@ -1,8 +1,6 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Bunit;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using OoBDev.UiDefinitions;
-using OoBDev.UiDefinitions.Blazor;
 
 namespace OoBDev.UiDefinitions.Blazor.Tests;
 

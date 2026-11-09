@@ -1,6 +1,4 @@
-using System.Collections.Generic;
-
-namespace OoBDev.WebApi.Models;
+﻿namespace OoBDev.WebApi.Models;
 
 /// <summary>A value to keep in the cache.</summary>
 public class CacheStoreModel

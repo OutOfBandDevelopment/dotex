@@ -1,6 +1,4 @@
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
-using OoBDev.System.IO.Pipelines;
+﻿using Microsoft.Extensions.DependencyInjection;
 
 namespace OoBDev.System.IO.UsbTmc;
 

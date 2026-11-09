@@ -1,5 +1,4 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using OoBDev.DevTerm.Devices.Demo;
+﻿using OoBDev.DevTerm.Devices.Demo;
 
 namespace OoBDev.DevTerm.Devices.Tests.Demo;
 

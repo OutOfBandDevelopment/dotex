@@ -1,15 +1,9 @@
-using OoBDev.System.IO;
+﻿using OoBDev.System.IO;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using OoBDev.System.IO.Tcp;
-using OoBDev.DevTerm;
 using OoBDev.DevTerm.Configuration;
-using OoBDev.DevTerm.Presenters.Text;
 namespace OoBDev.DevTerm.Tui;
 
 /// <summary>

@@ -1,15 +1,8 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using OoBDev.DevTerm.TestUtilities;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net.Http;
-using System.Threading;
 using System.Threading.Tasks;
 using OoBDev.DevTerm.Configuration;
 using Terminal.Gui.Input;
-using Terminal.Gui.Views;
 namespace OoBDev.DevTerm.Tui.Tests;
 
 /// <summary>The shared user flows, driven through the real Terminal.Gui main window (headless driver, running app loop).</summary>

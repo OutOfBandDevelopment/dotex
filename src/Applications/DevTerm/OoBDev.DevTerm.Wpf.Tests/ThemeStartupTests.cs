@@ -1,5 +1,4 @@
-using System;
-using OoBDev.System.IO;
+﻿using OoBDev.System.IO;
 using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.DevTerm.Configuration;

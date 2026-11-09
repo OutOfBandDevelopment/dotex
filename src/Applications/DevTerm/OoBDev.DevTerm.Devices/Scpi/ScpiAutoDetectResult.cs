@@ -1,5 +1,4 @@
-using System;
-using System.Globalization;
+﻿using System;
 using OoBDev.Scpi;
 
 namespace OoBDev.DevTerm.Devices.Scpi;

@@ -1,11 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.Buffers;
 using System.Text;
-using OoBDev.DevTerm.Presenters.Text;
 
 namespace OoBDev.DevTerm.Tui.Tests;
 

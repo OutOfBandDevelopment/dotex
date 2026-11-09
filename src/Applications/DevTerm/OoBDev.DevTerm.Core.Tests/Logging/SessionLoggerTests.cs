@@ -1,4 +1,4 @@
-using OoBDev.System.IO;
+﻿using OoBDev.System.IO;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -6,8 +6,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using OoBDev.DevTerm;
-using OoBDev.DevTerm.Logging;
 using System.Diagnostics;
 using OoBDev.DevTerm.Presenters.Text;
 using Microsoft.Extensions.Options;
