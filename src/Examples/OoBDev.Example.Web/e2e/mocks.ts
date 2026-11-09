@@ -55,6 +55,8 @@ export async function mockApi(page: Page): Promise<void> {
     if (path === '/api/TextTemplate/Preview') return text(route, '<h1>Hello Ada</h1><p>Your order 1042 has shipped.</p>');
     if (path.startsWith('/api/TextTemplate/Apply')) return text(route, '<h1>Hello Ada</h1><p>Your order 1042 has shipped.</p>');
     if (path.startsWith('/api/Communications/')) return text(route, 'Mail accepted');
+    if (path === '/api/MessageQueueing/channels') return json(route, [{ channel: 'EmailMessageModel', provider: 'rabbit-mq', queueName: 'email-receive', hostName: 'localhost', receiverEnabled: false }, { channel: 'ExampleMessageProvider', provider: 'rabbit-mq', queueName: 'email-receive', hostName: 'localhost', receiverEnabled: false }]);
+    if (path === '/api/MessageQueueing/received') return json(route, [{ receivedAt: '2026-11-09T12:00:00Z', correlationId: 'demo-1', message: '{"Input":"hello"}' }]);
     if (path.startsWith('/api/MessageQueueing/')) return text(route, '7f3c1c1e-0b53-4b7c-9d1f-2a9d8e0a1111');
     if (path === '/api/User/claims') return json(route, [{ type: 'name', value: 'Ada Lovelace' }, { type: 'role', value: 'Reader' }]);
     if (path === '/Document/List') return json(route, [{ fileName: 'quarterly-report.docx', contentType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' }]);

@@ -19,7 +19,6 @@ Review of the example web app (`src/Examples/OoBDev.Example.Web`) and API agains
 | --- | --- | --- | --- |
 | Template management | `OoBDev.TextTemplating`, Handlebars | List, edit, save and preview templates | List, open and preview built 2026-11-09; save waits for OPEN-QUESTIONS Q2 |
 | Identity management | `OoBDev.Identity`, `OoBDev.Identity.Jws`, Keycloak | User lookup, rights, sessions | Keycloak admin scope; the host runs the API anonymously today |
-| Queue adapters | RabbitMQ, SQS, Service Bus, Storage queues | Provider status, receive monitor | Queue receive endpoint (the blob list endpoint was built 2026-11-09 as the stored-documents list on the Documents screen; Azurite and Moto exist in the test stack) |
 | Data access and DacPac builder | `OoBDev.Data.Common`, MongoDB, `OoBDev.DacFx` | Read-only query runner, dacpac build and diff | Read-only guard design |
 | Semantic Kernel plug-in tester | `OoBDev.SemanticKernel` | Plug-in list and invoke | Controller |
 | Vector store browser | Qdrant, OpenSearch, SQL store | Collection list, upsert, query | Collection listing on the vector store interface |
@@ -61,7 +60,7 @@ These have no row in `future-example.md` or `screens.md`; whether each deserves 
 
 1. ~~Search~~ (built 2026-11-09 as `/ai/search`).
 2. ~~Template management~~ (list, open and preview built 2026-11-09; save waits for Q2).
-3. Queue adapters (the blob browser is built as the stored-documents list, 2026-11-09), reusing the Azurite and Moto stack.
+3. ~~Queue adapters and blob browser~~ (channel list and received monitor on the Queues screen, stored-documents list on the Documents screen, built 2026-11-09).
 4. Rights and roles, then Identity management, because they show the authorization model that every other API surface relies on.
 5. Server-driven UI, since it is the framework's own UI contract.
 6. The rest as the owner prioritizes; instrument protocols stay deferred.

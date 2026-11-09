@@ -143,7 +143,7 @@ Purpose: send a message through the public, queued or private channel. Commands:
 
 ## Queues
 
-Purpose: send a sample message to the public or private queue and show the AsyncAPI contract for it. Commands: `EnqueueCommand`.
+Purpose: send a sample message to the public or private queue, show the AsyncAPI contract for it, list the configured channels (`GET api/MessageQueueing/channels`: provider, queue, host and receiver flag; connection strings and other secrets are never returned) and show the last 50 messages the example handler received (`GET api/MessageQueueing/received`, newest first, kept in memory). Commands: `EnqueueCommand`, `RefreshChannelsCommand`, `RefreshReceivedCommand`.
 
 ```plantuml
 @startsalt

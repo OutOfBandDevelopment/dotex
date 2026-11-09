@@ -75,6 +75,9 @@ public static class Program
 
         ConfigureVectorsAndModels(builder);
         builder.Services.AddTransient<OoBDev.WebApi.Services.TemplateCatalog>();
+        builder.Services.Configure<OoBDev.WebApi.Models.QueueChannelsOptions>(builder.Configuration.GetSection("MessageQueue"));
+        builder.Services.AddTransient<OoBDev.WebApi.Services.QueueChannelCatalog>();
+        builder.Services.AddSingleton<OoBDev.WebApi.Services.ReceivedMessageLog>();
 
         // Add services to the container.
         services.AddLogging(builder => builder
