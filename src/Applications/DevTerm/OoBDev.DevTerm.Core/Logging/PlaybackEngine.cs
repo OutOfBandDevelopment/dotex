@@ -21,6 +21,7 @@ public sealed class PlaybackEngine
     private Func<Pipeline> _pipelineFactory;
     private Pipeline _pipeline;
     private double _speed = 1.0;
+    private TimeSpan? _maxGap;
 
     // Playback timing is anchored: at _anchorTimestamp (clock) the log was at _anchorOffset, and
     // log time advances at Speed x clock time from there. Re-anchored on every play, seek, step and
@@ -71,6 +72,25 @@ public sealed class PlaybackEngine
         }
     }
 
+    /// <summary>
+    /// Skip-silence cap: a quiet stretch between two records longer than this plays as this long (null, the default,
+    /// plays every gap in full). Only the waiting shortens; <see cref="Elapsed"/> and record timestamps keep showing log time.
+    /// </summary>
+    public TimeSpan? MaxGap
+    {
+        get => _maxGap;
+        set
+        {
+            if (value is { } gap && gap <= TimeSpan.Zero)
+            {
+                throw new ArgumentOutOfRangeException(nameof(value), value, "The gap cap must be positive (null for no cap).");
+            }
+
+            Reanchor(CurrentLogTime());
+            _maxGap = value;
+        }
+    }
+
     public void Play()
     {
         if (IsAtEnd || IsPlaying)
@@ -114,6 +134,7 @@ public sealed class PlaybackEngine
             return PlaybackBatch.Empty;
         }
 
+        SkipSilence();
         var infinite = double.IsPositiveInfinity(_speed);
         var due = infinite ? TimeSpan.MaxValue : CurrentLogTime();
 
@@ -150,6 +171,7 @@ public sealed class PlaybackEngine
             return TimeSpan.Zero;
         }
 
+        SkipSilence();
         var logTimeAhead = Log.OffsetOf(Position) - CurrentLogTime();
         return logTimeAhead <= TimeSpan.Zero ? TimeSpan.Zero : logTimeAhead / _speed;
     }
@@ -283,6 +305,21 @@ public sealed class PlaybackEngine
         IsPlaying && !double.IsPositiveInfinity(_speed)
             ? _anchorOffset + (_clock.GetElapsedTime(_anchorTimestamp) * _speed)
             : _anchorOffset;
+
+    // Jumps log time over the idle part of a gap longer than MaxGap, leaving MaxGap still to wait.
+    private void SkipSilence()
+    {
+        if (_maxGap is not { } cap || !IsPlaying || IsAtEnd)
+        {
+            return;
+        }
+
+        var resumeAt = Log.OffsetOf(Position) - cap;
+        if (resumeAt > CurrentLogTime() && resumeAt > Elapsed)
+        {
+            Reanchor(resumeAt);
+        }
+    }
 
     private void Reanchor() => Reanchor(Elapsed);
 
