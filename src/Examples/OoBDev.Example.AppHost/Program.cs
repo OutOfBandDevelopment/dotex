@@ -132,6 +132,8 @@ builder.AddViteApp("example-web", Path.Combine("..", "OoBDev.Example.Web"))
     .WaitFor(api)
     .WithEnvironment("VITE_OIDC_AUTHORITY", keycloakRealm)
     .WithEnvironment("VITE_OIDC_CLIENT_ID", "oobdev-example-web")
+    // The realm only allows the redirect URIs 8088, 5173 and 8080; a dynamic port gives Keycloak "Invalid parameter: redirect_uri".
+    .WithEndpoint("http", endpoint => endpoint.Port = 5173)
     .WithExternalHttpEndpoints();
 
 builder.Build().Run();
