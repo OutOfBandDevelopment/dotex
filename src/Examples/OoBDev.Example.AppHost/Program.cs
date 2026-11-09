@@ -39,10 +39,15 @@ var vectorDb = sql.AddDatabase("VectorDb")
 
 var smtp = builder.AddContainer("smtp4dev", "rnwood/smtp4dev")
     .WithHttpEndpoint(targetPort: 80, name: "web")
-    .WithEndpoint(targetPort: 25, name: "smtp");
+    .WithEndpoint(targetPort: 25, name: "smtp")
+    .WithEndpoint(targetPort: 143, name: "imap");
 
-builder.AddContainer("apache-tika", "apache/tika")
+var tika = builder.AddContainer("apache-tika", "apache/tika")
     .WithHttpEndpoint(targetPort: 9998, name: "http");
+
+// The sentence-embedding service behind the embedding lab; the first start builds the image and downloads the model.
+var sbert = builder.AddDockerfile("sbert", Path.Combine(repoRoot, "containers"), "DockerFile.sbert")
+    .WithHttpEndpoint(targetPort: 5000, name: "http");
 
 // The port is fixed because the token issuer is the browser-visible address; a dynamic port would change the issuer on every run.
 var keycloakPort = int.Parse(Environment.GetEnvironmentVariable("TEST_PORT_KEYCLOAK") ?? "8081", System.Globalization.CultureInfo.InvariantCulture);
@@ -78,6 +83,10 @@ var api = builder.AddProject<OoBDev_Example_WebApi>("example-api", options => op
     .WaitFor(keycloak)
     .WithEnvironment("OllamaApiClientOptions__Url", ollama.GetEndpoint("http"))
     .WithEnvironment("OllamaApiClientOptions__DefaultModel", "phi3")
+    .WithEnvironment("ApacheTikaClientOptions__Url", tika.GetEndpoint("http"))
+    .WithEnvironment("SentenceEmbeddingOptions__Url", sbert.GetEndpoint("http"))
+    .WaitFor(tika)
+    .WaitFor(sbert)
     .WithReference(redis)
     .WithReference(rabbitmq)
     .WithReference(vectorDb)
@@ -91,7 +100,10 @@ var api = builder.AddProject<OoBDev_Example_WebApi>("example-api", options => op
     // The mail client and the queue providers read host, port and credentials from their own sections (the compose file sets the same keys),
     // not from the connection string the reference adds; without these they call localhost on the default ports and the send and queue calls fail.
     .WithEnvironment("MailKitSmtpClientOptions__Host", smtp.GetEndpoint("smtp").Property(EndpointProperty.Host))
-    .WithEnvironment("MailKitSmtpClientOptions__Port", smtp.GetEndpoint("smtp").Property(EndpointProperty.Port));
+    .WithEnvironment("MailKitSmtpClientOptions__Port", smtp.GetEndpoint("smtp").Property(EndpointProperty.Port))
+    .WithEnvironment("MailKitImapClientOptions__Host", smtp.GetEndpoint("imap").Property(EndpointProperty.Host))
+    .WithEnvironment("MailKitImapClientOptions__Port", smtp.GetEndpoint("imap").Property(EndpointProperty.Port))
+    .WaitFor(smtp);
 
 // The Telemetry page links to the dashboard and reads recent traces through its API; the defaults point at the compose stack's port 18888.
 // ASPNETCORE_URLS is the host's own dashboard address (the launch profile's, or a dynamic one from the CLI).
