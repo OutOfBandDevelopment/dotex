@@ -639,6 +639,15 @@ export const journeys: Journey[] = [
           await expect(page.locator('pre.result')).toContainText('Revenue grew 12 percent');
         },
       },
+      {
+        title: 'See what is stored',
+        narrative: 'The Stored documents list shows every document in the store; choosing a name fills the Name in store box.',
+        expect: ['The stored document is listed.'],
+        run: async page => {
+          await expect(page.locator('.stored-list li').first()).toContainText('quarterly-report.docx');
+          await press(page, 'quarterly-report.docx');
+        },
+      },
     ],
   },
   {

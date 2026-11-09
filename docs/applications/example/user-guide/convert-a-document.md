@@ -36,6 +36,7 @@ skinparam shadowing false
 start
 :Choose a file;
 :Convert it;
+:See what is stored;
 stop
 @enduml
 ```
@@ -59,3 +60,11 @@ Choose the target type and convert. The converted text appears below.
 ![Convert it](images/convert-a-document/02-convert-it.png)
 
 *Figure 3 — Convert it*
+
+### 3. See what is stored
+
+The Stored documents list shows every document in the store; choosing a name fills the Name in store box.
+
+![See what is stored](images/convert-a-document/03-see-what-is-stored.png)
+
+*Figure 4 — See what is stored*

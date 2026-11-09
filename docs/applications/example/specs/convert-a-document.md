@@ -14,5 +14,6 @@
 | --- | --- | --- |
 | 1 | Choose a file | The Convert button is enabled once a file is chosen. |
 | 2 | Convert it | The converted text appears in the result panel. |
+| 3 | See what is stored | The stored document is listed. |
 
 Source: `e2e/journeys.ts` (journey `convert-a-document`). Each expected result is asserted by the step's `run` function.

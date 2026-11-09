@@ -42,7 +42,6 @@ Owner: all protocols and features of dev-term must exist here. Done means what d
 - [ ] GraphQL surface (HotChocolate, on demand), without breaking the custom search syntax; adopt `[OoBDevEnableQuery]` in the example API when it gets an `IQueryable` endpoint. See the [HTTP API](docs/patterns-discovery/03-practices-and-conventions/10-http-api-practices.md) and [authorization](docs/patterns-discovery/03-practices-and-conventions/11-authorization-practices.md) practices.
 - [ ] Example guides cleanup, left: share the Tui screen-buffer renderer (`TuiCapture` is a copy of `TuiScreenshot`); waits for OPEN-QUESTIONS Q1.
 - [ ] Example app missing screens ([list](docs/design/example-ui/missing-screens.md)); owner, 2026-11-09, [recommended order](docs/design/example-ui/missing-screens.md#recommended-order) steps 1 to 3 are built (Search, Template management, queue monitor and blob browser); the rest stay unplanned.
-  - [ ] Playwright journey step for the Documents stored list (the Search, Templates and Queues journeys exist).
   - [ ] Template save waits for OPEN-QUESTIONS Q2; the queue receive monitor shows nothing until a channel has its receiver enabled (all example channels set `DisableReceiver`).
 - [ ] Performance gate for database-backed (non-vector) endpoints: no such endpoint exists yet, so add the gate with the first one.
 
