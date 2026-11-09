@@ -11,6 +11,6 @@ Keep this file short (about 15 one-line items). When an item starts, move it her
 
 ## Next
 
-- [ ] Order (owner, 2026-11-09): the cleanup follow-ups first (the desired-state bake-off test plan; example guide cleanup and the Ollama tests are done), then the DevTerm parity WPF slices ([status](docs/design/DevTermParity/status.md)).
+- [ ] Order (owner, 2026-11-09): the cleanup follow-ups first (done: bake-off test plan, example guide cleanup, Ollama tests), then the DevTerm parity WPF slices ([status](docs/design/DevTermParity/status.md)).
 
 - [ ] Device decoding leftovers: DE-5000 Hardware test (needs BLE) and the physical passes; phase 0 is done ([device-parity.md](docs/migration/device-parity.md) section 5).

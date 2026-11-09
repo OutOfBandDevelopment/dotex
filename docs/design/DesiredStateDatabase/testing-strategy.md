@@ -19,6 +19,6 @@ Plan generation and hazard detection are Unit tests on fixture schemas (80% cove
 | REQ-001, REQ-002 | Integration | apply scripts to an empty database, change one, plan contains one step |
 | REQ-003 | Unit | dropping a column yields a hazard and `ApplyAsync` throws without the flag |
 | REQ-004 | Integration | run ensure scripts twice, second run reports no change |
-| REQ-005, REQ-008 | Manual record | bake-off result document under `docs/design/DesiredStateDatabase/` |
+| REQ-005, REQ-008 | Manual record | bake-off result document under `docs/design/DesiredStateDatabase/`, run per the [test plan](bake-off-test-plan.md) |
 | REQ-006 | Unit | providers resolve by engine key |
 | REQ-007 | Unit | manifest compiles to expected script text |

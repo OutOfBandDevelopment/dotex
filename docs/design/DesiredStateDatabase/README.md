@@ -24,4 +24,4 @@ Derive migrations from plain `CREATE` scripts for SQL Server, Postgres, SQLite a
 
 ## Summary
 
-The work starts with a recorded buy-or-build bake-off of sqldef, pgschema and Atlas on a real schema (phase 0). Nothing else is built until it has a result per engine. Layers 1 to 3 (diff provider, ensure scripts, feature manifest) follow behind a provider interface. The open choices are in `OPEN-QUESTIONS.md` (Q5): schema scope, wrap versus write, and the stack.
+The work starts with a recorded buy-or-build bake-off (plan: [bake-off-test-plan.md](bake-off-test-plan.md)) of sqldef, pgschema and Atlas on a real schema (phase 0). Nothing else is built until it has a result per engine. Layers 1 to 3 (diff provider, ensure scripts, feature manifest) follow behind a provider interface. The open choices are in `OPEN-QUESTIONS.md` (Q5): schema scope, wrap versus write, and the stack.
