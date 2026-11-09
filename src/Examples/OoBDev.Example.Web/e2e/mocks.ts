@@ -57,6 +57,7 @@ export async function mockApi(page: Page): Promise<void> {
     if (path.startsWith('/api/Communications/')) return text(route, 'Mail accepted');
     if (path.startsWith('/api/MessageQueueing/')) return text(route, '7f3c1c1e-0b53-4b7c-9d1f-2a9d8e0a1111');
     if (path === '/api/User/claims') return json(route, [{ type: 'name', value: 'Ada Lovelace' }, { type: 'role', value: 'Reader' }]);
+    if (path === '/Document/List') return json(route, [{ fileName: 'quarterly-report.docx', contentType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' }]);
     if (path.startsWith('/Document/Convert')) return text(route, 'Quarterly report\n\nRevenue grew 12 percent.');
     if (path.startsWith('/Document/Upload')) return text(route, 'stored');
     if (path.startsWith('/Document/Text')) return text(route, 'Quarterly report\n\nRevenue grew 12 percent.');

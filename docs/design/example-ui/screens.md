@@ -97,7 +97,7 @@ Purpose: turn text into a vector with each available model and compare them. Com
 
 ## Documents workbench
 
-Purpose: upload a file, view it as text, HTML, PDF or summary, or convert between types. Commands: `UploadCommand`, `ConvertCommand`, `DownloadCommand`.
+Purpose: upload a file, browse the stored documents (blob browser over `GET Document/List`, which reads the `docs` container through `IBlobContainer`), view one as text, HTML, PDF or summary, or convert between types. Commands: `ListStoredCommand`, `PickStoredCommand`, `UploadCommand`, `ConvertCommand`, `DownloadCommand`.
 
 ```plantuml
 @startsalt
@@ -106,6 +106,7 @@ Purpose: upload a file, view it as text, HTML, PDF or summary, or convert betwee
   File: [ Choose file ] report.docx
   Name in store: "reports/report.docx    "
   [ Upload ] | [ Download ]
+  Stored: [ report.docx ] [ notes.txt ]
   ----
   {/ Text | Html | Pdf | Summary | Convert }
   {+

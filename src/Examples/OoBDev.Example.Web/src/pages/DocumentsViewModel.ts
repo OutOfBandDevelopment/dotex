@@ -4,7 +4,15 @@ import { http } from '../core/http';
 
 export const targetTypes = ['text/plain', 'text/html', 'application/pdf', 'text/markdown'];
 
+export interface StoredDocument {
+  fileName: string;
+  contentType: string;
+}
+
 export class DocumentsViewModel {
+  readonly stored = ref<StoredDocument[]>([]);
+  readonly refresh = new ListStoredCommand(this);
+  readonly pick = new PickStoredCommand(this);
   readonly file = ref<File | null>(null);
   readonly storeName = ref('');
   readonly targetType = ref(targetTypes[0]);
@@ -52,5 +60,20 @@ export class ViewTextCommand extends Command {
   protected isAllowed() { return this.vm.storeName.value.trim() !== ''; }
   protected async run() {
     this.vm.output.value = await http.getText(`/Document/Text/${this.vm.storeName.value}`);
+  }
+}
+
+export class ListStoredCommand extends Command {
+  constructor(private readonly vm: DocumentsViewModel) { super(); }
+  protected async run() {
+    this.vm.stored.value = await http.getJson<StoredDocument[]>("/Document/List");
+  }
+}
+
+/** Selects a stored document by name so the read actions apply to it. */
+export class PickStoredCommand extends Command<StoredDocument> {
+  constructor(private readonly vm: DocumentsViewModel) { super(); }
+  protected async run(doc?: StoredDocument) {
+    if (doc) this.vm.storeName.value = doc.fileName;
   }
 }

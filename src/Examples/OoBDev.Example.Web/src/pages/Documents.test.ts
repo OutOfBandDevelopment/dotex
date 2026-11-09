@@ -17,3 +17,20 @@ describe('ViewStoredCommand', () => {
     expect(vm.output.value).toBe('<p>hi</p>');
   });
 });
+
+describe('stored document commands', () => {
+  afterEach(() => vi.unstubAllGlobals());
+
+  it('refresh_Execute_FillsStoredList', async () => {
+    const docs = [{ fileName: 'a.txt', contentType: 'text/plain' }];
+    vi.stubGlobal('fetch', vi.fn(async () => new Response(JSON.stringify(docs), { status: 200 })));
+    const vm = new DocumentsViewModel();
+    await vm.refresh.execute();
+    expect(vm.stored.value).toEqual(docs);
+  });
+  it('pick_Document_SetsStoreName', async () => {
+    const vm = new DocumentsViewModel();
+    await vm.pick.execute({ fileName: 'a.txt', contentType: 'text/plain' });
+    expect(vm.storeName.value).toBe('a.txt');
+  });
+});
