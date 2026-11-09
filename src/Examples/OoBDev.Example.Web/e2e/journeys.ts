@@ -711,4 +711,104 @@ export const journeys: Journey[] = [
       },
     ],
   },
+  {
+    id: 'search-three-ways',
+    title: 'Search passages by keyword, meaning and both',
+    persona: 'A developer choosing a search strategy',
+    goal: 'Run one query three ways and see what each mode finds.',
+    start: '/ai/search',
+    prerequisites: ['The all-MiniLM embedder is available in the API.'],
+    features: ['OoBDev.Onnx.SentenceEmbeddings', 'OoBDev.AI.Abstractions (`IEmbeddingProvider`)'],
+    why: 'See why keyword search misses paraphrases, why embeddings rank everything, and how rank fusion combines them, with the scoring in plain view.',
+    problems: [
+      { symptom: 'Keywords find nothing', cause: 'The query shares no word with any passage', fix: 'Use the meaning or hybrid list, or reword the query' },
+      { symptom: 'Bad request', cause: 'The query or the passages are empty', fix: 'Fill in both' },
+    ],
+    steps: [
+      {
+        title: 'Review the passages and the query',
+        narrative: 'Sample passages and a query are filled in. Separate your own passages with a blank line.',
+        expect: ['The Search button is enabled.'],
+        run: async page => {
+          await expect(page.locator('fluent-button', { hasText: 'Search' })).not.toHaveAttribute('disabled', '');
+        },
+      },
+      {
+        title: 'Search',
+        narrative: 'The same query runs by keywords (BM25), by meaning (embeddings) and by reciprocal rank fusion of both.',
+        expect: ['Three result lists are shown.', 'The first list has a hit with a score.'],
+        run: async page => {
+          await press(page, 'Search');
+          await expect(page.getByRole('heading', { name: 'Hybrid (rank fusion)' })).toBeVisible();
+          await expect(page.locator('table.grid tbody tr').first()).toBeVisible();
+        },
+      },
+    ],
+  },
+  {
+    id: 'preview-a-template',
+    title: 'Open and preview a template',
+    persona: 'A developer working with text templates',
+    goal: 'Open a template file, change its text and see it rendered with sample data without saving anything.',
+    start: '/content/templates',
+    prerequisites: ['The example Templates folder holds the sample templates.'],
+    features: ['OoBDev.System (`ITemplateEngine`, `FileTemplateSource`)', 'OoBDev.Handlebars'],
+    why: 'Try a Handlebars template against JSON data and see the output at once, before wiring it into code.',
+    problems: [
+      { symptom: 'Preview shows a template error', cause: 'The draft text is not valid for the engine', fix: 'Fix the braces or the helper name shown in the message' },
+      { symptom: 'The file list is empty', cause: 'The template folder does not exist or holds no template files', fix: 'Check the file template path option' },
+    ],
+    steps: [
+      {
+        title: 'Open a template file',
+        narrative: 'The list shows every template file; choosing one loads its text into the source box.',
+        expect: ['The source box holds the template text.'],
+        run: async page => {
+          await press(page, 'order-shipped.html.hbs');
+          await expect(page.getByLabel('Template source')).toHaveValue(/Hello/);
+        },
+      },
+      {
+        title: 'Preview the draft',
+        narrative: 'Preview renders the text in the box with the JSON data. Nothing is saved.',
+        expect: ['The output shows the rendered text.'],
+        run: async page => {
+          await press(page, 'Preview draft');
+          await expect(page.locator('pre.result').first()).toContainText('Hello Ada');
+        },
+      },
+    ],
+  },
+  {
+    id: 'watch-the-queues',
+    title: 'See the queue channels and received messages',
+    persona: 'A developer checking the message queue wiring',
+    goal: 'Confirm which provider and queue each channel uses and whether this host receives from it.',
+    start: '/messaging/queues',
+    prerequisites: ['The example API is running.'],
+    features: ['OoBDev.MessageQueueing', 'OoBDev.RabbitMq, OoBDev.Microsoft.Azure.StorageAccount'],
+    why: 'See the configured channels without opening configuration files, and watch what the handler receives.',
+    problems: [
+      { symptom: 'Received list stays empty', cause: 'The channel has DisableReceiver set, or nothing was sent', fix: 'Enable the receiver in the MessageQueue section and send a message' },
+    ],
+    steps: [
+      {
+        title: 'Read the configured channels',
+        narrative: 'The table lists each channel with its provider, queue, host and whether the receiver is on. Connection strings are never shown.',
+        expect: ['The channel table lists the provider and queue.'],
+        run: async page => {
+          await expect(page.locator('table.channels tbody tr').first()).toContainText('rabbit-mq');
+        },
+      },
+      {
+        title: 'Look at the received messages',
+        narrative: 'The list shows the last messages this host received, newest first. Refresh to update it.',
+        expect: ['A received message is listed with its time and text.'],
+        run: async page => {
+          await press(page, 'Refresh');
+          await expect(page.locator('.received-list li').first()).toContainText('hello');
+        },
+      },
+    ],
+  },
 ];

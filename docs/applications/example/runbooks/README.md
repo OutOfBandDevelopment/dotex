@@ -30,3 +30,6 @@ How to verify each feature and what to do when it fails. Generated from the same
 | [Convert and store a document](convert-a-document.md) | Example stack running. |
 | [Sign in with Keycloak](sign-in.md) | The compose stack is running with sign-in on (the default) and the `oobdev-example` realm imported. Use the sample user `ada` (password `ada`) or `grace` (password `grace`, also an admin). |
 | [See the claims on your token](see-who-you-are.md) | Sign-in is configured, or the API runs with identity disabled for local work. |
+| [Search passages by keyword, meaning and both](search-three-ways.md) | The all-MiniLM embedder is available in the API. |
+| [Open and preview a template](preview-a-template.md) | The example Templates folder holds the sample templates. |
+| [See the queue channels and received messages](watch-the-queues.md) | The example API is running. |

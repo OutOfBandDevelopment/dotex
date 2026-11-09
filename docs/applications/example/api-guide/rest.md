@@ -94,6 +94,12 @@ Responses:
 
 - `200` OK (`text/plain`, `application/json`, `text/json`)
 
+### GET `/api/MessageQueueing/channels`
+
+Responses:
+
+- `200` OK (`text/plain`, `application/json`, `text/json`)
+
 ### POST `/api/MessageQueueing/private`
 
 Parameters:
@@ -113,6 +119,12 @@ Parameters:
 - `correlationId` (query, string)
 
 Request body: `application/json`, `text/json`, `application/*+json`
+
+Responses:
+
+- `200` OK (`text/plain`, `application/json`, `text/json`)
+
+### GET `/api/MessageQueueing/received`
 
 Responses:
 
@@ -201,6 +213,14 @@ Responses:
 
 - `200` OK (`text/plain`, `application/json`, `text/json`)
 
+### POST `/api/Search`
+
+Request body: `application/json`, `text/json`, `application/*+json`
+
+Responses:
+
+- `200` OK (`text/plain`, `application/json`, `text/json`)
+
 ### GET `/api/Telemetry/recent`
 
 Responses:
@@ -218,6 +238,30 @@ Request body: `application/json`, `text/json`, `application/*+json`
 Responses:
 
 - `200` OK
+
+### GET `/api/TextTemplate/List`
+
+Responses:
+
+- `200` OK (`text/plain`, `application/json`, `text/json`)
+
+### POST `/api/TextTemplate/Preview`
+
+Request body: `application/json`, `text/json`, `application/*+json`
+
+Responses:
+
+- `200` OK
+
+### GET `/api/TextTemplate/Read`
+
+Parameters:
+
+- `file` (query, string)
+
+Responses:
+
+- `200` OK (`text/plain`, `application/json`, `text/json`)
 
 ### POST `/api/TextTemplate/SupportedTemplates`
 

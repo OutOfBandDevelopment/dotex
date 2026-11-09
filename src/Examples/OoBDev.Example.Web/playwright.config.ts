@@ -5,7 +5,9 @@ import { defineConfig } from '@playwright/test';
  * (and the screenshots it writes into the user guide) is deterministic and needs no containers.
  * Set E2E_BASE_URL (for example http://localhost:8088) to run the same journeys against the compose stack.
  */
-const baseURL = process.env.E2E_BASE_URL ?? 'http://localhost:5173';
+// E2E_PORT moves the mocked run off 5173 when another dev server (for example the Aspire host's) already holds it and uses real sign-in.
+const port = process.env.E2E_PORT ?? '5173';
+const baseURL = process.env.E2E_BASE_URL ?? `http://localhost:${port}`;
 
 export default defineConfig({
   testDir: 'e2e',
@@ -22,5 +24,5 @@ export default defineConfig({
   },
   webServer: process.env.E2E_BASE_URL
     ? undefined
-    : { command: 'npm run dev -- --strictPort', url: baseURL, reuseExistingServer: true, timeout: 60_000 },
+    : { command: `npm run dev -- --strictPort --port ${port}`, url: baseURL, reuseExistingServer: true, timeout: 60_000 },
 });

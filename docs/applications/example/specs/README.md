@@ -30,3 +30,6 @@ Acceptance criteria for each journey. The same journeys run as Playwright tests.
 | [Convert and store a document](convert-a-document.md) | 2 | `/content/documents` |
 | [Sign in with Keycloak](sign-in.md) | 3 | `/identity/me` |
 | [See the claims on your token](see-who-you-are.md) | 1 | `/identity/me` |
+| [Search passages by keyword, meaning and both](search-three-ways.md) | 2 | `/ai/search` |
+| [Open and preview a template](preview-a-template.md) | 2 | `/content/templates` |
+| [See the queue channels and received messages](watch-the-queues.md) | 2 | `/messaging/queues` |
