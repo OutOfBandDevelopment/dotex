@@ -34,6 +34,8 @@ dotnet run --project src/Examples/OoBDev.Example.WebApi
 
 Needs Go on the path. The built files are not committed (`cgi-bin/.gitignore`). `AllowAnonymous` is on in `appsettings.json` for the example only.
 
+On Windows call `greet.exe`. A `greet.cgi` left in `cgi-bin/` by a Linux or container build is an ELF binary, which Windows cannot start, so `/cgi-bin/greet.cgi` answers `500 The program could not start.` (the log line "CGI script greet.cgi could not start" names the script). Delete it or ignore it; `build.ps1` builds the file for the current system.
+
 ## Running
 
 ```bash
