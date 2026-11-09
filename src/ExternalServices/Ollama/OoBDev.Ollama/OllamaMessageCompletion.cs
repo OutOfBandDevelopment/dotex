@@ -17,7 +17,7 @@ namespace OoBDev.Ollama;
 /// <summary>
 /// Represents a class responsible for generating message completions using the Ollama API.
 /// </summary>
-public class OllamaMessageCompletion : IMessageCompletion, IEmbeddingProvider, IStreamedCompletion
+public class OllamaMessageCompletion : IMessageCompletion, IStreamedCompletion
 {
     private readonly IOllamaApiClient _client;
     private readonly IOllamaModelMapper _mapper;
@@ -35,32 +35,6 @@ public class OllamaMessageCompletion : IMessageCompletion, IEmbeddingProvider, I
         _client = client;
         _mapper = mapper;
     }
-
-    private int? _length;
-    /// <summary>
-    /// Gets the length of the embeddings.
-    /// </summary>
-    public int Length => _length ??= GenerateEmbeddingAsync("hello world", default, default).Result.Length;
-
-    /// <summary>
-    /// Retrieves the embedding vector for the given content.
-    /// </summary>
-    /// <param name="content">The content for which to retrieve the embedding.</param>
-    /// <param name="model">The model for which to retrieve the embedding.</param>
-    /// <param name="cancellationToken"></param>
-    /// <returns>A task representing the asynchronous operation. The task result contains the 
-    /// embedding vector as an array of single-precision floats.</returns>
-    public async Task<ReadOnlyMemory<float>> GenerateEmbeddingAsync(
-        string content,
-#if DEBUG
-        string? model,
-        CancellationToken cancellationToken
-#else
-        string? model = default,
-        CancellationToken cancellationToken = default
-#endif
-        ) =>
-        await _client.GetEmbeddingSingleAsync(content, model ?? _client.SelectedModel).ConfigureAwait(false);
 
     /// <summary>
     /// Generates a completion for the given prompt using the specified model.

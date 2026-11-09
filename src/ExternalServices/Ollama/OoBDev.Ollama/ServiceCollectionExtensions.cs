@@ -41,10 +41,9 @@ public static class ServiceCollectionExtensions
         services.TryAddTransient(sp => sp.GetRequiredService<IOllamaApiClientFactory>().Build());
 
         services.TryAddTransient<IMessageCompletion, OllamaMessageCompletion>();
-        services.TryAddTransient<IEmbeddingProvider, OllamaMessageCompletion>();
 
         services.TryAddKeyedTransient<IMessageCompletion, OllamaMessageCompletion>(OllamaGlobals.ProviderKey);
-        services.TryAddKeyedTransient<IEmbeddingProvider, OllamaMessageCompletion>(OllamaGlobals.ProviderKey);
+        services.TryAddKeyedTransient<IEmbeddingProvider, OllamaEmbeddingProvider>(OllamaGlobals.ProviderKey);
         services.TryAddKeyedTransient<IStreamedCompletion, OllamaMessageCompletion>(OllamaGlobals.ProviderKey);
 
         services.AddOptions<OllamaApiClientOptions>()

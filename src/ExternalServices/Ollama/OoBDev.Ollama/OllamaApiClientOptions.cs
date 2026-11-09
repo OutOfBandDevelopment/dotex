@@ -23,4 +23,9 @@ public record OllamaApiClientOptions
     /// Gets or initializes an optional API key sent as a bearer token, for Ollama endpoints behind an authenticating gateway.
     /// </summary>
     public string? ApiKey { get; init; }
+
+    /// <summary>
+    /// Gets or initializes the model used for embeddings. It is pulled on first use when the server does not have it. Defaults to all-minilm.
+    /// </summary>
+    public string EmbeddingModel { get; init; } = "all-minilm";
 }
