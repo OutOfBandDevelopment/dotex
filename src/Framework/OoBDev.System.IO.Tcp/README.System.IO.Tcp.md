@@ -20,6 +20,7 @@ These take options and register with DI (`ServiceCollectionExtensions`); each re
 
 - `TcpEndpointDeviceAdapter` (`AddTcpEndpointDeviceAdapter()`, `TcpEndpointOptions`, validated by `TcpEndpointOptionsValidator`): raw or Telnet TCP for instruments and serial-to-Ethernet bridges, with optional XON/XOFF flow control. `LxiDiscovery` finds LXI devices.
 - `TcpPeerListener`: a listener that keeps accepting; `AcceptPeersAsync` yields a `TcpPeer` (remote endpoint plus an open `IDeviceAdapter`) per inbound connection, so a front end can open one tab per peer. Port 0 picks a free port (`Port` reports it).
+- `UdpEndpointDeviceAdapter` (`UdpEndpointOptions`: `Host`, `Port`, `Target`): one session on a bound UDP port. Each datagram reaches `Input` and raises `DatagramReceived` with its sender; `Output` goes to `Target`, else to the last sender (or `ReplyTarget`, set to choose a peer).
 - `Rfc2217ClientDeviceAdapter` (`AddRfc2217ClientDeviceAdapter()`, `Rfc2217ClientOptions`): a serial port on a terminal server such as ser2net, with the full RFC 2217 codec (modem and line state, flow control, purge). Implements `IComPortControl` and `ILineStatusSource`.
 - `Vxi11DeviceAdapter` (`AddVxi11DeviceAdapter()`, `Vxi11DeviceAdapterOptions`): VXI-11 (ONC-RPC over TCP) instruments, tested against a loopback RPC server.
 
