@@ -104,6 +104,27 @@ public class CgiOpenApiDocumentTransformerTests
 
     [TestMethod]
     [TestCategory("Unit")]
+    public async Task Transform_LinuxBinaryOnWindows_IsNotListed()
+    {
+        if (!OperatingSystem.IsWindows())
+            Assert.Inconclusive("Only Windows skips Linux binaries.");
+
+        // Stage
+        File.WriteAllBytes(Path.Combine(_root, "greet.cgi"), [0x7F, (byte)'E', (byte)'L', (byte)'F', 1]);
+        File.WriteAllText(Path.Combine(_root, "greet.exe"), "MZ");
+        File.WriteAllText(Path.Combine(_root, "greet.openapi.json"), Description);
+        var document = new OpenApiDocument();
+
+        // Test
+        await Run(document);
+
+        // Assert
+        Assert.IsTrue(document.Paths.ContainsKey("/cgi-bin/greet.exe"));
+        Assert.IsFalse(document.Paths.ContainsKey("/cgi-bin/greet.cgi"));
+    }
+
+    [TestMethod]
+    [TestCategory("Unit")]
     public async Task Transform_DescriptionWithoutProgram_IsSkipped()
     {
         // Stage

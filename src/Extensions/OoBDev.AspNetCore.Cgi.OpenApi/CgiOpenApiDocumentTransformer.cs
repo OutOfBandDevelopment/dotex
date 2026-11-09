@@ -62,7 +62,16 @@ public partial class CgiOpenApiDocumentTransformer(
         [.. cgi.Value.Handlers.Keys
             .Select(extension => baseName + extension)
             .Where(name => File.Exists(Path.Combine(root, name)))
+            .Where(name => !OperatingSystem.IsWindows() || !IsElf(Path.Combine(root, name)))
             .Order(StringComparer.OrdinalIgnoreCase)];
+
+    // A Linux build left in the script root cannot start on Windows (the middleware answers 500), so it is not advertised.
+    private static bool IsElf(string file)
+    {
+        Span<byte> head = stackalloc byte[4];
+        using var stream = File.OpenRead(file);
+        return stream.Read(head) == 4 && head[0] == 0x7F && head[1] == (byte)'E' && head[2] == (byte)'L' && head[3] == (byte)'F';
+    }
 
     private void Merge(OpenApiDocument target, OpenApiDocument source, string basePath, string tagName, string? idSuffix)
     {

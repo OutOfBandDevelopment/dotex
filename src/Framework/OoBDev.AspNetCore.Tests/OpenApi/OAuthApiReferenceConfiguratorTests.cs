@@ -20,6 +20,25 @@ public class OAuthApiReferenceConfiguratorTests
 
     [TestMethod]
     [TestCategory(TestCategories.Unit)]
+    public void Configure_ClientIdSet_UsesItInsteadOfTheAudience()
+    {
+        // Stage
+        var options = new ScalarOptions();
+        var configurator = new OAuthApiReferenceConfigurator(
+            Options.Create(new JwtBearerOptions { Audience = "my-api" }),
+            Options.Create(new OAuth2OpenApiOptions { UserReadApiClaim = "api.read", AuthorizationUrl = "https://sts.test/auth", TokenUrl = "https://sts.test/token", ClientId = "my-scalar" }),
+            NullLogger<OAuthApiReferenceConfigurator>.Instance);
+
+        // Test
+        configurator.Configure(options);
+
+        // Assert
+        var scheme = options.Authentication?.SecuritySchemes?[OAuthDocumentTransformer.SecuritySchemeName] as ScalarOAuth2SecurityScheme;
+        Assert.AreEqual("my-scalar", scheme?.Flows?.AuthorizationCode?.ClientId);
+    }
+
+    [TestMethod]
+    [TestCategory(TestCategories.Unit)]
     public void Configure_AudienceSet_UsesAuthorizationCodeWithPkceAndTheAudienceAsClientId()
     {
         // Stage

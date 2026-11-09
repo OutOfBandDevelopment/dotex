@@ -35,7 +35,7 @@ public partial class OAuthApiReferenceConfigurator(
             .AddPreferredSecuritySchemes(OAuthDocumentTransformer.SecuritySchemeName)
             .AddAuthorizationCodeFlow(OAuthDocumentTransformer.SecuritySchemeName, flow =>
             {
-                flow.ClientId = jwt.Value.Audience;
+                flow.ClientId = string.IsNullOrWhiteSpace(oauth.Value.ClientId) ? jwt.Value.Audience : oauth.Value.ClientId;
                 flow.Pkce = Pkce.Sha256;
                 flow.SelectedScopes = [.. scopes];
             });

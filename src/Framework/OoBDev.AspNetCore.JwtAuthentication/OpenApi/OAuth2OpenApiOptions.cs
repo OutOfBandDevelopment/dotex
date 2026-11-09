@@ -19,4 +19,9 @@ public class OAuth2OpenApiOptions
     /// Gets or sets the URL for the token endpoint.
     /// </summary>
     public required string TokenUrl { get; set; }
+
+    /// <summary>
+    /// Gets or sets the client id the API reference signs in with. Empty uses the JwtBearer audience.
+    /// </summary>
+    public string? ClientId { get; set; }
 }

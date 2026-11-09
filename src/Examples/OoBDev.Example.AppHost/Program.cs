@@ -77,6 +77,7 @@ var api = builder.AddProject<OoBDev_Example_WebApi>("example-api", options => op
     .WithEnvironment("Keycloak__JwtBearerOptions__TokenValidationParameters__ValidIssuers__0", keycloakRealm)
     .WithEnvironment("Keycloak__OAuth2OpenApiOptions__AuthorizationUrl", $"{keycloakRealm}/protocol/openid-connect/auth/")
     .WithEnvironment("Keycloak__OAuth2OpenApiOptions__TokenUrl", $"{keycloakRealm}/protocol/openid-connect/token")
+    .WithEnvironment("Keycloak__OAuth2OpenApiOptions__ClientId", "oobdev-example-scalar")
     .WaitFor(keycloak)
     .WithEnvironment("OllamaApiClientOptions__Url", ollama.GetEndpoint("http"))
     .WithEnvironment("OllamaApiClientOptions__DefaultModel", "phi3")
