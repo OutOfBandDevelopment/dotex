@@ -117,6 +117,13 @@ foreach (var queue in new[] { "ExampleMessageProvider", "EmailMessageModel" })
         .WithEnvironment($"MessageQueue__{queue}__Config__Password", rabbitmq.Resource.PasswordParameter);
 }
 
+// The dashboard link opens the API reference (the API has no page at its root).
+api.WithUrlForEndpoint("http", url =>
+{
+    url.Url = "/scalar";
+    url.DisplayText = "Scalar API reference";
+});
+
 // Under Visual Studio the child inherits ASPNETCORE_URLS=https://localhost:5001;http://localhost:5000, and URLS outranks HTTP_PORTS, so the API
 // would ignore the port the host proxies to and every request through the proxy (including the web site's) would hang.
 api.WithEnvironment("ASPNETCORE_URLS", ReferenceExpression.Create($"http://localhost:{api.GetEndpoint("http").Property(EndpointProperty.TargetPort)}"));

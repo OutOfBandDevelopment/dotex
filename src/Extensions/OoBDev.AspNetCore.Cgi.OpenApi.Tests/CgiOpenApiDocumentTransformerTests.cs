@@ -85,6 +85,25 @@ public class CgiOpenApiDocumentTransformerTests
 
     [TestMethod]
     [TestCategory("Unit")]
+    public async Task Transform_BothExeAndCgiExist_ListsBothPrograms()
+    {
+        // Stage
+        File.WriteAllText(Path.Combine(_root, "greet.exe"), string.Empty);
+        File.WriteAllText(Path.Combine(_root, "greet.cgi"), "#!/bin/sh");
+        File.WriteAllText(Path.Combine(_root, "greet.openapi.json"), Description);
+        var document = new OpenApiDocument();
+
+        // Test
+        await Run(document);
+
+        // Assert
+        Assert.IsTrue(document.Paths.ContainsKey("/cgi-bin/greet.exe"));
+        Assert.IsTrue(document.Paths.ContainsKey("/cgi-bin/greet.cgi"));
+        Assert.AreEqual(4, document.Paths.Count);
+    }
+
+    [TestMethod]
+    [TestCategory("Unit")]
     public async Task Transform_DescriptionWithoutProgram_IsSkipped()
     {
         // Stage
