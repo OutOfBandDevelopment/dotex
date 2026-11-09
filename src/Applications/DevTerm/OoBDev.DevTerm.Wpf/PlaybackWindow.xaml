@@ -20,6 +20,7 @@
             <Button Content="Mark in" Command="{Binding MarkIn}" Padding="8,2" />
             <Button Content="Mark out" Command="{Binding MarkOut}" Margin="4,0" Padding="8,2" />
             <Button Content="Save trim" Command="{Binding SaveTrim}" Padding="8,2" />
+            <CheckBox Content="Skip silence" IsChecked="{Binding SkipSilence}" Margin="12,0,0,0" VerticalAlignment="Center" ToolTip="Play gaps longer than 1 s as 1 s" />
             <TextBox Text="{Binding NoteText, UpdateSourceTrigger=PropertyChanged}" Width="200" Margin="12,0,0,0" />
             <TextBox Text="{Binding PresenterText, UpdateSourceTrigger=PropertyChanged}" Width="120" Margin="12,0,0,0" ToolTip="Presenters, comma separated" />
             <Button Content="Presenters" Command="{Binding ApplyPresenters}" Margin="4,0" Padding="8,2" />

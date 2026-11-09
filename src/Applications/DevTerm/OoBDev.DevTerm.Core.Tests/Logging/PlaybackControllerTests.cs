@@ -53,6 +53,20 @@ public sealed class PlaybackControllerTests
     private PlaybackController Open() => PlaybackController.Open(_path, PipelineFor, _available, new ManualTimeProvider());
 
     [TestMethod]
+    public void SkipSilence_Toggled_SetsTheEnginesGapCap()
+    {
+        // Stage
+        var controller = Open();
+
+        // Test + Assert
+        Assert.IsFalse(controller.SkipSilence, "Off by default.");
+        controller.SkipSilence = true;
+        Assert.AreEqual(PlaybackController.DefaultSkipSilenceCap, controller.Engine.MaxGap);
+        controller.SkipSilence = false;
+        Assert.IsNull(controller.Engine.MaxGap);
+    }
+
+    [TestMethod]
     public void StartsWithTheLogsOwnPresenters_LimitedToTheInstalledOnes()
     {
         var controller = Open();

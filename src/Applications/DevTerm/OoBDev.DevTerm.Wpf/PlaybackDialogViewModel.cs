@@ -85,6 +85,20 @@ public sealed class PlaybackDialogViewModel : ViewModelBase
         }
     }
 
+    /// <summary>Whether long quiet stretches are shortened while playing.</summary>
+    public bool SkipSilence
+    {
+        get => _controller.SkipSilence;
+        set
+        {
+            if (_controller.SkipSilence != value)
+            {
+                _controller.SkipSilence = value;
+                OnPropertyChanged();
+            }
+        }
+    }
+
     /// <summary>A record number or log time to jump to.</summary>
     public string JumpText
     {

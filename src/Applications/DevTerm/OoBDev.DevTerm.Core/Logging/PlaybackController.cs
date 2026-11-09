@@ -68,6 +68,16 @@ public sealed class PlaybackController
 
     public PlaybackSpeed Speed { get; private set; } = Speeds[2];
 
+    /// <summary>The idle gap a front end caps playback to when skip silence is on (decided 2026-10-13: 1 s).</summary>
+    public static readonly TimeSpan DefaultSkipSilenceCap = TimeSpan.FromSeconds(1);
+
+    /// <summary>Whether long quiet stretches play as <see cref="DefaultSkipSilenceCap"/> (off by default); timestamps keep showing log time.</summary>
+    public bool SkipSilence
+    {
+        get => Engine.MaxGap is not null;
+        set => Engine.MaxGap = value ? DefaultSkipSilenceCap : null;
+    }
+
     /// <summary>The trim selection as positions: records <see cref="SelectionStart"/> (inclusive) to <see cref="SelectionEnd"/> (exclusive). Starts as the whole log.</summary>
     public int SelectionStart { get; private set; }
 
