@@ -26,6 +26,7 @@ services:
       - Keycloak__JwtBearerOptions__TokenValidationParameters__ValidIssuers__0=http://localhost:${TEST_PORT_KEYCLOAK:-8081}/realms/oobdev-example
       - Keycloak__OAuth2OpenApiOptions__AuthorizationUrl=http://localhost:${TEST_PORT_KEYCLOAK:-8081}/realms/oobdev-example/protocol/openid-connect/auth/
       - Keycloak__OAuth2OpenApiOptions__TokenUrl=http://localhost:${TEST_PORT_KEYCLOAK:-8081}/realms/oobdev-example/protocol/openid-connect/token
+      - Keycloak__OAuth2OpenApiOptions__ClientId=oobdev-example-scalar
       # Backend services by compose service name (the appsettings defaults point at localhost).
       - MailKitSmtpClientOptions__Host=smtp4dev
       - MailKitSmtpClientOptions__Port=25
