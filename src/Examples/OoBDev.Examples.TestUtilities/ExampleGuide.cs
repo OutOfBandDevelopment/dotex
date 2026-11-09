@@ -8,8 +8,6 @@ namespace OoBDev.Examples.TestUtilities;
 /// <summary>Where the control examples' user-guide screenshots live, and how a fresh capture replaces a committed one: through <c>image-mask sync</c>, so the file changes only when the capture differs once the zones in the <c>zones.json</c> beside it are masked.</summary>
 public static class ExampleGuide
 {
-    private const string _zonesFileName = "zones.json";
-
     /// <summary>The committed image path for <paramref name="imageName"/>.</summary>
     public static string ImagePath(string imageName) =>
         Path.Combine(RepoRoot(), "docs", "applications", "example", "controls-guide", "images", imageName);
@@ -27,11 +25,8 @@ public static class ExampleGuide
     public static bool Sync(string capturePath, string imageName)
     {
         var committed = ImagePath(imageName);
-        var directory = Path.GetDirectoryName(committed)!;
-        Directory.CreateDirectory(directory);
-        var zones = Path.Combine(directory, _zonesFileName);
-        var definition = File.Exists(zones) ? MaskDefinition.Load(zones) : new MaskDefinition();
-        return ImageSync.Run(capturePath, committed, definition, tolerance: 0, maxDifferentPixels: 0);
+        Directory.CreateDirectory(Path.GetDirectoryName(committed)!);
+        return ImageSync.RunBesideZonesFile(capturePath, committed);
     }
 
     private static string RepoRoot()
