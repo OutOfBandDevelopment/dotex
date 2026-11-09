@@ -28,6 +28,14 @@ app.UseCgi();
 }
 ```
 
+An empty handler value (`".exe": ""`) runs the file itself, so it must be a program the host operating system can start: a Linux binary named `.cgi` on Windows fails with 500 "The program could not start." (the warning log names the script).
+
+## More options
+
+- `MaxResponseBytes` (default none): past the limit the response is aborted.
+- `MaxStderrBytes` (64 KB): stderr kept and logged per request.
+- `InheritedEnvironmentVariables` (`PATH`, `SystemRoot`): the only host variables copied into the cleared child environment when they exist.
+
 ## Safe defaults
 
 - Only extensions listed in `Handlers` run (403 otherwise); `.cmd` and `.bat` also need `AllowBatchFiles`.
