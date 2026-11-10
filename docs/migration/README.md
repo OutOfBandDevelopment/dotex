@@ -85,7 +85,7 @@ dev-term merges into this repository entirely (owner, 2026-10-28): shells become
 |------|-------|
 | Net.ServiceHost CLI | Decided (D6, owner 2026-11-10): no standalone tool; DevTerm hosts the generic TCP services, see the [feature request](../features/request/2026-11-10-devterm-generic-service-listeners.md) |
 | Windows.Forms `ValidTextBox` | Commented out in main; decision in the [WindowsForms plan](../design/WindowsForms/migration-plan.md) |
-| `Incoming/BinaryDecoders` | Removed 2026-11-10 (the source repository is clean at `e590b420`). Its comparison, bug and issue reports were reviewed against `src` and removed; the open gaps are in [the feature request](../features/request/2026-11-10-binary-data-decoders-open-issues.md) |
+| `Incoming/BinaryDecoders` | Removed 2026-11-10 (the source repository is clean at `e590b420`). Its comparison, bug and issue reports were reviewed against `src` and removed; the open gaps are one feature request each in [docs/features/request](../features/request/README.md) |
 | `Incoming/Tools` (De5000 BLE scan CLI) | Removed 2026-11-10: scanning is `BleDeviceScanner`, GATT enumeration is `IBleGattProfileExplorer`, decoding is `OoBDev.DerEE.De5000` (D6) |
 
 ## SharedFramework epics
