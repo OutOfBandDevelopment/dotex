@@ -25,6 +25,7 @@ public sealed class LinuxLimitTests
 
         Assert.IsTrue(plugin.WaitForExit(30_000));
         Assert.AreNotEqual(0, plugin.ExitCode);
+        Assert.AreEqual(LimitHit.Memory, plugin.LimitHit);
     }
 
     [TestMethod]
@@ -34,6 +35,7 @@ public sealed class LinuxLimitTests
 
         Assert.IsTrue(plugin.WaitForExit(30_000));
         Assert.AreNotEqual(0, plugin.ExitCode);
+        Assert.AreEqual(LimitHit.Cpu, plugin.LimitHit);
     }
 
     [TestMethod]
@@ -42,5 +44,27 @@ public sealed class LinuxLimitTests
         using var plugin = new BubblewrapPlugin("sleep", limits: new JobLimits(WallSeconds: 2));
 
         Assert.IsTrue(plugin.WaitForExit(30_000));
+        Assert.AreEqual(LimitHit.Wall, plugin.LimitHit);
+    }
+
+    [TestMethod]
+    public void Fork_MoreProcessesThanTheLimit_TheTreeIsKilledAndReported()
+    {
+        using var plugin = new BubblewrapPlugin("fork", limits: new JobLimits(MaxProcesses: 4));
+
+        Assert.IsTrue(plugin.WaitForExit(30_000));
+        Assert.AreEqual(LimitHit.Processes, plugin.LimitHit);
+    }
+
+    [TestMethod]
+    public void Sleep_WithinEveryLimit_NoLimitIsReported()
+    {
+        using var plugin = new BubblewrapPlugin("echo", limits: new JobLimits(MemoryMb: 256, MaxProcesses: 8, CpuSeconds: 30, WallSeconds: 60));
+        plugin.Receive();
+
+        plugin.Send(FrameType.Shutdown, "lifecycle.shutdown", "{}");
+
+        Assert.IsTrue(plugin.WaitForExit(10_000));
+        Assert.AreEqual(LimitHit.None, plugin.LimitHit);
     }
 }

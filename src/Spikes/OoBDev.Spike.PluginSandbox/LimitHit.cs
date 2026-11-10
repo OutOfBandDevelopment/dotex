@@ -14,4 +14,7 @@ public enum LimitHit
 
     /// <summary>The wall-clock cap.</summary>
     Wall = 3,
+
+    /// <summary>The process-count cap.</summary>
+    Processes = 4,
 }

@@ -49,6 +49,15 @@ internal static class Program
             case "probe":
                 return Probe(args, input, output);
 
+            case "fork":
+                for (var i = 0; i < 10; i++)
+                {
+                    Process.Start(new ProcessStartInfo("/usr/bin/sleep", "30") { UseShellExecute = false });
+                }
+
+                Thread.Sleep(Timeout.Infinite);
+                return 0;
+
             case "spin":
                 while (true)
                 {

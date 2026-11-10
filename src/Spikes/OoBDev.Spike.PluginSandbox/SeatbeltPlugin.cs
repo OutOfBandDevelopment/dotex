@@ -60,6 +60,9 @@ public sealed class SeatbeltPlugin : ISandboxedPlugin
     }
 
     /// <inheritdoc />
+    /// <inheritdoc />
+    public LimitHit LimitHit => LimitHit.None;
+
     public int ExitCode => _process.ExitCode;
 
     /// <summary>

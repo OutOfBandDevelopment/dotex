@@ -28,9 +28,9 @@ public sealed class GrantBroker(GrantStore grants, HttpMessageHandler? handler =
             return Log(pluginId, "file", path, false, "no grant");
         }
 
-        var full = Path.GetFullPath(path);
+        var full = LinkResolver.Real(path);
         var comparison = OperatingSystem.IsWindows() ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
-        var folder = grant.Files.FirstOrDefault(f => Inside(full, Path.GetFullPath(f.Path), comparison));
+        var folder = grant.Files.FirstOrDefault(f => Inside(full, LinkResolver.Real(f.Path), comparison));
         if (folder is null)
         {
             return Log(pluginId, "file", path, false, "outside the granted folders");

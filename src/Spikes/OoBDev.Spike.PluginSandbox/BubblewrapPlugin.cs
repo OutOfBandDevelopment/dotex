@@ -20,6 +20,9 @@ public sealed class BubblewrapPlugin : ISandboxedPlugin
     private readonly Process _process;
     private readonly FrameChannel _channel;
     private readonly global::System.Threading.Timer? _wall;
+    private readonly LinuxProcessWatcher? _watcher;
+    private readonly JobLimits? _limits;
+    private volatile int _hit;
 
     /// <summary>Starts the plugin; the folders are bound at the same path inside the sandbox.</summary>
     public BubblewrapPlugin(string commandArguments, IReadOnlyCollection<string>? readDirectories = null, IReadOnlyCollection<string>? writeDirectories = null, FrameFlags flags = FrameFlags.Crc32 | FrameFlags.Hmac | FrameFlags.CounterSign, JobLimits? limits = null)
@@ -50,14 +53,44 @@ public sealed class BubblewrapPlugin : ISandboxedPlugin
 
         _process = Process.Start(info) ?? throw new InvalidOperationException("could not start the plugin");
         _channel = new FrameChannel(_process.StandardOutput.BaseStream, _process.StandardInput.BaseStream, flags, key);
+        _limits = limits;
+        if (limits is { MaxProcesses: > 0 } or { CpuSeconds: > 0 } or { MemoryMb: > 0 })
+        {
+            _watcher = new LinuxProcessWatcher(_process.Id, limits, hit => End(hit));
+        }
+
         if (limits?.WallSeconds > 0)
         {
-            _wall = new global::System.Threading.Timer(_ => Kill(), null, TimeSpan.FromSeconds(limits.WallSeconds), global::System.Threading.Timeout.InfiniteTimeSpan);
+            _wall = new global::System.Threading.Timer(_ => End(LimitHit.Wall), null, TimeSpan.FromSeconds(limits.WallSeconds), global::System.Threading.Timeout.InfiniteTimeSpan);
         }
     }
 
     /// <inheritdoc />
     public int ExitCode => _process.ExitCode;
+
+    /// <inheritdoc />
+    public LimitHit LimitHit
+    {
+        get
+        {
+            if (_hit != 0)
+            {
+                return (LimitHit)_hit;
+            }
+
+            if (!_process.HasExited || _process.ExitCode == 0 || _limits is null || _watcher is null)
+            {
+                return LimitHit.None;
+            }
+
+            if (_limits.CpuSeconds > 0 && _watcher.CpuSeconds >= _limits.CpuSeconds * 0.8)
+            {
+                return LimitHit.Cpu;
+            }
+
+            return _limits.MemoryMb > 0 && _watcher.PeakMemoryMb >= _limits.MemoryMb * 2.0 / 3 ? LimitHit.Memory : LimitHit.None;
+        }
+    }
 
     /// <summary>Builds the bubblewrap command line; public so a test can assert what is and is not mounted.</summary>
     public static IReadOnlyList<string> Arguments(string dll, string dotnetRoot, string keyHex, string flags, IReadOnlyCollection<string> read, IReadOnlyCollection<string> write, string commandArguments, int memoryMb = 0)
@@ -116,7 +149,16 @@ public sealed class BubblewrapPlugin : ISandboxedPlugin
     /// <inheritdoc />
     public bool WaitForExit(int milliseconds) => _process.WaitForExit(milliseconds);
 
-    /// <inheritdoc />
+    private void End(LimitHit hit)
+    {
+        if (!_process.HasExited)
+        {
+            _hit = (int)hit;
+        }
+
+        Kill();
+    }
+
     private void Kill()
     {
         try
@@ -131,6 +173,7 @@ public sealed class BubblewrapPlugin : ISandboxedPlugin
         }
     }
 
+    /// <inheritdoc />
     public void Dispose()
     {
         if (!_process.HasExited)
@@ -139,6 +182,7 @@ public sealed class BubblewrapPlugin : ISandboxedPlugin
         }
 
         _wall?.Dispose();
+        _watcher?.Dispose();
         _process.WaitForExit();
         _process.Dispose();
     }

@@ -5,6 +5,9 @@ namespace OoBDev.Spike.PluginSandbox;
 /// <summary>A plugin process on any platform, speaking the framed protocol over stdio; the launcher behind it decides how it is isolated.</summary>
 public interface ISandboxedPlugin : IDisposable
 {
+    /// <summary>Which limit ended the plugin, or none; reported where the platform can tell (Windows, Linux).</summary>
+    LimitHit LimitHit { get; }
+
     /// <summary>The plugin's exit code once it has ended.</summary>
     int ExitCode { get; }
 

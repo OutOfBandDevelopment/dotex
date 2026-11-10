@@ -40,6 +40,9 @@ public sealed class PlainPlugin : ISandboxedPlugin
     }
 
     /// <inheritdoc />
+    /// <inheritdoc />
+    public LimitHit LimitHit => LimitHit.None;
+
     public int ExitCode => _process.ExitCode;
 
     /// <inheritdoc />
