@@ -1,3 +1,4 @@
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.DevTerm.Configuration.Discovery;
 using OoBDev.System.IO.Tcp;
@@ -33,6 +34,30 @@ public sealed class LxiDeviceOptionTests
         Assert.AreEqual(0, option.Port);
         Assert.AreEqual("vxi11", option.Transport);
         Assert.AreEqual("10.0.0.9", option.Host);
+    }
+
+    [TestMethod]
+    public void FromDevice_WithSeveralServices_IsOneRowWithBadges_FillingTheRawTcpPortFirst()
+    {
+        var device = NetworkDiscovery.GroupByDevice(
+        [
+            new NetworkDeviceHit("10.0.0.7", 1024, "vxi11", "lxi", "Scope", "lxi"),
+            new NetworkDeviceHit("10.0.0.7", 5025, "tcp", "lxi", "Scope", "lxi"),
+        ]).Single();
+
+        var option = LxiDeviceOption.FromDevice(device);
+
+        Assert.AreEqual("10.0.0.7  Scope  [vxi11:1024, tcp:5025]", option.Display);
+        Assert.AreEqual(5025, option.Port);
+        Assert.AreEqual("tcp", option.Transport);
+    }
+
+    [TestMethod]
+    public void FromDevice_WithOnlyVxi11_SwitchesTheTransport()
+    {
+        var device = NetworkDiscovery.GroupByDevice([new NetworkDeviceHit("10.0.0.7", 1024, "vxi11", "lxi", "Scope", "lxi")]).Single();
+
+        Assert.AreEqual("vxi11", LxiDeviceOption.FromDevice(device).Transport);
     }
 
     [TestMethod]
