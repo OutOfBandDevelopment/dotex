@@ -67,6 +67,10 @@ docs/test/2026-09-24-09-54-39.md), Korad KA3005P, Korad KA6003P. See:
   [tektronix-2230-protocol.md](../../protocols/tektronix-2230-protocol.md) proposal — though a minimal one-command
   profile (`ID?`) was added the same day; see `docs/changes/2026-09-23.md`.
 
+## Layered profiles (built 2026-11-09)
+
+A device sub-type profile sets `Extends` to the name of a generic or family profile (owner decision, 2026-10-13: layering stays in SCPI profiles, apart from `DeviceManifest`). `ScpiProfileCatalog` resolves the chain after loading every file, so load order does not matter: base commands first, same-`Id` commands replaced, terminator and notes inherited unless the file sets them, `IdnPattern` never inherited. A missing base or a cycle is reported in `LoadErrors` and the profile is dropped. Tests: `ScpiProfileLayeringTests`.
+
 ## Source
 
 This proposal is derived from an existing (separate) project tracked in the

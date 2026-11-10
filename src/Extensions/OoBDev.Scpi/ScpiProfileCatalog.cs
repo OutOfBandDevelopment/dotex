@@ -56,13 +56,15 @@ public sealed class ScpiProfileCatalog
     {
         var profiles = new List<ScpiInstrumentProfile>();
         var errors = new List<string>();
+        var ownTerminator = new HashSet<ScpiInstrumentProfile>();
+        var sources = new Dictionary<ScpiInstrumentProfile, string>();
 
         var assembly = typeof(ScpiProfileCatalog).Assembly;
         foreach (var name in assembly.GetManifestResourceNames().Where(n => n.StartsWith("OoBDev.Scpi.Profiles.", StringComparison.Ordinal)).Order(StringComparer.Ordinal))
         {
             using var stream = assembly.GetManifestResourceStream(name)!;
             using var reader = new StreamReader(stream);
-            TryAdd(reader.ReadToEnd(), name["OoBDev.Scpi.Profiles.".Length..], profiles, errors);
+            TryAdd(reader.ReadToEnd(), name["OoBDev.Scpi.Profiles.".Length..], profiles, errors, ownTerminator, sources);
         }
 
         foreach (var directory in dropInDirectories ?? [])
@@ -73,7 +75,7 @@ public sealed class ScpiProfileCatalog
             {
                 try
                 {
-                    TryAdd(File.ReadAllText(file), Path.GetFileName(file), profiles, errors);
+                    TryAdd(File.ReadAllText(file), Path.GetFileName(file), profiles, errors, ownTerminator, sources);
                 }
                 catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
                 {
@@ -82,7 +84,68 @@ public sealed class ScpiProfileCatalog
             }
         }
 
+        ResolveExtends(profiles, errors, ownTerminator, sources);
         return new ScpiProfileCatalog(profiles, errors);
+    }
+
+    private static void ResolveExtends(List<ScpiInstrumentProfile> profiles, List<string> errors, HashSet<ScpiInstrumentProfile> ownTerminator, Dictionary<ScpiInstrumentProfile, string> sources)
+    {
+        var done = new HashSet<ScpiInstrumentProfile>();
+        var failed = new HashSet<ScpiInstrumentProfile>();
+
+        bool Resolve(ScpiInstrumentProfile profile, Stack<ScpiInstrumentProfile> path)
+        {
+            if (done.Contains(profile)) return true;
+            if (failed.Contains(profile)) return false;
+            if (string.IsNullOrWhiteSpace(profile.Extends))
+            {
+                done.Add(profile);
+                return true;
+            }
+
+            if (path.Contains(profile))
+            {
+                errors.Add($"{sources[profile]}: '{profile.Name}' extends itself through a cycle.");
+                failed.Add(profile);
+                return false;
+            }
+
+            var baseProfile = string.Equals(profile.Extends, Generic.Name, StringComparison.OrdinalIgnoreCase)
+                ? Generic
+                : profiles.FirstOrDefault(p => !ReferenceEquals(p, profile) && string.Equals(p.Name, profile.Extends, StringComparison.OrdinalIgnoreCase));
+            if (baseProfile is null)
+            {
+                errors.Add($"{sources[profile]}: '{profile.Name}' extends '{profile.Extends}', which is not a loaded profile.");
+                failed.Add(profile);
+                return false;
+            }
+
+            path.Push(profile);
+            var baseResolved = ReferenceEquals(baseProfile, Generic) || Resolve(baseProfile, path);
+            path.Pop();
+            if (!baseResolved)
+            {
+                errors.Add($"{sources[profile]}: '{profile.Name}' extends '{profile.Extends}', which failed to load.");
+                failed.Add(profile);
+                return false;
+            }
+
+            var own = profile.Commands.ToList();
+            var merged = baseProfile.Commands.Select(c => own.FirstOrDefault(o => o.Id == c.Id) ?? c).ToList();
+            merged.AddRange(own.Where(o => baseProfile.Commands.All(c => c.Id != o.Id)));
+            profile.Commands = merged;
+            if (!ownTerminator.Contains(profile)) profile.Terminator = baseProfile.Terminator;
+            profile.Notes ??= baseProfile.Notes;
+            done.Add(profile);
+            return true;
+        }
+
+        foreach (var profile in profiles.ToList())
+        {
+            Resolve(profile, new Stack<ScpiInstrumentProfile>());
+        }
+
+        profiles.RemoveAll(failed.Contains);
     }
 
     /// <summary>
@@ -117,12 +180,21 @@ public sealed class ScpiProfileCatalog
         return null;
     }
 
-    private static void TryAdd(string json, string source, List<ScpiInstrumentProfile> profiles, List<string> errors)
+    private static void TryAdd(string json, string source, List<ScpiInstrumentProfile> profiles, List<string> errors, HashSet<ScpiInstrumentProfile> ownTerminator, Dictionary<ScpiInstrumentProfile, string> sources)
     {
         try
         {
             var profile = JsonSerializer.Deserialize<ScpiInstrumentProfile>(json, SerializerOptions);
             if (profile is null) return;
+            using (var document = JsonDocument.Parse(json, new JsonDocumentOptions { CommentHandling = JsonCommentHandling.Skip }))
+            {
+                if (document.RootElement.ValueKind == JsonValueKind.Object && document.RootElement.EnumerateObject().Any(p => string.Equals(p.Name, nameof(ScpiInstrumentProfile.Terminator), StringComparison.OrdinalIgnoreCase)))
+                {
+                    ownTerminator.Add(profile);
+                }
+            }
+
+            sources[profile] = source;
 
             // Math.Clamp throws when the minimum exceeds the maximum, so reject the profile here, not at invoke time.
             var bad = profile.Commands
