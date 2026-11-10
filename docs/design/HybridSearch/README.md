@@ -1,6 +1,6 @@
 # OoBDev - Hybrid Search Engine and Document Store
 
-> Status: moved from `docs/Framework/SearchProvider.md` (2026-11-10) as the starting point of this design. The code is `OoBDev.Search`, the Qdrant and OpenSearch adapters and the embedders; the requirements, architecture, API design and testing strategy documents are still to be written ([standard](../../patterns-discovery/06-design-document-standard.md)). Flows: [document search flows](document-search-flows.md), [upload and search diagrams](upload-and-search-diagrams.md).
+> Status: moved from `docs/Framework/SearchProvider.md` (2026-11-10) as the starting point of this design. The code is `OoBDev.Search`, the Qdrant and OpenSearch adapters and the embedders; the four standard documents (written 2026-11-10 from the code as it stands): [requirements](requirements.md), [architecture](architecture.md), [API design](api-design.md), [testing strategy](testing-strategy.md) ([standard](../../patterns-discovery/06-design-document-standard.md)). Flows: [document search flows](document-search-flows.md), [upload and search diagrams](upload-and-search-diagrams.md).
 
 ## Summary
 
