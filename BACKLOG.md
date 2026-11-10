@@ -51,7 +51,7 @@ A clean rebuild after the 2026-11-06 pass reports no analyzer warnings (218 befo
 - [ ] Bug-review the migrated projects that the source review never covered (device IO, toolkit and text, code analysis and archives, apps and tooling); the source split was dropped with `REVIEW-STATUS.md` (history keeps it)
 - [ ] ExpressionCalculator optional reductions, never built (the source only listed them as a "bonus round"): `B^-1` to `1/B`, `B/N` to `B*(1/N)`, `B*B*...` to `B^T`, `B+B+...` to `B*T`; add them to `IdentityExpressionOptimizer` or a new optimizer with tests, or decline
 - [ ] Apple II encoding drops the high bit, so inverse and flashing text do not round-trip ([issue](docs/issues/retro-apple2-encoding-drops-high-bit.md))
-- [ ] HybridSearch: add the `OoBDev.Search.Tests` listed in its [testing strategy](docs/design/HybridSearch/testing-strategy.md) (project has none; 80% target), and decide whether to remove the three obsolete provider shells and build the hybrid merge ([requirements](docs/design/HybridSearch/requirements.md#open-questions))
+- [ ] HybridSearch: decide whether to remove the three obsolete provider shells or build the hybrid merge ([requirements](docs/design/HybridSearch/requirements.md#open-questions)); the `OoBDev.Search.Tests` are done
 
 ## 6. Migrations
 

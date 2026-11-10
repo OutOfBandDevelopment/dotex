@@ -16,7 +16,7 @@
 
 ## Current state
 
-`OoBDev.Search.Tests` exists and references `OoBDev.Search`, but holds no test files, so the Framework 80% target is not met for `OoBDev.Search`. The only search tests elsewhere cover the adapters (`QdrantVectorStoreProviderTests`, `QdrantGrpcClientTests`, `OpenSearchTests`, all in their own projects) and the example application (`SearchScoringTests`, `SearchAnnotationsExampleTests`). The three obsolete shells are excluded from coverage and need no tests.
+`OoBDev.Search.Tests` holds 11 tests (2026-11-10: `VectorStoreFactoryTests`, `ServiceCollectionExtensionsTests`) and `OoBDev.Search` reports 100% line coverage. The only search tests elsewhere cover the adapters (`QdrantVectorStoreProviderTests`, `QdrantGrpcClientTests`, `OpenSearchTests`, all in their own projects) and the example application (`SearchScoringTests`, `SearchAnnotationsExampleTests`). The three obsolete shells are excluded from coverage and need no tests.
 
 ## Test layers
 
@@ -42,4 +42,4 @@
 
 ## Coverage
 
-Target 80% or more for `OoBDev.Search` (the factory, the wrapper and the registration are the only live code). Report the number from `dotnet test --collect:"XPlat Code Coverage"`; until the tests above exist the figure is 0%.
+Target 80% or more for `OoBDev.Search` (the factory, the wrapper and the registration are the only live code). Report the number from `dotnet test --collect:"XPlat Code Coverage"`; measured 2026-11-10: 100% lines for `OoBDev.Search`.
