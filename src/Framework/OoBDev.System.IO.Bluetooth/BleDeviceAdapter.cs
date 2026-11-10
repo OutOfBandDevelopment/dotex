@@ -77,6 +77,12 @@ public sealed class BleDeviceAdapter : IDeviceAdapter
             return;
         }
 
+        // A peripheral-side disconnect leaves the old connection attached; release it so its late notifications cannot reach the new pipe.
+        if (_adapter is not null)
+        {
+            await CloseAsync(cancellationToken).ConfigureAwait(false);
+        }
+
         State = ConnectionState.Opening;
 
         var adapter = _adapterFactory.Create(_options.Value);

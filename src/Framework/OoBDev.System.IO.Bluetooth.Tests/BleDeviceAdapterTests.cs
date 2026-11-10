@@ -216,6 +216,32 @@ public sealed class BleDeviceAdapterTests
     }
 
     [TestMethod]
+    public async Task OpenAsync_AfterThePeripheralDisconnected_ReleasesTheOldConnectionAndIgnoresItsLateNotifications()
+    {
+        // Stage
+        var first = new Mock<IBleConnection>();
+        var second = new Mock<IBleConnection>();
+        var factory = new Mock<IBleConnectionFactory>();
+        factory.SetupSequence(f => f.Create(It.IsAny<BleDeviceAdapterOptions>())).Returns(first.Object).Returns(second.Object);
+        var transport = new BleDeviceAdapter(factory.Object, Options());
+        await transport.OpenAsync(TestContext.CancellationToken);
+        first.Raise(a => a.Disconnected += null, first.Object, EventArgs.Empty);
+        Assert.AreEqual(ConnectionState.Closed, transport.State);
+
+        // Test
+        await transport.OpenAsync(TestContext.CancellationToken);
+        first.Raise(a => a.NotificationReceived += null, first.Object, new ReadOnlyMemory<byte>("late"u8.ToArray()));
+        second.Raise(a => a.NotificationReceived += null, second.Object, new ReadOnlyMemory<byte>("new"u8.ToArray()));
+
+        // Assert
+        first.Verify(a => a.DisposeAsync(), Times.Once);
+        var result = await transport.Input.ReadAsync(TestContext.CancellationToken);
+        Assert.AreEqual("new", global::System.Text.Encoding.UTF8.GetString(result.Buffer.ToArray()));
+
+        await transport.CloseAsync(TestContext.CancellationToken);
+    }
+
+    [TestMethod]
     public async Task CloseAsync_DisconnectsAndDisposesAdapter()
     {
         var adapter = new Mock<IBleConnection>();
