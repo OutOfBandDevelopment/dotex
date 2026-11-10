@@ -36,6 +36,15 @@ public sealed partial class JobObject : IDisposable
         }
     }
 
+    /// <summary>Puts a process by raw handle in the job; used for a process created suspended.</summary>
+    public void Assign(nint processHandle)
+    {
+        if (!AssignProcessToJobObject(_handle, processHandle))
+        {
+            throw new InvalidOperationException("AssignProcessToJobObject failed: " + Marshal.GetLastWin32Error());
+        }
+    }
+
     /// <inheritdoc />
     public void Dispose() => CloseHandle(_handle);
 

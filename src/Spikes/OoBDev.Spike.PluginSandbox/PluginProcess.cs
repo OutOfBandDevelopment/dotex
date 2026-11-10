@@ -1,7 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.Runtime.Versioning;
-using System.Text.Json;
+using System.Security.Cryptography;
 
 namespace OoBDev.Spike.PluginSandbox;
 
@@ -11,11 +11,13 @@ public sealed class PluginProcess : IDisposable
 {
     private readonly Process _process;
     private readonly JobObject _job;
+    private readonly FrameChannel _channel;
 
     /// <summary>Starts the plugin in <paramref name="mode"/> with a per-process <paramref name="memoryMb"/> cap.</summary>
-    public PluginProcess(string mode, int memoryMb)
+    public PluginProcess(string mode, int memoryMb, FrameFlags flags = FrameFlags.Crc32 | FrameFlags.Hmac | FrameFlags.CounterSign)
     {
         _job = new JobObject(memoryMb);
+        var key = RandomNumberGenerator.GetBytes(32);
         var info = new ProcessStartInfo("dotnet", $"\"{typeof(PluginProcess).Assembly.Location}\" {mode}")
         {
             RedirectStandardInput = true,
@@ -23,8 +25,11 @@ public sealed class PluginProcess : IDisposable
             RedirectStandardError = true,
             UseShellExecute = false,
         };
+        info.Environment[Program.KeyVariable] = Convert.ToHexString(key);
+        info.Environment[Program.FlagsVariable] = ((byte)flags).ToString();
         _process = Process.Start(info) ?? throw new InvalidOperationException("could not start the plugin");
         _job.Assign(_process);
+        _channel = new FrameChannel(_process.StandardOutput.BaseStream, _process.StandardInput.BaseStream, flags, key);
     }
 
     /// <summary>True once the plugin process has exited.</summary>
@@ -34,14 +39,14 @@ public sealed class PluginProcess : IDisposable
     public int ExitCode => _process.ExitCode;
 
     /// <summary>Sends one JSON message.</summary>
-    public void Send(string json) => Frame.Write(_process.StandardInput.BaseStream, json);
+    public ulong Send(FrameType type, string topic, string json) => _channel.Send(type, topic, json);
 
     /// <summary>Reads one message. A wire violation kills the plugin (Table 8) and is rethrown.</summary>
-    public JsonDocument Receive()
+    public ReceivedFrame Receive()
     {
         try
         {
-            return Frame.Read(_process.StandardOutput.BaseStream);
+            return _channel.Read();
         }
         catch (FrameViolation)
         {

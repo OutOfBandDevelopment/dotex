@@ -35,3 +35,4 @@ Non-goals (first version): macOS isolation, in-process plugins, GPU access, a pl
 | REQ-008 | The PoC escape tests pass on Windows and Linux | Must |
 | REQ-009 | The wire protocol is language-neutral and versioned | Should |
 | REQ-010 | A threat model is written and reviewed before implementation | Must |
+| REQ-011 | Plugin lifetime is chosen by manifest and application configuration: `Bound` to the calling process (dies with it) or `Shared` (one reusable instance, found and joined through a named mutex, ended when the last caller leaves). The manifest says which modes the plugin supports and the application picks one of them; an unsupported pick is refused with a reason. When the caller dies, the plugin is either killed or kept for a reconnect window so a recovered caller can resume it in a new session (owner, 2026-11-10) | Should |

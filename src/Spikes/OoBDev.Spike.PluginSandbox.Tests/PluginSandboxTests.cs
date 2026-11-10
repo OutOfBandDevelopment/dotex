@@ -11,18 +11,18 @@ namespace OoBDev.Spike.PluginSandbox.Tests;
 public sealed class PluginSandboxTests
 {
     [TestMethod]
-    public void Echo_ReadyThenRequest_ReturnsResponseWithCorrelationId()
+    public void Echo_ReadyThenRequest_ReturnsCounterSignedResponse()
     {
         using var plugin = new PluginProcess("echo", 256);
 
-        using var ready = plugin.Receive();
-        plugin.Send("""{"v":1,"type":"Request","requestId":"r1","topic":"echo","payload":{"n":7}}""");
-        using var response = plugin.Receive();
-        plugin.Send("""{"v":1,"type":"Shutdown","requestId":"r2"}""");
+        var ready = plugin.Receive();
+        var requestSequence = plugin.Send(FrameType.Request, "echo", """{"n":7}""");
+        var response = plugin.Receive();
+        plugin.Send(FrameType.Shutdown, "lifecycle.shutdown", """{}""");
 
-        Assert.AreEqual("lifecycle.ready", ready.RootElement.GetProperty("topic").GetString());
-        Assert.AreEqual("r1", response.RootElement.GetProperty("correlationId").GetString());
-        Assert.AreEqual(7, response.RootElement.GetProperty("payload").GetProperty("n").GetInt32());
+        Assert.AreEqual("lifecycle.ready", ready.Topic);
+        Assert.AreEqual(requestSequence, response.Ack);
+        Assert.AreEqual(7, response.ParseJson().RootElement.GetProperty("n").GetInt32());
         Assert.IsTrue(plugin.WaitForExit(10_000));
         Assert.AreEqual(0, plugin.ExitCode);
     }

@@ -12,6 +12,10 @@ The owner asked for a proof of concept in `src/Spikes` before signing off the [t
 - **Violation reaction.** A frame length over the 1 MiB cap makes the host's reader throw `FrameViolation`, kill the process tree and report it exited (Table 8, first row). Invalid UTF-8 and invalid JSON take the same path in code; only the length case has a test.
 - **Resource limit.** A Windows job object with a per-process memory limit and kill-on-close ends a plugin that allocates without bound (exit code not 0), and closing the job kills the plugin.
 
+## Update 2026-11-10
+
+The frame is now a packed binary structure (versioned header, type, format, sequence, ack, topic, payload, optional CRC-32 and HMAC, counter-signed replies), covered by 22 Unit tests; the Windows AppContainer launcher is written but not yet exercised by a test. The lines below about the old 4-byte framing and the missing isolation still describe what is proven by tests today.
+
 ## What was not shown
 
 - Start-suspended assignment to the job: the spike assigns after start, so a plugin has a short unlimited window. A real launcher creates the process suspended.
