@@ -436,6 +436,24 @@ public sealed class ManifestEditorTests
     }
 
     [TestMethod]
+    public void ConvertPanelToJson_XmlPanelFile_RenamesItAndMarksTheEditorDirty()
+    {
+        // Stage
+        var editor = new ManifestEditorViewModel(Path.Combine(Path.GetTempPath(), "unused-manifests"));
+        editor.Manifest.UiFile = "panel.xml";
+
+        // Test
+        var could = editor.CanConvertPanelToJson;
+        editor.ConvertPanelToJson();
+
+        // Assert
+        Assert.IsTrue(could);
+        Assert.AreEqual("panel.json", editor.Manifest.UiFile);
+        Assert.IsTrue(editor.IsDirty);
+        Assert.IsFalse(editor.CanConvertPanelToJson);
+    }
+
+    [TestMethod]
     public void Preview_DoesNotChangeTheManifest_AndItsSurfaceSendsNothing()
     {
         var editor = new ManifestEditorViewModel(Path.GetTempPath());
