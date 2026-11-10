@@ -30,7 +30,9 @@ public partial class App : Application, IDisposable
         }
 
         _provider = services.BuildServiceProvider();
-        new MainWindow { DataContext = _provider.GetRequiredService<ShellViewModel>() }.Show();
+        var shell = _provider.GetRequiredService<ShellViewModel>();
+        new MainWindow { DataContext = shell }.Show();
+        _ = Dispatcher.BeginInvoke(shell.PromptPendingPlugins, System.Windows.Threading.DispatcherPriority.ApplicationIdle);
     }
 
     /// <summary>Closes the instrument connection.</summary>

@@ -112,6 +112,17 @@ public sealed class InstallPluginTests
     }
 
     [TestMethod]
+    public void PromptPendingPlugins_NothingWaiting_AsksNothing()
+    {
+        var dialog = new FakeDialog(null, PluginApprovalChoice.Once);
+
+        new ShellViewModel([], pluginInstallDialog: dialog).PromptPendingPlugins();
+        new ShellViewModel([]).PromptPendingPlugins();
+
+        Assert.AreEqual(0, dialog.Reviewed);
+    }
+
+    [TestMethod]
     public void ReviewPluginApprovals_NothingRemembered_SaysSo()
     {
         var dialog = new FakeDialog(null, PluginApprovalChoice.Once);

@@ -20,6 +20,7 @@ public static class ServiceCollectionExtensions
     {
         services.AddDevTermCore();
         services.AddDevTermDevicePanels();
+        services.AddPlugins(new CliOptions());
         services.TryAddSingleton<IColorPicker, WpfColorPicker>();
         services.TryAddSingleton<IConfirmPrompt, WpfConfirmPrompt>();
         services.TryAddEnumerable(ServiceDescriptor.Singleton<IPanelFactory, DemoPanelFactory>());

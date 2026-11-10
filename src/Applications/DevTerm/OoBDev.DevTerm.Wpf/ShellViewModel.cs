@@ -243,6 +243,15 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
 
     internal bool CanInstallPlugin => _pluginInstallDialog is not null;
 
+    /// <summary>Asks about each plugin waiting for approval; called once the window is up. Does nothing without the dialog or without a waiting plugin.</summary>
+    public void PromptPendingPlugins()
+    {
+        if (_pluginInstallDialog is not null && LivePlugins.Pending.Count > 0)
+        {
+            LivePlugins.ReviewPending(_pluginInstallDialog.AskPending);
+        }
+    }
+
     internal void ReviewPlugins()
     {
         LivePlugins.ReviewPending(_pluginInstallDialog!.AskPending);
