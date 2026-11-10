@@ -18,6 +18,10 @@ public static class PluginLoader
     /// <summary>The plugin contract this build implements. A plugin built for another number is skipped.</summary>
     public const int ContractVersion = 1;
 
+    /// <summary>The plugins directory for a configured value: that path, or <c>plugins</c> next to the app when none is set.</summary>
+    public static string ResolveDirectory(string? configured) =>
+        string.IsNullOrWhiteSpace(configured) ? Path.Combine(AppContext.BaseDirectory, "plugins") : configured;
+
     public static IReadOnlyList<PluginLoadResult> LoadAll(string? directory, IServiceCollection services)
     {
         ArgumentNullException.ThrowIfNull(services);

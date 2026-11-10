@@ -832,6 +832,7 @@ public static class TuiMode
                 // Always available, and app-wide: the registered tools serve every device and profile.
                 new MenuItem("Converter _Tools...", string.Empty, Guarded(EditConverterTools)),
                 new MenuItem("_Plugins...", string.Empty, Guarded(() => MessageBox.Query(app, "dev-term — plugins", PluginReport.Text(plugins), "Ok"))),
+                new MenuItem("_Install plugin...", string.Empty, Guarded(() => InstallPlugin(app, PluginLoader.ResolveDirectory(cliOptions.Plugins)))),
                 new MenuItem("Plugin appro_vals...", string.Empty, Guarded(() => ReviewPluginApprovals(app))),
                 new MenuItem("Confi_gure device...", string.Empty, Guarded(() =>
                 {
@@ -1659,6 +1660,34 @@ public static class TuiMode
             1 => ApprovalReviewChoice.Keep,
             _ => ApprovalReviewChoice.Stop,
         });
+    }
+
+    /// <summary>Device &gt; Install plugin: asks for a plugin <c>.zip</c>, shows what it would run for approval (<see cref="PluginInstaller"/>), and reports the outcome; the plugin loads at the next start.</summary>
+    internal static void InstallPlugin(IApplication app, string pluginsDirectory, IPluginApprover? approver = null)
+    {
+        var path = PlaybackMode.PromptForText(app, "dev-term — install plugin", "Path of the plugin .zip:", string.Empty)?.Trim().Trim('"');
+        if (string.IsNullOrEmpty(path))
+        {
+            return;
+        }
+
+        approver ??= new DialogPluginApprover(app);
+        var result = PluginInstaller.Install(path, pluginsDirectory, approver);
+        MessageBox.Query(app, "dev-term — install plugin", result.Installed ? result.Message + Environment.NewLine + "It loads the next time dev-term starts." : "Not installed: " + result.Message, "Ok");
+    }
+
+    private sealed class DialogPluginApprover(IApplication app) : IPluginApprover
+    {
+        public PluginApprovalChoice Ask(PluginApprovalRequest request)
+        {
+            var text = string.Join(Environment.NewLine, $"Plugin '{request.Name}' {request.Version} will be installed and can then:", string.Empty, $"  {request.CommandLine}", $"  into {request.Folder}", $"  (content hash {request.Hash[..12]})");
+            return MessageBox.Query(app, "dev-term — install plugin", text, ["Install", "Install and always allow", "Cancel"]) switch
+            {
+                0 => PluginApprovalChoice.Once,
+                1 => PluginApprovalChoice.Always,
+                _ => PluginApprovalChoice.Deny,
+            };
+        }
     }
 
     /// <summary>Asks about each out-of-process plugin still waiting for approval; an approved one goes live at once (<see cref="LivePlugins"/>).</summary>
