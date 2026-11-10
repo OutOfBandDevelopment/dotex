@@ -16,3 +16,7 @@ The no-flaky-tests goal is met: ten consecutive full Integration runs passed on 
 - Caching models will not help on a warm runner.
 - Trim repeated work, for example the 18-image conformance set run for each preset and each test in `OoBDev.Onnx.ImageEmbeddings.Tests`.
 - Give the runner more cores; this helps more than trimming one class.
+
+## Run on 2026-11-10
+
+`scripts/ci/run-tests.ps1 -Category Integration -Configuration Debug` took 4 min 58 s end to end (stack already up, build included), inside the 5 minute goal. Four tests failed under that load and passed when their project was rerun alone against the same stack: `RabbitMqIntegrationTests` AMQPS and STOMP-over-TLS (5 to 6 s timeouts in `OoBDev.System.IO.Brokers.Tests`), `RealRabbitMq_Stomp_RoutesBothWays` (`OoBDev.DevTerm.Core.Tests`, 11 s wait) and one SQL vector test whose initializer failed to load `Microsoft.Identity.Client` (`OoBDev.Data.Vectors.DB.Tests`). The first three were timeouts too tight for a loaded machine (the test adapters now use 30 s, the DevTerm wait 30 s); the fourth is a DacFx assembly-load problem that did not reproduce alone and stays in `BACKLOG.md`.

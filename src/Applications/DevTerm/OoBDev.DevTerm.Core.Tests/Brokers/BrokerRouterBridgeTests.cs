@@ -169,7 +169,7 @@ public sealed class BrokerRouterBridgeTests
 
     private async Task WaitAsync(Func<bool> condition)
     {
-        var deadline = DateTime.UtcNow.AddSeconds(10);
+        var deadline = DateTime.UtcNow.AddSeconds(30);
         while (!condition() && DateTime.UtcNow < deadline)
         {
             await Task.Delay(20, TestContext.CancellationToken);

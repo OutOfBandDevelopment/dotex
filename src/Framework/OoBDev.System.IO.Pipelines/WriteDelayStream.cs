@@ -71,5 +71,20 @@ public sealed class WriteDelayStream : Stream
 
     public override void SetLength(long value) => throw new NotSupportedException();
 
-    public override void Write(byte[] buffer, int offset, int count) => throw new NotSupportedException();
+    public override Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken) =>
+        WriteAsync(buffer.AsMemory(offset, count), cancellationToken).AsTask();
+
+    public override void Write(byte[] buffer, int offset, int count)
+    {
+        for (var i = 0; i < count; i++)
+        {
+            _inner.Write(buffer, offset + i, 1);
+            _inner.Flush();
+
+            if (_delayMilliseconds > 0 && i < count - 1)
+            {
+                Thread.Sleep(_delayMilliseconds);
+            }
+        }
+    }
 }
