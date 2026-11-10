@@ -4,7 +4,7 @@
 > **Owner questions:** [OPEN-QUESTIONS.md](./OPEN-QUESTIONS.md) · **New to this project?** Read [CLAUDE.md](./CLAUDE.md) first.
 > **Wish list (owner's own notes):** [docs/todo.md](docs/todo.md) · **Other repositories to harvest from:** [docs/harvest-candidates.md](docs/harvest-candidates.md)
 
-**Last Updated:** 2026-11-09
+**Last Updated:** 2026-11-10
 
 GitHub is no longer the primary repository (local bare repo `origin`), so nothing here waits on GitHub Actions. Keep items to one short line; detail lives in the linked feature doc (rule `work-tracking`).
 
@@ -61,6 +61,7 @@ Scope rule: every BinaryDataDecoders feature is migrated; phases are priority or
 - [ ] **BinaryDataDecoders** (~50,000 LOC, source `C:\repo\mine\binary-data-decoders`, newer than `Incoming/BinaryDecoders`, which is superseded; removing it is the owner's call). Done: Numerics, NMEA helpers, Drawing, Code analysis, Fencing, LanC, the Xslt CLI, the PackMan CLI and the eight hardware devices (from dev-term). All three items of Table 4 of [the re-review](docs/migration/binarydatadecoders-rereview-2026-10-29.md) are done (2026-11-03); what remains is the owner decisions listed there (for example removing `Incoming/BinaryDecoders`).
 - [ ] **Harvest candidates**: nothing decided; map in [docs/harvest-candidates.md](docs/harvest-candidates.md). Evaluate later (decision D7): hybridsearch, Oobtainium, BuildFirstOnce, markdownplantuml, TotpExample, HandyClasses, postsql-playground (informs `OoBDev.DacFx`).
 - [ ] Plugin sandbox: the [threat model](docs/design/PluginSandbox/threat-model.md) and [protocol and manifest design](docs/design/PluginSandbox/protocol-and-manifest.md) wait for the owner sign-off of REQ-010; spike done 2026-11-09 ([result](docs/design/PluginSandbox/spike-result.md)); waiting for the owner sign-off of REQ-010.
+  - Sandbox follow-ups (owner, 2026-11-10: macOS deferred until later): Linux memory, CPU and process limits; Survive named-pipe transport; shared-instance mutex in `PluginPool`; grant broker wired to frames and launcher; request context in a frame; links inside a granted folder; Linux equivalents of the caller-death and pool lifetime tests. Deferred: run `CrossPlatformEscapeTests` on a Mac, macOS limits and PID isolation ([result](docs/design/PluginSandbox/spike-result.md)).
 
 ### Decided, waiting its turn
 
