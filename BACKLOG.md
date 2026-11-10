@@ -89,5 +89,4 @@ Scope rule: every BinaryDataDecoders feature is migrated; phases are priority or
 - [ ] DevTerm leftovers beyond the list above:
   - Stream Monitor in-window preview of HP-GL, PostScript and PCL in the Tui and Web monitors (the WPF window draws HP-GL itself and PostScript/PCL through an installed Ghostscript/GhostPCL since 2026-11-09).
   - A DevTerm rule in `OoBDev.Analyzers` only when one is needed (decided 2026-11-09: the checkable DevTerm constraints are legitimate in most uses or need data flow the analyzer cannot see, so a rule now would be noise; add OOB0004 when a repeatable mistake appears).
-  - Dockable MDI layout in WPF (decided 2026-11-09: AvalonDock, MIT; theme it in `DarkControls.xaml`, save the layout as XML).
   - Read-write control channel and out-of-process plugins over a named pipe and a localhost web service (with the plugin sandbox item); research notes such as the BYTECC BT-UP01 bridge.

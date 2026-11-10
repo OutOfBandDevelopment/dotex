@@ -111,6 +111,11 @@ public static class WpfTheme
     {
         ArgumentNullException.ThrowIfNull(window);
         Apply(window.Resources, theme);
+        if (window.FindName("Dock") is AvalonDock.DockingManager dock)
+        {
+            // AvalonDock's stock theme is light; the dark themes use its VS2013 dark chrome.
+            dock.Theme = theme.IsDark ? new AvalonDock.Themes.Vs2013DarkTheme() : null;
+        }
     }
 
     private static void Apply(ResourceDictionary resources, DevTermTheme theme)

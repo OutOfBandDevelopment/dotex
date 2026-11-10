@@ -26,7 +26,12 @@ public sealed class UiLayoutReviewTests
     [TestCleanup]
     public void ResetTheme() => ActiveTheme.Reset();
 
-    private static void Review(string theme, Func<Window> build, double width, double height)
+    private static readonly LayoutAllowance[] _dockGlyphs =
+    [
+        new(WpfLayoutAssert.LightChromeCheck, e => e is global::System.Windows.Shapes.Path && e.Name is "PART_ImgHidePin" or "MenuDropDownButtonImage", "AvalonDock's pin and menu glyphs are light icons drawn on its dark header, on purpose"),
+    ];
+
+    private static void Review(string theme, Func<Window> build, double width, double height, global::System.Collections.Generic.IReadOnlyList<LayoutAllowance>? allowed = null)
     {
         WpfScreenshot.RunOnSta(() =>
         {
@@ -37,7 +42,7 @@ public sealed class UiLayoutReviewTests
                 WpfScreenshot.ShowOffScreen(window, width, height);
                 Dispatcher.CurrentDispatcher.Invoke(() => { }, DispatcherPriority.Background);
                 window.UpdateLayout();
-                WpfLayoutAssert.Check(window, new LayoutCheckOptions { IsDarkTheme = theme == BuiltInThemes.DarkName }, window.GetType().Name + " (" + theme + ")");
+                WpfLayoutAssert.Check(window, new LayoutCheckOptions { IsDarkTheme = theme == BuiltInThemes.DarkName, Allowed = allowed ?? [] }, window.GetType().Name + " (" + theme + ")");
             }
             finally
             {
@@ -94,7 +99,7 @@ public sealed class UiLayoutReviewTests
     [DataRow(BuiltInThemes.LightName)]
     [DataRow(BuiltInThemes.DarkName)]
     public void MainWindow_Connected_HasNoLayoutProblems(string theme) =>
-        Review(theme, ShellScreenshotTests.BuildWindow, 900, 650);
+        Review(theme, ShellScreenshotTests.BuildWindow, 900, 650, _dockGlyphs);
 
     [TestMethod]
     [DataRow(BuiltInThemes.LightName)]
@@ -185,7 +190,7 @@ public sealed class UiLayoutReviewTests
     [DataRow(BuiltInThemes.LightName)]
     [DataRow(BuiltInThemes.DarkName)]
     public void MainWindow_WithScpiControlPanel_HasNoLayoutProblems(string theme) =>
-        Review(theme, BuildWindowWithScpiPanel, 900, 650);
+        Review(theme, BuildWindowWithScpiPanel, 900, 650, _dockGlyphs);
 
     [TestMethod]
     [DataRow(BuiltInThemes.LightName)]

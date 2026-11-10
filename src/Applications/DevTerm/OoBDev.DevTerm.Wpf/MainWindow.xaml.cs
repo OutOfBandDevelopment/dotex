@@ -11,5 +11,13 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
         WpfTheme.Attach(this);
+        if (LayoutFile is not null)
+        {
+            Loaded += (_, _) => DockLayout.Load(Dock, LayoutFile);
+            Closing += (_, _) => DockLayout.Save(Dock, LayoutFile);
+        }
     }
+
+    /// <summary>Where the dock layout is saved as XML and restored from; null (the default, and in tests) keeps it unsaved.</summary>
+    public static string? LayoutFile { get; set; }
 }

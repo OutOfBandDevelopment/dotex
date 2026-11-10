@@ -31,6 +31,7 @@ public partial class App : Application, IDisposable
 
         _provider = services.BuildServiceProvider();
         var shell = _provider.GetRequiredService<ShellViewModel>();
+        DevTermApp.MainWindow.LayoutFile = global::System.IO.Path.Combine(global::System.Environment.GetFolderPath(global::System.Environment.SpecialFolder.LocalApplicationData), "OoBDev", "DevTerm", "layout.xml");
         new MainWindow { DataContext = shell }.Show();
         _ = Dispatcher.BeginInvoke(shell.PromptPendingPlugins, System.Windows.Threading.DispatcherPriority.ApplicationIdle);
     }
