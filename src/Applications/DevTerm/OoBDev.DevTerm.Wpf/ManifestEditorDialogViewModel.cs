@@ -52,7 +52,8 @@ public sealed class ManifestEditorDialogViewModel : ViewModelBase, IDisposable
         var up = new ManifestEditorCommand(() => _editor.CanMove, _editor.MoveUp);
         var down = new ManifestEditorCommand(() => _editor.CanMove, _editor.MoveDown);
         var createPanel = new ManifestEditorCommand(() => _editor.SelectedNode is { Kind: ManifestNodeKind.Panel, Form: null }, _editor.CreatePanelFromCommands);
-        _stateful = [undo, redo, add, remove, up, down, createPanel];
+        var convertPanel = new ManifestEditorCommand(() => _editor.CanConvertPanelToJson, _editor.ConvertPanelToJson);
+        _stateful = [undo, redo, add, remove, up, down, createPanel, convertPanel];
         Undo = undo;
         Redo = redo;
         Add = add;
@@ -60,6 +61,7 @@ public sealed class ManifestEditorDialogViewModel : ViewModelBase, IDisposable
         MoveUp = up;
         MoveDown = down;
         CreatePanel = createPanel;
+        ConvertPanelToJson = convertPanel;
         New = new ManifestEditorCommand(() => true, () => _editor.New());
         Open = new ManifestEditorCommand(() => true, OpenManifest);
         Save = new ManifestEditorCommand(() => true, () => _editor.Save());
@@ -197,6 +199,9 @@ public sealed class ManifestEditorDialogViewModel : ViewModelBase, IDisposable
 
     /// <summary>Creates the panel from the manifest's commands.</summary>
     public ICommand CreatePanel { get; }
+
+    /// <summary>Moves an <c>.xml</c> panel file to JSON on the next save (the editor writes JSON only).</summary>
+    public ICommand ConvertPanelToJson { get; }
 
     /// <inheritdoc />
     public void Dispose()
