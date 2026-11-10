@@ -17,6 +17,7 @@ public sealed class PeerTabSource(CliOptions cliOptions, string? host, int port)
     private readonly TcpPeerListener _listener = new(host, port);
     private CancellationTokenSource? _cts;
     private Task? _loop;
+    private int _disposed;
 
     /// <summary>Raised for each accepted peer with its remote endpoint and ready (already open) tab. May be raised on a background thread.</summary>
     public event EventHandler<PeerTabEventArgs>? TabReady;
@@ -40,6 +41,11 @@ public sealed class PeerTabSource(CliOptions cliOptions, string? host, int port)
     /// <inheritdoc />
     public async ValueTask DisposeAsync()
     {
+        if (Interlocked.Exchange(ref _disposed, 1) == 1)
+        {
+            return;
+        }
+
         if (_cts is not null)
         {
             await _cts.CancelAsync().ConfigureAwait(false);

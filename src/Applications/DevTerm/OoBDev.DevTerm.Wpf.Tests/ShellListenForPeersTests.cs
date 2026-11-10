@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
@@ -20,6 +21,30 @@ public sealed class ShellListenForPeersTests
     private sealed class FixedPortDialog(int? port) : IListenPeersDialog
     {
         public int? AskPort() => port;
+
+        public int? AskUdpPort() => port;
+    }
+
+    [TestMethod]
+    public async Task ListenForUdp_DatagramArrives_ListsItsSenderInTheSessionOutput()
+    {
+        // Stage
+        var services = new ServiceCollection();
+        services.AddSingleton<IListenPeersDialog>(new FixedPortDialog(0));
+        await using var provider = services.AddDevTermWpfShell().BuildServiceProvider();
+        var shell = provider.GetRequiredService<ShellViewModel>();
+        shell.ListenForUdp.Execute(null);
+        var session = shell.Sessions[0];
+        Assert.IsTrue(SpinWait.SpinUntil(() => session.State == OoBDev.System.IO.ConnectionState.Open, TimeSpan.FromSeconds(5)));
+        var port = ((global::System.Net.IPEndPoint)((OoBDev.System.IO.Tcp.UdpEndpointDeviceAdapter)session.Tab!.Session.Transport).LocalEndPoint!).Port;
+        using var sender = new UdpClient(new IPEndPoint(IPAddress.Loopback, 0));
+
+        // Test
+        await sender.SendAsync("hi"u8.ToArray(), new IPEndPoint(IPAddress.Loopback, port), TestContext.CancellationToken);
+        var listed = SpinWait.SpinUntil(() => session.OutputLines.Any(l => l.StartsWith("Datagram from", StringComparison.Ordinal)), TimeSpan.FromSeconds(5));
+
+        // Assert
+        Assert.IsTrue(listed);
     }
 
     [TestMethod]

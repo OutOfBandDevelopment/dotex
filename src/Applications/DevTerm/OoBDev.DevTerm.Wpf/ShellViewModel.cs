@@ -96,6 +96,7 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
         Open = new OpenPanelCommand(this);
         _listenPeersDialog = listenPeersDialog;
         ListenForPeers = new ListenForPeersCommand(this);
+        ListenForUdp = new ListenForUdpCommand(this);
         NewLoopbackSession = new NewLoopbackSessionCommand(this);
         OpenProfileSession = new OpenProfileSessionCommand(this);
         if (Factories.Count > 0)
@@ -388,6 +389,37 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
         source.Start();
         _peerSource = source;
         ((CommandBase)ListenForPeers).RaiseCanExecuteChanged();
+    }
+
+    /// <summary>Asks for a port and opens a session tab for it that lists the sender of each UDP datagram.</summary>
+    public ICommand ListenForUdp { get; }
+
+    internal bool CanListenForUdp => _sessionFactory is not null && _listenPeersDialog is not null;
+
+    internal void StartListeningForUdp()
+    {
+        if (_listenPeersDialog!.AskUdpPort() is not { } port)
+        {
+            return;
+        }
+
+        var udp = UdpSessionTab.Build(new CliOptions { Presenter = ["ascii"] }, null, port);
+        var session = _sessionFactory!.CreateFromTab(udp.Tab, $"UDP :{port}");
+        var context = SynchronizationContext.Current;
+        udp.Adapter.DatagramReceived += (_, e) =>
+        {
+            var line = UdpSessionTab.Describe(e);
+            if (context is null)
+            {
+                session.OutputLines.Add(line);
+            }
+            else
+            {
+                context.Post(_ => session.OutputLines.Add(line), null);
+            }
+        };
+        AddSession(session);
+        session.Connect.Execute(null);
     }
 
     /// <summary>The port peers connect to while <see cref="ListenForPeers"/> is active, or null.</summary>

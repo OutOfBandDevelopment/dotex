@@ -8,7 +8,12 @@ namespace OoBDev.DevTerm.Wpf;
 public sealed class WpfListenPeersDialog : IListenPeersDialog
 {
     /// <inheritdoc />
-    public int? AskPort()
+    public int? AskPort() => Ask("Listen for Peers", "TCP port to listen on (each peer gets its own tab):");
+
+    /// <inheritdoc />
+    public int? AskUdpPort() => Ask("Listen for UDP", "UDP port to bind (each datagram's sender is shown):");
+
+    private static int? Ask(string title, string label)
     {
         var box = new TextBox { MinWidth = 120, Text = "9000", Margin = new Thickness(0, 0, 0, 12) };
         var ok = new Button { Content = "OK", IsDefault = true, MinWidth = 72, Margin = new Thickness(0, 0, 8, 0) };
@@ -17,12 +22,12 @@ public sealed class WpfListenPeersDialog : IListenPeersDialog
         buttons.Children.Add(ok);
         buttons.Children.Add(cancel);
         var panel = new StackPanel { Margin = new Thickness(12) };
-        panel.Children.Add(new TextBlock { Text = "TCP port to listen on (each peer gets its own tab):", Margin = new Thickness(0, 0, 0, 4) });
+        panel.Children.Add(new TextBlock { Text = label, Margin = new Thickness(0, 0, 0, 4) });
         panel.Children.Add(box);
         panel.Children.Add(buttons);
         var dialog = new Window
         {
-            Title = "Listen for Peers",
+            Title = title,
             Content = panel,
             SizeToContent = SizeToContent.WidthAndHeight,
             ResizeMode = ResizeMode.NoResize,
