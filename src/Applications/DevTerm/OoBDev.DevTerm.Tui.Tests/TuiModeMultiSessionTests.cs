@@ -186,6 +186,49 @@ public sealed class TuiModeMultiSessionTests
     }
 
     [TestMethod]
+    public async Task ListenForPeersMenuItem_APeerConnects_AddsATabForIt()
+    {
+        var (session, _, presenter) = CreateLoopbackSession();
+        await session.OpenAsync(TestContext.CancellationToken);
+        var cliOptions = new CliOptions { Transport = "loopback", Presenter = ["ascii"] };
+        int port;
+        using (var probe = new global::System.Net.Sockets.TcpListener(global::System.Net.IPAddress.Loopback, 0))
+        {
+            probe.Start();
+            port = ((global::System.Net.IPEndPoint)probe.LocalEndpoint).Port;
+        }
+
+        TuiTestRunner.RunWithLoop(session, presenter, cliOptions, parts =>
+        {
+            var app = TuiTestRunner.CurrentApp;
+            TuiTestRunner.InvokeOnLoop(() =>
+            {
+                app.AddTimeout(TimeSpan.FromMilliseconds(20), () =>
+                {
+                    if (app.TopRunnableView is not { } dialog || dialog == parts.Window)
+                    {
+                        return true;
+                    }
+
+                    dialog.SubViews.OfType<TextField>().Single().Text = port.ToString(global::System.Globalization.CultureInfo.InvariantCulture);
+                    FindButton(dialog, "OK").InvokeCommand(Command.Accept);
+                    return false;
+                });
+
+                parts.ListenForPeersMenuItem.Action!.Invoke();
+                return true;
+            });
+
+            using var client = new global::System.Net.Sockets.TcpClient();
+            client.Connect(global::System.Net.IPAddress.Loopback, port);
+
+            Assert.IsTrue(TuiTestRunner.WaitUntilOnLoop(() => parts.AllSessions().Count == 2, _waitTimeout), "Expected a tab for the connected peer.");
+        });
+
+        await session.CloseAsync(TestContext.CancellationToken);
+    }
+
+    [TestMethod]
     public async Task CloseSessionMenuItem_WithMultipleTabs_ClosesTheActiveTabAndSwitchesToAnother()
     {
         var (session, _, presenter) = CreateLoopbackSession();

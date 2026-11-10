@@ -41,6 +41,7 @@ internal sealed record TuiWindowParts(
     Tabs TabsView,
     MenuItem NewSessionMenuItem,
     MenuItem CloseSessionMenuItem,
+    MenuItem ListenForPeersMenuItem,
     Func<IReadOnlyList<Session>> AllSessions,
     Action CleanupAllTabs,
     MenuItem EchoSentCommandsMenuItem,

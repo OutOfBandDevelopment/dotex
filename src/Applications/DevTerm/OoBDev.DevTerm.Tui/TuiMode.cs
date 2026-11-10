@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.ObjectModel;
 using OoBDev.DevTerm.Configuration;
+using System.Globalization;
 using OoBDev.DevTerm.Logging;
 using Terminal.Gui.App;
 using Terminal.Gui.Editor;
@@ -204,6 +205,8 @@ public static class TuiMode
         MergedSessionLog? mergedLog = null;
         MenuItem? newSessionMenuItem = null;
         MenuItem? closeSessionMenuItem = null;
+        PeerTabSource? peerSource = null;
+        MenuItem? listenForPeersMenuItem = null;
         MenuItem? deviceProfilesMenuItem = null;
         MenuBarItem? sendAsMenuBarItem = null;
         var sendAsItems = new List<(string Name, MenuItem Item)>();
@@ -656,6 +659,45 @@ public static class TuiMode
 
                     var newTab = AddTab(newSessionTab);
                     Observe(ConnectNewTabAsync(newTab), line => AppendOutput(newTab, line));
+                })),
+                listenForPeersMenuItem = new MenuItem("Listen for _Peers...", string.Empty, Guarded(() =>
+                {
+                    if (peerSource is not null)
+                    {
+                        AppendStatus(ActiveTab(), $"Already listening for peers on port {peerSource.Port}.");
+                        return;
+                    }
+
+                    var text = PlaybackMode.PromptForText(app, "Listen for peers", "TCP port to listen on (each peer connecting gets its own tab):", "9000");
+                    if (text is null)
+                    {
+                        return;
+                    }
+
+                    if (!int.TryParse(text, NumberStyles.None, CultureInfo.InvariantCulture, out var listenPort) || listenPort is < 0 or > 65535)
+                    {
+                        AppendError(ActiveTab(), $"'{text}' is not a TCP port.");
+                        return;
+                    }
+
+                    var seed = ActiveTabOrNull()?.Tab.CliOptions ?? lastCliOptions;
+                    try
+                    {
+                        peerSource = new PeerTabSource(seed, null, listenPort);
+                        peerSource.TabReady += (_, e) => app.Invoke(() =>
+                        {
+                            var peerTab = AddTab(e.Tab);
+                            AppendStatus(peerTab, $"Peer {e.RemoteEndPoint} connected.");
+                            Observe(ConnectNewTabAsync(peerTab), line => AppendOutput(peerTab, line));
+                        });
+                        peerSource.Start();
+                        AppendStatus(ActiveTab(), $"Listening for peers on port {peerSource.Port}.");
+                    }
+                    catch (Exception ex)
+                    {
+                        peerSource = null;
+                        AppendError(ActiveTab(), $"Could not listen on port {listenPort}: {ex.Message}");
+                    }
                 })),
                 closeSessionMenuItem = new MenuItem("_Close Session", string.Empty, () =>
                 {
@@ -1458,6 +1500,7 @@ public static class TuiMode
             tabsView,
             newSessionMenuItem!,
             closeSessionMenuItem!,
+            listenForPeersMenuItem!,
             () => tabs.Select(t => t.Tab.Session).ToList(),
             () =>
             {
@@ -1467,6 +1510,10 @@ public static class TuiMode
                 }
 
                 streamMonitor?.Dispose();
+                if (peerSource is not null)
+                {
+                    _ = peerSource.DisposeAsync().AsTask();
+                }
             },
             echoSentCommandsMenuItem!,
             clearOutputMenuItem!,
