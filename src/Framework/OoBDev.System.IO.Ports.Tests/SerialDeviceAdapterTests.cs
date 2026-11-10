@@ -260,4 +260,37 @@ public sealed class SerialTransportTests
     }
 
     public required TestContext TestContext { get; set; }
+
+    [TestMethod]
+    public async Task OpenAsync_AfterTheDeviceClosed_ReleasesThePreviousPort()
+    {
+        // Stage
+        var (first, devicePipe) = CreatePort();
+        var (second, _) = CreatePort();
+        var factory = new Mock<ISerialPortFactory>();
+        factory.SetupSequence(f => f.Create(It.IsAny<SerialDeviceAdapterOptions>())).Returns(first.Object).Returns(second.Object);
+        var transport = new SerialDeviceAdapter(factory.Object, Options());
+        var closedTcs = new TaskCompletionSource();
+        transport.StateChanged += (_, e) =>
+        {
+            if (e.Current == ConnectionState.Closed)
+            {
+                closedTcs.TrySetResult();
+            }
+        };
+        await transport.OpenAsync(TestContext.CancellationToken);
+        await devicePipe.Writer.CompleteAsync();
+        await closedTcs.Task.WaitAsync(TimeSpan.FromSeconds(5), TestContext.CancellationToken);
+
+        // Test
+        await transport.OpenAsync(TestContext.CancellationToken);
+
+        // Assert
+        Assert.AreEqual(ConnectionState.Open, transport.State);
+        first.Verify(p => p.Close(), Times.Once);
+        first.Verify(p => p.Dispose(), Times.Once);
+        second.Verify(p => p.Open(), Times.Once);
+
+        await transport.CloseAsync(TestContext.CancellationToken);
+    }
 }
