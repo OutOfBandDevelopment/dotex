@@ -22,3 +22,16 @@ In Channels mode the picker edits the whole `id[:label[:#RRGGBB[:expression]]]; 
 **Default:** C until answered (nothing is built on a guess).
 
 **Your answer:**
+
+### Q2 — 2026-11-09 — Raster export: confirm the layering plan
+
+The plan in [raster-export.md](docs/design/Presenters/raster-export.md#migration-plan) splits the HP-GL converter into a scene parser and writers, with no new project.
+
+**Options**
+- A. Scene and SVG writer stay in `OoBDev.Documents.Hpgl` (Framework); the SkiaSharp rasterizer goes in `OoBDev.Extensions.Drawing` (recommended): no new project, Framework stays Skia-free, the rasterizer is reusable by any scene. Trade-off: the scene types carry an HP-GL library name though they are generic.
+- B. A new Framework project `OoBDev.Drawing.Vector` for the scene, writers and parser contract. Trade-off: honest generic name, one more project to package.
+- C. Keep SVG only; PNG comes from an external tool. Trade-off: no work, no in-app PNG.
+
+**Default:** A once confirmed; nothing is built until you answer (project layout rule).
+
+**Your answer:**
