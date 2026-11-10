@@ -40,11 +40,10 @@ internal sealed class SerialPortReadStream(SerialPort port) : Stream
         if (port.BytesToRead == 0)
         {
             var tcs = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+            // ErrorReceived is deliberately not awaited: after a framing or parity error BytesToRead can still be 0 and the Read below would block for ReadTimeout.
             void OnDataReceived(object sender, SerialDataReceivedEventArgs e) => tcs.TrySetResult();
-            void OnErrorReceived(object sender, SerialErrorReceivedEventArgs e) => tcs.TrySetResult();
 
             port.DataReceived += OnDataReceived;
-            port.ErrorReceived += OnErrorReceived;
             try
             {
                 using var registration = cancellationToken.Register(
@@ -77,7 +76,6 @@ internal sealed class SerialPortReadStream(SerialPort port) : Stream
             finally
             {
                 port.DataReceived -= OnDataReceived;
-                port.ErrorReceived -= OnErrorReceived;
             }
         }
 

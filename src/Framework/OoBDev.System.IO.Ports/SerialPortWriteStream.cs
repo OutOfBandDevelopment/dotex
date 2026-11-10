@@ -16,17 +16,13 @@ namespace OoBDev.System.IO.Ports;
 /// </summary>
 internal sealed class SerialPortWriteStream(ISerialPort port) : Stream
 {
-    public override Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
-    {
-        port.Write(buffer, offset, count);
-        return Task.CompletedTask;
-    }
+    public override Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken) =>
+        Task.Run(() => port.Write(buffer, offset, count), cancellationToken);
 
     public override ValueTask WriteAsync(ReadOnlyMemory<byte> buffer, CancellationToken cancellationToken = default)
     {
         var array = buffer.ToArray();
-        port.Write(array, 0, array.Length);
-        return ValueTask.CompletedTask;
+        return new ValueTask(Task.Run(() => port.Write(array, 0, array.Length), cancellationToken));
     }
 
     public override bool CanRead => false;
