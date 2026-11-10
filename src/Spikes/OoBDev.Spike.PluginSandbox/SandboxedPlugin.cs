@@ -93,6 +93,9 @@ public sealed class SandboxedPlugin : ISandboxedPlugin
     /// <summary>Sends a frame with a JSON payload.</summary>
     public ulong Send(FrameType type, string topic, string json) => _channel.Send(type, topic, json);
 
+    /// <summary>Answers <paramref name="request"/> with a JSON payload.</summary>
+    public ulong Reply(ReceivedFrame request, FrameType type, string json) => _channel.Reply(request, type, global::System.Text.Encoding.UTF8.GetBytes(json));
+
     /// <summary>Reads one frame; a wire violation kills the plugin and is rethrown.</summary>
     public ReceivedFrame Receive()
     {

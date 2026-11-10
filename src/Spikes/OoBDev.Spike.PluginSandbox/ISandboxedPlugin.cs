@@ -11,6 +11,9 @@ public interface ISandboxedPlugin : IDisposable
     /// <summary>Sends a frame with a JSON payload.</summary>
     ulong Send(FrameType type, string topic, string json);
 
+    /// <summary>Answers <paramref name="request"/> with a JSON payload.</summary>
+    ulong Reply(ReceivedFrame request, FrameType type, string json);
+
     /// <summary>Reads one frame.</summary>
     ReceivedFrame Receive();
 

@@ -45,6 +45,9 @@ public sealed class PlainPlugin : ISandboxedPlugin
     /// <inheritdoc />
     public ulong Send(FrameType type, string topic, string json) => _channel.Send(type, topic, json);
 
+    /// <summary>Answers <paramref name="request"/> with a JSON payload.</summary>
+    public ulong Reply(ReceivedFrame request, FrameType type, string json) => _channel.Reply(request, type, global::System.Text.Encoding.UTF8.GetBytes(json));
+
     /// <inheritdoc />
     public ReceivedFrame Receive() => _channel.Read();
 

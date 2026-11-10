@@ -37,6 +37,9 @@ internal static class Program
                 input.CopyTo(Stream.Null);
                 return 0;
 
+            case "brokered":
+                return Brokered(input, output);
+
             case "caller":
                 return Caller(args);
 
@@ -168,6 +171,59 @@ internal static class Program
         var channel = new FrameChannel(input, output, flags, key);
         channel.Send(FrameType.Event, "probe.result", JsonSerializer.Serialize(new { kind, allowed, detail }));
         return 0;
+    }
+
+    // A plugin that can do nothing itself: it forwards read, write and fetch requests to the host broker and returns the answer, and "whoami" returns the request context the host sent.
+    private static int Brokered(Stream input, Stream output)
+    {
+        var flags = (FrameFlags)byte.Parse(Environment.GetEnvironmentVariable(FlagsVariable) ?? "0");
+        var key = Environment.GetEnvironmentVariable(KeyVariable) is { } hex ? Convert.FromHexString(hex) : null;
+        var channel = new FrameChannel(input, output, flags, key);
+        channel.Send(FrameType.Event, "lifecycle.ready", """{"id":"brokered","version":"1.0.0"}""");
+        var context = "{}";
+        try
+        {
+            while (true)
+            {
+                var message = channel.Read();
+                if (message.Type == FrameType.Shutdown)
+                {
+                    return 0;
+                }
+
+                if (message.Topic == "context.set")
+                {
+                    context = message.Text;
+                    continue;
+                }
+
+                using var document = JsonDocument.Parse(message.Payload);
+                var op = document.RootElement.GetProperty("op").GetString();
+                if (op == "whoami")
+                {
+                    channel.Reply(message, FrameType.Response, System.Text.Encoding.UTF8.GetBytes(context));
+                    continue;
+                }
+
+                var topic = op switch
+                {
+                    "read" => "broker.file.read",
+                    "write" => "broker.file.write",
+                    _ => "broker.fetch",
+                };
+                channel.Send(FrameType.Request, topic, message.Text);
+                var answer = channel.Read();
+                channel.Reply(message, FrameType.Response, answer.Payload);
+            }
+        }
+        catch (EndOfStreamException)
+        {
+            return 0;
+        }
+        catch (FrameViolation)
+        {
+            return 3;
+        }
     }
 
     private static int Echo(Stream input, Stream output)
