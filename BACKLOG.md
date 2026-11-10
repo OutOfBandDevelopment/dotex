@@ -33,8 +33,6 @@ Owner: all protocols and features of dev-term must exist here. Done means what d
 
 ## 4. APIs and documents
 
-  - [ ] Step 3: port the BinaryDataDecoders documentation generation off `xslt.cli` onto TemplateEngine as MSTest entry points rather than scripts around dotnet tools (a dotnet tool stays fine if its `.props` and `.targets` extensions are right); the templates live in the external repository.
-  - [ ] `XsltTemplateProvider` taking input-type navigators.
 
 - [ ] CGI middleware ([design](docs/design/CgiMiddleware/README.md)): first cut built with 23 passing tests; left is run-as-another-user (decided: stays a TODO, deployers use the service account). Shell fixtures run through `scripts/ci/run-linux-tests.ps1`.
 - [ ] AllMiniLmL6V2: `AddValidatedOptions` for the embedding options (blocked by the Abstractions-only adapter rule).
@@ -56,20 +54,15 @@ Scope rule: every BinaryDataDecoders feature is migrated; phases are priority or
 
 ### Waiting on the owner
 
-- [ ] **Incoming code plan** ([plan](docs/migration/README.md)): D1 to D7 answered A on 2026-11-05 (D8 and D9 answered A on 2026-11-09; copies inside this repo may be deleted once migrated, older repositories stay untouched); migrate item by item per the plan: hardware per device from the best-covered source in one package each, fencing (untested), PackMan, Xslt and Net.ServiceHost.
-  - Diff review of `Incoming/BinaryDecoders` is complete (2026-11-06); the incoming copies were deleted (D1; `Incoming/BinaryDecoders` itself on 2026-11-10). Record: [migration plan](docs/migration/README.md#libraries-and-tools-from-binarydatadecoders).
-- [ ] **BinaryDataDecoders** (~50,000 LOC, source `C:\repo\mine\binary-data-decoders`). Done: Numerics, NMEA helpers, Drawing, Code analysis, Fencing, LanC, the Xslt CLI, the PackMan CLI and the eight hardware devices (from dev-term). All three items of the order of work in [the migration plan](docs/migration/README.md#libraries-and-tools-from-binarydatadecoders) are done (2026-11-03); what remains is the owner decisions listed there.
-- [ ] **Harvest candidates**: nothing decided; map in [docs/harvest-candidates.md](docs/harvest-candidates.md). Evaluate later (decision D7): hybridsearch, Oobtainium, BuildFirstOnce, markdownplantuml, TotpExample, HandyClasses, postsql-playground (informs `OoBDev.DacFx`).
-- [ ] Plugin sandbox: the [threat model](docs/design/PluginSandbox/threat-model.md) and [protocol and manifest design](docs/design/PluginSandbox/protocol-and-manifest.md) wait for the owner sign-off of REQ-010; spike done 2026-11-09 ([result](docs/design/PluginSandbox/spike-result.md)); waiting for the owner sign-off of REQ-010.
-  - Sandbox follow-ups (owner, 2026-11-10: macOS deferred until later): Linux process-count limit (needs cgroups); Survive named-pipe transport; request context tied to a token validator; links inside a granted folder; Linux equivalents of the caller-death and pool lifetime tests. Deferred: run `CrossPlatformEscapeTests` on a Mac, macOS limits and PID isolation ([result](docs/design/PluginSandbox/spike-result.md)).
+- [ ] **Migration leftovers** ([plan](docs/migration/README.md)): Net.ServiceHost CLI (D6; compare with the worker recipe first) and the Windows.Forms `ValidTextBox` decision ([plan](docs/design/WindowsForms/migration-plan.md)); everything else from BinaryDataDecoders, dev-term and the incoming copies is migrated, rejected with a reason, or tracked in the plan.
+- [ ] Plugin sandbox: the [threat model](docs/design/PluginSandbox/threat-model.md) and [protocol and manifest design](docs/design/PluginSandbox/protocol-and-manifest.md) wait for the owner sign-off of REQ-010, and the [layering proposal](docs/design/PluginSandbox/migration-plan.md) for its confirmation; spike result: [spike-result.md](docs/design/PluginSandbox/spike-result.md).
+  - Sandbox follow-ups (owner, 2026-11-10: macOS deferred until later): message rate and heartbeat enforcement; Survive named-pipe transport; request context tied to a token validator; Linux equivalents of the caller-death and pool lifetime tests; AppContainer profile and ACL cleanup; wiring the persisted `GrantStore` path into `PluginHost` use and the docs. Deferred: `CrossPlatformEscapeTests` on a Mac, macOS limits and PID isolation.
 
 ### Decided, waiting its turn
 
 - [ ] **SharedFramework** (Epics 2, 6, 7, 10): the four design documents exist for every feature in `docs/design` ([migration plan](docs/design/SharedFramework/migration-plan.md)) and all four epics are compared with the existing projects (`reconcile-designs-and-code`). Owner, 2026-11-06 (Q1): none is implemented for now; the designs stay designs until a consumer appears. Implementation, when it starts, is design first per [the standard](docs/patterns-discovery/06-design-document-standard.md).
   - Epic 10 status (2026-11-05): `OoBDev.Handlebars` already has the provider, ten helpers and a compilation cache; open from the design: the Epic 11 container adapter and the database template source ([readme](src/ExternalServices/Handlebars/OoBDev.Handlebars/README.Handlebars.md)).
-- [ ] **BulkLlm**: consolidate. `OoBDev.LlmCodeGen.Cli` is built; the live Groq run is covered by `GroqLiveRunTests` (2026-11-09) ([design](docs/design/LlmCodeGen/README.md)).
 - [ ] Desired-state database tooling phase 0: bake-off of sqldef, pgschema and Atlas per `docs/design/DesiredStateDatabase/`; do it after the other backlog items (owner, 2026-10-29). Test plan written 2026-11-09 ([bake-off-test-plan.md](docs/design/DesiredStateDatabase/bake-off-test-plan.md)); run it after the owner reviews it.
-- ContractParser: keep as a specification; no work (decided 2026-10-09).
 
 ## 7. Documentation review (owner, 2026-10-28)
 
