@@ -27,8 +27,9 @@ Findings from the first real run: `CreateProcessW` with an explicit environment 
 ## What was not shown
 
 - Start-suspended assignment to the job: the spike assigns after start, so a plugin has a short unlimited window. A real launcher creates the process suspended.
-- Signed packages and the grant broker, per-host network grants, and the caller-death part of REQ-011 are not built. REQ-011 is partly built: `PluginPool` gives Bound (one instance per lease, ended on dispose) and Shared (one instance per plugin id and grant hash, ended by an idle sweep) with 6 Unit and 3 Integration tests, the latter proving the real sandboxed process is gone after dispose. Not built: the cross-process named mutex, a test that kills the caller process and sees the child die (the job has kill-on-close, but no test does this), and the Survive reconnect with token and new session key. The request context (REQ-012) is built as `RequestContext` and `ContextBroker` with 10 Unit tests (declared claims only, canonical SHA-256 id, unknown, forged, other-plugin, expired, missing-right and released ids refused); it is not yet carried in a frame or wired to a real token validator or RFC 8693 exchange.
-- Linux and macOS. No shim was tried.
+- Built since the first result, with tests: `PluginPool` Bound and Shared (REQ-011), the cross-process named mutex and the caller-death kill and survive tests, the reconnect registry (logic only), signed packages (REQ-006), the grant store and broker with per-host network checks (REQ-002/003/004/007), the request context (REQ-012; not yet carried in a frame or tied to a token validator or RFC 8693), and Linux under bubblewrap (REQ-008, 6 tests in the sdk container via `scripts/spikes/run-sandbox-linux.sh`).
+- Still not built: a Survive transport (a named pipe that outlives the caller; the registry has the token rules only), wiring the mutex into `PluginPool`, wiring the broker and grants to the frame protocol and the launcher, the Linux memory, CPU and process limits, and a link-aware file check (a link inside a granted folder that points outside it).
+- macOS. No shim was tried.
 - Message rate and heartbeat enforcement.
 
 ## Consequence for the sign-off

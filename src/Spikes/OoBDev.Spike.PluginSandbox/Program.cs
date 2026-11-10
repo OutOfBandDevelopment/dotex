@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Net.Sockets;
 using System.Text.Json;
 using System.Threading;
@@ -128,6 +129,12 @@ internal static class Program
                     File.WriteAllText(target, "x");
                     detail = "written";
                     allowed = true;
+                    break;
+
+                case "pids":
+                    var count = Directory.GetDirectories("/proc").Count(path => int.TryParse(Path.GetFileName(path), out _));
+                    allowed = count > int.Parse(target, System.Globalization.CultureInfo.InvariantCulture);
+                    detail = count.ToString(System.Globalization.CultureInfo.InvariantCulture);
                     break;
 
                 case "env":
