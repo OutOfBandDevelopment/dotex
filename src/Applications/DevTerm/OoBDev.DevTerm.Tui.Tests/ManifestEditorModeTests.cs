@@ -234,4 +234,15 @@ public sealed class ManifestEditorModeTests
             TuiScreenshot.Save(Path.Combine(_imagesDirectory, "tui-manifest-editor-frame.png"));
         });
     }
+
+    [TestMethod]
+    public void CtrlJ_PointsAnXmlPanelFileAtJson()
+    {
+        Run((parts, _) =>
+        {
+            parts.ViewModel.Manifest.UiFile = "panel.xml";
+            TuiTestRunner.CurrentApp.Keyboard.RaiseKeyDownEvent(Key.J.WithCtrl);
+            Assert.AreEqual("panel.json", parts.ViewModel.Manifest.UiFile);
+        });
+    }
 }

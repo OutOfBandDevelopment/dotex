@@ -459,6 +459,12 @@ internal static class ManifestEditorMode
                 key.Handled = true;
                 editor.Redo();
             }
+            else if (key == Key.J.WithCtrl)
+            {
+                // The toolbars are full at 80 columns, so converting an .xml panel to JSON has a key, not a button.
+                key.Handled = true;
+                editor.ConvertPanelToJson();
+            }
         }
 
         app.Keyboard.KeyDown += undoRedoOnCtrlKeys;
