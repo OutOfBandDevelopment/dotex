@@ -35,7 +35,7 @@ Findings from the first real run: `CreateProcessW` with an explicit environment 
 
 | Requirement | State | Gap |
 |-------------|-------|-----|
-| REQ-001 isolation (files, environment) | Shown on Windows and Linux | Links closed; a process that is not started suspended has a short unlimited window on Windows |
+| REQ-001 isolation (files, environment) | Shown on Windows and Linux | Links closed; none known (start-suspended assignment is in) |
 | REQ-002 approved permissions, stored and auditable | Shown, persisted | Grant files are not encrypted or access-protected |
 | REQ-003 brokered file access | Shown | none known |
 | REQ-004 brokered network | Shown for `broker.fetch` | none known |
@@ -47,7 +47,7 @@ Findings from the first real run: `CreateProcessW` with an explicit environment 
 
 ## Still not built
 
-- Start-suspended job assignment on Windows; AppContainer profile and ACL cleanup (the Windows API calls are hand-written).
+- AppContainer profile and ACL cleanup (the Windows API calls are hand-written). The Windows launcher already creates the process suspended, assigns it to the job and then resumes it (`AppContainerLauncher`), so there is no unlimited window.
 - A Survive transport (a named pipe that outlives the caller; the reconnect registry has the token rules only) and Linux versions of the caller-death and pool lifetime tests.
 - Message rate and heartbeat enforcement.
 - The request context is not tied to a token validator or RFC 8693.
