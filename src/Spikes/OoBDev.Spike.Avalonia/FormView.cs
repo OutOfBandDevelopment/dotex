@@ -65,7 +65,7 @@ public static class FormView
                 button.Bind(global::Avalonia.Controls.Button.CommandProperty, new Binding(nameof(ButtonViewModel.Invoke)));
                 return button;
             case TextViewModel { IsSlider: true }:
-                var slider = new Slider();
+                var slider = new Slider { Width = 160 };
                 slider.Bind(global::Avalonia.Controls.Primitives.RangeBase.MinimumProperty, new Binding(nameof(TextViewModel.Minimum)));
                 slider.Bind(global::Avalonia.Controls.Primitives.RangeBase.MaximumProperty, new Binding(nameof(TextViewModel.Maximum)));
                 slider.Bind(global::Avalonia.Controls.Primitives.RangeBase.ValueProperty, new Binding(nameof(TextViewModel.Value), BindingMode.TwoWay));

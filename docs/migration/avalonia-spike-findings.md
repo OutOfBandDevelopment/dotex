@@ -10,11 +10,11 @@ The shared `OoBDev.UiDefinitions.ViewModels` render in an Avalonia 11.3.23 windo
 |-------|---------|
 | .NET 10 and licence | `Avalonia`, `Avalonia.Headless`, `Avalonia.Themes.Fluent` 11.3.23 target net8+ and run on net10.0; MIT. |
 | Binding fit | Close: `ICommand`, `INotifyPropertyChanged` and `IReadOnlyList` map directly. Gaps: a `RadioButton` or `CheckBox` needs `CommandParameter` bound (the option text, or the negated `IsChecked`); an invisible row is absent from the visual tree, so tests assert absence, not `IsVisible`. |
-| Headless | `HeadlessUnitTestSession` works under MSTest on Windows. `Avalonia.Headless.MSTest` does not exist on NuGet, so the session is started by hand (`Dispatch`). No frames were captured: that needs `Avalonia.Skia` in headless mode (not tried). |
+| Headless | `HeadlessUnitTestSession` works under MSTest on Windows. `Avalonia.Headless.MSTest` does not exist on NuGet, so the session is started by hand (`Dispatch`). Frames are captured with `Avalonia.Skia` and `UseHeadless(UseHeadlessDrawing = false)`: `window.CaptureRenderedFrame().Save(path)` then `TestContext.AddResultFile(path)`, so the four tests attach a PNG each to the TRX (2026-11-10). The first capture showed a slider with no track (no width in an auto column); fixed with a fixed width. The spike is also a runnable app: `dotnet run --project src/Spikes/OoBDev.Spike.Avalonia`. |
 | Platforms | Only Windows was run. Linux (container with a virtual display) and macOS were not run. |
 | Package size | Not measured. |
 | Eto.Forms, GTK | Not compared; not needed for the finding above. |
 
 ## Recommendation
 
-Avalonia is a workable cross-platform renderer for the UiDefinition view models: the view-model layer needs no change. Before adopting it: capture a frame headless with Skia (tie it to the guide screenshots), run the tests in a Linux container, and measure published size. Views would be written in AXAML rather than code (this spike builds them in C# to avoid a XAML toolchain).
+Avalonia is a workable cross-platform renderer for the UiDefinition view models: the view-model layer needs no change. Before adopting it: tie the captured frames to the guide screenshots, run the tests in a Linux container, and measure published size. Views would be written in AXAML rather than code (this spike builds them in C# to avoid a XAML toolchain).
