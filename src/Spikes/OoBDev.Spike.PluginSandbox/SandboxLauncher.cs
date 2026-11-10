@@ -22,7 +22,7 @@ public static class SandboxLauncher
 
         if (OperatingSystem.IsLinux())
         {
-            return new BubblewrapPlugin(commandArguments, readDirectories, writeDirectories);
+            return new BubblewrapPlugin(commandArguments, readDirectories, writeDirectories, limits: new JobLimits(MemoryMb: 256));
         }
 
         if (OperatingSystem.IsMacOS())

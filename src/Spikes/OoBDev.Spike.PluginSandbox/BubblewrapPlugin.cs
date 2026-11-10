@@ -12,21 +12,23 @@ namespace OoBDev.Spike.PluginSandbox;
 /// Runs this assembly as a plugin under bubblewrap on Linux (REQ-008): new user, PID, IPC, UTS and network namespaces (so no network),
 /// a read-only system, an empty temp folder, an explicit environment, and only the granted folders bound in. It speaks the same binary
 /// frame protocol over stdio as the other launchers.
-/// Not built on Linux yet: memory, CPU and process-count limits (the Windows job object has no bubblewrap equivalent; cgroups or rlimits are the route).
+/// Limits: memory through the .NET GC hard limit, CPU time through ulimit -t, wall time through a kill timer. A process-count limit needs cgroup delegation and is not built.
 /// </summary>
 [SupportedOSPlatform("linux")]
 public sealed class BubblewrapPlugin : ISandboxedPlugin
 {
     private readonly Process _process;
     private readonly FrameChannel _channel;
+    private readonly global::System.Threading.Timer? _wall;
 
     /// <summary>Starts the plugin; the folders are bound at the same path inside the sandbox.</summary>
-    public BubblewrapPlugin(string commandArguments, IReadOnlyCollection<string>? readDirectories = null, IReadOnlyCollection<string>? writeDirectories = null, FrameFlags flags = FrameFlags.Crc32 | FrameFlags.Hmac | FrameFlags.CounterSign)
+    public BubblewrapPlugin(string commandArguments, IReadOnlyCollection<string>? readDirectories = null, IReadOnlyCollection<string>? writeDirectories = null, FrameFlags flags = FrameFlags.Crc32 | FrameFlags.Hmac | FrameFlags.CounterSign, JobLimits? limits = null)
     {
         var key = RandomNumberGenerator.GetBytes(32);
         var dll = typeof(BubblewrapPlugin).Assembly.Location;
         var dotnetRoot = Path.GetFullPath(Path.Combine(RuntimeEnvironment.GetRuntimeDirectory(), "..", "..", ".."));
-        var info = new ProcessStartInfo("bwrap")
+        var cpu = limits?.CpuSeconds ?? 0;
+        var info = new ProcessStartInfo(cpu > 0 ? "/bin/sh" : "bwrap")
         {
             RedirectStandardInput = true,
             RedirectStandardOutput = true,
@@ -34,20 +36,31 @@ public sealed class BubblewrapPlugin : ISandboxedPlugin
             UseShellExecute = false,
         };
         var flagText = ((byte)flags).ToString(System.Globalization.CultureInfo.InvariantCulture);
-        foreach (var argument in Arguments(dll, dotnetRoot, Convert.ToHexString(key), flagText, readDirectories ?? [], writeDirectories ?? [], commandArguments))
+        if (cpu > 0)
+        {
+            info.ArgumentList.Add("-c");
+            info.ArgumentList.Add("ulimit -t \"$0\"; exec bwrap \"$@\"");
+            info.ArgumentList.Add(cpu.ToString(System.Globalization.CultureInfo.InvariantCulture));
+        }
+
+        foreach (var argument in Arguments(dll, dotnetRoot, Convert.ToHexString(key), flagText, readDirectories ?? [], writeDirectories ?? [], commandArguments, limits?.MemoryMb ?? 0))
         {
             info.ArgumentList.Add(argument);
         }
 
         _process = Process.Start(info) ?? throw new InvalidOperationException("could not start the plugin");
         _channel = new FrameChannel(_process.StandardOutput.BaseStream, _process.StandardInput.BaseStream, flags, key);
+        if (limits?.WallSeconds > 0)
+        {
+            _wall = new global::System.Threading.Timer(_ => Kill(), null, TimeSpan.FromSeconds(limits.WallSeconds), global::System.Threading.Timeout.InfiniteTimeSpan);
+        }
     }
 
     /// <inheritdoc />
     public int ExitCode => _process.ExitCode;
 
     /// <summary>Builds the bubblewrap command line; public so a test can assert what is and is not mounted.</summary>
-    public static IReadOnlyList<string> Arguments(string dll, string dotnetRoot, string keyHex, string flags, IReadOnlyCollection<string> read, IReadOnlyCollection<string> write, string commandArguments)
+    public static IReadOnlyList<string> Arguments(string dll, string dotnetRoot, string keyHex, string flags, IReadOnlyCollection<string> read, IReadOnlyCollection<string> write, string commandArguments, int memoryMb = 0)
     {
         var args = new List<string>
         {
@@ -58,6 +71,11 @@ public sealed class BubblewrapPlugin : ISandboxedPlugin
             "--setenv", "HOME", "/tmp", "--setenv", "TMPDIR", "/tmp", "--setenv", "DOTNET_ROOT", dotnetRoot, "--setenv", "DOTNET_NOLOGO", "1",
             "--setenv", Program.KeyVariable, keyHex, "--setenv", Program.FlagsVariable, flags,
         };
+
+        if (memoryMb > 0)
+        {
+            args.AddRange(["--setenv", "DOTNET_GCHeapHardLimit", ((long)memoryMb * 1024 * 1024).ToString("X", System.Globalization.CultureInfo.InvariantCulture)]);
+        }
 
         var bound = new HashSet<string>(StringComparer.Ordinal) { "/usr" };
         void Bind(string option, string path)
@@ -99,6 +117,20 @@ public sealed class BubblewrapPlugin : ISandboxedPlugin
     public bool WaitForExit(int milliseconds) => _process.WaitForExit(milliseconds);
 
     /// <inheritdoc />
+    private void Kill()
+    {
+        try
+        {
+            if (!_process.HasExited)
+            {
+                _process.Kill(entireProcessTree: true);
+            }
+        }
+        catch (InvalidOperationException)
+        {
+        }
+    }
+
     public void Dispose()
     {
         if (!_process.HasExited)
@@ -106,6 +138,7 @@ public sealed class BubblewrapPlugin : ISandboxedPlugin
             _process.Kill(entireProcessTree: true);
         }
 
+        _wall?.Dispose();
         _process.WaitForExit();
         _process.Dispose();
     }
