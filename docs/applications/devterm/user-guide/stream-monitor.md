@@ -78,7 +78,7 @@ HP-GL, PostScript and PCL are captured and saved, but can't be previewed directl
 
 ![WPF Stream Monitor with an HP-GL capture selected](images/wpf-stream-monitor-hpgl.png)
 
-To see an HP-GL plot, pick **HP-GL to SVG** in the conversion drop-down above the preview and press
+To see an HP-GL plot, pick **HP-GL to SVG** (or **HP-GL to PNG** / **HP-GL to JPG** for a raster picture) in the conversion drop-down above the preview and press
 **Convert...**. The SVG is added to the list as a new entry (selected, "converted from HP-GL plot") and
 drawn in the preview:
 
@@ -102,7 +102,7 @@ selected a capture. It runs whichever conversion mechanism the connection is con
 writes the result next to the capture's saved file (same folder and name, a new extension).
 
 Choose the mechanism right in the window, next to Convert...: a **conversion** drop-down in WPF
-(None, HP-GL to SVG, Auto, each registered tool, External tool) and a **Convert as:** button in the TUI that opens the
+(None, HP-GL to SVG, HP-GL to PNG, HP-GL to JPG, Auto, each registered tool, External tool) and a **Convert as:** button in the TUI that opens the
 same list. The choice applies to that window; the profile's saved mode is just where it starts. For
 HP-GL captures, **HP-GL to SVG** needs nothing else. External tool also needs its
 path, which comes from the profile.
