@@ -217,7 +217,6 @@ What makes OoBDev unique:
   - [Variables and Configuration in .runsettings](../how-tos/runsettings-variables-and-configuration.md)
 
 ### Framework Documentation
-- [../Framework/MajorFunctionality.md](../Framework/MajorFunctionality.md)
 - [../Framework/MessageQueueing.md](../Framework/MessageQueueing.md)
 - [../Framework/TextTemplating.md](../Framework/TextTemplating.md)
 - [../Framework/DocumentConversion.md](../Framework/DocumentConversion.md)

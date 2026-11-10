@@ -1,3 +1,5 @@
+> Status: moved from `docs/Framework/search-design.md` (2026-11-10); part of the [HybridSearch](README.md) design.
+
 
 
 ## Diagrams

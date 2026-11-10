@@ -1,5 +1,7 @@
 # Out-of-Band Development - SQLCLR Vector Support
 
+> Status: moved from `docs/Framework/VectorSqlClr.md` (2026-11-10). The code is `OoBDev.Data.Vectors` and its SQL store and hosting projects ([readme](../../../src/Extensions/OoBDev.Data.Vectors/README.Data.Vectors.md)); this is the embedding round trip that the SQL trigger starts.
+
 ## Summary
 
 This page adds support to MS SQL Server for Vector Search Functionality.

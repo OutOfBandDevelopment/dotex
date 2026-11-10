@@ -1,5 +1,7 @@
 # OoBDev - Hybrid Search Engine and Document Store
 
+> Status: moved from `docs/Framework/SearchProvider.md` (2026-11-10) as the starting point of this design. The code is `OoBDev.Search`, the Qdrant and OpenSearch adapters and the embedders; the requirements, architecture, API design and testing strategy documents are still to be written ([standard](../../patterns-discovery/06-design-document-standard.md)). Flows: [document search flows](document-search-flows.md), [upload and search diagrams](upload-and-search-diagrams.md).
+
 ## Summary
 
 Hybrid search is a means to combine multiple search providers into a single correlated result.  In this example this is combining Keyword/Lexical search with Associative/Semantic search.

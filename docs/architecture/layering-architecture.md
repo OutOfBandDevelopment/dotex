@@ -234,7 +234,7 @@ Framework projects are organized by domain:
 
 **Coverage:** 90.4% (excellent)
 
-**Reference:** `src/Framework/OoBDev.MessageQueueing/`, `/docs/Framework/MessageQueueing.md`
+**Reference:** `src/Framework/OoBDev.MessageQueueing/`, `docs/design/MessageQueuing`
 
 #### Search (3 projects)
 - **OoBDev.Search.Abstractions** - Vector store, search
@@ -362,7 +362,7 @@ The Extensions layer provides custom .NET system extensions that enhance base .N
 - SQL CLR functions for SQL Server
 - Vector normalization and operations
 
-**Reference:** `src/Extensions/OoBDev.Data.Vectors/`, `/docs/Framework/VectorSqlClr.md`
+**Reference:** `src/Extensions/OoBDev.Data.Vectors/`, `docs/design/VectorSearch`
 
 #### Text Processing (6 projects)
 - **OoBDev.System.Text.Html.** (2) - HTML processing
@@ -504,7 +504,7 @@ Projects are organized by vendor/technology:
 
 **Purpose:** MongoDB database integration
 
-**Reference:** `src/ExternalServices/MongoDB/OoBDev.MongoDB/`, `/docs/Framework/MongoDbExtensions.md`
+**Reference:** `src/ExternalServices/MongoDB/OoBDev.MongoDB/`, `README.MongoDB.md`
 
 #### MysticMind (2 projects)
 - **OoBDev.MysticMind.Abstractions**

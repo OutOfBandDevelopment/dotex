@@ -1,5 +1,7 @@
 # OoBDev Libs - Build Extensions
 
+> Moved from `docs/Framework/BuildExtensions.md` (2026-11-10). The shared build files are `src/Directory.Build.props` and `src/Directory.Build.targets`.
+
 ## Summary
 
 .Net provides a means to extend the build for your projects though the MSBuild Project SDK

@@ -705,7 +705,7 @@ OoBDev.MyProject.Tests/
 
 ### 6.2 Framework Documentation
 
-**Standard:** New patterns MUST be documented in `/docs/Framework/`.
+**Standard:** New patterns MUST be documented in `docs/design/<Feature>/`.
 
 **Required Documentation:**
 - PlantUML diagram showing architecture
@@ -714,7 +714,7 @@ OoBDev.MyProject.Tests/
 - Extension points
 - Related patterns
 
-**Reference:** `/docs/Framework/MessageQueueing.md`, `/docs/Framework/TextTemplating.md`
+**Reference:** `docs/design/MessageQueuing`, `docs/design/TextTemplating`
 
 ---
 

@@ -1,3 +1,5 @@
+> Status: moved from `docs/Framework/DocumentSearchEngine.md` (2026-11-10); part of the [HybridSearch](README.md) design.
+
 # Document Search
 
 ## Summary
