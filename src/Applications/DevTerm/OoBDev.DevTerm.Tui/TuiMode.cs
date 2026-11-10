@@ -207,6 +207,7 @@ public static class TuiMode
         MenuItem? closeSessionMenuItem = null;
         PeerTabSource? peerSource = null;
         MenuItem? listenForPeersMenuItem = null;
+        MenuItem? listenForUdpMenuItem = null;
         MenuItem? deviceProfilesMenuItem = null;
         MenuBarItem? sendAsMenuBarItem = null;
         var sendAsItems = new List<(string Name, MenuItem Item)>();
@@ -697,6 +698,33 @@ public static class TuiMode
                     {
                         peerSource = null;
                         AppendError(ActiveTab(), $"Could not listen on port {listenPort}: {ex.Message}");
+                    }
+                })),
+                listenForUdpMenuItem = new MenuItem("Listen for _UDP...", string.Empty, Guarded(() =>
+                {
+                    var text = PlaybackMode.PromptForText(app, "Listen for UDP", "UDP port to bind (each datagram's sender is shown):", "9000");
+                    if (text is null)
+                    {
+                        return;
+                    }
+
+                    if (!int.TryParse(text, NumberStyles.None, CultureInfo.InvariantCulture, out var udpPort) || udpPort is < 0 or > 65535)
+                    {
+                        AppendError(ActiveTab(), $"'{text}' is not a UDP port.");
+                        return;
+                    }
+
+                    var seed = ActiveTabOrNull()?.Tab.CliOptions ?? lastCliOptions;
+                    try
+                    {
+                        var udp = UdpSessionTab.Build(seed, null, udpPort);
+                        var udpTab = AddTab(udp.Tab);
+                        udp.Adapter.DatagramReceived += (_, e) => app.Invoke(() => AppendStatus(udpTab, UdpSessionTab.Describe(e)));
+                        Observe(ConnectNewTabAsync(udpTab), line => AppendOutput(udpTab, line));
+                    }
+                    catch (Exception ex)
+                    {
+                        AppendError(ActiveTab(), $"Could not listen on UDP port {udpPort}: {ex.Message}");
                     }
                 })),
                 closeSessionMenuItem = new MenuItem("_Close Session", string.Empty, () =>
@@ -1501,6 +1529,7 @@ public static class TuiMode
             newSessionMenuItem!,
             closeSessionMenuItem!,
             listenForPeersMenuItem!,
+            listenForUdpMenuItem!,
             () => tabs.Select(t => t.Tab.Session).ToList(),
             () =>
             {

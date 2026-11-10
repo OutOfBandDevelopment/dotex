@@ -229,6 +229,41 @@ public sealed class TuiModeMultiSessionTests
     }
 
     [TestMethod]
+    public async Task ListenForUdpMenuItem_WithAPort_AddsAConnectedTab()
+    {
+        var (session, _, presenter) = CreateLoopbackSession();
+        await session.OpenAsync(TestContext.CancellationToken);
+        var cliOptions = new CliOptions { Transport = "loopback", Presenter = ["ascii"] };
+
+        TuiTestRunner.RunWithLoop(session, presenter, cliOptions, parts =>
+        {
+            var app = TuiTestRunner.CurrentApp;
+            TuiTestRunner.InvokeOnLoop(() =>
+            {
+                app.AddTimeout(TimeSpan.FromMilliseconds(20), () =>
+                {
+                    if (app.TopRunnableView is not { } dialog || dialog == parts.Window)
+                    {
+                        return true;
+                    }
+
+                    dialog.SubViews.OfType<TextField>().Single().Text = "0";
+                    FindButton(dialog, "OK").InvokeCommand(Command.Accept);
+                    return false;
+                });
+
+                parts.ListenForUdpMenuItem.Action!.Invoke();
+                return true;
+            });
+
+            Assert.IsTrue(TuiTestRunner.WaitUntilOnLoop(() => parts.AllSessions().Count == 2, _waitTimeout), "Expected a tab for the UDP port.");
+            Assert.IsTrue(TuiTestRunner.WaitUntilOnLoop(() => parts.AllSessions().Any(s => !ReferenceEquals(s, session) && s.State == ConnectionState.Open), _waitTimeout), "Expected the UDP tab to bind.");
+        });
+
+        await session.CloseAsync(TestContext.CancellationToken);
+    }
+
+    [TestMethod]
     public async Task CloseSessionMenuItem_WithMultipleTabs_ClosesTheActiveTabAndSwitchesToAnother()
     {
         var (session, _, presenter) = CreateLoopbackSession();
