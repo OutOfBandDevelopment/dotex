@@ -8,6 +8,7 @@
             <MenuItem Header="_File">
                 <MenuItem Header="_New connection..." Command="{Binding NewConnection}" />
                 <MenuItem Header="New _loopback session" Command="{Binding NewLoopbackSession}" />
+                <MenuItem Header="Listen for _peers..." Command="{Binding ListenForPeers}" />
                 <MenuItem Header="Open log for _playback..." Command="{Binding OpenPlaybackWindow}" />
                 <Separator />
                 <MenuItem Header="Start _logging" Command="{Binding SelectedSession.ToggleLogging}" />

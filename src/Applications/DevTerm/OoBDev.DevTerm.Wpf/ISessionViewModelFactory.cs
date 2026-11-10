@@ -25,6 +25,11 @@ public interface ISessionViewModelFactory
     /// <param name="title">The tab title.</param>
     SessionViewModel CreateFromOptions(CliOptions options, string title);
 
+    /// <summary>Creates a session around a tab that already has its transport, such as an accepted listener peer.</summary>
+    /// <param name="tab">The tab.</param>
+    /// <param name="title">The tab title.</param>
+    SessionViewModel CreateFromTab(SessionTab tab, string title);
+
     /// <summary>Creates a connection editor over the saved profiles.</summary>
     ConnectionEditorViewModel CreateEditor();
 }
