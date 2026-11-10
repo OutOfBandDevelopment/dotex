@@ -14,7 +14,6 @@ Owner: all protocols and features of dev-term must exist here. Done means what d
 
 - [ ] **DevTerm docs into living documents** (owner, 2026-10-30): reusable designs, proposals, features and rejected protocols are folded into `docs/design/` and `docs/protocols/` (2026-11-04, see [the map](docs/migration/devterm-docs-map.md)); device copies deleted 2026-11-04; left: the imported `source` and `bugs` history (the `changes` history is merged into the daily files, 2026-11-04; cleanup plan after every migration), then delete the map.
 - The docs Unit tests `PlantUml_Blocks_AreWellFormed` and `Links_Relative_Resolve` fail on the imported DevTerm history; the planned documentation cleanup after all migrations fixes them (owner, 2026-10-30).
-- [ ] WPF test failure: `MainWindow_Connected_HasNoLayoutProblems` (light, dark) reports the left button column clipped (needs 761 px, 618 shown); it fails without the 2026-11-09 menu changes too, so find the slice that added buttons and make the column scroll or wrap (`UiLayoutReview`).
 - [ ] Test gap: an interactive Tui run in a real console (a spike drove `conhost.exe` with `AttachConsole` and `WriteConsoleInput`; typing and screen reads worked, but the app exited at once in some runs and Ctrl+Q never ended it, so the code was dropped; retry in a spike; deferred 2026-11-05: it needs `AttachConsole` and `WriteConsoleInput` interop while the machine is still crashing for unknown reasons, so run it when the owner is present) ([list](docs/design/DevTermParity/status.md#test-gaps)).
 
 

@@ -43,7 +43,8 @@
                 <MenuItem Header="Clea_r output" Command="{Binding SelectedSession.ClearOutput}" />
             </MenuItem>
         </Menu>
-        <StackPanel DockPanel.Dock="Left" Width="180">
+        <ScrollViewer DockPanel.Dock="Left" Width="200" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Width="180">
             <Button Content="New connection..." Margin="4" Command="{Binding NewConnection}" />
             <Button Content="Open log for playback..." Margin="4" Command="{Binding OpenPlaybackWindow}" />
             <Button Content="Merged log..." Margin="4" Command="{Binding ShowMergedLogWindow}" />
@@ -93,6 +94,7 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </StackPanel>
+        </ScrollViewer>
         <Grid DockPanel.Dock="Bottom" DataContext="{Binding SelectedSession}" Margin="4">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
