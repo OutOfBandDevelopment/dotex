@@ -1041,7 +1041,7 @@ var person = provider.Generate<PersonModel>();
 
 ### 9.3 Code Documentation
 
-- [x] 40+ README files in `docs/code/`
+- [x] 40+ project `README.{Project}.md` files beside the projects
 - [x] Per-project documentation
 - [x] Extensive XML comments
 

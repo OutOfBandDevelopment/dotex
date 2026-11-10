@@ -106,7 +106,7 @@ src/
 - ✅ Build fails if README.md is missing
 - ✅ Build task `CheckReadMeSize` validates README is not empty
 
-**Reference:** `/docs/code/*/README.md` for examples
+**Reference:** the `README.{Project}.md` files beside the projects for examples
 
 ---
 
@@ -699,7 +699,7 @@ OoBDev.MyProject.Tests/
 - ✅ Build fails if README is missing
 - Code review verifies README completeness
 
-**Reference:** `/docs/code/*/README.md`
+**Reference:** the `README.{Project}.md` files beside the projects
 
 ---
 
