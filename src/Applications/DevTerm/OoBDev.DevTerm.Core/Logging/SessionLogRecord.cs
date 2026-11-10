@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace OoBDev.DevTerm.Logging;
 
@@ -34,6 +35,19 @@ public sealed record SessionLogRecord
 
     /// <summary>For <see cref="SessionLogRecordKind.Unknown"/>: the record's JSON line exactly as read, written back unchanged.</summary>
     public string? RawJson { get; init; }
+
+    /// <summary>For a <see cref="SessionLogRecordKind.Note"/> edited or deleted during playback: its earlier texts, oldest first, so the log stays auditable (null for a note never revised).</summary>
+    public IReadOnlyList<string>? PreviousTexts { get; init; }
+
+    /// <summary>For a <see cref="SessionLogRecordKind.Note"/>: it was deleted during playback. The record stays in the file (with its last text and history) but plays as a deletion marker.</summary>
+    public bool Deleted { get; init; }
+
+    /// <summary>This note with new text, the current text added to its history.</summary>
+    public SessionLogRecord Revised(string text) =>
+        this with { Text = text, PreviousTexts = [.. PreviousTexts ?? [], Text ?? string.Empty], Deleted = false };
+
+    /// <summary>This note marked deleted, keeping its text and history.</summary>
+    public SessionLogRecord AsDeleted() => this with { Deleted = true };
 
     public static SessionLogRecord Note(DateTimeOffset timestamp, string text) =>
         new() { Kind = SessionLogRecordKind.Note, Timestamp = timestamp, Text = text };

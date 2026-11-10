@@ -278,6 +278,18 @@ public sealed class PlaybackEngine
         return new PlaybackBatch(false, [item]);
     }
 
+    /// <summary>
+    /// Edits (<paramref name="text"/> given) or deletes (<see langword="null"/>) the note at <paramref name="index"/> and replays up to
+    /// the current position, so the screen shows the revision. The caller saves the log.
+    /// </summary>
+    public PlaybackBatch ReviseNote(int index, string? text)
+    {
+        Log.ReviseNote(index, text);
+        var position = Position;
+        Rewind();
+        return SeekTo(position) with { Reset = true };
+    }
+
     private PlaybackItem PlayNext()
     {
         var index = Position;

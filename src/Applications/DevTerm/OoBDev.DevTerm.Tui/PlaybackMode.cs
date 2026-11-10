@@ -6,6 +6,7 @@ using OoBDev.DevTerm.Configuration;
 using OoBDev.DevTerm.Logging;
 using Terminal.Gui.App;
 using Terminal.Gui.Editor;
+using Terminal.Gui.Input;
 using Terminal.Gui.ViewBase;
 using Terminal.Gui.Views;
 namespace OoBDev.DevTerm.Tui;
@@ -259,6 +260,34 @@ public static class PlaybackMode
             e.Handled = true;
             app.RequestStop();
         };
+
+        // The button row is full at 80 columns, so editing or deleting the note just played has keys, not buttons.
+        void reviseNoteOnCtrlKeys(object? _, Key key)
+        {
+            if (key.Handled || app.TopRunnableView != window || (key != Key.E.WithCtrl && key != Key.D.WithCtrl))
+            {
+                return;
+            }
+
+            key.Handled = true;
+            if (controller.CurrentNoteIndex is not { } index)
+            {
+                MessageBox.ErrorQuery(app, "dev-term — playback", "Step to a note first: Ctrl+E edits and Ctrl+D deletes the note just played.", "Ok");
+                return;
+            }
+
+            if (key == Key.D.WithCtrl)
+            {
+                Do(controller.DeleteNote);
+            }
+            else if (PromptForText(app, "Edit Note", "Note:", controller.Log.Records[index].Text ?? string.Empty) is { } text && text.Trim().Length > 0)
+            {
+                Do(() => controller.EditNote(text));
+            }
+        }
+
+        app.Keyboard.KeyDown += reviseNoteOnCtrlKeys;
+        window.Disposing += (_, _) => app.Keyboard.KeyDown -= reviseNoteOnCtrlKeys;
 
         presentersField.Accepting += (_, e) =>
         {

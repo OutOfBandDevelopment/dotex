@@ -40,7 +40,11 @@ public static class PlaybackText
             case SessionLogRecordKind.Instrument:
                 return [new($"{time} [dev-term] Instrument profile {record.Profile}.", PlaybackLineKind.Status)];
             case SessionLogRecordKind.Note:
-                return [new($"{time} [note] {record.Text}", PlaybackLineKind.Note)];
+                return [new(
+                    record.Deleted ? $"{time} [note] (deleted: {record.Text})"
+                    : record.PreviousTexts is { Count: > 0 } ? $"{time} [note] {record.Text} (edited)"
+                    : $"{time} [note] {record.Text}",
+                    PlaybackLineKind.Note)];
             default:
                 return [];
         }

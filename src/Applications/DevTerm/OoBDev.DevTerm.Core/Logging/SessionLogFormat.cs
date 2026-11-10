@@ -85,6 +85,22 @@ public static class SessionLogFormat
                     break;
                 case SessionLogRecordKind.Note:
                     writer.WriteString("text", record.Text ?? string.Empty);
+                    if (record.PreviousTexts is { Count: > 0 } history)
+                    {
+                        writer.WriteStartArray("history");
+                        foreach (var earlier in history)
+                        {
+                            writer.WriteStringValue(earlier);
+                        }
+
+                        writer.WriteEndArray();
+                    }
+
+                    if (record.Deleted)
+                    {
+                        writer.WriteBoolean("deleted", true);
+                    }
+
                     break;
                 case SessionLogRecordKind.Instrument:
                     writer.WriteString("profile", record.Profile ?? string.Empty);
@@ -204,6 +220,8 @@ public static class SessionLogFormat
                 Connection = GetString(root, "connection"),
                 Profile = GetString(root, "profile"),
                 State = GetString(root, "state"),
+                PreviousTexts = kind == SessionLogRecordKind.Note ? ReadHistory(root) : null,
+                Deleted = kind == SessionLogRecordKind.Note && root.TryGetProperty("deleted", out var deleted) && deleted.ValueKind == JsonValueKind.True,
             };
         }
         catch (JsonException ex)
@@ -258,6 +276,11 @@ public static class SessionLogFormat
             writer.WriteString(name, value);
         }
     }
+
+    private static string[]? ReadHistory(JsonElement root) =>
+        root.TryGetProperty("history", out var history) && history.ValueKind == JsonValueKind.Array
+            ? [.. history.EnumerateArray().Where(e => e.ValueKind == JsonValueKind.String).Select(e => e.GetString() ?? string.Empty)]
+            : null;
 
     private static string? GetString(JsonElement element, string name) =>
         element.TryGetProperty(name, out var value) && value.ValueKind == JsonValueKind.String ? value.GetString() : null;
