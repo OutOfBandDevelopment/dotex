@@ -2,4 +2,4 @@
 
 Source repository: `C:\repo\mine\binary-data-decoders` (retired, `RETIRED.md` points here). The code is tracked in [the re-review](../../migration/README.md); the surroundings in [the surroundings review](../../migration/README.md#surroundings-guides-agent-config-scripts).
 
-- [bugs/](bugs/): the four bug reports and the paused review status of the serial and IO device stack, kept as history until every migration is done (owner, 2026-10-30).
+The incoming reports and the four bug reports were reviewed against `src` on 2026-11-10 and removed. The one bug that still applies is [io-serial-read-ignores-cancel](../../issues/io-serial-read-ignores-cancel.md); the open feature gaps are in [the feature request](../../features/request/2026-11-10-binary-data-decoders-open-issues.md).
