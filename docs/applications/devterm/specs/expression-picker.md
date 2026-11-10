@@ -72,5 +72,5 @@ the picker opens until **Next sample** is pressed.
 
 ## Open items
 
-- Pick on a single channel's expression segment (typed after the third `:`), and on a button's Parameter fields (command parameter ids, not value paths). Decided 2026-10-13: parameter fields first, then channel segments (BACKLOG).
+- Pick on a single channel's expression segment (typed after the third `:`): waiting on OPEN-QUESTIONS Q1. A button's Parameter fields are built (`ExpressionList` mode).
 - Operators/regex helpers and the CEL-style language extension (proposal's later steps).
