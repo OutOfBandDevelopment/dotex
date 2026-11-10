@@ -44,7 +44,7 @@ Key principles:
 - Nullable enabled, ImplicitUsings disabled
 - Report outcomes faithfully: failing tests, skipped steps and unverified changes are stated plainly
 
-Incoming projects pending owner decisions (BotChat was extracted 2026-10-09 and removed): BinaryDataDecoders (~50,000 LOC, 14+ decisions; Phase 1 foundation work is blocked on them), ContractParser (implement now, later, or keep as spec), Tools (consolidate BulkLlm or archive).
+The `Incoming/` folder is gone (2026-11-10): the decisions D1 to D9 are answered and the remaining migration work is in [the migration plan](docs/migration/README.md).
 
 ---
 

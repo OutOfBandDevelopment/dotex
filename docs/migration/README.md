@@ -86,7 +86,7 @@ dev-term merges into this repository entirely (owner, 2026-10-28): shells become
 | Net.ServiceHost CLI | To migrate (D6) as a tool in `src/Tools`; main has the worker recipe and hosting packages, so compare first |
 | Windows.Forms `ValidTextBox` | Commented out in main; decision in the [WindowsForms plan](../design/WindowsForms/migration-plan.md) |
 | `Incoming/BinaryDecoders` | Removed 2026-11-10 (the source repository is clean at `e590b420`). Its comparison, bug and issue reports are imported under [incoming-reports](../applications/binary-data-decoders/incoming-reports/) |
-| `Incoming/Tools` (BulkLlm) | Consolidation tracked in the backlog |
+| `Incoming/Tools` (De5000 BLE scan CLI) | Removed 2026-11-10: scanning is `BleDeviceScanner`, GATT enumeration is `IBleGattProfileExplorer`, decoding is `OoBDev.DerEE.De5000` (D6) |
 
 ## SharedFramework epics
 
