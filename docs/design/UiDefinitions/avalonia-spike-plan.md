@@ -1,6 +1,6 @@
 # Avalonia spike for the device UI
 
-**Status:** Done 2026-11-09, see [findings](avalonia-spike-findings.md). Was planned, owner task 2026-10-26. Runs after the first WPF device panel works end to end. Part of phase 7 of the [device decoding migration plan](../../migration/device-decoding-migration-plan.md). The owner answered Q3 on 2026-10-29; the toolkit pick for the cross-platform renderer waits for this spike.
+**Status:** Done 2026-11-09, see [findings](avalonia-spike-findings.md). Was planned, owner task 2026-10-26. Runs after the first WPF device panel works end to end. Part of phase 7 of the [device decoding migration plan](../../design/DeviceDecoding/migration-plan.md). The owner answered Q3 on 2026-10-29; the toolkit pick for the cross-platform renderer waits for this spike.
 
 ## Scope
 

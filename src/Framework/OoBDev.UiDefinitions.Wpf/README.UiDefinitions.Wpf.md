@@ -4,7 +4,7 @@ A WPF view for `OoBDev.UiDefinitions.ViewModels`: `FormView` renders a `FormView
 
 ## Description
 
-Phase 7 of [the device decoding plan](../../../docs/migration/device-decoding-migration-plan.md). The view is pure XAML: `DataTemplate`s per view model type (check box, text box with inline error, radio group or check list, button), commands bound to the view models' `ICommand` types, and rows collapsed through `IsVisible`. The code-behind only calls `InitializeComponent`.
+Phase 7 of [the device decoding plan](../../../docs/design/DeviceDecoding/migration-plan.md). The view is pure XAML: `DataTemplate`s per view model type (check box, text box with inline error, radio group or check list, button), commands bound to the view models' `ICommand` types, and rows collapsed through `IsVisible`. The code-behind only calls `InitializeComponent`.
 
 ```csharp
 var form = new FormViewModel(FormDefinitionGenerator.Generate(settings), new FormBinding(settings));

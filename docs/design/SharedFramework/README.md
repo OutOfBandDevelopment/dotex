@@ -269,8 +269,8 @@ All feature designs MUST adhere to:
 **Migration Strategy:** Design-first, modern reimplementation
 
 **Reference Documents:**
-- [SharedFramework Feature Mapping](../../migration/sharedframework.md)
-- [SharedFramework Migration Plan](../../migration/sharedframework.md)
+- [SharedFramework Feature Mapping](../../migration/README.md#epics-from-sharedframework)
+- [SharedFramework Migration Plan](../../migration/README.md#epics-from-sharedframework)
 - [OoBDev Architecture](../../architecture/)
 
 ---

@@ -1,6 +1,6 @@
 # Device Decoding
 
-**Status:** Draft · **Date:** 2026-10-28 · **Plan:** [device-decoding-migration-plan.md](../../migration/device-decoding-migration-plan.md) · **Parity:** [device-parity.md](../../migration/device-parity.md)
+**Status:** Draft · **Date:** 2026-10-28 · **Plan:** [migration-plan.md](migration-plan.md) · **Parity:** [device merge list](../../migration/README.md#devices)
 
 Protocol decoders for hardware devices (DE-5000, Busylight, K8055, NMEA, Radex One, Zoom H4n, later SCPI and Z-Wave), migrated from dev-term as one package per device on the existing `OoBDev.System.IO` device model.
 

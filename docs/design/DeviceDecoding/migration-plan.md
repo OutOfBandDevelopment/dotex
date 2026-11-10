@@ -1,8 +1,8 @@
 # Device decoding migration plan (dev-term to dotex)
 
-**Written:** 2026-10-26 | **Branch:** `dev/device-decoding` | **Status:** plan, Q2 answered 2026-10-28, waiting on Q3 in [OPEN-QUESTIONS.md](../../OPEN-QUESTIONS.md)
+**Written:** 2026-10-26 | **Branch:** `dev/device-decoding` | **Status:** plan, Q2 answered 2026-10-28, waiting on Q3 in [OPEN-QUESTIONS.md](../../../OPEN-QUESTIONS.md)
 
-Source: `C:\repo\oobdev\dev-term` (branch `dev/zstick-s2`, commit `d777358`; the Z-Wave module is still changing there). The owner wants the binary protocol decoders in this framework, and dev-term rebuilt on top of them later ([harvest-candidates.md](../harvest-candidates.md)).
+Source: `C:\repo\oobdev\dev-term` (branch `dev/zstick-s2`, commit `d777358`; the Z-Wave module is still changing there). The owner wants the binary protocol decoders in this framework, and dev-term rebuilt on top of them later ([harvest-candidates.md](../../harvest-candidates.md)).
 
 ## Contents
 
@@ -137,7 +137,7 @@ The migrated code follows this repository's patterns and practices, not dev-term
 | No project readme | `README.{Project}.md` per project |
 | `InternalsVisibleTo` via `AssemblyInfo.cs` | `InternalsVisibleTo` item in the csproj |
 
-**Table 4 — Naming and layout** (checked against [01-naming-and-layout.md](../patterns-discovery/03-practices-and-conventions/01-naming-and-layout.md); names are proposals to confirm in the phase 1 api-design document)
+**Table 4 — Naming and layout** (checked against [01-naming-and-layout.md](../../patterns-discovery/03-practices-and-conventions/01-naming-and-layout.md); names are proposals to confirm in the phase 1 api-design document)
 
 | Item | dev-term | dotex name |
 |------|----------|------------|
@@ -188,10 +188,10 @@ Where this meets the dotex test rules (`.claude/rules/testing.md`: `Unit`, `Simu
 
 | Phase | Work | Exit |
 |------:|------|------|
-| 0 | Compare each device with `mine/binary-data-decoders` (not `Incoming/BinaryDecoders`, which is superseded) for missing parts only (dev-term is the base); rebuild the parity table; record merges and rejections in [incoming-harvest-crosscheck.md](incoming-harvest-crosscheck.md) | Parity table in `docs/migration/`, merge list and rejections recorded. First pass done 2026-10-28: [device-parity.md](device-parity.md) (open checks in its section 4) |
+| 0 | Compare each device with `mine/binary-data-decoders` (not `Incoming/BinaryDecoders`, which is superseded) for missing parts only (dev-term is the base); rebuild the parity table; record merges and rejections in [incoming-harvest-crosscheck.md](../../migration/README.md#sources-and-best-coverage) | Parity table in `docs/migration/`, merge list and rejections recorded. First pass done 2026-10-28: [device-parity.md](../../migration/README.md#devices) (open checks in its section 4) |
 | 1 | Feature docs `docs/design/DeviceDecoding/` (requirements, architecture, api-design, testing-strategy); additions to the existing IO model for the gaps in section 4 (no new device contract project unless they do not fit); test helpers per Q2; first end-to-end device as a template | Contracts reviewed, template device green. Docs written as Draft 2026-10-28; template device not started |
 | 2 | ~~Simple fixed-frame devices: DE-5000, Busylight, K8055~~ | ~~Unit tests ported, `.ksy` and device docs moved~~ Cores are in main (2026-10-28); `.ksy` moves with phase 8 |
-| 3 | ~~NMEA, Radex One, Zoom H4n~~ | ~~As above; NMEA merged with the incoming copy~~ Cores are in main; the BinaryDataDecoders copies are superseded by dev-term ([overlap-review-2026-10-29.md](overlap-review-2026-10-29.md)) |
+| 3 | ~~NMEA, Radex One, Zoom H4n~~ | ~~As above; NMEA merged with the incoming copy~~ Cores are in main; the BinaryDataDecoders copies are superseded by dev-term ([overlap-review-2026-10-29.md](../../migration/README.md#devices)) |
 | 4 | SCPI with profiles and auto-detect | Profile data loads through options; 103 tests ported |
 | 5 | Z-Wave, after the upstream `dev/zstick-s2` work settles | Id tables kept as data files |
 | 6 | `OoBDev.UiDefinitions` model, serializer, validator (ported with the phase 2 devices as their panels need it) | Round-trip and validator tests ported |

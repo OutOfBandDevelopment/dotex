@@ -1,7 +1,7 @@
 # Bug reports
 
 One file per bug: `NNN-short-slug.md`, numbered in the order filed. **File and maintain them with the
-[`bug-report` skill](../../../../docs/migration/devterm-surroundings-review-2026-10-30.md)**, which has the template, numbering, severity and
+[`bug-report` skill](../../../../docs/migration/README.md#surroundings-guides-agent-config-scripts)**, which has the template, numbering, severity and
 confidence rules, and the Fixed/Resolution lifecycle. Each report records the date and the full git commit it was
 found at (`git show <hash>:<path>` shows the code its line numbers refer to), plus the failure scenario, a suggested
 fix, and the tests that should come with the fix.

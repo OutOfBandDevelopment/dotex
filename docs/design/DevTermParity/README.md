@@ -1,6 +1,6 @@
 # DevTerm parity: matrix of dev-term against this repository
 
-**Status:** Draft, 2026-10-29 · [Migration overlap review](../../migration/overlap-review-2026-10-29.md) · [Device decoding design](../DeviceDecoding/README.md) · [Device decoding plan](../../migration/device-decoding-migration-plan.md)
+**Status:** Draft, 2026-10-29 · [Migration overlap review](../../migration/README.md) · [Device decoding design](../DeviceDecoding/README.md) · [Device decoding plan](../../design/DeviceDecoding/migration-plan.md)
 
 Owner requirement (2026-10-29): the OoBDev version of dev-term has 100% parity with dev-term, every protocol and every feature. This is the first step, the matrix. Requirements, architecture, api-design and testing-strategy documents follow per feature group (rule: `docs/patterns-discovery/06-design-document-standard.md`).
 

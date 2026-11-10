@@ -1,6 +1,6 @@
 # OoBDev.DevTerm.Wpf
 
-WPF shell for device panels, rebuilt on the OoBDev libraries (phase 10 of [the device decoding plan](../../../docs/migration/device-decoding-migration-plan.md)).
+WPF shell for device panels, rebuilt on the OoBDev libraries (phase 10 of [the device decoding plan](../../../docs/design/DeviceDecoding/migration-plan.md)).
 
 ## Description
 
