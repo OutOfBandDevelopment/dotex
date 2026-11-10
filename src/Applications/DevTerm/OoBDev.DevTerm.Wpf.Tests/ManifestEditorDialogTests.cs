@@ -181,6 +181,26 @@ public sealed class ManifestEditorDialogTests
     }
 
     [TestMethod]
+    public void FieldPickers_StripChart_OffersAnExpressionPickPerChannel_AndWritesItBack()
+    {
+        // Stage
+        var picker = new FakePicker("{a} * 2");
+        var (_, dialog, form) = IndicatorEditor(picker);
+        using var _ = dialog;
+        form.Kind = "stripChart";
+        form.Channels = "a:Alpha; b";
+
+        // Test
+        dialog.FieldPickers.Single(p => p.Label == "Channel b expression").Pick.Execute(null);
+
+        // Assert
+        Assert.IsTrue(dialog.FieldPickers.Any(p => p.Label == "Channel a expression"));
+        Assert.AreEqual("a:Alpha; b:::{a} * 2", form.Channels);
+        Assert.AreEqual("{a} * 2", form.GetChannelExpression(1));
+        Assert.AreEqual(string.Empty, form.GetChannelExpression(0));
+    }
+
+    [TestMethod]
     public void FieldPickers_Cancelled_LeavesTheField()
     {
         // Stage

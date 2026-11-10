@@ -72,5 +72,5 @@ the picker opens until **Next sample** is pressed.
 
 ## Open items
 
-- Pick on a single channel's expression segment (typed after the third `:`): waiting on OPEN-QUESTIONS Q1. A button's Parameter fields are built (`ExpressionList` mode).
+- Pick on a single channel's expression segment: built in the WPF Manifest Editor (2026-11-09, owner decision Q1): each channel of a bar graph or strip chart gets its own **Channel {id} expression** Pick..., which opens Expression mode on that channel's fourth segment and writes the result back. The Tui form still offers only the whole-list Channels picker (BACKLOG).
 - Operators/regex helpers and the CEL-style language extension (proposal's later steps).

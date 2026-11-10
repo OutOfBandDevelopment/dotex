@@ -300,7 +300,26 @@ public sealed class ManifestEditorDialogViewModel : ViewModelBase, IDisposable
             if (_form.Row(field) is { IsVisible: true } row)
             {
                 FieldPickers.Add(new FieldPickerViewModel(row.Label, new ManifestEditorCommand(() => true, () => PickField(row.Control, mode))));
+                if (field == nameof(ControlForm.Channels) && _formBinding.Source is ControlForm controlForm)
+                {
+                    var ids = controlForm.ChannelIds;
+                    for (var i = 0; i < ids.Count; i++)
+                    {
+                        var index = i;
+                        FieldPickers.Add(new FieldPickerViewModel($"Channel {ids[i]} expression", new ManifestEditorCommand(() => true, () => PickChannelExpression(controlForm, index))));
+                    }
+                }
             }
+        }
+    }
+
+    private void PickChannelExpression(ControlForm controlForm, int index)
+    {
+        var picked = _pickerDialog!.Pick(_editor.CreatePicker(controlForm.GetChannelExpression(index), PickerMode.Expression));
+        if (picked is not null)
+        {
+            controlForm.SetChannelExpression(index, picked);
+            _form!.Refresh();
         }
     }
 

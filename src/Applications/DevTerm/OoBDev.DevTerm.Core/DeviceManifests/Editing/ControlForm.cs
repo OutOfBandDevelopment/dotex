@@ -421,6 +421,26 @@ public sealed class ControlForm : EditorForm
         }
     }
 
+    /// <summary>The ids of the chart's channels, in order (empty for other controls).</summary>
+    public IReadOnlyList<string> ChannelIds => [.. ChannelsOf(Control).Select(c => c.Id)];
+
+    /// <summary>The expression of channel <paramref name="index"/>, or an empty string when it has none or the index is out of range.</summary>
+    public string GetChannelExpression(int index) =>
+        ChannelsOf(Control) is var list && index >= 0 && index < list.Count ? list[index].Expression ?? string.Empty : string.Empty;
+
+    /// <summary>Sets the expression of channel <paramref name="index"/> (blank clears it); an index out of range is ignored.</summary>
+    public void SetChannelExpression(int index, string? expression)
+    {
+        var list = ChannelsOf(Control);
+        if (index < 0 || index >= list.Count)
+        {
+            return;
+        }
+
+        list[index].Expression = NullIfBlank(expression?.Trim());
+        Changed();
+    }
+
     [Category("Display")]
     [DisplayName("History length")]
     [FormField(Order = 1, VisibleWhen = nameof(Kind), VisibleWhenValues = [_stripChartKind], Minimum = 1)]
