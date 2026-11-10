@@ -1032,7 +1032,7 @@ var person = provider.Generate<PersonModel>();
 | `DocumentConversion.md` | Conversion framework |
 | `BlobStorage.md` | Blob storage design |
 | `CultureInfoMiddleware.md` | Localization |
-| `ConfigurationSettings.md` | Settings reference |
+| `CONFIGURATION_SETTINGS.md` (repo root) | Settings reference |
 
 ### 9.2 Library Documentation
 
@@ -1864,7 +1864,7 @@ public class ProductSearchModel
 
 **Post-Integration:**
 - [ ] Update FEATURE_INVENTORY.md (mark as integrated)
-- [ ] Update ConfigurationSettings.md
+- [ ] Update CONFIGURATION_SETTINGS.md
 - [ ] Create library documentation
 - [ ] Create example applications
 - [ ] NuGet packages published
