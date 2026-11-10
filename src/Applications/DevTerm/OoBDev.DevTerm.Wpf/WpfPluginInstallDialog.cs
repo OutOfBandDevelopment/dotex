@@ -61,6 +61,9 @@ public sealed class WpfPluginInstallDialog : IPluginInstallDialog
     public void ReportNoApprovals() => MessageBox.Show(PluginReport.ApprovalText([]), "Plugin approvals", MessageBoxButton.OK, MessageBoxImage.Information);
 
     /// <inheritdoc />
+    public void ShowPlugins(string text) => MessageBox.Show(text, "Plugins", MessageBoxButton.OK, MessageBoxImage.Information);
+
+    /// <inheritdoc />
     public void Report(PluginInstallResult result)
     {
         ArgumentNullException.ThrowIfNull(result);

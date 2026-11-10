@@ -18,6 +18,9 @@ public interface IPluginInstallDialog
     /// <summary>Tells the user there are no remembered plugin approvals.</summary>
     void ReportNoApprovals();
 
+    /// <summary>Shows the loaded plugins and how each fared (loaded, skipped, failed).</summary>
+    void ShowPlugins(string text);
+
     /// <summary>Tells the user how the install ended.</summary>
     void Report(PluginInstallResult result);
 }

@@ -61,6 +61,10 @@ public sealed class InstallPluginTests
         }
 
         public void Report(PluginInstallResult result) => Reported = result;
+
+        public string? Listed { get; private set; }
+
+        public void ShowPlugins(string text) => Listed = text;
     }
 
     private static string MakeZip(string folder)
@@ -120,6 +124,18 @@ public sealed class InstallPluginTests
         new ShellViewModel([]).PromptPendingPlugins();
 
         Assert.AreEqual(0, dialog.Reviewed);
+    }
+
+    [TestMethod]
+    public void ShowPlugins_ListsEachPluginWithItsStatus()
+    {
+        var dialog = new FakeDialog(null, PluginApprovalChoice.Once);
+        var shell = new ShellViewModel([], pluginInstallDialog: dialog, plugins: [new("a", "Alpha", true, string.Empty), new("b", "Beta", false, "bad contract")]);
+
+        shell.ShowPlugins.Execute(null);
+
+        StringAssert.Contains(dialog.Listed, "Alpha  loaded");
+        StringAssert.Contains(dialog.Listed, "Beta  skipped: bad contract");
     }
 
     [TestMethod]
