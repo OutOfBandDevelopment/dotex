@@ -47,13 +47,14 @@ try {
     # Directory.Build.props computes SolutionDir from the working directory, so run from src.
     Push-Location $src
     try {
-        Invoke-Step 'Restore' { dotnet restore }
-        Invoke-Step 'Build' { dotnet build --configuration $Configuration --no-restore --nologo }
+        Invoke-Step 'Restore' { dotnet restore OoBDev.slnx }
+        Invoke-Step 'Build' { dotnet build OoBDev.slnx --configuration $Configuration --no-restore --nologo }
 
         # Honors TEST_PORT_<NAME> overrides from the environment or containers/testing/.env.
         $settings = (& (Join-Path $PSScriptRoot 'new-runsettings.ps1') | Select-Object -Last 1).ToString()
         $filter = ($Category | ForEach-Object { "TestCategory=$_" }) -join '|'
         $testArgs = @(
+            'OoBDev.slnx',
             '--configuration', $Configuration, '--no-build', '--no-restore', '--nologo',
             '--settings', $settings,
             '--filter', $filter,
