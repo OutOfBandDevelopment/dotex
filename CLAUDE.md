@@ -14,7 +14,7 @@ Working agreements are enforced by files, not by this guide alone:
 | Mechanism | Location | What it holds |
 |-----------|----------|---------------|
 | Rules (always loaded, or loaded for matching files) | `.claude/rules/` | `git-workflow`, `owner-decisions`, `open-questions`, `autonomous-mode` (always); `coding-standards` (C#), `testing` (tests, runsettings, containers), `docs-and-diagrams` (docs, markdown) |
-| Skills (loaded when the task matches) | `.claude/skills/` | `add-integration-service`, `archive-completed-work`, `document-configuration`, `compare-incoming-codebase`, `architectural-analysis`, `security-audit`, `write-docs`, `complete-work`, `reconcile-designs-and-code`, `work-backlog`, `owner-interview` |
+| Skills (loaded when the task matches) | `.claude/skills/` | `add-integration-service`, `archive-completed-work`, `document-configuration`, `compare-incoming-codebase`, `architectural-analysis`, `security-audit`, `write-docs`, `write-tests`, `complete-work`, `reconcile-designs-and-code`, `work-backlog`, `owner-interview` |
 | Hooks (deterministic guards) | `.claude/hooks/`, registered in `.claude/settings.json` | `guard-git.mjs` guards git (attribution, history rewrites, `gh`, `upstream`); `autonomous-mode.mjs` (UserPromptSubmit) and `keep-going.mjs` (Stop) keep the backlog loop running until the owner says "I'm back" (rule `autonomous-mode`) |
 | Memory | `.claude/memory/` (in the repository, never user-specific; index `MEMORY.md`) | owner preferences and feedback |
 
