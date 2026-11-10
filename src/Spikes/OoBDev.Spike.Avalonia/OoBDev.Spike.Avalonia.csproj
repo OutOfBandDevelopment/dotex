@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="../../Examples/OoBDev.Examples.Controls.Shared/LiveSampleFeed.cs" Link="LiveSampleFeed.cs" />
     <ProjectReference Include="..\..\Framework\OoBDev.UiDefinitions.ViewModels\OoBDev.UiDefinitions.ViewModels.csproj" />
   </ItemGroup>
 </Project>

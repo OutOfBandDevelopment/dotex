@@ -28,7 +28,7 @@ public static class TestAppBuilder
 [TestClass]
 public sealed class AvaloniaFormTests
 {
-    private static readonly HeadlessUnitTestSession _session = HeadlessUnitTestSession.StartNew(typeof(TestAppBuilder));
+    private static HeadlessUnitTestSession _session => HeadlessSession.Instance;
 
     public TestContext TestContext { get; set; } = null!;
 
@@ -41,13 +41,7 @@ public sealed class AvaloniaFormTests
         body(model, window);
     }, default).GetAwaiter().GetResult();
 
-    private void Shot(Window window, string step)
-    {
-        Dispatcher.UIThread.RunJobs();
-        var path = Path.Combine(TestContext.TestRunDirectory ?? Path.GetTempPath(), $"{TestContext.TestName}-{step}.png");
-        window.CaptureRenderedFrame()!.Save(path);
-        TestContext.AddResultFile(path);
-    }
+    private void Shot(Window window, string step) => Screenshots.Save(TestContext, window, step);
 
     [TestMethod]
     public void Render_Form_ShowsControlsAndHidesConditionalRow()

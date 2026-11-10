@@ -16,6 +16,7 @@ public sealed class SpikeApp : Application
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             desktop.MainWindow = DemoForm.CreateWindow(new DemoModel());
+            new LiveDemo().CreateWindow(run: true).Show();
         }
 
         base.OnFrameworkInitializationCompleted();
