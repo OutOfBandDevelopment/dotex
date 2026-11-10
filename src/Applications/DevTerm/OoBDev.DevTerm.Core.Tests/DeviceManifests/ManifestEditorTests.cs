@@ -408,6 +408,34 @@ public sealed class ManifestEditorTests
     }
 
     [TestMethod]
+    public void ConvertUiFileToJson_XmlPanel_IsSavedAsJsonAndReloads()
+    {
+        InTemp(directory =>
+        {
+            // Stage
+            var manifest = new DeviceManifest
+            {
+                Name = "Package",
+                UiFile = "panel.xml",
+                Ui = new UiDefinition { Name = "Package", Sections = [new UiSection { Label = "S", Controls = [new IndicatorControl { Id = "v", Label = "V" }] }] },
+            };
+
+            // Test
+            var converted = DeviceManifestWriter.ConvertUiFileToJson(manifest);
+            var file = DeviceManifestWriter.Save(manifest, Path.Combine(directory, "out"));
+
+            // Assert
+            Assert.IsTrue(converted);
+            Assert.AreEqual("panel.json", manifest.UiFile);
+            Assert.IsTrue(File.Exists(Path.Combine(directory, "out", "panel.json")));
+            Assert.IsFalse(File.Exists(Path.Combine(directory, "out", "panel.xml")));
+            Assert.AreEqual("v", DeviceManifestLoader.Load(Path.Combine(directory, "out")).Ui!.Sections[0].Controls[0].Id);
+            Assert.IsFalse(DeviceManifestWriter.ConvertUiFileToJson(manifest), "Already JSON: nothing to convert.");
+            Assert.IsNotNull(file);
+        });
+    }
+
+    [TestMethod]
     public void Preview_DoesNotChangeTheManifest_AndItsSurfaceSendsNothing()
     {
         var editor = new ManifestEditorViewModel(Path.GetTempPath());
