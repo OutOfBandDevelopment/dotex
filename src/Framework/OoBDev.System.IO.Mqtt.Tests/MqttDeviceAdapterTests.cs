@@ -148,12 +148,38 @@ public sealed class MqttDeviceAdapterTests
         Assert.AreEqual("t\tx\n", Encoding.UTF8.GetString(result.Buffer));
     }
 
+    [TestMethod]
+    public async Task OpenAsync_AfterABrokerSideDisconnect_DisposesTheOldConnectionAndIgnoresItsLateEvents()
+    {
+        // Stage
+        var first = new FakeConnection();
+        var second = new FakeConnection();
+        await using var transport = new MqttDeviceAdapter(new FakeFactory(first, second), Options.Create(new MqttDeviceAdapterOptions { Host = "b" }));
+        await transport.OpenAsync(TestContext.CancellationToken);
+        first.Drop(new IOException("gone"));
+        Assert.AreEqual(ConnectionState.Faulted, transport.State);
+
+        // Test
+        await transport.OpenAsync(TestContext.CancellationToken);
+        first.Receive("late", "x"u8.ToArray());
+        first.Drop(new IOException("late"));
+
+        // Assert
+        Assert.IsTrue(first.Disposed);
+        Assert.AreEqual(ConnectionState.Open, transport.State);
+        second.Receive("t", "1"u8.ToArray());
+        var result = await transport.Input.ReadAsync(TestContext.CancellationToken);
+        Assert.AreEqual("t\t1\n", Encoding.UTF8.GetString(result.Buffer));
+    }
+
     private static MqttDeviceAdapter Create(FakeConnection fake, MqttDeviceAdapterOptions options)
         => new(new FakeFactory(fake), Options.Create(options));
 
-    private sealed class FakeFactory(FakeConnection connection) : IMqttConnectionFactory
+    private sealed class FakeFactory(params FakeConnection[] connections) : IMqttConnectionFactory
     {
-        public IMqttConnection Create() => connection;
+        private int _next;
+
+        public IMqttConnection Create() => connections[_next++];
     }
 
     private sealed class FakeConnection : IMqttConnection
@@ -195,6 +221,12 @@ public sealed class MqttDeviceAdapterTests
             return Task.CompletedTask;
         }
 
-        public ValueTask DisposeAsync() => ValueTask.CompletedTask;
+        public bool Disposed { get; private set; }
+
+        public ValueTask DisposeAsync()
+        {
+            Disposed = true;
+            return ValueTask.CompletedTask;
+        }
     }
 }
