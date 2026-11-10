@@ -110,7 +110,7 @@ Map: [harvest-candidates.md](../harvest-candidates.md). Nothing is copied withou
 | Source item | Decision |
 |-------------|----------|
 | ScoreMachine and HomeSeer | Libraries and emulators only (D8); applications rejected |
-| hybridsearch, Oobtainium, BuildFirstOnce, markdownplantuml, TotpExample, HandyClasses, postsql-playground | Evaluate later (D7); postsql informs `OoBDev.DacFx` |
+| hybridsearch, Oobtainium, BuildFirstOnce, markdownplantuml, TotpExample, HandyClasses, postsql-playground | Compared 2026-11-10: [recommendations](harvest-d7-comparison.md) await the owner (D7); postsql informs `OoBDev.DacFx` |
 | Oobtainium (mocking and proxy framework, about 1,600 lines) | Not migrated; Moq and NSubstitute cover it. Reopen only with a fresh comparison against `proving-grounds/examples/OoBDev.Oobtainium` |
 | `OoBDev.MessageBroker`, `Ssb.Modeling`, `SQL` | Deferred until a Service Broker feature exists |
 | `event-sourcing`, `sync-mesh`, `fohjin-cqrs` | Read-only pattern references; ask before copying |
