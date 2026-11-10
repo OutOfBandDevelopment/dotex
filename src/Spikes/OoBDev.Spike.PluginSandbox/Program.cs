@@ -36,6 +36,12 @@ internal static class Program
                 input.CopyTo(Stream.Null);
                 return 0;
 
+            case "caller":
+                return Caller(args);
+
+            case "holdmutex":
+                return HoldMutex(args);
+
             case "probe":
                 return Probe(args, input, output);
 
@@ -60,6 +66,36 @@ internal static class Program
             default:
                 return 2;
         }
+    }
+
+    // A stand-in host: starts a sandboxed plugin (echo, or sleep when it should survive because echo ends when its stdin closes) (killOnClose per args[1]), writes its process id to args[2], then waits to be killed.
+    private static int Caller(string[] args)
+    {
+        if (!OperatingSystem.IsWindows())
+        {
+            return 3;
+        }
+
+        var kill = args[1] == "kill";
+        var plugin = new SandboxedPlugin(kill ? "echo" : "sleep", new JobLimits(MemoryMb: 256), killOnClose: kill);
+        if (kill)
+        {
+            plugin.Receive();
+        }
+
+        File.WriteAllText(args[2], plugin.ProcessId.ToString(global::System.Globalization.CultureInfo.InvariantCulture));
+        Thread.Sleep(Timeout.Infinite);
+        return 0;
+    }
+
+    // Holds a named mutex (args[1]) until the process is killed, then the next owner sees it abandoned; args[2] is written once held.
+    private static int HoldMutex(string[] args)
+    {
+        using var mutex = new Mutex(false, args[1]);
+        mutex.WaitOne();
+        File.WriteAllText(args[2], "held");
+        Thread.Sleep(Timeout.Infinite);
+        return 0;
     }
 
     // Tries one thing a sandboxed plugin must not be able to do and reports whether it worked, so a test can assert the refusal.
