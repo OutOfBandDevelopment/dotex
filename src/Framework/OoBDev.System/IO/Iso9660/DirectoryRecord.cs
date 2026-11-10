@@ -74,7 +74,7 @@ public class DirectoryRecord : IEnumerable<DirectoryRecord>
         //    00 
     }
 
-    private static DateTime ReadDateTime(byte[] buffer, ref int offset)
+    internal static DateTime ReadDateTime(byte[] buffer, ref int offset)
     {
         //1	63 
         var yearOffset = buffer[offset];
@@ -98,14 +98,23 @@ public class DirectoryRecord : IEnumerable<DirectoryRecord>
         var quaterHourOffset = (sbyte)buffer[offset];
         offset++;
 
+        // ECMA-119 9.1.5: the fields are local time and the offset is quarter hours from GMT, so UTC is local minus the offset.
         var timeOffset = quaterHourOffset * 15d;
-        return new DateTime(yearOffset + 1900,
-                                     month == 0 ? 1 : month,
-                                     day == 0 ? 1 : month,
-                                     hour,
-                                     minute,
-                                     second
-                                     ).AddMinutes(timeOffset);
+        try
+        {
+            return new DateTime(yearOffset + 1900,
+                                month == 0 ? 1 : month,
+                                day == 0 ? 1 : day,
+                                hour,
+                                minute,
+                                second,
+                                DateTimeKind.Utc
+                                ).AddMinutes(-timeOffset);
+        }
+        catch (ArgumentOutOfRangeException)
+        {
+            return DateTime.MinValue;
+        }
     }
 
     #region Properties

@@ -48,7 +48,7 @@ Owner: all protocols and features of dev-term must exist here. Done means what d
 A clean rebuild after the 2026-11-06 pass reports no analyzer warnings (218 before). Analyzers are wired from `src/Directory.Build.props` (`OoBDev.Analyzers` OOB0001 to OOB0003, NetAnalyzers Recommended, Meziantou); `Tools`, `Examples` and `Applications` are exempt from MA0004, and `Tools` and `Examples` from MA0048, in `src/.editorconfig`.
 
 - [ ] Rules kept at `suggestion` on purpose in `src/.editorconfig` (nothing to flip unless the owner decides otherwise):: MA0026 (about 50 TODO comments), MA0046 (3, `EventHandler<TMessage>` on the device interfaces), MA0061 (3, DEBUG-only required parameters), CA1710, CA1720, CA1708 (domain names).
-- [ ] Bug-review the migrated projects that the source review never covered (device IO, toolkit and text, code analysis and archives, apps and tooling); the source split was dropped with `REVIEW-STATUS.md` (history keeps it)
+- [ ] Bug-review the migrated projects that the source review never covered (rest of device IO: `BridgeWorker`, `SerialDeviceAdapter`, Bluetooth, Mqtt, Brokers; then toolkit and text, code analysis and archives, apps and tooling); first pass and open findings in [the issue](docs/issues/device-io-review-findings.md)
 - [ ] ExpressionCalculator optional reductions, never built (the source only listed them as a "bonus round"): `B^-1` to `1/B`, `B/N` to `B*(1/N)`, `B*B*...` to `B^T`, `B+B+...` to `B*T`; add them to `IdentityExpressionOptimizer` or a new optimizer with tests, or decline
 - [ ] HybridSearch: decide whether to remove the three obsolete provider shells or build the hybrid merge ([requirements](docs/design/HybridSearch/requirements.md#open-questions)); the `OoBDev.Search.Tests` are done
 
