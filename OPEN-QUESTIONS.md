@@ -35,3 +35,16 @@ The plan in [raster-export.md](docs/design/Presenters/raster-export.md#migration
 **Default:** A once confirmed; nothing is built until you answer (project layout rule).
 
 **Your answer:**
+
+### Q3 — 2026-11-09 — WPF dockable layout: which docking library?
+
+Sessions and the Stream Monitor are fixed tabs plus floating windows. Visual Studio style docking needs a docking library (a new third-party dependency) and a layout-persistence story; the dark templates would need covering too. Your rule on dependencies rejects third-party DI, logging and Polly, so this needs your call.
+
+**Options**
+- A. AvalonDock (MIT, the de facto WPF docking library; recommended): least work, layouts serialize to XML; trade-off: one more dependency to theme with `DarkControls.xaml`.
+- B. Build a small in-house dock (tab groups, drag to float, saved layout JSON). Trade-off: no dependency, but weeks of work for less polish.
+- C. Keep tabs and floating windows. Trade-off: no work, no docking.
+
+**Default:** C until answered (nothing is built on a guess).
+
+**Your answer:**
