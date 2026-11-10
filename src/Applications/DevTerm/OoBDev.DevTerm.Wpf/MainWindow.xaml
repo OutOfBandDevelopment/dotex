@@ -24,6 +24,7 @@
                 <MenuItem Header="Converter _tools..." Command="{Binding ShowConverterTools}" />
                 <MenuItem Header="Confi_gure device..." Command="{Binding ShowConfigureDevice}" />
                 <MenuItem Header="_Install plugin..." Command="{Binding InstallPluginFromZip}" />
+                <MenuItem Header="_Plugin approvals..." Command="{Binding ReviewPluginApprovals}" />
             </MenuItem>
             <MenuItem Header="_View">
                 <MenuItem Header="_Theme" ItemsSource="{Binding Themes.Choices}">

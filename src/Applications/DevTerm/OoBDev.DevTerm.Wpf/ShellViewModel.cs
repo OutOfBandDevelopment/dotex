@@ -95,6 +95,7 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
         BuildTheme = new BuildThemeCommand(this);
         ShowConfigureDevice = new ShowConfigureDeviceCommand(this);
         InstallPluginFromZip = new InstallPluginCommand(this);
+        ReviewPluginApprovals = new ReviewPluginApprovalsCommand(this);
         OpenInstrumentPanel = new OpenInstrumentCommand(this);
         ShowRoutingWindow = new ShowRoutingCommand(this);
         NewConnection = new NewConnectionCommand(this);
@@ -148,6 +149,9 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
 
     /// <summary>Device &gt; Install plugin: choose a plugin .zip, approve it, install it (it loads at the next start).</summary>
     public ICommand InstallPluginFromZip { get; }
+
+    /// <summary>Device &gt; Plugin approvals: approve plugins waiting to start, then review the remembered approvals one by one.</summary>
+    public ICommand ReviewPluginApprovals { get; }
 
     /// <summary>Picks a seed theme and edits a new theme from it.</summary>
     public ICommand BuildTheme { get; }
@@ -238,6 +242,18 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
     }
 
     internal bool CanInstallPlugin => _pluginInstallDialog is not null;
+
+    internal void ReviewPlugins()
+    {
+        LivePlugins.ReviewPending(_pluginInstallDialog!.AskPending);
+        if (PluginTrust.Approvals().Count == 0)
+        {
+            _pluginInstallDialog.ReportNoApprovals();
+            return;
+        }
+
+        PluginTrust.Review(_pluginInstallDialog.AskReview);
+    }
 
     internal void InstallPlugin()
     {

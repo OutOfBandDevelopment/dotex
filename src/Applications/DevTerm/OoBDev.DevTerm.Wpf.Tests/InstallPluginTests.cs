@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.IO.Compression;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.System.IO;
@@ -7,12 +8,47 @@ namespace OoBDev.DevTerm.Wpf.Tests;
 
 /// <summary>Device &gt; Install plugin in the WPF shell, over a fake dialog.</summary>
 [TestCategory("Unit")]
+[DoNotParallelize]
 [TestClass]
 public sealed class InstallPluginTests
 {
+    private TempDirectoryHandle? _home;
+    private string? _previousHome;
+
+    [TestInitialize]
+    public void UseTempHome()
+    {
+        _previousHome = Environment.GetEnvironmentVariable(DevTermHome.EnvironmentVariable);
+        _home = new TempDirectoryHandle();
+        Environment.SetEnvironmentVariable(DevTermHome.EnvironmentVariable, _home.DirectoryPath);
+    }
+
+    [TestCleanup]
+    public void RestoreHome()
+    {
+        Environment.SetEnvironmentVariable(DevTermHome.EnvironmentVariable, _previousHome);
+        _home?.Dispose();
+    }
+
     private sealed class FakeDialog(string? zip, PluginApprovalChoice choice) : IPluginInstallDialog
     {
         public PluginInstallResult? Reported { get; private set; }
+
+        public ApprovalReviewChoice Review { get; init; } = ApprovalReviewChoice.Keep;
+
+        public int Reviewed { get; private set; }
+
+        public bool SaidNone { get; private set; }
+
+        public PluginApprovalChoice AskPending(PendingPlugin plugin) => PluginApprovalChoice.Deny;
+
+        public ApprovalReviewChoice AskReview(PluginApproval approval)
+        {
+            Reviewed++;
+            return Review;
+        }
+
+        public void ReportNoApprovals() => SaidNone = true;
 
         public PluginApprovalRequest? Asked { get; private set; }
 
@@ -73,5 +109,41 @@ public sealed class InstallPluginTests
         Assert.IsFalse(declined.Reported!.Installed);
         Assert.IsNull(cancelled.Reported, "Cancelling the file picker reports nothing.");
         Assert.IsFalse(Directory.Exists(Path.Combine(plugins, "Echo")));
+    }
+
+    [TestMethod]
+    public void ReviewPluginApprovals_NothingRemembered_SaysSo()
+    {
+        var dialog = new FakeDialog(null, PluginApprovalChoice.Once);
+        var shell = new ShellViewModel([], pluginInstallDialog: dialog);
+
+        shell.ReviewPluginApprovals.Execute(null);
+
+        Assert.IsTrue(dialog.SaidNone);
+        Assert.AreEqual(0, dialog.Reviewed);
+    }
+
+    [TestMethod]
+    public void ReviewPluginApprovals_Forget_RemovesTheApproval()
+    {
+        PluginTrust.Remember("Echo", "abc123");
+        var dialog = new FakeDialog(null, PluginApprovalChoice.Once) { Review = ApprovalReviewChoice.Forget };
+        var shell = new ShellViewModel([], pluginInstallDialog: dialog);
+
+        shell.ReviewPluginApprovals.Execute(null);
+
+        Assert.AreEqual(1, dialog.Reviewed);
+        Assert.IsEmpty(PluginTrust.Approvals());
+    }
+
+    [TestMethod]
+    public void ReviewPluginApprovals_Keep_LeavesTheApproval()
+    {
+        PluginTrust.Remember("Echo", "abc123");
+        var shell = new ShellViewModel([], pluginInstallDialog: new FakeDialog(null, PluginApprovalChoice.Once));
+
+        shell.ReviewPluginApprovals.Execute(null);
+
+        Assert.HasCount(1, PluginTrust.Approvals());
     }
 }
