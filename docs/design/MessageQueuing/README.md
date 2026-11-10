@@ -53,7 +53,7 @@ public interface IMessageSenderProvider
 
 - **AWS SQS** - `src/ExternalServices/Amazon/OoBDev.Amazon.Sqs/`
   - FIFO queues, message attributes, dead-letter queues
-  - LocalStack emulator support for integration testing
+  - Moto (AWS emulator) support for integration testing
   - Latest package: AWSSDK.SQS 4.0.2.11
   - Status: ✅ Complete (2026-01-20)
 

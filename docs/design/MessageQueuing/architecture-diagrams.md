@@ -650,7 +650,7 @@ package "Integration Tests\n(Docker)" {
     component [DockerTests] as DockerTests
     component [DockerCompose] as Docker
     component [RabbitMQ Container] as RabbitDocker
-    component [LocalStack Container] as LocalStack
+    component [Moto Container] as Moto
 }
 
 package "System Under Test" {
@@ -674,7 +674,7 @@ DockerTests ..> RealConfig : Load from appsettings
 DockerTests ..> SUT : Test
 DockerTests ..> Docker : Start containers
 Docker --> RabbitDocker : RabbitMQ on port 5672
-Docker --> LocalStack : SQS on port 4566
+Docker --> Moto : SQS on port 4566
 
 note right of UnitTests
   Fast, isolated tests

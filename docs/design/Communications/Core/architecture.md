@@ -407,7 +407,7 @@ ComposeAndSendAsync(targetPersonId, messageType, culture, data, correlationId, h
 **Dependencies:**
 - `ITemplateProvider`
 - `IStringFormatter`
-- `ISelectedService<ISendEmailProvider>` (picks SendGrid vs SMTP)
+- `TryAddConfiguredKeyedService<ISendEmailProvider>` (picks SendGrid vs SMTP)
 - `ILogger<EmailMessageComposer>`
 
 ---
@@ -436,7 +436,7 @@ ComposeAndSendAsync(targetPersonId, messageType, culture, data, correlationId, h
 **Dependencies:**
 - `ITemplateProvider`
 - `IStringFormatter`
-- `ISelectedService<ISendSmsProvider>` (picks Twilio vs custom)
+- `TryAddConfiguredKeyedService<ISendSmsProvider>` (picks Twilio vs custom)
 - `ILogger<SmsMessageComposer>`
 
 ---

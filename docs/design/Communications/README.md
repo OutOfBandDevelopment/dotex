@@ -312,7 +312,7 @@ services.AddCommunications()
     .AddSendGridProvider(options => { /* ... */ })
     .AddTwilioSmsProvider(options => { /* ... */ });
 
-// System uses ISelectedService<ISendEmailProvider> to pick provider
+// System uses TryAddConfiguredKeyedService<ISendEmailProvider> to pick provider
 // Configured via: OoBDev:ServiceKeys:OoBDev.Communications.ISendEmailProvider = "SendGrid"
 ```
 
@@ -446,7 +446,7 @@ ITargetPreference {
 
 ### OoBDev Framework
 - **OoBDev.System** - `IStringFormatter` (template variable substitution)
-- **OoBDev.System** - `ISelectedService<T>` (provider selection)
+- **OoBDev.System** - `TryAddConfiguredKeyedService<T>` (provider selection)
 - **OoBDev.System** - `IObjectSerializer` (deferral request serialization)
 - **OoBDev.MailKit** - Alternative SMTP email provider (already in main)
 

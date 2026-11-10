@@ -315,7 +315,7 @@ public static IServiceCollection TryAddSystemExtensions(
     this IServiceCollection services,
     IConfiguration configuration)
 {
-    services.TryAddSingleton<IDateTimeProvider, DateTimeProvider>();
+    services.TryAddSingleton(TimeProvider.System);
     services.TryAddSingleton<IGuidProvider, GuidProvider>();
     services.TryAddSingleton<IJsonSerializer, JsonSerializer>();
     services.TryAddSingleton<ITempFileFactory, TempFileFactory>();
@@ -1346,7 +1346,7 @@ public static class ServiceCollectionExtensions
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        services.TryAddSingleton<IDateTimeProvider, DateTimeProvider>();
+        services.TryAddSingleton(TimeProvider.System);
         services.TryAddSingleton<IGuidProvider, GuidProvider>();
         return services;
     }

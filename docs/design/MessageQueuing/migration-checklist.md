@@ -354,7 +354,7 @@ public class RabbitMQQueueMessageProvider : IMessageSenderProvider, IMessageRece
 - [ ] Test topic/subscription features (Service Bus)
 
 ### Integration Tests (Docker - Future)
-- [ ] Consider adding LocalStack for SQS testing (CI/CD)
+- [ ] Moto container is the SQS test emulator (done) (CI/CD)
 - [ ] Azure Service Bus emulator (if available)
 
 ---

@@ -356,7 +356,7 @@ deactivate Comm
 ### OoBDev Framework
 - **Epic 11: Data Enhancement Pipeline** - Used by Message Composition, NOT Communications
 - **Epic 10: Text Templating** - Used by Message Composition, NOT Communications
-- **OoBDev.System** - `ISelectedService<T>` for provider selection
+- **OoBDev.System** - `TryAddConfiguredKeyedService<T>` for provider selection
 
 ### External Services
 - **SendGrid API** - Cloud email delivery

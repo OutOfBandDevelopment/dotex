@@ -179,7 +179,7 @@ ITargetPreference {
 
 ### OoBDev Framework
 - `IStringFormatter` - Template variable substitution
-- `ISelectedService<T>` - Provider selection
+- `TryAddConfiguredKeyedService<T>` - Provider selection
 - `IObjectSerializer` - Deferral request serialization
 
 ### External

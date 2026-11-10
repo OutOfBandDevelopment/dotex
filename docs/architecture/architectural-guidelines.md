@@ -477,15 +477,14 @@ var service = new OrderService(mockSender.Object, NullLogger<OrderService>.Insta
 
 **Abstraction of External Dependencies:**
 ```csharp
-// ✅ GOOD: Time is abstracted for testing
-public interface IDateTimeProvider
+// ✅ GOOD: Time is abstracted for testing (the platform TimeProvider)
+public class Clock(TimeProvider time)
 {
-    DateTime UtcNow { get; }
+    public DateTimeOffset Now => time.GetUtcNow();
 }
 
-// Test with fixed time
-var mockTime = new Mock<IDateTimeProvider>();
-mockTime.Setup(x => x.UtcNow).Returns(new DateTime(2026, 1, 12));
+// Test with fixed time (Microsoft.Extensions.TimeProvider.Testing)
+var fakeTime = new FakeTimeProvider(new DateTimeOffset(2026, 1, 12, 0, 0, 0, TimeSpan.Zero));
 ```
 
 **Test Utilities:**
