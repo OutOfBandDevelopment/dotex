@@ -117,7 +117,7 @@ public sealed class FrameChannelTests
         var bytes = wire.GetBuffer();
         var bodyEnd = FrameChannel.HeaderSize + _topic.Length + _request.Length;
         bytes[FrameChannel.HeaderSize + _topic.Length + 3] ^= 1;
-        var crc = new System.IO.Hashing.Crc32();
+        var crc = new global::System.IO.Hashing.Crc32();
         crc.Append(bytes.AsSpan(0, bodyEnd));
         BinaryPrimitives.WriteUInt32LittleEndian(bytes.AsSpan(bodyEnd), crc.GetCurrentHashAsUInt32());
 

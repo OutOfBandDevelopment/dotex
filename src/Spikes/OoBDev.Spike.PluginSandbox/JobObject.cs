@@ -12,14 +12,36 @@ public sealed partial class JobObject : IDisposable
     private const int _extendedLimitInformation = 9;
     private const uint _killOnJobClose = 0x2000;
     private const uint _processMemory = 0x100;
+    private const uint _activeProcess = 0x8;
 
     private readonly nint _handle;
 
     /// <summary>Creates the job with <paramref name="memoryMb"/> per process.</summary>
     public JobObject(int memoryMb)
+        : this(new JobLimits(memoryMb))
     {
+    }
+
+    /// <summary>Creates the job with the memory and process-count limits in <paramref name="limits"/>; <paramref name="killOnClose"/> false lets the plugin outlive the host (the Survive lifetime).</summary>
+    public JobObject(JobLimits limits, bool killOnClose = true)
+    {
+        ArgumentNullException.ThrowIfNull(limits);
         _handle = CreateJobObjectW(0, null);
-        var info = new ExtendedLimit { Basic = new BasicLimit { LimitFlags = _killOnJobClose | _processMemory }, ProcessMemoryLimit = (nuint)memoryMb * 1024 * 1024 };
+        var flags = killOnClose ? _killOnJobClose : 0u;
+        var info = new ExtendedLimit { Basic = new BasicLimit() };
+        if (limits.MemoryMb > 0)
+        {
+            flags |= _processMemory;
+            info.ProcessMemoryLimit = (nuint)limits.MemoryMb * 1024 * 1024;
+        }
+
+        if (limits.MaxProcesses > 0)
+        {
+            flags |= _activeProcess;
+            info.Basic.ActiveProcessLimit = (uint)limits.MaxProcesses;
+        }
+
+        info.Basic.LimitFlags = flags;
         if (!SetInformationJobObject(_handle, _extendedLimitInformation, ref info, (uint)Marshal.SizeOf<ExtendedLimit>()))
         {
             throw new InvalidOperationException("SetInformationJobObject failed: " + Marshal.GetLastWin32Error());
@@ -43,6 +65,17 @@ public sealed partial class JobObject : IDisposable
         {
             throw new InvalidOperationException("AssignProcessToJobObject failed: " + Marshal.GetLastWin32Error());
         }
+    }
+
+    /// <summary>The largest memory any process in the job has used, in bytes.</summary>
+    public long PeakProcessMemoryBytes()
+    {
+        if (!QueryInformationJobObject(_handle, _extendedLimitInformation, out ExtendedLimit info, (uint)Marshal.SizeOf<ExtendedLimit>(), 0))
+        {
+            throw new InvalidOperationException("QueryInformationJobObject failed: " + Marshal.GetLastWin32Error());
+        }
+
+        return (long)info.PeakProcessMemoryUsed;
     }
 
     /// <inheritdoc />
@@ -90,6 +123,10 @@ public sealed partial class JobObject : IDisposable
     [LibraryImport("kernel32.dll", SetLastError = true)]
     [return: MarshalAs(UnmanagedType.Bool)]
     private static partial bool SetInformationJobObject(nint job, int infoClass, ref ExtendedLimit info, uint length);
+
+    [LibraryImport("kernel32.dll", SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static partial bool QueryInformationJobObject(nint job, int infoClass, out ExtendedLimit info, uint length, nint returned);
 
     [LibraryImport("kernel32.dll", SetLastError = true)]
     [return: MarshalAs(UnmanagedType.Bool)]

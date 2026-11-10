@@ -111,7 +111,7 @@ public static partial class AppContainerLauncher
         var sidMemory = Marshal.AllocHGlobal(sidBytes.Length);
         var capabilities = Marshal.AllocHGlobal(Marshal.SizeOf<SecurityCapabilities>());
         var handleList = Marshal.AllocHGlobal(3 * IntPtr.Size);
-        var environmentBlock = Marshal.StringToHGlobalUni(string.Concat(environment.Select(p => $"{p.Key}={p.Value}\0")) + "\0");
+        var environmentBlock = Marshal.StringToHGlobalUni(string.Concat(environment.OrderBy(p => p.Key, StringComparer.OrdinalIgnoreCase).Select(p => $"{p.Key}={p.Value}\0")) + "\0");
         nint attributeList = 0;
         try
         {
@@ -143,8 +143,12 @@ public static partial class AppContainerLauncher
 
             var line = Marshal.StringToHGlobalUni(commandLine);
             var started = CreateProcessW(applicationPath, line, 0, 0, true, _extendedStartupInfoPresent | _createSuspended | _createNoWindow | _createUnicodeEnvironment, environmentBlock, workingDirectory, ref startup, out var created);
+            var startError = Marshal.GetLastWin32Error();
             Marshal.FreeHGlobal(line);
-            Check(started);
+            if (!started)
+            {
+                throw new Win32Exception(startError);
+            }
             try
             {
                 job.Assign(created.Process);

@@ -61,7 +61,7 @@ Boundary 1 is package to host (signature, hashes, safe paths). Boundary 2 is the
 | ID | Threat | Mitigation | Status in the PoC |
 |----|--------|------------|-------------------|
 | T1 | Plugin reads or writes files outside its grants | AppContainer ACLs; bubblewrap mount namespace with a read-only plugin folder | Held on both, with positive controls |
-| T2 | Plugin reaches the network or resolves names | No network by default: AppContainer without capabilities; new network namespace | Held on both. Per-host network grants (REQ-007) are not built; the broker must do it |
+| T2 | Plugin reaches the network or resolves names | No network by default: AppContainer without capabilities; new network namespace | Held on both; Windows covered by `EscapeTests` with a positive control. Per-host network grants (REQ-007) are not built; the broker must do it |
 | T3 | Plugin starts child processes or fork-bombs | Job `ActiveProcessLimit = 1`; seccomp filter on `fork`/`clone` plus `RLIMIT_NPROC` | Held on both |
 | T4 | Plugin exhausts memory or CPU | Job memory and CPU rate; `RLIMIT_DATA`, `prlimit` | Memory held on both. CPU held on Windows only (0.37 of a core under a 1% cap on a 32-processor machine). No CPU or cgroup limit on Linux |
 | T5 | Plugin reads host secrets from its environment | Minimal explicit environment block | Held after a found leak was fixed |
@@ -77,6 +77,7 @@ Boundary 1 is package to host (signature, hashes, safe paths). Boundary 2 is the
 | T15 | Broker confused deputy: a granted call used for more than granted (path traversal, redirect to another host, symlink) | Canonicalise and compare against the grant; never follow links out of a granted folder | Not in the PoC (it has no broker). Needs its own tests |
 | T16 | Side channels, covert channels through timing or shared CPU | None | Out of scope for the first version; stated so nobody assumes otherwise |
 | T18 | Shared plugin instance abused by a second caller (wider grants, session mix-up, orphaned instance) | Grant hash in the lock name; per-caller session keys and sequences; pipe access control list; refcount with idle timeout; abandoned-mutex restart; for `Survive`: grants suspended while no caller, reconnect token in the grant store, new key per session, watchdog kills after the window | Design only (REQ-011); not built or tested |
+| T19 | Plugin forges or alters the request context, replays one from another request, or exfiltrates the user's token | Host-built canonical context with SHA-256 id; plugin sends only the id and the broker uses the stored copy; `aud` and `exp` checked; plugin never receives credentials; only declared claims released | Design only (REQ-012); not built or tested |
 | T17 | Unprivileged user namespaces disabled (hardened distribution, some CI) | Refuse to start and say why; no silent fallback to the plain launcher | The PoC fails to start inside the default Docker profile. The refusal path is a requirement, not yet written |
 
 ## Proof-of-concept review

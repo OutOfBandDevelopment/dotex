@@ -13,6 +13,7 @@ Phase 1 design (REQ-009, REQ-002, REQ-006). The frame format described here is b
 - [Message flow](#message-flow)
 - [Plugin rules](#plugin-rules)
 - [Versioning](#versioning)
+- [Request context](#request-context)
 - [Manifest](#manifest)
 - [Open points](#open-points)
 
@@ -113,6 +114,19 @@ Plugin --> Host : exit 0 within the grace period
 
 The protocol version is `major.minor`. The manifest names the version the plugin was built for and every frame carries the major in its `version` byte. The host refuses a plugin whose major it does not support, with a reason in the log, before launch. Within a major, minor versions only add optional fields, new topics and new error codes; a receiver ignores what it does not know. A removed or changed meaning needs a new major, and the host may support two majors at once while plugins migrate. Conformance (the proof of concept's 36 checks, ported) is the contract test: a platform is listed in a manifest only after the plugin passes it there.
 
+## Request context
+
+A plugin that acts for a user needs to know who the user is, but it is untrusted, so it receives an immutable, minimised *assertion* from the host and never the user's credentials (REQ-012; auth rules in `owner-decisions`: services understand JWT, the host validates it).
+
+1. **Built by the host from a validated token.** The host validates the bearer token itself and builds the context: `id`, `sub`, `tenant`, `claims` (only the claim types the manifest asks for under `context.claims`; everything else is dropped), `rights` (application rights, not raw roles), `aud` (the plugin id), `iat`, `exp` (short, never longer than the request's `ttlMs`) and `traceId`. The plugin never sees the access token, refresh token or any password.
+2. **Immutable and tamper evident.** The context is serialised as canonical JSON (RFC 8785) and the `id` is its SHA-256. It travels in the `Request` payload as `{ "context": {...}, "body": {...} }`, or once per session as an `Event` on topic `context.set` that later requests refer to by `id`. The frame HMAC protects it in transit; the `id` lets any later check detect a changed copy. The plugin may read it and may not change it: it has no way to mint a context that the host will accept.
+3. **The plugin presents only the id, never the data.** When the plugin asks the broker to do something (read a file, call a host, reach another plugin), it sends the context `id`. The broker looks up the context it stored for that request and checks the grant and the user's rights against it, so a plugin that edits its copy gains nothing. A request arriving with an unknown, expired or other-plugin `id` is refused and logged.
+4. **Scoped to the request.** A context is valid for one request (or one session event with an `exp`) and for one plugin (`aud`). It is not kept after the request finishes unless the manifest declares `context.retain` and the user approved it.
+5. **Acting for the user downstream.** If a call needs the user's identity at another service, the broker makes it, using an RFC 8693 token exchange (optional, config-gated) for a narrow audience, or the plugin receives a short-lived delegated token whose `aud` is only that service. The user's own token is never forwarded.
+6. **Minimisation and privacy.** A plugin gets only the claims it declared and the user approved at install; personal data in claims (email, name) is a declared claim like any other and appears in the grant record.
+
+A plugin can still copy what it was given and leak it through any channel it is granted, so declared claims are the limit of the disclosure. The context is for the plugin's logic, not a trust boundary for the host.
+
 ## Manifest
 
 The manifest is JSON inside the signed package. The signature covers the manifest bytes and the manifest carries a SHA-256 for every file (REQ-006). `entry.dev` from the proof of concept is not part of the schema; a development switch in the host may accept it from an explicitly named folder only.
@@ -129,6 +143,7 @@ The manifest is JSON inside the signed package. The signature covers the manifes
 | `lifetime` | no | Object `{ "modes": ["Bound", "Shared"], "default": "Bound", "onCallerExit": "Kill", "reconnectWindowSec": 30, "singleton": false }`. Which lifetimes the plugin supports (see [Lifetime](#lifetime)); omitted means `Bound` only |
 | `permissions` | yes | What the plugin requests; the user approves a subset (REQ-002). Shape below |
 | `limits` | no | `memoryMb`, `cpuPercent`, `maxProcesses`, `wallTimeSec`, `msgPerSec`, `maxFrameBytes`; the host applies its own ceilings |
+| `context` | no | `{ "claims": ["sub", "name"], "retain": false }`: claim types the plugin asks for in the request context, and whether it may keep a context past the request. See [Request context](#request-context) |
 | `heartbeatTimeout` | no | Duration; default from the host |
 | `files` | yes | Map from relative path to `sha256:` digest, covering every file |
 | `signature` | yes | Detached signature over the manifest, with the key id of a key in the host's trust list |
@@ -185,6 +200,7 @@ Rules for `Shared`:
 
 - The Windows and Linux launchers need the owner's placement answer (Q6) before any code. This page does not depend on it.
 - Reconnect after caller death (`Survive`): the reconnect token's storage, whether the plugin may keep local files open meanwhile, and the default window (30 s proposed) are open; proposals above are the defaults until answered.
+- Request context: the signature scheme for a context handed to another plugin (host-only HMAC key or Ed25519) and whether `rights` are copied or looked up at broker time are open; the broker lookup by `id` in rule 3 is the default.
 - Shared lifetime: the idle timeout default (proposed 30 s), whether the named pipe may also be offered across user sessions, and the Linux lock mechanism are open; proposals above are the defaults until answered.
 - Key rotation and revocation (threat T11) need a trust-list format; to be designed with signed packages in phase 4.
 - Whether `sendTo` targets are logical plugin ids or capabilities is left to the broker design in phase 2; the proof of concept used ids.
