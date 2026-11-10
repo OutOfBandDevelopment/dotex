@@ -11,3 +11,4 @@ A framework-agnostic, serializable model for declaring a control panel once so e
 - [manifest-editor-expression-builder.md](manifest-editor-expression-builder.md) - expression builder in the manifest editor
 - [ksy-importer.md](ksy-importer.md) - binary frames and the .ksy importer
 - [format-schema-files.md](format-schema-files.md) - generated JSON Schema files for the formats
+- [avalonia-spike-plan.md](avalonia-spike-plan.md), [avalonia-spike-findings.md](avalonia-spike-findings.md) - Avalonia renderer spike for the view models, with captured screenshots in [avalonia-spike/](avalonia-spike/README.md)

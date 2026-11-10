@@ -4,6 +4,8 @@
 
 A .NET 10 host that runs plugins written in any language as isolated processes, with approved permissions, brokered access to external resources, network isolation and resource limits.
 
+**Plugin model and contributions:** [Plugins](../Plugins/README.md) (what a plugin is and contributes; this folder is how it is isolated).
+
 ## Contents
 
 1. [Requirements](requirements.md)

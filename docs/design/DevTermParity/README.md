@@ -84,4 +84,4 @@ Counts from `C:\repo\oobdev\dev-term\docs` (2026-10-29).
 
 - [Status and leftovers](status.md), [restructure plan](restructure-plan.md), [control panel spike](control-panel-spike.md)
 - [Test utilities plan](test-utilities-plan.md), [UI language (later)](ui-language-later.md)
-- [Avalonia spike](../../migration/avalonia-spike.md)
+- [Avalonia spike](../UiDefinitions/avalonia-spike-plan.md)

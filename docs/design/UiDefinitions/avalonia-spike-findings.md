@@ -1,6 +1,6 @@
 # Avalonia spike findings
 
-**Status:** Done 2026-11-09 (spike code in `src/Spikes/OoBDev.Spike.Avalonia` and `.Tests`, not in the solution). Plan: [avalonia-spike.md](avalonia-spike.md). The owner decides the toolkit.
+**Status:** Done 2026-11-09 (spike code in `src/Spikes/OoBDev.Spike.Avalonia` and `.Tests`, not in the solution). Plan: [avalonia-spike.md](avalonia-spike-plan.md). The owner decides the toolkit.
 
 ## Result
 

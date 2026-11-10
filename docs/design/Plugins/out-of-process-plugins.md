@@ -3,6 +3,7 @@
 Owner direction (2026-10-03): plugin isolation should allow plugins written in other languages, hosted out of process.
 The in-process `AssemblyLoadContext` loader ([plugin-model.md](plugin-model.md)) stays for .NET plugins; this is
 the second path for everything else.
+The sandboxed host that now implements the isolation (grants, brokered access, limits, wire protocol) is designed in [PluginSandbox](../PluginSandbox/README.md); this note keeps the original intent and the contribution side.
 
 ## Shape
 

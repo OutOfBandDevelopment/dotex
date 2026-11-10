@@ -35,3 +35,9 @@ Plans, mappings and analyses for code brought into the framework from other repo
 - Vector comparison: the application-level `Vector` type is in `OoBDev.System.Abstractions` (`Math`), documented in its readme and tested; the cosine distance versus similarity difference is recorded there.
 - MailKit and SendGrid integration analysis: both integrations are complete and described in `README.MailKit.md`.
 - Consolidated on 2026-10-29: the BinaryDataDecoders feature mapping, migration plan, decision sheet and critical questions (now the re-review), the four SharedFramework analyses (now `sharedframework.md`) and the two Oobtainium notes (now `oobtainium.md`).
+
+## Moved or removed on 2026-11-10
+
+- Ser2NetWin map: the move is complete (library, CLI, tests, docs, script); history is in `git log -- docs/migration`.
+- Avalonia spike plan, findings and screenshots: moved to [docs/design/UiDefinitions](../design/UiDefinitions/avalonia-spike-findings.md), because the result is a renderer finding for the view models, not a migration.
+- Kept: the DevTerm docs map and surroundings review (rows still open), device decoding plan and parity, the BinaryDataDecoders reviews, overlap review, incoming plan and cross-check, SharedFramework and Oobtainium notes (work or decisions pending).

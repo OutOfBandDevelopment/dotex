@@ -25,7 +25,7 @@ The single-client bug in [the bug report](../../applications/ser2netwin/bugs/sin
 | Docs | `README.md`, `docs/bugs/...` | `docs/applications/ser2netwin/` (README, requirements, architecture, API/CLI design, testing strategy; bug report kept as history) and `README.System.IO.Ports.Bridge.md`, `README.Ser2NetWin.Cli.md` | - | - | links from `docs/how-tos/test-hardware.md` and the Z-Wave design |
 | Scripts | `scripts/publish.ps1` | `scripts/ser2netwin/publish.ps1` | - | - | repo-relative paths |
 | Solution | `Ser2NetWin.sln`, `Directory.Build.props` | dropped; entries in `OoBDev.slnx` | - | - | repository props apply |
-| Transient map | - | `docs/migration/ser2netwin-map.md`, deleted when the move is complete | - | - | - |
+| Transient map | - | deleted 2026-11-10 (move complete; history in `git log -- docs/migration`) | - | - | - |
 
 ## Layer consequences
 
