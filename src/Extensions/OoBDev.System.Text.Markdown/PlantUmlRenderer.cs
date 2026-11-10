@@ -34,6 +34,16 @@ public class PlantUmlRenderer
         _pipeline = pipeline;
     }
 
+    /// <summary>Initializes the renderer with an explicit PlantUML back end (for example one that does not call a public server).</summary>
+    /// <param name="pipeline">The Markdown pipeline configuration.</param>
+    /// <param name="render">The PlantUML renderer to use.</param>
+    public PlantUmlRenderer(MarkdownPipeline pipeline, IPlantUmlRenderer render)
+    {
+        ArgumentNullException.ThrowIfNull(render);
+        _render = render;
+        _pipeline = pipeline;
+    }
+
     /// <summary>
     /// Writes a PlantUML script as HTML with an embedded SVG diagram.
     /// Includes a collapsible details section with the PlantUML source code.
@@ -62,7 +72,7 @@ public class PlantUmlRenderer
         renderer.Write("<details>" + Environment.NewLine);
         renderer.Write("\t<summary>PlantUML - Details</summary>" + Environment.NewLine + Environment.NewLine);
         renderer.Write("<pre><code type=\"plantuml\">" + Environment.NewLine);
-        renderer.Write(script);
+        renderer.WriteEscape(script);
         renderer.Write("</code></pre></details>" + Environment.NewLine + Environment.NewLine);
     }
 
