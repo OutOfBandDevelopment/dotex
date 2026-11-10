@@ -23,6 +23,8 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
     private readonly IStreamExportDialog? _streamExport;
     private readonly IThemeBuilderDialog? _themeBuilderDialog;
     private readonly IConfigureDeviceDialog? _configureDeviceDialog;
+    private readonly IPluginInstallDialog? _pluginInstallDialog;
+    private readonly string? _pluginsDirectory;
     private readonly IInstrumentPickerDialog? _instrumentPickerDialog;
     private readonly IReadOnlyList<OoBDev.System.IO.Devices.IDeviceConfigEditor> _configEditors;
     private readonly string? _themesDirectory;
@@ -52,7 +54,7 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
     /// <param name="routingDialog">Shows the routing window, or null when the shell has no window to host it.</param>
     /// <param name="editorDialog">Shows the connection editor, or null when the shell has no window to host it.</param>
     [global::System.Diagnostics.CodeAnalysis.SuppressMessage("Maintainability", "MA0051:Method is too long", Justification = "A composition constructor: one assignment per injected dialog and one per command; splitting it would hide the wiring.")]
-    public ShellViewModel(IEnumerable<IPanelFactory> factories, ISessionViewModelFactory? sessionFactory = null, IConnectionEditorDialog? editorDialog = null, IRoutingDialog? routingDialog = null, IStreamMonitorDialog? streamMonitorDialog = null, StreamMonitor? streamMonitor = null, IMergedLogDialog? mergedLogDialog = null, MergedSessionLog? mergedLog = null, IPlaybackDialog? playbackDialog = null, PlaybackPresenters? playbackPresenters = null, IEnumerable<IDevicePanelContribution>? devicePanels = null, IConfirmPrompt? confirm = null, IColorPicker? colorPicker = null, IConverterToolsDialog? converterToolsDialog = null, ConverterToolsStore? converterToolsStore = null, IManifestPickerDialog? manifestPickerDialog = null, IThemeBuilderDialog? themeBuilderDialog = null, string? themesDirectory = null, IConfigureDeviceDialog? configureDeviceDialog = null, IEnumerable<OoBDev.System.IO.Devices.IDeviceConfigEditor>? configEditors = null, IInstrumentPickerDialog? instrumentPickerDialog = null, IEnumerable<IInstrumentPanelProvider>? instruments = null, IManifestEditorDialog? manifestEditorDialog = null, IManifestFileDialogs? manifestFiles = null, IExpressionPickerDialog? expressionPicker = null, IStreamExportDialog? streamExport = null, IListenPeersDialog? listenPeersDialog = null)
+    public ShellViewModel(IEnumerable<IPanelFactory> factories, ISessionViewModelFactory? sessionFactory = null, IConnectionEditorDialog? editorDialog = null, IRoutingDialog? routingDialog = null, IStreamMonitorDialog? streamMonitorDialog = null, StreamMonitor? streamMonitor = null, IMergedLogDialog? mergedLogDialog = null, MergedSessionLog? mergedLog = null, IPlaybackDialog? playbackDialog = null, PlaybackPresenters? playbackPresenters = null, IEnumerable<IDevicePanelContribution>? devicePanels = null, IConfirmPrompt? confirm = null, IColorPicker? colorPicker = null, IConverterToolsDialog? converterToolsDialog = null, ConverterToolsStore? converterToolsStore = null, IManifestPickerDialog? manifestPickerDialog = null, IThemeBuilderDialog? themeBuilderDialog = null, string? themesDirectory = null, IConfigureDeviceDialog? configureDeviceDialog = null, IEnumerable<OoBDev.System.IO.Devices.IDeviceConfigEditor>? configEditors = null, IInstrumentPickerDialog? instrumentPickerDialog = null, IEnumerable<IInstrumentPanelProvider>? instruments = null, IManifestEditorDialog? manifestEditorDialog = null, IManifestFileDialogs? manifestFiles = null, IExpressionPickerDialog? expressionPicker = null, IStreamExportDialog? streamExport = null, IListenPeersDialog? listenPeersDialog = null, IPluginInstallDialog? pluginInstallDialog = null, string? pluginsDirectory = null)
     {
         ArgumentNullException.ThrowIfNull(factories);
         Factories = [.. factories];
@@ -68,6 +70,8 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
         _streamExport = streamExport;
         _themeBuilderDialog = themeBuilderDialog;
         _configureDeviceDialog = configureDeviceDialog;
+        _pluginInstallDialog = pluginInstallDialog;
+        _pluginsDirectory = pluginsDirectory;
         _instrumentPickerDialog = instrumentPickerDialog;
         Instruments = [.. instruments ?? []];
         _configEditors = [.. configEditors ?? []];
@@ -90,6 +94,7 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
         ShowManifestEditor = new ShowManifestEditorCommand(this);
         BuildTheme = new BuildThemeCommand(this);
         ShowConfigureDevice = new ShowConfigureDeviceCommand(this);
+        InstallPluginFromZip = new InstallPluginCommand(this);
         OpenInstrumentPanel = new OpenInstrumentCommand(this);
         ShowRoutingWindow = new ShowRoutingCommand(this);
         NewConnection = new NewConnectionCommand(this);
@@ -140,6 +145,9 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
 
     /// <summary>Shows the Configure device window.</summary>
     public ICommand ShowConfigureDevice { get; }
+
+    /// <summary>Device &gt; Install plugin: choose a plugin .zip, approve it, install it (it loads at the next start).</summary>
+    public ICommand InstallPluginFromZip { get; }
 
     /// <summary>Picks a seed theme and edits a new theme from it.</summary>
     public ICommand BuildTheme { get; }
@@ -227,6 +235,23 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
         {
             selected.OutputLines.Add($"Could not open the instrument panel: {ex.Message}");
         }
+    }
+
+    internal bool CanInstallPlugin => _pluginInstallDialog is not null;
+
+    internal void InstallPlugin()
+    {
+        if (_pluginInstallDialog!.PickZip() is not { } zip)
+        {
+            return;
+        }
+
+        _pluginInstallDialog.Report(PluginInstaller.Install(zip, PluginLoader.ResolveDirectory(_pluginsDirectory), new DialogApprover(_pluginInstallDialog)));
+    }
+
+    private sealed class DialogApprover(IPluginInstallDialog dialog) : IPluginApprover
+    {
+        public PluginApprovalChoice Ask(PluginApprovalRequest request) => dialog.Approve(request);
     }
 
     internal bool CanConfigureDevice => _configureDeviceDialog is not null && _configEditors.Count > 0;
