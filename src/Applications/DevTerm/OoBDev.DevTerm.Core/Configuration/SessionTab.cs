@@ -82,6 +82,13 @@ public sealed class SessionTab : IDisposable
         return new SessionTab(built.Session, built.Catalog, cliOptions, built.Services);
     }
 
+    /// <summary>Builds a tab around an existing, possibly already open <paramref name="transport"/> (an accepted listener peer).</summary>
+    public static SessionTab BuildForAdapter(CliOptions cliOptions, IDeviceAdapter transport)
+    {
+        var built = DevTermSessionBuilder.BuildForAdapter(cliOptions, transport);
+        return new SessionTab(built.Session, built.Catalog, cliOptions, built.Services);
+    }
+
     /// <summary>This tab's window/tab-label title, e.g. <c>dev-term — tek2230 (ascii; send as ascii)</c> — see <see cref="ConnectionDescription.WindowTitle"/>.</summary>
     public string Title(ConnectionProfileStore profileStore) =>
         ConnectionDescription.WindowTitle(CliOptions, Parser, profileStore, Session.State == ConnectionState.Open);

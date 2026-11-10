@@ -52,6 +52,26 @@ public static class DevTermSessionBuilder
     }
 
     /// <summary>
+    /// Like <see cref="Build"/> but around an already-created <paramref name="transport"/> (for example one
+    /// accepted peer of a listener) instead of the one the options would compose.
+    /// </summary>
+    /// <exception cref="InvalidOperationException"><paramref name="cliOptions"/> names an unknown presenter, or a parser that can't encode input.</exception>
+    public static Result BuildForAdapter(CliOptions cliOptions, IDeviceAdapter transport)
+    {
+        ArgumentNullException.ThrowIfNull(cliOptions);
+        ArgumentNullException.ThrowIfNull(transport);
+        var services = new ServiceCollection();
+        services.AddDevTermFrontEnd(cliOptions);
+        var provider = services.BuildServiceProvider();
+
+        var catalog = provider.GetRequiredService<PresenterCatalog>();
+        var presenters = ResolvePresenters(catalog, cliOptions);
+        var session = provider.GetRequiredService<ISessionFactory>().Create(transport, new Pipeline(presenters));
+        session.Limits = cliOptions.SessionLimits;
+        return new Result(session, catalog, provider);
+    }
+
+    /// <summary>
     /// Resolves <see cref="CliOptions.EffectivePresenters"/> to the registered presenters (in the
     /// order listed) and checks <see cref="CliOptions.EffectiveParser"/> can encode typed input.
     /// Shared by every entry point that composes a session so a bad name fails the same way
