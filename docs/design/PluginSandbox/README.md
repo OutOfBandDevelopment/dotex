@@ -12,6 +12,7 @@ A .NET 10 host that runs plugins written in any language as isolated processes, 
 4. [Testing strategy](testing-strategy.md)
 5. [Threat model and proof-of-concept review](threat-model.md)
 6. [Protocol and manifest schema](protocol-and-manifest.md)
+7. [Spike result](spike-result.md)
 
 ### List of Tables
 
