@@ -24,14 +24,36 @@ The frame is now a packed binary structure (versioned header, type, format, sequ
 
 Findings from the first real run: `CreateProcessW` with an explicit environment block fails with `ERROR_ENVVAR_NOT_FOUND` (203) unless the block contains `LOCALAPPDATA` (point it at the plugin scratch folder, not the user profile); the block must be sorted; `Process.GetProcessById` cannot read the exit code of a process it did not start, so the launcher keeps its own handle; the .NET runtime sets a GC heap limit at 75% of the job memory limit, so peak memory at the kill is about 73%, and the attribution uses two thirds; coverage instrumentation writes a lock file to `TEMP` at exit and the container correctly denies it, so exit code 0 is not asserted for an instrumented build. CPU and wall limits are enforced by a host watcher thread, not by the job object. Linux (REQ-008) is not built in the spike.
 
-## What was not shown
+## Built since, with tests (Windows 110 passed, Linux container 107 passed)
 
-- Start-suspended assignment to the job: the spike assigns after start, so a plugin has a short unlimited window. A real launcher creates the process suspended.
-- Built since the first result, with tests: `PluginPool` Bound and Shared (REQ-011), the cross-process named mutex and the caller-death kill and survive tests, the reconnect registry (logic only), and the host chain `PluginHost`/`BrokeredPlugin` that ties package verification, grants, the mutex, the pool, the sandbox and the request context together, signed packages (REQ-006), the grant store and broker with per-host network checks (REQ-002/003/004/007), the request context (REQ-012; carried in a `context.set` frame and enforced as brokered rights; not yet tied to a token validator or RFC 8693), and Linux under bubblewrap (REQ-008, 6 tests in the sdk container via `scripts/spikes/run-sandbox-linux.sh`).
-- Still not built: a Survive transport (a named pipe that outlives the caller; the registry has the token rules only), wiring the mutex into `PluginPool`, wiring the broker and grants to the frame protocol and the launcher, the Linux memory, CPU and process limits, and a link-aware file check (a link inside a granted folder that points outside it).
-- macOS: `SeatbeltPlugin` (sandbox-exec with a generated profile) and `SandboxLauncher` select the sandbox per OS. The profile text is covered by 5 Unit tests on every OS; the escape tests in `CrossPlatformEscapeTests` have never run on a Mac, so the macOS rules are unverified. `sandbox-exec` is deprecated by Apple; App Sandbox entitlements in a signed bundle are the production route. No PID namespace or resource limits on macOS.
+- Host chain: `PluginHost` ties package verification (REQ-006), grant and manifest check, the cross-process named mutex, `PluginPool` Bound and Shared (REQ-011), the sandbox and `BrokeredPlugin` (brokered file read and write and fetch, each checked against the grant and the caller's request-context rights, REQ-002/003/004/007/012).
+- Grants and audit survive a restart (JSON file plus append-only audit lines, `GrantStoreTests`).
+- Link-aware file check: a link inside a granted folder that points outside it is refused (`LinkResolver`, `LinkCheckTests`; the three symlink tests run in the Linux container and skip on this Windows machine because creating links needs privilege).
+- Linux under bubblewrap (REQ-008): no network, read-only system, granted folders only, plus limits: memory through the .NET GC hard limit (a managed-heap cap, not an OS cap), CPU through `ulimit -t`, wall time through a kill timer, process count through `LinuxProcessWatcher` polling `/proc`; `LimitHit` reports which one ended the plugin.
+
+## Must-row audit (REQ-001 to 008 and 010)
+
+| Requirement | State | Gap |
+|-------------|-------|-----|
+| REQ-001 isolation (files, environment) | Shown on Windows and Linux | Links closed; a process that is not started suspended has a short unlimited window on Windows |
+| REQ-002 approved permissions, stored and auditable | Shown, persisted | Grant files are not encrypted or access-protected |
+| REQ-003 brokered file access | Shown | none known |
+| REQ-004 brokered network | Shown for `broker.fetch` | none known |
+| REQ-005 limits | Windows job object and watcher; Linux as above | Linux memory is a managed-heap cap only |
+| REQ-006 signed packages | Shown | key distribution is not designed |
+| REQ-007 network off by default | Shown on both | none known |
+| REQ-008 Linux | Shown | macOS deferred |
+| REQ-010 sign-off | Owner decision | open |
+
+## Still not built
+
+- Start-suspended job assignment on Windows; AppContainer profile and ACL cleanup (the Windows API calls are hand-written).
+- A Survive transport (a named pipe that outlives the caller; the reconnect registry has the token rules only) and Linux versions of the caller-death and pool lifetime tests.
 - Message rate and heartbeat enforcement.
+- The request context is not tied to a token validator or RFC 8693.
+- macOS (deferred by the owner): `SeatbeltPlugin` and its profile text are covered by Unit tests on every OS, but the escape tests have never run on a Mac; `sandbox-exec` is deprecated, and there is no PID namespace or resource limit.
+- Library placement: [migration plan](migration-plan.md), awaiting the owner. The spikes stay in `src/OoBDev.Spikes.slnx` until it is confirmed and executed (owner, 2026-11-10).
 
 ## Consequence for the sign-off
 
-Nothing found contradicts the protocol or the threat model's assumption that a stdio framed channel plus a job object is enough for the first Windows launcher. The unshown items stay open in the phase plan ([Table 2](architecture.md#table-2)); sign-off of REQ-010 is the owner's.
+Nothing found contradicts the protocol or the threat model's assumption that a stdio framed channel plus a job object (Windows) or bubblewrap (Linux) is enough for the first launchers. The unshown items stay open in the phase plan ([Table 2](architecture.md#table-2)); sign-off of REQ-010 is the owner's.
