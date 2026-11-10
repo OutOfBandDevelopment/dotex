@@ -33,6 +33,7 @@
 	<ItemGroup>
 		<ProjectReference Include="..\OoBDev.DevTerm.Tui\OoBDev.DevTerm.Tui.csproj" />
 		<ProjectReference Include="..\..\..\Framework\OoBDev.TestUtilities\OoBDev.TestUtilities.csproj" />
+		<ProjectReference Include="..\..\..\Framework\OoBDev.Tui.TestUtilities\OoBDev.Tui.TestUtilities.csproj" />
 		<ProjectReference Include="..\OoBDev.DevTerm.TestUtilities\OoBDev.DevTerm.TestUtilities.csproj" />
 	</ItemGroup>
 
