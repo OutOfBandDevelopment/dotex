@@ -10,6 +10,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\Framework\OoBDev.System.Abstractions\OoBDev.System.Abstractions.csproj" />
     <ProjectReference Include="..\..\..\Framework\OoBDev.Documents.Hpgl\OoBDev.Documents.Hpgl.csproj" />
+    <ProjectReference Include="..\..\..\Extensions\OoBDev.Extensions.Drawing\OoBDev.Extensions.Drawing.csproj" />
     <ProjectReference Include="..\..\..\Framework\OoBDev.Documents.ExternalTools\OoBDev.Documents.ExternalTools.csproj" />
     <ProjectReference Include="..\..\..\Framework\OoBDev.Documents\OoBDev.Documents.csproj" />
     <ProjectReference Include="..\..\..\Framework\OoBDev.System\OoBDev.System.csproj" />

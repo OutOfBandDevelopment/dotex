@@ -79,6 +79,21 @@ public sealed class StreamCaptureConverterTests
     }
 
     [TestMethod]
+    [DataRow("png", (byte)0x89)]
+    [DataRow("jpg", (byte)0xFF)]
+    public async Task ConvertAsync_InternalHpgl_WithRasterExtension_WritesAnImage(string extension, byte firstByte)
+    {
+        var options = new StreamCaptureConverterOptions { Mode = StreamConversionMode.InternalHpglToSvg, OutputExtension = extension };
+        var capture = SavedCapture(StreamContentKind.Hpgl, StreamContentSamples.Hpgl(), "plot.hpgl");
+
+        var result = await Converter(options).ConvertAsync(capture);
+
+        Assert.IsTrue(result.Success, result.Error);
+        Assert.AreEqual(Path.ChangeExtension(capture.SavedPath, extension), result.OutputPath);
+        Assert.AreEqual(firstByte, File.ReadAllBytes(result.OutputPath!)[0]);
+    }
+
+    [TestMethod]
     public async Task ConvertAsync_InternalHpglToSvg_NonHpglCapture_Fails()
     {
         var options = new StreamCaptureConverterOptions { Mode = StreamConversionMode.InternalHpglToSvg };

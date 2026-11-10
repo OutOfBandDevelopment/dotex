@@ -1,5 +1,7 @@
 ﻿using OoBDev.Documents.ExternalTools;
 using OoBDev.Documents.Hpgl;
+using OoBDev.Extensions.Drawing;
+using SkiaSharp;
 using System;
 using OoBDev.Documents.Conversion;
 using OoBDev.System.IO;
@@ -68,7 +70,41 @@ public sealed class StreamCaptureConverter
             return Task.FromResult(new StreamConversionResult(false, null, $"The internal HP-GL-to-SVG converter only handles HP-GL captures, not {capture.Capture.Kind.DisplayName}."));
         }
 
-        return RunHandlerAsync(capture, new HpglToSvgConversionHandler(), HpglToSvgConversionHandler.SvgContentType, options.OutputExtension ?? "svg", cancellationToken);
+        var extension = options.OutputExtension ?? "svg";
+        var raster = RasterFormatOf(extension);
+        return raster is null
+            ? RunHandlerAsync(capture, new HpglToSvgConversionHandler(), HpglToSvgConversionHandler.SvgContentType, extension, cancellationToken)
+            : Task.FromResult(RasterizeHpgl(capture, extension, raster.Value));
+    }
+
+    /// <summary>Width, in pixels, of a PNG or JPEG made from an HP-GL capture.</summary>
+    public const int RasterWidthPixels = 1600;
+
+    private static SKEncodedImageFormat? RasterFormatOf(string extension) => extension.TrimStart('.').ToLowerInvariant() switch
+    {
+        "png" => SKEncodedImageFormat.Png,
+        "jpg" or "jpeg" => SKEncodedImageFormat.Jpeg,
+        _ => null,
+    };
+
+    private static StreamConversionResult RasterizeHpgl(StreamMonitorCapture capture, string extension, SKEncodedImageFormat format)
+    {
+        if (capture.SavedPath is null)
+        {
+            return new StreamConversionResult(false, null, "This capture was never saved to a file, so there is nowhere to write the converted output next to.");
+        }
+
+        var outputPath = OutputPathFor(capture, extension)!;
+        try
+        {
+            var scene = HpglToSvgConverter.ParseScene(capture.Capture.Data);
+            File.WriteAllBytes(outputPath, VectorSceneRasterizer.Rasterize(scene, RasterWidthPixels, format));
+            return new StreamConversionResult(true, outputPath, null);
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or ArgumentException)
+        {
+            return new StreamConversionResult(false, null, ex.Message);
+        }
     }
 
     private static Task<StreamConversionResult> ConvertExternalAsync(StreamMonitorCapture capture, StreamCaptureConverterOptions options, CancellationToken cancellationToken) =>

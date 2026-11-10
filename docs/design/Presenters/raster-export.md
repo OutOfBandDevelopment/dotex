@@ -1,6 +1,6 @@
 # Raster export of rendered content
 
-Decided 2026-10-13: raster export (PNG, JPG) is a core service that every front end calls, not something each rendering presenter implements ([presenters.md](presenters.md)). This document defines the contract it needs. Designed 2026-11-09; not built yet (waits on [OPEN-QUESTIONS Q2](../../../OPEN-QUESTIONS.md)).
+Decided 2026-10-13: raster export (PNG, JPG) is a core service that every front end calls, not something each rendering presenter implements ([presenters.md](presenters.md)). This document defines the contract it needs. Designed 2026-11-09; scene split, rasterizer and the Stream Monitor converter are built (2026-11-09); the Wpf/Tui picker for the output format is still to do.
 
 ## Contents
 
@@ -48,7 +48,7 @@ ras --> ui
 
 | Item | Current | Target | Namespace | Unit | References that change |
 |------|---------|--------|-----------|------|------------------------|
-| `VectorScene`, `VectorPolyline`, `IVectorSceneParser`, SVG writer | inside `HpglToSvgConverter` (`Framework/OoBDev.Documents.Hpgl`) | `Framework/OoBDev.Documents.Hpgl` (recommended, see Q2) | `OoBDev.Documents.Hpgl` | existing package | none |
+| `VectorScene`, `VectorPolyline`, `IVectorSceneParser`, SVG writer | inside `HpglToSvgConverter` (`Framework/OoBDev.Documents.Hpgl`) | `Framework/OoBDev.Documents.Hpgl` (confirmed 2026-11-09) | `OoBDev.Documents.Hpgl` | existing package | none |
 | `VectorSceneRasterizer` | does not exist | `Extensions/OoBDev.Extensions.Drawing` (already references SkiaSharp) | `OoBDev.Extensions.Drawing` | existing package | `OoBDev.DevTerm.Core` references it for export |
 
 No new project is created. The scene sits in the Framework library because it has no Skia dependency; only the rasterizer pulls Skia, and it lives in an Extensions library, as the layer rules require (Framework depends only on Common).
@@ -61,7 +61,8 @@ No new project is created. The scene sits in the Framework library because it ha
 ## Completion checklist
 
 - [x] Contract and migration plan written
-- [ ] Owner confirms the plan (Q2)
-- [ ] Scene split with unchanged SVG output
-- [ ] Rasterizer with tests
-- [ ] Export action in WPF and Tui, guide entry
+- [x] Owner confirms the plan (Q2, 2026-11-09)
+- [x] Scene split with unchanged SVG output
+- [x] Rasterizer with tests (`VectorSceneRasterizer`, width 1 to 8192)
+- [x] `StreamCaptureConverter`: the internal HP-GL mode writes PNG or JPEG (width 1600) when the output extension is `png`, `jpg` or `jpeg`
+- [ ] Output-format choice (SVG, PNG, JPG) in the WPF and Tui Stream Monitor, guide entry
