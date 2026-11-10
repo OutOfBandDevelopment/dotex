@@ -9,10 +9,6 @@ Represents a builder for configuring hosting extensions.
 
 ### Properties
 
-#### DisableMailKit
-Gets or sets a value indicating whether MailKit functionality should be disabled. Set to `true` to 
-disable MailKit functionality; otherwise, set to `false`. The default value is `false`.
-
 #### DisableMessageQueueing
 Gets or sets a value indicating whether message queueing should be disabled. Set to `true` to disable
 message queueing; otherwise, set to `false`. The default value is `false`.
