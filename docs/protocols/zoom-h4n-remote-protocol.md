@@ -3,7 +3,7 @@
 ## Source
 
 - `C:\repo\oobdev\dotex\Incoming\BinaryDecoders\src\OoBDev.Zoom.H4n\` — a working prior C#
-  implementation, from the same local `dotex/Incoming/BinaryDecoders` project as the other newly
+  implementation, from the former local `dotex/Incoming/BinaryDecoders` (removed 2026-11-10) project as the other newly
   added proposals in this directory. Cross-references two independent public reverse-engineering
   writeups: [g7smy.co.uk's H2n remote hack](http://www.g7smy.co.uk/2017/04/hacking-the-zoom-h2n-remote/)
   and a 2012 EasterHegg blog account of decoding the H4n's RC04 remote protocol directly.
