@@ -14,7 +14,7 @@ Drawing (Code39 table equals the incoming one and is tested; JpegSegmentReader a
 
 ToolKit.Abstractions, ToolKit.Tests, Nmea, Windows.Forms, TestUtilities and the CLI projects are the remaining diff review.
 
-Diff-then-delete section 1, first pass (2026-11-06, file names normalised, usings and doc comments ignored): every incoming file of Apple2, ExpressionCalculator, Archives, FileSystems, Cryptography and Net has a counterpart in main (SECURITY_ATTRIBUTES is `SecurityAttributes`), but the bodies differ (Apple2 91 changed lines over 11 files, ExpressionCalculator 327 over 34, Archives 396 over 14, FileSystems 399 over 4, Cryptography 378 over 9, Net 248 over 24), so nothing is deleted yet; the per-file review of those deltas against `C:epomineinary-data-decoders` is the remaining work.
+Diff-then-delete section 1, first pass (2026-11-06, file names normalised, usings and doc comments ignored): every incoming file of Apple2, ExpressionCalculator, Archives, FileSystems, Cryptography and Net has a counterpart in main (SECURITY_ATTRIBUTES is `SecurityAttributes`), but the bodies differ (Apple2 91 changed lines over 11 files, ExpressionCalculator 327 over 34, Archives 396 over 14, FileSystems 399 over 4, Cryptography 378 over 9, Net 248 over 24), so nothing is deleted yet; the per-file review of those deltas against `C:/repo/mine/binary-data-decoders` is the remaining work.
 
 Fencing SgStateParser reviewed 2026-11-06: the score-and-cards split byte (`_C` is 0x3a) and the EOT check (`Eotr` is 0x04) equal the incoming code; no defect.
 
