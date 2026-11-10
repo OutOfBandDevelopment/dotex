@@ -35,3 +35,16 @@ The Templates screen lists, opens and previews templates; saving would write fil
 **Default:** A until answered.
 
 **Your answer:**
+
+### Q3 (2026-11-09, DevTerm, TCP peer and UDP sessions): how does a front end host several sessions?
+
+`TcpPeerListener` gives one open adapter per accepted peer and `UdpEndpointDeviceAdapter` raises each datagram with its sender, but every DevTerm front end (Tui, WPF, Web) holds exactly one `Session`. A tab per peer needs a session collection in the front end.
+
+**Options**
+- A. A Core `SessionHost` (ordered collection of sessions, add/remove/active, events) that each front end renders as tabs or a list; Tui and WPF first, Web later (recommended: one tested model, the front ends stay thin, matches the MVVM rule).
+- B. Each front end keeps its own list of sessions (faster to start, three copies of the logic).
+- C. Spawn one DevTerm window or process per peer (no model change, poor for many peers).
+
+**Default:** A, designed in `docs/design/Transports/` before any code; parked until answered.
+
+**Your answer:**
