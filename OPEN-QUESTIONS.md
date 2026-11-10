@@ -9,15 +9,3 @@ How this file is kept: see `.claude/rules/open-questions.md` and `.claude/rules/
 _(none waiting; processed requests are in BACKLOG.md and TODO.md)_
 
 ## Open
-### Q17 — 2026-11-10 — Security — SonarQube token was written into `src/run-sonar.bat`
-
-The script (deleted 2026-11-10 with the other stale `src` scripts) set `SONARQUBE_TOKEN` to a literal value, and it stays in git history (commits `0df4a116` and later). Deleting the file does not make the token safe.
-
-**Options**
-
-- A. Revoke the token in SonarQube (recommended: only you can do this, and it closes the exposure).
-- B. Leave it (only sensible if the token is already dead or the project is gone).
-
-**Default:** nothing changes in the repository; the token must be revoked in SonarQube.
-
-**Your answer:**
