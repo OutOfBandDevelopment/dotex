@@ -26,6 +26,8 @@ export async function mockApi(page: Page): Promise<void> {
     }
     if (path === '/api/Operations/info') return json(route, { environment: 'Development', application: 'OoBDev.Example.WebApi', runtime: '.NET 10.0.0', machine: 'example-api', started: '2026-10-19T08:00:00+00:00', configuration: [{ key: 'AllowedHosts', value: '*' }, { key: 'FileTemplatingOptions:TemplatePath', value: 'Templates' }, { key: 'Identity:Keycloak:ClientSecret', value: '***' }, { key: 'Logging:LogLevel:Default', value: 'Information' }] });
     if (path === '/api/CgiPrograms') return json(route, [{ name: 'greet.exe', path: '/cgi-bin/greet.exe' }]);
+    if (path === '/api/Rights/endpoints') return json(route, [{ method: 'GET', route: '/api/Cache', access: 'anonymous', rights: [] }, { method: 'GET', route: '/api/Rights/protected', access: 'rights', rights: ['rights.demo'] }, { method: 'GET', route: '/api/User/claims', access: 'authenticated', rights: [] }]);
+    if (path === '/api/Rights/check') return json(route, { required: ['rights.demo'], held: [], result: 'Unauthenticated' });
     if (path === '/cgi-bin/greet.exe') return route.fulfill({ status: 200, contentType: 'text/html', body: '<h1>Hello, Ada!</h1>' });
     if (path.startsWith('/webhooks/')) return route.fulfill({ status: 404, contentType: 'application/problem+json', body: JSON.stringify({ title: 'Webhook rejected', status: 404, detail: 'Channel not found' }) });
     if (path === '/api/Cache') {

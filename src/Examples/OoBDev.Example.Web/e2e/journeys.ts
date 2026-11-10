@@ -872,4 +872,39 @@ export const journeys: Journey[] = [
       },
     ],
   },
+  {
+    id: 'check-your-rights',
+    title: 'Check which rights an endpoint needs',
+    persona: 'A developer working out why an API call is refused',
+    goal: 'See the access each endpoint needs and check the current user against a right.',
+    start: '/identity/rights',
+    prerequisites: ['The example API is running.'],
+    features: ['OoBDev.AspNetCore.Abstractions (`[ApplicationRight]`, `IApplicationRightChecker`)'],
+    why: 'See the authorization model in one place: anonymous, authenticated or application rights, the same on every API surface.',
+    problems: [
+      { symptom: 'The check says Unauthenticated', cause: 'The host runs anonymously or the token is missing', fix: 'Sign in, then check again' },
+      { symptom: 'The check says Forbidden', cause: 'The token has none of the listed rights', fix: 'Ask for a role that is translated to one of the rights' },
+    ],
+    steps: [
+      {
+        title: 'Read the endpoint table',
+        narrative: 'Every endpoint is listed with its access. The filter narrows the list to a route or a right.',
+        expect: ['The table lists the rights.demo endpoint with access rights.'],
+        run: async page => {
+          await page.getByLabel('Filter').fill('demo');
+          await expect(page.locator('.rights-table')).toContainText('rights.demo');
+        },
+      },
+      {
+        title: 'Check a right',
+        narrative: 'Check asks the host whether the current user holds at least one of the listed rights.',
+        expect: ['A result is shown with the rights the user holds.'],
+        run: async page => {
+          await press(page, 'Check');
+          await expect(page.locator('.rights-result')).toContainText('Unauthenticated');
+          await expect(page.locator('.rights-held')).toContainText('none');
+        },
+      },
+    ],
+  },
 ];
