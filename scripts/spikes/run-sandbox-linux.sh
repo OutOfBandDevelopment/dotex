@@ -14,5 +14,5 @@ MSYS_NO_PATHCONV=1 docker run --rm \
     mkdir /work && cd /repo && tar --exclude=bin --exclude=obj --exclude=.git --exclude=.vs --exclude=TestResults -cf - src | tar -xf - -C /work
     cp -r /repo/.editorconfig /work/ 2>/dev/null || true
     cd /work/src/Spikes
-    dotnet test OoBDev.Spike.PluginSandbox.Tests -p:DisableGitVersionTask=true --filter '$filter' 2>&1 | tail -40
+    dotnet test OoBDev.Spike.PluginSandbox.Tests -p:DisableGitVersionTask=true --filter '$filter' 2>&1 | tail -400
   "

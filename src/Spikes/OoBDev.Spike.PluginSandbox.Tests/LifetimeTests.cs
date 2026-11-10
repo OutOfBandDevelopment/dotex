@@ -8,6 +8,15 @@ namespace OoBDev.Spike.PluginSandbox.Tests;
 [TestClass]
 public sealed class LifetimeTests
 {
+    [TestInitialize]
+    public void RequireWindows()
+    {
+        if (!OperatingSystem.IsWindows())
+        {
+            Assert.Inconclusive("Windows launcher (AppContainer and job object); see CrossPlatformEscapeTests for Linux and macOS.");
+        }
+    }
+
     private static SandboxedPlugin Start() => new("echo", new JobLimits(MemoryMb: 256));
 
     private static bool Gone(int pid)

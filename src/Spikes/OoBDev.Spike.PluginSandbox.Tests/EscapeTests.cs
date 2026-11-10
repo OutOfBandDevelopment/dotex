@@ -17,6 +17,15 @@ namespace OoBDev.Spike.PluginSandbox.Tests;
 [TestClass]
 public sealed class EscapeTests
 {
+    [TestInitialize]
+    public void RequireWindows()
+    {
+        if (!OperatingSystem.IsWindows())
+        {
+            Assert.Inconclusive("Windows launcher (AppContainer and job object); see CrossPlatformEscapeTests for Linux and macOS.");
+        }
+    }
+
     private const string _secretName = "OOBDEV_SPIKE_SECRET";
     private static readonly string _whoami = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "whoami.exe");
     private static readonly TempFileFactory _temp = new(new ServiceCollection().BuildServiceProvider());

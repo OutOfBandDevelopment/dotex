@@ -1,3 +1,4 @@
+using System;
 using System.Runtime.Versioning;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -10,6 +11,15 @@ namespace OoBDev.Spike.PluginSandbox.Tests;
 [TestClass]
 public sealed class PluginSandboxTests
 {
+    [TestInitialize]
+    public void RequireWindows()
+    {
+        if (!OperatingSystem.IsWindows())
+        {
+            Assert.Inconclusive("Windows launcher (AppContainer and job object); see CrossPlatformEscapeTests for Linux and macOS.");
+        }
+    }
+
     [TestMethod]
     public void Echo_ReadyThenRequest_ReturnsCounterSignedResponse()
     {

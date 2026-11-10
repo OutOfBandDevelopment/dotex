@@ -32,7 +32,7 @@ Non-goals (first version): macOS isolation, in-process plugins, GPU access, a pl
 | REQ-005 | CPU, memory, process count and wall-time limits are enforced; the host stops the plugin and reports which limit | Must |
 | REQ-006 | A package with a missing or invalid signature is refused | Must |
 | REQ-007 | Network access is off by default and, when granted, limited to named hosts | Must |
-| REQ-008 | The PoC escape tests pass on Windows and Linux | Must |
+| REQ-008 | The PoC escape tests pass on Windows, Linux and macOS (macOS written but not yet run on a Mac) | Must |
 | REQ-009 | The wire protocol is language-neutral and versioned | Should |
 | REQ-010 | A threat model is written and reviewed before implementation | Must |
 | REQ-012 | The host hands a plugin an immutable, minimised request context (authenticated user, declared claims, application rights, expiry, trace id) and never the user's credentials; the plugin refers to it by id and the broker enforces against the host's stored copy (owner, 2026-11-10) | Should |

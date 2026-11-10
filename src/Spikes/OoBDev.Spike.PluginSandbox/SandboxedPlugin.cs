@@ -14,7 +14,7 @@ namespace OoBDev.Spike.PluginSandbox;
 /// handles) inside a job object with the limits of <see cref="JobLimits"/>, and speaks the binary frame protocol with it.
 /// </summary>
 [SupportedOSPlatform("windows")]
-public sealed class SandboxedPlugin : IDisposable
+public sealed class SandboxedPlugin : ISandboxedPlugin
 {
     private readonly AppContainerLauncher.Launched _launched;
     private readonly JobObject _job;

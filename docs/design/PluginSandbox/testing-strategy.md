@@ -16,7 +16,7 @@ Grant checking, manifest parsing, signature verification and limit arithmetic ar
 
 | Requirement | Category | Test idea |
 |-------------|----------|-----------|
-| REQ-001, REQ-008 | Integration | escape suite on both platforms, none succeeds |
+| REQ-001, REQ-008 | Integration | escape suite on Windows, Linux and macOS (`CrossPlatformEscapeTests` via `SandboxLauncher`), none succeeds |
 | REQ-002, REQ-003, REQ-004 | Unit | grant store and broker allow/deny with log entries |
 | REQ-005 | Integration | memory hog, CPU spinner and sleeper stopped with the right reason |
 | REQ-006 | Unit | tampered and unsigned packages refused |

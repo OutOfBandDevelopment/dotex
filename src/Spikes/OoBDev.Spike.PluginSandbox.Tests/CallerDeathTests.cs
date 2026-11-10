@@ -11,6 +11,15 @@ namespace OoBDev.Spike.PluginSandbox.Tests;
 [TestClass]
 public sealed class CallerDeathTests
 {
+    [TestInitialize]
+    public void RequireWindows()
+    {
+        if (!OperatingSystem.IsWindows())
+        {
+            Assert.Inconclusive("Windows launcher (AppContainer and job object); see CrossPlatformEscapeTests for Linux and macOS.");
+        }
+    }
+
     private static string Dll => typeof(SandboxedPlugin).Assembly.Location;
 
     private static bool Exists(int pid)

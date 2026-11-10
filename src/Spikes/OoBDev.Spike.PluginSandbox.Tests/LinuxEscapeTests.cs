@@ -115,7 +115,7 @@ public sealed class LinuxEscapeTests
 
     private static bool Probe(string kind, string target, bool sandboxed, string[]? read = null, string[]? write = null)
     {
-        using var plugin = new BubblewrapPlugin($"probe {kind} {target}", read, write, sandboxed);
+        using ISandboxedPlugin plugin = sandboxed ? new BubblewrapPlugin($"probe {kind} {target}", read, write) : new PlainPlugin($"probe {kind} {target}");
         var frame = plugin.Receive();
         Assert.AreEqual("probe.result", frame.Topic);
         using var document = frame.ParseJson();

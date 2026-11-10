@@ -20,6 +20,7 @@ namespace OoBDev.Spike.PluginSandbox;
 public static partial class AppContainerLauncher
 {
     private const string _profileName = "OoBDev.Spike.PluginSandbox";
+    private static readonly object _profileLock = new();
     private const uint _extendedStartupInfoPresent = 0x00080000;
     private const uint _createSuspended = 0x00000004;
     private const uint _createNoWindow = 0x08000000;
@@ -63,10 +64,15 @@ public static partial class AppContainerLauncher
     /// <summary>The AppContainer SID of this spike's profile, creating the profile when it is missing.</summary>
     public static SecurityIdentifier ContainerSid()
     {
-        var hr = CreateAppContainerProfile(_profileName, _profileName, "Plugin sandbox spike", 0, 0, out var sid);
-        if (hr == _alreadyExists)
+        int hr;
+        nint sid;
+        lock (_profileLock)
         {
-            hr = DeriveAppContainerSidFromAppContainerName(_profileName, out sid);
+            hr = CreateAppContainerProfile(_profileName, _profileName, "Plugin sandbox spike", 0, 0, out sid);
+            if (hr == _alreadyExists)
+            {
+                hr = DeriveAppContainerSidFromAppContainerName(_profileName, out sid);
+            }
         }
 
         if (hr != 0)
