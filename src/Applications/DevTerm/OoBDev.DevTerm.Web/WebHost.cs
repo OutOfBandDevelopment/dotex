@@ -247,6 +247,30 @@ public static class WebHost
                 : Results.NotFound();
         }).WithSummary("A Stream Monitor capture's bytes (index into the oldest-first list); 404 unknown");
 
+        var previewRenderer = new ExternalPreviewRenderer();
+        app.MapGet("/api/monitor/captures/{n:int}/preview", async (int n) =>
+        {
+            var all = streamMonitor.Monitor.Captures;
+            if (n < 0 || n >= all.Count)
+            {
+                return Results.NotFound();
+            }
+
+            var capture = all[n];
+            if (capture.Capture.Kind.Format == StreamContentFormat.Hpgl)
+            {
+                return Results.Text(OoBDev.Documents.Hpgl.HpglToSvgConverter.ConvertToSvg(capture.Capture.Data), "image/svg+xml");
+            }
+
+            if (!ExternalPreviewRenderer.Handles(capture.Capture.Kind))
+            {
+                return Results.NotFound();
+            }
+
+            var (png, error) = await previewRenderer.RenderAsync(capture).ConfigureAwait(false);
+            return png is null ? Results.Problem(error, statusCode: StatusCodes.Status501NotImplemented) : Results.File(png, "image/png");
+        }).WithSummary("A drawn preview of an HP-GL (SVG), PostScript or PCL (PNG through an installed Ghostscript or GhostPCL) capture; 404 unknown or not drawable, 501 with the reason when the tool is missing");
+
         // The REST surface as OpenAPI with a Scalar viewer, and the two streaming channels as AsyncAPI. All behind the same token.
         app.MapOpenApi("/openapi/v1.json");
         app.MapScalarApiReference("/scalar", options => options.WithTitle("dev-term web host"));
