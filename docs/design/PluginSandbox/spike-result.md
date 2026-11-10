@@ -27,7 +27,7 @@ Findings from the first real run: `CreateProcessW` with an explicit environment 
 ## What was not shown
 
 - Start-suspended assignment to the job: the spike assigns after start, so a plugin has a short unlimited window. A real launcher creates the process suspended.
-- Signed packages and the grant broker, per-host network grants, and the lifetime modes (REQ-011) are designed, not built. The request context (REQ-012) is built as `RequestContext` and `ContextBroker` with 10 Unit tests (declared claims only, canonical SHA-256 id, unknown, forged, other-plugin, expired, missing-right and released ids refused); it is not yet carried in a frame or wired to a real token validator or RFC 8693 exchange.
+- Signed packages and the grant broker, per-host network grants, and the caller-death part of REQ-011 are not built. REQ-011 is partly built: `PluginPool` gives Bound (one instance per lease, ended on dispose) and Shared (one instance per plugin id and grant hash, ended by an idle sweep) with 6 Unit and 3 Integration tests, the latter proving the real sandboxed process is gone after dispose. Not built: the cross-process named mutex, a test that kills the caller process and sees the child die (the job has kill-on-close, but no test does this), and the Survive reconnect with token and new session key. The request context (REQ-012) is built as `RequestContext` and `ContextBroker` with 10 Unit tests (declared claims only, canonical SHA-256 id, unknown, forged, other-plugin, expired, missing-right and released ids refused); it is not yet carried in a frame or wired to a real token validator or RFC 8693 exchange.
 - Linux and macOS. No shim was tried.
 - Message rate and heartbeat enforcement.
 

@@ -72,6 +72,9 @@ public sealed class SandboxedPlugin : IDisposable
         _watcher.Start();
     }
 
+    /// <summary>The operating system process id (valid to read after disposal, to prove the process is gone).</summary>
+    public int ProcessId => _launched.ProcessId;
+
     /// <summary>True once the plugin process has ended.</summary>
     public bool HasExited => _process.HasExited;
 
