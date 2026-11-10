@@ -41,8 +41,10 @@ One plan for what is still to bring into this framework from other repositories,
 |--------|----------|-------|
 | BinaryDataDecoders | `C:\repo\mine\binary-data-decoders` at `e590b420` (newer than `Incoming/BinaryDecoders`, which is superseded; removing it is the owner's call) | Libraries, tools and eight devices migrated and checked; leftovers in [Table 4](#table-4) |
 | dev-term | `C:\repo\oobdev\dev-term` at `8c66e74` | Base for devices; shells and transports in progress ([parity status](../design/DevTermParity/status.md)) |
-| SharedFramework | `Incoming/SharedFramework` | Replaced by designs ([Table 5](#table-5)) |
+| SharedFramework | (removed from `Incoming/`; history in `git log`) | Replaced by designs ([Table 5](#table-5)) |
 | proving-grounds, learning repositories, `_storage`, notes | `C:\repo\mine`, `C:\repo\oobdev` | Read-only references ([Table 6](#table-6)) |
+
+The former `Incoming/CHECKLIST.md` status table is folded in: dotnet-lib (95% identical to main, bug fix applied) and Framework (vector library already in main) were deleted, Oobtainium moved to proving-grounds, BotChat was extracted 2026-10-09, SharedFramework was replaced by designs, and BinaryDecoders, ContractParser and Tools are covered below.
 
 Where two sources hold the same feature, dev-term is newer and tested, so it is the base. Migrated libraries were behaviour-checked by running the source tests against main (2026-11-03).
 
@@ -83,7 +85,7 @@ dev-term merges into this repository entirely (owner, 2026-10-28): shells become
 |------|-------|
 | Net.ServiceHost CLI | To migrate (D6) as a tool in `src/Tools`; main has the worker recipe and hosting packages, so compare first |
 | Windows.Forms `ValidTextBox` | Commented out in main; decision in the [WindowsForms plan](../design/WindowsForms/migration-plan.md) |
-| `Incoming/BinaryDecoders` | Superseded; deletion is the owner's call |
+| `Incoming/BinaryDecoders` | Superseded; code deletion is the owner's call. Its comparison, bug and issue reports are imported under [incoming-reports](../applications/binary-data-decoders/incoming-reports/) |
 | `Incoming/Tools` (BulkLlm) | Consolidation tracked in the backlog |
 
 ## SharedFramework epics

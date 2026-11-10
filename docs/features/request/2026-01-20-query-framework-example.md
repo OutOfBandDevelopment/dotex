@@ -1,3 +1,15 @@
+# Feature request: stored-procedure query framework (audit log example)
+
+- **Status:** new
+- **Requested by:** owner
+- **Date:** 2026-01-20
+- **Area:** `OoBDev.Data.Common`
+
+## Need
+
+A typed record mapped to a stored procedure with `[ConnectionStringName]`, `[StoredProcedure]` and `[QueryParameter]` attributes. Example from the original notes:
+
+```csharp
 using OoBDev.Common.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
@@ -66,3 +78,5 @@ public record AuditLogEntry
     [QueryParameter(IsJson = true)]
     public required AuditLogInfo AuditInfo { get; init; }
 }
+
+```

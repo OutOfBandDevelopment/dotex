@@ -379,8 +379,8 @@ public class RabbitMQQueueMessageProvider : IMessageSenderProvider, IMessageRece
   - [ ] Troubleshooting
 
 ### Architecture Documentation
-- [ ] Update `Features/MessageQueuing/pattern-context-based.md` with AWS SQS examples
-- [ ] Update `Features/MessageQueuing/pattern-context-based.md` with Azure Service Bus examples
+- [ ] Update `docs/design/MessageQueuing/pattern-context-based.md` with AWS SQS examples
+- [ ] Update `docs/design/MessageQueuing/pattern-context-based.md` with Azure Service Bus examples
 - [ ] Document provider-specific configuration options
 
 ---

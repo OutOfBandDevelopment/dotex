@@ -2,7 +2,7 @@
 
 > **Full work list.** Every open, valid item lives here; [TODO.md](TODO.md) holds only what is being worked on now. Finished work lives in the change history: [docs/changes/](docs/changes/README.md).
 > **Owner questions:** [OPEN-QUESTIONS.md](./OPEN-QUESTIONS.md) · **New to this project?** Read [CLAUDE.md](./CLAUDE.md) first.
-> **Wish list (owner's own notes):** [docs/todo.md](docs/todo.md) · **Other repositories to harvest from:** [docs/harvest-candidates.md](docs/harvest-candidates.md)
+> **Other repositories to harvest from:** [docs/harvest-candidates.md](docs/harvest-candidates.md)
 
 **Last Updated:** 2026-11-10
 
@@ -80,6 +80,7 @@ Scope rule: every BinaryDataDecoders feature is migrated; phases are priority or
 ## 8. Future ideas (not tied to DevTerm, nothing required now)
 
 - [ ] Owner, 2026-11-09: after the first WPF device panel works end to end. An Ebyte `IDeviceConfigEditor` so the Configure device button has an editor (dev-term has only the interface and a fake; needs a fresh capture, see [the proposal](docs/protocols/ebyte-e810-dtu-config-protocol.md)).
+- [ ] Owner wish list (rolled in from `docs/todo.md`, 2026-11-10): turn MS Project into planning control; an OAuth token-exchange example that handles several client ids in one set of services and front ends; user analytics (screen usage, URLs, timeouts); error-handling middleware with correlation that returns the original error location (see [observability](docs/patterns-discovery/03-practices-and-conventions/13-observability-practices.md)).
 - [ ] **UiDefinitions as a generic dashboard and form language for web front ends** (later, nothing required now): [ui-language-later.md](docs/design/DevTermParity/ui-language-later.md).
 - [ ] dev-term future plans, not in dev-term today and not needed to call the migration complete (owner, 2026-10-30) ([TODO and BACKLOG snapshots](docs/applications/devterm/source/BACKLOG.md)): BLE backends for Linux and macOS; UDP transport and the EByte E810-DTU config protocol (needs a fresh capture); HP-GL, PostScript and PCL presenters and SVG in the Tui; declarative SCPI control-module schema and DE-5000 bench pass; out-of-process plugins and the control channel (with the plugin sandbox below); the rest is listed in the snapshot linked above.
 - [ ] DevTerm decided UX work (decided 2026-10-13, detail in the [dev-term snapshot](docs/applications/devterm/source/BACKLOG.md) and the linked designs); built status not yet checked against the code (network discovery has a start in `Configuration/Discovery`):

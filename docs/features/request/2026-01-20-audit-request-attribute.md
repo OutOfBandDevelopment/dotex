@@ -1,6 +1,11 @@
-# Event Auditing
+# Feature request: audit tags on classes and methods
 
-Out-of-Band Development - Dotnet Extensions
+- **Status:** new
+- **Requested by:** owner
+- **Date:** 2026-01-20
+- **Area:** logging middleware, `OoBDev.Extensions`
+
+## Need
 
 ## Summary
 

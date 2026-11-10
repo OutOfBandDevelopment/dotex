@@ -115,7 +115,7 @@ dotnet test src/ --collect:"XPlat Code Coverage"
 
 ## Important Files
 
-- `/TODO.md`, `/BACKLOG.md`, `/Incoming/CHECKLIST.md` - work tracking and incoming project status
+- `/TODO.md`, `/BACKLOG.md`, `/docs/migration/README.md` - work tracking and the unified migration plan
 - `/docs/architecture/`, `/docs/how-tos/` ([.runsettings variables](docs/how-tos/runsettings-variables-and-configuration.md)), `/docs/migration/`, `/docs/changes/`
 - Git: the primary repo is the local bare repo `origin` (`G:/oobdev/dotex.git`); GitHub (`upstream`) is no longer primary, so no `gh`, PRs or GitHub CI waits. Commit as you work on a branch, never on `main` (`.claude/rules/git-workflow.md`)
 - `/GitVersion.yml` (Mainline strategy: major.minor from the last release tag, patch rises with every commit that reaches main, branches build `0.5.67-dev-name.1+commits`; merges into main are always `--no-ff`), `/src/.runsettings`, `scripts/ci` (manual CI)
@@ -173,4 +173,4 @@ Older entries (before 2026-10) live in `docs/changes/` (index: `docs/changes/REA
 2. **Integration testing** - run the Docker stack and Integration suite locally; CI is manual only (`scripts/ci`): no scheduled or push builds, and the GitHub workflows are removed
 3. **SharedFramework** - design-first (Epics 2 Communications, 6 Documents, 7 Identity, 10 Text Templating): four documents per feature (requirements, architecture, api-design, testing-strategy; 85-90% coverage targets) instead of code migration, per `docs/patterns-discovery/06-design-document-standard.md`
 4. **Incoming projects** - all investigated, decisions pending
-5. **Backlog** - single backlog in `BACKLOG.md`; CGI middleware and related-work pointers are in `docs/todo.md` and `docs/harvest-candidates.md`
+5. **Backlog** - single backlog in `BACKLOG.md`; related-work pointers are in `docs/harvest-candidates.md`

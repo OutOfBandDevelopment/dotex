@@ -6,7 +6,7 @@
 **Surroundings rule (owner, 2026-10-30, applied 2026-11-04):** these repositories are read-only references and nothing in them is migrated, so no surroundings review is due yet. When a project is actually harvested, review its guide, `.claude`, docs, scripts and plans first and record the result in `docs/migration/{project}-surroundings-review-{date}.md` (done so far: [dev-term](migration/README.md#surroundings-guides-agent-config-scripts), [BinaryDataDecoders](migration/README.md#surroundings-guides-agent-config-scripts)).
 The owner keeps several other repositories and a notes repository. This page says what each one is, roughly what it does and where it lives locally, so work on dotex can take what it wants. Descriptions come from the owner's notes repository (`C:\repo\_notes\shared`, index in `projects/repository-index.md`, `projects/proving-grounds-catalog.md`, `projects/device-parity.md`), read from file lists, READMEs and a few sources. Code was not compiled, run or diffed against dotex. A name match means "probably related, not compared". Check the code before relying on any line below.
 
-Related: [TODO](../TODO.md) (section 4), [dev-term pointer in docs/todo.md](todo.md), [BinaryDataDecoders re-review](migration/README.md).
+Related: [TODO](../TODO.md) (section 4), [BinaryDataDecoders re-review](migration/README.md).
 
 ## 1. Protocol and device libraries
 
@@ -68,7 +68,7 @@ The owner has not decided to publish the event-sourcing work; it needs sanitizin
 
 In `C:\repo\_notes\shared\projects\`:
 
-- `cgi-middleware-kestrel/` : design for the CGI middleware requested in [todo.md](todo.md).
+- `cgi-middleware-kestrel/` : design for the CGI middleware requested in [the CGI middleware design](design/CgiMiddleware/README.md).
 - `dotex-consolidation/` : the consolidation plan and candidate list.
 - `sqldef-evaluation/` : bake-off plan and design spec for a dacpac-parity desired-state schema tool.
 - `synchronized-telemetry-streaming-research/` : RFC and standards research with code examples.

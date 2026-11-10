@@ -185,7 +185,7 @@ catch (ConfigurationMissingException ex)
 
 ## See Also
 
-- [Message Queue Architecture](../../../Features/MessageQueuing/README.md)
-- [Context-Based Pattern Documentation](../../../Features/MessageQueuing/pattern-context-based.md)
-- [Multi-Provider Examples](../../../Features/MessageQueuing/archive/multi-provider-bridge-example.md)
+- [Message Queue Architecture](../../../../docs/design/MessageQueuing/README.md)
+- [Context-Based Pattern Documentation](../../../../docs/design/MessageQueuing/pattern-context-based.md)
+- [Multi-Provider Examples](../../../../docs/design/MessageQueuing/archive/multi-provider-bridge-example.md)
 - [AWS SQS Documentation](https://docs.aws.amazon.com/sqs/)
