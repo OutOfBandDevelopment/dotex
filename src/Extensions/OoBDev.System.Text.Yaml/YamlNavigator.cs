@@ -47,6 +47,6 @@ public class YamlNavigator : IToXPathNavigable
     {
         var yaml = new YamlStream();
         yaml.Load(reader);
-        return yaml.Documents.SingleOrDefault()?.ToNavigable();
+        return yaml.Documents.FirstOrDefault()?.ToNavigable();
     }
 }
