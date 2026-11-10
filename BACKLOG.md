@@ -87,7 +87,7 @@ Scope rule: every BinaryDataDecoders feature is migrated; phases are priority or
   - expression picker per channel in the Tui Manifest Editor (the WPF editor has a Pick... per channel row since 2026-11-09; see [expression-picker.md](docs/applications/devterm/specs/expression-picker.md)).
   - Network device discovery: the Detect button and one row per device with badges are built; the EByte and USR UDP probes need a fresh capture. In-app config editors for network bridges ([proposal](docs/design/NetworkDevices/network-device-config-editors.md)).
 - [ ] DevTerm leftovers beyond the list above:
-  - Stream Monitor direct in-window preview of PCL and PostScript (decided 2026-11-09: run Ghostscript/GhostPCL as an external process when installed and show its PNG) and HP-GL (after raster export).
+  - Stream Monitor in-window preview of HP-GL, PostScript and PCL in the Tui and Web monitors (the WPF window draws HP-GL itself and PostScript/PCL through an installed Ghostscript/GhostPCL since 2026-11-09).
   - A DevTerm rule in `OoBDev.Analyzers` only when one is needed (decided 2026-11-09: the checkable DevTerm constraints are legitimate in most uses or need data flow the analyzer cannot see, so a rule now would be noise; add OOB0004 when a repeatable mistake appears).
   - Dockable MDI layout in WPF (decided 2026-11-09: AvalonDock, MIT; theme it in `DarkControls.xaml`, save the layout as XML).
   - Read-write control channel and out-of-process plugins over a named pipe and a localhost web service (with the plugin sandbox item); research notes such as the BYTECC BT-UP01 bridge.

@@ -190,7 +190,7 @@ public sealed class StreamCaptureConverter
         }
     }
 
-    private static string SourceContentType(StreamContentKind kind) => kind.Format switch
+    internal static string SourceContentType(StreamContentKind kind) => kind.Format switch
     {
         StreamContentFormat.Hpgl => HpglToSvgConversionHandler.HpglContentType,
         StreamContentFormat.PostScript => "application/postscript",

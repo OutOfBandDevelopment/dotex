@@ -372,7 +372,7 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
     {
         var selected = SelectedSession!;
         _streamMonitor!.Track(selected, selected.Session, selected.Title, DevTermUserDataPaths.ExportsDirectory);
-        using var window = new StreamMonitorDialogViewModel(_streamMonitor, _streamExport, StreamCaptureConverterOptions.FromCliOptions(null, _converterToolsStore?.Load()));
+        using var window = new StreamMonitorDialogViewModel(_streamMonitor, _streamExport, StreamCaptureConverterOptions.FromCliOptions(null, _converterToolsStore?.Load()), previewRenderer: new ExternalPreviewRenderer());
         _streamMonitorDialog!.Show(window);
     }
 

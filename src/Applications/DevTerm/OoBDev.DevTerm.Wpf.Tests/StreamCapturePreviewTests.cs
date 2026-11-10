@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.DevTerm.Configuration;
 
@@ -64,14 +65,43 @@ public sealed class StreamCapturePreviewTests
     }
 
     [TestMethod]
-    public void Render_Hpgl_SaysNoPreview()
+    public void Render_Hpgl_DrawsTheScene()
     {
         // Stage / Test
-        var image = StreamCapturePreview.Render(Capture(StreamContentKind.Hpgl, [1]), out var message);
+        var image = StreamCapturePreview.Render(Capture(StreamContentKind.Hpgl, "IN;SP1;PU0,0;PD1000,1000;"u8.ToArray()), out var message);
+
+        // Assert
+        Assert.IsNotNull(image, message);
+        Assert.AreEqual(1000, (int)image.Width);
+    }
+
+    [TestMethod]
+    public void Render_PostScript_HasNoInProcessPreview()
+    {
+        // Stage / Test
+        var image = StreamCapturePreview.Render(Capture(StreamContentKind.PostScript, "%!PS"u8.ToArray()), out var message);
 
         // Assert
         Assert.IsNull(image);
-        StringAssert.StartsWith(message, "Preview not available yet for HP-GL plot");
+        StringAssert.StartsWith(message, "Preview not available yet for");
+    }
+
+    [TestMethod]
+    public async Task SelectedPostScript_NoToolInstalled_ExplainsWhatToInstall()
+    {
+        // Stage
+        var directory = global::System.IO.Directory.CreateTempSubdirectory("devterm-nogs-").FullName;
+        using var viewModel = new StreamMonitorDialogViewModel(new StreamMonitor(), previewRenderer: new ExternalPreviewRenderer([directory]));
+        viewModel.AddCapture(Capture(StreamContentKind.PostScript, "%!PS"u8.ToArray()));
+
+        // Test
+        viewModel.SelectedIndex = 0;
+        await viewModel.ExternalPreviewTask;
+
+        // Assert
+        Assert.IsNull(viewModel.Preview);
+        StringAssert.Contains(viewModel.PreviewMessage, "Install Ghostscript");
+        global::System.IO.Directory.Delete(directory);
     }
 
     [TestMethod]
