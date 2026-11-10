@@ -56,7 +56,7 @@ Before starting, understand that incoming projects fall into these categories:
 - [ ] [Architectural Standards](../../docs/architecture/architectural-standards.md) reviewed
 - [ ] [Layering Architecture](../../docs/architecture/layering-architecture.md) reviewed
 - [ ] Write access to create documentation
-- [ ] Access to `Incomming/CHECKLIST.md` for tracking
+- [ ] Access to `docs/migration/README.md` for tracking
 
 ---
 
@@ -110,7 +110,7 @@ Classify as: Framework Library, Sample/Demo App, Tool/CLI, External Service, Tes
 
 Register the project in the tracking checklist.
 
-**1.5.1: Update Incomming/CHECKLIST.md**
+**1.5.1: Update docs/migration/README.md**
 
 - [ ] Add project to "Projects Status" table with status "🚧 IN PROGRESS"
 - [ ] Fill in known statistics (files, LOC estimates)
@@ -739,7 +739,7 @@ Add a new section in `/TODO.md` under appropriate category:
 - [ ] **Create Documentation**
   - [ ] Create comprehensive README.md
   - [ ] Add code comments
-  - [ ] Update Incomming/CHECKLIST.md
+  - [ ] Update docs/migration/README.md
 
 ### Option 2: ENHANCE as Official Demo
 
@@ -793,7 +793,7 @@ Update the "Last Updated" date and add to completed/pending sections as appropri
 Ensure bidirectional links:
 - TODO.md links to migration plan docs
 - Migration plan links back to TODO.md section
-- Incomming/CHECKLIST.md links to TODO.md section
+- docs/migration/README.md links to TODO.md section
 
 **Validation:**
 - [ ] TODO.md updated with all migration tasks
@@ -1064,7 +1064,7 @@ Document any architectural changes:
 
 Mark the investigation as complete in the tracking checklist.
 
-**13.1: Update Incomming/CHECKLIST.md**
+**13.1: Update docs/migration/README.md**
 
 - [ ] Change status from "🚧 IN PROGRESS" to "🔍 INVESTIGATED"
 - [ ] Update file count, LOC with actual values
@@ -1299,7 +1299,7 @@ find $INCOMING_DIR -name "*.csproj" | wc -l
 
 **Step 1.5: Update Checklist**
 ```
-Added to Incomming/CHECKLIST.md:
+Added to docs/migration/README.md:
 - Status: 🚧 IN PROGRESS
 - Type: Framework Library
 - Files: ~500
@@ -1320,7 +1320,7 @@ Result: OoBDev.System.IO exists, CodeAnalysis missing, etc.
 **Step 4-6: Create Documents**
 ```
 Created:
-- docs/migration/binarydatadecoders-rereview-2026-10-29.md
+- docs/migration/README.md
 - docs/migration/README.md
 ```
 
@@ -1334,7 +1334,7 @@ Found 5 critical bugs in OoBDev:
 
 **Step 13: Update Checklist - Complete**
 ```
-Updated Incomming/CHECKLIST.md:
+Updated docs/migration/README.md:
 - Status: 🔍 INVESTIGATED (Blocked - awaiting critical questions)
 - Priority: HIGH
 - Complexity: VERY HIGH
@@ -1366,7 +1366,7 @@ find $INCOMING_DIR -name "*.csproj"
 
 **Step 1.5: Update Checklist**
 ```
-Added to Incomming/CHECKLIST.md:
+Added to docs/migration/README.md:
 - Status: 🚧 IN PROGRESS
 - Type: Sample Application
 - Files: ~12
@@ -1406,7 +1406,7 @@ Created:
 
 **Step 13: Update Checklist - Complete**
 ```
-Updated Incomming/CHECKLIST.md:
+Updated docs/migration/README.md:
 - Status: 🔍 INVESTIGATED (Awaiting decision)
 - Priority: LOW (sample app, not critical functionality)
 - Complexity: LOW (if archiving), MEDIUM (if enhancing)

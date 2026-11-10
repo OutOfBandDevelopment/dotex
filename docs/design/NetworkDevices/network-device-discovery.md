@@ -76,7 +76,7 @@ UI -> UI : prefill Transport/Host/Port/baud/profile
 
 - Which of mDNS/SSDP/USR-search answer on the bench devices at all (each probe records what it verified).
 - Subnet choice when several adapters exist (default: every up, non-loopback IPv4 adapter).
-- ~~Whether a hit with several services (a bridge with HTTP and a data port) is one row or several.~~ Decided 2026-10-13: one row per device, its services shown as badges. Not built yet (BACKLOG).
+- ~~Whether a hit with several services (a bridge with HTTP and a data port) is one row or several.~~ Decided 2026-10-13: one row per device, its services shown as badges. Built 2026-11-09: `LxiDeviceScanner.ScanNetwork` groups with `NetworkDiscovery.GroupByDevice`; `LxiDeviceOption.FromDevice(NetworkDevice)` labels the row `address  name  [badges]` and fills the raw tcp port first, then vxi11, then mqtt.
 
 ## Completion checklist
 

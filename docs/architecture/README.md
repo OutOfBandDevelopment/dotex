@@ -187,7 +187,7 @@ IMessageQueueHandler<TChannel, TMessage> where TMessage : class
 4. Add configuration options class
 5. Create extension builder
 6. Add comprehensive tests
-7. Document in `/docs/Libraries/`
+7. Document in the project `README.{Project}.md`
 
 ---
 
@@ -217,7 +217,6 @@ What makes OoBDev unique:
   - [Variables and Configuration in .runsettings](../how-tos/runsettings-variables-and-configuration.md)
 
 ### Framework Documentation
-- [../Framework/MajorFunctionality.md](../Framework/MajorFunctionality.md)
 - [../Framework/MessageQueueing.md](../Framework/MessageQueueing.md)
 - [../Framework/TextTemplating.md](../Framework/TextTemplating.md)
 - [../Framework/DocumentConversion.md](../Framework/DocumentConversion.md)

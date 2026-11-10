@@ -20,6 +20,8 @@ public sealed class StreamMonitorDialogViewModel : ViewModelBase, IDisposable
     private readonly IStreamExportDialog? _exportDialog;
     private readonly StreamCaptureConverterOptions? _converterOptions;
     private readonly StreamCaptureConverter? _converter;
+    private readonly ExternalPreviewRenderer? _previewRenderer;
+    private int _previewTicket;
     private readonly IReadOnlyList<StreamConversionChoice> _choices = [];
     private int _convertIndex;
     private const string AllKinds = "All types";
@@ -39,8 +41,10 @@ public sealed class StreamMonitorDialogViewModel : ViewModelBase, IDisposable
     /// <param name="monitor">The monitor, with a session already tracked.</param>
     /// <param name="exportDialog">Asks where to export a capture; without it export is unavailable.</param>
     /// <param name="converterOptions">How captures may be converted; without it Convert is unavailable.</param>
-    public StreamMonitorDialogViewModel(StreamMonitor monitor, IStreamExportDialog? exportDialog = null, StreamCaptureConverterOptions? converterOptions = null)
+    /// <param name="previewRenderer">Draws PostScript and PCL captures with an installed Ghostscript or GhostPCL; without it they show a message.</param>
+    public StreamMonitorDialogViewModel(StreamMonitor monitor, IStreamExportDialog? exportDialog = null, StreamCaptureConverterOptions? converterOptions = null, ExternalPreviewRenderer? previewRenderer = null)
     {
+        _previewRenderer = previewRenderer;
         ArgumentNullException.ThrowIfNull(monitor);
         _monitor = monitor;
         _exportDialog = exportDialog;
@@ -359,8 +363,38 @@ public sealed class StreamMonitorDialogViewModel : ViewModelBase, IDisposable
         }
     }
 
+    /// <summary>The external render started for the selected capture, if any; a caller may await it (tests do).</summary>
+    public Task ExternalPreviewTask { get; private set; } = Task.CompletedTask;
+
+    private async Task RenderExternalAsync(StreamMonitorCapture capture, int ticket)
+    {
+        var (png, error) = await _previewRenderer!.RenderAsync(capture).ConfigureAwait(false);
+        void Apply()
+        {
+            if (ticket != _previewTicket)
+            {
+                return;
+            }
+
+            Preview = png is null ? null : StreamCapturePreview.Decode(png, capture.Capture.Kind.DisplayName, out error);
+            PreviewMessage = Preview is null ? error ?? string.Empty : string.Empty;
+            OnPropertyChanged(nameof(Preview));
+            OnPropertyChanged(nameof(PreviewMessage));
+        }
+
+        if (_context is null)
+        {
+            Apply();
+        }
+        else
+        {
+            _context.Post(_ => Apply(), null);
+        }
+    }
+
     private void ShowSelected()
     {
+        _previewTicket++;
         if (SelectedIndex < 0 || SelectedIndex >= _items.Count)
         {
             Preview = null;
@@ -375,6 +409,11 @@ public sealed class StreamMonitorDialogViewModel : ViewModelBase, IDisposable
             SavedPath = capture.SavedPath is { } path ? $"Saved to {StreamMonitor.DisplayPath(path)}" : $"Not saved: {capture.SaveError}";
             Preview = StreamCapturePreview.Render(capture, out var message);
             PreviewMessage = message;
+            if (Preview is null && _previewRenderer is not null && ExternalPreviewRenderer.Handles(capture.Capture.Kind))
+            {
+                PreviewMessage = $"Drawing {capture.Capture.Kind.DisplayName} with an external tool...";
+                ExternalPreviewTask = RenderExternalAsync(capture, _previewTicket);
+            }
         }
 
         OnPropertyChanged(nameof(Preview));

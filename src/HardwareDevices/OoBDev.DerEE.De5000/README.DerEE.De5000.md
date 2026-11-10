@@ -4,7 +4,7 @@ DER EE DE-5000 LCR meter: a 17-byte measurement packet read from a stream (no co
 
 ## Description
 
-The meter (a Cyrustek ES51919 chipset) transmits unprompted, so the device only receives. Bytes arrive through the existing adapters (optical-to-USB serial, or the optical-to-BLE adapter); the package never opens a port. Source: dev-term `Devices.De5000` (new in dotex). Design: [DeviceDecoding](../../../docs/design/DeviceDecoding/README.md), plan: [device-decoding-migration-plan.md](../../../docs/migration/device-decoding-migration-plan.md).
+The meter (a Cyrustek ES51919 chipset) transmits unprompted, so the device only receives. Bytes arrive through the existing adapters (optical-to-USB serial, or the optical-to-BLE adapter); the package never opens a port. Source: dev-term `Devices.De5000` (new in dotex). Design: [DeviceDecoding](../../../docs/design/DeviceDecoding/README.md), plan: [device-decoding-migration-plan.md](../../../docs/design/DeviceDecoding/migration-plan.md).
 
 | Type | Role |
 |------|------|

@@ -16,7 +16,7 @@ public static class LxiDeviceScanner
     public static IReadOnlyList<LxiDeviceOption> Scan() =>
         [.. LxiDiscovery.ScanAsync(TimeSpan.FromSeconds(2), TimeSpan.FromSeconds(1)).GetAwaiter().GetResult().Select(LxiDeviceOption.FromDevice)];
 
-    /// <summary>Every discovery probe (LXI, mDNS, SSDP), for the Connection Editor's "Detect network devices..." picker.</summary>
+    /// <summary>Every discovery probe (LXI, mDNS, SSDP, USR), for the Connection Editor's "Detect network devices..." picker: one row per device, its services as badges.</summary>
     public static IReadOnlyList<LxiDeviceOption> ScanNetwork() =>
-        [.. NetworkDiscovery.CreateDefault().DiscoverAsync(TimeSpan.FromSeconds(3)).GetAwaiter().GetResult().Select(LxiDeviceOption.FromHit)];
+        [.. NetworkDiscovery.GroupByDevice(NetworkDiscovery.CreateDefault().DiscoverAsync(TimeSpan.FromSeconds(3)).GetAwaiter().GetResult()).Select(LxiDeviceOption.FromDevice)];
 }

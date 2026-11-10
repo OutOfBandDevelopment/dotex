@@ -43,7 +43,7 @@
     <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="10.0.13" />
     <PackageVersion Include="Microsoft.Build.Utilities.Core" Version="18.11.0" />
     <PackageVersion Include="Microsoft.Data.SqlClient" Version="7.1.1" />
-    <PackageVersion Include="Microsoft.Extensions.AI" Version="10.0.1" />
+    <PackageVersion Include="Microsoft.Extensions.AI" Version="10.11.0" />
     <PackageVersion Include="Microsoft.Extensions.AI.Abstractions" Version="10.11.0" />
     <PackageVersion Include="Microsoft.Extensions.Caching.Memory" Version="10.0.13" />
     <PackageVersion Include="Microsoft.Extensions.Configuration" Version="10.0.13" />
@@ -79,6 +79,11 @@
     <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.20.0" />
     <PackageVersion Include="System.Numerics.Tensors" Version="10.0.13" />
     <PackageVersion Include="Microsoft.ML.OnnxRuntime" Version="1.31.0" />
+    <PackageVersion Include="Avalonia" Version="11.3.23" />
+    <PackageVersion Include="Avalonia.Desktop" Version="11.3.23" />
+    <PackageVersion Include="Avalonia.Headless" Version="11.3.23" />
+    <PackageVersion Include="Avalonia.Skia" Version="11.3.23" />
+    <PackageVersion Include="Avalonia.Themes.Fluent" Version="11.3.23" />
     <PackageVersion Include="SkiaSharp" Version="4.153.1" />
     <PackageVersion Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="4.153.1" />
     <PackageVersion Include="Microsoft.ML.OnnxRuntime.Managed" Version="1.31.0" />
@@ -105,12 +110,15 @@
     <PackageVersion Include="ReverseMarkdown" Version="6.2.1" />
     <PackageVersion Include="StackExchange.Redis" Version="3.4.5" />
     <PackageVersion Include="bunit" Version="1.40.0" />
+    <PackageVersion Include="Dirkster.AvalonDock" Version="4.74.1" />
+    <PackageVersion Include="Dirkster.AvalonDock.Themes.VS2013" Version="4.74.1" />
     <PackageVersion Include="Scalar.AspNetCore" Version="2.18.0" />
     <PackageVersion Include="System.Data.SqlClient" Version="4.9.1" />
     <PackageVersion Include="Terminal.Gui" Version="2.5.0" />
     <PackageVersion Include="Terminal.Gui.Editor" Version="2.5.7" />
     <PackageVersion Include="System.Drawing.Common" Version="10.0.13" />
     <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="8.23.0" />
+    <PackageVersion Include="System.IO.Hashing" Version="10.0.13" />
     <PackageVersion Include="System.IO.Packaging" Version="10.0.13" />
     <PackageVersion Include="Spectre.Console" Version="0.57.2" />
     <PackageVersion Include="System.IO.Ports" Version="10.0.13" />

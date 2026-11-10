@@ -1,4 +1,4 @@
-yes{
+{
   "profiles": {
     "OoBDev.Examples.Controls.Blazor": {
       "commandName": "Project",

@@ -25,6 +25,22 @@ public class TemplateCatalog(IOptions<FileTemplatingOptions> options, IEnumerabl
             : new TemplateDetailModel { Info = info, Text = File.ReadAllText(Path.Combine(options.Value.TemplatePath, info.File)) };
     }
 
+    /// <summary>Overwrites one listed template file; a file name that is not in the list is never written, so no file is created and no path is followed.</summary>
+    /// <param name="file">The file name from <see cref="List"/>.</param>
+    /// <param name="text">The new template text.</param>
+    /// <returns><c>true</c> when the file was written; <c>false</c> when no listed template has that file name.</returns>
+    public bool Save(string file, string text)
+    {
+        var info = List().FirstOrDefault(t => string.Equals(t.File, file, StringComparison.Ordinal));
+        if (info == null)
+        {
+            return false;
+        }
+
+        File.WriteAllText(Path.Combine(options.Value.TemplatePath, info.File), text);
+        return true;
+    }
+
     /// <summary>Lists the template files, ordered by name.</summary>
     /// <returns>The templates found; empty when the folder does not exist.</returns>
     public IReadOnlyList<TemplateInfoModel> List()

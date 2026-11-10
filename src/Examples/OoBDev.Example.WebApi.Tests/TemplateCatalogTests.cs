@@ -48,6 +48,34 @@ public class TemplateCatalogTests
 
     [TestMethod]
     [TestCategory(TestCategories.Unit)]
+    public void Save_ListedFile_OverwritesTheText()
+    {
+        using var dir = Temp.GetTempDirectory();
+        var path = Path.Combine(dir.DirectoryPath, "a-note.txt.hbs");
+        File.WriteAllText(path, "old");
+
+        var saved = Catalog(dir.DirectoryPath).Save("a-note.txt.hbs", "new {{name}}");
+
+        Assert.IsTrue(saved);
+        Assert.AreEqual("new {{name}}", File.ReadAllText(path));
+    }
+
+    [TestMethod]
+    [TestCategory(TestCategories.Unit)]
+    public void Save_UnlistedFileOrPath_WritesNothing()
+    {
+        using var dir = Temp.GetTempDirectory();
+        File.WriteAllText(Path.Combine(dir.DirectoryPath, "a-note.txt.hbs"), "old");
+        var catalog = Catalog(dir.DirectoryPath);
+
+        Assert.IsFalse(catalog.Save("new.txt.hbs", "x"));
+        Assert.IsFalse(catalog.Save("../escape.txt.hbs", "x"));
+        Assert.IsFalse(File.Exists(Path.Combine(dir.DirectoryPath, "new.txt.hbs")));
+        Assert.AreEqual(1, Directory.GetFiles(dir.DirectoryPath).Length);
+    }
+
+    [TestMethod]
+    [TestCategory(TestCategories.Unit)]
     public void Read_ListedFile_ReturnsText()
     {
         using var dir = Temp.GetTempDirectory();

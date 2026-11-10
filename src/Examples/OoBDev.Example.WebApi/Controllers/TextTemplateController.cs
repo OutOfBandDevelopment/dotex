@@ -63,6 +63,16 @@ public class TextTemplateController(
         catalog.Read(file) is { } detail ? detail : NotFound();
 
     /// <summary>
+    /// Saves new text over a listed template file (the example demo edits the repository files; owner, 2026-11-09).
+    /// </summary>
+    /// <param name="model">The listed file name and the new text.</param>
+    /// <returns>No content, or not found when the file is not a listed template.</returns>
+    [HttpPut()]
+    [AllowAnonymous]
+    public IActionResult Save([FromBody] TemplateSaveRequestModel model) =>
+        catalog.Save(model.File, model.Text) ? NoContent() : NotFound();
+
+    /// <summary>
     /// Renders a draft template text with sample data. Nothing is saved.
     /// </summary>
     /// <param name="model">The draft text, the engine, the target extension and the data.</param>

@@ -20,6 +20,7 @@
             <Button Content="Redo" Command="{Binding Redo}" Margin="2" Padding="8,3" />
             <Button Content="Import .ksy..." Command="{Binding ImportKsy}" Margin="12,2,2,2" Padding="8,3" />
             <Button Content="{Binding RecordingLabel}" Command="{Binding ToggleRecording}" Margin="2" Padding="8,3" />
+            <Button Content="Panel to JSON" Command="{Binding ConvertPanelToJson}" ToolTip="Save the .xml panel file as JSON" Margin="2" Padding="8,3" />
         </WrapPanel>
         <Grid Grid.Row="1" Margin="0,6,0,0">
             <Grid.ColumnDefinitions>

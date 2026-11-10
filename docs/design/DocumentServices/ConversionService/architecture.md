@@ -734,3 +734,7 @@ public async Task<ConversionResult> ConvertWithRetryAsync(...)
 - [API Design](api-design.md)
 - [Testing Strategy](testing-strategy.md)
 - [MediaTypeDetection Architecture](../MediaTypeDetection/architecture.md)
+
+## Reference links
+
+Kept from the old `docs/Framework/DocumentConversion.md` (2026-11-10): [reversemarkdown-net](https://github.com/mysticmind/reversemarkdown-net), [pdf2htmlEX](https://github.com/pdf2htmlEX/pdf2htmlEX), [dotnet-mammoth](https://github.com/mwilliamson/dotnet-mammoth), [pdftohtml](https://pdftohtml.sourceforge.net/), [Apache Tika](https://tika.apache.org/download.html).

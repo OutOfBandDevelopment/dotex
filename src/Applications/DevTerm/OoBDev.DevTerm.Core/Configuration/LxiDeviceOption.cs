@@ -1,4 +1,5 @@
-﻿using OoBDev.System.IO.Tcp;
+﻿using System.Linq;
+using OoBDev.System.IO.Tcp;
 namespace OoBDev.DevTerm.Configuration;
 
 /// <summary>
@@ -18,6 +19,21 @@ public sealed record LxiDeviceOption(string Display, string Host, int Port, stri
         "tcp" => new(hit.Display, hit.Address, hit.Port),
         _ => new(hit.Display, hit.Address, hit.Port),
     };
+
+    /// <summary>
+    /// One row for a whole device (decided 2026-10-13): the label lists its services as badges, and picking the row fills the
+    /// service most likely to carry data: a raw tcp port first, then vxi11, then mqtt, then whatever else was found.
+    /// </summary>
+    public static LxiDeviceOption FromDevice(Discovery.NetworkDevice device)
+    {
+        global::System.ArgumentNullException.ThrowIfNull(device);
+        var primary = device.Services.FirstOrDefault(s => s.Transport == "tcp" && s.Port > 0)
+            ?? device.Services.FirstOrDefault(s => s.Transport == "vxi11")
+            ?? device.Services.FirstOrDefault(s => s.Transport == "mqtt")
+            ?? device.Services[0];
+        var option = FromHit(primary);
+        return option with { Display = $"{device.Address}  {device.Name}  [{device.Badges}]" };
+    }
 
     public static LxiDeviceOption FromDevice(LxiDevice device) =>
         new(device.Display, device.Host, device.ScpiPort > 0 ? device.ScpiPort : 5025);

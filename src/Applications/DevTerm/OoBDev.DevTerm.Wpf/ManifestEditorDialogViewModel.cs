@@ -52,7 +52,8 @@ public sealed class ManifestEditorDialogViewModel : ViewModelBase, IDisposable
         var up = new ManifestEditorCommand(() => _editor.CanMove, _editor.MoveUp);
         var down = new ManifestEditorCommand(() => _editor.CanMove, _editor.MoveDown);
         var createPanel = new ManifestEditorCommand(() => _editor.SelectedNode is { Kind: ManifestNodeKind.Panel, Form: null }, _editor.CreatePanelFromCommands);
-        _stateful = [undo, redo, add, remove, up, down, createPanel];
+        var convertPanel = new ManifestEditorCommand(() => _editor.CanConvertPanelToJson, _editor.ConvertPanelToJson);
+        _stateful = [undo, redo, add, remove, up, down, createPanel, convertPanel];
         Undo = undo;
         Redo = redo;
         Add = add;
@@ -60,6 +61,7 @@ public sealed class ManifestEditorDialogViewModel : ViewModelBase, IDisposable
         MoveUp = up;
         MoveDown = down;
         CreatePanel = createPanel;
+        ConvertPanelToJson = convertPanel;
         New = new ManifestEditorCommand(() => true, () => _editor.New());
         Open = new ManifestEditorCommand(() => true, OpenManifest);
         Save = new ManifestEditorCommand(() => true, () => _editor.Save());
@@ -198,6 +200,9 @@ public sealed class ManifestEditorDialogViewModel : ViewModelBase, IDisposable
     /// <summary>Creates the panel from the manifest's commands.</summary>
     public ICommand CreatePanel { get; }
 
+    /// <summary>Moves an <c>.xml</c> panel file to JSON on the next save (the editor writes JSON only).</summary>
+    public ICommand ConvertPanelToJson { get; }
+
     /// <inheritdoc />
     public void Dispose()
     {
@@ -295,7 +300,26 @@ public sealed class ManifestEditorDialogViewModel : ViewModelBase, IDisposable
             if (_form.Row(field) is { IsVisible: true } row)
             {
                 FieldPickers.Add(new FieldPickerViewModel(row.Label, new ManifestEditorCommand(() => true, () => PickField(row.Control, mode))));
+                if (field == nameof(ControlForm.Channels) && _formBinding.Source is ControlForm controlForm)
+                {
+                    var ids = controlForm.ChannelIds;
+                    for (var i = 0; i < ids.Count; i++)
+                    {
+                        var index = i;
+                        FieldPickers.Add(new FieldPickerViewModel($"Channel {ids[i]} expression", new ManifestEditorCommand(() => true, () => PickChannelExpression(controlForm, index))));
+                    }
+                }
             }
+        }
+    }
+
+    private void PickChannelExpression(ControlForm controlForm, int index)
+    {
+        var picked = _pickerDialog!.Pick(_editor.CreatePicker(controlForm.GetChannelExpression(index), PickerMode.Expression));
+        if (picked is not null)
+        {
+            controlForm.SetChannelExpression(index, picked);
+            _form!.Refresh();
         }
     }
 

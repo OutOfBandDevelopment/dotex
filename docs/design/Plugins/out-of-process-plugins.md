@@ -3,6 +3,7 @@
 Owner direction (2026-10-03): plugin isolation should allow plugins written in other languages, hosted out of process.
 The in-process `AssemblyLoadContext` loader ([plugin-model.md](plugin-model.md)) stays for .NET plugins; this is
 the second path for everything else.
+The sandboxed host that now implements the isolation (grants, brokered access, limits, wire protocol) is designed in [PluginSandbox](../PluginSandbox/README.md); this note keeps the original intent and the contribution side.
 
 ## Shape
 
@@ -58,7 +59,7 @@ bytes), `examples/go/out-of-process-plugin/` (reverses text); each folder has a 
 
 - Trust and signing for third-party programs: an out-of-process plugin runs with the user's rights, isolation only
   protects the host's stability, not the machine.
-- Discovery and packaging: a `plugin.json` naming the command line, next to the existing in-process manifests. Decided 2026-10-13: a plugin is shared as a `.zip` with `plugin.json` at its root, installed from the Plugins screen, with the trust approval asked at install (BACKLOG).
+- Discovery and packaging: a `plugin.json` naming the command line, next to the existing in-process manifests. Decided 2026-10-13: a plugin is shared as a `.zip` with `plugin.json` at its root, installed from the Plugins screen, with the trust approval asked at install. **Core built 2026-11-09:** `PluginInstaller.Install(zip, pluginsDirectory, approver)` unpacks to a staging folder (zip-slip and 256 MB checks), requires `plugin.json` at the root and the current contract, asks the `IPluginApprover` with the final command line and content hash (in-process plugins too), then replaces any same-named folder; `Always` records the hash in `PluginTrust`. The Tui has Device > Install plugin (path prompt, approval box, outcome box; the plugin loads at the next start); WPF has Device > Install plugin (`IPluginInstallDialog`: file picker, approval box, outcome box).
 - Render is synchronous on the session's read loop, so a slow plugin delays reading up to the reply timeout; a
   per-plugin timeout default and an async path are undecided. Decided 2026-10-13: the async path is wanted: show the raw bytes at once and the decoded output when the plugin answers (out-of-order output in the pane is accepted). The default reply timeout is 2 seconds, overridable per plugin by `replyTimeoutMs` (already so in `PluginManifest`). Built 2026-10-14: `LazyExternalPresenter` queues each chunk to one worker and delivers lines through `IAsyncOutputSource.OutputReady`, which `Pipeline.AsyncOutput` forwards to `Session.Output`; `Render` returns at once.
 - Binary or high-rate plugins: JSON-with-hex is fine for text devices, wasteful for bulk streams.

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Threading;
 using System.Windows.Input;
 using OoBDev.DevTerm.Configuration;
 using OoBDev.UiDefinitions.ViewModels;
@@ -22,6 +23,9 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
     private readonly IStreamExportDialog? _streamExport;
     private readonly IThemeBuilderDialog? _themeBuilderDialog;
     private readonly IConfigureDeviceDialog? _configureDeviceDialog;
+    private readonly IPluginInstallDialog? _pluginInstallDialog;
+    private readonly string? _pluginsDirectory;
+    private readonly IReadOnlyList<PluginLoadResult>? _plugins;
     private readonly IInstrumentPickerDialog? _instrumentPickerDialog;
     private readonly IReadOnlyList<OoBDev.System.IO.Devices.IDeviceConfigEditor> _configEditors;
     private readonly string? _themesDirectory;
@@ -33,6 +37,8 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
     private readonly MergedSessionLog? _mergedLog;
     private PanelViewModel? _selected;
     private readonly IConfirmPrompt? _confirm;
+    private readonly IListenPeersDialog? _listenPeersDialog;
+    private PeerTabSource? _peerSource;
     private readonly IColorPicker? _colorPicker;
     private SessionViewModel? _selectedSession;
     private int _connectionCount;
@@ -49,7 +55,7 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
     /// <param name="routingDialog">Shows the routing window, or null when the shell has no window to host it.</param>
     /// <param name="editorDialog">Shows the connection editor, or null when the shell has no window to host it.</param>
     [global::System.Diagnostics.CodeAnalysis.SuppressMessage("Maintainability", "MA0051:Method is too long", Justification = "A composition constructor: one assignment per injected dialog and one per command; splitting it would hide the wiring.")]
-    public ShellViewModel(IEnumerable<IPanelFactory> factories, ISessionViewModelFactory? sessionFactory = null, IConnectionEditorDialog? editorDialog = null, IRoutingDialog? routingDialog = null, IStreamMonitorDialog? streamMonitorDialog = null, StreamMonitor? streamMonitor = null, IMergedLogDialog? mergedLogDialog = null, MergedSessionLog? mergedLog = null, IPlaybackDialog? playbackDialog = null, PlaybackPresenters? playbackPresenters = null, IEnumerable<IDevicePanelContribution>? devicePanels = null, IConfirmPrompt? confirm = null, IColorPicker? colorPicker = null, IConverterToolsDialog? converterToolsDialog = null, ConverterToolsStore? converterToolsStore = null, IManifestPickerDialog? manifestPickerDialog = null, IThemeBuilderDialog? themeBuilderDialog = null, string? themesDirectory = null, IConfigureDeviceDialog? configureDeviceDialog = null, IEnumerable<OoBDev.System.IO.Devices.IDeviceConfigEditor>? configEditors = null, IInstrumentPickerDialog? instrumentPickerDialog = null, IEnumerable<IInstrumentPanelProvider>? instruments = null, IManifestEditorDialog? manifestEditorDialog = null, IManifestFileDialogs? manifestFiles = null, IExpressionPickerDialog? expressionPicker = null, IStreamExportDialog? streamExport = null)
+    public ShellViewModel(IEnumerable<IPanelFactory> factories, ISessionViewModelFactory? sessionFactory = null, IConnectionEditorDialog? editorDialog = null, IRoutingDialog? routingDialog = null, IStreamMonitorDialog? streamMonitorDialog = null, StreamMonitor? streamMonitor = null, IMergedLogDialog? mergedLogDialog = null, MergedSessionLog? mergedLog = null, IPlaybackDialog? playbackDialog = null, PlaybackPresenters? playbackPresenters = null, IEnumerable<IDevicePanelContribution>? devicePanels = null, IConfirmPrompt? confirm = null, IColorPicker? colorPicker = null, IConverterToolsDialog? converterToolsDialog = null, ConverterToolsStore? converterToolsStore = null, IManifestPickerDialog? manifestPickerDialog = null, IThemeBuilderDialog? themeBuilderDialog = null, string? themesDirectory = null, IConfigureDeviceDialog? configureDeviceDialog = null, IEnumerable<OoBDev.System.IO.Devices.IDeviceConfigEditor>? configEditors = null, IInstrumentPickerDialog? instrumentPickerDialog = null, IEnumerable<IInstrumentPanelProvider>? instruments = null, IManifestEditorDialog? manifestEditorDialog = null, IManifestFileDialogs? manifestFiles = null, IExpressionPickerDialog? expressionPicker = null, IStreamExportDialog? streamExport = null, IListenPeersDialog? listenPeersDialog = null, IPluginInstallDialog? pluginInstallDialog = null, string? pluginsDirectory = null, IReadOnlyList<PluginLoadResult>? plugins = null)
     {
         ArgumentNullException.ThrowIfNull(factories);
         Factories = [.. factories];
@@ -65,6 +71,9 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
         _streamExport = streamExport;
         _themeBuilderDialog = themeBuilderDialog;
         _configureDeviceDialog = configureDeviceDialog;
+        _pluginInstallDialog = pluginInstallDialog;
+        _pluginsDirectory = pluginsDirectory;
+        _plugins = plugins;
         _instrumentPickerDialog = instrumentPickerDialog;
         Instruments = [.. instruments ?? []];
         _configEditors = [.. configEditors ?? []];
@@ -87,10 +96,16 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
         ShowManifestEditor = new ShowManifestEditorCommand(this);
         BuildTheme = new BuildThemeCommand(this);
         ShowConfigureDevice = new ShowConfigureDeviceCommand(this);
+        InstallPluginFromZip = new InstallPluginCommand(this);
+        ReviewPluginApprovals = new ReviewPluginApprovalsCommand(this);
+        ShowPlugins = new ShowPluginsCommand(this);
         OpenInstrumentPanel = new OpenInstrumentCommand(this);
         ShowRoutingWindow = new ShowRoutingCommand(this);
         NewConnection = new NewConnectionCommand(this);
         Open = new OpenPanelCommand(this);
+        _listenPeersDialog = listenPeersDialog;
+        ListenForPeers = new ListenForPeersCommand(this);
+        ListenForUdp = new ListenForUdpCommand(this);
         NewLoopbackSession = new NewLoopbackSessionCommand(this);
         OpenProfileSession = new OpenProfileSessionCommand(this);
         if (Factories.Count > 0)
@@ -134,6 +149,15 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
 
     /// <summary>Shows the Configure device window.</summary>
     public ICommand ShowConfigureDevice { get; }
+
+    /// <summary>Device &gt; Install plugin: choose a plugin .zip, approve it, install it (it loads at the next start).</summary>
+    public ICommand InstallPluginFromZip { get; }
+
+    /// <summary>Device &gt; Plugin approvals: approve plugins waiting to start, then review the remembered approvals one by one.</summary>
+    public ICommand ReviewPluginApprovals { get; }
+
+    /// <summary>Device > Plugins: the loaded plugins and their status.</summary>
+    public ICommand ShowPlugins { get; }
 
     /// <summary>Picks a seed theme and edits a new theme from it.</summary>
     public ICommand BuildTheme { get; }
@@ -223,6 +247,46 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
         }
     }
 
+    internal bool CanInstallPlugin => _pluginInstallDialog is not null;
+
+    /// <summary>Asks about each plugin waiting for approval; called once the window is up. Does nothing without the dialog or without a waiting plugin.</summary>
+    public void PromptPendingPlugins()
+    {
+        if (_pluginInstallDialog is not null && LivePlugins.Pending.Count > 0)
+        {
+            LivePlugins.ReviewPending(_pluginInstallDialog.AskPending);
+        }
+    }
+
+    internal void ShowPluginList() => _pluginInstallDialog!.ShowPlugins(PluginReport.Text(_plugins));
+
+    internal void ReviewPlugins()
+    {
+        LivePlugins.ReviewPending(_pluginInstallDialog!.AskPending);
+        if (PluginTrust.Approvals().Count == 0)
+        {
+            _pluginInstallDialog.ReportNoApprovals();
+            return;
+        }
+
+        PluginTrust.Review(_pluginInstallDialog.AskReview);
+    }
+
+    internal void InstallPlugin()
+    {
+        if (_pluginInstallDialog!.PickZip() is not { } zip)
+        {
+            return;
+        }
+
+        _pluginInstallDialog.Report(PluginInstaller.Install(zip, PluginLoader.ResolveDirectory(_pluginsDirectory), new DialogApprover(_pluginInstallDialog)));
+    }
+
+    private sealed class DialogApprover(IPluginInstallDialog dialog) : IPluginApprover
+    {
+        public PluginApprovalChoice Ask(PluginApprovalRequest request) => dialog.Approve(request);
+    }
+
     internal bool CanConfigureDevice => _configureDeviceDialog is not null && _configEditors.Count > 0;
 
     internal void ConfigureDevice() => _configureDeviceDialog!.Show(new ConfigureDeviceDialogViewModel(_configEditors));
@@ -308,7 +372,7 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
     {
         var selected = SelectedSession!;
         _streamMonitor!.Track(selected, selected.Session, selected.Title, DevTermUserDataPaths.ExportsDirectory);
-        using var window = new StreamMonitorDialogViewModel(_streamMonitor, _streamExport, StreamCaptureConverterOptions.FromCliOptions(null, _converterToolsStore?.Load()));
+        using var window = new StreamMonitorDialogViewModel(_streamMonitor, _streamExport, StreamCaptureConverterOptions.FromCliOptions(null, _converterToolsStore?.Load()), previewRenderer: new ExternalPreviewRenderer());
         _streamMonitorDialog!.Show(window);
     }
 
@@ -347,6 +411,77 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
 
     /// <summary>The names of the saved connection profiles.</summary>
     public IReadOnlyList<string> ProfileNames => _sessionFactory?.ListProfiles() ?? [];
+
+    /// <summary>Asks for a port and opens a session tab for every TCP peer that connects.</summary>
+    public ICommand ListenForPeers { get; }
+
+    internal bool CanListenForPeers => _sessionFactory is not null && _listenPeersDialog is not null && _peerSource is null;
+
+    internal void StartListeningForPeers()
+    {
+        if (_listenPeersDialog!.AskPort() is not { } port)
+        {
+            return;
+        }
+
+        var context = SynchronizationContext.Current;
+        var source = new PeerTabSource(new CliOptions { Presenter = ["ascii"] }, null, port);
+        source.TabReady += (_, e) =>
+        {
+            void Add()
+            {
+                var session = _sessionFactory!.CreateFromTab(e.Tab, e.RemoteEndPoint);
+                AddSession(session);
+                session.Connect.Execute(null);
+            }
+
+            if (context is null)
+            {
+                Add();
+            }
+            else
+            {
+                context.Post(_ => Add(), null);
+            }
+        };
+        source.Start();
+        _peerSource = source;
+        ((CommandBase)ListenForPeers).RaiseCanExecuteChanged();
+    }
+
+    /// <summary>Asks for a port and opens a session tab for it that lists the sender of each UDP datagram.</summary>
+    public ICommand ListenForUdp { get; }
+
+    internal bool CanListenForUdp => _sessionFactory is not null && _listenPeersDialog is not null;
+
+    internal void StartListeningForUdp()
+    {
+        if (_listenPeersDialog!.AskUdpPort() is not { } port)
+        {
+            return;
+        }
+
+        var udp = UdpSessionTab.Build(new CliOptions { Presenter = ["ascii"] }, null, port);
+        var session = _sessionFactory!.CreateFromTab(udp.Tab, $"UDP :{port}");
+        var context = SynchronizationContext.Current;
+        udp.Adapter.DatagramReceived += (_, e) =>
+        {
+            var line = UdpSessionTab.Describe(e);
+            if (context is null)
+            {
+                session.OutputLines.Add(line);
+            }
+            else
+            {
+                context.Post(_ => session.OutputLines.Add(line), null);
+            }
+        };
+        AddSession(session);
+        session.Connect.Execute(null);
+    }
+
+    /// <summary>The port peers connect to while <see cref="ListenForPeers"/> is active, or null.</summary>
+    public int? ListeningPort => _peerSource?.Port;
 
     /// <summary>The selected session, or null.</summary>
     public SessionViewModel? SelectedSession
@@ -395,6 +530,7 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
     /// <inheritdoc />
     public void Dispose()
     {
+        _peerSource?.DisposeAsync().AsTask().GetAwaiter().GetResult();
         SelectedPanel = null;
         foreach (var session in Sessions)
         {

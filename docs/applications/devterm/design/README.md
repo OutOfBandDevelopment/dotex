@@ -1,6 +1,6 @@
 # DevTerm design documents
 
-The application's own design documents stay here. Reusable capability designs moved to `docs/design/` and protocol references to `docs/protocols/` on 2026-11-04 (map: [devterm-docs-map](../../../migration/devterm-docs-map.md)). Requirements, architecture, API design and testing strategy of the application are one level up: [README](../README.md).
+The application's own design documents stay here. Reusable capability designs moved to `docs/design/` and protocol references to `docs/protocols/` on 2026-11-04 (map: [migration plan](../../../migration/README.md#devterm-ui-shells-and-plugins)). Requirements, architecture, API design and testing strategy of the application are one level up: [README](../README.md).
 
 ## Contents
 

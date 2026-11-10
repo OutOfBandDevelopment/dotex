@@ -4,7 +4,7 @@ Quarta Radex One dosimeter on a serial port (9600 baud, 8-N-1, no handshake): pr
 
 ## Description
 
-Hardware driver, so it lives in `src/HardwareDevices`. Source: dev-term `Devices.RadexOne`, with merges M3 and M4 (BinaryDataDecoders) kept as documented hypotheses. Design: [DeviceDecoding](../../../docs/design/DeviceDecoding/README.md), plan: [device-decoding-migration-plan.md](../../../docs/migration/device-decoding-migration-plan.md).
+Hardware driver, so it lives in `src/HardwareDevices`. Source: dev-term `Devices.RadexOne`, with merges M3 and M4 (BinaryDataDecoders) kept as documented hypotheses. Design: [DeviceDecoding](../../../docs/design/DeviceDecoding/README.md), plan: [device-decoding-migration-plan.md](../../../docs/design/DeviceDecoding/migration-plan.md).
 
 Bytes arrive through `OoBDev.System.IO.Ports`, so the package never opens the port.
 

@@ -30,7 +30,7 @@ in the same change; a rule that's only written down here but not enforced anywhe
   Testing below) — a missing or typo'd category doesn't fail a build on its own (MSTest just silently
   excludes that test from any `--filter TestCategory=...`), so nothing else catches it. Runs as part
   of the ordinary `dotnet test`, no separate step.
-- **A future `DevTerm.Analyzers` project** (not built yet) — for standards that need a compile-time
+- **A future DevTerm rule in `OoBDev.Analyzers`** (not built yet; the project merged into the repo's own analyzer, which already has OOB0001-0003) — for standards that need a compile-time
   check on ordinary source (not test metadata) and can't be expressed as a generic style rule (e.g.
   "every `ITransport` implementation must no-op on an empty write, not throw" — see `CLAUDE.md`'s
   constraints list for why that one matters). Added once an actual rule needs it, not speculatively.

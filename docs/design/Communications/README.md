@@ -486,8 +486,8 @@ ITargetPreference {
 
 ## Related Documentation
 
-- [SharedFramework Feature Mapping](../../migration/sharedframework.md)
-- [SharedFramework Migration Plan - Phase 2](../../migration/sharedframework.md)
+- [SharedFramework Feature Mapping](../../migration/README.md#epics-from-sharedframework)
+- [SharedFramework Migration Plan - Phase 2](../../migration/README.md#epics-from-sharedframework)
 
 ---
 

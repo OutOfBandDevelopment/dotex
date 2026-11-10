@@ -2,6 +2,8 @@
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using OoBDev.DevTerm.Configuration;
+using OoBDev.Documents.Hpgl;
+using OoBDev.Extensions.Drawing;
 
 namespace OoBDev.DevTerm.Wpf;
 
@@ -23,15 +25,33 @@ public static class StreamCapturePreview
             return svg;
         }
 
+        if (kind.Format == StreamContentFormat.Hpgl)
+        {
+            var scene = HpglToSvgConverter.ParseScene(capture.Capture.Data);
+            return Decode(VectorSceneRasterizer.Rasterize(scene, HpglPreviewWidthPixels), kind.DisplayName, out message);
+        }
+
         if (!kind.IsNativeImage)
         {
             message = $"Preview not available yet for {kind.DisplayName}; the captured bytes were saved as-is.";
             return null;
         }
 
+        return Decode(capture.Capture.Data, kind.DisplayName, out message);
+    }
+
+    /// <summary>Width of the picture an HP-GL plot is drawn at.</summary>
+    public const int HpglPreviewWidthPixels = 1000;
+
+    /// <summary>Decodes image bytes Windows understands (PNG, JPEG, BMP, ...).</summary>
+    /// <param name="data">The bytes.</param>
+    /// <param name="kindName">What the bytes are, for the message.</param>
+    /// <param name="message">Empty when decoded; otherwise why not.</param>
+    public static ImageSource? Decode(byte[] data, string kindName, out string message)
+    {
         try
         {
-            using var stream = new global::System.IO.MemoryStream(capture.Capture.Data, writable: false);
+            using var stream = new global::System.IO.MemoryStream(data, writable: false);
             var frame = BitmapDecoder.Create(stream, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.OnLoad).Frames[0];
             frame.Freeze();
             message = string.Empty;
@@ -39,7 +59,7 @@ public static class StreamCapturePreview
         }
         catch (Exception ex) when (ex is NotSupportedException or global::System.IO.FileFormatException or ArgumentException or global::System.IO.IOException or InvalidOperationException or OverflowException)
         {
-            message = $"Could not preview this {kind.DisplayName}: {ex.Message}";
+            message = $"Could not preview this {kindName}: {ex.Message}";
             return null;
         }
     }

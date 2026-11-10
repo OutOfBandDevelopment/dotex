@@ -2,7 +2,7 @@
 
 [↑ Overview](README.md) · [Architecture →](architecture.md)
 
-**Status:** Draft · **Date:** 2026-10-28 · **Related:** [migration plan](../../migration/device-decoding-migration-plan.md), [device parity](../../migration/device-parity.md)
+**Status:** Draft · **Date:** 2026-10-28 · **Related:** [migration plan](../../design/DeviceDecoding/migration-plan.md), [device parity](../../migration/README.md#devices)
 
 ## Contents
 

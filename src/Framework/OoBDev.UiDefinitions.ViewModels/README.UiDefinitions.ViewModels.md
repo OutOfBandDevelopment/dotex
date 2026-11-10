@@ -4,7 +4,7 @@ Toolkit-neutral view models over a `UiDefinition` and a `FormBinding`. A rendere
 
 ## Description
 
-Phase 7 of [the device decoding plan](../../../docs/migration/device-decoding-migration-plan.md), first part. The dev-term WPF renderer was code-behind; here the behaviour lives in testable types.
+Phase 7 of [the device decoding plan](../../../docs/design/DeviceDecoding/migration-plan.md), first part. The dev-term WPF renderer was code-behind; here the behaviour lives in testable types.
 
 | Type | Role |
 |------|------|

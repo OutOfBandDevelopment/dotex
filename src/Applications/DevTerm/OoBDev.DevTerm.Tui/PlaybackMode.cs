@@ -6,6 +6,7 @@ using OoBDev.DevTerm.Configuration;
 using OoBDev.DevTerm.Logging;
 using Terminal.Gui.App;
 using Terminal.Gui.Editor;
+using Terminal.Gui.Input;
 using Terminal.Gui.ViewBase;
 using Terminal.Gui.Views;
 namespace OoBDev.DevTerm.Tui;
@@ -130,7 +131,9 @@ public static class PlaybackMode
             WordWrap = true,
         };
 
-        var positionLabel = new Label { X = 0, Y = Pos.Bottom(output), Width = Dim.Fill() };
+        var positionLabel = new Label { X = 0, Y = Pos.Bottom(output), Width = Dim.Fill(18) };
+        var silenceBox = new CheckBox { X = Pos.AnchorEnd(16), Y = Pos.Bottom(output), Text = "Skip _silence", Value = CheckState.UnChecked };
+        silenceBox.ValueChanged += (_, _) => controller.SkipSilence = silenceBox.Value == CheckState.Checked;
 
         var transportRow = Pos.Bottom(positionLabel);
         var rewindButton = new Button { X = 0, Y = transportRow, Text = "_Rewind", ShadowStyle = ShadowStyles.None };
@@ -140,6 +143,7 @@ public static class PlaybackMode
         var endButton = new Button { X = Pos.Right(forwardButton) + 1, Y = transportRow, Text = "_End", ShadowStyle = ShadowStyles.None };
         var slowerButton = new Button { X = Pos.Right(endButton) + 1, Y = transportRow, Text = "Slo_wer", ShadowStyle = ShadowStyles.None };
         var fasterButton = new Button { X = Pos.Right(slowerButton) + 1, Y = transportRow, Text = "_Faster", ShadowStyle = ShadowStyles.None };
+
 
         var editRow = Pos.Bottom(positionLabel) + 1;
         var markInButton = new Button { X = 0, Y = editRow, Text = "Mark _In", ShadowStyle = ShadowStyles.None };
@@ -257,6 +261,34 @@ public static class PlaybackMode
             app.RequestStop();
         };
 
+        // The button row is full at 80 columns, so editing or deleting the note just played has keys, not buttons.
+        void reviseNoteOnCtrlKeys(object? _, Key key)
+        {
+            if (key.Handled || app.TopRunnableView != window || (key != Key.E.WithCtrl && key != Key.D.WithCtrl))
+            {
+                return;
+            }
+
+            key.Handled = true;
+            if (controller.CurrentNoteIndex is not { } index)
+            {
+                MessageBox.ErrorQuery(app, "dev-term — playback", "Step to a note first: Ctrl+E edits and Ctrl+D deletes the note just played.", "Ok");
+                return;
+            }
+
+            if (key == Key.D.WithCtrl)
+            {
+                Do(controller.DeleteNote);
+            }
+            else if (PromptForText(app, "Edit Note", "Note:", controller.Log.Records[index].Text ?? string.Empty) is { } text && text.Trim().Length > 0)
+            {
+                Do(() => controller.EditNote(text));
+            }
+        }
+
+        app.Keyboard.KeyDown += reviseNoteOnCtrlKeys;
+        window.Disposing += (_, _) => app.Keyboard.KeyDown -= reviseNoteOnCtrlKeys;
+
         presentersField.Accepting += (_, e) =>
         {
             Do(() => controller.SetPresenters(presentersField.Text.Split([',', ' '], StringSplitOptions.RemoveEmptyEntries)));
@@ -271,7 +303,7 @@ public static class PlaybackMode
 
         window.Add(
             description, presentersLabel, presentersField, jumpLabel, jumpField, availableLabel, output, positionLabel,
-            rewindButton, stepButton, playButton, forwardButton, endButton, slowerButton, fasterButton,
+            rewindButton, stepButton, playButton, forwardButton, endButton, slowerButton, fasterButton, silenceBox,
             markInButton, markOutButton, saveButton, noteButton, closeButton);
 
         foreach (var warning in controller.Log.Warnings)

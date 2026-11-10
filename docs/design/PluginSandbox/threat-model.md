@@ -61,7 +61,7 @@ Boundary 1 is package to host (signature, hashes, safe paths). Boundary 2 is the
 | ID | Threat | Mitigation | Status in the PoC |
 |----|--------|------------|-------------------|
 | T1 | Plugin reads or writes files outside its grants | AppContainer ACLs; bubblewrap mount namespace with a read-only plugin folder | Held on both, with positive controls |
-| T2 | Plugin reaches the network or resolves names | No network by default: AppContainer without capabilities; new network namespace | Held on both. Per-host network grants (REQ-007) are not built; the broker must do it |
+| T2 | Plugin reaches the network or resolves names | No network by default: AppContainer without capabilities; new network namespace | Held on both; Windows covered by `EscapeTests` with a positive control. Per-host network grants (REQ-007) are not built; the broker must do it |
 | T3 | Plugin starts child processes or fork-bombs | Job `ActiveProcessLimit = 1`; seccomp filter on `fork`/`clone` plus `RLIMIT_NPROC` | Held on both |
 | T4 | Plugin exhausts memory or CPU | Job memory and CPU rate; `RLIMIT_DATA`, `prlimit` | Memory held on both. CPU held on Windows only (0.37 of a core under a 1% cap on a 32-processor machine). No CPU or cgroup limit on Linux |
 | T5 | Plugin reads host secrets from its environment | Minimal explicit environment block | Held after a found leak was fixed |
@@ -69,18 +69,20 @@ Boundary 1 is package to host (signature, hashes, safe paths). Boundary 2 is the
 | T7 | Plugin attacks the host or a peer process | Host not visible or not openable; pid namespace; anonymous pipe pairs | Held on both |
 | T8 | Plugin outlives the host | Job kill-on-close; `--die-with-parent` | Held on both. One timing flake seen on Linux, not investigated |
 | T9 | Plugin spoofs another plugin or the host on the wire | Host stamps `Source` from the channel; only `lifecycle.ready` is accepted from a plugin | Held (chaos mode `spoof`) |
-| T10 | Plugin floods, sends oversize or malformed frames, or hangs | Frame cap (1 MiB), strict UTF-8 and JSON parse, rate limit, heartbeat and request time to live, restart policy with a failure ceiling | Held (chaos modes), including a bug the property tests found in UTF-8 validation |
+| T10 | Plugin floods, sends oversize or malformed frames, or hangs | Frame cap (1 MiB), fixed binary header checks, strict UTF-8 and JSON parse of the payload, per-launch HMAC with counter-signed replies against injection, replay and cross-request replies, rate limit, heartbeat and request time to live, restart policy with a failure ceiling | Held (chaos modes), including a bug the property tests found in UTF-8 validation |
 | T11 | Tampered, unsigned or wrongly signed package | Signature over the manifest and per-file hashes; unsafe path, size and id checks | Held for the tested cases. No key revocation, rotation, expiry or chain |
 | T12 | Package changed between verification and launch | Read-only installed files; `VerifyInstalled` | Not closed: a writer to the install folder can swap a file in the window. The install folder must be writable by the host only, or the launch must hash what it executes |
 | T13 | `entry.dev` or the plain launcher used in production | None in the PoC; the key bypasses packaging | Open. The host must refuse `entry.dev` outside an explicit development mode |
 | T14 | Grants persist after uninstall (ACL residue) | Ledger of grants; `Uninstall` revokes them | Held on Windows |
 | T15 | Broker confused deputy: a granted call used for more than granted (path traversal, redirect to another host, symlink) | Canonicalise and compare against the grant; never follow links out of a granted folder | Not in the PoC (it has no broker). Needs its own tests |
 | T16 | Side channels, covert channels through timing or shared CPU | None | Out of scope for the first version; stated so nobody assumes otherwise |
+| T18 | Shared plugin instance abused by a second caller (wider grants, session mix-up, orphaned instance) | Grant hash in the lock name; per-caller session keys and sequences; pipe access control list; refcount with idle timeout; abandoned-mutex restart; for `Survive`: grants suspended while no caller, reconnect token in the grant store, new key per session, watchdog kills after the window | Design only (REQ-011); not built or tested |
+| T19 | Plugin forges or alters the request context, replays one from another request, or exfiltrates the user's token | Host-built canonical context with SHA-256 id; plugin sends only the id and the broker uses the stored copy; `aud` and `exp` checked; plugin never receives credentials; only declared claims released | Design only (REQ-012); not built or tested |
 | T17 | Unprivileged user namespaces disabled (hardened distribution, some CI) | Refuse to start and say why; no silent fallback to the plain launcher | The PoC fails to start inside the default Docker profile. The refusal path is a requirement, not yet written |
 
 ## Proof-of-concept review
 
-What it proves: the wire profile (4-byte little-endian length, UTF-8 JSON, 1 MiB cap) carries every behaviour tested, in five languages, with the same checks passing against the stand-in and the real host. The Windows and Linux launchers deny the sixteen and fourteen capabilities in the matrix, each with a positive control so that a broken probe cannot look like a tight sandbox. Packaging verifies signatures and hashes.
+What it proves: the proof-of-concept wire profile (4-byte little-endian length, UTF-8 JSON, 1 MiB cap; superseded for the product by the binary frame in protocol-and-manifest.md) carries every behaviour tested, in five languages, with the same checks passing against the stand-in and the real host. The Windows and Linux launchers deny the sixteen and fourteen capabilities in the matrix, each with a positive control so that a broken probe cannot look like a tight sandbox. Packaging verifies signatures and hashes.
 
 What it does not prove: anything about an attack its tests did not think of. The authors say so in the matrix notes, and this review repeats it.
 

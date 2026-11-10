@@ -68,6 +68,16 @@ public sealed class PlaybackController
 
     public PlaybackSpeed Speed { get; private set; } = Speeds[2];
 
+    /// <summary>The idle gap a front end caps playback to when skip silence is on (decided 2026-10-13: 1 s).</summary>
+    public static readonly TimeSpan DefaultSkipSilenceCap = TimeSpan.FromSeconds(1);
+
+    /// <summary>Whether long quiet stretches play as <see cref="DefaultSkipSilenceCap"/> (off by default); timestamps keep showing log time.</summary>
+    public bool SkipSilence
+    {
+        get => Engine.MaxGap is not null;
+        set => Engine.MaxGap = value ? DefaultSkipSilenceCap : null;
+    }
+
     /// <summary>The trim selection as positions: records <see cref="SelectionStart"/> (inclusive) to <see cref="SelectionEnd"/> (exclusive). Starts as the whole log.</summary>
     public int SelectionStart { get; private set; }
 
@@ -237,6 +247,31 @@ public sealed class PlaybackController
         }
 
         return batch;
+    }
+
+    /// <summary>The index of the note just played (the record before the position), or null when that record is not a live note: the one Edit and Delete act on.</summary>
+    public int? CurrentNoteIndex =>
+        Engine.Position > 0 && Log.Records[Engine.Position - 1] is { Kind: SessionLogRecordKind.Note, Deleted: false } ? Engine.Position - 1 : null;
+
+    /// <summary>Replaces the text of the note just played, keeping the old text in the log as a revision, and saves the log in place.</summary>
+    public PlaybackBatch EditNote(string text)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(text);
+        return Revise(text.Trim());
+    }
+
+    /// <summary>Marks the note just played deleted (its text stays in the log as a revision) and saves the log in place.</summary>
+    public PlaybackBatch DeleteNote() => Revise(null);
+
+    private PlaybackBatch Revise(string? text)
+    {
+        var index = CurrentNoteIndex ?? throw new InvalidOperationException("Step to a note first: the note just played is the one that is changed.");
+
+        // Trial copy first, as in AddNote: a failed save must leave the in-memory log unchanged.
+        var trial = new SessionLog(Log.Header, Log.Records);
+        trial.ReviseNote(index, text);
+        trial.Save(Path);
+        return Engine.ReviseNote(index, text);
     }
 
     private static string DefaultPresenter(IReadOnlyList<string> available) =>

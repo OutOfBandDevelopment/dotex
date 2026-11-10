@@ -77,6 +77,10 @@
         {
             <img data-preview class="preview" alt="@sel.Capture.Kind.DisplayName" src="api/monitor/captures/@_selected" />
         }
+        else if (sel.Capture.Kind.Format is StreamContentFormat.Hpgl or StreamContentFormat.PostScript or StreamContentFormat.Pcl)
+        {
+            <img data-preview class="preview" alt="@sel.Capture.Kind.DisplayName" src="api/monitor/captures/@_selected/preview" />
+        }
         else
         {
             <p class="note" data-nopreview>Preview not available for @sel.Capture.Kind.DisplayName - download it to view.</p>

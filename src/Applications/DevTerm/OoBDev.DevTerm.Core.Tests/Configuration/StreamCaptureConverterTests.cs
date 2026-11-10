@@ -79,6 +79,21 @@ public sealed class StreamCaptureConverterTests
     }
 
     [TestMethod]
+    [DataRow("png", (byte)0x89)]
+    [DataRow("jpg", (byte)0xFF)]
+    public async Task ConvertAsync_InternalHpgl_WithRasterExtension_WritesAnImage(string extension, byte firstByte)
+    {
+        var options = new StreamCaptureConverterOptions { Mode = StreamConversionMode.InternalHpglToSvg, OutputExtension = extension };
+        var capture = SavedCapture(StreamContentKind.Hpgl, StreamContentSamples.Hpgl(), "plot.hpgl");
+
+        var result = await Converter(options).ConvertAsync(capture);
+
+        Assert.IsTrue(result.Success, result.Error);
+        Assert.AreEqual(Path.ChangeExtension(capture.SavedPath, extension), result.OutputPath);
+        Assert.AreEqual(firstByte, File.ReadAllBytes(result.OutputPath!)[0]);
+    }
+
+    [TestMethod]
     public async Task ConvertAsync_InternalHpglToSvg_NonHpglCapture_Fails()
     {
         var options = new StreamCaptureConverterOptions { Mode = StreamConversionMode.InternalHpglToSvg };
@@ -360,11 +375,26 @@ public sealed class StreamCaptureConverterTests
         var choices = StreamConversionChoice.For(options);
 
         CollectionAssert.AreEqual(
-            new[] { "None", "HP-GL to SVG", "Auto (by format)", "gs", "gpcl", "External tool" },
+            new[] { "None", "HP-GL to SVG", "HP-GL to PNG", "HP-GL to JPG", "Auto (by format)", "gs", "gpcl", "External tool" },
             choices.Select(c => c.DisplayName).ToArray());
-        choices[4].ApplyTo(options);
+        choices[6].ApplyTo(options);
         Assert.AreEqual(StreamConversionMode.Tool, options.Mode);
-        Assert.AreEqual(4, StreamConversionChoice.IndexOf(choices, options));
+        Assert.AreEqual(6, StreamConversionChoice.IndexOf(choices, options));
+    }
+
+    [TestMethod]
+    public void Choices_RasterFormat_SetsTheOutputExtension_AndRoundTrips()
+    {
+        var options = new StreamCaptureConverterOptions();
+        var choices = StreamConversionChoice.For(options);
+
+        choices.Single(c => c.DisplayName == "HP-GL to PNG").ApplyTo(options);
+        Assert.AreEqual("png", options.OutputExtension);
+        Assert.AreEqual("HP-GL to PNG", choices[StreamConversionChoice.IndexOf(choices, options)].DisplayName);
+
+        choices.Single(c => c.DisplayName == "HP-GL to SVG").ApplyTo(options);
+        Assert.IsNull(options.OutputExtension);
+        Assert.AreEqual("HP-GL to SVG", choices[StreamConversionChoice.IndexOf(choices, options)].DisplayName);
     }
 
     [TestMethod]
@@ -372,6 +402,6 @@ public sealed class StreamCaptureConverterTests
     {
         var choices = StreamConversionChoice.For(new StreamCaptureConverterOptions());
 
-        CollectionAssert.AreEqual(new[] { "None", "HP-GL to SVG", "External tool" }, choices.Select(c => c.DisplayName).ToArray());
+        CollectionAssert.AreEqual(new[] { "None", "HP-GL to SVG", "HP-GL to PNG", "HP-GL to JPG", "External tool" }, choices.Select(c => c.DisplayName).ToArray());
     }
 }

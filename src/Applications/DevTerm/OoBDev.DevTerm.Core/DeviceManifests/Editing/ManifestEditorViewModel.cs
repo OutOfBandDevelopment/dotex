@@ -391,6 +391,24 @@ public sealed class ManifestEditorViewModel
         StructureChanged?.Invoke(this, EventArgs.Empty);
     }
 
+    /// <summary>Whether the manifest keeps its panel in an <c>.xml</c> file that <see cref="ConvertPanelToJson"/> can move to JSON.</summary>
+    public bool CanConvertPanelToJson => Manifest.UiFile is { Length: > 0 } uiFile && string.Equals(Path.GetExtension(uiFile), ".xml", StringComparison.OrdinalIgnoreCase);
+
+    /// <summary>The editor saves JSON only: points an <c>.xml</c> panel file at a <c>.json</c> one, written on the next save (the old <c>.xml</c> stays).</summary>
+    public void ConvertPanelToJson()
+    {
+        if (!CanConvertPanelToJson)
+        {
+            return;
+        }
+
+        ArmCheckpoint();
+        DeviceManifestWriter.ConvertUiFileToJson(Manifest);
+        MarkEdited();
+        StatusMessage = $"The panel file is now {Manifest.UiFile}; save to write it as JSON.";
+        StructureChanged?.Invoke(this, EventArgs.Empty);
+    }
+
     /// <summary>The panel as it would open (see <see cref="ManifestUiBuilder"/>) — built from a copy, since building can fill in the panel's notes.</summary>
     public UiDefinition BuildPreviewDefinition() => ManifestUiBuilder.Build(Clone(Manifest));
 

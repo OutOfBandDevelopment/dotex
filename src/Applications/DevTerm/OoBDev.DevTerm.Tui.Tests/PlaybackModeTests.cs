@@ -183,4 +183,26 @@ public sealed class PlaybackModeTests
 
         Assert.AreEqual("IDN reply is correct", SessionLog.Load(path).Records[5].Text);
     }
+
+    [TestMethod]
+    public void EditAndDeleteNote_ShowTheRevision_AndKeepTheHistoryInTheLog()
+    {
+        var path = WriteSampleLog(_directory);
+        var controller = new PlaybackPresenters().Open(path, new ManualTimeProvider());
+
+        RunWindow(controller, parts =>
+        {
+            parts.Do(() => controller.SeekTo(5));
+            parts.Do(() => controller.AddNote("first"));
+            parts.Do(() => controller.EditNote("second"));
+            Assert.Contains("[note] second (edited)", parts.Output.Text);
+
+            parts.Do(controller.DeleteNote);
+            Assert.Contains("[note] (deleted: second)", parts.Output.Text);
+        });
+
+        var saved = SessionLog.Load(path).Records[5];
+        Assert.IsTrue(saved.Deleted);
+        CollectionAssert.AreEqual(new[] { "first" }, global::System.Linq.Enumerable.ToArray(saved.PreviousTexts!));
+    }
 }

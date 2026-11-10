@@ -76,6 +76,18 @@ Responses:
 
 - `200` OK
 
+### GET `/api/monitor/captures/{n}/preview`
+
+A drawn preview of an HP-GL (SVG), PostScript or PCL (PNG through an installed Ghostscript or GhostPCL) capture; 404 unknown or not drawable, 501 with the reason when the tool is missing
+
+Parameters:
+
+- `n` (path, integer, required)
+
+Responses:
+
+- `200` OK
+
 ### GET `/api/panel`
 
 Responses:

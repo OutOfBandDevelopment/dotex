@@ -82,7 +82,7 @@ Captured records also have `seq`, which starts at 1 and goes up by 1 per record 
 | `tx` | `data` | Bytes handed to the transport. |
 | `rx` | `data` | One chunk from the device, exactly as the presenters were given it: one `PipeReader.ReadAsync` result, one record. |
 | `instrument` | `profile` | A SCPI instrument profile was picked from the Device panel after logging started (added 2026-10-09). Playback uses the first one when the header has no `scpiProfile`. |
-| `note` | `text` | A playback annotation. It has no `seq`, since it isn't a captured event. Its `t` is the previous record's time. A live RFC 2217 line/modem state change is recorded as a note prefixed `[line] `. |
+| `note` | `text`; `history` (earlier texts, oldest first) and `deleted` (true) once revised | A playback annotation. It has no `seq`, since it isn't a captured event. Its `t` is the previous record's time. A live RFC 2217 line/modem state change is recorded as a note prefixed `[line] `. |
 
 `data` is the raw bytes, **base64** (RFC 4648, with padding).
 
@@ -240,5 +240,5 @@ Decided 2026-10-03.
 - ~~A note can't be added to a log that this same process is still recording.~~ Built 2026-10-13: File > Add Note to Log... (TUI and WPF, enabled while that tab logs) writes a timestamped `note` record through the recorder (`SessionLogger.RecordNote`), in sequence with the traffic. Playback's atomic replace still can't touch a log this process is recording; stop logging first for that.
 - Seeking backward replays from record 0, so its cost grows with the log. Presenter snapshots at
   intervals would fix that, but `IPresenter` has no snapshot/restore contract today. Decided 2026-10-13: the recorder writes periodic checkpoint markers into the log and playback seeks from the nearest one (BACKLOG).
-- Skip silence: `PlaybackEngine.MaxGap` caps long idle gaps during realtime playback (built 2026-11-09; null plays every gap in full). Decided 2026-10-13: the playback bar sets it, default 1 s; timestamps keep showing real time. The playback bar control in the front ends is still to do (BACKLOG).
-- Notes can only be added, not edited or deleted, from the Playback window. Decided 2026-10-13: edit and delete are wanted, with each change recorded as a revision so the log stays auditable (BACKLOG).
+- Skip silence: `PlaybackEngine.MaxGap` caps long idle gaps during realtime playback (built 2026-11-09; null plays every gap in full). Decided 2026-10-13: the playback bar sets it, default 1 s; timestamps keep showing real time. The WPF playback window has a Skip silence checkbox (`PlaybackController.SkipSilence`, off by default, 1 s cap, built 2026-11-09); the Tui playback window has the same Skip silence checkbox beside the position line (built 2026-11-09).
+- ~~Notes can only be added, not edited or deleted.~~ Built 2026-11-09: the Playback window edits or deletes the note just played (WPF buttons; Tui Ctrl+E and Ctrl+D). The record stays in place; an edit sets the new `text` and appends the old one to `history`, a delete sets `"deleted":true` and plays as `(deleted: text)`. Older readers ignore the two extra fields, so the log stays valid; the file is saved in place like Add Note.

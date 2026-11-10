@@ -37,6 +37,8 @@ public sealed class PlaybackDialogViewModel : ViewModelBase
         SkipToEnd = new PlaybackCommand(this, c => c.SkipToEnd());
         Jump = new PlaybackCommand(this, c => c.JumpTo(JumpText));
         AddNote = new PlaybackCommand(this, c => c.AddNote(NoteText));
+        EditNote = new PlaybackCommand(this, c => c.EditNote(NoteText));
+        DeleteNote = new PlaybackCommand(this, c => c.DeleteNote());
         MarkIn = new PlaybackCommand(this, c =>
         {
             c.MarkIn();
@@ -85,6 +87,20 @@ public sealed class PlaybackDialogViewModel : ViewModelBase
         }
     }
 
+    /// <summary>Whether long quiet stretches are shortened while playing.</summary>
+    public bool SkipSilence
+    {
+        get => _controller.SkipSilence;
+        set
+        {
+            if (_controller.SkipSilence != value)
+            {
+                _controller.SkipSilence = value;
+                OnPropertyChanged();
+            }
+        }
+    }
+
     /// <summary>A record number or log time to jump to.</summary>
     public string JumpText
     {
@@ -121,6 +137,12 @@ public sealed class PlaybackDialogViewModel : ViewModelBase
 
     /// <summary>Adds <see cref="NoteText"/> at the current position and saves the log.</summary>
     public ICommand AddNote { get; }
+
+    /// <summary>Replaces the note just played with <see cref="NoteText"/>; the old text stays in the log as a revision.</summary>
+    public ICommand EditNote { get; }
+
+    /// <summary>Deletes the note just played; its text stays in the log as a revision.</summary>
+    public ICommand DeleteNote { get; }
 
     /// <summary>Starts the trim selection at the current position.</summary>
     public ICommand MarkIn { get; }

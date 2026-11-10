@@ -4,7 +4,7 @@ Velleman K8055 USB experiment board (vendor 0x10CF, product 0x5500): the unpromp
 
 ## Description
 
-Hardware driver, so it lives in `src/HardwareDevices`. Source: dev-term `Devices.K8055` with merge M2 (named input flags) from `mine/binary-data-decoders`. Design: [DeviceDecoding](../../../docs/design/DeviceDecoding/README.md), plan: [device-decoding-migration-plan.md](../../../docs/migration/device-decoding-migration-plan.md).
+Hardware driver, so it lives in `src/HardwareDevices`. Source: dev-term `Devices.K8055` with merge M2 (named input flags) from `mine/binary-data-decoders`. Design: [DeviceDecoding](../../../docs/design/DeviceDecoding/README.md), plan: [device-decoding-migration-plan.md](../../../docs/design/DeviceDecoding/migration-plan.md).
 
 The USB product id follows the board address (jumpers SK5 and SK6): `K8055Device` is address 0 (0x5500, `[UsbHid(0x10CF, 0x5500)]`), and `K8055Address1Device` to `K8055Address3Device` are 0x5501 to 0x5503. All share `K8055DeviceBase`. Bytes go through `OoBDev.System.IO.UsbHids`, so the package never opens the device.
 

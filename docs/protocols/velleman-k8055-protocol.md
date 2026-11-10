@@ -3,7 +3,7 @@
 ## Source
 
 - `C:\repo\oobdev\dotex\Incoming\BinaryDecoders\src\OoBDev.Velleman.K8055\` — a working prior C#
-  implementation plus reverse-engineering notes, from the same local `dotex/Incoming/BinaryDecoders`
+  implementation plus reverse-engineering notes, from the former local `dotex/Incoming/BinaryDecoders` (removed 2026-11-10)
   project as the [EByte](ebyte-e810-dtu-config-protocol.md) and [Kuando Busylight](kuando-busylight-protocol.md)
   proposals. Cross-references two independent public sources: [rm-hull/k8055](https://github.com/rm-hull/k8055)
   and [libk8055](http://libk8055.sourceforge.net/).

@@ -214,4 +214,26 @@ public sealed class SessionLog
         _records = list;
         return note;
     }
+
+    /// <summary>
+    /// Edits (<paramref name="text"/> given) or deletes (<see langword="null"/>) the note at <paramref name="index"/>. The record
+    /// stays in the file with its earlier texts, so the change is auditable (see <see cref="SessionLogRecord.PreviousTexts"/>).
+    /// </summary>
+    /// <exception cref="InvalidOperationException">The record at <paramref name="index"/> is not a note.</exception>
+    public SessionLogRecord ReviseNote(int index, string? text)
+    {
+        ArgumentOutOfRangeException.ThrowIfNegative(index);
+        ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual(index, _records.Count);
+        var existing = _records[index];
+        if (existing.Kind != SessionLogRecordKind.Note)
+        {
+            throw new InvalidOperationException($"Record {index + 1} is not a note.");
+        }
+
+        var revised = text is null ? existing.AsDeleted() : existing.Revised(text);
+        var list = _records as List<SessionLogRecord> ?? [.. _records];
+        list[index] = revised;
+        _records = list;
+        return revised;
+    }
 }

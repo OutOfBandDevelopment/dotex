@@ -13,6 +13,13 @@ public sealed class ScpiInstrumentProfile
     /// <summary>The display name.</summary>
     public required string Name { get; set; }
 
+    /// <summary>
+    /// The name of the profile this one builds on (a sub-type layered over a generic or family profile, decided 2026-10-13). The base's
+    /// commands come first and a command here with the same id replaces its base command; the terminator and notes are inherited when
+    /// the file leaves them out. <see cref="IdnPattern"/> is never inherited. Resolved by <see cref="ScpiProfileCatalog"/>.
+    /// </summary>
+    public string? Extends { get; set; }
+
     /// <summary>A regular expression matched against an <c>*IDN?</c> reply; empty for a profile that is never auto-selected.</summary>
     public string? IdnPattern { get; set; }
 

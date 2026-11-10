@@ -2,7 +2,7 @@
 
 [↑ Overview](README.md) · [Architecture →](architecture.md)
 
-**Status:** Draft · **Date:** 2026-10-22 · **Related:** [docs/todo.md](../../todo.md)
+**Status:** Draft · **Date:** 2026-10-22
 
 ## Contents
 

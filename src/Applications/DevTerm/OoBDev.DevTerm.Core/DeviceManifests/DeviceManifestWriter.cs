@@ -77,4 +77,22 @@ public static class DeviceManifestWriter
         File.WriteAllText(file, ToFileJson(toWrite) + "\n");
         return file;
     }
+
+    /// <summary>
+    /// Points a manifest whose UI file is an <c>.xml</c> panel at a <c>.json</c> file of the same name, so the
+    /// next <see cref="Save"/> writes the panel as JSON (the manifest editor is JSON only; this is its convert
+    /// from an <c>.xml</c> panel). The old <c>.xml</c> file is left in place. Returns false when there was
+    /// nothing to convert.
+    /// </summary>
+    public static bool ConvertUiFileToJson(DeviceManifest manifest)
+    {
+        ArgumentNullException.ThrowIfNull(manifest);
+        if (manifest.UiFile is not { Length: > 0 } uiFile || !string.Equals(Path.GetExtension(uiFile), ".xml", StringComparison.OrdinalIgnoreCase))
+        {
+            return false;
+        }
+
+        manifest.UiFile = Path.ChangeExtension(uiFile, ".json");
+        return true;
+    }
 }

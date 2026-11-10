@@ -53,6 +53,20 @@ public sealed class PlaybackControllerTests
     private PlaybackController Open() => PlaybackController.Open(_path, PipelineFor, _available, new ManualTimeProvider());
 
     [TestMethod]
+    public void SkipSilence_Toggled_SetsTheEnginesGapCap()
+    {
+        // Stage
+        var controller = Open();
+
+        // Test + Assert
+        Assert.IsFalse(controller.SkipSilence, "Off by default.");
+        controller.SkipSilence = true;
+        Assert.AreEqual(PlaybackController.DefaultSkipSilenceCap, controller.Engine.MaxGap);
+        controller.SkipSilence = false;
+        Assert.IsNull(controller.Engine.MaxGap);
+    }
+
+    [TestMethod]
     public void StartsWithTheLogsOwnPresenters_LimitedToTheInstalledOnes()
     {
         var controller = Open();
@@ -185,6 +199,62 @@ public sealed class PlaybackControllerTests
         Assert.AreEqual(recordCountBefore, controller.Log.Records.Count, "The note must not be inserted in memory if the save failed.");
         Assert.AreEqual(positionBefore, controller.Engine.Position);
         Assert.AreEqual(selectionEndBefore, controller.SelectionEnd);
+    }
+
+    [TestMethod]
+    public void EditNote_KeepsTheOldTextAsHistory_SavesIt_AndPlaysAsEdited()
+    {
+        var controller = Open();
+        controller.SeekTo(2);
+        controller.AddNote("first");
+
+        var line = PlaybackText.Lines(controller.EditNote("  second  ")).Single(l => l.Kind == PlaybackLineKind.Note);
+
+        Assert.AreEqual("00:01.000 [note] second (edited)", line.Text);
+        var saved = SessionLog.Load(_path).Records[2];
+        Assert.AreEqual("second", saved.Text);
+        CollectionAssert.AreEqual(new[] { "first" }, saved.PreviousTexts!.ToArray());
+        Assert.IsFalse(saved.Deleted);
+    }
+
+    [TestMethod]
+    public void DeleteNote_MarksItDeletedInTheFile_AndNoLongerOffersItForChange()
+    {
+        var controller = Open();
+        controller.SeekTo(2);
+        controller.AddNote("oops");
+
+        var line = PlaybackText.Lines(controller.DeleteNote()).Single(l => l.Kind == PlaybackLineKind.Note);
+
+        Assert.AreEqual("00:01.000 [note] (deleted: oops)", line.Text);
+        var saved = SessionLog.Load(_path).Records[2];
+        Assert.IsTrue(saved.Deleted);
+        Assert.AreEqual("oops", saved.Text);
+        Assert.IsNull(controller.CurrentNoteIndex);
+    }
+
+    [TestMethod]
+    public void EditNote_WhenTheRecordJustPlayedIsNotANote_Throws()
+    {
+        var controller = Open();
+        controller.SeekTo(2);
+
+        Assert.IsNull(controller.CurrentNoteIndex);
+        Assert.ThrowsExactly<InvalidOperationException>(() => controller.EditNote("x"));
+    }
+
+    [TestMethod]
+    public void EditNote_WhenTheLogFileIsHeldOpenByAWriter_ThrowsAndLeavesMemoryUnchanged()
+    {
+        var controller = Open();
+        controller.SeekTo(2);
+        controller.AddNote("first");
+        using var writerHold = new FileStream(_path, FileMode.Open, FileAccess.Write, FileShare.Read);
+
+        Assert.ThrowsExactly<UnauthorizedAccessException>(() => controller.EditNote("second"));
+
+        Assert.AreEqual("first", controller.Log.Records[2].Text);
+        Assert.IsNull(controller.Log.Records[2].PreviousTexts);
     }
 
     [TestMethod]

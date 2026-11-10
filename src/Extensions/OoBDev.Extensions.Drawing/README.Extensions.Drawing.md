@@ -9,6 +9,7 @@ Bitmap and image helpers on SkiaSharp (cross-platform), migrated from BinaryData
 | `PngPack` | `Pack(bytes)` stores arbitrary bytes in the pixels of a lossless PNG (length header, then data); `Unpack` reads them back. |
 | `ZOrderCurve` | `GetValue(Point)` and `GetPoint(uint)` interleave and split the X and Y bits (Morton order), 16 bits per axis. |
 | `MultiScaleTile` | Deep-zoom tile pyramid: `GetMaxLevel`, `GetTileCount`, `GetTile`, `GetTileAsBytes` (JPEG) and `GetTileAsStream` on an `SKBitmap`, with path and stream overloads. |
+| `VectorSceneRasterizer` | `Rasterize(scene, widthPixels, format)` draws a `VectorScene` (from `OoBDev.Documents.Hpgl`, for example `HpglToSvgConverter.ParseScene`) to PNG or JPEG bytes: white background, anti-aliased 1 px strokes, aspect ratio kept, width 1 to 8192. |
 | `SizeExtensions` | `MaxLevel`, `Scale` and `OffsetBy` used by the pyramid. |
 
 ```csharp

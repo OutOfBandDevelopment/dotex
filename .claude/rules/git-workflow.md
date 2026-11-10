@@ -5,4 +5,4 @@
 - Commit messages must never mention Claude or AI: no `Co-Authored-By`, no "generated with" line. A hook (`.claude/hooks/guard-git.mjs`) blocks these.
 - Never force-push, amend published commits, or rewrite history without explicit approval in that turn.
 - Before committing, run `git status` and stage only the files that belong to the change (name paths explicitly; no `git add -A`).
-- Unrelated working-tree changes the owner made (for example an existing edit to `docs/todo.md`) are theirs: do not stage, commit or revert them unless asked.
+- Unrelated working-tree changes the owner made (for example an existing edit to a design document) are theirs: do not stage, commit or revert them unless asked.

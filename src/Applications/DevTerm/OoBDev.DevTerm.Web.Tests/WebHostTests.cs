@@ -12,6 +12,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Net.WebSockets;
 using System.Text;
+using Microsoft.Extensions.DependencyInjection;
 using OoBDev.DevTerm.Configuration;
 using OoBDev.TestUtilities;
 namespace OoBDev.DevTerm.Web.Tests;
@@ -80,6 +81,34 @@ public class WebHostTests
             using var response = await client.SendAsync(request);
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
             await built.App.StopAsync();
+        }
+    }
+
+    [TestMethod]
+    public async Task MonitorPreview_DrawsHpglAsSvg_AndRefusesWhatItCannotDraw()
+    {
+        using var exportsDirectory = new TempDirectoryHandle();
+        var exports = exportsDirectory.DirectoryPath;
+        Directory.CreateDirectory(exports);
+        await File.WriteAllTextAsync(Path.Combine(exports, "dev_20260101-000000.hpgl"), "IN;SP1;PU0,0;PD1000,1000;", TestContext.CancellationToken);
+        var webPort = FreePort();
+        var built = WebHost.Build(
+            new CliOptions { Transport = "loopback", Presenter = ["ascii"], Tui = false, Cli = true, ExportDirectory = exports },
+            new WebOptions { Urls = $"http://127.0.0.1:{webPort}", Token = "secret" },
+            []);
+        await built.App.StartAsync();
+        await using (built.Hub)
+        {
+            built.App.Services.GetRequiredService<WebStreamMonitor>().Monitor.LoadFromDisk();
+            using var client = new HttpClient { BaseAddress = new Uri($"http://127.0.0.1:{webPort}/") };
+            client.DefaultRequestHeaders.Authorization = new("Bearer", "secret");
+
+            using var svg = await client.GetAsync("api/monitor/captures/0/preview", TestContext.CancellationToken);
+            Assert.AreEqual(HttpStatusCode.OK, svg.StatusCode);
+            Assert.AreEqual("image/svg+xml", svg.Content.Headers.ContentType?.MediaType);
+            StringAssert.Contains(await svg.Content.ReadAsStringAsync(TestContext.CancellationToken), "<svg");
+            Assert.AreEqual(HttpStatusCode.NotFound, (await client.GetAsync("api/monitor/captures/9/preview", TestContext.CancellationToken)).StatusCode);
+            await built.App.StopAsync(TestContext.CancellationToken);
         }
     }
 

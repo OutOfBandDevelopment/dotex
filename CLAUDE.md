@@ -14,7 +14,7 @@ Working agreements are enforced by files, not by this guide alone:
 | Mechanism | Location | What it holds |
 |-----------|----------|---------------|
 | Rules (always loaded, or loaded for matching files) | `.claude/rules/` | `git-workflow`, `owner-decisions`, `open-questions`, `autonomous-mode` (always); `coding-standards` (C#), `testing` (tests, runsettings, containers), `docs-and-diagrams` (docs, markdown) |
-| Skills (loaded when the task matches) | `.claude/skills/` | `add-integration-service`, `archive-completed-work`, `document-configuration`, `compare-incoming-codebase`, `architectural-analysis`, `security-audit`, `write-docs`, `complete-work`, `reconcile-designs-and-code`, `work-backlog`, `owner-interview` |
+| Skills (loaded when the task matches) | `.claude/skills/` | `add-integration-service`, `archive-completed-work`, `document-configuration`, `compare-incoming-codebase`, `architectural-analysis`, `security-audit`, `write-docs`, `write-tests`, `complete-work`, `reconcile-designs-and-code`, `work-backlog`, `owner-interview` |
 | Hooks (deterministic guards) | `.claude/hooks/`, registered in `.claude/settings.json` | `guard-git.mjs` guards git (attribution, history rewrites, `gh`, `upstream`); `autonomous-mode.mjs` (UserPromptSubmit) and `keep-going.mjs` (Stop) keep the backlog loop running until the owner says "I'm back" (rule `autonomous-mode`) |
 | Memory | `.claude/memory/` (in the repository, never user-specific; index `MEMORY.md`) | owner preferences and feedback |
 
@@ -38,13 +38,13 @@ Read first:
 - `/docs/architecture/README.md` and `/docs/architecture/architectural-standards.md`
 
 Key principles:
-- ALL features from BinaryDataDecoders migrate (phases = priority order, not selection); the newest source is `C:\repo\mine\binary-data-decoders`, and `Incoming/BinaryDecoders` can be behind
+- ALL features from BinaryDataDecoders migrate (phases = priority order, not selection); the newest source is `C:\repo\mine\binary-data-decoders`; the old `Incoming/BinaryDecoders` copy was removed 2026-11-10
 - Provider/factory pattern for extensibility; DI with `TryAdd*`
 - `README.{Project}.md` (upper-case `README`) per project; `PackageReadmeFile` derives from it (`src/Directory.Build.props`), and a missing file is only warning OBDPK001
 - Nullable enabled, ImplicitUsings disabled
 - Report outcomes faithfully: failing tests, skipped steps and unverified changes are stated plainly
 
-Incoming projects pending owner decisions (BotChat was extracted 2026-10-09 and removed): BinaryDataDecoders (~50,000 LOC, 14+ decisions; Phase 1 foundation work is blocked on them), ContractParser (implement now, later, or keep as spec), Tools (consolidate BulkLlm or archive).
+The `Incoming/` folder is gone (2026-11-10): the decisions D1 to D9 are answered and the remaining migration work is in [the migration plan](docs/migration/README.md).
 
 ---
 
@@ -115,7 +115,7 @@ dotnet test src/ --collect:"XPlat Code Coverage"
 
 ## Important Files
 
-- `/TODO.md`, `/BACKLOG.md`, `/Incoming/CHECKLIST.md` - work tracking and incoming project status
+- `/TODO.md`, `/BACKLOG.md`, `/docs/migration/README.md` - work tracking and the unified migration plan
 - `/docs/architecture/`, `/docs/how-tos/` ([.runsettings variables](docs/how-tos/runsettings-variables-and-configuration.md)), `/docs/migration/`, `/docs/changes/`
 - Git: the primary repo is the local bare repo `origin` (`G:/oobdev/dotex.git`); GitHub (`upstream`) is no longer primary, so no `gh`, PRs or GitHub CI waits. Commit as you work on a branch, never on `main` (`.claude/rules/git-workflow.md`)
 - `/GitVersion.yml` (Mainline strategy: major.minor from the last release tag, patch rises with every commit that reaches main, branches build `0.5.67-dev-name.1+commits`; merges into main are always `--no-ff`), `/src/.runsettings`, `scripts/ci` (manual CI)
@@ -173,4 +173,4 @@ Older entries (before 2026-10) live in `docs/changes/` (index: `docs/changes/REA
 2. **Integration testing** - run the Docker stack and Integration suite locally; CI is manual only (`scripts/ci`): no scheduled or push builds, and the GitHub workflows are removed
 3. **SharedFramework** - design-first (Epics 2 Communications, 6 Documents, 7 Identity, 10 Text Templating): four documents per feature (requirements, architecture, api-design, testing-strategy; 85-90% coverage targets) instead of code migration, per `docs/patterns-discovery/06-design-document-standard.md`
 4. **Incoming projects** - all investigated, decisions pending
-5. **Backlog** - single backlog in `BACKLOG.md`; CGI middleware and related-work pointers are in `docs/todo.md` and `docs/harvest-candidates.md`
+5. **Backlog** - single backlog in `BACKLOG.md`; related-work pointers are in `docs/harvest-candidates.md`

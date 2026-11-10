@@ -22,6 +22,10 @@ Ghostscript isn't in winget, so use the official installer:
 
 Use `gswin64c.exe` (console), not `gswin64.exe`, which opens a window for each conversion.
 
+## Automatic preview (WPF and Web)
+
+When Ghostscript (`gswin64c.exe`) or GhostPCL (`gpcl6win64.exe`) is on `PATH` or under `C:\Program Files\gs\`, the WPF Stream Monitor draws a selected PostScript or PCL capture by itself (100 dpi, `-dSAFER`, abandoned after 20 seconds). Nothing is installed or configured for this; without the tool the window says what to install. HP-GL plots are drawn by dev-term itself. The Web monitor does the same through `GET /api/monitor/captures/{n}/preview` (SVG for HP-GL, PNG for PostScript and PCL, 501 with the reason when the tool is missing).
+
 ## Configure
 
 Set the mode to **External tool**, point at the executable and give it an argument template. These are the

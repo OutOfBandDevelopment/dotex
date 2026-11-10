@@ -236,6 +236,7 @@
     <Project Path="Framework/OoBDev.Data.Common.Tests/OoBDev.Data.Common.Tests.csproj" />
     <Project Path="Framework/OoBDev.Data.Common/OoBDev.Data.Common.csproj" />
     <Project Path="Framework/OoBDev.Devices.TestUtilities/OoBDev.Devices.TestUtilities.csproj" />
+    <Project Path="Framework/OoBDev.Tui.TestUtilities/OoBDev.Tui.TestUtilities.csproj" />
     <Project Path="Framework/OoBDev.Documents.Abstractions/OoBDev.Documents.Abstractions.csproj" />
     <Project Path="Framework/OoBDev.Documents.Hpgl.Tests/OoBDev.Documents.Hpgl.Tests.csproj" />
     <Project Path="Framework/OoBDev.Documents.Hpgl/OoBDev.Documents.Hpgl.csproj" />

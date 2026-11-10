@@ -44,6 +44,8 @@ broker --> ext : only if granted
 
 The plugin has no direct network, file or environment access; the only channel it holds is the broker connection. Isolation is per platform: Windows AppContainer plus job object; Linux bubblewrap plus seccomp, with a small shim that sets up the sandbox before exec.
 
+Lifetime is a manifest capability chosen by application configuration (REQ-011): `Bound` ties the plugin to its caller through a job object with kill-on-close (Windows) or parent-death signals (Linux); `Shared` lets several callers reuse one instance found through a named mutex. Rules in [protocol-and-manifest.md](protocol-and-manifest.md#lifetime).
+
 ## Phases
 
 <a id="table-2"></a>**Table 2 — Phases**

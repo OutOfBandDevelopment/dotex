@@ -27,19 +27,15 @@ menu item per device. The panel itself is already generic (`UiDefinition` render
 
 ```plantuml
 @startuml
-interface IPluginModule
-interface IDevicePanelContribution {
-  Id; MenuTitle; PresenterName
-  BuildDefinition(): UiDefinition
-  CreateSurface(Session): IControlSurface
-}
+interface "IPluginModule" as M
+interface "IDevicePanelContribution\n(Id, MenuTitle, PresenterName,\nBuildDefinition, CreateSurface)" as P
 component "K8055 plugin folder" as K
 component "PluginLoader" as L
 component "TuiMode / MainWindow / WebHost" as F
-K ..|> IPluginModule
-K --> IDevicePanelContribution : registers
+K ..> M : implements
+K --> P : registers
 L --> K : loads
-F --> IDevicePanelContribution : menu + panel
+F --> P : menu + panel
 @enduml
 ```
 

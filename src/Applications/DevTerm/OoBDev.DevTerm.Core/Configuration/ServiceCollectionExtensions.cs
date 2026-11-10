@@ -181,7 +181,7 @@ public static class ServiceCollectionExtensions
     /// <summary>Loads plugins from <see cref="CliOptions.Plugins"/> (default: <c>plugins</c> next to the app) and registers their <see cref="PluginLoadResult"/>s.</summary>
     public static IServiceCollection AddPlugins(this IServiceCollection services, CliOptions cliOptions)
     {
-        var directory = string.IsNullOrWhiteSpace(cliOptions.Plugins) ? global::System.IO.Path.Combine(AppContext.BaseDirectory, "plugins") : cliOptions.Plugins;
+        var directory = PluginLoader.ResolveDirectory(cliOptions.Plugins);
         var results = PluginLoader.LoadAll(directory, services);
         services.AddSingleton<IReadOnlyList<PluginLoadResult>>(results);
         PublishInstrumentProviders(services);

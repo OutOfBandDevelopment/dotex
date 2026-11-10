@@ -4,7 +4,7 @@ Kuando Busylight USB HID status light (vendor 0x04D8, product 0xF848): command r
 
 ## Description
 
-Hardware driver, so it lives in `src/HardwareDevices` beside the other device packages, apart from the generic protocols in `src/Extensions`. Source: dev-term `Devices.Busylight` plus merge M1 from `mine/binary-data-decoders` (step record, program frame). Design: [DeviceDecoding](../../../docs/design/DeviceDecoding/README.md), plan: [device-decoding-migration-plan.md](../../../docs/migration/device-decoding-migration-plan.md).
+Hardware driver, so it lives in `src/HardwareDevices` beside the other device packages, apart from the generic protocols in `src/Extensions`. Source: dev-term `Devices.Busylight` plus merge M1 from `mine/binary-data-decoders` (step record, program frame). Design: [DeviceDecoding](../../../docs/design/DeviceDecoding/README.md), plan: [device-decoding-migration-plan.md](../../../docs/design/DeviceDecoding/migration-plan.md).
 
 The device is `[UsbHid(0x04D8, 0xF848)]`; bytes go through `OoBDev.System.IO.UsbHids`, so the package never opens the device. The light is told its whole state, so the message is the state.
 

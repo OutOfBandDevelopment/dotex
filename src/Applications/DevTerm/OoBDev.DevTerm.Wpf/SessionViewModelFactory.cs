@@ -39,5 +39,8 @@ public sealed class SessionViewModelFactory(IOptions<LoopbackTransportOptions> l
     }
 
     /// <inheritdoc />
+    public SessionViewModel CreateFromTab(SessionTab tab, string title) => new(tab.Session, title, tab, logDialog);
+
+    /// <inheritdoc />
     public ConnectionEditorViewModel CreateEditor() => new(profiles, new CliOptions());
 }

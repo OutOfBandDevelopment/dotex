@@ -1036,12 +1036,12 @@ var person = provider.Generate<PersonModel>();
 
 ### 9.2 Library Documentation
 
-- [x] 40+ library-specific markdown files in `docs/Libraries/`
+- [x] 40+ project `README.{Project}.md` files beside the projects
 - [x] Detailed API documentation per library
 
 ### 9.3 Code Documentation
 
-- [x] 40+ README files in `docs/code/`
+- [x] 40+ project `README.{Project}.md` files beside the projects
 - [x] Per-project documentation
 - [x] Extensive XML comments
 

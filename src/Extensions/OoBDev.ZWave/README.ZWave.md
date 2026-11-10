@@ -33,7 +33,7 @@ The control surface (waits on owner question Q3). `ZWaveStick` in the tests stil
 - Unit tests use byte-exact frames captured from an Aeotec Z-Stick S2 by dev-term.
 - Hardware test `ZWaveHardwareTests` (run parameter `ZWAVE_SERIAL_PORT`) sent GetVersion to a Z-Stick S2 on COM13 and got "Z-Wave 2.78" with no CAN or NAK. It ends Inconclusive when the port is absent or busy.
 
-Design: [DeviceDecoding](../../../docs/design/DeviceDecoding/README.md), plan: [device-decoding-migration-plan.md](../../../docs/migration/device-decoding-migration-plan.md).
+Design: [DeviceDecoding](../../../docs/design/DeviceDecoding/README.md), plan: [migration-plan.md](../../../docs/design/DeviceDecoding/migration-plan.md).
 
 ## Device documentation
 

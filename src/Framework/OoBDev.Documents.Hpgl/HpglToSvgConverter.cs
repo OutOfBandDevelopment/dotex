@@ -50,8 +50,11 @@ public static class HpglToSvgConverter
     /// malformed input — an instruction it can't parse is simply skipped, the same tolerance the
     /// rest of dev-term's wire-format parsing uses.
     /// </summary>
+    public static string ConvertToSvg(ReadOnlySpan<byte> data) => VectorSceneSvgWriter.Write(ParseScene(data));
+
+    /// <summary>Parses <paramref name="data"/> as HP-GL into a <see cref="VectorScene"/> (Y pointing down, with a margin); never throws on malformed input.</summary>
     [SuppressMessage("Maintainability", "MA0051:Method is too long", Justification = "A single-pass format state machine; splitting it would scatter shared scanner state.")]
-    public static string ConvertToSvg(ReadOnlySpan<byte> data)
+    public static VectorScene ParseScene(ReadOnlySpan<byte> data)
     {
         var text = Encoding.ASCII.GetString(data);
         var paths = new List<PenPath>();
@@ -121,7 +124,7 @@ public static class HpglToSvgConverter
         }
 
         Flush();
-        return Render(paths);
+        return BuildScene(paths);
 
         void ApplyCoordinates(string rest, bool draw)
         {
@@ -175,14 +178,13 @@ public static class HpglToSvgConverter
         return values;
     }
 
-    private static string Render(List<PenPath> paths)
+    private static VectorScene BuildScene(List<PenPath> paths)
     {
         const double margin = 20;
 
         if (paths.Count == 0)
         {
-            return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                   "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"100\" height=\"100\" viewBox=\"0 0 100 100\"></svg>\n";
+            return VectorScene.Empty;
         }
 
         var minX = double.MaxValue;
@@ -203,27 +205,15 @@ public static class HpglToSvgConverter
         var width = Math.Max(maxX - minX, 1) + (margin * 2);
         var height = Math.Max(maxY - minY, 1) + (margin * 2);
 
-        var builder = new StringBuilder();
-        builder.Append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
-        builder.Append(CultureInfo.InvariantCulture, $"<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"{width:F2}\" height=\"{height:F2}\" viewBox=\"0 0 {width:F2} {height:F2}\">\n");
-
+        var lines = new List<VectorPolyline>(paths.Count);
         foreach (var path in paths)
         {
             var color = _penColors[((path.Pen % _penColors.Length) + _penColors.Length) % _penColors.Length];
-            builder.Append("  <path d=\"");
-            for (var i = 0; i < path.Points.Count; i++)
-            {
-                var point = path.Points[i];
-                // HP-GL's Y axis increases upward; SVG's increases downward.
-                var svgX = point.X - minX + margin;
-                var svgY = height - (point.Y - minY + margin);
-                builder.Append(CultureInfo.InvariantCulture, $"{(i == 0 ? "M" : "L")} {svgX:F2},{svgY:F2} ");
-            }
-
-            builder.Append(CultureInfo.InvariantCulture, $"\" fill=\"none\" stroke=\"{color}\" stroke-width=\"1\" />\n");
+            // HP-GL's Y axis increases upward; the scene's increases downward.
+            var points = path.Points.ConvertAll(point => new VectorPoint(point.X - minX + margin, height - (point.Y - minY + margin)));
+            lines.Add(new VectorPolyline(path.Pen, color, points));
         }
 
-        builder.Append("</svg>\n");
-        return builder.ToString();
+        return new VectorScene(width, height, lines);
     }
 }

@@ -131,6 +131,8 @@ public sealed class PlaybackDialogTests
                 playback.SaveTrim.Execute(null);
                 playback.NoteText = "checked";
                 playback.AddNote.Execute(null);
+                playback.NoteText = "rechecked";
+                playback.EditNote.Execute(null);
             }));
             using var provider = services.AddDevTermWpfShell().BuildServiceProvider();
 
@@ -139,7 +141,9 @@ public sealed class PlaybackDialogTests
 
             // Assert
             Assert.AreEqual(1, Directory.GetFiles(directory, "*.trim-*").Length);
-            Assert.IsTrue(File.ReadAllText(path).Contains("checked", StringComparison.Ordinal));
+            var saved = File.ReadAllText(path);
+            Assert.IsTrue(saved.Contains("rechecked", StringComparison.Ordinal));
+            Assert.IsTrue(saved.Contains("\"history\":[\"checked\"]", StringComparison.Ordinal));
         }
     }
 

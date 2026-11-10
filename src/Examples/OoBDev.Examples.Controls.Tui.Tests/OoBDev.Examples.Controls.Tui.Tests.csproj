@@ -26,6 +26,7 @@
 	<ItemGroup>
 		<ProjectReference Include="..\OoBDev.Examples.Controls.Tui\OoBDev.Examples.Controls.Tui.csproj" />
 		<ProjectReference Include="..\OoBDev.Examples.TestUtilities\OoBDev.Examples.TestUtilities.csproj" />
+		<ProjectReference Include="..\..\Framework\OoBDev.Tui.TestUtilities\OoBDev.Tui.TestUtilities.csproj" />
 	</ItemGroup>
 
 </Project>

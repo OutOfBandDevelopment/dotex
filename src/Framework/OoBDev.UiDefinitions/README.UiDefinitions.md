@@ -4,7 +4,7 @@ A serializable, toolkit-neutral description of a control panel. A renderer (WPF,
 
 ## Description
 
-Ported from dev-term `UiDefinitions` (phase 6 of [the device decoding plan](../../../docs/migration/device-decoding-migration-plan.md)).
+Ported from dev-term `UiDefinitions` (phase 6 of [the device decoding plan](../../../docs/design/DeviceDecoding/migration-plan.md)).
 
 | Area | Types |
 |------|-------|

@@ -4,7 +4,7 @@
 
 - `C:\repo\oobdev\dotex\Incoming\BinaryDecoders\src\OoBDev.Kuando.Busylight\` — a working prior C#
   implementation (structs for the wire format, a real USB trace with request/response pairs), from
-  the same local `dotex/Incoming/BinaryDecoders` project as the [EByte proposal](ebyte-e810-dtu-config-protocol.md).
+  the former local `dotex/Incoming/BinaryDecoders` (removed 2026-11-10) project as the [EByte proposal](ebyte-e810-dtu-config-protocol.md).
 
 ## Device
 

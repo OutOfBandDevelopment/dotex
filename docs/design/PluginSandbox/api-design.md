@@ -17,6 +17,6 @@ public sealed record PluginGrant(IReadOnlySet<string> Hosts, IReadOnlySet<string
 public sealed record PluginLimits(TimeSpan WallTime, long MemoryBytes, int MaxProcesses, double CpuShare);
 ```
 
-Manifest: JSON with `id`, `version`, `entry`, `permissions[]` (kind, target, reason). Protocol: length-prefixed JSON messages over a pipe or Unix socket, with `protocol` version in the first frame. Signature verification uses `OoBDev.Identity.Jws` ideas only as reference; package signing algorithm is decided in phase 1.
+Manifest: JSON with `id`, `version`, `entry`, `permissions[]` (kind, target, reason). Protocol: packed binary frames (versioned header, type, sequence and ack, topic, payload, optional CRC-32 and HMAC with counter-signed replies) over the plugin's stdin and stdout; the payload may be a JSON string. Layout in [protocol-and-manifest.md](protocol-and-manifest.md). Signature verification uses `OoBDev.Identity.Jws` ideas only as reference; package signing algorithm is decided in phase 1.
 
 Providers follow the repo pattern: `IPluginLauncher` per platform behind a factory, `TryAdd*` registration.
