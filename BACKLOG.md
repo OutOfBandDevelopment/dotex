@@ -48,7 +48,6 @@ Owner: all protocols and features of dev-term must exist here. Done means what d
 A clean rebuild after the 2026-11-06 pass reports no analyzer warnings (218 before). Analyzers are wired from `src/Directory.Build.props` (`OoBDev.Analyzers` OOB0001 to OOB0003, NetAnalyzers Recommended, Meziantou); `Tools`, `Examples` and `Applications` are exempt from MA0004, and `Tools` and `Examples` from MA0048, in `src/.editorconfig`.
 
 - [ ] Rules kept at `suggestion` on purpose in `src/.editorconfig` (nothing to flip unless the owner decides otherwise):: MA0026 (about 50 TODO comments), MA0046 (3, `EventHandler<TMessage>` on the device interfaces), MA0061 (3, DEBUG-only required parameters), CA1710, CA1720, CA1708 (domain names).
-- [ ] Serial read ignores cancellation and can leak the COM port ([issue](docs/issues/io-serial-read-ignores-cancel.md)); add a test for the busy-port path in `SerialPortDeviceAdapter`
 - [ ] Bug-review the migrated projects that the source review never covered (device IO, toolkit and text, code analysis and archives, apps and tooling); the source split was dropped with `REVIEW-STATUS.md` (history keeps it)
 - [ ] ExpressionCalculator cleanup: remove the commented-out Java blocks in `ExpressionOptimizer.cs` and add tests for `ShiftCommutativeVariablesRight` (found reviewing the BinaryDataDecoders reports, 2026-11-10)
 
