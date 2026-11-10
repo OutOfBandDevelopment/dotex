@@ -26,6 +26,7 @@ export class TemplatesViewModel {
   readonly list = new ListTemplatesCommand(this);
   readonly open = new OpenTemplateCommand(this);
   readonly preview = new PreviewTemplateCommand(this);
+  readonly save = new SaveTemplateCommand(this);
   readonly apply = new ApplyTemplateCommand(this);
 }
 
@@ -67,6 +68,19 @@ export class PreviewTemplateCommand extends Command {
       targetExtension: selected?.targetExtension || '.txt',
       data: JSON.parse(this.vm.data.value || '{}'),
     });
+  }
+}
+
+export class SaveTemplateCommand extends Command {
+  constructor(private readonly vm: TemplatesViewModel) { super(); }
+  protected isAllowed() {
+    return this.vm.selected.value !== null && this.vm.text.value.trim() !== '';
+  }
+  protected async run() {
+    const selected = this.vm.selected.value;
+    if (!selected) return;
+    await http.sendJson('PUT', '/api/TextTemplate/Save', { file: selected.file, text: this.vm.text.value });
+    this.vm.output.value = `Saved ${selected.file}`;
   }
 }
 

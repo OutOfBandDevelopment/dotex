@@ -63,3 +63,27 @@ describe('template management commands', () => {
     expect(vm.output.value).toBe('<p>Ada</p>');
   });
 });
+
+describe('save command', () => {
+  afterEach(() => vi.unstubAllGlobals());
+
+  const info = { name: 'order-shipped', file: 'order-shipped.html.hbs', templateContentType: 'text/x-handlebars-template', targetExtension: '.html' };
+
+  it('save_NothingSelected_CannotExecute', () => {
+    const vm = new TemplatesViewModel();
+    vm.text.value = 'x';
+    expect(vm.save.canExecute.value).toBe(false);
+  });
+  it('save_Selected_PutsFileAndText', async () => {
+    const fetchMock = vi.fn(async (_p: string, _i: RequestInit) => new Response(null, { status: 204 }));
+    vi.stubGlobal('fetch', fetchMock);
+    const vm = new TemplatesViewModel();
+    vm.selected.value = info;
+    vm.text.value = '<p>{{name}}</p>';
+    await vm.save.execute();
+    expect(fetchMock.mock.calls[0][0]).toBe('/api/TextTemplate/Save');
+    expect(fetchMock.mock.calls[0][1].method).toBe('PUT');
+    expect(JSON.parse(String(fetchMock.mock.calls[0][1].body))).toEqual({ file: info.file, text: '<p>{{name}}</p>' });
+    expect(vm.output.value).toBe('Saved order-shipped.html.hbs');
+  });
+});

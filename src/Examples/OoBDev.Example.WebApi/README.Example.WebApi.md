@@ -20,7 +20,7 @@ A sample ASP.NET Core web API that composes the OoBDev framework the way a real 
 | `CommunicationsController` | Email through `ISendService` (channel `email`), directly or queued |
 | `WebhooksController` | Anonymous `POST /webhooks/{channel}`: raw body to `IReceiveService.HandleWebhookAsync` (204, 400 or 404 problem details) |
 | `DocumentController`, `TextToolsController` | Document conversion, the stored-documents list and text tools |
-| `TextTemplateController` | Text templating: list and read the example template files, preview a draft, apply a named template |
+| `TextTemplateController` | Text templating: list, read and save the example template files, preview a draft, apply a named template |
 | `UserController` | Current user and claims |
 | `CacheController`, `OperationsController`, `TelemetryController`, `ToolboxController` | Caching, operations, telemetry readback and shared tools |
 
