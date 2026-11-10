@@ -720,7 +720,7 @@ OoBDev.MyProject.Tests/
 
 ### 6.3 Library Documentation
 
-**Standard:** New integrations MUST be documented in `/docs/Libraries/`.
+**Standard:** New integrations MUST be documented in their project `README.{Project}.md`.
 
 **Required Content:**
 - Provider description
@@ -729,7 +729,7 @@ OoBDev.MyProject.Tests/
 - Limitations
 - External service requirements
 
-**Reference:** `/docs/Libraries/*.md`
+**Reference:** the `README.{Project}.md` files beside the projects
 
 ---
 

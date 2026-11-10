@@ -613,7 +613,7 @@ OoBDev.{Vendor}/
 - [ ] Create `{Vendor}Options` configuration class
 - [ ] Create `TryAdd{Vendor}Services` extension method
 - [ ] Add README with usage examples
-- [ ] Add to `/docs/Libraries/{vendor}.md`
+- [ ] Add to the project `README.{Project}.md`
 - [ ] Create test project (optional but recommended)
 
 ---

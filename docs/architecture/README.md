@@ -187,7 +187,7 @@ IMessageQueueHandler<TChannel, TMessage> where TMessage : class
 4. Add configuration options class
 5. Create extension builder
 6. Add comprehensive tests
-7. Document in `/docs/Libraries/`
+7. Document in the project `README.{Project}.md`
 
 ---
 
