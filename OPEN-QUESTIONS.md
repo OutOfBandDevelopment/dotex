@@ -48,3 +48,16 @@ Sessions and the Stream Monitor are fixed tabs plus floating windows. Visual Stu
 **Default:** C until answered (nothing is built on a guess).
 
 **Your answer:**
+
+### Q4 — 2026-11-09 — Stream Monitor: how should PostScript and PCL be previewed in the window?
+
+HP-GL already converts to SVG; PostScript and PCL need an interpreter to draw. No managed one exists in the repo, and writing one is a large separate project.
+
+**Options**
+- A. Call Ghostscript (and GhostPCL) as an external process when installed, and show the PNG it writes (recommended): small code, covers both languages; trade-off: an AGPL tool you do not ship, and the preview is absent when it is not installed.
+- B. Write a small in-house renderer for a useful subset (text, lines, fills). Trade-off: no dependency, but weeks of work and wrong output for real jobs.
+- C. Keep saving the capture and opening it in an external viewer. Trade-off: no work, no in-window preview.
+
+**Default:** C until answered.
+
+**Your answer:**
