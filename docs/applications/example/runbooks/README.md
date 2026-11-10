@@ -36,3 +36,4 @@ How to verify each feature and what to do when it fails. Generated from the same
 | [Run a CGI program](run-a-cgi-program.md) | The example API is running and cgi-bin holds a program built for this system. |
 | [Send a webhook to a channel](send-a-webhook.md) | The example API is running. |
 | [Check which rights an endpoint needs](check-your-rights.md) | The example API is running. |
+| [Render a panel from a server-supplied definition](server-driven-ui.md) | The example API is running. |
