@@ -74,7 +74,7 @@ public class MyTests
 
     [TestMethod]
     [TestCategory(TestCategories.LiveIntegration)]
-    public async Task AzureB2CTest()
+    public async Task AzureOpenAiTest()
     {
         // Requires live Azure credentials, manual execution only
     }
@@ -108,8 +108,8 @@ else (yes)
   if (Can run in Docker\nor use emulators?) then (no)
     :LiveIntegration;
     note right
-      Azure B2C
-      App Insights
+      Azure OpenAI
+      Cloud telemetry backends
       Groq Cloud
     end note
     stop

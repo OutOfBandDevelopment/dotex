@@ -40,7 +40,6 @@ These have no row in `future-example.md` or `screens.md`; whether each deserves 
 | Data loading | `OoBDev.DataLoader` | Load a file into a table with a preview of the mapping |
 | Code generation | `OoBDev.Generations` | Generate from a model and show the output |
 | Server-driven UI | `OoBDev.UiDefinitions` (+ ViewModels, Wpf) | A page rendered from a `UiDefinition` returned by the API (the framework's own UI contract is not shown anywhere in the SPA) |
-| Rights and roles | `[ApplicationRight]`, claims transformation | Who can call what: rights per endpoint and per role |
 | Token tools | `OoBDev.Identity.Jws` | Decode and verify a JWS |
 | Instrument protocols | `OoBDev.Nmea`, `OoBDev.Scpi`, `OoBDev.ZWave` | Deferred with the hardware UI |
 
@@ -60,6 +59,6 @@ These have no row in `future-example.md` or `screens.md`; whether each deserves 
 1. ~~Search~~ (built 2026-11-09 as `/ai/search`).
 2. ~~Template management~~ (list, open and preview built 2026-11-09; save waits for Q2).
 3. ~~Queue adapters and blob browser~~ (channel list and received monitor on the Queues screen, stored-documents list on the Documents screen, built 2026-11-09).
-4. Rights and roles, then Identity management, because they show the authorization model that every other API surface relies on.
+4. ~~Rights and roles~~ (built 2026-11-10 as `/identity/rights`), then Identity management, because they show the authorization model that every other API surface relies on.
 5. Server-driven UI, since it is the framework's own UI contract.
 6. The rest as the owner prioritizes; instrument protocols stay deferred.

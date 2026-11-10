@@ -112,6 +112,7 @@
     <Project Path="HardwareDevices/OoBDev.Zoom.H4n/OoBDev.Zoom.H4n.csproj" />
   </Folder>
   <Folder Name="/ExternalServices/Amazon/">
+    <Project Path="ExternalServices/Amazon/OoBDev.Amazon.Sqs.Tests/OoBDev.Amazon.Sqs.Tests.csproj" />
     <Project Path="ExternalServices/Amazon/OoBDev.Amazon.Sqs/OoBDev.Amazon.Sqs.csproj" />
     <Project Path="ExternalServices/Amazon/OoBDev.Amazon.Ses.Tests/OoBDev.Amazon.Ses.Tests.csproj" />
     <Project Path="ExternalServices/Amazon/OoBDev.Amazon.Ses/OoBDev.Amazon.Ses.csproj" />
@@ -145,6 +146,7 @@
     <Project Path="ExternalServices/Markdig/OoBDev.Markdig/OoBDev.Markdig.csproj" />
   </Folder>
   <Folder Name="/ExternalServices/Microsoft/">
+    <Project Path="ExternalServices/Microsoft/OoBDev.Microsoft.Azure.ServiceBus.Tests/OoBDev.Microsoft.Azure.ServiceBus.Tests.csproj" />
     <Project Path="ExternalServices/Microsoft/OoBDev.Microsoft.Azure.ServiceBus/OoBDev.Microsoft.Azure.ServiceBus.csproj" />
     <Project Path="ExternalServices/Microsoft/OoBDev.Microsoft.Azure.StorageAccount.Tests/OoBDev.Microsoft.Azure.StorageAccount.Tests.csproj" />
     <Project Path="ExternalServices/Microsoft/OoBDev.Microsoft.Azure.StorageAccount/OoBDev.Microsoft.Azure.StorageAccount.csproj" />

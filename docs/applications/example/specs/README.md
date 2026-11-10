@@ -35,3 +35,4 @@ Acceptance criteria for each journey. The same journeys run as Playwright tests.
 | [See the queue channels and received messages](watch-the-queues.md) | 2 | `/messaging/queues` |
 | [Run a CGI program](run-a-cgi-program.md) | 1 | `/developer/cgi` |
 | [Send a webhook to a channel](send-a-webhook.md) | 1 | `/messaging/webhooks` |
+| [Check which rights an endpoint needs](check-your-rights.md) | 2 | `/identity/rights` |

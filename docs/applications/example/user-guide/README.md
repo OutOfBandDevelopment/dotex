@@ -35,3 +35,4 @@ Step-by-step guides with screenshots, one per user journey. They are regenerated
 | [See the queue channels and received messages](watch-the-queues.md) | A developer checking the message queue wiring | Confirm which provider and queue each channel uses and whether this host receives from it. |
 | [Run a CGI program](run-a-cgi-program.md) | A developer checking the CGI hosting | Pick a program the host can start and see its answer. |
 | [Send a webhook to a channel](send-a-webhook.md) | A developer testing inbound provider calls | Post a provider call to a channel and see how the host answers. |
+| [Check which rights an endpoint needs](check-your-rights.md) | A developer working out why an API call is refused | See the access each endpoint needs and check the current user against a right. |

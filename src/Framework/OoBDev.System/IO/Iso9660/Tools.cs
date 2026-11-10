@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Globalization;
 using System.Text;
-using System.Threading;
 
 namespace OoBDev.System.IO.Iso9660;
 
@@ -77,7 +76,7 @@ public static class Tools
 
     /// <summary>
     /// Extracts a DateTime from a byte array in ISO 9660 format (17 bytes: yyyyMMddHHmmssff + timezone offset).
-    /// The timezone offset is in 15-minute intervals and is applied to the result.
+    /// The result is UTC: the digits are local time and the 15-minute-interval offset from GMT is subtracted.
     /// </summary>
     /// <param name="buffer">The byte array containing the datetime data.</param>
     /// <param name="offset">The starting offset in the buffer (updated to point after the datetime).</param>
@@ -89,13 +88,14 @@ public static class Tools
     {
         var temp = Encoding.ASCII.GetString(buffer, offset, 16).Trim();
         var timeOffset = (sbyte)buffer[offset + 16] * 15;
-        if (DateTime.TryParseExact(temp,
-                                   "yyyyMMddHHmmssff",
-                                   Thread.CurrentThread.CurrentCulture,
-                                   DateTimeStyles.AdjustToUniversal,
-                                   out DateTime ret))
-            ret = ret.AddMinutes(timeOffset);
-        offset += length;
+        // Invariant culture and no zone adjustment: the digits are local time at the stated offset, so UTC is local minus the offset.
+        var ret = DateTime.TryParseExact(temp,
+                                         "yyyyMMddHHmmssff",
+                                         CultureInfo.InvariantCulture,
+                                         DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal,
+                                         out var parsed)
+            ? parsed.AddMinutes(-timeOffset)
+            : default;        offset += length;
         return ret;
     }
 }

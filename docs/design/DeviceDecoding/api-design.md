@@ -45,6 +45,7 @@ Read from the code on 2026-10-28; each is closed in the template device or the d
 | `IMessageDecoder<T>` is stateless, dev-term decoders are not | `K8055Decoder` buffers 9-byte frames and keeps `_lastValues` | Framing to the segmenter; change tracking to a consumer type (architecture, Table 1) |
 | `IMessageEncoder<T>.Encode(ref T)` returns bytes from one message, but Busylight commands come from accumulated UI state | `BusylightControlSurface.BuildFrame` | A record holding the full state is the message; the consumer owns the state |
 | The serial adapter catches only `IOException` when opening, so a busy port throws `UnauthorizedAccessException` | `OoBDev.System.IO.Ports` `SerialPortDeviceAdapter.OpenAsync` (was `TryOpen`) | Fix with a test in the template device (R9); check the three sibling defects in the same pass |
+| A serial read ignores its cancellation token while no bytes arrive (BDD BUG-002) | `StreamDeviceAdapter.CloseAsync` cancels the pump, disposes the stream (which releases the pending read) and calls `Disconnect()` | Covered by `StreamDeviceAdapterCancellationTests` (a deaf stream: close completes in bounded time, port released, reopen works) |
 
 ## Per device shape
 

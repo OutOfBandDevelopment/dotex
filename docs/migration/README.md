@@ -83,9 +83,9 @@ dev-term merges into this repository entirely (owner, 2026-10-28): shells become
 
 | Item | State |
 |------|-------|
-| Net.ServiceHost CLI | To migrate (D6) as a tool in `src/Tools`; main has the worker recipe and hosting packages, so compare first |
-| Windows.Forms `ValidTextBox` | Commented out in main; decision in the [WindowsForms plan](../design/WindowsForms/migration-plan.md) |
-| `Incoming/BinaryDecoders` | Removed 2026-11-10 (the source repository is clean at `e590b420`). Its comparison, bug and issue reports are imported under [incoming-reports](../applications/binary-data-decoders/incoming-reports/) |
+| Net.ServiceHost CLI | Decided (D6, owner 2026-11-10): no standalone tool; DevTerm hosts the generic TCP services, see the [feature request](../features/request/2026-11-10-devterm-generic-service-listeners.md) |
+| Windows.Forms `ValidTextBox` | Migrated 2026-11-06 to `OoBDev.Extensions.Windows.Forms` (5 unit tests) and shown in `OoBDev.Examples.Controls.WinForms`; see the [WindowsForms plan](../design/WindowsForms/migration-plan.md) |
+| `Incoming/BinaryDecoders` | Removed 2026-11-10 (the source repository is clean at `e590b420`). Its comparison, bug and issue reports were reviewed against `src` and removed; the open gaps are one feature request each in [docs/features/request](../features/request/README.md) |
 | `Incoming/Tools` (De5000 BLE scan CLI) | Removed 2026-11-10: scanning is `BleDeviceScanner`, GATT enumeration is `IBleGattProfileExplorer`, decoding is `OoBDev.DerEE.De5000` (D6) |
 
 ## SharedFramework epics
@@ -110,7 +110,7 @@ Map: [harvest-candidates.md](../harvest-candidates.md). Nothing is copied withou
 | Source item | Decision |
 |-------------|----------|
 | ScoreMachine and HomeSeer | Libraries and emulators only (D8); applications rejected |
-| hybridsearch, Oobtainium, BuildFirstOnce, markdownplantuml, TotpExample, HandyClasses, postsql-playground | Evaluate later (D7); postsql informs `OoBDev.DacFx` |
+| hybridsearch, Oobtainium, BuildFirstOnce, markdownplantuml, TotpExample, HandyClasses, postsql-playground | Compared 2026-11-10: [recommendations](harvest-d7-comparison.md) await the owner (D7); postsql informs `OoBDev.DacFx` |
 | Oobtainium (mocking and proxy framework, about 1,600 lines) | Not migrated; Moq and NSubstitute cover it. Reopen only with a fresh comparison against `proving-grounds/examples/OoBDev.Oobtainium` |
 | `OoBDev.MessageBroker`, `Ssb.Modeling`, `SQL` | Deferred until a Service Broker feature exists |
 | `event-sourcing`, `sync-mesh`, `fohjin-cqrs` | Read-only pattern references; ask before copying |

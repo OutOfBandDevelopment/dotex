@@ -35,6 +35,7 @@ Each screen lists its purpose, the API it binds to, its commands and a mockup. "
 | Communications | `/messaging/communications` | `api/Communications/*` | Exists |
 | Queues | `/messaging/queues` | `api/MessageQueueing/*` | Exists |
 | Current user | `/identity/me` | `api/User/claims` | Exists |
+| Rights and roles | `/identity/rights` | `api/Rights/endpoints`, `api/Rights/check` | Exists |
 | Cache | `/data/cache` | `api/Cache` | Exists as a lab (store, look up, remove; the provider cannot list keys) |
 | Vector stores | `/utilities/vectors` | vector store endpoints | Exists (store texts, search by meaning; lexical and hybrid Planned) |
 | Image embeddings | `/ai/images` | image endpoints | Exists (zero-shot labels) |

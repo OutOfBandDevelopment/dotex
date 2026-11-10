@@ -1,0 +1,41 @@
+# Feature request: Basic Stamp tokenizer and detokenizer
+
+- **Status:** new
+- **Requested by:** owner (open gap found reviewing the migration, 2026-11-10)
+- **Date:** 2026-11-10
+- **Area:** `OoBDev.System` (`Retro` or a new microcontroller area)
+
+## Need
+
+There is no tool to tokenize or detokenize Basic Stamp programs for the microcontroller.
+
+## Proposed behavior
+
+Convert between Basic Stamp source and its tokenized EEPROM image, like the Applesoft `Detokenizer`.
+
+## Acceptance criteria
+
+- Given a tokenized program, then the detokenizer returns the original source.
+- Given source, then the tokenizer output round-trips.
+
+## Existing code checked
+
+`Retro/Apple2/ApplesoftBASIC` (`Detokenizer`, `TokenMap`) is the model; nothing for Basic Stamp.
+
+## Security and operations
+
+Inputs are untrusted: bound lengths.
+
+## Priority
+
+- **Impact:** retro and hobby hardware; niche.
+- **Needed by:** no date
+- **Workaround today:** none
+
+## Open questions
+
+Which Basic Stamp generations (BS1, BS2 family)?
+
+## Triage notes
+
+Origin: BinaryDataDecoders issue 25. Low priority and specialized; accept, schedule or decline.

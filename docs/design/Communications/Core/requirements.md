@@ -474,7 +474,7 @@ These may be added in future phases based on demand.
 
 ### Upstream (Required)
 - **OoBDev.Communications.Abstractions** - Interfaces and contracts
-- **OoBDev.System** - IStringFormatter, ISelectedService<T>, IObjectSerializer
+- **OoBDev.System** - IStringFormatter, TryAddConfiguredKeyedService<T>, IObjectSerializer
 - **Microsoft.Extensions.Logging** - Logging framework
 - **Microsoft.Extensions.DependencyInjection** - DI container
 - **Newtonsoft.Json** - JObject for data enhancement

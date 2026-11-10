@@ -32,6 +32,7 @@ export const router = createRouter({
     { path: '/messaging/communications', component: () => import('../pages/CommunicationsPage.vue'), meta: { crumbs: ['Messaging', 'Communications'] } },
     { path: '/messaging/queues', component: () => import('../pages/QueuesPage.vue'), meta: { crumbs: ['Messaging', 'Queues'] } },
     { path: '/identity/me', component: () => import('../pages/CurrentUserPage.vue'), meta: { crumbs: ['Identity and security', 'Current user'], requiresAuth: true } },
+    { path: '/identity/rights', component: () => import('../pages/RightsPage.vue'), meta: { crumbs: ['Identity and security', 'Rights and roles'] } },
     { path: '/developer/cgi', component: () => import('../pages/CgiPage.vue'), meta: { crumbs: ['Developer', 'CGI programs'] } },
     { path: '/messaging/webhooks', component: () => import('../pages/WebhooksPage.vue'), meta: { crumbs: ['Messaging', 'Webhooks'] } },
     { path: '/developer/api', component: () => import('../pages/ExternalLinkPage.vue'), props: { title: 'API reference', href: '/scalar' }, meta: { crumbs: ['Developer', 'API reference'] } },

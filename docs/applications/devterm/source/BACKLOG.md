@@ -20,7 +20,7 @@ the rest.
   independently; neither has been started.
 - RFC 2217 server (`Rfc2217ServerBridge`): the transparent TCP listener proxy is built (`--sharetcp`); `--sharerfc2217 true` adds the RFC 2217 negotiation (verified with pyserial); the client's baud/DTR/RTS now reach the device through `IComPortControl`. See `docs/design/rfc2217.md`.
 - UDP transport (target + listener modes). Real target hardware once built:
-  [EByte E810-DTU(RS485)](docs/design/proposals/ebyte-e810-dtu-config-protocol.md)'s broadcast
+  [EByte E810-DTU(RS485)](../../../protocols/ebyte-e810-dtu-config-protocol.md)'s broadcast
   discovery/config protocol (port 1901) — note the proposal's own byte-count discrepancy needs
   resolving against a fresh capture before implementing, not just the existing notes.
 
@@ -29,9 +29,9 @@ the rest.
 - Protocol decoders with a human-readable text baseline; composite/channelized decoders;
   mappable presenters.
 - Rendering presenters (HPGL/PostScript/PCL, telemetry plots) + export (SVG/PNG/JPG) — the actual
-  drawing/rendering half, for the HPGL/PostScript/PCL the Stream Monitor ([proposal](docs/design/features/stream-content-detection.md))
+  drawing/rendering half, for the HPGL/PostScript/PCL the Stream Monitor ([proposal](../../../design/StreamTools/stream-content-detection.md))
   already captures and saves. HP-GL now converts to SVG, listed in the capture list and drawn in WPF (2026-10-02); PostScript/PCL and TUI drawing remain.
-- Stream Monitor leftovers ([feature](docs/design/features/stream-content-detection.md)): direct in-window preview of
+- Stream Monitor leftovers ([feature](../../../design/StreamTools/stream-content-detection.md)): direct in-window preview of
   PostScript and PCL (needs the rendering presenter above), and SVG drawing in the TUI (it only lists the converted file).
 
 ### Device control modules & hardware profiles
@@ -40,7 +40,7 @@ the rest.
   pattern, an SCPI baseline for common bench-instrument commands) — see the new section in
   `docs/design/device-control-modules.md`.
   **Still open:**
-  - **DE-5000 bench pass.** [DE-5000 LCR meter](docs/design/proposals/de5000-lcr-meter-protocol.md) landed 2026-09-25
+  - **DE-5000 bench pass.** [DE-5000 LCR meter](../../../protocols/de5000-lcr-meter-protocol.md) landed 2026-09-25
   (`DevTerm.Devices.De5000`, see `docs/changes/2026-09-25.md`) but is unverified against real
   hardware (its `.ksy` and decoder are unit-tested only; no meter available 2026-10-02) — deferred, not a dev-term-side blocker: the general BLE/GATT transport is confirmed
   working (`docs/test/2026-09-29-17-12-20.md`), but this meter's custom IR-to-BLE adapter is off the
@@ -56,24 +56,24 @@ the rest.
   constraints list for why that one matters). Deliberately not built yet: no such rule has actually
   been declared that a generic analyzer can't already cover — build it once one is.
 
-- **Read-write control channel and out-of-process plugins over both a named pipe and a localhost web service** (decided 2026-10-07): see [cross-process-control-channel](docs/design/proposals/cross-process-control-channel.md) and [out-of-process-plugins](docs/design/proposals/out-of-process-plugins.md).
+- **Read-write control channel and out-of-process plugins over both a named pipe and a localhost web service** (decided 2026-10-07): see [cross-process-control-channel](../../../design/SessionChannel/cross-process-control-channel.md) and [out-of-process-plugins](../../../design/Plugins/out-of-process-plugins.md).
 
 ### UX decisions awaiting implementation (decided 2026-10-13)
 
-- Network device config editors are manifests with a config UI where possible; a `DevTerm.Devices.*` project only when custom protocol code is needed ([network-device-config-editors](docs/design/proposals/network-device-config-editors.md)).
-- UDP listener: one session, each datagram shown with its sender ([transports](docs/design/transports.md)).
-- Raster export as a core service every front end calls ([presenters](docs/design/presenters.md)).
-- Plugin `.zip` packaging installed from the Plugins screen with approval at install ([out-of-process-plugins](docs/design/proposals/out-of-process-plugins.md)).
-- SCPI profiles stay separate from `DeviceManifest`, layered: a generic SCPI profile plus device-specific sub-types ([format-schema-files](docs/design/features/format-schema-files.md)).
-- TCP listener: one tab per accepted peer ([transports](docs/design/transports.md)).
-- Session log playback: periodic checkpoint markers (needs an `IPresenter` snapshot contract), a skip-silence gap cap (default 1 s), and note edit/delete recorded as revisions ([session-logging](docs/design/session-logging.md)).
-- Expression picker: parameter fields first, then channel segments ([expression-picker](docs/specs/expression-picker.md)).
-- Manifest editor: JSON only, with a one-click convert from an `.xml` panel ([manifest-editor](docs/specs/manifest-editor.md)).
+- Network device config editors are manifests with a config UI where possible; a `DevTerm.Devices.*` project only when custom protocol code is needed ([network-device-config-editors](../../../design/NetworkDevices/network-device-config-editors.md)).
+- UDP listener: one session, each datagram shown with its sender ([transports](../../../design/Transports/transports.md)).
+- Raster export as a core service every front end calls ([presenters](../../../design/Presenters/presenters.md)).
+- Plugin `.zip` packaging installed from the Plugins screen with approval at install ([out-of-process-plugins](../../../design/Plugins/out-of-process-plugins.md)).
+- SCPI profiles stay separate from `DeviceManifest`, layered: a generic SCPI profile plus device-specific sub-types ([format-schema-files](../../../design/UiDefinitions/format-schema-files.md)).
+- TCP listener: one tab per accepted peer ([transports](../../../design/Transports/transports.md)).
+- Session log playback: periodic checkpoint markers (needs an `IPresenter` snapshot contract), a skip-silence gap cap (default 1 s), and note edit/delete recorded as revisions ([session-logging](../../../design/SessionLogging/session-logging.md)).
+- Expression picker: parameter fields first, then channel segments ([expression-picker](../../../applications/devterm/specs/expression-picker.md)).
+- Manifest editor: JSON only, with a one-click convert from an `.xml` panel ([manifest-editor](../../../applications/devterm/specs/manifest-editor.md)).
 
 ### Proposed Ideas
 
-- [Web-accessible host service (WebSocket tunnels + Blazor front end)](docs/design/proposals/web-tunnel-blazor-frontend.md) (the host, `/ws` tunnel and `/panel` page are already built and in `TODO.md` item 1; this line is the rest).
-- [Network device discovery](docs/design/proposals/network-device-discovery.md) and [in-app config editors for network bridges](docs/design/proposals/network-device-config-editors.md) (proposed 2026-10-03): one Detect button for any network device with prefill, and a Device > Configure device menu for the USR-TCP232-302 and EByte E810-DTU.
+- [Web-accessible host service (WebSocket tunnels + Blazor front end)](../../../design/WebFrontend/web-tunnel-blazor-frontend.md) (the host, `/ws` tunnel and `/panel` page are already built and in `TODO.md` item 1; this line is the rest).
+- [Network device discovery](../../../design/NetworkDevices/network-device-discovery.md) and [in-app config editors for network bridges](../../../design/NetworkDevices/network-device-config-editors.md) (proposed 2026-10-03): one Detect button for any network device with prefill, and a Device > Configure device menu for the USR-TCP232-302 and EByte E810-DTU.
 
 
 ## Proposals and bugs tracker
@@ -88,19 +88,19 @@ when the item is checked off in the proposal (the `work-docs-audit` skill re-swe
 
 | Proposal | Unchecked items | Blocked on |
 |---|---|---|
-| [network-device-discovery](docs/design/proposals/network-device-discovery.md) | EByte UDP probe; USR UDP search packet (the web-login USR probe is built) |  A fresh capture of each device |
-| [network-device-config-editors](docs/design/proposals/network-device-config-editors.md) | EByte E810-DTU editor; USR-TCP232-302 editor; spec, guide and a `docs/test/` bench report | The seam is built; the editors need captures and bench time |
-| [out-of-process-plugins](docs/design/proposals/out-of-process-plugins.md) | Transport and device-module variants | Design work |
-| [message-broker-protocols](docs/design/proposals/message-broker-protocols.md) | A real device or home-automation broker check for MQTT | A real broker |
-| [web-tunnel-blazor-frontend](docs/design/proposals/web-tunnel-blazor-frontend.md) | A real device through the page with several browsers | Your setup |
-| [de5000-lcr-meter-protocol](docs/design/proposals/de5000-lcr-meter-protocol.md) | Confirm the adapter's GATT profile; run `RealHardwareDe5000Tests` and write the `docs/test/` report | The meter on the bench |
-| [ebyte-e810-dtu-config-protocol](docs/design/proposals/ebyte-e810-dtu-config-protocol.md) | Five checklist items (capture and layout confirmation, read-only support first) | A fresh capture of the real unit |
-| [bytecc-bt-up01-usb-network-bridge](docs/design/proposals/bytecc-bt-up01-usb-network-bridge.md) | Five checklist items | The hardware |
-| [z-wave-support](docs/design/proposals/z-wave-support.md) | Verify learn, reset, heal and remove-failed on the stick; the RPi HAT | A reachable node and your go-ahead; the HAT |
+| [network-device-discovery](../../../design/NetworkDevices/network-device-discovery.md) | EByte UDP probe; USR UDP search packet (the web-login USR probe is built) |  A fresh capture of each device |
+| [network-device-config-editors](../../../design/NetworkDevices/network-device-config-editors.md) | EByte E810-DTU editor; USR-TCP232-302 editor; spec, guide and a `docs/test/` bench report | The seam is built; the editors need captures and bench time |
+| [out-of-process-plugins](../../../design/Plugins/out-of-process-plugins.md) | Transport and device-module variants | Design work |
+| [message-broker-protocols](../../../design/Transports/message-broker-protocols.md) | A real device or home-automation broker check for MQTT | A real broker |
+| [web-tunnel-blazor-frontend](../../../design/WebFrontend/web-tunnel-blazor-frontend.md) | A real device through the page with several browsers | Your setup |
+| [de5000-lcr-meter-protocol](../../../protocols/de5000-lcr-meter-protocol.md) | Confirm the adapter's GATT profile; run `RealHardwareDe5000Tests` and write the `docs/test/` report | The meter on the bench |
+| [ebyte-e810-dtu-config-protocol](../../../protocols/ebyte-e810-dtu-config-protocol.md) | Five checklist items (capture and layout confirmation, read-only support first) | A fresh capture of the real unit |
+| [bytecc-bt-up01-usb-network-bridge](../../../protocols/bytecc-bt-up01-usb-network-bridge.md) | Five checklist items | The hardware |
+| [z-wave-support](../../../design/ZWave/z-wave-support.md) | Verify learn, reset, heal and remove-failed on the stick; the RPi HAT | A reachable node and your go-ahead; the HAT |
 
 ## Research (not backlog-ready)
 
-- [BYTECC BT-UP01 USB-over-network bridge](docs/design/proposals/bytecc-bt-up01-usb-network-bridge.md) —
+- [BYTECC BT-UP01 USB-over-network bridge](../../../protocols/bytecc-bt-up01-usb-network-bridge.md) —
   **low priority for now**, by choice (2026-09-15): pursuing the "reverse-engineer it directly"
   route (network sniffer + decompiling the vendor client) rather than the boring-but-reliable
   Raspberry-Pi-running-`usbip` fallback, but only once a real capture exists — nothing to act on

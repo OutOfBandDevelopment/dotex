@@ -9,5 +9,3 @@ How this file is kept: see `.claude/rules/open-questions.md` and `.claude/rules/
 _(none waiting; processed requests are in BACKLOG.md and TODO.md)_
 
 ## Open
-
-_(none open)_

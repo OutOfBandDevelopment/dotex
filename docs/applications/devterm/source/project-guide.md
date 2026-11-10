@@ -7,7 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 `dev-term` is a modular, extensible development terminal for talking to devices over serial, TCP,
 USB HID, USBTMC, BLE, RFC 2217, VXI-11, MQTT/AMQP/STOMP brokers and other transports — decoding/presenting
 whatever comes back and sending commands.
-Built on .NET 10. Full design intent lives in [`docs/design/`](docs/design/README.md); this file
+Built on .NET 10. Full design intent lives in [`docs/design/`](../../../applications/devterm/design/README.md); this file
 covers only what's actually built and the conventions that matter for working in this codebase.
 
 ## Commands
@@ -36,7 +36,7 @@ are for). `--tui false` is equivalent to `--cli true`.
 
 There is no separate lint step; `dotnet build` surfaces analyzer warnings (MSTest analyzers, plus
 `.editorconfig`'s built-in Roslyn code-style rules and StyleCop.Analyzers — see
-[`docs/coding-standards.md`](docs/coding-standards.md) for what's actually declared/enforced and how
+[`docs/coding-standards.md`](../../../applications/devterm/coding-standards.md) for what's actually declared/enforced and how
 to add a new rule). StyleCop itself starts with every rule silenced except what's explicitly turned
 on — it produced ~1,800 warnings against this codebase with its defaults, almost none of them a real
 standard anyone declared, so don't re-enable a whole category to "see what's there."
@@ -145,7 +145,7 @@ precedence) — via the standard `Microsoft.Extensions.Configuration` extensions
 parser. `CliOptions` property names double as CLI flag names (case-insensitive).
 
 Full architecture/rationale, including what's designed but not yet built (a UDP transport, an
-RFC 2217 server, BLE off Windows, general protocol decoders and rendering presenters): see [`docs/design/`](docs/design/README.md) — see "Documentation" below for the rest of
+RFC 2217 server, BLE off Windows, general protocol decoders and rendering presenters): see [`docs/design/`](../../../applications/devterm/design/README.md) — see "Documentation" below for the rest of
 the doc tree and how to keep it in sync.
 
 ## Documentation
@@ -173,17 +173,17 @@ Eight kinds of doc, each with a distinct job — don't blend them:
   work lands within a day; don't rewrite prior days'. This is where a real root cause, a fix's actual
   detail, or a "verified against real hardware" note belongs — `TODO.md`/proposal docs cross-reference
   it rather than repeating it.
-- **[`docs/design/`](docs/design/README.md)** — intent and rationale for people building dev-term:
+- **[`docs/design/`](../../../applications/devterm/design/README.md)** — intent and rationale for people building dev-term:
   one doc per architectural concern (transports, presenters, plugin model, ...), plus
   `docs/design/proposals/` (listed in `docs/design/README.md`'s "Proposals" section) for concrete,
   per-device/per-feature proposals (each with a "Completion checklist" of `- [ ]`/`- [x]` items saying what is still needed to close it, kept current in the same change as the work, and a "Status" section — implemented/not, and what's
   actually been verified against real hardware vs. assumed). Update a proposal's Status and
   `docs/design/README.md`'s one-line summary of it in the same change that implements/extends it.
-- **[`docs/specs/`](docs/specs/README.md)** — the precise field/action/state reference for one
+- **[`docs/specs/`](../../../applications/devterm/specs/README.md)** — the precise field/action/state reference for one
   user-facing screen or shared component, kept current as that screen changes (in the same change
   that changes the behavior, not a follow-up). This is what to check before changing a screen's
   behavior or verifying an implementation matches intent.
-- **[`docs/user-guide/`](docs/user-guide/README.md)** — task-oriented walkthroughs, one file per user
+- **[`docs/user-guide/`](../../../applications/devterm/user-guide/README.md)** — task-oriented walkthroughs, one file per user
   flow (not per front end) — see what a flow looks like across CLI/TUI/WPF together. Every screenshot/
   transcript is real captured output (`ScreenshotTests` et al.), never a hand-typed mockup.
 - **`docs/test/{yyyy-MM-dd-HH-mm-ss}.md`** — the report from one real-hardware bench test session:
@@ -194,7 +194,7 @@ Eight kinds of doc, each with a distinct job — don't blend them:
   the session led to an actual code/doc change, cross-referencing the `docs/test/` file rather than
   repeating its content.
 
-- **[`docs/bugs/`](docs/bugs/README.md)** — one file per known bug (`NNN-short-slug.md`): severity, status,
+- **[`docs/bugs/`](../../../applications/devterm/bugs/README.md)** — one file per known bug (`NNN-short-slug.md`): severity, status,
   confidence, the date and full git commit it was found at, location, failure scenario, suggested fix, tests to
   add. File and update them with the `bug-report` skill (`.claude/skills/bug-report/SKILL.md`). When a fix lands, set its Status to `Fixed`
   with a `## Resolution` section (commit + regression test) and update its row in `docs/bugs/README.md` in the same
@@ -300,7 +300,7 @@ file only points there, it doesn't restate them.**
   thread instead of the STA thread that owns the UI, throwing "The calling thread cannot access
   this object because a different thread owns it." Only shows up with real I/O, not a fake
   transport whose "async" calls complete synchronously — see `DevTerm.Wpf.Tests.StaTestRunner` and
-  [`docs/design/testing.md`](docs/design/testing.md).
+  [`docs/design/testing.md`](../../../applications/devterm/design/testing.md).
 - **Don't both call `MainWindow.Show()` and `MainWindow.ConnectAsync()` from the same caller** —
   `Show()` fires the real `Loaded` event, which calls `ConnectAsync` on its own; calling it again
   opens the session twice concurrently, and two concurrent readers on one `PipeReader` corrupts its
@@ -312,7 +312,7 @@ file only points there, it doesn't restate them.**
   it. Conversely, `IInputInjector.InjectKey`/`ProcessQueue()` only reliably reaches the focused view
   when there's *no* `Application.Run()` loop running concurrently on another thread — the two don't
   compose. See `DevTerm.Console.Tests.TuiTestRunner`'s two separate run modes
-  (`RunHeadless`/`RunWithLoop`) and [`docs/design/testing.md`](docs/design/testing.md).
+  (`RunHeadless`/`RunWithLoop`) and [`docs/design/testing.md`](../../../applications/devterm/design/testing.md).
 - **`Session` recreates its read-loop `CancellationTokenSource` on every `OpenAsync`, not once for
   the object's lifetime** — a `CancellationTokenSource` can only ever be cancelled once, so reusing
   the same one across a Close-then-reopen would start the new read loop with an already-cancelled
@@ -345,7 +345,7 @@ file only points there, it doesn't restate them.**
   `PumpAsync`'s own call stack (a synchronous `Output` handler invoking `SendAsync`), so the deadlock
   it was meant to catch reproduced identically. Fixed with an `AsyncLocal<bool>` set at the top of
   `PumpAsync` instead — see the next point and
-  [039](docs/bugs/resolved/039-sendasync-from-read-loop-deadlock.md).
+  [039](../../../applications/devterm/bugs/resolved/039-sendasync-from-read-loop-deadlock.md).
 - **An `AsyncLocal<T>` set inside a method stays visible to everything that method calls — sync or
   async — until that method returns, but never to a separate, concurrent caller on the same object**,
   which is exactly the distinction `Session` needs to detect "`SendAsync` was called synchronously

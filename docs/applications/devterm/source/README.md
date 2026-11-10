@@ -18,7 +18,7 @@ Working on embedded or protocol-level code usually means switching between sever
 
 ## Technology
 
-.NET 10+, composed throughout with `Microsoft.Extensions.DependencyInjection`/Generic Host, with settings modeled via the `Microsoft.Extensions.Options` pattern. The GUI is WPF (Windows-only); the console app (CLI + TUI) has no such constraint. See [platform.md](docs/design/platform.md) for detail.
+.NET 10+, composed throughout with `Microsoft.Extensions.DependencyInjection`/Generic Host, with settings modeled via the `Microsoft.Extensions.Options` pattern. The GUI is WPF (Windows-only); the console app (CLI + TUI) has no such constraint. See [platform.md](../../../applications/devterm/design/platform.md) for detail.
 
 ## Status
 
@@ -32,25 +32,25 @@ Actively under development; most of what the design docs describe is built. All 
 - **Around the edges:** session logging and playback, a Stream Monitor that captures and previews device output,
   out-of-process and in-process plugins, a loopback-only web host, and OpenTelemetry export.
 - **Verified on real hardware:** serial and TCP bench instruments (scopes, a DMM, supplies), HID, USBTMC, BLE, RFC 2217
-  against ser2net, and VXI-11 against a Rigol DG1062Z. Each bench session is recorded under [`docs/test/`](docs/test/).
+  against ser2net, and VXI-11 against a Rigol DG1062Z. Each bench session is recorded under [`docs/test/`](../../../applications/devterm/test/).
 
 See [`TODO.md`](TODO.md) for work in progress, [`BACKLOG.md`](BACKLOG.md) for what's not started,
 [`OPEN_QUESTIONS.md`](OPEN_QUESTIONS.md) for every undecided question, and `docs/changes/` for a dated log of completed work.
 
 ## Documentation
 
-- [User guide](docs/user-guide/README.md) — task-oriented walkthroughs with real captured screens
-- [Screen specs](docs/specs/README.md) — the precise fields and actions of each screen
-- [Design docs index](docs/design/README.md)
-- [Architecture overview](docs/design/architecture.md)
-- [Transport layer](docs/design/transports.md), [RFC 2217](docs/design/rfc2217.md), [VXI-11](docs/design/vxi11-transport.md)
-- [Presenters & encodings](docs/design/presenters.md)
-- [Plugin model](docs/design/plugin-model.md)
-- [Device control modules](docs/design/device-control-modules.md)
-- [Front ends (console CLI/TUI + WPF GUI)](docs/design/frontends.md)
-- [Platform, hosting & configuration](docs/design/platform.md)
-- [Coding standards](docs/coding-standards.md) — declared, enforced rules (`.editorconfig`/analyzers), not a style guide written in the abstract
+- [User guide](../../../applications/devterm/user-guide/README.md) — task-oriented walkthroughs with real captured screens
+- [Screen specs](../../../applications/devterm/specs/README.md) — the precise fields and actions of each screen
+- [Design docs index](../../../applications/devterm/design/README.md)
+- [Architecture overview](../../../applications/devterm/design/architecture.md)
+- [Transport layer](../../../design/Transports/transports.md), [RFC 2217](../../../design/Transports/rfc2217.md), [VXI-11](../../../design/Transports/vxi11-transport.md)
+- [Presenters & encodings](../../../design/Presenters/presenters.md)
+- [Plugin model](../../../design/Plugins/plugin-model.md)
+- [Device control modules](../../../design/UiDefinitions/device-control-modules.md)
+- [Front ends (console CLI/TUI + WPF GUI)](../../../applications/devterm/design/frontends.md)
+- [Platform, hosting & configuration](../../../applications/devterm/design/platform.md)
+- [Coding standards](../../../applications/devterm/coding-standards.md) — declared, enforced rules (`.editorconfig`/analyzers), not a style guide written in the abstract
 
 ## License
 
-[MIT NON-AI License](LICENSE) — MIT-style, with an added restriction against using this software, or its derivatives, in training or improving machine learning / AI models.
+[MIT NON-AI License](../../../../LICENSE) — MIT-style, with an added restriction against using this software, or its derivatives, in training or improving machine learning / AI models.
