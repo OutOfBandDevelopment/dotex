@@ -26,7 +26,7 @@ This package provides concrete implementations and built-in plugins for Microsof
 using OoBDev.SemanticKernel;
 using Microsoft.Extensions.DependencyInjection;
 
-services.AddSemanticKernel(configuration);
+services.TryAddSemanticKernelPlugins();  // registers the time and current-user plugins
 
 // Plugins are automatically registered and available in the kernel
 ```

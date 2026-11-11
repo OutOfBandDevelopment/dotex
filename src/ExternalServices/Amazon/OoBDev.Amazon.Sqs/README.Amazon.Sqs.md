@@ -25,10 +25,10 @@ dotnet add package OoBDev.Amazon.Sqs
 
 ```csharp
 using OoBDev.Amazon.Sqs;
-using OoBDev.System.Text.Json;
+using OoBDev.System;
 
 services.TryAddAmazonSqsServices();
-services.TryAddJsonSerializer();  // OoBDev.System
+services.TrySerializerExtensions();  // OoBDev.System (JSON, XML and the other serializers)
 ```
 
 ### 2. Configure Queue

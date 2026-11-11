@@ -28,7 +28,7 @@ This package provides comprehensive DacPac building capabilities, extracting SQL
 using OoBDev.DacFx;
 using Microsoft.Extensions.DependencyInjection;
 
-services.AddDacFx();
+services.TryAddDacPacServices();
 
 // Build DacPac from assembly
 dacPacBuilder.BuildDacPac(

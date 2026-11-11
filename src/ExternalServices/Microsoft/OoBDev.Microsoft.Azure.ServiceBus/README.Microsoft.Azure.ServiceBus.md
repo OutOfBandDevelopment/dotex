@@ -25,10 +25,10 @@ dotnet add package OoBDev.Microsoft.Azure.ServiceBus
 
 ```csharp
 using OoBDev.Microsoft.Azure.ServiceBus;
-using OoBDev.System.Text.Json;
+using OoBDev.System;
 
 services.TryAddAzureServiceBusServices();
-services.TryAddJsonSerializer();  // OoBDev.System
+services.TrySerializerExtensions();  // OoBDev.System (JSON, XML and the other serializers)
 ```
 
 ### 2. Configure Queue or Topic

@@ -26,7 +26,7 @@ This package provides abstraction layers and dependency injection extensions for
 using OoBDev.SemanticKernel;
 using Microsoft.Extensions.DependencyInjection;
 
-services.AddSemanticKernelAbstractions(configuration);
+services.AddKernelPlugIn<MyPlugIn>();  // registers an IKernelPlugIn
 
 // Implement custom chat provider
 public class MyChatProvider : IChatProvider

@@ -28,7 +28,7 @@ This package provides comprehensive SQL Server integration including database ma
 using OoBDev.Microsoft.SqlServer.Server;
 using Microsoft.Extensions.DependencyInjection;
 
-services.AddSqlServerSupport(configuration);
+services.TryAddMicrosoftSqlServerExtensions();
 
 // Define query with attributes
 [ConnectionStringName("MyDatabase")]

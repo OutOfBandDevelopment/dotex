@@ -28,7 +28,7 @@ This package provides tools for creating and merging SQL Server Data-tier Applic
 using OoBDev.Microsoft.SqlServer.DacFx;
 using Microsoft.Extensions.DependencyInjection;
 
-services.AddDacPacMergeCompiler(configuration);
+services.AddDacPacCompilerServices();
 
 // Create merge definition
 var definition = factory.CreateDefinition(
