@@ -13,14 +13,14 @@ _(none waiting; processed requests are in BACKLOG.md and TODO.md)_
 
 ### Q-CQRS-EDGE — Where does the CloudEvents edge live? (2026-11-11, CqrsEventSourcing)
 
-`CloudEventMapper` (EventRecord <-> CloudEvents 1.0 JSON) is built and tested but connected to nothing.
+`CloudEventMapper` (EventRecord <-> CloudEvents 1.0 JSON) is built and tested, and the queue-side edge (option A) is built as `CloudEventsIngressHandler`. Only the HTTP edge (option B) is open.
 
 **Options**
-- A. A queue-side option in `OoBDev.EventSourcing` (Framework, host-free): a `CloudEventsEventsHandler` that accepts a CloudEvent string from any queue and appends it to the event store, plus a sender wrapper that publishes CloudEvents instead of `EventRecord` JSON, chosen by config (recommended: no ASP.NET dependency, matches the "edge option on the queue pattern" decision and `layering-and-migration-plans`).
+- A. (built) Queue-side `CloudEventsIngressHandler` in `OoBDev.EventSourcing`: no ASP.NET dependency.
 - B. An HTTP endpoint (`POST /events` with `application/cloudevents+json`) in an ASP.NET host library. Needs a web-bound project; where it lives is a layering decision (new `OoBDev.EventSourcing.Web` vs an application).
-- C. Both A and B.
+- C. Add B on top of A (A stays).
 
-**Default:** A is built later; B waits for your answer.
+**Default:** A stays; B waits for your answer (recommended: B in a new `OoBDev.EventSourcing.Web` only when an HTTP producer exists).
 
 **Your answer:**
 
