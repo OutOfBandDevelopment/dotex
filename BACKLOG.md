@@ -51,7 +51,7 @@ A clean rebuild after the 2026-11-06 pass reports no analyzer warnings (218 befo
 - [ ] ExpressionCalculator optional reductions, never built (the source only listed them as a "bonus round"): `B^-1` to `1/B`, `B/N` to `B*(1/N)`, `B*B*...` to `B^T`, `B+B+...` to `B*T`; add them to `IdentityExpressionOptimizer` or a new optimizer with tests, or decline
 - [ ] Example app Identity management screen, read-only (Keycloak service account with `view-users` and `view-realm`; shows users, roles and the role-to-right translation) (owner, 2026-11-10).
 - [ ] Reference architecture stack: add a full identity admin feature (create and disable users) once the reference architecture is located; not for the example app (owner, 2026-11-10).
-- [ ] HybridSearch: decide whether to remove the three obsolete provider shells or build the hybrid merge ([requirements](docs/design/HybridSearch/requirements.md#open-questions)); the `OoBDev.Search.Tests` are done
+- [ ] HybridSearch: build the hybrid merge (`IHybridSearch`, reciprocal rank fusion vs. "larger score") when a consumer needs it ([api-design](docs/design/HybridSearch/api-design.md#planned-hybrid-contract)); the shells are removed and `OoBDev.Search.Tests` are done
 
 ## 6. Migrations
 
