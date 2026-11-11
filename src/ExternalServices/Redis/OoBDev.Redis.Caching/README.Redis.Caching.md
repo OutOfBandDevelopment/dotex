@@ -29,4 +29,4 @@ See the [StackExchange.Redis configuration reference](https://stackexchange.gith
 
 ## Verification
 
-`OoBDev.Redis.Caching.Tests`: Unit tests for the provider with a mocked connection, and Integration tests against the Redis container of the test stack (`REDIS_CONNECTION_STRING`, default `localhost:6379`; see `docs/architecture/testing/integration/`). `docs/README.Redis.md` has the local Docker notes.
+`OoBDev.Redis.Caching.Tests`: Unit tests for the provider with a mocked connection, and Integration tests against the Redis container of the test stack (`REDIS_CONNECTION_STRING`, default `localhost:6379`; see `docs/architecture/testing/integration/`). Start the container with `containers/testing/scripts/integration-up.sh`.
