@@ -37,11 +37,6 @@ public interface IHtmlDocumentVistor
             _log = log;
         }
 
-        // https://stackoverflow.com/questions/41446280/how-to-remove-image-as-attachment-but-show-in-body-of-email?noredirect=1&lq=1
-        // https://stackoverflow.com/questions/32767314/how-to-use-razor-engine-for-email-templating-with-image-src/32767496#32767496
-        // https://github.com/zzzprojects/html-agility-pack
-        // https://goessner.net/articles/JsonPath/
-        // https://www.newtonsoft.com/json/help/html/SelectToken.htm#SelectTokenJSONPath
 
         public async Task<string> GenerateAsync<TModel>(string template, TModel model)
         {
@@ -64,9 +59,6 @@ public interface IHtmlDocumentVistor
                 json = JToken.Parse(data);
             }
 
-            // https://stackoverflow.com/questions/14348567/json-net-how-to-use-jsonpath-with
-            // https://goessner.net/articles/JsonPath/
-            //json.SelectToken()
 
             var result = Visit(html.DocumentNode, json, new List<Scoped>()); //, Enumerable.Empty<(string, JToken)>());
 
@@ -116,7 +108,6 @@ public interface IHtmlDocumentVistor
                 if (scope != null)
                     scopes.Add(scope);
 
-                //_log.LogDebug($"{node.Name} => ({itemKey}, {sourceKey}, {bindingPath}) {source}");
                 try
                 {
                     if (child.Name == "value-of")

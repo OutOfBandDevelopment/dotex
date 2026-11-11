@@ -52,7 +52,6 @@ A clean rebuild after the 2026-11-06 pass reports no analyzer warnings (218 befo
 - [ ] `OoBDev.System.Text.Markdown` PlantUML renderer: add `PlantUmlRendererOptions.RemoteUrl`, default to the local `plantuml` container and fail with a clear message when no URL is set, so nothing leaves the machine unless opted in (owner, 2026-11-10); update the readme and tests.
 - [ ] Example app Identity management screen, read-only (Keycloak service account with `view-users` and `view-realm`; shows users, roles and the role-to-right translation) (owner, 2026-11-10).
 - [ ] Reference architecture stack: add a full identity admin feature (create and disable users) once the reference architecture is located; not for the example app (owner, 2026-11-10).
-- [ ] Remove the roughly 200 lines of commented-out legacy code in the `OoBDev.System.Text.Html` document visitor (found in the bug review, see [findings](docs/issues/device-io-review-findings.md)).
 - [ ] HybridSearch: decide whether to remove the three obsolete provider shells or build the hybrid merge ([requirements](docs/design/HybridSearch/requirements.md#open-questions)); the `OoBDev.Search.Tests` are done
 
 ## 6. Migrations
