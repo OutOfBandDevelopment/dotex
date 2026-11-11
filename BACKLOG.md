@@ -43,13 +43,12 @@ Owner: all protocols and features of dev-term must exist here. Done means what d
 
 ## 5. Code quality backlog
 - [ ] Fix `SentenceEmbeddingClient` in `OoBDev.SBert`: URL-escape the `query` text and honour the `model` argument of `GenerateEmbeddingAsync` (found in the readme review, 2026-11-11; see `README.SBert.md`).
+- [ ] Conversion handlers (Markdig, WkHtmlToPdf, HtmlToOpenXml, MysticMind): the unsupported destination exception says "Source Content Type"; fix the text and test it (found 2026-11-11).
 - [ ] HtmlToOpenXml and MysticMind: add unit tests (HtmlToOpenXml.Tests has none; MysticMind lacks the unsupported-type cases), and have the MysticMind handler rewind its destination like the others (found in the readme review, 2026-11-11).
-- [ ] Markdig: add unit tests for the `MarkdownToHtmlConversionHandler` unsupported-type exceptions and the supported-type lists (found in the readme review, 2026-11-11).
 - [ ] Qdrant: make the result limit and distance configurable, share the collection-creation code between the provider and `EnsureCollectionExistsAsync`, drop or use `QdrantOptions.CollectionName`, and restore or delete the commented `QdrantGrpcClientTests` (found in the readme review, 2026-11-11).
 - [ ] MigrationHelper.Cli: skip binary files for real (the null-character check prints `Skip:` but still writes the file) and add a dry-run mode (found in the readme review, 2026-11-11).
 - [ ] Align the `--help` tool names of `file-convert` and `file-rag` with their `ToolCommandName` (the usage text says `oobdev-documentconverter`; found in the readme review, 2026-11-11).
 - [ ] Remove the obsolete, fully commented `LexicalProvider` from `OoBDev.OpenSearch` and add TLS settings to `OpenSearchOptions` (found in the readme review, 2026-11-11).
-- [ ] Add Unit tests for the content-type checks of `HtmlToPdfConversionHandler` (`OoBDev.WkHtmlToPdf.Tests` has only a DevLocal conversion test).
 
 A clean rebuild after the 2026-11-06 pass reports no analyzer warnings (218 before). Analyzers are wired from `src/Directory.Build.props` (`OoBDev.Analyzers` OOB0001 to OOB0003, NetAnalyzers Recommended, Meziantou); `Tools`, `Examples` and `Applications` are exempt from MA0004, and `Tools` and `Examples` from MA0048, in `src/.editorconfig`.
 
