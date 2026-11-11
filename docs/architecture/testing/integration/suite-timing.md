@@ -20,3 +20,7 @@ The no-flaky-tests goal is met: ten consecutive full Integration runs passed on 
 ## Run on 2026-11-10
 
 `scripts/ci/run-tests.ps1 -Category Integration -Configuration Debug` took 4 min 58 s end to end (stack already up, build included), inside the 5 minute goal. Four tests failed under that load and passed when their project was rerun alone against the same stack: `RabbitMqIntegrationTests` AMQPS and STOMP-over-TLS (5 to 6 s timeouts in `OoBDev.System.IO.Brokers.Tests`), `RealRabbitMq_Stomp_RoutesBothWays` (`OoBDev.DevTerm.Core.Tests`, 11 s wait) and one SQL vector test whose initializer failed to load `Microsoft.Identity.Client` (`OoBDev.Data.Vectors.DB.Tests`). The first three were timeouts too tight for a loaded machine (the test adapters now use 30 s, the DevTerm wait 30 s); the fourth is a DacFx assembly-load problem that did not reproduce alone and stays in `BACKLOG.md`.
+
+## Run on 2026-11-11
+
+`dotnet test OoBDev.slnx --settings .runsettings --filter TestCategory=Integration` (stack already up, Keycloak and the Aspire dashboard on overridden ports, build included) took 6 min 51 s and all 34 test projects passed with no failure. The suite has grown since 2026-11-10 (event sourcing, Azure blob provider tests), so the 5 minute goal is not met; the earlier trimming options (the repeated ONNX conformance set, more cores) still apply.
