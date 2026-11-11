@@ -93,3 +93,9 @@ Default XmlSerializer.
 
 ### Apple2Encoding
 Single-byte `Encoding` for Apple ][ text. Bytes with bit 7 set (normal text) decode to the ASCII character with the bit cleared; bytes with bit 7 clear (inverse and flashing text) decode to the private-use character `U+E000` plus the byte value, so all 256 byte values round-trip through `GetString` and `GetBytes`. Encoding ASCII sets bit 7; other characters become `?`. `Dos33.FileEntry` names use it.
+
+## Time
+
+### HybridLogicalClock and HybridLogicalClockGenerator
+
+Orders events across sites whose clocks are skewed. `HybridLogicalClock` is wall-clock ticks plus a logical counter, compared physical first. `HybridLogicalClockGenerator` (register as a singleton, thread safe, takes a `TimeProvider`) offers `Next()` for local events and `Merge(received)` for events received from another site; both return values strictly greater than anything seen before. An optional `maxDrift` rejects a received clock too far ahead of local time, and counter exhaustion throws `OverflowException` instead of wrapping. Pattern from the sync-mesh reference (hybrid logical clock paper); see [CQRS and event sourcing](../../../docs/design/CqrsEventSourcing/README.md).
