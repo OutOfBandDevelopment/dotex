@@ -47,7 +47,7 @@ This functionality will be automatically enabled for any ASP.Net MVC Controller/
 
 ### DotNet in General
 
-The require classes are in the `OoBDev.System` assembly in the `OoBDev.System.Linq.Search` name space.
+The require classes are in the `OoBDev.System.Linq` assembly in the `OoBDev.System.Linq.Search` name space.
 You may choose to either directly instantiate `QueryBuilder<T>` or use the static methods provided on the 
 `QueryBuilder` class but if you are using the `Microsoft.Extensions.DependnecyInjection` library you may
 prefer to use the `.TryAddSearchQueryExtensions()` with your IOC registration. Using this registration you
