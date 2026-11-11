@@ -71,6 +71,7 @@ public class PgmqSettingsTests
 
         Assert.IsTrue(services.Any(d => d.ServiceType == typeof(IMessageSenderProvider) && Equals(d.ServiceKey, PgmqGlobals.MessageProviderKey)));
         Assert.IsTrue(services.Any(d => d.ServiceType == typeof(IMessageReceiverProvider) && Equals(d.ServiceKey, PgmqGlobals.MessageProviderKey)));
+        Assert.AreEqual(1, services.Count(d => d.ServiceType == typeof(OoBDev.AsyncApi.IAsyncApiContributor)));
         Assert.IsTrue(services.Any(d => d.ServiceType == typeof(IPgmqClientFactory)));
     }
 }

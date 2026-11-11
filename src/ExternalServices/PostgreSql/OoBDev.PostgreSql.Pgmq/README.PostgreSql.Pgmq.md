@@ -7,3 +7,4 @@ Message-queue adapter for [pgmq](https://github.com/pgmq/pgmq), the PostgreSQL e
 - Sending calls `pgmq.send`. Receiving calls `pgmq.read` with the visibility timeout; after the handler succeeds the message is archived with `pgmq.archive`; when it throws the message is left and arrives again after the timeout (at-least-once, so handlers are idempotent).
 - The database needs `CREATE EXTENSION pgmq` (the test stack image `ghcr.io/pgmq/pg17-pgmq` does it at first start).
 - Not yet: an AsyncAPI contributor, dead-lettering after a read-count limit.
+- AsyncAPI: `PgmqAsyncApiContributor` describes the queue (host and port only, never the credentials).

@@ -1,5 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using OoBDev.AsyncApi;
 using OoBDev.MessageQueueing.Services;
 using OoBDev.PostgreSql.Pgmq.MessageQueueing;
 
@@ -24,6 +25,7 @@ public static class ServiceCollectionExtensions
         services.TryAddKeyedTransient<IMessageReceiverProvider, PgmqQueueMessageProvider>(PgmqGlobals.MessageProviderKey);
 
         services.TryAddTransient<IPgmqClientFactory, PgmqClientFactory>();
+        services.TryAddEnumerable(ServiceDescriptor.Singleton<IAsyncApiContributor, PgmqAsyncApiContributor>());
         return services;
     }
 }
