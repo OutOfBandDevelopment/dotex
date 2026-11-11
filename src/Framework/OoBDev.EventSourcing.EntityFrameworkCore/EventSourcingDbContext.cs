@@ -55,8 +55,8 @@ public sealed class EventSourcingDbContext(DbContextOptions<EventSourcingDbConte
         {
             e.ToTable("Entities");
             e.HasKey(x => new { x.Type, x.Key });
-            e.Property(x => x.Type).HasMaxLength(200);
-            e.Property(x => x.Key).HasMaxLength(400);
+            e.Property(x => x.Type).HasMaxLength(100);
+            e.Property(x => x.Key).HasMaxLength(200);
             e.Property(x => x.Value).IsRequired();
 
             switch (provider)

@@ -1,9 +1,10 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace OoBDev.EventSourcing.Sqlite.Migrations
+namespace OoBDev.EventSourcing.Postgres.Migrations
 {
     /// <inheritdoc />
     public partial class InitialCreate : Migration
@@ -15,34 +16,32 @@ namespace OoBDev.EventSourcing.Sqlite.Migrations
                 name: "Entities",
                 columns: table => new
                 {
-                    Type = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false),
-                    Key = table.Column<string>(type: "TEXT", maxLength: 400, nullable: false),
-                    Version = table.Column<long>(type: "INTEGER", nullable: false),
-                    Value = table.Column<string>(type: "TEXT", nullable: false)
+                    Type = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    Key = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
+                    Version = table.Column<long>(type: "bigint", nullable: false),
+                    Value = table.Column<string>(type: "jsonb", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Entities", x => new { x.Type, x.Key });
-                    table.CheckConstraint("CK_Entities_Value_Json", "json_valid(\"Value\")");
                 });
 
             migrationBuilder.CreateTable(
                 name: "Events",
                 columns: table => new
                 {
-                    Position = table.Column<long>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    StreamId = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false),
-                    Sequence = table.Column<long>(type: "INTEGER", nullable: false),
-                    Type = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false),
-                    Timestamp = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
-                    Payload = table.Column<string>(type: "TEXT", nullable: false),
-                    Metadata = table.Column<string>(type: "TEXT", nullable: true)
+                    Position = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    StreamId = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
+                    Sequence = table.Column<long>(type: "bigint", nullable: false),
+                    Type = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
+                    Timestamp = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    Payload = table.Column<string>(type: "jsonb", nullable: false),
+                    Metadata = table.Column<string>(type: "jsonb", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Events", x => x.Position);
-                    table.CheckConstraint("CK_Events_Payload_Json", "json_valid(\"Payload\")");
                 });
 
             migrationBuilder.CreateIndex(

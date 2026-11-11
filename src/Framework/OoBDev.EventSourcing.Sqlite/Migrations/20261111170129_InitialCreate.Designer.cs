@@ -11,7 +11,7 @@ using OoBDev.EventSourcing.EntityFrameworkCore;
 namespace OoBDev.EventSourcing.Sqlite.Migrations
 {
     [DbContext(typeof(EventSourcingDbContext))]
-    [Migration("20261111165837_InitialCreate")]
+    [Migration("20261111170129_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -23,11 +23,11 @@ namespace OoBDev.EventSourcing.Sqlite.Migrations
             modelBuilder.Entity("OoBDev.EventSourcing.EntityFrameworkCore.EntityRow", b =>
                 {
                     b.Property<string>("Type")
-                        .HasMaxLength(200)
+                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Key")
-                        .HasMaxLength(400)
+                        .HasMaxLength(200)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Value")

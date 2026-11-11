@@ -255,6 +255,8 @@
     <Project Path="Framework/OoBDev.EventSourcing.EntityFrameworkCore/OoBDev.EventSourcing.EntityFrameworkCore.csproj" />
     <Project Path="Framework/OoBDev.EventSourcing.Postgres/OoBDev.EventSourcing.Postgres.csproj" />
     <Project Path="Framework/OoBDev.EventSourcing.Sqlite/OoBDev.EventSourcing.Sqlite.csproj" />
+    <Project Path="Framework/OoBDev.EventSourcing.SqlServer.Database/OoBDev.EventSourcing.SqlServer.Database.csproj" />
+    <Project Path="Framework/OoBDev.EventSourcing.SqlServer/OoBDev.EventSourcing.SqlServer.csproj" />
     <Project Path="Framework/OoBDev.EventSourcing.Tests/OoBDev.EventSourcing.Tests.csproj" />
     <Project Path="Framework/OoBDev.EventSourcing/OoBDev.EventSourcing.csproj" />
     <Project Path="Framework/OoBDev.Extensions.Tests/OoBDev.Extensions.Tests.csproj" />

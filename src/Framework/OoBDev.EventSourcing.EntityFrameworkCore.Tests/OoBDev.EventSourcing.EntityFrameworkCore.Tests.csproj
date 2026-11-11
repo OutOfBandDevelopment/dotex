@@ -28,6 +28,8 @@
 		<ProjectReference Include="..\OoBDev.EventSourcing.EntityFrameworkCore\OoBDev.EventSourcing.EntityFrameworkCore.csproj" />
 		<ProjectReference Include="..\OoBDev.EventSourcing.Postgres\OoBDev.EventSourcing.Postgres.csproj" />
 		<ProjectReference Include="..\OoBDev.EventSourcing.Sqlite\OoBDev.EventSourcing.Sqlite.csproj" />
+		<ProjectReference Include="..\OoBDev.EventSourcing.SqlServer\OoBDev.EventSourcing.SqlServer.csproj" />
+		<ProjectReference Include="..\OoBDev.EventSourcing.SqlServer.Database\OoBDev.EventSourcing.SqlServer.Database.csproj" ReferenceOutputAssembly="false" />
 		<ProjectReference Include="..\OoBDev.TestUtilities\OoBDev.TestUtilities.csproj" />
 	</ItemGroup>
 

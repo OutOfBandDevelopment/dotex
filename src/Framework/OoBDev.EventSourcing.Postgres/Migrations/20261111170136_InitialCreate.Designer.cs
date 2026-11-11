@@ -12,7 +12,7 @@ using OoBDev.EventSourcing.EntityFrameworkCore;
 namespace OoBDev.EventSourcing.Postgres.Migrations
 {
     [DbContext(typeof(EventSourcingDbContext))]
-    [Migration("20261111165849_InitialCreate")]
+    [Migration("20261111170136_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -28,12 +28,12 @@ namespace OoBDev.EventSourcing.Postgres.Migrations
             modelBuilder.Entity("OoBDev.EventSourcing.EntityFrameworkCore.EntityRow", b =>
                 {
                     b.Property<string>("Type")
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<string>("Key")
-                        .HasMaxLength(400)
-                        .HasColumnType("character varying(400)");
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.Property<string>("Value")
                         .IsRequired()

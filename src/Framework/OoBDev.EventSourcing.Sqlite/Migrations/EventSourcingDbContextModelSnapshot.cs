@@ -20,11 +20,11 @@ namespace OoBDev.EventSourcing.Sqlite.Migrations
             modelBuilder.Entity("OoBDev.EventSourcing.EntityFrameworkCore.EntityRow", b =>
                 {
                     b.Property<string>("Type")
-                        .HasMaxLength(200)
+                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Key")
-                        .HasMaxLength(400)
+                        .HasMaxLength(200)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Value")
