@@ -1,34 +1,13 @@
 # OoBDev.Data.Vectors.Net481
 
-.NET Framework 4.8 build target for OoBDev.Data.Vectors SQL CLR deployment.
+The SQL CLR build of `OoBDev.Data.Vectors`: the same source compiled for the framework SQL Server loads, producing the assembly (`OoBDev.Data.Vectors.dll`, x64) and the dacpac that carries the `[embedding]` types and functions.
 
-## Description
+## How it is built
 
-This package provides the .NET Framework 4.8.1 compiled version of OoBDev.Data.Vectors required for SQL Server CLR deployment. It shares the same source code as OoBDev.Data.Vectors but targets the .NET Framework runtime required by SQL Server.
+- The project has no code of its own: it compiles every `.cs` file of `OoBDev.Data.Vectors` (`Compile Include="..\OoBDev.Data.Vectors\**\*.cs"`), so a change there is a change here. Nullable and implicit usings are off because the sources are shared with the .NET Framework build.
+- On Windows it targets `net48`; elsewhere it targets `netstandard2.1` so the solution still builds on Linux. SQL Server itself only loads the .NET Framework assembly.
+- `AssemblyName` is `OoBDev.Data.Vectors`, so the assembly deployed to SQL Server has the same name as the library.
 
-## Key Features
+## Where it is used
 
-- .NET Framework 4.8.1 target for SQL CLR
-- Shared source with OoBDev.Data.Vectors
-- DacPac generation support
-- SQL Server CLR safe mode compatible
-
-## Installation
-
-This package is typically used as part of a database project build process rather than directly referenced:
-
-```xml
-<ProjectReference Include="OoBDev.Data.Vectors.Net481.csproj" />
-```
-
-## Usage
-
-This project automatically builds as part of the OoBDev.Data.Vectors.DB database project to generate the SQL CLR assembly and DacPac for deployment to SQL Server.
-
-## License
-
-See repository license file for details.
-
-## Repository
-
-[OoBDev Repository](https://github.com/yourusername/oobdev)
+Do not reference it from application code. `OoBDev.Data.Vectors.DB` and `OoBDev.Example.DB` reference its dacpac (target `GenerateDacPac`), and `OoBDev.DacPacCompiler.Cli` reads the assembly to create that dacpac. The deployment steps and SQL Server prerequisites (CLR enabled, assembly trusted) are in the [Data.Vectors.DB readme](../OoBDev.Data.Vectors.DB/README.Data.Vectors.DB.md). The type and function reference is the [Data.Vectors readme](../OoBDev.Data.Vectors/README.Data.Vectors.md).
