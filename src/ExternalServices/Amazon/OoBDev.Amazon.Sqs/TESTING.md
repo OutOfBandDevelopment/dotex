@@ -105,6 +105,7 @@ public class AmazonSqsIntegrationTests
             { "MessageQueuing:TestQueue:Region", "us-east-1" },
             { "MessageQueuing:TestQueue:AccessKeyId", "test" },
             { "MessageQueuing:TestQueue:SecretAccessKey", "test" },
+            { "MessageQueuing:TestQueue:ServiceUrl", "http://localhost:4566" },
         });
 
         var config = configBuilder.Build();
@@ -149,6 +150,7 @@ public class AmazonSqsIntegrationTests
             { "MessageQueuing:FifoQueue:Region", "us-east-1" },
             { "MessageQueuing:FifoQueue:AccessKeyId", "test" },
             { "MessageQueuing:FifoQueue:SecretAccessKey", "test" },
+            { "MessageQueuing:FifoQueue:ServiceUrl", "http://localhost:4566" },
             { "MessageQueuing:FifoQueue:MessageGroupId", "test-group" },
         });
 
@@ -200,6 +202,7 @@ configBuilder.AddInMemoryCollection(new Dictionary<string, string?>
     { "MessageQueuing:FifoQueue:MessageGroupId", "my-group" },
     { "MessageQueuing:FifoQueue:AccessKeyId", "test" },
     { "MessageQueuing:FifoQueue:SecretAccessKey", "test" },
+    { "MessageQueuing:FifoQueue:ServiceUrl", "http://localhost:4566" },
 });
 ```
 
