@@ -27,7 +27,7 @@ using Markdig;
 using OoBDev.System.Text.Markdown;
 
 var pipeline = new MarkdownPipelineBuilder()
-    .Use<PlantUmlExtension>()
+    .UsePlantuml()
     .Build();
 
 var html = Markdown.ToHtml(markdownText, pipeline);
