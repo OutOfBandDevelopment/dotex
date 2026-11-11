@@ -45,7 +45,7 @@ CloudEvents 1.0 is an edge option, not the internal envelope (owner, 2026-11-11)
 
 [Testing strategy →](testing-strategy.md)
 
-**Status:** Draft · **Date:** 2026-11-11 · *Proposed: none of these types exist yet.*
+**Status:** Draft · **Date:** 2026-11-11 · *Built (2026-11-11): `IEventStore`, `EventRecord`, `NewEvent`, `AppendResult`, `IEntityStore`, `EntityRecord`, `EventsChannel`, the in-memory stores, `EventRelay` and `TryAddEventSourcing()`. Proposed, not built: the EF stores, `AggregateRoot`, `IAggregateRepository<T>`, `IProjection`, `IEventUpcaster` and the CloudEvents mapper. Provider and factory interfaces are replaced by keyed services selected with `TryAddConfiguredKeyedService`.*
 
 ## Contents
 
