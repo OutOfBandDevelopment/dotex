@@ -1,21 +1,14 @@
-# OoBDev - Complete Framework
+# OoBDev.Common.Complete
 
-## Summary
+Aggregator package that references every other `Common` aggregator (Abstractions, base, AspNetCore, Extensions, HardwareDevices, Hosting) and registers all of them in one call.
 
-This one reference add the full power of the OoBDev Shared Framework.
-
-## Usage
-
-Adding the reference do your project as well as adding the following to your IoC container 
-will enable all of the functionality from this framework.  All framework features will be 
-available for use, configuration and replacement as required for your application.
-
-### Example
+## Use
 
 ```csharp
-using OoBDev.Common;
-
-
-//Add this after you IServiceCollection registation
-        services.TryAllCommonExtensions();
+services.TryAllCommonExtensions(configuration);            // namespace OoBDev.Common
+app.UseAllCommonMiddleware();                              // optional MiddlewareExtensionBuilder
 ```
+
+`TryAllCommonExtensions(configuration, systemBuilder, aspNetBuilder, jwtBuilder, identityBuilder, externalBuilder, hostingBuilder)` runs, in order, `TryCommonExtensions`, `TryCommonAspNetCoreExtensions`, `TryCommonExternalExtensions`, `TryCommonHardwareDeviceExtensions` and `TryCommonHosting`. Every builder is optional in release builds (null means defaults); in Debug builds all are required so a child builder is never forgotten. `UseAllCommonMiddleware` currently only calls `UseCommonAspNetCoreMiddleware` (health check endpoint).
+
+Smaller entry points: [Common](../OoBDev.Common/README.Common.md), [Common.AspNetCore](../OoBDev.Common.AspNetCore/README.Common.AspNetCore.md), [Common.Extensions](../OoBDev.Common.Extensions/README.Common.Extensions.md), [Common.HardwareDevices](../OoBDev.Common.HardwareDevices/README.Common.HardwareDevices.md) and [Common.Hosting](../OoBDev.Common.Hosting/README.Common.Hosting.md).

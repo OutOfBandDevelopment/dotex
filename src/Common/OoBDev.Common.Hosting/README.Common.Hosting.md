@@ -1,37 +1,21 @@
 # OoBDev.Common.Hosting
 
-This library provides a set of classes and extension methods for configuring common hosting services 
-in .NET applications.
+Aggregator for the hosted-service projects (`*.Hosting` in Framework, Extensions and ExternalServices) with one registration that switches them on.
 
-## Common.Hosting.HostingBuilder
+## Use
 
-Represents a builder for configuring hosting extensions.
+```csharp
+services.TryCommonHosting(configuration);                  // builder optional in release builds
+services.TryCommonHosting(configuration, new HostingBuilder { DisableVectorHosting = true });
+```
 
-### Properties
+**Table 1 — `HostingBuilder` options**
 
-#### DisableMessageQueueing
-Gets or sets a value indicating whether message queueing should be disabled. Set to `true` to disable
-message queueing; otherwise, set to `false`. The default value is `false`.
+| Property | Default | Effect |
+|----------|---------|--------|
+| `DisableCommunications` | false | Skips `TryAddCommunicationsHosting` |
+| `DisableMessageQueueing` | false | Skips `TryAddMessageQueueingHosting` ([receiver host](../../Framework/OoBDev.MessageQueueing.Hosting/README.MessageQueueing.Hosting.md)) |
+| `DisableVectorHosting` | false | Skips `TryAddVectorHosting` |
+| `EmbeddingSentenceTransformerQueueReaderConfigurationSection` | `EmbeddingSentenceTransformerQueueReaderOptions` | Configuration section the vector hosting reads |
 
-## Common.Hosting.ServiceCollectionExtensions
-
-Provides extension methods for configuring common hosting services in the `IServiceCollection`.
-
-### Methods
-
-#### TryCommonHosting
-Tries to add common hosting services to the specified `IServiceCollection`.
-
-##### Parameters
-
-* `services`: The instance.
-* `configuration`: The configuration containing settings for hosting services.
-* `builder`: Optional builder for configuring hosting. Default is `null`.
-
-##### Return value
-
-The updated instance.
-
-This library is designed to make it easy to configure common hosting services in your .NET applications. 
-By using the `HostingBuilder` and `ServiceCollectionExtensions` classes, you can quickly and easily add 
-the hosting services your application needs.
+In Debug builds the builder parameter is required, in Release it defaults to null (all hosts on).
