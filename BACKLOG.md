@@ -45,7 +45,6 @@ Owner: all protocols and features of dev-term must exist here. Done means what d
 
 A clean rebuild after the 2026-11-06 pass reports no analyzer warnings (218 before). Analyzers are wired from `src/Directory.Build.props` (`OoBDev.Analyzers` OOB0001 to OOB0003, NetAnalyzers Recommended, Meziantou); `Tools`, `Examples` and `Applications` are exempt from MA0004, and `Tools` and `Examples` from MA0048, in `src/.editorconfig`.
 
-- [ ] Bug-review the migrated projects that the source review never covered (rest of device IO: `BridgeWorker`, `SerialDeviceAdapter`, Bluetooth, Mqtt, Brokers; then toolkit and text, code analysis and archives, apps and tooling); first pass and open findings in [the issue](docs/issues/device-io-review-findings.md)
 - [ ] Example app Identity management screen, read-only (Keycloak service account with `view-users` and `view-realm`; shows users, roles and the role-to-right translation) (owner, 2026-11-10).
 - [ ] Reference architecture stack: add a full identity admin feature (create and disable users) once the reference architecture is located; not for the example app (owner, 2026-11-10).
 - [ ] HybridSearch: build the hybrid merge (`IHybridSearch`, reciprocal rank fusion vs. "larger score") when a consumer needs it ([api-design](docs/design/HybridSearch/api-design.md#planned-hybrid-contract)); the shells are removed and `OoBDev.Search.Tests` are done

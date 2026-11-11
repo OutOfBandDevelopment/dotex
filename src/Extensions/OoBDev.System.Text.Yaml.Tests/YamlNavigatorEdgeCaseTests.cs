@@ -36,4 +36,18 @@ public class YamlNavigatorEdgeCaseTests
         // Assert
         Assert.IsNotNull(xpath.SelectSingleNode("//a"));
     }
+
+    [TestMethod]
+    public void ToNavigable_Stream_LeavesTheCallersStreamOpen()
+    {
+        // Stage
+        var nav = new YamlNavigator();
+        using var stream = Yaml("a: 1\n");
+
+        // Test
+        nav.ToNavigable(stream);
+
+        // Assert
+        Assert.IsTrue(stream.CanRead);
+    }
 }
