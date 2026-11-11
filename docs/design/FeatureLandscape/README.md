@@ -22,7 +22,6 @@ For every feature in [docs/design](../README.md): which features are expected to
 
 1. [Table 1 — Status at a glance](#table-1)
 2. [Table 2 — Area documents](#table-2)
-3. [Table 3 — Design status that disagrees with the code](#table-3)
 
 ## How the features relate
 
@@ -129,16 +128,7 @@ An arrow means "is expected to be used by or to feed" the target, taken from the
 
 ## Cross-cutting findings
 
-**Table 3 — Design status that disagrees with the code**
-
-| Feature | Design says | Code shows |
-|---------|-------------|------------|
-| Communications | Design phase, "replaces a 16 LOC stub" | `OoBDev.Communications` plus Abstractions, Hosting and MessageQueueing projects with tests |
-| TextTemplating | Design phase | Handlebars adapter and `OoBDev.System.Text.Templating.Xslt` exist |
-| SharedCaching | Design phase | `OoBDev.Caching` and Abstractions exist; whether the attribute-based, AOP and background-task designs are covered is not stated |
-| SharedIdentity | Design phase | `OoBDev.Identity`, Abstractions and `OoBDev.Identity.Jws` exist |
-| Jws | Accepted | `OoBDev.Identity.Jws` exists |
-| DocumentServices | Design phase | `OoBDev.Documents` plus Abstractions, ExternalTools, Guides and Hpgl exist |
+The first review found eight designs whose status line disagreed with the code (ApplicationRights, ODataQuery, HttpQueryVerb, Communications, TextTemplating, SharedCaching, SharedIdentity, Jws, DocumentServices). All were reconciled by 2026-11-11 and now carry a true status; the epic designs list what is built and what is not in their own implementation status.
 
 Other patterns across the set:
 
@@ -149,6 +139,6 @@ Other patterns across the set:
 
 ## Suggested follow-up
 
-1. Reconcile the five remaining drifted designs in Table 3 (ApplicationRights, ODataQuery and HttpQueryVerb done 2026-11-11) and update their status lines (backlog item, one change each).
+1. ~~Reconcile the drifted design status lines~~ (done 2026-11-11).
 2. Give the moved DevTerm leaf folders a status line that points to the parity status.
 3. Pick the missing features in each area document that the owner wants and move them to `BACKLOG.md`; none are added there by this review.

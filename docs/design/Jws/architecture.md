@@ -2,7 +2,7 @@
 
 [← Requirements](requirements.md) · [↑ Overview](README.md) · [API design →](api-design.md)
 
-**Status:** Accepted · **Date:** 2026-10-29
+**Status:** Built · **Date:** 2026-11-11 (REQ-001 to REQ-010 in `OoBDev.Identity.Jws`, covered by `JsonWebSignatureTests`)
 
 ## Contents
 

@@ -46,7 +46,6 @@ Owner: all protocols and features of dev-term must exist here. Done means what d
 - [ ] Azure AI Search adapter behind the Search abstractions (owner, 2026-11-11; LiveIntegration tests); see [HybridSearch](docs/design/HybridSearch/README.md)
 - [ ] Neo4j graph retrieval adapter (owner, 2026-11-11; Neo4j container in the test stack via the `add-integration-service` skill); see [GraphQueries](docs/design/GraphQueries/README.md)
 - [ ] Graph query examples: SQL Server node/edge tables with `MATCH` and `SHORTEST_PATH` in `OoBDev.Example.DB`, plus recursive-CTE equivalents for PostgreSQL and SQLite; Apache AGE spike after the PostgreSQL service exists ([plan](docs/design/GraphQueries/README.md#plan))
-- [ ] Reconcile the five designs with stale status lines left (Communications, TextTemplating, SharedCaching, SharedIdentity/Jws, DocumentServices; ApplicationRights, ODataQuery, HttpQueryVerb done 2026-11-11) ([landscape Table 3](docs/design/FeatureLandscape/README.md#cross-cutting-findings)); owner, 2026-11-11: after the CQRS library build
 
 ## 5. Code quality backlog
 

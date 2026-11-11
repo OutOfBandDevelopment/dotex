@@ -1,7 +1,7 @@
 # Epic 10: Text Templating Extensions
 
 **Priority:** MEDIUM
-**Status:** 📋 Design Phase - Documentation Complete
+**Status:** 🔧 Partly built (reconciled 2026-11-11): Feature 1 (Handlebars provider, `OoBDev.Handlebars`, with compilation cache, escaping and formatting-helper tests) is built, and the XSLT engine (`OoBDev.System.Text.Templating.Xslt`) exists beside it. Feature 2 (database template source) and Feature 3 (IDataContainer integration) are not built.
 **Complexity:** LOW (leverage existing framework)
 **Impact:** ~400 LOC (additions to existing template engine)
 
@@ -60,7 +60,7 @@ DC --> Sources
 
 ## Feature Breakdown
 
-### Feature 1: Handlebars Template Provider ✅ COMPLETE
+### Feature 1: Handlebars Template Provider ✅ BUILT
 **Path:** `//HandlebarsProvider/`
 **Priority:** HIGH
 **LOC:** ~150
