@@ -86,9 +86,28 @@
           }
         }
       ]
+    },
+    {
+      "clientId": "oobdev-example-directory",
+      "name": "OoBDev example directory reader (service account, read-only)",
+      "enabled": true,
+      "publicClient": false,
+      "secret": "example-directory-secret",
+      "standardFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": true
     }
   ],
   "users": [
+    {
+      "id": "00000000-0000-4000-8000-0000000000f1",
+      "username": "service-account-oobdev-example-directory",
+      "enabled": true,
+      "serviceAccountClientId": "oobdev-example-directory",
+      "clientRoles": {
+        "realm-management": [ "view-users", "view-realm" ]
+      }
+    },
     {
       "id": "00000000-0000-4000-8000-000000000001",
       "username": "ada",

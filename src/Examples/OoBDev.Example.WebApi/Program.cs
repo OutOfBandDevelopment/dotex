@@ -92,6 +92,7 @@ public static class Program
 #endif
         );
 
+        services.TryAddRoleRightMapping(builder.Configuration);
         builder.Services.AddControllers();
 
         // CGI programs (see cgi-src/ and README.Example.WebApi.md); their {program}.openapi.json files appear in the "all" OpenAPI document
