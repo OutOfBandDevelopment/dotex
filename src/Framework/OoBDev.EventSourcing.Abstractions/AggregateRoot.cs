@@ -60,6 +60,18 @@ public abstract class AggregateRoot
     }
 
     /// <summary>
+    /// Sets the identity and version of an aggregate whose state was restored from a snapshot.
+    /// </summary>
+    /// <param name="id">The identifier.</param>
+    /// <param name="version">The stream version the snapshot covers.</param>
+    public void LoadFromSnapshot(string id, long version)
+    {
+        Id = id;
+        Version = version;
+        _uncommitted.Clear();
+    }
+
+    /// <summary>
     /// Clears the uncommitted events after a successful save (used by the repository).
     /// </summary>
     /// <param name="version">The sequence of the last saved event.</param>

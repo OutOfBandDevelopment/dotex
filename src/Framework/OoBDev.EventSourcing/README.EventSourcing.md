@@ -25,3 +25,7 @@ Implement `IProjection` (`Name`, idempotent `ApplyAsync(EventRecord)`) and regis
 ## Upcasting
 
 Register `IEventUpcaster` implementations (`FromType`, `Upcast(payload)` returning the new type name and payload). `EventUpcastPipeline` chains them (a cycle throws) and `AggregateRepository` applies it when loading, so stored events are never rewritten.
+
+## Snapshots
+
+An aggregate that implements `ISnapshotable` (`CaptureState`, `RestoreState`) is snapshotted into the entity store (type `aggregate-snapshot`) each time its stream version passes a multiple of `OoBDev:EventSourcing:Snapshots:Interval` (default 100, 0 turns it off). `AggregateRepository` restores the snapshot and replays only the later events; the stream stays the source of truth, so a snapshot can be deleted at any time.

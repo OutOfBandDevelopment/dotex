@@ -29,6 +29,7 @@ public static class ServiceCollectionExtensions
         services.TryAddConfiguredKeyedService<IEventStore>(EventSourcingGlobals.EventStorePath, EventSourcingGlobals.EventStoreSelectedKey);
         services.TryAddConfiguredKeyedService<IEntityStore>(EventSourcingGlobals.EntityStorePath, EventSourcingGlobals.EntityStoreSelectedKey);
         services.AddOptions<EventRelayOptions>().BindConfiguration(EventSourcingGlobals.RelaySection).ValidateDataAnnotations();
+        services.AddOptions<SnapshotOptions>().BindConfiguration(EventSourcingGlobals.SnapshotSection).ValidateDataAnnotations();
         services.TryAddTransient(sp => new EventRelay(
             sp.GetRequiredKeyedService<IEventStore>(EventSourcingGlobals.EventStoreSelectedKey),
             sp.GetRequiredKeyedService<IEntityStore>(EventSourcingGlobals.EntityStoreSelectedKey),
