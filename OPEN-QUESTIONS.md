@@ -22,14 +22,3 @@ The example app lists users and roles on a screen only if the host may call the 
 
 **Your answer:**
 
-### Q2 - 2026-11-10 - Markdown PlantUML renderer: which server renders diagrams
-`OoBDev.System.Text.Markdown` renders every diagram on the public plantuml.com server, so the diagram text (which can describe internal systems) leaves the machine. What should the default be?
-
-**Options:**
-- A. (recommended) A `PlantUmlRendererOptions` with `RemoteUrl`, defaulting to the test stack's `plantuml` container URL when configured and failing with a clear message when none is set. No document text leaves the machine unless someone opts in; matches the owner's "no live data" and local-first rules.
-- B. Same option, but keep plantuml.com as the default. No behaviour change for existing users, but data still leaves by default.
-- C. Leave the hard-coded URL and only document it.
-
-**Default:** A in code is not started; the renderer keeps its current URL until answered (the constructor taking an `IPlantUmlRenderer` already allows a local back end).
-
-**Your answer:**
