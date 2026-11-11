@@ -18,7 +18,7 @@ Review of the example web app (`src/Examples/OoBDev.Example.Web`) and API agains
 | Screen | Framework projects | What the screen would show | Needs |
 | --- | --- | --- | --- |
 | Template management | `OoBDev.TextTemplating`, Handlebars | List, edit, save and preview templates | List, open and preview built 2026-11-09; save waits for OPEN-QUESTIONS Q2 |
-| Identity management | `OoBDev.Identity`, `OoBDev.Identity.Jws`, Keycloak | User lookup, rights, sessions | Keycloak admin scope; the host runs the API anonymously today |
+| Identity management | `OoBDev.Identity`, `OoBDev.Identity.Jws`, Keycloak | User lookup, rights (read-only page `/identity/directory` built 2026-11-11; sessions are not covered) | Keycloak admin scope; the host runs the API anonymously today |
 | Data access and DacPac builder | `OoBDev.Data.Common`, MongoDB, `OoBDev.DacFx` | Read-only query runner, dacpac build and diff | Read-only guard design |
 | Semantic Kernel plug-in tester | `OoBDev.SemanticKernel` | Plug-in list and invoke | Controller |
 | Vector store browser | Qdrant, OpenSearch, SQL store | Collection list, upsert, query | Collection listing on the vector store interface |
