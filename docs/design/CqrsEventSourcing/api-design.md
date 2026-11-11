@@ -1,6 +1,31 @@
 # CQRS and Event Sourcing — API Design
 
-[← Architecture](architecture.md) · [↑ Overview](README.md) · [Testing strategy →](testing-strategy.md)
+[← Architecture](architecture.md) · [↑ Overview](README.md) · ## Entity Framework stores
+
+The event store and the entity store have a relational implementation on Entity Framework Core, so one model serves several databases (owner, 2026-11-11). The first databases are **PostgreSQL, SQL Server and SQLite**, each a configurable option. The event stream is not relational; it stays on the message-queue adapters.
+
+```json
+{ "OoBDev": { "EventSourcing": {
+    "EventStore":  { "Type": "entity-framework" },
+    "EntityStore": { "Type": "entity-framework" },
+    "EntityFramework": { "Database": "postgres", "ConnectionName": "EventSourcing" } } } }
+```
+
+`Database` is `postgres`, `sql-server` or `sqlite`. The two stores may use different databases or connection names by giving each its own `EntityFramework` section (`EventStore:EntityFramework`, `EntityStore:EntityFramework`).
+
+| Table | Columns | Notes |
+|-------|---------|-------|
+| `Events` | `Position` (identity, global order), `StreamId`, `Sequence`, `Type`, `Timestamp`, `Payload` (JSON), `Metadata` (JSON) | unique index on (`StreamId`, `Sequence`); a duplicate-key error is the optimistic concurrency conflict |
+| `Entities` | `Type`, `Key`, `Version`, `Value` (JSON) | primary key (`Type`, `Key`); `Version` is the concurrency token |
+| `Checkpoints` | `Name`, `Position` | one row per projection or relay |
+
+- **Providers:** the stores (`EventSourcingDbContext`, the two store classes and the model) live in `OoBDev.EventSourcing.EntityFrameworkCore` and reference only EF Core and the Abstractions. The database packages are separate small projects (`.Postgres`, `.SqlServer`, `.Sqlite`), each registering its provider under a kebab-case key (`postgres`, `sql-server`, `sqlite`) in its own `{Vendor}Globals`, so a deployment pulls only the database it uses.
+- **JSON columns:** `jsonb` on PostgreSQL, `nvarchar(max)` with `ISJSON` on SQL Server, `TEXT` on SQLite; the model maps one string property and the provider project configures the column type.
+- **Migrations:** one migration set per database, in the provider project. SQLite and tests may use `EnsureCreated` through an option; production deployments apply migrations.
+- **Gaps in the global position:** identity values are allocated before commit, so a concurrent transaction can commit a lower position after a higher one is visible. The relay therefore reads only positions older than a small safety window (default 5 seconds) and re-reads gaps once; this is a known limitation of every identity-based feed.
+- **Not in the first cut:** querying inside the JSON value (`QueryAsync` filters on `Type` and `Key` prefix only) and sharding by stream.
+
+[Testing strategy →](testing-strategy.md)
 
 **Status:** Draft · **Date:** 2026-11-11 · *Proposed: none of these types exist yet.*
 

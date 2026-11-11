@@ -37,6 +37,7 @@ Confirmed by the owner on 2026-11-11 (the recommended options):
 2. **Store contract:** append with an expected sequence (optimistic concurrency), read by stream, follow by global position.
 3. **Home:** Framework (`OoBDev.EventSourcing` plus Abstractions). The event store, the event stream (message queue) and the entity store are three separate providers, each swapped by its own configured key (owner, 2026-11-11); their adapters are separate projects.
 4. **First cut:** minimal. Snapshots and upcasting are separate backlog items.
-5. **Erasure:** crypto-shredding per subject is the supported route; no event deletion and no redaction events.
+5. **Relational stores:** the event store and the entity store have an Entity Framework Core implementation with PostgreSQL, SQL Server and SQLite as configurable databases (owner, 2026-11-11); see [API design](api-design.md#entity-framework-stores).
+6. **Erasure:** crypto-shredding per subject is the supported route; no event deletion and no redaction events.
 
 The library build is now unblocked and sits in `BACKLOG.md`.
