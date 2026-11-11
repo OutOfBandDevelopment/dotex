@@ -1,47 +1,24 @@
 # OoBDev.HtmlToOpenXml
 
-A .NET library for converting HTML content to OpenXML format using WkHtmlToPdf.
+HTML to Word (`.docx`) conversion for the document conversion pipeline, using the [HtmlToOpenXml](https://github.com/onizet/html2openxml) package and the Open XML SDK. It runs in process, with no external tool.
 
-## Classes
+## Use
 
-### WkHtmlToPdf.HtmlToDocxConversionHandler
-Handler for converting HTML content to Docx format.
+```csharp
+services.TryAddHtmlToOpenXmlServices();
+```
 
-#### Fields
+This registers `HtmlToDocxConversionHandler` as an `IDocumentConversionHandler` and a `Microsoft Word - OpenXML` `IDocumentType` (extension `.docx`, content type `application/vnd.openxmlformats-officedocument.wordprocessingml.document`). A TODO in the registration considers Tika instead, or making this adapter excludable from the common set.
 
-* `DESTINATIONS`: Target Content Types
+**Table 1 — Content types of `HtmlToDocxConversionHandler` (compared ignoring case)**
 
-#### Properties
+| Direction | Types |
+|-----------|-------|
+| Sources | `text/html`, `text/xhtml`, `text/xhtml+xml` |
+| Destinations | the `.docx` content type above (`DESTINATIONS`) |
 
-* `Destinations`: Gets the supported content types for destination PDF files.
-* `Sources`: Gets the supported content types for source HTML files.
+`ConvertAsync` throws `NotSupportedException` for any other content type. It rewinds the source, reads it as text, creates a Word document in memory, parses the HTML into its body, writes the bytes to the destination and rewinds the destination. For PDF output use [OoBDev.WkHtmlToPdf](../../WkHtmlToPdf/OoBDev.WkHtmlToPdf/README.WkHtmlToPdf.md).
 
-#### Methods
+## Tests
 
-* `ConvertAsync(System.IO.Stream, System.String, System.IO.Stream, System.String)`: Converts HTML content from a source stream to Docx format and writes it to a destination stream.
-	+ Parameters:
-		+ `source`: The source stream containing the HTML content.
-		+ `sourceContentType`: The content type of the source.
-		+ `destination`: The destination stream to write the PDF content.
-		+ `destinationContentType`: The content type of the destination.
-	+ Return value: A task representing the asynchronous operation.
-	+ Exceptions:
-		+ `System.NotSupportedException`: Thrown if the source or destination content type is not supported.
-* `SupportedDestination(System.String)`: Checks if the specified content type is supported for PDF conversion.
-	+ Parameters:
-		+ `contentType`: The content type to check.
-	+ Return value: `true` if the content type is supported; otherwise, `false`.
-* `SupportedSource(System.String)`: Checks if the specified content type is supported as source HTML for PDF conversion.
-	+ Parameters:
-		+ `contentType`: The content type to check.
-	+ Return value: `true` if the content type is supported; otherwise, `false`.
-
-### HtmlToOpenXml.ServiceCollectionExtensions
-Provides extension methods for configuring services related to WkHtmlToPdf.
-
-#### Methods
-
-* `TryAddHtmlToOpenXmlServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)`: Configures services for WkHtmlToPdf.
-	+ Parameters:
-		+ `services`: The service collection to add the services to.
-	+ Return value: The modified service collection.
+`OoBDev.HtmlToOpenXml.Tests` contains no test classes yet (backlog item).

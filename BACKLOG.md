@@ -43,6 +43,7 @@ Owner: all protocols and features of dev-term must exist here. Done means what d
 
 ## 5. Code quality backlog
 - [ ] Fix `SentenceEmbeddingClient` in `OoBDev.SBert`: URL-escape the `query` text and honour the `model` argument of `GenerateEmbeddingAsync` (found in the readme review, 2026-11-11; see `README.SBert.md`).
+- [ ] HtmlToOpenXml and MysticMind: add unit tests (HtmlToOpenXml.Tests has none; MysticMind lacks the unsupported-type cases), and have the MysticMind handler rewind its destination like the others (found in the readme review, 2026-11-11).
 - [ ] Markdig: add unit tests for the `MarkdownToHtmlConversionHandler` unsupported-type exceptions and the supported-type lists (found in the readme review, 2026-11-11).
 - [ ] Qdrant: make the result limit and distance configurable, share the collection-creation code between the provider and `EnsureCollectionExistsAsync`, drop or use `QdrantOptions.CollectionName`, and restore or delete the commented `QdrantGrpcClientTests` (found in the readme review, 2026-11-11).
 - [ ] MigrationHelper.Cli: skip binary files for real (the null-character check prints `Skip:` but still writes the file) and add a dry-run mode (found in the readme review, 2026-11-11).
