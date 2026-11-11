@@ -76,10 +76,9 @@ public static class StructuredLogNavigatorFactory
         return item switch
         {
             Project log => Of(log).Concat(log.EntryTargets.Select(i => (XName.Get("EntryTarget", ""), (object)i))),
-            Item or ProjectEvaluation or Target or Task or Build or Folder or TimedNode or Message or EntryTarget or Parameter or AddItem or RemoveItem or Warning or Error
-                => Of((TreeNode)item),
-            Metadata or Property or BaseNode or string => null,
-            _ => throw new NotSupportedException(item.GetType().ToString()),
+            Metadata or Property => null,
+            TreeNode node => Of(node),
+            _ => null,
         };
     }
 }
