@@ -19,7 +19,7 @@ Practical guides for common tasks and scenarios in the OoBDev framework.
 
 ## Tools
 
-- [**Converting `oobdev-xslt` calls to `oobdev-templateengine`**](converting-xslt-cli-to-templateengine.md)
+- [**Converting `oobdev-xslt` calls to `templateengine`**](converting-xslt-cli-to-templateengine.md)
 
 ## Operations
 

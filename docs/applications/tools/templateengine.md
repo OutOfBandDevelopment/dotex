@@ -1,4 +1,4 @@
-# oobdev-templateengine
+# templateengine
 
 Renders a Handlebars or XSLT template over input files.
 
@@ -7,8 +7,8 @@ Renders a Handlebars or XSLT template over input files.
 Run the tool with `--help` to list its options.
 
 ```console
-$ oobdev-templateengine --help
-oobdev-templateengine - Renders a Handlebars or XSLT template over input files.
+$ templateengine --help
+templateengine - Renders a Handlebars or XSLT template over input files.
 Pass options as --name value (a boolean needs an explicit true or false).
   --input                   <string>
   --Template                <string> (required)

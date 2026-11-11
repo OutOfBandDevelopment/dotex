@@ -18,7 +18,7 @@ internal sealed class Program
 
         if (CommandLine.IsHelpRequest(args))
         {
-            global::System.Console.WriteLine(CommandLine.Usage("oobdev-dacpac", "Builds a DACPAC from a SQL CLR assembly.", typeof(DacPacBuilderEngineOptions)));
+            global::System.Console.WriteLine(CommandLine.Usage("dacpactools", "Builds a DACPAC from a SQL CLR assembly.", typeof(DacPacBuilderEngineOptions)));
             global::System.Console.WriteLine();
             global::System.Console.WriteLine(DacPacMergeHost.Usage);
             return 0;

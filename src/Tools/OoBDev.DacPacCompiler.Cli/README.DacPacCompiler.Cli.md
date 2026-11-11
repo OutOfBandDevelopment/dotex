@@ -31,7 +31,7 @@ dacpactools --sqlclr "OoBDev.Data.Vectors.dll" --pdb "OoBDev.Data.Vectors.pdb" -
 | `--version` | no | Project version for the package metadata; defaults to `0.0.0.1`. |
 | `--tool` | no | `SqlClr` (default) or `Merge` (see [Merging DacPacs](#merging-dacpacs)). |
 
-The host binds the options from the command line, logs them and calls `IDacPacBuilder.BuildDacPac` (`OoBDev.DacFx`), then exits. The generated reference page is [oobdev-dacpac](../../../docs/applications/tools/oobdev-dacpac.md).
+The host binds the options from the command line, logs them and calls `IDacPacBuilder.BuildDacPac` (`OoBDev.DacFx`), then exits. The generated reference page is [dacpactools](../../../docs/applications/tools/dacpactools.md).
 
 ## Merging DacPacs
 

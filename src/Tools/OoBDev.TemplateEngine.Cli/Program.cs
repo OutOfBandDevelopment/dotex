@@ -23,7 +23,7 @@ public class Program
     {
         if (CommandLine.IsHelpRequest(args))
         {
-            global::System.Console.WriteLine(CommandLine.Usage("oobdev-templateengine", "Renders a Handlebars or XSLT template over input files.", typeof(TemplateEngineOptions), typeof(FileTemplatingOptions)));
+            global::System.Console.WriteLine(CommandLine.Usage("templateengine", "Renders a Handlebars or XSLT template over input files.", typeof(TemplateEngineOptions), typeof(FileTemplatingOptions)));
             return 0;
         }
 
