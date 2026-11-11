@@ -29,12 +29,14 @@ Commands change aggregates, aggregates raise events, an append-only store keeps 
 
 [Requirements →](requirements.md)
 
-## Decisions needed
+## Decisions
 
-Confirm these in one pass; each has a recommendation, and the library is not built until they are answered.
+Confirmed by the owner on 2026-11-11 (the recommended options):
 
-1. **Event envelope.** Recommended: a CloudEvents 1.0 compatible envelope with an `OoBDev` extension for stream id and sequence. Alternative: a plain record with no external standard.
-2. **Store contract.** Recommended: append with an expected sequence (optimistic concurrency), read by stream, follow by global position. Alternative: stream-only, no global feed.
-3. **Home.** Recommended: Framework (`OoBDev.EventSourcing` plus Abstractions), with SQL and message-queue stores as adapters. Alternative: Extensions.
-4. **Snapshots and upcasting.** Recommended: out of the first cut, tracked as backlog items. Alternative: include both now.
-5. **Erasure.** Recommended: document crypto-shredding per subject as the supported route; no event deletion. Alternative: allow redaction events.
+1. **Event envelope:** CloudEvents 1.0 compatible, with an `OoBDev` extension for stream id and sequence.
+2. **Store contract:** append with an expected sequence (optimistic concurrency), read by stream, follow by global position.
+3. **Home:** Framework (`OoBDev.EventSourcing` plus Abstractions); SQL and message-queue stores are adapters.
+4. **First cut:** minimal. Snapshots and upcasting are separate backlog items.
+5. **Erasure:** crypto-shredding per subject is the supported route; no event deletion and no redaction events.
+
+The library build is now unblocked and sits in `BACKLOG.md`.
