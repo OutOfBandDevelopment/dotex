@@ -90,8 +90,8 @@ public partial class PgmqQueueMessageProvider(
 
     private async Task<int> ReceiveBatchAsync(NpgsqlConnection connection, PgmqSettings settings, IMessageHandlerProvider handler, CancellationToken cancellationToken)
     {
-        var batch = new List<(long Id, string Body)>();
-        await using (var read = new NpgsqlCommand("SELECT msg_id, message::text FROM pgmq.read(@queue, @vt, @qty)", connection))
+        var batch = new List<(long Id, string Body, int Reads)>();
+        await using (var read = new NpgsqlCommand("SELECT msg_id, message::text, read_ct FROM pgmq.read(@queue, @vt, @qty)", connection))
         {
             read.Parameters.AddWithValue("queue", settings.QueueName);
             read.Parameters.AddWithValue("vt", (int)settings.VisibilityTimeout.TotalSeconds);
@@ -100,12 +100,23 @@ public partial class PgmqQueueMessageProvider(
             await using (reader.ConfigureAwait(false))
             {
                 while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false))
-                    batch.Add((reader.GetInt64(0), reader.GetString(1)));
+                    batch.Add((reader.GetInt64(0), reader.GetString(1), reader.GetInt32(2)));
             }
         }
 
-        foreach (var (id, body) in batch)
+        foreach (var (id, body, reads) in batch)
         {
+            if (settings.MaxDeliveries > 0 && reads > settings.MaxDeliveries)
+            {
+                await using var dead = new NpgsqlCommand("SELECT pgmq.send(@dlq, @message::jsonb)", connection);
+                dead.Parameters.AddWithValue("dlq", settings.DeadLetterQueueName);
+                dead.Parameters.AddWithValue("message", body);
+                await dead.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
+                await ArchiveAsync(connection, settings, id).ConfigureAwait(false);
+                LogDeadLettered(id, reads);
+                continue;
+            }
+
             try
             {
                 using var stream = new MemoryStream(Encoding.UTF8.GetBytes(body));
@@ -119,13 +130,19 @@ public partial class PgmqQueueMessageProvider(
                 continue;
             }
 
-            await using var archive = new NpgsqlCommand("SELECT pgmq.archive(@queue, @id)", connection);
-            archive.Parameters.AddWithValue("queue", settings.QueueName);
-            archive.Parameters.AddWithValue("id", id);
-            await archive.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
+            await ArchiveAsync(connection, settings, id).ConfigureAwait(false);
         }
 
         return batch.Count;
+    }
+
+    private static async Task ArchiveAsync(NpgsqlConnection connection, PgmqSettings settings, long id)
+    {
+        await using var archive = new NpgsqlCommand("SELECT pgmq.archive(@queue, @id)", connection);
+        archive.Parameters.AddWithValue("queue", settings.QueueName);
+        archive.Parameters.AddWithValue("id", id);
+        // not cancellable: a message the handler finished must be archived even while the host stops
+        await archive.ExecuteNonQueryAsync(CancellationToken.None).ConfigureAwait(false);
     }
 
     [LoggerMessage(EventId = 1, Level = LogLevel.Information, Message = "Enqueue: {correlationId}")]
@@ -136,4 +153,7 @@ public partial class PgmqQueueMessageProvider(
 
     [LoggerMessage(EventId = 3, Level = LogLevel.Warning, Message = "Handler failed for pgmq message {messageId}; it will be delivered again after the visibility timeout")]
     private partial void LogHandlerFailed(Exception exception, long messageId);
+
+    [LoggerMessage(EventId = 4, Level = LogLevel.Warning, Message = "pgmq message {messageId} was read {reads} times and moved to the dead-letter queue")]
+    private partial void LogDeadLettered(long messageId, int reads);
 }

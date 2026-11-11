@@ -22,6 +22,12 @@ public class PgmqClientFactory : IPgmqClientFactory
             await using var create = new NpgsqlCommand("SELECT pgmq.create(@queue)", connection);
             create.Parameters.AddWithValue("queue", settings.QueueName);
             await create.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
+            if (settings.MaxDeliveries > 0)
+            {
+                await using var createDead = new NpgsqlCommand("SELECT pgmq.create(@queue)", connection);
+                createDead.Parameters.AddWithValue("queue", settings.DeadLetterQueueName);
+                await createDead.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
+            }
             return (connection, settings);
         }
         catch

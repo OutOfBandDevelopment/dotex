@@ -39,18 +39,29 @@ public class PgmqIntegrationTests
             return;
         await using var connection = new NpgsqlConnection(_connectionString);
         await connection.OpenAsync();
-        await using var drop = new NpgsqlCommand("SELECT pgmq.drop_queue(@q)", connection);
-        drop.Parameters.AddWithValue("q", _queue);
-        await drop.ExecuteNonQueryAsync();
+        foreach (var name in new[] { _queue, $"{_queue}_dlq" })
+        {
+            await using var drop = new NpgsqlCommand("SELECT pgmq.drop_queue(@q)", connection);
+            drop.Parameters.AddWithValue("q", name);
+            try
+            {
+                await drop.ExecuteNonQueryAsync();
+            }
+            catch (PostgresException)
+            {
+                // the dead-letter queue exists only when MaxDeliveries is on
+            }
+        }
     }
 
-    private IConfigurationRoot Config() => new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string?>
+    private IConfigurationRoot Config(string maxDeliveries = "5") => new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string?>
     {
         [$"MessageQueue:{QueueConfig}:Provider"] = PgmqGlobals.MessageProviderKey,
         [$"MessageQueue:{QueueConfig}:Config:ConnectionString"] = _connectionString,
         [$"MessageQueue:{QueueConfig}:Config:QueueName"] = _queue,
         [$"MessageQueue:{QueueConfig}:Config:VisibilityTimeoutSeconds"] = "1",
         [$"MessageQueue:{QueueConfig}:Config:PollIntervalMilliseconds"] = "50",
+        [$"MessageQueue:{QueueConfig}:Config:MaxDeliveries"] = maxDeliveries,
     }).Build();
 
     [TestMethod]
@@ -126,7 +137,42 @@ public class PgmqIntegrationTests
         Assert.AreEqual(2, handler.Calls);
     }
 
-    private sealed class RecordingHandler(IConfigurationSection config, bool failFirst = false) : IMessageHandlerProvider
+    [TestMethod]
+    [TestCategory(TestCategories.Integration)]
+    public async Task RunAsync_AlwaysFailing_MovesMessageToDeadLetterQueue()
+    {
+        // Stage
+        var config = Config(maxDeliveries: "2");
+        var service = MessageSenderTests.GetServiceProvider(TestContext, config, s => s.TryAddPgmqQueueServices());
+        await service.GetRequiredService<IMessageQueueSender<PgmqIntegrationTests>>().SendAsync(new { hello = "poison" });
+
+        var handler = new RecordingHandler(config.GetSection($"MessageQueue:{QueueConfig}:Config"), failAlways: true);
+        var receiver = service.GetRequiredService<IMessageReceiverProvider>().SetHandlerProvider(handler);
+        using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(40));
+
+        // Test
+        var run = receiver.RunAsync(cts.Token);
+        long dead = 0;
+        await using var connection = new NpgsqlConnection(_connectionString);
+        await connection.OpenAsync();
+        while (dead == 0 && !cts.IsCancellationRequested)
+        {
+            await Task.Delay(250);
+            await using var count = new NpgsqlCommand($"SELECT count(*) FROM pgmq.q_{_queue}_dlq", connection);
+            dead = (long)(await count.ExecuteScalarAsync())!;
+        }
+
+        await cts.CancelAsync();
+        await run;
+
+        // Assert
+        Assert.AreEqual(1L, dead);
+        Assert.AreEqual(2, handler.Calls);
+        await using var main = new NpgsqlCommand($"SELECT count(*) FROM pgmq.q_{_queue}", connection);
+        Assert.AreEqual(0L, await main.ExecuteScalarAsync());
+    }
+
+    private sealed class RecordingHandler(IConfigurationSection config, bool failFirst = false, bool failAlways = false) : IMessageHandlerProvider
     {
         public IConfigurationSection Config { get; } = config;
         public TaskCompletionSource Received { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -136,8 +182,8 @@ public class PgmqIntegrationTests
         public Task HandleAsync(IQueueMessage message, string messageId)
         {
             Calls++;
-            if (failFirst && Calls == 1)
-                throw new InvalidOperationException("first delivery fails");
+            if (failAlways || (failFirst && Calls == 1))
+                throw new InvalidOperationException("delivery fails");
             MessageId = messageId;
             Received.TrySetResult();
             return Task.CompletedTask;

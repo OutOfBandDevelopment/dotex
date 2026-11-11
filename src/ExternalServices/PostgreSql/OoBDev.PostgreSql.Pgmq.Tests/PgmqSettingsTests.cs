@@ -28,6 +28,7 @@ public class PgmqSettingsTests
         Assert.AreEqual(TimeSpan.FromSeconds(30), settings.VisibilityTimeout);
         Assert.AreEqual(TimeSpan.FromMilliseconds(500), settings.PollInterval);
         Assert.AreEqual(10, settings.BatchSize);
+        Assert.AreEqual(5, settings.MaxDeliveries);
     }
 
     [TestMethod]
