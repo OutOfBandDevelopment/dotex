@@ -1,224 +1,58 @@
-# OoBDev.Microsoft.Azure.ServiceBus - Azure Service Bus Message Provider
+# OoBDev.Microsoft.Azure.ServiceBus
 
-Context-based message queue provider for Azure Service Bus (Queues and Topics).
+Sender provider for Azure Service Bus queues and topics in the [message queueing](../../../Framework/OoBDev.MessageQueueing/README.MessageQueueing.md) pipeline. It sends only: there is no receiver provider, so inbound Service Bus handlers are not supported. Authentication is by connection string.
 
-## Features
-
-- ✅ Queue and Topic support
-- ✅ Session-based messaging
-- ✅ Message correlation
-- ✅ Application properties (metadata)
-- ✅ Scheduled delivery support
-- ✅ Runtime queue/topic configuration
-- ✅ Multi-provider compatibility
-- ✅ Connection string authentication
-
-## Installation
-
-```bash
-dotnet add package OoBDev.Microsoft.Azure.ServiceBus
-```
-
-## Quick Start
-
-### 1. Register Services
+## Use
 
 ```csharp
-using OoBDev.Microsoft.Azure.ServiceBus;
-using OoBDev.System;
-
-services.TryAddAzureServiceBusServices();
-services.TrySerializerExtensions();  // OoBDev.System (JSON, XML and the other serializers)
+services.TryAddMessageQueueingServices();    // OoBDev.MessageQueueing
+services.TryAddAzureServiceBusServices();    // sender provider, sender factory, AsyncAPI contributor
+services.TrySerializerExtensions();          // the JSON serializer the provider needs
 ```
 
-### 2. Configure Queue or Topic
-
-**Using appsettings.json:**
+Configuration is read by the message property resolver from the `MessageQueue` section (lookup order in the [MessageQueueing readme](../../../Framework/OoBDev.MessageQueueing/README.MessageQueueing.md#components)):
 
 ```json
 {
-  "MessageQueuing": {
-    "OrderQueue": {
+  "MessageQueue": {
+    "OrderPlaced": {
       "Provider": "servicebus",
-      "ConnectionString": "Endpoint=sb://myservicebus.servicebus.windows.net/;SharedAccessKeyName=...",
+      "ConnectionString": "Endpoint=sb://myservicebus.servicebus.windows.net/;SharedAccessKeyName=...;SharedAccessKey=...",
       "QueueName": "orders"
     },
-    "NotificationTopic": {
+    "Default": {
       "Provider": "servicebus",
-      "ConnectionString": "Endpoint=sb://myservicebus.servicebus.windows.net/;SharedAccessKeyName=...",
+      "ConnectionString": "Endpoint=sb://...",
       "TopicName": "notifications"
     }
   }
 }
 ```
 
-### 3. Send Messages
+Inject `IMessageQueueSender` (or `IMessageQueueSender<TChannel>`) and call `SendAsync(message, messageId)`; the sender picks this provider through the keyed service `servicebus` (`AzureServiceBusGlobals.MessageProviderKey`).
 
-```csharp
-using OoBDev.MessageQueueing.Services;
+## Configuration keys
 
-public class OrderService
-{
-    private readonly IMessageSenderProvider _sender;
-    private readonly IMessageContextFactory _contextFactory;
+**Table 1 — Keys under the resolved message section (or its `Config` child)**
 
-    public OrderService(
-        IMessageSenderProvider sender,
-        IMessageContextFactory contextFactory)
-    {
-        _sender = sender;
-        _contextFactory = contextFactory;
-    }
+| Key | Meaning |
+|-----|---------|
+| `Provider` | Must be `servicebus` to select this provider |
+| `ConnectionString` | Required; a missing value throws `ConfigurationMissingException` naming `<section path>:ConnectionString` |
+| `QueueName` | Entity to send to. When both names are set, the queue wins |
+| `TopicName` | Topic to send to, used when `QueueName` is empty. Neither set throws `ConfigurationMissingException` |
+| `SessionId` | A fixed session id put on every message sent with this configuration; the entity must be session-enabled |
 
-    public async Task ProcessOrder(Order order)
-    {
-        var context = _contextFactory.Create("OrderQueue", typeof(Order).FullName);
-        context.Headers["CustomerId"] = order.CustomerId;
-        context.Headers["Priority"] = "High";
+## What is sent
 
-        var correlationId = await _sender.SendAsync(order, context);
-    }
-}
-```
+`SendAsync` wraps the message in a `WrappedQueueMessage` (content type `application/json`, assembly-qualified payload type, correlation id or a new GUID, payload, headers) and sends the serialized bytes as the body of a `ServiceBusMessage` with the correlation id and content type set. Each non-null context header becomes an application property. The returned value is the correlation id (Service Bus assigns no id the provider could return), and one `[LoggerMessage]` (event 1) records it.
 
-## Configuration Reference
+The provider creates a `ServiceBusClient` and sender for every send and disposes both in a `finally`, so a send does not keep a connection open. Scheduled delivery, per-message session ids and message settlement are not supported.
 
-| Key | Required | Description | Default |
-|-----|----------|-------------|---------|
-| `ConnectionString` | Yes | Azure Service Bus connection string | - |
-| `QueueName` | Yes* | Service Bus queue name | - |
-| `TopicName` | Yes* | Service Bus topic name | - |
-| `SessionId` | No | Session ID for session-based messaging | - |
+## AsyncAPI
 
-*Either `QueueName` or `TopicName` must be provided (not both)
+`ServiceBusAsyncApiContributor` describes the entity for the generated AsyncAPI document: host from the `Endpoint` part of the connection string (else `servicebus`), protocol `amqp`, channel name from `QueueName` or `TopicName`. It does not read the credentials.
 
-## Queue vs Topic
+## Tests
 
-### Queues (Point-to-Point)
-Messages are sent to a single queue and consumed by one receiver:
-
-```json
-{
-  "OrderQueue": {
-    "ConnectionString": "Endpoint=...",
-    "QueueName": "orders"
-  }
-}
-```
-
-### Topics (Publish-Subscribe)
-Messages are sent to a topic and can be consumed by multiple subscriptions:
-
-```json
-{
-  "NotificationTopic": {
-    "ConnectionString": "Endpoint=...",
-    "TopicName": "notifications"
-  }
-}
-```
-
-## Session-Based Messaging
-
-For guaranteed message ordering and stateful processing:
-
-```json
-{
-  "OrderQueue": {
-    "ConnectionString": "Endpoint=...",
-    "QueueName": "orders",
-    "SessionId": "customer-12345"
-  }
-}
-```
-
-```csharp
-var context = _contextFactory.Create("OrderQueue", typeof(Order).FullName);
-await _sender.SendAsync(order, context);
-```
-
-**Note:** The queue or topic must be session-enabled in Azure.
-
-## Multi-Provider Usage
-
-Use keyed services to work with multiple message queue providers simultaneously:
-
-```csharp
-using Microsoft.Extensions.DependencyInjection;
-
-public class BridgeService
-{
-    private readonly IMessageSenderProvider _serviceBusSender;
-    private readonly IMessageSenderProvider _sqsSender;
-
-    public BridgeService(
-        [FromKeyedServices("servicebus")] IMessageSenderProvider serviceBusSender,
-        [FromKeyedServices("sqs")] IMessageSenderProvider sqsSender)
-    {
-        _serviceBusSender = serviceBusSender;
-        _sqsSender = sqsSender;
-    }
-
-    public async Task BridgeMessage(Order order)
-    {
-        // Read from Service Bus
-        // ...
-
-        // Forward to AWS SQS
-        var context = _contextFactory.Create("SqsQueue", typeof(Order).FullName);
-        await _sqsSender.SendAsync(order, context);
-    }
-}
-```
-
-## Application Properties (Headers)
-
-Custom headers are automatically converted to Service Bus ApplicationProperties:
-
-```csharp
-var context = _contextFactory.Create("OrderQueue", typeof(Order).FullName);
-context.Headers["CustomerId"] = order.CustomerId;
-context.Headers["OrderType"] = "Premium";
-context.Headers["Region"] = "US-EAST";
-
-await _sender.SendAsync(order, context);
-```
-
-## Connection String
-
-Obtain your Service Bus connection string from:
-1. Azure Portal → Service Bus Namespace → Shared access policies
-2. Select a policy (e.g., "RootManageSharedAccessKey")
-3. Copy the "Primary Connection String"
-
-**Format:**
-```
-Endpoint=sb://<namespace>.servicebus.windows.net/;SharedAccessKeyName=<policy>;SharedAccessKey=<key>
-```
-
-## Error Handling
-
-The provider throws `ConfigurationMissingException` if required configuration is missing:
-
-```csharp
-try
-{
-    var correlationId = await _sender.SendAsync(order, context);
-}
-catch (ConfigurationMissingException ex)
-{
-    // Handle missing configuration
-    // Ex: "Configuration \"MessageQueuing:OrderQueue:ConnectionString\" is missing"
-}
-```
-
-## Resource Disposal
-
-The provider automatically disposes of `ServiceBusClient` and `ServiceBusSender` instances after each send operation to prevent connection leaks.
-
-## See Also
-
-- [Message Queue Architecture](../../../../docs/design/MessageQueuing/README.md)
-- [Context-Based Pattern Documentation](../../../../docs/design/MessageQueuing/pattern-context-based.md)
-- [Multi-Provider Examples](../../../../docs/design/MessageQueuing/archive/multi-provider-bridge-example.md)
-- [Azure Service Bus Documentation](https://docs.microsoft.com/en-us/azure/service-bus-messaging/)
+`OoBDev.Microsoft.Azure.ServiceBus.Tests` holds unit tests and `Integration` tests against the Service Bus emulator; setup is in [TESTING.md](TESTING.md).
