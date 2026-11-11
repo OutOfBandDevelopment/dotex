@@ -188,6 +188,10 @@
     <Project Path="ExternalServices/Qdrant/OoBDev.Qdrant.Tests/OoBDev.Qdrant.Tests.csproj" />
     <Project Path="ExternalServices/Qdrant/OoBDev.Qdrant/OoBDev.Qdrant.csproj" />
   </Folder>
+  <Folder Name="/ExternalServices/PostgreSql/">
+    <Project Path="ExternalServices/PostgreSql/OoBDev.PostgreSql.Pgmq.Tests/OoBDev.PostgreSql.Pgmq.Tests.csproj" />
+    <Project Path="ExternalServices/PostgreSql/OoBDev.PostgreSql.Pgmq/OoBDev.PostgreSql.Pgmq.csproj" />
+  </Folder>
   <Folder Name="/ExternalServices/RabbitMQ/">
     <Project Path="ExternalServices/RabbitMQ/OoBDev.RabbitMQ.Tests/OoBDev.RabbitMQ.Tests.csproj" />
     <Project Path="ExternalServices/RabbitMQ/OoBDev.RabbitMQ/OoBDev.RabbitMQ.csproj" />
