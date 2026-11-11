@@ -2,7 +2,7 @@
 
 [← Architecture](architecture.md) · [↑ Overview](README.md) · [Testing strategy →](testing-strategy.md)
 
-**Status:** Draft · **Date:** 2026-10-22 · **Related:** [architecture](architecture.md)
+**Status:** Built · **Date:** 2026-11-11 (all of REQ-001 to REQ-011 are in `OoBDev.AspNetCore.Abstractions`, `OoBDev.AspNetCore.Mvc` and `OoBDev.AspNetCore.Cgi`, covered by `RoleRightTests` and `CgiMiddlewareTests`) · **Related:** [architecture](architecture.md)
 
 ## Contents
 

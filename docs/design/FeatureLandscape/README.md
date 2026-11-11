@@ -133,8 +133,6 @@ An arrow means "is expected to be used by or to feed" the target, taken from the
 
 | Feature | Design says | Code shows |
 |---------|-------------|------------|
-| ApplicationRights | Draft | `RoleRightOptions` in `OoBDev.AspNetCore.Mvc` and the example API's rights catalog and controller exist |
-| ODataQuery, HttpQueryVerb | Draft | `OoBDev.AspNetCore.OData` with limits and a query-body middleware exists |
 | Communications | Design phase, "replaces a 16 LOC stub" | `OoBDev.Communications` plus Abstractions, Hosting and MessageQueueing projects with tests |
 | TextTemplating | Design phase | Handlebars adapter and `OoBDev.System.Text.Templating.Xslt` exist |
 | SharedCaching | Design phase | `OoBDev.Caching` and Abstractions exist; whether the attribute-based, AOP and background-task designs are covered is not stated |
@@ -151,6 +149,6 @@ Other patterns across the set:
 
 ## Suggested follow-up
 
-1. Reconcile the eight drifted designs in Table 3 and update their status lines (backlog item, one change each).
+1. Reconcile the five remaining drifted designs in Table 3 (ApplicationRights, ODataQuery and HttpQueryVerb done 2026-11-11) and update their status lines (backlog item, one change each).
 2. Give the moved DevTerm leaf folders a status line that points to the parity status.
 3. Pick the missing features in each area document that the owner wants and move them to `BACKLOG.md`; none are added there by this review.

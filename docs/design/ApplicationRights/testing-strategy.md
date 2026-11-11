@@ -2,7 +2,7 @@
 
 [← API design](api-design.md) · [↑ Overview](README.md)
 
-**Status:** Draft · **Date:** 2026-10-22 · **Related:** [requirements](requirements.md)
+**Status:** Built · **Date:** 2026-11-11 (all of REQ-001 to REQ-011 are in `OoBDev.AspNetCore.Abstractions`, `OoBDev.AspNetCore.Mvc` and `OoBDev.AspNetCore.Cgi`, covered by `RoleRightTests` and `CgiMiddlewareTests`) · **Related:** [requirements](requirements.md)
 
 ## Contents
 

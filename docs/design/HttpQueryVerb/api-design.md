@@ -2,7 +2,7 @@
 
 [← Architecture](architecture.md) · [↑ Overview](README.md) · [Testing strategy →](testing-strategy.md)
 
-**Status:** Draft · **Date:** 2026-10-22
+**Status:** Built · **Date:** 2026-11-11 (REQ-001 to REQ-007 in `OoBDev.AspNetCore.Mvc` `QueryVerbMiddleware`, `UseHttpQueryVerb()` and `[AcceptsQuery]`, covered by the middleware and filter tests)
 
 ## Contents
 
