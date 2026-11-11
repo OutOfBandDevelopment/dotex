@@ -28,3 +28,13 @@ A reference design for building command/query separation and event-sourced aggre
 Commands change aggregates, aggregates raise events, an append-only store keeps the events, and projections build read models from the event stream. The pattern explanations come from `fohjin-cqrs` (read-only, linked not copied) and the store design from `event-sourcing`; the ordering primitive comes from the planned hybrid logical clock. Contracts follow the framework patterns: handler `IHandler<TRequest, TResponse>`, provider and factory, `TryAdd*` registration, `TimeProvider` for time.
 
 [Requirements →](requirements.md)
+
+## Decisions needed
+
+Confirm these in one pass; each has a recommendation, and the library is not built until they are answered.
+
+1. **Event envelope.** Recommended: a CloudEvents 1.0 compatible envelope with an `OoBDev` extension for stream id and sequence. Alternative: a plain record with no external standard.
+2. **Store contract.** Recommended: append with an expected sequence (optimistic concurrency), read by stream, follow by global position. Alternative: stream-only, no global feed.
+3. **Home.** Recommended: Framework (`OoBDev.EventSourcing` plus Abstractions), with SQL and message-queue stores as adapters. Alternative: Extensions.
+4. **Snapshots and upcasting.** Recommended: out of the first cut, tracked as backlog items. Alternative: include both now.
+5. **Erasure.** Recommended: document crypto-shredding per subject as the supported route; no event deletion. Alternative: allow redaction events.

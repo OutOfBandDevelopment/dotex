@@ -72,7 +72,6 @@ Scope rule: every BinaryDataDecoders feature is migrated; phases are priority or
 
 ## 7. Documentation review (owner, 2026-10-28)
 
-- [ ] **Design review report for every feature in `docs/design`** (owner request, 2026-11-11): per feature, the features expected to work with it, implementation status, known issues, related web standards and RFCs, common patterns and practices, and suggested missing features; one section per feature in a new `docs/design/feature-landscape.md` (use skill `reconcile-designs-and-code` for status).
 
 - [ ] **Review and clean up all documents**: content and coverage review against the rules `docs-and-diagrams` and `work-tracking` and `docs/patterns-discovery/06-design-document-standard.md`; the DevTerm docs come with the parity work. Numbering, validator problems and stale generated docs are done (2026-10-29); use the `write-docs` skill and `scripts/docs` validators.
 
