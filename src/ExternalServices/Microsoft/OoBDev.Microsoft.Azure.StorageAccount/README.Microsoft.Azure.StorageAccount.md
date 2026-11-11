@@ -38,4 +38,4 @@ The registration class is `OoBDev.Microsoft.Azure.StorageAccount.ServiceCollecti
 
 ## Verification
 
-Queue tests (`OoBDev.Microsoft.Azure.StorageAccount.Tests`): Unit for the mapper and the AsyncAPI contributor, Integration against Azurite in the integration stack (see `docs/architecture/testing/integration/`). The blob provider has no tests yet.
+Queue tests (`OoBDev.Microsoft.Azure.StorageAccount.Tests`): Unit for the mapper and the AsyncAPI contributor, Integration against Azurite in the integration stack (see `docs/architecture/testing/integration/`). Blob provider tests (`BlobStorage/AzureBlobContainerProviderIntegrationTests`, Integration) cover store, read, metadata, list, delete and the no-overwrite default.
