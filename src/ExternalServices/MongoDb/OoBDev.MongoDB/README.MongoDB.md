@@ -1,109 +1,46 @@
 # OoBDev.MongoDB
 
-## BsonObjectIdConvention
+MongoDB access through typed database interfaces: you declare an interface whose properties are `IMongoCollection<T>`, and the library creates the database object behind it from configuration.
 
-Represents a convention for configuring BSON serialization of object IDs.
+## Use
 
-### Methods
+```csharp
+services.TryAddMongoServices(configuration);                    // section MongoDatabaseOptions
+services.TryAddMongoDatabase<IOrdersDatabase>();                // uses MongoDatabaseOptions
+services.TryAddMongoDatabase<IOrdersDatabase, MySettings>();    // or your own IMongoSettings type
+```
 
-#### Apply(MongoDB.Bson.Serialization.BsonMemberMap)
+```csharp
+public interface IOrdersDatabase
+{
+    IMongoCollection<OrderModel> Orders { get; }
 
-Applies a modification to the member map.
+    [Table("order_lines")]                 // optional collection name
+    IMongoCollection<OrderLineModel> Lines { get; }
+}
+```
 
-## IMongoDatabaseFactory
+```json
+{ "MongoDatabaseOptions": { "ConnectionString": "mongodb://localhost:27017", "DatabaseName": "orders" } }
+```
 
-Provides a centralized means to create MongoDB instances.
+In `DEBUG` builds the section name of `TryAddMongoServices` is a required argument (rule `coding-standards`). `MongoDatabaseOptions` (`ConnectionString` and `DatabaseName`, both required and validated) implements `IMongoSettings`; a custom settings type must be bound as `IOptions<TSettings>` by the caller.
 
-### Methods
+## Behaviour
 
-#### Create<T>
+**Table 1 — Components (namespace `OoBDev.MongoDB.Extensions`)**
 
-Factory method to create a MongoDB instance.
+| Type | Role |
+|------|------|
+| `IMongoDatabaseFactory` / `MongoDatabaseFactory` (singleton) | `Create<TSettings>()` returns an `IMongoDatabase` for the settings; `Create<TDatabase, TSettings>()` returns the typed interface behind a dispatch proxy. A new `MongoClient` is created per call; the transient registration of each typed database calls it on every resolve. |
+| `MongoDispatchProxy` | Implements the interface at run time. Each property or method returning `IMongoCollection<T>` resolves the collection named by `[Table]` on the property, else on the entity type, else the property name; collections are cached per member. |
+| `BsonObjectIdConvention` | A member named `_id`, `<Type>Id` (the type name without a `Model` or `Collection` suffix) or marked `[Key]` becomes the BSON id, stored as an `ObjectId`. |
+| `IMongoDatabaseRegistration` | Internal list of the registered typed database interfaces. |
 
-#### Create<TDocument, TSettings>
+The first use of `MongoDatabaseFactory` registers, process-wide, a `DateTimeOffset` serializer (BSON date time) and a convention pack with camel-case element names plus the id convention for all types.
 
-Factory method to create a MongoDB Database abstraction.
+`IMongoVectorSearch` and `IAtlasVectorSearch` are interfaces for Atlas vector search; nothing in the repository implements them yet.
 
-## IMongoDatabaseRegistration
+## Tests
 
-Internal registry for MongoDB database connections.
-
-### Properties
-
-- **Types**: List of registered interfaces for MongoDB instances.
-
-## IMongoSettings
-
-Common pattern for declaring MongoDB settings.
-
-### Properties
-
-- **ConnectionString**: MongoDB Connection String
-- **DatabaseName**: Name of the database to map for MongoDB
-
-## MongoDatabaseFactory
-
-Factory for creating MongoDB database instances.
-
-### Methods
-
-#### Constructor
-
-Initializes a new instance of the class.
-
-#### Create<T>
-
-Creates a MongoDB database instance based on the provided settings.
-
-#### Create<TDocument, TSettings>
-
-Creates a proxied MongoDB database instance based on the provided settings.
-
-#### Static Constructor
-
-Registers serializers and conventions.
-
-## MongoDatabaseOptions
-
-Default connection information for MongoDB databases.
-
-### Properties
-
-- **ConnectionString**: Gets or sets the connection string for the MongoDB database.
-- **DatabaseName**: Gets or sets the name of the MongoDB database.
-
-### Methods
-
-#### ToString
-
-Returns a string that represents the current object.
-
-## MongoDatabaseRegistration
-
-Represents a registration of types for MongoDB databases.
-
-### Properties
-
-- **Types**: Gets the read-only collection of types registered for MongoDB databases.
-
-## MongoDispatchProxy
-
-This proxy allows for dynamic creation of wrapper classes to expose MongoDatabase instances.
-
-## ServiceCollectionExtensions
-
-Common libraries to enable MongoDB Support.
-
-### Methods
-
-#### TryAddMongoServices
-
-Enable common infrastructure.
-
-#### TryAddMongoDatabase<T>
-
-Register a MongoDatabase instance with custom configuration options.
-
-#### TryAddMongoDatabase<T>
-
-Register a MongoDatabase instance that will use the MongoDatabaseOptions configuration options.
+`OoBDev.MongoDB.Tests` holds six `Integration` tests against the MongoDB container of the test stack (`MONGODB_*` parameters in `.runsettings`).
