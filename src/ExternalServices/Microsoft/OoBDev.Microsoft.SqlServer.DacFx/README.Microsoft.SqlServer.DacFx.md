@@ -20,4 +20,4 @@ Registers as singletons (`TryAdd`): `IDacpacMergeCompiler`, `IDacPacCompilerConf
 compiler.CreatePackage(definitionFactory.Create(template));
 ```
 
-Object options (`TSqlObjectOptions`) are not carried over from the sources (a TODO in the code). `DacTools` holds the helpers: model options, reading objects and scripts from a DacPac, adding script content and generating the build-version script. The `dacpactools` CLI does not call this merge yet; see its readme.
+Object options (`TSqlObjectOptions`) are not carried over from the sources (a TODO in the code). `DacTools` holds the helpers: model options, reading objects and scripts from a DacPac, adding script content and generating the build-version script. The `dacpactools` CLI calls this merge with `--tool Merge`; see [its readme](../../../Tools/OoBDev.DacPacCompiler.Cli/README.DacPacCompiler.Cli.md).
