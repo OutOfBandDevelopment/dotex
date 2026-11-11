@@ -485,6 +485,15 @@ These parameters are in `src/.runsettings` beside the URL and connection-string 
 **Tests Using:**
 - `OoBDev.GroqCloud.Tests` (manual execution only, `LiveIntegration`)
 
+### Azure AI Search (vector store)
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `AZURE_SEARCH_ENDPOINT` | *(none)* | Service URL; environment variable also read |
+| `AZURE_SEARCH_API_KEY` | *(none)* | Admin key |
+
+**Tests Using:** `OoBDev.Microsoft.Azure.AISearch.Tests` (`LiveIntegration`, inconclusive when unset)
+
 **Setup:**
 1. Create Groq account at https://groq.com
 2. Generate API key

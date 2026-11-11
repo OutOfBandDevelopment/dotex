@@ -17,7 +17,6 @@ Owner: all protocols and features of dev-term must exist here. Done means what d
 - The docs Unit tests `PlantUml_Blocks_AreWellFormed` and `Links_Relative_Resolve` fail on the imported DevTerm history; the planned documentation cleanup after all migrations fixes them (owner, 2026-10-30).
 - [ ] Test gap: an interactive Tui run in a real console (a spike drove `conhost.exe` with `AttachConsole` and `WriteConsoleInput`; typing and screen reads worked, but the app exited at once in some runs and Ctrl+Q never ended it, so the code was dropped; retry in a spike; deferred 2026-11-05: it needs `AttachConsole` and `WriteConsoleInput` interop while the machine is still crashing for unknown reasons, so run it when the owner is present) ([list](docs/design/DevTermParity/status.md#test-gaps)).
 
-
 ## 2. Devices
 
 - [ ] Device decoding leftovers: the DE-5000 Hardware test waits on the owner fitting the BLE radio in the meter (not fitted 2026-11-05; the BLE transport itself is verified through the HC-08); phase 0 is done ([device merge list](docs/migration/README.md#devices); M3 needs a Radex capture); the physical passes for K8055, Busylight, Radex One, Zoom H4n and NMEA ran on 2026-11-04 and the SCPI instruments on 2026-11-05 (owner confirmed; [change log](docs/changes/2026-11-04.md)). Plan: [migration-plan.md](docs/design/DeviceDecoding/migration-plan.md).
@@ -33,7 +32,6 @@ Owner: all protocols and features of dev-term must exist here. Done means what d
 
 ## 4. APIs and documents
 
-
 - [ ] AllMiniLmL6V2: `AddValidatedOptions` for the embedding options (blocked by the Abstractions-only adapter rule).
 - [ ] Compare the remaining project `README.{Project}.md` files with their code beyond the identifier check (behaviour review of about 100 readmes; take it project by project with its owning item) (`reconcile-designs-and-code` skill); identifier checks of Common, Framework, Extensions and ExternalServices readmes are done.
 - [ ] GraphQL surface (HotChocolate, on demand), without breaking the custom search syntax; adopt `[OoBDevEnableQuery]` in the example API when it gets an `IQueryable` endpoint. See the [HTTP API](docs/patterns-discovery/03-practices-and-conventions/10-http-api-practices.md) and [authorization](docs/patterns-discovery/03-practices-and-conventions/11-authorization-practices.md) practices.
@@ -43,7 +41,7 @@ Owner: all protocols and features of dev-term must exist here. Done means what d
 - [ ] **UiDefinitions renderers for Avalonia and WinForms, each with an example app** (owner request, 2026-11-11): `OoBDev.UiDefinitions.Avalonia` and `OoBDev.UiDefinitions.WinForms` beside the Wpf, Tui and Blazor ones, plus `OoBDev.Examples.Controls.Avalonia` and a UiDefinitions form in `OoBDev.Examples.Controls.WinForms`, each rendering `ControlsSampleSettings` with a journey test; designs: [ui-definitions.md](docs/design/UiDefinitions/ui-definitions.md), [avalonia spike](docs/design/UiDefinitions/avalonia-spike-findings.md). Layering decided (owner, 2026-11-11): same layer and naming as the existing renderers, each in its own package, example apps under `src/Examples`.
 
 - [x] **CQRS and event sourcing library** (decided 2026-11-11): built are the Abstractions, in-memory stores, event relay and hosted relay loop, aggregates, projections, upcasting, snapshots, the EF Core stores with SQLite, PostgreSQL and SQL Server packages (dacpac project), the CloudEvents mapper and the pgmq adapter. Open: add the CloudEvents HTTP endpoint (queue ingress and relay output are built; HTTP endpoint waits on Q-CQRS-EDGE in OPEN-QUESTIONS.md); coverage 2026-11-11 (non-Integration run): core 96.8%, Hosting 81.4%, Abstractions 100%, EF Core 99.4%, Sqlite 95.2%, SqlServer 100%, Postgres 39% (the rest is generated migration code, exercised by the Integration test). Design: [CqrsEventSourcing](docs/design/CqrsEventSourcing/README.md).
-- [ ] Azure AI Search adapter behind the Search abstractions (owner, 2026-11-11; LiveIntegration tests); see [HybridSearch](docs/design/HybridSearch/README.md)
+
 - [ ] Neo4j graph retrieval adapter (owner, 2026-11-11; Neo4j container in the test stack via the `add-integration-service` skill); see [GraphQueries](docs/design/GraphQueries/README.md)
 - [ ] Graph query examples: SQL Server node/edge tables with `MATCH` and `SHORTEST_PATH` in `OoBDev.Example.DB`, plus recursive-CTE equivalents for PostgreSQL and SQLite; Apache AGE spike after the PostgreSQL service exists ([plan](docs/design/GraphQueries/README.md#plan))
 
@@ -76,7 +74,6 @@ Scope rule: every BinaryDataDecoders feature is migrated; phases are priority or
 - [ ] Desired-state database tooling phase 0: bake-off of sqldef, pgschema and Atlas per `docs/design/DesiredStateDatabase/`; do it after the other backlog items (owner, 2026-10-29). Test plan written 2026-11-09 ([bake-off-test-plan.md](docs/design/DesiredStateDatabase/bake-off-test-plan.md)); run it after the owner reviews it.
 
 ## 7. Documentation review (owner, 2026-10-28)
-
 
 - [ ] **Review and clean up all documents**: content and coverage review against the rules `docs-and-diagrams` and `work-tracking` and `docs/patterns-discovery/06-design-document-standard.md`; the DevTerm docs come with the parity work. Numbering, validator problems and stale generated docs are done (2026-10-29); use the `write-docs` skill and `scripts/docs` validators.
 
