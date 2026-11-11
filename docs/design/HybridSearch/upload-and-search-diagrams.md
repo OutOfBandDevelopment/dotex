@@ -4,19 +4,21 @@
 
 ## Diagrams
 
-###  Upload Document
+### Upload Document
+
+The branches inside a `split` run in parallel; `split` is used instead of `fork` because the PlantUML server crashes (`height=0.0`) on forks that contain groups.
 
 ```plantuml
 @startuml
-start 
+start
 
 :upload content;
 
-fork
+split
     group store original content
         :store content;
     end group
-fork again
+split again
     group convert if not text
         :detect content type;
         if (text) then (no)
@@ -24,9 +26,9 @@ fork again
             :store converted content;
         endif
     end group
-end fork
+end split
 
-fork
+split
     group index document content
         :chunk up content;
         while (has chunk)
@@ -34,7 +36,7 @@ fork
             :store embedding;
         endwhile
     end group
-fork again
+split again
     group summarize text
         :call summarization service;
         :store summary;
@@ -42,7 +44,7 @@ fork again
             :get embedding;
             :store embedding;
     end group
-end fork
+end split
 
 stop
 @enduml
@@ -50,9 +52,9 @@ stop
 
 ## Search content
 
-```plantuml 
+```plantuml
 @startuml
-start 
+start
 
 :enter query;
 :get embedding;
@@ -68,23 +70,23 @@ stop
 
 ```plantuml
 @startuml
-start 
+start
 
 :upload content;
 
-fork
+split
     group store original content
         :store content;
         :get image embedding;
         :store image embedding;
     end group
-fork again
+split again
     group classify content
         :query llava model to generate description;
         :get embedding for description;
         :store embedding;
     end group   
-fork again
+split again
     group OCR content
         :query image for OCR content;
         :chunk up content;
@@ -93,7 +95,7 @@ fork again
             :store embedding;
         endwhile
     end group 
-end fork
+end split
 
 stop
 @enduml

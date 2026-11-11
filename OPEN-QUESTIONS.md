@@ -8,10 +8,5 @@ How this file is kept: see `.claude/rules/open-questions.md` and `.claude/rules/
 
 _(none waiting; processed requests are in BACKLOG.md and TODO.md)_
 
-- a diagrams in `docs\design\HybridSearch\upload-and-search-diagrams.md` is broken
-- review all designs in `docs\design`.  I would like to know relationships for features that are expected to work together, implmetnation status, known issues, related WebStandards, RFCs and common patterns and practices related to the topic, and suggseted missing features related to the topic.  
-- I would like the `Avalionia` and `WinForms` versions of `UiDefinitions` with example apps
-- `README.Examples` should include a list of the entry point apps.. I think they are [full framework stack tests] AppHost (Web, WebApi, DB), [control examples] Tui, Winforms, Wpf, Blazor, Avalionia
-
 ## Open
 

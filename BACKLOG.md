@@ -40,6 +40,8 @@ Owner: all protocols and features of dev-term must exist here. Done means what d
 - [ ] Example app missing screens ([list](docs/design/example-ui/missing-screens.md)); owner, 2026-11-09, [recommended order](docs/design/example-ui/missing-screens.md#recommended-order) steps 1 to 5 are built (Search, Template management, queue monitor and blob browser, Rights and roles, Server-driven UI; Identity management waits for a Keycloak admin scope); the rest stay unplanned.
   - [ ] Template save waits for OPEN-QUESTIONS Q2; the queue receive monitor shows nothing until a channel has its receiver enabled (all example channels set `DisableReceiver`).
 
+- [ ] **UiDefinitions renderers for Avalonia and WinForms, each with an example app** (owner request, 2026-11-11): `OoBDev.UiDefinitions.Avalonia` and `OoBDev.UiDefinitions.WinForms` beside the Wpf, Tui and Blazor ones, plus `OoBDev.Examples.Controls.Avalonia` and a UiDefinitions form in `OoBDev.Examples.Controls.WinForms`, each rendering `ControlsSampleSettings` with a journey test; designs: [ui-definitions.md](docs/design/UiDefinitions/ui-definitions.md), [avalonia spike](docs/design/UiDefinitions/avalonia-spike-findings.md). A layering question first (project homes) per rule `layering-and-migration-plans`.
+
 ## 5. Code quality backlog
 
 A clean rebuild after the 2026-11-06 pass reports no analyzer warnings (218 before). Analyzers are wired from `src/Directory.Build.props` (`OoBDev.Analyzers` OOB0001 to OOB0003, NetAnalyzers Recommended, Meziantou); `Tools`, `Examples` and `Applications` are exempt from MA0004, and `Tools` and `Examples` from MA0048, in `src/.editorconfig`.
@@ -70,6 +72,7 @@ Scope rule: every BinaryDataDecoders feature is migrated; phases are priority or
 
 ## 7. Documentation review (owner, 2026-10-28)
 
+- [ ] **Design review report for every feature in `docs/design`** (owner request, 2026-11-11): per feature, the features expected to work with it, implementation status, known issues, related web standards and RFCs, common patterns and practices, and suggested missing features; one section per feature in a new `docs/design/feature-landscape.md` (use skill `reconcile-designs-and-code` for status).
 
 - [ ] **Review and clean up all documents**: content and coverage review against the rules `docs-and-diagrams` and `work-tracking` and `docs/patterns-discovery/06-design-document-standard.md`; the DevTerm docs come with the parity work. Numbering, validator problems and stale generated docs are done (2026-10-29); use the `write-docs` skill and `scripts/docs` validators.
 
