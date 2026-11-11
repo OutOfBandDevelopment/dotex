@@ -35,7 +35,7 @@ Confirmed by the owner on 2026-11-11 (the recommended options):
 
 1. **Event envelope:** CloudEvents 1.0 compatible, with an `OoBDev` extension for stream id and sequence.
 2. **Store contract:** append with an expected sequence (optimistic concurrency), read by stream, follow by global position.
-3. **Home:** Framework (`OoBDev.EventSourcing` plus Abstractions); SQL and message-queue stores are adapters.
+3. **Home:** Framework (`OoBDev.EventSourcing` plus Abstractions). The event store, the event stream (message queue) and the entity store are three separate providers, each swapped by its own configured key (owner, 2026-11-11); their adapters are separate projects.
 4. **First cut:** minimal. Snapshots and upcasting are separate backlog items.
 5. **Erasure:** crypto-shredding per subject is the supported route; no event deletion and no redaction events.
 
