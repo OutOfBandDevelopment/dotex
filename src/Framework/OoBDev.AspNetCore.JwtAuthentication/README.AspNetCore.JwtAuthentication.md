@@ -1,63 +1,44 @@
 # OoBDev.AspNetCore.JwtAuthentication
 
-## Summary
+JWT bearer authentication for ASP.NET Core, bound from configuration, plus the OAuth2 sign-in for the OpenAPI documents and the Scalar API reference. Services understand only JWT (owner decision); the STS or an edge adapter converts any other credential.
 
-This assembly contains methods for configuring JWT Bearer authentication for ASP.Net Core
-and the OAuth2 sign-in for the OpenAPI documents and the Scalar API reference.
-
-## Getting started
-
-To use these extensions, first add a reference to the `OoBDev.AspNetCore.JwtAuthentication`
-package in your project. Then, add the following namespaces to your IOC registation code:
+## Use
 
 ```csharp
-using OoBDev.AspNetCore.JwtAuthentication;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+services.TryAddJwtBearerServices(configuration);                       // namespace OoBDev.AspNetCore.JwtAuthentication
+services.TryAddJwtBearerServices(configuration, new JwtExtensionBuilder { DefaultSchema = "Bearer" });
 ```
 
-Next, configure your JWT Bearer authentication and OpenAPI services in your
-IServiceCollection using the extension methods:
+In Debug builds the builder is a required parameter, in Release it defaults to null (the `#if DEBUG` pattern). `TryAddJwtBearerServices` calls the two parts, which can also be used alone:
 
-```csharp
-public void ConfigureServices(IServiceCollection services)
-{
-    services.TryAddJwtBearerServices(configuration);
-}
-```
+**Table 1 — Registrations**
 
-where `configuration` is your `IConfiguration` instance.
+| Method | Does |
+|--------|------|
+| `TryAddJwtBearerAuthentication(configuration, defaultScheme, section)` | Binds `JwtBearerOptions` from the section (default `JwtBearerOptions`) and adds authentication with the JWT bearer handler as the default scheme (`Bearer`) |
+| `TryAddJwtBearerOpenApi(configuration, section)` | Binds `OAuth2OpenApiOptions` from the section (default `OAuth2OpenApiOptions`) and adds `ConfigureOAuthOpenApiOptions` (registers `OAuthDocumentTransformer`) and `OAuthApiReferenceConfigurator` |
 
-These extensions configure JWT Bearer authentication and add the OpenAPI pieces for OAuth2
-using the configuration sections specified in the JwtBearerOptions and OAuth2OpenApiOptions classes:
-
-- `OAuthDocumentTransformer` declares the `oauth2` authorization code security scheme in every OpenAPI document.
-- `OAuthApiReferenceConfigurator` configures the Scalar API reference to sign in with the authorization code flow and PKCE,
-  using the JwtBearer `Audience` as the client id.
+`JwtExtensionBuilder` holds `DefaultSchema`, `JwtBearerConfigurationSection` and `OAuth2OpenApiConfigurationSection`.
 
 ## Configuration
 
-The JWT Bearer authentication configuration is specified in the JwtBearerOptions class. The
-OAuth2OpenApiOptions class (`UserReadApiClaim`, `AuthorizationUrl`, `TokenUrl`) specifies the OAuth2 sign-in for the documents.
-
-The configuration for JWT Bearer authentication is specified in the jwtBearerConfigurationSection
-parameter of the TryAddJwtBearerAuthentication method. The configuration for the OpenAPI OAuth2 sign-in
-is specified in the configurationSection parameter of the
-TryAddJwtBearerOpenApi method (default section `OAuth2OpenApiOptions`).
-
-## Example
-
-```csharp
-public void ConfigureServices(IServiceCollection services)
+```json
 {
-    services.TryAddAspNetCoreExtensions(configuration);   // OpenAPI documents and transformers
-    services.TryAddJwtBearerServices(configuration);      // JWT bearer and the OAuth2 scheme
+  "JwtBearerOptions": { "Authority": "https://sts.example/realms/app", "Audience": "my-api" },
+  "OAuth2OpenApiOptions": {
+    "UserReadApiClaim": "api.read",
+    "AuthorizationUrl": "https://sts.example/realms/app/protocol/openid-connect/auth",
+    "TokenUrl": "https://sts.example/realms/app/protocol/openid-connect/token",
+    "ClientId": "my-api-docs"
+  }
 }
-
-// pipeline
-app.MapControllers();
-app.MapApiReference();   // /openapi/{document}.json and /scalar/{document}
 ```
 
-Each assembly that contains controllers gets its own document (`/openapi/{AssemblyName}.json`) and
-the `all` document contains every endpoint.
+`UserReadApiClaim`, `AuthorizationUrl` and `TokenUrl` are required; `ClientId` is optional.
+
+## OpenAPI and Scalar
+
+- `OAuthDocumentTransformer` declares the `oauth2` authorization code security scheme, with the scope from `UserReadApiClaim`, in every OpenAPI document.
+- `OAuthApiReferenceConfigurator` configures the Scalar reference to sign in with the authorization code flow and PKCE (SHA-256). The client id is `ClientId`, else the JWT `Audience`; when neither is set it logs a warning (event 1) and leaves Scalar unconfigured.
+
+The documents and Scalar are mapped by `MapApiReference()` from [OoBDev.AspNetCore.Mvc](../OoBDev.AspNetCore.Mvc/README.AspNetCore.Mvc.md): `/openapi/{AssemblyName}.json`, the `all` document and `/scalar/{document}`.
