@@ -36,3 +36,15 @@ The Neo4j adapter needs a provider-neutral contract (`IGraphStore`: upsert node,
 **Default:** A (reversible: moving the namespace to B later is a rename, the framework is unreleased).
 
 **Your answer:**
+
+### Q-HTML-TEMPLATE — Build or remove the unfinished HTML template transform? (2026-11-11, TextTemplating)
+
+`OoBDev.System.Text.Html` has `HtmlTemplateTransform`, `IHtmlDocumentVistor` (misspelled), and the Framework has `IInstanceFactory`, `IPathResolver` and `IFormatter`; nothing implements the visitor, the path resolver or the factory, so the HTML transform cannot run. The TextTemplating design rejects a custom HTML template syntax ("Handlebars and XSLT already cover HTML").
+
+**Options**
+- A. Remove `HtmlTemplateTransform`, `IHtmlDocumentVistor` and the unused `IInstanceFactory`/`IPathResolver` scaffolding (keep `HtmlNavigator`); HTML templates go through Handlebars or XSLT (recommended: matches the recorded design decision, deletes dead surface, history keeps the old directive list).
+- B. Build the visitor and a path resolver for the old `value-of`, `repeater`, `condition`, `value-attr` and `data-binding` directives: preserves the migrated feature, but adds a second HTML syntax the design rejected.
+
+**Default:** A is not done until you answer (it deletes public API); nothing else depends on it.
+
+**Your answer:**
