@@ -9,6 +9,7 @@ One section per stack. Values are the test defaults from `src/.runsettings`; the
 - [SQL Server](#sql-server)
 - [MongoDB](#mongodb)
 - [Redis](#redis)
+- [PostgreSQL](#postgresql)
 - [RabbitMQ](#rabbitmq)
 - [DevTerm peers](#devterm-peers-mosquitto-ser2net-loopback-device)
 - [OpenSearch](#opensearch)
@@ -31,6 +32,7 @@ One section per stack. Values are the test defaults from `src/.runsettings`; the
 | SQL Server | `mssql/server:2022-latest` | `localhost,1433` | `sa` / `IntegrationTest123!` |
 | MongoDB | `mongo:latest` | `mongodb://localhost:27017` | none |
 | Redis | `valkey/valkey:8-alpine` | `localhost:6379` | none |
+| PostgreSQL | `ghcr.io/pgmq/pg17-pgmq:v1.8.0` | `localhost:5434` | `postgres` / `IntegrationTest123!` |
 | RabbitMQ | `rabbitmq:management` | `amqp://localhost:5673` | `guest` / `guest` |
 | OpenSearch | `opensearchproject/opensearch` | `https://localhost:9200` | `admin` / `IntegrationTest123!` |
 | Qdrant | `qdrant/qdrant` | `http://localhost:6333` | none |
@@ -51,6 +53,10 @@ Developer edition. Used for SQL vector and matrix tests (`OoBDev.Data.Vectors.DB
 ## MongoDB
 
 Document store tests. Keys: `MONGODB_CONNECTION_STRING`, `MONGODB_DATABASE_NAME`. Tests create a database named `IntegrationTest_<guid>` and drop it in cleanup.
+
+## PostgreSQL
+
+PostgreSQL 17 with the pgmq extension created at first start (`containers/testing/postgres/01-pgmq.sql`), database `oobdev_test`, ephemeral volume. Host port 5434 because 5432 and 5433 are common local installs. Used by the event sourcing Postgres provider tests and the pgmq queue adapter. Key: `POSTGRES_CONNECTION_STRING`.
 
 ## Redis
 

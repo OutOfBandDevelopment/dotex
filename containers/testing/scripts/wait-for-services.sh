@@ -36,6 +36,7 @@ SERVICES=(
     "oobd-test-sqlserver"
     "oobd-test-rabbitmq"
     "oobd-test-redis"
+    "oobd-test-postgres"
     "oobd-test-opensearch"
     "oobd-test-qdrant"
     "oobd-test-azurite"

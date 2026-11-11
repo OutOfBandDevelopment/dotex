@@ -24,6 +24,7 @@ This document lists all test properties used by Integration tests. These propert
    - [MongoDB (NoSQL Database)](#mongodb-nosql-database)
    - [SQL Server (Relational Database)](#sql-server-relational-database)
    - [RabbitMQ (Message Queue)](#rabbitmq-message-queue)
+   - [PostgreSQL (with pgmq)](#postgresql-with-pgmq)
    - [Redis (Cache Store)](#redis-cache-store)
    - [OpenSearch (Search Engine)](#opensearch-search-engine)
    - [SBert (Sentence Embeddings)](#sbert-sentence-embeddings---aiml)
@@ -152,6 +153,20 @@ Tests that require live cloud credentials. Manual execution only.
 **Notes:**
 - Default credentials: `guest/guest`
 - Queue cleanup handled by framework
+
+---
+
+### PostgreSQL (with pgmq)
+
+**Service:** PostgreSQL 17 with the pgmq extension (`ghcr.io/pgmq/pg17-pgmq`).
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `POSTGRES_CONNECTION_STRING` | `Host=localhost;Port=5434;Database=oobdev_test;Username=postgres;Password=IntegrationTest123!` | Npgsql connection string of the test database |
+
+**Docker Container:** `oobd-test-postgres` (host port 5434, override with `TEST_PORT_POSTGRES`)
+
+**Tests Using:** `OoBDev.EventSourcing.EntityFrameworkCore.Tests` (`PostgresIntegrationTests`).
 
 ---
 

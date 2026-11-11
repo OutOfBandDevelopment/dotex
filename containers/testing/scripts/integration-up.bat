@@ -90,6 +90,7 @@ echo   - MongoDB:            mongodb://localhost:27017
 echo   - SQL Server:         localhost,1433 (sa/IntegrationTest123!)
 echo   - RabbitMQ:           amqp://localhost:5673, http://localhost:15672
 echo   - Redis:              localhost:6379
+echo   - PostgreSQL (pgmq):  localhost:5434 (postgres, db oobdev_test)
 echo   - OpenSearch:         https://localhost:9200 (admin/IntegrationTest123!)
 echo   - Qdrant:             http://localhost:6333
 echo   - Azurite:            http://localhost:10000 (Blob), 10001 (Queue), 10002 (Table)
