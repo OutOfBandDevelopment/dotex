@@ -43,6 +43,7 @@ Owner: all protocols and features of dev-term must exist here. Done means what d
 
 ## 5. Code quality backlog
 - [ ] Fix `SentenceEmbeddingClient` in `OoBDev.SBert`: URL-escape the `query` text and honour the `model` argument of `GenerateEmbeddingAsync` (found in the readme review, 2026-11-11; see `README.SBert.md`).
+- [ ] Align the `--help` tool names of `file-convert` and `file-rag` with their `ToolCommandName` (the usage text says `oobdev-documentconverter`; found in the readme review, 2026-11-11).
 - [ ] Remove the obsolete, fully commented `LexicalProvider` from `OoBDev.OpenSearch` and add TLS settings to `OpenSearchOptions` (found in the readme review, 2026-11-11).
 - [ ] Add Unit tests for the content-type checks of `HtmlToPdfConversionHandler` (`OoBDev.WkHtmlToPdf.Tests` has only a DevLocal conversion test).
 
