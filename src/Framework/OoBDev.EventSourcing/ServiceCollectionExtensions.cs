@@ -35,6 +35,8 @@ public static class ServiceCollectionExtensions
             sp.GetRequiredService<IMessageQueueSender<EventsChannel>>(),
             sp.GetRequiredService<IOptions<EventRelayOptions>>(),
             sp.GetRequiredService<TimeProvider>()));
+        services.TryAddSingleton<EventTypeRegistry>();
+        services.TryAddTransient(typeof(IAggregateRepository<>), typeof(AggregateRepository<>));
         return services;
     }
 }

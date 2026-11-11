@@ -11,3 +11,7 @@ Entity Framework stores, the CloudEvents mapper and the queue adapters are separ
 ## CloudEvents at the edge
 
 `CloudEventMapper.ToCloudEvent(record, source)` and `FromCloudEvent(json)` convert an `EventRecord` to and from a CloudEvents 1.0 structured JSON document (`application/cloudevents+json`). `id` is `{StreamId}:{Sequence}`, `subject` the stream id; `sequence` and `metadata` are extension attributes. An external event that has only an `id` of the form `stream:sequence` is accepted. Anything else raises `FormatException`.
+
+## Aggregates
+
+`AggregateRoot` (Abstractions) changes state only through `Raise(event)`, which calls your `Apply(object)` and keeps the event until it is saved. `AggregateRepository<T>` (resolved as `IAggregateRepository<T>` after `TryAddEventSourcing()`) loads by replaying the stream `{TypeName}-{id}` and saves the uncommitted events with the aggregate's `Version` as the expected sequence; a concurrent writer gets `EventStreamConflictException`. Events are stored as JSON under a name from `[EventType("name")]` (or the class name); register the classes with `EventTypeRegistry.Register<T>()` or `RegisterAssembly`. Not yet: snapshots and upcasting.
