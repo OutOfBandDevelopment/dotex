@@ -51,9 +51,8 @@ public static class FormView
         {
             case ToggleViewModel:
                 var check = new CheckBox();
-                check.Bind(ToggleButton_IsChecked, new Binding(nameof(ToggleViewModel.IsChecked)));
+                check.Bind(ToggleButton_IsChecked, new Binding(nameof(ToggleViewModel.IsChecked), BindingMode.OneWay));
                 check.Bind(global::Avalonia.Controls.Button.CommandProperty, new Binding(nameof(ToggleViewModel.Toggle)));
-                check.Bind(global::Avalonia.Controls.Button.CommandParameterProperty, new Binding(nameof(ToggleViewModel.IsChecked), BindingMode.OneWay) { Converter = global::Avalonia.Data.Converters.BoolConverters.Not });
                 return check;
             case ChoiceViewModel:
                 var list = new ItemsControl { ItemTemplate = new FuncDataTemplate<ChoiceOptionViewModel>((_, _) => Option()) };
