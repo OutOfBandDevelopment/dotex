@@ -23,3 +23,16 @@ _(none waiting; processed requests are in BACKLOG.md and TODO.md)_
 **Default:** A is built later; B waits for your answer.
 
 **Your answer:**
+
+### Q-GRAPH-CONTRACT — Where does the graph retrieval contract live? (2026-11-11, GraphQueries / HybridSearch)
+
+The Neo4j adapter needs a provider-neutral contract (`IGraphStore`: upsert node, connect, neighbors within N steps, shortest path, delete) so SQL Server node/edge tables or Apache AGE can sit behind it later.
+
+**Options**
+- A. `OoBDev.Search.Abstractions` (namespace `OoBDev.Search.Graph`), beside `IVectorStore`: no new project, adapters already reference it, and graph retrieval is a search source for the hybrid pipeline. Cost: the Search abstraction grows past vectors.
+- B. A new `OoBDev.Graph.Abstractions` Framework project: clean separation, but one more package for two small interfaces. (recommended once a second provider exists)
+- C. Adapter-only (no shared contract): fastest, but locks callers to Neo4j.
+
+**Default:** A (reversible: moving the namespace to B later is a rename, the framework is unreleased).
+
+**Your answer:**

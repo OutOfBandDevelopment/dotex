@@ -1,6 +1,6 @@
 # Graph queries: SQL Server examples and PostgreSQL options
 
-**Status:** Draft · **Date:** 2026-11-11 · **Request:** owner, 2026-11-11 · **Related:** [HybridSearch](../HybridSearch/README.md) (Neo4j graph adapter), [DesiredStateDatabase](../DesiredStateDatabase/README.md), `src/Examples/OoBDev.Example.DB`
+**Status:** Draft (Neo4j adapter built) · **Date:** 2026-11-11 · **Request:** owner, 2026-11-11 · **Related:** [HybridSearch](../HybridSearch/README.md) (Neo4j graph adapter), [DesiredStateDatabase](../DesiredStateDatabase/README.md), `src/Examples/OoBDev.Example.DB`
 
 Examples of graph queries on SQL Server, and what PostgreSQL offers for the same questions. The examples are teaching material and the test bed for the graph retrieval adapters; they add no framework API.
 
@@ -29,7 +29,7 @@ Examples of graph queries on SQL Server, and what PostgreSQL offers for the same
 | SQL Server (2017 and later) | Yes: node tables (`AS NODE`) and edge tables (`AS EDGE`) | `MATCH` patterns in `SELECT`; `SHORTEST_PATH` with `+` and `{1,n}` quantifiers from SQL Server 2019; edge constraints |
 | PostgreSQL | No graph language in the core server | `WITH RECURSIVE` (with the `SEARCH` and `CYCLE` clauses since PostgreSQL 14) covers parent/child trees and general graphs; the Apache AGE extension adds openCypher on property graphs; `ltree` suits pure hierarchies; pgRouting suits path algorithms. SQL:2023 `GRAPH_TABLE` (SQL/PGQ) is under development upstream; check the current release before relying on it |
 | SQLite | No | `WITH RECURSIVE` only |
-| Neo4j | Yes | Cypher, through the planned graph adapter |
+| Neo4j | Yes | Cypher, through `OoBDev.Neo4j` (built) |
 
 So PostgreSQL supports more than parent/child searching through recursive CTEs, but real graph pattern queries need an extension (Apache AGE) or a dedicated graph database.
 

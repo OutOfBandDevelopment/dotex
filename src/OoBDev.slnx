@@ -148,6 +148,8 @@
     <Project Path="ExternalServices/Markdig/OoBDev.Markdig/OoBDev.Markdig.csproj" />
   </Folder>
   <Folder Name="/ExternalServices/Microsoft/">
+    <Project Path="ExternalServices/Neo4j/OoBDev.Neo4j.Tests/OoBDev.Neo4j.Tests.csproj" />
+    <Project Path="ExternalServices/Neo4j/OoBDev.Neo4j/OoBDev.Neo4j.csproj" />
     <Project Path="ExternalServices/Microsoft/OoBDev.Microsoft.Azure.AISearch.Tests/OoBDev.Microsoft.Azure.AISearch.Tests.csproj" />
     <Project Path="ExternalServices/Microsoft/OoBDev.Microsoft.Azure.AISearch/OoBDev.Microsoft.Azure.AISearch.csproj" />
     <Project Path="ExternalServices/Microsoft/OoBDev.Microsoft.Azure.ServiceBus.Tests/OoBDev.Microsoft.Azure.ServiceBus.Tests.csproj" />

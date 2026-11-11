@@ -39,6 +39,7 @@ SERVICES=(
     "oobd-test-postgres"
     "oobd-test-opensearch"
     "oobd-test-qdrant"
+    "oobd-test-neo4j"
     "oobd-test-azurite"
     "oobd-test-moto"
     "oobd-test-servicebus"

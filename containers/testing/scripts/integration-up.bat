@@ -93,6 +93,7 @@ echo   - Redis:              localhost:6379
 echo   - PostgreSQL (pgmq):  localhost:5434 (postgres, db oobdev_test)
 echo   - OpenSearch:         https://localhost:9200 (admin/IntegrationTest123!)
 echo   - Qdrant:             http://localhost:6333
+echo   - Neo4j:              bolt://localhost:7687 (browser http://localhost:7474)
 echo   - Azurite:            http://localhost:10000 (Blob), 10001 (Queue), 10002 (Table)
 echo   - Moto:         http://localhost:4566
 echo   - Service Bus:        localhost:5672

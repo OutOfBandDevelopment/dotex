@@ -326,6 +326,22 @@ The device list with connections is in [docs/how-tos/test-hardware.md](docs/how-
 
 ---
 
+### Neo4j (Graph Database)
+
+**Service:** Neo4j community, Cypher over Bolt
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `NEO4J_URI` | `bolt://localhost:7687` | Bolt endpoint |
+| `NEO4J_USER` | `neo4j` | User |
+| `NEO4J_PASSWORD` | `oobdev-test-pass` | Password (test instance only) |
+
+**Docker Container:** `neo4j:5-community` (Ports 7687 Bolt, 7474 browser)
+
+**Tests Using:** `OoBDev.Neo4j.Tests` (`Integration`)
+
+---
+
 ### Qdrant (Vector Database)
 
 **Service:** Qdrant vector similarity search engine
