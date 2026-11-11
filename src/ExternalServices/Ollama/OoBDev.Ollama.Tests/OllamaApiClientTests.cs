@@ -22,6 +22,9 @@ namespace OoBDev.Ollama.Tests;
 [TestClass]
 public class OllamaApiClientTests
 {
+    // The tests assert a non-empty answer, not its length: on the CPU-only test container generation time is per token.
+    private const int MaxTokens = 24;
+
     public required TestContext TestContext { get; set; }
 
     [ClassInitialize]
@@ -161,6 +164,7 @@ public class OllamaApiClientTests
             Options = new OllamaSharp.Models.RequestOptions
             {
                 Seed = 12345,
+                NumPredict = MaxTokens,
                 Temperature = 0.1f,
             },
         }).ToListAsync();
@@ -191,6 +195,7 @@ public class OllamaApiClientTests
             Options = new OllamaSharp.Models.RequestOptions
             {
                 Seed = 12312542,
+                NumPredict = MaxTokens,
                 TopK = 100,
                 TopP = 0.9f,
                 Temperature = 1f,
@@ -222,7 +227,7 @@ public class OllamaApiClientTests
         {
             Model = model,
             Messages = new[] { new Message(ChatRole.User, prompt, [base64]) },
-            Options = new OllamaSharp.Models.RequestOptions(),
+            Options = new OllamaSharp.Models.RequestOptions { NumPredict = MaxTokens },
         }).ToListAsync();
 
         var text = string.Join("", responses.Select(r => r?.Message.Content ?? ""));
