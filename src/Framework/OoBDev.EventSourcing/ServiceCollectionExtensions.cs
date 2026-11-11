@@ -36,6 +36,10 @@ public static class ServiceCollectionExtensions
             sp.GetRequiredService<IOptions<EventRelayOptions>>(),
             sp.GetRequiredService<TimeProvider>()));
         services.TryAddSingleton<EventTypeRegistry>();
+        services.TryAddTransient(sp => new ProjectionRunner(
+            sp.GetRequiredKeyedService<IEventStore>(EventSourcingGlobals.EventStoreSelectedKey),
+            sp.GetRequiredKeyedService<IEntityStore>(EventSourcingGlobals.EntityStoreSelectedKey),
+            sp.GetServices<IProjection>()));
         services.TryAddTransient(typeof(IAggregateRepository<>), typeof(AggregateRepository<>));
         return services;
     }
