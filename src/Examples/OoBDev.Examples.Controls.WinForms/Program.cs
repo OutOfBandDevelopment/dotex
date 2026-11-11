@@ -11,6 +11,7 @@ internal static class Program
         ApplicationConfiguration.Initialize();
         var controls = new ControlsForm();
         controls.Show();
+        new LiveForm().Show();
         Application.Run(new SettingsForm(new ControlsSampleSettings()));
     }
 }
