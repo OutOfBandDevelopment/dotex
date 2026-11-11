@@ -4,7 +4,7 @@
 > **Owner questions:** [OPEN-QUESTIONS.md](./OPEN-QUESTIONS.md) · **New to this project?** Read [CLAUDE.md](./CLAUDE.md) first.
 > **Other repositories to harvest from:** [docs/harvest-candidates.md](docs/harvest-candidates.md)
 
-**Last Updated:** 2026-11-10
+**Last Updated:** 2026-11-11
 
 GitHub is no longer the primary repository (local bare repo `origin`), so nothing here waits on GitHub Actions. Keep items to one short line; detail lives in the linked feature doc (rule `work-tracking`).
 
@@ -59,7 +59,7 @@ Scope rule: every BinaryDataDecoders feature is migrated; phases are priority or
 ### Waiting on the owner
 
 - [ ] **Harvest candidates** (D7): [open items await the owner](docs/migration/harvest-d7-comparison.md); candidate map in [harvest-candidates.md](docs/harvest-candidates.md)
-- [ ] CQRS and event sourcing reference design (`docs/design/CqrsEventSourcing/`) from `fohjin-cqrs` and `event-sourcing`, then an HLC feature in `OoBDev.System` from `sync-mesh`: [extraction table](docs/migration/harvest-d7-comparison.md#table-2).
+- [ ] Hybrid logical clock feature in `OoBDev.System` from `sync-mesh` (reference design written: [CqrsEventSourcing](docs/design/CqrsEventSourcing/README.md); a store library waits for a consumer): [extraction table](docs/migration/harvest-d7-comparison.md#table-2).
 - [ ] Plugin sandbox: the [threat model](docs/design/PluginSandbox/threat-model.md) and [protocol and manifest design](docs/design/PluginSandbox/protocol-and-manifest.md) wait for the owner sign-off of REQ-010, and the [layering proposal](docs/design/PluginSandbox/migration-plan.md) for its confirmation; spike result: [spike-result.md](docs/design/PluginSandbox/spike-result.md).
   - Sandbox follow-ups (owner, 2026-11-10: macOS deferred until later): message rate and heartbeat enforcement; Survive named-pipe transport; request context tied to a token validator; Linux equivalents of the caller-death and pool lifetime tests; AppContainer profile and ACL cleanup; wiring the persisted `GrantStore` path into `PluginHost` use and the docs. Deferred: `CrossPlatformEscapeTests` on a Mac, macOS limits and PID isolation.
 
