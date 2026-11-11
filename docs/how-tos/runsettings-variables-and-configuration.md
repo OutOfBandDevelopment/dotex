@@ -370,7 +370,7 @@ public class MyIntegrationTests
 - Supports prefix filtering
 - Works with configuration validation
 
-See [OoBDev.TestUtilities README](../../src/Framework/OoBDev.TestUtilities/README.md#1-testcontext-configuration-provider) for complete documentation.
+See [OoBDev.TestUtilities README](../../src/Framework/OoBDev.TestUtilities/README.TestUtilities.md#test-parameters) for complete documentation.
 
 ---
 

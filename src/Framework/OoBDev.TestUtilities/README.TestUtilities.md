@@ -1,61 +1,61 @@
 # OoBDev.TestUtilities
 
-## Summary
+Helpers for MSTest projects: test parameters as configuration, result attachments, embedded test data, tier categories, numeric assertions, a test logger and a guard for integration tests. The tier rules are in `.claude/rules/testing.md`; the `.runsettings` parameters are in the [runsettings how-to](../../../docs/how-tos/runsettings-variables-and-configuration.md).
 
-This is a collection of extensions that may help to improve unit tests within your projects 
+## Contents
 
-## Features 
+- [Test parameters](#test-parameters)
+- [Results and test data](#results-and-test-data)
+- [Categories](#categories)
+- [Assertions, logging and guards](#assertions-logging-and-guards)
+- [Tests](#tests)
 
-### TestContextExtensions
+## Test parameters
 
-This class contains a set of extension methods for the TestContext class that can be used to
-add test results, such as files or JSON objects, to the test results. These methods can be used 
-to attach files, such as binary data or text files, to the test results, or to add JSON objects 
-that can be used to analyze the test results.
+`.runsettings` `<Parameter>` values reach tests through `TestContext.Properties`. Two routes:
 
-### TestContext.GetTestData(...)
+```csharp
+var url = TestContext.GetRequiredProperty<string>("MOTO_URL");          // throws when missing
+var port = TestContext.GetPropertyOrDefault("MOTO_PORT", 4566);          // typed, with default
+// also GetProperty<T> (null when missing) and TryGetProperty<T>
 
-This method can be used to retrieve test data from embedded resources that have been included 
-in the test project. The data can be retrieved as a specific type, such as a class or a JSON 
-object, and can be retrieved based on the name of the test method or a specific target.
+var config = new ConfigurationBuilder()
+    .AddJsonFile("appsettings.json", optional: true)
+    .AddTestContext(TestContext)                  // or AddTestContext(TestContext, "MyApp")
+    .Build();
+```
 
-### TestContext.GetTestDataAsync(...)
+`AddTestContext` is an `IConfigurationBuilder` extension (namespace `Microsoft.Extensions.Configuration`, provider `TestContextConfigurationProvider`). With a prefix, only the properties starting with it are loaded and the prefix is removed from the keys. Add it last to let test parameters override the other sources. Read settings with these helpers, never with `Environment.GetEnvironmentVariable` (rule `testing`).
 
-This method is an asynchronous version of TestContext.GetTestData, and can be used to retrieve 
-test data from embedded resources in an asynchronous way.
+## Results and test data
 
-### TestContext.AddResult(...)
+**Table 1 — TestContext extensions (`TestContextExtensions`)**
 
-This method can be used to add a result to the test results, such as a JSON object or a file. 
-The result can be added based on a specific object or a code snippet, and can be added with or 
-without a specific file name.
+| Method | Purpose |
+|--------|---------|
+| `AddResult(...)`, `AddResultFile(name, bytes)` | Attach an object (as JSON), text or bytes to the test result |
+| `GetTestRunResultFiles()` | The files attached during the run |
+| `GetTestData(type, target)`, `GetTestDataAsync<T>(target)` | Deserialize an embedded resource of the test project, named by the test method or an explicit target |
+| `GetQualifiedTestName()`, `ResolveTestType()` | The test's qualified name and its class type |
+| `GetLogger<T>()` | A logger writing to the test output |
 
-### TestContext.AddResultFile(...)
+Related: `ContextualTestMethodAttribute` and `ContextualTestClassBase` expose the current test method and instance through `TestContext.Properties`; `TestTargetAttribute` names the class and member under test; `Xml/Xsl/Extensions/TrxExtensions` support XSL over TRX results.
 
-This method can be used to add a file to the test results, based on a specific file name and 
-content.
+## Categories
 
-### TestContext.GetQualifiedTestName(...)
+`TestCategories` holds the constants for `[TestCategory(...)]`: the tiers `Unit`, `Simulate`, `Integration`, `DevLocal`, `LiveIntegration` and `Hardware`; transport and area tags (`Serial`, `Tcp`, `Hid`, `Usbtmc`, `Ble`, `Loopback`, `Rfc2217`, `Vxi11`, `Mqtt`, `Brokers`, `Web`, `Scpi`, `Logging`, `BugRegression`); and one tag per bench device (for example `Korad_Ka3005p`, `Radex_One`, `Zoom_H4n`). A test carries exactly one tier.
 
-This method can be used to retrieve a simplified name for the test, which includes the fully 
-qualified name of the test class and the name of the test method.
+```bash
+dotnet test src/ --filter TestCategory=Unit
+dotnet test src/ --filter "TestCategory=Integration"
+```
 
-### TestContext.GetTestRunResultFiles(...)
+## Assertions, logging and guards
 
-This method can be used to retrieve a list of all the files that have been added to the test 
-results for the current test run.
+- `NumericAsserts.AreSimilar(expected, actual[, tolerance])`: exact for integers; for `double`, `float` and `decimal` a relative tolerance of `Max(|expected|, |actual|)` times 1e-10 (`double`, `decimal`) or 1e-5 (`float`), or the tolerance given.
+- `AddTestLoggingServices(context)` (`OoBDev.TestUtilities.Logging`) registers `ILogger` and `ILogger<>` that write to the test output and the debug window.
+- `TestInstanceGuard.Require(connectionString)` fails an Integration test unless every host in the connection string (key/value pairs or URL) is loopback or `host.docker.internal`; `IsTestInstance` returns the boolean. The SQL Server deployment tests use it.
 
-### TestContext.ResolveTestType(...)
+## Tests
 
-This method can be used to retrieve the current type from the test context, based on the fully 
-qualified name of the test class.
-
-## TestCategories
-
-This is intended to provide a named set of categories to provider to `TestCategoryAttribute` 
-as a means to consistence within your projects to make executing filtered sets for tests easier.
-
-
-## TestInstanceGuard
-
-`TestInstanceGuard.Require(connectionString)` fails an Integration test unless every host in the connection string (key/value pairs or URL) is loopback or `host.docker.internal`. Wrap the connection-string read with it; `IsTestInstance` returns the boolean. The SQL Server deployment tests use it. Rule: `testing`.
+`OoBDev.TestUtilities.Tests` covers the configuration provider (Unit and Integration), the property helpers, the data helpers, numeric asserts and the guard.
