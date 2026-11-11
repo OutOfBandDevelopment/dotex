@@ -26,4 +26,9 @@ public sealed class EventRelayOptions
     /// Events newer than this are left for the next pass, because an identity position can commit out of order.
     /// </summary>
     public TimeSpan SafetyWindow { get; set; } = TimeSpan.FromSeconds(5);
+
+    /// <summary>
+    /// Gets or sets the CloudEvents <c>source</c>. When set, the relay publishes each event as a CloudEvents 1.0 JSON string instead of an <see cref="EventRecord"/>.
+    /// </summary>
+    public string? CloudEventsSource { get; set; }
 }

@@ -18,7 +18,7 @@ public class EventRelayTests
     private InMemoryEventStore _events = null!;
     private InMemoryEntityStore _entities = null!;
 
-    private EventRelay Create(TimeSpan window, int batch = 500)
+    private EventRelay Create(TimeSpan window, int batch = 500, string? cloudEventsSource = null)
     {
         _events = new InMemoryEventStore(_time);
         _entities = new InMemoryEntityStore();
@@ -30,7 +30,7 @@ public class EventRelayTests
                 _sent.Add((m, id));
                 return Task.FromResult(id ?? string.Empty);
             });
-        var options = Options.Create(new EventRelayOptions { SafetyWindow = window, BatchSize = batch });
+        var options = Options.Create(new EventRelayOptions { SafetyWindow = window, BatchSize = batch, CloudEventsSource = cloudEventsSource });
         return new EventRelay(_events, _entities, sender.Object, options, _time);
     }
 
@@ -94,5 +94,23 @@ public class EventRelayTests
         var racing = new EventRelay(_events, _entities, sender.Object, Options.Create(new EventRelayOptions { SafetyWindow = TimeSpan.Zero }), _time);
 
         await Assert.ThrowsExactlyAsync<InvalidOperationException>(() => racing.RunOnceAsync());
+    }
+
+    [TestMethod]
+    [TestCategory(TestCategories.Unit)]
+    public async Task RunOnceAsync_WithCloudEventsSource_SendsCloudEventJson()
+    {
+        // Stage
+        var relay = Create(TimeSpan.Zero, cloudEventsSource: "urn:test");
+        await _events.AppendAsync("a", 0, [new NewEvent("A1", "{\"n\":1}")]);
+
+        // Test
+        await relay.RunOnceAsync();
+
+        // Assert
+        var record = CloudEventMapper.FromCloudEvent((string)_sent[0].Message);
+        Assert.AreEqual("a", record.StreamId);
+        Assert.AreEqual(1, record.Sequence);
+        Assert.AreEqual("A1", record.Type);
     }
 }

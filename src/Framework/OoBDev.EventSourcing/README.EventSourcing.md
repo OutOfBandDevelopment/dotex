@@ -32,4 +32,4 @@ An aggregate that implements `ISnapshotable` (`CaptureState`, `RestoreState`) is
 
 ## CloudEvents ingress
 
-`CloudEventsIngressHandler` is an `IMessageQueueHandler<EventsChannel, string>`: register it with the queue provider's handler registration and any queue can feed a stream with CloudEvents 1.0 JSON. The event keeps its stream and sequence; a message that does not follow the stream's last sequence throws, so the queue retries or dead-letters it. Publishing CloudEvents on the way out and an HTTP endpoint (Q-CQRS-EDGE) are not built.
+`CloudEventsIngressHandler` is an `IMessageQueueHandler<EventsChannel, string>`: register it with the queue provider's handler registration and any queue can feed a stream with CloudEvents 1.0 JSON. The event keeps its stream and sequence; a message that does not follow the stream's last sequence throws, so the queue retries or dead-letters it. Set `OoBDev:EventSourcing:Relay:CloudEventsSource` and the relay publishes CloudEvents JSON instead of `EventRecord`, so the same handler type reads what another instance sends. An HTTP endpoint (Q-CQRS-EDGE) is not built.

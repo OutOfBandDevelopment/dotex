@@ -42,7 +42,8 @@ public sealed class EventRelay(
         foreach (var record in ready)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            await sender.SendAsync(record, $"{record.StreamId}:{record.Sequence}").ConfigureAwait(false);
+            object body = settings.CloudEventsSource is { Length: > 0 } source ? CloudEventMapper.ToCloudEvent(record, source) : record;
+            await sender.SendAsync(body, $"{record.StreamId}:{record.Sequence}").ConfigureAwait(false);
         }
 
         var last = ready[^1].Position;
