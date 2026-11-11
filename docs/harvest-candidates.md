@@ -53,7 +53,7 @@ Under `C:\repo\learning` (bare origins in `g:/learning/`):
 | `postsql-playground` (`f414afa`) | PgProj desired-state PostgreSQL deployment (`.pgpkg`). Relevant to `OoBDev.DacFx` and the notes `sqldef-evaluation` project. |
 | `intel-8088-emu` (`3e38788`) | 8086/8088 emulator core in C# (.NET 8). |
 
-The owner has not decided to publish the event-sourcing work; it needs sanitizing first. Ask before copying.
+The owner has not decided to publish the event-sourcing work; it needs sanitizing first. Ask before copying. What to extract from the first three (a reference design, the hybrid logical clock) is in [the comparison](migration/harvest-d7-comparison.md#table-2).
 
 ## 4. Applications
 

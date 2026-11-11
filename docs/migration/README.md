@@ -99,7 +99,7 @@ Map: [harvest-candidates.md](../harvest-candidates.md). Nothing is copied withou
 | hybridsearch, BuildFirstOnce, HandyClasses (`CsvWriter`, `IniFile`), postsql-playground | Compared 2026-11-10: [recommendations](harvest-d7-comparison.md) await the owner (D7); postsql informs `OoBDev.DacFx` |
 | Oobtainium (mocking and proxy framework, about 1,600 lines) | Not migrated; Moq and NSubstitute cover it. Reopen only with a fresh comparison against `proving-grounds/examples/OoBDev.Oobtainium` |
 | `OoBDev.MessageBroker`, `Ssb.Modeling`, `SQL` | Deferred until a Service Broker feature exists |
-| `event-sourcing`, `sync-mesh`, `fohjin-cqrs` | Read-only pattern references; ask before copying |
+| `event-sourcing`, `sync-mesh`, `fohjin-cqrs` | Read-only pattern references; extract knowledge only, see [Table 2](harvest-d7-comparison.md#table-2): a CQRS and event sourcing reference design, an HLC feature request. Ask before copying source |
 | notes: `sqldef-evaluation`, `jws-jwt-from-scratch` | Design inputs for the matching features |
 
 ## Rejected, with reasons
