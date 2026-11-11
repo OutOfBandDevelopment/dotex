@@ -29,3 +29,7 @@ Register `IEventUpcaster` implementations (`FromType`, `Upcast(payload)` returni
 ## Snapshots
 
 An aggregate that implements `ISnapshotable` (`CaptureState`, `RestoreState`) is snapshotted into the entity store (type `aggregate-snapshot`) each time its stream version passes a multiple of `OoBDev:EventSourcing:Snapshots:Interval` (default 100, 0 turns it off). `AggregateRepository` restores the snapshot and replays only the later events; the stream stays the source of truth, so a snapshot can be deleted at any time.
+
+## CloudEvents ingress
+
+`CloudEventsIngressHandler` is an `IMessageQueueHandler<EventsChannel, string>`: register it with the queue provider's handler registration and any queue can feed a stream with CloudEvents 1.0 JSON. The event keeps its stream and sequence; a message that does not follow the stream's last sequence throws, so the queue retries or dead-letters it. Publishing CloudEvents on the way out and an HTTP endpoint (Q-CQRS-EDGE) are not built.
