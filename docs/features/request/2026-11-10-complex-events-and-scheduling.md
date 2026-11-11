@@ -1,6 +1,6 @@
 # Feature request: complex events, scheduling and Azure Event Hubs
 
-- **Status:** new
+- **Status:** triaged
 - **Requested by:** owner (SharedFramework comparison, 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** `src/Framework` (abstractions and common), `src/ExternalServices/Microsoft` (Event Hubs)
@@ -54,3 +54,5 @@ The owner's event-sourcing material (`event-sourcing`, `sync-mesh`) overlaps; th
 ## Triage notes
 
 Origin: SharedFramework. Not covered by any design; design comes first.
+
+2026-11-11: triaged. Accepted as a backlog item: design first (`docs/patterns-discovery/06-design-document-standard.md`), no code until a consumer appears. Backlog: BACKLOG.md, SharedFramework requests.

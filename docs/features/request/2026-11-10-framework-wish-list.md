@@ -1,6 +1,6 @@
 # Feature request: framework wish list from the old overview
 
-- **Status:** new
+- **Status:** triaged
 - **Requested by:** owner (kept from `docs/Framework/MajorFunctionality.md`, removed 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** unknown (many libraries)
@@ -107,3 +107,5 @@ Original text (headings lowered by one level):
 * https://spdx.dev/use/tools/
 * https://github.com/microsoft/sbom-tool
 * https://github.com/CycloneDX/cyclonedx-dotnet
+
+2026-11-11: triaged. Accepted as a backlog item: design first (`docs/patterns-discovery/06-design-document-standard.md`), no code until a consumer appears. Backlog: BACKLOG.md, SharedFramework requests.

@@ -1,6 +1,6 @@
 # Feature request: reference designs for common entities
 
-- **Status:** new
+- **Status:** triaged
 - **Requested by:** owner (kept from `docs/ReferenceDesign`, removed 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** docs, `docs/design`, shared framework
@@ -38,3 +38,5 @@ Is this the patterns-discovery blueprint under another name?
 ## Triage notes
 
 The deleted pages are in the parent of this commit.
+
+2026-11-11: triaged. Accepted as a backlog item: design first (`docs/patterns-discovery/06-design-document-standard.md`), no code until a consumer appears. Backlog: BACKLOG.md, SharedFramework requests.

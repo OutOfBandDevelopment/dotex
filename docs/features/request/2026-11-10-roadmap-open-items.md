@@ -1,6 +1,6 @@
 # Feature request: unbuilt items from the 2025 roadmap tree
 
-- **Status:** new
+- **Status:** triaged
 - **Requested by:** owner (kept from `docs/planning.md`, removed 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** many (storage, communications, search, caching, workflow, platform)
@@ -265,3 +265,5 @@ Open lines (indentation shows the original nesting; text after a dash is the ori
     - Knowledge base (0%)
     - Enhanced Language Model (0%)
     - Dataloader (0%)
+
+2026-11-11: triaged. Accepted as a backlog item: design first (`docs/patterns-discovery/06-design-document-standard.md`), no code until a consumer appears. Backlog: BACKLOG.md, SharedFramework requests.

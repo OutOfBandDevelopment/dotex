@@ -1,6 +1,6 @@
 # Feature request: PostgreSQL support alongside the SQL Server pieces
 
-- **Status:** new
+- **Status:** triaged
 - **Requested by:** owner (filed from the notes repository, `projects/postgres-backup-scheduling-spike` and `projects/dotex-consolidation/sqldef-evaluation`)
 - **Date:** 2026-11-10
 - **Area:** `OoBDev.DacFx` neighbours, data access and the SQL Service Broker tooling
@@ -46,3 +46,5 @@ Connection strings and credentials stay in configuration; the test fixture uses 
 ## Triage notes
 
 Origin: notes repository `projects/dotex-consolidation/README.md` (mapping section). Lowest priority of three filed together. Maintainers: accept, schedule or decline.
+
+2026-11-11: triaged. Accepted as a backlog idea: design first (`docs/patterns-discovery/06-design-document-standard.md`), no code until a consumer appears. Backlog: BACKLOG.md, Consolidation requests.

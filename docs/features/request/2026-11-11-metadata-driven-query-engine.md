@@ -1,6 +1,6 @@
 # Feature request: metadata-driven query engine (kinds declared by attributes, one query entry point)
 
-- **Status:** new
+- **Status:** triaged
 - **Requested by:** owner (filed from the NAS storage catalog application, `C:\repo\_storage`, `src/Storage.Query`)
 - **Date:** 2026-11-11
 - **Area:** new library near `OoBDev.AspNetCore.OData`, `OoBDev.Search` and `OoBDev.Data.Vectors`; the HTTP QUERY verb and OData designs
@@ -82,3 +82,5 @@ Read-only by design: the engine only builds `select` statements from declaration
 - Is `POST /q` with a `QUERY` verb fallback acceptable as the single entry point, or should each kind keep its own route?
 
 ## Triage notes
+
+2026-11-11: triaged. Accepted as a backlog idea from the storage and photo-library review; the code named above was not read in full, so the first step is the superset comparison before any design. Face and pet matching also needs an owner decision on personal data. Backlog: BACKLOG.md, Consolidation requests.

@@ -1,6 +1,6 @@
 # Feature request: Embedding service container with a configurable client
 
-- **Status:** new
+- **Status:** triaged
 - **Requested by:** owner (filed from the NAS storage catalog application, `C:\repo\_storage`)
 - **Date:** 2026-11-11
 - **Area:** `OoBDev.Onnx.ImageEmbeddings`, `Onnx.SentenceEmbeddings`, `Vision.*`, `Ollama`, `SBert`; a new client abstraction
@@ -49,3 +49,5 @@ Inputs are private files (photos, scans), so nothing is logged beyond identifier
 - Does the container ship from this repository or stay with the catalog application?
 
 ## Triage notes
+
+2026-11-11: triaged. Accepted as a backlog idea from the storage and photo-library review; the code named above was not read in full, so the first step is the superset comparison before any design. Face and pet matching also needs an owner decision on personal data. Backlog: BACKLOG.md, Consolidation requests.

@@ -1,6 +1,6 @@
 # Feature request: OCR and document text extraction stage (scans and PDFs to Markdown)
 
-- **Status:** new
+- **Status:** triaged
 - **Requested by:** owner (filed from the NAS storage catalog application, `C:\repo\_storage`)
 - **Date:** 2026-11-11
 - **Area:** `OoBDev.Documents`, `Documents.ExternalTools`, `System.Text.Markdown`
@@ -46,3 +46,5 @@ Inputs are private files (photos, scans), so nothing is logged beyond identifier
 - Which converter is the default (Docling, Tesseract, another)? Recommended: provider interface first, Docling as the first provider.
 
 ## Triage notes
+
+2026-11-11: triaged. Accepted as a backlog idea from the storage and photo-library review; the code named above was not read in full, so the first step is the superset comparison before any design. Face and pet matching also needs an owner decision on personal data. Backlog: BACKLOG.md, Consolidation requests.

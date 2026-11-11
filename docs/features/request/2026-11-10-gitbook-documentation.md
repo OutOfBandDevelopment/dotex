@@ -1,6 +1,6 @@
 # Feature request: evaluate GitBook for the documentation
 
-- **Status:** new
+- **Status:** triaged
 - **Requested by:** owner (open gap found reviewing the migration, 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** `docs/`
@@ -39,3 +39,5 @@ Is an external docs site wanted at all?
 ## Triage notes
 
 Origin: BinaryDataDecoders issue 21. Accept or decline.
+
+2026-11-11: triaged. Accepted as tooling work through deterministic scripts or MSTest entry points ([GeneratedGuides](../../design/GeneratedGuides/README.md)); scheduled behind the active work. Backlog: BACKLOG.md, Tooling requests.

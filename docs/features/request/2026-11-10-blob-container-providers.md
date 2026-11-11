@@ -1,6 +1,6 @@
 # Feature request: blob containers defined per point of use
 
-- **Status:** new
+- **Status:** triaged
 - **Requested by:** owner (from `docs/Framework/BlobStorage.md`, removed 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** storage, `OoBDev.Azure.StorageAccount`, document services
@@ -41,3 +41,5 @@ Is this the PersistenceService design under another name?
 ## Triage notes
 
 None yet.
+
+2026-11-11: triaged. Accepted as a backlog item: design first (`docs/patterns-discovery/06-design-document-standard.md`), no code until a consumer appears. Backlog: BACKLOG.md, SharedFramework requests.

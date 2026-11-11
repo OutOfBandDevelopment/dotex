@@ -1,6 +1,6 @@
 # Feature request: test results summary as markdown
 
-- **Status:** new
+- **Status:** triaged
 - **Requested by:** owner (found while cleaning `docs/templates`, 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** `scripts/ci`, `src/test.sh`, `OoBDev.TemplateEngine.Cli`
@@ -40,3 +40,5 @@ Commit the summary or keep it as a build artifact only?
 ## Triage notes
 
 The template is kept in [docs/templates](../../templates/README.md) (`TestResultsToMarkdown.md.xslt`).
+
+2026-11-11: triaged. Accepted as tooling work through deterministic scripts or MSTest entry points ([GeneratedGuides](../../design/GeneratedGuides/README.md)); scheduled behind the active work. Backlog: BACKLOG.md, Tooling requests.

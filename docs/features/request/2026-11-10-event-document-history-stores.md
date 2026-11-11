@@ -1,6 +1,6 @@
 # Feature request: Event, document and history store abstractions with an embedded SQLite provider
 
-- **Status:** new
+- **Status:** triaged
 - **Requested by:** owner (filed from the notes repository; origin is the `ctrl-home` proposal, `docs/proposal/02-architecture.md` and `11-build-on-dotex.md`)
 - **Date:** 2026-11-10
 - **Area:** new, near `OoBDev.MessageQueueing`, `OoBDev.Caching` and `OoBDev.ComplexEvents`
@@ -52,3 +52,5 @@ Local files on the host; place, permissions and encryption at rest are the host'
 ## Triage notes
 
 Origin: notes repository `projects/dotex-consolidation/README.md` (mapping section). Maintainers: accept, schedule or decline.
+
+2026-11-11: triaged. Accepted as a backlog idea: design first (`docs/patterns-discovery/06-design-document-standard.md`), no code until a consumer appears. Backlog: BACKLOG.md, Consolidation requests.

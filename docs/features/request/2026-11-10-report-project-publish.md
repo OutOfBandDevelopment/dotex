@@ -1,6 +1,6 @@
 # Feature request: publish target for report projects
 
-- **Status:** new
+- **Status:** triaged
 - **Requested by:** owner (open gap found reviewing the migration, 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** build, `src/`
@@ -39,3 +39,5 @@ Are report projects wanted at all? Recommended default: decline.
 ## Triage notes
 
 Origin: BinaryDataDecoders issue 19. Accept or decline.
+
+2026-11-11: triaged. Accepted as tooling work through deterministic scripts or MSTest entry points ([GeneratedGuides](../../design/GeneratedGuides/README.md)); scheduled behind the active work. Backlog: BACKLOG.md, Tooling requests.

@@ -1,6 +1,6 @@
 # Feature request: File inventory and duplicate detection (exact and near-duplicate images)
 
-- **Status:** new
+- **Status:** triaged
 - **Requested by:** owner (filed from the notes repository, `projects/applications/nas-storage-catalog` and `second-shooter-photo-library.md`)
 - **Date:** 2026-11-10
 - **Area:** new, near `OoBDev.Onnx.ImageEmbeddings`, `OoBDev.Documents` and the blob container request
@@ -57,3 +57,5 @@ Reads whole files, so IO cost is large on a NAS; the scan should be throttled an
 ## Triage notes
 
 Origin: notes repository `projects/dotex-consolidation/README.md` (mapping section). Maintainers: accept, schedule or decline.
+
+2026-11-11: triaged. Accepted as a backlog idea: design first (`docs/patterns-discovery/06-design-document-standard.md`), no code until a consumer appears. Backlog: BACKLOG.md, Consolidation requests.
