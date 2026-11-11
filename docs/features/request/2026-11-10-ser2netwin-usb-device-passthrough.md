@@ -1,6 +1,6 @@
 # Feature request: Ser2NetWin as the way to reach a Windows USB device from a Linux container
 
-- **Status:** new
+- **Status:** triaged
 - **Requested by:** owner (notes repository, `projects/windows-usb-passthough`, 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** `src/Applications/Ser2NetWin`, `OoBDev.System.IO.Ports.Bridge`, `docs/applications/ser2netwin`
@@ -59,3 +59,5 @@ listener per bridge. A raw device behind a TCP hop adds latency; some tools may 
 ## Triage notes
 
 Origin: notes repository `projects/windows-usb-passthough` and `projects/ser2net-win`. Maintainers: accept, schedule or decline.
+
+2026-11-11: triaged. Accepted as a backlog idea with no design yet; it needs hardware on the bench (see the test hardware map) before a design is written. Backlog: BACKLOG.md, Devices ideas.

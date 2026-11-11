@@ -1,6 +1,6 @@
 # Feature request: span and sequence based Applesoft detokenizer and Tar archive
 
-- **Status:** new
+- **Status:** triaged
 - **Requested by:** owner (open gap found reviewing the migration, 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** `OoBDev.System` (`Archives/Tar`, `Retro/Apple2/ApplesoftBASIC`)
@@ -39,3 +39,5 @@ Keep the old overloads or remove them? The framework is unreleased, so breaking 
 ## Triage notes
 
 Origin: BinaryDataDecoders issues 9 and 14. Low priority; accept, schedule or decline.
+
+2026-11-11: triaged. Accepted at low priority: every BinaryDataDecoders feature is kept (scope rule in `CLAUDE.md`), so it is scheduled behind the DevTerm and event-sourcing work. Backlog: BACKLOG.md, Migrations (specialized formats).
