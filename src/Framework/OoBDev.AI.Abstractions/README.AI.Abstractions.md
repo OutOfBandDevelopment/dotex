@@ -1,29 +1,29 @@
 # OoBDev.AI.Abstractions
 
-## Summary
+Contracts for embeddings and language models, so applications depend on these interfaces and the provider (Ollama, SBert, ONNX, vision models) is chosen by registration. Namespace `OoBDev.AI`; no implementation lives here.
 
-This library contains the abstract definitions for interfacing with ML/AI such as 
-sentence embeddings and language models.
+## Contracts
 
-## Notes
+**Table 1 — Interfaces**
 
-This document outlines the OoBDev.AI namespace, detailing three key classes:
+| Interface | Members |
+|-----------|---------|
+| `IEmbeddingProvider` | `Length` (dimension count) and `GenerateEmbeddingAsync(content, model, cancellationToken)` returning a `ReadOnlyMemory<float>`. `model` may be null to use the provider's model; `model` and the token have defaults in release builds and are required in `DEBUG` builds (rule `coding-standards`). |
+| `ILanguageModelProvider` | `GetResponseAsync(promptDetails, userInput)`; streamed variants `GetStreamedResponseAsync` and `GetStreamedContextResponseAsync(assistantConfinment, systemInteractions, userInput)`; `GetContextResponseAsync`; `GetRAGResponseAsync(assistantConfinment, ragData, userInput)` and `GetRAGResponseCitiationsAsync(IList<KeyValuePairModel>, userQuery)`; `GetEmbeddedResponseAsync(data)` returning `float[]`. |
+| `IStreamedCompletion` | `GetStreamedResponseAsync(promptDetails, userInput, cancellationToken)` as an `IAsyncEnumerable<string>`. |
+| `IMessageCompletion` | `GetCompletionAsync(modelName, prompt)`, and `GetCompletionAsync(CompletionRequest)` returning a `CompletionResponse`. |
 
-* AI.IEmbeddingProvider:
-  * Represents a provider for word embeddings.
-  * Length: Retrieves the length of the embeddings.
-  * GetEmbeddingAsync(content): Retrieves the embedding vector for the given content. Takes 
-    content as input and returns an array of single-precision floats representing the 
-    embedding vector.
+**Table 2 — Models**
 
-* AI.ILanguageModelProvider:
-  * Represents a provider for a language model.
-  * GetResponseAsync(promptDetails, userInput): Retrieves a response from the language model 
-    based on provided prompt details and user input. Takes prompt details and user input as 
-    inputs and returns a response from the language model.
+| Type | Fields |
+|------|--------|
+| `CompletionRequest` | `Prompt` (required), `Model`, `Context` (token context of an earlier turn), `Images`, `System`, `Template` |
+| `CompletionResponse` | `Response`, `Context` (pass it back to continue the conversation) |
+| `KeyValuePairModel` | `Key`, `Value`: one retrieved source for the RAG methods |
 
-* AI.IMessageCompletion:
-  * Represents a provider for message completion.
-  * GetCompletionAsync(modelName, prompt): Retrieves a completion for the given prompt from 
-    the specified model. Takes model name and prompt as inputs and returns the completion 
-    for the prompt.
+The `Citiations` spelling in `GetRAGResponseCitiationsAsync` is the current public name.
+
+## Implementations
+
+- Embeddings: [SBert](../../ExternalServices/SBert/OoBDev.SBert/README.SBert.md) (HTTP service), [Onnx.SentenceEmbeddings](../../ExternalServices/Onnx/OoBDev.Onnx.SentenceEmbeddings/README.Onnx.SentenceEmbeddings.md) (in process) and the Ollama provider.
+- Completion: the Ollama adapter (`IMessageCompletion`); the `OoBDev.Spike.ExtensionsAI` spike wraps `Microsoft.Extensions.AI` chat clients as an `ILanguageModelProvider`.
