@@ -42,13 +42,12 @@ One plan for what is still to bring into this framework from other repositories,
 | SharedFramework | (removed from `Incoming/`; history in `git log`) | Replaced by designs ([Table 4](#table-4)) |
 | proving-grounds, learning repositories, `_storage`, notes | `C:\repo\mine`, `C:\repo\oobdev` | Read-only references ([Table 5](#table-5)) |
 
-The former `Incoming/CHECKLIST.md` status table is folded in: dotnet-lib (95% identical to main, bug fix applied) and Framework (vector library already in main) were deleted, Oobtainium moved to proving-grounds, BotChat was extracted 2026-10-09, SharedFramework was replaced by designs, and BinaryDecoders, ContractParser and Tools are covered below.
 
 Where two sources hold the same feature, dev-term is newer and tested, so it is the base. Migrated libraries were behaviour-checked by running the source tests against main (2026-11-03).
 
 ## Devices
 
-Design: [DeviceDecoding](../design/DeviceDecoding/README.md) and its [migration plan](../design/DeviceDecoding/migration-plan.md) (conversion rules, naming, order of work). Busylight, K8055, Radex One, Zoom H4n, NMEA, DE-5000, SCPI, Z-Wave, Fencing and LanC are migrated; merges M1, M2 and M5 from BinaryDataDecoders are in. What is left:
+Design: [DeviceDecoding](../design/DeviceDecoding/README.md) and its [migration plan](../design/DeviceDecoding/migration-plan.md) (conversion rules, naming, order of work). What is left:
 
 <a id="table-2"></a>**Table 2 — Device work left**
 
@@ -77,7 +76,7 @@ dev-term merges into this repository entirely (owner, 2026-10-28): shells become
 
 ## SharedFramework epics
 
-Design first (owner, 2026-11-06): none is implemented until a consumer appears. Four documents per feature ([standard](../patterns-discovery/06-design-document-standard.md)); plan in [SharedFramework](../design/SharedFramework/migration-plan.md). Queues, storage, caching, identity, documents and the MailKit adapter already exist in main.
+Design first (owner, 2026-11-06): none is implemented until a consumer appears. Four documents per feature ([standard](../patterns-discovery/06-design-document-standard.md)); plan in [SharedFramework](../design/SharedFramework/migration-plan.md).
 
 <a id="table-4"></a>**Table 4 — SharedFramework epics**
 
@@ -97,7 +96,7 @@ Map: [harvest-candidates.md](../harvest-candidates.md). Nothing is copied withou
 | Source item | Decision |
 |-------------|----------|
 | ScoreMachine and HomeSeer | Libraries and emulators only (D8); applications rejected |
-| hybridsearch, Oobtainium, BuildFirstOnce, markdownplantuml, TotpExample, HandyClasses, postsql-playground | Compared 2026-11-10: [recommendations](harvest-d7-comparison.md) await the owner (D7); postsql informs `OoBDev.DacFx` |
+| hybridsearch, BuildFirstOnce, HandyClasses (`CsvWriter`, `IniFile`), postsql-playground | Compared 2026-11-10: [recommendations](harvest-d7-comparison.md) await the owner (D7); postsql informs `OoBDev.DacFx` |
 | Oobtainium (mocking and proxy framework, about 1,600 lines) | Not migrated; Moq and NSubstitute cover it. Reopen only with a fresh comparison against `proving-grounds/examples/OoBDev.Oobtainium` |
 | `OoBDev.MessageBroker`, `Ssb.Modeling`, `SQL` | Deferred until a Service Broker feature exists |
 | `event-sourcing`, `sync-mesh`, `fohjin-cqrs` | Read-only pattern references; ask before copying |

@@ -29,11 +29,9 @@ All under `C:\repo\mine\proving-grounds` (origin https://github.com/mwwhited/pro
 | `examples/hybridsearch` | Hybrid search spike (155 files). Compare `OoBDev.Search` and the embedders. |
 | `examples/plugin-sandbox-poc` | Plugin sandbox proof of concept (AppContainer on Windows, bubblewrap/seccomp on Linux, signed packages, escape tests). Last commit 2026-10-08. |
 | `examples/HandyClasses` | Code39, CsvWriter, IniFile (MIT, 2016). |
-| `examples/TotpExample` | `WhitedUS.Totp` time-based one-time password example. |
 | `examples/WindowsUnixSocket`, `examples/OobDev.Tools` | Unix-domain socket client/host and AfUnix tools. |
 | `examples/UnmanagedExports` | Tests for exporting and importing unmanaged DLL entry points from .NET. |
 | `examples/PostMessageProxy` | ASP.NET proxy for window `postMessage`. |
-| `examples/markdownplantuml` | Markdig extension that renders PlantUML. |
 | `examples/OsciRenderClient` | Client for osci-render (TCP port 51622). |
 | `examples/OoBDev.ScoreMachine` | Fencing scoring system (Favero, LANC relay, HID scanner, H4n CLI, web). Its Kestrel host is one more place a CGI middleware could be tried. |
 | `examples/AccountingEngine`, `examples/CarMaintenanceLog`, `examples/SecondShooter` | Applications; likely sources of reusable data-access or domain code, not libraries. |

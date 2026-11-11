@@ -58,7 +58,7 @@ Scope rule: every BinaryDataDecoders feature is migrated; phases are priority or
 
 ### Waiting on the owner
 
-- [ ] **Harvest candidates** (D7): [comparison done, recommendations await the owner](docs/migration/harvest-d7-comparison.md); candidate map in [harvest-candidates.md](docs/harvest-candidates.md)
+- [ ] **Harvest candidates** (D7): [open items await the owner](docs/migration/harvest-d7-comparison.md); candidate map in [harvest-candidates.md](docs/harvest-candidates.md)
 - [ ] Plugin sandbox: the [threat model](docs/design/PluginSandbox/threat-model.md) and [protocol and manifest design](docs/design/PluginSandbox/protocol-and-manifest.md) wait for the owner sign-off of REQ-010, and the [layering proposal](docs/design/PluginSandbox/migration-plan.md) for its confirmation; spike result: [spike-result.md](docs/design/PluginSandbox/spike-result.md).
   - Sandbox follow-ups (owner, 2026-11-10: macOS deferred until later): message rate and heartbeat enforcement; Survive named-pipe transport; request context tied to a token validator; Linux equivalents of the caller-death and pool lifetime tests; AppContainer profile and ACL cleanup; wiring the persisted `GrantStore` path into `PluginHost` use and the docs. Deferred: `CrossPlatformEscapeTests` on a Mac, macOS limits and PID isolation.
 
