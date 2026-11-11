@@ -28,7 +28,7 @@ One plan for what is still to bring into this framework from other repositories,
 
 - Everything migrates except stubs with no implementation, obsolete platforms (Silverlight, UWP, Compact Framework) and code with no net10.0 equivalent (`CLAUDE.md`, Migration Scope). Phases are priority order, not selection.
 - Best coverage (`owner-decisions`): compare every source and use the best-covered, tested implementation as the base; merge what the others add. A rejection carries its reason ([Table 6](#table-6)).
-- Surroundings migrate too (guides, agent configuration, docs, scripts, plans). The dev-term and BinaryDataDecoders surroundings are migrated or rejected; what is still open is wiring `containers/devterm` into the integration stack (backlog).
+- Surroundings migrate too (guides, agent configuration, docs, scripts, plans). The dev-term and BinaryDataDecoders surroundings are migrated or rejected.
 - A layering change needs a confirmed plan first (rule `layering-and-migration-plans`). Copies of code inside this repository may be deleted once migrated; older repositories stay untouched (owner, 2026-11-09).
 
 ## Sources
