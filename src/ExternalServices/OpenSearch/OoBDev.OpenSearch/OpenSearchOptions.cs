@@ -30,4 +30,14 @@ public class OpenSearchOptions
     /// Gets or sets the password for authentication (if required).
     /// </summary>
     public string? Password { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether to connect over <c>https</c> (default <c>false</c>, plain <c>http</c>).
+    /// </summary>
+    public bool UseTls { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether any server certificate is accepted (default <c>false</c>). Only for local test instances with self-signed certificates.
+    /// </summary>
+    public bool AllowInvalidCertificate { get; set; }
 }

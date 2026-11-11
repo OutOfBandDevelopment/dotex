@@ -31,11 +31,11 @@ In `DEBUG` builds the section name is a required argument (builder parameters ar
 | `Port` | Default 9200 |
 | `IndexName` | Required; the index the consumers use |
 | `UserName`, `Password` | Basic authentication, applied only when both are non-blank |
+| `UseTls` | Connect over `https` (default `false`) |
+| `AllowInvalidCertificate` | Accept any server certificate (default `false`); only for local test instances with self-signed certificates |
 
-Options are validated by data annotations. `IOpenSearchClientFactory` (`OpenSearchClientFactory`, transient) creates the client, and `IOpenSearchLowLevelClient` is registered from it. The client connects over plain `http://host:port`, enables HTTP compression and throws on failed requests (`ThrowExceptions(true)`); TLS and certificate settings are not configurable yet.
-
-`LexicalProvider` is an obsolete empty class (its body is commented out, kept until removal); do not use it.
+Options are validated by data annotations. `IOpenSearchClientFactory` (`OpenSearchClientFactory`, transient) creates the client, and `IOpenSearchLowLevelClient` is registered from it. The client connects over `http://host:port` (`https` with `UseTls`), enables HTTP compression and throws on failed requests (`ThrowExceptions(true)`).
 
 ## Tests
 
-`OoBDev.OpenSearch.Tests` holds two `Integration` tests against the OpenSearch container (`OPENSEARCH_*` parameters in `.runsettings`).
+`OoBDev.OpenSearch.Tests` holds three `Unit` tests of the client factory (scheme and certificate callback) and two `Integration` tests against the OpenSearch container (`OPENSEARCH_*` parameters in `.runsettings`).
