@@ -61,3 +61,16 @@ Echo, discard, daytime, time and chargen servers exist in `OoBDev.System`; DevTe
 **Default:** A, built once you confirm (it adds a member to `ServerBase`).
 
 **Your answer:**
+
+### Q-PLAYBACK-CHECKPOINT — Which presenters must snapshot for playback checkpoints? (2026-11-11, SessionLogging)
+
+Decided 2026-10-13: the recorder writes periodic checkpoint markers and playback seeks from the nearest one instead of replaying from record 0 ([session logging](docs/design/SessionLogging/session-logging.md)). `IPresenter` has no snapshot contract, and presenters are many: the text ones are stateless per chunk, the frame, device-decoder and out-of-process plugin presenters keep state.
+
+**Options**
+- A. A marker is only a log offset and a "presenters were at a chunk boundary" flag; an optional `ISnapshotPresenter` (save and restore state) is added, and a checkpoint is usable only when every active presenter is stateless or snapshots (recommended: no change to existing presenters or plugins, seeking is fast for the common text case, stateful presenters keep today's replay-from-start until they opt in).
+- B. Make `IPresenter` snapshot mandatory: one behaviour everywhere, but every presenter and the plugin protocol change.
+- C. Store the rendered screen in each checkpoint instead of presenter state: front-end specific, large logs, no presenter change.
+
+**Default:** A, built once you confirm (it adds one optional interface and a `checkpoint` record kind that older readers ignore).
+
+**Your answer:**
