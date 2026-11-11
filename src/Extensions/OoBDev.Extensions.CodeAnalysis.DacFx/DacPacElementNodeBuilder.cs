@@ -25,7 +25,7 @@ public class DacPacElementNodeBuilder(TSqlModel sqlModel) : ReflectionElementNod
         "OwningType", "ObjectType",
     ];
 
-    private readonly HashSet<object> _collected = [];
+    private readonly HashSet<(object Model, PropertyInfo Property)> _collected = [];
 
     /// <inheritdoc />
     protected override IEnumerable<(XName name, object child)>? ChildSelector(object model) =>
@@ -58,12 +58,10 @@ public class DacPacElementNodeBuilder(TSqlModel sqlModel) : ReflectionElementNod
     protected override bool AllowNavigate(object model, PropertyInfo property)
     {
         if (!base.AllowNavigate(model, property)) return false;
-        if (property.PropertyType.IsInstanceOfType(typeof(ObjectIdentifier))) return false;
+        if (typeof(ObjectIdentifier).IsAssignableFrom(property.PropertyType)) return false;
         if (ExcludedProperties.Contains(property.Name)) return false;
-        if (_collected.Contains(model)) return false;
 
-        _collected.Add((model, property));
-        return true;
+        return _collected.Add((model, property));
     }
 
     /// <inheritdoc />

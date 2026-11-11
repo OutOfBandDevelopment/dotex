@@ -88,4 +88,20 @@ public class DacPacNavigatorTests
             File.Delete(path);
         }
     }
+
+    [TestMethod]
+    [TestCategory("Unit")]
+    public void Build_Model_SecondWalkSeesTheSameProperties()
+    {
+        // Stage
+        var navigator = new DacPacElementNodeBuilder(SampleModel()).Build().ToNavigable().CreateNavigator()!;
+
+        // Test
+        var first = Count(navigator, "//@*");
+        var second = Count(navigator, "//@*");
+
+        // Assert
+        Assert.IsGreaterThan(0, first);
+        Assert.AreEqual(first, second);
+    }
 }
