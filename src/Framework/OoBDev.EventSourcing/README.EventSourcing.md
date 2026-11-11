@@ -7,3 +7,7 @@ Implementation side of event sourcing (contracts in `OoBDev.EventSourcing.Abstra
 - `TryAddEventSourcing()`: registers the in-memory defaults, the configured selection of the stores (`OoBDev:EventSourcing:EventStore:Type`, `OoBDev:EventSourcing:EntityStore:Type`; an unknown key throws) and the relay (options `OoBDev:EventSourcing:Relay`). It expects an `IMessageQueueSender<EventsChannel>` from the message-queue registration.
 
 Entity Framework stores, the CloudEvents mapper and the queue adapters are separate projects (see the backlog).
+
+## CloudEvents at the edge
+
+`CloudEventMapper.ToCloudEvent(record, source)` and `FromCloudEvent(json)` convert an `EventRecord` to and from a CloudEvents 1.0 structured JSON document (`application/cloudevents+json`). `id` is `{StreamId}:{Sequence}`, `subject` the stream id; `sequence` and `metadata` are extension attributes. An external event that has only an `id` of the form `stream:sequence` is accepted. Anything else raises `FormatException`.
