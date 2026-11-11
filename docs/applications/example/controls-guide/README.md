@@ -34,17 +34,27 @@ Typing in the filter box narrows the rows.
 
 *Figure 4 — WinForms with a filter typed*
 
+The settings dialog is the same class in a second window. Ticking Show advanced reveals the Notes row.
+
+![WinForms settings, initial](images/winforms-3-settings-initial.png)
+
+*Figure 5 — WinForms settings dialog, initial state*
+
+![WinForms settings, advanced shown](images/winforms-4-settings-advanced.png)
+
+*Figure 6 — WinForms settings dialog after ticking Show advanced*
+
 ## Tui
 
 Focus **Show advanced** and press Space.
 
 ![Tui, initial](images/tui-1-initial.png)
 
-*Figure 5 — Tui, initial state*
+*Figure 7 — Tui, initial state*
 
 ![Tui, advanced shown](images/tui-2-advanced-shown.png)
 
-*Figure 6 — Tui after pressing Space on Show advanced*
+*Figure 8 — Tui after pressing Space on Show advanced*
 
 ## Blazor
 
@@ -52,11 +62,11 @@ Every control writes the settings object; the preview card and the bound-model t
 
 ![Blazor, initial](images/blazor-1-initial.png)
 
-*Figure 7 — Blazor, initial state*
+*Figure 9 — Blazor, initial state*
 
 ![Blazor, changed](images/blazor-2-changed.png)
 
-*Figure 8 — Blazor after choosing High, showing Advanced, typing a note and clearing Enabled*
+*Figure 10 — Blazor after choosing High, showing Advanced, typing a note and clearing Enabled*
 
 ## How the images are made
 
