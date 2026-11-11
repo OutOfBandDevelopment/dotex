@@ -14,7 +14,6 @@ Both machines transmit unprompted, so the devices only receive. Bytes arrive thr
 | `SgStateParser` / `SgMessageDecoder` | Each frame carries one fact (score, clock, lights, cards), so the parser keeps the last state and applies the new fact to it |
 | `ScoreMachineState`, `Fencer`, `Cards`, `Lights`, `MachineType` | The decoded state |
 | `ServiceCollectionExtensions` | `TryAddFencingScoreMachines()`: keyed decoders `favero` and `saint-george` (`FencingGlobals`) |
-
 | `Panels/FaveroPanel`, `Panels/SaintGeorgePanel` | DevTerm device panels (`IDevicePanel`, serial only, presenter names `favero` and `saint-george`): read-only indicators for the clock, match and each side's score, lights, cards and priority; no controls |
 | `Panels/ScoreMachineDecoder` | `IDeviceDecoder`: cuts the stream into frames, buffers partial ones, returns one state line per frame (`BAD FRAME: <hex>` when the parser rejects one) and publishes only changed values |
 

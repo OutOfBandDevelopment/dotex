@@ -18,7 +18,7 @@ The USB product id follows the board address (jumpers SK5 and SK6): `K8055Device
 | `K8055MessageEncoder` | Command to the 9-byte write (report id `00` first) |
 | `ServiceCollectionExtensions` | `TryAddK8055()` |
 
-The board sets every output with one report, so `K8055Outputs.WithDigital` returns the new state and the caller sends the whole of it; holding that state is a consumer concern.
+The board sets every output with one report, so `K8055Outputs.WithDigital` returns the new state and the caller sends the whole of it; the panel's control surface holds that state (see Device panel).
 
 ## Verified
 
@@ -32,3 +32,7 @@ Which physical input pin sets which bit (the names come from BinaryDataDecoders;
 ## Device documentation
 
 [docs/known-configuration.md](docs/known-configuration.md) records how the device is reached on the bench (transport, framing, byte order, what was verified on hardware); the frame layouts are Kaitai Struct files in [docs/](docs/): `k8055-input-report.ksy`, `k8055-output-report.ksy`. Paths such as `docs/design/...`, `docs/test/...` and `src/DevTerm.*` inside those notes name files in the dev-term repository, where they were written.
+
+## Device panel
+
+`Panels/K8055Panel` is the board's `IDevicePanel` for DevTerm, registered in `OoBDev.DevTerm.Devices` with `TryAddDevicePanel<K8055Panel>()` and matching vendor 0x10CF. `K8055ControlSurface` keeps the digital-out bitmask and both analogue-out bytes, so every output change resends the full set-outputs frame (report id `00`, command `05`, duration bytes zero) and can preview the bytes. `K8055Decoder` decodes the unprompted 9-byte input report and publishes the inputs and counters under the ids `K8055UiDefinition` declares. The panel tests (`K8055ControlSurfaceTests`, `K8055DecoderTests`, `K8055PanelTests`) cover them.
