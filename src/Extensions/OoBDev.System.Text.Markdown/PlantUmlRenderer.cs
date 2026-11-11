@@ -22,12 +22,17 @@ public class PlantUmlRenderer
     /// Initializes a new instance of the PlantUmlRenderer class.
     /// </summary>
     /// <param name="pipeline">The Markdown pipeline configuration.</param>
-    public PlantUmlRenderer(MarkdownPipeline pipeline)
+    /// <param name="options">The renderer settings; <see cref="PlantUmlRendererOptions.RemoteUrl"/> must be set.</param>
+    public PlantUmlRenderer(MarkdownPipeline pipeline, PlantUmlRendererOptions options)
     {
+        ArgumentNullException.ThrowIfNull(options);
+        if (string.IsNullOrWhiteSpace(options.RemoteUrl))
+            throw new InvalidOperationException("No PlantUML server is configured. Set PlantUmlRendererOptions.RemoteUrl (the local plantuml container is http://localhost:8086/); diagram source is not sent to a public server unless you set one.");
+
         var renderFactory = new RendererFactory();
         _render = renderFactory.CreateRenderer(new PlantUmlSettings
         {
-            RemoteUrl = "https://www.plantuml.com/plantuml/", //TODO: expose these are configurable
+            RemoteUrl = options.RemoteUrl,
             RenderingMode = RenderingMode.Remote,
         });
 

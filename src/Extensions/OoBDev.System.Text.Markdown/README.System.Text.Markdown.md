@@ -33,6 +33,16 @@ var pipeline = new MarkdownPipelineBuilder()
 var html = Markdown.ToHtml(markdownText, pipeline);
 ```
 
+## PlantUML server
+
+Diagrams are rendered by a PlantUML server. `PlantUmlRendererOptions.RemoteUrl` defaults to the local `plantuml` container (`http://localhost:8086/`), so no diagram source leaves the machine unless you set a public server on purpose; a blank URL fails with a clear message.
+
+```csharp
+var pipeline = new MarkdownPipelineBuilder()
+    .UsePlantuml(new PlantUmlRendererOptions { RemoteUrl = "https://www.plantuml.com/plantuml/" })
+    .Build();
+```
+
 ## License
 
 See repository license file for details.

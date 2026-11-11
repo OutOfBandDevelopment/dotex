@@ -49,7 +49,6 @@ A clean rebuild after the 2026-11-06 pass reports no analyzer warnings (218 befo
 
 - [ ] Bug-review the migrated projects that the source review never covered (rest of device IO: `BridgeWorker`, `SerialDeviceAdapter`, Bluetooth, Mqtt, Brokers; then toolkit and text, code analysis and archives, apps and tooling); first pass and open findings in [the issue](docs/issues/device-io-review-findings.md)
 - [ ] ExpressionCalculator optional reductions, never built (the source only listed them as a "bonus round"): `B^-1` to `1/B`, `B/N` to `B*(1/N)`, `B*B*...` to `B^T`, `B+B+...` to `B*T`; add them to `IdentityExpressionOptimizer` or a new optimizer with tests, or decline
-- [ ] `OoBDev.System.Text.Markdown` PlantUML renderer: add `PlantUmlRendererOptions.RemoteUrl`, default to the local `plantuml` container and fail with a clear message when no URL is set, so nothing leaves the machine unless opted in (owner, 2026-11-10); update the readme and tests.
 - [ ] Example app Identity management screen, read-only (Keycloak service account with `view-users` and `view-realm`; shows users, roles and the role-to-right translation) (owner, 2026-11-10).
 - [ ] Reference architecture stack: add a full identity admin feature (create and disable users) once the reference architecture is located; not for the example app (owner, 2026-11-10).
 - [ ] HybridSearch: decide whether to remove the three obsolete provider shells or build the hybrid merge ([requirements](docs/design/HybridSearch/requirements.md#open-questions)); the `OoBDev.Search.Tests` are done
