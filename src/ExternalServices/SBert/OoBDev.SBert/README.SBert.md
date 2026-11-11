@@ -24,7 +24,7 @@ In `DEBUG` builds the section name is a required argument (rule `coding-standard
 
 ## Behaviour
 
-The client calls `GET /generate-embedding?query=<text>` and reads the `embedding` array of the JSON response, as `float` (`GetEmbeddingAsync`, used by the provider) or `double` (`GetEmbeddingDoubleAsync`). `SentenceEmbeddingProvider.Length` is found by embedding `"hello world"` once and cached. Known limits: the `model` argument of `GenerateEmbeddingAsync` is ignored (the service decides the model), and the query text is not URL-escaped by the client, so long or special-character text is better sent through the ONNX provider.
+The client calls `GET /generate-embedding?query=<text>` and reads the `embedding` array of the JSON response, as `float` (`GetEmbeddingAsync`, used by the provider) or `double` (`GetEmbeddingDoubleAsync`). `SentenceEmbeddingProvider.Length` is found by embedding `"hello world"` once and cached. The query text is URL-escaped. Known limit: the `model` argument of `GenerateEmbeddingAsync` is ignored, because the service runs one fixed model; long texts are better sent through the ONNX provider.
 
 Model presets for this service: [AllMpnetBaseV2](../OoBDev.SBert.AllMpnetBaseV2/README.SBert.AllMpnetBaseV2.md) and [NomicEmbedTextV1_5](../OoBDev.SBert.NomicEmbedTextV1_5/README.SBert.NomicEmbedTextV1_5.md).
 
