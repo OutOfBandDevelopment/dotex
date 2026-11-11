@@ -437,7 +437,7 @@ These parameters are in `src/.runsettings` beside the URL and connection-string 
 | `REDIS_HOST`, `REDIS_PORT` | `localhost`, `6379` | Redis |
 | `QDRANT_HOST`, `QDRANT_PORT` | `localhost`, `6333` | Qdrant |
 | `OPENSEARCH_HOST`, `OPENSEARCH_PORT`, `OPENSEARCH_USE_HTTPS` | `localhost`, `9200`, `true` | OpenSearch |
-| `OPENSEARCH_DASHBOARDS_URL`, `_HOST`, `_PORT` | `http://localhost:5601` | OpenSearch Dashboards |
+| `OPENSEARCH_DASHBOARDS_URL`, `OPENSEARCH_DASHBOARDS_HOST`, `OPENSEARCH_DASHBOARDS_PORT` | `http://localhost:5601`, `localhost`, `5601` | OpenSearch Dashboards |
 | `SQLSERVER_HOST`, `SQLSERVER_PORT`, `SQLSERVER_USERNAME`, `SQLSERVER_PASSWORD` | `127.0.0.1`, `1433`, `sa`, test password | SQL Server |
 | `MONGODB_DATABASE_NAME` | `integration_tests` | MongoDB database for tests |
 | `RABBITMQ_AMQP_PORT`, `RABBITMQ_MANAGEMENT_PORT`, `RABBITMQ_USERNAME`, `RABBITMQ_PASSWORD`, `RABBITMQ_CONNECTION_STRING` | `5673`, `15672`, `guest`, `guest`, `amqp://guest:guest@localhost:5673/` | RabbitMQ AMQP and management |

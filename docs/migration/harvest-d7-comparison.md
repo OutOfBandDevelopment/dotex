@@ -17,7 +17,7 @@
 
 ## Summary
 
-Compared by file listing and reading the key files against `src`. The covered candidates (markdownplantuml, TotpExample, the Code39, ConsoleEx, XFragment and SMTP parts of HandyClasses) are dropped from this list; only open items remain. Oobtainium is already decided (not migrated; see the plan) and `postsql-playground` is not on this disk, so it was not compared.
+Compared by file listing and reading the key files against `src`. The covered candidates (markdownplantuml, TotpExample, HandyClasses (Code39, ConsoleEx, XFragment, SMTP, and since 2026-11-11 CsvWriter and IniFile)) are dropped from this list; only open items remain. Oobtainium is already decided (not migrated; see the plan) and `postsql-playground` is not on this disk, so it was not compared.
 
 <a id="table-1"></a>**Table 1 — Recommendation per candidate**
 
