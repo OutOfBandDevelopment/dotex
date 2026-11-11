@@ -15,7 +15,7 @@ The meter (a Cyrustek ES51919 chipset) transmits unprompted, so the device only 
 | `De5000Interpreter` / `De5000Reading` | Frame to a readable line plus named values for indicators |
 | `ServiceCollectionExtensions` | `TryAddDe5000()` |
 
-Change tracking for indicators (publish only the values that changed) and the control surface are consumer concerns, not part of this package (control surface waits on owner question Q3).
+Change tracking for indicators (publish only the values that changed) and the control surface are consumer concerns, not part of this package (the control surface comes with the DevTerm merge).
 
 ## Verified
 

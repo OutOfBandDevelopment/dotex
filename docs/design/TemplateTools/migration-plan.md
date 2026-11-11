@@ -1,6 +1,6 @@
 # Fold `Xslt.Cli` into the template engine: plan
 
-Status: confirmed by the owner on 2026-11-05 (OPEN-QUESTIONS Q3, option A). All four steps are done (2026-11-06); the BinaryDataDecoders documentation run was dropped because its report templates were rejected on 2026-11-04 (see below). Spike result: [README](README.md).
+Status: confirmed by the owner on 2026-11-05 (an owner question, option A). All four steps are done (2026-11-06); the BinaryDataDecoders documentation run was dropped because its report templates were rejected on 2026-11-04 (see below). Spike result: [README](README.md).
 
 **Table 1 — Steps**
 

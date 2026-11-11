@@ -18,7 +18,7 @@ The device is `[UsbHid(0x04D8, 0xF848)]`; bytes go through `OoBDev.System.IO.Usb
 | `BusylightSegmenter` / `BusylightMessageDecoder` | One HID read is one report; printable ASCII shown, the rest as dots |
 | `ServiceCollectionExtensions` | `TryAddBusylight()` |
 
-State holding (colour, track, volume set separately and applied together) is a consumer concern; the control surface waits on owner question Q3.
+State holding (colour, track, volume set separately and applied together) is a consumer concern; the control surface comes with the DevTerm merge.
 
 ## Verified
 
