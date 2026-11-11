@@ -17,6 +17,12 @@ public sealed class EventRelayOptions
     public int BatchSize { get; set; } = 500;
 
     /// <summary>
+    /// The pause between passes of the hosted relay when no events are waiting.
+    /// </summary>
+    [Range(typeof(TimeSpan), "00:00:00.010", "01:00:00")]
+    public TimeSpan PollInterval { get; set; } = TimeSpan.FromSeconds(1);
+
+    /// <summary>
     /// Events newer than this are left for the next pass, because an identity position can commit out of order.
     /// </summary>
     public TimeSpan SafetyWindow { get; set; } = TimeSpan.FromSeconds(5);

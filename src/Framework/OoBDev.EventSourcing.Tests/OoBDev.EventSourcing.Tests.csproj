@@ -27,6 +27,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\OoBDev.EventSourcing\OoBDev.EventSourcing.csproj" />
+		<ProjectReference Include="..\OoBDev.EventSourcing.Hosting\OoBDev.EventSourcing.Hosting.csproj" />
 		<ProjectReference Include="..\OoBDev.TestUtilities\OoBDev.TestUtilities.csproj" />
 	</ItemGroup>
 
