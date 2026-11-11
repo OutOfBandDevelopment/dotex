@@ -1,66 +1,20 @@
 # OoBDev.MessageQueueing.Hosting
 
-## MessageReceiverHost
+Hosted service that runs every message receiver provider of the application, so inbound queue handlers start with the host and stop with it.
 
-Hosted service responsible for starting and stopping message receivers based on the configured providers.
+## Use
 
-### Methods
+```csharp
+services.TryAddMessageQueueingHosting();
+```
 
-#### Constructor
+This adds `MessageReceiverHost` as a hosted service. It needs `IMessageReceiverProviderFactory` (registered by `TryAddMessageQueueingServices()` in [OoBDev.MessageQueueing](../OoBDev.MessageQueueing/README.MessageQueueing.md), which also decides per channel which keyed receiver provider runs). Queue adapters such as `OoBDev.Amazon.Sqs` and `OoBDev.Microsoft.Azure.ServiceBus` add their receiver providers.
 
-Initializes a new instance of the class.
+## How it behaves
 
-##### Parameters
+- `StartAsync` asks the factory for all providers and runs each one's `RunAsync` on its own task. It throws `InvalidOperationException` when called twice without a stop in between.
+- When a provider throws, the host logs the error (message at error level, exception at debug level), waits 10 seconds (fixed, there is a TODO in the code to make it configurable) and runs the provider again. When `RunAsync` returns without an exception it is called again straight away, so a provider must run until its token is cancelled.
+- `StopAsync` and `Dispose` cancel the shared token; `StopAsync` also waits for every provider task to finish.
+- Start, stop, restart and failure messages use `[LoggerMessage]` event ids 1 to 11.
 
-- *logger*: The logger.
-- *factory*: The message receiver provider factory.
-
-#### Dispose
-
-Disposes of the resources used by the MessageReceiverHost.
-
-#### Dispose(System.Boolean)
-
-Disposes of the resources used by the MessageReceiverHost.
-
-##### Parameters
-
-- *disposing*
-
-#### StartAsync(System.Threading.CancellationToken)
-
-Starts the message receiver host.
-
-##### Parameters
-
-- *cancellationToken*: The cancellation token.
-
-##### Return value
-
-A task representing the start operation.
-
-#### StopAsync(System.Threading.CancellationToken)
-
-Stops the message receiver host.
-
-##### Parameters
-
-- *cancellationToken*: The cancellation token.
-
-##### Return value
-
-A task representing the stop operation.
-
-## ServiceCollectionExtensions
-
-Provides extension methods for configuring IoC (Inversion of Control) services to support all Message Queueing within this library.
-
-### Methods
-
-#### TryAddMessageQueueingHosting(Microsoft.Extensions.DependencyInjection.IServiceCollection)
-
-Add IOC configurations to support all Message Queueing within this library.
-
-##### Parameters
-
-- *services*
+The host is covered by `MessageReceiverHostTests` in `OoBDev.MessageQueueing.Tests`.
