@@ -100,16 +100,17 @@ public class AzureServiceBusIntegrationTests
 
         var services = new ServiceCollection();
         services.TryAddAzureServiceBusServices();
-        services.TryAddJsonSerializer();
+        services.TrySerializerExtensions(SerializerTypes.Json);
         services.TryAddSingleton<IConfiguration>(config);
-        services.TryAddSingleton<IMessageContextFactory, MessageContextFactory>();
+        services.AddSingleton<ClaimsPrincipal>(new ClaimsPrincipal());
+        services.TryAddMessageQueueingServices();
 
         var provider = services.BuildServiceProvider();
-        var sender = provider.GetRequiredService<IMessageSenderProvider>();
+        var sender = provider.GetRequiredKeyedService<IMessageSenderProvider>(AzureServiceBusGlobals.MessageProviderKey);
         var contextFactory = provider.GetRequiredService<IMessageContextFactory>();
 
         // Act - Send test message
-        var context = contextFactory.Create("TestQueue", typeof(TestMessage).FullName);
+        var context = contextFactory.Create(typeof(AzureServiceBusMessageProvider), typeof(TestMessage), null, Guid.NewGuid().ToString(), Guid.NewGuid().ToString(), config.GetSection("MessageQueuing:TestQueue"), null, 0, null);
         context.Headers["TestHeader"] = "TestValue";
         context.Headers["CustomProperty"] = "CustomValue";
 
@@ -145,16 +146,17 @@ public class AzureServiceBusIntegrationTests
 
         var services = new ServiceCollection();
         services.TryAddAzureServiceBusServices();
-        services.TryAddJsonSerializer();
+        services.TrySerializerExtensions(SerializerTypes.Json);
         services.TryAddSingleton<IConfiguration>(config);
-        services.TryAddSingleton<IMessageContextFactory, MessageContextFactory>();
+        services.AddSingleton<ClaimsPrincipal>(new ClaimsPrincipal());
+        services.TryAddMessageQueueingServices();
 
         var provider = services.BuildServiceProvider();
-        var sender = provider.GetRequiredService<IMessageSenderProvider>();
+        var sender = provider.GetRequiredKeyedService<IMessageSenderProvider>(AzureServiceBusGlobals.MessageProviderKey);
         var contextFactory = provider.GetRequiredService<IMessageContextFactory>();
 
         // Act - Send to topic
-        var context = contextFactory.Create("TestTopic", typeof(TestMessage).FullName);
+        var context = contextFactory.Create(typeof(AzureServiceBusMessageProvider), typeof(TestMessage), null, Guid.NewGuid().ToString(), Guid.NewGuid().ToString(), config.GetSection("MessageQueuing:TestTopic"), null, 0, null);
 
         var testMessage = new TestMessage
         {
@@ -189,7 +191,7 @@ configBuilder.AddInMemoryCollection(new Dictionary<string, string?>
     { "MessageQueuing:SessionQueue:SessionId", "session-123" },
 });
 
-var context = contextFactory.Create("SessionQueue", typeof(Order).FullName);
+var context = contextFactory.Create(typeof(AzureServiceBusMessageProvider), typeof(Order), null, Guid.NewGuid().ToString(), Guid.NewGuid().ToString(), config.GetSection("MessageQueuing:SessionQueue"), null, 0, null);
 var correlationId = await sender.SendAsync(order, context);
 ```
 
@@ -198,7 +200,7 @@ var correlationId = await sender.SendAsync(order, context);
 ## Testing Application Properties
 
 ```csharp
-var context = contextFactory.Create("TestQueue", typeof(Order).FullName);
+var context = contextFactory.Create(typeof(AzureServiceBusMessageProvider), typeof(Order), null, Guid.NewGuid().ToString(), Guid.NewGuid().ToString(), config.GetSection("MessageQueuing:TestQueue"), null, 0, null);
 context.Headers["CustomerId"] = "customer-456";
 context.Headers["OrderType"] = "Premium";
 context.Headers["Priority"] = "High";
