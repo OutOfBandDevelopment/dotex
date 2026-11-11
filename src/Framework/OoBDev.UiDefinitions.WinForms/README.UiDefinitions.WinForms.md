@@ -9,7 +9,7 @@ Controls.Add(new FormView(form) { Dock = DockStyle.Fill });
 
 Editors write through the view model: toggles, choices and buttons run the view model's commands, text and sliders set its properties. Each row follows its view model for value, visibility (`IsVisible`), enabled state and error (an `ErrorProvider`); descriptions are tool tips. `Editors` exposes each editor by control id. Choices are radio buttons, or check boxes for a check list; sliders are track bars scaled by the control's step.
 
-`LiveDisplayView` draws the indicator, bar graph, strip chart and vector displays (`PlotSurface` is the 100 by 100 plot). Not built yet: a colour picker; see the backlog. Example app: `src/Examples/OoBDev.Examples.Controls.WinForms` (`SettingsForm`, `LiveForm`).
+`LiveDisplayView` draws the indicator, bar graph, strip chart and vector displays (`PlotSurface` is the 100 by 100 plot). `WinFormsColorPicker` implements `IColorPicker` with the standard colour dialog (`r,g,b` text, a delegate seam for tests). Example app: `src/Examples/OoBDev.Examples.Controls.WinForms` (`SettingsForm`, `LiveForm`).
 
 ## Verified
 

@@ -38,8 +38,6 @@ Owner: all protocols and features of dev-term must exist here. Done means what d
 - [ ] Example app missing screens ([list](docs/design/example-ui/missing-screens.md)); owner, 2026-11-09, [recommended order](docs/design/example-ui/missing-screens.md#recommended-order) steps 1 to 5 are built (Search, Template management, queue monitor and blob browser, Rights and roles, Server-driven UI; Identity management waits for a Keycloak admin scope); the rest stay unplanned.
   - [ ] Template save waits for OPEN-QUESTIONS Q2; the queue receive monitor shows nothing until a channel has its receiver enabled (all example channels set `DisableReceiver`).
 
-- [ ] **UiDefinitions WinForms follow-ups**: a colour picker for `OoBDev.UiDefinitions.WinForms`; the Wpf renderer has all of these ([readme](src/Framework/OoBDev.UiDefinitions.WinForms/README.UiDefinitions.WinForms.md)).
-
 - [x] **CQRS and event sourcing library** (decided 2026-11-11): built and covered (Abstractions, stores, relay, aggregates, projections, upcasting, snapshots, EF Core packages, CloudEvents mapper, pgmq adapter). Open: the CloudEvents HTTP endpoint, waiting on Q-CQRS-EDGE in OPEN-QUESTIONS.md. Design and coverage: [CqrsEventSourcing](docs/design/CqrsEventSourcing/testing-strategy.md#coverage).
 
 
