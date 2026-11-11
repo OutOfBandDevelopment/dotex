@@ -27,7 +27,6 @@ Owner: all protocols and features of dev-term must exist here. Done means what d
 
 - [ ] Integration coverage gaps: Azure runs on emulators only (Azurite, Service Bus emulator, no Azure licence); Moto is used only for SQS, so S3 tests wait for an S3 adapter.
 - [ ] Integration suite under 5 minutes (4 min 58 s on 2026-11-10; the RabbitMQ timeouts that failed under load are raised; a one-off `Microsoft.Identity.Client` load failure in `OoBDev.Data.Vectors.DB.Tests` passed alone, rerun the full suite to see if it recurs): [suite-timing.md](docs/architecture/testing/integration/suite-timing.md).
-- [ ] `DevLocal` tests kept on purpose: USB HID (hardware), `PathEx`, `MergedXPathNavigator`, `ProjectTools.FixReadmes` (hard-coded `C:\Repos` paths), Markdown `TestMethod1` (writes files).
 - [ ] Add a live-integration doc page per new cloud service (only Groq exists; the live tests passed again on 2026-11-09 with the key in the user environment variable `GROQ_API_KEY`).
 - [ ] Example AppHost live journeys: Keycloak wiring is built but not run live. The OTLP protocol bug is fixed and unit tested (2026-11-05); re-run the host once the stale DCP process holding port 16890 is stopped (needs an owner kill, the tool refused it), then check traces reach the dashboard and run the journeys ([apphost-live-journeys.md](docs/design/example-ui/apphost-live-journeys.md)).
 - Azure Monitor exporter: not built (decided 2026-10-22); OTLP reaches any collector and is verified with the Aspire dashboard.
@@ -35,19 +34,16 @@ Owner: all protocols and features of dev-term must exist here. Done means what d
 ## 4. APIs and documents
 
 
-- [ ] CGI middleware ([design](docs/design/CgiMiddleware/README.md)): first cut built with 23 passing tests; left is run-as-another-user (decided: stays a TODO, deployers use the service account). Shell fixtures run through `scripts/ci/run-linux-tests.ps1`.
 - [ ] AllMiniLmL6V2: `AddValidatedOptions` for the embedding options (blocked by the Abstractions-only adapter rule).
 - [ ] Compare the remaining project `README.{Project}.md` files with their code beyond the identifier check (behaviour review of about 100 readmes; take it project by project with its owning item) (`reconcile-designs-and-code` skill); identifier checks of Common, Framework, Extensions and ExternalServices readmes are done.
 - [ ] GraphQL surface (HotChocolate, on demand), without breaking the custom search syntax; adopt `[OoBDevEnableQuery]` in the example API when it gets an `IQueryable` endpoint. See the [HTTP API](docs/patterns-discovery/03-practices-and-conventions/10-http-api-practices.md) and [authorization](docs/patterns-discovery/03-practices-and-conventions/11-authorization-practices.md) practices.
 - [ ] Example app missing screens ([list](docs/design/example-ui/missing-screens.md)); owner, 2026-11-09, [recommended order](docs/design/example-ui/missing-screens.md#recommended-order) steps 1 to 5 are built (Search, Template management, queue monitor and blob browser, Rights and roles, Server-driven UI; Identity management waits for a Keycloak admin scope); the rest stay unplanned.
   - [ ] Template save waits for OPEN-QUESTIONS Q2; the queue receive monitor shows nothing until a channel has its receiver enabled (all example channels set `DisableReceiver`).
-- [ ] Performance gate for database-backed (non-vector) endpoints: no such endpoint exists yet, so add the gate with the first one.
 
 ## 5. Code quality backlog
 
 A clean rebuild after the 2026-11-06 pass reports no analyzer warnings (218 before). Analyzers are wired from `src/Directory.Build.props` (`OoBDev.Analyzers` OOB0001 to OOB0003, NetAnalyzers Recommended, Meziantou); `Tools`, `Examples` and `Applications` are exempt from MA0004, and `Tools` and `Examples` from MA0048, in `src/.editorconfig`.
 
-- [ ] Rules kept at `suggestion` on purpose in `src/.editorconfig` (nothing to flip unless the owner decides otherwise):: MA0026 (about 50 TODO comments), MA0046 (3, `EventHandler<TMessage>` on the device interfaces), MA0061 (3, DEBUG-only required parameters), CA1710, CA1720, CA1708 (domain names).
 - [ ] Bug-review the migrated projects that the source review never covered (rest of device IO: `BridgeWorker`, `SerialDeviceAdapter`, Bluetooth, Mqtt, Brokers; then toolkit and text, code analysis and archives, apps and tooling); first pass and open findings in [the issue](docs/issues/device-io-review-findings.md)
 - [ ] ExpressionCalculator optional reductions, never built (the source only listed them as a "bonus round"): `B^-1` to `1/B`, `B/N` to `B*(1/N)`, `B*B*...` to `B^T`, `B+B+...` to `B*T`; add them to `IdentityExpressionOptimizer` or a new optimizer with tests, or decline
 - [ ] `OoBDev.System.Text.Markdown` PlantUML renderer: add `PlantUmlRendererOptions.RemoteUrl`, default to the local `plantuml` container and fail with a clear message when no URL is set, so nothing leaves the machine unless opted in (owner, 2026-11-10); update the readme and tests.
@@ -75,7 +71,6 @@ Scope rule: every BinaryDataDecoders feature is migrated; phases are priority or
 ## 7. Documentation review (owner, 2026-10-28)
 
 
-- [ ] Lower priority, after the migrations: review every project `.md` file for out-of-date and redundant documents (owner, 2026-10-30).
 - [ ] **Review and clean up all documents**: content and coverage review against the rules `docs-and-diagrams` and `work-tracking` and `docs/patterns-discovery/06-design-document-standard.md`; the DevTerm docs come with the parity work. Numbering, validator problems and stale generated docs are done (2026-10-29); use the `write-docs` skill and `scripts/docs` validators.
 
 ## 8. Future ideas (not tied to DevTerm, nothing required now)
@@ -92,5 +87,4 @@ Scope rule: every BinaryDataDecoders feature is migrated; phases are priority or
   - Network device discovery: the Detect button and one row per device with badges are built; the EByte and USR UDP probes need a fresh capture. In-app config editors for network bridges ([proposal](docs/design/NetworkDevices/network-device-config-editors.md)).
 - [ ] DevTerm leftovers beyond the list above:
   - Stream Monitor in-window preview of HP-GL, PostScript and PCL in the Tui monitor (a terminal cannot show a picture; decide whether to open the converted file externally) (the WPF and Web monitors draw HP-GL themselves and PostScript/PCL through an installed Ghostscript/GhostPCL since 2026-11-09).
-  - A DevTerm rule in `OoBDev.Analyzers` only when one is needed (decided 2026-11-09: the checkable DevTerm constraints are legitimate in most uses or need data flow the analyzer cannot see, so a rule now would be noise; add OOB0004 when a repeatable mistake appears).
   - Read-write control channel and out-of-process plugins over a named pipe and a localhost web service (with the plugin sandbox item); research notes such as the BYTECC BT-UP01 bridge.

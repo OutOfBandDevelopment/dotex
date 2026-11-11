@@ -28,4 +28,6 @@ An opt-in ASP.NET Core middleware that runs CGI/1.1 ([RFC 3875](https://www.rfc-
 
 One middleware (`CgiMiddleware`), one options class (`CgiOptions`), and registration through `ServiceCollectionExtensions` plus `UseCgi`. A URL prefix (default `/cgi-bin`) maps to a single script root. Safety is the default: an extension allowlist, no shell, request data only in the environment and stdin, and bounded time, concurrency, body and output.
 
+Decided: running a script as another user is not built; deployers use the service account of the host.
+
 [Requirements →](requirements.md)
