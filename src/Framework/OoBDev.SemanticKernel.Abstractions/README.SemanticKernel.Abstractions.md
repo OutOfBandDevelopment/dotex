@@ -41,7 +41,3 @@ public class MyChatProvider : IChatProvider
 ## License
 
 See repository license file for details.
-
-## Repository
-
-[OoBDev Repository](https://github.com/yourusername/oobdev)

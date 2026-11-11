@@ -39,7 +39,3 @@ var port = xpath.SelectSingleNode("//server/port")?.Value;
 ## License
 
 See repository license file for details.
-
-## Repository
-
-[OoBDev Repository](https://github.com/yourusername/oobdev)

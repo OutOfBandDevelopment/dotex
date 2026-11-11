@@ -46,7 +46,3 @@ var results = await databaseQuery.ExecuteAsync(new GetUsersQuery { UserId = 123 
 ## License
 
 See repository license file for details.
-
-## Repository
-
-[OoBDev Repository](https://github.com/yourusername/oobdev)

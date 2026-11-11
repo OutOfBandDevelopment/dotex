@@ -41,10 +41,6 @@ var portNames = factory.GetDeviceNames();
 
 See repository license file for details.
 
-## Repository
-
-[OoBDev Repository](https://github.com/yourusername/oobdev)
-
 ## Options-driven serial adapter
 
 `SerialDeviceAdapter` (an `IDeviceAdapter`) over a COM port, including `IComPortControl` (baud, parity, stop bits, DTR/RTS) and per-platform port descriptions (Windows registry, Linux sysfs, macOS).

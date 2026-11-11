@@ -51,7 +51,3 @@ services.Configure<UsbHidEndpointOptions>(o => { o.VendorId = 0x1915; o.ProductI
 ## License
 
 See repository license file for details.
-
-## Repository
-
-[OoBDev Repository](https://github.com/yourusername/oobdev)
