@@ -59,6 +59,6 @@ These have no row in [the plan](plan.md) or `screens.md`; whether each deserves 
 1. ~~Search~~ (built 2026-11-09 as `/ai/search`).
 2. ~~Template management~~ (list, open and preview built 2026-11-09; save waits for Q2).
 3. ~~Queue adapters and blob browser~~ (channel list and received monitor on the Queues screen, stored-documents list on the Documents screen, built 2026-11-09).
-4. ~~Rights and roles~~ (built 2026-11-10 as `/identity/rights`), then Identity management, because they show the authorization model that every other API surface relies on.
+4. ~~Rights and roles~~ (built 2026-11-10 as `/identity/rights`), then Identity management (built 2026-11-11 as `/identity/directory`, read-only), because they show the authorization model that every other API surface relies on.
 5. ~~Server-driven UI~~ (built 2026-11-10 as `/utilities/server-ui`: bench-supply hand-built definition and a generated shipping form served by `/api/UiDefinitions`).
 6. The rest as the owner prioritizes; instrument protocols stay deferred.
