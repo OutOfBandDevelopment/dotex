@@ -99,3 +99,13 @@ Single-byte `Encoding` for Apple ][ text. Bytes with bit 7 set (normal text) dec
 ### HybridLogicalClock and HybridLogicalClockGenerator
 
 Orders events across sites whose clocks are skewed. `HybridLogicalClock` is wall-clock ticks plus a logical counter, compared physical first. `HybridLogicalClockGenerator` (register as a singleton, thread safe, takes a `TimeProvider`) offers `Next()` for local events and `Merge(received)` for events received from another site; both return values strictly greater than anything seen before. An optional `maxDrift` rejects a received clock too far ahead of local time, and counter exhaustion throws `OverflowException` instead of wrapping. Pattern from the sync-mesh reference (hybrid logical clock paper); see [CQRS and event sourcing](../../../docs/design/CqrsEventSourcing/README.md).
+
+## IO
+
+### CsvWriter
+
+- **WriteAsCsvTo(source, stream, includeHeader)** and **WriteAsCsvToAsync(...)**: write a sequence of objects as CSV, one column per readable public property. Every field is quoted, embedded quotes are doubled, underscores in header names become spaces, values use the invariant culture, null items are skipped, and the stream stays open.
+
+### IniFile
+
+- **Read(section, key, default)**, **Write(section, key, value)** and indexers: a managed INI reader and writer with no Win32 dependency. Names are case-insensitive, comments (`;` or `#`) and unrelated lines survive a write, and a missing file, section or key reads as the default.

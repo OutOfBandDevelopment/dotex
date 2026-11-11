@@ -23,14 +23,13 @@ Compared by file listing and reading the key files against `src`. The covered ca
 
 | Candidate | Already in dotex | Recommendation |
 |-----------|------------------|----------------|
-| HandyClasses | Code39, ConsoleEx, XFragment and the SMTP service are already in the framework | **Open:** `CsvWriter` and `IniFile` have no equivalent; migrate them as small `OoBDev.System` features if wanted |
 | BuildFirstOnce | Not used | **Open:** the `Directory.Build.targets` tasks `DeepClean` and `CleanPaths` (`dotnet clean /T:DeepClean`) would help the 112-project solution. The "build a tool first, once" trick has no current use; record it as a technique only |
 | hybridsearch | `OoBDev.Search`, `Qdrant`, `OpenSearch`, `Ollama`, `SBert`, `Documents` via Tika, `Markdig`, `WkHtmlToPdf` | Mostly covered (see [HybridSearch docs](../design/HybridSearch/README.md)). **Open:** the Azure, Neo4j and Go variants have no equivalent; the lexical-plus-vector merge is already tracked in `BACKLOG.md` |
 | postsql-playground | Not on this disk | Keep as a design input for the PostgreSQL support feature request; compare when the repository is available |
 
 ## Findings
 
-- **Small features to decide (3):** `CsvWriter`, `IniFile`, and the `DeepClean` build targets. Each would be a feature request with tests (Framework layer, 80%).
+- **Small feature to decide (1):** the `DeepClean` build targets. `CsvWriter` and `IniFile` were built in `OoBDev.System.IO` on 2026-11-11.
 - **Large and already tracked (1):** the hybrid merge, with the Azure and Neo4j providers as optional later adapters.
 - Hybridsearch's Go version is a language port of the same design; no action, except to keep it as a read-only reference.
 

@@ -14,7 +14,6 @@ All under `C:\repo\mine\proving-grounds` (origin https://github.com/mwwhited/pro
 
 | Folder | What it does | Worth taking |
 |---|---|---|
-| `examples/HandyClasses`, `examples/OobDev.Tools` | `CsvWriter` (with tests) and `IniFile` | Both as small `OoBDev.System` features; no equivalent exists |
 | `examples/BuildFirstOnce` | `Directory.Build.targets` tasks `DeepClean` and `CleanPaths` | The deep-clean targets for the 112-project solution; the "build a tool first" trick only as a documented technique |
 | `examples/hybridsearch` | Hybrid search spike | The Azure and Neo4j variants as optional later adapters; the rest is covered by `OoBDev.Search` |
 | `examples/OsciRenderClient` | Client for osci-render (TCP port 51622): frame, object and stroke model, plus fractal and curve generators | A small device-client library with a simulator, if an osci-render device is wanted; no equivalent exists |
