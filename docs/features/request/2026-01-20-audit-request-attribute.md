@@ -1,6 +1,6 @@
 # Feature request: audit tags on classes and methods
 
-- **Status:** new
+- **Status:** triaged
 - **Requested by:** owner
 - **Date:** 2026-01-20
 - **Area:** logging middleware, `OoBDev.Extensions`
@@ -244,3 +244,4 @@ public static class HttpContextExtensions
         return default;
     }
 }
+2026-11-11: triaged. Auditing of request and response payloads belongs with the telemetry and rights middleware work; no code today. Kept as a backlog item under HTTP and authorization. Design: [ApplicationRights](../../design/ApplicationRights/README.md). Backlog: BACKLOG.md, Framework wish list.

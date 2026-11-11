@@ -1,6 +1,6 @@
 # Feature request: stored-procedure query framework (audit log example)
 
-- **Status:** new
+- **Status:** triaged
 - **Requested by:** owner
 - **Date:** 2026-01-20
 - **Area:** `OoBDev.Data.Common`
@@ -80,3 +80,5 @@ public record AuditLogEntry
 }
 
 ```
+
+2026-11-11: triaged. Kept as an example item: a typed record mapped to a stored procedure; schedule with the example application work. Backlog: BACKLOG.md, Framework wish list.
