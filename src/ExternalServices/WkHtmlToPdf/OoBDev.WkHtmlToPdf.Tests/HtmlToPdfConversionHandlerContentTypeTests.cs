@@ -105,6 +105,7 @@ public class HtmlToPdfConversionHandlerContentTypeTests
         var action = () => handler.ConvertAsync(source, "text/html", destination, "text/html");
 
         // Assert
-        await Assert.ThrowsExactlyAsync<NotSupportedException>(action);
+        var ex = await Assert.ThrowsExactlyAsync<NotSupportedException>(action);
+        StringAssert.Contains(ex.Message, "Destination Content Type");
     }
 }

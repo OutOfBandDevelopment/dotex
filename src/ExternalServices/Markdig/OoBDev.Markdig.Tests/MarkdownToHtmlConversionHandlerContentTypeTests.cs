@@ -110,6 +110,7 @@ public class MarkdownToHtmlConversionHandlerContentTypeTests
         var action = () => handler.ConvertAsync(source, "text/markdown", destination, "application/pdf");
 
         // Assert
-        await Assert.ThrowsExactlyAsync<NotSupportedException>(action);
+        var ex = await Assert.ThrowsExactlyAsync<NotSupportedException>(action);
+        StringAssert.Contains(ex.Message, "Destination Content Type");
     }
 }
