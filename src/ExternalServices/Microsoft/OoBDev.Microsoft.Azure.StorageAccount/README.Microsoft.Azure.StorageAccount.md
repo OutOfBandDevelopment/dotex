@@ -1,105 +1,41 @@
-# OoBDev.Azure.StorageAccount
+# OoBDev.Microsoft.Azure.StorageAccount
 
-## Summary
+Azure Storage adapters: a blob container provider (`IBlobContainerProvider`) and a storage queue message provider (`IMessageSenderProvider` and `IMessageReceiverProvider`).
 
-The OoBDev.Azure.StorageAccount library provides classes and methods for interacting with 
-Azure Storage services, including Blob storage and message queueing. It offers functionalities 
-such as storing and retrieving content in Blob storage, sending and receiving messages using 
-Azure Storage Queues, and configuring Azure Storage services in .NET applications.
+## Contents
 
-## Classes and Methods
+- [Registration](#registration)
+- [Blob storage](#blob-storage)
+- [Storage queues](#storage-queues)
+- [Verification](#verification)
 
-### Azure.StorageAccount.AzureStorageGlobals
+## Registration
 
-Contains global constants related to Azure Storage.
+```csharp
+services.TryAddAzureStorageServices(configuration);          // blobs and queues
+services.TryAddAzureStorageBlobServices(configuration);      // blobs only
+services.TryAddAzureStorageQueueServices();                  // queues only
+```
 
-- **MessageProviderKey**: The key associated with the Azure Storage message provider.
+The registration class is `OoBDev.Microsoft.Azure.StorageAccount.ServiceCollectionExtensions`. The blob options bind to the `AzureBlobProviderOptions` section unless another name is passed (it is a required argument in DEBUG builds).
 
-### Azure.StorageAccount.BlobStorage.AzureBlobContainerProvider
+## Blob storage
 
-Represents a provider for storing and searching content in Azure Blob storage.
+**Table 1 — Blob types**
 
-- **Properties**:
-  - **ContainerName**: Container name for this instance
+| Type | Role |
+|------|------|
+| `AzureBlobProviderOptions` | `ConnectionString` (required) and `EnsureContainerExists` (create the container on first use when true). |
+| `IBlobServiceClientFactory`, `AzureBlobServiceClientFactory` | Create the `BlobServiceClient`; the `BlobServiceClient` is also registered as a transient service. |
+| `AzureBlobContainerProviderFactory` | `IBlobContainerProviderFactory.Create(containerName)`; returns `null` when no connection string is set. |
+| `AzureBlobContainerProvider` | `IBlobContainerProvider` over one container (the name is lower-cased): `GetContentAsync`, `GetContentMetaDataAsync`, `StoreContentAsync`, `StoreContentMetaDataAsync`, `QueryContent`, `DeleteContentAsync`. |
 
-- **Methods**:
-  - **Constructor**: Initializes a new instance of the `AzureBlobContainerProvider` class with 
-    the specified client, collectionName, and loggerFactory.
-  - **GetContentAsync**: Retrieves the content of the specified file from Azure Blob storage.
-  - **TryStoreAsync**: Stores the specified content in Azure Blob storage.
-  - **GetContentMetaDataAsync**: Retrieves content metadata asynchronously.
-  - **StoreContentAsync**: Stores content asynchronously.
-  - **StoreContentMetaDataAsync**: Stores content metadata asynchronously.
-  - **QueryContent**: Queries content metadata.
-  - **DeleteContentAsync**: Deletes content asynchronously.
+## Storage queues
 
-### Azure.StorageAccount.BlobStorage.AzureBlobContainerProviderFactory
+`AzureStorageQueueMessageProvider` sends and receives messages. It is registered under the key `azure-storage-queue` (`AzureStorageGlobals.MessageProviderKey`) and as the default sender and receiver. The queue section holds `ConnectionString` and `QueueName`; a missing value throws `ConfigurationMissingException` naming the key. Messages are Base64 encoded. `IQueueClientFactory` creates the `QueueClient`, and `IAzureStorageQueueMapper` wraps a message and its context for the queue and reads the `EnsureQueueExists` and wait-delay settings.
 
-Represents a factory for creating instances of `AzureBlobContainerProvider`.
+`AzureStorageQueueAsyncApiContributor` describes the queue in the AsyncAPI document from the endpoint host in the connection string; keys are never read.
 
-- **Methods**:
-  - **Constructor**: Initializes a new instance of the `AzureBlobContainerProviderFactory` class 
-    with the specified dependencies.
-  - **Create**: Creates a new instance of `AzureBlobContainerProvider` based on the specified collection name.
+## Verification
 
-### Azure.StorageAccount.BlobStorage.AzureBlobProviderOptions
-
-Options for configuring Azure Blob storage provider.
-
-- **Properties**:
-  - **ConnectionString**: Gets or sets the connection string for Azure Blob storage.
-  - **DocumentCollectionName**: Gets or sets the name of the collection for storing documents 
-    in Azure Blob storage.
-  - **SummaryCollectionName**: Gets or sets the name of the collection for storing document 
-    summaries in Azure Blob storage.
-
-### Azure.StorageAccount.BlobStorage.BlobServiceClientFactory
-
-Represents a factory for creating instances of `BlobServiceClient`.
-
-- **Methods**:
-  - **Constructor**: Initializes a new instance of the `BlobServiceClientFactory` class with
-    the specified configuration.
-  - **Create**: Creates a new instance of `BlobServiceClient`.
-
-### Azure.StorageAccount.BlobStorage.IBlobServiceClientFactory
-
-Interface for a factory that creates instances of `BlobServiceClient`.
-
-- **Methods**:
-  - **Create**: Creates a new instance of `BlobServiceClient`.
-
-### Azure.StorageAccount.MessageQueueing.AzureStorageQueueMessageProvider
-
-Provides functionality for sending and receiving messages using Azure Storage Queues.
-
-- **Methods**:
-  - **Constructor**: Initializes a new instance of the `AzureStorageQueueMessageProvider` class.
-  - **SendAsync**: Sends a message asynchronously to an Azure Storage Queue.
-  - **SetHandlerProvider**: Sets the message handler provider for processing received messages.
-  - **RunAsync**: Runs the message receiver asynchronously, continuously listening for incoming messages.
-
-### Azure.StorageAccount.MessageQueueing.IQueueClientFactory
-
-Factory for creating instances of `QueueClient` for Azure Storage Queues.
-
-- **Methods**:
-  - **Create**: Creates a new instance of `QueueClient` based on the provided configuration section.
-
-### Azure.StorageAccount.MessageQueueing.QueueClientFactory
-
-Factory for creating instances of `QueueClient` for Azure Storage Queues.
-
-- **Methods**:
-  - **Create**: Creates a new instance of `QueueClient` based on the provided configuration section.
-
-### Azure.StorageAccount.ServiceCollectionExtensions
-
-Provides extension methods for configuring Azure Storage services in the `IServiceCollection`.
-
-- **Methods**:
-  - **TryAddAzureStorageServices**: Tries to add Azure Storage services including blob and queue 
-    services to the specified `IServiceCollection`.
-  - **TryAddAzureStorageBlobServices**: Configures services for Azure Storage Blob.
-  - **TryAddAzureStorageQueueServices**: Tries to add Azure Storage queue services to the specified `IServiceCollection`.
-
+Queue tests (`OoBDev.Microsoft.Azure.StorageAccount.Tests`): Unit for the mapper and the AsyncAPI contributor, Integration against Azurite in the integration stack (see `docs/architecture/testing/integration/`). The blob provider has no tests yet.
