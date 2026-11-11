@@ -251,6 +251,8 @@
     <Project Path="Framework/OoBDev.Documents.Tests/OoBDev.Documents.Tests.csproj" />
     <Project Path="Framework/OoBDev.Documents/OoBDev.Documents.csproj" />
     <Project Path="Framework/OoBDev.EventSourcing.Abstractions/OoBDev.EventSourcing.Abstractions.csproj" />
+    <Project Path="Framework/OoBDev.EventSourcing.EntityFrameworkCore.Tests/OoBDev.EventSourcing.EntityFrameworkCore.Tests.csproj" />
+    <Project Path="Framework/OoBDev.EventSourcing.EntityFrameworkCore/OoBDev.EventSourcing.EntityFrameworkCore.csproj" />
     <Project Path="Framework/OoBDev.EventSourcing.Tests/OoBDev.EventSourcing.Tests.csproj" />
     <Project Path="Framework/OoBDev.EventSourcing/OoBDev.EventSourcing.csproj" />
     <Project Path="Framework/OoBDev.Extensions.Tests/OoBDev.Extensions.Tests.csproj" />
