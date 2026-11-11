@@ -26,13 +26,13 @@ This package provides high-performance SQL CLR user-defined types (UDT) and aggr
 
 ```sql
 -- Create vector from JSON array
-DECLARE @v1 embedding.Vector = '[1.0, 2.0, 3.0]'
+DECLARE @v1 embedding.Vector = '[1.0, 2.0, 3.0]'   -- a JSON-style array or plain 1,2,3
 DECLARE @v2 embedding.Vector = '[4.0, 5.0, 6.0]'
 
 -- Calculate cosine similarity
 SELECT @v1.Similarity(@v2)
 
--- Calculate distance
+-- Calculate distance; metrics: cosine, similarity, euclidean, dot, manhattan (anything else returns NULL)
 SELECT @v1.Distance(@v2, 'cosine')
 
 -- Find nearest neighbors

@@ -1,31 +1,14 @@
 # OoBDev.DacPacCompiler.Cli
 
-Command-line tool for working with SQL Server DacPac files.
+Command-line tool that builds a SQL Server DacPac from a SQL CLR assembly (the .NET Framework 4.8 build of a project such as `OoBDev.Data.Vectors`). The tool command is `dacpactools` when installed as a dotnet tool.
 
-## Description
+## Contents
 
-This CLI tool provides two primary capabilities:
-1. Compiling .NET Framework 4.8 assemblies containing SQL CLR types into SQL Server DacPac files
-2. Merging multiple DacPac files into a single package
-
-## Key Features
-
-- .NET assembly to DacPac compilation
-- SQL CLR metadata extraction
-- DacPac merging and composition
-- PDB symbol file inclusion
-- Project version and naming support
-- Template-based configuration
-- Hosted service architecture
-- DacPac validation
+- [Installation](#installation)
+- [Usage](#usage)
+- [Not wired yet: merging DacPacs](#not-wired-yet-merging-dacpacs)
 
 ## Installation
-
-```xml
-<PackageReference Include="OoBDev.DacPacCompiler.Cli" Version="*" />
-```
-
-Or install as a global tool:
 
 ```bash
 dotnet tool install -g OoBDev.DacPacCompiler.Cli
@@ -33,59 +16,23 @@ dotnet tool install -g OoBDev.DacPacCompiler.Cli
 
 ## Usage
 
-### Compiling .NET Assembly to DacPac
-
 ```bash
-dacpactools --sqlclr "assembly.dll" --dotnet "assembly.dll" --output "output.dacpac" --name "MyProject" --version "1.0.0"
+dacpactools --sqlclr "OoBDev.Data.Vectors.dll" --pdb "OoBDev.Data.Vectors.pdb" --dacpac "OoBDev.Data.Vectors.dacpac" --project "OoBDev.Data.Vectors" --version "1.0.0"
 ```
 
-Command-line arguments:
-- `--sqlclr` - Path to .NET Framework 4.8 assembly
-- `--dotnet` - Path to .NET assembly (for reference)
-- `--output` - Output DacPac file path
-- `--name` - Project name
-- `--version` - Project version
+**Table 1 — Options** (`--help` prints them; pass each as `--name value`)
 
-### Merging Multiple DacPac Files
+| Option | Required | Use |
+|--------|----------|-----|
+| `--sqlclr` | yes | Path of the .NET Framework SQL CLR assembly to read (its metadata is inspected, it is not executed). |
+| `--pdb` | no | Symbol file to include; defaults to the assembly path with `.pdb`. |
+| `--dacpac` | no | Output file; defaults to the assembly path with `.dacpac`. |
+| `--project` | no | Project name for the package metadata; defaults to the assembly file name. |
+| `--version` | no | Project version for the package metadata; defaults to `0.0.0.1`. |
+| `--tool` | no | `SqlClr` (default), `Merge` or `Unknown`; see below. |
 
-```bash
-dacpactools -s "." -p "*.dacpac" -r "merged.dacpac" -d "Merged package" -n "MyDatabase" -v "1.2.3"
-```
+The host binds the options from the command line, logs them and calls `IDacPacBuilder.BuildDacPac` (`OoBDev.DacFx`), then exits. The generated reference page is [oobdev-dacpac](../../../docs/applications/tools/oobdev-dacpac.md).
 
-Command-line parameters:
-- `-t | --template` - Path to a configuration template YAML file
-- `-s | --source-path` - Base directory to be used with source patterns
-- `-p | --source-patterns` - File globbing pattern to select DacPacs to be merged
-- `-r | --target-path` - Full output path for merged DacPac results
-- `-d | --description` - Description to be added to the DacPac metadata
-- `-n | --name` - Name to be added to the DacPac metadata (defaults to output filename)
-- `-v | --version` - Version number to apply to DacPac metadata
-- `-b | --build-version` - Extended version number for build (defaults to version if not provided)
+## Not wired yet: merging DacPacs
 
-## Template File Example
-
-```yml
-SourcePath: "."
-SourcePatterns:
-- "*.dacpac"
-
-TargetPath: composed_XXXXXXXXXX.dacpac
-ServerVersion: SqlAzure
-
-ModelOptionSource: Custom
-ModelOptions: # Based on Microsoft.SqlServer.Dac.Model.TSqlModelOptions
-- Property: Value
-
-Name: test name
-Description: test desc
-Version: 1.2.3
-BuildVersion: 20200527-1.2.3-XYZ.4
-```
-
-## License
-
-See repository license file for details.
-
-## Repository
-
-[OoBDev Repository](https://github.com/mwwhited/dotex)
+`DacPacMergeTemplate.yml` and the `Merge` value of `--tool` come from an earlier version that also merged several DacPacs into one. Today the host registers only `TryAddDacPacServices()` and the builder service, so `--tool Merge` does nothing. The merge itself exists as `IDacpacMergeCompiler` in `OoBDev.Microsoft.SqlServer.DacFx` (`AddDacPacCompilerServices()`); wiring it into this tool is tracked in `BACKLOG.md`.

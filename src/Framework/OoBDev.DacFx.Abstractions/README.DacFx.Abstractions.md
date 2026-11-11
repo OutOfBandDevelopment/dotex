@@ -20,4 +20,4 @@ Contracts for building a SQL Server DacPac from a SQLCLR assembly, validating on
 
 ## Implementations
 
-The builder and validator are in [OoBDev.DacFx](../OoBDev.DacFx/README.DacFx.md) (`services.TryAddDacPacServices()`). The merge compiler and the template and definition factories are in `OoBDev.Microsoft.SqlServer.DacFx` (`services.AddDacPacCompilerServices()`), and the `dacpactools` dotnet tool (`OoBDev.DacPacCompiler.Cli`) runs the merge from the command line.
+The builder and validator are in [OoBDev.DacFx](../OoBDev.DacFx/README.DacFx.md) (`services.TryAddDacPacServices()`). The merge compiler and the template and definition factories are in `OoBDev.Microsoft.SqlServer.DacFx` (`services.AddDacPacCompilerServices()`). The `dacpactools` dotnet tool (`OoBDev.DacPacCompiler.Cli`) builds a DacPac only; the merge is not wired into it yet.
