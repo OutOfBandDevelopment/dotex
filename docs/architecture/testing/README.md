@@ -152,3 +152,6 @@ When working with tests, follow these protocols:
 | Adding new test parameters | [add-integration-service skill](../../../.claude/skills/add-integration-service/SKILL.md) |
 | Writing new integration tests | [testing-guidelines.md](./testing-guidelines.md) |
 
+## DevLocal tests kept on purpose
+
+These stay `DevLocal` (manual only): USB HID (hardware), `PathEx`, `MergedXPathNavigator`, `ProjectTools.FixReadmes` (hard-coded `C:Repos` paths) and the Markdown `TestMethod1` (writes files). Do not move them to a tier that runs by default (owner decision).

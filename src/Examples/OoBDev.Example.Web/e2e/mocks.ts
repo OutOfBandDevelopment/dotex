@@ -26,6 +26,32 @@ export async function mockApi(page: Page): Promise<void> {
     }
     if (path === '/api/Operations/info') return json(route, { environment: 'Development', application: 'OoBDev.Example.WebApi', runtime: '.NET 10.0.0', machine: 'example-api', started: '2026-10-19T08:00:00+00:00', configuration: [{ key: 'AllowedHosts', value: '*' }, { key: 'FileTemplatingOptions:TemplatePath', value: 'Templates' }, { key: 'Identity:Keycloak:ClientSecret', value: '***' }, { key: 'Logging:LogLevel:Default', value: 'Information' }] });
     if (path === '/api/CgiPrograms') return json(route, [{ name: 'greet.exe', path: '/cgi-bin/greet.exe' }]);
+    if (path === '/api/UiDefinitions') return json(route, [{ key: 'bench-supply', name: 'Bench power supply', description: 'Written by hand.', source: 'hand-built' }]);
+    if (path === '/api/UiDefinitions/bench-supply' && method === 'GET') return json(route, { name: 'Bench power supply', sections: [
+      { label: 'Output', controls: [
+        { kind: 'toggle', id: 'output', label: 'Output enabled' },
+        { kind: 'numeric', id: 'voltage', label: 'Voltage', unit: 'V', minimum: 0, maximum: 30 },
+        { kind: 'choice', id: 'mode', label: 'Mode', style: 'radioGroup', options: ['Constant voltage', 'Constant current'] },
+      ] },
+      { label: 'Current limit', controls: [
+        { kind: 'slider', id: 'current', label: 'Current', unit: 'A', minimum: 0, maximum: 5, step: 0.1 },
+        { kind: 'button', id: 'reset', label: 'Reset limit', commandId: 'reset-limit' },
+      ] },
+    ] });
+    if (path === '/api/UiDefinitions/bench-supply/evaluate' && method === 'POST') {
+      const v = JSON.parse(route.request().postData() ?? '{}').values ?? {};
+      const on = v.output === 'true';
+      const cc = v.mode === 'Constant current';
+      const volts = v.voltage ?? '5';
+      const bad = Number(volts) > 30 || Number.isNaN(Number(volts));
+      return json(route, [
+        { id: 'output', visible: true, enabled: true, valid: true, value: v.output ?? 'false' },
+        { id: 'voltage', visible: true, enabled: on, disabledReason: on ? null : 'Switch the output on first.', valid: !bad, value: volts, error: bad ? 'Enter a number from 0 to 30.' : null },
+        { id: 'mode', visible: true, enabled: true, valid: true, value: v.mode ?? 'Constant voltage' },
+        { id: 'current', visible: cc, enabled: true, valid: true, value: v.current ?? '1' },
+        { id: 'reset', visible: cc, enabled: true, valid: true, value: '' },
+      ]);
+    }
     if (path === '/api/Rights/endpoints') return json(route, [{ method: 'GET', route: '/api/Cache', access: 'anonymous', rights: [] }, { method: 'GET', route: '/api/Rights/protected', access: 'rights', rights: ['rights.demo'] }, { method: 'GET', route: '/api/User/claims', access: 'authenticated', rights: [] }]);
     if (path === '/api/Rights/check') return json(route, { required: ['rights.demo'], held: [], result: 'Unauthenticated' });
     if (path === '/cgi-bin/greet.exe') return route.fulfill({ status: 200, contentType: 'text/html', body: '<h1>Hello, Ada!</h1>' });

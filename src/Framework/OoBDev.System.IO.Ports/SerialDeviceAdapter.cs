@@ -62,11 +62,17 @@ public sealed class SerialDeviceAdapter : IDeviceAdapter, IComPortControl
     /// <inheritdoc />
     public PipeWriter Output => _output ??= DeviceAdapterOutput.Create((data, ct) => WriteAsync(data, ct));
 
-    public Task OpenAsync(CancellationToken cancellationToken = default)
+    public async Task OpenAsync(CancellationToken cancellationToken = default)
     {
         if (State is ConnectionState.Open or ConnectionState.Opening)
         {
-            return Task.CompletedTask;
+            return;
+        }
+
+        // A device-side close or unplug moves the state to Closed but leaves the port and pump behind; release them before opening again.
+        if (_port is not null)
+        {
+            await CloseAsync(cancellationToken).ConfigureAwait(false);
         }
 
         State = ConnectionState.Opening;
@@ -108,7 +114,6 @@ public sealed class SerialDeviceAdapter : IDeviceAdapter, IComPortControl
             TaskScheduler.Default);
 
         State = ConnectionState.Open;
-        return Task.CompletedTask;
     }
 
     public async Task CloseAsync(CancellationToken cancellationToken = default)

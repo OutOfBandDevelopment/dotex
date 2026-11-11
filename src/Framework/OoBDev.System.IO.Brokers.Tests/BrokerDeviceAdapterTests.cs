@@ -42,9 +42,35 @@ public sealed class BrokerDeviceAdapterTests
         await Assert.ThrowsExactlyAsync<InvalidOperationException>(() => transport.WriteAsync("x\n"u8.ToArray(), TestContext.CancellationToken));
     }
 
-    private sealed class FakeFactory(FakeConnection connection) : IBrokerConnectionFactory
+    [TestMethod]
+    public async Task Open_AfterABrokerSideDisconnect_DisposesTheOldConnectionAndIgnoresItsLateEvents()
     {
-        public IBrokerConnection Create() => connection;
+        // Stage
+        var first = new FakeConnection();
+        var second = new FakeConnection();
+        await using var transport = new BrokerDeviceAdapter(new FakeFactory(first, second), Options.Create(new BrokerDeviceAdapterOptions { Host = "b" }));
+        await transport.OpenAsync(TestContext.CancellationToken);
+        first.Drop(new global::System.IO.IOException("gone"));
+        Assert.AreEqual(ConnectionState.Faulted, transport.State);
+
+        // Test
+        await transport.OpenAsync(TestContext.CancellationToken);
+        first.Receive("late", "x"u8.ToArray());
+        first.Drop(new global::System.IO.IOException("late"));
+
+        // Assert
+        Assert.IsTrue(first.Disposed);
+        Assert.AreEqual(ConnectionState.Open, transport.State);
+        second.Receive("t", "1"u8.ToArray());
+        var result = await transport.Input.ReadAsync(TestContext.CancellationToken);
+        Assert.AreEqual("t\t1\n", Encoding.UTF8.GetString(result.Buffer));
+    }
+
+    private sealed class FakeFactory(params FakeConnection[] connections) : IBrokerConnectionFactory
+    {
+        private int _next;
+
+        public IBrokerConnection Create() => connections[_next++];
     }
 
     private sealed class FakeConnection : IBrokerConnection
@@ -55,11 +81,11 @@ public sealed class BrokerDeviceAdapterTests
 
         public event Action<string, byte[]>? MessageReceived;
 
-        public event Action<Exception?>? Disconnected
-        {
-            add { }
-            remove { }
-        }
+        public event Action<Exception?>? Disconnected;
+
+        public bool Disposed { get; private set; }
+
+        public void Drop(Exception error) => Disconnected?.Invoke(error);
 
         public void Receive(string address, byte[] payload) => MessageReceived?.Invoke(address, payload);
 
@@ -79,6 +105,10 @@ public sealed class BrokerDeviceAdapterTests
 
         public Task DisconnectAsync(CancellationToken cancellationToken) => Task.CompletedTask;
 
-        public ValueTask DisposeAsync() => ValueTask.CompletedTask;
+        public ValueTask DisposeAsync()
+        {
+            Disposed = true;
+            return ValueTask.CompletedTask;
+        }
     }
 }

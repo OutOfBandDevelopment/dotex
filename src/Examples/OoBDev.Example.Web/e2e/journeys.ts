@@ -907,4 +907,48 @@ export const journeys: Journey[] = [
       },
     ],
   },
+  {
+    id: 'server-driven-ui',
+    title: 'Render a panel from a server-supplied definition',
+    persona: 'A developer who wants one UI contract for every front end',
+    goal: 'Open a UI definition and watch the host decide which controls show, enable and validate.',
+    start: '/utilities/server-ui',
+    prerequisites: ['The example API is running.'],
+    features: ['OoBDev.UiDefinitions (`UiDefinition`, `ValueValidator`, `FormDefinitionGenerator`)'],
+    why: 'See the framework UI contract rendered by a client that has no knowledge of the form.',
+    problems: [
+      { symptom: 'The Voltage field is disabled', cause: 'Its enabled-when condition is not met', fix: 'Switch the output on' },
+      { symptom: 'A red message appears under a field', cause: 'The value broke the control constraint', fix: 'Enter a value in the stated range' },
+    ],
+    steps: [
+      {
+        title: 'Open the definition',
+        narrative: 'Pick the bench supply. The page fetches the definition and asks the host for each control state.',
+        expect: ['The Output section shows with Voltage disabled and its reason.'],
+        run: async page => {
+          await press(page, 'Bench power supply');
+          await expect(page.locator('.ui-reason')).toContainText('Switch the output on first.');
+        },
+      },
+      {
+        title: 'Enable the output and enter a bad value',
+        narrative: 'Switching the output on enables Voltage. A value above 30 is rejected by the host.',
+        expect: ['Voltage accepts input and shows a range error.'],
+        run: async page => {
+          await page.getByLabel('Output enabled').check();
+          await page.getByLabel('Voltage', { exact: true }).fill('42');
+          await expect(page.locator('.ui-error')).toContainText('0 to 30');
+        },
+      },
+      {
+        title: 'Switch mode to reveal a section',
+        narrative: 'Choosing Constant current makes the Current limit section visible.',
+        expect: ['The Current limit section appears with a Reset limit button.'],
+        run: async page => {
+          await page.getByLabel('Constant current', { exact: true }).check();
+          await expect(page.locator('[data-control="reset"]')).toBeVisible();
+        },
+      },
+    ],
+  },
 ];

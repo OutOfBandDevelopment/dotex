@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -52,5 +53,33 @@ public sealed class SerialPortWriteStreamTests
         using var stream = new SerialPortWriteStream(port.Object);
 
         Assert.ThrowsExactly<NotSupportedException>(() => stream.Read(new byte[1], 0, 1));
+    }
+
+    [TestMethod]
+    public async Task WriteAsync_Array_RunsOffTheCallerThread()
+    {
+        var callerThread = Environment.CurrentManagedThreadId;
+        int? writeThread = null;
+        var port = new Mock<ISerialPort>();
+        port.Setup(p => p.Write(It.IsAny<byte[]>(), 0, 2)).Callback(() => writeThread = Environment.CurrentManagedThreadId);
+        using var stream = new SerialPortWriteStream(port.Object);
+
+        await stream.WriteAsync(new byte[] { 1, 2 }, 0, 2, CancellationToken.None);
+
+        Assert.IsNotNull(writeThread);
+        Assert.AreNotEqual(callerThread, writeThread);
+    }
+
+    [TestMethod]
+    public async Task WriteAsync_AlreadyCanceled_DoesNotWrite()
+    {
+        var port = new Mock<ISerialPort>();
+        using var stream = new SerialPortWriteStream(port.Object);
+        using var cts = new CancellationTokenSource();
+        await cts.CancelAsync();
+
+        await Assert.ThrowsAsync<TaskCanceledException>(async () => await stream.WriteAsync(new byte[] { 1 }, cts.Token));
+
+        port.Verify(p => p.Write(It.IsAny<byte[]>(), It.IsAny<int>(), It.IsAny<int>()), Times.Never);
     }
 }

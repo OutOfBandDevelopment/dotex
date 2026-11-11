@@ -70,6 +70,17 @@ public sealed class MqttDeviceAdapter : IDeviceAdapter
     /// <inheritdoc />
     public async Task OpenAsync(CancellationToken cancellationToken = default)
     {
+        if (State is ConnectionState.Open or ConnectionState.Opening)
+        {
+            return;
+        }
+
+        // A broker-side disconnect leaves the old connection attached; release it so its socket is closed and its late events cannot reach the new pipe.
+        if (_connection is not null)
+        {
+            await CloseAsync(cancellationToken).ConfigureAwait(false);
+        }
+
         lock (_pipeLock)
         {
             _pipe = new Pipe();

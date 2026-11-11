@@ -80,6 +80,8 @@ public static class Program
         builder.Services.AddSingleton<OoBDev.WebApi.Services.ReceivedMessageLog>();
         builder.Services.AddTransient<OoBDev.WebApi.Services.CgiProgramCatalog>();
         builder.Services.AddSingleton<OoBDev.WebApi.Services.EndpointRightCatalog>();
+        builder.Services.AddSingleton<OoBDev.WebApi.Services.UiDefinitionCatalog>();
+        builder.Services.AddSingleton<OoBDev.WebApi.Services.UiDefinitionEvaluator>();
         builder.Services.TryAddSingleton<OoBDev.AspNetCore.Authorization.IApplicationRightChecker, OoBDev.AspNetCore.Authorization.ApplicationRightChecker>();
 
         // Add services to the container.

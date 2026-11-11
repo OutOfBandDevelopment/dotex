@@ -1,13 +1,13 @@
-# Future Example Application: Plan and Checklist
+# Example Application: Plan and Checklist
 
-**Status:** planning (nothing built yet) · **Created:** 2026-10-19 · **Branch:** `dev/analyzer-burn-down`
+**Status:** in progress (shell, most covered-feature screens and the generated guides are built; open items are in the checklist) · **Created:** 2026-10-19 · **Last Updated:** 2026-11-10 · **Part of:** [Example UI design](README.md)
 
 Goal: an example front end (Vue, Azure-portal style left navigation) that exercises every framework feature that can sensibly have a UI, backed by the existing `OoBDev.Example.WebApi`.
 
 Related documents:
 
-- [Design specs](docs/design/example-ui/README.md): shell, navigation, conventions
-- [Screen designs](docs/design/example-ui/screens.md): per-feature Salt mockups and API bindings
+- [Design specs](README.md): shell, navigation, conventions
+- [Screen designs](screens.md): per-feature Salt mockups and API bindings
 
 ## Table of Contents
 
@@ -31,12 +31,7 @@ Related documents:
 
 ## 1. Review scope
 
-The request said "full remove of this project"; I read that as a **full review** and changed nothing. Nothing is deleted by this plan.
-
-Repository state when the review was done:
-
-- Working tree clean; all 7 local branches are level with `origin` (`G:/oobdev/dotex.git`), and all 33 tags are on `origin`.
-- Not on `origin`: the local-only stash `stash@{0}` ("discarded stale working tree 2026-10-09"). It was deliberately set aside earlier and is not source history.
+The plan came from a full review (2026-10-19) of the framework layers against the controllers in `src/Examples/OoBDev.Example.WebApi`; the tables below were true then and the checklist in section 5 holds the current state.
 
 The review covered 4 layers: 6 Common, about 32 Framework, 7 Extensions and about 35 ExternalServices projects, plus 8 CLI tools, compared with the controllers in `src/Examples/OoBDev.Example.WebApi`.
 
@@ -129,7 +124,7 @@ Decisions proposed (all open to change):
 - **Auth:** `oidc-client-ts` authorization code with PKCE against Keycloak; the SPA only holds tokens in memory.
 - **MVVM:** each screen has a view-model composable plus real command classes (for example `SendEmailCommand`) with injected services, not inline lambdas. Vue is not true MVVM, so the divergence is that the template binds through `ref`/`computed` rather than a binding engine.
 - **Tests:** Vitest for view-models and commands, Playwright for flows against the Docker stack.
-- **Shell:** left navigation of collapsible service groups, breadcrumb, top bar with global search, resource-blade pattern with a blade header, command bar and tabs (see the [shell design](docs/design/example-ui/README.md)).
+- **Shell:** left navigation of collapsible service groups, breadcrumb, top bar with global search, resource-blade pattern with a blade header, command bar and tabs (see the [shell design](README.md)).
 
 ## 5. Work plan and checklist
 
@@ -148,9 +143,9 @@ Decisions proposed (all open to change):
 Checklist (tick as work lands):
 
 - [ ] **Deferred (not in this plan):** hardware and device IO UI, revisit after the hardware projects are merged
-- [ ] **Phase 0**
-  - [ ] Confirm stack (Vue 3 + Fluent UI web components) and location
-  - [ ] Confirm the section 6 questions
+- [x] **Phase 0** (decided 2026-10-19, see section 6)
+  - [x] Confirm stack (Vue 3 + Fluent UI web components) and location
+  - [x] Confirm the section 6 questions
 - [ ] **Phase 1: shell**
   - [x] Create `OoBDev.Example.Web` (Vite, TypeScript, Pinia, Router)
   - [x] Portal layout: top bar, left nav, breadcrumb, blade (command bar and toasts still to do)
@@ -160,7 +155,7 @@ Checklist (tick as work lands):
   - [x] Streaming helper for the streamed AI endpoints
   - [x] Command base class and view-model conventions documented (README.Example.Web.md)
   - [x] Container images and compose entry (API and SPA images build; verified 2026-10-19 through the SPA proxy: openapi, templates, embeddings answer 200, `api/User/claims` 401 without a token)
-- [ ] **Phase 2: covered features** (one screen each, specs in [screens.md](docs/design/example-ui/screens.md))
+- [ ] **Phase 2: covered features** (one screen each, specs in [screens.md](screens.md))
   - [x] Overview dashboard
   - [x] AI chat (completion and streamed; context mode still to do)
   - [x] Embeddings lab (SBert, AllMiniLM)
@@ -183,7 +178,7 @@ Checklist (tick as work lands):
   - [x] Image embeddings and zero-shot labels (CLIP; live model download not yet exercised)
   - [x] ONNX sentence embeddings and model compare
   - [x] Vectors and matrix calculator
-  - [ ] Identity management
+  - [ ] Identity management: read-only screen in the example (owner, 2026-11-10); the admin feature belongs in the reference architecture stack, see BACKLOG.md
   - [ ] Data access and DacPac builder
   - [ ] Queue adapters monitor and blob browser
   - [ ] Semantic Kernel plug-in tester
@@ -195,8 +190,8 @@ Checklist (tick as work lands):
 - [ ] **Journeys, screenshots and generated user guides (Playwright)**
   - [x] Journey definitions, runner, mocked API, guide and spec generators (`e2e/`, `npm run e2e`)
   - [x] 9 journeys covering the screens built so far; guides, specs and screenshots in `docs/applications/example`
-  - [x] Hand-written index and testing notes ([docs/applications/example](docs/applications/example/README.md))
-  - [ ] Add a journey (and refresh the guide) with every new screen
+  - [x] Hand-written index and testing notes ([docs/applications/example](../../applications/example/README.md))
+  - Standing rule: every new screen ships with a journey and a refreshed guide (work-tracking rule)
   - [x] Run books and a features page (why to use each capability) generated from the journeys
   - [x] Local check instead of CI: `scripts/examples/verify-example-web.ps1` (tests, build, journeys, fails when `docs/applications/example` drifts from what is committed)
   - [ ] Live run against the compose stack as a nightly check
@@ -216,8 +211,7 @@ Checklist (tick as work lands):
   - [ ] Vitest coverage on view-models and commands (command base done)
   - [ ] Playwright flows for every screen against the integration stack
   - [ ] Accessibility pass (keyboard, contrast, screen reader labels)
-  - [ ] Docs validation (`python scripts/docs/validate-docs.py docs`) and README for the new project
-  - [ ] Update `TODO.md` and `CLAUDE.md`
+  - [ ] Docs validation (`dotnet test src/Tools/OoBDev.Docs.Tests`) and README for the new project
 - [ ] **Phase 6: mail receive (lowest priority)**
   - [ ] Review what exists in MailKit hosting and why `DisableMailKit = true`
   - [ ] Design the four documents (requirements, architecture, API design, testing) for receive

@@ -1,6 +1,6 @@
 # Example UI: Screen Designs
 
-Part of [future-example.md](../../../future-example.md). Back to the [shell design](README.md).
+Part of [the plan](plan.md). Back to the [shell design](README.md).
 
 Each screen lists its purpose, the API it binds to, its commands and a mockup. "New" in the API column means the endpoint does not exist yet (see the phases in the plan).
 
@@ -257,4 +257,4 @@ These follow the same blade pattern; each gets its own four design documents (re
 | Operations | health, configuration | Secrets masked |
 | Developer | links to Scalar, AsyncAPI, Aspire dashboard, CLI catalog | |
 
-[Back to the plan](../../../future-example.md) · [Shell design](README.md) · [Missing screens review](missing-screens.md)
+[Back to the plan](plan.md) · [Shell design](README.md) · [Missing screens review](missing-screens.md)

@@ -44,6 +44,12 @@ Responses:
 
 - `200` OK
 
+### GET `/api/CgiPrograms`
+
+Responses:
+
+- `200` OK (`text/plain`, `application/json`, `text/json`)
+
 ### POST `/api/Communications/private`
 
 Request body: `application/json`, `text/json`, `application/*+json`
@@ -193,6 +199,28 @@ Responses:
 
 - `200` OK (`text/plain`, `application/json`, `text/json`)
 
+### GET `/api/Rights/check`
+
+Parameters:
+
+- `rights` (query, array)
+
+Responses:
+
+- `200` OK (`text/plain`, `application/json`, `text/json`)
+
+### GET `/api/Rights/endpoints`
+
+Responses:
+
+- `200` OK (`text/plain`, `application/json`, `text/json`)
+
+### GET `/api/Rights/protected`
+
+Responses:
+
+- `200` OK (`text/plain`, `application/json`, `text/json`)
+
 ### GET `/api/SBERT`
 
 Parameters:
@@ -262,6 +290,14 @@ Parameters:
 Responses:
 
 - `200` OK (`text/plain`, `application/json`, `text/json`)
+
+### PUT `/api/TextTemplate/Save`
+
+Request body: `application/json`, `text/json`, `application/*+json`
+
+Responses:
+
+- `200` OK
 
 ### POST `/api/TextTemplate/SupportedTemplates`
 

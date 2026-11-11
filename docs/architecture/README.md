@@ -227,9 +227,6 @@ What makes OoBDev unique:
 ### Code Documentation
 - [../code/](../code/) - Per-project README files
 
-### Feature Tracking
-- [../FEATURE_INVENTORY.md](../migration/README.md) - Comprehensive feature comparison
-
 ---
 
 ## Change Log

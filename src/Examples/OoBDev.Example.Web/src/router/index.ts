@@ -21,6 +21,7 @@ export const router = createRouter({
     { path: '/utilities/text', component: () => import('../pages/TextToolsPage.vue'), meta: { crumbs: ['Utilities', 'Text tools'] } },
     { path: '/utilities/vectors', component: () => import('../pages/VectorStorePage.vue'), meta: { crumbs: ['Utilities', 'Vector store'] } },
     { path: '/utilities/vector-lab', component: () => import('../pages/VectorLabPage.vue'), meta: { crumbs: ['Utilities', 'Vector lab'] } },
+    { path: '/utilities/server-ui', component: () => import('../pages/ServerUiPage.vue'), meta: { crumbs: ['Utilities', 'Server-driven UI'] } },
     { path: '/ai/images', component: () => import('../pages/ImagesPage.vue'), meta: { crumbs: ['AI', 'Image labels'] } },
     { path: '/ai/model-compare', component: () => import('../pages/ModelComparePage.vue'), meta: { crumbs: ['AI', 'Model compare'] } },
     { path: '/operations/telemetry', component: () => import('../pages/TelemetryPage.vue'), meta: { crumbs: ['Operations', 'Telemetry'] } },

@@ -1,6 +1,6 @@
 # Integration Test Variables
 
-**Last Updated:** 2026-01-24
+**Last Updated:** 2026-11-11
 
 This document lists all test properties used by Integration tests. These properties can be configured via:
 - `.runsettings` file (`TestRunParameters` section)
@@ -33,12 +33,13 @@ This document lists all test properties used by Integration tests. These propert
    - [Azurite (Azure Storage Emulator)](#azurite-azure-storage-emulator)
    - [Moto (AWS Emulator)](#moto-aws-emulator)
    - [Keycloak (Identity & Access Management)](#keycloak-identity--access-management)
-3. [LiveIntegration Test Variables](#liveintegration-test-variables)
+3. [Host, port and extra parameters](#host-port-and-extra-parameters)
+4. [LiveIntegration Test Variables](#liveintegration-test-variables)
    - [Groq Cloud (LLM API)](#groq-cloud-llm-api)
-4. [Configuration Examples](#configuration-examples)
-5. [Test Pattern Guidelines](#test-pattern-guidelines)
-6. [Docker Integration Stack](#docker-integration-stack)
-7. [Related Documentation](#related-documentation)
+5. [Configuration Examples](#configuration-examples)
+6. [Test Pattern Guidelines](#test-pattern-guidelines)
+7. [Docker Integration Stack](#docker-integration-stack)
+8. [Related Documentation](#related-documentation)
 
 ---
 
@@ -119,7 +120,7 @@ Tests that require live cloud credentials. Manual execution only.
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `SQL_CONNECTION_STRING` | `Server=localhost,1433;User Id=sa;Password=IntegrationTest123!;TrustServerCertificate=True` | SQL Server connection string |
+| `SQLSERVER_CONNECTION_STRING` | `Server=localhost,1433;User Id=sa;Password=IntegrationTest123!;TrustServerCertificate=True` | SQL Server connection string |
 
 **Docker Container:** `mcr.microsoft.com/mssql/server:2022-latest` (Port 1433)
 
@@ -317,7 +318,6 @@ The device list with connections is in [docs/how-tos/test-hardware.md](docs/how-
 | Variable | Default | Description |
 |----------|---------|-------------|
 | `QDRANT_URL` | `http://localhost:6333` | Qdrant HTTP API endpoint |
-| `QDRANT_GRPC_URL` | `http://localhost:6334` | Qdrant gRPC endpoint |
 
 **Docker Container:** `qdrant/qdrant` (Ports 6333 HTTP, 6334 gRPC)
 
@@ -336,9 +336,7 @@ The device list with connections is in [docs/how-tos/test-hardware.md](docs/how-
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `AZURITE_BLOB_URL` | `http://localhost:10000` | Blob storage endpoint |
-| `AZURITE_QUEUE_URL` | `http://localhost:10001` | Queue storage endpoint |
-| `AZURITE_TABLE_URL` | `http://localhost:10002` | Table storage endpoint |
+| `AZURITE_URL` | `http://localhost:10000` | Azurite base endpoint (blob on 10000) |
 
 **Docker Container:** `mcr.microsoft.com/azure-storage/azurite` (Ports 10000-10002)
 
@@ -428,6 +426,35 @@ The device list with connections is in [docs/how-tos/test-hardware.md](docs/how-
 
 ---
 
+## Host, port and extra parameters
+
+These parameters are in `src/.runsettings` beside the URL and connection-string parameters above. Tests that need only a host and a port read these; every host port can be overridden with `TEST_PORT_<NAME>` (see `containers/testing/README.md`).
+
+| Variable | Default | Used for |
+|----------|---------|----------|
+| `TIKA_HOST`, `TIKA_PORT` | `localhost`, `9998` | Apache Tika |
+| `SBERT_HOST`, `SBERT_PORT` | `localhost`, `5080` | SBert embeddings |
+| `REDIS_HOST`, `REDIS_PORT` | `localhost`, `6379` | Redis |
+| `QDRANT_HOST`, `QDRANT_PORT` | `localhost`, `6333` | Qdrant |
+| `OPENSEARCH_HOST`, `OPENSEARCH_PORT`, `OPENSEARCH_USE_HTTPS` | `localhost`, `9200`, `true` | OpenSearch |
+| `OPENSEARCH_DASHBOARDS_URL`, `OPENSEARCH_DASHBOARDS_HOST`, `OPENSEARCH_DASHBOARDS_PORT` | `http://localhost:5601`, `localhost`, `5601` | OpenSearch Dashboards |
+| `SQLSERVER_HOST`, `SQLSERVER_PORT`, `SQLSERVER_USERNAME`, `SQLSERVER_PASSWORD` | `127.0.0.1`, `1433`, `sa`, test password | SQL Server |
+| `MONGODB_DATABASE_NAME` | `integration_tests` | MongoDB database for tests |
+| `RABBITMQ_AMQP_PORT`, `RABBITMQ_MANAGEMENT_PORT`, `RABBITMQ_USERNAME`, `RABBITMQ_PASSWORD`, `RABBITMQ_CONNECTION_STRING` | `5673`, `15672`, `guest`, `guest`, `amqp://guest:guest@localhost:5673/` | RabbitMQ AMQP and management |
+| `RABBITMQ_STOMP_PORT`, `RABBITMQ_AMQPS_PORT`, `RABBITMQ_STOMP_TLS_PORT` | `21613`, `5671`, `21614` | DevTerm broker tests (STOMP, TLS) |
+| `MOSQUITTO_HOST`, `MOSQUITTO_PORT` | `localhost`, `1883` | MQTT broker for DevTerm tests |
+| `SER2NET_HOST`, `SER2NET_PORT` | `localhost`, `2217` | RFC 2217 serial server |
+| `LOOPBACK_DEVICE_HOST`, `LOOPBACK_DEVICE_PORT` | `localhost`, `7778` | Loopback device peer |
+| `AZURITE_BLOB_SERVICE_URL`, `AZURITE_CONNECTION_STRING` | development storage account | Azurite blob service and connection string |
+| `MOTO_HOST`, `MOTO_PORT` | `localhost`, `4566` | Moto AWS emulator |
+| `AWS_REGION`, `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY` | `us-east-1`, `test`, `test` | Test credentials for Moto |
+| `SQS_ENDPOINT`, `SQS_TEST_QUEUE` | `http://localhost:4566`, `integration-test-queue` | SQS tests |
+| `SERVICEBUS_HOST`, `SERVICEBUS_PORT` | `localhost`, `5672` | Service Bus emulator |
+| `SMTP_URL` | `http://localhost:7777` | SMTP4Dev web API |
+| `NGINX_URL`, `NGINX_HOST`, `NGINX_PORT` | `http://localhost:8080` | Test web server |
+| `DOCKER_NETWORK`, `DOCKER_COMPOSE_FILE` | `oobd-integration-test-net`, `docker-compose.integration-tests.yml` | Stack scripts |
+| `TestConfig_*`, `TestConfig:*`, `TestConfig__*` | sample values | Fixtures for the `TestContext` configuration provider tests; no service behind them |
+
 ## LiveIntegration Test Variables
 
 ### Groq Cloud (LLM API)
@@ -471,7 +498,7 @@ The device list with connections is in [docs/how-tos/test-hardware.md](docs/how-
     <Parameter name="MONGODB_CONNECTION_STRING" value="mongodb://localhost:27017?collation={locale:'en_US',caseLevel:false,strength:2 }" />
 
     <!-- SQL Server -->
-    <Parameter name="SQL_CONNECTION_STRING" value="Server=localhost,1433;User Id=sa;Password=IntegrationTest123!;TrustServerCertificate=True" />
+    <Parameter name="SQLSERVER_CONNECTION_STRING" value="Server=localhost,1433;User Id=sa;Password=IntegrationTest123!;TrustServerCertificate=True" />
 
     <!-- RabbitMQ -->
     <Parameter name="RABBITMQ_HOST" value="localhost" />
@@ -487,12 +514,9 @@ The device list with connections is in [docs/how-tos/test-hardware.md](docs/how-
 
     <!-- Qdrant -->
     <Parameter name="QDRANT_URL" value="http://localhost:6333" />
-    <Parameter name="QDRANT_GRPC_URL" value="http://localhost:6334" />
 
     <!-- Azurite -->
-    <Parameter name="AZURITE_BLOB_URL" value="http://localhost:10000" />
-    <Parameter name="AZURITE_QUEUE_URL" value="http://localhost:10001" />
-    <Parameter name="AZURITE_TABLE_URL" value="http://localhost:10002" />
+    <Parameter name="AZURITE_URL" value="http://localhost:10000" />
 
     <!-- Moto -->
     <Parameter name="MOTO_URL" value="http://localhost:4566" />

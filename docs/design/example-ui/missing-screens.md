@@ -1,6 +1,6 @@
 # Example app: missing screens review (2026-10-29)
 
-[Screen designs](screens.md) · [Plan](../../../future-example.md) · [Shell design](README.md)
+[Screen designs](screens.md) · [Plan](plan.md) · [Shell design](README.md)
 
 Review of the example web app (`src/Examples/OoBDev.Example.Web`) and API against the framework's features. Built means a routed page with a controller behind it; the router has 21 pages plus two links (API reference, event reference).
 
@@ -22,13 +22,13 @@ Review of the example web app (`src/Examples/OoBDev.Example.Web`) and API agains
 | Data access and DacPac builder | `OoBDev.Data.Common`, MongoDB, `OoBDev.DacFx` | Read-only query runner, dacpac build and diff | Read-only guard design |
 | Semantic Kernel plug-in tester | `OoBDev.SemanticKernel` | Plug-in list and invoke | Controller |
 | Vector store browser | Qdrant, OpenSearch, SQL store | Collection list, upsert, query | Collection listing on the vector store interface |
-| Mail receive | MailKit IMAP | Inbox view | Decision in `future-example.md` section 6 |
+| Mail receive | MailKit IMAP | Inbox view | Decision in [the plan](plan.md) section 6 |
 | Formats and pipelines | `OoBDev.System.IO.Pipelines`, Tar, BCD, bit tools | File inspector, pipeline builder | Controller |
 | CLI tool catalog | DacPacCompiler, DocumentConverter, FileRagEngine, and the other CLI tools | Catalog with run instructions (no execution from the browser) | Static page |
 
 ## Framework areas the plan does not mention
 
-These have no row in `future-example.md` or `screens.md`; whether each deserves a screen is an owner decision.
+These have no row in [the plan](plan.md) or `screens.md`; whether each deserves a screen is an owner decision.
 
 **Table 2 — Framework features with no screen and no plan**
 
@@ -60,5 +60,5 @@ These have no row in `future-example.md` or `screens.md`; whether each deserves 
 2. ~~Template management~~ (list, open and preview built 2026-11-09; save waits for Q2).
 3. ~~Queue adapters and blob browser~~ (channel list and received monitor on the Queues screen, stored-documents list on the Documents screen, built 2026-11-09).
 4. ~~Rights and roles~~ (built 2026-11-10 as `/identity/rights`), then Identity management, because they show the authorization model that every other API surface relies on.
-5. Server-driven UI, since it is the framework's own UI contract.
+5. ~~Server-driven UI~~ (built 2026-11-10 as `/utilities/server-ui`: bench-supply hand-built definition and a generated shipping form served by `/api/UiDefinitions`).
 6. The rest as the owner prioritizes; instrument protocols stay deferred.

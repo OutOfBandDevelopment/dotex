@@ -36,3 +36,4 @@ Step-by-step guides with screenshots, one per user journey. They are regenerated
 | [Run a CGI program](run-a-cgi-program.md) | A developer checking the CGI hosting | Pick a program the host can start and see its answer. |
 | [Send a webhook to a channel](send-a-webhook.md) | A developer testing inbound provider calls | Post a provider call to a channel and see how the host answers. |
 | [Check which rights an endpoint needs](check-your-rights.md) | A developer working out why an API call is refused | See the access each endpoint needs and check the current user against a right. |
+| [Render a panel from a server-supplied definition](server-driven-ui.md) | A developer who wants one UI contract for every front end | Open a UI definition and watch the host decide which controls show, enable and validate. |

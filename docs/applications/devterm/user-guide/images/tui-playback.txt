@@ -19,7 +19,7 @@
 │                                                                              │
 │                                                                              │
 │                                                                              │
-│Paused  7/9  00:06.000 / 00:09.000  2x  Selection 7–9                         │
+│Paused  7/9  00:06.000 / 00:09.000  2x  Selection 7–9         ☐ Skip silence  │
 │⟦ Rewind ⟧  ⟦ Step ⟧  ⟦ Play ⟧  ⟦ +10s ⟧  ⟦ End ⟧  ⟦ Slower ⟧  ⟦ Faster ⟧     │
 │⟦ Mark In ⟧  ⟦ Mark Out ⟧  ⟦ Save Selection... ⟧  ⟦ Add Note... ⟧  ⟦ Close ⟧  │
 └──────────────────────────────────────────────────────────────────────────────┘

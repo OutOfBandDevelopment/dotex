@@ -47,6 +47,20 @@ if (badChange.length > 0) {
   process.exit(0);
 }
 
+// The repository root holds a fixed set of files (rule work-tracking); a new loose file belongs under docs/ (owner, 2026-11-10).
+const ROOT_FILES = /^(\.[^/]+|README\.md|CLAUDE\.md|TODO\.md|BACKLOG\.md|OPEN-QUESTIONS\.md|TEST_VARIABLES\.md|CONFIGURATION_SETTINGS\.md|GitVersion\.yml|LICENSE|[^/]+\.(slnx?|props|targets|json|config|ruleset|editorconfig))$/;
+const strayRoot = added.filter((f) => !f.includes('/') && !ROOT_FILES.test(f));
+if (strayRoot.length > 0) {
+  console.log(JSON.stringify({
+    hookSpecificOutput: {
+      hookEventName: 'PreToolUse',
+      additionalContext:
+        `work-tracking: ${strayRoot.join(', ')} is a new loose file in the repository root. The root holds only README.md, CLAUDE.md, TODO.md, BACKLOG.md, OPEN-QUESTIONS.md, TEST_VARIABLES.md and CONFIGURATION_SETTINGS.md plus build and repo configuration; plans and inventories live in docs/design/<Feature>/ or docs/ (rule work-tracking).`,
+    },
+  }));
+  process.exit(0);
+}
+
 // A new task section belongs in today's file (owner, 2026-11-05): the local date decides, not the newest file.
 const pad = (n) => String(n).padStart(2, '0');
 const now = new Date();

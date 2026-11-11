@@ -10,7 +10,6 @@ One plan for what is still to bring into this framework from other repositories,
 - [Sources](#sources)
 - [Devices](#devices)
 - [Transports, DevTerm and plugins](#transports-devterm-and-plugins)
-- [BinaryDataDecoders leftovers](#binarydatadecoders-leftovers)
 - [SharedFramework epics](#sharedframework-epics)
 - [Harvest candidates](#harvest-candidates)
 - [Rejected, with reasons](#rejected-with-reasons)
@@ -21,16 +20,15 @@ One plan for what is still to bring into this framework from other repositories,
 1. [Table 1 — Sources](#table-1)
 2. [Table 2 — Device work left](#table-2)
 3. [Table 3 — Transports, DevTerm and plugins](#table-3)
-4. [Table 4 — BinaryDataDecoders leftovers](#table-4)
-5. [Table 5 — SharedFramework epics](#table-5)
-6. [Table 6 — Harvest candidates](#table-6)
-7. [Table 7 — Rejections](#table-7)
+4. [Table 4 — SharedFramework epics](#table-4)
+5. [Table 5 — Harvest candidates](#table-5)
+6. [Table 6 — Rejections](#table-6)
 
 ## Rules
 
 - Everything migrates except stubs with no implementation, obsolete platforms (Silverlight, UWP, Compact Framework) and code with no net10.0 equivalent (`CLAUDE.md`, Migration Scope). Phases are priority order, not selection.
-- Best coverage (`owner-decisions`): compare every source and use the best-covered, tested implementation as the base; merge what the others add. A rejection carries its reason ([Table 7](#table-7)).
-- Surroundings migrate too (guides, agent configuration, docs, scripts, plans). The dev-term and BinaryDataDecoders surroundings are migrated or rejected; what is still open is wiring `containers/devterm` into the integration stack (backlog).
+- Best coverage (`owner-decisions`): compare every source and use the best-covered, tested implementation as the base; merge what the others add. A rejection carries its reason ([Table 6](#table-6)).
+- Surroundings migrate too (guides, agent configuration, docs, scripts, plans). The dev-term and BinaryDataDecoders surroundings are migrated or rejected.
 - A layering change needs a confirmed plan first (rule `layering-and-migration-plans`). Copies of code inside this repository may be deleted once migrated; older repositories stay untouched (owner, 2026-11-09).
 
 ## Sources
@@ -39,18 +37,17 @@ One plan for what is still to bring into this framework from other repositories,
 
 | Source | Location | State |
 |--------|----------|-------|
-| BinaryDataDecoders | `C:\repo\mine\binary-data-decoders` at `e590b420` (the old `Incoming/BinaryDecoders` subset copy was removed 2026-11-10) | Libraries, tools and eight devices migrated and checked; leftovers in [Table 4](#table-4) |
+| BinaryDataDecoders | `C:\repo\mine\binary-data-decoders` at `e590b420` (the old `Incoming/BinaryDecoders` subset copy was removed 2026-11-10) | Libraries, tools and eight devices migrated and checked; the generic TCP services continue as a DevTerm feature request ([backlog](../../BACKLOG.md)) |
 | dev-term | `C:\repo\oobdev\dev-term` at `8c66e74` | Base for devices; shells and transports in progress ([parity status](../design/DevTermParity/status.md)) |
-| SharedFramework | (removed from `Incoming/`; history in `git log`) | Replaced by designs ([Table 5](#table-5)) |
-| proving-grounds, learning repositories, `_storage`, notes | `C:\repo\mine`, `C:\repo\oobdev` | Read-only references ([Table 6](#table-6)) |
+| SharedFramework | (removed from `Incoming/`; history in `git log`) | Replaced by designs ([Table 4](#table-4)) |
+| proving-grounds, learning repositories, `_storage`, notes | `C:\repo\mine`, `C:\repo\oobdev` | Read-only references ([Table 5](#table-5)) |
 
-The former `Incoming/CHECKLIST.md` status table is folded in: dotnet-lib (95% identical to main, bug fix applied) and Framework (vector library already in main) were deleted, Oobtainium moved to proving-grounds, BotChat was extracted 2026-10-09, SharedFramework was replaced by designs, and BinaryDecoders, ContractParser and Tools are covered below.
 
 Where two sources hold the same feature, dev-term is newer and tested, so it is the base. Migrated libraries were behaviour-checked by running the source tests against main (2026-11-03).
 
 ## Devices
 
-Design: [DeviceDecoding](../design/DeviceDecoding/README.md) and its [migration plan](../design/DeviceDecoding/migration-plan.md) (conversion rules, naming, order of work). Busylight, K8055, Radex One, Zoom H4n, NMEA, DE-5000, SCPI, Z-Wave, Fencing and LanC are migrated; merges M1, M2 and M5 from BinaryDataDecoders are in. What is left:
+Design: [DeviceDecoding](../design/DeviceDecoding/README.md) and its [migration plan](../design/DeviceDecoding/migration-plan.md) (conversion rules, naming, order of work). What is left:
 
 <a id="table-2"></a>**Table 2 — Device work left**
 
@@ -77,22 +74,11 @@ dev-term merges into this repository entirely (owner, 2026-10-28): shells become
 | Plugins and sandbox; the sandbox layering proposal awaits confirmation | `OoBDev.System.Sandbox*` | [Plugins](../design/Plugins/README.md), [PluginSandbox](../design/PluginSandbox/migration-plan.md) |
 | dev-term future plans (UDP, rendering presenters, discovery and config editors, research items) | one backlog item each | `BACKLOG.md` section 1 |
 
-## BinaryDataDecoders leftovers
-
-<a id="table-4"></a>**Table 4 — BinaryDataDecoders leftovers**
-
-| Item | State |
-|------|-------|
-| Net.ServiceHost CLI | Decided (D6, owner 2026-11-10): no standalone tool; DevTerm hosts the generic TCP services, see the [feature request](../features/request/2026-11-10-devterm-generic-service-listeners.md) |
-| Windows.Forms `ValidTextBox` | Migrated 2026-11-06 to `OoBDev.Extensions.Windows.Forms` (5 unit tests) and shown in `OoBDev.Examples.Controls.WinForms`; see the [WindowsForms plan](../design/WindowsForms/migration-plan.md) |
-| `Incoming/BinaryDecoders` | Removed 2026-11-10 (the source repository is clean at `e590b420`). Its comparison, bug and issue reports were reviewed against `src` and removed; the open gaps are one feature request each in [docs/features/request](../features/request/README.md) |
-| `Incoming/Tools` (De5000 BLE scan CLI) | Removed 2026-11-10: scanning is `BleDeviceScanner`, GATT enumeration is `IBleGattProfileExplorer`, decoding is `OoBDev.DerEE.De5000` (D6) |
-
 ## SharedFramework epics
 
-Design first (owner, 2026-11-06): none is implemented until a consumer appears. Four documents per feature ([standard](../patterns-discovery/06-design-document-standard.md)); plan in [SharedFramework](../design/SharedFramework/migration-plan.md). Queues, storage, caching, identity, documents and the MailKit adapter already exist in main.
+Design first (owner, 2026-11-06): none is implemented until a consumer appears. Four documents per feature ([standard](../patterns-discovery/06-design-document-standard.md)); plan in [SharedFramework](../design/SharedFramework/migration-plan.md).
 
-<a id="table-5"></a>**Table 5 — SharedFramework epics**
+<a id="table-4"></a>**Table 4 — SharedFramework epics**
 
 | Epic | Design | Open |
 |------|--------|------|
@@ -105,20 +91,20 @@ Design first (owner, 2026-11-06): none is implemented until a consumer appears. 
 
 Map: [harvest-candidates.md](../harvest-candidates.md). Nothing is copied without a comparison.
 
-<a id="table-6"></a>**Table 6 — Harvest candidates**
+<a id="table-5"></a>**Table 5 — Harvest candidates**
 
 | Source item | Decision |
 |-------------|----------|
 | ScoreMachine and HomeSeer | Libraries and emulators only (D8); applications rejected |
-| hybridsearch, Oobtainium, BuildFirstOnce, markdownplantuml, TotpExample, HandyClasses, postsql-playground | Compared 2026-11-10: [recommendations](harvest-d7-comparison.md) await the owner (D7); postsql informs `OoBDev.DacFx` |
+| hybridsearch, BuildFirstOnce, postsql-playground | Compared 2026-11-10: [recommendations](harvest-d7-comparison.md) await the owner (D7); postsql informs `OoBDev.DacFx` |
 | Oobtainium (mocking and proxy framework, about 1,600 lines) | Not migrated; Moq and NSubstitute cover it. Reopen only with a fresh comparison against `proving-grounds/examples/OoBDev.Oobtainium` |
 | `OoBDev.MessageBroker`, `Ssb.Modeling`, `SQL` | Deferred until a Service Broker feature exists |
-| `event-sourcing`, `sync-mesh`, `fohjin-cqrs` | Read-only pattern references; ask before copying |
+| `event-sourcing`, `sync-mesh`, `fohjin-cqrs` | Read-only pattern references; extract knowledge only, see [Table 2](harvest-d7-comparison.md#table-2): a CQRS and event sourcing reference design, an HLC feature request. Ask before copying source |
 | notes: `sqldef-evaluation`, `jws-jwt-from-scratch` | Design inputs for the matching features |
 
 ## Rejected, with reasons
 
-<a id="table-7"></a>**Table 7 — Rejections**
+<a id="table-6"></a>**Table 6 — Rejections**
 
 | Item | Reason |
 |------|--------|

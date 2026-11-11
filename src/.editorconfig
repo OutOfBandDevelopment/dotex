@@ -231,6 +231,7 @@ dotnet_diagnostic.MA0017.severity = warning
 dotnet_diagnostic.MA0019.severity = warning
 dotnet_diagnostic.MA0023.severity = warning
 dotnet_diagnostic.MA0025.severity = warning
+# MA0026 (about 50 TODO comments), MA0046 (EventHandler<TMessage> on the device interfaces), MA0061 (DEBUG-only required parameters), CA1710, CA1720 and CA1708 (domain names) stay at suggestion on purpose.
 dotnet_diagnostic.MA0026.severity = suggestion
 dotnet_diagnostic.MA0046.severity = suggestion
 dotnet_diagnostic.MA0048.severity = warning

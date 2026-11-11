@@ -54,4 +54,26 @@ public sealed class WriteDelayStreamTests
         Assert.ThrowsExactly<NotSupportedException>(() => stream.Length);
         Assert.ThrowsExactly<NotSupportedException>(() => stream.Read(new byte[1], 0, 1));
     }
+
+    [TestMethod]
+    public async Task WriteAsync_ArrayOverload_ReachesTheInnerStream()
+    {
+        using var inner = new MemoryStream();
+        await using var stream = new WriteDelayStream(inner, 0);
+
+        await stream.WriteAsync(new byte[] { 9, 1, 2, 3 }, 1, 2, TestContext.CancellationToken);
+
+        CollectionAssert.AreEqual(new byte[] { 1, 2 }, inner.ToArray());
+    }
+
+    [TestMethod]
+    public void Write_Sync_PacesAndForwardsEveryByte()
+    {
+        using var inner = new MemoryStream();
+        using var stream = new WriteDelayStream(inner, 0);
+
+        stream.Write(new byte[] { 4, 5, 6 }, 0, 3);
+
+        CollectionAssert.AreEqual(new byte[] { 4, 5, 6 }, inner.ToArray());
+    }
 }
