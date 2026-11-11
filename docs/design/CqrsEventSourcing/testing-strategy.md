@@ -42,3 +42,4 @@ One shared contract test class runs against every database provider: append and 
 - **SQL Server**: `Integration`, on the existing SQL Server container.
 - **PostgreSQL**: `Integration`, needs a PostgreSQL service added to the test stack (`add-integration-service` skill) with `POSTGRES_*` parameters in `src/.runsettings` and `TEST_VARIABLES.md`.
 - A concurrency test appends to one stream from several tasks and expects exactly one winner per sequence on each database.
+- **SQL Server schema parity:** deploy `OoBDev.EventSourcing.SqlServer.Database` (the dacpac) to a throwaway database and compare tables, columns, types and indexes with the EF model; `Integration`.
