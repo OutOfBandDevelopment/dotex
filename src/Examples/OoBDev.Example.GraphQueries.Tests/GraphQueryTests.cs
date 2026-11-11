@@ -44,6 +44,7 @@ public class GraphQueryTests
 
         // Test
         await RunBatchesAsync(connection, "Recursive.Schema.sql");
+        await RunBatchesAsync(connection, "Tree.Schema.sql");
 
         // Assert
         await AssertRecursiveAnswersAsync(connection);
@@ -63,6 +64,7 @@ public class GraphQueryTests
         {
             // Test
             await RunBatchesAsync(connection, "Recursive.Schema.sql");
+            await RunBatchesAsync(connection, "Tree.Schema.sql");
 
             // Assert
             await AssertRecursiveAnswersAsync(connection);
@@ -90,6 +92,7 @@ public class GraphQueryTests
 
             // Test
             await RunBatchesAsync(connection, "SqlServer.Schema.sql");
+            await RunBatchesAsync(connection, "SqlServer.Tree.Schema.sql");
             var friends = await QueryAsync(connection, await ReadAsync("SqlServer.FriendsWithinTwoSteps.sql"));
             var path = await QueryAsync(connection, await ReadAsync("SqlServer.ShortestPath.sql"));
 
@@ -98,6 +101,7 @@ public class GraphQueryTests
             Assert.AreEqual(1, path.Count);
             Assert.AreEqual(2, Convert.ToInt32(path[0][1]));
             Assert.AreEqual("Eve>Dan", (string)path[0][0]);
+            await AssertTreeAnswersAsync(connection, "SqlServer.Tree");
         }
         finally
         {
@@ -114,12 +118,24 @@ public class GraphQueryTests
         Assert.AreEqual(1, path.Count);
         Assert.AreEqual(2, Convert.ToInt32(path[0][1]));
         Assert.AreEqual(",1,5,4,", (string)path[0][0]);
+
+        await AssertTreeAnswersAsync(connection, "Tree");
+    }
+
+    private static async Task AssertTreeAnswersAsync(DbConnection connection, string prefix)
+    {
+        async Task<string[]> NamesAsync(string script) =>
+            (await QueryAsync(connection, await ReadAsync($"{prefix}.{script}.sql"))).Select(r => (string)r[0]).ToArray();
+
+        CollectionAssert.AreEqual(new[] { "Dev", "Intern", "Ops", "VP" }, await NamesAsync("Descendants"));
+        CollectionAssert.AreEqual(new[] { "Dev", "VP", "CEO" }, await NamesAsync("Ancestors"));
+        CollectionAssert.AreEqual(new[] { "A", "B", "C" }, await NamesAsync("Cycles"));
     }
 
     private static async Task<string> ReadAsync(string script)
     {
         var assembly = Assembly.GetExecutingAssembly();
-        var name = assembly.GetManifestResourceNames().Single(n => n.EndsWith(script, StringComparison.Ordinal));
+        var name = assembly.GetManifestResourceNames().Single(n => n.EndsWith(".Graph." + script, StringComparison.Ordinal));
         await using var stream = assembly.GetManifestResourceStream(name)!;
         using var reader = new StreamReader(stream);
         return await reader.ReadToEndAsync();
