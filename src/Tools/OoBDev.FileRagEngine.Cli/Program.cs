@@ -23,7 +23,7 @@ public class Program
     {
         if (CommandLine.IsHelpRequest(args))
         {
-            global::System.Console.WriteLine(CommandLine.Usage("oobdev-filerag", "Runs a template over files with a language model.", typeof(FileRagEngineOptions), typeof(FileTemplatingOptions)));
+            global::System.Console.WriteLine(CommandLine.Usage("file-rag", "Runs a template over files with a language model.", typeof(FileRagEngineOptions), typeof(FileTemplatingOptions)));
             return 0;
         }
 

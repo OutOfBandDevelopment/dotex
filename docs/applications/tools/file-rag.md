@@ -1,4 +1,4 @@
-# oobdev-filerag
+# file-rag
 
 Runs a template over files with a language model.
 
@@ -7,8 +7,8 @@ Runs a template over files with a language model.
 Run the tool with `--help` to list its options.
 
 ```console
-$ oobdev-filerag --help
-oobdev-filerag - Runs a template over files with a language model.
+$ file-rag --help
+file-rag - Runs a template over files with a language model.
 Pass options as --name value (a boolean needs an explicit true or false).
   --input                   <string>
   --Template                <string> (required)

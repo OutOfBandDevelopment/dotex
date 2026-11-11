@@ -68,11 +68,11 @@ public sealed class ToolGuideTests
 
     [TestMethod]
     public Task DocumentConverter_Help_WritesTheGuideAsync() =>
-        HelpGuideAsync("OoBDev.DocumentConverter.Cli", "oobdev-documentconverter", "Converts a document from one format to another.", "--output");
+        HelpGuideAsync("OoBDev.DocumentConverter.Cli", "file-convert", "Converts a document from one format to another.", "--output");
 
     [TestMethod]
     public Task FileRagEngine_Help_WritesTheGuideAsync() =>
-        HelpGuideAsync("OoBDev.FileRagEngine.Cli", "oobdev-filerag", "Runs a template over files with a language model.", "--include-prompt");
+        HelpGuideAsync("OoBDev.FileRagEngine.Cli", "file-rag", "Runs a template over files with a language model.", "--include-prompt");
 
     [TestMethod]
     public Task DacPacCompiler_Help_WritesTheGuideAsync() =>
