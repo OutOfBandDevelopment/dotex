@@ -1,77 +1,61 @@
 # Harvest candidates: other projects dotex can draw from
 
-**Created:** 2026-10-22 · **Status:** reference map, not a plan; maintained by Claude (owner handed it over 2026-10-22). Nothing here has been migrated or decided. Use it to find reference projects when working on a feature, and update a row when you compare or take code from it.
+**Created:** 2026-10-22 · **Status:** reference map, not a plan; maintained by Claude (owner handed it over 2026-10-22). Only what is still worth taking is listed; what dotex already has was removed. Use it to find reference projects when working on a feature, and update a row when you compare or take code from it.
 
 
-**Surroundings rule (owner, 2026-10-30, applied 2026-11-04):** these repositories are read-only references and nothing in them is migrated, so no surroundings review is due yet. When a project is actually harvested, review its guide, `.claude`, docs, scripts and plans first and record the result in `docs/migration/{project}-surroundings-review-{date}.md` (done so far: [dev-term](migration/README.md#surroundings-guides-agent-config-scripts), [BinaryDataDecoders](migration/README.md#surroundings-guides-agent-config-scripts)).
+**Surroundings rule (owner, 2026-10-30, applied 2026-11-04):** these repositories are read-only references. When a project is actually harvested, review its guide, `.claude`, docs, scripts and plans first and record the result in `docs/migration/{project}-surroundings-review-{date}.md`.
 The owner keeps several other repositories and a notes repository. This page says what each one is, roughly what it does and where it lives locally, so work on dotex can take what it wants. Descriptions come from the owner's notes repository (`C:\repo\_notes\shared`, index in `projects/repository-index.md`, `projects/proving-grounds-catalog.md`, `projects/device-parity.md`), read from file lists, READMEs and a few sources. Code was not compiled, run or diffed against dotex. A name match means "probably related, not compared". Check the code before relying on any line below.
 
-Related: [TODO](../TODO.md) (section 4), [BinaryDataDecoders re-review](migration/README.md).
+Related: [TODO](../TODO.md), [migration plan](migration/README.md).
 
-## 1. Protocol and device libraries
+## 1. Libraries and tools to draw from
 
-| Where | What it is | Harvest idea |
+All under `C:\repo\mine\proving-grounds` (origin https://github.com/mwwhited/proving-grounds.git) unless stated. Only what dotex does not already have is listed; migrated, covered and rejected items were removed (see [the migration plan](migration/README.md) and [the comparison](migration/harvest-d7-comparison.md)).
+
+| Folder | What it does | Worth taking |
 |---|---|---|
-| `C:\repo\mine\binary-data-decoders` (origin `g:/mwwhited/binary-data-decoders.git`) | 78 .NET projects: encoding/decoding, IO (serial, HID, pipelines), archives, Apple II, Fencing, Radex One, K8055, Zoom H4n, Rigol, LanC. Marked retired 2026-01-10 but committed to on 2026-09-26 (`e590b420`). | The source for `Incoming/BinaryDecoders`, which holds a 41-project renamed subset. Decide which copy is canonical before migrating. |
-| `C:\repo\oobdev\dev-term` (origin `g:/oobdev/dev-term.git`, upstream https://github.com/OutOfBandDevelopment/dev-term, `899bb15`, 2026-10-14) | Modular device terminal. Projects: `Transports.*` (Serial, Tcp, Hid, Usbtmc, Vxi11, Ble, Rfc2217, Mqtt, Loopback), `Devices.*` (RadexOne, Scpi, K8055, ZoomH4n, Busylight, De5000, Nmea), plus Core, Configuration, Logging, Observability, Schemas, UI hosts (Console, Web, Wpf) and plugins. Does not reference dotex today. | Owner intends to move protocol handlers and framework-level code into dotex and rebuild dev-term on top of it. Transports probably overlap `OoBDev.System.IO.Ports`, `UsbHids` and `IO.Pipelines` (not compared). Device-profile docs and bench notes (2230 at 9600 baud with write pacing, TDS2024) are in its `docs/`. |
-| Notes: `projects/device-parity.md` | Table comparing the same device across binary-data-decoders, the dotex copy and dev-term. | Starting point for choosing one implementation per device. |
+| `examples/HandyClasses`, `examples/OobDev.Tools` | `CsvWriter` (with tests) and `IniFile` | Both as small `OoBDev.System` features; no equivalent exists |
+| `examples/BuildFirstOnce` | `Directory.Build.targets` tasks `DeepClean` and `CleanPaths` | The deep-clean targets for the 112-project solution; the "build a tool first" trick only as a documented technique |
+| `examples/hybridsearch` | Hybrid search spike | The Azure and Neo4j variants as optional later adapters; the rest is covered by `OoBDev.Search` |
+| `examples/OsciRenderClient` | Client for osci-render (TCP port 51622): frame, object and stroke model, plus fractal and curve generators | A small device-client library with a simulator, if an osci-render device is wanted; no equivalent exists |
+| `examples/AccountingEngine` | Billing, amortization, clearing and dunning engines behind interfaces (28 files) | A domain reference design; compare before any extraction |
+| `design-patterns/BehaviorBlackboard` | Blackboard pattern sample (8 files) | A worked example for the patterns docs |
+| `examples/OoBDev.MessageBroker`, `examples/Ssb.Modeling`, `examples/SQL` | SQL Server Service Broker tooling | Deferred until a Service Broker feature exists ([design](design/SqlServiceBroker/README.md)) |
+| `examples/OoBDev.ScoreMachine` | Fencing scoring system (Favero, LANC relay, HID scanner, H4n CLI, web) | Libraries and emulators only (D8); its Kestrel host is one more place the CGI middleware could be tried |
+| `examples/CarMaintenanceLog`, `examples/SecondShooter` | Applications | Reference applications; extract only when a feature needs the same data-access or domain code |
+| `examples/NeedsReviewed` | 307 unsorted C# files | Triage once; unknown content |
 
-## 2. Libraries and tools already built elsewhere
+Removed because dotex already has or rejects them: SharedFramework (replaced by designs), Oobtainium (Moq and NSubstitute cover it), plugin-sandbox-poc (`docs/design/PluginSandbox` and the spike), the Unix-domain socket samples (.NET has `UnixDomainSocketEndPoint`), UnmanagedExports (`UnmanagedCallersOnly` and Native AOT), PostMessageProxy (old ASP.NET MVC), the BulkLlm and ImageConverter tools (`OoBDev.LlmCodeGen.Cli`), and binary-data-decoders and dev-term (migrated).
 
-All under `C:\repo\mine\proving-grounds` (origin https://github.com/mwwhited/proving-grounds.git, catalogued at `caba03a`) unless stated. `examples/` and `tools/` folders:
-
-| Folder | What it does |
-|---|---|
-| `examples/SharedFramework` | Shared C# framework (487 C# files) with a migration quick-reference. Likely an ancestor of dotex; compare before copying anything. |
-| `examples/OoBDev.Oobtainium` | Mocking framework: dynamic interface proxies with call recording (`DispatchProxy`). Upstream repo `OutOfBandDevelopment/oobtainium`. |
-| `examples/BuildFirstOnce` | `Directory.Build.props` ProjectReference trick that builds a tool before the projects that use it. Upstream `OutOfBandDevelopment/BuildFirstOnce`. |
-| `examples/OoBDev.MessageBroker`, `examples/Ssb.Modeling`, `examples/SQL` | SQL Server Service Broker tooling: CLI, DB project, EF helpers, WPF designer and flow modelling. |
-| `examples/hybridsearch` | Hybrid search spike (155 files). Compare `OoBDev.Search` and the embedders. |
-| `examples/plugin-sandbox-poc` | Plugin sandbox proof of concept (AppContainer on Windows, bubblewrap/seccomp on Linux, signed packages, escape tests). Last commit 2026-10-08. |
-| `examples/HandyClasses` | Code39, CsvWriter, IniFile (MIT, 2016). |
-| `examples/WindowsUnixSocket`, `examples/OobDev.Tools` | Unix-domain socket client/host and AfUnix tools. |
-| `examples/UnmanagedExports` | Tests for exporting and importing unmanaged DLL entry points from .NET. |
-| `examples/PostMessageProxy` | ASP.NET proxy for window `postMessage`. |
-| `examples/OsciRenderClient` | Client for osci-render (TCP port 51622). |
-| `examples/OoBDev.ScoreMachine` | Fencing scoring system (Favero, LANC relay, HID scanner, H4n CLI, web). Its Kestrel host is one more place a CGI middleware could be tried. |
-| `examples/AccountingEngine`, `examples/CarMaintenanceLog`, `examples/SecondShooter` | Applications; likely sources of reusable data-access or domain code, not libraries. |
-| `design-patterns/BehaviorBlackboard` | Small blackboard pattern sample. |
-| `tools/OobDev.BulkLlm.*`, `tools/OoBDev.ImageConverter.Cli` | Bulk LLM and image conversion CLIs. Already consolidated into `OoBDev.LlmCodeGen.Cli` per `TODO.md`. |
-| `examples/NeedsReviewed` | 307 unsorted C# files. Unknown content. |
-
-Catalogue with file counts and dates: notes `projects/proving-grounds-catalog.md`.
-
-## 3. Pattern references (read-only clones from 2026-10-21)
+## 2. Pattern references (read-only clones from 2026-10-21)
 
 Under `C:\repo\learning` (bare origins in `g:/learning/`):
 
-| Repo | What it is |
-|---|---|
-| `event-sourcing` (`191964e`) | Open event-sourcing store: design package plus implementation. |
-| `sync-mesh` (`06270e3`) | Distributed event-sourced recording and sync mesh. |
-| `fohjin-cqrs` (`5585623`) | Fohjin.DDD CQRS and event-sourcing reference bank app. |
-| `postsql-playground` (`f414afa`) | PgProj desired-state PostgreSQL deployment (`.pgpkg`). Relevant to `OoBDev.DacFx` and the notes `sqldef-evaluation` project. |
-| `intel-8088-emu` (`3e38788`) | 8086/8088 emulator core in C# (.NET 8). |
+| Repo | What it is | Worth taking |
+|---|---|---|
+| `event-sourcing` (`191964e`) | Open event-sourcing store: design package plus implementation | The write and read side design, for the CQRS and event sourcing reference design |
+| `fohjin-cqrs` (`5585623`) | CQRS and event-sourcing reference bank app | The pattern explanations, as the teaching baseline |
+| `sync-mesh` (`06270e3`) | Distributed event-sourced recording and sync mesh | The hybrid logical clock and two ADRs |
+| `postsql-playground` (`f414afa`) | PgProj desired-state PostgreSQL deployment (`.pgpkg`) | Design input for `OoBDev.DacFx` and [DesiredStateDatabase](design/DesiredStateDatabase/README.md) |
+| `intel-8088-emu` (`3e38788`) | 8086/8088 emulator core in C# (.NET 8) | Reference only |
 
-The owner has not decided to publish the event-sourcing work; it needs sanitizing first. Ask before copying. What to extract from the first three (a reference design, the hybrid logical clock) is in [the comparison](migration/harvest-d7-comparison.md#table-2).
+The owner has not decided to publish the event-sourcing work; it needs sanitizing first. Ask before copying. The extraction plan for the first three is in [the comparison](migration/harvest-d7-comparison.md#table-2).
 
-## 4. Applications
+## 3. Applications
 
-| Where | What it is |
-|---|---|
-| `C:\repo\_storage` (origin `g:/_storage.git`) | .NET 10 and Vue system that inventories, deduplicates, classifies and converts documents and programs on a NAS share. An application, not a library; reusable pieces would need extracting. |
-| `C:\repo\oobdev\containers` | Central Docker services and compositions (34 services). dotex's own `containers/` may overlap. |
+| Where | What it is | Worth taking |
+|---|---|---|
+| `C:\repo\_storage` (origin `g:/_storage.git`) | .NET 10 and Vue system that inventories, deduplicates, classifies and converts documents and programs on a NAS share | An application; extract reusable pieces only when a feature needs them |
+| `C:\repo\oobdev\containers` | Central Docker services and compositions (34 services) | Compare with `containers/testing` for services the test stack lacks |
 
-## 5. Design material in the notes repository
+## 4. Design material in the notes repository
 
-In `C:\repo\_notes\shared\projects\`:
+In the notes repository (projects folder), only what is still an input:
 
-- `cgi-middleware-kestrel/` : design for the CGI middleware requested in [the CGI middleware design](design/CgiMiddleware/README.md).
 - `dotex-consolidation/` : the consolidation plan and candidate list.
-- `sqldef-evaluation/` : bake-off plan and design spec for a dacpac-parity desired-state schema tool.
+- `sqldef-evaluation/` : bake-off plan and design spec for a dacpac-parity desired-state schema tool (input for [DesiredStateDatabase](design/DesiredStateDatabase/README.md)).
 - `synchronized-telemetry-streaming-research/` : RFC and standards research with code examples.
-- `plugin-sandbox-project/`, `hybrid-search-engine/`, `jws-jwt-from-scratch/`, `sql-service-broker-tools/` : design notes for the matching items above.
 
 ---
 
-*Last updated: 2026-10-22*
+*Last updated: 2026-11-10*
