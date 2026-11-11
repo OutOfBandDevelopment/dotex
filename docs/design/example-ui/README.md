@@ -1,6 +1,6 @@
 # Example UI: Shell and Navigation Design
 
-Part of [future-example.md](../../../future-example.md). Next: [screen designs](screens.md).
+Part of [the plan](plan.md). Next: [screen designs](screens.md).
 
 ## Contents
 
@@ -120,7 +120,7 @@ Every feature page is one resource blade:
 - **State:** Pinia stores hold session data only; nothing sensitive is persisted in browser storage. Tokens are kept in memory.
 - **Commands:** each user action is a class implementing `execute(): Promise<void>` and `canExecute: boolean`, injected with its service. View-model composables expose them to the template.
 
-[Back to the plan](../../../future-example.md)
+[Back to the plan](plan.md)
 
 ## Related documents
 

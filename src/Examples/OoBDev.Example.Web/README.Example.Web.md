@@ -1,6 +1,6 @@
 # OoBDev.Example.Web
 
-Vue 3 example front end with an Azure-portal-style left navigation. Each screen exercises one framework feature through `OoBDev.Example.WebApi`. Plan and checklist: [future-example.md](../../../future-example.md); designs: [docs/design/example-ui](../../../docs/design/example-ui/README.md).
+Vue 3 example front end with an Azure-portal-style left navigation. Each screen exercises one framework feature through `OoBDev.Example.WebApi`. Plan and checklist: [plan.md](../../../docs/design/example-ui/plan.md); designs: [docs/design/example-ui](../../../docs/design/example-ui/README.md).
 
 ## Run
 

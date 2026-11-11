@@ -73,8 +73,6 @@
 	  <None Include="..\..\buildoutput.csv" Link="buildoutput.csv" />
 	  <None Include="..\..\CLAUDE.md" Link="CLAUDE.md" />
 	  <None Include="..\..\CONFIGURATION_SETTINGS.md" Link="CONFIGURATION_SETTINGS.md" />
-	  <None Include="..\..\FEATURE_INVENTORY.md" Link="FEATURE_INVENTORY.md" />
-	  <None Include="..\..\future-example.md" Link="future-example.md" />
 	  <None Include="..\..\GitVersion.yml" Link="GitVersion.yml" />
 	  <None Include="..\..\LICENSE" Link="LICENSE" />
 	  <None Include="..\..\OPEN-QUESTIONS.md" Link="OPEN-QUESTIONS.md" />

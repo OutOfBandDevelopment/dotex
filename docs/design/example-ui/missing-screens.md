@@ -1,6 +1,6 @@
 # Example app: missing screens review (2026-10-29)
 
-[Screen designs](screens.md) · [Plan](../../../future-example.md) · [Shell design](README.md)
+[Screen designs](screens.md) · [Plan](plan.md) · [Shell design](README.md)
 
 Review of the example web app (`src/Examples/OoBDev.Example.Web`) and API against the framework's features. Built means a routed page with a controller behind it; the router has 21 pages plus two links (API reference, event reference).
 
@@ -22,13 +22,13 @@ Review of the example web app (`src/Examples/OoBDev.Example.Web`) and API agains
 | Data access and DacPac builder | `OoBDev.Data.Common`, MongoDB, `OoBDev.DacFx` | Read-only query runner, dacpac build and diff | Read-only guard design |
 | Semantic Kernel plug-in tester | `OoBDev.SemanticKernel` | Plug-in list and invoke | Controller |
 | Vector store browser | Qdrant, OpenSearch, SQL store | Collection list, upsert, query | Collection listing on the vector store interface |
-| Mail receive | MailKit IMAP | Inbox view | Decision in `future-example.md` section 6 |
+| Mail receive | MailKit IMAP | Inbox view | Decision in [the plan](plan.md) section 6 |
 | Formats and pipelines | `OoBDev.System.IO.Pipelines`, Tar, BCD, bit tools | File inspector, pipeline builder | Controller |
 | CLI tool catalog | DacPacCompiler, DocumentConverter, FileRagEngine, and the other CLI tools | Catalog with run instructions (no execution from the browser) | Static page |
 
 ## Framework areas the plan does not mention
 
-These have no row in `future-example.md` or `screens.md`; whether each deserves a screen is an owner decision.
+These have no row in [the plan](plan.md) or `screens.md`; whether each deserves a screen is an owner decision.
 
 **Table 2 — Framework features with no screen and no plan**
 

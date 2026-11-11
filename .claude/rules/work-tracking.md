@@ -34,4 +34,5 @@ Rules:
 - The "Current Work Context" priorities in `CLAUDE.md` must name what `TODO.md` In progress is working on. When the focus changes, change both in the same commit.
 - A `SessionStart` hook (`.claude/hooks/tracking-hygiene.mjs`) reports an over-long `TODO.md`, run-on items and stale dates; fix what it reports before new work.
 
-- The root holds only `README.md`, `CLAUDE.md`, `TODO.md`, `BACKLOG.md`, `OPEN-QUESTIONS.md`, `TEST_VARIABLES.md` and `CONFIGURATION_SETTINGS.md`.
+- The root holds only `README.md`, `CLAUDE.md`, `TODO.md`, `BACKLOG.md`, `OPEN-QUESTIONS.md`, `TEST_VARIABLES.md` and `CONFIGURATION_SETTINGS.md`. Plans, inventories and checklists are feature docs: a plan lives in `docs/design/<Feature>/plan.md`, a feature inventory is replaced by the project readmes and `docs/migration/README.md`, and a loose root file is moved there (owner, 2026-11-10). The `work-tracking` hook warns when a commit stages a new root file outside this list.
+- A plan or checklist keeps its status header true: a `Status`, `Last Updated` and the work-in-flight tick (`[x]`) change in the same commit as the work that moves them; "nothing built yet" is removed the day something is built.

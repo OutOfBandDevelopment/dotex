@@ -53,4 +53,4 @@ One folder per feature, written to the [design-document standard](../patterns-di
 | [WebFrontend](WebFrontend/README.md) | Web-accessible host service with WebSocket tunnels and a Blazor front end. |
 | [WindowsForms](WindowsForms/README.md) | `ValidTextBox` (a `TextBox` whose background shows whether the text matches a regex filter) and its `ValidationEventArgs`, carried over from the BinaryDataDecoders `OoBDev.Windows.Forms` library. |
 | [ZWave](ZWave/README.md) | Z-Wave support through the Serial API. Moved from the DevTerm design folder on 2026-11-04. |
-| [example-ui](example-ui/README.md) | Part of [future-example.md](../../../future-example.md). |
+| [example-ui](example-ui/README.md) | Part of [the Example UI plan](example-ui/plan.md). |
