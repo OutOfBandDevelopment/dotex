@@ -47,6 +47,7 @@ A clean rebuild after the 2026-11-06 pass reports no analyzer warnings (218 befo
 
 - [ ] Reference architecture stack: add a full identity admin feature (create and disable users) once the reference architecture is located; not for the example app (owner, 2026-11-10).
 - [ ] HybridSearch: build the hybrid merge (`IHybridSearch`, reciprocal rank fusion vs. "larger score") when a consumer needs it ([api-design](docs/design/HybridSearch/api-design.md#planned-hybrid-contract)); the shells are removed and `OoBDev.Search.Tests` are done
+- [ ] Rename `IHtmlDocumentVistor` to `IHtmlDocumentVisitor` (misspelt; breaking rename is allowed, 4 files use it; owner rule: no forwarders).
 
 ## 6. Migrations
 

@@ -15,7 +15,7 @@ HTML support for the OoBDev text templating framework, built on HtmlAgilityPack.
 ## Notes
 
 - Server-side code in the source HTML is disabled when parsing.
-- The interface name `IHtmlDocumentVistor` is misspelled (Visitor); renaming it is a breaking change and is tracked with the other naming items in the repository `TODO.md`.
+- The interface name `IHtmlDocumentVistor` is misspelled (Visitor); renaming it is a breaking change and is tracked in `BACKLOG.md` (code quality).
 
 ## See Also
 
