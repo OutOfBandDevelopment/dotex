@@ -48,3 +48,16 @@ The Neo4j adapter needs a provider-neutral contract (`IGraphStore`: upsert node,
 **Default:** A is not done until you answer (it deletes public API); nothing else depends on it.
 
 **Your answer:**
+
+### Q-TCP-SERVICES — How does DevTerm host the generic TCP services? (2026-11-11, DevTermParity)
+
+Echo, discard, daytime, time and chargen servers exist in `OoBDev.System`; DevTerm must host them (D6) and show their traffic in a session. Plan: [generic-services-plan.md](docs/design/DevTermParity/generic-services-plan.md).
+
+**Options**
+- A. `ServiceHostBridge` in DevTerm.Core beside `Rfc2217ServerBridge`, with a small traffic tap added to `ServerBase` (recommended: reuses the servers as decided, follows the bridge precedent, shows traffic in the session).
+- B. A server-side `tcp-service` transport with the kinds as originating presenters: native session traffic, but reimplements the servers.
+- C. CLI switch only, no session: least work, fails the "session shows the traffic" criterion.
+
+**Default:** A, built once you confirm (it adds a member to `ServerBase`).
+
+**Your answer:**
