@@ -1,60 +1,39 @@
 # OoBDev.Documents.Abstractions
 
-## Overview
+Contracts for blob storage, document conversion and document type detection. Implementations: [OoBDev.Documents](../OoBDev.Documents/README.Documents.md) (factory, conversion, type tools), the Azure storage account adapter (blob provider) and the conversion adapters (Markdig, WkHtmlToPdf, HtmlToOpenXml, MysticMind).
 
-The OoBDev.Documents.Abstractions namespace provides interfaces and attributes for interacting with document-related 
-functionalities such as blob containers, document conversion, content type detection, and document type management.
+**Table 1 — Contracts**
 
-## Key Interfaces and Attributes
+| Type (namespace) | Role |
+|------------------|------|
+| `IBlobContainer` (`OoBDev.Documents`) | `GetContentAsync(path)`, `GetContentMetaDataAsync(path)`, `StoreContentAsync(reference, metadata, overwrite)`, `StoreContentMetaDataAsync`, `QueryContent()` (an `IQueryable<ContentMetaDataReference>`) and `DeleteContentAsync(path)`. `IBlobContainer<T>` is the same contract bound to a type |
+| `BlobContainerAttribute` | Class attribute with `ContainerName`, naming the container a type uses |
+| `IBlobContainerFactory` (`.Containers`) | `Create(containerName)` and `Create<T>()` |
+| `IBlobContainerProvider` | A container for one provider technology, with a settable `ContainerName` |
+| `IBlobContainerProviderFactory` | `Create(containerName)` returns a provider, or null when it does not serve that container |
+| `IDocumentConversion` | `ConvertAsync(source, sourceType, destination, destinationType)` returns false when no handler supports the pair |
+| `IDocumentConversionHandler` (`.Conversion`) | One conversion: `Sources`, `Destinations`, `SupportedSource`, `SupportedDestination` and `ConvertAsync`; handlers throw `NotSupportedException` for an unsupported type |
+| `IContentTypeDetector` | `DetectContentTypeAsync(stream)` returns the content type or null |
+| `IDocumentTypeTools` | Content type detection plus lookup of an `IDocumentType` by content type, file extension or file header stream |
 
-- **BlobContainerAttribute**: Configuration attribute for Blob Containers, specifying the container name.
-- **IBlobContainerFactory**: Factory interface for building blob containers by name or type reference.
-- **IBlobContainerProvider**: Interface for implementing a blob container for a particular provider type.
-- **IBlobContainerProviderFactory**: Factory interface for creating a blob container by name for a specific provider type.
-- **IDocumentConversionHandler**: Interface for a handler responsible for document conversion, specifying supported source and destination content types.
-- **IBlobContainer**: Interface for interacting with blob containers, providing methods for content retrieval, storage, and deletion.
-- **IDocumentConversion**: Interface for a service responsible for document conversion, with a method for converting documents from one format to another.
-- **IDocumentTypeTools**: Interface providing tools for working with document types, including content type detection and retrieval of document types by file extension or header.
-- **IContentTypeDetector**: Interface for detecting content type from a stream.
-- **IDocumentType**: Interface representing a document type, providing information such as supported content types, file extensions, and file headers.
+**Table 2 — Models (namespace `OoBDev.Documents.Models`)**
 
-## Key Models
+| Type | Members |
+|------|---------|
+| `ContentReference` | `Content` (stream), `ContentType`, `FileName` (all required) |
+| `ContentMetaDataReference` | `ContentType`, `FileName` (required), optional `MetaData` dictionary |
+| `IDocumentType`, `DocumentType` | `Name`, `ContentTypes`, `FileExtensions`, `FileHeader` (bytes); the record is the default implementation adapters register |
 
-- **ContentMetaDataReference**: Represents a reference to content metadata, including content type, file name, and metadata.
-- **ContentReference**: Represents a reference to content, containing information such as content type, file name, and content itself.
-- **DocumentType**: Represents a document type, including its name, supported content types, file extensions, and file header.
-- **IDocumentType**: Interface representing a document type, providing information such as name, supported content types, file extensions, and file headers.
+## Use
 
-## Getting Started
-
-Interfaces in the OoBDev.Documents.Abstractions namespace provide contracts for implementing various document-related 
-functionalities. Implement these interfaces in your application to integrate document management features such as blob 
-storage, document conversion, and content type detection.
-
-## Example Usage
+A conversion adapter implements the handler and registers its document types:
 
 ```csharp
-// Example of implementing IBlobContainerProvider interface
-public class MyBlobContainerProvider : IBlobContainerProvider
+services.AddTransient<IDocumentConversionHandler, MyHandler>();
+services.AddTransient<IDocumentType>(_ => new DocumentType
 {
-    public string ContainerName { get; }
+    Name = "Markdown", FileHeader = [], FileExtensions = [".md"], ContentTypes = ["text/markdown"],
+});
+```
 
-    public MyBlobContainerProvider(string containerName)
-    {
-        ContainerName = containerName;
-    }
-
-    public IBlobContainer CreateBlobContainer()
-    {
-        // Implementation to create a blob container
-    }
-}
-
-// Example of using IDocumentConversion interface
-public class MyDocumentConversionService : IDocumentConversion
-{
-    public async Task ConvertAsync(Stream source, string sourceContentType, Stream destination, string destinationContentType)
-    {
-        // Implementation of document conversion logic
-    }
-}
+Consumers inject `IDocumentConversion` (the framework picks the handler whose sources and destinations match) and `IBlobContainerFactory`.
