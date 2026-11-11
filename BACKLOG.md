@@ -42,7 +42,7 @@ Owner: all protocols and features of dev-term must exist here. Done means what d
 
 - [x] **CQRS and event sourcing library** (decided 2026-11-11): built and covered (Abstractions, stores, relay, aggregates, projections, upcasting, snapshots, EF Core packages, CloudEvents mapper, pgmq adapter). Open: the CloudEvents HTTP endpoint, waiting on Q-CQRS-EDGE in OPEN-QUESTIONS.md. Design and coverage: [CqrsEventSourcing](docs/design/CqrsEventSourcing/testing-strategy.md#coverage).
 
-- [ ] Graph query examples: Apache AGE spike (openCypher on PostgreSQL) now that the PostgreSQL service exists ([plan](docs/design/GraphQueries/README.md#plan))
+- [ ] Graph query examples: the ancestors, descendants and cycles question (parent/child tree) on SQL Server, PostgreSQL and SQLite, beside the existing scripts ([plan](docs/design/GraphQueries/README.md#plan))
 
 ## 5. Code quality backlog
 
