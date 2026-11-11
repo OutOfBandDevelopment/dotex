@@ -13,7 +13,7 @@ namespace OoBDev.EventSourcing;
 /// <typeparam name="T">The aggregate type.</typeparam>
 /// <param name="store">The event store.</param>
 /// <param name="types">The event type registry.</param>
-public class AggregateRepository<T>([FromKeyedServices(EventSourcingGlobals.EventStoreSelectedKey)] IEventStore store, EventTypeRegistry types) : IAggregateRepository<T> where T : AggregateRoot, new()
+public class AggregateRepository<T>([FromKeyedServices(EventSourcingGlobals.EventStoreSelectedKey)] IEventStore store, EventTypeRegistry types, EventUpcastPipeline? upcasts = null) : IAggregateRepository<T> where T : AggregateRoot, new()
 {
     /// <summary>
     /// Gets the stream id of an aggregate.
@@ -30,11 +30,19 @@ public class AggregateRepository<T>([FromKeyedServices(EventSourcingGlobals.Even
         if (records.Count == 0)
             return null;
 
-        var history = records.Select(r => JsonSerializer.Deserialize(r.Payload, types.Resolve(r.Type))
+        var history = records.Select(r => Upcast(r)).Select(r => JsonSerializer.Deserialize(r.Payload, types.Resolve(r.Type))
             ?? throw new InvalidOperationException($"Event {r.StreamId}:{r.Sequence} has no payload.")).ToList();
         var aggregate = new T();
         aggregate.LoadFromHistory(id, history, records[^1].Sequence);
         return aggregate;
+    }
+
+    private EventRecord Upcast(EventRecord record)
+    {
+        if (upcasts is null)
+            return record;
+        var (type, payload) = upcasts.Upcast(record.Type, record.Payload);
+        return record with { Type = type, Payload = payload };
     }
 
     /// <inheritdoc />

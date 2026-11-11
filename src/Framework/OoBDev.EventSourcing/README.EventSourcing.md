@@ -21,3 +21,7 @@ The relay loop is hosted by `OoBDev.EventSourcing.Hosting` (`TryAddEventRelayHos
 ## Projections
 
 Implement `IProjection` (`Name`, idempotent `ApplyAsync(EventRecord)`) and register it. `ProjectionRunner.CatchUpAsync()` reads the event store from each projection checkpoint (kept in the entity store as `projection-checkpoint`), applies the events in batches and saves the checkpoint after each batch; `ResetAsync(name)` clears the checkpoint to rebuild. Run one runner per projection. Queue-driven projections stay possible with an `IMessageQueueHandler<EventsChannel, EventRecord>`.
+
+## Upcasting
+
+Register `IEventUpcaster` implementations (`FromType`, `Upcast(payload)` returning the new type name and payload). `EventUpcastPipeline` chains them (a cycle throws) and `AggregateRepository` applies it when loading, so stored events are never rewritten.
