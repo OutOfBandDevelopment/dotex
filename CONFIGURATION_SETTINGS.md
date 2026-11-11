@@ -463,18 +463,18 @@ services.Configure<OpenSearchOptions>(options =>
 | Property | Type | Required | Default | Description |
 |----------|------|----------|---------|-------------|
 | Url | string | Yes | - | Qdrant server URL |
-| CollectionName | string | Yes | - | Collection name for vectors |
 | EnsureCollectionExists | bool | No | false | Auto-create collection if missing |
+| Distance | Distance | No | Cosine | Distance for created collections |
+| ResultLimit | int | No | 1000 | Most points a list or neighbour search returns |
 
 **Validation:**
-- Url, CollectionName: Required (compile-time via `required` modifier)
+- Url: Required (compile-time via `required` modifier)
 
 **Usage:**
 ```csharp
 services.Configure<QdrantOptions>(options =>
 {
     options.Url = "http://localhost:6333";
-    options.CollectionName = "embeddings";
     options.EnsureCollectionExists = true;
 });
 ```

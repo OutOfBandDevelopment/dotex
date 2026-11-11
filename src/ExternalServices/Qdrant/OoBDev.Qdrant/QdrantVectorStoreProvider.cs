@@ -42,30 +42,6 @@ public class QdrantVectorStoreProvider : IVectorStoreProvider
         CollectionName = _collectionName = containerName;
     }
 
-    //TODO: this should be done a different way
-    private async Task EnsureCollectionExistsAsync(int vectorLength)
-    {
-        if (!(await _client.Collections.CollectionExistsAsync(new()
-        {
-            CollectionName = _collectionName,
-        }).ConfigureAwait(false)).Result.Exists)
-        {
-            await _client.Collections.CreateAsync(new()
-            {
-                CollectionName = _collectionName,
-
-                VectorsConfig = new()
-                {
-                    Params = new()
-                    {
-                        Size = (ulong)vectorLength,
-                        Distance = Distance.Cosine, //TODO: these are configs or redefined
-                    },
-                }
-            }).ConfigureAwait(false);
-        }
-    }
-
     /// <summary>
     /// Gets or sets the name of the container.
     /// </summary>
@@ -84,7 +60,7 @@ public class QdrantVectorStoreProvider : IVectorStoreProvider
         )
     {
         if (_options.Value.EnsureCollectionExists)
-            await EnsureCollectionExistsAsync(items.First().embedding.Length).ConfigureAwait(false);
+            await _client.EnsureCollectionExistsAsync(_collectionName, (ulong)items.First().embedding.Length, _options.Value.Distance).ConfigureAwait(false);
 
         List<PointStruct> points = [];
 
@@ -207,7 +183,7 @@ public class QdrantVectorStoreProvider : IVectorStoreProvider
         var results = await _client.Points.ScrollAsync(new()
         {
             CollectionName = _collectionName,
-            Limit = (uint)1000,
+            Limit = (uint)_options.Value.ResultLimit,
             WithPayload = true,
             // WithVectors = true,
         }).ConfigureAwait(false);
@@ -225,7 +201,7 @@ public class QdrantVectorStoreProvider : IVectorStoreProvider
         var results = await _client.Points.QueryAsync(new()
         {
             CollectionName = _collectionName,
-            Limit = (uint)1000,
+            Limit = (uint)_options.Value.ResultLimit,
             Query = ToQuery(find),
             WithPayload = true,
             //  WithVectors = true,
@@ -245,7 +221,7 @@ public class QdrantVectorStoreProvider : IVectorStoreProvider
         var results = await _client.Points.QueryGroupsAsync(new()
         {
             CollectionName = _collectionName,
-            Limit = (uint)1000,
+            Limit = (uint)_options.Value.ResultLimit,
             Query = ToQuery(find),
             WithPayload = true,
             // WithVectors = true,

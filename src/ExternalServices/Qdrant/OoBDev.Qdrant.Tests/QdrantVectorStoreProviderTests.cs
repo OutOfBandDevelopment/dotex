@@ -26,7 +26,6 @@ public class QdrantVectorStoreProviderTests
         _client = new QdrantGrpcClientFactory(Options.Create(new QdrantOptions
         {
             Url = $"http://{host}:{grpcPort}",
-            CollectionName = _collection,
         })).Create();
     }
 
@@ -41,7 +40,6 @@ public class QdrantVectorStoreProviderTests
         new(_client!, Options.Create(new QdrantOptions
         {
             Url = "unused",
-            CollectionName = _collection,
             EnsureCollectionExists = true,
         }), _collection);
 
