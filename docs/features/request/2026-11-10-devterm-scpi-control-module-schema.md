@@ -1,6 +1,6 @@
 # Feature request: DevTerm declarative SCPI control-module schema
 
-- **Status:** new
+- **Status:** triaged
 - **Requested by:** owner (retire dev-term, 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** `src/Applications/DevTerm`, `src/HardwareDevices` (SCPI)
@@ -44,3 +44,5 @@ Does the manifest model (JSON panels) cover enough that a second schema is not n
 ## Triage notes
 
 Origin: dev-term BACKLOG (Device control modules; UX decisions).
+
+2026-11-11: triaged. Declarative SCPI profiles exist (`OoBDev.Scpi` JSON profiles, drop-in directories, layered `Extends`, generated `Panels`); the note above predates them. What remains is the control-module schema beyond profiles. Design: [ScpiInstruments](../../design/ScpiInstruments/README.md). Backlog: BACKLOG.md, DevTerm.

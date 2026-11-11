@@ -1,6 +1,6 @@
 # Feature request: DevTerm UDP transport (target and listener) and listener sessions
 
-- **Status:** new
+- **Status:** triaged
 - **Requested by:** owner (retire dev-term, 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** `src/Applications/DevTerm`
@@ -46,3 +46,5 @@ The EByte byte-count discrepancy (`FD00`/`FD01`) needs a fresh capture of the re
 ## Triage notes
 
 Origin: dev-term BACKLOG (Transports; UX decisions 2026-10-13).
+
+2026-11-11: triaged. The note above is out of date: the UDP adapter (`UdpEndpointDeviceAdapter`), the listener libraries and the UDP session tab are built (2026-11-09, Core `SessionHost` decision for tabs per peer). The EByte E810-DTU config protocol still needs a fresh capture. Design: [Transports](../../design/Transports/README.md), [MultiSessionUi](../../design/MultiSessionUi/README.md). Backlog: BACKLOG.md, DevTerm.

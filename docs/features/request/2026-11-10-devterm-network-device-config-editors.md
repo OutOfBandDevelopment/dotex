@@ -1,6 +1,6 @@
 # Feature request: DevTerm network device config editors and discovery probes
 
-- **Status:** new
+- **Status:** triaged
 - **Requested by:** owner (retire dev-term, 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** `src/Applications/DevTerm` (`Configuration/Discovery`, device manifests)
@@ -46,3 +46,5 @@ Needs a fresh capture of each real device (the dev-term TODO said "continue to w
 ## Triage notes
 
 Origin: dev-term BACKLOG (Proposals tracker, Proposed Ideas).
+
+2026-11-11: triaged. Discovery and the `IDeviceConfigEditor` seam exist; the Ebyte editor is queued behind the first WPF device panel (owner, 2026-11-09). Design: [NetworkDevices](../../design/NetworkDevices/README.md). Backlog: BACKLOG.md, DevTerm.

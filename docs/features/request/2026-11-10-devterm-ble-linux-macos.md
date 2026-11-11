@@ -1,6 +1,6 @@
 # Feature request: DevTerm BLE backends for Linux and macOS
 
-- **Status:** new
+- **Status:** triaged
 - **Requested by:** owner (retire dev-term, 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** `src/Applications/DevTerm` (BLE transport adapters)
@@ -43,3 +43,5 @@ Which platform first, and is a machine available for it?
 ## Triage notes
 
 Origin: dev-term BACKLOG (Transports); dev-term TODO "continue to wait".
+
+2026-11-11: triaged. Windows adapter and seam only; BlueZ and CoreBluetooth wait for hardware to test (macOS deferred, owner 2026-11-10). Design: [Transports](../../design/Transports/README.md). Backlog: BACKLOG.md, DevTerm.
