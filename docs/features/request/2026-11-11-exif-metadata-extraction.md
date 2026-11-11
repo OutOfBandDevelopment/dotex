@@ -22,6 +22,14 @@ A read-only metadata reader interface with an image implementation (EXIF, XMP, I
 
 - No metadata reader found by project names; not all packages were read.
 
+## Source references (NAS storage catalog application)
+
+Paths are in the catalog repository `C:epo_storage`. They are the code to merge from when this feature is taken in; the catalog will drop its copy and consume the framework version afterward (owner 2026-11-11).
+
+- Stages: `src/Storage.Workers/Stages/ExifStageRunner.cs`, `ImgMetaStageRunner.cs`, `AudioMetaStageRunner.cs`; readers `ExifDump.cs`, `ExifTagNames.cs`, `HeicContainer.cs`, `ImageFormats.cs`, `AudioFormats.cs`, `DateCombiner.cs`; duty `Duties/FileDatesDuty.cs`.
+- Python helpers: `containers/tools/exif_service.py`, `heic_service.py`.
+- Model: `src/Storage.Catalog/Domain/Content.cs`.
+
 ## Security and operations
 
 Inputs are private files (photos, scans), so nothing is logged beyond identifiers and counts, and no source file is modified. Runs as a worker with a lease and a runtime ceiling (see `2026-11-11-database-stage-work-queue.md`).

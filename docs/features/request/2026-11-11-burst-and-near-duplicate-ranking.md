@@ -22,6 +22,13 @@ A grouping step using capture time plus embedding similarity, a pluggable rankin
 
 - `2026-11-10-file-inventory-and-deduplication.md` covers inventory and duplicates.
 
+## Source references (NAS storage catalog application)
+
+Paths are in the catalog repository `C:epo_storage`. They are the code to merge from when this feature is taken in; the catalog will drop its copy and consume the framework version afterward (owner 2026-11-11).
+
+- Ranking and grouping: `src/Storage.Workers/BurstRanker.cs`, `Duties/BurstsDuty.cs`, `DHash.cs`, `QualityLabels.cs`, `Stages/QualityStageRunner.cs`; Python scoring `containers/tools/quality.py`, `quality_service.py`.
+- Rows and API: `src/Storage.Catalog.Infrastructure/BurstBestRow.cs`, `BurstMemberRow.cs`, `src/Storage.Api/Images/BurstsController.cs`.
+
 ## Security and operations
 
 Inputs are private files (photos, scans), so nothing is logged beyond identifiers and counts, and no source file is modified. Runs as a worker with a lease and a runtime ceiling (see `2026-11-11-database-stage-work-queue.md`).

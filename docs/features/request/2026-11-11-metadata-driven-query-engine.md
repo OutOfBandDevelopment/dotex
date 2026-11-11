@@ -56,6 +56,16 @@ Pieces to take, in order:
 - `OoBDev.Search`: the custom search syntax and ranking; not compared in code. The catalog's text language could be one more syntax.
 - Source of the engine is `src/Storage.Query` in the catalog application (98 files, with its own test project); the dotex code was not read beyond project names and the design pages.
 
+## Source references (NAS storage catalog application)
+
+Paths are in the catalog repository `C:epo_storage`. They are the code to merge from when this feature is taken in; the catalog will drop its copy and consume the framework version afterward (owner 2026-11-11).
+
+- Engine: `src/Storage.Query/` (`QueryEngine.cs`, `QueryCompiler.cs`, `FilterCompiler.cs`, `Cursor.cs`, `KindRegistry.cs`, `SqlParameters.cs`), attributes in `src/Storage.Query/Metadata/`, kinds in `src/Storage.Query/Kinds/`.
+- Text language: `SearchParser.cs`, `SearchOperator.cs`, `QueryText.cs`, `ParsedSearch.cs`; page `docs/features/query-host/query-language.md`.
+- Host and verbs: `src/Storage.Query.Web/` (`/q`, `/parse`, `CommandRelay.cs`, `ProbeCache.cs`).
+- Tests: `tests/Storage.Query.Tests` (engine, compiler, DocGen of `docs/api-guide/`), `tests/Storage.Query.Web.Tests`.
+- Design: `docs/features/query-host.md`, `docs/features/query-host/`.
+
 ## Security and operations
 
 Read-only by design: the engine only builds `select` statements from declarations, with every value bound as a parameter. Access control is a hook per kind (a kind can require a right); it should use the application rights design rather than its own. Cost is one compiled plan per kind at start.

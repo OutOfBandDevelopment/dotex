@@ -45,6 +45,15 @@ A stage or duty is switched on by name in configuration (`Workers:Stages:hash = 
 - `2026-11-10-complex-events-and-scheduling.md` and `2026-11-10-event-document-history-stores.md`: neighbours (scheduling, event history); not compared in detail.
 - The catalog application documents the behavior as rules `que-1` to `que-14` in `docs/features/pipeline/queue-and-stages.md`; the tests live with the application.
 
+## Source references (NAS storage catalog application)
+
+Paths are in the catalog repository `C:epo_storage`. They are the code to merge from when this feature is taken in; the catalog will drop its copy and consume the framework version afterward (owner 2026-11-11).
+
+- Queue: `src/Storage.Work/` (`WorkQueue.cs`, `StageSla.cs`, `StageStats.cs`, `TaskEnqueuer.cs`, `WorkerEvents.cs`, `WorkerEvent.cs`, `WorkOptions.cs`).
+- Hosting and stages: `src/Storage.Workers/` (`Stages/*StageRunner.cs`, `Duties/`), registry `src/Storage.Catalog/Pipeline/StageRegistry.cs`, `StageServices.cs`; owner stage control `src/Storage.Catalog/Owner/StageControl.cs`.
+- Schema: migrations in `src/Storage.Migrator`.
+- Rules and behavior: `docs/features/pipeline/queue-and-stages.md` (`que-1` to `que-14`); tests in `tests/Storage.Api.Tests` and `tests/Storage.Catalog.IntegrationTests`.
+
 ## Security and operations
 
 The queue tables hold paths and statuses, not content. The operator controls (pause, speed) are writes and need an application right. Database cost: one index per stage state; the events table is capped by the retention settings.

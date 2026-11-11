@@ -23,6 +23,14 @@ Detection and embedding providers, a vector store for the results, and an increm
 
 - No project or request found for face or pet recognition. Personal data: see Security.
 
+## Source references (NAS storage catalog application)
+
+Paths are in the catalog repository `C:epo_storage`. They are the code to merge from when this feature is taken in; the catalog will drop its copy and consume the framework version afterward (owner 2026-11-11).
+
+- Stages: `src/Storage.Workers/Stages/FacesStageRunner.cs`, `PetsStageRunner.cs`; clustering `src/Storage.Workers/ClusterAssigner.cs`, `Duties/AutoClusterDuty.cs`, `Duties/PetClaimsDuty.cs`, `Duties/ManualDetectionsDuty.cs`.
+- Owner model: `src/Storage.Catalog/Owner/` (`Person.cs`, `ContentPerson.cs`, `ManualDetection.cs`, `PersonUnion.cs`, `PersonParent.cs`).
+- API: `src/Storage.Api/People/`.
+
 ## Security and operations
 
 Inputs are private files (photos, scans), so nothing is logged beyond identifiers and counts, and no source file is modified. Runs as a worker with a lease and a runtime ceiling (see `2026-11-11-database-stage-work-queue.md`).

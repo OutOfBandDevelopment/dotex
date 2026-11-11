@@ -33,6 +33,14 @@ Two things the catalog application does that other dotex applications will want.
 - `2026-11-10-file-inventory-and-deduplication.md`: the inventory side; the annotation layer is its natural companion.
 - A search of `src` for Npgsql and pgvector found nothing.
 
+## Source references (NAS storage catalog application)
+
+Paths are in the catalog repository `C:epo_storage`. They are the code to merge from when this feature is taken in; the catalog will drop its copy and consume the framework version afterward (owner 2026-11-11).
+
+- Vector spaces and multi-vector matching: `src/Storage.Query/Metadata/SpaceAttribute.cs`, `SpaceMetric.cs`, `src/Storage.Query/SpaceInfo.cs`, `QueryCompiler.cs`.
+- Writers: `src/Storage.Workers/Stages/ImgVecStageRunner.cs`, `EmbedStageRunner.cs`, `PageVecStageRunner.cs`, `Duties/BothVectorsDuty.cs`, `Duties/CaptionVectorsDuty.cs`; database image `containers/pgvector`.
+- Annotation layer: `src/Storage.Catalog/Owner/` (`Annotation.cs`, `ImageAdjustment.cs`, `ImageDerivation.cs`, `SavedSelection.cs`, `SelectionDecision.cs`, `ContentMark.cs`, `RemovalMark.cs`); the catalog side `src/Storage.Catalog/Domain/`.
+
 ## Security and operations
 
 Vectors of personal photos and faces are personal data; the store provider should not log them. HNSW builds lock writes briefly; the index step is documented, not automatic.

@@ -23,6 +23,14 @@ A document-to-Markdown provider interface with an OCR implementation (external t
 
 - `Documents.ExternalTools` (4 files) is the nearest piece; not read. The catalog notes mention Docling as the converter.
 
+## Source references (NAS storage catalog application)
+
+Paths are in the catalog repository `C:epo_storage`. They are the code to merge from when this feature is taken in; the catalog will drop its copy and consume the framework version afterward (owner 2026-11-11).
+
+- Stages: `src/Storage.Workers/Stages/OcrStageRunner.cs`, `PageOcrStageRunner.cs`, `ExtractStageRunner.cs`, `PdfInfoStageRunner.cs`, `RenderStageRunner.cs`, `SummarizeStageRunner.cs`; helpers `ExtractConverter.cs`, `ExtractPaths.cs`, `ChunkText.cs`, `HtmlMarkdown.cs`, `HtmlText.cs`.
+- Container: `containers/docling-ocr/` (README and backup scripts), `containers/renderer/server.py`.
+- Documents and pages API: `src/Storage.Api/Documents/`; row model `src/Storage.Catalog.Infrastructure/DocumentRow.cs`.
+
 ## Security and operations
 
 Inputs are private files (photos, scans), so nothing is logged beyond identifiers and counts, and no source file is modified. Runs as a worker with a lease and a runtime ceiling (see `2026-11-11-database-stage-work-queue.md`).

@@ -25,6 +25,14 @@ The catalog runs image and text embedding in a Python GPU container (DINOv2, CLI
 
 - `ExternalServices/Onnx`, `Vision`, `Ollama`, `SBert` list embedding providers; whether one already offers a configurable HTTP client and what signature it uses was not read.
 
+## Source references (NAS storage catalog application)
+
+Paths are in the catalog repository `C:epo_storage`. They are the code to merge from when this feature is taken in; the catalog will drop its copy and consume the framework version afterward (owner 2026-11-11).
+
+- Stages that call the container: `src/Storage.Workers/Stages/ImgVecStageRunner.cs`, `EmbedStageRunner.cs`, `PageVecStageRunner.cs`, `CaptionStageRunner.cs`; duties `Duties/BothVectorsDuty.cs`, `CaptionVectorsDuty.cs`.
+- Python side: `containers/tools/` (`server.py`, `Dockerfile`, `media_service.py`); LLM side `containers/ollama/` (`models.txt`); health `src/Storage.Workers/ILlmHealth.cs`, `Duties/LlmHealthDuty.cs`.
+- Container lifecycle: `src/Storage.Workers/IContainerControl.cs`, `DockerCli.cs`, `Duties/ContainerTendDuty.cs`.
+
 ## Security and operations
 
 Inputs are private files (photos, scans), so nothing is logged beyond identifiers and counts, and no source file is modified. Runs as a worker with a lease and a runtime ceiling (see `2026-11-11-database-stage-work-queue.md`).

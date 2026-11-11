@@ -31,6 +31,13 @@ file inventory or duplicate detection.
 - `OoBDev.Onnx.ImageEmbeddings` (embeddings and vector stores) is the nearest piece for near-duplicates. Not read.
 - The two notes projects were checked from their pages only; their code was not compared with each other.
 
+## Source references (NAS storage catalog application, added 2026-11-11)
+
+Paths are in the catalog repository `C:epo_storage`; merge from them when this is taken in.
+
+- Hashing and recheck: `src/Storage.Workers/FileHasher.cs`, `Stages/HashStageRunner.cs`, `Duties/HashRecheckDuty.cs`; archive walking `ArchiveWalker.cs`, `Stages/ArchiveStageRunner.cs`; perceptual hash `DHash.cs`.
+- Duplicate notes and removal marks (never performed): `src/Storage.Catalog/Owner/RemovalMark.cs`, `ContentMark.cs`; archive overlap `src/Storage.Catalog.Infrastructure/ArchiveOverlapRow.cs`; page `docs/features/pipeline/purge-and-cleanup.md`.
+
 ## Security and operations
 
 Reads whole files, so IO cost is large on a NAS; the scan should be throttled and resumable. Paths are listed in output, so reports may contain private names.
