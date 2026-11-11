@@ -45,7 +45,7 @@ CloudEvents 1.0 is an edge option, not the internal envelope (owner, 2026-11-11)
 
 [Testing strategy →](testing-strategy.md)
 
-**Status:** Draft · **Date:** 2026-11-11 · *Built (2026-11-11): `IEventStore`, `EventRecord`, `NewEvent`, `AppendResult`, `IEntityStore`, `EntityRecord`, `EventsChannel`, the in-memory stores, `EventRelay` and `TryAddEventSourcing()`. Proposed, not built: the provider packages with migrations, `AggregateRoot`, `IAggregateRepository<T>`, `IProjection`, `IEventUpcaster` and the CloudEvents mapper. Also built: `EfEventStore`, `EfEntityStore` and `EventSourcingDbContext` in `OoBDev.EventSourcing.EntityFrameworkCore` (tested on SQLite). Provider and factory interfaces are replaced by keyed services selected with `TryAddConfiguredKeyedService`.*
+**Status:** Draft · **Date:** 2026-11-11 · *Built (2026-11-11): `IEventStore`, `EventRecord`, `NewEvent`, `AppendResult`, `IEntityStore`, `EntityRecord`, `EventsChannel`, the in-memory stores, `EventRelay` and `TryAddEventSourcing()`. Proposed, not built: the `.SqlServer` package and dacpac, `AggregateRoot`, `IAggregateRepository<T>`, `IProjection`, `IEventUpcaster` and the CloudEvents mapper. Also built: `EfEventStore`, `EfEntityStore` and `EventSourcingDbContext` in `OoBDev.EventSourcing.EntityFrameworkCore`, and the `.Sqlite` and `.Postgres` database packages with `InitialCreate` migrations (tested on SQLite; PostgreSQL checked only for migration-to-model drift). Provider and factory interfaces are replaced by keyed services selected with `TryAddConfiguredKeyedService`.*
 
 ## Contents
 
