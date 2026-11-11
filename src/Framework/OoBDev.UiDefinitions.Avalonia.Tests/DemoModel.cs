@@ -1,7 +1,7 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace OoBDev.Spike.Avalonia;
+namespace OoBDev.UiDefinitions.Avalonia.Tests;
 
 /// <summary>The object the demo form edits.</summary>
 public sealed class DemoModel : INotifyPropertyChanged

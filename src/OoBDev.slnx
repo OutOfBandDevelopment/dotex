@@ -44,6 +44,8 @@
     </Project>
     <Project Path="Examples/OoBDev.Example.WebApi/OoBDev.Example.WebApi.csproj" />
     <Project Path="Examples/OoBDev.Example.WebApi.Tests/OoBDev.Example.WebApi.Tests.csproj" />
+    <Project Path="Examples/OoBDev.Examples.Controls.Avalonia.Tests/OoBDev.Examples.Controls.Avalonia.Tests.csproj" />
+    <Project Path="Examples/OoBDev.Examples.Controls.Avalonia/OoBDev.Examples.Controls.Avalonia.csproj" />
     <Project Path="Examples/OoBDev.Examples.Controls.Blazor.Tests/OoBDev.Examples.Controls.Blazor.Tests.csproj" />
     <Project Path="Examples/OoBDev.Examples.Controls.Blazor/OoBDev.Examples.Controls.Blazor.csproj" />
     <Project Path="Examples/OoBDev.Examples.Controls.Tui.Tests/OoBDev.Examples.Controls.Tui.Tests.csproj" />
@@ -311,6 +313,10 @@
     <Project Path="Framework/OoBDev.System.Tests/OoBDev.System.Tests.csproj" />
     <Project Path="Framework/OoBDev.System/OoBDev.System.csproj" />
     <Project Path="Framework/OoBDev.TestUtilities.Tests/OoBDev.TestUtilities.Tests.csproj" />
+    <Project Path="Framework/OoBDev.UiDefinitions.Avalonia.Tests/OoBDev.UiDefinitions.Avalonia.Tests.csproj" />
+    <Project Path="Framework/OoBDev.UiDefinitions.Avalonia/OoBDev.UiDefinitions.Avalonia.csproj" />
+    <Project Path="Framework/OoBDev.UiDefinitions.WinForms.Tests/OoBDev.UiDefinitions.WinForms.Tests.csproj" />
+    <Project Path="Framework/OoBDev.UiDefinitions.WinForms/OoBDev.UiDefinitions.WinForms.csproj" />
     <Project Path="Framework/OoBDev.UiDefinitions.Tests/OoBDev.UiDefinitions.Tests.csproj" />
     <Project Path="Framework/OoBDev.UiDefinitions.ViewModels.Tests/OoBDev.UiDefinitions.ViewModels.Tests.csproj" />
     <Project Path="Framework/OoBDev.UiDefinitions.ViewModels/OoBDev.UiDefinitions.ViewModels.csproj" />

@@ -2,10 +2,10 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Themes.Fluent;
 
-namespace OoBDev.Spike.Avalonia;
+namespace OoBDev.Examples.Controls.Avalonia;
 
-/// <summary>Minimal Avalonia application with the Fluent theme (no XAML) that opens the demo form.</summary>
-public sealed class SpikeApp : Application
+/// <summary>Minimal Avalonia application with the Fluent theme (no XAML) that opens the generated settings form.</summary>
+public sealed class ControlsApp : Application
 {
     /// <inheritdoc />
     public override void Initialize() => Styles.Add(new FluentTheme());
@@ -15,8 +15,8 @@ public sealed class SpikeApp : Application
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            desktop.MainWindow = DemoForm.CreateWindow(new DemoModel());
-            new LiveDemo().CreateWindow(run: true).Show();
+            desktop.MainWindow = ControlsWindow.Build(new ControlsSampleSettings(), out _);
+            new LiveSample().CreateWindow(run: true).Show();
         }
 
         base.OnFrameworkInitializationCompleted();

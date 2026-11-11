@@ -4,8 +4,6 @@
     <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>
-  <Project Path="Spikes/OoBDev.Spike.Avalonia/OoBDev.Spike.Avalonia.csproj" />
-  <Project Path="Spikes/OoBDev.Spike.Avalonia.Tests/OoBDev.Spike.Avalonia.Tests.csproj" />
   <Project Path="Spikes/OoBDev.Spike.ExtensionsAI/OoBDev.Spike.ExtensionsAI.csproj" />
   <Project Path="Spikes/OoBDev.Spike.PluginSandbox/OoBDev.Spike.PluginSandbox.csproj" />
   <Project Path="Spikes/OoBDev.Spike.PluginSandbox.Tests/OoBDev.Spike.PluginSandbox.Tests.csproj" />

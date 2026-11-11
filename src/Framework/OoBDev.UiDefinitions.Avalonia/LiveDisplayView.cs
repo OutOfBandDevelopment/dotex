@@ -10,7 +10,7 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using OoBDev.UiDefinitions.ViewModels;
 
-namespace OoBDev.Spike.Avalonia;
+namespace OoBDev.UiDefinitions.Avalonia;
 
 /// <summary>
 /// Draws a <see cref="LiveDisplayViewModel"/> (indicator, bar graph, strip chart or vector) in Avalonia. The strip chart and vector are

@@ -3,17 +3,18 @@ using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Threading;
 using OoBDev.Examples.Controls;
+using OoBDev.UiDefinitions.Avalonia;
 using OoBDev.UiDefinitions.ViewModels;
 
-namespace OoBDev.Spike.Avalonia;
+namespace OoBDev.Examples.Controls.Avalonia;
 
 /// <summary>The indicator, bar graph and strip chart of the shared <see cref="LiveSampleFeed"/>, drawn in Avalonia.</summary>
-public sealed class LiveDemo
+public sealed class LiveSample
 {
     private readonly LiveSampleFeed _feed = new();
 
     /// <summary>Creates one view model per live control.</summary>
-    public LiveDemo() => Displays = [.. LiveSampleFeed.Controls.Select(control => new LiveDisplayViewModel(control))];
+    public LiveSample() => Displays = [.. LiveSampleFeed.Controls.Select(control => new LiveDisplayViewModel(control))];
 
     /// <summary>One view model per live control, in display order.</summary>
     public IReadOnlyList<LiveDisplayViewModel> Displays { get; }

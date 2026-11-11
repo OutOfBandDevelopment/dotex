@@ -4,7 +4,7 @@ using Avalonia.Headless;
 using Avalonia.Threading;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace OoBDev.Spike.Avalonia.Tests;
+namespace OoBDev.Examples.Controls.Avalonia.Tests;
 
 /// <summary>Writes a rendered window to the test results directory and attaches it to the test result.</summary>
 public static class Screenshots

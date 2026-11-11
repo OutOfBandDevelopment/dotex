@@ -3,7 +3,7 @@ using OoBDev.UiDefinitions;
 using OoBDev.UiDefinitions.Forms;
 using OoBDev.UiDefinitions.ViewModels;
 
-namespace OoBDev.Spike.Avalonia;
+namespace OoBDev.UiDefinitions.Avalonia.Tests;
 
 /// <summary>Builds the demo definition, view model and window content.</summary>
 public static class DemoForm

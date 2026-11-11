@@ -1,6 +1,6 @@
 using Avalonia.Headless;
 
-namespace OoBDev.Spike.Avalonia.Tests;
+namespace OoBDev.UiDefinitions.Avalonia.Tests;
 
 /// <summary>The one headless session of the test process; Avalonia allows only one application per process.</summary>
 public static class HeadlessSession

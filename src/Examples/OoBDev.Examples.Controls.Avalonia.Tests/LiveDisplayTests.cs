@@ -5,9 +5,9 @@ using Avalonia.Headless;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using OoBDev.Spike.Avalonia;
+using OoBDev.Examples.Controls.Avalonia;
 
-namespace OoBDev.Spike.Avalonia.Tests;
+namespace OoBDev.Examples.Controls.Avalonia.Tests;
 
 /// <summary>The live displays (indicator, bar graph, strip chart) drawn headless from the shared sample feed, with screenshots attached.</summary>
 [TestCategory("Unit")]
@@ -18,9 +18,9 @@ public sealed class LiveDisplayTests
 
     public TestContext TestContext { get; set; } = null!;
 
-    private void Run(int steps, global::System.Action<LiveDemo, Window> body) => _session.Dispatch(() =>
+    private void Run(int steps, global::System.Action<LiveSample, Window> body) => _session.Dispatch(() =>
     {
-        var demo = new LiveDemo();
+        var demo = new LiveSample();
         for (var i = 0; i < steps; i++)
         {
             demo.Step();

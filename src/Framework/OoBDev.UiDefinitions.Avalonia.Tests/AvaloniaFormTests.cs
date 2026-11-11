@@ -7,18 +7,18 @@ using Avalonia.Skia;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using OoBDev.Spike.Avalonia;
+using OoBDev.UiDefinitions.Avalonia;
 using OoBDev.UiDefinitions.ViewModels;
 
-[assembly: AvaloniaTestApplication(typeof(OoBDev.Spike.Avalonia.Tests.TestAppBuilder))]
+[assembly: AvaloniaTestApplication(typeof(OoBDev.UiDefinitions.Avalonia.Tests.TestAppBuilder))]
 
-namespace OoBDev.Spike.Avalonia.Tests;
+namespace OoBDev.UiDefinitions.Avalonia.Tests;
 
 /// <summary>Headless application with the real Skia renderer, so screenshots show what a user sees.</summary>
 public static class TestAppBuilder
 {
     /// <summary>Builds the test application.</summary>
-    public static AppBuilder BuildAvaloniaApp() => AppBuilder.Configure<SpikeApp>()
+    public static AppBuilder BuildAvaloniaApp() => AppBuilder.Configure<TestApp>()
         .UseSkia()
         .UseHeadless(new AvaloniaHeadlessPlatformOptions { UseHeadlessDrawing = false });
 }

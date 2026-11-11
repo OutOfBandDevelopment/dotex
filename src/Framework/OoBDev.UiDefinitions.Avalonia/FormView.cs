@@ -4,7 +4,7 @@ using Avalonia.Data;
 using Avalonia.Layout;
 using OoBDev.UiDefinitions.ViewModels;
 
-namespace OoBDev.Spike.Avalonia;
+namespace OoBDev.UiDefinitions.Avalonia;
 
 /// <summary>Renders a <see cref="FormViewModel"/> in Avalonia using only bindings to its properties and commands (no code-behind logic).</summary>
 public static class FormView
