@@ -33,10 +33,12 @@ Commands change aggregates, aggregates raise events, an append-only store keeps 
 
 Confirmed by the owner on 2026-11-11 (the recommended options):
 
-1. **Event envelope:** CloudEvents 1.0 compatible, with an `OoBDev` extension for stream id and sequence.
+1. **Event shape:** a plain `EventRecord` (stream id, sequence, type, timestamp, payload) carried by the existing message-queue pattern (`IMessageQueueSender`, `IMessageQueueHandler`, `IMessageContext`). CloudEvents 1.0 is an edge option mapped over it, not the internal envelope (owner, 2026-11-11).
 2. **Store contract:** append with an expected sequence (optimistic concurrency), read by stream, follow by global position.
-3. **Home:** Framework (`OoBDev.EventSourcing` plus Abstractions); SQL and message-queue stores are adapters.
+3. **Home:** Framework (`OoBDev.EventSourcing` plus Abstractions). The event store, the event stream and the entity store are separate, each swapped by configuration; the stream is the existing message-queue providers (owner, 2026-11-11). The first queues are Azure Service Bus and Storage Queues, SQL Server Service Broker and a new PostgreSQL pgmq adapter.
 4. **First cut:** minimal. Snapshots and upcasting are separate backlog items.
-5. **Erasure:** crypto-shredding per subject is the supported route; no event deletion and no redaction events.
+5. **Relational stores:** the event store and the entity store have an Entity Framework Core implementation with PostgreSQL, SQL Server and SQLite as configurable databases (owner, 2026-11-11); see [API design](api-design.md#entity-framework-stores).
+6. **Reference material:** the harvest event-sourcing project may be copied from after sanitizing, recording each source in the readme (owner, 2026-11-11).
+7. **Erasure:** crypto-shredding per subject is the supported route; no event deletion and no redaction events.
 
 The library build is now unblocked and sits in `BACKLOG.md`.

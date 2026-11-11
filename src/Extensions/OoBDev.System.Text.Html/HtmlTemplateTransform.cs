@@ -29,14 +29,11 @@ public class HtmlTemplateTransform(
             DisableServerSideCode = true,
 
             OptionAutoCloseOnEnd = true,
-            // OptionDefaultStreamEncoding = Encoding.UTF8,
             OptionEmptyCollection = true,
             OptionFixNestedTags = true,
             OptionOutputAsXml = true,
             OptionOutputOptimizeAttributeValues = true,
-            // OptionPreserveXmlNamespaces = true,
             OptionReadEncoding = true,
-            //OptionWriteEmptyNodes = true,
 
         };
         html.LoadHtml(content);

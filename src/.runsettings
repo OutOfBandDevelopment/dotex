@@ -121,6 +121,9 @@ https://github.com/coverlet-coverage/coverlet/blob/fc7ec26dcaed8fedba880ff13c6f1
 		<Parameter name="REDIS_HOST" value="localhost" />
 		<Parameter name="REDIS_PORT" value="6379" />
 
+		<!-- PostgreSQL (pgmq) -->
+		<Parameter name="POSTGRES_CONNECTION_STRING" value="Host=localhost;Port=5434;Database=oobdev_test;Username=postgres;Password=IntegrationTest123!" />
+
 		<!-- OpenSearch -->
 		<Parameter name="OPENSEARCH_URL" value="https://localhost:9200" />
 		<Parameter name="OPENSEARCH_HOST" value="localhost" />
@@ -137,6 +140,11 @@ https://github.com/coverlet-coverage/coverlet/blob/fc7ec26dcaed8fedba880ff13c6f1
 		<Parameter name="QDRANT_URL" value="http://localhost:6333" />
 		<Parameter name="QDRANT_HOST" value="localhost" />
 		<Parameter name="QDRANT_PORT" value="6333" />
+
+		<!-- Neo4j -->
+		<Parameter name="NEO4J_URI" value="bolt://localhost:7687" />
+		<Parameter name="NEO4J_USER" value="neo4j" />
+		<Parameter name="NEO4J_PASSWORD" value="oobdev-test-pass" />
 
 		<!-- Azure Storage (Azurite) -->
 		<Parameter name="AZURITE_URL" value="http://localhost:10000" />

@@ -39,7 +39,7 @@ public class YamlNavigator : IToXPathNavigable
     /// <returns>An IXPathNavigable instance representing the YAML document, or null if the document cannot be loaded.</returns>
     public IXPathNavigable? ToNavigable(Stream stream)
     {
-        using var input = new StreamReader(stream);
+        using var input = new StreamReader(stream, leaveOpen: true);
         return ToNavigable(input);
     }
 

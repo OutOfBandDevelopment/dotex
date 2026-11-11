@@ -367,6 +367,34 @@ Responses:
 
 - `200` OK (`text/plain`, `application/json`, `text/json`)
 
+### GET `/api/UiDefinitions`
+
+Responses:
+
+- `200` OK (`text/plain`, `application/json`, `text/json`)
+
+### GET `/api/UiDefinitions/{key}`
+
+Parameters:
+
+- `key` (path, string, required)
+
+Responses:
+
+- `200` OK (`text/plain`, `application/json`, `text/json`)
+
+### POST `/api/UiDefinitions/{key}/evaluate`
+
+Parameters:
+
+- `key` (path, string, required)
+
+Request body: `application/json`, `text/json`, `application/*+json`
+
+Responses:
+
+- `200` OK (`text/plain`, `application/json`, `text/json`)
+
 ### GET `/api/User/claims`
 
 Responses:

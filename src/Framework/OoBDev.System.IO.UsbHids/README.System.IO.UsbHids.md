@@ -29,7 +29,7 @@ using OoBDev.System.IO.UsbHids;
 [UsbHid(VendorId = 0x1234, ProductId = 0x5678)]
 public class MyUsbDevice { }
 
-// Get device using factory
+// The factory matches VendorId and (ProductId & ProductMask) and returns a UsbHidEndpointDeviceAdapter per device path
 var factory = new UsbHidFactory();
 var device = factory.GetDevice(new MyUsbDevice());
 
@@ -46,12 +46,5 @@ services.AddUsbHidEndpointDeviceAdapter();
 services.Configure<UsbHidEndpointOptions>(o => { o.VendorId = 0x1915; o.ProductId = 0xAFDA; });
 ```
 
-`IUsbHidDiscovery` (`SystemUsbHidDiscovery`) lists connected devices as `UsbHidDeviceDescriptor`. `IUsbHidDevice` and `IUsbHidDeviceFactory` are the test seams; the adapter is unit tested against a pipe-backed fake, and hardware tests are not part of this library.
+`IUsbHidDiscovery` (`SystemUsbHidDiscovery`) lists connected devices as `UsbHidDeviceDescriptor`. `AddUsbHidEndpointDeviceAdapter()` registers the adapter and its options. `IUsbHidDevice` and `IUsbHidDeviceFactory` are the test seams; the adapter is unit tested against a pipe-backed fake, and hardware tests are not part of this library.
 
-## License
-
-See repository license file for details.
-
-## Repository
-
-[OoBDev Repository](https://github.com/yourusername/oobdev)

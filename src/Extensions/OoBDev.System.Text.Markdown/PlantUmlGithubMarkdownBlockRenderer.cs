@@ -7,9 +7,9 @@ namespace OoBDev.System.Text.Markdown;
 /// Renders PlantUML blocks as GitHub-flavored Markdown with embedded diagram images.
 /// </summary>
 /// <param name="pipeline">The Markdown pipeline configuration.</param>
-public class PlantUmlGithubMarkdownBlockRenderer(MarkdownPipeline pipeline) : NormalizeObjectRenderer<PlantUmlBlock>
+public class PlantUmlGithubMarkdownBlockRenderer(MarkdownPipeline pipeline, PlantUmlRendererOptions options) : NormalizeObjectRenderer<PlantUmlBlock>
 {
-    private readonly PlantUmlRenderer _renderer = new(pipeline);
+    private readonly PlantUmlRenderer _renderer = new(pipeline, options);
 
     /// <summary>
     /// Writes the PlantUML block as GitHub-flavored Markdown with an embedded diagram image.

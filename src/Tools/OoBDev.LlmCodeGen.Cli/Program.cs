@@ -30,7 +30,7 @@ public static class Program
     };
 
     private const string Usage = """
-        oobdev-llmcodegen --input <folder> --output <folder> --template <name|file> --model <model> [--provider ollama|groq-cloud] [--pattern *.*] [--overwrite true|false] [--extract true|false]
+        llmcodegen --input <folder> --output <folder> --template <name|file> --model <model> [--provider ollama|groq-cloud] [--pattern *.*] [--overwrite true|false] [--extract true|false]
           --input      folder scanned recursively; every folder with matching files becomes one prompt (required)
           --output     folder for prompts, responses and extracted files (required)
           --template   bundled template name (for example documentation) or a Handlebars file (required)

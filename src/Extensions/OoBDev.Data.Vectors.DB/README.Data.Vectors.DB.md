@@ -63,7 +63,3 @@ Functions return NULL for undefined results; see `OoBDev.Data.Vectors` readme, "
 ## License
 
 See repository license file for details.
-
-## Repository
-
-[OoBDev Repository](https://github.com/yourusername/oobdev)

@@ -2,7 +2,7 @@
 
 [↑ Overview](README.md) · [Architecture →](architecture.md)
 
-**Status:** Draft · **Date:** 2026-10-22 · **Related:** [authorization practices](../../patterns-discovery/03-practices-and-conventions/11-authorization-practices.md)
+**Status:** Built · **Date:** 2026-11-11 (all of REQ-001 to REQ-011 are in `OoBDev.AspNetCore.Abstractions`, `OoBDev.AspNetCore.Mvc` and `OoBDev.AspNetCore.Cgi`, covered by `RoleRightTests` and `CgiMiddlewareTests`) · **Related:** [authorization practices](../../patterns-discovery/03-practices-and-conventions/11-authorization-practices.md)
 
 ## Contents
 

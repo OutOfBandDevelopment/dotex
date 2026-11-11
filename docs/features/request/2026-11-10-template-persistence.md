@@ -1,6 +1,6 @@
 # Feature request: template persistence (text template store)
 
-- **Status:** new
+- **Status:** triaged
 - **Requested by:** owner (SharedFramework comparison, 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** `OoBDev.System.Text.Templating*`, `OoBDev.Handlebars` (Epic 10 Text Templating)
@@ -47,3 +47,5 @@ Does it share the lookup with the embedded template fallback request?
 ## Triage notes
 
 Origin: SharedFramework. Design exists; no code until a consumer appears.
+
+2026-11-11: triaged. Design exists in [TextTemplating](../../design/TextTemplating/README.md) (`DatabaseTemplateSource`); no code until a consumer appears. Backlog: BACKLOG.md, SharedFramework.

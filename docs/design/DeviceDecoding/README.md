@@ -15,4 +15,4 @@ Protocol decoders for hardware devices (DE-5000, Busylight, K8055, NMEA, Radex O
 
 ## Scope of this folder
 
-Phase 1 of the plan covers the protocol libraries only. The UI framework (phases 6 and 7), manifests (phase 8) and extra transports (phase 9) get their own documents when Q3 is answered, and are listed here only where a protocol decision depends on them.
+Phase 1 of the plan covers the protocol libraries only. The UI framework (phases 6 and 7), manifests (phase 8) and extra transports (phase 9) get their own documents (the migration was decided 2026-10-28), and are listed here only where a protocol decision depends on them.

@@ -1,6 +1,6 @@
 # Feature request: data loader (ETL pipeline and CLI)
 
-- **Status:** new
+- **Status:** triaged
 - **Requested by:** owner (SharedFramework comparison, 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** `src/Framework` (abstractions and pipeline) and `src/Tools` (CLI)
@@ -53,3 +53,5 @@ Does this wait for the MasterData design (Epic 5) or stand alone? Is the CLI wan
 ## Triage notes
 
 Origin: SharedFramework. Not covered by any design; design comes first.
+
+2026-11-11: triaged. Accepted as a backlog item: design first (`docs/patterns-discovery/06-design-document-standard.md`), no code until a consumer appears. Backlog: BACKLOG.md, SharedFramework requests.

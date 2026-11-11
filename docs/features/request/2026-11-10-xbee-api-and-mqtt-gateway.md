@@ -1,6 +1,6 @@
 # Feature request: XBee API-mode frames and an XBee-to-MQTT gateway
 
-- **Status:** new
+- **Status:** triaged
 - **Requested by:** owner (notes repository project mapping, 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** `src/HardwareDevices` (new `OoBDev.Digi.XBee`) and `OoBDev.System.IO.Mqtt`
@@ -54,3 +54,5 @@ as a small host process or inside DevTerm.
 ## Triage notes
 
 Origin: notes repository backlog (`projects/project-ideas.md`, Wireless & IoT). Maintainers: accept, schedule or decline.
+
+2026-11-11: triaged. Accepted as a backlog idea with no design yet; it needs hardware on the bench (see the test hardware map) before a design is written. Backlog: BACKLOG.md, Devices ideas.

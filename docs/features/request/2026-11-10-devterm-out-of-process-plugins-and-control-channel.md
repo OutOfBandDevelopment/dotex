@@ -1,6 +1,6 @@
 # Feature request: DevTerm out-of-process plugins and read-write control channel
 
-- **Status:** new
+- **Status:** triaged
 - **Requested by:** owner (retire dev-term, 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** `src/Applications/DevTerm` (plugins), see the PluginSandbox design
@@ -45,3 +45,5 @@ The PluginSandbox layering question and sign-off of its requirements are already
 ## Triage notes
 
 Origin: dev-term BACKLOG (Tooling; Proposals tracker).
+
+2026-11-11: triaged. Out-of-process plugins are the PluginSandbox feature (threat model, protocol and manifest design, launchers built; follow-ups in BACKLOG). The read-write control channel is part of that item. Design: [PluginSandbox](../../design/PluginSandbox/README.md), [SessionChannel](../../design/SessionChannel/README.md). Backlog: BACKLOG.md, security.

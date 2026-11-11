@@ -324,8 +324,10 @@ scripts\integration-down.bat --clean
 | **SQL Server** | `mcr.microsoft.com/mssql/server:2022-latest` | 1433 | Relational database | `sqlcmd -Q "SELECT 1"` |
 | **RabbitMQ** | `rabbitmq:latest` | 5673 (AMQP)<br>15672 (Management) | Message broker | `rabbitmq-diagnostics ping` |
 | **Redis** | `valkey/valkey:8-alpine` | 6379 | In-memory cache store | `valkey-cli ping` |
+| **PostgreSQL** | `ghcr.io/pgmq/pg17-pgmq:v1.8.0` | 5434 | Relational store with the pgmq queue extension | `pg_isready` |
 | **OpenSearch** | `opensearchproject/opensearch:latest` | 9200 (HTTP)<br>9600 (Performance) | Search engine | `curl https://localhost:9200/_cluster/health` |
 | **Qdrant** | `qdrant/qdrant` | 6333 (HTTP)<br>6334 (gRPC) | Vector database | `curl http://localhost:6333/health` |
+| **Neo4j** | `neo4j:5-community` | 7687 (Bolt)<br>7474 (Browser) | Graph database | `cypher-shell "RETURN 1"` |
 
 ### Emulators
 
@@ -422,6 +424,7 @@ Tests use environment variables for connection strings. See `.env.integration` f
 | `MONGODB_CONNECTION_STRING` | `mongodb://localhost:27017` | MongoDB connection |
 | `RABBITMQ_CONNECTION_STRING` | `amqp://guest:guest@localhost:5673/` | RabbitMQ connection |
 | `REDIS_CONNECTION_STRING` | `localhost:6379` | Redis connection |
+| `POSTGRES_CONNECTION_STRING` | `Host=localhost;Port=5434;...` | PostgreSQL connection |
 | `OPENSEARCH_URL` | `https://localhost:9200` | OpenSearch endpoint |
 | `QDRANT_URL` | `http://localhost:6333` | Qdrant HTTP endpoint |
 | `TIKA_URL` | `http://localhost:9998` | Apache Tika endpoint |
@@ -597,9 +600,11 @@ netstat -ano | findstr :27017
 | `TEST_PORT_SQLSERVER` | 1433 | SQL Server |
 | `TEST_PORT_RABBITMQ`, `TEST_PORT_RABBITMQ_MGMT` | 5673, 15672 | RabbitMQ (AMQP, management) |
 | `TEST_PORT_REDIS` | 6379 | Redis |
+| `TEST_PORT_POSTGRES` | 5434 | PostgreSQL with pgmq |
 | `TEST_PORT_OPENSEARCH`, `TEST_PORT_OPENSEARCH_PERF` | 9200, 9600 | OpenSearch |
 | `TEST_PORT_OPENSEARCH_DASHBOARDS` | 5601 | OpenSearch Dashboards |
 | `TEST_PORT_QDRANT`, `TEST_PORT_QDRANT_GRPC` | 6333, 6334 | Qdrant |
+| `TEST_PORT_NEO4J_BOLT`, `TEST_PORT_NEO4J` | 7687, 7474 | Neo4j |
 | `TEST_PORT_AZURITE_BLOB`, `TEST_PORT_AZURITE_QUEUE`, `TEST_PORT_AZURITE_TABLE` | 10000, 10001, 10002 | Azurite |
 | `TEST_PORT_MOTO` | 4566 | Moto |
 | `TEST_PORT_SERVICEBUS` | 5672 | Service Bus emulator |
@@ -685,6 +690,7 @@ All containers are prefixed with `oobd-test-`:
 - `oobd-test-sqlserver`
 - `oobd-test-rabbitmq`
 - `oobd-test-redis`
+- `oobd-test-postgres`
 - `oobd-test-opensearch`
 - `oobd-test-qdrant`
 - `oobd-test-azurite`

@@ -1,52 +1,49 @@
 # OoBDev.Microsoft.SqlServer.Server
 
-SQL Server database abstraction with Service Broker integration.
+The SQL Server `IDatabaseMapper` (`SqlDatabaseMapper`): it turns an attributed query class into a stored procedure call and maps the result rows to objects. `IDatabaseQuery<>` in [OoBDev.Data.Common](../../../Framework/OoBDev.Data.Common/README.Data.Common.md) runs it.
 
-## Description
-
-This package provides comprehensive SQL Server integration including database mapping, stored procedure execution, and Service Broker message queue support. It implements the OoBDev database abstraction patterns for SQL Server.
-
-## Key Features
-
-- Attribute-based database query mapping
-- Stored procedure parameter binding
-- SQL Service Broker queue message provider
-- Connection string management
-- JSON and XML parameter serialization
-- Dynamic result mapping with expression trees
-- Command timeout configuration
-
-## Installation
-
-```xml
-<PackageReference Include="OoBDev.Microsoft.SqlServer.Server" Version="*" />
-```
-
-## Basic Usage
+## Registration
 
 ```csharp
-using OoBDev.Microsoft.SqlServer.Server;
-using Microsoft.Extensions.DependencyInjection;
+services.TryAddDataCommonServices();
+services.TryAddMicrosoftSqlServerExtensions();
+```
 
-services.AddSqlServerSupport(configuration);
+The mapper is registered as `IDatabaseMapper` and as a keyed service under `SqlServerGlobals.ProviderKey` (`"mssql"`). It needs `IConfiguration` and an `IJsonSerializer`.
 
-// Define query with attributes
+## Describing a query
+
+The attributes are in `OoBDev.System.ComponentModel.Data`.
+
+```csharp
 [ConnectionStringName("MyDatabase")]
 [StoredProcedure("dbo.GetUsers")]
 public class GetUsersQuery
 {
-    [QueryParameter("@userId")]
+    [QueryParameter(Name = "userId")]
     public int UserId { get; set; }
+
+    [QueryParameter(IsJson = true)]
+    public Filter? Filter { get; set; }
 }
 
-// Execute query
-var results = await databaseQuery.ExecuteAsync(new GetUsersQuery { UserId = 123 });
+public class UserRow
+{
+    [QueryResult(Name = "user_name")] public string? Name { get; set; }
+    public int Id { get; set; }
+}
+
+await foreach (var row in databaseQuery.ExecuteStoredProcedureAsync<GetUsersQuery, UserRow>(query, ct)) { }
 ```
 
-## License
+**Table 1 — What the mapper does**
 
-See repository license file for details.
+| Step | Behaviour |
+|------|-----------|
+| Connection string | `ConnectionStrings:<name>` from the `ConnectionStringName` attribute; a missing attribute throws `NotSupportedException`, a missing string `InvalidOperationException`. |
+| Command timeout | `CommandTimeouts:<name>` in seconds; unset means the provider default. |
+| Procedure | The `StoredProcedure` attribute, run as a stored procedure command. |
+| Parameters | Every property with `QueryParameter` becomes `@name` (the property name when `Name` is not set, a leading `@` is optional); `null` becomes `DBNull`; arrays and properties with `IsJson = true` are sent as JSON text. |
+| Result rows | A compiled expression builds `TResult` (needs a default constructor) and fills each property from the column with the same name, or the `QueryResult` name or `Position`; a value of another type becomes the default. |
 
-## Repository
-
-[OoBDev Repository](https://github.com/yourusername/oobdev)
+`MessageQueueing/SqlServiceBrokerQueueMessageProvider` is a placeholder for a Service Broker sender and receiver: every member throws `NotSupportedException`. The Service Broker queues of the vector database are used through the Hosting project instead (see `OoBDev.Data.Vectors.Hosting`).

@@ -1,45 +1,24 @@
 # OoBDev.MysticMind
 
-OoBDev.MysticMind provides functionality for converting HTML documents to Markdown format. Let's explore its features:
+HTML to Markdown conversion for the document conversion pipeline, using the [ReverseMarkdown](https://github.com/mysticmind/reversemarkdown-net) `Converter` (the project is named after its author).
 
-## ConverterFactory
+## Use
 
-This class is a factory for creating converters.
+```csharp
+services.TryAddMysticMindServices();
+```
 
-### Methods
+This registers `IConverterFactory` (builds `new Converter()` with default settings), a transient `Converter` resolved from that factory, and `HtmlToMarkdownConversionHandler` as an `IDocumentConversionHandler`. Replace `IConverterFactory` before this call to change the converter settings. No `IDocumentType` is registered; the Markdown type comes from [OoBDev.Markdig](../../Markdig/OoBDev.Markdig/README.Markdig.md).
 
-- **Build**: Builds a new converter.
+**Table 1 — Content types of `HtmlToMarkdownConversionHandler` (compared ignoring case)**
 
-## HtmlToMarkdownConversionHandler
+| Direction | Types |
+|-----------|-------|
+| Sources | `text/html`, `text/xhtml`, `text/xhtml+xml` |
+| Destinations | `text/markdown`, `text/x-markdown`, `text/plain` |
 
-Converts HTML documents to Markdown format.
+`ConvertAsync` throws `NotSupportedException` for any other content type, reads the whole source as text, converts it and writes the Markdown to the destination, leaving both streams open. Unlike the Markdig and HtmlToOpenXml handlers it does not rewind the destination.
 
-### Properties
+## Tests
 
-- **Destinations**: Gets the content types supported for the destination stream.
-- **Sources**: Gets the content types supported for the source stream.
-
-### Methods
-
-- **Constructor**: Constructor for HtmlToMarkdownConversionHandler.
-- **ConvertAsync(source, sourceContentType, destination, destinationContentType)**: Converts the content of an HTML document in the source stream to Markdown format and writes it to the destination stream.
-- **SupportedDestination(contentType)**: Checks if the specified content type is supported for the destination stream.
-- **SupportedSource(contentType)**: Checks if the specified content type is supported for the source stream.
-
-## IConverterFactory
-
-Interface for a factory that creates converters.
-
-### Methods
-
-- **Build**: Builds a new converter.
-
-## ServiceCollectionExtensions
-
-Provides extension methods for configuring services related to MysticMind.
-
-### Methods
-
-- **TryAddMysticMindServices(services)**: Configures services for MysticMind.
-
-OoBDev.MysticMind simplifies the conversion of HTML documents to Markdown format, providing flexibility and ease of use.
+`OoBDev.MysticMind.Tests` has one `Unit` test method for the conversion; the unsupported-type path is not covered.

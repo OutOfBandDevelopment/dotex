@@ -1,6 +1,6 @@
 # Feature request: authentication translation gateway
 
-- **Status:** new
+- **Status:** triaged
 - **Requested by:** owner (notes repository project mapping, 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** `OoBDev.AspNetCore.JwtAuthentication`, `OoBDev.Identity*`, a new gateway project
@@ -53,3 +53,5 @@ storage outside the repository, short token cache lifetimes, an audit entry per 
 ## Triage notes
 
 Origin: notes repository backlog (`projects/project-ideas.md`, Software Architecture & APIs, SSO/Authentication Translation Proxy). Maintainers: accept, schedule or decline.
+
+2026-11-11: triaged. Accepted as a backlog idea: design first (`docs/patterns-discovery/06-design-document-standard.md`), no code until a consumer appears. Backlog: BACKLOG.md, Consolidation requests.

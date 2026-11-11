@@ -1,6 +1,6 @@
 # Feature request: API reference generated from the XML docs
 
-- **Status:** new
+- **Status:** triaged
 - **Requested by:** owner (found while removing `docs/Libraries`, 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** build, `OoBDev.TemplateEngine.Cli`, `docs/`
@@ -40,3 +40,5 @@ Committed or generated only? One page per project or per namespace?
 ## Triage notes
 
 The template is kept in [docs/templates](../../templates/README.md) (`Documentation.md.xslt`); the deleted pages are in the parent of commit `e73474e2`.
+
+2026-11-11: triaged. Accepted as tooling work through deterministic scripts or MSTest entry points ([GeneratedGuides](../../design/GeneratedGuides/README.md)); scheduled behind the active work. Backlog: BACKLOG.md, Tooling requests.

@@ -1,6 +1,6 @@
 # Feature request: procedural test data generation
 
-- **Status:** new
+- **Status:** triaged
 - **Requested by:** owner (SharedFramework comparison, 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** `src/Framework` (test utilities and generation library)
@@ -49,3 +49,5 @@ Take this over, or use `Bogus` (the owner's dependency rule applies)? Does it sh
 ## Triage notes
 
 Origin: SharedFramework. Compare with the built-in alternatives before accepting.
+
+2026-11-11: triaged. Accepted as a backlog item: design first (`docs/patterns-discovery/06-design-document-standard.md`), no code until a consumer appears. Backlog: BACKLOG.md, SharedFramework requests.

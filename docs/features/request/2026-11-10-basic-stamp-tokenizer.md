@@ -1,6 +1,6 @@
 # Feature request: Basic Stamp tokenizer and detokenizer
 
-- **Status:** new
+- **Status:** triaged
 - **Requested by:** owner (open gap found reviewing the migration, 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** `OoBDev.System` (`Retro` or a new microcontroller area)
@@ -39,3 +39,5 @@ Which Basic Stamp generations (BS1, BS2 family)?
 ## Triage notes
 
 Origin: BinaryDataDecoders issue 25. Low priority and specialized; accept, schedule or decline.
+
+2026-11-11: triaged. Accepted at low priority: every BinaryDataDecoders feature is kept (scope rule in `CLAUDE.md`), so it is scheduled behind the DevTerm and event-sourcing work. Backlog: BACKLOG.md, Migrations (specialized formats).

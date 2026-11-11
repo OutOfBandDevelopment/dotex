@@ -9,6 +9,9 @@ internal static class Program
     private static void Main()
     {
         ApplicationConfiguration.Initialize();
-        Application.Run(new ControlsForm());
+        var controls = new ControlsForm();
+        controls.Show();
+        new LiveForm().Show();
+        Application.Run(new SettingsForm(new ControlsSampleSettings()));
     }
 }

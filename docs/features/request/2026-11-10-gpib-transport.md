@@ -1,6 +1,6 @@
 # Feature request: GPIB (IEEE-488) transport for SCPI instruments
 
-- **Status:** new
+- **Status:** triaged
 - **Requested by:** owner (notes repository project mapping, 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** `src/Framework` (new transport, next to `OoBDev.System.IO.UsbTmc` and `OoBDev.System.IO.Tcp`) and `OoBDev.Scpi`
@@ -53,3 +53,5 @@ connection per controller.
 
 Origin: notes repository backlog (`projects/project-ideas.md`, Protocol Bridges & Interfaces) and `projects/applications/dev-term-device-terminal/scpi-instrument-control.md`.
 Maintainers: accept, schedule or decline.
+
+2026-11-11: triaged. Accepted as a backlog idea with no design yet; it needs hardware on the bench (see the test hardware map) before a design is written. Backlog: BACKLOG.md, Devices ideas.

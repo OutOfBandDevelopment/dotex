@@ -12,10 +12,10 @@ public static class PlantumlExtensionFunctions
     /// </summary>
     /// <param name="pipeline">The pipeline builder to extend.</param>
     /// <returns>The pipeline builder for method chaining.</returns>
-    public static MarkdownPipelineBuilder UsePlantuml(this MarkdownPipelineBuilder pipeline)
+    public static MarkdownPipelineBuilder UsePlantuml(this MarkdownPipelineBuilder pipeline, PlantUmlRendererOptions options = null)
     {
         if (!pipeline.Extensions.Contains<PlantUmlExtension>())
-            pipeline.Extensions.Add(new PlantUmlExtension());
+            pipeline.Extensions.Add(new PlantUmlExtension(options));
         return pipeline;
     }
 }

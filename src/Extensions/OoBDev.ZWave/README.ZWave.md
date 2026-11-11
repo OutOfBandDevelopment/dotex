@@ -26,7 +26,7 @@ The consumer must answer every received data frame, or the stick retransmits and
 
 ## Not yet ported
 
-The control surface (waits on owner question Q3). `ZWaveStick` in the tests still writes the answers itself; `ZWaveSession` is the library way. Network-management commands (include, exclude, reset) are not exercised on hardware.
+The control surface (comes with the DevTerm merge, see the DevTerm parity status). `ZWaveStick` in the tests still writes the answers itself; `ZWaveSession` is the library way. Network-management commands (include, exclude, reset) are not exercised on hardware.
 
 ## Verified
 

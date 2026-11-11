@@ -1,6 +1,6 @@
 # Feature request: project readme index and a markdown endpoint listing
 
-- **Status:** new
+- **Status:** triaged
 - **Requested by:** owner (found while removing `docs/code`, 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** `src/Directory.Build.props`, `docs/`, `OoBDev.TemplateEngine.Cli`
@@ -44,3 +44,5 @@ Fold into GeneratedGuides or keep separate?
 ## Triage notes
 
 The templates are kept in [docs/templates](../../templates/README.md).
+
+2026-11-11: triaged. Accepted as tooling work through deterministic scripts or MSTest entry points ([GeneratedGuides](../../design/GeneratedGuides/README.md)); scheduled behind the active work. Backlog: BACKLOG.md, Tooling requests.

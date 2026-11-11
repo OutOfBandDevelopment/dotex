@@ -21,9 +21,9 @@ Source: dev-term `Devices.Scpi` (base); BinaryDataDecoders has no SCPI package. 
 
 - A definite-length block reply (`#<n><length>` then that many bytes, such as a screen dump) is cut as one segment by `ScpiReplySegmenter` and decoded into `ScpiReply.Block`; a leading `#` not followed by a digit 1 to 9 is an ordinary line. Indefinite blocks (`#0`) are not supported. A profile with an empty terminator takes each arrival as one reply, so a block there is not reassembled. Turning the bytes into an image is left to the caller (`ExpectedResponseFormat` says when to expect one).
 
-## Not yet verified on hardware
+## Hardware verification
 
-No instrument has been connected to this package. The profile contents are as verified in dev-term (the Korad and Tektronix notes come from real devices there).
+The Korad supplies were checked read-only through `KoradSupplyTests` (identify, setpoints, status byte; both supplies passed on 2026-11-05, see [the test hardware how-to](../../../docs/how-tos/test-hardware.md)). The other profiles rest on the dev-term bench notes and unit tests; [hardware coverage](../../../docs/applications/devterm/test/hardware-coverage.md) lists what each pass reached.
 
 ## Instrument documentation
 
@@ -47,4 +47,4 @@ The `OoBDev.Scpi.Panels` namespace builds a control panel from an instrument pro
 
 - A button packs its field values joined by `,` (the `InvokeCommand` convention), so a text value containing a comma splits into two values.
 - `ParameterExpressions` are not generated (a profile has no expressions).
-- Not run against a real instrument or rendered in WPF yet; the DevTerm shell wiring (`IPanelFactory`) is the next step.
+- The DevTerm WPF shell opens these panels through `ScpiPanelFactory` (`--scpi host[:port]`, see [the Wpf readme](../../Applications/DevTerm/OoBDev.DevTerm.Wpf/README.DevTerm.Wpf.md)) and the Tui renders them in control-panel mode.

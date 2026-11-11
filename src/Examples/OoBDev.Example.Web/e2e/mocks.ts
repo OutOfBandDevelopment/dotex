@@ -54,6 +54,8 @@ export async function mockApi(page: Page): Promise<void> {
     }
     if (path === '/api/Rights/endpoints') return json(route, [{ method: 'GET', route: '/api/Cache', access: 'anonymous', rights: [] }, { method: 'GET', route: '/api/Rights/protected', access: 'rights', rights: ['rights.demo'] }, { method: 'GET', route: '/api/User/claims', access: 'authenticated', rights: [] }]);
     if (path === '/api/Rights/check') return json(route, { required: ['rights.demo'], held: [], result: 'Unauthenticated' });
+    if (path === '/api/Identity/users') return json(route, [{ id: '1', userName: 'ann', email: 'ann@example.test', displayName: 'Ann Lee', enabled: true, roles: ['editor'], rights: ['docs.read'] }]);
+    if (path === '/api/Identity/roles') return json(route, [{ name: 'editor', rights: ['docs.read'] }, { name: 'viewer', rights: [] }]);
     if (path === '/cgi-bin/greet.exe') return route.fulfill({ status: 200, contentType: 'text/html', body: '<h1>Hello, Ada!</h1>' });
     if (path.startsWith('/webhooks/')) return route.fulfill({ status: 404, contentType: 'application/problem+json', body: JSON.stringify({ title: 'Webhook rejected', status: 404, detail: 'Channel not found' }) });
     if (path === '/api/Cache') {

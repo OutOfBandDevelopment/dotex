@@ -1,28 +1,21 @@
 # OoBDev.Keycloak
 
-OoBDev.Keycloak offers functionality for integrating with Keycloak identity management. Let's explore its features:
+Read-only Keycloak adapter for the identity abstractions. It reads a realm through the admin REST API with a service account (client credentials); nothing creates, changes or removes users (owner, 2026-11-10).
 
-## KeycloakIdentityOptions
+## Settings (`KeycloakIdentityOptions`)
 
-This class represents the options for configuring Keycloak identity.
+| Key | Meaning |
+|-----|---------|
+| `BaseUrl` | Server root, for example `http://localhost:8081` |
+| `Realm` | Realm to read |
+| `ClientId`, `ClientSecret` | Service account client; it needs the `view-users` and `view-realm` realm-management roles |
 
-## ManageKeycloakUser
+**Table 1 — settings**
 
-Manages user operations in Keycloak for both graph and identity aspects.
+## Types
 
-### Methods
+- `KeycloakDirectoryReader`: `ListUsersAsync(search, email, max)` returns `KeycloakUserSummary` (id, user name, email, names, enabled, direct realm roles); `ListRolesAsync()` returns the realm role names. The token is cached until 30 seconds before it expires.
+- `ManageKeycloakUser` (`IIdentityManager`): `GetIdentityUsersByEmail` matches the email exactly; `CreateIdentityUserAsync` and `RemoveIdentityUserAsync` throw `NotSupportedException`.
+- `TryAddKeycloakServices(configuration, section)` binds the options, registers the reader as a typed `HttpClient` and the manager.
 
-- **Constructor**: Initializes a new instance of the ManageKeycloakUser class.
-- **CreateIdentityUserAsync(email, firstName, lastName)**: Creates a new identity user asynchronously with the specified details.
-- **GetIdentityUsersByEmail(emailAddress)**: Retrieves a list of user identity models based on the specified email address.
-- **RemoveIdentityUserAsync(userId)**: Removes an identity user asynchronously based on the specified object ID.
-
-## ServiceCollectionExtensions
-
-Provides extension methods for configuring services related to Keycloak in the Microsoft.Extensions.DependencyInjection.IServiceCollection.
-
-### Methods
-
-- **TryAddKeycloakServices(services, configuration, keycloakIdentityConfigurationSection)**: Tries to add Keycloak-related services to the specified IServiceCollection.
-
-OoBDev.Keycloak simplifies integration with Keycloak identity management, enabling seamless management of users and their identities.
+Unit tests use a scripted handler; the Integration tests in `OoBDev.Keycloak.Tests` need the Keycloak container.

@@ -64,23 +64,23 @@ public sealed class ToolGuideTests
 
     [TestMethod]
     public Task TemplateEngine_Help_WritesTheGuideAsync() =>
-        HelpGuideAsync("OoBDev.TemplateEngine.Cli", "oobdev-templateengine", "Renders a Handlebars or XSLT template over input files.", "--merge");
+        HelpGuideAsync("OoBDev.TemplateEngine.Cli", "templateengine", "Renders a Handlebars or XSLT template over input files.", "--merge");
 
     [TestMethod]
     public Task DocumentConverter_Help_WritesTheGuideAsync() =>
-        HelpGuideAsync("OoBDev.DocumentConverter.Cli", "oobdev-documentconverter", "Converts a document from one format to another.", "--output");
+        HelpGuideAsync("OoBDev.DocumentConverter.Cli", "file-convert", "Converts a document from one format to another.", "--output");
 
     [TestMethod]
     public Task FileRagEngine_Help_WritesTheGuideAsync() =>
-        HelpGuideAsync("OoBDev.FileRagEngine.Cli", "oobdev-filerag", "Runs a template over files with a language model.", "--include-prompt");
+        HelpGuideAsync("OoBDev.FileRagEngine.Cli", "file-rag", "Runs a template over files with a language model.", "--include-prompt");
 
     [TestMethod]
     public Task DacPacCompiler_Help_WritesTheGuideAsync() =>
-        HelpGuideAsync("OoBDev.DacPacCompiler.Cli", "oobdev-dacpac", "Builds a DACPAC from a SQL CLR assembly.", "--sqlclr");
+        HelpGuideAsync("OoBDev.DacPacCompiler.Cli", "dacpactools", "Builds a DACPAC from a SQL CLR assembly.", "--sqlclr");
 
     [TestMethod]
     public Task FixSourceLinks_Help_WritesTheGuideAsync() =>
-        HelpGuideAsync("OoBDev.FixSourceLinks.Cli", "oobdev-fixsourcelinks", "Rewrites https links in XML reports to local paths.", "--include");
+        HelpGuideAsync("OoBDev.FixSourceLinks.Cli", "fix-sourcelink", "Rewrites https links in XML reports to local paths.", "--include");
 
     [TestMethod]
     public Task MigrationHelper_Help_WritesTheGuideAsync() =>
@@ -88,7 +88,7 @@ public sealed class ToolGuideTests
 
     [TestMethod]
     public Task LlmCodeGen_Help_WritesTheGuideAsync() =>
-        HelpGuideAsync("OoBDev.LlmCodeGen.Cli", "oobdev-llmcodegen", "Sends the files of each folder to a language model with a template and writes the responses.", "--provider");
+        HelpGuideAsync("OoBDev.LlmCodeGen.Cli", "llmcodegen", "Sends the files of each folder to a language model with a template and writes the responses.", "--provider");
 
     [TestMethod]
     public async Task PackMan_Help_WritesTheGuideAsync()

@@ -1,6 +1,6 @@
 # Feature request: culture negotiation middleware
 
-- **Status:** new
+- **Status:** triaged
 - **Requested by:** owner (from `docs/Framework/CultureInfoMiddleware.md`, removed 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** ASP.NET Core middleware, text templating
@@ -40,3 +40,5 @@ Use the platform middleware only, or keep the accessor abstraction?
 ## Triage notes
 
 References: MDN pages for `Accept-Language` and `Content-Language`.
+
+2026-11-11: triaged. `ICultureInfoAccessor` is not in `src`. Plan: use ASP.NET Core `RequestLocalizationMiddleware` for negotiation and add only the accessor and template integration if a consumer needs it. Backlog: BACKLOG.md, Framework wish list.

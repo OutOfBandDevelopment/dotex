@@ -36,4 +36,4 @@ A .NET 10 host that runs plugins written in any language as isolated processes, 
 
 ## Summary
 
-The whole feature is a security boundary, so the first deliverable is a threat model and a review of the proving-grounds proof of concept (`examples/plugin-sandbox-poc`), not code. The proof of concept is read-only reference material. Nothing in the notes' reference code was ever compiled. Whether this lives in dotex or stays a separate project is owner question Q6 in `OPEN-QUESTIONS.md`; until it is answered only the threat model and the protocol design proceed.
+The whole feature is a security boundary, so the first deliverable is a threat model and a review of the proving-grounds proof of concept (`examples/plugin-sandbox-poc`), not code. The proof of concept is read-only reference material. Nothing in the notes' reference code was ever compiled. It lives in dotex (the home question was answered; the launchers are built, see BACKLOG follow-ups).

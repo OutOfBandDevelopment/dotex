@@ -1,6 +1,6 @@
 # Application Rights — Overview
 
-**Status:** Draft · **Date:** 2026-10-22 · **Related:** [authorization practices](../../patterns-discovery/03-practices-and-conventions/11-authorization-practices.md), [HTTP API practices](../../patterns-discovery/03-practices-and-conventions/10-http-api-practices.md), [design standard](../../patterns-discovery/06-design-document-standard.md)
+**Status:** Built · **Date:** 2026-11-11 (all of REQ-001 to REQ-011 are in `OoBDev.AspNetCore.Abstractions`, `OoBDev.AspNetCore.Mvc` and `OoBDev.AspNetCore.Cgi`, covered by `RoleRightTests` and `CgiMiddlewareTests`) · **Related:** [authorization practices](../../patterns-discovery/03-practices-and-conventions/11-authorization-practices.md), [HTTP API practices](../../patterns-discovery/03-practices-and-conventions/10-http-api-practices.md), [design standard](../../patterns-discovery/06-design-document-standard.md)
 
 Role-based access control with application rights. The identity provider issues roles in the JWT; this feature translates them into `app__application_right` claims in one place, and one checker decides every endpoint's access, so REST, OData and GraphQL share the same rule. The first slice is the translation (claims transformation plus mapper) and the shared checker; the CGI middleware and the MVC filter move onto the checker.
 

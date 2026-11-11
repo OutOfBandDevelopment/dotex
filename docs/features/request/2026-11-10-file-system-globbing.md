@@ -1,6 +1,6 @@
 # Feature request: file globbing through Microsoft.Extensions.FileSystemGlobbing
 
-- **Status:** new
+- **Status:** triaged
 - **Requested by:** owner (open gap found reviewing the migration, 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** `OoBDev.System` (`IO/PathEx`)
@@ -39,3 +39,5 @@ Does `OoBDev.System` accept the package reference (layering question for the own
 ## Triage notes
 
 Origin: BinaryDataDecoders issue 17. Accept, schedule or decline.
+
+2026-11-11: triaged. Accepted as tooling work through deterministic scripts or MSTest entry points ([GeneratedGuides](../../design/GeneratedGuides/README.md)); scheduled behind the active work. Backlog: BACKLOG.md, Tooling requests.

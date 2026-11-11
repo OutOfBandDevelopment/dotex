@@ -1,50 +1,27 @@
-# OoBDev.Amazon.Sqs - AWS SQS Message Queue Provider
+# OoBDev.Amazon.Sqs
 
-Context-based message queue provider for AWS Simple Queue Service (SQS).
+Sender provider for Amazon SQS in the [message queueing](../../../Framework/OoBDev.MessageQueueing/README.MessageQueueing.md) pipeline. It sends only: there is no receiver provider yet (a TODO in `AmazonSqsMessageProvider`), so inbound SQS handlers are not supported.
 
-## Features
-
-- ✅ Standard and FIFO queue support
-- ✅ Message attributes and metadata
-- ✅ Delay queues (0-900 seconds)
-- ✅ Long polling support
-- ✅ AWS credential chain integration
-- ✅ Multi-region support
-- ✅ Runtime queue configuration
-- ✅ Multi-provider compatibility
-
-## Installation
-
-```bash
-dotnet add package OoBDev.Amazon.Sqs
-```
-
-## Quick Start
-
-### 1. Register Services
+## Use
 
 ```csharp
-using OoBDev.Amazon.Sqs;
-using OoBDev.System.Text.Json;
-
-services.TryAddAmazonSqsServices();
-services.TryAddJsonSerializer();  // OoBDev.System
+services.TryAddMessageQueueingServices();   // OoBDev.MessageQueueing
+services.TryAddAmazonSqsServices();         // sender provider, client factory, AsyncAPI contributor
+services.TrySerializerExtensions();         // the JSON serializer the provider needs
 ```
 
-### 2. Configure Queue
-
-**Using appsettings.json:**
+Configuration is read by the message property resolver from the `MessageQueue` section (lookup order in the [MessageQueueing readme](../../../Framework/OoBDev.MessageQueueing/README.MessageQueueing.md#components)):
 
 ```json
 {
-  "MessageQueuing": {
-    "OrderQueue": {
+  "MessageQueue": {
+    "OrderPlaced": {
       "Provider": "sqs",
       "QueueName": "production-orders",
-      "Region": "us-east-1",
+      "Region": "eu-west-1",
       "DelaySeconds": 0
     },
-    "FifoQueue": {
+    "Default": {
       "Provider": "sqs",
       "QueueUrl": "https://sqs.us-east-1.amazonaws.com/123/orders.fifo",
       "MessageGroupId": "order-processing"
@@ -53,139 +30,33 @@ services.TryAddJsonSerializer();  // OoBDev.System
 }
 ```
 
-### 3. Send Messages
+Inject `IMessageQueueSender` (or `IMessageQueueSender<TChannel>`) and call `SendAsync(message, messageId)`; the sender picks this provider through the keyed service `sqs` (`AwsSqsGlobals.MessageProviderKey`).
 
-```csharp
-using OoBDev.MessageQueueing.Services;
+## Configuration keys
 
-public class OrderService
-{
-    private readonly IMessageSenderProvider _sender;
-    private readonly IMessageContextFactory _contextFactory;
+**Table 1 — Keys under the resolved message section (or its `Config` child)**
 
-    public OrderService(
-        IMessageSenderProvider sender,
-        IMessageContextFactory contextFactory)
-    {
-        _sender = sender;
-        _contextFactory = contextFactory;
-    }
+| Key | Meaning | Default |
+|-----|---------|---------|
+| `Provider` | Must be `sqs` to select this provider | |
+| `QueueUrl` | Full queue URL; wins over `QueueName` | |
+| `QueueName` | Queue name, resolved to a URL with `GetQueueUrl` | |
+| `Region` | AWS region system name | `us-east-1` |
+| `AccessKeyId`, `SecretAccessKey` | Explicit credentials; when `AccessKeyId` is empty the AWS SDK default credential chain is used | chain |
+| `ServiceUrl` | Endpoint override for emulators such as Moto; also sets the authentication region | unset (real AWS) |
+| `DelaySeconds` | Per-message delay, sent when it parses as an integer (SQS accepts 0 to 900; the provider does not check the range) | unset |
+| `MessageGroupId` | Sent when non-empty; required by FIFO queues | unset |
 
-    public async Task ProcessOrder(Order order)
-    {
-        var context = _contextFactory.Create("OrderQueue", typeof(Order).FullName);
-        context.Headers["Priority"] = "High";
-        context.Headers["OrderType"] = order.Type;
+Neither `QueueUrl` nor `QueueName` set throws `ConfigurationMissingException` naming `<section path>:QueueName`. FIFO queues are recognised only by their `.fifo` name; the provider sets no deduplication id, so use content-based deduplication on the queue.
 
-        var messageId = await _sender.SendAsync(order, context);
-    }
-}
-```
+## What is sent
 
-## Configuration Reference
+`SendAsync` wraps the message in a `WrappedQueueMessage` (content type `application/json`, assembly-qualified payload type, correlation id or a new GUID, payload, headers), serializes it as the message body and sends it with `SendMessage`. Each non-null context header also becomes a `String` message attribute. It logs the SQS message id and correlation id (`[LoggerMessage]` event 1) and returns the SQS message id.
 
-| Key | Required | Description | Default |
-|-----|----------|-------------|---------|
-| `QueueName` | Yes* | SQS queue name | - |
-| `QueueUrl` | Yes* | Full SQS queue URL | - |
-| `Region` | No | AWS region (e.g., "us-east-1", "eu-west-1") | us-east-1 |
-| `AccessKeyId` | No | AWS access key ID | (uses AWS credential chain) |
-| `SecretAccessKey` | No | AWS secret access key | (uses AWS credential chain) |
-| `DelaySeconds` | No | Message delay in seconds (0-900) | 0 |
-| `MessageGroupId` | No | FIFO queue message group ID | - |
+## AsyncAPI
 
-*Either `QueueName` or `QueueUrl` must be provided
+`SqsAsyncApiContributor` describes the queue for the generated AsyncAPI document: host from `ServiceUrl` or `sqs.<region>.amazonaws.com`, queue name from `QueueName` or the last segment of `QueueUrl`, and an SQS binding with `fifoQueue` set for `.fifo` names.
 
-## AWS Credential Chain
+## Tests
 
-If `AccessKeyId` and `SecretAccessKey` are not provided, the provider uses the AWS SDK default credential chain:
-
-1. Environment variables (`AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`)
-2. AWS credentials file (`~/.aws/credentials`)
-3. IAM role for Amazon EC2 instances
-4. IAM role for containers (ECS, EKS)
-
-## FIFO Queue Support
-
-For FIFO (First-In-First-Out) queues:
-
-```json
-{
-  "MessageQueuing": {
-    "OrderQueue": {
-      "QueueUrl": "https://sqs.us-east-1.amazonaws.com/123/orders.fifo",
-      "MessageGroupId": "order-processing"
-    }
-  }
-}
-```
-
-**Important:** FIFO queue URLs must end with `.fifo`
-
-## Multi-Provider Usage
-
-Use keyed services to work with multiple message queue providers simultaneously:
-
-```csharp
-using Microsoft.Extensions.DependencyInjection;
-
-public class BridgeService
-{
-    private readonly IMessageSenderProvider _sqsSender;
-    private readonly IMessageSenderProvider _rabbitSender;
-
-    public BridgeService(
-        [FromKeyedServices("sqs")] IMessageSenderProvider sqsSender,
-        [FromKeyedServices("rabbitmq")] IMessageSenderProvider rabbitSender)
-    {
-        _sqsSender = sqsSender;
-        _rabbitSender = rabbitSender;
-    }
-
-    public async Task BridgeMessage(Order order)
-    {
-        // Read from SQS
-        // ...
-
-        // Forward to RabbitMQ
-        var context = _contextFactory.Create("RabbitQueue", typeof(Order).FullName);
-        await _rabbitSender.SendAsync(order, context);
-    }
-}
-```
-
-## Message Headers
-
-Custom headers are automatically converted to SQS message attributes:
-
-```csharp
-var context = _contextFactory.Create("OrderQueue", typeof(Order).FullName);
-context.Headers["CustomerId"] = order.CustomerId;
-context.Headers["Priority"] = "High";
-context.Headers["ProcessingRegion"] = "US-EAST";
-
-await _sender.SendAsync(order, context);
-```
-
-## Error Handling
-
-The provider throws `ConfigurationMissingException` if required configuration is missing:
-
-```csharp
-try
-{
-    var messageId = await _sender.SendAsync(order, context);
-}
-catch (ConfigurationMissingException ex)
-{
-    // Handle missing configuration
-    // Ex: "Configuration \"MessageQueuing:OrderQueue:QueueName\" is missing"
-}
-```
-
-## See Also
-
-- [Message Queue Architecture](../../../../docs/design/MessageQueuing/README.md)
-- [Context-Based Pattern Documentation](../../../../docs/design/MessageQueuing/pattern-context-based.md)
-- [Multi-Provider Examples](../../../../docs/design/MessageQueuing/archive/multi-provider-bridge-example.md)
-- [AWS SQS Documentation](https://docs.aws.amazon.com/sqs/)
+`OoBDev.Amazon.Sqs.Tests` holds the unit tests and the Moto-backed `Integration` tests; set-up of the Moto queues is in [TESTING.md](TESTING.md).

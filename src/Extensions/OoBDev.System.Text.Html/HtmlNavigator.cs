@@ -25,14 +25,11 @@ public class HtmlNavigator : IToXPathNavigable
             DisableServerSideCode = true,
 
             OptionAutoCloseOnEnd = true,
-            // OptionDefaultStreamEncoding = Encoding.UTF8,
             OptionEmptyCollection = true,
             OptionFixNestedTags = true,
             OptionOutputAsXml = true,
             OptionOutputOptimizeAttributeValues = true,
-            // OptionPreserveXmlNamespaces = true,
             OptionReadEncoding = true,
-            //OptionWriteEmptyNodes = true,
 
         };
         html.Load(filePath);
@@ -52,14 +49,11 @@ public class HtmlNavigator : IToXPathNavigable
             DisableServerSideCode = true,
 
             OptionAutoCloseOnEnd = true,
-            // OptionDefaultStreamEncoding = Encoding.UTF8,
             OptionEmptyCollection = true,
             OptionFixNestedTags = true,
             OptionOutputAsXml = true,
             OptionOutputOptimizeAttributeValues = true,
-            // OptionPreserveXmlNamespaces = true,
             OptionReadEncoding = true,
-            //OptionWriteEmptyNodes = true,
 
         };
         html.Load(stream);

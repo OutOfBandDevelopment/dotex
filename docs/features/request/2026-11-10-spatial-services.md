@@ -1,6 +1,6 @@
 # Feature request: spatial services (address geocoding with Census, Google Maps and Bing Maps)
 
-- **Status:** new
+- **Status:** triaged
 - **Requested by:** owner (SharedFramework comparison, 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** `src/Framework` (abstractions) and `src/ExternalServices/<Vendor>` (adapters)
@@ -51,3 +51,5 @@ Which vendors are still wanted (Bing Maps is being retired by Microsoft)? Is the
 ## Triage notes
 
 Origin: SharedFramework (the application framework dotex grew from). No design documents yet, so the design comes first (`docs/patterns-discovery/06-design-document-standard.md`).
+
+2026-11-11: triaged. Accepted as a backlog item: design first (`docs/patterns-discovery/06-design-document-standard.md`), no code until a consumer appears. Backlog: BACKLOG.md, SharedFramework requests.

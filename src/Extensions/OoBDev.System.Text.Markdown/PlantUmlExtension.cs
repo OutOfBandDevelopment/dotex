@@ -8,8 +8,10 @@ namespace OoBDev.System.Text.Markdown;
 /// Markdig extension for processing PlantUML diagrams in Markdown documents.
 /// Adds support for rendering PlantUML code blocks as diagrams.
 /// </summary>
-public class PlantUmlExtension : IMarkdownExtension
+public class PlantUmlExtension(PlantUmlRendererOptions options = null) : IMarkdownExtension
 {
+    private readonly PlantUmlRendererOptions _options = options ?? new PlantUmlRendererOptions();
+
     /// <summary>
     /// Configures the Markdown pipeline to recognize PlantUML code blocks.
     /// </summary>
@@ -29,9 +31,9 @@ public class PlantUmlExtension : IMarkdownExtension
     public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
     {
         if (renderer is HtmlRenderer html && !html.ObjectRenderers.Contains<PlantUmlHtmlBlockRenderer>())
-            html.ObjectRenderers.Insert(0, new PlantUmlHtmlBlockRenderer(pipeline));
+            html.ObjectRenderers.Insert(0, new PlantUmlHtmlBlockRenderer(pipeline, _options));
 
         if (renderer is NormalizeRenderer github && !github.ObjectRenderers.Contains<PlantUmlGithubMarkdownBlockRenderer>())
-            github.ObjectRenderers.Insert(0, new PlantUmlGithubMarkdownBlockRenderer(pipeline));
+            github.ObjectRenderers.Insert(0, new PlantUmlGithubMarkdownBlockRenderer(pipeline, _options));
     }
 }

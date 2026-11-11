@@ -59,6 +59,7 @@ var keycloak = builder.AddContainer("keycloak", "quay.io/keycloak/keycloak", "la
     .WithArgs("start-dev", "--import-realm", "--features=scripts");
 
 var keycloakRealm = $"http://localhost:{keycloakPort}/realms/oobdev-example";
+var keycloakBase = $"http://localhost:{keycloakPort}";
 
 // phi3 is baked into the image at build time, so the first start builds it from the same Dockerfile the compose stack uses.
 var ollama = builder.AddDockerfile("ollama", Path.Combine(testing, "ollama"))
@@ -78,6 +79,10 @@ var api = builder.AddProject<OoBDev_Example_WebApi>("example-api", options => op
     .WithEnvironment("Keycloak__OAuth2OpenApiOptions__AuthorizationUrl", $"{keycloakRealm}/protocol/openid-connect/auth/")
     .WithEnvironment("Keycloak__OAuth2OpenApiOptions__TokenUrl", $"{keycloakRealm}/protocol/openid-connect/token")
     .WithEnvironment("Keycloak__OAuth2OpenApiOptions__ClientId", "oobdev-example-scalar")
+    .WithEnvironment("KeycloakIdentityOptions__BaseUrl", keycloakBase)
+    .WithEnvironment("KeycloakIdentityOptions__Realm", "oobdev-example")
+    .WithEnvironment("KeycloakIdentityOptions__ClientId", "oobdev-example-directory")
+    .WithEnvironment("KeycloakIdentityOptions__ClientSecret", "example-directory-secret")
     .WaitFor(keycloak)
     .WithEnvironment("OllamaApiClientOptions__Url", ollama.GetEndpoint("http"))
     .WithEnvironment("OllamaApiClientOptions__DefaultModel", "phi3")

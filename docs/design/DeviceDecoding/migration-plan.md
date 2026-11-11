@@ -1,6 +1,6 @@
 # Device decoding migration plan (dev-term to dotex)
 
-**Written:** 2026-10-26 | **Branch:** `dev/device-decoding` | **Status:** plan, Q2 answered 2026-10-28, waiting on Q3 in [OPEN-QUESTIONS.md](../../../OPEN-QUESTIONS.md)
+**Written:** 2026-10-26 | **Branch:** `dev/device-decoding` | **Status:** plan; Q2 and Q3 answered 2026-10-28 (dev-term merged entirely, see [requirements](requirements.md))
 
 Source: `C:\repo\oobdev\dev-term` (branch `dev/zstick-s2`, commit `d777358`; the Z-Wave module is still changing there). The owner wants the binary protocol decoders in this framework, and dev-term rebuilt on top of them later ([harvest-candidates.md](../../harvest-candidates.md)).
 
@@ -196,8 +196,8 @@ Where this meets the dotex test rules (`.claude/rules/testing.md`: `Unit`, `Simu
 | 5 | Z-Wave, after the upstream `dev/zstick-s2` work settles | Id tables kept as data files |
 | 6 | `OoBDev.UiDefinitions` model, serializer, validator (ported with the phase 2 devices as their panels need it) | Round-trip and validator tests ported |
 | 7 | View-model layer with `ICommand` types; WPF renderer first (`net10.0-windows`), then a cross-platform renderer (Avalonia or GTK, chosen in the phase 7 design), Terminal.Gui and Blazor, each added only when needed | One device panel rendered by each, driven by the same view model. Owner, 2026-10-29 (Q3, option A): do phases 5 and 6 and the WPF renderer first; the Avalonia spike follows the first working WPF panel and decides the cross-platform toolkit |
-| 8 | Device manifests and `.ksy` frame decoding (5,825 LOC) | Decision on Q3 |
-| 9 | Transports that dotex lacks (TCP, USBTMC, VXI-11, RFC 2217, BLE, brokers) | Decision on Q3 |
+| 8 | Device manifests and `.ksy` frame decoding (5,825 LOC) | Decided 2026-10-28 |
+| 9 | Transports that dotex lacks (TCP, USBTMC, VXI-11, RFC 2217, BLE, brokers) | Decided 2026-10-28 |
 | 10 | dev-term merged entirely into this framework (owner, 2026-10-28, answers Q4): the shells become tools `OoBDev.DevTerm.Wpf`, `OoBDev.DevTerm.Tui` and `OoBDev.DevTerm.Web` under `src/Tools`; the control libraries are generic, one per platform, under `src/Framework`; dev-term is not kept as a consumer repository and nothing is back-ported into it | Tools build with no copied framework code |
 
 Each device closes with the `complete-work` skill (change document, index, readme, `TODO.md`, `BACKLOG.md`), one commit series per device.

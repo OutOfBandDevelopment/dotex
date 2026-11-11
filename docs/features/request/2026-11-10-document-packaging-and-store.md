@@ -1,6 +1,6 @@
 # Feature request: document packaging and document store
 
-- **Status:** new
+- **Status:** triaged
 - **Requested by:** owner (SharedFramework comparison, 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** `OoBDev.Documents*` (Epic 6 Documents)
@@ -50,3 +50,5 @@ The design may already supersede the source types: follow the design, with the s
 ## Triage notes
 
 Origin: SharedFramework. Design exists; no code until a consumer appears.
+
+2026-11-11: triaged. Accepted as a backlog item: design first (`docs/patterns-discovery/06-design-document-standard.md`), no code until a consumer appears. Backlog: BACKLOG.md, SharedFramework requests.

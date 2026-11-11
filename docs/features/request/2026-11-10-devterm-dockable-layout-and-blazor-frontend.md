@@ -1,6 +1,6 @@
 # Feature request: DevTerm dockable layout (WPF) and Blazor web front end
 
-- **Status:** new
+- **Status:** triaged
 - **Requested by:** owner (retire dev-term, 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** `src/Applications/DevTerm` (WPF shell, Web host)
@@ -42,3 +42,5 @@ Docking library: a third-party one (for example AvalonDock) conflicts with the o
 ## Triage notes
 
 Origin: dev-term BACKLOG (Research, Proposed Ideas).
+
+2026-11-11: triaged. Decided 2026-11-09: AvalonDock (MIT) for the WPF dockable layout, themed in `DarkControls.xaml`, layout saved as XML. The Web host exists; no docking code is built yet. Design: [WebFrontend](../../design/WebFrontend/README.md), [DevTermParity](../../design/DevTermParity/README.md). Backlog: BACKLOG.md, DevTerm.

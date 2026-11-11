@@ -908,6 +908,40 @@ export const journeys: Journey[] = [
     ],
   },
   {
+    id: 'browse-users-and-roles',
+    title: 'Browse users and roles',
+    persona: 'An administrator checking who can do what',
+    goal: 'See the realm users with their roles and the application rights those roles grant.',
+    start: '/identity/directory',
+    prerequisites: ['Sign-in is configured and the signed-in user holds the identity.read right.', 'The Keycloak service account has the view-users and view-realm roles.'],
+    features: ['OoBDev.Keycloak (`KeycloakDirectoryReader`)', 'OoBDev.AspNetCore.Abstractions (`IRoleRightMapper`)'],
+    why: 'Answer "why can this person do that" without opening the Keycloak console; the screen is read-only.',
+    problems: [
+      { symptom: 'The screen shows 403', cause: 'Your token has no role that maps to identity.read', fix: 'Ask for a role that is translated to identity.read' },
+      { symptom: 'The screen shows 500 or 401 from Keycloak', cause: 'The service account is missing or lacks view-users', fix: 'Give the client the realm-management view-users and view-realm roles' },
+    ],
+    steps: [
+      {
+        title: 'Read the user table',
+        narrative: 'Each user shows their realm roles and the rights the role translation grants.',
+        expect: ['The user ann is listed with the editor role and the docs.read right.'],
+        run: async page => {
+          await expect(page.locator('.identity-users')).toContainText('ann');
+          await expect(page.locator('.identity-users')).toContainText('docs.read');
+        },
+      },
+      {
+        title: 'Read the role table',
+        narrative: 'The role table shows what each role grants, including roles that grant nothing.',
+        expect: ['The viewer role is listed with no rights.'],
+        run: async page => {
+          await expect(page.locator('.identity-roles')).toContainText('viewer');
+          await expect(page.locator('.identity-roles')).toContainText('none');
+        },
+      },
+    ],
+  },
+  {
     id: 'server-driven-ui',
     title: 'Render a panel from a server-supplied definition',
     persona: 'A developer who wants one UI contract for every front end',

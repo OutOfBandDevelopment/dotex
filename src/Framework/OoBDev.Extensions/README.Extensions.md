@@ -1,54 +1,41 @@
 # OoBDev.Extensions
 
-## Overview
+Small, dependency-light helpers used across the framework: stream chunking, JSON and XML stream deserialization, async enumerable helpers, reflection and resource helpers, command line option binding, in-memory configuration and an ambient accessor.
 
-The OoBDev.Extensions namespace provides a collection of extension methods and utility classes for common 
-tasks such as accessing values, configuration, file operations, stream manipulation, reflection, and string 
-manipulation.
+**Table 1 — Contents**
 
-## Key Classes and Extensions
+| Namespace / type | What it gives you |
+|------------------|-------------------|
+| `OoBDev.Extensions.IO` `StreamExtensions` | `CopyOf(stream)` (rewound memory copy); `SplitStreamAsync(contextLength = 768, overlap = 0)` yields `ContentChunk` (text, sequence, start, length) and needs a seekable stream |
+| `FileTools` | `SplitFileAsync(filename, chunkLength, overlap)`: the same chunking for a file |
+| `StreamJsonDeserializeExtensions` | `AsJson<T>()`, `AsJsonAsync<T>()` and `Type` overloads, with optional `JsonSerializerOptions`; null stream gives null |
+| `StreamXmlDeserializeExtensions` | `AsXml<T>(extraTypes)`, `AsXmlAsync<T>()` and `Type` overloads |
+| `OoBDev.Extensions.Linq` `AsyncEnumerableExtensions` | `ToListAsync`, `ToReadOnlyCollectionAsync`, `ToSetAsync`, `AsEnumerableAsync`, `AsAsyncEnumerable` and an async `Select` |
+| `DictionaryExtensions` | `TryGetValue(key, out value, comparer)` and `ChangeComparer(comparer)` (both copy the dictionary) |
+| `OoBDev.Extensions.Reflection` `ReflectionExtensions` | `GetShortTypeName`, `GetAttributes`, `GetPropertiesByAttribute<T>`, `GetStaticMethod`, `GetInstanceMethod`, `GetParametersTypes`, `TryParse`, `MakeSafe` and others |
+| `ResourceExtensions` | `GetResourceStream` (object, type or assembly) and `GetResourceAsString(Async)` for embedded resources |
+| `OoBDev.Extensions.Configuration` `ConfigurationBuilderExtensions` | `AddInMemoryCollection` with `(key, value)` tuples (the first value wins on duplicate keys) |
+| `CommandLine` | Binds `--name value` options to a class marked with `CommandParameterAttribute`; see below |
+| `OoBDev.Extensions.Accessors` | `IAccessor<T>`: an `AsyncLocal` value holder registered by `AddAccessor<T>()` (singleton, `TryAdd`) |
+| `OoBDev.Extensions` `ServiceCollectionExtensions` | `AddAccessor<T>()` and `GetSingletonInstance<TService, TInstance>(out instance)` (reuses a registered instance or creates one and registers it) |
+| `StringTools` | `SplitBy(length = 80, breaker = ' ')` and `WriteAsLines()` |
 
-- **Accessor<T>**: Represents an accessor for a value of type T, providing a property to get or set the associated value.
-- **CommandLine**: Provides a builder pattern for command parameter arguments, with methods for adding and building configurable parameters.
-- **ConfigurationBuilderExtensions**: Extension methods for adding in-memory collections to the IConfigurationBuilder, allowing the addition of initial data.
-- **FileTools**: Provides methods for working with files, including asynchronous splitting of files into chunks.
-- **StreamExtensions**: Provides methods for working with streams, such as creating an in-memory copy of a stream and splitting a stream into chunks.
-- **StreamJsonDeserializeExtensions**: Extension methods for deserializing JSON streams using System.Text.Json.
-- **StreamXmlDeserializeExtensions**: Extension methods for deserializing XML streams using System.Xml.
-- **AsyncEnumerableExtensions**: Extensions to add async support to existing IEnumerable<T>, including methods for converting async enumerable sequences to lists and sets.
-- **DictionaryExtensions**: Reusable extensions for generic dictionaries, including methods for getting values with a custom comparer and changing the dictionary comparer.
-- **EnumerableExtensions**: Provides extension methods for asynchronous enumerables, such as converting async enumerable sequences to sets.
-- **ReflectionExtensions**: Extensions for reflection and common patterns, including methods for getting method parameters, attributes, and static or instance methods.
-- **ResourceExtensions**: Extension methods for working with embedded resources, including methods for getting resource streams and content as strings.
-- **ServiceCollectionExtensions**: Suggested IOC configurations, including methods for registering accessor types and getting singleton instances from the IOC container.
-- **StringTools**: Provides utility methods for string manipulation, such as splitting strings into lines and concatenating lines with newline separators.
-
-## Getting Started
-
-The OoBDev.Extensions namespace offers a wide range of utility classes and extension methods to streamline 
-common development tasks. Simply include the namespace in your project and start using the provided classes 
-and extensions in your code.
-
-## Example Usage
+## Command line options
 
 ```csharp
-// Example of using StreamExtensions to split a file into chunks
-var filename = "example.txt";
-var chunkLength = 1024;
-var overlap = 128;
-await using var fileStream = File.OpenRead(filename);
-await foreach (var chunk in fileStream.SplitStreamAsync(chunkLength, overlap))
+config.AddCommandLine(args, CommandLine.BuildParameters<MyOptions>());   // --input and --Input both bind
+if (CommandLine.IsHelpRequest(args))                                    // -h, --help, -?
+    Console.WriteLine(CommandLine.Usage("my-tool", "What it does.", typeof(MyOptions)));
+```
+
+`BuildParameters<T>` maps the `Short` and `Value` names of each property's `CommandParameterAttribute` and the property name to `--name` switches (ignoring case). `Usage` lists every switch with its type, `(required)` marks and the `Description`; a boolean needs an explicit `true` or `false`. The tools in `src/Tools` use it.
+
+## Chunking example
+
+```csharp
+await using var file = File.OpenRead("notes.txt");
+await foreach (var chunk in file.SplitStreamAsync(contextLength: 1024, overlap: 128))
 {
-    // Process each chunk asynchronously
+    // chunk.Data, chunk.Sequence, chunk.Start, chunk.Length
 }
-
-// Example of using ReflectionExtensions to get method parameters
-var methodInfo = typeof(MyClass).GetMethod("MyMethod");
-var parameters = methodInfo.GetParametersTypes();
-
-// Example of using ServiceCollectionExtensions to register accessor types
-services.AddAccessor<MyClass>();
-
-// Example of using StringTools to split a string into lines
-var input = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
-var lines = input.SplitBy(20); // Split into lines of max 20 characters
+```

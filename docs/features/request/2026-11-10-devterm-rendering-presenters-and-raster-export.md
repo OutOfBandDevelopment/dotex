@@ -1,6 +1,6 @@
 # Feature request: DevTerm rendering presenters and raster export service
 
-- **Status:** new
+- **Status:** triaged
 - **Requested by:** owner (retire dev-term, 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** `src/Applications/DevTerm` (presenters, Stream Monitor)
@@ -45,3 +45,5 @@ Which raster library fits the dependency rules (no large native package)?
 ## Triage notes
 
 Origin: dev-term BACKLOG (Plugin architecture, Stream Monitor leftovers, UX decisions).
+
+2026-11-11: triaged. Raster export is built as a core service (`VectorSceneRasterizer`, `StreamCaptureConverter`; decided 2026-10-13); the search above missed it. Rendering presenters remain future work. Design: [raster export](../../design/Presenters/raster-export.md), [Presenters](../../design/Presenters/README.md). Backlog: BACKLOG.md, DevTerm.

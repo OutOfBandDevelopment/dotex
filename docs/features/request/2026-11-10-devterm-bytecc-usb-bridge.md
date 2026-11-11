@@ -1,6 +1,6 @@
 # Feature request: DevTerm BYTECC BT-UP01 USB-over-network bridge (research)
 
-- **Status:** new
+- **Status:** triaged
 - **Requested by:** owner (retire dev-term, 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** `src/Applications/DevTerm`, research
@@ -42,3 +42,5 @@ Is the hardware still owned? Without it, decline.
 ## Triage notes
 
 Origin: dev-term BACKLOG (Research). Probably a decline.
+
+2026-11-11: triaged. Research only; no BYTECC code. Kept as a research note in the DevTerm backlog and declined as a build item until a device is on the bench. Backlog: BACKLOG.md, DevTerm.

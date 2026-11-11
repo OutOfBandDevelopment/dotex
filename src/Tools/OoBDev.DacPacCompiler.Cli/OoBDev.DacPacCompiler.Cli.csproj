@@ -24,6 +24,8 @@
   <ItemGroup>
     <ProjectReference Include="..\..\ExternalServices\Microsoft\OoBDev.Microsoft.SqlServer.DacFx\OoBDev.Microsoft.SqlServer.DacFx.csproj" />
     <ProjectReference Include="..\..\Framework\OoBDev.DacFx\OoBDev.DacFx.csproj" />
+    <ProjectReference Include="..\..\Framework\OoBDev.System\OoBDev.System.csproj" />
+    <InternalsVisibleTo Include="OoBDev.DacPacCompiler.Cli.Tests" />
   </ItemGroup>
 
   <!-- Force the 4.8 build to run before this project for testing -->

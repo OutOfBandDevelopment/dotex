@@ -1,47 +1,24 @@
 # OoBDev.SemanticKernel.Abstractions
 
-Abstractions and interfaces for Semantic Kernel integration.
+The contracts the other projects use to plug into Semantic Kernel without depending on a connector. The namespace is `OoBDev.SemanticKernel`.
 
-## Description
+**Table 1 — Types**
 
-This package provides abstraction layers and dependency injection extensions for Microsoft Semantic Kernel. It defines core interfaces for chat providers and kernel plugins, enabling flexible AI integration patterns.
-
-## Key Features
-
-- Chat provider abstraction for LLM interactions
-- Kernel plugin interface for extensibility
-- Dependency injection integration
-- Configuration support for Semantic Kernel services
-- Type-safe kernel globals management
-
-## Installation
-
-```xml
-<PackageReference Include="OoBDev.SemanticKernel.Abstractions" Version="*" />
-```
-
-## Basic Usage
+| Type | Role |
+|------|------|
+| `IKernelPlugIn` | Marker for a class whose `[KernelFunction]` methods become a kernel plugin. |
+| `AddKernelPlugIn<T>()` | `IServiceCollection` extension that registers `T` as a transient `IKernelPlugIn`. |
+| `IChatProvider` | `OneShotAsync(prompt)` sends one prompt and returns the reply text (or `null`); implemented by `OllamaChatProvider` in `OoBDev.Ollama`. |
+| `KernelGlobal.Name` | The service key `"kernel"` for the keyed `Kernel` and `IChatCompletionService`. |
 
 ```csharp
-using OoBDev.SemanticKernel;
-using Microsoft.Extensions.DependencyInjection;
-
-services.AddSemanticKernelAbstractions(configuration);
-
-// Implement custom chat provider
-public class MyChatProvider : IChatProvider
+public sealed class WeatherPlugIn : IKernelPlugIn
 {
-    public async Task<string?> OneShotAsync(string prompt)
-    {
-        // Your implementation
-    }
+    [KernelFunction("forecast"), Description("get the forecast for a city")]
+    public Task<string> ForecastAsync(string city) => Task.FromResult("sunny");
 }
+
+services.AddKernelPlugIn<WeatherPlugIn>();
 ```
 
-## License
-
-See repository license file for details.
-
-## Repository
-
-[OoBDev Repository](https://github.com/yourusername/oobdev)
+The kernel itself is built by `services.TryAddSemanticKernelPlugins()` in [OoBDev.SemanticKernel](../OoBDev.SemanticKernel/README.SemanticKernel.md).

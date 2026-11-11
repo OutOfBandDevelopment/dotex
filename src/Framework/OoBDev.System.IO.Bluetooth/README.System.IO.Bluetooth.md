@@ -20,4 +20,4 @@ services.Configure<BleDeviceAdapterOptions>(o => o.DeviceId = "BluetoothLE#...")
 
 ## Verified
 
-19 Unit tests cover the adapter against a mocked connection, the write chunker and the unsupported-platform defaults. The Windows backend builds but has not been run against a peripheral.
+20 Unit tests cover the adapter against a mocked connection, the write chunker and the unsupported-platform defaults. The Windows backend has a Hardware round trip through an HC-08 module that passed on 2026-11-05 (see its readme).

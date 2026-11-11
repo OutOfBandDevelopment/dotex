@@ -12,7 +12,7 @@ namespace OoBDev.FixSourceLinks.Cli;
 internal sealed class Program
 {
     private const string Usage = """
-        oobdev-fixsourcelinks [--include <glob;glob>] [--exclude <glob;glob>] [--search <folder>] [--target <folder>]
+        fix-sourcelink [--include <glob;glob>] [--exclude <glob;glob>] [--search <folder>] [--target <folder>]
           Rewrites https links in the filename attributes of the matching XML files (for example coverage reports) to local paths under the target folder.
           --include  semicolon-separated globs of the files to fix (nothing is changed without it)
           --exclude  semicolon-separated globs to skip

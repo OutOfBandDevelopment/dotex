@@ -1,112 +1,35 @@
 # OoBDev.Common.Extensions
 
-This library provides a set of extension methods and classes for configuring common external services and identity providers in .NET applications.
+Aggregator for the external service adapters (`src/ExternalServices`) with one registration that adds them all. It is part of [OoBDev.Common.Complete](../OoBDev.Common.Complete/README.Common.Complete.md).
 
-## Classes
+## Use
 
-### `Common.Extensions.ExternalExtensionBuilder`
-
-Represents a builder for configuring external extensions.
-
-### `Common.Extensions.IdentityExtensionBuilder`
-
-Represents a builder for configuring identity extensions.
-
-### `Common.Extensions.IdentityProviders`
-
-Specifies different identity providers for authentication.
-
-### `Common.Extensions.ServiceCollectionExtensions`
-
-Provides extension methods for configuring common external services.
-
-## Methods
-
-### `TryCommonExternalExtensions`
-
-Tries to add common external services to the specified `IServiceCollection`.
-
-* Parameters:
-	+ `services`: The instance of `IServiceCollection`.
-	+ `configuration`: The configuration containing settings for external services.
-	+ `identityBuilder`: Optional builder for configuring identity extensions. Default is null.
-	+ `externalBuilder`: Optional builder for configuring external extensions. Default is null.
-* Return value: The updated instance of `IServiceCollection`.
-
-**Properties**
--------------
-
-### `MongoDatabaseConfigurationSection`
-
-Gets or sets the configuration section name for MongoDB database options. Default is "MongoDatabaseOptions".
-
-### `AzureBlobProviderOptionSection`
-
-Gets or sets the configuration section name for Azure Blob Container options. Default is "AzureBlobContainerOptions".
-
-### `SmtpConfigurationSection`
-
-Gets or sets the configuration section name for SMTP client options (MailKit). Default is "MailKitSmtpClientOptions".
-
-### `ImapConfigurationSection`
-
-Gets or sets the configuration section name for IMAP client options (MailKit). Default is "MailKitImapClientOptions".
-
-### `SentenceEmbeddingOptionSection`
-
-Gets or sets the configuration section name for SentenceEmbeddingOptions.
-
-### `QdrantOptionSection`
-
-Gets or sets the configuration section name for Qdrant options.
-
-### `OpenSearchOptionSection`
-
-Gets or sets the configuration section name for OpenSearch options.
-
-### `OllamaApiClientOptionSection`
-
-Gets or sets the configuration section name for Ollama Api Client options.
-
-### `GroqCloudApiClientOptionSection`
-
-Gets or sets the configuration section name for GroqCloud Api Client options.
-
-### `ApacheTikaClientOptionSection`
-
-Gets or sets the configuration section name of Apache Tika Client options.
-
-### `IdentityProvider`
-
-Gets or sets the identity provider to use. Specifies the identity provider for authentication. The default value is `None`.
-
-### `KeycloakIdentityConfigurationSection`
-
-Gets or sets the configuration section name for Keycloak identity options. Default is "KeycloakIdentityOptions".
-
-**Identity Providers**
---------------------
-
-### `None`
-
-Represents no specific identity provider.
-
-### `Keycloak`
-
-Represents the Keycloak identity provider.
-
-**Getting Started**
--------------------
-
-To use this library, add the following NuGet package to your project:
+```csharp
+services.TryCommonExternalExtensions(configuration);                 // namespace OoBDev.Common.Extensions
+services.TryCommonExternalExtensions(configuration,
+    new IdentityExtensionBuilder { IdentityProvider = IdentityProviders.None },
+    new ExternalExtensionBuilder { QdrantOptionSection = "Vectors:Qdrant" });
 ```
-Install-Package OoBDev.Common.Extensions
-```
-Then, in your startup class, use the `TryCommonExternalExtensions` method to configure the external services and identity providers:
-```
-public void ConfigureServices(IServiceCollection services)
-{
-    services.TryCommonExternalExtensions(Configuration, new IdentityExtensionBuilder(), new ExternalExtensionBuilder());
-}
-```
-This library is designed to be flexible and extensible, so feel free to modify or extend it to suit your specific needs.
+
+In Debug builds both builders are required parameters, in Release they default to null (the `#if DEBUG` pattern). Every registration uses `TryAdd*`, so an earlier registration wins.
+
+## What it registers
+
+In order: MongoDB, Azure storage (blob), RabbitMQ, MailKit (SMTP and IMAP), OpenTelemetry, Keycloak (only when `IdentityProvider` has the `Keycloak` flag, the default), SBert, all-MiniLM-L6-v2 embeddings, Qdrant, OpenSearch, Ollama, GroqCloud, Apache Tika, WkHtmlToPdf, Markdig, Handlebars, MysticMind, HtmlToOpenXml, SQL Server, Microsoft caching and Redis caching. Each adapter's readme lists its own configuration.
+
+## Builders
+
+**Table 1 — `ExternalExtensionBuilder` configuration sections (defaults are the options type names)**
+
+| Property | Default section |
+|----------|-----------------|
+| `MongoDatabaseConfigurationSection` | `MongoDatabaseOptions` |
+| `AzureBlobProviderOptionSection` | `AzureBlobProviderOptions` |
+| `SmtpConfigurationSection`, `ImapConfigurationSection` | `MailKitSmtpClientOptions`, `MailKitImapClientOptions` |
+| `SentenceEmbeddingOptionSection` | `SentenceEmbeddingOptions` (shared by SBert and all-MiniLM-L6-v2) |
+| `OpenTelemetryOptionSection` | `OpenTelemetryOptions` |
+| `QdrantOptionSection`, `OpenSearchOptionSection` | `QdrantOptions`, `OpenSearchOptions` |
+| `OllamaApiClientOptionSection`, `GroqCloudApiClientOptionSection` | `OllamaApiClientOptions`, `GroqCloudApiClientOptions` |
+| `ApacheTikaClientOptionSection` | `ApacheTikaClientOptions` |
+
+`IdentityExtensionBuilder` has `IdentityProvider` (flags enum `IdentityProviders`: `None`, `Keycloak`; default `Keycloak`) and `KeycloakIdentityConfigurationSection` (default `KeycloakIdentityOptions`).

@@ -9,10 +9,12 @@ One section per stack. Values are the test defaults from `src/.runsettings`; the
 - [SQL Server](#sql-server)
 - [MongoDB](#mongodb)
 - [Redis](#redis)
+- [PostgreSQL](#postgresql)
 - [RabbitMQ](#rabbitmq)
 - [DevTerm peers](#devterm-peers-mosquitto-ser2net-loopback-device)
 - [OpenSearch](#opensearch)
 - [Qdrant](#qdrant)
+- [Neo4j](#neo4j)
 - [Apache Tika](#apache-tika)
 - [smtp4dev](#smtp4dev)
 - [Azurite](#azurite)
@@ -31,9 +33,11 @@ One section per stack. Values are the test defaults from `src/.runsettings`; the
 | SQL Server | `mssql/server:2022-latest` | `localhost,1433` | `sa` / `IntegrationTest123!` |
 | MongoDB | `mongo:latest` | `mongodb://localhost:27017` | none |
 | Redis | `valkey/valkey:8-alpine` | `localhost:6379` | none |
+| PostgreSQL | `ghcr.io/pgmq/pg17-pgmq:v1.8.0` | `localhost:5434` | `postgres` / `IntegrationTest123!` |
 | RabbitMQ | `rabbitmq:management` | `amqp://localhost:5673` | `guest` / `guest` |
 | OpenSearch | `opensearchproject/opensearch` | `https://localhost:9200` | `admin` / `IntegrationTest123!` |
 | Qdrant | `qdrant/qdrant` | `http://localhost:6333` | none |
+| Neo4j | `neo4j:5-community` | `bolt://localhost:7687`, browser `http://localhost:7474` | `neo4j` / `oobdev-test-pass` |
 | Apache Tika | `apache/tika` | `http://localhost:9998` | none |
 | smtp4dev | `rnwood/smtp4dev` | SMTP 25, IMAP 143, UI 7777 | none |
 | Azurite | `azure-storage/azurite` | `http://127.0.0.1:10000/devstoreaccount1` | well-known dev account key |
@@ -51,6 +55,10 @@ Developer edition. Used for SQL vector and matrix tests (`OoBDev.Data.Vectors.DB
 ## MongoDB
 
 Document store tests. Keys: `MONGODB_CONNECTION_STRING`, `MONGODB_DATABASE_NAME`. Tests create a database named `IntegrationTest_<guid>` and drop it in cleanup.
+
+## PostgreSQL
+
+PostgreSQL 17 with the pgmq extension created at first start (`containers/testing/postgres/01-pgmq.sql`), database `oobdev_test`, ephemeral volume. Host port 5434 because 5432 and 5433 are common local installs. Used by the event sourcing Postgres provider tests and the pgmq queue adapter. Key: `POSTGRES_CONNECTION_STRING`.
 
 ## Redis
 
@@ -71,6 +79,10 @@ Security plugin on, self-signed certificate (tests use `OPENSEARCH_USE_HTTPS=tru
 ## Qdrant
 
 Vector database over the query API. Keys: `QDRANT_URL`, `QDRANT_HOST`, `QDRANT_PORT`. Storage and snapshot volumes persist between runs, so tests use unique collection names.
+
+## Neo4j
+
+Graph database (Cypher over Bolt) for the graph retrieval adapter. Keys: `NEO4J_URI`, `NEO4J_USER`, `NEO4J_PASSWORD`; host ports `TEST_PORT_NEO4J_BOLT` (7687) and `TEST_PORT_NEO4J` (7474, browser). The data volume persists between runs, so tests use unique node labels or ids and delete what they create. No nginx proxy (the browser is on 7474 directly).
 
 ## Apache Tika
 

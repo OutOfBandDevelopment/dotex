@@ -1,26 +1,57 @@
 # OoBDev.DevTerm.Wpf
 
-WPF shell for device panels, rebuilt on the OoBDev libraries (phase 10 of [the device decoding plan](../../../docs/design/DeviceDecoding/migration-plan.md)).
+WPF front end for DevTerm on `OoBDev.DevTerm.Core`: session tabs with connect, send and output, device panels from `OoBDev.UiDefinitions.Wpf`, and the DevTerm tool windows. Every action is an `ICommand` class with injected dependencies and every window talks to its view model through a dialog interface, so the logic is tested without showing a window (rule `owner-decisions`, MVVM with command binding). Slice status is in [the parity status](../../../docs/design/DevTermParity/status.md).
 
-## Description
+## Contents
 
-A window with a panel list and the open panel's `FormView` from `OoBDev.UiDefinitions.Wpf`. A device adds an `IPanelFactory` in `App.OnStartup` to appear in the list; the shell opens it through `OpenPanelCommand`, so there is no code-behind logic.
+- [Shell](#shell)
+- [Windows and dialogs](#windows-and-dialogs)
+- [SCPI instruments](#scpi-instruments)
+- [Tests](#tests)
+- [Notes](#notes)
+
+## Shell
+
+`App` composes through `services.AddDevTermWpfShell()`, which registers the core, the device panels (`AddDevTermDevicePanels()`), plugins, the text presenters, the loopback transport, the profile store, the dialogs listed below and the shell view model.
+
+**Table 1 — Shell types**
 
 | Type | Role |
 |------|------|
-| `ShellViewModel` | The registered factories, the open panel, and the `Open` command |
-| `ServiceCollectionExtensions.AddDevTermWpfShell()` | Registers the core, the device panels, the colour picker, the demo panel factory and the shell; `App` composes through it |
-| `PanelViewModel` | A title and a `FormViewModel`; disposed when replaced |
-| `IPanelFactory` | How a device contributes a panel |
-| `ScpiPanelFactory` | A panel generated from a SCPI instrument profile (`OoBDev.Scpi`, namespace `OoBDev.Scpi.Panels`); the caller supplies the send function |
-| `ScpiTcpExecutor` | Sends a SCPI request to an instrument's raw socket (default port 5025) and reads one reply line for a query |
-| `DemoPanelFactory` | A panel generated from `DemoSettings`; stands in until device panels exist |
+| `ShellViewModel` | The registered `IPanelFactory`s, the open panel and sessions, and the `Open` command |
+| `SessionViewModel`, `SessionViewModelFactory` | One session tab: connect, disconnect, send, output, logging |
+| `PanelViewModel`, `IPanelFactory` | A title and a `FormViewModel`, disposed when replaced; how a device or plugin contributes a panel |
+| `DemoPanelFactory`, `DemoSettings` | A panel generated from settings, for flows that need no hardware |
+| `WpfTheme`, `DarkControls.xaml`, `ThemeViewModel` | Light and dark themes with replacement control templates (stock chrome is hard-coded light) |
 
-Start with `--scpi host[:port] [profile name]` to add a panel for an instrument on its raw socket; the profile is looked up in the SCPI catalog by name and defaults to the generic one. Other transports (serial, USBTMC, VXI-11) are not wired in yet.
+## Windows and dialogs
 
-## Verified
+Each dialog is an interface (`IRoutingDialog`) with a `Wpf...Dialog` implementation that shows a `...Window` over a `...DialogViewModel`.
 
-8 Unit tests (shell view model, SCPI factory, SCPI socket executor against a loopback listener). The window and a real instrument has not been started or looked at on screen.
+**Table 2 — Tool windows**
+
+| Window | Does |
+|--------|------|
+| Connection editor | Edit connection profiles and scan for serial, USB, HID, LXI and network devices (`ConnectionEditorWindow`) |
+| Configure device | Read and write a device's configuration with preview (`ConfigureDeviceWindow`) |
+| Playback and merged log | Replay a session log; merge several logs (`PlaybackWindow`, `MergedLogWindow`) |
+| Stream monitor | Capture and preview images and plot data seen in the byte stream, export, convert (`StreamMonitorWindow`) |
+| Routing | Edit and run rules between a session and a broker (`RoutingWindow`) |
+| Converter tools | Edit the external converters (`ConverterToolsWindow`) |
+| Manifest picker and editor | Open or edit a device manifest (`ManifestPickerWindow`, `ManifestEditorWindow`) |
+| Expression picker | Pick a value path for a manifest expression (`ExpressionPickerWindow`) |
+| Theme builder | Build a theme from seed colours (`ThemeBuilderWindow`, `ThemeSeedPickerWindow`) |
+| Instrument picker | Choose an SCPI instrument (`InstrumentPickerWindow`) |
+
+Plugin installation and approval review, profile zip import and export, listening for UDP or peer sessions and session logging are commands on the main window.
+
+## SCPI instruments
+
+Start with `--scpi host[:port] [profile name]` to add a panel for an instrument on its raw socket. The profile is looked up in the SCPI catalog by name and defaults to the generic one. `ScpiPanelFactory` builds the panel from the profile (`OoBDev.Scpi.Panels`) and `ScpiTcpExecutor` sends requests to the socket (default port 5025), reading one reply line for a query. Other SCPI transports (serial, USBTMC, VXI-11) are reached through a connection profile and the instrument picker, not this switch.
+
+## Tests
+
+`OoBDev.DevTerm.Wpf.Tests` (about 180 test methods) is `[assembly: DoNotParallelize]` (WPF's XAML parser races across STA threads) and includes screenshot tests. Real instruments and a manual run on screen are covered by the hardware passes in `docs/applications/devterm/test/`, not by these tests.
 
 ## Notes
 

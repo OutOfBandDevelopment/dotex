@@ -7,7 +7,7 @@ A dotnet tool that walks a folder tree, renders one prompt per folder from a Han
 ## Usage
 
 ```
-llmcodegen --input <dir> --output <dir> --template <name|path> --model <model> [--provider ollama|groq] [--pattern "*.ts"] [--overwrite] [--extract false]
+llmcodegen --input <dir> --output <dir> --template <name|path> --model <model> [--provider ollama|groq] [--pattern "*.ts"] [--overwrite true] [--extract false]
 ```
 
 **Table 1 — Options**
@@ -20,8 +20,8 @@ llmcodegen --input <dir> --output <dir> --template <name|path> --model <model> [
 | `--model` | required | Model name sent with the prompt |
 | `--provider` | `ollama` | `ollama` or `groq` (the `groq-cloud` key) |
 | `--pattern` | `*.*` | File pattern for the files in a prompt |
-| `--overwrite` | off | Rerun folders that already have a response |
-| `--extract` | `true` | Write the files found in the response |
+| `--overwrite` | `false` (give `true`; a bare switch has no value) | Rerun folders that already have a response |
+| `--extract` | `true` (give `false` to skip) | Write the files found in the response |
 
 Settings can also come from environment variables (`LlmCodeGen__Model`). Provider endpoints and keys are the adapters' own settings: `OoBDev__Ollama__Url` (default `http://localhost:11434`) and `OoBDev__GroqCloud__ApiKey` (or the `API_Key_Groq` user variable). Keys are never tool options.
 

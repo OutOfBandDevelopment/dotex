@@ -2,7 +2,7 @@
 
 [← API design](api-design.md) · [↑ Overview](README.md)
 
-**Status:** Draft · **Date:** 2026-10-29
+**Status:** Built · **Date:** 2026-11-11 (REQ-001 to REQ-010 in `OoBDev.AspNetCore.OData`, covered by its Simulate tests)
 
 ## Contents
 

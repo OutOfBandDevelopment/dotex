@@ -57,9 +57,10 @@ Consumers get an `IVectorStore<T>` from DI or from `IVectorStoreFactory`. The fa
 | Project | Layer | Holds |
 |---------|-------|-------|
 | `OoBDev.Search.Abstractions` | Common | `IVectorStore`, `IVectorStore<T>`, `IVectorStoreProvider`, `IVectorStoreProviderFactory`, `IVectorStoreFactory`, `[VectorStore]`, `SearchResultModel`, `SearchTypes` |
-| `OoBDev.Search` | Framework | `VectorStoreFactory`, `WrappedVectorStore<T>`, `TryAddSearchServices()`, and the three obsolete shells (`HybridProvider`, `SearchProvider`, `DocumentSummaryGenerationProvider`) |
+| `OoBDev.Search` | Framework | `VectorStoreFactory`, `WrappedVectorStore<T>`, `TryAddSearchServices()` |
 | `OoBDev.Qdrant` | ExternalServices | `QdrantVectorStoreProvider`, its factory, options, gRPC client factory, point struct factory |
-| `OoBDev.OpenSearch` | ExternalServices | `OpenSearchOptions`, `OpenSearchClientFactory`; `LexicalProvider` is a commented-out class |
+| `OoBDev.Microsoft.Azure.AISearch` | ExternalServices | `AzureAISearchVectorStoreProvider`, its factory and options; stores `Id`, `Payload` (JSON) and `Vector` (HNSW) in an Azure AI Search index (LiveIntegration test) |
+| `OoBDev.OpenSearch` | ExternalServices | `OpenSearchOptions`, `OpenSearchClientFactory`; no lexical provider |
 | `OoBDev.Onnx.SentenceEmbeddings`, `OoBDev.Onnx.ImageEmbeddings`, `OoBDev.Ollama` | ExternalServices | Embedders feeding the store |
 
 ## Provider selection

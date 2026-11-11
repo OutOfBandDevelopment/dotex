@@ -1,3 +1,4 @@
+using System;
 using OoBDev.Identity;
 using OoBDev.Keycloak.Identity;
 using Microsoft.Extensions.Configuration;
@@ -30,6 +31,8 @@ public static class ServiceCollectionExtensions
 #endif
     )
     {
+        services.TryAddSingleton(TimeProvider.System);
+        services.AddHttpClient<KeycloakDirectoryReader>();
         services.TryAddTransient<IIdentityManager, ManageKeycloakUser>();
 
         services.Configure<KeycloakIdentityOptions>(options => configuration.Bind(keycloakIdentityConfigurationSection, options));

@@ -165,6 +165,27 @@ services:
       retries: 5
       start_period: 5s
 
+  postgres:
+    image: ghcr.io/pgmq/pg17-pgmq:v1.8.0
+    container_name: oobd-test-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-IntegrationTest123!}
+      POSTGRES_DB: oobdev_test
+    ports:
+      - "${TEST_PORT_POSTGRES:-5434}:5432"   # 5432 and 5433 are common local installs
+    networks:
+      - integration-test-net
+    volumes:
+      - postgres-test-data:/var/lib/postgresql/data
+      - ./postgres/01-pgmq.sql:/docker-entrypoint-initdb.d/01-pgmq.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d oobdev_test"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
   opensearch:
     extends:
       file: ../docker-compose.opensearch.yml
@@ -216,6 +237,30 @@ services:
       timeout: 5s
       retries: 5
       start_period: 10s
+
+  # ============================================================================
+  # Neo4j - graph database (Cypher over Bolt)
+  # ============================================================================
+  neo4j:
+    image: neo4j:5-community
+    container_name: oobd-test-neo4j
+    environment:
+      NEO4J_AUTH: neo4j/oobdev-test-pass
+      NEO4J_server_memory_heap_initial__size: 256m
+      NEO4J_server_memory_heap_max__size: 512m
+    ports:
+      - "${TEST_PORT_NEO4J_BOLT:-7687}:7687"
+      - "${TEST_PORT_NEO4J:-7474}:7474"
+    networks:
+      - integration-test-net
+    volumes:
+      - neo4j-test-data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "cypher-shell -u neo4j -p oobdev-test-pass 'RETURN 1' || exit 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 30s
 
   # ============================================================================
   # Cloud Emulators - Azure and AWS service emulation
@@ -465,12 +510,16 @@ volumes:
     name: oobd-test-sqlserver-data
   rabbitmq-test-data:
     name: oobd-test-rabbitmq-data
+  postgres-test-data:
+    name: oobd-test-postgres-data
   redis-test-data:
     name: oobd-test-redis-data
   opensearch-test-data:
     name: oobd-test-opensearch-data
   qdrant-test-storage:
     name: oobd-test-qdrant-storage
+  neo4j-test-data:
+    name: oobd-test-neo4j-data
   qdrant-test-snapshots:
     name: oobd-test-qdrant-snapshots
   azurite-test-data:

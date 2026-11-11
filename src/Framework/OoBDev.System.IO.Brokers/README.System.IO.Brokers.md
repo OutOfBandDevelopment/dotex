@@ -17,4 +17,4 @@ services.Configure<BrokerDeviceAdapterOptions>(o => { o.Host = "localhost"; o.Ex
 
 ## Verified
 
-8 Unit tests cover the adapter against a mocked connection and the STOMP frame codec. `RabbitMqIntegrationTests` (category `DevLocal`) needs a RabbitMQ broker and ends inconclusive when none is there; it was not run.
+9 Unit tests cover the adapter against a mocked connection and the STOMP frame codec. `RabbitMqIntegrationTests` (category `Integration`, 6 tests) round-trips AMQP, STOMP and the TLS listeners through the RabbitMQ of `containers/testing` (`RABBITMQ_*` test parameters); it was not run for this review.

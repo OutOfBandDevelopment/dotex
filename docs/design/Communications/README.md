@@ -1,7 +1,7 @@
 # Epic 2: Communications Platform
 
 **Priority:** CRITICAL
-**Status:** 📋 Design Phase
+**Status:** 🔧 Partly built (reconciled 2026-11-11): the abstractions (`IChannel`, `IChannelProvider`, registry, send and receive services, delivery tracking, webhook processors, polling host), the hosting and MessageQueueing email handler are in `OoBDev.Communications*`; the MailKit (SMTP, IMAP) and Amazon SES channel providers exist. Not built: SendGrid and Twilio SMS providers, scheduled campaigns, attribute-based data enhancement. The 16 LOC stub in the impact line is gone.
 **Complexity:** HIGH
 **Impact:** ~2,500 LOC (replaces 16 LOC stub with production-ready implementation)
 
@@ -158,7 +158,7 @@ The Communications Platform provides a **multi-channel communications orchestrat
 
 ### Feature 1: Core Orchestration
 **Path:** `./Core/`
-**Status:** 📋 Design Phase
+**Status:** see the top of this document
 
 **Description:** Central message routing and orchestration engine that coordinates multi-channel delivery.
 
@@ -172,7 +172,7 @@ The Communications Platform provides a **multi-channel communications orchestrat
 
 ### Feature 2: SendGrid Email Provider
 **Path:** `./SendGridProvider/`
-**Status:** 📋 Design Phase
+**Status:** see the top of this document
 
 **Description:** Cloud email service via SendGrid API.
 
@@ -185,7 +185,7 @@ The Communications Platform provides a **multi-channel communications orchestrat
 
 ### Feature 3: Twilio SMS Provider
 **Path:** `./TwilioSmsProvider/`
-**Status:** 📋 Design Phase
+**Status:** see the top of this document
 
 **Description:** SMS messaging via Twilio API.
 
@@ -198,7 +198,7 @@ The Communications Platform provides a **multi-channel communications orchestrat
 
 ### Feature 4: Communications Abstractions
 **Path:** `./Abstractions/`
-**Status:** 📋 Design Phase
+**Status:** Built (abstractions project)
 
 **Description:** Core interfaces and contracts for all communication channels.
 

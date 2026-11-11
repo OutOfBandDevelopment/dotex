@@ -109,3 +109,7 @@ Orders events across sites whose clocks are skewed. `HybridLogicalClock` is wall
 ### IniFile
 
 - **Read(section, key, default)**, **Write(section, key, value)** and indexers: a managed INI reader and writer with no Win32 dependency. Names are case-insensitive, comments (`;` or `#`) and unrelated lines survive a write, and a missing file, section or key reads as the default.
+
+## ExpressionCalculator optimizers
+
+`ExpressionOptimizationProvider<T>` applies inner-expression, unary, identity (`B^1`, `B*1`, `B+0`, `B/-1` and so on), constant folding and commutative-variable shifting until the expression stops changing. The four "bonus round" reductions of the source (`B^-1` to `1/B`, `B/N` to `B*(1/N)`, `B*B*...` to `B^T`, `B+B+...` to `B*T`) are declined (2026-11-11): the first two change results for integer `T` (integer division) and for floating point (rounding), and the last two save no real work for a tree evaluated once. Add one only with a test that proves it is exact for every supported `T`.

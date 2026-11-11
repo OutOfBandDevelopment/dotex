@@ -1,76 +1,75 @@
 # OoBDev.Apache.Tika
 
+Content type detection and document-to-HTML conversion through an Apache Tika server, plugged into the `OoBDev.Documents` abstractions.
 
-## Summary
+## Contents
 
-The OoBDev.Apache.Tika library provides functionality for content type detection and document conversion 
-using Apache Tika. It offers a set of classes and methods for integrating Apache Tika services with .NET 
-applications.
+- [Registration](#registration)
+- [Configuration](#configuration)
+- [Content type detection](#content-type-detection)
+- [Document conversion](#document-conversion)
+- [Health check](#health-check)
+- [Verification](#verification)
 
-## Installation
-
-To use this library in your .NET project, add a reference to the OoBDev.Apache.Tika NuGet package.
-
-## Usage
-
-### Content Type Detection
-
-The `TikaContentTypeDetector` class provides methods for asynchronously detecting the content type of a 
-stream using Apache Tika.
+## Registration
 
 ```csharp
-using OoBDev.Apache.Tika;
-
-// Detect content type asynchronously
-string contentType = await TikaContentTypeDetector.DetectContentTypeAsync(stream);
-
-
-## Document Conversion
-
-The library includes several conversion handlers for converting documents to HTML format using Apache 
-Tika. Each handler supports specific document formats.
-
-### Word Documents (DOCX)
-
-```csharp
-using OoBDev.Apache.Tika;
-
-// Convert DOCX document to HTML
-TikaDocxToHtmlConversionHandler handler = new TikaDocxToHtmlConversionHandler();
-handler.ConvertAsync(sourceStream, sourceContentType, destinationStream, destinationContentType);
+services.TryAddApacheTikaServices(configuration);   // section name is required in DEBUG builds
 ```
 
-### PDF Documents
+Nothing is registered when the `ApacheTikaClientOptions:Url` setting is missing, so a host without Tika simply has no Tika services. When it is set the call registers:
 
-```csharp
-using OoBDev.Apache.Tika;
+- `IApacheTikaClient` (typed `HttpClient` with `BaseAddress` set to the URL),
+- `TikaContentTypeDetector` as `IContentTypeDetector`,
+- one `IDocumentConversionHandler` per format and one `IDocumentType` per format,
+- the `apache-tika` health check, and `ApacheTikaClientOptions` validated with data annotations.
 
-// Convert PDF document to HTML
-TikaPdfToHtmlConversionHandler handler = new TikaPdfToHtmlConversionHandler();
-handler.ConvertAsync(sourceStream, sourceContentType, destinationStream, destinationContentType);
+## Configuration
+
+```json
+{ "ApacheTikaClientOptions": { "Url": "http://localhost:9998" } }
 ```
 
-### OpenDocument Text (ODT) Documents
+**Table 1 — Options**
+
+| Key | Required | Use |
+|-----|----------|-----|
+| `Url` | yes | Base URL of the Tika server. The test stack publishes it on port 9998 (`TIKA_URL` in `src/.runsettings`). |
+
+## Content type detection
+
+`TikaContentTypeDetector.DetectContentTypeAsync(Stream)` sends the stream to the server (`PUT /detect`, then `PUT /detect/stream` when the first call does not answer) and returns the detected MIME type.
 
 ```csharp
-using OoBDev.Apache.Tika;
-
-// Convert ODT document to HTML
-TikaOdtToHtmlConversionHandler handler = new TikaOdtToHtmlConversionHandler();
-handler.ConvertAsync(sourceStream, sourceContentType, destinationStream, destinationContentType);
+IContentTypeDetector detector = provider.GetRequiredService<IContentTypeDetector>();
+string? contentType = await detector.DetectContentTypeAsync(stream);
 ```
 
-### Rich Text Format (RTF) Documents
+## Document conversion
+
+Each handler converts one family of sources to `text/html` by calling the server (`/tika/html`; `text/plain` and `text/xml` are also mapped by the client). Pick the handler through the conversion service of `OoBDev.Documents`, or call a handler directly.
+
+**Table 2 — Handlers and document types**
+
+| Handler | Format | Extension |
+|---------|--------|-----------|
+| `TikaDocToHtmlConversionHandler` | Microsoft Word | `.doc` |
+| `TikaDocxToHtmlConversionHandler` | Microsoft Word, OpenXML | `.docx` |
+| `TikaPdfToHtmlConversionHandler` | Portable Document Format (header `%PDF-`) | `.pdf` |
+| `TikaOdtToHtmlConversionHandler` | Open Office document | `.odt` |
+| `TikaEpubToHtmlConversionHandler` | Electronic publication | `.epub` |
+| `TikaRtfToHtmlConversionHandler` | Rich Text Format | `.rtf` |
 
 ```csharp
-using OoBDev.Apache.Tika;
-
-// Convert RTF document to HTML
-TikaRtfToHtmlConversionHandler handler = new TikaRtfToHtmlConversionHandler();
-handler.ConvertAsync(sourceStream, sourceContentType, destinationStream, destinationContentType);
+await handler.ConvertAsync(source, sourceContentType, destination, "text/html");
 ```
 
-## Extensibility
+A source or destination content type the handler does not list throws `NotSupportedException`. To add a format, derive from `TikaToHtmlConversionBaseHandler` (HTML output) or `TikaConversionHandlerBase` (other outputs), expose the `SOURCES` content types and register the handler as an `IDocumentConversionHandler`.
 
-Developers can extend the functionality by inheriting from `TikaToHtmlConversionBaseHandler` or 
-`TikaConversionHandlerBase` classes for custom document conversion requirements.
+## Health check
+
+`ApacheTikaHealthCheck` calls the server root (`GET /tika`): the answer is reported as healthy, and any exception as degraded.
+
+## Verification
+
+`OoBDev.Apache.Tika.Tests` has Unit tests for the health check, detector and handlers, and Integration tests against the Tika container of the test stack (see `docs/architecture/testing/integration/`).

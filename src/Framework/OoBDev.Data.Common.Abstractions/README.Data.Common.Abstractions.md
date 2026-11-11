@@ -1,47 +1,21 @@
 # OoBDev.Data.Common.Abstractions
 
-Core abstractions for database operations and query mapping.
+Contracts for running stored procedures and scalar functions without tying the caller to a database: `IDatabaseQuery<TDbOptions>` for callers and `IDatabaseMapper` for database adapters.
 
-## Description
+## Contracts
 
-This package provides fundamental abstractions for database operations including database mappers, query interfaces, and connection management. It defines the contracts used across the OoBDev data access framework.
+**Table 1 — Contracts**
 
-## Key Features
+| Type | Role |
+|------|------|
+| `IDatabaseQuery<TDbOptions>` | What application code injects: `GetConnection`, `ExecuteStoredProcedureAsync<T, TResult>` (with an optional return-value callback) and `ExecuteFunctionAsync<TResult>`. `TDbOptions` selects the database. The implementation is `DatabaseQuery<>` in `OoBDev.Data.Common`. |
+| `IDatabaseMapper` | What a database adapter implements: `GetConnectionString<TDbOptions>`, `GetConnection<TDbOptions>`, `GetCommandTimeout<TDbOptions>` (seconds, `null` for the provider default), `GetStoredProcedureName<T>`, `GetStoredProcedure<T>(connection, query)`, `GetCommandParameters<T>(query)` and `GetReaderMapper<TResult>(reader)`. |
 
-- IDatabaseMapper interface for database mapping
-- IDatabaseQuery interface for query execution
-- Connection string management abstractions
-- Stored procedure parameter mapping
-- Result set mapping interfaces
-- Type-safe database operations
+## Writing an adapter
 
-## Installation
-
-```xml
-<PackageReference Include="OoBDev.Data.Common.Abstractions" Version="*" />
-```
-
-## Basic Usage
+Implement `IDatabaseMapper` for one provider, return a provider connection from `GetConnection<TDbOptions>`, and register it with the framework registration of the adapter project. `OoBDev.Microsoft.SqlServer.Server` (`SqlDatabaseMapper`) is the SQL Server implementation and the reference to copy.
 
 ```csharp
-using OoBDev.Data.Common;
-
-// Implement custom database mapper
-public class MyDatabaseMapper : IDatabaseMapper
-{
-    public DbConnection GetConnection<TDbOptions>()
-    {
-        // Your implementation
-    }
-
-    // Implement other interface members
-}
+services.TryAddDataCommonServices();            // OoBDev.Data.Common: IDatabaseQuery<>
+services.TryAddMicrosoftSqlServerExtensions();  // the SQL Server IDatabaseMapper
 ```
-
-## License
-
-See repository license file for details.
-
-## Repository
-
-[OoBDev Repository](https://github.com/yourusername/oobdev)

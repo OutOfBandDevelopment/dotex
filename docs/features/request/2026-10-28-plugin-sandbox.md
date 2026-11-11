@@ -52,6 +52,6 @@ is unaddressed.
 
 ## Triage notes
 
-2026-10-29: accepted as a phased design that begins with a threat model; no isolation code before it is reviewed. Home and platforms are owner question Q6 in `OPEN-QUESTIONS.md` (default: dotex package family, Windows and Linux). Design: [docs/design/PluginSandbox](../../design/PluginSandbox/README.md). Backlog: BACKLOG.md, security.
+2026-10-29: accepted as a phased design that begins with a threat model; no isolation code before it is reviewed. Home and platforms were settled later: the dotex package family, Windows and Linux (macOS deferred, owner 2026-11-10). Design: [docs/design/PluginSandbox](../../design/PluginSandbox/README.md). Backlog: BACKLOG.md, security.
 
 2026-10-29: phase 0 done: [threat model and PoC review](../../design/PluginSandbox/threat-model.md). Status stays `triaged` until the launchers ship.

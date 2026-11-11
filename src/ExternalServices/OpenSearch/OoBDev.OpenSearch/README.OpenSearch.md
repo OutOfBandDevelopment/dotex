@@ -1,35 +1,41 @@
 # OoBDev.OpenSearch
 
-OoBDev.OpenSearch provides classes and utilities for working with OpenSearch. Here's an overview of its key components:
+Registers a low-level OpenSearch client built from configuration. It gives other libraries (and your code) an `IOpenSearchLowLevelClient` for the OpenSearch container of the test stack or a real cluster; it adds no search model of its own.
 
-## IOpenSearchClientFactory
+## Use
 
-### Methods
-- **Create**: Creates a new instance of the `OpenSearch.Net.IOpenSearchLowLevelClient`.
+```csharp
+services.TryAddOpenSearchServices(configuration);                 // section OpenSearchOptions
+services.TryAddOpenSearchServices(configuration, "MySearch");     // or a named section
+```
 
-## LexicalProvider
+```json
+{
+  "OpenSearchOptions": {
+    "HostName": "localhost",
+    "Port": 9200,
+    "IndexName": "documents",
+    "UserName": "admin",
+    "Password": "..."
+  }
+}
+```
 
-Provides functionality for storing and searching lexical content using OpenSearch.
+In `DEBUG` builds the section name is a required argument (builder parameters are forwarded explicitly, rule `coding-standards`).
 
-## OpenSearchClientFactory
+**Table 1 — `OpenSearchOptions`**
 
-### Methods
-- **Constructor**: Initializes a new instance of the `OoBDev.OpenSearch.OpenSearchClientFactory` class.
-- **Create**: Creates a new instance of the `OpenSearch.Net.IOpenSearchLowLevelClient`.
+| Key | Meaning |
+|-----|---------|
+| `HostName` | Required |
+| `Port` | Default 9200 |
+| `IndexName` | Required; the index the consumers use |
+| `UserName`, `Password` | Basic authentication, applied only when both are non-blank |
+| `UseTls` | Connect over `https` (default `false`) |
+| `AllowInvalidCertificate` | Accept any server certificate (default `false`); only for local test instances with self-signed certificates |
 
-## OpenSearchOptions
+Options are validated by data annotations. `IOpenSearchClientFactory` (`OpenSearchClientFactory`, transient) creates the client, and `IOpenSearchLowLevelClient` is registered from it. The client connects over `http://host:port` (`https` with `UseTls`), enables HTTP compression and throws on failed requests (`ThrowExceptions(true)`).
 
-Configuration options for the OpenSearch client.
-- **HostName**: Gets or sets the hostname of the OpenSearch server.
-- **Port**: Gets or sets the port number of the OpenSearch server.
-- **IndexName**: Gets or sets the index name used for OpenSearch operations.
-- **UserName**: Gets or sets the username for authentication (if required).
-- **Password**: Gets or sets the password for authentication (if required).
+## Tests
 
-## ServiceCollectionExtensions
-
-Provides extension methods for configuring services related to OpenSearch.
-
-### Methods
-- **TryAddOpenSearchServices**: Configures services for OpenSearch.
-
+`OoBDev.OpenSearch.Tests` holds three `Unit` tests of the client factory (scheme and certificate callback) and two `Integration` tests against the OpenSearch container (`OPENSEARCH_*` parameters in `.runsettings`).

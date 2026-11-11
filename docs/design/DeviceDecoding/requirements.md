@@ -25,7 +25,7 @@
 
 ## Non-goals
 
-- UI panels, view models and renderers (phases 6 and 7, waiting on Q3).
+- UI panels, view models and renderers (phases 6 and 7, decided 2026-10-28).
 - Device manifests and `.ksy` frame decoding (phase 8) and transports dotex lacks (phase 9).
 - Z-Wave (phase 5) until the upstream `dev/zstick-s2` work settles; SCPI (phase 4) is designed here only as far as the shared contracts need.
 - Hardware control logic that belongs to a shell (sessions, connection profiles, plugin loading).
@@ -58,6 +58,6 @@
 
 ## Open questions
 
-- **Q3** whether UI, manifests and transports migrate, and in what order.
+- Decided 2026-10-28 (was Q3): UI, manifests and transports all migrate.
 - Decided 2026-10-28 (was Q4): dev-term is merged entirely into this framework as `OoBDev.DevTerm.{Wpf|Tui|Web}` tools with generic per-platform control libraries under Framework.
 Decided 2026-10-28: package names `OoBDev.DerEE.De5000` and `OoBDev.ZWave` (the protocol, not the stick); test layout in the [testing strategy](testing-strategy.md).

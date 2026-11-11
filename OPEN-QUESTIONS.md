@@ -10,3 +10,5 @@ _(none waiting; processed requests are in BACKLOG.md and TODO.md)_
 
 ## Open
 
+
+_(none open; answered 2026-11-11 and recorded in BACKLOG.md)_

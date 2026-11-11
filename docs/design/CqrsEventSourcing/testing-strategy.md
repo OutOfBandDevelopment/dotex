@@ -33,3 +33,17 @@ When a library is built it sits in the Framework layer, so Unit tests target 80%
 | R8 | With a fake `TimeProvider` event timestamps are deterministic |
 | R9 | Not tested until an extension is built |
 | R10 | Documentation check only: the relation table exists |
+
+## Entity Framework stores
+
+One shared contract test class runs against every database provider: append and read, stale-sequence conflict, global feed order, entity version conflict and checkpoint round trip.
+
+- **SQLite** (in-memory connection): `Simulate`, runs in the normal test run.
+- **SQL Server**: `Integration`, on the existing SQL Server container.
+- **PostgreSQL**: `Integration`, needs a PostgreSQL service added to the test stack (`add-integration-service` skill) with `POSTGRES_*` parameters in `src/.runsettings` and `TEST_VARIABLES.md`.
+- A concurrency test appends to one stream from several tasks and expects exactly one winner per sequence on each database.
+- **SQL Server schema parity:** deploy `OoBDev.EventSourcing.SqlServer.Database` (the dacpac) to a throwaway database and compare tables, columns, types and indexes with the EF model; `Integration`.
+
+## Coverage
+
+Measured 2026-11-11 on a non-Integration run: core 96.8%, Hosting 81.4%, Abstractions 100%, EF Core 99.4%, Sqlite 95.2%, SqlServer 100%, Postgres 39% (the rest is generated migration code, exercised by the Integration test).

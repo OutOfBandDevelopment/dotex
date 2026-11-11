@@ -31,7 +31,7 @@ Each screen lists its purpose, the API it binds to, its commands and a mockup. "
 | RAG | `/ai/rag` | `api/Rag` (embeds passages in process, answers through Ollama) | Exists |
 | Search | `/ai/search` | `api/Search` (BM25 keywords, in-process embeddings and reciprocal rank fusion over pasted passages) | Exists |
 | Documents | `/content/documents` | `Document/*` | Exists |
-| Templates | `/content/templates` | `api/TextTemplate/*` | Yes (list, open, preview; no save) |
+| Templates | `/content/templates` | `api/TextTemplate/*` | Yes (list, open, preview, save) |
 | Communications | `/messaging/communications` | `api/Communications/*` | Exists |
 | Queues | `/messaging/queues` | `api/MessageQueueing/*` | Exists |
 | Current user | `/identity/me` | `api/User/claims` | Exists |
@@ -164,7 +164,7 @@ Purpose: send a sample message to the public or private queue, show the AsyncAPI
 
 ## Templates
 
-Purpose: browse the template files of the example `Templates` folder, open one, edit the text and data, and preview the draft. Binds to `GET api/TextTemplate/List`, `GET api/TextTemplate/Read?file=` (only a listed file name is opened), `POST api/TextTemplate/Preview` (renders draft text, saves nothing) and `Apply` for a named template. Saving is not built; it waits for the owner (OPEN-QUESTIONS Q2). Commands: `ListTemplatesCommand`, `OpenTemplateCommand`, `PreviewTemplateCommand`, `ApplyTemplateCommand`.
+Purpose: browse the template files of the example `Templates` folder, open one, edit the text and data, and preview the draft. Binds to `GET api/TextTemplate/List`, `GET api/TextTemplate/Read?file=` (only a listed file name is opened), `POST api/TextTemplate/Preview` (renders draft text, saves nothing) and `Apply` for a named template. `PUT api/TextTemplate/Save` writes the edited text over the listed file (owner, 2026-11-09: a demo click edits the tracked file; only a listed file name is accepted). Commands: `ListTemplatesCommand`, `OpenTemplateCommand`, `PreviewTemplateCommand`, `SaveTemplateCommand`, `ApplyTemplateCommand`.
 
 ```plantuml
 @startsalt

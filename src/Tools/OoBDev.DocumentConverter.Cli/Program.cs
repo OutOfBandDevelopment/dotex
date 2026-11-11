@@ -22,7 +22,7 @@ public class Program
     {
         if (CommandLine.IsHelpRequest(args))
         {
-            global::System.Console.WriteLine(CommandLine.Usage("oobdev-documentconverter", "Converts a document from one format to another.", typeof(DocumentConverterOptions)));
+            global::System.Console.WriteLine(CommandLine.Usage("file-convert", "Converts a document from one format to another.", typeof(DocumentConverterOptions)));
             return 0;
         }
 

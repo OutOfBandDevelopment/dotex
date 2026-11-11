@@ -1,6 +1,6 @@
 # Feature request: HP-GL vector scene to an oscilloscope display (osci-render)
 
-- **Status:** new
+- **Status:** triaged
 - **Requested by:** owner (notes repository project mapping, 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** `OoBDev.Documents.Hpgl` and a new sink project
@@ -48,3 +48,5 @@ Sends data to a configured TCP endpoint on the local network; no credentials. Co
 ## Triage notes
 
 Origin: notes repository `projects/osci-render-client` and `OoBDev.Documents.Hpgl`. Low priority and speculative; accept, schedule or decline.
+
+2026-11-11: triaged. Accepted as a backlog idea with no design yet; it needs hardware on the bench (see the test hardware map) before a design is written. Backlog: BACKLOG.md, Devices ideas.

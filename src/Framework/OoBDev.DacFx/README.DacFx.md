@@ -1,36 +1,16 @@
 # OoBDev.DacFx
 
-SQL Server DacPac builder and validator implementation.
+Builds a SQL Server DacPac from a SQLCLR assembly and checks the result. The contracts are `IDacPacBuilder` and `IDacPacValidator` in [OoBDev.DacFx.Abstractions](../OoBDev.DacFx.Abstractions/README.DacFx.Abstractions.md).
 
-## Description
-
-This package provides comprehensive DacPac building capabilities, extracting SQL CLR metadata from .NET assemblies and generating valid SQL Server deployment packages. It uses MetadataLoadContext for assembly reflection and creates compliant DacPac ZIP archives.
-
-## Key Features
-
-- .NET assembly to DacPac conversion
-- SQL CLR type extraction (UDT, aggregates, functions, methods)
-- MetadataLoadContext-based reflection
-- DacPac validation using Microsoft DacFx
-- XML model generation
-- Assembly and PDB embedding
-- Type mapping for SQL Server types
-
-## Installation
-
-```xml
-<PackageReference Include="OoBDev.DacFx" Version="*" />
-```
-
-## Basic Usage
+## Registration
 
 ```csharp
-using OoBDev.DacFx;
-using Microsoft.Extensions.DependencyInjection;
+services.TryAddDacPacServices();
+```
 
-services.AddDacFx();
+## Building a DacPac
 
-// Build DacPac from assembly
+```csharp
 dacPacBuilder.BuildDacPac(
     assemblyFileFramework: "MyAssembly.dll",
     assemblyPdbFramework: "MyAssembly.pdb",
@@ -39,10 +19,10 @@ dacPacBuilder.BuildDacPac(
     projectVersion: "1.0.0");
 ```
 
-## License
+`DacPacBuilder` reads the assembly with `MetadataLoadContext` (the SQLCLR assembly is inspected, never loaded and run), finds the SQL aggregates, functions, methods and user-defined types, writes the model XML, and zips it with the assembly and the symbol file into the package. The `OoBDev.DacPacCompiler.Cli` tool and the `GenerateDacPac` build target (`src/SqlClr.Build.targets`) call it.
 
-See repository license file for details.
+## Validating
 
-## Repository
+`BuildDacPac` runs the validator on its own output. `DacPacValidator.ValidateDacPac(file)` loads the package with Microsoft DacFx (`DacPackage.Load`, then a `TSqlModel`), logs name, version and the counts of assemblies, scalar functions, aggregates and user-defined types, and checks each one. Any failure is logged and rethrown as `InvalidOperationException("Generated DACPAC is invalid: ...")`.
 
-[OoBDev Repository](https://github.com/yourusername/oobdev)
+Merging several DacPacs is a separate package: [OoBDev.Microsoft.SqlServer.DacFx](../../ExternalServices/Microsoft/OoBDev.Microsoft.SqlServer.DacFx/README.Microsoft.SqlServer.DacFx.md).

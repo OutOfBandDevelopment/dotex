@@ -1,6 +1,6 @@
 # Feature request: software bill of materials report
 
-- **Status:** new
+- **Status:** triaged
 - **Requested by:** owner (found while cleaning `docs/templates`, 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** build, `OoBDev.TemplateEngine.Cli`, `docs/`
@@ -40,3 +40,5 @@ CycloneDX dotnet tool or the Microsoft sbom-tool (SPDX)? Commit the report or on
 ## Triage notes
 
 The template is kept in [docs/templates](../../templates/README.md) (`SoftwareBillOfMaterials.md.xslt`).
+
+2026-11-11: triaged. Accepted as tooling work through deterministic scripts or MSTest entry points ([GeneratedGuides](../../design/GeneratedGuides/README.md)); scheduled behind the active work. Backlog: BACKLOG.md, Tooling requests.

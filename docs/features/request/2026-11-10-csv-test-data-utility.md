@@ -1,6 +1,6 @@
 # Feature request: CSV driven test data utility
 
-- **Status:** new
+- **Status:** triaged
 - **Requested by:** owner (open gap found reviewing the migration, 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** `OoBDev.Devices.TestUtilities` or a shared test utilities project
@@ -39,3 +39,5 @@ Compare with MSTest dynamic data first. Is a helper still needed?
 ## Triage notes
 
 Origin: BinaryDataDecoders issue 7. Accept, schedule or decline.
+
+2026-11-11: triaged. Accepted as tooling work through deterministic scripts or MSTest entry points ([GeneratedGuides](../../design/GeneratedGuides/README.md)); scheduled behind the active work. Backlog: BACKLOG.md, Tooling requests.

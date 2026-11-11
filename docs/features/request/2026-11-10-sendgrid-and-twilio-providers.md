@@ -1,6 +1,6 @@
 # Feature request: SendGrid email and Twilio SMS providers
 
-- **Status:** new
+- **Status:** triaged
 - **Requested by:** owner (SharedFramework comparison, 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** `src/ExternalServices/Twilio` (new adapters), `OoBDev.Communications*` (Epic 2 Communications)
@@ -48,3 +48,5 @@ Are these vendors still wanted? Does a different SMS or email vendor fit better?
 ## Triage notes
 
 Origin: SharedFramework. Design exists; no code until a consumer appears.
+
+2026-11-11: triaged. Accepted as a backlog item: design first (`docs/patterns-discovery/06-design-document-standard.md`), no code until a consumer appears. Backlog: BACKLOG.md, SharedFramework requests.

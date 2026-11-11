@@ -35,7 +35,7 @@ public class MarkdownToHtmlConversionHandler : IDocumentConversionHandler
     public async Task ConvertAsync(Stream source, string sourceContentType, Stream destination, string destinationContentType)
     {
         if (!SupportedSource(sourceContentType)) throw new NotSupportedException($"Source Content Type \"{sourceContentType}\" is not supported");
-        if (!SupportedDestination(destinationContentType)) throw new NotSupportedException($"Source Content Type \"{destinationContentType}\" is not supported");
+        if (!SupportedDestination(destinationContentType)) throw new NotSupportedException($"Destination Content Type \"{destinationContentType}\" is not supported");
 
         using var reader = new StreamReader(source, leaveOpen: true);
         using var writer = new StreamWriter(destination, leaveOpen: true) { AutoFlush = true, };

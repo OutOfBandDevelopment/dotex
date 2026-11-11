@@ -1,48 +1,48 @@
 using OoBDev.Identity;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace OoBDev.Keycloak.Identity;
 
 /// <summary>
-/// Manages user operations in Keycloak for both graph and identity aspects.
+/// The Keycloak identity manager. Lookup is supported through the read-only admin directory; creating and removing users is not
+/// (the example identity screen is read only, owner 2026-11-10).
 /// </summary>
-/// <param name="log">The logger for logging purposes.</param>
-/// <param name="config">The configuration options for Keycloak identity.</param>
-public class ManageKeycloakUser(
-    ILogger<ManageKeycloakUser> log,
-    IOptions<KeycloakIdentityOptions> config
-        ) : IIdentityManager
+/// <param name="directory">The read-only admin API reader.</param>
+public class ManageKeycloakUser(KeycloakDirectoryReader directory) : IIdentityManager
 {
-    private readonly ILogger _log = log;
-    private readonly IOptions<KeycloakIdentityOptions> config = config;
-
-    /// <summary>
-    /// Creates a new identity user asynchronously with the specified details.
-    /// </summary>
+    /// <summary>Not supported: the Keycloak adapter is read only.</summary>
     /// <param name="email">The email address of the user.</param>
     /// <param name="firstName">The first name of the user.</param>
     /// <param name="lastName">The last name of the user.</param>
-    /// <returns>A task that represents the asynchronous operation. The task result contains the object ID and an optional password for the created user.</returns>
+    /// <returns>Never returns.</returns>
+    /// <exception cref="NotSupportedException">Always.</exception>
     public Task<(string objectId, string? password)> CreateIdentityUserAsync(string email, string firstName, string lastName) =>
         throw new NotSupportedException();
 
-    /// <summary>
-    /// Retrieves a list of user identity models based on the specified email address.
-    /// </summary>
+    /// <summary>Finds the users whose email address matches exactly.</summary>
     /// <param name="emailAddress">The email address to search for.</param>
-    /// <returns>A task that represents the asynchronous operation. The task result contains the list of user identity models or <c>null</c> if no users are found.</returns>
-    public Task<IList<UserIdentityModel>?> GetIdentityUsersByEmail(string emailAddress) =>
-           throw new NotSupportedException();
+    /// <returns>The matching users, or <c>null</c> when none match.</returns>
+    public async Task<IList<UserIdentityModel>?> GetIdentityUsersByEmail(string emailAddress)
+    {
+        var users = await directory.ListUsersAsync(email: emailAddress).ConfigureAwait(false);
+        return users.Count == 0
+            ? null
+            : [.. users.Select(u => new UserIdentityModel
+            {
+                FirstName = u.FirstName,
+                LastName = u.LastName,
+                EmailAddress = u.Email,
+                UserName = u.UserName,
+            })];
+    }
 
-    /// <summary>
-    /// Removes an identity user asynchronously based on the specified object ID.
-    /// </summary>
+    /// <summary>Not supported: the Keycloak adapter is read only.</summary>
     /// <param name="userId">The object ID of the user to remove.</param>
-    /// <returns>A task that represents the asynchronous operation. The task result is <c>true</c> if the user was successfully removed; otherwise, <c>false</c>.</returns>
+    /// <returns>Never returns.</returns>
+    /// <exception cref="NotSupportedException">Always.</exception>
     public Task<bool> RemoveIdentityUserAsync(string userId) =>
         throw new NotSupportedException();
 }

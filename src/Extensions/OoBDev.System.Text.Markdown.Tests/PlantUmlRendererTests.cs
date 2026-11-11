@@ -36,6 +36,34 @@ public class PlantUmlRendererTests
     }
 
     [TestMethod]
+    public void Constructor_BlankRemoteUrl_ThrowsWithAClearMessage()
+    {
+        // Stage
+        var options = new PlantUmlRendererOptions { RemoteUrl = " " };
+
+        // Test
+        var ex = Assert.ThrowsExactly<InvalidOperationException>(() => new PlantUmlRenderer(new MarkdownPipelineBuilder().Build(), options));
+
+        // Assert
+        Assert.Contains("RemoteUrl", ex.Message, StringComparison.Ordinal);
+    }
+
+    [TestMethod]
+    public void Options_Default_PointsAtTheLocalContainer() =>
+        Assert.AreEqual("http://localhost:8086/", new PlantUmlRendererOptions().RemoteUrl);
+
+    [TestMethod]
+    public void UsePlantuml_BlankRemoteUrl_FailsWhenTheRendererIsSetUp()
+    {
+        // Stage
+        var pipeline = new MarkdownPipelineBuilder().UsePlantuml(new PlantUmlRendererOptions { RemoteUrl = null }).Build();
+        using var writer = new StringWriter();
+
+        // Test and Assert
+        Assert.ThrowsExactly<InvalidOperationException>(() => pipeline.Setup(new HtmlRenderer(writer)));
+    }
+
+    [TestMethod]
     public void Write_Html_BlankScript_WritesNothing()
     {
         // Stage

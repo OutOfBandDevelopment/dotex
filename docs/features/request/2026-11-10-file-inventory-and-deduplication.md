@@ -1,6 +1,6 @@
 # Feature request: File inventory and duplicate detection (exact and near-duplicate images)
 
-- **Status:** new
+- **Status:** triaged
 - **Requested by:** owner (filed from the notes repository, `projects/applications/nas-storage-catalog` and `second-shooter-photo-library.md`)
 - **Date:** 2026-11-10
 - **Area:** new, near `OoBDev.Onnx.ImageEmbeddings`, `OoBDev.Documents` and the blob container request
@@ -31,6 +31,13 @@ file inventory or duplicate detection.
 - `OoBDev.Onnx.ImageEmbeddings` (embeddings and vector stores) is the nearest piece for near-duplicates. Not read.
 - The two notes projects were checked from their pages only; their code was not compared with each other.
 
+## Source references (NAS storage catalog application, added 2026-11-11)
+
+Paths are in the catalog repository `C:epo_storage`; merge from them when this is taken in.
+
+- Hashing and recheck: `src/Storage.Workers/FileHasher.cs`, `Stages/HashStageRunner.cs`, `Duties/HashRecheckDuty.cs`; archive walking `ArchiveWalker.cs`, `Stages/ArchiveStageRunner.cs`; perceptual hash `DHash.cs`.
+- Duplicate notes and removal marks (never performed): `src/Storage.Catalog/Owner/RemovalMark.cs`, `ContentMark.cs`; archive overlap `src/Storage.Catalog.Infrastructure/ArchiveOverlapRow.cs`; page `docs/features/pipeline/purge-and-cleanup.md`.
+
 ## Security and operations
 
 Reads whole files, so IO cost is large on a NAS; the scan should be throttled and resumable. Paths are listed in output, so reports may contain private names.
@@ -50,3 +57,5 @@ Reads whole files, so IO cost is large on a NAS; the scan should be throttled an
 ## Triage notes
 
 Origin: notes repository `projects/dotex-consolidation/README.md` (mapping section). Maintainers: accept, schedule or decline.
+
+2026-11-11: triaged. Accepted as a backlog idea: design first (`docs/patterns-discovery/06-design-document-standard.md`), no code until a consumer appears. Backlog: BACKLOG.md, Consolidation requests.

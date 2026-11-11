@@ -18,7 +18,7 @@ The device is `[UsbHid(0x04D8, 0xF848)]`; bytes go through `OoBDev.System.IO.Usb
 | `BusylightSegmenter` / `BusylightMessageDecoder` | One HID read is one report; printable ASCII shown, the rest as dots |
 | `ServiceCollectionExtensions` | `TryAddBusylight()` |
 
-State holding (colour, track, volume set separately and applied together) is a consumer concern; the control surface waits on owner question Q3.
+State holding is the control surface's job (see Device panel below).
 
 ## Verified
 
@@ -33,3 +33,7 @@ That the program frame makes the light cycle through its steps.
 ## Device documentation
 
 [docs/known-configuration.md](docs/known-configuration.md) records how the device is reached on the bench (transport, framing, byte order, what was verified on hardware); the frame layouts are Kaitai Struct files in [docs/](docs/): `busylight-command.ksy`. Paths such as `docs/design/...`, `docs/test/...` and `src/DevTerm.*` inside those notes name files in the dev-term repository, where they were written.
+
+## Device panel
+
+`Panels/BusylightPanel` is the light's `IDevicePanel` for DevTerm, registered in `OoBDev.DevTerm.Devices` with `TryAddDevicePanel<BusylightPanel>()`. `BusylightUiDefinition` lays out the colour presets (Red, Green, Blue, Yellow, Off), a custom colour, the track (Funky, Nordic, Quiet, Open Office, Kuando), a volume slider (0 to 7) and a program sequence. `BusylightControlSurface` keeps colour, track and volume as state and sends the single-command frame only when `apply` runs (it also previews the frame bytes). `BusylightDecoder` shows the poll reply, an ASCII identification string, and publishes no live values. `BusylightPanelTests`, `BusylightControlSurfaceTests` and `BusylightDecoderTests` cover them.

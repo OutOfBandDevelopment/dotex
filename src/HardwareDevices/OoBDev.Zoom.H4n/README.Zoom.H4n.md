@@ -28,7 +28,7 @@ Unit tests: all 12 press codes, the release, status bits, stream segmentation, D
 
 ## Not yet verified on hardware
 
-Everything on the wire: the handshake, the button codes, and whether the recorder echoes status for a given unit (the dev-term test only proved no fault or timeout). Not ported: the per-recording-mode LED blink patterns, and the dev-term control surface (the panel, Q3).
+Everything on the wire: the handshake, the button codes, and whether the recorder echoes status for a given unit (the dev-term test only proved no fault or timeout). Not ported: the per-recording-mode LED blink patterns (the control surface is ported, see Device panel).
 
 ## Device documentation
 

@@ -1,6 +1,6 @@
 # Feature request: a code quality scanner (new SonarQube or similar)
 
-- **Status:** new
+- **Status:** triaged
 - **Requested by:** owner (2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** build, `scripts/ci`, `.config/dotnet-tools.json`
@@ -52,3 +52,5 @@ Candidates to compare in a short evaluation:
 ## Triage notes
 
 Replaces the stale Sonar script and the owner question about its token.
+
+2026-11-11: triaged. Accepted as tooling work through deterministic scripts or MSTest entry points ([GeneratedGuides](../../design/GeneratedGuides/README.md)); scheduled behind the active work. Backlog: BACKLOG.md, Tooling requests.

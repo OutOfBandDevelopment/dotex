@@ -1,87 +1,30 @@
 # OoBDev.Caching.Abstractions
 
-Distributed caching abstractions and interfaces for the OoBDev framework.
+Contracts for method caching. The implementation (manager, factory, proxy) is `OoBDev.Caching`; storage comes from a provider package (`OoBDev.Microsoft.Caching`, `OoBDev.Redis.Caching`).
 
-## Overview
+## Types
 
-This package provides the core abstractions for implementing distributed caching in OoBDev applications. It defines interfaces and attributes for caching providers, managers, and factories.
+**Table 1 — Caching contracts**
 
-## Features
+| Type | Role |
+|------|------|
+| `ICachingProvider` | Storage backend: `StoreAsync(key, data, expiration)`, `RetrieveAsync(key, targetType)`, `FlushAsync(key)`. |
+| `ICachingManager` | `BuildKey(method, args)` from the attributes, plus `StoreAsync`, `RetrieveAsync` (typed and untyped) and `FlushAsync`. |
+| `ICacheableFactory` | `Create<TInterface, TImplementation>()` returns the caching proxy. |
+| `ServiceProviderExtensions.Cacheable<TInterface, TImplementation>()` | Shortcut for the factory; throws `NotSupportedException` when no `ICacheableFactory` is registered. |
+| `[IsCacheable(keyFormatter, lifetime)]` | Marks a method whose result is cached under the formatted key for the lifetime (`TimeSpan` text, for example `"00:05:00"`). |
+| `[FlushCache(keyFormatter)]`, `[FlushCache(type, methodName)]` | Flushes the formatted key, or the key of the named cacheable method for the same arguments; may be repeated on a method. |
+| `CachingGlobals` | `ConfigurationPath` (`OoBDev:CachingProvider:Type`) and `SelectedKey` (`selected`). |
 
-- **ICachingProvider** - Interface for caching provider implementations
-- **ICachingManager** - Interface for cache management operations
-- **ICacheableFactory** - Factory pattern for cache operations
-- **[IsCacheable]** - Attribute to mark methods as cacheable
-- **[FlushCache]** - Attribute to trigger cache invalidation
-
-## Usage
-
-### Mark Methods as Cacheable
-
-```csharp
-public class DataService
-{
-    [IsCacheable]
-    public async Task<Data> GetDataAsync(string id)
-    {
-        // This method's results will be cached
-        return await _repository.GetByIdAsync(id);
-    }
-
-    [FlushCache]
-    public async Task UpdateDataAsync(Data data)
-    {
-        // This will flush the cache when called
-        await _repository.UpdateAsync(data);
-    }
-}
-```
-
-### Implement a Caching Provider
+## Implementing a provider
 
 ```csharp
 public class MyCachingProvider : ICachingProvider
 {
-    public async Task FlushAsync(string key)
-    {
-        // Implementation
-    }
-
-    public async Task StoreAsync(string key, object data, TimeSpan expiration)
-    {
-        // Implementation
-    }
-
-    public async Task<object?> RetrieveAsync(string key, Type targetType)
-    {
-        // Implementation
-    }
+    public Task FlushAsync(string? key) => ...;
+    public Task StoreAsync(string? key, object? data, TimeSpan expiration) => ...;
+    public Task<object?> RetrieveAsync(string? key, Type? targetType) => ...;
 }
 ```
 
-## Providers
-
-See provider packages for concrete implementations:
-
-- **OoBDev.Redis.Caching** - Redis-based distributed caching
-- **OoBDev.Microsoft.Caching** - Microsoft in-memory and distributed caching
-
-## Installation
-
-```bash
-dotnet add package OoBDev.Caching.Abstractions
-```
-
-## Dependencies
-
-- OoBDev.System.Abstractions - Core system abstractions
-
-## Related Packages
-
-- OoBDev.Caching - Common caching implementation
-- OoBDev.Redis.Caching - Redis provider
-- OoBDev.Microsoft.Caching - Microsoft provider
-
-## License
-
-See the main OoBDev repository for license information.
+Register it under a kebab-case key and select it with the `OoBDev:CachingProvider:Type` setting (see the [Caching readme](../OoBDev.Caching/README.Caching.md)).

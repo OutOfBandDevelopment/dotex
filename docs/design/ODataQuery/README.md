@@ -1,6 +1,6 @@
 # OData Query — Overview
 
-**Status:** Draft · **Date:** 2026-10-29 · **Related:** [HTTP QUERY verb](../HttpQueryVerb/README.md), [application rights](../ApplicationRights/README.md), [HTTP API practices](../../patterns-discovery/03-practices-and-conventions/10-http-api-practices.md)
+**Status:** Built · **Date:** 2026-11-11 (REQ-001 to REQ-010 in `OoBDev.AspNetCore.OData`, covered by its Simulate tests) · **Related:** [HTTP QUERY verb](../HttpQueryVerb/README.md), [application rights](../ApplicationRights/README.md), [HTTP API practices](../../patterns-discovery/03-practices-and-conventions/10-http-api-practices.md)
 
 Lets any `IQueryable<T>` endpoint answer the OData system query options (`$filter`, `$orderby`, `$top`, `$skip`, `$select`, `$count`) beside the custom search syntax, on `GET` and, through the HTTP `QUERY` verb, with the options in a form body. Decided 2026-10-22: OData through `Microsoft.AspNetCore.OData` on the `IQueryable<T>` seam; GraphQL (HotChocolate) later on demand; the custom syntax is unchanged.
 

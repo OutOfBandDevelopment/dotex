@@ -24,6 +24,7 @@ This document lists all test properties used by Integration tests. These propert
    - [MongoDB (NoSQL Database)](#mongodb-nosql-database)
    - [SQL Server (Relational Database)](#sql-server-relational-database)
    - [RabbitMQ (Message Queue)](#rabbitmq-message-queue)
+   - [PostgreSQL (with pgmq)](#postgresql-with-pgmq)
    - [Redis (Cache Store)](#redis-cache-store)
    - [OpenSearch (Search Engine)](#opensearch-search-engine)
    - [SBert (Sentence Embeddings)](#sbert-sentence-embeddings---aiml)
@@ -152,6 +153,20 @@ Tests that require live cloud credentials. Manual execution only.
 **Notes:**
 - Default credentials: `guest/guest`
 - Queue cleanup handled by framework
+
+---
+
+### PostgreSQL (with pgmq)
+
+**Service:** PostgreSQL 17 with the pgmq extension (`ghcr.io/pgmq/pg17-pgmq`).
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `POSTGRES_CONNECTION_STRING` | `Host=localhost;Port=5434;Database=oobdev_test;Username=postgres;Password=IntegrationTest123!` | Npgsql connection string of the test database |
+
+**Docker Container:** `oobd-test-postgres` (host port 5434, override with `TEST_PORT_POSTGRES`)
+
+**Tests Using:** `OoBDev.EventSourcing.EntityFrameworkCore.Tests` (`PostgresIntegrationTests`).
 
 ---
 
@@ -308,6 +323,22 @@ Tests that require live cloud credentials. Manual execution only.
 The device list with connections is in [docs/how-tos/test-hardware.md](docs/how-tos/test-hardware.md).
 
 **Tests Using:** `OoBDev.ZWave.Tests` (category `Hardware`)
+
+---
+
+### Neo4j (Graph Database)
+
+**Service:** Neo4j community, Cypher over Bolt
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `NEO4J_URI` | `bolt://localhost:7687` | Bolt endpoint |
+| `NEO4J_USER` | `neo4j` | User |
+| `NEO4J_PASSWORD` | `oobdev-test-pass` | Password (test instance only) |
+
+**Docker Container:** `neo4j:5-community` (Ports 7687 Bolt, 7474 browser)
+
+**Tests Using:** `OoBDev.Neo4j.Tests` (`Integration`)
 
 ---
 
@@ -469,6 +500,15 @@ These parameters are in `src/.runsettings` beside the URL and connection-string 
 
 **Tests Using:**
 - `OoBDev.GroqCloud.Tests` (manual execution only, `LiveIntegration`)
+
+### Azure AI Search (vector store)
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `AZURE_SEARCH_ENDPOINT` | *(none)* | Service URL; environment variable also read |
+| `AZURE_SEARCH_API_KEY` | *(none)* | Admin key |
+
+**Tests Using:** `OoBDev.Microsoft.Azure.AISearch.Tests` (`LiveIntegration`, inconclusive when unset)
 
 **Setup:**
 1. Create Groq account at https://groq.com

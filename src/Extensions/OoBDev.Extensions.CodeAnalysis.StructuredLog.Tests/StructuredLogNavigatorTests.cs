@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Xml.XPath;
+using Microsoft.Build.Logging.StructuredLogger;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace OoBDev.Extensions.CodeAnalysis.StructuredLog.Tests;
@@ -90,5 +91,26 @@ public class StructuredLogNavigatorTests
     public void AsNode_NullBuild_Throws()
     {
         Assert.ThrowsExactly<ArgumentNullException>(() => StructuredLogNavigatorFactory.AsNode(null!));
+    }
+
+    private sealed class UnknownNode : TreeNode
+    {
+    }
+
+    [TestMethod]
+    [TestCategory("Unit")]
+    public void ToNavigable_NodeTypeNotInTheList_StillNavigatesItsChildren()
+    {
+        // Stage
+        var build = new Build();
+        var unknown = new UnknownNode();
+        unknown.AddChild(new Folder { Name = "inner" });
+        build.AddChild(unknown);
+
+        // Test
+        var navigator = build.ToNavigable().CreateNavigator()!;
+
+        // Assert
+        Assert.AreEqual(1, Count(navigator, "/Build/*/Folder[@Name='inner']"));
     }
 }

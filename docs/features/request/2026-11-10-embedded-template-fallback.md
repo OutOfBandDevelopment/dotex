@@ -1,6 +1,6 @@
 # Feature request: embedded resource fallback for templates
 
-- **Status:** new
+- **Status:** triaged
 - **Requested by:** owner (open gap found reviewing the migration, 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** `OoBDev.System.Text.Templating*`, `OoBDev.Handlebars`, `OoBDev.TemplateEngine.Cli`
@@ -39,3 +39,5 @@ Where does the lookup live? A template source abstraction shared with the Shared
 ## Triage notes
 
 Origin: BinaryDataDecoders issue 27. Accept, schedule or decline.
+
+2026-11-11: triaged. Accepted in principle: a template source that falls back to an embedded resource, added to [TextTemplating](../../design/TextTemplating/README.md) as a source option. Scheduled behind template persistence. Backlog: BACKLOG.md, SharedFramework.

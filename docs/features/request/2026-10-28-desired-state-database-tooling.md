@@ -57,4 +57,4 @@ containers for testing. The cost is mostly test infrastructure: containers for P
 
 ## Triage notes
 
-2026-10-29: accepted as a phased design; phase 0 is the sqldef/pgschema/Atlas bake-off, nothing else is built before its result. Scope, wrap versus write, Oracle and stack are owner question Q5 in `OPEN-QUESTIONS.md` (default: wrap, schema objects first, .NET host). Design: [docs/design/DesiredStateDatabase](../../design/DesiredStateDatabase/README.md). Backlog: BACKLOG.md, database.
+2026-10-29: accepted as a phased design; phase 0 is the sqldef/pgschema/Atlas bake-off, nothing else is built before its result. Scope, wrap versus write, Oracle and stack follow the defaults wrap, schema objects first and a .NET host (the question left `OPEN-QUESTIONS.md` without a recorded change; the bake-off confirms or reverses them). Design: [docs/design/DesiredStateDatabase](../../design/DesiredStateDatabase/README.md). Backlog: BACKLOG.md, database.

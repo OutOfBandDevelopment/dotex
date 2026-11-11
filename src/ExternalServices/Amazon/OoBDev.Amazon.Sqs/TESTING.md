@@ -105,22 +105,24 @@ public class AmazonSqsIntegrationTests
             { "MessageQueuing:TestQueue:Region", "us-east-1" },
             { "MessageQueuing:TestQueue:AccessKeyId", "test" },
             { "MessageQueuing:TestQueue:SecretAccessKey", "test" },
+            { "MessageQueuing:TestQueue:ServiceUrl", "http://localhost:4566" },
         });
 
         var config = configBuilder.Build();
 
         var services = new ServiceCollection();
         services.TryAddAmazonSqsServices();
-        services.TryAddJsonSerializer();
+        services.TrySerializerExtensions(SerializerTypes.Json);
         services.TryAddSingleton<IConfiguration>(config);
-        services.TryAddSingleton<IMessageContextFactory, MessageContextFactory>();
+        services.AddSingleton<ClaimsPrincipal>(new ClaimsPrincipal());
+        services.TryAddMessageQueueingServices();
 
         var provider = services.BuildServiceProvider();
-        var sender = provider.GetRequiredService<IMessageSenderProvider>();
+        var sender = provider.GetRequiredKeyedService<IMessageSenderProvider>(AwsSqsGlobals.MessageProviderKey);
         var contextFactory = provider.GetRequiredService<IMessageContextFactory>();
 
         // Act - Send test message
-        var context = contextFactory.Create("TestQueue", typeof(TestMessage).FullName);
+        var context = contextFactory.Create(typeof(AmazonSqsMessageProvider), typeof(TestMessage), null, Guid.NewGuid().ToString(), Guid.NewGuid().ToString(), config.GetSection("MessageQueuing:TestQueue"), null, 0, null);
         context.Headers["TestHeader"] = "TestValue";
 
         var testMessage = new TestMessage
@@ -148,6 +150,7 @@ public class AmazonSqsIntegrationTests
             { "MessageQueuing:FifoQueue:Region", "us-east-1" },
             { "MessageQueuing:FifoQueue:AccessKeyId", "test" },
             { "MessageQueuing:FifoQueue:SecretAccessKey", "test" },
+            { "MessageQueuing:FifoQueue:ServiceUrl", "http://localhost:4566" },
             { "MessageQueuing:FifoQueue:MessageGroupId", "test-group" },
         });
 
@@ -155,16 +158,17 @@ public class AmazonSqsIntegrationTests
 
         var services = new ServiceCollection();
         services.TryAddAmazonSqsServices();
-        services.TryAddJsonSerializer();
+        services.TrySerializerExtensions(SerializerTypes.Json);
         services.TryAddSingleton<IConfiguration>(config);
-        services.TryAddSingleton<IMessageContextFactory, MessageContextFactory>();
+        services.AddSingleton<ClaimsPrincipal>(new ClaimsPrincipal());
+        services.TryAddMessageQueueingServices();
 
         var provider = services.BuildServiceProvider();
-        var sender = provider.GetRequiredService<IMessageSenderProvider>();
+        var sender = provider.GetRequiredKeyedService<IMessageSenderProvider>(AwsSqsGlobals.MessageProviderKey);
         var contextFactory = provider.GetRequiredService<IMessageContextFactory>();
 
         // Act - Send to FIFO queue
-        var context = contextFactory.Create("FifoQueue", typeof(TestMessage).FullName);
+        var context = contextFactory.Create(typeof(AmazonSqsMessageProvider), typeof(TestMessage), null, Guid.NewGuid().ToString(), Guid.NewGuid().ToString(), config.GetSection("MessageQueuing:FifoQueue"), null, 0, null);
 
         var testMessage = new TestMessage
         {
@@ -198,13 +202,14 @@ configBuilder.AddInMemoryCollection(new Dictionary<string, string?>
     { "MessageQueuing:FifoQueue:MessageGroupId", "my-group" },
     { "MessageQueuing:FifoQueue:AccessKeyId", "test" },
     { "MessageQueuing:FifoQueue:SecretAccessKey", "test" },
+    { "MessageQueuing:FifoQueue:ServiceUrl", "http://localhost:4566" },
 });
 ```
 
 ## Testing Message Attributes
 
 ```csharp
-var context = contextFactory.Create("TestQueue", typeof(Order).FullName);
+var context = contextFactory.Create(typeof(AmazonSqsMessageProvider), typeof(Order), null, Guid.NewGuid().ToString(), Guid.NewGuid().ToString(), config.GetSection("MessageQueuing:TestQueue"), null, 0, null);
 context.Headers["CustomerId"] = "customer-123";
 context.Headers["Priority"] = "High";
 context.Headers["Region"] = "US-EAST";

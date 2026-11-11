@@ -37,12 +37,15 @@
     <File Path="Examples/README.Examples.md" />
     <Project Path="Examples/OoBDev.Example.AppHost/OoBDev.Example.AppHost.csproj" />
     <Project Path="Examples/OoBDev.Example.DB/OoBDev.Example.DB.csproj" />
+    <Project Path="Examples/OoBDev.Example.GraphQueries.Tests/OoBDev.Example.GraphQueries.Tests.csproj" />
     <Project Path="Examples/OoBDev.Example.Tests/OoBDev.Example.Tests.csproj" />
     <Project Path="Examples/OoBDev.Example.Web/OoBDev.Example.Web.esproj">
       <Platform Project="AnyCPU" />
     </Project>
     <Project Path="Examples/OoBDev.Example.WebApi/OoBDev.Example.WebApi.csproj" />
     <Project Path="Examples/OoBDev.Example.WebApi.Tests/OoBDev.Example.WebApi.Tests.csproj" />
+    <Project Path="Examples/OoBDev.Examples.Controls.Avalonia.Tests/OoBDev.Examples.Controls.Avalonia.Tests.csproj" />
+    <Project Path="Examples/OoBDev.Examples.Controls.Avalonia/OoBDev.Examples.Controls.Avalonia.csproj" />
     <Project Path="Examples/OoBDev.Examples.Controls.Blazor.Tests/OoBDev.Examples.Controls.Blazor.Tests.csproj" />
     <Project Path="Examples/OoBDev.Examples.Controls.Blazor/OoBDev.Examples.Controls.Blazor.csproj" />
     <Project Path="Examples/OoBDev.Examples.Controls.Tui.Tests/OoBDev.Examples.Controls.Tui.Tests.csproj" />
@@ -148,6 +151,10 @@
     <Project Path="ExternalServices/Markdig/OoBDev.Markdig/OoBDev.Markdig.csproj" />
   </Folder>
   <Folder Name="/ExternalServices/Microsoft/">
+    <Project Path="ExternalServices/Neo4j/OoBDev.Neo4j.Tests/OoBDev.Neo4j.Tests.csproj" />
+    <Project Path="ExternalServices/Neo4j/OoBDev.Neo4j/OoBDev.Neo4j.csproj" />
+    <Project Path="ExternalServices/Microsoft/OoBDev.Microsoft.Azure.AISearch.Tests/OoBDev.Microsoft.Azure.AISearch.Tests.csproj" />
+    <Project Path="ExternalServices/Microsoft/OoBDev.Microsoft.Azure.AISearch/OoBDev.Microsoft.Azure.AISearch.csproj" />
     <Project Path="ExternalServices/Microsoft/OoBDev.Microsoft.Azure.ServiceBus.Tests/OoBDev.Microsoft.Azure.ServiceBus.Tests.csproj" />
     <Project Path="ExternalServices/Microsoft/OoBDev.Microsoft.Azure.ServiceBus/OoBDev.Microsoft.Azure.ServiceBus.csproj" />
     <Project Path="ExternalServices/Microsoft/OoBDev.Microsoft.Azure.StorageAccount.Tests/OoBDev.Microsoft.Azure.StorageAccount.Tests.csproj" />
@@ -187,6 +194,10 @@
   <Folder Name="/ExternalServices/Qdrant/">
     <Project Path="ExternalServices/Qdrant/OoBDev.Qdrant.Tests/OoBDev.Qdrant.Tests.csproj" />
     <Project Path="ExternalServices/Qdrant/OoBDev.Qdrant/OoBDev.Qdrant.csproj" />
+  </Folder>
+  <Folder Name="/ExternalServices/PostgreSql/">
+    <Project Path="ExternalServices/PostgreSql/OoBDev.PostgreSql.Pgmq.Tests/OoBDev.PostgreSql.Pgmq.Tests.csproj" />
+    <Project Path="ExternalServices/PostgreSql/OoBDev.PostgreSql.Pgmq/OoBDev.PostgreSql.Pgmq.csproj" />
   </Folder>
   <Folder Name="/ExternalServices/RabbitMQ/">
     <Project Path="ExternalServices/RabbitMQ/OoBDev.RabbitMQ.Tests/OoBDev.RabbitMQ.Tests.csproj" />
@@ -250,6 +261,16 @@
     <Project Path="Framework/OoBDev.Documents.Guides/OoBDev.Documents.Guides.csproj" />
     <Project Path="Framework/OoBDev.Documents.Tests/OoBDev.Documents.Tests.csproj" />
     <Project Path="Framework/OoBDev.Documents/OoBDev.Documents.csproj" />
+    <Project Path="Framework/OoBDev.EventSourcing.Abstractions/OoBDev.EventSourcing.Abstractions.csproj" />
+    <Project Path="Framework/OoBDev.EventSourcing.EntityFrameworkCore.Tests/OoBDev.EventSourcing.EntityFrameworkCore.Tests.csproj" />
+    <Project Path="Framework/OoBDev.EventSourcing.EntityFrameworkCore/OoBDev.EventSourcing.EntityFrameworkCore.csproj" />
+    <Project Path="Framework/OoBDev.EventSourcing.Hosting/OoBDev.EventSourcing.Hosting.csproj" />
+    <Project Path="Framework/OoBDev.EventSourcing.Postgres/OoBDev.EventSourcing.Postgres.csproj" />
+    <Project Path="Framework/OoBDev.EventSourcing.Sqlite/OoBDev.EventSourcing.Sqlite.csproj" />
+    <Project Path="Framework/OoBDev.EventSourcing.SqlServer.Database/OoBDev.EventSourcing.SqlServer.Database.csproj" />
+    <Project Path="Framework/OoBDev.EventSourcing.SqlServer/OoBDev.EventSourcing.SqlServer.csproj" />
+    <Project Path="Framework/OoBDev.EventSourcing.Tests/OoBDev.EventSourcing.Tests.csproj" />
+    <Project Path="Framework/OoBDev.EventSourcing/OoBDev.EventSourcing.csproj" />
     <Project Path="Framework/OoBDev.Extensions.Tests/OoBDev.Extensions.Tests.csproj" />
     <Project Path="Framework/OoBDev.Extensions/OoBDev.Extensions.csproj" />
     <Project Path="Framework/OoBDev.Identity.Abstractions/OoBDev.Identity.Abstractions.csproj" />
@@ -292,6 +313,10 @@
     <Project Path="Framework/OoBDev.System.Tests/OoBDev.System.Tests.csproj" />
     <Project Path="Framework/OoBDev.System/OoBDev.System.csproj" />
     <Project Path="Framework/OoBDev.TestUtilities.Tests/OoBDev.TestUtilities.Tests.csproj" />
+    <Project Path="Framework/OoBDev.UiDefinitions.Avalonia.Tests/OoBDev.UiDefinitions.Avalonia.Tests.csproj" />
+    <Project Path="Framework/OoBDev.UiDefinitions.Avalonia/OoBDev.UiDefinitions.Avalonia.csproj" />
+    <Project Path="Framework/OoBDev.UiDefinitions.WinForms.Tests/OoBDev.UiDefinitions.WinForms.Tests.csproj" />
+    <Project Path="Framework/OoBDev.UiDefinitions.WinForms/OoBDev.UiDefinitions.WinForms.csproj" />
     <Project Path="Framework/OoBDev.UiDefinitions.Tests/OoBDev.UiDefinitions.Tests.csproj" />
     <Project Path="Framework/OoBDev.UiDefinitions.ViewModels.Tests/OoBDev.UiDefinitions.ViewModels.Tests.csproj" />
     <Project Path="Framework/OoBDev.UiDefinitions.ViewModels/OoBDev.UiDefinitions.ViewModels.csproj" />
@@ -306,6 +331,7 @@
     <Project Path="Tools/OoBDev.PackMan.Cli.Tests/OoBDev.PackMan.Cli.Tests.csproj" />
     <Project Path="Tools/OoBDev.PackMan.Cli/OoBDev.PackMan.Cli.csproj" />
     <Project Path="Tools/OoBDev.Tools.Guides.Tests/OoBDev.Tools.Guides.Tests.csproj" />
+    <Project Path="Tools/OoBDev.DacPacCompiler.Cli.Tests/OoBDev.DacPacCompiler.Cli.Tests.csproj" />
     <Project Path="Tools/OoBDev.DacPacCompiler.Cli/OoBDev.DacPacCompiler.Cli.csproj" />
     <Project Path="Tools/OoBDev.Docs.Tests/OoBDev.Docs.Tests.csproj" />
     <Project Path="Tools/OoBDev.CodingStandards.Tests/OoBDev.CodingStandards.Tests.csproj" />
@@ -316,6 +342,7 @@
     <Project Path="Tools/OoBDev.ImageMask.Cli.Tests/OoBDev.ImageMask.Cli.Tests.csproj" />
     <Project Path="Tools/OoBDev.LlmCodeGen.Cli.Tests/OoBDev.LlmCodeGen.Cli.Tests.csproj" />
     <Project Path="Tools/OoBDev.LlmCodeGen.Cli/OoBDev.LlmCodeGen.Cli.csproj" />
+    <Project Path="Tools/OoBDev.MigrationHelper.Cli.Tests/OoBDev.MigrationHelper.Cli.Tests.csproj" />
     <Project Path="Tools/OoBDev.MigrationHelper.Cli/OoBDev.MigrationHelper.Cli.csproj" />
     <Project Path="Tools/OoBDev.TemplateEngine.Cli.Tests/OoBDev.TemplateEngine.Cli.Tests.csproj" />
     <Project Path="Tools/OoBDev.TemplateEngine.Cli/OoBDev.TemplateEngine.Cli.csproj" />

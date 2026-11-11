@@ -1,6 +1,6 @@
 # Feature request: DevTerm session playback checkpoints and note revisions
 
-- **Status:** new
+- **Status:** triaged
 - **Requested by:** owner (retire dev-term, 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** `src/Applications/DevTerm` (`Logging`, presenters)
@@ -45,3 +45,5 @@ None.
 ## Triage notes
 
 Origin: dev-term BACKLOG (UX decisions awaiting implementation). Skip-silence part appears done: confirm and drop it from the scope.
+
+2026-11-11: triaged. Skip silence (`PlaybackEngine.MaxGap`, the WPF and Tui checkboxes) and note edit and delete (history kept in the record) are built; only checkpoint markers remain. The snapshot shape is owner question Q-PLAYBACK-CHECKPOINT in `OPEN-QUESTIONS.md` (default: an optional `ISnapshotPresenter`). Design: [session logging](../../design/SessionLogging/session-logging.md). Backlog: BACKLOG.md, DevTerm.

@@ -21,7 +21,9 @@
 
 ## Write and read sides
 
-A command handler loads an aggregate by replaying its stream from the event store, the aggregate raises events, and the store appends them with an expected sequence. A projection host follows the store, applies each event to a read model, and saves a checkpoint. Queries read the read model only.
+A command handler loads an aggregate by replaying its stream from the event store, the aggregate raises events, and the store appends them with an expected sequence. A relay reads new events from the store by global position and sends them through the existing message-queue sender. A projection is a message-queue handler applies each event to a read model in the entity store, and saves a checkpoint. Queries read the entity store only.
+
+The event store, the event stream and the entity store are three separate parts, each swapped by configuration (see [API design](api-design.md#registration)); the event stream is the existing message-queue provider set, not a new contract. They share no storage, so the relay, not a dual write, is what keeps them consistent: events are durable in the store first, and the stream is a delivery mechanism that can be rebuilt from the store.
 
 <a id="figure-1"></a>
 
@@ -33,13 +35,22 @@ skinparam rectangle {
 }
 rectangle "Command handler\n[IHandler<TCommand, TResult>]" as H
 rectangle "Aggregate\n[replays events, raises events]" as A
-database "Event store\n[append-only, expected sequence]" as S
-rectangle "Projection host\n[follows store, checkpoints]" as P
-database "Read model\n[eventually consistent]" as R
+database "Event store
+[provider: append-only, expected sequence]" as S
+rectangle "Event relay
+[store position to stream]" as X
+queue "Event stream
+[existing message-queue providers]" as M
+rectangle "Projection
+[IMessageQueueHandler, checkpoints]" as P
+database "Entity store
+[provider: read models, eventually consistent]" as R
 rectangle "Query handler\n[IHandler<TQuery, TResult>]" as Q
 H --> A : load and apply
 A --> S : append events
-S --> P : follow stream
+S --> X : read by position
+X --> M : publish
+M --> P : deliver
 P --> R : update
 Q --> R : read
 @enduml

@@ -15,7 +15,7 @@ The meter (a Cyrustek ES51919 chipset) transmits unprompted, so the device only 
 | `De5000Interpreter` / `De5000Reading` | Frame to a readable line plus named values for indicators |
 | `ServiceCollectionExtensions` | `TryAddDe5000()` |
 
-Change tracking for indicators (publish only the values that changed) and the control surface are consumer concerns, not part of this package (control surface waits on owner question Q3).
+Change tracking for indicators (publish only the values that changed) and the control surface are consumer concerns, not part of this package (the panel and its control surface are below).
 
 ## Verified
 
@@ -23,7 +23,7 @@ Unit tests use the dev-term packet layout, including the sign-extended negative 
 
 ## Not yet verified on hardware
 
-No Hardware test yet: dev-term reaches the meter over BLE (device id and GATT UUIDs, still unconfirmed there), and dotex has no BLE adapter in this package.
+No Hardware test yet: dev-term reaches the meter over BLE (device id and GATT UUIDs, still unconfirmed there), and the BLE adapter is in `OoBDev.System.IO.Bluetooth` and this package does not reference it.
 
 ## Device documentation
 

@@ -1,6 +1,6 @@
 # Feature request: claims enhancement pipeline and user session
 
-- **Status:** new
+- **Status:** triaged
 - **Requested by:** owner (SharedFramework comparison, 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** `OoBDev.Identity*` and `OoBDev.AspNetCore.*` (Epic 7 Identity)
@@ -52,3 +52,5 @@ Is a pipeline needed beyond `IClaimsTransformation`, which the platform already 
 ## Triage notes
 
 Origin: SharedFramework. Design exists; compare against platform primitives first.
+
+2026-11-11: triaged. The design exists in [SharedIdentity](../../design/SharedIdentity/README.md); no code until a consumer appears, and platform primitives (`IClaimsTransformation`) are compared first. Backlog: BACKLOG.md, SharedFramework.
