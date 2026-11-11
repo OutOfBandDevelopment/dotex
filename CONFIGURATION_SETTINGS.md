@@ -1,6 +1,6 @@
 # OoBDev Framework - Configuration Reference
 
-**Last Updated:** 2026-01-21
+**Last Updated:** 2026-11-11
 **Framework Version:** net10.0
 **Total Configuration Points:** 157+
 
@@ -991,6 +991,61 @@ Within each section:
 **Purpose:** Enable/disable email composition debug tracing
 
 ---
+
+### Web Extensions (added 2026-11-11)
+
+#### CGI hosting (`OoBDev:Cgi`, `CgiOptions`)
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| `Prefix` | string | `/cgi-bin` | URL prefix handled by the middleware (required) |
+| `ScriptRoot` | string | - | Directory holding the scripts (required) |
+| `Handlers` | map | empty | File extension to interpreter |
+| `Timeout` | TimeSpan | 30 s | Per-request process timeout |
+| `MaxRequestBodyBytes` | long | 10 MiB | Request body limit |
+| `MaxResponseBytes` | long? | none | Response limit |
+| `MaxConcurrentProcesses` | int | 2 x CPU count | Concurrent script processes |
+| `MaxStderrBytes` | int | 64 KiB | Captured stderr limit |
+| `AllowAnonymous` | bool | false | Skip authentication |
+| `RequiredRights` | list | empty | Application rights needed for every script |
+| `ScriptRights` | map | empty | Extra rights per script |
+| `AllowBatchFiles` | bool | false | Allow `.bat` and `.cmd` |
+| `InheritedEnvironmentVariables` | list | `PATH`, `SystemRoot` | Variables passed to the script |
+
+#### CGI OpenAPI (`OoBDev:Cgi:OpenApi`, `CgiOpenApiOptions`)
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| `FileSuffix` | string | `.openapi.json` | Suffix of the per-script OpenAPI file |
+| `Documents` | list | `all` | OpenAPI documents that receive the CGI operations |
+
+#### OData query limits (`OoBDev:OData`, `ODataQueryLimits`)
+
+| Key | Type | Default | Range | Description |
+|-----|------|---------|-------|-------------|
+| `DefaultPageSize` | int | 50 | 1-100000 | Page size without `$top` |
+| `MaxTop` | int | 100 | 1-100000 | Largest `$top` |
+| `MaxNodeCount` | int | 100 | 1-10000 | Query node limit |
+| `AllowExpand` | bool | false | - | Allow `$expand` |
+| `MaxExpansionDepth` | int | 2 | 1-10 | `$expand` depth |
+
+### Telemetry (added 2026-11-11)
+
+`OpenTelemetryOptions`, section `OpenTelemetryOptions` (config-gated; nothing is exported without an endpoint):
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| `OtlpEndpoint` | Uri? | none | OTLP collector endpoint |
+| `Protocol` | string? | exporter default | OTLP protocol |
+| `ServiceName` | string? | assembly name | Service name resource attribute |
+| `Sources` | string[] | empty | Extra activity sources to record |
+
+### Other keys (added 2026-11-11)
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| `OoBDev:Caching:Disabled` | bool | false | Turns caching off globally |
+| `OoBDev:Ollama`, `OoBDev:GroqCloud` | sections | - | Model settings of the `OoBDev.LlmCodeGen.Cli` tool |
 
 ## Environment Variables
 
