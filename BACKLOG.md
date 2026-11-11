@@ -42,7 +42,7 @@ Owner: all protocols and features of dev-term must exist here. Done means what d
 
 - [x] **CQRS and event sourcing library** (decided 2026-11-11): built are the Abstractions, in-memory stores, event relay and hosted relay loop, aggregates, projections, upcasting, snapshots, the EF Core stores with SQLite, PostgreSQL and SQL Server packages (dacpac project), the CloudEvents mapper and the pgmq adapter. Open: add the CloudEvents HTTP endpoint (queue ingress and relay output are built; HTTP endpoint waits on Q-CQRS-EDGE in OPEN-QUESTIONS.md); coverage 2026-11-11 (non-Integration run): core 96.8%, Hosting 81.4%, Abstractions 100%, EF Core 99.4%, Sqlite 95.2%, SqlServer 100%, Postgres 39% (the rest is generated migration code, exercised by the Integration test). Design: [CqrsEventSourcing](docs/design/CqrsEventSourcing/README.md).
 
-- [ ] Graph query examples: SQL Server node/edge tables with `MATCH` and `SHORTEST_PATH` in `OoBDev.Example.DB`, plus recursive-CTE equivalents for PostgreSQL and SQLite; Apache AGE spike after the PostgreSQL service exists ([plan](docs/design/GraphQueries/README.md#plan))
+- [ ] Graph query examples: Apache AGE spike (openCypher on PostgreSQL) now that the PostgreSQL service exists ([plan](docs/design/GraphQueries/README.md#plan))
 
 ## 5. Code quality backlog
 

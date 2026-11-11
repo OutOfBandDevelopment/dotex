@@ -37,6 +37,7 @@
     <File Path="Examples/README.Examples.md" />
     <Project Path="Examples/OoBDev.Example.AppHost/OoBDev.Example.AppHost.csproj" />
     <Project Path="Examples/OoBDev.Example.DB/OoBDev.Example.DB.csproj" />
+    <Project Path="Examples/OoBDev.Example.GraphQueries.Tests/OoBDev.Example.GraphQueries.Tests.csproj" />
     <Project Path="Examples/OoBDev.Example.Tests/OoBDev.Example.Tests.csproj" />
     <Project Path="Examples/OoBDev.Example.Web/OoBDev.Example.Web.esproj">
       <Platform Project="AnyCPU" />

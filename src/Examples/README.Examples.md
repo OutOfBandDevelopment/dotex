@@ -19,6 +19,7 @@ Out-of-Band Development
 | Full framework stack | `OoBDev.Example.Web` | Vue 3 front end, one screen per framework feature | [README.Example.Web.md](OoBDev.Example.Web/README.Example.Web.md) |
 | Full framework stack | `OoBDev.Example.WebApi` | ASP.NET Core API the SPA calls | [README.Example.WebApi.md](OoBDev.Example.WebApi/README.Example.WebApi.md) |
 | Full framework stack | `OoBDev.Example.DB` | SQL Server database project with vector columns | [README.Example.DB.md](OoBDev.Example.DB/README.Example.DB.md) |
+| Database | `OoBDev.Example.GraphQueries.Tests` | Graph query scripts and tests for SQL Server, PostgreSQL and SQLite | [README](OoBDev.Example.GraphQueries.Tests/README.Example.GraphQueries.Tests.md) |
 | Control examples | `OoBDev.Examples.Controls.Tui` | UiDefinitions form in Terminal.Gui | [README.Controls.Tui.md](OoBDev.Examples.Controls.Tui/README.Controls.Tui.md) |
 | Control examples | `OoBDev.Examples.Controls.WinForms` | Custom Windows Forms controls (UiDefinitions renderer still to build) | [README.Controls.WinForms.md](OoBDev.Examples.Controls.WinForms/README.Controls.WinForms.md) |
 | Control examples | `OoBDev.Examples.Controls.Wpf` | UiDefinitions form in WPF | [README.Controls.Wpf.md](OoBDev.Examples.Controls.Wpf/README.Controls.Wpf.md) |

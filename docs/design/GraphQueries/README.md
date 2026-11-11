@@ -1,6 +1,6 @@
 # Graph queries: SQL Server examples and PostgreSQL options
 
-**Status:** Draft (Neo4j adapter built) · **Date:** 2026-11-11 · **Request:** owner, 2026-11-11 · **Related:** [HybridSearch](../HybridSearch/README.md) (Neo4j graph adapter), [DesiredStateDatabase](../DesiredStateDatabase/README.md), `src/Examples/OoBDev.Example.DB`
+**Status:** Partly built (Neo4j adapter, SQL Server and recursive examples; AGE spike open) · **Date:** 2026-11-11 · **Request:** owner, 2026-11-11 · **Related:** [HybridSearch](../HybridSearch/README.md) (Neo4j graph adapter), [DesiredStateDatabase](../DesiredStateDatabase/README.md), `src/Examples/OoBDev.Example.DB`
 
 Examples of graph queries on SQL Server, and what PostgreSQL offers for the same questions. The examples are teaching material and the test bed for the graph retrieval adapters; they add no framework API.
 
@@ -35,7 +35,7 @@ So PostgreSQL supports more than parent/child searching through recursive CTEs, 
 
 ## Plan
 
-1. Add graph tables (node and edge) and a post-deployment sample data set to `OoBDev.Example.DB`, with queries for the three questions above using `MATCH` and `SHORTEST_PATH`.
-2. Write the same three queries as recursive CTEs for PostgreSQL and SQLite, as documented examples with Integration tests on the containers (the PostgreSQL service is already on the backlog).
+1. Done (2026-11-11): node and edge tables, sample data and the `MATCH` / `SHORTEST_PATH` queries for friends within N steps and the shortest path, in `src/Examples/OoBDev.Example.GraphQueries.Tests/Graph` (not in `OoBDev.Example.DB`, whose dacpac build compiles every `.sql` file). The ancestors and cycles question is not yet covered.
+2. Done (2026-11-11): the same two queries as recursive CTEs on PostgreSQL and SQLite, with Integration tests on the containers.
 3. Evaluate Apache AGE as a spike after the PostgreSQL service exists.
-4. Reuse the data set to test the Neo4j adapter.
+4. Neo4j adapter tests use the same shape of graph (done, `Neo4jGraphStoreTests`).
