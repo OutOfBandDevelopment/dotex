@@ -19,6 +19,7 @@ One folder per feature, written to the [design-document standard](../patterns-di
 | [DeviceDecoding](DeviceDecoding/README.md) | Protocol decoders for hardware devices (DE-5000, Busylight, K8055, NMEA, Radex One, Zoom H4n, later SCPI and Z-Wave), migrated from dev-term as one package per device on the existing `OoBDev.System.IO` device model. |
 | [DocumentServices](DocumentServices/README.md) | Design documents for the document-processing services of the SharedFramework (Epic 6). |
 | [BurstRanking](BurstRanking/README.md) | Burst grouping, best-shot ranking, quality labels and a 64-bit difference hash, merged from the storage catalog; shares the ImageAnalysis placement question. |
+| [DocumentToMarkdown](DocumentToMarkdown/README.md) | Documents to page-anchored Markdown, Docling OCR client and resumable segmented OCR, merged from the storage catalog. |
 | [ImageAnalysis](ImageAnalysis/README.md) | Histograms, colour facets and exposure metrics as pure functions over RGB buffers; placement waits for the owner. |
 | [MediaMetadata](MediaMetadata/README.md) | Read-only EXIF reader and tag dump for images (JPEG, PNG, WebP, TIFF), merged from the storage catalog; placement waits for the owner. |
 | [GeneratedGuides](GeneratedGuides/README.md) | A user or API guide is never edited by hand to stay current. |

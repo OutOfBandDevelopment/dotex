@@ -91,3 +91,16 @@ Histograms, colour facets and exposure metrics are pure functions over an RGB pi
 **Default:** A once confirmed; nothing built meanwhile (the item is parked).
 
 **Your answer:**
+
+### Q-DOCMARKDOWN-HOME — 2026-11-12 — Document to Markdown and OCR (layering, dependency)
+
+The catalog converts documents to page-anchored Markdown and calls a Docling OCR service ([design](docs/design/DocumentToMarkdown/README.md), [request](docs/features/request/2026-11-11-ocr-document-text-extraction.md)). The catalog reads PDF text with the third-party PdfPig package (a dependency choice is yours). Where does the code live?
+
+**Options**
+- A (recommended): a new Framework project `OoBDev.Documents.Markdown` (no PDF package; PDF text comes from an injected `IPdfTextReader`) plus a Docling adapter `OoBDev.Docling` under ExternalServices; PdfPig, if wanted, goes into a third small adapter you approve separately.
+- B: one Framework project that references PdfPig directly; fewer projects, but adds a third-party dependency to Framework.
+- C: leave it in the catalog (no framework version).
+
+**Default:** A once confirmed; nothing built meanwhile (the item is parked).
+
+**Your answer:**
