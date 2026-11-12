@@ -1,4 +1,4 @@
-﻿# BACKLOG - OoBDev (dotex) Framework
+# BACKLOG - OoBDev (dotex) Framework
 
 > **Full work list.** Every open, valid item lives here; [TODO.md](TODO.md) holds only what is being worked on now. Finished work lives in the change history: [docs/changes/](docs/changes/README.md).
 > **Owner questions:** [OPEN-QUESTIONS.md](./OPEN-QUESTIONS.md) · **New to this project?** Read [CLAUDE.md](./CLAUDE.md) first.
@@ -11,6 +11,8 @@ GitHub is no longer the primary repository (local bare repo `origin`), so nothin
 ## 1. DevTerm (merge of dev-term, 100% parity)
 
 Owner: all protocols and features of dev-term must exist here. Done means what dev-term has today; its own future plans are in section 8. Status, slices and leftovers: [status.md](docs/design/DevTermParity/status.md); matrix: [README](docs/design/DevTermParity/README.md); restructure steps 0 to 6 are done.
+
+- [ ] WPF form renderer: the WPF Connection Editor is hand-written XAML (fields complete, 2026-11-12); carry over `DevTerm.Wpf.FormRenderer` so it draws the generated `FormDefinition` like dev-term ([spec](docs/applications/devterm/specs/connection-editor.md)).
 
 - [ ] **DevTerm docs into living documents** (owner, 2026-10-30): reusable designs, proposals, features and rejected protocols are folded into `docs/design/` and `docs/protocols/` (2026-11-04, see [the map](docs/migration/README.md#devterm-ui-shells-and-plugins)); device copies deleted 2026-11-04; left: the imported `source` and `bugs` history (the `changes` history is merged into the daily files, 2026-11-04; cleanup plan after every migration), then delete the map.
 - The docs Unit tests `PlantUml_Blocks_AreWellFormed` and `Links_Relative_Resolve` fail on the imported DevTerm history; the planned documentation cleanup after all migrations fixes them (owner, 2026-10-30).

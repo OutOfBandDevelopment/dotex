@@ -1,4 +1,4 @@
-# Connection Editor
+﻿# Connection Editor
 
 ## Purpose
 
@@ -11,7 +11,7 @@ both front ends:
 - **WPF**: `DevTerm.Wpf.DeviceProfilesWindow` — the profile list and action rows bound via XAML
   `{Binding ...}`/`Command="{Binding ...}"`, no business logic in code-behind.
 
-**The connection fields are generated, not hand-built** (since 2026-09-25): the view model's own
+**Status in this repository (2026-11-12):** the generic WPF form renderer (`DevTerm.Wpf.FormRenderer`) was not carried over by the migration, so the WPF window draws the same fields from hand-written XAML bound to the same view-model properties (Description, the transport fields, Device manifest, Presenters, SCPI profile and auto-detect timeout, Send format, Line ending, ASCII max line length); `ConnectionEditorWindowTests` checks the presenter and choice controls. Moving it back onto the generated form is the rest of the WPF form-renderer slice.`n`n**The connection fields are generated, not hand-built** (since 2026-09-25, in dev-term): the view model's own
 properties carry `[Category]`/`[DisplayName]`/`[FormField]` annotations (plus `[FormSection]` on the
 class for each transport group's visibility), `FormDefinitionGenerator` turns them into
 `ConnectionEditorViewModel.FormDefinition` — an ordinary `UiDefinition` — and each front end's

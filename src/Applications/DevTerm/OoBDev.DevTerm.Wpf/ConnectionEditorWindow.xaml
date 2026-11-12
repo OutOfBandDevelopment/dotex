@@ -53,6 +53,8 @@
             </StackPanel>
             <ScrollViewer VerticalScrollBarVisibility="Auto">
             <StackPanel Margin="0,0,8,0">
+                <TextBlock Text="Description" />
+                <TextBox Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
                 <TextBlock Text="Transport" />
                 <ComboBox ItemsSource="{Binding TransportOptions}" SelectedItem="{Binding Transport}" Margin="0,2,0,8" />
                 <StackPanel Visibility="{Binding IsSerialLikeTransport, Converter={StaticResource Visible}}">
@@ -116,17 +118,24 @@
                     <TextBlock Text="User name" />
                     <TextBox Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
                 </StackPanel>
-                <TextBlock Text="Presenters" FontWeight="SemiBold" Margin="0,8,0,2" />
+                <TextBlock Text="Device manifest" />
+                <TextBox Text="{Binding ManifestName, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
+                <TextBlock Text="Presenters" />
                 <ItemsControl ItemsSource="{Binding PresenterChoices}" Margin="0,0,0,8">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate><WrapPanel /></ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <CheckBox Content="{Binding Name}" IsChecked="{Binding IsSelected}" Margin="0,1" />
+                            <CheckBox Content="{Binding Name}" IsChecked="{Binding IsSelected}" Margin="0,2,12,2" />
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
                 <StackPanel Visibility="{Binding IsScpiPresenterSelected, Converter={StaticResource Visible}}">
                     <TextBlock Text="SCPI profile" />
                     <ComboBox ItemsSource="{Binding ScpiProfileOptions}" Text="{Binding ScpiProfile, UpdateSourceTrigger=PropertyChanged}" IsEditable="True" Margin="0,2,0,8" />
+                    <TextBlock Text="SCPI auto-detect timeout (ms)" />
+                    <TextBox Text="{Binding ScpiAutoDetectTimeoutMs, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
                 </StackPanel>
                 <TextBlock Text="Send format (parser)" />
                 <ComboBox ItemsSource="{Binding PresenterOptions}" SelectedItem="{Binding Parser}" Margin="0,2,0,8" />

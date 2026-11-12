@@ -1,4 +1,4 @@
-# Controlling a device from a panel, not just typed commands
+﻿# Controlling a device from a panel, not just typed commands
 
 Some devices get a real control panel instead of typing raw bytes — buttons, sliders, toggles, and
 fields generated from that device's own declared layout. Once connected (see
@@ -8,10 +8,10 @@ what's available. Full field-by-field/action-by-action reference:
 
 ## Where the Device menu entries come from
 
-Each panel entry in the **Device** menu is contributed by a plugin (K8055, Busylight, Radex One, Zoom H4n, DE-5000,
+Each panel entry in the **Device** menu is compiled in (registered by `AddDevTermDevicePanels()`; K8055, Busylight, Radex One, Zoom H4n, DE-5000,
 NMEA 0183, Z-Wave controllers, SCPI instruments), not built into dev-term. A plugin's entry is enabled only while connected to a transport and
 device it supports (the K8055 needs its USB HID board, for example); otherwise it stays greyed out. **Device > Plugins...**
-(or `--listplugins true`) lists what was loaded, so a missing entry usually means the plugin folder was not found.
+(or `--listplugins true`) lists only external plugin folders (`plugins/<name>/plugin.json`), not these panels, so "No plugins found" is normal. A greyed entry means the connection does not match the device.
 The web host offers the same panels through `Web:Panel` (a contribution id such as `k8055`).
 
 ## Finding your way around a panel
