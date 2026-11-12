@@ -14,6 +14,7 @@ namespace OoBDev.TemplateEngine.Cli.Tests;
 
 /// <summary>The service sends XSLT templates through the sandboxed transformer and everything else to the engine.</summary>
 [TestClass]
+[DoNotParallelize]
 public sealed class TemplateEngineServiceTests
 {
     private const string CountItems = """

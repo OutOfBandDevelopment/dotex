@@ -90,7 +90,7 @@ public sealed class SandboxedTransformer
     private Func<string, IXPathNavigable>? ByExtension(string filePath) =>
         Path.GetExtension(filePath).ToUpper(CultureInfo.InvariantCulture) switch
         {
-            ".XML" => ByType(InputTypes.Xml),
+            ".XML" or ".TRX" => ByType(InputTypes.Xml),
             ".HTML" or ".HTM" => ByType(InputTypes.Html),
             ".JSON" => ByType(InputTypes.Json),
             ".YAML" or ".YML" => ByType(InputTypes.Yaml),

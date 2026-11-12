@@ -1,102 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE xsl:stylesheet [
-	<!ENTITY cr "<xsl:text>
-</xsl:text>">
-]>
 <xsl:stylesheet
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
-	xmlns:tt="http://microsoft.com/schemas/VisualStudio/TeamTest/2010"
-	xmlns:msxsl="urn:schemas-microsoft-com:xslt"
-	>
+	xmlns:tt="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
 	<xsl:output method="text" indent="no"/>
 
+	<xsl:key name="definition" match="tt:UnitTest" use="@id"/>
+
 	<xsl:template match="/">
-		<xsl:text># Test Results</xsl:text>&cr;&cr;
+		<xsl:variable name="results" select="/tt:TestRun/tt:Results/tt:UnitTestResult"/>
+		<xsl:text># Test results&#10;&#10;</xsl:text>
+		<xsl:text>**Table 1 — Totals**&#10;&#10;</xsl:text>
+		<xsl:text>| Outcome | Tests |&#10;|---------|------:|&#10;</xsl:text>
+		<xsl:text>| Total | </xsl:text><xsl:value-of select="count($results)"/><xsl:text> |&#10;</xsl:text>
+		<xsl:text>| Passed | </xsl:text><xsl:value-of select="count($results[@outcome='Passed'])"/><xsl:text> |&#10;</xsl:text>
+		<xsl:text>| Failed | </xsl:text><xsl:value-of select="count($results[@outcome='Failed'])"/><xsl:text> |&#10;</xsl:text>
+		<xsl:text>| Inconclusive | </xsl:text><xsl:value-of select="count($results[@outcome='Inconclusive'])"/><xsl:text> |&#10;</xsl:text>
+		<xsl:text>| Skipped | </xsl:text><xsl:value-of select="count($results[@outcome='NotExecuted'])"/><xsl:text> |&#10;&#10;</xsl:text>
 
-		<!--<TestRun id="e0d5c8c7-76dc-4bf4-8c92-8a4fbf6a0eba" name="MWhited@LW-18560 2023-07-12 11:06:34" runUser="EGI\MWhited" 
-xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
-  <Times 
-  creation="2023-07-12T11:06:34.8838123-04:00" 
-  queuing="2023-07-12T11:06:34.8838123-04:00" 
-  start="2023-07-12T11:06:27.0160661-04:00" 
-  finish="2023-07-12T11:06:43.4406360-04:00" 
-  />
-  <TestSettings name="default" id="3766080a-bc96-4439-853d-0af501a6f44b">
-    <Deployment runDeploymentRoot="MWhited_LW-18560_2023-07-12_11_06_34" />
-  </TestSettings>-->
+		<xsl:text>**Table 2 — Totals per tier**&#10;&#10;</xsl:text>
+		<xsl:text>| Tier | Tests | Passed | Failed | Inconclusive | Skipped |&#10;|------|------:|-------:|-------:|-------------:|--------:|&#10;</xsl:text>
+		<xsl:call-template name="tier"><xsl:with-param name="name" select="'Unit'"/></xsl:call-template>
+		<xsl:call-template name="tier"><xsl:with-param name="name" select="'Simulate'"/></xsl:call-template>
+		<xsl:call-template name="tier"><xsl:with-param name="name" select="'Integration'"/></xsl:call-template>
+		<xsl:call-template name="tier"><xsl:with-param name="name" select="'Hardware'"/></xsl:call-template>
+		<xsl:call-template name="tier"><xsl:with-param name="name" select="'DevLocal'"/></xsl:call-template>
+		<xsl:call-template name="tier"><xsl:with-param name="name" select="'LiveIntegration'"/></xsl:call-template>
+		<xsl:text>&#10;</xsl:text>
 
-		<xsl:apply-templates select="/tt:TestRun/tt:Results/tt:UnitTestResult">
-			<!--<xsl:sort select="/tt:TestRun/tt:TestDefinitions/tt:UnitTest[@id=@testId]/tt:TestMethod/@className" />-->
-			<xsl:sort select="@testName" />
-		</xsl:apply-templates>
+		<xsl:call-template name="list">
+			<xsl:with-param name="title" select="'Failed'"/>
+			<xsl:with-param name="items" select="$results[@outcome='Failed']"/>
+			<xsl:with-param name="withMessage" select="true()"/>
+		</xsl:call-template>
+		<xsl:call-template name="list">
+			<xsl:with-param name="title" select="'Inconclusive'"/>
+			<xsl:with-param name="items" select="$results[@outcome='Inconclusive']"/>
+			<xsl:with-param name="withMessage" select="true()"/>
+		</xsl:call-template>
+		<xsl:call-template name="list">
+			<xsl:with-param name="title" select="'Skipped'"/>
+			<xsl:with-param name="items" select="$results[@outcome='NotExecuted']"/>
+			<xsl:with-param name="withMessage" select="false()"/>
+		</xsl:call-template>
 	</xsl:template>
 
-	<xsl:template match="tt:UnitTestResult">
+	<xsl:template name="tier">
+		<xsl:param name="name"/>
+		<xsl:variable name="in" select="/tt:TestRun/tt:Results/tt:UnitTestResult[key('definition', @testId)/tt:TestCategory/tt:TestCategoryItem/@TestCategory = $name]"/>
+		<xsl:if test="$in">
+			<xsl:text>| </xsl:text><xsl:value-of select="$name"/>
+			<xsl:text> | </xsl:text><xsl:value-of select="count($in)"/>
+			<xsl:text> | </xsl:text><xsl:value-of select="count($in[@outcome='Passed'])"/>
+			<xsl:text> | </xsl:text><xsl:value-of select="count($in[@outcome='Failed'])"/>
+			<xsl:text> | </xsl:text><xsl:value-of select="count($in[@outcome='Inconclusive'])"/>
+			<xsl:text> | </xsl:text><xsl:value-of select="count($in[@outcome='NotExecuted'])"/>
+			<xsl:text> |&#10;</xsl:text>
+		</xsl:if>
+	</xsl:template>
 
-		<!--
-		<TestRun><Results>
-	<UnitTestResult 
-		executionId="85402472-3cbc-4a1e-9ba2-390fef860389" 
-		testId="4ec775bf-44bd-e2cb-9974-71998d0ab555" 
-		testName="GetHash (hello world,XrY7u+Ae7tCTyyK7j1rNww==)" 
-		computerName="LW-18560" 
-		duration="00:00:00.0243718" 
-		startTime="2023-07-12T11:06:42.7077536-04:00" 
-		endTime="2023-07-12T11:06:42.7384692-04:00" 
-		testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" 
-		outcome="Passed" 
-		testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" 
-		relativeResultsDirectory="85402472-3cbc-4a1e-9ba2-390fef860389"
-		>
-		-->
-
-		<xsl:text>## Test Name: </xsl:text><xsl:value-of select="@testName"/>&cr;&cr;
-
-		<xsl:variable name="test-id" select="@testId" />
-		<xsl:variable name="execution-id" select="@executionId" />
-
-		<xsl:variable name="unit-test" select="/tt:TestRun/tt:TestDefinitions/tt:UnitTest[@id=$test-id]" />
-
-		<xsl:text>* Name: </xsl:text><xsl:value-of select="$unit-test/@name"/>&cr;
-		<!--<xsl:text>* Storage: </xsl:text><xsl:value-of select="$unit-test/@storage"/>&cr;-->
-		<xsl:text>* Test Class: </xsl:text><xsl:value-of select="$unit-test/tt:TestMethod/@className"/>&cr;
-		<xsl:text>  * Method: </xsl:text><xsl:value-of select="$unit-test/tt:TestMethod/@name"/>&cr;
-		<!--<xsl:text>  * Code Base: </xsl:text><xsl:value-of select="$unit-test/tt:TestMethod/@codeBase"/>&cr;-->
-		<xsl:if test="$unit-test/tt:TestCategory/tt:TestCategoryItem/@TestCategory">
-			<xsl:text>* Categories</xsl:text>&cr;
-			<xsl:for-each select="$unit-test/tt:TestCategory/tt:TestCategoryItem/@TestCategory">
-				<xsl:text>  * </xsl:text><xsl:value-of select="."/>&cr;
+	<xsl:template name="list">
+		<xsl:param name="title"/>
+		<xsl:param name="items"/>
+		<xsl:param name="withMessage"/>
+		<xsl:if test="$items">
+			<xsl:text>## </xsl:text><xsl:value-of select="$title"/><xsl:text>&#10;&#10;</xsl:text>
+			<xsl:for-each select="$items">
+				<xsl:sort select="key('definition', @testId)/tt:TestMethod/@className"/>
+				<xsl:sort select="@testName"/>
+				<xsl:variable name="message" select="tt:Output/tt:ErrorInfo/tt:Message"/>
+				<xsl:text>- `</xsl:text><xsl:value-of select="key('definition', @testId)/tt:TestMethod/@className"/>
+				<xsl:text>.</xsl:text><xsl:value-of select="@testName"/><xsl:text>`</xsl:text>
+				<xsl:if test="$withMessage and $message">
+					<xsl:text> — </xsl:text>
+					<xsl:choose>
+						<xsl:when test="contains($message, '&#10;')"><xsl:value-of select="normalize-space(substring-before($message, '&#10;'))"/></xsl:when>
+						<xsl:otherwise><xsl:value-of select="normalize-space($message)"/></xsl:otherwise>
+					</xsl:choose>
+				</xsl:if>
+				<xsl:text>&#10;</xsl:text>
 			</xsl:for-each>
+			<xsl:text>&#10;</xsl:text>
 		</xsl:if>
-		
-		<xsl:text>* Details: </xsl:text>&cr;	
-		<!--<xsl:text>  * Execution ID: </xsl:text><xsl:value-of select="@executionId"/>&cr;-->	
-		<!--<xsl:text>  * Test ID: </xsl:text><xsl:value-of select="@testId"/>&cr;-->	
-		<xsl:text>  * Duration: </xsl:text><xsl:value-of select="@duration"/>&cr;	
-		<xsl:text>  * Outcome: </xsl:text><xsl:value-of select="@outcome"/>&cr;	
-		&cr;
-
-		<xsl:if test="tt:Output/tt:StdOut">
-			&cr;
-			<xsl:text>### Standard Out</xsl:text>&cr;&cr;
-			<xsl:value-of select="tt:Output/tt:StdOut" disable-output-escaping="yes"/>
-			&cr;
-		</xsl:if>
-
-		<xsl:if test="tt:Output/tt:StdErr">
-			&cr;
-			<xsl:text>### Standard Error</xsl:text>&cr;&cr;
-			<xsl:value-of select="tt:Output/tt:StdErr" disable-output-escaping="yes"/>
-			&cr;
-		</xsl:if>
-		&cr;
 	</xsl:template>
-
-
-	<xsl:template match="@* | node()" mode="duplicate">
-		<xsl:copy>
-			<xsl:apply-templates select="@* | node()" mode="duplicate"/>
-		</xsl:copy>
-	</xsl:template>
-
 </xsl:stylesheet>
