@@ -130,3 +130,17 @@ The request ([face and pet matching](docs/features/request/2026-11-11-face-and-p
 **Default:** A; nothing built (the item is parked).
 
 **Your answer:**
+
+### Q-QUERYENGINE-HOME — 2026-11-12 — Metadata-driven query engine (layering)
+
+The catalog's engine declares queryable kinds by attributes and answers every read screen with one request ([design](docs/design/MetadataQuery/README.md), [request](docs/features/request/2026-11-11-metadata-driven-query-engine.md)). Its attributes hold SQL fragments written by the application author; only request values are bound. Where does it live, and is that acceptable?
+
+**Options**
+- A (recommended): a Framework project `OoBDev.Query.Metadata` (model, attributes, registry, parser, compiler; no database reference) plus an adapter `OoBDev.Query.Postgres` (dialect and runner; Npgsql only there); one dialect first. Answers the request's question "model plus a dialect interface".
+- B: one project that references Npgsql; simpler, but Framework then depends on a database driver.
+- C: attributes without SQL (a declarative expression language compiled per dialect); safer but a much larger design and a second language to maintain.
+- D: leave it in the catalog.
+
+**Default:** A once confirmed; nothing built meanwhile (the item is parked).
+
+**Your answer:**
