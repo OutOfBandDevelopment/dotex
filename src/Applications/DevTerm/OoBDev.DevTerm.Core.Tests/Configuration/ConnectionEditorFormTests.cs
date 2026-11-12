@@ -122,7 +122,7 @@ public sealed class ConnectionEditorFormTests
     {
         var definition = FormDefinitionGenerator.Generate<CliOptions>();
 
-        Assert.AreSequenceEqual(["General", "Mode", "Presentation", "Serial", "Timing", "Loopback", "TCP", "MQTT", "USB Device", "BLE", "Session", "Stream Monitor"], [.. definition.Sections.Select(s => s.Label)]);
+        Assert.AreSequenceEqual(["General", "Mode", "Presentation", "Serial", "Timing", "Loopback", "Service", "TCP", "MQTT", "USB Device", "BLE", "Session", "Stream Monitor"], [.. definition.Sections.Select(s => s.Label)]);
         var ids = Controls(definition).Select(c => c.Id).ToList();
         Assert.DoesNotContain(nameof(CliOptions.EffectivePresenters), ids, "[Browsable(false)] is left out.");
         Assert.Contains(nameof(CliOptions.Baud), ids);
@@ -135,7 +135,7 @@ public sealed class ConnectionEditorFormTests
         Assert.AreEqual("Read timeout (ms)", Controls(definition).Single(c => c.Id == nameof(CliOptions.ReadTimeoutMs)).Label);
         Assert.IsTrue(((ToggleControl)Controls(definition).Single(c => c.Id == nameof(CliOptions.Dtr))).DefaultValue);
         Assert.AreEqual(
-            "Which transport to use: serial, tcp, hid, usbtmc, ble, rfc2217, vxi11, mqtt, amqp, stomp, or loopback.",
+            "Which transport to use: serial, tcp, hid, usbtmc, ble, rfc2217, vxi11, mqtt, amqp, stomp, loopback, or service.",
             Controls(definition).Single(c => c.Id == nameof(CliOptions.Transport)).Description);
     }
 }

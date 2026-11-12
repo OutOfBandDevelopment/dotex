@@ -1,5 +1,6 @@
 ﻿using OoBDev.System.Net.Sockets;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -14,8 +15,14 @@ namespace OoBDev.System.Net.Services;
 /// </summary>
 /// <param name="ipAddress">The IP address to bind to. If null, binds to all available network interfaces.</param>
 /// <param name="port">The port number to listen on. Defaults to 19 (standard chargen port).</param>
-public class ChargenServer(IPAddress? ipAddress = default, ushort port = 19) : ServerBase(ipAddress, port)
+/// <param name="maxBytesPerClient">Stop sending to a client after this many bytes (0 means no limit), so a forgotten connection cannot flood a session.</param>
+public class ChargenServer(IPAddress? ipAddress = default, ushort port = 19, long maxBytesPerClient = ChargenServer.DefaultMaxBytesPerClient) : ServerBase(ipAddress, port)
 {
+    /// <summary>The default per-client byte limit (64 KiB).</summary>
+    public const long DefaultMaxBytesPerClient = 64 * 1024;
+
+    private readonly Dictionary<int, long> _sent = [];
+
     /// <summary>
     /// Starts the server and begins sending random data to connected clients at random intervals.
     /// </summary>
@@ -34,10 +41,15 @@ public class ChargenServer(IPAddress? ipAddress = default, ushort port = 19) : S
                     if (!client.Value.Connected)
                         continue;
 
+                    var sent = _sent.GetValueOrDefault(client.Key);
+                    if (maxBytesPerClient > 0 && sent >= maxBytesPerClient)
+                        continue;
+
                     if (rand.NextDouble() > 0.5)
                         continue;
                     Memory<byte> buffer = Guid.NewGuid().ToByteArray();
-                    await client.Value.GetStream().WriteAsync(buffer, cts.Token).ConfigureAwait(false);
+                    await SendAsync(client.Value, buffer, cts.Token).ConfigureAwait(false);
+                    _sent[client.Key] = sent + buffer.Length;
                 }
                 catch (OperationCanceledException ocex)
                 {

@@ -35,6 +35,11 @@ public static class ConnectionDescription
             return $"BLE {cliOptions.BleDeviceId}";
         }
 
+        if (string.Equals(cliOptions.Transport, "service", StringComparison.OrdinalIgnoreCase))
+        {
+            return $"Service {cliOptions.Service}";
+        }
+
         if (string.Equals(cliOptions.Transport, "loopback", StringComparison.OrdinalIgnoreCase))
         {
             return cliOptions.LoopbackSampleIntervalMs > 0
@@ -110,6 +115,11 @@ public static class ConnectionDescription
         if (string.Equals(cliOptions.Transport, "ble", StringComparison.OrdinalIgnoreCase))
         {
             return $"ble://{cliOptions.BleDeviceId}";
+        }
+
+        if (string.Equals(cliOptions.Transport, "service", StringComparison.OrdinalIgnoreCase))
+        {
+            return $"service://{cliOptions.Service}";
         }
 
         if (string.Equals(cliOptions.Transport, "loopback", StringComparison.OrdinalIgnoreCase))

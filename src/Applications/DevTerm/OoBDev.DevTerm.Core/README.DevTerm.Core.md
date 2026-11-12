@@ -29,6 +29,7 @@ The engine of the DevTerm tool, shared by the Tui, Web and WPF front ends. It bi
 | `DevicePanelContribution`, `SurfacePanelBuilder`, `DeviceDecoderPresenter` (`Panels/`), `IInstrumentPanelProvider`, `DeviceConfigSession`, `ParameterValueList` | Turn the device control contracts into panels; config editing with read-back and preview |
 | `SessionPipeServer`, `SessionPipeClient`, `SessionControlPipeServer`, `SessionControlClient`, `SessionTcpShareServer`, `SessionHttpControlServer`, `SessionCommands` | Cross-process access to a live session: read-only pipe tail, control pipe, TCP share and HTTP control |
 | `Rfc2217ServerBridge`, `Rfc2217PortSettings` | Shares a session's serial port over RFC 2217 |
+| `ServiceHostBridge`, `ServiceKind` | Hosts the echo, discard, daytime, time or chargen TCP server as a device (`--transport service --service <kind>`); clients show as received data, replies on `Replied` |
 | `DevTermHome` | The per-user DevTerm folder (`~/.dev-term`; `DEVTERM_HOME` overrides it) |
 
 ```csharp
@@ -39,7 +40,7 @@ services.AddDevTermCore();   // PresenterCatalog (transient), ISessionFactory, I
 
 `Configuration/` is the composition root of the DevTerm hosts: CLI, environment and JSON options (`CliOptions`, `CliOptionsValidator`), `.devterm` project files, connection profiles and the connection editor view model, user data paths, themes and preferences, converter tools, capture export, stream monitoring, routing, send history, and network discovery (mDNS, SSDP, USR bridge).
 
-`AddDevTermFrontEnd(cliOptions)` registers the core, the text presenters and the adapter the `--transport` option names, configured from the options: `loopback`, `tcp`, `hid`, `usbtmc`, `ble`, `rfc2217`, `vxi11`, `mqtt`, `amqp`, `stomp` and the serial default. `AddPlugins(cliOptions)` adds the plugin loader. `DevTermSessionBuilder` and `SessionTab` build a session from the same options. The BLE platform adapter is loaded by reflection (`BlePlatformAdapterLoader`) so plain net10.0 hosts need no Windows target.
+`AddDevTermFrontEnd(cliOptions)` registers the core, the text presenters and the adapter the `--transport` option names, configured from the options: `loopback`, `service`, `tcp`, `hid`, `usbtmc`, `ble`, `rfc2217`, `vxi11`, `mqtt`, `amqp`, `stomp` and the serial default. `AddPlugins(cliOptions)` adds the plugin loader. `DevTermSessionBuilder` and `SessionTab` build a session from the same options. The BLE platform adapter is loaded by reflection (`BlePlatformAdapterLoader`) so plain net10.0 hosts need no Windows target.
 
 ## Device manifests
 

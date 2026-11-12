@@ -37,6 +37,33 @@ public abstract class ServerBase : IServerBase
     }
 
     /// <summary>
+    /// Raised for every chunk that crosses a client connection: the bytes, and <see langword="true"/> when a client sent them,
+    /// <see langword="false"/> when this server wrote them. A tap for observers; it never changes what the server does,
+    /// and a throwing handler is ignored.
+    /// </summary>
+    public event Action<ReadOnlyMemory<byte>, bool>? Traffic;
+
+    /// <summary>Writes <paramref name="data"/> to <paramref name="client"/> and reports it on <see cref="Traffic"/>. Derived servers send through this so the tap sees their replies.</summary>
+    protected async Task SendAsync(TcpClient client, ReadOnlyMemory<byte> data, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(client);
+        await client.GetStream().WriteAsync(data, cancellationToken).ConfigureAwait(false);
+        RaiseTraffic(data, false);
+    }
+
+    private void RaiseTraffic(ReadOnlyMemory<byte> data, bool incoming)
+    {
+        try
+        {
+            Traffic?.Invoke(data, incoming);
+        }
+        catch (Exception)
+        {
+            // A broken observer must not take the server down.
+        }
+    }
+
+    /// <summary>
     /// Starts the TCP server and begins listening for client connections.
     /// Initializes the TCP listener and starts the service loop for accepting clients.
     /// </summary>
@@ -155,6 +182,7 @@ public abstract class ServerBase : IServerBase
                     {
                         var sliced = buffer[..readLength];
                         Console.WriteLine($"{GetType()}: {clientId}-{Environment.CurrentManagedThreadId}: {Encoding.UTF8.GetString(sliced.ToArray())}");
+                        RaiseTraffic(sliced.ToArray(), true);
                         await MessageReceivedAsync(clientId, accepted, sliced, cts.Token).ConfigureAwait(false);
                     }
                     else if (readLength <= 0)
@@ -203,10 +231,17 @@ public abstract class ServerBase : IServerBase
 
         await Task.Yield();
 
-        await Task.WhenAll(
-            _task ?? Task.CompletedTask,
-            Task.WhenAll(_tasks)
-            ).ConfigureAwait(false);
+        try
+        {
+            await Task.WhenAll(
+                _task ?? Task.CompletedTask,
+                Task.WhenAll(_tasks)
+                ).ConfigureAwait(false);
+        }
+        catch (Exception ex) when (ex is OperationCanceledException or global::System.IO.IOException or ObjectDisposedException or SocketException)
+        {
+            // Stopping cancels the loops and closes the sockets under them, so these are the expected way they end.
+        }
 
         await Task.Yield();
 

@@ -1,3 +1,5 @@
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using OoBDev.System.IO;
 using OoBDev.System.IO.UsbTmc;
 using OoBDev.System.IO.UsbHids;
 using OoBDev.System.IO.Tcp;
@@ -33,6 +35,12 @@ public static class ServiceCollectionExtensions
             case "loopback":
                 services.TryAddLoopbackTransport();
                 services.Configure<LoopbackTransportOptions>(o => o.SampleIntervalMs = cliOptions.LoopbackSampleIntervalMs);
+                break;
+            case "service":
+                services.TryAddTransient<IDeviceAdapter>(_ => new ServiceHostBridge(
+                    Enum.Parse<ServiceKind>(cliOptions.Service ?? string.Empty, true),
+                    ushort.TryParse(cliOptions.Port, global::System.Globalization.CultureInfo.InvariantCulture, out var servicePort) ? servicePort : (ushort)0,
+                    global::System.Net.IPAddress.TryParse(cliOptions.Host, out var serviceAddress) ? serviceAddress : null));
                 break;
             case "tcp":
                 services.AddTcpEndpointDeviceAdapter();

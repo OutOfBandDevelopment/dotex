@@ -442,7 +442,7 @@ public sealed class ConnectionEditorViewModel : INotifyPropertyChanged, IDisposa
     /// <c>AddTextPresenters</c> registers (see <c>DevTerm.Presenters.Text.ServiceCollectionExtensions</c>),
     /// and every <see cref="Configuration.LineEnding"/> member, respectively.
     /// </summary>
-    public IReadOnlyList<string> TransportOptions { get; } = ["serial", "tcp", "hid", "usbtmc", "ble", "rfc2217", "vxi11", "mqtt", "amqp", "stomp", "loopback"];
+    public IReadOnlyList<string> TransportOptions { get; } = ["serial", "tcp", "hid", "usbtmc", "ble", "rfc2217", "vxi11", "mqtt", "amqp", "stomp", "loopback", "service"];
 
     /// <summary>
     /// Every presenter name a saved profile can check, in registration order (built-ins first, then
