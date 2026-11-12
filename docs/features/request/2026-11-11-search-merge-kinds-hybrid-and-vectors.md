@@ -1,4 +1,4 @@
-# Feature request: merge the catalog search model with dotex Search (hybrid ranking, kinds, multi-vector)
+﻿# Feature request: merge the catalog search model with dotex Search (hybrid ranking, kinds, multi-vector)
 
 - **Status:** triaged
 - **Requested by:** owner (filed from the NAS storage catalog application, `C:\repo\_storage`)
@@ -49,5 +49,7 @@ Search reads only. Per-kind rights apply (see the query engine request).
 - Fusion method for hybrid scores (reciprocal rank fusion is the usual default).
 
 ## Triage notes
+
+2026-11-12: compared and designed in [SearchMerge](../../design/SearchMerge/README.md); nothing built.
 
 2026-11-11: triaged. Accepted as a backlog idea from the storage and photo-library review; the code named above was not read in full, so the first step is the superset comparison before any design. Face and pet matching also needs an owner decision on personal data. Backlog: BACKLOG.md, Consolidation requests.
