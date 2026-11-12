@@ -51,3 +51,17 @@ The request asks for a Basic Stamp tokenizer and detokenizer but the repo holds 
 **Default:** A once confirmed; nothing built meanwhile (the item is parked).
 
 **Your answer:**
+
+
+### Q-MIDI-PANEL — 2026-11-12 — MIDI device panel for DevTerm (layering)
+
+`OoBDev.Midi` (Extensions) is pure and references nothing. A DevTerm device panel (`IDevicePanel`, decoder, control surface, UI definition) needs `OoBDev.System.Abstractions` (`UiDefinitions`), as the ZWave and device projects do. MIDI runs on a plain serial line at 31250 baud (or USB-MIDI), so no new transport is needed. Where does the panel live?
+
+**Options**
+- A (recommended): a `Panels` folder in `OoBDev.Midi` with a reference to `OoBDev.System.Abstractions`, like `OoBDev.ZWave`; one project, same pattern as the other panels; the pure parser now carries a UiDefinitions reference.
+- B: a separate `OoBDev.Midi.Panels` project; keeps `OoBDev.Midi` reference-free, one more project and package.
+- C: no MIDI panel until there is a MIDI device on the bench (the request lists no consumer).
+
+**Default:** A once confirmed; nothing built meanwhile (the item is parked).
+
+**Your answer:**
