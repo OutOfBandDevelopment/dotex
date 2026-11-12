@@ -24,6 +24,7 @@ namespace OoBDev.System.Xml.Xsl;
 /// <param name="extensions">optional extensions for XSLT Transform</param>
 public class XsltTransformer(string sandbox, params object[] extensions) : IXsltTransformer
 {
+    private static readonly object _currentDirectoryLock = new();
     private readonly string _sandbox = sandbox;
 
     /// <summary>
@@ -85,29 +86,33 @@ public class XsltTransformer(string sandbox, params object[] extensions) : IXslt
             Directory.CreateDirectory(outputDir);
         using var resultStream = File.Create(output);
 
-        var currentDirectory = Environment.CurrentDirectory;
-        try
+        // The current directory is process-wide, so concurrent transforms (or other code reading relative paths) would see each other's change.
+        lock (_currentDirectoryLock)
         {
-            var localOutfolder = Path.GetDirectoryName(output) ?? throw new NotSupportedException($"{nameof(output)} not set");
-            if (!Directory.Exists(localOutfolder))
+            var currentDirectory = Environment.CurrentDirectory;
+            try
             {
-                Directory.CreateDirectory(localOutfolder);
+                var localOutfolder = Path.GetDirectoryName(output) ?? throw new NotSupportedException($"{nameof(output)} not set");
+                if (!Directory.Exists(localOutfolder))
+                {
+                    Directory.CreateDirectory(localOutfolder);
+                }
+                Environment.CurrentDirectory = localOutfolder;
+
+                var inputNavigator = input.CreateNavigator() ?? throw new NotSupportedException($"Could not resolve navigator for {nameof(input)}");
+                inputNavigator.MoveToRoot();
+
+                //var x = xslt.GetType();
+                //var pf = x.GetFields(BindingFlags.NonPublic | BindingFlags.Instance);
+                //var pfc = pf.First(i => i.Name == "_command");
+                //var pfv = pfc.GetValue(xslt);
+
+                xslt.Transform(inputNavigator, xsltArgumentList, resultStream);
             }
-            Environment.CurrentDirectory = localOutfolder;
-
-            var inputNavigator = input.CreateNavigator() ?? throw new NotSupportedException($"Could not resolve navigator for {nameof(input)}");
-            inputNavigator.MoveToRoot();
-
-            //var x = xslt.GetType();
-            //var pf = x.GetFields(BindingFlags.NonPublic | BindingFlags.Instance);
-            //var pfc = pf.First(i => i.Name == "_command");
-            //var pfv = pfc.GetValue(xslt);
-
-            xslt.Transform(inputNavigator, xsltArgumentList, resultStream);
-        }
-        finally
-        {
-            Environment.CurrentDirectory = currentDirectory;
+            finally
+            {
+                Environment.CurrentDirectory = currentDirectory;
+            }
         }
     }
 
