@@ -1,4 +1,4 @@
-# Feature request: Face and pet detection, embedding and clustering
+﻿# Feature request: Face and pet detection, embedding and clustering
 
 - **Status:** triaged
 - **Requested by:** owner (filed from the NAS storage catalog application, `C:\repo\_storage`)
@@ -46,5 +46,7 @@ Inputs are private files (photos, scans), so nothing is logged beyond identifier
 - Which detection model and licence? The catalog's choice would be the starting point.
 
 ## Triage notes
+
+2026-11-12: parked on Q-FACEMATCH-SCOPE (biometric data and model licence are owner decisions); no design until it is answered.
 
 2026-11-11: triaged. Accepted as a backlog idea from the storage and photo-library review; the code named above was not read in full, so the first step is the superset comparison before any design. Face and pet matching also needs an owner decision on personal data. Backlog: BACKLOG.md, Consolidation requests.

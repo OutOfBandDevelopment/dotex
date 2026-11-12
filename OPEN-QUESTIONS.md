@@ -117,3 +117,16 @@ True RAW development needs a native decoder ([design](docs/design/RawDevelopment
 **Default:** A for the managed part once Q-MEDIAMETADATA-HOME is answered; no native package is added meanwhile (the item is parked).
 
 **Your answer:**
+
+### Q-FACEMATCH-SCOPE — 2026-11-12 — Face and pet matching (personal data, dependency)
+
+The request ([face and pet matching](docs/features/request/2026-11-11-face-and-pet-matching.md)) detects faces in private photos, stores embeddings and names people. Face embeddings are biometric personal data, and a detection model carries a licence. Should the framework take this on?
+
+**Options**
+- A (recommended): not now. Keep it out of the framework until a consumer needs it; the catalog keeps its own copy. Burst ranking already works without face signals.
+- B: build detection and embedding behind an interface with no bundled model, storage opt-in, embeddings never logged, delete-by-person supported; you choose the model and licence later.
+- C: pets and objects only (no human faces), using a general image embedder that already exists in the framework.
+
+**Default:** A; nothing built (the item is parked).
+
+**Your answer:**
