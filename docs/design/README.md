@@ -18,6 +18,7 @@ One folder per feature, written to the [design-document standard](../patterns-di
 | [DevTermParity](DevTermParity/README.md) | Owner requirement (2026-10-29): the OoBDev version of dev-term has 100% parity with dev-term, every protocol and every feature. |
 | [DeviceDecoding](DeviceDecoding/README.md) | Protocol decoders for hardware devices (DE-5000, Busylight, K8055, NMEA, Radex One, Zoom H4n, later SCPI and Z-Wave), migrated from dev-term as one package per device on the existing `OoBDev.System.IO` device model. |
 | [DocumentServices](DocumentServices/README.md) | Design documents for the document-processing services of the SharedFramework (Epic 6). |
+| [ImageAnalysis](ImageAnalysis/README.md) | Histograms, colour facets and exposure metrics as pure functions over RGB buffers; placement waits for the owner. |
 | [MediaMetadata](MediaMetadata/README.md) | Read-only EXIF reader and tag dump for images (JPEG, PNG, WebP, TIFF), merged from the storage catalog; placement waits for the owner. |
 | [GeneratedGuides](GeneratedGuides/README.md) | A user or API guide is never edited by hand to stay current. |
 | [HttpQueryVerb](HttpQueryVerb/README.md) | Lets a client send a query as a request body with the HTTP `QUERY` verb (safe, idempotent), with a `POST` fallback for clients and proxies that cannot send `QUERY`. |

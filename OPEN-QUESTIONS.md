@@ -78,3 +78,16 @@ The storage catalog has a small first-party EXIF reader and tag dump (about 640 
 **Default:** A once confirmed; nothing built meanwhile (the item is parked).
 
 **Your answer:**
+
+### Q-IMAGEANALYSIS-HOME — 2026-11-12 — Image colour analysis (layering)
+
+Histograms, colour facets and exposure metrics are pure functions over an RGB pixel buffer ([design](docs/design/ImageAnalysis/README.md), [request](docs/features/request/2026-11-11-image-color-analysis-and-histograms.md)). No library for the analysis itself is needed. Where does it live, and which pixel type does it take?
+
+**Options**
+- A (recommended): a new Framework project `OoBDev.Imaging.Analysis` (BCL plus `OoBDev.System` for `ColorConversion`) with its own small `RgbImage` view; decoders (Skia, ONNX `DecodedImage`) stay in their adapters and convert; generic name, no image-library dependency.
+- B: add the analysis to `OoBDev.System` next to `ColorConversion` (`Graphics` folder); no new project, but that project is already very large.
+- C: put it in `OoBDev.Onnx.ImageEmbeddings.Skia` and reuse `SkiaImageDecoder`; fewer types, but analysis then needs Skia and ONNX packages and is not reusable without them.
+
+**Default:** A once confirmed; nothing built meanwhile (the item is parked).
+
+**Your answer:**
