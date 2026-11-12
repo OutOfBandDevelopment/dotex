@@ -28,6 +28,7 @@ public static class ServiceCollectionExtensions
         services.TryAddTransient<IMessageHandlerProvider, MessageHandlerProvider>();
         services.TryAddTransient<IMessageReceiverProviderFactory, MessageReceiverProviderFactory>();
 
+        services.AddOptions();
         services.TryAddSingleton<InProcessMessageProvider>();
 
         services.AddTransient<IMessageSenderProvider>(sp => sp.GetRequiredService<InProcessMessageProvider>());

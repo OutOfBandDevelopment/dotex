@@ -1,4 +1,4 @@
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 
 namespace OoBDev.MessageQueueing.Hosting;
 
@@ -16,6 +16,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection TryAddMessageQueueingHosting(this IServiceCollection services)
     {
         //Note: this is the service host to enable the inbound message handlers
+        services.AddOptions();
         services.AddHostedService<MessageReceiverHost>();
         return services;
     }

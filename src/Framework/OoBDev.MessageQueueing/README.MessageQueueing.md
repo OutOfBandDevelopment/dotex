@@ -31,7 +31,7 @@ Inject `IMessageQueueSender` (channel `object`) or `IMessageQueueSender<TChannel
 | `MessageReceiverProviderFactory` | Groups the registered `IMessageQueueHandler` instances by provider key, configuration path and channel, gets the keyed `IMessageReceiverProvider` for each group, and gives it a `MessageHandlerProvider` holding the group's handlers. Groups without a provider are logged and skipped; a section with `DisableReceiver` set to `true` or `1` is skipped. |
 | `MessageHandlerProvider` | Builds the message context, converts the payload to the message's `PayloadType` through the JSON serializer, and calls every handler of the group in turn. |
 | `MessageContext`, `MessageContextFactory` | The context passed to senders and handlers (ids, headers, configuration, caller information). |
-| `InProcessMessageProvider` | Sender and receiver in one: a singleton `ConcurrentQueue` per process, provider key `in-process`. `RunAsync` polls once a second (fixed, a TODO in the code) and throws when no handler provider was set. For tests and single-process use. |
+| `InProcessMessageProvider` | Sender and receiver in one: a singleton `ConcurrentQueue` per process, provider key `in-process`. `RunAsync` polls every `InProcessMessageProviderOptions.PollInterval` (default one second) and throws when no handler provider was set. For tests and single-process use. |
 
 Messages are wrapped as `WrappedQueueMessage` (content type, payload type, correlation id, payload, properties) by the in-process provider.
 

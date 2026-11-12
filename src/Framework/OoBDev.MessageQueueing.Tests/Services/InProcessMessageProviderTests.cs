@@ -1,8 +1,10 @@
-using OoBDev.MessageQueueing.Services;
+﻿using OoBDev.MessageQueueing.Services;
 using OoBDev.MessageQueueing.Tests.TestItems;
 using OoBDev.TestUtilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.Extensions.Options;
 using Moq;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -32,7 +34,8 @@ public class InProcessMessageProviderTests
                    });
 
         var provider = new InProcessMessageProvider(
-            TestLogger.CreateLogger<InProcessMessageProvider>()
+            TestLogger.CreateLogger<InProcessMessageProvider>(),
+            Options.Create(new InProcessMessageProviderOptions { PollInterval = TimeSpan.FromMilliseconds(10) })
             );
 
         provider.SetHandlerProvider(mockHandler.Object);

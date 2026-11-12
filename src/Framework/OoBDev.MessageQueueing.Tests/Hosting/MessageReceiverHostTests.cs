@@ -1,8 +1,10 @@
-using OoBDev.MessageQueueing.Hosting;
+﻿using OoBDev.MessageQueueing.Hosting;
 using OoBDev.MessageQueueing.Services;
 using OoBDev.TestUtilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.Extensions.Options;
 using Moq;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -41,7 +43,8 @@ public class MessageReceiverHostTests
 
         using (var host = new MessageReceiverHost(
              TestLogger.CreateLogger<MessageReceiverHost>(),
-             mockReceiverProviderFactory.Object
+             mockReceiverProviderFactory.Object,
+             Options.Create(new MessageReceiverHostOptions { RestartDelay = TimeSpan.FromMilliseconds(10) })
              ))
         {
             await host.StartAsync(cancellationTokenSource.Token);
@@ -57,4 +60,36 @@ public class MessageReceiverHostTests
 
         mockRepo.VerifyAll();
     }
-}
+
+    [TestMethod]
+    [TestCategory(TestCategories.Unit)]
+    public async Task StartAsync_ReceiverFails_RestartsAfterTheConfiguredDelay()
+    {
+        // Stage
+        using var stop = new CancellationTokenSource();
+        var runs = 0;
+        var provider = new Mock<IMessageReceiverProvider>();
+        provider.Setup(p => p.RunAsync(It.IsAny<CancellationToken>()))
+            .Returns(() =>
+            {
+                if (Interlocked.Increment(ref runs) >= 3)
+                {
+                    stop.Cancel();
+                }
+
+                return Task.FromException(new InvalidOperationException("boom"));
+            });
+        var factory = new Mock<IMessageReceiverProviderFactory>();
+        factory.Setup(f => f.Create()).Returns([provider.Object]);
+        using var host = new MessageReceiverHost(
+            TestLogger.CreateLogger<MessageReceiverHost>(),
+            factory.Object,
+            Options.Create(new MessageReceiverHostOptions { RestartDelay = TimeSpan.FromMilliseconds(10) }));
+
+        // Test
+        await host.StartAsync(stop.Token);
+        await Task.Delay(500, TestContext.CancellationToken);
+
+        // Assert
+        Assert.IsGreaterThanOrEqualTo(3, runs);
+    }}
