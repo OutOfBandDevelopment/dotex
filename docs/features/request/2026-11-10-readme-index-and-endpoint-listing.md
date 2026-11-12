@@ -1,6 +1,6 @@
-# Feature request: project readme index and a markdown endpoint listing
+﻿# Feature request: project readme index and a markdown endpoint listing
 
-- **Status:** triaged
+- **Status:** done (2026-11-12; the index is the project catalog, the listing is the API guide with access lines)
 - **Requested by:** owner (found while removing `docs/code`, 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** `src/Directory.Build.props`, `docs/`, `OoBDev.TemplateEngine.Cli`

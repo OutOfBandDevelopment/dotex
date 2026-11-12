@@ -1,4 +1,4 @@
-# OoBDev.Documents.Guides
+﻿# OoBDev.Documents.Guides
 
 ## Overview
 
@@ -6,7 +6,7 @@ Deterministic markdown guides generated from machine-readable specifications, fo
 
 ## Key Classes
 
-- **ApiGuideRenderer**: `OpenApi(json, title)` and `AsyncApi(json, title)` render an OpenAPI or AsyncAPI document as markdown (operations sorted by path, channels with their parameters and messages); `WriteIfChanged(path, content)` writes LF text only when the file differs.
+- **ApiGuideRenderer**: `OpenApi(json, title)` and `AsyncApi(json, title)` render an OpenAPI or AsyncAPI document as markdown (operations sorted by path, each with its access line from the `x-permissions` extension: anonymous or authenticated plus the required rights; channels with their parameters and messages); `WriteIfChanged(path, content)` writes LF text only when the file differs.
 - **CliToolGuide**: `Render(title, synopsis, examples)` turns captured `CliExample` runs (title, description, command line, output, exit code) into a markdown guide with `console` blocks.
 - **CliToolRunner**: `RunAsync(...)` starts a tool, captures stdout and stderr and returns a `CliExample`; `displayCommandLine` keeps machine paths out of the guide.
 
