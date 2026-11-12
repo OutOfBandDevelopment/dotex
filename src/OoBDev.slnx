@@ -84,6 +84,8 @@
     <Project Path="Extensions/OoBDev.Extensions.Drawing/OoBDev.Extensions.Drawing.csproj" />
     <Project Path="Extensions/OoBDev.Extensions.Windows.Forms.Tests/OoBDev.Extensions.Windows.Forms.Tests.csproj" />
     <Project Path="Extensions/OoBDev.Extensions.Windows.Forms/OoBDev.Extensions.Windows.Forms.csproj" />
+    <Project Path="Extensions/OoBDev.Midi.Tests/OoBDev.Midi.Tests.csproj" />
+    <Project Path="Extensions/OoBDev.Midi/OoBDev.Midi.csproj" />
     <Project Path="Extensions/OoBDev.Nmea.Tests/OoBDev.Nmea.Tests.csproj" />
     <Project Path="Extensions/OoBDev.Nmea/OoBDev.Nmea.csproj" />
     <Project Path="Extensions/OoBDev.Scpi.Tests/OoBDev.Scpi.Tests.csproj" />
