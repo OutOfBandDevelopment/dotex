@@ -22,6 +22,7 @@ One folder per feature, written to the [design-document standard](../patterns-di
 | [DocumentToMarkdown](DocumentToMarkdown/README.md) | Documents to page-anchored Markdown, Docling OCR client and resumable segmented OCR, merged from the storage catalog. |
 | [RawDevelopment](RawDevelopment/README.md) | RAW detection, embedded-preview extraction and an optional native developer behind one interface. |
 | [MetadataQuery](MetadataQuery/README.md) | Kinds declared by attributes, one request shape, dialect interface and keyset paging, merged from the storage catalog's query engine. |
+| [WorkQueue](WorkQueue/README.md) | Row-level work queue with leases, fenced completion, back-off and dead letters on PostgreSQL, merged from the storage catalog. |
 | [ImageAnalysis](ImageAnalysis/README.md) | Histograms, colour facets and exposure metrics as pure functions over RGB buffers; placement waits for the owner. |
 | [MediaMetadata](MediaMetadata/README.md) | Read-only EXIF reader and tag dump for images (JPEG, PNG, WebP, TIFF), merged from the storage catalog; placement waits for the owner. |
 | [GeneratedGuides](GeneratedGuides/README.md) | A user or API guide is never edited by hand to stay current. |

@@ -144,3 +144,17 @@ The catalog's engine declares queryable kinds by attributes and answers every re
 **Default:** A once confirmed; nothing built meanwhile (the item is parked).
 
 **Your answer:**
+
+### Q-WORKQUEUE-HOME — 2026-11-12 — Database work queue (layering)
+
+The catalog's PostgreSQL work queue with leases, fenced completion and dead letters ([design](docs/design/WorkQueue/README.md), [request](docs/features/request/2026-11-11-database-stage-work-queue.md)) is the answer to the Postgres request for a queue. Where does it live?
+
+**Options**
+- A (recommended): a Framework project `OoBDev.WorkQueue` (contracts, SLA, hosting; no database reference) plus an adapter `OoBDev.WorkQueue.Postgres` (Npgsql only there) and a PostgreSQL service added to the integration stack for its tests.
+- B: one project referencing Npgsql; fewer projects, Framework depends on a driver.
+- C: extend `OoBDev.MessageQueueing` with a row-level mode; one family, but it blurs a broker abstraction with a task table.
+- D: leave it in the catalog.
+
+**Default:** A once confirmed; nothing built meanwhile (the item is parked).
+
+**Your answer:**
