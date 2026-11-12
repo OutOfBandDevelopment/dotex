@@ -38,4 +38,47 @@ public sealed class Utf8PresenterTests
         Assert.IsEmpty(first);
         Assert.AreEqual("é", second.Single());
     }
+
+    [TestMethod]
+    public void Restore_SnapshotTakenMidCharacter_CompletesTheCharacterOnAFreshPresenter()
+    {
+        var bytes = Encoding.UTF8.GetBytes("日");
+        _presenter.Render(Of(bytes[..2]));
+        var snapshot = _presenter.Snapshot();
+        var restored = new Utf8Presenter();
+
+        restored.Restore(snapshot);
+        var result = restored.Render(Of(bytes[2..]));
+
+        Assert.AreEqual("日", result.Single());
+    }
+
+    [TestMethod]
+    public void Restore_SnapshotTakenOnACharacterBoundary_StartsClean()
+    {
+        _presenter.Render(Of(Encoding.UTF8.GetBytes("aé")));
+        var snapshot = _presenter.Snapshot();
+        var restored = new Utf8Presenter();
+
+        restored.Restore(snapshot);
+
+        Assert.AreEqual("b", restored.Render(Of("b"u8.ToArray())).Single());
+    }
+
+    [TestMethod]
+    public void Restore_LaterRendersAfterTheSnapshot_DoNotChangeIt()
+    {
+        var bytes = Encoding.UTF8.GetBytes("é");
+        _presenter.Render(Of(bytes[..1]));
+        var snapshot = _presenter.Snapshot();
+        _presenter.Render(Of(bytes[1..]));
+
+        _presenter.Restore(snapshot);
+
+        Assert.AreEqual("é", _presenter.Render(Of(bytes[1..])).Single());
+    }
+
+    [TestMethod]
+    public void Restore_ForeignSnapshot_Throws() =>
+        Assert.ThrowsExactly<global::System.ArgumentException>(() => _presenter.Restore("x"));
 }
