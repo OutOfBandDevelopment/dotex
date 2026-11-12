@@ -145,4 +145,25 @@ public class DiskImageCommands : IDiskImageCommands
 
         return outputSpan;
     }
+
+    /// <inheritdoc />
+    public byte[] GetFileContent(Stream diskImage, FileEntry fileEntry)
+    {
+        var raw = GetDataFileEntry(diskImage, fileEntry).ToArray();
+        var type = (AppleFileType)((byte)fileEntry.FileType & 0x7F);
+        switch (type)
+        {
+            case AppleFileType.Binary when raw.Length >= 4:
+                return Slice(raw, 4, raw[2] | (raw[3] << 8));
+            case AppleFileType.ApplesoftBasic or AppleFileType.IntegerBasic when raw.Length >= 2:
+                return Slice(raw, 2, raw[0] | (raw[1] << 8));
+            case AppleFileType.Text:
+                var end = Array.IndexOf(raw, (byte)0);
+                return end < 0 ? raw : raw[..end];
+            default:
+                return raw;
+        }
+    }
+
+    private static byte[] Slice(byte[] raw, int start, int length) => raw[start..global::System.Math.Min(raw.Length, start + length)];
 }

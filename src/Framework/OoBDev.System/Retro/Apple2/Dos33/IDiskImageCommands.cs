@@ -38,4 +38,14 @@ public interface IDiskImageCommands
     /// <param name="fileEntry"></param>
     /// <returns></returns>
     Span<byte> GetDataFileEntry(Stream diskImage, FileEntry fileEntry);
+
+    /// <summary>
+    /// Retrieves the content of a file with its real length. Binary files carry a 4-byte header (load address, length) and
+    /// Applesoft and Integer BASIC files a 2-byte length prefix; the header is dropped. Text files end before the first zero byte.
+    /// Other types are returned whole sectors, as <see cref="GetDataFileEntry"/> does.
+    /// </summary>
+    /// <param name="diskImage">The disk image.</param>
+    /// <param name="fileEntry">The catalog entry.</param>
+    /// <returns>The file content; a header that claims more than the sectors hold is clipped to what is there.</returns>
+    byte[] GetFileContent(Stream diskImage, FileEntry fileEntry);
 }

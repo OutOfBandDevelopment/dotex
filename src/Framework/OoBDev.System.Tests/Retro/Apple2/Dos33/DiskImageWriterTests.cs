@@ -178,4 +178,33 @@ public class DiskImageWriterTests
         Assert.ThrowsExactly<InvalidDataException>(() => writer.AddFile(tiny, "X", AppleFileType.Text, default));
         Assert.ThrowsExactly<ArgumentException>(() => writer.AddFile(new MemoryStream([], false), "X", AppleFileType.Text, default));
     }
+
+    [TestMethod, TestCategory(TestCategories.Unit)]
+    public void GetFileContent_BinaryApplesoftAndText_ReturnTheRealLength()
+    {
+        using var image = OpenImage();
+        var writer = new DiskImageWriter();
+        byte[] binary = [0x00, 0x03, 0x05, 0x00, 1, 2, 3, 4, 5];
+        byte[] basic = [0x03, 0x00, 9, 8, 7];
+        writer.AddFile(image, "BIN", AppleFileType.Binary, binary);
+        writer.AddFile(image, "PRG", AppleFileType.ApplesoftBasic, basic);
+        writer.AddFile(image, "TXT", AppleFileType.Text, "HELLO"u8);
+        var commands = new DiskImageCommands();
+
+        CollectionAssert.AreEqual(new byte[] { 1, 2, 3, 4, 5 }, commands.GetFileContent(image, Find(image, "BIN")));
+        CollectionAssert.AreEqual(new byte[] { 9, 8, 7 }, commands.GetFileContent(image, Find(image, "PRG")));
+        CollectionAssert.AreEqual("HELLO"u8.ToArray(), commands.GetFileContent(image, Find(image, "TXT")));
+    }
+
+    [TestMethod, TestCategory(TestCategories.Unit)]
+    public void GetFileContent_HeaderClaimsTooMuch_IsClippedToTheSectors()
+    {
+        using var image = OpenImage();
+        new DiskImageWriter().AddFile(image, "LIAR", AppleFileType.Binary, new byte[] { 0, 3, 0xFF, 0xFF, 1, 2 });
+
+        var content = new DiskImageCommands().GetFileContent(image, Find(image, "LIAR"));
+
+        Assert.AreEqual(256 - 4, content.Length);
+        Assert.AreEqual(1, content[0]);
+    }
 }
