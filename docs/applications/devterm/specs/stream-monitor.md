@@ -94,6 +94,7 @@ on the capture (`Not saved: {reason}`) and reported; it never interrupts the con
 | **Earlier exports** | When the window opens, files already in the export folders (the profile's folder and `~/.dev-term/exports`) that match `{device}_{yyyyMMdd-HHmmss}[-n].{ext}` are listed too, oldest first, so earlier captures survive a restart (`StreamMonitor.LoadFromDisk`) |
 | **Automatic HP-GL to SVG** | An HP-GL capture is also written as an `.svg` beside it and listed as a second capture, with dev-term's own converter. On by default; profile setting `StreamAutoConvertHpgl` (`false` turns it off) |
 | **Conversion** drop-down (WPF) / **Convert as:** button (TUI) | Picks the mechanism Convert... uses: None, HP-GL to SVG, Auto, each registered tool (`StreamConvertTools`), or External tool (`StreamConversionChoice.For`). Starts on the profile's `Stream Convert Mode`; changing it affects only this window and isn't saved. The TUI button opens a pick-one list. External tool still reads its path from the profile |
+| **Open** (TUI) | Opens the selected capture's saved file (or a converted file) in the system viewer through the shell, since the TUI cannot draw a picture. Reports `Opened <file>.`, `Open failed: <reason>` or that the capture has no saved file |
 | **Convert...** (TUI + WPF) | Runs the configured conversion mechanism (below) against the selected capture, writing the result next to its saved file (same folder and name, a new extension). Enabled when a capture is selected. TUI reports the outcome in the detail label; WPF reports success in the detail text and a failure via a message box |
 | Selecting a capture | Shows its detail (and, in WPF, its preview) |
 
@@ -119,7 +120,7 @@ quiet, hit the size limit, or was stopped mid-capture), or `…, but could not s
 
 ## Per-front-end notes
 
-- **TUI**: no preview by design (Terminal.Gui can't draw images); open the saved file. The window is
+- **TUI**: no preview by design (Terminal.Gui can't draw images); the **Open** button hands the saved file to the system viewer. The window is
   modal like every other TUI screen, which is why closing it doesn't stop monitoring. Device names
   and file names are shown verbatim (`_` is not treated as a hotkey marker).
 - **Web** (`/monitor`, `WebStreamMonitor`): one monitor on the host's shared session and on every extra connection opened from a project (each tracked under its own key while open, so captures list their device; `ConnectionManager.ConnectionOpened`/`ConnectionClosed`), started when a read-write viewer opens the page (a read-only viewer sees it but cannot start/stop) and following a profile switch. Shows the state line, `Saving to` folder, Start/Stop, search, Type and Device filters and Sort (`StreamCaptureView.Apply`), the capture list (newest selected as each arrives, live), the detail lines, a Download link (`GET /api/monitor/captures/{n}`) and an `<img>` preview for BMP/PNG/JPEG/GIF/SVG (a message otherwise). Convert as + Convert (the same `StreamCaptureConverter` choices, using the app-wide tools list; a success is listed as a new capture; read-only viewers cannot convert). Not on the web: Open Folder and Export As (a viewer's browser cannot open the host's folder; Download replaces both).

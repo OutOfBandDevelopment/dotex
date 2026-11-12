@@ -236,6 +236,65 @@ public sealed class StreamMonitorModeTests
     }
 
     [TestMethod]
+    public async Task OpenButton_WithASavedCapture_HandsItsFileToTheViewer()
+    {
+        await using var bench = await StreamMonitorBench.StartAsync("scope");
+        var capture = await bench.CaptureAsync(StreamContentSamples.Hpgl());
+        string? opened = null;
+
+        StreamMonitorWindowParts? captured = null;
+        TuiTestRunner.RunWithLoopApp(
+            beforeBuild: null,
+            build: app =>
+            {
+                captured = StreamMonitorMode.BuildWindow(app, bench.Monitor, openFile: path => opened = path);
+                return captured.Window;
+            },
+            body: (app, _) =>
+            {
+                var parts = captured!;
+                TuiTestRunner.InvokeOnLoop(() =>
+                {
+                    parts.CaptureList.SelectedItem = 0;
+                    parts.OpenButton.InvokeCommand(Command.Accept);
+                    return 0;
+                });
+
+                Assert.IsTrue(TuiTestRunner.WaitUntilOnLoop(() => parts.DetailLabel.Text.Contains("Opened", StringComparison.Ordinal), TimeSpan.FromSeconds(5)));
+            });
+
+        Assert.AreEqual(capture.SavedPath, opened);
+    }
+
+    [TestMethod]
+    public async Task OpenButton_WhenTheViewerFails_ReportsTheFailure()
+    {
+        await using var bench = await StreamMonitorBench.StartAsync("scope");
+        await bench.CaptureAsync(StreamContentSamples.Hpgl());
+
+        StreamMonitorWindowParts? captured = null;
+        TuiTestRunner.RunWithLoopApp(
+            beforeBuild: null,
+            build: app =>
+            {
+                captured = StreamMonitorMode.BuildWindow(app, bench.Monitor, openFile: _ => throw new InvalidOperationException("no viewer"));
+                return captured.Window;
+            },
+            body: (app, _) =>
+            {
+                var parts = captured!;
+                TuiTestRunner.InvokeOnLoop(() =>
+                {
+                    parts.CaptureList.SelectedItem = 0;
+                    parts.OpenButton.InvokeCommand(Command.Accept);
+                    return 0;
+                });
+
+                Assert.IsTrue(TuiTestRunner.WaitUntilOnLoop(() => parts.DetailLabel.Text.Contains("Open failed: no viewer", StringComparison.Ordinal), TimeSpan.FromSeconds(5)));
+            });
+    }
+
+    [TestMethod]
     public async Task ConvertButton_WithNoModeConfigured_ReportsTheFailure()
     {
         await using var bench = await StreamMonitorBench.StartAsync("scope");

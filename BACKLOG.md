@@ -95,5 +95,4 @@ Scope rule: every BinaryDataDecoders feature is migrated; phases are priority or
   - Network device discovery: the Detect button and one row per device with badges are built; the EByte and USR UDP probes need a fresh capture. In-app config editors for network bridges ([proposal](docs/design/NetworkDevices/network-device-config-editors.md)).
 - [ ] DevTerm leftovers beyond the list above:
   - Dockable MDI layout in WPF (decided 2026-11-09: AvalonDock, MIT; theme it in `DarkControls.xaml`, save the layout as XML): [request](docs/features/request/2026-11-10-devterm-dockable-layout-and-blazor-frontend.md).
-  - Stream Monitor in-window preview of HP-GL, PostScript and PCL in the Tui monitor (a terminal cannot show a picture; decide whether to open the converted file externally) (the WPF and Web monitors draw HP-GL themselves and PostScript/PCL through an installed Ghostscript/GhostPCL since 2026-11-09).
   - Read-write control channel and out-of-process plugins over a named pipe and a localhost web service (with the plugin sandbox item); research notes such as the BYTECC BT-UP01 bridge.
