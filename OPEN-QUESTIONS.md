@@ -24,3 +24,17 @@ Where does the CloudEvents `POST /events` edge live? Plan: [cloudevents-edge-pla
 **Default:** A (building nothing until confirmed).
 
 **Your answer:**
+
+
+### Q-ZWAVE-ENUMERATE — 2026-11-12 — Z-Wave panel (contract)
+
+Enumerate and Describe node must read replies (the init-data node list, then each node's answers), but `IControlSurface` only sends and `IDeviceDecoder` only decodes, and the host creates them separately. How does a command see replies?
+
+**Options**
+- A (recommended): the panel shares one per-session `ZWaveNodeTable` between `CreateSurface` and `CreateDecoder` (the host calls both for one session); Enumerate waits on the table with a timeout. No contract change, but the panel instance becomes stateful.
+- B: extend `IDevicePanel` with a session-scoped `CreateSession(DeviceSend)` returning the surface and decoder together; cleaner, changes the shared UiDefinitions contract and the three front ends.
+- C: Enumerate sends GetNodeProtocolInfo for a typed node range (default 1-10) without reading replies; no state, but the user must know the range.
+
+**Default:** A once confirmed; nothing built meanwhile (the item is parked).
+
+**Your answer:**
