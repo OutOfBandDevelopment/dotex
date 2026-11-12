@@ -1,10 +1,10 @@
-# OoBDev.DevTerm.Web
+﻿# OoBDev.DevTerm.Web
 
 ASP.NET Core and Blazor front end for DevTerm, ported from dev-term `DevTerm.Web` onto `OoBDev.DevTerm.Core`.
 
 ## Description
 
-A host that opens one device session (`AddDevTermFrontEnd` selects the transport from the command line) and serves it to browsers: a SignalR session hub, a REST API described by OpenAPI (Scalar reference), an AsyncAPI document, and Blazor pages for the terminal, playback and generated device panels (`PanelApi`, `PanelHost`). Roles are mapped to rights as in the other API surfaces.
+A host that opens one device session (`AddDevTermFrontEnd` selects the transport from the command line) and serves it to browsers: a SignalR session hub, a REST API described by OpenAPI (Scalar reference), an AsyncAPI document, and Blazor pages for the terminal, playback and generated device panels (`PanelApi`, `PanelHostHolder`). Roles are mapped to rights as in the other API surfaces.
 
 ## Verified
 
