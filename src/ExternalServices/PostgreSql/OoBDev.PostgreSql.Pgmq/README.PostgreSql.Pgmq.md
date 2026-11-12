@@ -6,5 +6,4 @@ Message-queue adapter for [pgmq](https://github.com/pgmq/pgmq), the PostgreSQL e
 - Queue configuration (`MessageQueue:{name}:Config`): `ConnectionString` and `QueueName` (required; the queue is created on first use), `VisibilityTimeoutSeconds` (30), `PollIntervalMilliseconds` (500), `BatchSize` (10), `MaxDeliveries` (5): a message that was read more often than that is moved to the queue `{QueueName}_dlq` (created on first use) instead of being handled again; 0 turns it off.
 - Sending calls `pgmq.send`. Receiving calls `pgmq.read` with the visibility timeout; after the handler succeeds the message is archived with `pgmq.archive`; when it throws the message is left and arrives again after the timeout (at-least-once, so handlers are idempotent).
 - The database needs `CREATE EXTENSION pgmq` (the test stack image `ghcr.io/pgmq/pg17-pgmq` does it at first start).
-- Not yet: an AsyncAPI contributor, dead-lettering after a read-count limit.
 - AsyncAPI: `PgmqAsyncApiContributor` describes the queue (host and port only, never the credentials).
