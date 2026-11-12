@@ -1,6 +1,6 @@
 # Feature request: span and sequence based Applesoft detokenizer and Tar archive
 
-- **Status:** triaged
+- **Status:** done (2026-11-12, see docs/changes/2026-11-12.md#tar-header-parsing-on-spans-and-the-legacy-win32-types-removed)
 - **Requested by:** owner (open gap found reviewing the migration, 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** `OoBDev.System` (`Archives/Tar`, `Retro/Apple2/ApplesoftBASIC`)
