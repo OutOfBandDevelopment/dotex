@@ -94,6 +94,12 @@ Default XmlSerializer.
 ### Apple2Encoding
 Single-byte `Encoding` for Apple ][ text. Bytes with bit 7 set (normal text) decode to the ASCII character with the bit cleared; bytes with bit 7 clear (inverse and flashing text) decode to the private-use character `U+E000` plus the byte value, so all 256 byte values round-trip through `GetString` and `GetBytes`. Encoding ASCII sets bit 7; other characters become `?`. `Dos33.FileEntry` names use it.
 
+### Applesoft BASIC
+`Detokenizer` reads a tokenized program; `ApplesoftParser` reads a listing into lines, statements and keyword or literal elements (interpreter-level lexing, bounded, `FormatException` on bad input); `ApplesoftTokenizer` writes the binary form back. See the 2026-11-12 change document for the REM and DATA spacing caveat.
+
+### Dos33
+`DiskImageCommands` reads a DOS 3.3 image (catalog, track/sector lists, data). `DiskImageWriter` (`IDiskImageWriter`) adds, replaces and deletes files in DOS-order 256-byte-sector images: it works on an in-memory copy and writes back only when the file fits, so a full disk, a full catalog or a duplicate name leaves the stream unchanged (`InvalidOperationException`). Sectors are taken outward from track 17; a delete frees the bitmap and marks the entry `0xFF` with the original track kept, as DOS does. The caller supplies Applesoft and binary files with DOS's own length prefix.
+
 ## Time
 
 ### HybridLogicalClock and HybridLogicalClockGenerator

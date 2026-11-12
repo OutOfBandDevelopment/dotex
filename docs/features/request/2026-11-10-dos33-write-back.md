@@ -1,6 +1,6 @@
 # Feature request: DOS 3.3 disk image write support
 
-- **Status:** triaged
+- **Status:** done (2026-11-12, see docs/changes/2026-11-12.md#dos-33-disk-image-write-support)
 - **Requested by:** owner (open gap found reviewing the migration, 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** `OoBDev.System/Retro/Apple2/Dos33`
