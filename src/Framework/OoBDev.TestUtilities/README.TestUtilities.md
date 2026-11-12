@@ -1,4 +1,4 @@
-# OoBDev.TestUtilities
+﻿# OoBDev.TestUtilities
 
 Helpers for MSTest projects: test parameters as configuration, result attachments, embedded test data, tier categories, numeric assertions, a test logger and a guard for integration tests. The tier rules are in `.claude/rules/testing.md`; the `.runsettings` parameters are in the [runsettings how-to](../../../docs/how-tos/runsettings-variables-and-configuration.md).
 
@@ -40,6 +40,10 @@ var config = new ConfigurationBuilder()
 | `GetLogger<T>()` | A logger writing to the test output |
 
 Related: `ContextualTestMethodAttribute` and `ContextualTestClassBase` expose the current test method and instance through `TestContext.Properties`; `TestTargetAttribute` names the class and member under test; `Xml/Xsl/Extensions/TrxExtensions` support XSL over TRX results.
+
+## CSV test data
+
+`[CsvData("Data/cases.csv")]` on a test method (namespace `OoBDev.TestUtilities.Data`) turns each row of the file into a test case. The header names the columns; each is matched to the method parameter of the same name, so column order is free. Values convert with the invariant culture (enums by name, hex text to `byte[]`, empty text to `null` for nullable value types). A case is named `Method (cases.csv:LINE)`, and a bad value, short row, missing column or unclosed quote fails with the file and line. Mark the file copy to output (`<None Update="Data\*.csv" CopyToOutputDirectory="PreserveNewest" />`). MSTest 4 has no CSV source of its own, which is why this exists.
 
 ## Categories
 

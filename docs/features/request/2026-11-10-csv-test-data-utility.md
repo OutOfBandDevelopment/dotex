@@ -1,6 +1,6 @@
-# Feature request: CSV driven test data utility
+﻿# Feature request: CSV driven test data utility
 
-- **Status:** triaged
+- **Status:** done (2026-11-12, `CsvDataAttribute` in `OoBDev.TestUtilities`)
 - **Requested by:** owner (open gap found reviewing the migration, 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** `OoBDev.Devices.TestUtilities` or a shared test utilities project
