@@ -62,6 +62,7 @@
                     <ComboBox ItemsSource="{Binding SerialPortNames}" SelectedItem="{Binding SelectedSerialPort}" ItemTemplate="{StaticResource TextDisplay}" Margin="0,2,0,8" />
                     <TextBlock Text="Serial port" />
                     <TextBox Text="{Binding Port, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
+                    <TextBlock Text="{Binding SerialPortNotFoundHint}" Foreground="Firebrick" TextWrapping="Wrap" Margin="0,0,0,8" Visibility="{Binding ConnectedDeviceNotFound, Converter={StaticResource Visible}}" />
                     <TextBlock Text="Baud" />
                     <TextBox Text="{Binding Baud, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
                     <TextBlock Text="Data bits" />
@@ -72,6 +73,14 @@
                     <ComboBox ItemsSource="{Binding StopBitsOptions}" SelectedItem="{Binding StopBitsText}" Margin="0,2,0,8" />
                     <TextBlock Text="Flow control" />
                     <ComboBox ItemsSource="{Binding HandshakeOptions}" SelectedItem="{Binding HandshakeText}" Margin="0,2,0,8" />
+                    <CheckBox Content="DTR" IsChecked="{Binding Dtr}" Margin="0,0,0,4" />
+                    <CheckBox Content="RTS" IsChecked="{Binding Rts}" Margin="0,0,0,8" />
+                    <TextBlock Text="Write timeout (ms)" />
+                    <TextBox Text="{Binding WriteTimeoutMs, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
+                    <StackPanel Visibility="{Binding IsSerialTransport, Converter={StaticResource Visible}}">
+                    <TextBlock Text="Read timeout (ms)" />
+                    <TextBox Text="{Binding ReadTimeoutMs, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
+                    </StackPanel>
                 </StackPanel>
                 <StackPanel Visibility="{Binding IsTcpLikeTransport, Converter={StaticResource Visible}}">
                     <Button Content="Scan network" Command="{Binding Scans.ScanLxi, RelativeSource={RelativeSource AncestorType=Window}}" HorizontalAlignment="Left" Padding="8,2" Margin="0,0,0,4" />
@@ -81,20 +90,23 @@
                     <TextBox Text="{Binding Host, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
                     <TextBlock Text="TCP port" />
                     <TextBox Text="{Binding TcpPort, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
+                    <CheckBox Content="Listen (server mode)" IsChecked="{Binding Listen}" Visibility="{Binding IsTcpTransport, Converter={StaticResource Visible}}" Margin="0,0,0,8" />
                 </StackPanel>
                 <StackPanel Visibility="{Binding IsUsbDeviceTransport, Converter={StaticResource Visible}}">
                     <TextBlock Text="Detected HID devices" Visibility="{Binding IsHidTransport, Converter={StaticResource Visible}}" />
                     <ComboBox ItemsSource="{Binding HidDeviceOptions}" SelectedItem="{Binding SelectedHidDevice}" ItemTemplate="{StaticResource OptionDisplay}" Margin="0,2,0,8" Visibility="{Binding IsHidTransport, Converter={StaticResource Visible}}" />
                     <TextBlock Text="Detected USBTMC devices" Visibility="{Binding IsUsbtmcTransport, Converter={StaticResource Visible}}" />
                     <ComboBox ItemsSource="{Binding UsbtmcDeviceOptions}" SelectedItem="{Binding SelectedUsbtmcDevice}" ItemTemplate="{StaticResource OptionDisplay}" Margin="0,2,0,8" Visibility="{Binding IsUsbtmcTransport, Converter={StaticResource Visible}}" />
-                    <TextBlock Text="Vendor id" />
-                    <TextBox Text="{Binding VendorId, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
-                    <TextBlock Text="Product id" />
-                    <TextBox Text="{Binding ProductId, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
+                    <CheckBox Content="Show as hex" IsChecked="{Binding IdsShowHex}" Margin="0,0,0,8" />
+                    <TextBlock Text="Vendor ID" />
+                    <TextBox Text="{Binding VendorIdDisplay, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
+                    <TextBlock Text="Product ID" />
+                    <TextBox Text="{Binding ProductIdDisplay, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
                     <TextBlock Text="Serial number" />
                     <TextBox Text="{Binding SerialNumber, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
                     <TextBlock Text="Device path" />
                     <TextBox Text="{Binding DevicePath, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
+                    <TextBlock Text="{Binding UsbDeviceNotFoundHint}" Foreground="Firebrick" TextWrapping="Wrap" Margin="0,0,0,8" Visibility="{Binding ConnectedDeviceNotFound, Converter={StaticResource Visible}}" />
                 </StackPanel>
                 <StackPanel Visibility="{Binding IsBleTransport, Converter={StaticResource Visible}}">
                     <Button Content="Scan Bluetooth" Command="{Binding Scans.ScanBle, RelativeSource={RelativeSource AncestorType=Window}}" HorizontalAlignment="Left" Padding="8,2" Margin="0,0,0,4" />
@@ -117,6 +129,15 @@
                 <StackPanel Visibility="{Binding IsMqttTransport, Converter={StaticResource Visible}}">
                     <TextBlock Text="User name" />
                     <TextBox Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
+                    <TextBlock Text="Subscribe topics" />
+                    <TextBox Text="{Binding Subscribe, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
+                    <TextBlock Text="Publish topic" />
+                    <TextBox Text="{Binding Publish, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
+                </StackPanel>
+                <StackPanel Visibility="{Binding IsLoopbackTransport, Converter={StaticResource Visible}}">
+                    <TextBlock Text="{Binding LoopbackInfo}" TextWrapping="Wrap" Margin="0,0,0,8" />
+                    <TextBlock Text="Sample interval (ms)" />
+                    <TextBox Text="{Binding LoopbackSampleIntervalMs, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
                 </StackPanel>
                 <TextBlock Text="Device manifest" />
                 <TextBox Text="{Binding ManifestName, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
@@ -143,6 +164,8 @@
                 <ComboBox ItemsSource="{Binding LineEndingOptions}" SelectedItem="{Binding LineEndingText}" Margin="0,2,0,8" />
                 <TextBlock Text="ASCII max line length" />
                 <TextBox Text="{Binding AsciiMaxLineLength, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
+                <TextBlock Text="Write byte delay (ms)" />
+                <TextBox Text="{Binding WriteByteDelayMs, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
             </StackPanel>
             </ScrollViewer>
         </DockPanel>
