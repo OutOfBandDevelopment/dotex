@@ -53,7 +53,7 @@ The review is done per area in the design that covers it:
 | Images (burst, RAW) | [BurstRanking](../BurstRanking/README.md), [RawDevelopment](../RawDevelopment/README.md) |
 | Caching | `OoBDev.Caching` (providers, factories, managers) against the catalog `ProbeCache` (19 lines: remember a probe answer for a lifetime, with `TimeProvider`). Nothing missing in the framework: the probe cache is one use of a short-lived keyed cache and moves to the catalog's own use of `OoBDev.Caching`; no capability to add |
 | Telemetry | `OoBDev.Telemetry` (config-gated OpenTelemetry, OTLP, correlation and user processors) against catalog `ServiceDefaults` (OpenTelemetry logs, traces, metrics, OTLP, plus Aspire service discovery and `AddStandardResilienceHandler`). Framework covers the telemetry; service discovery and the standard resilience handler (Polly based) are not adopted because the owner avoids Polly (rejected-dependencies memory), so the catalog keeps those two lines or drops them |
-| Rights and command relay | not compared yet: Identity and ApplicationRights against `CommandRelay` (428 lines) and `Access*`; backlog entry |
+| Rights and command relay | ApplicationRights (role to right claims, one checker for every endpoint) is endpoint authorization. The catalog's `Access*` is a different thing: per-record visibility (private, groups, family, lan, public) inherited by folder prefix and by person, which ApplicationRights does not express. `CommandRelay` (428 lines) maps named verbs to a legacy API and goes away with that API. Gap: a data-visibility label model is not in the framework; it is application data in the catalog and is recorded as a backlog candidate, not a framework feature, until a second consumer exists |
 
 ## Migration plan
 
