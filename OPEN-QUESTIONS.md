@@ -38,3 +38,16 @@ Enumerate and Describe node must read replies (the init-data node list, then eac
 **Default:** A once confirmed; nothing built meanwhile (the item is parked).
 
 **Your answer:**
+
+### Q-BASICSTAMP-FORMAT — 2026-11-12 — Basic Stamp tokenizer (scope and source)
+
+The request asks for a Basic Stamp tokenizer and detokenizer but the repo holds no format reference, and Parallax does not publish the BS2 EEPROM token format (it is reverse-engineered in third-party tools such as the open-source `pbasic` and `stampy` projects). Which generation, and where does the format come from?
+
+**Options**
+- A (recommended): BS1 only first, from the published BS1 token tables in the Parallax manual; small, documented, testable with hand-built bytes. BS2 waits for a reference.
+- B: BS2 family from a reference project you point to (add it to `docs/harvest-candidates.md`); larger, format is undocumented and needs real EEPROM dumps to verify.
+- C: drop the item (no consumer, no hardware on the bench).
+
+**Default:** A once confirmed; nothing built meanwhile (the item is parked).
+
+**Your answer:**
