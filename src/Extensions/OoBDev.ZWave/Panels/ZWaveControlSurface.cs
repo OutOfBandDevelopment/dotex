@@ -1,0 +1,78 @@
+using System;
+using System.Globalization;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using OoBDev.UiDefinitions;
+
+namespace OoBDev.ZWave.Panels;
+
+/// <summary>Turns panel commands into Serial API request frames and sends them. Each request that expects a callback gets a fresh callback id.</summary>
+public sealed class ZWaveControlSurface : IControlSurface, ICommandPreview
+{
+    private readonly DeviceSend _send;
+    private int _callbackId;
+
+    /// <summary>Creates the surface over the connection's send function.</summary>
+    public ZWaveControlSurface(DeviceSend send)
+    {
+        ArgumentNullException.ThrowIfNull(send);
+        _send = send;
+    }
+
+    /// <inheritdoc/>
+    public Task InvokeAsync(string commandId, string? value, CancellationToken cancellationToken = default)
+    {
+        var frame = Build(commandId, value, NextCallback());
+        return _send(frame.Raw, cancellationToken);
+    }
+
+    /// <inheritdoc/>
+    public string? PreviewCommand(string commandId, string? value)
+    {
+        ArgumentNullException.ThrowIfNull(commandId);
+        return ZWaveUiDefinition.CommandIds.Contains(commandId)
+            ? CommandPreviewFormat.ToHex(Build(commandId, value, 2).Raw)
+            : null;
+    }
+
+    private byte NextCallback()
+    {
+        // Callback ids 0 and 1 are reserved by the Serial API, so cycle through 2..255.
+        var next = Interlocked.Increment(ref _callbackId);
+        return (byte)(2 + ((next - 1) % 254));
+    }
+
+    private static ZWaveFrame Build(string commandId, string? value, byte callback)
+    {
+        ArgumentNullException.ThrowIfNull(commandId);
+        var parts = (value ?? string.Empty).Split(',', StringSplitOptions.TrimEntries);
+        return commandId switch
+        {
+            "version" => ZWaveRequests.GetVersion(),
+            "memoryId" => ZWaveRequests.MemoryGetId(),
+            "initData" => ZWaveRequests.GetInitData(),
+            "softReset" => ZWaveRequests.SoftReset(),
+            "nodeInfo" => ZWaveRequests.RequestNodeInfo(Node(parts)),
+            "switchOn" => ZWaveRequests.SwitchSet(Node(parts), true, callback),
+            "switchOff" => ZWaveRequests.SwitchSet(Node(parts), false, callback),
+            "switchGet" => ZWaveRequests.SwitchGet(Node(parts), callback),
+            "setLevel" => ZWaveRequests.LevelSet(Node(parts), Level(parts), callback),
+            "addNode" => ZWaveRequests.AddNode(callback),
+            "stopAddNode" => ZWaveRequests.StopAddNode(callback),
+            "removeNode" => ZWaveRequests.RemoveNode(callback),
+            "stopRemoveNode" => ZWaveRequests.StopRemoveNode(callback),
+            _ => throw new ArgumentException($"Unknown Z-Wave command '{commandId}'.", nameof(commandId)),
+        };
+    }
+
+    private static byte Node(string[] parts) =>
+        parts.Length > 0 && byte.TryParse(parts[0], NumberStyles.Integer, CultureInfo.InvariantCulture, out var node) && node is >= 1 and <= 232
+            ? node
+            : throw new ArgumentException("A node id from 1 to 232 is required.", nameof(parts));
+
+    private static byte Level(string[] parts) =>
+        parts.Length > 1 && byte.TryParse(parts[1], NumberStyles.Integer, CultureInfo.InvariantCulture, out var level) && level <= 99
+            ? level
+            : throw new ArgumentException("A level from 0 to 99 is required.", nameof(parts));
+}

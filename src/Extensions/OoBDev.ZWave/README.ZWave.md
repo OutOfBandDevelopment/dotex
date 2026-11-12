@@ -26,7 +26,7 @@ The consumer must answer every received data frame, or the stick retransmits and
 
 ## Not yet ported
 
-The control surface (comes with the DevTerm merge, see the DevTerm parity status). `ZWaveStick` in the tests still writes the answers itself; `ZWaveSession` is the library way. Network-management commands (include, exclude, reset) are not exercised on hardware.
+The richer panel flows of the old plugin (Refresh, Enumerate, Describe node, configuration get/set, learn mode, a panel-lifetime ACK responder) are in the backlog; `Panels/ZWavePanel` covers controller queries, switching and network management. `ZWaveStick` in the tests still writes the answers itself; `ZWaveSession` is the library way. Network-management commands (include, exclude, reset) are not exercised on hardware.
 
 ## Verified
 
