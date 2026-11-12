@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
@@ -10,31 +10,74 @@ namespace OoBDev.ZWave.Panels;
 /// <summary>Turns panel commands into Serial API request frames and sends them. Each request that expects a callback gets a fresh callback id.</summary>
 public sealed class ZWaveControlSurface : IControlSurface, ICommandPreview
 {
+    private static readonly TimeSpan _defaultRefreshGap = TimeSpan.FromMilliseconds(150);
+
+    private const string _refreshId = "refresh";
+
     private readonly DeviceSend _send;
+    private readonly TimeProvider _time;
+    private readonly TimeSpan _refreshGap;
     private int _callbackId;
 
     /// <summary>Creates the surface over the connection's send function.</summary>
-    public ZWaveControlSurface(DeviceSend send)
+    /// <param name="send">Sends bytes to the stick.</param>
+    /// <param name="time">The clock for the pause between the Refresh requests, or <see langword="null"/> for the system clock.</param>
+    /// <param name="refreshGap">The pause between the Refresh requests, or <see langword="null"/> for 150 ms, which the stick needs to answer each one.</param>
+    public ZWaveControlSurface(DeviceSend send, TimeProvider? time = null, TimeSpan? refreshGap = null)
     {
         ArgumentNullException.ThrowIfNull(send);
         _send = send;
+        _time = time ?? TimeProvider.System;
+        _refreshGap = refreshGap ?? _defaultRefreshGap;
     }
 
     /// <inheritdoc/>
-    public Task InvokeAsync(string commandId, string? value, CancellationToken cancellationToken = default)
+    public async Task InvokeAsync(string commandId, string? value, CancellationToken cancellationToken = default)
     {
+        ArgumentNullException.ThrowIfNull(commandId);
+        if (commandId == _refreshId)
+        {
+            var frames = RefreshFrames();
+            for (var i = 0; i < frames.Length; i++)
+            {
+                if (i > 0)
+                {
+                    await Task.Delay(_refreshGap, _time, cancellationToken).ConfigureAwait(false);
+                }
+
+                await _send(frames[i].Raw, cancellationToken).ConfigureAwait(false);
+            }
+
+            return;
+        }
+
         var frame = Build(commandId, value, NextCallback());
-        return _send(frame.Raw, cancellationToken);
+        await _send(frame.Raw, cancellationToken).ConfigureAwait(false);
     }
 
     /// <inheritdoc/>
     public string? PreviewCommand(string commandId, string? value)
     {
         ArgumentNullException.ThrowIfNull(commandId);
+        if (commandId == _refreshId)
+        {
+            return string.Join(" | ", RefreshFrames().Select(f => CommandPreviewFormat.ToHex(f.Raw)));
+        }
+
         return ZWaveUiDefinition.CommandIds.Contains(commandId)
             ? CommandPreviewFormat.ToHex(Build(commandId, value, 2).Raw)
             : null;
     }
+
+    private static ZWaveFrame[] RefreshFrames() =>
+    [
+        ZWaveRequests.GetVersion(),
+        ZWaveRequests.MemoryGetId(),
+        ZWaveRequests.GetCapabilities(),
+        ZWaveRequests.GetControllerCapabilities(),
+        ZWaveRequests.GetInitData(),
+        ZWaveRequests.GetSucNodeId(),
+    ];
 
     private byte NextCallback()
     {

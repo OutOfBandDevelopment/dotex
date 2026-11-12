@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using OoBDev.UiDefinitions;
 
 namespace OoBDev.ZWave.Panels;
@@ -9,7 +9,7 @@ public static class ZWaveUiDefinition
     /// <summary>The command ids the control surface accepts.</summary>
     public static IReadOnlyList<string> CommandIds { get; } =
     [
-        "version", "memoryId", "initData", "softReset", "nodeInfo", "switchOn", "switchOff", "switchGet", "setLevel",
+        "refresh", "version", "memoryId", "initData", "softReset", "nodeInfo", "switchOn", "switchOff", "switchGet", "setLevel",
         "addNode", "stopAddNode", "removeNode", "stopRemoveNode",
         "resetNetwork", "learnOn", "learnOff", "heal", "isFailed", "removeFailed", "configGet", "configSet", "sendRaw",
     ];
@@ -26,6 +26,7 @@ public static class ZWaveUiDefinition
                 Label = "Controller",
                 Controls =
                 [
+                    new ButtonControl { Id = "refresh", Label = "Refresh" },
                     new ButtonControl { Id = "version", Label = "Version" },
                     new ButtonControl { Id = "memoryId", Label = "Home and node id" },
                     new ButtonControl { Id = "initData", Label = "Node list" },
@@ -74,6 +75,18 @@ public static class ZWaveUiDefinition
                 Controls =
                 [
                     new IndicatorControl { Id = "last", Label = "Last frame", DefaultValue = "-" },
+                    new IndicatorControl { Id = "library", Label = "Library", DefaultValue = "-" },
+                    new IndicatorControl { Id = "serialApi", Label = "Serial API", DefaultValue = "-" },
+                    new IndicatorControl { Id = "manufacturer", Label = "Manufacturer", DefaultValue = "-" },
+                    new IndicatorControl { Id = "product", Label = "Product", DefaultValue = "-" },
+                    new IndicatorControl { Id = "functions", Label = "Functions", DefaultValue = "-" },
+                    new IndicatorControl { Id = "homeId", Label = "Home ID", DefaultValue = "-" },
+                    new IndicatorControl { Id = "controllerNode", Label = "Controller node", DefaultValue = "-" },
+                    new IndicatorControl { Id = "role", Label = "Role", DefaultValue = "-" },
+                    new IndicatorControl { Id = "chip", Label = "Chip", DefaultValue = "-" },
+                    new IndicatorControl { Id = "sucNode", Label = "SUC node", DefaultValue = "-" },
+                    new IndicatorControl { Id = "nodeCount", Label = "Node count", DefaultValue = "-" },
+                    new IndicatorControl { Id = "nodes", Label = "Nodes", DefaultValue = "-" },
                 ],
             },
         ],

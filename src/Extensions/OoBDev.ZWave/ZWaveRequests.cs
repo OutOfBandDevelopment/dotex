@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace OoBDev.ZWave;
 
@@ -23,6 +23,18 @@ public static class ZWaveRequests
     /// <summary>The GetVersion request.</summary>
     /// <returns>The request frame.</returns>
     public static ZWaveFrame GetVersion() => For(ZWaveFunctions.GetVersion);
+
+    /// <summary>The GetCapabilities request (Serial API version, manufacturer and the supported functions).</summary>
+    /// <returns>The request frame.</returns>
+    public static ZWaveFrame GetCapabilities() => For(ZWaveFunctions.GetCapabilities);
+
+    /// <summary>The GetControllerCapabilities request (primary or secondary, SUC and similar flags).</summary>
+    /// <returns>The request frame.</returns>
+    public static ZWaveFrame GetControllerCapabilities() => For(ZWaveFunctions.GetControllerCapabilities);
+
+    /// <summary>The GetSucNodeId request.</summary>
+    /// <returns>The request frame.</returns>
+    public static ZWaveFrame GetSucNodeId() => For(ZWaveFunctions.GetSucNodeId);
 
     /// <summary>The MemoryGetId request (home id and own node id).</summary>
     /// <returns>The request frame.</returns>

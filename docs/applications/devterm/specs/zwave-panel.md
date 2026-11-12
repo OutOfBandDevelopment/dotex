@@ -1,10 +1,10 @@
-# Z-Wave controller panel
+﻿# Z-Wave controller panel
 
 **Purpose.** The **Device > Z-Wave controller...** panel (TUI `ControlPanelMode`, WPF `ControlPanelWindow`, web `Web:Panel=zwave`) shows what a Z-Wave USB controller (such as the Aeotec Z-Stick S2) says about itself and its network, enumerates and queries nodes, switches a node, and manages the network (add, remove, reset, learn). Network-changing buttons change real state; the erasing ones ask first. It is contributed by the `zwave` plugin (`src/DevTerm.Devices.ZWave`) and is available on the `serial` transport only. The same plugin's `zwave` presenter decodes the Serial API frames in the terminal output.
 
 The panel is a generic render of `ZWaveUiDefinition`, driven by `ZWaveControlSurface` (an `IControlSurface` and `ICommandPreview`) on the live session.
 
-> **Implementation status (2026-11-12).** `OoBDev.ZWave.Panels` ships: Controller (Version, Home and node id, Node list, Soft reset), Node (Node and Level fields; Node info, On, Off, Read switch, Set level, Configuration get and set, a raw command class payload sent to the node) and Network (Include, Exclude and their stop buttons, Join another network and Stop learn mode, Heal node, Is node failed, Remove failed node, Reset network) buttons, with a confirmation on the erasing ones, plus a Last frame indicator. The Refresh sequence with the identity indicators, Enumerate, Describe node and the panel-lifetime ACK responder described below are not built yet (see `BACKLOG.md`).
+> **Implementation status (2026-11-12).** `OoBDev.ZWave.Panels` ships: Controller (Refresh, Version, Home and node id, Node list, Soft reset), Node (Node and Level fields; Node info, On, Off, Read switch, Set level, Configuration get and set, a raw command class payload sent to the node) and Network (Include, Exclude and their stop buttons, Join another network and Stop learn mode, Heal node, Is node failed, Remove failed node, Reset network) buttons, with a confirmation on the erasing ones, plus the Status indicators: Last frame and the identity indicators filled by Refresh (Library, Serial API, Manufacturer, Product, Functions, Home ID, Controller node, Role, Chip, SUC node, Node count, Nodes). Refresh sends GetVersion, MemoryGetId, GetCapabilities, GetControllerCapabilities, GetInitData and GetSucNodeId 150 ms apart (the plain requests, without the ACK prefix the old plugin added); its command preview lists all six. Enumerate, Describe node and the panel-lifetime ACK responder described below are not built yet (see `BACKLOG.md`).
 
 ## Fields
 

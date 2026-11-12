@@ -1,7 +1,8 @@
-using System;
+﻿using System;
 using System.Buffers;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.UiDefinitions;
@@ -227,6 +228,82 @@ public sealed class ZWavePanelTests
         Assert.HasCount(1, second);
         Assert.HasCount(2, changes);
         Assert.AreEqual(second[0], changes[1]["last"]);
+    }
+
+    [TestMethod]
+    public async Task InvokeAsync_Refresh_SendsTheSixIdentityRequestsInOrder()
+    {
+        // Stage
+        var functions = new List<byte>();
+        var surface = new ZWaveControlSurface((data, _) =>
+        {
+            functions.Add(new ZWaveMessageDecoder().Decode(new ReadOnlySequence<byte>(data.ToArray())).Function);
+            return Task.CompletedTask;
+        }, refreshGap: TimeSpan.Zero);
+
+        // Test
+        await surface.InvokeAsync("refresh", null, TestContext.CancellationToken);
+
+        // Assert
+        CollectionAssert.AreEqual(
+            new[] { ZWaveFunctions.GetVersion, ZWaveFunctions.MemoryGetId, ZWaveFunctions.GetCapabilities, ZWaveFunctions.GetControllerCapabilities, ZWaveFunctions.GetInitData, ZWaveFunctions.GetSucNodeId },
+            functions);
+    }
+
+    [TestMethod]
+    public async Task InvokeAsync_RefreshCancelledBetweenRequests_StopsSending()
+    {
+        // Stage
+        using var cts = CancellationTokenSource.CreateLinkedTokenSource(TestContext.CancellationToken);
+        var sent = 0;
+        var surface = new ZWaveControlSurface((_, _) =>
+        {
+            sent++;
+            cts.Cancel();
+            return Task.CompletedTask;
+        }, refreshGap: TimeSpan.FromMinutes(1));
+
+        // Test / Assert
+        await Assert.ThrowsAsync<OperationCanceledException>(() => surface.InvokeAsync("refresh", null, cts.Token));
+        Assert.AreEqual(1, sent);
+    }
+
+    [TestMethod]
+    public void PreviewCommand_Refresh_ListsEveryRequest()
+    {
+        var surface = new ZWaveControlSurface((_, _) => Task.CompletedTask);
+
+        var preview = surface.PreviewCommand("refresh", null);
+
+        Assert.AreEqual(6, preview!.Split(" | ").Length);
+    }
+
+    [TestMethod]
+    public void Decode_MemoryIdReply_FillsTheHomeAndNodeIndicators()
+    {
+        // Stage
+        var decoder = new ZWaveDecoder();
+        var changes = new List<IReadOnlyDictionary<string, string>>();
+        decoder.ValuesChanged += (_, values) => changes.Add(values);
+        var reply = ZWaveFrame.Create(ZWaveFrame.Response, ZWaveFunctions.MemoryGetId, [0xE5, 0x12, 0x34, 0x56, 0x01]);
+
+        // Test
+        decoder.Decode(new ReadOnlySequence<byte>(reply.Raw));
+
+        // Assert
+        Assert.AreEqual("E5123456", changes[0]["homeId"]);
+        Assert.AreEqual("1", changes[0]["controllerNode"]);
+    }
+
+    [TestMethod]
+    public void BuildDefinition_IdentityIndicators_MatchTheValuesTheInterpreterEmits()
+    {
+        var indicators = new ZWavePanel().BuildDefinition().Sections.SelectMany(s => s.Controls).OfType<IndicatorControl>().Select(i => i.Id).ToList();
+
+        foreach (var id in new[] { "library", "serialApi", "manufacturer", "product", "functions", "homeId", "controllerNode", "role", "chip", "sucNode", "nodeCount", "nodes" })
+        {
+            CollectionAssert.Contains(indicators, id);
+        }
     }
 
     [TestMethod]

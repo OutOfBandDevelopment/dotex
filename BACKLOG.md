@@ -1,4 +1,4 @@
-# BACKLOG - OoBDev (dotex) Framework
+﻿# BACKLOG - OoBDev (dotex) Framework
 
 > **Full work list.** Every open, valid item lives here; [TODO.md](TODO.md) holds only what is being worked on now. Finished work lives in the change history: [docs/changes/](docs/changes/README.md).
 > **Owner questions:** [OPEN-QUESTIONS.md](./OPEN-QUESTIONS.md) · **New to this project?** Read [CLAUDE.md](./CLAUDE.md) first.
@@ -20,7 +20,7 @@ Owner: all protocols and features of dev-term must exist here. Done means what d
 
 - [ ] Device decoding leftovers: the DE-5000 Hardware test waits on the owner fitting the BLE radio in the meter (not fitted 2026-11-05; the BLE transport itself is verified through the HC-08); phase 0 is done ([device merge list](docs/migration/README.md#devices); M3 needs a Radex capture); the physical passes for K8055, Busylight, Radex One, Zoom H4n and NMEA ran on 2026-11-04 and the SCPI instruments on 2026-11-05 (owner confirmed; [change log](docs/changes/2026-11-04.md)). Plan: [migration-plan.md](docs/design/DeviceDecoding/migration-plan.md).
   - Favero and Saint George score machines have no hardware pass (the owner has no machine, 2026-11-04); their decoders rest on unit tests, and Saint George priority is read from the `P` byte so it is never set (ported as-is).
-- [ ] Z-Wave panel, remaining slices (built: controller queries, switch, level, include, exclude, soft reset): Refresh sequence with the identity indicators, Enumerate and Describe node, and a panel-lifetime `ZWaveAckResponder` (configuration, raw payload, learn mode and the heal and failed-node commands are built, 2026-11-12, with no hardware pass) (spec `docs/applications/devterm/specs/zwave-panel.md`); include, exclude and reset have no hardware pass.
+- [ ] Z-Wave panel, remaining slices (built: controller queries, Refresh with the identity indicators, switch, level, include, exclude, soft reset): Enumerate and Describe node, and a panel-lifetime `ZWaveAckResponder` (configuration, raw payload, learn mode and the heal and failed-node commands are built, 2026-11-12, with no hardware pass) (spec `docs/applications/devterm/specs/zwave-panel.md`); include, exclude and reset have no hardware pass.
 
 ## 3. Test infrastructure
 
