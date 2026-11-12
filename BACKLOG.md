@@ -77,7 +77,7 @@ Scope rule: every BinaryDataDecoders feature is migrated; phases are priority or
   - Epic 10 status (2026-11-05): `OoBDev.Handlebars` already has the provider, ten helpers and a compilation cache; open from the design: the Epic 11 container adapter and the database template source ([readme](src/ExternalServices/Handlebars/OoBDev.Handlebars/README.Handlebars.md)).
 - [ ] Desired-state database tooling phase 0: bake-off of sqldef, pgschema and Atlas per `docs/design/DesiredStateDatabase/`; do it after the other backlog items (owner, 2026-10-29). Test plan written 2026-11-09 ([bake-off-test-plan.md](docs/design/DesiredStateDatabase/bake-off-test-plan.md)); run it after the owner reviews it.
 
-- [ ] DOS 3.3 reader rough edges found with the writer (2026-11-12): `GetDataFileEntry` returns whole sectors and ignores the real file length (binary and text files carry it inside the data). ProDOS-order (`.po`) images are not detected.
+- [ ] DOS 3.3 reader rough edges found with the writer (2026-11-12): ProDOS-order (`.po`) images are not detected.
 
 ## 7. Documentation review (owner, 2026-10-28)
 
