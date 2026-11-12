@@ -1,6 +1,6 @@
-# Burst grouping and best-shot ranking
+﻿# Burst grouping and best-shot ranking
 
-Status: **design written 2026-11-12; placement waits for the owner (Q-IMAGEANALYSIS-HOME in `OPEN-QUESTIONS.md`, shared with [ImageAnalysis](../ImageAnalysis/README.md)), nothing built.** Request: [burst and near-duplicate ranking](../../features/request/2026-11-11-burst-and-near-duplicate-ranking.md).
+Status: **design written 2026-11-12; placement confirmed by the owner 2026-11-12 (shared with [ImageAnalysis](../ImageAnalysis/README.md)), nothing built.** Request: [burst and near-duplicate ranking](../../features/request/2026-11-11-burst-and-near-duplicate-ranking.md).
 
 ## Contents
 

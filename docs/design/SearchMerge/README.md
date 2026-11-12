@@ -1,6 +1,6 @@
 ﻿# Search merge: one request model over keyword, vector, hybrid and SQL kinds
 
-Status: **design written 2026-11-12; nothing built.** It builds on the answers to Q-QUERYENGINE-HOME and Q-PGVECTOR-HOME. Requests: [search merge and hybrid](../../features/request/2026-11-11-search-merge-kinds-hybrid-and-vectors.md), [superset review](../../features/request/2026-11-11-superset-review-of-overlapping-features.md). Related: [HybridSearch](../HybridSearch/README.md), [MetadataQuery](../MetadataQuery/README.md), [EmbeddingClientAndPgVector](../EmbeddingClientAndPgVector/README.md).
+Status: **design written 2026-11-12; nothing built.** It builds on the confirmed placements of MetadataQuery and EmbeddingClientAndPgVector. Requests: [search merge and hybrid](../../features/request/2026-11-11-search-merge-kinds-hybrid-and-vectors.md), [superset review](../../features/request/2026-11-11-superset-review-of-overlapping-features.md). Related: [HybridSearch](../HybridSearch/README.md), [MetadataQuery](../MetadataQuery/README.md), [EmbeddingClientAndPgVector](../EmbeddingClientAndPgVector/README.md).
 
 ## Contents
 
@@ -62,7 +62,7 @@ The review is done per area in the design that covers it:
 | Project | Current location | Target location | Namespace | Package or unit |
 |---------|------------------|-----------------|-----------|-----------------|
 | Request model, parser, fusion strategies | `Storage.Query/SearchParser.cs` and `OoBDev.Search` | `src/Framework/OoBDev.Search` and `OoBDev.Search.Abstractions` (extended; breaking changes allowed, unreleased) | `OoBDev.Search` | existing packages |
-| SQL-kind provider | none | with the MetadataQuery adapter, after Q-QUERYENGINE-HOME | `OoBDev.Query.Postgres` | adapter |
+| SQL-kind provider | none | with the MetadataQuery adapter, after the MetadataQuery adapter exists | `OoBDev.Query.Postgres` | adapter |
 
 ## Testing strategy
 

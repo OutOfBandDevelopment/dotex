@@ -1,6 +1,6 @@
-# Database work queue for restartable stages
+﻿# Database work queue for restartable stages
 
-Status: **design written 2026-11-12; placement waits for the owner (Q-WORKQUEUE-HOME in `OPEN-QUESTIONS.md`), nothing built.** Request: [database stage work queue](../../features/request/2026-11-11-database-stage-work-queue.md). Related: [postgres support](../../features/request/2026-11-10-postgres-support.md).
+Status: **design written 2026-11-12; placement confirmed by the owner 2026-11-12 (option A: Framework project plus a PostgreSQL adapter), nothing built.** Request: [database stage work queue](../../features/request/2026-11-11-database-stage-work-queue.md). Related: [postgres support](../../features/request/2026-11-10-postgres-support.md).
 
 ## Contents
 

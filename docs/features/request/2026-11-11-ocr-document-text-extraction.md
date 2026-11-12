@@ -47,6 +47,6 @@ Inputs are private files (photos, scans), so nothing is logged beyond identifier
 
 ## Triage notes
 
-2026-11-12: superset comparison done and the design written: [DocumentToMarkdown](../../design/DocumentToMarkdown/README.md); placement and the PDF text library are Q-DOCMARKDOWN-HOME.
+2026-11-12: superset comparison done and the design written: [DocumentToMarkdown](../../design/DocumentToMarkdown/README.md); placement confirmed 2026-11-12: split projects, PdfPig in a separate adapter approved later.
 
 2026-11-11: triaged. Accepted as a backlog idea from the storage and photo-library review; the code named above was not read in full, so the first step is the superset comparison before any design. Face and pet matching also needs an owner decision on personal data. Backlog: BACKLOG.md, Consolidation requests.

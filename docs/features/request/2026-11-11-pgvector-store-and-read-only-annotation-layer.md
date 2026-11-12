@@ -58,6 +58,6 @@ Vectors of personal photos and faces are personal data; the store provider shoul
 
 ## Triage notes
 
-2026-11-12: designed in [EmbeddingClientAndPgVector](../../design/EmbeddingClientAndPgVector/README.md); placement and the Npgsql dependency are Q-PGVECTOR-HOME.
+2026-11-12: designed in [EmbeddingClientAndPgVector](../../design/EmbeddingClientAndPgVector/README.md); placement and dependencies confirmed 2026-11-12.
 
 2026-11-11: triaged. Accepted as a backlog idea from the storage and photo-library review; the code named above was not read in full, so the first step is the superset comparison before any design. Face and pet matching also needs an owner decision on personal data. Backlog: BACKLOG.md, Consolidation requests.

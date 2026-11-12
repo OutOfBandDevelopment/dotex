@@ -1,6 +1,6 @@
-# Image analysis (histograms, colour facets, exposure)
+﻿# Image analysis (histograms, colour facets, exposure)
 
-Status: **design written 2026-11-12; placement waits for the owner (Q-IMAGEANALYSIS-HOME in `OPEN-QUESTIONS.md`), nothing built.** Request: [image colour analysis and histograms](../../features/request/2026-11-11-image-color-analysis-and-histograms.md).
+Status: **design written 2026-11-12; placement confirmed by the owner 2026-11-12 (new Framework project, option A), nothing built.** Request: [image colour analysis and histograms](../../features/request/2026-11-11-image-color-analysis-and-histograms.md).
 
 ## Contents
 

@@ -47,6 +47,6 @@ Inputs are private files (photos, scans), so nothing is logged beyond identifier
 
 ## Triage notes
 
-2026-11-12: parked on Q-FACEMATCH-SCOPE (biometric data and model licence are owner decisions); no design until it is answered.
+2026-11-12: owner decided 2026-11-12 that the framework takes this on; designed in [FaceAndPetMatching](../../design/FaceAndPetMatching/README.md).
 
 2026-11-11: triaged. Accepted as a backlog idea from the storage and photo-library review; the code named above was not read in full, so the first step is the superset comparison before any design. Face and pet matching also needs an owner decision on personal data. Backlog: BACKLOG.md, Consolidation requests.

@@ -1,6 +1,6 @@
-# Embedding HTTP client, pgvector store and annotation layer
+﻿# Embedding HTTP client, pgvector store and annotation layer
 
-Status: **design written 2026-11-12; placement waits for the owner (Q-PGVECTOR-HOME in `OPEN-QUESTIONS.md`), nothing built.** Requests: [embedding container and client](../../features/request/2026-11-11-embedding-container-and-client.md), [pgvector store and read-only annotation layer](../../features/request/2026-11-11-pgvector-store-and-read-only-annotation-layer.md). Related: [ImageEmbeddings](../ImageEmbeddings/README.md), [VectorSearch](../VectorSearch/README.md), [WorkQueue](../WorkQueue/README.md).
+Status: **design written 2026-11-12; placement confirmed by the owner 2026-11-12 (option A: two ExternalServices projects; Npgsql and Pgvector allowed in the adapter only; pgvector service added to the test stack), nothing built.** Requests: [embedding container and client](../../features/request/2026-11-11-embedding-container-and-client.md), [pgvector store and read-only annotation layer](../../features/request/2026-11-11-pgvector-store-and-read-only-annotation-layer.md). Related: [ImageEmbeddings](../ImageEmbeddings/README.md), [VectorSearch](../VectorSearch/README.md), [WorkQueue](../WorkQueue/README.md).
 
 ## Contents
 

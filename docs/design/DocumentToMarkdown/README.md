@@ -1,6 +1,6 @@
 # Document to Markdown and OCR
 
-Status: **design written 2026-11-12; placement and the PDF text library wait for the owner (Q-DOCMARKDOWN-HOME in `OPEN-QUESTIONS.md`), nothing built.** Request: [OCR and document text extraction](../../features/request/2026-11-11-ocr-document-text-extraction.md). Related existing designs: [OcrService](../DocumentServices/OcrService/requirements.md) (images, context based, Tesseract and cloud providers) and [ExtractionService](../DocumentServices/ExtractionService/requirements.md) (text and metadata).
+Status: **design written 2026-11-12; placement confirmed by the owner 2026-11-12 (Framework project without a PDF package, a Docling adapter, PdfPig only in a separate adapter approved later), nothing built.** Request: [OCR and document text extraction](../../features/request/2026-11-11-ocr-document-text-extraction.md). Related existing designs: [OcrService](../DocumentServices/OcrService/requirements.md) (images, context based, Tesseract and cloud providers) and [ExtractionService](../DocumentServices/ExtractionService/requirements.md) (text and metadata).
 
 ## Contents
 

@@ -1,6 +1,6 @@
-# Media metadata (EXIF) reader
+﻿# Media metadata (EXIF) reader
 
-Status: **design written 2026-11-12; placement waits for the owner (Q-MEDIAMETADATA-HOME in `OPEN-QUESTIONS.md`), nothing built.** Request: [EXIF and media metadata extraction](../../features/request/2026-11-11-exif-metadata-extraction.md).
+Status: **design written 2026-11-12; placement confirmed by the owner 2026-11-12 (new Framework project, option A), nothing built.** Request: [EXIF and media metadata extraction](../../features/request/2026-11-11-exif-metadata-extraction.md).
 
 ## Contents
 

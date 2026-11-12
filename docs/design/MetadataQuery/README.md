@@ -1,6 +1,6 @@
-# Metadata-driven query engine
+﻿# Metadata-driven query engine
 
-Status: **design written 2026-11-12; placement waits for the owner (Q-QUERYENGINE-HOME in `OPEN-QUESTIONS.md`), nothing built.** Request: [metadata-driven query engine](../../features/request/2026-11-11-metadata-driven-query-engine.md). Transport options: [OData over QUERY](../ODataQuery/README.md) and [HTTP QUERY verb](../HttpQueryVerb/README.md).
+Status: **design written 2026-11-12; placement confirmed by the owner 2026-11-12 (option A: database-free Framework project plus a PostgreSQL adapter), nothing built.** Request: [metadata-driven query engine](../../features/request/2026-11-11-metadata-driven-query-engine.md). Transport options: [OData over QUERY](../ODataQuery/README.md) and [HTTP QUERY verb](../HttpQueryVerb/README.md).
 
 ## Contents
 

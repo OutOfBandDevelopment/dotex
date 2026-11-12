@@ -49,7 +49,7 @@ Native decoders parse untrusted binary formats, so they should run in a worker w
 
 ## Triage notes
 
-2026-11-12: design written: [RawDevelopment](../../design/RawDevelopment/README.md); the native provider is Q-RAW-PROVIDER.
+2026-11-12: design written: [RawDevelopment](../../design/RawDevelopment/README.md); provider is ImageMagick (owner, 2026-11-12).
 
 Origin: notes repository `projects/applications/second-shooter-photo-library.md`. Maintainers: accept, schedule or decline.
 

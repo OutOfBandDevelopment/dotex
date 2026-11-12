@@ -1,6 +1,6 @@
 # RAW camera file development
 
-Status: **design written 2026-11-12; the native provider is a third-party choice that waits for the owner (Q-RAW-PROVIDER in `OPEN-QUESTIONS.md`), nothing built.** Request: [RAW camera file development](../../features/request/2026-11-11-raw-camera-file-development.md).
+Status: **design written 2026-11-12; provider confirmed by the owner 2026-11-12: ImageMagick (Magick.NET) in an adapter project, managed detection and embedded preview stay in Framework, nothing built.** Request: [RAW camera file development](../../features/request/2026-11-11-raw-camera-file-development.md).
 
 ## Contents
 
@@ -38,7 +38,7 @@ Embeddings, histograms and thumbnails need a decoded RGB image; RAW files (Nikon
 
 | Project | Target location | Namespace | Package or unit |
 |---------|-----------------|-----------|-----------------|
-| Interface, options, detection, preview developer | the project chosen in Q-MEDIAMETADATA-HOME (TIFF reader shared) | `OoBDev.Media.Metadata.Raw` | with that project |
+| Interface, options, detection, preview developer | `OoBDev.Media.Metadata` (TIFF reader shared) | `OoBDev.Media.Metadata.Raw` | with that project |
 | Native LibRaw adapter | new `src/ExternalServices/OoBDev.Raw.LibRaw` (after approval) | `OoBDev.Raw.LibRaw` | separate package, native assets |
 
 **Table 3 — References that change**
