@@ -1,6 +1,6 @@
 # CloudEvents HTTP edge: migration plan
 
-**Status:** proposed, waiting on Q-CLOUDEVENTS-EDGE in `OPEN-QUESTIONS.md` (rule `layering-and-migration-plans`). Nothing built.
+**Status:** placement confirmed by the owner 2026-11-12 (`OoBDev.EventSourcing.Web` in `src/Extensions`). Nothing built.
 **Last Updated:** 2026-11-12
 
 ## Contents

@@ -34,7 +34,7 @@ Inputs are untrusted: bound lengths.
 
 ## Open questions
 
-Which Basic Stamp generations (BS1, BS2 family)?
+Answered 2026-11-12: BS2 family, format taken from a third-party reference project (`pbasic` or `stampy`), chosen after a licence check.
 
 ## Triage notes
 
