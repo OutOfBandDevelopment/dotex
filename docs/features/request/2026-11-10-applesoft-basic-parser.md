@@ -1,6 +1,6 @@
 # Feature request: Applesoft BASIC language parser and syntax tree
 
-- **Status:** triaged
+- **Status:** done (2026-11-12, see docs/changes/2026-11-12.md#applesoft-basic-parser-and-tokenizer)
 - **Requested by:** owner (open gap found reviewing the migration, 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** `OoBDev.System/Retro/Apple2/ApplesoftBASIC`
