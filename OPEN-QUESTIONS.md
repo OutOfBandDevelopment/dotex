@@ -1,4 +1,4 @@
-# Open questions
+﻿# Open questions
 
 Questions Claude has for the owner. Pick an option (or write your own) under **Your answer**; answering in chat counts the same. Claude keeps working on the **Default** until you answer. Answered questions are removed from this file once the answer is recorded in the feature docs, [BACKLOG.md](BACKLOG.md), [TODO.md](TODO.md) or the rules; history is in `git log`. An answer that raises a new question gets a new entry here.
 
@@ -61,6 +61,19 @@ The request asks for a Basic Stamp tokenizer and detokenizer but the repo holds 
 - A (recommended): a `Panels` folder in `OoBDev.Midi` with a reference to `OoBDev.System.Abstractions`, like `OoBDev.ZWave`; one project, same pattern as the other panels; the pure parser now carries a UiDefinitions reference.
 - B: a separate `OoBDev.Midi.Panels` project; keeps `OoBDev.Midi` reference-free, one more project and package.
 - C: no MIDI panel until there is a MIDI device on the bench (the request lists no consumer).
+
+**Default:** A once confirmed; nothing built meanwhile (the item is parked).
+
+**Your answer:**
+
+### Q-MEDIAMETADATA-HOME — 2026-11-12 — EXIF reader (layering)
+
+The storage catalog has a small first-party EXIF reader and tag dump (about 640 lines, BCL only) that the request wants in the framework ([design](docs/design/MediaMetadata/README.md), [request](docs/features/request/2026-11-11-exif-metadata-extraction.md)). No third-party library is needed. Where does it live?
+
+**Options**
+- A (recommended): a new Framework project `OoBDev.Media.Metadata` (BCL only) with its own tests project; generic name, usable by any host; matches the rule "reusable means Framework" and how `OoBDev.Documents.Guides` was placed.
+- B: inside `OoBDev.Extensions.Drawing` (Extensions layer) beside `JpegSegmentReader`; no new project, but that project is Windows-drawing flavoured and a catalog worker would reference it for byte parsing.
+- C: leave it in the catalog application (no framework version).
 
 **Default:** A once confirmed; nothing built meanwhile (the item is parked).
 
