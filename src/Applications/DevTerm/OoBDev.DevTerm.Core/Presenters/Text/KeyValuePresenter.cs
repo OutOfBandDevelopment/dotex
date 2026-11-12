@@ -11,12 +11,21 @@ namespace OoBDev.DevTerm.Presenters.Text;
 /// without <c>=</c> after a field is that field's unit), raises <see cref="MessageDecoded"/> and renders one <c>name = value unit</c> row
 /// per field. Lines with no <c>name=value</c> token are ignored. Try it against the loopback device's <c>STATUS?</c>.
 /// </summary>
-public sealed class KeyValuePresenter : IPresenter, IStructuredMessageSource
+public sealed class KeyValuePresenter : IPresenter, IStructuredMessageSource, ISnapshotPresenter
 {
     private const int _maxLine = 4096;
     private readonly StringBuilder _line = new();
 
     public string Name => "keyvalue";
+
+    /// <inheritdoc />
+    public object? Snapshot() => _line.ToString();
+
+    /// <inheritdoc />
+    public void Restore(object? snapshot)
+    {
+        _line.Clear().Append(snapshot as string ?? throw new ArgumentException("Not a KeyValuePresenter snapshot.", nameof(snapshot)));
+    }
 
     public event EventHandler<StructuredMessage>? MessageDecoded;
 

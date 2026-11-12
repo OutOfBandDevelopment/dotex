@@ -1,6 +1,6 @@
 # Feature request: DevTerm session playback checkpoints and note revisions
 
-- **Status:** triaged
+- **Status:** done (checkpoints built 2026-11-12, see docs/changes/2026-11-12.md)
 - **Requested by:** owner (retire dev-term, 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** `src/Applications/DevTerm` (`Logging`, presenters)

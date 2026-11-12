@@ -240,6 +240,7 @@ public static class SessionLogFormat
         SessionLogRecordKind.Rx => "rx",
         SessionLogRecordKind.Instrument => "instrument",
         SessionLogRecordKind.Note => "note",
+        SessionLogRecordKind.Checkpoint => "checkpoint",
         _ => throw new ArgumentOutOfRangeException(nameof(kind), kind, "An unknown record keeps its own raw type."),
     };
 
@@ -253,6 +254,7 @@ public static class SessionLogFormat
         "rx" => SessionLogRecordKind.Rx,
         "instrument" => SessionLogRecordKind.Instrument,
         "note" => SessionLogRecordKind.Note,
+        "checkpoint" => SessionLogRecordKind.Checkpoint,
         _ => SessionLogRecordKind.Unknown,
     };
 

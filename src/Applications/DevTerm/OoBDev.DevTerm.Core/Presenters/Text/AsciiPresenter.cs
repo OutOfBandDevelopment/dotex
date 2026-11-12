@@ -18,7 +18,7 @@ namespace OoBDev.DevTerm.Presenters.Text;
 /// One instance is meant to back one session's pipeline at a time; sharing an instance across
 /// concurrent sessions would interleave their partial lines.
 /// </remarks>
-public sealed class AsciiPresenter : IPresenter, IPresenterInput, IResettablePresenter
+public sealed class AsciiPresenter : IPresenter, IPresenterInput, IResettablePresenter, ISnapshotPresenter
 {
     public const int DefaultMaxLineLength = 4096;
 
@@ -121,6 +121,21 @@ public sealed class AsciiPresenter : IPresenter, IPresenterInput, IResettablePre
         _pendingCr = false;
         _pendingLengthFlushTerminator = false;
     }
+
+    /// <inheritdoc />
+    public object? Snapshot() => new State([.. _buffer], _pendingCr, _pendingLengthFlushTerminator);
+
+    /// <inheritdoc />
+    public void Restore(object? snapshot)
+    {
+        var state = snapshot as State ?? throw new ArgumentException("Not an AsciiPresenter snapshot.", nameof(snapshot));
+        _buffer.Clear();
+        _buffer.AddRange(state.Buffer);
+        _pendingCr = state.PendingCr;
+        _pendingLengthFlushTerminator = state.PendingLengthFlushTerminator;
+    }
+
+    private sealed record State(byte[] Buffer, bool PendingCr, bool PendingLengthFlushTerminator);
 
     private string Flush()
     {
