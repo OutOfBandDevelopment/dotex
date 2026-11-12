@@ -41,3 +41,5 @@ Keep the old overloads or remove them? The framework is unreleased, so breaking 
 Origin: BinaryDataDecoders issues 9 and 14. Low priority; accept, schedule or decline.
 
 2026-11-11: triaged. Accepted at low priority: every BinaryDataDecoders feature is kept (scope rule in `CLAUDE.md`), so it is scheduled behind the DevTerm and event-sourcing work. Backlog: BACKLOG.md, Migrations (specialized formats).
+
+2026-11-12: `Detokenizer.GetLines` now takes `ReadOnlyMemory<byte>` (the `IEnumerable<byte>` overload is removed). Tar is not done.

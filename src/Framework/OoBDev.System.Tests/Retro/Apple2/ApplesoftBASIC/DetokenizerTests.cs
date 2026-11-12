@@ -45,5 +45,22 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=");
 
         //Verify
     }
-    //IEnumerable<string> GetLines(ReadOnlySpan<byte> input)
+    [TestMethod, TestCategory(TestCategories.Unit)]
+    public void GetLines_Empty_ReturnsOnlyTheSizeLine()
+    {
+        var lines = new Detokenizer().GetLines(ReadOnlyMemory<byte>.Empty);
+
+        Assert.AreEqual("$$$ FILE SIZE :0", lines.Single());
+    }
+
+    [TestMethod, TestCategory(TestCategories.Unit)]
+    public void GetLines_TruncatedLine_EndsTheLineWithoutThrowing()
+    {
+        // size 5, next address 0x0801, line number 10, then "PR" with no terminator
+        byte[] input = [5, 0, 0x01, 0x08, 10, 0, (byte)'P', (byte)'R'];
+
+        var lines = new Detokenizer().GetLines(input);
+
+        Assert.AreEqual("10 PR", lines[1]);
+    }
 }
