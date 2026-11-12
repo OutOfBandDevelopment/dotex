@@ -52,8 +52,7 @@ A clean rebuild after the 2026-11-06 pass reports no analyzer warnings (218 befo
 - [ ] Reference architecture stack: add a full identity admin feature (create and disable users) once the reference architecture is located; not for the example app (owner, 2026-11-10).
 - [ ] HybridSearch: build the hybrid merge (`IHybridSearch`, reciprocal rank fusion vs. "larger score") when a consumer needs it ([api-design](docs/design/HybridSearch/api-design.md#planned-hybrid-contract)); the shells are removed and `OoBDev.Search.Tests` are done
 - [ ] Owner decisions 2026-11-11 (answered open questions), to build:
-  - [ ] Graph retrieval: `IGraphStore` in `OoBDev.Search.Abstractions`, namespace `OoBDev.Search.Graph`.
-  - [ ] CloudEvents HTTP edge: `POST /events` in a new `OoBDev.EventSourcing.Web`; write the migration plan in `docs/design/CqrsEventSourcing/` and have it confirmed first (rule `layering-and-migration-plans`).
+  - [ ] CloudEvents HTTP edge: `POST /events` in a new `OoBDev.EventSourcing.Web`; plan written ([plan](docs/design/CqrsEventSourcing/cloudevents-edge-plan.md)), waiting for the owner to confirm Q-CLOUDEVENTS-EDGE.
 
 ## 6. Migrations
 

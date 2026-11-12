@@ -11,4 +11,16 @@ _(none waiting; processed requests are in BACKLOG.md and TODO.md)_
 ## Open
 
 
-_(none open; answered 2026-11-11 and recorded in BACKLOG.md)_
+
+### Q-CLOUDEVENTS-EDGE — 2026-11-12 — CqrsEventSourcing (layering)
+
+Where does the CloudEvents `POST /events` edge live? Plan: [cloudevents-edge-plan.md](docs/design/CqrsEventSourcing/cloudevents-edge-plan.md).
+
+**Options**
+- A (recommended): new `OoBDev.EventSourcing.Web` in `src/Extensions`, beside the other ASP.NET libraries; keeps Framework host-free.
+- B: new project in `src/Framework` with an ASP.NET `FrameworkReference`; breaks the Framework-has-no-host rule.
+- C: add the endpoint to an existing web library; mixes unrelated concerns.
+
+**Default:** A (building nothing until confirmed).
+
+**Your answer:**
