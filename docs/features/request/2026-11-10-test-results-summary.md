@@ -1,6 +1,6 @@
 ﻿# Feature request: test results summary as markdown
 
-- **Status:** done (2026-11-12; wiring it into scripts/ci is open, see BACKLOG)
+- **Status:** done (2026-11-12)
 - **Requested by:** owner (found while cleaning `docs/templates`, 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** `scripts/ci`, `src/test.sh`, `OoBDev.TemplateEngine.Cli`

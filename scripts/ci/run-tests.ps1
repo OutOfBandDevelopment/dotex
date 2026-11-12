@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     Local replacement for the dotnet.yml and integration-tests.yml GitHub workflows.
 
@@ -69,6 +69,15 @@ try {
     }
 }
 finally {
+    # One markdown summary per test assembly (a .trx each), also after a failed run.
+    if (Get-ChildItem $results -Filter *.trx -ErrorAction SilentlyContinue) {
+        Write-Host '==== Summarise results' -ForegroundColor Cyan
+        dotnet run --project (Join-Path $src 'Tools\OoBDev.TemplateEngine.Cli') --configuration $Configuration --no-build -- `
+            --input (Join-Path $results '*.trx') `
+            --output (Join-Path $results 'summary\[file].md') `
+            --template (Join-Path $root 'docs\templates\TestResultsToMarkdown.md.xslt')
+    }
+
     if ($stackStarted -and -not $KeepStack) {
         Write-Host '==== Stop Docker stack' -ForegroundColor Cyan
         & (Join-Path $testing 'scripts\integration-down.bat') --clean
