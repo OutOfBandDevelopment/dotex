@@ -4,6 +4,7 @@ using Microsoft.Extensions.Options;
 using MimeKit;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -117,10 +118,18 @@ public class MimeMessageFactory(
             Subject = message.Subject ?? string.Empty,
             TextContent = message.TextBody,
             HtmlContent = message.HtmlBody,
+            Attachments = [.. message.BodyParts.OfType<MimePart>().Where(p => p.IsAttachment || p.ContentId is not null && p.ContentType.MediaType != "text").Select(ToAttachment)],
         };
         received.Metadata["server"] = server;
         received.Metadata["path"] = path;
         return received;
+    }
+
+    private static EmailAttachment ToAttachment(MimePart part)
+    {
+        using var buffer = new MemoryStream();
+        part.Content?.DecodeTo(buffer);
+        return EmailAttachment.FromBytes(part.FileName ?? part.ContentId ?? "attachment", part.ContentType.MimeType, buffer.ToArray(), part.ContentId);
     }
 
 }

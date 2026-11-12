@@ -28,4 +28,4 @@ Attachments are sent: `MimeMessageFactory.CreateAsync` adds each `IEmailAttachme
 `MailKitImapChannelProvider` (`mailkit-imap` / `email`, an `IPollableChannelProvider`) reads unread messages from the IMAP inbox
 (`MailKitImapClientOptions`) when IMAP is configured. `PollAsync` opens the inbox read-only, so nothing is marked read yet; each message carries a
 receipt `uidValidity:uid`. `AcknowledgeAsync` marks the receipts seen, and skips receipts from an earlier UID validity (the mailbox was rebuilt).
-Declare a channel with `Provider = mailkit-imap` and call `IReceiveService.PollAsync("<channel>")`. It cannot send. Attachments of received messages are not mapped yet (`ToReceived` copies addresses, body and origin only).
+Declare a channel with `Provider = mailkit-imap` and call `IReceiveService.PollAsync("<channel>")`. It cannot send. Attachments of received messages are mapped by `ToReceived` (file name, media type, decoded bytes and content id; inline images included).

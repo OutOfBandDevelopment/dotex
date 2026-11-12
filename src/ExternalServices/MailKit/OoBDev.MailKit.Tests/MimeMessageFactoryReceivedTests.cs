@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Microsoft.Extensions.Options;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MimeKit;
@@ -39,6 +40,36 @@ public class MimeMessageFactoryReceivedTests
         StringAssert.Contains(email.ReplyTo, "reply@example.test");
         Assert.AreEqual("imap.example.test:993", email.Metadata["server"]);
         Assert.AreEqual("INBOX", email.Metadata["path"]);
+    }
+
+    [TestMethod]
+    [TestCategory(TestCategories.Unit)]
+    public void ToReceived_AttachmentAndInlineImage_AreMappedWithContent()
+    {
+        var builder = new BodyBuilder { TextBody = "Hi", HtmlBody = "<img src=\"cid:logo@example.test\">" };
+        builder.Attachments.Add("report.pdf", new byte[] { 1, 2, 3 }, ContentType.Parse("application/pdf"));
+        var inline = (MimePart)builder.LinkedResources.Add("logo.png", new byte[] { 9, 8 }, ContentType.Parse("image/png"));
+        inline.ContentId = "logo@example.test";
+        var mime = new MimeMessage { Body = builder.ToMessageBody() };
+
+        var email = new MimeMessageFactory(Options.Create(new MailKitSmtpClientOptions { Host = "smtp.example.test" })).ToReceived(mime, "s", "INBOX");
+
+        Assert.HasCount(2, email.Attachments);
+        var report = email.Attachments.Single(a => a.FileName == "report.pdf");
+        var logo = email.Attachments.Single(a => a.FileName == "logo.png");
+        Assert.AreEqual("report.pdf", report.FileName);
+        Assert.AreEqual("application/pdf", report.ContentType);
+        CollectionAssert.AreEqual(new byte[] { 1, 2, 3 }, report.GetContentAsync().AsTask().Result.ToArray());
+        Assert.AreEqual("logo@example.test", logo.ContentId);
+    }
+
+    [TestMethod]
+    [TestCategory(TestCategories.Unit)]
+    public void ToReceived_PlainTextOnly_HasNoAttachments()
+    {
+        var email = new MimeMessageFactory(Options.Create(new MailKitSmtpClientOptions { Host = "smtp.example.test" })).ToReceived(new MimeMessage { Body = new TextPart("plain") { Text = "x" } }, "s", "INBOX");
+
+        Assert.IsEmpty(email.Attachments);
     }
 
     [TestMethod]
