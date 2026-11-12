@@ -1,4 +1,4 @@
-# Feature request: Embedding service container with a configurable client
+﻿# Feature request: Embedding service container with a configurable client
 
 - **Status:** triaged
 - **Requested by:** owner (filed from the NAS storage catalog application, `C:\repo\_storage`)
@@ -49,5 +49,7 @@ Inputs are private files (photos, scans), so nothing is logged beyond identifier
 - Does the container ship from this repository or stay with the catalog application?
 
 ## Triage notes
+
+2026-11-12: designed in [EmbeddingClientAndPgVector](../../design/EmbeddingClientAndPgVector/README.md); the catalog's tools container has no embedding server (imgvec runs ONNX in process); placement is Q-PGVECTOR-HOME.
 
 2026-11-11: triaged. Accepted as a backlog idea from the storage and photo-library review; the code named above was not read in full, so the first step is the superset comparison before any design. Face and pet matching also needs an owner decision on personal data. Backlog: BACKLOG.md, Consolidation requests.

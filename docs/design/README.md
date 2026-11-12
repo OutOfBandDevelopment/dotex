@@ -23,6 +23,7 @@ One folder per feature, written to the [design-document standard](../patterns-di
 | [RawDevelopment](RawDevelopment/README.md) | RAW detection, embedded-preview extraction and an optional native developer behind one interface. |
 | [MetadataQuery](MetadataQuery/README.md) | Kinds declared by attributes, one request shape, dialect interface and keyset paging, merged from the storage catalog's query engine. |
 | [WorkQueue](WorkQueue/README.md) | Row-level work queue with leases, fenced completion, back-off and dead letters on PostgreSQL, merged from the storage catalog. |
+| [EmbeddingClientAndPgVector](EmbeddingClientAndPgVector/README.md) | OpenAI-compatible embedding client, pgvector store with multi-vector matches, annotation-layer pattern. |
 | [ImageAnalysis](ImageAnalysis/README.md) | Histograms, colour facets and exposure metrics as pure functions over RGB buffers; placement waits for the owner. |
 | [MediaMetadata](MediaMetadata/README.md) | Read-only EXIF reader and tag dump for images (JPEG, PNG, WebP, TIFF), merged from the storage catalog; placement waits for the owner. |
 | [GeneratedGuides](GeneratedGuides/README.md) | A user or API guide is never edited by hand to stay current. |

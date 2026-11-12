@@ -158,3 +158,16 @@ The catalog's PostgreSQL work queue with leases, fenced completion and dead lett
 **Default:** A once confirmed; nothing built meanwhile (the item is parked).
 
 **Your answer:**
+
+### Q-PGVECTOR-HOME — 2026-11-12 — HTTP embedding client and pgvector store (layering, dependency)
+
+The design ([EmbeddingClientAndPgVector](docs/design/EmbeddingClientAndPgVector/README.md)) adds an OpenAI-compatible embedding client and a PostgreSQL pgvector store. The pgvector store needs Npgsql (and possibly the Pgvector package), which are third-party dependency choices. Where do they live, and may they be added?
+
+**Options**
+- A (recommended): two new ExternalServices projects, `OoBDev.Embeddings.Http` (no new package) and `OoBDev.Data.Vectors.Postgres` (Npgsql, Pgvector only there), plus a pgvector PostgreSQL service in the test stack.
+- B: HTTP client only now; defer the pgvector store until a consumer needs it.
+- C: leave both in the catalog.
+
+**Default:** B for the HTTP client is safe, but nothing is built while this is open (the item is parked).
+
+**Your answer:**

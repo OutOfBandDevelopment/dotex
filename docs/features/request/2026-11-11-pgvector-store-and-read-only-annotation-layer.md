@@ -1,4 +1,4 @@
-# Feature request: pgvector vector store and an owner annotation layer over read-only sources
+﻿# Feature request: pgvector vector store and an owner annotation layer over read-only sources
 
 - **Status:** triaged
 - **Requested by:** owner (filed from the NAS storage catalog application, `C:\repo\_storage`)
@@ -57,5 +57,7 @@ Vectors of personal photos and faces are personal data; the store provider shoul
 - Should Postgres support be a single provider package or one package per capability?
 
 ## Triage notes
+
+2026-11-12: designed in [EmbeddingClientAndPgVector](../../design/EmbeddingClientAndPgVector/README.md); placement and the Npgsql dependency are Q-PGVECTOR-HOME.
 
 2026-11-11: triaged. Accepted as a backlog idea from the storage and photo-library review; the code named above was not read in full, so the first step is the superset comparison before any design. Face and pet matching also needs an owner decision on personal data. Backlog: BACKLOG.md, Consolidation requests.
