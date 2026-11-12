@@ -1,4 +1,4 @@
-# OoBDev.System
+﻿# OoBDev.System
 
 OoBDev.System provides a comprehensive set of classes and utilities for various system-related functionalities. Here's an overview of its key components:
 
@@ -99,6 +99,10 @@ Single-byte `Encoding` for Apple ][ text. Bytes with bit 7 set (normal text) dec
 
 ### Dos33
 `DiskImageCommands` reads a DOS 3.3 image (catalog, track/sector lists, data). `DiskImageWriter` (`IDiskImageWriter`) adds, replaces and deletes files in DOS-order 256-byte-sector images: it works on an in-memory copy and writes back only when the file fits, so a full disk, a full catalog or a duplicate name leaves the stream unchanged (`InvalidOperationException`). Sectors are taken outward from track 17; a delete frees the bitmap and marks the entry `0xFF` with the original track kept, as DOS does. The caller supplies Applesoft and binary files with DOS's own length prefix.
+
+## IO.PathEx globbing
+
+`PathEx.EnumerateFiles(pattern)` takes the literal leading segments as the root and matches the rest with `Microsoft.Extensions.FileSystemGlobbing` (`*` and `**`; `?` is narrowed by a regular expression because the matcher lacks it). `PathEx.EnumerateFiles(root, patterns)` matches under a root only and treats a pattern starting with `!` as an exclusion, for example `!**/obj/**`.
 
 ## IO.Fat
 

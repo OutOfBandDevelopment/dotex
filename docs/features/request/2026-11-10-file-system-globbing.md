@@ -1,6 +1,6 @@
-# Feature request: file globbing through Microsoft.Extensions.FileSystemGlobbing
+﻿# Feature request: file globbing through Microsoft.Extensions.FileSystemGlobbing
 
-- **Status:** triaged
+- **Status:** done (2026-11-12; PathEx.EnumerateDirectories is still hand-built)
 - **Requested by:** owner (open gap found reviewing the migration, 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** `OoBDev.System` (`IO/PathEx`)
