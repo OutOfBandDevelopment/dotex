@@ -1,4 +1,4 @@
-# Search merge: one request model over keyword, vector, hybrid and SQL kinds
+﻿# Search merge: one request model over keyword, vector, hybrid and SQL kinds
 
 Status: **design written 2026-11-12; nothing built.** It builds on the answers to Q-QUERYENGINE-HOME and Q-PGVECTOR-HOME. Requests: [search merge and hybrid](../../features/request/2026-11-11-search-merge-kinds-hybrid-and-vectors.md), [superset review](../../features/request/2026-11-11-superset-review-of-overlapping-features.md). Related: [HybridSearch](../HybridSearch/README.md), [MetadataQuery](../MetadataQuery/README.md), [EmbeddingClientAndPgVector](../EmbeddingClientAndPgVector/README.md).
 
@@ -51,7 +51,9 @@ The review is done per area in the design that covers it:
 | Queue | [WorkQueue](../WorkQueue/README.md) |
 | Documents and Markdown | [DocumentToMarkdown](../DocumentToMarkdown/README.md) |
 | Images (burst, RAW) | [BurstRanking](../BurstRanking/README.md), [RawDevelopment](../RawDevelopment/README.md) |
-| Caching, telemetry, rights and command relay | not compared yet: `OoBDev.Caching` against `ProbeCache`, `OoBDev.Telemetry` against `ServiceDefaults`, Identity and ApplicationRights against `CommandRelay` and `Access*`; backlog entry |
+| Caching | `OoBDev.Caching` (providers, factories, managers) against the catalog `ProbeCache` (19 lines: remember a probe answer for a lifetime, with `TimeProvider`). Nothing missing in the framework: the probe cache is one use of a short-lived keyed cache and moves to the catalog's own use of `OoBDev.Caching`; no capability to add |
+| Telemetry | `OoBDev.Telemetry` (config-gated OpenTelemetry, OTLP, correlation and user processors) against catalog `ServiceDefaults` (OpenTelemetry logs, traces, metrics, OTLP, plus Aspire service discovery and `AddStandardResilienceHandler`). Framework covers the telemetry; service discovery and the standard resilience handler (Polly based) are not adopted because the owner avoids Polly (rejected-dependencies memory), so the catalog keeps those two lines or drops them |
+| Rights and command relay | not compared yet: Identity and ApplicationRights against `CommandRelay` (428 lines) and `Access*`; backlog entry |
 
 ## Migration plan
 
