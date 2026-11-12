@@ -102,6 +102,8 @@
   <Folder Name="/HardwareDevices/">
     <Project Path="HardwareDevices/OoBDev.DerEE.De5000.Tests/OoBDev.DerEE.De5000.Tests.csproj" />
     <Project Path="HardwareDevices/OoBDev.DerEE.De5000/OoBDev.DerEE.De5000.csproj" />
+    <Project Path="HardwareDevices/OoBDev.EcoWitt.Tests/OoBDev.EcoWitt.Tests.csproj" />
+    <Project Path="HardwareDevices/OoBDev.EcoWitt/OoBDev.EcoWitt.csproj" />
     <Project Path="HardwareDevices/OoBDev.Fencing.ScoreMachines.Tests/OoBDev.Fencing.ScoreMachines.Tests.csproj" />
     <Project Path="HardwareDevices/OoBDev.Fencing.ScoreMachines/OoBDev.Fencing.ScoreMachines.csproj" />
     <Project Path="HardwareDevices/OoBDev.LanC.Tests/OoBDev.LanC.Tests.csproj" />

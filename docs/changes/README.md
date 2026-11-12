@@ -1,4 +1,4 @@
-﻿# Change Documentation Archive
+# Change Documentation Archive
 
 This directory contains detailed documentation of completed work, archived to reduce context overhead in active TODO files and CLAUDE.md.
 
@@ -65,7 +65,7 @@ Each task section should include:
 
 ## By day
 
-- [2026-11-12](2026-11-12.md): 14 task(s)
+- [2026-11-12](2026-11-12.md): 15 task(s)
 - [2026-11-11](2026-11-11.md): 124 task(s)
 - [2026-11-10](2026-11-10.md): 49 task(s)
 - [2026-11-09](2026-11-09.md): 24 task(s)

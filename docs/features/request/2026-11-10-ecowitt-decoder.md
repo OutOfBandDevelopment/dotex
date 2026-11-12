@@ -1,6 +1,6 @@
 # Feature request: EcoWitt weather station decoder
 
-- **Status:** triaged
+- **Status:** triaged (HTTP push decoder built 2026-11-12; the local TCP API remains)
 - **Requested by:** owner (open gap found reviewing the migration, 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** `HardwareDevices`
