@@ -1,4 +1,4 @@
-# Feature request: Develop camera RAW files (NEF and others) to JPEG or PNG
+﻿# Feature request: Develop camera RAW files (NEF and others) to JPEG or PNG
 
 - **Status:** triaged
 - **Requested by:** owner (filed from the notes repository, `projects/applications/second-shooter-photo-library.md`; design concepts only, its code is not reused)
@@ -48,6 +48,8 @@ Native decoders parse untrusted binary formats, so they should run in a worker w
 - Should sidecar files (XMP) from Lightroom be read here or in the metadata request?
 
 ## Triage notes
+
+2026-11-12: design written: [RawDevelopment](../../design/RawDevelopment/README.md); the native provider is Q-RAW-PROVIDER.
 
 Origin: notes repository `projects/applications/second-shooter-photo-library.md`. Maintainers: accept, schedule or decline.
 

@@ -104,3 +104,16 @@ The catalog converts documents to page-anchored Markdown and calls a Docling OCR
 **Default:** A once confirmed; nothing built meanwhile (the item is parked).
 
 **Your answer:**
+
+### Q-RAW-PROVIDER — 2026-11-12 — RAW development provider (dependency)
+
+True RAW development needs a native decoder ([design](docs/design/RawDevelopment/README.md), [request](docs/features/request/2026-11-11-raw-camera-file-development.md)). Dependency choices are yours. Which provider, if any?
+
+**Options**
+- A (recommended): build the managed part now (detection, embedded-preview extraction, white-balance scaling) and add a LibRaw adapter project later once you approve a wrapper package; no native code in Framework.
+- B: ImageMagick (Magick.NET) as the provider; one package covers many formats, large native payload and a heavier licence review.
+- C: managed only, no true development (previews only).
+
+**Default:** A for the managed part once Q-MEDIAMETADATA-HOME is answered; no native package is added meanwhile (the item is parked).
+
+**Your answer:**
