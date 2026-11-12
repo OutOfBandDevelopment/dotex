@@ -4,7 +4,7 @@
 > **Owner questions:** [OPEN-QUESTIONS.md](./OPEN-QUESTIONS.md) · **New to this project?** Read [CLAUDE.md](./CLAUDE.md) first.
 > **Other repositories to harvest from:** [docs/harvest-candidates.md](docs/harvest-candidates.md)
 
-**Last Updated:** 2026-11-11
+**Last Updated:** 2026-11-12
 
 GitHub is no longer the primary repository (local bare repo `origin`), so nothing here waits on GitHub Actions. Keep items to one short line; detail lives in the linked feature doc (rule `work-tracking`).
 
@@ -51,9 +51,7 @@ A clean rebuild after the 2026-11-06 pass reports no analyzer warnings (218 befo
 
 - [ ] Reference architecture stack: add a full identity admin feature (create and disable users) once the reference architecture is located; not for the example app (owner, 2026-11-10).
 - [ ] HybridSearch: build the hybrid merge (`IHybridSearch`, reciprocal rank fusion vs. "larger score") when a consumer needs it ([api-design](docs/design/HybridSearch/api-design.md#planned-hybrid-contract)); the shells are removed and `OoBDev.Search.Tests` are done
-- [ ] Rename `IHtmlDocumentVistor` to `IHtmlDocumentVisitor` (misspelt; breaking rename is allowed, 4 files use it; owner rule: no forwarders).
 - [ ] Owner decisions 2026-11-11 (answered open questions), to build:
-  - [ ] HTML template: visitor and path resolver for `value-of`, `repeater`, `condition`, `value-attr`, `data-binding` in `OoBDev.System.Text.Html`; keep `HtmlTemplateTransform`; do the Visitor rename with it; update the TextTemplating design that rejected a custom HTML syntax.
   - [ ] DevTerm TCP services: `ServiceHostBridge` in DevTerm.Core beside `Rfc2217ServerBridge`, traffic tap on `ServerBase` ([plan](docs/design/DevTermParity/generic-services-plan.md)).
   - [ ] Playback checkpoints: optional `ISnapshotPresenter` and a `checkpoint` record kind older readers ignore ([session logging](docs/design/SessionLogging/session-logging.md)).
   - [ ] Graph retrieval: `IGraphStore` in `OoBDev.Search.Abstractions`, namespace `OoBDev.Search.Graph`.

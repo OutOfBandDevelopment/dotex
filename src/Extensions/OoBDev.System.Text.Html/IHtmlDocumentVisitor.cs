@@ -7,7 +7,7 @@ namespace OoBDev.System.Text.Html;
 /// <summary>
 /// Defines a visitor for processing HTML document nodes with data binding support.
 /// </summary>
-public interface IHtmlDocumentVistor
+public interface IHtmlDocumentVisitor
 {
     /// <summary>
     /// Visits an HTML node and processes data bindings recursively.
