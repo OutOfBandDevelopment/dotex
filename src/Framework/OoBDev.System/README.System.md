@@ -100,6 +100,11 @@ Single-byte `Encoding` for Apple ][ text. Bytes with bit 7 set (normal text) dec
 ### Dos33
 `DiskImageCommands` reads a DOS 3.3 image (catalog, track/sector lists, data). `DiskImageWriter` (`IDiskImageWriter`) adds, replaces and deletes files in DOS-order 256-byte-sector images: it works on an in-memory copy and writes back only when the file fits, so a full disk, a full catalog or a duplicate name leaves the stream unchanged (`InvalidOperationException`). Sectors are taken outward from track 17; a delete frees the bitmap and marks the entry `0xFF` with the original track kept, as DOS does. The caller supplies Applesoft and binary files with DOS's own length prefix.
 
+## IO.Fat
+
+### FatVolume
+Read-only FAT12, FAT16 and FAT32 reader (`FatVolume.Open(stream)`). The type comes from the cluster count, as the specification requires. `GetEntries(directory?)` lists a directory with long names (checksum-verified; deleted entries, `.`/`..` and the label entry are skipped), `Find(path)` walks `/` or `\` paths without regard to case, `OpenRead(entry)` returns the file content, `Label` is the root label entry or the boot label. Short names are Latin-1 (OEM code pages are not applied). The image is untrusted: sizes, table length, cluster numbers and chains are bounded, and corrupt or looping structures raise `InvalidDataException`. Write support is not part of it.
+
 ## Time
 
 ### HybridLogicalClock and HybridLogicalClockGenerator

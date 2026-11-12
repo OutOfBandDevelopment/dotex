@@ -1,6 +1,6 @@
 # Feature request: FAT12, FAT16 and FAT32 file system readers
 
-- **Status:** triaged
+- **Status:** done (2026-11-12, see docs/changes/2026-11-12.md#fat12-fat16-and-fat32-read-only-reader)
 - **Requested by:** owner (open gap found reviewing the migration, 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** `OoBDev.System` (`IO`, next to `Iso9660`)
