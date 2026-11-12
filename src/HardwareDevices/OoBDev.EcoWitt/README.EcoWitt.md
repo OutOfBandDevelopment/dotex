@@ -28,4 +28,8 @@ Any other field (extra sensors, battery flags) is kept by name in `Unrecognised`
 
 ## Not built
 
-The gateway's local TCP API (binary, port 45000) is not decoded; it is tracked in `BACKLOG.md`. The tests use a representative push written from the protocol description, not a capture from a device; a real capture would confirm the unit assumptions for additional sensors.
+Extra-sensor and battery fields of the local API are not decoded (decoding stops at the first unknown id and reports it). The tests use a representative push written from the protocol description, not a capture from a device; a real capture would confirm the unit assumptions for additional sensors.
+
+## Local TCP API
+
+`EcoWittLocalApi.BuildRequest(EcoWittLocalApi.LiveDataCommand)` gives the bytes to send to port 45000 of the gateway; `EcoWittLiveDataDecoder.Decode(response)` turns the reply into an `EcoWittLiveReading` (metric units, `null` for a field the reply lacked). A field id the decoder does not know has no known size, so decoding stops there and reports it in `Problems`. Bad framing (header, size, checksum) throws `InvalidDataException`. Opening the socket is the caller's job.
