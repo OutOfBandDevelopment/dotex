@@ -116,6 +116,24 @@
                     <TextBlock Text="User name" />
                     <TextBox Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
                 </StackPanel>
+                <TextBlock Text="Presenters" FontWeight="SemiBold" Margin="0,8,0,2" />
+                <ItemsControl ItemsSource="{Binding PresenterChoices}" Margin="0,0,0,8">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <CheckBox Content="{Binding Name}" IsChecked="{Binding IsSelected}" Margin="0,1" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <StackPanel Visibility="{Binding IsScpiPresenterSelected, Converter={StaticResource Visible}}">
+                    <TextBlock Text="SCPI profile" />
+                    <ComboBox ItemsSource="{Binding ScpiProfileOptions}" Text="{Binding ScpiProfile, UpdateSourceTrigger=PropertyChanged}" IsEditable="True" Margin="0,2,0,8" />
+                </StackPanel>
+                <TextBlock Text="Send format (parser)" />
+                <ComboBox ItemsSource="{Binding PresenterOptions}" SelectedItem="{Binding Parser}" Margin="0,2,0,8" />
+                <TextBlock Text="Line ending" />
+                <ComboBox ItemsSource="{Binding LineEndingOptions}" SelectedItem="{Binding LineEndingText}" Margin="0,2,0,8" />
+                <TextBlock Text="ASCII max line length" />
+                <TextBox Text="{Binding AsciiMaxLineLength, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
             </StackPanel>
             </ScrollViewer>
         </DockPanel>
