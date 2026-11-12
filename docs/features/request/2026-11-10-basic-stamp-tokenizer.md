@@ -34,7 +34,7 @@ Inputs are untrusted: bound lengths.
 
 ## Open questions
 
-Answered 2026-11-12: BS2 family, format taken from a third-party reference project (`pbasic` or `stampy`), chosen after a licence check.
+On hold (owner, 2026-11-12). When resumed: BS2 family, format from a third-party reference (`pbasic` or `stampy`) chosen after a licence check.
 
 ## Triage notes
 
