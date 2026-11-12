@@ -1,6 +1,6 @@
-# Feature request: API reference generated from the XML docs
+﻿# Feature request: API reference generated from the XML docs
 
-- **Status:** triaged
+- **Status:** done (2026-11-12, [change](../../changes/2026-11-12.md#api-reference-generated-from-xml-docs))
 - **Requested by:** owner (found while removing `docs/Libraries`, 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** build, `OoBDev.TemplateEngine.Cli`, `docs/`

@@ -8,6 +8,7 @@ Deterministic markdown guides generated from machine-readable specifications, fo
 
 - **ApiGuideRenderer**: `OpenApi(json, title)` and `AsyncApi(json, title)` render an OpenAPI or AsyncAPI document as markdown (operations sorted by path, each with its access line from the `x-permissions` extension: anonymous or authenticated plus the required rights; channels with their parameters and messages); `WriteIfChanged(path, content)` writes LF text only when the file differs.
 - **CliToolGuide**: `Render(title, synopsis, examples)` turns captured `CliExample` runs (title, description, command line, output, exit code) into a markdown guide with `console` blocks.
+- **XmlDocReferenceRenderer**: `Render(xml)` turns a compiler XML documentation file into an API reference page (types in ordinal order with their documented fields, properties, methods and events; members that only inherit their docs are left out). `OoBDev.Docs.Tests` `ApiReference.Write` writes one page per project into the test's build output (`api-reference`) and removes pages of removed projects.
 - **CliToolRunner**: `RunAsync(...)` starts a tool, captures stdout and stderr and returns a `CliExample`; `displayCommandLine` keeps machine paths out of the guide.
 
 ## Usage
