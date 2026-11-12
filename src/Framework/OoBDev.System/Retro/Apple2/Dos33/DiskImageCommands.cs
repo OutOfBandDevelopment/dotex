@@ -11,6 +11,8 @@ namespace OoBDev.System.Retro.Apple2.Dos33;
 /// </summary>
 public class DiskImageCommands : IDiskImageCommands
 {
+    private const int _maxTrackSectorLists = 600;
+
     /// <summary>
     /// Retrieve Volume table of contents.
     /// </summary>
@@ -84,6 +86,7 @@ public class DiskImageCommands : IDiskImageCommands
         var sectorLength = vtoc.NumberOfBytesPerSector;
 
         var buffer = new byte[sectorLength];
+        var lists = 0;
     next:
 
         Span<byte> span = buffer;
@@ -93,6 +96,11 @@ public class DiskImageCommands : IDiskImageCommands
         var read = diskImage.Read(span);
         var item = new TrackSectorList(span[..read]);
         yield return item;
+
+        if (++lists > _maxTrackSectorLists)
+        {
+            throw new InvalidDataException("The track/sector list chain does not end.");
+        }
 
         if (item.NextTrack != 0 && item.NextSector != 0)
         {
@@ -111,30 +119,28 @@ public class DiskImageCommands : IDiskImageCommands
     public Span<byte> GetDataFileEntry(Stream diskImage, FileEntry fileEntry)
     {
         var ts = (from trackSectorList in GetTrackSectorListForFileEntry(diskImage, fileEntry)
-                  from trackSector in trackSectorList.TrackSectorPairs
-                  where trackSector.Track != 0 || trackSector.Sector != 0
-                  select (trackSectorList, trackSector)).ToArray();
+                  from entry in trackSectorList.TrackSectorPairs.Select((pair, index) => (pair, position: trackSectorList.SectorOffset + index))
+                  where entry.pair.Track != 0 || entry.pair.Sector != 0
+                  select entry).ToArray();
 
         var vtoc = GetVolumeTableOfContents(diskImage);
         var trackSectors = vtoc.NumberOfSectorsPerTrack;
         var sectorLength = vtoc.NumberOfBytesPerSector;
 
-        var outputBuffer = new byte[sectorLength * ts.Length];
+        var sectorCount = ts.Length == 0 ? 0 : ts.Max(e => e.position) + 1;
+        if (sectorCount > trackSectors * 255)
+        {
+            throw new InvalidDataException("The track/sector lists describe more sectors than the disk holds.");
+        }
+
+        var outputBuffer = new byte[sectorLength * sectorCount];
         Span<byte> outputSpan = outputBuffer;
 
-        for (var i = 0; i < ts.Length; i++)
+        foreach (var (pair, position) in ts)
         {
-            if (ts[i].trackSectorList.SectorOffset != 0) throw new NotSupportedException();
-
-            var track = ts[i].trackSector.Track;
-            var sector = ts[i].trackSector.Sector;
-            var location = track * trackSectors * sectorLength + sector * sectorLength;
+            var location = pair.Track * trackSectors * sectorLength + pair.Sector * sectorLength;
             diskImage.Position = location;
-
-            Span<byte> sectorSpan = outputSpan.Slice(i * sectorLength, sectorLength);
-
-            var read = diskImage.Read(sectorSpan);
-
+            diskImage.ReadExactly(outputSpan.Slice(position * sectorLength, sectorLength));
         }
 
         return outputSpan;

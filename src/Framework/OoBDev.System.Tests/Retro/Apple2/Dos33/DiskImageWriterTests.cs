@@ -1,4 +1,4 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.System.Retro.Apple2.Dos33;
 using OoBDev.TestUtilities;
 using System;
@@ -59,6 +59,17 @@ public class DiskImageWriterTests
         Assert.AreEqual(before - 5, FreeSectors(image));
     }
 
+    [TestMethod, TestCategory(TestCategories.Unit)]
+    public void GetDataFileEntry_FileOverOneListSector_ReadsEverySectorInOrder()
+    {
+        using var image = OpenImage();
+        var data = Pattern(130 * 256);
+        new DiskImageWriter().AddFile(image, "BIG", AppleFileType.Binary, data);
+
+        var read = new DiskImageCommands().GetDataFileEntry(image, Find(image, "BIG"));
+
+        CollectionAssert.AreEqual(data, read.ToArray());
+    }
     [TestMethod, TestCategory(TestCategories.Unit)]
     public void AddFile_FileOverOneListSector_ChainsTheLists()
     {
