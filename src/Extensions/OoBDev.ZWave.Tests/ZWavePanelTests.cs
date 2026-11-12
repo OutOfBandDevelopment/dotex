@@ -38,7 +38,7 @@ public sealed class ZWavePanelTests
         CollectionAssert.AreEquivalent(ZWaveUiDefinition.CommandIds.ToList(), ids);
         foreach (var id in ids)
         {
-            Assert.IsNotNull(surface.PreviewCommand(id, "2,50"), id);
+            Assert.IsNotNull(surface.PreviewCommand(id, id switch { "configSet" => "2,5 1", "sendRaw" => "2,26 01 32", _ => "2,50" }), id);
         }
     }
 
@@ -104,6 +104,87 @@ public sealed class ZWavePanelTests
     }
 
     [TestMethod]
+    public async Task InvokeAsync_ConfigurationSet_WritesTheValueBigEndianWithTheSmallestSize()
+    {
+        // Stage
+        var sent = new List<byte[]>();
+        var surface = new ZWaveControlSurface((data, _) =>
+        {
+            sent.Add(data.ToArray());
+            return Task.CompletedTask;
+        });
+
+        // Test
+        await surface.InvokeAsync("configSet", "4,7 300", TestContext.CancellationToken);
+        await surface.InvokeAsync("configSet", "4,7 5 4", TestContext.CancellationToken);
+
+        // Assert
+        CollectionAssert.AreEqual(new byte[] { 0x70, 0x04, 7, 2, 0x01, 0x2C }, sent[0][6..12]);
+        CollectionAssert.AreEqual(new byte[] { 0x70, 0x04, 7, 4, 0, 0, 0, 5 }, sent[1][6..14]);
+    }
+
+    [TestMethod]
+    public async Task InvokeAsync_ConfigurationGetAndRawPayload_CarryTheirBytes()
+    {
+        // Stage
+        var sent = new List<byte[]>();
+        var surface = new ZWaveControlSurface((data, _) =>
+        {
+            sent.Add(data.ToArray());
+            return Task.CompletedTask;
+        });
+
+        // Test
+        await surface.InvokeAsync("configGet", "3,12", TestContext.CancellationToken);
+        await surface.InvokeAsync("sendRaw", "3,26 01 32", TestContext.CancellationToken);
+
+        // Assert
+        CollectionAssert.AreEqual(new byte[] { 0x70, 0x05, 12 }, sent[0][6..9]);
+        CollectionAssert.AreEqual(new byte[] { 0x26, 0x01, 0x32 }, sent[1][6..9]);
+    }
+
+    [TestMethod]
+    public async Task InvokeAsync_HealIsFailedAndRemoveFailed_UseTheirFunctions()
+    {
+        // Stage
+        var functions = new List<byte>();
+        var surface = new ZWaveControlSurface((data, _) =>
+        {
+            functions.Add(new ZWaveMessageDecoder().Decode(new ReadOnlySequence<byte>(data.ToArray())).Function);
+            return Task.CompletedTask;
+        });
+
+        // Test
+        foreach (var id in new[] { "heal", "isFailed", "removeFailed", "learnOn", "learnOff", "resetNetwork" })
+        {
+            await surface.InvokeAsync(id, "6", TestContext.CancellationToken);
+        }
+
+        // Assert
+        CollectionAssert.AreEqual(
+            new[] { ZWaveFunctions.RequestNodeNeighborUpdate, ZWaveFunctions.IsFailedNode, ZWaveFunctions.RemoveFailedNode, ZWaveFunctions.SetLearnMode, ZWaveFunctions.SetLearnMode, ZWaveFunctions.SetDefault },
+            functions);
+    }
+
+    [TestMethod]
+    public void BuildDefinition_DestructiveButtons_AskFirst()
+    {
+        var buttons = new ZWavePanel().BuildDefinition().Sections.SelectMany(s => s.Controls).OfType<ButtonControl>().ToDictionary(b => b.Id);
+
+        foreach (var id in new[] { "resetNetwork", "removeFailed", "learnOn", "configSet", "softReset" })
+        {
+            Assert.IsNotNull(buttons[id].ConfirmMessage, id);
+        }
+    }
+
+    [TestMethod]
+    [DataRow("configGet", "2")]
+    [DataRow("configGet", "2,x")]
+    [DataRow("configSet", "2,5")]
+    [DataRow("configSet", "2,5 1 3")]
+    [DataRow("sendRaw", "2,ZZ")]
+    [DataRow("sendRaw", "2,26")]
+    [DataRow("heal", null)]
     [DataRow("switchOn", null)]
     [DataRow("switchOn", "0")]
     [DataRow("switchOn", "233")]

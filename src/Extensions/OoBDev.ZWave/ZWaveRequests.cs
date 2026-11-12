@@ -136,4 +136,35 @@ public static class ZWaveRequests
     /// <summary>Restarts the Serial API application.</summary>
     /// <returns>The request frame.</returns>
     public static ZWaveFrame SoftReset() => For(ZWaveFunctions.SoftReset);
+
+    /// <summary>Configuration Get (class 0x70, command 0x05) for one parameter of <paramref name="node"/>.</summary>
+    /// <param name="node">The destination node.</param>
+    /// <param name="parameter">The configuration parameter number.</param>
+    /// <param name="callbackId">The id the controller repeats in its transmit callback.</param>
+    /// <returns>The request frame.</returns>
+    public static ZWaveFrame ConfigurationGet(byte node, byte parameter, byte callbackId) => SendData(node, [0x70, 0x05, parameter], callbackId);
+
+    /// <summary>Configuration Set (class 0x70, command 0x04) writing a big-endian value of 1, 2 or 4 bytes. This changes the device's stored configuration.</summary>
+    /// <param name="node">The destination node.</param>
+    /// <param name="parameter">The configuration parameter number.</param>
+    /// <param name="value">The value to write.</param>
+    /// <param name="size">The value size in bytes: 1, 2 or 4.</param>
+    /// <param name="callbackId">The id the controller repeats in its transmit callback.</param>
+    /// <returns>The request frame.</returns>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="size"/> is not 1, 2 or 4.</exception>
+    public static ZWaveFrame ConfigurationSet(byte node, byte parameter, int value, int size, byte callbackId)
+    {
+        if (size is not (1 or 2 or 4))
+        {
+            throw new ArgumentOutOfRangeException(nameof(size), size, "A configuration value is 1, 2 or 4 bytes.");
+        }
+
+        var data = new byte[size];
+        for (var i = 0; i < size; i++)
+        {
+            data[i] = (byte)(value >> (8 * (size - 1 - i)));
+        }
+
+        return SendData(node, [0x70, 0x04, parameter, (byte)size, .. data], callbackId);
+    }
 }

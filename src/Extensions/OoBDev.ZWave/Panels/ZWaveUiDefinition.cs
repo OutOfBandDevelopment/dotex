@@ -11,6 +11,7 @@ public static class ZWaveUiDefinition
     [
         "version", "memoryId", "initData", "softReset", "nodeInfo", "switchOn", "switchOff", "switchGet", "setLevel",
         "addNode", "stopAddNode", "removeNode", "stopRemoveNode",
+        "resetNetwork", "learnOn", "learnOff", "heal", "isFailed", "removeFailed", "configGet", "configSet", "sendRaw",
     ];
 
     /// <summary>Builds the panel definition.</summary>
@@ -43,6 +44,11 @@ public static class ZWaveUiDefinition
                     new ButtonControl { Id = "switchOff", Label = "Off", ParameterFieldIds = ["node"] },
                     new ButtonControl { Id = "switchGet", Label = "Read switch", ParameterFieldIds = ["node"] },
                     new ButtonControl { Id = "setLevel", Label = "Set level", ParameterFieldIds = ["node", "level"] },
+                    new TextFieldControl { Id = "config", Label = "Configuration", DefaultValue = "1" },
+                    new ButtonControl { Id = "configGet", Label = "Configuration get", ParameterFieldIds = ["node", "config"] },
+                    new ButtonControl { Id = "configSet", Label = "Configuration set", ParameterFieldIds = ["node", "config"], ConfirmMessage = "Write this configuration value to the device? It changes the device's stored configuration." },
+                    new TextFieldControl { Id = "payload", Label = "Command class payload (hex)", DefaultValue = "26 01 32" },
+                    new ButtonControl { Id = "sendRaw", Label = "Send to node", ParameterFieldIds = ["node", "payload"] },
                 ],
             },
             new UiSection
@@ -54,6 +60,12 @@ public static class ZWaveUiDefinition
                     new ButtonControl { Id = "stopAddNode", Label = "Stop including" },
                     new ButtonControl { Id = "removeNode", Label = "Exclude node" },
                     new ButtonControl { Id = "stopRemoveNode", Label = "Stop excluding" },
+                    new ButtonControl { Id = "learnOn", Label = "Join another network", ConfirmMessage = "Make the stick a secondary controller of the network that includes it?" },
+                    new ButtonControl { Id = "learnOff", Label = "Stop learn mode" },
+                    new ButtonControl { Id = "heal", Label = "Heal node", ParameterFieldIds = ["node"] },
+                    new ButtonControl { Id = "isFailed", Label = "Is node failed?", ParameterFieldIds = ["node"] },
+                    new ButtonControl { Id = "removeFailed", Label = "Remove failed node", ParameterFieldIds = ["node"], ConfirmMessage = "Remove this node from the network? The controller only removes a node it marks as failed." },
+                    new ButtonControl { Id = "resetNetwork", Label = "Reset network", ConfirmMessage = "Erase every pairing and create a new home id? This cannot be undone." },
                 ],
             },
             new UiSection

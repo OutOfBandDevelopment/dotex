@@ -4,7 +4,7 @@
 
 The panel is a generic render of `ZWaveUiDefinition`, driven by `ZWaveControlSurface` (an `IControlSurface` and `ICommandPreview`) on the live session.
 
-> **Implementation status (2026-11-12).** `OoBDev.ZWave.Panels` ships the first slice: Controller (Version, Home and node id, Node list, Soft reset), Node (Node and Level fields; Node info, On, Off, Read switch, Set level) and Network (Include, Exclude and their stop buttons) buttons plus a Last frame indicator. The Refresh sequence, Enumerate, Describe node, configuration, raw payload, learn mode and the ACK responder described below are not built yet (see `BACKLOG.md`).
+> **Implementation status (2026-11-12).** `OoBDev.ZWave.Panels` ships: Controller (Version, Home and node id, Node list, Soft reset), Node (Node and Level fields; Node info, On, Off, Read switch, Set level, Configuration get and set, a raw command class payload sent to the node) and Network (Include, Exclude and their stop buttons, Join another network and Stop learn mode, Heal node, Is node failed, Remove failed node, Reset network) buttons, with a confirmation on the erasing ones, plus a Last frame indicator. The Refresh sequence with the identity indicators, Enumerate, Describe node and the panel-lifetime ACK responder described below are not built yet (see `BACKLOG.md`).
 
 ## Fields
 
