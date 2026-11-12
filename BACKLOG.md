@@ -21,6 +21,7 @@ Owner: all protocols and features of dev-term must exist here. Done means what d
 
 - [ ] Device decoding leftovers: the DE-5000 Hardware test waits on the owner fitting the BLE radio in the meter (not fitted 2026-11-05; the BLE transport itself is verified through the HC-08); phase 0 is done ([device merge list](docs/migration/README.md#devices); M3 needs a Radex capture); the physical passes for K8055, Busylight, Radex One, Zoom H4n and NMEA ran on 2026-11-04 and the SCPI instruments on 2026-11-05 (owner confirmed; [change log](docs/changes/2026-11-04.md)). Plan: [migration-plan.md](docs/design/DeviceDecoding/migration-plan.md).
   - Favero and Saint George score machines have no hardware pass (the owner has no machine, 2026-11-04); their decoders rest on unit tests, and Saint George priority is read from the `P` byte so it is never set (ported as-is).
+- [ ] Z-Wave control surface and panel for the DevTerm shell (`OoBDev.ZWave` has `ZWaveSession` but no `IControlSurface`/`IDevicePanel`, unlike the other device libraries; screen spec in `docs/applications/devterm/specs/`); network-management commands (include, exclude, reset) have no hardware pass. Found by the readme review 2026-11-12.
 
 ## 3. Test infrastructure
 

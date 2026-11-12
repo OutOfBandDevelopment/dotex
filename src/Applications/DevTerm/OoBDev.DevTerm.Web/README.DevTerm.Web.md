@@ -8,7 +8,7 @@ A host that opens one device session (`AddDevTermFrontEnd` selects the transport
 
 ## Verified
 
-`OoBDev.DevTerm.Web.Tests`: 43 Unit tests pass, 4 are ignored (they need the k8055 and busylight panels, which are not in `OoBDev.DevTerm.Core` yet). The Playwright user-flow and screenshot tests are `DevLocal` and were not run.
+`OoBDev.DevTerm.Web.Tests`: 49 Unit tests pass (2026-11-12), none ignored. The Playwright user-flow and screenshot tests are `DevLocal` and were not run.
 
 ## Not done
 
