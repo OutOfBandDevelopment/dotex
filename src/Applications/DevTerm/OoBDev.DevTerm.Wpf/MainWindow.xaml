@@ -4,23 +4,30 @@
         xmlns:ui="clr-namespace:UiDefinitionsWpf;assembly=OoBDev.UiDefinitions.Wpf"
         xmlns:avalon="https://github.com/Dirkster99/AvalonDock"
         Title="OoBDev DevTerm" Width="900" Height="600">
+    <Window.InputBindings>
+        <KeyBinding Key="N" Modifiers="Ctrl" Command="{Binding NewConnection}" />
+        <KeyBinding Key="O" Modifiers="Ctrl" Command="{Binding OpenPlaybackWindow}" />
+        <KeyBinding Key="L" Modifiers="Ctrl+Shift" Command="{Binding SelectedSession.ToggleLogging}" />
+        <KeyBinding Key="M" Modifiers="Ctrl" Command="{Binding ShowStreamMonitorWindow}" />
+        <KeyBinding Key="L" Modifiers="Ctrl" Command="{Binding SelectedSession.ClearOutput}" />
+    </Window.InputBindings>
     <DockPanel>
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="_File">
-                <MenuItem Header="_New connection..." Command="{Binding NewConnection}" />
+                <MenuItem Header="_New connection..." InputGestureText="Ctrl+N" Command="{Binding NewConnection}" />
                 <MenuItem Header="New _loopback session" Command="{Binding NewLoopbackSession}" />
                 <MenuItem Header="Listen for p_eers..." Command="{Binding ListenForPeers}" />
                 <MenuItem Header="Listen for _UDP..." Command="{Binding ListenForUdp}" />
-                <MenuItem Header="Open log for play_back..." Command="{Binding OpenPlaybackWindow}" />
+                <MenuItem Header="Open log for play_back..." InputGestureText="Ctrl+O" Command="{Binding OpenPlaybackWindow}" />
                 <Separator />
-                <MenuItem Header="Start lo_gging" Command="{Binding SelectedSession.ToggleLogging}" />
+                <MenuItem Header="Start lo_gging" InputGestureText="Ctrl+Shift+L" Command="{Binding SelectedSession.ToggleLogging}" />
                 <MenuItem Header="Add n_ote to log..." Command="{Binding SelectedSession.AddLogNote}" />
             </MenuItem>
             <MenuItem Header="_Device">
                 <MenuItem Header="Device _manifest..." Command="{Binding OpenManifestPanel}" />
                 <MenuItem Header="_Edit device manifest..." Command="{Binding ShowManifestEditor}" />
                 <Separator />
-                <MenuItem Header="_Stream monitor..." Command="{Binding ShowStreamMonitorWindow}" />
+                <MenuItem Header="_Stream monitor..." InputGestureText="Ctrl+M" Command="{Binding ShowStreamMonitorWindow}" />
                 <MenuItem Header="_Routing..." Command="{Binding ShowRoutingWindow}" />
                 <MenuItem Header="Converter _tools..." Command="{Binding ShowConverterTools}" />
                 <MenuItem Header="Confi_gure device..." Command="{Binding ShowConfigureDevice}" />
@@ -44,7 +51,7 @@
                 <Separator />
                 <MenuItem Header="_Echo sent commands" IsCheckable="True" IsChecked="{Binding SelectedSession.EchoSent, Mode=TwoWay}" />
                 <MenuItem Header="_Software flow control (XON/XOFF)" IsCheckable="True" IsEnabled="{Binding SelectedSession.HasSoftwareFlowControl}" IsChecked="{Binding SelectedSession.SoftwareFlowControl, Mode=TwoWay}" />
-                <MenuItem Header="Clea_r output" Command="{Binding SelectedSession.ClearOutput}" />
+                <MenuItem Header="Clea_r output" InputGestureText="Ctrl+L" Command="{Binding SelectedSession.ClearOutput}" />
             </MenuItem>
         </Menu>
         <Grid DockPanel.Dock="Bottom" DataContext="{Binding SelectedSession}" Margin="4">

@@ -55,7 +55,7 @@ A clean rebuild after the 2026-11-06 pass reports no analyzer warnings (218 befo
   - Web: a query endpoint and screen for the durable rights audit trail (the store exists since 2026-11-16); the endpoint home waits on Q3 in [OPEN-QUESTIONS.md](OPEN-QUESTIONS.md) (default: documentation only).
   - Messaging: GDPR erasure remainder (steps 3 to 5 of `docs/design/CqrsEventSourcing/erasure.md`: hash-chain re-seal once chaining exists and a right-guarded entry point with a screen spec).
   - AI and data: a re-embed screen in the example (the `POST /api/VectorStore/{collection}/reembed` endpoint exists); a judged query set for the vector and hybrid search (the keyword baseline exists, `SearchRelevanceTests`).
-  - DevTerm: keyboard shortcuts (the shell defines none; design which ones first); the manifest, permissions and signing prompt are designed in PluginSandbox and tracked on the sandbox item below.
+  - DevTerm: the manifest, permissions and signing prompt are designed in PluginSandbox and tracked on the sandbox item below.
 
 ## 6. Migrations
 

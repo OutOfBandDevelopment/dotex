@@ -101,6 +101,20 @@ is active — the WPF equivalent of the TUI's tab strip (`docs/specs/tui-main-sc
   `SwitchCts`, so a slow-to-fail connect on one tab can't stomp a newer switch's UI on that same tab,
   and switching a *different* tab's profile doesn't touch it at all (`docs/bugs/resolved/017-wpf-profile-switch-no-supersede.md`).
 
+## Keyboard shortcuts
+
+Decided 2026-11-16 (the shell had none beyond the access keys). Each is a `KeyBinding` on the window bound to the same command as its menu item, so the menu shows it (`InputGestureText`); `XamlKeyboardTests` rejects a duplicate shortcut or one no menu item shows.
+
+| Shortcut | Command | Menu item |
+| --- | --- | --- |
+| Ctrl+N | NewConnection | File > New connection |
+| Ctrl+O | OpenPlaybackWindow | File > Open log for playback |
+| Ctrl+Shift+L | SelectedSession.ToggleLogging | File > Start logging |
+| Ctrl+M | ShowStreamMonitorWindow | Device > Stream monitor |
+| Ctrl+L | SelectedSession.ClearOutput | View > Clear output |
+
+Not run: the keys pressed in the live window (the tests check the XAML only).
+
 ## Errors
 
 The window never closes itself or crashes over an error. Every error is appended to the relevant tab's

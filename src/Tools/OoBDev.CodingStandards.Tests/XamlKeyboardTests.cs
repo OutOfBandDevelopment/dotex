@@ -35,6 +35,25 @@ public class XamlKeyboardTests
         return null;
     }
 
+    internal static IEnumerable<string> ShortcutProblems(string xaml)
+    {
+        var document = XDocument.Parse(xaml);
+        var gestures = document.Descendants().Where(e => e.Name.LocalName == "KeyBinding")
+            .Select(e => $"{e.Attribute("Modifiers")?.Value}+{e.Attribute("Key")?.Value}".Trim('+'))
+            .ToList();
+        foreach (var duplicate in gestures.GroupBy(g => g, StringComparer.OrdinalIgnoreCase).Where(g => g.Count() > 1))
+        {
+            yield return $"shortcut {duplicate.Key} is bound more than once";
+        }
+
+        var shown = document.Descendants().Where(e => e.Name.LocalName == "MenuItem").Select(e => e.Attribute("InputGestureText")?.Value)
+            .Where(g => g is not null).ToHashSet(StringComparer.OrdinalIgnoreCase);
+        foreach (var gesture in gestures.Where(g => !shown.Contains(g)))
+        {
+            yield return $"shortcut {gesture} has no menu item showing it (InputGestureText)";
+        }
+    }
+
     internal static IEnumerable<string> MenuProblems(string xaml)
     {
         var document = XDocument.Parse(xaml);
@@ -107,6 +126,33 @@ public class XamlKeyboardTests
             """;
 
         Assert.HasCount(1, TabIndexProblems(xaml).ToList());
+    }
+
+    [TestMethod]
+    public void ShortcutProblems_DuplicateAndUnlabelled_AreReported()
+    {
+        const string xaml = """
+            <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+              <Window.InputBindings>
+                <KeyBinding Key="N" Modifiers="Ctrl" /><KeyBinding Key="N" Modifiers="Ctrl" /><KeyBinding Key="Q" Modifiers="Ctrl" />
+              </Window.InputBindings>
+              <Menu><MenuItem Header="_A" InputGestureText="Ctrl+N" /></Menu>
+            </Window>
+            """;
+
+        var problems = ShortcutProblems(xaml).ToList();
+
+        Assert.HasCount(2, problems);
+    }
+
+    [TestMethod]
+    public void XamlFiles_ShortcutsAreUniqueAndShownInAMenu()
+    {
+        var problems = XamlAccessibilityTests.XamlFiles()
+            .SelectMany(f => ShortcutProblems(File.ReadAllText(f)).Select(p => $"{Path.GetFileName(f)}: {p}"))
+            .ToList();
+
+        Assert.IsEmpty(problems, string.Join(Environment.NewLine, problems));
     }
 
     [TestMethod]
