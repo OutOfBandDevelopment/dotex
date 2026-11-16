@@ -68,3 +68,15 @@ Request [code-quality-scanner](docs/features/request/2026-11-10-code-quality-sca
 
 **Default:** A once confirmed; nothing built meanwhile.
 **Your answer:**
+
+### Q-EXAMPLE-ANONYMOUS — 2026-11-16 — Open endpoints in the example API
+
+The new right-coverage test (`EndpointRightCoverageTests`) found 18 actions of `OoBDev.Example.WebApi` with no `[ApplicationRight]`, `[Authorize]` or `[AllowAnonymous]` and no fallback policy, so they are open to anyone: Embed (AllMiniLM, SBERT, Ollama), Cache (Store, Lookup, Flush), Groq and Ollama completion, Operations info, Text tools, and the Toolbox calculators. They are in a `KnownOpen` list in the test (it may only shrink; a new unprotected action fails the test).
+
+**Options**
+- A (recommended): give each a right (for example `toolbox.use`, `cache.manage`, `ai.invoke`) and make the example hold them for its demo users, so the example shows the rule it teaches (owner decision: RBAC with `[ApplicationRight]` on every API surface).
+- B: add a fallback policy that requires an authenticated user, then mark only the deliberate public ones `[AllowAnonymous]`; coarser, fewer names to invent.
+- C: keep them open as a demo and mark them `[AllowAnonymous]` so the choice is explicit.
+
+**Default:** none changed (the test records the gap); A once you confirm the right names.
+**Your answer:**
