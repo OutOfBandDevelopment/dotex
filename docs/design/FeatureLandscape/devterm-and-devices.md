@@ -59,7 +59,7 @@ Part of the [feature landscape](README.md). Status is "a project exists under `s
 
 - **Works with:** UiDefinitions and Presenters (plugin kinds).
 - **Known issues:** the sandbox is a spike; in-process .NET plugins cannot be isolated by `AssemblyLoadContext` alone, so the design must pick out-of-process hosting or accept trusted plugins.
-- **Missing:** plugin manifest with version and permissions; signing and trust prompt.
+- **Designed:** the manifest (version, publish and subscribe topics, permissions), package signing and the grant prompt are in [PluginSandbox](../PluginSandbox/protocol-and-manifest.md) and spiked (`PackageVerifier`, `GrantStore`); the production host waits for the owner sign-off tracked in `BACKLOG.md`.
 
 ## Instruments and networks
 
