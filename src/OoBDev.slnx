@@ -254,6 +254,8 @@
   </Folder>
   <Folder Name="/Framework/">
     <Project Path="Framework/OoBDev.AI.Abstractions/OoBDev.AI.Abstractions.csproj" />
+    <Project Path="Framework/OoBDev.AI.Tests/OoBDev.AI.Tests.csproj" />
+    <Project Path="Framework/OoBDev.AI/OoBDev.AI.csproj" />
     <Project Path="Framework/OoBDev.Analyzers.Tests/OoBDev.Analyzers.Tests.csproj" />
     <Project Path="Framework/OoBDev.Analyzers/OoBDev.Analyzers.csproj" />
     <Project Path="Framework/OoBDev.AspNetCore.Abstractions/OoBDev.AspNetCore.Abstractions.csproj" />

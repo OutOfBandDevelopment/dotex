@@ -1,6 +1,6 @@
 # OoBDev.AI.Abstractions
 
-Contracts for embeddings and language models, so applications depend on these interfaces and the provider (Ollama, SBert, ONNX, vision models) is chosen by registration. Namespace `OoBDev.AI`; no implementation lives here.
+Contracts for embeddings and language models, so applications depend on these interfaces and the provider (Ollama, SBert, ONNX, vision models) is chosen by registration. Namespace `OoBDev.AI`; no implementation lives here (the usage decorators are in `OoBDev.AI`).
 
 ## Contracts
 
