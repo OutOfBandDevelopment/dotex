@@ -1,6 +1,6 @@
 # Feature request: software bill of materials report
 
-- **Status:** triaged
+- **Status:** done (2026-11-16)
 - **Requested by:** owner (found while cleaning `docs/templates`, 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** build, `OoBDev.TemplateEngine.Cli`, `docs/`
@@ -42,3 +42,5 @@ CycloneDX dotnet tool or the Microsoft sbom-tool (SPDX)? Commit the report or on
 The template is kept in [docs/templates](../../templates/README.md) (`SoftwareBillOfMaterials.md.xslt`).
 
 2026-11-11: triaged. Accepted as tooling work through deterministic scripts or MSTest entry points ([GeneratedGuides](../../design/GeneratedGuides/README.md)); scheduled behind the active work. Backlog: BACKLOG.md, Tooling requests.
+
+2026-11-16: done. `scripts/docs/sbom.ps1` writes `artifacts/sbom/bom.xml` (CycloneDX 1.6) from `dotnet list package --include-transitive` (no new tool, so the CycloneDX and sbom-tool question is moot) and `artifacts/sbom/bom.md` through `TemplateEngine.Cli` and the XSLT. The timestamp is the last commit's date, so two runs on one commit are identical (checked). The output is generated, not committed (`artifacts/` is ignored). The package list carries id, version and direct or transitive scope; licences, authors and hashes need the NuGet metadata and are not included.

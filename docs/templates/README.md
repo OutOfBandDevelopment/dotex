@@ -22,7 +22,7 @@ Templates that `OoBDev.TemplateEngine.Cli` runs to turn tool output into markdow
 |----------|--------|-------|--------|----------------|
 | `Documentation.md.xslt` | XSLT | compiler XML doc file (`*.xml`) | API reference page per assembly | [API reference](../features/request/2026-11-10-api-reference-from-xml-docs.md) |
 | `Service-Endpoints.md.hbs` | Handlebars | OpenAPI JSON (with `x-permissions`) | endpoint, rights and request listing | [Endpoint listing](../features/request/2026-11-10-readme-index-and-endpoint-listing.md) |
-| `SoftwareBillOfMaterials.md.xslt` | XSLT | CycloneDX 1.6 XML | component inventory | [SBOM report](../features/request/2026-11-10-sbom-report.md) |
+| `SoftwareBillOfMaterials.md.xslt` | XSLT | CycloneDX 1.6 XML | component inventory | built 2026-11-16 by `scripts/docs/sbom.ps1`; [SBOM report](../features/request/2026-11-10-sbom-report.md) |
 | `TestResultsToMarkdown.md.xslt` | XSLT | `.trx` test results | totals, failures and skipped tests | [Test results summary](../features/request/2026-11-10-test-results-summary.md) |
 | `DuplicateXml.xml.xslt` | XSLT | any XML | identity copy, a starting point for new XSLT | none |
 
