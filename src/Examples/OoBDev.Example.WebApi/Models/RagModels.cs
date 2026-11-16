@@ -10,6 +10,9 @@ public class RagPassage
 
     /// <summary>Gets or sets the passage text.</summary>
     public required string Text { get; set; }
+
+    /// <summary>Gets or sets the application right a caller needs to see this passage; empty means everyone.</summary>
+    public string? RequiredRight { get; set; }
 }
 
 /// <summary>Question plus the passages to search.</summary>

@@ -1,4 +1,5 @@
 using OoBDev.AI;
+using OoBDev.AspNetCore.Authorization;
 using OoBDev.SBert.AllMiniLmL6V2;
 using OoBDev.WebApi.Models;
 using OoBDev.WebApi.Services;
@@ -19,7 +20,9 @@ namespace OoBDev.WebApi.Controllers;
 /// </summary>
 [Route("api/[controller]")]
 [ApiController]
-public class SearchController([FromKeyedServices(SBertGlobals.AllMiniLmL6V2Key)] IEmbeddingProvider embedding) : ControllerBase
+public class SearchController(
+    [FromKeyedServices(SBertGlobals.AllMiniLmL6V2Key)] IEmbeddingProvider embedding,
+    IApplicationRightChecker rights) : ControllerBase
 {
     /// <summary>
     /// Runs the query in all three modes.
@@ -35,17 +38,19 @@ public class SearchController([FromKeyedServices(SBertGlobals.AllMiniLmL6V2Key)]
             return Problem(title: "Nothing to search", detail: "Give a query and at least one passage.", statusCode: StatusCodes.Status400BadRequest);
         }
 
+        var passages = PassageAccess.VisibleTo(model.Passages, User, rights);
+        var hidden = model.Passages.Count - passages.Count;
         var limit = Math.Clamp(model.Limit, 1, 20);
         var question = (await embedding.GenerateEmbeddingAsync(model.Query, default, default)).ToArray();
         var scored = new List<SearchHitModel>();
-        foreach (var passage in model.Passages)
+        foreach (var passage in passages)
         {
             var vector = (await embedding.GenerateEmbeddingAsync(passage.Text, default, default)).ToArray();
             scored.Add(new SearchHitModel { Id = passage.Id, Text = passage.Text, Score = TensorPrimitives.CosineSimilarity(question, vector) });
         }
 
         var semantic = scored.OrderByDescending(h => h.Score).ToList();
-        var lexical = SearchScoring.Lexical(model.Query, model.Passages);
+        var lexical = SearchScoring.Lexical(model.Query, passages);
         var hybrid = SearchScoring.Fuse(lexical, semantic);
 
         return new SearchResponseModel
@@ -53,6 +58,7 @@ public class SearchController([FromKeyedServices(SBertGlobals.AllMiniLmL6V2Key)]
             Lexical = lexical.Take(limit).ToList(),
             Semantic = semantic.Take(limit).ToList(),
             Hybrid = hybrid.Take(limit).ToList(),
+            Hidden = hidden,
         };
     }
 }
