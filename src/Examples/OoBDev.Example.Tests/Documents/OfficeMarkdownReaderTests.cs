@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace OoBDev.Examples.Tests.Documents;
 
@@ -25,7 +26,7 @@ public class OfficeMarkdownReaderTests
     [DataRow("sample2.doc")]
     [DataRow("sample2.odt")]
     [DataRow("sample-2.rtf")]
-    public void Read_OfficeSample_ReturnsMarkdownThroughTheTikaChain(string resourceName)
+    public async Task Read_OfficeSample_ReturnsMarkdownThroughTheTikaChain(string resourceName)
     {
         // Stage
         var config = new ConfigurationBuilder()
@@ -34,7 +35,7 @@ public class OfficeMarkdownReaderTests
                 ["ApacheTikaClientOptions:Url"] = TestContext.GetPropertyOrDefault("TIKA_URL", "http://127.0.0.1:9998"),
             })
             .Build();
-        using var provider = new ServiceCollection()
+        await using var provider = new ServiceCollection()
             .AddLogging()
             .TryAllCommonExtensions(config, systemBuilder: new(), aspNetBuilder: new(), jwtBuilder: new(), identityBuilder: new(), externalBuilder: new(), hostingBuilder: new())
             .BuildServiceProvider();
