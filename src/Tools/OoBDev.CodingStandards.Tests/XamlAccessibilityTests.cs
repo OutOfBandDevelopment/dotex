@@ -95,4 +95,16 @@ public class XamlAccessibilityTests
 
         Assert.IsEmpty(problems, string.Join(Environment.NewLine, problems));
     }
+
+    [TestMethod]
+    public void DialogWindows_CloseOnEscape()
+    {
+        var missing = XamlFiles()
+            .Where(f => f.EndsWith("Window.xaml", StringComparison.Ordinal) && !f.EndsWith("MainWindow.xaml", StringComparison.Ordinal))
+            .Where(f => !File.ReadAllText(f).Contains("IsCancel=\"True\"", StringComparison.Ordinal))
+            .Select(Path.GetFileName)
+            .ToList();
+
+        Assert.IsEmpty(missing, "Windows without an IsCancel button (Escape does not close them): " + string.Join(", ", missing));
+    }
 }

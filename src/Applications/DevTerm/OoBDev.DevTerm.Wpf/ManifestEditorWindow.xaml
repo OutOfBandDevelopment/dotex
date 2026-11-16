@@ -68,6 +68,9 @@
                 </ScrollViewer>
             </DockPanel>
         </Grid>
-        <TextBlock Grid.Row="2" Margin="0,6,0,0" TextWrapping="Wrap" Text="{Binding Status}" />
+        <DockPanel Grid.Row="2" Margin="0,6,0,0">
+            <Button DockPanel.Dock="Right" Content="Close" IsCancel="True" Margin="8,0,0,0" Padding="12,3" />
+            <TextBlock TextWrapping="Wrap" Text="{Binding Status}" VerticalAlignment="Center" />
+        </DockPanel>
     </Grid>
 </Window>
