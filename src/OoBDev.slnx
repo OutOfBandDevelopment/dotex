@@ -261,6 +261,8 @@
     <Project Path="Framework/OoBDev.Analyzers.Tests/OoBDev.Analyzers.Tests.csproj" />
     <Project Path="Framework/OoBDev.Analyzers/OoBDev.Analyzers.csproj" />
     <Project Path="Framework/OoBDev.AspNetCore.Abstractions/OoBDev.AspNetCore.Abstractions.csproj" />
+    <Project Path="Framework/OoBDev.AspNetCore.EntityFrameworkCore.Tests/OoBDev.AspNetCore.EntityFrameworkCore.Tests.csproj" />
+    <Project Path="Framework/OoBDev.AspNetCore.EntityFrameworkCore/OoBDev.AspNetCore.EntityFrameworkCore.csproj" />
     <Project Path="Framework/OoBDev.AspNetCore.JwtAuthentication/OoBDev.AspNetCore.JwtAuthentication.csproj" />
     <Project Path="Framework/OoBDev.AspNetCore.Mvc/OoBDev.AspNetCore.Mvc.csproj" />
     <Project Path="Framework/OoBDev.AspNetCore.Tests/OoBDev.AspNetCore.Tests.csproj" />

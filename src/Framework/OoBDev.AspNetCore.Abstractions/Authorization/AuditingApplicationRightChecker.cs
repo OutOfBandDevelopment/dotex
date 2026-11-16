@@ -9,8 +9,13 @@ namespace OoBDev.AspNetCore.Authorization;
 /// <summary>
 /// Wraps an <see cref="IApplicationRightChecker"/> and writes one structured log entry per check: who asked,
 /// which rights were required and the outcome. Denials log at warning, allowed checks at information.
+/// An optional <see cref="IRightAuditSink"/> also receives each check for a durable trail.
 /// </summary>
-public partial class AuditingApplicationRightChecker(IApplicationRightChecker inner, ILogger<AuditingApplicationRightChecker> logger) : IApplicationRightChecker
+public partial class AuditingApplicationRightChecker(
+    IApplicationRightChecker inner,
+    ILogger<AuditingApplicationRightChecker> logger,
+    IRightAuditSink? sink = null,
+    TimeProvider? timeProvider = null) : IApplicationRightChecker
 {
     /// <inheritdoc/>
     public RightCheckResult Check(ClaimsPrincipal principal, IReadOnlyCollection<string> requiredRights)
@@ -28,6 +33,7 @@ public partial class AuditingApplicationRightChecker(IApplicationRightChecker in
             LogDenied(logger, subject, rights, result);
         }
 
+        sink?.Record(new RightAuditEntry((timeProvider ?? TimeProvider.System).GetUtcNow(), subject, rights, result.ToString()));
         return result;
     }
 

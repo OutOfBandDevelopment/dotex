@@ -124,7 +124,7 @@ public static class ServiceCollectionExtensions
         services.Add(ServiceDescriptor.Describe(typeof(AuditedInner), sp => new AuditedInner(CreateInner(sp, existing)), existing.Lifetime));
         services.Add(ServiceDescriptor.Describe(
             typeof(IApplicationRightChecker),
-            sp => new AuditingApplicationRightChecker(sp.GetRequiredService<AuditedInner>().Checker, sp.GetRequiredService<Microsoft.Extensions.Logging.ILogger<AuditingApplicationRightChecker>>()),
+            sp => new AuditingApplicationRightChecker(sp.GetRequiredService<AuditedInner>().Checker, sp.GetRequiredService<Microsoft.Extensions.Logging.ILogger<AuditingApplicationRightChecker>>(), sp.GetService<IRightAuditSink>(), sp.GetService<TimeProvider>()),
             existing.Lifetime));
         return services;
     }

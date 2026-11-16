@@ -38,7 +38,8 @@ Part of the [feature landscape](README.md). Status is "a project exists under `s
 - **Practices:** secure by default, deny without a right, rights not roles in code, roles translated in middleware.
 - **Built 2026-11-16:** `EndpointRightCoverageTests` (example API) fails on a new controller action with no `[ApplicationRight]`, `[Authorize]` or `[AllowAnonymous]`. The 18 open actions got rights on 2026-11-16 (`toolbox.use`, `cache.manage`, `ai.invoke`, `operations.read`, all held by the `admin` role in `appsettings.json`), so the test now allows none.
 - **Built 2026-11-16:** `AuditingApplicationRightChecker` and `AddRightAuditLog()` log every right check (who, rights, outcome).
-- **Missing:** a durable audit store with retention (logs only for now).
+- **Built 2026-11-16:** `OoBDev.AspNetCore.EntityFrameworkCore`: `IRightAuditSink` receives each check, a bounded buffer and `RightAuditWriter` store it in batches with a retention purge (`OoBDev:RightAudit`).
+- **Missing:** a right-guarded query endpoint and screen for the trail; shipped migrations.
 
 ## HttpQueryVerb and ODataQuery
 
