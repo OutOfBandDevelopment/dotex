@@ -1,6 +1,6 @@
 ﻿# Metadata-driven query engine
 
-Status: **design written 2026-11-12; placement confirmed by the owner 2026-11-12 (option A: database-free Framework project plus a PostgreSQL adapter), nothing built.** Request: [metadata-driven query engine](../../features/request/2026-11-11-metadata-driven-query-engine.md). Transport options: [OData over QUERY](../ODataQuery/README.md) and [HTTP QUERY verb](../HttpQueryVerb/README.md).
+Status: **first slice built 2026-11-16 (rows, facets, keyset paging, text form, describer, OpenAPI, rights; Framework project plus PostgreSQL adapter, owner placement 2026-11-12 option A); the items under "Not in the first slice" are open.** Request: [metadata-driven query engine](../../features/request/2026-11-11-metadata-driven-query-engine.md). Transport options: [OData over QUERY](../ODataQuery/README.md) and [HTTP QUERY verb](../HttpQueryVerb/README.md).
 
 ## Contents
 
@@ -46,10 +46,10 @@ One request shape answers every read screen. A *kind* (a row class) declares by 
 
 | Project | Current location | Target location | Namespace | Package or unit |
 |---------|------------------|-----------------|-----------|-----------------|
-| Attributes, model, registry, parser, compiler, describer | `C:\repo\_storage\src\Storage.Query` (read-only reference) | new `src/Framework/OoBDev.Query.Metadata` | `OoBDev.Query.Metadata` | packable, no database reference |
-| PostgreSQL dialect and engine runner | `QueryEngine.cs`, `SqlParameters.cs` | new `src/ExternalServices/OoBDev.Query.Postgres` | `OoBDev.Query.Postgres` | packable adapter, Npgsql only here |
+| Attributes, model, registry, parser, compiler, describer | `C:\repo\_storage\src\Storage.Query` (read-only reference) | `src/Framework/OoBDev.Query.Metadata` (built) | `OoBDev.Query.Metadata` | packable, no database reference |
+| PostgreSQL dialect and engine runner | `QueryEngine.cs`, `SqlParameters.cs` | new `src/ExternalServices/PostgreSql/OoBDev.PostgreSql.Query` | `OoBDev.PostgreSql.Query` | packable adapter, Npgsql only here |
 | Host sample | `Storage.Query.Web` | after the placement answer (an example under `src/Examples`) | `OoBDev.Example.Query` | sample |
-| Tests | `tests/Storage.Query.Tests` | `OoBDev.Query.Metadata.Tests`, `OoBDev.Query.Postgres.Tests` (compile output as `Unit`; database run as `Integration` on the stack's PostgreSQL if one exists) | matching | MSTest |
+| Tests | `tests/Storage.Query.Tests` | `OoBDev.Query.Metadata.Tests`, `OoBDev.PostgreSql.Query.Tests` (compile output as `Unit`; database run as `Integration` on the stack's PostgreSQL if one exists) | matching | MSTest |
 
 **Table 3 — References that change**
 
