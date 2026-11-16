@@ -41,7 +41,8 @@ Part of the [feature landscape](README.md). Status is "a project exists under `s
 - **Known issues:** broker-specific behaviour (visibility timeout, prefetch, ordering) differs per adapter; the design should list which guarantees the abstraction promises.
 - **Practices:** handler pattern `IHandler<TRequest, TResponse>`, provider/factory per broker, outbox for publish-after-commit.
 - **Built 2026-11-16:** the inbox half: `IdempotentMessageQueueHandler` with `IInboxStore` (idempotent consumers for every adapter).
-- **Missing:** the outbox half (publish-after-commit store and dispatcher) and a database `IInboxStore`.
+- **Built 2026-11-16:** the outbox half: `OutboxMessageQueueSender`, `OutboxDispatcher`, `IOutboxStore`.
+- **Missing:** database implementations of `IInboxStore` and `IOutboxStore` (the outbox write in the business transaction) and a hosted service that runs the dispatcher.
 
 ## Communications and MessageComposition
 
