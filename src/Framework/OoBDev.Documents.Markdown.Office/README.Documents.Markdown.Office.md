@@ -17,3 +17,5 @@ services.TryAddOfficeMarkdown();
 ```
 
 `IFileMarkdownReader.Read` is synchronous, so the conversion is awaited on the caller's thread. Spreadsheets and presentations (`.xlsx`, `.pptx`) have no Tika handler yet and are not listed.
+
+Tests: unit tests in `OoBDev.Documents.Markdown.Office.Tests`; the real chain is exercised by `OfficeMarkdownReaderTests` in `OoBDev.Example.Tests` (Integration, needs the Tika container).
