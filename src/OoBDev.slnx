@@ -202,6 +202,8 @@
   <Folder Name="/ExternalServices/PostgreSql/">
     <Project Path="ExternalServices/PostgreSql/OoBDev.PostgreSql.Pgmq.Tests/OoBDev.PostgreSql.Pgmq.Tests.csproj" />
     <Project Path="ExternalServices/PostgreSql/OoBDev.PostgreSql.Pgmq/OoBDev.PostgreSql.Pgmq.csproj" />
+    <Project Path="ExternalServices/PostgreSql/OoBDev.PostgreSql.WorkQueue.Tests/OoBDev.PostgreSql.WorkQueue.Tests.csproj" />
+    <Project Path="ExternalServices/PostgreSql/OoBDev.PostgreSql.WorkQueue/OoBDev.PostgreSql.WorkQueue.csproj" />
   </Folder>
   <Folder Name="/ExternalServices/RabbitMQ/">
     <Project Path="ExternalServices/RabbitMQ/OoBDev.RabbitMQ.Tests/OoBDev.RabbitMQ.Tests.csproj" />
@@ -290,6 +292,8 @@
     <Project Path="Framework/OoBDev.Search.Abstractions/OoBDev.Search.Abstractions.csproj" />
     <Project Path="Framework/OoBDev.Search.Tests/OoBDev.Search.Tests.csproj" />
     <Project Path="Framework/OoBDev.Search/OoBDev.Search.csproj" />
+    <Project Path="Framework/OoBDev.WorkQueue.Tests/OoBDev.WorkQueue.Tests.csproj" />
+    <Project Path="Framework/OoBDev.WorkQueue/OoBDev.WorkQueue.csproj" />
     <Project Path="Framework/OoBDev.SemanticKernel.Abstractions/OoBDev.SemanticKernel.Abstractions.csproj" />
     <Project Path="Framework/OoBDev.SemanticKernel/OoBDev.SemanticKernel.csproj" />
     <Project Path="Framework/OoBDev.Telemetry.Tests/OoBDev.Telemetry.Tests.csproj" />

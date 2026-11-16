@@ -178,7 +178,7 @@ Tests that require live cloud credentials. Manual execution only.
 
 **Docker Container:** `oobd-test-pgvector` (host port 5435, override with `TEST_PORT_PGVECTOR`)
 
-**Tests Using:** none yet; the pgvector store and work queue tests will use it.
+**Tests Using:** `OoBDev.PostgreSql.WorkQueue.Tests` (work queue, throwaway schema per test); the pgvector store tests will use it too.
 
 ---
 

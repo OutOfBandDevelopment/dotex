@@ -1,6 +1,6 @@
 ﻿# Database work queue for restartable stages
 
-Status: **design written 2026-11-12; placement confirmed by the owner 2026-11-12 (option A: Framework project plus a PostgreSQL adapter), nothing built.** Request: [database stage work queue](../../features/request/2026-11-11-database-stage-work-queue.md). Related: [postgres support](../../features/request/2026-11-10-postgres-support.md).
+Status: **first slice built 2026-11-16** (Framework `OoBDev.WorkQueue` with the in-memory provider and stage workers, PostgreSQL adapter `OoBDev.PostgreSql.WorkQueue`; placement confirmed by the owner 2026-11-12, option A). Worker events, the PGMQ reader and application stages are not built. Request: [database stage work queue](../../features/request/2026-11-11-database-stage-work-queue.md). Related: [postgres support](../../features/request/2026-11-10-postgres-support.md).
 
 ## Contents
 
@@ -49,14 +49,14 @@ Long-running, restartable pipelines need a queue where the unit of work is a vis
 | Project | Current location | Target location | Namespace | Package or unit |
 |---------|------------------|-----------------|-----------|-----------------|
 | Contracts, SLA, options, hosting shape | `C:\repo\_storage\src\Storage.Work` and `Storage.Workers` hosting (read-only reference) | new `src/Framework/OoBDev.WorkQueue` | `OoBDev.WorkQueue` | packable, no database reference |
-| PostgreSQL provider and migration | `WorkQueue.cs`, `TaskEnqueuer.cs`, `WorkerEvents.cs` | new `src/ExternalServices/OoBDev.WorkQueue.Postgres` | `OoBDev.WorkQueue.Postgres` | packable adapter, Npgsql only here |
-| Tests | `tests/Storage.Api.Tests`, `Storage.Catalog.IntegrationTests` | `OoBDev.WorkQueue.Tests` (fake clock, in-memory fake provider, `Unit`) and `OoBDev.WorkQueue.Postgres.Tests` (`Integration`, needs a PostgreSQL service in the stack) | matching | MSTest |
+| PostgreSQL provider and migration | `WorkQueue.cs`, `TaskEnqueuer.cs`, `WorkerEvents.cs` | new `src/ExternalServices/PostgreSql/OoBDev.PostgreSql.WorkQueue` (grouped with the pgmq adapter) | `OoBDev.PostgreSql.WorkQueue` | packable adapter, Npgsql only here |
+| Tests | `tests/Storage.Api.Tests`, `Storage.Catalog.IntegrationTests` | `OoBDev.WorkQueue.Tests` (fake clock, in-memory fake provider, `Unit`) and `OoBDev.PostgreSql.WorkQueue.Tests` (`Unit` for script, options and registration; `Integration` against the `pgvector` service) | matching | MSTest |
 
 **Table 3 — References that change**
 
 | Project | Change |
 |---------|--------|
-| Test stack | gains a PostgreSQL service (the `add-integration-service` skill) when the provider tests are written |
+| Test stack | gained the `pgvector` PostgreSQL service (2026-11-16) |
 | Storage catalog | drops `Storage.Work` and references the packages (outside this repository) |
 
 ## Testing strategy
