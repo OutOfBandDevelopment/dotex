@@ -1,5 +1,7 @@
 # Message Queue Provider Migration Checklist
 
+> **Archived 2026-11-16.** The migration is done: the AWS SQS adapter is `src/ExternalServices/Amazon/OoBDev.Amazon.Sqs` and the Azure Service Bus adapter lives under `src/ExternalServices/Microsoft`, each with a readme and tests. The unchecked boxes below are the January plan, not open work; the pattern in use is [pattern-context-based](../pattern-context-based.md).
+
 **Date:** 2026-01-20
 **Pattern:** Context-Based (Following RabbitMQ Implementation)
 **Target:** AWS SQS and Azure Service Bus
