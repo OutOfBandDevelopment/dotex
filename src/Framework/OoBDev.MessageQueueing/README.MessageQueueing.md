@@ -32,6 +32,7 @@ Inject `IMessageQueueSender` (channel `object`) or `IMessageQueueSender<TChannel
 | `MessageHandlerProvider` | Builds the message context, converts the payload to the message's `PayloadType` through the JSON serializer, and calls every handler of the group in turn. |
 | `MessageContext`, `MessageContextFactory` | The context passed to senders and handlers (ids, headers, configuration, caller information). |
 | `InProcessMessageProvider` | Sender and receiver in one: a singleton `ConcurrentQueue` per process, provider key `in-process`. `RunAsync` polls every `InProcessMessageProviderOptions.PollInterval` (default one second) and throws when no handler provider was set. For tests and single-process use. |
+| `IdempotentMessageQueueHandler`, `IInboxStore`, `InMemoryInboxStore` | Inbox: wraps a handler so a message id (`SentId`) is handled once per consumer name; a handler that throws releases the id so the broker redelivery runs again. The in-memory store forgets on restart; a database store implements `IInboxStore` when redelivery can cross a restart. Messages without an id are always handled. |
 
 Messages are wrapped as `WrappedQueueMessage` (content type, payload type, correlation id, payload, properties) by the in-process provider.
 

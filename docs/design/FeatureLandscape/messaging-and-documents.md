@@ -40,7 +40,8 @@ Part of the [feature landscape](README.md). Status is "a project exists under `s
 - **Works with:** AsyncApi (documents the queues), Communications (sends through the queue), CqrsEventSourcing (the event feed could ride on it).
 - **Known issues:** broker-specific behaviour (visibility timeout, prefetch, ordering) differs per adapter; the design should list which guarantees the abstraction promises.
 - **Practices:** handler pattern `IHandler<TRequest, TResponse>`, provider/factory per broker, outbox for publish-after-commit.
-- **Missing:** an outbox/inbox design (idempotent consumers) shared by all adapters.
+- **Built 2026-11-16:** the inbox half: `IdempotentMessageQueueHandler` with `IInboxStore` (idempotent consumers for every adapter).
+- **Missing:** the outbox half (publish-after-commit store and dispatcher) and a database `IInboxStore`.
 
 ## Communications and MessageComposition
 
