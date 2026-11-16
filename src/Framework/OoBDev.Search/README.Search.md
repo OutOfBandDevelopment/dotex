@@ -26,6 +26,15 @@ This adds `IVectorStoreFactory` (`VectorStoreFactory`) and the open generic `IVe
 
 `IVectorStore<T>` wraps the store for `T`'s collection and forwards `FindNeighborsAsync` (with or without a group-by), `ListAsync` and both `StoreVectorsAsync` overloads.
 
+## Embedding version tag
+
+`EmbeddingVersion` records which model produced each vector, inside the vector metadata (key `embeddingModel`), so no store needs a schema change:
+
+- `Tag(modelId, dimensions)` builds the tag, for example `all-MiniLM-L6-v2/384`; `Stamp(metadata, tag)` returns a copy of the metadata carrying it (pass the result to `StoreVectorsAsync`).
+- `Read(result)`, `IsStale(result, currentTag)` and `StaleIds(results, currentTag)` find the rows to re-embed after a model change; a vector stored before tagging counts as stale.
+
+The embedder presets expose the model id and dimensions through `EmbeddingGeneratorMetadata`, which is what to feed `Tag`.
+
 ## Search requests, text form and hybrid merge
 
 One request model (`SearchRequest`, in `OoBDev.Search.Abstractions`) is understood by every `ISearchProvider`: free text, `FieldFilter` conditions, an optional `SearchAnchor` (`like` an item or `near` a text or vector), sort, page size and an opaque cursor. Each `SearchItem` carries a `SearchExplanation` (field, vector index, distance, the score per source and the fusion name). A provider lists the filters it supports in `SupportedFilters` and throws `UnsupportedFilterException` (filter name only, never the value) for the rest.
