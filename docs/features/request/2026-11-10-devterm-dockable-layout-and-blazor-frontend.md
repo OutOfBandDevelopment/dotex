@@ -1,6 +1,6 @@
 # Feature request: DevTerm dockable layout (WPF) and Blazor web front end
 
-- **Status:** triaged
+- **Status:** triaged (WPF docking built; Blazor open)
 - **Requested by:** owner (retire dev-term, 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** `src/Applications/DevTerm` (WPF shell, Web host)
