@@ -1,6 +1,6 @@
 # Feature request: a code quality scanner (new SonarQube or similar)
 
-- **Status:** triaged
+- **Status:** triaged (owner, 2026-11-16: SonarQube Community in the integration stack with `dotnet-sonarscanner`, token in a user secret, `scripts/ci/sonar.ps1`, switchable gate; add it with the `add-integration-service` skill)
 - **Requested by:** owner (2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** build, `scripts/ci`, `.config/dotnet-tools.json`
