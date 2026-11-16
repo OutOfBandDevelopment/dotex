@@ -65,6 +65,10 @@ Custom JSON converter for dictionaries with string keys and object values.
 
 ## Templating
 
+### TemplateRenderHarness
+
+`TemplateRenderHarness.CheckAsync(engine, cases)` renders each `TemplateRenderCase` (template name, sample data, approved output) and returns a `TemplateRenderFailure` per case that is missing, renders nothing, throws or differs; the reason names the first differing line. Line endings and trailing blank lines are ignored. Use it in a project test so a template or engine change that alters a message fails the build (`TemplateRenderHarnessTests`).
+
 ### FileTemplateSource
 Access template from the file system.
 - **Get(templateName: string)**: Looks up templates from the file system.
