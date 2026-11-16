@@ -22,7 +22,9 @@ A maintainer sets the **Status** line at the top of your file:
 
 - `new` — waiting for triage.
 - `triaged` — merged into a design document (`docs/design/<Feature>/`) and [BACKLOG.md](../../../BACKLOG.md); the file names both.
-- `declined` — not planned, with the reason.
-- `done` — built and tested; the file links the change document in [docs/changes](../../changes/README.md).
+- `declined` — not planned, with the reason; the file moves to [rejected](../rejected/).
+- `done` — built and tested; the file links the change document in [docs/changes](../../changes/README.md) and moves to [completed](../completed/).
+
+Only `new` and `triaged` requests stay in this folder. A closed request moves with `git mv`, and the links to it are fixed in the same commit. The `work-tracking` hook warns when a request sits in the wrong folder.
 
 Questions back to the requester go into the file under **Triage notes**, so the history stays with the request.

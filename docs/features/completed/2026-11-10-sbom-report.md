@@ -21,7 +21,7 @@ A repeatable command writes a CycloneDX SBOM for the solution and a markdown rep
 
 ## Existing code checked
 
-`TemplateEngine.Cli` runs XSLT and Handlebars templates, so the report step exists. No CycloneDX tool is wired; the [framework wish list](2026-11-10-framework-wish-list.md) keeps the CycloneDX and Microsoft sbom-tool links.
+`TemplateEngine.Cli` runs XSLT and Handlebars templates, so the report step exists. No CycloneDX tool is wired; the [framework wish list](../request/2026-11-10-framework-wish-list.md) keeps the CycloneDX and Microsoft sbom-tool links.
 
 ## Security and operations
 

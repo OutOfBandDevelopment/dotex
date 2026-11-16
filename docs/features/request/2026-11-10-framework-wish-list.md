@@ -102,7 +102,7 @@ Original text (headings lowered by one level):
 - [ ] Create example dotnet template set
 - [ ] Add data redaction extension for query engine
 
-### SBOM references (for the [SBOM request](2026-11-10-sbom-report.md))
+### SBOM references (for the [SBOM request](../completed/2026-11-10-sbom-report.md))
 
 * https://spdx.dev/use/tools/
 * https://github.com/microsoft/sbom-tool
