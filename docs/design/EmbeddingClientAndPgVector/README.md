@@ -64,7 +64,7 @@ Unit: batch vectors come back in request order with the configured dimension; op
 
 - The container image and compose file (nothing in the catalog is an embedding server; revisit if the owner wants one published).
 - Annotation abstractions in code.
-- The image variant (`IImageEmbeddingProvider` posting bytes) and the ONNX providers implementing the shared interface.
+- The image variant (`IImageEmbeddingProvider` posting bytes) and the ONNX providers implementing the shared interface. Deferred 2026-11-16: no server in the stack or the catalog speaks an image wire format (OpenAI has no image embeddings route), so a contract written now could not be tested against a real server; build it with the first server that needs it.
 - A shared explanation type with HybridSearch: `VectorMatch` (vector index and distance) lives in the pgvector project until HybridSearch needs it.
 - The annotation pattern page `docs/design/AnnotationLayer/` (waits on the placement answer).
 - ONNX versus HTTP cosine comparison on a fixed sample (needs a running embedding server; the Ollama service in the stack can serve it).
