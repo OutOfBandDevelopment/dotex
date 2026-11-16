@@ -36,3 +36,16 @@ DevTerm and the other desktop clients have no sign-in code (nothing under `src/A
 **Default:** C until answered; the BACKLOG item waits.
 
 **Your answer:**
+
+### Q3 (2026-11-16, Web, right audit): where does the query endpoint for the durable right audit trail live?
+
+`EfRightAuditStore.QueryAsync` exists, but nothing exposes it. A right-guarded endpoint (rights such as `audit.read`) needs ASP.NET, and `OoBDev.AspNetCore.EntityFrameworkCore` is host-free (EF Core Relational and hosting abstractions only). The example web API has no EF reference and no database.
+
+**Options**
+- A. Add the endpoint to `OoBDev.AspNetCore.Mvc` behind a small `IRightAuditQuery` contract in `OoBDev.AspNetCore.Abstractions`; the EF store implements it. The library stays host-free, the controller is reusable, and any store (not only EF) can serve it. (recommended: follows "reusable means Framework" and keeps the host reference where it already is.)
+- B. Add a `MapRightAudit()` minimal-API extension to the EF project and give it a `FrameworkReference` to ASP.NET. One package, but a host-bound library holding data access.
+- C. Only document how to expose it in the consumer; the example stays without it.
+
+**Default:** C until answered; the BACKLOG item waits.
+
+**Your answer:**
