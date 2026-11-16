@@ -26,11 +26,15 @@ public class EventTypeRegistry
     /// </summary>
     /// <param name="type">The event class.</param>
     /// <returns>The registry for chaining.</returns>
-    /// <exception cref="InvalidOperationException">Another class already uses the name.</exception>
+    /// <exception cref="InvalidOperationException">Another class already uses the name, or the class has a <c>SubjectId</c> property and neither <see cref="PersonalDataAttribute"/> nor <see cref="NoPersonalDataAttribute"/>.</exception>
     public EventTypeRegistry Register(Type type)
     {
         ArgumentNullException.ThrowIfNull(type);
         var name = NameOf(type);
+        if (type.GetProperty(SubjectIdProperty, BindingFlags.Public | BindingFlags.Instance) is not null
+            && type.GetCustomAttribute<PersonalDataAttribute>() is null
+            && type.GetCustomAttribute<NoPersonalDataAttribute>() is null)
+            throw new InvalidOperationException($"{type} has a {SubjectIdProperty} property: mark it [PersonalData] (and list the personal fields) or [NoPersonalData] so erasure cannot miss it.");
         var existing = _byName.GetOrAdd(name, type);
         if (existing != type)
             throw new InvalidOperationException($"Event type name '{name}' is used by both {existing} and {type}.");
@@ -68,6 +72,9 @@ public class EventTypeRegistry
 
         return new PersonalDataRule(marks.SubjectProperty, placeholders);
     }
+
+    /// <summary>The property name that makes an event class subject to the personal data check.</summary>
+    public const string SubjectIdProperty = "SubjectId";
 
     /// <summary>The placeholder stored in a non-nullable text field after erasure.</summary>
     public const string ErasedText = "[erased]";

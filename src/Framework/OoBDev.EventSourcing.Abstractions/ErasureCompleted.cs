@@ -5,4 +5,5 @@ namespace OoBDev.EventSourcing;
 /// <param name="RequestId">The request id.</param>
 /// <param name="EventsChanged">How many events were changed.</param>
 [EventType("ErasureCompleted")]
+[NoPersonalData]
 public sealed record ErasureCompleted(string SubjectId, string RequestId, int EventsChanged);

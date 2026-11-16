@@ -32,7 +32,7 @@ An aggregate that implements `ISnapshotable` (`CaptureState`, `RestoreState`) is
 
 ## GDPR erasure
 
-Mark an event class `[PersonalData("CustomerId", "Name", "Email")]` (subject property, then the personal fields) and register it in the `EventTypeRegistry`. `ErasureService.RequestAsync(subject, requestId, knownCopies)` appends an `ErasureRequested` tombstone to the stream `erasure:{subject}`; `CompactAsync()` blanks the marked fields of every event of each open request's subject through `IEventPayloadRewriter`, appends `ErasureCompleted` with the count and calls the `ISubjectErasureHandler` services. A second run changes nothing. Design and what erasure breaks: [erasure](../../../docs/design/CqrsEventSourcing/erasure.md). The selected event store must implement `IEventPayloadRewriter` (in-memory and EF do).
+Mark an event class `[PersonalData("CustomerId", "Name", "Email")]` (subject property, then the personal fields) (or `[NoPersonalData]` when `SubjectId` is only a reference; a class with a `SubjectId` property and neither mark is refused at registration) and register it in the `EventTypeRegistry`. `ErasureService.RequestAsync(subject, requestId, knownCopies)` appends an `ErasureRequested` tombstone to the stream `erasure:{subject}`; `CompactAsync()` blanks the marked fields of every event of each open request's subject through `IEventPayloadRewriter`, appends `ErasureCompleted` with the count and calls the `ISubjectErasureHandler` services. A second run changes nothing. Design and what erasure breaks: [erasure](../../../docs/design/CqrsEventSourcing/erasure.md). The selected event store must implement `IEventPayloadRewriter` (in-memory and EF do).
 
 ## CloudEvents ingress
 

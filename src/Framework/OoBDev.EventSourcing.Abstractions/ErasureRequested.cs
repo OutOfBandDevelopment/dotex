@@ -7,4 +7,5 @@ namespace OoBDev.EventSourcing;
 /// <param name="RequestId">The request id.</param>
 /// <param name="KnownCopies">Other places that hold copies (backups, exports) and need their own request.</param>
 [EventType("ErasureRequested")]
+[NoPersonalData]
 public sealed record ErasureRequested(string SubjectId, string RequestId, IReadOnlyList<string> KnownCopies);

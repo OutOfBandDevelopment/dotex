@@ -157,4 +157,30 @@ public class ErasureServiceTests
     [TestCategory(TestCategories.Unit)]
     public void RuleFor_UnmarkedType_IsNull()
         => Assert.IsNull(new EventTypeRegistry().Register<PlanChanged>().RuleFor("PlanChanged"));
+
+    [EventType("Unmarked")]
+    private sealed record UnmarkedEvent(string SubjectId, string Email);
+
+    [EventType("Reference")]
+    [NoPersonalData]
+    private sealed record ReferenceEvent(string SubjectId, string Plan);
+
+    [TestMethod]
+    [TestCategory(TestCategories.Unit)]
+    public void Register_SubjectIdWithoutAMark_IsRefused()
+    {
+        var error = Assert.ThrowsExactly<InvalidOperationException>(() => new EventTypeRegistry().Register<UnmarkedEvent>());
+
+        StringAssert.Contains(error.Message, "[PersonalData]");
+    }
+
+    [TestMethod]
+    [TestCategory(TestCategories.Unit)]
+    public void Register_SubjectIdMarkedNoPersonalData_IsAcceptedWithoutARule()
+        => Assert.IsNull(new EventTypeRegistry().Register<ReferenceEvent>().RuleFor("Reference"));
+
+    [TestMethod]
+    [TestCategory(TestCategories.Unit)]
+    public void Register_ErasureEvents_AreAccepted()
+        => _ = new EventTypeRegistry().Register<ErasureRequested>().Register<ErasureCompleted>();
 }
