@@ -69,6 +69,18 @@ Request [code-quality-scanner](docs/features/request/2026-11-10-code-quality-sca
 **Default:** A once confirmed; nothing built meanwhile.
 **Your answer:**
 
+### Q-VECTOR-DELETE — 2026-11-16 — Re-embedding stale vectors (interface)
+
+`EmbeddingVersion.StaleIds` finds rows made by an old model, but `IVectorStore` can only store, list and search: no delete or upsert by id. A re-embed command would add new rows beside the stale ones (duplicates in every search) until the store can replace a row. Changing `IVectorStore` touches every provider (in-memory, SQL Server, Qdrant, OpenSearch).
+
+**Options**
+- A (recommended): add `DeleteAsync(IEnumerable<string> ids)` to `IVectorStore` and implement it in each provider; the re-embed helper stores the new row then deletes the stale id. Small, additive, and the framework is unreleased so the break is allowed (breaking changes OK).
+- B: add `UpsertAsync(id, embedding, metadata)`. Cleaner for callers, but providers differ in id handling (SQL generates ids), so more work per provider.
+- C: no interface change; re-embed means rebuilding the whole collection from source. Nothing to implement, but slow and needs the source texts.
+
+**Default:** A once confirmed; nothing built meanwhile (the stale-row detector already works).
+**Your answer:**
+
 ### Q-EXAMPLE-ANONYMOUS — 2026-11-16 — Open endpoints in the example API
 
 The new right-coverage test (`EndpointRightCoverageTests`) found 18 actions of `OoBDev.Example.WebApi` with no `[ApplicationRight]`, `[Authorize]` or `[AllowAnonymous]` and no fallback policy, so they are open to anyone: Embed (AllMiniLM, SBERT, Ollama), Cache (Store, Lookup, Flush), Groq and Ollama completion, Operations info, Text tools, and the Toolbox calculators. They are in a `KnownOpen` list in the test (it may only shrink; a new unprotected action fails the test).
