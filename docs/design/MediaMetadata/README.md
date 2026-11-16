@@ -1,6 +1,6 @@
 ﻿# Media metadata (EXIF) reader
 
-Status: **design written 2026-11-12; placement confirmed by the owner 2026-11-12 (new Framework project, option A), nothing built.** Request: [EXIF and media metadata extraction](../../features/request/2026-11-11-exif-metadata-extraction.md).
+Status: **first slice built 2026-11-16** (locator, reader, dump, tag names; placement confirmed by the owner 2026-11-12, new Framework project, option A). Request: [EXIF and media metadata extraction](../../features/request/2026-11-11-exif-metadata-extraction.md).
 
 ## Contents
 
@@ -66,3 +66,4 @@ Unit tests build tiny TIFF blocks in memory (little and big endian) and wrap the
 - Reporting which tags were damaged (request acceptance criterion 2): the catalog code skips them silently; add a result type with problems after the port.
 - HEIC Exif item, XMP and IPTC, audio tags, date merging: separate slices in the order the catalog needs them.
 - Camera raw: stays in the Pillow/LibRaw container.
+- Built 2026-11-16 as `OoBDev.Media.Metadata`: `ExifLocator`, `ExifReader` (`ExifFields`), `ExifDump`, `ExifTagNames`, with the catalog's Pillow-style text kept. Differences from the catalog copy: the locator bounds-checks every chunk length instead of relying on a caught exception, one shared TIFF directory walker serves reader and dump, and tag tables are read-only.
