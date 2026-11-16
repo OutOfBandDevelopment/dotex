@@ -45,7 +45,7 @@ Part of the [feature landscape](README.md). Status is "a project exists under `s
 - **Status:** OData host and limits exist; GraphQL is only under evaluation.
 - **Known issues:** the QUERY verb is still an IETF draft, so the `POST` fallback must remain; caches and proxies often ignore QUERY.
 - **Standards:** RFC 9110 (methods, safe and idempotent), OData 4.01 URL conventions, RFC 9111 (caching).
-- **Missing:** a decision record on GraphQL versus OData; response paging with `Link` headers (RFC 8288).
+- **Missing:** a decision record on GraphQL versus OData. Built 2026-11-16: paged search results carry an RFC 8288 `Link` header (first, prev, next, last).
 
 ## OpenApiScalar and AsyncApi
 

@@ -1,6 +1,7 @@
 using OoBDev.System.Accessors;
 using OoBDev.System.Linq.Search;
 using OoBDev.System.ResponseModel;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -53,6 +54,11 @@ public partial class SearchQueryResultFilter(
             {
                 var queryBuilder = (IQueryBuilder)serviceProvider.GetRequiredService(typeof(IQueryBuilder<>).MakeGenericType(elementType));
                 objectResult.Value = queryBuilder.ExecuteBy(query, searchQuery.Value);
+                if (objectResult.Value is IPagedQueryResult paged
+                    && PagingLinkHeader.Build(context.HttpContext.Request, paged.CurrentPage, paged.TotalPageCount) is { } link)
+                {
+                    context.HttpContext.Response.Headers.Append("Link", link);
+                }
             }
             else
             {
