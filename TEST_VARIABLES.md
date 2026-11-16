@@ -355,6 +355,8 @@ The analysis token is a user secret (`dotnet user-secrets` or the `SONAR_TOKEN` 
 |----------|---------|-------------|
 | `PLANTUML_URL` | `http://localhost:8086` | The PlantUML server already running on the system (container `plantuml`); the test stack does not start its own |
 | `DOCS_VALIDATE_PATHS` | `docs/patterns-discovery;docs/applications` | `;`-separated repo-relative folders or files to validate |
+| `DOCS_CHECK_SCREENSHOTS` | `false` | `true` compares each guide screenshot's last commit with the newest commit of the code it shows (`images/sources.json`) |
+| `DOCS_SCREENSHOT_TOLERANCE_DAYS` | `30` | days the code may be newer than its screenshot before the check reports it |
 
 **Tests Using:** `OoBDev.Docs.Tests` (Unit for structure, links and captions; Integration for rendering)
 

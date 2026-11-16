@@ -64,4 +64,4 @@ Part of the [feature landscape](README.md). Status is "a project exists under `s
 
 - **Works with:** every UI feature (journey tests produce screenshots) and OpenApiScalar/AsyncApi (API guides).
 - **Known issues:** screenshots need the interactive desktop for WPF, so generation is a manual step.
-- **Missing:** a freshness check in the docs validator that compares screenshot dates with the XAML they show.
+- **Built 2026-11-16:** `ScreenshotFreshness` in `OoBDev.Docs.Tests`: each image maps by file name prefix to source folders (`images/sources.json`) and is reported when the code has a newer commit by more than `DOCS_SCREENSHOT_TOLERANCE_DAYS` (30); off by default (`DOCS_CHECK_SCREENSHOTS=true`) because it needs git history.
