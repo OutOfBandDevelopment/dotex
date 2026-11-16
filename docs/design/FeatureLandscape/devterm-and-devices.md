@@ -46,7 +46,7 @@ Part of the [feature landscape](README.md). Status is "a project exists under `s
 
 - **Works with:** Transports (input), UiDefinitions (output), StreamTools (export and convert).
 - **Known issues:** leaf designs are not marked done although the parity status says the slices are.
-- **Missing:** a log format version and a replay compatibility test.
+- **Built 2026-11-16:** the log header carries `version` (1 today; a newer one is rejected with a clear message), and `SessionLogCompatibilityTests` freezes a version 1 log: it must load and write back byte-identical.
 
 ## UiDefinitions, Theming and WindowsForms
 
