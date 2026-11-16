@@ -39,6 +39,7 @@ SERVICES=(
     "oobd-test-postgres"
     "oobd-test-pgvector"
     "oobd-test-docling"
+    "oobd-test-clamav"
     "oobd-test-sonarqube"
     "oobd-test-opensearch"
     "oobd-test-qdrant"

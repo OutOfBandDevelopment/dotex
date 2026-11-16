@@ -21,6 +21,7 @@ This document lists all test properties used by Integration tests. These propert
 2. [Integration Test Variables](#integration-test-variables)
    - [Apache Tika (Document Processing)](#apache-tika-document-processing)
    - [Docling serve (Document Conversion and OCR)](#docling-serve-document-conversion-and-ocr)
+   - [ClamAV (Virus Scanning)](#clamav-virus-scanning)
    - [SonarQube (Static Analysis)](#sonarqube-static-analysis)
    - [SMTP/IMAP (Email Testing)](#smtpimap-email-testing)
    - [MongoDB (NoSQL Database)](#mongodb-nosql-database)
@@ -83,6 +84,20 @@ Tests that require live cloud credentials. Manual execution only.
 
 **Tests Using:**
 - `OoBDev.Docling.Tests` (`DoclingIntegrationTests`)
+
+### ClamAV (Virus Scanning)
+
+**Service:** ClamAV daemon (clamd)
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `CLAMAV_HOST` | `localhost` | clamd host |
+| `CLAMAV_PORT` | `3310` | clamd TCP port |
+
+**Docker Container:** `clamav/clamav:stable` (Port 3310, override `TEST_PORT_CLAMAV`). The first start downloads the signature database, so the health check allows a few minutes.
+
+**Tests Using:**
+- `OoBDev.ClamAv.Tests` (`ClamAvIntegrationTests`)
 
 ### SonarQube (Static Analysis)
 

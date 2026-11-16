@@ -204,6 +204,8 @@
   <Folder Name="/ExternalServices/Embeddings/">
     <Project Path="ExternalServices/OoBDev.Data.Vectors.Postgres.Tests/OoBDev.Data.Vectors.Postgres.Tests.csproj" />
     <Project Path="ExternalServices/OoBDev.Data.Vectors.Postgres/OoBDev.Data.Vectors.Postgres.csproj" />
+    <Project Path="ExternalServices/OoBDev.ClamAv.Tests/OoBDev.ClamAv.Tests.csproj" />
+    <Project Path="ExternalServices/OoBDev.ClamAv/OoBDev.ClamAv.csproj" />
     <Project Path="ExternalServices/OoBDev.Docling.Tests/OoBDev.Docling.Tests.csproj" />
     <Project Path="ExternalServices/OoBDev.Docling/OoBDev.Docling.csproj" />
     <Project Path="ExternalServices/OoBDev.ImageMagick.Tests/OoBDev.ImageMagick.Tests.csproj" />

@@ -196,6 +196,10 @@ https://github.com/coverlet-coverage/coverlet/blob/fc7ec26dcaed8fedba880ff13c6f1
 		<!-- Docling serve (document conversion and OCR) -->
 		<Parameter name="DOCLING_URL" value="http://localhost:5001" />
 
+		<!-- ClamAV (virus scanning over clamd INSTREAM) -->
+		<Parameter name="CLAMAV_HOST" value="localhost" />
+		<Parameter name="CLAMAV_PORT" value="3310" />
+
 		<!-- SonarQube Community (static analysis; the token is a user secret) -->
 		<Parameter name="SONARQUBE_URL" value="http://localhost:9002" />
 

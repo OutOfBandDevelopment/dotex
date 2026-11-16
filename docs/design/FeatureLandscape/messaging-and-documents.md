@@ -70,7 +70,7 @@ Part of the [feature landscape](README.md). Status is "a project exists under `s
 - **Known issues:** external tools (Tika container, converters) make most tests Integration; HPGL is a niche format kept for the migration scope.
 - **Standards:** ISO 32000 (PDF), PDF/A for archives, Office Open XML (ECMA-376).
 - **Built 2026-11-16:** `IContentScanner` and the fail-closed `ScanningBlobContainer` decorator.
-- **Missing:** OCR as a provider; a real scanner adapter (ClamAV in the test stack).
+- **Missing:** OCR as a provider. **Built:** `OoBDev.ClamAv` scanner adapter (clamd INSTREAM).
 
 ## SharedCaching and SharedFramework
 

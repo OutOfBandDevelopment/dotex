@@ -17,6 +17,7 @@ One section per stack. Values are the test defaults from `src/.runsettings`; the
 - [Neo4j](#neo4j)
 - [Apache Tika](#apache-tika)
 - [Docling serve](#docling-serve)
+- [ClamAV](#clamav)
 - [SonarQube](#sonarqube)
 - [smtp4dev](#smtp4dev)
 - [Azurite](#azurite)
@@ -42,6 +43,7 @@ One section per stack. Values are the test defaults from `src/.runsettings`; the
 | Neo4j | `neo4j:5-community` | `bolt://localhost:7687`, browser `http://localhost:7474` | `neo4j` / `oobdev-test-pass` |
 | Apache Tika | `apache/tika` | `http://localhost:9998` | none |
 | Docling serve | `quay.io/docling-project/docling-serve-cpu` | `http://localhost:5001` | none |
+| ClamAV | `clamav/clamav:stable` | `localhost:3310` | none |
 | SonarQube | `sonarqube:community` | `http://localhost:9002` | `admin` / `admin`, changed on first login |
 | smtp4dev | `rnwood/smtp4dev` | SMTP 25, IMAP 143, UI 7777 | none |
 | Azurite | `azure-storage/azurite` | `http://127.0.0.1:10000/devstoreaccount1` | well-known dev account key |
@@ -95,6 +97,10 @@ Graph database (Cypher over Bolt) for the graph retrieval adapter. Keys: `NEO4J_
 ## Apache Tika
 
 Stateless document detection and extraction. Keys: `TIKA_URL`, `TIKA_HOST`, `TIKA_PORT`.
+
+## ClamAV
+
+Virus scanning for `IContentScanner` through the clamd `INSTREAM` protocol. Keys: `CLAMAV_HOST`, `CLAMAV_PORT`; host port `TEST_PORT_CLAMAV` (3310). The first start downloads the signature database (freshclam), so the container reports healthy only after a few minutes; the health check is the image's `clamdcheck.sh`. The integration test sends the standard EICAR test string, which is not malware.
 
 ## Docling serve
 
