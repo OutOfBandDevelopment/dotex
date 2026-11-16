@@ -1,6 +1,6 @@
 ﻿# Image analysis (histograms, colour facets, exposure)
 
-Status: **design written 2026-11-12; placement confirmed by the owner 2026-11-12 (new Framework project, option A), nothing built.** Request: [image colour analysis and histograms](../../features/request/2026-11-11-image-color-analysis-and-histograms.md).
+Status: **project created 2026-11-16 with the burst code; histograms, colour facets and exposure metrics not built yet** (placement confirmed by the owner 2026-11-12, option A). Request: [image colour analysis and histograms](../../features/request/2026-11-11-image-color-analysis-and-histograms.md).
 
 ## Contents
 

@@ -300,6 +300,8 @@
     <Project Path="Framework/OoBDev.Search.Abstractions/OoBDev.Search.Abstractions.csproj" />
     <Project Path="Framework/OoBDev.Search.Tests/OoBDev.Search.Tests.csproj" />
     <Project Path="Framework/OoBDev.Search/OoBDev.Search.csproj" />
+    <Project Path="Framework/OoBDev.Imaging.Analysis.Tests/OoBDev.Imaging.Analysis.Tests.csproj" />
+    <Project Path="Framework/OoBDev.Imaging.Analysis/OoBDev.Imaging.Analysis.csproj" />
     <Project Path="Framework/OoBDev.Media.Metadata.Tests/OoBDev.Media.Metadata.Tests.csproj" />
     <Project Path="Framework/OoBDev.Media.Metadata/OoBDev.Media.Metadata.csproj" />
     <Project Path="Framework/OoBDev.Query.Metadata.Tests/OoBDev.Query.Metadata.Tests.csproj" />

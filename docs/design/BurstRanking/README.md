@@ -1,6 +1,6 @@
 ﻿# Burst grouping and best-shot ranking
 
-Status: **design written 2026-11-12; placement confirmed by the owner 2026-11-12 (shared with [ImageAnalysis](../ImageAnalysis/README.md)), nothing built.** Request: [burst and near-duplicate ranking](../../features/request/2026-11-11-burst-and-near-duplicate-ranking.md).
+Status: **first slice built 2026-11-16** (ranker, labels, measures, dHash in `OoBDev.Imaging.Analysis`; placement confirmed by the owner 2026-11-12, shared with [ImageAnalysis](../ImageAnalysis/README.md)). Request: [burst and near-duplicate ranking](../../features/request/2026-11-11-burst-and-near-duplicate-ranking.md).
 
 ## Contents
 
@@ -63,3 +63,7 @@ Pairs: five frames within two seconds pair up, a gap above the window breaks the
 - Eyes-open and face signals (need the face decision, see [face and pet matching](../../features/request/2026-11-11-face-and-pet-matching.md)).
 - Computing the eight quality measures in .NET (sharpness tiles, isotropy, noise); they stay in the Python container for now.
 - Database queue and API: catalog-specific.
+
+## Built
+
+2026-11-16: `OoBDev.Imaging.Analysis.Bursts` has `BurstRanker` (Pairs, Components, Score), `QualityMeasures`, `SubjectFocus`, `BurstScore`, `QualityLabels` and `DHash` (gray buffer in, Pillow-equal Lanczos resize; RGB and RGBA gray helpers). Differences from the catalog copy: no Skia, a record result instead of a tuple, a dark frame is not also labelled under. The catalog's golden dHash values were not available (the catalog has no test for them), so the tests pin gradients and a step image; compare against the catalog values when the catalog switches to the package.
