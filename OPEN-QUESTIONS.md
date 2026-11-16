@@ -75,3 +75,17 @@ Restore is clean today. Turning the NuGet audit warnings into errors (`WarningsA
 **Default:** A until answered.
 
 **Your answer:**
+
+### Q6 (2026-11-16, DevTerm WPF, Connection Editor): replace the hand-written editor XAML with the generic form?
+
+`ConnectionEditorViewModel.FormDefinition` is a subset of the hand-written editor: it has no scan buttons (network, Bluetooth, characteristics), no BLE uuid fields, no saved-profile list, import/export or save-name rows. Rendering it with `FormView` would drop those unless the form model grows buttons and the editor keeps the profile panel beside it. The Tui already uses the generated form.
+
+**Options**
+- A. Keep the hand-written XAML; use `FormView` only where the form is complete (manifest editor, panels). (recommended: nothing is lost, and the spec's field list stays tested by the XAML accessibility checks.)
+- B. Extend the form model with action controls and the missing fields, then render the connection part with `FormView` and keep the profile panel as XAML. Removes duplicated field lists, but is a Framework change plus a screenshot pass.
+- C. Replace the whole window with the generated form and move profiles into a separate window.
+
+**Default:** A; the BACKLOG item is parked on this question.
+
+**Your answer:**
+
