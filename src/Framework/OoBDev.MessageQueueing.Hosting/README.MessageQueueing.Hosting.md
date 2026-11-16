@@ -18,3 +18,7 @@ This adds `MessageReceiverHost` as a hosted service. It needs `IMessageReceiverP
 - Start, stop, restart and failure messages use `[LoggerMessage]` event ids 1 to 11.
 
 The host is covered by `MessageReceiverHostTests` in `OoBDev.MessageQueueing.Tests`.
+
+## Outbox dispatcher
+
+`services.TryAddOutboxDispatcherHosting()` adds `OutboxDispatcherHost`, a background service that calls `OutboxDispatcher.DispatchAsync` and waits `OutboxDispatcherHostOptions.PollInterval` (default 5 seconds) when nothing was sent. A failed send is logged and retried on the next run; entries stay in the store until a send succeeds. Register the real `IMessageQueueSender` for the dispatcher and a durable `IOutboxStore` for production (the in-memory store is the default). Covered by `OutboxDispatcherHostTests`.

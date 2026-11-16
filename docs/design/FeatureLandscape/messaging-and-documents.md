@@ -42,7 +42,7 @@ Part of the [feature landscape](README.md). Status is "a project exists under `s
 - **Practices:** handler pattern `IHandler<TRequest, TResponse>`, provider/factory per broker, outbox for publish-after-commit.
 - **Built 2026-11-16:** the inbox half: `IdempotentMessageQueueHandler` with `IInboxStore` (idempotent consumers for every adapter).
 - **Built 2026-11-16:** the outbox half: `OutboxMessageQueueSender`, `OutboxDispatcher`, `IOutboxStore`.
-- **Missing:** database implementations of `IInboxStore` and `IOutboxStore` (the outbox write in the business transaction) and a hosted service that runs the dispatcher.
+- **Missing:** database implementations of `IInboxStore` and `IOutboxStore` (the outbox write in the business transaction) .
 
 ## Communications and MessageComposition
 
