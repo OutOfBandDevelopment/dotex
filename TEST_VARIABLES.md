@@ -21,6 +21,7 @@ This document lists all test properties used by Integration tests. These propert
 2. [Integration Test Variables](#integration-test-variables)
    - [Apache Tika (Document Processing)](#apache-tika-document-processing)
    - [Docling serve (Document Conversion and OCR)](#docling-serve-document-conversion-and-ocr)
+   - [SonarQube (Static Analysis)](#sonarqube-static-analysis)
    - [SMTP/IMAP (Email Testing)](#smtpimap-email-testing)
    - [MongoDB (NoSQL Database)](#mongodb-nosql-database)
    - [SQL Server (Relational Database)](#sql-server-relational-database)
@@ -82,6 +83,20 @@ Tests that require live cloud credentials. Manual execution only.
 
 **Tests Using:**
 - `OoBDev.Docling.Tests` (`DoclingIntegrationTests`)
+
+### SonarQube (Static Analysis)
+
+**Service:** SonarQube Community build
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `SONARQUBE_URL` | `http://localhost:9002` | SonarQube base URL |
+
+The analysis token is a user secret (`dotnet user-secrets` or the `SONAR_TOKEN` shell variable read by `scripts/ci/sonar.ps1`), never a test parameter and never committed.
+
+**Docker Container:** `sonarqube:community` (Port 9000 inside, 9002 on the host, override `TEST_PORT_SONARQUBE`)
+
+**Tests Using:** none; `scripts/ci/sonar.ps1` is the client.
 
 ---
 

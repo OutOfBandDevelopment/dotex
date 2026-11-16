@@ -313,6 +313,7 @@ scripts\integration-down.bat --clean
 |---------|-------|---------|---------|--------------|
 | **Apache Tika** | `apache/tika` | 9998 | Document content detection | `curl http://localhost:9998/tika` |
 | **Docling serve** | `quay.io/docling-project/docling-serve-cpu` | 5001 | Document conversion and OCR | `curl http://localhost:5001/health` |
+| **SonarQube** | `sonarqube:community` | 9002 | Static analysis (`scripts/ci/sonar.ps1`) | `curl http://localhost:9002/api/system/status` |
 | **SMTP4Dev** | `rnwood/smtp4dev` | 25 (SMTP)<br>7777 (Web) | Email testing | `curl http://localhost:7777` |
 
 ### Stateful Services
@@ -432,6 +433,7 @@ Tests use environment variables for connection strings. See `.env.integration` f
 | `QDRANT_URL` | `http://localhost:6333` | Qdrant HTTP endpoint |
 | `TIKA_URL` | `http://localhost:9998` | Apache Tika endpoint |
 | `DOCLING_URL` | `http://localhost:5001` | docling-serve endpoint |
+| `SONARQUBE_URL` | `http://localhost:9002` | SonarQube endpoint |
 | `SMTP_HOST` | `localhost` | SMTP server host |
 | `AZURITE_CONNECTION_STRING` | (see .env file) | Azurite connection |
 | `MOTO_URL` | `http://localhost:4566` | Moto endpoint |
@@ -601,6 +603,7 @@ netstat -ano | findstr :27017
 | `TEST_PORT_SMTP_WEB`, `TEST_PORT_SMTP`, `TEST_PORT_IMAP` | 7777, 25, 143 | smtp4dev |
 | `TEST_PORT_TIKA` | 9998 | Apache Tika |
 | `TEST_PORT_DOCLING` | 5001 | docling-serve |
+| `TEST_PORT_SONARQUBE` | 9002 | SonarQube |
 | `TEST_PORT_MONGODB` | 27017 | MongoDB |
 | `TEST_PORT_SQLSERVER` | 1433 | SQL Server |
 | `TEST_PORT_RABBITMQ`, `TEST_PORT_RABBITMQ_MGMT` | 5673, 15672 | RabbitMQ (AMQP, management) |
@@ -681,6 +684,7 @@ cd ../containers/testing
 
 - **Apache Tika**: http://localhost:9998
 - **Docling serve**: http://localhost:5001
+- **SonarQube**: http://localhost:9002
 - **SMTP4Dev Web UI**: http://localhost:7777
 - **RabbitMQ Management**: http://localhost:15672 (guest/guest)
 - **OpenSearch**: https://localhost:9200 (admin/IntegrationTest123!)
@@ -693,6 +697,7 @@ cd ../containers/testing
 All containers are prefixed with `oobd-test-`:
 - `oobd-test-tika`
 - `oobd-test-docling`
+- `oobd-test-sonarqube`
 - `oobd-test-smtp`
 - `oobd-test-mongodb`
 - `oobd-test-sqlserver`

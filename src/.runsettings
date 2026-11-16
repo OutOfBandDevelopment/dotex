@@ -196,6 +196,9 @@ https://github.com/coverlet-coverage/coverlet/blob/fc7ec26dcaed8fedba880ff13c6f1
 		<!-- Docling serve (document conversion and OCR) -->
 		<Parameter name="DOCLING_URL" value="http://localhost:5001" />
 
+		<!-- SonarQube Community (static analysis; the token is a user secret) -->
+		<Parameter name="SONARQUBE_URL" value="http://localhost:9002" />
+
 		<!-- SBert (Sentence Embeddings) -->
 		<Parameter name="SBERT_URL" value="http://localhost:5080" />
 		<Parameter name="SBERT_HOST" value="localhost" />

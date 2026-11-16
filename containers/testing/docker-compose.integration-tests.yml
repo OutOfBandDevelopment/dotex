@@ -221,6 +221,25 @@ services:
       retries: 10
       start_period: 60s
 
+  sonarqube:
+    image: sonarqube:community
+    container_name: oobd-test-sonarqube
+    environment:
+      SONAR_ES_BOOTSTRAP_CHECKS_DISABLE: "true"   # no vm.max_map_count change needed on the Docker host
+    ports:
+      - "${TEST_PORT_SONARQUBE:-9002}:9000"   # 9000 is a common local port
+    networks:
+      - integration-test-net
+    volumes:
+      - sonarqube-test-data:/opt/sonarqube/data
+      - sonarqube-test-extensions:/opt/sonarqube/extensions
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:9000/api/system/status | grep -q '\"status\":\"UP\"'"]
+      interval: 15s
+      timeout: 10s
+      retries: 20
+      start_period: 90s
+
   opensearch:
     extends:
       file: ../docker-compose.opensearch.yml
@@ -549,6 +568,10 @@ volumes:
     name: oobd-test-postgres-data
   pgvector-test-data:
     name: oobd-test-pgvector-data
+  sonarqube-test-data:
+    name: oobd-test-sonarqube-data
+  sonarqube-test-extensions:
+    name: oobd-test-sonarqube-extensions
   redis-test-data:
     name: oobd-test-redis-data
   opensearch-test-data:

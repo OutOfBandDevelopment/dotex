@@ -17,6 +17,7 @@ One section per stack. Values are the test defaults from `src/.runsettings`; the
 - [Neo4j](#neo4j)
 - [Apache Tika](#apache-tika)
 - [Docling serve](#docling-serve)
+- [SonarQube](#sonarqube)
 - [smtp4dev](#smtp4dev)
 - [Azurite](#azurite)
 - [Moto](#moto)
@@ -41,6 +42,7 @@ One section per stack. Values are the test defaults from `src/.runsettings`; the
 | Neo4j | `neo4j:5-community` | `bolt://localhost:7687`, browser `http://localhost:7474` | `neo4j` / `oobdev-test-pass` |
 | Apache Tika | `apache/tika` | `http://localhost:9998` | none |
 | Docling serve | `quay.io/docling-project/docling-serve-cpu` | `http://localhost:5001` | none |
+| SonarQube | `sonarqube:community` | `http://localhost:9002` | `admin` / `admin`, changed on first login |
 | smtp4dev | `rnwood/smtp4dev` | SMTP 25, IMAP 143, UI 7777 | none |
 | Azurite | `azure-storage/azurite` | `http://127.0.0.1:10000/devstoreaccount1` | well-known dev account key |
 | Moto | `motoserver/moto` | `http://localhost:4566` | `test` / `test` |
@@ -97,6 +99,10 @@ Stateless document detection and extraction. Keys: `TIKA_URL`, `TIKA_HOST`, `TIK
 ## Docling serve
 
 Document conversion and OCR (PDF to Markdown). Key: `DOCLING_URL`; host port `TEST_PORT_DOCLING` (5001). The CPU image is about 7.6 GB and ships Tesseract with English only, so tests send `ocr_lang=eng` (`DoclingOptions.OcrLanguages`). The server caps `images_scale` at 2.0 and has no formula-enrichment model, so the adapter retries with its light options.
+
+## SonarQube
+
+Static analysis for the C# solution. Key: `SONARQUBE_URL`; host port `TEST_PORT_SONARQUBE` (9002). Start-up takes about a minute (health check `/api/system/status` reports `UP`). The first login forces a new admin password; create a user token in the UI and keep it in a user secret or the `SONAR_TOKEN` variable. `scripts/ci/sonar.ps1` runs `dotnet-sonarscanner` against it.
 
 ## smtp4dev
 
