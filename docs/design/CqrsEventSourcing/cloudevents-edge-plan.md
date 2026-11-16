@@ -1,7 +1,7 @@
 # CloudEvents HTTP edge: migration plan
 
-**Status:** placement confirmed by the owner 2026-11-12 (`OoBDev.EventSourcing.Web` in `src/Extensions`). Nothing built.
-**Last Updated:** 2026-11-12
+**Status:** placement confirmed by the owner 2026-11-12 (`OoBDev.EventSourcing.Web` in `src/Extensions`); built 2026-11-16 ([readme](../../../src/Extensions/OoBDev.EventSourcing.Web/README.EventSourcing.Web.md)).
+**Last Updated:** 2026-11-16
 
 ## Contents
 
@@ -35,4 +35,4 @@ Reason for `src/Extensions`: Framework must not carry an ASP.NET `FrameworkRefer
 
 ## Test plan
 
-Unit tests with `WebApplicationFactory`-free `TestServer` in `OoBDev.EventSourcing.Web.Tests`: accepted event reaches the store, wrong content type 415, malformed event 400, unauthenticated request rejected when a policy is set. Category `Unit`.
+Unit tests with a real Kestrel host on a free port (no `TestHost` package) in `OoBDev.EventSourcing.Web.Tests`: accepted event reaches the store, wrong content type 415, malformed event 400, unauthenticated request rejected when a policy is set. Category `Unit`.

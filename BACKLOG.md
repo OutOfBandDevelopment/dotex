@@ -42,7 +42,7 @@ Owner: all protocols and features of dev-term must exist here. Done means what d
 - [ ] Example app missing screens ([list](docs/design/example-ui/missing-screens.md)); owner, 2026-11-09, [recommended order](docs/design/example-ui/missing-screens.md#recommended-order) steps 1 to 5 are built (Search, Template management, queue monitor and blob browser, Rights and roles, Server-driven UI; Identity management built 2026-11-11 as `/identity/directory`, not yet run live); the rest stay unplanned.
   - [ ] The queue receive monitor shows nothing until a channel has its receiver enabled (all example channels set `DisableReceiver`).
 
-- [x] **CQRS and event sourcing library** (decided 2026-11-11): built and covered (Abstractions, stores, relay, aggregates, projections, upcasting, snapshots, EF Core packages, CloudEvents mapper, pgmq adapter). Open: the CloudEvents HTTP endpoint, waiting on Q-CQRS-EDGE in OPEN-QUESTIONS.md. Design and coverage: [CqrsEventSourcing](docs/design/CqrsEventSourcing/testing-strategy.md#coverage).
+- [x] **CQRS and event sourcing library** (decided 2026-11-11): built and covered (Abstractions, stores, relay, aggregates, projections, upcasting, snapshots, EF Core packages, CloudEvents mapper, pgmq adapter). The CloudEvents HTTP edge (`OoBDev.EventSourcing.Web`) was built 2026-11-16. Design and coverage: [CqrsEventSourcing](docs/design/CqrsEventSourcing/testing-strategy.md#coverage).
 
 
 ## 5. Code quality backlog
@@ -57,8 +57,6 @@ A clean rebuild after the 2026-11-06 pass reports no analyzer warnings (218 befo
   - AI and data: embedding version tag per vector (re-embed on model change); relevance test set and access filters tied to rights; prompt-injection guidance and token cost accounting for LLM tools; rollback and data-loss guard for destructive desired-state diffs; screenshot freshness check in the docs validator.
   - DevTerm: transport capability matrix and reconnect defaults; session log format version with a replay compatibility test; keyboard and screen-reader requirements as tests; plugin manifest version, permissions and signing prompt; give the moved DevTerm leaf design folders (ConnectionProfiles, MultiSessionUi, ProjectState, SessionChannel, SessionLogging, StreamTools, Theming) a status line.
 - [ ] Stale design docs found 2026-11-12: `docs/design/MessageQueuing/migration-checklist.md` has 102 open boxes although the SQS and Service Bus adapters exist; reconcile it with the code and archive or tick it (`reconcile-designs-and-code`). Also run that skill over the January 2026 epic designs (SharedFramework, DataEnhancement, MasterData, ContractParser) whose status still says design phase.
-- [ ] Owner decisions 2026-11-11 (answered open questions), to build:
-  - [ ] CloudEvents HTTP edge: `POST /events` in a new `OoBDev.EventSourcing.Web`; plan written ([plan](docs/design/CqrsEventSourcing/cloudevents-edge-plan.md)), placement confirmed by the owner 2026-11-12.
 
 ## 6. Migrations
 
