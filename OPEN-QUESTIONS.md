@@ -104,3 +104,15 @@ The new right-coverage test (`EndpointRightCoverageTests`) found 18 actions of `
 
 **Default:** none changed (the test records the gap); A once you confirm the right names.
 **Your answer:**
+
+### Q-GDPR-ERASURE — 2026-11-16 — Erasing personal data from append-only event stores
+
+`OoBDev.EventSourcing` stores events append-only, so a "delete my data" request cannot delete rows without breaking replay and the sequence check. The way personal data is stored decides this and changes the event data model.
+
+**Options**
+- A (recommended): crypto-shredding. Personal fields are encrypted with a per-subject key held in a separate key store; erasure deletes the key, the events stay and replay shows the field as erased. Keeps history and sequence intact; needs a key store, a marker on personal fields and a decision on which fields count. Fits the owner's no-live-data and security preferences.
+- B: keep personal data out of events (events hold an id; the data lives in a normal table that supports delete). Simplest and standard, but every existing event type must be reviewed, and events that already carry personal data need a migration.
+- C: rewrite history (a tombstone event plus a compaction job that blanks the fields). No key store, but it breaks the append-only guarantee and any hash chain or external copy.
+
+**Default:** none built; A is designed when you confirm (the event store stays unchanged meanwhile).
+**Your answer:**
