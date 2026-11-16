@@ -1,6 +1,6 @@
 ﻿# Search merge: one request model over keyword, vector, hybrid and SQL kinds
 
-Status: **design written 2026-11-12; nothing built.** It builds on the confirmed placements of MetadataQuery and EmbeddingClientAndPgVector. Requests: [search merge and hybrid](../../features/request/2026-11-11-search-merge-kinds-hybrid-and-vectors.md), [superset review](../../features/request/2026-11-11-superset-review-of-overlapping-features.md). Related: [HybridSearch](../HybridSearch/README.md), [MetadataQuery](../MetadataQuery/README.md), [EmbeddingClientAndPgVector](../EmbeddingClientAndPgVector/README.md).
+Status: **first slice built 2026-11-16** (request model, text parser, max-normalised and reciprocal-rank fusion, hybrid provider; the keyword, vector and SQL-kind providers are not built). Design written 2026-11-12. It builds on the confirmed placements of MetadataQuery and EmbeddingClientAndPgVector. Requests: [search merge and hybrid](../../features/request/2026-11-11-search-merge-kinds-hybrid-and-vectors.md), [superset review](../../features/request/2026-11-11-superset-review-of-overlapping-features.md). Related: [HybridSearch](../HybridSearch/README.md), [MetadataQuery](../MetadataQuery/README.md), [EmbeddingClientAndPgVector](../EmbeddingClientAndPgVector/README.md).
 
 ## Contents
 
@@ -72,3 +72,4 @@ Unit: parser cases from `tests/Storage.Query.Tests`; RRF and max fusion golden s
 
 - Built hybrid merge until a consumer needs it (backlog line stays).
 - Query-by-image anchors and learned rerankers.
+- Built 2026-11-16 in `OoBDev.Search` and `OoBDev.Search.Abstractions`: `SearchRequest`, `ISearchProvider`, `SearchTextParser`, `IScoreFusion` (max-normalised and reciprocal rank), `HybridSearchProvider`, `Search:Fusion` options. Still to build: the keyword (OpenSearch) provider, the vector provider (over `IVectorStore`), the SQL-kind provider over MetadataQuery and the shared filter-parity set (Integration). The hybrid provider returns one page without a cursor.
