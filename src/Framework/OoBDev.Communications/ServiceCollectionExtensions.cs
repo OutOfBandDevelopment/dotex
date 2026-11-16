@@ -3,6 +3,7 @@ using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using OoBDev.Communications.Abstractions;
+using OoBDev.Communications.Unsubscribe;
 
 namespace OoBDev.Communications;
 
@@ -59,6 +60,27 @@ public static class ServiceCollectionExtensions
                     : (ISendService)ActivatorUtilities.CreateInstance(provider, inner.ImplementationType!);
             return new SuppressingSendService(real, provider.GetRequiredService<ISuppressionList>(), provider.GetRequiredService<TimeProvider>());
         });
+        return services;
+    }
+
+    /// <summary>
+    /// Adds <see cref="UnsubscribeLinks"/> (RFC 8058 one-click unsubscribe). Options bind from <c>OoBDev:Communications:Unsubscribe</c>.
+    /// The caller maps an HTTPS POST (and GET) endpoint that calls <see cref="UnsubscribeLinks.UnsubscribeAsync"/>.
+    /// </summary>
+    /// <param name="services">The service collection.</param>
+    /// <param name="configure">Optional settings override.</param>
+    /// <returns>The service collection.</returns>
+    public static IServiceCollection AddUnsubscribeLinks(this IServiceCollection services, Action<UnsubscribeOptions>? configure = null)
+    {
+        ArgumentNullException.ThrowIfNull(services);
+        services.AddOptions<UnsubscribeOptions>().BindConfiguration("OoBDev:Communications:Unsubscribe").ValidateDataAnnotations().ValidateOnStart();
+        if (configure is not null)
+        {
+            services.Configure(configure);
+        }
+
+        services.TryAddSingleton<ISuppressionList, InMemorySuppressionList>();
+        services.TryAddSingleton<UnsubscribeLinks>();
         return services;
     }
 }

@@ -267,6 +267,8 @@
     <Project Path="Framework/OoBDev.Caching.Abstractions/OoBDev.Caching.Abstractions.csproj" />
     <Project Path="Framework/OoBDev.Caching.Tests/OoBDev.Caching.Tests.csproj" />
     <Project Path="Framework/OoBDev.Caching/OoBDev.Caching.csproj" />
+    <Project Path="Framework/OoBDev.Communications.EntityFrameworkCore.Tests/OoBDev.Communications.EntityFrameworkCore.Tests.csproj" />
+    <Project Path="Framework/OoBDev.Communications.EntityFrameworkCore/OoBDev.Communications.EntityFrameworkCore.csproj" />
     <Project Path="Framework/OoBDev.Communications.Abstractions/OoBDev.Communications.Abstractions.csproj" />
     <Project Path="Framework/OoBDev.Communications.Hosting/OoBDev.Communications.Hosting.csproj" />
     <Project Path="Framework/OoBDev.Communications.Hosting.Tests/OoBDev.Communications.Hosting.Tests.csproj" />

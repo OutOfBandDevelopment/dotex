@@ -61,3 +61,7 @@ provider that cannot be polled throws `NotSupportedException`. `services.TryAddC
 - Options (`SendReceiveOptions` and the others) are validated with data annotations and `ValidateOnStart` instead of `AddValidatedOptions<T>()`, so this library does not reference `OoBDev.System` (owner, 2026-11-05).
 - Attachments will not be Stream-only: temp file, `byte[]` or zero-copy `ReadOnlyMemory<byte>`; see the [requirements](../../../docs/design/Communications/SendReceive/requirements.md#decisions-2026-11-05).
 - Provider adapters (AWS SES and SNS first) are tested against emulators only, and their documents say so.
+
+## One-click unsubscribe (RFC 8058)
+
+`AddUnsubscribeLinks()` registers `UnsubscribeLinks` (options `OoBDev:Communications:Unsubscribe`: `EndpointUrl`, `SigningKey` of 32+ characters). `CreateHeaders(address)` returns `List-Unsubscribe` (`<url?t=token>`) and `List-Unsubscribe-Post: List-Unsubscribe=One-Click` to add to a bulk message. The token is the lower-cased address plus an HMAC-SHA512 signature: it cannot be forged for another address, needs no storage and never expires. The host maps an HTTPS endpoint that calls `UnsubscribeAsync(token)` for the POST (and a GET confirmation page); a valid token adds the address to the `ISuppressionList` with reason `unsubscribe`. Pair it with `OoBDev.Communications.EntityFrameworkCore` for a durable list. Changing the key invalidates links already sent.
