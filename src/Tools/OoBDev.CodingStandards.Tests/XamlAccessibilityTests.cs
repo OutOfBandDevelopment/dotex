@@ -10,7 +10,7 @@ namespace OoBDev.CodingStandards.Tests;
 /// <summary>
 /// Screen readers need a name for every input control. Text boxes, lists and combo boxes must carry
 /// <c>AutomationProperties.Name</c> or <c>LabeledBy</c>; buttons, check boxes and radio buttons are named by their content.
-/// Existing gaps are a per-file ratchet: a file may go down (lower its number here) but never up, and a new XAML file starts at zero.
+/// Every Applications XAML file is held to it with no exceptions.
 /// </summary>
 [TestClass, TestCategory("Unit")]
 public class XamlAccessibilityTests
@@ -23,12 +23,6 @@ public class XamlAccessibilityTests
     private static readonly HashSet<string> _contentControls = new(StringComparer.Ordinal)
     {
         "Button", "CheckBox", "RadioButton", "ToggleButton",
-    };
-
-    // File name -> unnamed controls allowed today. Fix a window, then lower or remove its line.
-    private static readonly Dictionary<string, int> _baseline = new(StringComparer.Ordinal)
-    {
-        ["ConnectionEditorWindow.xaml"] = 41,
     };
 
     private static IEnumerable<string> XamlFiles()
@@ -91,23 +85,13 @@ public class XamlAccessibilityTests
     }
 
     [TestMethod]
-    public void XamlFiles_StayWithinTheirUnnamedControlBaseline()
+    public void XamlFiles_HaveNoUnnamedInputControls()
     {
-        var problems = new List<string>();
-        foreach (var file in XamlFiles())
-        {
-            var name = Path.GetFileName(file);
-            var actual = CountUnnamed(File.ReadAllText(file));
-            var allowed = _baseline.GetValueOrDefault(name);
-            if (actual > allowed)
-            {
-                problems.Add($"{name}: {actual} unnamed controls, baseline {allowed}. Add AutomationProperties.Name.");
-            }
-            else if (actual < allowed)
-            {
-                problems.Add($"{name}: now {actual}, baseline {allowed}. Lower the baseline in {nameof(XamlAccessibilityTests)}.");
-            }
-        }
+        var problems = XamlFiles()
+            .Select(file => (Name: Path.GetFileName(file), Count: CountUnnamed(File.ReadAllText(file))))
+            .Where(f => f.Count > 0)
+            .Select(f => $"{f.Name}: {f.Count} unnamed controls. Add AutomationProperties.Name.")
+            .ToList();
 
         Assert.IsEmpty(problems, string.Join(Environment.NewLine, problems));
     }

@@ -26,7 +26,7 @@
                 <Button Content="Export selected" Command="{Binding ExportSelectedProfilesCommand}" Margin="0,0,0,4" />
                 <Button Content="Export all" Command="{Binding ExportAllProfilesCommand}" />
             </StackPanel>
-            <ListBox ItemsSource="{Binding Profiles}" SelectedItem="{Binding SelectedProfileName}" SelectionMode="Extended" SelectionChanged="ProfilesList_SelectionChanged" />
+            <ListBox AutomationProperties.Name="Saved profiles" ItemsSource="{Binding Profiles}" SelectedItem="{Binding SelectedProfileName}" SelectionMode="Extended" SelectionChanged="ProfilesList_SelectionChanged" />
         </DockPanel>
         <DockPanel Grid.Column="1">
             <TextBlock DockPanel.Dock="Bottom" Text="{Binding StatusMessage}" TextWrapping="Wrap" Margin="0,4,0,0" />
@@ -37,14 +37,14 @@
             </StackPanel>
             <StackPanel DockPanel.Dock="Bottom" Margin="0,8,0,0">
                 <TextBlock Text="Save as profile named" />
-                <TextBox Text="{Binding SaveName, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
+                <TextBox AutomationProperties.Name="Save as profile named" Text="{Binding SaveName, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
                 <TextBlock Text="Import or export zip path" />
                 <DockPanel Margin="0,2,0,4">
                     <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
                         <Button Content="Browse..." Command="{Binding ZipBrowser.Browse, RelativeSource={RelativeSource AncestorType=Window}}" Padding="8,2" Margin="4,0,0,0" />
                         <Button Content="Save as..." Command="{Binding ZipBrowser.SaveAs, RelativeSource={RelativeSource AncestorType=Window}}" Padding="8,2" Margin="4,0,0,0" />
                     </StackPanel>
-                    <TextBox Text="{Binding ImportExportPath, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBox AutomationProperties.Name="Import or export path" Text="{Binding ImportExportPath, UpdateSourceTrigger=PropertyChanged}" />
                 </DockPanel>
                 <StackPanel Orientation="Horizontal">
                     <Button Content="Import" Command="{Binding ImportCommand}" Padding="8,2" Margin="0,0,4,0" />
@@ -54,93 +54,93 @@
             <ScrollViewer VerticalScrollBarVisibility="Auto">
             <StackPanel Margin="0,0,8,0">
                 <TextBlock Text="Description" />
-                <TextBox Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
+                <TextBox AutomationProperties.Name="Description" Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
                 <TextBlock Text="Transport" />
-                <ComboBox ItemsSource="{Binding TransportOptions}" SelectedItem="{Binding Transport}" Margin="0,2,0,8" />
+                <ComboBox AutomationProperties.Name="Transport" ItemsSource="{Binding TransportOptions}" SelectedItem="{Binding Transport}" Margin="0,2,0,8" />
                 <StackPanel Visibility="{Binding IsSerialLikeTransport, Converter={StaticResource Visible}}">
                     <TextBlock Text="Detected ports" />
-                    <ComboBox ItemsSource="{Binding SerialPortNames}" SelectedItem="{Binding SelectedSerialPort}" ItemTemplate="{StaticResource TextDisplay}" Margin="0,2,0,8" />
+                    <ComboBox AutomationProperties.Name="Detected ports" ItemsSource="{Binding SerialPortNames}" SelectedItem="{Binding SelectedSerialPort}" ItemTemplate="{StaticResource TextDisplay}" Margin="0,2,0,8" />
                     <TextBlock Text="Serial port" />
-                    <TextBox Text="{Binding Port, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
+                    <TextBox AutomationProperties.Name="Serial port" Text="{Binding Port, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
                     <TextBlock Text="{Binding SerialPortNotFoundHint}" Foreground="Firebrick" TextWrapping="Wrap" Margin="0,0,0,8" Visibility="{Binding ConnectedDeviceNotFound, Converter={StaticResource Visible}}" />
                     <TextBlock Text="Baud" />
-                    <TextBox Text="{Binding Baud, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
+                    <TextBox AutomationProperties.Name="Baud" Text="{Binding Baud, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
                     <TextBlock Text="Data bits" />
-                    <TextBox Text="{Binding DataBits, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
+                    <TextBox AutomationProperties.Name="Data bits" Text="{Binding DataBits, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
                     <TextBlock Text="Parity" />
-                    <ComboBox ItemsSource="{Binding ParityOptions}" SelectedItem="{Binding ParityText}" Margin="0,2,0,8" />
+                    <ComboBox AutomationProperties.Name="Parity" ItemsSource="{Binding ParityOptions}" SelectedItem="{Binding ParityText}" Margin="0,2,0,8" />
                     <TextBlock Text="Stop bits" />
-                    <ComboBox ItemsSource="{Binding StopBitsOptions}" SelectedItem="{Binding StopBitsText}" Margin="0,2,0,8" />
+                    <ComboBox AutomationProperties.Name="Stop bits" ItemsSource="{Binding StopBitsOptions}" SelectedItem="{Binding StopBitsText}" Margin="0,2,0,8" />
                     <TextBlock Text="Flow control" />
-                    <ComboBox ItemsSource="{Binding HandshakeOptions}" SelectedItem="{Binding HandshakeText}" Margin="0,2,0,8" />
+                    <ComboBox AutomationProperties.Name="Flow control" ItemsSource="{Binding HandshakeOptions}" SelectedItem="{Binding HandshakeText}" Margin="0,2,0,8" />
                     <CheckBox Content="DTR" IsChecked="{Binding Dtr}" Margin="0,0,0,4" />
                     <CheckBox Content="RTS" IsChecked="{Binding Rts}" Margin="0,0,0,8" />
                     <TextBlock Text="Write timeout (ms)" />
-                    <TextBox Text="{Binding WriteTimeoutMs, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
+                    <TextBox AutomationProperties.Name="Write timeout (ms)" Text="{Binding WriteTimeoutMs, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
                     <StackPanel Visibility="{Binding IsSerialTransport, Converter={StaticResource Visible}}">
                     <TextBlock Text="Read timeout (ms)" />
-                    <TextBox Text="{Binding ReadTimeoutMs, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
+                    <TextBox AutomationProperties.Name="Read timeout (ms)" Text="{Binding ReadTimeoutMs, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
                     </StackPanel>
                 </StackPanel>
                 <StackPanel Visibility="{Binding IsTcpLikeTransport, Converter={StaticResource Visible}}">
                     <Button Content="Scan network" Command="{Binding Scans.ScanLxi, RelativeSource={RelativeSource AncestorType=Window}}" HorizontalAlignment="Left" Padding="8,2" Margin="0,0,0,4" />
                     <TextBlock Text="Detected network devices" />
-                    <ComboBox ItemsSource="{Binding LxiDeviceOptions}" SelectedItem="{Binding SelectedLxiDevice}" ItemTemplate="{StaticResource OptionDisplay}" Margin="0,2,0,8" />
+                    <ComboBox AutomationProperties.Name="Detected network devices" ItemsSource="{Binding LxiDeviceOptions}" SelectedItem="{Binding SelectedLxiDevice}" ItemTemplate="{StaticResource OptionDisplay}" Margin="0,2,0,8" />
                     <TextBlock Text="Host" />
-                    <TextBox Text="{Binding Host, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
+                    <TextBox AutomationProperties.Name="Host" Text="{Binding Host, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
                     <TextBlock Text="TCP port" />
-                    <TextBox Text="{Binding TcpPort, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
+                    <TextBox AutomationProperties.Name="TCP port" Text="{Binding TcpPort, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
                     <CheckBox Content="Listen (server mode)" IsChecked="{Binding Listen}" Visibility="{Binding IsTcpTransport, Converter={StaticResource Visible}}" Margin="0,0,0,8" />
                 </StackPanel>
                 <StackPanel Visibility="{Binding IsUsbDeviceTransport, Converter={StaticResource Visible}}">
                     <TextBlock Text="Detected HID devices" Visibility="{Binding IsHidTransport, Converter={StaticResource Visible}}" />
-                    <ComboBox ItemsSource="{Binding HidDeviceOptions}" SelectedItem="{Binding SelectedHidDevice}" ItemTemplate="{StaticResource OptionDisplay}" Margin="0,2,0,8" Visibility="{Binding IsHidTransport, Converter={StaticResource Visible}}" />
+                    <ComboBox AutomationProperties.Name="Detected HID devices" ItemsSource="{Binding HidDeviceOptions}" SelectedItem="{Binding SelectedHidDevice}" ItemTemplate="{StaticResource OptionDisplay}" Margin="0,2,0,8" Visibility="{Binding IsHidTransport, Converter={StaticResource Visible}}" />
                     <TextBlock Text="Detected USBTMC devices" Visibility="{Binding IsUsbtmcTransport, Converter={StaticResource Visible}}" />
-                    <ComboBox ItemsSource="{Binding UsbtmcDeviceOptions}" SelectedItem="{Binding SelectedUsbtmcDevice}" ItemTemplate="{StaticResource OptionDisplay}" Margin="0,2,0,8" Visibility="{Binding IsUsbtmcTransport, Converter={StaticResource Visible}}" />
+                    <ComboBox AutomationProperties.Name="Detected USBTMC devices" ItemsSource="{Binding UsbtmcDeviceOptions}" SelectedItem="{Binding SelectedUsbtmcDevice}" ItemTemplate="{StaticResource OptionDisplay}" Margin="0,2,0,8" Visibility="{Binding IsUsbtmcTransport, Converter={StaticResource Visible}}" />
                     <CheckBox Content="Show as hex" IsChecked="{Binding IdsShowHex}" Margin="0,0,0,8" />
                     <TextBlock Text="Vendor ID" />
-                    <TextBox Text="{Binding VendorIdDisplay, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
+                    <TextBox AutomationProperties.Name="Vendor ID" Text="{Binding VendorIdDisplay, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
                     <TextBlock Text="Product ID" />
-                    <TextBox Text="{Binding ProductIdDisplay, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
+                    <TextBox AutomationProperties.Name="Product ID" Text="{Binding ProductIdDisplay, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
                     <TextBlock Text="Serial number" />
-                    <TextBox Text="{Binding SerialNumber, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
+                    <TextBox AutomationProperties.Name="Serial number" Text="{Binding SerialNumber, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
                     <TextBlock Text="Device path" />
-                    <TextBox Text="{Binding DevicePath, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
+                    <TextBox AutomationProperties.Name="Device path" Text="{Binding DevicePath, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
                     <TextBlock Text="{Binding UsbDeviceNotFoundHint}" Foreground="Firebrick" TextWrapping="Wrap" Margin="0,0,0,8" Visibility="{Binding ConnectedDeviceNotFound, Converter={StaticResource Visible}}" />
                 </StackPanel>
                 <StackPanel Visibility="{Binding IsBleTransport, Converter={StaticResource Visible}}">
                     <Button Content="Scan Bluetooth" Command="{Binding Scans.ScanBle, RelativeSource={RelativeSource AncestorType=Window}}" HorizontalAlignment="Left" Padding="8,2" Margin="0,0,0,4" />
                     <TextBlock Text="Detected BLE devices" />
-                    <ComboBox ItemsSource="{Binding BleDeviceOptions}" SelectedItem="{Binding SelectedBleDevice}" ItemTemplate="{StaticResource OptionDisplay}" Margin="0,2,0,8" />
+                    <ComboBox AutomationProperties.Name="Detected BLE devices" ItemsSource="{Binding BleDeviceOptions}" SelectedItem="{Binding SelectedBleDevice}" ItemTemplate="{StaticResource OptionDisplay}" Margin="0,2,0,8" />
                     <TextBlock Text="Device id" />
-                    <TextBox Text="{Binding BleDeviceId, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
+                    <TextBox AutomationProperties.Name="Device id" Text="{Binding BleDeviceId, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
                     <Button Content="Explore characteristics" Command="{Binding Scans.ExploreBle, RelativeSource={RelativeSource AncestorType=Window}}" HorizontalAlignment="Left" Padding="8,2" Margin="0,0,0,4" />
                     <TextBlock Text="Detected characteristics (write)" />
-                    <ComboBox ItemsSource="{Binding BleCharacteristicOptions}" SelectedItem="{Binding SelectedBleWriteCharacteristic}" ItemTemplate="{StaticResource OptionDisplay}" Margin="0,2,0,8" />
+                    <ComboBox AutomationProperties.Name="Detected characteristics (write)" ItemsSource="{Binding BleCharacteristicOptions}" SelectedItem="{Binding SelectedBleWriteCharacteristic}" ItemTemplate="{StaticResource OptionDisplay}" Margin="0,2,0,8" />
                     <TextBlock Text="Detected characteristics (notify)" />
-                    <ComboBox ItemsSource="{Binding BleCharacteristicOptions}" SelectedItem="{Binding SelectedBleNotifyCharacteristic}" ItemTemplate="{StaticResource OptionDisplay}" Margin="0,2,0,8" />
+                    <ComboBox AutomationProperties.Name="Detected characteristics (notify)" ItemsSource="{Binding BleCharacteristicOptions}" SelectedItem="{Binding SelectedBleNotifyCharacteristic}" ItemTemplate="{StaticResource OptionDisplay}" Margin="0,2,0,8" />
                     <TextBlock Text="Service uuid" />
-                    <TextBox Text="{Binding BleServiceUuid, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
+                    <TextBox AutomationProperties.Name="Service uuid" Text="{Binding BleServiceUuid, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
                     <TextBlock Text="Write characteristic uuid" />
-                    <TextBox Text="{Binding BleWriteCharacteristicUuid, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
+                    <TextBox AutomationProperties.Name="Write characteristic uuid" Text="{Binding BleWriteCharacteristicUuid, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
                     <TextBlock Text="Notify characteristic uuid" />
-                    <TextBox Text="{Binding BleNotifyCharacteristicUuid, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
+                    <TextBox AutomationProperties.Name="Notify characteristic uuid" Text="{Binding BleNotifyCharacteristicUuid, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
                 </StackPanel>
                 <StackPanel Visibility="{Binding IsMqttTransport, Converter={StaticResource Visible}}">
                     <TextBlock Text="User name" />
-                    <TextBox Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
+                    <TextBox AutomationProperties.Name="User name" Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
                     <TextBlock Text="Subscribe topics" />
-                    <TextBox Text="{Binding Subscribe, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
+                    <TextBox AutomationProperties.Name="Subscribe topics" Text="{Binding Subscribe, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
                     <TextBlock Text="Publish topic" />
-                    <TextBox Text="{Binding Publish, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
+                    <TextBox AutomationProperties.Name="Publish topic" Text="{Binding Publish, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
                 </StackPanel>
                 <StackPanel Visibility="{Binding IsLoopbackTransport, Converter={StaticResource Visible}}">
                     <TextBlock Text="{Binding LoopbackInfo}" TextWrapping="Wrap" Margin="0,0,0,8" />
                     <TextBlock Text="Sample interval (ms)" />
-                    <TextBox Text="{Binding LoopbackSampleIntervalMs, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
+                    <TextBox AutomationProperties.Name="Sample interval (ms)" Text="{Binding LoopbackSampleIntervalMs, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
                 </StackPanel>
                 <TextBlock Text="Device manifest" />
-                <TextBox Text="{Binding ManifestName, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
+                <TextBox AutomationProperties.Name="Device manifest" Text="{Binding ManifestName, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
                 <TextBlock Text="Presenters" />
                 <ItemsControl ItemsSource="{Binding PresenterChoices}" Margin="0,0,0,8">
                     <ItemsControl.ItemsPanel>
@@ -154,18 +154,18 @@
                 </ItemsControl>
                 <StackPanel Visibility="{Binding IsScpiPresenterSelected, Converter={StaticResource Visible}}">
                     <TextBlock Text="SCPI profile" />
-                    <ComboBox ItemsSource="{Binding ScpiProfileOptions}" Text="{Binding ScpiProfile, UpdateSourceTrigger=PropertyChanged}" IsEditable="True" Margin="0,2,0,8" />
+                    <ComboBox AutomationProperties.Name="SCPI profile" ItemsSource="{Binding ScpiProfileOptions}" Text="{Binding ScpiProfile, UpdateSourceTrigger=PropertyChanged}" IsEditable="True" Margin="0,2,0,8" />
                     <TextBlock Text="SCPI auto-detect timeout (ms)" />
-                    <TextBox Text="{Binding ScpiAutoDetectTimeoutMs, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
+                    <TextBox AutomationProperties.Name="SCPI auto-detect timeout (ms)" Text="{Binding ScpiAutoDetectTimeoutMs, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
                 </StackPanel>
                 <TextBlock Text="Send format (parser)" />
-                <ComboBox ItemsSource="{Binding PresenterOptions}" SelectedItem="{Binding Parser}" Margin="0,2,0,8" />
+                <ComboBox AutomationProperties.Name="Send format (parser)" ItemsSource="{Binding PresenterOptions}" SelectedItem="{Binding Parser}" Margin="0,2,0,8" />
                 <TextBlock Text="Line ending" />
-                <ComboBox ItemsSource="{Binding LineEndingOptions}" SelectedItem="{Binding LineEndingText}" Margin="0,2,0,8" />
+                <ComboBox AutomationProperties.Name="Line ending" ItemsSource="{Binding LineEndingOptions}" SelectedItem="{Binding LineEndingText}" Margin="0,2,0,8" />
                 <TextBlock Text="ASCII max line length" />
-                <TextBox Text="{Binding AsciiMaxLineLength, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
+                <TextBox AutomationProperties.Name="ASCII max line length" Text="{Binding AsciiMaxLineLength, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
                 <TextBlock Text="Write byte delay (ms)" />
-                <TextBox Text="{Binding WriteByteDelayMs, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
+                <TextBox AutomationProperties.Name="Write byte delay (ms)" Text="{Binding WriteByteDelayMs, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
             </StackPanel>
             </ScrollViewer>
         </DockPanel>

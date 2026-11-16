@@ -55,7 +55,7 @@ A clean rebuild after the 2026-11-06 pass reports no analyzer warnings (218 befo
   - Web: a durable rights audit store with retention (the log decorator exists); refresh tokens for DevTerm clients.
   - Messaging: shared outbox and inbox (idempotent consumers); cross-process cache single flight; template versioning, localisation and a render test harness; bounce, complaint and delivery receipts; a ClamAV adapter for `IContentScanner`; GDPR erasure for append-only event stores.
   - AI and data: a re-embed command for stale rows (waits on Q-VECTOR-DELETE; the detector `EmbeddingVersion.StaleIds` and the stamping example exist); a relevance query set for the example search and access filters tied to rights; token cost accounting for LLM tools (waits on Q-LLM-USAGE); screenshot freshness check in the docs validator.
-  - DevTerm: keyboard navigation requirements as tests; sweep the 41 unnamed input controls listed in the `XamlAccessibilityTests` baseline, fixing a window and lowering its number (only ConnectionEditorWindow is left) (the plugin manifest, permissions and signing prompt are designed in PluginSandbox and tracked on the sandbox item below).
+  - DevTerm: keyboard navigation requirements as tests (screen-reader names are done and enforced; the manifest, permissions and signing prompt are designed in PluginSandbox and tracked on the sandbox item below).
 
 ## 6. Migrations
 
