@@ -1,6 +1,6 @@
 # RAW camera file development
 
-Status: **built 2026-11-16: the managed part (`OoBDev.Media.Metadata.Raw`) and the ImageMagick adapter `OoBDev.ImageMagick`; provider confirmed by the owner 2026-11-12 (Magick.NET, Q16). A DevLocal test on a real RAW file runs when `RAW_TEST_FILE` is set.** Request: [RAW camera file development](../../features/request/2026-11-11-raw-camera-file-development.md).
+Status: **built 2026-11-16: the managed part (`OoBDev.Media.Metadata.Raw`) and the ImageMagick adapter `OoBDev.ImageMagick`; provider confirmed by the owner 2026-11-12 (Magick.NET, Q16). A DevLocal test on a real RAW file runs when `RAW_TEST_FILE` is set.** Request: [RAW camera file development](../../features/completed/2026-11-11-raw-camera-file-development.md).
 
 ## Contents
 

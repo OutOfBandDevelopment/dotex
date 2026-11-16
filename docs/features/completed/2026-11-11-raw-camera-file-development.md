@@ -1,6 +1,6 @@
 ﻿# Feature request: Develop camera RAW files (NEF and others) to JPEG or PNG
 
-- **Status:** triaged
+- **Status:** done (2026-11-16, [change](../../changes/2026-11-16.md#raw-development); the native decode of real NEF and CR3 files is unverified until a DevLocal run with `RAW_TEST_FILE`)
 - **Requested by:** owner (filed from the notes repository, `projects/applications/second-shooter-photo-library.md`; design concepts only, its code is not reused)
 - **Date:** 2026-11-11
 - **Area:** new, near `OoBDev.Onnx.ImageEmbeddings.Skia` and the file inventory request
