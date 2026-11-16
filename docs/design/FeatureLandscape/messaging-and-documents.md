@@ -61,7 +61,7 @@ Part of the [feature landscape](README.md). Status is "a project exists under `s
 - **Practices:** provider keyed by engine name, sandboxed template execution, no code in templates.
 - **Built 2026-11-16:** `TemplateRenderHarness` renders templates against sample data and reports the first differing line.
 - **Built 2026-11-16:** `LocalizedTemplateEngine` (culture suffix lookup with parent fallback).
-- **Missing:** template versioning.
+- **Built:** versioned, tenant and culture aware database templates (`OoBDev.System.Text.Templating.EntityFrameworkCore`: publish, latest or specific version, rollback, withdraw, audit columns). Not built: shipped migrations, SQL Server and PostgreSQL runs, a cache in front of the source.
 
 ## DocumentServices
 
