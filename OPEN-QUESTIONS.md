@@ -56,3 +56,15 @@ Request [report-project-publish](docs/features/request/2026-11-10-report-project
 
 **Default:** A; the request is set to declined when you confirm.
 **Your answer:**
+
+### Q-SCANNER — 2026-11-16 — Code quality scanner
+
+Request [code-quality-scanner](docs/features/request/2026-11-10-code-quality-scanner.md): the earlier SonarQube is gone; the analyzers in `src/.editorconfig` (Meziantou, NetAnalyzers, `OoBDev.Analyzers`) give build-time findings with no history. Standing up a server scanner adds a container and a tool the repository does not have.
+
+**Options**
+- A (recommended): keep the build analyzers as the gate and add SonarAnalyzer.CSharp to them (a NuGet analyzer, no server, no secrets); history comes from `git log` and the committed coverage reports. Smallest change, nothing to run.
+- B: SonarQube Community in the integration stack (about 2 GB memory, PostgreSQL, the `dotnet-sonarscanner` dotnet tool, a token in a user secret), `scripts/ci/sonar.ps1` for the end-to-end scan and a switchable gate. Gives the dashboard and trends the request asks for.
+- C: Semgrep or Qodana as a container run on demand: security and bug rules without a long-lived server, no trend history.
+
+**Default:** A once confirmed; nothing built meanwhile.
+**Your answer:**
