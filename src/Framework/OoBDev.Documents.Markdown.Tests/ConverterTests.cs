@@ -122,4 +122,43 @@ public class ConverterTests
         Assert.AreEqual(ConversionStatus.Unchanged, result.Status);
         Assert.AreEqual("kept", File.ReadAllText(md));
     }
+
+    [TestMethod, TestCategory(TestCategories.Unit)]
+    public void Convert_ReaderForExtension_UsesTheReader()
+    {
+        var html = Write("page.HTML", "<p>x</p>");
+        var md = Path.Combine(dir, "page.md");
+        var converter = new DocumentMarkdownConverter(new FakePdfText(new PdfText([], null)), [new FakeFileReader("a\r\nb", ".html")]);
+
+        var result = converter.Convert(html, md, "h");
+
+        Assert.AreEqual(ConversionStatus.Converted, result.Status);
+        var written = File.ReadAllText(md);
+        StringAssert.Contains(written, "kind: html");
+        StringAssert.Contains(written, "extractor: fake reader");
+        StringAssert.EndsWith(written, "a\nb");
+    }
+
+    [TestMethod, TestCategory(TestCategories.Unit)]
+    public void Convert_ReaderReturnsBlank_Empty()
+    {
+        var html = Write("blank.html", "<p></p>");
+        var converter = new DocumentMarkdownConverter(new FakePdfText(new PdfText([], null)), [new FakeFileReader("  ", ".html")]);
+
+        var result = converter.Convert(html, Path.Combine(dir, "blank.md"), "h");
+
+        Assert.AreEqual(ConversionStatus.Empty, result.Status);
+    }
+
+    [TestMethod, TestCategory(TestCategories.Unit)]
+    public void Convert_NoReaderForExtension_FallsBackToText()
+    {
+        var txt = Write("n.txt", "plain");
+        var md = Path.Combine(dir, "n.md");
+        var converter = new DocumentMarkdownConverter(new FakePdfText(new PdfText([], null)), [new FakeFileReader("ignored", ".html")]);
+
+        converter.Convert(txt, md, "h");
+
+        StringAssert.Contains(File.ReadAllText(md), "kind: text");
+    }
 }

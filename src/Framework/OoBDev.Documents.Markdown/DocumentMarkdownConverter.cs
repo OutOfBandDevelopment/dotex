@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -11,7 +12,8 @@ namespace OoBDev.Documents.Markdown;
 /// Plain text and PDF to page-anchored Markdown with front matter. A PDF whose pages average under <see cref="MinCharsPerPage"/> characters needs OCR instead.
 /// </summary>
 /// <param name="pdfText">Reads the embedded text of a PDF.</param>
-public sealed class DocumentMarkdownConverter(IPdfTextReader pdfText)
+/// <param name="readers">Format readers (HTML, office) tried by extension before the plain-text fallback.</param>
+public sealed class DocumentMarkdownConverter(IPdfTextReader pdfText, IEnumerable<IFileMarkdownReader>? readers = null)
 {
     /// <summary>The average characters per page below which a PDF counts as a scan.</summary>
     public const int MinCharsPerPage = 40;
@@ -55,6 +57,19 @@ public sealed class DocumentMarkdownConverter(IPdfTextReader pdfText)
             kind = "pdf";
             extractor = PdfExtractor;
         }
+        else if (FindReader(file) is { } reader)
+        {
+            body = reader.Read(file, cancellationToken).Replace("\r\n", "\n", StringComparison.Ordinal).Replace('\r', '\n');
+            if (body.Trim().Length == 0)
+            {
+                return new ConversionResult(ConversionStatus.Empty, "no text found");
+            }
+
+            title = Path.GetFileNameWithoutExtension(file);
+            kind = Path.GetExtension(file).TrimStart('.').ToLowerInvariant();
+            extractor = reader.Extractor;
+            pages = 1;
+        }
         else
         {
             body = new UTF8Encoding(false, false).GetString(File.ReadAllBytes(file)).Replace("\r\n", "\n", StringComparison.Ordinal).Replace('\r', '\n');
@@ -78,6 +93,12 @@ public sealed class DocumentMarkdownConverter(IPdfTextReader pdfText)
         var front = MarkdownPages.FrontMatter(title, file, sha256, new FileInfo(file).Length, kind, pages, extractor);
         File.WriteAllText(markdownPath, front + body, new UTF8Encoding(false));
         return new ConversionResult(ConversionStatus.Converted, markdownPath.Replace('\\', '/'));
+    }
+
+    private IFileMarkdownReader? FindReader(string file)
+    {
+        var extension = Path.GetExtension(file);
+        return readers?.FirstOrDefault(r => r.Extensions.Contains(extension, StringComparer.OrdinalIgnoreCase));
     }
 
     private static bool HasPdfHeader(string file)

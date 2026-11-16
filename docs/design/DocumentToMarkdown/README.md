@@ -1,6 +1,6 @@
 # Document to Markdown and OCR
 
-Status: **design written 2026-11-12; placement confirmed by the owner 2026-11-12 (Framework project without a PDF package, a Docling adapter, PdfPig only in a separate adapter approved later), first slice built 2026-11-16 (Framework project, contracts, Docling adapter, docling-serve in the integration stack with an Integration test); HTML and office formats and the PdfPig adapter not built.** Request: [OCR and document text extraction](../../features/request/2026-11-11-ocr-document-text-extraction.md). Related existing designs: [OcrService](../DocumentServices/OcrService/requirements.md) (images, context based, Tesseract and cloud providers) and [ExtractionService](../DocumentServices/ExtractionService/requirements.md) (text and metadata).
+Status: **design written 2026-11-12; placement confirmed by the owner 2026-11-12 (Framework project without a PDF package, a Docling adapter, PdfPig only in a separate adapter approved later), first slice built 2026-11-16 (Framework project, contracts, Docling adapter, docling-serve in the integration stack with an Integration test); HTML built 2026-11-16 (`IFileMarkdownReader` seam, ReverseMarkdown reader in `OoBDev.MysticMind`); office formats and the PdfPig adapter not built.** Request: [OCR and document text extraction](../../features/request/2026-11-11-ocr-document-text-extraction.md). Related existing designs: [OcrService](../DocumentServices/OcrService/requirements.md) (images, context based, Tesseract and cloud providers) and [ExtractionService](../DocumentServices/ExtractionService/requirements.md) (text and metadata).
 
 ## Contents
 
@@ -66,4 +66,4 @@ Converter: text and Markdown pass through, a PDF with enough text converts with 
 - Region coordinates and language detection.
 - The queue, lease and twin reuse (catalog database).
 - Rendering stages (`RenderStageRunner`, the renderer container) and summarize.
-- Office readers (docx, xlsx, pptx, OLE): they already exist or overlap other Documents work and need their own comparison.
+- Office readers (docx, xlsx, pptx, OLE; they would be further `IFileMarkdownReader` adapters): they already exist or overlap other Documents work and need their own comparison.
