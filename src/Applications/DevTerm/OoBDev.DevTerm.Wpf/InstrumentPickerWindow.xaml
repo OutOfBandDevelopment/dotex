@@ -8,6 +8,6 @@
             <Button Content="Select" Width="80" Height="32" Margin="0,0,8,0" IsDefault="True" Click="Select_Click" />
             <Button Content="Cancel" Width="80" Height="32" IsCancel="True" />
         </StackPanel>
-        <ListBox ItemsSource="{Binding Choices}" SelectedIndex="{Binding SelectedIndex}" MouseDoubleClick="List_MouseDoubleClick" />
+        <ListBox AutomationProperties.Name="Instruments" ItemsSource="{Binding Choices}" SelectedIndex="{Binding SelectedIndex}" MouseDoubleClick="List_MouseDoubleClick" />
     </DockPanel>
 </Window>

@@ -11,12 +11,12 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <ListBox Grid.Row="0" ItemsSource="{Binding Entries}" SelectedIndex="{Binding SelectedIndex}" DisplayMemberPath="DisplayName" MouseDoubleClick="List_MouseDoubleClick" />
+        <ListBox AutomationProperties.Name="Manifests" Grid.Row="0" ItemsSource="{Binding Entries}" SelectedIndex="{Binding SelectedIndex}" DisplayMemberPath="DisplayName" MouseDoubleClick="List_MouseDoubleClick" />
         <TextBlock Grid.Row="1" Margin="0,8,0,0" Text="Or a path (file, folder, .zip):" />
         <DockPanel Grid.Row="2" Margin="0,4,0,0">
             <Button DockPanel.Dock="Right" Content="Folder..." Width="72" Margin="6,0,0,0" Click="BrowseFolder_Click" />
             <Button DockPanel.Dock="Right" Content="File..." Width="72" Margin="6,0,0,0" Click="BrowseFile_Click" />
-            <TextBox Text="{Binding PathText, UpdateSourceTrigger=PropertyChanged}" VerticalContentAlignment="Center" ToolTip="A manifest file (.json), a folder with a device.json, or a .zip of one" />
+            <TextBox AutomationProperties.Name="Manifest path" Text="{Binding PathText, UpdateSourceTrigger=PropertyChanged}" VerticalContentAlignment="Center" ToolTip="A manifest file (.json), a folder with a device.json, or a .zip of one" />
         </DockPanel>
         <ScrollViewer Grid.Row="3" MaxHeight="72" Margin="0,8,0,0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
             <TextBlock TextWrapping="Wrap" Foreground="#C0392B" Text="{Binding Error}" />

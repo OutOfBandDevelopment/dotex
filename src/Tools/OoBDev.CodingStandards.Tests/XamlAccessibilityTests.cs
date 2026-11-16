@@ -32,16 +32,11 @@ public class XamlAccessibilityTests
         ["ConnectionEditorWindow.xaml"] = 41,
         ["ConverterToolsWindow.xaml"] = 7,
         ["ExpressionPickerWindow.xaml"] = 3,
-        ["InstrumentPickerWindow.xaml"] = 1,
         ["MainWindow.xaml"] = 4,
-        ["ManifestEditorWindow.xaml"] = 1,
-        ["ManifestPickerWindow.xaml"] = 2,
-        ["MergedLogWindow.xaml"] = 1,
         ["PlaybackWindow.xaml"] = 5,
         ["RoutingWindow.xaml"] = 11,
         ["StreamMonitorWindow.xaml"] = 6,
         ["ThemeBuilderWindow.xaml"] = 3,
-        ["ThemeSeedPickerWindow.xaml"] = 2,
     };
 
     private static IEnumerable<string> XamlFiles()
