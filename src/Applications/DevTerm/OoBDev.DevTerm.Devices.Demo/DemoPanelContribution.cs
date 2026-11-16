@@ -23,5 +23,5 @@ public sealed class DemoPanelContribution : IDevicePanelContribution
     public UiDefinition BuildDefinition() => DemoUiDefinition.Build();
 
     /// <inheritdoc />
-    public IControlSurface CreateSurface(Session session) => new DemoControlSurface(session);
+    public IControlSurface CreateSurface(Session session, IStructuredPresenter? source = null) => new DemoControlSurface(session);
 }

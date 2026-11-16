@@ -137,8 +137,14 @@ internal sealed class SessionPanels(IEnumerable<IDevicePanelContribution> contri
 
         return _open.GetOrAdd((hub, contribution.Id), _ =>
         {
-            var panel = new OpenPanel(contribution.BuildDefinition(), contribution.CreateSurface(hub.Session));
-            if (contribution.PresenterName is { } name && hub.Catalog.TryGet(name, out var presenter) && presenter is IStructuredPresenter structured)
+            IStructuredPresenter? structured = null;
+            if (contribution.PresenterName is { } name && hub.Catalog.TryGet(name, out var presenter) && presenter is IStructuredPresenter found)
+            {
+                structured = found;
+            }
+
+            var panel = new OpenPanel(contribution.BuildDefinition(), contribution.CreateSurface(hub.Session, structured));
+            if (structured is not null)
             {
                 structured.ValuesChanged += (_, values) => panel.Merge(values);
             }

@@ -16,6 +16,9 @@ public sealed class ZWavePanelTests
 {
     public TestContext TestContext { get; set; } = null!;
 
+    private static OoBDev.UiDefinitions.IControlSurface Surface(OoBDev.UiDefinitions.IDevicePanel panel, OoBDev.UiDefinitions.DeviceSend send) =>
+        panel.CreateSurface(send, panel.CreateDecoder());
+
     [TestMethod]
     public void IsAvailable_Transport_OnlyForSerial()
     {
@@ -48,7 +51,7 @@ public sealed class ZWavePanelTests
     {
         // Stage
         byte[]? sent = null;
-        var surface = new ZWavePanel().CreateSurface((data, _) =>
+        var surface = Surface(new ZWavePanel(), (data, _) =>
         {
             sent = data.ToArray();
             return Task.CompletedTask;
@@ -317,5 +320,102 @@ public sealed class ZWavePanelTests
         Assert.AreEqual("NAK", lines[0]);
         Assert.AreEqual("CAN", lines[1]);
         StringAssert.StartsWith(lines[2], "INVALID");
+    }
+
+    private static byte[] InitDataResponse()
+    {
+        var payload = new byte[3 + 29 + 2];
+        payload[0] = 5;
+        payload[2] = 29;
+        payload[3] = 0b0000_0011; // nodes 1 and 2
+        return ZWaveFrame.Create(0x01, ZWaveFunctions.GetInitData, payload).Raw;
+    }
+
+    [TestMethod]
+    public void Decode_InitDataResponse_FillsTheSharedTable()
+    {
+        var decoder = new ZWaveDecoder();
+
+        decoder.Decode(new ReadOnlySequence<byte>(InitDataResponse()));
+
+        CollectionAssert.AreEqual(new[] { 1, 2 }, decoder.Table.Nodes.Select(n => n.Node).ToArray());
+        Assert.HasCount(2, decoder.Table.Describe());
+    }
+
+    [TestMethod]
+    public async Task InvokeAsync_Enumerate_ListsNodesThenQueriesEach()
+    {
+        var sent = new List<byte[]>();
+        var decoder = new ZWaveDecoder();
+        var surface = new ZWaveControlSurface((data, _) =>
+        {
+            sent.Add(data.ToArray());
+            if (data.Length > 3 && data.Span[3] == ZWaveFunctions.GetInitData)
+            {
+                decoder.Decode(new ReadOnlySequence<byte>(InitDataResponse()));
+            }
+
+            return Task.CompletedTask;
+        }, TimeProvider.System, TimeSpan.Zero, decoder, TimeSpan.FromSeconds(5));
+
+        await surface.InvokeAsync("enumerate", null, TestContext.CancellationToken);
+
+        Assert.IsTrue(sent.Any(f => f.Length > 3 && f[3] == ZWaveFunctions.GetInitData));
+        Assert.AreEqual(2, sent.Count(f => f.Length > 4 && f[3] == ZWaveFunctions.GetNodeProtocolInfo));
+        Assert.AreEqual(2, sent.Count(f => f.Length > 4 && f[3] == ZWaveFunctions.IsFailedNode));
+    }
+
+    [TestMethod]
+    public async Task InvokeAsync_Enumerate_NoNodeList_TimesOut()
+    {
+        var surface = new ZWaveControlSurface((_, _) => Task.CompletedTask, TimeProvider.System, TimeSpan.Zero, new ZWaveDecoder(), TimeSpan.FromMilliseconds(50));
+
+        await Assert.ThrowsAsync<TimeoutException>(() => surface.InvokeAsync("enumerate", null, TestContext.CancellationToken));
+    }
+
+    [TestMethod]
+    public async Task InvokeAsync_Describe_WithoutDecoder_Throws()
+    {
+        var surface = new ZWaveControlSurface((_, _) => Task.CompletedTask);
+
+        await Assert.ThrowsAsync<InvalidOperationException>(() => surface.InvokeAsync("describe", "2", TestContext.CancellationToken));
+    }
+
+    [TestMethod]
+    public async Task InvokeAsync_Describe_QueriesOneNode()
+    {
+        var sent = new List<byte[]>();
+        var surface = new ZWaveControlSurface((data, _) =>
+        {
+            sent.Add(data.ToArray());
+            return Task.CompletedTask;
+        }, TimeProvider.System, TimeSpan.Zero, new ZWaveDecoder());
+
+        await surface.InvokeAsync("describe", "7", TestContext.CancellationToken);
+
+        Assert.AreEqual(1, sent.Count(f => f.Length > 4 && f[3] == ZWaveFunctions.GetNodeProtocolInfo && f[4] == 7));
+    }
+
+    [TestMethod]
+    public async Task Surface_WithDecoder_AcknowledgesDataFramesUntilDisposed()
+    {
+        var acks = new List<byte[]>();
+        var decoder = new ZWaveDecoder();
+        var surface = new ZWaveControlSurface((data, _) =>
+        {
+            lock (acks) { acks.Add(data.ToArray()); }
+            return Task.CompletedTask;
+        }, decoder: decoder);
+
+        decoder.Decode(new ReadOnlySequence<byte>(InitDataResponse()));
+        for (var i = 0; i < 100 && acks.Count == 0; i++) await Task.Delay(20, TestContext.CancellationToken);
+        surface.Dispose();
+        var after = acks.Count;
+        decoder.Decode(new ReadOnlySequence<byte>(InitDataResponse()));
+        await Task.Delay(100, TestContext.CancellationToken);
+
+        Assert.AreEqual(1, after);
+        CollectionAssert.AreEqual(new[] { ZWaveFrame.AckByte }, acks[0]);
+        Assert.AreEqual(after, acks.Count);
     }
 }

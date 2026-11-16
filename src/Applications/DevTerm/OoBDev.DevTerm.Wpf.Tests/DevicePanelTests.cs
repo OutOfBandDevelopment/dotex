@@ -60,7 +60,7 @@ public sealed class DevicePanelTests
             Sections = [new UiSection { Controls = [new ToggleControl { Id = "d1", Label = "D1" }, new ButtonControl { Id = "wipe", Label = "Wipe", CommandId = "WIPE", ConfirmMessage = "Erase?" }, new TextFieldControl { Id = "color", Label = "Color" }, new ButtonControl { Id = "pick", Label = "Pick", ColorPickerTargetCommandId = "color" }] }],
         };
 
-        public IControlSurface CreateSurface(Session session) => surface;
+        public IControlSurface CreateSurface(Session session, IStructuredPresenter? source = null) => surface;
     }
 
     private sealed class InterlockPanel(FakeSurface surface) : IDevicePanelContribution
@@ -79,7 +79,7 @@ public sealed class DevicePanelTests
             Sections = [new UiSection { Controls = [new ToggleControl { Id = "arm", Label = "Arm" }, new ButtonControl { Id = "fire", Label = "Fire", CommandId = "FIRE", EnabledWhen = new UiCondition { Id = "arm", Values = ["True"] }, DisabledReason = "Arm first" }] }],
         };
 
-        public IControlSurface CreateSurface(Session session) => surface;
+        public IControlSurface CreateSurface(Session session, IStructuredPresenter? source = null) => surface;
     }
 
     [TestMethod]

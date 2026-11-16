@@ -23,7 +23,7 @@ public sealed class ZWavePanel : IDevicePanel
     public UiDefinition BuildDefinition() => ZWaveUiDefinition.Build();
 
     /// <inheritdoc/>
-    public IControlSurface CreateSurface(DeviceSend send) => new ZWaveControlSurface(send);
+    public IControlSurface CreateSurface(DeviceSend send, IDeviceDecoder decoder) => new ZWaveControlSurface(send, decoder: decoder as ZWaveDecoder);
 
     /// <inheritdoc/>
     public IDeviceDecoder CreateDecoder() => new ZWaveDecoder();

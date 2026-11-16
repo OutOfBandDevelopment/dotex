@@ -29,7 +29,11 @@ public sealed class SurfacePanel : IDisposable
     public FormBinding Binding { get; }
 
     /// <inheritdoc />
-    public void Dispose() => Binding.Changed -= OnChanged;
+    public void Dispose()
+    {
+        Binding.Changed -= OnChanged;
+        (_surface as IDisposable)?.Dispose();
+    }
 
     private void OnChanged(object? sender, string? id)
     {

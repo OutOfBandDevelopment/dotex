@@ -9,7 +9,7 @@ public static class ZWaveUiDefinition
     /// <summary>The command ids the control surface accepts.</summary>
     public static IReadOnlyList<string> CommandIds { get; } =
     [
-        "refresh", "version", "memoryId", "initData", "softReset", "nodeInfo", "switchOn", "switchOff", "switchGet", "setLevel",
+        "refresh", "enumerate", "describe", "version", "memoryId", "initData", "softReset", "nodeInfo", "switchOn", "switchOff", "switchGet", "setLevel",
         "addNode", "stopAddNode", "removeNode", "stopRemoveNode",
         "resetNetwork", "learnOn", "learnOff", "heal", "isFailed", "removeFailed", "configGet", "configSet", "sendRaw",
     ];
@@ -27,6 +27,7 @@ public static class ZWaveUiDefinition
                 Controls =
                 [
                     new ButtonControl { Id = "refresh", Label = "Refresh" },
+                    new ButtonControl { Id = "enumerate", Label = "Enumerate nodes" },
                     new ButtonControl { Id = "version", Label = "Version" },
                     new ButtonControl { Id = "memoryId", Label = "Home and node id" },
                     new ButtonControl { Id = "initData", Label = "Node list" },
@@ -41,6 +42,7 @@ public static class ZWaveUiDefinition
                     new NumericControl { Id = "node", Label = "Node", Minimum = 1, Maximum = 232, DefaultValue = 2 },
                     new NumericControl { Id = "level", Label = "Level", Minimum = 0, Maximum = 99, DefaultValue = 50 },
                     new ButtonControl { Id = "nodeInfo", Label = "Node info", ParameterFieldIds = ["node"] },
+                    new ButtonControl { Id = "describe", Label = "Describe node", ParameterFieldIds = ["node"] },
                     new ButtonControl { Id = "switchOn", Label = "On", ParameterFieldIds = ["node"] },
                     new ButtonControl { Id = "switchOff", Label = "Off", ParameterFieldIds = ["node"] },
                     new ButtonControl { Id = "switchGet", Label = "Read switch", ParameterFieldIds = ["node"] },

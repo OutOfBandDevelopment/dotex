@@ -11,6 +11,16 @@ public sealed class ZWaveDecoder : IDeviceDecoder
     private readonly ZWaveMessageDecoder _frames = new();
     private readonly List<byte> _pending = [];
 
+    /// <summary>Creates the decoder over a node table.</summary>
+    /// <param name="table">The table the decoded frames are folded into, or <see langword="null"/> for a new one.</param>
+    public ZWaveDecoder(ZWaveNodeTable? table = null) => Table = table ?? new ZWaveNodeTable();
+
+    /// <summary>Gets what is known about the network, built from the frames this decoder has seen. The control surface of the same session shares it.</summary>
+    public ZWaveNodeTable Table { get; }
+
+    /// <summary>Occurs for every unit decoded, before its description is published.</summary>
+    public event EventHandler<ZWaveFrame>? FrameDecoded;
+
     /// <inheritdoc/>
     public string Name => ZWaveGlobals.ProviderKey;
 
@@ -64,6 +74,7 @@ public sealed class ZWaveDecoder : IDeviceDecoder
     {
         var values = new Dictionary<string, string>(StringComparer.Ordinal);
         string text;
+        FrameDecoded?.Invoke(this, frame);
         switch (frame.Kind)
         {
             case ZWaveFrameKind.Ack:
@@ -81,6 +92,11 @@ public sealed class ZWaveDecoder : IDeviceDecoder
                 foreach (var pair in reading.Values)
                 {
                     values[pair.Key] = pair.Value;
+                }
+
+                if (Table.Apply(frame) is not null)
+                {
+                    values["nodes"] = string.Join(Environment.NewLine, Table.Describe());
                 }
 
                 break;

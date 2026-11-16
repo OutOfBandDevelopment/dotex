@@ -23,7 +23,7 @@ public sealed class De5000Panel : IDevicePanel
     public UiDefinition BuildDefinition() => De5000UiDefinition.Build();
 
     /// <inheritdoc />
-    public IControlSurface CreateSurface(DeviceSend send) => new De5000ControlSurface();
+    public IControlSurface CreateSurface(DeviceSend send, IDeviceDecoder decoder) => new De5000ControlSurface();
 
     /// <inheritdoc />
     public IDeviceDecoder CreateDecoder() => new De5000Decoder();

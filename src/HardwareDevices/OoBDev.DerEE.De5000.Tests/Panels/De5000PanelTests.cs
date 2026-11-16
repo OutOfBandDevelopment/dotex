@@ -14,6 +14,9 @@ namespace OoBDev.DerEE.De5000.Panels.Tests;
 [TestCategory(TestCategories.DerEe_De5000)]
 public sealed class De5000PanelTests
 {
+    private static OoBDev.UiDefinitions.IControlSurface Surface(OoBDev.UiDefinitions.IDevicePanel panel, OoBDev.UiDefinitions.DeviceSend send) =>
+        panel.CreateSurface(send, panel.CreateDecoder());
+
     [TestMethod, TestCategory(TestCategories.Unit)]
     [DataRow("serial", true)]
     [DataRow("BLE", true)]
@@ -35,7 +38,7 @@ public sealed class De5000PanelTests
     [TestMethod, TestCategory(TestCategories.Unit)]
     public async Task InvokeAsync_AnyCommand_Throws()
     {
-        var surface = new De5000Panel().CreateSurface((_, _) => Task.CompletedTask);
+        var surface = Surface(new De5000Panel(), (_, _) => Task.CompletedTask);
 
         await Assert.ThrowsExactlyAsync<ArgumentException>(() => surface.InvokeAsync("reset", null, TestContext.CancellationToken));
     }

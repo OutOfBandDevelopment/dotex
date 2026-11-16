@@ -29,7 +29,7 @@ public sealed class BusylightPanel : IDevicePanel
     public UiDefinition BuildDefinition() => BusylightUiDefinition.Build();
 
     /// <inheritdoc />
-    public IControlSurface CreateSurface(DeviceSend send) => new BusylightControlSurface(send);
+    public IControlSurface CreateSurface(DeviceSend send, IDeviceDecoder decoder) => new BusylightControlSurface(send);
 
     /// <inheritdoc />
     public IDeviceDecoder CreateDecoder() => new BusylightDecoder();

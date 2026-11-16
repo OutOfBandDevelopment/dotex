@@ -9,6 +9,9 @@ namespace OoBDev.Velleman.K8055.Panels.Tests;
 [TestCategory(TestCategories.Velleman_K8055)]
 public sealed class K8055PanelTests
 {
+    private static OoBDev.UiDefinitions.IControlSurface Surface(OoBDev.UiDefinitions.IDevicePanel panel, OoBDev.UiDefinitions.DeviceSend send) =>
+        panel.CreateSurface(send, panel.CreateDecoder());
+
     [TestMethod, TestCategory(TestCategories.Unit)]
     [DataRow("hid", 0x10CF, 0x5500, true)]
     [DataRow("HID", 0x10CF, 0x5503, true)]
@@ -46,7 +49,7 @@ public sealed class K8055PanelTests
     public async Task CreateSurface_Invoke_SendsThroughTheDelegate()
     {
         byte[]? sent = null;
-        var surface = new K8055Panel().CreateSurface((data, _) =>
+        var surface = Surface(new K8055Panel(), (data, _) =>
         {
             sent = data.ToArray();
             return Task.CompletedTask;

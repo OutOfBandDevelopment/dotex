@@ -23,9 +23,10 @@ public sealed class DevicePanelContribution(IDevicePanel panel) : IDevicePanelCo
     public UiDefinition BuildDefinition() => panel.BuildDefinition();
 
     /// <inheritdoc />
-    public IControlSurface CreateSurface(Session session)
+    public IControlSurface CreateSurface(Session session, IStructuredPresenter? source = null)
     {
         ArgumentNullException.ThrowIfNull(session);
-        return panel.CreateSurface((data, cancellationToken) => session.SendAsync(data, cancellationToken));
+        var decoder = (source as DeviceDecoderPresenter)?.Decoder ?? panel.CreateDecoder();
+        return panel.CreateSurface((data, cancellationToken) => session.SendAsync(data, cancellationToken), decoder);
     }
 }

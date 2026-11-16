@@ -390,7 +390,7 @@ public static class WebHost
         var (definition, surface) = webOptions.Panel?.ToLowerInvariant() switch
         {
             { } id when app.Services.GetServices<IDevicePanelContribution>().FirstOrDefault(c => string.Equals(c.Id, id, StringComparison.OrdinalIgnoreCase)) is { } contributed
-                => (contributed.BuildDefinition(), contributed.CreateSurface(hub.Session)),
+                => (contributed.BuildDefinition(), contributed.CreateSurface(hub.Session, SessionSource(hub, contributed))),
             _ => ((UiDefinition?)null, (IControlSurface?)null),
         };
         if (!string.IsNullOrWhiteSpace(webOptions.Panel) && definition is null)
@@ -421,7 +421,7 @@ public static class WebHost
                 // A switched profile brings a new session and presenter set: point the panel at them.
                 hub.SessionChanged += () =>
                 {
-                    liveSurface = contribution.CreateSurface(hub.Session);
+                    liveSurface = contribution.CreateSurface(hub.Session, SessionSource(hub, contribution));
                     holder.Set(definition, liveSurface);
                     Subscribe();
                 };
@@ -456,4 +456,7 @@ public static class WebHost
 
         return new Built(app, hub, token, controlHttp);
     }
+
+    private static IStructuredPresenter? SessionSource(SessionHub hub, IDevicePanelContribution contribution) =>
+        contribution.PresenterName is { } name && hub.Catalog.TryGet(name, out var presenter) ? presenter as IStructuredPresenter : null;
 }
