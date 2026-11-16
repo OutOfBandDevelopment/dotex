@@ -35,6 +35,10 @@ This adds `IVectorStoreFactory` (`VectorStoreFactory`) and the open generic `IVe
 
 The embedder presets expose the model id and dimensions through `EmbeddingGeneratorMetadata`, which is what to feed `Tag`.
 
+## Relevance metrics
+
+`RelevanceMetrics` scores a ranked id list against the ids marked relevant: `RecallAtK`, `ReciprocalRank` and `MeanReciprocalRank`. Keep a small set of queries with expected hits beside a search feature and assert a minimum score in a test, so a change to fusion, filters or an embedding model that hurts ranking fails the build. The set itself is project data, not part of this library.
+
 ## Search requests, text form and hybrid merge
 
 One request model (`SearchRequest`, in `OoBDev.Search.Abstractions`) is understood by every `ISearchProvider`: free text, `FieldFilter` conditions, an optional `SearchAnchor` (`like` an item or `near` a text or vector), sort, page size and an opaque cursor. Each `SearchItem` carries a `SearchExplanation` (field, vector index, distance, the score per source and the fusion name). A provider lists the filters it supports in `SupportedFilters` and throws `UnsupportedFilterException` (filter name only, never the value) for the rest.
