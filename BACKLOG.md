@@ -55,7 +55,7 @@ A clean rebuild after the 2026-11-06 pass reports no analyzer warnings (218 befo
   - Web: a query endpoint and screen for the durable rights audit trail (the store exists since 2026-11-16).
   - Messaging: GDPR erasure remainder (steps 3 to 5 of `docs/design/CqrsEventSourcing/erasure.md`: hash-chain re-seal once chaining exists, a right-guarded entry point and a screen spec, the unmarked-type check).
   - AI and data: a re-embed command or screen in the example that calls `EmbeddingVersion.ReembedAsync` (the helper and `IVectorStore.DeleteAsync` exist since 2026-11-16); a relevance query set for the example search and access filters tied to rights.
-  - DevTerm: keyboard navigation requirements as tests (screen-reader names are done and enforced; the manifest, permissions and signing prompt are designed in PluginSandbox and tracked on the sandbox item below).
+  - DevTerm: keyboard shortcuts (the shell defines none; design which ones first); the manifest, permissions and signing prompt are designed in PluginSandbox and tracked on the sandbox item below.
 
 ## 6. Migrations
 

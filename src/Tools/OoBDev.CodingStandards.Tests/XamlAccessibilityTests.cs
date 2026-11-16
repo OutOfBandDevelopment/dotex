@@ -25,7 +25,7 @@ public class XamlAccessibilityTests
         "Button", "CheckBox", "RadioButton", "ToggleButton",
     };
 
-    private static IEnumerable<string> XamlFiles()
+    internal static IEnumerable<string> XamlFiles()
     {
         var root = Path.Combine(RepositoryRoot.Find(), "src", "Applications");
         return Directory.EnumerateFiles(root, "*.xaml", SearchOption.AllDirectories)

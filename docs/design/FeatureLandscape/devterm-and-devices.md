@@ -54,7 +54,8 @@ Part of the [feature landscape](README.md). Status is "a project exists under `s
 - **Known issues:** Avalonia has only a spike; WinForms has a control library but no renderer. The open layering question (renderers in Framework beside Wpf and Tui, or in Extensions) is queued in `OPEN-QUESTIONS.md`.
 - **Standards:** WCAG 2.2 contrast ratios for themes.
 - **Built 2026-11-16:** `XamlAccessibilityTests` (OoBDev.CodingStandards.Tests) fails the build when an input control in the Applications XAML has no `AutomationProperties.Name` or `LabeledBy`; the 93 existing gaps in 14 windows were fixed the same day.
-- **Missing:** keyboard navigation (tab order, access keys) as testable requirements.
+- **Built 2026-11-16:** `XamlKeyboardTests` (OoBDev.CodingStandards.Tests): menu access keys are unique per menu level and every literal menu header has one, and no positive `TabIndex` outside templates (tab order follows the layout); dialogs close on Escape (`IsCancel`, existing test). The check found five clashing access keys in the main menu, now fixed.
+- **Missing:** keyboard shortcuts: the shell defines no `KeyBinding` or `InputGestureText`, so there is nothing to test; which shortcuts to offer is a design item first.
 
 ## Plugins and PluginSandbox
 
