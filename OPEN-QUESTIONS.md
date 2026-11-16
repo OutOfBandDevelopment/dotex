@@ -62,3 +62,16 @@ DevTerm and the other desktop clients have no sign-in code (nothing under `src/A
 **Default:** C until answered; the BACKLOG item waits.
 
 **Your answer:**
+
+### Q5 (2026-11-16, Build, vulnerable packages): should NU1901 to NU1904 break the build?
+
+Restore is clean today. Turning the NuGet audit warnings into errors (`WarningsAsErrors` in `src/Directory.Build.props`) makes a new advisory stop every build until the package is bumped.
+
+**Options**
+- A. Keep warnings and run `scripts/docs/sbom.ps1` plus `dotnet list package --vulnerable` in the manual CI. (recommended: CI is manual and local-only, so a hard failure would hit whoever builds next, mid-task; the manual pass still catches advisories.)
+- B. Errors for High and Critical only (`NuGetAuditLevel` high plus `WarningsAsErrors`), warnings for the rest. Stops work only for serious advisories.
+- C. Errors for all four codes. Strictest, most disruptive.
+
+**Default:** A until answered.
+
+**Your answer:**
