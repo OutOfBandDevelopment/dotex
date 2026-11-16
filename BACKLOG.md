@@ -56,7 +56,6 @@ A clean rebuild after the 2026-11-06 pass reports no analyzer warnings (218 befo
   - Messaging: shared outbox and inbox (idempotent consumers); cache stampede protection and a distributed cache option (Redis); template versioning, localisation and a render test harness; bounce, complaint and delivery receipts; antivirus hook before document ingest; GDPR erasure for append-only event stores.
   - AI and data: embedding version tag per vector (re-embed on model change); relevance test set and access filters tied to rights; prompt-injection guidance and token cost accounting for LLM tools; rollback and data-loss guard for destructive desired-state diffs; screenshot freshness check in the docs validator.
   - DevTerm: transport capability matrix and reconnect defaults; session log format version with a replay compatibility test; keyboard and screen-reader requirements as tests; plugin manifest version, permissions and signing prompt; give the moved DevTerm leaf design folders (ConnectionProfiles, MultiSessionUi, ProjectState, SessionChannel, SessionLogging, StreamTools, Theming) a status line.
-- [ ] Stale design docs: run the `reconcile-designs-and-code` skill over the January 2026 epic designs (SharedFramework, DataEnhancement, MasterData, ContractParser) whose status still says design phase (the MessageQueuing checklist was archived 2026-11-16).
 
 ## 6. Migrations
 
