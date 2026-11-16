@@ -15,3 +15,16 @@ Pure image-analysis functions over decoded pixels. BCL only: no image library, n
 The caller decides similarity (embedding or dHash) and passes the links and the measures.
 
 Design: [docs/design/BurstRanking](../../../docs/design/BurstRanking/README.md).
+
+## Whole-image analysis (`OoBDev.Imaging.Analysis`)
+
+| Type | Purpose |
+|------|---------|
+| `RgbImage` | Immutable 8-bit RGB view (the caller decodes); `ToGrayscale`, `AdjustBrightnessContrast` return new images |
+| `ImageHistograms.Compute` | Red, green, blue and Rec. 709 luminance counts over 1 to 256 bins |
+| `ExposureMetrics.Compute` | Mean luminance, percent clipped black and white (thresholds optional), contrast as standard deviation |
+| `ColorFacets.Compute` | Saturation-weighted dominant hue, mean saturation and value, deterministic median-cut palette |
+
+Everything is deterministic. `ColorFacets` converts each pixel through `OoBDev.System` `ColorConversion`, so pass a thumbnail.
+
+Design: [docs/design/ImageAnalysis](../../../docs/design/ImageAnalysis/README.md).

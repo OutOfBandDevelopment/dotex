@@ -17,4 +17,8 @@
 		</PackageReference>
 	</ItemGroup>
 
+	<ItemGroup>
+		<ProjectReference Include="..\OoBDev.System\OoBDev.System.csproj" />
+	</ItemGroup>
+
 </Project>

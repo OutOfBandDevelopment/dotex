@@ -1,6 +1,6 @@
 ﻿# Image analysis (histograms, colour facets, exposure)
 
-Status: **project created 2026-11-16 with the burst code; histograms, colour facets and exposure metrics not built yet** (placement confirmed by the owner 2026-11-12, option A). Request: [image colour analysis and histograms](../../features/request/2026-11-11-image-color-analysis-and-histograms.md).
+Status: **first slice built 2026-11-16** (RgbImage, histograms, exposure, colour facets, transforms) (placement confirmed by the owner 2026-11-12, option A). Request: [image colour analysis and histograms](../../features/request/2026-11-11-image-color-analysis-and-histograms.md).
 
 ## Contents
 
@@ -64,3 +64,7 @@ Synthetic buffers only: solid mid-grey (one bin per channel), 10 percent white p
 - Rendering a histogram to an image (Extensions.Drawing or a web view), if wanted.
 - Burst and near-duplicate ranking builds on these metrics ([request](../../features/request/2026-11-11-burst-and-near-duplicate-ranking.md)).
 - Resizing stays with the imaging library that decodes (Skia).
+
+## Built
+
+2026-11-16: `RgbImage` (with `ToGrayscale` and `AdjustBrightnessContrast`), `ImageHistograms`, `ExposureMetrics`, `ColorFacets` with a deterministic median-cut palette, in `OoBDev.Imaging.Analysis`. The `OoBDev.System` reference was added for `ColorConversion`. Not built: histogram rendering, conversions from `DecodedImage` and Skia bitmaps (the caller builds an `RgbImage`).
