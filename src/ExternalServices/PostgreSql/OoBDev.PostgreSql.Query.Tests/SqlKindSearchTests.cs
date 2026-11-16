@@ -79,7 +79,7 @@ public class SqlKindSearchTests
         Assert.IsFalse(result.Items[0].MetaData!.ContainsKey("tags"));
         StringAssert.Contains(executor.Sql!, ">=");
         StringAssert.Contains(executor.Sql!, "NOT ILIKE");
-        Assert.IsTrue(executor.Parameters!.Values.Any(v => v is double d && d == 5));
+        Assert.IsTrue(executor.Parameters!.Values.Any(v => v is long l && l == 5));
         Assert.IsNull(result.NextCursor);
     }
 

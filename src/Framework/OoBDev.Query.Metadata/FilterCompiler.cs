@@ -50,7 +50,7 @@ internal static partial class FilterCompiler
         JsonValueKind.Null => null,
         JsonValueKind.True => true,
         JsonValueKind.False => false,
-        JsonValueKind.Number when facet is null || facet.Type == "number" => value.TryGetInt64(out var l) ? l : value.GetDouble(),
+        JsonValueKind.Number when facet is null || facet.Type == "number" => value.TryGetInt64(out var l) ? (object)l : value.GetDouble(),
         JsonValueKind.Number => value.GetRawText(),
         JsonValueKind.String when facet?.Format == "date" => DateTime.TryParse(value.GetString(), CultureInfo.InvariantCulture,
             DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal, out var d)
