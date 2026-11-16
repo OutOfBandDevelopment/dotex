@@ -35,3 +35,7 @@ One request model (`SearchRequest`, in `OoBDev.Search.Abstractions`) is understo
 - `HybridSearchProvider(sources, fusion)` runs the request against every source and fuses the results. It supports the filters every source supports, returns one page and rejects a cursor.
 
 Not built yet: the keyword (OpenSearch) and vector providers, the SQL-kind provider over the metadata query engine and the filter-parity Integration set ([design](../../../docs/design/SearchMerge/README.md)).
+
+## Vector search provider
+
+`VectorSearchProvider(IVectorStore, IEmbeddingProvider)` is an `ISearchProvider` over nearest neighbours: the query vector is `Anchor.NearVector`, else the embedding of `Anchor.NearText` or the request text. It supports no filters (a store holds none), no cursor and no like-item anchor, and an empty query returns no hits. Use it as a source of `HybridSearchProvider`.
