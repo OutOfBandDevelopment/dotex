@@ -28,10 +28,7 @@ public class XamlAccessibilityTests
     // File name -> unnamed controls allowed today. Fix a window, then lower or remove its line.
     private static readonly Dictionary<string, int> _baseline = new(StringComparer.Ordinal)
     {
-        ["ConfigureDeviceWindow.xaml"] = 6,
         ["ConnectionEditorWindow.xaml"] = 41,
-        ["RoutingWindow.xaml"] = 11,
-        ["StreamMonitorWindow.xaml"] = 6,
     };
 
     private static IEnumerable<string> XamlFiles()

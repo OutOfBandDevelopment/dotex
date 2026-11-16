@@ -14,11 +14,11 @@
         </StackPanel>
         <StackPanel DockPanel.Dock="Top">
             <TextBlock Text="Protocol" />
-            <ComboBox ItemsSource="{Binding Protocols}" SelectedItem="{Binding Draft.Protocol}" Margin="0,2,0,8" />
+            <ComboBox AutomationProperties.Name="Protocol" ItemsSource="{Binding Protocols}" SelectedItem="{Binding Draft.Protocol}" Margin="0,2,0,8" />
             <TextBlock Text="Broker host" />
-            <TextBox Text="{Binding Draft.Host, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
+            <TextBox AutomationProperties.Name="Broker host" Text="{Binding Draft.Host, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
             <TextBlock Text="Port (0 = default)" />
-            <TextBox Text="{Binding Draft.Port, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
+            <TextBox AutomationProperties.Name="Port" Text="{Binding Draft.Port, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,8" />
             <CheckBox Content="TLS" IsChecked="{Binding Draft.Tls}" Margin="0,0,0,8" />
             <TextBlock Text="{Binding StatusText}" FontWeight="SemiBold" />
             <TextBlock Text="{Binding Message}" TextWrapping="Wrap" Margin="0,2,0,8" />
@@ -31,13 +31,13 @@
             <TextBlock Text="Try a device line" Margin="0,8,0,0" />
             <DockPanel Margin="0,2,0,4">
                 <Button DockPanel.Dock="Right" Content="Test" Command="{Binding TestRulesCommand}" Padding="8,2" Margin="4,0,0,0" />
-                <TextBox Text="{Binding SampleText, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBox AutomationProperties.Name="Sample text" Text="{Binding SampleText, UpdateSourceTrigger=PropertyChanged}" />
             </DockPanel>
-            <ListBox ItemsSource="{Binding TestResults}" Height="60" />
+            <ListBox AutomationProperties.Name="Test results" ItemsSource="{Binding TestResults}" Height="60" />
             <TextBlock Text="History" Margin="0,8,0,0" />
-            <ListBox ItemsSource="{Binding History}" Height="90" FontFamily="Consolas" />
+            <ListBox AutomationProperties.Name="Routing history" ItemsSource="{Binding History}" Height="90" FontFamily="Consolas" />
         </StackPanel>
-        <ListBox ItemsSource="{Binding Rules}" HorizontalContentAlignment="Stretch">
+        <ListBox AutomationProperties.Name="Routing rules" ItemsSource="{Binding Rules}" HorizontalContentAlignment="Stretch">
             <ListBox.ItemTemplate>
                 <DataTemplate DataType="{x:Type wpf:RoutingRuleRow}">
                     <Grid Margin="0,2">
@@ -48,10 +48,10 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <ComboBox Grid.Column="0" ItemsSource="{x:Static wpf:RoutingRuleRow.Directions}" SelectedItem="{Binding Direction}" Margin="0,0,4,0" />
-                        <TextBox Grid.Column="1" Text="{Binding Topic, UpdateSourceTrigger=PropertyChanged}" ToolTip="Topic" Margin="0,0,4,0" />
-                        <TextBox Grid.Column="2" Text="{Binding Match, UpdateSourceTrigger=PropertyChanged}" ToolTip="Match pattern" Margin="0,0,4,0" />
-                        <TextBox Grid.Column="3" Text="{Binding Payload, UpdateSourceTrigger=PropertyChanged}" ToolTip="Payload template" Margin="0,0,4,0" />
+                        <ComboBox AutomationProperties.Name="Direction" Grid.Column="0" ItemsSource="{x:Static wpf:RoutingRuleRow.Directions}" SelectedItem="{Binding Direction}" Margin="0,0,4,0" />
+                        <TextBox AutomationProperties.Name="Topic" Grid.Column="1" Text="{Binding Topic, UpdateSourceTrigger=PropertyChanged}" ToolTip="Topic" Margin="0,0,4,0" />
+                        <TextBox AutomationProperties.Name="Match pattern" Grid.Column="2" Text="{Binding Match, UpdateSourceTrigger=PropertyChanged}" ToolTip="Match pattern" Margin="0,0,4,0" />
+                        <TextBox AutomationProperties.Name="Payload template" Grid.Column="3" Text="{Binding Payload, UpdateSourceTrigger=PropertyChanged}" ToolTip="Payload template" Margin="0,0,4,0" />
                         <StackPanel Grid.Column="4" Orientation="Horizontal">
                             <TextBlock Text="{Binding Hits, StringFormat=hits {0}}" VerticalAlignment="Center" Margin="0,0,4,0" />
                             <Button Content="Up" Command="{Binding DataContext.MoveRuleUp, RelativeSource={RelativeSource AncestorType=ListBox}}" CommandParameter="{Binding}" Padding="4,0" />
