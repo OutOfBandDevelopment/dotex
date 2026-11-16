@@ -61,7 +61,8 @@ Part of the [feature landscape](README.md). Status is "a project exists under `s
 - **Works with:** HybridSearch (text extraction), MessageComposition (attachments), GeneratedGuides.
 - **Known issues:** external tools (Tika container, converters) make most tests Integration; HPGL is a niche format kept for the migration scope.
 - **Standards:** ISO 32000 (PDF), PDF/A for archives, Office Open XML (ECMA-376).
-- **Missing:** OCR as a provider; antivirus scan hook before ingest.
+- **Built 2026-11-16:** `IContentScanner` and the fail-closed `ScanningBlobContainer` decorator.
+- **Missing:** OCR as a provider; a real scanner adapter (ClamAV in the test stack).
 
 ## SharedCaching and SharedFramework
 
