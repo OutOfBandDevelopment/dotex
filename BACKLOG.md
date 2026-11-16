@@ -53,7 +53,7 @@ A clean rebuild after the 2026-11-06 pass reports no analyzer warnings (218 befo
 - [ ] Reference architecture stack: add a full identity admin feature (create and disable users) once the reference architecture is located; not for the example app (owner, 2026-11-10).
 - [ ] Feature landscape gaps (review 2026-11-12; the right-coverage test exists since 2026-11-16, its 18 findings are fixed 2026-11-16; each other gap needs a design line first; areas: [web](docs/design/FeatureLandscape/web-and-api.md), [messaging](docs/design/FeatureLandscape/messaging-and-documents.md), [AI](docs/design/FeatureLandscape/ai-and-data.md), [DevTerm](docs/design/FeatureLandscape/devterm-and-devices.md)):
   - Web: a query endpoint and screen for the durable rights audit trail (the store exists since 2026-11-16); refresh tokens for DevTerm clients.
-  - Messaging: shipped migrations for the EF inbox/outbox stores; GDPR erasure remainder (steps 3 to 5 of `docs/design/CqrsEventSourcing/erasure.md`: hash-chain re-seal once chaining exists, a right-guarded entry point and a screen spec, the unmarked-type check).
+  - Messaging: GDPR erasure remainder (steps 3 to 5 of `docs/design/CqrsEventSourcing/erasure.md`: hash-chain re-seal once chaining exists, a right-guarded entry point and a screen spec, the unmarked-type check).
   - AI and data: a re-embed command or screen in the example that calls `EmbeddingVersion.ReembedAsync` (the helper and `IVectorStore.DeleteAsync` exist since 2026-11-16); a relevance query set for the example search and access filters tied to rights; screenshot freshness check in the docs validator.
   - DevTerm: keyboard navigation requirements as tests (screen-reader names are done and enforced; the manifest, permissions and signing prompt are designed in PluginSandbox and tracked on the sandbox item below).
 
@@ -63,6 +63,7 @@ Scope rule: every BinaryDataDecoders feature is migrated; phases are priority or
 
 ### Waiting on the owner
 
+- [ ] Shipped schema for the EF stores (messaging, suppression, templates, event stores, right audit): provider-specific, so Q1 in [OPEN-QUESTIONS.md](OPEN-QUESTIONS.md) asks SQL scripts, per-provider migration assemblies or as is (default: as is).
 - [ ] **Harvest candidates** (D7): [open items await the owner](docs/migration/harvest-d7-comparison.md); candidate map in [harvest-candidates.md](docs/harvest-candidates.md)
 - [ ] Plugin sandbox: the [threat model](docs/design/PluginSandbox/threat-model.md) and [protocol and manifest design](docs/design/PluginSandbox/protocol-and-manifest.md) wait for the owner sign-off of REQ-010, and the [layering proposal](docs/design/PluginSandbox/migration-plan.md) for its confirmation; spike result: [spike-result.md](docs/design/PluginSandbox/spike-result.md).
   - Sandbox follow-ups (owner, 2026-11-10: macOS deferred until later): message rate and heartbeat enforcement; Survive named-pipe transport; request context tied to a token validator; Linux equivalents of the caller-death and pool lifetime tests; AppContainer profile and ACL cleanup; wiring the persisted `GrantStore` path into `PluginHost` use and the docs. Deferred: `CrossPlatformEscapeTests` on a Mac, macOS limits and PID isolation.
