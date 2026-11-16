@@ -67,6 +67,26 @@ public class DoclingOcrTests
     }
 
     [TestMethod]
+    public async Task Recognize_OcrLanguagesSet_SendsOneFieldPerLanguage()
+    {
+        var handler = new StubHandler((req, _) => req.RequestUri!.AbsolutePath switch
+        {
+            "/v1/convert/file/async" => Ok("{\"task_id\":\"t\"}"),
+            var p when p.StartsWith("/v1/status/poll/", StringComparison.Ordinal) => Ok("{\"task_status\":\"success\"}"),
+            _ => Ok("{\"status\":\"success\",\"document\":{\"md_content\":\"x\"}}"),
+        });
+        var client = new DoclingOcr(new HttpClient(handler) { BaseAddress = new Uri("http://docling/") },
+            Options.Create(new DoclingOptions { BaseUrl = "http://docling", OcrLanguages = "eng, deu" }));
+
+        await client.RecognizeAsync(pdf, CancellationToken.None);
+
+        var body = handler.Calls[0].Body;
+        StringAssert.Contains(body, "name=ocr_lang");
+        StringAssert.Contains(body, "eng");
+        StringAssert.Contains(body, "deu");
+    }
+
+    [TestMethod]
     public async Task Recognize_FailureThenSuccess_RunsLightOptions()
     {
         var posts = new List<string>();

@@ -38,6 +38,7 @@ SERVICES=(
     "oobd-test-redis"
     "oobd-test-postgres"
     "oobd-test-pgvector"
+    "oobd-test-docling"
     "oobd-test-opensearch"
     "oobd-test-qdrant"
     "oobd-test-neo4j"

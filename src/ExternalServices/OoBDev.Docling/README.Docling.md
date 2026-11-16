@@ -25,6 +25,7 @@ Pair it with `SegmentedOcr` and `OcrMarkdown` from `OoBDev.Documents.Markdown` t
 | `BaseUrl` | required | Server root |
 | `TimeoutSeconds` | 1800 | Total time one conversion may take |
 | `PollWaitSeconds` | 20 | Seconds one status poll waits on the server |
+| `OcrLanguages` | empty | Comma-separated Tesseract languages sent as `ocr_lang` (for example `eng`); empty uses the server default, which fails when a default language is not installed (the CPU image ships English only) |
 
 ## Not in the first slice
 

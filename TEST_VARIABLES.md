@@ -20,6 +20,7 @@ This document lists all test properties used by Integration tests. These propert
 1. [Test Categories](#test-categories)
 2. [Integration Test Variables](#integration-test-variables)
    - [Apache Tika (Document Processing)](#apache-tika-document-processing)
+   - [Docling serve (Document Conversion and OCR)](#docling-serve-document-conversion-and-ocr)
    - [SMTP/IMAP (Email Testing)](#smtpimap-email-testing)
    - [MongoDB (NoSQL Database)](#mongodb-nosql-database)
    - [SQL Server (Relational Database)](#sql-server-relational-database)
@@ -68,6 +69,21 @@ Tests that require live cloud credentials. Manual execution only.
 
 **Tests Using:**
 - `OoBDev.Apache.Tika.Tests` (6 handlers: PDF, DOC, DOCX, EPUB, ODT, RTF)
+
+### Docling serve (Document Conversion and OCR)
+
+**Service:** docling-serve (CPU image, English Tesseract only)
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `DOCLING_URL` | `http://localhost:5001` | docling-serve base URL |
+
+**Docker Container:** `quay.io/docling-project/docling-serve-cpu` (Port 5001, override `TEST_PORT_DOCLING`)
+
+**Tests Using:**
+- `OoBDev.Docling.Tests` (`DoclingIntegrationTests`)
+
+---
 
 ---
 

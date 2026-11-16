@@ -22,7 +22,7 @@ public sealed class DoclingOcr(HttpClient http, IOptions<DoclingOptions> options
 {
     private static readonly (string Key, string Value)[] HeavyOptions =
     [
-        ("to_formats", "md"), ("do_ocr", "true"), ("force_ocr", "true"), ("ocr_engine", "tesseract"), ("images_scale", "3"),
+        ("to_formats", "md"), ("do_ocr", "true"), ("force_ocr", "true"), ("ocr_engine", "tesseract"), ("images_scale", "2"),
         ("do_table_structure", "true"), ("table_mode", "accurate"), ("do_formula_enrichment", "true"),
         ("image_export_mode", "placeholder"), ("md_page_break_placeholder", IDocumentOcr.PageMark),
     ];
@@ -59,6 +59,11 @@ public sealed class DoclingOcr(HttpClient http, IOptions<DoclingOptions> options
         foreach (var (key, value) in settings)
         {
             form.Add(new StringContent(value), key);
+        }
+
+        foreach (var lang in options.Value.OcrLanguages.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+        {
+            form.Add(new StringContent(lang), "ocr_lang");
         }
 
         using var file = File.OpenRead(pdfPath);

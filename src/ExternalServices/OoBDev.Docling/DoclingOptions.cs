@@ -19,4 +19,7 @@ public sealed class DoclingOptions
     /// <summary>The seconds one status poll waits on the server.</summary>
     [Range(0, 120)]
     public int PollWaitSeconds { get; set; } = 20;
+
+    /// <summary>Comma-separated OCR languages sent as <c>ocr_lang</c>; empty uses the server default, which needs every default language installed.</summary>
+    public string OcrLanguages { get; set; } = "";
 }
