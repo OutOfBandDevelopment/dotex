@@ -1,6 +1,6 @@
 ﻿# Embedding HTTP client, pgvector store and annotation layer
 
-Status: **design written 2026-11-12; placement confirmed by the owner 2026-11-12 (option A: two ExternalServices projects; Npgsql and Pgvector allowed in the adapter only; pgvector service added to the test stack), nothing built.** Requests: [embedding container and client](../../features/request/2026-11-11-embedding-container-and-client.md), [pgvector store and read-only annotation layer](../../features/request/2026-11-11-pgvector-store-and-read-only-annotation-layer.md). Related: [ImageEmbeddings](../ImageEmbeddings/README.md), [VectorSearch](../VectorSearch/README.md), [WorkQueue](../WorkQueue/README.md).
+Status: **first slice built 2026-11-16 (HTTP embedding client and pgvector store, two ExternalServices projects per owner placement 2026-11-12; Npgsql and Pgvector in the store only); the items under "Not in the first slice" are open.** Requests: [embedding container and client](../../features/request/2026-11-11-embedding-container-and-client.md), [pgvector store and read-only annotation layer](../../features/request/2026-11-11-pgvector-store-and-read-only-annotation-layer.md). Related: [ImageEmbeddings](../ImageEmbeddings/README.md), [VectorSearch](../VectorSearch/README.md), [WorkQueue](../WorkQueue/README.md).
 
 ## Contents
 
@@ -44,8 +44,8 @@ Applications want vectors from a configurable HTTP embedding server (a container
 
 | Project | Current location | Target location | Namespace | Package or unit |
 |---------|------------------|-----------------|-----------|-----------------|
-| HTTP embedding client | none (new) | new `src/ExternalServices/OoBDev.Embeddings.Http` | `OoBDev.Embeddings.Http` | packable |
-| pgvector store | catalog SQL (reference only) | new `src/ExternalServices/OoBDev.Data.Vectors.Postgres` | `OoBDev.Data.Vectors.Postgres` | packable, Npgsql and pgvector here only |
+| HTTP embedding client | none (new) | `src/ExternalServices/OoBDev.Embeddings.Http` (built) | `OoBDev.Embeddings.Http` | packable |
+| pgvector store | catalog SQL (reference only) | `src/ExternalServices/OoBDev.Data.Vectors.Postgres` (built) | `OoBDev.Data.Vectors.Postgres` | packable, Npgsql and pgvector here only |
 | Annotation pattern page | catalog tables | `docs/design/AnnotationLayer/` after the placement answer | none | docs |
 | Tests | none | `Unit` (fake HTTP handler, request/response shape), `Integration` (PostgreSQL with pgvector service in the stack; Ollama for a real server) | matching | MSTest |
 
@@ -64,3 +64,7 @@ Unit: batch vectors come back in request order with the configured dimension; op
 
 - The container image and compose file (nothing in the catalog is an embedding server; revisit if the owner wants one published).
 - Annotation abstractions in code.
+- The image variant (`IImageEmbeddingProvider` posting bytes) and the ONNX providers implementing the shared interface.
+- A shared explanation type with HybridSearch: `VectorMatch` (vector index and distance) lives in the pgvector project until HybridSearch needs it.
+- The annotation pattern page `docs/design/AnnotationLayer/` (waits on the placement answer).
+- ONNX versus HTTP cosine comparison on a fixed sample (needs a running embedding server; the Ollama service in the stack can serve it).

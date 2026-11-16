@@ -199,6 +199,12 @@
     <Project Path="ExternalServices/Qdrant/OoBDev.Qdrant.Tests/OoBDev.Qdrant.Tests.csproj" />
     <Project Path="ExternalServices/Qdrant/OoBDev.Qdrant/OoBDev.Qdrant.csproj" />
   </Folder>
+  <Folder Name="/ExternalServices/Embeddings/">
+    <Project Path="ExternalServices/OoBDev.Data.Vectors.Postgres.Tests/OoBDev.Data.Vectors.Postgres.Tests.csproj" />
+    <Project Path="ExternalServices/OoBDev.Data.Vectors.Postgres/OoBDev.Data.Vectors.Postgres.csproj" />
+    <Project Path="ExternalServices/OoBDev.Embeddings.Http.Tests/OoBDev.Embeddings.Http.Tests.csproj" />
+    <Project Path="ExternalServices/OoBDev.Embeddings.Http/OoBDev.Embeddings.Http.csproj" />
+  </Folder>
   <Folder Name="/ExternalServices/PostgreSql/">
     <Project Path="ExternalServices/PostgreSql/OoBDev.PostgreSql.Pgmq.Tests/OoBDev.PostgreSql.Pgmq.Tests.csproj" />
     <Project Path="ExternalServices/PostgreSql/OoBDev.PostgreSql.Pgmq/OoBDev.PostgreSql.Pgmq.csproj" />
