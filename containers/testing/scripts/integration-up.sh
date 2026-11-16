@@ -82,6 +82,7 @@ echo "  - SQL Server:         localhost,1433 (sa/${SQL_SA_PASSWORD:-IntegrationT
 echo "  - RabbitMQ:           amqp://localhost:5673, http://localhost:15672"
 echo "  - Redis:              localhost:6379"
 echo "  - PostgreSQL (pgmq):  localhost:5434 (postgres/${POSTGRES_PASSWORD:-IntegrationTest123!}, db oobdev_test)"
+echo "  - PostgreSQL (pgvector): localhost:5435 (postgres/${POSTGRES_PASSWORD:-IntegrationTest123!}, db oobdev_test)"
 echo "  - OpenSearch:         https://localhost:9200 (admin/${OPENSEARCH_PASSWORD:-IntegrationTest123!})"
 echo "  - Qdrant:             http://localhost:6333"
 echo "  - Neo4j:              bolt://localhost:7687 (browser http://localhost:7474)"

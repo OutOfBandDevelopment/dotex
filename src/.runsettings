@@ -123,6 +123,7 @@ https://github.com/coverlet-coverage/coverlet/blob/fc7ec26dcaed8fedba880ff13c6f1
 
 		<!-- PostgreSQL (pgmq) -->
 		<Parameter name="POSTGRES_CONNECTION_STRING" value="Host=localhost;Port=5434;Database=oobdev_test;Username=postgres;Password=IntegrationTest123!" />
+		<Parameter name="PGVECTOR_CONNECTION_STRING" value="Host=localhost;Port=5435;Database=oobdev_test;Username=postgres;Password=IntegrationTest123!" />
 
 		<!-- OpenSearch -->
 		<Parameter name="OPENSEARCH_URL" value="https://localhost:9200" />

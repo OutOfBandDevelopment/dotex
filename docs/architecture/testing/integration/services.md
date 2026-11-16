@@ -60,6 +60,10 @@ Document store tests. Keys: `MONGODB_CONNECTION_STRING`, `MONGODB_DATABASE_NAME`
 
 PostgreSQL 17 with the pgmq extension created at first start (`containers/testing/postgres/01-pgmq.sql`), database `oobdev_test`, ephemeral volume. Host port 5434 because 5432 and 5433 are common local installs. Used by the event sourcing Postgres provider tests and the pgmq queue adapter. Key: `POSTGRES_CONNECTION_STRING`.
 
+## PostgreSQL with pgvector
+
+PostgreSQL 17 with the pgvector extension created at first start (`containers/testing/pgvector/01-vector.sql`), database `oobdev_test`, ephemeral volume, image `pgvector/pgvector:0.8.1-pg17`. Host port 5435 (override with `TEST_PORT_PGVECTOR`). Separate from the pgmq service so neither image constrains the other. Used by the pgvector store and the database work queue tests. Key: `PGVECTOR_CONNECTION_STRING`.
+
 ## Redis
 
 256 MB cap, `allkeys-lru`, no persistence. Used by the caching provider tests. Keys: `REDIS_CONNECTION_STRING`, `REDIS_HOST`, `REDIS_PORT`.

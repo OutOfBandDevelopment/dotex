@@ -168,6 +168,18 @@ Tests that require live cloud credentials. Manual execution only.
 
 **Tests Using:** `OoBDev.EventSourcing.EntityFrameworkCore.Tests` (`PostgresIntegrationTests`).
 
+### PostgreSQL with pgvector
+
+**Service:** PostgreSQL 17 with the pgvector extension (`pgvector/pgvector`).
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `PGVECTOR_CONNECTION_STRING` | `Host=localhost;Port=5435;Database=oobdev_test;Username=postgres;Password=IntegrationTest123!` | Npgsql connection string of the vector test database |
+
+**Docker Container:** `oobd-test-pgvector` (host port 5435, override with `TEST_PORT_PGVECTOR`)
+
+**Tests Using:** none yet; the pgvector store and work queue tests will use it.
+
 ---
 
 ### Redis (Cache Store)

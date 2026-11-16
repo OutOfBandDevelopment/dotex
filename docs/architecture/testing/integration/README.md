@@ -31,6 +31,7 @@ Which test projects need which service. A test project that appears here must ma
 | `OoBDev.MongoDB.Tests` | MongoDB |
 | `OoBDev.Redis.Caching.Tests` | Redis |
 | `OoBDev.EventSourcing.EntityFrameworkCore.Tests` | PostgreSQL |
+| (planned) pgvector store and work queue tests | PostgreSQL with pgvector |
 | `OoBDev.OpenSearch.Tests` | OpenSearch |
 | `OoBDev.Qdrant.Tests` | Qdrant |
 | `OoBDev.Data.Vectors.DB.Tests` | SQL Server |
