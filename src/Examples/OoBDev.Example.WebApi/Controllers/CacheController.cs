@@ -1,3 +1,4 @@
+using OoBDev.AspNetCore.Mvc.Filters;
 using OoBDev.Caching;
 using OoBDev.WebApi.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -11,6 +12,7 @@ namespace OoBDev.WebApi.Controllers;
 /// </summary>
 [ApiController]
 [Route("api/[controller]")]
+[ApplicationRight("cache.manage")]
 public class CacheController(ICachingProvider cache) : ControllerBase
 {
     /// <summary>Stores text under a key for a number of seconds.</summary>

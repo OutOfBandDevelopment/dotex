@@ -1,4 +1,5 @@
 ﻿using OoBDev.GroqCloud;
+using OoBDev.AspNetCore.Mvc.Filters;
 using OoBDev.AI;
 using OoBDev.AI.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -12,6 +13,7 @@ namespace OoBDev.WebApi.Controllers;
 /// </summary>
 [Route("api/[controller]")]
 [ApiController]
+[ApplicationRight("ai.invoke")]
 public class GroqCloudController : ControllerBase
 {
     private readonly IMessageCompletion _completion;

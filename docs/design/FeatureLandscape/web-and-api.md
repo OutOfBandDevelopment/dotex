@@ -36,7 +36,7 @@ Part of the [feature landscape](README.md). Status is "a project exists under `s
 - **Status:** the pieces exist; the design status is older than the code.
 - **Known issues:** drift in the status line; the surface-parity rule (same checks on every API surface, owner decision) has no automated test across surfaces.
 - **Practices:** secure by default, deny without a right, rights not roles in code, roles translated in middleware.
-- **Built 2026-11-16:** `EndpointRightCoverageTests` (example API) fails on a new controller action with no `[ApplicationRight]`, `[Authorize]` or `[AllowAnonymous]`; 18 existing open actions are listed until Q-EXAMPLE-ANONYMOUS is answered.
+- **Built 2026-11-16:** `EndpointRightCoverageTests` (example API) fails on a new controller action with no `[ApplicationRight]`, `[Authorize]` or `[AllowAnonymous]`. The 18 open actions got rights on 2026-11-16 (`toolbox.use`, `cache.manage`, `ai.invoke`, `operations.read`, all held by the `admin` role in `appsettings.json`), so the test now allows none.
 - **Built 2026-11-16:** `AuditingApplicationRightChecker` and `AddRightAuditLog()` log every right check (who, rights, outcome).
 - **Missing:** a durable audit store with retention (logs only for now).
 

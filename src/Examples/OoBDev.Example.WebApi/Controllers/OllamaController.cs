@@ -1,4 +1,5 @@
 ﻿using OoBDev.Ollama;
+using OoBDev.AspNetCore.Mvc.Filters;
 using OoBDev.AI;
 using OoBDev.AI.Models;
 using OoBDev.WebApi.Models;
@@ -16,6 +17,7 @@ namespace OoBDev.WebApi.Controllers;
 /// </summary>
 [Route("api/[controller]")]
 [ApiController]
+[ApplicationRight("ai.invoke")]
 public class OllamaController : ControllerBase
 {
     private readonly IMessageCompletion _completion;

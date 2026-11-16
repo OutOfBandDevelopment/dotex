@@ -16,17 +16,6 @@ namespace OoBDev.Example.WebApi.Tests;
 [TestClass]
 public class EndpointRightCoverageTests
 {
-    // Open today (no fallback policy, no attribute); the list may only shrink. Securing them is Q-EXAMPLE-ANONYMOUS.
-    private static readonly string[] KnownOpen =
-    [
-        "AllMiniLMController.Embed", "CacheController.Flush", "CacheController.Lookup", "CacheController.Store",
-        "GroqCloudController.Completion", "OllamaController.Completion", "OllamaController.Embed",
-        "OperationsController.Info", "SBERTController.Embed", "SBERTDefaultController.Embed",
-        "TextToolsController.Markdown", "TextToolsController.Query", "ToolboxController.Algorithms",
-        "ToolboxController.Calculate", "ToolboxController.Hash", "ToolboxController.Hmac",
-        "ToolboxController.Otp", "ToolboxController.VectorDistance",
-    ];
-
     private static IEnumerable<(Type Controller, MethodInfo Action)> Actions() =>
         typeof(RightsController).Assembly.GetTypes()
             .Where(t => t is { IsClass: true, IsAbstract: false, IsPublic: true } && typeof(ControllerBase).IsAssignableFrom(t))
@@ -60,10 +49,6 @@ public class EndpointRightCoverageTests
             .Order(StringComparer.Ordinal)
             .ToArray();
 
-        var added = missing.Except(KnownOpen, StringComparer.Ordinal).ToArray();
-        var fixedNow = KnownOpen.Except(missing, StringComparer.Ordinal).ToArray();
-
-        Assert.AreEqual(0, added.Length, "New actions without [ApplicationRight], [Authorize] or [AllowAnonymous]: " + string.Join(", ", added));
-        Assert.AreEqual(0, fixedNow.Length, "These actions now state their access; remove them from KnownOpen: " + string.Join(", ", fixedNow));
+        Assert.AreEqual(0, missing.Length, "Actions without [ApplicationRight], [Authorize] or [AllowAnonymous]: " + string.Join(", ", missing));
     }
 }

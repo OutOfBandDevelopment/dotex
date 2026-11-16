@@ -1,3 +1,4 @@
+using OoBDev.AspNetCore.Mvc.Filters;
 using OoBDev.System.ExpressionCalculator.Expressions;
 using OoBDev.System.Math;
 using OoBDev.System.Security.Cryptography;
@@ -14,6 +15,7 @@ namespace OoBDev.WebApi.Controllers;
 /// </summary>
 [ApiController]
 [Route("api/[controller]")]
+[ApplicationRight("toolbox.use")]
 public class ToolboxController(IServiceProvider services) : ControllerBase
 {
     private static readonly string[] Hashes = ["md5", "sha256", "sha512"];
