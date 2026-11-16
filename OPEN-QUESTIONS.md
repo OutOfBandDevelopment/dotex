@@ -33,3 +33,26 @@ The Z-Wave Enumerate and Describe node buttons need the decoder's frames and the
 
 **Default:** A once confirmed; the slice is parked (BACKLOG line says so). The panel-lifetime `ZWaveAckResponder` waits on the same decision.
 **Your answer:**
+
+### Q-GITBOOK — 2026-11-16 — Documentation publishing
+
+Request [gitbook-documentation](docs/features/request/2026-11-10-gitbook-documentation.md): publish `docs/` through GitBook? `docs/` is markdown with PlantUML (validated by `OoBDev.Docs.Tests`, rendered by the local plantuml container); GitBook syncs markdown from git but does not render PlantUML, and publishing exposes the docs outside the repository.
+
+**Options**
+- A (recommended): decline; keep reading the repository and the generated guides. Nothing leaks, no sync to maintain, and the diagrams stay source of truth.
+- B: publish through GitBook after a pass that decides what may be public and pre-renders the diagrams to images.
+- C: a static site generated in the repository's own tooling (no third party), later.
+
+**Default:** A (declining is reversible); the request is set to declined when you confirm.
+**Your answer:**
+
+### Q-REPORT-PROJECTS — 2026-11-16 — Report definition projects
+
+Request [report-project-publish](docs/features/request/2026-11-10-report-project-publish.md): the old repository had a custom SDK-style project and publish profile for report definitions. The migration plan rejected it as old build glue ("revisit on request"), and nothing in dotex produces report definitions; the report output that exists is markdown from `TemplateEngine.Cli` templates.
+
+**Options**
+- A (recommended): decline; reports are templates (`docs/templates`) run by `TemplateEngine.Cli`, which already has a deterministic publish step (`scripts/docs/sbom.ps1` is the model).
+- B: add a report project type once you name the report format (RDL, Liquid, or other) and a consumer.
+
+**Default:** A; the request is set to declined when you confirm.
+**Your answer:**
