@@ -4,7 +4,7 @@
 > **Owner questions:** [OPEN-QUESTIONS.md](./OPEN-QUESTIONS.md) · **New to this project?** Read [CLAUDE.md](./CLAUDE.md) first.
 > **Other repositories to harvest from:** [docs/harvest-candidates.md](docs/harvest-candidates.md)
 
-**Last Updated:** 2026-11-12
+**Last Updated:** 2026-11-16
 
 GitHub is no longer the primary repository (local bare repo `origin`), so nothing here waits on GitHub Actions. Keep items to one short line; detail lives in the linked feature doc (rule `work-tracking`).
 
@@ -27,7 +27,7 @@ Owner: all protocols and features of dev-term must exist here. Done means what d
 ## 3. Test infrastructure
 
 - [ ] Integration coverage gaps: Azure runs on emulators only (Azurite, Service Bus emulator, no Azure licence); Moto is used only for SQS, so S3 tests wait for an S3 adapter.
-- [ ] Integration suite under 5 minutes (4 min 58 s on 2026-11-10, 6 min 51 s on 2026-11-11; the RabbitMQ timeouts that failed under load are raised; the one-off `Microsoft.Identity.Client` load failure in `OoBDev.Data.Vectors.DB.Tests` did not recur in the 2026-11-11 full run, which passed once the host ports another project held (8081, 8080, 18888) were overridden with `TEST_PORT_KEYCLOAK`, `TEST_PORT_NGINX` and `TEST_PORT_OTEL_DASHBOARD` plus matching `-- TestRunParameters` URLs; the run took 6 min 51 s with 34 projects green, over the goal): [suite-timing.md](docs/architecture/testing/integration/suite-timing.md). Audit 2026-11-12: the stack is not running and the goal is CPU-bound with host load, so no change was made this run; measure it next time the stack is up.
+- [ ] Integration suite under 5 minutes (6 min 51 s on 2026-11-11, over the goal; CPU-bound): measure again when the stack is up, see [suite-timing.md](docs/architecture/testing/integration/suite-timing.md).
 - [ ] Add a live-integration doc page per new cloud service (only Groq exists; the live tests passed again on 2026-11-09 with the key in the user environment variable `GROQ_API_KEY`).
 - [ ] Example AppHost live journeys: Keycloak wiring is built but not run live. The OTLP protocol bug is fixed and unit tested (2026-11-05); re-run the host once the stale DCP process holding port 16890 is stopped (needs an owner kill, the tool refused it), then check traces reach the dashboard and run the journeys ([apphost-live-journeys.md](docs/design/example-ui/apphost-live-journeys.md)).
 - Azure Monitor exporter: not built (decided 2026-10-22); OTLP reaches any collector and is verified with the Aspire dashboard.
