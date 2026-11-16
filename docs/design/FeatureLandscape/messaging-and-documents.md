@@ -42,7 +42,8 @@ Part of the [feature landscape](README.md). Status is "a project exists under `s
 - **Practices:** handler pattern `IHandler<TRequest, TResponse>`, provider/factory per broker, outbox for publish-after-commit.
 - **Built 2026-11-16:** the inbox half: `IdempotentMessageQueueHandler` with `IInboxStore` (idempotent consumers for every adapter).
 - **Built 2026-11-16:** the outbox half: `OutboxMessageQueueSender`, `OutboxDispatcher`, `IOutboxStore`.
-- **Missing:** database implementations of `IInboxStore` and `IOutboxStore` (the outbox write in the business transaction) .
+- **Built 2026-11-16:** database `IInboxStore` and `IOutboxStore` in `OoBDev.MessageQueueing.EntityFrameworkCore` (type name plus JSON with a registered-type allow-list; inbox claim by primary key).
+- **Missing:** the outbox write in the caller's business transaction (the stores use their own context), and shipped migrations.
 
 ## Communications and MessageComposition
 

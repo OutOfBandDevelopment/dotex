@@ -314,6 +314,8 @@
     <Project Path="Framework/OoBDev.Identity.Tests/OoBDev.Identity.Tests.csproj" />
     <Project Path="Framework/OoBDev.Identity/OoBDev.Identity.csproj" />
     <Project Path="Framework/OoBDev.MessageQueueing.Abstractions/OoBDev.MessageQueueing.Abstractions.csproj" />
+    <Project Path="Framework/OoBDev.MessageQueueing.EntityFrameworkCore.Tests/OoBDev.MessageQueueing.EntityFrameworkCore.Tests.csproj" />
+    <Project Path="Framework/OoBDev.MessageQueueing.EntityFrameworkCore/OoBDev.MessageQueueing.EntityFrameworkCore.csproj" />
     <Project Path="Framework/OoBDev.MessageQueueing.Hosting/OoBDev.MessageQueueing.Hosting.csproj" />
     <Project Path="Framework/OoBDev.MessageQueueing.Tests/OoBDev.MessageQueueing.Tests.csproj" />
     <Project Path="Framework/OoBDev.MessageQueueing/OoBDev.MessageQueueing.csproj" />
