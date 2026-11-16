@@ -34,6 +34,10 @@ services.TryAddSendReceive();   // settings: OoBDev:Communications (RetryCount, 
 // the host registers the IChannelProvider implementations; ChannelRegistry matches provider key and protocol
 ```
 
+### Suppression list
+
+`AddEmailSuppression()` (after `TryAddSendReceive`) wraps `ISendService` in `SuppressingSendService`: addresses on the `ISuppressionList` (case-insensitive; `InMemorySuppressionList` by default, register a durable one first) are removed from To, Cc and Bcc, and a message with no To left is not sent and returns a `Rejected` failure. Non-email messages pass through. Feeding the list from bounce and complaint webhooks is not wired yet (the status updates carry no recipient address). Covered by `SuppressingSendServiceTests`.
+
 ### Receiving webhooks
 
 `IReceiveService.HandleWebhookAsync(channel, WebhookRequest)` finds the channel and the provider's `IWebhookProcessor`
