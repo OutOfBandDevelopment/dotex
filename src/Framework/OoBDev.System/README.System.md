@@ -69,6 +69,10 @@ Custom JSON converter for dictionaries with string keys and object values.
 
 `TemplateRenderHarness.CheckAsync(engine, cases)` renders each `TemplateRenderCase` (template name, sample data, approved output) and returns a `TemplateRenderFailure` per case that is missing, renders nothing, throws or differs; the reason names the first differing line. Line endings and trailing blank lines are ignored. Use it in a project test so a template or engine change that alters a message fails the build (`TemplateRenderHarnessTests`).
 
+### LocalizedTemplateEngine
+
+Wraps an `ITemplateEngine` so a template name resolves for the current UI culture: `name.fr-CA`, then `name.fr`, then plain `name`. A translation is another template beside the original, so no source changes. Template contexts passed in directly are not re-resolved. Covered by `LocalizedTemplateEngineTests`.
+
 ### FileTemplateSource
 Access template from the file system.
 - **Get(templateName: string)**: Looks up templates from the file system.

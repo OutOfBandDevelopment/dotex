@@ -59,7 +59,8 @@ Part of the [feature landscape](README.md). Status is "a project exists under `s
 - **Known issues:** two engines (Handlebars, XSLT) exist; the design should state how a template is matched to an engine and how output encoding (HTML escaping) is guaranteed.
 - **Practices:** provider keyed by engine name, sandboxed template execution, no code in templates.
 - **Built 2026-11-16:** `TemplateRenderHarness` renders templates against sample data and reports the first differing line.
-- **Missing:** template versioning and localisation.
+- **Built 2026-11-16:** `LocalizedTemplateEngine` (culture suffix lookup with parent fallback).
+- **Missing:** template versioning.
 
 ## DocumentServices
 
