@@ -6,6 +6,7 @@ using OoBDev.Communications.Abstractions;
 using OoBDev.TestUtilities;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -98,5 +99,42 @@ public class SuppressingSendServiceTests
         using var provider = services.BuildServiceProvider();
 
         Assert.IsInstanceOfType<SuppressingSendService>(provider.GetRequiredService<ISendService>());
+    }
+
+    [TestMethod, TestCategory(TestCategories.Unit)]
+    [DataRow(DeliveryStatus.Bounced, "Permanent", true)]
+    [DataRow(DeliveryStatus.Complained, "abuse", true)]
+    [DataRow(DeliveryStatus.Bounced, "Transient", false)]
+    [DataRow(DeliveryStatus.Delivered, null, false)]
+    public async Task StatusHandler_SuppressesOnlyHardBouncesAndComplaints(DeliveryStatus status, string? details, bool suppressed)
+    {
+        var list = new InMemorySuppressionList();
+
+        await new SuppressionStatusHandler(list).HandleAsync(new DeliveryStatusUpdate("m", status, details, DateTimeOffset.UnixEpoch, ["a@example.com"]));
+
+        Assert.AreEqual(suppressed, await list.IsSuppressedAsync("a@example.com"));
+    }
+
+    [TestMethod, TestCategory(TestCategories.Unit)]
+    public async Task StatusHandler_NoRecipients_DoesNothing()
+    {
+        var list = new InMemorySuppressionList();
+
+        await new SuppressionStatusHandler(list).HandleAsync(new DeliveryStatusUpdate("m", DeliveryStatus.Complained, null, DateTimeOffset.UnixEpoch));
+
+        Assert.IsFalse(await list.IsSuppressedAsync("a@example.com"));
+    }
+
+    [TestMethod, TestCategory(TestCategories.Unit)]
+    public void AddEmailSuppression_RegistersTheStatusHandler()
+    {
+        var services = new ServiceCollection();
+        services.AddSingleton(TimeProvider.System);
+        services.AddSingleton(new Mock<ISendService>().Object);
+        services.AddEmailSuppression();
+
+        using var provider = services.BuildServiceProvider();
+
+        Assert.IsTrue(provider.GetServices<IDeliveryStatusHandler>().OfType<SuppressionStatusHandler>().Any());
     }
 }

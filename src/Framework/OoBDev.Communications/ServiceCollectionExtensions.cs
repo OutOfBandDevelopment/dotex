@@ -49,6 +49,7 @@ public static class ServiceCollectionExtensions
             ?? throw new InvalidOperationException("Register ISendService (TryAddSendReceive) before AddEmailSuppression.");
         services.Remove(inner);
         services.TryAddSingleton<ISuppressionList, InMemorySuppressionList>();
+        services.TryAddEnumerable(ServiceDescriptor.Singleton<IDeliveryStatusHandler, SuppressionStatusHandler>());
         services.AddSingleton<ISendService>(provider =>
         {
             var real = inner.ImplementationFactory != null

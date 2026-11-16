@@ -36,7 +36,7 @@ services.TryAddSendReceive();   // settings: OoBDev:Communications (RetryCount, 
 
 ### Suppression list
 
-`AddEmailSuppression()` (after `TryAddSendReceive`) wraps `ISendService` in `SuppressingSendService`: addresses on the `ISuppressionList` (case-insensitive; `InMemorySuppressionList` by default, register a durable one first) are removed from To, Cc and Bcc, and a message with no To left is not sent and returns a `Rejected` failure. Non-email messages pass through. Feeding the list from bounce and complaint webhooks is not wired yet (the status updates carry no recipient address). Covered by `SuppressingSendServiceTests`.
+`AddEmailSuppression()` (after `TryAddSendReceive`) wraps `ISendService` in `SuppressingSendService`: addresses on the `ISuppressionList` (case-insensitive; `InMemorySuppressionList` by default, register a durable one first) are removed from To, Cc and Bcc, and a message with no To left is not sent and returns a `Rejected` failure. Non-email messages pass through. `SuppressionStatusHandler` (registered by the same call) feeds the list from delivery status updates: the recipients of a `Permanent` bounce and of a `Complained` update are added; a transient bounce is not. `DeliveryStatusUpdate.Recipients` carries the addresses; the SES processor fills it from `bouncedRecipients` and `complainedRecipients`, and maps a complaint to the new `DeliveryStatus.Complained` (last in the order, so it still applies after an open or click). Covered by `SuppressingSendServiceTests`.
 
 ### Receiving webhooks
 

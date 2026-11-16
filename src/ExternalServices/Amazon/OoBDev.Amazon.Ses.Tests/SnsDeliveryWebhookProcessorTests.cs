@@ -36,7 +36,7 @@ public class SnsDeliveryWebhookProcessorTests
     [DataRow("Send", DeliveryStatus.Sent)]
     [DataRow("Delivery", DeliveryStatus.Delivered)]
     [DataRow("Bounce", DeliveryStatus.Bounced)]
-    [DataRow("Complaint", DeliveryStatus.Failed)]
+    [DataRow("Complaint", DeliveryStatus.Complained)]
     [DataRow("Reject", DeliveryStatus.Failed)]
     [DataRow("Open", DeliveryStatus.Opened)]
     [DataRow("Click", DeliveryStatus.Clicked)]
@@ -66,6 +66,17 @@ public class SnsDeliveryWebhookProcessorTests
         Assert.AreEqual("ses-9", evt.MessageId);
         Assert.AreEqual("Permanent", evt.Update.StatusDetails);
         Assert.AreEqual(Now, evt.Update.Timestamp);
+    }
+
+    [TestMethod]
+    [DataRow("""{"notificationType":"Bounce","bounce":{"bounceType":"Permanent","bouncedRecipients":[{"emailAddress":"a@example.com"},{"emailAddress":"b@example.com"}]},"mail":{"messageId":"m"}}""", "a@example.com,b@example.com")]
+    [DataRow("""{"notificationType":"Complaint","complaint":{"complainedRecipients":[{"emailAddress":"c@example.com"}]},"mail":{"messageId":"m"}}""", "c@example.com")]
+    public async Task ProcessAsync_BounceAndComplaint_CarryTheRecipientsAsync(string inner, string expected)
+    {
+        var events = await Processor().ProcessAsync(Chan, Envelope("Notification", inner), TestContext.CancellationToken);
+
+        var update = ((DeliveryStatusEvent)events.Single()).Update;
+        Assert.AreEqual(expected, string.Join(",", update.Recipients!));
     }
 
     [TestMethod]

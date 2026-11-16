@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace OoBDev.Communications.Abstractions;
 
@@ -7,4 +8,5 @@ namespace OoBDev.Communications.Abstractions;
 /// <param name="NewStatus">The status the vendor reported.</param>
 /// <param name="StatusDetails">Free text from the vendor.</param>
 /// <param name="Timestamp">When the vendor reported it.</param>
-public sealed record DeliveryStatusUpdate(string MessageId, DeliveryStatus NewStatus, string? StatusDetails, DateTimeOffset Timestamp);
+/// <param name="Recipients">The addresses the status is about, when the vendor reports them (bounces and complaints).</param>
+public sealed record DeliveryStatusUpdate(string MessageId, DeliveryStatus NewStatus, string? StatusDetails, DateTimeOffset Timestamp, IReadOnlyList<string>? Recipients = null);

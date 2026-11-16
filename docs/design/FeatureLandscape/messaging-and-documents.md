@@ -50,7 +50,8 @@ Part of the [feature landscape](README.md). Status is "a project exists under `s
 - **Known issues:** the Communications design still describes a 16-line stub that has since grown into four projects.
 - **Standards:** SMTP and message format (RFC 5321/5322), MIME (RFC 2045-2049), DKIM/SPF/DMARC for sending, RFC 8058 unsubscribe.
 - **Built:** delivery status tracking and the SES webhook (delivered, bounce, complaint, open, click) exist; 2026-11-16 added the suppression list (`ISuppressionList`, `SuppressingSendService`).
-- **Missing:** feeding the suppression list from bounce and complaint updates (updates carry no recipient address); a distinct complaint status (SES complaints map to `Failed`); SMS and push as further channels behind the same provider.
+- **Built 2026-11-16:** `DeliveryStatus.Complained`, recipients on `DeliveryStatusUpdate`, and `SuppressionStatusHandler` feed the list from permanent bounces and complaints.
+- **Missing:** a durable `ISuppressionList`; RFC 8058 unsubscribe feeding it; SMS and push as further channels behind the same provider.
 
 ## TextTemplating, TemplateTools and DataEnhancement
 
