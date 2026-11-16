@@ -26,15 +26,6 @@ public sealed class MessagingDbContext(DbContextOptions<MessagingDbContext> opti
             e.Property(x => x.MessageId).HasMaxLength(200);
         });
 
-        modelBuilder.Entity<OutboxRow>(e =>
-        {
-            e.ToTable("Outbox");
-            e.HasKey(x => x.Position);
-            e.Property(x => x.Position).ValueGeneratedOnAdd();
-            e.Property(x => x.Id).HasMaxLength(200).IsRequired();
-            e.Property(x => x.TypeName).HasMaxLength(500).IsRequired();
-            e.Property(x => x.Json).IsRequired();
-            e.HasIndex(x => x.Id).IsUnique();
-        });
+        modelBuilder.AddOutbox();
     }
 }

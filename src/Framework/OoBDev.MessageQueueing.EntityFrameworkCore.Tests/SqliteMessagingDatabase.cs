@@ -11,13 +11,15 @@ internal sealed class SqliteMessagingDatabase : IAsyncDisposable
 
     public SqliteMessagingDatabase()
     {
-        var connectionString = $"Data Source=mq_{Guid.NewGuid():N};Mode=Memory;Cache=Shared";
-        keeper = new SqliteConnection(connectionString);
+        ConnectionString = $"Data Source=mq_{Guid.NewGuid():N};Mode=Memory;Cache=Shared";
+        keeper = new SqliteConnection(ConnectionString);
         keeper.Open();
-        Factory = new ContextFactory(connectionString);
+        Factory = new ContextFactory(ConnectionString);
         using var db = Factory.CreateDbContext();
         db.Database.EnsureCreated();
     }
+
+    public string ConnectionString { get; }
 
     public IDbContextFactory<MessagingDbContext> Factory { get; }
 

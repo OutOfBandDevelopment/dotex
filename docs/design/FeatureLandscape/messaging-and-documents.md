@@ -43,7 +43,8 @@ Part of the [feature landscape](README.md). Status is "a project exists under `s
 - **Built 2026-11-16:** the inbox half: `IdempotentMessageQueueHandler` with `IInboxStore` (idempotent consumers for every adapter).
 - **Built 2026-11-16:** the outbox half: `OutboxMessageQueueSender`, `OutboxDispatcher`, `IOutboxStore`.
 - **Built 2026-11-16:** database `IInboxStore` and `IOutboxStore` in `OoBDev.MessageQueueing.EntityFrameworkCore` (type name plus JSON with a registered-type allow-list; inbox claim by primary key).
-- **Missing:** the outbox write in the caller's business transaction (the stores use their own context), and shipped migrations.
+- **Built 2026-11-16:** the outbox write in the caller's business transaction: `modelBuilder.AddOutbox()` in the business context and `db.StageOutbox(types, message)` saved by its own `SaveChanges`; the dispatcher store reads the same table.
+- **Missing:** shipped migrations.
 
 ## Communications and MessageComposition
 

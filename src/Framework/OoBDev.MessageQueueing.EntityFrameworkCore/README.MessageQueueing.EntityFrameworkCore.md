@@ -13,4 +13,16 @@ services.TryAddEntityFrameworkMessaging(
     types => types.Add<OrderPlaced>());
 ```
 
-Limits: the stores use their own context, so an outbox entry is not written in the same transaction as the business change (that needs a store bound to the caller's context). The schema is created by the consumer (`EnsureCreated` or a migration); no migrations ship yet. Delivery is at least once, so receivers stay idempotent (the inbox).
+The schema is created by the consumer (`EnsureCreated` or a migration); no migrations ship yet. Delivery is at least once, so receivers stay idempotent (the inbox).
+
+## Write in the caller's transaction
+
+Call `modelBuilder.AddOutbox()` in the business context's `OnModelCreating` (same `Outbox` table and database as `MessagingDbContext`), then stage the message in the same unit of work:
+
+```csharp
+db.Orders.Add(order);
+db.StageOutbox(types, new OrderPlaced(order.Id));   // types is the registered OutboxMessageTypes
+await db.SaveChangesAsync();                        // order and message commit or roll back together
+```
+
+The dispatcher's `EfOutboxStore` sends the row afterwards. Both contexts must point at one database, and the table is created by the business context's migration or `EnsureCreated`.
