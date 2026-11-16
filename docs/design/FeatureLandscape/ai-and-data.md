@@ -49,7 +49,8 @@ Part of the [feature landscape](README.md). Status is "a project exists under `s
 - **Works with:** Embeddings for retrieval; ContractParser would feed it contract text.
 - **Known issues:** ContractParser is a harvest project with no migration decision yet; live LLM tests are manual (LiveIntegration).
 - **Practices:** provider/factory per LLM service, local Ollama for CI.
-- **Missing:** prompt injection guidance for tools that act on model output; token and cost accounting.
+- **Built 2026-11-16:** prompt-injection guidance in the LlmCodeGen requirements ("Untrusted input and output").
+- **Missing:** token and cost accounting.
 
 ## DesiredStateDatabase
 
