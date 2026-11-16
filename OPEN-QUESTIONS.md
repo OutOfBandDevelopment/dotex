@@ -81,6 +81,18 @@ Request [code-quality-scanner](docs/features/request/2026-11-10-code-quality-sca
 **Default:** A once confirmed; nothing built meanwhile (the stale-row detector already works).
 **Your answer:**
 
+### Q-LLM-USAGE — 2026-11-16 — Token and cost accounting for LLM calls (interface, layering)
+
+`ILanguageModelProvider` returns plain strings, so callers never see the token counts that Ollama, OpenAI, Groq and Azure report. No Framework project implements the interface (only adapters do), so a shared meter has no home yet.
+
+**Options**
+- A (recommended): add a usage result to the interface (`LanguageModelResponse` with text plus input and output token counts) and have each adapter fill it; a `System.Diagnostics.Metrics` counter pair (`oobdev.llm.tokens`) is then emitted once, in a Framework decorator that OpenTelemetry already exports. Exact numbers; breaking change to the interface and adapters, allowed while unreleased.
+- B: a decorator that estimates tokens (characters divided by four) with no interface change. Cheap, works for every adapter, but the numbers are approximate and a cost figure would mislead.
+- C: leave accounting to each provider dashboard. No code, no cross-provider view.
+
+**Default:** A once confirmed; nothing built meanwhile.
+**Your answer:**
+
 ### Q-EXAMPLE-ANONYMOUS — 2026-11-16 — Open endpoints in the example API
 
 The new right-coverage test (`EndpointRightCoverageTests`) found 18 actions of `OoBDev.Example.WebApi` with no `[ApplicationRight]`, `[Authorize]` or `[AllowAnonymous]` and no fallback policy, so they are open to anyone: Embed (AllMiniLM, SBERT, Ollama), Cache (Store, Lookup, Flush), Groq and Ollama completion, Operations info, Text tools, and the Toolbox calculators. They are in a `KnownOpen` list in the test (it may only shrink; a new unprotected action fails the test).

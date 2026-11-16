@@ -54,7 +54,7 @@ A clean rebuild after the 2026-11-06 pass reports no analyzer warnings (218 befo
 - [ ] Feature landscape gaps (review 2026-11-12; the right-coverage test exists since 2026-11-16, its 18 findings wait on Q-EXAMPLE-ANONYMOUS; each other gap needs a design line first; areas: [web](docs/design/FeatureLandscape/web-and-api.md), [messaging](docs/design/FeatureLandscape/messaging-and-documents.md), [AI](docs/design/FeatureLandscape/ai-and-data.md), [DevTerm](docs/design/FeatureLandscape/devterm-and-devices.md)):
   - Web: a rights audit log; refresh tokens for DevTerm clients.
   - Messaging: shared outbox and inbox (idempotent consumers); cross-process cache single flight; template versioning, localisation and a render test harness; bounce, complaint and delivery receipts; a ClamAV adapter for `IContentScanner`; GDPR erasure for append-only event stores.
-  - AI and data: a re-embed command for stale rows (waits on Q-VECTOR-DELETE; the detector `EmbeddingVersion.StaleIds` and the stamping example exist); a relevance query set for the example search and access filters tied to rights; token cost accounting for LLM tools; screenshot freshness check in the docs validator.
+  - AI and data: a re-embed command for stale rows (waits on Q-VECTOR-DELETE; the detector `EmbeddingVersion.StaleIds` and the stamping example exist); a relevance query set for the example search and access filters tied to rights; token cost accounting for LLM tools (waits on Q-LLM-USAGE); screenshot freshness check in the docs validator.
   - DevTerm: keyboard and screen-reader requirements as tests; plugin manifest version, permissions and signing prompt.
 
 ## 6. Migrations
