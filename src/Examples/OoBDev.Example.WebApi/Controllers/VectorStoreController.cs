@@ -68,6 +68,25 @@ public class VectorStoreController(
         return hits;
     }
 
+    /// <summary>
+    /// Re-embeds the rows of the collection that were not produced by the current model (or were stored before tagging),
+    /// from the text kept in their metadata. Rows without text are skipped.
+    /// </summary>
+    /// <param name="collection">The collection name.</param>
+    /// <returns>How many rows were replaced and which model tag they now carry.</returns>
+    [HttpPost("{collection}/reembed")]
+    [AllowAnonymous]
+    public async Task<ActionResult<VectorReembedResponseModel>> Reembed(string collection)
+    {
+        var replaced = await EmbeddingVersion.ReembedAsync(stores.Create(collection), _embeddingTag, async row =>
+        {
+            if (row.MetaData is null || !row.MetaData.TryGetValue("text", out var text) || string.IsNullOrWhiteSpace(text?.ToString()))
+                return null;
+            return (await embedding.GenerateEmbeddingAsync(text.ToString()!, default, default)).ToArray();
+        });
+        return new VectorReembedResponseModel { Replaced = replaced, Tag = _embeddingTag };
+    }
+
     /// <summary>Lists what is stored in the collection.</summary>
     /// <param name="collection">The collection name.</param>
     /// <returns>The stored items.</returns>

@@ -14,7 +14,7 @@ A sample ASP.NET Core web API that composes the OoBDev framework the way a real 
 |------------|-----------|
 | `OllamaController`, `GroqCloudController`, `ModelCompareController` | Language model providers and side-by-side comparison |
 | `AllMiniLMController`, `SBERTController`, `SBERTDefaultController` | Embedding providers |
-| `VectorStoreController`, `VectorLabController`, `RagController`, `SearchController`, `ImagesController` | Vector store, vector experiments, retrieval, keyword, semantic and hybrid search, and image embeddings |
+| `VectorStoreController` (index, query, list, re-embed), `VectorLabController`, `RagController`, `SearchController`, `ImagesController` | Vector store, vector experiments, retrieval, keyword, semantic and hybrid search, and image embeddings |
 | `CgiProgramsController` | `GET api/CgiPrograms`: the CGI programs this host can start (Linux binaries are left out on Windows) |
 | `MessageQueueingController` | Message queue sender, configured channels (no secrets) and the received-message monitor |
 | `CommunicationsController` | Email through `ISendService` (channel `email`), directly or queued |
