@@ -2,7 +2,7 @@
 
 [← Overview](README.md) · [Requirements](requirements.md) · [Architecture](architecture.md) · [API design](api-design.md)
 
-**Status:** Draft · **Date:** 2026-11-16 · **Nothing built yet.** Decided by the owner on 2026-11-16: erase personal data by rewriting history (a tombstone event and a compaction job that blanks the personal fields). This replaces the earlier line "crypto-shredding is the supported route; no redaction events" in the [overview](README.md#decisions).
+**Status:** Core built 2026-11-16 (build steps 1, 2, the compaction job and the projection notification; see [Build order](#build-order)) · **Date:** 2026-11-16. Decided by the owner on 2026-11-16: erase personal data by rewriting history (a tombstone event and a compaction job that blanks the personal fields). This replaces the earlier line "crypto-shredding is the supported route; no redaction events" in the [overview](README.md#decisions).
 
 ## Contents
 
@@ -57,8 +57,8 @@ When built, tests prove: marked fields are blanked and unmarked fields are not; 
 
 ## Build order
 
-1. `[PersonalData]` attribute and schema registry check.
-2. `ErasureRequested` and `ErasureCompleted` events and the store update path guarded by a right.
-3. The compaction job with the chain re-seal.
-4. Projection notification and rebuild test.
-5. A DevTerm-style or API entry to file a request (needs its own screen spec).
+1. Built: `[PersonalData(subjectProperty, fields...)]` on the event class; `EventTypeRegistry.Register` refuses a mark that names a missing property and builds the placeholder per field (`null` for a nullable field, `[erased]` for text, `0`/`false` for numbers and booleans).
+2. Built: `ErasureRequested` and `ErasureCompleted` events, and `IEventPayloadRewriter` (implemented by `InMemoryEventStore` and `EfEventStore`; one transaction per stream; id, sequence, type and timestamp unchanged). It is a separate interface so ordinary code cannot reach it.
+3. Built: `ErasureService.CompactAsync` (idempotent; a request without `ErasureCompleted` is retried). **Not built:** the hash-chain re-seal, because the stores do not chain events yet (R9 open); the compaction runs from a host job or command, not a hosted service yet.
+4. Built: `ISubjectErasureHandler` is called per completed request so live read models blank at once; a rebuild reads the blanked events (tested through the store). **Not built:** a projection-runner rebuild test per read model.
+5. Not built: an entry point behind its own right and its screen spec; the check that refuses an unmarked event type carrying a subject id.

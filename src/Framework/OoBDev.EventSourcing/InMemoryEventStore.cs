@@ -9,7 +9,7 @@ namespace OoBDev.EventSourcing;
 /// <summary>
 /// Event store that keeps events in memory; for tests and single-process use.
 /// </summary>
-public sealed class InMemoryEventStore(TimeProvider timeProvider) : IEventStore
+public sealed class InMemoryEventStore(TimeProvider timeProvider) : IEventStore, IEventPayloadRewriter
 {
     private readonly Lock _gate = new();
     private readonly List<EventRecord> _all = [];
@@ -62,6 +62,30 @@ public sealed class InMemoryEventStore(TimeProvider timeProvider) : IEventStore
         {
             IReadOnlyList<EventRecord> result = [.. _all.Where(e => e.Position > afterPosition).Take(maxCount)];
             return Task.FromResult(result);
+        }
+    }
+
+    /// <inheritdoc />
+    public Task<int> RewritePayloadsAsync(string streamId, IReadOnlyDictionary<long, string> payloads, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(payloads);
+        lock (_gate)
+        {
+            if (!_streams.TryGetValue(streamId, out var stream))
+                return Task.FromResult(0);
+            var changed = 0;
+            foreach (var (sequence, payload) in payloads)
+            {
+                var index = (int)sequence - 1;
+                if (index < 0 || index >= stream.Count || stream[index].Payload == payload)
+                    continue;
+                var updated = stream[index] with { Payload = payload };
+                stream[index] = updated;
+                _all[(int)updated.Position - 1] = updated;
+                changed++;
+            }
+
+            return Task.FromResult(changed);
         }
     }
 }

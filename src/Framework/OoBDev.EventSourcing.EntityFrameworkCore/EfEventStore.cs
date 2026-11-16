@@ -10,7 +10,7 @@ namespace OoBDev.EventSourcing.EntityFrameworkCore;
 /// <summary>
 /// Event store on Entity Framework Core. The unique index on (StreamId, Sequence) decides concurrent writers.
 /// </summary>
-public sealed class EfEventStore(IDbContextFactory<EventSourcingDbContext> factory, TimeProvider timeProvider) : IEventStore
+public sealed class EfEventStore(IDbContextFactory<EventSourcingDbContext> factory, TimeProvider timeProvider) : IEventStore, IEventPayloadRewriter
 {
     /// <inheritdoc />
     public async Task<AppendResult> AppendAsync(string streamId, long expectedSequence, IReadOnlyList<NewEvent> events, CancellationToken cancellationToken = default)
@@ -77,6 +77,27 @@ public sealed class EfEventStore(IDbContextFactory<EventSourcingDbContext> facto
             .Take(maxCount)
             .ToListAsync(cancellationToken).ConfigureAwait(false);
         return [.. rows.Select(ToRecord)];
+    }
+
+    /// <inheritdoc />
+    public async Task<int> RewritePayloadsAsync(string streamId, IReadOnlyDictionary<long, string> payloads, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(payloads);
+        var db = await factory.CreateDbContextAsync(cancellationToken).ConfigureAwait(false);
+        await using var disposer = db.ConfigureAwait(false);
+        var sequences = payloads.Keys.ToList();
+        var rows = await db.Events.Where(e => e.StreamId == streamId && sequences.Contains(e.Sequence)).ToListAsync(cancellationToken).ConfigureAwait(false);
+        var changed = 0;
+        foreach (var row in rows)
+        {
+            if (row.Payload == payloads[row.Sequence])
+                continue;
+            row.Payload = payloads[row.Sequence];
+            changed++;
+        }
+
+        await db.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        return changed;
     }
 
     private static async Task<long> LastSequenceAsync(EventSourcingDbContext db, string streamId, CancellationToken cancellationToken)

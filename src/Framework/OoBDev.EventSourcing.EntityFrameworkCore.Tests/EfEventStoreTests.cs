@@ -1,6 +1,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.TestUtilities;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -91,5 +92,23 @@ public class EfEventStoreTests
 
         CollectionAssert.AreEqual(new[] { "a1", "b1", "a2" }, all.Select(e => e.Type).ToArray());
         CollectionAssert.AreEqual(new[] { "b1" }, after.Select(e => e.Type).ToArray());
+    }
+
+    [TestMethod]
+    [TestCategory(TestCategories.Simulate)]
+    public async Task RewritePayloadsAsync_ChangesOnlyNamedSequences_AndIsIdempotent()
+    {
+        await _store.AppendAsync("s", 0, [new NewEvent("A", "{\"v\":1}"), new NewEvent("A", "{\"v\":2}")]);
+        var changes = new Dictionary<long, string> { [2] = "{\"v\":0}" };
+
+        var first = await _store.RewritePayloadsAsync("s", changes);
+        var second = await _store.RewritePayloadsAsync("s", changes);
+
+        Assert.AreEqual(1, first);
+        Assert.AreEqual(0, second);
+        var read = await _store.ReadAsync("s");
+        Assert.AreEqual("{\"v\":1}", read[0].Payload);
+        Assert.AreEqual("{\"v\":0}", read[1].Payload);
+        Assert.AreEqual(2, read[1].Position);
     }
 }

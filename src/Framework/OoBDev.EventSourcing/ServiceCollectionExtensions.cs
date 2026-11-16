@@ -37,6 +37,12 @@ public static class ServiceCollectionExtensions
             sp.GetRequiredService<IOptions<EventRelayOptions>>(),
             sp.GetRequiredService<TimeProvider>()));
         services.TryAddSingleton<EventTypeRegistry>();
+        services.TryAddTransient(sp => new ErasureService(
+            sp.GetRequiredKeyedService<IEventStore>(EventSourcingGlobals.EventStoreSelectedKey),
+            sp.GetRequiredKeyedService<IEventStore>(EventSourcingGlobals.EventStoreSelectedKey) as IEventPayloadRewriter
+                ?? throw new InvalidOperationException("The selected event store cannot rewrite payloads, so erasure is not available."),
+            sp.GetRequiredService<EventTypeRegistry>(),
+            sp.GetServices<ISubjectErasureHandler>()));
         services.TryAddSingleton<EventUpcastPipeline>();
         services.TryAddTransient(sp => new ProjectionRunner(
             sp.GetRequiredKeyedService<IEventStore>(EventSourcingGlobals.EventStoreSelectedKey),
