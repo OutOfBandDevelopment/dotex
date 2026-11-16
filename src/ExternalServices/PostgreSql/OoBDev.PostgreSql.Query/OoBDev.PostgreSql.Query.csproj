@@ -23,6 +23,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\..\Framework\OoBDev.Query.Metadata\OoBDev.Query.Metadata.csproj" />
+		<ProjectReference Include="..\..\..\Framework\OoBDev.Search.Abstractions\OoBDev.Search.Abstractions.csproj" />
 		<ProjectReference Include="..\..\..\Framework\OoBDev.System\OoBDev.System.csproj" />
 	</ItemGroup>
 

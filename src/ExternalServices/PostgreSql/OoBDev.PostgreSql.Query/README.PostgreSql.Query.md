@@ -24,3 +24,11 @@ Registers `PostgresQueryDialect` and `NpgsqlQueryExecutor` (a lazily created `Np
 ## Tests
 
 Unit tests cover the dialect and registration. Integration tests run against the `pgvector` service of the test stack (`PGVECTOR_CONNECTION_STRING`) in a throwaway schema per test: filters and count, wildcard text taken literally, injection text, keyset paging with a row inserted between pages, and facet counts.
+
+## SQL-kind search provider
+
+`TryAddPostgresSqlKindSearch(configuration)` registers `SqlKindSearchProvider` as an `ISearchProvider` (keyed `postgres-sql-kind`) over one query kind; it needs `TryAddPostgresMetadataQuery`. Settings under `OoBDev:Search:SqlKind`: `Kind` (the `[QueryKind]` name) and `IdFacet` (default `id`, the facet that becomes the item id).
+
+- Free text becomes the kind's search words; filters map to facet operators (equals `eq`/`ne`, contains `like`/`nlike`, `gt`, `gte`, `lt`, `lte`); only the kind's filterable facets are supported, and a negated range, or two filters with the same operator on one facet, is refused with `NotSupportedException`.
+- Hits are unranked (score 0), so hybrid fusion treats them by rank; the cursor is the engine's keyset cursor; like-item, near-text and near-vector anchors are refused.
+- Tested with a fake `IQueryExecutor` (generated SQL and parameters); a run against the Docker PostgreSQL is part of the filter-parity Integration set that is not built yet.
