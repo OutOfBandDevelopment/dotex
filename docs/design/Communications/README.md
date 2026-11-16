@@ -1,7 +1,7 @@
 # Epic 2: Communications Platform
 
 **Priority:** CRITICAL
-**Status:** 🔧 Partly built (reconciled 2026-11-11): the abstractions (`IChannel`, `IChannelProvider`, registry, send and receive services, delivery tracking, webhook processors, polling host), the hosting and MessageQueueing email handler are in `OoBDev.Communications*`; the MailKit (SMTP, IMAP) and Amazon SES channel providers exist. Not built: SendGrid and Twilio SMS providers, scheduled campaigns, attribute-based data enhancement. The 16 LOC stub in the impact line is gone.
+**Status:** 🔧 Partly built (reconciled 2026-11-11): the abstractions (`IChannel`, `IChannelProvider`, registry, send and receive services, delivery tracking, webhook processors, polling host), the hosting and MessageQueueing email handler are in `OoBDev.Communications*`; the MailKit (SMTP, IMAP), Amazon SES, SendGrid (`OoBDev.SendGrid`, built 2026-11-16, email over the v3 REST API) and Twilio (`OoBDev.Twilio`, built 2026-11-16, SMS through `ISmsMessage`) channel providers exist; the adapters use `HttpClient` and options (`OoBDev:SendGrid`, `OoBDev:Twilio`), not the vendor SDKs, and sit under `src/ExternalServices/SendGrid` and `Twilio`. Not built: scheduled campaigns, attribute-based data enhancement. The 16 LOC stub in the impact line is gone.
 **Complexity:** HIGH
 **Impact:** ~2,500 LOC (replaces 16 LOC stub with production-ready implementation)
 

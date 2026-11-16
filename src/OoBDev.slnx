@@ -235,6 +235,14 @@
     <Project Path="ExternalServices/SBert/OoBDev.SBert.Tests/OoBDev.SBert.Tests.csproj" />
     <Project Path="ExternalServices/SBert/OoBDev.SBert/OoBDev.SBert.csproj" />
   </Folder>
+  <Folder Name="/ExternalServices/SendGrid/">
+    <Project Path="ExternalServices/SendGrid/OoBDev.SendGrid.Tests/OoBDev.SendGrid.Tests.csproj" />
+    <Project Path="ExternalServices/SendGrid/OoBDev.SendGrid/OoBDev.SendGrid.csproj" />
+  </Folder>
+  <Folder Name="/ExternalServices/Twilio/">
+    <Project Path="ExternalServices/Twilio/OoBDev.Twilio.Tests/OoBDev.Twilio.Tests.csproj" />
+    <Project Path="ExternalServices/Twilio/OoBDev.Twilio/OoBDev.Twilio.csproj" />
+  </Folder>
   <Folder Name="/ExternalServices/Vision/">
     <Project Path="ExternalServices/Vision/OoBDev.Vision.ClipVitB32/OoBDev.Vision.ClipVitB32.csproj" />
     <Project Path="ExternalServices/Vision/OoBDev.Vision.Dinov2Small/OoBDev.Vision.Dinov2Small.csproj" />
