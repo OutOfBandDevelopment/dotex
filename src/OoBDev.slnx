@@ -202,6 +202,8 @@
   <Folder Name="/ExternalServices/Embeddings/">
     <Project Path="ExternalServices/OoBDev.Data.Vectors.Postgres.Tests/OoBDev.Data.Vectors.Postgres.Tests.csproj" />
     <Project Path="ExternalServices/OoBDev.Data.Vectors.Postgres/OoBDev.Data.Vectors.Postgres.csproj" />
+    <Project Path="ExternalServices/OoBDev.Docling.Tests/OoBDev.Docling.Tests.csproj" />
+    <Project Path="ExternalServices/OoBDev.Docling/OoBDev.Docling.csproj" />
     <Project Path="ExternalServices/OoBDev.Embeddings.Http.Tests/OoBDev.Embeddings.Http.Tests.csproj" />
     <Project Path="ExternalServices/OoBDev.Embeddings.Http/OoBDev.Embeddings.Http.csproj" />
   </Folder>
@@ -268,6 +270,8 @@
     <Project Path="Framework/OoBDev.Devices.TestUtilities.Tests/OoBDev.Devices.TestUtilities.Tests.csproj" />
     <Project Path="Framework/OoBDev.Tui.TestUtilities/OoBDev.Tui.TestUtilities.csproj" />
     <Project Path="Framework/OoBDev.Documents.Abstractions/OoBDev.Documents.Abstractions.csproj" />
+    <Project Path="Framework/OoBDev.Documents.Markdown.Tests/OoBDev.Documents.Markdown.Tests.csproj" />
+    <Project Path="Framework/OoBDev.Documents.Markdown/OoBDev.Documents.Markdown.csproj" />
     <Project Path="Framework/OoBDev.Documents.Hpgl.Tests/OoBDev.Documents.Hpgl.Tests.csproj" />
     <Project Path="Framework/OoBDev.Documents.Hpgl/OoBDev.Documents.Hpgl.csproj" />
     <Project Path="Framework/OoBDev.Documents.ExternalTools.Tests/OoBDev.Documents.ExternalTools.Tests.csproj" />
