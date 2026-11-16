@@ -12,9 +12,13 @@ const vm = new VectorStoreViewModel();
   <p>
     <fluent-button appearance="primary" :disabled="!vm.index.canExecute.value" @click="vm.index.execute()">Store texts</fluent-button>
     <fluent-button :disabled="!vm.list.canExecute.value" @click="vm.list.execute()">List collection</fluent-button>
+    <fluent-button :disabled="!vm.reembed.canExecute.value" @click="vm.reembed.execute()">Re-embed old rows</fluent-button>
   </p>
   <p v-if="vm.index.error.value" class="error">{{ vm.index.error.value }}</p>
   <p v-if="vm.stored.value.length" aria-label="Stored">Stored {{ vm.stored.value.length }} text(s) in the {{ vm.store.value }} store.</p>
+
+  <p v-if="vm.reembed.error.value" class="error">{{ vm.reembed.error.value }}</p>
+  <p v-if="vm.reembedResult.value" aria-label="Re-embedded">Re-embedded {{ vm.reembedResult.value.replaced }} row(s); they now carry the model tag {{ vm.reembedResult.value.tag }}.</p>
 
   <h2>Find the closest</h2>
   <p><label>Query <input v-model="vm.query.value" size="50" /></label></p>
