@@ -37,7 +37,8 @@ Part of the [feature landscape](README.md). Status is "a project exists under `s
 - **Known issues:** drift in the status line; the surface-parity rule (same checks on every API surface, owner decision) has no automated test across surfaces.
 - **Practices:** secure by default, deny without a right, rights not roles in code, roles translated in middleware.
 - **Built 2026-11-16:** `EndpointRightCoverageTests` (example API) fails on a new controller action with no `[ApplicationRight]`, `[Authorize]` or `[AllowAnonymous]`; 18 existing open actions are listed until Q-EXAMPLE-ANONYMOUS is answered.
-- **Missing:** a rights audit log.
+- **Built 2026-11-16:** `AuditingApplicationRightChecker` and `AddRightAuditLog()` log every right check (who, rights, outcome).
+- **Missing:** a durable audit store with retention (logs only for now).
 
 ## HttpQueryVerb and ODataQuery
 

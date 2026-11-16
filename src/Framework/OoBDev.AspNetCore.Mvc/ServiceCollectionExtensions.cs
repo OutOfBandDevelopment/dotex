@@ -20,6 +20,7 @@ using OoBDev.System.Linq.Search;
 using OoBDev.System.Net.Http;
 using OoBDev.System.Security;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Security.Claims;
@@ -108,6 +109,32 @@ public static class ServiceCollectionExtensions
         services.TryAddTransient<IClaimsTransformation, RoleRightClaimsTransformation>();
         return services;
     }
+
+    /// <summary>
+    /// Writes one log entry per application right check (subject, required rights, outcome) by wrapping the registered
+    /// <see cref="IApplicationRightChecker"/>. Call it after the checker is registered.
+    /// </summary>
+    /// <param name="services">The service collection.</param>
+    /// <returns>The modified service collection.</returns>
+    public static IServiceCollection AddRightAuditLog(this IServiceCollection services)
+    {
+        var existing = services.LastOrDefault(d => d.ServiceType == typeof(IApplicationRightChecker))
+            ?? throw new InvalidOperationException("Register an IApplicationRightChecker (for example with TryAddRoleRightMapping) before AddRightAuditLog.");
+        services.Remove(existing);
+        services.Add(ServiceDescriptor.Describe(typeof(AuditedInner), sp => new AuditedInner(CreateInner(sp, existing)), existing.Lifetime));
+        services.Add(ServiceDescriptor.Describe(
+            typeof(IApplicationRightChecker),
+            sp => new AuditingApplicationRightChecker(sp.GetRequiredService<AuditedInner>().Checker, sp.GetRequiredService<Microsoft.Extensions.Logging.ILogger<AuditingApplicationRightChecker>>()),
+            existing.Lifetime));
+        return services;
+    }
+
+    private sealed record AuditedInner(IApplicationRightChecker Checker);
+
+    private static IApplicationRightChecker CreateInner(IServiceProvider sp, ServiceDescriptor descriptor) =>
+        descriptor.ImplementationInstance as IApplicationRightChecker
+        ?? (descriptor.ImplementationFactory?.Invoke(sp) as IApplicationRightChecker)
+        ?? (IApplicationRightChecker)ActivatorUtilities.CreateInstance(sp, descriptor.ImplementationType!);
 
     /// <summary>
     /// Adds authentication requirements to the service collection.
