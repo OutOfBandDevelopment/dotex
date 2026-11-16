@@ -21,3 +21,15 @@ Office files (docx, odt, rtf, epub, doc) to Markdown need a reader behind `IFile
 
 **Default:** A once confirmed; nothing built meanwhile (the item is parked).
 **Your answer:**
+
+### Q-ZWAVE-SESSION — 2026-11-16 — DevTerm Z-Wave panel (layering)
+
+The Z-Wave Enumerate and Describe node buttons need the decoder's frames and the surface's requests to share one `ZWaveNodeTable` per session (your 2026-11-12 choice). The hosts build them apart: `CreateSurface(DeviceSend)` runs when a panel opens (WPF, Tui, Web each), while `CreateDecoder()` runs from DI as a transient presenter (`DeviceDecoderPresenter`). Neither call knows the session, so the panel cannot pair them.
+
+**Options**
+- A (recommended): `IDevicePanel` gets `CreateSurface(DeviceSend send, IDeviceDecoder decoder)` so a host passes the decoder it already holds for that session; the Z-Wave surface casts it to read the shared table. One interface change, all panels updated, hosts pass what they have.
+- B: `ZWavePanel` keeps one table for all sessions. No interface change, but two sticks would mix nodes.
+- C: the surface opens its own `ZWaveSession` on the transport. Duplicates the reader and fights the host for the stream.
+
+**Default:** A once confirmed; the slice is parked (BACKLOG line says so). The panel-lifetime `ZWaveAckResponder` waits on the same decision.
+**Your answer:**
