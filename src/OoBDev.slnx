@@ -204,6 +204,8 @@
     <Project Path="ExternalServices/OoBDev.Data.Vectors.Postgres/OoBDev.Data.Vectors.Postgres.csproj" />
     <Project Path="ExternalServices/OoBDev.Docling.Tests/OoBDev.Docling.Tests.csproj" />
     <Project Path="ExternalServices/OoBDev.Docling/OoBDev.Docling.csproj" />
+    <Project Path="ExternalServices/OoBDev.ImageMagick.Tests/OoBDev.ImageMagick.Tests.csproj" />
+    <Project Path="ExternalServices/OoBDev.ImageMagick/OoBDev.ImageMagick.csproj" />
     <Project Path="ExternalServices/OoBDev.Embeddings.Http.Tests/OoBDev.Embeddings.Http.Tests.csproj" />
     <Project Path="ExternalServices/OoBDev.Embeddings.Http/OoBDev.Embeddings.Http.csproj" />
   </Folder>

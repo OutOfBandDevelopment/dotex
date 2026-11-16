@@ -23,3 +23,9 @@ var all = ExifDump.Read(bytes);   // { "Make": "Canon", "GPS.GPSLatitude": "(52.
 - GPS south and west are negative; a result outside -90 to 90 or -180 to 180, or exactly 0, 0, is dropped.
 
 Not built yet: a result that reports which tags were damaged, the HEIC Exif item, XMP and IPTC, audio tags and date merging.
+
+## RAW files (`OoBDev.Media.Metadata.Raw`)
+
+- `RawDetector.IsRaw(head)` recognises RAW by content: CR2, CR3, RAF, ORF, RW2, DNG and TIFF files whose Make is a camera maker and that carry SubIFDs.
+- `IRawDeveloper` (`IsRaw`, `DevelopAsync(input, output, RawDevelopOptions)`); `EmbeddedPreviewDeveloper` writes the largest embedded JPEG preview with no native code and throws `NotSupportedException` for PNG, 16 bit or white-balance changes. The true development is `OoBDev.ImageMagick`.
+- `WhiteBalance.Scale` is the pure per-channel scaling over an RGB buffer.

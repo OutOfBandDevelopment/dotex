@@ -1,6 +1,6 @@
 # RAW camera file development
 
-Status: **design written 2026-11-12; provider confirmed by the owner 2026-11-12: ImageMagick (Magick.NET) in an adapter project, managed detection and embedded preview stay in Framework, nothing built.** Request: [RAW camera file development](../../features/request/2026-11-11-raw-camera-file-development.md).
+Status: **built 2026-11-16: the managed part (`OoBDev.Media.Metadata.Raw`) and the ImageMagick adapter `OoBDev.ImageMagick`; provider confirmed by the owner 2026-11-12 (Magick.NET, Q16). A DevLocal test on a real RAW file runs when `RAW_TEST_FILE` is set.** Request: [RAW camera file development](../../features/request/2026-11-11-raw-camera-file-development.md).
 
 ## Contents
 
@@ -28,7 +28,7 @@ Embeddings, histograms and thumbnails need a decoded RGB image; RAW files (Nikon
 ## Design
 
 - `IRawDeveloper` with `IsRaw(stream)` (content based: TIFF header plus maker and RAW markers, or the Fuji and Canon CR3 box headers) and `DevelopAsync(input, output, RawDevelopOptions)`; options hold output format (JPEG or PNG), JPEG quality, 8 or 16 bit, and white-balance scales for the three channels.
-- Two providers behind it: an always-available `EmbeddedPreviewDeveloper` (extracts the camera's full-size JPEG preview, no native code, not a true development), and a native provider (LibRaw through a wrapper) that does the real demosaic. A host without the native provider gets a clear `NotSupportedException` for a true development.
+- Two providers behind it: an always-available `EmbeddedPreviewDeveloper` (extracts the camera's full-size JPEG preview, no native code, not a true development), and a native provider (ImageMagick through Magick.NET, `MagickRawDeveloper`) that does the real development. A host without the native provider gets a clear `NotSupportedException` for a true development.
 - The source is read only; output goes to a separate stream or path.
 - The native provider is a separate adapter project so Framework never carries native code.
 
@@ -39,7 +39,7 @@ Embeddings, histograms and thumbnails need a decoded RGB image; RAW files (Nikon
 | Project | Target location | Namespace | Package or unit |
 |---------|-----------------|-----------|-----------------|
 | Interface, options, detection, preview developer | `OoBDev.Media.Metadata` (TIFF reader shared) | `OoBDev.Media.Metadata.Raw` | with that project |
-| Native LibRaw adapter | new `src/ExternalServices/OoBDev.Raw.LibRaw` (after approval) | `OoBDev.Raw.LibRaw` | separate package, native assets |
+| ImageMagick adapter | new `src/ExternalServices/OoBDev.ImageMagick` | `OoBDev.ImageMagick` | separate package, native assets |
 
 **Table 3 — References that change**
 

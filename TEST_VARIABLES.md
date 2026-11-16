@@ -679,3 +679,9 @@ See `/containers/testing/README.md` for detailed Docker infrastructure documenta
 - New test properties are introduced
 - Docker services are added/modified
 - Default values change
+
+### RAW development (DevLocal)
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `RAW_TEST_FILE` | empty | Path of a camera RAW file for the `OoBDev.ImageMagick.Tests` DevLocal test; the test is inconclusive when unset |

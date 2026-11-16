@@ -200,6 +200,7 @@ https://github.com/coverlet-coverage/coverlet/blob/fc7ec26dcaed8fedba880ff13c6f1
 
 		<!-- Ollama (LLM Inference) -->
 		<Parameter name="OLLAMA_URL" value="http://localhost:11435" />
+		<Parameter name="RAW_TEST_FILE" value="" />
 		<Parameter name="OLLAMA_HOST" value="localhost" />
 		<Parameter name="OLLAMA_PORT" value="11435" />
 		<Parameter name="OLLAMA_MODEL" value="phi3" />
