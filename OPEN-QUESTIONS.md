@@ -23,3 +23,16 @@ The EF stores (messaging inbox/outbox, suppression list, template source, event 
 **Default:** C until answered; the item stays in BACKLOG as "waiting for the owner".
 
 **Your answer:**
+
+### Q2 (2026-11-16, Web, DevTerm sign-in): where does desktop client sign-in and refresh live?
+
+DevTerm and the other desktop clients have no sign-in code (nothing under `src/Applications` acquires a token), so refresh-token handling has nothing to attach to. A client needs the OAuth 2.0 public-client flow with Keycloak: authorization code with PKCE on a loopback redirect (or device code for the Tui), a token cache that refreshes the access token before it expires, and a secure store for the refresh token.
+
+**Options**
+- A. A new Framework library `OoBDev.Security.OAuthClient` (host-free: PKCE, loopback listener, device code, `ITokenCache` with refresh and `ISecretStore` abstraction; Windows DPAPI store in an Extension). Reusable by every client. (recommended: matches "reusable means Framework" and the Keycloak decision; needs your confirmation because it creates a project.)
+- B. Put the flow inside DevTerm only. Quicker, but the next client repeats it.
+- C. Leave sign-in to the consumer; document the flow only.
+
+**Default:** C until answered; the BACKLOG item waits.
+
+**Your answer:**
