@@ -14,7 +14,7 @@ namespace OoBDev.Example.WebApi.Tests;
 [TestClass]
 public class SearchRelevanceTests
 {
-    private static readonly RagPassage[] Corpus =
+    internal static readonly RagPassage[] Corpus =
     [
         new() { Id = "queue-rabbit", Text = "Messages are published to a RabbitMQ queue by the RabbitMQ adapter and received by a consumer." },
         new() { Id = "queue-sqs", Text = "The SQS adapter sends and receives messages on an Amazon queue with long polling." },
