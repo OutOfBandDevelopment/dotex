@@ -24,6 +24,7 @@ public class VectorStoreController(
     ) : ControllerBase
 {
     private const int MaxTexts = 100;
+    private static readonly string _embeddingTag = EmbeddingVersion.Tag(SBertGlobals.AllMiniLmL6V2Key, 384);
 
     /// <summary>Embeds the texts and stores them in the collection.</summary>
     /// <param name="model">The collection and texts.</param>
@@ -39,7 +40,7 @@ public class VectorStoreController(
         foreach (var text in model.Texts)
         {
             var vector = (await embedding.GenerateEmbeddingAsync(text, default, default)).ToArray();
-            items.Add((vector, new Dictionary<string, object>(StringComparer.Ordinal) { ["text"] = text }));
+            items.Add((vector, EmbeddingVersion.Stamp(new Dictionary<string, object>(StringComparer.Ordinal) { ["text"] = text }, _embeddingTag)));
         }
 
         var ids = await stores.Create(model.Collection).StoreVectorsAsync(items, new Dictionary<string, object>(StringComparer.Ordinal));
