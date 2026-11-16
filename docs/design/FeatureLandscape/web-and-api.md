@@ -27,7 +27,7 @@ Part of the [feature landscape](README.md). Status is "a project exists under `s
 | OpenApiScalar | `Microsoft.AspNetCore.OpenApi` documents with Scalar | OpenAPI 3.1, OAuth2 code with PKCE (RFC 7636) | none known |
 | AsyncApi | `OoBDev.AsyncApi` plus contributors in the queue adapters | AsyncAPI 3.0 | adapters for Kafka-style brokers are not planned |
 | CgiMiddleware | `OoBDev.AspNetCore.Cgi`, `.Cgi.OpenApi` | RFC 3875 | first cut; process isolation and timeouts need review |
-| Jws | `OoBDev.Identity.Jws` | RFC 7515, 7517, 7518 | JWKS rotation is not described |
+| Jws | `OoBDev.Identity.Jws` | RFC 7515, 7517, 7518 | JWKS caching and rotation: platform handler, see the JwtAuthentication readme |
 | SharedIdentity | `OoBDev.Identity`, `.Abstractions`, `OoBDev.AspNetCore.JwtAuthentication` | RFC 7519, 8693 (optional exchange), OIDC Core | token exchange is config-gated and unbuilt |
 
 ## ApplicationRights
@@ -69,4 +69,4 @@ Part of the [feature landscape](README.md). Status is "a project exists under `s
 - **Status:** libraries exist; the design statuses (Accepted and Design phase) lag.
 - **Known issues:** the owner decision "services understand only JWT; the STS converts other credentials" is documented, but no design lists the converters (API key, HMAC, basic, Kerberos, SAML) as separate features.
 - **Standards:** RFC 7515/7519 (JWS, JWT), RFC 8725 (JWT best practice), RFC 8693 (token exchange), RFC 9068 (JWT access token profile), OIDC Core and Discovery.
-- **Missing:** key rotation and JWKS caching design; refresh-token handling for the DevTerm and desktop clients.
+- **Built 2026-11-16:** key rotation and JWKS caching are the platform handler behaviour, documented in the JwtAuthentication readme and pinned by tests. **Missing:** refresh-token handling for the DevTerm and desktop clients.
