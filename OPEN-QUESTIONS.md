@@ -49,3 +49,16 @@ DevTerm and the other desktop clients have no sign-in code (nothing under `src/A
 **Default:** C until answered; the BACKLOG item waits.
 
 **Your answer:**
+
+### Q4 (2026-11-16, Messaging, GDPR erasure): where does the right-guarded erasure entry point live?
+
+`ErasureService.RequestAsync` and `CompactAsync` exist, but nothing lets an authorised person start them. `OoBDev.EventSourcing` has no reference to the rights contracts (`OoBDev.AspNetCore.Abstractions`), and the design says compaction runs behind its own right (for example `erasure.request`, `erasure.compact`).
+
+**Options**
+- A. A small `GuardedErasureService` decorator in a new host-free Framework project that references `OoBDev.EventSourcing` and `OoBDev.AspNetCore.Abstractions` (`IApplicationRightChecker`); an MVC controller in `OoBDev.AspNetCore.Mvc` calls it. (recommended: same shape as Q3, no host reference in the event library; needs your yes because it creates a project.)
+- B. Add the `OoBDev.AspNetCore.Abstractions` reference to `OoBDev.EventSourcing` and check rights inside `ErasureService`. No new project, but event sourcing then depends on the web contracts.
+- C. Leave it to the consumer; document the pattern only.
+
+**Default:** C until answered; the BACKLOG item waits.
+
+**Your answer:**
