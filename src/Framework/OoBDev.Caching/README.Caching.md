@@ -57,6 +57,10 @@ IProductRepository repository = serviceProvider.Cacheable<IProductRepository, Pr
 - Key formatters use `{parameter}` and `{parameter.Property}` placeholders over the method arguments.
 - `ICachingManager` can also be used directly: `BuildKey`, `StoreAsync`, `RetrieveAsync` and `FlushAsync`.
 
+## Concurrent misses
+
+When several callers miss the same key at once, the first computes and the rest wait and then read its result, so an expensive method runs once per key, not once per caller (`CachedProxyStampedeTests`). The gate is in process and striped over 64 locks, so unrelated keys can occasionally wait on each other but nothing leaks; across processes each instance still computes once. The Redis provider (`redis`) shares the stored result between instances.
+
 ## Failure behaviour
 
 A caching failure is logged and swallowed so the call still runs, except in DEBUG builds, which rethrow so a broken key or provider shows up locally.

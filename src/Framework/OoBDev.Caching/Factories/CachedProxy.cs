@@ -2,6 +2,7 @@
 using System;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace OoBDev.Caching.Factories;
@@ -16,6 +17,9 @@ namespace OoBDev.Caching.Factories;
 public partial class CachedProxy<TInterface, TImplemention> : DispatchProxy
         where TImplemention : class, TInterface
 {
+    private const int _gateCount = 64;
+    private static readonly SemaphoreSlim[] _gates = [.. Enumerable.Range(0, _gateCount).Select(_ => new SemaphoreSlim(1, 1))];
+
     private TImplemention? _decorated;
     private ICachingManager? _cachingManager;
     private ILogger<TImplemention>? _logger;
@@ -127,20 +131,37 @@ public partial class CachedProxy<TInterface, TImplemention> : DispatchProxy
             return isTask ? ResultAwaiter.Wrap(cachedResult) : cachedResult;
         }
 
-        // look up original
-        var original = method.Invoke(_decorated, args);
-        if (original == null) return null; // no result to try to cache
-
-        if (isTask)
+        // Concurrent misses for one key compute once: the first caller holds the gate, the rest wait and then read its result.
+        var gate = _gates[(uint)StringComparer.Ordinal.GetHashCode(cachingKey) % _gateCount];
+        gate.Wait();
+        try
         {
-            original = ResultAwaiter.Unwrap(targetReturnType, original);
+            cachedResult = cachingManager.RetrieveAsync(cachingKey, targetReturnType).ConfigureAwait(false).GetAwaiter().GetResult();
+            if (cachedResult != null)
+            {
+                if (_logger != null) LogRetrieved(_logger, targetMethod.Name, cachingKey);
+                return isTask ? ResultAwaiter.Wrap(cachedResult) : cachedResult;
+            }
+
+            // look up original
+            var original = method.Invoke(_decorated, args);
+            if (original == null) return null; // no result to try to cache
+
+            if (isTask)
+            {
+                original = ResultAwaiter.Unwrap(targetReturnType, original);
+            }
+
+            // store original
+            cachingManager.StoreAsync(cachingKey, original, lifeTime).ConfigureAwait(false).GetAwaiter().GetResult();
+            if (_logger != null) LogStored(_logger, targetMethod.Name, cachingKey);
+
+            return isTask ? ResultAwaiter.Wrap(original) : original;
         }
-
-        // store original
-        cachingManager.StoreAsync(cachingKey, original, lifeTime).ConfigureAwait(false).GetAwaiter().GetResult();
-        if (_logger != null) LogStored(_logger, targetMethod.Name, cachingKey);
-
-        return isTask ? ResultAwaiter.Wrap(original) : original;
+        finally
+        {
+            gate.Release();
+        }
     }
 
     [LoggerMessage(EventId = 1, Level = LogLevel.Information, Message = "Retrieved from Cache::{Method}::{Key}")]

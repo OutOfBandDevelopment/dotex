@@ -68,7 +68,8 @@ Part of the [feature landscape](README.md). Status is "a project exists under `s
 - **Works with:** every feature that caches (embeddings, rights, OpenAPI documents).
 - **Known issues:** cache key and invalidation conventions are in the design only; the configured `OoBDev:Caching:Disabled` switch exists.
 - **Standards:** RFC 9111 for HTTP caches.
-- **Missing:** stampede protection and a distributed cache option (Redis is in the test stack).
+- **Built 2026-11-16:** in-process stampede protection in `CachedProxy` (one compute per key for concurrent misses). The distributed option already exists as the `redis` provider (`OoBDev.Redis.Caching`).
+- **Missing:** cross-process single flight (each instance computes once on a cold key).
 
 ## CqrsEventSourcing and MasterData
 
