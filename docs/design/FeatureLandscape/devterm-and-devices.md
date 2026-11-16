@@ -40,7 +40,7 @@ Part of the [feature landscape](README.md). Status is "a project exists under `s
 - **Works with:** Presenters (decoded text or structure), UiDefinitions (device panels), the Docker test stack (RabbitMQ, Mosquitto, ser2net, loopback).
 - **Known issues:** hardware tests are DevLocal and need the bench (see `docs/how-tos/test-hardware.md`); the transport list in the design predates the Brokers and Mqtt projects.
 - **Standards:** RFC 2217 (Telnet COM port control), MQTT, STOMP, USBTMC, NMEA 0183.
-- **Missing:** a transport capability matrix (framed, flow control, reconnect); reconnect policy defaults.
+- **Built 2026-11-16:** a capability matrix in `docs/design/Transports/transports.md`; reconnect defaults are the core `SessionLimits`.
 
 ## Presenters, SessionLogging and SessionChannel
 

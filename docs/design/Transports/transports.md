@@ -193,6 +193,23 @@ This is a distinct, real production transport, not a repurposed version of the i
 `MainWindow` in automated tests; this one is registered through the same `AddDevTermFrontEnd` DI path
 as every other transport and is selectable by an actual end user.
 
+## Capability matrix
+
+What each transport offers, from the sections above. Reconnect, timeout and retry are not per transport: the core owns them as `SessionLimits` (`--connecttimeoutms`, `--connectretries`, `--connectretrydelayms`) and every transport gets the same defaults.
+
+| Transport | Message boundaries kept | Flow control or pacing | Can listen | Discovery | Read cancellation |
+|-----------|-------------------------|------------------------|------------|-----------|-------------------|
+| Serial | no (byte stream) | RTS/CTS option, write pacing, bounded write timeout | no | port list | `DataReceived` event |
+| TCP | no (byte stream) | TCP | yes (one tab per accepted peer, decided) | no | stream |
+| UDP | yes (one datagram per message) | none | yes | no | datagram |
+| USB HID | yes (one report per message) | none (fixed report length) | no | device list | dedicated read thread |
+| USBTMC | yes (one message per reply) | bulk reassembly | no | device list | transport-owned |
+| BLE | yes (one notification per message) | none | no | paired device list | notifications |
+| VXI-11 | request and reply | ONC-RPC | no | no | RPC timeout |
+| MQTT, AMQP, STOMP | per message | broker | no | no | broker client |
+| RFC 2217 | no (byte stream) | remote serial control | no | no | stream |
+| Loopback | no | sample rate (see [loopback](loopback-sample-rate.md)) | no | no | stream |
+
 ## Extensibility
 
 New transports (CAN bus, SPI/I2C bridge adapters, raw sockets, SSH, named pipes, etc.) implement the same `ITransport` contract and are picked up via the plugin host — no core changes required. RFC 2217 (a remote-controllable serial port over Telnet) is built as a client (`DevTerm.Transports.Rfc2217`), with a share-server option — see [rfc2217.md](rfc2217.md), including a real-world caveat about vendor-specific variants that don't actually match the IETF standard despite the name.
