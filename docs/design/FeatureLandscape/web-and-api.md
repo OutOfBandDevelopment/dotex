@@ -53,7 +53,7 @@ Part of the [feature landscape](README.md). Status is "a project exists under `s
 - **Status:** built; the document set and viewer are in the change log of 2026-10-09.
 - **Known issues:** none recorded.
 - **Standards:** OpenAPI 3.1, JSON Schema 2020-12, AsyncAPI 3.0, RFC 9457 problem details as the error schema.
-- **Missing:** contract tests that diff the generated document against a committed baseline to catch breaking changes.
+- **Built 2026-11-16:** `Document_ContractBaseline_HasNoBreakingRemovals` (`OoBDev.AspNetCore.Tests`) compares the generated operations, parameters and response codes with `openapi-surface.baseline.txt`; a removal fails, an addition passes. Missing: schema-level diffing.
 
 ## CgiMiddleware
 

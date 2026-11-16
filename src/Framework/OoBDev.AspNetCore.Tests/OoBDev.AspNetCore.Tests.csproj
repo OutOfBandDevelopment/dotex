@@ -34,5 +34,9 @@
     <ProjectReference Include="..\..\ExternalServices\RabbitMQ\OoBDev.RabbitMQ\OoBDev.RabbitMQ.csproj" />
     <ProjectReference Include="..\OoBDev.TestUtilities\OoBDev.TestUtilities.csproj" />
   </ItemGroup>
-  
+
+  <ItemGroup>
+    <Content Include="OpenApi\openapi-surface.baseline.txt" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
 </Project>

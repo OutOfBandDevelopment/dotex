@@ -13,6 +13,8 @@ using OoBDev.AspNetCore.Mvc.Filters;
 using OoBDev.AspNetCore.Mvc.OpenApi;
 using OoBDev.TestUtilities;
 using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
@@ -127,5 +129,34 @@ public class OpenApiDocumentTests
         Assert.IsNotNull(schema["properties"]!["rows"], schema.ToJsonString());
         Assert.IsNotNull(schema["properties"]!["totalRowCount"]);
         Assert.AreEqual("Gets the items.", (string?)operation["summary"]);
+    }
+
+    [TestMethod]
+    public async Task Document_ContractBaseline_HasNoBreakingRemovals()
+    {
+        var document = await GetDocumentAsync("all");
+        var surface = new HashSet<string>(StringComparer.Ordinal);
+        foreach (var path in document["paths"]!.AsObject())
+        {
+            foreach (var operation in path.Value!.AsObject())
+            {
+                var key = $"{operation.Key.ToUpperInvariant()} {path.Key}";
+                surface.Add(key);
+                foreach (var parameter in operation.Value!["parameters"]?.AsArray() ?? [])
+                {
+                    surface.Add($"{key} param:{(string?)parameter!["name"]}");
+                }
+                foreach (var response in operation.Value!["responses"]?.AsObject() ?? [])
+                {
+                    surface.Add($"{key} response:{response.Key}");
+                }
+            }
+        }
+
+        var baseline = File.ReadAllLines(Path.Combine(AppContext.BaseDirectory, "OpenApi", "openapi-surface.baseline.txt"))
+            .Where(l => !string.IsNullOrWhiteSpace(l));
+        var removed = baseline.Where(l => !surface.Contains(l)).ToArray();
+
+        Assert.AreEqual(0, removed.Length, "Breaking change, removed from the contract (update the baseline only for a deliberate break): " + string.Join("; ", removed));
     }
 }
