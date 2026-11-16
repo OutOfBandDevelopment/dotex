@@ -35,7 +35,7 @@ Part of the [feature landscape](README.md). Status is "a project exists under `s
 - **Works with:** VectorSearch (stores the vectors), HybridSearch (query and document embeddings), LlmCodeGen (retrieval context).
 - **Known issues:** model files come from a shared Hugging Face cache and are not in the repository; tests for them are Integration or DevLocal.
 - **Practices:** one embedder interface, presets by key, NULL-safe vectors.
-- **Built 2026-11-16:** `EmbeddingVersion` (OoBDev.Search) stamps the model tag into vector metadata and finds stale rows after a model change; the example vector store controller stamps on ingest; a re-embed command is the next step.
+- **Built 2026-11-16:** `EmbeddingVersion` (OoBDev.Search) stamps the model tag into vector metadata and finds stale rows after a model change; the example vector store controller stamps on ingest; `IVectorStore.DeleteAsync` and `EmbeddingVersion.ReembedAsync` replace stale rows (store the new tagged row, then delete the old); a command or screen that calls it is still to build.
 
 ## VectorSearch and HybridSearch
 

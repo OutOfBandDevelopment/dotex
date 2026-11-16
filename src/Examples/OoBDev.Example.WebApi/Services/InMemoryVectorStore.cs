@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Numerics.Tensors;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace OoBDev.WebApi.Services;
@@ -34,7 +35,7 @@ public sealed class InMemoryVectorStoreProviderFactory : IVectorStoreProviderFac
             {
                 foreach (var (embedding, own) in items)
                 {
-                    var id = (rows.Count + 1).ToString(CultureInfo.InvariantCulture);
+                    var id = Interlocked.Increment(ref _nextId).ToString(CultureInfo.InvariantCulture);
                     var merged = new Dictionary<string, object>(metadata, StringComparer.Ordinal);
                     foreach (var p in own)
                         merged[p.Key] = p.Value;
@@ -43,6 +44,16 @@ public sealed class InMemoryVectorStoreProviderFactory : IVectorStoreProviderFac
                 }
             }
             return Task.FromResult(ids.ToArray());
+        }
+
+        private static long _nextId;
+
+        public Task DeleteAsync(IEnumerable<string> ids)
+        {
+            var remove = new HashSet<string>(ids, StringComparer.Ordinal);
+            lock (rows)
+                rows.RemoveAll(r => remove.Contains(r.Id));
+            return Task.CompletedTask;
         }
 
         private List<(string Id, float[] Vector, IDictionary<string, object> Metadata)> Snapshot()

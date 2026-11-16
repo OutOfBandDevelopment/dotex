@@ -33,6 +33,10 @@ This adds `IVectorStoreFactory` (`VectorStoreFactory`) and the open generic `IVe
 - `Tag(modelId, dimensions)` builds the tag, for example `all-MiniLM-L6-v2/384`; `Stamp(metadata, tag)` returns a copy of the metadata carrying it (pass the result to `StoreVectorsAsync`).
 - `Read(result)`, `IsStale(result, currentTag)` and `StaleIds(results, currentTag)` find the rows to re-embed after a model change; a vector stored before tagging counts as stale.
 
+`ReembedAsync(store, currentTag, embed)` replaces the stale rows: the callback returns a new vector for a stale result (it knows the source text; null skips the row), the new row is stored with the current tag and then the old id is removed with `IVectorStore.DeleteAsync` (store first, so a failure never loses a row).
+
+`IVectorStore.DeleteAsync(ids)` is implemented by the in-memory example store, SQL Server (`VectorID` in the collection), Qdrant (point ids; `StoreVectorsAsync` now returns them), Azure AI Search and pgvector (the item id removes all its vectors). An unknown id is ignored.
+
 The embedder presets expose the model id and dimensions through `EmbeddingGeneratorMetadata`, which is what to feed `Tag`.
 
 ## Relevance metrics

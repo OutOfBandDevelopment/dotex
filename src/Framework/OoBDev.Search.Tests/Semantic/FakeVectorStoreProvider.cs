@@ -23,6 +23,12 @@ internal sealed class FakeVectorStoreProvider : IVectorStoreProvider
         return Task.FromResult(new[] { "b" });
     }
 
+    public Task DeleteAsync(IEnumerable<string> ids)
+    {
+        Calls.Add(nameof(DeleteAsync) + ":" + string.Join(",", ids));
+        return Task.CompletedTask;
+    }
+
     public async IAsyncEnumerable<SearchResultModel> ListAsync()
     {
         Calls.Add(nameof(ListAsync));

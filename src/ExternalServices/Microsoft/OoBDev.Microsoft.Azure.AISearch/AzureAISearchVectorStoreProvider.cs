@@ -65,6 +65,14 @@ public class AzureAISearchVectorStoreProvider : IVectorStoreProvider
     }
 
     /// <inheritdoc />
+    public async Task DeleteAsync(IEnumerable<string> ids)
+    {
+        var keys = ids.ToArray();
+        if (keys.Length > 0)
+            await _searchClient.DeleteDocumentsAsync(AzureAISearchGlobals.IdField, keys).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc />
     public async IAsyncEnumerable<SearchResultModel> ListAsync()
     {
         var options = new SearchOptions { Size = 1000, Select = { AzureAISearchGlobals.IdField, AzureAISearchGlobals.PayloadField } };

@@ -32,6 +32,8 @@ internal sealed class PgVectorSql(PgVectorOptions options)
 
     public string Insert => $"INSERT INTO {Table} (id, item_id, vector_index, embedding, metadata) VALUES (@id, @item, @idx, @embedding, @metadata)";
 
+    public string DeleteByItem => $"DELETE FROM {Table} WHERE item_id = ANY(@ids)";
+
     public string List => $"SELECT item_id, metadata FROM {Table} ORDER BY item_id, vector_index";
 
     public string Neighbours =>

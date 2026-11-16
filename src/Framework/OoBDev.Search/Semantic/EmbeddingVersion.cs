@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace OoBDev.Search.Semantic;
 
@@ -65,5 +66,44 @@ public static class EmbeddingVersion
     {
         ArgumentNullException.ThrowIfNull(results);
         return [.. results.Where(r => IsStale(r, currentTag)).Select(r => r.ItemId)];
+    }
+
+    /// <summary>
+    /// Re-embeds the stale rows of a store: for each stale result the callback supplies a new vector (it knows the source
+    /// text; null skips the row), the new row is stored with the current tag, and only then is the old row deleted, so a
+    /// failure never loses a row (it can leave a duplicate that the next run replaces).
+    /// </summary>
+    /// <param name="store">The vector store.</param>
+    /// <param name="currentTag">The tag of the model in use.</param>
+    /// <param name="embed">Produces the new vector for a stale result, or null to skip it.</param>
+    /// <returns>The number of rows replaced.</returns>
+    public static async Task<int> ReembedAsync(IVectorStore store, string currentTag, Func<SearchResultModel, Task<ReadOnlyMemory<float>?>> embed)
+    {
+        ArgumentNullException.ThrowIfNull(store);
+        ArgumentNullException.ThrowIfNull(embed);
+        var stale = new List<SearchResultModel>();
+        await foreach (var row in store.ListAsync().ConfigureAwait(false))
+        {
+            if (IsStale(row, currentTag))
+            {
+                stale.Add(row);
+            }
+        }
+
+        var replaced = 0;
+        foreach (var row in stale)
+        {
+            var vector = await embed(row).ConfigureAwait(false);
+            if (vector is null)
+            {
+                continue;
+            }
+
+            await store.StoreVectorsAsync([vector.Value], Stamp(row.MetaData, currentTag)).ConfigureAwait(false);
+            await store.DeleteAsync([row.ItemId]).ConfigureAwait(false);
+            replaced++;
+        }
+
+        return replaced;
     }
 }

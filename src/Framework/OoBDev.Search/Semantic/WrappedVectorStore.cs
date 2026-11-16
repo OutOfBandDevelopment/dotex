@@ -44,6 +44,13 @@ public class WrappedVectorStore<T> : IVectorStore<T>
         _wrapped.FindNeighborsAsync(find, groupBy);
 
     /// <summary>
+    /// Deletes vectors by id.
+    /// </summary>
+    /// <param name="ids">The ids to delete.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
+    public Task DeleteAsync(IEnumerable<string> ids) => _wrapped.DeleteAsync(ids);
+
+    /// <summary>
     /// Retrieves all items asynchronously.
     /// </summary>
     /// <returns>An asynchronous enumerable collection of search results.</returns>

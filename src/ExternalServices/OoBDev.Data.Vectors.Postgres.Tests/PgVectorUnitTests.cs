@@ -53,6 +53,7 @@ public class PgVectorUnitTests
 
         Assert.AreEqual("\"s\".\"t\"", sql.Table);
         StringAssert.Contains(sql.Insert, "@embedding");
+        StringAssert.Contains(sql.DeleteByItem, "item_id = ANY(@ids)");
         StringAssert.Contains(sql.Neighbours, "LIMIT @limit");
         StringAssert.Contains(sql.NeighboursBestPerGroup, "metadata ->> @group");
     }

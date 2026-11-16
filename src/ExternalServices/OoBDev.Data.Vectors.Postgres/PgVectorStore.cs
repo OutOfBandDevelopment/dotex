@@ -67,6 +67,15 @@ public sealed class PgVectorStore(IOptions<PgVectorOptions> options) : IVectorSt
     }
 
     /// <inheritdoc />
+    public async Task DeleteAsync(IEnumerable<string> ids)
+    {
+        await using var command = _source.Value.CreateCommand(_sql.DeleteByItem);
+        command.CommandTimeout = _options.CommandTimeoutSeconds;
+        command.Parameters.AddWithValue("ids", ids.ToArray());
+        await command.ExecuteNonQueryAsync().ConfigureAwait(false);
+    }
+
+    /// <inheritdoc />
     public async IAsyncEnumerable<SearchResultModel> ListAsync()
     {
         await using var command = _source.Value.CreateCommand(_sql.List);
