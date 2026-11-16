@@ -112,6 +112,22 @@ public sealed class LlmUsageTests
     }
 
     [TestMethod, TestCategory(TestCategories.Unit)]
+    public async Task TryAddEstimatedLlmUsage_KeyedServices_AreWrappedAndKeepTheirKey()
+    {
+        var services = new ServiceCollection();
+        services.AddKeyedSingleton<IMessageCompletion, FakeCompletion>("a");
+        services.AddKeyedSingleton<IMessageCompletion>("b", (_, _) => new FakeCompletion());
+        services.TryAddEstimatedLlmUsage();
+
+        using var provider = services.BuildServiceProvider();
+        await provider.GetRequiredKeyedService<IMessageCompletion>("a").GetCompletionAsync("m", "abcd");
+        await provider.GetRequiredKeyedService<IMessageCompletion>("b").GetCompletionAsync("m", "abcd");
+
+        Assert.IsInstanceOfType<EstimatingMessageCompletion>(provider.GetRequiredKeyedService<IMessageCompletion>("a"));
+        Assert.AreEqual(2, provider.GetRequiredService<LlmUsageMeter>().Snapshot().Single().Calls);
+    }
+
+    [TestMethod, TestCategory(TestCategories.Unit)]
     public void TryAddEstimatedLlmUsage_NothingRegistered_StillRegistersTheMeter()
     {
         var services = new ServiceCollection();

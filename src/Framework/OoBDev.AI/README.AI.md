@@ -9,7 +9,7 @@ Framework implementations on top of [OoBDev.AI.Abstractions](../OoBDev.AI.Abstra
 | `TokenEstimate` | `Of(text)`: characters divided by four, rounded up |
 | `EstimatingMessageCompletion`, `EstimatingStreamedCompletion` | Decorators for `IMessageCompletion` and `IStreamedCompletion`; the interfaces do not change. A streamed call is recorded when the stream ends or the caller stops reading |
 | `LlmUsageMeter` | Adds up calls and estimated prompt and completion tokens per model (`Snapshot()` returns `LlmUsage` rows) and feeds the `oobdev.ai.estimated_tokens` counter on the `OoBDev.AI` meter, so an OpenTelemetry meter list that names `LlmUsageMeter.MeterName` exports it |
-| `ServiceCollectionExtensions.TryAddEstimatedLlmUsage()` | Registers the meter and wraps the already registered completion services once; call it after the adapter registrations |
+| `ServiceCollectionExtensions.TryAddEstimatedLlmUsage()` | Registers the meter and wraps every already registered completion service, plain or keyed, once; call it after the adapter registrations |
 
 ```csharp
 services.TryAddOllamaServices(...);
