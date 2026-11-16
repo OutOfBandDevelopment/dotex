@@ -56,7 +56,8 @@ Part of the [feature landscape](README.md). Status is "a project exists under `s
 
 - **Works with:** MasterData, VectorSearch (schemas) and the SQL Server test container.
 - **Known issues:** schema compare needs a SQL Server instance, so tests are Integration.
-- **Missing:** a rollback story and a data-loss guard for destructive diffs.
+- **Decided 2026-11-16:** the data-loss guard is requirement REQ-003 of the DesiredStateDatabase design (unsafe changes refused without an explicit flag; hazard and `ApplyAsync` test in its testing strategy), built with the feature after the bake-off, not separately.
+- **Missing:** a rollback story.
 
 ## GeneratedGuides
 
