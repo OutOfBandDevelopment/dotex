@@ -72,4 +72,10 @@ public class CachingManager : ICachingManager
     /// <inheritdoc/>
     public Task StoreAsync(string key, object data, TimeSpan lifeTime) =>
         _cache.StoreAsync(key, data, lifeTime);
+
+    /// <inheritdoc/>
+    public Task<IAsyncDisposable?> TryLockAsync(string key, TimeSpan lifeTime) =>
+        _cache is ICachingLock locking
+            ? locking.TryAcquireAsync(key, lifeTime)
+            : Task.FromResult<IAsyncDisposable?>(NoLock.Instance);
 }

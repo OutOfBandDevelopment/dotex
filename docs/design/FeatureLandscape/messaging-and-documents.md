@@ -77,7 +77,7 @@ Part of the [feature landscape](README.md). Status is "a project exists under `s
 - **Known issues:** cache key and invalidation conventions are in the design only; the configured `OoBDev:Caching:Disabled` switch exists.
 - **Standards:** RFC 9111 for HTTP caches.
 - **Built 2026-11-16:** in-process stampede protection in `CachedProxy` (one compute per key for concurrent misses). The distributed option already exists as the `redis` provider (`OoBDev.Redis.Caching`).
-- **Missing:** cross-process single flight (each instance computes once on a cold key).
+- **Built 2026-11-16:** cross-process single flight: optional `ICachingLock` on the provider (Redis `SET NX` lock with owner token), used by `CachedProxy` so one process computes a cold key and the others wait for it.
 
 ## CqrsEventSourcing and MasterData
 
