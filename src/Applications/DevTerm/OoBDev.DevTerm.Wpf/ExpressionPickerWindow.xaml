@@ -14,13 +14,13 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <TextBlock x:Name="ExpressionLabel" Grid.Row="0" Text="Expression:" />
-        <TextBox x:Name="ExpressionBox" Grid.Row="1" Margin="0,4,0,0" MinHeight="22" VerticalContentAlignment="Center" FontFamily="Consolas" AcceptsReturn="False" TextChanged="ExpressionBox_TextChanged" />
+        <TextBox AutomationProperties.Name="Expression" x:Name="ExpressionBox" Grid.Row="1" Margin="0,4,0,0" MinHeight="22" VerticalContentAlignment="Center" FontFamily="Consolas" AcceptsReturn="False" TextChanged="ExpressionBox_TextChanged" />
         <TextBlock x:Name="DiagnosticsText" Grid.Row="2" Margin="0,6,0,0" TextWrapping="Wrap" MinHeight="32" />
         <DockPanel Grid.Row="3" Margin="0,8,0,4">
             <TextBlock DockPanel.Dock="Left" Text="Find a value:" VerticalAlignment="Center" Margin="0,0,8,0" />
-            <TextBox x:Name="FilterBox" VerticalContentAlignment="Center" TextChanged="FilterBox_TextChanged" />
+            <TextBox AutomationProperties.Name="Filter paths" x:Name="FilterBox" VerticalContentAlignment="Center" TextChanged="FilterBox_TextChanged" />
         </DockPanel>
-        <ListBox x:Name="PathList" Grid.Row="4" MouseDoubleClick="PathList_MouseDoubleClick" ToolTip="Double-click a value to insert it at the caret" />
+        <ListBox AutomationProperties.Name="Matching paths" x:Name="PathList" Grid.Row="4" MouseDoubleClick="PathList_MouseDoubleClick" ToolTip="Double-click a value to insert it at the caret" />
         <WrapPanel x:Name="FunctionPanel" Grid.Row="5" Margin="0,8,0,0">
             <TextBlock Text="Functions:" VerticalAlignment="Center" Margin="0,0,8,0" />
         </WrapPanel>

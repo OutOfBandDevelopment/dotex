@@ -11,8 +11,8 @@
             <Button Content="Fast forward" Command="{Binding FastForward}" Margin="4,0" Padding="8,2" />
             <Button Content="Skip to end" Command="{Binding SkipToEnd}" Padding="8,2" />
             <TextBlock Text="{Binding Position}" Margin="12,0,0,0" VerticalAlignment="Center" />
-            <ComboBox ItemsSource="{Binding Speeds}" SelectedItem="{Binding Speed}" DisplayMemberPath="Label" Margin="12,0,0,0" MinWidth="56" />
-            <TextBox Text="{Binding JumpText, UpdateSourceTrigger=PropertyChanged}" Width="80" Margin="12,0,0,0" />
+            <ComboBox AutomationProperties.Name="Playback speed" ItemsSource="{Binding Speeds}" SelectedItem="{Binding Speed}" DisplayMemberPath="Label" Margin="12,0,0,0" MinWidth="56" />
+            <TextBox AutomationProperties.Name="Jump to" Text="{Binding JumpText, UpdateSourceTrigger=PropertyChanged}" Width="80" Margin="12,0,0,0" />
             <Button Content="Jump" Command="{Binding Jump}" Margin="4,0" Padding="8,2" />
             <Button Content="Close" IsCancel="True" Margin="12,0,0,0" Padding="8,2" />
         </StackPanel>
@@ -21,14 +21,14 @@
             <Button Content="Mark out" Command="{Binding MarkOut}" Margin="4,0" Padding="8,2" />
             <Button Content="Save trim" Command="{Binding SaveTrim}" Padding="8,2" />
             <CheckBox Content="Skip silence" IsChecked="{Binding SkipSilence}" Margin="12,0,0,0" VerticalAlignment="Center" ToolTip="Play gaps longer than 1 s as 1 s" />
-            <TextBox Text="{Binding NoteText, UpdateSourceTrigger=PropertyChanged}" Width="200" Margin="12,0,0,0" />
-            <TextBox Text="{Binding PresenterText, UpdateSourceTrigger=PropertyChanged}" Width="120" Margin="12,0,0,0" ToolTip="Presenters, comma separated" />
+            <TextBox AutomationProperties.Name="Note text" Text="{Binding NoteText, UpdateSourceTrigger=PropertyChanged}" Width="200" Margin="12,0,0,0" />
+            <TextBox AutomationProperties.Name="Presenters" Text="{Binding PresenterText, UpdateSourceTrigger=PropertyChanged}" Width="120" Margin="12,0,0,0" ToolTip="Presenters, comma separated" />
             <Button Content="Presenters" Command="{Binding ApplyPresenters}" Margin="4,0" Padding="8,2" />
             <Button Content="Add note" Command="{Binding AddNote}" Margin="4,0" Padding="8,2" />
             <Button Content="Edit note" Command="{Binding EditNote}" ToolTip="Replace the note just played with the text" Margin="0,0,4,0" Padding="8,2" />
             <Button Content="Delete note" Command="{Binding DeleteNote}" ToolTip="Delete the note just played" Padding="8,2" />
         </StackPanel>
         <TextBlock DockPanel.Dock="Bottom" Text="{Binding StatusText}" Margin="0,4,0,0" />
-        <ListBox ItemsSource="{Binding Lines}" FontFamily="Consolas" />
+        <ListBox AutomationProperties.Name="Playback lines" ItemsSource="{Binding Lines}" FontFamily="Consolas" />
     </DockPanel>
 </Window>

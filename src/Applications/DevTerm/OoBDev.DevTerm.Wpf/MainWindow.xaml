@@ -58,7 +58,7 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <TextBox Grid.Column="0" Text="{Binding SendText, UpdateSourceTrigger=PropertyChanged}" />
+            <TextBox AutomationProperties.Name="Text to send" Grid.Column="0" Text="{Binding SendText, UpdateSourceTrigger=PropertyChanged}" />
             <Button Grid.Column="1" Content="Send" Margin="4,0,0,0" Command="{Binding Send}" />
             <Button Grid.Column="2" Content="Connect" Margin="4,0,0,0" Command="{Binding Connect}" />
             <Button Grid.Column="3" Content="Disconnect" Margin="4,0,0,0" Command="{Binding Disconnect}" />
@@ -96,8 +96,8 @@
                                             </ItemsControl.ItemTemplate>
                                         </ItemsControl>
                                         <TextBlock Text="Theme" Margin="4,4,4,0" />
-                                        <ComboBox ItemsSource="{Binding Themes.Names}" SelectedItem="{Binding Themes.Selected}" Margin="4" />
-                                        <ListBox ItemsSource="{Binding Sessions}" SelectedItem="{Binding SelectedSession}" DisplayMemberPath="Title" Margin="4" MinHeight="60" />
+                                        <ComboBox AutomationProperties.Name="Theme" ItemsSource="{Binding Themes.Names}" SelectedItem="{Binding Themes.Selected}" Margin="4" />
+                                        <ListBox AutomationProperties.Name="Sessions" ItemsSource="{Binding Sessions}" SelectedItem="{Binding SelectedSession}" DisplayMemberPath="Title" Margin="4" MinHeight="60" />
                                         <ItemsControl ItemsSource="{Binding DevicePanels}">
                                             <ItemsControl.ItemTemplate>
                                                 <DataTemplate>
@@ -131,7 +131,7 @@
                     </avalon:LayoutAnchorablePane>
                     <avalon:LayoutDocumentPane>
                         <avalon:LayoutDocument ContentId="output" Title="Session output" CanClose="False">
-                        <ListBox DataContext="{Binding DataContext.SelectedSession, RelativeSource={RelativeSource AncestorType=Window}}" ItemsSource="{Binding OutputLines}" FontFamily="Consolas" />
+                        <ListBox AutomationProperties.Name="Session output" DataContext="{Binding DataContext.SelectedSession, RelativeSource={RelativeSource AncestorType=Window}}" ItemsSource="{Binding OutputLines}" FontFamily="Consolas" />
                                     </avalon:LayoutDocument>
                     </avalon:LayoutDocumentPane>
                     <avalon:LayoutAnchorablePane DockWidth="420">

@@ -53,7 +53,7 @@ Part of the [feature landscape](README.md). Status is "a project exists under `s
 - **Works with:** Plugins (panels), ViewModels (MVVM with real `ICommand` types, owner decision), GeneratedGuides (screenshots).
 - **Known issues:** Avalonia has only a spike; WinForms has a control library but no renderer. The open layering question (renderers in Framework beside Wpf and Tui, or in Extensions) is queued in `OPEN-QUESTIONS.md`.
 - **Standards:** WCAG 2.2 contrast ratios for themes.
-- **Built 2026-11-16:** `XamlAccessibilityTests` (OoBDev.CodingStandards.Tests) requires `AutomationProperties.Name` or `LabeledBy` on every input control in the Applications XAML, as a per-file ratchet: 80 existing gaps are the baseline (five small windows already fixed), a new gap fails the test, a fixed one forces the baseline down.
+- **Built 2026-11-16:** `XamlAccessibilityTests` (OoBDev.CodingStandards.Tests) requires `AutomationProperties.Name` or `LabeledBy` on every input control in the Applications XAML, as a per-file ratchet: 53 existing gaps are the baseline (ten windows already fixed), a new gap fails the test, a fixed one forces the baseline down.
 - **Missing:** keyboard navigation (tab order, access keys) as testable requirements.
 
 ## Plugins and PluginSandbox
