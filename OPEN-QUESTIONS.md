@@ -34,29 +34,6 @@ The Z-Wave Enumerate and Describe node buttons need the decoder's frames and the
 **Default:** A once confirmed; the slice is parked (BACKLOG line says so). The panel-lifetime `ZWaveAckResponder` waits on the same decision.
 **Your answer:**
 
-### Q-GITBOOK — 2026-11-16 — Documentation publishing
-
-Request [gitbook-documentation](docs/features/request/2026-11-10-gitbook-documentation.md): publish `docs/` through GitBook? `docs/` is markdown with PlantUML (validated by `OoBDev.Docs.Tests`, rendered by the local plantuml container); GitBook syncs markdown from git but does not render PlantUML, and publishing exposes the docs outside the repository.
-
-**Options**
-- A (recommended): decline; keep reading the repository and the generated guides. Nothing leaks, no sync to maintain, and the diagrams stay source of truth.
-- B: publish through GitBook after a pass that decides what may be public and pre-renders the diagrams to images.
-- C: a static site generated in the repository's own tooling (no third party), later.
-
-**Default:** A (declining is reversible); the request is set to declined when you confirm.
-**Your answer:**
-
-### Q-REPORT-PROJECTS — 2026-11-16 — Report definition projects
-
-Request [report-project-publish](docs/features/request/2026-11-10-report-project-publish.md): the old repository had a custom SDK-style project and publish profile for report definitions. The migration plan rejected it as old build glue ("revisit on request"), and nothing in dotex produces report definitions; the report output that exists is markdown from `TemplateEngine.Cli` templates.
-
-**Options**
-- A (recommended): decline; reports are templates (`docs/templates`) run by `TemplateEngine.Cli`, which already has a deterministic publish step (`scripts/docs/sbom.ps1` is the model).
-- B: add a report project type once you name the report format (RDL, Liquid, or other) and a consumer.
-
-**Default:** A; the request is set to declined when you confirm.
-**Your answer:**
-
 ### Q-SCANNER — 2026-11-16 — Code quality scanner
 
 Request [code-quality-scanner](docs/features/request/2026-11-10-code-quality-scanner.md): the earlier SonarQube is gone; the analyzers in `src/.editorconfig` (Meziantou, NetAnalyzers, `OoBDev.Analyzers`) give build-time findings with no history. Standing up a server scanner adds a container and a tool the repository does not have.
@@ -91,18 +68,6 @@ Request [code-quality-scanner](docs/features/request/2026-11-10-code-quality-sca
 - C: leave accounting to each provider dashboard. No code, no cross-provider view.
 
 **Default:** A once confirmed; nothing built meanwhile.
-**Your answer:**
-
-### Q-EXAMPLE-ANONYMOUS — 2026-11-16 — Open endpoints in the example API
-
-The new right-coverage test (`EndpointRightCoverageTests`) found 18 actions of `OoBDev.Example.WebApi` with no `[ApplicationRight]`, `[Authorize]` or `[AllowAnonymous]` and no fallback policy, so they are open to anyone: Embed (AllMiniLM, SBERT, Ollama), Cache (Store, Lookup, Flush), Groq and Ollama completion, Operations info, Text tools, and the Toolbox calculators. They are in a `KnownOpen` list in the test (it may only shrink; a new unprotected action fails the test).
-
-**Options**
-- A (recommended): give each a right (for example `toolbox.use`, `cache.manage`, `ai.invoke`) and make the example hold them for its demo users, so the example shows the rule it teaches (owner decision: RBAC with `[ApplicationRight]` on every API surface).
-- B: add a fallback policy that requires an authenticated user, then mark only the deliberate public ones `[AllowAnonymous]`; coarser, fewer names to invent.
-- C: keep them open as a demo and mark them `[AllowAnonymous]` so the choice is explicit.
-
-**Default:** none changed (the test records the gap); A once you confirm the right names.
 **Your answer:**
 
 ### Q-GDPR-ERASURE — 2026-11-16 — Erasing personal data from append-only event stores

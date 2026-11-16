@@ -1,6 +1,6 @@
 # Feature request: evaluate GitBook for the documentation
 
-- **Status:** triaged
+- **Status:** declined (owner, 2026-11-16: keep reading the repository and the generated guides; nothing is published outside it)
 - **Requested by:** owner (open gap found reviewing the migration, 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** `docs/`

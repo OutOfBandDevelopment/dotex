@@ -1,6 +1,6 @@
 # Feature request: publish target for report projects
 
-- **Status:** triaged
+- **Status:** declined (owner, 2026-11-16: reports are templates run by `TemplateEngine.Cli`; revisit when a report format and consumer are named)
 - **Requested by:** owner (open gap found reviewing the migration, 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** build, `src/`
