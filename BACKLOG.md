@@ -60,7 +60,6 @@ A clean rebuild after the 2026-11-06 pass reports no analyzer warnings (218 befo
   - [ ] Configurable defaults and an id generation service ([request](docs/features/request/2026-11-17-configurable-defaults-and-id-generation.md)).
   - [ ] Document converter dependencies and Linux support ([request](docs/features/request/2026-11-17-document-converter-dependencies.md)).
   - [ ] Provider and adapter gaps (12 small items) ([request](docs/features/request/2026-11-17-provider-and-adapter-gaps.md)).
-  - [ ] Code cleanup and test gaps ([request](docs/features/request/2026-11-17-code-cleanup-and-test-gaps.md)).
 - [ ] Reference architecture stack: add a full identity admin feature (create and disable users) once the reference architecture is located; not for the example app (owner, 2026-11-10).
 - [ ] Feature landscape gaps (review 2026-11-12; the right-coverage test exists since 2026-11-16, its 18 findings are fixed 2026-11-16; each other gap needs a design line first; areas: [web](docs/design/FeatureLandscape/web-and-api.md), [messaging](docs/design/FeatureLandscape/messaging-and-documents.md), [AI](docs/design/FeatureLandscape/ai-and-data.md), [DevTerm](docs/design/FeatureLandscape/devterm-and-devices.md)):
   - Web: a query endpoint and screen for the durable rights audit trail (the store exists since 2026-11-16); the endpoint home waits on Q3 in [OPEN-QUESTIONS.md](OPEN-QUESTIONS.md) (default: documentation only).

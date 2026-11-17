@@ -72,13 +72,6 @@ public class HandlebarsTemplateProviderTests
     [TestCategory(TestCategories.Unit)]
     public async Task ApplyAsyncTest_WithDate()
     {
-        if (Environment.OSVersion.Platform != PlatformID.Win32NT)
-        {
-            // Request: docs/features/request/2026-11-17-code-cleanup-and-test-gaps.md
-            Assert.Inconclusive();
-            return;
-        }
-
         var data = new
         {
         };

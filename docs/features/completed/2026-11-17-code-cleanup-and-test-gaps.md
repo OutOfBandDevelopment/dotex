@@ -1,6 +1,6 @@
 # Feature request: code cleanup and test gaps
 
-- **Status:** triaged
+- **Status:** done (built 2026-11-17, see [change](../../changes/2026-11-17.md#code-cleanup-and-test-gaps-closed))
 - **Requested by:** owner (source `TODO` comments, collected 2026-11-17)
 - **Date:** 2026-11-17
 - **Area:** `OoBDev.System`, `OoBDev.TestUtilities`, MongoDB, Handlebars and enum tests
@@ -49,6 +49,11 @@ None.
 
 None.
 
-## Triage notes
+## Outcome
 
-Triaged 2026-11-17 into [BACKLOG.md](../../../BACKLOG.md) section 5 (source TODO comments). Design document to follow when built.
+1. `ObjectConverter`: kept, declined removal. It backs `IObjectConverter` for the Redis caching provider and the DacFx template factories; three tests added.
+2. `DataConverter.Split`: a JSON string node is now split like a string; test added.
+3. `StreamEx.ReadAsStringAsync`: disposes the stream by design (the reader owns it); documented and tested.
+4. `TextContextExtensions`: the dead commented-out code is removed.
+5. `MongoQueryFixes`: the empty placeholder class is deleted.
+6. `EnumExtensionsTests` and `HandlebarsTemplateProviderTests`: the Windows-only guards are removed; line endings are normalized and the tests pass on this machine.
