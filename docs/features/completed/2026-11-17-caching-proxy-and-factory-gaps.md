@@ -1,6 +1,6 @@
 # Feature request: caching proxy and factory gaps
 
-- **Status:** triaged
+- **Status:** done (built 2026-11-17, see [change](../../changes/2026-11-17.md#cached-proxy-passes-void-and-task-methods-through))
 - **Requested by:** owner (source `TODO` comments, collected 2026-11-17)
 - **Date:** 2026-11-17
 - **Area:** `OoBDev.Caching` (`CachedProxy`, `CacheableFactory`)
@@ -37,10 +37,7 @@ None.
 - **Needed by:** no date.
 - **Workaround today:** do not mark such methods cacheable.
 
-## Open questions
+## Outcome
 
-Pass through or throw at build time? Recommendation: throw at build time (fail early).
-
-## Triage notes
-
-Triaged 2026-11-17 into [BACKLOG.md](../../../BACKLOG.md) section 5 (source TODO comments). Design document to follow when built.
+- A `[IsCacheable]` void or non-generic `Task` method is called through, never cached, with a warning log; it no longer throws in DEBUG builds. Rule recorded in [api-design.md](../../design/SharedCaching/AttributeBasedCaching/api-design.md).
+- `CacheableFactory` keeps `ILogger<T>` (declined `ILoggerFactory`: the category is already the decorated type).

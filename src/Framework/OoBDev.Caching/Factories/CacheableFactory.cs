@@ -53,7 +53,7 @@ public class CacheableFactory : ICacheableFactory
             TImplemention instance => CachedProxy<TInterface, TImplemention>.Create(
                 instance,
                 _cachingManager,
-                _serviceProvider.GetRequiredService<ILogger<TImplemention>>() // Request: docs/features/request/2026-11-17-caching-proxy-and-factory-gaps.md
+                _serviceProvider.GetRequiredService<ILogger<TImplemention>>()
                 ),
             _ => throw new InvalidOperationException($"Unable to created instance of {typeof(TImplemention)}")
         };

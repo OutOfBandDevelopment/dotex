@@ -423,6 +423,11 @@ public static class AttributeBasedCachingExtensions
 
 ---
 
+## Unsupported return types and logging
+
+- `[IsCacheable]` on a `void` or non-generic `Task` method is ignored: the proxy calls through, never touches the cache and logs a warning (`Not cached, {Method} returns {ReturnType}...`). Only `T` and `Task<T>` results are cached.
+- `CacheableFactory` resolves `ILogger<TImplementation>` and keeps it: the category is the decorated type, which an `ILoggerFactory` would only recreate.
+
 ## Best Practices
 
 ### 1. Attribute Placement

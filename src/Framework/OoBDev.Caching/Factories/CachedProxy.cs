@@ -44,10 +44,18 @@ public partial class CachedProxy<TInterface, TImplemention> : DispatchProxy
                 var isCachableAttribute = method.GetCustomAttribute<IsCacheableAttribute>();
                 if (isCachableAttribute != null)
                 {
-                    var cachingKey = _cachingManager.BuildKey(method, args);
-                    if (!string.IsNullOrWhiteSpace(cachingKey))
+                    if (HasNoCacheableResult(method.ReturnType))
                     {
-                        return InvokeCached(method, targetMethod, args, cachingKey, isCachableAttribute.LifeTime);
+                        // a void or non-generic Task method has no value to cache: call through
+                        if (_logger != null) LogNotCacheable(_logger, targetMethod.Name, method.ReturnType.Name);
+                    }
+                    else
+                    {
+                        var cachingKey = _cachingManager.BuildKey(method, args);
+                        if (!string.IsNullOrWhiteSpace(cachingKey))
+                        {
+                            return InvokeCached(method, targetMethod, args, cachingKey, isCachableAttribute.LifeTime);
+                        }
                     }
                 }
 
@@ -106,12 +114,12 @@ public partial class CachedProxy<TInterface, TImplemention> : DispatchProxy
 #pragma warning restore CS8603 // Possible null reference return.
     }
 
+    private static bool HasNoCacheableResult(Type returnType) => returnType == typeof(void) || returnType == typeof(Task);
+
     private object? InvokeCached(MethodInfo method, MethodInfo targetMethod, object?[]? args, string cachingKey, TimeSpan lifeTime)
     {
         var cachingManager = _cachingManager!;
         // do cacheable stuff
-
-        // Request: docs/features/request/2026-11-17-caching-proxy-and-factory-gaps.md
 
         var targetReturnType = method.ReturnType;
         var isTask = false;
@@ -120,14 +128,6 @@ public partial class CachedProxy<TInterface, TImplemention> : DispatchProxy
             //checking to see if Task<>
             targetReturnType = targetReturnType.GetGenericArguments().First();
             isTask = true;
-        }
-        else if (targetReturnType == typeof(Task))
-        {
-            throw new NotSupportedException($"Caching of Task not supported");
-        }
-        else if (targetReturnType == typeof(void))
-        {
-            throw new NotSupportedException($"Caching of Void not supported");
         }
 
         var cachedResult = cachingManager.RetrieveAsync(cachingKey, targetReturnType).ConfigureAwait(false).GetAwaiter().GetResult();
@@ -215,6 +215,9 @@ public partial class CachedProxy<TInterface, TImplemention> : DispatchProxy
 
     [LoggerMessage(EventId = 4, Level = LogLevel.Error, Message = "{Message}")]
     private static partial void LogFailure(ILogger logger, string message);
+
+    [LoggerMessage(EventId = 6, Level = LogLevel.Warning, Message = "Not cached, {Method} returns {ReturnType} and has no result to store")]
+    private static partial void LogNotCacheable(ILogger logger, string method, string returnType);
 
     [LoggerMessage(EventId = 5, Level = LogLevel.Debug, Message = "Caching operation failed")]
     private static partial void LogFailureDetails(ILogger logger, Exception exception);
