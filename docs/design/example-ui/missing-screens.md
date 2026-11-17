@@ -40,7 +40,7 @@ These have no row in [the plan](plan.md) or `screens.md`; whether each deserves 
 | Data loading | `OoBDev.DataLoader` | Load a file into a table with a preview of the mapping |
 | Code generation | `OoBDev.Generations` | Generate from a model and show the output |
 | Server-driven UI | `OoBDev.UiDefinitions` (+ ViewModels, Wpf) | A page rendered from a `UiDefinition` returned by the API (the framework's own UI contract is not shown anywhere in the SPA) |
-| Token tools | `OoBDev.Identity.Jws` | Decode and verify a JWS |
+| Token tools | `OoBDev.Identity.Jws` | Built 2026-11-16 as a section of the Toolbox page: sign HS256, read a token, check the signature |
 | Instrument protocols | `OoBDev.Nmea`, `OoBDev.Scpi`, `OoBDev.ZWave` | Deferred with the hardware UI |
 
 ## Built screens with gaps

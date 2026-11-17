@@ -30,4 +30,15 @@ describe('toolbox commands', () => {
     expect(JSON.parse(fetchMock.mock.calls[0][1].body as string)).toEqual({ algorithm: 'sha512', value: 'hello' });
     expect(vm.hashResult.value).toBe('abc');
   });
+  it('readJws_NoToken_CannotExecute', () => expect(new ToolboxViewModel().readJws.canExecute.value).toBe(false));
+  it('signJws_Valid_PostsPayloadAndFillsTheToken', async () => {
+    const fetchMock = vi.fn(async (_p: string, _i: RequestInit) =>
+      new Response(JSON.stringify({ algorithm: 'HS256', result: 'a.b.c' }), { status: 200, headers: { 'Content-Type': 'application/json' } }));
+    vi.stubGlobal('fetch', fetchMock);
+    const vm = new ToolboxViewModel();
+    await vm.signJws.execute();
+    expect(fetchMock.mock.calls[0][0]).toBe('/api/Toolbox/jws/sign');
+    expect(vm.jwsToken.value).toBe('a.b.c');
+    expect(vm.readJws.canExecute.value).toBe(true);
+  });
 });

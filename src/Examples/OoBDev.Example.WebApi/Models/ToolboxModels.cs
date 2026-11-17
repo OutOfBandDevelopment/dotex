@@ -110,3 +110,37 @@ public class OtpResponseModel
     /// <summary>Gets or sets whether the supplied code is valid, when one was supplied.</summary>
     public bool? Valid { get; set; }
 }
+
+/// <summary>Request to sign a payload as an HS256 token.</summary>
+public class JwsSignRequestModel
+{
+    /// <summary>Gets or sets the JSON payload.</summary>
+    public required string Payload { get; set; }
+
+    /// <summary>Gets or sets the shared secret (at least 32 bytes as UTF-8).</summary>
+    public required string Secret { get; set; }
+}
+
+/// <summary>Request to read or verify a compact token.</summary>
+public class JwsReadRequestModel
+{
+    /// <summary>Gets or sets the compact token.</summary>
+    public required string Token { get; set; }
+
+    /// <summary>Gets or sets the shared secret; the signature is only checked when it is given.</summary>
+    public string? Secret { get; set; }
+}
+
+/// <summary>The parts of a token, and whether its signature is valid.</summary>
+public class JwsReadResponseModel
+{
+    /// <summary>Gets or sets the decoded header JSON.</summary>
+    public required string Header { get; set; }
+
+    /// <summary>Gets or sets the decoded payload JSON (not trusted unless <see cref="Verified"/> is true).</summary>
+    public required string Payload { get; set; }
+
+    /// <summary>Gets or sets whether the signature was checked and valid; null when no secret was given.</summary>
+    public bool? Verified { get; set; }
+}
+

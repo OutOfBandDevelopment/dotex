@@ -63,4 +63,21 @@ const vm = new ToolboxViewModel();
       <tr v-if="vm.otp.value.valid !== null"><th>Code is valid</th><td>{{ vm.otp.value.valid ? 'yes' : 'no' }}</td></tr>
     </tbody>
   </table>
+
+  <h2>Signed token (JWS, HS256)</h2>
+  <p>Sign a payload with a shared secret of at least 32 characters, or paste a token to read it. The payload is only trusted when a secret is given and the signature checks out.</p>
+  <p><label>Payload <input v-model="vm.jwsPayload.value" size="40" /></label></p>
+  <p><label>Secret <input v-model="vm.jwsSecret.value" size="40" /></label></p>
+  <p><fluent-button appearance="primary" @click="vm.signJws.execute()">Sign</fluent-button></p>
+  <p v-if="vm.signJws.error.value" class="error">{{ vm.signJws.error.value }}</p>
+  <p><label>Token <input v-model="vm.jwsToken.value" size="60" /></label></p>
+  <p><fluent-button @click="vm.readJws.execute()">Read and verify</fluent-button></p>
+  <p v-if="vm.readJws.error.value" class="error">{{ vm.readJws.error.value }}</p>
+  <table v-if="vm.jwsRead.value" class="grid" aria-label="Token contents">
+    <tbody>
+      <tr><th>Header</th><td>{{ vm.jwsRead.value.header }}</td></tr>
+      <tr><th>Payload</th><td>{{ vm.jwsRead.value.payload }}</td></tr>
+      <tr><th>Signature</th><td>{{ vm.jwsRead.value.verified === null ? 'not checked' : vm.jwsRead.value.verified ? 'valid' : 'invalid' }}</td></tr>
+    </tbody>
+  </table>
 </template>

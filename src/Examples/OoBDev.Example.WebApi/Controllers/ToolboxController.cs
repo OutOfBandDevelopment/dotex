@@ -1,4 +1,5 @@
 using OoBDev.AspNetCore.Mvc.Filters;
+using OoBDev.Identity.Jws;
 using OoBDev.System.ExpressionCalculator.Expressions;
 using OoBDev.System.Math;
 using OoBDev.System.Security.Cryptography;
@@ -6,7 +7,9 @@ using OoBDev.WebApi.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Buffers.Text;
 using System.Linq;
+using System.Text;
 
 namespace OoBDev.WebApi.Controllers;
 
@@ -117,5 +120,46 @@ public class ToolboxController(IServiceProvider services) : ControllerBase
         {
             return Problem(title: "The secret is not valid Base32", detail: ex.Message, statusCode: 400);
         }
+    }
+
+    /// <summary>Signs a JSON payload as an HS256 token.</summary>
+    /// <param name="model">The payload and the shared secret.</param>
+    /// <returns>The compact token.</returns>
+    [HttpPost("jws/sign")]
+    public ActionResult<ToolResultModel> JwsSign([FromBody] JwsSignRequestModel model)
+    {
+        var key = Encoding.UTF8.GetBytes(model.Secret);
+        if (key.Length < JsonWebSignature.MinimumHs256KeyBytes)
+            return Problem(title: "The secret is too short", detail: $"Use at least {JsonWebSignature.MinimumHs256KeyBytes} bytes.", statusCode: 400);
+        try
+        {
+            return new ToolResultModel { Algorithm = JsonWebSignature.Hs256, Result = JsonWebSignature.SignHs256("{\"alg\":\"HS256\",\"typ\":\"JWT\"}", model.Payload, key) };
+        }
+        catch (Exception ex) when (ex is ArgumentException)
+        {
+            return Problem(title: "Could not sign the payload", detail: ex.Message, statusCode: 400);
+        }
+    }
+
+    /// <summary>Reads the header and payload of a compact token and checks an HS256 signature when a secret is given.</summary>
+    /// <param name="model">The token and an optional secret.</param>
+    /// <returns>The decoded parts and the verification result.</returns>
+    [HttpPost("jws/read")]
+    public ActionResult<JwsReadResponseModel> JwsRead([FromBody] JwsReadRequestModel model)
+    {
+        var parts = model.Token.Trim().Split('.');
+        if (parts.Length != 3 || !TryDecode(parts[0], out var header) || !TryDecode(parts[1], out var payload))
+            return Problem(title: "Not a compact token", detail: "Expected three base64url parts separated by dots.", statusCode: 400);
+        bool? verified = string.IsNullOrEmpty(model.Secret) ? null : JsonWebSignature.TryVerifyHs256(model.Token.Trim(), Encoding.UTF8.GetBytes(model.Secret), out _);
+        return new JwsReadResponseModel { Header = header, Payload = payload, Verified = verified };
+    }
+
+    private static bool TryDecode(string part, out string text)
+    {
+        text = string.Empty;
+        if (!Base64Url.IsValid(part))
+            return false;
+        text = Encoding.UTF8.GetString(Base64Url.DecodeFromChars(part));
+        return true;
     }
 }
