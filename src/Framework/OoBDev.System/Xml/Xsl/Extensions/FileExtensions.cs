@@ -19,7 +19,7 @@ namespace OoBDev.System.Xml.Xsl.Extensions;
 /// </remarks>
 /// <param name="sandbox">base path for sandboxing these functions</param>
 [XmlRoot(Namespace = XmlNamespaces.Base + nameof(FileExtensions))]
-public class FileExtensions(string sandbox, bool emptyOnUnreadable = false, ILogger? logger = null)
+public partial class FileExtensions(string sandbox, bool emptyOnUnreadable = false, ILogger? logger = null)
 {
     private readonly ILogger _logger = logger ?? NullLogger.Instance;
 
@@ -35,7 +35,7 @@ public class FileExtensions(string sandbox, bool emptyOnUnreadable = false, ILog
         var realPath = SandboxPath.EnsureSafePath(sandbox, filePath).CreateParentIfNotExists();
         if (realPath == null)
         {
-            _logger.LogWarning("WriteToFile skipped: the path \"{FilePath}\" is outside the sandbox or null", filePath);
+            LogWriteSkipped(_logger, filePath);
         }
         else
         {
@@ -44,11 +44,6 @@ public class FileExtensions(string sandbox, bool emptyOnUnreadable = false, ILog
         return source;
     }
 
-    /// <summary>
-    /// XPathNavigator for XML content of given filePath
-    /// </summary>
-    /// <param name="filePath">file path to read</param>
-    /// <returns>xml content of provided file</returns>
     /// <summary>
     /// Reads an XML file inside the sandbox. A missing file throws <see cref="FileNotFoundException"/> and a file that is not XML throws <see cref="XmlException"/>,
     /// unless the extension was created with <c>emptyOnUnreadable</c>, which returns an empty document and logs a warning instead.
@@ -66,8 +61,14 @@ public class FileExtensions(string sandbox, bool emptyOnUnreadable = false, ILog
         }
         catch (Exception ex) when (emptyOnUnreadable && ex is FileNotFoundException or XmlException)
         {
-            _logger.LogWarning(ex, "ReadXml returned an empty document for \"{FilePath}\"", filePath);
+            LogReadEmpty(_logger, ex, filePath);
             return new XDocument().CreateNavigator();
         }
     }
+
+    [LoggerMessage(EventId = 1, Level = LogLevel.Warning, Message = "WriteToFile skipped: the path \"{FilePath}\" is outside the sandbox or null")]
+    private static partial void LogWriteSkipped(ILogger logger, string filePath);
+
+    [LoggerMessage(EventId = 2, Level = LogLevel.Warning, Message = "ReadXml returned an empty document for \"{FilePath}\"")]
+    private static partial void LogReadEmpty(ILogger logger, Exception exception, string filePath);
 }

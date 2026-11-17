@@ -31,10 +31,5 @@ BEGIN
 	IF (@messageType = 'oobdev://embedding/sentence-transformer/response')
 	BEGIN
 		END CONVERSATION @conversationHandle;
-		-- Request: docs/features/request/2026-11-17-provider-and-adapter-gaps.md
-		
-		--SEND ON CONVERSATION @conversationHandle
-		--	MESSAGE TYPE [oobdev://embedding/sentence-transformer/response]
-		--	(@message);
 	END 
 END

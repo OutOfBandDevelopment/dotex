@@ -40,7 +40,7 @@ public partial class DacpacMergeCompiler : IDacpacMergeCompiler
             foreach (var source in sqlModel.ReadPackage())
             {
                 LogMessage(file, source.name);
-                target.AddOrUpdateObjects(source.script, source.name, new TSqlObjectOptions()); // Request: docs/features/request/2026-11-17-provider-and-adapter-gaps.md
+                target.AddOrUpdateObjects(source.script, source.name, new TSqlObjectOptions());
             }
 
             var scripts = DacTools.GetScripts(file);

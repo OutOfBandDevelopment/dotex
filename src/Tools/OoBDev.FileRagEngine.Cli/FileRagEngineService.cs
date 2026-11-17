@@ -1,4 +1,5 @@
 using OoBDev.AI;
+using OoBDev.System.IO;
 using OoBDev.System.Text.Templating;
 using HandlebarsDotNet;
 using Microsoft.Extensions.DependencyInjection;
@@ -115,11 +116,12 @@ public partial class FileRagEngineService : IHostedService
 
     private static string[] ProcessableFiles(string directory) =>
         (from file in Directory.GetFiles(directory)
-            let ext = Path.GetExtension(file).ToUpperInvariant() // Request: docs/features/request/2026-11-17-provider-and-adapter-gaps.md
+            let ext = Path.GetExtension(file).ToUpperInvariant()
             where !new[] {
                 ".PDF", ".DLL", ".EXE", ".PNG", ".GIF", ".JPG", ".ZIP", ".GZ", ".EPUB", ".RTF", ".DOC", ".DOCX" ,
                 ".V2", ".DACPAC", ".BACPAC", ".SCMP", ".BIN", ".SVG", ".ICO",
             }.Any(i => i == ext)
+            where TextContent.FileLooksLikeText(file)
             select file).ToArray();
 
     private async Task<Exception?> GenerateChunkAsync(IMessageCompletion client, string directory, string[] files, int x, int length, string realResponseFileContent, string responseFileContent, string promptFile, string responseFile, CancellationToken cancellationToken)

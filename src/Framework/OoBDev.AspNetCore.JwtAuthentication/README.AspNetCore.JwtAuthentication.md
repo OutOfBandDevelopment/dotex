@@ -34,7 +34,7 @@ In Debug builds the builder is a required parameter, in Release it defaults to n
 }
 ```
 
-`UserReadApiClaim`, `AuthorizationUrl` and `TokenUrl` are required; `ClientId` is optional.
+`UserReadApiClaim` is required; `ClientId` is optional. `AuthorizationUrl` and `TokenUrl` are required unless `Authority` is set: the transformer then reads the missing ones from `<Authority>/.well-known/openid-configuration` (`OpenIdConfigurationDiscovery`: 5 second timeout, a success is cached, a failure is logged and retried on the next document). Configured URLs always win over discovered ones.
 
 ## OpenAPI and Scalar
 

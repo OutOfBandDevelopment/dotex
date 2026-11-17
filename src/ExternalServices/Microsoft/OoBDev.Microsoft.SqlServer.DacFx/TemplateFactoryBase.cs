@@ -34,16 +34,6 @@ public abstract class TemplateFactoryBase<T> where T : class, new()
             throw new FileNotFoundException($"Missing Template File: \"{fileName}\"", fileName);
 
         var content = await File.ReadAllTextAsync(fileName).ConfigureAwait(false);
-        var ext = Path.GetExtension(fileName).ToUpperInvariant();
-
-        var template = ext switch
-        {
-            // Request: docs/features/request/2026-11-17-provider-and-adapter-gaps.md
-            //".YML" => ReadAsYaml(content),
-            //".YAML" => ReadAsYaml(content),
-            _ => _converter.Convert<T>(content)
-        } ?? new T();
-
-        return template;
+        return _converter.Convert<T>(content) ?? new T();
     }
 }

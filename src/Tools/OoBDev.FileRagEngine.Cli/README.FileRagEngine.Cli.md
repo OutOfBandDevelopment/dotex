@@ -21,7 +21,7 @@ file-rag --input ./src --output ./out --template review.hbs --llm ollama --inclu
 
 ## Behaviour
 
-- Every folder is processed on its own; `bin` and `obj` folders are skipped. Binary and archive extensions (pdf, dll, exe, images, zip, gz, epub, rtf, doc, docx, dacpac, bacpac, bin, svg, ico and a few more) are not read.
+- Every folder is processed on its own; `bin` and `obj` folders are skipped. Binary and archive extensions (pdf, dll, exe, images, zip, gz, epub, rtf, doc, docx, dacpac, bacpac, bin, svg, ico and a few more) are not read. A file with another extension is read only when its first 8 KB look like text (`TextContent.FileLooksLikeText`: no NUL bytes, few control characters).
 - Files of a folder are sent in chunks of five. The first chunk's answer is written to `<output>/<folder>/<template name>`, later chunks to `<name>.<offset>.<ext>`.
 - A folder whose answer file already exists is skipped, so an interrupted run resumes.
 - A failing chunk writes `<name>.error.<ext>` with the exception, the run continues, and an `AggregateException` is thrown at the end.

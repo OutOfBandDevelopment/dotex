@@ -26,7 +26,7 @@ public class GroqCloudModelMapper : IGroqCloudModelMapper
     /// <returns>A completion response object.</returns>
     public CompletionResponse Map(GroqChatCompletions response) => new()
     {
-        Context = [], // Request: docs/features/request/2026-11-17-provider-and-adapter-gaps.md
+        Context = [], // chat completions are stateless: Groq returns no context tokens
         Response = (response.Choices.Count > 0 ? response.Choices[0].Message?.Content : null) ?? "",
     };
 }

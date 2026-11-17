@@ -118,6 +118,10 @@ Single-byte `Encoding` for Apple ][ text. Bytes with bit 7 set (normal text) dec
 
 `PathEx.EnumerateFiles(pattern)` takes the literal leading segments as the root and matches the rest with `Microsoft.Extensions.FileSystemGlobbing` (`*` and `**`; `?` is narrowed by a regular expression because the matcher lacks it). `PathEx.EnumerateFiles(root, patterns)` matches under a root only and treats a pattern starting with `!` as an exclusion, for example `!**/obj/**`.
 
+## IO.TextContent
+
+`TextContent.LooksLikeText(bytes)` and `FileLooksLikeText(path)` tell text from binary by the first 8 KB: no NUL bytes (a UTF-16 byte order mark is accepted) and at most 5% control characters. Use it instead of an extension list.
+
 ## IO.Fat
 
 ### FatVolume

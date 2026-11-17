@@ -46,4 +46,4 @@ await foreach (var row in databaseQuery.ExecuteStoredProcedureAsync<GetUsersQuer
 | Parameters | Every property with `QueryParameter` becomes `@name` (the property name when `Name` is not set, a leading `@` is optional); `null` becomes `DBNull`; arrays and properties with `IsJson = true` are sent as JSON text. |
 | Result rows | A compiled expression builds `TResult` (needs a default constructor) and fills each property from the column with the same name, or the `QueryResult` name or `Position`; a value of another type becomes the default. |
 
-`MessageQueueing/SqlServiceBrokerQueueMessageProvider` is a placeholder for a Service Broker sender and receiver: every member throws `NotSupportedException`. The Service Broker queues of the vector database are used through the Hosting project instead (see `OoBDev.Data.Vectors.Hosting`).
+Service Broker messaging lives in `OoBDev.Microsoft.SqlServer.ServiceBroker` (sender and receiver providers); the Service Broker queues of the vector database are used through the Hosting project (see `OoBDev.Data.Vectors.Hosting`).

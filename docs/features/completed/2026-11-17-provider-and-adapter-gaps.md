@@ -1,6 +1,6 @@
 # Feature request: provider and adapter gaps
 
-- **Status:** triaged
+- **Status:** done (built 2026-11-17, see [change](../../changes/2026-11-17.md#provider-and-adapter-gaps))
 - **Requested by:** owner (source `TODO` comments, collected 2026-11-17)
 - **Date:** 2026-11-17
 - **Area:** external-service adapters, tools and the vector database project
@@ -63,4 +63,24 @@ Which to build first? Recommendation: 2 (finish Service Broker) and 6 (discovery
 
 ## Triage notes
 
-Triaged 2026-11-17 into [BACKLOG.md](../../../BACKLOG.md) section 5 (source TODO comments). Design document to follow when built.
+Triaged 2026-11-17 into [BACKLOG.md](../../../BACKLOG.md) section 5 (source TODO comments).
+
+## Outcome
+
+Built:
+
+- Item 1: `AzureBlobContainerProvider.QueryContent` already listed blobs; it did not request metadata, so `MetaData` was empty. It now lists with `BlobTraits.Metadata` (Azurite integration test filters by metadata). Filters run in memory over the page-by-page listing; the service has no server-side filter beyond a prefix.
+- Item 2: the finished provider is `OoBDev.Microsoft.SqlServer.ServiceBroker`; the `NotSupportedException` stub in `OoBDev.Microsoft.SqlServer.Server` was dead and is removed with its project reference.
+- Item 3: `EnsureModelExistsAsync` copies from a named `sourceModel` or the first local model, and copies only when no model starts with the name (the old test was inverted).
+- Item 6: `OAuth2OpenApiOptions.Authority` and `OpenIdConfigurationDiscovery` (5 second timeout, success cached, failure retried); configured URLs win.
+- Item 9: the file RAG engine also skips content that looks binary (`TextContent` in `OoBDev.System.IO`); the unused `AddRequiredFramework` in the DacPac compiler CLI is deleted.
+
+Declined, comments removed:
+
+- Item 4: Groq chat completions are stateless and return no context tokens; the empty array is correct.
+- Item 5: the dacpac script text carries no `TSqlObjectOptions`, and `IObjectConverter` already reads the template content, so there is no serializer to pick by media type (the YAML lines were commented out; YAML has no serializer in the framework).
+- Item 7: nothing in the application consumes a routed event; revisit when the Hosting project needs a notification.
+- Item 8: there is no data loader command factory yet; the name logic stays in `MongoDispatchProxy` until the data loader request is built.
+- Item 10: `ISentenceEmbeddingClient` is the seam the provider and health check use and mock; kept.
+
+Unit tests: 13 added (AspNetCore 52 passed, Ollama 12, System 6 for TextContent) plus one Azurite integration test (7 passed).

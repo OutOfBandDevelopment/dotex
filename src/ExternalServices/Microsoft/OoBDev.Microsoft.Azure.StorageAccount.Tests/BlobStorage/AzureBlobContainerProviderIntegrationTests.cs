@@ -134,6 +134,24 @@ public class AzureBlobContainerProviderIntegrationTests
 
     [IntegrationTestMethod("oobd-test-azurite")]
     [TestCategory(TestCategories.Integration)]
+    public async Task QueryContent_BlobWithMetadata_ReturnsTheMetadataAndFiltersByIt()
+    {
+        // Stage
+        var provider = CreateProvider();
+        await provider.StoreContentAsync(Text("a.txt", "one"), new Dictionary<string, string> { ["owner"] = "alice" });
+        await provider.StoreContentAsync(Text("b.txt", "two"), new Dictionary<string, string> { ["owner"] = "bob" });
+        TestContext.WriteLine("Container {0}", provider.ContainerName);
+
+        // Test
+        var owned = provider.QueryContent().Where(c => c.MetaData["owner"] == "bob").Select(c => c.FileName).ToList();
+
+        // Assert
+        TestContext.WriteLine("Owned by bob: {0}", string.Join(",", owned));
+        CollectionAssert.AreEqual(new[] { "b.txt" }, owned);
+    }
+
+    [IntegrationTestMethod("oobd-test-azurite")]
+    [TestCategory(TestCategories.Integration)]
     public async Task DeleteContentAsync_ExistingBlob_RemovesIt()
     {
         // Stage
