@@ -38,7 +38,7 @@ Each user has the email `<user>@example.test`, a verified email, and a fixed id 
 | `operator` | Can run operations screens: queues, cache, health |
 | `admin` | Can use every example screen, including identity management |
 
-Roles arrive in the access token's `realm_access.roles` claim; the API translates roles into application rights in middleware (see the authorization practices in the patterns discovery documents).
+Roles arrive in the access token's `realm_access.roles` claim; the API reads that nested claim (`OoBDev:Authorization:RoleObjectClaimTypes`, default `realm_access`) and translates roles into application rights in middleware (see the authorization practices in the patterns discovery documents).
 
 ## Client
 

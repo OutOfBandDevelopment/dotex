@@ -215,6 +215,7 @@ services.Configure<FileTemplatingOptions>(options =>
 | Property | Default | Description |
 |----------|---------|-------------|
 | `RoleClaimTypes` | `ClaimTypes.Role`, `roles`, `role` | Claim types read as roles; at least one, none blank |
+| `RoleObjectClaimTypes` | `realm_access` | JSON object claims whose `roles` array holds roles (Keycloak realm roles) |
 | `Roles` | empty | Role name (case-insensitive) to the application rights it grants; no blank role or right |
 
 Unmapped roles grant nothing. See [ApplicationRights](docs/design/ApplicationRights/README.md).

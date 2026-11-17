@@ -111,6 +111,38 @@ public class RoleRightTests
 
     [TestMethod]
     [TestCategory("Unit")]
+    public async Task Transform_KeycloakRealmAccessClaim_GrantsRightsAsync()
+    {
+        // Stage
+        var options = Options();
+        var transformation = new RoleRightClaimsTransformation(Mapper(options), new FixedMonitor(options), NullLogger<RoleRightClaimsTransformation>.Instance);
+        var user = User(new Claim("realm_access", "{\"roles\":[\"reader\",\"order-manager\"]}"));
+
+        // Test
+        var result = await transformation.TransformAsync(user);
+
+        // Assert
+        var rights = result.FindAll(CommonClaims.ApplicationRight).Select(c => c.Value).OrderBy(v => v).ToArray();
+        CollectionAssert.AreEqual(new[] { "orders.approve", "orders.read" }, rights);
+    }
+
+    [TestMethod]
+    [TestCategory("Unit")]
+    public async Task Transform_MalformedRealmAccessClaim_GrantsNothingAsync()
+    {
+        // Stage
+        var options = Options();
+        var transformation = new RoleRightClaimsTransformation(Mapper(options), new FixedMonitor(options), NullLogger<RoleRightClaimsTransformation>.Instance);
+
+        // Test
+        var result = await transformation.TransformAsync(User(new Claim("realm_access", "not json"), new Claim("realm_access", "{\"roles\":5}")));
+
+        // Assert
+        Assert.AreEqual(0, result.FindAll(CommonClaims.ApplicationRight).Count());
+    }
+
+    [TestMethod]
+    [TestCategory("Unit")]
     public async Task Transform_CustomClaimTypeAndExistingRight_MergesWithoutDuplicatesAsync()
     {
         // Stage

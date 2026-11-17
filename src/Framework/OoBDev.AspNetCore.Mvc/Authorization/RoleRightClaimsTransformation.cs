@@ -4,8 +4,10 @@ using Microsoft.Extensions.Options;
 using OoBDev.AspNetCore.Authorization;
 using OoBDev.System.Security.Claims;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace OoBDev.AspNetCore.Mvc.Authorization;
@@ -27,7 +29,9 @@ public partial class RoleRightClaimsTransformation(
             return Task.FromResult(principal);
 
         var types = options.CurrentValue.RoleClaimTypes;
-        var roles = principal.Claims.Where(c => types.Contains(c.Type, StringComparer.Ordinal)).Select(c => c.Value).Distinct(StringComparer.Ordinal).ToArray();
+        var roles = principal.Claims.Where(c => types.Contains(c.Type, StringComparer.Ordinal)).Select(c => c.Value)
+            .Concat(principal.Claims.Where(c => options.CurrentValue.RoleObjectClaimTypes.Contains(c.Type, StringComparer.Ordinal)).SelectMany(c => RolesOf(c.Value)))
+            .Distinct(StringComparer.Ordinal).ToArray();
         var held = principal.FindAll(CommonClaims.ApplicationRight).Select(c => c.Value).ToHashSet(StringComparer.Ordinal);
         var missing = mapper.MapRights(roles).Where(r => !held.Contains(r)).ToArray();
         if (missing.Length == 0)
@@ -39,6 +43,21 @@ public partial class RoleRightClaimsTransformation(
             identity.AddClaim(new Claim(CommonClaims.ApplicationRight, right));
         LogRightsGranted(missing.Length, roles.Length);
         return Task.FromResult(clone);
+    }
+
+    private static IEnumerable<string> RolesOf(string json)
+    {
+        try
+        {
+            using var document = JsonDocument.Parse(json);
+            if (document.RootElement.ValueKind != JsonValueKind.Object || !document.RootElement.TryGetProperty("roles", out var roles) || roles.ValueKind != JsonValueKind.Array)
+                return [];
+            return [.. roles.EnumerateArray().Where(r => r.ValueKind == JsonValueKind.String).Select(r => r.GetString()!)];
+        }
+        catch (JsonException)
+        {
+            return [];
+        }
     }
 
     [LoggerMessage(Level = LogLevel.Debug, Message = "Granted {RightCount} application rights from {RoleCount} roles")]
