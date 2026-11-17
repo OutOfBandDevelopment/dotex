@@ -10,7 +10,7 @@
 │                                                                             █│
 │                                                                             █│
 │  Transport:       ○ serial  ◉ tcp  ○ hid  ○ usbtmc  ○ ble  ○ rfc2217        █│
-│                   ○ vxi11  ○ mqtt  ○ amqp  ○ stomp  ○ loopback              █│
+│                   ○ vxi11  ○ mqtt  ○ amqp  ○ stomp  ○ loopback  ○ service   █│
 │  Description:     Tektronix 2230 bench scope                                ░│
 │  Device manifest:                                                           ░│
 │                                                                             ░│
