@@ -29,7 +29,7 @@ obtained from the configured identity provider.
 
 - `OoBDev.AspNetCore.JwtAuthentication`: JWT bearer validation and OAuth2 sign-in for OpenAPI and Scalar. No other inbound schemes and no outbound conversion.
 - `OoBDev.Identity`, `OoBDev.Identity.Jws`: tokens and signing; the JWS request (`2026-10-28-jws-jwt-from-scratch.md`) covers building and checking tokens, not proxying.
-- `2026-01-20-lightweight-auth-provider.md` and `2026-11-10-claims-enhancement-and-user-session.md`: adjacent, neither converts credentials.
+- [`2026-01-20-lightweight-auth-provider.md`](../rejected/2026-01-20-lightweight-auth-provider.md) and `2026-11-10-claims-enhancement-and-user-session.md`: adjacent, neither converts credentials.
 - The Keycloak external service and the Example application: a token source to convert to.
 - Not checked: existing proxies (YARP and similar) that could do the forwarding with only the authentication step written here.
 

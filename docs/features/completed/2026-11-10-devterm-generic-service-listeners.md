@@ -1,6 +1,6 @@
 # Feature request: configurable generic TCP services in DevTerm
 
-- **Status:** triaged
+- **Status:** done (built 2026-11-12: `ServiceHostBridge` and `--transport service`; [change](../../changes/2026-11-12.md), [design](../../design/DevTermParity/generic-services-plan.md))
 - **Requested by:** owner (answer to D6, 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** `src/Applications/DevTerm`, `OoBDev.System` (`Net/Services`, `Net/Sockets`)

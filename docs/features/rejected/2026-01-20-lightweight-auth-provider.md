@@ -1,6 +1,6 @@
 # Feature request: lightweight auth provider demo
 
-- **Status:** triaged
+- **Status:** declined (2026-11-11: JWT only, owner decision; Keycloak is the identity provider)
 - **Requested by:** owner
 - **Date:** 2026-01-20
 - **Area:** `OoBDev.AspNetCore.JwtAuthentication`, examples
