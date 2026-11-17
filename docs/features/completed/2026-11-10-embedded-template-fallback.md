@@ -1,6 +1,6 @@
 # Feature request: embedded resource fallback for templates
 
-- **Status:** triaged
+- **Status:** done (built 2026-11-17, see [change](../../changes/2026-11-17.md#embedded-template-source))
 - **Requested by:** owner (open gap found reviewing the migration, 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** `OoBDev.System.Text.Templating*`, `OoBDev.Handlebars`, `OoBDev.TemplateEngine.Cli`
@@ -41,3 +41,7 @@ Where does the lookup live? A template source abstraction shared with the Shared
 Origin: BinaryDataDecoders issue 27. Accept, schedule or decline.
 
 2026-11-11: triaged. Accepted in principle: a template source that falls back to an embedded resource, added to [TextTemplating](../../design/TextTemplating/README.md) as a source option. Scheduled behind template persistence. Backlog: BACKLOG.md, SharedFramework.
+
+## Outcome
+
+`EmbeddedResourceTemplateSource` (`OoBDev.System`) finds `prefix + name + target extension + template extension` among an assembly's manifest resources (folders in the name become dots, case-insensitive) with priority 1000. `TemplateEngine` takes the lowest priority first and the file source uses 100, so a template on disk wins and the embedded default is the fallback. Registered with `AddEmbeddedTemplates(assembly, prefix)`. The lookup lives in the shared `ITemplateSource` abstraction, so the Handlebars and XSLT providers and `OoBDev.TemplateEngine.Cli` get it without change. Unit tests: 2.

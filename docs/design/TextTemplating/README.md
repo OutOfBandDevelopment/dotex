@@ -18,6 +18,7 @@
 - ✅ `ITemplateContext` - Template metadata/context
 - ✅ `XsltTemplateProvider` - XSLT support (already implemented)
 - ✅ `FileTemplateSource` - File-based template storage
+- ✅ `EmbeddedResourceTemplateSource` - embedded defaults behind the file source (built 2026-11-17)
 
 **This Epic Adds:**
 1/ **Handlebars Template Provider** - Industry-standard template support

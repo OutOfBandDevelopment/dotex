@@ -80,6 +80,9 @@ Wraps an `ITemplateEngine` so a template name resolves for the current UI cultur
 Access template from the file system.
 - **Get(templateName: string)**: Looks up templates from the file system.
 
+### EmbeddedResourceTemplateSource
+Access templates embedded in an assembly (`prefix + name + target extension + template extension`, folders as dots). Its priority (1000) is behind the file source (100), so a template on disk overrides the embedded default. Add it with `AddEmbeddedTemplates(assembly, prefix)`.
+
 ### FileTemplatingOptions
 Configuration settings for file templating engine.
 
