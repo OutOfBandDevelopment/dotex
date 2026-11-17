@@ -46,5 +46,25 @@ public class XsltTransformerTests
         }
     }
 
+    [TestMethod, TestCategory(TestCategories.Unit)]
+    public async Task TransformAsync_InputFile_WritesOutputAndLeavesNoTempFile()
+    {
+        // Stage
+        using var temp = new TempFileFactory(null).GetTempDirectory();
+        var template = Path.Combine(temp.DirectoryPath, "t.xslt");
+        File.WriteAllText(template, Stylesheet);
+        var input = Path.Combine(temp.DirectoryPath, "in.xml");
+        File.WriteAllText(input, "<root id=\"7\" />");
+        var output = Path.Combine(temp.DirectoryPath, "out", "result.txt");
+        TestContext.WriteLine($"template={template} input={input} output={output}");
+
+        // Test
+        await new XsltTransformer(temp.DirectoryPath).TransformAsync(template, input, output, TestContext.CancellationToken);
+
+        // Assert
+        Assert.AreEqual("7", File.ReadAllText(output));
+        Assert.AreEqual(1, Directory.GetFiles(Path.GetDirectoryName(output)!).Length, "only the result stays");
+    }
+
     public required TestContext TestContext { get; set; }
 }

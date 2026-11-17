@@ -1,6 +1,6 @@
 # Feature request: XSLT transformer and extension function improvements
 
-- **Status:** triaged
+- **Status:** done (built 2026-11-17, see [change](../../changes/2026-11-17.md#xslt-transformer-and-file-function-improvements))
 - **Requested by:** owner (source `TODO` comments, collected 2026-11-17)
 - **Date:** 2026-11-17
 - **Area:** `OoBDev.System` (`Xml/Xsl`)
@@ -24,12 +24,6 @@ An async transform API; defined behavior on errors instead of "do something smar
 
 `docs/design/TemplateTools`, `docs/design/TextTemplating`, `README` of `OoBDev.Templating.Xslt`. They describe the feature but not these gaps.
 
-Source comments (replaced by a reference to this request):
-
-- `src/Framework/OoBDev.System/Xml/Xsl/XsltTransformer.cs` (4): "should make this async/await"; "do something smart"; "should probably add the file to the input navigator"; "need to figure out why this won't navigate correctly".
-- `src/Framework/OoBDev.System/Xml/Xsl/Extensions/FileExtensions.cs` (3): "change to injectable console logger"; "should this be made safe to return an empty set if file not found?"; "should this be made safe to not throw if input is not XML".
-- `src/Framework/OoBDev.System/Xml/Xsl/Extensions/XPath20Functions.cs`: a function "does not seem supported at this time" (commented out).
-
 ## Security and operations
 
 File functions read and write paths from a stylesheet: keep them behind the existing path restrictions. None otherwise.
@@ -42,8 +36,12 @@ File functions read and write paths from a stylesheet: keep them behind the exis
 
 ## Open questions
 
-Empty set or error for a missing file? Recommendation: error by default, empty set behind an option.
+Decided: error by default (`FileNotFoundException`, `XmlException`), empty set behind `emptyOnUnreadable`.
 
 ## Triage notes
 
 Triaged 2026-11-17 into [BACKLOG.md](../../../BACKLOG.md) section 5 (source TODO comments). Design document to follow when built.
+
+## Outcome
+
+`IXsltTransformer.TransformAsync` reads the input with an async reader, runs the transform and writes through a temp file that replaces the output (a failed run leaves no partial output). `FileExtensions.ReadXml` throws `FileNotFoundException` for a missing file and `XmlException` for non-XML by default, or returns an empty document and logs a warning when created with `emptyOnUnreadable: true`; `WriteToFile` logs through an injected `ILogger` (default no-op) instead of `Debug.WriteLine`. Not pursued, comments removed: the file in the input navigator and the odd navigation (the merge path reloads the merged XML and works), and the XPath 2.0 `apply` function (the commented draft never worked; no consumer). XSLT itself has no async API, so the transform runs on a pool thread. Unit tests: 4 added (Xsl and Xml 45 passed, 1 skipped).

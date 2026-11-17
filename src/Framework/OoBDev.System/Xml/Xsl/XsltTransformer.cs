@@ -6,12 +6,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
 using System.Xml.Xsl;
 
-// Request: docs/features/request/2026-11-17-xslt-transformer-improvements.md
 namespace OoBDev.System.Xml.Xsl;
 
 /// <summary>
@@ -48,7 +49,6 @@ public class XsltTransformer(string sandbox, params object[] extensions) : IXslt
         catch
         {
             return null;
-            // Request: docs/features/request/2026-11-17-xslt-transformer-improvements.md
         }
     }
 
@@ -58,6 +58,46 @@ public class XsltTransformer(string sandbox, params object[] extensions) : IXslt
     /// <param name="template">path for XSLT style-sheet</param>
     /// <param name="input">source XML file</param>
     /// <param name="output">resulting text content</param>
+    /// <summary>
+    /// Transforms without blocking the caller's thread on file access: the result is built in memory (XSLT itself is synchronous) and written asynchronously.
+    /// </summary>
+    /// <param name="template">The XSLT file.</param>
+    /// <param name="input">The input XML file.</param>
+    /// <param name="output">The output file.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    public async Task TransformAsync(string template, string input, string output, CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        var inputPath = PathEx.FixUpPath(input) ?? input;
+        IXPathNavigable? document;
+        await using (var stream = new FileStream(inputPath, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, FileOptions.Asynchronous))
+        using (var reader = XmlReader.Create(stream, new XmlReaderSettings
+        {
+            Async = true,
+            DtdProcessing = DtdProcessing.Ignore,
+            ConformanceLevel = ConformanceLevel.Document,
+            NameTable = new NameTable(),
+        }))
+        {
+            var xmlDocument = new XmlDocument();
+            xmlDocument.Load(reader);
+            document = xmlDocument;
+        }
+
+        var outputPath = PathEx.FixUpPath(output) ?? output;
+        var temp = outputPath + "." + Guid.NewGuid().ToString("N") + ".tmp";
+        try
+        {
+            await Task.Run(() => Transform(template, input, document, temp), cancellationToken);
+            File.Move(temp, outputPath, true);
+        }
+        finally
+        {
+            if (File.Exists(temp))
+                File.Delete(temp);
+        }
+    }
+
     public void Transform(string template, string input, string output) => Transform(template, input, ReadAsXml(input), output);
 
     /// <summary>
@@ -235,10 +275,8 @@ public class XsltTransformer(string sandbox, params object[] extensions) : IXslt
             if (!inputFiles.Any())
                 throw new FileNotFoundException($"input");
 
-            // Request: docs/features/request/2026-11-17-xslt-transformer-improvements.md
             var navigators = inputFiles.Select(f => (f, (IXPathNavigable?)inputNavigatorFactory(f))).ToList();
 
-            // Request: docs/features/request/2026-11-17-xslt-transformer-improvements.md
             var merged = navigators.MergeNavigators().CreateNavigator();
             if (merged == null) return;
             var doc = new XmlDocument();

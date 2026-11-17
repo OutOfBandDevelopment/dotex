@@ -131,24 +131,6 @@ public class XPath20Functions
                 .GroupBy(i => i.Value, StringComparer.Ordinal)
                 .Select(grouped => grouped.First()));
 
-    // Request: docs/features/request/2026-11-17-xslt-transformer-improvements.md
-    ///// <summary>
-    ///// Applies an XPath expression to each node in the input sequence and returns the combined results.
-    ///// </summary>
-    ///// <param name="xpath">The XPath expression to evaluate on each input node.</param>
-    ///// <param name="input">The input node iterator.</param>
-    ///// <returns>An XPath node iterator containing all results from evaluating the XPath expression on each input node.</returns>
-    //public XPathNodeIterator apply(string xPath, XPathNodeIterator input)
-    //{
-    //    input.AsNavigatorSet().FirstOrDefault().ev
-    //}
-    ////new EnumerableXPathNodeIterator(
-    ////   from item in input.AsNavigatorSet()
-    ////   let value = item.Evaluate(xpath) 
-    ////   from node in value.AsNodeSet()
-    ////   select node
-    ////   );
-
 #pragma warning restore IDE1006 // Naming Styles
 
     /*
