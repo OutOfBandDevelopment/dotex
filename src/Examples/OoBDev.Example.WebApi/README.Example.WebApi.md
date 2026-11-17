@@ -22,7 +22,7 @@ A sample ASP.NET Core web API that composes the OoBDev framework the way a real 
 | `DocumentController`, `TextToolsController` | Document conversion, the stored-documents list and text tools |
 | `TextTemplateController` | Text templating: list, read and save the example template files, preview a draft, apply a named template |
 | `UserController` | Current user and claims |
-| `CacheController`, `OperationsController`, `TelemetryController`, `ToolboxController` | Caching, operations, telemetry readback and shared tools (the toolbox also signs and reads HS256 tokens through `OoBDev.Identity.Jws`) |
+| `CacheController`, `OperationsController`, `TelemetryController`, `ToolboxController` | Caching, operations, telemetry readback and shared tools (the toolbox also signs and reads HS256 tokens through `OoBDev.Identity.Jws`, and converts text with the Morse, Roman numeral and Base32 codecs) |
 
 ## CGI example (Go)
 

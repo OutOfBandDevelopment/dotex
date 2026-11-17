@@ -23,7 +23,7 @@ Review of the example web app (`src/Examples/OoBDev.Example.Web`) and API agains
 | Semantic Kernel plug-in tester | `OoBDev.SemanticKernel` | Plug-in list and invoke | Controller |
 | Vector store browser | Qdrant, OpenSearch, SQL store | Collection list, upsert, query | Collection listing on the vector store interface |
 | Mail receive | MailKit IMAP | Inbox view | Decision in [the plan](plan.md) section 6 |
-| Formats and pipelines | `OoBDev.System.IO.Pipelines`, Tar, BCD, bit tools | File inspector, pipeline builder | Controller |
+| Formats and pipelines | `OoBDev.System.IO.Pipelines`, Tar, BCD, bit tools | File inspector, pipeline builder (the Morse, Roman and Base32 codecs are on the Toolbox page since 2026-11-17) | Controller |
 | CLI tool catalog | DacPacCompiler, DocumentConverter, FileRagEngine, and the other CLI tools | Built 2026-11-16 as `/utilities/tools` (static list with a filter; no execution from the browser) | Static page |
 
 ## Framework areas the plan does not mention

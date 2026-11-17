@@ -64,6 +64,17 @@ const vm = new ToolboxViewModel();
     </tbody>
   </table>
 
+  <h2>Classic codecs</h2>
+  <p>Convert text with Morse code, Roman numerals (numbers up to 3999999) or Base32.</p>
+  <p>
+    <label>Codec <select v-model="vm.codec.value"><option value="morse">Morse</option><option value="roman">Roman numerals</option><option value="base32">Base32</option></select></label>
+    <label><input type="checkbox" v-model="vm.codecDecode.value" /> Decode</label>
+  </p>
+  <p><label>Text <input v-model="vm.codecValue.value" size="40" /></label></p>
+  <p><fluent-button appearance="primary" @click="vm.convertCodec.execute()">Convert</fluent-button></p>
+  <p v-if="vm.convertCodec.error.value" class="error">{{ vm.convertCodec.error.value }}</p>
+  <p v-if="vm.codecResult.value" aria-label="Codec result"><code>{{ vm.codecResult.value }}</code></p>
+
   <h2>Signed token (JWS, HS256)</h2>
   <p>Sign a payload with a shared secret of at least 32 characters, or paste a token to read it. The payload is only trusted when a secret is given and the signature checks out.</p>
   <p><label>Payload <input v-model="vm.jwsPayload.value" size="40" /></label></p>

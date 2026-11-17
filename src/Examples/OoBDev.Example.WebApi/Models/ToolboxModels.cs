@@ -144,3 +144,16 @@ public class JwsReadResponseModel
     public bool? Verified { get; set; }
 }
 
+
+/// <summary>Text to convert with one of the classic codecs.</summary>
+public class CodecRequestModel
+{
+    /// <summary>Gets or sets the codec key: morse, roman or base32.</summary>
+    public required string Codec { get; set; }
+
+    /// <summary>Gets or sets a value indicating whether to decode instead of encode.</summary>
+    public bool Decode { get; set; }
+
+    /// <summary>Gets or sets the text to convert.</summary>
+    public required string Value { get; set; }
+}

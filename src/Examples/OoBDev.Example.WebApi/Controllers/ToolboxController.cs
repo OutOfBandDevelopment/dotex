@@ -1,5 +1,6 @@
 using OoBDev.AspNetCore.Mvc.Filters;
 using OoBDev.Identity.Jws;
+using OoBDev.System.Codecs;
 using OoBDev.System.ExpressionCalculator.Expressions;
 using OoBDev.System.Math;
 using OoBDev.System.Security.Cryptography;
@@ -8,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Buffers.Text;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -119,6 +121,36 @@ public class ToolboxController(IServiceProvider services) : ControllerBase
         catch (Exception ex) when (ex is ArgumentException or FormatException)
         {
             return Problem(title: "The secret is not valid Base32", detail: ex.Message, statusCode: 400);
+        }
+    }
+
+    /// <summary>Converts text with Morse code, Roman numerals or Base32.</summary>
+    /// <param name="model">The codec, direction and text.</param>
+    /// <returns>The converted text.</returns>
+    [HttpPost("codec")]
+    public ActionResult<ToolResultModel> Codec([FromBody] CodecRequestModel model)
+    {
+        if (model.Value.Length > 10_000)
+            return Problem(title: "The text is too long", detail: "At most 10000 characters.", statusCode: 400);
+        var key = model.Codec.Trim().ToLowerInvariant();
+        try
+        {
+            string? result = key switch
+            {
+                "morse" => model.Decode ? new MorseCode().Decode(model.Value) : new MorseCode().Encode(model.Value.ToUpperInvariant()),
+                "roman" => model.Decode
+                    ? new RomanNumeral().Convert(model.Value.Trim().ToUpperInvariant()).ToString(global::System.Globalization.CultureInfo.InvariantCulture)
+                    : new RomanNumeral().Convert(int.Parse(model.Value.Trim(), global::System.Globalization.CultureInfo.InvariantCulture)),
+                "base32" => model.Decode ? Encoding.UTF8.GetString(new Base32Codec().Decode(model.Value.Trim())) : new Base32Codec().Encode(Encoding.UTF8.GetBytes(model.Value)),
+                _ => null,
+            };
+            return result is null
+                ? Problem(title: "Unknown codec", detail: "Use morse, roman or base32.", statusCode: 400)
+                : new ToolResultModel { Algorithm = key, Result = result };
+        }
+        catch (Exception ex) when (ex is ArgumentException or FormatException or OverflowException or InvalidOperationException or KeyNotFoundException)
+        {
+            return Problem(title: "The text cannot be converted", detail: ex.Message, statusCode: 400);
         }
     }
 

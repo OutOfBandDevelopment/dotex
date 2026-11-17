@@ -54,6 +54,11 @@ export class ToolboxViewModel {
   readonly otpCode = ref('');
   readonly otp = ref<Otp | null>(null);
   readonly generateOtp = new OtpCommand(this);
+  readonly codec = ref('morse');
+  readonly codecDecode = ref(false);
+  readonly codecValue = ref('sos');
+  readonly codecResult = ref('');
+  readonly convertCodec = new ConvertCodecCommand(this);
   readonly jwsPayload = ref('{"sub":"ann","role":"reader"}');
   readonly jwsSecret = ref('0123456789abcdef0123456789abcdef');
   readonly jwsToken = ref('');
@@ -126,5 +131,14 @@ export class ReadJwsCommand extends Command {
   protected isAllowed() { return this.vm.jwsToken.value.trim() !== ''; }
   protected async run() {
     this.vm.jwsRead.value = await http.postJson<JwsRead>('/api/Toolbox/jws/read', { token: this.vm.jwsToken.value, secret: this.vm.jwsSecret.value || null });
+  }
+}
+
+export class ConvertCodecCommand extends Command {
+  constructor(private readonly vm: ToolboxViewModel) { super(); }
+  protected isAllowed() { return this.vm.codecValue.value.trim() !== ''; }
+  protected async run() {
+    const r = await http.postJson<ToolResult>('/api/Toolbox/codec', { codec: this.vm.codec.value, decode: this.vm.codecDecode.value, value: this.vm.codecValue.value });
+    this.vm.codecResult.value = r.result;
   }
 }
