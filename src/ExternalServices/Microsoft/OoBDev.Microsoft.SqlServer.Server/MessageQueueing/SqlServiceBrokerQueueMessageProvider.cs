@@ -13,7 +13,7 @@ namespace OoBDev.Microsoft.SqlServer.Server.MessageQueueing;
 /// </remarks>
 public class SqlServiceBrokerQueueMessageProvider : IMessageSenderProvider, IMessageReceiverProvider
 {
-    //TODO: finish this out
+    // Request: docs/features/request/2026-11-17-provider-and-adapter-gaps.md
     /// <inheritdoc/>
     public Task RunAsync(CancellationToken cancellationToken = default) =>
         throw new NotSupportedException();

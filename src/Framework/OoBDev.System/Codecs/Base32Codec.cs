@@ -34,7 +34,7 @@ namespace OoBDev.System.Codecs;
 /// </remarks>
 public class Base32Codec
 {
-    //TODO: refactor this to use ReadOnlySpan/Memory
+    // Request: docs/features/request/2026-11-17-span-memory-and-codec-modernization.md
 
     private readonly string _base32Alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567=";
 

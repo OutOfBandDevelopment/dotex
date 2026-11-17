@@ -131,7 +131,7 @@ public class XPath20Functions
                 .GroupBy(i => i.Value, StringComparer.Ordinal)
                 .Select(grouped => grouped.First()));
 
-    ////TODO: this does not seem supported at this time
+    // Request: docs/features/request/2026-11-17-xslt-transformer-improvements.md
     ///// <summary>
     ///// Applies an XPath expression to each node in the input sequence and returns the combined results.
     ///// </summary>

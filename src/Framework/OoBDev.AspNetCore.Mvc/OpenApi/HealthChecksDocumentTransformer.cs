@@ -16,7 +16,7 @@ public class HealthChecksDocumentTransformer : IOpenApiDocumentTransformer
     /// <summary>
     /// The endpoint for health check.
     /// </summary>
-    public const string HealthCheckEndpoint = @"/health"; //TODO: make so this can be looked up
+    public const string HealthCheckEndpoint = @"/health"; // Request: docs/features/request/2026-11-17-health-check-detail-by-caller.md
 
     /// <summary>
     /// Adds the health check path to the document.

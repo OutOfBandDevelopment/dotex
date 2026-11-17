@@ -14,7 +14,7 @@ namespace OoBDev.SBert.Tests;
 [TestClass]
 public class SentenceEmbeddingClientTests
 {
-    //TODO: I think I want to do away with ISentenceEmbeddingClient
+    // Request: docs/features/request/2026-11-17-provider-and-adapter-gaps.md
 
     public required TestContext TestContext { get; set; }
 

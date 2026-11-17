@@ -111,7 +111,7 @@ public partial class CachedProxy<TInterface, TImplemention> : DispatchProxy
         var cachingManager = _cachingManager!;
         // do cacheable stuff
 
-        //TODO: add exception for void and non generic tasks
+        // Request: docs/features/request/2026-11-17-caching-proxy-and-factory-gaps.md
 
         var targetReturnType = method.ReturnType;
         var isTask = false;

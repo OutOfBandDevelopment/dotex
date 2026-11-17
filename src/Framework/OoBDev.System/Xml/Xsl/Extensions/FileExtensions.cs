@@ -32,7 +32,7 @@ public class FileExtensions(string sandbox)
         var realPath = SandboxPath.EnsureSafePath(sandbox, filePath).CreateParentIfNotExists();
         if (realPath == null)
         {
-            Debug.WriteLine("FileExtensions::WriteToFile(...) path is null");//TODO: change to injectable console logger
+            Debug.WriteLine("FileExtensions::WriteToFile(...) path is null");// Request: docs/features/request/2026-11-17-xslt-transformer-improvements.md
         }
         else
         {
@@ -47,7 +47,7 @@ public class FileExtensions(string sandbox)
     /// <param name="filePath">file path to read</param>
     /// <returns>xml content of provided file</returns>
     public XPathNavigator ReadXml(string filePath) =>
-        //TODO: should this be made safe to return an empty set if file not found?
-        //TODO: should this be made safe to not throw if input is not XML
+        // Request: docs/features/request/2026-11-17-xslt-transformer-improvements.md
+        // Request: docs/features/request/2026-11-17-xslt-transformer-improvements.md
         XDocument.Load(SandboxPath.EnsureSafePath(sandbox, filePath) ?? throw new NotSupportedException("null path not allowe")).CreateNavigator();
 }

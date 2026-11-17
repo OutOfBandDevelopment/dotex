@@ -33,7 +33,7 @@ public static partial class OllamaApiClientExtensions
 
         LogCreateMaybe(logger);
         if (models.Any(m => !m.Name.StartsWith(modelName, StringComparison.Ordinal)))
-            await ollama.CopyModelAsync("llama2", modelName).ConfigureAwait(false); //TODO: fix this
+            await ollama.CopyModelAsync("llama2", modelName).ConfigureAwait(false); // Request: docs/features/request/2026-11-17-provider-and-adapter-gaps.md
         LogSelectModel(logger, modelName);
 
         //ollama.SelectedModel = modelName;

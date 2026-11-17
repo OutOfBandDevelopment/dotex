@@ -149,7 +149,7 @@ public static class ServiceCollectionExtensions
         bool requireApplicationUserId,
         Action<AuthorizationPolicyBuilder>? authorizationPolicyBuilder
 #else
-        bool requireApplicationUserId = true, //TODO: fix this too
+        bool requireApplicationUserId = true, // Request: docs/features/request/2026-11-17-configurable-application-user-claim.md
         Action<AuthorizationPolicyBuilder>? authorizationPolicyBuilder = null
 #endif
     )

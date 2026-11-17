@@ -40,7 +40,7 @@ public partial class InProcessMessageProvider(
         {
             ContentType = "application/json;",
             PayloadType = message.GetType().AssemblyQualifiedName ?? throw new NotSupportedException(),
-            CorrelationId = context.CorrelationId ?? Guid.NewGuid().ToString(), //TODO: do this better such has having a id generation interface that can be replaced
+            CorrelationId = context.CorrelationId ?? Guid.NewGuid().ToString(), // Request: docs/features/request/2026-11-17-configurable-defaults-and-id-generation.md
             Payload = message,
             Properties = context.Headers,
         };

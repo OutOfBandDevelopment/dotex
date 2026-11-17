@@ -115,7 +115,7 @@ public partial class FileRagEngineService : IHostedService
 
     private static string[] ProcessableFiles(string directory) =>
         (from file in Directory.GetFiles(directory)
-            let ext = Path.GetExtension(file).ToUpperInvariant() //TODO: do something smarter
+            let ext = Path.GetExtension(file).ToUpperInvariant() // Request: docs/features/request/2026-11-17-provider-and-adapter-gaps.md
             where !new[] {
                 ".PDF", ".DLL", ".EXE", ".PNG", ".GIF", ".JPG", ".ZIP", ".GZ", ".EPUB", ".RTF", ".DOC", ".DOCX" ,
                 ".V2", ".DACPAC", ".BACPAC", ".SCMP", ".BIN", ".SVG", ".ICO",

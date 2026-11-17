@@ -96,7 +96,7 @@ public class ExpressionTreeBuilder<TModel>(
         yield return BuildPredicate(scope, expression, Operators.GreaterThan, search.GreaterThan, isSearchTerm);
         yield return BuildPredicate(scope, expression, Operators.GreaterThanOrEqualTo, search.GreaterThanOrEqualTo, isSearchTerm);
 
-        //TODO: add support for these operations
+        // Request: docs/features/request/2026-11-17-search-query-expression-gaps.md
         //yield return BuildPredicate(scope, expression, Operators.Ands, search.Ands, isSearchTerm);
         //yield return BuildPredicate(scope, expression, Operators.Ors, search.Ors, isSearchTerm);
         //yield return BuildPredicate(scope, expression, Operators.OrNull, search.OrNull, isSearchTerm);
@@ -136,7 +136,7 @@ public class ExpressionTreeBuilder<TModel>(
 
         var isElementSet = IsElementSet(unwrapped.Type, out var unwrappedElementType);
 
-        if (queryParameter is string queryString && queryString.Length > 0) //TODO: should be "like"
+        if (queryParameter is string queryString && queryString.Length > 0) // Request: docs/features/request/2026-11-17-search-query-expression-gaps.md
         {
             if (queryString[..1] == "!")
             {
@@ -157,7 +157,7 @@ public class ExpressionTreeBuilder<TModel>(
 
         if (queryParameter != null && unwrapped.Type.IsAssignableFrom(queryParameter.GetType()))
         {
-            //TODO: needs to be a bit more creative.  type casting not supported
+            // Request: docs/features/request/2026-11-17-search-query-expression-gaps.md
             var parameter = Expression.Parameter(typeof(TModel), "n");
             var predicate = BuildBinaryExpression(expressionOperator, unwrapped, queryParameter);
             var replaced = new ParameterReplacerExpressionVisitor(parameter).Visit(predicate);
@@ -182,7 +182,7 @@ public class ExpressionTreeBuilder<TModel>(
         Type queryParameterType,
         bool isSearchTerm)
     {
-        if (queryParameterType.IsArray) //TODO: should support IEnumerable<> as well
+        if (queryParameterType.IsArray) // Request: docs/features/request/2026-11-17-search-query-expression-gaps.md
         {
             var elementType = queryParameterType.GetElementType();
             if (elementType == unwrapped.Type)
@@ -278,7 +278,7 @@ public class ExpressionTreeBuilder<TModel>(
         var (method, queryValue) = WildcardMethod(queryString);
         if (method == null)
         {
-            //  TODO: make null safe
+            // Request: docs/features/request/2026-11-17-search-query-expression-gaps.md
             throw new NotSupportedException("Method not defined");
         }
 
@@ -518,7 +518,7 @@ public class ExpressionTreeBuilder<TModel>(
     private static object? SimplifyValue(object? value) =>
         value switch
         {
-            //TODO: consider this being a type converter on FilterParameter instead
+            // Request: docs/features/request/2026-11-17-search-query-expression-gaps.md
             FilterParameter filter => ExpressionTreeBuilder<TModel>.SimplifyValue(filter.EqualTo),
             JsonElement element when element.ValueKind == JsonValueKind.String => element.GetString(),
             JsonElement element when element.ValueKind == JsonValueKind.Number => element.GetDouble(),
@@ -544,7 +544,7 @@ public class ExpressionTreeBuilder<TModel>(
 
         if (value.EqualTo != null)
         {
-            //TODO: we should have logic to enumerate the requested type instead of just assuming the type based on the json type.
+            // Request: docs/features/request/2026-11-17-search-query-expression-gaps.md
             var simple = ExpressionTreeBuilder<TModel>.SimplifyValue(value);
             if (simple != null)
             {
@@ -556,7 +556,7 @@ public class ExpressionTreeBuilder<TModel>(
             }
         }
 
-        //TODO: should I add support to unroll the searchOption?
+        // Request: docs/features/request/2026-11-17-search-query-expression-gaps.md
 
         expression ??= BuildPredicate(name, GetPropertyExpression(name, stringComparison), value, isSearchTerm);
 

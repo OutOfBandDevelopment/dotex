@@ -23,7 +23,7 @@ public class HtmlToPdfConversionHandlerTests
     {
         if (Environment.OSVersion.Platform != PlatformID.Win32NT)
         {
-            //TODO: fix this better
+            // Request: docs/features/request/2026-11-17-document-converter-dependencies.md
             Assert.Inconclusive();
             return;
         }

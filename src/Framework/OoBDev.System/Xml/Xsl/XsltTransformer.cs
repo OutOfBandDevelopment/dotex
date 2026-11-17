@@ -11,7 +11,7 @@ using System.Xml.Linq;
 using System.Xml.XPath;
 using System.Xml.Xsl;
 
-//TODO: should make this async/await
+// Request: docs/features/request/2026-11-17-xslt-transformer-improvements.md
 namespace OoBDev.System.Xml.Xsl;
 
 /// <summary>
@@ -48,7 +48,7 @@ public class XsltTransformer(string sandbox, params object[] extensions) : IXslt
         catch
         {
             return null;
-            //TODO: do something smart
+            // Request: docs/features/request/2026-11-17-xslt-transformer-improvements.md
         }
     }
 
@@ -235,10 +235,10 @@ public class XsltTransformer(string sandbox, params object[] extensions) : IXslt
             if (!inputFiles.Any())
                 throw new FileNotFoundException($"input");
 
-            //TODO: should probably add the file to the input navigator
+            // Request: docs/features/request/2026-11-17-xslt-transformer-improvements.md
             var navigators = inputFiles.Select(f => (f, (IXPathNavigable?)inputNavigatorFactory(f))).ToList();
 
-            //TODO: need to figure out why this won't navigate correctly.
+            // Request: docs/features/request/2026-11-17-xslt-transformer-improvements.md
             var merged = navigators.MergeNavigators().CreateNavigator();
             if (merged == null) return;
             var doc = new XmlDocument();

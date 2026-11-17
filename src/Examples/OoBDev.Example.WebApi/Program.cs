@@ -68,7 +68,7 @@ public static class Program
             },
             hostingBuilder: new()
             {
-                //TODO: add a run profile that disable hosting
+                // Request: docs/features/request/2026-11-17-document-converter-dependencies.md
                 DisableCommunications = false,
                 //DisableMessageQueueing = true,  // skipHosting,
             });

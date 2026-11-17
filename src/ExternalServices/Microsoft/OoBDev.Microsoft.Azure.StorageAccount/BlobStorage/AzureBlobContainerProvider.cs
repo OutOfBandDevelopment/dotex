@@ -157,7 +157,7 @@ public partial class AzureBlobContainerProvider : IBlobContainerProvider
     public IQueryable<ContentMetaDataReference> QueryContent()
     {
         EnsureContainerExistsAsync().GetAwaiter().GetResult();
-        //TODO: build a query provider!
+        // Request: docs/features/request/2026-11-17-provider-and-adapter-gaps.md
         var query = from p in _blockBlobClient.GetBlobs().AsPages()
                     from b in p.Values
                     select new ContentMetaDataReference

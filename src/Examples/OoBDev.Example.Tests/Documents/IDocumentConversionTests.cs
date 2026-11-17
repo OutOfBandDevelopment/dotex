@@ -22,7 +22,7 @@ public class IDocumentConversionTests
     [TestCategory(TestCategories.Unit)]
     [TestMethod]
     [DataRow("HelloWorld.html", "text/html", "text/x-markdown", ".md")]
-    //TODO: these require more configuration on linux at this time. 
+    // Request: docs/features/request/2026-11-17-document-converter-dependencies.md
     //[DataRow("HelloWorld.html", "text/html", "application/pdf", ".pdf")]
     //[DataRow("HelloWorld.txt", "text/plain", "application/pdf", ".pdf")]
     [DataRow("HelloWorld.txt", "text/plain", "text/html", ".html")]

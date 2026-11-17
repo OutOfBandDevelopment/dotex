@@ -25,7 +25,7 @@ public record AspNetCoreExtensionBuilder
     /// Set to <c>true</c> to require an application user ID; otherwise, set to <c>false</c>.
     /// The default value is <see cref="UserAuthorizationRequirement.RequireApplicationUserId"/>.
     /// </remarks>
-    public bool RequireApplicationUserId { get; init; } = true; //TODO: should be able to detect if mapping claim is configured and use that instead
+    public bool RequireApplicationUserId { get; init; } = true; // Request: docs/features/request/2026-11-17-configurable-application-user-claim.md
 
     /// <summary>
     /// Gets or sets the delegate for configuring an <see cref="AuthorizationPolicyBuilder"/>.

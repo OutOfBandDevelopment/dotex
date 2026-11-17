@@ -31,7 +31,7 @@ public class BsonTypeInfoResolver : DefaultJsonTypeInfoResolver
         {
             var hasIdAttribute = prop.AttributeProvider?.GetCustomAttributes(true).Any(a =>
                 a is KeyAttribute ||
-                a.GetType().Name == "BsonRepresentationAttribute" //TODO: consider making this injectable so it can be extended
+                a.GetType().Name == "BsonRepresentationAttribute" // Request: docs/features/request/2026-11-17-configurable-defaults-and-id-generation.md
                 ) ?? false;
 
             if (string.Equals(prop.Name, idConvention, StringComparison.OrdinalIgnoreCase))

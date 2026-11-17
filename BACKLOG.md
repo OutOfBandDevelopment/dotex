@@ -4,7 +4,7 @@
 > **Owner questions:** [OPEN-QUESTIONS.md](./OPEN-QUESTIONS.md) · **New to this project?** Read [CLAUDE.md](./CLAUDE.md) first.
 > **Other repositories to harvest from:** [docs/harvest-candidates.md](docs/harvest-candidates.md)
 
-**Last Updated:** 2026-11-16
+**Last Updated:** 2026-11-17
 
 GitHub is no longer the primary repository (local bare repo `origin`), so nothing here waits on GitHub Actions. Keep items to one short line; detail lives in the linked feature doc (rule `work-tracking`).
 
@@ -50,6 +50,17 @@ Owner: all protocols and features of dev-term must exist here. Done means what d
 A clean rebuild after the 2026-11-06 pass reports no analyzer warnings (218 before). Analyzers are wired from `src/Directory.Build.props` (`OoBDev.Analyzers` OOB0001 to OOB0003, NetAnalyzers Recommended, Meziantou); `Tools`, `Examples` and `Applications` are exempt from MA0004, and `Tools` and `Examples` from MA0048, in `src/.editorconfig`.
 
 - [ ] Decide whether NU1901 to NU1904 (known-vulnerable packages) become build errors in `src/Directory.Build.props`; restore is clean since 2026-11-16, but a new advisory would then break every build until a bump (owner call, Q5 in [OPEN-QUESTIONS.md](OPEN-QUESTIONS.md); default: keep warnings and run `scripts/docs/sbom.ps1` plus `dotnet list package --vulnerable` in the manual CI).
+- [ ] Source `TODO` comments, converted to feature requests (owner, 2026-11-17; the comments now point at the request, triage each one into a design document or decline it):
+  - [ ] Health check detail by caller level ([request](docs/features/request/2026-11-17-health-check-detail-by-caller.md)).
+  - [ ] Configurable application-user claim and debug bypass (may merge into the claims request) ([request](docs/features/request/2026-11-17-configurable-application-user-claim.md)).
+  - [ ] Search and filter query expression gaps ([request](docs/features/request/2026-11-17-search-query-expression-gaps.md)).
+  - [ ] XSLT transformer and extension function improvements ([request](docs/features/request/2026-11-17-xslt-transformer-improvements.md)).
+  - [ ] Span and Memory support in codecs and segmenters ([request](docs/features/request/2026-11-17-span-memory-and-codec-modernization.md)).
+  - [ ] Caching proxy and factory gaps ([request](docs/features/request/2026-11-17-caching-proxy-and-factory-gaps.md)).
+  - [ ] Configurable defaults and an id generation service ([request](docs/features/request/2026-11-17-configurable-defaults-and-id-generation.md)).
+  - [ ] Document converter dependencies and Linux support ([request](docs/features/request/2026-11-17-document-converter-dependencies.md)).
+  - [ ] Provider and adapter gaps (12 small items) ([request](docs/features/request/2026-11-17-provider-and-adapter-gaps.md)).
+  - [ ] Code cleanup and test gaps ([request](docs/features/request/2026-11-17-code-cleanup-and-test-gaps.md)).
 - [ ] Reference architecture stack: add a full identity admin feature (create and disable users) once the reference architecture is located; not for the example app (owner, 2026-11-10).
 - [ ] Feature landscape gaps (review 2026-11-12; the right-coverage test exists since 2026-11-16, its 18 findings are fixed 2026-11-16; each other gap needs a design line first; areas: [web](docs/design/FeatureLandscape/web-and-api.md), [messaging](docs/design/FeatureLandscape/messaging-and-documents.md), [AI](docs/design/FeatureLandscape/ai-and-data.md), [DevTerm](docs/design/FeatureLandscape/devterm-and-devices.md)):
   - Web: a query endpoint and screen for the durable rights audit trail (the store exists since 2026-11-16); the endpoint home waits on Q3 in [OPEN-QUESTIONS.md](OPEN-QUESTIONS.md) (default: documentation only).

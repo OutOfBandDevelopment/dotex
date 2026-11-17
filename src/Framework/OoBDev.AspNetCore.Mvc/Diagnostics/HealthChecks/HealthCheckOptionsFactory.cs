@@ -26,9 +26,9 @@ public class HealthCheckOptionsFactory
                 // https://blog.kritner.com/2020/12/04/prettifying-healthchecks/
                 context.Response.ContentType = "application/json; charset=utf-8";
 
-                //TODO: make it so unauthenticated only gets the "status"
-                //TODO: authenticates should get result list without descriptions
-                //TODO: special claim gets descriptions, data and errors
+                // Request: docs/features/request/2026-11-17-health-check-detail-by-caller.md
+                // Request: docs/features/request/2026-11-17-health-check-detail-by-caller.md
+                // Request: docs/features/request/2026-11-17-health-check-detail-by-caller.md
 
                 var options = new JsonWriterOptions
                 {
