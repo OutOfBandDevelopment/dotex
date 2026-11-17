@@ -24,7 +24,7 @@ Review of the example web app (`src/Examples/OoBDev.Example.Web`) and API agains
 | Vector store browser | Qdrant, OpenSearch, SQL store | Collection list, upsert, query | Collection listing on the vector store interface |
 | Mail receive | MailKit IMAP | Inbox view | Decision in [the plan](plan.md) section 6 |
 | Formats and pipelines | `OoBDev.System.IO.Pipelines`, Tar, BCD, bit tools | File inspector, pipeline builder | Controller |
-| CLI tool catalog | DacPacCompiler, DocumentConverter, FileRagEngine, and the other CLI tools | Catalog with run instructions (no execution from the browser) | Static page |
+| CLI tool catalog | DacPacCompiler, DocumentConverter, FileRagEngine, and the other CLI tools | Built 2026-11-16 as `/utilities/tools` (static list with a filter; no execution from the browser) | Static page |
 
 ## Framework areas the plan does not mention
 

@@ -17,6 +17,7 @@ export const router = createRouter({
     { path: '/ai/search', component: () => import('../pages/SearchPage.vue'), meta: { crumbs: ['AI', 'Search'] } },
     { path: '/operations/info', component: () => import('../pages/OperationsPage.vue'), meta: { crumbs: ['Operations', 'Runtime and configuration'] } },
     { path: '/data/cache', component: () => import('../pages/CachePage.vue'), meta: { crumbs: ['Data', 'Cache lab'] } },
+    { path: '/utilities/tools', component: () => import('../pages/ToolCatalogPage.vue'), meta: { crumbs: ['Utilities', 'Command-line tools'] } },
     { path: '/utilities/toolbox', component: () => import('../pages/ToolboxPage.vue'), meta: { crumbs: ['Utilities', 'Toolbox'] } },
     { path: '/utilities/text', component: () => import('../pages/TextToolsPage.vue'), meta: { crumbs: ['Utilities', 'Text tools'] } },
     { path: '/utilities/vectors', component: () => import('../pages/VectorStorePage.vue'), meta: { crumbs: ['Utilities', 'Vector store'] } },
