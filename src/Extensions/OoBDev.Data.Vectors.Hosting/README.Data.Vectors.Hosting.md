@@ -24,6 +24,7 @@ This binds `EmbeddingSentenceTransformerQueueReaderOptions` from the `EmbeddingS
 | `MaximumReadLength` | 100 | Messages received per `RECEIVE`. |
 | `ReadWaitTimeout` | 5 minutes | `WAITFOR ... TIMEOUT` on the queue, and the pause after a failed batch. |
 | `ErrorWaitTimeout` | 30 seconds | Declared but not used yet; the reader pauses for `ReadWaitTimeout` after an error. |
+| `RestartDelay` | 10 seconds | How long the host waits before it restarts a reader that stopped with an error. |
 
 ## Message flow
 

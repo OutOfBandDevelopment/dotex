@@ -1,6 +1,6 @@
 # Feature request: configurable defaults and an id generation service
 
-- **Status:** triaged
+- **Status:** done (built 2026-11-17, see [change](../../changes/2026-11-17.md#configurable-defaults-and-id-generation-closed))
 - **Requested by:** owner (source `TODO` comments, collected 2026-11-17)
 - **Date:** 2026-11-17
 - **Area:** `OoBDev.Data.Vectors.Hosting`, `OoBDev.System.IO.Pipelines`, `OoBDev.MessageQueueing`, `OoBDev.System` (BSON type info)
@@ -44,6 +44,11 @@ None; correlation ids stay unguessable by default.
 
 Use `TimeProvider`-style platform primitives where they exist (owner preference) before adding an interface.
 
-## Triage notes
+## Outcome
 
-Triaged 2026-11-17 into [BACKLOG.md](../../../BACKLOG.md) section 5 (source TODO comments). Design document to follow when built.
+1. `EmbeddingSentenceTransformerQueueReaderOptions.RestartDelay` (default 10 s) drives the host restart delay; stopping the host during that delay no longer throws `TaskCanceledException`.
+2. `StreamDevice` takes `int? minimumTransmissionDelay`: explicit value, else the new optional `IDeviceDefinitionTransmissionDelay` of the device definition, else 1000 ms.
+3. `InProcessMessageProvider` takes an optional `IGuidProvider` (existing platform-style service) for generated correlation ids, falling back to `Guid.NewGuid()`.
+4. `BsonTypeInfoResolver` has a constructor taking extra id attribute type names.
+
+Tests: new `OoBDev.Data.Vectors.Hosting.Tests`, `StreamDeviceTests`, `BsonSerializerTests`, `InProcessMessageProviderTests`.

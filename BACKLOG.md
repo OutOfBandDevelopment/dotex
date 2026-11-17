@@ -55,7 +55,6 @@ A clean rebuild after the 2026-11-06 pass reports no analyzer warnings (218 befo
   - [ ] Configurable application-user claim and debug bypass (may merge into the claims request) ([request](docs/features/request/2026-11-17-configurable-application-user-claim.md)).
   - [ ] Search and filter query expression gaps ([request](docs/features/request/2026-11-17-search-query-expression-gaps.md)).
   - [ ] XSLT transformer and extension function improvements ([request](docs/features/request/2026-11-17-xslt-transformer-improvements.md)).
-  - [ ] Configurable defaults and an id generation service ([request](docs/features/request/2026-11-17-configurable-defaults-and-id-generation.md)).
   - [ ] Document converter dependencies and Linux support ([request](docs/features/request/2026-11-17-document-converter-dependencies.md)).
   - [ ] Provider and adapter gaps (12 small items) ([request](docs/features/request/2026-11-17-provider-and-adapter-gaps.md)).
 - [ ] Reference architecture stack: add a full identity admin feature (create and disable users) once the reference architecture is located; not for the example app (owner, 2026-11-10).

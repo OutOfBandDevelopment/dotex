@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using OoBDev.System.Providers;
 using System;
 using System.Collections.Concurrent;
 using System.Threading;
@@ -15,9 +16,11 @@ namespace OoBDev.MessageQueueing.Services;
 /// </remarks>
 /// <param name="logger">The logger.</param>
 /// <param name="options">The polling options.</param>
+/// <param name="guidProvider">Source of generated correlation ids; <see cref="Guid.NewGuid()"/> when none is registered.</param>
 public partial class InProcessMessageProvider(
     ILogger<InProcessMessageProvider> logger,
-    IOptions<InProcessMessageProviderOptions> options
+    IOptions<InProcessMessageProviderOptions> options,
+    IGuidProvider? guidProvider = null
     ) : IMessageSenderProvider, IMessageReceiverProvider
 {
     private IMessageHandlerProvider? _handlerProvider;
@@ -40,7 +43,7 @@ public partial class InProcessMessageProvider(
         {
             ContentType = "application/json;",
             PayloadType = message.GetType().AssemblyQualifiedName ?? throw new NotSupportedException(),
-            CorrelationId = context.CorrelationId ?? Guid.NewGuid().ToString(), // Request: docs/features/request/2026-11-17-configurable-defaults-and-id-generation.md
+            CorrelationId = context.CorrelationId ?? (guidProvider?.NewGuid() ?? Guid.NewGuid()).ToString(),
             Payload = message,
             Properties = context.Headers,
         };

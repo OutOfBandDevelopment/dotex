@@ -15,6 +15,8 @@ namespace OoBDev.System.IO.Pipelines;
 /// <typeparam name="TMessage">The type of messages to send and receive.</typeparam>
 public class StreamDevice<TMessage> : IStreamDevice<TMessage>
 {
+    private const int DefaultMinimumTransmissionDelay = 1000;
+
     private readonly Channel<TMessage> _transmissionQueue = Channel.CreateUnbounded<TMessage>(new UnboundedChannelOptions { SingleReader = true });
 
     private readonly IDeviceAdapter _adapter;
@@ -31,12 +33,12 @@ public class StreamDevice<TMessage> : IStreamDevice<TMessage>
     /// </summary>
     /// <param name="adapter">The opened device adapter providing the pipes; the device disposes it.</param>
     /// <param name="device">The device definition describing the device's behavior.</param>
-    /// <param name="minimumTransmissionDelay">Minimum delay between message transmissions in milliseconds (default is 1000ms).</param>
+    /// <param name="minimumTransmissionDelay">Minimum delay between message transmissions in milliseconds. When null the device definition's <see cref="IDeviceDefinitionTransmissionDelay"/> is used, else 1000ms.</param>
     /// <param name="token">Optional cancellation token to stop the device operations.</param>
     public StreamDevice(
         IDeviceAdapter adapter,
         IDeviceDefinition device,
-        int minimumTransmissionDelay = 1000, // Request: docs/features/request/2026-11-17-configurable-defaults-and-id-generation.md
+        int? minimumTransmissionDelay = null,
         CancellationToken token = default
         )
     {
@@ -45,7 +47,9 @@ public class StreamDevice<TMessage> : IStreamDevice<TMessage>
 
         _adapter = adapter;
         _device = device;
-        _minimumTransmissionDelay = minimumTransmissionDelay;
+        _minimumTransmissionDelay = minimumTransmissionDelay
+            ?? (device as IDeviceDefinitionTransmissionDelay)?.MinimumTransmissionDelay
+            ?? DefaultMinimumTransmissionDelay;
 
         Task? messageReceiver = null;
         Task? messageTransmitter = null;
