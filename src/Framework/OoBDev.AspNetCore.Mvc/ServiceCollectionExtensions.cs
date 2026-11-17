@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication;
+using OoBDev.AspNetCore.Mvc.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -52,6 +53,7 @@ public static class ServiceCollectionExtensions
         builder ??= new();
 
         services.AddHealthChecks();
+        services.TryAddSingleton<HealthCheckPath>();
 
         services.TryAddCommonOpenApiExtensions();
         services.TryAddAspNetCoreSearchQuery();

@@ -32,7 +32,7 @@ In Debug builds the builder and `healthCheckPath` parameters are required, in Re
 | `TryAddAspNetCoreSearchQuery()` | Search query filter, `ISearchQuery` accessor, `ISearchModelMapper` and `ISearchModelBuilder` |
 | `TryAddRoleRightMapping(configuration)` | Role to application right mapping, below |
 | `TryAddCultureNegotiation(configuration)` | `OoBDev:Culture` options: `DefaultCulture` and `SupportedCultures`; `Accept-Language` is matched by quality, an unsupported culture gets the default, and `Content-Language` returns the result |
-| `UseAspNetCoreExtensionMiddleware(path)` | Health check endpoint (default `/health`), correlation info, culture and search query middleware |
+| `UseAspNetCoreExtensionMiddleware(path)` | Health check endpoint (default `/health`; call after `UseAuthentication`), correlation info, culture and search query middleware. The health body depends on the caller: anonymous gets `status` only, authenticated gets the check list, and the right `health.details` adds descriptions, data and errors. The OpenAPI document shows the mapped path |
 | `UseHttpQueryVerb()` | `QueryVerbMiddleware` for HTTP `QUERY` |
 | `MapApiReference(configure)` | OpenAPI endpoints plus Scalar listing every document; each `IApiReferenceConfigurator` (for example the OAuth2 one) and then `configure` shape the options |
 | `MapAsyncApi()` | `/asyncapi/{document}.json` and an HTML viewer at `/asyncapi/{document}` loading the web component from `AsyncApi:ViewerScriptUrl` (default a pinned unpkg script); 404 for an unknown document |

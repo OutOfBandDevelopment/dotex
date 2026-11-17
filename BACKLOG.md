@@ -51,7 +51,6 @@ A clean rebuild after the 2026-11-06 pass reports no analyzer warnings (218 befo
 
 - [ ] Decide whether NU1901 to NU1904 (known-vulnerable packages) become build errors in `src/Directory.Build.props`; restore is clean since 2026-11-16, but a new advisory would then break every build until a bump (owner call, Q5 in [OPEN-QUESTIONS.md](OPEN-QUESTIONS.md); default: keep warnings and run `scripts/docs/sbom.ps1` plus `dotnet list package --vulnerable` in the manual CI).
 - [ ] Source `TODO` comments, converted to feature requests (owner, 2026-11-17; the comments now point at the request, triage each one into a design document or decline it):
-  - [ ] Health check detail by caller level ([request](docs/features/request/2026-11-17-health-check-detail-by-caller.md)).
   - [ ] Configurable application-user claim and debug bypass (may merge into the claims request) ([request](docs/features/request/2026-11-17-configurable-application-user-claim.md)).
   - [ ] Search and filter query expression gaps ([request](docs/features/request/2026-11-17-search-query-expression-gaps.md)).
   - [ ] XSLT transformer and extension function improvements ([request](docs/features/request/2026-11-17-xslt-transformer-improvements.md)).
