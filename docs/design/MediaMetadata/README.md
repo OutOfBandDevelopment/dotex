@@ -1,6 +1,6 @@
 ﻿# Media metadata (EXIF) reader
 
-Status: **first slice built 2026-11-16** (locator, reader, dump, tag names; placement confirmed by the owner 2026-11-12, new Framework project, option A). Request: [EXIF and media metadata extraction](../../features/request/2026-11-11-exif-metadata-extraction.md).
+Status: **first slice built 2026-11-16** (locator, reader, dump, tag names; placement confirmed by the owner 2026-11-12, new Framework project, option A). Request: [EXIF and media metadata extraction](../../features/completed/2026-11-11-exif-metadata-extraction.md).
 
 ## Contents
 

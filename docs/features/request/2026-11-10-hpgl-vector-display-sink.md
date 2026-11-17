@@ -19,6 +19,14 @@ Known limits, to be documented in the readme:
 - Many sound cards and line outputs are AC-coupled and lose the DC offset; DC-coupled or USB audio devices draw steadier.
 - The scope must be in X-Y mode and the level may need attenuating.
 
+## Audio hardware notes (2026-11-17)
+
+- Output is stereo X-Y by default. An optional third Z (blanking) track goes into a multi-channel WAV for devices with more channels, with the channel layout (for example 5.1: Z on the center channel, never on the low-pass filtered LFE) set in options.
+- The sample rate is an option. 48 kHz is the baseline: about 1,900 points per frame at 25 frames a second. A device with a faster converter (listings claim up to 384 kHz; unverified, check with a loopback test) allows denser scenes and makes fast jumps almost invisible without Z.
+- Candidate devices: a C-Media based 7.1 USB adapter (StarTech ICUSBAUDIO7D: eight discrete analog channels, 16-bit, 44.1 or 48 kHz), the onboard Realtek output when Windows exposes 5.1 or 7.1, or a 2-in/2-out recording interface for X-Y only.
+- Not suitable: an S/PDIF decoder box. S/PDIF carries only two PCM channels, so a third discrete channel means a lossy AC-3 or DTS bitstream with filtered bandwidth and channel delay, which smears the Z edges and misaligns Z against X and Y.
+- AC-coupled outputs lose the DC offset, so the image can drift; DC-coupled interfaces draw steadier.
+
 ## Acceptance criteria
 
 - Given a scene with one polyline, when rendered, then left and right samples follow its points in order.

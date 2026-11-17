@@ -1,6 +1,6 @@
 ﻿# Feature request: EXIF and media metadata extraction
 
-- **Status:** triaged
+- **Status:** done (first slice built 2026-11-16, verified 2026-11-17, see [change](../../changes/2026-11-17.md#midi-and-exif-requests-moved-to-completed))
 - **Requested by:** owner (filed from the NAS storage catalog application, `C:\repo\_storage`)
 - **Date:** 2026-11-11
 - **Area:** new, near `Onnx.ImageEmbeddings.Skia` and file inventory
@@ -47,3 +47,7 @@ Inputs are private files (photos, scans), so nothing is logged beyond identifier
 ## Triage notes
 
 2026-11-11: triaged. Accepted as a backlog idea from the storage and photo-library review; the code named above was not read in full, so the first step is the superset comparison before any design. Face and pet matching also needs an owner decision on personal data. Backlog: BACKLOG.md, Consolidation requests.
+
+## Outcome
+
+`OoBDev.Media.Metadata` (`src/Framework`) locates the EXIF block in JPEG, PNG and WebP, reads capture time, camera model and orientation without touching the source, and returns what is valid when tags or blocks are damaged (73 Unit tests passed 2026-11-17). Later slices (HEIC Exif item, audio tags, date merging) stay in the [design](../../design/MediaMetadata/README.md) and `BACKLOG.md`.

@@ -32,7 +32,7 @@ single colors but nothing that analyses a whole image, and no histogram code was
 - The old sample (`proving-grounds/examples/SecondShooter/src/SortEm/OpenCvExample`) was read and not reused: it is adapted from a public OpenCvSharp sample, needs desktop windows,
   and, reading the code only, histograms channel 0 (blue) over 64 bins covering 0 to 63, which looks wrong for 8-bit data. Not run.
 - Search of `src` project files found no OpenCV or ImageMagick dependency; Skia is the imaging dependency in `Onnx.ImageEmbeddings.Skia`.
-- `2026-11-11-burst-and-near-duplicate-ranking.md` and `2026-11-11-exif-metadata-extraction.md` are neighbours; this request supplies pixel-level inputs for the first.
+- `2026-11-11-burst-and-near-duplicate-ranking.md` and `2026-11-11-exif-metadata-extraction.md` (completed) are neighbours; this request supplies pixel-level inputs for the first.
 
 ## Security and operations
 
