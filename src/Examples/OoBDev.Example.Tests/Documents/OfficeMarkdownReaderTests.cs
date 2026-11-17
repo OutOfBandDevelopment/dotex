@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Configuration;
+using OoBDev.TestUtilities.Containers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.Common;
@@ -21,7 +22,7 @@ public class OfficeMarkdownReaderTests
     public required TestContext TestContext { get; set; }
 
     [TestCategory(TestCategories.Integration)]
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-tika")]
     [DataRow("sample1.docx")]
     [DataRow("sample2.doc")]
     [DataRow("sample2.odt")]

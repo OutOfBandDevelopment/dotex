@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Configuration;
+using OoBDev.TestUtilities.Containers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Npgsql;
@@ -64,7 +65,7 @@ public class PgmqIntegrationTests
         [$"MessageQueue:{QueueConfig}:Config:MaxDeliveries"] = maxDeliveries,
     }).Build();
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-postgres")]
     [TestCategory(TestCategories.Integration)]
     public async Task SendAsync_PutsOneMessageOnTheQueue()
     {
@@ -84,7 +85,7 @@ public class PgmqIntegrationTests
         Assert.AreEqual(1L, await count.ExecuteScalarAsync());
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-postgres")]
     [TestCategory(TestCategories.Integration)]
     public async Task RunAsync_DeliversToHandlerAndArchives()
     {
@@ -114,7 +115,7 @@ public class PgmqIntegrationTests
         Assert.AreEqual(1L, await archived.ExecuteScalarAsync());
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-postgres")]
     [TestCategory(TestCategories.Integration)]
     public async Task RunAsync_FailedHandler_RedeliversAfterVisibilityTimeout()
     {
@@ -137,7 +138,7 @@ public class PgmqIntegrationTests
         Assert.AreEqual(2, handler.Calls);
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-postgres")]
     [TestCategory(TestCategories.Integration)]
     public async Task RunAsync_AlwaysFailing_MovesMessageToDeadLetterQueue()
     {

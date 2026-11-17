@@ -1,4 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using OoBDev.TestUtilities.Containers;
 using OoBDev.TestUtilities;
 using System;
 using System.Collections.Generic;
@@ -78,7 +79,7 @@ public class ExampleRealmTests
         Assert.IsTrue(guarded.IsSubsetOf(mapped), $"Rights guarded but not granted to admin: {string.Join(", ", guarded.Except(mapped))}");
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-keycloak")]
     [TestCategory(TestCategories.Integration)]
     public async Task RunningKeycloak_HoldsTheRealmFileUsersAndRoles()
     {

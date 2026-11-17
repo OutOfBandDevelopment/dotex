@@ -1,4 +1,5 @@
 using System;
+using OoBDev.TestUtilities.Containers;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -145,27 +146,27 @@ public class FilterParityTests
     private static SearchRequest Request(string text = "", params FieldFilter[] filters) =>
         new() { Text = text, Filters = filters, PageSize = 50 };
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-pgvector,oobd-test-opensearch")]
     public Task Equals_OnKeyword_MatchesBothProviders() =>
         AssertParity(Request(filters: new FieldFilter("ext", FilterComparator.Equals, "pdf")), d => d.Ext == "pdf");
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-pgvector,oobd-test-opensearch")]
     public Task NegatedEquals_ExcludesInBothProviders() =>
         AssertParity(Request(filters: new FieldFilter("ext", FilterComparator.Equals, "pdf", Negated: true)), d => d.Ext != "pdf");
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-pgvector,oobd-test-opensearch")]
     public Task Range_BothBounds_MatchesBothProviders() =>
         AssertParity(Request(filters: [new FieldFilter("size", FilterComparator.GreaterOrEqual, "3"), new FieldFilter("size", FilterComparator.Less, "8")]), d => d.Size is >= 3 and < 8);
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-pgvector,oobd-test-opensearch")]
     public Task Range_StrictBounds_MatchesBothProviders() =>
         AssertParity(Request(filters: [new FieldFilter("size", FilterComparator.Greater, "2"), new FieldFilter("size", FilterComparator.LessOrEqual, "6")]), d => d.Size is > 2 and <= 6);
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-pgvector,oobd-test-opensearch")]
     public Task Text_WholeWord_MatchesBothProviders() =>
         AssertParity(Request("red"), d => d.Name.Contains("red", StringComparison.Ordinal));
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-pgvector,oobd-test-opensearch")]
     public Task TextAndFilter_Combine_InBothProviders() =>
         AssertParity(Request("car", new FieldFilter("ext", FilterComparator.Equals, "pdf"), new FieldFilter("size", FilterComparator.Greater, "1")),
             d => d.Name.Contains("car", StringComparison.Ordinal) && d.Ext == "pdf" && d.Size > 1);

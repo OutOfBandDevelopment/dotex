@@ -116,6 +116,11 @@ https://github.com/coverlet-coverage/coverlet/blob/fc7ec26dcaed8fedba880ff13c6f1
 		<Parameter name="LOOPBACK_DEVICE_HOST" value="localhost" />
 		<Parameter name="LOOPBACK_DEVICE_PORT" value="7778" />
 
+		<!-- Integration container start-up (IntegrationTestMethod) -->
+		<Parameter name="CONTAINER_STARTUP_TIMEOUT_SECONDS" value="5" />
+		<Parameter name="CONTAINER_AUTOSTART" value="true" />
+		<Parameter name="CONTAINER_STOP_AFTER_TESTS" value="true" />
+
 		<!-- Redis -->
 		<Parameter name="REDIS_CONNECTION_STRING" value="localhost:6379" />
 		<Parameter name="REDIS_HOST" value="localhost" />

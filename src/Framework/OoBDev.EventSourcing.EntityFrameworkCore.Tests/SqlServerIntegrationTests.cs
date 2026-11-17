@@ -1,4 +1,5 @@
 using Microsoft.Data.SqlClient;
+using OoBDev.TestUtilities.Containers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -80,7 +81,7 @@ public class SqlServerIntegrationTests
         throw new FileNotFoundException("The SQL Server dacpac was not built.");
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-sqlserver")]
     [TestCategory(TestCategories.Integration)]
     public async Task EventStore_AppendReadAndConflict_WorkOnTheDeployedDacpac()
     {
@@ -101,7 +102,7 @@ public class SqlServerIntegrationTests
         Assert.IsTrue(all[0].Position < all[1].Position);
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-sqlserver")]
     [TestCategory(TestCategories.Integration)]
     public async Task EntityStore_VersionedSaveAndDelete_WorkOnTheDeployedDacpac()
     {

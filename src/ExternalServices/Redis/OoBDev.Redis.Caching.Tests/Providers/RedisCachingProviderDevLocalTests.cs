@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using OoBDev.TestUtilities.Containers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.Extensions.Configuration;
@@ -33,7 +34,7 @@ public class RedisCachingProviderDevLocalTests
         return redis;
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-redis")]
     [TestCategory(TestCategories.Integration)]
     public async Task FlushAsyncTest()
     {
@@ -62,7 +63,7 @@ public class RedisCachingProviderDevLocalTests
         // Assert - no exception thrown
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-redis")]
     [TestCategory(TestCategories.Integration)]
     public async Task RetrieveAsyncTest()
     {
@@ -99,7 +100,7 @@ public class RedisCachingProviderDevLocalTests
         await provider.FlushAsync(key);
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-redis")]
     [TestCategory(TestCategories.Integration)]
     public async Task StoreAsyncTest()
     {

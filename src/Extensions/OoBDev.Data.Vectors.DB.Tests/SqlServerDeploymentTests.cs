@@ -1,4 +1,5 @@
 using Microsoft.Data.SqlClient;
+using OoBDev.TestUtilities.Containers;
 using Microsoft.SqlServer.Dac;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.TestUtilities;
@@ -69,7 +70,7 @@ public class SqlServerDeploymentTests
             EXEC sp_configure 'clr enabled', {_originalClrEnabled}; RECONFIGURE;");
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-sqlserver")]
     [TestCategory(TestCategories.Integration)]
     public async Task SqlVectorStore_StoreAndFindNeighbors_RanksByCosineAndKeepsMetadata()
     {
@@ -98,7 +99,7 @@ public class SqlServerDeploymentTests
         Assert.AreEqual(3, listed);
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-sqlserver")]
     [TestCategory(TestCategories.Integration)]
     public void Redeploy_SameDacpac_ChangesNothing()
     {
@@ -116,7 +117,7 @@ public class SqlServerDeploymentTests
         Assert.IsFalse(script.Contains("rebuilding table", StringComparison.Ordinal), script);
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-sqlserver")]
     [TestCategory(TestCategories.Integration)]
     public async Task Distance_And_Angle_RunInsideSqlServer()
     {
@@ -128,7 +129,7 @@ public class SqlServerDeploymentTests
         Assert.AreEqual(Math.Acos(0.6), await ScalarAsync<double>(db, vectors + "SELECT CAST(@a.Angle(@b) AS float)"), 1e-5);
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-sqlserver")]
     [TestCategory(TestCategories.Integration)]
     public async Task Aggregates_RunInsideSqlServer()
     {
@@ -142,7 +143,7 @@ public class SqlServerDeploymentTests
         Assert.AreEqual(5d, await ScalarAsync<double>(db, $"SELECT CAST(embedding.CentroidF(v).Element(1) AS float) {rows}"), 1e-5);
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-sqlserver")]
     [TestCategory(TestCategories.Integration)]
     public async Task MatrixAndDoubleVector_RunInsideSqlServer()
     {
@@ -160,7 +161,7 @@ public class SqlServerDeploymentTests
         Assert.AreEqual(2, await ScalarAsync<int>(db, vectors + "SELECT @a.Length()"));
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-sqlserver")]
     [TestCategory(TestCategories.Integration)]
     public async Task UndefinedInputs_ReturnNull_WithoutFailingTheBatch()
     {
@@ -183,7 +184,7 @@ public class SqlServerDeploymentTests
         Assert.AreEqual(0d, Convert.ToDouble(reader.GetValue(4)), 1e-6, "identical vectors");
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-sqlserver")]
     [TestCategory(TestCategories.Integration)]
     public async Task SqlVectorStore_FindNeighbors_StaysUnderTheLatencyGate()
     {
@@ -215,7 +216,7 @@ public class SqlServerDeploymentTests
         Assert.IsLessThan(FailMilliseconds, stopwatch.ElapsedMilliseconds, "vector search latency gate");
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-sqlserver")]
     [TestCategory(TestCategories.Integration)]
     public async Task RestoredCopy_WithNewBrokerId_KeepsTheDataAndTakesTheMigration()
     {

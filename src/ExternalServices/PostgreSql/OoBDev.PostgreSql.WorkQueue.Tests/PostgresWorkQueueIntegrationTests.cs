@@ -1,4 +1,5 @@
 using System;
+using OoBDev.TestUtilities.Containers;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
@@ -48,7 +49,7 @@ public class PostgresWorkQueueIntegrationTests
         await _queue.DisposeAsync();
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-pgvector")]
     public async Task Enqueue_IsIdempotent()
     {
         Assert.IsTrue(await _queue.EnqueueAsync(Stage, "a"));
@@ -56,7 +57,7 @@ public class PostgresWorkQueueIntegrationTests
         Assert.AreEqual(1, (await _queue.StatsAsync(Stage)).Claimable);
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-pgvector")]
     public async Task Claim_ConcurrentWorkers_EachItemGoesToExactlyOne()
     {
         for (var i = 0; i < 20; i++)
@@ -69,7 +70,7 @@ public class PostgresWorkQueueIntegrationTests
         Assert.AreEqual(20, keys.Distinct().Count());
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-pgvector")]
     public async Task Claim_TakesOldestFirstUpToBatch()
     {
         await _queue.EnqueueAsync(Stage, "b");
@@ -83,7 +84,7 @@ public class PostgresWorkQueueIntegrationTests
         CollectionAssert.AreEquivalent(new[] { "b", "a" }, items.Select(i => i.Key).ToArray());
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-pgvector")]
     public async Task Complete_FromAWorkerWhoseLeaseExpired_IsRejected()
     {
         await _queue.EnqueueAsync(Stage, "a");
@@ -102,7 +103,7 @@ public class PostgresWorkQueueIntegrationTests
         Assert.AreEqual(0, (await _queue.StatsAsync(Stage)).Running);
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-pgvector")]
     public async Task Fail_Retryable_WaitsForTheBackoff_ThenDiesOnTheLastAttempt()
     {
         await _queue.EnqueueAsync(Stage, "a");
@@ -128,7 +129,7 @@ public class PostgresWorkQueueIntegrationTests
         Assert.AreEqual(500, letter.LastError!.Length);
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-pgvector")]
     public async Task Fail_NonRetryable_IsDeadAtOnce()
     {
         await _queue.EnqueueAsync(Stage, "a");
@@ -139,7 +140,7 @@ public class PostgresWorkQueueIntegrationTests
         Assert.AreEqual("non-retryable", (await _queue.DeadLettersAsync(Stage)).Single().Reason);
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-pgvector")]
     public async Task Claim_ParksAnItemThatKeptHanging()
     {
         await _queue.EnqueueAsync(Stage, "a");
@@ -155,7 +156,7 @@ public class PostgresWorkQueueIntegrationTests
         Assert.AreEqual("lease expired", (await _queue.DeadLettersAsync(Stage)).Single().Reason);
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-pgvector")]
     public async Task Redrive_ReturnsDeadAndParkedWithAFreshBudget()
     {
         await _queue.EnqueueAsync(Stage, "a");
@@ -173,7 +174,7 @@ public class PostgresWorkQueueIntegrationTests
         Assert.IsTrue((await _queue.DeadLettersAsync(Stage)).All(d => d.RedrivenAt is not null));
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-pgvector")]
     public async Task Complete_RejectsAnUnknownFinalStatus()
     {
         await _queue.EnqueueAsync(Stage, "a");

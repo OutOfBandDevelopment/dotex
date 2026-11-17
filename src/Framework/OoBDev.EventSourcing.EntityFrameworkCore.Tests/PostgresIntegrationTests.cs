@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using OoBDev.TestUtilities.Containers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -61,7 +62,7 @@ public class PostgresIntegrationTests
         await command.ExecuteNonQueryAsync();
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-postgres")]
     [TestCategory(TestCategories.Integration)]
     public async Task EventStore_AppendReadAndConflict_WorkOnPostgreSql()
     {
@@ -83,7 +84,7 @@ public class PostgresIntegrationTests
         Assert.IsTrue(all[0].Position < all[1].Position);
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-postgres")]
     [TestCategory(TestCategories.Integration)]
     public async Task EntityStore_VersionedSaveAndDelete_WorkOnPostgreSql()
     {

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using OoBDev.TestUtilities.Containers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.TestUtilities;
@@ -32,7 +33,7 @@ public class SentenceEmbeddingClientTests
         return client;
     }
 
-    [TestMethod, TestCategory(TestCategories.Integration),Ignore]
+    [IntegrationTestMethod("oobd-test-sbert"), TestCategory(TestCategories.Integration),Ignore]
     public async Task GetEmbeddingAsyncTest()
     {
         var url = TestInstanceGuard.Require(TestContext.GetRequiredProperty<string>("SBERT_URL"));
@@ -43,7 +44,7 @@ public class SentenceEmbeddingClientTests
         TestContext.WriteLine(string.Join(';', embedding));
     }
 
-    [TestMethod, TestCategory(TestCategories.Integration), Ignore]
+    [IntegrationTestMethod("oobd-test-sbert"), TestCategory(TestCategories.Integration), Ignore]
     public async Task GetAllTest()
     {
         var url = TestInstanceGuard.Require(TestContext.GetRequiredProperty<string>("SBERT_URL"));

@@ -1,4 +1,5 @@
 using System;
+using OoBDev.TestUtilities.Containers;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -24,7 +25,7 @@ public sealed class AmazonSqsReceiveIntegrationTests
 {
     public TestContext TestContext { get; set; } = null!;
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-moto")]
     public async Task RunAsync_MessageSentToMoto_IsHandledAndDeleted()
     {
         // Stage

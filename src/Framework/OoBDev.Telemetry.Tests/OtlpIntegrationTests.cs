@@ -1,4 +1,5 @@
 using OoBDev.System.Security;
+using OoBDev.TestUtilities.Containers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -26,7 +27,7 @@ public partial class OtlpIntegrationTests
 
     public required TestContext TestContext { get; set; }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-otel")]
     [TestCategory(TestCategories.Integration)]
     public async Task Spans_ShouldReachDashboardWithCorrelationTags()
     {
@@ -52,7 +53,7 @@ public partial class OtlpIntegrationTests
         StringAssert.Contains(trace, serviceName);
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-otel")]
     [TestCategory(TestCategories.Integration)]
     public async Task Logs_ShouldReachDashboardWithCorrelationAttributes()
     {

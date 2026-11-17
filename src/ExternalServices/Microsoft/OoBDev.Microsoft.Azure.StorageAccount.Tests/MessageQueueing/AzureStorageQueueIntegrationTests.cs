@@ -1,4 +1,5 @@
 using Azure.Storage.Queues;
+using OoBDev.TestUtilities.Containers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.Microsoft.Azure.StorageAccount.MessageQueueing;
@@ -44,7 +45,7 @@ public class AzureStorageQueueIntegrationTests
             _ = await _queue.DeleteIfExistsAsync();
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-azurite")]
     [TestCategory(TestCategories.Integration)]
     public async Task SendMessage_Azurite_ReceivesSameText()
     {
@@ -67,7 +68,7 @@ public class AzureStorageQueueIntegrationTests
         Assert.IsNull(after.Value);
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-azurite")]
     [TestCategory(TestCategories.Integration)]
     public async Task ReceiveMessage_EmptyQueue_ReturnsNothing()
     {

@@ -1,4 +1,5 @@
 using System;
+using OoBDev.TestUtilities.Containers;
 using System.IO;
 using System.Net.Http;
 using System.Text;
@@ -49,7 +50,7 @@ public class DoclingIntegrationTests
         return pdf.ToString();
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-docling")]
     public async Task Recognize_RealDoclingServe_ReturnsTheText()
     {
         var url = TestInstanceGuard.Require(TestContext.GetRequiredProperty<string>("DOCLING_URL"));

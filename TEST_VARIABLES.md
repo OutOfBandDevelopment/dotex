@@ -52,6 +52,16 @@ This document lists all test properties used by Integration tests. These propert
 ### Integration Tests (Docker-Based)
 Tests that run against Docker containers. See `/containers/testing/` for Docker infrastructure.
 
+#### Container start-up
+
+Integration tests marked `[IntegrationTestMethod("oobd-test-redis")]` check their containers first: a running, healthy container is used as it is; a stopped or missing one is started (`docker start` or `docker compose up` of the one service) and watched until its health check passes. If that takes longer than the timeout, or Docker is missing, the test ends Inconclusive. Only containers the tests started are stopped, when the test run ends.
+
+| Parameter | Default | Meaning |
+|-----------|---------|---------|
+| `CONTAINER_STARTUP_TIMEOUT_SECONDS` | `5` | Seconds to wait for a container to become healthy |
+| `CONTAINER_AUTOSTART` | `true` | Start containers that are down; `false` makes the tests Inconclusive instead |
+| `CONTAINER_STOP_AFTER_TESTS` | `true` | Stop the containers the tests started when the run ends |
+
 ### LiveIntegration Tests (Cloud-Based)
 Tests that require live cloud credentials. Manual execution only.
 

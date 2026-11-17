@@ -1,4 +1,5 @@
 using System;
+using OoBDev.TestUtilities.Containers;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -53,7 +54,7 @@ public class PgVectorIntegrationTests
         return list;
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-pgvector")]
     public async Task FindNeighbors_Cosine_OrdersNearestFirstWithScore()
     {
         await using var store = Store();
@@ -69,7 +70,7 @@ public class PgVectorIntegrationTests
         Assert.AreEqual("a", found[0].MetaData!["name"].ToString());
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-pgvector")]
     public async Task FindNeighbors_MultiVectorItem_ReturnsItemOnceWithMatchingVectorIndex()
     {
         await using var store = Store();
@@ -86,7 +87,7 @@ public class PgVectorIntegrationTests
         Assert.IsTrue(best.Distance < 0.1);
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-pgvector")]
     public async Task FindNeighbors_GroupBy_ReturnsBestPerGroup()
     {
         await using var store = Store();
@@ -99,7 +100,7 @@ public class PgVectorIntegrationTests
         CollectionAssert.AreEquivalent(new[] { "x", "y" }, found.Select(f => f.MetaData!["album"].ToString()).ToArray());
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-pgvector")]
     public async Task FindNeighbors_L2AndHalfVector_Work()
     {
         await using var store = Store(metric: VectorMetric.L2, half: true);
@@ -113,7 +114,7 @@ public class PgVectorIntegrationTests
         Assert.IsTrue(found[0].Score > found[1].Score);
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-pgvector")]
     public async Task Store_WrongDimension_Throws()
     {
         await using var store = Store();
@@ -122,7 +123,7 @@ public class PgVectorIntegrationTests
         await Assert.ThrowsExactlyAsync<ArgumentException>(() => store.StoreVectorsAsync([new float[] { 1, 2 }], Meta("a", "b")));
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-pgvector")]
     public async Task List_ReturnsEveryStoredVectorWithMetadata()
     {
         await using var store = Store();
@@ -135,7 +136,7 @@ public class PgVectorIntegrationTests
         Assert.IsTrue(listed.All(l => l.MetaData!["k"].ToString() == "v"));
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-pgvector")]
     public async Task Store_ItemsOverload_MergesSharedMetadata()
     {
         await using var store = Store();
@@ -149,7 +150,7 @@ public class PgVectorIntegrationTests
         Assert.AreEqual("1", found.MetaData["own"].ToString());
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-pgvector")]
     public async Task CreateHnswIndex_IsExplicitAndRepeatable()
     {
         await using var store = Store();
@@ -162,7 +163,7 @@ public class PgVectorIntegrationTests
         Assert.AreEqual(1, await IndexCount());
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-pgvector")]
     public async Task FindNeighbors_TenThousandVectorsWithHnsw_ReturnsInBoundedTime()
     {
         await using var store = Store(dimensions: 8, limit: 5);

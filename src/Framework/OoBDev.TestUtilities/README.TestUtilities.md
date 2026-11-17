@@ -63,3 +63,7 @@ dotnet test src/ --filter "TestCategory=Integration"
 ## Tests
 
 `OoBDev.TestUtilities.Tests` covers the configuration provider (Unit and Integration), the property helpers, the data helpers, numeric asserts and the guard.
+
+## Integration containers
+
+`[IntegrationTestMethod("oobd-test-redis,oobd-test-sqlserver")]` replaces `[TestMethod]` on an Integration test. Before the test runs, `IntegrationContainers.EnsureAsync` inspects each container: ready ones are used as they are, stopped or missing ones are started and awaited until healthy, and the test ends Inconclusive when that takes longer than `CONTAINER_STARTUP_TIMEOUT_SECONDS` (default 5), Docker is missing or `CONTAINER_AUTOSTART` is false. Containers the tests started (and only those) are stopped at process exit unless `CONTAINER_STOP_AFTER_TESTS` is false. The compose health checks use `start_interval: 1s` so a container reports healthy within seconds. See [TEST_VARIABLES.md](../../../TEST_VARIABLES.md).

@@ -1,4 +1,5 @@
 ﻿using OoBDev.Common;
+using OoBDev.TestUtilities.Containers;
 using OoBDev.Documents;
 using OoBDev.TestUtilities;
 using Microsoft.Extensions.Configuration;
@@ -31,7 +32,7 @@ public class IDocumentConversionTests
         InternalConvertAsyncTest(resourceName, sourceType, targetType, extension, false);
 
     [TestCategory(TestCategories.Integration)]
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-tika")]
     [DataRow("HelloWorld.txt", "unknown/unknown", "text/plain", ".txt")]
     [DataRow("sample1.docx", "unknown/unknown", "application/pdf", ".pdf")]
     [DataRow("sample1.docx", "unknown/unknown", "text/markdown", ".md")]

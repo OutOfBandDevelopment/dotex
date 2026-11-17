@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Options;
+using OoBDev.TestUtilities.Containers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.TestUtilities;
 using Qdrant.Client.Grpc;
@@ -43,7 +44,7 @@ public class QdrantVectorStoreProviderTests
             EnsureCollectionExists = true,
         }), _collection);
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-qdrant")]
     [TestCategory(TestCategories.Integration)]
     public async Task FindNeighborsAsync_NearestVectorFirst()
     {
@@ -61,7 +62,7 @@ public class QdrantVectorStoreProviderTests
         Assert.AreEqual("x", results[0].MetaData!["name"]);
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-qdrant")]
     [TestCategory(TestCategories.Integration)]
     public async Task FindNeighborsAsync_GroupBy_ReturnsOneHitPerGroup()
     {

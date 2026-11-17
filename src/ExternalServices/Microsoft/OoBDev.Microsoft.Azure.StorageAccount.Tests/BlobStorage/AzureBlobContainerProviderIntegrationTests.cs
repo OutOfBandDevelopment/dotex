@@ -1,4 +1,5 @@
 using Azure.Storage.Blobs;
+using OoBDev.TestUtilities.Containers;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -50,7 +51,7 @@ public class AzureBlobContainerProviderIntegrationTests
             _ = await _client.DeleteBlobContainerAsync(_provider.ContainerName);
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-azurite")]
     [TestCategory(TestCategories.Integration)]
     public async Task StoreContentAsync_ThenGetContentAsync_ReturnsSameContentAndType()
     {
@@ -72,7 +73,7 @@ public class AzureBlobContainerProviderIntegrationTests
         Assert.AreEqual("test", metaData!.MetaData!["owner"]);
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-azurite")]
     [TestCategory(TestCategories.Integration)]
     public async Task GetContentAsync_MissingBlob_ReturnsNull()
     {
@@ -86,7 +87,7 @@ public class AzureBlobContainerProviderIntegrationTests
         Assert.IsNull(content);
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-azurite")]
     [TestCategory(TestCategories.Integration)]
     public async Task StoreContentAsync_ExistingBlobWithoutOverwrite_Throws()
     {
@@ -101,7 +102,7 @@ public class AzureBlobContainerProviderIntegrationTests
         await Assert.ThrowsExactlyAsync<global::Azure.RequestFailedException>(second);
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-azurite")]
     [TestCategory(TestCategories.Integration)]
     public async Task StoreContentMetaDataAsync_MissingBlob_ReturnsFalse()
     {
@@ -115,7 +116,7 @@ public class AzureBlobContainerProviderIntegrationTests
         Assert.IsFalse(stored);
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-azurite")]
     [TestCategory(TestCategories.Integration)]
     public async Task QueryContent_TwoBlobs_ListsBothNames()
     {
@@ -131,7 +132,7 @@ public class AzureBlobContainerProviderIntegrationTests
         CollectionAssert.AreEqual(new[] { "a.txt", "b.txt" }, names);
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-azurite")]
     [TestCategory(TestCategories.Integration)]
     public async Task DeleteContentAsync_ExistingBlob_RemovesIt()
     {

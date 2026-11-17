@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Configuration;
+using OoBDev.TestUtilities.Containers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.Extensions.Configuration;
@@ -30,7 +31,7 @@ public class RedisCachingLockIntegrationTests
         return ActivatorUtilities.CreateInstance<RedisCachingProvider>(services);
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-redis")]
     [TestCategory(TestCategories.Integration)]
     public async Task TryAcquireAsync_TwoProviders_OnlyOneHoldsUntilReleased()
     {
@@ -53,7 +54,7 @@ public class RedisCachingLockIntegrationTests
         await afterRelease.DisposeAsync();
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-redis")]
     [TestCategory(TestCategories.Integration)]
     public async Task TryAcquireAsync_OwnerDies_LockExpires()
     {

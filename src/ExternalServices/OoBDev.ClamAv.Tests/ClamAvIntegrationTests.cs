@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Options;
+using OoBDev.TestUtilities.Containers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.Documents.Models;
 using OoBDev.TestUtilities;
@@ -23,7 +24,7 @@ public class ClamAvIntegrationTests
     private static ContentReference Content(string text) =>
         new() { Content = new MemoryStream(Encoding.ASCII.GetBytes(text)), ContentType = "text/plain", FileName = "file.txt" };
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-clamav")]
     public async Task Scan_PlainText_IsClean()
     {
         var result = await Scanner().ScanAsync(Content("hello"));
@@ -31,7 +32,7 @@ public class ClamAvIntegrationTests
         Assert.IsTrue(result.IsClean);
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-clamav")]
     public async Task Scan_EicarTestString_IsInfected()
     {
         // The standard antivirus test string; it is not malware.

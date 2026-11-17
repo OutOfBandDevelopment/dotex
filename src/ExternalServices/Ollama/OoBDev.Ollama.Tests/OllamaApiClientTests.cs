@@ -1,4 +1,5 @@
 ﻿using OoBDev.Extensions;
+using OoBDev.TestUtilities.Containers;
 using OoBDev.TestUtilities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -110,7 +111,7 @@ public class OllamaApiClientTests
     }
 
     [TestCategory(TestCategories.Integration)]
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-ollama")]
     public async Task GenerateEmbeddingsDoubleTest()
     {
         var url = TestInstanceGuard.Require(TestContext.GetRequiredProperty<string>("OLLAMA_URL"));
@@ -130,7 +131,7 @@ public class OllamaApiClientTests
     }
 
     [TestCategory(TestCategories.Integration)]
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-ollama")]
     public async Task GenerateEmbeddingsSingleTest()
     {
         var url = TestInstanceGuard.Require(TestContext.GetRequiredProperty<string>("OLLAMA_URL"));
@@ -150,7 +151,7 @@ public class OllamaApiClientTests
     }
 
     [TestCategory(TestCategories.Integration)]
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-ollama")]
     public async Task ChatAsyncTest()
     {
         var url = TestInstanceGuard.Require(TestContext.GetRequiredProperty<string>("OLLAMA_URL"));
@@ -181,7 +182,7 @@ public class OllamaApiClientTests
     }
 
     [TestCategory(TestCategories.Integration)]
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-ollama")]
     public async Task ChatAsyncTest_SamplingOptions_AnswersAsync()
     {
         var url = TestInstanceGuard.Require(TestContext.GetRequiredProperty<string>("OLLAMA_URL"));
@@ -209,7 +210,7 @@ public class OllamaApiClientTests
     }
 
     [TestCategory(TestCategories.Integration)]
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-ollama")]
     [DataRow("describe the image", "LadyDancingWithDog.jpg")]
     [DataRow("describe the image in less than 10 words", "RobotsTalking.jpg")]
     public async Task ChatWithVisionTest(string prompt, string imageName)
@@ -238,7 +239,7 @@ public class OllamaApiClientTests
     }
 
     [TestCategory(TestCategories.Integration)]
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-ollama")]
     public async Task ListModelsTest()
     {
         var url = TestInstanceGuard.Require(TestContext.GetRequiredProperty<string>("OLLAMA_URL"));
@@ -254,7 +255,7 @@ public class OllamaApiClientTests
     }
 
     [TestCategory(TestCategories.Integration)]
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-ollama")]
     public async Task PullModelTest_EmbeddingModel_IsListedAfterwardsAsync()
     {
         var url = TestInstanceGuard.Require(TestContext.GetRequiredProperty<string>("OLLAMA_URL"));
@@ -270,7 +271,7 @@ public class OllamaApiClientTests
     }
 
     [TestCategory(TestCategories.Integration)]
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-ollama")]
     public async Task DeleteModelTest_CopyOfAModel_IsGoneAfterwardsAsync()
     {
         var url = TestInstanceGuard.Require(TestContext.GetRequiredProperty<string>("OLLAMA_URL"));

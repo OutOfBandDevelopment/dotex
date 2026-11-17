@@ -1,4 +1,5 @@
 using System;
+using OoBDev.TestUtilities.Containers;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
@@ -71,7 +72,7 @@ public class PostgresQueryIntegrationTests
         await Run(connection, $"DROP SCHEMA IF EXISTS \"{_schema}\" CASCADE");
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-pgvector")]
     public async Task Query_FiltersAndCount_RunAgainstPostgres()
     {
         var page = await _engine.QueryAsync<ItemRow>(new QueryRequest { From = "items", Search = "tag:even", Filters = Filters("""{"live":"yes"}"""), Top = 100, Count = true });
@@ -81,7 +82,7 @@ public class PostgresQueryIntegrationTests
         Assert.IsTrue(page.Rows.All(r => r.Id % 2 == 0));
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-pgvector")]
     public async Task Query_WildcardInSearch_IsLiteral()
     {
         var page = await _engine.QueryAsync<ItemRow>(new QueryRequest { From = "items", Search = "\"50%_off\"", Top = 100 });
@@ -89,7 +90,7 @@ public class PostgresQueryIntegrationTests
         Assert.AreEqual(5, page.Rows.Count);
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-pgvector")]
     public async Task Query_InjectionText_IsHarmless()
     {
         var page = await _engine.QueryAsync<ItemRow>(new QueryRequest { From = "items", Filters = Filters("""{"title":"x'; DROP TABLE items;--"}""") });
@@ -98,7 +99,7 @@ public class PostgresQueryIntegrationTests
         Assert.AreEqual(25, (await _engine.QueryAsync<ItemRow>(new QueryRequest { From = "items", Top = 100 })).Rows.Count);
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-pgvector")]
     public async Task Query_Paging_NeverRepeatsOrSkipsWhenARowIsInsertedBetweenPages()
     {
         var seen = new List<long>();
@@ -123,7 +124,7 @@ public class PostgresQueryIntegrationTests
         Assert.AreEqual(25, seen.Count(i => i < 1000));
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-pgvector")]
     public async Task Query_FacetsShape_CountsByValue()
     {
         var page = await _engine.QueryAsync<FacetCount>(new QueryRequest { From = "items", Shape = "facets", By = ["score"] });
