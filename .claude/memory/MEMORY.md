@@ -18,3 +18,4 @@
 - [Change doc per day](feedback-change-doc-by-date.md) — log work in docs/changes/{today}.md, a new file when the date rolls over
 - [Embedded PlantUML only](feedback-embedded-plantuml.md) — no ASCII diagrams anywhere; hook blocks them
 - [Model licences and cache](feedback-model-licences.md) — ONNX + Hugging Face cache, MIT-compatible, copyleft models deployed separately
+- [Tests log progress](feedback-tests-log-progress.md) — TestContext.WriteLine per phase, reason before Inconclusive, no secrets
