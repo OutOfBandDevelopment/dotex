@@ -45,6 +45,7 @@ The `image-mask` dotnet tool ([`OoBDev.ImageMask.Cli`](../../../src/Tools/OoBDev
 ## Decisions
 
 - A guide per mode is generated even when mostly duplicated (Tui, WPF and Web each get their own); filtering one markdown source per type is not available, so generation does the work.
+- Freshness: `Screenshots_AreNotOlderThanTheirCode` (`DOCS_CHECK_SCREENSHOTS=true`) reports an image whose source folders (`images/sources.json`) have a commit more than 30 days newer.
 - Tui screenshot tests write straight into `docs/applications/devterm/user-guide/images` (done).
 
 ## Open points

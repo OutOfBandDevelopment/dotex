@@ -7,6 +7,7 @@ Attribute-driven method caching: a manager that builds cache keys and a factory 
 - [Registration](#registration)
 - [Provider selection](#provider-selection)
 - [Caching a service](#caching-a-service)
+- [Concurrent misses](#concurrent-misses)
 - [Failure behaviour](#failure-behaviour)
 
 ## Registration
@@ -56,6 +57,14 @@ IProductRepository repository = serviceProvider.Cacheable<IProductRepository, Pr
 - `[FlushCache(keyFormatter)]` flushes the formatted key; `[FlushCache(type, methodName)]` flushes the key the named cacheable method would build for the same arguments.
 - Key formatters use `{parameter}` and `{parameter.Property}` placeholders over the method arguments.
 - `ICachingManager` can also be used directly: `BuildKey`, `StoreAsync`, `RetrieveAsync` and `FlushAsync`.
+
+## Concurrent misses
+
+When several callers miss the same key at once, the first computes and the rest wait and then read its result, so an expensive method runs once per key, not once per caller (`CachedProxyStampedeTests`). The gate is in process and striped over 64 locks, so unrelated keys can occasionally wait on each other but nothing leaks; across processes each instance still computes once. The Redis provider (`redis`) shares the stored result between instances.
+
+## Concurrent misses
+
+A cold key is computed once. In one process `CachedProxy` serialises misses per key (striped gates). Across processes, a provider that implements `ICachingLock` (the `redis` provider does) lets the first process take a lock and compute while the others poll the cache every 50 ms until the value appears; if the holder dies, the lock expires after 30 s and a waiter computes instead. A provider without a lock (the memory cache is per process anyway) is treated as always granted.
 
 ## Failure behaviour
 

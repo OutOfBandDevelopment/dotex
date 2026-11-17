@@ -40,4 +40,19 @@ describe('VectorStoreViewModel', () => {
     await vm.list.execute();
     expect(fetchMock.mock.calls[0][0]).toBe('/api/VectorStore/my%20notes');
   });
+  it('reembed_Valid_PostsToTheCollectionAndRecordsResult', async () => {
+    const fetchMock = vi.fn(async (_p: string, _i: RequestInit) => ok({ replaced: 3, tag: 'minilm-v1' }));
+    vi.stubGlobal('fetch', fetchMock);
+    const vm = new VectorStoreViewModel();
+    vm.collection.value = 'my notes';
+    await vm.reembed.execute();
+    expect(fetchMock.mock.calls[0][0]).toBe('/api/VectorStore/my%20notes/reembed');
+    expect(fetchMock.mock.calls[0][1].method).toBe('POST');
+    expect(vm.reembedResult.value).toEqual({ replaced: 3, tag: 'minilm-v1' });
+  });
+  it('reembed_BlankCollection_CannotExecute', () => {
+    const vm = new VectorStoreViewModel();
+    vm.collection.value = ' ';
+    expect(vm.reembed.canExecute.value).toBe(false);
+  });
 });

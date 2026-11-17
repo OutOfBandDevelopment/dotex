@@ -20,6 +20,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\OoBDev.MessageQueueing.Abstractions\OoBDev.MessageQueueing.Abstractions.csproj" />
+		<ProjectReference Include="..\OoBDev.MessageQueueing\OoBDev.MessageQueueing.csproj" />
 		<ProjectReference Include="..\OoBDev.System.Abstractions\OoBDev.System.Abstractions.csproj" />
 		<ProjectReference Include="..\OoBDev.System\OoBDev.System.csproj" />
 	</ItemGroup>

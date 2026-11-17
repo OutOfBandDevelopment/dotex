@@ -673,6 +673,7 @@ The [archive](./archive/) folder contains comprehensive analysis of alternative 
 - Understanding trade-offs
 
 **Archived Documents:**
+- [Migration Checklist](./archive/migration-checklist.md) - Archived January 2026 migration plan (done)
 - [Pattern Comparison](./archive/pattern-comparison.md) - Executive summary and recommendation
 - [Generic Channel-Based Pattern](./archive/pattern-generic-channel-based.md) - Alternative with compile-time queue type safety
 - [Multi-Provider Examples](./archive/multi-provider-bridge-example.md) - Advanced scenarios

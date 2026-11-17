@@ -4,29 +4,36 @@
         xmlns:ui="clr-namespace:UiDefinitionsWpf;assembly=OoBDev.UiDefinitions.Wpf"
         xmlns:avalon="https://github.com/Dirkster99/AvalonDock"
         Title="OoBDev DevTerm" Width="900" Height="600">
+    <Window.InputBindings>
+        <KeyBinding Key="N" Modifiers="Ctrl" Command="{Binding NewConnection}" />
+        <KeyBinding Key="O" Modifiers="Ctrl" Command="{Binding OpenPlaybackWindow}" />
+        <KeyBinding Key="L" Modifiers="Ctrl+Shift" Command="{Binding SelectedSession.ToggleLogging}" />
+        <KeyBinding Key="M" Modifiers="Ctrl" Command="{Binding ShowStreamMonitorWindow}" />
+        <KeyBinding Key="L" Modifiers="Ctrl" Command="{Binding SelectedSession.ClearOutput}" />
+    </Window.InputBindings>
     <DockPanel>
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="_File">
-                <MenuItem Header="_New connection..." Command="{Binding NewConnection}" />
+                <MenuItem Header="_New connection..." InputGestureText="Ctrl+N" Command="{Binding NewConnection}" />
                 <MenuItem Header="New _loopback session" Command="{Binding NewLoopbackSession}" />
-                <MenuItem Header="Listen for _peers..." Command="{Binding ListenForPeers}" />
+                <MenuItem Header="Listen for p_eers..." Command="{Binding ListenForPeers}" />
                 <MenuItem Header="Listen for _UDP..." Command="{Binding ListenForUdp}" />
-                <MenuItem Header="Open log for _playback..." Command="{Binding OpenPlaybackWindow}" />
+                <MenuItem Header="Open log for play_back..." InputGestureText="Ctrl+O" Command="{Binding OpenPlaybackWindow}" />
                 <Separator />
-                <MenuItem Header="Start _logging" Command="{Binding SelectedSession.ToggleLogging}" />
-                <MenuItem Header="Add _note to log..." Command="{Binding SelectedSession.AddLogNote}" />
+                <MenuItem Header="Start lo_gging" InputGestureText="Ctrl+Shift+L" Command="{Binding SelectedSession.ToggleLogging}" />
+                <MenuItem Header="Add n_ote to log..." Command="{Binding SelectedSession.AddLogNote}" />
             </MenuItem>
             <MenuItem Header="_Device">
                 <MenuItem Header="Device _manifest..." Command="{Binding OpenManifestPanel}" />
                 <MenuItem Header="_Edit device manifest..." Command="{Binding ShowManifestEditor}" />
                 <Separator />
-                <MenuItem Header="S_tream monitor..." Command="{Binding ShowStreamMonitorWindow}" />
+                <MenuItem Header="_Stream monitor..." InputGestureText="Ctrl+M" Command="{Binding ShowStreamMonitorWindow}" />
                 <MenuItem Header="_Routing..." Command="{Binding ShowRoutingWindow}" />
                 <MenuItem Header="Converter _tools..." Command="{Binding ShowConverterTools}" />
                 <MenuItem Header="Confi_gure device..." Command="{Binding ShowConfigureDevice}" />
                 <MenuItem Header="_Install plugin..." Command="{Binding InstallPluginFromZip}" />
                 <MenuItem Header="_Plugins..." Command="{Binding ShowPlugins}" />
-                <MenuItem Header="_Plugin approvals..." Command="{Binding ReviewPluginApprovals}" />
+                <MenuItem Header="Plugin _approvals..." Command="{Binding ReviewPluginApprovals}" />
             </MenuItem>
             <MenuItem Header="_View">
                 <MenuItem Header="_Theme" ItemsSource="{Binding Themes.Choices}">
@@ -44,7 +51,7 @@
                 <Separator />
                 <MenuItem Header="_Echo sent commands" IsCheckable="True" IsChecked="{Binding SelectedSession.EchoSent, Mode=TwoWay}" />
                 <MenuItem Header="_Software flow control (XON/XOFF)" IsCheckable="True" IsEnabled="{Binding SelectedSession.HasSoftwareFlowControl}" IsChecked="{Binding SelectedSession.SoftwareFlowControl, Mode=TwoWay}" />
-                <MenuItem Header="Clea_r output" Command="{Binding SelectedSession.ClearOutput}" />
+                <MenuItem Header="Clea_r output" InputGestureText="Ctrl+L" Command="{Binding SelectedSession.ClearOutput}" />
             </MenuItem>
         </Menu>
         <Grid DockPanel.Dock="Bottom" DataContext="{Binding SelectedSession}" Margin="4">
@@ -58,7 +65,7 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <TextBox Grid.Column="0" Text="{Binding SendText, UpdateSourceTrigger=PropertyChanged}" />
+            <TextBox AutomationProperties.Name="Text to send" Grid.Column="0" Text="{Binding SendText, UpdateSourceTrigger=PropertyChanged}" />
             <Button Grid.Column="1" Content="Send" Margin="4,0,0,0" Command="{Binding Send}" />
             <Button Grid.Column="2" Content="Connect" Margin="4,0,0,0" Command="{Binding Connect}" />
             <Button Grid.Column="3" Content="Disconnect" Margin="4,0,0,0" Command="{Binding Disconnect}" />
@@ -96,8 +103,8 @@
                                             </ItemsControl.ItemTemplate>
                                         </ItemsControl>
                                         <TextBlock Text="Theme" Margin="4,4,4,0" />
-                                        <ComboBox ItemsSource="{Binding Themes.Names}" SelectedItem="{Binding Themes.Selected}" Margin="4" />
-                                        <ListBox ItemsSource="{Binding Sessions}" SelectedItem="{Binding SelectedSession}" DisplayMemberPath="Title" Margin="4" MinHeight="60" />
+                                        <ComboBox AutomationProperties.Name="Theme" ItemsSource="{Binding Themes.Names}" SelectedItem="{Binding Themes.Selected}" Margin="4" />
+                                        <ListBox AutomationProperties.Name="Sessions" ItemsSource="{Binding Sessions}" SelectedItem="{Binding SelectedSession}" DisplayMemberPath="Title" Margin="4" MinHeight="60" />
                                         <ItemsControl ItemsSource="{Binding DevicePanels}">
                                             <ItemsControl.ItemTemplate>
                                                 <DataTemplate>
@@ -131,7 +138,7 @@
                     </avalon:LayoutAnchorablePane>
                     <avalon:LayoutDocumentPane>
                         <avalon:LayoutDocument ContentId="output" Title="Session output" CanClose="False">
-                        <ListBox DataContext="{Binding DataContext.SelectedSession, RelativeSource={RelativeSource AncestorType=Window}}" ItemsSource="{Binding OutputLines}" FontFamily="Consolas" />
+                        <ListBox AutomationProperties.Name="Session output" DataContext="{Binding DataContext.SelectedSession, RelativeSource={RelativeSource AncestorType=Window}}" ItemsSource="{Binding OutputLines}" FontFamily="Consolas" />
                                     </avalon:LayoutDocument>
                     </avalon:LayoutDocumentPane>
                     <avalon:LayoutAnchorablePane DockWidth="420">

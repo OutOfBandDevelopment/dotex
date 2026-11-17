@@ -1,3 +1,4 @@
+using OoBDev.AspNetCore.Mvc.Filters;
 using OoBDev.WebApi.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -14,6 +15,7 @@ namespace OoBDev.WebApi.Controllers;
 /// </summary>
 [ApiController]
 [Route("api/[controller]")]
+[ApplicationRight("operations.read")]
 public class OperationsController(
     IConfiguration configuration,
     IWebHostEnvironment environment

@@ -41,6 +41,7 @@ public interface IApplicationRightChecker
 | Property | Default | Notes |
 |----------|---------|-------|
 | `RoleClaimTypes` | `ClaimTypes.Role`, `roles`, `role` | Claim types read as roles; at least one entry |
+| `RoleObjectClaimTypes` | `realm_access` | JSON object claims whose `roles` array holds roles (Keycloak realm roles) |
 | `Roles` | empty | Role name to list of rights; names and rights must not be blank |
 
 ## Registration

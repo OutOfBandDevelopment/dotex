@@ -28,7 +28,7 @@ public sealed class K8055Panel : IDevicePanel
     public UiDefinition BuildDefinition() => K8055UiDefinition.Build();
 
     /// <inheritdoc />
-    public IControlSurface CreateSurface(DeviceSend send) => new K8055ControlSurface(send);
+    public IControlSurface CreateSurface(DeviceSend send, IDeviceDecoder decoder) => new K8055ControlSurface(send);
 
     /// <inheritdoc />
     public IDeviceDecoder CreateDecoder() => new K8055Decoder();

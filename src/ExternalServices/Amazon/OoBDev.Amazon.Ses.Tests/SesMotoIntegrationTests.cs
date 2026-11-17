@@ -1,4 +1,5 @@
 ﻿using System;
+using OoBDev.TestUtilities.Containers;
 using System.Threading.Tasks;
 using Amazon.SimpleEmailV2.Model;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -18,7 +19,7 @@ public class SesMotoIntegrationTests
 
     private sealed record Channel(string Name, string Protocol, string Provider) : IChannel;
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-moto")]
     public async Task SendAsync_WithMoto_ReturnsASesMessageIdAsync()
     {
         // Stage

@@ -1,4 +1,5 @@
 using Amazon.SQS;
+using OoBDev.TestUtilities.Containers;
 using Amazon.SQS.Model;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -31,7 +32,7 @@ public class AmazonSqsIntegrationTests
     /// Lists all available SQS queues.
     /// Useful for verifying Moto setup or AWS credentials.
     /// </summary>
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-moto")]
     [TestCategory(TestCategories.Integration)]
     public async Task ListQueues_WithMoto_ReturnsQueueUrls()
     {
@@ -67,7 +68,7 @@ public class AmazonSqsIntegrationTests
     /// Creates a new test queue.
     /// Queue name will include timestamp to ensure uniqueness.
     /// </summary>
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-moto")]
     [TestCategory(TestCategories.Integration)]
     public async Task CreateQueue_WithMoto_CreatesSuccessfully()
     {
@@ -129,7 +130,7 @@ public class AmazonSqsIntegrationTests
     /// <summary>
     /// Sends a test message to a queue using the AmazonSqsMessageProvider.
     /// </summary>
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-moto")]
     [TestCategory(TestCategories.Integration)]
     public async Task SendAsync_ToMotoQueue_SendsSuccessfully()
     {
@@ -226,7 +227,7 @@ public class AmazonSqsIntegrationTests
     /// <summary>
     /// Tests sending to a FIFO queue with MessageGroupId.
     /// </summary>
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-moto")]
     [TestCategory(TestCategories.Integration)]
     public async Task SendAsync_ToFifoQueue_WithMessageGroupId_SendsSuccessfully()
     {

@@ -9,7 +9,8 @@ A reference design for building command/query separation and event-sourced aggre
 1. [Requirements](requirements.md) — goals, non-goals, numbered requirements
 2. [Architecture](architecture.md) — write side, read side, how it relates to the SharedFramework "Complex Events" epic
 3. [API design](api-design.md) — the proposed contracts
-4. [Testing strategy](testing-strategy.md) — requirement to test map
+4. [Testing strategy](testing-strategy.md)
+5. [Erasure](erasure.md) — tombstone and compaction (GDPR), what it breaks — requirement to test map
 
 ### List of Figures
 
@@ -39,6 +40,6 @@ Confirmed by the owner on 2026-11-11 (the recommended options):
 4. **First cut:** minimal. Snapshots and upcasting are separate backlog items.
 5. **Relational stores:** the event store and the entity store have an Entity Framework Core implementation with PostgreSQL, SQL Server and SQLite as configurable databases (owner, 2026-11-11); see [API design](api-design.md#entity-framework-stores).
 6. **Reference material:** the harvest event-sourcing project may be copied from after sanitizing, recording each source in the readme (owner, 2026-11-11).
-7. **Erasure:** crypto-shredding per subject is the supported route; no event deletion and no redaction events.
+7. **Erasure (owner, 2026-11-16):** rewrite history: a tombstone event and a compaction job blank the personal fields; this breaks hash chains (re-sealed) and leaves external copies, see [erasure](erasure.md). Crypto-shredding is no longer the route.
 
 The library build is now unblocked and sits in `BACKLOG.md`.

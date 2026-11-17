@@ -1,4 +1,4 @@
-# Change Documentation Archive
+﻿# Change Documentation Archive
 
 This directory contains detailed documentation of completed work, archived to reduce context overhead in active TODO files and CLAUDE.md.
 
@@ -65,19 +65,22 @@ Each task section should include:
 
 ## By day
 
+- [2026-11-17](2026-11-17.md): 11 task(s)
+- [2026-11-16](2026-11-16.md): 80 task(s)
+- [2026-11-12](2026-11-12.md): 51 task(s)
 - [2026-11-11](2026-11-11.md): 124 task(s)
 - [2026-11-10](2026-11-10.md): 49 task(s)
 - [2026-11-09](2026-11-09.md): 24 task(s)
-- [2026-11-06](2026-11-06.md): 47 task(s)
+- [2026-11-06](2026-11-06.md): 48 task(s)
 - [2026-11-05](2026-11-05.md): 39 task(s)
 - [2026-11-04](2026-11-04.md): 39 task(s)
-- [2026-11-03](2026-11-03.md): 4 task(s)
+- [2026-11-03](2026-11-03.md): 9 task(s)
 - [2026-10-30](2026-10-30.md): 34 task(s)
 - [2026-10-29](2026-10-29.md): 99 task(s)
 - [2026-10-28](2026-10-28.md): 24 task(s)
 - [2026-10-22](2026-10-22.md): 29 task(s)
-- [2026-10-09](2026-10-09.md): 6 task(s)
-- [2026-10-08](2026-10-08.md): 4 task(s)
+- [2026-10-09](2026-10-09.md): 9 task(s)
+- [2026-10-08](2026-10-08.md): 9 task(s)
 - [2026-10-07](2026-10-07.md): 3 task(s)
 - [2026-09-30](2026-09-30.md): 3 task(s)
 - [2026-01-21](2026-01-21.md): 9 task(s)

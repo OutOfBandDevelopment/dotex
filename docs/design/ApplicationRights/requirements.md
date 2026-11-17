@@ -37,6 +37,7 @@
 | REQ-002 | Must | The default mapper reads `OoBDev:Authorization:Roles:<role>` (a list of rights) from configuration. Role names compare case-insensitively. |
 | REQ-003 | Must | `RoleRightClaimsTransformation` adds one `app__application_right` claim per mapped right to an authenticated principal, once per principal (re-running adds nothing). Unauthenticated principals are returned unchanged. |
 | REQ-004 | Must | Roles are read from the claim types listed in `RoleClaimTypes` (default `ClaimTypes.Role`, `roles`, `role`). |
+| REQ-004a | Must | Roles in a JSON object claim listed in `RoleObjectClaimTypes` (default `realm_access`, Keycloak realm roles) are read from its `roles` array; malformed JSON grants nothing. |
 | REQ-005 | Must | Rights already present as `app__application_right` claims (for example from an STS exchange) are kept and merged with mapped rights. |
 | REQ-006 | Must | `IApplicationRightChecker.Check` returns `Unauthenticated`, `Forbidden` or `Allowed`: unauthenticated callers never pass; with a non-empty required list the caller needs at least one listed right; an empty list requires only authentication. |
 | REQ-007 | Must | An unmapped role grants nothing (deny by default). |

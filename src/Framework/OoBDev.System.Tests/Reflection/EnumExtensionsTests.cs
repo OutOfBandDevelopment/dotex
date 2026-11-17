@@ -19,7 +19,7 @@ public class EnumExtensionsTests
     {
         if (Environment.OSVersion.Platform != PlatformID.Win32NT)
         {
-            //TODO: fix this better
+            // Request: docs/features/request/2026-11-17-code-cleanup-and-test-gaps.md
             Assert.Inconclusive();
             return;
         }
@@ -56,7 +56,7 @@ EnumModel { Id = 32767, Name = All, Code = ALL, Description = , Order = 0, Value
     {
         if (Environment.OSVersion.Platform != PlatformID.Win32NT)
         {
-            //TODO: fix this better
+            // Request: docs/features/request/2026-11-17-code-cleanup-and-test-gaps.md
             Assert.Inconclusive();
             return;
         }

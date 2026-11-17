@@ -38,7 +38,7 @@ echo Check interval: %INTERVAL% seconds
 echo.
 
 REM Service list (container names from docker-compose file)
-set SERVICES=oobd-test-tika oobd-test-smtp oobd-test-mongodb oobd-test-sqlserver oobd-test-rabbitmq oobd-test-redis oobd-test-postgres oobd-test-opensearch oobd-test-qdrant oobd-test-neo4j oobd-test-azurite oobd-test-moto oobd-test-servicebus oobd-test-keycloak oobd-test-sbert oobd-test-ollama oobd-test-otel oobd-test-mosquitto oobd-test-ser2net oobd-test-loopback-device
+set SERVICES=oobd-test-tika oobd-test-smtp oobd-test-mongodb oobd-test-sqlserver oobd-test-rabbitmq oobd-test-redis oobd-test-postgres oobd-test-pgvector oobd-test-docling oobd-test-clamav oobd-test-sonarqube oobd-test-opensearch oobd-test-qdrant oobd-test-neo4j oobd-test-azurite oobd-test-moto oobd-test-servicebus oobd-test-keycloak oobd-test-sbert oobd-test-ollama oobd-test-otel oobd-test-mosquitto oobd-test-ser2net oobd-test-loopback-device
 
 REM Main health check loop
 set /a elapsed=0

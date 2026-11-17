@@ -50,7 +50,7 @@ public partial class OAuthDocumentTransformer(
     /// <returns>A completed task.</returns>
     public Task TransformAsync(OpenApiDocument document, OpenApiDocumentTransformerContext context, CancellationToken cancellationToken)
     {
-        //TODO: consider getting from oauth ./.well-known/openid-configuration if not set
+        // Request: docs/features/request/2026-11-17-provider-and-adapter-gaps.md
         var options = config.Value;
 
         if (string.IsNullOrEmpty(options.AuthorizationUrl))

@@ -68,6 +68,28 @@ public class SqlVectorStoreProvider : IVectorStoreProvider
     }
 
     /// <inheritdoc/>
+    public async Task DeleteAsync(IEnumerable<string> ids)
+    {
+        var numeric = ids.Select(i => long.TryParse(i, NumberStyles.None, CultureInfo.InvariantCulture, out var n) ? n : (long?)null)
+            .Where(n => n.HasValue).Select(n => n!.Value).Distinct().ToArray();
+        if (numeric.Length == 0)
+            return;
+
+        await using var connection = Open();
+        await connection.OpenAsync().ConfigureAwait(false);
+        await using var command = connection.CreateCommand();
+        var names = numeric.Select((_, i) => "@id" + i.ToString(CultureInfo.InvariantCulture)).ToArray();
+        command.CommandText = $"""
+            DELETE v FROM [embedding].[Vectors] v JOIN [embedding].[Sources] s ON s.[SourceID] = v.[SourceID]
+            WHERE s.[Name] = @name AND v.[VectorID] IN ({string.Join(",", names)});
+            """;
+        command.Parameters.AddWithValue("@name", CollectionName);
+        for (var i = 0; i < numeric.Length; i++)
+            command.Parameters.AddWithValue(names[i], numeric[i]);
+        await command.ExecuteNonQueryAsync().ConfigureAwait(false);
+    }
+
+    /// <inheritdoc/>
     public IAsyncEnumerable<SearchResultModel> ListAsync() =>
         QueryAsync("""
             SELECT TOP (@limit) v.[VectorID], CAST(0 AS float), v.[Metadata]

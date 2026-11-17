@@ -1,7 +1,7 @@
 # Feature Proposals - SharedFramework Modernization
 
 **Last Updated:** 2026-01-22
-**Status:** 📋 Design & Requirements Phase
+**Status:** 📋 Design & Requirements Phase (Epic 1 built; epics 2 to 10 not built, reconciled with `src` on 2026-11-16: DataEnhancement, MasterData and ContractParser have no code either)
 **Purpose:** Comprehensive design documentation for reimplementing SharedFramework capabilities using modern OoBDev patterns
 
 ---
@@ -46,7 +46,7 @@ Each feature proposal follows this structure:
 ## Epic Index
 
 ### Epic 1: Message Queueing Infrastructure
-**Status:** 📋 Documentation Pending
+**Status:** ✅ Built (AWS SQS, Azure Service Bus and the abstractions exist with tests; see [MessageQueuing](../MessageQueuing/README.md)); reconciled 2026-11-16
 **Priority:** HIGH
 **Capabilities:** AWS SQS, Azure Service Bus providers with unified abstraction
 

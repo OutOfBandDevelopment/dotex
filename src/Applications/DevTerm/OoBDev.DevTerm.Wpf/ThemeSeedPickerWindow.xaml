@@ -13,9 +13,9 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <TextBlock Grid.Row="0" Text="Start from:" />
-        <ListBox Grid.Row="1" Margin="0,4,0,0" ItemsSource="{Binding Options}" SelectedIndex="{Binding SelectedIndex}" DisplayMemberPath="Label" MouseDoubleClick="List_MouseDoubleClick" />
+        <ListBox AutomationProperties.Name="Theme seeds" Grid.Row="1" Margin="0,4,0,0" ItemsSource="{Binding Options}" SelectedIndex="{Binding SelectedIndex}" DisplayMemberPath="Label" MouseDoubleClick="List_MouseDoubleClick" />
         <TextBlock Grid.Row="2" Margin="0,8,0,0" Text="New theme name:" />
-        <TextBox Grid.Row="3" Margin="0,4,0,0" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" />
+        <TextBox AutomationProperties.Name="Theme name" Grid.Row="3" Margin="0,4,0,0" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" />
         <TextBlock Grid.Row="4" Margin="0,6,0,0" TextWrapping="Wrap" Foreground="#C0392B" Text="{Binding Message}" />
         <StackPanel Grid.Row="5" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
             <Button Content="Create" Width="80" Height="32" Margin="0,0,8,0" IsDefault="True" Click="Create_Click" />

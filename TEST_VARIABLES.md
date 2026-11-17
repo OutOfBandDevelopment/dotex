@@ -20,6 +20,9 @@ This document lists all test properties used by Integration tests. These propert
 1. [Test Categories](#test-categories)
 2. [Integration Test Variables](#integration-test-variables)
    - [Apache Tika (Document Processing)](#apache-tika-document-processing)
+   - [Docling serve (Document Conversion and OCR)](#docling-serve-document-conversion-and-ocr)
+   - [ClamAV (Virus Scanning)](#clamav-virus-scanning)
+   - [SonarQube (Static Analysis)](#sonarqube-static-analysis)
    - [SMTP/IMAP (Email Testing)](#smtpimap-email-testing)
    - [MongoDB (NoSQL Database)](#mongodb-nosql-database)
    - [SQL Server (Relational Database)](#sql-server-relational-database)
@@ -49,6 +52,16 @@ This document lists all test properties used by Integration tests. These propert
 ### Integration Tests (Docker-Based)
 Tests that run against Docker containers. See `/containers/testing/` for Docker infrastructure.
 
+#### Container start-up
+
+Integration tests marked `[IntegrationTestMethod("oobd-test-redis")]` check their containers first: a running, healthy container is used as it is; a stopped or missing one is started (`docker start` or `docker compose up` of the one service) and watched until its health check passes. If that takes longer than the timeout, or Docker is missing, the test ends Inconclusive. Only containers the tests started are stopped, by the last test process still using them (shared lease files), when its run ends.
+
+| Parameter | Default | Meaning |
+|-----------|---------|---------|
+| `CONTAINER_STARTUP_TIMEOUT_SECONDS` | `5` | Seconds to wait for a container to become healthy |
+| `CONTAINER_AUTOSTART` | `true` | Start containers that are down; `false` makes the tests Inconclusive instead |
+| `CONTAINER_STOP_AFTER_TESTS` | `true` | Stop the containers the tests started when the run ends |
+
 ### LiveIntegration Tests (Cloud-Based)
 Tests that require live cloud credentials. Manual execution only.
 
@@ -68,6 +81,49 @@ Tests that require live cloud credentials. Manual execution only.
 
 **Tests Using:**
 - `OoBDev.Apache.Tika.Tests` (6 handlers: PDF, DOC, DOCX, EPUB, ODT, RTF)
+
+### Docling serve (Document Conversion and OCR)
+
+**Service:** docling-serve (CPU image, English Tesseract only)
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `DOCLING_URL` | `http://localhost:5001` | docling-serve base URL |
+
+**Docker Container:** `quay.io/docling-project/docling-serve-cpu` (Port 5001, override `TEST_PORT_DOCLING`)
+
+**Tests Using:**
+- `OoBDev.Docling.Tests` (`DoclingIntegrationTests`)
+
+### ClamAV (Virus Scanning)
+
+**Service:** ClamAV daemon (clamd)
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `CLAMAV_HOST` | `localhost` | clamd host |
+| `CLAMAV_PORT` | `3310` | clamd TCP port |
+
+**Docker Container:** `clamav/clamav:stable` (Port 3310, override `TEST_PORT_CLAMAV`). The first start downloads the signature database, so the health check allows a few minutes.
+
+**Tests Using:**
+- `OoBDev.ClamAv.Tests` (`ClamAvIntegrationTests`)
+
+### SonarQube (Static Analysis)
+
+**Service:** SonarQube Community build
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `SONARQUBE_URL` | `http://localhost:9002` | SonarQube base URL |
+
+The analysis token is a user secret (`dotnet user-secrets` or the `SONAR_TOKEN` shell variable read by `scripts/ci/sonar.ps1`), never a test parameter and never committed.
+
+**Docker Container:** `sonarqube:community` (Port 9000 inside, 9002 on the host, override `TEST_PORT_SONARQUBE`)
+
+**Tests Using:** none; `scripts/ci/sonar.ps1` is the client.
+
+---
 
 ---
 
@@ -167,6 +223,18 @@ Tests that require live cloud credentials. Manual execution only.
 **Docker Container:** `oobd-test-postgres` (host port 5434, override with `TEST_PORT_POSTGRES`)
 
 **Tests Using:** `OoBDev.EventSourcing.EntityFrameworkCore.Tests` (`PostgresIntegrationTests`).
+
+### PostgreSQL with pgvector
+
+**Service:** PostgreSQL 17 with the pgvector extension (`pgvector/pgvector`).
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `PGVECTOR_CONNECTION_STRING` | `Host=localhost;Port=5435;Database=oobdev_test;Username=postgres;Password=IntegrationTest123!` | Npgsql connection string of the vector test database |
+
+**Docker Container:** `oobd-test-pgvector` (host port 5435, override with `TEST_PORT_PGVECTOR`)
+
+**Tests Using:** `OoBDev.PostgreSql.WorkQueue.Tests` (work queue, throwaway schema per test); the pgvector store tests will use it too.
 
 ---
 
@@ -297,6 +365,8 @@ Tests that require live cloud credentials. Manual execution only.
 |----------|---------|-------------|
 | `PLANTUML_URL` | `http://localhost:8086` | The PlantUML server already running on the system (container `plantuml`); the test stack does not start its own |
 | `DOCS_VALIDATE_PATHS` | `docs/patterns-discovery;docs/applications` | `;`-separated repo-relative folders or files to validate |
+| `DOCS_CHECK_SCREENSHOTS` | `false` | `true` compares each guide screenshot's last commit with the newest commit of the code it shows (`images/sources.json`) |
+| `DOCS_SCREENSHOT_TOLERANCE_DAYS` | `30` | days the code may be newer than its screenshot before the check reports it |
 
 **Tests Using:** `OoBDev.Docs.Tests` (Unit for structure, links and captions; Integration for rendering)
 
@@ -667,3 +737,9 @@ See `/containers/testing/README.md` for detailed Docker infrastructure documenta
 - New test properties are introduced
 - Docker services are added/modified
 - Default values change
+
+### RAW development (DevLocal)
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `RAW_TEST_FILE` | empty | Path of a camera RAW file for the `OoBDev.ImageMagick.Tests` DevLocal test; the test is inconclusive when unset |

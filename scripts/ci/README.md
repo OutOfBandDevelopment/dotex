@@ -5,7 +5,9 @@ GitHub is no longer the primary repository and CI is manual only: nothing runs o
 | Script | Replaces | What it does |
 |--------|----------|--------------|
 | `run-linux-tests.ps1` | WSL for Linux-only tests | Copies `src/` into the `mcr.microsoft.com/dotnet/sdk:10.0` container (host build output is untouched, GitVersion off) and runs `dotnet test` there; default project is the CGI middleware tests (`.sh` fixtures). Results in `artifacts/test-results/linux` |
-| `run-tests.ps1` | the former GitHub build and test workflows | Restore, build and test `src/` for the chosen categories; starts and always stops the Docker stack when `Integration` is included |
+| `run-tests.ps1` | the former GitHub build and test workflows | Restore, build and test `src/` for the chosen categories, then writes a markdown summary per `.trx` to `artifacts/test-results/summary`; starts and always stops the Docker stack when `Integration` is included |
+
+| `sonar.ps1` | the deleted `run-sonar.bat` | Scans `src/` with `dotnet-sonarscanner` against the SonarQube service of the test stack (begin, build, tests with OpenCover coverage, end). Token from `SONAR_TOKEN` only, never a file; `-Gate` waits for the quality gate and fails the script when it fails; `-SkipTests` skips coverage |
 
 ```powershell
 pwsh scripts/ci/run-tests.ps1                          # Unit and Simulate

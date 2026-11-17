@@ -61,6 +61,32 @@ if (strayRoot.length > 0) {
   process.exit(0);
 }
 
+// A closed request lives in the folder of its outcome (owner, 2026-11-16): done in completed/, declined in rejected/, open ones in request/.
+const misfiled = [];
+for (const f of staged) {
+  const m = /^docs\/features\/(request|completed|rejected)\/\d{4}-\d{2}-\d{2}-[^/]+\.md$/.exec(f);
+  if (!m) continue;
+  let text;
+  try {
+    text = readFileSync(`${process.env.CLAUDE_PROJECT_DIR ?? process.cwd()}/${f}`, 'utf8');
+  } catch {
+    continue;
+  }
+  const status = /\*\*Status:\*\*\s*(\w+)/i.exec(text)?.[1]?.toLowerCase();
+  const wanted = status === 'done' ? 'completed' : status === 'declined' ? 'rejected' : 'request';
+  if (status && wanted !== m[1]) misfiled.push(`${f} (Status ${status} belongs in docs/features/${wanted}/)`);
+}
+if (misfiled.length > 0) {
+  console.log(JSON.stringify({
+    hookSpecificOutput: {
+      hookEventName: 'PreToolUse',
+      additionalContext:
+        `work-tracking: ${misfiled.join('; ')}. A finished request moves with git mv to docs/features/completed/ (Status done, change document linked); a declined one to docs/features/rejected/ (Status declined, reason given); then fix the links to it (rule work-tracking, skill complete-work).`,
+    },
+  }));
+  process.exit(0);
+}
+
 // A new task section belongs in today's file (owner, 2026-11-05): the local date decides, not the newest file.
 const pad = (n) => String(n).padStart(2, '0');
 const now = new Date();

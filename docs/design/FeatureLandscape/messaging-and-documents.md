@@ -40,35 +40,46 @@ Part of the [feature landscape](README.md). Status is "a project exists under `s
 - **Works with:** AsyncApi (documents the queues), Communications (sends through the queue), CqrsEventSourcing (the event feed could ride on it).
 - **Known issues:** broker-specific behaviour (visibility timeout, prefetch, ordering) differs per adapter; the design should list which guarantees the abstraction promises.
 - **Practices:** handler pattern `IHandler<TRequest, TResponse>`, provider/factory per broker, outbox for publish-after-commit.
-- **Missing:** an outbox/inbox design (idempotent consumers) shared by all adapters.
+- **Built 2026-11-16:** the inbox half: `IdempotentMessageQueueHandler` with `IInboxStore` (idempotent consumers for every adapter).
+- **Built 2026-11-16:** the outbox half: `OutboxMessageQueueSender`, `OutboxDispatcher`, `IOutboxStore`.
+- **Built 2026-11-16:** database `IInboxStore` and `IOutboxStore` in `OoBDev.MessageQueueing.EntityFrameworkCore` (type name plus JSON with a registered-type allow-list; inbox claim by primary key).
+- **Built 2026-11-16:** the outbox write in the caller's business transaction: `modelBuilder.AddOutbox()` in the business context and `db.StageOutbox(types, message)` saved by its own `SaveChanges`; the dispatcher store reads the same table.
+- **Missing:** shipped migrations.
 
 ## Communications and MessageComposition
 
 - **Works with:** MessageQueuing, TextTemplating, DataEnhancement, DocumentServices (composition feeds delivery).
 - **Known issues:** the Communications design still describes a 16-line stub that has since grown into four projects.
 - **Standards:** SMTP and message format (RFC 5321/5322), MIME (RFC 2045-2049), DKIM/SPF/DMARC for sending, RFC 8058 unsubscribe.
-- **Missing:** bounce and complaint handling; delivery receipts; SMS and push as further channels behind the same provider.
+- **Built:** delivery status tracking and the SES webhook (delivered, bounce, complaint, open, click) exist; 2026-11-16 added the suppression list (`ISuppressionList`, `SuppressingSendService`).
+- **Built 2026-11-16:** `DeliveryStatus.Complained`, recipients on `DeliveryStatusUpdate`, and `SuppressionStatusHandler` feed the list from permanent bounces and complaints.
+- **Built 2026-11-16:** durable list (`OoBDev.Communications.EntityFrameworkCore`) and signed RFC 8058 unsubscribe links (`UnsubscribeLinks`).
+- **Missing:** an unsubscribe HTTP endpoint in a host, SMS and push as further channels behind the same provider.
 
 ## TextTemplating, TemplateTools and DataEnhancement
 
 - **Works with:** MessageComposition (body generation) and DocumentServices (report output).
 - **Known issues:** two engines (Handlebars, XSLT) exist; the design should state how a template is matched to an engine and how output encoding (HTML escaping) is guaranteed.
 - **Practices:** provider keyed by engine name, sandboxed template execution, no code in templates.
-- **Missing:** template versioning and localisation; a template test harness that renders against sample data.
+- **Built 2026-11-16:** `TemplateRenderHarness` renders templates against sample data and reports the first differing line.
+- **Built 2026-11-16:** `LocalizedTemplateEngine` (culture suffix lookup with parent fallback).
+- **Built:** versioned, tenant and culture aware database templates (`OoBDev.System.Text.Templating.EntityFrameworkCore`: publish, latest or specific version, rollback, withdraw, audit columns). Not built: shipped migrations, SQL Server and PostgreSQL runs, a cache in front of the source.
 
 ## DocumentServices
 
 - **Works with:** HybridSearch (text extraction), MessageComposition (attachments), GeneratedGuides.
 - **Known issues:** external tools (Tika container, converters) make most tests Integration; HPGL is a niche format kept for the migration scope.
 - **Standards:** ISO 32000 (PDF), PDF/A for archives, Office Open XML (ECMA-376).
-- **Missing:** OCR as a provider; antivirus scan hook before ingest.
+- **Built 2026-11-16:** `IContentScanner` and the fail-closed `ScanningBlobContainer` decorator.
+- **Missing:** OCR as a provider. **Built:** `OoBDev.ClamAv` scanner adapter (clamd INSTREAM).
 
 ## SharedCaching and SharedFramework
 
 - **Works with:** every feature that caches (embeddings, rights, OpenAPI documents).
 - **Known issues:** cache key and invalidation conventions are in the design only; the configured `OoBDev:Caching:Disabled` switch exists.
 - **Standards:** RFC 9111 for HTTP caches.
-- **Missing:** stampede protection and a distributed cache option (Redis is in the test stack).
+- **Built 2026-11-16:** in-process stampede protection in `CachedProxy` (one compute per key for concurrent misses). The distributed option already exists as the `redis` provider (`OoBDev.Redis.Caching`).
+- **Built 2026-11-16:** cross-process single flight: optional `ICachingLock` on the provider (Redis `SET NX` lock with owner token), used by `CachedProxy` so one process computes a cold key and the others wait for it.
 
 ## CqrsEventSourcing and MasterData
 

@@ -20,11 +20,11 @@ Review of the example web app (`src/Examples/OoBDev.Example.Web`) and API agains
 | Template management | `OoBDev.TextTemplating`, Handlebars | List, edit, save and preview templates | List, open and preview built 2026-11-09; save built (writes over the repository file, owner 2026-11-09) |
 | Identity management | `OoBDev.Identity`, `OoBDev.Identity.Jws`, Keycloak | User lookup, rights (read-only page `/identity/directory` built 2026-11-11; sessions are not covered) | Keycloak admin scope; the host runs the API anonymously today |
 | Data access and DacPac builder | `OoBDev.Data.Common`, MongoDB, `OoBDev.DacFx` | Read-only query runner, dacpac build and diff | Read-only guard design |
-| Semantic Kernel plug-in tester | `OoBDev.SemanticKernel` | Plug-in list and invoke | Controller |
+| Semantic Kernel plug-in tester | `OoBDev.SemanticKernel` | Built 2026-11-17 as `/utilities/kernel`: plug-in function list and a direct invoke with text arguments (no model) | Controller (built) |
 | Vector store browser | Qdrant, OpenSearch, SQL store | Collection list, upsert, query | Collection listing on the vector store interface |
 | Mail receive | MailKit IMAP | Inbox view | Decision in [the plan](plan.md) section 6 |
-| Formats and pipelines | `OoBDev.System.IO.Pipelines`, Tar, BCD, bit tools | File inspector, pipeline builder | Controller |
-| CLI tool catalog | DacPacCompiler, DocumentConverter, FileRagEngine, and the other CLI tools | Catalog with run instructions (no execution from the browser) | Static page |
+| Formats and pipelines | `OoBDev.System.IO.Pipelines`, Tar, BCD, bit tools | File inspector, pipeline builder (the Morse, Roman and Base32 codecs are on the Toolbox page since 2026-11-17) | Controller |
+| CLI tool catalog | DacPacCompiler, DocumentConverter, FileRagEngine, and the other CLI tools | Built 2026-11-16 as `/utilities/tools` (static list with a filter; no execution from the browser) | Static page |
 
 ## Framework areas the plan does not mention
 
@@ -40,7 +40,7 @@ These have no row in [the plan](plan.md) or `screens.md`; whether each deserves 
 | Data loading | `OoBDev.DataLoader` | Load a file into a table with a preview of the mapping |
 | Code generation | `OoBDev.Generations` | Generate from a model and show the output |
 | Server-driven UI | `OoBDev.UiDefinitions` (+ ViewModels, Wpf) | A page rendered from a `UiDefinition` returned by the API (the framework's own UI contract is not shown anywhere in the SPA) |
-| Token tools | `OoBDev.Identity.Jws` | Decode and verify a JWS |
+| Token tools | `OoBDev.Identity.Jws` | Built 2026-11-16 as a section of the Toolbox page: sign HS256, read a token, check the signature |
 | Instrument protocols | `OoBDev.Nmea`, `OoBDev.Scpi`, `OoBDev.ZWave` | Deferred with the hardware UI |
 
 ## Built screens with gaps

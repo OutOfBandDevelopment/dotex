@@ -1,4 +1,5 @@
 using OoBDev.System.Security;
+using OoBDev.TestUtilities.Containers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -26,11 +27,12 @@ public partial class OtlpIntegrationTests
 
     public required TestContext TestContext { get; set; }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-otel")]
     [TestCategory(TestCategories.Integration)]
     public async Task Spans_ShouldReachDashboardWithCorrelationTags()
     {
         // Stage
+        await WaitForDashboardAsync();
         var serviceName = $"oobdev-it-{Guid.NewGuid():N}";
         var correlationId = $"corr-{Guid.NewGuid():N}";
         using var provider = CreateProvider(serviceName, correlationId);
@@ -38,6 +40,7 @@ public partial class OtlpIntegrationTests
         string traceId;
 
         // Test
+        TestContext.WriteLine($"Test: span in service {serviceName}, correlation {correlationId}");
         using (var source = new ActivitySource(SourceName))
         using (var activity = source.StartActivity("integration-work"))
         {
@@ -52,7 +55,7 @@ public partial class OtlpIntegrationTests
         StringAssert.Contains(trace, serviceName);
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-otel")]
     [TestCategory(TestCategories.Integration)]
     public async Task Logs_ShouldReachDashboardWithCorrelationAttributes()
     {
@@ -63,6 +66,7 @@ public partial class OtlpIntegrationTests
         var logs = provider.GetRequiredService<LoggerProvider>();
 
         // Test
+        TestContext.WriteLine($"Test: log record in service {serviceName}, correlation {correlationId}");
         var logger = provider.GetRequiredService<ILoggerFactory>().CreateLogger("integration");
         LogHello(logger, "otlp");
         Assert.IsTrue(logs.ForceFlush(10_000));
@@ -104,17 +108,43 @@ public partial class OtlpIntegrationTests
         var dashboard = TestContext.GetRequiredProperty<string>("OTEL_DASHBOARD_URL");
         using var client = new HttpClient { BaseAddress = new Uri(dashboard) };
         client.DefaultRequestHeaders.Add("x-api-key", TestContext.GetPropertyOrDefault("OTEL_DASHBOARD_API_KEY", "oobdev-test-key"));
-        for (var attempt = 0; attempt < 30; attempt++)
+        for (var attempt = 1; attempt <= 30; attempt++)
         {
-            using var response = await client.GetAsync(path, TestContext.CancellationToken);
-            if (response.IsSuccessStatusCode)
+            try
             {
-                var body = await response.Content.ReadAsStringAsync(TestContext.CancellationToken);
-                if (accept(body)) return body;
+                using var response = await client.GetAsync(path, TestContext.CancellationToken);
+                if (response.IsSuccessStatusCode)
+                {
+                    var body = await response.Content.ReadAsStringAsync(TestContext.CancellationToken);
+                    if (accept(body))
+                    {
+                        TestContext.WriteLine($"Poll {path}: accepted on attempt {attempt}");
+                        return body;
+                    }
+                }
+                else
+                {
+                    TestContext.WriteLine($"Poll {path}: attempt {attempt} returned {(int)response.StatusCode}");
+                }
             }
+            catch (HttpRequestException ex)
+            {
+                // The container is running before the dashboard listens: connections are reset until then.
+                TestContext.WriteLine($"Poll {path}: attempt {attempt} not reachable yet ({ex.InnerException?.Message ?? ex.Message})");
+            }
+
             await Task.Delay(TimeSpan.FromSeconds(1), TestContext.CancellationToken);
         }
+
         return null;
+    }
+
+    /// <summary>The Aspire image has no health check, so wait for its telemetry API before exporting anything to it.</summary>
+    private async Task WaitForDashboardAsync()
+    {
+        TestContext.WriteLine("Stage: waiting for the Aspire dashboard telemetry API");
+        if (await PollAsync("/api/telemetry/spans", _ => true) is null)
+            Assert.Inconclusive("The Aspire dashboard telemetry API did not answer within 30 s.");
     }
 
     private sealed class TestCorrelationAccessor(CorrelationInfo value) : IAccessor<CorrelationInfo>

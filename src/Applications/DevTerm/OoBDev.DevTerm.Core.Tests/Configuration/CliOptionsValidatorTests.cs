@@ -221,6 +221,25 @@ public sealed class CliOptionsValidatorTests
     }
 
     [TestMethod]
+    public void Validate_WithServiceTransportAndAKnownService_Succeeds()
+    {
+        var result = _validator.Validate(null, new CliOptions { Transport = "service", Service = "Echo" });
+
+        Assert.IsTrue(result.Succeeded);
+    }
+
+    [TestMethod]
+    [DataRow(null)]
+    [DataRow("")]
+    [DataRow("finger")]
+    public void Validate_WithServiceTransportAndAnUnknownService_Fails(string? service)
+    {
+        var result = _validator.Validate(null, new CliOptions { Transport = "service", Service = service });
+
+        Assert.IsTrue(result.Failed);
+    }
+
+    [TestMethod]
     public void Validate_WithPositiveLoopbackSampleIntervalMs_Succeeds()
     {
         var result = _validator.Validate(null, new CliOptions { Transport = "loopback", LoopbackSampleIntervalMs = 100 });

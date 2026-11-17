@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Buffers;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace OoBDev.DevTerm.Logging;
 
@@ -22,6 +23,12 @@ public sealed class PlaybackEngine
     private Pipeline _pipeline;
     private double _speed = 1.0;
     private TimeSpan? _maxGap;
+
+    // Backward seeks restart from the nearest checkpoint record already played: the pipeline state saved when playback
+    // passed it, keyed by the position just after it, plus the outputs of every record played so far so the batch can
+    // still carry the whole transcript (front ends clear and redraw on Reset) without re-running the presenters.
+    private readonly SortedDictionary<int, IReadOnlyList<object?>> _snapshots = [];
+    private readonly Dictionary<int, IReadOnlyList<PresenterOutput>> _outputs = [];
 
     // Playback timing is anchored: at _anchorTimestamp (clock) the log was at _anchorOffset, and
     // log time advances at Speed x clock time from there. Re-anchored on every play, seek, step and
@@ -208,13 +215,17 @@ public sealed class PlaybackEngine
     {
         position = Math.Clamp(position, 0, Count);
         var reset = false;
+        var items = new List<PlaybackItem>();
         if (position < Position)
         {
-            Rewind();
+            if (!TryRestoreCheckpoint(position, items))
+            {
+                Rewind();
+            }
+
             reset = true;
         }
 
-        var items = new List<PlaybackItem>();
         while (Position < position)
         {
             items.Add(PlayNext());
@@ -262,6 +273,8 @@ public sealed class PlaybackEngine
     {
         ArgumentNullException.ThrowIfNull(pipelineFactory);
         _pipelineFactory = pipelineFactory;
+        _snapshots.Clear();
+        _outputs.Clear();
         var position = Position;
         Rewind();
         var batch = SeekTo(position);
@@ -273,6 +286,18 @@ public sealed class PlaybackEngine
     {
         ArgumentNullException.ThrowIfNull(text);
         Log.InsertNote(Position, text);
+
+        // Records after the note moved one place later, so what was saved for them no longer lines up.
+        foreach (var key in _snapshots.Keys.Where(k => k > Position).ToList())
+        {
+            _snapshots.Remove(key);
+        }
+
+        foreach (var key in _outputs.Keys.Where(k => k >= Position).ToList())
+        {
+            _outputs.Remove(key);
+        }
+
         var item = PlayNext();
         Reanchor();
         return new PlaybackBatch(false, [item]);
@@ -308,7 +333,57 @@ public sealed class PlaybackEngine
         }
 
         Position = index + 1;
+        if (outputs.Count > 0)
+        {
+            _outputs[index] = outputs;
+        }
+        else if (record.Kind == SessionLogRecordKind.Checkpoint && _pipeline.TakeSnapshot() is { } snapshot)
+        {
+            _snapshots[Position] = snapshot;
+        }
+
         return new PlaybackItem(index, record, Log.OffsetOf(index), outputs);
+    }
+
+    // Puts the pipeline back as it was at the last checkpoint at or before position and fills items with the transcript up
+    // to it from the saved outputs. False (nothing changed) when there is none, or a presenter cannot restore.
+    private bool TryRestoreCheckpoint(int position, List<PlaybackItem> items)
+    {
+        var at = -1;
+        foreach (var key in _snapshots.Keys)
+        {
+            if (key > position)
+            {
+                break;
+            }
+
+            at = key;
+        }
+
+        if (at < 0)
+        {
+            return false;
+        }
+
+        var pipeline = _pipelineFactory();
+        try
+        {
+            pipeline.RestoreSnapshot(_snapshots[at]);
+        }
+        catch (InvalidOperationException)
+        {
+            return false;
+        }
+
+        _pipeline = pipeline;
+        for (var i = 0; i < at; i++)
+        {
+            items.Add(new PlaybackItem(i, Log.Records[i], Log.OffsetOf(i), _outputs.GetValueOrDefault(i) ?? []));
+        }
+
+        Position = at;
+        Reanchor();
+        return true;
     }
 
     // Where playback is in log time right now: frozen while paused (or at Max speed, where Tick

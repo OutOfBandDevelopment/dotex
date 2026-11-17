@@ -1,4 +1,4 @@
-# Feature request: EXIF and media metadata extraction
+﻿# Feature request: EXIF and media metadata extraction
 
 - **Status:** triaged
 - **Requested by:** owner (filed from the NAS storage catalog application, `C:\repo\_storage`)
@@ -20,7 +20,7 @@ A read-only metadata reader interface with an image implementation (EXIF, XMP, I
 
 ## Existing code checked
 
-- No metadata reader found by project names; not all packages were read.
+- Superset comparison done 2026-11-12: dotex has only `JpegSegmentReader`; the catalog reader is the base. See [MediaMetadata](../../design/MediaMetadata/README.md). Library choice: own code, no package.
 
 ## Source references (NAS storage catalog application)
 

@@ -1,4 +1,4 @@
-# Feature request: database-backed stage work queue with leases, throttling and worker events
+﻿# Feature request: database-backed stage work queue with leases, throttling and worker events
 
 - **Status:** triaged
 - **Requested by:** owner (filed from the NAS storage catalog application, `C:\repo\_storage`, `src/Storage.Work` and `src/Storage.Workers`)
@@ -70,5 +70,7 @@ The queue tables hold paths and statuses, not content. The operator controls (pa
 - Should the table shape be fixed by the library or mapped by the application?
 
 ## Triage notes
+
+2026-11-12: superset comparison done and the design written: [WorkQueue](../../design/WorkQueue/README.md); placement confirmed 2026-11-12.
 
 2026-11-11: triaged. Accepted as a backlog idea from the storage and photo-library review; the code named above was not read in full, so the first step is the superset comparison before any design. Face and pet matching also needs an owner decision on personal data. Backlog: BACKLOG.md, Consolidation requests.

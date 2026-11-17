@@ -10,27 +10,39 @@ namespace OoBDev.System.Archives.Tar;
 /// </summary>
 public static class Utilities
 {
-    /// <summary>
-    /// Converts a byte array containing TAR header data into a TarHeader object.
-    /// Parses the 512-byte TAR header block according to the TAR format specification.
-    /// </summary>
-    /// <param name="input">The byte array containing the TAR header data (typically 512 bytes).</param>
-    /// <returns>A TarHeader object populated with the parsed header information.</returns>
-    /// <exception cref="NotSupportedException">Thrown when required header fields are missing or invalid.</exception>
-    public static TarHeader ToHeader(this byte[] input) =>
-        new()
-        {
-            FileName = input.ToString(0, 100) ?? throw new NotSupportedException($"Missing {nameof(TarHeader.FileName)}"),
-            FileMode = input.ToString(100, 8) ?? throw new NotSupportedException($"Missing {nameof(TarHeader.FileMode)}"),
-            OwnerId = input.ToString(108, 8) ?? throw new NotSupportedException($"Missing {nameof(TarHeader.OwnerId)}"),
-            GroupId = input.ToString(116, 8) ?? throw new NotSupportedException($"Missing {nameof(TarHeader.GroupId)}"),
+    /// <summary>The size of a TAR header block in bytes.</summary>
+    public const int HeaderBlockSize = 512;
 
-            FileSize = Convert.ToInt32(input.ToString(124, 12) ?? "0", 8),
-            LastModifiedTime = Convert.ToInt32(input.ToString(136, 12) ?? "0", 8),
-            CheckSum = input.ToString(148, 8) ?? throw new NotSupportedException($"Missing {nameof(TarHeader.CheckSum)}"),
+    /// <summary>
+    /// Parses a TAR header block (ustar layout). The input is untrusted: it must hold a whole block and the numeric fields must be octal and fit an <see cref="int"/>.
+    /// </summary>
+    /// <param name="input">The header block, at least <see cref="HeaderBlockSize"/> bytes.</param>
+    /// <returns>The parsed header. A blank name yields an empty <see cref="TarHeader.FileName"/>, which marks the end-of-archive block.</returns>
+    /// <exception cref="ArgumentException">The block is shorter than <see cref="HeaderBlockSize"/>.</exception>
+    /// <exception cref="InvalidDataException">A numeric field is not octal or does not fit.</exception>
+    public static TarHeader ToHeader(this ReadOnlySpan<byte> input)
+    {
+        if (input.Length < HeaderBlockSize)
+        {
+            throw new ArgumentException($"A TAR header block is {HeaderBlockSize} bytes; got {input.Length}.", nameof(input));
+        }
+
+        return new TarHeader
+        {
+            FileName = Text(input, 0, 100),
+            FileMode = Text(input, 100, 8),
+            OwnerId = Text(input, 108, 8),
+            GroupId = Text(input, 116, 8),
+            FileSize = Octal(input, 124, 12),
+            LastModifiedTime = Octal(input, 136, 12),
+            CheckSum = Text(input, 148, 8),
             FileType = (TarFileType)input[156],
-            LinkedFile = input.ToString(157, 100) ?? throw new NotSupportedException($"Missing {nameof(TarHeader.LinkedFile)}"),
+            LinkedFile = Text(input, 157, 100),
         };
+    }
+
+    /// <inheritdoc cref="ToHeader(ReadOnlySpan{byte})"/>
+    public static TarHeader ToHeader(this byte[] input) => ToHeader((ReadOnlySpan<byte>)input);
 
     /// <summary>
     /// Extracts an ASCII string from a byte array at the specified position and length.
@@ -43,13 +55,12 @@ public static class Utilities
     public static string? ToString(this byte[] input, int index, int length)
     {
         if (input == null || input.Length == 0)
-            return null;
-        else
         {
-            var result = Encoding.ASCII.GetString(input, index, length)
-                                          .Trim('\0', ' ');
-            return result == string.Empty ? null : result;
+            return null;
         }
+
+        var result = Text(input, index, length);
+        return result.Length == 0 ? null : result;
     }
 
     /// <summary>
@@ -60,25 +71,17 @@ public static class Utilities
     public static byte[]? Decompress(this byte[] input)
     {
         if (input == null || input.Length < 1)
+        {
             return null;
+        }
 
         using var compressedData = new MemoryStream(input);
         using var decompressedData = new MemoryStream();
-        using (var deflateDecompress = new GZipStream(compressedData,
-                                                      CompressionMode.Decompress,
-                                                      true))
+        using (var deflateDecompress = new GZipStream(compressedData, CompressionMode.Decompress, true))
         {
-            var buffer = new byte[1024];
-            int bufferLen;
-            do
-            {
-                bufferLen = deflateDecompress.Read(buffer,
-                                                   0,
-                                                   buffer.Length);
-                if (bufferLen > 0)
-                    decompressedData.Write(buffer, 0, bufferLen);
-            } while (bufferLen > 0);
+            deflateDecompress.CopyTo(decompressedData);
         }
+
         return decompressedData.ToArray();
     }
 
@@ -90,4 +93,28 @@ public static class Utilities
     /// <returns>A GZipStream configured for decompression.</returns>
     public static Stream Decompress(this Stream input) =>
         new GZipStream(input, CompressionMode.Decompress, false);
+
+    private static string Text(ReadOnlySpan<byte> block, int index, int length) =>
+        Encoding.ASCII.GetString(block.Slice(index, length)).Trim('\0', ' ');
+
+    private static int Octal(ReadOnlySpan<byte> block, int index, int length)
+    {
+        var text = Text(block, index, length);
+        long value = 0;
+        foreach (var c in text)
+        {
+            if (c is < '0' or > '7')
+            {
+                throw new InvalidDataException($"Tar field at offset {index} is not octal: '{text}'.");
+            }
+
+            value = (value << 3) | (uint)(c - '0');
+            if (value > int.MaxValue)
+            {
+                throw new InvalidDataException($"Tar field at offset {index} does not fit 32 bits: '{text}'.");
+            }
+        }
+
+        return (int)value;
+    }
 }

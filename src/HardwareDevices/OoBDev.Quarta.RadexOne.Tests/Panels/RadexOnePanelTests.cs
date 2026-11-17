@@ -37,6 +37,9 @@ public sealed class RadexOnePanelTests
         return RadexOneFramer.BuildReply(2, extension);
     }
 
+    private static OoBDev.UiDefinitions.IControlSurface Surface(OoBDev.UiDefinitions.IDevicePanel panel, OoBDev.UiDefinitions.DeviceSend send) =>
+        panel.CreateSurface(send, panel.CreateDecoder());
+
     [TestMethod, TestCategory(TestCategories.Unit)]
     [DataRow("serial", true)]
     [DataRow("hid", false)]
@@ -64,7 +67,7 @@ public sealed class RadexOnePanelTests
     public async Task InvokeAsync_ReadDataTwice_SendsTheRequestWithRisingPacketNumbers()
     {
         var sent = new List<byte[]>();
-        var surface = new RadexOnePanel().CreateSurface((data, _) =>
+        var surface = Surface(new RadexOnePanel(), (data, _) =>
         {
             sent.Add(data.ToArray());
             return Task.CompletedTask;

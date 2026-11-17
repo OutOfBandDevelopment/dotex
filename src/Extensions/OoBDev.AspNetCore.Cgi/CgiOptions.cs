@@ -39,9 +39,9 @@ public class CgiOptions
     public long MaxRequestBodyBytes { get; set; } = 10 * 1024 * 1024;
 
     /// <summary>
-    /// Maximum response body size in bytes, or null for no limit. Past the limit the response is aborted.
+    /// Maximum response body size in bytes (default 50 MB), or null for no limit. Past the limit the response is aborted.
     /// </summary>
-    public long? MaxResponseBytes { get; set; }
+    public long? MaxResponseBytes { get; set; } = 50 * 1024 * 1024;
 
     /// <summary>
     /// Maximum number of processes running at once. Requests over the limit get 503 with <c>Retry-After</c>.

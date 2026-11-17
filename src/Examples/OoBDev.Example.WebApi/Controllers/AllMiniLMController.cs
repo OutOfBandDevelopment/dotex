@@ -1,4 +1,5 @@
 ﻿using OoBDev.AI;
+using OoBDev.AspNetCore.Mvc.Filters;
 using OoBDev.SBert.AllMiniLmL6V2;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,6 +13,7 @@ namespace OoBDev.WebApi.Controllers;
 /// </summary>
 [Route("api/[controller]")]
 [ApiController]
+[ApplicationRight("ai.invoke")]
 public class AllMiniLMController : ControllerBase
 {
     private readonly IEmbeddingProvider _embedding;

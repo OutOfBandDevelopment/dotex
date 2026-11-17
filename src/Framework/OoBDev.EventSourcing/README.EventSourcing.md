@@ -30,6 +30,10 @@ Register `IEventUpcaster` implementations (`FromType`, `Upcast(payload)` returni
 
 An aggregate that implements `ISnapshotable` (`CaptureState`, `RestoreState`) is snapshotted into the entity store (type `aggregate-snapshot`) each time its stream version passes a multiple of `OoBDev:EventSourcing:Snapshots:Interval` (default 100, 0 turns it off). `AggregateRepository` restores the snapshot and replays only the later events; the stream stays the source of truth, so a snapshot can be deleted at any time.
 
+## GDPR erasure
+
+Mark an event class `[PersonalData("CustomerId", "Name", "Email")]` (subject property, then the personal fields) (or `[NoPersonalData]` when `SubjectId` is only a reference; a class with a `SubjectId` property and neither mark is refused at registration) and register it in the `EventTypeRegistry`. `ErasureService.RequestAsync(subject, requestId, knownCopies)` appends an `ErasureRequested` tombstone to the stream `erasure:{subject}`; `CompactAsync()` blanks the marked fields of every event of each open request's subject through `IEventPayloadRewriter`, appends `ErasureCompleted` with the count and calls the `ISubjectErasureHandler` services. A second run changes nothing. Design and what erasure breaks: [erasure](../../../docs/design/CqrsEventSourcing/erasure.md). The selected event store must implement `IEventPayloadRewriter` (in-memory and EF do).
+
 ## CloudEvents ingress
 
 `CloudEventsIngressHandler` is an `IMessageQueueHandler<EventsChannel, string>`: register it with the queue provider's handler registration and any queue can feed a stream with CloudEvents 1.0 JSON. The event keeps its stream and sequence; a message that does not follow the stream's last sequence throws, so the queue retries or dead-letters it. Set `OoBDev:EventSourcing:Relay:CloudEventsSource` and the relay publishes CloudEvents JSON instead of `EventRecord`, so the same handler type reads what another instance sends. An HTTP endpoint (Q-CQRS-EDGE) is not built.

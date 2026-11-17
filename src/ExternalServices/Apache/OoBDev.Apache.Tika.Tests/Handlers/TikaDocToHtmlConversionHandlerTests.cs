@@ -1,4 +1,5 @@
 ﻿using OoBDev.Apache.Tika.Handlers;
+using OoBDev.TestUtilities.Containers;
 using OoBDev.TestUtilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Threading.Tasks;
@@ -12,7 +13,7 @@ public class TikaDocToHtmlConversionHandlerTests :
     public required TestContext TestContext { get; set; }
 
     [TestCategory(TestCategories.Integration)]
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-tika")]
     [DataRow("sample2.doc", "application/msword", "text/html", ".html")]
     public async Task ExternalConvertAsyncTest(string resourceName, string sourceType, string targetType, string ext) =>
         await ConvertAsyncTestHarness(resourceName, sourceType, targetType, ext, TestContext);

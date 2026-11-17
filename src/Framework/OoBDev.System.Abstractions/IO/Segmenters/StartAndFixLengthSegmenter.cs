@@ -58,7 +58,7 @@ public sealed class StartAndFixLengthSegmenter(
                 if (ExtensionDefinition != null)
                 {
                     var valueData = completeSegment.Slice(ExtensionDefinition.Postion, ExtensionDefinition.Length);
-                    //TODO, drop the endian check... only support little and convert 
+                    // Request: docs/features/request/2026-11-17-span-memory-and-codec-modernization.md
                     var set = ExtensionDefinition.Endianness == Endianness.Little ? valueData.ToArray() : [.. valueData.ToArray().Reverse()];
 
                     ulong extendedLength = 0;

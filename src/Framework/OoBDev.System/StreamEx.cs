@@ -16,7 +16,7 @@ public static class StreamEx
     public static async Task<string?> ReadAsStringAsync(this Stream? stream)
     {
         if (stream == null) return null;
-        using var sr = new StreamReader(stream); //TODO: should this leave the underlying stream open?
+        using var sr = new StreamReader(stream); // Request: docs/features/request/2026-11-17-code-cleanup-and-test-gaps.md
         return await sr.ReadToEndAsync().ConfigureAwait(false);
     }
 

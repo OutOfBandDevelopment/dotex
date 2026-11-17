@@ -13,7 +13,7 @@ public static class ServiceCollectionExtensions
     /// <param name="services">The service collection.</param>
     /// <returns>The service collection for chaining.</returns>
     public static IServiceCollection AddRequiredFramework(this IServiceCollection services) => services
-        //TODO: fix this up
+        // Request: docs/features/request/2026-11-17-provider-and-adapter-gaps.md
         //.AddLogging(opt =>
         //{
         //    opt.AddConsole();

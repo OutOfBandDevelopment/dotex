@@ -1,4 +1,5 @@
 ﻿using OoBDev.SBert.AllMpnetBaseV2;
+using OoBDev.AspNetCore.Mvc.Filters;
 using OoBDev.AI;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,6 +13,7 @@ namespace OoBDev.WebApi.Controllers;
 /// </summary>
 [Route("api/[controller]")]
 [ApiController]
+[ApplicationRight("ai.invoke")]
 public class SBERTController : ControllerBase
 {
     private readonly IEmbeddingProvider _embedding;

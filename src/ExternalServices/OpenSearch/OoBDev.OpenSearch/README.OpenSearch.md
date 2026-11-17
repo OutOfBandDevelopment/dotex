@@ -39,3 +39,11 @@ Options are validated by data annotations. `IOpenSearchClientFactory` (`OpenSear
 ## Tests
 
 `OoBDev.OpenSearch.Tests` holds three `Unit` tests of the client factory (scheme and certificate callback) and two `Integration` tests against the OpenSearch container (`OPENSEARCH_*` parameters in `.runsettings`).
+
+## Keyword search provider
+
+`TryAddOpenSearchKeywordSearch(configuration)` registers `KeywordSearchProvider` as an `ISearchProvider` (keyed `opensearch-keyword`), on top of the connection from `TryAddOpenSearchServices`. Settings under `OoBDev:OpenSearch:Keyword`: `TextFields` (default `*`) and `FilterFields`, the only names a request may filter on.
+
+- Free text becomes a `simple_query_string` (default operator AND); filters become `term` (equals), `match` (contains) and `range` clauses, negated ones go to `must_not`; a `-` before a sort key means descending.
+- The cursor is the offset of the next page; a request with a like-item or vector anchor is refused (use the vector or hybrid provider).
+- Tested without a server by `KeywordQueryBuilder` JSON checks and a canned in-memory response; a run against the Docker OpenSearch is part of the filter-parity Integration set that is not built yet.

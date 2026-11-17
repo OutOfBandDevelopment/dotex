@@ -9,7 +9,7 @@ pwsh .githooks/setup.ps1 -Remove    # back to the default .git/hooks
 
 | Hook | When it runs | What it does |
 |------|--------------|--------------|
-| `pre-merge-commit` | before a clean merge on `main` creates its merge commit | Runs `scripts/ci/run-tests.ps1` (restore, build, Unit and Simulate tests) on the merge result. A failure stops the merge commit: the merge stays staged, so fix the cause and `git commit`, or `git merge --abort`. Skip it once with `git merge --no-verify`. |
+| `pre-merge-commit` | before a clean merge on `main` creates its merge commit | Runs `scripts/ci/run-tests.ps1` (restore, build, Unit tests only; Simulate and Integration take too long (owner, 2026-11-17)) on the merge result. A failure stops the merge commit: the merge stays staged, so fix the cause and `git commit`, or `git merge --abort`. Skip it once with `git merge --no-verify`. |
 | `post-merge` | after `git merge` or `git pull` completes | If the current branch is `main` and `HEAD` is a merge commit, runs `scripts/ci/pack.ps1`: `dotnet pack` of `OoBDev.slnx` into `G:\nuget\` and `npm pack` of publishable npm projects into `G:\npm\`, all with the GitVersion version. Other branches and fast-forwards do nothing. |
 
 Notes:

@@ -1,6 +1,6 @@
 # JWS Reference Implementation — Overview
 
-**Status:** Built · **Date:** 2026-11-11 (REQ-001 to REQ-010 in `OoBDev.Identity.Jws`, covered by `JsonWebSignatureTests`) · **Request:** [JWS/JWT from scratch](../../features/request/2026-10-28-jws-jwt-from-scratch.md) · **Related:** [authentication practices](../../patterns-discovery/03-practices-and-conventions/09-authentication-practices.md), [design standard](../../patterns-discovery/06-design-document-standard.md)
+**Status:** Built · **Date:** 2026-11-11 (REQ-001 to REQ-010 in `OoBDev.Identity.Jws`, covered by `JsonWebSignatureTests`) · **Request:** [JWS/JWT from scratch](../../features/completed/2026-10-28-jws-jwt-from-scratch.md) · **Related:** [authentication practices](../../patterns-discovery/03-practices-and-conventions/09-authentication-practices.md), [design standard](../../patterns-discovery/06-design-document-standard.md)
 
 A small JSON Web Signature (RFC 7515) signer and verifier written from the specification, so the signing and verification steps are understood and testable instead of hidden behind a library. It is a learning and reference implementation, not the production authentication path: applications keep validating bearer tokens with the platform (`OoBDev.AspNetCore.JwtAuthentication`).
 

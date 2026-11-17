@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Configuration;
+using OoBDev.TestUtilities.Containers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.AI;
@@ -49,7 +50,7 @@ public class OllamaEmbeddingProviderTests
     }
 
     [TestCategory(TestCategories.Integration)]
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-ollama")]
     public async Task GenerateEmbeddingAsync_DockerOllama_PullsTheEmbeddingModelAndReturnsAVectorAsync()
     {
         var url = TestInstanceGuard.Require(TestContext.GetRequiredProperty<string>("OLLAMA_URL"));

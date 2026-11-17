@@ -11,7 +11,7 @@ using System.Xml.Linq;
 using System.Xml.XPath;
 using System.Xml.Xsl;
 
-//TODO: should make this async/await
+// Request: docs/features/request/2026-11-17-xslt-transformer-improvements.md
 namespace OoBDev.System.Xml.Xsl;
 
 /// <summary>
@@ -48,7 +48,7 @@ public class XsltTransformer(string sandbox, params object[] extensions) : IXslt
         catch
         {
             return null;
-            //TODO: do something smart
+            // Request: docs/features/request/2026-11-17-xslt-transformer-improvements.md
         }
     }
 
@@ -85,32 +85,11 @@ public class XsltTransformer(string sandbox, params object[] extensions) : IXslt
             Directory.CreateDirectory(outputDir);
         using var resultStream = File.Create(output);
 
-        var currentDirectory = Environment.CurrentDirectory;
-        try
-        {
-            var localOutfolder = Path.GetDirectoryName(output) ?? throw new NotSupportedException($"{nameof(output)} not set");
-            if (!Directory.Exists(localOutfolder))
-            {
-                Directory.CreateDirectory(localOutfolder);
-            }
-            Environment.CurrentDirectory = localOutfolder;
+        var inputNavigator = input.CreateNavigator() ?? throw new NotSupportedException($"Could not resolve navigator for {nameof(input)}");
+        inputNavigator.MoveToRoot();
 
-            var inputNavigator = input.CreateNavigator() ?? throw new NotSupportedException($"Could not resolve navigator for {nameof(input)}");
-            inputNavigator.MoveToRoot();
-
-            //var x = xslt.GetType();
-            //var pf = x.GetFields(BindingFlags.NonPublic | BindingFlags.Instance);
-            //var pfc = pf.First(i => i.Name == "_command");
-            //var pfv = pfc.GetValue(xslt);
-
-            xslt.Transform(inputNavigator, xsltArgumentList, resultStream);
-        }
-        finally
-        {
-            Environment.CurrentDirectory = currentDirectory;
-        }
+        xslt.Transform(inputNavigator, xsltArgumentList, resultStream);
     }
-
     private static Exception innerMost(Exception ex) => ex.InnerException == null ? ex : innerMost(ex.InnerException);
 
     private XsltArgumentList BuildArguments(string template, string inputSource, IXPathNavigable input, string output, string? sandboxPath)
@@ -256,10 +235,10 @@ public class XsltTransformer(string sandbox, params object[] extensions) : IXslt
             if (!inputFiles.Any())
                 throw new FileNotFoundException($"input");
 
-            //TODO: should probably add the file to the input navigator
+            // Request: docs/features/request/2026-11-17-xslt-transformer-improvements.md
             var navigators = inputFiles.Select(f => (f, (IXPathNavigable?)inputNavigatorFactory(f))).ToList();
 
-            //TODO: need to figure out why this won't navigate correctly.
+            // Request: docs/features/request/2026-11-17-xslt-transformer-improvements.md
             var merged = navigators.MergeNavigators().CreateNavigator();
             if (merged == null) return;
             var doc = new XmlDocument();

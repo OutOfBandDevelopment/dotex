@@ -24,6 +24,7 @@ public class VectorStoreController(
     ) : ControllerBase
 {
     private const int MaxTexts = 100;
+    private static readonly string _embeddingTag = EmbeddingVersion.Tag(SBertGlobals.AllMiniLmL6V2Key, 384);
 
     /// <summary>Embeds the texts and stores them in the collection.</summary>
     /// <param name="model">The collection and texts.</param>
@@ -39,7 +40,7 @@ public class VectorStoreController(
         foreach (var text in model.Texts)
         {
             var vector = (await embedding.GenerateEmbeddingAsync(text, default, default)).ToArray();
-            items.Add((vector, new Dictionary<string, object>(StringComparer.Ordinal) { ["text"] = text }));
+            items.Add((vector, EmbeddingVersion.Stamp(new Dictionary<string, object>(StringComparer.Ordinal) { ["text"] = text }, _embeddingTag)));
         }
 
         var ids = await stores.Create(model.Collection).StoreVectorsAsync(items, new Dictionary<string, object>(StringComparer.Ordinal));
@@ -65,6 +66,25 @@ public class VectorStoreController(
                 break;
         }
         return hits;
+    }
+
+    /// <summary>
+    /// Re-embeds the rows of the collection that were not produced by the current model (or were stored before tagging),
+    /// from the text kept in their metadata. Rows without text are skipped.
+    /// </summary>
+    /// <param name="collection">The collection name.</param>
+    /// <returns>How many rows were replaced and which model tag they now carry.</returns>
+    [HttpPost("{collection}/reembed")]
+    [AllowAnonymous]
+    public async Task<ActionResult<VectorReembedResponseModel>> Reembed(string collection)
+    {
+        var replaced = await EmbeddingVersion.ReembedAsync(stores.Create(collection), _embeddingTag, async row =>
+        {
+            if (row.MetaData is null || !row.MetaData.TryGetValue("text", out var text) || string.IsNullOrWhiteSpace(text?.ToString()))
+                return null;
+            return (await embedding.GenerateEmbeddingAsync(text.ToString()!, default, default)).ToArray();
+        });
+        return new VectorReembedResponseModel { Replaced = replaced, Tag = _embeddingTag };
     }
 
     /// <summary>Lists what is stored in the collection.</summary>

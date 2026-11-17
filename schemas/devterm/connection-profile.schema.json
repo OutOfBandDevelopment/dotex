@@ -211,6 +211,12 @@
     "LoopbackSampleIntervalMs": {
       "type": "integer"
     },
+    "Service": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
     "Host": {
       "type": [
         "string",

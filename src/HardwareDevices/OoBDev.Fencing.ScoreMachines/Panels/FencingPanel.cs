@@ -29,7 +29,7 @@ public abstract class FencingPanel : IDevicePanel
     public UiDefinition BuildDefinition() => FencingUiDefinition.Build(_type == MachineType.Favero ? "Favero" : "Saint George");
 
     /// <inheritdoc />
-    public IControlSurface CreateSurface(DeviceSend send) => new FencingControlSurface();
+    public IControlSurface CreateSurface(DeviceSend send, IDeviceDecoder decoder) => new FencingControlSurface();
 
     /// <inheritdoc />
     public IDeviceDecoder CreateDecoder() => new ScoreMachineDecoder(_type);

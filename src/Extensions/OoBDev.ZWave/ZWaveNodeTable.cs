@@ -83,6 +83,37 @@ public sealed class ZWaveNodeTable
         return null;
     }
 
+    /// <summary>Describes each known node on one line: device, product, failed state and the number of command classes.</summary>
+    /// <returns>The lines, in node id order; empty when no node is known.</returns>
+    public IReadOnlyList<string> Describe() =>
+    [
+        .. Nodes.Select(n =>
+        {
+            var parts = new List<string> { "node " + n.Node.ToString(CultureInfo.InvariantCulture) };
+            if (n.Protocol is not null) parts.Add(n.Protocol);
+            if (ProductOf(n) is { } product) parts.Add(product);
+            if (n.Failed is not null) parts.Add(n.Failed);
+            if (n.Classes is not null) parts.Add(n.Classes.Split(',', StringSplitOptions.RemoveEmptyEntries).Length.ToString(CultureInfo.InvariantCulture) + " classes");
+            return string.Join(" | ", parts);
+        }),
+    ];
+
+    private static string? ProductOf(ZWaveNodeRecord node)
+    {
+        var ids = node.Ids?.Split(':');
+        if (ids is not { Length: 3 }
+            || !ushort.TryParse(ids[0], NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var manufacturer)
+            || !ushort.TryParse(ids[1], NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var type)
+            || !ushort.TryParse(ids[2], NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var id))
+        {
+            return null;
+        }
+
+        var name = ZWaveRegistry.Manufacturer(manufacturer);
+        var product = ZWaveRegistry.Product(manufacturer, type, id);
+        return product is null ? node.Ids : name is null ? product : name + " " + product;
+    }
+
     private int? TakeExpected(byte function)
     {
         var kept = new Queue<(byte Function, int Node)>();

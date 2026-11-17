@@ -32,7 +32,7 @@ An empty handler value (`".exe": ""`) runs the file itself, so it must be a prog
 
 ## More options
 
-- `MaxResponseBytes` (default none): past the limit the response is aborted.
+- `MaxResponseBytes` (default 50 MB, `null` for no limit): past the limit the response is aborted.
 - `MaxStderrBytes` (64 KB): stderr kept and logged per request.
 - `InheritedEnvironmentVariables` (`PATH`, `SystemRoot`): the only host variables copied into the cleared child environment when they exist.
 

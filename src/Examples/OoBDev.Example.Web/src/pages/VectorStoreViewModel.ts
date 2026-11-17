@@ -21,6 +21,8 @@ export class VectorStoreViewModel {
   readonly index = new IndexCommand(this);
   readonly search = new SearchCommand(this);
   readonly list = new ListCommand(this);
+  readonly reembed = new ReembedCommand(this);
+  readonly reembedResult = ref<{ replaced: number; tag: string } | null>(null);
 
   /** The non-empty lines of the text box, one document each. */
   lines() { return this.texts.value.split('\n').map(l => l.trim()).filter(l => l !== ''); }
@@ -53,5 +55,14 @@ export class ListCommand extends Command {
   protected isAllowed() { return this.vm.collection.value.trim() !== ''; }
   protected async run() {
     this.vm.hits.value = await http.getJson<VectorHit[]>(`/api/VectorStore/${encodeURIComponent(this.vm.collection.value.trim())}`);
+  }
+}
+
+export class ReembedCommand extends Command {
+  constructor(private readonly vm: VectorStoreViewModel) { super(); }
+  protected isAllowed() { return this.vm.collection.value.trim() !== ''; }
+  protected async run() {
+    this.vm.reembedResult.value = await http.postJson<{ replaced: number; tag: string }>(
+      `/api/VectorStore/${encodeURIComponent(this.vm.collection.value.trim())}/reembed`, {});
   }
 }

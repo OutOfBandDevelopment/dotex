@@ -36,7 +36,7 @@ public class StreamDevice<TMessage> : IStreamDevice<TMessage>
     public StreamDevice(
         IDeviceAdapter adapter,
         IDeviceDefinition device,
-        int minimumTransmissionDelay = 1000, //TODO should this default be overideable from the devicedefinition or it's attributes?
+        int minimumTransmissionDelay = 1000, // Request: docs/features/request/2026-11-17-configurable-defaults-and-id-generation.md
         CancellationToken token = default
         )
     {

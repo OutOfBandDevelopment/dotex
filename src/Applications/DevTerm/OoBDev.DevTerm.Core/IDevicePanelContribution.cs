@@ -23,5 +23,8 @@ public interface IDevicePanelContribution
 
     UiDefinition BuildDefinition();
 
-    IControlSurface CreateSurface(Session session);
+    /// <summary>Creates the surface for the session.</summary>
+    /// <param name="session">The session the surface sends through.</param>
+    /// <param name="source">The session's presenter that feeds the panel (the catalog entry named <see cref="PresenterName"/>), or null; a surface that reads replies uses its decoder.</param>
+    IControlSurface CreateSurface(Session session, IStructuredPresenter? source = null);
 }

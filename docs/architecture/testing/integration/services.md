@@ -16,6 +16,9 @@ One section per stack. Values are the test defaults from `src/.runsettings`; the
 - [Qdrant](#qdrant)
 - [Neo4j](#neo4j)
 - [Apache Tika](#apache-tika)
+- [Docling serve](#docling-serve)
+- [ClamAV](#clamav)
+- [SonarQube](#sonarqube)
 - [smtp4dev](#smtp4dev)
 - [Azurite](#azurite)
 - [Moto](#moto)
@@ -39,6 +42,9 @@ One section per stack. Values are the test defaults from `src/.runsettings`; the
 | Qdrant | `qdrant/qdrant` | `http://localhost:6333` | none |
 | Neo4j | `neo4j:5-community` | `bolt://localhost:7687`, browser `http://localhost:7474` | `neo4j` / `oobdev-test-pass` |
 | Apache Tika | `apache/tika` | `http://localhost:9998` | none |
+| Docling serve | `quay.io/docling-project/docling-serve-cpu` | `http://localhost:5001` | none |
+| ClamAV | `clamav/clamav:stable` | `localhost:3310` | none |
+| SonarQube | `sonarqube:community` | `http://localhost:9002` | `admin` / `admin`, changed on first login |
 | smtp4dev | `rnwood/smtp4dev` | SMTP 25, IMAP 143, UI 7777 | none |
 | Azurite | `azure-storage/azurite` | `http://127.0.0.1:10000/devstoreaccount1` | well-known dev account key |
 | Moto | `motoserver/moto` | `http://localhost:4566` | `test` / `test` |
@@ -59,6 +65,10 @@ Document store tests. Keys: `MONGODB_CONNECTION_STRING`, `MONGODB_DATABASE_NAME`
 ## PostgreSQL
 
 PostgreSQL 17 with the pgmq extension created at first start (`containers/testing/postgres/01-pgmq.sql`), database `oobdev_test`, ephemeral volume. Host port 5434 because 5432 and 5433 are common local installs. Used by the event sourcing Postgres provider tests and the pgmq queue adapter. Key: `POSTGRES_CONNECTION_STRING`.
+
+## PostgreSQL with pgvector
+
+PostgreSQL 17 with the pgvector extension created at first start (`containers/testing/pgvector/01-vector.sql`), database `oobdev_test`, ephemeral volume, image `pgvector/pgvector:0.8.1-pg17`. Host port 5435 (override with `TEST_PORT_PGVECTOR`). Separate from the pgmq service so neither image constrains the other. Used by the pgvector store and the database work queue tests. Key: `PGVECTOR_CONNECTION_STRING`.
 
 ## Redis
 
@@ -87,6 +97,18 @@ Graph database (Cypher over Bolt) for the graph retrieval adapter. Keys: `NEO4J_
 ## Apache Tika
 
 Stateless document detection and extraction. Keys: `TIKA_URL`, `TIKA_HOST`, `TIKA_PORT`.
+
+## ClamAV
+
+Virus scanning for `IContentScanner` through the clamd `INSTREAM` protocol. Keys: `CLAMAV_HOST`, `CLAMAV_PORT`; host port `TEST_PORT_CLAMAV` (3310). The first start downloads the signature database (freshclam), so the container reports healthy only after a few minutes; the health check is the image's `clamdcheck.sh`. The integration test sends the standard EICAR test string, which is not malware.
+
+## Docling serve
+
+Document conversion and OCR (PDF to Markdown). Key: `DOCLING_URL`; host port `TEST_PORT_DOCLING` (5001). The CPU image is about 7.6 GB and ships Tesseract with English only, so tests send `ocr_lang=eng` (`DoclingOptions.OcrLanguages`). The server caps `images_scale` at 2.0 and has no formula-enrichment model, so the adapter retries with its light options.
+
+## SonarQube
+
+Static analysis for the C# solution. Key: `SONARQUBE_URL`; host port `TEST_PORT_SONARQUBE` (9002). Start-up takes about a minute (health check `/api/system/status` reports `UP`). The first login forces a new admin password; create a user token in the UI and keep it in a user secret or the `SONAR_TOKEN` variable. `scripts/ci/sonar.ps1` runs `dotnet-sonarscanner` against it.
 
 ## smtp4dev
 

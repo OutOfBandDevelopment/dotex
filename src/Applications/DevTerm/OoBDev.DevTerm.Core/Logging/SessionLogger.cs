@@ -23,11 +23,19 @@ public sealed class SessionLogger : ISessionObserver, IDisposable
     private readonly Lock _gate = new();
     private IDisposable? _registration;
     private Action? _unsubscribeLineStatus;
+    private readonly int _checkpointEvery;
+    private int _sinceCheckpoint;
     private bool _disposed;
 
-    public SessionLogger(SessionLogWriter writer, TimeProvider? clock = null)
+    /// <summary>How many received chunks pass between automatic <c>checkpoint</c> records unless the caller says otherwise.</summary>
+    public const int DefaultCheckpointInterval = 500;
+
+    /// <param name="checkpointEvery">Write a <c>checkpoint</c> record after this many received chunks (0 turns them off).</param>
+    public SessionLogger(SessionLogWriter writer, TimeProvider? clock = null, int checkpointEvery = DefaultCheckpointInterval)
     {
         ArgumentNullException.ThrowIfNull(writer);
+        ArgumentOutOfRangeException.ThrowIfNegative(checkpointEvery);
+        _checkpointEvery = checkpointEvery;
         _writer = writer;
         _clock = clock ?? TimeProvider.System;
         _start = _clock.GetUtcNow();
@@ -39,12 +47,12 @@ public sealed class SessionLogger : ISessionObserver, IDisposable
     /// <see cref="SessionLogHeader.Created"/> is taken from <paramref name="clock"/>, not from
     /// <paramref name="header"/>.
     /// </summary>
-    public static SessionLogger Start(string path, SessionLogHeader header, TimeProvider? clock = null)
+    public static SessionLogger Start(string path, SessionLogHeader header, TimeProvider? clock = null, int checkpointEvery = DefaultCheckpointInterval)
     {
         ArgumentNullException.ThrowIfNull(header);
         clock ??= TimeProvider.System;
         var writer = SessionLogWriter.Create(path, header with { Created = clock.GetUtcNow() });
-        return new SessionLogger(writer, clock);
+        return new SessionLogger(writer, clock, checkpointEvery);
     }
 
     /// <summary>The file being written, when started by <see cref="Start"/>.</summary>
@@ -174,6 +182,12 @@ public sealed class SessionLogger : ISessionObserver, IDisposable
                 Profile = profile,
                 State = state,
             });
+
+            if (kind == SessionLogRecordKind.Rx && _checkpointEvery > 0 && ++_sinceCheckpoint >= _checkpointEvery)
+            {
+                _sinceCheckpoint = 0;
+                Record(SessionLogRecordKind.Checkpoint, default);
+            }
         }
     }
 }

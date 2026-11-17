@@ -1,4 +1,4 @@
-# OoBDev.ZWave
+﻿# OoBDev.ZWave
 
 Z-Wave Serial API framing, decoding and request building (the protocol, not one stick).
 
@@ -26,7 +26,7 @@ The consumer must answer every received data frame, or the stick retransmits and
 
 ## Not yet ported
 
-The control surface (comes with the DevTerm merge, see the DevTerm parity status). `ZWaveStick` in the tests still writes the answers itself; `ZWaveSession` is the library way. Network-management commands (include, exclude, reset) are not exercised on hardware.
+`Panels/ZWavePanel` shares one `ZWaveNodeTable` between the session decoder (`ZWaveDecoder.Table`) and the control surface (`CreateSurface(send, decoder)`): Enumerate nodes and Describe node read it, and the surface acknowledges every data frame while the panel is open. It also covers a Refresh sequence (six identity requests, 150 ms apart, filling the Library, Serial API, Home ID and similar indicators), controller queries, switching, configuration get and set, raw payloads, learn mode, heal and failed-node commands, and network management. `ZWaveStick` in the tests still writes the answers itself; `ZWaveSession` is the library way. Network-management commands (include, exclude, reset) are not exercised on hardware.
 
 ## Verified
 

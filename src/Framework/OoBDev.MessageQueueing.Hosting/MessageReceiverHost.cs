@@ -1,6 +1,7 @@
-using OoBDev.MessageQueueing.Services;
+﻿using OoBDev.MessageQueueing.Services;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,9 +18,11 @@ namespace OoBDev.MessageQueueing.Hosting;
 /// </remarks>
 /// <param name="logger">The logger.</param>
 /// <param name="factory">The message receiver provider factory.</param>
+/// <param name="options">The restart options.</param>
 public partial class MessageReceiverHost(
     ILogger<MessageReceiverHost> logger,
-    IMessageReceiverProviderFactory factory
+    IMessageReceiverProviderFactory factory,
+    IOptions<MessageReceiverHostOptions> options
     ) : IHostedService, IDisposable
 {
     private readonly List<Task> _tasks = [];
@@ -108,7 +111,7 @@ public partial class MessageReceiverHost(
                 LogError(provider, ex);
 
                 LogWaitingForRestart(provider);
-                await Task.Delay(10000, token).ConfigureAwait(false); // TODO: this should be configurable
+                await Task.Delay(options.Value.RestartDelay, token).ConfigureAwait(false);
             }
         }
     }

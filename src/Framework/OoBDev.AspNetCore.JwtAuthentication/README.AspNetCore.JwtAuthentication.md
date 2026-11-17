@@ -42,3 +42,13 @@ In Debug builds the builder is a required parameter, in Release it defaults to n
 - `OAuthApiReferenceConfigurator` configures the Scalar reference to sign in with the authorization code flow and PKCE (SHA-256). The client id is `ClientId`, else the JWT `Audience`; when neither is set it logs a warning (event 1) and leaves Scalar unconfigured.
 
 The documents and Scalar are mapped by `MapApiReference()` from [OoBDev.AspNetCore.Mvc](../OoBDev.AspNetCore.Mvc/README.AspNetCore.Mvc.md): `/openapi/{AssemblyName}.json`, the `all` document and `/scalar/{document}`.
+
+## Signing keys and rotation
+
+With `Authority` (or `MetadataAddress`) set, the platform handler downloads the discovery document and the JWKS and caches them. No custom key store exists, by design:
+
+- `AutomaticRefreshInterval` (default 12 hours) reloads the metadata and keys on a schedule.
+- `RefreshOnIssuerKeyNotFound` (default `true`) reloads at once when a token names an unknown `kid`, so a key the STS has just rotated in is accepted; `RefreshInterval` (default 5 minutes) limits how often that on-demand reload can run, which stops a flood of bad `kid` values from hammering the STS.
+- Keep `RequireHttpsMetadata` on outside local development.
+
+All three bind from the `JwtBearerOptions` section like any other option (`JwtBearerKeyRefreshTests` pins the defaults and the binding).

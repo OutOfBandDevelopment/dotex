@@ -58,3 +58,7 @@ Attribute for specifying the collection name of a vector store.
 `IGraphStore` (`UpsertNodeAsync`, `ConnectAsync`, `NeighborsAsync`, `ShortestPathAsync`, `DeleteNodeAsync`) over `GraphNode` (id, label, properties) is the graph contract; see the [GraphQueries](../../../docs/design/GraphQueries/README.md) design.
 
 `SearchTypes` is a flags enum: `Semantic` (1), `Lexical` (2) and `Hybrid` (3, both). No lexical or hybrid provider exists yet.
+
+## Search requests
+
+`ISearchProvider.SearchAsync(SearchRequest)` returns a `SearchResult` page of `SearchItem` (score and `SearchExplanation`). `IScoreFusion` combines `FusionInput` lists from several sources. `FieldFilter`, `FilterComparator` and `SearchAnchor` build the request, and `UnsupportedFilterException` names a filter a provider rejects. The text parser, the fusion strategies and `HybridSearchProvider` are in `OoBDev.Search`.

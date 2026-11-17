@@ -43,14 +43,13 @@
 
 `services.TryAddSearchServices()` adds `IVectorStoreFactory` and the open-generic `IVectorStore<>` as transient. Adapters add the provider (`OoBDev.Qdrant` `ServiceCollectionExtensions`) and read their options through `IOptions<T>`.
 
-## Planned hybrid contract
+## Hybrid contract (built 2026-11-16)
 
-Not built. The behaviour recovered from the commented `HybridProvider`, to be implemented as one service in `OoBDev.Search` when a consumer needs it:
+`HybridSearchProvider` in `OoBDev.Search` is an `ISearchProvider` over named source providers (for example keyword and vector) and an `IScoreFusion`:
 
-1. Query lexical and semantic with `limit × 2`, in parallel.
-2. Full outer join on the item key (the path hash).
-3. Rescale the lexical score by the maximum lexical score when that maximum is above 1; use 0 when absent. Use the semantic score as is, or 0 when absent.
-4. The item's score is the larger of the two; order descending; take `limit`.
-5. The result's type is the union of the providers that found it (`Lexical | Semantic`).
+1. Every source runs in parallel with the same request.
+2. `SupportedFilters` is the intersection of the sources; an unsupported filter throws `UnsupportedFilterException` before any source is called.
+3. The rankings are fused by `IScoreFusion` (`MaxNormalisedFusion`, the recovered "larger score" rule, or `ReciprocalRankFusion`), chosen by `Search:Fusion:Strategy` through `TryAddSearchFusion`; the page size is taken from the fused list.
+4. Result is one page: a cursor is rejected with `NotSupportedException` and `NextCursor` is always null.
 
-Open design points before building: add `SearchTypes Type` to `SearchResultModel`; pass the page through; make the weights configurable (`AddValidatedOptions<T>()`) instead of "larger of"; decide the item key (`ItemId` today).
+Still open: `SearchTypes Type` on the result model, and a paging scheme for fused results. No consumer composes the provider in DI yet; the sources are passed to its constructor.

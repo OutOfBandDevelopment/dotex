@@ -13,6 +13,9 @@ namespace OoBDev.LanC.Panels.Tests;
 [TestCategory("Unit")]
 public sealed class LanCPanelTests
 {
+    private static OoBDev.UiDefinitions.IControlSurface Surface(OoBDev.UiDefinitions.IDevicePanel panel, OoBDev.UiDefinitions.DeviceSend send) =>
+        panel.CreateSurface(send, panel.CreateDecoder());
+
     [TestMethod]
     public void IsAvailable_Transport_OnlyForSerial()
     {
@@ -41,7 +44,7 @@ public sealed class LanCPanelTests
     public async Task InvokeAsync_Play_SendsTheCameraVtrTablePair()
     {
         byte[]? sent = null;
-        var surface = new LanCPanel().CreateSurface((data, _) =>
+        var surface = Surface(new LanCPanel(), (data, _) =>
         {
             sent = data.ToArray();
             return Task.CompletedTask;

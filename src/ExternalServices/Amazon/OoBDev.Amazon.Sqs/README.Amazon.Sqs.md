@@ -1,6 +1,6 @@
 # OoBDev.Amazon.Sqs
 
-Sender provider for Amazon SQS in the [message queueing](../../../Framework/OoBDev.MessageQueueing/README.MessageQueueing.md) pipeline. It sends only: there is no receiver provider yet (a TODO in `AmazonSqsMessageProvider`), so inbound SQS handlers are not supported.
+Sender and receiver provider for Amazon SQS in the [message queueing](../../../Framework/OoBDev.MessageQueueing/README.MessageQueueing.md) pipeline. The receiver (`IMessageReceiverProvider`, also under the provider key) long-polls the queue, hands each `WrappedQueueMessage` to the handler and deletes the message only after the handler returns; a handler that throws leaves it for redelivery after the visibility timeout. Config keys beside the queue settings: `WaitSeconds` (0 to 20, default 20) and `MaxMessages` (1 to 10, default 10).
 
 ## Use
 

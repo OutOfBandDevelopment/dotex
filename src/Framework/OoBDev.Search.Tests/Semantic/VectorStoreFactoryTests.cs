@@ -166,6 +166,16 @@ public class VectorStoreFactoryTests
         Assert.AreEqual("FindNeighborsAsync:file", inner.Calls[4]);
     }
 
+    [TestMethod, TestCategory(TestCategories.Unit)]
+    public async Task WrappedVectorStore_Delete_ForwardsToWrapped()
+    {
+        var inner = new FakeVectorStoreProvider();
+
+        await new WrappedVectorStore<PlainItem>(inner).DeleteAsync(["x", "y"]);
+
+        CollectionAssert.AreEqual(new[] { "DeleteAsync:x,y" }, inner.Calls);
+    }
+
     private static async Task<string> ListAll(IAsyncEnumerable<SearchResultModel> items)
     {
         var ids = new List<string>();

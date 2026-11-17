@@ -1,4 +1,5 @@
 using Azure.Messaging.ServiceBus;
+using OoBDev.TestUtilities.Containers;
 using Azure.Messaging.ServiceBus.Administration;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -31,7 +32,7 @@ public class AzureServiceBusIntegrationTests
     /// Lists all available Service Bus queues.
     /// Note: The emulator doesn't support management operations, so this requires real Azure.
     /// </summary>
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-servicebus,oobd-test-sqlserver")]
     [TestCategory(TestCategories.Integration)]
     public async Task ListQueues_WithAzureServiceBus_ReturnsQueueNames()
     {
@@ -66,7 +67,7 @@ public class AzureServiceBusIntegrationTests
     /// Creates a new test queue.
     /// Note: The emulator doesn't support management operations, so this requires real Azure.
     /// </summary>
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-servicebus,oobd-test-sqlserver")]
     [TestCategory(TestCategories.Integration)]
     public async Task CreateQueue_WithAzureServiceBus_CreatesSuccessfully()
     {
@@ -121,7 +122,7 @@ public class AzureServiceBusIntegrationTests
     /// Sends a test message to a queue using the AzureServiceBusMessageProvider.
     /// Works with both emulator and real Azure Service Bus.
     /// </summary>
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-servicebus,oobd-test-sqlserver")]
     [TestCategory(TestCategories.Integration)]
     public async Task SendAsync_ToServiceBusQueue_SendsSuccessfully()
     {
@@ -206,7 +207,7 @@ public class AzureServiceBusIntegrationTests
     /// Sends a test message to a topic using the AzureServiceBusMessageProvider.
     /// Works with both emulator and real Azure Service Bus.
     /// </summary>
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-servicebus,oobd-test-sqlserver")]
     [TestCategory(TestCategories.Integration)]
     public async Task SendAsync_ToServiceBusTopic_SendsSuccessfully()
     {
@@ -267,7 +268,7 @@ public class AzureServiceBusIntegrationTests
     /// Tests sending to a session-enabled queue.
     /// Uses the session queue from containers/testing/servicebus-config/Config.json.
     /// </summary>
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-servicebus,oobd-test-sqlserver")]
     [TestCategory(TestCategories.Integration)]
     public async Task SendAsync_ToSessionQueue_WithSessionId_SendsSuccessfully()
     {

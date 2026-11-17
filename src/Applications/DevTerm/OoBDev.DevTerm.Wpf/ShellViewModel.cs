@@ -190,14 +190,15 @@ public sealed class ShellViewModel : ViewModelBase, IDisposable
 
     internal void OpenDevicePanel(IDevicePanelContribution panel)
     {
-        var surface = panel.CreateSurface(SelectedSession!.Session);
-        var definition = panel.BuildDefinition();
-        var built = OoBDev.DevTerm.Panels.SurfacePanelBuilder.Build(definition, surface);
         OoBDev.UiDefinitions.IStructuredPresenter? source = null;
-        if (panel.PresenterName is { } name && SelectedSession.Tab?.Catalog.TryGet(name, out var presenter) == true)
+        if (panel.PresenterName is { } name && SelectedSession!.Tab?.Catalog.TryGet(name, out var presenter) == true)
         {
             source = presenter as OoBDev.UiDefinitions.IStructuredPresenter;
         }
+
+        var surface = panel.CreateSurface(SelectedSession!.Session, source);
+        var definition = panel.BuildDefinition();
+        var built = OoBDev.DevTerm.Panels.SurfacePanelBuilder.Build(definition, surface);
 
         var feed = new DevicePanelFeed(definition, source, built);
         SelectedPanel = new PanelViewModel(panel.MenuTitle.Replace("_", string.Empty, StringComparison.Ordinal).TrimEnd('.'), new FormViewModel(built.Definition, built.Binding, _colorPicker, _confirm, surface as OoBDev.UiDefinitions.ICommandPreview), feed, feed.Displays);

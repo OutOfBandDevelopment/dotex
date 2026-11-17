@@ -108,7 +108,7 @@ public partial class SearchQueryOperationTransformer(
 
             if (property.Name.Equals(nameof(ISearchQuery.Filter), StringComparison.OrdinalIgnoreCase))
             {
-                //TODO: ignore filter support for now.
+                // Request: docs/features/request/2026-11-17-search-query-expression-gaps.md
                 continue;
             }
 

@@ -18,6 +18,12 @@ public class RoleRightOptions : IValidatableObject
     public string[] RoleClaimTypes { get; set; } = [ClaimTypes.Role, "roles", "role"];
 
     /// <summary>
+    /// JSON object claims whose <c>roles</c> array holds roles (Keycloak puts realm roles in <c>realm_access</c>, which the
+    /// JWT handler leaves as one JSON claim).
+    /// </summary>
+    public string[] RoleObjectClaimTypes { get; set; } = ["realm_access"];
+
+    /// <summary>
     /// Role name to the rights it grants.
     /// </summary>
     public IDictionary<string, string[]> Roles { get; set; } = new Dictionary<string, string[]>(StringComparer.Ordinal);

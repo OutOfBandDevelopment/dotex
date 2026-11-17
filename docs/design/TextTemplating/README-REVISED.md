@@ -350,9 +350,9 @@ public class ScribanTemplateProvider : ITemplateProvider
 
 ## What We're NOT Doing
 
-### ❌ Custom HTML Template Syntax
-**Reason:** Handlebars and XSLT already cover HTML scenarios
-**Decision:** Use industry standards, not custom syntax
+### ❌ Custom HTML Template Syntax (reversed 2026-11-11)
+**Reason:** Handlebars and XSLT already cover HTML scenarios. **Reversed (owner, 2026-11-11):** the owner's existing HTML templates use `value-of`, `repeater`, `condition`, `value-attr` and `data-binding`; they are built in [html-directives.md](html-directives.md).
+**Decision (superseded for HTML templates):** use industry standards for new templates, not custom syntax
 
 ### ❌ Custom Template Language
 **Reason:** Reinventing the wheel, no benefit over Handlebars/Liquid

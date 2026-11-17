@@ -312,6 +312,9 @@ scripts\integration-down.bat --clean
 | Service | Image | Port(s) | Purpose | Health Check |
 |---------|-------|---------|---------|--------------|
 | **Apache Tika** | `apache/tika` | 9998 | Document content detection | `curl http://localhost:9998/tika` |
+| **Docling serve** | `quay.io/docling-project/docling-serve-cpu` | 5001 | Document conversion and OCR | `curl http://localhost:5001/health` |
+| **ClamAV** | `clamav/clamav:stable` | 3310 | Virus scanning (clamd INSTREAM) | `/usr/local/bin/clamdcheck.sh` inside the container |
+| **SonarQube** | `sonarqube:community` | 9002 | Static analysis (`scripts/ci/sonar.ps1`) | `curl http://localhost:9002/api/system/status` |
 | **SMTP4Dev** | `rnwood/smtp4dev` | 25 (SMTP)<br>7777 (Web) | Email testing | `curl http://localhost:7777` |
 
 ### Stateful Services
@@ -325,6 +328,7 @@ scripts\integration-down.bat --clean
 | **RabbitMQ** | `rabbitmq:latest` | 5673 (AMQP)<br>15672 (Management) | Message broker | `rabbitmq-diagnostics ping` |
 | **Redis** | `valkey/valkey:8-alpine` | 6379 | In-memory cache store | `valkey-cli ping` |
 | **PostgreSQL** | `ghcr.io/pgmq/pg17-pgmq:v1.8.0` | 5434 | Relational store with the pgmq queue extension | `pg_isready` |
+| **PostgreSQL (pgvector)** | `pgvector/pgvector:0.8.1-pg17` | 5435 | Relational store with the vector extension for embedding stores and the work queue tests | `pg_isready` |
 | **OpenSearch** | `opensearchproject/opensearch:latest` | 9200 (HTTP)<br>9600 (Performance) | Search engine | `curl https://localhost:9200/_cluster/health` |
 | **Qdrant** | `qdrant/qdrant` | 6333 (HTTP)<br>6334 (gRPC) | Vector database | `curl http://localhost:6333/health` |
 | **Neo4j** | `neo4j:5-community` | 7687 (Bolt)<br>7474 (Browser) | Graph database | `cypher-shell "RETURN 1"` |
@@ -425,9 +429,13 @@ Tests use environment variables for connection strings. See `.env.integration` f
 | `RABBITMQ_CONNECTION_STRING` | `amqp://guest:guest@localhost:5673/` | RabbitMQ connection |
 | `REDIS_CONNECTION_STRING` | `localhost:6379` | Redis connection |
 | `POSTGRES_CONNECTION_STRING` | `Host=localhost;Port=5434;...` | PostgreSQL connection |
+| `PGVECTOR_CONNECTION_STRING` | `Host=localhost;Port=5435;...` | PostgreSQL with pgvector connection |
 | `OPENSEARCH_URL` | `https://localhost:9200` | OpenSearch endpoint |
 | `QDRANT_URL` | `http://localhost:6333` | Qdrant HTTP endpoint |
 | `TIKA_URL` | `http://localhost:9998` | Apache Tika endpoint |
+| `DOCLING_URL` | `http://localhost:5001` | docling-serve endpoint |
+| `CLAMAV_HOST` / `CLAMAV_PORT` | `localhost` / `3310` | clamd endpoint |
+| `SONARQUBE_URL` | `http://localhost:9002` | SonarQube endpoint |
 | `SMTP_HOST` | `localhost` | SMTP server host |
 | `AZURITE_CONNECTION_STRING` | (see .env file) | Azurite connection |
 | `MOTO_URL` | `http://localhost:4566` | Moto endpoint |
@@ -596,11 +604,15 @@ netstat -ano | findstr :27017
 |----------|---------|---------|
 | `TEST_PORT_SMTP_WEB`, `TEST_PORT_SMTP`, `TEST_PORT_IMAP` | 7777, 25, 143 | smtp4dev |
 | `TEST_PORT_TIKA` | 9998 | Apache Tika |
+| `TEST_PORT_DOCLING` | 5001 | docling-serve |
+| `TEST_PORT_CLAMAV` | 3310 | ClamAV |
+| `TEST_PORT_SONARQUBE` | 9002 | SonarQube |
 | `TEST_PORT_MONGODB` | 27017 | MongoDB |
 | `TEST_PORT_SQLSERVER` | 1433 | SQL Server |
 | `TEST_PORT_RABBITMQ`, `TEST_PORT_RABBITMQ_MGMT` | 5673, 15672 | RabbitMQ (AMQP, management) |
 | `TEST_PORT_REDIS` | 6379 | Redis |
 | `TEST_PORT_POSTGRES` | 5434 | PostgreSQL with pgmq |
+| `TEST_PORT_PGVECTOR` | 5435 | PostgreSQL with pgvector |
 | `TEST_PORT_OPENSEARCH`, `TEST_PORT_OPENSEARCH_PERF` | 9200, 9600 | OpenSearch |
 | `TEST_PORT_OPENSEARCH_DASHBOARDS` | 5601 | OpenSearch Dashboards |
 | `TEST_PORT_QDRANT`, `TEST_PORT_QDRANT_GRPC` | 6333, 6334 | Qdrant |
@@ -674,6 +686,9 @@ cd ../containers/testing
 ### Service URLs
 
 - **Apache Tika**: http://localhost:9998
+- **Docling serve**: http://localhost:5001
+- **ClamAV**: localhost:3310 (TCP, clamd)
+- **SonarQube**: http://localhost:9002
 - **SMTP4Dev Web UI**: http://localhost:7777
 - **RabbitMQ Management**: http://localhost:15672 (guest/guest)
 - **OpenSearch**: https://localhost:9200 (admin/IntegrationTest123!)
@@ -685,12 +700,16 @@ cd ../containers/testing
 
 All containers are prefixed with `oobd-test-`:
 - `oobd-test-tika`
+- `oobd-test-docling`
+- `oobd-test-clamav`
+- `oobd-test-sonarqube`
 - `oobd-test-smtp`
 - `oobd-test-mongodb`
 - `oobd-test-sqlserver`
 - `oobd-test-rabbitmq`
 - `oobd-test-redis`
 - `oobd-test-postgres`
+- `oobd-test-pgvector`
 - `oobd-test-opensearch`
 - `oobd-test-qdrant`
 - `oobd-test-azurite`

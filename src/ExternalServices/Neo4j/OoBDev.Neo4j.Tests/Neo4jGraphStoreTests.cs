@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Configuration;
+using OoBDev.TestUtilities.Containers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -70,7 +71,7 @@ public class Neo4jGraphStoreTests
         Assert.ThrowsExactly<OptionsValidationException>(() => _ = provider.GetRequiredService<IOptions<Neo4jOptions>>().Value);
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-neo4j")]
     [TestCategory(TestCategories.Integration)]
     public async Task Graph_RoundTrip_AgainstRealNeo4j()
     {

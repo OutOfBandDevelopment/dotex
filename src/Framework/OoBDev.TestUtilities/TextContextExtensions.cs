@@ -87,7 +87,7 @@ public static class TextContextExtensions
         return context;
     }
 
-    //TODO: clean this up
+    // Request: docs/features/request/2026-11-17-code-cleanup-and-test-gaps.md
     ///// <summary>
     ///// Write out binary content to test results folder and link to test results
     ///// </summary>

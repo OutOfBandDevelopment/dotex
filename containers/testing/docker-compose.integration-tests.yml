@@ -31,6 +31,7 @@ services:
       timeout: 5s
       retries: 5
       start_period: 10s
+      start_interval: 1s
 
   smtp4dev:
     image: rnwood/smtp4dev
@@ -47,6 +48,7 @@ services:
       timeout: 5s
       retries: 5
       start_period: 5s
+      start_interval: 1s
 
   # ============================================================================
   # Stateful Services - Require cleanup between test runs
@@ -69,6 +71,7 @@ services:
       timeout: 5s
       retries: 5
       start_period: 10s
+      start_interval: 1s
 
   sql-server:
     extends:
@@ -91,6 +94,7 @@ services:
       timeout: 5s
       retries: 10
       start_period: 30s
+      start_interval: 1s
 
   rabbitmq:
     image: rabbitmq:management
@@ -117,6 +121,7 @@ services:
       timeout: 5s
       retries: 5
       start_period: 15s
+      start_interval: 1s
 
   mosquitto:
     image: eclipse-mosquitto:2
@@ -164,6 +169,7 @@ services:
       timeout: 5s
       retries: 5
       start_period: 5s
+      start_interval: 1s
 
   postgres:
     image: ghcr.io/pgmq/pg17-pgmq:v1.8.0
@@ -185,6 +191,79 @@ services:
       timeout: 5s
       retries: 5
       start_period: 10s
+      start_interval: 1s
+
+  pgvector:
+    image: pgvector/pgvector:0.8.1-pg17
+    container_name: oobd-test-pgvector
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-IntegrationTest123!}
+      POSTGRES_DB: oobdev_test
+    ports:
+      - "${TEST_PORT_PGVECTOR:-5435}:5432"   # next to the pgmq service on 5434
+    networks:
+      - integration-test-net
+    volumes:
+      - pgvector-test-data:/var/lib/postgresql/data
+      - ./pgvector/01-vector.sql:/docker-entrypoint-initdb.d/01-vector.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d oobdev_test"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+      start_interval: 1s
+
+  docling:
+    image: quay.io/docling-project/docling-serve-cpu:latest
+    container_name: oobd-test-docling
+    ports:
+      - "${TEST_PORT_DOCLING:-5001}:5001"
+    networks:
+      - integration-test-net
+    healthcheck:
+      test: ["CMD-SHELL", "python3 -c \"import urllib.request; urllib.request.urlopen('http://localhost:5001/health')\""]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 60s
+      start_interval: 1s
+
+  clamav:
+    image: clamav/clamav:stable
+    container_name: oobd-test-clamav
+    ports:
+      - "${TEST_PORT_CLAMAV:-3310}:3310"
+    networks:
+      - integration-test-net
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/clamdcheck.sh"]
+      interval: 15s
+      timeout: 10s
+      retries: 20
+      start_period: 120s   # the first start downloads the signature database
+      start_interval: 1s
+
+  sonarqube:
+    image: sonarqube:community
+    container_name: oobd-test-sonarqube
+    environment:
+      SONAR_ES_BOOTSTRAP_CHECKS_DISABLE: "true"   # no vm.max_map_count change needed on the Docker host
+    ports:
+      - "${TEST_PORT_SONARQUBE:-9002}:9000"   # 9000 is a common local port
+    networks:
+      - integration-test-net
+    volumes:
+      - sonarqube-test-data:/opt/sonarqube/data
+      - sonarqube-test-extensions:/opt/sonarqube/extensions
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:9000/api/system/status | grep -q '\"status\":\"UP\"'"]
+      interval: 15s
+      timeout: 10s
+      retries: 20
+      start_period: 90s
+      start_interval: 1s
 
   opensearch:
     extends:
@@ -217,6 +296,7 @@ services:
       timeout: 5s
       retries: 10
       start_period: 30s
+      start_interval: 1s
 
   qdrant:
     extends:
@@ -237,6 +317,7 @@ services:
       timeout: 5s
       retries: 5
       start_period: 10s
+      start_interval: 1s
 
   # ============================================================================
   # Neo4j - graph database (Cypher over Bolt)
@@ -261,6 +342,7 @@ services:
       timeout: 10s
       retries: 10
       start_period: 30s
+      start_interval: 1s
 
   # ============================================================================
   # Cloud Emulators - Azure and AWS service emulation
@@ -285,6 +367,7 @@ services:
       timeout: 5s
       retries: 5
       start_period: 10s
+      start_interval: 1s
 
   # Moto server: Apache-2.0 AWS emulator, no licence token. Host port 4566 is kept so SQS_ENDPOINT is unchanged.
   moto:
@@ -302,6 +385,7 @@ services:
       timeout: 5s
       retries: 5
       start_period: 10s
+      start_interval: 1s
 
   # One-shot: creates the SQS queues the integration tests expect, then exits
   moto-init:
@@ -393,6 +477,7 @@ services:
       timeout: 5s
       retries: 10
       start_period: 40s
+      start_interval: 1s
 
   # ============================================================================
   # Reverse Proxy & Dashboard
@@ -420,6 +505,7 @@ services:
       timeout: 5s
       retries: 3
       start_period: 10s
+      start_interval: 1s
 
   # ============================================================================
   # Data Visualization
@@ -447,6 +533,7 @@ services:
       timeout: 10s
       retries: 5
       start_period: 60s
+      start_interval: 1s
 
   # ============================================================================
   # AI/ML Services - CPU-only for CI/CD compatibility
@@ -468,6 +555,7 @@ services:
       timeout: 5s
       retries: 5
       start_period: 30s
+      start_interval: 1s
 
   ollama:
     build:
@@ -489,6 +577,7 @@ services:
       timeout: 5s
       retries: 5
       start_period: 30s
+      start_interval: 1s
 
 # ============================================================================
 # Networks - Isolated test network
@@ -512,6 +601,12 @@ volumes:
     name: oobd-test-rabbitmq-data
   postgres-test-data:
     name: oobd-test-postgres-data
+  pgvector-test-data:
+    name: oobd-test-pgvector-data
+  sonarqube-test-data:
+    name: oobd-test-sonarqube-data
+  sonarqube-test-extensions:
+    name: oobd-test-sonarqube-extensions
   redis-test-data:
     name: oobd-test-redis-data
   opensearch-test-data:

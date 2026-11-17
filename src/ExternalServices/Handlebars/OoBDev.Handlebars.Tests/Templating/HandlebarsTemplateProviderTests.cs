@@ -74,7 +74,7 @@ public class HandlebarsTemplateProviderTests
     {
         if (Environment.OSVersion.Platform != PlatformID.Win32NT)
         {
-            //TODO: fix this better
+            // Request: docs/features/request/2026-11-17-code-cleanup-and-test-gaps.md
             Assert.Inconclusive();
             return;
         }

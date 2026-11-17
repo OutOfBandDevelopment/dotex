@@ -1,4 +1,5 @@
 ﻿using OoBDev.AI;
+using OoBDev.TestUtilities.Containers;
 using OoBDev.TestUtilities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -34,7 +35,7 @@ public class OllamaMessageCompletionTests
     }
 
     [TestCategory(TestCategories.Integration)]
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-ollama")]
     public async Task IMessageCompletion_GetCompletionAsyncTest()
     {
         var url = TestInstanceGuard.Require(TestContext.GetRequiredProperty<string>("OLLAMA_URL"));

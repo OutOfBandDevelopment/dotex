@@ -1,4 +1,5 @@
 using Microsoft.Data.SqlClient;
+using OoBDev.TestUtilities.Containers;
 using Microsoft.Data.Sqlite;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Npgsql;
@@ -34,7 +35,7 @@ public class GraphQueryTests
         Assert.IsTrue(names.Any(n => n.EndsWith("SqlServer.ShortestPath.sql", StringComparison.Ordinal)));
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-postgres,oobd-test-sqlserver")]
     [TestCategory(TestCategories.Integration)]
     public async Task Sqlite_RecursiveCte_AnswersTheQuestions()
     {
@@ -50,7 +51,7 @@ public class GraphQueryTests
         await AssertRecursiveAnswersAsync(connection);
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-postgres,oobd-test-sqlserver")]
     [TestCategory(TestCategories.Integration)]
     public async Task Postgres_RecursiveCte_AnswersTheQuestions()
     {
@@ -75,7 +76,7 @@ public class GraphQueryTests
         }
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-postgres,oobd-test-sqlserver")]
     [TestCategory(TestCategories.Integration)]
     public async Task SqlServer_NodeAndEdgeTables_AnswerTheQuestions()
     {

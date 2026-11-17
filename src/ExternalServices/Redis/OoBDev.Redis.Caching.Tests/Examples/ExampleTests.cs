@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using OoBDev.TestUtilities.Containers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.Caching;
@@ -16,7 +17,7 @@ public class ExampleTests
 {
     public required TestContext TestContext { get; set; }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-redis")]
     [TestCategory(TestCategories.Integration)]
     public async Task CachingDesignTest_WithRedisCache()
     {

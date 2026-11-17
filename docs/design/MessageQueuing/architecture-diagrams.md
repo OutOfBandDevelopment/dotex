@@ -779,7 +779,7 @@ These diagrams use PlantUML syntax and can be rendered using:
 ## See Also
 
 - [Pattern Context-Based](./pattern-context-based.md) - Detailed pattern documentation
-- [Migration Checklist](./migration-checklist.md) - Step-by-step migration guide
+- [Migration Checklist](./archive/migration-checklist.md) - The January 2026 migration plan (archived, done)
 - [README](./README.md) - Overview and quick start
 
 ---

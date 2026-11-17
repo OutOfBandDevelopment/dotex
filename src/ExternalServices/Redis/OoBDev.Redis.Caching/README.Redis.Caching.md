@@ -25,6 +25,7 @@ See the [StackExchange.Redis configuration reference](https://stackexchange.gith
 - `StoreAsync` serializes the object to JSON and sets the string key with the given expiration; a blank key or null data is ignored.
 - `RetrieveAsync` reads the string and converts it to the requested type with `IObjectConverter`; a missing key or blank key returns `null`.
 - `FlushAsync` deletes one key.
+- `TryAcquireAsync` (`ICachingLock`) takes a Redis lock `lock:{key}` with `SET NX` and a random token, released only by its owner and expiring after the given lifetime. `CachedProxy` uses it so a cold key is computed by one process while the others wait for the value (cross-process single flight).
 - Entries are shared by every instance that uses the same Redis and survive an application restart.
 
 ## Verification

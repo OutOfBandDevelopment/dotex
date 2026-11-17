@@ -63,6 +63,7 @@ public class QdrantVectorStoreProvider : IVectorStoreProvider
             await _client.EnsureCollectionExistsAsync(_collectionName, (ulong)items.First().embedding.Length, _options.Value.Distance).ConfigureAwait(false);
 
         List<PointStruct> points = [];
+        List<string> ids = [];
 
         foreach (var item in items)
         {
@@ -76,7 +77,7 @@ public class QdrantVectorStoreProvider : IVectorStoreProvider
 
             var point = new PointStruct
             {
-                Id = new PointId { Uuid = Guid.NewGuid().ToString() },
+                Id = new PointId { Uuid = NewId(ids) },
                 Payload =
                 {
                      map
@@ -96,7 +97,30 @@ public class QdrantVectorStoreProvider : IVectorStoreProvider
             Points = { points },
         }).ConfigureAwait(false);
 
-        return [];  //Note: want to return IDs but its not possible as the actual persistence is out of process.  
+        return [.. ids];
+    }
+
+    private static string NewId(List<string> ids)
+    {
+        var id = Guid.NewGuid().ToString();
+        ids.Add(id);
+        return id;
+    }
+
+    /// <inheritdoc/>
+    public virtual async Task DeleteAsync(IEnumerable<string> ids)
+    {
+        var selector = new PointsIdsList();
+        foreach (var id in ids)
+            selector.Ids.Add(ulong.TryParse(id, NumberStyles.None, CultureInfo.InvariantCulture, out var n) ? new PointId { Num = n } : new PointId { Uuid = id });
+        if (selector.Ids.Count == 0)
+            return;
+
+        await _client.Points.DeleteAsync(new DeletePoints
+        {
+            CollectionName = _collectionName,
+            Points = new PointsSelector { Points = selector },
+        }).ConfigureAwait(false);
     }
 
     private Value? Convert(object value) =>

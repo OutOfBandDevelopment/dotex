@@ -62,7 +62,7 @@ public sealed class SnsDeliveryWebhookProcessor(IOptions<SesOptions> options) : 
             "Send" => (DeliveryStatus.Sent, (string?)null),
             "Delivery" => (DeliveryStatus.Delivered, null),
             "Bounce" => (DeliveryStatus.Bounced, Nested(payload, "bounce", "bounceType")),
-            "Complaint" => (DeliveryStatus.Failed, Nested(payload, "complaint", "complaintFeedbackType") ?? "complaint"),
+            "Complaint" => (DeliveryStatus.Complained, Nested(payload, "complaint", "complaintFeedbackType") ?? "complaint"),
             "Reject" => (DeliveryStatus.Failed, Nested(payload, "reject", "reason")),
             "Rendering Failure" => (DeliveryStatus.Failed, Nested(payload, "failure", "errorMessage")),
             "Open" => (DeliveryStatus.Opened, null),
@@ -85,7 +85,23 @@ public sealed class SnsDeliveryWebhookProcessor(IOptions<SesOptions> options) : 
         }
 
         var timestamp = Text(mail, "timestamp") is { } t && DateTimeOffset.TryParse(t, null, global::System.Globalization.DateTimeStyles.AssumeUniversal, out var parsed) ? parsed : receivedAt;
-        return [new DeliveryStatusEvent(id, new DeliveryStatusUpdate(id, status, detail, timestamp))];
+        return [new DeliveryStatusEvent(id, new DeliveryStatusUpdate(id, status, detail, timestamp, Recipients(payload, status)))];
+    }
+
+    private static IReadOnlyList<string>? Recipients(JsonElement payload, DeliveryStatus status)
+    {
+        var (parent, list) = status switch
+        {
+            DeliveryStatus.Bounced => ("bounce", "bouncedRecipients"),
+            DeliveryStatus.Complained => ("complaint", "complainedRecipients"),
+            _ => (null, null),
+        };
+        if (parent is null || !payload.TryGetProperty(parent, out var section) || !section.TryGetProperty(list!, out var items) || items.ValueKind != JsonValueKind.Array)
+        {
+            return null;
+        }
+
+        return items.EnumerateArray().Select(i => Text(i, "emailAddress")).OfType<string>().ToList();
     }
 
     private static string? Text(JsonElement element, string name)

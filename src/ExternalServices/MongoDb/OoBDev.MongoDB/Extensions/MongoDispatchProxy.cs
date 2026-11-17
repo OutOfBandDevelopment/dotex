@@ -30,7 +30,7 @@ internal class MongoDispatchProxy : DispatchProxy
             return ret;
         }
 
-        //TODO: need to simplify this name logic with that on the DataloaderCommandFactory
+        // Request: docs/features/request/2026-11-17-provider-and-adapter-gaps.md
         var originalName = targetMethod.Name.StartsWith("get_", StringComparison.Ordinal) ? targetMethod.Name[4..] : targetMethod.Name;
 
         var name = targetMethod.DeclaringType?.GetProperty(originalName)

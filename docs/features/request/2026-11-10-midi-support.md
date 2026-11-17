@@ -41,3 +41,5 @@ Own project or inside `OoBDev.System`? Does DevTerm get a MIDI transport?
 Origin: BinaryDataDecoders issue 22. Low priority and specialized; accept, schedule or decline.
 
 2026-11-11: triaged. Accepted at low priority: every BinaryDataDecoders feature is kept (scope rule in `CLAUDE.md`), so it is scheduled behind the DevTerm and event-sourcing work. Backlog: BACKLOG.md, Migrations (specialized formats).
+
+2026-11-12: built as `OoBDev.Midi` (`src/Extensions`): file parse and write with byte-for-byte round trip, and `MidiStreamDecoder` with running status. Device definition and DevTerm transport remain in the backlog.

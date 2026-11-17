@@ -21,5 +21,6 @@ public IActionResult List() => Ok();
 | `IApplicationRightChecker` | `Check(principal, requiredRights)` returns a `RightCheckResult`: `Allowed`, `Unauthenticated` or `Forbidden`. Every API surface uses the same checker so the rule is identical everywhere. |
 | `ApplicationRightChecker` | Default: unauthenticated principal is `Unauthenticated`; no required rights is `Allowed`; otherwise `Allowed` when any `ApplicationRight` claim (`CommonClaims.ApplicationRight`) equals a required right (ordinal comparison), else `Forbidden`. |
 | `IRoleRightMapper` | `MapRights(roles)` returns the set of rights for a set of roles. |
+| `AuditingApplicationRightChecker` | Decorator that logs one structured entry per check (subject from the name-identifier claim or `anonymous`, required rights, outcome); denials at warning, allowed at information. Enable it with `services.AddRightAuditLog()` (OoBDev.AspNetCore.Mvc) after the checker is registered; the entries leave through the normal logging and OpenTelemetry pipeline. |
 
 The filter resolves `IApplicationRightChecker` from the request services and falls back to the default checker when none is registered.

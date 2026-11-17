@@ -12,6 +12,8 @@ namespace OoBDev.System.IO.Ports.Tests;
 [TestCategory(TestCategories.Serial)]
 public sealed class SerialPortWriteStreamTests
 {
+    public required TestContext TestContext { get; set; }
+
     [TestMethod]
     public async Task WriteAsync_Memory_WritesThroughToThePort()
     {
@@ -58,14 +60,25 @@ public sealed class SerialPortWriteStreamTests
     [TestMethod]
     public async Task WriteAsync_Array_RunsOffTheCallerThread()
     {
+        // Stage: the write signals when it ran; the caller thread stays blocked until then so the pool cannot reuse it for the write
         var callerThread = Environment.CurrentManagedThreadId;
         int? writeThread = null;
+        using var written = new ManualResetEventSlim();
         var port = new Mock<ISerialPort>();
-        port.Setup(p => p.Write(It.IsAny<byte[]>(), 0, 2)).Callback(() => writeThread = Environment.CurrentManagedThreadId);
+        port.Setup(p => p.Write(It.IsAny<byte[]>(), 0, 2)).Callback(() =>
+        {
+            writeThread = Environment.CurrentManagedThreadId;
+            written.Set();
+        });
         using var stream = new SerialPortWriteStream(port.Object);
 
-        await stream.WriteAsync(new byte[] { 1, 2 }, 0, 2, CancellationToken.None);
+        // Test
+        var task = stream.WriteAsync(new byte[] { 1, 2 }, 0, 2, CancellationToken.None);
+        Assert.IsTrue(written.Wait(TimeSpan.FromSeconds(10)), "The write did not run within 10 s.");
+        await task;
 
+        // Assert
+        TestContext.WriteLine($"Caller thread {callerThread}, write thread {writeThread}");
         Assert.IsNotNull(writeThread);
         Assert.AreNotEqual(callerThread, writeThread);
     }

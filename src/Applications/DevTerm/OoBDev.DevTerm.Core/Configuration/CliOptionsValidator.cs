@@ -241,11 +241,19 @@ public sealed class CliOptionsValidator : IValidateOptions<CliOptions>
 
                 break;
 
+            case "service":
+                if (!Enum.TryParse<ServiceKind>(options.Service, true, out _))
+                {
+                    return ValidateOptionsResult.Fail("'--service' must be one of: echo, discard, daytime, time, chargen.");
+                }
+
+                break;
+
             case "loopback":
                 break;
 
             default:
-                return ValidateOptionsResult.Fail($"Unknown transport '{options.Transport}'. Expected 'serial', 'tcp', 'hid', 'usbtmc', 'ble', 'rfc2217', 'vxi11', 'mqtt', 'amqp', 'stomp', or 'loopback'.");
+                return ValidateOptionsResult.Fail($"Unknown transport '{options.Transport}'. Expected 'serial', 'tcp', 'hid', 'usbtmc', 'ble', 'rfc2217', 'vxi11', 'mqtt', 'amqp', 'stomp', 'loopback', or 'service'.");
         }
 
         return ValidateOptionsResult.Success;

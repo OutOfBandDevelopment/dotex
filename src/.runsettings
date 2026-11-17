@@ -116,6 +116,11 @@ https://github.com/coverlet-coverage/coverlet/blob/fc7ec26dcaed8fedba880ff13c6f1
 		<Parameter name="LOOPBACK_DEVICE_HOST" value="localhost" />
 		<Parameter name="LOOPBACK_DEVICE_PORT" value="7778" />
 
+		<!-- Integration container start-up (IntegrationTestMethod) -->
+		<Parameter name="CONTAINER_STARTUP_TIMEOUT_SECONDS" value="5" />
+		<Parameter name="CONTAINER_AUTOSTART" value="true" />
+		<Parameter name="CONTAINER_STOP_AFTER_TESTS" value="true" />
+
 		<!-- Redis -->
 		<Parameter name="REDIS_CONNECTION_STRING" value="localhost:6379" />
 		<Parameter name="REDIS_HOST" value="localhost" />
@@ -123,6 +128,7 @@ https://github.com/coverlet-coverage/coverlet/blob/fc7ec26dcaed8fedba880ff13c6f1
 
 		<!-- PostgreSQL (pgmq) -->
 		<Parameter name="POSTGRES_CONNECTION_STRING" value="Host=localhost;Port=5434;Database=oobdev_test;Username=postgres;Password=IntegrationTest123!" />
+		<Parameter name="PGVECTOR_CONNECTION_STRING" value="Host=localhost;Port=5435;Database=oobdev_test;Username=postgres;Password=IntegrationTest123!" />
 
 		<!-- OpenSearch -->
 		<Parameter name="OPENSEARCH_URL" value="https://localhost:9200" />
@@ -135,6 +141,8 @@ https://github.com/coverlet-coverage/coverlet/blob/fc7ec26dcaed8fedba880ff13c6f1
 		<!-- PlantUML renderer and docs validation -->
 		<Parameter name="PLANTUML_URL" value="http://localhost:8086" />
 		<Parameter name="DOCS_VALIDATE_PATHS" value="docs/patterns-discovery;docs/applications" />
+		<Parameter name="DOCS_CHECK_SCREENSHOTS" value="false" />
+		<Parameter name="DOCS_SCREENSHOT_TOLERANCE_DAYS" value="30" />
 
 		<!-- Qdrant -->
 		<Parameter name="QDRANT_URL" value="http://localhost:6333" />
@@ -192,6 +200,16 @@ https://github.com/coverlet-coverage/coverlet/blob/fc7ec26dcaed8fedba880ff13c6f1
 		<Parameter name="TIKA_HOST" value="localhost" />
 		<Parameter name="TIKA_PORT" value="9998" />
 
+		<!-- Docling serve (document conversion and OCR) -->
+		<Parameter name="DOCLING_URL" value="http://localhost:5001" />
+
+		<!-- ClamAV (virus scanning over clamd INSTREAM) -->
+		<Parameter name="CLAMAV_HOST" value="localhost" />
+		<Parameter name="CLAMAV_PORT" value="3310" />
+
+		<!-- SonarQube Community (static analysis; the token is a user secret) -->
+		<Parameter name="SONARQUBE_URL" value="http://localhost:9002" />
+
 		<!-- SBert (Sentence Embeddings) -->
 		<Parameter name="SBERT_URL" value="http://localhost:5080" />
 		<Parameter name="SBERT_HOST" value="localhost" />
@@ -199,6 +217,7 @@ https://github.com/coverlet-coverage/coverlet/blob/fc7ec26dcaed8fedba880ff13c6f1
 
 		<!-- Ollama (LLM Inference) -->
 		<Parameter name="OLLAMA_URL" value="http://localhost:11435" />
+		<Parameter name="RAW_TEST_FILE" value="" />
 		<Parameter name="OLLAMA_HOST" value="localhost" />
 		<Parameter name="OLLAMA_PORT" value="11435" />
 		<Parameter name="OLLAMA_MODEL" value="phi3" />

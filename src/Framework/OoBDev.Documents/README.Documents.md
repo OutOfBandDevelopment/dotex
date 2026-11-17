@@ -38,3 +38,9 @@ var documentConversion = new DocumentConversion(conversionChainBuilder);
 // Perform document conversion asynchronously
 await documentConversion.ConvertAsync(sourceStream, "application/pdf", destinationStream, "application/msword");
 ```
+
+## Malware scanning before storage
+
+`ScanningBlobContainer` decorates any `IBlobContainer` and calls an `IContentScanner` (contract in `OoBDev.Documents.Abstractions`, namespace `OoBDev.Documents.Scanning`) before `StoreContentAsync`. An infected result or a scanner failure throws `ContentRejectedException` and nothing is stored (fail closed). Non-seekable streams are buffered once so the scan and the store read the same bytes. Reads, queries and deletes pass through. No scanner adapter ships yet (a ClamAV adapter would implement `IContentScanner`); wrap a container with `new ScanningBlobContainer(inner, scanner)` in the composition root.
+
+Tests: `ScanningBlobContainerTests`.

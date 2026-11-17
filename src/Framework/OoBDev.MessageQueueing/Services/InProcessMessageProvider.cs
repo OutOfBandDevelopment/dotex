@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Concurrent;
 using System.Threading;
@@ -13,8 +14,10 @@ namespace OoBDev.MessageQueueing.Services;
 /// Initializes a new instance of the <see cref="InProcessMessageProvider"/> class.
 /// </remarks>
 /// <param name="logger">The logger.</param>
+/// <param name="options">The polling options.</param>
 public partial class InProcessMessageProvider(
-    ILogger<InProcessMessageProvider> logger
+    ILogger<InProcessMessageProvider> logger,
+    IOptions<InProcessMessageProviderOptions> options
     ) : IMessageSenderProvider, IMessageReceiverProvider
 {
     private IMessageHandlerProvider? _handlerProvider;
@@ -37,7 +40,7 @@ public partial class InProcessMessageProvider(
         {
             ContentType = "application/json;",
             PayloadType = message.GetType().AssemblyQualifiedName ?? throw new NotSupportedException(),
-            CorrelationId = context.CorrelationId ?? Guid.NewGuid().ToString(), //TODO: do this better such has having a id generation interface that can be replaced
+            CorrelationId = context.CorrelationId ?? Guid.NewGuid().ToString(), // Request: docs/features/request/2026-11-17-configurable-defaults-and-id-generation.md
             Payload = message,
             Properties = context.Headers,
         };
@@ -76,7 +79,7 @@ public partial class InProcessMessageProvider(
             if (!_queue.TryDequeue(out var wrapped))
             {
                 LogNothingReceived();
-                await Task.Delay(1000, cancellationToken).ConfigureAwait(false);  // TODO: this should be configurable
+                await Task.Delay(options.Value.PollInterval, cancellationToken).ConfigureAwait(false);
                 continue;
             }
 

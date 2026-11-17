@@ -1,6 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.Extensions.FileSystemGlobbing;
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace OoBDev.System.IO;
 
@@ -9,6 +13,8 @@ namespace OoBDev.System.IO;
 /// </summary>
 public static class PathEx
 {
+    private static readonly char[] _wildCards = ['*', '?'];
+
     /// <summary>
     /// Create parent directory is does not exist
     /// </summary>
@@ -62,39 +68,88 @@ public static class PathEx
     }
 
     /// <summary>
-    /// Enumerates files matching a wildcard path pattern.
-    /// Supports wildcards (* and ?) in any path segment and recursively searches directories.
+    /// Enumerates files matching a wildcard path pattern. The literal leading segments become the root and the rest is matched
+    /// with the platform glob matcher: <c>*</c> and <c>?</c> within a segment, <c>**</c> across directories.
     /// </summary>
     /// <param name="wildcardPath">The path pattern to search for, which may contain wildcard characters.</param>
     /// <returns>An enumerable collection of full file paths matching the wildcard pattern.</returns>
     public static IEnumerable<string> EnumerateFiles(string? wildcardPath)
     {
         if (string.IsNullOrWhiteSpace(wildcardPath))
-            yield break;
+            return [];
 
         wildcardPath = Path.GetFullPath(wildcardPath);
 
         if (File.Exists(wildcardPath))
-        {
-            yield return wildcardPath;
-            yield break;
-        }
+            return [wildcardPath];
 
         if (EndsInDirectorySeparator(wildcardPath))
-            wildcardPath += "*.*";
-        var wildCards = new[] { '*', '?' };
-        var pathSegments = wildcardPath.Split('/', '\\');
-        var segmentsQuery = from ps in pathSegments
-                            select (segment: ps, hasWildcard: wildCards.Any(c => ps.Contains(c)));
-        var basePath = string.Join(Path.DirectorySeparatorChar, segmentsQuery.TakeWhile(ps => !ps.hasWildcard).Select(ps => ps.segment));
-        var searchPathSegments = string.Join(Path.DirectorySeparatorChar, segmentsQuery.SkipWhile(ps => !ps.hasWildcard).Select(ps => ps.segment));
-        var searchPaths = Path.GetDirectoryName(searchPathSegments);
-        var searchFilePattern = Path.GetFileName(searchPathSegments);
+            wildcardPath += "*";
+        var segments = wildcardPath.Split('/', '\\');
+        var literal = segments.TakeWhile(s => s.IndexOfAny(_wildCards) < 0).ToArray();
+        var pattern = segments.Skip(literal.Length).ToArray();
+        if (pattern.Length == 0)
+            return [];
 
-        if (searchPaths != null)
-            foreach (var directory in EnumerateDirectories(basePath, searchPaths))
-                foreach (var file in Directory.EnumerateFiles(directory, searchFilePattern))
-                    yield return file;
+        return EnumerateFiles(string.Join(Path.DirectorySeparatorChar, literal), [string.Join('/', pattern)]);
+    }
+
+    /// <summary>
+    /// Enumerates files under a root that match glob patterns.
+    /// </summary>
+    /// <param name="root">The directory the patterns are relative to; nothing outside it is matched.</param>
+    /// <param name="patterns">Glob patterns such as <c>**/*.cs</c>. A pattern starting with <c>!</c> excludes what it matches, for example <c>!**/obj/**</c>.</param>
+    /// <returns>The full paths of the matching files; empty when the root does not exist.</returns>
+    public static IEnumerable<string> EnumerateFiles(string root, IEnumerable<string> patterns)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(root);
+        ArgumentNullException.ThrowIfNull(patterns);
+        if (!Directory.Exists(root))
+            return [];
+
+        var matcher = new Matcher(StringComparison.OrdinalIgnoreCase);
+        var singleCharacter = new List<Regex>();
+        foreach (var pattern in patterns)
+        {
+            if (pattern.StartsWith('!'))
+            {
+                matcher.AddExclude(pattern[1..]);
+                continue;
+            }
+
+            matcher.AddInclude(pattern.Replace('?', '*'));
+            singleCharacter.Add(ToRegex(pattern));
+        }
+
+        var fullRoot = Path.GetFullPath(root);
+        var results = matcher.GetResultsInFullPath(fullRoot);
+        if (!patterns.Any(p => !p.StartsWith('!') && p.Contains('?')))
+            return results;
+
+        // The matcher has no single-character wildcard: it matched with '?' widened to '*', so narrow the candidates again.
+        return results.Where(file => singleCharacter.Exists(r => r.IsMatch(Path.GetRelativePath(fullRoot, file).Replace(Path.DirectorySeparatorChar, '/')))).ToList();
+    }
+
+    private static Regex ToRegex(string pattern)
+    {
+        var body = new StringBuilder();
+        var segments = pattern.Replace(Path.DirectorySeparatorChar, '/').Split('/');
+        for (var i = 0; i < segments.Length; i++)
+        {
+            var last = i == segments.Length - 1;
+            if (segments[i] == "**")
+            {
+                body.Append(last ? ".*" : "(?:.*/)?");
+                continue;
+            }
+
+            foreach (var c in segments[i])
+                body.Append(c switch { '*' => "[^/]*", '?' => "[^/]", _ => Regex.Escape(c.ToString()) });
+            if (!last)
+                body.Append('/');
+        }
+
+        return new Regex($"^{body}$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant, TimeSpan.FromSeconds(1));
     }
 
     /// <summary>

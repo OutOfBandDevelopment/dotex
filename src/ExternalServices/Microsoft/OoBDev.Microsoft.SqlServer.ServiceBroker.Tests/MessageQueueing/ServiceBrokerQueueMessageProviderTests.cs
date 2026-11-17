@@ -1,4 +1,5 @@
 using Microsoft.Data.SqlClient;
+using OoBDev.TestUtilities.Containers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -74,7 +75,7 @@ public class ServiceBrokerQueueMessageProviderTests
         }
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-sqlserver")]
     [TestCategory(TestCategories.Integration)]
     public async Task SendAsync_ThenReceive_DeliversTheBodyOnce()
     {
@@ -100,7 +101,7 @@ public class ServiceBrokerQueueMessageProviderTests
         Assert.AreEqual(0, await QueueDepthAsync());
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-sqlserver")]
     [TestCategory(TestCategories.Integration)]
     public async Task RunAsync_HandlerFailsTwice_RetriesAndThenSucceeds()
     {
@@ -123,7 +124,7 @@ public class ServiceBrokerQueueMessageProviderTests
         Assert.AreEqual(1, handler.Received.Count);
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-sqlserver")]
     [TestCategory(TestCategories.Integration)]
     public async Task RunAsync_HandlerAlwaysFails_EndsTheConversationAndKeepsTheQueueEnabled()
     {
@@ -152,7 +153,7 @@ public class ServiceBrokerQueueMessageProviderTests
         Assert.AreEqual(true, await command.ExecuteScalarAsync());
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-sqlserver")]
     [TestCategory(TestCategories.Integration)]
     public async Task EnsureObjects_RunTwice_ChangesNothing()
     {
@@ -166,7 +167,7 @@ public class ServiceBrokerQueueMessageProviderTests
         await using (await factory.OpenAsync(options)) { }
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-sqlserver")]
     [TestCategory(TestCategories.Integration)]
     public async Task OpenAsync_BrokerDisabled_ThrowsInvalidOperation()
     {

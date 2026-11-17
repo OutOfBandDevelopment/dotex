@@ -52,3 +52,7 @@ In Debug builds the builder and `healthCheckPath` parameters are required, in Re
 ```
 
 Unmapped roles grant nothing. Granted rights are logged at Debug as counts only. Details: [ApplicationRights](../../../docs/design/ApplicationRights/README.md).
+
+## Paging links
+
+When a search action returns a paged result with more than one page, `SearchQueryResultFilter` adds an RFC 8288 `Link` header with `first`, `prev`, `next` and `last` (`PagingLinkHeader`). The path and the other query parameters are kept; only `currentPage` changes.

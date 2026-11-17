@@ -1,7 +1,7 @@
 # Generic TCP services in DevTerm: design and migration plan
 
-**Status:** proposed, waiting on Q-TCP-SERVICES in `OPEN-QUESTIONS.md` (layering question, rule `layering-and-migration-plans`). Nothing built.
-**Last Updated:** 2026-11-11
+**Status:** built (option A, owner decision 2026-11-11): `ServiceHostBridge`, the `ServerBase` traffic tap and `--transport service`. The Tui and Web hosts take it through the common transport option.
+**Last Updated:** 2026-11-12
 
 ## Contents
 

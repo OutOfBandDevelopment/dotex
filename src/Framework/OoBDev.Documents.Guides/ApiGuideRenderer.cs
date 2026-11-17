@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -42,6 +42,7 @@ public static class ApiGuideRenderer
                     text.Append(summary).Append("\n\n");
                 }
 
+                AppendAccess(text, operation);
                 AppendParameters(text, operation);
                 if (operation.TryGetProperty("requestBody", out var body) && body.TryGetProperty("content", out var content))
                 {
@@ -53,6 +54,23 @@ public static class ApiGuideRenderer
         }
 
         return text.ToString();
+    }
+
+    private static void AppendAccess(StringBuilder text, JsonElement operation)
+    {
+        if (!operation.TryGetProperty("x-permissions", out var permissions))
+        {
+            return;
+        }
+
+        var anonymous = permissions.TryGetProperty("anonymous", out var flag) && flag.ValueKind == JsonValueKind.True;
+        text.Append("Access: ").Append(anonymous ? "anonymous" : "authenticated");
+        if (permissions.TryGetProperty("right", out var rights) && rights.ValueKind == JsonValueKind.Array && rights.GetArrayLength() > 0)
+        {
+            text.Append("; rights: ").Append(string.Join(", ", rights.EnumerateArray().Select(r => $"`{r.GetString()}`").Order(StringComparer.Ordinal)));
+        }
+
+        text.Append("\n\n");
     }
 
     private static void AppendResponses(StringBuilder text, JsonElement operation)

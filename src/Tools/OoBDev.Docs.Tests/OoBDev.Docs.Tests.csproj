@@ -24,6 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Framework\OoBDev.Documents.Guides\OoBDev.Documents.Guides.csproj" />
     <ProjectReference Include="..\..\Framework\OoBDev.TestUtilities\OoBDev.TestUtilities.csproj" />
   </ItemGroup>
 

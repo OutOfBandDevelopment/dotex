@@ -8,7 +8,7 @@ A console executable that opens one device session (`AddDevTermFrontEnd` selects
 
 ## Verified
 
-`OoBDev.DevTerm.Tui.Tests`: 355 Unit tests pass, 1 is skipped. Tests that need hardware, a broker or a real console are `DevLocal` and were not run. The screenshot tests write PNG and text captures under `docs/user-guide/images` and `artifacts/ui-review`.
+`OoBDev.DevTerm.Tui.Tests`: 416 Unit tests pass and 1 is skipped (2026-11-12; the full Unit run takes about 10 minutes). Tests that need hardware, a broker or a real console are `DevLocal` and were not run. The screenshot tests write PNG and text captures under `docs/user-guide/images` and `artifacts/ui-review`.
 
 ## Not done
 

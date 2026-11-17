@@ -20,11 +20,11 @@ This registers `HtmlToPdfConversionHandler`, a single shared `SynchronizedConver
 | Destinations | `application/pdf` |
 | Other content types | `NotSupportedException` |
 
-`ConvertAsync` reads the whole source stream as text (the stream stays open) and renders it with fixed settings: colour, portrait, Letter paper, UTF-8, and a header line with `Page [page] of [toPage]` on the right. The page settings are not configurable yet (a TODO in the handler). The native wkhtmltopdf binary must be loadable on the host; the code notes Tika as a possible replacement.
+`ConvertAsync` reads the whole source stream as text (the stream stays open) and renders it with the page settings of `HtmlToPdfOptions`: colour mode, orientation, paper size, default encoding and the header (right text, font size, line). The defaults are colour, portrait, Letter, UTF-8 and a header line with `Page [page] of [toPage]` on the right; change them with `services.Configure<HtmlToPdfOptions>(...)` or by binding a configuration section. `CreateDocument(html)` builds the wkhtmltopdf document without the native library. The native wkhtmltopdf binary must be loadable on the host; the code notes Tika as a possible replacement.
 
 ## Tests
 
-`OoBDev.WkHtmlToPdf.Tests` has one `DevLocal` conversion test (it needs the native library on the machine); the content-type checks have no test yet.
+`OoBDev.WkHtmlToPdf.Tests` has one `DevLocal` conversion test (it needs the native library on the machine); the content-type checks and the option-to-document mapping are `Unit` tests that need no native library.
 
 ## Notes
 

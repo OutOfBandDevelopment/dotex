@@ -30,7 +30,7 @@ public sealed class CliOptions
 {
     [Category("General")]
     [DisplayName("Transport")]
-    [Description("Which transport to use: serial, tcp, hid, usbtmc, ble, rfc2217, vxi11, mqtt, amqp, stomp, or loopback.")]
+    [Description("Which transport to use: serial, tcp, hid, usbtmc, ble, rfc2217, vxi11, mqtt, amqp, stomp, loopback, or service.")]
     public string Transport { get; set; } = "serial";
 
     /// <summary>A free-text note about this connection/profile — purely descriptive, never read by any transport or validated.</summary>
@@ -220,6 +220,11 @@ public sealed class CliOptions
     [Category("Loopback")]
     [DisplayName("Sample interval (ms)")]
     public int LoopbackSampleIntervalMs { get; set; }
+
+    [Category("Service")]
+    [DisplayName("Service")]
+    [Description("The TCP service the service transport hosts: echo, discard, daytime, time or chargen. The port is --port (the standard one when unset) and the bind address --host (loopback when unset).")]
+    public string? Service { get; set; }
 
     // TCP transport.
     [Category("TCP")]

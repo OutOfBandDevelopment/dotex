@@ -11,7 +11,7 @@ namespace OoBDev.Redis.Caching.Providers;
 /// Redis-based caching provider implementation using StackExchange.Redis.
 /// Provides distributed caching capabilities with support for expiration and serialization.
 /// </summary>
-public class RedisCachingProvider : ICachingProvider
+public class RedisCachingProvider : ICachingProvider, ICachingLock
 {
     private readonly Lazy<IConnectionMultiplexer> _redis;
     private readonly IObjectConverter _converter;
@@ -87,5 +87,22 @@ public class RedisCachingProvider : ICachingProvider
 
         var redisKey = new RedisKey(key);
         await db.StringSetAsync(redisKey, value, expiration).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc />
+    public async Task<IAsyncDisposable?> TryAcquireAsync(string key, TimeSpan lifeTime)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(key);
+        var db = _redis.Value.GetDatabase();
+        var lockKey = new RedisKey("lock:" + key);
+        var token = new RedisValue(Guid.NewGuid().ToString("N"));
+        return await db.LockTakeAsync(lockKey, token, lifeTime).ConfigureAwait(false)
+            ? new RedisLock(db, lockKey, token)
+            : null;
+    }
+
+    private sealed class RedisLock(IDatabase db, RedisKey key, RedisValue token) : IAsyncDisposable
+    {
+        public async ValueTask DisposeAsync() => await db.LockReleaseAsync(key, token).ConfigureAwait(false);
     }
 }

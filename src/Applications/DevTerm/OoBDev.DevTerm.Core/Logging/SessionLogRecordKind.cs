@@ -27,6 +27,9 @@ public enum SessionLogRecordKind
     /// <summary><c>"note"</c> — a text annotation added during playback (markup). Not a captured event, so it has no sequence number.</summary>
     Note,
 
+    /// <summary><c>"checkpoint"</c> — a marker the recorder writes every so often. It carries no data; playback saves the presenters' state when it passes one, so a backward seek restarts from the nearest checkpoint. Older readers keep it as an unknown record and ignore it.</summary>
+    Checkpoint,
+
     /// <summary>A record type this version doesn't know (written by a newer dev-term) — kept verbatim so trimming/annotating a log never drops it.</summary>
     Unknown,
 }

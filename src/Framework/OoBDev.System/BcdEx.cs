@@ -7,7 +7,7 @@ namespace OoBDev.System;
 /// </summary>
 public static class BcdEx
 {
-    //TODO: extend to support ReadOnlySpan
+    // Request: docs/features/request/2026-11-17-span-memory-and-codec-modernization.md
 
     /// <summary>
     /// convert Binary Code Decimal (BCD) byte to integer

@@ -1,4 +1,5 @@
 ﻿using MailKit;
+using OoBDev.TestUtilities.Containers;
 using MailKit.Net.Imap;
 using MailKit.Net.Smtp;
 using MailKit.Security;
@@ -16,7 +17,7 @@ public class ClientExampleTests
 {
     public required TestContext TestContext { get; set; }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-smtp")]
     [TestCategory(TestCategories.Integration)]
     public async Task SendSmtpTest()
     {
@@ -71,7 +72,7 @@ public class ClientExampleTests
         TestContext.WriteLine($"Sent: {result}");
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-smtp")]
     [TestCategory(TestCategories.Integration)]
     public async Task GetImapTest()
     {

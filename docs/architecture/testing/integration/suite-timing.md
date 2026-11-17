@@ -24,3 +24,7 @@ The no-flaky-tests goal is met: ten consecutive full Integration runs passed on 
 ## Run on 2026-11-11
 
 `dotnet test OoBDev.slnx --settings .runsettings --filter TestCategory=Integration` (stack already up, Keycloak and the Aspire dashboard on overridden ports, build included) took 6 min 51 s and all 34 test projects passed with no failure. The suite has grown since 2026-11-10 (event sourcing, Azure blob provider tests), so the 5 minute goal is not met; the earlier trimming options (the repeated ONNX conformance set, more cores) still apply.
+
+## Audit 2026-11-12
+
+The stack was not running and the goal is CPU-bound with host load, so no change was made. The `Microsoft.Identity.Client` load failure in `OoBDev.Data.Vectors.DB.Tests` did not recur in the 2026-11-11 run. That run passed once the host ports another project held (8081, 8080, 18888) were overridden with `TEST_PORT_KEYCLOAK`, `TEST_PORT_NGINX` and `TEST_PORT_OTEL_DASHBOARD` plus matching `-- TestRunParameters` URLs. Measure the suite again the next time the stack is up.

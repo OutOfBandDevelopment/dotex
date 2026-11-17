@@ -2,6 +2,7 @@
 using System;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace OoBDev.Caching.Factories;
@@ -16,6 +17,11 @@ namespace OoBDev.Caching.Factories;
 public partial class CachedProxy<TInterface, TImplemention> : DispatchProxy
         where TImplemention : class, TInterface
 {
+    private const int _gateCount = 64;
+    private static readonly TimeSpan _lockPoll = TimeSpan.FromMilliseconds(50);
+    private static readonly SemaphoreSlim[] _gates = [.. Enumerable.Range(0, _gateCount).Select(_ => new SemaphoreSlim(1, 1))];
+
+    private TimeSpan _lockLifeTime = TimeSpan.FromSeconds(30);
     private TImplemention? _decorated;
     private ICachingManager? _cachingManager;
     private ILogger<TImplemention>? _logger;
@@ -80,7 +86,10 @@ public partial class CachedProxy<TInterface, TImplemention> : DispatchProxy
     /// <param name="cachingManager">The caching manager for cache operations.</param>
     /// <param name="logger">The logger for recording cache operations.</param>
     /// <returns>A proxy instance that intercepts method calls and applies caching logic.</returns>
-    public static TInterface Create(TImplemention decorated, ICachingManager cachingManager, ILogger<TImplemention> logger)
+    public static TInterface Create(TImplemention decorated, ICachingManager cachingManager, ILogger<TImplemention> logger) =>
+        Create(decorated, cachingManager, logger, TimeSpan.FromSeconds(30));
+
+    internal static TInterface Create(TImplemention decorated, ICachingManager cachingManager, ILogger<TImplemention> logger, TimeSpan lockLifeTime)
     {
         object? proxy = Create<TInterface, CachedProxy<TInterface, TImplemention>>();
         var unwrapped = (CachedProxy<TInterface, TImplemention>?)proxy;
@@ -89,6 +98,7 @@ public partial class CachedProxy<TInterface, TImplemention> : DispatchProxy
             unwrapped._decorated = decorated;
             unwrapped._cachingManager = cachingManager;
             unwrapped._logger = logger;
+            unwrapped._lockLifeTime = lockLifeTime;
             return (TInterface)proxy;
         }
 #pragma warning disable CS8603 // Possible null reference return.
@@ -101,7 +111,7 @@ public partial class CachedProxy<TInterface, TImplemention> : DispatchProxy
         var cachingManager = _cachingManager!;
         // do cacheable stuff
 
-        //TODO: add exception for void and non generic tasks
+        // Request: docs/features/request/2026-11-17-caching-proxy-and-factory-gaps.md
 
         var targetReturnType = method.ReturnType;
         var isTask = false;
@@ -127,20 +137,71 @@ public partial class CachedProxy<TInterface, TImplemention> : DispatchProxy
             return isTask ? ResultAwaiter.Wrap(cachedResult) : cachedResult;
         }
 
-        // look up original
-        var original = method.Invoke(_decorated, args);
-        if (original == null) return null; // no result to try to cache
-
-        if (isTask)
+        // Concurrent misses for one key compute once: the first caller holds the gate, the rest wait and then read its result.
+        var gate = _gates[(uint)StringComparer.Ordinal.GetHashCode(cachingKey) % _gateCount];
+        gate.Wait();
+        try
         {
-            original = ResultAwaiter.Unwrap(targetReturnType, original);
+            cachedResult = cachingManager.RetrieveAsync(cachingKey, targetReturnType).ConfigureAwait(false).GetAwaiter().GetResult();
+            if (cachedResult != null)
+            {
+                if (_logger != null) LogRetrieved(_logger, targetMethod.Name, cachingKey);
+                return isTask ? ResultAwaiter.Wrap(cachedResult) : cachedResult;
+            }
+
+            // Across processes: the lock holder computes, the others poll the cache until its value appears or the lock lifetime passes.
+            IAsyncDisposable? crossProcessLock;
+            var deadline = Environment.TickCount64 + (long)_lockLifeTime.TotalMilliseconds;
+            while ((crossProcessLock = cachingManager.TryLockAsync(cachingKey, _lockLifeTime).ConfigureAwait(false).GetAwaiter().GetResult()) == null)
+            {
+                if (Environment.TickCount64 >= deadline)
+                {
+                    crossProcessLock = NoLock.Instance;
+                    break;
+                }
+
+                Thread.Sleep(_lockPoll);
+                cachedResult = cachingManager.RetrieveAsync(cachingKey, targetReturnType).ConfigureAwait(false).GetAwaiter().GetResult();
+                if (cachedResult != null)
+                {
+                    if (_logger != null) LogRetrieved(_logger, targetMethod.Name, cachingKey);
+                    return isTask ? ResultAwaiter.Wrap(cachedResult) : cachedResult;
+                }
+            }
+
+            try
+            {
+                cachedResult = cachingManager.RetrieveAsync(cachingKey, targetReturnType).ConfigureAwait(false).GetAwaiter().GetResult();
+                if (cachedResult != null)
+                {
+                    if (_logger != null) LogRetrieved(_logger, targetMethod.Name, cachingKey);
+                    return isTask ? ResultAwaiter.Wrap(cachedResult) : cachedResult;
+                }
+
+                // look up original
+                var original = method.Invoke(_decorated, args);
+                if (original == null) return null; // no result to try to cache
+
+                if (isTask)
+                {
+                    original = ResultAwaiter.Unwrap(targetReturnType, original);
+                }
+
+                // store original
+                cachingManager.StoreAsync(cachingKey, original, lifeTime).ConfigureAwait(false).GetAwaiter().GetResult();
+                if (_logger != null) LogStored(_logger, targetMethod.Name, cachingKey);
+
+                return isTask ? ResultAwaiter.Wrap(original) : original;
+            }
+            finally
+            {
+                crossProcessLock.DisposeAsync().AsTask().ConfigureAwait(false).GetAwaiter().GetResult();
+            }
         }
-
-        // store original
-        cachingManager.StoreAsync(cachingKey, original, lifeTime).ConfigureAwait(false).GetAwaiter().GetResult();
-        if (_logger != null) LogStored(_logger, targetMethod.Name, cachingKey);
-
-        return isTask ? ResultAwaiter.Wrap(original) : original;
+        finally
+        {
+            gate.Release();
+        }
     }
 
     [LoggerMessage(EventId = 1, Level = LogLevel.Information, Message = "Retrieved from Cache::{Method}::{Key}")]

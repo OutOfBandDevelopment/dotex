@@ -1,4 +1,4 @@
-# Feature request: Image color analysis: histograms, HSV facets and exposure metrics
+﻿# Feature request: Image color analysis: histograms, HSV facets and exposure metrics
 
 - **Status:** triaged
 - **Requested by:** owner (filed from the notes repository, `projects/applications/second-shooter-photo-library.md`; design concepts only, its code is not reused)
@@ -51,6 +51,8 @@ Reads decoded pixels only. Cost is one pass over the image, so it should reuse a
 - Is a rendered histogram in scope, or only the data?
 
 ## Triage notes
+
+2026-11-12: superset comparison done (no whole-image colour code in dotex) and the design written: [ImageAnalysis](../../design/ImageAnalysis/README.md); placement is the confirmed placement (2026-11-12).
 
 Origin: notes repository `projects/applications/second-shooter-photo-library.md`. Maintainers: accept, schedule or decline.
 

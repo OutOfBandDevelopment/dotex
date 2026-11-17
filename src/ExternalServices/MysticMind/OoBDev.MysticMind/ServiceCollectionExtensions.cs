@@ -1,4 +1,5 @@
 using OoBDev.Documents.Conversion;
+using OoBDev.Documents.Markdown;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
@@ -19,6 +20,7 @@ public static class ServiceCollectionExtensions
         services.TryAddTransient<IConverterFactory, ConverterFactory>();
         services.TryAddTransient(sp => sp.GetRequiredService<IConverterFactory>().Build());
         services.AddTransient<IDocumentConversionHandler, HtmlToMarkdownConversionHandler>();
+        services.AddTransient<IFileMarkdownReader, HtmlFileMarkdownReader>();
 
         return services;
     }

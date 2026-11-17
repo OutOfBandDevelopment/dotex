@@ -19,6 +19,10 @@ This registers `IConverterFactory` (builds `new Converter()` with default settin
 
 `ConvertAsync` throws `NotSupportedException` for any other content type, reads the whole source as text, converts it and writes the Markdown to the destination, leaving both streams open. Unlike the Markdig and HtmlToOpenXml handlers it does not rewind the destination.
 
+## File reader for Markdown conversion
+
+`HtmlFileMarkdownReader` implements `IFileMarkdownReader` (`OoBDev.Documents.Abstractions`) for `.html`, `.htm` and `.xhtml` files, registered by `TryAddMysticMindServices`. `DocumentMarkdownConverter` (`OoBDev.Documents.Markdown`) uses it to turn an HTML file into Markdown with front matter (`extractor: reversemarkdown html`).
+
 ## Tests
 
-`OoBDev.MysticMind.Tests` has one `Unit` test method for the conversion; the unsupported-type path is not covered.
+`OoBDev.MysticMind.Tests` covers the conversion handler (content types) and `HtmlFileMarkdownReaderTests` (registration, file to Markdown); the handler's unsupported-type path is not covered.

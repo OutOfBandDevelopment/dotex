@@ -68,7 +68,7 @@ public static class Program
             },
             hostingBuilder: new()
             {
-                //TODO: add a run profile that disable hosting
+                // Request: docs/features/request/2026-11-17-document-converter-dependencies.md
                 DisableCommunications = false,
                 //DisableMessageQueueing = true,  // skipHosting,
             });
@@ -120,6 +120,9 @@ public static class Program
         // CLIP image embeddings; the model is only downloaded when first resolved
         OoBDev.Onnx.ImageEmbeddings.Skia.ServiceCollectionExtensions.TryAddSkiaImageDecoder(services);
         OoBDev.Vision.ClipVitB32.ServiceCollectionExtensions.TryAddClipVitB32Services(services, builder.Configuration, "ClipVitB32");
+
+        // Count estimated LLM usage (calls, tokens) per model for every completion provider registered above
+        OoBDev.AI.ServiceCollectionExtensions.TryAddEstimatedLlmUsage(services);
     }
 
     private static void ConfigurePipeline(WebApplication app)

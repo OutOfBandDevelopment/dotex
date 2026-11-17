@@ -14,7 +14,7 @@ namespace OoBDev.System.Text.Html;
 [TemplateTransform(MediaTypes.Html)]
 public class HtmlTemplateTransform(
     IInstanceFactory instanceFactory,
-    IHtmlDocumentVistor htmlVisitor
+    IHtmlDocumentVisitor htmlVisitor
         ) : ITemplateTransform
 {
     /// <summary>

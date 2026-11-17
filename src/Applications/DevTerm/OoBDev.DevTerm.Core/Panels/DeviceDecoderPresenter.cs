@@ -18,6 +18,9 @@ public sealed class DeviceDecoderPresenter : IPresenter, IStructuredPresenter
         _decoder = decoder;
     }
 
+    /// <summary>The wrapped decoder.</summary>
+    public IDeviceDecoder Decoder => _decoder;
+
     /// <inheritdoc />
     public string Name => _decoder.Name;
 

@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Options;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.TestUtilities;
 using System;
@@ -10,7 +11,7 @@ namespace OoBDev.WkHtmlToPdf.Tests;
 public class HtmlToPdfConversionHandlerContentTypeTests
 {
     // The converter is only used after the content type checks, so these tests need no native library.
-    private static HtmlToPdfConversionHandler CreateHandler() => new(null!);
+    private static HtmlToPdfConversionHandler CreateHandler() => new(null!, Options.Create(new HtmlToPdfOptions()));
 
     [TestCategory(TestCategories.Unit)]
     [TestMethod]

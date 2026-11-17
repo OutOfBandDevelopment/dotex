@@ -1,4 +1,4 @@
-# OoBDev.System
+﻿# OoBDev.System
 
 OoBDev.System provides a comprehensive set of classes and utilities for various system-related functionalities. Here's an overview of its key components:
 
@@ -65,6 +65,14 @@ Custom JSON converter for dictionaries with string keys and object values.
 
 ## Templating
 
+### TemplateRenderHarness
+
+`TemplateRenderHarness.CheckAsync(engine, cases)` renders each `TemplateRenderCase` (template name, sample data, approved output) and returns a `TemplateRenderFailure` per case that is missing, renders nothing, throws or differs; the reason names the first differing line. Line endings and trailing blank lines are ignored. Use it in a project test so a template or engine change that alters a message fails the build (`TemplateRenderHarnessTests`).
+
+### LocalizedTemplateEngine
+
+Wraps an `ITemplateEngine` so a template name resolves for the current UI culture: `name.fr-CA`, then `name.fr`, then plain `name`. A translation is another template beside the original, so no source changes. Template contexts passed in directly are not re-resolved. Covered by `LocalizedTemplateEngineTests`.
+
 ### FileTemplateSource
 Access template from the file system.
 - **Get(templateName: string)**: Looks up templates from the file system.
@@ -93,6 +101,21 @@ Default XmlSerializer.
 
 ### Apple2Encoding
 Single-byte `Encoding` for Apple ][ text. Bytes with bit 7 set (normal text) decode to the ASCII character with the bit cleared; bytes with bit 7 clear (inverse and flashing text) decode to the private-use character `U+E000` plus the byte value, so all 256 byte values round-trip through `GetString` and `GetBytes`. Encoding ASCII sets bit 7; other characters become `?`. `Dos33.FileEntry` names use it.
+
+### Applesoft BASIC
+`Detokenizer` reads a tokenized program; `ApplesoftParser` reads a listing into lines, statements and keyword or literal elements (interpreter-level lexing, bounded, `FormatException` on bad input); `ApplesoftTokenizer` writes the binary form back. See the 2026-11-12 change document for the REM and DATA spacing caveat.
+
+### Dos33
+`DiskImageCommands` reads a DOS 3.3 image (catalog, track/sector lists, data). `DiskImageWriter` (`IDiskImageWriter`) adds, replaces and deletes files in DOS-order 256-byte-sector images: it works on an in-memory copy and writes back only when the file fits, so a full disk, a full catalog or a duplicate name leaves the stream unchanged (`InvalidOperationException`). Sectors are taken outward from track 17; a delete frees the bitmap and marks the entry `0xFF` with the original track kept, as DOS does. `GetFileContent` returns a file with its real length (binary 4-byte header, BASIC 2-byte prefix, text up to the first zero) where `GetDataFileEntry` returns whole sectors. `DiskImageOrder.IsProDosOrder` guesses from the length of the catalog chain whether a `.po` image holds its sectors in ProDOS order, and `ConvertSectorOrder` swaps between the orders (sectors 1 to 14 mirror); convert before using the reader or writer. The caller supplies Applesoft and binary files with DOS's own length prefix.
+
+## IO.PathEx globbing
+
+`PathEx.EnumerateFiles(pattern)` takes the literal leading segments as the root and matches the rest with `Microsoft.Extensions.FileSystemGlobbing` (`*` and `**`; `?` is narrowed by a regular expression because the matcher lacks it). `PathEx.EnumerateFiles(root, patterns)` matches under a root only and treats a pattern starting with `!` as an exclusion, for example `!**/obj/**`.
+
+## IO.Fat
+
+### FatVolume
+Read-only FAT12, FAT16 and FAT32 reader (`FatVolume.Open(stream)`). The type comes from the cluster count, as the specification requires. `GetEntries(directory?)` lists a directory with long names (checksum-verified; deleted entries, `.`/`..` and the label entry are skipped), `Find(path)` walks `/` or `\` paths without regard to case, `OpenRead(entry)` returns the file content, `Label` is the root label entry or the boot label. Short names are Latin-1 (OEM code pages are not applied). The image is untrusted: sizes, table length, cluster numbers and chains are bounded, and corrupt or looping structures raise `InvalidDataException`. Write support is not part of it.
 
 ## Time
 

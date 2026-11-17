@@ -40,7 +40,7 @@ public class QueryableExtensionsTests
     [DataRow(typeof(TestTargetModel), nameof(TestTargetModel.Index), Operators.GreaterThan, 995, 4, "996,997,998,999")]
     [DataRow(typeof(TestTargetModel), nameof(TestTargetModel.Index), Operators.GreaterThanOrEqualTo, 995, 5, "995,996,997,998,999")]
     [DataRow(typeof(TestTargetModel), nameof(TestTargetModel.Index), Operators.EqualTo, "0", 1, "0")]
-    //TODO: not currently supported [DataRow(typeof(TestTargetModel), nameof(TestTargetModel.Index), Operators.EqualTo, "0.0", 1, "0")]
+    // Request: docs/features/request/2026-11-17-search-query-expression-gaps.md [DataRow(typeof(TestTargetModel), nameof(TestTargetModel.Index), Operators.EqualTo, "0.0", 1, "0")]
     [DataRow(typeof(TestTargetModel), nameof(TestTargetModel.Index), Operators.EqualTo, 0, 1, "0")]
     [DataRow(typeof(TestTargetModel), nameof(TestTargetModel.Index), Operators.EqualTo, 0.0, 1, "0")]
     [DataRow(typeof(TestTargetModel), nameof(TestTargetModel.Name), Operators.EqualTo, "*03", 9, "103,203,303,403,503,603,703,803,903")]

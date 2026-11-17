@@ -64,3 +64,6 @@
 
 *.sh text eol=lf
 .githooks/* text eol=lf
+
+# Generated DevTerm TUI captures: tests write CRLF on Windows; keep them LF in the repository so they do not show as modified
+docs/applications/devterm/user-guide/images/*.txt text eol=lf

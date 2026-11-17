@@ -14,7 +14,7 @@ A sample ASP.NET Core web API that composes the OoBDev framework the way a real 
 |------------|-----------|
 | `OllamaController`, `GroqCloudController`, `ModelCompareController` | Language model providers and side-by-side comparison |
 | `AllMiniLMController`, `SBERTController`, `SBERTDefaultController` | Embedding providers |
-| `VectorStoreController`, `VectorLabController`, `RagController`, `SearchController`, `ImagesController` | Vector store, vector experiments, retrieval, keyword, semantic and hybrid search, and image embeddings |
+| `VectorStoreController` (index, query, list, re-embed), `VectorLabController`, `RagController`, `SearchController` (passages with a `RequiredRight` are hidden from callers without it), `ImagesController` | Vector store, vector experiments, retrieval, keyword, semantic and hybrid search, and image embeddings |
 | `CgiProgramsController` | `GET api/CgiPrograms`: the CGI programs this host can start (Linux binaries are left out on Windows) |
 | `MessageQueueingController` | Message queue sender, configured channels (no secrets) and the received-message monitor |
 | `CommunicationsController` | Email through `ISendService` (channel `email`), directly or queued |
@@ -22,7 +22,8 @@ A sample ASP.NET Core web API that composes the OoBDev framework the way a real 
 | `DocumentController`, `TextToolsController` | Document conversion, the stored-documents list and text tools |
 | `TextTemplateController` | Text templating: list, read and save the example template files, preview a draft, apply a named template |
 | `UserController` | Current user and claims |
-| `CacheController`, `OperationsController`, `TelemetryController`, `ToolboxController` | Caching, operations, telemetry readback and shared tools |
+| `KernelPlugInsController` | Lists the Semantic Kernel plug-in functions and invokes one with text arguments (right `toolbox.use`) |
+| `CacheController`, `OperationsController`, `TelemetryController`, `ToolboxController` | Caching, operations, telemetry readback and shared tools (the toolbox also signs and reads HS256 tokens through `OoBDev.Identity.Jws`, and converts text with the Morse, Roman numeral and Base32 codecs) |
 
 ## CGI example (Go)
 

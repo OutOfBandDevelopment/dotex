@@ -1,4 +1,5 @@
 ﻿
+using OoBDev.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc;
 using OoBDev.System.Text.Html;
 using OoBDev.System.Text.Json;
@@ -18,6 +19,7 @@ namespace OoBDev.WebApi.Controllers;
 /// </summary>
 [ApiController]
 [Route("api/[controller]")]
+[ApplicationRight("toolbox.use")]
 public class TextToolsController : ControllerBase
 {
     private const int MaxLength = 200_000;

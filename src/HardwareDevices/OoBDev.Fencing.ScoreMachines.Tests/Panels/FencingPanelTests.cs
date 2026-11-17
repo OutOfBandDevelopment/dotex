@@ -17,6 +17,9 @@ public sealed class FencingPanelTests
 
     private static ReadOnlySequence<byte> Seq(params byte[] bytes) => new(bytes);
 
+    private static OoBDev.UiDefinitions.IControlSurface Surface(OoBDev.UiDefinitions.IDevicePanel panel, OoBDev.UiDefinitions.DeviceSend send) =>
+        panel.CreateSurface(send, panel.CreateDecoder());
+
     [TestMethod]
     public void IsAvailable_Transport_OnlyForSerial()
     {
@@ -49,7 +52,7 @@ public sealed class FencingPanelTests
     [TestMethod]
     public async Task InvokeAsync_AnyCommand_Throws()
     {
-        var surface = new FaveroPanel().CreateSurface((_, _) => Task.CompletedTask);
+        var surface = Surface(new FaveroPanel(), (_, _) => Task.CompletedTask);
 
         await Assert.ThrowsExactlyAsync<ArgumentException>(() => surface.InvokeAsync("reset", null, TestContext.CancellationToken));
     }

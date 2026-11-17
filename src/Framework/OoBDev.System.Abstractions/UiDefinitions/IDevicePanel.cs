@@ -25,7 +25,9 @@ public interface IDevicePanel
     UiDefinition BuildDefinition();
 
     /// <summary>Creates the surface that runs the panel's commands over <paramref name="send"/>.</summary>
-    IControlSurface CreateSurface(DeviceSend send);
+    /// <param name="send">Sends bytes to the device.</param>
+    /// <param name="decoder">The decoder of the same session (what <see cref="CreateDecoder"/> returned for it), so a surface can read the replies the session already decodes instead of reading the connection a second time.</param>
+    IControlSurface CreateSurface(DeviceSend send, IDeviceDecoder decoder);
 
     /// <summary>Creates a fresh decoder for one session.</summary>
     IDeviceDecoder CreateDecoder();

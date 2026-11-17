@@ -36,8 +36,12 @@ internal static class StreamMonitorMode
         return $"Convert as: {choices[StreamConversionChoice.IndexOf(choices, options)].DisplayName}";
     }
 
-    internal static StreamMonitorWindowParts BuildWindow(IApplication app, StreamMonitor monitor, CliOptions? cliOptions = null, IEnumerable<ExternalToolOptions>? globalTools = null)
+    private static void OpenWithShell(string path) =>
+        global::System.Diagnostics.Process.Start(new global::System.Diagnostics.ProcessStartInfo { FileName = path, UseShellExecute = true })?.Dispose();
+
+    internal static StreamMonitorWindowParts BuildWindow(IApplication app, StreamMonitor monitor, CliOptions? cliOptions = null, IEnumerable<ExternalToolOptions>? globalTools = null, Action<string>? openFile = null)
     {
+        openFile ??= OpenWithShell;
         ArgumentNullException.ThrowIfNull(app);
         ArgumentNullException.ThrowIfNull(monitor);
         monitor.LoadFromDisk();
@@ -60,7 +64,7 @@ internal static class StreamMonitorMode
         var folderLabel = new Label { X = 0, Y = 1, Width = Dim.Fill(), Height = 1, HotKeySpecifier = noHotKey };
         var explanationLabel = new Label { X = 0, Y = 2, Width = Dim.Fill(), Height = 2, Text = ExplanationText };
         var capturesLabel = new Label { X = 0, Y = 5, Text = "Search:" };
-        var searchField = new TextField { X = Pos.Right(capturesLabel) + 1, Y = 5, Width = 16 };
+        var searchField = new TextField { X = Pos.Right(capturesLabel) + 1, Y = 5, Width = 10 };
         var sortButton = new Button { X = Pos.Right(searchField) + 2, Y = 5, Text = SortText(StreamCaptureSort.Oldest), ShadowStyle = ShadowStyles.None };
         var deviceButton = new Button { X = Pos.Right(sortButton) + 1, Y = 5, Text = DeviceText(null, 0), ShadowStyle = ShadowStyles.None };
         var captureList = new ListView
@@ -74,6 +78,7 @@ internal static class StreamMonitorMode
         var toggleButton = new Button { X = 0, Y = Pos.Bottom(detailLabel), Text = "Stop Monitoring" };
         var modeButton = new Button { X = Pos.Right(toggleButton) + 2, Y = Pos.Top(toggleButton), Text = ModeButtonText(converterOptions) };
         var convertButton = new Button { X = Pos.Right(modeButton) + 2, Y = Pos.Top(toggleButton), Text = "Convert..." };
+        var openButton = new Button { X = Pos.Right(deviceButton) + 1, Y = 5, Text = "Open", ShadowStyle = ShadowStyles.None };
         var closeButton = new Button { X = Pos.Right(convertButton) + 2, Y = Pos.Top(toggleButton), Text = "Close", IsDefault = true };
 
         var rows = new ObservableCollection<string>();
@@ -235,16 +240,42 @@ internal static class StreamMonitorMode
                 TaskScheduler.Default);
         };
 
+        // A terminal cannot show a picture, so a saved capture (an HP-GL, PostScript or PCL file, or its converted image) opens in the system viewer.
+        openButton.Accepting += (_, e) =>
+        {
+            e.Handled = true;
+            if (Selected() is not { } capture)
+            {
+                return;
+            }
+
+            if (capture.SavedPath is not { } path || !File.Exists(path))
+            {
+                detailLabel.Text = "The selected capture has no saved file to open.";
+                return;
+            }
+
+            try
+            {
+                openFile(path);
+                detailLabel.Text = $"Opened {Path.GetFileName(path)}.";
+            }
+            catch (Exception ex)
+            {
+                detailLabel.Text = $"Open failed: {ex.Message}";
+            }
+        };
+
         closeButton.Accepting += (_, e) =>
         {
             e.Handled = true;
             app.RequestStop();
         };
 
-        window.Add(statusLabel, folderLabel, explanationLabel, capturesLabel, searchField, sortButton, deviceButton, captureList, detailLabel, toggleButton, modeButton, convertButton, closeButton);
+        window.Add(statusLabel, folderLabel, explanationLabel, capturesLabel, searchField, sortButton, deviceButton, captureList, detailLabel, toggleButton, modeButton, convertButton, openButton, closeButton);
         Refresh();
 
-        return new StreamMonitorWindowParts(window, statusLabel, captureList, detailLabel, toggleButton, convertButton, closeButton, Refresh, modeButton, converterOptions, searchField, sortButton, deviceButton);
+        return new StreamMonitorWindowParts(window, statusLabel, captureList, detailLabel, toggleButton, convertButton, closeButton, Refresh, modeButton, converterOptions, searchField, sortButton, deviceButton, openButton);
     }
 
     /// <summary>

@@ -24,7 +24,7 @@ public sealed class ZoomH4nPanel : IDevicePanel
     public UiDefinition BuildDefinition() => ZoomH4nUiDefinition.Build();
 
     /// <inheritdoc />
-    public IControlSurface CreateSurface(DeviceSend send) => new ZoomH4nControlSurface(send);
+    public IControlSurface CreateSurface(DeviceSend send, IDeviceDecoder decoder) => new ZoomH4nControlSurface(send);
 
     /// <inheritdoc />
     public IDeviceDecoder CreateDecoder() => new ZoomH4nDecoder();

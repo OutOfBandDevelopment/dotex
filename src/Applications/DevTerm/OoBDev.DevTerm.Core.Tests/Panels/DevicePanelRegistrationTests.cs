@@ -44,7 +44,13 @@ public sealed class DevicePanelRegistrationTests
 
         public UiDefinition BuildDefinition() => new() { Name = "Test" };
 
-        public IControlSurface CreateSurface(DeviceSend send) => new SendingSurface(send);
+        public IDeviceDecoder? SeenDecoder { get; private set; }
+
+        public IControlSurface CreateSurface(DeviceSend send, IDeviceDecoder decoder)
+        {
+            SeenDecoder = decoder;
+            return new SendingSurface(send);
+        }
 
         public IDeviceDecoder CreateDecoder() => new TestDecoder();
     }
@@ -135,4 +141,29 @@ public sealed class DevicePanelRegistrationTests
     }
 
     public required TestContext TestContext { get; set; }
+
+    [TestMethod, TestCategory("Unit")]
+    public void CreateSurface_GivenTheSessionPresenter_PassesItsDecoder()
+    {
+        var panel = new TestPanel();
+        var decoder = new TestDecoder();
+        var adapter = new Mock<IDeviceAdapter>();
+        var session = new Session(adapter.Object, new Pipeline([]));
+
+        new DevicePanelContribution(panel).CreateSurface(session, new DeviceDecoderPresenter(decoder));
+
+        Assert.AreSame(decoder, panel.SeenDecoder);
+    }
+
+    [TestMethod, TestCategory("Unit")]
+    public void CreateSurface_WithoutAPresenter_PassesAFreshDecoder()
+    {
+        var panel = new TestPanel();
+        var adapter = new Mock<IDeviceAdapter>();
+        var session = new Session(adapter.Object, new Pipeline([]));
+
+        new DevicePanelContribution(panel).CreateSurface(session);
+
+        Assert.IsInstanceOfType<TestDecoder>(panel.SeenDecoder);
+    }
 }

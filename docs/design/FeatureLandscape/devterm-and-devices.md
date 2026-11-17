@@ -40,26 +40,28 @@ Part of the [feature landscape](README.md). Status is "a project exists under `s
 - **Works with:** Presenters (decoded text or structure), UiDefinitions (device panels), the Docker test stack (RabbitMQ, Mosquitto, ser2net, loopback).
 - **Known issues:** hardware tests are DevLocal and need the bench (see `docs/how-tos/test-hardware.md`); the transport list in the design predates the Brokers and Mqtt projects.
 - **Standards:** RFC 2217 (Telnet COM port control), MQTT, STOMP, USBTMC, NMEA 0183.
-- **Missing:** a transport capability matrix (framed, flow control, reconnect); reconnect policy defaults.
+- **Built 2026-11-16:** a capability matrix in `docs/design/Transports/transports.md`; reconnect defaults are the core `SessionLimits`.
 
 ## Presenters, SessionLogging and SessionChannel
 
 - **Works with:** Transports (input), UiDefinitions (output), StreamTools (export and convert).
 - **Known issues:** leaf designs are not marked done although the parity status says the slices are.
-- **Missing:** a log format version and a replay compatibility test.
+- **Built 2026-11-16:** the log header carries `version` (1 today; a newer one is rejected with a clear message), and `SessionLogCompatibilityTests` freezes a version 1 log: it must load and write back byte-identical.
 
 ## UiDefinitions, Theming and WindowsForms
 
 - **Works with:** Plugins (panels), ViewModels (MVVM with real `ICommand` types, owner decision), GeneratedGuides (screenshots).
 - **Known issues:** Avalonia has only a spike; WinForms has a control library but no renderer. The open layering question (renderers in Framework beside Wpf and Tui, or in Extensions) is queued in `OPEN-QUESTIONS.md`.
 - **Standards:** WCAG 2.2 contrast ratios for themes.
-- **Missing:** keyboard navigation and screen reader names as testable requirements.
+- **Built 2026-11-16:** `XamlAccessibilityTests` (OoBDev.CodingStandards.Tests) fails the build when an input control in the Applications XAML has no `AutomationProperties.Name` or `LabeledBy`; the 93 existing gaps in 14 windows were fixed the same day.
+- **Built 2026-11-16:** `XamlKeyboardTests` (OoBDev.CodingStandards.Tests): menu access keys are unique per menu level and every literal menu header has one, and no positive `TabIndex` outside templates (tab order follows the layout); dialogs close on Escape (`IsCancel`, existing test). The check found five clashing access keys in the main menu, now fixed.
+- **Missing:** keyboard shortcuts: the shell defines no `KeyBinding` or `InputGestureText`, so there is nothing to test; which shortcuts to offer is a design item first.
 
 ## Plugins and PluginSandbox
 
 - **Works with:** UiDefinitions and Presenters (plugin kinds).
 - **Known issues:** the sandbox is a spike; in-process .NET plugins cannot be isolated by `AssemblyLoadContext` alone, so the design must pick out-of-process hosting or accept trusted plugins.
-- **Missing:** plugin manifest with version and permissions; signing and trust prompt.
+- **Designed:** the manifest (version, publish and subscribe topics, permissions), package signing and the grant prompt are in [PluginSandbox](../PluginSandbox/protocol-and-manifest.md) and spiked (`PackageVerifier`, `GrantStore`); the production host waits for the owner sign-off tracked in `BACKLOG.md`.
 
 ## Instruments and networks
 

@@ -28,6 +28,16 @@
 | Two copies of the loop | One loop, provider chosen by key |
 | No cancellation, no logging | `CancellationToken` and `ILogger` |
 
+## Untrusted input and output
+
+Source files go into the prompt and the response comes back as files, so both sides are untrusted (prompt injection: text in a source file that tells the model to do something else).
+
+- **The model only produces text.** The tool never executes, imports or shells out to generated content; it only writes files. A new feature that acts on model output (running a command, calling an API) needs its own design line and an owner decision.
+- **Writes stay inside the output folder.** Names from the response are resolved against the output root and a traversal or absolute name is rejected (`FolderPromptRunnerTests.RunAsync_TraversalNameInResponse_StaysInsideOutput`).
+- **Reviewed, not trusted.** Output is a draft for a person to review in version control; it is never merged or deployed by the tool.
+- **No secrets in prompts.** Templates take source folders only; credentials stay in provider options, never in a template or a prompt file.
+- **Cost accounting is still open.** Token counts per run are not recorded yet; the response metadata file is where they would go.
+
 ## Acceptance
 
 - Running against a small sample folder with a fake `IMessageCompletion` writes the prompt, the response and the extracted files.

@@ -23,4 +23,7 @@ public enum DeliveryStatus
 
     /// <summary>The recipient followed a link.</summary>
     Clicked,
+
+    /// <summary>The recipient marked the message as spam. Last in the order so it still applies after an open or click.</summary>
+    Complained,
 }

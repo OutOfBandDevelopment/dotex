@@ -1,4 +1,5 @@
 ﻿using OoBDev.AI;
+using OoBDev.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
@@ -10,6 +11,7 @@ namespace OoBDev.WebApi.Controllers;
 /// </summary>
 [Route("api/[controller]")]
 [ApiController]
+[ApplicationRight("ai.invoke")]
 public class SBERTDefaultController : ControllerBase
 {
     private readonly IEmbeddingProvider _embedding;

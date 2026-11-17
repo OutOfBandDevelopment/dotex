@@ -38,7 +38,7 @@ Each user has the email `<user>@example.test`, a verified email, and a fixed id 
 | `operator` | Can run operations screens: queues, cache, health |
 | `admin` | Can use every example screen, including identity management |
 
-Roles arrive in the access token's `realm_access.roles` claim; the API translates roles into application rights in middleware (see the authorization practices in the patterns discovery documents).
+Roles arrive in the access token's `realm_access.roles` claim; the API reads that nested claim (`OoBDev:Authorization:RoleObjectClaimTypes`, default `realm_access`) and translates roles into application rights in middleware (see the authorization practices in the patterns discovery documents).
 
 ## Client
 
@@ -67,3 +67,14 @@ docker compose -f containers/example/docker-compose.example.yml rm -sf keycloak
 docker volume rm oobd-test-keycloak-data
 docker compose -f containers/example/docker-compose.example.yml up -d keycloak
 ```
+
+## Checking the accounts
+
+If an account is missing or gets 403 after the realm file changed, the running Keycloak probably still holds the old realm. With the stack running, this test compares the users and roles in Keycloak with the realm file and says whether a reset is needed:
+
+```
+cd src
+dotnet test ExternalServices/Keycloak/OoBDev.Keycloak.Tests --filter "FullyQualifiedName~ExampleRealmTests" --settings .runsettings
+```
+
+The test is described in [README.Keycloak.Tests.md](../../../src/ExternalServices/Keycloak/OoBDev.Keycloak.Tests/README.Keycloak.Tests.md). If it fails, follow "Changing the realm" above.

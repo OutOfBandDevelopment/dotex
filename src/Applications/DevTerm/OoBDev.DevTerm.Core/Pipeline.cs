@@ -87,6 +87,59 @@ public sealed class Pipeline
         }
     }
 
+    /// <summary>
+    /// Captures every presenter's state, in presenter order, or returns <see langword="null"/> when any presenter is not an
+    /// <see cref="ISnapshotPresenter"/> (its state could not be put back, so no snapshot of the pipeline is valid).
+    /// </summary>
+    public IReadOnlyList<object?>? TakeSnapshot()
+    {
+        IPresenter[] snapshot;
+        lock (_gate)
+        {
+            snapshot = [.. _presenters];
+        }
+
+        var states = new object?[snapshot.Length];
+        for (var i = 0; i < snapshot.Length; i++)
+        {
+            if (snapshot[i] is not ISnapshotPresenter presenter)
+            {
+                return null;
+            }
+
+            states[i] = presenter.Snapshot();
+        }
+
+        return states;
+    }
+
+    /// <summary>Puts back a snapshot from <see cref="TakeSnapshot"/> taken on a pipeline built the same way.</summary>
+    /// <exception cref="InvalidOperationException">The pipeline's presenters do not match the snapshot.</exception>
+    public void RestoreSnapshot(IReadOnlyList<object?> states)
+    {
+        ArgumentNullException.ThrowIfNull(states);
+        IPresenter[] snapshot;
+        lock (_gate)
+        {
+            snapshot = [.. _presenters];
+        }
+
+        if (snapshot.Length != states.Count)
+        {
+            throw new InvalidOperationException("The snapshot was taken from a pipeline with a different set of presenters.");
+        }
+
+        for (var i = 0; i < snapshot.Length; i++)
+        {
+            if (snapshot[i] is not ISnapshotPresenter presenter)
+            {
+                throw new InvalidOperationException($"Presenter '{snapshot[i].Name}' cannot restore a snapshot.");
+            }
+
+            presenter.Restore(states[i]);
+        }
+    }
+
     private void Subscribe(IPresenter presenter)
     {
         if (presenter is IStructuredMessageSource source)

@@ -95,7 +95,7 @@ public partial class EmbeddingSentenceTransformerQueueReaderHost : IHostedServic
                     LogError(reader, ex);
 
                     LogWaitingForRestart(reader);
-                    await Task.Delay(10000, token).ConfigureAwait(false); // TODO: this should be configurable
+                    await Task.Delay(10000, token).ConfigureAwait(false); // Request: docs/features/request/2026-11-17-configurable-defaults-and-id-generation.md
                 }
             }
         }, cancellationToken);

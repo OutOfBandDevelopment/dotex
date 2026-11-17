@@ -27,7 +27,7 @@ public partial class UserAuthorizationHandler(ILogger<UserAuthorizationHandler> 
     /// <returns>A task representing the asynchronous operation.</returns>
     protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, UserAuthorizationRequirement requirement)
     {
-#if DEBUG //TODO: consider adding the ability to enable this with an environment variable so it can be used outside of local development
+#if DEBUG // Request: docs/features/request/2026-11-17-configurable-application-user-claim.md
         IdentityModelEventSource.ShowPII = true;
 #endif
         var user = context.User;
@@ -36,7 +36,7 @@ public partial class UserAuthorizationHandler(ILogger<UserAuthorizationHandler> 
         var userName = user.GetClaimValue(CommonClaims.ObjectId, CommonClaims.ObjectIdentifier, CommonClaims.NameIdentifier)?.value;
 
         // If the application has extended the user id claim, it should be provided as well
-        var userId = user.GetClaimValue(CommonClaims.UserId)?.value; //TODO: maybe this should be injected in a different way such as making this a configurable claim and if not configured then not required.
+        var userId = user.GetClaimValue(CommonClaims.UserId)?.value; // Request: docs/features/request/2026-11-17-configurable-application-user-claim.md
 
         var isAuthorized = !string.IsNullOrWhiteSpace(userName);
 

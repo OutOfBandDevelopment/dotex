@@ -47,3 +47,13 @@ public class VectorHitModel
     /// <summary>Gets or sets the stored text.</summary>
     public string? Text { get; set; }
 }
+
+/// <summary>The outcome of a re-embed run.</summary>
+public class VectorReembedResponseModel
+{
+    /// <summary>Gets or sets how many rows were replaced.</summary>
+    public int Replaced { get; set; }
+
+    /// <summary>Gets or sets the model tag the replaced rows now carry.</summary>
+    public required string Tag { get; set; }
+}

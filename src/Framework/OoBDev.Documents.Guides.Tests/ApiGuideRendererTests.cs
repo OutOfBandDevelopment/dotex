@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.System.IO;
@@ -41,6 +41,26 @@ public sealed class ApiGuideRendererTests
         StringAssert.Contains(guide, "- `id` (query, string, required)");
         StringAssert.Contains(guide, "Request body: `application/json`");
         StringAssert.Contains(guide, "- `200` Ok (`text/plain`)");
+    }
+
+    [TestMethod]
+    public void OpenApi_PermissionsExtension_ShowsAccessAndRights()
+    {
+        // Stage
+        const string document = """
+            { "paths": {
+              "/open": { "get": { "x-permissions": { "anonymous": true }, "responses": {} } },
+              "/locked": { "delete": { "x-permissions": { "anonymous": false, "right": [ "Write", "Admin" ] }, "responses": {} } },
+              "/plain": { "get": { "responses": {} } } } }
+            """;
+
+        // Test
+        var guide = ApiGuideRenderer.OpenApi(document, "Demo");
+
+        // Assert
+        StringAssert.Contains(guide, "### GET `/open`\n\nAccess: anonymous\n\n");
+        StringAssert.Contains(guide, "Access: authenticated; rights: `Admin`, `Write`\n\n");
+        Assert.DoesNotContain("Access:", guide[guide.IndexOf("`/plain`", StringComparison.Ordinal)..]);
     }
 
     [TestMethod]

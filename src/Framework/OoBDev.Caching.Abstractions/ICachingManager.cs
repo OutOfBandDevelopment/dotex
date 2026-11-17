@@ -48,4 +48,13 @@ public interface ICachingManager
     /// <param name="key">The cache key.</param>
     /// <returns>The cached value.</returns>
     Task<T?> RetrieveAsync<T>(string key);
+
+    /// <summary>
+    /// Takes a lock on <paramref name="key"/> shared by every process that uses the same cache, so one process computes a
+    /// missing value while the others wait for it (cross-process single flight).
+    /// </summary>
+    /// <param name="key">The cache key.</param>
+    /// <param name="lifeTime">How long the lock holds if its owner dies before releasing it.</param>
+    /// <returns>The lock to dispose when done; <see langword="null"/> when another process holds it. A provider with no lock support returns an always-granted no-op lock.</returns>
+    Task<IAsyncDisposable?> TryLockAsync(string key, TimeSpan lifeTime) => Task.FromResult<IAsyncDisposable?>(NoLock.Instance);
 }

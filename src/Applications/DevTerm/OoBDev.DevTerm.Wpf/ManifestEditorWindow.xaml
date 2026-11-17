@@ -37,7 +37,7 @@
                     <Button Content="Up" Command="{Binding MoveUp}" Margin="2" Padding="8,3" />
                     <Button Content="Down" Command="{Binding MoveDown}" Margin="2" Padding="8,3" />
                 </WrapPanel>
-                <ListBox ItemsSource="{Binding Nodes}" SelectedIndex="{Binding SelectedIndex}" DisplayMemberPath="Display" FontFamily="Consolas" />
+                <ListBox AutomationProperties.Name="Manifest nodes" ItemsSource="{Binding Nodes}" SelectedIndex="{Binding SelectedIndex}" DisplayMemberPath="Display" FontFamily="Consolas" />
             </DockPanel>
             <DockPanel Grid.Column="2">
                 <TextBlock DockPanel.Dock="Top" FontWeight="SemiBold" Text="{Binding PaneTitle}" Margin="0,0,0,4" />
@@ -68,6 +68,9 @@
                 </ScrollViewer>
             </DockPanel>
         </Grid>
-        <TextBlock Grid.Row="2" Margin="0,6,0,0" TextWrapping="Wrap" Text="{Binding Status}" />
+        <DockPanel Grid.Row="2" Margin="0,6,0,0">
+            <Button DockPanel.Dock="Right" Content="Close" IsCancel="True" Margin="8,0,0,0" Padding="12,3" />
+            <TextBlock TextWrapping="Wrap" Text="{Binding Status}" VerticalAlignment="Center" />
+        </DockPanel>
     </Grid>
 </Window>

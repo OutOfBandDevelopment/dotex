@@ -68,5 +68,6 @@ Call `Assert.Inconclusive` when the credential is missing so a clean checkout st
 | Service | Test project | Page |
 |---------|--------------|------|
 | Groq Cloud | `OoBDev.GroqCloud.Tests` | [Groq Cloud](groq.md) |
+| Azure AI Search | `OoBDev.Microsoft.Azure.AISearch.Tests` | [Azure AI Search](azure-ai-search.md) |
 
 [Testing home](../README.md) · [Groq Cloud →](groq.md)

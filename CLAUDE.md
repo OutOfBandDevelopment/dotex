@@ -1,6 +1,6 @@
 # OoBDev (dotex) Framework - Claude Development Guide
 
-**Last Updated:** 2026-10-30
+**Last Updated:** 2026-11-16
 **Framework:** OoBDev (dotex) - Enterprise .NET Library Suite
 **Target:** net10.0
 **Current Work:** DevTerm parity (branch `dev/hardware-report`, see [status](docs/design/DevTermParity/status.md)) | Patterns discovery (branch `dev/patterns-discovery`, see below) | Design-first approach for SharedFramework migrations
@@ -169,7 +169,7 @@ Older entries (before 2026-10) live in `docs/changes/` (index: `docs/changes/REA
 ## Current Work Context
 
 **Active priorities** (keep in step with `TODO.md`, rule `work-tracking`):
-1. **DevTerm parity** - merge of dev-term into this repo: WPF shell slices first, then the decided cleanups (test fixture rename, shared test utilities); detail in `docs/design/DevTermParity/status.md`
+1. **DevTerm parity** - the WPF shell slices are done; what is left is the decided UX work (BACKLOG section 8) and the cleanups (test fixture rename, shared test utilities); detail in `docs/design/DevTermParity/status.md`
 2. **Integration testing** - run the Docker stack and Integration suite locally; CI is manual only (`scripts/ci`): no scheduled or push builds, and the GitHub workflows are removed
 3. **SharedFramework** - design-first (Epics 2 Communications, 6 Documents, 7 Identity, 10 Text Templating): four documents per feature (requirements, architecture, api-design, testing-strategy; 85-90% coverage targets) instead of code migration, per `docs/patterns-discovery/06-design-document-standard.md`
 4. **Incoming projects** - all investigated, decisions pending

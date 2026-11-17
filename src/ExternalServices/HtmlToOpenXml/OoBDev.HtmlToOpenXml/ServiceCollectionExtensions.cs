@@ -16,7 +16,7 @@ public static class ServiceCollectionExtensions
     /// <returns>The modified <see cref="IServiceCollection"/>.</returns>
     public static IServiceCollection TryAddHtmlToOpenXmlServices(this IServiceCollection services)
     {
-        //TODO: consider switching to TIKA or at the very lease making it so this can be excluded from common
+        // Request: docs/features/request/2026-11-17-document-converter-dependencies.md
         services.AddTransient<IDocumentConversionHandler, HtmlToDocxConversionHandler>();
 
         services.AddTransient<IDocumentType>(_ => new DocumentType

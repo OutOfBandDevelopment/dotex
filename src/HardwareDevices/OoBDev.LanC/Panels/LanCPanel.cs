@@ -23,7 +23,7 @@ public sealed class LanCPanel : IDevicePanel
     public UiDefinition BuildDefinition() => LanCUiDefinition.Build();
 
     /// <inheritdoc />
-    public IControlSurface CreateSurface(DeviceSend send) => new LanCControlSurface(send);
+    public IControlSurface CreateSurface(DeviceSend send, IDeviceDecoder decoder) => new LanCControlSurface(send);
 
     /// <inheritdoc />
     public IDeviceDecoder CreateDecoder() => new LanCDecoder();

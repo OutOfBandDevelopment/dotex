@@ -1,8 +1,10 @@
-# Z-Wave controller panel
+﻿# Z-Wave controller panel
 
 **Purpose.** The **Device > Z-Wave controller...** panel (TUI `ControlPanelMode`, WPF `ControlPanelWindow`, web `Web:Panel=zwave`) shows what a Z-Wave USB controller (such as the Aeotec Z-Stick S2) says about itself and its network, enumerates and queries nodes, switches a node, and manages the network (add, remove, reset, learn). Network-changing buttons change real state; the erasing ones ask first. It is contributed by the `zwave` plugin (`src/DevTerm.Devices.ZWave`) and is available on the `serial` transport only. The same plugin's `zwave` presenter decodes the Serial API frames in the terminal output.
 
 The panel is a generic render of `ZWaveUiDefinition`, driven by `ZWaveControlSurface` (an `IControlSurface` and `ICommandPreview`) on the live session.
+
+> **Implementation status (2026-11-12).** `OoBDev.ZWave.Panels` ships: Controller (Refresh, Version, Home and node id, Node list, Soft reset), Node (Node and Level fields; Node info, On, Off, Read switch, Set level, Configuration get and set, a raw command class payload sent to the node) and Network (Include, Exclude and their stop buttons, Join another network and Stop learn mode, Heal node, Is node failed, Remove failed node, Reset network) buttons, with a confirmation on the erasing ones, plus the Status indicators: Last frame and the identity indicators filled by Refresh (Library, Serial API, Manufacturer, Product, Functions, Home ID, Controller node, Role, Chip, SUC node, Node count, Nodes). Refresh sends GetVersion, MemoryGetId, GetCapabilities, GetControllerCapabilities, GetInitData and GetSucNodeId 150 ms apart (the plain requests, without the ACK prefix the old plugin added); its command preview lists all six. Enumerate nodes and Describe node (2026-11-16) share the session `ZWaveNodeTable` with the decoder: the host passes the session decoder to `IDevicePanel.CreateSurface(send, decoder)`, the decoder folds every frame into its `Table`, and Enumerate waits for the node list (3 s, then `TimeoutException`) before querying each node 150 ms apart. The surface also ACKs every data frame the decoder sees while it lives (disposed with the panel), off the read loop. Not run on the real stick yet.
 
 ## Fields
 

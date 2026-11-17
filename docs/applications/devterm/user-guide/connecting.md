@@ -1,4 +1,4 @@
-# Connecting to a device
+﻿# Connecting to a device
 
 How you get from "just started dev-term" to "connected, ready to send" — three ways in: command-line
 flags (CLI), or the shared Connection Editor screen (TUI/WPF), which also opens automatically at
@@ -194,7 +194,7 @@ heading for its group (Serial, TCP, USB Device, Loopback), followed by the Prese
 fields are the same in both front ends because both draw them from one definition (see
 [the Connection Editor spec](../specs/connection-editor.md)); a value that isn't what the field
 expects (a Baud rate that isn't a whole number, say) is flagged right under or beside the field as
-you type.
+you type. In WPF the Presentation fields are Device manifest, Presenters (one checkbox each), SCPI profile and timeout (shown only while `scpi` is checked), Send format, Line ending and ASCII max line length, below the transport fields.
 
 **Serial** (TUI, then WPF):
 

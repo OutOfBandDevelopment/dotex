@@ -1,6 +1,6 @@
 # SQL Server Service Broker Queue Provider — Overview
 
-**Status:** Implemented · **Date:** 2026-10-29 · **Request:** [SQL Server Service Broker support](../../features/request/2026-10-28-sql-service-broker-tools.md) · **Related:** [RabbitMQ provider](../../../src/ExternalServices/RabbitMQ/OoBDev.RabbitMQ/README.RabbitMQ.md), [design standard](../../patterns-discovery/06-design-document-standard.md)
+**Status:** Implemented · **Date:** 2026-10-29 · **Request:** [SQL Server Service Broker support](../../features/completed/2026-10-28-sql-service-broker-tools.md) · **Related:** [RabbitMQ provider](../../../src/ExternalServices/RabbitMQ/OoBDev.RabbitMQ/README.RabbitMQ.md), [design standard](../../patterns-discovery/06-design-document-standard.md)
 
 Send and receive messages through SQL Server Service Broker using the existing `IMessageSenderProvider` and `IMessageReceiverProvider` contracts, selected by configuration like the RabbitMQ, SQS and Service Bus providers.
 

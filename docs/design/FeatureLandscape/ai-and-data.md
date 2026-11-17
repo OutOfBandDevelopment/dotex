@@ -35,30 +35,33 @@ Part of the [feature landscape](README.md). Status is "a project exists under `s
 - **Works with:** VectorSearch (stores the vectors), HybridSearch (query and document embeddings), LlmCodeGen (retrieval context).
 - **Known issues:** model files come from a shared Hugging Face cache and are not in the repository; tests for them are Integration or DevLocal.
 - **Practices:** one embedder interface, presets by key, NULL-safe vectors.
-- **Missing:** an embedding version tag stored with each vector so a model change can trigger re-embedding.
+- **Built 2026-11-16:** `EmbeddingVersion` (OoBDev.Search) stamps the model tag into vector metadata and finds stale rows after a model change; the example vector store controller stamps on ingest; `IVectorStore.DeleteAsync` and `EmbeddingVersion.ReembedAsync` replace stale rows (store the new tagged row, then delete the old); a command or screen that calls it is still to build.
 
 ## VectorSearch and HybridSearch
 
 - **Works with:** DocumentServices (text in), Embeddings (vectors), OpenSearch and Qdrant (test stack).
 - **Known issues:** diagrams crashed the PlantUML server until `fork` was replaced by `split` (fixed 2026-11-11); ranking quality is not measured.
 - **Standards:** none formal; BM25 plus vector fusion (reciprocal rank fusion) is the usual pattern.
-- **Missing:** a relevance test set (queries with expected hits), access filters tied to ApplicationRights so search never leaks documents.
+- **Built 2026-11-16:** `RelevanceMetrics` (recall at k, reciprocal rank, mean reciprocal rank) in OoBDev.Search to score a query set; the query set itself is per project.
+- **Missing:** access filters tied to ApplicationRights so search never leaks documents.
 
 ## LlmCodeGen and ContractParser
 
 - **Works with:** Embeddings for retrieval; ContractParser would feed it contract text.
 - **Known issues:** ContractParser is a harvest project with no migration decision yet; live LLM tests are manual (LiveIntegration).
 - **Practices:** provider/factory per LLM service, local Ollama for CI.
-- **Missing:** prompt injection guidance for tools that act on model output; token and cost accounting.
+- **Built 2026-11-16:** prompt-injection guidance in the LlmCodeGen requirements ("Untrusted input and output").
+- **Missing:** token and cost accounting.
 
 ## DesiredStateDatabase
 
 - **Works with:** MasterData, VectorSearch (schemas) and the SQL Server test container.
 - **Known issues:** schema compare needs a SQL Server instance, so tests are Integration.
-- **Missing:** a rollback story and a data-loss guard for destructive diffs.
+- **Decided 2026-11-16:** the data-loss guard is requirement REQ-003 of the DesiredStateDatabase design (unsafe changes refused without an explicit flag; hazard and `ApplyAsync` test in its testing strategy), built with the feature after the bake-off, not separately.
+- **Missing:** a rollback story.
 
 ## GeneratedGuides
 
 - **Works with:** every UI feature (journey tests produce screenshots) and OpenApiScalar/AsyncApi (API guides).
 - **Known issues:** screenshots need the interactive desktop for WPF, so generation is a manual step.
-- **Missing:** a freshness check in the docs validator that compares screenshot dates with the XAML they show.
+- **Built 2026-11-16:** `ScreenshotFreshness` in `OoBDev.Docs.Tests`: each image maps by file name prefix to source folders (`images/sources.json`) and is reported when the code has a newer commit by more than `DOCS_SCREENSHOT_TOLERANCE_DAYS` (30); off by default (`DOCS_CHECK_SCREENSHOTS=true`) because it needs git history.

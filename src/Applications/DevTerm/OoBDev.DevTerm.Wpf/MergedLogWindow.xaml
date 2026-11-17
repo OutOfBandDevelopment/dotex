@@ -7,6 +7,6 @@
             <Button Content="Clear" Command="{Binding Clear}" Padding="8,2" />
             <Button Content="Close" IsCancel="True" Margin="4,0" Padding="8,2" />
         </StackPanel>
-        <ListBox ItemsSource="{Binding Lines}" FontFamily="Consolas" />
+        <ListBox AutomationProperties.Name="Merged log lines" ItemsSource="{Binding Lines}" FontFamily="Consolas" />
     </DockPanel>
 </Window>

@@ -8,6 +8,8 @@ Generated from the application's OpenAPI document by `ApiGuideTests`; do not edi
 
 ### GET `/api/AllMiniLM`
 
+Access: authenticated; rights: `ai.invoke`
+
 Parameters:
 
 - `text` (query, string)
@@ -17,6 +19,8 @@ Responses:
 - `200` OK (`text/plain`, `application/json`, `text/json`)
 
 ### GET `/api/Cache`
+
+Access: authenticated; rights: `cache.manage`
 
 Parameters:
 
@@ -28,6 +32,8 @@ Responses:
 
 ### PUT `/api/Cache`
 
+Access: authenticated; rights: `cache.manage`
+
 Request body: `application/json`, `text/json`, `application/*+json`
 
 Responses:
@@ -35,6 +41,8 @@ Responses:
 - `200` OK
 
 ### DELETE `/api/Cache`
+
+Access: authenticated; rights: `cache.manage`
 
 Parameters:
 
@@ -46,11 +54,15 @@ Responses:
 
 ### GET `/api/CgiPrograms`
 
+Access: anonymous
+
 Responses:
 
 - `200` OK (`text/plain`, `application/json`, `text/json`)
 
 ### POST `/api/Communications/private`
+
+Access: authenticated
 
 Request body: `application/json`, `text/json`, `application/*+json`
 
@@ -61,6 +73,8 @@ Responses:
 
 ### POST `/api/Communications/public`
 
+Access: anonymous
+
 Request body: `application/json`, `text/json`, `application/*+json`
 
 Responses:
@@ -70,6 +84,8 @@ Responses:
 
 ### POST `/api/Communications/queued`
 
+Access: anonymous
+
 Request body: `application/json`, `text/json`, `application/*+json`
 
 Responses:
@@ -78,13 +94,38 @@ Responses:
 
 ### POST `/api/GroqCloud/Completion`
 
+Access: authenticated; rights: `ai.invoke`
+
 Request body: `application/json`, `text/json`, `application/*+json`
 
 Responses:
 
 - `200` OK (`text/plain`, `application/json`, `text/json`)
 
+### GET `/api/Identity/roles`
+
+Access: authenticated; rights: `identity.read`
+
+Responses:
+
+- `200` OK (`text/plain`, `application/json`, `text/json`)
+
+### GET `/api/Identity/users`
+
+Access: authenticated; rights: `identity.read`
+
+Parameters:
+
+- `search` (query, string)
+- `max` (query)
+
+Responses:
+
+- `200` OK (`text/plain`, `application/json`, `text/json`)
+
 ### POST `/api/Images/classify`
+
+Access: anonymous
 
 Request body: `multipart/form-data`
 
@@ -94,7 +135,27 @@ Responses:
 
 ### POST `/api/Images/embed`
 
+Access: anonymous
+
 Request body: `multipart/form-data`
+
+Responses:
+
+- `200` OK (`text/plain`, `application/json`, `text/json`)
+
+### GET `/api/KernelPlugIns`
+
+Access: authenticated; rights: `toolbox.use`
+
+Responses:
+
+- `200` OK (`text/plain`, `application/json`, `text/json`)
+
+### POST `/api/KernelPlugIns/invoke`
+
+Access: authenticated; rights: `toolbox.use`
+
+Request body: `application/json`, `text/json`, `application/*+json`
 
 Responses:
 
@@ -102,11 +163,15 @@ Responses:
 
 ### GET `/api/MessageQueueing/channels`
 
+Access: anonymous
+
 Responses:
 
 - `200` OK (`text/plain`, `application/json`, `text/json`)
 
 ### POST `/api/MessageQueueing/private`
+
+Access: authenticated
 
 Parameters:
 
@@ -120,6 +185,8 @@ Responses:
 
 ### POST `/api/MessageQueueing/public`
 
+Access: anonymous
+
 Parameters:
 
 - `correlationId` (query, string)
@@ -132,17 +199,23 @@ Responses:
 
 ### GET `/api/MessageQueueing/received`
 
+Access: anonymous
+
 Responses:
 
 - `200` OK (`text/plain`, `application/json`, `text/json`)
 
 ### GET `/api/ModelCompare/models`
 
+Access: anonymous
+
 Responses:
 
 - `200` OK (`text/plain`, `application/json`, `text/json`)
 
 ### POST `/api/ModelCompare/similarity`
+
+Access: anonymous
 
 Request body: `application/json`, `text/json`, `application/*+json`
 
@@ -151,6 +224,8 @@ Responses:
 - `200` OK (`text/plain`, `application/json`, `text/json`)
 
 ### GET `/api/Ollama`
+
+Access: authenticated; rights: `ai.invoke`
 
 Parameters:
 
@@ -163,6 +238,8 @@ Responses:
 
 ### POST `/api/Ollama`
 
+Access: anonymous; rights: `ai.invoke`
+
 Request body: `application/json`, `text/json`, `application/*+json`
 
 Responses:
@@ -170,6 +247,8 @@ Responses:
 - `200` OK (`text/plain`, `application/json`, `text/json`)
 
 ### POST `/api/Ollama/Completion`
+
+Access: authenticated; rights: `ai.invoke`
 
 Request body: `application/json`, `text/json`, `application/*+json`
 
@@ -179,6 +258,8 @@ Responses:
 
 ### POST `/api/Ollama/Streamed`
 
+Access: anonymous; rights: `ai.invoke`
+
 Request body: `application/json`, `text/json`, `application/*+json`
 
 Responses:
@@ -187,11 +268,15 @@ Responses:
 
 ### GET `/api/Operations/info`
 
+Access: authenticated; rights: `operations.read`
+
 Responses:
 
 - `200` OK (`text/plain`, `application/json`, `text/json`)
 
 ### POST `/api/Rag`
+
+Access: anonymous
 
 Request body: `application/json`, `text/json`, `application/*+json`
 
@@ -200,6 +285,8 @@ Responses:
 - `200` OK (`text/plain`, `application/json`, `text/json`)
 
 ### GET `/api/Rights/check`
+
+Access: anonymous
 
 Parameters:
 
@@ -211,17 +298,23 @@ Responses:
 
 ### GET `/api/Rights/endpoints`
 
+Access: anonymous
+
 Responses:
 
 - `200` OK (`text/plain`, `application/json`, `text/json`)
 
 ### GET `/api/Rights/protected`
 
+Access: anonymous; rights: `rights.demo`
+
 Responses:
 
 - `200` OK (`text/plain`, `application/json`, `text/json`)
 
 ### GET `/api/SBERT`
+
+Access: authenticated; rights: `ai.invoke`
 
 Parameters:
 
@@ -233,6 +326,8 @@ Responses:
 
 ### GET `/api/SBERTDefault`
 
+Access: authenticated; rights: `ai.invoke`
+
 Parameters:
 
 - `text` (query, string)
@@ -243,6 +338,8 @@ Responses:
 
 ### POST `/api/Search`
 
+Access: anonymous
+
 Request body: `application/json`, `text/json`, `application/*+json`
 
 Responses:
@@ -251,11 +348,15 @@ Responses:
 
 ### GET `/api/Telemetry/recent`
 
+Access: anonymous
+
 Responses:
 
 - `200` OK (`text/plain`, `application/json`, `text/json`)
 
 ### POST `/api/TextTemplate/Apply`
+
+Access: anonymous
 
 Parameters:
 
@@ -269,11 +370,15 @@ Responses:
 
 ### GET `/api/TextTemplate/List`
 
+Access: anonymous
+
 Responses:
 
 - `200` OK (`text/plain`, `application/json`, `text/json`)
 
 ### POST `/api/TextTemplate/Preview`
+
+Access: anonymous
 
 Request body: `application/json`, `text/json`, `application/*+json`
 
@@ -282,6 +387,8 @@ Responses:
 - `200` OK
 
 ### GET `/api/TextTemplate/Read`
+
+Access: anonymous
 
 Parameters:
 
@@ -293,6 +400,8 @@ Responses:
 
 ### PUT `/api/TextTemplate/Save`
 
+Access: anonymous
+
 Request body: `application/json`, `text/json`, `application/*+json`
 
 Responses:
@@ -301,11 +410,15 @@ Responses:
 
 ### POST `/api/TextTemplate/SupportedTemplates`
 
+Access: anonymous
+
 Responses:
 
 - `200` OK (`text/plain`, `application/json`, `text/json`)
 
 ### POST `/api/TextTools/markdown`
+
+Access: authenticated; rights: `toolbox.use`
 
 Request body: `application/json`, `text/json`, `application/*+json`
 
@@ -315,6 +428,8 @@ Responses:
 
 ### POST `/api/TextTools/xpath`
 
+Access: authenticated; rights: `toolbox.use`
+
 Request body: `application/json`, `text/json`, `application/*+json`
 
 Responses:
@@ -323,11 +438,25 @@ Responses:
 
 ### GET `/api/Toolbox/algorithms`
 
+Access: authenticated; rights: `toolbox.use`
+
 Responses:
 
 - `200` OK
 
 ### POST `/api/Toolbox/calculate`
+
+Access: authenticated; rights: `toolbox.use`
+
+Request body: `application/json`, `text/json`, `application/*+json`
+
+Responses:
+
+- `200` OK (`text/plain`, `application/json`, `text/json`)
+
+### POST `/api/Toolbox/codec`
+
+Access: authenticated; rights: `toolbox.use`
 
 Request body: `application/json`, `text/json`, `application/*+json`
 
@@ -337,6 +466,8 @@ Responses:
 
 ### POST `/api/Toolbox/hash`
 
+Access: authenticated; rights: `toolbox.use`
+
 Request body: `application/json`, `text/json`, `application/*+json`
 
 Responses:
@@ -344,6 +475,28 @@ Responses:
 - `200` OK (`text/plain`, `application/json`, `text/json`)
 
 ### POST `/api/Toolbox/hmac`
+
+Access: authenticated; rights: `toolbox.use`
+
+Request body: `application/json`, `text/json`, `application/*+json`
+
+Responses:
+
+- `200` OK (`text/plain`, `application/json`, `text/json`)
+
+### POST `/api/Toolbox/jws/read`
+
+Access: authenticated; rights: `toolbox.use`
+
+Request body: `application/json`, `text/json`, `application/*+json`
+
+Responses:
+
+- `200` OK (`text/plain`, `application/json`, `text/json`)
+
+### POST `/api/Toolbox/jws/sign`
+
+Access: authenticated; rights: `toolbox.use`
 
 Request body: `application/json`, `text/json`, `application/*+json`
 
@@ -353,6 +506,8 @@ Responses:
 
 ### POST `/api/Toolbox/otp`
 
+Access: authenticated; rights: `toolbox.use`
+
 Request body: `application/json`, `text/json`, `application/*+json`
 
 Responses:
@@ -360,6 +515,8 @@ Responses:
 - `200` OK (`text/plain`, `application/json`, `text/json`)
 
 ### POST `/api/Toolbox/vector-distance`
+
+Access: authenticated; rights: `toolbox.use`
 
 Request body: `application/json`, `text/json`, `application/*+json`
 
@@ -369,11 +526,15 @@ Responses:
 
 ### GET `/api/UiDefinitions`
 
+Access: anonymous
+
 Responses:
 
 - `200` OK (`text/plain`, `application/json`, `text/json`)
 
 ### GET `/api/UiDefinitions/{key}`
+
+Access: anonymous
 
 Parameters:
 
@@ -384,6 +545,8 @@ Responses:
 - `200` OK (`text/plain`, `application/json`, `text/json`)
 
 ### POST `/api/UiDefinitions/{key}/evaluate`
+
+Access: anonymous
 
 Parameters:
 
@@ -397,11 +560,15 @@ Responses:
 
 ### GET `/api/User/claims`
 
+Access: authenticated
+
 Responses:
 
 - `200` OK (`text/plain`, `application/json`, `text/json`)
 
 ### POST `/api/VectorLab/matrix`
+
+Access: anonymous
 
 Request body: `application/json`, `text/json`, `application/*+json`
 
@@ -411,6 +578,8 @@ Responses:
 
 ### POST `/api/VectorStore/index`
 
+Access: anonymous
+
 Request body: `application/json`, `text/json`, `application/*+json`
 
 Responses:
@@ -419,6 +588,8 @@ Responses:
 
 ### POST `/api/VectorStore/query`
 
+Access: anonymous
+
 Request body: `application/json`, `text/json`, `application/*+json`
 
 Responses:
@@ -426,6 +597,20 @@ Responses:
 - `200` OK (`text/plain`, `application/json`, `text/json`)
 
 ### GET `/api/VectorStore/{collection}`
+
+Access: anonymous
+
+Parameters:
+
+- `collection` (path, string, required)
+
+Responses:
+
+- `200` OK (`text/plain`, `application/json`, `text/json`)
+
+### POST `/api/VectorStore/{collection}/reembed`
+
+Access: anonymous
 
 Parameters:
 
@@ -437,6 +622,8 @@ Responses:
 
 ### GET `/asyncapi/{document}`
 
+Access: authenticated
+
 Parameters:
 
 - `document` (path, string, required)
@@ -446,6 +633,8 @@ Responses:
 - `200` OK
 
 ### GET `/asyncapi/{document}.json`
+
+Access: authenticated
 
 Parameters:
 
@@ -462,6 +651,8 @@ Responses:
 - `200` Health report (`application/json`)
 
 ### POST `/webhooks/{channel}`
+
+Access: anonymous
 
 Parameters:
 

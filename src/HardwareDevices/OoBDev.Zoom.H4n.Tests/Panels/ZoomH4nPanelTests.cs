@@ -13,6 +13,9 @@ namespace OoBDev.Zoom.H4n.Panels.Tests;
 [TestCategory(TestCategories.Zoom_H4n)]
 public sealed class ZoomH4nPanelTests
 {
+    private static OoBDev.UiDefinitions.IControlSurface Surface(OoBDev.UiDefinitions.IDevicePanel panel, OoBDev.UiDefinitions.DeviceSend send) =>
+        panel.CreateSurface(send, panel.CreateDecoder());
+
     [TestMethod, TestCategory(TestCategories.Unit)]
     [DataRow("serial", true)]
     [DataRow("SERIAL", true)]
@@ -49,7 +52,7 @@ public sealed class ZoomH4nPanelTests
     public async Task InvokeAsync_Record_SendsPressThenRelease()
     {
         var sent = new List<byte[]>();
-        var surface = new ZoomH4nPanel().CreateSurface((data, _) =>
+        var surface = Surface(new ZoomH4nPanel(), (data, _) =>
         {
             sent.Add(data.ToArray());
             return Task.CompletedTask;

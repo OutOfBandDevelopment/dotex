@@ -38,7 +38,7 @@ public abstract class TemplateFactoryBase<T> where T : class, new()
 
         var template = ext switch
         {
-            //TODO: add a way to detect serializer by passing around media type
+            // Request: docs/features/request/2026-11-17-provider-and-adapter-gaps.md
             //".YML" => ReadAsYaml(content),
             //".YAML" => ReadAsYaml(content),
             _ => _converter.Convert<T>(content)

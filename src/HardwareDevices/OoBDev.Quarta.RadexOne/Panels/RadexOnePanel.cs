@@ -23,7 +23,7 @@ public sealed class RadexOnePanel : IDevicePanel
     public UiDefinition BuildDefinition() => RadexOneUiDefinition.Build();
 
     /// <inheritdoc />
-    public IControlSurface CreateSurface(DeviceSend send) => new RadexOneControlSurface(send);
+    public IControlSurface CreateSurface(DeviceSend send, IDeviceDecoder decoder) => new RadexOneControlSurface(send);
 
     /// <inheritdoc />
     public IDeviceDecoder CreateDecoder() => new RadexOneDecoder();

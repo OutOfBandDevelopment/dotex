@@ -31,6 +31,7 @@ Which test projects need which service. A test project that appears here must ma
 | `OoBDev.MongoDB.Tests` | MongoDB |
 | `OoBDev.Redis.Caching.Tests` | Redis |
 | `OoBDev.EventSourcing.EntityFrameworkCore.Tests` | PostgreSQL |
+| work queue tests (`OoBDev.PostgreSql.WorkQueue.Tests`); (planned) pgvector store tests | PostgreSQL with pgvector |
 | `OoBDev.OpenSearch.Tests` | OpenSearch |
 | `OoBDev.Qdrant.Tests` | Qdrant |
 | `OoBDev.Data.Vectors.DB.Tests` | SQL Server |
@@ -40,6 +41,8 @@ Which test projects need which service. A test project that appears here must ma
 | `OoBDev.System.IO.Mqtt.Tests`, `OoBDev.System.IO.Brokers.Tests`, `OoBDev.System.IO.Tcp.Tests`, `OoBDev.DevTerm.Core.Tests` | Mosquitto, RabbitMQ (AMQP, STOMP, TLS), ser2net |
 | `OoBDev.MailKit.Tests` | smtp4dev |
 | `OoBDev.Apache.Tika.Tests`, `OoBDev.Documents.Tests` (conversion), `OoBDev.Example.Tests` (document conversion) | Apache Tika |
+| `OoBDev.Docling.Tests` | Docling serve |
+| `OoBDev.ClamAv.Tests` | ClamAV |
 | `OoBDev.Keycloak.Tests` | Keycloak |
 | `OoBDev.SBert.Tests`, `OoBDev.SBert.AllMiniLmL6V2.Tests` | SBert |
 | `OoBDev.Ollama.Tests` | Ollama |
