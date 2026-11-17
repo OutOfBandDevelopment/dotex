@@ -98,7 +98,7 @@ public abstract class ExpressionParserTests<T>
     [DataRow("b")]
     [DataRow("b+1")]
     [TestTarget(typeof(ExpressionParser<>), Member = nameof(ExpressionParser<>.Parse))]
-    // Request: docs/features/request/2026-11-17-search-query-expression-gaps.md [DataRow("1e")]
+    [DataRow("1e")]
     public void PoorlyFormedExpressions(string input)
     {
         Assert.Throws<ParseCanceledException>(() =>

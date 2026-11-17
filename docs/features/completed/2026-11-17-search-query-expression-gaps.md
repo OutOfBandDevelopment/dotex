@@ -1,6 +1,6 @@
 # Feature request: search and filter query expression gaps
 
-- **Status:** triaged
+- **Status:** done (built 2026-11-17, see [change](../../changes/2026-11-17.md#search-and-filter-query-expression-gaps))
 - **Requested by:** owner (source `TODO` comments, collected 2026-11-17)
 - **Date:** 2026-11-17
 - **Area:** `OoBDev.System.Linq` (`ExpressionTreeBuilder`), `OoBDev.AspNetCore.Mvc` (search query binding and OpenAPI), `OoBDev.System` (expression parser)
@@ -49,4 +49,22 @@ Which gaps to build first? Recommendation: `like`, null safety, `IEnumerable<>`.
 
 ## Triage notes
 
-Triaged 2026-11-17 into [BACKLOG.md](../../../BACKLOG.md) section 5 (source TODO comments). Design document to follow when built.
+Triaged 2026-11-17 into [BACKLOG.md](../../../BACKLOG.md) section 5 (source TODO comments).
+
+## Outcome
+
+Built:
+
+- `IEnumerable<>` arguments: `InSet` given a `List<T>` or any sequence (not only an array) now works (`OperatorExtensions.AsFilter` cast it to `Array` and threw `InvalidCastException`).
+- The expression parser rejects `1e`: the lexer error listener now throws `ParseCanceledException` instead of printing and dropping the character.
+- A whole-number string such as `0.0` matches an integer member (the test case that was commented out is enabled).
+
+Declined, comments removed:
+
+- String `like`: the `*x`, `x*` and `*x*` wildcards already give contains, starts-with and ends-with.
+- Null-safe member chains: filters address one property of the model, there is no chain to guard; a null member already excludes the row (see the System.Linq readme).
+- Type-converter on `FilterParameter`, enumerating the requested type, unrolling `searchOption`, and the commented `Ands`/`Ors`/`OrNull` operators: no consumer needs them; `TryParse` by member type covers conversion. Recursive groups stay a suggested feature in the readme.
+- Dictionary binding from forms and query strings: the form and query providers bind the filter keys already; a free-form `Dictionary<string, object>` has no typed shape to bind.
+- Filters in the OpenAPI operation: the filter is a free-form dictionary keyed by model property, so there is no per-property schema to publish.
+
+Tests: 3 added or enabled (`1e`, `0.0`, list `InSet`); System Unit run 1390 passed.

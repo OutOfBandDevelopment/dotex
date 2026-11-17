@@ -96,7 +96,7 @@ public class ExpressionTreeBuilder<TModel>(
         yield return BuildPredicate(scope, expression, Operators.GreaterThan, search.GreaterThan, isSearchTerm);
         yield return BuildPredicate(scope, expression, Operators.GreaterThanOrEqualTo, search.GreaterThanOrEqualTo, isSearchTerm);
 
-        // Request: docs/features/request/2026-11-17-search-query-expression-gaps.md
+       
         //yield return BuildPredicate(scope, expression, Operators.Ands, search.Ands, isSearchTerm);
         //yield return BuildPredicate(scope, expression, Operators.Ors, search.Ors, isSearchTerm);
         //yield return BuildPredicate(scope, expression, Operators.OrNull, search.OrNull, isSearchTerm);
@@ -136,7 +136,7 @@ public class ExpressionTreeBuilder<TModel>(
 
         var isElementSet = IsElementSet(unwrapped.Type, out var unwrappedElementType);
 
-        if (queryParameter is string queryString && queryString.Length > 0) // Request: docs/features/request/2026-11-17-search-query-expression-gaps.md
+        if (queryParameter is string queryString && queryString.Length > 0)
         {
             if (queryString[..1] == "!")
             {
@@ -153,11 +153,16 @@ public class ExpressionTreeBuilder<TModel>(
                 PublishParsed(scope, queryString, value);
                 queryParameter = value;
             }
+            else if (TryParseWholeNumber(unwrapped.Type, queryString, out var whole))
+            {
+                PublishParsed(scope, queryString, whole);
+                queryParameter = whole;
+            }
         }
 
         if (queryParameter != null && unwrapped.Type.IsAssignableFrom(queryParameter.GetType()))
         {
-            // Request: docs/features/request/2026-11-17-search-query-expression-gaps.md
+           
             var parameter = Expression.Parameter(typeof(TModel), "n");
             var predicate = BuildBinaryExpression(expressionOperator, unwrapped, queryParameter);
             var replaced = new ParameterReplacerExpressionVisitor(parameter).Visit(predicate);
@@ -182,7 +187,7 @@ public class ExpressionTreeBuilder<TModel>(
         Type queryParameterType,
         bool isSearchTerm)
     {
-        if (queryParameterType.IsArray) // Request: docs/features/request/2026-11-17-search-query-expression-gaps.md
+        if (queryParameterType.IsArray)
         {
             var elementType = queryParameterType.GetElementType();
             if (elementType == unwrapped.Type)
@@ -278,7 +283,7 @@ public class ExpressionTreeBuilder<TModel>(
         var (method, queryValue) = WildcardMethod(queryString);
         if (method == null)
         {
-            // Request: docs/features/request/2026-11-17-search-query-expression-gaps.md
+           
             throw new NotSupportedException("Method not defined");
         }
 
@@ -316,6 +321,23 @@ public class ExpressionTreeBuilder<TModel>(
             (_, "*") => (typeof(string).GetInstanceMethod(nameof(string.StartsWith), typeof(string)), queryString[..^1]),
             (_, _) => (typeof(string).GetInstanceMethod(nameof(string.Equals), typeof(string)), queryString),
         };
+
+    private static bool TryParseWholeNumber(Type target, string text, out object? whole)
+    {
+        whole = null;
+        var type = Nullable.GetUnderlyingType(target) ?? target;
+        if (type == typeof(bool) || !type.IsPrimitive || type == typeof(char) || type == typeof(float) || type == typeof(double)) return false;
+        if (!decimal.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out var number) || number != decimal.Truncate(number)) return false;
+        try
+        {
+            whole = Convert.ChangeType(number, type, CultureInfo.InvariantCulture);
+            return true;
+        }
+        catch (OverflowException)
+        {
+            return false;
+        }
+    }
 
     private static bool IsElementSet(Type type, out Type elementType)
     {
@@ -518,7 +540,7 @@ public class ExpressionTreeBuilder<TModel>(
     private static object? SimplifyValue(object? value) =>
         value switch
         {
-            // Request: docs/features/request/2026-11-17-search-query-expression-gaps.md
+           
             FilterParameter filter => ExpressionTreeBuilder<TModel>.SimplifyValue(filter.EqualTo),
             JsonElement element when element.ValueKind == JsonValueKind.String => element.GetString(),
             JsonElement element when element.ValueKind == JsonValueKind.Number => element.GetDouble(),
@@ -544,7 +566,7 @@ public class ExpressionTreeBuilder<TModel>(
 
         if (value.EqualTo != null)
         {
-            // Request: docs/features/request/2026-11-17-search-query-expression-gaps.md
+           
             var simple = ExpressionTreeBuilder<TModel>.SimplifyValue(value);
             if (simple != null)
             {
@@ -556,7 +578,7 @@ public class ExpressionTreeBuilder<TModel>(
             }
         }
 
-        // Request: docs/features/request/2026-11-17-search-query-expression-gaps.md
+       
 
         expression ??= BuildPredicate(name, GetPropertyExpression(name, stringComparison), value, isSearchTerm);
 

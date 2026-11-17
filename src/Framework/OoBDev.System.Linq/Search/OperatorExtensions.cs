@@ -1,4 +1,5 @@
 using OoBDev.Extensions.Reflection;
+using System.Linq;
 using OoBDev.System.ResponseModel;
 using System;
 
@@ -37,8 +38,17 @@ internal static class OperatorExtensions
             Operators.GreaterThan => filter with { GreaterThan = value },
             Operators.GreaterThanOrEqualTo => filter with { GreaterThanOrEqualTo = value },
 
-            Operators.InSet => filter with { InSet = (object[]?)typeof(object).MakeSafeArray((Array?)value, capture) },
+            Operators.InSet => filter with { InSet = (object[]?)typeof(object).MakeSafeArray(AsArray(value), capture) },
 
             _ => throw new NotSupportedException($"{expressionOperator} is not supported"),
         };
+
+    private static Array? AsArray(object? value) => value switch
+    {
+        null => null,
+        Array array => array,
+        string text => new[] { text },
+        global::System.Collections.IEnumerable sequence => sequence.Cast<object?>().ToArray(),
+        _ => new[] { value },
+    };
 }

@@ -108,7 +108,7 @@ public partial class SearchQueryOperationTransformer(
 
             if (property.Name.Equals(nameof(ISearchQuery.Filter), StringComparison.OrdinalIgnoreCase))
             {
-                // Request: docs/features/request/2026-11-17-search-query-expression-gaps.md
+                // Filter is a free-form dictionary keyed by model property; no per-property schema is generated.
                 continue;
             }
 

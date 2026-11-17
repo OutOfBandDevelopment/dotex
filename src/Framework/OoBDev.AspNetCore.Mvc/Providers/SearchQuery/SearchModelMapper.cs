@@ -86,7 +86,6 @@ public class SearchModelMapper : ISearchModelMapper
         RequestType requestType
         ) => requestType switch
         {
-            // Request: docs/features/request/2026-11-17-search-query-expression-gaps.md
             RequestType.Form => new FormValueProvider(BindingSource.Form, context.Request.Form, null),
             RequestType.Json => await CompositeValueProvider.CreateAsync(controllerContext),
             RequestType.Query => new QueryStringValueProvider(BindingSource.Query, context.Request.Query, null),
