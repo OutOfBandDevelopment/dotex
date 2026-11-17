@@ -28,6 +28,7 @@ The host port defaults to 8081 (`TEST_PORT_KEYCLOAK` changes it, then pass the m
 |-------|------|--------|
 | `KeycloakDirectoryReaderTests` | Unit | Search and exact e-mail listing with sorted roles, token reuse until expiry, role listing, no match returns null. |
 | `KeycloakUserManagementTests` | Integration | With `Keycloak.ApiClient.Net` and an admin token from the master realm: create a user (with credentials, with realm roles), set a password and authenticate, update, page and search users, a disabled user cannot authenticate, count users. |
+| `ExampleRealmTests` | Unit and Integration | Unit: the `oobdev-example` realm file defines ada, alan, margaret and grace with the documented roles, and the example API maps the `admin` role grace holds to every right its controllers guard. Integration: the running Keycloak holds the same users and realm roles; a failure means the volume predates the realm file, so reset it (`integration-down.sh --clean`, then `integration-up.sh --wait`). |
 
 ## Configuration
 
