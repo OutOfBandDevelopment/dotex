@@ -54,7 +54,7 @@ Tests that run against Docker containers. See `/containers/testing/` for Docker 
 
 #### Container start-up
 
-Integration tests marked `[IntegrationTestMethod("oobd-test-redis")]` check their containers first: a running, healthy container is used as it is; a stopped or missing one is started (`docker start` or `docker compose up` of the one service) and watched until its health check passes. If that takes longer than the timeout, or Docker is missing, the test ends Inconclusive. Only containers the tests started are stopped, when the test run ends.
+Integration tests marked `[IntegrationTestMethod("oobd-test-redis")]` check their containers first: a running, healthy container is used as it is; a stopped or missing one is started (`docker start` or `docker compose up` of the one service) and watched until its health check passes. If that takes longer than the timeout, or Docker is missing, the test ends Inconclusive. Only containers the tests started are stopped, by the last test process still using them (shared lease files), when its run ends.
 
 | Parameter | Default | Meaning |
 |-----------|---------|---------|

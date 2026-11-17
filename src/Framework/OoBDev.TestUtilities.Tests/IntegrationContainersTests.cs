@@ -50,14 +50,17 @@ public class IntegrationContainersTests
     }
 
     private FakeDocker _docker = new();
+    private string _leaseDirectory = string.Empty;
 
     [TestInitialize]
     public void Setup()
     {
         _docker = new FakeDocker();
         IntegrationContainers.Docker = _docker;
+        _leaseDirectory = Path.Combine(Path.GetTempPath(), "oobdev-lease-tests-" + Guid.NewGuid().ToString("N"));
+        IntegrationContainers.LeaseDirectory = _leaseDirectory;
         IntegrationContainers.PollInterval = TimeSpan.FromMilliseconds(10);
-        Environment.SetEnvironmentVariable(Timeout, "1");
+        IntegrationContainers.Overrides[Timeout] = "1";
     }
 
     [TestCleanup]
@@ -65,8 +68,10 @@ public class IntegrationContainersTests
     {
         IntegrationContainers.Docker = new ProcessDockerCli();
         IntegrationContainers.PollInterval = TimeSpan.FromMilliseconds(250);
-        foreach (var name in new[] { Timeout, Autostart, Stop })
-            Environment.SetEnvironmentVariable(name, null);
+        IntegrationContainers.LeaseDirectory = Path.Combine(Path.GetTempPath(), "oobdev-lease-tests-reset");
+        if (Directory.Exists(_leaseDirectory))
+            Directory.Delete(_leaseDirectory, true);
+        IntegrationContainers.Overrides.Clear();
     }
 
     private static async Task<string> InconclusiveMessageAsync(Func<Task> action)
@@ -81,6 +86,23 @@ public class IntegrationContainersTests
         }
 
         return string.Empty;
+    }
+
+    private static int AnotherLiveProcessId()
+    {
+        foreach (var process in global::System.Diagnostics.Process.GetProcesses())
+        {
+            try
+            {
+                if (process.Id != Environment.ProcessId && !process.HasExited)
+                    return process.Id;
+            }
+            catch (global::System.ComponentModel.Win32Exception)
+            {
+            }
+        }
+
+        throw new InvalidOperationException("No other process to borrow an id from.");
     }
 
     [TestMethod]
@@ -131,14 +153,49 @@ public class IntegrationContainersTests
     {
         _docker.State = new ContainerState(false, string.Empty);
         _docker.StateAfterStart = new ContainerState(true, "healthy");
-        Environment.SetEnvironmentVariable(Stop, "false");
+        IntegrationContainers.Overrides[Stop] = "false";
 
         await IntegrationContainers.EnsureAsync(TestContext, "oobd-test-redis");
         await IntegrationContainers.ReleaseAsync(TestContext, "oobd-test-redis");
 
         CollectionAssert.AreEqual(new[] { "start oobd-test-redis" }, _docker.Calls);
-        Environment.SetEnvironmentVariable(Stop, null);
+        IntegrationContainers.Overrides.Remove(Stop);
         await IntegrationContainers.ReleaseAsync(TestContext, "oobd-test-redis");
+    }
+
+    [TestMethod]
+    [TestCategory(TestCategories.Unit)]
+    public async Task Release_AnotherLiveProcessStillUsesIt_LeavesTheContainerRunningAsync()
+    {
+        // Stage: this process starts the container; another live process also holds a lease
+        _docker.State = new ContainerState(false, string.Empty);
+        _docker.StateAfterStart = new ContainerState(true, "healthy");
+        await IntegrationContainers.EnsureAsync(TestContext, "oobd-test-redis");
+        File.WriteAllText(Path.Combine(_leaseDirectory, "oobd-test-redis", AnotherLiveProcessId() + ".lease"), string.Empty);
+
+        // Test
+        await IntegrationContainers.ReleaseAsync(TestContext, "oobd-test-redis");
+
+        // Assert: not stopped, the marker stays for whoever releases last
+        CollectionAssert.AreEqual(new[] { "start oobd-test-redis" }, _docker.Calls);
+        Assert.IsTrue(File.Exists(Path.Combine(_leaseDirectory, "oobd-test-redis", "started")));
+    }
+
+    [TestMethod]
+    [TestCategory(TestCategories.Unit)]
+    public async Task Release_LastUserOfAContainerAnotherProcessStarted_StopsItAsync()
+    {
+        // Stage: another (dead) process started it and left the marker; this process only uses it
+        _docker.State = new ContainerState(true, "healthy");
+        Directory.CreateDirectory(Path.Combine(_leaseDirectory, "oobd-test-redis"));
+        File.WriteAllText(Path.Combine(_leaseDirectory, "oobd-test-redis", "started"), "1");
+        await IntegrationContainers.EnsureAsync(TestContext, "oobd-test-redis");
+
+        // Test
+        await IntegrationContainers.ReleaseAsync(TestContext, "oobd-test-redis");
+
+        // Assert
+        CollectionAssert.AreEqual(new[] { "stop oobd-test-redis" }, _docker.Calls);
     }
 
     [TestMethod]
@@ -194,7 +251,7 @@ public class IntegrationContainersTests
     public async Task Ensure_DockerUnavailable_IsInconclusiveAsync()
     {
         _docker.State = null;
-        Environment.SetEnvironmentVariable(Autostart, "false");
+        IntegrationContainers.Overrides[Autostart] = "false";
 
         var message = await InconclusiveMessageAsync(() => IntegrationContainers.EnsureAsync(TestContext, "oobd-test-redis"));
 

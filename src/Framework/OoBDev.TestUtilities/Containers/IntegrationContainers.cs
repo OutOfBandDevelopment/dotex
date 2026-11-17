@@ -27,12 +27,19 @@ public static class IntegrationContainers
 
     private const string ComposeFileName = "docker-compose.integration-tests.yml";
     private static readonly Lock _gate = new();
-    private static readonly Dictionary<string, int> _startedByTests = new(StringComparer.Ordinal);
+    private static readonly HashSet<string> _leased = new(StringComparer.Ordinal);
     private static readonly Dictionary<string, DateTimeOffset> _readyUntil = new(StringComparer.Ordinal);
     private static readonly TimeSpan _readyCache = TimeSpan.FromSeconds(30);
     private static bool _exitHookRegistered;
     private static bool _stopAfterTests = true;
     private static IDockerCli _docker = new ProcessDockerCli();
+    private static ContainerLeases _leases = new(ContainerLeases.DefaultDirectory);
+
+    /// <summary>The lease directory shared between test processes; replaced in unit tests.</summary>
+    internal static string LeaseDirectory
+    {
+        set => _leases = new ContainerLeases(value);
+    }
 
     /// <summary>The Docker client; replaced in unit tests.</summary>
     internal static IDockerCli Docker
@@ -46,6 +53,9 @@ public static class IntegrationContainers
         }
     }
 
+    /// <summary>Settings that win over the test parameters; used by unit tests.</summary>
+    internal static Dictionary<string, string> Overrides { get; } = new(StringComparer.Ordinal);
+
     /// <summary>Polling interval while waiting for a health check.</summary>
     internal static TimeSpan PollInterval { get; set; } = TimeSpan.FromMilliseconds(250);
 
@@ -55,7 +65,9 @@ public static class IntegrationContainers
     public static async Task EnsureAsync(TestContext testContext, params string[] containers)
     {
         ArgumentNullException.ThrowIfNull(testContext);
-        var seconds = testContext.GetPropertyOrDefault("CONTAINER_STARTUP_TIMEOUT_SECONDS", DefaultStartupSeconds);
+        var seconds = Overrides.TryGetValue("CONTAINER_STARTUP_TIMEOUT_SECONDS", out var overridden)
+            ? int.Parse(overridden, global::System.Globalization.CultureInfo.InvariantCulture)
+            : testContext.GetPropertyOrDefault("CONTAINER_STARTUP_TIMEOUT_SECONDS", DefaultStartupSeconds);
         var autostart = Flag(testContext, "CONTAINER_AUTOSTART");
         _stopAfterTests = Flag(testContext, "CONTAINER_STOP_AFTER_TESTS");
         using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(seconds));
@@ -68,61 +80,70 @@ public static class IntegrationContainers
                     continue;
             }
 
-            var problem = await TryEnsureAsync(container, autostart, timeout.Token);
+            var started = false;
+            var problem = await TryEnsureAsync(container, autostart, timeout.Token, () => started = true);
             if (problem is null)
             {
-                lock (_gate)
-                    _readyUntil[container] = DateTimeOffset.UtcNow + _readyCache;
+                Lease(container, started);
                 continue;
             }
+
+            if (started)
+                Lease(container, true);
 
             if (problem is not null)
                 Assert.Inconclusive($"Container {container} is not available: {problem} (waited at most {seconds} s; CONTAINER_STARTUP_TIMEOUT_SECONDS changes the wait).");
         }
     }
 
-    /// <summary>Stops the containers this test run started, unless <c>CONTAINER_STOP_AFTER_TESTS</c> is false.</summary>
+    /// <summary>
+    /// Ends this process's use of the containers. A container the tests started is stopped only when no other test process
+    /// still uses it (and <c>CONTAINER_STOP_AFTER_TESTS</c> is not false); one that was already running is never stopped.
+    /// </summary>
     public static async Task ReleaseAsync(TestContext testContext, params string[] containers)
     {
         ArgumentNullException.ThrowIfNull(testContext);
-        if (!Flag(testContext, "CONTAINER_STOP_AFTER_TESTS"))
-            return;
+        await ReleaseCoreAsync(Flag(testContext, "CONTAINER_STOP_AFTER_TESTS"), containers);
+    }
 
+    private static async Task ReleaseCoreAsync(bool stopAllowed, IEnumerable<string> containers)
+    {
         foreach (var container in containers)
         {
-            bool stop;
             lock (_gate)
             {
-                if (!_startedByTests.TryGetValue(container, out var users))
+                _readyUntil.Remove(container);
+                if (!_leased.Remove(container))
                     continue;
-                stop = users <= 1;
-                if (stop)
-                    _startedByTests.Remove(container);
-                else
-                    _startedByTests[container] = users - 1;
             }
 
-            if (stop)
-            {
-                lock (_gate)
-                    _readyUntil.Remove(container);
+            if (_leases.Release(container) && stopAllowed)
                 await Docker.StopAsync(container, TimeSpan.FromSeconds(10), CancellationToken.None);
+        }
+    }
+
+    private static void Lease(string container, bool startedByTests)
+    {
+        _leases.Acquire(container, startedByTests);
+        lock (_gate)
+        {
+            _leased.Add(container);
+            _readyUntil[container] = DateTimeOffset.UtcNow + _readyCache;
+            if (!_exitHookRegistered)
+            {
+                _exitHookRegistered = true;
+                AppDomain.CurrentDomain.ProcessExit += (_, _) => ReleaseCoreAsync(_stopAfterTests, LeasedContainers()).GetAwaiter().GetResult();
             }
         }
     }
 
-    private static void StopStartedContainers()
+    private static string[] LeasedContainers()
     {
-        string[] started;
         lock (_gate)
-            started = [.. _startedByTests.Keys];
-        if (!_stopAfterTests)
-            return;
-        foreach (var container in started)
-            Docker.StopAsync(container, TimeSpan.FromSeconds(10), CancellationToken.None).GetAwaiter().GetResult();
+            return [.. _leased];
     }
 
-    private static async Task<string?> TryEnsureAsync(string container, bool autostart, CancellationToken cancellationToken)
+    private static async Task<string?> TryEnsureAsync(string container, bool autostart, CancellationToken cancellationToken, Action onStarted)
     {
         try
         {
@@ -150,15 +171,7 @@ public static class IntegrationContainers
                     await Docker.StartAsync(container, cancellationToken);
                 }
 
-                lock (_gate)
-                {
-                    _startedByTests[container] = _startedByTests.GetValueOrDefault(container) + 1;
-                    if (!_exitHookRegistered)
-                    {
-                        _exitHookRegistered = true;
-                        AppDomain.CurrentDomain.ProcessExit += (_, _) => StopStartedContainers();
-                    }
-                }
+                onStarted();
             }
 
             while (true)
@@ -180,7 +193,7 @@ public static class IntegrationContainers
     }
 
     private static bool Flag(TestContext testContext, string name) =>
-        !bool.TryParse(testContext.GetPropertyOrDefault(name, "true"), out var value) || value;
+        !bool.TryParse(Overrides.TryGetValue(name, out var overridden) ? overridden : testContext.GetPropertyOrDefault(name, "true"), out var value) || value;
 
     internal static string? ServiceOf(string composeFile, string container)
     {
