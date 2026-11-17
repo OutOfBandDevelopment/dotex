@@ -37,6 +37,7 @@ public static class ServiceCollectionExtensions
         services.AddTransient<IHelperDescriptor<HelperOptions>, HashHelperDescriptor>();
         services.AddTransient<IHelperDescriptor<HelperOptions>, SetHelperDescriptor>();
         services.AddTransient<IHelperDescriptor<HelperOptions>, StringReplaceHelperDescriptor>();
+        services.AddTransient<IHelperDescriptor<HelperOptions>, TranslateHelperDescriptor>();
 
         return services;
     }

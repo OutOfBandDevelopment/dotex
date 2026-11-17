@@ -1,6 +1,6 @@
 # Feature request: culture negotiation middleware
 
-- **Status:** triaged
+- **Status:** done (built 2026-11-17, see [change](../../changes/2026-11-17.md#culture-negotiation-options-and-translate-helper))
 - **Requested by:** owner (from `docs/Framework/CultureInfoMiddleware.md`, removed 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** ASP.NET Core middleware, text templating
@@ -42,3 +42,7 @@ Use the platform middleware only, or keep the accessor abstraction?
 References: MDN pages for `Accept-Language` and `Content-Language`.
 
 2026-11-11: triaged. `ICultureInfoAccessor` is not in `src`. Plan: use ASP.NET Core `RequestLocalizationMiddleware` for negotiation and add only the accessor and template integration if a consumer needs it. Backlog: BACKLOG.md, Framework wish list.
+
+## Outcome
+
+Decision: keep the accessor (`IAccessor<CultureInfo>`, already registered) and the existing `CultureInfoMiddleware` instead of the platform `RequestLocalizationMiddleware`, so services and templates read one request-scoped culture. The middleware now negotiates `Accept-Language` by quality against `CultureInfoMiddlewareOptions` (`OoBDev:Culture`: `DefaultCulture`, `SupportedCultures`; registered with `TryAddCultureNegotiation(configuration)`), falls back to the default for an unsupported culture and returns the chosen one in `Content-Language`. `ITranslationProvider` (`OptionsTranslationProvider`, `TranslationOptions`, fr-CA then fr then neutral) and the Handlebars `translate` helper give template text in the request culture. Unit tests: 5 middleware, 5 translation, 1 helper.

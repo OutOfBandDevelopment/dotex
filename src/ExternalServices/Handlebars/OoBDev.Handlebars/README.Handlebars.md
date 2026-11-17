@@ -17,6 +17,7 @@ Handlebars templates for the framework template engine (`OoBDev.System.Text.Temp
 | `json` | value, optional `true` to indent | `System.Text.Json` |
 | `guid_new` | none | a new GUID from `IGuidProvider` |
 | `hash` | one value | the hash of its text from the registered `IHash` |
+| `translate` | key | the text for the key in the request culture (`IAccessor<CultureInfo>`, then the UI culture) from `ITranslationProvider`; the key itself when no entry exists |
 | `set` | key, value | stores the value for the rest of the render (async-local store), writes nothing |
 | `get` | key | writes the stored value |
 | `str-replace` | input, find, replacement | the input with every `find` replaced; writes nothing when the input or `find` is blank |

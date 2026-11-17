@@ -31,6 +31,7 @@ In Debug builds the builder and `healthCheckPath` parameters are required, in Re
 | `TryAddCommonOpenApiExtensions()` or `(controllerAssemblies)` | One OpenAPI document per controller assembly (`/openapi/{AssemblyName}.json`) and an `all` document, with the XML documentation, search query, permission and health check transformers |
 | `TryAddAspNetCoreSearchQuery()` | Search query filter, `ISearchQuery` accessor, `ISearchModelMapper` and `ISearchModelBuilder` |
 | `TryAddRoleRightMapping(configuration)` | Role to application right mapping, below |
+| `TryAddCultureNegotiation(configuration)` | `OoBDev:Culture` options: `DefaultCulture` and `SupportedCultures`; `Accept-Language` is matched by quality, an unsupported culture gets the default, and `Content-Language` returns the result |
 | `UseAspNetCoreExtensionMiddleware(path)` | Health check endpoint (default `/health`), correlation info, culture and search query middleware |
 | `UseHttpQueryVerb()` | `QueryVerbMiddleware` for HTTP `QUERY` |
 | `MapApiReference(configure)` | OpenAPI endpoints plus Scalar listing every document; each `IApiReferenceConfigurator` (for example the OAuth2 one) and then `configure` shape the options |

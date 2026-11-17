@@ -95,6 +95,19 @@ public static class ServiceCollectionExtensions
     }
 
     /// <summary>
+    /// Adds the options of <see cref="Middleware.CultureInfoMiddleware"/> (<c>OoBDev:Culture</c>: <c>DefaultCulture</c>, <c>SupportedCultures</c>).
+    /// Without them the middleware accepts any valid culture and keeps the process culture for a request that names none.
+    /// </summary>
+    /// <param name="services">The service collection.</param>
+    /// <param name="configuration">The configuration holding the <c>OoBDev:Culture</c> section.</param>
+    /// <returns>The modified service collection.</returns>
+    public static IServiceCollection TryAddCultureNegotiation(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddValidatedOptions<Middleware.CultureInfoMiddlewareOptions>(configuration, "OoBDev:Culture");
+        return services;
+    }
+
+    /// <summary>
     /// Adds role to application right mapping: validated options (<c>OoBDev:Authorization</c>), the configuration mapper,
     /// the claims transformation and the shared right checker.
     /// </summary>

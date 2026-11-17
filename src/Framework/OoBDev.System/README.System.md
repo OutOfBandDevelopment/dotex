@@ -33,6 +33,9 @@ Adds support for shared serializers.
 ### TryTemplatingExtensions
 Adds support for shared templating.
 
+### Translations
+`ITranslationProvider` looks up text by key and culture (fr-CA, then fr, then the neutral entries); `OptionsTranslationProvider` reads `TranslationOptions.Cultures` (culture name, then key, then text; bind it from configuration). Registered by `TryAddProviders`.
+
 ## SystemExtensionBuilder
 Builder for configuring system extensions.
 

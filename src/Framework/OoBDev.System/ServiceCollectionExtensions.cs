@@ -194,6 +194,8 @@ public static class ServiceCollectionExtensions
         services.TryAddSingleton<IDataConverter, DataConverter>();
         services.TryAddSingleton(global::System.TimeProvider.System);
         services.TryAddSingleton<IGuidProvider, GuidProvider>();
+        services.AddOptions<TranslationOptions>();
+        services.TryAddSingleton<ITranslationProvider, OptionsTranslationProvider>();
 
         services.TryAddSingleton<ITempFileFactory, TempFileFactory>();
 
