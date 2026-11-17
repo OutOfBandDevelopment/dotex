@@ -28,7 +28,7 @@ Owner: all protocols and features of dev-term must exist here. Done means what d
 
 - [ ] Integration coverage gaps: Azure runs on emulators only (Azurite, Service Bus emulator, no Azure licence); Moto is used only for SQS, so S3 tests wait for an S3 adapter.
 - [ ] Integration suite under 5 minutes (6 min 51 s on 2026-11-11, over the goal; CPU-bound): measure again when the stack is up (2026-11-16 run: every Integration project passed, with the Ollama project alone taking 4 m 57 s; the full-solution wall time was not captured because a lingering `testhost` kept the run open), see [suite-timing.md](docs/architecture/testing/integration/suite-timing.md).
-- [ ] Add a live-integration doc page per new cloud service (only Groq exists; the live tests passed again on 2026-11-09 with the key in the user environment variable `GROQ_API_KEY`).
+- [ ] Add a live-integration doc page per new cloud service (Groq and Azure AI Search have one; the live tests passed again on 2026-11-09 with the key in the user environment variable `GROQ_API_KEY`).
 - [ ] Example AppHost live journeys: Keycloak wiring is built but not run live. The OTLP protocol bug is fixed and unit tested (2026-11-05); re-run the host once the stale DCP process holding port 16890 is stopped (needs an owner kill, the tool refused it), then check traces reach the dashboard and run the journeys ([apphost-live-journeys.md](docs/design/example-ui/apphost-live-journeys.md)).
 - Azure Monitor exporter: not built (decided 2026-10-22); OTLP reaches any collector and is verified with the Aspire dashboard.
 
