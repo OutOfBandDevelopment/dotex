@@ -1,6 +1,6 @@
 # Feature request: Span and Memory support in codecs and segmenters
 
-- **Status:** triaged
+- **Status:** done (built 2026-11-17, see [change](../../changes/2026-11-17.md#span-support-for-bcd-and-base32-and-a-copy-free-segmenter))
 - **Requested by:** owner (source `TODO` comments, collected 2026-11-17)
 - **Date:** 2026-11-17
 - **Area:** `OoBDev.System` (`BcdEx`, `Base32Codec`), `OoBDev.System.Abstractions` (segmenters)
@@ -38,10 +38,8 @@ None.
 - **Needed by:** no date.
 - **Workaround today:** none needed.
 
-## Open questions
+## Outcome
 
-Keep the array overloads or remove them (breaking changes are allowed)? Recommendation: keep one span-based API.
-
-## Triage notes
-
-Triaged 2026-11-17 into [BACKLOG.md](../../../BACKLOG.md) section 5 (source TODO comments). Design document to follow when built.
+- `Base32Codec.Encode(ReadOnlySpan<byte>)` and `Decode(ReadOnlySpan<char>)` replace the array and string forms (arrays and strings convert implicitly, so callers are unchanged); the LINQ and array copies are gone and unpadded input decodes.
+- `BcdEx` gained `AsBCD(ReadOnlySpan<byte>)` (packed, big endian, up to 18 digits) and `ToBCD(long, Span<byte>)`; the single-byte forms stay.
+- `StartAndFixLengthSegmenter` reads the length field into a stack span and reverses it for big endian: no array, and the endianness option stays (declined to drop it: DevTerm profiles use both).
