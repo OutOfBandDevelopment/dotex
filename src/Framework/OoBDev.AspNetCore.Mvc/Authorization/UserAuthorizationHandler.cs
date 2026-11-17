@@ -1,9 +1,9 @@
 using OoBDev.System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
-#if DEBUG 
+using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Logging;
-#endif
+using System;
 using System.Threading.Tasks;
 
 namespace OoBDev.AspNetCore.Mvc.Authorization;
@@ -11,13 +11,35 @@ namespace OoBDev.AspNetCore.Mvc.Authorization;
 /// <summary>
 /// Handles user authorization based on specified requirements.
 /// </summary>
-/// <remarks>
-/// Initializes a new instance of the <see cref="UserAuthorizationHandler"/> class.
-/// </remarks>
-/// <param name="logger">The logger.</param>
-public partial class UserAuthorizationHandler(ILogger<UserAuthorizationHandler> logger) : AuthorizationHandler<UserAuthorizationRequirement>
+public partial class UserAuthorizationHandler : AuthorizationHandler<UserAuthorizationRequirement>
 {
-    private readonly ILogger _logger = logger;
+    /// <summary>
+    /// Environment variable that, set to <c>true</c>, shows personal data in identity model logs. Ignored in Production.
+    /// </summary>
+    public const string ShowPiiVariable = "OOBDEV_SHOW_PII";
+
+    private readonly ILogger _logger;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="UserAuthorizationHandler"/> class.
+    /// </summary>
+    /// <param name="logger">The logger.</param>
+    /// <param name="environment">The host environment.</param>
+    public UserAuthorizationHandler(ILogger<UserAuthorizationHandler> logger, IHostEnvironment environment)
+    {
+        _logger = logger;
+        if (string.Equals(Environment.GetEnvironmentVariable(ShowPiiVariable), "true", StringComparison.OrdinalIgnoreCase))
+        {
+            if (environment.IsProduction())
+            {
+                LogShowPiiIgnored(ShowPiiVariable);
+            }
+            else
+            {
+                IdentityModelEventSource.ShowPII = true;
+            }
+        }
+    }
 
     /// <summary>
     /// Handles the user authorization requirement asynchronously.
@@ -27,16 +49,13 @@ public partial class UserAuthorizationHandler(ILogger<UserAuthorizationHandler> 
     /// <returns>A task representing the asynchronous operation.</returns>
     protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, UserAuthorizationRequirement requirement)
     {
-#if DEBUG // Request: docs/features/request/2026-11-17-configurable-application-user-claim.md
-        IdentityModelEventSource.ShowPII = true;
-#endif
         var user = context.User;
 
         // These should be provided by the authentication provider
         var userName = user.GetClaimValue(CommonClaims.ObjectId, CommonClaims.ObjectIdentifier, CommonClaims.NameIdentifier)?.value;
 
         // If the application has extended the user id claim, it should be provided as well
-        var userId = user.GetClaimValue(CommonClaims.UserId)?.value; // Request: docs/features/request/2026-11-17-configurable-application-user-claim.md
+        var userId = requirement.RequireApplicationUserId ? user.GetClaimValue(requirement.ApplicationUserIdClaim!)?.value : null;
 
         var isAuthorized = !string.IsNullOrWhiteSpace(userName);
 
@@ -58,6 +77,9 @@ public partial class UserAuthorizationHandler(ILogger<UserAuthorizationHandler> 
 
         return Task.CompletedTask;
     }
+
+    [LoggerMessage(EventId = 3, Level = LogLevel.Warning, Message = "{variable} is set but ignored in Production")]
+    private partial void LogShowPiiIgnored(string variable);
 
     [LoggerMessage(EventId = 1, Level = LogLevel.Information, Message = "{userName} is authorized ({userId})")]
     private partial void LogAuthorized(string? userName, string? userId);

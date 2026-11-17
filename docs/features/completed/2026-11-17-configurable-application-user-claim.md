@@ -1,6 +1,6 @@
 # Feature request: configurable application-user claim and debug bypass
 
-- **Status:** triaged
+- **Status:** done (built 2026-11-17, see [change](../../changes/2026-11-17.md#configurable-application-user-claim-and-debug-bypass))
 - **Requested by:** owner (source `TODO` comments, collected 2026-11-17)
 - **Date:** 2026-11-17
 - **Area:** `OoBDev.AspNetCore.Mvc` (authorization, builder options)
@@ -21,7 +21,7 @@ The claim that carries the application user id is configurable. When no claim is
 
 ## Existing code checked
 
-`UserAuthorizationHandler`, `AspNetCoreExtensionBuilder`, `AddAspNetCoreExtensions` (`requireApplicationUserId`), request [claims enhancement and user session](2026-11-10-claims-enhancement-and-user-session.md), which may absorb this.
+`UserAuthorizationHandler`, `AspNetCoreExtensionBuilder`, `AddAspNetCoreExtensions` (`requireApplicationUserId`), request [claims enhancement and user session](../request/2026-11-10-claims-enhancement-and-user-session.md), which may absorb this.
 
 Source comments (replaced by a reference to this request):
 
@@ -45,4 +45,14 @@ Merge into the claims-enhancement request, or keep separate? Recommendation: mer
 
 ## Triage notes
 
-Triaged 2026-11-17 into [BACKLOG.md](../../../BACKLOG.md) section 5 (source TODO comments). Design document to follow when built.
+Triaged 2026-11-17 into [BACKLOG.md](../../../BACKLOG.md) section 5 (source TODO comments).
+
+## Outcome
+
+Kept separate from the claims-enhancement request (it is a small authorization change). Built:
+
+- `AspNetCoreExtensionBuilder.ApplicationUserIdClaim` (default `CommonClaims.UserId`) replaces `RequireApplicationUserId`; `null` means the application has no user id and the requirement is off. `UserAuthorizationRequirement` and `AddRequireAuthenticatedUser` take the claim name; the handler reads that claim.
+- The `#if DEBUG` bypass was `IdentityModelEventSource.ShowPII`, which shows personal data in logs. It is now enabled by `OOBDEV_SHOW_PII=true` in any build outside Production; in Production it is ignored with a logged warning. Off by default.
+- "Detect the claim mapping" is declined: the framework has no claim mapping setting to read, so the claim is named explicitly.
+
+Tests: 6 Unit tests (`UserAuthorizationHandlerTests`). The example Web API sets the claim to `null`.

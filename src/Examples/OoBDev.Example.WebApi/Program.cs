@@ -51,7 +51,7 @@ public static class Program
             },
             aspNetBuilder: new()
             {
-                RequireApplicationUserId = false,
+                ApplicationUserIdClaim = null,
                 RequireAuthenticatedByDefault = identityProvider != IdentityProviders.None,
             },
             jwtBuilder: new()

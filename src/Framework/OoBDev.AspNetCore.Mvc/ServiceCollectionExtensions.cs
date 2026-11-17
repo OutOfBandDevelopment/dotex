@@ -88,7 +88,7 @@ public static class ServiceCollectionExtensions
         if (builder.RequireAuthenticatedByDefault)
         {
             services.AddRequireAuthenticatedUser(
-                builder.RequireApplicationUserId,
+                builder.ApplicationUserIdClaim,
                 builder.AuthorizationPolicyBuilder
                 );
         }
@@ -155,16 +155,16 @@ public static class ServiceCollectionExtensions
     /// Adds authentication requirements to the service collection.
     /// </summary>
     /// <param name="services">The service collection to which authentication requirements should be added.</param>
-    /// <param name="requireApplicationUserId">Indicates whether the application user ID is required.</param>
+    /// <param name="applicationUserIdClaim">The claim that carries the application user ID; <c>null</c> turns the requirement off.</param>
     /// <param name="authorizationPolicyBuilder">Action to configure the authorization policy builder.</param>
     /// <returns>The modified service collection.</returns>
     public static IServiceCollection AddRequireAuthenticatedUser(
         this IServiceCollection services,
 #if DEBUG
-        bool requireApplicationUserId,
+        string? applicationUserIdClaim,
         Action<AuthorizationPolicyBuilder>? authorizationPolicyBuilder
 #else
-        bool requireApplicationUserId = true, // Request: docs/features/request/2026-11-17-configurable-application-user-claim.md
+        string? applicationUserIdClaim = CommonClaims.UserId,
         Action<AuthorizationPolicyBuilder>? authorizationPolicyBuilder = null
 #endif
     )
@@ -175,7 +175,7 @@ public static class ServiceCollectionExtensions
         // Policy builder
         var policyBuilder = new AuthorizationPolicyBuilder()
                 .RequireAuthenticatedUser()
-                .AddRequirements(new UserAuthorizationRequirement(requireApplicationUserId));
+                .AddRequirements(new UserAuthorizationRequirement(applicationUserIdClaim));
         authorizationPolicyBuilder?.Invoke(policyBuilder);
 
         var authorizationPolicy = policyBuilder.Build();
