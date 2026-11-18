@@ -69,7 +69,7 @@ Converter: text and Markdown pass through, a PDF with enough text converts with 
 
 ## Not in the first slice
 
-- Language detection.
+- Language detection (2026-11-18): `LanguageDetector.Detect(text)` in `OoBDev.Documents.Markdown` guesses en, de, fr, es, it, nl or pt from stop-word shares (at least 20 words, a clear lead, otherwise `null`). It is a hint for the front matter, not a classifier: other scripts and languages answer `null`; a model-based detector can replace it behind the same call.
 - The queue, lease and twin reuse (catalog database).
 - Rendering stages (`RenderStageRunner`, the renderer container) and summarize.
 - Legacy OLE spreadsheet and presentation readers (`.xls`, `.ppt`): `.xlsx` and `.pptx` are built (2026-11-18, below); the binary formats have no reader. Word-processing and e-book files are built (`OoBDev.Documents.Markdown.Office`, owner 2026-11-16: compose the Tika and MysticMind handlers, no new package).
