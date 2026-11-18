@@ -61,9 +61,11 @@ Pairs: five frames within two seconds pair up, a gap above the window breaks the
 ## Not in the first slice
 
 - Eyes-open and face signals (need the face decision, see [face and pet matching](../../features/request/2026-11-11-face-and-pet-matching.md)).
-- Computing the eight quality measures in .NET (sharpness tiles, isotropy, noise); they stay in the Python container for now.
+- Subject-region focus (needs the face decision); the eight whole-frame measures are built (below).
 - Database queue and API: catalog-specific.
 
 ## Built
+
+2026-11-18: `QualityAnalyzer.Analyze` computes the eight measures in .NET from a gray buffer (recipe `q1` port). Not compared against the Python numbers on real photos yet, so the catalog thresholds stay with the caller until that comparison is run (needs the container and sample images); tests check ordering (blur lowers focus and high-frequency share), clipping, range, isotropy and argument checks.
 
 2026-11-16: `OoBDev.Imaging.Analysis.Bursts` has `BurstRanker` (Pairs, Components, Score), `QualityMeasures`, `SubjectFocus`, `BurstScore`, `QualityLabels` and `DHash` (gray buffer in, Pillow-equal Lanczos resize; RGB and RGBA gray helpers). Differences from the catalog copy: no Skia, a record result instead of a tuple, a dark frame is not also labelled under. The catalog's golden dHash values were not available (the catalog has no test for them), so the tests pin gradients and a step image; compare against the catalog values when the catalog switches to the package.
