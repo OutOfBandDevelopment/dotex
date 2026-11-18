@@ -18,6 +18,10 @@ Pair it with `SegmentedOcr` and `OcrMarkdown` from `OoBDev.Documents.Markdown` t
 - Tesseract at 3x scale with accurate tables and formula enrichment first; when the task or result reports failure the same file is retried once with the light options (2x scale, fast tables, no formulas).
 - A transport fault or a response that is not JSON is `HttpRequestException`; no result inside `TimeoutSeconds` is `TimeoutException` (the caller retries both); a failed task or a result that is not a success after the light retry is `OcrFailedException` (final).
 
+## Layout
+
+`DoclingOcr` also implements `IDocumentLayoutOcr`: `RecognizeLayoutAsync` adds `json` to `to_formats` and returns the Markdown with `OcrRegion`s (page, label, text, box as fractions of the page, top-left origin) read from `json_content` by `DoclingLayout.Parse`. Registered by `TryAddDoclingOcr` as `IDocumentLayoutOcr`.
+
 ## Options (`Docling`)
 
 | Key | Default | Meaning |

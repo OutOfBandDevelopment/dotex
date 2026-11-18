@@ -65,9 +65,11 @@ Converter: text and Markdown pass through, a PDF with enough text converts with 
 
 - `.xlsx`/`.xlsm` and `.pptx`/`.pptm` readers (2026-11-18) in `OoBDev.Documents.Markdown.Office`: they read the Open XML zip with `System.IO.Compression` and `System.Xml.Linq` (no package, no Tika). Spreadsheets give a table per sheet (stored values, shared strings, first row as header, `|` escaped, formulas as last saved); presentations give a section per slide in `sldIdLst` order (title placeholder as the heading, other paragraphs as bullets, speaker notes). `TryAddOpenXmlMarkdown()` registers them. Not done: number formats and dates (serials stay numbers), merged cells, charts, images, tables inside slides as tables.
 
+- Region coordinates (2026-11-18): `IDocumentLayoutOcr` (extends `IDocumentOcr`) returns `OcrLayout(Markdown, Regions)`; `OcrRegion` carries page, label, text and a box as fractions of the page (top-left origin, so it survives any render scale and matches the [annotation layer](../AnnotationLayer/README.md)). `DoclingOcr` implements it by also asking for `json` and reading `json_content` with `DoclingLayout` (texts, tables and pictures; bottom-left boxes flipped; boxes clamped to the page). Tested with fixture JSON written from the docling document schema; not yet compared with a live docling-serve response.
+
 ## Not in the first slice
 
-- Region coordinates and language detection.
+- Language detection.
 - The queue, lease and twin reuse (catalog database).
 - Rendering stages (`RenderStageRunner`, the renderer container) and summarize.
 - Legacy OLE spreadsheet and presentation readers (`.xls`, `.ppt`): `.xlsx` and `.pptx` are built (2026-11-18, below); the binary formats have no reader. Word-processing and e-book files are built (`OoBDev.Documents.Markdown.Office`, owner 2026-11-16: compose the Tika and MysticMind handlers, no new package).
