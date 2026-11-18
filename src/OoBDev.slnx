@@ -42,6 +42,7 @@
     <Project Path="Examples/OoBDev.Example.Web/OoBDev.Example.Web.esproj">
       <Platform Project="AnyCPU" />
     </Project>
+    <Project Path="Examples/OoBDev.Example.Query/OoBDev.Example.Query.csproj" />
     <Project Path="Examples/OoBDev.Example.WebApi/OoBDev.Example.WebApi.csproj" />
     <Project Path="Examples/OoBDev.Example.WebApi.Tests/OoBDev.Example.WebApi.Tests.csproj" />
     <Project Path="Examples/OoBDev.Examples.Controls.Avalonia.Tests/OoBDev.Examples.Controls.Avalonia.Tests.csproj" />

@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>false</ImplicitUsings>
+    <IsPackable>false</IsPackable>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Framework\OoBDev.Query.Metadata\OoBDev.Query.Metadata.csproj" />
+    <ProjectReference Include="..\..\ExternalServices\PostgreSql\OoBDev.PostgreSql.Query\OoBDev.PostgreSql.Query.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -64,10 +64,10 @@ Registry: a class with attributes appears in the description with its facets, pr
 
 ## Not in the first slice
 
-- (second slice, after rows, facets and paging).
-- Snapshot sources, text anchors and index-first paging for vector spaces, and the host sample (second slice, after rows, facets and paging).
+- Snapshot sources, text anchors and index-first paging for vector spaces (second slice, after rows, facets and paging).
 ## Built in the second slice
 
+- Host sample (2026-11-18): `src/Examples/OoBDev.Example.Query` (`NoteRow`, `/describe`, `/openapi.json`, `POST /q`, `GET /q?text=`; `QueryException` answers 400 problem details). Smoke-tested by running it; no automated test (the repo has no TestHost package).
 - Near (2026-11-18): `[Space]` with `Haversine` (two numeric facets, kilometres) and `Cosine` (joined embedding table `sv`, anchor by key), `near` clause and text form, `distance` column and sort, `DefaultMax`, keyset paging over the distance. Not carried over from the catalog: sky (angular) metric, multi-vector spaces, the text anchor (needs an embedder), halfvec cast, and the table-first paging that makes the HNSW index usable; the join form scans the embedding table.
 - Graph shape (2026-11-18): `[Edge]`, `shape: graph`, `root` and `depth` walk (at most 4 steps, one statement each), `Nodes` on the result, text form `as graph from <id> depth <n>` (`from` and `depth` are read only after `as graph`, so they stay ordinary search words elsewhere).
 - Relations (2026-11-18): `[Relation(name, sql)]`, `related { via, of }` / text `of via:key`; the anchor is a bound parameter (`{anchor}`), the condition joins the filters, so paging and counts work unchanged. The catalog's `{sha}` placeholder is not carried over.
