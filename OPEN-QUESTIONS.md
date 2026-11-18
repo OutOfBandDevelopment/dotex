@@ -10,20 +10,6 @@ _(none waiting; processed requests are in BACKLOG.md and TODO.md)_
 
 ## Open
 
-
-### Q1 (2026-11-16, Messaging and EF stores): how do the EF stores ship their schema?
-
-The EF stores (messaging inbox/outbox, suppression list, template source, event stores, right audit) create their schema only through the consumer's `EnsureCreated` or own migrations. A migration is provider-specific (SQL Server, PostgreSQL and SQLite differ), so a shipped migration needs a provider choice.
-
-**Options**
-- A. Ship generated SQL scripts per provider (SQL Server, PostgreSQL) under each project's `Schema/` folder, produced by a script from the model, plus a test that the script matches the model. No provider package is referenced by the library. (recommended: keeps the library provider-neutral and fits "adapters reference Abstractions only"; the consumer runs the script or copies the table into its own migration.)
-- B. Ship one migrations assembly per provider (`...EntityFrameworkCore.SqlServer`). Applied with `Migrate()`, but it adds about five projects per store and ties versions to EF providers.
-- C. Keep it as is: document `EnsureCreated` and the table shape only. Cheapest, no upgrade path.
-
-**Default:** C until answered; the item stays in BACKLOG as "waiting for the owner".
-
-**Your answer:**
-
 ### Q2 (2026-11-16, Web, DevTerm sign-in): where does desktop client sign-in and refresh live?
 
 DevTerm and the other desktop clients have no sign-in code (nothing under `src/Applications` acquires a token), so refresh-token handling has nothing to attach to. A client needs the OAuth 2.0 public-client flow with Keycloak: authorization code with PKCE on a loopback redirect (or device code for the Tui), a token cache that refreshes the access token before it expires, and a secure store for the refresh token.
@@ -48,7 +34,7 @@ DevTerm and the other desktop clients have no sign-in code (nothing under `src/A
 
 **Default:** C until answered; the BACKLOG item waits.
 
-**Your answer:**
+**Your answer:** it should be abstracted so it can be easily sweapped out later but a default implmentation based on EF should be included in the framework. 
 
 ### Q4 (2026-11-16, Messaging, GDPR erasure): where does the right-guarded erasure entry point live?
 
@@ -61,7 +47,7 @@ DevTerm and the other desktop clients have no sign-in code (nothing under `src/A
 
 **Default:** C until answered; the BACKLOG item waits.
 
-**Your answer:**
+**Your answer:**  it should be abstracted with an interface in a security core library and then have default implmnetantions in the related leaf libraries.  (this is how all these sorts of features should be implmented)
 
 ### Q5 (2026-11-16, Build, vulnerable packages): should NU1901 to NU1904 break the build?
 
@@ -72,7 +58,7 @@ Restore is clean today. Turning the NuGet audit warnings into errors (`WarningsA
 - B. Errors for High and Critical only (`NuGetAuditLevel` high plus `WarningsAsErrors`), warnings for the rest. Stops work only for serious advisories.
 - C. Errors for all four codes. Strictest, most disruptive.
 
-**Default:** A until answered.
+**Default:** B, they should break the build and be fixed when discovered.
 
 **Your answer:**
 
@@ -87,5 +73,5 @@ Restore is clean today. Turning the NuGet audit warnings into errors (`WarningsA
 
 **Default:** A; the BACKLOG item is parked on this question.
 
-**Your answer:**
+**Your answer:**  is possible.  something like a property grid editor or whatever,  
 

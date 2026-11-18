@@ -224,9 +224,11 @@ internal static class TuiTestRunner
         finally
         {
             app!.Invoke(() => app.RequestStop());
-            thread.Join(_stopTimeout);
+            // A loop thread that did not stop is still drawing: disposing the app under it takes the whole test host down (seen as "Test host process crashed").
+            var stopped = thread.Join(_stopTimeout);
             _currentApp = null;
-            app.Dispose();
+            if (stopped)
+                app.Dispose();
         }
     }
 
@@ -282,9 +284,11 @@ internal static class TuiTestRunner
         finally
         {
             app!.Invoke(() => app.RequestStop());
-            thread.Join(_stopTimeout);
+            // A loop thread that did not stop is still drawing: disposing the app under it takes the whole test host down (seen as "Test host process crashed").
+            var stopped = thread.Join(_stopTimeout);
             _currentApp = null;
-            app.Dispose();
+            if (stopped)
+                app.Dispose();
         }
     }
 
@@ -341,10 +345,14 @@ internal static class TuiTestRunner
         finally
         {
             app!.Invoke(() => app.RequestStop((IRunnable)root!));
-            thread.Join(_stopTimeout);
+            // A loop thread that did not stop is still drawing: disposing the app under it takes the whole test host down (seen as "Test host process crashed").
+            var stopped = thread.Join(_stopTimeout);
             _currentApp = null;
-            root!.Dispose();
-            app.Dispose();
+            if (stopped)
+            {
+                root!.Dispose();
+                app.Dispose();
+            }
         }
     }
 
