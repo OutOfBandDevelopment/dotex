@@ -57,7 +57,7 @@ public sealed class KindRegistry
         var edge = edgeAttribute is null ? null : new EdgeInfo(edgeAttribute.Source, edgeAttribute.Target, edgeAttribute.Weight);
         var spaces = type.GetCustomAttributes<SpaceAttribute>().ToDictionary(
             s => s.Name,
-            s => new SpaceInfo(s.Name, s.Metric, s.A, s.B, s.Table, s.IdColumn, s.IdType, s.VectorColumn, s.DefaultMax),
+            s => new SpaceInfo(s.Name, s.Metric, s.A, s.B, s.Table, s.IdColumn, s.IdType, s.VectorColumn, s.DefaultMax, s.Candidates),
             StringComparer.OrdinalIgnoreCase);
         return new KindInfo(attribute.Name, type, attribute.Title, attribute.Base, attribute.Joins, attribute.Key, attribute.DefaultSort, attribute.Right, facets, predicates, operators, attribute.Sample, hints, relations, edge, spaces);
     }

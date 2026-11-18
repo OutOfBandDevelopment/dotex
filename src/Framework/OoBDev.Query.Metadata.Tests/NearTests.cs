@@ -50,6 +50,22 @@ public sealed class NearTests
     }
 
     [TestMethod]
+    public async Task QueryAsync_NearVectorWithCandidates_TakesTheNearestFromTheTableFirstAsync()
+    {
+        var ex = new FakeExecutor();
+
+        await Engine(ex).QueryAsync<IndexedSpaceRow>(new QueryRequest { From = "indexed", Near = new NearClause("similar", Ref: "7"), Filters = Support.Filters("{\"name\":\"a\"}") });
+
+        var sql = ex.Calls[0].Sql;
+        TestContext.WriteLine("SQL: {0}", sql);
+        StringAssert.Contains(sql, "JOIN (SELECT x.spot_id AS id, VEC(x.vec,");
+        StringAssert.Contains(sql, " FROM spot_vectors x ORDER BY VEC(x.vec,");
+        StringAssert.Contains(sql, "LIMIT 200) sv ON sv.id = s.id");
+        StringAssert.Contains(sql, "sv.d AS \"distance\"");
+        StringAssert.Contains(sql, "ORDER BY sv.d ASC");
+    }
+
+    [TestMethod]
     public async Task QueryAsync_NearThenPage_CursorCarriesTheDistanceAsync()
     {
         var ex = new FakeExecutor();

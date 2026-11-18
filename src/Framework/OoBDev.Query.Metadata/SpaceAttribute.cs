@@ -35,6 +35,12 @@ public sealed class SpaceAttribute(string name, SpaceMetric metric) : Attribute
     /// <summary>Vector: the vector column.</summary>
     public string VectorColumn { get; init; } = "";
 
+    /// <summary>
+    /// Vector: when above zero, the nearest this many rows are taken from the embedding table first (<c>ORDER BY distance LIMIT n</c> on the table alone, which lets a vector index such as HNSW answer it)
+    /// and the kind's filters apply to that pool. Paging then covers the pool only, and a filter can leave fewer rows than asked for. Zero joins the whole table.
+    /// </summary>
+    public int Candidates { get; init; }
+
     /// <summary>A farthest distance applied when the request gives none; unset means no limit.</summary>
     public double DefaultMax { get; init; } = double.NaN;
 }

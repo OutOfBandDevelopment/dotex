@@ -10,4 +10,5 @@ namespace OoBDev.Query.Metadata;
 /// <param name="IdType">Anchor key SQL type.</param>
 /// <param name="VectorColumn">Vector column.</param>
 /// <param name="DefaultMax">The default farthest distance, or NaN.</param>
-public sealed record SpaceInfo(string Name, SpaceMetric Metric, string A, string B, string Table, string IdColumn, string IdType, string VectorColumn, double DefaultMax);
+/// <param name="Candidates">Vector: the index-first pool size, or 0 for a join of the whole table.</param>
+public sealed record SpaceInfo(string Name, SpaceMetric Metric, string A, string B, string Table, string IdColumn, string IdType, string VectorColumn, double DefaultMax, int Candidates = 0);

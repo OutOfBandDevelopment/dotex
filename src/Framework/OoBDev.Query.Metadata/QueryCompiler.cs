@@ -93,9 +93,18 @@ public static class QueryCompiler
         {
             if (string.IsNullOrEmpty(near.Ref))
                 throw new QueryException($"Space '{space.Name}' needs an anchor: ref, the key of a row.");
-            from += $" JOIN {space.Table} sv ON sv.{space.IdColumn} = {kind.Key}";
-            var anchor = $"SELECT x.{space.VectorColumn} FROM {space.Table} x WHERE x.{space.IdColumn} = CAST({parameters.Add(near.Ref)} AS {space.IdType})";
-            distance = dialect.VectorDistance("sv." + space.VectorColumn, anchor);
+            var anchor = $"SELECT a.{space.VectorColumn} FROM {space.Table} a WHERE a.{space.IdColumn} = CAST({parameters.Add(near.Ref)} AS {space.IdType})";
+            if (space.Candidates > 0)
+            {
+                var pool = dialect.VectorDistance("x." + space.VectorColumn, anchor);
+                from += $" JOIN (SELECT x.{space.IdColumn} AS id, {pool} AS d FROM {space.Table} x ORDER BY {pool} {dialect.Limit(space.Candidates)}) sv ON sv.id = {kind.Key}";
+                distance = "sv.d";
+            }
+            else
+            {
+                from += $" JOIN {space.Table} sv ON sv.{space.IdColumn} = {kind.Key}";
+                distance = dialect.VectorDistance("sv." + space.VectorColumn, anchor);
+            }
         }
 
         var max = near.Max ?? (double.IsNaN(space.DefaultMax) ? (double?)null : space.DefaultMax);

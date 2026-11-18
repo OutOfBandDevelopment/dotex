@@ -64,7 +64,7 @@ Registry: a class with attributes appears in the description with its facets, pr
 
 ## Not in the first slice
 
-- Snapshot sources, text anchors and index-first paging for vector spaces (second slice, after rows, facets and paging).
+- Snapshot sources and text anchors (second slice, after rows, facets and paging).
 ## Built in the second slice
 
 - Host sample (2026-11-18): `src/Examples/OoBDev.Example.Query` (`NoteRow`, `/describe`, `/openapi.json`, `POST /q`, `GET /q?text=`; `QueryException` answers 400 problem details). Smoke-tested by running it; no automated test (the repo has no TestHost package).
@@ -73,5 +73,6 @@ Registry: a class with attributes appears in the description with its facets, pr
 - Relations (2026-11-18): `[Relation(name, sql)]`, `related { via, of }` / text `of via:key`; the anchor is a bound parameter (`{anchor}`), the condition joins the filters, so paging and counts work unchanged. The catalog's `{sha}` placeholder is not carried over.
 - Hints (2026-11-18): `[Hint(name, sql)]` on a kind, `has` in `select` triggers one batched statement for the page keys (typed key array, `IQueryDialect.In`), the `has` object per row, `Has` mapped to the row class, listed in the description and the OpenAPI row schema. The catalog also replaced `{sha}`; that placeholder is not carried over (only `{k}`).
 - Buckets (2026-11-18): shape `buckets` over two numeric facets, `QueryRequest.Cell`, `QueryKind.Sample`, `IQueryDialect.GridCell`, the `Bucket` row, text form `as buckets by a,b cell n`. Checked against the catalog's `Buckets` compile; the catalog's fixed `sha` sample became the declared `Sample` expression so no column name is assumed.
+- Index-first vector pool (2026-11-18): `[Space(Candidates = n)]` takes the nearest n rows from the embedding table alone (`ORDER BY distance LIMIT n`, which a vector index can answer), joins the kind to that pool as `sv` and filters afterwards; the distance column is `sv.d`. Paging covers the pool only and a filter can leave fewer rows; zero keeps the whole-table join. Golden SQL test with a fake dialect; not run against pgvector.
 - Snapshot sources and the anchor store (catalog caching).
 - GraphQL and OData transports on top (see the existing transport designs).
