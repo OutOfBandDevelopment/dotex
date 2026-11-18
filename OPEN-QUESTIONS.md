@@ -73,5 +73,4 @@ Restore is clean today. Turning the NuGet audit warnings into errors (`WarningsA
 
 **Default:** A; the BACKLOG item is parked on this question.
 
-**Your answer:**  is possible.  something like a property grid editor or whatever,  
-
+**Your answer:**  is possible.  something like a property grid editor or whatever,
